@@ -1,6 +1,6 @@
-import React from 'react';
-import { useForm } from 'react-hook-form';
-import { Link as RouterLink } from 'react-router-dom';
+import React from "react";
+import { useForm } from "react-hook-form";
+import { Link as RouterLink, useHistory } from "react-router-dom";
 import {
   Flex,
   Heading,
@@ -13,13 +13,16 @@ import {
   Input,
   Link,
   Box,
-} from '@chakra-ui/react';
+} from "@chakra-ui/react";
 
-import { FcGoogle } from 'react-icons/fc';
-import { FiAtSign } from 'react-icons/fi';
-import { FaLock } from 'react-icons/fa';
+import { FcGoogle } from "react-icons/fc";
+import { FiAtSign } from "react-icons/fi";
+import { FaLock } from "react-icons/fa";
 
-import { Logo } from 'components/icons';
+import { Logo } from "components/icons";
+import API from "helpers/api";
+import Auth from "helpers/auth";
+
 const SignIn: React.FC = () => {
   return (
     <>
@@ -37,7 +40,7 @@ const SignIn: React.FC = () => {
         <Text color="subtle" my={3}>
           Welcome back, you’ve been missed!
         </Text>
-        <Button my={4} sx={{ fontSize: '13px', px: 8, py: 6 }}>
+        <Button my={4} sx={{ fontSize: "13px", px: 8, py: 6 }}>
           <Icon as={FcGoogle} mr={2} fontSize="20px" />
           Sign In with Google
         </Button>
@@ -45,16 +48,16 @@ const SignIn: React.FC = () => {
         <Flex
           align="center"
           justify="center"
-          width={['300px', '400px', '500px']}
+          width={["300px", "400px", "500px"]}
           color="subtle"
           px={5}
           mt={8}
           sx={{
             height: 0.5,
-            borderColor: '#EDF2F7',
-            borderStyle: 'solid',
-            borderLeftWidth: ['130px', '180px', '220px'],
-            borderRightWidth: ['130px', '180px', '220px'],
+            borderColor: "#EDF2F7",
+            borderStyle: "solid",
+            borderLeftWidth: ["130px", "180px", "220px"],
+            borderRightWidth: ["130px", "180px", "220px"],
           }}
         >
           <Text fontWeight={600} color="subtle">
@@ -70,7 +73,7 @@ const SignIn: React.FC = () => {
           mt={4}
           to="/signup"
         >
-          Dont have an account yet?{' '}
+          Dont have an account yet?{" "}
           <Box as="span" color="black" fontWeight={600}>
             Sign up
           </Box>
@@ -81,20 +84,32 @@ const SignIn: React.FC = () => {
 };
 
 type FormData = {
-  emailId: string;
+  email: string;
   password: string;
+};
+
+type LoginResponse = {
+  status: string;
+  message: string;
 };
 
 const LoginForm: React.FC = () => {
   const { handleSubmit, register, formState } = useForm<FormData>();
-
-  const onSubmit = async ({ emailId, password }: FormData) => {
-    console.log({ emailId, password });
+  const history = useHistory();
+  const onSubmit = async ({ email, password }: FormData) => {
+    const { data } = await API.post<LoginResponse>("/api-login/", {
+      email,
+      password,
+    });
+    if (data.status === "success") {
+      Auth.authenticateUser();
+      history.push("/home");
+    }
   };
 
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
-      <Stack spacing={6} mt={8} width={['300px', '400px', '500px']}>
+      <Stack spacing={6} mt={8} width={["300px", "400px", "500px"]}>
         <InputGroup alignItems="center">
           <InputLeftElement
             height="48px"
@@ -106,7 +121,7 @@ const LoginForm: React.FC = () => {
             placeholder="Your email"
             variant="brand"
             size="lg"
-            {...register('emailId', { required: true })}
+            {...register("email", { required: true })}
           />
         </InputGroup>
 
@@ -122,7 +137,7 @@ const LoginForm: React.FC = () => {
             placeholder="Password"
             variant="brand"
             size="lg"
-            {...register('password', { required: true })}
+            {...register("password", { required: true })}
           />
         </InputGroup>
         <Flex width="100%" justify="flex-end">

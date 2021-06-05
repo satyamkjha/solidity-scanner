@@ -1,42 +1,84 @@
-import React, { lazy, Suspense } from 'react';
+import React, { lazy, Suspense, useEffect } from "react";
 import {
   BrowserRouter as Router,
   Switch,
   Route,
   Redirect,
   RouteProps,
-} from 'react-router-dom';
+} from "react-router-dom";
+import { useToast } from "@chakra-ui/react";
 
-import Layout from 'components/layout';
+import Layout from "components/layout";
 
-import Auth from 'helpers/auth';
+import Auth from "helpers/auth";
+import API from "helpers/api";
 
 //  Auth Pages
 const SignIn = lazy(
-  () => import('pages/Signin' /* webpackChunkName: "Signin" */)
+  () => import("pages/Signin" /* webpackChunkName: "Signin" */)
 );
 
 const SignUp = lazy(
-  () => import('pages/Signup' /* webpackChunkName: "SignUp" */)
+  () => import("pages/Signup" /* webpackChunkName: "SignUp" */)
 );
 
-const ForgotPasword = lazy(
-  () => import('pages/Forgot' /* webpackChunkName: "ForgotPasword" */)
+const Verify = lazy(
+  () => import("pages/Signup/verify" /* webpackChunkName: "Verify" */)
+);
+
+const ForgotPassword = lazy(
+  () => import("pages/Forgot" /* webpackChunkName: "ForgotPassword" */)
 );
 
 // Core Pages
-const Home = lazy(() => import('pages/Home' /* webpackChunkName: "Home" */));
+const Home = lazy(() => import("pages/Home" /* webpackChunkName: "Home" */));
 
 const Projects = lazy(
-  () => import('pages/Projects' /* webpackChunkName: "Projects" */)
+  () => import("pages/Projects" /* webpackChunkName: "Projects" */)
 );
 
 const ProjectPage = lazy(
   () =>
-    import('pages/Projects/ProjectPage' /* webpackChunkName: "ProjectPage" */)
+    import("pages/Projects/ProjectPage" /* webpackChunkName: "ProjectPage" */)
 );
 
 const Routes: React.FC = () => {
+  const toast = useToast();
+
+  useEffect(() => {
+    const interceptor = API.interceptors.response.use(
+      (response) => {
+        return response;
+      },
+      (error) => {
+        // if (error.response.status === 401) {
+        //   logout();
+        // } else
+
+        if (!error.response) {
+          toast({
+            title: `Unexpected Error`,
+            status: "error",
+            isClosable: true,
+            position: "bottom-right",
+          });
+        } else {
+          toast({
+            title: error.response.data.message,
+            status: "error",
+            isClosable: true,
+            position: "bottom-right",
+          });
+        }
+
+        return Promise.reject(error);
+      }
+    );
+    return () => {
+      API.interceptors.response.eject(interceptor);
+    };
+  });
+
   return (
     <Router>
       <Switch>
@@ -46,22 +88,25 @@ const Routes: React.FC = () => {
         <Route exact path="/signup">
           <SignUp />
         </Route>
+        <Route exact path="/verify">
+          <Verify />
+        </Route>
         <Route exact path="/forgot">
-          <ForgotPasword />
+          <ForgotPassword />
         </Route>
 
         <Layout>
           <Suspense fallback="">
             <Switch>
-              <Route exact path="/home">
+              <PrivateRoute exact path="/home">
                 <Home />
-              </Route>
-              <Route exact path="/projects">
+              </PrivateRoute>
+              <PrivateRoute exact path="/projects">
                 <Projects />
-              </Route>
-              <Route exact path="/projects/:id">
+              </PrivateRoute>
+              <PrivateRoute exact path="/projects/:id">
                 <ProjectPage />
-              </Route>
+              </PrivateRoute>
             </Switch>
           </Suspense>
         </Layout>
@@ -80,7 +125,7 @@ const PrivateRoute: React.FC<RouteProps> = ({ children, ...rest }) => {
         ) : (
           <Redirect
             to={{
-              pathname: '/',
+              pathname: "/signin",
               state: { from: location },
             }}
           />

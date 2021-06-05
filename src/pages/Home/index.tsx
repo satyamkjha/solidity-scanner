@@ -1,5 +1,5 @@
-import React from 'react';
-import { useForm } from 'react-hook-form';
+import React from "react";
+import { useForm } from "react-hook-form";
 import {
   Flex,
   Box,
@@ -11,8 +11,9 @@ import {
   Input,
   Icon,
   Progress,
-} from '@chakra-ui/react';
-import { FaFileCode } from 'react-icons/fa';
+} from "@chakra-ui/react";
+import { FaFileCode } from "react-icons/fa";
+import API from "helpers/api";
 
 type FormData = {
   url: string;
@@ -23,39 +24,40 @@ const Home: React.FC = () => {
 
   const onSubmit = async ({ url }: FormData) => {
     console.log({ url });
+    API.post("/test/", { test: "test" });
   };
 
   return (
     <Box
       sx={{
-        width: '100%',
+        width: "100%",
       }}
     >
-      <Flex sx={{ width: '100%', flexDir: ['column', 'column', 'row'] }}>
+      <Flex sx={{ width: "100%", flexDir: ["column", "column", "row"] }}>
         <Flex
           sx={{
-            w: ['100%', '100%', '60%'],
-            flexDir: 'column',
-            alignItems: 'center',
-            bg: 'bg.subtle',
-            borderRadius: '20px',
+            w: ["100%", "100%", "60%"],
+            flexDir: "column",
+            alignItems: "center",
+            bg: "bg.subtle",
+            borderRadius: "20px",
             p: 4,
             mx: [0, 0, 4],
             my: 4,
           }}
         >
-          <Text sx={{ fontSize: '2xl', fontWeight: 600, my: 6 }}>
+          <Text sx={{ fontSize: "2xl", fontWeight: 600, my: 6 }}>
             Load application
           </Text>
 
-          <Text sx={{ color: 'subtle', textAlign: 'center', mb: 6 }}>
+          <Text sx={{ color: "subtle", textAlign: "center", mb: 6 }}>
             Provide a link to Git or Subversion repository, or application on
             Google Play. See link examples and additional restrictions in the
             User Guide (section Starting a scan from UI) available on the User
             Guide page.
           </Text>
-          <form onSubmit={handleSubmit(onSubmit)} style={{ width: '100%' }}>
-            <Stack spacing={6} my={8} width={'100%'}>
+          <form onSubmit={handleSubmit(onSubmit)} style={{ width: "100%" }}>
+            <Stack spacing={6} my={8} width={"100%"}>
               <InputGroup alignItems="center">
                 <InputLeftElement
                   height="48px"
@@ -67,7 +69,7 @@ const Home: React.FC = () => {
                   placeholder="Application link/ Path to directory"
                   variant="brand"
                   size="lg"
-                  {...register('url', { required: true })}
+                  {...register("url", { required: true })}
                 />
               </InputGroup>
 
@@ -84,67 +86,67 @@ const Home: React.FC = () => {
 
         <Box
           sx={{
-            w: ['100%', '100%', '40%'],
+            w: ["100%", "100%", "40%"],
             mx: [0, 0, 4],
             my: 4,
           }}
         >
-          <Text sx={{ color: 'subtle', fontSize: 'sm', px: 4 }}>OVERVIEW</Text>
+          <Text sx={{ color: "subtle", fontSize: "sm", px: 4 }}>OVERVIEW</Text>
           <Box
             sx={{
-              w: '100%',
-              borderRadius: '20px',
-              bg: 'bg.subtle',
+              w: "100%",
+              borderRadius: "20px",
+              bg: "bg.subtle",
               p: 4,
               my: 2,
             }}
           >
-            <Text sx={{ fontSize: '3xl', fontWeight: 600 }}>2345</Text>
-            <Text sx={{ fontSize: 'sm', fontWeight: 600, color: 'gray.600' }}>
+            <Text sx={{ fontSize: "3xl", fontWeight: 600 }}>2345</Text>
+            <Text sx={{ fontSize: "sm", fontWeight: 600, color: "gray.600" }}>
               Lines of code scanned
             </Text>
           </Box>
           <Box
             sx={{
-              w: '100%',
-              borderRadius: '20px',
-              bg: 'bg.subtle',
+              w: "100%",
+              borderRadius: "20px",
+              bg: "bg.subtle",
               p: 4,
               my: 2,
             }}
           >
-            <Text sx={{ fontSize: '3xl', fontWeight: 600 }}>0:00:02</Text>
-            <Text sx={{ fontSize: 'sm', fontWeight: 600, color: 'gray.600' }}>
+            <Text sx={{ fontSize: "3xl", fontWeight: 600 }}>0:00:02</Text>
+            <Text sx={{ fontSize: "sm", fontWeight: 600, color: "gray.600" }}>
               Scan Duration
             </Text>
           </Box>
           <Box
             sx={{
-              w: '100%',
-              borderRadius: '20px',
-              bg: 'bg.subtle',
+              w: "100%",
+              borderRadius: "20px",
+              bg: "bg.subtle",
               p: 4,
               my: 2,
             }}
           >
-            <Text sx={{ fontSize: '3xl', fontWeight: 600 }}>12</Text>
-            <Text sx={{ fontSize: 'sm', fontWeight: 600, color: 'gray.600' }}>
+            <Text sx={{ fontSize: "3xl", fontWeight: 600 }}>12</Text>
+            <Text sx={{ fontSize: "sm", fontWeight: 600, color: "gray.600" }}>
               Number of Scans
             </Text>
           </Box>
           <Box
             sx={{
-              w: '100%',
-              borderRadius: '20px',
+              w: "100%",
+              borderRadius: "20px",
               p: 4,
               my: 2,
             }}
           >
             <Flex
               sx={{
-                w: '100%',
-                justifyContent: 'space-between',
-                fontSize: 'sm',
+                w: "100%",
+                justifyContent: "space-between",
+                fontSize: "sm",
                 fontWeight: 600,
                 px: 4,
                 my: 4,
@@ -161,9 +163,9 @@ const Home: React.FC = () => {
             />
             <Flex
               sx={{
-                w: '100%',
-                justifyContent: 'space-between',
-                fontSize: 'sm',
+                w: "100%",
+                justifyContent: "space-between",
+                fontSize: "sm",
                 fontWeight: 600,
                 px: 4,
                 my: 4,
@@ -177,12 +179,12 @@ const Home: React.FC = () => {
               variant="medium"
               value={1000 / 30}
               size="sm"
-            />{' '}
+            />{" "}
             <Flex
               sx={{
-                w: '100%',
-                justifyContent: 'space-between',
-                fontSize: 'sm',
+                w: "100%",
+                justifyContent: "space-between",
+                fontSize: "sm",
                 fontWeight: 600,
                 px: 4,
                 my: 4,
@@ -199,9 +201,9 @@ const Home: React.FC = () => {
             />
             <Flex
               sx={{
-                w: '100%',
-                justifyContent: 'space-between',
-                fontSize: 'sm',
+                w: "100%",
+                justifyContent: "space-between",
+                fontSize: "sm",
                 fontWeight: 600,
                 px: 4,
                 my: 4,

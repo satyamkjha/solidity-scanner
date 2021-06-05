@@ -5,8 +5,8 @@ class Auth {
    * @param {string} sessionId
    */
   /* eslint-disable no-undef */
-  static authenticateUser(sessionId: string): void {
-    localStorage.setItem('sessionId', sessionId);
+  static authenticateUser(): void {
+    localStorage.setItem("authenticated", "true");
   }
 
   /**
@@ -15,7 +15,7 @@ class Auth {
    * @returns {boolean}
    */
   static isUserAuthenticated(): boolean {
-    return localStorage.getItem('sessionId') !== null;
+    return localStorage.getItem("authenticated") !== null;
   }
 
   /**
@@ -23,7 +23,7 @@ class Auth {
    *
    */
   static deauthenticateUser(): void {
-    localStorage.removeItem('sessionId');
+    localStorage.removeItem("authenticated");
   }
 
   /**
@@ -32,9 +32,9 @@ class Auth {
    * @returns {string}
    */
 
-  static getSessionId(): string | null {
-    return localStorage.getItem('sessionId');
-  }
+  // static getSessionId(): string | null {
+  //   return localStorage.getItem('sessionId');
+  // }
 }
 
 export default Auth;
