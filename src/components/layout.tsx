@@ -26,7 +26,7 @@ const Layout: React.FC = ({ children }) => {
   };
 
   const logout = async () => {
-    await API.get("api-logout", { withCredentials: true });
+    await API.get("api-logout");
     Auth.deauthenticateUser();
     history.push("/signin");
   };

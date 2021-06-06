@@ -33,14 +33,10 @@ const Verify: React.FC = () => {
     const verifyEmail = async () => {
       setLoading(true);
       try {
-        const { data } = await API.post<VerifyResponse>(
-          "/api-verify-email/",
-          {
-            email,
-            token,
-          },
-          { withCredentials: true }
-        );
+        const { data } = await API.post<VerifyResponse>("/api-verify-email/", {
+          email,
+          token,
+        });
         if (data.status === "success") {
           setVerification("success");
           setLoading(false);

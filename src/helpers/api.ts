@@ -1,7 +1,7 @@
 import axios from "axios";
 // import Auth from './auth';
 
-export const API_URL_PROD = `http://ec2-3-21-102-98.us-east-2.compute.amazonaws.com:8000/`;
+export const API_URL_PROD = `http://ec2-3-135-7-17.us-east-2.compute.amazonaws.com:8000/`;
 export const API_URL_STAGING = ``;
 
 const API = axios.create({
@@ -9,6 +9,7 @@ const API = axios.create({
   headers: {
     "Content-Type": "application/json",
   },
+  withCredentials: true,
 });
 
 // API.interceptors.request.use((config: AxiosRequestConfig) => {

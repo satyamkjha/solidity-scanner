@@ -97,11 +97,12 @@ const LoginForm: React.FC = () => {
   const { handleSubmit, register, formState } = useForm<FormData>();
   const history = useHistory();
   const onSubmit = async ({ email, password }: FormData) => {
-    const { data } = await API.post<LoginResponse>("/api-login/", {
+    const res = await API.post<LoginResponse>("/api-login/", {
       email,
       password,
     });
-    if (data.status === "success") {
+    console.log(res);
+    if (res.data.status === "success") {
       Auth.authenticateUser();
       history.push("/home");
     }
