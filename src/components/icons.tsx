@@ -180,7 +180,7 @@ export const SeverityIcon: React.FC<{ size?: number; variant: Severity }> = ({
         cy={4}
         r={4}
         fill={
-          variant === "critical"
+          variant === "high"
             ? "#FF5C00"
             : variant === "medium"
             ? "#FFE600"

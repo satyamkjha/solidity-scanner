@@ -1,4 +1,6 @@
 import React from "react";
+import { useQueryClient } from "react-query";
+import { useHistory } from "react-router";
 import { useForm } from "react-hook-form";
 import {
   Flex,
@@ -16,15 +18,17 @@ import { FaFileCode } from "react-icons/fa";
 import API from "helpers/api";
 
 type FormData = {
-  url: string;
+  project_url: string;
 };
 
 const Home: React.FC = () => {
+  const queryClient = useQueryClient();
   const { handleSubmit, register, formState } = useForm<FormData>();
-
-  const onSubmit = async ({ url }: FormData) => {
-    console.log({ url });
-    API.post("/test/", { test: "test" });
+  const history = useHistory();
+  const onSubmit = async ({ project_url }: FormData) => {
+    await API.post("/api-start-scan/", { project_url });
+    queryClient.invalidateQueries("scans");
+    history.push("/projects");
   };
 
   return (
@@ -65,11 +69,11 @@ const Home: React.FC = () => {
                 />
                 <Input
                   isRequired
-                  type="text"
+                  type="url"
                   placeholder="Application link/ Path to directory"
                   variant="brand"
                   size="lg"
-                  {...register("url", { required: true })}
+                  {...register("project_url", { required: true })}
                 />
               </InputGroup>
 
@@ -152,12 +156,12 @@ const Home: React.FC = () => {
                 my: 4,
               }}
             >
-              <Text>Critical</Text>
+              <Text>High</Text>
               <Text>4</Text>
             </Flex>
             <Progress
               sx={{ my: 2, mx: 4 }}
-              variant="critical"
+              variant="high"
               value={400 / 30}
               size="sm"
             />

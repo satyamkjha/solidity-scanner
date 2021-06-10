@@ -18,6 +18,10 @@ const SignIn = lazy(
   () => import("pages/Signin" /* webpackChunkName: "Signin" */)
 );
 
+const Reset = lazy(
+  () => import("pages/Signin/reset" /* webpackChunkName: "Reset" */)
+);
+
 const SignUp = lazy(
   () => import("pages/Signup" /* webpackChunkName: "SignUp" */)
 );
@@ -85,6 +89,9 @@ const Routes: React.FC = () => {
         <Route exact path="/signin">
           <SignIn />
         </Route>
+        <Route exact path="/reset">
+          <Reset />
+        </Route>
         <Route exact path="/signup">
           <SignUp />
         </Route>
@@ -104,7 +111,7 @@ const Routes: React.FC = () => {
               <PrivateRoute exact path="/projects">
                 <Projects />
               </PrivateRoute>
-              <PrivateRoute exact path="/projects/:id">
+              <PrivateRoute exact path="/projects/:scanId">
                 <ProjectPage />
               </PrivateRoute>
             </Switch>

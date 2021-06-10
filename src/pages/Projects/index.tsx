@@ -1,132 +1,159 @@
-import React from 'react';
-import { Link } from 'react-router-dom';
-import { Flex, Box, Text, Progress } from '@chakra-ui/react';
+import React, { useEffect } from "react";
+import { Link } from "react-router-dom";
+import { Flex, Box, Text, Button, Progress, Spinner } from "@chakra-ui/react";
 
-import { ProjectSummary } from 'common/types';
-import { LogoIcon } from 'components/icons';
-import Score from 'components/score';
+import { LogoIcon } from "components/icons";
+import Score from "components/score";
 
-const projectList: ProjectSummary[] = [
-  {
-    project_name: 'Test dummy project 1',
-    task_status: 'COMPLETED',
-    task_id: '1',
-    last_updated: 3,
-    task_added: 3,
-  },
-  {
-    project_name: 'Test dummy project 2',
-    task_status: 'COMPLETED',
-    task_id: '2',
-    last_updated: 3,
-    task_added: 3,
-  },
-  {
-    project_name: 'Test dummy project 3',
-    task_status: 'COMPLETED',
-    task_id: '3',
-    last_updated: 3,
-    task_added: 3,
-  },
-  {
-    project_name: 'Test dummy project 4',
-    task_status: 'COMPLETED',
-    task_id: '4',
-    last_updated: 3,
-    task_added: 3,
-  },
-  {
-    project_name: 'Test dummy project 5',
-    task_status: 'IN_PROGRESS',
-    task_id: '5',
-    last_updated: 3,
-    task_added: 3,
-  },
-];
+import { Scan } from "common/types";
+import { timeSince } from "common/functions";
+import { useScans } from "hooks/useScans";
 
 const Projects: React.FC = () => {
+  const { data, isLoading, refetch } = useScans();
+  useEffect(() => {
+    let intervalId: NodeJS.Timeout;
+    console.log("in useEffect");
+    const refetchTillScanComplete = () => {
+      if (
+        data &&
+        data.scans.some(({ scan_status }) => scan_status !== "scan_done")
+      ) {
+        intervalId = setInterval(async () => {
+          await refetch();
+          if (
+            data &&
+            data.scans.every(({ scan_status }) => scan_status === "scan_done")
+          ) {
+            clearInterval(intervalId);
+          }
+        }, 3000);
+      }
+    };
+
+    refetchTillScanComplete();
+    return () => {
+      clearInterval(intervalId);
+    };
+  }, [data, refetch]);
+
   return (
     <Box
       sx={{
-        w: '100%',
-        bg: 'bg.subtle',
-        borderRadius: '20px',
+        w: "100%",
+        bg: "bg.subtle",
+        borderRadius: "20px",
         py: 4,
         px: 8,
         mx: [0, 0, 4],
         my: 4,
+        minH: "80vh",
       }}
     >
       <Flex
         sx={{
-          w: '100%',
-          alignItems: 'center',
-          justifyContent: 'space-between',
+          w: "100%",
+          alignItems: "center",
+          justifyContent: "space-between",
           my: 4,
         }}
       >
-        <Text sx={{ color: 'subtle', fontWeight: 600 }}>PROJECTS</Text>
+        <Text sx={{ color: "subtle", fontWeight: 600 }}>PROJECTS</Text>
       </Flex>
-      <Flex
-        sx={{
-          flexWrap: 'wrap',
-          justifyItems: ['center', 'center', 'space-around'],
-        }}
-      >
-        {projectList.map((projectData) => (
-          <ProjectCard projectData={projectData} />
-        ))}
-      </Flex>
+
+      {isLoading ? (
+        <Flex w="100%" h="70vh" alignItems="center" justifyContent="center">
+          <Spinner />
+        </Flex>
+      ) : data?.scans.length === 0 ? (
+        <Flex
+          w="100%"
+          h="70vh"
+          direction="column"
+          justifyItems="center"
+          alignItems="center"
+          justifyContent="center"
+        >
+          <Box mb={2} opacity={0.5}>
+            <LogoIcon size={50} />
+          </Box>
+          <Text fontSize="sm">No projects started yet.</Text>
+          <Link to="/home">
+            <Button variant="brand" width="200px" my={8}>
+              Start a scan
+            </Button>
+          </Link>
+        </Flex>
+      ) : (
+        <Flex
+          sx={{
+            flexWrap: "wrap",
+            justifyItems: ["center", "center", "space-around"],
+          }}
+        >
+          {[...(data?.scans || [])]
+            .sort((scan1, scan2) =>
+              new Date(scan1._updated) < new Date(scan2._updated) ? 1 : -1
+            )
+            .map((scan) => (
+              <ProjectCard key={scan.scan_id} scan={scan} />
+            ))}
+        </Flex>
+      )}
     </Box>
   );
 };
 
-const ProjectCard: React.FC<{ projectData: ProjectSummary }> = ({
-  projectData,
-}) => {
-  const { task_status, project_name, task_id } = projectData;
+const ProjectCard: React.FC<{ scan: Scan }> = ({ scan }) => {
+  const { scan_status, project_url, scan_id, scan_summary, _updated } = scan;
 
   return (
     <Link
-      to={task_status === 'COMPLETED' ? `/projects/${task_id}` : '/projects'}
+      to={scan_status === "scan_done" ? `/projects/${scan_id}` : "/projects"}
     >
       <Flex
         sx={{
-          cursor: task_status === 'COMPLETED' ? 'pointer' : 'not-allowed',
-          flexDir: 'column',
-          justifyContent: 'space-between',
-          w: '320px',
-          h: '230px',
+          cursor: scan_status === "scan_done" ? "pointer" : "not-allowed",
+          flexDir: "column",
+          justifyContent: "space-between",
+          w: "320px",
+          h: "230px",
           my: 4,
           mr: 8,
           p: 5,
           borderRadius: 15,
-          bg: 'white',
-          transition: '0.3s box-shadow',
-          boxShadow: '0px 4px 24px rgba(0, 0, 0, 0.05)',
+          bg: "white",
+          transition: "0.3s box-shadow",
+          boxShadow: "0px 4px 24px rgba(0, 0, 0, 0.05)",
           _hover: {
-            boxShadow: '0px 4px 24px rgba(0, 0, 0, 0.2)',
+            boxShadow: "0px 4px 24px rgba(0, 0, 0, 0.2)",
           },
         }}
       >
         <Box>
-          <Text>{project_name}</Text>
-          <Text sx={{ fontSize: 'sm', color: 'subtle' }}>
-            Last scanned 3 days ago
+          <Text sx={{ w: "100%" }} isTruncated>
+            {project_url}
+          </Text>
+          <Text sx={{ fontSize: "sm", color: "subtle" }}>
+            Last scanned {timeSince(new Date(_updated))}
           </Text>
         </Box>
-        {task_status === 'COMPLETED' ? (
+        {scan_status === "scan_done" ? (
           <>
             <Score score={3.7} />
-            <VulnerabilityDistribution critical={0} medium={1} low={11} />
+            <VulnerabilityDistribution
+              high={scan_summary?.issue_severity_distribution?.high || 0}
+              medium={scan_summary?.issue_severity_distribution?.medium || 0}
+              low={scan_summary?.issue_severity_distribution?.low || 0}
+            />
           </>
         ) : (
           <Box>
             <Flex
               sx={{
-                display: 'inline-flex',
-                bg: 'bg.subtle',
-                alignItems: 'center',
+                display: "inline-flex",
+                bg: "bg.subtle",
+                alignItems: "center",
                 p: 2,
                 mb: 2,
                 borderRadius: 15,
@@ -146,45 +173,43 @@ const ProjectCard: React.FC<{ projectData: ProjectSummary }> = ({
 };
 
 const VulnerabilityDistribution: React.FC<{
-  critical: number;
+  high: number;
   medium: number;
   low: number;
-}> = ({ critical, medium, low }) => {
+}> = ({ high, medium, low }) => {
   return (
     <Flex
       sx={{
-        justifyContent: 'space-between',
-        alignItems: 'center',
+        justifyContent: "space-between",
+        alignItems: "center",
         mx: 2,
       }}
     >
       <Box>
         <Text sx={{ lineHeight: 1.2, fontWeight: 600 }}>
-          {critical + medium + low}
+          {high + medium + low}
         </Text>
-        <Text sx={{ color: 'subtle', fontSize: 'xs' }}>Total</Text>
+        <Text sx={{ color: "subtle", fontSize: "xs" }}>Total</Text>
         <Box
-          sx={{ w: '24px', h: '3px', bgColor: 'gray.400', ml: '1px', mt: 1 }}
+          sx={{ w: "24px", h: "3px", bgColor: "gray.400", ml: "1px", mt: 1 }}
         />
       </Box>
       <Box>
-        <Text sx={{ lineHeight: 1.2, fontWeight: 600 }}>{critical}</Text>
-        <Text sx={{ color: 'subtle', fontSize: 'xs' }}>Critical</Text>
-        <Box
-          sx={{ w: '24px', h: '3px', bgColor: 'critical', ml: '1px', mt: 1 }}
-        />
+        <Text sx={{ lineHeight: 1.2, fontWeight: 600 }}>{high}</Text>
+        <Text sx={{ color: "subtle", fontSize: "xs" }}>High</Text>
+        <Box sx={{ w: "24px", h: "3px", bgColor: "high", ml: "1px", mt: 1 }} />
       </Box>
       <Box>
         <Text sx={{ lineHeight: 1.2, fontWeight: 600 }}>{medium}</Text>
-        <Text sx={{ color: 'subtle', fontSize: 'xs' }}>Medium</Text>
+        <Text sx={{ color: "subtle", fontSize: "xs" }}>Medium</Text>
         <Box
-          sx={{ w: '24px', h: '3px', bgColor: 'medium', ml: '1px', mt: 1 }}
+          sx={{ w: "24px", h: "3px", bgColor: "medium", ml: "1px", mt: 1 }}
         />
       </Box>
       <Box>
         <Text sx={{ lineHeight: 1.2, fontWeight: 600 }}>{low}</Text>
-        <Text sx={{ color: 'subtle', fontSize: 'xs' }}>Low</Text>
-        <Box sx={{ w: '24px', h: '3px', bgColor: 'low', ml: '1px', mt: 1 }} />
+        <Text sx={{ color: "subtle", fontSize: "xs" }}>Low</Text>
+        <Box sx={{ w: "24px", h: "3px", bgColor: "low", ml: "1px", mt: 1 }} />
       </Box>
     </Flex>
   );

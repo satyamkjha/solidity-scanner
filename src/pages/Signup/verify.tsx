@@ -8,16 +8,13 @@ import { Logo, MailSent, MailLock } from "components/icons";
 import API from "helpers/api";
 import Auth from "helpers/auth";
 
+import { AuthResponse } from "common/types";
+
 const CustomFlex = motion(Flex);
 
 function useQuery() {
   return new URLSearchParams(useLocation().search);
 }
-
-type VerifyResponse = {
-  status: string;
-  message: string;
-};
 
 const Verify: React.FC = () => {
   const [loading, setLoading] = useState(false);
@@ -33,7 +30,7 @@ const Verify: React.FC = () => {
     const verifyEmail = async () => {
       setLoading(true);
       try {
-        const { data } = await API.post<VerifyResponse>("/api-verify-email/", {
+        const { data } = await API.post<AuthResponse>("/api-verify-email/", {
           email,
           token,
         });

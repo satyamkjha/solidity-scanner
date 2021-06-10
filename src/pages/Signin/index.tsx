@@ -1,6 +1,6 @@
 import React from "react";
 import { useForm } from "react-hook-form";
-import { Link as RouterLink, useHistory } from "react-router-dom";
+import { Link as RouterLink, useHistory, useLocation } from "react-router-dom";
 import {
   Flex,
   Heading,
@@ -13,17 +13,35 @@ import {
   Input,
   Link,
   Box,
+  useToast,
 } from "@chakra-ui/react";
-
 import { FcGoogle } from "react-icons/fc";
 import { FiAtSign } from "react-icons/fi";
 import { FaLock } from "react-icons/fa";
 
 import { Logo } from "components/icons";
+
 import API from "helpers/api";
 import Auth from "helpers/auth";
+import { AuthResponse } from "common/types";
+
+function useQuery() {
+  return new URLSearchParams(useLocation().search);
+}
 
 const SignIn: React.FC = () => {
+  const query = useQuery();
+  const isPasswordReset = Boolean(query.get("isPasswordReset")?.toString());
+  const toast = useToast();
+  if (isPasswordReset) {
+    toast({
+      title: "Password successfully reset.",
+      description: "Please login with your new password.",
+      status: "success",
+      duration: 9000,
+      isClosable: true,
+    });
+  }
   return (
     <>
       <Flex
@@ -88,21 +106,17 @@ type FormData = {
   password: string;
 };
 
-type LoginResponse = {
-  status: string;
-  message: string;
-};
-
 const LoginForm: React.FC = () => {
   const { handleSubmit, register, formState } = useForm<FormData>();
+
   const history = useHistory();
   const onSubmit = async ({ email, password }: FormData) => {
-    const res = await API.post<LoginResponse>("/api-login/", {
+    const { data } = await API.post<AuthResponse>("/api-login/", {
       email,
       password,
     });
-    console.log(res);
-    if (res.data.status === "success") {
+
+    if (data.status === "success") {
       Auth.authenticateUser();
       history.push("/home");
     }

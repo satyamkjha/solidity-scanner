@@ -22,6 +22,7 @@ import { FaLock, FaUserAlt } from "react-icons/fa";
 import { Logo, MailSent } from "components/icons";
 
 import API from "helpers/api";
+import { AuthResponse } from "common/types";
 
 const CustomFlex = motion(Flex);
 
@@ -116,11 +117,6 @@ type FormData = {
   company_name: string;
 };
 
-type RegisterResponse = {
-  status: string;
-  message: string;
-};
-
 const RegisterForm: React.FC<{
   setRegistered: React.Dispatch<React.SetStateAction<boolean>>;
   setEmail: React.Dispatch<React.SetStateAction<string>>;
@@ -134,7 +130,7 @@ const RegisterForm: React.FC<{
     contact_number,
     first_name,
   }: FormData) => {
-    const { data } = await API.post<RegisterResponse>("/api-register/", {
+    const { data } = await API.post<AuthResponse>("/api-register/", {
       email,
       password1,
       company_name,
