@@ -38,37 +38,6 @@ type FileState = {
   line_nos_end: number[];
 };
 
-const sampleDesc = `
-Solidity source files indicate the versions of the compiler they can be compiled with. pragma solidity ^0.4.17;
-        
-// bad: compiles w 0.4.17 and above pragma solidity 0.4.24;
-// good : compiles w 0.4.24 only
-                    
-It is recommended to follow the latter example, as future compiler
-versions may handle certain language constructions in a way the
-developer did not foresee.`;
-
-const sampleCode = `query HeroComparison($first: Int = 3) {
-  leftComparison: hero(episode: EMPIRE) {
-    ...comparisonFields
-  }
-  rightComparison: hero(episode: JEDI) {
-    ...comparisonFields
-  }
-}
-
-fragment comparisonFields on Character {
-  name
-  friendsConnection(first: $first) {
-    totalCount
-    edges {
-      node {
-        name
-      }
-    }
-  }
-}`;
-
 export const Result: React.FC<{
   scanSummary: ScanSummary;
   scanDetails: ScanDetail[];
@@ -262,20 +231,21 @@ const FileDetails: React.FC<FileDetailsProps> = ({ file }) => {
           </Flex>
         )}
         {data && (
-          <CodeBlock
-            customStyle={{
-              height: "35vh",
-              fontSize: "14px",
-              overflow: "scroll",
-            }}
-            theme={atomOneLight}
-            showLineNumbers
-            text={data.file_contents}
-            highlight={file.line_nos_start
-              .map((number, index) => `${number}-${file.line_nos_end[index]}`)
-              .join(",")}
-            language="js"
-          />
+          <pre>
+            <CodeBlock
+              customStyle={{
+                height: "35vh",
+                fontSize: "14px",
+                overflow: "scroll",
+              }}
+              theme={atomOneLight}
+              showLineNumbers
+              text={data.file_contents}
+              highlight={file.line_nos_start
+                .map((number, index) => `${number}-${file.line_nos_end[index]}`)
+                .join(",")}
+            />
+          </pre>
         )}
       </Box>
       <Box
