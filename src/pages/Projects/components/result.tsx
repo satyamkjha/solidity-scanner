@@ -1,4 +1,5 @@
 import React, { useState, Dispatch, SetStateAction } from "react";
+import { useParams } from "react-router-dom";
 import {
   Flex,
   VStack,
@@ -14,6 +15,7 @@ import {
   TabPanels,
   Tab,
   TabPanel,
+  Spinner,
 } from "@chakra-ui/react";
 import { BiCodeCurly } from "react-icons/bi";
 import { AiOutlineCaretRight } from "react-icons/ai";
@@ -23,6 +25,10 @@ import { CodeBlock, atomOneLight } from "react-code-blocks";
 import VulnerabilityDistribution from "components/vulnDistribution";
 import Score from "components/score";
 import { SeverityIcon } from "components/icons";
+
+import { useFileContent } from "hooks/useFileContent";
+import { useIssueDetail } from "hooks/useIssueDetail";
+
 import { ScanDetail, ScanSummary } from "common/types";
 
 type FileState = {
@@ -228,6 +234,8 @@ const Issues: React.FC<IssuesProps> = ({ issues, file, setFile }) => {
 
 type FileDetailsProps = { file: FileState };
 const FileDetails: React.FC<FileDetailsProps> = ({ file }) => {
+  const { scanId: scan_id } = useParams<{ scanId: string }>();
+  const { data, isLoading } = useFileContent(scan_id, file.file_path);
   return (
     <Box w="100%">
       <Box
@@ -241,17 +249,34 @@ const FileDetails: React.FC<FileDetailsProps> = ({ file }) => {
         <Text text="subtle" fontSize="sm" color="subtle" mb={2}>
           {file.file_path}
         </Text>
-        <CodeBlock
-          customStyle={{
-            height: "35vh",
-            fontSize: "14px",
-            overflow: "scroll",
-          }}
-          theme={atomOneLight}
-          showLineNumbers
-          text={sampleCode}
-          language="graphql"
-        />
+        {isLoading && (
+          <Flex
+            sx={{
+              w: "100%",
+              justifyContent: "center",
+              alignItems: "center",
+              h: "35vh",
+            }}
+          >
+            <Spinner />
+          </Flex>
+        )}
+        {data && (
+          <CodeBlock
+            customStyle={{
+              height: "35vh",
+              fontSize: "14px",
+              overflow: "scroll",
+            }}
+            theme={atomOneLight}
+            showLineNumbers
+            text={data.file_contents}
+            highlight={file.line_nos_start
+              .map((number, index) => `${number}-${file.line_nos_end[index]}`)
+              .join(",")}
+            language="js"
+          />
+        )}
       </Box>
       <Box
         sx={{
@@ -270,6 +295,7 @@ const FileDetails: React.FC<FileDetailsProps> = ({ file }) => {
 };
 
 const IssueDetail: React.FC<{ issue_id: string }> = ({ issue_id }) => {
+  const { data, isLoading } = useIssueDetail("issue_id1");
   return (
     <Tabs size="sm" variant="soft-rounded" colorScheme="green">
       <TabList
@@ -282,20 +308,33 @@ const IssueDetail: React.FC<{ issue_id: string }> = ({ issue_id }) => {
         }}
       >
         <Tab mx={2}>Vulnerability Description</Tab>
-        <Tab mx={2}>Example</Tab>
-        <Tab mx={2}>Recommendations</Tab>
+        <Tab mx={2}>Remediation</Tab>
       </TabList>
-      <TabPanels>
-        <TabPanel sx={{ h: "35vh", w: "100%", overflowY: "scroll" }}>
-          <pre>{sampleDesc}</pre>
-        </TabPanel>
-        <TabPanel sx={{ h: "35vh", w: "100%", overflowY: "scroll" }}>
-          test2
-        </TabPanel>
-        <TabPanel sx={{ h: "35vh", w: "100%", overflowY: "scroll" }}>
-          <pre>{sampleCode}</pre>
-        </TabPanel>
-      </TabPanels>
+      {isLoading && (
+        <Flex
+          sx={{
+            w: "100%",
+            justifyContent: "center",
+            alignItems: "center",
+            h: "35vh",
+          }}
+        >
+          <Spinner />
+        </Flex>
+      )}
+      {data && (
+        <TabPanels>
+          <TabPanel sx={{ h: "35vh", w: "100%", overflowY: "scroll" }}>
+            <Text fontWeight={500} fontSize="md" pb={4}>
+              {data.issue_details.issue_name}
+            </Text>
+            <pre>{data.issue_details.issue_description}</pre>
+          </TabPanel>
+          <TabPanel sx={{ h: "35vh", w: "100%", overflowY: "scroll" }}>
+            <pre>{data.issue_details.issue_remediation}</pre>
+          </TabPanel>
+        </TabPanels>
+      )}
     </Tabs>
   );
 };

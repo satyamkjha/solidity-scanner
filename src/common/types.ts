@@ -61,3 +61,11 @@ export type TemplateDetails = {
   type: string;
   version: string;
 };
+
+export type IssueDetails = {
+  issue_details: {
+    issue_description: string;
+    issue_name: string;
+    issue_remediation: string;
+  };
+};

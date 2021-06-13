@@ -10,7 +10,7 @@ const getScan = async (scan_id: string) => {
 };
 
 export const useScan = (scan_id: string) => {
-  return useQuery<{ scan_report: Scan }>(["scan", scan_id], () =>
+  return useQuery<{ scan_report: Scan }>(["scan_detail", scan_id], () =>
     getScan(scan_id)
   );
 };
