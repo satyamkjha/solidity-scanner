@@ -51,7 +51,9 @@ const SignIn: React.FC = () => {
         mx="auto"
         py={8}
       >
-        <Logo />
+        <RouterLink to="/">
+          <Logo />
+        </RouterLink>
       </Flex>
       <Flex align="center" direction="column" my={8}>
         <Heading fontSize="2xl">Sign In</Heading>

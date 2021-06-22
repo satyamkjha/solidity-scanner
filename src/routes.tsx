@@ -13,6 +13,24 @@ import Layout from "components/layout";
 import Auth from "helpers/auth";
 import API from "helpers/api";
 
+const Landing = lazy(
+  () => import("pages/Landing" /* webpackChunkName: "Landing" */)
+);
+
+const Pricing = lazy(
+  () => import("pages/Pricing" /* webpackChunkName: "Pricing" */)
+);
+
+const TermsOfService = lazy(
+  () => import("pages/Extra/tos" /* webpackChunkName: "TermsOfService" */)
+);
+
+const PrivacyPolicy = lazy(
+  () => import("pages/Extra/privacy" /* webpackChunkName: "PrivacyPolicy" */)
+);
+
+const FAQ = lazy(() => import("pages/FAQ" /* webpackChunkName: "FAQ" */));
+
 //  Auth Pages
 const SignIn = lazy(
   () => import("pages/Signin" /* webpackChunkName: "Signin" */)
@@ -86,6 +104,21 @@ const Routes: React.FC = () => {
   return (
     <Router>
       <Switch>
+        <Route exact path="/">
+          <Landing />
+        </Route>
+        <Route exact path="/pricing">
+          <Pricing />
+        </Route>
+        <Route exact path="/faq">
+          <FAQ />
+        </Route>
+        <Route exact path="/terms-of-service">
+          <TermsOfService />
+        </Route>
+        <Route exact path="/privacy-policy">
+          <PrivacyPolicy />
+        </Route>
         <Route exact path="/signin">
           <SignIn />
         </Route>

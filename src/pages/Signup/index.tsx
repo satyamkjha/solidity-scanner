@@ -38,7 +38,9 @@ const SignUp: React.FC = () => {
         mx="auto"
         py={8}
       >
-        <Logo />
+        <RouterLink to="/">
+          <Logo />
+        </RouterLink>
       </Flex>
       {!registered ? (
         <Flex align="center" direction="column" my={4}>

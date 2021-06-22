@@ -10463,6 +10463,14 @@ react-code-blocks@^0.0.8:
     tslib "^2.0.0"
     typescript-plugin-styled-components "^1.4.4"
 
+react-collapsed@^3.0.2:
+  version "3.0.2"
+  resolved "https://registry.yarnpkg.com/react-collapsed/-/react-collapsed-3.0.2.tgz#94ddf0415e9611003dc863db41417a6aec1898ab"
+  integrity sha512-TecE2O/3b3Szcej2BkWlLIwvLBZBKGzCfcGVDnqrgVsq8SZe9q2uUc9c54qX3ctJ7wbj9yXJd2QgSZwWfRoAvQ==
+  dependencies:
+    raf "^3.4.1"
+    tiny-warning "^1.0.3"
+
 react-cookie@^4.0.3:
   version "4.0.3"
   resolved "https://registry.yarnpkg.com/react-cookie/-/react-cookie-4.0.3.tgz#ba8e5ea0047c916516e1181a3ad394c9b7580b56"

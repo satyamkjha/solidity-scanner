@@ -37,7 +37,7 @@ export const Logo: React.FC = () => {
   return (
     <HStack>
       <LogoIcon size={35} />
-      <Heading fontSize="2xl" fontWeight={700} color="black">
+      <Heading fontSize={["xl", "xl", "2xl"]} fontWeight={700} color="black">
         Solidity Scan
       </Heading>
     </HStack>
@@ -186,6 +186,190 @@ export const SeverityIcon: React.FC<{ size?: number; variant: Severity }> = ({
             ? "#FFE600"
             : "#38CB89"
         }
+      />
+    </svg>
+  );
+};
+
+// Landing Page Icons
+
+export const CreditCard: React.FC<{ size: number }> = ({ size, ...props }) => {
+  return (
+    <svg
+      width={size}
+      height={size}
+      viewBox="0 0 64 64"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+      {...props}
+    >
+      <circle cx={32} cy={32} r={32} fill="#20DAF1" fillOpacity={0.08} />
+      <path
+        d="M43.455 22h-22.91C19.14 22 18 23.12 18 24.5v15c0 1.38 1.14 2.5 2.546 2.5h22.909C44.86 42 46 40.88 46 39.5v-15c0-1.38-1.14-2.5-2.545-2.5zM18 29h28"
+        stroke="#20DAF1"
+        strokeWidth={3}
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+    </svg>
+  );
+};
+
+export const Integration: React.FC<{ size: number }> = ({ size, ...props }) => {
+  return (
+    <svg
+      width={size}
+      height={size}
+      viewBox="0 0 64 64"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+      {...props}
+    >
+      <circle cx={32} cy={32} r={32} fill="#F90" fillOpacity={0.08} />
+      <path
+        d="M41.333 46a4.667 4.667 0 100-9.333 4.667 4.667 0 000 9.333zM22.667 27.333a4.667 4.667 0 100-9.333 4.667 4.667 0 000 9.333zM33.556 22.667h4.666a3.11 3.11 0 013.111 3.11v10.89M22.667 27.333V46"
+        stroke="#F90"
+        strokeWidth={3}
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+    </svg>
+  );
+};
+
+export const Growth: React.FC<{ size: number }> = ({ size, ...props }) => {
+  return (
+    <svg
+      width={size}
+      height={size}
+      viewBox="0 0 64 64"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+      {...props}
+    >
+      <circle cx={32} cy={32} r={32} fill="#FB5392" fillOpacity={0.08} />
+      <path
+        d="M46 25L33.91 36.875l-6.364-6.25L18 40"
+        stroke="#FB5392"
+        strokeWidth={3}
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+      <path
+        d="M38 25h8v8"
+        stroke="#FB5392"
+        strokeWidth={3}
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+    </svg>
+  );
+};
+
+export const User: React.FC<{ size: number }> = ({ size, ...props }) => {
+  return (
+    <svg
+      width={size}
+      height={size}
+      viewBox="0 0 64 64"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+      {...props}
+    >
+      <circle cx={32} cy={32} r={32} fill="#7737FF" fillOpacity={0.08} />
+      <path
+        d="M44 46v-3a6 6 0 00-6-6H26a6 6 0 00-6 6v3M32 30a6 6 0 100-12 6 6 0 000 12z"
+        stroke="#7737FF"
+        strokeWidth={3}
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+    </svg>
+  );
+};
+
+export const File: React.FC<{ size: number }> = ({ size, ...props }) => {
+  return (
+    <svg
+      width={size}
+      height={size}
+      viewBox="0 0 64 64"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+      {...props}
+    >
+      <circle cx={32} cy={32} r={32} fill="#FB5392" fillOpacity={0.08} />
+      <path
+        d="M34.75 18h-11c-.73 0-1.429.295-1.945.82A2.826 2.826 0 0021 20.8v22.4c0 .743.29 1.455.805 1.98.516.525 1.216.82 1.945.82h16.5c.73 0 1.429-.295 1.944-.82A2.826 2.826 0 0043 43.2V26.4L34.75 18z"
+        stroke="#FB5392"
+        strokeWidth={3}
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+      <path
+        d="M34.75 18v8.4H43M37 34H26M37 40H26M29 28h-3"
+        stroke="#FB5392"
+        strokeWidth={3}
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+    </svg>
+  );
+};
+
+export const Work: React.FC<{ size: number }> = ({ size, ...props }) => {
+  return (
+    <svg
+      width={size}
+      height={size}
+      viewBox="0 0 64 64"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+      {...props}
+    >
+      <circle cx={32} cy={32} r={32} fill="#F90" fillOpacity={0.08} />
+      <path
+        d="M43.2 25H20.8c-1.546 0-2.8 1.28-2.8 2.857v14.286C18 43.72 19.254 45 20.8 45h22.4c1.546 0 2.8-1.28 2.8-2.857V27.857C46 26.28 44.746 25 43.2 25z"
+        stroke="#F90"
+        strokeWidth={3}
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+      <path
+        d="M37 44V21.778c0-.737-.263-1.444-.732-1.964-.47-.521-1.105-.814-1.768-.814h-5c-.663 0-1.299.293-1.768.814A2.942 2.942 0 0027 21.778V44"
+        stroke="#F90"
+        strokeWidth={3}
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+    </svg>
+  );
+};
+
+export const Smile: React.FC<{ size: number }> = ({ size, ...props }) => {
+  return (
+    <svg
+      width={size}
+      height={size}
+      viewBox="0 0 64 64"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+      {...props}
+    >
+      <circle cx={32} cy={32} r={32} fill="#69C85A" fillOpacity={0.08} />
+      <path
+        d="M32 46c7.732 0 14-6.268 14-14s-6.268-14-14-14-14 6.268-14 14 6.268 14 14 14z"
+        stroke="#69C85A"
+        strokeWidth={3}
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+      <path
+        d="M26.4 34.8s2.1 3 5.6 3c3.5 0 5.6-3 5.6-3M27.8 27.8h.014M36.2 27.8h.014"
+        stroke="#69C85A"
+        strokeWidth={3}
+        strokeLinecap="round"
+        strokeLinejoin="round"
       />
     </svg>
   );
