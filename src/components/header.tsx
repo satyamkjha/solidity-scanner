@@ -27,7 +27,7 @@ export const Header: React.FC = () => {
           </Link>
         </HStack>
       </Flex>
-      <HStack spacing={4} sx={{ display: ["none", "flex", "flex"] }}>
+      <HStack spacing={4} sx={{ display: ["none", "none", "flex"] }}>
         <RouterLink to="/signin">
           <Button variant="ghost" sx={{ p: 6 }}>
             Sign In
