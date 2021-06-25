@@ -6,8 +6,9 @@ import { FiLogOut } from "react-icons/fi";
 
 import Sidebar from "components/sidebar";
 
-import { SIDEBAR_WIDTH } from "common/constants";
+import { useProfile } from "hooks/useProfile";
 
+import { SIDEBAR_WIDTH } from "common/constants";
 import API from "helpers/api";
 import Auth from "helpers/auth";
 
@@ -15,6 +16,7 @@ const Layout: React.FC = ({ children }) => {
   const [showSidebar, setShowSidebar] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
   const history = useHistory();
+  const { data: profileData } = useProfile();
 
   const handleClickOutside = (e: MouseEvent) => {
     if (ref.current && ref.current.contains(e.target as Node)) {
@@ -98,12 +100,14 @@ const Layout: React.FC = ({ children }) => {
               }}
               onClick={() => setShowSidebar(!showSidebar)}
             />
-            <Text fontWeight={600} fontSize="2xl">
-              <Box as="span" role="img" aria-label="wave" mr={2}>
-                👋
-              </Box>{" "}
-              Hi Shashank!
-            </Text>
+            {profileData && (
+              <Text fontWeight={600} fontSize="2xl">
+                <Box as="span" role="img" aria-label="wave" mr={2}>
+                  👋
+                </Box>{" "}
+                Hi {profileData?.name}
+              </Text>
+            )}
           </Flex>
           <Button
             variant="outline"

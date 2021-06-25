@@ -1,4 +1,12 @@
 export type Severity = "high" | "medium" | "low";
+
+export type Profile = {
+  name: string;
+  email: string;
+  contact_number: string;
+  credits: number;
+  company_name: string;
+};
 export type ProjectSummary = {
   project_name: string;
   task_status: string;
