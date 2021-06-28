@@ -1,25 +1,29 @@
-import React from 'react';
+import React from "react";
 import {
   Flex,
   Box,
   Text,
   CircularProgress,
   CircularProgressLabel,
-} from '@chakra-ui/react';
+} from "@chakra-ui/react";
 
-import { LogoIcon } from 'components/icons';
+import { LogoIcon } from "components/icons";
 
-export type ScoreProps = { score: number };
+export type ScoreProps = { score: string };
 const Score: React.FC<ScoreProps> = ({ score }) => {
   return (
     <Flex
       sx={{
-        alignItems: 'center',
+        alignItems: "center",
       }}
     >
-      <CircularProgress value={(score * 100) / 5} color="brand" capIsRound>
+      <CircularProgress
+        value={(parseInt(score, 10) * 100) / 5}
+        color="brand"
+        capIsRound
+      >
         <CircularProgressLabel
-          sx={{ display: 'flex', justifyContent: 'center' }}
+          sx={{ display: "flex", justifyContent: "center" }}
         >
           <LogoIcon size={20} />
         </CircularProgressLabel>
@@ -27,17 +31,17 @@ const Score: React.FC<ScoreProps> = ({ score }) => {
       <Box mx={2}>
         <Text
           sx={{
-            color: 'accent',
-            fontSize: '2xl',
+            color: "accent",
+            fontSize: "2xl",
             fontWeight: 600,
-            mx: 'auto',
-            textAlign: 'center',
+            mx: "auto",
+            textAlign: "center",
             lineHeight: 1,
           }}
         >
           {score}
         </Text>
-        <Text sx={{ color: 'subtle', fontSize: 'sm', fontWeight: 600 }}>
+        <Text sx={{ color: "subtle", fontSize: "sm", fontWeight: 600 }}>
           Score
         </Text>
       </Box>

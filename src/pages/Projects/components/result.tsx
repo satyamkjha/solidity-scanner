@@ -1,5 +1,6 @@
 import React, { useState, Dispatch, SetStateAction } from "react";
 import { useParams } from "react-router-dom";
+import styled from "@emotion/styled";
 import {
   Flex,
   VStack,
@@ -44,7 +45,8 @@ export const Result: React.FC<{
 }> = ({ scanSummary, scanDetails }) => {
   const [file, setFile] = useState<FileState | null>(null);
   const {
-    issue_severity_distribution: { high, medium, low },
+    issue_severity_distribution: { critical, high, medium, low, informational },
+    score,
   } = scanSummary;
 
   return (
@@ -56,10 +58,16 @@ export const Result: React.FC<{
         alignItems="flex-start"
       >
         <Flex w="100%" justifyContent="space-around">
-          <Box width="60%">
-            <VulnerabilityDistribution high={high} medium={medium} low={low} />
+          <Box width="80%">
+            <VulnerabilityDistribution
+              critical={critical}
+              high={high}
+              medium={medium}
+              low={low}
+              informational={informational}
+            />
           </Box>
-          <Score score={3.7} />
+          {/* <Score score={score} /> */}
         </Flex>
         <Box w="100%" minH="50vh">
           <Issues issues={scanDetails} file={file} setFile={setFile} />
@@ -134,7 +142,16 @@ const Issues: React.FC<IssuesProps> = ({ issues, file, setFile }) => {
                 >
                   <Flex sx={{ alignItems: "center" }}>
                     <SeverityIcon variant="high" />
-                    <Text sx={{ ml: 3, fontWeight: 600, color: "#4E5D78" }}>
+                    <Text
+                      sx={{
+                        ml: 3,
+                        fontWeight: 600,
+                        color: "#4E5D78",
+                        maxW: 250,
+                        fontSize: "sm",
+                      }}
+                      isTruncated
+                    >
                       {template_details.issue_name}
                     </Text>
                   </Flex>
@@ -265,7 +282,7 @@ const FileDetails: React.FC<FileDetailsProps> = ({ file }) => {
 };
 
 const IssueDetail: React.FC<{ issue_id: string }> = ({ issue_id }) => {
-  const { data, isLoading } = useIssueDetail("issue_id1");
+  const { data, isLoading } = useIssueDetail("ERC20_APPROVE");
   return (
     <Tabs size="sm" variant="soft-rounded" colorScheme="green">
       <TabList
@@ -298,15 +315,45 @@ const IssueDetail: React.FC<{ issue_id: string }> = ({ issue_id }) => {
             <Text fontWeight={500} fontSize="md" pb={4}>
               {data.issue_details.issue_name}
             </Text>
-            <pre>{data.issue_details.issue_description}</pre>
+            <DescriptionWrapper>
+              <Box
+                dangerouslySetInnerHTML={{
+                  __html: data.issue_details.issue_description,
+                }}
+              />
+            </DescriptionWrapper>
+            {/* <pre>{data.issue_details.issue_description}</pre> */}
           </TabPanel>
           <TabPanel sx={{ h: "35vh", w: "100%", overflowY: "scroll" }}>
-            <pre>{data.issue_details.issue_remediation}</pre>
+            <DescriptionWrapper>
+              <Box
+                dangerouslySetInnerHTML={{
+                  __html: data.issue_details.issue_remediation,
+                }}
+              />
+            </DescriptionWrapper>
           </TabPanel>
         </TabPanels>
       )}
     </Tabs>
   );
 };
+
+const DescriptionWrapper = styled.div`
+  code {
+    background: #cbd5e0;
+    padding: 2px 4px;
+    border-radius: 5px;
+  }
+
+  a {
+    color: #4299e1;
+    text-decoration: underline;
+    transition: 0.2s color;
+    &:hover {
+      color: #2b6cb0;
+    }
+  }
+`;
 
 export default Result;

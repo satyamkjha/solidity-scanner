@@ -1,11 +1,15 @@
 import React from "react";
 import { Flex, Box, Text } from "@chakra-ui/react";
 
-const VulnerabilityDistribution: React.FC<{
-  high: number;
-  medium: number;
-  low: number;
-}> = ({ high, medium, low }) => {
+import { IssueSeverityDistribution } from "common/types";
+
+const VulnerabilityDistribution: React.FC<IssueSeverityDistribution> = ({
+  critical,
+  high,
+  medium,
+  low,
+  informational,
+}) => {
   return (
     <Flex
       sx={{
@@ -15,13 +19,9 @@ const VulnerabilityDistribution: React.FC<{
       }}
     >
       <Box>
-        <Text sx={{ lineHeight: 1.2, fontWeight: 600 }}>
-          {high + medium + low}
-        </Text>
-        <Text sx={{ color: "subtle", fontSize: "xs" }}>Total</Text>
-        <Box
-          sx={{ w: "24px", h: "3px", bgColor: "gray.400", ml: "1px", mt: 1 }}
-        />
+        <Text sx={{ lineHeight: 1.2, fontWeight: 600 }}>{critical}</Text>
+        <Text sx={{ color: "subtle", fontSize: "xs" }}>Crit</Text>
+        <Box sx={{ w: "24px", h: "3px", bgColor: "high", ml: "1px", mt: 1 }} />
       </Box>
       <Box>
         <Text sx={{ lineHeight: 1.2, fontWeight: 600 }}>{high}</Text>
@@ -30,7 +30,7 @@ const VulnerabilityDistribution: React.FC<{
       </Box>
       <Box>
         <Text sx={{ lineHeight: 1.2, fontWeight: 600 }}>{medium}</Text>
-        <Text sx={{ color: "subtle", fontSize: "xs" }}>Medium</Text>
+        <Text sx={{ color: "subtle", fontSize: "xs" }}>Med</Text>
         <Box
           sx={{ w: "24px", h: "3px", bgColor: "medium", ml: "1px", mt: 1 }}
         />
@@ -39,6 +39,13 @@ const VulnerabilityDistribution: React.FC<{
         <Text sx={{ lineHeight: 1.2, fontWeight: 600 }}>{low}</Text>
         <Text sx={{ color: "subtle", fontSize: "xs" }}>Low</Text>
         <Box sx={{ w: "24px", h: "3px", bgColor: "low", ml: "1px", mt: 1 }} />
+      </Box>
+      <Box>
+        <Text sx={{ lineHeight: 1.2, fontWeight: 600 }}>{informational}</Text>
+        <Text sx={{ color: "subtle", fontSize: "xs" }}>Infor</Text>
+        <Box
+          sx={{ w: "24px", h: "3px", bgColor: "gray.400", ml: "1px", mt: 1 }}
+        />
       </Box>
     </Flex>
   );

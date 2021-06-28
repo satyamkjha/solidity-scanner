@@ -4,6 +4,7 @@ import { Flex, Box, Text, Button, Progress, Spinner } from "@chakra-ui/react";
 
 import { LogoIcon } from "components/icons";
 import Score from "components/score";
+import VulnerabilityDistribution from "components/vulnDistribution";
 
 import { Scan } from "common/types";
 import { timeSince } from "common/functions";
@@ -140,11 +141,17 @@ const ProjectCard: React.FC<{ scan: Scan }> = ({ scan }) => {
         </Box>
         {scan_status === "scan_done" ? (
           <>
-            <Score score={3.7} />
+            <Score score={scan_summary?.score || "0"} />
             <VulnerabilityDistribution
+              critical={
+                scan_summary?.issue_severity_distribution?.critical || 0
+              }
               high={scan_summary?.issue_severity_distribution?.high || 0}
               medium={scan_summary?.issue_severity_distribution?.medium || 0}
               low={scan_summary?.issue_severity_distribution?.low || 0}
+              informational={
+                scan_summary?.issue_severity_distribution?.informational || 0
+              }
             />
           </>
         ) : (
@@ -169,49 +176,6 @@ const ProjectCard: React.FC<{ scan: Scan }> = ({ scan }) => {
         )}
       </Flex>
     </Link>
-  );
-};
-
-const VulnerabilityDistribution: React.FC<{
-  high: number;
-  medium: number;
-  low: number;
-}> = ({ high, medium, low }) => {
-  return (
-    <Flex
-      sx={{
-        justifyContent: "space-between",
-        alignItems: "center",
-        mx: 2,
-      }}
-    >
-      <Box>
-        <Text sx={{ lineHeight: 1.2, fontWeight: 600 }}>
-          {high + medium + low}
-        </Text>
-        <Text sx={{ color: "subtle", fontSize: "xs" }}>Total</Text>
-        <Box
-          sx={{ w: "24px", h: "3px", bgColor: "gray.400", ml: "1px", mt: 1 }}
-        />
-      </Box>
-      <Box>
-        <Text sx={{ lineHeight: 1.2, fontWeight: 600 }}>{high}</Text>
-        <Text sx={{ color: "subtle", fontSize: "xs" }}>High</Text>
-        <Box sx={{ w: "24px", h: "3px", bgColor: "high", ml: "1px", mt: 1 }} />
-      </Box>
-      <Box>
-        <Text sx={{ lineHeight: 1.2, fontWeight: 600 }}>{medium}</Text>
-        <Text sx={{ color: "subtle", fontSize: "xs" }}>Medium</Text>
-        <Box
-          sx={{ w: "24px", h: "3px", bgColor: "medium", ml: "1px", mt: 1 }}
-        />
-      </Box>
-      <Box>
-        <Text sx={{ lineHeight: 1.2, fontWeight: 600 }}>{low}</Text>
-        <Text sx={{ color: "subtle", fontSize: "xs" }}>Low</Text>
-        <Box sx={{ w: "24px", h: "3px", bgColor: "low", ml: "1px", mt: 1 }} />
-      </Box>
-    </Flex>
   );
 };
 

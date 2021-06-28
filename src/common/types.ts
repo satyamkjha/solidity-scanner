@@ -37,6 +37,7 @@ export type Scan = {
 export type ScanSummary = {
   count_files_analyzed: number;
   issue_severity_distribution: IssueSeverityDistribution;
+  score: string;
   issues_count: number;
   lines_analyzed_count: number;
   scan_time_taken: number;
@@ -44,9 +45,11 @@ export type ScanSummary = {
 };
 
 export type IssueSeverityDistribution = {
+  critical: number;
   high: number;
   medium: number;
   low: number;
+  informational: number;
 };
 
 export type ScanDetail = {
