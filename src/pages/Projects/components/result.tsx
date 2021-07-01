@@ -282,7 +282,7 @@ const FileDetails: React.FC<FileDetailsProps> = ({ file }) => {
 };
 
 const IssueDetail: React.FC<{ issue_id: string }> = ({ issue_id }) => {
-  const { data, isLoading } = useIssueDetail("ERC20_APPROVE");
+  const { data, isLoading } = useIssueDetail(issue_id);
   return (
     <Tabs size="sm" variant="soft-rounded" colorScheme="green">
       <TabList
