@@ -1,7 +1,7 @@
 import axios from "axios";
 // import Auth from './auth';
 
-export const API_URL_PROD = `http://solidityscan.com:80/`;
+export const API_URL_PROD = `http://solidityscan.com/`;
 export const API_URL_DEV = `http://127.0.0.1:8000/`;
 
 const API = axios.create({
