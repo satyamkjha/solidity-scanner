@@ -16,7 +16,10 @@ import {
 } from "@chakra-ui/react";
 import { motion } from "framer-motion";
 import { FcGoogle } from "react-icons/fc";
+import { FaPhoneAlt } from "react-icons/fa";
 import { FiAtSign } from "react-icons/fi";
+import { MdWork } from "react-icons/md";
+
 import { FaLock, FaUserAlt } from "react-icons/fa";
 
 import { Logo, MailSent } from "components/icons";
@@ -167,7 +170,7 @@ const RegisterForm: React.FC<{
         <InputGroup alignItems="center">
           <InputLeftElement
             height="48px"
-            children={<Icon as={FiAtSign} color="gray.300" />}
+            children={<Icon as={MdWork} color="gray.300" />}
           />
           <Input
             isRequired
@@ -181,7 +184,7 @@ const RegisterForm: React.FC<{
         <InputGroup alignItems="center">
           <InputLeftElement
             height="48px"
-            children={<Icon as={FiAtSign} color="gray.300" />}
+            children={<Icon as={FaPhoneAlt} color="gray.300" />}
           />
           <Input
             isRequired

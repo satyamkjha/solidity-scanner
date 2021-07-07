@@ -39,11 +39,11 @@ export default function LandingPage() {
         >
           <Box w={["100%", "100%", "50%"]} px={[0, 0, 10]} py={10}>
             <Heading fontSize={["3xl", "4xl"]} mb={8}>
-              Get your Smart Contracts audited by an AI tool.
+              Get you smart contracts audited by a smarter tool
             </Heading>
             <Text fontSize="xl" color="subtle" mb={8}>
-              Change the way you manage your tasks with our revolutionary
-              project management technology.
+              Smart-contract scanning tool built to discover vulnerabilities &
+              mitigate risks in your code.
             </Text>
             <Link to="/signup">
               <Button variant="brand" w="200px">
@@ -58,10 +58,20 @@ export default function LandingPage() {
         {/* Section 2 */}
         <Box w="100%" as="section" sx={{ textAlign: "center" }} my={8}>
           <Heading fontSize="3xl" mb={4}>
-            Get more done in{" "}
-            <Box as="span" sx={{ color: "accent" }}>
-              less time
-            </Box>
+            Scan.{" "}
+            <Box
+              as="span"
+              sx={{
+                background:
+                  "linear-gradient(129.18deg, #52FF00 8.52%, #00EEFD 93.94%)",
+                backgroundClip: "text",
+                WebkitTextFillColor: "transparent",
+                mx: 4,
+              }}
+            >
+              Fix.
+            </Box>{" "}
+            Deploy.
           </Heading>
           <Text color="subtle" fontSize="xl" mb={4}>
             Simple, fast, effortlessly.
@@ -86,7 +96,7 @@ export default function LandingPage() {
             >
               <CreditCard size={48} />{" "}
               <Text fontSize="sm" ml="2" fontWeight={600}>
-                Transparent Pricing
+                Schedule scans
               </Text>
             </Flex>
             <Flex
@@ -112,7 +122,7 @@ export default function LandingPage() {
             >
               <Growth size={48} />{" "}
               <Text fontSize="sm" ml="2" fontWeight={600}>
-                Superb Efficiency
+                100+ vulnerability checks
               </Text>
             </Flex>
           </Flex>
@@ -136,11 +146,13 @@ export default function LandingPage() {
           </Box>
           <Box w={["100%", "100%", "50%"]} p={10}>
             <Heading fontSize="3xl" mb={8}>
-              Revolutionize your workflow
+              See your security posture evolve
             </Heading>
             <Text fontSize="xl" color="subtle" mb={8}>
-              We have designed our app for increased efficiency and it will help
-              you to start getting more things done.
+              Upload specific contract code or provide code repositories link
+              and we’ll take care of the rest. Set triggers to automatically run
+              scans when developers make updates, and see trends on how your
+              code quality has improved.
             </Text>
           </Box>
         </Flex>
@@ -154,7 +166,7 @@ export default function LandingPage() {
         >
           <Box width={["100%", "100%", "50%"]}>
             <Image
-              src="/landing-image02.jpg"
+              src="/landing-image03.jpg"
               alt="Product screenshot"
               mx="auto"
               p={12}
@@ -162,11 +174,12 @@ export default function LandingPage() {
           </Box>
           <Box w={["100%", "100%", "50%"]} p={10}>
             <Heading fontSize="3xl" mb={8}>
-              Revolutionize your workflow
+              Integrate with the services already love
             </Heading>
             <Text fontSize="xl" color="subtle" mb={8}>
-              We have designed our app for increased efficiency and it will help
-              you to start getting more things done.
+              Using Slack/ Microsoft teams or JIRA? Built-in integrations with
+              most of the popular tools to automatically send out alerts or
+              raise issue tickets, so your team sees everything in one place.
             </Text>
           </Box>
         </Flex>
@@ -180,7 +193,7 @@ export default function LandingPage() {
         >
           <Box width={["100%", "100%", "50%"]}>
             <Image
-              src="/landing-image02.jpg"
+              src="/landing-image04.jpg"
               alt="Product screenshot"
               mx="auto"
               p={12}
@@ -188,11 +201,12 @@ export default function LandingPage() {
           </Box>
           <Box w={["100%", "100%", "50%"]} p={10}>
             <Heading fontSize="3xl" mb={8}>
-              Revolutionize your workflow
+              Built by us, for your contracts:
             </Heading>
             <Text fontSize="xl" color="subtle" mb={8}>
-              We have designed our app for increased efficiency and it will help
-              you to start getting more things done.
+              Customise issues, silence specific issues or add your own rules to
+              trigger alerts for. Request for assistance with issue remediation
+              or get a manual audit from a team of experts.
             </Text>
           </Box>
         </Flex>
@@ -200,16 +214,16 @@ export default function LandingPage() {
         {/* Section 4 */}
         <Box w="100%" as="section" sx={{ textAlign: "center" }} my={8}>
           <Heading fontSize="3xl" mb={4}>
-            Fully reinvented smart contract audit system <br /> to help you{" "}
+            Fully automated smart contract audit system <br /> to help{" "}
             <Box as="span" sx={{ color: "accent" }}>
-              secure poducts faster
+              secure your poducts faster
             </Box>
           </Heading>
           <Text color="subtle" fontSize="xl" mb={4}>
             Focus on what matters most, our robots handle the rest ☕️
           </Text>
           <Image
-            src="/landing-image03.jpg"
+            src="/landing-image05.jpg"
             transform="translateX(10%)"
             py={10}
             width={["70vw", "50vw"]}
@@ -219,14 +233,14 @@ export default function LandingPage() {
         {/* Section 5 */}
         <Box w="100%" as="section" sx={{ textAlign: "center" }} my={8}>
           <Heading fontSize="3xl" mb={4}>
-            Completely{" "}
+            Request for a{" "}
             <Box as="span" sx={{ color: "accent" }}>
-              free to use
+              manual audit
             </Box>{" "}
-            <br /> with useful premium features
           </Heading>
           <Text color="subtle" fontSize="xl" mb={4}>
-            Focus on what matters most, our robots handle the rest ☕️
+            Tak to our team of security experts for help on securing your
+            products
           </Text>
           <Flex
             sx={{ w: ["100%", "80%"], flexWrap: "wrap", mx: "auto" }}
@@ -243,9 +257,9 @@ export default function LandingPage() {
             >
               <User size={36} />
               <Heading fontSize="3xl" my={4}>
-                3,000,000+
+                140 +
               </Heading>
-              <Text>Daily active users</Text>
+              <Text>Code patterns detected</Text>
             </Flex>
             <Flex
               sx={{
@@ -258,9 +272,9 @@ export default function LandingPage() {
             >
               <File size={36} />
               <Heading fontSize="3xl" my={4}>
-                10,090,000+
+                16,000,000+
               </Heading>
-              <Text>Tasks completed</Text>
+              <Text>Line of code scanned</Text>
             </Flex>
             <Flex
               sx={{
@@ -273,9 +287,9 @@ export default function LandingPage() {
             >
               <Work size={36} />
               <Heading fontSize="3xl" my={4}>
-                12,500+
+                2.4M $
               </Heading>
-              <Text>Companies using our software</Text>
+              <Text>Worth of contracts secured</Text>
             </Flex>
             <Flex
               sx={{
@@ -314,15 +328,15 @@ export default function LandingPage() {
             }}
           >
             <Heading fontSize="3xl" lineHeight="1.4" mb={4}>
-              Risk-free 30 day trial to
+              Start securing your
               <br />
               <Box as="span" sx={{ color: "accent" }}>
-                level up
+                contracts
               </Box>{" "}
-              your team’s productivity.
+              today
             </Heading>
             <Text color="accent">
-              Get started now and take advantage of our 30 day free trial today.{" "}
+              Have more questions? Talk to our team and get a demo now.
             </Text>
           </Box>
           <Box
