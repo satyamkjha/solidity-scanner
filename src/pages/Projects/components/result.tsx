@@ -17,20 +17,24 @@ import {
   Tab,
   TabPanel,
   Spinner,
+  Button,
+  useToast,
 } from "@chakra-ui/react";
 import { BiCodeCurly } from "react-icons/bi";
-import { AiOutlineCaretRight } from "react-icons/ai";
+import { AiOutlineCaretRight, AiFillGithub } from "react-icons/ai";
 
 import { CodeBlock, atomOneLight } from "react-code-blocks";
 
 import VulnerabilityDistribution from "components/vulnDistribution";
-import Score from "components/score";
 import { SeverityIcon } from "components/icons";
 
 import { useFileContent } from "hooks/useFileContent";
 import { useIssueDetail } from "hooks/useIssueDetail";
 
 import { ScanDetail, ScanSummary } from "common/types";
+import { severityPriority } from "common/values";
+import API from "helpers/api";
+import { useMutation } from "react-query";
 
 type FileState = {
   issue_id: string;
@@ -46,7 +50,6 @@ export const Result: React.FC<{
   const [file, setFile] = useState<FileState | null>(null);
   const {
     issue_severity_distribution: { critical, high, medium, low, informational },
-    score,
   } = scanSummary;
 
   return (
@@ -120,100 +123,111 @@ type IssuesProps = {
 const Issues: React.FC<IssuesProps> = ({ issues, file, setFile }) => {
   return (
     <Accordion allowMultiple>
-      {issues.map(({ issue_id, findings, template_details }) => (
-        <AccordionItem id={issue_id} key={issue_id}>
-          {({ isExpanded }) => (
-            <>
-              <AccordionButton
-                _hover={{
-                  bg: "rgba(47, 248, 107, 0.07)",
-                }}
-                _expanded={{
-                  bg: "rgba(47, 248, 107, 0.1)",
-                }}
-              >
-                <Flex
-                  sx={{
-                    w: "100%",
-                    my: 2,
-                    alignItems: "center",
-                    justifyContent: "space-between",
+      {Array.from(issues)
+        .sort((issue1, issue2) =>
+          severityPriority[issue1.template_details.issue_severity] >
+          severityPriority[issue2.template_details.issue_severity]
+            ? -1
+            : 1
+        )
+        .map(({ issue_id, findings, template_details }) => (
+          <AccordionItem id={issue_id} key={issue_id}>
+            {({ isExpanded }) => (
+              <>
+                <AccordionButton
+                  _hover={{
+                    bg: "rgba(47, 248, 107, 0.07)",
+                  }}
+                  _expanded={{
+                    bg: "rgba(47, 248, 107, 0.1)",
                   }}
                 >
-                  <Flex sx={{ alignItems: "center" }}>
-                    <SeverityIcon variant="high" />
+                  <Flex
+                    sx={{
+                      w: "100%",
+                      my: 2,
+                      alignItems: "center",
+                      justifyContent: "space-between",
+                    }}
+                  >
+                    <Flex sx={{ alignItems: "center" }}>
+                      <SeverityIcon variant={template_details.issue_severity} />
+                      <Text
+                        sx={{
+                          ml: 3,
+                          fontWeight: 600,
+                          color: "#4E5D78",
+                          maxW: 250,
+                          fontSize: "sm",
+                        }}
+                        isTruncated
+                      >
+                        {template_details.issue_name}
+                      </Text>
+                    </Flex>
                     <Text
                       sx={{
-                        ml: 3,
-                        fontWeight: 600,
-                        color: "#4E5D78",
-                        maxW: 250,
+                        mr: 3,
                         fontSize: "sm",
+                        fontWeight: 600,
+                        color: "subtle",
                       }}
-                      isTruncated
                     >
-                      {template_details.issue_name}
+                      {findings.length} file{findings.length > 1 && "s"}
                     </Text>
                   </Flex>
-                  <Text
-                    sx={{
-                      mr: 3,
-                      fontSize: "sm",
-                      fontWeight: 600,
-                      color: "subtle",
-                    }}
-                  >
-                    {findings.length} file{findings.length > 1 && "s"}
-                  </Text>
-                </Flex>
-                <Icon
-                  as={AiOutlineCaretRight}
-                  mr={2}
-                  color="subtle"
-                  fontSize="14px"
-                  transition="transform 0.2s"
-                  transform={isExpanded ? "rotate(90deg)" : "rotate(0deg)"}
-                />
-              </AccordionButton>
-              <AccordionPanel pb={4}>
-                {findings.map(({ file_path, line_nos_start, line_nos_end }) => (
-                  <Box
-                    key={file_path}
-                    id={file_path}
-                    sx={{
-                      cursor: "pointer",
-                      bg:
-                        file_path === file?.file_path ? "gray.200" : "gray.50",
-                      p: 4,
-                      my: 2,
-                      color: "text",
-                      fontSize: "sm",
-                      borderRadius: 15,
-                      transition: "0.2s background",
-                      _hover: {
-                        bg:
-                          file_path === file?.file_path
-                            ? "gray.200"
-                            : "gray.100",
-                      },
-                    }}
-                    onClick={() =>
-                      setFile({
-                        issue_id,
-                        file_path,
-                        line_nos_start,
-                        line_nos_end,
-                      })
-                    }
-                  >
-                    <Text>{file_path}</Text>
-                  </Box>
-                ))}
-              </AccordionPanel>
-            </>
-          )}
-        </AccordionItem>
-      ))}
+                  <Icon
+                    as={AiOutlineCaretRight}
+                    mr={2}
+                    color="subtle"
+                    fontSize="14px"
+                    transition="transform 0.2s"
+                    transform={isExpanded ? "rotate(90deg)" : "rotate(0deg)"}
+                  />
+                </AccordionButton>
+                <AccordionPanel pb={4}>
+                  {findings.map(
+                    ({ file_path, line_nos_start, line_nos_end }) => (
+                      <Box
+                        key={file_path}
+                        id={file_path}
+                        sx={{
+                          cursor: "pointer",
+                          bg:
+                            file_path === file?.file_path
+                              ? "gray.200"
+                              : "gray.50",
+                          p: 4,
+                          my: 2,
+                          color: "text",
+                          fontSize: "sm",
+                          borderRadius: 15,
+                          transition: "0.2s background",
+                          _hover: {
+                            bg:
+                              file_path === file?.file_path
+                                ? "gray.200"
+                                : "gray.100",
+                          },
+                        }}
+                        onClick={() =>
+                          setFile({
+                            issue_id,
+                            file_path,
+                            line_nos_start,
+                            line_nos_end,
+                          })
+                        }
+                      >
+                        <Text>{file_path}</Text>
+                      </Box>
+                    )
+                  )}
+                </AccordionPanel>
+              </>
+            )}
+          </AccordionItem>
+        ))}
     </Accordion>
   );
 };
@@ -221,7 +235,29 @@ const Issues: React.FC<IssuesProps> = ({ issues, file, setFile }) => {
 type FileDetailsProps = { file: FileState };
 const FileDetails: React.FC<FileDetailsProps> = ({ file }) => {
   const { scanId: scan_id } = useParams<{ scanId: string }>();
-  const { data, isLoading } = useFileContent(scan_id, file.file_path);
+  const toast = useToast();
+  const { file_path, issue_id, line_nos_end, line_nos_start } = file;
+  const mutation = useMutation(() =>
+    API.post("/api-create-github-issue/", {
+      scan_id,
+      file_path,
+      issue_id,
+      integration_service: "github",
+    })
+  );
+  const createGithubIssue = async () => {
+    await mutation.mutateAsync();
+    toast({
+      title: "Issue created.",
+      description: "You can find the issue on the github repo.",
+      status: "success",
+      duration: 5000,
+      isClosable: true,
+      position: "bottom-right",
+    });
+  };
+
+  const { data, isLoading } = useFileContent(scan_id, file_path);
   return (
     <Box w="100%">
       <Box
@@ -232,9 +268,33 @@ const FileDetails: React.FC<FileDetailsProps> = ({ file }) => {
           my: 2,
         }}
       >
-        <Text text="subtle" fontSize="sm" color="subtle" mb={2}>
-          {file.file_path}
-        </Text>
+        <Flex
+          sx={{
+            w: "100%",
+            justifyContent: "space-between",
+            alignItems: "center",
+          }}
+        >
+          <Text
+            text="subtle"
+            fontSize="sm"
+            color="subtle"
+            mb={2}
+            maxW="70%"
+            isTruncated
+          >
+            {file_path}
+          </Text>
+          <Button
+            size="sm"
+            isDisabled={mutation.isLoading}
+            isLoading={mutation.isLoading}
+            onClick={createGithubIssue}
+          >
+            <Icon as={AiFillGithub} color="subtle" mr={2} />
+            Create issue
+          </Button>
+        </Flex>
         {isLoading && (
           <Flex
             sx={{
@@ -258,8 +318,8 @@ const FileDetails: React.FC<FileDetailsProps> = ({ file }) => {
               theme={atomOneLight}
               showLineNumbers
               text={data.file_contents}
-              highlight={file.line_nos_start
-                .map((number, index) => `${number}-${file.line_nos_end[index]}`)
+              highlight={line_nos_start
+                .map((number, index) => `${number}-${line_nos_end[index]}`)
                 .join(",")}
             />
           </pre>
@@ -274,7 +334,7 @@ const FileDetails: React.FC<FileDetailsProps> = ({ file }) => {
         }}
       >
         <Box fontSize="sm" mb={2}>
-          <IssueDetail issue_id={file.issue_id} />
+          <IssueDetail issue_id={issue_id} />
         </Box>
       </Box>
     </Box>

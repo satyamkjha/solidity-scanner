@@ -18,17 +18,18 @@ import { HiCheckCircle } from "react-icons/hi";
 export interface PricingCardData {
   features: string[];
   name: string;
-  price: string;
+  price?: string;
 }
 
 interface PricingCardProps extends CardProps {
+  custom?: boolean;
   data: PricingCardData;
-  icon: React.ElementType;
+  icon?: React.ElementType;
   button: React.ReactElement;
 }
 
 export const PricingCard = (props: PricingCardProps) => {
-  const { data, icon, button, ...rest } = props;
+  const { data, icon, button, custom, ...rest } = props;
   const { features, price, name } = data;
   const accentColor = "#19A398";
 
@@ -47,12 +48,16 @@ export const PricingCard = (props: PricingCardProps) => {
         color={accentColor}
         my="8"
       >
-        <Heading size="3xl" fontWeight="inherit" lineHeight="0.9em">
-          {price}
-        </Heading>
-        <Text fontWeight="inherit" fontSize="2xl">
-          / yr
-        </Text>
+        {!custom && (
+          <>
+            <Heading size="3xl" fontWeight="inherit" lineHeight="0.9em">
+              {price}
+            </Heading>
+            <Text fontWeight="inherit" fontSize="2xl">
+              / yr
+            </Text>
+          </>
+        )}
       </Flex>
       <List spacing="4" mb="8" maxW="28ch" mx="auto">
         {features.map((feature, index) => (

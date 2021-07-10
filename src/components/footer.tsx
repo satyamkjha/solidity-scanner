@@ -40,7 +40,7 @@ export const Footer: React.FC = () => {
           >
             Terms of Service
           </Link>
-          <Link
+          {/* <Link
             as={RouterLink}
             to="/faq"
             variant="brand"
@@ -49,7 +49,7 @@ export const Footer: React.FC = () => {
             fontWeight="600"
           >
             FAQ
-          </Link>
+          </Link> */}
           <Link
             as={RouterLink}
             to="/privacy-policy"

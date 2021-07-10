@@ -9,8 +9,6 @@ import {
   ButtonProps,
 } from "@chakra-ui/react";
 
-import { SiHive, SiMarketo, SiMicrosoft } from "react-icons/si";
-
 import Header from "components/header";
 import Footer from "components/footer";
 import { PricingCard } from "./components/pricingCard";
@@ -52,16 +50,14 @@ export default function PricingPage() {
           >
             <PricingCard
               data={{
-                price: "$29",
-                name: "Application UI",
+                price: "$1000",
+                name: "Individual Researcher",
                 features: [
-                  "All application UI components",
-                  "Lifetime access",
-                  "Use on unlimited projects",
-                  "Free Updates",
+                  "Monitor upto 3 projects",
+                  "Unlimited rescans",
+                  "Access to all existing templates",
                 ],
               }}
-              icon={SiMicrosoft}
               button={
                 <ActionButton variant="outline" borderWidth="2px">
                   Buy now
@@ -73,34 +69,32 @@ export default function PricingPage() {
               isPopular
               transform={{ lg: "scale(1.05)" }}
               data={{
-                price: "$49",
-                name: "Bundle",
+                price: "$5000",
+                name: "Enterprise",
                 features: [
-                  "All application UI components",
-                  "Lifetime access",
-                  "Use on unlimited projects",
-                  "Use on unlimited projects",
-                  "Free Updates",
+                  "Monitor upto 10 projects",
+                  "Unlimited rescans",
+                  "Access to all existing templates",
+                  "Integrate with all popular tools and platforms",
+                  "Add custom scan templates and set priorities for issues",
+                  "Access to white glove services from our team",
                 ],
               }}
-              icon={SiHive}
               button={<ActionButton>Buy now</ActionButton>}
             />
             <PricingCard
+              custom
               data={{
-                price: "$29",
-                name: "Marketing UI",
+                name: "Custom Plan",
                 features: [
-                  "All application UI components",
-                  "Lifetime access",
-                  "Use on unlimited projects",
-                  "Free Updates",
+                  "Contact us in more custom features",
+                  "Request our team for a manual audit",
+                  "Get suggestions for issue remediation",
                 ],
               }}
-              icon={SiMarketo}
               button={
                 <ActionButton variant="outline" borderWidth="2px">
-                  Buy now
+                  Contact us
                 </ActionButton>
               }
             />

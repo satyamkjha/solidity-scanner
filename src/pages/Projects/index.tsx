@@ -106,8 +106,8 @@ const Projects: React.FC = () => {
 };
 
 const ProjectCard: React.FC<{ scan: Scan }> = ({ scan }) => {
-  const { scan_status, project_url, scan_id, scan_summary, _updated } = scan;
-
+  const { scan_status, project_name, scan_id, scan_summary, _updated } = scan;
+  console.log(project_name);
   return (
     <Link
       to={scan_status === "scan_done" ? `/projects/${scan_id}` : "/projects"}
@@ -133,7 +133,7 @@ const ProjectCard: React.FC<{ scan: Scan }> = ({ scan }) => {
       >
         <Box>
           <Text sx={{ w: "100%" }} isTruncated>
-            {project_url}
+            {project_name}
           </Text>
           <Text sx={{ fontSize: "sm", color: "subtle" }}>
             Last scanned {timeSince(new Date(_updated))}

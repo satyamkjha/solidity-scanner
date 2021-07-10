@@ -21,6 +21,8 @@ export const theme = extendTheme({
     text: "#323B4B",
     subtle: "#8A94A6",
     border: "#F3F3F3",
+    informational: "#A0AEC0",
+    critical: "#FF5C00",
     high: "#FF5C00",
     medium: "#FFE600",
     low: "#38CB89",
@@ -148,6 +150,16 @@ export const theme = extendTheme({
         low: {
           filledTrack: {
             bgColor: "low",
+          },
+        },
+        critical: {
+          filledTrack: {
+            bgColor: "critical",
+          },
+        },
+        informational: {
+          filledTrack: {
+            bgColor: "gray.300",
           },
         },
       },

@@ -24,9 +24,9 @@ export const Header: React.FC = () => {
           <Link as={RouterLink} to="/pricing" variant="brand" fontWeight="600">
             Pricing
           </Link>
-          <Link as={RouterLink} to="/faq" variant="brand" fontWeight="600">
+          {/* <Link as={RouterLink} to="/faq" variant="brand" fontWeight="600">
             FAQ
-          </Link>
+          </Link> */}
         </HStack>
       </Flex>
       <HStack spacing={4} sx={{ display: ["none", "none", "flex"] }}>

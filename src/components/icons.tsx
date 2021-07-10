@@ -1,6 +1,5 @@
 import React from "react";
-import { HStack, Heading } from "@chakra-ui/react";
-import { Severity } from "common/types";
+import { HStack, Heading, Box } from "@chakra-ui/react";
 
 export const LogoIcon: React.FC<{ size: number }> = ({ size, ...props }) => {
   const gradientId = "_" + Math.random().toString(36).substr(2, 9);
@@ -161,7 +160,7 @@ export const ProjectsMenuIcon: React.FC<{ size: number; active?: boolean }> = ({
   );
 };
 
-export const SeverityIcon: React.FC<{ size?: number; variant: Severity }> = ({
+export const SeverityIcon: React.FC<{ size?: number; variant: string }> = ({
   size = 8,
   variant,
   ...props
@@ -175,18 +174,7 @@ export const SeverityIcon: React.FC<{ size?: number; variant: Severity }> = ({
       xmlns="http://www.w3.org/2000/svg"
       {...props}
     >
-      <circle
-        cx={4}
-        cy={4}
-        r={4}
-        fill={
-          variant === "high"
-            ? "#FF5C00"
-            : variant === "medium"
-            ? "#FFE600"
-            : "#38CB89"
-        }
-      />
+      <Box as="circle" cx={4} cy={4} r={4} fill={variant} />
     </svg>
   );
 };

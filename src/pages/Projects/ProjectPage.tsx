@@ -45,7 +45,7 @@ export const ProjectPage: React.FC = () => {
               sx={{ justifyContent: "space-between", alignItems: "center" }}
             >
               <Text sx={{ fontSize: "xl", fontWeight: 600, ml: 2 }}>
-                {data?.scan_report.project_url}
+                {data?.scan_report.project_name}
               </Text>
               <Link
                 as={RouterLink}

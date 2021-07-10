@@ -13,20 +13,29 @@ import {
   Input,
   Icon,
   Progress,
+  Spinner,
 } from "@chakra-ui/react";
 import { FaFileCode } from "react-icons/fa";
+import { AiOutlineProject } from "react-icons/ai";
+
 import API from "helpers/api";
+import { useOverview } from "hooks/useOverview";
 
 type FormData = {
   project_url: string;
+  project_name: string;
 };
 
 const Home: React.FC = () => {
+  const { data } = useOverview();
   const queryClient = useQueryClient();
   const { handleSubmit, register, formState } = useForm<FormData>();
   const history = useHistory();
-  const onSubmit = async ({ project_url }: FormData) => {
-    await API.post("/api-start-scan/", { project_url });
+  const onSubmit = async ({ project_url, project_name }: FormData) => {
+    await API.post("/api-start-scan/", {
+      project_url,
+      ...(project_name && project_name !== "" && { project_name }),
+    });
     queryClient.invalidateQueries("scans");
     history.push("/projects");
   };
@@ -65,6 +74,18 @@ const Home: React.FC = () => {
               <InputGroup alignItems="center">
                 <InputLeftElement
                   height="48px"
+                  children={<Icon as={AiOutlineProject} color="gray.300" />}
+                />
+                <Input
+                  placeholder="Project name (Optional)"
+                  variant="brand"
+                  size="lg"
+                  {...register("project_name")}
+                />
+              </InputGroup>
+              <InputGroup alignItems="center" mb={4}>
+                <InputLeftElement
+                  height="48px"
                   children={<Icon as={FaFileCode} color="gray.300" />}
                 />
                 <Input
@@ -87,140 +108,165 @@ const Home: React.FC = () => {
             </Stack>
           </form>
         </Flex>
-
-        <Box
-          sx={{
-            w: ["100%", "100%", "40%"],
-            mx: [0, 0, 4],
-            my: 4,
-          }}
-        >
-          <Text sx={{ color: "subtle", fontSize: "sm", px: 4 }}>OVERVIEW</Text>
-          <Box
+        {!data && (
+          <Flex
             sx={{
-              w: "100%",
-              borderRadius: "20px",
-              bg: "bg.subtle",
-              p: 4,
-              my: 2,
+              w: ["100%", "100%", "40%"],
+              mx: [0, 0, 4],
+              my: 4,
+              justifyContent: "center",
             }}
           >
-            <Text sx={{ fontSize: "3xl", fontWeight: 600 }}>2345</Text>
-            <Text sx={{ fontSize: "sm", fontWeight: 600, color: "gray.600" }}>
-              Lines of code scanned
+            <Spinner mt={20} />
+          </Flex>
+        )}
+        {data && (
+          <Box
+            sx={{
+              w: ["100%", "100%", "40%"],
+              mx: [0, 0, 4],
+              my: 4,
+            }}
+          >
+            <Text sx={{ color: "subtle", fontSize: "sm", px: 4 }}>
+              OVERVIEW
             </Text>
-          </Box>
-          <Box
-            sx={{
-              w: "100%",
-              borderRadius: "20px",
-              bg: "bg.subtle",
-              p: 4,
-              my: 2,
-            }}
-          >
-            <Text sx={{ fontSize: "3xl", fontWeight: 600 }}>0:00:02</Text>
-            <Text sx={{ fontSize: "sm", fontWeight: 600, color: "gray.600" }}>
-              Scan Duration
-            </Text>
-          </Box>
-          <Box
-            sx={{
-              w: "100%",
-              borderRadius: "20px",
-              bg: "bg.subtle",
-              p: 4,
-              my: 2,
-            }}
-          >
-            <Text sx={{ fontSize: "3xl", fontWeight: 600 }}>12</Text>
-            <Text sx={{ fontSize: "sm", fontWeight: 600, color: "gray.600" }}>
-              Number of Scans
-            </Text>
-          </Box>
-          <Box
-            sx={{
-              w: "100%",
-              borderRadius: "20px",
-              p: 4,
-              my: 2,
-            }}
-          >
-            <Flex
+            <Box
               sx={{
                 w: "100%",
-                justifyContent: "space-between",
-                fontSize: "sm",
-                fontWeight: 600,
-                px: 4,
-                my: 4,
+                borderRadius: "20px",
+                bg: "bg.subtle",
+                p: 4,
+                my: 2,
               }}
             >
-              <Text>High</Text>
-              <Text>4</Text>
-            </Flex>
-            <Progress
-              sx={{ my: 2, mx: 4 }}
-              variant="high"
-              value={400 / 30}
-              size="sm"
-            />
-            <Flex
+              <Text sx={{ fontSize: "3xl", fontWeight: 600 }}>
+                {data.overview.total_lines_scanner}
+              </Text>
+              <Text sx={{ fontSize: "sm", fontWeight: 600, color: "gray.600" }}>
+                Lines of code scanned
+              </Text>
+            </Box>
+            <Box
               sx={{
                 w: "100%",
-                justifyContent: "space-between",
-                fontSize: "sm",
-                fontWeight: 600,
-                px: 4,
-                my: 4,
+                borderRadius: "20px",
+                bg: "bg.subtle",
+                p: 4,
+                my: 2,
               }}
             >
-              <Text>Medium</Text>
-              <Text>10</Text>
-            </Flex>
-            <Progress
-              sx={{ my: 2, mx: 4 }}
-              variant="medium"
-              value={1000 / 30}
-              size="sm"
-            />{" "}
-            <Flex
+              <Text sx={{ fontSize: "3xl", fontWeight: 600 }}>
+                {data.overview.total_projects_monitored}
+              </Text>
+              <Text sx={{ fontSize: "sm", fontWeight: 600, color: "gray.600" }}>
+                Projects monitored
+              </Text>
+            </Box>
+            {/* <Box
               sx={{
                 w: "100%",
-                justifyContent: "space-between",
-                fontSize: "sm",
-                fontWeight: 600,
-                px: 4,
-                my: 4,
+                borderRadius: "20px",
+                bg: "bg.subtle",
+                p: 4,
+                my: 2,
               }}
             >
-              <Text>Low</Text>
-              <Text>12</Text>
-            </Flex>
-            <Progress
-              sx={{ my: 2, mx: 4 }}
-              variant="low"
-              value={1200 / 30}
-              size="sm"
-            />
-            <Flex
+              <Text sx={{ fontSize: "3xl", fontWeight: 600 }}>
+                {data?.overview.total_issues_open}
+              </Text>
+              <Text sx={{ fontSize: "sm", fontWeight: 600, color: "gray.600" }}>
+                Open Issues
+              </Text>
+            </Box> */}
+            <Box
               sx={{
                 w: "100%",
-                justifyContent: "space-between",
-                fontSize: "sm",
-                fontWeight: 600,
-                px: 4,
-                my: 4,
+                borderRadius: "20px",
+                p: 4,
+                my: 2,
               }}
             >
-              <Text>Total Vulnerabalities Found</Text>
-              <Text>30</Text>
-            </Flex>
+              <VulnerabilityProgress
+                label="Critical"
+                variant="critical"
+                count={data.overview.issue_count_critical}
+                total={data.overview.issue_count_total}
+              />
+              <VulnerabilityProgress
+                label="High"
+                variant="high"
+                count={data.overview.issue_count_high}
+                total={data.overview.issue_count_total}
+              />
+              <VulnerabilityProgress
+                label="Medium"
+                variant="medium"
+                count={data.overview.issue_count_medium}
+                total={data.overview.issue_count_total}
+              />
+              <VulnerabilityProgress
+                label="Low"
+                variant="low"
+                count={data.overview.issue_count_low}
+                total={data.overview.issue_count_total}
+              />
+              <VulnerabilityProgress
+                label="Informational"
+                variant="informational"
+                count={data.overview.issue_count_informational}
+                total={data.overview.issue_count_total}
+              />
+              <Flex
+                sx={{
+                  w: "100%",
+                  justifyContent: "space-between",
+                  fontSize: "md",
+                  fontWeight: 600,
+                  px: 4,
+                  mt: 8,
+                }}
+              >
+                <Text>Total Vulnerabalities Found</Text>
+                <Text>{data.overview.issue_count_total}</Text>
+              </Flex>
+            </Box>
           </Box>
-        </Box>
+        )}
       </Flex>
     </Box>
   );
 };
 
+type VulnerabilityProgressProps = {
+  label: string;
+  count: number;
+  total: number;
+  variant: string;
+};
+const VulnerabilityProgress = (props: VulnerabilityProgressProps) => {
+  return (
+    <>
+      <Flex
+        sx={{
+          w: "100%",
+          justifyContent: "space-between",
+          fontSize: "sm",
+          fontWeight: 600,
+          px: 4,
+          my: 4,
+        }}
+      >
+        <Text>{props.label}</Text>
+        <Text>{props.count}</Text>
+      </Flex>
+      <Progress
+        sx={{ my: 2, mx: 4 }}
+        variant={props.variant}
+        value={(props.count * 100) / props.total}
+        size="sm"
+      />
+    </>
+  );
+};
 export default Home;

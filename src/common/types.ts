@@ -25,6 +25,7 @@ export type AuthResponse = {
 export type Scan = {
   client_id: number;
   project_url: string;
+  project_name: string;
   scan_id: number;
   scan_init_time: string;
   scan_status: string;
@@ -79,4 +80,17 @@ export type IssueDetails = {
     issue_name: string;
     issue_remediation: string;
   };
+};
+
+export type Overview = {
+  issue_count_critical: number;
+  issue_count_high: number;
+  issue_count_informational: number;
+  issue_count_medium: number;
+  issue_count_low: number;
+  issue_count_total: number;
+  total_issues_open: number;
+  total_lines_scanner: number;
+  total_projects_monitored: number;
+  upcoming_scan: string;
 };
