@@ -6,7 +6,7 @@ import {
   Logo,
   HomeMenuIcon,
   ProjectsMenuIcon,
-  IntegrationMenuIcon,
+  // IntegrationMenuIcon,
   Integration,
 } from "components/icons";
 

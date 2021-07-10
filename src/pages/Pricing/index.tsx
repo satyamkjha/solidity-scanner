@@ -7,6 +7,7 @@ import {
   Flex,
   SimpleGrid,
   ButtonProps,
+  Link,
 } from "@chakra-ui/react";
 
 import Header from "components/header";
@@ -93,9 +94,11 @@ export default function PricingPage() {
                 ],
               }}
               button={
-                <ActionButton variant="outline" borderWidth="2px">
-                  Contact us
-                </ActionButton>
+                <Link target="_blank" href="mailto:info@solidityscan.com">
+                  <ActionButton variant="outline" borderWidth="2px">
+                    Contact us
+                  </ActionButton>
+                </Link>
               }
             />
           </SimpleGrid>

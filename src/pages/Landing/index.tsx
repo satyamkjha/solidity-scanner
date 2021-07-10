@@ -9,6 +9,7 @@ import {
   Heading,
   Button,
   Image,
+  Link as ChakraLink,
 } from "@chakra-ui/react";
 
 import {
@@ -23,6 +24,7 @@ import {
 
 import Header from "components/header";
 import Footer from "components/footer";
+import ImageCarousel from "./components/carousel";
 
 export default function LandingPage() {
   return (
@@ -36,6 +38,7 @@ export default function LandingPage() {
           alignItems="center"
           my={[10, 10, 0]}
           textAlign={["center", "left"]}
+          py={36}
         >
           <Box w={["100%", "100%", "50%"]} px={[0, 0, 10]} py={10}>
             <Heading fontSize={["3xl", "4xl"]} mb={8}>
@@ -222,33 +225,78 @@ export default function LandingPage() {
           <Text color="subtle" fontSize="xl" mb={4}>
             Focus on what matters most, our robots handle the rest ☕️
           </Text>
-          <Image
+          <ImageCarousel />
+          {/* <Image
             src="/landing-image05.jpg"
             transform="translateX(10%)"
             py={10}
             width={["70vw", "50vw"]}
             mx="auto"
-          />
+          /> */}
         </Box>
         {/* Section 5 */}
+        <Box
+          sx={{
+            w: "100%",
+            backgroundImage: 'url("/pattern.jpg")',
+            borderRadius: 20,
+            overflow: "hidden",
+            mb: 10,
+          }}
+        >
+          <Flex
+            sx={{
+              px: 10,
+              py: 20,
+              w: "100%",
+              bg: "rgba(82, 255, 0, 0.06)",
+              flexDir: "column",
+              alignItems: "center",
+            }}
+          >
+            <Heading fontSize="3xl" mb={4} textAlign="center">
+              Request for a{" "}
+              <Box as="span" sx={{ color: "accent" }}>
+                manual audit
+              </Box>{" "}
+            </Heading>
+            <Text color="subtle" fontSize="xl" mb={4} textAlign="center">
+              Tak to our team of security experts for help on securing your
+              products
+            </Text>
+            <ChakraLink target="_blank" href="mailto:info@solidityscan.com">
+              <Button variant="brand" mt={8}>
+                Request audit
+              </Button>
+            </ChakraLink>
+          </Flex>
+        </Box>
         <Box w="100%" as="section" sx={{ textAlign: "center" }} my={8}>
-          <Heading fontSize="3xl" mb={4}>
-            Request for a{" "}
-            <Box as="span" sx={{ color: "accent" }}>
-              manual audit
-            </Box>{" "}
-          </Heading>
-          <Text color="subtle" fontSize="xl" mb={4}>
-            Tak to our team of security experts for help on securing your
-            products
-          </Text>
+          <Flex
+            sx={{
+              w: ["100%"],
+              mb: 10,
+              mt: 20,
+              flexDir: "column",
+              alignItems: "center",
+            }}
+            color="#69C85A"
+          >
+            <Smile size={50} />
+            <Heading fontSize="4xl" my={4}>
+              28,50,000,000+
+            </Heading>
+            <Text fontSize="md">
+              Direct financial losses due to hacks and exploits
+            </Text>
+          </Flex>
           <Flex
             sx={{ w: ["100%", "80%"], flexWrap: "wrap", mx: "auto" }}
             py={10}
           >
             <Flex
               sx={{
-                w: ["100%", "100%", "50%"],
+                w: ["100%", "100%", "33%"],
                 mb: 10,
                 flexDir: "column",
                 alignItems: "center",
@@ -263,7 +311,7 @@ export default function LandingPage() {
             </Flex>
             <Flex
               sx={{
-                w: ["100%", "100%", "50%"],
+                w: ["100%", "100%", "33%"],
                 mb: 10,
                 flexDir: "column",
                 alignItems: "center",
@@ -278,7 +326,7 @@ export default function LandingPage() {
             </Flex>
             <Flex
               sx={{
-                w: ["100%", "100%", "50%"],
+                w: ["100%", "100%", "33%"],
                 mb: 10,
                 flexDir: "column",
                 alignItems: "center",
@@ -291,7 +339,7 @@ export default function LandingPage() {
               </Heading>
               <Text>Worth of contracts secured</Text>
             </Flex>
-            <Flex
+            {/* <Flex
               sx={{
                 w: ["100%", "100%", "50%"],
                 mb: 10,
@@ -305,52 +353,64 @@ export default function LandingPage() {
                 275,000+
               </Heading>
               <Text>Positive reviews</Text>
-            </Flex>
+            </Flex> */}
           </Flex>
         </Box>
         {/* Section 6 */}
-        <Flex
+        <Box
           sx={{
             w: "100%",
-            alignItems: "center",
-            px: 10,
-            py: 20,
             backgroundImage: 'url("/pattern.jpg")',
             borderRadius: 20,
             overflow: "hidden",
             mb: 10,
-            flexDir: ["column", "column", "row"],
           }}
         >
-          <Box
+          <Flex
             sx={{
-              w: ["100%", "70%"],
+              px: [2, 2, 10],
+              py: [8, 8, 20],
+              w: "100%",
+              bg: "rgba(82, 255, 0, 0.06)",
+              flexDir: ["column", "column", "row"],
+              alignItems: "center",
             }}
           >
-            <Heading fontSize="3xl" lineHeight="1.4" mb={4}>
-              Start securing your
-              <br />
-              <Box as="span" sx={{ color: "accent" }}>
-                contracts
-              </Box>{" "}
-              today
-            </Heading>
-            <Text color="accent">
-              Have more questions? Talk to our team and get a demo now.
-            </Text>
-          </Box>
-          <Box
-            sx={{
-              w: ["100%", "30%"],
-            }}
-          >
-            <Link to="/signup">
-              <Button variant="brand" w="100%" my={10}>
-                Get Started
-              </Button>
-            </Link>
-          </Box>
-        </Flex>
+            <Box
+              sx={{
+                w: ["100%", "70%"],
+              }}
+            >
+              <Heading
+                fontSize="3xl"
+                lineHeight="1.4"
+                mb={4}
+                textAlign={["center", "center", "left"]}
+              >
+                Start securing your
+                <br />
+                <Box as="span" sx={{ color: "accent" }}>
+                  contracts
+                </Box>{" "}
+                today
+              </Heading>
+              <Text color="accent" textAlign={["center", "center", "left"]}>
+                Have more questions? Talk to our team and get a demo now.
+              </Text>
+            </Box>
+            <Box
+              sx={{
+                w: ["100%", "30%"],
+              }}
+            >
+              <Link to="/signup">
+                <Button variant="brand" w="100%" my={10}>
+                  Get Started
+                </Button>
+              </Link>
+            </Box>
+          </Flex>
+        </Box>
       </Container>
       <Footer />
     </>

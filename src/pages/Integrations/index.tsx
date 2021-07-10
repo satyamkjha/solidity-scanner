@@ -1,6 +1,6 @@
 import React, { ReactElement } from "react";
 import { Flex, Box, Text, Icon, Button, VStack } from "@chakra-ui/react";
-import { SiSlack, SiJira, SiGithub } from "react-icons/si";
+import { SiGithub } from "react-icons/si";
 import { SlackIcon, JiraIcon } from "components/icons";
 
 const Integrations: React.FC = () => {
