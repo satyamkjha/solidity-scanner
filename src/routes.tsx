@@ -64,6 +64,10 @@ const ProjectPage = lazy(
     import("pages/Projects/ProjectPage" /* webpackChunkName: "ProjectPage" */)
 );
 
+const Integrations = lazy(
+  () => import("pages/Integrations" /* webpackChunkName: "ProjectPage" */)
+);
+
 const Routes: React.FC = () => {
   const toast = useToast();
 
@@ -146,6 +150,9 @@ const Routes: React.FC = () => {
               </PrivateRoute>
               <PrivateRoute exact path="/projects/:scanId">
                 <ProjectPage />
+              </PrivateRoute>
+              <PrivateRoute exact path="/integrations">
+                <Integrations />
               </PrivateRoute>
             </Switch>
           </Suspense>

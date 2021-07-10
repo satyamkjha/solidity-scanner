@@ -160,6 +160,37 @@ export const ProjectsMenuIcon: React.FC<{ size: number; active?: boolean }> = ({
   );
 };
 
+export const IntegrationMenuIcon: React.FC<{ size: number; active?: boolean }> =
+  ({ size, active, ...props }) => {
+    const iconColor = active ? "#52FF00" : "#3300FF";
+    return (
+      <svg
+        width={24}
+        height={24}
+        viewBox="0 0 24 24"
+        fill="none"
+        xmlns="http://www.w3.org/2000/svg"
+        {...props}
+      >
+        <path
+          fillRule="evenodd"
+          clipRule="evenodd"
+          d="M16 15.632V12a3 3 0 00-3-3H6.162V5.526A2.526 2.526 0 018.688 3h11.79a2.526 2.526 0 012.526 2.526v7.58l.017 4.68a.5.5 0 01-.854.356l-2.51-2.51H16z"
+          fill={iconColor}
+          style={{ transition: "0.3s fill" }}
+        />
+        <path
+          opacity={0.3}
+          fillRule="evenodd"
+          clipRule="evenodd"
+          d="M1.985 18v-5a2 2 0 012-2h8a2 2 0 012 2v5a2 2 0 01-2 2H4.101l-1.244 1.19a.5.5 0 01-.846-.36v-2.506A2.015 2.015 0 011.985 18zM6.5 14a.5.5 0 000 1h5a.5.5 0 000-1h-5zm3 2a.5.5 0 000 1h2a.5.5 0 000-1h-2z"
+          fill={iconColor}
+          style={{ transition: "0.3s fill" }}
+        />
+      </svg>
+    );
+  };
+
 export const SeverityIcon: React.FC<{ size?: number; variant: string }> = ({
   size = 8,
   variant,
@@ -175,6 +206,81 @@ export const SeverityIcon: React.FC<{ size?: number; variant: string }> = ({
       {...props}
     >
       <Box as="circle" cx={4} cy={4} r={4} fill={variant} />
+    </svg>
+  );
+};
+
+export const SlackIcon: React.FC<{ size: number }> = ({ size }) => {
+  return (
+    <svg
+      height={size}
+      viewBox="0 0 24 24"
+      width={size}
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      <path
+        d="M8.843 12.651a2.521 2.521 0 00-2.521 2.521v6.306a2.521 2.521 0 005.042 0v-6.306a2.523 2.523 0 00-2.521-2.521zM.019 15.172a2.524 2.524 0 005.046 0v-2.523H2.542a2.524 2.524 0 00-2.523 2.523z"
+        fill="#e91e63"
+      />
+      <path
+        d="M8.846-.001h-.003a2.524 2.524 0 000 5.046h2.521V2.517A2.519 2.519 0 008.846-.001zM2.525 11.37h6.318a2.524 2.524 0 000-5.046H2.525a2.524 2.524 0 000 5.046z"
+        fill="#00bcd4"
+      />
+      <path
+        d="M21.457 6.323a2.518 2.518 0 00-2.518 2.518v2.528h2.521a2.524 2.524 0 000-5.046h-.003zm-8.816-3.801v6.325a2.521 2.521 0 005.042 0V2.522a2.521 2.521 0 00-5.042 0z"
+        fill="#4caf50"
+      />
+      <path
+        d="M17.682 21.476a2.521 2.521 0 00-2.521-2.521H12.64v2.523a2.521 2.521 0 005.042-.002zm3.797-8.827h-6.318a2.524 2.524 0 000 5.046h6.318a2.524 2.524 0 000-5.046z"
+        fill="#ff9800"
+      />
+    </svg>
+  );
+};
+
+export const JiraIcon: React.FC<{ size: number }> = ({ size }) => {
+  return (
+    <svg
+      viewBox="2.59 0 214.091 224"
+      // height={2500}
+      // width={2361}
+      height={size}
+      width={(size * 2361) / 2500}
+      xmlns="http://www.w3.org/2000/svg"
+      xmlnsXlink="http://www.w3.org/1999/xlink"
+    >
+      <linearGradient
+        id="prefix__a"
+        gradientTransform="matrix(1 0 0 -1 0 264)"
+        gradientUnits="userSpaceOnUse"
+        x1={102.4}
+        x2={56.15}
+        y1={218.63}
+        y2={172.39}
+      >
+        <stop offset={0.18} stopColor="#0052cc" />
+        <stop offset={1} stopColor="#2684ff" />
+      </linearGradient>
+      <linearGradient
+        id="prefix__b"
+        x1={114.65}
+        x2={160.81}
+        xlinkHref="#prefix__a"
+        y1={85.77}
+        y2={131.92}
+      />
+      <path
+        d="M214.06 105.73L117.67 9.34 108.33 0 35.77 72.56 2.59 105.73a8.89 8.89 0 000 12.54l66.29 66.29L108.33 224l72.55-72.56 1.13-1.12 32.05-32a8.87 8.87 0 000-12.59zm-105.73 39.39L75.21 112l33.12-33.12L141.44 112z"
+        fill="#2684ff"
+      />
+      <path
+        d="M108.33 78.88a55.75 55.75 0 01-.24-78.61L35.62 72.71l39.44 39.44z"
+        fill="url(#prefix__a)"
+      />
+      <path
+        d="M141.53 111.91l-33.2 33.21a55.77 55.77 0 010 78.86L181 151.35z"
+        fill="url(#prefix__b)"
+      />
     </svg>
   );
 };
