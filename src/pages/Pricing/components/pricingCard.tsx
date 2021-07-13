@@ -54,7 +54,7 @@ export const PricingCard = (props: PricingCardProps) => {
               {price}
             </Heading>
             <Text fontWeight="inherit" fontSize="2xl">
-              / yr
+              / mo
             </Text>
           </>
         )}
