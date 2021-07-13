@@ -51,7 +51,7 @@ export default function PricingPage() {
           >
             <PricingCard
               data={{
-                price: "$1000",
+                price: "$99",
                 name: "Individual Researcher",
                 features: [
                   "Monitor upto 3 projects",
@@ -70,7 +70,7 @@ export default function PricingPage() {
               isPopular
               transform={{ lg: "scale(1.05)" }}
               data={{
-                price: "$5000",
+                price: "$499",
                 name: "Enterprise",
                 features: [
                   "Monitor upto 10 projects",
