@@ -94,7 +94,7 @@ export default function PricingPage() {
                 ],
               }}
               button={
-                <Link target="_blank" href="mailto:info@solidityscan.com">
+                <Link target="_blank" href="mailto:info@bitaces.com">
                   <ActionButton variant="outline" borderWidth="2px">
                     Contact us
                   </ActionButton>
