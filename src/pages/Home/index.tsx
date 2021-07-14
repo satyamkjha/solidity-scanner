@@ -64,8 +64,7 @@ const Home: React.FC = () => {
           </Text>
 
           <Text sx={{ color: "subtle", textAlign: "center", mb: 6 }}>
-            Provide a link to Git or Subversion repository, or application on
-            Google Play. See link examples and additional restrictions in the
+            Provide a link to a Git repository. See link examples and additional restrictions in the
             User Guide (section Starting a scan from UI) available on the User
             Guide page.
           </Text>
@@ -91,7 +90,7 @@ const Home: React.FC = () => {
                 <Input
                   isRequired
                   type="url"
-                  placeholder="Application link/ Path to directory"
+                  placeholder="Link to the Github repository"
                   variant="brand"
                   size="lg"
                   {...register("project_url", { required: true })}
