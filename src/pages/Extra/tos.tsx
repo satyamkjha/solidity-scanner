@@ -326,11 +326,11 @@ export default function TOSPage() {
             <li>
               By email:{" "}
               <Link
-                href="mailto:info@solidityscan.com"
+                href="mailto:info@bitaces.com"
                 variant="brand"
                 target="_blank"
               >
-                info@solidityscan.com
+                info@bitaces.com
               </Link>
             </li>
           </ul>
