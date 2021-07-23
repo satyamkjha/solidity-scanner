@@ -177,7 +177,7 @@ export default function LandingPage() {
           </Box>
           <Box w={["100%", "100%", "50%"]} p={10}>
             <Heading fontSize="3xl" mb={8}>
-              Integrate with the services already love
+              Integrate with the services you already love
             </Heading>
             <Text fontSize="xl" color="subtle" mb={8}>
               Using Slack/ Microsoft teams or JIRA? Built-in integrations with
