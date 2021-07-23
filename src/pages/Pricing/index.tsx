@@ -37,7 +37,7 @@ export default function PricingPage() {
             fontWeight={2}
             my={3}
           >
-            Transparent, no-frills and no-hidden, standard pricing for all.
+            Signup for a trial and get two scans free. 
           </Text>
         </Flex>
         <Box as="section" py="14" px={{ base: "4", md: "8" }}>
@@ -61,7 +61,7 @@ export default function PricingPage() {
               }}
               button={
                 <ActionButton variant="outline" borderWidth="2px">
-                  Buy now
+                  Start Free Trial
                 </ActionButton>
               }
             />
@@ -81,7 +81,7 @@ export default function PricingPage() {
                   "Access to white glove services from our team",
                 ],
               }}
-              button={<ActionButton>Buy now</ActionButton>}
+              button={<ActionButton>Start Free Trial</ActionButton>}
             />
             <PricingCard
               custom
