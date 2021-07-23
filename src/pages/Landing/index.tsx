@@ -50,7 +50,7 @@ export default function LandingPage() {
             </Text>
             <Link to="/signup">
               <Button variant="brand" w="200px">
-                Get Started
+                Signup For Free
               </Button>
             </Link>
           </Box>
@@ -405,7 +405,7 @@ export default function LandingPage() {
             >
               <Link to="/signup">
                 <Button variant="brand" w="100%" my={10}>
-                  Get Started
+                  Signup For Free
                 </Button>
               </Link>
             </Box>
