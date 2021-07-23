@@ -37,7 +37,7 @@ export default function PricingPage() {
             fontWeight={2}
             my={3}
           >
-            Transparent, no-frills and no-hidden, standard pricing for all.
+            Signup for a trial and get two scans free. 
           </Text>
         </Flex>
         <Box as="section" py="14" px={{ base: "4", md: "8" }}>
