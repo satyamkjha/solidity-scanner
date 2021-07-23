@@ -1,4 +1,5 @@
 import React from "react";
+import { Link as RouterLink } from "react-router-dom";
 import {
   Box,
   Container,
@@ -37,7 +38,7 @@ export default function PricingPage() {
             fontWeight={2}
             my={3}
           >
-            Signup for a trial and get two scans free. 
+            Signup for a trial and get two scans free.
           </Text>
         </Flex>
         <Box as="section" py="14" px={{ base: "4", md: "8" }}>
@@ -60,9 +61,11 @@ export default function PricingPage() {
                 ],
               }}
               button={
-                <ActionButton variant="outline" borderWidth="2px">
-                  Start Free Trial
-                </ActionButton>
+                <RouterLink to="/signup">
+                  <ActionButton variant="outline" borderWidth="2px">
+                    Start Free Trial
+                  </ActionButton>
+                </RouterLink>
               }
             />
             <PricingCard
@@ -81,7 +84,11 @@ export default function PricingPage() {
                   "Access to white glove services from our team",
                 ],
               }}
-              button={<ActionButton>Start Free Trial</ActionButton>}
+              button={
+                <RouterLink to="/signup">
+                  <ActionButton>Start Free Trial</ActionButton>
+                </RouterLink>
+              }
             />
             <PricingCard
               custom
