@@ -261,8 +261,8 @@ export default function LandingPage() {
               </Box>{" "}
             </Heading>
             <Text color="subtle" fontSize="xl" mb={4} textAlign="center">
-              Tak to our team of security experts for help on securing your
-              products
+              Talk to our team of security experts for help on securing your
+              Smart Contracts
             </Text>
             <ChakraLink target="_blank" href="mailto:info@bitaces.com">
               <Button variant="brand" mt={8}>
