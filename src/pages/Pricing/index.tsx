@@ -61,7 +61,7 @@ export default function PricingPage() {
               }}
               button={
                 <ActionButton variant="outline" borderWidth="2px">
-                  Buy now
+                  Start Free Trial
                 </ActionButton>
               }
             />
@@ -81,7 +81,7 @@ export default function PricingPage() {
                   "Access to white glove services from our team",
                 ],
               }}
-              button={<ActionButton>Buy now</ActionButton>}
+              button={<ActionButton>Start Free Trial</ActionButton>}
             />
             <PricingCard
               custom
