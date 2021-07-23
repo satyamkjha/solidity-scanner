@@ -77,7 +77,7 @@ export default function LandingPage() {
             Deploy.
           </Heading>
           <Text color="subtle" fontSize="xl" mb={4}>
-            Simple, fast, effortlessly.
+            Simple, fast, effortless.
           </Text>
           <Flex
             sx={{
@@ -99,7 +99,7 @@ export default function LandingPage() {
             >
               <CreditCard size={48} />{" "}
               <Text fontSize="sm" ml="2" fontWeight={600}>
-                Schedule scans
+                Schedule Scans
               </Text>
             </Flex>
             <Flex
@@ -125,7 +125,7 @@ export default function LandingPage() {
             >
               <Growth size={48} />{" "}
               <Text fontSize="sm" ml="2" fontWeight={600}>
-                100+ vulnerability checks
+                100+ Vulnerability Checks
               </Text>
             </Flex>
           </Flex>
