@@ -305,7 +305,7 @@ export default function LandingPage() {
             >
               <User size={36} />
               <Heading fontSize="3xl" my={4}>
-                140 +
+                100 +
               </Heading>
               <Text>Code patterns detected</Text>
             </Flex>
