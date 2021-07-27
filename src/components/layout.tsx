@@ -106,6 +106,9 @@ const Layout: React.FC = ({ children }) => {
                   👋
                 </Box>{" "}
                 Hi {profileData?.name}
+                <Box as="span" ml={4} color="subtle" fontSize="sm">
+                  CREDITS: {profileData?.credits}
+                </Box>
               </Text>
             )}
           </Flex>
