@@ -26,6 +26,7 @@ export type Scan = {
   client_id: number;
   project_url: string;
   project_name: string;
+  scan_type: string;
   scan_id: number;
   scan_init_time: string;
   scan_status: string;

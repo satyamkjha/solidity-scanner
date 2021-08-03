@@ -96,6 +96,7 @@ const Projects: React.FC = () => {
             .sort((scan1, scan2) =>
               new Date(scan1._updated) < new Date(scan2._updated) ? 1 : -1
             )
+            .filter(({ scan_type }) => scan_type === "project")
             .map((scan) => (
               <ProjectCard key={scan.scan_id} scan={scan} />
             ))}
