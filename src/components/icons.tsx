@@ -287,24 +287,407 @@ export const JiraIcon: React.FC<{ size: number }> = ({ size }) => {
 
 // Landing Page Icons
 
-export const CreditCard: React.FC<{ size: number }> = ({ size, ...props }) => {
+export const ScheduleScan: React.FC<{ size: number }> = ({
+  size,
+  ...props
+}) => {
   return (
     <svg
       width={size}
       height={size}
-      viewBox="0 0 64 64"
+      viewBox="0 0 140 140"
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
       {...props}
     >
-      <circle cx={32} cy={32} r={32} fill="#20DAF1" fillOpacity={0.08} />
+      <circle cx={70} cy={70} r={70} fill="#EDFCFE" />
       <path
-        d="M43.455 22h-22.91C19.14 22 18 23.12 18 24.5v15c0 1.38 1.14 2.5 2.546 2.5h22.909C44.86 42 46 40.88 46 39.5v-15c0-1.38-1.14-2.5-2.545-2.5zM18 29h28"
-        stroke="#20DAF1"
-        strokeWidth={3}
+        d="M32.392 71.569h76.582V42a8 8 0 00-8-8H40.392a8 8 0 00-8 8V71.57z"
+        fill="#20DAF1"
+      />
+      <g filter="url(#prefix__filter0_dss)">
+        <path
+          d="M32.392 71.569h76.582v31.013a8 8 0 01-8 8H40.392a8 8 0 01-8-8V71.569z"
+          fill="#fff"
+        />
+        <path
+          d="M32.892 72.069h75.582v30.513a7.5 7.5 0 01-7.5 7.5H40.392a7.5 7.5 0 01-7.5-7.5V72.069z"
+          stroke="#EFEFEF"
+        />
+      </g>
+      <path
+        d="M32.392 71.569h76.582l5.77-16.865c1.776-5.191-2.082-10.59-7.569-10.59H34.192c-5.487 0-9.345 5.399-7.57 10.59l5.77 16.865z"
+        fill="#E3F0F1"
+      />
+      <path
+        d="M57.996 64.785a20.298 20.298 0 015.86-.879c5.029 0 7.543 1.905 7.543 5.713 0 2.305-.918 3.892-2.754 4.761 1.836.83 2.754 2.417 2.754 4.76 0 4.005-2.514 6.007-7.544 6.007-1.953 0-3.906-.293-5.859-.88v-2.343c1.953.683 3.906 1.025 5.86 1.025 3.222 0 4.833-1.27 4.833-3.808 0-2.442-1.23-3.662-3.691-3.662h-4.805V73.28h4.761c2.49 0 3.736-1.22 3.736-3.662 0-2.344-1.612-3.515-4.834-3.515-1.954 0-3.907.341-5.86 1.025v-2.344zM77.04 85V66.675h-2.197V65.37l4.907-1.465V85h-2.71z"
+        fill="#304B4F"
+      />
+      <path
+        d="M57.996 64.785l-.144-.479-.356.107v.372h.5zm10.65 9.595l-.214-.452-.977.462.984.446.207-.456zm-10.65 9.888h-.5v.372l.356.107.144-.48zm0-2.344l.165-.472-.665-.233v.705h.5zm2.197-6.445h-.5v.5h.5v-.5zm0-2.198v-.5h-.5v.5h.5zm-2.197-6.152h-.5v.705l.665-.233-.165-.472zm.144-1.865a19.799 19.799 0 015.715-.858v-1a20.8 20.8 0 00-6.003.9l.288.958zm5.715-.858c2.466 0 4.224.47 5.357 1.327 1.106.838 1.687 2.102 1.687 3.886h1c0-2.024-.675-3.616-2.084-4.683-1.382-1.047-3.396-1.53-5.96-1.53v1zM70.9 69.62c0 1.087-.216 1.969-.62 2.669-.404.696-1.01 1.244-1.847 1.64l.427.904c1-.473 1.77-1.153 2.285-2.044.513-.886.755-1.95.755-3.169h-1zm-2.46 5.217c.833.376 1.438.913 1.84 1.607.404.7.62 1.59.62 2.698h1c0-1.236-.242-2.31-.755-3.199-.517-.892-1.29-1.564-2.293-2.018l-.412.912zm2.46 4.305c0 1.89-.588 3.23-1.697 4.113-1.131.9-2.885 1.393-5.346 1.393v1c2.567 0 4.585-.51 5.969-1.61 1.405-1.12 2.074-2.783 2.074-4.896h-1zm-7.044 5.506c-1.902 0-3.807-.286-5.715-.858l-.288.958c1.998.599 4 .9 6.004.9v-1zm-5.359-.38v-2.343h-1v2.344h1zm-.665-1.871c2.003.7 4.012 1.053 6.024 1.053v-1c-1.893 0-3.79-.33-5.694-.997l-.33.944zm6.024 1.053c1.664 0 3.004-.325 3.935-1.06.955-.751 1.4-1.866 1.4-3.248h-1c0 1.156-.361 1.946-1.019 2.463-.68.536-1.756.845-3.316.845v1zm5.334-4.308c0-1.299-.327-2.365-1.07-3.102-.743-.736-1.814-1.06-3.121-1.06v1c1.154 0 1.928.286 2.416.77.488.484.775 1.25.775 2.392h1zm-4.191-4.162h-4.805v1h4.805v-1zm-4.305.5V73.28h-1v2.198h1zm-.5-1.698h4.761v-1h-4.76v1zm4.761 0c1.32 0 2.402-.323 3.152-1.058.751-.737 1.084-1.803 1.084-3.104h-1c0 1.141-.29 1.906-.784 2.39-.496.486-1.281.772-2.452.772v1zm4.236-4.162c0-1.3-.456-2.343-1.415-3.04-.93-.677-2.263-.975-3.92-.975v1c1.566 0 2.65.287 3.332.783.652.474 1.002 1.188 1.002 2.232h1zm-5.334-4.015c-2.013 0-4.022.352-6.025 1.053l.33.944c1.904-.666 3.8-.997 5.694-.997v-1zm-5.36 1.525v-2.344h-1v2.344h1zM77.04 85h-.5v.5h.5V85zm0-18.325h.5v-.5h-.5v.5zm-2.197 0h-.5v.5h.5v-.5zm0-1.304l-.143-.479-.357.107v.372h.5zm4.907-1.465h.5v-.67l-.643.191.143.48zm0 21.094v.5h.5V85h-.5zm-2.21 0V66.675h-1V85h1zm-.5-18.825h-2.197v1h2.197v-1zm-1.697.5V65.37h-1v1.304h1zm-.357-.825l4.907-1.465-.286-.958-4.907 1.465.286.958zm4.264-1.944V85h1V63.906h-1zm.5 20.594h-2.71v1h2.71v-1z"
+        fill="#fff"
+      />
+      <circle cx={53.344} cy={39.502} r={2.167} fill="#fff" />
+      <circle cx={90.912} cy={39.502} r={2.167} fill="#fff" />
+      <circle cx={96.155} cy={101.155} r={18.155} fill="#fff" />
+      <circle
+        cx={96.155}
+        cy={101.155}
+        r={18.155}
+        fill="url(#prefix__paint0_linear)"
+      />
+      <path
+        d="M102 97l-8.25 9-3.75-4.091"
+        stroke="#fff"
+        strokeWidth={2.5}
         strokeLinecap="round"
         strokeLinejoin="round"
       />
+      <defs>
+        <linearGradient
+          id="prefix__paint0_linear"
+          x1={85.781}
+          y1={83}
+          x2={104.8}
+          y2={116.717}
+          gradientUnits="userSpaceOnUse"
+        >
+          <stop stopColor="#20DAF1" />
+          <stop offset={1} stopColor="#83F1FF" />
+        </linearGradient>
+        <filter
+          id="prefix__filter0_dss"
+          x={28.392}
+          y={71.569}
+          width={84.582}
+          height={47.014}
+          filterUnits="userSpaceOnUse"
+          colorInterpolationFilters="sRGB"
+        >
+          <feFlood floodOpacity={0} result="BackgroundImageFix" />
+          <feColorMatrix
+            in="SourceAlpha"
+            values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0"
+            result="hardAlpha"
+          />
+          <feOffset dy={4} />
+          <feGaussianBlur stdDeviation={2} />
+          <feComposite in2="hardAlpha" operator="out" />
+          <feColorMatrix values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.25 0" />
+          <feBlend in2="BackgroundImageFix" result="effect1_dropShadow" />
+          <feBlend in="SourceGraphic" in2="effect1_dropShadow" result="shape" />
+        </filter>
+      </defs>
+    </svg>
+  );
+};
+
+export const VulnCheck: React.FC<{ size: number }> = ({ size, ...props }) => {
+  return (
+    <svg
+      width={size}
+      height={size}
+      viewBox="0 0 140 140"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+      {...props}
+    >
+      <circle cx={70} cy={70} r={70} fill="#FFF7EB" />
+      <g filter="url(#prefix__filter0_dvc)">
+        <path fill="#E3E3E3" d="M64.686 103.726h14.647v14.647H64.686z" />
+      </g>
+      <g filter="url(#prefix__filter1_d)">
+        <path
+          d="M27.255 39a2 2 0 012-2h85.51a2 2 0 012 2v53.334h-89.51V39z"
+          fill="#172D45"
+        />
+      </g>
+      <g filter="url(#prefix__filter2_d)">
+        <path
+          d="M27.255 101.726a2 2 0 002 2h85.51a2 2 0 002-2v-9.392h-89.51v9.392z"
+          fill="#E3E3E3"
+        />
+      </g>
+      <path fill="#fff" d="M30.51 40.255h83v48.824h-83z" />
+      <g filter="url(#prefix__filter3_d)">
+        <rect x={42} y={118} width={59} height={2} rx={1} fill="#E3E3E3" />
+      </g>
+      <circle cx={72.01} cy={98.03} r={2.441} fill="#fff" />
+      <g filter="url(#prefix__filter4_d)">
+        <path fill="#fff" d="M30.51 40.255h83v8.137h-83z" />
+      </g>
+      <circle cx={36.613} cy={44.324} r={1.221} fill="#FC724E" />
+      <circle cx={40.681} cy={44.324} r={1.221} fill="#FECB00" />
+      <circle cx={44.75} cy={44.324} r={1.221} fill="#7ED072" />
+      <g filter="url(#prefix__filter5_d)">
+        <path fill="#EFEFEF" d="M30.51 48.392h22.784v40.686H30.51z" />
+      </g>
+      <circle cx={41.902} cy={57.343} r={2.441} fill="#fff" />
+      <rect
+        x={35.392}
+        y={61.412}
+        width={13.02}
+        height={1.139}
+        rx={0.57}
+        fill="#fff"
+      />
+      <rect
+        x={35.392}
+        y={64.667}
+        width={13.02}
+        height={1.139}
+        rx={0.57}
+        fill="#fff"
+      />
+      <rect
+        x={35.392}
+        y={67.922}
+        width={13.02}
+        height={1.139}
+        rx={0.57}
+        fill="#fff"
+      />
+      <rect
+        x={35.392}
+        y={71.177}
+        width={13.02}
+        height={1.139}
+        rx={0.57}
+        fill="#fff"
+      />
+      <rect
+        x={35.392}
+        y={74.431}
+        width={13.02}
+        height={1.139}
+        rx={0.57}
+        fill="#fff"
+      />
+      <rect
+        x={39}
+        y={77.686}
+        width={6.51}
+        height={1.139}
+        rx={0.57}
+        fill="#fff"
+      />
+      <rect
+        x={59.804}
+        y={71.177}
+        width={4.882}
+        height={11.392}
+        rx={1}
+        fill="#EFEFEF"
+      />
+      <path fill="#DADADA" d="M59.804 79.314h4.882v3.255h-4.882z" />
+      <rect
+        x={69.568}
+        y={66.294}
+        width={4.882}
+        height={16.274}
+        rx={1}
+        fill="#EFEFEF"
+      />
+      <path fill="#DADADA" d="M69.568 77.686h4.882v4.882h-4.882z" />
+      <rect
+        x={80.961}
+        y={71.177}
+        width={4.882}
+        height={11.392}
+        rx={1}
+        fill="#EFEFEF"
+      />
+      <path fill="#DADADA" d="M80.961 79.314h4.882v3.255h-4.882z" />
+      <rect
+        x={92.353}
+        y={58.157}
+        width={4.882}
+        height={24.412}
+        rx={1}
+        fill="#EFEFEF"
+      />
+      <path fill="#DADADA" d="M92.353 72.804h4.882v9.765h-4.882z" />
+      <rect
+        x={103.746}
+        y={66.294}
+        width={4.882}
+        height={16.274}
+        rx={1}
+        fill="#EFEFEF"
+      />
+      <path fill="#DADADA" d="M103.746 79.314h4.882v3.255h-4.882z" />
+      <path
+        d="M61.432 77.781c1.168 1.315 4.486 2.998 8.412-.789 4.908-4.733 4.908-6.311 7.712-5.522 2.804 1.578 3.505 3.155 6.31 3.155 3.993 0 5.608-.788 7.711-5.522l1.402-4.734c.234-1.051 1.543-2.84 4.908-1.578 3.365 1.263 7.477-4.733 9.113-7.889"
+        stroke="#F90"
+        strokeWidth={2}
+        strokeLinecap="round"
+      />
+      <circle cx={110.155} cy={98.155} r={18.155} fill="#fff" />
+      <circle
+        cx={110.155}
+        cy={98.155}
+        r={18.155}
+        fill="url(#prefix__paint0_linear)"
+      />
+      <path
+        d="M117.555 92l-5.871 8.453-4.423-3.127-4.634 6.674"
+        stroke="#fff"
+        strokeWidth={2}
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+      <path
+        d="M112.596 92.873l4.959-.873.873 4.958"
+        stroke="#fff"
+        strokeWidth={2}
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+      <defs>
+        <filter
+          id="prefix__filter0_dvc"
+          x={60.687}
+          y={100.726}
+          width={22.647}
+          height={22.647}
+          filterUnits="userSpaceOnUse"
+          colorInterpolationFilters="sRGB"
+        >
+          <feFlood floodOpacity={0} result="BackgroundImageFix" />
+          <feColorMatrix
+            in="SourceAlpha"
+            values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0"
+            result="hardAlpha"
+          />
+          <feOffset dy={1} />
+          <feGaussianBlur stdDeviation={2} />
+          <feComposite in2="hardAlpha" operator="out" />
+          <feColorMatrix values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.25 0" />
+          <feBlend in2="BackgroundImageFix" result="effect1_dropShadow" />
+          <feBlend in="SourceGraphic" in2="effect1_dropShadow" result="shape" />
+        </filter>
+        <filter
+          id="prefix__filter1_d"
+          x={23.255}
+          y={34}
+          width={97.51}
+          height={63.333}
+          filterUnits="userSpaceOnUse"
+          colorInterpolationFilters="sRGB"
+        >
+          <feFlood floodOpacity={0} result="BackgroundImageFix" />
+          <feColorMatrix
+            in="SourceAlpha"
+            values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0"
+            result="hardAlpha"
+          />
+          <feOffset dy={1} />
+          <feGaussianBlur stdDeviation={2} />
+          <feComposite in2="hardAlpha" operator="out" />
+          <feColorMatrix values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.25 0" />
+          <feBlend in2="BackgroundImageFix" result="effect1_dropShadow" />
+          <feBlend in="SourceGraphic" in2="effect1_dropShadow" result="shape" />
+        </filter>
+        <filter
+          id="prefix__filter2_d"
+          x={23.255}
+          y={89.334}
+          width={97.51}
+          height={19.392}
+          filterUnits="userSpaceOnUse"
+          colorInterpolationFilters="sRGB"
+        >
+          <feFlood floodOpacity={0} result="BackgroundImageFix" />
+          <feColorMatrix
+            in="SourceAlpha"
+            values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0"
+            result="hardAlpha"
+          />
+          <feOffset dy={1} />
+          <feGaussianBlur stdDeviation={2} />
+          <feComposite in2="hardAlpha" operator="out" />
+          <feColorMatrix values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.25 0" />
+          <feBlend in2="BackgroundImageFix" result="effect1_dropShadow" />
+          <feBlend in="SourceGraphic" in2="effect1_dropShadow" result="shape" />
+        </filter>
+        <filter
+          id="prefix__filter3_d"
+          x={38}
+          y={115}
+          width={67}
+          height={10}
+          filterUnits="userSpaceOnUse"
+          colorInterpolationFilters="sRGB"
+        >
+          <feFlood floodOpacity={0} result="BackgroundImageFix" />
+          <feColorMatrix
+            in="SourceAlpha"
+            values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0"
+            result="hardAlpha"
+          />
+          <feOffset dy={1} />
+          <feGaussianBlur stdDeviation={2} />
+          <feComposite in2="hardAlpha" operator="out" />
+          <feColorMatrix values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.25 0" />
+          <feBlend in2="BackgroundImageFix" result="effect1_dropShadow" />
+          <feBlend in="SourceGraphic" in2="effect1_dropShadow" result="shape" />
+        </filter>
+        <filter
+          id="prefix__filter4_d"
+          x={30.21}
+          y={40.155}
+          width={83.6}
+          height={8.737}
+          filterUnits="userSpaceOnUse"
+          colorInterpolationFilters="sRGB"
+        >
+          <feFlood floodOpacity={0} result="BackgroundImageFix" />
+          <feColorMatrix
+            in="SourceAlpha"
+            values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0"
+            result="hardAlpha"
+          />
+          <feOffset dy={0.2} />
+          <feGaussianBlur stdDeviation={0.15} />
+          <feComposite in2="hardAlpha" operator="out" />
+          <feColorMatrix values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.11 0" />
+          <feBlend in2="BackgroundImageFix" result="effect1_dropShadow" />
+          <feBlend in="SourceGraphic" in2="effect1_dropShadow" result="shape" />
+        </filter>
+        <filter
+          id="prefix__filter5_d"
+          x={30.21}
+          y={48.292}
+          width={23.384}
+          height={41.286}
+          filterUnits="userSpaceOnUse"
+          colorInterpolationFilters="sRGB"
+        >
+          <feFlood floodOpacity={0} result="BackgroundImageFix" />
+          <feColorMatrix
+            in="SourceAlpha"
+            values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0"
+            result="hardAlpha"
+          />
+          <feOffset dy={0.2} />
+          <feGaussianBlur stdDeviation={0.15} />
+          <feComposite in2="hardAlpha" operator="out" />
+          <feColorMatrix values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.11 0" />
+          <feBlend in2="BackgroundImageFix" result="effect1_dropShadow" />
+          <feBlend in="SourceGraphic" in2="effect1_dropShadow" result="shape" />
+        </filter>
+        <linearGradient
+          id="prefix__paint0_linear"
+          x1={99.781}
+          y1={80}
+          x2={118.8}
+          y2={113.717}
+          gradientUnits="userSpaceOnUse"
+        >
+          <stop stopColor="#F90" />
+          <stop offset={1} stopColor="#FFBB54" />
+        </linearGradient>
+      </defs>
     </svg>
   );
 };
@@ -314,48 +697,178 @@ export const Integration: React.FC<{ size: number }> = ({ size, ...props }) => {
     <svg
       width={size}
       height={size}
-      viewBox="0 0 64 64"
+      viewBox="0 0 140 140"
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
       {...props}
     >
-      <circle cx={32} cy={32} r={32} fill="#F90" fillOpacity={0.08} />
+      <circle cx={70} cy={70} r={70} fill="#FFEEF6" />
       <path
-        d="M41.333 46a4.667 4.667 0 100-9.333 4.667 4.667 0 000 9.333zM22.667 27.333a4.667 4.667 0 100-9.333 4.667 4.667 0 000 9.333zM33.556 22.667h4.666a3.11 3.11 0 013.111 3.11v10.89M22.667 27.333V46"
-        stroke="#F90"
-        strokeWidth={3}
+        d="M26 48.332h88.32V43a3 3 0 00-3-3H29a3 3 0 00-3 3v5.332z"
+        fill="#ED6CA5"
+      />
+      <circle cx={33.915} cy={44.583} r={1.25} fill="#fff" />
+      <circle cx={38.914} cy={44.583} r={1.25} fill="#fff" />
+      <circle cx={43.914} cy={44.583} r={1.25} fill="#fff" />
+      <g filter="url(#prefix__filter0_di)">
+        <path
+          d="M26 48.332h88.32v53.658a3 3 0 01-3 3H29a3 3 0 01-3-3V48.332z"
+          fill="#fff"
+        />
+      </g>
+      <rect
+        x={35.998}
+        y={59.997}
+        width={46.66}
+        height={1.666}
+        rx={0.833}
+        fill="#1C3754"
+      />
+      <rect
+        x={35.998}
+        y={71.662}
+        width={8.332}
+        height={1.666}
+        rx={0.833}
+        fill="#6C8BFF"
+      />
+      <rect
+        x={35.998}
+        y={78.328}
+        width={16.664}
+        height={1.666}
+        rx={0.833}
+        fill="#FFDBEB"
+      />
+      <rect
+        x={35.998}
+        y={86.66}
+        width={16.664}
+        height={1.666}
+        rx={0.833}
+        fill="#FFDBEB"
+      />
+      <rect
+        x={35.998}
+        y={93.326}
+        width={11.665}
+        height={1.666}
+        rx={0.833}
+        fill="#FA4E9A"
+      />
+      <rect
+        x={54.329}
+        y={93.326}
+        width={11.665}
+        height={1.666}
+        rx={0.833}
+        fill="#FFDBEB"
+      />
+      <rect
+        x={70.994}
+        y={93.326}
+        width={21.663}
+        height={1.666}
+        rx={0.833}
+        fill="#FA4E9A"
+      />
+      <rect
+        x={57.662}
+        y={86.66}
+        width={23.33}
+        height={1.666}
+        rx={0.833}
+        fill="#6C8BFF"
+      />
+      <rect
+        x={57.662}
+        y={78.328}
+        width={11.665}
+        height={1.666}
+        rx={0.833}
+        fill="#FA4E9A"
+      />
+      <rect
+        x={72.66}
+        y={78.328}
+        width={24.996}
+        height={1.666}
+        rx={0.833}
+        fill="#FFDBEB"
+      />
+      <rect
+        x={47.664}
+        y={71.662}
+        width={18.331}
+        height={1.666}
+        rx={0.833}
+        fill="#FFDBEB"
+      />
+      <rect
+        x={69.327}
+        y={71.662}
+        width={11.665}
+        height={1.666}
+        rx={0.833}
+        fill="#6C8BFF"
+      />
+      <rect
+        x={84.324}
+        y={71.662}
+        width={18.331}
+        height={1.666}
+        rx={0.833}
+        fill="#FFDBEB"
+      />
+      <circle cx={105.155} cy={98.155} r={18.155} fill="#fff" />
+      <circle
+        cx={105.155}
+        cy={98.155}
+        r={18.155}
+        fill="url(#prefix__paint0_linear)"
+      />
+      <path
+        d="M112.721 100.265L104.985 106l-7.736-5.735a.626.626 0 01-.218-.697l.886-2.801 1.772-5.565a.311.311 0 01.502-.119.315.315 0 01.08.134l1.772 5.55h5.884l1.773-5.565a.311.311 0 01.29-.202.31.31 0 01.211.083.315.315 0 01.08.134l1.772 5.565.923 2.786a.645.645 0 01-.014.391.62.62 0 01-.241.306v0z"
+        stroke="#fff"
+        strokeWidth={2}
         strokeLinecap="round"
         strokeLinejoin="round"
       />
-    </svg>
-  );
-};
-
-export const Growth: React.FC<{ size: number }> = ({ size, ...props }) => {
-  return (
-    <svg
-      width={size}
-      height={size}
-      viewBox="0 0 64 64"
-      fill="none"
-      xmlns="http://www.w3.org/2000/svg"
-      {...props}
-    >
-      <circle cx={32} cy={32} r={32} fill="#FB5392" fillOpacity={0.08} />
-      <path
-        d="M46 25L33.91 36.875l-6.364-6.25L18 40"
-        stroke="#FB5392"
-        strokeWidth={3}
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
-      <path
-        d="M38 25h8v8"
-        stroke="#FB5392"
-        strokeWidth={3}
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
+      <defs>
+        <linearGradient
+          id="prefix__paint0_linear"
+          x1={94.781}
+          y1={80}
+          x2={113.8}
+          y2={113.717}
+          gradientUnits="userSpaceOnUse"
+        >
+          <stop stopColor="#ED6CA5" />
+          <stop offset={1} stopColor="#FF9EC9" />
+        </linearGradient>
+        <filter
+          id="prefix__filter0_di"
+          x={22}
+          y={48.332}
+          width={96.32}
+          height={64.658}
+          filterUnits="userSpaceOnUse"
+          colorInterpolationFilters="sRGB"
+        >
+          <feFlood floodOpacity={0} result="BackgroundImageFix" />
+          <feColorMatrix
+            in="SourceAlpha"
+            values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0"
+            result="hardAlpha"
+          />
+          <feOffset dy={4} />
+          <feGaussianBlur stdDeviation={2} />
+          <feComposite in2="hardAlpha" operator="out" />
+          <feColorMatrix values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.25 0" />
+          <feBlend in2="BackgroundImageFix" result="effect1_dropShadow" />
+          <feBlend in="SourceGraphic" in2="effect1_dropShadow" result="shape" />
+        </filter>
+      </defs>
     </svg>
   );
 };

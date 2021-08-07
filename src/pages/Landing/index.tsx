@@ -13,8 +13,8 @@ import {
 } from "@chakra-ui/react";
 
 import {
-  CreditCard,
-  Growth,
+  ScheduleScan,
+  VulnCheck,
   Integration,
   User,
   File,
@@ -40,7 +40,7 @@ export default function LandingPage() {
           textAlign={["center", "left"]}
           py={36}
         >
-          <Box w={["100%", "100%", "50%"]} px={[0, 0, 10]} py={10}>
+          <Box w={["100%", "100%", "45%"]} px={[0, 0, 10]} py={10}>
             <Heading fontSize={["3xl", "4xl"]} mb={8}>
               Get you smart contracts audited by a smarter tool
             </Heading>
@@ -54,7 +54,7 @@ export default function LandingPage() {
               </Button>
             </Link>
           </Box>
-          <Box w="50%" display={["none", "none", "flex"]}>
+          <Box w="55%" display={["none", "none", "flex"]}>
             <Image src="/landing-image01.jpg" alt="Product screenshot" />
           </Box>
         </Flex>
@@ -91,43 +91,40 @@ export default function LandingPage() {
           >
             <Flex
               sx={{
-                flexDir: ["column", "column", "row"],
-
+                flexDir: "column",
                 alignItems: "center",
                 mb: [8, 8, 0],
               }}
             >
-              <CreditCard size={48} />{" "}
-              <Text fontSize="sm" ml="2" fontWeight={600}>
+              <ScheduleScan size={140} />
+              <Text fontSize="sm" ml="2" mt={4} fontWeight={600}>
                 Schedule Scans
               </Text>
             </Flex>
             <Flex
               sx={{
-                flexDir: ["column", "column", "row"],
-
+                flexDir: "column",
                 alignItems: "center",
                 mb: [8, 8, 0],
               }}
             >
-              <Integration size={48} />{" "}
-              <Text fontSize="sm" ml="2" fontWeight={600}>
-                Easy Integrations
-              </Text>
-            </Flex>{" "}
-            <Flex
-              sx={{
-                flexDir: ["column", "column", "row"],
-
-                alignItems: "center",
-                mb: [8, 8, 0],
-              }}
-            >
-              <Growth size={48} />{" "}
-              <Text fontSize="sm" ml="2" fontWeight={600}>
+              <VulnCheck size={140} />
+              <Text fontSize="sm" ml="2" mt={4} fontWeight={600}>
                 100+ Vulnerability Checks
               </Text>
             </Flex>
+            <Flex
+              sx={{
+                flexDir: "column",
+                alignItems: "center",
+                mb: [8, 8, 0],
+              }}
+            >
+              <Integration size={140} />
+              <Text fontSize="sm" ml="2" mt={4} fontWeight={600}>
+                Easy Integrations
+              </Text>
+            </Flex>{" "}
           </Flex>
         </Box>
         {/* Section 3 */}
