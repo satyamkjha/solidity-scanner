@@ -77,6 +77,7 @@ export const ProjectPage: React.FC = () => {
                 >
                   <Tab mx={2}>Overview</Tab>
                   <Tab mx={2}>Detailed Result</Tab>
+                  <Tab mx={2}>Advanced Scan(Beta)</Tab>
                 </TabList>
                 <TabPanels>
                   <TabPanel>

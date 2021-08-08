@@ -103,7 +103,7 @@ export const HomeMenuIcon: React.FC<{ size: number; active?: boolean }> = ({
   active,
   ...props
 }) => {
-  const iconColor = active ? "#52FF00" : "#3300FF";
+  const iconColor = active ? "#04B79C" : "#3300FF";
   return (
     <svg
       width={24}
@@ -135,7 +135,7 @@ export const ProjectsMenuIcon: React.FC<{ size: number; active?: boolean }> = ({
   active,
   ...props
 }) => {
-  const iconColor = active ? "#52FF00" : "#3300FF";
+  const iconColor = active ? "#04B79C" : "#3300FF";
   return (
     <svg
       width={24}
@@ -160,36 +160,113 @@ export const ProjectsMenuIcon: React.FC<{ size: number; active?: boolean }> = ({
   );
 };
 
-export const IntegrationMenuIcon: React.FC<{ size: number; active?: boolean }> =
-  ({ size, active, ...props }) => {
-    const iconColor = active ? "#52FF00" : "#3300FF";
-    return (
-      <svg
-        width={24}
-        height={24}
-        viewBox="0 0 24 24"
-        fill="none"
-        xmlns="http://www.w3.org/2000/svg"
-        {...props}
+export const IntegrationMenuIcon: React.FC<{ size: number }> = ({
+  size,
+  ...props
+}) => {
+  return (
+    <svg
+      width={size}
+      height={size}
+      viewBox="0 0 64 64"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+      {...props}
+    >
+      <circle cx={32} cy={32} r={32} fill="#F90" fillOpacity={0.08} />
+      <path
+        d="M41.333 46a4.667 4.667 0 100-9.333 4.667 4.667 0 000 9.333zM22.667 27.333a4.667 4.667 0 100-9.333 4.667 4.667 0 000 9.333zM33.556 22.667h4.666a3.11 3.11 0 013.111 3.11v10.89M22.667 27.333V46"
+        stroke="#F90"
+        strokeWidth={3}
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+    </svg>
+  );
+};
+
+export const BillingMenuIcon: React.FC<{ size: number; active?: boolean }> = ({
+  size,
+  active,
+  ...props
+}) => {
+  return (
+    <svg
+      width={size}
+      height={size}
+      viewBox="0 0 24 24"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+      {...props}
+    >
+      <mask
+        id="prefix__a"
+        maskUnits="userSpaceOnUse"
+        x={0}
+        y={0}
+        width={size}
+        height={size}
       >
+        <path fill="#C4C4C4" d="M0 0h24v24H0z" />
+      </mask>
+      <g mask="url(#prefix__a)">
         <path
           fillRule="evenodd"
           clipRule="evenodd"
-          d="M16 15.632V12a3 3 0 00-3-3H6.162V5.526A2.526 2.526 0 018.688 3h11.79a2.526 2.526 0 012.526 2.526v7.58l.017 4.68a.5.5 0 01-.854.356l-2.51-2.51H16z"
-          fill={iconColor}
-          style={{ transition: "0.3s fill" }}
+          d={
+            active
+              ? "M21.441 1.502l1.632 1.632a2 2 0 01.585 1.414V9.99a2 2 0 01-.585 1.414L11.666 22.81a2 2 0 01-2.828 0l-7.424-7.424a2 2 0 010-2.828L12.777 1.195a2 2 0 011.519-.583l5.836.307a2 2 0 011.31.583zM16.955 7.27a1.673 1.673 0 102.366-2.366 1.673 1.673 0 00-2.366 2.366z"
+              : "M21.441 1.503l1.632 1.631a2 2 0 01.586 1.415v5.44a2 2 0 01-.586 1.414L11.666 22.81a2 2 0 01-2.828 0l-7.423-7.424a2 2 0 010-2.828L12.777 1.195a2 2 0 011.52-.583l5.835.308a2 2 0 011.31.583zm-4.485 5.766a1.673 1.673 0 102.366-2.366 1.673 1.673 0 00-2.366 2.366z"
+          }
+          fill="#fff"
         />
         <path
-          opacity={0.3}
           fillRule="evenodd"
           clipRule="evenodd"
-          d="M1.985 18v-5a2 2 0 012-2h8a2 2 0 012 2v5a2 2 0 01-2 2H4.101l-1.244 1.19a.5.5 0 01-.846-.36v-2.506A2.015 2.015 0 011.985 18zM6.5 14a.5.5 0 000 1h5a.5.5 0 000-1h-5zm3 2a.5.5 0 000 1h2a.5.5 0 000-1h-2z"
-          fill={iconColor}
-          style={{ transition: "0.3s fill" }}
+          d={
+            active
+              ? "M21.441 1.502l1.632 1.632a2 2 0 01.585 1.414V9.99a2 2 0 01-.585 1.414L11.666 22.81a2 2 0 01-2.828 0l-7.424-7.424a2 2 0 010-2.828L12.777 1.195a2 2 0 011.519-.583l5.836.307a2 2 0 011.31.583zM16.955 7.27a1.673 1.673 0 102.366-2.366 1.673 1.673 0 00-2.366 2.366z"
+              : "M21.441 1.503l1.632 1.631a2 2 0 01.586 1.415v5.44a2 2 0 01-.586 1.414L11.666 22.81a2 2 0 01-2.828 0l-7.423-7.424a2 2 0 010-2.828L12.777 1.195a2 2 0 011.52-.583l5.835.308a2 2 0 011.31.583zm-4.485 5.766a1.673 1.673 0 102.366-2.366 1.673 1.673 0 00-2.366 2.366z"
+          }
+          style={{ transition: "fill 0.2s ease" }}
+          fill={active ? "#04B79C" : "#C2B3FF"}
         />
-      </svg>
-    );
-  };
+        <rect
+          x={22.878}
+          y={0.558}
+          width={1.115}
+          height={6.703}
+          rx={0.558}
+          transform="rotate(45 22.878 .558)"
+          fill={active ? "#38CB89" : "#30F"}
+        />
+        <path
+          d={
+            active
+              ? "M14.037 10.503c-1.176-1.176-2.764-1.494-3.548-.71-.785.784-.467 2.373.71 3.549 1.175 1.176 1.493 2.764.71 3.548-.785.785-2.374.467-3.55-.71m5.678-5.677L8.36 16.18m5.678-5.678c.788.787 1.191 1.761 1.135 2.554l-1.135-2.554zm0 0l.71-.71M8.36 16.18l-.71.71m.71-.71c-.787-.788-1.19-1.762-1.135-2.555l1.135 2.555z"
+              : "M14.038 10.503c-1.176-1.176-2.765-1.494-3.55-.71-.783.784-.465 2.373.71 3.549 1.177 1.176 1.495 2.764.71 3.548-.784.785-2.372.467-3.548-.71m5.678-5.677L8.36 16.18m5.678-5.678c.787.787 1.19 1.761 1.135 2.554l-1.135-2.554zm0 0l.71-.71M8.36 16.18l-.71.71m.71-.71c-.788-.788-1.191-1.762-1.135-2.555l1.135 2.555z"
+          }
+          stroke={active ? "#CAFFEA" : "#30F"}
+          strokeLinecap="round"
+          strokeLinejoin="round"
+        />
+      </g>
+      <defs>
+        <linearGradient
+          id="prefix__paint0_linearbilling"
+          x1={22.081}
+          y1={2.143}
+          x2={5.126}
+          y2={19.098}
+          gradientUnits="userSpaceOnUse"
+        >
+          <stop stopColor="#98FDAC" />
+          <stop offset={1} stopColor="#04B79C" />
+        </linearGradient>
+      </defs>
+    </svg>
+  );
+};
 
 export const SeverityIcon: React.FC<{ size?: number; variant: string }> = ({
   size = 8,

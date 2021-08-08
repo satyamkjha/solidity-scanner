@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { useQueryClient } from "react-query";
 import { useHistory } from "react-router";
 import { useForm } from "react-hook-form";
@@ -14,6 +14,17 @@ import {
   Icon,
   Progress,
   Spinner,
+  Tabs,
+  TabList,
+  TabPanels,
+  Tab,
+  TabPanel,
+  Radio,
+  RadioGroup,
+  FormControl,
+  FormLabel,
+  Select,
+  FormHelperText,
 } from "@chakra-ui/react";
 import { FaFileCode } from "react-icons/fa";
 import { AiOutlineProject } from "react-icons/ai";
@@ -21,24 +32,8 @@ import { AiOutlineProject } from "react-icons/ai";
 import API from "helpers/api";
 import { useOverview } from "hooks/useOverview";
 
-type FormData = {
-  project_url: string;
-  project_name: string;
-};
-
 const Home: React.FC = () => {
   const { data } = useOverview();
-  const queryClient = useQueryClient();
-  const { handleSubmit, register, formState } = useForm<FormData>();
-  const history = useHistory();
-  const onSubmit = async ({ project_url, project_name }: FormData) => {
-    await API.post("/api-start-scan/", {
-      project_url,
-      ...(project_name && project_name !== "" && { project_name }),
-    });
-    queryClient.invalidateQueries("scans");
-    history.push("/projects");
-  };
 
   return (
     <Box
@@ -59,53 +54,20 @@ const Home: React.FC = () => {
             my: 4,
           }}
         >
-          <Text sx={{ fontSize: "2xl", fontWeight: 600, my: 6 }}>
-            Load application
-          </Text>
-
-          <Text sx={{ color: "subtle", textAlign: "center", mb: 6 }}>
-            Provide a link to a Git repository. See link examples and additional restrictions in the
-            User Guide (section Starting a scan from UI) available on the User
-            Guide page.
-          </Text>
-          <form onSubmit={handleSubmit(onSubmit)} style={{ width: "100%" }}>
-            <Stack spacing={6} my={8} width={"100%"}>
-              <InputGroup alignItems="center">
-                <InputLeftElement
-                  height="48px"
-                  children={<Icon as={AiOutlineProject} color="gray.300" />}
-                />
-                <Input
-                  placeholder="Project name (Optional)"
-                  variant="brand"
-                  size="lg"
-                  {...register("project_name")}
-                />
-              </InputGroup>
-              <InputGroup alignItems="center" mb={4}>
-                <InputLeftElement
-                  height="48px"
-                  children={<Icon as={FaFileCode} color="gray.300" />}
-                />
-                <Input
-                  isRequired
-                  type="url"
-                  placeholder="Link to the Github repository"
-                  variant="brand"
-                  size="lg"
-                  {...register("project_url", { required: true })}
-                />
-              </InputGroup>
-
-              <Button
-                type="submit"
-                variant="brand"
-                isLoading={formState.isSubmitting}
-              >
-                Start Scan
-              </Button>
-            </Stack>
-          </form>
+          <Tabs variant="soft-rounded" colorScheme="green">
+            <TabList mb="1em">
+              <Tab width="50%">Application</Tab>
+              <Tab width="50%">Blockchain Contract</Tab>
+            </TabList>
+            <TabPanels>
+              <TabPanel>
+                <ApplicationForm />
+              </TabPanel>
+              <TabPanel>
+                <ContractForm />
+              </TabPanel>
+            </TabPanels>
+          </Tabs>
         </Flex>
         {!data && (
           <Flex
@@ -268,4 +230,164 @@ const VulnerabilityProgress = (props: VulnerabilityProgressProps) => {
     </>
   );
 };
+
+type ApplicationFormData = {
+  project_url: string;
+  project_name: string;
+};
+
+const ApplicationForm: React.FC = () => {
+  const queryClient = useQueryClient();
+  const { handleSubmit, register, formState } = useForm<ApplicationFormData>();
+  const history = useHistory();
+  const onSubmit = async ({
+    project_url,
+    project_name,
+  }: ApplicationFormData) => {
+    await API.post("/api-start-scan/", {
+      project_url,
+      ...(project_name && project_name !== "" && { project_name }),
+    });
+    queryClient.invalidateQueries("scans");
+    history.push("/projects");
+  };
+  return (
+    <>
+      <Text
+        sx={{
+          fontSize: "2xl",
+          fontWeight: 600,
+          my: 6,
+          textAlign: "center",
+        }}
+      >
+        Load application
+      </Text>
+
+      <Text sx={{ color: "subtle", textAlign: "center", mb: 6 }}>
+        Provide a link to a Git repository. See link examples and additional
+        restrictions in the User Guide (section Starting a scan from UI)
+        available on the User Guide page.
+      </Text>
+      <form onSubmit={handleSubmit(onSubmit)} style={{ width: "100%" }}>
+        <Stack spacing={6} my={8} width={"100%"}>
+          <InputGroup alignItems="center">
+            <InputLeftElement
+              height="48px"
+              children={<Icon as={AiOutlineProject} color="gray.300" />}
+            />
+            <Input
+              placeholder="Project name (Optional)"
+              variant="brand"
+              size="lg"
+              {...register("project_name")}
+            />
+          </InputGroup>
+          <InputGroup alignItems="center" mb={4}>
+            <InputLeftElement
+              height="48px"
+              children={<Icon as={FaFileCode} color="gray.300" />}
+            />
+            <Input
+              isRequired
+              type="url"
+              placeholder="Link to the Github repository"
+              variant="brand"
+              size="lg"
+              {...register("project_url", { required: true })}
+            />
+          </InputGroup>
+
+          <Button
+            type="submit"
+            variant="brand"
+            isLoading={formState.isSubmitting}
+          >
+            Start Scan
+          </Button>
+        </Stack>
+      </form>
+    </>
+  );
+};
+
+type ContractFormData = {
+  // contract_name: string;
+  contract_address: string;
+  // contract_platform: string;
+};
+
+const ContractForm: React.FC = () => {
+  const [platform, setPlatform] = React.useState("etherscan");
+  const queryClient = useQueryClient();
+  const { handleSubmit, register, formState } = useForm<ContractFormData>();
+  const history = useHistory();
+  const onSubmit = async ({ contract_address }: ContractFormData) => {
+    await API.post("/api-start-scan/", {
+      contract_address,
+      // ...(project_name && project_name !== "" && { project_name }),
+    });
+    queryClient.invalidateQueries("scans");
+    history.push("/projects");
+  };
+  return (
+    <>
+      <Text
+        sx={{
+          fontSize: "2xl",
+          fontWeight: 600,
+          my: 6,
+          textAlign: "center",
+        }}
+      >
+        Load contract
+      </Text>
+
+      <Text sx={{ color: "subtle", textAlign: "center", mb: 6 }}>
+        Provide the address of your blockchain contract. See link examples and
+        additional restrictions in the User Guide (section Starting a scan from
+        UI) available on the User Guide page.
+      </Text>
+      <form onSubmit={handleSubmit(onSubmit)} style={{ width: "100%" }}>
+        <Stack spacing={6} my={8} width={"100%"}>
+          <InputGroup alignItems="center">
+            <InputLeftElement
+              height="48px"
+              children={<Icon as={AiOutlineProject} color="gray.300" />}
+            />
+            <Input
+              isRequired
+              placeholder="Contract address"
+              variant="brand"
+              size="lg"
+              {...register("contract_address")}
+            />
+          </InputGroup>
+
+          <FormControl id="contract_platform">
+            <FormLabel fontSize="sm">Contract platform</FormLabel>
+            <Select
+              placeholder="Select contract platform"
+              value={platform}
+              isRequired
+              onChange={(e) => setPlatform(e.target.value)}
+            >
+              <option value="etherscan">Etherscan</option>
+              <option value="binance">Binance</option>
+            </Select>
+          </FormControl>
+
+          <Button
+            type="submit"
+            variant="brand"
+            isLoading={formState.isSubmitting}
+          >
+            Start Scan
+          </Button>
+        </Stack>
+      </form>
+    </>
+  );
+};
+
 export default Home;

@@ -65,7 +65,11 @@ const ProjectPage = lazy(
 );
 
 const Integrations = lazy(
-  () => import("pages/Integrations" /* webpackChunkName: "ProjectPage" */)
+  () => import("pages/Integrations" /* webpackChunkName: "Integration" */)
+);
+
+const Billing = lazy(
+  () => import("pages/Billing" /* webpackChunkName: "Billing" */)
 );
 
 const Routes: React.FC = () => {
@@ -153,6 +157,9 @@ const Routes: React.FC = () => {
               </PrivateRoute>
               <PrivateRoute exact path="/integrations">
                 <Integrations />
+              </PrivateRoute>
+              <PrivateRoute exact path="/billing">
+                <Billing />
               </PrivateRoute>
             </Switch>
           </Suspense>

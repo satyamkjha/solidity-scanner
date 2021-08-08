@@ -6,8 +6,8 @@ import {
   Logo,
   HomeMenuIcon,
   ProjectsMenuIcon,
-  // IntegrationMenuIcon,
-  Integration,
+  IntegrationMenuIcon,
+  BillingMenuIcon,
 } from "components/icons";
 
 import { SIDEBAR_WIDTH } from "common/constants";
@@ -45,7 +45,12 @@ const Sidebar: React.FC = () => {
           <SidebarItem
             to="/integrations"
             label="Integrations"
-            icon={<Integration size={24} />}
+            icon={<IntegrationMenuIcon size={24} />}
+          />
+          <SidebarItem
+            to="/billing"
+            label="Billing"
+            icon={<BillingMenuIcon size={24} />}
           />
         </Box>
       </Flex>
