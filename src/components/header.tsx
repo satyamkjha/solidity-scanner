@@ -30,7 +30,7 @@ export const Header: React.FC = () => {
         </HStack>
       </Flex>
       <HStack spacing={4} sx={{ display: ["none", "none", "flex"] }}>
-        {Auth.isUserAuthenticated() ? (
+        {!Auth.isUserAuthenticated() ? (
           <>
             {" "}
             <RouterLink to="/signin">
