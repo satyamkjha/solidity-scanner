@@ -323,12 +323,12 @@ const ContractForm: React.FC = () => {
   const { handleSubmit, register, formState } = useForm<ContractFormData>();
   const history = useHistory();
   const onSubmit = async ({ contract_address }: ContractFormData) => {
-    await API.post("/api-start-scan/", {
+    await API.post("/api-start-scan-block/", {
       contract_address,
-      // ...(project_name && project_name !== "" && { project_name }),
+      contract_platform: platform,
     });
     queryClient.invalidateQueries("scans");
-    history.push("/projects");
+    history.push("/blocks");
   };
   return (
     <>

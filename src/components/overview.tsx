@@ -45,7 +45,7 @@ const pieData = (
   },
 ];
 
-export const Overview: React.FC<{ data: ScanSummary }> = ({ data }) => {
+const Overview: React.FC<{ data: ScanSummary }> = ({ data }) => {
   const {
     issues_count,
     issue_severity_distribution: { critical, high, medium, low, informational },

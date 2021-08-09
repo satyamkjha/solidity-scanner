@@ -43,6 +43,11 @@ const Sidebar: React.FC = () => {
             icon={<ProjectsMenuIcon size={16} />}
           />
           <SidebarItem
+            to="/blocks"
+            label="Blocks"
+            icon={<HomeMenuIcon size={16} />}
+          />
+          <SidebarItem
             to="/integrations"
             label="Integrations"
             icon={<IntegrationMenuIcon size={24} />}

@@ -18,7 +18,7 @@ import Result from "components/result";
 
 import { useScan } from "hooks/useScan";
 
-export const ProjectPage: React.FC = () => {
+export const BlockPage: React.FC = () => {
   const { scanId } = useParams<{ scanId: string }>();
   const { data, isLoading } = useScan(scanId);
   return (
@@ -49,7 +49,7 @@ export const ProjectPage: React.FC = () => {
               </Text>
               <Link
                 as={RouterLink}
-                to="/projects"
+                to="/blocks"
                 variant="subtle-without-underline"
                 fontSize="md"
               >
@@ -104,4 +104,4 @@ export const ProjectPage: React.FC = () => {
   );
 };
 
-export default ProjectPage;
+export default BlockPage;
