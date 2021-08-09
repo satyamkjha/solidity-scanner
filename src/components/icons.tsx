@@ -160,30 +160,30 @@ export const ProjectsMenuIcon: React.FC<{ size: number; active?: boolean }> = ({
   );
 };
 
-export const IntegrationMenuIcon: React.FC<{ size: number }> = ({
-  size,
-  ...props
-}) => {
-  return (
-    <svg
-      width={size}
-      height={size}
-      viewBox="0 0 64 64"
-      fill="none"
-      xmlns="http://www.w3.org/2000/svg"
-      {...props}
-    >
-      <circle cx={32} cy={32} r={32} fill="#F90" fillOpacity={0.08} />
-      <path
-        d="M41.333 46a4.667 4.667 0 100-9.333 4.667 4.667 0 000 9.333zM22.667 27.333a4.667 4.667 0 100-9.333 4.667 4.667 0 000 9.333zM33.556 22.667h4.666a3.11 3.11 0 013.111 3.11v10.89M22.667 27.333V46"
-        stroke="#F90"
-        strokeWidth={3}
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
-    </svg>
-  );
-};
+export const IntegrationMenuIcon: React.FC<{ size: number; active?: boolean }> =
+  ({ size, active, ...props }) => {
+    const iconColor = active ? "#04B79C" : "#3300FF";
+
+    return (
+      <svg
+        width={size}
+        height={size}
+        viewBox="0 0 64 64"
+        fill="none"
+        xmlns="http://www.w3.org/2000/svg"
+        {...props}
+      >
+        <circle cx={32} cy={32} r={32} fill={iconColor} fillOpacity={0.08} />
+        <path
+          d="M41.333 46a4.667 4.667 0 100-9.333 4.667 4.667 0 000 9.333zM22.667 27.333a4.667 4.667 0 100-9.333 4.667 4.667 0 000 9.333zM33.556 22.667h4.666a3.11 3.11 0 013.111 3.11v10.89M22.667 27.333V46"
+          stroke={iconColor}
+          strokeWidth={3}
+          strokeLinecap="round"
+          strokeLinejoin="round"
+        />
+      </svg>
+    );
+  };
 
 export const BillingMenuIcon: React.FC<{ size: number; active?: boolean }> = ({
   size,

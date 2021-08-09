@@ -45,7 +45,7 @@ export const BlockPage: React.FC = () => {
               sx={{ justifyContent: "space-between", alignItems: "center" }}
             >
               <Text sx={{ fontSize: "xl", fontWeight: 600, ml: 2 }}>
-                {data?.scan_report.project_name}
+                {data?.scan_report.contract_address}
               </Text>
               <Link
                 as={RouterLink}
@@ -77,7 +77,7 @@ export const BlockPage: React.FC = () => {
                 >
                   <Tab mx={2}>Overview</Tab>
                   <Tab mx={2}>Detailed Result</Tab>
-                  <Tab mx={2}>Advanced Scan(Beta)</Tab>
+                  {/* <Tab mx={2}>Advanced Scan(Beta)</Tab> */}
                 </TabList>
                 <TabPanels>
                   <TabPanel>
@@ -91,6 +91,7 @@ export const BlockPage: React.FC = () => {
                         <Result
                           scanSummary={data.scan_report.scan_summary}
                           scanDetails={data.scan_report.scan_details}
+                          type="block"
                         />
                       )}
                   </TabPanel>

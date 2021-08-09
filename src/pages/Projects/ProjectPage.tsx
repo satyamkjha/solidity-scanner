@@ -46,6 +46,9 @@ export const ProjectPage: React.FC = () => {
             >
               <Text sx={{ fontSize: "xl", fontWeight: 600, ml: 2 }}>
                 {data?.scan_report.project_name}
+                <Link fontSize="14px" ml={3} variant="subtle" target="_blank">
+                  {data.scan_report.project_url}
+                </Link>
               </Text>
               <Link
                 as={RouterLink}
@@ -91,6 +94,7 @@ export const ProjectPage: React.FC = () => {
                         <Result
                           scanSummary={data.scan_report.scan_summary}
                           scanDetails={data.scan_report.scan_details}
+                          type="project"
                         />
                       )}
                   </TabPanel>

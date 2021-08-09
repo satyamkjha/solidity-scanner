@@ -107,7 +107,14 @@ const Blocks: React.FC = () => {
 };
 
 const BlockCard: React.FC<{ scan: Scan }> = ({ scan }) => {
-  const { scan_status, project_name, scan_id, scan_summary, _updated } = scan;
+  const {
+    scan_status,
+    project_name,
+    scan_id,
+    scan_summary,
+    _updated,
+    contract_address,
+  } = scan;
   return (
     <Link to={scan_status === "scan_done" ? `/blocks/${scan_id}` : "/blocks"}>
       <Flex
@@ -131,7 +138,7 @@ const BlockCard: React.FC<{ scan: Scan }> = ({ scan }) => {
       >
         <Box>
           <Text sx={{ w: "100%" }} isTruncated>
-            {project_name}
+            {project_name || contract_address}
           </Text>
           <Text sx={{ fontSize: "sm", color: "subtle" }}>
             Last scanned {timeSince(new Date(_updated))}

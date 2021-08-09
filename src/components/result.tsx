@@ -46,7 +46,8 @@ type FileState = {
 export const Result: React.FC<{
   scanSummary: ScanSummary;
   scanDetails: ScanDetail[];
-}> = ({ scanSummary, scanDetails }) => {
+  type: "project" | "block";
+}> = ({ scanSummary, scanDetails, type }) => {
   const [file, setFile] = useState<FileState | null>(null);
   const {
     issue_severity_distribution: { critical, high, medium, low, informational },
@@ -91,7 +92,7 @@ export const Result: React.FC<{
         >
           {file ? (
             <>
-              <FileDetails file={file} />
+              <FileDetails file={file} type={type} />
             </>
           ) : (
             <Flex
@@ -232,8 +233,8 @@ const Issues: React.FC<IssuesProps> = ({ issues, file, setFile }) => {
   );
 };
 
-type FileDetailsProps = { file: FileState };
-const FileDetails: React.FC<FileDetailsProps> = ({ file }) => {
+type FileDetailsProps = { file: FileState; type: "project" | "block" };
+const FileDetails: React.FC<FileDetailsProps> = ({ file, type }) => {
   const { scanId: scan_id } = useParams<{ scanId: string }>();
   const toast = useToast();
   const { file_path, issue_id, line_nos_end, line_nos_start } = file;
@@ -257,7 +258,7 @@ const FileDetails: React.FC<FileDetailsProps> = ({ file }) => {
     });
   };
 
-  const { data, isLoading } = useFileContent(scan_id, file_path);
+  const { data, isLoading } = useFileContent(scan_id, file_path, type);
   return (
     <Box w="100%">
       <Box
