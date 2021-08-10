@@ -44,7 +44,7 @@ const Reset: React.FC = () => {
     });
 
     if (data.status === "success") {
-      history.push("/siginin?isPasswordReset=true");
+      history.push("/signin?isPasswordReset=true");
     }
   };
   return (
