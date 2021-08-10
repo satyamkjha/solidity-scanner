@@ -102,7 +102,7 @@ const Reset: React.FC = () => {
               variant="brand"
               isLoading={formState.isSubmitting}
             >
-              Send Now
+              Update Password
             </Button>
           </Stack>
         </form>
