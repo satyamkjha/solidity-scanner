@@ -42,7 +42,7 @@ export default function LandingPage() {
         >
           <Box w={["100%", "100%", "45%"]} px={[0, 0, 10]} py={10}>
             <Heading fontSize={["3xl", "4xl"]} mb={8}>
-              Get you smart contracts audited by a smarter tool
+              Get your smart contracts audited by a smarter tool
             </Heading>
             <Text fontSize="xl" color="subtle" mb={8}>
               Smart-contract scanning tool built to discover vulnerabilities &
