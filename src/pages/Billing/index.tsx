@@ -57,6 +57,7 @@ const Billing: React.FC = () => {
       <Box sx={{ w: "100%", background: "white", borderRadius: 15, p: 8 }}>
         <PricingPlan
           name="Individual Researcher"
+          packageName="individual"
           price={99}
           details={[
             "Monitor upto 3 projects",
@@ -67,6 +68,7 @@ const Billing: React.FC = () => {
         <Divider w="100%" my={8} />
         <PricingPlan
           name="Enterprise"
+          packageName="enterprise"
           price={499}
           details={[
             "Monitor upto 10 projects",
@@ -84,6 +86,7 @@ const Billing: React.FC = () => {
         <PricingPlan
           isCustom
           name="Custom"
+          packageName=""
           price={499}
           details={[
             "Contact us in more custom features",
@@ -104,10 +107,11 @@ const Billing: React.FC = () => {
 
 const PricingPlan: React.FC<{
   name: string;
+  packageName: string;
   price: number;
   details: string[];
   isCustom?: boolean;
-}> = ({ name, price, details, isCustom }) => {
+}> = ({ name, price, details, packageName, isCustom }) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
 
   const createPaypalOrder = async () => {
@@ -115,7 +119,7 @@ const PricingPlan: React.FC<{
       status: string;
       orderID: string;
     }>("/api-create-paypal-order/", {
-      package: "package1",
+      package: packageName,
     });
     return data.orderID;
   };
