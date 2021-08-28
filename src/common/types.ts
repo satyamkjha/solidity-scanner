@@ -6,6 +6,7 @@ export type Profile = {
   contact_number: string;
   credits: number;
   company_name: string;
+  current_package: string;
 };
 export type ProjectSummary = {
   project_name: string;

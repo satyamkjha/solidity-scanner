@@ -5,6 +5,7 @@ import {
   Route,
   Redirect,
   RouteProps,
+  useHistory,
 } from "react-router-dom";
 import { useToast } from "@chakra-ui/react";
 
@@ -81,6 +82,13 @@ const Billing = lazy(
 
 const Routes: React.FC = () => {
   const toast = useToast();
+  const history = useHistory();
+
+  const logout = async () => {
+    await API.get("api-logout");
+    Auth.deauthenticateUser();
+    history.push("/signin");
+  };
 
   useEffect(() => {
     const interceptor = API.interceptors.response.use(
@@ -88,10 +96,9 @@ const Routes: React.FC = () => {
         return response;
       },
       (error) => {
-        // if (error.response.status === 401) {
-        //   logout();
-        // } else
-
+        if (error.response.status === 401) {
+          logout();
+        }
         if (!error.response) {
           toast({
             title: `Unexpected Error`,

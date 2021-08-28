@@ -14,7 +14,6 @@ const Projects: React.FC = () => {
   const { data, isLoading, refetch } = useScans();
   useEffect(() => {
     let intervalId: NodeJS.Timeout;
-    console.log("in useEffect");
     const refetchTillScanComplete = () => {
       if (
         data &&

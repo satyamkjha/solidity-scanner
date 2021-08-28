@@ -1,5 +1,5 @@
 import React from "react";
-
+import { useQueryClient } from "react-query";
 import { PayPalScriptProvider, PayPalButtons } from "@paypal/react-paypal-js";
 import {
   OnApproveData,
@@ -20,12 +20,17 @@ import {
   ModalContent,
   ModalBody,
   ModalCloseButton,
+  Spinner,
+  useToast,
 } from "@chakra-ui/react";
 
 import { AiOutlineCheckCircle } from "react-icons/ai";
 import API from "helpers/api";
+import { useProfile } from "hooks/useProfile";
+import { AiOutlineCalendar, AiFillCheckCircle } from "react-icons/ai";
 
 const Billing: React.FC = () => {
+  const { data } = useProfile();
   return (
     <Box
       sx={{
@@ -49,52 +54,112 @@ const Billing: React.FC = () => {
       >
         <Text sx={{ color: "text", fontWeight: 600 }}>
           BILLING
-          <Text as="span" ml={4} color="subtle" fontSize="smaller">
-            Get two scans free with trial account
-          </Text>
+          {data?.current_package === "trial" && (
+            <Text as="span" ml={4} color="subtle" fontSize="smaller">
+              Get two scans free with trial account
+            </Text>
+          )}
         </Text>
       </Flex>
-      <Box sx={{ w: "100%", background: "white", borderRadius: 15, p: 8 }}>
-        <PricingPlan
-          name="Individual Researcher"
-          packageName="individual"
-          price={99}
-          details={[
-            "Monitor upto 3 projects",
-            "Unlimited rescans",
-            "Access to all existing templates",
-          ]}
-        />
-        <Divider w="100%" my={8} />
-        <PricingPlan
-          name="Enterprise"
-          packageName="enterprise"
-          price={499}
-          details={[
-            "Monitor upto 10 projects",
-            "Unlimited rescans",
-            "Access to all existing templates",
-            "Integrate with all popular tools and platforms",
-            "Add custom scan templates and set priorities for issues",
-            "Access to white glove services from our team",
-          ]}
-        />
-      </Box>
-      <Box
-        sx={{ w: "100%", background: "white", borderRadius: 15, p: 8, mt: 4 }}
-      >
-        <PricingPlan
-          isCustom
-          name="Custom"
-          packageName=""
-          price={499}
-          details={[
-            "Contact us in more custom features",
-            "Request our team for a manual audit",
-            "Get suggestions for issue remediation",
-          ]}
-        />
-      </Box>
+      {!data ? (
+        <Flex w="100%" h="70vh" alignItems="center" justifyContent="center">
+          <Spinner />
+        </Flex>
+      ) : (
+        <>
+          {data.current_package === "trial" ? (
+            <>
+              <Box
+                sx={{ w: "100%", background: "white", borderRadius: 15, p: 8 }}
+              >
+                <PricingPlan
+                  name="Individual Researcher"
+                  packageName="individual"
+                  price={99}
+                  details={[
+                    "Monitor upto 3 projects",
+                    "Unlimited rescans",
+                    "Access to all existing templates",
+                  ]}
+                />
+                <Divider w="100%" my={8} />
+                <PricingPlan
+                  name="Enterprise"
+                  packageName="enterprise"
+                  price={499}
+                  details={[
+                    "Monitor upto 10 projects",
+                    "Unlimited rescans",
+                    "Access to all existing templates",
+                    "Integrate with all popular tools and platforms",
+                    "Add custom scan templates and set priorities for issues",
+                    "Access to white glove services from our team",
+                  ]}
+                />
+              </Box>
+              <Box
+                sx={{
+                  w: "100%",
+                  background: "white",
+                  borderRadius: 15,
+                  p: 8,
+                  mt: 4,
+                }}
+              >
+                <PricingPlan
+                  isCustom
+                  name="Custom"
+                  packageName=""
+                  price={499}
+                  details={[
+                    "Contact us in more custom features",
+                    "Request our team for a manual audit",
+                    "Get suggestions for issue remediation",
+                  ]}
+                />
+              </Box>
+            </>
+          ) : (
+            <>
+              {data.current_package === "enterprise" ? (
+                <Flex width="100%" p={8}>
+                  <Box sx={{ w: "100%" }}>
+                    <CurrentPlan
+                      name="Enterprise"
+                      packageName="enterprise"
+                      details={[
+                        "Monitor upto 10 projects",
+                        "Unlimited rescans",
+                        "Access to all existing templates",
+                        "Integrate with all popular tools and platforms",
+                        "Add custom scan templates and set priorities for issues",
+                        "Access to white glove services from our team",
+                      ]}
+                    />
+                  </Box>
+                  {/* <Box sx={{ w: "%" }}></Box> */}
+                </Flex>
+              ) : (
+                <Flex width="100%" p={8}>
+                  <Box sx={{ w: "100%" }}>
+                    <CurrentPlan
+                      name="Individual Researcher"
+                      packageName="individual"
+                      details={[
+                        "Monitor upto 3 projects",
+                        "Unlimited rescans",
+                        "Access to all existing templates",
+                      ]}
+                    />
+                  </Box>
+                  {/* <Box sx={{ w: "%" }}></Box> */}
+                </Flex>
+              )}
+            </>
+          )}
+        </>
+      )}
+
       {/* {isLoading ? (
         <Flex w="100%" h="70vh" alignItems="center" justifyContent="center">
           <Spinner />
@@ -113,6 +178,8 @@ const PricingPlan: React.FC<{
   isCustom?: boolean;
 }> = ({ name, price, details, packageName, isCustom }) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
+  const toast = useToast();
+  const queryClient = useQueryClient();
 
   const createPaypalOrder = async () => {
     const { data } = await API.post<{
@@ -128,13 +195,30 @@ const PricingPlan: React.FC<{
     data: OnApproveData,
     actions: OnApproveActions
   ) => {
-    const { data: responseData } = await API.post(
-      "/api-execute-paypal-order/",
-      {
-        order_id: data.orderID,
-      }
-    );
-    console.log(responseData);
+    const { data: responseData } = await API.post<{
+      status: string;
+      message: string;
+    }>("/api-execute-paypal-order/", {
+      order_id: data.orderID,
+    });
+    queryClient.invalidateQueries("profile");
+    if (responseData.status === "success") {
+      toast({
+        title: "Payment successful.",
+        description: `You've successfully subscribed to the ${packageName} plan.`,
+        status: "success",
+        duration: 9000,
+        isClosable: true,
+      });
+    } else {
+      toast({
+        title: "Error.",
+        description: `There was an issue processing your payment.`,
+        status: "error",
+        duration: 9000,
+        isClosable: true,
+      });
+    }
   };
 
   return (
@@ -266,6 +350,74 @@ const PricingDetails: React.FC<{ details: string[]; inModal?: boolean }> = ({
         </Flex>
       ))}
     </>
+  );
+};
+
+const CurrentPlan: React.FC<{
+  name: string;
+  packageName: string;
+  details: string[];
+}> = ({ name, packageName, details }) => {
+  return (
+    <Box
+      sx={{
+        w: "100%",
+        background: "white",
+        borderRadius: 15,
+        p: 8,
+        border: "1px solid #38CB89",
+      }}
+    >
+      <Flex alignItems="center">
+        <Icon as={AiFillCheckCircle} color="#38CB89" fontSize="xl" mr={2} />
+        <Text>Current Plan</Text>
+      </Flex>
+      <Flex>
+        <Box width="50%">
+          <Text sx={{ fontWeight: 500 }} fontSize="2xl" mt={8}>
+            {name}
+          </Text>
+          {/* <Text
+            sx={{
+              fontWeight: 600,
+              fontSize: "3xl",
+              color: "brand-dark",
+              py: 2,
+            }}
+          >
+            ${price} / mo
+          </Text> */}
+          <Box py={4}>
+            <PricingDetails details={details} inModal />
+          </Box>
+        </Box>
+        <Flex
+          width="50%"
+          py={4}
+          justifyContent="space-between"
+          alignItems="flex-end"
+          flexDirection="column"
+        >
+          <Flex alignItems="center" pt={4}>
+            <Icon
+              as={AiOutlineCalendar}
+              color="gray.500"
+              fontSize="2xl"
+              mr={2}
+            />
+            <Text>
+              <Text as="span" fontSize="2xl" fontWeight={700}>
+                28
+              </Text>{" "}
+              days remaining
+            </Text>
+          </Flex>
+          <Button size="sm" variant="brand">
+            Cancel Subscription
+          </Button>
+        </Flex>
+      </Flex>
+    </Box>
   );
 };
 
