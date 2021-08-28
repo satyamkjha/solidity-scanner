@@ -8,12 +8,16 @@ import Sidebar from "components/sidebar";
 
 import { useProfile } from "hooks/useProfile";
 
-import { SIDEBAR_WIDTH } from "common/constants";
+import {
+  SIDEBAR_WIDTH_EXPANDED,
+  SIDEBAR_WIDTH_COLLAPSED,
+} from "common/constants";
 import API from "helpers/api";
 import Auth from "helpers/auth";
 
 const Layout: React.FC = ({ children }) => {
   const [showSidebar, setShowSidebar] = useState(false);
+  const [isSidebarCollapsed, setSidebarCollapsed] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
   const history = useHistory();
   const { data: profileData } = useProfile();
@@ -53,7 +57,9 @@ const Layout: React.FC = ({ children }) => {
           top: 0,
           left: 0,
           display: ["block", "block", "none"],
-          width: SIDEBAR_WIDTH,
+          width: isSidebarCollapsed
+            ? SIDEBAR_WIDTH_COLLAPSED
+            : SIDEBAR_WIDTH_EXPANDED,
           height: "100vh",
           transform: showSidebar
             ? "translate3d(0px,0px,0px)"
@@ -64,14 +70,28 @@ const Layout: React.FC = ({ children }) => {
         }}
         ref={ref}
       >
-        <Sidebar />
+        <Sidebar
+          isCollapsed={isSidebarCollapsed}
+          setCollapsed={setSidebarCollapsed}
+        />
       </Box>
       <Box sx={{ display: ["none", "none", "block"] }}>
-        <Sidebar />
+        <Sidebar
+          isCollapsed={isSidebarCollapsed}
+          setCollapsed={setSidebarCollapsed}
+        />
       </Box>
       <Box
         sx={{
-          width: ["100%", "100%", `calc(100% - ${SIDEBAR_WIDTH})`],
+          width: [
+            "100%",
+            "100%",
+            `calc(100% - ${
+              isSidebarCollapsed
+                ? SIDEBAR_WIDTH_COLLAPSED
+                : SIDEBAR_WIDTH_EXPANDED
+            })`,
+          ],
           height: "100vh",
           overflowY: "scroll",
         }}

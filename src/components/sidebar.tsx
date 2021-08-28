@@ -1,65 +1,113 @@
 import React, { ReactElement } from "react";
 import { Link, useRouteMatch } from "react-router-dom";
-
-import { Flex, Box, Text } from "@chakra-ui/react";
+import { BsArrowsCollapse, BsArrowsExpand } from "react-icons/bs";
+import { Flex, Box, Text, Button, Icon } from "@chakra-ui/react";
 import {
   Logo,
+  LogoIcon,
   HomeMenuIcon,
   ProjectsMenuIcon,
   IntegrationMenuIcon,
   BillingMenuIcon,
 } from "components/icons";
 
-import { SIDEBAR_WIDTH } from "common/constants";
+import {
+  SIDEBAR_WIDTH_EXPANDED,
+  SIDEBAR_WIDTH_COLLAPSED,
+} from "common/constants";
 
-const Sidebar: React.FC = () => {
+const Sidebar: React.FC<{
+  isCollapsed: boolean;
+  setCollapsed: React.Dispatch<React.SetStateAction<boolean>>;
+}> = ({ isCollapsed, setCollapsed }) => {
   return (
-    <Box
+    <Flex
       sx={{
-        width: SIDEBAR_WIDTH,
+        width: isCollapsed ? SIDEBAR_WIDTH_COLLAPSED : SIDEBAR_WIDTH_EXPANDED,
         height: "100vh",
         borderRightWidth: 1,
         borderRightStyle: "solid",
         borderRightColor: "border",
         bg: "white",
+        flexDir: "column",
+        justifyContent: "space-between",
+        transition: "width 0.3s ease",
       }}
     >
-      <Flex width="100%" justifyContent="center" py={8}>
-        <Logo />
+      <Flex
+        width="100%"
+        justifyContent="center"
+        pt={8}
+        position="relative"
+        // overflow="hidden"
+      >
+        <Box position="absolute" width={isCollapsed ? "40px" : "220px"}>
+          {isCollapsed ? <LogoIcon size={35} /> : <Logo />}
+        </Box>
       </Flex>
-      <Flex sx={{ width: "100%", mt: 20, justifyContent: "flex-end" }}>
+      <Flex sx={{ width: "100%", justifyContent: "flex-end", pb: 16 }}>
         <Box sx={{ width: "85%" }}>
-          <Text sx={{ color: "subtle", ml: 3, mb: 4, fontSize: "xs" }}>
+          <Text
+            sx={{
+              color: "subtle",
+              ml: 3,
+              mb: 4,
+              fontSize: "xs",
+              opacity: isCollapsed ? 0 : 1,
+              transition: "opacity 0.3s ease",
+            }}
+          >
             PAGES
           </Text>
+
           <SidebarItem
             to="/home"
             label="Home"
             icon={<HomeMenuIcon size={16} />}
+            isCollapsed={isCollapsed}
           />
           <SidebarItem
             to="/projects"
             label="Projects"
             icon={<ProjectsMenuIcon size={16} />}
+            isCollapsed={isCollapsed}
           />
           <SidebarItem
             to="/blocks"
             label="Blocks"
             icon={<HomeMenuIcon size={16} />}
+            isCollapsed={isCollapsed}
           />
           <SidebarItem
             to="/integrations"
             label="Integrations"
             icon={<IntegrationMenuIcon size={24} />}
+            isCollapsed={isCollapsed}
           />
           <SidebarItem
             to="/billing"
             label="Billing"
             icon={<BillingMenuIcon size={24} />}
+            isCollapsed={isCollapsed}
           />
         </Box>
       </Flex>
-    </Box>
+      <Flex width="100%" justifyContent="center" pb={8} px={4}>
+        <Button
+          w="100%"
+          onClick={() => {
+            setCollapsed(!isCollapsed);
+          }}
+        >
+          <Icon
+            as={isCollapsed ? BsArrowsExpand : BsArrowsCollapse}
+            fontSize="2xl"
+            transform="rotate(90deg)"
+            color="gray.500"
+          />{" "}
+        </Button>
+      </Flex>
+    </Flex>
   );
 };
 
@@ -67,12 +115,14 @@ type SidebarItemProps = {
   to: string;
   label: string;
   icon: ReactElement;
+  isCollapsed: boolean;
 };
 
 export const SidebarItem: React.FC<SidebarItemProps> = ({
   to,
   label,
   icon,
+  isCollapsed,
 }) => {
   const match = useRouteMatch({
     path: to,
@@ -92,9 +142,11 @@ export const SidebarItem: React.FC<SidebarItemProps> = ({
         }}
       >
         {React.cloneElement(icon, { active })}
-        <Text ml={2} fontSize="sm">
-          {label}
-        </Text>
+        {!isCollapsed && (
+          <Text ml={2} fontSize="sm">
+            {label}
+          </Text>
+        )}
       </Flex>
     </Link>
   );
