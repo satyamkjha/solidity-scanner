@@ -81,11 +81,80 @@ const Billing = lazy(
 );
 
 const Routes: React.FC = () => {
+  return (
+    <Router>
+      <ErrorHandler>
+        <Switch>
+          <Route exact path="/">
+            <Landing />
+          </Route>
+          <Route exact path="/pricing">
+            <Pricing />
+          </Route>
+          <Route exact path="/faq">
+            <FAQ />
+          </Route>
+          <Route exact path="/terms-of-service">
+            <TermsOfService />
+          </Route>
+          <Route exact path="/privacy-policy">
+            <PrivacyPolicy />
+          </Route>
+          <Route exact path="/signin">
+            <SignIn />
+          </Route>
+          <Route exact path="/reset">
+            <Reset />
+          </Route>
+          <Route exact path="/signup">
+            <SignUp />
+          </Route>
+          <Route exact path="/verify">
+            <Verify />
+          </Route>
+          <Route exact path="/forgot">
+            <ForgotPassword />
+          </Route>
+
+          <Layout>
+            <Suspense fallback="">
+              <Switch>
+                <PrivateRoute exact path="/home">
+                  <Home />
+                </PrivateRoute>
+                <PrivateRoute exact path="/projects">
+                  <Projects />
+                </PrivateRoute>
+                <PrivateRoute exact path="/projects/:scanId">
+                  <ProjectPage />
+                </PrivateRoute>
+                <PrivateRoute exact path="/blocks">
+                  <Blocks />
+                </PrivateRoute>
+                <PrivateRoute exact path="/blocks/:scanId">
+                  <BlockPage />
+                </PrivateRoute>
+                <PrivateRoute exact path="/integrations">
+                  <Integrations />
+                </PrivateRoute>
+                <PrivateRoute exact path="/billing">
+                  <Billing />
+                </PrivateRoute>
+              </Switch>
+            </Suspense>
+          </Layout>
+        </Switch>
+      </ErrorHandler>
+    </Router>
+  );
+};
+
+const ErrorHandler: React.FC = ({ children }) => {
   const toast = useToast();
   const history = useHistory();
 
   const logout = async () => {
-    await API.get("api-logout");
+    // await API.get("api-logout");
     Auth.deauthenticateUser();
     history.push("/signin");
   };
@@ -98,8 +167,7 @@ const Routes: React.FC = () => {
       (error) => {
         if (error.response.status === 401) {
           logout();
-        }
-        if (!error.response) {
+        } else if (!error.response) {
           toast({
             title: `Unexpected Error`,
             status: "error",
@@ -122,71 +190,7 @@ const Routes: React.FC = () => {
       API.interceptors.response.eject(interceptor);
     };
   });
-
-  return (
-    <Router>
-      <Switch>
-        <Route exact path="/">
-          <Landing />
-        </Route>
-        <Route exact path="/pricing">
-          <Pricing />
-        </Route>
-        <Route exact path="/faq">
-          <FAQ />
-        </Route>
-        <Route exact path="/terms-of-service">
-          <TermsOfService />
-        </Route>
-        <Route exact path="/privacy-policy">
-          <PrivacyPolicy />
-        </Route>
-        <Route exact path="/signin">
-          <SignIn />
-        </Route>
-        <Route exact path="/reset">
-          <Reset />
-        </Route>
-        <Route exact path="/signup">
-          <SignUp />
-        </Route>
-        <Route exact path="/verify">
-          <Verify />
-        </Route>
-        <Route exact path="/forgot">
-          <ForgotPassword />
-        </Route>
-
-        <Layout>
-          <Suspense fallback="">
-            <Switch>
-              <PrivateRoute exact path="/home">
-                <Home />
-              </PrivateRoute>
-              <PrivateRoute exact path="/projects">
-                <Projects />
-              </PrivateRoute>
-              <PrivateRoute exact path="/projects/:scanId">
-                <ProjectPage />
-              </PrivateRoute>
-              <PrivateRoute exact path="/blocks">
-                <Blocks />
-              </PrivateRoute>
-              <PrivateRoute exact path="/blocks/:scanId">
-                <BlockPage />
-              </PrivateRoute>
-              <PrivateRoute exact path="/integrations">
-                <Integrations />
-              </PrivateRoute>
-              <PrivateRoute exact path="/billing">
-                <Billing />
-              </PrivateRoute>
-            </Switch>
-          </Suspense>
-        </Layout>
-      </Switch>
-    </Router>
-  );
+  return <>{children}</>;
 };
 
 const PrivateRoute: React.FC<RouteProps> = ({ children, ...rest }) => {

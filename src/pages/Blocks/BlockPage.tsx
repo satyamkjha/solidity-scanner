@@ -46,6 +46,9 @@ export const BlockPage: React.FC = () => {
             >
               <Text sx={{ fontSize: "xl", fontWeight: 600, ml: 2 }}>
                 {data?.scan_report.contract_address}
+                <Text as="span" fontSize="14px" ml={3} color="gray.500">
+                  {data.scan_report?.contract_platform?.toUpperCase()}
+                </Text>
               </Text>
               <Link
                 as={RouterLink}

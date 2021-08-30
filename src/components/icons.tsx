@@ -167,19 +167,37 @@ export const IntegrationMenuIcon: React.FC<{ size: number; active?: boolean }> =
     return (
       <svg
         width={size}
-        height={size}
-        viewBox="0 0 64 64"
+        height={(size * 22) / 28}
+        viewBox="0 0 18 22"
         fill="none"
         xmlns="http://www.w3.org/2000/svg"
         {...props}
       >
-        <circle cx={32} cy={32} r={32} fill={iconColor} fillOpacity={0.08} />
         <path
-          d="M41.333 46a4.667 4.667 0 100-9.333 4.667 4.667 0 000 9.333zM22.667 27.333a4.667 4.667 0 100-9.333 4.667 4.667 0 000 9.333zM33.556 22.667h4.666a3.11 3.11 0 013.111 3.11v10.89M22.667 27.333V46"
-          stroke={iconColor}
-          strokeWidth={3}
-          strokeLinecap="round"
-          strokeLinejoin="round"
+          d="M11.37 21.5h-5V19c-6.8-2-6.833-8.833-6-12h17c1.6 7.6-3.333 11.167-6 12v2.5z"
+          fill={active ? "#98FDAC" : "#B0A1ED"}
+        />
+        <rect
+          x={8.658}
+          y={9.344}
+          width={1.939}
+          height={4.696}
+          rx={0.97}
+          transform="rotate(31.284 8.658 9.344)"
+          fill={iconColor}
+        />
+        <rect
+          x={9.4}
+          y={11.73}
+          width={1.939}
+          height={4.696}
+          rx={0.97}
+          transform="rotate(34.426 9.4 11.73)"
+          fill={iconColor}
+        />
+        <path
+          d="M3.559 1.5a1.5 1.5 0 013 0V7h-3V1.5zM11.443 1.5a1.5 1.5 0 113 0V7h-3V1.5z"
+          fill={iconColor}
         />
       </svg>
     );
