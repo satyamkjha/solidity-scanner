@@ -51,7 +51,7 @@ small and middle deployments, and you shouldn’t feel obligated to use this
 feature. However we understand that this tool wouldn’t be useful if you couldn’t
 customize it when you are ready for it.
 
-## Server Setup
+### Server Setup
 sudo apt install nodejs
 sudo apt install npm
 sudo npm cache clean -f
