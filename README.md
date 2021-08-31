@@ -51,17 +51,17 @@ small and middle deployments, and you shouldn’t feel obligated to use this
 feature. However we understand that this tool wouldn’t be useful if you couldn’t
 customize it when you are ready for it.
 
-### Server Setup
-sudo apt install nodejs
-sudo apt install npm
-sudo npm cache clean -f
-sudo npm install -g n
-sudo n stable
-Sudo npm install
-sudo npm install --global yarn
-sudo yarn build
-sudo npm install -g serve
-serve -s build -l 80
+### `Server Setup`
+`sudo apt install nodejs`
+`sudo apt install npm`
+`sudo npm cache clean -f`
+`sudo npm install -g n`
+`sudo n stable`
+`Sudo npm install`
+`sudo npm install --global yarn`
+`sudo yarn build`
+`sudo npm install -g serve`
+`serve -s build -l 80`
 
 ## Learn More
 
