@@ -57,3 +57,15 @@ You can learn more in the
 [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
 
 To learn React, check out the [React documentation](https://reactjs.org/).
+
+## Server Setup
+sudo apt install nodejs
+sudo apt install npm
+sudo npm cache clean -f
+sudo npm install -g n
+sudo n stable
+Sudo npm install
+sudo npm install --global yarn
+sudo yarn build
+sudo npm install -g serve
+serve -s build -l 80
