@@ -103,7 +103,7 @@ const Projects: React.FC = () => {
           <Text fontSize="sm">No projects started yet.</Text>
           <Link to="/home">
             <Button variant="brand" width="200px" my={8}>
-              Start a scan for a new project
+              Add a New Project
             </Button>
           </Link>
         </Flex>
