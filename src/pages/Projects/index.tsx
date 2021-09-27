@@ -187,7 +187,7 @@ const ProjectCard: React.FC<{ project: Project }> = ({ project }) => {
           <>
             <Flex w="100%" alignItems="center" justifyContent="space-between">
               <Box>
-                <Text sx={{ w: "100%" }} isTruncated>
+                <Text sx={{ w: "220px" }} isTruncated>
                   {project_name}
                 </Text>
                 <Text sx={{ fontSize: "sm", color: "subtle" }}>
