@@ -6,6 +6,9 @@ import { ScanMeta } from "common/types";
 const getScans = async (project_id: string) => {
   const { data } = await API.post<{
     scans_remaining: number;
+    project_id: string;
+    project_name: string;
+    project_url: string;
     scans: ScanMeta[];
   }>("/api-get-scans/", {
     project_id,

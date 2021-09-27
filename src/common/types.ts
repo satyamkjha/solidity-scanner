@@ -39,7 +39,7 @@ export type Scan = {
   contract_address?: string;
   contract_platform?: string;
   scan_type: string;
-  scan_id: number;
+  scan_id: string;
   scan_init_time: string;
   scan_status: string;
   scan_summary?: ScanSummary;
@@ -52,6 +52,8 @@ export type ScanMeta = {
   scan_id: string;
   scan_time: string;
   project_id: string;
+  scan_score: string;
+  scan_name: string;
 };
 
 export type ScanSummary = {
