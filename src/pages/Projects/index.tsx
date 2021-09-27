@@ -204,7 +204,8 @@ const ProjectCard: React.FC<{ project: Project }> = ({ project }) => {
                     setIsOpen(true);
                   }}
                   transition="0.3s opacity"
-                  _hover={{ opacity: 0.9 }}
+                  _hover={{ opacity: scans_remaining === 0 ? 0.4 : 0.9 }}
+                  isDisabled={scans_remaining === 0}
                 >
                   <Flex sx={{ flexDir: "column", alignItems: "center" }}>
                     <RescanIcon size={38} />

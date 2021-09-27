@@ -188,8 +188,9 @@ const ScanDetails: React.FC<{ scansRemaining: number; scans: ScanMeta[] }> = ({
                       px={2}
                       py={6}
                       transition="0.3s opacity"
-                      _hover={{ opacity: 0.9 }}
                       onClick={() => setIsOpen(true)}
+                      _hover={{ opacity: scansRemaining === 0 ? 0.4 : 0.9 }}
+                      isDisabled={scansRemaining === 0}
                     >
                       <Flex sx={{ flexDir: "column", alignItems: "center" }}>
                         <RescanIcon size={38} />
@@ -202,6 +203,13 @@ const ScanDetails: React.FC<{ scansRemaining: number; scans: ScanMeta[] }> = ({
                         (scan) => scan.scan_id === data.scan_report.scan_id
                       )?.scan_name
                     }
+                    <Box
+                      as="span"
+                      ml={4}
+                      sx={{ fontWeight: 600, fontSize: "sm", color: "subtle" }}
+                    >
+                      {scansRemaining} scans remaining
+                    </Box>
                   </Text>
                 </HStack>
                 <HStack
