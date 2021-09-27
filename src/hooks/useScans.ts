@@ -1,13 +1,18 @@
 import { useQuery } from "react-query";
 import API from "helpers/api";
 
-import { Scan } from "common/types";
+import { ScanMeta } from "common/types";
 
-const getScans = async () => {
-  const { data } = await API.get("/api-get-task-status");
+const getScans = async (project_id: string) => {
+  const { data } = await API.post<{
+    scans_remaining: number;
+    scans: ScanMeta[];
+  }>("/api-get-scans/", {
+    project_id,
+  });
   return data;
 };
 
-export const useScans = () => {
-  return useQuery<{ scans: Scan[] }>("scans", getScans);
+export const useScans = (project_id: string) => {
+  return useQuery(["scans", project_id], () => getScans(project_id));
 };

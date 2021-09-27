@@ -1,29 +1,52 @@
-import React, { useEffect } from "react";
-import { Link } from "react-router-dom";
-import { Flex, Box, Text, Button, Progress, Spinner } from "@chakra-ui/react";
+import React, { useEffect, useState, useRef } from "react";
+import { Link, useHistory } from "react-router-dom";
+import { useQueryClient } from "react-query";
+import {
+  Flex,
+  Box,
+  Text,
+  Button,
+  Progress,
+  Spinner,
+  Tooltip,
+  AlertDialog,
+  AlertDialogBody,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogContent,
+  AlertDialogOverlay,
+} from "@chakra-ui/react";
 
-import { LogoIcon } from "components/icons";
+import { LogoIcon, RescanIcon } from "components/icons";
 import Score from "components/score";
 import VulnerabilityDistribution from "components/vulnDistribution";
 
-import { Scan } from "common/types";
+import API from "helpers/api";
+
+import { Project } from "common/types";
 import { timeSince } from "common/functions";
-import { useScans } from "hooks/useScans";
+
+import { useProjects } from "hooks/useProjects";
 
 const Projects: React.FC = () => {
-  const { data, isLoading, refetch } = useScans();
+  const { data, isLoading, refetch } = useProjects();
+
   useEffect(() => {
     let intervalId: NodeJS.Timeout;
     const refetchTillScanComplete = () => {
       if (
         data &&
-        data.scans.some(({ scan_status }) => scan_status !== "scan_done")
+        data.projects.some(
+          ({ _latest_scan }) => _latest_scan.scan_status !== "scan_done"
+        )
       ) {
         intervalId = setInterval(async () => {
           await refetch();
           if (
             data &&
-            data.scans.every(({ scan_status }) => scan_status === "scan_done")
+            data.projects.every(
+              ({ _latest_scan }) => _latest_scan.scan_status === "scan_done"
+            )
           ) {
             clearInterval(intervalId);
           }
@@ -65,7 +88,7 @@ const Projects: React.FC = () => {
         <Flex w="100%" h="70vh" alignItems="center" justifyContent="center">
           <Spinner />
         </Flex>
-      ) : data?.scans.length === 0 ? (
+      ) : data?.projects.length === 0 ? (
         <Flex
           w="100%"
           h="70vh"
@@ -80,7 +103,7 @@ const Projects: React.FC = () => {
           <Text fontSize="sm">No projects started yet.</Text>
           <Link to="/home">
             <Button variant="brand" width="200px" my={8}>
-              Start a scan
+              Start a scan for a new project
             </Button>
           </Link>
         </Flex>
@@ -91,13 +114,14 @@ const Projects: React.FC = () => {
             justifyItems: ["center", "center", "space-around"],
           }}
         >
-          {[...(data?.scans || [])]
-            .sort((scan1, scan2) =>
-              new Date(scan1._updated) < new Date(scan2._updated) ? 1 : -1
+          {[...(data?.projects || [])]
+            .sort((project1, project2) =>
+              new Date(project1.date_updated) < new Date(project2.date_updated)
+                ? 1
+                : -1
             )
-            .filter(({ scan_type }) => scan_type === "project")
-            .map((scan) => (
-              <ProjectCard key={scan.scan_id} scan={scan} />
+            .map((project) => (
+              <ProjectCard key={project.project_id} project={project} />
             ))}
         </Flex>
       )}
@@ -105,13 +129,42 @@ const Projects: React.FC = () => {
   );
 };
 
-const ProjectCard: React.FC<{ scan: Scan }> = ({ scan }) => {
-  const { scan_status, project_name, scan_id, scan_summary, _updated } = scan;
+const ProjectCard: React.FC<{ project: Project }> = ({ project }) => {
+  const [isOpen, setIsOpen] = useState(false);
+  const [isRescanLoading, setRescanLoading] = useState(false);
+  const cancelRef = useRef<HTMLButtonElement | null>(null);
+  const history = useHistory();
+  const queryClient = useQueryClient();
+  const {
+    project_id,
+    project_name,
+    date_updated,
+    scans_remaining,
+    _latest_scan,
+  } = project;
+
+  const { scan_summary, scan_status } = _latest_scan;
+
+  const onClose = () => setIsOpen(false);
+
+  const rescan = async () => {
+    setRescanLoading(true);
+    await API.post("/api-project-scan/", {
+      project_id,
+      project_type: "existing",
+    });
+    await queryClient.invalidateQueries("projects");
+    setRescanLoading(false);
+    onClose();
+  };
+
   return (
-    <Link
-      to={scan_status === "scan_done" ? `/projects/${scan_id}` : "/projects"}
-    >
+    <>
       <Flex
+        onClick={() => {
+          if (scan_status === "scan_done")
+            history.push(`/projects/${project_id}/${_latest_scan.scan_id}`);
+        }}
         sx={{
           cursor: scan_status === "scan_done" ? "pointer" : "not-allowed",
           flexDir: "column",
@@ -130,17 +183,44 @@ const ProjectCard: React.FC<{ scan: Scan }> = ({ scan }) => {
           },
         }}
       >
-        <Box>
-          <Text sx={{ w: "100%" }} isTruncated>
-            {project_name}
-          </Text>
-          <Text sx={{ fontSize: "sm", color: "subtle" }}>
-            Last scanned {timeSince(new Date(_updated))}
-          </Text>
-        </Box>
         {scan_status === "scan_done" ? (
           <>
-            <Score score={scan_summary?.score || "0"} />
+            <Flex w="100%" alignItems="center" justifyContent="space-between">
+              <Box>
+                <Text sx={{ w: "100%" }} isTruncated>
+                  {project_name}
+                </Text>
+                <Text sx={{ fontSize: "sm", color: "subtle" }}>
+                  Last scanned {timeSince(new Date(date_updated))}
+                </Text>
+              </Box>
+              <Tooltip label="Rescan" aria-label="A tooltip">
+                <Button
+                  variant="brand"
+                  px={2}
+                  py={6}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    setIsOpen(true);
+                  }}
+                  transition="0.3s opacity"
+                  _hover={{ opacity: 0.9 }}
+                >
+                  <Flex sx={{ flexDir: "column", alignItems: "center" }}>
+                    <RescanIcon size={38} />
+                  </Flex>
+                </Button>
+              </Tooltip>
+            </Flex>
+            <Flex w="100%" alignItems="center" justifyContent="space-between">
+              <Score score={scan_summary?.score || "0"} />
+              <Text sx={{ fontSize: "sm", color: "subtle" }}>
+                <Box as="span" sx={{ fontWeight: 600, fontSize: "md" }}>
+                  {scans_remaining}
+                </Box>{" "}
+                scans remaining
+              </Text>
+            </Flex>
             <VulnerabilityDistribution
               critical={
                 scan_summary?.issue_severity_distribution?.critical || 0
@@ -155,6 +235,10 @@ const ProjectCard: React.FC<{ scan: Scan }> = ({ scan }) => {
           </>
         ) : (
           <Box>
+            <Text sx={{ w: "100%", mb: 8 }} isTruncated>
+              {project_name}
+            </Text>
+
             <Flex
               sx={{
                 display: "inline-flex",
@@ -174,7 +258,42 @@ const ProjectCard: React.FC<{ scan: Scan }> = ({ scan }) => {
           </Box>
         )}
       </Flex>
-    </Link>
+      <AlertDialog
+        isOpen={isOpen}
+        leastDestructiveRef={cancelRef}
+        onClose={onClose}
+      >
+        <AlertDialogOverlay>
+          <AlertDialogContent>
+            <AlertDialogHeader fontSize="lg" fontWeight="bold">
+              Rescan Project
+            </AlertDialogHeader>
+
+            <AlertDialogBody>
+              Are you sure? You have{" "}
+              <Box as="span" sx={{ fontWeight: 600 }}>
+                {scans_remaining}
+              </Box>{" "}
+              scans remaining.
+            </AlertDialogBody>
+
+            <AlertDialogFooter>
+              <Button ref={cancelRef} onClick={onClose} py={6}>
+                Cancel
+              </Button>
+              <Button
+                variant="brand"
+                onClick={rescan}
+                ml={3}
+                isLoading={isRescanLoading}
+              >
+                Rescan
+              </Button>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialogOverlay>
+      </AlertDialog>
+    </>
   );
 };
 

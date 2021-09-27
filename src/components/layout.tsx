@@ -14,6 +14,7 @@ import {
 } from "common/constants";
 import API from "helpers/api";
 import Auth from "helpers/auth";
+import { ProjectIcon } from "./icons";
 
 const Layout: React.FC = ({ children }) => {
   const [showSidebar, setShowSidebar] = useState(false);
@@ -130,6 +131,21 @@ const Layout: React.FC = ({ children }) => {
                   CREDITS: {profileData?.credits}
                 </Box>
               </Text>
+            )}
+
+            {profileData && (
+              <Flex ml={20} sx={{ display: ["none", "none", "flex"] }}>
+                <ProjectIcon size={37} />
+                <Text fontWeight={600} fontSize="2xl" ml={2}>
+                  {profileData.projects_remaining.toLocaleString("en-US", {
+                    minimumIntegerDigits: 2,
+                    useGrouping: false,
+                  })}
+                  <Box as="span" ml={2} color="subtle" fontSize="sm">
+                    Remaining Projects
+                  </Box>
+                </Text>
+              </Flex>
             )}
           </Flex>
           <Button

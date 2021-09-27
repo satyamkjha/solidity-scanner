@@ -333,6 +333,87 @@ export const SlackIcon: React.FC<{ size: number }> = ({ size }) => {
   );
 };
 
+export const ProjectIcon: React.FC<{ size: number }> = ({ size }) => {
+  return (
+    <svg width={37} height={27} fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path
+        d="M0 5h34a3 3 0 013 3v16a3 3 0 01-3 3H3a3 3 0 01-3-3V5zM0 4a4 4 0 014-4h10.5L19 5H0V4z"
+        fill="#E49F4E"
+      />
+      <path
+        d="M1.75 5h32.248a3 3 0 013 3v15.536a2 2 0 01-2 2H4.75a3 3 0 01-3-3V5z"
+        fill="#FFC661"
+      />
+      <path d="M1.75 2a2 2 0 012-2h10.748l4.5 5-17.248.111V2z" fill="#FFC661" />
+      <rect x={6.301} y={19} width={7.232} height={2} rx={1} fill="#D3E2FA" />
+      <g filter="url(#folderDefs)">
+        <rect
+          x={6.449}
+          y={19.339}
+          width={7.222}
+          height={2}
+          rx={1}
+          fill="#EEF5FD"
+        />
+      </g>
+      <defs>
+        <filter
+          id="folderDefs"
+          x={6.349}
+          y={19.339}
+          width={7.422}
+          height={2.3}
+          filterUnits="userSpaceOnUse"
+          colorInterpolationFilters="sRGB"
+        >
+          <feFlood floodOpacity={0} result="BackgroundImageFix" />
+          <feColorMatrix
+            in="SourceAlpha"
+            values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0"
+            result="hardAlpha"
+          />
+          <feOffset dy={0.2} />
+          <feGaussianBlur stdDeviation={0.05} />
+          <feComposite in2="hardAlpha" operator="out" />
+          <feColorMatrix values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.15 0" />
+          <feBlend in2="BackgroundImageFix" result="effect1_dropShadow" />
+          <feBlend in="SourceGraphic" in2="effect1_dropShadow" result="shape" />
+        </filter>
+      </defs>
+    </svg>
+  );
+};
+
+export const RescanIcon: React.FC<{ size: number }> = ({ size }) => {
+  return (
+    <svg
+      viewBox="0 0 38 40"
+      width={size}
+      height={(40 * size) / 38}
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      <path
+        d="M9.1 11.07v5.347h2.2v-4.278h4.4V10h-5.5c-.292 0-.572.113-.778.313-.206.2-.322.473-.322.756zm19.8 5.347v-5.348c0-.283-.116-.555-.322-.756A1.116 1.116 0 0027.8 10h-5.5v2.139h4.4v4.278h2.2zM26.7 27.11h-4.4v2.139h5.5c.292 0 .572-.113.778-.313.206-.2.322-.473.322-.756v-5.348h-2.2v4.278zm-11 2.139v-2.139h-4.4v-4.278H9.1v5.348c0 .283.116.555.322.756.206.2.486.313.778.313h5.5zM8 18.556h22v2.138H8v-2.138z"
+        fill="#fff"
+      />
+      <path
+        fillRule="evenodd"
+        clipRule="evenodd"
+        d="M18 2h2c8.837 0 16 7.163 16 16v1.829c0 7.552-5.232 13.881-12.268 15.562v2.05C31.882 35.724 38 28.491 38 19.83V18c0-9.941-8.059-18-18-18h-2C8.059 0 0 8.059 0 18v1.829C0 27.54 4.85 34.12 11.668 36.684v-2.157C5.981 32.074 2 26.417 2 19.829V18c0-6.587 3.98-12.245 9.668-14.698V3.1h.488A15.96 15.96 0 0118 2z"
+        fill="#fff"
+      />
+      <path
+        d="M25.395 38.477l-2.986-1.865 1.767-3.04"
+        stroke="#fff"
+        strokeWidth={2}
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+    </svg>
+  );
+};
+
 export const JiraIcon: React.FC<{ size: number }> = ({ size }) => {
   return (
     <svg

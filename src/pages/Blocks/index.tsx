@@ -8,10 +8,10 @@ import VulnerabilityDistribution from "components/vulnDistribution";
 
 import { Scan } from "common/types";
 import { timeSince } from "common/functions";
-import { useScans } from "hooks/useScans";
+import { useBlocks } from "hooks/useBlocks";
 
 const Blocks: React.FC = () => {
-  const { data, isLoading, refetch } = useScans();
+  const { data, isLoading, refetch } = useBlocks();
   useEffect(() => {
     let intervalId: NodeJS.Timeout;
     const refetchTillScanComplete = () => {
@@ -95,7 +95,6 @@ const Blocks: React.FC = () => {
             .sort((scan1, scan2) =>
               new Date(scan1._updated) < new Date(scan2._updated) ? 1 : -1
             )
-            .filter(({ scan_type }) => scan_type === "block")
             .map((scan) => (
               <BlockCard key={scan.scan_id} scan={scan} />
             ))}

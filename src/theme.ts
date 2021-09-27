@@ -62,6 +62,33 @@ export const theme = extendTheme({
               "linear-gradient(129.18deg, #52FF00 8.52%, #00EEFD 93.94%)",
           },
         }),
+        "accent-ghost": (props) => ({
+          ...defaultTheme.components.Button.variants.ghost(props),
+          background: "white",
+          color: "#3300FF",
+          fontSize: "15px",
+          py: 6,
+          _hover: {
+            background: "#f7f5ff",
+          },
+          _active: {
+            background: "#efebff",
+          },
+        }),
+        "accent-outline": (props) => ({
+          ...defaultTheme.components.Button.variants.outline(props),
+          background: "#F5F2FF",
+          color: "#000000",
+          fontSize: "15px",
+          borderColor: "#C1B1FF",
+          py: 6,
+          _hover: {
+            background: "#f7f5ff",
+          },
+          _active: {
+            background: "#efebff",
+          },
+        }),
       },
     },
     Input: {
@@ -161,6 +188,22 @@ export const theme = extendTheme({
         informational: {
           filledTrack: {
             bgColor: "gray.300",
+          },
+        },
+      },
+    },
+    Switch: {
+      parts: ["container", "track", "thumb"],
+      variants: {
+        brand: {
+          track: {
+            bg: "gray.100",
+            _checked: {
+              bg: "gray.100",
+            },
+          },
+          thumb: {
+            bg: "linear-gradient(129.18deg, #52FF00 8.52%, #00EEFD 93.94%)",
           },
         },
       },

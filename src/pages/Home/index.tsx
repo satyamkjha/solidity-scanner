@@ -25,6 +25,8 @@ import {
   FormLabel,
   Select,
   FormHelperText,
+  Switch,
+  HStack,
 } from "@chakra-ui/react";
 import { FaFileCode } from "react-icons/fa";
 import { AiOutlineProject } from "react-icons/ai";
@@ -238,17 +240,21 @@ type ApplicationFormData = {
 
 const ApplicationForm: React.FC = () => {
   const queryClient = useQueryClient();
+  const [visibility, setVisibility] = useState(false);
   const { handleSubmit, register, formState } = useForm<ApplicationFormData>();
   const history = useHistory();
   const onSubmit = async ({
     project_url,
     project_name,
   }: ApplicationFormData) => {
-    await API.post("/api-start-scan/", {
+    await API.post("/api-project-scan/", {
       project_url,
       ...(project_name && project_name !== "" && { project_name }),
+      project_type: "new",
+      project_visibility: visibility ? "private" : "public",
     });
     queryClient.invalidateQueries("scans");
+    queryClient.invalidateQueries("profile");
     history.push("/projects");
   };
   return (
@@ -298,6 +304,17 @@ const ApplicationForm: React.FC = () => {
             />
           </InputGroup>
 
+          <HStack alignItems="center" spacing={6} fontSize="14px">
+            <Text>Public</Text>
+            <Switch
+              size="lg"
+              variant="brand"
+              isChecked={visibility}
+              onChange={() => setVisibility(!visibility)}
+            />
+            <Text>Private</Text>
+          </HStack>
+
           <Button
             type="submit"
             variant="brand"
@@ -328,6 +345,7 @@ const ContractForm: React.FC = () => {
       contract_platform: platform,
     });
     queryClient.invalidateQueries("scans");
+    queryClient.invalidateQueries("profile");
     history.push("/blocks");
   };
   return (

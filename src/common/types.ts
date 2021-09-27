@@ -7,13 +7,22 @@ export type Profile = {
   credits: number;
   company_name: string;
   current_package: string;
+  projects_remaining: number;
 };
-export type ProjectSummary = {
+
+export type Project = {
+  project_id: string;
   project_name: string;
-  task_status: string;
-  task_id: string;
-  last_updated: number;
-  task_added: number;
+  project_url: string;
+  project_visibility: string;
+  date_created: string;
+  date_updated: string;
+  scans_remaining: number;
+  _latest_scan: {
+    scan_id: string;
+    scan_status: string;
+    scan_summary: ScanSummary;
+  };
 };
 
 export type AuthResponse = {
@@ -37,6 +46,12 @@ export type Scan = {
   scan_details?: ScanDetail[];
   _created: string;
   _updated: string;
+};
+
+export type ScanMeta = {
+  scan_id: string;
+  scan_time: string;
+  project_id: string;
 };
 
 export type ScanSummary = {

@@ -1,10 +1,19 @@
 import React from "react";
-import { Flex, VStack, HStack, Box, Text } from "@chakra-ui/react";
+import {
+  Flex,
+  VStack,
+  HStack,
+  Box,
+  Text,
+  CircularProgress,
+  CircularProgressLabel,
+} from "@chakra-ui/react";
 
 import VulnerabilityDistribution from "components/vulnDistribution";
 import PieChart from "components/pieChart";
 import Score from "components/score";
 import { ScanSummary } from "common/types";
+import { LogoIcon } from "./icons";
 
 const pieData = (
   critical: number,
@@ -45,7 +54,10 @@ const pieData = (
   },
 ];
 
-const Overview: React.FC<{ data: ScanSummary }> = ({ data }) => {
+const Overview: React.FC<{ data: ScanSummary; scansRemaining?: number }> = ({
+  data,
+  scansRemaining,
+}) => {
   const {
     issues_count,
     issue_severity_distribution: { critical, high, medium, low, informational },
@@ -77,7 +89,44 @@ const Overview: React.FC<{ data: ScanSummary }> = ({ data }) => {
         p={8}
         spacing={5}
       >
-        <Score score={score} />
+        <HStack w="100%" justifyContent="space-between">
+          {scansRemaining && (
+            <Flex px={2}>
+              <LogoIcon size={40} />
+              <Box ml={2} mt="-4px">
+                <Text>
+                  {scansRemaining.toLocaleString("en-US", {
+                    minimumIntegerDigits: 2,
+                    useGrouping: false,
+                  })}
+                </Text>
+                <Text fontSize="12px" color="subtle">
+                  Scans left
+                </Text>
+              </Box>
+            </Flex>
+          )}
+          <CircularProgress
+            value={(parseInt(score, 10) * 100) / 5}
+            color="accent"
+            thickness="4px"
+            size="65px"
+            capIsRound
+          >
+            <CircularProgressLabel
+              sx={{ display: "flex", justifyContent: "center" }}
+            >
+              <Box>
+                <Text fontSize="14px" fontWeight={700} color="accent">
+                  {score}
+                </Text>
+                <Text fontSize="11px" color="subtle" mt="-4px">
+                  Score
+                </Text>
+              </Box>
+            </CircularProgressLabel>
+          </CircularProgress>
+        </HStack>
         <Box sx={{ w: "100%", borderRadius: 15, bg: "bg.subtle", p: 4 }}>
           <Text sx={{ fontSize: "sm", letterSpacing: "0.7px" }}>
             SCAN STATISTICS

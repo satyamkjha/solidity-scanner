@@ -17,7 +17,7 @@ const Score: React.FC<ScoreProps> = ({ score }) => {
         alignItems: "center",
       }}
     >
-      <CircularProgress
+      {/* <CircularProgress
         value={(parseInt(score, 10) * 100) / 5}
         color="brand"
         capIsRound
@@ -27,15 +27,14 @@ const Score: React.FC<ScoreProps> = ({ score }) => {
         >
           <LogoIcon size={20} />
         </CircularProgressLabel>
-      </CircularProgress>
-      <Box mx={2}>
+      </CircularProgress> */}
+      <Box mx={2} sx={{ textAlign: "center" }}>
         <Text
           sx={{
             color: "accent",
             fontSize: "2xl",
             fontWeight: 600,
             mx: "auto",
-            textAlign: "center",
             lineHeight: 1,
           }}
         >

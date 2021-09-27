@@ -1,9 +1,16 @@
 import React, { ReactElement } from "react";
 import { Link, useRouteMatch } from "react-router-dom";
 import { BsArrowsCollapse, BsArrowsExpand } from "react-icons/bs";
-import { Flex, Box, Text, Button, Icon } from "@chakra-ui/react";
 import {
-  Logo,
+  Flex,
+  Box,
+  Text,
+  Button,
+  Icon,
+  HStack,
+  Heading,
+} from "@chakra-ui/react";
+import {
   LogoIcon,
   HomeMenuIcon,
   ProjectsMenuIcon,
@@ -16,10 +23,14 @@ import {
   SIDEBAR_WIDTH_COLLAPSED,
 } from "common/constants";
 
+import { useProfile } from "hooks/useProfile";
+
 const Sidebar: React.FC<{
   isCollapsed: boolean;
   setCollapsed: React.Dispatch<React.SetStateAction<boolean>>;
 }> = ({ isCollapsed, setCollapsed }) => {
+  const { data: profileData } = useProfile();
+
   return (
     <Flex
       sx={{
@@ -31,6 +42,7 @@ const Sidebar: React.FC<{
         bg: "white",
         flexDir: "column",
         justifyContent: "space-between",
+        overflow: "hidden",
         transition: "width 0.3s ease",
       }}
     >
@@ -42,7 +54,27 @@ const Sidebar: React.FC<{
         // overflow="hidden"
       >
         <Box position="absolute" width={isCollapsed ? "40px" : "220px"}>
-          {isCollapsed ? <LogoIcon size={35} /> : <Logo />}
+          {isCollapsed ? (
+            <LogoIcon size={40} />
+          ) : (
+            <HStack>
+              <LogoIcon size={40} />
+              <Box>
+                <Heading
+                  fontSize={["xl", "xl", "2xl"]}
+                  fontWeight={700}
+                  color="black"
+                >
+                  Solidity Scan
+                </Heading>
+                {profileData && (
+                  <Text fontSize="13px">
+                    {profileData.current_package.toUpperCase()}
+                  </Text>
+                )}
+              </Box>
+            </HStack>
+          )}
         </Box>
       </Flex>
       <Flex sx={{ width: "100%", justifyContent: "flex-end", pb: 16 }}>
