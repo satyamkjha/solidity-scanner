@@ -18,3 +18,9 @@ export function timeSince(date: Date): string {
   }
   return `${Math.floor(seconds)} seconds ago`;
 }
+
+export function getCookie(name: string) {
+  const value = `; ${document.cookie}`;
+  const parts = value.split(`; ${name}=`);
+  if (parts.length === 2) return parts.pop().split(";").shift();
+}

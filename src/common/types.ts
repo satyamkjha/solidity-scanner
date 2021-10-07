@@ -8,6 +8,16 @@ export type Profile = {
   company_name: string;
   current_package: string;
   projects_remaining: number;
+  _integrations: {
+    github: IntegrationData;
+    slack: IntegrationData;
+    jira: IntegrationData;
+  };
+};
+
+export type IntegrationData = {
+  allowed: boolean;
+  status: string;
 };
 
 export type Project = {
