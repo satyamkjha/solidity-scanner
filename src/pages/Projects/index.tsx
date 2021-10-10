@@ -185,7 +185,11 @@ const ProjectCard: React.FC<{ project: Project }> = ({ project }) => {
       >
         {scan_status === "scan_done" ? (
           <>
-            <Flex w="100%" alignItems="center" justifyContent="space-between">
+            <Flex
+              w="100%"
+              alignItems="flex-start"
+              justifyContent="space-between"
+            >
               <Box>
                 <Text sx={{ w: "220px" }} isTruncated>
                   {project_name}
