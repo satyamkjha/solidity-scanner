@@ -52,6 +52,7 @@ export type Scan = {
   scan_id: string;
   scan_init_time: string;
   scan_status: string;
+  beta_scan_status: string;
   scan_summary?: ScanSummary;
   scan_details?: ScanDetail[];
   _created: string;
@@ -92,6 +93,7 @@ export type ScanDetail = {
 
 export type Finding = {
   file_path: string;
+  description: string;
   line_nos_start: number[];
   line_nos_end: number[];
 };

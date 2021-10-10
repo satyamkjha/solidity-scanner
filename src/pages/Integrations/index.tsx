@@ -189,9 +189,9 @@ const IntegrationChannel: React.FC<IntegrationChannelProps> = ({
               <Flex alignItems="center" mt={1}>
                 <Icon
                   mr={1}
-                  fontSize="14px"
+                  fontSize="12px"
                   as={AiOutlineWarning}
-                  color="yellow.500"
+                  color="yellow.400"
                 />
                 <Text
                   fontSize="12px"

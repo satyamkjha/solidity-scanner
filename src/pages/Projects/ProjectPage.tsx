@@ -1,4 +1,5 @@
 import React, { useEffect, useState, useRef } from "react";
+import { useQueryClient } from "react-query";
 import {
   Switch,
   Route,
@@ -34,6 +35,7 @@ import {
 import { AiOutlineClockCircle, AiOutlineDownload } from "react-icons/ai";
 import Overview from "components/overview";
 import Result from "components/result";
+import AdvancedScan from "components/advancedScan";
 import { RescanIcon, LogoIcon } from "components/icons";
 
 import API from "helpers/api";
@@ -115,6 +117,7 @@ const ScanDetails: React.FC<{ scansRemaining: number; scans: ScanMeta[] }> = ({
   const [isOpen, setIsOpen] = useState(false);
   const [isRescanLoading, setRescanLoading] = useState(false);
   const cancelRef = useRef<HTMLButtonElement | null>(null);
+  const queryClient = useQueryClient();
   const { projectId, scanId } =
     useParams<{ projectId: string; scanId: string }>();
   const history = useHistory();
@@ -148,6 +151,7 @@ const ScanDetails: React.FC<{ scansRemaining: number; scans: ScanMeta[] }> = ({
       project_type: "existing",
     });
     setRescanLoading(false);
+    queryClient.invalidateQueries(["scans", projectId]);
     onClose();
     history.push(`/projects/${projectId}/${data.scan_id}`);
   };
@@ -182,18 +186,28 @@ const ScanDetails: React.FC<{ scansRemaining: number; scans: ScanMeta[] }> = ({
                 }}
               >
                 <HStack spacing={[8]} mb={[4, 4, 0]}>
-                  <Tooltip label="Rescan" aria-label="A tooltip">
+                  <Tooltip label="Rescan" aria-label="A tooltip" mt={2}>
                     <Button
-                      variant="brand"
-                      px={2}
-                      py={6}
+                      size="sm"
+                      colorScheme="white"
                       transition="0.3s opacity"
+                      height="58px"
+                      width="58px"
                       onClick={() => setIsOpen(true)}
-                      _hover={{ opacity: scansRemaining === 0 ? 0.4 : 0.9 }}
-                      isDisabled={scansRemaining === 0}
+                      _hover={{
+                        opacity:
+                          scansRemaining === 0 ||
+                          data.scan_report.scan_status !== "scan_done"
+                            ? 0.4
+                            : 0.9,
+                      }}
+                      isDisabled={
+                        scansRemaining === 0 ||
+                        data.scan_report.scan_status !== "scan_done"
+                      }
                     >
                       <Flex sx={{ flexDir: "column", alignItems: "center" }}>
-                        <RescanIcon size={38} />
+                        <RescanIcon size={60} />
                       </Flex>
                     </Button>
                   </Tooltip>
@@ -268,7 +282,7 @@ const ScanDetails: React.FC<{ scansRemaining: number; scans: ScanMeta[] }> = ({
                   />
                 </Flex>
               ) : (
-                <Tabs variant="soft-rounded" colorScheme="green">
+                <Tabs variant="soft-rounded" colorScheme="green" isLazy>
                   <TabList
                     sx={{
                       borderBottomWidth: "1px",
@@ -299,6 +313,9 @@ const ScanDetails: React.FC<{ scansRemaining: number; scans: ScanMeta[] }> = ({
                             type="project"
                           />
                         )}
+                    </TabPanel>
+                    <TabPanel>
+                      <AdvancedScan scanId={scanId} />
                     </TabPanel>
                   </TabPanels>
                 </Tabs>

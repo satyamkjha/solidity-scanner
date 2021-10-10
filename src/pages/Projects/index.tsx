@@ -194,11 +194,12 @@ const ProjectCard: React.FC<{ project: Project }> = ({ project }) => {
                   Last scanned {timeSince(new Date(date_updated))}
                 </Text>
               </Box>
-              <Tooltip label="Rescan" aria-label="A tooltip">
+              <Tooltip label="Rescan" aria-label="A tooltip" mt={2}>
                 <Button
-                  variant="brand"
-                  px={2}
-                  py={6}
+                  size="sm"
+                  colorScheme="white"
+                  height="58px"
+                  width="58px"
                   onClick={(e) => {
                     e.stopPropagation();
                     setIsOpen(true);
@@ -208,7 +209,7 @@ const ProjectCard: React.FC<{ project: Project }> = ({ project }) => {
                   isDisabled={scans_remaining === 0}
                 >
                   <Flex sx={{ flexDir: "column", alignItems: "center" }}>
-                    <RescanIcon size={38} />
+                    <RescanIcon size={60} />
                   </Flex>
                 </Button>
               </Tooltip>
