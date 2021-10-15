@@ -70,9 +70,8 @@ export default function TOSPage() {
             </li>
             <li>
               <strong>Company</strong> (referred to as either "the Company",
-              "We", "Us" or "Our" in this Agreement) refers to, Bitaces Labs
-              Pvt. Ltd., GA, 84, Camelot Layout, Kondapur, Hyderabad, Telangana
-              500084.
+              "We", "Us" or "Our" in this Agreement) refers to, CREDSHIELDS TECHNOLOGIES PTE. LTD., 
+              20A TANJONG PAGAR ROAD, SINGAPORE (088443).
             </li>
             <li>
               <strong>Country</strong> refers to: India
@@ -326,7 +325,7 @@ export default function TOSPage() {
             <li>
               By email:{" "}
               <Link
-                href="mailto:info@bitaces.com"
+                href="mailto:info@credshields.com"
                 variant="brand"
                 target="_blank"
               >
