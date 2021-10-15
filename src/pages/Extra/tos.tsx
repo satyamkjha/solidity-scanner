@@ -329,7 +329,7 @@ export default function TOSPage() {
                 variant="brand"
                 target="_blank"
               >
-                info@bitaces.com
+                info@credshields.com
               </Link>
             </li>
           </ul>
