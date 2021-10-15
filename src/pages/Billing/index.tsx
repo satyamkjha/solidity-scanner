@@ -270,7 +270,7 @@ const PricingPlan: React.FC<{
                   boxShadow="0px 0px 5px rgba(0, 0, 0, 0.2)"
                 >
                   <Box width="100%" px={4}>
-                    <PayPalScriptProvider options={{ "client-id": "sb" }}>
+                    <PayPalScriptProvider options={{ "client-id": "AZAcrVVsOPsS5yHduMohAWjIVrlPtaD_RbaoCh7JlvcA3TE8EF-n1q834XEMlZYOxzd1wjAGLEcRHifO" }}>
                       <PayPalButtons
                         style={{
                           color: "blue",
