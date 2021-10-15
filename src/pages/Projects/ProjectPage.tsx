@@ -411,6 +411,7 @@ const ScanBlock: React.FC<{ scan: ScanMeta }> = ({ scan }) => {
         my: 4,
         p: 4,
         px: 10,
+        borderRadius: "5px",
         transition: "0.3s box-shadow",
         boxShadow: "0px 4px 20px rgba(0, 0, 0, 0.05)",
         _hover: {

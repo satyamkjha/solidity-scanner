@@ -229,7 +229,7 @@ const PricingPlan: React.FC<{
         flexDir={["column", "column", "row"]}
         w="100%"
       >
-        <Box mb={[6, 6, 0]}>
+        <Box mb={[6, 6, 0]} minW="200px">
           <Text sx={{ fontSize: "lg" }}>{name}</Text>
           <Text fontSize="3xl" color="brand-dark" fontWeight={500} pt={2}>
             {" "}
