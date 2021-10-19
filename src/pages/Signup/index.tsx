@@ -51,7 +51,7 @@ const SignUp: React.FC = () => {
           <Text color="subtle" my={3}>
             Create an account to continue!
           </Text>
-          <Button my={4} sx={{ fontSize: "13px", px: 8, py: 6 }}>
+          <Button my={4} sx={{ fontSize: "13px", px: 8, py: 6 }} isDisabled>
             <Icon as={FcGoogle} mr={2} fontSize="20px" />
             Sign Up with Google
           </Button>
