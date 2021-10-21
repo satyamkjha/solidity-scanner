@@ -31,6 +31,7 @@ export type Project = {
   _latest_scan: {
     scan_id: string;
     scan_status: string;
+    scan_message: string;
     scan_summary: ScanSummary;
   };
 };
@@ -52,6 +53,7 @@ export type Scan = {
   scan_id: string;
   scan_init_time: string;
   scan_status: string;
+  scan_message: string;
   beta_scan_status: string;
   scan_summary?: ScanSummary;
   scan_details?: ScanDetail[];
@@ -62,6 +64,9 @@ export type Scan = {
 export type ScanMeta = {
   scan_id: string;
   scan_time: string;
+  scan_status: string;
+  scan_message: string;
+  reporting_status: string;
   project_id: string;
   scan_score: string;
   scan_name: string;

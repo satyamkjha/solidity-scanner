@@ -1,8 +1,10 @@
 import React, { useState } from "react";
 import { useQueryClient } from "react-query";
-import { useHistory } from "react-router";
+import { useHistory, Link as RouterLink } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import {
+  Alert,
+  AlertIcon,
   Flex,
   Box,
   Text,
@@ -19,20 +21,19 @@ import {
   TabPanels,
   Tab,
   TabPanel,
-  Radio,
-  RadioGroup,
   FormControl,
   FormLabel,
   Select,
-  FormHelperText,
   Switch,
   HStack,
+  Link,
 } from "@chakra-ui/react";
 import { FaFileCode } from "react-icons/fa";
 import { AiOutlineProject } from "react-icons/ai";
 
 import API from "helpers/api";
 import { useOverview } from "hooks/useOverview";
+import { useProfile } from "hooks/useProfile";
 
 const Home: React.FC = () => {
   const { data } = useOverview();
@@ -240,6 +241,7 @@ type ApplicationFormData = {
 
 const ApplicationForm: React.FC = () => {
   const queryClient = useQueryClient();
+  const { data: profileData } = useProfile();
   const [visibility, setVisibility] = useState(false);
   const { handleSubmit, register, formState } = useForm<ApplicationFormData>();
   const history = useHistory();
@@ -257,6 +259,9 @@ const ApplicationForm: React.FC = () => {
     queryClient.invalidateQueries("profile");
     history.push("/projects");
   };
+
+  const isGithubIntegrated =
+    profileData?._integrations?.github?.status === "successful";
   return (
     <>
       <Text
@@ -315,9 +320,25 @@ const ApplicationForm: React.FC = () => {
             <Text>Private</Text>
           </HStack>
 
+          {!isGithubIntegrated && visibility && (
+            <Alert status="warning" fontSize="14px">
+              <AlertIcon />
+              You need to connect your GitHub to start a private scan.
+              <Link
+                as={RouterLink}
+                to="/integrations"
+                variant="brand"
+                fontWeight="600"
+                ml={1}
+              >
+                Connect
+              </Link>
+            </Alert>
+          )}
           <Button
             type="submit"
             variant="brand"
+            isDisabled={!isGithubIntegrated && visibility}
             isLoading={formState.isSubmitting}
           >
             Start Scan

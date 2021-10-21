@@ -7,6 +7,7 @@ import {
   useParams,
   useHistory,
 } from "react-router-dom";
+import FileDownload from "js-file-download";
 
 import {
   Flex,
@@ -36,7 +37,7 @@ import { AiOutlineClockCircle, AiOutlineDownload } from "react-icons/ai";
 import Overview from "components/overview";
 import Result from "components/result";
 import AdvancedScan from "components/advancedScan";
-import { RescanIcon, LogoIcon } from "components/icons";
+import { RescanIcon, LogoIcon, ScanErrorIcon } from "components/icons";
 
 import API from "helpers/api";
 
@@ -48,7 +49,37 @@ import Score from "components/score";
 
 export const ProjectPage: React.FC = () => {
   const { projectId } = useParams<{ projectId: string }>();
-  const { data, isLoading } = useScans(projectId);
+  const { data, isLoading, refetch } = useScans(projectId);
+
+  useEffect(() => {
+    let intervalId: NodeJS.Timeout;
+    const refetchTillScanComplete = () => {
+      if (
+        data &&
+        data.scans.some(
+          ({ reporting_status }) => reporting_status === "generating_report"
+        )
+      ) {
+        intervalId = setInterval(async () => {
+          await refetch();
+          if (
+            data &&
+            data.scans.some(
+              ({ reporting_status }) => reporting_status !== "generating_report"
+            )
+          ) {
+            clearInterval(intervalId);
+          }
+        }, 10000);
+      }
+    };
+
+    refetchTillScanComplete();
+    return () => {
+      clearInterval(intervalId);
+    };
+  }, [data, refetch]);
+
   return (
     <Box
       sx={{
@@ -116,6 +147,7 @@ const ScanDetails: React.FC<{ scansRemaining: number; scans: ScanMeta[] }> = ({
 }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [isRescanLoading, setRescanLoading] = useState(false);
+  const [isDownloadLoading, setDownloadLoading] = useState(false);
   const cancelRef = useRef<HTMLButtonElement | null>(null);
   const queryClient = useQueryClient();
   const { projectId, scanId } =
@@ -126,7 +158,7 @@ const ScanDetails: React.FC<{ scansRemaining: number; scans: ScanMeta[] }> = ({
   useEffect(() => {
     let intervalId: NodeJS.Timeout;
     const refetchTillScanComplete = () => {
-      if (data && data.scan_report.scan_status !== "scan_done") {
+      if (data && data.scan_report.scan_status === "scanning") {
         intervalId = setInterval(async () => {
           await refetch();
           if (data && data.scan_report.scan_status === "scan_done") {
@@ -144,6 +176,22 @@ const ScanDetails: React.FC<{ scansRemaining: number; scans: ScanMeta[] }> = ({
 
   const onClose = () => setIsOpen(false);
 
+  const downloadReport = async () => {
+    setDownloadLoading(true);
+    const { data } = await API.post(
+      "/api-get-report/",
+      {
+        scan_id: scanId,
+      },
+      { responseType: "blob" }
+    );
+    FileDownload(
+      new Blob([data], { type: "application/pdf" }),
+      `${scanId}.pdf`
+    );
+    setDownloadLoading(false);
+  };
+
   const rescan = async () => {
     setRescanLoading(true);
     const { data } = await API.post<{ scan_id: string }>("/api-project-scan/", {
@@ -155,6 +203,20 @@ const ScanDetails: React.FC<{ scansRemaining: number; scans: ScanMeta[] }> = ({
     onClose();
     history.push(`/projects/${projectId}/${data.scan_id}`);
   };
+
+  const scan_name =
+    data &&
+    scans.find((scan) => scan.scan_id === data.scan_report.scan_id)?.scan_name;
+
+  // const scan_message =
+  //   data &&
+  //   scans.find((scan) => scan.scan_id === data.scan_report.scan_id)
+  //     ?.scan_message;
+
+  const reporting_status =
+    data &&
+    scans.find((scan) => scan.scan_id === data.scan_report.scan_id)
+      ?.reporting_status;
 
   return (
     <>
@@ -197,13 +259,13 @@ const ScanDetails: React.FC<{ scansRemaining: number; scans: ScanMeta[] }> = ({
                       _hover={{
                         opacity:
                           scansRemaining === 0 ||
-                          data.scan_report.scan_status !== "scan_done"
+                          data.scan_report.scan_status === "scanning"
                             ? 0.4
                             : 0.9,
                       }}
                       isDisabled={
                         scansRemaining === 0 ||
-                        data.scan_report.scan_status !== "scan_done"
+                        data.scan_report.scan_status === "scanning"
                       }
                     >
                       <Flex sx={{ flexDir: "column", alignItems: "center" }}>
@@ -212,15 +274,15 @@ const ScanDetails: React.FC<{ scansRemaining: number; scans: ScanMeta[] }> = ({
                     </Button>
                   </Tooltip>
                   <Text sx={{ fontSize: "xl", fontWeight: 600 }}>
-                    {
-                      scans.find(
-                        (scan) => scan.scan_id === data.scan_report.scan_id
-                      )?.scan_name
-                    }
+                    {scan_name}
                     <Box
                       as="span"
                       ml={4}
-                      sx={{ fontWeight: 600, fontSize: "sm", color: "subtle" }}
+                      sx={{
+                        fontWeight: 600,
+                        fontSize: "sm",
+                        color: scansRemaining === 0 ? "high" : "subtle",
+                      }}
                     >
                       {scansRemaining} scans remaining
                     </Box>
@@ -239,18 +301,61 @@ const ScanDetails: React.FC<{ scansRemaining: number; scans: ScanMeta[] }> = ({
                     <Icon as={AiOutlineClockCircle} mr={2} fontSize="17px" />
                     Scan History
                   </Button>
-                  <Button variant="accent-outline">
-                    <Icon
-                      as={AiOutlineDownload}
-                      mr={2}
-                      fontSize="17px"
-                      color="#806CCF"
-                    />
-                    Export report
+                  <Button
+                    variant="accent-outline"
+                    isDisabled={reporting_status !== "generated"}
+                    onClick={downloadReport}
+                    isLoading={isDownloadLoading}
+                  >
+                    {reporting_status === "generated" ? (
+                      <Icon
+                        as={AiOutlineDownload}
+                        mr={2}
+                        fontSize="17px"
+                        color="#806CCF"
+                      />
+                    ) : (
+                      <Spinner color="#806CCF" size="xs" mr={3} />
+                    )}
+                    {reporting_status === "generated"
+                      ? "Export report"
+                      : "Generating report..."}
                   </Button>
                 </HStack>
               </Flex>
-              {data.scan_report.scan_status !== "scan_done" ? (
+              {data.scan_report.scan_status === "scan_incomplete" ? (
+                <>
+                  <Flex
+                    w="100%"
+                    alignItems="center"
+                    justifyContent="center"
+                    border="1px solid"
+                    borderColor="border"
+                    borderRightWidth="0px"
+                    borderLeftWidth="0px"
+                  >
+                    <Flex
+                      w="97%"
+                      m={4}
+                      borderRadius="20px"
+                      bgColor="high-subtle"
+                      p={4}
+                    >
+                      <ScanErrorIcon size={28} />
+                      <Text color="high" ml={4}>
+                        {data.scan_report.scan_message}
+                      </Text>
+                    </Flex>
+                  </Flex>
+                  <Flex
+                    w="100%"
+                    h="40vh"
+                    alignItems="center"
+                    justifyContent="center"
+                    flexDirection="column"
+                  ></Flex>
+                </>
+              ) : data.scan_report.scan_status === "scanning" ? (
                 <Flex
                   w="100%"
                   h="60vh"
@@ -398,8 +503,24 @@ const monthNames = [
 ];
 
 const ScanBlock: React.FC<{ scan: ScanMeta }> = ({ scan }) => {
+  const [isDownloadLoading, setDownloadLoading] = useState(false);
   const history = useHistory();
   const { projectId } = useParams<{ projectId: string }>();
+  const downloadReport = async (scan_id: string) => {
+    setDownloadLoading(true);
+    const { data } = await API.post(
+      "/api-get-report/",
+      {
+        scan_id,
+      },
+      { responseType: "blob" }
+    );
+    FileDownload(
+      new Blob([data], { type: "application/pdf" }),
+      `${scan_id}.pdf`
+    );
+    setDownloadLoading(false);
+  };
   return (
     <Flex
       alignItems="center"
@@ -442,17 +563,33 @@ const ScanBlock: React.FC<{ scan: ScanMeta }> = ({ scan }) => {
         <Text fontSize="xl" mx={16}>
           {scan.scan_name}
         </Text>
-        <Score score={scan.scan_score} />
+        {scan.scan_status === "scan_incomplete" ? (
+          <Flex
+            p={3}
+            sx={{ bgColor: "high-subtle", borderRadius: "20px" }}
+            ml={3}
+          >
+            <ScanErrorIcon size={28} />
+          </Flex>
+        ) : (
+          <Score score={scan.scan_score} />
+        )}
       </Flex>
       <Button
         variant="accent-outline"
+        isDisabled={scan.reporting_status !== "generated"}
+        isLoading={isDownloadLoading}
         onClick={(e) => {
           e.stopPropagation();
-          console.log("PDF Download!");
+          downloadReport(scan.scan_id);
         }}
       >
-        PDF
-        <Icon as={AiOutlineDownload} ml={2} fontSize="17px" color="#806CCF" />
+        {scan.reporting_status === "generated" ? "PDF" : "Generating PDF..."}
+        {scan.reporting_status === "generated" ? (
+          <Icon as={AiOutlineDownload} ml={2} fontSize="17px" color="#806CCF" />
+        ) : (
+          <Spinner color="#806CCF" size="sm" ml={2} />
+        )}
       </Button>
     </Flex>
   );

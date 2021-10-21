@@ -1201,3 +1201,113 @@ export const Smile: React.FC<{ size: number }> = ({ size, ...props }) => {
     </svg>
   );
 };
+
+export const ScanErrorIcon: React.FC<{ size: number }> = ({
+  size,
+  ...props
+}) => {
+  return (
+    <svg
+      width={size}
+      height={size}
+      viewBox="0 0 28 28"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      <rect
+        x={14.43}
+        y={0.434}
+        width={19}
+        height={19}
+        rx={4}
+        transform="rotate(45 14.43 .434)"
+        fill="#FF5630"
+      />
+      <path
+        d="M14.422 9.869v4M14.422 17.869h.01"
+        stroke="#fff"
+        strokeWidth={2}
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+    </svg>
+  );
+};
+
+export const ProfileIconOne: React.FC<{ size: number }> = ({ size }) => {
+  return (
+    <svg
+      width={size}
+      height={size}
+      viewBox="0 0 59 59"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      <circle
+        cx={29.479}
+        cy={29.521}
+        r={29.479}
+        fill="#2FF86B"
+        fillOpacity={0.07}
+      />
+      <mask
+        id="prefix__profile_icon"
+        style={{
+          maskType: "alpha",
+        }}
+        maskUnits="userSpaceOnUse"
+        x={0}
+        y={0}
+        width={59}
+        height={59}
+      >
+        <circle
+          cx={29.479}
+          cy={29.521}
+          r={29.479}
+          fill="#C8EBC2"
+          stroke="#8F92A1"
+          strokeWidth="1px"
+        />
+      </mask>
+      <g mask="url(#prefix__profile_icon)">
+        <path
+          d="M25.252 33.827l4.382 9.109h-8.765l4.383-9.109z"
+          fill="#2FF86B"
+        />
+        <path
+          d="M25.252 52.044l-4.382-9.108h8.764l-4.382 9.108zM34.025 33.827l4.383 9.109h-8.765l4.382-9.109z"
+          fill="#2FF86B"
+        />
+        <path
+          d="M34.026 52.044l-4.383-9.108h8.765l-4.382 9.108zM42.795 33.827l4.382 9.109h-8.765l4.383-9.109z"
+          fill="#2FF86B"
+        />
+        <path
+          d="M42.795 52.044l-4.382-9.108h8.765l-4.383 9.108zM51.564 33.827l4.383 9.109h-8.765l4.382-9.109z"
+          fill="#2FF86B"
+        />
+        <path
+          d="M51.565 52.044l-4.383-9.108h8.765l-4.382 9.108zM16.482 33.827l4.383 9.109H12.1l4.382-9.109zM16.483 52.044L12.1 42.936h8.765l-4.382 9.108zM7.709 33.827l4.382 9.109H3.326l4.383-9.109z"
+          fill="#2FF86B"
+        />
+        <path
+          d="M7.71 52.044l-4.383-9.108h8.765l-4.383 9.108z"
+          fill="#2FF86B"
+        />
+        <path
+          d="M12.1 42.936l4.382 9.108H7.717l4.382-9.108zM12.1 61.153l-4.382-9.109h8.764L12.1 61.153z"
+          fill="#32CE6D"
+        />
+        <path
+          d="M16.482 52.044l4.383 9.109H12.1l4.382-9.109zM25.252 52.044l4.382 9.109h-8.765l4.383-9.109zM34.025 52.044l4.383 9.109h-8.765l4.382-9.109zM42.795 52.044l4.382 9.109h-8.765l4.383-9.109z"
+          fill="#289F4C"
+        />
+        <path
+          d="M20.865 42.936l4.382 9.108h-8.764l4.382-9.108zM20.866 61.153l-4.383-9.109h8.765l-4.383 9.109zM29.634 42.936l4.383 9.108h-8.765l4.383-9.108zM29.635 61.153l-4.382-9.109h8.764l-4.382 9.109zM38.404 42.936l4.382 9.108h-8.764l4.382-9.108zM38.404 61.153l-4.382-9.109h8.765l-4.383 9.109zM47.174 42.936l4.382 9.108H42.79l4.383-9.108zM47.174 61.153l-4.382-9.109h8.764l-4.382 9.109z"
+          fill="#32CE6D"
+        />
+      </g>
+    </svg>
+  );
+};

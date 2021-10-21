@@ -56,6 +56,10 @@ const ForgotPassword = lazy(
 // Core Pages
 const Home = lazy(() => import("pages/Home" /* webpackChunkName: "Home" */));
 
+const Profile = lazy(
+  () => import("pages/Profile" /* webpackChunkName: "Profile" */)
+);
+
 const Projects = lazy(
   () => import("pages/Projects" /* webpackChunkName: "Projects" */)
 );
@@ -122,6 +126,9 @@ const Routes: React.FC = () => {
                 <PrivateRoute exact path="/home">
                   <Home />
                 </PrivateRoute>
+                <PrivateRoute exact path="/profile">
+                  <Profile />
+                </PrivateRoute>
                 <PrivateRoute exact path="/projects">
                   <Projects />
                 </PrivateRoute>
@@ -172,14 +179,14 @@ const ErrorHandler: React.FC = ({ children }) => {
             title: `Unexpected Error`,
             status: "error",
             isClosable: true,
-            position: "bottom-right",
+            position: "bottom",
           });
         } else {
           toast({
             title: error.response.data.message,
             status: "error",
             isClosable: true,
-            position: "bottom-right",
+            position: "bottom",
           });
         }
 

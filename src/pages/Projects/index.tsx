@@ -17,7 +17,7 @@ import {
   AlertDialogOverlay,
 } from "@chakra-ui/react";
 
-import { LogoIcon, RescanIcon } from "components/icons";
+import { LogoIcon, RescanIcon, ScanErrorIcon } from "components/icons";
 import Score from "components/score";
 import VulnerabilityDistribution from "components/vulnDistribution";
 
@@ -37,7 +37,7 @@ const Projects: React.FC = () => {
       if (
         data &&
         data.projects.some(
-          ({ _latest_scan }) => _latest_scan.scan_status !== "scan_done"
+          ({ _latest_scan }) => _latest_scan.scan_status === "scanning"
         )
       ) {
         intervalId = setInterval(async () => {
@@ -143,7 +143,7 @@ const ProjectCard: React.FC<{ project: Project }> = ({ project }) => {
     _latest_scan,
   } = project;
 
-  const { scan_summary, scan_status } = _latest_scan;
+  const { scan_summary, scan_status, scan_message } = _latest_scan;
 
   const onClose = () => setIsOpen(false);
 
@@ -160,31 +160,36 @@ const ProjectCard: React.FC<{ project: Project }> = ({ project }) => {
 
   return (
     <>
-      <Flex
-        onClick={() => {
-          if (scan_status === "scan_done")
+      {scan_status === "scan_incomplete" ? (
+        <Box
+          onClick={() => {
             history.push(`/projects/${project_id}/${_latest_scan.scan_id}`);
-        }}
-        sx={{
-          cursor: scan_status === "scan_done" ? "pointer" : "not-allowed",
-          flexDir: "column",
-          justifyContent: "space-between",
-          w: "320px",
-          h: "230px",
-          my: 4,
-          mr: 8,
-          p: 5,
-          borderRadius: 15,
-          bg: "white",
-          transition: "0.3s box-shadow",
-          boxShadow: "0px 4px 24px rgba(0, 0, 0, 0.05)",
-          _hover: {
-            boxShadow: "0px 4px 24px rgba(0, 0, 0, 0.2)",
-          },
-        }}
-      >
-        {scan_status === "scan_done" ? (
-          <>
+          }}
+          sx={{
+            cursor: "pointer",
+            my: 4,
+            mr: 8,
+            borderRadius: 15,
+            w: "320px",
+            h: "230px",
+            bg: "white",
+            transition: "0.3s box-shadow",
+            boxShadow: "0px 4px 24px rgba(0, 0, 0, 0.05)",
+            _hover: {
+              boxShadow: "0px 4px 24px rgba(0, 0, 0, 0.2)",
+            },
+            overflow: "hidden",
+          }}
+        >
+          <Flex
+            sx={{
+              flexDir: "column",
+              justifyContent: "space-between",
+              h: "144px",
+              pt: 5,
+              px: 5,
+            }}
+          >
             <Flex
               w="100%"
               alignItems="flex-start"
@@ -219,51 +224,147 @@ const ProjectCard: React.FC<{ project: Project }> = ({ project }) => {
               </Tooltip>
             </Flex>
             <Flex w="100%" alignItems="center" justifyContent="space-between">
-              <Score score={scan_summary?.score || "0"} />
-              <Text sx={{ fontSize: "sm", color: "subtle" }}>
+              <Box h="45px" w="2px" />
+              <Text
+                sx={{
+                  fontSize: "sm",
+                  color: scans_remaining === 0 ? "high" : "subtle",
+                }}
+              >
                 <Box as="span" sx={{ fontWeight: 600, fontSize: "md" }}>
                   {scans_remaining}
                 </Box>{" "}
                 scans remaining
               </Text>
             </Flex>
-            <VulnerabilityDistribution
-              critical={
-                scan_summary?.issue_severity_distribution?.critical || 0
-              }
-              high={scan_summary?.issue_severity_distribution?.high || 0}
-              medium={scan_summary?.issue_severity_distribution?.medium || 0}
-              low={scan_summary?.issue_severity_distribution?.low || 0}
-              informational={
-                scan_summary?.issue_severity_distribution?.informational || 0
-              }
-            />
-          </>
-        ) : (
-          <Box>
-            <Text sx={{ w: "100%", mb: 8 }} isTruncated>
-              {project_name}
+          </Flex>
+          <Box
+            sx={{
+              p: 5,
+              pl: 10,
+              backgroundColor: "high-subtle",
+              position: "relative",
+            }}
+          >
+            <Box position="absolute" transform="translate3d(-30px, -34px,0)">
+              <ScanErrorIcon size={28} />
+            </Box>
+            <Text sx={{ fontSize: "xs", color: "#FF5630", h: "46px" }}>
+              {scan_message}
             </Text>
-
-            <Flex
-              sx={{
-                display: "inline-flex",
-                bg: "bg.subtle",
-                alignItems: "center",
-                p: 2,
-                mb: 2,
-                borderRadius: 15,
-              }}
-            >
-              <LogoIcon size={15} />
-              <Text mx={2} fontSize="sm">
-                Scan in progress
-              </Text>
-            </Flex>
-            <Progress value={20} isIndeterminate size="xs" />
           </Box>
-        )}
-      </Flex>
+        </Box>
+      ) : (
+        <Flex
+          onClick={() => {
+            if (scan_status === "scan_done")
+              history.push(`/projects/${project_id}/${_latest_scan.scan_id}`);
+          }}
+          sx={{
+            cursor: scan_status === "scan_done" ? "pointer" : "not-allowed",
+            flexDir: "column",
+            justifyContent: "space-between",
+            w: "320px",
+            h: "230px",
+            my: 4,
+            mr: 8,
+            p: 5,
+            borderRadius: 15,
+            bg: "white",
+            transition: "0.3s box-shadow",
+            boxShadow: "0px 4px 24px rgba(0, 0, 0, 0.05)",
+            _hover: {
+              boxShadow: "0px 4px 24px rgba(0, 0, 0, 0.2)",
+            },
+          }}
+        >
+          {scan_status === "scan_done" ? (
+            <>
+              <Flex
+                w="100%"
+                alignItems="flex-start"
+                justifyContent="space-between"
+              >
+                <Box>
+                  <Text sx={{ w: "220px" }} isTruncated>
+                    {project_name}
+                  </Text>
+                  <Text sx={{ fontSize: "sm", color: "subtle" }}>
+                    Last scanned {timeSince(new Date(date_updated))}
+                  </Text>
+                </Box>
+                <Tooltip label="Rescan" aria-label="A tooltip" mt={2}>
+                  <Button
+                    size="sm"
+                    colorScheme="white"
+                    height="58px"
+                    width="58px"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      setIsOpen(true);
+                    }}
+                    transition="0.3s opacity"
+                    _hover={{ opacity: scans_remaining === 0 ? 0.4 : 0.9 }}
+                    isDisabled={scans_remaining === 0}
+                  >
+                    <Flex sx={{ flexDir: "column", alignItems: "center" }}>
+                      <RescanIcon size={60} />
+                    </Flex>
+                  </Button>
+                </Tooltip>
+              </Flex>
+              <Flex w="100%" alignItems="center" justifyContent="space-between">
+                <Score score={scan_summary?.score || "0"} />
+                <Text
+                  sx={{
+                    fontSize: "sm",
+                    color: scans_remaining === 0 ? "high" : "subtle",
+                  }}
+                >
+                  <Box as="span" sx={{ fontWeight: 600, fontSize: "md" }}>
+                    {scans_remaining}
+                  </Box>{" "}
+                  scans remaining
+                </Text>
+              </Flex>
+              <VulnerabilityDistribution
+                critical={
+                  scan_summary?.issue_severity_distribution?.critical || 0
+                }
+                high={scan_summary?.issue_severity_distribution?.high || 0}
+                medium={scan_summary?.issue_severity_distribution?.medium || 0}
+                low={scan_summary?.issue_severity_distribution?.low || 0}
+                informational={
+                  scan_summary?.issue_severity_distribution?.informational || 0
+                }
+              />
+            </>
+          ) : (
+            <Box>
+              <Text sx={{ w: "100%", mb: 8 }} isTruncated>
+                {project_name}
+              </Text>
+
+              <Flex
+                sx={{
+                  display: "inline-flex",
+                  bg: "bg.subtle",
+                  alignItems: "center",
+                  p: 2,
+                  mb: 2,
+                  borderRadius: 15,
+                }}
+              >
+                <LogoIcon size={15} />
+                <Text mx={2} fontSize="sm">
+                  Scan in progress
+                </Text>
+              </Flex>
+              <Progress value={20} isIndeterminate size="xs" />
+            </Box>
+          )}
+        </Flex>
+      )}
       <AlertDialog
         isOpen={isOpen}
         leastDestructiveRef={cancelRef}

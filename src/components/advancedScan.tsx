@@ -322,7 +322,7 @@ const FileDetails: React.FC<FileDetailsProps> = ({ file, type }) => {
       status: "success",
       duration: 5000,
       isClosable: true,
-      position: "bottom-right",
+      position: "bottom",
     });
   };
 

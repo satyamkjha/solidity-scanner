@@ -27,6 +27,7 @@ export const theme = extendTheme({
     high: "#FF5C00",
     medium: "#FFE600",
     low: "#38CB89",
+    "high-subtle": "#FFECE8",
     bg: {
       subtle: "#FAFBFC",
     },
@@ -56,6 +57,10 @@ export const theme = extendTheme({
           _hover: {
             background:
               "linear-gradient(129.18deg, #52FF00 10.52%, #00EEFD 93.94%)",
+            _disabled: {
+              background:
+                "linear-gradient(129.18deg, #52FF00 10.52%, #00EEFD 93.94%)",
+            },
           },
           _active: {
             background:

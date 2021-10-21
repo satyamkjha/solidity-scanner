@@ -1,10 +1,21 @@
 import React, { useState, useRef, useEffect } from "react";
 import { useHistory } from "react-router-dom";
-import { Flex, Box, Text, Icon, Button } from "@chakra-ui/react";
+import {
+  Flex,
+  Box,
+  Text,
+  Icon,
+  Button,
+  Menu,
+  MenuButton,
+  MenuList,
+  MenuItem,
+} from "@chakra-ui/react";
 import { GiHamburgerMenu } from "react-icons/gi";
-import { FiLogOut } from "react-icons/fi";
+import { BiUser, BiPowerOff } from "react-icons/bi";
 
 import Sidebar from "components/sidebar";
+import { ProfileIconOne, ProjectIcon } from "components/icons";
 
 import { useProfile } from "hooks/useProfile";
 
@@ -14,7 +25,6 @@ import {
 } from "common/constants";
 import API from "helpers/api";
 import Auth from "helpers/auth";
-import { ProjectIcon } from "./icons";
 
 const Layout: React.FC = ({ children }) => {
   const [showSidebar, setShowSidebar] = useState(false);
@@ -148,7 +158,8 @@ const Layout: React.FC = ({ children }) => {
               </Flex>
             )}
           </Flex>
-          <Button
+
+          {/* <Button
             variant="outline"
             size="sm"
             color="gray.600"
@@ -158,7 +169,45 @@ const Layout: React.FC = ({ children }) => {
           >
             <Icon as={FiLogOut} mr={2} />
             Logout
-          </Button>
+          </Button> */}
+          <Menu>
+            <MenuButton
+              as={Button}
+              variant="unstyled"
+              borderRadius="100%"
+              border="2px solid"
+              borderColor="brand-dark"
+              overflow="hidden"
+              mr={4}
+            >
+              <ProfileIconOne size={40} />
+            </MenuButton>
+            <MenuList
+              p={4}
+              borderWidth="0px"
+              boxShadow="0px 4px 20px rgba(0, 0, 0, 0.15)"
+              borderRadius="15px"
+            >
+              <MenuItem
+                borderBottom="1px solid"
+                borderColor="border"
+                py={2}
+                onClick={() => history.push("/profile")}
+                borderTopRadius="10px"
+              >
+                <Icon as={BiUser} mr={3} color="gray.500" />
+                Profile
+              </MenuItem>
+              <MenuItem
+                py={2}
+                borderBottomRadius="10px"
+                onClick={() => logout()}
+              >
+                <Icon as={BiPowerOff} mr={3} color="gray.500" />
+                Logout
+              </MenuItem>
+            </MenuList>
+          </Menu>
         </Flex>
         <Box px={4}>{children}</Box>
       </Box>
