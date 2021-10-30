@@ -77,7 +77,7 @@ const Sidebar: React.FC<{
           )}
         </Box>
       </Flex>
-      <Flex sx={{ width: "100%", justifyContent: "flex-end", pb: 16 }}>
+      <Flex sx={{ width: "100%", justifyContent: "flex-end", pt: 24, pb: 24 }}>
         <Box sx={{ width: "85%" }}>
           <Text
             sx={{
