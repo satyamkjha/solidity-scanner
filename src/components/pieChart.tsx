@@ -29,4 +29,36 @@ const MyResponsivePie: React.FC<{ data: PieData[] }> = ({ data }) => (
   />
 );
 
+export const ErrorResponsivePie: React.FC = () => {
+  return (
+    <ResponsivePie
+      data={[
+        {
+          id: "one",
+          label: "Critical",
+          value: 85,
+          color: "#C4C4C4",
+        },
+        {
+          id: "two",
+          label: "High",
+          value: 15,
+          color: "#E5E5E5",
+        },
+      ]}
+      margin={{ top: 40, right: 40, bottom: 40, left: 0 }}
+      colors={{ datum: "data.color" }}
+      // innerRadius={0.5}
+      padAngle={0}
+      cornerRadius={0}
+      activeOuterRadiusOffset={8}
+      borderWidth={1}
+      borderColor={{ from: "color", modifiers: [["darker", 0.2]] }}
+      enableArcLabels={false}
+      isInteractive={false}
+      enableArcLinkLabels={false}
+    />
+  );
+};
+
 export default MyResponsivePie;

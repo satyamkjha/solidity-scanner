@@ -25,6 +25,7 @@ import {
   HStack,
   Tooltip,
   Progress,
+  VStack,
   AlertDialog,
   AlertDialogBody,
   AlertDialogFooter,
@@ -38,6 +39,8 @@ import Overview from "components/overview";
 import Result from "components/result";
 import AdvancedScan from "components/advancedScan";
 import { RescanIcon, LogoIcon, ScanErrorIcon } from "components/icons";
+import { ErrorResponsivePie } from "components/pieChart";
+import { ErrorVulnerabilityDistribution } from "components/vulnDistribution";
 
 import API from "helpers/api";
 
@@ -324,37 +327,10 @@ const ScanDetails: React.FC<{ scansRemaining: number; scans: ScanMeta[] }> = ({
                 </HStack>
               </Flex>
               {data.scan_report.scan_status === "scan_incomplete" ? (
-                <>
-                  <Flex
-                    w="100%"
-                    alignItems="center"
-                    justifyContent="center"
-                    border="1px solid"
-                    borderColor="border"
-                    borderRightWidth="0px"
-                    borderLeftWidth="0px"
-                  >
-                    <Flex
-                      w="97%"
-                      m={4}
-                      borderRadius="20px"
-                      bgColor="high-subtle"
-                      p={4}
-                    >
-                      <ScanErrorIcon size={28} />
-                      <Text color="high" ml={4}>
-                        {data.scan_report.scan_message}
-                      </Text>
-                    </Flex>
-                  </Flex>
-                  <Flex
-                    w="100%"
-                    h="40vh"
-                    alignItems="center"
-                    justifyContent="center"
-                    flexDirection="column"
-                  ></Flex>
-                </>
+                <IncompleteScan
+                  message={data.scan_report.scan_message}
+                  scansRemaining={scansRemaining}
+                />
               ) : data.scan_report.scan_status === "scanning" ? (
                 <Flex
                   w="100%"
@@ -592,6 +568,111 @@ const ScanBlock: React.FC<{ scan: ScanMeta }> = ({ scan }) => {
         )}
       </Button>
     </Flex>
+  );
+};
+
+const IncompleteScan: React.FC<{ message: string; scansRemaining: number }> = ({
+  message,
+  scansRemaining,
+}) => {
+  return (
+    <>
+      <Flex
+        w="100%"
+        alignItems="center"
+        justifyContent="center"
+        border="1px solid"
+        borderColor="border"
+        borderRightWidth="0px"
+        borderLeftWidth="0px"
+      >
+        <Flex w="97%" m={4} borderRadius="20px" bgColor="high-subtle" p={4}>
+          <ScanErrorIcon size={28} />
+          <Text color="high" ml={4}>
+            {message}
+          </Text>
+        </Flex>
+      </Flex>
+      <Flex
+        w="100%"
+        alignItems="center"
+        justifyContent="center"
+        flexDirection="column"
+      ></Flex>
+      <Flex w="100%" sx={{ flexDir: ["column", "column", "row"] }}>
+        <VStack w={["100%", "100%", "50%"]} mb={[8, 8, 0]}>
+          <Box w={["100%", "100%", "70%"]} h="300px">
+            <ErrorResponsivePie />
+          </Box>
+          <Box w={["70%", "70%", "60%"]}>
+            <ErrorVulnerabilityDistribution />
+          </Box>
+        </VStack>
+        <VStack
+          w={["100%", "100%", "50%"]}
+          alignItems="flex-start"
+          p={8}
+          spacing={5}
+        >
+          <HStack w="100%" justifyContent="space-between">
+            {scansRemaining && (
+              <Flex px={2}>
+                <LogoIcon size={40} />
+                <Box ml={2} mt="-4px">
+                  <Text>
+                    {scansRemaining.toLocaleString("en-US", {
+                      minimumIntegerDigits: 2,
+                      useGrouping: false,
+                    })}
+                  </Text>
+                  <Text fontSize="12px" color="subtle">
+                    Scans left
+                  </Text>
+                </Box>
+              </Flex>
+            )}
+          </HStack>
+          <Box sx={{ w: "100%", borderRadius: 15, bg: "bg.subtle", p: 4 }}>
+            <Text sx={{ fontSize: "sm", letterSpacing: "0.7px" }}>
+              SCAN STATISTICS
+            </Text>
+          </Box>
+
+          <VStack w="100%" px={4} spacing={8} fontSize="sm">
+            <HStack w="100%" justifyContent="space-between">
+              <Text>Status</Text>
+              <Text
+                sx={{
+                  color: "high",
+                  bg: "high-subtle",
+                  px: 3,
+                  py: 1,
+                  borderRadius: 20,
+                }}
+              >
+                Error
+              </Text>
+            </HStack>
+            <HStack w="100%" justifyContent="space-between">
+              <Text>Score</Text>
+              <Text color="subtle">--</Text>
+            </HStack>
+            <HStack w="100%" justifyContent="space-between">
+              <Text>Issue Count</Text>
+              <Text color="subtle">--</Text>
+            </HStack>
+            <HStack w="100%" justifyContent="space-between">
+              <Text>Duration</Text>
+              <Text color="subtle">--</Text>
+            </HStack>
+            <HStack w="100%" justifyContent="space-between">
+              <Text>Lines of code</Text>
+              <Text color="subtle">--</Text>
+            </HStack>
+          </VStack>
+        </VStack>
+      </Flex>
+    </>
   );
 };
 export default ProjectPage;
