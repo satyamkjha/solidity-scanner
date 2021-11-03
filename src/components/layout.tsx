@@ -137,16 +137,16 @@ const Layout: React.FC = ({ children }) => {
                   👋
                 </Box>{" "}
                 Hi {profileData?.name}
-                <Box as="span" ml={4} color="subtle" fontSize="sm">
+                {/* <Box as="span" ml={4} color="subtle" fontSize="sm">
                   CREDITS: {profileData?.credits}
-                </Box>
+                </Box> */}
               </Text>
             )}
 
             {profileData && (
               <Flex ml={20} sx={{ display: ["none", "none", "flex"] }}>
                 <ProjectIcon size={37} />
-                <Text fontWeight={600} fontSize="2xl" ml={2}>
+                <Text fontWeight={600} fontSize="2xl" ml={4}>
                   {profileData.projects_remaining.toLocaleString("en-US", {
                     minimumIntegerDigits: 2,
                     useGrouping: false,

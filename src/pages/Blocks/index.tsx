@@ -9,9 +9,11 @@ import VulnerabilityDistribution from "components/vulnDistribution";
 import { Scan } from "common/types";
 import { timeSince } from "common/functions";
 import { useBlocks } from "hooks/useBlocks";
+import { useProfile } from "hooks/useProfile";
 
 const Blocks: React.FC = () => {
   const { data, isLoading, refetch } = useBlocks();
+  const { data: profileData } = useProfile();
   useEffect(() => {
     let intervalId: NodeJS.Timeout;
     const refetchTillScanComplete = () => {
@@ -58,7 +60,21 @@ const Blocks: React.FC = () => {
           my: 4,
         }}
       >
-        <Text sx={{ color: "subtle", fontWeight: 600 }}>BLOCKS</Text>
+        <Text sx={{ color: "subtle", fontWeight: 600 }}>
+          BLOCKS
+          <Box
+            as="span"
+            sx={{
+              color: (profileData?.credits || 0) > 0 ? "low" : "high",
+              fontWeight: 600,
+              fontSize: "sm",
+              textAlign: "center",
+              ml: 3,
+            }}
+          >
+            ({profileData?.credits} contract scan credits remaining)
+          </Box>
+        </Text>
       </Flex>
 
       {isLoading ? (

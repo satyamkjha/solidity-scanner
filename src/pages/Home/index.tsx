@@ -59,7 +59,7 @@ const Home: React.FC = () => {
         >
           <Tabs variant="soft-rounded" colorScheme="green">
             <TabList mb="1em">
-              <Tab width="50%">Application</Tab>
+              <Tab width="50%">GitHub Application</Tab>
               <Tab width="50%">Blockchain Contract</Tab>
             </TabList>
             <TabPanels>
@@ -360,6 +360,7 @@ const ContractForm: React.FC = () => {
   const queryClient = useQueryClient();
   const { handleSubmit, register, formState } = useForm<ContractFormData>();
   const history = useHistory();
+  const { data: profileData } = useProfile();
   const onSubmit = async ({ contract_address }: ContractFormData) => {
     await API.post("/api-start-scan-block/", {
       contract_address,
@@ -375,11 +376,22 @@ const ContractForm: React.FC = () => {
         sx={{
           fontSize: "2xl",
           fontWeight: 600,
-          my: 6,
+          mt: 6,
           textAlign: "center",
         }}
       >
         Load contract
+      </Text>
+      <Text
+        sx={{
+          color: (profileData?.credits || 0) > 0 ? "low" : "high",
+          fontWeight: 600,
+          fontSize: "sm",
+          textAlign: "center",
+          mb: 6,
+        }}
+      >
+        Contract scan credits: {profileData?.credits}
       </Text>
 
       <Text sx={{ color: "subtle", textAlign: "center", mb: 6 }}>
@@ -420,6 +432,7 @@ const ContractForm: React.FC = () => {
             type="submit"
             variant="brand"
             isLoading={formState.isSubmitting}
+            isDisabled={profileData?.credits === 0}
           >
             Start Scan
           </Button>

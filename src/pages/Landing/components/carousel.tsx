@@ -7,6 +7,7 @@ const ImageCarousel = () => (
     <img src="/result-scrshot.jpg" />
     <img src="/home-scrshot.jpg" />
     <img src="/overview-scrshot.jpg" />
+    <img src="/integration-scrshot.jpg" />
   </Carousel>
 );
 
