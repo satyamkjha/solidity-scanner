@@ -1,5 +1,5 @@
 import React from "react";
-import { HStack, Heading, Box } from "@chakra-ui/react";
+import { HStack, Heading, Box, Text } from "@chakra-ui/react";
 
 export const LogoIcon: React.FC<{ size: number }> = ({ size, ...props }) => {
   const gradientId = "_" + Math.random().toString(36).substr(2, 9);
@@ -35,10 +35,24 @@ export const LogoIcon: React.FC<{ size: number }> = ({ size, ...props }) => {
 export const Logo: React.FC = () => {
   return (
     <HStack>
-      <LogoIcon size={35} />
-      <Heading fontSize={["xl", "xl", "2xl"]} fontWeight={700} color="black">
-        Solidity Scan
-      </Heading>
+      <LogoIcon size={40} />
+      <Box>
+        <Heading fontSize={["xl", "xl", "2xl"]} fontWeight={700} color="black">
+          Solidity Scan
+        </Heading>
+        <Text
+          fontSize="12px"
+          sx={{
+            color: "green.500",
+            bg: "green.50",
+            px: 3,
+            borderRadius: 20,
+            w: "55px",
+          }}
+        >
+          BETA
+        </Text>
+      </Box>
     </HStack>
   );
 };
