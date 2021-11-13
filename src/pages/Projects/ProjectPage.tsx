@@ -92,7 +92,7 @@ export const ProjectPage: React.FC = () => {
         my: 4,
         px: 8,
         py: 4,
-        minH: "80vh",
+        minH: "78vh",
       }}
     >
       {isLoading ? (

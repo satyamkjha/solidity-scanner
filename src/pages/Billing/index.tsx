@@ -1,5 +1,7 @@
-import React from "react";
+import React, { useState } from "react";
 import { useQueryClient } from "react-query";
+import CryptoIcon from "react-crypto-icons";
+
 import { PayPalScriptProvider, PayPalButtons } from "@paypal/react-paypal-js";
 import {
   OnApproveData,
@@ -15,6 +17,9 @@ import {
   Divider,
   Link,
   useDisclosure,
+  FormControl,
+  FormLabel,
+  Select,
   Modal,
   ModalOverlay,
   ModalContent,
@@ -22,12 +27,17 @@ import {
   ModalCloseButton,
   Spinner,
   useToast,
+  VStack,
 } from "@chakra-ui/react";
 
 import { AiOutlineCheckCircle } from "react-icons/ai";
-import API from "helpers/api";
-import { useProfile } from "hooks/useProfile";
 import { AiOutlineCalendar, AiFillCheckCircle } from "react-icons/ai";
+
+import { useProfile } from "hooks/useProfile";
+import { useAcceptedCoins } from "hooks/usePricing";
+
+import API from "helpers/api";
+import { daysRemaining, dateToDDMMMMYYYY } from "common/functions";
 
 const Billing: React.FC = () => {
   const { data } = useProfile();
@@ -41,7 +51,7 @@ const Billing: React.FC = () => {
         px: 8,
         mx: [0, 0, 4],
         my: 4,
-        minH: "80vh",
+        minH: "78vh",
       }}
     >
       <Flex
@@ -127,6 +137,8 @@ const Billing: React.FC = () => {
                     <CurrentPlan
                       name="Enterprise"
                       packageName="enterprise"
+                      packageRechargeDate={data.package_recharge_date}
+                      packageValidity={data.package_validity}
                       details={[
                         "Monitor upto 10 projects",
                         "Unlimited rescans",
@@ -145,6 +157,8 @@ const Billing: React.FC = () => {
                     <CurrentPlan
                       name="Individual Researcher"
                       packageName="individual"
+                      packageRechargeDate={data.package_recharge_date}
+                      packageValidity={data.package_validity}
                       details={[
                         "Monitor upto 3 projects",
                         "Unlimited rescans",
@@ -259,7 +273,7 @@ const PricingPlan: React.FC<{
           <ModalCloseButton />
           <ModalBody py={12}>
             <Flex w="100%">
-              <Box width="70%" m={2}>
+              <Box width="65%" m={2}>
                 <Flex
                   cursor="pointer"
                   width="100%"
@@ -267,10 +281,16 @@ const PricingPlan: React.FC<{
                   pt={6}
                   px={8}
                   borderRadius="15px"
+                  h="160px"
                   boxShadow="0px 0px 5px rgba(0, 0, 0, 0.2)"
                 >
                   <Box width="100%" px={4}>
-                    <PayPalScriptProvider options={{ "client-id": "AZAcrVVsOPsS5yHduMohAWjIVrlPtaD_RbaoCh7JlvcA3TE8EF-n1q834XEMlZYOxzd1wjAGLEcRHifO" }}>
+                    <PayPalScriptProvider
+                      options={{
+                        "client-id":
+                          "AZAcrVVsOPsS5yHduMohAWjIVrlPtaD_RbaoCh7JlvcA3TE8EF-n1q834XEMlZYOxzd1wjAGLEcRHifO",
+                      }}
+                    >
                       <PayPalButtons
                         style={{
                           color: "blue",
@@ -285,22 +305,41 @@ const PricingPlan: React.FC<{
                       />
                     </PayPalScriptProvider>
                   </Box>
-                  {/* <PayPalButtons
-                      style={{
-                        color: "blue",
-                        shape: "pill",
-                        label: "pay",
-                        height: 40,
-                        layout: "vertical",
-                      }}
-                      className="full-width"
-                      createOrder={createPaypalOrder}
-                      onApprove={onPaypayApprove}
-                    /> */}
+                </Flex>
+                <Flex
+                  align="center"
+                  justify="center"
+                  color="subtle"
+                  px={5}
+                  mt={6}
+                  sx={{
+                    height: 0.5,
+                    borderColor: "#EDF2F7",
+                    borderStyle: "solid",
+                    borderLeftWidth: ["130px", "180px", "240px"],
+                    borderRightWidth: ["130px", "180px", "240px"],
+                  }}
+                >
+                  <Text fontWeight={600} color="subtle">
+                    OR
+                  </Text>
+                </Flex>
+                <Flex
+                  cursor="pointer"
+                  width="100%"
+                  bg="white"
+                  mt={6}
+                  py={6}
+                  px={8}
+                  borderRadius="15px"
+                  // h="320px"
+                  boxShadow="0px 0px 5px rgba(0, 0, 0, 0.2)"
+                >
+                  <CoinPayments packageName={packageName} onClose={onClose} />
                 </Flex>
               </Box>
               <Box
-                width="30%"
+                width="35%"
                 bg="white"
                 m={2}
                 py={6}
@@ -357,7 +396,9 @@ const CurrentPlan: React.FC<{
   name: string;
   packageName: string;
   details: string[];
-}> = ({ name, packageName, details }) => {
+  packageRechargeDate: string;
+  packageValidity: number;
+}> = ({ name, packageRechargeDate, packageValidity, details }) => {
   return (
     <Box
       sx={{
@@ -394,6 +435,7 @@ const CurrentPlan: React.FC<{
         <Flex
           width="50%"
           py={4}
+          pr={4}
           justifyContent="space-between"
           alignItems="flex-end"
           flexDirection="column"
@@ -407,17 +449,106 @@ const CurrentPlan: React.FC<{
             />
             <Text>
               <Text as="span" fontSize="2xl" fontWeight={700}>
-                28
+                {daysRemaining(new Date(packageRechargeDate), packageValidity)}
               </Text>{" "}
               days remaining
             </Text>
           </Flex>
-          <Button size="sm" variant="brand">
-            Cancel Subscription
-          </Button>
+          <Box mb={2}>
+            <Text fontWeight={400} fontSize="md" mb={1} color="#4E5D78">
+              Subscribed on
+            </Text>
+            <Text fontWeight={500} fontSize="xl">
+              {dateToDDMMMMYYYY(new Date(packageRechargeDate))}
+            </Text>
+          </Box>
         </Flex>
       </Flex>
     </Box>
+  );
+};
+
+const CoinPayments: React.FC<{ packageName: string; onClose: () => void }> = ({
+  packageName,
+  onClose,
+}) => {
+  const { data, isLoading } = useAcceptedCoins();
+  const [coin, setCoin] = useState("");
+  const [loading, setLoading] = useState(false);
+  const handleSubmit = async () => {
+    const width = 600;
+    const height = 800;
+    const left = window.innerWidth / 2 - width / 2;
+    const top = window.innerHeight / 2 - height / 2;
+    try {
+      setLoading(true);
+      const { data } = await API.post<{
+        checkout_url: string;
+        status: string;
+        status_url: string;
+      }>("api-create-order-cp/", {
+        package: packageName,
+        currency: coin,
+      });
+      setLoading(false);
+      const popup = window.open(
+        data.checkout_url,
+        "",
+        `toolbar=no, location=no, directories=no, status=no, menubar=no, scrollbars=no, resizable=no, copyhistory=no, width=${width}, height=${height}, top=${top}, left=${left}`
+      );
+      onClose();
+    } catch (e) {
+      setLoading(false);
+    }
+  };
+  return (
+    <VStack width="100%" spacing={6} mt={4} alignItems="inherit">
+      <Flex alignItems="flex-end" justifyContent="space-between">
+        <img
+          src="/coinpayments-logo.svg"
+          width="200px"
+          alt="CoinPayments Logo"
+        />
+        {data && coin !== "" && (
+          <Flex alignItems="center">
+            <CryptoIcon size={32} name={coin.toLowerCase()} />
+            <Text ml={2} color="brand-dark" fontWeight={700} fontSize="3xl">
+              {parseFloat(data[coin]).toPrecision(2)}
+              <Text as="span" fontSize="md" fontWeight={700} ml={2}>
+                {coin}
+              </Text>
+            </Text>
+          </Flex>
+        )}
+      </Flex>
+      <FormControl id="contract_platform">
+        <FormLabel fontSize="sm">Select coin</FormLabel>
+        <Select
+          placeholder="Select coin"
+          value={coin}
+          isRequired
+          isDisabled={isLoading}
+          onChange={(e) => setCoin(e.target.value)}
+        >
+          {data &&
+            Object.keys(data).map((key) => (
+              <option key={key} value={key}>
+                {key}
+              </option>
+            ))}
+        </Select>
+      </FormControl>
+      <Flex justifyContent="flex-end">
+        <Button
+          variant="brand"
+          isDisabled={coin === "" || isLoading}
+          isLoading={loading}
+          onClick={handleSubmit}
+        >
+          Make Payment
+        </Button>
+      </Flex>
+    </VStack>
   );
 };
 

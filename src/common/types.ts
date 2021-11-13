@@ -8,6 +8,8 @@ export type Profile = {
   company_name: string;
   current_package: string;
   projects_remaining: number;
+  package_recharge_date: string;
+  package_validity: number;
   _integrations: {
     github: IntegrationData;
     slack: IntegrationData;

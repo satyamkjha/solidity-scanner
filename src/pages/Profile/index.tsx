@@ -65,7 +65,7 @@ const Profile: React.FC = () => {
         px: 4,
         ml: [0, 0, 4],
         my: 4,
-        minH: "80vh",
+        minH: "78vh",
       }}
     >
       {!data && (

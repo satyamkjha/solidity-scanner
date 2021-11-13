@@ -24,3 +24,32 @@ export function getCookie(name: string) {
   const parts = value.split(`; ${name}=`);
   if (parts.length === 2) return (parts.pop() || "").split(";").shift();
 }
+
+export function daysRemaining(date: Date, days: number): number {
+  const seconds = Math.floor(
+    (date.getTime() + daysToMiliseconds(days) - new Date().getTime()) / 1000
+  );
+  return Math.floor(seconds / 86400);
+}
+
+export function daysToMiliseconds(days: number): number {
+  return days * 86400000;
+}
+
+export function dateToDDMMMMYYYY(date: Date): string {
+  const months = [
+    "January",
+    "February",
+    "March",
+    "April",
+    "May",
+    "June",
+    "July",
+    "August",
+    "September",
+    "October",
+    "November",
+    "December",
+  ];
+  return `${date.getDate()} ${months[date.getMonth()]} ${date.getFullYear()}`;
+}

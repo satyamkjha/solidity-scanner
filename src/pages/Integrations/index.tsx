@@ -55,7 +55,7 @@ const Integrations: React.FC = () => {
         px: 8,
         mx: [0, 0, 4],
         my: 4,
-        minH: "80vh",
+        minH: "78vh",
       }}
     >
       <Flex
