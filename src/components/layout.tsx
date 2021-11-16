@@ -1,5 +1,7 @@
 import React, { useState, useRef, useEffect } from "react";
 import { useHistory, Link as RouterLink } from "react-router-dom";
+import { motion } from "framer-motion";
+
 import {
   Flex,
   Box,
@@ -26,6 +28,8 @@ import {
 } from "common/constants";
 import API from "helpers/api";
 import Auth from "helpers/auth";
+
+const MotionFlex = motion(Flex);
 
 const Layout: React.FC = ({ children }) => {
   const [showSidebar, setShowSidebar] = useState(false);
@@ -63,45 +67,53 @@ const Layout: React.FC = ({ children }) => {
 
   return (
     <>
-      {profileData?.current_package === "expired" ? (
-        <Flex
-          sx={{
-            w: "100%",
-            alignItems: "center",
-            justifyContent: "center",
-            py: 1,
-            bg: "red.500",
-          }}
-        >
-          <Text fontSize="12px" color="white" fontWeight={700}>
-            Your package has expired. To renew your package
-          </Text>
-          <Link
-            as={RouterLink}
-            to="/billing"
-            color="white"
-            textDecor="underline"
-            fontWeight="700"
-            fontSize="12px"
-            ml="3px"
-            mt="1px"
-          >
-            click here.
-          </Link>
-        </Flex>
-      ) : (
-        <Flex
-          sx={{
-            w: "100%",
-            justifyContent: "center",
-            py: 1,
-            bg: "brand-dark",
-          }}
-        >
-          <Text fontSize="12px" color="white" fontWeight={700}>
-            This product is in beta.
-          </Text>
-        </Flex>
+      {profileData && (
+        <>
+          {profileData.current_package === "expired" ? (
+            <MotionFlex
+              initial={{ height: 0 }}
+              animate={{ height: "auto" }}
+              sx={{
+                w: "100%",
+                alignItems: "center",
+                justifyContent: "center",
+                py: 1,
+                bg: "red.500",
+              }}
+            >
+              <Text fontSize="12px" color="white" fontWeight={700}>
+                Your package has expired. To renew your package
+              </Text>
+              <Link
+                as={RouterLink}
+                to="/billing"
+                color="white"
+                textDecor="underline"
+                fontWeight="700"
+                fontSize="12px"
+                ml="3px"
+                mt="1px"
+              >
+                click here.
+              </Link>
+            </MotionFlex>
+          ) : (
+            <MotionFlex
+              initial={{ height: 0 }}
+              animate={{ height: "auto" }}
+              sx={{
+                w: "100%",
+                justifyContent: "center",
+                py: 1,
+                bg: "brand-dark",
+              }}
+            >
+              <Text fontSize="12px" color="white" fontWeight={700}>
+                This product is in beta.
+              </Text>
+            </MotionFlex>
+          )}
+        </>
       )}
       <Flex
         sx={{
