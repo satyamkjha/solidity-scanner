@@ -568,7 +568,7 @@ export const ScheduleScan: React.FC<{ size: number }> = ({
         cx={96.155}
         cy={101.155}
         r={18.155}
-        fill="url(#prefix__paint0_linear)"
+        fill="url(#ScheduleScan_paint)"
       />
       <path
         d="M102 97l-8.25 9-3.75-4.091"
@@ -579,7 +579,7 @@ export const ScheduleScan: React.FC<{ size: number }> = ({
       />
       <defs>
         <linearGradient
-          id="prefix__paint0_linear"
+          id="ScheduleScan_paint"
           x1={85.781}
           y1={83}
           x2={104.8}
@@ -761,7 +761,7 @@ export const VulnCheck: React.FC<{ size: number }> = ({ size, ...props }) => {
         cx={110.155}
         cy={98.155}
         r={18.155}
-        fill="url(#prefix__paint0_linear)"
+        fill="url(#VulnCheck_paint)"
       />
       <path
         d="M117.555 92l-5.871 8.453-4.423-3.127-4.634 6.674"
@@ -911,7 +911,7 @@ export const VulnCheck: React.FC<{ size: number }> = ({ size, ...props }) => {
           <feBlend in="SourceGraphic" in2="effect1_dropShadow" result="shape" />
         </filter>
         <linearGradient
-          id="prefix__paint0_linear"
+          id="VulnCheck_paint"
           x1={99.781}
           y1={80}
           x2={118.8}
@@ -1059,7 +1059,7 @@ export const Integration: React.FC<{ size: number }> = ({ size, ...props }) => {
         cx={105.155}
         cy={98.155}
         r={18.155}
-        fill="url(#prefix__paint0_linear)"
+        fill="url(#Integration_paint)"
       />
       <path
         d="M112.721 100.265L104.985 106l-7.736-5.735a.626.626 0 01-.218-.697l.886-2.801 1.772-5.565a.311.311 0 01.502-.119.315.315 0 01.08.134l1.772 5.55h5.884l1.773-5.565a.311.311 0 01.29-.202.31.31 0 01.211.083.315.315 0 01.08.134l1.772 5.565.923 2.786a.645.645 0 01-.014.391.62.62 0 01-.241.306v0z"
@@ -1070,7 +1070,7 @@ export const Integration: React.FC<{ size: number }> = ({ size, ...props }) => {
       />
       <defs>
         <linearGradient
-          id="prefix__paint0_linear"
+          id="Integration_paint"
           x1={94.781}
           y1={80}
           x2={113.8}

@@ -77,7 +77,8 @@ const Billing: React.FC = () => {
         </Flex>
       ) : (
         <>
-          {data.current_package === "trial" ? (
+          {data.current_package === "trial" ||
+          data.current_package === "expired" ? (
             <>
               <Box
                 sx={{ w: "100%", background: "white", borderRadius: 15, p: 8 }}
@@ -173,13 +174,6 @@ const Billing: React.FC = () => {
           )}
         </>
       )}
-
-      {/* {isLoading ? (
-        <Flex w="100%" h="70vh" alignItems="center" justifyContent="center">
-          <Spinner />
-        </Flex>
-      ) : 'TEST'
-      )} */}
     </Box>
   );
 };
@@ -513,7 +507,10 @@ const CoinPayments: React.FC<{ packageName: string; onClose: () => void }> = ({
           <Flex alignItems="center">
             <CryptoIcon size={32} name={coin.toLowerCase()} />
             <Text ml={2} color="brand-dark" fontWeight={700} fontSize="3xl">
-              {parseFloat(data[coin]).toPrecision(2)}
+              {packageName === "individual" &&
+                parseFloat(data[coin].rate_individual).toPrecision(2)}
+              {packageName === "enterprise" &&
+                parseFloat(data[coin].rate_enterprise).toPrecision(2)}
               <Text as="span" fontSize="md" fontWeight={700} ml={2}>
                 {coin}
               </Text>
@@ -533,7 +530,7 @@ const CoinPayments: React.FC<{ packageName: string; onClose: () => void }> = ({
           {data &&
             Object.keys(data).map((key) => (
               <option key={key} value={key}>
-                {key}
+                {data[key].name}
               </option>
             ))}
         </Select>

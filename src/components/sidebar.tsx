@@ -67,11 +67,25 @@ const Sidebar: React.FC<{
                 >
                   Solidity Scan
                 </Heading>
-                {profileData && (
-                  <Text fontSize="13px">
-                    {profileData.current_package.toUpperCase()}
-                  </Text>
-                )}
+                {profileData &&
+                  (profileData.current_package === "expired" ? (
+                    <Text
+                      fontSize="12px"
+                      sx={{
+                        color: "red.500",
+                        bg: "high-subtle",
+                        px: 3,
+                        borderRadius: 20,
+                        w: "74px",
+                      }}
+                    >
+                      EXPIRED
+                    </Text>
+                  ) : (
+                    <Text fontSize="13px">
+                      {profileData.current_package.toUpperCase()}
+                    </Text>
+                  ))}
               </Box>
             </HStack>
           )}

@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from "react";
-import { useHistory } from "react-router-dom";
+import { useHistory, Link as RouterLink } from "react-router-dom";
 import {
   Flex,
   Box,
@@ -10,6 +10,7 @@ import {
   MenuButton,
   MenuList,
   MenuItem,
+  Link,
 } from "@chakra-ui/react";
 import { GiHamburgerMenu } from "react-icons/gi";
 import { BiUser, BiPowerOff } from "react-icons/bi";
@@ -62,18 +63,46 @@ const Layout: React.FC = ({ children }) => {
 
   return (
     <>
-      <Flex
-        sx={{
-          w: "100%",
-          justifyContent: "center",
-          py: 1,
-          bg: "brand-dark",
-        }}
-      >
-        <Text fontSize="12px" color="white" fontWeight={700}>
-          This product is in beta.
-        </Text>
-      </Flex>
+      {profileData?.current_package === "expired" ? (
+        <Flex
+          sx={{
+            w: "100%",
+            alignItems: "center",
+            justifyContent: "center",
+            py: 1,
+            bg: "red.500",
+          }}
+        >
+          <Text fontSize="12px" color="white" fontWeight={700}>
+            Your package has expired. To renew your package
+          </Text>
+          <Link
+            as={RouterLink}
+            to="/billing"
+            color="white"
+            textDecor="underline"
+            fontWeight="700"
+            fontSize="12px"
+            ml="3px"
+            mt="1px"
+          >
+            click here.
+          </Link>
+        </Flex>
+      ) : (
+        <Flex
+          sx={{
+            w: "100%",
+            justifyContent: "center",
+            py: 1,
+            bg: "brand-dark",
+          }}
+        >
+          <Text fontSize="12px" color="white" fontWeight={700}>
+            This product is in beta.
+          </Text>
+        </Flex>
+      )}
       <Flex
         sx={{
           width: "100%",
