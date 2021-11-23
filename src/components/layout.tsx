@@ -162,7 +162,7 @@ const Layout: React.FC = ({ children }) => {
                   : SIDEBAR_WIDTH_EXPANDED
               })`,
             ],
-            height: "calc(100vh - 26px)",
+            height: "calc(100vh - 28px)",
             overflowY: "scroll",
           }}
         >
