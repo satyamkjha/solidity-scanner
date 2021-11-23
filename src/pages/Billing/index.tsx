@@ -239,17 +239,22 @@ const PricingPlan: React.FC<{
       >
         <Box mb={[6, 6, 0]} minW="200px">
           <Text sx={{ fontSize: "lg" }}>{name}</Text>
-          <Text fontSize="3xl" color="brand-dark" fontWeight={500} pt={2}>
-            {" "}
-            ${price} / mo
-          </Text>
+          {isCustom ? (
+            <Text fontSize="3xl" color="#78909C" fontWeight={500} pt={2}>
+              $@?# / mo
+            </Text>
+          ) : (
+            <Text fontSize="3xl" color="brand-dark" fontWeight={500} pt={2}>
+              ${price} / mo
+            </Text>
+          )}
         </Box>
         <Box width={["80%", "80%", "40%"]} mb={[6, 6, 0]}>
           <PricingDetails details={details} />
         </Box>
         <Box mb={[6, 6, 0]}>
           {isCustom ? (
-            <Link target="_blank" href="mailto:info@bitaces.com">
+            <Link target="_blank" href="mailto:info@credshields.com">
               <Button colorScheme="gray" variant="outline" width="230px">
                 Contact us
               </Button>
