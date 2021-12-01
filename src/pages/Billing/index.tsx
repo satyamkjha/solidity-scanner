@@ -88,9 +88,12 @@ const Billing: React.FC = () => {
                   packageName="individual"
                   price={99}
                   details={[
-                    "Monitor upto 3 projects",
-                    "Unlimited rescans",
-                    "Access to all existing templates",
+                    "Monitor upto 2 projects",
+                    "Get 10 rescans per project",
+                    "Get 10 credits for block scans",
+                    "Add a new project with 10 scans at $50/month",
+                    "Add 10 additional scans to an existing project at $5",
+                    "Add credit for block scan at $8/credit",
                   ]}
                 />
                 <Divider w="100%" my={8} />
@@ -100,11 +103,11 @@ const Billing: React.FC = () => {
                   price={499}
                   details={[
                     "Monitor upto 10 projects",
-                    "Unlimited rescans",
-                    "Access to all existing templates",
-                    "Integrate with all popular tools and platforms",
-                    "Add custom scan templates and set priorities for issues",
-                    "Access to white glove services from our team",
+                    "Get 20 rescans per project",
+                    "Get 50 credits for block scans",
+                    "Add a new project with 20 scans at $50/month",
+                    "Add 20 additional scans to an existing project at $5",
+                    "Add credit for block scan at $5/credit",
                   ]}
                 />
               </Box>
@@ -142,11 +145,11 @@ const Billing: React.FC = () => {
                       packageValidity={data.package_validity}
                       details={[
                         "Monitor upto 10 projects",
-                        "Unlimited rescans",
-                        "Access to all existing templates",
-                        "Integrate with all popular tools and platforms",
-                        "Add custom scan templates and set priorities for issues",
-                        "Access to white glove services from our team",
+                        "Get 20 rescans per project",
+                        "Get 50 credits for block scans",
+                        "Add a new project with 20 scans at $50/month",
+                        "Add 20 additional scans to an existing project at $5",
+                        "Add credit for block scan at $5/credit",
                       ]}
                     />
                   </Box>
@@ -161,9 +164,12 @@ const Billing: React.FC = () => {
                       packageRechargeDate={data.package_recharge_date}
                       packageValidity={data.package_validity}
                       details={[
-                        "Monitor upto 3 projects",
-                        "Unlimited rescans",
-                        "Access to all existing templates",
+                        "Monitor upto 2 projects",
+                        "Get 10 rescans per project",
+                        "Get 10 credits for block scans",
+                        "Add a new project with 10 scans at $50/month",
+                        "Add 10 additional scans to an existing project at $5",
+                        "Add credit for block scan at $8/credit",
                       ]}
                     />
                   </Box>
@@ -241,7 +247,7 @@ const PricingPlan: React.FC<{
           <Text sx={{ fontSize: "lg" }}>{name}</Text>
           {isCustom ? (
             <Text fontSize="3xl" color="#78909C" fontWeight={500} pt={2}>
-              $@?# / mo
+              - / mo
             </Text>
           ) : (
             <Text fontSize="3xl" color="brand-dark" fontWeight={500} pt={2}>
@@ -287,7 +293,7 @@ const PricingPlan: React.FC<{
                     <PayPalScriptProvider
                       options={{
                         "client-id":
-                          "AZAcrVVsOPsS5yHduMohAWjIVrlPtaD_RbaoCh7JlvcA3TE8EF-n1q834XEMlZYOxzd1wjAGLEcRHifO",
+                          "sb",
                       }}
                     >
                       <PayPalButtons

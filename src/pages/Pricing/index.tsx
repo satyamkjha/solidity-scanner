@@ -55,9 +55,12 @@ export default function PricingPage() {
                 price: "$99",
                 name: "Individual Researcher",
                 features: [
-                  "Monitor upto 3 projects",
-                  "Unlimited rescans",
-                  "Access to all existing templates",
+                  "Monitor upto 2 projects",
+                  "Get 10 rescans per project",
+                  "Get 10 credits for block scans",
+                  "Add a new project with 10 scans at $50/month",
+                  "Add 10 additional scans to an existing project at $5",
+                  "Add credit for block scan at $8/credit",
                 ],
               }}
               button={
@@ -77,11 +80,11 @@ export default function PricingPage() {
                 name: "Enterprise",
                 features: [
                   "Monitor upto 10 projects",
-                  "Unlimited rescans",
-                  "Access to all existing templates",
-                  "Integrate with all popular tools and platforms",
-                  "Add custom scan templates and set priorities for issues",
-                  "Access to white glove services from our team",
+                  "Get 20 rescans per project",
+                  "Get 50 credits for block scans",
+                  "Add a new project with 20 scans at $50/month",
+                  "Add 20 additional scans to an existing project at $5",
+                  "Add credit for block scan at $5/credit",
                 ],
               }}
               button={
@@ -101,7 +104,7 @@ export default function PricingPage() {
                 ],
               }}
               button={
-                <Link target="_blank" href="mailto:info@bitaces.com">
+                <Link target="_blank" href="mailto:info@credshields.com">
                   <ActionButton variant="outline" borderWidth="2px">
                     Contact us
                   </ActionButton>
