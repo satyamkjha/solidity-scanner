@@ -293,7 +293,7 @@ const PricingPlan: React.FC<{
                     <PayPalScriptProvider
                       options={{
                         "client-id":
-                          "sb",
+                          "AZAcrVVsOPsS5yHduMohAWjIVrlPtaD_RbaoCh7JlvcA3TE8EF-n1q834XEMlZYOxzd1wjAGLEcRHifO",
                       }}
                     >
                       <PayPalButtons
