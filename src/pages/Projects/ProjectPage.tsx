@@ -49,6 +49,8 @@ import { useScan } from "hooks/useScan";
 
 import { ScanMeta } from "common/types";
 import Score from "components/score";
+import { useProfile } from "hooks/useProfile";
+import TrialWall from "components/trialWall";
 
 export const ProjectPage: React.FC = () => {
   const { projectId } = useParams<{ projectId: string }>();
@@ -157,6 +159,7 @@ const ScanDetails: React.FC<{ scansRemaining: number; scans: ScanMeta[] }> = ({
     useParams<{ projectId: string; scanId: string }>();
   const history = useHistory();
   const { data, isLoading, refetch } = useScan(scanId);
+  const { data: profile, isLoading: isProfileLoading } = useProfile();
 
   useEffect(() => {
     let intervalId: NodeJS.Timeout;
@@ -232,12 +235,13 @@ const ScanDetails: React.FC<{ scansRemaining: number; scans: ScanMeta[] }> = ({
           p: 4,
         }}
       >
-        {isLoading ? (
+        {isLoading || isProfileLoading ? (
           <Flex w="100%" h="70vh" alignItems="center" justifyContent="center">
             <Spinner />
           </Flex>
         ) : (
-          data && (
+          data &&
+          profile && (
             <>
               <Flex
                 sx={{
@@ -306,7 +310,10 @@ const ScanDetails: React.FC<{ scansRemaining: number; scans: ScanMeta[] }> = ({
                   </Button>
                   <Button
                     variant="accent-outline"
-                    isDisabled={reporting_status !== "generated"}
+                    isDisabled={
+                      reporting_status !== "generated" ||
+                      profile.current_package === "trial"
+                    }
                     onClick={downloadReport}
                     isLoading={isDownloadLoading}
                   >
@@ -386,17 +393,25 @@ const ScanDetails: React.FC<{ scansRemaining: number; scans: ScanMeta[] }> = ({
                       )}
                     </TabPanel>
                     <TabPanel>
-                      {data.scan_report.scan_details &&
+                      {profile.current_package === "trial" ? (
+                        <TrialWall />
+                      ) : (
+                        data.scan_report.scan_details &&
                         data.scan_report.scan_summary && (
                           <Result
                             scanSummary={data.scan_report.scan_summary}
                             scanDetails={data.scan_report.scan_details}
                             type="project"
                           />
-                        )}
+                        )
+                      )}
                     </TabPanel>
                     <TabPanel>
-                      <AdvancedScan scanId={scanId} />
+                      {profile.current_package === "trial" ? (
+                        <TrialWall />
+                      ) : (
+                        <AdvancedScan scanId={scanId} />
+                      )}
                     </TabPanel>
                   </TabPanels>
                 </Tabs>

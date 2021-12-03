@@ -15,12 +15,16 @@ import {
 } from "@chakra-ui/react";
 import Overview from "components/overview";
 import Result from "components/result";
+import TrialWall from "components/trialWall";
 
 import { useScan } from "hooks/useScan";
+import { useProfile } from "hooks/useProfile";
 
-export const BlockPage: React.FC = () => {
+const BlockPage: React.FC = () => {
   const { scanId } = useParams<{ scanId: string }>();
   const { data, isLoading } = useScan(scanId);
+  const { data: profile, isLoading: isProfileLoading } = useProfile();
+
   return (
     <Box
       sx={{
@@ -33,12 +37,13 @@ export const BlockPage: React.FC = () => {
         minH: "78vh",
       }}
     >
-      {isLoading ? (
+      {isLoading || isProfileLoading ? (
         <Flex w="100%" h="70vh" alignItems="center" justifyContent="center">
           <Spinner />
         </Flex>
       ) : (
-        data && (
+        data &&
+        profile && (
           <>
             {" "}
             <Flex
@@ -89,14 +94,18 @@ export const BlockPage: React.FC = () => {
                     )}
                   </TabPanel>
                   <TabPanel>
-                    {data.scan_report.scan_details &&
+                    {profile.current_package === "trial" ? (
+                      <TrialWall />
+                    ) : (
+                      data.scan_report.scan_details &&
                       data.scan_report.scan_summary && (
                         <Result
                           scanSummary={data.scan_report.scan_summary}
                           scanDetails={data.scan_report.scan_details}
                           type="block"
                         />
-                      )}
+                      )
+                    )}
                   </TabPanel>
                 </TabPanels>
               </Tabs>

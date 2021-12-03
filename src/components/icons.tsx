@@ -319,6 +319,38 @@ export const SeverityIcon: React.FC<{ size?: number; variant: string }> = ({
   );
 };
 
+export const TrialWallIcon: React.FC<{ size?: number }> = ({
+  size = 120,
+  ...props
+}) => {
+  return (
+    <svg
+      width={size}
+      height={size}
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+      viewBox="0 0 120 120"
+      {...props}
+    >
+      <circle cx={60} cy={60} r={60} fill="#F4F1FF" />
+      <path
+        d="M83.416 56.654H36.58a6.69 6.69 0 0 0-6.69 6.69v23.418a6.69 6.69 0 0 0 6.69 6.69h46.835a6.69 6.69 0 0 0 6.69-6.69V63.345a6.69 6.69 0 0 0-6.69-6.69ZM43.273 56.654V43.273a16.727 16.727 0 0 1 33.454 0v13.381"
+        stroke="#30F"
+        strokeWidth={3}
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+      <circle cx={60.43} cy={75.108} fill="#30F" r={3.453} />
+      <path
+        stroke="#30F"
+        strokeWidth={2}
+        strokeLinecap="round"
+        d="M60.566 78.697v5.77"
+      />
+    </svg>
+  );
+};
+
 export const SlackIcon: React.FC<{ size: number }> = ({ size }) => {
   return (
     <svg
