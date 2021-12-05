@@ -14,11 +14,13 @@ import {
 } from "@chakra-ui/react";
 import * as React from "react";
 import { HiCheckCircle } from "react-icons/hi";
+import { HiXCircle } from "react-icons/hi";
 
 export interface PricingCardData {
   features: string[];
   name: string;
   price?: string;
+  nonfeatures?: string[];
 }
 
 interface PricingCardProps extends CardProps {
@@ -30,8 +32,10 @@ interface PricingCardProps extends CardProps {
 
 export const PricingCard = (props: PricingCardProps) => {
   const { data, icon, button, custom, ...rest } = props;
-  const { features, price, name } = data;
+  const { features, price, name, nonfeatures } = data;
   const accentColor = "#19A398";
+  const successColor = "#289F4C";
+  const greyColor = "#808080"
 
   return (
     <Card rounded={{ sm: "xl" }} {...rest}>
@@ -59,16 +63,27 @@ export const PricingCard = (props: PricingCardProps) => {
           </>
         )}
       </Flex>
-      <List spacing="4" mb="8" maxW="28ch" mx="auto">
+      <List spacing="6" mb="8" maxW="28ch" mx="auto" >
         {features.map((feature, index) => (
-          <ListItem fontWeight="medium" key={index}>
+          <ListItem fontWeight="medium" fontSize="lg" key={index} color="#4E5D78">
             <ListIcon
               fontSize="xl"
               as={HiCheckCircle}
               marginEnd={2}
-              color={accentColor}
+              color={successColor}
             />
             {feature}
+          </ListItem>
+        ))}
+        {nonfeatures?.map((nonfeature, index) => (
+          <ListItem fontWeight="medium" fontSize="lg" key={index} color="#8A94A6">
+            <ListIcon
+              fontSize="xl"
+              as={HiXCircle}
+              marginEnd={2}
+              color={greyColor}
+            />
+            {nonfeature}
           </ListItem>
         ))}
       </List>
