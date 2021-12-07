@@ -30,7 +30,7 @@ import {
 } from "@chakra-ui/react";
 import { FaFileCode } from "react-icons/fa";
 import { AiOutlineProject } from "react-icons/ai";
-
+import { BlockCredit } from "components/icons";
 import API from "helpers/api";
 import { useOverview } from "hooks/useOverview";
 import { useProfile } from "hooks/useProfile";
@@ -382,17 +382,38 @@ const ContractForm: React.FC = () => {
       >
         Load contract
       </Text>
-      <Text
-        sx={{
-          color: (profileData?.credits || 0) > 0 ? "low" : "high",
-          fontWeight: 600,
-          fontSize: "sm",
-          textAlign: "center",
-          mb: 6,
-        }}
+      <Flex
+        justifyContent="center"
+        alignItems="center"
+        flexDir="column"
+        w="100%"
+        py={4}
+        my={4}
+        bg={
+          (profileData?.credits || 0) > 0
+            ? "rgba(223, 255, 233, 0.5)"
+            : "high-subtle"
+        }
+        border="1px solid"
+        borderColor={(profileData?.credits || 0) > 0 ? "brand-dark" : "high"}
+        borderRadius="25px"
       >
-        Contract scan credits: {profileData?.credits}
-      </Text>
+        <Flex alignItems="center">
+          <BlockCredit />
+          <Text fontSize="2xl" fontWeight="700" ml={2}>
+            {profileData?.credits}
+          </Text>
+        </Flex>
+        <Text
+          sx={{
+            color: (profileData?.credits || 0) > 0 ? "low" : "high",
+            fontWeight: 600,
+            textAlign: "center",
+          }}
+        >
+          Contract scan credits
+        </Text>
+      </Flex>
 
       <Text sx={{ color: "subtle", textAlign: "center", mb: 6 }}>
         Provide the address of your blockchain contract. See link examples and

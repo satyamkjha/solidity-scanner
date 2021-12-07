@@ -2,7 +2,7 @@ import React, { useEffect } from "react";
 import { Link } from "react-router-dom";
 import { Flex, Box, Text, Button, Progress, Spinner } from "@chakra-ui/react";
 
-import { LogoIcon } from "components/icons";
+import { LogoIcon, BlockCredit } from "components/icons";
 import Score from "components/score";
 import VulnerabilityDistribution from "components/vulnDistribution";
 
@@ -60,21 +60,22 @@ const Blocks: React.FC = () => {
           my: 4,
         }}
       >
-        <Text sx={{ color: "subtle", fontWeight: 600 }}>
-          BLOCKS
-          <Box
-            as="span"
-            sx={{
-              color: (profileData?.credits || 0) > 0 ? "low" : "high",
-              fontWeight: 600,
-              fontSize: "sm",
-              textAlign: "center",
-              ml: 3,
-            }}
-          >
-            ({profileData?.credits} contract scan credits remaining)
-          </Box>
-        </Text>
+        <Flex alignItems="center">
+          <Text sx={{ color: "subtle", fontWeight: 600 }}> BLOCKS</Text>
+          <Flex alignItems="center" ml={2}>
+            <BlockCredit />
+            <Text fontSize="xl" fontWeight="700" ml={2}>
+              {profileData?.credits}
+            </Text>
+            <Text
+              ml={2}
+              mt="2px"
+              color={(profileData?.credits || 0) > 0 ? "low" : "high"}
+            >
+              contract scan credits
+            </Text>
+          </Flex>
+        </Flex>
       </Flex>
 
       {isLoading ? (
