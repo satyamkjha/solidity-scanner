@@ -155,7 +155,7 @@ const Billing: React.FC = () => {
                   </Box>
                   {/* <Box sx={{ w: "%" }}></Box> */}
                 </Flex>
-              ) : (
+              ) : data.current_package === "individual" ? (
                 <Flex width="100%" p={8}>
                   <Box sx={{ w: "100%" }}>
                     <CurrentPlan
@@ -170,6 +170,23 @@ const Billing: React.FC = () => {
                         "Add a new project with 10 scans at $50/month",
                         "Add 10 additional scans to an existing project at $5",
                         "Add credit for block scan at $8/credit",
+                      ]}
+                    />
+                  </Box>
+                  {/* <Box sx={{ w: "%" }}></Box> */}
+                </Flex>
+              ) : (
+                <Flex width="100%" p={8}>
+                  <Box sx={{ w: "100%" }}>
+                    <CurrentPlan
+                      name="Custom"
+                      packageName="custom"
+                      packageRechargeDate={data.package_recharge_date}
+                      packageValidity={data.package_validity}
+                      details={[
+                        "Custom feature requested",
+                        "Contact our team for a manual audit",
+                        "Get suggestions for issue remediation",
                       ]}
                     />
                   </Box>
@@ -260,11 +277,22 @@ const PricingPlan: React.FC<{
         </Box>
         <Box mb={[6, 6, 0]}>
           {isCustom ? (
-            <Link target="_blank" href="mailto:info@credshields.com">
-              <Button colorScheme="gray" variant="outline" width="230px">
-                Contact us
-              </Button>
-            </Link>
+            <Flex flexDir="column" alignItems="center">
+              <Link target="_blank" href="mailto:info@credshields.com">
+                <Button colorScheme="gray" variant="outline" width="230px">
+                  Contact us
+                </Button>
+              </Link>
+              <Link
+                mt={2}
+                fontSize="15px"
+                target="_blank"
+                variant="brand"
+                href="mailto:info@credshields.com"
+              >
+                info@credshields.com
+              </Link>
+            </Flex>
           ) : (
             <Button variant="brand" width="230px" onClick={onOpen}>
               Pay Now

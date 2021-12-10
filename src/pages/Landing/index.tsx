@@ -55,7 +55,11 @@ export default function LandingPage() {
             </Link>
           </Box>
           <Box w="55%" display={["none", "none", "flex"]}>
-            <Image src="/landing-image01.jpg" alt="Product screenshot" />
+            <Image
+              src="/landing-image01.png"
+              alt="Product screenshot"
+              transform="translateX(20px)"
+            />
           </Box>
         </Flex>
         {/* Section 2 */}

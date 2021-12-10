@@ -34,7 +34,11 @@ import {
   AlertDialogOverlay,
 } from "@chakra-ui/react";
 
-import { AiOutlineClockCircle, AiOutlineDownload } from "react-icons/ai";
+import {
+  AiOutlineClockCircle,
+  AiOutlineDownload,
+  AiFillLock,
+} from "react-icons/ai";
 import Overview from "components/overview";
 import Result from "components/result";
 import AdvancedScan from "components/advancedScan";
@@ -319,7 +323,11 @@ const ScanDetails: React.FC<{ scansRemaining: number; scans: ScanMeta[] }> = ({
                   >
                     {reporting_status === "generated" ? (
                       <Icon
-                        as={AiOutlineDownload}
+                        as={
+                          profile.current_package === "trial"
+                            ? AiFillLock
+                            : AiOutlineDownload
+                        }
                         mr={2}
                         fontSize="17px"
                         color="#806CCF"
@@ -461,6 +469,7 @@ const ScanDetails: React.FC<{ scansRemaining: number; scans: ScanMeta[] }> = ({
 };
 
 const ScanHistory: React.FC<{ scans: ScanMeta[] }> = ({ scans }) => {
+  const { data: profile } = useProfile();
   return (
     <Box
       sx={{
@@ -471,9 +480,14 @@ const ScanHistory: React.FC<{ scans: ScanMeta[] }> = ({ scans }) => {
       }}
     >
       <Text sx={{ fontSize: "xl", mb: 4 }}>Scan History</Text>
-      {scans.map((scan) => (
-        <ScanBlock key={scan.scan_id} scan={scan} />
-      ))}
+      {profile &&
+        scans.map((scan) => (
+          <ScanBlock
+            key={scan.scan_id}
+            scan={scan}
+            isTrial={profile?.current_package === "trial"}
+          />
+        ))}
     </Box>
   );
 };
@@ -493,7 +507,10 @@ const monthNames = [
   "Dec",
 ];
 
-const ScanBlock: React.FC<{ scan: ScanMeta }> = ({ scan }) => {
+const ScanBlock: React.FC<{ scan: ScanMeta; isTrial: boolean }> = ({
+  scan,
+  isTrial,
+}) => {
   const [isDownloadLoading, setDownloadLoading] = useState(false);
   const history = useHistory();
   const { projectId } = useParams<{ projectId: string }>();
@@ -568,7 +585,7 @@ const ScanBlock: React.FC<{ scan: ScanMeta }> = ({ scan }) => {
       </Flex>
       <Button
         variant="accent-outline"
-        isDisabled={scan.reporting_status !== "generated"}
+        isDisabled={scan.reporting_status !== "generated" || isTrial}
         isLoading={isDownloadLoading}
         onClick={(e) => {
           e.stopPropagation();
@@ -577,7 +594,12 @@ const ScanBlock: React.FC<{ scan: ScanMeta }> = ({ scan }) => {
       >
         {scan.reporting_status === "generated" ? "PDF" : "Generating PDF..."}
         {scan.reporting_status === "generated" ? (
-          <Icon as={AiOutlineDownload} ml={2} fontSize="17px" color="#806CCF" />
+          <Icon
+            as={isTrial ? AiFillLock : AiOutlineDownload}
+            ml={2}
+            fontSize="17px"
+            color="#806CCF"
+          />
         ) : (
           <Spinner color="#806CCF" size="sm" ml={2} />
         )}

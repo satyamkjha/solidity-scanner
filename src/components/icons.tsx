@@ -113,31 +113,28 @@ export const MailLock: React.FC<{ size: number }> = ({ size, ...props }) => {
 // Menu Icons
 
 export const HomeMenuIcon: React.FC<{ size: number; active?: boolean }> = ({
-  size,
+  size = 21,
   active,
   ...props
 }) => {
   const iconColor = active ? "#04B79C" : "#3300FF";
+
   return (
     <svg
-      width={24}
-      height={24}
-      viewBox="0 0 24 24"
+      width={21}
+      height={21}
       fill="none"
+      viewBox="0 0 21 21"
       xmlns="http://www.w3.org/2000/svg"
       {...props}
     >
       <path
-        d="M9.5 4h-4A1.5 1.5 0 004 5.5v4A1.5 1.5 0 005.5 11h4A1.5 1.5 0 0011 9.5v-4A1.5 1.5 0 009.5 4z"
-        style={{ transition: "0.3s fill" }}
+        d="M0 8.786a3 3 0 0 1 1.258-2.442l7.15-5.101a3 3 0 0 1 3.484 0l7.15 5.101A3 3 0 0 1 20.3 8.786V18a3 3 0 0 1-3 3H3a3 3 0 0 1-3-3V8.786Z"
+        opacity={0.3}
         fill={iconColor}
       />
       <path
-        opacity={0.3}
-        fillRule="evenodd"
-        clipRule="evenodd"
-        d="M5.5 13h4a1.5 1.5 0 011.5 1.5v4A1.5 1.5 0 019.5 20h-4A1.5 1.5 0 014 18.5v-4A1.5 1.5 0 015.5 13zm9-9h4A1.5 1.5 0 0120 5.5v4a1.5 1.5 0 01-1.5 1.5h-4A1.5 1.5 0 0113 9.5v-4A1.5 1.5 0 0114.5 4zm0 9h4a1.5 1.5 0 011.5 1.5v4a1.5 1.5 0 01-1.5 1.5h-4a1.5 1.5 0 01-1.5-1.5v-4a1.5 1.5 0 011.5-1.5z"
-        style={{ transition: "0.3s fill" }}
+        d="M6.043 15.065a4.109 4.109 0 0 1 8.217 0V21H6.043v-5.935Z"
         fill={iconColor}
       />
     </svg>
