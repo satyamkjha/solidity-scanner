@@ -14,6 +14,7 @@ import {
   LogoIcon,
   HomeMenuIcon,
   ProjectsMenuIcon,
+  BlockMenuIcon,
   IntegrationMenuIcon,
   BillingMenuIcon,
 } from "components/icons";
@@ -121,7 +122,7 @@ const Sidebar: React.FC<{
           <SidebarItem
             to="/blocks"
             label="Blocks"
-            icon={<HomeMenuIcon size={16} />}
+            icon={<BlockMenuIcon size={16} />}
             isCollapsed={isCollapsed}
           />
           <SidebarItem
