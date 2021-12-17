@@ -94,9 +94,11 @@ const BlockPage: React.FC = () => {
                     )}
                   </TabPanel>
                   <TabPanel>
-                    {profile.current_package === "trial" ? (
-                      <TrialWall />
-                    ) : (
+                    {
+                    // profile.current_package === "trial" ? (
+                    //   <TrialWall />
+                    // ) : 
+                    (
                       data.scan_report.scan_details &&
                       data.scan_report.scan_summary && (
                         <Result

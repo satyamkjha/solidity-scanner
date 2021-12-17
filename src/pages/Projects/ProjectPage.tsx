@@ -315,8 +315,9 @@ const ScanDetails: React.FC<{ scansRemaining: number; scans: ScanMeta[] }> = ({
                   <Button
                     variant="accent-outline"
                     isDisabled={
-                      reporting_status !== "generated" ||
-                      profile.current_package === "trial"
+                      reporting_status !== "generated" 
+                      // ||
+                      // profile.current_package === "trial"
                     }
                     onClick={downloadReport}
                     isLoading={isDownloadLoading}
@@ -324,9 +325,10 @@ const ScanDetails: React.FC<{ scansRemaining: number; scans: ScanMeta[] }> = ({
                     {reporting_status === "generated" ? (
                       <Icon
                         as={
-                          profile.current_package === "trial"
-                            ? AiFillLock
-                            : AiOutlineDownload
+                          // profile.current_package === "trial"
+                          //   ? AiFillLock
+                          //   :
+                             AiOutlineDownload
                         }
                         mr={2}
                         fontSize="17px"
@@ -401,9 +403,10 @@ const ScanDetails: React.FC<{ scansRemaining: number; scans: ScanMeta[] }> = ({
                       )}
                     </TabPanel>
                     <TabPanel>
-                      {profile.current_package === "trial" ? (
-                        <TrialWall />
-                      ) : (
+                      {
+                      // profile.current_package === "trial" ? (
+                      //   <TrialWall />
+                      // ) : (
                         data.scan_report.scan_details &&
                         data.scan_report.scan_summary && (
                           <Result
@@ -412,14 +415,15 @@ const ScanDetails: React.FC<{ scansRemaining: number; scans: ScanMeta[] }> = ({
                             type="project"
                           />
                         )
-                      )}
+                      // )
+                      }
                     </TabPanel>
                     <TabPanel>
-                      {profile.current_package === "trial" ? (
+                      {/* {profile.current_package === "trial" ? (
                         <TrialWall />
-                      ) : (
+                      ) : ( */}
                         <AdvancedScan scanId={scanId} />
-                      )}
+                      {/* )} */}
                     </TabPanel>
                   </TabPanels>
                 </Tabs>
@@ -485,7 +489,8 @@ const ScanHistory: React.FC<{ scans: ScanMeta[] }> = ({ scans }) => {
           <ScanBlock
             key={scan.scan_id}
             scan={scan}
-            isTrial={profile?.current_package === "trial"}
+            // isTrial={profile?.current_package === "trial"}
+            isTrial={false}
           />
         ))}
     </Box>
