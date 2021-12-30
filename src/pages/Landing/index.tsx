@@ -265,7 +265,7 @@ export default function LandingPage() {
               Talk to our team of security experts for help on securing your
               Smart Contracts
             </Text>
-            <ChakraLink target="_blank" href="mailto:info@bitaces.com">
+            <ChakraLink target="_blank" href="mailto:info@credshields.com">
               <Button variant="brand" mt={8}>
                 Request audit
               </Button>
