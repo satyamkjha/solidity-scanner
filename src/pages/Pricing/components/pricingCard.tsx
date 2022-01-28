@@ -35,7 +35,7 @@ export const PricingCard = (props: PricingCardProps) => {
   const { features, price, name, nonfeatures } = data;
   const accentColor = "#19A398";
   const successColor = "#289F4C";
-  const greyColor = "#808080"
+  const greyColor = "#808080";
 
   return (
     <Card rounded={{ sm: "xl" }} {...rest}>
@@ -63,9 +63,14 @@ export const PricingCard = (props: PricingCardProps) => {
           </>
         )}
       </Flex>
-      <List spacing="6" mb="8" maxW="28ch" mx="auto" >
+      <List spacing="6" mb="8" maxW="28ch" mx="auto">
         {features.map((feature, index) => (
-          <ListItem fontWeight="medium" fontSize="lg" key={index} color="#4E5D78">
+          <ListItem
+            fontWeight="medium"
+            fontSize="lg"
+            key={index}
+            color="#4E5D78"
+          >
             <ListIcon
               fontSize="xl"
               as={HiCheckCircle}
@@ -76,7 +81,12 @@ export const PricingCard = (props: PricingCardProps) => {
           </ListItem>
         ))}
         {nonfeatures?.map((nonfeature, index) => (
-          <ListItem fontWeight="medium" fontSize="lg" key={index} color="#8A94A6">
+          <ListItem
+            fontWeight="medium"
+            fontSize="lg"
+            key={index}
+            color="#8A94A6"
+          >
             <ListIcon
               fontSize="xl"
               as={HiXCircle}

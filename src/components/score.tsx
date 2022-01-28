@@ -3,11 +3,7 @@ import {
   Flex,
   Box,
   Text,
-  CircularProgress,
-  CircularProgressLabel,
 } from "@chakra-ui/react";
-
-import { LogoIcon } from "components/icons";
 
 export type ScoreProps = { score: string };
 const Score: React.FC<ScoreProps> = ({ score }) => {

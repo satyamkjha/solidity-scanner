@@ -28,6 +28,7 @@ import {
   Spinner,
   useToast,
   VStack,
+  Image,
 } from "@chakra-ui/react";
 
 import { AiOutlineCheckCircle } from "react-icons/ai";
@@ -212,46 +213,15 @@ const PricingPlan: React.FC<{
   const toast = useToast();
   const queryClient = useQueryClient();
 
-  const createPaypalOrder = async () => {
+  const createStripePayment = async () => {
     const { data } = await API.post<{
       status: string;
-      orderID: string;
-    }>("/api-create-paypal-order/", {
+      checkout_url: string;
+    }>("/api-create-stripe-order/", {
       package: packageName,
     });
-    return data.orderID;
+    window.open(`${data.checkout_url}`, "_blank");
   };
-
-  const onPaypayApprove = async (
-    data: OnApproveData,
-    actions: OnApproveActions
-  ) => {
-    const { data: responseData } = await API.post<{
-      status: string;
-      message: string;
-    }>("/api-execute-paypal-order/", {
-      order_id: data.orderID,
-    });
-    queryClient.invalidateQueries("profile");
-    if (responseData.status === "success") {
-      toast({
-        title: "Payment successful.",
-        description: `You've successfully subscribed to the ${packageName} plan.`,
-        status: "success",
-        duration: 9000,
-        isClosable: true,
-      });
-    } else {
-      toast({
-        title: "Error.",
-        description: `There was an issue processing your payment.`,
-        status: "error",
-        duration: 9000,
-        isClosable: true,
-      });
-    }
-  };
-
   return (
     <>
       <Flex
@@ -310,33 +280,61 @@ const PricingPlan: React.FC<{
                 <Flex
                   cursor="pointer"
                   width="100%"
-                  bg="white"
-                  pt={6}
-                  px={8}
+                  bg="#F6F9FC"
+                  pb={6}
                   borderRadius="15px"
-                  h="160px"
+                  h="fit-content"
                   boxShadow="0px 0px 5px rgba(0, 0, 0, 0.2)"
                 >
-                  <Box width="100%" px={4}>
-                    <PayPalScriptProvider
-                      options={{
-                        "client-id":
-                          "AZAcrVVsOPsS5yHduMohAWjIVrlPtaD_RbaoCh7JlvcA3TE8EF-n1q834XEMlZYOxzd1wjAGLEcRHifO",
-                      }}
+                  <Box
+                    flexDir={"column"}
+                    justifyContent={"center"}
+                    alignItems={"center"}
+                    w="100%"
+                  >
+                    <Box
+                      flexDir={"row"}
+                      justifyContent={"flex-start"}
+                      alignItems={"center"}
+                      w="100%"
+                      height={"fit-content"}
                     >
-                      <PayPalButtons
-                        style={{
-                          color: "blue",
-                          shape: "pill",
-                          label: "pay",
-                          height: 40,
-                          layout: "vertical",
-                        }}
-                        className="full-width"
-                        createOrder={createPaypalOrder}
-                        onApprove={onPaypayApprove}
+                      <Image
+                        src="/stripe-pay.png"
+                        alt="pay"
+                        borderRadius="15px"
+                        w={"360px"}
+                        h={"90px"}
                       />
-                    </PayPalScriptProvider>
+                    </Box>
+                    <Flex
+                      flexDir={"row"}
+                      justifyContent="center"
+                      alignItems="center"
+                      w="100%"
+                      height={"fit-content"}
+                      px={4}
+                    >
+                      <Button
+                        onClick={createStripePayment}
+                        style={{
+                          padding: "1.3rem",
+                          backgroundColor: "#5a1cff",
+                          color: "#FFFFFF",
+                          borderRadius: "30px",
+                        }}
+                        w={"300px"}
+                      >
+                        Pay with
+                        <Image
+                          src="/stripe.png"
+                          alt="pay"
+                          ml={"2.5px"}
+                          w={"70px"}
+                          h={"45px"}
+                        />
+                      </Button>
+                    </Flex>
                   </Box>
                 </Flex>
                 <Flex
@@ -360,7 +358,7 @@ const PricingPlan: React.FC<{
                 <Flex
                   cursor="pointer"
                   width="100%"
-                  bg="white"
+                  bg="#F6F9FC"
                   mt={6}
                   py={6}
                   px={8}

@@ -18,8 +18,9 @@ function useQuery() {
 
 const Verify: React.FC = () => {
   const [loading, setLoading] = useState(false);
-  const [verification, setVerification] =
-    useState<"success" | "failed" | null>(null);
+  const [verification, setVerification] = useState<"success" | "failed" | null>(
+    null
+  );
   const [errorMessage, setErrorMessage] = useState("");
 
   const query = useQuery();

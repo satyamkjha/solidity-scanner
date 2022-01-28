@@ -70,8 +70,9 @@ export default function TOSPage() {
             </li>
             <li>
               <strong>Company</strong> (referred to as either "the Company",
-              "We", "Us" or "Our" in this Agreement) refers to, CREDSHIELDS TECHNOLOGIES PTE. LTD., 
-              20A TANJONG PAGAR ROAD, SINGAPORE (088443).
+              "We", "Us" or "Our" in this Agreement) refers to, CREDSHIELDS
+              TECHNOLOGIES PTE. LTD., 20A TANJONG PAGAR ROAD, SINGAPORE
+              (088443).
             </li>
             <li>
               <strong>Country</strong> refers to: India

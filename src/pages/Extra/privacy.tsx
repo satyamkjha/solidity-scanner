@@ -80,8 +80,9 @@ export default function PrivacyPage() {
             <li>
               <p>
                 <strong>Company</strong> (referred to as either "the Company",
-                "We", "Us" or "Our" in this Agreement) refers to CREDSHIELDS TECHNOLOGIES PTE. LTD., 
-                20A TANJONG PAGAR ROAD, SINGAPORE (088443).
+                "We", "Us" or "Our" in this Agreement) refers to CREDSHIELDS
+                TECHNOLOGIES PTE. LTD., 20A TANJONG PAGAR ROAD, SINGAPORE
+                (088443).
               </p>
             </li>
             <li>
