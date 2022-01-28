@@ -62,6 +62,7 @@ export default function LandingPage() {
             />
           </Box>
         </Flex>
+
         {/* Section 2 */}
         <Box w="100%" as="section" sx={{ textAlign: "center" }} my={8}>
           <Heading fontSize="3xl" mb={4}>

@@ -315,7 +315,7 @@ const ScanDetails: React.FC<{ scansRemaining: number; scans: ScanMeta[] }> = ({
                   <Button
                     variant="accent-outline"
                     isDisabled={
-                      reporting_status !== "generated" 
+                      reporting_status !== "generated"
                       // ||
                       // profile.current_package === "trial"
                     }
@@ -328,7 +328,7 @@ const ScanDetails: React.FC<{ scansRemaining: number; scans: ScanMeta[] }> = ({
                           // profile.current_package === "trial"
                           //   ? AiFillLock
                           //   :
-                             AiOutlineDownload
+                          AiOutlineDownload
                         }
                         mr={2}
                         fontSize="17px"
@@ -404,25 +404,25 @@ const ScanDetails: React.FC<{ scansRemaining: number; scans: ScanMeta[] }> = ({
                     </TabPanel>
                     <TabPanel>
                       {
-                      // profile.current_package === "trial" ? (
-                      //   <TrialWall />
-                      // ) : (
+                        // profile.current_package === "trial" ? (
+                        //   <TrialWall />
+                        // ) : (
                         data.scan_report.scan_details &&
-                        data.scan_report.scan_summary && (
-                          <Result
-                            scanSummary={data.scan_report.scan_summary}
-                            scanDetails={data.scan_report.scan_details}
-                            type="project"
-                          />
-                        )
-                      // )
+                          data.scan_report.scan_summary && (
+                            <Result
+                              scanSummary={data.scan_report.scan_summary}
+                              scanDetails={data.scan_report.scan_details}
+                              type="project"
+                            />
+                          )
+                        // )
                       }
                     </TabPanel>
                     <TabPanel>
                       {/* {profile.current_package === "trial" ? (
                         <TrialWall />
                       ) : ( */}
-                        <AdvancedScan scanId={scanId} />
+                      <AdvancedScan scanId={scanId} />
                       {/* )} */}
                     </TabPanel>
                   </TabPanels>

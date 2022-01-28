@@ -203,48 +203,50 @@ export const ProjectsMenuIcon: React.FC<{ size: number; active?: boolean }> = ({
   );
 };
 
-export const IntegrationMenuIcon: React.FC<{ size: number; active?: boolean }> =
-  ({ size, active, ...props }) => {
-    const iconColor = active ? "#04B79C" : "#3300FF";
+export const IntegrationMenuIcon: React.FC<{
+  size: number;
+  active?: boolean;
+}> = ({ size, active, ...props }) => {
+  const iconColor = active ? "#04B79C" : "#3300FF";
 
-    return (
-      <svg
-        width={size}
-        height={(size * 22) / 28}
-        viewBox="0 0 18 22"
-        fill="none"
-        xmlns="http://www.w3.org/2000/svg"
-        {...props}
-      >
-        <path
-          d="M11.37 21.5h-5V19c-6.8-2-6.833-8.833-6-12h17c1.6 7.6-3.333 11.167-6 12v2.5z"
-          fill={active ? "#98FDAC" : "#B0A1ED"}
-        />
-        <rect
-          x={8.658}
-          y={9.344}
-          width={1.939}
-          height={4.696}
-          rx={0.97}
-          transform="rotate(31.284 8.658 9.344)"
-          fill={iconColor}
-        />
-        <rect
-          x={9.4}
-          y={11.73}
-          width={1.939}
-          height={4.696}
-          rx={0.97}
-          transform="rotate(34.426 9.4 11.73)"
-          fill={iconColor}
-        />
-        <path
-          d="M3.559 1.5a1.5 1.5 0 013 0V7h-3V1.5zM11.443 1.5a1.5 1.5 0 113 0V7h-3V1.5z"
-          fill={iconColor}
-        />
-      </svg>
-    );
-  };
+  return (
+    <svg
+      width={size}
+      height={(size * 22) / 28}
+      viewBox="0 0 18 22"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+      {...props}
+    >
+      <path
+        d="M11.37 21.5h-5V19c-6.8-2-6.833-8.833-6-12h17c1.6 7.6-3.333 11.167-6 12v2.5z"
+        fill={active ? "#98FDAC" : "#B0A1ED"}
+      />
+      <rect
+        x={8.658}
+        y={9.344}
+        width={1.939}
+        height={4.696}
+        rx={0.97}
+        transform="rotate(31.284 8.658 9.344)"
+        fill={iconColor}
+      />
+      <rect
+        x={9.4}
+        y={11.73}
+        width={1.939}
+        height={4.696}
+        rx={0.97}
+        transform="rotate(34.426 9.4 11.73)"
+        fill={iconColor}
+      />
+      <path
+        d="M3.559 1.5a1.5 1.5 0 013 0V7h-3V1.5zM11.443 1.5a1.5 1.5 0 113 0V7h-3V1.5z"
+        fill={iconColor}
+      />
+    </svg>
+  );
+};
 
 export const BillingMenuIcon: React.FC<{ size: number; active?: boolean }> = ({
   size,

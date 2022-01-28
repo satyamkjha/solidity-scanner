@@ -11,7 +11,6 @@ import {
 
 import VulnerabilityDistribution from "components/vulnDistribution";
 import PieChart from "components/pieChart";
-import Score from "components/score";
 import { ScanSummary } from "common/types";
 import { LogoIcon } from "./icons";
 

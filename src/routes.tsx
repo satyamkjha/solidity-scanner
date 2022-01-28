@@ -13,6 +13,7 @@ import Layout from "components/layout";
 
 import Auth from "helpers/auth";
 import API from "helpers/api";
+import PaymentSucess from "pages/Billing/payment";
 
 const Landing = lazy(
   () => import("pages/Landing" /* webpackChunkName: "Landing" */)
@@ -92,6 +93,10 @@ const Routes: React.FC = () => {
           <Route exact path="/">
             <Landing />
           </Route>
+          <Route exact path="/billing/:status">
+            <PaymentSucess />
+          </Route>
+
           <Route exact path="/pricing">
             <Pricing />
           </Route>
