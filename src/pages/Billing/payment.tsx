@@ -18,11 +18,11 @@ import Auth from "helpers/auth";
 export default function PaymentSucess() {
   const { status } = useParams<{ status: string }>();
 
-  useEffect(()=>{
-    setInterval(()=>{
+  useEffect(() => {
+    setInterval(() => {
       window.close();
-    }, 5000)
-  }, [])
+    }, 5000);
+  }, []);
 
   return (
     <>
