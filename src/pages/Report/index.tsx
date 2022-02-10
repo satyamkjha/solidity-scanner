@@ -17,6 +17,7 @@ import { Logo, SeverityIcon } from "components/icons";
 import { IssueItem } from "common/types";
 import VulnerabilityProgress from "components/VulnerabilityProgress";
 import { useIssueDetail } from "hooks/useIssueDetail";
+import { sentenceCapitalize } from "helpers/helperFunction";
 
 const pieData = (
   critical: number,
@@ -184,7 +185,7 @@ export default function ReportPage() {
               {data?.summary_report?.project_summary_report?.project_name!}
             </Heading>
             <Text fontSize="xl" color={"white"} mt={24} mb={4}>
-              Nov 20th, 2022
+              {data.summary_report.project_summary_report.last_project_report_update_time.slice(0,10)}
             </Text>
           </Flex>
 
@@ -643,10 +644,7 @@ export default function ReportPage() {
                 color={"gray.600"}
                 width={"70%"}
               >
-                {
-                  data?.summary_report.project_summary_report
-                    .last_scan_triggered_time
-                }
+                {data?.summary_report.project_summary_report.last_project_report_update_time.slice(0,10)}
               </Text>
             </Flex>
             <Flex
@@ -907,16 +905,16 @@ export default function ReportPage() {
                     ml={2}
                     width={"100%"}
                   >
-                    {issue.severity}
+                          {sentenceCapitalize(issue.severity)}
                   </Text>
                 </Flex>
                 <Text
                   fontSize="md"
-                  fontWeight={"extrabold"}
+                  fontWeight={"normal"}
                   color={"gray.600"}
                   width={"15%"}
                 >
-                  {issue.status}
+                  {sentenceCapitalize(issue.status.toLowerCase())}
                 </Text>
               </Flex>
             ))}
@@ -1044,7 +1042,7 @@ export default function ReportPage() {
                 </Text>
                 <Text
                   fontSize="md"
-                  fontWeight={"extrabold"}
+                  fontWeight={"normal"}
                   color={"gray.600"}
                   width={"17%"}
                 >
@@ -1171,7 +1169,7 @@ export default function ReportPage() {
                     mt={12}
                     mb={8}
                   >
-                    {`${index + 1}. ${key}`}
+                    {`${index + 1}. ${data.summary_report.issues[key][0].issue_name}`}
                   </Text>
                   <Flex
                     as="section"
@@ -1256,7 +1254,7 @@ export default function ReportPage() {
                       </Text>
                       <Text
                         fontSize="lg"
-                        fontWeight={"extrabold"}
+                        fontWeight={"normal"}
                         color={"gray.600"}
                         width={"15%"}
                       >
@@ -1272,22 +1270,22 @@ export default function ReportPage() {
                       >
                         <SeverityIcon variant={issue.severity} />
                         <Text
-                          fontSize="md"
+                          fontSize="lg"
                           fontWeight={"normal"}
                           color={"gray.600"}
                           ml={2}
                           width={"100%"}
                         >
-                          {issue.severity}
+                          {sentenceCapitalize(issue.severity)}
                         </Text>
                       </Flex>
                       <Text
                         fontSize="lg"
-                        fontWeight={"extrabold"}
+                        fontWeight={"normal"}
                         color={"gray.600"}
                         width={"20%"}
                       >
-                        {issue.status}
+                        {sentenceCapitalize(issue.status.toLowerCase())}
                       </Text>
                     </Flex>
                   ))}
