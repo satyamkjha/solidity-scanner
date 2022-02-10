@@ -1,9 +1,5 @@
 import React from "react";
-import {
-  Flex,
-  Box,
-  Text,
-} from "@chakra-ui/react";
+import { Flex, Box, Text } from "@chakra-ui/react";
 
 export type ScoreProps = { score: string };
 const Score: React.FC<ScoreProps> = ({ score }) => {

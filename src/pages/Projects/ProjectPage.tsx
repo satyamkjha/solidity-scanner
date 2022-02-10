@@ -54,7 +54,6 @@ import { useScan } from "hooks/useScan";
 import { ScanMeta } from "common/types";
 import Score from "components/score";
 import { useProfile } from "hooks/useProfile";
-import TrialWall from "components/trialWall";
 
 export const ProjectPage: React.FC = () => {
   const { projectId } = useParams<{ projectId: string }>();

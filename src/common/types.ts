@@ -1,3 +1,5 @@
+import { type } from "os";
+
 export type Severity = "high" | "medium" | "low";
 
 export type Profile = {
@@ -133,4 +135,43 @@ export type Overview = {
   total_lines_scanner: number;
   total_projects_monitored: number;
   upcoming_scan: string;
+};
+
+export type IssueItem = {
+  bug_id: string;
+  file_path: string;
+  issue_hash: string;
+  issue_name: string;
+  line_number_end: string;
+  line_number_start: string;
+  severity: string;
+  status: string;
+};
+
+export type Report = {
+  git_commit_hash: string;
+  issues: {
+    [key: string]: IssueItem[];
+  };
+  report_id: string;
+  project_summary_report: {
+    git_commit_hash: string;
+    project_id: string;
+    project_name: string;
+    project_url: string;
+    last_project_report_update_time: string;
+    last_scan_triggered_time: string;
+  };
+  scan_summary: ScanItem[];
+};
+
+export type ScanItem = {
+  count_files_analyzed: number;
+  issue_severity_distribution: IssueSeverityDistribution;
+  score: string;
+  issues_count: number;
+  lines_analyzed_count: number;
+  scan_time_taken: number;
+  scan_time: string;
+  scans_ran: string[];
 };

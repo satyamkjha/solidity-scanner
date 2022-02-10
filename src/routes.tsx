@@ -19,6 +19,10 @@ const Landing = lazy(
   () => import("pages/Landing" /* webpackChunkName: "Landing" */)
 );
 
+const Report = lazy(
+  () => import("pages/Report" /* webpackChunkName: "Landing" */)
+);
+
 const Pricing = lazy(
   () => import("pages/Pricing" /* webpackChunkName: "Pricing" */)
 );
@@ -93,10 +97,12 @@ const Routes: React.FC = () => {
           <Route exact path="/">
             <Landing />
           </Route>
+          <Route exact path="/report/:reportId">
+            <Report />
+          </Route>
           <Route exact path="/billing/:status">
             <PaymentSucess />
           </Route>
-
           <Route exact path="/pricing">
             <Pricing />
           </Route>

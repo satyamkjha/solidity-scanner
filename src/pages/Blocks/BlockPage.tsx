@@ -12,11 +12,16 @@ import {
   Tab,
   TabPanel,
   Spinner,
+  Accordion,
+  AccordionButton,
+  AccordionIcon,
+  AccordionItem,
+  AccordionPanel,
 } from "@chakra-ui/react";
 import Overview from "components/overview";
 import Result from "components/result";
 import TrialWall from "components/trialWall";
-
+import { AddIcon, MinusIcon } from "@chakra-ui/icons";
 import { useScan } from "hooks/useScan";
 import { useProfile } from "hooks/useProfile";
 
@@ -73,13 +78,35 @@ const BlockPage: React.FC = () => {
                 p: 4,
               }}
             >
+              <Accordion allowMultiple borderBottomWidth={0}>
+                <AccordionItem borderTopWidth={0} style={{}}>
+                  {({ isExpanded }) => (
+                    <>
+                      <h2>
+                        <AccordionButton>
+                          <Box flex="1" p={3} textAlign="left">
+                            Section 2 title
+                          </Box>
+                        </AccordionButton>
+                      </h2>
+                      <AccordionPanel pb={4}>
+                        Lorem ipsum dolor sit amet, consectetur adipiscing elit,
+                        sed do eiusmod tempor incididunt ut labore et dolore
+                        magna aliqua. Ut enim ad minim veniam, quis nostrud
+                        exercitation ullamco laboris nisi ut aliquip ex ea
+                        commodo consequat.
+                      </AccordionPanel>
+                    </>
+                  )}
+                </AccordionItem>
+              </Accordion>
               <Tabs variant="soft-rounded" colorScheme="green">
                 <TabList
                   sx={{
                     borderBottomWidth: "1px",
                     borderBottomStyle: "solid",
                     borderColor: "border",
-                    pb: 4,
+                    py: 4,
                     px: 4,
                   }}
                 >

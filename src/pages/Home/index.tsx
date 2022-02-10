@@ -34,6 +34,7 @@ import { BlockCredit } from "components/icons";
 import API from "helpers/api";
 import { useOverview } from "hooks/useOverview";
 import { useProfile } from "hooks/useProfile";
+import VulnerabilityProgress from "components/VulnerabilityProgress";
 
 const Home: React.FC = () => {
   const { data } = useOverview();
@@ -199,38 +200,6 @@ const Home: React.FC = () => {
         )}
       </Flex>
     </Box>
-  );
-};
-
-type VulnerabilityProgressProps = {
-  label: string;
-  count: number;
-  total: number;
-  variant: string;
-};
-const VulnerabilityProgress = (props: VulnerabilityProgressProps) => {
-  return (
-    <>
-      <Flex
-        sx={{
-          w: "100%",
-          justifyContent: "space-between",
-          fontSize: "sm",
-          fontWeight: 600,
-          px: 4,
-          my: 4,
-        }}
-      >
-        <Text>{props.label}</Text>
-        <Text>{props.count}</Text>
-      </Flex>
-      <Progress
-        sx={{ my: 2, mx: 4 }}
-        variant={props.variant}
-        value={(props.count * 100) / props.total}
-        size="sm"
-      />
-    </>
   );
 };
 
