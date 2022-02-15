@@ -3,16 +3,19 @@ import { useQuery } from "react-query";
 import API from "helpers/api";
 import { Report } from "common/types";
 
-const getReport = async (scan_id: string) => {
+const getReport = async (project_id: string, report_id: string) => {
   const { data } = await API.post<{ summary_report: Report }>(
-    "/api-get-report/",
+    "/api-get-beta-report/",
     {
-      scan_id,
+      project_id,
+      report_id,
     }
   );
   return data;
 };
 
-export const useReport = (scan_id: string) => {
-  return useQuery(["beta_scan_detail", scan_id], () => getReport(scan_id));
+export const useReport = (project_id: string, report_id: string) => {
+  return useQuery(["beta_report-detail", project_id, report_id], () =>
+    getReport(project_id, report_id)
+  );
 };

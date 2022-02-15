@@ -97,7 +97,7 @@ const Routes: React.FC = () => {
           <Route exact path="/">
             <Landing />
           </Route>
-          <Route exact path="/report/:reportId">
+          <Route exact path="/report/:projectId/:reportId">
             <Report />
           </Route>
           <Route exact path="/billing/:status">
