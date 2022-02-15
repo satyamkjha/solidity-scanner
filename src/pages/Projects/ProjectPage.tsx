@@ -8,7 +8,6 @@ import {
   useHistory,
 } from "react-router-dom";
 import FileDownload from "js-file-download";
-
 import {
   Flex,
   Box,
@@ -33,7 +32,6 @@ import {
   AlertDialogContent,
   AlertDialogOverlay,
 } from "@chakra-ui/react";
-
 import {
   AiOutlineClockCircle,
   AiOutlineDownload,
@@ -155,25 +153,29 @@ const ScanDetails: React.FC<{ scansRemaining: number; scans: ScanMeta[] }> = ({
 }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [isRescanLoading, setRescanLoading] = useState(false);
-  const [isDownloadLoading, setDownloadLoading] = useState(false);
   const cancelRef = useRef<HTMLButtonElement | null>(null);
   const queryClient = useQueryClient();
   const { projectId, scanId } =
     useParams<{ projectId: string; scanId: string }>();
   const history = useHistory();
   const { data, isLoading, refetch } = useScan(scanId);
-  const { data: profile, isLoading: isProfileLoading } = useProfile();
+
+  console.log(data);
 
   useEffect(() => {
     let intervalId: NodeJS.Timeout;
     const refetchTillScanComplete = () => {
-      if (data && data.scan_report.scan_status === "scanning") {
+      if (
+        data &&
+        (data.scan_report.scan_status === "scanning" ||
+          data.scan_report.reporting_status === "generating_report")
+      ) {
         intervalId = setInterval(async () => {
           await refetch();
           if (data && data.scan_report.scan_status === "scan_done") {
             clearInterval(intervalId);
           }
-        }, 3000);
+        }, 1000);
       }
     };
 
@@ -185,20 +187,13 @@ const ScanDetails: React.FC<{ scansRemaining: number; scans: ScanMeta[] }> = ({
 
   const onClose = () => setIsOpen(false);
 
-  const downloadReport = async () => {
-    setDownloadLoading(true);
-    const { data } = await API.post(
-      "/api-get-report/",
-      {
-        scan_id: scanId,
-      },
-      { responseType: "blob" }
-    );
-    FileDownload(
-      new Blob([data], { type: "application/pdf" }),
-      `${scanId}.pdf`
-    );
-    setDownloadLoading(false);
+  const generateReport = async () => {
+    const { data } = await API.post("/api-generate-report/", {
+      project_id: projectId,
+    });
+    if(data.success){
+      await refetch();
+    }
   };
 
   const rescan = async () => {
@@ -213,19 +208,12 @@ const ScanDetails: React.FC<{ scansRemaining: number; scans: ScanMeta[] }> = ({
     history.push(`/projects/${projectId}/${data.scan_id}`);
   };
 
+
   const scan_name =
     data &&
     scans.find((scan) => scan.scan_id === data.scan_report.scan_id)?.scan_name;
 
-  // const scan_message =
-  //   data &&
-  //   scans.find((scan) => scan.scan_id === data.scan_report.scan_id)
-  //     ?.scan_message;
-
-  const reporting_status =
-    data &&
-    scans.find((scan) => scan.scan_id === data.scan_report.scan_id)
-      ?.reporting_status;
+  const reporting_status = data?.scan_report.reporting_status;
 
   return (
     <>
@@ -238,13 +226,12 @@ const ScanDetails: React.FC<{ scansRemaining: number; scans: ScanMeta[] }> = ({
           p: 4,
         }}
       >
-        {isLoading || isProfileLoading ? (
+        {isLoading ? (
           <Flex w="100%" h="70vh" alignItems="center" justifyContent="center">
             <Spinner />
           </Flex>
         ) : (
-          data &&
-          profile && (
+          data && (
             <>
               <Flex
                 sx={{
@@ -312,33 +299,27 @@ const ScanDetails: React.FC<{ scansRemaining: number; scans: ScanMeta[] }> = ({
                     Scan History
                   </Button>
                   <Button
-                    variant="accent-outline"
-                    isDisabled={
-                      reporting_status !== "generated"
-                      // ||
-                      // profile.current_package === "trial"
-                    }
-                    onClick={downloadReport}
-                    isLoading={isDownloadLoading}
+                    variant={"accent-outline"}
+                    color={"gray.400"}
+                    isDisabled={reporting_status === "generating_report"}
+                    onClick={() => {
+                      if (reporting_status === "not_generated") {
+                        generateReport();
+                      } else if (reporting_status === "report_generated") {
+                        history.push(
+                          `/report/${projectId}/${data.scan_report.latest_report_id}`
+                        );
+                      }
+                    }}
                   >
-                    {reporting_status === "generated" ? (
-                      <Icon
-                        as={
-                          // profile.current_package === "trial"
-                          //   ? AiFillLock
-                          //   :
-                          AiOutlineDownload
-                        }
-                        mr={2}
-                        fontSize="17px"
-                        color="#806CCF"
-                      />
-                    ) : (
+                    {reporting_status === "generating_report" && (
                       <Spinner color="#806CCF" size="xs" mr={3} />
                     )}
-                    {reporting_status === "generated"
-                      ? "Export report"
-                      : "Generating report..."}
+                    {reporting_status === "not_generated"
+                      ? "Generate Report"
+                      : reporting_status === "generating_report"
+                      ? "Generating report..."
+                      : "View Report"}
                   </Button>
                 </HStack>
               </Flex>
@@ -390,7 +371,7 @@ const ScanDetails: React.FC<{ scansRemaining: number; scans: ScanMeta[] }> = ({
                   >
                     <Tab mx={2}>Overview</Tab>
                     <Tab mx={2}>Detailed Result</Tab>
-                    <Tab mx={2}>Advanced Scan(Beta)</Tab>
+                    {/* <Tab mx={2}>Advanced Scan(Beta)</Tab> */}
                   </TabList>
                   <TabPanels>
                     <TabPanel>
@@ -418,11 +399,7 @@ const ScanDetails: React.FC<{ scansRemaining: number; scans: ScanMeta[] }> = ({
                       }
                     </TabPanel>
                     <TabPanel>
-                      {/* {profile.current_package === "trial" ? (
-                        <TrialWall />
-                      ) : ( */}
-                      <AdvancedScan scanId={scanId} />
-                      {/* )} */}
+                      {/* <AdvancedScan scanId={scanId} /> */}
                     </TabPanel>
                   </TabPanels>
                 </Tabs>

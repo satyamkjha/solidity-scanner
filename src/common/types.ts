@@ -49,8 +49,10 @@ export type AuthResponse = {
 
 export type Scan = {
   client_id: number;
+  latest_report_id: string;
   project_url: string;
   project_name: string;
+  project_id: string;
   contract_address?: string;
   contract_platform?: string;
   scan_type: string;
@@ -61,6 +63,7 @@ export type Scan = {
   beta_scan_status: string;
   scan_summary?: ScanSummary;
   scan_details?: ScanDetail[];
+  reporting_status: string;
   _created: string;
   _updated: string;
 };

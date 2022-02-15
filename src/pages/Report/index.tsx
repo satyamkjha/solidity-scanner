@@ -109,8 +109,9 @@ const IssueDataComp = (props: Props) => {
 };
 
 export default function ReportPage() {
-  const { reportId } = useParams<{ reportId: string }>();
-  const { data } = useReport(reportId);
+  const { reportId, projectId } =
+    useParams<{ reportId: string; projectId: string }>();
+  const { data } = useReport(projectId, reportId);
 
   const issues: IssueItem[] = [];
 
@@ -120,8 +121,6 @@ export default function ReportPage() {
         issues.push(issue);
       });
     });
-
-    
 
   return (
     <>
@@ -185,7 +184,10 @@ export default function ReportPage() {
               {data?.summary_report?.project_summary_report?.project_name!}
             </Heading>
             <Text fontSize="xl" color={"white"} mt={24} mb={4}>
-              {data.summary_report.project_summary_report.last_project_report_update_time.slice(0,10)}
+              {data.summary_report.project_summary_report.last_project_report_update_time.slice(
+                0,
+                10
+              )}
             </Text>
           </Flex>
 
@@ -644,7 +646,10 @@ export default function ReportPage() {
                 color={"gray.600"}
                 width={"70%"}
               >
-                {data?.summary_report.project_summary_report.last_project_report_update_time.slice(0,10)}
+                {data?.summary_report.project_summary_report.last_project_report_update_time.slice(
+                  0,
+                  10
+                )}
               </Text>
             </Flex>
             <Flex
@@ -905,7 +910,7 @@ export default function ReportPage() {
                     ml={2}
                     width={"100%"}
                   >
-                          {sentenceCapitalize(issue.severity)}
+                    {sentenceCapitalize(issue.severity)}
                   </Text>
                 </Flex>
                 <Text
@@ -966,6 +971,68 @@ export default function ReportPage() {
               width={"150px"}
               backgroundColor={"#38CB89"}
             />
+
+            <Flex
+              as="section"
+              w="100%"
+              alignItems="center"
+              justifyContent="flex-end"
+              flexDir={"row"}
+              textAlign={["left", "left"]}
+              py={2}
+              px={[1, 10]}
+            >
+              <SeverityIcon variant={"critical"} />
+              <Text
+                fontSize="md"
+                fontWeight={"normal"}
+                color={"gray.600"}
+                ml={2}
+                mr={5}
+              >
+                Critical
+              </Text>
+              <SeverityIcon variant={"high"} />
+              <Text
+                fontSize="md"
+                fontWeight={"normal"}
+                color={"gray.600"}
+                ml={2}
+                mr={5}
+              >
+                High
+              </Text>
+              <SeverityIcon variant={"informational"} />
+              <Text
+                fontSize="md"
+                fontWeight={"normal"}
+                color={"gray.600"}
+                ml={2}
+                mr={5}
+              >
+                Informational
+              </Text>
+              <SeverityIcon variant={"medium"} />
+              <Text
+                fontSize="md"
+                fontWeight={"normal"}
+                color={"gray.600"}
+                ml={2}
+                mr={5}
+              >
+                Medium
+              </Text>
+              <SeverityIcon variant={"low"} />
+              <Text
+                fontSize="md"
+                fontWeight={"normal"}
+                color={"gray.600"}
+                ml={2}
+                mr={5}
+              >
+                Low
+              </Text>
+            </Flex>
             <Flex
               as="section"
               w="100%"
@@ -1169,7 +1236,9 @@ export default function ReportPage() {
                     mt={12}
                     mb={8}
                   >
-                    {`${index + 1}. ${data.summary_report.issues[key][0].issue_name}`}
+                    {`${index + 1}. ${
+                      data.summary_report.issues[key][0].issue_name
+                    }`}
                   </Text>
                   <Flex
                     as="section"
