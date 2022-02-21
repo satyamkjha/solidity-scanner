@@ -31,11 +31,25 @@ import {
   AlertDialogHeader,
   AlertDialogContent,
   AlertDialogOverlay,
+  Modal,
+  ModalOverlay,
+  ModalContent,
+  ModalHeader,
+  ModalCloseButton,
+  ModalBody,
+  InputGroup,
+  InputLeftElement,
+  Input,
+  ModalFooter,
+  Switch as SwitchComp,
+  toast,
+  useToast,
 } from "@chakra-ui/react";
 import {
   AiOutlineClockCircle,
   AiOutlineDownload,
   AiFillLock,
+  AiOutlineProject,
 } from "react-icons/ai";
 import Overview from "components/overview";
 import Result from "components/result";
@@ -52,6 +66,19 @@ import { useScan } from "hooks/useScan";
 import { ScanMeta } from "common/types";
 import Score from "components/score";
 import { useProfile } from "hooks/useProfile";
+import {
+  FaBuilding,
+  FaCalendar,
+  FaCalendarAlt,
+  FaCalendarCheck,
+  FaCalendarDay,
+  FaEnvelope,
+  FaFileCode,
+  FaGithub,
+  FaInternetExplorer,
+  FaMailBulk,
+  FaRegCalendarCheck,
+} from "react-icons/fa";
 
 export const ProjectPage: React.FC = () => {
   const { projectId } = useParams<{ projectId: string }>();
@@ -131,7 +158,7 @@ export const ProjectPage: React.FC = () => {
             </Flex>
             <Switch>
               <Route exact path="/projects/:projectId/history">
-                <ScanHistory scans={data.scans} />
+                <ScanHistory />
               </Route>
               <Route exact path="/projects/:projectId/:scanId">
                 <ScanDetails
@@ -159,8 +186,12 @@ const ScanDetails: React.FC<{ scansRemaining: number; scans: ScanMeta[] }> = ({
     useParams<{ projectId: string; scanId: string }>();
   const history = useHistory();
   const { data, isLoading, refetch } = useScan(scanId);
+  const toast = useToast();
 
   console.log(data);
+
+  const [next, setNext] = useState(false);
+  const [open, setOpen] = useState(false);
 
   useEffect(() => {
     let intervalId: NodeJS.Timeout;
@@ -191,7 +222,7 @@ const ScanDetails: React.FC<{ scansRemaining: number; scans: ScanMeta[] }> = ({
     const { data } = await API.post("/api-generate-report/", {
       project_id: projectId,
     });
-    if(data.success){
+    if (data.success) {
       await refetch();
     }
   };
@@ -208,12 +239,89 @@ const ScanDetails: React.FC<{ scansRemaining: number; scans: ScanMeta[] }> = ({
     history.push(`/projects/${projectId}/${data.scan_id}`);
   };
 
-
   const scan_name =
     data &&
     scans.find((scan) => scan.scan_id === data.scan_report.scan_id)?.scan_name;
 
   const reporting_status = data?.scan_report.reporting_status;
+
+  const [projectName, setProjectName] = useState(
+    data?.scan_report.project_name
+  );
+  const [repoUrl, setRepoUrl] = useState(data?.scan_report.project_url);
+  const [commitHash, setCommitHash] = useState("");
+  // const [lastTime, ]
+  const [pubName, setPubName] = useState("");
+  const [nameSwitch, setNameSwitch] = useState(true);
+  const [pubOrg, setPubOrg] = useState("");
+  const [orgSwitch, setOrgSwitch] = useState(true);
+  const [pubWeb, setPubWeb] = useState("");
+  const [webSwitch, setWebSwitch] = useState(true);
+  const [pubEmail, setPubEmail] = useState("");
+  const [emailSwitch, setEmailSwitch] = useState(true);
+
+  //   {
+  //     "project_id": "fd399f9d7baed2796cdc770bbebd9b73",
+  //     "report_id": "219f36ce653a8e3a",
+  //     "additional_details": {
+  //         "report_owner": {
+  //             "value": "Mark",
+  //             "is_public": "true"
+  //         },
+  //         "website": {
+  //             "value": "https://example.com",
+  //             "is_public": "false"
+  //         },
+  //         "organization": {
+  //             "value": "Credshields",
+  //             "is_public": "true"
+  //         },
+  //         "contact_email": {
+  //             "value": "mark@email.com",
+  //             "is_public": "true"
+  //         }
+
+  //     }
+  // }
+
+  const reportId = data?.scan_report.latest_report_id;
+
+  const publishReport = async () => {
+    const { data } = await API.post("/api-publish-report/", {
+      project_id: projectId,
+      report_id: reportId,
+      additional_details: {
+        report_owner: {
+          value: pubName,
+          is_public: nameSwitch,
+        },
+        website: {
+          value: pubWeb,
+          is_public: webSwitch,
+        },
+        organization: {
+          value: pubOrg,
+          is_public: orgSwitch,
+        },
+        contact_email: {
+          value: pubEmail,
+          is_public: emailSwitch,
+        },
+      },
+    });
+
+    if (data.status === "success") {
+      toast({
+        title: "Publish Request Success.",
+        description:
+          "Report has been sent for approval. It will be published once approved",
+        status: "success",
+        duration: 3000,
+        isClosable: true,
+      });
+      setOpen(false);
+    }
+  };
 
   return (
     <>
@@ -289,38 +397,46 @@ const ScanDetails: React.FC<{ scansRemaining: number; scans: ScanMeta[] }> = ({
                   spacing={8}
                   alignSelf={["flex-end", "flex-end", "auto"]}
                 >
-                  <Button
-                    variant="accent-ghost"
-                    onClick={() =>
-                      history.push(`/projects/${projectId}/history`)
-                    }
-                  >
-                    <Icon as={AiOutlineClockCircle} mr={2} fontSize="17px" />
-                    Scan History
-                  </Button>
-                  <Button
-                    variant={"accent-outline"}
-                    color={"gray.400"}
-                    isDisabled={reporting_status === "generating_report"}
-                    onClick={() => {
-                      if (reporting_status === "not_generated") {
-                        generateReport();
-                      } else if (reporting_status === "report_generated") {
-                        history.push(
-                          `/report/${projectId}/${data.scan_report.latest_report_id}`
-                        );
+                  {data.scan_report.reporting_status === "report_generated" && (
+                    <Button
+                      variant="accent-ghost"
+                      onClick={() =>
+                        // history.push(`/projects/${projectId}/history`)
+                        setOpen(!open)
                       }
-                    }}
-                  >
-                    {reporting_status === "generating_report" && (
-                      <Spinner color="#806CCF" size="xs" mr={3} />
-                    )}
-                    {reporting_status === "not_generated"
-                      ? "Generate Report"
-                      : reporting_status === "generating_report"
-                      ? "Generating report..."
-                      : "View Report"}
-                  </Button>
+                    >
+                      {/* <Icon as={AiOutlineClockCircle} mr={2} fontSize="17px" /> */}
+                      Publish Report
+                    </Button>
+                  )}
+                  {data.scan_report.scan_status !== "scanning" && (
+                    <Button
+                      variant={"accent-outline"}
+                      isDisabled={reporting_status === "generating_report"}
+                      onClick={() => {
+                        if (reporting_status === "not_generated") {
+                          generateReport();
+                        } else if (reporting_status === "report_generated") {
+                          window.open(
+                            `http://127.0.0.1:3001/report/${projectId}/${data.scan_report.latest_report_id}`,
+                            "_blank"
+                          );
+                          // history.push(
+                          //   `/report/${projectId}/${data.scan_report.latest_report_id}`
+                          // );
+                        }
+                      }}
+                    >
+                      {reporting_status === "generating_report" && (
+                        <Spinner color="#806CCF" size="xs" mr={3} />
+                      )}
+                      {reporting_status === "not_generated"
+                        ? "Generate Report"
+                        : reporting_status === "generating_report"
+                        ? "Generating report..."
+                        : "View Report"}
+                    </Button>
+                  )}
                 </HStack>
               </Flex>
               {data.scan_report.scan_status === "scan_incomplete" ? (
@@ -371,6 +487,7 @@ const ScanDetails: React.FC<{ scansRemaining: number; scans: ScanMeta[] }> = ({
                   >
                     <Tab mx={2}>Overview</Tab>
                     <Tab mx={2}>Detailed Result</Tab>
+                    <Tab mx={2}>Scan History</Tab>
                     {/* <Tab mx={2}>Advanced Scan(Beta)</Tab> */}
                   </TabList>
                   <TabPanels>
@@ -399,7 +516,7 @@ const ScanDetails: React.FC<{ scansRemaining: number; scans: ScanMeta[] }> = ({
                       }
                     </TabPanel>
                     <TabPanel>
-                      {/* <AdvancedScan scanId={scanId} /> */}
+                      <ScanHistory />
                     </TabPanel>
                   </TabPanels>
                 </Tabs>
@@ -444,24 +561,299 @@ const ScanDetails: React.FC<{ scansRemaining: number; scans: ScanMeta[] }> = ({
           </AlertDialogContent>
         </AlertDialogOverlay>
       </AlertDialog>
+
+      <Modal
+        isOpen={open}
+        onClose={() => {
+          setOpen(false);
+        }}
+      >
+        <ModalOverlay />
+        <ModalContent bg="bg.subtle" h={"60vh"} maxW="container.md">
+          <ModalHeader>Publish Report</ModalHeader>
+          <ModalCloseButton />
+          <ModalBody>
+            {!next && (
+              <>
+                <HStack
+                  alignItems="center"
+                  spacing={3}
+                  mt={4}
+                  mb={4}
+                  fontSize="14px"
+                >
+                  <InputGroup alignItems="center">
+                    <InputLeftElement
+                      height="48px"
+                      children={<Icon as={AiOutlineProject} color="gray.300" />}
+                    />
+                    <Input
+                      isRequired
+                      type="text"
+                      placeholder="Project name "
+                      variant="brand"
+                      size="lg"
+                      value={projectName}
+                      onChange={(e) => {
+                        setProjectName(e.target.value);
+                      }}
+                    />
+                  </InputGroup>
+                </HStack>
+                <HStack alignItems="center" spacing={3} mb={4} fontSize="14px">
+                  <InputGroup alignItems="center">
+                    <InputLeftElement
+                      height="48px"
+                      children={<Icon as={FaFileCode} color="gray.300" />}
+                    />
+                    <Input
+                      isRequired
+                      type="url"
+                      placeholder="Link to the repository"
+                      variant="brand"
+                      size="lg"
+                      value={repoUrl}
+                      onChange={(e) => {
+                        setRepoUrl(e.target.value);
+                      }}
+                    />
+                  </InputGroup>
+                </HStack>
+
+                <HStack alignItems="center" spacing={3} mb={4} fontSize="14px">
+                  <InputGroup alignItems="center">
+                    <InputLeftElement
+                      height="48px"
+                      children={<Icon as={FaGithub} color="gray.300" />}
+                    />
+                    <Input
+                      isRequired
+                      type="text"
+                      placeholder="Git commit hash"
+                      variant="brand"
+                      size="lg"
+                    />
+                  </InputGroup>
+                </HStack>
+
+                <HStack alignItems="center" spacing={3} mb={4} fontSize="14px">
+                  <InputGroup alignItems="center">
+                    <InputLeftElement
+                      height="48px"
+                      children={<Icon as={FaCalendarAlt} color="gray.300" />}
+                    />
+                    <Input
+                      isRequired
+                      type="text"
+                      placeholder="Latest Report Update Time"
+                      variant="brand"
+                      size="lg"
+                    />
+                  </InputGroup>
+                </HStack>
+
+                <HStack alignItems="center" spacing={3} fontSize="14px">
+                  <InputGroup alignItems="center">
+                    <InputLeftElement
+                      height="48px"
+                      children={
+                        <Icon as={FaRegCalendarCheck} color="gray.300" />
+                      }
+                    />
+                    <Input
+                      isRequired
+                      type="text"
+                      placeholder="Date Published"
+                      variant="brand"
+                      size="lg"
+                    />
+                  </InputGroup>
+                </HStack>
+              </>
+            )}
+            {next && (
+              <>
+                <HStack
+                  alignItems="center"
+                  spacing={3}
+                  mt={4}
+                  mb={4}
+                  fontSize="14px"
+                >
+                  <InputGroup alignItems="center">
+                    <InputLeftElement
+                      height="48px"
+                      children={<Icon as={AiOutlineProject} color="gray.300" />}
+                    />
+                    <Input
+                      isRequired
+                      type="text"
+                      placeholder="Publisher's name"
+                      variant="brand"
+                      size="lg"
+                      value={pubName}
+                      onChange={(e) => {
+                        setPubName(e.target.value);
+                      }}
+                    />
+                  </InputGroup>
+                  <Text>Private</Text>
+                  <SwitchComp
+                    isChecked={nameSwitch}
+                    onChange={() => {
+                      setNameSwitch(!nameSwitch);
+                    }}
+                    size="lg"
+                    variant="brand"
+                  />
+                  <Text>Public</Text>
+                </HStack>
+                <HStack alignItems="center" spacing={3} mb={4} fontSize="14px">
+                  <InputGroup alignItems="center">
+                    <InputLeftElement
+                      height="48px"
+                      children={<Icon as={FaEnvelope} color="gray.300" />}
+                    />
+                    <Input
+                      isRequired
+                      type="email"
+                      placeholder="Publisher's Email"
+                      variant="brand"
+                      size="lg"
+                      value={pubEmail}
+                      onChange={(e) => {
+                        setPubEmail(e.target.value);
+                      }}
+                    />
+                  </InputGroup>
+                  <Text>Private</Text>
+                  <SwitchComp
+                    isChecked={emailSwitch}
+                    onChange={() => {
+                      setEmailSwitch(!emailSwitch);
+                    }}
+                    size="lg"
+                    variant="brand"
+                  />
+                  <Text> Public</Text>
+                </HStack>
+
+                <HStack alignItems="center" spacing={3} mb={4} fontSize="14px">
+                  <InputGroup alignItems="center">
+                    <InputLeftElement
+                      height="48px"
+                      children={
+                        <Icon as={FaInternetExplorer} color="gray.300" />
+                      }
+                    />
+                    <Input
+                      isRequired
+                      type="url"
+                      placeholder="Link to the Publisher's Website"
+                      variant="brand"
+                      size="lg"
+                      value={pubWeb}
+                      onChange={(e) => {
+                        setPubWeb(e.target.value);
+                      }}
+                    />
+                  </InputGroup>
+                  <Text>Private</Text>
+                  <SwitchComp
+                    isChecked={webSwitch}
+                    onChange={() => {
+                      setWebSwitch(!webSwitch);
+                    }}
+                    size="lg"
+                    variant="brand"
+                  />
+                  <Text> Public</Text>
+                </HStack>
+                <HStack alignItems="center" spacing={3} fontSize="14px">
+                  <InputGroup alignItems="center">
+                    <InputLeftElement
+                      height="48px"
+                      children={<Icon as={FaBuilding} color="gray.300" />}
+                    />
+                    <Input
+                      isRequired
+                      type="text"
+                      placeholder="Publisher's Organization"
+                      variant="brand"
+                      size="lg"
+                      value={pubOrg}
+                      onChange={(e) => {
+                        setPubOrg(e.target.value);
+                      }}
+                    />
+                  </InputGroup>
+                  <Text> Private</Text>
+                  <SwitchComp
+                    isChecked={orgSwitch}
+                    onChange={() => {
+                      setOrgSwitch(!orgSwitch);
+                    }}
+                    size="lg"
+                    variant="brand"
+                  />
+                  <Text> Public</Text>
+                </HStack>
+              </>
+            )}
+          </ModalBody>
+
+          <ModalFooter>
+            {next && (
+              <Button
+                w={"100px"}
+                variant={"ghost"}
+                mr={3}
+                onClick={() => {
+                  setNext(false);
+                }}
+              >
+                Back
+              </Button>
+            )}
+            <Button
+              w={"100px"}
+              variant={"brand"}
+              mr={3}
+              onClick={() => {
+                if(next){
+                  publishReport();
+                } else {
+                  setNext(true);
+                }
+              }}
+            >
+              {next ? "Publish" : "Next"}
+            </Button>
+          </ModalFooter>
+        </ModalContent>
+      </Modal>
     </>
   );
 };
 
-const ScanHistory: React.FC<{ scans: ScanMeta[] }> = ({ scans }) => {
+const ScanHistory: React.FC = () => {
   const { data: profile } = useProfile();
+
+  const { projectId } = useParams<{ projectId: string }>();
+  const { data } = useScans(projectId);
+
+  const scans = data?.scans;
+
   return (
     <Box
       sx={{
         w: "100%",
         borderRadius: "20px",
-        my: 4,
         p: 4,
       }}
     >
-      <Text sx={{ fontSize: "xl", mb: 4 }}>Scan History</Text>
       {profile &&
-        scans.map((scan) => (
+        scans?.map((scan) => (
           <ScanBlock
             key={scan.scan_id}
             scan={scan}
@@ -495,21 +887,9 @@ const ScanBlock: React.FC<{ scan: ScanMeta; isTrial: boolean }> = ({
   const [isDownloadLoading, setDownloadLoading] = useState(false);
   const history = useHistory();
   const { projectId } = useParams<{ projectId: string }>();
-  const downloadReport = async (scan_id: string) => {
-    setDownloadLoading(true);
-    const { data } = await API.post(
-      "/api-get-report/",
-      {
-        scan_id,
-      },
-      { responseType: "blob" }
-    );
-    FileDownload(
-      new Blob([data], { type: "application/pdf" }),
-      `${scan_id}.pdf`
-    );
-    setDownloadLoading(false);
-  };
+
+  const { data, isLoading, refetch } = useScan(scan.scan_id);
+
   return (
     <Flex
       alignItems="center"
@@ -566,22 +946,21 @@ const ScanBlock: React.FC<{ scan: ScanMeta; isTrial: boolean }> = ({
       </Flex>
       <Button
         variant="accent-outline"
-        isDisabled={scan.reporting_status !== "generated" || isTrial}
+        isDisabled={scan.reporting_status !== "report_generated" || isTrial}
         isLoading={isDownloadLoading}
         onClick={(e) => {
           e.stopPropagation();
-          downloadReport(scan.scan_id);
+          window.open(
+            `http://127.0.0.1:3001/report/${projectId}/${data?.scan_report.latest_report_id}`,
+            "_blank"
+          );
+          // history.push(`/report/${scan.project_id}/${data?.scan_report.latest_report_id}`)
         }}
       >
-        {scan.reporting_status === "generated" ? "PDF" : "Generating PDF..."}
-        {scan.reporting_status === "generated" ? (
-          <Icon
-            as={isTrial ? AiFillLock : AiOutlineDownload}
-            ml={2}
-            fontSize="17px"
-            color="#806CCF"
-          />
-        ) : (
+        {scan.reporting_status === "report_generated"
+          ? "View Report"
+          : "Report Not Generated"}
+        {scan.reporting_status === "generating_report" && (
           <Spinner color="#806CCF" size="sm" ml={2} />
         )}
       </Button>

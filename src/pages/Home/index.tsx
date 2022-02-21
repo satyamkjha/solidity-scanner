@@ -14,7 +14,6 @@ import {
   InputLeftElement,
   Input,
   Icon,
-  Progress,
   Spinner,
   Tabs,
   TabList,

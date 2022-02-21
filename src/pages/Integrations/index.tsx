@@ -237,9 +237,10 @@ const IntegrationChannel: React.FC<IntegrationChannelProps> = ({
             py={6}
             border="2px solid #2FF86B"
             width="250px"
-            onClick={() => history.push("/billing")}
+            onClick={() => {}}
           >
-            <Icon as={BiLockAlt} mr={2} fontSize="18px" /> Upgrade
+            {/* <Icon as={BiLockAlt} mr={2} fontSize="18px" /> */}
+            Coming Soon
           </Button>
         )}
       </Flex>
