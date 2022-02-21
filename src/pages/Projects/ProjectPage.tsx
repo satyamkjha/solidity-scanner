@@ -58,7 +58,7 @@ import { RescanIcon, LogoIcon, ScanErrorIcon } from "components/icons";
 import { ErrorResponsivePie } from "components/pieChart";
 import { ErrorVulnerabilityDistribution } from "components/vulnDistribution";
 
-import API from "helpers/api";
+import API, { API_URL_DEV } from "helpers/api";
 
 import { useScans } from "hooks/useScans";
 import { useScan } from "hooks/useScan";
@@ -79,6 +79,7 @@ import {
   FaMailBulk,
   FaRegCalendarCheck,
 } from "react-icons/fa";
+import { useReport } from "hooks/useReport";
 
 export const ProjectPage: React.FC = () => {
   const { projectId } = useParams<{ projectId: string }>();
@@ -186,9 +187,12 @@ const ScanDetails: React.FC<{ scansRemaining: number; scans: ScanMeta[] }> = ({
     useParams<{ projectId: string; scanId: string }>();
   const history = useHistory();
   const { data, isLoading, refetch } = useScan(scanId);
+
+  // data && 
+  // const { data } = useReport(projectId, data?.scan_report.latest_report_id)
+
   const toast = useToast();
 
-  console.log(data);
 
   const [next, setNext] = useState(false);
   const [open, setOpen] = useState(false);
@@ -245,10 +249,8 @@ const ScanDetails: React.FC<{ scansRemaining: number; scans: ScanMeta[] }> = ({
 
   const reporting_status = data?.scan_report.reporting_status;
 
-  const [projectName, setProjectName] = useState(
-    data?.scan_report.project_name
-  );
-  const [repoUrl, setRepoUrl] = useState(data?.scan_report.project_url);
+  const [projectName, setProjectName] = useState("");
+  const [repoUrl, setRepoUrl] = useState("");
   const [commitHash, setCommitHash] = useState("");
   // const [lastTime, ]
   const [pubName, setPubName] = useState("");
@@ -260,29 +262,14 @@ const ScanDetails: React.FC<{ scansRemaining: number; scans: ScanMeta[] }> = ({
   const [pubEmail, setPubEmail] = useState("");
   const [emailSwitch, setEmailSwitch] = useState(true);
 
-  //   {
-  //     "project_id": "fd399f9d7baed2796cdc770bbebd9b73",
-  //     "report_id": "219f36ce653a8e3a",
-  //     "additional_details": {
-  //         "report_owner": {
-  //             "value": "Mark",
-  //             "is_public": "true"
-  //         },
-  //         "website": {
-  //             "value": "https://example.com",
-  //             "is_public": "false"
-  //         },
-  //         "organization": {
-  //             "value": "Credshields",
-  //             "is_public": "true"
-  //         },
-  //         "contact_email": {
-  //             "value": "mark@email.com",
-  //             "is_public": "true"
-  //         }
+  useEffect(()=>{
+    console.log(data);
+    if(data){
+      setProjectName(data.scan_report.project_name);
+      setRepoUrl(data.scan_report.project_url)
+    }
+  }, [data])
 
-  //     }
-  // }
 
   const reportId = data?.scan_report.latest_report_id;
 
@@ -418,7 +405,7 @@ const ScanDetails: React.FC<{ scansRemaining: number; scans: ScanMeta[] }> = ({
                           generateReport();
                         } else if (reporting_status === "report_generated") {
                           window.open(
-                            `http://127.0.0.1:3001/report/${projectId}/${data.scan_report.latest_report_id}`,
+                            `http://${document.location.host}/report/${projectId}/${data?.scan_report.latest_report_id}`,
                             "_blank"
                           );
                           // history.push(
@@ -569,7 +556,7 @@ const ScanDetails: React.FC<{ scansRemaining: number; scans: ScanMeta[] }> = ({
         }}
       >
         <ModalOverlay />
-        <ModalContent bg="bg.subtle" h={"60vh"} maxW="container.md">
+        <ModalContent bg="bg.subtle" h={"500px"} minH={'fit-content'} maxW="container.md">
           <ModalHeader>Publish Report</ModalHeader>
           <ModalCloseButton />
           <ModalBody>
@@ -767,7 +754,7 @@ const ScanDetails: React.FC<{ scansRemaining: number; scans: ScanMeta[] }> = ({
                     size="lg"
                     variant="brand"
                   />
-                  <Text> Public</Text>
+                  <Text>Public</Text>
                 </HStack>
                 <HStack alignItems="center" spacing={3} fontSize="14px">
                   <InputGroup alignItems="center">
@@ -787,7 +774,7 @@ const ScanDetails: React.FC<{ scansRemaining: number; scans: ScanMeta[] }> = ({
                       }}
                     />
                   </InputGroup>
-                  <Text> Private</Text>
+                  <Text>Private</Text>
                   <SwitchComp
                     isChecked={orgSwitch}
                     onChange={() => {
@@ -796,7 +783,7 @@ const ScanDetails: React.FC<{ scansRemaining: number; scans: ScanMeta[] }> = ({
                     size="lg"
                     variant="brand"
                   />
-                  <Text> Public</Text>
+                  <Text>Public</Text>
                 </HStack>
               </>
             )}
@@ -951,7 +938,7 @@ const ScanBlock: React.FC<{ scan: ScanMeta; isTrial: boolean }> = ({
         onClick={(e) => {
           e.stopPropagation();
           window.open(
-            `http://127.0.0.1:3001/report/${projectId}/${data?.scan_report.latest_report_id}`,
+            `http://${document.location.host}/report/${projectId}/${data?.scan_report.latest_report_id}`,
             "_blank"
           );
           // history.push(`/report/${scan.project_id}/${data?.scan_report.latest_report_id}`)

@@ -141,8 +141,9 @@ const UpdateRowComp = ({
   setWontFix,
   setFalsePositive,
 }: UpdateProps) => {
-  const [fps, setFps] = useState<boolean>(false);
-  const [wntFx, setwntFx] = useState<boolean>(false);
+  const [fps, setFps] = useState<boolean>(issue.status === 'FALSE_POSITIVE');
+  const [wntFx, setwntFx] = useState<boolean>(issue.status === 'WONT_FIX');
+
 
   return (
     <>
@@ -216,7 +217,7 @@ const UpdateRowComp = ({
             color={"gray.600"}
             width={"14%"}
           >
-            {sentenceCapitalize(issue.status.toLowerCase())}
+            {sentenceCapitalize(issue.status.toLowerCase().replace('_', ' '))}
           </Text>
 
           <Flex
@@ -311,15 +312,12 @@ const UpdateRowComp = ({
 export default function ReportPage() {
   const { reportId, projectId } =
     useParams<{ reportId: string; projectId: string }>();
-  const { data } = useReport(projectId, reportId);
+  const { data, refetch } = useReport(projectId, reportId);
 
   const toast = useToast();
 
   const [wontfix, setWontFix] = useState<String[]>([]);
   const [falsePositive, setFalsePositive] = useState<String[]>([]);
-
-  // let wontfix: String[] = []
-  // let falsePositive: String[] = []
 
   const issues: IssueItem[] = [];
 
@@ -351,6 +349,7 @@ export default function ReportPage() {
         isClosable: true,
       });
       onClose();
+      refetch();
     }
   };
 
@@ -1191,7 +1190,7 @@ export default function ReportPage() {
                   color={"gray.600"}
                   width={"15%"}
                 >
-                  {sentenceCapitalize(issue.status.toLowerCase())}
+                  {sentenceCapitalize(issue.status.toLowerCase().replace('_', ' '))}
                 </Text>
               </Flex>
             ))}
