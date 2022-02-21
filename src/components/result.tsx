@@ -286,7 +286,7 @@ const FileDetails: React.FC<FileDetailsProps> = ({ file, type }) => {
           >
             {file_path}
           </Text>
-          <Button
+          {/* <Button
             size="sm"
             isDisabled={mutation.isLoading}
             isLoading={mutation.isLoading}
@@ -294,7 +294,7 @@ const FileDetails: React.FC<FileDetailsProps> = ({ file, type }) => {
           >
             <Icon as={AiFillGithub} color="subtle" mr={2} />
             Create issue
-          </Button>
+          </Button> */}
         </Flex>
         {isLoading && (
           <Flex

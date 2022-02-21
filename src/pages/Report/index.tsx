@@ -1,7 +1,7 @@
-import React from "react";
+import React, { useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import MyResponsivePie from "components/pieChart";
-
+import { useForm } from "react-hook-form";
 import {
   Flex,
   Box,
@@ -10,6 +10,22 @@ import {
   Heading,
   Image,
   HStack,
+  Button,
+  Modal,
+  ModalBody,
+  ModalCloseButton,
+  ModalContent,
+  ModalFooter,
+  ModalHeader,
+  ModalOverlay,
+  useDisclosure,
+  Checkbox,
+  Accordion,
+  AccordionButton,
+  AccordionIcon,
+  AccordionItem,
+  AccordionPanel,
+  useToast,
 } from "@chakra-ui/react";
 import { useReport } from "hooks/useReport";
 import { ResponsivePie } from "@nivo/pie";
@@ -18,6 +34,9 @@ import { IssueItem } from "common/types";
 import VulnerabilityProgress from "components/VulnerabilityProgress";
 import { useIssueDetail } from "hooks/useIssueDetail";
 import { sentenceCapitalize } from "helpers/helperFunction";
+import { AiOutlineProject } from "react-icons/ai";
+import { FaFileCode, FaInternetExplorer } from "react-icons/fa";
+import API from "helpers/api";
 
 const pieData = (
   critical: number,
@@ -63,7 +82,6 @@ interface Props {
 }
 
 const IssueDataComp = (props: Props) => {
-  console.log(props);
   const { data } = useIssueDetail(props.issueId);
 
   return (
@@ -108,12 +126,239 @@ const IssueDataComp = (props: Props) => {
   );
 };
 
+interface UpdateProps {
+  issue: IssueItem;
+  wontfix: String[];
+  falsePositive: String[];
+  setFalsePositive: React.Dispatch<React.SetStateAction<String[]>>;
+  setWontFix: React.Dispatch<React.SetStateAction<String[]>>;
+}
+
+const UpdateRowComp = ({
+  issue,
+  wontfix,
+  falsePositive,
+  setWontFix,
+  setFalsePositive,
+}: UpdateProps) => {
+  const [fps, setFps] = useState<boolean>(false);
+  const [wntFx, setwntFx] = useState<boolean>(false);
+
+  return (
+    <>
+      <Flex
+        as="div"
+        w="100%"
+        alignItems="flex-start"
+        justifyContent="flex-start"
+        flexDir={"column"}
+        textAlign={["left", "left"]}
+        py={3}
+        px={[1, 10]}
+        borderBottomWidth={1}
+        borderBottomColor={"#E4E4E4"}
+      >
+        <Flex
+          as="div"
+          w="100%"
+          alignItems="flex-start"
+          justifyContent="flex-start"
+          flexDir={"row"}
+          textAlign={["left", "left"]}
+        >
+          <Text
+            fontSize="md"
+            fontWeight={"normal"}
+            color={"gray.600"}
+            width={"10%"}
+          >
+            {issue.bug_id}
+          </Text>
+          <Text
+            mr={2}
+            fontSize="md"
+            fontWeight={"normal"}
+            color={"gray.600"}
+            width={"35%"}
+          >
+            {issue.file_path}
+          </Text>
+          <Text
+            fontSize="md"
+            fontWeight={"normal"}
+            color={"gray.600"}
+            width={"11%"}
+          >
+            {`L${issue.line_number_start} - L${issue.line_number_end}`}
+          </Text>
+          <Flex
+            as="div"
+            width={"14%"}
+            height={"30px"}
+            alignItems="center"
+            justifyContent="flex-start"
+            flexDir={"row"}
+          >
+            <SeverityIcon variant={issue.severity} />
+            <Text
+              fontSize="md"
+              fontWeight={"normal"}
+              color={"gray.600"}
+              ml={2}
+              width={"100%"}
+            >
+              {sentenceCapitalize(issue.severity)}
+            </Text>
+          </Flex>
+          <Text
+            fontSize="md"
+            fontWeight={"normal"}
+            color={"gray.600"}
+            width={"14%"}
+          >
+            {sentenceCapitalize(issue.status.toLowerCase())}
+          </Text>
+
+          <Flex
+            as="div"
+            width={"10%"}
+            height={"30px"}
+            alignItems="center"
+            justifyContent="flex-start"
+            flexDir={"row"}
+          >
+            <Checkbox
+              isChecked={fps}
+              onChange={() => {
+                if (!fps && wntFx) {
+                  setwntFx(!wntFx);
+                } else if (fps && !wntFx) {
+                  setwntFx(!wntFx);
+                }
+                setFps(!fps);
+                let newfalsePositive = falsePositive.filter(
+                  (hash) => hash !== issue.issue_hash
+                );
+                let newwontfix = wontfix.filter(
+                  (hash) => hash !== issue.issue_hash
+                );
+                newfalsePositive.push(issue.issue_hash);
+                setFalsePositive([...newfalsePositive]);
+                setWontFix([...newwontfix]);
+              }}
+              size={"lg"}
+            ></Checkbox>
+          </Flex>
+          <Flex
+            as="div"
+            width={"6%"}
+            height={"30px"}
+            alignItems="center"
+            justifyContent="flex-start"
+            flexDir={"row"}
+          >
+            <Checkbox
+              isChecked={wntFx}
+              onChange={() => {
+                if (!fps && wntFx) {
+                  setFps(!fps);
+                } else if (fps && !wntFx) {
+                  setFps(!fps);
+                }
+                setwntFx(!wntFx);
+                let newfalsePositive = falsePositive.filter(
+                  (hash) => hash !== issue.issue_hash
+                );
+                let newwontfix = wontfix.filter(
+                  (hash) => hash !== issue.issue_hash
+                );
+                newwontfix.push(issue.issue_hash);
+                setFalsePositive([...newfalsePositive]);
+                setWontFix([...newwontfix]);
+              }}
+              size={"lg"}
+            ></Checkbox>
+          </Flex>
+        </Flex>
+        {/* {wntFx && (
+          
+            <Flex
+              as="div"
+              w="100%"
+              alignItems="flex-start"
+              justifyContent="flex-start"
+              flexDir={"column"}
+              textAlign={["left", "left"]}
+              pt={8}
+            >
+              <Textarea placeholder='Put your comments here' />
+              <Flex
+              as="div"
+              w="100%"
+              alignItems="flex-start"
+              justifyContent="flex-end"
+              flexDir={"row"}
+              pt={2}
+            ><Button>Comment</Button></Flex>
+            </Flex>
+          
+        )} */}
+      </Flex>
+    </>
+  );
+};
+
 export default function ReportPage() {
   const { reportId, projectId } =
     useParams<{ reportId: string; projectId: string }>();
   const { data } = useReport(projectId, reportId);
 
+  const toast = useToast();
+
+  const [wontfix, setWontFix] = useState<String[]>([]);
+  const [falsePositive, setFalsePositive] = useState<String[]>([]);
+
+  // let wontfix: String[] = []
+  // let falsePositive: String[] = []
+
   const issues: IssueItem[] = [];
+
+  let d = new Date();
+
+  const { isOpen, onOpen, onClose } = useDisclosure();
+
+  const updateReport = async () => {
+    const { data } = await API.post<{
+      success: boolean;
+    }>("/api-update-report/", {
+      project_id: projectId,
+      report_id: reportId,
+      updates: {
+        wontfix: wontfix,
+        fps: falsePositive,
+      },
+    });
+
+    console.log(data);
+
+    if (data.success) {
+      toast({
+        title: "Report updated.",
+        description:
+          "Report has been successfullt upadted with the new changes",
+        status: "success",
+        duration: 3000,
+        isClosable: true,
+      });
+      onClose();
+    }
+  };
+
+  if (data) {
+    d = new Date(
+      data?.summary_report.project_summary_report.last_project_report_update_time
+    );
+  }
 
   data &&
     Object.keys(data.summary_report.issues).forEach((key, index) => {
@@ -121,6 +366,21 @@ export default function ReportPage() {
         issues.push(issue);
       });
     });
+
+  const monthNames = [
+    "Jan",
+    "Feb",
+    "March",
+    "April",
+    "May",
+    "June",
+    "July",
+    "Aug",
+    "Sept",
+    "Oct",
+    "Nov",
+    "Dec",
+  ];
 
   return (
     <>
@@ -143,10 +403,21 @@ export default function ReportPage() {
             <Box
               ml={10}
               height={"10px"}
-              width="calc(100% - 250px)"
+              width="calc(100% - 410px)"
               backgroundColor={"#38CB89"}
             />
+            <Button ml={5} variant="accent-outline" onClick={onOpen}>
+              Update Report
+            </Button>
           </Flex>
+
+          {/* <Button
+            onClick={() => {
+              setEdit(!edit);
+            }}
+          >
+            Edit
+          </Button> */}
           <Flex
             as="section"
             w="100%"
@@ -184,10 +455,12 @@ export default function ReportPage() {
               {data?.summary_report?.project_summary_report?.project_name!}
             </Heading>
             <Text fontSize="xl" color={"white"} mt={24} mb={4}>
-              {data.summary_report.project_summary_report.last_project_report_update_time.slice(
+              {`${d.getDate()} ${monthNames[d.getMonth()]} ${d.getFullYear()}`}
+
+              {/* {data.summary_report.project_summary_report.last_project_report_update_time.slice(
                 0,
                 10
-              )}
+              )} */}
             </Text>
           </Flex>
 
@@ -646,10 +919,9 @@ export default function ReportPage() {
                 color={"gray.600"}
                 width={"70%"}
               >
-                {data?.summary_report.project_summary_report.last_project_report_update_time.slice(
-                  0,
-                  10
-                )}
+                {`${d.getDate()} ${
+                  monthNames[d.getMonth()]
+                } ${d.getFullYear()}`}
               </Text>
             </Flex>
             <Flex
@@ -1002,16 +1274,6 @@ export default function ReportPage() {
               >
                 High
               </Text>
-              <SeverityIcon variant={"informational"} />
-              <Text
-                fontSize="md"
-                fontWeight={"normal"}
-                color={"gray.600"}
-                ml={2}
-                mr={5}
-              >
-                Informational
-              </Text>
               <SeverityIcon variant={"medium"} />
               <Text
                 fontSize="md"
@@ -1031,6 +1293,16 @@ export default function ReportPage() {
                 mr={5}
               >
                 Low
+              </Text>
+              <SeverityIcon variant={"informational"} />
+              <Text
+                fontSize="md"
+                fontWeight={"normal"}
+                color={"gray.600"}
+                ml={2}
+                mr={5}
+              >
+                Informational
               </Text>
             </Flex>
             <Flex
@@ -1252,23 +1524,23 @@ export default function ReportPage() {
                     backgroundColor={"#F5F5F5"}
                   >
                     <Text
-                      fontSize="lg"
+                      fontSize="md"
                       fontWeight={"extrabold"}
                       color={"gray.600"}
-                      width={"15%"}
+                      width={"10%"}
                     >
                       Bug ID
                     </Text>
                     <Text
-                      fontSize="lg"
+                      fontSize="md"
                       fontWeight={"extrabold"}
                       color={"gray.600"}
-                      width={"30%"}
+                      width={"35%"}
                     >
-                      Title
+                      File Location
                     </Text>
                     <Text
-                      fontSize="lg"
+                      fontSize="md"
                       fontWeight={"extrabold"}
                       color={"gray.600"}
                       width={"15%"}
@@ -1276,7 +1548,7 @@ export default function ReportPage() {
                       Line No
                     </Text>
                     <Text
-                      fontSize="lg"
+                      fontSize="md"
                       fontWeight={"extrabold"}
                       color={"gray.600"}
                       width={"20%"}
@@ -1284,7 +1556,7 @@ export default function ReportPage() {
                       Severity
                     </Text>
                     <Text
-                      fontSize="lg"
+                      fontSize="md"
                       fontWeight={"extrabold"}
                       color={"gray.600"}
                       width={"20%"}
@@ -1306,23 +1578,24 @@ export default function ReportPage() {
                       borderBottomColor={"#E4E4E4"}
                     >
                       <Text
-                        fontSize="lg"
+                        fontSize="md"
                         fontWeight={"normal"}
                         color={"gray.600"}
-                        width={"15%"}
+                        width={"10%"}
                       >
                         {issue.bug_id}
                       </Text>
                       <Text
-                        fontSize="lg"
+                        mr={2}
+                        fontSize="md"
                         fontWeight={"normal"}
                         color={"gray.600"}
-                        width={"30%"}
+                        width={"35%"}
                       >
                         {issue.file_path}
                       </Text>
                       <Text
-                        fontSize="lg"
+                        fontSize="md"
                         fontWeight={"normal"}
                         color={"gray.600"}
                         width={"15%"}
@@ -1331,7 +1604,7 @@ export default function ReportPage() {
                       </Text>
                       <Flex
                         as="div"
-                        w="20%"
+                        width={"20%"}
                         height={"30px"}
                         alignItems="center"
                         justifyContent="flex-start"
@@ -1339,7 +1612,7 @@ export default function ReportPage() {
                       >
                         <SeverityIcon variant={issue.severity} />
                         <Text
-                          fontSize="lg"
+                          fontSize="md"
                           fontWeight={"normal"}
                           color={"gray.600"}
                           ml={2}
@@ -1349,7 +1622,7 @@ export default function ReportPage() {
                         </Text>
                       </Flex>
                       <Text
-                        fontSize="lg"
+                        fontSize="md"
                         fontWeight={"normal"}
                         color={"gray.600"}
                         width={"20%"}
@@ -1488,6 +1761,230 @@ export default function ReportPage() {
               ensure the security of the smart contracts.
             </Text>
           </Flex>
+
+          <Modal isOpen={isOpen} onClose={onClose}>
+            <ModalOverlay />
+            <ModalContent
+              overflowY={"scroll"}
+              overflowX={"scroll"}
+              bg="bg.subtle"
+              h={"90vh"}
+              maxW="90vw"
+            >
+              <ModalHeader>Update Report</ModalHeader>
+              <ModalCloseButton />
+              <ModalBody h={"fit-content"}>
+                <Accordion>
+                  {data &&
+                    Object.keys(data.summary_report.issues).map(
+                      (key, index) => (
+                        <AccordionItem>
+                          <AccordionButton>
+                            <Box py={2} flex="1" textAlign="left">
+                              {`${index + 1}. ${
+                                data.summary_report.issues[key][0].issue_name
+                              }`}
+                            </Box>
+                            <AccordionIcon />
+                          </AccordionButton>
+                          <AccordionPanel pb={4}>
+                            <Flex
+                              as="section"
+                              w="100%"
+                              alignItems="flex-start"
+                              justifyContent="flex-start"
+                              flexDir={"row"}
+                              textAlign={["left", "left"]}
+                              py={3}
+                              px={[1, 10]}
+                              backgroundColor={"#F5F5F5"}
+                            >
+                              <Text
+                                fontSize="md"
+                                fontWeight={"extrabold"}
+                                color={"gray.600"}
+                                width={"10%"}
+                              >
+                                Bug ID
+                              </Text>
+                              <Text
+                                fontSize="md"
+                                fontWeight={"extrabold"}
+                                color={"gray.600"}
+                                width={"35%"}
+                              >
+                                File Location
+                              </Text>
+                              <Text
+                                fontSize="md"
+                                fontWeight={"extrabold"}
+                                color={"gray.600"}
+                                width={"11%"}
+                              >
+                                Line No
+                              </Text>
+                              <Text
+                                fontSize="md"
+                                fontWeight={"extrabold"}
+                                color={"gray.600"}
+                                width={"14%"}
+                              >
+                                Severity
+                              </Text>
+                              <Text
+                                fontSize="md"
+                                fontWeight={"extrabold"}
+                                color={"gray.600"}
+                                width={"14%"}
+                              >
+                                Status
+                              </Text>
+                              <Text
+                                fontSize="sm"
+                                fontWeight={"extrabold"}
+                                color={"gray.600"}
+                                width={"10%"}
+                              >
+                                False Positive
+                              </Text>
+                              <Text
+                                fontSize="sm"
+                                fontWeight={"extrabold"}
+                                color={"gray.600"}
+                                width={"6%"}
+                              >
+                                Won't Fix
+                              </Text>
+                            </Flex>
+
+                            {data.summary_report.issues[key].map((issue) => {
+                              return (
+                                <UpdateRowComp
+                                  wontfix={wontfix}
+                                  falsePositive={falsePositive}
+                                  setFalsePositive={setFalsePositive}
+                                  setWontFix={setWontFix}
+                                  issue={issue}
+                                />
+                              );
+                            })}
+                          </AccordionPanel>
+                        </AccordionItem>
+                      )
+                    )}
+                </Accordion>
+              </ModalBody>
+              <ModalFooter>
+                <Button
+                  w={"100px"}
+                  variant="accent-outline"
+                  mr={3}
+                  onClick={() => {
+                    updateReport();
+                  }}
+                >
+                  Update
+                </Button>
+              </ModalFooter>
+            </ModalContent>
+          </Modal>
+
+          {/* <Modal isOpen={isOpen} onClose={onClose}>
+            <ModalOverlay />
+            <ModalContent bg="bg.subtle" h={"50vh"} maxW="container.md">
+              <ModalHeader>Heading</ModalHeader>
+              <ModalCloseButton />
+              <ModalBody>
+                {next && (
+                  <>
+                    <HStack
+                      alignItems="center"
+                      spacing={3}
+                      mt={8}
+                      mb={4}
+                      fontSize="14px"
+                    >
+                      <InputGroup alignItems="center">
+                        <InputLeftElement
+                          height="48px"
+                          children={
+                            <Icon as={AiOutlineProject} color="gray.300" />
+                          }
+                        />
+                        <Input
+                          placeholder="Project name "
+                          variant="brand"
+                          size="lg"
+                          {...register("project_name")}
+                        />
+                      </InputGroup>
+                      <Text>Public</Text>
+                      <Switch size="lg" variant="brand" />
+                      <Text>Private</Text>
+                    </HStack>
+                    <HStack
+                      alignItems="center"
+                      spacing={3}
+                      mb={4}
+                      fontSize="14px"
+                    >
+                      <InputGroup alignItems="center">
+                        <InputLeftElement
+                          height="48px"
+                          children={<Icon as={FaFileCode} color="gray.300" />}
+                        />
+                        <Input
+                          isRequired
+                          type="url"
+                          placeholder="Link to the repository"
+                          variant="brand"
+                          size="lg"
+                          {...register("project_url", { required: true })}
+                        />
+                      </InputGroup>
+                      <Text>Public</Text>
+                      <Switch size="lg" variant="brand" />
+                      <Text>Private</Text>
+                    </HStack>
+
+                    <HStack alignItems="center" spacing={3} fontSize="14px">
+                      <InputGroup alignItems="center">
+                        <InputLeftElement
+                          height="48px"
+                          children={
+                            <Icon as={FaInternetExplorer} color="gray.300" />
+                          }
+                        />
+                        <Input
+                          isRequired
+                          type="url"
+                          placeholder="Link to the Website"
+                          variant="brand"
+                          size="lg"
+                          {...register("project_url", { required: true })}
+                        />
+                      </InputGroup>
+                      <Text>Public</Text>
+                      <Switch size="lg" variant="brand" />
+                      <Text>Private</Text>
+                    </HStack>
+                  </>
+                )}
+              </ModalBody>
+              <ModalFooter>
+                <Button
+                  w={"100px"}
+                  variant={"brand"}
+                  mr={3}
+                  onClick={() => {
+                    setNext(false);
+                  }}
+                >
+                  Next
+                </Button>
+              </ModalFooter>
+            </ModalContent>
+          </Modal> */}
 
           {/* Section 2 */}
         </Container>
