@@ -67,7 +67,7 @@ export default function PricingPage() {
             borderRadius="full"
             maxW="85vw"
           >
-            <ActionButton
+            {/* <ActionButton
               onClick={() => setTab("weekly")}
               fontSize="lg"
               py={1}
@@ -77,7 +77,7 @@ export default function PricingPage() {
               variant={tab === "weekly" ? "brand" : "ghost"}
             >
               Weekly
-            </ActionButton>
+            </ActionButton> */}
             <ActionButton
               onClick={() => setTab("monthly")}
               fontSize="lg"
@@ -89,7 +89,7 @@ export default function PricingPage() {
             >
               Monthly
             </ActionButton>
-            <ActionButton
+            {/* <ActionButton
               onClick={() => setTab("yearly")}
               fontSize="lg"
               py={1}
@@ -99,7 +99,7 @@ export default function PricingPage() {
               variant={tab === "yearly" ? "brand" : "ghost"}
             >
               Yearly
-            </ActionButton>
+            </ActionButton> */}
           </Flex>
         </Flex>
         {tab === "weekly" && (

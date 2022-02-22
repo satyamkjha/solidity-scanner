@@ -26,6 +26,7 @@ import {
   Switch,
   HStack,
   Link,
+  useToast,
 } from "@chakra-ui/react";
 import { FaFileCode } from "react-icons/fa";
 import { AiOutlineProject } from "react-icons/ai";
@@ -208,6 +209,7 @@ type ApplicationFormData = {
 };
 
 const ApplicationForm: React.FC = () => {
+  const toast = useToast();
   const queryClient = useQueryClient();
   const { data: profileData } = useProfile();
   const [visibility, setVisibility] = useState(false);
@@ -217,15 +219,27 @@ const ApplicationForm: React.FC = () => {
     project_url,
     project_name,
   }: ApplicationFormData) => {
-    await API.post("/api-project-scan/", {
-      project_url,
-      ...(project_name && project_name !== "" && { project_name }),
-      project_type: "new",
-      project_visibility: visibility ? "private" : "public",
-    });
-    queryClient.invalidateQueries("scans");
-    queryClient.invalidateQueries("profile");
-    history.push("/projects");
+    if(project_name.length < 51){
+      await API.post("/api-project-scan/", {
+        project_url,
+        ...(project_name && project_name !== "" && { project_name }),
+        project_type: "new",
+        project_visibility: visibility ? "private" : "public",
+      });
+      queryClient.invalidateQueries("scans");
+      queryClient.invalidateQueries("profile");
+      history.push("/projects");
+    } else {
+      toast({
+        title: "Character Exceeded",
+        description:
+          "Project Name cannot exceed to more than 50 characters.",
+        status: "warning",
+        duration: 3000,
+        isClosable: true,
+      });
+    }
+    
   };
 
   const isGithubIntegrated =

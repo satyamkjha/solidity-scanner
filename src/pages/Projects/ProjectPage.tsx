@@ -265,15 +265,18 @@ const ScanDetails: React.FC<{ scansRemaining: number; scans: ScanMeta[] }> = ({
   useEffect(()=>{
     console.log(data);
     if(data){
+      
       setProjectName(data.scan_report.project_name);
       setRepoUrl(data.scan_report.project_url)
     }
   }, [data])
 
 
-  const reportId = data?.scan_report.latest_report_id;
+  let reportId: string = ''
+  
 
   const publishReport = async () => {
+
     const { data } = await API.post("/api-publish-report/", {
       project_id: projectId,
       report_id: reportId,

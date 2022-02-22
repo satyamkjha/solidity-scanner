@@ -60,10 +60,10 @@ const SignIn: React.FC = () => {
         <Text color="subtle" my={3}>
           Welcome back, you’ve been missed!
         </Text>
-        <Button my={4} sx={{ fontSize: "13px", px: 8, py: 6 }} isDisabled>
+        {/* <Button my={4} sx={{ fontSize: "13px", px: 8, py: 6 }} isDisabled>
           <Icon as={FcGoogle} mr={2} fontSize="20px" />
           Sign In with Google
-        </Button>
+        </Button> */}
 
         <Flex
           align="center"
