@@ -219,7 +219,7 @@ const ApplicationForm: React.FC = () => {
     project_url,
     project_name,
   }: ApplicationFormData) => {
-    if(project_name.length < 51){
+    if (project_name.length < 51) {
       await API.post("/api-project-scan/", {
         project_url,
         ...(project_name && project_name !== "" && { project_name }),
@@ -232,14 +232,12 @@ const ApplicationForm: React.FC = () => {
     } else {
       toast({
         title: "Character Exceeded",
-        description:
-          "Project Name cannot exceed to more than 50 characters.",
+        description: "Project Name cannot exceed to more than 50 characters.",
         status: "warning",
         duration: 3000,
         isClosable: true,
       });
     }
-    
   };
 
   const isGithubIntegrated =

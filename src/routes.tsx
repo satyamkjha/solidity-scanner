@@ -14,6 +14,7 @@ import Layout from "components/layout";
 import Auth from "helpers/auth";
 import API from "helpers/api";
 import PaymentSucess from "pages/Billing/payment";
+import PublicReportPage from "pages/Report/PublicReport";
 
 const Landing = lazy(
   () => import("pages/Landing" /* webpackChunkName: "Landing" */)
@@ -99,6 +100,9 @@ const Routes: React.FC = () => {
           </Route>
           <Route exact path="/report/:projectId/:reportId">
             <Report />
+          </Route>
+          <Route exact path="/published-report/:reportId">
+            <PublicReportPage />
           </Route>
           <Route exact path="/billing/:status">
             <PaymentSucess />
