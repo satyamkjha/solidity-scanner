@@ -1089,6 +1089,7 @@ const ReportBlock: React.FC<{ report: ReportsListItem }> = ({ report }) => {
           isLoading={isDownloadLoading}
           onClick={(e) => {
             e.stopPropagation();
+            console.log('asdkbkalsd');
             navigator.clipboard
               .writeText(
                 `http://${document.location.host}/published-report/${report.report_id}`
