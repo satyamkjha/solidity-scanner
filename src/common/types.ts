@@ -168,6 +168,14 @@ export type Report = {
   scan_summary: ScanItem[];
 };
 
+export type ReportsListItem = {
+  project_id: string;
+  report_id: string;
+  date_published: string;
+  is_public: boolean;
+  is_approved: boolean;
+};
+
 export type ScanItem = {
   count_files_analyzed: number;
   issue_severity_distribution: IssueSeverityDistribution;

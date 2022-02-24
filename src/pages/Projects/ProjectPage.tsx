@@ -44,6 +44,7 @@ import {
   Switch as SwitchComp,
   toast,
   useToast,
+  Badge,
 } from "@chakra-ui/react";
 import {
   AiOutlineClockCircle,
@@ -63,7 +64,7 @@ import API, { API_URL_DEV } from "helpers/api";
 import { useScans } from "hooks/useScans";
 import { useScan } from "hooks/useScan";
 
-import { ScanMeta } from "common/types";
+import { Report, ReportsListItem, ScanMeta } from "common/types";
 import Score from "components/score";
 import { useProfile } from "hooks/useProfile";
 import {
@@ -78,8 +79,10 @@ import {
   FaInternetExplorer,
   FaMailBulk,
   FaRegCalendarCheck,
+  FaRegCopy,
 } from "react-icons/fa";
 import { useReport } from "hooks/useReport";
+import { useReports } from "hooks/useReports";
 
 export const ProjectPage: React.FC = () => {
   const { projectId } = useParams<{ projectId: string }>();
@@ -188,11 +191,17 @@ const ScanDetails: React.FC<{ scansRemaining: number; scans: ScanMeta[] }> = ({
   const history = useHistory();
   const { data, isLoading, refetch } = useScan(scanId);
 
-  // data && 
+  const [tabIndex, setTabIndex] = React.useState(0)
+
+  const handleTabsChange = (index: number) => {
+    setTabIndex(index)
+  }
+
+
+  // data &&
   // const { data } = useReport(projectId, data?.scan_report.latest_report_id)
 
   const toast = useToast();
-
 
   const [next, setNext] = useState(false);
   const [open, setOpen] = useState(false);
@@ -252,7 +261,8 @@ const ScanDetails: React.FC<{ scansRemaining: number; scans: ScanMeta[] }> = ({
   const [projectName, setProjectName] = useState("");
   const [repoUrl, setRepoUrl] = useState("");
   const [commitHash, setCommitHash] = useState("");
-  // const [lastTime, ]
+  const [lastTimeUpdate, setLastTimeUpdate] = useState("");
+  const [datePublished, setDatePublished] = useState("");
   const [pubName, setPubName] = useState("");
   const [nameSwitch, setNameSwitch] = useState(true);
   const [pubOrg, setPubOrg] = useState("");
@@ -262,21 +272,38 @@ const ScanDetails: React.FC<{ scansRemaining: number; scans: ScanMeta[] }> = ({
   const [pubEmail, setPubEmail] = useState("");
   const [emailSwitch, setEmailSwitch] = useState(true);
 
-  useEffect(()=>{
-    console.log(data);
-    if(data){
-      
+  const getReportData = async (project_id: string, report_id: string) => {
+    const reportResponse = await API.post<{ summary_report: Report }>(
+      "/api-get-beta-report/",
+      {
+        project_id,
+        report_id,
+      }
+    );
+    setCommitHash(reportResponse.data.summary_report.git_commit_hash);
+    const d = new Date(
+      reportResponse.data.summary_report.project_summary_report.last_project_report_update_time
+    );
+    setLastTimeUpdate(
+      `${d.getDate()}-${monthNames[d.getMonth()]}-${d.getFullYear()}`
+    );
+  };
+
+  useEffect(() => {
+    if (data) {
+      getReportData(projectId, data.scan_report.latest_report_id);
       setProjectName(data.scan_report.project_name);
-      setRepoUrl(data.scan_report.project_url)
+      setRepoUrl(data.scan_report.project_url);
+      const d = new Date();
+      setDatePublished(
+        `${d.getDate()}-${monthNames[d.getMonth()]}-${d.getFullYear()}`
+      );
     }
-  }, [data])
+  }, [data]);
 
-
-  let reportId: string = ''
-  
+  let reportId: string = "";
 
   const publishReport = async () => {
-
     const { data } = await API.post("/api-publish-report/", {
       project_id: projectId,
       report_id: reportId,
@@ -411,9 +438,6 @@ const ScanDetails: React.FC<{ scansRemaining: number; scans: ScanMeta[] }> = ({
                             `http://${document.location.host}/report/${projectId}/${data?.scan_report.latest_report_id}`,
                             "_blank"
                           );
-                          // history.push(
-                          //   `/report/${projectId}/${data.scan_report.latest_report_id}`
-                          // );
                         }
                       }}
                     >
@@ -466,7 +490,8 @@ const ScanDetails: React.FC<{ scansRemaining: number; scans: ScanMeta[] }> = ({
                   />
                 </Flex>
               ) : (
-                <Tabs variant="soft-rounded" colorScheme="green" isLazy>
+  <Tabs   index={tabIndex} onChange={handleTabsChange}
+  variant="soft-rounded" colorScheme="green" isLazy>
                   <TabList
                     sx={{
                       borderBottomWidth: "1px",
@@ -478,6 +503,7 @@ const ScanDetails: React.FC<{ scansRemaining: number; scans: ScanMeta[] }> = ({
                     <Tab mx={2}>Overview</Tab>
                     <Tab mx={2}>Detailed Result</Tab>
                     <Tab mx={2}>Scan History</Tab>
+                    <Tab mx={2}>Published Reports</Tab>
                     {/* <Tab mx={2}>Advanced Scan(Beta)</Tab> */}
                   </TabList>
                   <TabPanels>
@@ -506,8 +532,12 @@ const ScanDetails: React.FC<{ scansRemaining: number; scans: ScanMeta[] }> = ({
                       }
                     </TabPanel>
                     <TabPanel>
-                      <ScanHistory />
+                      <ScanHistory handleTabsChange={handleTabsChange} />
                     </TabPanel>
+                    <TabPanel>
+                      <PublishedReports />
+                    </TabPanel>
+                   
                   </TabPanels>
                 </Tabs>
               )}
@@ -559,7 +589,12 @@ const ScanDetails: React.FC<{ scansRemaining: number; scans: ScanMeta[] }> = ({
         }}
       >
         <ModalOverlay />
-        <ModalContent bg="bg.subtle" h={"500px"} minH={'fit-content'} maxW="container.md">
+        <ModalContent
+          bg="bg.subtle"
+          h={"500px"}
+          minH={"fit-content"}
+          maxW="container.md"
+        >
           <ModalHeader>Publish Report</ModalHeader>
           <ModalCloseButton />
           <ModalBody>
@@ -622,6 +657,10 @@ const ScanDetails: React.FC<{ scansRemaining: number; scans: ScanMeta[] }> = ({
                       placeholder="Git commit hash"
                       variant="brand"
                       size="lg"
+                      value={commitHash}
+                      onChange={(e) => {
+                        setCommitHash(e.target.value);
+                      }}
                     />
                   </InputGroup>
                 </HStack>
@@ -638,6 +677,10 @@ const ScanDetails: React.FC<{ scansRemaining: number; scans: ScanMeta[] }> = ({
                       placeholder="Latest Report Update Time"
                       variant="brand"
                       size="lg"
+                      value={lastTimeUpdate}
+                      onChange={(e) => {
+                        setLastTimeUpdate(e.target.value);
+                      }}
                     />
                   </InputGroup>
                 </HStack>
@@ -656,6 +699,10 @@ const ScanDetails: React.FC<{ scansRemaining: number; scans: ScanMeta[] }> = ({
                       placeholder="Date Published"
                       variant="brand"
                       size="lg"
+                      value={datePublished}
+                      onChange={(e) => {
+                        setDatePublished(e.target.value);
+                      }}
                     />
                   </InputGroup>
                 </HStack>
@@ -810,7 +857,7 @@ const ScanDetails: React.FC<{ scansRemaining: number; scans: ScanMeta[] }> = ({
               variant={"brand"}
               mr={3}
               onClick={() => {
-                if(next){
+                if (next) {
                   publishReport();
                 } else {
                   setNext(true);
@@ -825,6 +872,8 @@ const ScanDetails: React.FC<{ scansRemaining: number; scans: ScanMeta[] }> = ({
     </>
   );
 };
+
+
 
 const ScanHistory: React.FC = () => {
   const { data: profile } = useProfile();
@@ -855,16 +904,33 @@ const ScanHistory: React.FC = () => {
   );
 };
 
+const PublishedReports: React.FC = () => {
+  const { projectId } = useParams<{ projectId: string }>();
+  const { data } = useReports(projectId);
+
+  return (
+    <Box
+      sx={{
+        w: "100%",
+        borderRadius: "20px",
+        p: 4,
+      }}
+    >
+      {data && data?.reports.map((report) => <ReportBlock report={report} />)}
+    </Box>
+  );
+};
+
 const monthNames = [
   "Jan",
   "Feb",
-  "March",
-  "April",
+  "Mar",
+  "Apr",
   "May",
-  "June",
-  "July",
+  "Jun",
+  "Jul",
   "Aug",
-  "Sept",
+  "Sep",
   "Oct",
   "Nov",
   "Dec",
@@ -954,6 +1020,115 @@ const ScanBlock: React.FC<{ scan: ScanMeta; isTrial: boolean }> = ({
           <Spinner color="#806CCF" size="sm" ml={2} />
         )}
       </Button>
+    </Flex>
+  );
+};
+
+const ReportBlock: React.FC<{ report: ReportsListItem }> = ({ report }) => {
+  const [isDownloadLoading, setDownloadLoading] = useState(false);
+  const history = useHistory();
+
+  const toast = useToast();
+
+  return (
+    <Flex
+      alignItems="center"
+      justifyContent="space-between"
+      sx={{
+        cursor: "pointer",
+        w: "100%",
+        bg: "white",
+        my: 4,
+        p: 2,
+        px: 10,
+        borderRadius: "10px",
+        transition: "0.3s box-shadow",
+        boxShadow: "0px 4px 20px rgba(0, 0, 0, 0.05)",
+        _hover: {
+          boxShadow: "0px 4px 20px rgba(0, 0, 0, 0.2)",
+        },
+      }}
+      onClick={() => history.push(``)}
+    >
+      <Flex alignItems="center">
+        <Box
+          sx={{
+            width: "60px",
+            height: "60px",
+            p: 2,
+            bg: "#F7F7F7",
+            color: "#4E5D78",
+            borderRadius: "50%",
+            textAlign: "center",
+          }}
+        >
+          <Text fontSize="xl" fontWeight="600">
+            {report.date_published.slice(0, 2)}
+          </Text>
+          <Text fontSize="12px" mt="-4px">
+            {report.date_published.slice(3, 6)}
+          </Text>
+        </Box>
+
+        <Badge
+          fontSize="sm"
+          ml={5}
+          p={2}
+          borderRadius={10}
+          colorScheme={report.is_approved ? "green" : "red"}
+        >
+          {report.is_approved ? "Approved" : "Waiting for Approval"}
+        </Badge>
+      </Flex>
+      <Flex alignItems="center">
+        <Button
+          variant="accent-outline"
+          isLoading={isDownloadLoading}
+          onClick={(e) => {
+            e.stopPropagation();
+            navigator.clipboard
+              .writeText(
+                `http://${document.location.host}/published-report/${report.report_id}`
+              )
+              .then(
+                () =>
+                  toast({
+                    title: "Copied Report URL",
+                    description:"",
+                    status: "success",
+                    duration: 1000,
+                    isClosable: true,
+                  }),
+                () =>
+                  toast({
+                    title: "Could not Copy Report URL",
+                    description: "",
+                    status: "error",
+                    duration: 3000,
+                    isClosable: true,
+                  })
+              );
+          }}
+        >
+          <FaRegCopy style={{ marginRight: "1rem" }} />
+          Copy Report URL
+        </Button>
+        <Button
+          variant="accent-outline"
+          ml={5}
+          isLoading={isDownloadLoading}
+          onClick={(e) => {
+            e.stopPropagation();
+            window.open(
+              `http://${document.location.host}/report/${report.project_id}/${report.report_id}`,
+              "_blank"
+            );
+            // history.push(`/report/${scan.project_id}/${data?.scan_report.latest_report_id}`)
+          }}
+        >
+          View Report
+        </Button>
+      </Flex>
     </Flex>
   );
 };
