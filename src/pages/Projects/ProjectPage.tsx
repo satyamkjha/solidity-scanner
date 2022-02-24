@@ -258,6 +258,7 @@ const ScanDetails: React.FC<{ scansRemaining: number; scans: ScanMeta[] }> = ({
 
   const reporting_status = data?.scan_report.reporting_status;
 
+
   const [projectName, setProjectName] = useState("");
   const [repoUrl, setRepoUrl] = useState("");
   const [commitHash, setCommitHash] = useState("");
@@ -301,7 +302,9 @@ const ScanDetails: React.FC<{ scansRemaining: number; scans: ScanMeta[] }> = ({
     }
   }, [data]);
 
-  let reportId: string = "";
+  
+  const reportId = data?.scan_report.latest_report_id;
+
 
   const publishReport = async () => {
     const { data } = await API.post("/api-publish-report/", {
@@ -532,7 +535,7 @@ const ScanDetails: React.FC<{ scansRemaining: number; scans: ScanMeta[] }> = ({
                       }
                     </TabPanel>
                     <TabPanel>
-                      <ScanHistory handleTabsChange={handleTabsChange} />
+                      <ScanHistory />
                     </TabPanel>
                     <TabPanel>
                       <PublishedReports />
