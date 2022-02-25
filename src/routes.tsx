@@ -92,12 +92,12 @@ const Billing = lazy(
 
 const Routes: React.FC = () => {
   return (
-    <Router>   
+    <Router>
       <ErrorHandler>
         <Switch>
-        <Route exact path="/published-report/:reportId">
-          <PublicReportPage />
-        </Route>
+          <Route exact path="/published-report/:reportId">
+            <PublicReportPage />
+          </Route>
           <Route exact path="/">
             <Landing />
           </Route>

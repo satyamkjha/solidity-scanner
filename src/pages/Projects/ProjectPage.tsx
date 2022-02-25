@@ -161,9 +161,7 @@ export const ProjectPage: React.FC = () => {
               </Link>
             </Flex>
             <Switch>
-              <Route exact path="/projects/:projectId/history">
-                <ScanHistory />
-              </Route>
+              
               <Route exact path="/projects/:projectId/:scanId">
                 <ScanDetails
                   scansRemaining={data.scans_remaining}
@@ -191,12 +189,11 @@ const ScanDetails: React.FC<{ scansRemaining: number; scans: ScanMeta[] }> = ({
   const history = useHistory();
   const { data, isLoading, refetch } = useScan(scanId);
 
-  const [tabIndex, setTabIndex] = React.useState(0)
+  const [tabIndex, setTabIndex] = React.useState(0);
 
   const handleTabsChange = (index: number) => {
-    setTabIndex(index)
-  }
-
+    setTabIndex(index);
+  };
 
   // data &&
   // const { data } = useReport(projectId, data?.scan_report.latest_report_id)
@@ -258,7 +255,6 @@ const ScanDetails: React.FC<{ scansRemaining: number; scans: ScanMeta[] }> = ({
 
   const reporting_status = data?.scan_report.reporting_status;
 
-
   const [projectName, setProjectName] = useState("");
   const [repoUrl, setRepoUrl] = useState("");
   const [commitHash, setCommitHash] = useState("");
@@ -302,9 +298,7 @@ const ScanDetails: React.FC<{ scansRemaining: number; scans: ScanMeta[] }> = ({
     }
   }, [data]);
 
-  
   const reportId = data?.scan_report.latest_report_id;
-
 
   const publishReport = async () => {
     const { data } = await API.post("/api-publish-report/", {
@@ -493,8 +487,13 @@ const ScanDetails: React.FC<{ scansRemaining: number; scans: ScanMeta[] }> = ({
                   />
                 </Flex>
               ) : (
-  <Tabs   index={tabIndex} onChange={handleTabsChange}
-  variant="soft-rounded" colorScheme="green" isLazy>
+                <Tabs
+                  index={tabIndex}
+                  onChange={handleTabsChange}
+                  variant="soft-rounded"
+                  colorScheme="green"
+                  isLazy
+                >
                   <TabList
                     sx={{
                       borderBottomWidth: "1px",
@@ -535,12 +534,11 @@ const ScanDetails: React.FC<{ scansRemaining: number; scans: ScanMeta[] }> = ({
                       }
                     </TabPanel>
                     <TabPanel>
-                      <ScanHistory />
+                      <ScanHistory setTabIndex={setTabIndex} />
                     </TabPanel>
                     <TabPanel>
                       <PublishedReports />
                     </TabPanel>
-                   
                   </TabPanels>
                 </Tabs>
               )}
@@ -876,9 +874,11 @@ const ScanDetails: React.FC<{ scansRemaining: number; scans: ScanMeta[] }> = ({
   );
 };
 
+interface Props {
+  setTabIndex: React.Dispatch<React.SetStateAction<number>>;
+}
 
-
-const ScanHistory: React.FC = () => {
+const ScanHistory: React.FC<{setTabIndex: React.Dispatch<React.SetStateAction<number>>}> = ({ setTabIndex }) => {
   const { data: profile } = useProfile();
 
   const { projectId } = useParams<{ projectId: string }>();
@@ -899,6 +899,7 @@ const ScanHistory: React.FC = () => {
           <ScanBlock
             key={scan.scan_id}
             scan={scan}
+            setTabIndex={setTabIndex}
             // isTrial={profile?.current_package === "trial"}
             isTrial={false}
           />
@@ -919,7 +920,10 @@ const PublishedReports: React.FC = () => {
         p: 4,
       }}
     >
-      {data && data?.reports.map((report) => <ReportBlock report={report} />)}
+      {data &&
+        data?.reports.map((report) => (
+          <ReportBlock report={report}  />
+        ))}
     </Box>
   );
 };
@@ -939,10 +943,11 @@ const monthNames = [
   "Dec",
 ];
 
-const ScanBlock: React.FC<{ scan: ScanMeta; isTrial: boolean }> = ({
-  scan,
-  isTrial,
-}) => {
+const ScanBlock: React.FC<{
+  scan: ScanMeta;
+  isTrial: boolean;
+  setTabIndex: React.Dispatch<React.SetStateAction<number>>;
+}> = ({ scan, isTrial, setTabIndex }) => {
   const [isDownloadLoading, setDownloadLoading] = useState(false);
   const history = useHistory();
   const { projectId } = useParams<{ projectId: string }>();
@@ -967,7 +972,10 @@ const ScanBlock: React.FC<{ scan: ScanMeta; isTrial: boolean }> = ({
           boxShadow: "0px 4px 20px rgba(0, 0, 0, 0.2)",
         },
       }}
-      onClick={() => history.push(`/projects/${projectId}/${scan.scan_id}`)}
+      onClick={() => {
+        setTabIndex(0);
+        history.push(`/projects/${projectId}/${scan.scan_id}`);
+      }}
     >
       <Flex alignItems="center">
         <Box
@@ -1089,7 +1097,7 @@ const ReportBlock: React.FC<{ report: ReportsListItem }> = ({ report }) => {
           isLoading={isDownloadLoading}
           onClick={(e) => {
             e.stopPropagation();
-            console.log('asdkbkalsd');
+            console.log("asdkbkalsd");
             navigator.clipboard
               .writeText(
                 `http://${document.location.host}/published-report/${report.report_id}`
@@ -1098,7 +1106,7 @@ const ReportBlock: React.FC<{ report: ReportsListItem }> = ({ report }) => {
                 () =>
                   toast({
                     title: "Copied Report URL",
-                    description:"",
+                    description: "",
                     status: "success",
                     duration: 1000,
                     isClosable: true,

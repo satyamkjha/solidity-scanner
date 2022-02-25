@@ -913,9 +913,9 @@ export default function ReportContainer({ summary_report }: Props) {
                   {/* {sentenceCapitalize(
                     issue.status.toLowerCase().replace("_", " ")
                   )} */}
-                  {issue.status === 'FALSE_POSITIVE' && 'False Positive'}
-                  {issue.status === 'WONT_FIX' && "Won't Fix"}
-                  {issue.status === 'DISCOVERED' && 'Discovered'}
+                  {issue.status === "FALSE_POSITIVE" && "False Positive"}
+                  {issue.status === "WONT_FIX" && "Won't Fix"}
+                  {issue.status === "DISCOVERED" && "Discovered"}
                 </Text>
               </Flex>
             ))}
@@ -1352,9 +1352,9 @@ export default function ReportContainer({ summary_report }: Props) {
                         width={"20%"}
                       >
                         {/* {sentenceCapitalize(issue.status.toLowerCase())} */}
-                        {issue.status === 'FALSE_POSITIVE' && 'False Positive'}
-                  {issue.status === 'WONT_FIX' && "Won't Fix"}
-                  {issue.status === 'DISCOVERED' && 'Discovered'}
+                        {issue.status === "FALSE_POSITIVE" && "False Positive"}
+                        {issue.status === "WONT_FIX" && "Won't Fix"}
+                        {issue.status === "DISCOVERED" && "Discovered"}
                       </Text>
                     </Flex>
                   ))}
