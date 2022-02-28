@@ -268,7 +268,7 @@ const ApplicationForm: React.FC = () => {
               children={<Icon as={AiOutlineProject} color="gray.300" />}
             />
             <Input
-              placeholder="Project name (Optional)"
+              placeholder="Project name"
               variant="brand"
               size="lg"
               {...register("project_name")}

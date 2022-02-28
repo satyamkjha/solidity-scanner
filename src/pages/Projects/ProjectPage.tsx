@@ -195,7 +195,7 @@ const ScanDetails: React.FC<{ scansRemaining: number; scans: ScanMeta[] }> = ({
     setTabIndex(index);
   };
 
-  // data &&
+  // data &&=
   // const { data } = useReport(projectId, data?.scan_report.latest_report_id)
 
   const toast = useToast();
@@ -1059,7 +1059,6 @@ const ReportBlock: React.FC<{ report: ReportsListItem }> = ({ report }) => {
           boxShadow: "0px 4px 20px rgba(0, 0, 0, 0.2)",
         },
       }}
-      onClick={() => history.push(``)}
     >
       <Flex alignItems="center">
         <Box
