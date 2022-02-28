@@ -82,13 +82,11 @@ const BlockPage: React.FC = () => {
                 <AccordionItem borderTopWidth={0} style={{}}>
                   {({ isExpanded }) => (
                     <>
-                      <h2>
                         <AccordionButton>
                           <Box flex="1" p={3} textAlign="left">
                             Section 2 title
                           </Box>
                         </AccordionButton>
-                      </h2>
                       <AccordionPanel pb={4}>
                         Lorem ipsum dolor sit amet, consectetur adipiscing elit,
                         sed do eiusmod tempor incididunt ut labore et dolore

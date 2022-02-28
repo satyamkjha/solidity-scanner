@@ -484,36 +484,6 @@ export default function ReportContainer({ summary_report }: Props) {
                 color={"gray.600"}
                 width={"30%"}
               >
-                Website
-              </Text>
-              <Text
-                fontSize="lg"
-                fontWeight={"normal"}
-                color={"gray.600"}
-                width={"70%"}
-              >
-                {summary_report.project_summary_report.project_url}
-              </Text>
-            </Flex>
-
-            <Flex
-              as="section"
-              w="100%"
-              alignItems="flex-start"
-              justifyContent="flex-start"
-              flexDir={"row"}
-              textAlign={["left", "left"]}
-              py={5}
-              px={[1, 10]}
-              borderBottomWidth={1}
-              borderBottomColor={"#E4E4E4"}
-            >
-              <Text
-                fontSize="lg"
-                fontWeight={"extrabold"}
-                color={"gray.600"}
-                width={"30%"}
-              >
                 Contract Type
               </Text>
               <Text
@@ -522,7 +492,7 @@ export default function ReportContainer({ summary_report }: Props) {
                 color={"gray.600"}
                 width={"70%"}
               >
-                {summary_report.project_summary_report.project_name}
+                Smart Contract
               </Text>
             </Flex>
             <Flex
@@ -609,7 +579,36 @@ export default function ReportContainer({ summary_report }: Props) {
                 color={"gray.600"}
                 width={"70%"}
               >
-                Solidity
+                {summary_report.project_summary_report.git_commit_hash}
+              </Text>
+            </Flex>
+            <Flex
+              as="section"
+              w="100%"
+              alignItems="flex-start"
+              justifyContent="flex-start"
+              flexDir={"row"}
+              textAlign={["left", "left"]}
+              py={5}
+              px={[1, 10]}
+              borderBottomWidth={1}
+              borderBottomColor={"#E4E4E4"}
+            >
+              <Text
+                fontSize="lg"
+                fontWeight={"extrabold"}
+                color={"gray.600"}
+                width={"30%"}
+              >
+                Website
+              </Text>
+              <Text
+                fontSize="lg"
+                fontWeight={"normal"}
+                color={"gray.600"}
+                width={"70%"}
+              >
+                {summary_report.project_summary_report.project_url}
               </Text>
             </Flex>
             <Flex
