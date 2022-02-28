@@ -67,7 +67,7 @@ export default function PricingPage() {
             borderRadius="full"
             maxW="85vw"
           > */}
-            {/* <ActionButton
+          {/* <ActionButton
               onClick={() => setTab("weekly")}
               fontSize="lg"
               py={1}
@@ -78,7 +78,7 @@ export default function PricingPage() {
             >
               Weekly
             </ActionButton> */}
-            {/* <ActionButton
+          {/* <ActionButton
               onClick={() => setTab("monthly")}
               fontSize="lg"
               py={1}
@@ -89,7 +89,7 @@ export default function PricingPage() {
             >
               Monthly
             </ActionButton> */}
-            {/* <ActionButton
+          {/* <ActionButton
               onClick={() => setTab("yearly")}
               fontSize="lg"
               py={1}
@@ -125,7 +125,6 @@ export default function PricingPage() {
                       "Add 10 additional scans to an existing project at $5",
                       "Add credit for block scan at $8/credit",
                     ],
-                      
                   }}
                   button={
                     <RouterLink to="/signup">
