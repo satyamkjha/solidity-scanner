@@ -47,6 +47,7 @@ export type AuthResponse = {
   csrf_token: string;
 };
 
+
 export type Scan = {
   client_id: number;
   latest_report_id: string;
@@ -55,6 +56,12 @@ export type Scan = {
   project_id: string;
   contract_address?: string;
   contract_platform?: string;
+  compilerversion?: string;
+  contract_url?: string;
+  contractname?: string;
+  evmversion?: string;
+  licensetype?: string;
+  contract_chain?: string;
   scan_type: string;
   scan_id: string;
   scan_init_time: string;

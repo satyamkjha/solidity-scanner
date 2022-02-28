@@ -161,7 +161,6 @@ export const ProjectPage: React.FC = () => {
               </Link>
             </Flex>
             <Switch>
-              
               <Route exact path="/projects/:projectId/:scanId">
                 <ScanDetails
                   scansRemaining={data.scans_remaining}
@@ -878,7 +877,9 @@ interface Props {
   setTabIndex: React.Dispatch<React.SetStateAction<number>>;
 }
 
-const ScanHistory: React.FC<{setTabIndex: React.Dispatch<React.SetStateAction<number>>}> = ({ setTabIndex }) => {
+const ScanHistory: React.FC<{
+  setTabIndex: React.Dispatch<React.SetStateAction<number>>;
+}> = ({ setTabIndex }) => {
   const { data: profile } = useProfile();
 
   const { projectId } = useParams<{ projectId: string }>();
@@ -920,10 +921,7 @@ const PublishedReports: React.FC = () => {
         p: 4,
       }}
     >
-      {data &&
-        data?.reports.map((report) => (
-          <ReportBlock report={report}  />
-        ))}
+      {data && data?.reports.map((report) => <ReportBlock report={report} />)}
     </Box>
   );
 };
