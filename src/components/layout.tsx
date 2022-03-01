@@ -98,20 +98,21 @@ const Layout: React.FC = ({ children }) => {
               </Link>
             </MotionFlex>
           ) : (
-            <MotionFlex
-              initial={{ height: 0 }}
-              animate={{ height: "auto" }}
-              sx={{
-                w: "100%",
-                justifyContent: "center",
-                py: 1,
-                bg: "brand-dark",
-              }}
-            >
-              <Text fontSize="12px" color="white" fontWeight={700}>
-                This product is in beta.
-              </Text>
-            </MotionFlex>
+            // <MotionFlex
+            //   initial={{ height: 0 }}
+            //   animate={{ height: "auto" }}
+            //   sx={{
+            //     w: "100%",
+            //     justifyContent: "center",
+            //     py: 1,
+            //     bg: "brand-dark",
+            //   }}
+            // >
+            //   <Text fontSize="12px" color="white" fontWeight={700}>
+            //     This product is in beta.
+            //   </Text>
+            // </MotionFlex>
+            <></>
           )}
         </>
       )}

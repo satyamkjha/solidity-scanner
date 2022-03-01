@@ -127,25 +127,50 @@ const BlockPage: React.FC = () => {
                             px={9}
                             borderRadius={36}
                             backgroundColor={"white"}
-                            cursor='pointer'
-                            onClick={() => window.open(
-                              `${data.scan_report.contract_url}`,
-                              "_blank"
-                            )}
-                            boxShadow='0px 1px 1px rgba(0, 0, 0, 0.09)'
+                            cursor="pointer"
+                            onClick={() =>
+                              window.open(
+                                `${data.scan_report.contract_url}`,
+                                "_blank"
+                              )
+                            }
+                            boxShadow="0px 1px 1px rgba(0, 0, 0, 0.09)"
                           >
-                            <Text minW={'50px'} width={"100%"} as="p" fontSize="12px">
+                            <Text
+                              minW={"50px"}
+                              width={"100%"}
+                              as="p"
+                              fontSize="12px"
+                            >
                               View on
                             </Text>
-                            <Text width={"100%"} color="gray.200" as="p" fontSize="16px">
+                            <Text
+                              width={"100%"}
+                              color="gray.200"
+                              as="p"
+                              fontSize="16px"
+                            >
                               |
                             </Text>
                             <Image
-                              src={data.scan_report.contract_platform === 'polygonscan'? "/polygon.svg" : data.scan_report.contract_platform === 'etherscan' ? '/etherscan.svg' : '/bscscan.svg'}
+                              src={
+                                data.scan_report.contract_platform ===
+                                "polygonscan"
+                                  ? "/polygon.svg"
+                                  : data.scan_report.contract_platform ===
+                                    "etherscan"
+                                  ? "/etherscan.svg"
+                                  : "/bscscan.svg"
+                              }
                               alt="Product screenshot"
                               mx="auto"
                             />
-                            <Text fontWeight={'700'} width={"100%"} as="p" fontSize="18px">
+                            <Text
+                              fontWeight={"700"}
+                              width={"100%"}
+                              as="p"
+                              fontSize="18px"
+                            >
                               {data.scan_report.contract_platform}
                             </Text>
                           </HStack>

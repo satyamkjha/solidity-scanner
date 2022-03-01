@@ -193,7 +193,7 @@ const Home: React.FC = () => {
                   mt: 8,
                 }}
               >
-                <Text>Total Vulnerabalities Found</Text>
+                <Text>Total Vulnerabilities Found</Text>
                 <Text>{data.overview.issue_count_total}</Text>
               </Flex>
             </Box>
