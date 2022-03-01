@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { useQueryClient } from "react-query";
 import { useHistory, Link as RouterLink } from "react-router-dom";
 import { useForm } from "react-hook-form";
@@ -35,7 +35,6 @@ import API from "helpers/api";
 import { useOverview } from "hooks/useOverview";
 import { useProfile } from "hooks/useProfile";
 import VulnerabilityProgress from "components/VulnerabilityProgress";
-import { useSupportedChains } from "hooks/useSupportedPlatforms";
 
 const Home: React.FC = () => {
   const { data } = useOverview();
@@ -269,7 +268,7 @@ const ApplicationForm: React.FC = () => {
               children={<Icon as={AiOutlineProject} color="gray.300" />}
             />
             <Input
-              placeholder="Project name"
+              placeholder="Project name (Optional)"
               variant="brand"
               size="lg"
               {...register("project_name")}
@@ -338,25 +337,14 @@ type ContractFormData = {
 
 const ContractForm: React.FC = () => {
   const [platform, setPlatform] = React.useState("etherscan");
-  const [chain, setChain] = React.useState("etherscan");
-  const [chainList, setChainList] = React.useState<string[]>([]);
   const queryClient = useQueryClient();
   const { handleSubmit, register, formState } = useForm<ContractFormData>();
   const history = useHistory();
   const { data: profileData } = useProfile();
-  const { data: supportedChains } = useSupportedChains();
-
-  useEffect(() => {
-    if (supportedChains) {
-      setChainList(supportedChains[platform]);
-    }
-  }, [supportedChains]);
-
   const onSubmit = async ({ contract_address }: ContractFormData) => {
     await API.post("/api-start-scan-block/", {
       contract_address,
       contract_platform: platform,
-      contract_chain: chain,
     });
     queryClient.invalidateQueries("scans");
     queryClient.invalidateQueries("profile");
@@ -433,37 +421,11 @@ const ContractForm: React.FC = () => {
             <Select
               placeholder="Select contract platform"
               value={platform}
-              disabled={supportedChains == null}
               isRequired
-              onChange={(e) => {
-                setPlatform(e.target.value);
-                console.log(supportedChains);
-                if (supportedChains) {
-                  setChainList(supportedChains[e.target.value]);
-                  console.log(supportedChains[e.target.value]);
-                }
-              }}
+              onChange={(e) => setPlatform(e.target.value)}
             >
               <option value="etherscan">Etherscan</option>
-              <option value="bscscan">Binance</option>
-              <option value="polygonscan">Polygon Scan</option>
-            </Select>
-          </FormControl>
-
-          <FormControl id="contract_chain">
-            <FormLabel fontSize="sm">Contract platform</FormLabel>
-            <Select
-              placeholder="Select Platform Chain"
-              value={chain}
-              disabled={supportedChains == null}
-              isRequired
-              onChange={(e) => {
-                setChain(e.target.value);
-              }}
-            >
-              {chainList?.map((item, index) => (
-                <option value={item}>{item.toUpperCase()}</option>
-              ))}
+              <option value="binance">Binance</option>
             </Select>
           </FormControl>
 
