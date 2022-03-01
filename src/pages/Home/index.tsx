@@ -40,7 +40,6 @@ import { useSupportedChains } from "hooks/useSupportedPlatforms";
 const Home: React.FC = () => {
   const { data } = useOverview();
 
-
   return (
     <Box
       sx={{
@@ -348,11 +347,10 @@ const ContractForm: React.FC = () => {
   const { data: supportedChains } = useSupportedChains();
 
   useEffect(() => {
-    if(supportedChains){
-      setChainList(supportedChains[platform])
+    if (supportedChains) {
+      setChainList(supportedChains[platform]);
     }
-  }, [supportedChains])
-
+  }, [supportedChains]);
 
   const onSubmit = async ({ contract_address }: ContractFormData) => {
     await API.post("/api-start-scan-block/", {
@@ -438,10 +436,10 @@ const ContractForm: React.FC = () => {
               disabled={supportedChains == null}
               isRequired
               onChange={(e) => {
-                setPlatform(e.target.value)
+                setPlatform(e.target.value);
                 console.log(supportedChains);
-                if(supportedChains){
-                  setChainList(supportedChains[e.target.value])
+                if (supportedChains) {
+                  setChainList(supportedChains[e.target.value]);
                   console.log(supportedChains[e.target.value]);
                 }
               }}
@@ -460,10 +458,10 @@ const ContractForm: React.FC = () => {
               disabled={supportedChains == null}
               isRequired
               onChange={(e) => {
-                setChain(e.target.value)
+                setChain(e.target.value);
               }}
             >
-              {chainList?.map((item, index)=>(
+              {chainList?.map((item, index) => (
                 <option value={item}>{item.toUpperCase()}</option>
               ))}
             </Select>

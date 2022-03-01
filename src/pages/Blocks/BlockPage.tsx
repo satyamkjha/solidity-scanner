@@ -18,6 +18,8 @@ import {
   AccordionItem,
   AccordionPanel,
   VStack,
+  Image,
+  HStack,
 } from "@chakra-ui/react";
 import Overview from "components/overview";
 import Result from "components/result";
@@ -120,6 +122,44 @@ const BlockPage: React.FC = () => {
                           textAlign={"left"}
                           p={6}
                         >
+                          <HStack
+                            py={2}
+                            px={9}
+                            borderRadius={36}
+                            backgroundColor={"white"}
+                            cursor='pointer'
+                            onClick={() => window.open(
+                              `${data.scan_report.contract_url}`,
+                              "_blank"
+                            )}
+                            boxShadow='0px 1px 1px rgba(0, 0, 0, 0.09)'
+                          >
+                            <Text minW={'50px'} width={"100%"} as="p" fontSize="12px">
+                              View on
+                            </Text>
+                            <Text width={"100%"} color="gray.200" as="p" fontSize="16px">
+                              |
+                            </Text>
+                            <Image
+                              src={data.scan_report.contract_platform === 'polygonscan'? "/polygon.svg" : data.scan_report.contract_platform === 'etherscan' ? '/etherscan.svg' : '/bscscan.svg'}
+                              alt="Product screenshot"
+                              mx="auto"
+                            />
+                            <Text fontWeight={'700'} width={"100%"} as="p" fontSize="18px">
+                              {data.scan_report.contract_platform}
+                            </Text>
+                          </HStack>
+                        </Flex>
+                        <Flex
+                          flexDirection={"row"}
+                          justifyContent="flex-start"
+                          alignItems={"flex-start"}
+                          width={"100%"}
+                          height="fit-content"
+                          flexWrap={"wrap"}
+                          textAlign={"left"}
+                          p={6}
+                        >
                           <VStack textAlign={"left"} width={"33.33%"}>
                             <Text
                               width={"100%"}
@@ -129,11 +169,7 @@ const BlockPage: React.FC = () => {
                             >
                               Contract Name
                             </Text>
-                            <Text
-                              width={"100%"}
-                              as="p"
-                              fontSize="14px"
-                            >
+                            <Text width={"100%"} as="p" fontSize="14px">
                               {data?.scan_report.contractname}
                             </Text>
                           </VStack>
@@ -146,11 +182,7 @@ const BlockPage: React.FC = () => {
                             >
                               Compiler Version
                             </Text>
-                            <Text
-                              width={"100%"}
-                              as="p"
-                              fontSize="14px"
-                            >
+                            <Text width={"100%"} as="p" fontSize="14px">
                               {data?.scan_report.compilerversion}
                             </Text>
                           </VStack>
@@ -163,11 +195,7 @@ const BlockPage: React.FC = () => {
                             >
                               EVM Version
                             </Text>
-                            <Text
-                              width={"100%"}
-                              as="p"
-                              fontSize="14px"
-                            >
+                            <Text width={"100%"} as="p" fontSize="14px">
                               {data?.scan_report.evmversion}
                             </Text>
                           </VStack>
@@ -178,15 +206,10 @@ const BlockPage: React.FC = () => {
                               fontSize="14px"
                               color="gray.500"
                               mt={10}
-
                             >
                               License Type
                             </Text>
-                            <Text
-                              width={"100%"}
-                              as="p"
-                              fontSize="14px"
-                            >
+                            <Text width={"100%"} as="p" fontSize="14px">
                               {data?.scan_report.licensetype}
                             </Text>
                           </VStack>
@@ -197,16 +220,12 @@ const BlockPage: React.FC = () => {
                               fontSize="14px"
                               color="gray.500"
                               mt={10}
-
                             >
                               Balance
                             </Text>
-                            <Text
-                              width={"100%"}
-                              as="p"
-                              fontSize="14px"
-                            >
-                              {data?.scan_report.contract_address}
+                            <Text width={"100%"} as="p" fontSize="14px">
+                              {data?.scan_report.value}{" "}
+                              {data.scan_report.currency}
                             </Text>
                           </VStack>
                         </Flex>

@@ -47,7 +47,6 @@ export type AuthResponse = {
   csrf_token: string;
 };
 
-
 export type Scan = {
   client_id: number;
   latest_report_id: string;
@@ -62,6 +61,8 @@ export type Scan = {
   evmversion?: string;
   licensetype?: string;
   contract_chain?: string;
+  value?: string;
+  currency?: string;
   scan_type: string;
   scan_id: string;
   scan_init_time: string;
