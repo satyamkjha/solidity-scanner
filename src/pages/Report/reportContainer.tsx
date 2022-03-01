@@ -915,6 +915,7 @@ export default function ReportContainer({ summary_report }: Props) {
                   {issue.status === "FALSE_POSITIVE" && "False Positive"}
                   {issue.status === "WONT_FIX" && "Won't Fix"}
                   {issue.status === "DISCOVERED" && "Discovered"}
+                  {issue.status === "FIXED" && "Fixed"}
                 </Text>
               </Flex>
             ))}
@@ -1354,6 +1355,7 @@ export default function ReportContainer({ summary_report }: Props) {
                         {issue.status === "FALSE_POSITIVE" && "False Positive"}
                         {issue.status === "WONT_FIX" && "Won't Fix"}
                         {issue.status === "DISCOVERED" && "Discovered"}
+                        {issue.status === "FIXED" && "Fixed"}
                       </Text>
                     </Flex>
                   ))}

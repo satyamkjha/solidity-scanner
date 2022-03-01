@@ -133,6 +133,7 @@ const UpdateRowComp = ({
             {issue.status === "FALSE_POSITIVE" && "False Positive"}
             {issue.status === "WONT_FIX" && "Won't Fix"}
             {issue.status === "DISCOVERED" && "Discovered"}
+            {issue.status === "FIXED" && "Fixed"}
           </Text>
 
           <Flex
@@ -143,25 +144,27 @@ const UpdateRowComp = ({
             justifyContent="flex-start"
             flexDir={"row"}
           >
-            <Checkbox
-              isChecked={fps}
-              onChange={() => {
-                if (wntFx) {
-                  setwntFx(!wntFx);
-                }
-                setFps(!fps);
-                let newfalsePositive = falsePositive.filter(
-                  (hash) => hash !== issue.issue_hash
-                );
-                let newwontfix = wontfix.filter(
-                  (hash) => hash !== issue.issue_hash
-                );
-                newfalsePositive.push(issue.issue_hash);
-                setFalsePositive([...newfalsePositive]);
-                setWontFix([...newwontfix]);
-              }}
-              size={"lg"}
-            ></Checkbox>
+            {issue.status !== "FIXED" && (
+              <Checkbox
+                isChecked={fps}
+                onChange={() => {
+                  if (wntFx) {
+                    setwntFx(!wntFx);
+                  }
+                  setFps(!fps);
+                  let newfalsePositive = falsePositive.filter(
+                    (hash) => hash !== issue.issue_hash
+                  );
+                  let newwontfix = wontfix.filter(
+                    (hash) => hash !== issue.issue_hash
+                  );
+                  newfalsePositive.push(issue.issue_hash);
+                  setFalsePositive([...newfalsePositive]);
+                  setWontFix([...newwontfix]);
+                }}
+                size={"lg"}
+              ></Checkbox>
+            )}
           </Flex>
           <Flex
             as="div"
@@ -171,25 +174,27 @@ const UpdateRowComp = ({
             justifyContent="flex-start"
             flexDir={"row"}
           >
-            <Checkbox
-              isChecked={wntFx}
-              onChange={() => {
-                if (fps) {
-                  setFps(!fps);
-                }
-                setwntFx(!wntFx);
-                let newfalsePositive = falsePositive.filter(
-                  (hash) => hash !== issue.issue_hash
-                );
-                let newwontfix = wontfix.filter(
-                  (hash) => hash !== issue.issue_hash
-                );
-                newwontfix.push(issue.issue_hash);
-                setFalsePositive([...newfalsePositive]);
-                setWontFix([...newwontfix]);
-              }}
-              size={"lg"}
-            ></Checkbox>
+            {issue.status !== "FIXED" && (
+              <Checkbox
+                isChecked={wntFx}
+                onChange={() => {
+                  if (fps) {
+                    setFps(!fps);
+                  }
+                  setwntFx(!wntFx);
+                  let newfalsePositive = falsePositive.filter(
+                    (hash) => hash !== issue.issue_hash
+                  );
+                  let newwontfix = wontfix.filter(
+                    (hash) => hash !== issue.issue_hash
+                  );
+                  newwontfix.push(issue.issue_hash);
+                  setFalsePositive([...newfalsePositive]);
+                  setWontFix([...newwontfix]);
+                }}
+                size={"lg"}
+              ></Checkbox>
+            )}
           </Flex>
         </Flex>
         {/* {wntFx && (

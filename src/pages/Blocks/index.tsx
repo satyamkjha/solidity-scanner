@@ -181,7 +181,7 @@ const BlockCard: React.FC<{ scan: Scan }> = ({ scan }) => {
             >
               <Score score={scan_summary?.score || "0"} />
               <HStack
-                h='fit-content'
+                h="fit-content"
                 py={2}
                 px={4}
                 borderRadius={36}

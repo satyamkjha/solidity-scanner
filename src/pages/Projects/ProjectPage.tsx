@@ -605,8 +605,19 @@ const ScanDetails: React.FC<{ scansRemaining: number; scans: ScanMeta[] }> = ({
                   spacing={3}
                   mt={4}
                   mb={4}
+                  pl={4}
                   fontSize="14px"
+                  bgColor={"white"}
+                  borderRadius={"16px"}
                 >
+                  <Text
+                    fontSize="md"
+                    fontWeight={"600"}
+                    color={"gray.500"}
+                    width={"35%"}
+                  >
+                    Project Name
+                  </Text>
                   <InputGroup alignItems="center">
                     <InputLeftElement
                       height="48px"
@@ -619,13 +630,27 @@ const ScanDetails: React.FC<{ scansRemaining: number; scans: ScanMeta[] }> = ({
                       variant="brand"
                       size="lg"
                       value={projectName}
-                      onChange={(e) => {
-                        setProjectName(e.target.value);
-                      }}
                     />
                   </InputGroup>
                 </HStack>
-                <HStack alignItems="center" spacing={3} mb={4} fontSize="14px">
+                <HStack
+                  alignItems="center"
+                  spacing={3}
+                  mb={4}
+                  pl={4}
+                  fontSize="14px"
+                  bgColor={"white"}
+                  borderRadius={"16px"}
+                  
+                >
+                  <Text
+                    fontSize="md"
+                    fontWeight={"600"}
+                    color={"gray.500"}
+                    width={"35%"}
+                  >
+                    Link to the repository{" "}
+                  </Text>
                   <InputGroup alignItems="center">
                     <InputLeftElement
                       height="48px"
@@ -638,14 +663,27 @@ const ScanDetails: React.FC<{ scansRemaining: number; scans: ScanMeta[] }> = ({
                       variant="brand"
                       size="lg"
                       value={repoUrl}
-                      onChange={(e) => {
-                        setRepoUrl(e.target.value);
-                      }}
                     />
                   </InputGroup>
                 </HStack>
 
-                <HStack alignItems="center" spacing={3} mb={4} fontSize="14px">
+                <HStack
+                  alignItems="center"
+                  spacing={3}
+                  mb={4}
+                  pl={4}
+                  fontSize="14px"
+                  bgColor={"white"}
+                  borderRadius={"16px"}
+                >
+                  <Text
+                    fontSize="md"
+                    fontWeight={"600"}
+                    color={"gray.500"}
+                    width={"35%"}
+                  >
+                    Git commit hash{" "}
+                  </Text>
                   <InputGroup alignItems="center">
                     <InputLeftElement
                       height="48px"
@@ -658,14 +696,27 @@ const ScanDetails: React.FC<{ scansRemaining: number; scans: ScanMeta[] }> = ({
                       variant="brand"
                       size="lg"
                       value={commitHash}
-                      onChange={(e) => {
-                        setCommitHash(e.target.value);
-                      }}
                     />
                   </InputGroup>
                 </HStack>
 
-                <HStack alignItems="center" spacing={3} mb={4} fontSize="14px">
+                <HStack
+                  alignItems="center"
+                  spacing={3}
+                  mb={4}
+                  pl={4}
+                  fontSize="14px"
+                  bgColor={"white"}
+                  borderRadius={"16px"}
+                >
+                  <Text
+                    fontSize="md"
+                    fontWeight={"600"}
+                    color={"gray.500"}
+                    width={"35%"}
+                  >
+                    Latest Report Update
+                  </Text>
                   <InputGroup alignItems="center">
                     <InputLeftElement
                       height="48px"
@@ -678,14 +729,26 @@ const ScanDetails: React.FC<{ scansRemaining: number; scans: ScanMeta[] }> = ({
                       variant="brand"
                       size="lg"
                       value={lastTimeUpdate}
-                      onChange={(e) => {
-                        setLastTimeUpdate(e.target.value);
-                      }}
                     />
                   </InputGroup>
                 </HStack>
 
-                <HStack alignItems="center" spacing={3} fontSize="14px">
+                <HStack
+                  alignItems="center"
+                  spacing={3}
+                  pl={4}
+                  fontSize="14px"
+                  bgColor={"white"}
+                  borderRadius={"16px"}
+                >
+                  <Text
+                    fontSize="md"
+                    fontWeight={"600"}
+                    color={"gray.500"}
+                    width={"35%"}
+                  >
+                    Date Published
+                  </Text>
                   <InputGroup alignItems="center">
                     <InputLeftElement
                       height="48px"
@@ -695,14 +758,12 @@ const ScanDetails: React.FC<{ scansRemaining: number; scans: ScanMeta[] }> = ({
                     />
                     <Input
                       isRequired
+                      opacity={1}
                       type="text"
                       placeholder="Date Published"
                       variant="brand"
                       size="lg"
                       value={datePublished}
-                      onChange={(e) => {
-                        setDatePublished(e.target.value);
-                      }}
                     />
                   </InputGroup>
                 </HStack>
