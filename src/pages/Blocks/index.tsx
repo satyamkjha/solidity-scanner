@@ -1,6 +1,15 @@
 import React, { useEffect } from "react";
 import { Link } from "react-router-dom";
-import { Flex, Box, Text, Button, Progress, Spinner } from "@chakra-ui/react";
+import {
+  Flex,
+  Box,
+  Text,
+  Button,
+  Progress,
+  Spinner,
+  HStack,
+  Image,
+} from "@chakra-ui/react";
 
 import { LogoIcon, BlockCredit } from "components/icons";
 import Score from "components/score";
@@ -129,6 +138,8 @@ const BlockCard: React.FC<{ scan: Scan }> = ({ scan }) => {
     scan_summary,
     _updated,
     contract_address,
+    contractname,
+    contract_platform,
   } = scan;
   return (
     <Link to={scan_status === "scan_done" ? `/blocks/${scan_id}` : "/blocks"}>
@@ -138,7 +149,7 @@ const BlockCard: React.FC<{ scan: Scan }> = ({ scan }) => {
           flexDir: "column",
           justifyContent: "space-between",
           w: "320px",
-          h: "230px",
+          h: "260px",
           my: 4,
           mr: 8,
           p: 5,
@@ -152,16 +163,49 @@ const BlockCard: React.FC<{ scan: Scan }> = ({ scan }) => {
         }}
       >
         <Box>
+          <Text sx={{ w: "100%", color: "subtle" }}>{contractname}</Text>
           <Text sx={{ w: "100%" }} isTruncated>
             {project_name || contract_address}
           </Text>
-          <Text sx={{ fontSize: "sm", color: "subtle" }}>
+          <Text sx={{ fontSize: "xs", color: "subtle" }}>
             Last scanned {timeSince(new Date(_updated))}
           </Text>
         </Box>
         {scan_status === "scan_done" ? (
           <>
-            <Score score={scan_summary?.score || "0"} />
+            <Flex
+              width={"100%"}
+              flexDir="row"
+              justifyContent={"space-between"}
+              height="fit-content"
+            >
+              <Score score={scan_summary?.score || "0"} />
+              <HStack
+                h='fit-content'
+                py={2}
+                px={4}
+                borderRadius={36}
+                backgroundColor="#FAFBFC"
+                cursor="pointer"
+                boxShadow="0px 1px 1px rgba(0, 0, 0, 0.09)"
+              >
+                <Image
+                  src={
+                    contract_platform === "polygonscan"
+                      ? "/polygon.svg"
+                      : contract_platform === "etherscan"
+                      ? "/etherscan.svg"
+                      : "/bscscan.svg"
+                  }
+                  alt="Product screenshot"
+                  h={"20px"}
+                  w={"20px"}
+                />
+                <Text fontWeight={"700"} width={"100%"} as="p" fontSize="14px">
+                  {contract_platform}
+                </Text>
+              </HStack>
+            </Flex>
             <VulnerabilityDistribution
               critical={
                 scan_summary?.issue_severity_distribution?.critical || 0

@@ -161,7 +161,6 @@ export const ProjectPage: React.FC = () => {
               </Link>
             </Flex>
             <Switch>
-              
               <Route exact path="/projects/:projectId/:scanId">
                 <ScanDetails
                   scansRemaining={data.scans_remaining}
@@ -195,7 +194,7 @@ const ScanDetails: React.FC<{ scansRemaining: number; scans: ScanMeta[] }> = ({
     setTabIndex(index);
   };
 
-  // data &&
+  // data &&=
   // const { data } = useReport(projectId, data?.scan_report.latest_report_id)
 
   const toast = useToast();
@@ -878,7 +877,9 @@ interface Props {
   setTabIndex: React.Dispatch<React.SetStateAction<number>>;
 }
 
-const ScanHistory: React.FC<{setTabIndex: React.Dispatch<React.SetStateAction<number>>}> = ({ setTabIndex }) => {
+const ScanHistory: React.FC<{
+  setTabIndex: React.Dispatch<React.SetStateAction<number>>;
+}> = ({ setTabIndex }) => {
   const { data: profile } = useProfile();
 
   const { projectId } = useParams<{ projectId: string }>();
@@ -920,10 +921,7 @@ const PublishedReports: React.FC = () => {
         p: 4,
       }}
     >
-      {data &&
-        data?.reports.map((report) => (
-          <ReportBlock report={report}  />
-        ))}
+      {data && data?.reports.map((report) => <ReportBlock report={report} />)}
     </Box>
   );
 };
@@ -1059,7 +1057,6 @@ const ReportBlock: React.FC<{ report: ReportsListItem }> = ({ report }) => {
           boxShadow: "0px 4px 20px rgba(0, 0, 0, 0.2)",
         },
       }}
-      onClick={() => history.push(``)}
     >
       <Flex alignItems="center">
         <Box
