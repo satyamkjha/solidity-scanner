@@ -40,7 +40,7 @@ export const Logo: React.FC = () => {
         <Heading fontSize={["xl", "xl", "2xl"]} fontWeight={700} color="black">
           Solidity Scan
         </Heading>
-        {/* <Text
+        <Text
           fontSize="12px"
           sx={{
             color: "green.500",
@@ -51,7 +51,7 @@ export const Logo: React.FC = () => {
           }}
         >
           BETA
-        </Text> */}
+        </Text>
       </Box>
     </HStack>
   );

@@ -17,9 +17,6 @@ import {
   AccordionIcon,
   AccordionItem,
   AccordionPanel,
-  VStack,
-  Image,
-  HStack,
 } from "@chakra-ui/react";
 import Overview from "components/overview";
 import Result from "components/result";
@@ -27,7 +24,6 @@ import TrialWall from "components/trialWall";
 import { AddIcon, MinusIcon } from "@chakra-ui/icons";
 import { useScan } from "hooks/useScan";
 import { useProfile } from "hooks/useProfile";
-import { BiChevronDownCircle, BiChevronUpCircle } from "react-icons/bi";
 
 const BlockPage: React.FC = () => {
   const { scanId } = useParams<{ scanId: string }>();
@@ -59,9 +55,9 @@ const BlockPage: React.FC = () => {
               sx={{ justifyContent: "space-between", alignItems: "center" }}
             >
               <Text sx={{ fontSize: "xl", fontWeight: 600, ml: 2 }}>
-                {data?.scan_report.project_name}
+                {data?.scan_report.contract_address}
                 <Text as="span" fontSize="14px" ml={3} color="gray.500">
-                  {data.scan_report?.contract_address}
+                  {data.scan_report?.contract_platform?.toUpperCase()}
                 </Text>
               </Text>
               <Link
@@ -79,181 +75,26 @@ const BlockPage: React.FC = () => {
                 bg: "white",
                 borderRadius: "20px",
                 my: 4,
-                py: 4,
+                p: 4,
               }}
             >
               <Accordion allowMultiple borderBottomWidth={0}>
                 <AccordionItem borderTopWidth={0} style={{}}>
                   {({ isExpanded }) => (
                     <>
-                      <Flex
-                        flexDirection={"row"}
-                        justifyContent="space-between"
-                        alignItems={"center"}
-                        width={"100%"}
-                        height="fit-content"
-                        pt={2}
-                        pb={5}
-                        px={4}
-                      >
-                        <Text sx={{ fontSize: "lg", fontWeight: 600, ml: 2 }}>
-                          {data?.scan_report.contract_address}
-                        </Text>
-                        <AccordionButton
-                          width={"fit-content"}
-                          borderRadius="48px"
-                        >
-                          {isExpanded ? (
-                            <BiChevronUpCircle />
-                          ) : (
-                            <BiChevronDownCircle />
-                          )}
+                      <h2>
+                        <AccordionButton>
+                          <Box flex="1" p={3} textAlign="left">
+                            Section 2 title
+                          </Box>
                         </AccordionButton>
-                      </Flex>
-
-                      <AccordionPanel backgroundColor={"#FAFBFC"} pb={4}>
-                        <Flex
-                          flexDirection={"row"}
-                          justifyContent="flex-start"
-                          alignItems={"flex-start"}
-                          width={"100%"}
-                          height="fit-content"
-                          flexWrap={"wrap"}
-                          textAlign={"left"}
-                          p={6}
-                        >
-                          <HStack
-                            py={2}
-                            px={9}
-                            borderRadius={36}
-                            backgroundColor={"white"}
-                            cursor="pointer"
-                            onClick={() =>
-                              window.open(
-                                `${data.scan_report.contract_url}`,
-                                "_blank"
-                              )
-                            }
-                            boxShadow="0px 1px 1px rgba(0, 0, 0, 0.09)"
-                          >
-                            <Text
-                              minW={"50px"}
-                              width={"100%"}
-                              as="p"
-                              fontSize="12px"
-                            >
-                              View on
-                            </Text>
-                            <Text
-                              width={"100%"}
-                              color="gray.200"
-                              as="p"
-                              fontSize="16px"
-                            >
-                              |
-                            </Text>
-                            <Image
-                              src={
-                                data.scan_report.contract_platform ===
-                                "polygonscan"
-                                  ? "/polygon.svg"
-                                  : data.scan_report.contract_platform ===
-                                    "etherscan"
-                                  ? "/etherscan.svg"
-                                  : "/bscscan.svg"
-                              }
-                              alt="Product screenshot"
-                              mx="auto"
-                            />
-                            <Text
-                              fontWeight={"700"}
-                              width={"100%"}
-                              as="p"
-                              fontSize="18px"
-                            >
-                              {data.scan_report.contract_platform}
-                            </Text>
-                          </HStack>
-                        </Flex>
-                        <Flex
-                          flexDirection={"row"}
-                          justifyContent="flex-start"
-                          alignItems={"flex-start"}
-                          width={"100%"}
-                          height="fit-content"
-                          flexWrap={"wrap"}
-                          textAlign={"left"}
-                          p={6}
-                        >
-                          <VStack textAlign={"left"} width={"33.33%"}>
-                            <Text
-                              width={"100%"}
-                              as="p"
-                              fontSize="14px"
-                              color="gray.500"
-                            >
-                              Contract Name
-                            </Text>
-                            <Text width={"100%"} as="p" fontSize="14px">
-                              {data?.scan_report.contractname}
-                            </Text>
-                          </VStack>
-                          <VStack textAlign={"left"} width={"33.33%"}>
-                            <Text
-                              width={"100%"}
-                              as="p"
-                              fontSize="14px"
-                              color="gray.500"
-                            >
-                              Compiler Version
-                            </Text>
-                            <Text width={"100%"} as="p" fontSize="14px">
-                              {data?.scan_report.compilerversion}
-                            </Text>
-                          </VStack>
-                          <VStack textAlign={"left"} width={"33.33%"}>
-                            <Text
-                              width={"100%"}
-                              as="p"
-                              fontSize="14px"
-                              color="gray.500"
-                            >
-                              EVM Version
-                            </Text>
-                            <Text width={"100%"} as="p" fontSize="14px">
-                              {data?.scan_report.evmversion}
-                            </Text>
-                          </VStack>
-                          <VStack textAlign={"left"} width={"33.33%"}>
-                            <Text
-                              width={"100%"}
-                              as="p"
-                              fontSize="14px"
-                              color="gray.500"
-                              mt={10}
-                            >
-                              License Type
-                            </Text>
-                            <Text width={"100%"} as="p" fontSize="14px">
-                              {data?.scan_report.licensetype}
-                            </Text>
-                          </VStack>
-                          <VStack textAlign={"left"} width={"33.33%"}>
-                            <Text
-                              width={"100%"}
-                              as="p"
-                              fontSize="14px"
-                              color="gray.500"
-                              mt={10}
-                            >
-                              Balance
-                            </Text>
-                            <Text width={"100%"} as="p" fontSize="14px">
-                              {data?.scan_report.value}{" "}
-                              {data.scan_report.currency}
-                            </Text>
-                          </VStack>
-                        </Flex>
+                      </h2>
+                      <AccordionPanel pb={4}>
+                        Lorem ipsum dolor sit amet, consectetur adipiscing elit,
+                        sed do eiusmod tempor incididunt ut labore et dolore
+                        magna aliqua. Ut enim ad minim veniam, quis nostrud
+                        exercitation ullamco laboris nisi ut aliquip ex ea
+                        commodo consequat.
                       </AccordionPanel>
                     </>
                   )}

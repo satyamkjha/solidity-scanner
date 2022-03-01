@@ -56,7 +56,7 @@ const SignUp: React.FC = () => {
             Sign Up with Google
           </Button> */}
 
-          {/* <Flex
+          <Flex
             align="center"
             justify="center"
             width={["300px", "400px", "500px"]}
@@ -74,7 +74,7 @@ const SignUp: React.FC = () => {
             <Text fontWeight={600} color="subtle">
               OR
             </Text>
-          </Flex> */}
+          </Flex>
           <RegisterForm setRegistered={setRegistered} setEmail={setEmail} />
           <Link
             as={RouterLink}
