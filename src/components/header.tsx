@@ -9,7 +9,7 @@ import Auth from "helpers/auth";
 export const Header: React.FC = () => {
   return (
     <>
-      <Flex
+      {/* <Flex
         sx={{
           w: "100%",
           justifyContent: "center",
@@ -20,7 +20,7 @@ export const Header: React.FC = () => {
         <Text fontSize="12px" color="white" fontWeight={700}>
           This product is in beta.
         </Text>
-      </Flex>
+      </Flex> */}
       <Flex
         as="header"
         alignItems="center"

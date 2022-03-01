@@ -55,6 +55,14 @@ export type Scan = {
   project_id: string;
   contract_address?: string;
   contract_platform?: string;
+  compilerversion?: string;
+  contract_url?: string;
+  contractname?: string;
+  evmversion?: string;
+  licensetype?: string;
+  contract_chain?: string;
+  value?: string;
+  currency?: string;
   scan_type: string;
   scan_id: string;
   scan_init_time: string;

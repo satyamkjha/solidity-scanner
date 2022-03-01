@@ -57,7 +57,7 @@ export default function PricingPage() {
           >
             Signup for a trial and get two scans free.
           </Text>
-          <Flex
+          {/* <Flex
             flexDirection="row"
             alignItems="center"
             mt={7}
@@ -66,8 +66,8 @@ export default function PricingPage() {
             background="#FFFFFF"
             borderRadius="full"
             maxW="85vw"
-          >
-            {/* <ActionButton
+          > */}
+          {/* <ActionButton
               onClick={() => setTab("weekly")}
               fontSize="lg"
               py={1}
@@ -78,7 +78,7 @@ export default function PricingPage() {
             >
               Weekly
             </ActionButton> */}
-            <ActionButton
+          {/* <ActionButton
               onClick={() => setTab("monthly")}
               fontSize="lg"
               py={1}
@@ -88,8 +88,8 @@ export default function PricingPage() {
               variant={tab === "monthly" ? "brand" : "ghost"}
             >
               Monthly
-            </ActionButton>
-            {/* <ActionButton
+            </ActionButton> */}
+          {/* <ActionButton
               onClick={() => setTab("yearly")}
               fontSize="lg"
               py={1}
@@ -100,7 +100,7 @@ export default function PricingPage() {
             >
               Yearly
             </ActionButton> */}
-          </Flex>
+          {/* </Flex> */}
         </Flex>
         {tab === "weekly" && (
           <ScaleFade initialScale={0.9} in={tab === "weekly"}>
@@ -121,8 +121,6 @@ export default function PricingPage() {
                       "Monitor upto 2 projects",
                       "Get 10 rescans per project",
                       "Get 10 credits for block scans",
-                    ],
-                    nonfeatures: [
                       "Add a new project with 10 scans at $50/month",
                       "Add 10 additional scans to an existing project at $5",
                       "Add credit for block scan at $8/credit",
