@@ -172,6 +172,8 @@ export type Report = {
     project_url: string;
     last_project_report_update_time: string;
     last_scan_triggered_time: string;
+    website?: string
+    publishers_name?: string
   };
   scan_summary: ScanItem[];
 };
