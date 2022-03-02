@@ -11,7 +11,7 @@ import {
   Image,
 } from "@chakra-ui/react";
 
-import { LogoIcon, BlockCredit } from "components/icons";
+import { LogoIcon, BlockCredit, ScanErrorIcon } from "components/icons";
 import Score from "components/score";
 import VulnerabilityDistribution from "components/vulnDistribution";
 
@@ -152,7 +152,6 @@ const BlockCard: React.FC<{ scan: Scan }> = ({ scan }) => {
           h: "260px",
           my: 4,
           mr: 8,
-          p: 5,
           borderRadius: 15,
           bg: "white",
           transition: "0.3s box-shadow",
@@ -162,7 +161,7 @@ const BlockCard: React.FC<{ scan: Scan }> = ({ scan }) => {
           },
         }}
       >
-        <Box>
+        <Box p={5}>
           <Text sx={{ w: "100%", color: "subtle" }}>{contractname}</Text>
           <Text sx={{ w: "100%" }} isTruncated>
             {project_name || contract_address}
@@ -172,12 +171,18 @@ const BlockCard: React.FC<{ scan: Scan }> = ({ scan }) => {
           </Text>
         </Box>
         {scan_status === "scan_done" ? (
-          <>
+          <Flex
+              width={"100%"}
+              flexDir="column"
+              height="fit-content"
+              p={5}
+            >
             <Flex
               width={"100%"}
               flexDir="row"
               justifyContent={"space-between"}
               height="fit-content"
+              mb={7}
             >
               <Score score={scan_summary?.score || "0"} />
               <HStack
@@ -217,9 +222,24 @@ const BlockCard: React.FC<{ scan: Scan }> = ({ scan }) => {
                 scan_summary?.issue_severity_distribution?.informational || 0
               }
             />
-          </>
-        ) : (
-          <Box>
+            </Flex>
+        ) : scan_status === "download_failed" || "Download_failed, either invalid URL / or Github token expired, please re-integrate" ? (<Box
+          sx={{
+            p: 5,
+            pl: 10,
+            backgroundColor: "high-subtle",
+            position: "relative",
+            borderBottomRadius: 15,
+          }}
+        >
+          <Box position="absolute" transform="translate3d(-30px, -34px,0)">
+            <ScanErrorIcon size={28} />
+          </Box>
+          <Text sx={{ fontSize: "xs", color: "#FF5630", h: "46px" }}>
+            {'This scan has failed, please contact support'}
+          </Text>
+        </Box>) : (
+          <Box p={5}>
             <Flex
               sx={{
                 display: "inline-flex",
