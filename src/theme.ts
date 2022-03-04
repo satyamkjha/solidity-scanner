@@ -128,6 +128,39 @@ export const theme = extendTheme({
         },
       },
     },
+    Select: {
+      parts: ["field", "addon"],
+      sizes: {
+        lg: {
+          field: {
+            borderRadius: "15px",
+          },
+        },
+      },
+      variants: {
+        brand: (props) => {
+          return {
+            field: {
+              ...defaultTheme.components.Input.variants.outline(props).field,
+              borderRadius: "15px",
+              borderWidth: "2px",
+              fontSize: "15px",
+              borderColor: "gray.100",
+              height: "32px",
+              fontWeight: 500,
+              bg: "white",
+              _hover: {
+                borderColor: "gray.200",
+              },
+              _focus: {
+                borderColor: "#52FF00",
+                boxShadow: "0px 12px 23px rgba(107, 255, 55, 0.1)",
+              },
+            },
+          };
+        },
+      },
+    },
     Link: {
       variants: {
         subtle: {

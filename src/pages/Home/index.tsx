@@ -22,12 +22,14 @@ import {
   TabPanel,
   FormControl,
   FormLabel,
-  Select,
   Switch,
   HStack,
   Link,
   useToast,
+  Image,
+  Select as ChakraSelect,
 } from "@chakra-ui/react";
+import Select from "react-select/dist/declarations/src/Select";
 import { FaFileCode } from "react-icons/fa";
 import { AiOutlineProject } from "react-icons/ai";
 import { BlockCredit } from "components/icons";
@@ -336,6 +338,13 @@ type ContractFormData = {
   // contract_platform: string;
 };
 
+const formatOptionLabel = ({ value, label, customAbbreviation }: any) => (
+  <div style={{ display: "flex" }}>
+    <div>{label}</div>
+    <div style={{ marginLeft: "10px", color: "#ccc" }}></div>
+  </div>
+);
+
 const ContractForm: React.FC = () => {
   const [platform, setPlatform] = React.useState("etherscan");
   const [chain, setChain] = React.useState("etherscan");
@@ -345,6 +354,12 @@ const ContractForm: React.FC = () => {
   const history = useHistory();
   const { data: profileData } = useProfile();
   const { data: supportedChains } = useSupportedChains();
+
+  const options = [
+    { value: "etherscan", label: "Abe", customAbbreviation: "A" },
+    { value: "bscscan", label: "John", customAbbreviation: "J" },
+    { value: "polygonscan", label: "Dustin", customAbbreviation: "D" },
+  ];
 
   useEffect(() => {
     if (supportedChains) {
@@ -430,8 +445,10 @@ const ContractForm: React.FC = () => {
 
           <FormControl id="contract_platform">
             <FormLabel fontSize="sm">Contract platform</FormLabel>
-            <Select
+            <ChakraSelect
+              h={"48px"}
               placeholder="Select contract platform"
+              variant={"brand"}
               value={platform}
               disabled={supportedChains == null}
               isRequired
@@ -447,14 +464,23 @@ const ContractForm: React.FC = () => {
               <option value="etherscan">Etherscan</option>
               <option value="bscscan">Binance</option>
               <option value="polygonscan">Polygon Scan</option>
-            </Select>
+            </ChakraSelect>
           </FormControl>
 
-          <FormControl id="contract_chain">
-            <FormLabel fontSize="sm">Contract platform</FormLabel>
-            <Select
+          {/* <Select
+    value={{value: platform, label: platform, customAbbreviation: platform}}
+    formatOptionLabel={formatOptionLabel}
+    options={options}
+  /> */}
+
+          <FormControl background={"white"} id="contract_chain">
+            <FormLabel fontSize="sm">Contract Chain</FormLabel>
+            <ChakraSelect
+              h={"48px"}
+              variant={"brand"}
               placeholder="Select Platform Chain"
               value={chain}
+              bgColor={"white"}
               disabled={supportedChains == null}
               isRequired
               onChange={(e) => {
@@ -462,9 +488,11 @@ const ContractForm: React.FC = () => {
               }}
             >
               {chainList?.map((item, index) => (
-                <option value={item}>{item.toUpperCase()}</option>
+                <option style={{ color: "black" }} value={item}>
+                  {item.toUpperCase()}
+                </option>
               ))}
-            </Select>
+            </ChakraSelect>
           </FormControl>
 
           <Button
