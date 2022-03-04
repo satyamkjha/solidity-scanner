@@ -55,7 +55,12 @@ import {
 import Overview from "components/overview";
 import Result from "components/result";
 import AdvancedScan from "components/advancedScan";
-import { RescanIcon, LogoIcon, ScanErrorIcon } from "components/icons";
+import {
+  RescanIcon,
+  LogoIcon,
+  ScanErrorIcon,
+  GithubIcon,
+} from "components/icons";
 import { ErrorResponsivePie } from "components/pieChart";
 import { ErrorVulnerabilityDistribution } from "components/vulnDistribution";
 
@@ -603,76 +608,78 @@ const ScanDetails: React.FC<{ scansRemaining: number; scans: ScanMeta[] }> = ({
                 <HStack
                   alignItems="center"
                   spacing={3}
-                  mt={4}
+                  px={5}
+                  py={3}
                   mb={4}
-                  pl={4}
                   fontSize="14px"
                   bgColor={"white"}
+                  border={"2px solid #EDF2F7"}
                   borderRadius={"16px"}
                 >
                   <Text
                     fontSize="md"
                     fontWeight={"600"}
                     color={"gray.500"}
-                    width={"35%"}
+                    width={"30%"}
                   >
                     Project Name
                   </Text>
-                  <InputGroup alignItems="center">
-                    <InputLeftElement
-                      height="48px"
-                      children={<Icon as={AiOutlineProject} color="gray.300" />}
-                    />
-                    <Input
-                      isRequired
-                      type="text"
-                      placeholder="Project name "
-                      variant="brand"
-                      size="lg"
-                      value={projectName}
-                    />
-                  </InputGroup>
+                  <HStack
+                    alignItems="center"
+                    spacing={3}
+                    width={"70%"}
+                    bgColor={"white"}
+                    borderRadius={"16px"}
+                  >
+                    <AiOutlineProject color="" />
+
+                    <Text fontSize="md" fontWeight={"600"}>
+                      {projectName}
+                    </Text>
+                  </HStack>
                 </HStack>
                 <HStack
                   alignItems="center"
                   spacing={3}
+                  px={5}
+                  py={3}
                   mb={4}
-                  pl={4}
                   fontSize="14px"
                   bgColor={"white"}
+                  border={"2px solid #EDF2F7"}
                   borderRadius={"16px"}
-                  
                 >
                   <Text
                     fontSize="md"
                     fontWeight={"600"}
                     color={"gray.500"}
-                    width={"35%"}
+                    width={"30%"}
                   >
                     Link to the repository{" "}
                   </Text>
-                  <InputGroup alignItems="center">
-                    <InputLeftElement
-                      height="48px"
-                      children={<Icon as={FaFileCode} color="gray.300" />}
-                    />
-                    <Input
-                      isRequired
-                      type="url"
-                      placeholder="Link to the repository"
-                      variant="brand"
-                      size="lg"
-                      value={repoUrl}
-                    />
-                  </InputGroup>
+                  <HStack
+                    alignItems="center"
+                    spacing={3}
+                    width={"70%"}
+                    bgColor={"white"}
+                    borderRadius={"16px"}
+                  >
+                    <FaFileCode />
+
+                    <Text fontSize="md" fontWeight={"600"}>
+                      {repoUrl}
+                    </Text>
+                  </HStack>
                 </HStack>
 
                 <HStack
                   alignItems="center"
                   spacing={3}
+                  px={5}
+                  py={3}
                   mb={4}
-                  pl={4}
                   fontSize="14px"
+                  border={"2px solid #EDF2F7"}
                   bgColor={"white"}
                   borderRadius={"16px"}
                 >
@@ -680,63 +687,65 @@ const ScanDetails: React.FC<{ scansRemaining: number; scans: ScanMeta[] }> = ({
                     fontSize="md"
                     fontWeight={"600"}
                     color={"gray.500"}
-                    width={"35%"}
+                    width={"30%"}
                   >
                     Git commit hash{" "}
                   </Text>
-                  <InputGroup alignItems="center">
-                    <InputLeftElement
-                      height="48px"
-                      children={<Icon as={FaGithub} color="gray.300" />}
-                    />
-                    <Input
-                      isRequired
-                      type="text"
-                      placeholder="Git commit hash"
-                      variant="brand"
-                      size="lg"
-                      value={commitHash}
-                    />
-                  </InputGroup>
+                  <HStack
+                    alignItems="center"
+                    spacing={3}
+                    width={"70%"}
+                    bgColor={"white"}
+                    borderRadius={"16px"}
+                  >
+                    <FaGithub />
+
+                    <Text fontSize="md" fontWeight={"600"}>
+                      {commitHash}
+                    </Text>
+                  </HStack>
                 </HStack>
 
                 <HStack
                   alignItems="center"
                   spacing={3}
+                  px={5}
+                  py={3}
                   mb={4}
-                  pl={4}
                   fontSize="14px"
                   bgColor={"white"}
+                  border={"2px solid #EDF2F7"}
                   borderRadius={"16px"}
                 >
                   <Text
                     fontSize="md"
                     fontWeight={"600"}
                     color={"gray.500"}
-                    width={"35%"}
+                    width={"30%"}
                   >
                     Latest Report Update
                   </Text>
-                  <InputGroup alignItems="center">
-                    <InputLeftElement
-                      height="48px"
-                      children={<Icon as={FaCalendarAlt} color="gray.300" />}
-                    />
-                    <Input
-                      isRequired
-                      type="text"
-                      placeholder="Latest Report Update Time"
-                      variant="brand"
-                      size="lg"
-                      value={lastTimeUpdate}
-                    />
-                  </InputGroup>
+                  <HStack
+                    alignItems="center"
+                    spacing={3}
+                    width={"70%"}
+                    bgColor={"white"}
+                    borderRadius={"16px"}
+                  >
+                    <FaCalendarAlt />
+
+                    <Text fontSize="md" fontWeight={"600"}>
+                      {lastTimeUpdate}
+                    </Text>
+                  </HStack>
                 </HStack>
 
                 <HStack
                   alignItems="center"
                   spacing={3}
-                  pl={4}
+                  px={5}
+                  py={3}
+                  border={"2px solid #EDF2F7"}
                   fontSize="14px"
                   bgColor={"white"}
                   borderRadius={"16px"}
@@ -745,27 +754,23 @@ const ScanDetails: React.FC<{ scansRemaining: number; scans: ScanMeta[] }> = ({
                     fontSize="md"
                     fontWeight={"600"}
                     color={"gray.500"}
-                    width={"35%"}
+                    width={"30%"}
                   >
                     Date Published
                   </Text>
-                  <InputGroup alignItems="center">
-                    <InputLeftElement
-                      height="48px"
-                      children={
-                        <Icon as={FaRegCalendarCheck} color="gray.300" />
-                      }
-                    />
-                    <Input
-                      isRequired
-                      opacity={1}
-                      type="text"
-                      placeholder="Date Published"
-                      variant="brand"
-                      size="lg"
-                      value={datePublished}
-                    />
-                  </InputGroup>
+                  <HStack
+                    alignItems="center"
+                    spacing={3}
+                    width={"70%"}
+                    bgColor={"white"}
+                    borderRadius={"16px"}
+                  >
+                    <FaRegCalendarCheck />
+
+                    <Text fontSize="md" fontWeight={"600"}>
+                      {datePublished}
+                    </Text>
+                  </HStack>
                 </HStack>
               </>
             )}
