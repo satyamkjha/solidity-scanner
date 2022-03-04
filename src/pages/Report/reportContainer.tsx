@@ -582,65 +582,69 @@ export default function ReportContainer({ summary_report }: Props) {
                 {summary_report.project_summary_report.git_commit_hash}
               </Text>
             </Flex>
-            {summary_report.project_summary_report.website && (<Flex
-              as="section"
-              w="100%"
-              alignItems="flex-start"
-              justifyContent="flex-start"
-              flexDir={"row"}
-              textAlign={["left", "left"]}
-              py={5}
-              px={[1, 10]}
-              borderBottomWidth={1}
-              borderBottomColor={"#E4E4E4"}
-            >
-              <Text
-                fontSize="lg"
-                fontWeight={"extrabold"}
-                color={"gray.600"}
-                width={"30%"}
+            {summary_report.project_summary_report.website && (
+              <Flex
+                as="section"
+                w="100%"
+                alignItems="flex-start"
+                justifyContent="flex-start"
+                flexDir={"row"}
+                textAlign={["left", "left"]}
+                py={5}
+                px={[1, 10]}
+                borderBottomWidth={1}
+                borderBottomColor={"#E4E4E4"}
               >
-                Website
-              </Text>
-              <Text
-                fontSize="lg"
-                fontWeight={"normal"}
-                color={"gray.600"}
-                width={"70%"}
+                <Text
+                  fontSize="lg"
+                  fontWeight={"extrabold"}
+                  color={"gray.600"}
+                  width={"30%"}
+                >
+                  Website
+                </Text>
+                <Text
+                  fontSize="lg"
+                  fontWeight={"normal"}
+                  color={"gray.600"}
+                  width={"70%"}
+                >
+                  {summary_report.project_summary_report.website}
+                </Text>
+              </Flex>
+            )}
+            {summary_report.project_summary_report.publishers_name && (
+              <Flex
+                as="section"
+                w="100%"
+                alignItems="flex-start"
+                justifyContent="flex-start"
+                flexDir={"row"}
+                textAlign={["left", "left"]}
+                py={5}
+                px={[1, 10]}
+                borderBottomWidth={1}
+                borderBottomColor={"#E4E4E4"}
               >
-                {summary_report.project_summary_report.website}
-              </Text>
-            </Flex>)}
-            {summary_report.project_summary_report.publishers_name && (<Flex
-              as="section"
-              w="100%"
-              alignItems="flex-start"
-              justifyContent="flex-start"
-              flexDir={"row"}
-              textAlign={["left", "left"]}
-              py={5}
-              px={[1, 10]}
-              borderBottomWidth={1}
-              borderBottomColor={"#E4E4E4"}
-            >
-              <Text
-                fontSize="lg"
-                fontWeight={"extrabold"}
-                color={"gray.600"}
-                width={"30%"}
-              >
-                Publishers/Owners Name
-              </Text>
-              <Text
-                fontSize="lg"
-                fontWeight={"normal"}
-                color={"gray.600"}
-                width={"70%"}
-              >
-                {summary_report.project_summary_report.publishers_name}
-              </Text>
-            </Flex>)}
-            
+                <Text
+                  fontSize="lg"
+                  fontWeight={"extrabold"}
+                  color={"gray.600"}
+                  width={"30%"}
+                >
+                  Publishers/Owners Name
+                </Text>
+                <Text
+                  fontSize="lg"
+                  fontWeight={"normal"}
+                  color={"gray.600"}
+                  width={"70%"}
+                >
+                  {summary_report.project_summary_report.publishers_name}
+                </Text>
+              </Flex>
+            )}
+
             <Flex
               as="section"
               w="100%"

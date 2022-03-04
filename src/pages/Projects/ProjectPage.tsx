@@ -628,6 +628,7 @@ const ScanDetails: React.FC<{ scansRemaining: number; scans: ScanMeta[] }> = ({
                       type="text"
                       placeholder="Project name "
                       variant="brand"
+                      
                       size="lg"
                       value={projectName}
                     />
@@ -641,7 +642,6 @@ const ScanDetails: React.FC<{ scansRemaining: number; scans: ScanMeta[] }> = ({
                   fontSize="14px"
                   bgColor={"white"}
                   borderRadius={"16px"}
-                  
                 >
                   <Text
                     fontSize="md"
