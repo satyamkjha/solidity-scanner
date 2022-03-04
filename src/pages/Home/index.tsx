@@ -439,6 +439,8 @@ const ContractForm: React.FC = () => {
             <Select
               placeholder="Select contract platform"
               value={platform}
+              variant='brand'
+              h={'48px'}
               disabled={supportedChains == null}
               isRequired
               onChange={(e) => {
@@ -461,6 +463,8 @@ const ContractForm: React.FC = () => {
             <Select
               placeholder="Select Platform Chain"
               value={chain}
+              variant='brand'
+              h={'48px'}
               disabled={supportedChains == null}
               isRequired
               onChange={(e) => {
