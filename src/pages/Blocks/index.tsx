@@ -171,12 +171,7 @@ const BlockCard: React.FC<{ scan: Scan }> = ({ scan }) => {
           </Text>
         </Box>
         {scan_status === "scan_done" ? (
-          <Flex
-              width={"100%"}
-              flexDir="column"
-              height="fit-content"
-              p={5}
-            >
+          <Flex width={"100%"} flexDir="column" height="fit-content" p={5}>
             <Flex
               width={"100%"}
               flexDir="row"
@@ -222,23 +217,26 @@ const BlockCard: React.FC<{ scan: Scan }> = ({ scan }) => {
                 scan_summary?.issue_severity_distribution?.informational || 0
               }
             />
-            </Flex>
-        ) : scan_status === "download_failed" || "Download_failed, either invalid URL / or Github token expired, please re-integrate" ? (<Box
-          sx={{
-            p: 5,
-            pl: 10,
-            backgroundColor: "high-subtle",
-            position: "relative",
-            borderBottomRadius: 15,
-          }}
-        >
-          <Box position="absolute" transform="translate3d(-30px, -34px,0)">
-            <ScanErrorIcon size={28} />
+          </Flex>
+        ) : scan_status === "download_failed" ||
+          "Download_failed, either invalid URL / or Github token expired, please re-integrate" ? (
+          <Box
+            sx={{
+              p: 5,
+              pl: 10,
+              backgroundColor: "high-subtle",
+              position: "relative",
+              borderBottomRadius: 15,
+            }}
+          >
+            <Box position="absolute" transform="translate3d(-30px, -34px,0)">
+              <ScanErrorIcon size={28} />
+            </Box>
+            <Text sx={{ fontSize: "xs", color: "#FF5630", h: "46px" }}>
+              {"This scan has failed, please contact support"}
+            </Text>
           </Box>
-          <Text sx={{ fontSize: "xs", color: "#FF5630", h: "46px" }}>
-            {'This scan has failed, please contact support'}
-          </Text>
-        </Box>) : (
+        ) : (
           <Box p={5}>
             <Flex
               sx={{
