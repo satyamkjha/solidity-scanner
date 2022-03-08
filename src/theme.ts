@@ -128,6 +128,7 @@ export const theme = extendTheme({
         },
       },
     },
+    
     Select: {
       parts: ["field", "addon"],
       sizes: {

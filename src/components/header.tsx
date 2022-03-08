@@ -1,12 +1,22 @@
 import React from "react";
 import { Link as RouterLink } from "react-router-dom";
 
-import { Flex, HStack, Button, Link, Text } from "@chakra-ui/react";
+import {
+  Flex,
+  HStack,
+  Button,
+  Link,
+  Text,
+  useDisclosure,
+} from "@chakra-ui/react";
 import { Logo } from "components/icons";
 
 import Auth from "helpers/auth";
+import ContactUs from "./contactus";
 
 export const Header: React.FC = () => {
+  const { isOpen, onClose, onOpen } = useDisclosure();
+
   return (
     <>
       {/* <Flex
@@ -53,17 +63,21 @@ export const Header: React.FC = () => {
                   Sign In
                 </Button>
               </RouterLink>
-              <RouterLink to="/signup">
-                <Button variant="brand">Get Started</Button>
-              </RouterLink>
+              <Button variant="brand">Contact Us</Button>
             </>
           ) : (
-            <RouterLink to="/home">
-              <Button variant="brand">Go to dashboard</Button>
-            </RouterLink>
+            <>
+              <RouterLink to="/home">
+                <Button variant="ghost" p={6}>Go to Dashboard</Button>
+              </RouterLink>
+              <Button variant="brand" onClick={onOpen}>
+                Contact Us
+              </Button>
+            </>
           )}
         </HStack>
       </Flex>
+      <ContactUs isOpen={isOpen} onClose={onClose} />
     </>
   );
 };
