@@ -68,7 +68,9 @@ export const Header: React.FC = () => {
           ) : (
             <>
               <RouterLink to="/home">
-                <Button variant="ghost" p={6}>Go to Dashboard</Button>
+                <Button variant="ghost" p={6}>
+                  Go to Dashboard
+                </Button>
               </RouterLink>
               <Button variant="brand" onClick={onOpen}>
                 Contact Us

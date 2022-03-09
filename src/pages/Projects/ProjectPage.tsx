@@ -188,6 +188,7 @@ const ScanDetails: React.FC<{ scansRemaining: number; scans: ScanMeta[] }> = ({
   const [isRescanLoading, setRescanLoading] = useState(false);
   const cancelRef = useRef<HTMLButtonElement | null>(null);
   const queryClient = useQueryClient();
+  const [reportingStatus, setReportingStatus] = useState<string>();
   const { projectId, scanId } =
     useParams<{ projectId: string; scanId: string }>();
   const history = useHistory();
@@ -217,7 +218,7 @@ const ScanDetails: React.FC<{ scansRemaining: number; scans: ScanMeta[] }> = ({
       ) {
         intervalId = setInterval(async () => {
           await refetch();
-          if (data && data.scan_report.scan_status === "scan_done") {
+          if (data && (data.scan_report.scan_status === "scan_done" )||(data.scan_report.reporting_status === "report_generated")) {
             clearInterval(intervalId);
           }
         }, 1000);
@@ -237,7 +238,9 @@ const ScanDetails: React.FC<{ scansRemaining: number; scans: ScanMeta[] }> = ({
       project_id: projectId,
     });
     if (data.success) {
-      await refetch();
+      setInterval(async () => {
+        await refetch();
+      }, 3000);
     }
   };
 
@@ -257,7 +260,7 @@ const ScanDetails: React.FC<{ scansRemaining: number; scans: ScanMeta[] }> = ({
     data &&
     scans.find((scan) => scan.scan_id === data.scan_report.scan_id)?.scan_name;
 
-  const reporting_status = data?.scan_report.reporting_status;
+  // const reportingStatus = data?.scan_report.reporting_status;
 
   const [projectName, setProjectName] = useState("");
   const [repoUrl, setRepoUrl] = useState("");
@@ -292,6 +295,9 @@ const ScanDetails: React.FC<{ scansRemaining: number; scans: ScanMeta[] }> = ({
 
   useEffect(() => {
     if (data) {
+      setReportingStatus(data.scan_report.reporting_status);
+    }
+    if (data && data.scan_report.reporting_status === 'report_generated') {
       getReportData(projectId, data.scan_report.latest_report_id);
       setProjectName(data.scan_report.project_name);
       setRepoUrl(data.scan_report.project_url);
@@ -430,11 +436,11 @@ const ScanDetails: React.FC<{ scansRemaining: number; scans: ScanMeta[] }> = ({
                   {data.scan_report.scan_status !== "scanning" && (
                     <Button
                       variant={"accent-outline"}
-                      isDisabled={reporting_status === "generating_report"}
+                      isDisabled={reportingStatus === "generating_report"}
                       onClick={() => {
-                        if (reporting_status === "not_generated") {
+                        if (reportingStatus === "not_generated") {
                           generateReport();
-                        } else if (reporting_status === "report_generated") {
+                        } else if (reportingStatus === "report_generated") {
                           window.open(
                             `http://${document.location.host}/report/${projectId}/${data?.scan_report.latest_report_id}`,
                             "_blank"
@@ -442,12 +448,12 @@ const ScanDetails: React.FC<{ scansRemaining: number; scans: ScanMeta[] }> = ({
                         }
                       }}
                     >
-                      {reporting_status === "generating_report" && (
+                      {reportingStatus === "generating_report" && (
                         <Spinner color="#806CCF" size="xs" mr={3} />
                       )}
-                      {reporting_status === "not_generated"
+                      {reportingStatus === "not_generated"
                         ? "Generate Report"
-                        : reporting_status === "generating_report"
+                        : reportingStatus === "generating_report"
                         ? "Generating report..."
                         : "View Report"}
                     </Button>

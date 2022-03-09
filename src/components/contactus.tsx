@@ -30,27 +30,23 @@ export const ContactUs: React.FC<{ onClose(): any; isOpen: boolean }> = ({
   isOpen,
   onClose,
 }) => {
+  const [email, setEmail] = useState("");
+  const [subject, setSubject] = useState("");
+  const [discord, setDiscord] = useState("");
+  const [body, setBody] = useState("");
 
-
-  const [email, setEmail] = useState('');
-  const [subject, setSubject] = useState('')
-  const [discord, setDiscord] = useState('')
-  const [body, setBody] = useState('');
-
-  const onSubmit = () =>{
-
-
-    axios.defaults.headers.post['Content-Type'] = 'application/json';
-    axios.post('https://formsubmit.co/ajax/satyam@credshields.com', {
+  const onSubmit = () => {
+    axios.defaults.headers.post["Content-Type"] = "application/json";
+    axios
+      .post("https://formsubmit.co/ajax/satyam@credshields.com", {
         email: email,
         subject: subject,
         discord: discord,
         message: body,
-    })
-    .then(response => console.log(response))
-    .catch(error => console.log(error));
-
-  }
+      })
+      .then((response) => console.log(response))
+      .catch((error) => console.log(error));
+  };
 
   return (
     <>
@@ -72,7 +68,7 @@ export const ContactUs: React.FC<{ onClose(): any; isOpen: boolean }> = ({
             Contact Us
           </ModalHeader>
           <ModalCloseButton />
-          <ModalBody h={"fit-content"} w={"100%"}  px={20}>
+          <ModalBody h={"fit-content"} w={"100%"} px={20}>
             <Stack spacing={6} mt={8}>
               <InputGroup mt={0} alignItems="center">
                 <InputLeftElement
@@ -85,8 +81,8 @@ export const ContactUs: React.FC<{ onClose(): any; isOpen: boolean }> = ({
                   variant="brand"
                   size="lg"
                   value={email}
-                  onChange={(e)=>{
-                    setEmail(e.target.value)
+                  onChange={(e) => {
+                    setEmail(e.target.value);
                   }}
                 />
               </InputGroup>
@@ -101,8 +97,8 @@ export const ContactUs: React.FC<{ onClose(): any; isOpen: boolean }> = ({
                   variant="brand"
                   size="lg"
                   value={subject}
-                  onChange={(e)=>{
-                    setSubject(e.target.value)
+                  onChange={(e) => {
+                    setSubject(e.target.value);
                   }}
                 />
               </InputGroup>
@@ -117,8 +113,8 @@ export const ContactUs: React.FC<{ onClose(): any; isOpen: boolean }> = ({
                   variant="brand"
                   size="lg"
                   value={discord}
-                  onChange={(e)=>{
-                    setDiscord(e.target.value)
+                  onChange={(e) => {
+                    setDiscord(e.target.value);
                   }}
                 />
               </InputGroup>
@@ -126,15 +122,15 @@ export const ContactUs: React.FC<{ onClose(): any; isOpen: boolean }> = ({
                 variant={"brand"}
                 placeholder="Enter your Query here"
                 borderRadius={"16px"}
-                fontSize= {"15px"}
+                fontSize={"15px"}
                 borderColor={"gray.100"}
                 borderWidth={"2px"}
                 noOfLines={4}
                 value={body}
-                  onChange={(e)=>{
-                    setBody(e.target.value)
-                  }}
-                height={'120px'}
+                onChange={(e) => {
+                  setBody(e.target.value);
+                }}
+                height={"120px"}
                 _hover={{ borderColor: "gray.200" }}
                 size="sm"
                 _focus={{
@@ -148,9 +144,11 @@ export const ContactUs: React.FC<{ onClose(): any; isOpen: boolean }> = ({
             <Button
               w={"100px"}
               variant="brand"
-              mr={'50px'}
+              mr={"50px"}
               mb={5}
-              onClick={() => { onSubmit()}}
+              onClick={() => {
+                onSubmit();
+              }}
             >
               Submit
             </Button>
