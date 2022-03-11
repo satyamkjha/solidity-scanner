@@ -188,7 +188,7 @@ const ScanDetails: React.FC<{ scansRemaining: number; scans: ScanMeta[] }> = ({
   const [isRescanLoading, setRescanLoading] = useState(false);
   const cancelRef = useRef<HTMLButtonElement | null>(null);
   const queryClient = useQueryClient();
-  const [reportingStatus, setReportingStatus] = useState<string>();
+  // const [reportingStatus, setReportingStatus] = useState<string>();
   const { projectId, scanId } =
     useParams<{ projectId: string; scanId: string }>();
   const history = useHistory();
@@ -218,7 +218,10 @@ const ScanDetails: React.FC<{ scansRemaining: number; scans: ScanMeta[] }> = ({
       ) {
         intervalId = setInterval(async () => {
           await refetch();
-          if (data && (data.scan_report.scan_status === "scan_done" )||(data.scan_report.reporting_status === "report_generated")) {
+          if (
+            (data && data.scan_report.scan_status === "scan_done") ||
+            data.scan_report.reporting_status === "report_generated"
+          ) {
             clearInterval(intervalId);
           }
         }, 1000);
@@ -260,7 +263,7 @@ const ScanDetails: React.FC<{ scansRemaining: number; scans: ScanMeta[] }> = ({
     data &&
     scans.find((scan) => scan.scan_id === data.scan_report.scan_id)?.scan_name;
 
-  // const reportingStatus = data?.scan_report.reporting_status;
+  const reportingStatus = data?.scan_report.reporting_status;
 
   const [projectName, setProjectName] = useState("");
   const [repoUrl, setRepoUrl] = useState("");
@@ -278,8 +281,9 @@ const ScanDetails: React.FC<{ scansRemaining: number; scans: ScanMeta[] }> = ({
 
   const getReportData = async (project_id: string, report_id: string) => {
     const reportResponse = await API.post<{ summary_report: Report }>(
-      "/api-get-beta-report/",
+      "/api-get-report/",
       {
+        project_type: "project",
         project_id,
         report_id,
       }
@@ -294,10 +298,7 @@ const ScanDetails: React.FC<{ scansRemaining: number; scans: ScanMeta[] }> = ({
   };
 
   useEffect(() => {
-    if (data) {
-      setReportingStatus(data.scan_report.reporting_status);
-    }
-    if (data && data.scan_report.reporting_status === 'report_generated') {
+    if (data && data.scan_report.reporting_status === "report_generated") {
       getReportData(projectId, data.scan_report.latest_report_id);
       setProjectName(data.scan_report.project_name);
       setRepoUrl(data.scan_report.project_url);
@@ -312,6 +313,7 @@ const ScanDetails: React.FC<{ scansRemaining: number; scans: ScanMeta[] }> = ({
 
   const publishReport = async () => {
     const { data } = await API.post("/api-publish-report/", {
+      project_type: "project",
       project_id: projectId,
       report_id: reportId,
       additional_details: {
@@ -442,7 +444,7 @@ const ScanDetails: React.FC<{ scansRemaining: number; scans: ScanMeta[] }> = ({
                           generateReport();
                         } else if (reportingStatus === "report_generated") {
                           window.open(
-                            `http://${document.location.host}/report/${projectId}/${data?.scan_report.latest_report_id}`,
+                            `http://${document.location.host}/report/project/${projectId}/${data?.scan_report.latest_report_id}`,
                             "_blank"
                           );
                         }
@@ -983,7 +985,7 @@ const ScanHistory: React.FC<{
 
 const PublishedReports: React.FC = () => {
   const { projectId } = useParams<{ projectId: string }>();
-  const { data } = useReports(projectId);
+  const { data } = useReports("project", projectId);
 
   return (
     <Box
@@ -1088,7 +1090,7 @@ const ScanBlock: React.FC<{
         onClick={(e) => {
           e.stopPropagation();
           window.open(
-            `http://${document.location.host}/report/${projectId}/${data?.scan_report.latest_report_id}`,
+            `http://${document.location.host}/report/project/${projectId}/${data?.scan_report.latest_report_id}`,
             "_blank"
           );
           // history.push(`/report/${scan.project_id}/${data?.scan_report.latest_report_id}`)
@@ -1169,7 +1171,7 @@ const ReportBlock: React.FC<{ report: ReportsListItem }> = ({ report }) => {
             console.log("asdkbkalsd");
             navigator.clipboard
               .writeText(
-                `http://${document.location.host}/published-report/${report.report_id}`
+                `http://${document.location.host}/published-report/project/${report.report_id}`
               )
               .then(
                 () =>
@@ -1201,7 +1203,7 @@ const ReportBlock: React.FC<{ report: ReportsListItem }> = ({ report }) => {
           onClick={(e) => {
             e.stopPropagation();
             window.open(
-              `http://${document.location.host}/report/${report.project_id}/${report.report_id}`,
+              `http://${document.location.host}/report/project/${report.project_id}/${report.report_id}`,
               "_blank"
             );
             // history.push(`/report/${scan.project_id}/${data?.scan_report.latest_report_id}`)
