@@ -1,5 +1,5 @@
-import React from "react";
-import { Link as RouterLink, useParams } from "react-router-dom";
+import React, { useEffect, useState } from "react";
+import { Link as RouterLink, useHistory, useParams } from "react-router-dom";
 
 import {
   Flex,
@@ -20,6 +20,21 @@ import {
   VStack,
   Image,
   HStack,
+  Button,
+  Icon,
+  Input,
+  InputGroup,
+  InputLeftElement,
+  Modal,
+  ModalBody,
+  ModalCloseButton,
+  ModalContent,
+  ModalFooter,
+  ModalHeader,
+  ModalOverlay,
+  Switch as SwitchComp,
+  useToast,
+  Badge,
 } from "@chakra-ui/react";
 import Overview from "components/overview";
 import Result from "components/result";
@@ -28,11 +43,157 @@ import { AddIcon, MinusIcon } from "@chakra-ui/icons";
 import { useScan } from "hooks/useScan";
 import { useProfile } from "hooks/useProfile";
 import { BiChevronDownCircle, BiChevronUpCircle } from "react-icons/bi";
+import { AiOutlineProject } from "react-icons/ai";
+import {
+  FaFileCode,
+  FaGithub,
+  FaCalendarAlt,
+  FaRegCalendarCheck,
+  FaEnvelope,
+  FaInternetExplorer,
+  FaBuilding,
+  FaRegCopy,
+} from "react-icons/fa";
+import API from "helpers/api";
+import { Report, ReportsListItem, Scan } from "common/types";
+import { useReports } from "hooks/useReports";
+import { useReport } from "hooks/useReport";
 
 const BlockPage: React.FC = () => {
   const { scanId } = useParams<{ scanId: string }>();
-  const { data, isLoading } = useScan(scanId);
+
+  const { data: scanData, isLoading, refetch } = useScan(scanId);
+
+  // const [reportingStatus, setReportingStatus] = useState<string>();
   const { data: profile, isLoading: isProfileLoading } = useProfile();
+  const toast = useToast();
+
+  const [next, setNext] = useState(false);
+  const [open, setOpen] = useState(false);
+
+  const [pubName, setPubName] = useState("");
+  const [nameSwitch, setNameSwitch] = useState(true);
+  const [pubOrg, setPubOrg] = useState("");
+  const [orgSwitch, setOrgSwitch] = useState(true);
+  const [pubWeb, setPubWeb] = useState("");
+  const [webSwitch, setWebSwitch] = useState(true);
+  const [pubEmail, setPubEmail] = useState("");
+  const [emailSwitch, setEmailSwitch] = useState(true);
+  const [lastTimeUpdate, setLastTimeUpdate] = useState("");
+  const [datePublished, setDatePublished] = useState("");
+
+  let reportingStatus = scanData?.scan_report.reporting_status;
+
+  useEffect(() => {
+    // if (data) {
+    //   setReportingStatus(data.scan_report.reporting_status);
+    // }
+    let intervalId: NodeJS.Timeout;
+    const refetchTillScanComplete = () => {
+      if (
+        scanData &&
+        scanData.scan_report.reporting_status === "generating_report"
+      ) {
+        intervalId = setInterval(async () => {
+          // setReportingStatus(scanData.scan_report.reporting_status);
+          await refetch();
+          if (scanData) {
+            if (scanData.scan_report.reporting_status === "report_generated") {
+              clearInterval(intervalId);
+            }
+          }
+        }, 2000);
+      }
+    };
+
+    refetchTillScanComplete();
+    return () => {
+      clearInterval(intervalId);
+    };
+  }, [refetch]);
+
+  const generateReport = async (projectId: string) => {
+    const { data } = await API.post("/api-generate-report-block/", {
+      project_id: projectId,
+    });
+    if (data.success) {
+      // setReportingStatus("generating_report");
+      setInterval(async () => {
+        await refetch();
+      }, 2000);
+    }
+  };
+
+  const publishReport = async () => {
+    const { data } = await API.post("/api-publish-report/", {
+      project_type: "block",
+      project_id: scanData?.scan_report.project_id,
+      report_id: scanData?.scan_report.latest_report_id,
+      additional_details: {
+        report_owner: {
+          value: pubName,
+          is_public: nameSwitch,
+        },
+        website: {
+          value: pubWeb,
+          is_public: webSwitch,
+        },
+        organization: {
+          value: pubOrg,
+          is_public: orgSwitch,
+        },
+        contact_email: {
+          value: pubEmail,
+          is_public: emailSwitch,
+        },
+      },
+    });
+
+    if (data.status === "success") {
+      toast({
+        title: "Publish Request Success.",
+        description:
+          "Report has been sent for approval. It will be published once approved",
+        status: "success",
+        duration: 3000,
+        isClosable: true,
+      });
+      setOpen(false);
+    }
+  };
+
+  const getReportData = async (project_id: string, report_id: string) => {
+    const reportResponse = await API.post<{ summary_report: Report }>(
+      "/api-get-report/",
+      {
+        project_type: "block",
+        project_id,
+        report_id,
+      }
+    );
+    const d = new Date(
+      reportResponse.data.summary_report.project_summary_report.last_project_report_update_time
+    );
+    setLastTimeUpdate(
+      `${d.getDate()}-${monthNames[d.getMonth()]}-${d.getFullYear()}`
+    );
+  };
+
+  useEffect(() => {
+    if (
+      scanData &&
+      scanData.scan_report.reporting_status === "report_generated"
+    ) {
+      getReportData(
+        scanData.scan_report.project_id,
+        scanData.scan_report.latest_report_id
+      );
+      const d = new Date();
+      setDatePublished(
+        `${d.getDate()}-${monthNames[d.getMonth()]}-${d.getFullYear()}`
+      );
+    }
+  }, [scanData]);
 
   return (
     <Box
@@ -51,7 +212,7 @@ const BlockPage: React.FC = () => {
           <Spinner />
         </Flex>
       ) : (
-        data &&
+        scanData &&
         profile && (
           <>
             {" "}
@@ -59,9 +220,8 @@ const BlockPage: React.FC = () => {
               sx={{ justifyContent: "space-between", alignItems: "center" }}
             >
               <Text sx={{ fontSize: "xl", fontWeight: 600, ml: 2 }}>
-                {data?.scan_report.project_name}
                 <Text as="span" fontSize="14px" ml={3} color="gray.500">
-                  {data.scan_report?.contract_address}
+                  {scanData.scan_report?.contract_address}
                 </Text>
               </Text>
               <Link
@@ -96,19 +256,80 @@ const BlockPage: React.FC = () => {
                         pb={5}
                         px={4}
                       >
-                        <Text sx={{ fontSize: "lg", fontWeight: 600, ml: 2 }}>
-                          {data?.scan_report.contract_address}
-                        </Text>
-                        <AccordionButton
-                          width={"fit-content"}
-                          borderRadius="48px"
+                        <Text
+                          isTruncated
+                          sx={{
+                            fontSize: "lg",
+                            fontWeight: 600,
+                            ml: 2,
+                            maxW: "250px",
+                          }}
                         >
-                          {isExpanded ? (
-                            <BiChevronUpCircle />
-                          ) : (
-                            <BiChevronDownCircle />
+                          {scanData.scan_report.contractname
+                            ? scanData.scan_report.contractname
+                            : scanData.scan_report.contract_address}
+                        </Text>
+                        <Flex
+                          as={"div"}
+                          flexDirection={"row"}
+                          justifyContent="flex-end"
+                          alignItems={"center"}
+                          width={"fit-content"}
+                          height="fit-content"
+                        >
+                          {scanData.scan_report.reporting_status ===
+                            "report_generated" && (
+                            <Button
+                              variant="accent-ghost"
+                              mr={5}
+                              onClick={() => setOpen(!open)}
+                            >
+                              Publish Report
+                            </Button>
                           )}
-                        </AccordionButton>
+                          {scanData.scan_report.scan_status !== "scanning" && (
+                            <Button
+                              variant={"accent-outline"}
+                              mr={5}
+                              isDisabled={
+                                reportingStatus === "generating_report"
+                              }
+                              onClick={() => {
+                                if (reportingStatus === "not_generated") {
+                                  generateReport(
+                                    scanData.scan_report.project_id
+                                  );
+                                } else if (
+                                  reportingStatus === "report_generated"
+                                ) {
+                                  window.open(
+                                    `http://${document.location.host}/report/block/${scanData.scan_report.project_id}/${scanData.scan_report.latest_report_id}`,
+                                    "_blank"
+                                  );
+                                }
+                              }}
+                            >
+                              {reportingStatus === "generating_report" && (
+                                <Spinner color="#806CCF" size="xs" mr={3} />
+                              )}
+                              {reportingStatus === "not_generated"
+                                ? "Generate Report"
+                                : reportingStatus === "generating_report"
+                                ? "Generating report..."
+                                : "View Report"}
+                            </Button>
+                          )}
+                          <AccordionButton
+                            width={"fit-content"}
+                            borderRadius="48px"
+                          >
+                            {isExpanded ? (
+                              <BiChevronUpCircle />
+                            ) : (
+                              <BiChevronDownCircle />
+                            )}
+                          </AccordionButton>
+                        </Flex>
                       </Flex>
 
                       <AccordionPanel backgroundColor={"#FAFBFC"} pb={4}>
@@ -130,7 +351,7 @@ const BlockPage: React.FC = () => {
                             cursor="pointer"
                             onClick={() =>
                               window.open(
-                                `${data.scan_report.contract_url}`,
+                                `${scanData.scan_report.contract_url}`,
                                 "_blank"
                               )
                             }
@@ -154,10 +375,10 @@ const BlockPage: React.FC = () => {
                             </Text>
                             <Image
                               src={
-                                data.scan_report.contract_platform ===
+                                scanData.scan_report.contract_platform ===
                                 "polygonscan"
                                   ? "/polygon.svg"
-                                  : data.scan_report.contract_platform ===
+                                  : scanData.scan_report.contract_platform ===
                                     "etherscan"
                                   ? "/etherscan.svg"
                                   : "/bscscan.svg"
@@ -171,7 +392,7 @@ const BlockPage: React.FC = () => {
                               as="p"
                               fontSize="18px"
                             >
-                              {data.scan_report.contract_platform}
+                              {scanData.scan_report.contract_platform}
                             </Text>
                           </HStack>
                         </Flex>
@@ -195,7 +416,7 @@ const BlockPage: React.FC = () => {
                               Contract Name
                             </Text>
                             <Text width={"100%"} as="p" fontSize="14px">
-                              {data?.scan_report.contractname}
+                              {scanData?.scan_report.contractname}
                             </Text>
                           </VStack>
                           <VStack textAlign={"left"} width={"33.33%"}>
@@ -208,7 +429,7 @@ const BlockPage: React.FC = () => {
                               Compiler Version
                             </Text>
                             <Text width={"100%"} as="p" fontSize="14px">
-                              {data?.scan_report.compilerversion}
+                              {scanData?.scan_report.compilerversion}
                             </Text>
                           </VStack>
                           <VStack textAlign={"left"} width={"33.33%"}>
@@ -221,7 +442,7 @@ const BlockPage: React.FC = () => {
                               EVM Version
                             </Text>
                             <Text width={"100%"} as="p" fontSize="14px">
-                              {data?.scan_report.evmversion}
+                              {scanData?.scan_report.evmversion}
                             </Text>
                           </VStack>
                           <VStack textAlign={"left"} width={"33.33%"}>
@@ -235,7 +456,7 @@ const BlockPage: React.FC = () => {
                               License Type
                             </Text>
                             <Text width={"100%"} as="p" fontSize="14px">
-                              {data?.scan_report.licensetype}
+                              {scanData?.scan_report.licensetype}
                             </Text>
                           </VStack>
                           <VStack textAlign={"left"} width={"33.33%"}>
@@ -249,8 +470,8 @@ const BlockPage: React.FC = () => {
                               Balance
                             </Text>
                             <Text width={"100%"} as="p" fontSize="14px">
-                              {data?.scan_report.value}{" "}
-                              {data.scan_report.currency}
+                              {scanData?.scan_report.value}{" "}
+                              {scanData.scan_report.currency}
                             </Text>
                           </VStack>
                         </Flex>
@@ -271,12 +492,13 @@ const BlockPage: React.FC = () => {
                 >
                   <Tab mx={2}>Overview</Tab>
                   <Tab mx={2}>Detailed Result</Tab>
+                  <Tab mx={2}>Published Report</Tab>
                   {/* <Tab mx={2}>Advanced Scan(Beta)</Tab> */}
                 </TabList>
                 <TabPanels>
                   <TabPanel>
-                    {data.scan_report.scan_summary && (
-                      <Overview data={data.scan_report.scan_summary} />
+                    {scanData.scan_report.scan_summary && (
+                      <Overview data={scanData.scan_report.scan_summary} />
                     )}
                   </TabPanel>
                   <TabPanel>
@@ -284,15 +506,18 @@ const BlockPage: React.FC = () => {
                       // profile.current_package === "trial" ? (
                       //   <TrialWall />
                       // ) :
-                      data.scan_report.scan_details &&
-                        data.scan_report.scan_summary && (
+                      scanData.scan_report.scan_details &&
+                        scanData.scan_report.scan_summary && (
                           <Result
-                            scanSummary={data.scan_report.scan_summary}
-                            scanDetails={data.scan_report.scan_details}
+                            scanSummary={scanData.scan_report.scan_summary}
+                            scanDetails={scanData.scan_report.scan_details}
                             type="block"
                           />
                         )
                     }
+                  </TabPanel>
+                  <TabPanel>
+                    <PublishedReports scan_report={scanData.scan_report} />
                   </TabPanel>
                 </TabPanels>
               </Tabs>
@@ -300,8 +525,549 @@ const BlockPage: React.FC = () => {
           </>
         )
       )}
+
+      <Modal
+        isOpen={open}
+        onClose={() => {
+          setOpen(false);
+        }}
+      >
+        <ModalOverlay />
+        <ModalContent
+          bg="bg.subtle"
+          h={"620px"}
+          minH={"fit-content"}
+          maxW="container.md"
+        >
+          <ModalHeader>Publish Report</ModalHeader>
+          <ModalCloseButton />
+          <ModalBody>
+            {!next && (
+              <>
+                <HStack
+                  alignItems="center"
+                  spacing={3}
+                  px={5}
+                  py={3}
+                  mb={4}
+                  fontSize="14px"
+                  bgColor={"white"}
+                  border={"2px solid #EDF2F7"}
+                  borderRadius={"16px"}
+                >
+                  <Text
+                    fontSize="md"
+                    fontWeight={"600"}
+                    color={"gray.500"}
+                    width={"30%"}
+                  >
+                    Contract Name
+                  </Text>
+                  <HStack
+                    alignItems="center"
+                    spacing={3}
+                    width={"70%"}
+                    bgColor={"white"}
+                    borderRadius={"16px"}
+                  >
+                    <Text fontSize="md" fontWeight={"600"}>
+                      {scanData?.scan_report.contractname}
+                    </Text>
+                  </HStack>
+                </HStack>
+                <HStack
+                  alignItems="center"
+                  spacing={3}
+                  px={5}
+                  py={3}
+                  mb={4}
+                  fontSize="14px"
+                  bgColor={"white"}
+                  border={"2px solid #EDF2F7"}
+                  borderRadius={"16px"}
+                >
+                  <Text
+                    fontSize="md"
+                    fontWeight={"600"}
+                    color={"gray.500"}
+                    width={"30%"}
+                  >
+                    Contract Address{" "}
+                  </Text>
+                  <HStack
+                    alignItems="center"
+                    spacing={3}
+                    width={"70%"}
+                    bgColor={"white"}
+                    borderRadius={"16px"}
+                  >
+                    <Text fontSize="md" fontWeight={"600"}>
+                      {scanData?.scan_report.contract_address}
+                    </Text>
+                  </HStack>
+                </HStack>
+
+                <HStack
+                  alignItems="center"
+                  spacing={3}
+                  px={5}
+                  py={3}
+                  mb={4}
+                  fontSize="14px"
+                  border={"2px solid #EDF2F7"}
+                  bgColor={"white"}
+                  borderRadius={"16px"}
+                >
+                  <Text
+                    fontSize="md"
+                    fontWeight={"600"}
+                    color={"gray.500"}
+                    width={"30%"}
+                  >
+                    Contract Platform{" "}
+                  </Text>
+                  <HStack
+                    alignItems="center"
+                    spacing={3}
+                    width={"70%"}
+                    bgColor={"white"}
+                    borderRadius={"16px"}
+                  >
+                    <Text fontSize="md" fontWeight={"600"}>
+                      {scanData?.scan_report.contract_platform}
+                    </Text>
+                  </HStack>
+                </HStack>
+
+                <HStack
+                  alignItems="center"
+                  spacing={3}
+                  px={5}
+                  py={3}
+                  mb={4}
+                  fontSize="14px"
+                  border={"2px solid #EDF2F7"}
+                  bgColor={"white"}
+                  borderRadius={"16px"}
+                >
+                  <Text
+                    fontSize="md"
+                    fontWeight={"600"}
+                    color={"gray.500"}
+                    width={"30%"}
+                  >
+                    Contract Chain{" "}
+                  </Text>
+                  <HStack
+                    alignItems="center"
+                    spacing={3}
+                    width={"70%"}
+                    bgColor={"white"}
+                    borderRadius={"16px"}
+                  >
+                    <Text fontSize="md" fontWeight={"600"}>
+                      {scanData?.scan_report.contract_chain}
+                    </Text>
+                  </HStack>
+                </HStack>
+
+                <HStack
+                  alignItems="center"
+                  spacing={3}
+                  px={5}
+                  py={3}
+                  mb={4}
+                  fontSize="14px"
+                  border={"2px solid #EDF2F7"}
+                  bgColor={"white"}
+                  borderRadius={"16px"}
+                >
+                  <Text
+                    fontSize="md"
+                    fontWeight={"600"}
+                    color={"gray.500"}
+                    width={"30%"}
+                  >
+                    Contract URL{" "}
+                  </Text>
+                  
+                    <Text
+                      width={"70%"}
+                      isTruncated
+                      fontSize="md"
+                      fontWeight={"600"}
+                    >
+                      {scanData?.scan_report.contract_url}
+                    </Text>
+                </HStack>
+
+                <HStack
+                  alignItems="center"
+                  spacing={3}
+                  px={5}
+                  py={3}
+                  mb={4}
+                  fontSize="14px"
+                  bgColor={"white"}
+                  border={"2px solid #EDF2F7"}
+                  borderRadius={"16px"}
+                >
+                  <Text
+                    fontSize="md"
+                    fontWeight={"600"}
+                    color={"gray.500"}
+                    width={"30%"}
+                  >
+                    Latest Report Update
+                  </Text>
+                  <HStack
+                    alignItems="center"
+                    spacing={3}
+                    width={"70%"}
+                    bgColor={"white"}
+                    borderRadius={"16px"}
+                  >
+                    <Text fontSize="md" fontWeight={"600"}>
+                      {lastTimeUpdate}
+                    </Text>
+                  </HStack>
+                </HStack>
+
+                <HStack
+                  alignItems="center"
+                  spacing={3}
+                  px={5}
+                  py={3}
+                  border={"2px solid #EDF2F7"}
+                  fontSize="14px"
+                  bgColor={"white"}
+                  borderRadius={"16px"}
+                >
+                  <Text
+                    fontSize="md"
+                    fontWeight={"600"}
+                    color={"gray.500"}
+                    width={"30%"}
+                  >
+                    Date Published
+                  </Text>
+                  <HStack
+                    alignItems="center"
+                    spacing={3}
+                    width={"70%"}
+                    bgColor={"white"}
+                    borderRadius={"16px"}
+                  >
+                    <Text fontSize="md" fontWeight={"600"}>
+                      {datePublished}
+                    </Text>
+                  </HStack>
+                </HStack>
+              </>
+            )}
+            {next && (
+              <>
+                <HStack
+                  alignItems="center"
+                  spacing={3}
+                  mt={4}
+                  mb={4}
+                  fontSize="14px"
+                >
+                  <InputGroup alignItems="center">
+                    <InputLeftElement
+                      height="48px"
+                      children={<Icon as={AiOutlineProject} color="gray.300" />}
+                    />
+                    <Input
+                      isRequired
+                      type="text"
+                      placeholder="Publisher's name"
+                      variant="brand"
+                      size="lg"
+                      value={pubName}
+                      onChange={(e) => {
+                        setPubName(e.target.value);
+                      }}
+                    />
+                  </InputGroup>
+                  <Text>Private</Text>
+                  <SwitchComp
+                    isChecked={nameSwitch}
+                    onChange={() => {
+                      setNameSwitch(!nameSwitch);
+                    }}
+                    size="lg"
+                    variant="brand"
+                  />
+                  <Text>Public</Text>
+                </HStack>
+                <HStack alignItems="center" spacing={3} mb={4} fontSize="14px">
+                  <InputGroup alignItems="center">
+                    <InputLeftElement
+                      height="48px"
+                      children={<Icon as={FaEnvelope} color="gray.300" />}
+                    />
+                    <Input
+                      isRequired
+                      type="email"
+                      placeholder="Publisher's Email"
+                      variant="brand"
+                      size="lg"
+                      value={pubEmail}
+                      onChange={(e) => {
+                        setPubEmail(e.target.value);
+                      }}
+                    />
+                  </InputGroup>
+                  <Text>Private</Text>
+                  <SwitchComp
+                    isChecked={emailSwitch}
+                    onChange={() => {
+                      setEmailSwitch(!emailSwitch);
+                    }}
+                    size="lg"
+                    variant="brand"
+                  />
+                  <Text> Public</Text>
+                </HStack>
+
+                <HStack alignItems="center" spacing={3} mb={4} fontSize="14px">
+                  <InputGroup alignItems="center">
+                    <InputLeftElement
+                      height="48px"
+                      children={
+                        <Icon as={FaInternetExplorer} color="gray.300" />
+                      }
+                    />
+                    <Input
+                      isRequired
+                      type="url"
+                      placeholder="Link to the Publisher's Website"
+                      variant="brand"
+                      size="lg"
+                      value={pubWeb}
+                      onChange={(e) => {
+                        setPubWeb(e.target.value);
+                      }}
+                    />
+                  </InputGroup>
+                  <Text>Private</Text>
+                  <SwitchComp
+                    isChecked={webSwitch}
+                    onChange={() => {
+                      setWebSwitch(!webSwitch);
+                    }}
+                    size="lg"
+                    variant="brand"
+                  />
+                  <Text>Public</Text>
+                </HStack>
+                <HStack alignItems="center" spacing={3} fontSize="14px">
+                  <InputGroup alignItems="center">
+                    <InputLeftElement
+                      height="48px"
+                      children={<Icon as={FaBuilding} color="gray.300" />}
+                    />
+                    <Input
+                      isRequired
+                      type="text"
+                      placeholder="Publisher's Organization"
+                      variant="brand"
+                      size="lg"
+                      value={pubOrg}
+                      onChange={(e) => {
+                        setPubOrg(e.target.value);
+                      }}
+                    />
+                  </InputGroup>
+                  <Text>Private</Text>
+                  <SwitchComp
+                    isChecked={orgSwitch}
+                    onChange={() => {
+                      setOrgSwitch(!orgSwitch);
+                    }}
+                    size="lg"
+                    variant="brand"
+                  />
+                  <Text>Public</Text>
+                </HStack>
+              </>
+            )}
+          </ModalBody>
+
+          <ModalFooter>
+            {next && (
+              <Button
+                w={"100px"}
+                variant={"ghost"}
+                mr={3}
+                onClick={() => {
+                  setNext(false);
+                }}
+              >
+                Back
+              </Button>
+            )}
+            <Button
+              w={"100px"}
+              variant={"brand"}
+              mr={3}
+              onClick={() => {
+                if (next) {
+                  publishReport();
+                } else {
+                  setNext(true);
+                }
+              }}
+            >
+              {next ? "Publish" : "Next"}
+            </Button>
+          </ModalFooter>
+        </ModalContent>
+      </Modal>
     </Box>
   );
 };
 
 export default BlockPage;
+
+const PublishedReports: React.FC<{ scan_report: Scan }> = ({ scan_report }) => {
+  const { data } = useReports("block", scan_report.project_id);
+
+  return (
+    <Box
+      sx={{
+        w: "100%",
+        borderRadius: "20px",
+        p: 4,
+      }}
+    >
+      {data && data?.reports.map((report) => <ReportBlock report={report} />)}
+    </Box>
+  );
+};
+
+const monthNames = [
+  "Jan",
+  "Feb",
+  "Mar",
+  "Apr",
+  "May",
+  "Jun",
+  "Jul",
+  "Aug",
+  "Sep",
+  "Oct",
+  "Nov",
+  "Dec",
+];
+
+const ReportBlock: React.FC<{ report: ReportsListItem }> = ({ report }) => {
+  const [isDownloadLoading, setDownloadLoading] = useState(false);
+  const history = useHistory();
+
+  const toast = useToast();
+
+  return (
+    <Flex
+      alignItems="center"
+      justifyContent="space-between"
+      sx={{
+        cursor: "pointer",
+        w: "100%",
+        bg: "white",
+        my: 4,
+        p: 2,
+        px: 10,
+        borderRadius: "10px",
+        transition: "0.3s box-shadow",
+        boxShadow: "0px 4px 20px rgba(0, 0, 0, 0.05)",
+        _hover: {
+          boxShadow: "0px 4px 20px rgba(0, 0, 0, 0.2)",
+        },
+      }}
+    >
+      <Flex alignItems="center">
+        <Box
+          sx={{
+            width: "60px",
+            height: "60px",
+            p: 2,
+            bg: "#F7F7F7",
+            color: "#4E5D78",
+            borderRadius: "50%",
+            textAlign: "center",
+          }}
+        >
+          <Text fontSize="xl" fontWeight="600">
+            {report.date_published.slice(0, 2)}
+          </Text>
+          <Text fontSize="12px" mt="-4px">
+            {report.date_published.slice(3, 6)}
+          </Text>
+        </Box>
+
+        <Badge
+          fontSize="sm"
+          ml={5}
+          p={2}
+          borderRadius={10}
+          colorScheme={report.is_approved ? "green" : "red"}
+        >
+          {report.is_approved ? "Approved" : "Waiting for Approval"}
+        </Badge>
+      </Flex>
+      <Flex alignItems="center">
+        <Button
+          variant="accent-outline"
+          isLoading={isDownloadLoading}
+          onClick={(e) => {
+            e.stopPropagation();
+            console.log("asdkbkalsd");
+            navigator.clipboard
+              .writeText(
+                `http://${document.location.host}/published-report/block/${report.report_id}`
+              )
+              .then(
+                () =>
+                  toast({
+                    title: "Copied Report URL",
+                    description: "",
+                    status: "success",
+                    duration: 1000,
+                    isClosable: true,
+                  }),
+                () =>
+                  toast({
+                    title: "Could not Copy Report URL",
+                    description: "",
+                    status: "error",
+                    duration: 3000,
+                    isClosable: true,
+                  })
+              );
+          }}
+        >
+          <FaRegCopy style={{ marginRight: "1rem" }} />
+          Copy Report URL
+        </Button>
+        <Button
+          variant="accent-outline"
+          ml={5}
+          isLoading={isDownloadLoading}
+          onClick={(e) => {
+            e.stopPropagation();
+            window.open(
+              `http://${document.location.host}/report/block/${report.project_id}/${report.report_id}`,
+              "_blank"
+            );
+            // history.push(`/report/${scan.project_id}/${data?.scan_report.latest_report_id}`)
+          }}
+        >
+          View Report
+        </Button>
+      </Flex>
+    </Flex>
+  );
+};

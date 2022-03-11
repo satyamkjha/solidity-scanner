@@ -6,8 +6,9 @@ import ReportContainer from "./reportContainer";
 import { usePublicReport } from "hooks/usePublicReport";
 
 export default function PublicReportPage() {
-  const { reportId } = useParams<{ reportId: string }>();
-  const { data, refetch } = usePublicReport(reportId);
+  const { projectType, reportId } =
+    useParams<{ projectType: string; reportId: string }>();
+  const { data } = usePublicReport(projectType, reportId);
 
   return (
     <>
