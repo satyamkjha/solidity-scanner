@@ -37,6 +37,7 @@ import { useOverview } from "hooks/useOverview";
 import { useProfile } from "hooks/useProfile";
 import VulnerabilityProgress from "components/VulnerabilityProgress";
 import { useSupportedChains } from "hooks/useSupportedPlatforms";
+import { sentenceCapitalize } from "helpers/helperFunction";
 
 const Home: React.FC = () => {
   const { data } = useOverview();
@@ -337,21 +338,34 @@ type ContractFormData = {
   // contract_platform: string;
 };
 
+
+
 const ContractForm: React.FC = () => {
+  const contractChain: {[key:string]: {label: string, value: string}[]} = {
+    'etherscan': [
+      {value: 'mainnet', label: 'Ethereum Mainnet'},
+      {value: 'testnet', label: 'Ropston Testnet'},
+      {value: 'testnet', label: 'Kovan Testnet'},
+      {value: 'testnet', label: 'Rinkeby Testnet'},
+      {value: 'testnet', label: 'Goerli Testnet'},
+    ],
+    'bscscan': [
+      {value: 'mainnet', label: 'Bsc Mainnet'},
+      {value: 'testnet', label: 'Bsc Testnet'}
+    ],
+    'polygonscan': [
+      {value: 'mainnet', label: 'Polygon Mainnet'},
+      {value: 'testnet', label: 'Polygon Testnet'}
+    ]
+  }
   const [platform, setPlatform] = React.useState("etherscan");
-  const [chain, setChain] = React.useState("etherscan");
-  const [chainList, setChainList] = React.useState<string[]>([]);
+  const [chain, setChain] = React.useState("");
+  const [chainList, setChainList] = React.useState<{label: string, value: string}[]>(contractChain['etherscan']);
   const queryClient = useQueryClient();
   const { handleSubmit, register, formState } = useForm<ContractFormData>();
   const history = useHistory();
   const { data: profileData } = useProfile();
   const { data: supportedChains } = useSupportedChains();
-
-  useEffect(() => {
-    if (supportedChains) {
-      setChainList(supportedChains[platform]);
-    }
-  }, [supportedChains]);
 
   const onSubmit = async ({ contract_address }: ContractFormData) => {
     await API.post("/api-start-scan-block/", {
@@ -448,13 +462,13 @@ const ContractForm: React.FC = () => {
                 setPlatform(e.target.value);
                 console.log(supportedChains);
                 if (supportedChains) {
-                  setChainList(supportedChains[e.target.value]);
+                  setChainList(contractChain[e.target.value]);
                   console.log(supportedChains[e.target.value]);
                 }
               }}
             >
               <option value="etherscan">Etherscan</option>
-              <option value="bscscan">Binance</option>
+              <option value="bscscan">BSC Scan</option>
               <option value="polygonscan">Polygon Scan</option>
             </Select>
           </FormControl>
@@ -472,8 +486,8 @@ const ContractForm: React.FC = () => {
                 setChain(e.target.value);
               }}
             >
-              {chainList?.map((item, index) => (
-                <option value={item}>{item.toUpperCase()}</option>
+              {chainList?.map((item) => (
+                <option value={item.value}>{item.label}</option>
               ))}
             </Select>
           </FormControl>
