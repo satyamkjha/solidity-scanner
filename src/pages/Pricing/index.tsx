@@ -10,15 +10,19 @@ import {
   ButtonProps,
   Link,
   ScaleFade,
+  useDisclosure,
 } from "@chakra-ui/react";
 
 import Header from "components/header";
 import Footer from "components/footer";
 import { PricingCard } from "./components/pricingCard";
 import { useState } from "react";
+import ContactUs from "components/contactus";
 
 export default function PricingPage() {
   const [tab, setTab] = useState<string>("weekly");
+  const { isOpen, onClose, onOpen } = useDisclosure();
+
 
   return (
     <>
@@ -168,24 +172,12 @@ export default function PricingPage() {
                   }}
                   button={
                     <Flex flexDir="column" alignItems="center">
-                      <Link target="_blank" href="mailto:info@credshields.com">
-                        <Button
-                          colorScheme="gray"
-                          variant="outline"
-                          width="230px"
+                        <ActionButton variant={'outline'}
+                          onClick={onOpen}
                         >
                           Contact us
-                        </Button>
-                      </Link>
-                      <Link
-                        mt={2}
-                        fontSize="15px"
-                        target="_blank"
-                        variant="brand"
-                        href="mailto:info@credshields.com"
-                      >
-                        info@credshields.com
-                      </Link>
+                        </ActionButton>
+                      
                     </Flex>
                   }
                 />
@@ -258,11 +250,9 @@ export default function PricingPage() {
                     ],
                   }}
                   button={
-                    <Link target="_blank" href="mailto:info@credshields.com">
                       <ActionButton variant="outline" borderWidth="2px">
                         Contact us
                       </ActionButton>
-                    </Link>
                   }
                 />
               </SimpleGrid>
@@ -335,7 +325,7 @@ export default function PricingPage() {
                   }}
                   button={
                     <Link target="_blank" href="mailto:info@credshields.com">
-                      <ActionButton variant="outline" borderWidth="2px">
+                      <ActionButton onClick={onOpen} variant="outline" borderWidth="2px">
                         Contact us
                       </ActionButton>
                     </Link>
@@ -346,6 +336,7 @@ export default function PricingPage() {
           </ScaleFade>
         )}
       </Container>
+      <ContactUs isOpen={isOpen} onClose={onClose} />
       <Footer />
     </>
   );
