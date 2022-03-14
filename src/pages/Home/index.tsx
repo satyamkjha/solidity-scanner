@@ -429,23 +429,24 @@ const ContractForm: React.FC = () => {
       </Text>
       <form onSubmit={handleSubmit(onSubmit)} style={{ width: "100%" }}>
         <Stack spacing={6} my={8} width={"100%"}>
-        
-          <VStack alignItems={'flex-start'}>
-          <Text mb={0} fontSize="sm">Contract address</Text>
+          <VStack alignItems={"flex-start"}>
+            <Text mb={0} fontSize="sm">
+              Contract address
+            </Text>
 
-          <InputGroup mt={0} alignItems="center">
-            <InputLeftElement
-              height="48px"
-              children={<Icon as={AiOutlineProject} color="gray.300" />}
-            />
-            <Input
-              isRequired
-              placeholder="0x808ed7A75n133f64069318Sa0q173c71rre44414"
-              variant="brand"
-              size="lg"
-              {...register("contract_address")}
-            />
-          </InputGroup>
+            <InputGroup mt={0} alignItems="center">
+              <InputLeftElement
+                height="48px"
+                children={<Icon as={AiOutlineProject} color="gray.300" />}
+              />
+              <Input
+                isRequired
+                placeholder="0x808ed7A75n133f64069318Sa0q173c71rre44414"
+                variant="brand"
+                size="lg"
+                {...register("contract_address")}
+              />
+            </InputGroup>
           </VStack>
 
           <FormControl id="contract_platform">
@@ -453,8 +454,8 @@ const ContractForm: React.FC = () => {
             <Select
               placeholder="Select contract platform"
               value={platform}
-              variant='brand'
-              h={'48px'}
+              variant="brand"
+              h={"48px"}
               disabled={supportedChains == null}
               isRequired
               onChange={(e) => {
@@ -472,13 +473,13 @@ const ContractForm: React.FC = () => {
             </Select>
           </FormControl>
 
-          <FormControl  id="contract_chain">
+          <FormControl id="contract_chain">
             <FormLabel fontSize="sm">Contract platform</FormLabel>
             <Select
               placeholder="Select Platform Chain"
               value={chain}
-              variant='brand'
-              h={'48px'}
+              variant="brand"
+              h={"48px"}
               disabled={supportedChains == null}
               isRequired
               onChange={(e) => {

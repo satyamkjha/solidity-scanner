@@ -95,13 +95,13 @@ const Routes: React.FC = () => {
     <Router>
       <ErrorHandler>
         <Switch>
-          <Route exact path="/published-report/:reportId">
+          <Route exact path="/published-report/:projectType/:reportId">
             <PublicReportPage />
           </Route>
           <Route exact path="/">
             <Landing />
           </Route>
-          <Route exact path="/report/:projectId/:reportId">
+          <Route exact path="/report/:projectType/:projectId/:reportId">
             <Report />
           </Route>
           <Route exact path="/billing/:status">

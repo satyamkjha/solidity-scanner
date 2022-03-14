@@ -10,6 +10,7 @@ import {
   Button,
   Image,
   Link as ChakraLink,
+  useDisclosure,
 } from "@chakra-ui/react";
 
 import {
@@ -25,8 +26,11 @@ import {
 import Header from "components/header";
 import Footer from "components/footer";
 import ImageCarousel from "./components/carousel";
+import ContactUs from "components/contactus";
 
 export default function LandingPage() {
+  const { isOpen, onClose, onOpen } = useDisclosure();
+
   return (
     <>
       <Header />
@@ -266,11 +270,9 @@ export default function LandingPage() {
               Talk to our team of security experts for help on securing your
               Smart Contracts
             </Text>
-            <ChakraLink target="_blank" href="mailto:info@credshields.com">
-              <Button variant="brand" mt={8}>
-                Request audit
-              </Button>
-            </ChakraLink>
+            <Button variant="brand" onClick={onOpen} mt={8}>
+              Request audit
+            </Button>
           </Flex>
         </Box>
         <Box w="100%" as="section" sx={{ textAlign: "center" }} my={8}>
@@ -415,6 +417,7 @@ export default function LandingPage() {
         </Box>
       </Container>
       <Footer />
+      <ContactUs isOpen={isOpen} onClose={onClose} />
     </>
   );
 }

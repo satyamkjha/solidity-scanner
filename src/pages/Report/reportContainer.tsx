@@ -171,7 +171,8 @@ export default function ReportContainer({ summary_report }: Props) {
               Security Assessment
             </Text>
             <Heading fontSize={["3xl", "4xl"]} color={"white"} mb={24}>
-              {summary_report?.project_summary_report?.project_name!}
+              {summary_report.project_summary_report.project_name}
+              {summary_report.project_summary_report.contract_name}
             </Heading>
             <Text fontSize="xl" color={"white"} mt={24} mb={4}>
               {`${d.getDate()} ${monthNames[d.getMonth()]} ${d.getFullYear()}`}
@@ -438,34 +439,196 @@ export default function ReportContainer({ summary_report }: Props) {
               width={"150px"}
               backgroundColor={"#38CB89"}
             />
-            <Flex
-              as="section"
-              w="100%"
-              alignItems="flex-start"
-              justifyContent="flex-start"
-              flexDir={"row"}
-              textAlign={["left", "left"]}
-              py={5}
-              px={[1, 10]}
-              backgroundColor={"#F5F5F5"}
-            >
-              <Text
-                fontSize="lg"
-                fontWeight={"extrabold"}
-                color={"gray.600"}
-                width={"30%"}
+            {summary_report.project_summary_report.project_name && (
+              <Flex
+                as="section"
+                w="100%"
+                alignItems="flex-start"
+                justifyContent="flex-start"
+                flexDir={"row"}
+                textAlign={["left", "left"]}
+                py={5}
+                px={[1, 10]}
+                backgroundColor={"#F5F5F5"}
               >
-                Project Name
-              </Text>
-              <Text
-                fontSize="lg"
-                fontWeight={"normal"}
-                color={"gray.600"}
-                width={"70%"}
+                <Text
+                  fontSize="lg"
+                  fontWeight={"extrabold"}
+                  color={"gray.600"}
+                  width={"30%"}
+                >
+                  Project Name
+                </Text>
+                <Text
+                  fontSize="lg"
+                  fontWeight={"normal"}
+                  color={"gray.600"}
+                  width={"70%"}
+                >
+                  {summary_report.project_summary_report.project_name}
+                </Text>
+              </Flex>
+            )}
+            {summary_report.project_summary_report.contract_name && (
+              <Flex
+                as="section"
+                w="100%"
+                alignItems="flex-start"
+                justifyContent="flex-start"
+                flexDir={"row"}
+                textAlign={["left", "left"]}
+                py={5}
+                px={[1, 10]}
+                backgroundColor={"#F5F5F5"}
               >
-                {summary_report.project_summary_report.project_name}
-              </Text>
-            </Flex>
+                <Text
+                  fontSize="lg"
+                  fontWeight={"extrabold"}
+                  color={"gray.600"}
+                  width={"30%"}
+                >
+                  Contract Name
+                </Text>
+                <Text
+                  fontSize="lg"
+                  fontWeight={"normal"}
+                  color={"gray.600"}
+                  width={"70%"}
+                >
+                  {summary_report.project_summary_report.contract_name}
+                </Text>
+              </Flex>
+            )}
+
+            {summary_report.project_summary_report.contract_address && (
+              <Flex
+                as="section"
+                w="100%"
+                alignItems="flex-start"
+                justifyContent="flex-start"
+                flexDir={"row"}
+                textAlign={["left", "left"]}
+                py={5}
+                px={[1, 10]}
+                borderBottomWidth={1}
+                borderBottomColor={"#E4E4E4"}
+              >
+                <Text
+                  fontSize="lg"
+                  fontWeight={"extrabold"}
+                  color={"gray.600"}
+                  width={"30%"}
+                >
+                  Contract Address
+                </Text>
+                <Text
+                  fontSize="lg"
+                  fontWeight={"normal"}
+                  color={"gray.600"}
+                  width={"70%"}
+                >
+                  {summary_report.project_summary_report.contract_address}
+                </Text>
+              </Flex>
+            )}
+
+            {summary_report.project_summary_report.contract_platform && (
+              <Flex
+                as="section"
+                w="100%"
+                alignItems="flex-start"
+                justifyContent="flex-start"
+                flexDir={"row"}
+                textAlign={["left", "left"]}
+                py={5}
+                px={[1, 10]}
+                borderBottomWidth={1}
+                borderBottomColor={"#E4E4E4"}
+              >
+                <Text
+                  fontSize="lg"
+                  fontWeight={"extrabold"}
+                  color={"gray.600"}
+                  width={"30%"}
+                >
+                  Contract Platform
+                </Text>
+                <Text
+                  fontSize="lg"
+                  fontWeight={"normal"}
+                  color={"gray.600"}
+                  width={"70%"}
+                >
+                  {sentenceCapitalize(summary_report.project_summary_report.contract_platform)}
+                </Text>
+              </Flex>
+            )}
+
+            {summary_report.project_summary_report.contract_chain && (
+              <Flex
+                as="section"
+                w="100%"
+                alignItems="flex-start"
+                justifyContent="flex-start"
+                flexDir={"row"}
+                textAlign={["left", "left"]}
+                py={5}
+                px={[1, 10]}
+                borderBottomWidth={1}
+                borderBottomColor={"#E4E4E4"}
+              >
+                <Text
+                  fontSize="lg"
+                  fontWeight={"extrabold"}
+                  color={"gray.600"}
+                  width={"30%"}
+                >
+                  Contract Chain
+                </Text>
+                <Text
+                  fontSize="lg"
+                  fontWeight={"normal"}
+                  color={"gray.600"}
+                  width={"70%"}
+                >
+                  {sentenceCapitalize(summary_report.project_summary_report.contract_chain)}
+                </Text>
+              </Flex>
+            )}
+
+            {summary_report.project_summary_report.contract_url && (
+              <Flex
+                as="section"
+                w="100%"
+                alignItems="flex-start"
+                justifyContent="flex-start"
+                flexDir={"row"}
+                textAlign={["left", "left"]}
+                py={5}
+                px={[1, 10]}
+                borderBottomWidth={1}
+                borderBottomColor={"#E4E4E4"}
+              >
+                <Text
+                  fontSize="lg"
+                  fontWeight={"extrabold"}
+                  color={"gray.600"}
+                  width={"30%"}
+                >
+                  Contract URL
+                </Text>
+                <Text
+                  fontSize="lg"
+                  fontWeight={"normal"}
+                  color={"gray.600"}
+                  width={"70%"}
+                  onClick={()=>{window.open(summary_report.project_summary_report.contract_url, '_blank')}}
+                >
+                  {summary_report.project_summary_report.contract_url}
+                </Text>
+              </Flex>
+            )}
+
             <Flex
               as="section"
               w="100%"
@@ -524,64 +687,70 @@ export default function ReportContainer({ summary_report }: Props) {
                 Solidity
               </Text>
             </Flex>
-            <Flex
-              as="section"
-              w="100%"
-              alignItems="flex-start"
-              justifyContent="flex-start"
-              flexDir={"row"}
-              textAlign={["left", "left"]}
-              py={5}
-              px={[1, 10]}
-              borderBottomWidth={1}
-              borderBottomColor={"#E4E4E4"}
-            >
-              <Text
-                fontSize="lg"
-                fontWeight={"extrabold"}
-                color={"gray.600"}
-                width={"30%"}
+            {summary_report.project_summary_report.project_url && (
+              <Flex
+                as="section"
+                w="100%"
+                alignItems="flex-start"
+                justifyContent="flex-start"
+                flexDir={"row"}
+                textAlign={["left", "left"]}
+                py={5}
+                px={[1, 10]}
+                borderBottomWidth={1}
+                borderBottomColor={"#E4E4E4"}
               >
-                Codebase
-              </Text>
-              <Text
-                fontSize="lg"
-                fontWeight={"normal"}
-                color={"gray.600"}
-                width={"70%"}
+                <Text
+                  fontSize="lg"
+                  fontWeight={"extrabold"}
+                  color={"gray.600"}
+                  width={"30%"}
+                >
+                  Codebase
+                </Text>
+                <Text
+                  fontSize="lg"
+                  fontWeight={"normal"}
+                  color={"gray.600"}
+                  width={"70%"}
+                >
+                  {summary_report.project_summary_report.project_url}
+                </Text>
+              </Flex>
+            )}
+
+            {summary_report.project_summary_report.git_commit_hash && (
+              <Flex
+                as="section"
+                w="100%"
+                alignItems="flex-start"
+                justifyContent="flex-start"
+                flexDir={"row"}
+                textAlign={["left", "left"]}
+                py={5}
+                px={[1, 10]}
+                borderBottomWidth={1}
+                borderBottomColor={"#E4E4E4"}
               >
-                {summary_report.project_summary_report.project_url}
-              </Text>
-            </Flex>
-            <Flex
-              as="section"
-              w="100%"
-              alignItems="flex-start"
-              justifyContent="flex-start"
-              flexDir={"row"}
-              textAlign={["left", "left"]}
-              py={5}
-              px={[1, 10]}
-              borderBottomWidth={1}
-              borderBottomColor={"#E4E4E4"}
-            >
-              <Text
-                fontSize="lg"
-                fontWeight={"extrabold"}
-                color={"gray.600"}
-                width={"30%"}
-              >
-                Commit Hash
-              </Text>
-              <Text
-                fontSize="lg"
-                fontWeight={"normal"}
-                color={"gray.600"}
-                width={"70%"}
-              >
-                {summary_report.project_summary_report.git_commit_hash}
-              </Text>
-            </Flex>
+                <Text
+                  fontSize="lg"
+                  fontWeight={"extrabold"}
+                  color={"gray.600"}
+                  width={"30%"}
+                >
+                  Commit Hash
+                </Text>
+                <Text
+                  fontSize="lg"
+                  fontWeight={"normal"}
+                  color={"gray.600"}
+                  width={"70%"}
+                >
+                  {summary_report.project_summary_report.git_commit_hash}
+                </Text>
+              </Flex>
+            )}
+
             {summary_report.project_summary_report.website && (
               <Flex
                 as="section"

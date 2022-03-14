@@ -166,14 +166,19 @@ export type Report = {
   };
   report_id: string;
   project_summary_report: {
-    git_commit_hash: string;
+    git_commit_hash?: string;
     project_id: string;
-    project_name: string;
-    project_url: string;
+    project_name?: string;
+    project_url?: string;
     last_project_report_update_time: string;
     last_scan_triggered_time: string;
     website?: string;
     publishers_name?: string;
+    contract_address?: string;
+    contract_chain?: string;
+    contract_url?: string;
+    contract_name?: string;
+    contract_platform?: string;
   };
   scan_summary: ScanItem[];
 };

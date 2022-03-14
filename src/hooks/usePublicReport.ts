@@ -11,18 +11,19 @@ const API = axios.create({
   },
 });
 
-const getPublicReport = async (report_id: string) => {
+const getPublicReport = async (project_type: string, report_id: string) => {
   const { data } = await API.post<{ summary_report: Report }>(
     "/api-get-published-report/",
     {
+      project_type,
       report_id,
     }
   );
   return data;
 };
 
-export const usePublicReport = (report_id: string) => {
-  return useQuery(["published_report", report_id], () =>
-    getPublicReport(report_id)
+export const usePublicReport = (project_type: string, report_id: string) => {
+  return useQuery(["published_report", project_type, report_id], () =>
+    getPublicReport(project_type, report_id)
   );
 };

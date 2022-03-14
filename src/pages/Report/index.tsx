@@ -226,9 +226,9 @@ const UpdateRowComp = ({
 };
 
 export default function ReportPage() {
-  const { reportId, projectId } =
-    useParams<{ reportId: string; projectId: string }>();
-  const { data, refetch } = useReport(projectId, reportId);
+  const { reportId, projectId, projectType } =
+    useParams<{ reportId: string; projectId: string; projectType: string }>();
+  const { data, refetch } = useReport(projectType, projectId, reportId);
 
   const toast = useToast();
 
@@ -241,6 +241,7 @@ export default function ReportPage() {
     const { data } = await API.post<{
       success: boolean;
     }>("/api-update-report/", {
+      project_type: projectType,
       project_id: projectId,
       report_id: reportId,
       updates: {
