@@ -344,7 +344,7 @@ const ContractForm: React.FC = () => {
   const contractChain: {[key:string]: {label: string, value: string}[]} = {
     'etherscan': [
       {value: 'mainnet', label: 'Ethereum Mainnet'},
-      {value: 'testnet', label: 'Ropston Testnet'},
+      {value: 'testnet', label: 'Ropsten Testnet'},
       {value: 'testnet', label: 'Kovan Testnet'},
       {value: 'testnet', label: 'Rinkeby Testnet'},
       {value: 'testnet', label: 'Goerli Testnet'},
