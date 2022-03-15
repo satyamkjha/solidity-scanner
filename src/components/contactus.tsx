@@ -38,7 +38,7 @@ export const ContactUs: React.FC<{ onClose(): any; isOpen: boolean }> = ({
   const onSubmit = () => {
     axios.defaults.headers.post["Content-Type"] = "application/json";
     axios
-      .post("https://formsubmit.co/ajax/satyam@credshields.com", {
+      .post("https://formsubmit.co/ajax/info@credshields.com", {
         email: email,
         subject: subject,
         discord: discord,
