@@ -23,7 +23,6 @@ export default function PricingPage() {
   const [tab, setTab] = useState<string>("weekly");
   const { isOpen, onClose, onOpen } = useDisclosure();
 
-
   return (
     <>
       <Header />
@@ -172,12 +171,9 @@ export default function PricingPage() {
                   }}
                   button={
                     <Flex flexDir="column" alignItems="center">
-                        <ActionButton variant={'outline'}
-                          onClick={onOpen}
-                        >
-                          Contact us
-                        </ActionButton>
-                      
+                      <ActionButton variant={"outline"} onClick={onOpen}>
+                        Contact us
+                      </ActionButton>
                     </Flex>
                   }
                 />
@@ -250,9 +246,9 @@ export default function PricingPage() {
                     ],
                   }}
                   button={
-                      <ActionButton variant="outline" borderWidth="2px">
-                        Contact us
-                      </ActionButton>
+                    <ActionButton variant="outline" borderWidth="2px">
+                      Contact us
+                    </ActionButton>
                   }
                 />
               </SimpleGrid>
@@ -325,7 +321,11 @@ export default function PricingPage() {
                   }}
                   button={
                     <Link target="_blank" href="mailto:info@credshields.com">
-                      <ActionButton onClick={onOpen} variant="outline" borderWidth="2px">
+                      <ActionButton
+                        onClick={onOpen}
+                        variant="outline"
+                        borderWidth="2px"
+                      >
                         Contact us
                       </ActionButton>
                     </Link>

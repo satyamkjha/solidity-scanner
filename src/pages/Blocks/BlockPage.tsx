@@ -474,6 +474,20 @@ const BlockPage: React.FC = () => {
                               {scanData.scan_report.currency}
                             </Text>
                           </VStack>
+                          <VStack textAlign={"left"} width={"33.33%"}>
+                            <Text
+                              width={"100%"}
+                              as="p"
+                              fontSize="14px"
+                              color="gray.500"
+                              mt={10}
+                            >
+                              Contract Chain
+                            </Text>
+                            <Text width={"100%"} as="p" fontSize="14px">
+                              {scanData?.scan_report.contract_chain}{" "}
+                            </Text>
+                          </VStack>
                         </Flex>
                       </AccordionPanel>
                     </>
@@ -517,7 +531,9 @@ const BlockPage: React.FC = () => {
                     }
                   </TabPanel>
                   <TabPanel>
-                    <PublishedReports scan_report={scanData.scan_report} />
+                    {scanData.scan_report.project_id && (
+                      <PublishedReports scan_report={scanData.scan_report} />
+                    )}
                   </TabPanel>
                 </TabPanels>
               </Tabs>
@@ -690,15 +706,15 @@ const BlockPage: React.FC = () => {
                   >
                     Contract URL{" "}
                   </Text>
-                  
-                    <Text
-                      width={"70%"}
-                      isTruncated
-                      fontSize="md"
-                      fontWeight={"600"}
-                    >
-                      {scanData?.scan_report.contract_url}
-                    </Text>
+
+                  <Text
+                    width={"70%"}
+                    isTruncated
+                    fontSize="md"
+                    fontWeight={"600"}
+                  >
+                    {scanData?.scan_report.contract_url}
+                  </Text>
                 </HStack>
 
                 <HStack

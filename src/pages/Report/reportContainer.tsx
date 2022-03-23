@@ -559,7 +559,9 @@ export default function ReportContainer({ summary_report }: Props) {
                   color={"gray.600"}
                   width={"70%"}
                 >
-                  {sentenceCapitalize(summary_report.project_summary_report.contract_platform)}
+                  {sentenceCapitalize(
+                    summary_report.project_summary_report.contract_platform
+                  )}
                 </Text>
               </Flex>
             )}
@@ -591,7 +593,9 @@ export default function ReportContainer({ summary_report }: Props) {
                   color={"gray.600"}
                   width={"70%"}
                 >
-                  {sentenceCapitalize(summary_report.project_summary_report.contract_chain)}
+                  {sentenceCapitalize(
+                    summary_report.project_summary_report.contract_chain
+                  )}
                 </Text>
               </Flex>
             )}
@@ -622,7 +626,12 @@ export default function ReportContainer({ summary_report }: Props) {
                   fontWeight={"normal"}
                   color={"gray.600"}
                   width={"70%"}
-                  onClick={()=>{window.open(summary_report.project_summary_report.contract_url, '_blank')}}
+                  onClick={() => {
+                    window.open(
+                      summary_report.project_summary_report.contract_url,
+                      "_blank"
+                    );
+                  }}
                 >
                   {summary_report.project_summary_report.contract_url}
                 </Text>

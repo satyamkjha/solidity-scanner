@@ -11,6 +11,7 @@ import {
   Image,
   Link as ChakraLink,
   useDisclosure,
+  HStack,
 } from "@chakra-ui/react";
 
 import {
@@ -251,8 +252,373 @@ export default function LandingPage() {
             </Text>
           </Box>
         </Flex>
+        <Box w="100%" as="section" sx={{ textAlign: "center" }} my={24}>
+          <Heading fontSize="3xl" mb={4}>
+            Our Team
+          </Heading>
+          <Text color="subtle" fontSize="xl" mb={4}>
+            Focus on what matters most, our robots handle the rest ☕️
+          </Text>
+          <Flex
+            as="div"
+            w="100%"
+            alignItems="center"
+            py={10}
+            my={10}
+            flexDir={["column", "column", "row"]}
+            justifyContent={"center"}
+          >
+            <Flex
+              as="div"
+              alignItems="center"
+              flexDir={["row", "row", "row"]}
+              justifyContent={"flex-start"}
+            >
+              <Box
+                height={"130px"}
+                ml="50px"
+                mr="20px"
+                width="130px"
+                borderRadius={"50%"}
+                backgroundImage={"url(/shashank.jpeg)"}
+                backgroundSize="contain"
+                backgroundPosition={"center"}
+              />
+              <Flex
+                width="200px"
+                as="div"
+                alignItems="center"
+                flexDir={"row"}
+                mt={4}
+                justifyContent={"flex-start"}
+              >
+                <Flex
+                  as="div"
+                  alignItems="flex-start"
+                  flexDir={"column"}
+                  justifyContent={"center"}
+                >
+                  <Text textAlign={"left"} fontSize="xl">
+                    Shashank
+                  </Text>
+                  <Text
+                    textAlign={"left"}
+                    color={"subtle"}
+                    fontSize="xl"
+                    fontWeight={900}
+                  >
+                    Co-Founder
+                  </Text>
+                  <HStack>
+                    <Image
+                      onClick={() => {
+                        window.open(
+                          "https://www.linkedin.com/in/shashank-in/",
+                          "_blank"
+                        );
+                      }}
+                      src="/linkedin.svg"
+                      height={"40px"}
+                      width={"40px"}
+                    />
+                    <Image
+                      onClick={() => {
+                        window.open(
+                          "https://twitter.com/cyberboyIndia",
+                          "_blank"
+                        );
+                      }}
+                      src="/twitter.svg"
+                      height={"30px"}
+                      width={"30px"}
+                      borderRadius={"5px"}
+                    />
+                  </HStack>
+                </Flex>
+              </Flex>
+            </Flex>
+            <Flex
+              as="div"
+              alignItems="center"
+              flexDir={["row", "row", "row"]}
+              justifyContent={"flex-start"}
+            >
+              <Box
+                height={"130px"}
+                ml="50px"
+                mr="20px"
+                width="130px"
+                borderRadius={"50%"}
+                backgroundImage={"url(/indranil.jpeg)"}
+                backgroundSize="contain"
+                backgroundPosition={"center"}
+              />
+              <Flex
+                width="200px"
+                as="div"
+                alignItems="center"
+                flexDir={"row"}
+                mt={4}
+                justifyContent={"flex-start"}
+              >
+                <Flex
+                  as="div"
+                  alignItems="flex-start"
+                  flexDir={"column"}
+                  justifyContent={"center"}
+                >
+                  <Text textAlign={"left"} fontSize="xl">
+                    Indranil Roy
+                  </Text>
+                  <Text
+                    textAlign={"left"}
+                    color={"subtle"}
+                    fontSize="xl"
+                    fontWeight={900}
+                  >
+                    Co-Founder
+                  </Text>
+                  <HStack>
+                    <Image
+                      onClick={() => {
+                        window.open(
+                          "https://www.linkedin.com/in/itsmeroy2012/",
+                          "_blank"
+                        );
+                      }}
+                      src="/linkedin.svg"
+                      height={"40px"}
+                      width={"40px"}
+                    />
+                    <Image
+                      onClick={() => {
+                        window.open(
+                          "https://twitter.com/itsmeroy2012",
+                          "_blank"
+                        );
+                      }}
+                      src="/twitter.svg"
+                      height={"30px"}
+                      width={"30px"}
+                      borderRadius={"5px"}
+                    />
+                  </HStack>
+                </Flex>
+              </Flex>
+            </Flex>
+            <Flex
+              as="div"
+              alignItems="center"
+              flexDir={["row", "row", "row"]}
+              justifyContent={"flex-start"}
+            >
+              <Box
+                height={"130px"}
+                ml="50px"
+                mr="20px"
+                width="130px"
+                borderRadius={"50%"}
+                backgroundImage={"url(/aditya.jpeg)"}
+                backgroundSize="contain"
+                backgroundPosition={"center"}
+              />
+              <Flex
+                width="200px"
+                as="div"
+                alignItems="center"
+                flexDir={"row"}
+                mt={4}
+                justifyContent={"flex-start"}
+              >
+                <Flex
+                  as="div"
+                  alignItems="flex-start"
+                  flexDir={"column"}
+                  justifyContent={"center"}
+                >
+                  <Text textAlign={"left"} fontSize="xl">
+                    Aditya D.
+                  </Text>
+                  <Text
+                    textAlign={"left"}
+                    color={"subtle"}
+                    fontSize="xl"
+                    fontWeight={900}
+                  >
+                    Security Researcher
+                  </Text>
+                  <HStack>
+                    <Image
+                      onClick={() => {
+                        window.open(
+                          "https://www.linkedin.com/in/ad17ya/",
+                          "_blank"
+                        );
+                      }}
+                      src="/linkedin.svg"
+                      height={"40px"}
+                      width={"40px"}
+                    />
+                    <Image
+                      onClick={() => {
+                        window.open("https://twitter.com/zombie007o", "_blank");
+                      }}
+                      src="/twitter.svg"
+                      height={"30px"}
+                      width={"30px"}
+                      borderRadius={"5px"}
+                    />
+                  </HStack>
+                </Flex>
+              </Flex>
+            </Flex>
+          </Flex>
+          <Flex
+            as="div"
+            w="100%"
+            alignItems="center"
+            py={10}
+            my={10}
+            flexDir={["column", "column", "row"]}
+            justifyContent={"center"}
+          >
+            <Flex
+              as="div"
+              alignItems="center"
+              flexDir={["row", "row", "row"]}
+              justifyContent={"flex-start"}
+            >
+              <Box
+                height={"130px"}
+                ml="50px"
+                mr="20px"
+                width="130px"
+                borderRadius={"50%"}
+                backgroundImage={"url(/ayush.jpeg)"}
+                backgroundSize="contain"
+                backgroundPosition={"center"}
+              />
+              <Flex
+                width="200px"
+                as="div"
+                alignItems="center"
+                flexDir={"row"}
+                mt={4}
+                justifyContent={"flex-start"}
+              >
+                <Flex
+                  as="div"
+                  alignItems="flex-start"
+                  flexDir={"column"}
+                  justifyContent={"center"}
+                >
+                  <Text textAlign={"left"} fontSize="xl">
+                    Ayush Tripathi
+                  </Text>
+                  <Text
+                    textAlign={"left"}
+                    color={"subtle"}
+                    fontSize="xl"
+                    fontWeight={900}
+                  >
+                    Backend Engineer
+                  </Text>
+                  <HStack>
+                    <Image
+                      onClick={() => {
+                        window.open(
+                          "https://twitter.com/TripathiAyush5",
+                          "_blank"
+                        );
+                      }}
+                      src="/linkedin.svg"
+                      height={"40px"}
+                      width={"40px"}
+                    />
+                    <Image
+                      onClick={() => {
+                        window.open(
+                          "https://www.linkedin.com/in/itsmeroy2012/",
+                          "_blank"
+                        );
+                      }}
+                      src="/twitter.svg"
+                      height={"30px"}
+                      width={"30px"}
+                      borderRadius={"5px"}
+                    />
+                  </HStack>
+                </Flex>
+              </Flex>
+            </Flex>
+            <Flex
+              as="div"
+              alignItems="center"
+              flexDir={["row", "row", "row"]}
+              justifyContent={"flex-start"}
+            >
+              <Box
+                height={"130px"}
+                ml="50px"
+                mr="20px"
+                width="130px"
+                borderRadius={"50%"}
+                backgroundImage={"url(/satyam-img.jpg)"}
+                backgroundSize="contain"
+                backgroundPosition={"center"}
+              />
+              <Flex
+                width="200px"
+                as="div"
+                alignItems="center"
+                flexDir={"row"}
+                mt={4}
+                justifyContent={"flex-start"}
+              >
+                <Flex
+                  as="div"
+                  alignItems="flex-start"
+                  flexDir={"column"}
+                  justifyContent={"center"}
+                >
+                  <Text textAlign={"left"} fontSize="xl">
+                    Satyam Kumar Jha
+                  </Text>
+                  <Text
+                    textAlign={"left"}
+                    color={"subtle"}
+                    fontSize="xl"
+                    fontWeight={900}
+                  >
+                    Frontend Engineer
+                  </Text>
+                  <HStack>
+                    <Image
+                      onClick={() => {
+                        window.open(
+                          "https://www.linkedin.com/in/satyamkjha/",
+                          "_blank"
+                        );
+                      }}
+                      src="/linkedin.svg"
+                      height={"40px"}
+                      width={"40px"}
+                    />
+                    {/* <Image
+                    src="/twitter.svg"
+                    height={"30px"}
+                    width={"30px"}
+                    borderRadius={"5px"}
+                  /> */}
+                  </HStack>
+                </Flex>
+              </Flex>
+            </Flex>
+          </Flex>
+        </Box>
+
         {/* Section 4 */}
-        <Box w="100%" as="section" sx={{ textAlign: "center" }} my={8}>
+        <Box w="100%" as="section" sx={{ textAlign: "center" }} my={8} mt={24}>
           <Heading fontSize="3xl" mb={4}>
             Fully automated smart contract audit system <br /> to help{" "}
             <Box as="span" sx={{ color: "accent" }}>

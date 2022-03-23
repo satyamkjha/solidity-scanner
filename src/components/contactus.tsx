@@ -20,9 +20,10 @@ import {
   InputLeftElement,
   Stack,
   Textarea,
+  useToast,
 } from "@chakra-ui/react";
 import { AiOutlineProject } from "react-icons/ai";
-import { FaDiscord, FaEnvelope } from "react-icons/fa";
+import { FaDiscord, FaEnvelope, FaTelegram } from "react-icons/fa";
 import { GiLetterBomb } from "react-icons/gi";
 import axios from "axios";
 
@@ -33,18 +34,36 @@ export const ContactUs: React.FC<{ onClose(): any; isOpen: boolean }> = ({
   const [email, setEmail] = useState("");
   const [subject, setSubject] = useState("");
   const [discord, setDiscord] = useState("");
+  const [telegram, setTelegram] = useState("");
   const [body, setBody] = useState("");
+  const toast = useToast();
 
   const onSubmit = () => {
     axios.defaults.headers.post["Content-Type"] = "application/json";
     axios
-      .post("https://formsubmit.co/ajax/satyam@credshields.com", {
+      .post("https://formsubmit.co/ajax/info@credshields.com", {
         email: email,
         subject: subject,
         discord: discord,
         message: body,
       })
-      .then((response) => console.log(response))
+      .then((response) => {
+        if (response.data.success) {
+          toast({
+            title: response.data.message,
+            status: "success",
+            duration: 2000,
+            isClosable: true,
+            position: "bottom",
+          });
+          onClose();
+          setEmail("");
+          setBody("");
+          setSubject("");
+          setDiscord("");
+          setTelegram("");
+        }
+      })
       .catch((error) => console.log(error));
   };
 
@@ -56,10 +75,9 @@ export const ContactUs: React.FC<{ onClose(): any; isOpen: boolean }> = ({
           overflowY={"scroll"}
           overflowX={"scroll"}
           bg="bg.subtle"
-          h={"70vh"}
           maxW="60vw"
           minW={"300px"}
-          minH={"500px"}
+          minH={"fit-content"}
         >
           <ModalHeader
             backgroundImage={'url("/pattern.jpg")'}
@@ -115,6 +133,22 @@ export const ContactUs: React.FC<{ onClose(): any; isOpen: boolean }> = ({
                   value={discord}
                   onChange={(e) => {
                     setDiscord(e.target.value);
+                  }}
+                />
+              </InputGroup>
+              <InputGroup mt={0} alignItems="center">
+                <InputLeftElement
+                  height="48px"
+                  children={<Icon as={FaTelegram} color="gray.300" />}
+                />
+                <Input
+                  isRequired
+                  placeholder="Telegram (optional)"
+                  variant="brand"
+                  size="lg"
+                  value={telegram}
+                  onChange={(e) => {
+                    setTelegram(e.target.value);
                   }}
                 />
               </InputGroup>

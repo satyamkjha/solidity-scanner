@@ -218,8 +218,9 @@ const BlockCard: React.FC<{ scan: Scan }> = ({ scan }) => {
               }
             />
           </Flex>
-        ) : (scan_status === "download_failed") ||
-        (scan_status === "Download_failed, either invalid URL / or Github token expired, please re-integrate") ? (
+        ) : scan_status === "download_failed" ||
+          scan_status ===
+            "Download_failed, either invalid URL / or Github token expired, please re-integrate" ? (
           <Box
             sx={{
               p: 5,

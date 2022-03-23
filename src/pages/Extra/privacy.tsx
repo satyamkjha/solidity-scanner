@@ -439,15 +439,15 @@ export default function PrivacyPage() {
           <ul>
             <li>
               <p>
-                <strong>FreshDesk</strong>
+                <strong>Hubspot</strong>
               </p>
               <p>
-                FreshDesk is a customer support software. The service is
+                Hubspot is a customer support software. The service is
                 operated by Freshworks, Inc.
               </p>
-              <p>FreshDesk service may collect information from Your Device.</p>
+              <p>Hubspot service may collect information from Your Device.</p>
               <p>
-                The information gathered by FreshDesk is held in accordance with
+                The information gathered by Hubspot is held in accordance with
                 its Privacy Policy:{" "}
                 <a href="https://www.freshworks.com/privacy/">
                   https://www.freshworks.com/privacy/
