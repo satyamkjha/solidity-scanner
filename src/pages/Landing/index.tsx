@@ -43,7 +43,7 @@ export default function LandingPage() {
           alignItems="center"
           my={[10, 10, 0]}
           textAlign={["center", "left"]}
-          py={36}
+          py={24}
         >
           <Box w={["100%", "100%", "45%"]} px={[0, 0, 10]} py={10}>
             <Heading fontSize={["3xl", "4xl"]} mb={8}>
@@ -59,12 +59,16 @@ export default function LandingPage() {
               </Button>
             </Link>
           </Box>
-          <Box w="55%" display={["none", "none", "flex"]}>
+          <Box w="55%" display={["none", "none", "flex"]} flexDirection='column' alignItems={'flex-end'}>
+            
             <Image
+              marginTop={'-60px'}
               src="/landing-image01.png"
               alt="Product screenshot"
               transform="translateX(20px)"
+              zIndex={'10'}
             />
+           
           </Box>
         </Flex>
 
@@ -108,7 +112,7 @@ export default function LandingPage() {
             >
               <ScheduleScan size={140} />
               <Text fontSize="sm" ml="2" mt={4} fontWeight={600}>
-                Schedule Scans
+                Initiate Scans
               </Text>
             </Flex>
             <Flex
@@ -214,13 +218,40 @@ export default function LandingPage() {
               Built by us, for your contracts:
             </Heading>
             <Text fontSize="xl" color="subtle" mb={8}>
-              Customise issues, silence specific issues or add your own rules to
+              Customize issues, silence specific issues or add your own rules to
               trigger alerts for. Request for assistance with issue remediation
-              or get a manual audit from a team of experts.
+              or get a manual audit from a team of security experts.
             </Text>
           </Box>
         </Flex>
 
+        <Flex
+          as="section"
+          w="100%"
+          alignItems="center"
+          py={10}
+          flexDir={["column", "column", "row-reverse"]}
+          textAlign={["center", "center", "left"]}
+        >
+          <Box width={["100%", "100%", "50%"]}>
+            <Image
+              src="/landing-image06.jpg"
+              alt="Product screenshot"
+              mx="auto"
+              p={12}
+            />
+          </Box>
+          <Box w={["100%", "100%", "50%"]} p={10}>
+            <Heading fontSize="3xl" mb={8}>
+              Integrate with the services you already love
+            </Heading>
+            <Text fontSize="xl" color="subtle" mb={8}>
+              Using Slack/ Microsoft teams or JIRA? Built-in integrations with
+              most of the popular tools to automatically send out alerts or
+              raise issue tickets, so your team sees everything in one place.
+            </Text>
+          </Box>
+        </Flex>
         <Box w="100%" as="section" sx={{ textAlign: "center" }} my={24}>
           <Heading fontSize="3xl" mb={4}>
             Our Team
