@@ -338,29 +338,29 @@ type ContractFormData = {
   // contract_platform: string;
 };
 
-
-
 const ContractForm: React.FC = () => {
-  const contractChain: {[key:string]: {label: string, value: string}[]} = {
-    'etherscan': [
-      {value: 'mainnet', label: 'Ethereum Mainnet'},
-      {value: 'testnet', label: 'Ropsten Testnet'},
-      {value: 'testnet', label: 'Kovan Testnet'},
-      {value: 'testnet', label: 'Rinkeby Testnet'},
-      {value: 'testnet', label: 'Goerli Testnet'},
+  const contractChain: { [key: string]: { label: string; value: string }[] } = {
+    etherscan: [
+      { value: "mainnet", label: "Ethereum Mainnet" },
+      { value: "testnet", label: "Ropsten Testnet" },
+      { value: "testnet", label: "Kovan Testnet" },
+      { value: "testnet", label: "Rinkeby Testnet" },
+      { value: "testnet", label: "Goerli Testnet" },
     ],
-    'bscscan': [
-      {value: 'mainnet', label: 'Bsc Mainnet'},
-      {value: 'testnet', label: 'Bsc Testnet'}
+    bscscan: [
+      { value: "mainnet", label: "Bsc Mainnet" },
+      { value: "testnet", label: "Bsc Testnet" },
     ],
-    'polygonscan': [
-      {value: 'mainnet', label: 'Polygon Mainnet'},
-      {value: 'testnet', label: 'Polygon Testnet'}
-    ]
-  }
+    polygonscan: [
+      { value: "mainnet", label: "Polygon Mainnet" },
+      { value: "testnet", label: "Polygon Testnet" },
+    ],
+  };
   const [platform, setPlatform] = React.useState("etherscan");
   const [chain, setChain] = React.useState("");
-  const [chainList, setChainList] = React.useState<{label: string, value: string}[]>(contractChain['etherscan']);
+  const [chainList, setChainList] = React.useState<
+    { label: string; value: string }[]
+  >(contractChain["etherscan"]);
   const queryClient = useQueryClient();
   const { handleSubmit, register, formState } = useForm<ContractFormData>();
   const history = useHistory();

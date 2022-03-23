@@ -531,8 +531,8 @@ const BlockPage: React.FC = () => {
                     }
                   </TabPanel>
                   <TabPanel>
-                      {scanData.scan_report.project_id && (
-                        <PublishedReports scan_report={scanData.scan_report} />
+                    {scanData.scan_report.project_id && (
+                      <PublishedReports scan_report={scanData.scan_report} />
                     )}
                   </TabPanel>
                 </TabPanels>
@@ -706,15 +706,15 @@ const BlockPage: React.FC = () => {
                   >
                     Contract URL{" "}
                   </Text>
-                  
-                    <Text
-                      width={"70%"}
-                      isTruncated
-                      fontSize="md"
-                      fontWeight={"600"}
-                    >
-                      {scanData?.scan_report.contract_url}
-                    </Text>
+
+                  <Text
+                    width={"70%"}
+                    isTruncated
+                    fontSize="md"
+                    fontWeight={"600"}
+                  >
+                    {scanData?.scan_report.contract_url}
+                  </Text>
                 </HStack>
 
                 <HStack
