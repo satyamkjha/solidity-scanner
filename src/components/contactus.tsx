@@ -38,7 +38,6 @@ export const ContactUs: React.FC<{ onClose(): any; isOpen: boolean }> = ({
   const [body, setBody] = useState("");
   const toast = useToast();
 
-
   const onSubmit = () => {
     axios.defaults.headers.post["Content-Type"] = "application/json";
     axios
@@ -49,7 +48,7 @@ export const ContactUs: React.FC<{ onClose(): any; isOpen: boolean }> = ({
         message: body,
       })
       .then((response) => {
-        if(response.data.success){
+        if (response.data.success) {
           toast({
             title: response.data.message,
             status: "success",
@@ -57,12 +56,12 @@ export const ContactUs: React.FC<{ onClose(): any; isOpen: boolean }> = ({
             isClosable: true,
             position: "bottom",
           });
-          onClose()
-          setEmail("")
-          setBody("")
-          setSubject("")
-          setDiscord("")
-          setTelegram("")
+          onClose();
+          setEmail("");
+          setBody("");
+          setSubject("");
+          setDiscord("");
+          setTelegram("");
         }
       })
       .catch((error) => console.log(error));

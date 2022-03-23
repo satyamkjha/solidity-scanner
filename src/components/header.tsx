@@ -63,7 +63,9 @@ export const Header: React.FC = () => {
                   Sign In
                 </Button>
               </RouterLink>
-              <Button variant="brand" onClick={onOpen}>Contact Us</Button>
+              <Button variant="brand" onClick={onOpen}>
+                Contact Us
+              </Button>
             </>
           ) : (
             <>
