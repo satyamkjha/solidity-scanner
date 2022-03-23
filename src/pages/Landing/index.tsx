@@ -59,14 +59,7 @@ export default function LandingPage() {
             </Link>
           </Box>
           <Box w="55%" display={["none", "none", "flex"]} flexDirection='column' alignItems={'flex-end'}>
-            <Image
-              mr={'75px'}
-              src="/vector-1.png"
-              alt="Product screenshot"
-              transform="translateX(20px)"
-              height={'150px'}
-              width='150px'
-            />
+            
             <Image
               marginTop={'-60px'}
               src="/landing-image01.png"
@@ -74,14 +67,7 @@ export default function LandingPage() {
               transform="translateX(20px)"
               zIndex={'10'}
             />
-            <Image
-              marginTop={'-150px'}
-              src="/vector-2.png"
-              alt="Product screenshot"
-              transform="translateX(20px)"
-              height={'150px'}
-              width='150px'
-            />
+           
           </Box>
         </Flex>
 
@@ -231,9 +217,9 @@ export default function LandingPage() {
               Built by us, for your contracts:
             </Heading>
             <Text fontSize="xl" color="subtle" mb={8}>
-              Customise issues, silence specific issues or add your own rules to
+              Customize issues, silence specific issues or add your own rules to
               trigger alerts for. Request for assistance with issue remediation
-              or get a manual audit from a team of experts.
+              or get a manual audit from a team of security experts.
             </Text>
           </Box>
         </Flex>
