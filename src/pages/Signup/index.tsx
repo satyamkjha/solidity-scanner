@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { useForm } from "react-hook-form";
+import { set, useForm } from "react-hook-form";
 import { Link as RouterLink } from "react-router-dom";
 import {
   Flex,
@@ -19,6 +19,7 @@ import { FcGoogle } from "react-icons/fc";
 import { FaPhoneAlt } from "react-icons/fa";
 import { FiAtSign } from "react-icons/fi";
 import { MdWork } from "react-icons/md";
+import { passwordStrength } from "check-password-strength";
 
 import { FaLock, FaUserAlt } from "react-icons/fa";
 
@@ -31,7 +32,11 @@ const CustomFlex = motion(Flex);
 
 const SignUp: React.FC = () => {
   const [registered, setRegistered] = useState(false);
+
   const [email, setEmail] = useState("");
+
+  const passwordChecker = new RegExp("^(?=.*?[A-Za-z])(?=.*?[0-9]).{6,}$");
+
   return (
     <>
       <Flex
@@ -75,7 +80,11 @@ const SignUp: React.FC = () => {
               OR
             </Text>
           </Flex> */}
-          <RegisterForm setRegistered={setRegistered} setEmail={setEmail} />
+          <RegisterForm
+            setRegistered={setRegistered}
+            setEmail={setEmail}
+            email={email}
+          />
           <Link
             as={RouterLink}
             variant="subtle"
@@ -125,22 +134,28 @@ type FormData = {
 const RegisterForm: React.FC<{
   setRegistered: React.Dispatch<React.SetStateAction<boolean>>;
   setEmail: React.Dispatch<React.SetStateAction<string>>;
-}> = ({ setRegistered, setEmail }) => {
+  email: string;
+}> = ({ setRegistered, setEmail, email }) => {
   const { handleSubmit, register, formState } = useForm<FormData>();
 
-  const onSubmit = async ({
-    email,
-    password1,
-    company_name,
-    contact_number,
-    first_name,
-  }: FormData) => {
+  const [password, setPassword] = useState("");
+  const [passwordError, setPasswordError] = useState<{
+    contains: string[];
+    id: number;
+    value: string;
+    length: number;
+  } | null>(null);
+  const [contactNumber, setContactNumber] = useState("");
+  const [name, setName] = useState("");
+  const [companyName, setCompanyName] = useState("");
+
+  const onSubmit = async () => {
     const { data } = await API.post<AuthResponse>("/api-register/", {
       email,
-      password1,
-      company_name,
-      contact_number,
-      first_name,
+      password,
+      companyName,
+      contactNumber,
+      name,
     });
 
     if (data.status === "success") {
@@ -148,6 +163,30 @@ const RegisterForm: React.FC<{
       setEmail(email);
     }
   };
+
+  const charTypes = ["lowercase", "uppercase", "symbol", "number"];
+
+  function unique(arr1: string[], arr2: string[]) {
+    let uniqueArr: string[] = [];
+    for (var i = 0; i < arr1.length; i++) {
+      let flag = 0;
+      for (var j = 0; j < arr2.length; j++) {
+        if (arr1[i] === arr2[j]) {
+          arr2.splice(j, 1);
+          j--;
+          flag = 1;
+        }
+      }
+
+      if (flag == 0) {
+        uniqueArr.push(arr1[i]);
+      }
+    }
+    arr2.forEach((item) => {
+      uniqueArr.push(item);
+    });
+    return uniqueArr;
+  }
 
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
@@ -159,11 +198,12 @@ const RegisterForm: React.FC<{
           />
           <Input
             isRequired
+            value={name}
             type="text"
             placeholder="Your name"
             variant="brand"
             size="lg"
-            {...register("first_name", { required: true })}
+            onChange={(event) => setName(event.target.value)}
           />
         </InputGroup>
 
@@ -174,10 +214,11 @@ const RegisterForm: React.FC<{
           />
           <Input
             isRequired
+            value={companyName}
             placeholder="Your company"
             variant="brand"
             size="lg"
-            {...register("company_name", { required: true })}
+            onChange={(event) => setCompanyName(event.target.value)}
           />
         </InputGroup>
 
@@ -187,11 +228,12 @@ const RegisterForm: React.FC<{
             children={<Icon as={FaPhoneAlt} color="gray.300" />}
           />
           <Input
+            value={contactNumber}
             isRequired
             placeholder="Your phone number"
             variant="brand"
             size="lg"
-            {...register("contact_number", { required: true })}
+            onChange={(event) => setContactNumber(event.target.value)}
           />
         </InputGroup>
 
@@ -202,11 +244,12 @@ const RegisterForm: React.FC<{
           />
           <Input
             isRequired
+            value={email}
             type="email"
             placeholder="Your email"
             variant="brand"
             size="lg"
-            {...register("email", { required: true })}
+            onChange={(event) => setEmail(event.target.value)}
           />
         </InputGroup>
 
@@ -218,13 +261,28 @@ const RegisterForm: React.FC<{
           />
           <Input
             isRequired
+            value={password}
             type="password"
             placeholder="Create password"
             variant="brand"
             size="lg"
-            {...register("password1", { required: true })}
+            onChange={(event) => {
+              setPassword(event.target.value);
+              setPasswordError(passwordStrength(event.target.value));
+            }}
           />
         </InputGroup>
+        {passwordError && (
+          <Text color={"subtle"} size={"xs"}>
+            Your password should contain a
+            {unique(passwordError.contains, charTypes).map(
+              (item) => ` ${item}, `
+            )}
+            {passwordError.length < 8 &&
+              ` and should have ${8 - passwordError.length} more characters`}
+          </Text>
+        )}
+
         <Button
           type="submit"
           variant="brand"

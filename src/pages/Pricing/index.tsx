@@ -11,6 +11,8 @@ import {
   Link,
   ScaleFade,
   useDisclosure,
+  HStack,
+  Image,
 } from "@chakra-ui/react";
 
 import Header from "components/header";
@@ -36,7 +38,7 @@ export default function PricingPage() {
           px={4}
           background="rgba(82, 255, 0, 0.04)"
           backgroundImage="url(./pattern.png)"
-          borderRadius="xl"
+          borderRadius="3xl"
         >
           <Text
             fontSize="4xl"
@@ -105,236 +107,136 @@ export default function PricingPage() {
             </ActionButton> */}
           {/* </Flex> */}
         </Flex>
-        {tab === "weekly" && (
           <ScaleFade initialScale={0.9} in={tab === "weekly"}>
-            <Box as="section" py="14" px={{ base: "4", md: "8" }}>
+            <Box
+              px={16}
+              as="section"
+              py="14"
+              display="flex"
+              flexDirection="row"
+            >
+              <Flex
+                as={"div"}
+                flexDirection="column"
+                justifyContent={"flex-start"}
+                alignContent={"flex-start"}
+              >
+                <Box
+                  as="div"
+                  py={"25px"}
+                  px={"100px"}
+                  display="flex"
+                  flexDirection="row"
+                >
+                  <Text
+                    fontSize="2xl"
+                    fontWeight="700"
+                    my={1}
+                    textAlign="center"
+                    lineHeight="title"
+                  >
+                    Packages
+                  </Text>
+                </Box>
+                <Box
+                  as="div"
+                  py={"40px"}
+                  px={"50px"}
+                  display="flex"
+                  flexDirection="row"
+                  borderTopLeftRadius={"xl"}
+                  border="1px solid #D6D6D6"
+                  borderRightWidth={0}
+                  borderBottomWidth={0}
+                >
+                  <HStack spacing={1}>
+                    <Image src="/pricing/coin.svg" mx="auto" mr={4} />
+                    <Text
+                      fontSize="lg"
+                      textAlign="center"
+                      lineHeight="title"
+                      fontWeight={'300'}
+                    >
+                      Scan Credit
+                    </Text>
+                  </HStack>
+                </Box>
+                <Box
+                  as="div"
+                  py={"40px"}
+                  px={"50px"}
+                  display="flex"
+                  flexDirection="row"
+                  borderLeft="1px solid #D6D6D6"
+                  backgroundColor={'#FAFAFB'}
+                >
+                  <HStack spacing={1}>
+                    <Image src="/pricing/github.svg" mx="auto" mr={4} />
+                    <Text
+                      fontSize="lg"
+                      textAlign="center"
+                      lineHeight="title"
+                      fontWeight={'300'}
+                    >
+                      Private Github
+                    </Text>
+                  </HStack>
+                </Box>
+                <Box
+                  as="div"
+                  py={"40px"}
+                  px={"50px"}
+                  display="flex"
+                  flexDirection="row"
+                  borderLeft="1px solid #D6D6D6"
+                >
+                  <HStack spacing={1}>
+                    <Image src="/pricing/report.svg" mx="auto" mr={4} />
+                    <Text
+                      fontSize="lg"
+                      textAlign="center"
+                      lineHeight="title"
+                      fontWeight={'300'}
+                    >
+                      Generate Report
+                    </Text>
+                  </HStack>
+                </Box>
+                <Box
+                  as="div"
+                  py={"40px"}
+                  px={"50px"}
+                  display="flex"
+                  flexDirection="row"
+                  borderLeft="1px solid #D6D6D6"
+                  borderBottom="1px solid #D6D6D6"
+                  backgroundColor={'#FAFAFB'}
+                  borderBottomLeftRadius={"xl"}
+                >
+                  <HStack spacing={1}>
+                    <Image src="/pricing/publish.svg" mx="auto" mr={4} />
+                    <Text
+                      fontSize="lg"
+                      textAlign="center"
+                      lineHeight="title"
+                      fontWeight={'300'}
+                    >
+                      Publishable Reports
+                    </Text>
+                  </HStack>
+                </Box>
+              </Flex>
               <SimpleGrid
-                columns={{ base: 1, lg: 3 }}
-                spacing={{ base: "8", lg: "0" }}
+                columns={4}
                 maxW="7xl"
-                mx="auto"
                 justifyItems="center"
                 alignItems="center"
               >
-                <PricingCard
-                  data={{
-                    price: "$99",
-                    name: "Individual Researcher",
-                    features: [
-                      "Monitor upto 2 projects",
-                      "Get 10 rescans per project",
-                      "Get 10 credits for block scans",
-                      "Add a new project with 10 scans at $50/month",
-                      "Add 10 additional scans to an existing project at $5",
-                      "Add credit for block scan at $8/credit",
-                    ],
-                  }}
-                  button={
-                    <RouterLink to="/signup">
-                      <ActionButton variant="outline" borderWidth="2px">
-                        Start Free Trial
-                      </ActionButton>
-                    </RouterLink>
-                  }
-                />
-                <PricingCard
-                  zIndex={1}
-                  isPopular
-                  transform={{ lg: "scale(1.05)" }}
-                  data={{
-                    price: "$499",
-                    name: "Enterprise",
-                    features: [
-                      "Monitor upto 10 projects",
-                      "Get 20 rescans per project",
-                      "Get 50 credits for block scans",
-                      "Add a new project with 20 scans at $50/month",
-                      "Add 20 additional scans to an existing project at $5",
-                      "Add credit for block scan at $5/credit",
-                    ],
-                  }}
-                  button={
-                    <RouterLink to="/signup">
-                      <ActionButton>Start Free Trial</ActionButton>
-                    </RouterLink>
-                  }
-                />
-                <PricingCard
-                  custom
-                  data={{
-                    name: "Custom Plan",
-                    features: [
-                      "Contact us in more custom features",
-                      "Request our team for a manual audit",
-                      "Get suggestions for issue remediation",
-                    ],
-                  }}
-                  button={
-                    <Flex flexDir="column" alignItems="center">
-                      <ActionButton variant={"outline"} onClick={onOpen}>
-                        Contact us
-                      </ActionButton>
-                    </Flex>
-                  }
-                />
+                <PricingColumn/>
               </SimpleGrid>
             </Box>
           </ScaleFade>
-        )}
-        {tab === "monthly" && (
-          <ScaleFade initialScale={0.9} in={tab === "monthly"}>
-            <Box as="section" py="14" px={{ base: "4", md: "8" }}>
-              <SimpleGrid
-                columns={{ base: 1, lg: 3 }}
-                spacing={{ base: "8", lg: "0" }}
-                maxW="7xl"
-                mx="auto"
-                justifyItems="center"
-                alignItems="center"
-              >
-                <PricingCard
-                  data={{
-                    price: "$99",
-                    name: "Individual Researcher",
-                    features: [
-                      "Monitor upto 2 projects",
-                      "Get 10 rescans per project",
-                      "Get 10 credits for block scans",
-                      "Add a new project with 10 scans at $50/month",
-                      "Add 10 additional scans to an existing project at $5",
-                      "Add credit for block scan at $8/credit",
-                    ],
-                  }}
-                  button={
-                    <RouterLink to="/signup">
-                      <ActionButton variant="outline" borderWidth="2px">
-                        Start Free Trial
-                      </ActionButton>
-                    </RouterLink>
-                  }
-                />
-                <PricingCard
-                  zIndex={1}
-                  isPopular
-                  transform={{ lg: "scale(1.05)" }}
-                  data={{
-                    price: "$499",
-                    name: "Enterprise",
-                    features: [
-                      "Monitor upto 10 projects",
-                      "Get 20 rescans per project",
-                      "Get 50 credits for block scans",
-                      "Add a new project with 20 scans at $50/month",
-                      "Add 20 additional scans to an existing project at $5",
-                      "Add credit for block scan at $5/credit",
-                    ],
-                  }}
-                  button={
-                    <RouterLink to="/signup">
-                      <ActionButton>Start Free Trial</ActionButton>
-                    </RouterLink>
-                  }
-                />
-                <PricingCard
-                  custom
-                  data={{
-                    name: "Custom Plan",
-                    features: [
-                      "Contact us in more custom features",
-                      "Request our team for a manual audit",
-                      "Get suggestions for issue remediation",
-                    ],
-                  }}
-                  button={
-                    <ActionButton variant="outline" borderWidth="2px">
-                      Contact us
-                    </ActionButton>
-                  }
-                />
-              </SimpleGrid>
-            </Box>
-          </ScaleFade>
-        )}
-        {tab === "yearly" && (
-          <ScaleFade initialScale={0.9} in={tab === "yearly"}>
-            <Box as="section" py="14" px={{ base: "4", md: "8" }}>
-              <SimpleGrid
-                columns={{ base: 1, lg: 3 }}
-                spacing={{ base: "8", lg: "0" }}
-                maxW="7xl"
-                mx="auto"
-                justifyItems="center"
-                alignItems="center"
-              >
-                <PricingCard
-                  data={{
-                    price: "$99",
-                    name: "Individual Researcher",
-                    features: [
-                      "Monitor upto 2 projects",
-                      "Get 10 rescans per project",
-                      "Get 10 credits for block scans",
-                      "Add a new project with 10 scans at $50/month",
-                      "Add 10 additional scans to an existing project at $5",
-                      "Add credit for block scan at $8/credit",
-                    ],
-                  }}
-                  button={
-                    <RouterLink to="/signup">
-                      <ActionButton variant="outline" borderWidth="2px">
-                        Start Free Trial
-                      </ActionButton>
-                    </RouterLink>
-                  }
-                />
-                <PricingCard
-                  zIndex={1}
-                  isPopular
-                  transform={{ lg: "scale(1.05)" }}
-                  data={{
-                    price: "$499",
-                    name: "Enterprise",
-                    features: [
-                      "Monitor upto 10 projects",
-                      "Get 20 rescans per project",
-                      "Get 50 credits for block scans",
-                      "Add a new project with 20 scans at $50/month",
-                      "Add 20 additional scans to an existing project at $5",
-                      "Add credit for block scan at $5/credit",
-                    ],
-                  }}
-                  button={
-                    <RouterLink to="/signup">
-                      <ActionButton>Start Free Trial</ActionButton>
-                    </RouterLink>
-                  }
-                />
-                <PricingCard
-                  custom
-                  data={{
-                    name: "Custom Plan",
-                    features: [
-                      "Contact us in more custom features",
-                      "Request our team for a manual audit",
-                      "Get suggestions for issue remediation",
-                    ],
-                  }}
-                  button={
-                    <Link target="_blank" href="mailto:info@credshields.com">
-                      <ActionButton
-                        onClick={onOpen}
-                        variant="outline"
-                        borderWidth="2px"
-                      >
-                        Contact us
-                      </ActionButton>
-                    </Link>
-                  }
-                />
-              </SimpleGrid>
-            </Box>
-          </ScaleFade>
-        )}
+       
       </Container>
       <ContactUs isOpen={isOpen} onClose={onClose} />
       <Footer />
@@ -352,3 +254,135 @@ export const ActionButton = (props: ButtonProps) => (
     {...props}
   />
 );
+
+
+export const PricingColumn = () => {
+
+  return (
+              <Flex
+                as={"div"}
+                flexDirection="column"
+                justifyContent={"flex-start"}
+                alignContent={"flex-start"}
+              >
+                <Box
+                  as="div"
+                  py={"25px"}
+                  px={"50px"}
+                  display="flex"
+                  flexDirection="column"
+                  borderTopLeftRadius={"xl"}
+                  border="1px solid #D6D6D6"
+                  borderRightWidth={0}
+                >
+                  <Text
+                      fontSize="md"
+                      textAlign="center"
+                      lineHeight="title"
+                      fontWeight={'300'}
+                    >
+                      Free
+                    </Text>
+                    <Text
+                      fontSize="lg"
+                      textAlign="center"
+                      lineHeight="title"
+                      fontWeight={'300'}
+                    >
+                      Ultra Noob
+                    </Text>
+                    <Text
+                      fontSize="xl"
+                      textAlign="center"
+                      lineHeight="title"
+                      fontWeight={'extrabold'}
+                    >
+                      Free
+                    </Text>
+                </Bsdasdasdasdaox>
+                <Box
+                  as="div"
+                  py={"40px"}
+                  px={"50px"}
+                  display="flex"
+                  flexDirection="row"
+                  borderLeft="1px solid #D6D6D6"
+                >
+                  <HStack spacing={1}>
+                    <Image src="/pricing/coin.svg" mx="auto" mr={4} />
+                    <Text
+                      fontSize="lg"
+                      textAlign="center"
+                      lineHeight="title"
+                      fontWeight={'300'}
+                    >
+                      Scan Credit
+                    </Text>
+                  </HStack>
+                </Box>
+                <Box
+                  as="div"
+                  py={"40px"}
+                  px={"50px"}
+                  display="flex"
+                  flexDirection="row"
+                  borderLeft="1px solid #D6D6D6"
+                  backgroundColor={'#FAFAFB'}
+                >
+                  <HStack spacing={1}>
+                    <Image src="/pricing/github.svg" mx="auto" mr={4} />
+                    <Text
+                      fontSize="lg"
+                      textAlign="center"
+                      lineHeight="title"
+                      fontWeight={'300'}
+                    >
+                      Private Github
+                    </Text>
+                  </HStack>
+                </Box>
+                <Box
+                  as="div"
+                  py={"40px"}
+                  px={"50px"}
+                  display="flex"
+                  flexDirection="row"
+                  borderLeft="1px solid #D6D6D6"
+                >
+                  <HStack spacing={1}>
+                    <Image src="/pricing/report.svg" mx="auto" mr={4} />
+                    <Text
+                      fontSize="lg"
+                      textAlign="center"
+                      lineHeight="title"
+                      fontWeight={'300'}
+                    >
+                      Generate Report
+                    </Text>
+                  </HStack>
+                </Box>
+                <Box
+                  as="div"
+                  py={"40px"}
+                  px={"50px"}
+                  display="flex"
+                  flexDirection="row"
+                  borderLeft="1px solid #D6D6D6"
+                  borderBottom="1px solid #D6D6D6"
+                  backgroundColor={'#FAFAFB'}
+                  borderBottomLeftRadius={"xl"}
+                >
+                  <HStack spacing={1}>
+                    <Image src="/pricing/publish.svg" mx="auto" mr={4} />
+                    <Text
+                      fontSize="lg"
+                      textAlign="center"
+                      lineHeight="title"
+                      fontWeight={'300'}
+                    >
+                      Publishable Reports
+                    </Text>
+                  </HStack>
+                </Box>
+              </Flex>
+)}
