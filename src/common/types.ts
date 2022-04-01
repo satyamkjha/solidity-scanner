@@ -201,3 +201,14 @@ export type ScanItem = {
   scan_time: string;
   scans_ran: string[];
 };
+
+export type Plan = {
+  name: string;
+  description: string;
+  discount: string | null;
+  scan_count: number;
+  amount: string;
+  github: boolean;
+  report: boolean;
+  publishable_report: boolean;
+};

@@ -5,8 +5,9 @@ const getAcceptedCoins = async () => {
   const { data } = await API.get<{
     [key: string]: {
       name: string;
-      rate_individual: string;
-      rate_enterprise: string;
+      monthly: {
+        [plan: string]: string;
+      };
     };
   }>("/api-get-accepted-coins/");
   return data;

@@ -59,16 +59,19 @@ export default function LandingPage() {
               </Button>
             </Link>
           </Box>
-          <Box w="55%" display={["none", "none", "flex"]} flexDirection='column' alignItems={'flex-end'}>
-            
+          <Box
+            w="55%"
+            display={["none", "none", "flex"]}
+            flexDirection="column"
+            alignItems={"flex-end"}
+          >
             <Image
-              marginTop={'-60px'}
+              marginTop={"-60px"}
               src="/landing-image01.png"
               alt="Product screenshot"
               transform="translateX(20px)"
-              zIndex={'10'}
+              zIndex={"10"}
             />
-           
           </Box>
         </Flex>
 

@@ -442,8 +442,8 @@ export default function PrivacyPage() {
                 <strong>Hubspot</strong>
               </p>
               <p>
-                Hubspot is a customer support software. The service is
-                operated by Freshworks, Inc.
+                Hubspot is a customer support software. The service is operated
+                by Freshworks, Inc.
               </p>
               <p>Hubspot service may collect information from Your Device.</p>
               <p>
