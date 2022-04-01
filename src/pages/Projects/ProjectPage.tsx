@@ -435,7 +435,7 @@ const ScanDetails: React.FC<{ scansRemaining: number; scans: ScanMeta[] }> = ({
                       Publish Report
                     </Button>
                   )}
-                  {data.scan_report.scan_status !== "scanning" && (
+                  {data.scan_report.scan_status === "scan_done" && (
                     <Button
                       variant={"accent-outline"}
                       isDisabled={reportingStatus === "generating_report"}
@@ -1083,7 +1083,8 @@ const ScanBlock: React.FC<{
           <Score score={scan.scan_score} />
         )}
       </Flex>
-      <Button
+      {scan.scan_status === 'scan_done' && (
+        <Button
         variant="accent-outline"
         isDisabled={scan.reporting_status !== "report_generated" || isTrial}
         isLoading={isDownloadLoading}
@@ -1103,6 +1104,8 @@ const ScanBlock: React.FC<{
           <Spinner color="#806CCF" size="sm" ml={2} />
         )}
       </Button>
+      )}
+      
     </Flex>
   );
 };
