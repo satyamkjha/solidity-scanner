@@ -104,7 +104,7 @@ const Routes: React.FC = () => {
           <Route exact path="/report/:projectType/:projectId/:reportId">
             <Report />
           </Route>
-          <Route exact path="/billing/:status">
+          <Route exact path="/payment/:status">
             <PaymentSucess />
           </Route>
           <Route exact path="/pricing">
@@ -159,7 +159,7 @@ const Routes: React.FC = () => {
                 <PrivateRoute exact path="/integrations">
                   <Integrations />
                 </PrivateRoute>
-                <PrivateRoute exact path="/billing">
+                <PrivateRoute exact path="/billing/:plancode">
                   <Billing />
                 </PrivateRoute>
               </Switch>

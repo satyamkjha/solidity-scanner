@@ -29,6 +29,8 @@ import {
   useToast,
   VStack,
   Image,
+  Heading,
+  HStack,
 } from "@chakra-ui/react";
 
 import { AiOutlineCheckCircle } from "react-icons/ai";
@@ -39,9 +41,23 @@ import { useAcceptedCoins } from "hooks/usePricing";
 
 import API from "helpers/api";
 import { daysRemaining, dateToDDMMMMYYYY } from "common/functions";
+import { usePricingPlans } from "hooks/usePricingPlans";
+import { Plan } from "common/types";
+import { HiCheckCircle, HiXCircle } from "react-icons/hi";
+import { useParams } from "react-router-dom";
 
 const Billing: React.FC = () => {
   const { data } = useProfile();
+  const successColor = "#289F4C";
+  const greyColor = "#BDBDBD";
+  const { data: plans } = usePricingPlans();
+
+  const { plancode } = useParams<{plancode: string}>()
+
+  console.log(plans);
+
+  const [selectedPlan, setSelectedPlan] = useState(plancode === 'expired' ? 'pro' : plancode);
+
   return (
     <Box
       sx={{
@@ -58,8 +74,9 @@ const Billing: React.FC = () => {
       <Flex
         sx={{
           w: "100%",
-          alignItems: "center",
-          justifyContent: "space-between",
+          flexDir: "column",
+          alignItems: "flex-start",
+          justifyContent: "flex-start",
           my: 4,
         }}
       >
@@ -71,204 +88,168 @@ const Billing: React.FC = () => {
             </Text>
           )}
         </Text>
+        {plans && (
+          <Flex
+            justifyContent={"flex-start"}
+            alignItems={"flex-start"}
+            flexWrap="wrap"
+            width={"100%"}
+            height={"fit-content"}
+            padding={2}
+            mt={5}
+          >
+            {Object.keys(plans.monthly).map((plan) => (
+              <PricingPlan
+                selectedPlan={selectedPlan}
+                setSelectedPlan={setSelectedPlan}
+                plan={plan}
+                planData={plans.monthly[plan]}
+              />
+            ))}
+          </Flex>
+        )}
+        {plans && (
+          <>
+            <Text sx={{ color: "text", fontWeight: 600 }} ml={5}>
+              {plans.monthly[selectedPlan].name}
+            </Text>
+            <Text as="span" ml={5} mt={3} fontWeight={300} fontSize="smaller">
+              {plans.monthly[selectedPlan].description}
+            </Text>
+            <Flex
+              justifyContent={"flex-start"}
+              alignItems={"flex-start"}
+              flexWrap="wrap"
+              width={"100%"}
+              height={"fit-content"}
+              padding={2}
+              mt={5}
+            >
+              <HStack mx={5} justify={"flex-start"} width={"30%"}>
+                <HiCheckCircle size={30} color={successColor} />
+
+                <Image src="/pricing/coin.svg" alt="Product screenshot" p={4} />
+                <Text fontSize={"md"} ml={5}>
+                  {plans.monthly[selectedPlan].scan_count} Scan Credit
+                </Text>
+              </HStack>
+
+              <HStack mx={5} justifyContent={"flex-start"} width={"50%"}>
+                {plans.monthly[selectedPlan].github ? (
+                  <HiCheckCircle size={30} color={successColor} />
+                ) : (
+                  <HiXCircle size={30} color={greyColor} />
+                )}
+                <Image
+                  src="/pricing/github.svg"
+                  alt="Product screenshot"
+                  p={4}
+                />
+                <Text fontSize={"md"} ml={5}>
+                  Private Github
+                </Text>
+              </HStack>
+
+              <HStack mx={5} justifyContent={"flex-start"} width={"30%"}>
+                {plans.monthly[selectedPlan].report ? (
+                  <HiCheckCircle size={30} color={successColor} />
+                ) : (
+                  <HiXCircle size={30} color={greyColor} />
+                )}
+                <Image
+                  src="/pricing/report.svg"
+                  alt="Product screenshot"
+                  p={4}
+                />
+                <Text fontSize={"md"} ml={5}>
+                  Generate Reports
+                </Text>
+              </HStack>
+              <HStack mx={5} justifyContent={"flex-start"} width={"30%"}>
+                {plans.monthly[selectedPlan].publishable_report ? (
+                  <HiCheckCircle size={30} color={successColor} />
+                ) : (
+                  <HiXCircle size={30} color={greyColor} />
+                )}
+                <Image
+                  src="/pricing/publish.svg"
+                  alt="Product screenshot"
+                  p={4}
+                />
+                <Text fontSize={"md"} ml={5}>
+                  Publishable Reports
+                </Text>
+              </HStack>
+            </Flex>
+          </>
+        )}
       </Flex>
-      {!data ? (
-        <Flex w="100%" h="70vh" alignItems="center" justifyContent="center">
-          <Spinner />
-        </Flex>
-      ) : (
-        <>
-          {data.current_package === "trial" ||
-          data.current_package === "expired" ? (
-            <>
-              <Box
-                sx={{ w: "100%", background: "white", borderRadius: 15, p: 8 }}
-              >
-                <PricingPlan
-                  name="Individual Researcher"
-                  packageName="individual"
-                  price={99}
-                  details={[
-                    "Monitor upto 2 projects",
-                    "Get 10 rescans per project",
-                    "Get 10 credits for block scans",
-                    "Add a new project with 10 scans at $50/month",
-                    "Add 10 additional scans to an existing project at $5",
-                    "Add credit for block scan at $8/credit",
-                  ]}
-                />
-                <Divider w="100%" my={8} />
-                <PricingPlan
-                  name="Enterprise"
-                  packageName="enterprise"
-                  price={499}
-                  details={[
-                    "Monitor upto 10 projects",
-                    "Get 20 rescans per project",
-                    "Get 50 credits for block scans",
-                    "Add a new project with 20 scans at $50/month",
-                    "Add 20 additional scans to an existing project at $5",
-                    "Add credit for block scan at $5/credit",
-                  ]}
-                />
-              </Box>
-              <Box
-                sx={{
-                  w: "100%",
-                  background: "white",
-                  borderRadius: 15,
-                  p: 8,
-                  mt: 4,
-                }}
-              >
-                <PricingPlan
-                  isCustom
-                  name="Custom"
-                  packageName=""
-                  price={499}
-                  details={[
-                    "Contact us in more custom features",
-                    "Request our team for a manual audit",
-                    "Get suggestions for issue remediation",
-                  ]}
-                />
-              </Box>
-            </>
-          ) : (
-            <>
-              {data.current_package === "enterprise" ? (
-                <Flex width="100%" p={8}>
-                  <Box sx={{ w: "100%" }}>
-                    <CurrentPlan
-                      name="Enterprise"
-                      packageName="enterprise"
-                      packageRechargeDate={data.package_recharge_date}
-                      packageValidity={data.package_validity}
-                      details={[
-                        "Monitor upto 10 projects",
-                        "Get 20 rescans per project",
-                        "Get 50 credits for block scans",
-                        "Add a new project with 20 scans at $50/month",
-                        "Add 20 additional scans to an existing project at $5",
-                        "Add credit for block scan at $5/credit",
-                      ]}
-                    />
-                  </Box>
-                  {/* <Box sx={{ w: "%" }}></Box> */}
-                </Flex>
-              ) : data.current_package === "individual" ? (
-                <Flex width="100%" p={8}>
-                  <Box sx={{ w: "100%" }}>
-                    <CurrentPlan
-                      name="Individual Researcher"
-                      packageName="individual"
-                      packageRechargeDate={data.package_recharge_date}
-                      packageValidity={data.package_validity}
-                      details={[
-                        "Monitor upto 2 projects",
-                        "Get 10 rescans per project",
-                        "Get 10 credits for block scans",
-                        "Add a new project with 10 scans at $50/month",
-                        "Add 10 additional scans to an existing project at $5",
-                        "Add credit for block scan at $8/credit",
-                      ]}
-                    />
-                  </Box>
-                  {/* <Box sx={{ w: "%" }}></Box> */}
-                </Flex>
-              ) : (
-                <Flex width="100%" p={8}>
-                  <Box sx={{ w: "100%" }}>
-                    <CurrentPlan
-                      name="Custom"
-                      packageName="custom"
-                      packageRechargeDate={data.package_recharge_date}
-                      packageValidity={data.package_validity}
-                      details={[
-                        "Custom feature requested",
-                        "Contact our team for a manual audit",
-                        "Get suggestions for issue remediation",
-                      ]}
-                    />
-                  </Box>
-                  {/* <Box sx={{ w: "%" }}></Box> */}
-                </Flex>
-              )}
-            </>
-          )}
-        </>
-      )}
     </Box>
   );
 };
 
 const PricingPlan: React.FC<{
-  name: string;
-  packageName: string;
-  price: number;
-  details: string[];
-  isCustom?: boolean;
-}> = ({ name, price, details, packageName, isCustom }) => {
+  plan: string;
+  planData: Plan;
+  setSelectedPlan: React.Dispatch<React.SetStateAction<string>>;
+  selectedPlan: string;
+}> = ({ plan, planData, selectedPlan, setSelectedPlan }) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
-  const toast = useToast();
-  const queryClient = useQueryClient();
 
   const createStripePayment = async () => {
     const { data } = await API.post<{
       status: string;
       checkout_url: string;
     }>("/api-create-stripe-order/", {
-      package: packageName,
+      package: selectedPlan,
+      duration: 'monthly'
     });
     window.open(`${data.checkout_url}`, "_blank");
   };
+  const selected = selectedPlan === plan;
+
   return (
     <>
       <Flex
-        alignItems={["center", "center", "flex-start"]}
-        justifyContent={["center", "center", "space-between"]}
-        flexDir={["column", "column", "row"]}
-        w="100%"
+        alignItems={"center"}
+        justifyContent={"flex-start"}
+        flexDir={["column"]}
+        w="180px"
+        backgroundColor={"white"}
+        borderRadius="xl"
+        mr={5}
+        mb={5}
+        border={selected ? "1px solid #3E15F4" : ""}
+        onClick={() => setSelectedPlan(plan)}
+        overflow={"hidden"}
+        zIndex={selected ? 100 : 0}
+        filter={
+          selected ? "drop-shadow(0px 4px 23px rgba(0, 0, 0, 0.15));" : ""
+        }
       >
-        <Box mb={[6, 6, 0]} minW="200px">
-          <Text sx={{ fontSize: "lg" }}>{name}</Text>
-          {isCustom ? (
-            <Text fontSize="3xl" color="#78909C" fontWeight={500} pt={2}>
-              - / mo
-            </Text>
-          ) : (
-            <Text fontSize="3xl" color="brand-dark" fontWeight={500} pt={2}>
-              ${price} / mo
-            </Text>
-          )}
-        </Box>
-        <Box width={["80%", "80%", "40%"]} mb={[6, 6, 0]}>
-          <PricingDetails details={details} />
-        </Box>
-        <Box mb={[6, 6, 0]}>
-          {isCustom ? (
-            <Flex flexDir="column" alignItems="center">
-              <Link target="_blank" href="mailto:info@credshields.com">
-                <Button colorScheme="gray" variant="outline" width="230px">
-                  Contact us
-                </Button>
-              </Link>
-              <Link
-                mt={2}
-                fontSize="15px"
-                target="_blank"
-                variant="brand"
-                href="mailto:info@credshields.com"
-              >
-                info@credshields.com
-              </Link>
-            </Flex>
-          ) : (
-            <Button variant="brand" width="230px" onClick={onOpen}>
-              Pay Now
-            </Button>
-          )}
-        </Box>
+        <Text
+          w={"100%"}
+          color={selected ? "white" : "accent"}
+          backgroundColor={selected ? "accent" : "white"}
+          py={4}
+          textAlign="center"
+          fontSize={"sm"}
+        >
+          Save upto {planData.discount}
+        </Text>
+
+        {!selected && <Divider w={"90%"} />}
+        <Text mt={10} mx={5} fontSize={"sm"}>
+          {planData.name}
+        </Text>
+        <Heading fontSize={"x-large"} mt={1} mb={!selected ? 10 : 4}>
+        {planData.amount === 'Free' ? 'Free' : `$ ${planData.amount}` }
+        </Heading>
+        {selected && (
+          <Button my={5} variant="brand" onClick={onOpen}>
+            Select Plan
+          </Button>
+        )}
       </Flex>
       <Modal isOpen={isOpen} onClose={onClose} size="4xl">
         <ModalOverlay />
@@ -366,10 +347,10 @@ const PricingPlan: React.FC<{
                   // h="320px"
                   boxShadow="0px 0px 5px rgba(0, 0, 0, 0.2)"
                 >
-                  <CoinPayments packageName={packageName} onClose={onClose} />
+                  <CoinPayments packageName={selectedPlan} onClose={onClose} />
                 </Flex>
               </Box>
-              <Box
+              {/* <Box
                 width="35%"
                 bg="white"
                 m={2}
@@ -393,7 +374,7 @@ const PricingPlan: React.FC<{
                 <Box py={8}>
                   <PricingDetails details={details} inModal />
                 </Box>
-              </Box>
+              </Box> */}
             </Flex>
           </ModalBody>
         </ModalContent>
@@ -460,7 +441,7 @@ const CurrentPlan: React.FC<{
             ${price} / mo
           </Text> */}
           <Box py={4}>
-            <PricingDetails details={details} inModal />
+            <PricingDetails details={details}  />
           </Box>
         </Box>
         <Flex
@@ -504,6 +485,7 @@ const CoinPayments: React.FC<{ packageName: string; onClose: () => void }> = ({
   onClose,
 }) => {
   const { data, isLoading } = useAcceptedCoins();
+  console.log(data);
   const [coin, setCoin] = useState("");
   const [loading, setLoading] = useState(false);
   const handleSubmit = async () => {
@@ -520,6 +502,7 @@ const CoinPayments: React.FC<{ packageName: string; onClose: () => void }> = ({
       }>("api-create-order-cp/", {
         package: packageName,
         currency: coin,
+        duration: 'monthly'
       });
       setLoading(false);
       const popup = window.open(
@@ -544,10 +527,7 @@ const CoinPayments: React.FC<{ packageName: string; onClose: () => void }> = ({
           <Flex alignItems="center">
             <CryptoIcon size={32} name={coin.toLowerCase()} />
             <Text ml={2} color="brand-dark" fontWeight={700} fontSize="3xl">
-              {packageName === "individual" &&
-                parseFloat(data[coin].rate_individual).toPrecision(2)}
-              {packageName === "enterprise" &&
-                parseFloat(data[coin].rate_enterprise).toPrecision(2)}
+                {parseFloat(data[coin].monthly[packageName]).toPrecision(2)}
               <Text as="span" fontSize="md" fontWeight={700} ml={2}>
                 {coin}
               </Text>
