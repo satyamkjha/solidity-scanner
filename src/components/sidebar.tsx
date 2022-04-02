@@ -132,7 +132,7 @@ const Sidebar: React.FC<{
             isCollapsed={isCollapsed}
           />
           <SidebarItem
-            to={`/billing/${profileData?.current_package}`}
+            to={`/billing`}
             label="Billing"
             icon={<BillingMenuIcon size={24} />}
             isCollapsed={isCollapsed}

@@ -45,18 +45,14 @@ import { usePricingPlans } from "hooks/usePricingPlans";
 import { Plan } from "common/types";
 import { HiCheckCircle, HiXCircle } from "react-icons/hi";
 import { useParams } from "react-router-dom";
+import { placements } from "@popperjs/core";
 
 const Billing: React.FC = () => {
   const { data } = useProfile();
   const successColor = "#289F4C";
   const greyColor = "#BDBDBD";
   const { data: plans } = usePricingPlans();
-
-  const { plancode } = useParams<{plancode: string}>()
-
-  console.log(plans);
-
-  const [selectedPlan, setSelectedPlan] = useState(plancode === 'expired' ? 'pro' : plancode);
+  const [selectedPlan, setSelectedPlan] = useState('pro');
 
   return (
     <Box
@@ -82,40 +78,18 @@ const Billing: React.FC = () => {
       >
         <Text sx={{ color: "text", fontWeight: 600 }}>
           BILLING
-          {data?.current_package === "trial" && (
-            <Text as="span" ml={4} color="subtle" fontSize="smaller">
-              Get two scans free with trial account
-            </Text>
-          )}
+          
         </Text>
-        {plans && (
-          <Flex
-            justifyContent={"flex-start"}
-            alignItems={"flex-start"}
-            flexWrap="wrap"
-            width={"100%"}
-            height={"fit-content"}
-            padding={2}
-            mt={5}
-          >
-            {Object.keys(plans.monthly).map((plan) => (
-              <PricingPlan
-                selectedPlan={selectedPlan}
-                setSelectedPlan={setSelectedPlan}
-                plan={plan}
-                planData={plans.monthly[plan]}
-              />
-            ))}
-          </Flex>
-        )}
-        {plans && (
-          <>
-            <Text sx={{ color: "text", fontWeight: 600 }} ml={5}>
-              {plans.monthly[selectedPlan].name}
-            </Text>
-            <Text as="span" ml={5} mt={3} fontWeight={300} fontSize="smaller">
-              {plans.monthly[selectedPlan].description}
-            </Text>
+        {!data || !plans ? (
+        <Flex w="100%" h="70vh" alignItems="center" justifyContent="center">
+          <Spinner />
+        </Flex>
+      ) : (
+        <>
+        {(data.current_package === 'trial' || data.current_package === 'expired') ? (
+         
+            <>
+  
             <Flex
               justifyContent={"flex-start"}
               alignItems={"flex-start"}
@@ -125,64 +99,110 @@ const Billing: React.FC = () => {
               padding={2}
               mt={5}
             >
-              <HStack mx={5} justify={"flex-start"} width={"30%"}>
-                <HiCheckCircle size={30} color={successColor} />
-
-                <Image src="/pricing/coin.svg" alt="Product screenshot" p={4} />
-                <Text fontSize={"md"} ml={5}>
-                  {plans.monthly[selectedPlan].scan_count} Scan Credit
-                </Text>
-              </HStack>
-
-              <HStack mx={5} justifyContent={"flex-start"} width={"50%"}>
-                {plans.monthly[selectedPlan].github ? (
-                  <HiCheckCircle size={30} color={successColor} />
-                ) : (
-                  <HiXCircle size={30} color={greyColor} />
-                )}
-                <Image
-                  src="/pricing/github.svg"
-                  alt="Product screenshot"
-                  p={4}
+              {Object.keys(plans.monthly).map((plan) => 
+              (
+                <PricingPlan
+                  selectedPlan={selectedPlan}
+                  setSelectedPlan={setSelectedPlan}
+                  plan={plan}
+                  planData={plans.monthly[plan]}
                 />
-                <Text fontSize={"md"} ml={5}>
-                  Private Github
-                </Text>
-              </HStack>
-
-              <HStack mx={5} justifyContent={"flex-start"} width={"30%"}>
-                {plans.monthly[selectedPlan].report ? (
-                  <HiCheckCircle size={30} color={successColor} />
-                ) : (
-                  <HiXCircle size={30} color={greyColor} />
-                )}
-                <Image
-                  src="/pricing/report.svg"
-                  alt="Product screenshot"
-                  p={4}
-                />
-                <Text fontSize={"md"} ml={5}>
-                  Generate Reports
-                </Text>
-              </HStack>
-              <HStack mx={5} justifyContent={"flex-start"} width={"30%"}>
-                {plans.monthly[selectedPlan].publishable_report ? (
-                  <HiCheckCircle size={30} color={successColor} />
-                ) : (
-                  <HiXCircle size={30} color={greyColor} />
-                )}
-                <Image
-                  src="/pricing/publish.svg"
-                  alt="Product screenshot"
-                  p={4}
-                />
-                <Text fontSize={"md"} ml={5}>
-                  Publishable Reports
-                </Text>
-              </HStack>
+              ))}
             </Flex>
+              <Text sx={{ color: "text", fontWeight: 600 }} ml={5}>
+                {plans.monthly[selectedPlan].name}
+              </Text>
+              <Text as="span" ml={5} mt={3} fontWeight={300} fontSize="smaller">
+                {plans.monthly[selectedPlan].description}
+              </Text>
+              <Flex
+                justifyContent={"flex-start"}
+                alignItems={"flex-start"}
+                flexWrap="wrap"
+                width={"100%"}
+                height={"fit-content"}
+                padding={2}
+                mt={5}
+              >
+                <HStack mx={5} justify={"flex-start"} width={"30%"}>
+                  <HiCheckCircle size={30} color={successColor} />
+  
+                  <Image src="/pricing/coin.svg" alt="Product screenshot" p={4} />
+                  <Text fontSize={"md"} ml={5}>
+                    {plans.monthly[selectedPlan].scan_count} Scan Credit
+                  </Text>
+                </HStack>
+  
+                <HStack mx={5} justifyContent={"flex-start"} width={"50%"}>
+                  {plans.monthly[selectedPlan].github ? (
+                    <HiCheckCircle size={30} color={successColor} />
+                  ) : (
+                    <HiXCircle size={30} color={greyColor} />
+                  )}
+                  <Image
+                    src="/pricing/github.svg"
+                    alt="Product screenshot"
+                    p={4}
+                  />
+                  <Text fontSize={"md"} ml={5}>
+                    Private Github
+                  </Text>
+                </HStack>
+  
+                <HStack mx={5} justifyContent={"flex-start"} width={"30%"}>
+                  {plans.monthly[selectedPlan].report ? (
+                    <HiCheckCircle size={30} color={successColor} />
+                  ) : (
+                    <HiXCircle size={30} color={greyColor} />
+                  )}
+                  <Image
+                    src="/pricing/report.svg"
+                    alt="Product screenshot"
+                    p={4}
+                  />
+                  <Text fontSize={"md"} ml={5}>
+                    Generate Reports
+                  </Text>
+                </HStack>
+                <HStack mx={5} justifyContent={"flex-start"} width={"30%"}>
+                  {plans.monthly[selectedPlan].publishable_report ? (
+                    <HiCheckCircle size={30} color={successColor} />
+                  ) : (
+                    <HiXCircle size={30} color={greyColor} />
+                  )}
+                  <Image
+                    src="/pricing/publish.svg"
+                    alt="Product screenshot"
+                    p={4}
+                  />
+                  <Text fontSize={"md"} ml={5}>
+                    Publishable Reports
+                  </Text>
+                </HStack>
+              </Flex>
+            </>
+         
+        ) : 
+          <>
+          
+
+            <Flex width="100%" p={8}>
+                  <Box sx={{ w: "100%" }}>
+                    <CurrentPlan
+                      name={plans.monthly[data.current_package].name}
+                      packageName={data.current_package}
+                      packageRechargeDate={data.package_recharge_date}
+                      packageValidity={data.package_validity}
+                      plan={plans.monthly[data.current_package]}
+                    />
+                  </Box>
+                  {/* <Box sx={{ w: "%" }}></Box> */}
+                </Flex>
           </>
-        )}
+        }
+        </>)}
+       
+       
       </Flex>
     </Box>
   );
@@ -407,10 +427,13 @@ const PricingDetails: React.FC<{ details: string[]; inModal?: boolean }> = ({
 const CurrentPlan: React.FC<{
   name: string;
   packageName: string;
-  details: string[];
   packageRechargeDate: string;
   packageValidity: number;
-}> = ({ name, packageRechargeDate, packageValidity, details }) => {
+  plan: Plan
+}> = ({ name, packageRechargeDate, packageValidity, plan}) => {
+
+  const successColor = "#289F4C";
+  const greyColor = "#BDBDBD";
   return (
     <Box
       sx={{
@@ -426,26 +449,41 @@ const CurrentPlan: React.FC<{
         <Text>Current Plan</Text>
       </Flex>
       <Flex>
-        <Box width="50%">
-          <Text sx={{ fontWeight: 500 }} fontSize="2xl" mt={8}>
+        <Box ml={7} width="60%">
+          {/* <Text sx={{ fontWeight: 500 }} fontSize="2xl" mt={8}>
             {name}
-          </Text>
-          {/* <Text
-            sx={{
-              fontWeight: 600,
-              fontSize: "3xl",
-              color: "brand-dark",
-              py: 2,
-            }}
-          >
-            ${price} / mo
           </Text> */}
-          <Box py={4}>
-            <PricingDetails details={details}  />
-          </Box>
+          <Text mt={7} fontSize={"xl"}>
+          {plan.name}
+        </Text>
+        <Text as="span" mt={5} mb={10}  fontWeight={300} fontSize="smaller">
+                {plan.description}
+              </Text>
+        <Divider mt={5} w={"60%"} />
+          
+        <HStack>
+        <Heading verticalAlign={'center'} fontSize={"x-large"} mt={4} mb={4}>
+        {plan.amount === 'Free' ? 'Free' : `$ ${plan.amount}/mo` }
+
+       
+        </Heading> 
+        {plan.discount && <Text
+          color={"accent"}
+          backgroundColor={"white"}
+          textAlign="left"
+          fontWeight={600}
+          fontSize={"sm"}
+          mb={10}
+          ml={10}
+        >
+          (Save upto {plan.discount})
+        </Text>}
+        </HStack>
+       
+              
         </Box>
         <Flex
-          width="50%"
+          width="40%"
           py={4}
           pr={4}
           justifyContent="space-between"
@@ -476,6 +514,71 @@ const CurrentPlan: React.FC<{
           </Box>
         </Flex>
       </Flex>
+      <Flex
+                justifyContent={"flex-start"}
+                alignItems={"flex-start"}
+                flexWrap="wrap"
+                width={"100%"}
+                height={"fit-content"}
+                padding={2}
+                mt={5}
+              >
+                <HStack mx={5} justify={"flex-start"} width={"40%"}>
+                  <HiCheckCircle size={30} color={successColor} />
+  
+                  <Image src="/pricing/coin.svg" alt="Product screenshot" p={4} />
+                  <Text fontSize={"md"} ml={5}>
+                    {plan.scan_count} Scan Credit
+                  </Text>
+                </HStack>
+  
+                <HStack mx={5} justifyContent={"flex-start"} width={"40%"}>
+                  {plan.github ? (
+                    <HiCheckCircle size={30} color={successColor} />
+                  ) : (
+                    <HiXCircle size={30} color={greyColor} />
+                  )}
+                  <Image
+                    src="/pricing/github.svg"
+                    alt="Product screenshot"
+                    p={4}
+                  />
+                  <Text fontSize={"md"} ml={5}>
+                    Private Github
+                  </Text>
+                </HStack>
+  
+                <HStack mx={5} justifyContent={"flex-start"} width={"40%"}>
+                  {plan.report ? (
+                    <HiCheckCircle size={30} color={successColor} />
+                  ) : (
+                    <HiXCircle size={30} color={greyColor} />
+                  )}
+                  <Image
+                    src="/pricing/report.svg"
+                    alt="Product screenshot"
+                    p={4}
+                  />
+                  <Text fontSize={"md"} ml={5}>
+                    Generate Reports
+                  </Text>
+                </HStack>
+                <HStack mx={5} justifyContent={"flex-start"} width={"40%"}>
+                  {plan.publishable_report ? (
+                    <HiCheckCircle size={30} color={successColor} />
+                  ) : (
+                    <HiXCircle size={30} color={greyColor} />
+                  )}
+                  <Image
+                    src="/pricing/publish.svg"
+                    alt="Product screenshot"
+                    p={4}
+                  />
+                  <Text fontSize={"md"} ml={5}>
+                    Publishable Reports
+                  </Text>
+                </HStack>
+              </Flex>
     </Box>
   );
 };

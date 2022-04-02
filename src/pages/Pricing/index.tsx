@@ -23,7 +23,7 @@ import Footer from "components/footer";
 import { PricingCard } from "./components/pricingCard";
 import { useState } from "react";
 import ContactUs from "components/contactus";
-import { HiCheckCircle } from "react-icons/hi";
+import { HiCheckCircle, HiXCircle } from "react-icons/hi";
 import { usePricingPlans } from "hooks/usePricingPlans";
 import { Plan } from "common/types";
 import Auth from "helpers/auth";
@@ -33,6 +33,8 @@ export default function PricingPage() {
   const { isOpen, onClose, onOpen } = useDisclosure();
 
   const { data: plans } = usePricingPlans();
+
+  const [selectedPlan, setSelectedPlan] = useState('')
 
 
   return (
@@ -139,7 +141,7 @@ export default function PricingPage() {
             >
               <Box
                 as="div"
-                py={"40px"}
+                py={"36px"}
                 px={"100px"}
                 display="flex"
                 flexDirection="row"
@@ -252,6 +254,8 @@ export default function PricingPage() {
               <PricingColumn
                 plan={plan}
                 planData={plans.monthly[plan]}
+                setSelectedPlan={setSelectedPlan}
+                selectedPlan={selectedPlan}
               />
               ))}
               
@@ -279,19 +283,22 @@ export const ActionButton = (props: ButtonProps) => (
 );
 
 export const PricingColumn: React.FC<{plan: string;
-  planData: Plan;}> = ({plan, planData}) => {
+  planData: Plan;
+  selectedPlan: string
+  setSelectedPlan: React.Dispatch<React.SetStateAction<string>>
+}> = ({plan, planData, selectedPlan, setSelectedPlan}) => {
   const successColor = "#289F4C";
   const greyColor = "#808080";
 
   const history = useHistory()
 
-  const [mouse, setMouse] = useState(false);
+  const mouse = selectedPlan === plan
 
   return (
     <Flex
       as={"div"}
-      onMouseEnter={() => setMouse(true)}
-      onMouseLeave={() => setMouse(false)}
+      onMouseOver={() => setSelectedPlan(plan)}
+      onMouseLeave={()=>setSelectedPlan('')}
       flexDirection="column"
       justifyContent={"flex-start"}
       alignContent={"flex-start"}
@@ -504,7 +511,14 @@ export const PricingColumn: React.FC<{plan: string;
             justifyContent={"center"}
             alignItems={"center"}
           >
-            <HiCheckCircle size={30} color={successColor} />
+            <Text
+              fontSize="lg"
+              textAlign="center"
+              lineHeight="title"
+              fontWeight={"300"}
+            >
+              {planData.scan_count}
+            </Text>
           </Box>
           <Box
             as="div"
@@ -516,8 +530,11 @@ export const PricingColumn: React.FC<{plan: string;
             justifyContent={"center"}
             alignItems={"center"}
           >
-            <HiCheckCircle size={30} color={successColor} />
-          </Box>
+{planData.github ? (
+                  <HiCheckCircle size={30} color={successColor} />
+                ) : (
+                  <HiXCircle size={30} color={greyColor} />
+                )}          </Box>
           <Box
             as="div"
             py={"40px"}
@@ -527,8 +544,11 @@ export const PricingColumn: React.FC<{plan: string;
             justifyContent={"center"}
             alignItems={"center"}
           >
-            <HiCheckCircle size={30} color={successColor} />
-          </Box>
+{planData.report ? (
+                  <HiCheckCircle size={30} color={successColor} />
+                ) : (
+                  <HiXCircle size={30} color={greyColor} />
+                )}          </Box>
           <Box
             as="div"
             py={"40px"}
@@ -539,8 +559,11 @@ export const PricingColumn: React.FC<{plan: string;
             justifyContent={"center"}
             alignItems={"center"}
           >
-            <HiCheckCircle size={30} color={successColor} />
-          </Box>
+{planData.publishable_report ? (
+                  <HiCheckCircle size={30} color={successColor} />
+                ) : (
+                  <HiXCircle size={30} color={greyColor} />
+                )}          </Box>
         </ScaleFade>
       )}
     </Flex>
