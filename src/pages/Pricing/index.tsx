@@ -23,7 +23,7 @@ import Footer from "components/footer";
 import { PricingCard } from "./components/pricingCard";
 import { useState } from "react";
 import ContactUs from "components/contactus";
-import { HiCheckCircle } from "react-icons/hi";
+import { HiCheckCircle, HiXCircle } from "react-icons/hi";
 import { usePricingPlans } from "hooks/usePricingPlans";
 import { Plan } from "common/types";
 import Auth from "helpers/auth";
@@ -33,6 +33,8 @@ export default function PricingPage() {
   const { isOpen, onClose, onOpen } = useDisclosure();
 
   const { data: plans } = usePricingPlans();
+
+  const [selectedPlan, setSelectedPlan] = useState("");
 
   return (
     <>
@@ -138,7 +140,7 @@ export default function PricingPage() {
               >
                 <Box
                   as="div"
-                  py={"40px"}
+                  py={"36px"}
                   px={"100px"}
                   display="flex"
                   flexDirection="row"
@@ -248,7 +250,12 @@ export default function PricingPage() {
                 alignItems="center"
               >
                 {Object.keys(plans.monthly).map((plan) => (
-                  <PricingColumn plan={plan} planData={plans.monthly[plan]} />
+                  <PricingColumn
+                    plan={plan}
+                    planData={plans.monthly[plan]}
+                    setSelectedPlan={setSelectedPlan}
+                    selectedPlan={selectedPlan}
+                  />
                 ))}
               </SimpleGrid>
             </Box>
@@ -272,22 +279,24 @@ export const ActionButton = (props: ButtonProps) => (
   />
 );
 
-export const PricingColumn: React.FC<{ plan: string; planData: Plan }> = ({
-  plan,
-  planData,
-}) => {
+export const PricingColumn: React.FC<{
+  plan: string;
+  planData: Plan;
+  selectedPlan: string;
+  setSelectedPlan: React.Dispatch<React.SetStateAction<string>>;
+}> = ({ plan, planData, selectedPlan, setSelectedPlan }) => {
   const successColor = "#289F4C";
   const greyColor = "#808080";
 
   const history = useHistory();
 
-  const [mouse, setMouse] = useState(false);
+  const mouse = selectedPlan === plan;
 
   return (
     <Flex
       as={"div"}
-      onMouseEnter={() => setMouse(true)}
-      onMouseLeave={() => setMouse(false)}
+      onMouseOver={() => setSelectedPlan(plan)}
+      onMouseLeave={() => setSelectedPlan("")}
       flexDirection="column"
       justifyContent={"flex-start"}
       alignContent={"flex-start"}
@@ -334,7 +343,7 @@ export const PricingColumn: React.FC<{ plan: string; planData: Plan }> = ({
                 fontWeight={"300"}
                 color={"#FFFFFF"}
               >
-                {plan === "trial" || plan === "beginner" ? "" : `Save upto`}
+                Save upto
               </Text>
               <Heading
                 fontSize="xl"
@@ -343,11 +352,7 @@ export const PricingColumn: React.FC<{ plan: string; planData: Plan }> = ({
                 fontWeight={"700"}
                 color={"#FFFFFF"}
               >
-                {plan === "trial"
-                  ? "Free"
-                  : plan === "beginner"
-                  ? "Starter"
-                  : planData.discount}
+                {planData.discount}
               </Heading>
             </HStack>
           </Box>
@@ -448,13 +453,13 @@ export const PricingColumn: React.FC<{ plan: string; planData: Plan }> = ({
               cursor="pointer"
               onClick={() => {
                 if (Auth.isUserAuthenticated()) {
-                  history.push(`/billing/${plan}`);
+                  history.push("/billing");
                 } else {
                   history.push("/signin");
                 }
               }}
             >
-              {Auth.isUserAuthenticated() ? "Choose" : "Get Started"}
+              Choose
             </Text>
           </Box>
         </ScaleFade>
@@ -475,13 +480,8 @@ export const PricingColumn: React.FC<{ plan: string; planData: Plan }> = ({
               textAlign="center"
               lineHeight="title"
               fontWeight={"300"}
-              color="accent"
             >
-              {plan === "trial"
-                ? "Free"
-                : plan === "beginner"
-                ? "Starter"
-                : `Save upto ${planData.discount}`}
+              {/* {plan === 'trial' ? 'Free' : plan === 'starter' ? ''} */}
             </Text>
             <Text
               fontSize="lg"
@@ -509,7 +509,14 @@ export const PricingColumn: React.FC<{ plan: string; planData: Plan }> = ({
             justifyContent={"center"}
             alignItems={"center"}
           >
-            <HiCheckCircle size={30} color={successColor} />
+            <Text
+              fontSize="lg"
+              textAlign="center"
+              lineHeight="title"
+              fontWeight={"300"}
+            >
+              {planData.scan_count}
+            </Text>
           </Box>
           <Box
             as="div"
@@ -521,7 +528,11 @@ export const PricingColumn: React.FC<{ plan: string; planData: Plan }> = ({
             justifyContent={"center"}
             alignItems={"center"}
           >
-            <HiCheckCircle size={30} color={successColor} />
+            {planData.github ? (
+              <HiCheckCircle size={30} color={successColor} />
+            ) : (
+              <HiXCircle size={30} color={greyColor} />
+            )}{" "}
           </Box>
           <Box
             as="div"
@@ -532,7 +543,11 @@ export const PricingColumn: React.FC<{ plan: string; planData: Plan }> = ({
             justifyContent={"center"}
             alignItems={"center"}
           >
-            <HiCheckCircle size={30} color={successColor} />
+            {planData.report ? (
+              <HiCheckCircle size={30} color={successColor} />
+            ) : (
+              <HiXCircle size={30} color={greyColor} />
+            )}{" "}
           </Box>
           <Box
             as="div"
@@ -544,7 +559,11 @@ export const PricingColumn: React.FC<{ plan: string; planData: Plan }> = ({
             justifyContent={"center"}
             alignItems={"center"}
           >
-            <HiCheckCircle size={30} color={successColor} />
+            {planData.publishable_report ? (
+              <HiCheckCircle size={30} color={successColor} />
+            ) : (
+              <HiXCircle size={30} color={greyColor} />
+            )}{" "}
           </Box>
         </ScaleFade>
       )}
