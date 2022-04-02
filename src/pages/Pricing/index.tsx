@@ -34,8 +34,7 @@ export default function PricingPage() {
 
   const { data: plans } = usePricingPlans();
 
-  const [selectedPlan, setSelectedPlan] = useState('')
-
+  const [selectedPlan, setSelectedPlan] = useState("");
 
   return (
     <>
@@ -122,148 +121,146 @@ export default function PricingPage() {
         {}
         {plans && (
           <ScaleFade initialScale={0.9} in={tab === "weekly"}>
-          <Box
-            px={16}
-            as="section"
-            py="14"
-            display="flex"
-            flexDirection="row"
-            justifyContent={"center"}
-            alignContent={"center"}
-          >
-            <Flex
-              as={"div"}
-              flexDirection="column"
-              justifyContent={"flex-end"}
+            <Box
+              px={16}
+              as="section"
+              py="14"
+              display="flex"
+              flexDirection="row"
+              justifyContent={"center"}
               alignContent={"center"}
-              mb={"70px"}
-              mt={"90px"}
             >
-              <Box
-                as="div"
-                py={"36px"}
-                px={"100px"}
-                display="flex"
-                flexDirection="row"
+              <Flex
+                as={"div"}
+                flexDirection="column"
+                justifyContent={"flex-end"}
+                alignContent={"center"}
+                mb={"70px"}
+                mt={"90px"}
               >
-                <Text
-                  fontSize="2xl"
-                  fontWeight="700"
-                  my={1}
-                  textAlign="center"
-                  lineHeight="title"
+                <Box
+                  as="div"
+                  py={"36px"}
+                  px={"100px"}
+                  display="flex"
+                  flexDirection="row"
                 >
-                  Packages
-                </Text>
-              </Box>
-              <Box
-                as="div"
-                py={"35px"}
-                px={"50px"}
-                display="flex"
-                flexDirection="row"
-                borderTopLeftRadius={"xl"}
-                border="2px solid #D6D6D6"
-                borderRightWidth={0}
-                borderBottomWidth={0}
-              >
-                <HStack spacing={1}>
-                  <Image src="/pricing/coin.svg" mx="auto" mr={4} />
                   <Text
-                    fontSize="lg"
+                    fontSize="2xl"
+                    fontWeight="700"
+                    my={1}
                     textAlign="center"
                     lineHeight="title"
-                    fontWeight={"300"}
                   >
-                    Scan Credit
+                    Packages
                   </Text>
-                </HStack>
-              </Box>
-              <Box
-                as="div"
-                py={"36px"}
-                px={"50px"}
-                display="flex"
-                flexDirection="row"
-                borderLeft="2px solid #D6D6D6"
-                backgroundColor={"#FAFAFB"}
+                </Box>
+                <Box
+                  as="div"
+                  py={"35px"}
+                  px={"50px"}
+                  display="flex"
+                  flexDirection="row"
+                  borderTopLeftRadius={"xl"}
+                  border="2px solid #D6D6D6"
+                  borderRightWidth={0}
+                  borderBottomWidth={0}
+                >
+                  <HStack spacing={1}>
+                    <Image src="/pricing/coin.svg" mx="auto" mr={4} />
+                    <Text
+                      fontSize="lg"
+                      textAlign="center"
+                      lineHeight="title"
+                      fontWeight={"300"}
+                    >
+                      Scan Credit
+                    </Text>
+                  </HStack>
+                </Box>
+                <Box
+                  as="div"
+                  py={"36px"}
+                  px={"50px"}
+                  display="flex"
+                  flexDirection="row"
+                  borderLeft="2px solid #D6D6D6"
+                  backgroundColor={"#FAFAFB"}
+                >
+                  <HStack spacing={1}>
+                    <Image src="/pricing/github.svg" mx="auto" mr={4} />
+                    <Text
+                      fontSize="lg"
+                      textAlign="center"
+                      lineHeight="title"
+                      fontWeight={"300"}
+                    >
+                      Private Github
+                    </Text>
+                  </HStack>
+                </Box>
+                <Box
+                  as="div"
+                  py={"35px"}
+                  px={"50px"}
+                  display="flex"
+                  flexDirection="row"
+                  borderLeft="2px solid #D6D6D6"
+                >
+                  <HStack spacing={1}>
+                    <Image src="/pricing/report.svg" mx="auto" mr={4} />
+                    <Text
+                      fontSize="lg"
+                      textAlign="center"
+                      lineHeight="title"
+                      fontWeight={"300"}
+                    >
+                      Generate Report
+                    </Text>
+                  </HStack>
+                </Box>
+                <Box
+                  as="div"
+                  py={"36px"}
+                  px={"50px"}
+                  display="flex"
+                  flexDirection="row"
+                  borderLeft="2px solid #D6D6D6"
+                  borderBottom="2px solid #D6D6D6"
+                  backgroundColor={"#FAFAFB"}
+                  borderBottomLeftRadius={"xl"}
+                >
+                  <HStack spacing={1}>
+                    <Image src="/pricing/publish.svg" mx="auto" mr={4} />
+                    <Text
+                      fontSize="lg"
+                      textAlign="center"
+                      lineHeight="title"
+                      fontWeight={"300"}
+                    >
+                      Publishable Reports
+                    </Text>
+                  </HStack>
+                </Box>
+              </Flex>
+              <SimpleGrid
+                columns={5}
+                maxW="7xl"
+                justifyItems="center"
+                alignItems="center"
               >
-                <HStack spacing={1}>
-                  <Image src="/pricing/github.svg" mx="auto" mr={4} />
-                  <Text
-                    fontSize="lg"
-                    textAlign="center"
-                    lineHeight="title"
-                    fontWeight={"300"}
-                  >
-                    Private Github
-                  </Text>
-                </HStack>
-              </Box>
-              <Box
-                as="div"
-                py={"35px"}
-                px={"50px"}
-                display="flex"
-                flexDirection="row"
-                borderLeft="2px solid #D6D6D6"
-              >
-                <HStack spacing={1}>
-                  <Image src="/pricing/report.svg" mx="auto" mr={4} />
-                  <Text
-                    fontSize="lg"
-                    textAlign="center"
-                    lineHeight="title"
-                    fontWeight={"300"}
-                  >
-                    Generate Report
-                  </Text>
-                </HStack>
-              </Box>
-              <Box
-                as="div"
-                py={"36px"}
-                px={"50px"}
-                display="flex"
-                flexDirection="row"
-                borderLeft="2px solid #D6D6D6"
-                borderBottom="2px solid #D6D6D6"
-                backgroundColor={"#FAFAFB"}
-                borderBottomLeftRadius={"xl"}
-              >
-                <HStack spacing={1}>
-                  <Image src="/pricing/publish.svg" mx="auto" mr={4} />
-                  <Text
-                    fontSize="lg"
-                    textAlign="center"
-                    lineHeight="title"
-                    fontWeight={"300"}
-                  >
-                    Publishable Reports
-                  </Text>
-                </HStack>
-              </Box>
-            </Flex>
-            <SimpleGrid
-              columns={5}
-              maxW="7xl"
-              justifyItems="center"
-              alignItems="center"
-            >
-              {Object.keys(plans.monthly).map((plan) => (
-              <PricingColumn
-                plan={plan}
-                planData={plans.monthly[plan]}
-                setSelectedPlan={setSelectedPlan}
-                selectedPlan={selectedPlan}
-              />
-              ))}
-              
-            </SimpleGrid>
-          </Box>
-        </ScaleFade>
+                {Object.keys(plans.monthly).map((plan) => (
+                  <PricingColumn
+                    plan={plan}
+                    planData={plans.monthly[plan]}
+                    setSelectedPlan={setSelectedPlan}
+                    selectedPlan={selectedPlan}
+                  />
+                ))}
+              </SimpleGrid>
+            </Box>
+          </ScaleFade>
         )}
-        
       </Container>
       <ContactUs isOpen={isOpen} onClose={onClose} />
       <Footer />
@@ -282,23 +279,24 @@ export const ActionButton = (props: ButtonProps) => (
   />
 );
 
-export const PricingColumn: React.FC<{plan: string;
+export const PricingColumn: React.FC<{
+  plan: string;
   planData: Plan;
-  selectedPlan: string
-  setSelectedPlan: React.Dispatch<React.SetStateAction<string>>
-}> = ({plan, planData, selectedPlan, setSelectedPlan}) => {
+  selectedPlan: string;
+  setSelectedPlan: React.Dispatch<React.SetStateAction<string>>;
+}> = ({ plan, planData, selectedPlan, setSelectedPlan }) => {
   const successColor = "#289F4C";
   const greyColor = "#808080";
 
-  const history = useHistory()
+  const history = useHistory();
 
-  const mouse = selectedPlan === plan
+  const mouse = selectedPlan === plan;
 
   return (
     <Flex
       as={"div"}
       onMouseOver={() => setSelectedPlan(plan)}
-      onMouseLeave={()=>setSelectedPlan('')}
+      onMouseLeave={() => setSelectedPlan("")}
       flexDirection="column"
       justifyContent={"flex-start"}
       alignContent={"flex-start"}
@@ -381,7 +379,7 @@ export const PricingColumn: React.FC<{plan: string;
               lineHeight="title"
               fontWeight={900}
             >
-              {planData.amount === 'Free' ? 'Free' : `$ ${planData.amount}` }
+              {planData.amount === "Free" ? "Free" : `$ ${planData.amount}`}
             </Heading>
           </Box>
           <Box
@@ -398,7 +396,7 @@ export const PricingColumn: React.FC<{plan: string;
               textAlign="center"
               lineHeight="title"
               fontWeight={"300"}
-              height={'130px'}
+              height={"130px"}
             >
               {planData.description}
             </Text>
@@ -452,12 +450,12 @@ export const PricingColumn: React.FC<{plan: string;
               lineHeight="title"
               fontWeight={"300"}
               color={"#3300FF"}
-              cursor='pointer'
-              onClick={()=>{
-                if(Auth.isUserAuthenticated()){
-                  history.push('/billing')
+              cursor="pointer"
+              onClick={() => {
+                if (Auth.isUserAuthenticated()) {
+                  history.push("/billing");
                 } else {
-                  history.push('/signin')
+                  history.push("/signin");
                 }
               }}
             >
@@ -499,7 +497,7 @@ export const PricingColumn: React.FC<{plan: string;
               lineHeight="title"
               fontWeight={900}
             >
-              {planData.amount === 'Free' ? 'Free' : `$ ${planData.amount}` }
+              {planData.amount === "Free" ? "Free" : `$ ${planData.amount}`}
             </Heading>
           </Box>
           <Box
@@ -530,11 +528,12 @@ export const PricingColumn: React.FC<{plan: string;
             justifyContent={"center"}
             alignItems={"center"}
           >
-{planData.github ? (
-                  <HiCheckCircle size={30} color={successColor} />
-                ) : (
-                  <HiXCircle size={30} color={greyColor} />
-                )}          </Box>
+            {planData.github ? (
+              <HiCheckCircle size={30} color={successColor} />
+            ) : (
+              <HiXCircle size={30} color={greyColor} />
+            )}{" "}
+          </Box>
           <Box
             as="div"
             py={"40px"}
@@ -544,11 +543,12 @@ export const PricingColumn: React.FC<{plan: string;
             justifyContent={"center"}
             alignItems={"center"}
           >
-{planData.report ? (
-                  <HiCheckCircle size={30} color={successColor} />
-                ) : (
-                  <HiXCircle size={30} color={greyColor} />
-                )}          </Box>
+            {planData.report ? (
+              <HiCheckCircle size={30} color={successColor} />
+            ) : (
+              <HiXCircle size={30} color={greyColor} />
+            )}{" "}
+          </Box>
           <Box
             as="div"
             py={"40px"}
@@ -559,11 +559,12 @@ export const PricingColumn: React.FC<{plan: string;
             justifyContent={"center"}
             alignItems={"center"}
           >
-{planData.publishable_report ? (
-                  <HiCheckCircle size={30} color={successColor} />
-                ) : (
-                  <HiXCircle size={30} color={greyColor} />
-                )}          </Box>
+            {planData.publishable_report ? (
+              <HiCheckCircle size={30} color={successColor} />
+            ) : (
+              <HiXCircle size={30} color={greyColor} />
+            )}{" "}
+          </Box>
         </ScaleFade>
       )}
     </Flex>
