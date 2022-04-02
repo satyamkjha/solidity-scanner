@@ -52,11 +52,13 @@ const Billing: React.FC = () => {
   const greyColor = "#BDBDBD";
   const { data: plans } = usePricingPlans();
 
-  const { plancode } = useParams<{plancode: string}>()
+  const { plancode } = useParams<{ plancode: string }>();
 
   console.log(plans);
 
-  const [selectedPlan, setSelectedPlan] = useState(plancode === 'expired' ? 'pro' : plancode);
+  const [selectedPlan, setSelectedPlan] = useState(
+    plancode === "expired" ? "pro" : plancode
+  );
 
   return (
     <Box
@@ -202,7 +204,7 @@ const PricingPlan: React.FC<{
       checkout_url: string;
     }>("/api-create-stripe-order/", {
       package: selectedPlan,
-      duration: 'monthly'
+      duration: "monthly",
     });
     window.open(`${data.checkout_url}`, "_blank");
   };
@@ -243,7 +245,7 @@ const PricingPlan: React.FC<{
           {planData.name}
         </Text>
         <Heading fontSize={"x-large"} mt={1} mb={!selected ? 10 : 4}>
-        {planData.amount === 'Free' ? 'Free' : `$ ${planData.amount}` }
+          {planData.amount === "Free" ? "Free" : `$ ${planData.amount}`}
         </Heading>
         {selected && (
           <Button my={5} variant="brand" onClick={onOpen}>
@@ -441,7 +443,7 @@ const CurrentPlan: React.FC<{
             ${price} / mo
           </Text> */}
           <Box py={4}>
-            <PricingDetails details={details}  />
+            <PricingDetails details={details} />
           </Box>
         </Box>
         <Flex
@@ -502,7 +504,7 @@ const CoinPayments: React.FC<{ packageName: string; onClose: () => void }> = ({
       }>("api-create-order-cp/", {
         package: packageName,
         currency: coin,
-        duration: 'monthly'
+        duration: "monthly",
       });
       setLoading(false);
       const popup = window.open(
@@ -527,7 +529,7 @@ const CoinPayments: React.FC<{ packageName: string; onClose: () => void }> = ({
           <Flex alignItems="center">
             <CryptoIcon size={32} name={coin.toLowerCase()} />
             <Text ml={2} color="brand-dark" fontWeight={700} fontSize="3xl">
-                {parseFloat(data[coin].monthly[packageName]).toPrecision(2)}
+              {parseFloat(data[coin].monthly[packageName]).toPrecision(2)}
               <Text as="span" fontSize="md" fontWeight={700} ml={2}>
                 {coin}
               </Text>

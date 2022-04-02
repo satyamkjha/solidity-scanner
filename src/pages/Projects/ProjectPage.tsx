@@ -1083,29 +1083,28 @@ const ScanBlock: React.FC<{
           <Score score={scan.scan_score} />
         )}
       </Flex>
-      {scan.scan_status === 'scan_done' && (
+      {scan.scan_status === "scan_done" && (
         <Button
-        variant="accent-outline"
-        isDisabled={scan.reporting_status !== "report_generated" || isTrial}
-        isLoading={isDownloadLoading}
-        onClick={(e) => {
-          e.stopPropagation();
-          window.open(
-            `http://${document.location.host}/report/project/${projectId}/${data?.scan_report.latest_report_id}`,
-            "_blank"
-          );
-          // history.push(`/report/${scan.project_id}/${data?.scan_report.latest_report_id}`)
-        }}
-      >
-        {scan.reporting_status === "report_generated"
-          ? "View Report"
-          : "Report Not Generated"}
-        {scan.reporting_status === "generating_report" && (
-          <Spinner color="#806CCF" size="sm" ml={2} />
-        )}
-      </Button>
+          variant="accent-outline"
+          isDisabled={scan.reporting_status !== "report_generated" || isTrial}
+          isLoading={isDownloadLoading}
+          onClick={(e) => {
+            e.stopPropagation();
+            window.open(
+              `http://${document.location.host}/report/project/${projectId}/${data?.scan_report.latest_report_id}`,
+              "_blank"
+            );
+            // history.push(`/report/${scan.project_id}/${data?.scan_report.latest_report_id}`)
+          }}
+        >
+          {scan.reporting_status === "report_generated"
+            ? "View Report"
+            : "Report Not Generated"}
+          {scan.reporting_status === "generating_report" && (
+            <Spinner color="#806CCF" size="sm" ml={2} />
+          )}
+        </Button>
       )}
-      
     </Flex>
   );
 };
