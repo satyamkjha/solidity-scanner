@@ -151,11 +151,11 @@ const RegisterForm: React.FC<{
 
   const onSubmit = async () => {
     const { data } = await API.post<AuthResponse>("/api-register/", {
-      email,
-      password,
-      companyName,
-      contactNumber,
-      name,
+      email: email,
+      password1: password,
+      company_name: companyName,
+      contact_number: contactNumber,
+      first_name: name,
     });
 
     if (data.status === "success") {
@@ -272,16 +272,18 @@ const RegisterForm: React.FC<{
             }}
           />
         </InputGroup>
-        {passwordError && (
-          <Text color={"subtle"} size={"xs"}>
-            Your password should contain a
-            {unique(passwordError.contains, charTypes).map(
-              (item) => ` ${item}, `
-            )}
-            {passwordError.length < 8 &&
-              ` and should have ${8 - passwordError.length} more characters`}
-          </Text>
-        )}
+        {passwordError &&
+          passwordError.length < 8 &&
+          passwordError.contains.length < 4 && (
+            <Text color={"subtle"} size={"xs"}>
+              Your password should contain a
+              {unique(passwordError.contains, charTypes).map(
+                (item) => ` ${item}, `
+              )}
+              {passwordError.length < 8 &&
+                ` and should have ${8 - passwordError.length} more characters`}
+            </Text>
+          )}
 
         <Button
           type="submit"
