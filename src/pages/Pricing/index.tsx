@@ -122,14 +122,22 @@ export default function PricingPage() {
         {}
         {plans && (
           <ScaleFade initialScale={0.9} in={tab === "weekly"}>
-            <Box
-              px={16}
-              as="section"
-              py="14"
-              display="flex"
-              flexDirection="row"
-              justifyContent={"center"}
+          <Box
+            px={16}
+            as="section"
+            py="14"
+            display="flex"
+            flexDirection="row"
+            justifyContent={"center"}
+            alignContent={"center"}
+          >
+            <Flex
+              as={"div"}
+              flexDirection="column"
+              justifyContent={"flex-end"}
               alignContent={"center"}
+              mb={"70px"}
+              mt={"90px"}
             >
               <Box
                 as="div"
@@ -138,116 +146,47 @@ export default function PricingPage() {
                 display="flex"
                 flexDirection="row"
               >
-                <Box
-                  as="div"
-                  py={"40px"}
-                  px={"100px"}
-                  display="flex"
-                  flexDirection="row"
+                <Text
+                  fontSize="2xl"
+                  fontWeight="700"
+                  my={1}
+                  textAlign="center"
+                  lineHeight="title"
                 >
+                  Packages
+                </Text>
+              </Box>
+              <Box
+                as="div"
+                py={"35px"}
+                px={"50px"}
+                display="flex"
+                flexDirection="row"
+                borderTopLeftRadius={"xl"}
+                border="2px solid #D6D6D6"
+                borderRightWidth={0}
+                borderBottomWidth={0}
+              >
+                <HStack spacing={1}>
+                  <Image src="/pricing/coin.svg" mx="auto" mr={4} />
                   <Text
-                    fontSize="2xl"
-                    fontWeight="700"
-                    my={1}
+                    fontSize="lg"
                     textAlign="center"
                     lineHeight="title"
+                    fontWeight={"300"}
                   >
-                    Packages
+                    Scan Credit
                   </Text>
-                </Box>
-                <Box
-                  as="div"
-                  py={"35px"}
-                  px={"50px"}
-                  display="flex"
-                  flexDirection="row"
-                  borderTopLeftRadius={"xl"}
-                  border="2px solid #D6D6D6"
-                  borderRightWidth={0}
-                  borderBottomWidth={0}
-                >
-                  <HStack spacing={1}>
-                    <Image src="/pricing/coin.svg" mx="auto" mr={4} />
-                    <Text
-                      fontSize="lg"
-                      textAlign="center"
-                      lineHeight="title"
-                      fontWeight={"300"}
-                    >
-                      Scan Credit
-                    </Text>
-                  </HStack>
-                </Box>
-                <Box
-                  as="div"
-                  py={"36px"}
-                  px={"50px"}
-                  display="flex"
-                  flexDirection="row"
-                  borderLeft="2px solid #D6D6D6"
-                  backgroundColor={"#FAFAFB"}
-                >
-                  <HStack spacing={1}>
-                    <Image src="/pricing/github.svg" mx="auto" mr={4} />
-                    <Text
-                      fontSize="lg"
-                      textAlign="center"
-                      lineHeight="title"
-                      fontWeight={"300"}
-                    >
-                      Private Github
-                    </Text>
-                  </HStack>
-                </Box>
-                <Box
-                  as="div"
-                  py={"35px"}
-                  px={"50px"}
-                  display="flex"
-                  flexDirection="row"
-                  borderLeft="2px solid #D6D6D6"
-                >
-                  <HStack spacing={1}>
-                    <Image src="/pricing/report.svg" mx="auto" mr={4} />
-                    <Text
-                      fontSize="lg"
-                      textAlign="center"
-                      lineHeight="title"
-                      fontWeight={"300"}
-                    >
-                      Generate Report
-                    </Text>
-                  </HStack>
-                </Box>
-                <Box
-                  as="div"
-                  py={"36px"}
-                  px={"50px"}
-                  display="flex"
-                  flexDirection="row"
-                  borderLeft="2px solid #D6D6D6"
-                  borderBottom="2px solid #D6D6D6"
-                  backgroundColor={"#FAFAFB"}
-                  borderBottomLeftRadius={"xl"}
-                >
-                  <HStack spacing={1}>
-                    <Image src="/pricing/publish.svg" mx="auto" mr={4} />
-                    <Text
-                      fontSize="lg"
-                      textAlign="center"
-                      lineHeight="title"
-                      fontWeight={"300"}
-                    >
-                      Publishable Reports
-                    </Text>
-                  </HStack>
-                </Box>
-              </Flex>
-              <SimpleGrid
-                columns={5}
-                maxW="7xl"
-                justifyItems="center"
-                alignItems="center"
+                </HStack>
+              </Box>
+              <Box
+                as="div"
+                py={"36px"}
+                px={"50px"}
+                display="flex"
+                flexDirection="row"
+                borderLeft="2px solid #D6D6D6"
+                backgroundColor={"#FAFAFB"}
               >
                 <HStack spacing={1}>
                   <Image src="/pricing/github.svg" mx="auto" mr={4} />
@@ -324,6 +263,7 @@ export default function PricingPage() {
           </Box>
         </ScaleFade>
         )}
+        
       </Container>
       <ContactUs isOpen={isOpen} onClose={onClose} />
       <Footer />
@@ -350,7 +290,7 @@ export const PricingColumn: React.FC<{plan: string;
   const successColor = "#289F4C";
   const greyColor = "#808080";
 
-  const history = useHistory();
+  const history = useHistory()
 
   const mouse = selectedPlan === plan
 
@@ -405,7 +345,7 @@ export const PricingColumn: React.FC<{plan: string;
                 fontWeight={"300"}
                 color={"#FFFFFF"}
               >
-                {plan === "trial" || plan === "beginner" ? "" : `Save upto`}
+                Save upto
               </Text>
               <Heading
                 fontSize="xl"
@@ -414,11 +354,7 @@ export const PricingColumn: React.FC<{plan: string;
                 fontWeight={"700"}
                 color={"#FFFFFF"}
               >
-                {plan === "trial"
-                  ? "Free"
-                  : plan === "beginner"
-                  ? "Starter"
-                  : planData.discount}
+                {planData.discount}
               </Heading>
             </HStack>
           </Box>
@@ -445,7 +381,7 @@ export const PricingColumn: React.FC<{plan: string;
               lineHeight="title"
               fontWeight={900}
             >
-              {planData.amount === "Free" ? "Free" : `$ ${planData.amount}`}
+              {planData.amount === 'Free' ? 'Free' : `$ ${planData.amount}` }
             </Heading>
           </Box>
           <Box
@@ -462,7 +398,7 @@ export const PricingColumn: React.FC<{plan: string;
               textAlign="center"
               lineHeight="title"
               fontWeight={"300"}
-              height={"130px"}
+              height={'130px'}
             >
               {planData.description}
             </Text>
@@ -516,16 +452,16 @@ export const PricingColumn: React.FC<{plan: string;
               lineHeight="title"
               fontWeight={"300"}
               color={"#3300FF"}
-              cursor="pointer"
-              onClick={() => {
-                if (Auth.isUserAuthenticated()) {
-                  history.push(`/billing/${plan}`);
+              cursor='pointer'
+              onClick={()=>{
+                if(Auth.isUserAuthenticated()){
+                  history.push('/billing')
                 } else {
-                  history.push("/signin");
+                  history.push('/signin')
                 }
               }}
             >
-              {Auth.isUserAuthenticated() ? "Choose" : "Get Started"}
+              Choose
             </Text>
           </Box>
         </ScaleFade>
@@ -546,13 +482,8 @@ export const PricingColumn: React.FC<{plan: string;
               textAlign="center"
               lineHeight="title"
               fontWeight={"300"}
-              color="accent"
             >
-              {plan === "trial"
-                ? "Free"
-                : plan === "beginner"
-                ? "Starter"
-                : `Save upto ${planData.discount}`}
+              {/* {plan === 'trial' ? 'Free' : plan === 'starter' ? ''} */}
             </Text>
             <Text
               fontSize="lg"
@@ -568,7 +499,7 @@ export const PricingColumn: React.FC<{plan: string;
               lineHeight="title"
               fontWeight={900}
             >
-              {planData.amount === "Free" ? "Free" : `$ ${planData.amount}`}
+              {planData.amount === 'Free' ? 'Free' : `$ ${planData.amount}` }
             </Heading>
           </Box>
           <Box
