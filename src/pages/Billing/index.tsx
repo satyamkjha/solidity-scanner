@@ -41,12 +41,12 @@ import { useAcceptedCoins } from "hooks/usePricing";
 
 import API from "helpers/api";
 import { daysRemaining, dateToDDMMMMYYYY } from "common/functions";
-import { usePricingPlans } from "hooks/usePricingPlans";
 import { Plan } from "common/types";
 import { HiCheckCircle, HiXCircle } from "react-icons/hi";
 import { useParams } from "react-router-dom";
 import { placements } from "@popperjs/core";
 import ContactUs from "components/contactus";
+import { usePricingPlans } from "hooks/usePricingPlans";
 
 const Billing: React.FC = () => {
   const { data } = useProfile();
