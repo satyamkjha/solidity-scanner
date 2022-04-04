@@ -88,10 +88,15 @@ import {
 } from "react-icons/fa";
 import { useReport } from "hooks/useReport";
 import { useReports } from "hooks/useReports";
+import { LockIcon } from "@chakra-ui/icons";
+import { profile } from "console";
+import { usePricingPlans } from "hooks/usePricingPlans";
 
 export const ProjectPage: React.FC = () => {
   const { projectId } = useParams<{ projectId: string }>();
   const { data, isLoading, refetch } = useScans(projectId);
+
+  
 
   useEffect(() => {
     let intervalId: NodeJS.Timeout;
@@ -195,6 +200,10 @@ const ScanDetails: React.FC<{ scansRemaining: number; scans: ScanMeta[] }> = ({
   const { data, isLoading, refetch } = useScan(scanId);
 
   const [tabIndex, setTabIndex] = React.useState(0);
+
+  const { data: profile, isLoading: isProfileLoading } = useProfile();
+  const { data: plans, isLoading: isPlanLoading } = usePricingPlans()
+
 
   const handleTabsChange = (index: number) => {
     setTabIndex(index);
@@ -360,12 +369,12 @@ const ScanDetails: React.FC<{ scansRemaining: number; scans: ScanMeta[] }> = ({
           p: 4,
         }}
       >
-        {isLoading ? (
+        {isLoading || isProfileLoading || isPlanLoading ? (
           <Flex w="100%" h="70vh" alignItems="center" justifyContent="center">
             <Spinner />
           </Flex>
         ) : (
-          data && (
+          data && profile && plans && (
             <>
               <Flex
                 sx={{
@@ -426,19 +435,26 @@ const ScanDetails: React.FC<{ scansRemaining: number; scans: ScanMeta[] }> = ({
                   {data.scan_report.reporting_status === "report_generated" && (
                     <Button
                       variant="accent-ghost"
+                      isDisabled={
+                        profile.current_package !== 'expired' && plans.monthly[profile.current_package].publishable_report
+                      }
                       onClick={() =>
                         // history.push(`/projects/${projectId}/history`)
                         setOpen(!open)
                       }
                     >
-                      {/* <Icon as={AiOutlineClockCircle} mr={2} fontSize="17px" /> */}
+                      {profile.current_package !== 'expired' && plans.monthly[profile.current_package].publishable_report && (
+                                <LockIcon color={'accent'} size="xs" mr={3}/>
+                      )}
                       Publish Report
                     </Button>
                   )}
                   {data.scan_report.scan_status === "scan_done" && (
                     <Button
                       variant={"accent-outline"}
-                      isDisabled={reportingStatus === "generating_report"}
+                      isDisabled={
+                        reportingStatus === "generating_report" || (profile.current_package !== 'expired' && !plans.monthly[profile.current_package].report)
+                      }                      
                       onClick={() => {
                         if (reportingStatus === "not_generated") {
                           generateReport();
@@ -453,11 +469,14 @@ const ScanDetails: React.FC<{ scansRemaining: number; scans: ScanMeta[] }> = ({
                       {reportingStatus === "generating_report" && (
                         <Spinner color="#806CCF" size="xs" mr={3} />
                       )}
-                      {reportingStatus === "not_generated"
-                        ? "Generate Report"
-                        : reportingStatus === "generating_report"
-                        ? "Generating report..."
-                        : "View Report"}
+                       {profile.current_package !== 'expired' && !plans.monthly[profile.current_package].report && (
+                                <LockIcon color={'accent'} size="xs" mr={3}/>
+                              )}
+                       {reportingStatus === "report_generated"
+                                ? "View Report"
+                                : reportingStatus === "generating_report"
+                                ? "Generating report..."
+                                : "Generate Report"}
                     </Button>
                   )}
                 </HStack>
@@ -1116,6 +1135,7 @@ const ReportBlock: React.FC<{ report: ReportsListItem }> = ({ report }) => {
   const toast = useToast();
 
   return (
+
     <Flex
       alignItems="center"
       justifyContent="space-between"
@@ -1201,6 +1221,7 @@ const ReportBlock: React.FC<{ report: ReportsListItem }> = ({ report }) => {
         <Button
           variant="accent-outline"
           ml={5}
+          
           isLoading={isDownloadLoading}
           onClick={(e) => {
             e.stopPropagation();
@@ -1211,6 +1232,7 @@ const ReportBlock: React.FC<{ report: ReportsListItem }> = ({ report }) => {
             // history.push(`/report/${scan.project_id}/${data?.scan_report.latest_report_id}`)
           }}
         >
+        
           View Report
         </Button>
       </Flex>

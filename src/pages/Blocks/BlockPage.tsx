@@ -39,7 +39,7 @@ import {
 import Overview from "components/overview";
 import Result from "components/result";
 import TrialWall from "components/trialWall";
-import { AddIcon, MinusIcon } from "@chakra-ui/icons";
+import { AddIcon, LockIcon, MinusIcon } from "@chakra-ui/icons";
 import { useScan } from "hooks/useScan";
 import { useProfile } from "hooks/useProfile";
 import { BiChevronDownCircle, BiChevronUpCircle } from "react-icons/bi";
@@ -58,6 +58,7 @@ import API from "helpers/api";
 import { Report, ReportsListItem, Scan } from "common/types";
 import { useReports } from "hooks/useReports";
 import { useReport } from "hooks/useReport";
+import { usePricingPlans } from "hooks/usePricingPlans";
 
 const BlockPage: React.FC = () => {
   const { scanId } = useParams<{ scanId: string }>();
@@ -66,6 +67,7 @@ const BlockPage: React.FC = () => {
 
   // const [reportingStatus, setReportingStatus] = useState<string>();
   const { data: profile, isLoading: isProfileLoading } = useProfile();
+  const { data: plans, isLoading: isPlanLoading } = usePricingPlans()
   const toast = useToast();
 
   const [next, setNext] = useState(false);
@@ -207,13 +209,13 @@ const BlockPage: React.FC = () => {
         minH: "78vh",
       }}
     >
-      {isLoading || isProfileLoading ? (
+      {isLoading || isProfileLoading || !plans ? (
         <Flex w="100%" h="70vh" alignItems="center" justifyContent="center">
           <Spinner />
         </Flex>
       ) : (
         scanData &&
-        profile && (
+        profile && plans && (
           <>
             {" "}
             <Flex
@@ -282,17 +284,23 @@ const BlockPage: React.FC = () => {
                             <Button
                               variant="accent-ghost"
                               mr={5}
+                              isDisabled={
+                                profile.current_package !== 'expired' && plans.monthly[profile.current_package].publishable_report
+                              }
                               onClick={() => setOpen(!open)}
                             >
+                              {profile.current_package !== 'expired' && plans.monthly[profile.current_package].publishable_report && (
+                                <LockIcon color={'accent'} size="xs" mr={3}/>
+                              )}
                               Publish Report
                             </Button>
                           )}
-                          {scanData.scan_report.scan_status !== "scanning" && (
+                          {scanData.scan_report.scan_status !== "scanning"&& (
                             <Button
                               variant={"accent-outline"}
                               mr={5}
                               isDisabled={
-                                reportingStatus === "generating_report"
+                                reportingStatus === "generating_report" || (profile.current_package !== 'expired' && !plans.monthly[profile.current_package].report)
                               }
                               onClick={() => {
                                 if (reportingStatus === "not_generated") {
@@ -312,11 +320,14 @@ const BlockPage: React.FC = () => {
                               {reportingStatus === "generating_report" && (
                                 <Spinner color="#806CCF" size="xs" mr={3} />
                               )}
-                              {reportingStatus === "not_generated"
-                                ? "Generate Report"
+                              {profile.current_package !== 'expired' && !plans.monthly[profile.current_package].report && (
+                                <LockIcon color={'accent'} size="xs" mr={3}/>
+                              )}
+                              {reportingStatus === "report_generated"
+                                ? "View Report"
                                 : reportingStatus === "generating_report"
                                 ? "Generating report..."
-                                : "View Report"}
+                                : "Generate Report"}
                             </Button>
                           )}
                           <AccordionButton
