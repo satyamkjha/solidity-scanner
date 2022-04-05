@@ -13,6 +13,7 @@ import {
   MenuList,
   MenuItem,
   Link,
+  Image
 } from "@chakra-ui/react";
 import { GiHamburgerMenu } from "react-icons/gi";
 import { BiUser, BiPowerOff } from "react-icons/bi";
@@ -217,14 +218,14 @@ const Layout: React.FC = ({ children }) => {
 
               {profileData && (
                 <Flex ml={20} sx={{ display: ["none", "none", "flex"] }}>
-                  <ProjectIcon size={37} />
+                  <Image src="/pricing/coin.svg" mx="auto" />
                   <Text fontWeight={600} fontSize="2xl" ml={4}>
-                    {profileData.projects_remaining.toLocaleString("en-US", {
+                    {profileData.credits.toLocaleString("en-US", {
                       minimumIntegerDigits: 2,
                       useGrouping: false,
                     })}
                     <Box as="span" ml={2} color="subtle" fontSize="sm">
-                      Remaining Projects
+                      Scan Credits
                     </Box>
                   </Text>
                 </Flex>

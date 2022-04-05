@@ -223,20 +223,6 @@ const ProjectCard: React.FC<{ project: Project }> = ({ project }) => {
                 </Button>
               </Tooltip>
             </Flex>
-            <Flex w="100%" alignItems="center" justifyContent="space-between">
-              <Box h="45px" w="2px" />
-              <Text
-                sx={{
-                  fontSize: "sm",
-                  color: scans_remaining === 0 ? "high" : "subtle",
-                }}
-              >
-                <Box as="span" sx={{ fontWeight: 600, fontSize: "md" }}>
-                  {scans_remaining}
-                </Box>{" "}
-                scans remaining
-              </Text>
-            </Flex>
           </Flex>
           <Box
             sx={{
@@ -313,19 +299,9 @@ const ProjectCard: React.FC<{ project: Project }> = ({ project }) => {
                   </Button>
                 </Tooltip>
               </Flex>
-              <Flex w="100%" alignItems="center" justifyContent="space-between">
+              <Flex w="100%" alignItems="center" justifyContent="flex-start">
                 <Score score={scan_summary?.score || "0"} />
-                <Text
-                  sx={{
-                    fontSize: "sm",
-                    color: scans_remaining === 0 ? "high" : "subtle",
-                  }}
-                >
-                  <Box as="span" sx={{ fontWeight: 600, fontSize: "md" }}>
-                    {scans_remaining}
-                  </Box>{" "}
-                  scans remaining
-                </Text>
+                
               </Flex>
               <VulnerabilityDistribution
                 critical={
