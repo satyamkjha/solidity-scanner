@@ -60,6 +60,7 @@ import {
   LogoIcon,
   ScanErrorIcon,
   GithubIcon,
+  ProjectIcon,
 } from "components/icons";
 import { ErrorResponsivePie } from "components/pieChart";
 import { ErrorVulnerabilityDistribution } from "components/vulnDistribution";
@@ -95,6 +96,8 @@ import { usePricingPlans } from "hooks/usePricingPlans";
 export const ProjectPage: React.FC = () => {
   const { projectId } = useParams<{ projectId: string }>();
   const { data, isLoading, refetch } = useScans(projectId);
+
+  const { data: profileData } = useProfile();
 
   
 
@@ -161,7 +164,19 @@ export const ProjectPage: React.FC = () => {
                   {data.project_url}
                 </Link>
               </Text>
-              <Link
+              {profileData && (
+                <Flex ml={20} sx={{ display: ["none", "none", "flex"] }}>
+                  <ProjectIcon size={37} />
+                  <Text fontWeight={600} fontSize="2xl" ml={4} mr={10}>
+                    {profileData.projects_remaining.toLocaleString("en-US", {
+                      minimumIntegerDigits: 2,
+                      useGrouping: false,
+                    })}
+                    <Box as="span" ml={2} color="subtle" fontSize="sm">
+                      Remaining Projects
+                    </Box>
+                  </Text>
+                  <Link
                 as={RouterLink}
                 to="/projects"
                 variant="subtle-without-underline"
@@ -169,6 +184,9 @@ export const ProjectPage: React.FC = () => {
               >
                 ← back
               </Link>
+                </Flex>
+              )}
+              
             </Flex>
             <Switch>
               <Route exact path="/projects/:projectId/:scanId">
@@ -413,20 +431,7 @@ const ScanDetails: React.FC<{ scansRemaining: number; scans: ScanMeta[] }> = ({
                       </Flex>
                     </Button>
                   </Tooltip>
-                  <Text sx={{ fontSize: "xl", fontWeight: 600 }}>
-                    {scan_name}
-                    <Box
-                      as="span"
-                      ml={4}
-                      sx={{
-                        fontWeight: 600,
-                        fontSize: "sm",
-                        color: scansRemaining === 0 ? "high" : "subtle",
-                      }}
-                    >
-                      {scansRemaining} scans remaining
-                    </Box>
-                  </Text>
+                  
                 </HStack>
                 <HStack
                   spacing={8}
@@ -436,15 +441,14 @@ const ScanDetails: React.FC<{ scansRemaining: number; scans: ScanMeta[] }> = ({
                     <Button
                       variant="accent-ghost"
                       isDisabled={
-                        profile.current_package !== 'expired' && plans.monthly[profile.current_package].publishable_report
+                        profile.current_package !== 'expired' && !plans.monthly[profile.current_package].publishable_report
                       }
                       onClick={() =>
-                        // history.push(`/projects/${projectId}/history`)
                         setOpen(!open)
                       }
                     >
-                      {profile.current_package !== 'expired' && plans.monthly[profile.current_package].publishable_report && (
-                                <LockIcon color={'accent'} size="xs" mr={3}/>
+                      {profile.current_package !== 'expired' && !plans.monthly[profile.current_package].publishable_report && (
+                        <LockIcon color={'accent'} size="xs" mr={3}/>
                       )}
                       Publish Report
                     </Button>
