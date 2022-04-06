@@ -99,8 +99,6 @@ export const ProjectPage: React.FC = () => {
 
   const { data: profileData } = useProfile();
 
-  
-
   useEffect(() => {
     let intervalId: NodeJS.Timeout;
     const refetchTillScanComplete = () => {
@@ -177,16 +175,15 @@ export const ProjectPage: React.FC = () => {
                     </Box>
                   </Text>
                   <Link
-                as={RouterLink}
-                to="/projects"
-                variant="subtle-without-underline"
-                fontSize="md"
-              >
-                ← back
-              </Link>
+                    as={RouterLink}
+                    to="/projects"
+                    variant="subtle-without-underline"
+                    fontSize="md"
+                  >
+                    ← back
+                  </Link>
                 </Flex>
               )}
-              
             </Flex>
             <Switch>
               <Route exact path="/projects/:projectId/:scanId">
@@ -220,8 +217,7 @@ const ScanDetails: React.FC<{ scansRemaining: number; scans: ScanMeta[] }> = ({
   const [tabIndex, setTabIndex] = React.useState(0);
 
   const { data: profile, isLoading: isProfileLoading } = useProfile();
-  const { data: plans, isLoading: isPlanLoading } = usePricingPlans()
-
+  const { data: plans, isLoading: isPlanLoading } = usePricingPlans();
 
   const handleTabsChange = (index: number) => {
     setTabIndex(index);
@@ -392,7 +388,9 @@ const ScanDetails: React.FC<{ scansRemaining: number; scans: ScanMeta[] }> = ({
             <Spinner />
           </Flex>
         ) : (
-          data && profile && plans && (
+          data &&
+          profile &&
+          plans && (
             <>
               <Flex
                 sx={{
@@ -431,7 +429,6 @@ const ScanDetails: React.FC<{ scansRemaining: number; scans: ScanMeta[] }> = ({
                       </Flex>
                     </Button>
                   </Tooltip>
-                  
                 </HStack>
                 <HStack
                   spacing={8}
@@ -441,15 +438,17 @@ const ScanDetails: React.FC<{ scansRemaining: number; scans: ScanMeta[] }> = ({
                     <Button
                       variant="accent-ghost"
                       isDisabled={
-                        profile.current_package !== 'expired' && !plans.monthly[profile.current_package].publishable_report
+                        profile.current_package !== "expired" &&
+                        !plans.monthly[profile.current_package]
+                          .publishable_report
                       }
-                      onClick={() =>
-                        setOpen(!open)
-                      }
+                      onClick={() => setOpen(!open)}
                     >
-                      {profile.current_package !== 'expired' && !plans.monthly[profile.current_package].publishable_report && (
-                        <LockIcon color={'accent'} size="xs" mr={3}/>
-                      )}
+                      {profile.current_package !== "expired" &&
+                        !plans.monthly[profile.current_package]
+                          .publishable_report && (
+                          <LockIcon color={"accent"} size="xs" mr={3} />
+                        )}
                       Publish Report
                     </Button>
                   )}
@@ -457,8 +456,10 @@ const ScanDetails: React.FC<{ scansRemaining: number; scans: ScanMeta[] }> = ({
                     <Button
                       variant={"accent-outline"}
                       isDisabled={
-                        reportingStatus === "generating_report" || (profile.current_package !== 'expired' && !plans.monthly[profile.current_package].report)
-                      }                      
+                        reportingStatus === "generating_report" ||
+                        (profile.current_package !== "expired" &&
+                          !plans.monthly[profile.current_package].report)
+                      }
                       onClick={() => {
                         if (reportingStatus === "not_generated") {
                           generateReport();
@@ -473,14 +474,15 @@ const ScanDetails: React.FC<{ scansRemaining: number; scans: ScanMeta[] }> = ({
                       {reportingStatus === "generating_report" && (
                         <Spinner color="#806CCF" size="xs" mr={3} />
                       )}
-                       {profile.current_package !== 'expired' && !plans.monthly[profile.current_package].report && (
-                                <LockIcon color={'accent'} size="xs" mr={3}/>
-                              )}
-                       {reportingStatus === "report_generated"
-                                ? "View Report"
-                                : reportingStatus === "generating_report"
-                                ? "Generating report..."
-                                : "Generate Report"}
+                      {profile.current_package !== "expired" &&
+                        !plans.monthly[profile.current_package].report && (
+                          <LockIcon color={"accent"} size="xs" mr={3} />
+                        )}
+                      {reportingStatus === "report_generated"
+                        ? "View Report"
+                        : reportingStatus === "generating_report"
+                        ? "Generating report..."
+                        : "Generate Report"}
                     </Button>
                   )}
                 </HStack>
@@ -1139,7 +1141,6 @@ const ReportBlock: React.FC<{ report: ReportsListItem }> = ({ report }) => {
   const toast = useToast();
 
   return (
-
     <Flex
       alignItems="center"
       justifyContent="space-between"
@@ -1225,7 +1226,6 @@ const ReportBlock: React.FC<{ report: ReportsListItem }> = ({ report }) => {
         <Button
           variant="accent-outline"
           ml={5}
-          
           isLoading={isDownloadLoading}
           onClick={(e) => {
             e.stopPropagation();
@@ -1236,7 +1236,6 @@ const ReportBlock: React.FC<{ report: ReportsListItem }> = ({ report }) => {
             // history.push(`/report/${scan.project_id}/${data?.scan_report.latest_report_id}`)
           }}
         >
-        
           View Report
         </Button>
       </Flex>

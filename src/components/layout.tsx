@@ -13,7 +13,7 @@ import {
   MenuList,
   MenuItem,
   Link,
-  Image
+  Image,
 } from "@chakra-ui/react";
 import { GiHamburgerMenu } from "react-icons/gi";
 import { BiUser, BiPowerOff } from "react-icons/bi";

@@ -235,6 +235,9 @@ const PricingPlan: React.FC<{
   };
   const selected = selectedPlan === plan;
 
+  const successColor = "#289F4C";
+  const greyColor = "#BDBDBD";
+
   return (
     <>
       <Flex
@@ -262,7 +265,7 @@ const PricingPlan: React.FC<{
           textAlign="center"
           fontSize={"sm"}
         >
-          Save upto {planData.discount}
+          {planData.discount ? `Save upto ${planData.discount}` : planData.name === 'Beginner' ? 'Starter' : ''}
         </Text>
 
         {!selected && <Divider w={"90%"} />}
@@ -384,57 +387,96 @@ const PricingPlan: React.FC<{
                   <CoinPayments packageName={selectedPlan} onClose={onClose} />
                 </Flex>
               </Box>
-              {/* <Box
+              <Box
                 width="35%"
                 bg="white"
                 m={2}
-                py={6}
-                px={8}
+                pb={6}
+                overflow='hidden'
                 borderRadius="15px"
                 border="1px solid"
                 borderColor="gray.300"
               >
-                <Text sx={{ fontWeight: 500 }}>{name}</Text>
                 <Text
-                  sx={{
-                    fontWeight: 600,
-                    fontSize: "3xl",
-                    color: "brand-dark",
-                    py: 2,
-                  }}
-                >
-                  ${price} / mo
-                </Text>
-                <Box py={8}>
-                  <PricingDetails details={details} inModal />
-                </Box>
-              </Box> */}
+          w={"100%"}
+          color={selected ? "white" : "accent"}
+          backgroundColor={selected ? "accent" : "white"}
+          py={3}
+          textAlign="center"
+          fontSize={"sm"}
+        >
+          {planData.discount ? `Save upto ${planData.discount}` : planData.name === 'Beginner' ? 'Starter' : ''}
+        </Text>
+                <Text mx={6} mt={4} sx={{ fontWeight: 500 }}>{planData.name}</Text>
+                <Heading mx={6} fontSize={"x-large"} mt={1} mb={!selected ? 10 : 4}>
+                  {planData.amount === "Free" ? "Free" : `$ ${planData.amount}`}
+                </Heading>
+                <Text mx={6} fontSize={'xs'}>{planData.description}</Text>
+                <HStack mx={6} my={4} justify={"flex-start"} width={'100%'}>
+                  <HiCheckCircle size={30} color={successColor} />
+
+                  <Image
+                    src="/pricing/coin.svg"
+                    alt="Product screenshot"
+                    p={1}
+                  />
+                  <Text fontSize={"md"} ml={5}>
+                    {planData.scan_count} Scan Credit
+                  </Text>
+                </HStack>
+
+                <HStack mx={6} my={4} justifyContent={"flex-start"}>
+                  {planData.github ? (
+                    <HiCheckCircle size={30} color={successColor} />
+                  ) : (
+                    <HiXCircle size={30} color={greyColor} />
+                  )}
+                  <Image
+                    src="/pricing/github.svg"
+                    alt="Product screenshot"
+                    p={1}
+                  />
+                  <Text fontSize={"md"} ml={5}>
+                    Private Github
+                  </Text>
+                </HStack>
+
+                <HStack mx={6} my={4} justifyContent={"flex-start"}>
+                  {planData.report ? (
+                    <HiCheckCircle size={30} color={successColor} />
+                  ) : (
+                    <HiXCircle size={30} color={greyColor} />
+                  )}
+                  <Image
+                    src="/pricing/report.svg"
+                    alt="Product screenshot"
+                    p={1}
+                  />
+                  <Text fontSize={"md"} ml={5}>
+                    Generate Reports
+                  </Text>
+                </HStack>
+                <HStack mx={6} my={4} justifyContent={"flex-start"}>
+                  {planData.publishable_report ? (
+                    <HiCheckCircle size={30} color={successColor} />
+                  ) : (
+                    <HiXCircle size={30} color={greyColor} />
+                  )}
+                  <Image
+                    src="/pricing/publish.svg"
+                    alt="Product screenshot"
+                    p={1}
+                  />
+                  <Text fontSize={"md"} ml={5}>
+                    Publishable Reports
+                  </Text>
+                </HStack>
+              </Box>
             </Flex>
           </ModalBody>
         </ModalContent>
       </Modal>
       <ContactUs isOpen={open} onClose={() => setOpen(false)} />
-    </>
-  );
-};
-
-const PricingDetails: React.FC<{ details: string[]; inModal?: boolean }> = ({
-  details,
-  inModal,
-}) => {
-  return (
-    <>
-      {details.map((detail) => (
-        <Flex
-          alignItems="center"
-          fontWeight={400}
-          fontSize={inModal ? "sm" : "md"}
-          my={2}
-        >
-          <Icon as={AiOutlineCheckCircle} color="brand-dark" mr={2} />
-          <Text>{detail}</Text>
-        </Flex>
-      ))}
     </>
   );
 };
@@ -671,6 +713,27 @@ const CoinPayments: React.FC<{ packageName: string; onClose: () => void }> = ({
         </Button>
       </Flex>
     </VStack>
+  );
+};
+
+const PricingDetails: React.FC<{ details: string[]; inModal?: boolean }> = ({
+  details,
+  inModal,
+}) => {
+  return (
+    <>
+      {details.map((detail) => (
+        <Flex
+          alignItems="center"
+          fontWeight={400}
+          fontSize={inModal ? "sm" : "md"}
+          my={2}
+        >
+          <Icon as={AiOutlineCheckCircle} color="brand-dark" mr={2} />
+          <Text>{detail}</Text>
+        </Flex>
+      ))}
+    </>
   );
 };
 
