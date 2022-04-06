@@ -301,7 +301,6 @@ const ProjectCard: React.FC<{ project: Project }> = ({ project }) => {
               </Flex>
               <Flex w="100%" alignItems="center" justifyContent="flex-start">
                 <Score score={scan_summary?.score || "0"} />
-                
               </Flex>
               <VulnerabilityDistribution
                 critical={
