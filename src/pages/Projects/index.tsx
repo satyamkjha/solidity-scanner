@@ -17,7 +17,7 @@ import {
   AlertDialogOverlay,
 } from "@chakra-ui/react";
 
-import { LogoIcon, RescanIcon, ScanErrorIcon } from "components/icons";
+import { LogoIcon, ProjectIcon, RescanIcon, ScanErrorIcon } from "components/icons";
 import Score from "components/score";
 import VulnerabilityDistribution from "components/vulnDistribution";
 
@@ -27,9 +27,13 @@ import { Project } from "common/types";
 import { timeSince } from "common/functions";
 
 import { useProjects } from "hooks/useProjects";
+import { useProfile } from "hooks/useProfile";
 
 const Projects: React.FC = () => {
   const { data, isLoading, refetch } = useProjects();
+
+  const { data: profileData } = useProfile();
+
 
   useEffect(() => {
     let intervalId: NodeJS.Timeout;
@@ -82,6 +86,21 @@ const Projects: React.FC = () => {
         }}
       >
         <Text sx={{ color: "subtle", fontWeight: 600 }}>PROJECTS</Text>
+        {profileData && (
+                <Flex ml={20} sx={{ display: ["none", "none", "flex"] }}>
+                  <ProjectIcon size={37} />
+                  <Text fontWeight={600} fontSize="2xl" ml={4} mr={10}>
+                    {profileData.projects_remaining.toLocaleString("en-US", {
+                      minimumIntegerDigits: 2,
+                      useGrouping: false,
+                    })}
+                    <Box as="span" ml={2} color="subtle" fontSize="sm">
+                      Remaining Projects
+                    </Box>
+                  </Text>
+                  
+                </Flex>
+              )}
       </Flex>
 
       {isLoading ? (

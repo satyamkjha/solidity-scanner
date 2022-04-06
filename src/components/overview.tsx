@@ -61,7 +61,7 @@ const Overview: React.FC<{ data: ScanSummary; scansRemaining?: number }> = ({
     issues_count,
     issue_severity_distribution: { critical, high, medium, low, informational },
     scan_time_taken,
-    count_files_analyzed,
+    lines_analyzed_count,
     score,
   } = data;
   return (
@@ -161,7 +161,7 @@ const Overview: React.FC<{ data: ScanSummary; scansRemaining?: number }> = ({
           </HStack>
           <HStack w="100%" justifyContent="space-between">
             <Text>Lines of code</Text>
-            <Text color="subtle">{count_files_analyzed}</Text>
+            <Text color="subtle">{lines_analyzed_count}</Text>
           </HStack>
         </VStack>
       </VStack>

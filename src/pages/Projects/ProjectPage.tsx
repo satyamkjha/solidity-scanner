@@ -97,7 +97,6 @@ export const ProjectPage: React.FC = () => {
   const { projectId } = useParams<{ projectId: string }>();
   const { data, isLoading, refetch } = useScans(projectId);
 
-  const { data: profileData } = useProfile();
 
   useEffect(() => {
     let intervalId: NodeJS.Timeout;
@@ -162,19 +161,8 @@ export const ProjectPage: React.FC = () => {
                   {data.project_url}
                 </Link>
               </Text>
-              {profileData && (
-                <Flex ml={20} sx={{ display: ["none", "none", "flex"] }}>
-                  <ProjectIcon size={37} />
-                  <Text fontWeight={600} fontSize="2xl" ml={4} mr={10}>
-                    {profileData.projects_remaining.toLocaleString("en-US", {
-                      minimumIntegerDigits: 2,
-                      useGrouping: false,
-                    })}
-                    <Box as="span" ml={2} color="subtle" fontSize="sm">
-                      Remaining Projects
-                    </Box>
-                  </Text>
-                  <Link
+             
+              <Link
                     as={RouterLink}
                     to="/projects"
                     variant="subtle-without-underline"
@@ -182,8 +170,6 @@ export const ProjectPage: React.FC = () => {
                   >
                     ← back
                   </Link>
-                </Flex>
-              )}
             </Flex>
             <Switch>
               <Route exact path="/projects/:projectId/:scanId">
