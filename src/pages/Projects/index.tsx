@@ -95,7 +95,7 @@ const Projects: React.FC = () => {
                       useGrouping: false,
                     })}
                     <Box as="span" ml={2} color="subtle" fontSize="sm">
-                      Remaining Projects
+                      Projects Monitored
                     </Box>
                   </Text>
                   
