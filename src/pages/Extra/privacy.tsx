@@ -104,7 +104,7 @@ export default function PrivacyPage() {
               <strong>Service</strong> refers to the Website.
             </li>
             <li>
-              <strong>Country</strong> refers to: India
+              <strong>Country</strong> refers to: Singapore
             </li>
             <li>
               <p>
@@ -443,14 +443,14 @@ export default function PrivacyPage() {
               </p>
               <p>
                 Hubspot is a customer support software. The service is operated
-                by Freshworks, Inc.
+                by HubSpot, Inc.
               </p>
               <p>Hubspot service may collect information from Your Device.</p>
               <p>
                 The information gathered by Hubspot is held in accordance with
                 its Privacy Policy:{" "}
-                <a href="https://www.freshworks.com/privacy/">
-                  https://www.freshworks.com/privacy/
+                <a href="https://legal.hubspot.com/privacy-policy">
+                  https://legal.hubspot.com/privacy-policy
                 </a>
               </p>
             </li>

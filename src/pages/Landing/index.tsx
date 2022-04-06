@@ -91,7 +91,7 @@ export default function LandingPage() {
             >
               Fix.
             </Box>{" "}
-            Deploy.
+            Publish.
           </Heading>
           <Text color="subtle" fontSize="xl" mb={4}>
             Simple, fast, effortless.
@@ -246,12 +246,14 @@ export default function LandingPage() {
           </Box>
           <Box w={["100%", "100%", "50%"]} p={10}>
             <Heading fontSize="3xl" mb={8}>
-              Integrate with the services you already love
+              Publish reports and share your security score
             </Heading>
             <Text fontSize="xl" color="subtle" mb={8}>
-              Using Slack/ Microsoft teams or JIRA? Built-in integrations with
-              most of the popular tools to automatically send out alerts or
-              raise issue tickets, so your team sees everything in one place.
+              Share and validate your progress with the community 
+              with easily publishable reports. Your community and investors 
+              can use the report summary and be confident of your contracts' security. 
+              For the more technical minded, you can add the full bug 
+              reports available in the report too.
             </Text>
           </Box>
         </Flex>
@@ -260,7 +262,7 @@ export default function LandingPage() {
             Our Team
           </Heading>
           <Text color="subtle" fontSize="xl" mb={4}>
-            Focus on what matters most, our robots handle the rest ☕️
+            Meet the experts behind the scenes. We are always excited to talk about anything crypto ₿
           </Text>
           <Flex
             as="div"

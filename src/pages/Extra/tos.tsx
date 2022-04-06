@@ -75,7 +75,7 @@ export default function TOSPage() {
               (088443).
             </li>
             <li>
-              <strong>Country</strong> refers to: India
+              <strong>Country</strong> refers to: Singapore
             </li>
             <li>
               <strong>Device</strong> means any device that can access the
