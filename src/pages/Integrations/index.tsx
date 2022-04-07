@@ -96,7 +96,7 @@ const Integrations: React.FC = () => {
 
           <IntegrationChannel
             title="JIRA"
-            description="Connect JIRA to receive updates about vulnerabilities directly to slack"
+            description="Connect JIRA to export vulnerabilities"
             icon={<JiraIcon size={76} />}
             allowed={data._integrations.jira.allowed}
             status={data._integrations.jira.status}
@@ -235,12 +235,12 @@ const IntegrationChannel: React.FC<IntegrationChannelProps> = ({
             color="black"
             fontSize="15px"
             py={6}
+            disabled={title === 'GitHub' ? true : false}
             border="2px solid #2FF86B"
             width="250px"
-            onClick={() => {}}
           >
-            {/* <Icon as={BiLockAlt} mr={2} fontSize="18px" /> */}
-            Coming Soon
+            {title === 'GitHub' && <Icon as={BiLockAlt} mr={2} fontSize="18px" />}
+            {title === 'GitHub' ? 'Upgrade' : 'Coming Soon'}
           </Button>
         )}
       </Flex>

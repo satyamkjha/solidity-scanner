@@ -197,6 +197,8 @@ const BlockPage: React.FC = () => {
     }
   }, [scanData]);
 
+  
+
   return (
     <Box
       sx={{
@@ -287,13 +289,13 @@ const BlockPage: React.FC = () => {
                               mr={5}
                               isDisabled={
                                 profile.current_package !== "expired" &&
-                                plans.monthly[profile.current_package]
+                                !plans.monthly[profile.current_package]
                                   .publishable_report
                               }
                               onClick={() => setOpen(!open)}
                             >
                               {profile.current_package !== "expired" &&
-                                plans.monthly[profile.current_package]
+                                !plans.monthly[profile.current_package]
                                   .publishable_report && (
                                   <LockIcon color={"accent"} size="xs" mr={3} />
                                 )}
@@ -311,16 +313,16 @@ const BlockPage: React.FC = () => {
                                     .report)
                               }
                               onClick={() => {
-                                if (reportingStatus === "not_generated") {
-                                  generateReport(
-                                    scanData.scan_report.project_id
-                                  );
-                                } else if (
+                               if (
                                   reportingStatus === "report_generated"
                                 ) {
                                   window.open(
                                     `http://${document.location.host}/report/block/${scanData.scan_report.project_id}/${scanData.scan_report.latest_report_id}`,
                                     "_blank"
+                                  );
+                                } else {
+                                  generateReport(
+                                    scanData.scan_report.project_id
                                   );
                                 }
                               }}
