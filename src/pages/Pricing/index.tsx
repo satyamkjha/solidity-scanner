@@ -411,25 +411,25 @@ export const PricingColumn: React.FC<{
             alignItems={"center"}
           >
             <Image
-              src="/pricing/coin-tick.svg"
+              src={`/pricing/coin-${planData.scan_count}.svg`}
               alt="Product screenshot"
               mx="auto"
               p={4}
             />
             <Image
-              src="/pricing/github-tick.svg"
+              src={`/pricing/github-${planData.github ? 'tick' : 'cross'}.svg`}
               alt="Product screenshot"
               mx="auto"
               p={4}
             />
             <Image
-              src="/pricing/report-tick.svg"
+              src={`/pricing/report-${planData.report ? 'tick' : 'cross'}.svg`}
               alt="Product screenshot"
               mx="auto"
               p={4}
             />
             <Image
-              src="/pricing/publish-tick.svg"
+              src={`/pricing/publish-${planData.publishable_report ? 'tick' : 'cross'}.svg`}
               alt="Product screenshot"
               mx="auto"
               p={4}
