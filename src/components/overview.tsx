@@ -71,7 +71,7 @@ const Overview: React.FC<{ data: ScanSummary; scansRemaining?: number }> = ({
   return (
     <Flex w="100%" sx={{ flexDir: ["column", "column", "row"] }}>
       <VStack w={["100%", "100%", "50%"]} mb={[8, 8, 0]}>
-        <Box w={["100%", "100%", "70%"]} h="300px">
+        <Box w={["100%", "100%", "70%"]} display='flex' justifyContent='center' alignItems={'center'} h="300px">
           {issues_count === 0 ? <Image
               src="/nobug.svg"
               alt="No Bugs Found"
