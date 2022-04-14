@@ -23,6 +23,10 @@ return (
     <img style={styleObject} src="/carousel/Screenshot 8.png" />
     <img style={styleObject} src="/carousel/Screenshot 9.png" />
     <img style={styleObject} src="/carousel/Screenshot 10.png" />
+    <img style={styleObject} src="/carousel/Screenshot 11.png" />
+    <img style={styleObject} src="/carousel/Screenshot 12.png" />
+    <img style={styleObject} src="/carousel/Screenshot 13.png" />
+    <img style={styleObject} src="/carousel/Screenshot 14̀.png" />
   </Carousel>
   
 )};
