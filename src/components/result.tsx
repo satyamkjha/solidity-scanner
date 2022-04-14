@@ -246,6 +246,20 @@ const FileDetails: React.FC<FileDetailsProps> = ({ file, type }) => {
       integration_service: "github",
     })
   );
+
+  let highlightArray : string[] = [];
+
+  line_nos_start.map((number, index) => {
+    if(number.toString().length === line_nos_end[index].toString().length){
+      highlightArray.push(`${number}-${line_nos_end[index]}`)
+    } else {
+      highlightArray.push(`${number}-${Math.pow(10, number.toString.length) - 1}`)
+      highlightArray.push(`${Math.pow(10, number.toString.length)}-${line_nos_end[index]}`)
+    }
+  }) 
+  let highlightString = highlightArray.join(',')
+
+
   const createGithubIssue = async () => {
     await mutation.mutateAsync();
     toast({
@@ -319,9 +333,7 @@ const FileDetails: React.FC<FileDetailsProps> = ({ file, type }) => {
               theme={atomOneLight}
               showLineNumbers
               text={data.file_contents}
-              highlight={line_nos_start
-                .map((number, index) => `${number}-${line_nos_end[index]}`)
-                .join(",")}
+              highlight={highlightString}
             />
           </pre>
         )}

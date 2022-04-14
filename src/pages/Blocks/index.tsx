@@ -180,31 +180,26 @@ const BlockCard: React.FC<{ scan: Scan }> = ({ scan }) => {
               mb={7}
             >
               <Score score={scan_summary?.score || "0"} />
-              <HStack
+              {/* <HStack
                 h="fit-content"
-                py={2}
+                py={1}
                 px={4}
                 borderRadius={36}
                 backgroundColor="#FAFBFC"
                 cursor="pointer"
                 boxShadow="0px 1px 1px rgba(0, 0, 0, 0.09)"
-              >
+              > */}
                 <Image
-                  src={
-                    contract_platform === "polygonscan"
-                      ? "/polygon.svg"
-                      : contract_platform === "etherscan"
-                      ? "/etherscan.svg"
-                      : "/bscscan.svg"
-                  }
+                mx={3}
+                  src={`/blockscan/${contract_platform}.svg`}
                   alt="Product screenshot"
-                  h={"20px"}
-                  w={"20px"}
+                  h={"40px"}
+                  w={"40px"}
                 />
-                <Text fontWeight={"700"} width={"100%"} as="p" fontSize="14px">
+                {/* <Text fontWeight={"700"} width={"100%"} as="p" fontSize="14px">
                   {contract_platform}
-                </Text>
-              </HStack>
+                </Text> */}
+              {/* </HStack> */}
             </Flex>
             <VulnerabilityDistribution
               critical={
