@@ -410,8 +410,7 @@ const BlockPage: React.FC = () => {
                               fontSize="18px"
                             >
                               {scanData.scan_report.contract_platform === 'fantom' ? 'FTMScan' : scanData.scan_report.contract_platform === 'avalanche' ? 'Snowtrace' : sentenceCapitalize(scanData.scan_report.contract_platform)}
-                            </Text>}
-                           
+                            </Text>}                           
                           </HStack>
                         </Flex>
                         <Flex

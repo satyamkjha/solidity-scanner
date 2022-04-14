@@ -306,7 +306,7 @@ const ApplicationForm: React.FC = () => {
           {!isGithubIntegrated && visibility && (
             <Alert status="warning" fontSize="14px">
               <AlertIcon />
-              You need to connect your GitHub to start a private scan.
+                You need to connect your GitHub to start a private scan.
               <Link
                 as={RouterLink}
                 to="/integrations"
