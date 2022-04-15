@@ -249,11 +249,11 @@ export default function LandingPage() {
               Publish reports and share your security score
             </Heading>
             <Text fontSize="xl" color="subtle" mb={8}>
-              Share and validate your progress with the community 
-              with easily publishable reports. Your community and investors 
-              can use the report summary and be confident of your contracts' security. 
-              For the more technical minded, you can add the full bug 
-              reports available in the report too.
+              Share and validate your progress with the community with easily
+              publishable reports. Your community and investors can use the
+              report summary and be confident of your contracts' security. For
+              the more technical minded, you can add the full bug reports
+              available in the report too.
             </Text>
           </Box>
         </Flex>
@@ -262,7 +262,8 @@ export default function LandingPage() {
             Our Team
           </Heading>
           <Text color="subtle" fontSize="xl" mb={4}>
-            Meet the experts behind the scenes. We are always excited to talk about anything crypto ₿
+            Meet the experts behind the scenes. We are always excited to talk
+            about anything crypto ₿
           </Text>
           <Flex
             as="div"
