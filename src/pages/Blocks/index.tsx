@@ -189,14 +189,14 @@ const BlockCard: React.FC<{ scan: Scan }> = ({ scan }) => {
                 cursor="pointer"
                 boxShadow="0px 1px 1px rgba(0, 0, 0, 0.09)"
               > */}
-                <Image
+              <Image
                 mx={3}
-                  src={`/blockscan/${contract_platform}.svg`}
-                  alt="Product screenshot"
-                  h={"40px"}
-                  w={"40px"}
-                />
-                {/* <Text fontWeight={"700"} width={"100%"} as="p" fontSize="14px">
+                src={`/blockscan/${contract_platform}.svg`}
+                alt="Product screenshot"
+                h={"40px"}
+                w={"40px"}
+              />
+              {/* <Text fontWeight={"700"} width={"100%"} as="p" fontSize="14px">
                   {contract_platform}
                 </Text> */}
               {/* </HStack> */}

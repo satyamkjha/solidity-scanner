@@ -247,18 +247,21 @@ const FileDetails: React.FC<FileDetailsProps> = ({ file, type }) => {
     })
   );
 
-  let highlightArray : string[] = [];
+  let highlightArray: string[] = [];
 
   line_nos_start.map((number, index) => {
-    if(number.toString().length === line_nos_end[index].toString().length){
-      highlightArray.push(`${number}-${line_nos_end[index]}`)
+    if (number.toString().length === line_nos_end[index].toString().length) {
+      highlightArray.push(`${number}-${line_nos_end[index]}`);
     } else {
-      highlightArray.push(`${number}-${Math.pow(10, number.toString.length) - 1}`)
-      highlightArray.push(`${Math.pow(10, number.toString.length)}-${line_nos_end[index]}`)
+      highlightArray.push(
+        `${number}-${Math.pow(10, number.toString.length) - 1}`
+      );
+      highlightArray.push(
+        `${Math.pow(10, number.toString.length)}-${line_nos_end[index]}`
+      );
     }
-  }) 
-  let highlightString = highlightArray.join(',')
-
+  });
+  let highlightString = highlightArray.join(",");
 
   const createGithubIssue = async () => {
     await mutation.mutateAsync();

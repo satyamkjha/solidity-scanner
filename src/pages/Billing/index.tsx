@@ -265,7 +265,11 @@ const PricingPlan: React.FC<{
           textAlign="center"
           fontSize={"sm"}
         >
-          {planData.discount ? `Save upto ${planData.discount}` : planData.name === 'Beginner' ? 'Starter' : ''}
+          {planData.discount
+            ? `Save upto ${planData.discount}`
+            : planData.name === "Beginner"
+            ? "Starter"
+            : ""}
         </Text>
 
         {!selected && <Divider w={"90%"} />}
@@ -392,27 +396,40 @@ const PricingPlan: React.FC<{
                 bg="white"
                 m={2}
                 pb={6}
-                overflow='hidden'
+                overflow="hidden"
                 borderRadius="15px"
                 border="1px solid"
                 borderColor="gray.300"
               >
                 <Text
-          w={"100%"}
-          color={selected ? "white" : "accent"}
-          backgroundColor={selected ? "accent" : "white"}
-          py={3}
-          textAlign="center"
-          fontSize={"sm"}
-        >
-          {planData.discount ? `Save upto ${planData.discount}` : planData.name === 'Beginner' ? 'Starter' : ''}
-        </Text>
-                <Text mx={6} mt={4} sx={{ fontWeight: 500 }}>{planData.name}</Text>
-                <Heading mx={6} fontSize={"x-large"} mt={1} mb={!selected ? 10 : 4}>
+                  w={"100%"}
+                  color={selected ? "white" : "accent"}
+                  backgroundColor={selected ? "accent" : "white"}
+                  py={3}
+                  textAlign="center"
+                  fontSize={"sm"}
+                >
+                  {planData.discount
+                    ? `Save upto ${planData.discount}`
+                    : planData.name === "Beginner"
+                    ? "Starter"
+                    : ""}
+                </Text>
+                <Text mx={6} mt={4} sx={{ fontWeight: 500 }}>
+                  {planData.name}
+                </Text>
+                <Heading
+                  mx={6}
+                  fontSize={"x-large"}
+                  mt={1}
+                  mb={!selected ? 10 : 4}
+                >
                   {planData.amount === "Free" ? "Free" : `$ ${planData.amount}`}
                 </Heading>
-                <Text mx={6} fontSize={'xs'}>{planData.description}</Text>
-                <HStack mx={6} my={4} justify={"flex-start"} width={'100%'}>
+                <Text mx={6} fontSize={"xs"}>
+                  {planData.description}
+                </Text>
+                <HStack mx={6} my={4} justify={"flex-start"} width={"100%"}>
                   <HiCheckCircle size={30} color={successColor} />
 
                   <Image

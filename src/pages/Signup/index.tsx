@@ -109,13 +109,20 @@ const SignUp: React.FC = () => {
         >
           <MailSent size={130} />
           <Text fontSize="2xl" fontWeight={600} mb={4} mt={8}>
-            Verify your Promotions or Spams folder in your email.
+            Verify your email
           </Text>
           <Text color="subtle">
             We've sent a link to your email address:{" "}
             <Box as="span" color="accent">
               {email}
             </Box>
+          </Text>
+          <Text mt={3} color="subtle">
+            Haven't received your email ? Have you checked your {" "}
+            <Box as="span" color={'black'} fontWeight={700}>
+              Spam/Promotions
+            </Box>{" "}
+            Folder?
           </Text>
         </CustomFlex>
       )}

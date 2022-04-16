@@ -4,8 +4,7 @@ import { Flex, Container, Link, Image } from "@chakra-ui/react";
 
 import { Logo } from "components/icons";
 export const Footer: React.FC = () => {
-
-  const history = useHistory()
+  const history = useHistory();
 
   return (
     <Container maxW="80vw" my={20}>
@@ -13,37 +12,41 @@ export const Footer: React.FC = () => {
         flexDirection={["column", "column", "row"]}
         justifyContent="space-between"
       >
-        <Flex flexDirection="row" alignItems={'flex-start'} width={["100%", "100%", "100%"]}>
+        <Flex
+          flexDirection="row"
+          alignItems={"flex-start"}
+          width={["100%", "100%", "100%"]}
+        >
           <Logo />
           <Flex
-          width={["100%", "100%", "33%"]}
-          flexWrap="wrap"
-          my={[4, 0]}
-          mx={[0, 20]}
-          pt={[10, 10, 0]}
-          textAlign="left"
-        >
-          <Link
-            as={RouterLink}
-            to="/pricing"
-            variant="brand"
-            w="50%"
-            mb={4}
-            fontWeight="600"
+            width={["100%", "100%", "33%"]}
+            flexWrap="wrap"
+            my={[4, 0]}
+            mx={[0, 20]}
+            pt={[10, 10, 0]}
+            textAlign="left"
           >
-            Pricing
-          </Link>
-          <Link
-            as={RouterLink}
-            to="/terms-of-service"
-            variant="brand"
-            w="50%"
-            mb={4}
-            fontWeight="600"
-          >
-            Terms of Service
-          </Link>
-          {/* <Link
+            <Link
+              as={RouterLink}
+              to="/pricing"
+              variant="brand"
+              w="50%"
+              mb={4}
+              fontWeight="600"
+            >
+              Pricing
+            </Link>
+            <Link
+              as={RouterLink}
+              to="/terms-of-service"
+              variant="brand"
+              w="50%"
+              mb={4}
+              fontWeight="600"
+            >
+              Terms of Service
+            </Link>
+            {/* <Link
             as={RouterLink}
             to="/faq"
             variant="brand"
@@ -53,22 +56,22 @@ export const Footer: React.FC = () => {
           >
             FAQ
           </Link> */}
-          <Link
-            as={RouterLink}
-            to="/privacy-policy"
-            variant="brand"
-            w="50%"
-            mb={4}
-            fontWeight="600"
-          >
-            Privacy Policy
-          </Link>
+            <Link
+              as={RouterLink}
+              to="/privacy-policy"
+              variant="brand"
+              w="50%"
+              mb={4}
+              fontWeight="600"
+            >
+              Privacy Policy
+            </Link>
           </Flex>
         </Flex>
         <Flex
           width={["100%", "100%", "40%"]}
-          justifyContent='flex-end'
-          alignItems={'center'}
+          justifyContent="flex-end"
+          alignItems={"center"}
         >
           {/* <Image
               src="/facebook-social.svg"
@@ -77,16 +80,20 @@ export const Footer: React.FC = () => {
               onClick={()=> window.open('https://www.instagram.com/credshields/', '_blank')}
           /> */}
           <Image
-              src="/instagram-social.svg"
-              alt="Instagram"
-              onClick={()=> window.open('https://www.instagram.com/credshields/', '_blank')}
-              mx={3}
+            src="/instagram-social.svg"
+            alt="Instagram"
+            onClick={() =>
+              window.open("https://www.instagram.com/credshields/", "_blank")
+            }
+            mx={3}
           />
           <Image
-              src="/twitter-social.svg"
-              alt="Twitter"
-              mx={3}
-              onClick={()=> window.open('https://twitter.com/CredShields', '_blank')}
+            src="/twitter-social.svg"
+            alt="Twitter"
+            mx={3}
+            onClick={() =>
+              window.open("https://twitter.com/CredShields", "_blank")
+            }
           />
         </Flex>
       </Flex>
