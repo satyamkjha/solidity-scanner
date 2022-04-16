@@ -417,19 +417,21 @@ export const PricingColumn: React.FC<{
               p={4}
             />
             <Image
-              src={`/pricing/github-${planData.github ? 'tick' : 'cross'}.svg`}
+              src={`/pricing/github-${planData.github ? "tick" : "cross"}.svg`}
               alt="Product screenshot"
               mx="auto"
               p={4}
             />
             <Image
-              src={`/pricing/report-${planData.report ? 'tick' : 'cross'}.svg`}
+              src={`/pricing/report-${planData.report ? "tick" : "cross"}.svg`}
               alt="Product screenshot"
               mx="auto"
               p={4}
             />
             <Image
-              src={`/pricing/publish-${planData.publishable_report ? 'tick' : 'cross'}.svg`}
+              src={`/pricing/publish-${
+                planData.publishable_report ? "tick" : "cross"
+              }.svg`}
               alt="Product screenshot"
               mx="auto"
               p={4}

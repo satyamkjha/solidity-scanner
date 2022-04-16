@@ -235,12 +235,14 @@ const IntegrationChannel: React.FC<IntegrationChannelProps> = ({
             color="black"
             fontSize="15px"
             py={6}
-            disabled={title === 'GitHub' ? true : false}
+            disabled={title === "GitHub" ? true : false}
             border="2px solid #2FF86B"
             width="250px"
           >
-            {title === 'GitHub' && <Icon as={BiLockAlt} mr={2} fontSize="18px" />}
-            {title === 'GitHub' ? 'Upgrade' : 'Coming Soon'}
+            {title === "GitHub" && (
+              <Icon as={BiLockAlt} mr={2} fontSize="18px" />
+            )}
+            {title === "GitHub" ? "Upgrade" : "Coming Soon"}
           </Button>
         )}
       </Flex>

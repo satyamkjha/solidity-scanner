@@ -117,6 +117,13 @@ const SignUp: React.FC = () => {
               {email}
             </Box>
           </Text>
+          <Text mt={3} color="subtle">
+            Haven't received your email ? Have you checked your {" "}
+            <Box as="span" color={'black'} fontWeight={700}>
+              Spam/Promotions
+            </Box>{" "}
+            Folder?
+          </Text>
         </CustomFlex>
       )}
     </>

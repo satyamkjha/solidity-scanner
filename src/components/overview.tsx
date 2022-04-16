@@ -7,6 +7,7 @@ import {
   Text,
   CircularProgress,
   CircularProgressLabel,
+  Image,
 } from "@chakra-ui/react";
 
 import VulnerabilityDistribution from "components/vulnDistribution";
@@ -64,13 +65,25 @@ const Overview: React.FC<{ data: ScanSummary; scansRemaining?: number }> = ({
     lines_analyzed_count,
     score,
   } = data;
+
+  console.log(issues_count);
   return (
     <Flex w="100%" sx={{ flexDir: ["column", "column", "row"] }}>
       <VStack w={["100%", "100%", "50%"]} mb={[8, 8, 0]}>
-        <Box w={["100%", "100%", "70%"]} h="300px">
-          <PieChart
-            data={pieData(critical, high, medium, low, informational)}
-          />
+        <Box
+          w={["100%", "100%", "70%"]}
+          display="flex"
+          justifyContent="center"
+          alignItems={"center"}
+          h="300px"
+        >
+          {issues_count === 0 ? (
+            <Image src="/nobug.svg" alt="No Bugs Found" />
+          ) : (
+            <PieChart
+              data={pieData(critical, high, medium, low, informational)}
+            />
+          )}
         </Box>
         <Box w={["70%", "70%", "60%"]}>
           <VulnerabilityDistribution

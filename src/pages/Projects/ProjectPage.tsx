@@ -97,7 +97,6 @@ export const ProjectPage: React.FC = () => {
   const { projectId } = useParams<{ projectId: string }>();
   const { data, isLoading, refetch } = useScans(projectId);
 
-
   useEffect(() => {
     let intervalId: NodeJS.Timeout;
     const refetchTillScanComplete = () => {
@@ -161,15 +160,15 @@ export const ProjectPage: React.FC = () => {
                   {data.project_url}
                 </Link>
               </Text>
-             
+
               <Link
-                    as={RouterLink}
-                    to="/projects"
-                    variant="subtle-without-underline"
-                    fontSize="md"
-                  >
-                    ← back
-                  </Link>
+                as={RouterLink}
+                to="/projects"
+                variant="subtle-without-underline"
+                fontSize="md"
+              >
+                ← back
+              </Link>
             </Flex>
             <Switch>
               <Route exact path="/projects/:projectId/:scanId">

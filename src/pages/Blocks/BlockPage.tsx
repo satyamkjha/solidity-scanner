@@ -59,6 +59,7 @@ import { Report, ReportsListItem, Scan } from "common/types";
 import { useReports } from "hooks/useReports";
 import { useReport } from "hooks/useReport";
 import { usePricingPlans } from "hooks/usePricingPlans";
+import { sentenceCapitalize } from "helpers/helperFunction";
 
 const BlockPage: React.FC = () => {
   const { scanId } = useParams<{ scanId: string }>();
@@ -197,8 +198,6 @@ const BlockPage: React.FC = () => {
     }
   }, [scanData]);
 
-  
-
   return (
     <Box
       sx={{
@@ -313,9 +312,7 @@ const BlockPage: React.FC = () => {
                                     .report)
                               }
                               onClick={() => {
-                               if (
-                                  reportingStatus === "report_generated"
-                                ) {
+                                if (reportingStatus === "report_generated") {
                                   window.open(
                                     `http://${document.location.host}/report/block/${scanData.scan_report.project_id}/${scanData.scan_report.latest_report_id}`,
                                     "_blank"
@@ -397,26 +394,30 @@ const BlockPage: React.FC = () => {
                               |
                             </Text>
                             <Image
-                              src={
-                                scanData.scan_report.contract_platform ===
-                                "polygonscan"
-                                  ? "/polygon.svg"
-                                  : scanData.scan_report.contract_platform ===
-                                    "etherscan"
-                                  ? "/etherscan.svg"
-                                  : "/bscscan.svg"
-                              }
+                              src={`/blockscan/${scanData.scan_report.contract_platform}-scan.svg`}
                               alt="Product screenshot"
                               mx="auto"
+                              h={"20px"}
+                              w={"20px"}
                             />
-                            <Text
-                              fontWeight={"700"}
-                              width={"100%"}
-                              as="p"
-                              fontSize="18px"
-                            >
-                              {scanData.scan_report.contract_platform}
-                            </Text>
+                            {scanData.scan_report.contract_platform && (
+                              <Text
+                                fontWeight={"700"}
+                                width={"fit-content"}
+                                as="p"
+                                fontSize="18px"
+                              >
+                                {scanData.scan_report.contract_platform ===
+                                "fantom"
+                                  ? "FTMScan"
+                                  : scanData.scan_report.contract_platform ===
+                                    "avalanche"
+                                  ? "Snowtrace"
+                                  : sentenceCapitalize(
+                                      scanData.scan_report.contract_platform
+                                    )}
+                              </Text>
+                            )}
                           </HStack>
                         </Flex>
                         <Flex
