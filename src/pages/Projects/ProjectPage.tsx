@@ -193,7 +193,7 @@ const ScanDetails: React.FC<{ scansRemaining: number; scans: ScanMeta[] }> = ({
   const [isRescanLoading, setRescanLoading] = useState(false);
   const cancelRef = useRef<HTMLButtonElement | null>(null);
   const queryClient = useQueryClient();
-  // const [reportingStatus, setReportingStatus] = useState<string>();
+  const [reportingStatus, setReportingStatus] = useState<string>();
   const { projectId, scanId } =
     useParams<{ projectId: string; scanId: string }>();
   const history = useHistory();
@@ -217,6 +217,7 @@ const ScanDetails: React.FC<{ scansRemaining: number; scans: ScanMeta[] }> = ({
   const [open, setOpen] = useState(false);
 
   useEffect(() => {
+    setReportingStatus(data?.scan_report.reporting_status)
     let intervalId: NodeJS.Timeout;
     const refetchTillScanComplete = () => {
       if (
@@ -230,6 +231,7 @@ const ScanDetails: React.FC<{ scansRemaining: number; scans: ScanMeta[] }> = ({
             (data && data.scan_report.scan_status === "scan_done") ||
             data.scan_report.reporting_status === "report_generated"
           ) {
+            setReportingStatus(data?.scan_report.reporting_status)
             clearInterval(intervalId);
           }
         }, 1000);
@@ -240,18 +242,22 @@ const ScanDetails: React.FC<{ scansRemaining: number; scans: ScanMeta[] }> = ({
     return () => {
       clearInterval(intervalId);
     };
+
   }, [data, refetch]);
 
   const onClose = () => setIsOpen(false);
 
   const generateReport = async () => {
+    console.log('askdhakjsdh')
+    setReportingStatus('generating_report')
     const { data } = await API.post("/api-generate-report/", {
       project_id: projectId,
     });
     if (data.success) {
       setInterval(async () => {
-        await refetch();
-      }, 3000);
+        setReportingStatus('report_generated')
+        await refetch()
+      }, 5000);
     }
   };
 
@@ -271,7 +277,8 @@ const ScanDetails: React.FC<{ scansRemaining: number; scans: ScanMeta[] }> = ({
     data &&
     scans.find((scan) => scan.scan_id === data.scan_report.scan_id)?.scan_name;
 
-  const reportingStatus = data?.scan_report.reporting_status;
+  // const reportingStatus = data?.scan_report.reporting_status;
+
 
   const [projectName, setProjectName] = useState("");
   const [repoUrl, setRepoUrl] = useState("");
@@ -446,6 +453,7 @@ const ScanDetails: React.FC<{ scansRemaining: number; scans: ScanMeta[] }> = ({
                           !plans.monthly[profile.current_package].report)
                       }
                       onClick={() => {
+                        console.log(reportingStatus)
                         if (reportingStatus === "not_generated") {
                           generateReport();
                         } else if (reportingStatus === "report_generated") {

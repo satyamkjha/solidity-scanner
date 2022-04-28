@@ -66,7 +66,7 @@ const BlockPage: React.FC = () => {
 
   const { data: scanData, isLoading, refetch } = useScan(scanId);
 
-  // const [reportingStatus, setReportingStatus] = useState<string>();
+  const [reportingStatus, setReportingStatus] = useState<string>();
   const { data: profile, isLoading: isProfileLoading } = useProfile();
   const { data: plans, isLoading: isPlanLoading } = usePricingPlans();
   const toast = useToast();
@@ -85,7 +85,6 @@ const BlockPage: React.FC = () => {
   const [lastTimeUpdate, setLastTimeUpdate] = useState("");
   const [datePublished, setDatePublished] = useState("");
 
-  let reportingStatus = scanData?.scan_report.reporting_status;
 
   useEffect(() => {
     // if (data) {
@@ -116,14 +115,15 @@ const BlockPage: React.FC = () => {
   }, [refetch]);
 
   const generateReport = async (projectId: string) => {
+    setReportingStatus("generating_report");
     const { data } = await API.post("/api-generate-report-block/", {
       project_id: projectId,
     });
     if (data.success) {
-      // setReportingStatus("generating_report");
       setInterval(async () => {
+        setReportingStatus("report_generated");
         await refetch();
-      }, 2000);
+      }, 5000);
     }
   };
 
@@ -183,6 +183,7 @@ const BlockPage: React.FC = () => {
   };
 
   useEffect(() => {
+    setReportingStatus(scanData?.scan_report.reporting_status);
     if (
       scanData &&
       scanData.scan_report.reporting_status === "report_generated"
