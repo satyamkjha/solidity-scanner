@@ -22,6 +22,7 @@ import {
   File,
   Work,
   Smile,
+  PublishReport,
 } from "components/icons";
 
 import Header from "components/header";
@@ -125,6 +126,18 @@ export default function LandingPage() {
                 mb: [8, 8, 0],
               }}
             >
+              <PublishReport size={140} />
+              <Text fontSize="sm" ml="2" mt={4} fontWeight={600}>
+                Publish Reports
+              </Text>
+            </Flex>
+            <Flex
+              sx={{
+                flexDir: "column",
+                alignItems: "center",
+                mb: [8, 8, 0],
+              }}
+            >
               <VulnCheck size={140} />
               <Text fontSize="sm" ml="2" mt={4} fontWeight={600}>
                 100+ Vulnerability Checks
@@ -142,6 +155,7 @@ export default function LandingPage() {
                 Easy Integrations
               </Text>
             </Flex>{" "}
+            
           </Flex>
         </Box>
         {/* Section 3 */}
