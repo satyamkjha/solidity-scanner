@@ -21,6 +21,7 @@ import {
   Stack,
   Textarea,
   useToast,
+  Image,
 } from "@chakra-ui/react";
 import { AiOutlineProject } from "react-icons/ai";
 import { FaDiscord, FaEnvelope, FaTelegram } from "react-icons/fa";
@@ -75,7 +76,7 @@ export const ContactUs: React.FC<{ onClose(): any; isOpen: boolean }> = ({
           overflowY={"scroll"}
           overflowX={"scroll"}
           bg="bg.subtle"
-          maxW="60vw"
+          maxW="70vw"
           minW={"300px"}
           minH={"fit-content"}
         >
@@ -86,8 +87,9 @@ export const ContactUs: React.FC<{ onClose(): any; isOpen: boolean }> = ({
             Contact Us
           </ModalHeader>
           <ModalCloseButton />
-          <ModalBody h={"fit-content"} w={"100%"} px={20}>
-            <Stack spacing={6} mt={8}>
+          <ModalBody h={"fit-content"} w={"100%"} px={20}>  
+            <Flex justifyContent={'flex-start'} alignItems={'center'} w={'100%'} flexDir='row'>
+            <Stack zIndex={"10"} w={'60%'} spacing={6} mt={8}>
               <InputGroup mt={0} alignItems="center">
                 <InputLeftElement
                   height="48px"
@@ -173,6 +175,13 @@ export const ContactUs: React.FC<{ onClose(): any; isOpen: boolean }> = ({
                 }}
               />
             </Stack>
+            <Image
+            ml={'-100px'}
+              src="/contactus.png"
+              alt="Product screenshot"
+              w={'50%'}
+            />
+            </Flex>
           </ModalBody>
           <ModalFooter>
             <Button

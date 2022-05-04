@@ -155,7 +155,6 @@ export default function LandingPage() {
                 Easy Integrations
               </Text>
             </Flex>{" "}
-            
           </Flex>
         </Box>
         {/* Section 3 */}

@@ -35,6 +35,7 @@ import {
   Switch as SwitchComp,
   useToast,
   Badge,
+  border,
 } from "@chakra-ui/react";
 import Overview from "components/overview";
 import Result from "components/result";
@@ -84,7 +85,6 @@ const BlockPage: React.FC = () => {
   const [emailSwitch, setEmailSwitch] = useState(true);
   const [lastTimeUpdate, setLastTimeUpdate] = useState("");
   const [datePublished, setDatePublished] = useState("");
-
 
   useEffect(() => {
     // if (data) {
@@ -576,21 +576,26 @@ const BlockPage: React.FC = () => {
         <ModalOverlay />
         <ModalContent
           bg="bg.subtle"
-          h={"620px"}
+          h={"650px"}
           minH={"fit-content"}
-          maxW="container.md"
+          overflowY={"scroll"}
+          overflowX={"scroll"}
+          maxW="70vw"
+          minW={"300px"}
         >
-          <ModalHeader>Publish Report</ModalHeader>
+          <ModalHeader p={10}>Publish Report</ModalHeader>
           <ModalCloseButton />
-          <ModalBody>
+          <ModalBody h={"fit-content"} w={"100%"} px={10}>  
+           <Flex justifyContent={'flex-start'} alignItems={'flex-start'} w={'100%'} flexDir='row'>
+
             {!next && (
-              <>
-                <HStack
+            <VStack zIndex={"10"} w={'70%'} spacing={2} >
+               <HStack
                   alignItems="center"
                   spacing={3}
                   px={5}
                   py={3}
-                  mb={4}
+                  w={'100%'}
                   fontSize="14px"
                   bgColor={"white"}
                   border={"2px solid #EDF2F7"}
@@ -610,6 +615,7 @@ const BlockPage: React.FC = () => {
                     width={"70%"}
                     bgColor={"white"}
                     borderRadius={"16px"}
+                    
                   >
                     <Text fontSize="md" fontWeight={"600"}>
                       {scanData?.scan_report.contractname}
@@ -622,6 +628,7 @@ const BlockPage: React.FC = () => {
                   px={5}
                   py={3}
                   mb={4}
+                  w={'100%'}
                   fontSize="14px"
                   bgColor={"white"}
                   border={"2px solid #EDF2F7"}
@@ -642,7 +649,8 @@ const BlockPage: React.FC = () => {
                     bgColor={"white"}
                     borderRadius={"16px"}
                   >
-                    <Text fontSize="md" fontWeight={"600"}>
+                    <Text                     isTruncated
+ fontSize="md" fontWeight={"600"}>
                       {scanData?.scan_report.contract_address}
                     </Text>
                   </HStack>
@@ -654,6 +662,7 @@ const BlockPage: React.FC = () => {
                   px={5}
                   py={3}
                   mb={4}
+                  w={'100%'}
                   fontSize="14px"
                   border={"2px solid #EDF2F7"}
                   bgColor={"white"}
@@ -686,6 +695,7 @@ const BlockPage: React.FC = () => {
                   px={5}
                   py={3}
                   mb={4}
+                  w={'100%'}
                   fontSize="14px"
                   border={"2px solid #EDF2F7"}
                   bgColor={"white"}
@@ -718,6 +728,7 @@ const BlockPage: React.FC = () => {
                   px={5}
                   py={3}
                   mb={4}
+                  w={'100%'}
                   fontSize="14px"
                   border={"2px solid #EDF2F7"}
                   bgColor={"white"}
@@ -748,6 +759,7 @@ const BlockPage: React.FC = () => {
                   px={5}
                   py={3}
                   mb={4}
+                  w={'100%'}
                   fontSize="14px"
                   bgColor={"white"}
                   border={"2px solid #EDF2F7"}
@@ -779,6 +791,7 @@ const BlockPage: React.FC = () => {
                   spacing={3}
                   px={5}
                   py={3}
+                  w={'100%'}
                   border={"2px solid #EDF2F7"}
                   fontSize="14px"
                   bgColor={"white"}
@@ -804,16 +817,24 @@ const BlockPage: React.FC = () => {
                     </Text>
                   </HStack>
                 </HStack>
-              </>
+              </VStack>
             )}
             {next && (
-              <>
-                <HStack
+                          <VStack zIndex={"10"} w={'70%'} spacing={6}>
+
+<HStack
                   alignItems="center"
                   spacing={3}
-                  mt={4}
-                  mb={4}
-                  fontSize="14px"
+                  px={5}
+                  w={'100%'}
+                  bgColor={"white"}
+                  border={"2px solid #EDF2F7"}
+                  borderRadius={"16px"}
+                  _hover={{
+                    borderColor: "#52FF00",
+                    boxShadow: "0px 12px 23px rgba(107, 255, 55, 0.1)",
+                  }}
+                 
                 >
                   <InputGroup alignItems="center">
                     <InputLeftElement
@@ -824,7 +845,13 @@ const BlockPage: React.FC = () => {
                       isRequired
                       type="text"
                       placeholder="Publisher's name"
-                      variant="brand"
+                      border={'0px solid #FFFFFF'}
+                      _focus={{
+                        border: '0px solid #FFFFFF'
+                      }}
+                      fontSize={'15px'}
+                      fontWeight={500}
+
                       size="lg"
                       value={pubName}
                       onChange={(e) => {
@@ -843,7 +870,20 @@ const BlockPage: React.FC = () => {
                   />
                   <Text>Public</Text>
                 </HStack>
-                <HStack alignItems="center" spacing={3} mb={4} fontSize="14px">
+                <HStack
+                  alignItems="center"
+                  spacing={3}
+                  px={5}
+                  w={'100%'}
+                  bgColor={"white"}
+                  border={"2px solid #EDF2F7"}
+                  borderRadius={"16px"}
+                  _hover={{
+                    borderColor: "#52FF00",
+                    boxShadow: "0px 12px 23px rgba(107, 255, 55, 0.1)",
+                  }}
+                 
+                >
                   <InputGroup alignItems="center">
                     <InputLeftElement
                       height="48px"
@@ -853,8 +893,13 @@ const BlockPage: React.FC = () => {
                       isRequired
                       type="email"
                       placeholder="Publisher's Email"
-                      variant="brand"
                       size="lg"
+                      border={'0px solid #FFFFFF'}
+                      _focus={{
+                        border: '0px solid #FFFFFF'
+                      }}
+                      fontSize={'15px'}
+                      fontWeight={500}
                       value={pubEmail}
                       onChange={(e) => {
                         setPubEmail(e.target.value);
@@ -873,7 +918,20 @@ const BlockPage: React.FC = () => {
                   <Text> Public</Text>
                 </HStack>
 
-                <HStack alignItems="center" spacing={3} mb={4} fontSize="14px">
+                <HStack
+                  alignItems="center"
+                  spacing={3}
+                  px={5}
+                  w={'100%'}
+                  bgColor={"white"}
+                  border={"2px solid #EDF2F7"}
+                  borderRadius={"16px"}
+                  _hover={{
+                    borderColor: "#52FF00",
+                    boxShadow: "0px 12px 23px rgba(107, 255, 55, 0.1)",
+                  }}
+                 
+                >
                   <InputGroup alignItems="center">
                     <InputLeftElement
                       height="48px"
@@ -885,7 +943,12 @@ const BlockPage: React.FC = () => {
                       isRequired
                       type="url"
                       placeholder="Link to the Publisher's Website"
-                      variant="brand"
+                      _focus={{
+                        border: '0px solid #FFFFFF'
+                      }}
+                      border={'0px solid #FFFFFF'}
+                      fontSize={'15px'}
+                      fontWeight={500}
                       size="lg"
                       value={pubWeb}
                       onChange={(e) => {
@@ -904,7 +967,20 @@ const BlockPage: React.FC = () => {
                   />
                   <Text>Public</Text>
                 </HStack>
-                <HStack alignItems="center" spacing={3} fontSize="14px">
+                <HStack
+                  alignItems="center"
+                  spacing={3}
+                  px={5}
+                  w={'100%'}
+                  bgColor={"white"}
+                  border={"2px solid #EDF2F7"}
+                  borderRadius={"16px"}
+                  _hover={{
+                    borderColor: "#52FF00",
+                    boxShadow: "0px 12px 23px rgba(107, 255, 55, 0.1)",
+                  }}
+                 
+                >
                   <InputGroup alignItems="center">
                     <InputLeftElement
                       height="48px"
@@ -914,8 +990,13 @@ const BlockPage: React.FC = () => {
                       isRequired
                       type="text"
                       placeholder="Publisher's Organization"
-                      variant="brand"
                       size="lg"
+                      border={'0px solid #FFFFFF'}
+                      _focus={{
+                        border: '0px solid #FFFFFF'
+                      }}
+                      fontSize={'15px'}
+                      fontWeight={500}
                       value={pubOrg}
                       onChange={(e) => {
                         setPubOrg(e.target.value);
@@ -933,8 +1014,18 @@ const BlockPage: React.FC = () => {
                   />
                   <Text>Public</Text>
                 </HStack>
-              </>
+              </VStack>
+
             )}
+            <Image
+            ml={'-10%'}
+              src="/publishreport.png"
+              alt="Product screenshot"
+              w={'40%'}
+              h={'auto'}
+              
+            />
+            </Flex>
           </ModalBody>
 
           <ModalFooter>
