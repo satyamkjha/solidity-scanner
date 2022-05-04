@@ -342,10 +342,10 @@ const ContractForm: React.FC = () => {
   const contractChain: { [key: string]: { label: string; value: string }[] } = {
     etherscan: [
       { value: "mainnet", label: "Ethereum Mainnet" },
-      { value: "testnet", label: "Ropsten Testnet" },
-      { value: "testnet", label: "Kovan Testnet" },
-      { value: "testnet", label: "Rinkeby Testnet" },
-      { value: "testnet", label: "Goerli Testnet" },
+      { value: "ropsten", label: "Ropsten Testnet" },
+      { value: "kovan", label: "Kovan Testnet" },
+      { value: "rinkeby", label: "Rinkeby Testnet" },
+      { value: "goerli", label: "Goerli Testnet" },
     ],
     bscscan: [
       { value: "mainnet", label: "Bsc Mainnet" },
