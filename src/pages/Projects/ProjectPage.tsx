@@ -45,6 +45,7 @@ import {
   toast,
   useToast,
   Badge,
+  Image
 } from "@chakra-ui/react";
 import {
   AiOutlineClockCircle,
@@ -217,7 +218,7 @@ const ScanDetails: React.FC<{ scansRemaining: number; scans: ScanMeta[] }> = ({
   const [open, setOpen] = useState(false);
 
   useEffect(() => {
-    setReportingStatus(data?.scan_report.reporting_status)
+    setReportingStatus(data?.scan_report.reporting_status);
     let intervalId: NodeJS.Timeout;
     const refetchTillScanComplete = () => {
       if (
@@ -231,7 +232,7 @@ const ScanDetails: React.FC<{ scansRemaining: number; scans: ScanMeta[] }> = ({
             (data && data.scan_report.scan_status === "scan_done") ||
             data.scan_report.reporting_status === "report_generated"
           ) {
-            setReportingStatus(data?.scan_report.reporting_status)
+            setReportingStatus(data?.scan_report.reporting_status);
             clearInterval(intervalId);
           }
         }, 1000);
@@ -242,21 +243,20 @@ const ScanDetails: React.FC<{ scansRemaining: number; scans: ScanMeta[] }> = ({
     return () => {
       clearInterval(intervalId);
     };
-
   }, [data, refetch]);
 
   const onClose = () => setIsOpen(false);
 
   const generateReport = async () => {
-    console.log('askdhakjsdh')
-    setReportingStatus('generating_report')
+    console.log("askdhakjsdh");
+    setReportingStatus("generating_report");
     const { data } = await API.post("/api-generate-report/", {
       project_id: projectId,
     });
     if (data.success) {
       setInterval(async () => {
-        setReportingStatus('report_generated')
-        await refetch()
+        setReportingStatus("report_generated");
+        await refetch();
       }, 5000);
     }
   };
@@ -450,7 +450,7 @@ const ScanDetails: React.FC<{ scansRemaining: number; scans: ScanMeta[] }> = ({
                           !plans.monthly[profile.current_package].report)
                       }
                       onClick={() => {
-                        console.log(reportingStatus)
+                        console.log(reportingStatus);
                         if (reportingStatus === "not_generated") {
                           generateReport();
                         } else if (reportingStatus === "report_generated") {
@@ -619,21 +619,26 @@ const ScanDetails: React.FC<{ scansRemaining: number; scans: ScanMeta[] }> = ({
         <ModalOverlay />
         <ModalContent
           bg="bg.subtle"
-          h={"500px"}
+          h={"650px"}
           minH={"fit-content"}
-          maxW="container.md"
+          overflowY={"scroll"}
+          overflowX={"scroll"}
+          maxW="70vw"
+          minW={"300px"}
         >
-          <ModalHeader>Publish Report</ModalHeader>
+          <ModalHeader p={10}>Publish Report</ModalHeader>
           <ModalCloseButton />
           <ModalBody>
+          <Flex justifyContent={'flex-start'} alignItems={'flex-start'} w={'100%'} flexDir='row'>
+
             {!next && (
-              <>
-                <HStack
+            <VStack zIndex={"10"} w={'70%'} spacing={2} >
+            <HStack
                   alignItems="center"
                   spacing={3}
                   px={5}
                   py={3}
-                  mb={4}
+                  w={'100%'}
                   fontSize="14px"
                   bgColor={"white"}
                   border={"2px solid #EDF2F7"}
@@ -666,7 +671,7 @@ const ScanDetails: React.FC<{ scansRemaining: number; scans: ScanMeta[] }> = ({
                   spacing={3}
                   px={5}
                   py={3}
-                  mb={4}
+                  w={'100%'}
                   fontSize="14px"
                   bgColor={"white"}
                   border={"2px solid #EDF2F7"}
@@ -689,7 +694,8 @@ const ScanDetails: React.FC<{ scansRemaining: number; scans: ScanMeta[] }> = ({
                   >
                     <FaFileCode />
 
-                    <Text fontSize="md" fontWeight={"600"}>
+                    <Text                     isTruncated
+ fontSize="md" fontWeight={"600"}>
                       {repoUrl}
                     </Text>
                   </HStack>
@@ -700,10 +706,10 @@ const ScanDetails: React.FC<{ scansRemaining: number; scans: ScanMeta[] }> = ({
                   spacing={3}
                   px={5}
                   py={3}
-                  mb={4}
+                  w={'100%'}
                   fontSize="14px"
-                  border={"2px solid #EDF2F7"}
                   bgColor={"white"}
+                  border={"2px solid #EDF2F7"}
                   borderRadius={"16px"}
                 >
                   <Text
@@ -720,10 +726,12 @@ const ScanDetails: React.FC<{ scansRemaining: number; scans: ScanMeta[] }> = ({
                     width={"70%"}
                     bgColor={"white"}
                     borderRadius={"16px"}
+
                   >
                     <FaGithub />
 
-                    <Text fontSize="md" fontWeight={"600"}>
+                    <Text                     isTruncated
+ fontSize="md" fontWeight={"600"}>
                       {commitHash}
                     </Text>
                   </HStack>
@@ -734,7 +742,7 @@ const ScanDetails: React.FC<{ scansRemaining: number; scans: ScanMeta[] }> = ({
                   spacing={3}
                   px={5}
                   py={3}
-                  mb={4}
+                  w={'100%'}
                   fontSize="14px"
                   bgColor={"white"}
                   border={"2px solid #EDF2F7"}
@@ -768,9 +776,10 @@ const ScanDetails: React.FC<{ scansRemaining: number; scans: ScanMeta[] }> = ({
                   spacing={3}
                   px={5}
                   py={3}
-                  border={"2px solid #EDF2F7"}
+                  w={'100%'}
                   fontSize="14px"
                   bgColor={"white"}
+                  border={"2px solid #EDF2F7"}
                   borderRadius={"16px"}
                 >
                   <Text
@@ -795,16 +804,24 @@ const ScanDetails: React.FC<{ scansRemaining: number; scans: ScanMeta[] }> = ({
                     </Text>
                   </HStack>
                 </HStack>
-              </>
+              </VStack>
             )}
             {next && (
-              <>
-                <HStack
+                          <VStack zIndex={"10"} w={'70%'} spacing={6}>
+
+<HStack
                   alignItems="center"
                   spacing={3}
-                  mt={4}
-                  mb={4}
-                  fontSize="14px"
+                  px={5}
+                  w={'100%'}
+                  bgColor={"white"}
+                  border={"2px solid #EDF2F7"}
+                  borderRadius={"16px"}
+                  _hover={{
+                    borderColor: "#52FF00",
+                    boxShadow: "0px 12px 23px rgba(107, 255, 55, 0.1)",
+                  }}
+                 
                 >
                   <InputGroup alignItems="center">
                     <InputLeftElement
@@ -815,7 +832,13 @@ const ScanDetails: React.FC<{ scansRemaining: number; scans: ScanMeta[] }> = ({
                       isRequired
                       type="text"
                       placeholder="Publisher's name"
-                      variant="brand"
+                      border={'0px solid #FFFFFF'}
+                      _focus={{
+                        border: '0px solid #FFFFFF'
+                      }}
+                      fontSize={'15px'}
+                      fontWeight={500}
+
                       size="lg"
                       value={pubName}
                       onChange={(e) => {
@@ -834,7 +857,20 @@ const ScanDetails: React.FC<{ scansRemaining: number; scans: ScanMeta[] }> = ({
                   />
                   <Text>Public</Text>
                 </HStack>
-                <HStack alignItems="center" spacing={3} mb={4} fontSize="14px">
+                <HStack
+                  alignItems="center"
+                  spacing={3}
+                  px={5}
+                  w={'100%'}
+                  bgColor={"white"}
+                  border={"2px solid #EDF2F7"}
+                  borderRadius={"16px"}
+                  _hover={{
+                    borderColor: "#52FF00",
+                    boxShadow: "0px 12px 23px rgba(107, 255, 55, 0.1)",
+                  }}
+                 
+                >
                   <InputGroup alignItems="center">
                     <InputLeftElement
                       height="48px"
@@ -844,8 +880,13 @@ const ScanDetails: React.FC<{ scansRemaining: number; scans: ScanMeta[] }> = ({
                       isRequired
                       type="email"
                       placeholder="Publisher's Email"
-                      variant="brand"
                       size="lg"
+                      border={'0px solid #FFFFFF'}
+                      _focus={{
+                        border: '0px solid #FFFFFF'
+                      }}
+                      fontSize={'15px'}
+                      fontWeight={500}
                       value={pubEmail}
                       onChange={(e) => {
                         setPubEmail(e.target.value);
@@ -864,7 +905,20 @@ const ScanDetails: React.FC<{ scansRemaining: number; scans: ScanMeta[] }> = ({
                   <Text> Public</Text>
                 </HStack>
 
-                <HStack alignItems="center" spacing={3} mb={4} fontSize="14px">
+                <HStack
+                  alignItems="center"
+                  spacing={3}
+                  px={5}
+                  w={'100%'}
+                  bgColor={"white"}
+                  border={"2px solid #EDF2F7"}
+                  borderRadius={"16px"}
+                  _hover={{
+                    borderColor: "#52FF00",
+                    boxShadow: "0px 12px 23px rgba(107, 255, 55, 0.1)",
+                  }}
+                 
+                >
                   <InputGroup alignItems="center">
                     <InputLeftElement
                       height="48px"
@@ -876,7 +930,12 @@ const ScanDetails: React.FC<{ scansRemaining: number; scans: ScanMeta[] }> = ({
                       isRequired
                       type="url"
                       placeholder="Link to the Publisher's Website"
-                      variant="brand"
+                      _focus={{
+                        border: '0px solid #FFFFFF'
+                      }}
+                      border={'0px solid #FFFFFF'}
+                      fontSize={'15px'}
+                      fontWeight={500}
                       size="lg"
                       value={pubWeb}
                       onChange={(e) => {
@@ -895,7 +954,20 @@ const ScanDetails: React.FC<{ scansRemaining: number; scans: ScanMeta[] }> = ({
                   />
                   <Text>Public</Text>
                 </HStack>
-                <HStack alignItems="center" spacing={3} fontSize="14px">
+                <HStack
+                  alignItems="center"
+                  spacing={3}
+                  px={5}
+                  w={'100%'}
+                  bgColor={"white"}
+                  border={"2px solid #EDF2F7"}
+                  borderRadius={"16px"}
+                  _hover={{
+                    borderColor: "#52FF00",
+                    boxShadow: "0px 12px 23px rgba(107, 255, 55, 0.1)",
+                  }}
+                 
+                >
                   <InputGroup alignItems="center">
                     <InputLeftElement
                       height="48px"
@@ -905,8 +977,13 @@ const ScanDetails: React.FC<{ scansRemaining: number; scans: ScanMeta[] }> = ({
                       isRequired
                       type="text"
                       placeholder="Publisher's Organization"
-                      variant="brand"
                       size="lg"
+                      border={'0px solid #FFFFFF'}
+                      _focus={{
+                        border: '0px solid #FFFFFF'
+                      }}
+                      fontSize={'15px'}
+                      fontWeight={500}
                       value={pubOrg}
                       onChange={(e) => {
                         setPubOrg(e.target.value);
@@ -924,8 +1001,18 @@ const ScanDetails: React.FC<{ scansRemaining: number; scans: ScanMeta[] }> = ({
                   />
                   <Text>Public</Text>
                 </HStack>
-              </>
+              </VStack>
+
             )}
+            <Image
+            ml={'-10%'}
+              src="/publishreport.png"
+              alt="Product screenshot"
+              w={'40%'}
+              h={'auto'}
+              
+            />
+            </Flex>
           </ModalBody>
 
           <ModalFooter>

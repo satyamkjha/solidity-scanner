@@ -26,6 +26,7 @@ import {
   AccordionItem,
   AccordionPanel,
   useToast,
+  Spinner,
 } from "@chakra-ui/react";
 import { useReport } from "hooks/useReport";
 import { ResponsivePie } from "@nivo/pie";
@@ -283,7 +284,7 @@ export default function ReportPage() {
 
   return (
     <>
-      {data && (
+      {data ? (
         <Container
           py={12}
           maxW={["100vw", "100vw", "90vw", "80vw", "80vw"]}
@@ -445,6 +446,26 @@ export default function ReportPage() {
               </ModalFooter>
             </ModalContent>
           </Modal>
+        </Container>
+      ) : (
+        <Container
+          py={12}
+          h="90vh"
+          maxW={["100vw", "100vw", "90vw", "80vw", "80vw"]}
+          color="black"
+        >
+          <Flex
+            as="div"
+            w="100%"
+            h="100%"
+            alignItems="center"
+            justifyContent="center"
+            flexDir={"row"}
+            textAlign={["left", "left"]}
+            mb={10}
+          >
+            <Spinner />
+          </Flex>
         </Container>
       )}
     </>
