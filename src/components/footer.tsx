@@ -90,9 +90,7 @@ export const Footer: React.FC = () => {
           <Image
             src="/telegram-social.svg"
             alt="Instagram"
-            onClick={() =>
-              window.open("https://t.me/solidityscan", "_blank")
-            }
+            onClick={() => window.open("https://t.me/solidityscan", "_blank")}
             mx={3}
           />
           <Image
