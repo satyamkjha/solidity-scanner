@@ -585,446 +585,442 @@ const BlockPage: React.FC = () => {
         >
           <ModalHeader p={10}>Publish Report</ModalHeader>
           <ModalCloseButton />
-          <ModalBody h={"fit-content"} w={"100%"} px={10}>  
-           <Flex justifyContent={'flex-start'} alignItems={'flex-start'} w={'100%'} flexDir='row'>
-
-            {!next && (
-            <VStack zIndex={"10"} w={'70%'} spacing={2} >
-               <HStack
-                  alignItems="center"
-                  spacing={3}
-                  px={5}
-                  py={3}
-                  w={'100%'}
-                  fontSize="14px"
-                  bgColor={"white"}
-                  border={"2px solid #EDF2F7"}
-                  borderRadius={"16px"}
-                >
-                  <Text
-                    fontSize="md"
-                    fontWeight={"600"}
-                    color={"gray.500"}
-                    width={"30%"}
-                  >
-                    Contract Name
-                  </Text>
+          <ModalBody h={"fit-content"} w={"100%"} px={10}>
+            <Flex
+              justifyContent={"flex-start"}
+              alignItems={"flex-start"}
+              w={"100%"}
+              flexDir="row"
+            >
+              {!next && (
+                <VStack zIndex={"10"} w={"70%"} spacing={2}>
                   <HStack
                     alignItems="center"
                     spacing={3}
-                    width={"70%"}
+                    px={5}
+                    py={3}
+                    w={"100%"}
+                    fontSize="14px"
                     bgColor={"white"}
+                    border={"2px solid #EDF2F7"}
                     borderRadius={"16px"}
-                    
                   >
-                    <Text fontSize="md" fontWeight={"600"}>
-                      {scanData?.scan_report.contractname}
+                    <Text
+                      fontSize="md"
+                      fontWeight={"600"}
+                      color={"gray.500"}
+                      width={"30%"}
+                    >
+                      Contract Name
                     </Text>
+                    <HStack
+                      alignItems="center"
+                      spacing={3}
+                      width={"70%"}
+                      bgColor={"white"}
+                      borderRadius={"16px"}
+                    >
+                      <Text fontSize="md" fontWeight={"600"}>
+                        {scanData?.scan_report.contractname}
+                      </Text>
+                    </HStack>
                   </HStack>
-                </HStack>
-                <HStack
-                  alignItems="center"
-                  spacing={3}
-                  px={5}
-                  py={3}
-                  mb={4}
-                  w={'100%'}
-                  fontSize="14px"
-                  bgColor={"white"}
-                  border={"2px solid #EDF2F7"}
-                  borderRadius={"16px"}
-                >
-                  <Text
-                    fontSize="md"
-                    fontWeight={"600"}
-                    color={"gray.500"}
-                    width={"30%"}
-                  >
-                    Contract Address{" "}
-                  </Text>
                   <HStack
                     alignItems="center"
                     spacing={3}
-                    width={"70%"}
+                    px={5}
+                    py={3}
+                    mb={4}
+                    w={"100%"}
+                    fontSize="14px"
                     bgColor={"white"}
+                    border={"2px solid #EDF2F7"}
                     borderRadius={"16px"}
                   >
-                    <Text                     isTruncated
- fontSize="md" fontWeight={"600"}>
-                      {scanData?.scan_report.contract_address}
+                    <Text
+                      fontSize="md"
+                      fontWeight={"600"}
+                      color={"gray.500"}
+                      width={"30%"}
+                    >
+                      Contract Address{" "}
                     </Text>
+                    <HStack
+                      alignItems="center"
+                      spacing={3}
+                      width={"70%"}
+                      bgColor={"white"}
+                      borderRadius={"16px"}
+                    >
+                      <Text isTruncated fontSize="md" fontWeight={"600"}>
+                        {scanData?.scan_report.contract_address}
+                      </Text>
+                    </HStack>
                   </HStack>
-                </HStack>
 
-                <HStack
-                  alignItems="center"
-                  spacing={3}
-                  px={5}
-                  py={3}
-                  mb={4}
-                  w={'100%'}
-                  fontSize="14px"
-                  border={"2px solid #EDF2F7"}
-                  bgColor={"white"}
-                  borderRadius={"16px"}
-                >
-                  <Text
-                    fontSize="md"
-                    fontWeight={"600"}
-                    color={"gray.500"}
-                    width={"30%"}
-                  >
-                    Contract Platform{" "}
-                  </Text>
                   <HStack
                     alignItems="center"
                     spacing={3}
-                    width={"70%"}
+                    px={5}
+                    py={3}
+                    mb={4}
+                    w={"100%"}
+                    fontSize="14px"
+                    border={"2px solid #EDF2F7"}
                     bgColor={"white"}
                     borderRadius={"16px"}
                   >
-                    <Text fontSize="md" fontWeight={"600"}>
-                      {scanData?.scan_report.contract_platform}
+                    <Text
+                      fontSize="md"
+                      fontWeight={"600"}
+                      color={"gray.500"}
+                      width={"30%"}
+                    >
+                      Contract Platform{" "}
                     </Text>
+                    <HStack
+                      alignItems="center"
+                      spacing={3}
+                      width={"70%"}
+                      bgColor={"white"}
+                      borderRadius={"16px"}
+                    >
+                      <Text fontSize="md" fontWeight={"600"}>
+                        {scanData?.scan_report.contract_platform}
+                      </Text>
+                    </HStack>
                   </HStack>
-                </HStack>
 
-                <HStack
-                  alignItems="center"
-                  spacing={3}
-                  px={5}
-                  py={3}
-                  mb={4}
-                  w={'100%'}
-                  fontSize="14px"
-                  border={"2px solid #EDF2F7"}
-                  bgColor={"white"}
-                  borderRadius={"16px"}
-                >
-                  <Text
-                    fontSize="md"
-                    fontWeight={"600"}
-                    color={"gray.500"}
-                    width={"30%"}
-                  >
-                    Contract Chain{" "}
-                  </Text>
                   <HStack
                     alignItems="center"
                     spacing={3}
-                    width={"70%"}
+                    px={5}
+                    py={3}
+                    mb={4}
+                    w={"100%"}
+                    fontSize="14px"
+                    border={"2px solid #EDF2F7"}
                     bgColor={"white"}
                     borderRadius={"16px"}
                   >
-                    <Text fontSize="md" fontWeight={"600"}>
-                      {scanData?.scan_report.contract_chain}
+                    <Text
+                      fontSize="md"
+                      fontWeight={"600"}
+                      color={"gray.500"}
+                      width={"30%"}
+                    >
+                      Contract Chain{" "}
                     </Text>
+                    <HStack
+                      alignItems="center"
+                      spacing={3}
+                      width={"70%"}
+                      bgColor={"white"}
+                      borderRadius={"16px"}
+                    >
+                      <Text fontSize="md" fontWeight={"600"}>
+                        {scanData?.scan_report.contract_chain}
+                      </Text>
+                    </HStack>
                   </HStack>
-                </HStack>
 
-                <HStack
-                  alignItems="center"
-                  spacing={3}
-                  px={5}
-                  py={3}
-                  mb={4}
-                  w={'100%'}
-                  fontSize="14px"
-                  border={"2px solid #EDF2F7"}
-                  bgColor={"white"}
-                  borderRadius={"16px"}
-                >
-                  <Text
-                    fontSize="md"
-                    fontWeight={"600"}
-                    color={"gray.500"}
-                    width={"30%"}
-                  >
-                    Contract URL{" "}
-                  </Text>
-
-                  <Text
-                    width={"70%"}
-                    isTruncated
-                    fontSize="md"
-                    fontWeight={"600"}
-                  >
-                    {scanData?.scan_report.contract_url}
-                  </Text>
-                </HStack>
-
-                <HStack
-                  alignItems="center"
-                  spacing={3}
-                  px={5}
-                  py={3}
-                  mb={4}
-                  w={'100%'}
-                  fontSize="14px"
-                  bgColor={"white"}
-                  border={"2px solid #EDF2F7"}
-                  borderRadius={"16px"}
-                >
-                  <Text
-                    fontSize="md"
-                    fontWeight={"600"}
-                    color={"gray.500"}
-                    width={"30%"}
-                  >
-                    Latest Report Update
-                  </Text>
                   <HStack
                     alignItems="center"
                     spacing={3}
-                    width={"70%"}
+                    px={5}
+                    py={3}
+                    mb={4}
+                    w={"100%"}
+                    fontSize="14px"
+                    border={"2px solid #EDF2F7"}
                     bgColor={"white"}
                     borderRadius={"16px"}
                   >
-                    <Text fontSize="md" fontWeight={"600"}>
-                      {lastTimeUpdate}
+                    <Text
+                      fontSize="md"
+                      fontWeight={"600"}
+                      color={"gray.500"}
+                      width={"30%"}
+                    >
+                      Contract URL{" "}
+                    </Text>
+
+                    <Text
+                      width={"70%"}
+                      isTruncated
+                      fontSize="md"
+                      fontWeight={"600"}
+                    >
+                      {scanData?.scan_report.contract_url}
                     </Text>
                   </HStack>
-                </HStack>
 
-                <HStack
-                  alignItems="center"
-                  spacing={3}
-                  px={5}
-                  py={3}
-                  w={'100%'}
-                  border={"2px solid #EDF2F7"}
-                  fontSize="14px"
-                  bgColor={"white"}
-                  borderRadius={"16px"}
-                >
-                  <Text
-                    fontSize="md"
-                    fontWeight={"600"}
-                    color={"gray.500"}
-                    width={"30%"}
-                  >
-                    Date Published
-                  </Text>
                   <HStack
                     alignItems="center"
                     spacing={3}
-                    width={"70%"}
+                    px={5}
+                    py={3}
+                    mb={4}
+                    w={"100%"}
+                    fontSize="14px"
+                    bgColor={"white"}
+                    border={"2px solid #EDF2F7"}
+                    borderRadius={"16px"}
+                  >
+                    <Text
+                      fontSize="md"
+                      fontWeight={"600"}
+                      color={"gray.500"}
+                      width={"30%"}
+                    >
+                      Latest Report Update
+                    </Text>
+                    <HStack
+                      alignItems="center"
+                      spacing={3}
+                      width={"70%"}
+                      bgColor={"white"}
+                      borderRadius={"16px"}
+                    >
+                      <Text fontSize="md" fontWeight={"600"}>
+                        {lastTimeUpdate}
+                      </Text>
+                    </HStack>
+                  </HStack>
+
+                  <HStack
+                    alignItems="center"
+                    spacing={3}
+                    px={5}
+                    py={3}
+                    w={"100%"}
+                    border={"2px solid #EDF2F7"}
+                    fontSize="14px"
                     bgColor={"white"}
                     borderRadius={"16px"}
                   >
-                    <Text fontSize="md" fontWeight={"600"}>
-                      {datePublished}
+                    <Text
+                      fontSize="md"
+                      fontWeight={"600"}
+                      color={"gray.500"}
+                      width={"30%"}
+                    >
+                      Date Published
                     </Text>
+                    <HStack
+                      alignItems="center"
+                      spacing={3}
+                      width={"70%"}
+                      bgColor={"white"}
+                      borderRadius={"16px"}
+                    >
+                      <Text fontSize="md" fontWeight={"600"}>
+                        {datePublished}
+                      </Text>
+                    </HStack>
                   </HStack>
-                </HStack>
-              </VStack>
-            )}
-            {next && (
-                          <VStack zIndex={"10"} w={'70%'} spacing={6}>
-
-<HStack
-                  alignItems="center"
-                  spacing={3}
-                  px={5}
-                  w={'100%'}
-                  bgColor={"white"}
-                  border={"2px solid #EDF2F7"}
-                  borderRadius={"16px"}
-                  _hover={{
-                    borderColor: "#52FF00",
-                    boxShadow: "0px 12px 23px rgba(107, 255, 55, 0.1)",
-                  }}
-                 
-                >
-                  <InputGroup alignItems="center">
-                    <InputLeftElement
-                      height="48px"
-                      children={<Icon as={AiOutlineProject} color="gray.300" />}
-                    />
-                    <Input
-                      isRequired
-                      type="text"
-                      placeholder="Publisher's name"
-                      border={'0px solid #FFFFFF'}
-                      _focus={{
-                        border: '0px solid #FFFFFF'
-                      }}
-                      fontSize={'15px'}
-                      fontWeight={500}
-
-                      size="lg"
-                      value={pubName}
-                      onChange={(e) => {
-                        setPubName(e.target.value);
-                      }}
-                    />
-                  </InputGroup>
-                  <Text>Private</Text>
-                  <SwitchComp
-                    isChecked={nameSwitch}
-                    onChange={() => {
-                      setNameSwitch(!nameSwitch);
+                </VStack>
+              )}
+              {next && (
+                <VStack zIndex={"10"} w={"70%"} spacing={6}>
+                  <HStack
+                    alignItems="center"
+                    spacing={3}
+                    px={5}
+                    w={"100%"}
+                    bgColor={"white"}
+                    border={"2px solid #EDF2F7"}
+                    borderRadius={"16px"}
+                    _hover={{
+                      borderColor: "#52FF00",
+                      boxShadow: "0px 12px 23px rgba(107, 255, 55, 0.1)",
                     }}
-                    size="lg"
-                    variant="brand"
-                  />
-                  <Text>Public</Text>
-                </HStack>
-                <HStack
-                  alignItems="center"
-                  spacing={3}
-                  px={5}
-                  w={'100%'}
-                  bgColor={"white"}
-                  border={"2px solid #EDF2F7"}
-                  borderRadius={"16px"}
-                  _hover={{
-                    borderColor: "#52FF00",
-                    boxShadow: "0px 12px 23px rgba(107, 255, 55, 0.1)",
-                  }}
-                 
-                >
-                  <InputGroup alignItems="center">
-                    <InputLeftElement
-                      height="48px"
-                      children={<Icon as={FaEnvelope} color="gray.300" />}
-                    />
-                    <Input
-                      isRequired
-                      type="email"
-                      placeholder="Publisher's Email"
+                  >
+                    <InputGroup alignItems="center">
+                      <InputLeftElement
+                        height="48px"
+                        children={
+                          <Icon as={AiOutlineProject} color="gray.300" />
+                        }
+                      />
+                      <Input
+                        isRequired
+                        type="text"
+                        placeholder="Publisher's name"
+                        border={"0px solid #FFFFFF"}
+                        _focus={{
+                          border: "0px solid #FFFFFF",
+                        }}
+                        fontSize={"15px"}
+                        fontWeight={500}
+                        size="lg"
+                        value={pubName}
+                        onChange={(e) => {
+                          setPubName(e.target.value);
+                        }}
+                      />
+                    </InputGroup>
+                    <Text>Private</Text>
+                    <SwitchComp
+                      isChecked={nameSwitch}
+                      onChange={() => {
+                        setNameSwitch(!nameSwitch);
+                      }}
                       size="lg"
-                      border={'0px solid #FFFFFF'}
-                      _focus={{
-                        border: '0px solid #FFFFFF'
-                      }}
-                      fontSize={'15px'}
-                      fontWeight={500}
-                      value={pubEmail}
-                      onChange={(e) => {
-                        setPubEmail(e.target.value);
-                      }}
+                      variant="brand"
                     />
-                  </InputGroup>
-                  <Text>Private</Text>
-                  <SwitchComp
-                    isChecked={emailSwitch}
-                    onChange={() => {
-                      setEmailSwitch(!emailSwitch);
+                    <Text>Public</Text>
+                  </HStack>
+                  <HStack
+                    alignItems="center"
+                    spacing={3}
+                    px={5}
+                    w={"100%"}
+                    bgColor={"white"}
+                    border={"2px solid #EDF2F7"}
+                    borderRadius={"16px"}
+                    _hover={{
+                      borderColor: "#52FF00",
+                      boxShadow: "0px 12px 23px rgba(107, 255, 55, 0.1)",
                     }}
-                    size="lg"
-                    variant="brand"
-                  />
-                  <Text> Public</Text>
-                </HStack>
+                  >
+                    <InputGroup alignItems="center">
+                      <InputLeftElement
+                        height="48px"
+                        children={<Icon as={FaEnvelope} color="gray.300" />}
+                      />
+                      <Input
+                        isRequired
+                        type="email"
+                        placeholder="Publisher's Email"
+                        size="lg"
+                        border={"0px solid #FFFFFF"}
+                        _focus={{
+                          border: "0px solid #FFFFFF",
+                        }}
+                        fontSize={"15px"}
+                        fontWeight={500}
+                        value={pubEmail}
+                        onChange={(e) => {
+                          setPubEmail(e.target.value);
+                        }}
+                      />
+                    </InputGroup>
+                    <Text>Private</Text>
+                    <SwitchComp
+                      isChecked={emailSwitch}
+                      onChange={() => {
+                        setEmailSwitch(!emailSwitch);
+                      }}
+                      size="lg"
+                      variant="brand"
+                    />
+                    <Text> Public</Text>
+                  </HStack>
 
-                <HStack
-                  alignItems="center"
-                  spacing={3}
-                  px={5}
-                  w={'100%'}
-                  bgColor={"white"}
-                  border={"2px solid #EDF2F7"}
-                  borderRadius={"16px"}
-                  _hover={{
-                    borderColor: "#52FF00",
-                    boxShadow: "0px 12px 23px rgba(107, 255, 55, 0.1)",
-                  }}
-                 
-                >
-                  <InputGroup alignItems="center">
-                    <InputLeftElement
-                      height="48px"
-                      children={
-                        <Icon as={FaInternetExplorer} color="gray.300" />
-                      }
-                    />
-                    <Input
-                      isRequired
-                      type="url"
-                      placeholder="Link to the Publisher's Website"
-                      _focus={{
-                        border: '0px solid #FFFFFF'
-                      }}
-                      border={'0px solid #FFFFFF'}
-                      fontSize={'15px'}
-                      fontWeight={500}
-                      size="lg"
-                      value={pubWeb}
-                      onChange={(e) => {
-                        setPubWeb(e.target.value);
-                      }}
-                    />
-                  </InputGroup>
-                  <Text>Private</Text>
-                  <SwitchComp
-                    isChecked={webSwitch}
-                    onChange={() => {
-                      setWebSwitch(!webSwitch);
+                  <HStack
+                    alignItems="center"
+                    spacing={3}
+                    px={5}
+                    w={"100%"}
+                    bgColor={"white"}
+                    border={"2px solid #EDF2F7"}
+                    borderRadius={"16px"}
+                    _hover={{
+                      borderColor: "#52FF00",
+                      boxShadow: "0px 12px 23px rgba(107, 255, 55, 0.1)",
                     }}
-                    size="lg"
-                    variant="brand"
-                  />
-                  <Text>Public</Text>
-                </HStack>
-                <HStack
-                  alignItems="center"
-                  spacing={3}
-                  px={5}
-                  w={'100%'}
-                  bgColor={"white"}
-                  border={"2px solid #EDF2F7"}
-                  borderRadius={"16px"}
-                  _hover={{
-                    borderColor: "#52FF00",
-                    boxShadow: "0px 12px 23px rgba(107, 255, 55, 0.1)",
-                  }}
-                 
-                >
-                  <InputGroup alignItems="center">
-                    <InputLeftElement
-                      height="48px"
-                      children={<Icon as={FaBuilding} color="gray.300" />}
-                    />
-                    <Input
-                      isRequired
-                      type="text"
-                      placeholder="Publisher's Organization"
+                  >
+                    <InputGroup alignItems="center">
+                      <InputLeftElement
+                        height="48px"
+                        children={
+                          <Icon as={FaInternetExplorer} color="gray.300" />
+                        }
+                      />
+                      <Input
+                        isRequired
+                        type="url"
+                        placeholder="Link to the Publisher's Website"
+                        _focus={{
+                          border: "0px solid #FFFFFF",
+                        }}
+                        border={"0px solid #FFFFFF"}
+                        fontSize={"15px"}
+                        fontWeight={500}
+                        size="lg"
+                        value={pubWeb}
+                        onChange={(e) => {
+                          setPubWeb(e.target.value);
+                        }}
+                      />
+                    </InputGroup>
+                    <Text>Private</Text>
+                    <SwitchComp
+                      isChecked={webSwitch}
+                      onChange={() => {
+                        setWebSwitch(!webSwitch);
+                      }}
                       size="lg"
-                      border={'0px solid #FFFFFF'}
-                      _focus={{
-                        border: '0px solid #FFFFFF'
-                      }}
-                      fontSize={'15px'}
-                      fontWeight={500}
-                      value={pubOrg}
-                      onChange={(e) => {
-                        setPubOrg(e.target.value);
-                      }}
+                      variant="brand"
                     />
-                  </InputGroup>
-                  <Text>Private</Text>
-                  <SwitchComp
-                    isChecked={orgSwitch}
-                    onChange={() => {
-                      setOrgSwitch(!orgSwitch);
+                    <Text>Public</Text>
+                  </HStack>
+                  <HStack
+                    alignItems="center"
+                    spacing={3}
+                    px={5}
+                    w={"100%"}
+                    bgColor={"white"}
+                    border={"2px solid #EDF2F7"}
+                    borderRadius={"16px"}
+                    _hover={{
+                      borderColor: "#52FF00",
+                      boxShadow: "0px 12px 23px rgba(107, 255, 55, 0.1)",
                     }}
-                    size="lg"
-                    variant="brand"
-                  />
-                  <Text>Public</Text>
-                </HStack>
-              </VStack>
-
-            )}
-            <Image
-            ml={'-10%'}
-              src="/publishreport.png"
-              alt="Product screenshot"
-              w={'40%'}
-              h={'auto'}
-              
-            />
+                  >
+                    <InputGroup alignItems="center">
+                      <InputLeftElement
+                        height="48px"
+                        children={<Icon as={FaBuilding} color="gray.300" />}
+                      />
+                      <Input
+                        isRequired
+                        type="text"
+                        placeholder="Publisher's Organization"
+                        size="lg"
+                        border={"0px solid #FFFFFF"}
+                        _focus={{
+                          border: "0px solid #FFFFFF",
+                        }}
+                        fontSize={"15px"}
+                        fontWeight={500}
+                        value={pubOrg}
+                        onChange={(e) => {
+                          setPubOrg(e.target.value);
+                        }}
+                      />
+                    </InputGroup>
+                    <Text>Private</Text>
+                    <SwitchComp
+                      isChecked={orgSwitch}
+                      onChange={() => {
+                        setOrgSwitch(!orgSwitch);
+                      }}
+                      size="lg"
+                      variant="brand"
+                    />
+                    <Text>Public</Text>
+                  </HStack>
+                </VStack>
+              )}
+              <Image
+                ml={"-10%"}
+                src="/publishreport.png"
+                alt="Product screenshot"
+                w={"40%"}
+                h={"auto"}
+              />
             </Flex>
           </ModalBody>
 
