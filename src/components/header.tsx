@@ -1,5 +1,5 @@
 import React from "react";
-import { Link as RouterLink } from "react-router-dom";
+import { Link as RouterLink, useHistory } from "react-router-dom";
 
 import {
   Flex,
@@ -51,6 +51,15 @@ export const Header: React.FC = () => {
               fontWeight="600"
             >
               Pricing
+            </Link>
+            <Link
+              onClick={()=>{
+                window.open('https://docs.solidityscan.com/', '_blank')
+              }}
+              variant="brand"
+              fontWeight="600"
+            >
+              Docs
             </Link>
           </HStack>
         </Flex>
