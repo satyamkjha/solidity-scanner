@@ -45,6 +45,7 @@ import {
   toast,
   useToast,
   Badge,
+  Image,
 } from "@chakra-ui/react";
 import {
   AiOutlineClockCircle,
@@ -193,7 +194,7 @@ const ScanDetails: React.FC<{ scansRemaining: number; scans: ScanMeta[] }> = ({
   const [isRescanLoading, setRescanLoading] = useState(false);
   const cancelRef = useRef<HTMLButtonElement | null>(null);
   const queryClient = useQueryClient();
-  // const [reportingStatus, setReportingStatus] = useState<string>();
+  const [reportingStatus, setReportingStatus] = useState<string>();
   const { projectId, scanId } =
     useParams<{ projectId: string; scanId: string }>();
   const history = useHistory();
@@ -217,6 +218,7 @@ const ScanDetails: React.FC<{ scansRemaining: number; scans: ScanMeta[] }> = ({
   const [open, setOpen] = useState(false);
 
   useEffect(() => {
+    setReportingStatus(data?.scan_report.reporting_status);
     let intervalId: NodeJS.Timeout;
     const refetchTillScanComplete = () => {
       if (
@@ -230,6 +232,7 @@ const ScanDetails: React.FC<{ scansRemaining: number; scans: ScanMeta[] }> = ({
             (data && data.scan_report.scan_status === "scan_done") ||
             data.scan_report.reporting_status === "report_generated"
           ) {
+            setReportingStatus(data?.scan_report.reporting_status);
             clearInterval(intervalId);
           }
         }, 1000);
@@ -245,13 +248,16 @@ const ScanDetails: React.FC<{ scansRemaining: number; scans: ScanMeta[] }> = ({
   const onClose = () => setIsOpen(false);
 
   const generateReport = async () => {
+    console.log("askdhakjsdh");
+    setReportingStatus("generating_report");
     const { data } = await API.post("/api-generate-report/", {
       project_id: projectId,
     });
     if (data.success) {
       setInterval(async () => {
+        setReportingStatus("report_generated");
         await refetch();
-      }, 3000);
+      }, 5000);
     }
   };
 
@@ -270,8 +276,6 @@ const ScanDetails: React.FC<{ scansRemaining: number; scans: ScanMeta[] }> = ({
   const scan_name =
     data &&
     scans.find((scan) => scan.scan_id === data.scan_report.scan_id)?.scan_name;
-
-  const reportingStatus = data?.scan_report.reporting_status;
 
   const [projectName, setProjectName] = useState("");
   const [repoUrl, setRepoUrl] = useState("");
@@ -446,6 +450,7 @@ const ScanDetails: React.FC<{ scansRemaining: number; scans: ScanMeta[] }> = ({
                           !plans.monthly[profile.current_package].report)
                       }
                       onClick={() => {
+                        console.log(reportingStatus);
                         if (reportingStatus === "not_generated") {
                           generateReport();
                         } else if (reportingStatus === "report_generated") {
@@ -614,313 +619,395 @@ const ScanDetails: React.FC<{ scansRemaining: number; scans: ScanMeta[] }> = ({
         <ModalOverlay />
         <ModalContent
           bg="bg.subtle"
-          h={"500px"}
+          h={"650px"}
           minH={"fit-content"}
-          maxW="container.md"
+          overflowY={"scroll"}
+          overflowX={"scroll"}
+          maxW="70vw"
+          minW={"300px"}
         >
-          <ModalHeader>Publish Report</ModalHeader>
+          <ModalHeader p={10}>Publish Report</ModalHeader>
           <ModalCloseButton />
           <ModalBody>
-            {!next && (
-              <>
-                <HStack
-                  alignItems="center"
-                  spacing={3}
-                  px={5}
-                  py={3}
-                  mb={4}
-                  fontSize="14px"
-                  bgColor={"white"}
-                  border={"2px solid #EDF2F7"}
-                  borderRadius={"16px"}
-                >
-                  <Text
-                    fontSize="md"
-                    fontWeight={"600"}
-                    color={"gray.500"}
-                    width={"30%"}
-                  >
-                    Project Name
-                  </Text>
+            <Flex
+              justifyContent={"flex-start"}
+              alignItems={"flex-start"}
+              w={"100%"}
+              flexDir="row"
+            >
+              {!next && (
+                <VStack zIndex={"10"} w={"70%"} spacing={2}>
                   <HStack
                     alignItems="center"
                     spacing={3}
-                    width={"70%"}
+                    px={5}
+                    py={3}
+                    w={"100%"}
+                    fontSize="14px"
                     bgColor={"white"}
+                    border={"2px solid #EDF2F7"}
                     borderRadius={"16px"}
                   >
-                    <AiOutlineProject color="" />
-
-                    <Text fontSize="md" fontWeight={"600"}>
-                      {projectName}
+                    <Text
+                      fontSize="md"
+                      fontWeight={"600"}
+                      color={"gray.500"}
+                      width={"30%"}
+                    >
+                      Project Name
                     </Text>
+                    <HStack
+                      alignItems="center"
+                      spacing={3}
+                      width={"70%"}
+                      bgColor={"white"}
+                      borderRadius={"16px"}
+                    >
+                      <AiOutlineProject color="" />
+
+                      <Text fontSize="md" fontWeight={"600"}>
+                        {projectName}
+                      </Text>
+                    </HStack>
                   </HStack>
-                </HStack>
-                <HStack
-                  alignItems="center"
-                  spacing={3}
-                  px={5}
-                  py={3}
-                  mb={4}
-                  fontSize="14px"
-                  bgColor={"white"}
-                  border={"2px solid #EDF2F7"}
-                  borderRadius={"16px"}
-                >
-                  <Text
-                    fontSize="md"
-                    fontWeight={"600"}
-                    color={"gray.500"}
-                    width={"30%"}
-                  >
-                    Link to the repository{" "}
-                  </Text>
                   <HStack
                     alignItems="center"
                     spacing={3}
-                    width={"70%"}
+                    px={5}
+                    py={3}
+                    w={"100%"}
+                    fontSize="14px"
                     bgColor={"white"}
+                    border={"2px solid #EDF2F7"}
                     borderRadius={"16px"}
                   >
-                    <FaFileCode />
-
-                    <Text fontSize="md" fontWeight={"600"}>
-                      {repoUrl}
+                    <Text
+                      fontSize="md"
+                      fontWeight={"600"}
+                      color={"gray.500"}
+                      width={"30%"}
+                    >
+                      Link to the repository{" "}
                     </Text>
-                  </HStack>
-                </HStack>
+                    <HStack
+                      alignItems="center"
+                      spacing={3}
+                      width={"70%"}
+                      bgColor={"white"}
+                      borderRadius={"16px"}
+                    >
+                      <FaFileCode />
 
-                <HStack
-                  alignItems="center"
-                  spacing={3}
-                  px={5}
-                  py={3}
-                  mb={4}
-                  fontSize="14px"
-                  border={"2px solid #EDF2F7"}
-                  bgColor={"white"}
-                  borderRadius={"16px"}
-                >
-                  <Text
-                    fontSize="md"
-                    fontWeight={"600"}
-                    color={"gray.500"}
-                    width={"30%"}
-                  >
-                    Git commit hash{" "}
-                  </Text>
+                      <Text isTruncated fontSize="md" fontWeight={"600"}>
+                        {repoUrl}
+                      </Text>
+                    </HStack>
+                  </HStack>
+
                   <HStack
                     alignItems="center"
                     spacing={3}
-                    width={"70%"}
+                    px={5}
+                    py={3}
+                    w={"100%"}
+                    fontSize="14px"
                     bgColor={"white"}
+                    border={"2px solid #EDF2F7"}
                     borderRadius={"16px"}
                   >
-                    <FaGithub />
-
-                    <Text fontSize="md" fontWeight={"600"}>
-                      {commitHash}
+                    <Text
+                      fontSize="md"
+                      fontWeight={"600"}
+                      color={"gray.500"}
+                      width={"30%"}
+                    >
+                      Git commit hash{" "}
                     </Text>
-                  </HStack>
-                </HStack>
+                    <HStack
+                      alignItems="center"
+                      spacing={3}
+                      width={"70%"}
+                      bgColor={"white"}
+                      borderRadius={"16px"}
+                    >
+                      <FaGithub />
 
-                <HStack
-                  alignItems="center"
-                  spacing={3}
-                  px={5}
-                  py={3}
-                  mb={4}
-                  fontSize="14px"
-                  bgColor={"white"}
-                  border={"2px solid #EDF2F7"}
-                  borderRadius={"16px"}
-                >
-                  <Text
-                    fontSize="md"
-                    fontWeight={"600"}
-                    color={"gray.500"}
-                    width={"30%"}
-                  >
-                    Latest Report Update
-                  </Text>
+                      <Text isTruncated fontSize="md" fontWeight={"600"}>
+                        {commitHash}
+                      </Text>
+                    </HStack>
+                  </HStack>
+
                   <HStack
                     alignItems="center"
                     spacing={3}
-                    width={"70%"}
+                    px={5}
+                    py={3}
+                    w={"100%"}
+                    fontSize="14px"
                     bgColor={"white"}
+                    border={"2px solid #EDF2F7"}
                     borderRadius={"16px"}
                   >
-                    <FaCalendarAlt />
-
-                    <Text fontSize="md" fontWeight={"600"}>
-                      {lastTimeUpdate}
+                    <Text
+                      fontSize="md"
+                      fontWeight={"600"}
+                      color={"gray.500"}
+                      width={"30%"}
+                    >
+                      Latest Report Update
                     </Text>
-                  </HStack>
-                </HStack>
+                    <HStack
+                      alignItems="center"
+                      spacing={3}
+                      width={"70%"}
+                      bgColor={"white"}
+                      borderRadius={"16px"}
+                    >
+                      <FaCalendarAlt />
 
-                <HStack
-                  alignItems="center"
-                  spacing={3}
-                  px={5}
-                  py={3}
-                  border={"2px solid #EDF2F7"}
-                  fontSize="14px"
-                  bgColor={"white"}
-                  borderRadius={"16px"}
-                >
-                  <Text
-                    fontSize="md"
-                    fontWeight={"600"}
-                    color={"gray.500"}
-                    width={"30%"}
-                  >
-                    Date Published
-                  </Text>
+                      <Text fontSize="md" fontWeight={"600"}>
+                        {lastTimeUpdate}
+                      </Text>
+                    </HStack>
+                  </HStack>
+
                   <HStack
                     alignItems="center"
                     spacing={3}
-                    width={"70%"}
+                    px={5}
+                    py={3}
+                    w={"100%"}
+                    fontSize="14px"
                     bgColor={"white"}
+                    border={"2px solid #EDF2F7"}
                     borderRadius={"16px"}
                   >
-                    <FaRegCalendarCheck />
-
-                    <Text fontSize="md" fontWeight={"600"}>
-                      {datePublished}
+                    <Text
+                      fontSize="md"
+                      fontWeight={"600"}
+                      color={"gray.500"}
+                      width={"30%"}
+                    >
+                      Date Published
                     </Text>
+                    <HStack
+                      alignItems="center"
+                      spacing={3}
+                      width={"70%"}
+                      bgColor={"white"}
+                      borderRadius={"16px"}
+                    >
+                      <FaRegCalendarCheck />
+
+                      <Text fontSize="md" fontWeight={"600"}>
+                        {datePublished}
+                      </Text>
+                    </HStack>
                   </HStack>
-                </HStack>
-              </>
-            )}
-            {next && (
-              <>
-                <HStack
-                  alignItems="center"
-                  spacing={3}
-                  mt={4}
-                  mb={4}
-                  fontSize="14px"
-                >
-                  <InputGroup alignItems="center">
-                    <InputLeftElement
-                      height="48px"
-                      children={<Icon as={AiOutlineProject} color="gray.300" />}
-                    />
-                    <Input
-                      isRequired
-                      type="text"
-                      placeholder="Publisher's name"
-                      variant="brand"
-                      size="lg"
-                      value={pubName}
-                      onChange={(e) => {
-                        setPubName(e.target.value);
-                      }}
-                    />
-                  </InputGroup>
-                  <Text>Private</Text>
-                  <SwitchComp
-                    isChecked={nameSwitch}
-                    onChange={() => {
-                      setNameSwitch(!nameSwitch);
+                </VStack>
+              )}
+              {next && (
+                <VStack zIndex={"10"} w={"70%"} spacing={6}>
+                  <HStack
+                    alignItems="center"
+                    spacing={3}
+                    px={5}
+                    w={"100%"}
+                    bgColor={"white"}
+                    border={"2px solid #EDF2F7"}
+                    borderRadius={"16px"}
+                    _hover={{
+                      borderColor: "#52FF00",
+                      boxShadow: "0px 12px 23px rgba(107, 255, 55, 0.1)",
                     }}
-                    size="lg"
-                    variant="brand"
-                  />
-                  <Text>Public</Text>
-                </HStack>
-                <HStack alignItems="center" spacing={3} mb={4} fontSize="14px">
-                  <InputGroup alignItems="center">
-                    <InputLeftElement
-                      height="48px"
-                      children={<Icon as={FaEnvelope} color="gray.300" />}
-                    />
-                    <Input
-                      isRequired
-                      type="email"
-                      placeholder="Publisher's Email"
-                      variant="brand"
-                      size="lg"
-                      value={pubEmail}
-                      onChange={(e) => {
-                        setPubEmail(e.target.value);
+                  >
+                    <InputGroup alignItems="center">
+                      <InputLeftElement
+                        height="48px"
+                        children={
+                          <Icon as={AiOutlineProject} color="gray.300" />
+                        }
+                      />
+                      <Input
+                        isRequired
+                        type="text"
+                        placeholder="Publisher's name"
+                        border={"0px solid #FFFFFF"}
+                        _focus={{
+                          border: "0px solid #FFFFFF",
+                        }}
+                        fontSize={"15px"}
+                        fontWeight={500}
+                        size="lg"
+                        value={pubName}
+                        onChange={(e) => {
+                          setPubName(e.target.value);
+                        }}
+                      />
+                    </InputGroup>
+                    <Text>Private</Text>
+                    <SwitchComp
+                      isChecked={nameSwitch}
+                      onChange={() => {
+                        setNameSwitch(!nameSwitch);
                       }}
+                      size="lg"
+                      variant="brand"
                     />
-                  </InputGroup>
-                  <Text>Private</Text>
-                  <SwitchComp
-                    isChecked={emailSwitch}
-                    onChange={() => {
-                      setEmailSwitch(!emailSwitch);
+                    <Text>Public</Text>
+                  </HStack>
+                  <HStack
+                    alignItems="center"
+                    spacing={3}
+                    px={5}
+                    w={"100%"}
+                    bgColor={"white"}
+                    border={"2px solid #EDF2F7"}
+                    borderRadius={"16px"}
+                    _hover={{
+                      borderColor: "#52FF00",
+                      boxShadow: "0px 12px 23px rgba(107, 255, 55, 0.1)",
                     }}
-                    size="lg"
-                    variant="brand"
-                  />
-                  <Text> Public</Text>
-                </HStack>
+                  >
+                    <InputGroup alignItems="center">
+                      <InputLeftElement
+                        height="48px"
+                        children={<Icon as={FaEnvelope} color="gray.300" />}
+                      />
+                      <Input
+                        isRequired
+                        type="email"
+                        placeholder="Publisher's Email"
+                        size="lg"
+                        border={"0px solid #FFFFFF"}
+                        _focus={{
+                          border: "0px solid #FFFFFF",
+                        }}
+                        fontSize={"15px"}
+                        fontWeight={500}
+                        value={pubEmail}
+                        onChange={(e) => {
+                          setPubEmail(e.target.value);
+                        }}
+                      />
+                    </InputGroup>
+                    <Text>Private</Text>
+                    <SwitchComp
+                      isChecked={emailSwitch}
+                      onChange={() => {
+                        setEmailSwitch(!emailSwitch);
+                      }}
+                      size="lg"
+                      variant="brand"
+                    />
+                    <Text> Public</Text>
+                  </HStack>
 
-                <HStack alignItems="center" spacing={3} mb={4} fontSize="14px">
-                  <InputGroup alignItems="center">
-                    <InputLeftElement
-                      height="48px"
-                      children={
-                        <Icon as={FaInternetExplorer} color="gray.300" />
-                      }
-                    />
-                    <Input
-                      isRequired
-                      type="url"
-                      placeholder="Link to the Publisher's Website"
-                      variant="brand"
-                      size="lg"
-                      value={pubWeb}
-                      onChange={(e) => {
-                        setPubWeb(e.target.value);
-                      }}
-                    />
-                  </InputGroup>
-                  <Text>Private</Text>
-                  <SwitchComp
-                    isChecked={webSwitch}
-                    onChange={() => {
-                      setWebSwitch(!webSwitch);
+                  <HStack
+                    alignItems="center"
+                    spacing={3}
+                    px={5}
+                    w={"100%"}
+                    bgColor={"white"}
+                    border={"2px solid #EDF2F7"}
+                    borderRadius={"16px"}
+                    _hover={{
+                      borderColor: "#52FF00",
+                      boxShadow: "0px 12px 23px rgba(107, 255, 55, 0.1)",
                     }}
-                    size="lg"
-                    variant="brand"
-                  />
-                  <Text>Public</Text>
-                </HStack>
-                <HStack alignItems="center" spacing={3} fontSize="14px">
-                  <InputGroup alignItems="center">
-                    <InputLeftElement
-                      height="48px"
-                      children={<Icon as={FaBuilding} color="gray.300" />}
-                    />
-                    <Input
-                      isRequired
-                      type="text"
-                      placeholder="Publisher's Organization"
-                      variant="brand"
-                      size="lg"
-                      value={pubOrg}
-                      onChange={(e) => {
-                        setPubOrg(e.target.value);
+                  >
+                    <InputGroup alignItems="center">
+                      <InputLeftElement
+                        height="48px"
+                        children={
+                          <Icon as={FaInternetExplorer} color="gray.300" />
+                        }
+                      />
+                      <Input
+                        isRequired
+                        type="url"
+                        placeholder="Link to the Publisher's Website"
+                        _focus={{
+                          border: "0px solid #FFFFFF",
+                        }}
+                        border={"0px solid #FFFFFF"}
+                        fontSize={"15px"}
+                        fontWeight={500}
+                        size="lg"
+                        value={pubWeb}
+                        onChange={(e) => {
+                          setPubWeb(e.target.value);
+                        }}
+                      />
+                    </InputGroup>
+                    <Text>Private</Text>
+                    <SwitchComp
+                      isChecked={webSwitch}
+                      onChange={() => {
+                        setWebSwitch(!webSwitch);
                       }}
+                      size="lg"
+                      variant="brand"
                     />
-                  </InputGroup>
-                  <Text>Private</Text>
-                  <SwitchComp
-                    isChecked={orgSwitch}
-                    onChange={() => {
-                      setOrgSwitch(!orgSwitch);
+                    <Text>Public</Text>
+                  </HStack>
+                  <HStack
+                    alignItems="center"
+                    spacing={3}
+                    px={5}
+                    w={"100%"}
+                    bgColor={"white"}
+                    border={"2px solid #EDF2F7"}
+                    borderRadius={"16px"}
+                    _hover={{
+                      borderColor: "#52FF00",
+                      boxShadow: "0px 12px 23px rgba(107, 255, 55, 0.1)",
                     }}
-                    size="lg"
-                    variant="brand"
-                  />
-                  <Text>Public</Text>
-                </HStack>
-              </>
-            )}
+                  >
+                    <InputGroup alignItems="center">
+                      <InputLeftElement
+                        height="48px"
+                        children={<Icon as={FaBuilding} color="gray.300" />}
+                      />
+                      <Input
+                        isRequired
+                        type="text"
+                        placeholder="Publisher's Organization"
+                        size="lg"
+                        border={"0px solid #FFFFFF"}
+                        _focus={{
+                          border: "0px solid #FFFFFF",
+                        }}
+                        fontSize={"15px"}
+                        fontWeight={500}
+                        value={pubOrg}
+                        onChange={(e) => {
+                          setPubOrg(e.target.value);
+                        }}
+                      />
+                    </InputGroup>
+                    <Text>Private</Text>
+                    <SwitchComp
+                      isChecked={orgSwitch}
+                      onChange={() => {
+                        setOrgSwitch(!orgSwitch);
+                      }}
+                      size="lg"
+                      variant="brand"
+                    />
+                    <Text>Public</Text>
+                  </HStack>
+                </VStack>
+              )}
+              <Image
+                ml={"-10%"}
+                src="/publishreport.png"
+                alt="Product screenshot"
+                w={"40%"}
+                h={"auto"}
+              />
+            </Flex>
           </ModalBody>
 
           <ModalFooter>

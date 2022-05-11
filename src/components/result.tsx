@@ -254,14 +254,16 @@ const FileDetails: React.FC<FileDetailsProps> = ({ file, type }) => {
       highlightArray.push(`${number}-${line_nos_end[index]}`);
     } else {
       highlightArray.push(
-        `${number}-${Math.pow(10, number.toString.length) - 1}`
+        `${number}-${Math.pow(10, number.toString().length) - 1}`
       );
       highlightArray.push(
-        `${Math.pow(10, number.toString.length)}-${line_nos_end[index]}`
+        `${Math.pow(10, number.toString().length)}-${line_nos_end[index]}`
       );
     }
   });
   let highlightString = highlightArray.join(",");
+
+  console.log(highlightArray);
 
   const createGithubIssue = async () => {
     await mutation.mutateAsync();

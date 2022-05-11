@@ -80,6 +80,20 @@ export const Footer: React.FC = () => {
               onClick={()=> window.open('https://www.instagram.com/credshields/', '_blank')}
           /> */}
           <Image
+            src="/discord-social.svg"
+            alt="Instagram"
+            onClick={() =>
+              window.open("https://discord.com/invite/9HhV4hGENw", "_blank")
+            }
+            mx={3}
+          />
+          <Image
+            src="/telegram-social.svg"
+            alt="Instagram"
+            onClick={() => window.open("https://t.me/solidityscan", "_blank")}
+            mx={3}
+          />
+          <Image
             src="/instagram-social.svg"
             alt="Instagram"
             onClick={() =>

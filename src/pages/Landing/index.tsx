@@ -1,5 +1,5 @@
-import React from "react";
-import { Link } from "react-router-dom";
+import React, { useEffect } from "react";
+import { Link, useLocation } from "react-router-dom";
 
 import {
   Flex,
@@ -22,6 +22,7 @@ import {
   File,
   Work,
   Smile,
+  PublishReport,
 } from "components/icons";
 
 import Header from "components/header";
@@ -31,6 +32,15 @@ import ContactUs from "components/contactus";
 
 export default function LandingPage() {
   const { isOpen, onClose, onOpen } = useDisclosure();
+  const location = useLocation();
+
+  useEffect(() => {
+    const query = new URLSearchParams(location.search);
+    const campaign_type = query.get("utm_source");
+    const campaign_id = query.get("utm_campaign");
+    if (campaign_type) localStorage.setItem("campaign_type", campaign_type);
+    if (campaign_id) localStorage.setItem("campaign_id", campaign_id);
+  }, []);
 
   return (
     <>
@@ -116,6 +126,18 @@ export default function LandingPage() {
               <ScheduleScan size={140} />
               <Text fontSize="sm" ml="2" mt={4} fontWeight={600}>
                 Initiate Scans
+              </Text>
+            </Flex>
+            <Flex
+              sx={{
+                flexDir: "column",
+                alignItems: "center",
+                mb: [8, 8, 0],
+              }}
+            >
+              <PublishReport size={140} />
+              <Text fontSize="sm" ml="2" mt={4} fontWeight={600}>
+                Publish Reports
               </Text>
             </Flex>
             <Flex

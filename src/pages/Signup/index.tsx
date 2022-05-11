@@ -118,8 +118,8 @@ const SignUp: React.FC = () => {
             </Box>
           </Text>
           <Text mt={3} color="subtle">
-            Haven't received your email ? Have you checked your {" "}
-            <Box as="span" color={'black'} fontWeight={700}>
+            Haven't received your email ? Have you checked your{" "}
+            <Box as="span" color={"black"} fontWeight={700}>
               Spam/Promotions
             </Box>{" "}
             Folder?
@@ -157,13 +157,32 @@ const RegisterForm: React.FC<{
   const [companyName, setCompanyName] = useState("");
 
   const onSubmit = async () => {
-    const { data } = await API.post<AuthResponse>("/api-register/", {
-      email: email,
-      password1: password,
-      company_name: companyName,
-      contact_number: contactNumber,
-      first_name: name,
-    });
+    const campaign_type = localStorage.getItem("campaign_type");
+    const campaign_id = localStorage.getItem("campaign_id");
+
+    let reqBody = {};
+    if (campaign_type && campaign_id) {
+      reqBody = {
+        email: email,
+        password1: password,
+        company_name: companyName,
+        contact_number: contactNumber,
+        first_name: name,
+        campaign: {
+          campaign_type,
+          campaign_id,
+        },
+      };
+    } else {
+      reqBody = {
+        email: email,
+        password1: password,
+        company_name: companyName,
+        contact_number: contactNumber,
+        first_name: name,
+      };
+    }
+    const { data } = await API.post<AuthResponse>("/api-register/", reqBody);
 
     if (data.status === "success") {
       setRegistered(true);
