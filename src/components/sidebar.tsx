@@ -17,6 +17,7 @@ import {
   BlockMenuIcon,
   IntegrationMenuIcon,
   BillingMenuIcon,
+  CredshieldsIcon,
 } from "components/icons";
 
 import {
@@ -59,10 +60,10 @@ const Sidebar: React.FC<{
             <LogoIcon size={40} />
           ) : (
             <HStack>
-              <LogoIcon size={40} />
+              <LogoIcon size={30} />
               <Box>
                 <Heading
-                  fontSize={["xl", "xl", "2xl"]}
+                  fontSize={["lg", "lg", "lg"]}
                   fontWeight={700}
                   color="black"
                 >
@@ -88,6 +89,12 @@ const Sidebar: React.FC<{
                     </Text>
                   ))}
               </Box>
+              <Box>
+        <Text ml={-2} mr={-2} fontSize={["2xl", "2xl", "3xl"]} fontWeight={100} color="gray.300">
+          |
+        </Text>
+      </Box>
+      <CredshieldsIcon size={45}/>
             </HStack>
           )}
         </Box>
@@ -137,6 +144,27 @@ const Sidebar: React.FC<{
             icon={<BillingMenuIcon size={24} />}
             isCollapsed={isCollapsed}
           />
+
+          <Flex
+            sx={{
+              width: "100%",
+              alignItems: "center",
+              p: 3,
+              my: 3,
+              borderLeftRadius: "15px",
+              transition: "0.3s background-color",
+            }}
+            onClick={() => {
+              window.open("https://docs.solidityscan.com/", "_blank");
+            }}
+          >
+            {React.cloneElement(<BillingMenuIcon size={24} />)}
+            {!isCollapsed && (
+              <Text ml={2} fontSize="sm">
+                {"User Guide"}
+              </Text>
+            )}
+          </Flex>
         </Box>
       </Flex>
       <Flex width="100%" justifyContent="center" pb={8} px={4}>

@@ -35,7 +35,7 @@ export const Header: React.FC = () => {
         as="header"
         alignItems="center"
         justifyContent="space-between"
-        maxW="80vw"
+        maxW="75vw"
         mx="auto"
         py={8}
       >
@@ -43,7 +43,7 @@ export const Header: React.FC = () => {
           <RouterLink to="/">
             <Logo />
           </RouterLink>
-          <HStack ml={10} spacing={8}>
+          <HStack ml={20} spacing={8}>
             <Link
               as={RouterLink}
               to="/pricing"
@@ -53,8 +53,8 @@ export const Header: React.FC = () => {
               Pricing
             </Link>
             <Link
-              onClick={()=>{
-                window.open('https://docs.solidityscan.com/', '_blank')
+              onClick={() => {
+                window.open("https://docs.solidityscan.com/", "_blank");
               }}
               variant="brand"
               fontWeight="600"
