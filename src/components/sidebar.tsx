@@ -90,11 +90,17 @@ const Sidebar: React.FC<{
                   ))}
               </Box>
               <Box>
-        <Text ml={-2} mr={-2} fontSize={["2xl", "2xl", "3xl"]} fontWeight={100} color="gray.300">
-          |
-        </Text>
-      </Box>
-      <CredshieldsIcon size={45}/>
+                <Text
+                  ml={-2}
+                  mr={-2}
+                  fontSize={["2xl", "2xl", "3xl"]}
+                  fontWeight={100}
+                  color="gray.300"
+                >
+                  |
+                </Text>
+              </Box>
+              <CredshieldsIcon size={45} />
             </HStack>
           )}
         </Box>

@@ -142,6 +142,36 @@ const Billing: React.FC = () => {
                     </Text>
                   </HStack>
 
+                  <HStack mx={5} justifyContent={"flex-start"} width={"40%"}>
+                    <HiCheckCircle size={30} color={successColor} />
+
+                    <Image
+                      src="/pricing/score-icon.svg"
+                      alt="Product screenshot"
+                      p={4}
+                    />
+                    <Text fontSize={"md"} ml={5}>
+                      Vulnerability Score
+                    </Text>
+                  </HStack>
+
+                  <HStack mx={5} justifyContent={"flex-start"} width={"40%"}>
+                    {selectedPlan === "trial" ? (
+                      <HiXCircle size={30} color={greyColor} />
+                    ) : (
+                      <HiCheckCircle size={30} color={successColor} />
+                    )}
+                    <Image
+                      h={"70px"}
+                      w={"70px"}
+                      src="/pricing/result-icon.svg"
+                      alt="Product screenshot"
+                      p={4}
+                    />
+                    <Text fontSize={"md"} ml={5}>
+                      Detailed Result
+                    </Text>
+                  </HStack>
                   <HStack mx={5} justifyContent={"flex-start"} width={"50%"}>
                     {plans.monthly[selectedPlan].github ? (
                       <HiCheckCircle size={30} color={successColor} />
@@ -269,6 +299,9 @@ const PricingPlan: React.FC<{
             ? `Save upto ${planData.discount}`
             : planData.name === "Beginner"
             ? "Starter"
+            : ""}
+          {planData.discount === null && planData.name === "On Demand"
+            ? "Pay as you go"
             : ""}
         </Text>
 
@@ -414,6 +447,9 @@ const PricingPlan: React.FC<{
                     : planData.name === "Beginner"
                     ? "Starter"
                     : ""}
+                  {planData.discount === null && planData.name === "On Demand"
+                    ? "Pay as you go"
+                    : ""}
                 </Text>
                 <Text mx={6} mt={4} sx={{ fontWeight: 500 }}>
                   {planData.name}
@@ -430,15 +466,47 @@ const PricingPlan: React.FC<{
                   {planData.description}
                 </Text>
                 <HStack mx={6} my={4} justify={"flex-start"} width={"100%"}>
-                  <HiCheckCircle size={30} color={successColor} />
+                  <HiCheckCircle size={20} color={successColor} />
 
                   <Image
+                    h={'50px'}
                     src="/pricing/coin.svg"
                     alt="Product screenshot"
                     p={1}
                   />
                   <Text fontSize={"md"} ml={5}>
                     {planData.scan_count} Scan Credit
+                  </Text>
+                </HStack>
+
+                <HStack mx={5} justifyContent={"flex-start"} width={"40%"}>
+                  <HiCheckCircle size={20} color={successColor} />
+
+                  <Image
+                    src="/pricing/score-icon.svg"
+                    alt="Product screenshot"
+                    p={4}
+                  />
+                  <Text fontSize={"md"} ml={5}>
+                    Vulnerability Score
+                  </Text>
+                </HStack>
+
+                <HStack mx={5} justifyContent={"flex-start"} width={"40%"}>
+                  {planData.name === "trial" ? (
+                    <HiXCircle size={30} color={greyColor} />
+                  ) : (
+                    <HiCheckCircle size={30} color={successColor} />
+                  )}
+                  <Image
+                    h={"70px"}
+                    w={"70px"}
+                    src="/pricing/result-icon.svg"
+                    alt="Product screenshot"
+                    p={4}
+                  />
+                  <Text fontSize={"md"} ml={5}>
+                    Detailed Result
                   </Text>
                 </HStack>
 
@@ -605,6 +673,32 @@ const CurrentPlan: React.FC<{
           <Image src="/pricing/coin.svg" alt="Product screenshot" p={4} />
           <Text fontSize={"md"} ml={5}>
             {plan.scan_count} Scan Credit
+          </Text>
+        </HStack>
+        <HStack mx={5} justifyContent={"flex-start"} width={"40%"}>
+          <HiCheckCircle size={30} color={successColor} />
+
+          <Image src="/pricing/score-icon.svg" alt="Product screenshot" p={4} />
+          <Text fontSize={"md"} ml={5}>
+            Vulnerability Score
+          </Text>
+        </HStack>
+
+        <HStack mx={5} justifyContent={"flex-start"} width={"40%"}>
+          {plan.name === "trial" ? (
+            <HiXCircle size={30} color={greyColor} />
+          ) : (
+            <HiCheckCircle size={30} color={successColor} />
+          )}
+          <Image
+            h={"70px"}
+            w={"70px"}
+            src="/pricing/result-icon.svg"
+            alt="Product screenshot"
+            p={4}
+          />
+          <Text fontSize={"md"} ml={5}>
+            Detailed Result
           </Text>
         </HStack>
 

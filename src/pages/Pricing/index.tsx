@@ -118,11 +118,12 @@ export default function PricingPage() {
             </ActionButton> */}
           {/* </Flex> */}
         </Flex>
-        {}
+
         {plans && (
           <ScaleFade initialScale={0.9} in={tab === "weekly"}>
             <Box
-              px={16}
+              px={10}
+              w={"90vw"}
               as="section"
               py="14"
               display="flex"
@@ -137,6 +138,7 @@ export default function PricingPage() {
                 alignContent={"center"}
                 mb={"70px"}
                 mt={"90px"}
+                w={"18vw"}
               >
                 <Box
                   as="div"
@@ -158,7 +160,7 @@ export default function PricingPage() {
                 <Box
                   as="div"
                   py={"35px"}
-                  px={"50px"}
+                  px={"25px"}
                   display="flex"
                   flexDirection="row"
                   borderTopLeftRadius={"xl"}
@@ -180,12 +182,32 @@ export default function PricingPage() {
                 </Box>
                 <Box
                   as="div"
-                  py={"36px"}
-                  px={"50px"}
+                  py={"35px"}
+                  px={"25px"}
                   display="flex"
                   flexDirection="row"
                   borderLeft="2px solid #D6D6D6"
                   backgroundColor={"#FAFAFB"}
+                >
+                  <HStack spacing={1}>
+                    <Image src="/pricing/score-icon.svg" mx="auto" mr={4} />
+                    <Text
+                      fontSize="lg"
+                      textAlign="center"
+                      lineHeight="title"
+                      fontWeight={"300"}
+                    >
+                      Vulnerability Score
+                    </Text>
+                  </HStack>
+                </Box>
+                <Box
+                  as="div"
+                  py={"36px"}
+                  px={"25px"}
+                  display="flex"
+                  flexDirection="row"
+                  borderLeft="2px solid #D6D6D6"
                 >
                   <HStack spacing={1}>
                     <Image src="/pricing/github.svg" mx="auto" mr={4} />
@@ -202,10 +224,11 @@ export default function PricingPage() {
                 <Box
                   as="div"
                   py={"35px"}
-                  px={"50px"}
+                  px={"25px"}
                   display="flex"
                   flexDirection="row"
                   borderLeft="2px solid #D6D6D6"
+                  backgroundColor={"#FAFAFB"}
                 >
                   <HStack spacing={1}>
                     <Image src="/pricing/report.svg" mx="auto" mr={4} />
@@ -222,12 +245,11 @@ export default function PricingPage() {
                 <Box
                   as="div"
                   py={"36px"}
-                  px={"50px"}
+                  px={"15px"}
                   display="flex"
                   flexDirection="row"
                   borderLeft="2px solid #D6D6D6"
                   borderBottom="2px solid #D6D6D6"
-                  backgroundColor={"#FAFAFB"}
                   borderBottomLeftRadius={"xl"}
                 >
                   <HStack spacing={1}>
@@ -244,10 +266,11 @@ export default function PricingPage() {
                 </Box>
               </Flex>
               <SimpleGrid
-                columns={5}
+                columns={6}
                 maxW="7xl"
                 justifyItems="center"
                 alignItems="center"
+                w={"72vw"}
               >
                 {Object.keys(plans.monthly).map((plan) => (
                   <PricingColumn
@@ -289,7 +312,6 @@ export const PricingColumn: React.FC<{
   const greyColor = "#808080";
 
   const history = useHistory();
-
   const mouse = selectedPlan === plan;
 
   return (
@@ -301,10 +323,7 @@ export const PricingColumn: React.FC<{
       justifyContent={"flex-start"}
       alignContent={"flex-start"}
       overflow={"hidden"}
-      width="13vw"
-      _hover={{
-        margin: "0 0 0 0",
-      }}
+      width={mouse ? "13vw" : "11vw"}
       mb={"70px"}
       mt={"90px"}
       border={`2px solid ${mouse ? "#3E15F4" : "#D6D6D6"}`}
@@ -320,255 +339,118 @@ export const PricingColumn: React.FC<{
         borderBottomLeftRadius: mouse ? "24px" : "0px",
       }}
       borderRadius={mouse ? "24px" : "0px"}
-      zIndex={10}
+      zIndex={mouse ? 10 : 0}
+      background={mouse ? "#FFFFFF" : ""}
     >
-      {mouse && (
-        <ScaleFade in={mouse}>
-          <Box
-            as="div"
-            py={"10px"}
-            px={"20px"}
-            display="flex"
-            flexDirection="row"
-            justifyContent={"center"}
-            alignItems={"center"}
-            backgroundColor={"#3300FF"}
-            transition="height 2s ease-in"
-          >
-            <HStack>
-              <Text
-                fontSize="sm"
-                textAlign="center"
-                lineHeight="title"
-                fontWeight={"300"}
-                color={"#FFFFFF"}
-              >
-                Save upto
-              </Text>
-              <Heading
-                fontSize="xl"
-                textAlign="center"
-                lineHeight="title"
-                fontWeight={"700"}
-                color={"#FFFFFF"}
-              >
-                {planData.discount}
-              </Heading>
-            </HStack>
-          </Box>
-
-          <Box
-            as="div"
-            py={"25px"}
-            px={"25px"}
-            display="flex"
-            flexDirection="column"
-            borderBottom="2px solid #D6D6D6"
-          >
-            <Text
-              fontSize="lg"
-              textAlign="center"
-              lineHeight="title"
-              fontWeight={"300"}
-            >
-              {planData.name}
-            </Text>
-            <Heading
-              fontSize="2xl"
-              textAlign="center"
-              lineHeight="title"
-              fontWeight={900}
-            >
-              {planData.amount === "Free" ? "Free" : `$ ${planData.amount}`}
-            </Heading>
-          </Box>
-          <Box
-            as="div"
-            pt={"20px"}
-            px={"25px"}
-            display="flex"
-            flexDirection="row"
-            justifyContent={"center"}
-            alignItems={"center"}
-          >
-            <Text
-              fontSize="sm"
-              textAlign="center"
-              lineHeight="title"
-              fontWeight={"300"}
-              height={"130px"}
-            >
-              {planData.description}
-            </Text>
-          </Box>
-          <Box
-            as="div"
-            py={"10px"}
-            px={"25px"}
-            display="flex"
-            flexDirection="column"
-            justifyContent={"center"}
-            alignItems={"center"}
-          >
-            <Image
-              src={`/pricing/coin-${planData.scan_count}.svg`}
-              alt="Product screenshot"
-              mx="auto"
-              p={4}
-            />
-            <Image
-              src={`/pricing/github-${planData.github ? "tick" : "cross"}.svg`}
-              alt="Product screenshot"
-              mx="auto"
-              p={4}
-            />
-            <Image
-              src={`/pricing/report-${planData.report ? "tick" : "cross"}.svg`}
-              alt="Product screenshot"
-              mx="auto"
-              p={4}
-            />
-            <Image
-              src={`/pricing/publish-${
-                planData.publishable_report ? "tick" : "cross"
-              }.svg`}
-              alt="Product screenshot"
-              mx="auto"
-              p={4}
-            />
-          </Box>
-          <Box
-            as="div"
-            pb={"25px"}
-            px={"50px"}
-            display="flex"
-            flexDirection="row"
-            justifyContent={"center"}
-            alignItems={"center"}
-          >
-            <Text
-              fontSize="sm"
-              textAlign="center"
-              lineHeight="title"
-              fontWeight={"300"}
-              color={"#3300FF"}
-              cursor="pointer"
-              onClick={() => {
-                if (Auth.isUserAuthenticated()) {
-                  history.push("/billing");
-                } else {
-                  history.push("/signin");
-                }
-              }}
-            >
-              Choose
-            </Text>
-          </Box>
-        </ScaleFade>
-      )}
-
-      {!mouse && (
-        <ScaleFade in={!mouse}>
-          <Box
-            as="div"
-            py={"25px"}
-            px={"25px"}
-            display="flex"
-            flexDirection="column"
-            borderBottom="2px solid #D6D6D6"
-          >
-            <Text
-              fontSize="sm"
-              textAlign="center"
-              lineHeight="title"
-              fontWeight={"300"}
-            >
-              {/* {plan === 'trial' ? 'Free' : plan === 'starter' ? ''} */}
-            </Text>
-            <Text
-              fontSize="lg"
-              textAlign="center"
-              lineHeight="title"
-              fontWeight={"300"}
-            >
-              {planData.name}
-            </Text>
-            <Heading
-              fontSize="2xl"
-              textAlign="center"
-              lineHeight="title"
-              fontWeight={900}
-            >
-              {planData.amount === "Free" ? "Free" : `$ ${planData.amount}`}
-            </Heading>
-          </Box>
-          <Box
-            as="div"
-            py={"40px"}
-            px={"50px"}
-            display="flex"
-            flexDirection="row"
-            justifyContent={"center"}
-            alignItems={"center"}
-          >
-            <Text
-              fontSize="lg"
-              textAlign="center"
-              lineHeight="title"
-              fontWeight={"300"}
-            >
-              {planData.scan_count}
-            </Text>
-          </Box>
-          <Box
-            as="div"
-            py={"40px"}
-            px={"50px"}
-            display="flex"
-            flexDirection="row"
-            backgroundColor={"#FAFAFB"}
-            justifyContent={"center"}
-            alignItems={"center"}
-          >
-            {planData.github ? (
-              <HiCheckCircle size={30} color={successColor} />
-            ) : (
-              <HiXCircle size={30} color={greyColor} />
-            )}{" "}
-          </Box>
-          <Box
-            as="div"
-            py={"40px"}
-            px={"50px"}
-            display="flex"
-            flexDirection="row"
-            justifyContent={"center"}
-            alignItems={"center"}
-          >
-            {planData.report ? (
-              <HiCheckCircle size={30} color={successColor} />
-            ) : (
-              <HiXCircle size={30} color={greyColor} />
-            )}{" "}
-          </Box>
-          <Box
-            as="div"
-            py={"40px"}
-            px={"50px"}
-            display="flex"
-            flexDirection="row"
-            backgroundColor={"#FAFAFB"}
-            justifyContent={"center"}
-            alignItems={"center"}
-          >
-            {planData.publishable_report ? (
-              <HiCheckCircle size={30} color={successColor} />
-            ) : (
-              <HiXCircle size={30} color={greyColor} />
-            )}{" "}
-          </Box>
-        </ScaleFade>
-      )}
+      <Box
+        as="div"
+        py={"25px"}
+        px={"15px"}
+        display="flex"
+        flexDirection="column"
+        borderBottom="2px solid #D6D6D6"
+      >
+        <Text
+          fontSize="sm"
+          textAlign="center"
+          lineHeight="title"
+          fontWeight={"300"}
+        >
+          {/* {plan === 'trial' ? 'Free' : plan === 'starter' ? ''} */}
+        </Text>
+        <Text
+          fontSize="lg"
+          textAlign="center"
+          lineHeight="title"
+          fontWeight={"300"}
+        >
+          {planData.name}
+        </Text>
+        <Heading
+          fontSize="2xl"
+          textAlign="center"
+          lineHeight="title"
+          fontWeight={900}
+        >
+          {planData.amount === "Free" ? "Free" : `$ ${planData.amount}`}
+        </Heading>
+      </Box>
+      <Box
+        as="div"
+        py={"40px"}
+        px={"25px"}
+        display="flex"
+        flexDirection="row"
+        justifyContent={"center"}
+        alignItems={"center"}
+      >
+        <Text
+          fontSize="lg"
+          textAlign="center"
+          lineHeight="title"
+          fontWeight={"300"}
+        >
+          {planData.scan_count}
+        </Text>
+      </Box>
+      <Box
+        as="div"
+        py={"40px"}
+        px={"25px"}
+        display="flex"
+        flexDirection="row"
+        backgroundColor={"#FAFAFB"}
+        justifyContent={"center"}
+        alignItems={"center"}
+      >
+        <HiCheckCircle size={30} color={successColor} />
+      </Box>
+      <Box
+        as="div"
+        py={"40px"}
+        px={"25px"}
+        display="flex"
+        flexDirection="row"
+        justifyContent={"center"}
+        alignItems={"center"}
+      >
+        {planData.github ? (
+          <HiCheckCircle size={30} color={successColor} />
+        ) : (
+          <HiXCircle size={30} color={greyColor} />
+        )}{" "}
+      </Box>
+      <Box
+        as="div"
+        py={"40px"}
+        px={"25px"}
+        display="flex"
+        flexDirection="row"
+        justifyContent={"center"}
+        alignItems={"center"}
+        backgroundColor={"#FAFAFB"}
+      >
+        {planData.report ? (
+          <HiCheckCircle size={30} color={successColor} />
+        ) : (
+          <HiXCircle size={30} color={greyColor} />
+        )}{" "}
+      </Box>
+      <Box
+        as="div"
+        py={"40px"}
+        px={"25px"}
+        display="flex"
+        flexDirection="row"
+        justifyContent={"center"}
+        alignItems={"center"}
+      >
+        {planData.publishable_report ? (
+          <HiCheckCircle size={30} color={successColor} />
+        ) : (
+          <HiXCircle size={30} color={greyColor} />
+        )}{" "}
+      </Box>
     </Flex>
   );
 };
