@@ -85,7 +85,8 @@ const Billing: React.FC = () => {
         ) : (
           <>
             {data.current_package === "trial" ||
-            data.current_package === "expired" ? (
+            data.current_package === "expired" ||
+            data.current_package === "ondemand" ? (
               <>
                 <Flex
                   justifyContent={"flex-start"}
