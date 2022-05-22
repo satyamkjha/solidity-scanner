@@ -126,11 +126,15 @@ export const Logo: React.FC = () => {
         </Text> */}
       </Box>
       <Box>
-        <Text fontSize={["2xl", "2xl", "5xl"]} fontWeight={100} color="gray.300">
+        <Text
+          fontSize={["2xl", "2xl", "5xl"]}
+          fontWeight={100}
+          color="gray.300"
+        >
           |
         </Text>
       </Box>
-      <CredshieldsIcon size={80}/>
+      <CredshieldsIcon size={80} />
     </HStack>
   );
 };
