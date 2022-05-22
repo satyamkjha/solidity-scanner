@@ -254,12 +254,18 @@ const PricingPlan: React.FC<{
   const [open, setOpen] = useState(false);
 
   const createStripePayment = async () => {
+    let duration = "";
+    if(selectedPlan === 'ondemand'){
+      duration = "ondemand"
+    } else {
+      duration = "monthly"
+    }
     const { data } = await API.post<{
       status: string;
       checkout_url: string;
     }>("/api-create-stripe-order/", {
       package: selectedPlan,
-      duration: "monthly",
+      duration: duration,
     });
     window.open(`${data.checkout_url}`, "_blank");
   };
@@ -735,7 +741,7 @@ const CurrentPlan: React.FC<{
           <Text fontSize={"md"} ml={5}>
             Publishable Reports
           </Text>
-        </HStack>
+        </HStack> 
       </Flex>
     </Box>
   );
@@ -754,8 +760,15 @@ const CoinPayments: React.FC<{ packageName: string; onClose: () => void }> = ({
     const height = 800;
     const left = window.innerWidth / 2 - width / 2;
     const top = window.innerHeight / 2 - height / 2;
+    let duration = "";
+    if(packageName === "ondemand"){
+      duration = "ondemand"
+    } else {
+      duration = "monthly"
+    }
     try {
       setLoading(true);
+
       const { data } = await API.post<{
         checkout_url: string;
         status: string;
@@ -763,7 +776,7 @@ const CoinPayments: React.FC<{ packageName: string; onClose: () => void }> = ({
       }>("api-create-order-cp/", {
         package: packageName,
         currency: coin,
-        duration: "monthly",
+        duration: duration,
       });
       setLoading(false);
       const popup = window.open(
@@ -788,7 +801,7 @@ const CoinPayments: React.FC<{ packageName: string; onClose: () => void }> = ({
           <Flex alignItems="center">
             <CryptoIcon size={32} name={coin.toLowerCase()} />
             <Text ml={2} color="brand-dark" fontWeight={700} fontSize="3xl">
-              {parseFloat(data[coin].monthly[packageName]).toPrecision(2)}
+              {packageName === "ondemand" ? parseFloat(data[coin].ondemand[packageName]).toPrecision(2) : parseFloat(data[coin].monthly[packageName]).toPrecision(2)}
               <Text as="span" fontSize="md" fontWeight={700} ml={2}>
                 {coin}
               </Text>

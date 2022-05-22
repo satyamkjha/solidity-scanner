@@ -8,6 +8,9 @@ const getAcceptedCoins = async () => {
       monthly: {
         [plan: string]: string;
       };
+      ondemand: {
+        [plan: string]: string;
+      };
     };
   }>("/api-get-accepted-coins/");
   return data;
