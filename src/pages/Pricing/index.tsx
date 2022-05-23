@@ -188,14 +188,24 @@ export default function PricingPage() {
                     borderBottomWidth={0}
                   >
                     <HStack spacing={1}>
+                    <VStack spacing={1} align={"left"}>
                       <Text
                         ml={15}
                         fontSize="md"
                         textAlign="center"
                         lineHeight="title"
                       >
-                        Recommended For
+                        Choose the subscription that suits you best
                       </Text>
+                      {/* <Text
+                          fontSize="xs"
+                          textAlign="left"
+                          lineHeight="title"
+                          fontWeight={"300"}
+                        >
+                          Publish your reports to a public url
+                        </Text> */}
+                      </VStack>
                     </HStack>
                   </Box>
                   <Box
@@ -215,9 +225,19 @@ export default function PricingPage() {
                         mx="auto"
                         mr={4}
                       />
-                      <Text fontSize="md" textAlign="center" lineHeight="title">
+                      <VStack spacing={1} align={"left"}>
+                      <Text fontSize="md" textAlign="left" lineHeight="title">
                         Scan Credit
                       </Text>
+                      <Text
+                          fontSize="xs"
+                          textAlign="left"
+                          lineHeight="title"
+                          fontWeight={"300"}
+                        >
+                          Use allotted credits to scan your solidity source code
+                        </Text>
+                        </VStack>
                     </HStack>
                   </Box>
                   <Box
@@ -239,10 +259,18 @@ export default function PricingPage() {
                       <VStack spacing={1} align={"left"}>
                         <Text
                           fontSize="md"
-                          textAlign="center"
+                          textAlign="left"
                           lineHeight="title"
                         >
                           Security Score
+                        </Text>
+                        <Text
+                          fontSize="xs"
+                          textAlign="left"
+                          lineHeight="title"
+                          fontWeight={"300"}
+                        >
+                          Get a security score tagged to all your scans
                         </Text>
                       </VStack>
                     </HStack>
@@ -514,14 +542,14 @@ export default function PricingPage() {
                             </PopoverContent>
                           </Popover> */}
                         </HStack>
-                        {/* <Text
+                        <Text
                           fontSize="xs"
                           textAlign="left"
                           lineHeight="title"
                           fontWeight={"300"}
                         >
-                          Publish your reports to a public url
-                        </Text> */}
+                          Verify your results and reports by web3 security experts
+                        </Text>
                       </VStack>
                     </HStack>
                   </Box>
