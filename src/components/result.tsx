@@ -1,5 +1,5 @@
 import React, { useState, Dispatch, SetStateAction } from "react";
-import { useParams } from "react-router-dom";
+import { useHistory, useParams } from "react-router-dom";
 import styled from "@emotion/styled";
 import {
   Flex,
@@ -19,6 +19,7 @@ import {
   Spinner,
   Button,
   useToast,
+  Image,
 } from "@chakra-ui/react";
 import { BiCodeCurly } from "react-icons/bi";
 import { AiOutlineCaretRight, AiFillGithub } from "react-icons/ai";
@@ -35,6 +36,7 @@ import { ScanDetail, ScanSummary } from "common/types";
 import { severityPriority } from "common/values";
 import API from "helpers/api";
 import { useMutation } from "react-query";
+import { useProfile } from "hooks/useProfile";
 
 type FileState = {
   issue_id: string;
@@ -79,6 +81,7 @@ export const Result: React.FC<{
       </VStack>
       <VStack
         w={["100%", "100%", "60%"]}
+        h={["100%"]}
         alignItems="flex-start"
         spacing={5}
         px={4}
@@ -86,6 +89,7 @@ export const Result: React.FC<{
         <Box
           sx={{
             w: "100%",
+            h: "100%",
             position: "sticky",
             top: 8,
           }}
@@ -247,6 +251,8 @@ const FileDetails: React.FC<FileDetailsProps> = ({ file, type }) => {
     })
   );
 
+  const { data: profileData } = useProfile();
+
   let highlightArray: string[] = [];
 
   line_nos_start.map((number, index) => {
@@ -277,35 +283,46 @@ const FileDetails: React.FC<FileDetailsProps> = ({ file, type }) => {
     });
   };
 
+  const history = useHistory();
+
   const { data, isLoading } = useFileContent(scan_id, file_path, type);
   return (
-    <Box w="100%">
+    <Box w="100%" position={"relative"} h={"100%"}>
       <Box
-        sx={{
-          borderRadius: 15,
-          bg: "bg.subtle",
-          p: 4,
-          my: 2,
-        }}
+        zIndex={-1}
+        top={0}
+        left={0}
+        h={"100%"}
+        w="100%"
+        position={"absolute"}
       >
-        <Flex
+        <Box
           sx={{
-            w: "100%",
-            justifyContent: "space-between",
-            alignItems: "center",
+            borderRadius: 15,
+            bg: "bg.subtle",
+            p: 4,
+            my: 2,
           }}
         >
-          <Text
-            text="subtle"
-            fontSize="sm"
-            color="subtle"
-            mb={2}
-            maxW="70%"
-            isTruncated
+          <Flex
+            sx={{
+              w: "100%",
+              justifyContent: "space-between",
+              alignItems: "center",
+              h: "100%",
+            }}
           >
-            {file_path}
-          </Text>
-          {/* <Button
+            <Text
+              text="subtle"
+              fontSize="sm"
+              color="subtle"
+              mb={2}
+              maxW="70%"
+              isTruncated
+            >
+              {file_path}
+            </Text>
+            {/* <Button
             size="sm"
             isDisabled={mutation.isLoading}
             isLoading={mutation.isLoading}
@@ -314,47 +331,103 @@ const FileDetails: React.FC<FileDetailsProps> = ({ file, type }) => {
             <Icon as={AiFillGithub} color="subtle" mr={2} />
             Create issue
           </Button> */}
-        </Flex>
-        {isLoading && (
-          <Flex
-            sx={{
-              w: "100%",
-              justifyContent: "center",
-              alignItems: "center",
-              h: "35vh",
-            }}
-          >
-            <Spinner />
           </Flex>
-        )}
-        {data && (
-          <pre>
-            <CodeBlock
-              customStyle={{
-                height: "35vh",
-                fontSize: "14px",
-                overflow: "scroll",
+          {isLoading && !profileData && (
+            <Flex
+              sx={{
+                w: "100%",
+                justifyContent: "center",
+                alignItems: "center",
+                h: "35vh",
               }}
-              theme={atomOneLight}
-              showLineNumbers
-              text={data.file_contents}
-              highlight={highlightString}
-            />
-          </pre>
-        )}
-      </Box>
-      <Box
-        sx={{
-          borderRadius: 15,
-          bg: "bg.subtle",
-          p: 4,
-          my: 4,
-        }}
-      >
-        <Box fontSize="sm" mb={2}>
-          <IssueDetail issue_id={issue_id} />
+            >
+              <Spinner />
+            </Flex>
+          )}
+          {data && (
+            <pre>
+              <CodeBlock
+                customStyle={{
+                  height: "35vh",
+                  fontSize: "14px",
+                  overflow: "scroll",
+                }}
+                theme={atomOneLight}
+                showLineNumbers
+                text={data.file_contents}
+                highlight={highlightString}
+              />
+            </pre>
+          )}
+        </Box>
+        <Box
+          sx={{
+            borderRadius: 15,
+            bg: "bg.subtle",
+            p: 4,
+            my: 4,
+          }}
+        >
+          <Box fontSize="sm" mb={2}>
+            <IssueDetail issue_id={issue_id} />
+          </Box>
         </Box>
       </Box>
+      {profileData && profileData.current_package === "trial" && (
+        <Flex
+          justifyContent={"center"}
+          alignItems={"center"}
+          zIndex={"10"}
+          w={"100%"}
+          h={"76vh"}
+        >
+          <Flex
+            as={"div"}
+            sx={{
+              backgroundColor: "rgba(255, 255, 255, 0.7)",
+              backdropFilter: "blur(8px)",
+            }}
+            justifyContent={"center"}
+            alignItems={"center"}
+            mt={5}
+            w={"95%"}
+            h={"93%"}
+            borderRadius={5}
+            flexDir="column"
+          >
+            <Image src="/trial-lock.svg" alt="Trial Lock" zIndex={"15"} />
+            <Text
+              mt={10}
+              textAlign={"center"}
+              w={"80%"}
+              fontWeight={700}
+              fontSize="md"
+              color="black"
+              mb={4}
+            >
+              Upgrade to use this feature
+            </Text>
+            <Text
+              textAlign={"center"}
+              w={"80%"}
+              fontWeight={300}
+              fontSize="sm"
+              color="black"
+              mb={8}
+            >
+              Upgrade from the trial plan to use this feature and much more.
+            </Text>
+            <Button
+              variant="brand"
+              onClick={() => {
+                history.push("/billing");
+              }}
+            >
+              Upgrade
+            </Button>
+          </Flex>
+        </Flex>
+      )}
     </Box>
   );
 };
@@ -381,7 +454,7 @@ const IssueDetail: React.FC<{ issue_id: string }> = ({ issue_id }) => {
             w: "100%",
             justifyContent: "center",
             alignItems: "center",
-            h: "35vh",
+            h: "20vh",
           }}
         >
           <Spinner />
@@ -389,7 +462,7 @@ const IssueDetail: React.FC<{ issue_id: string }> = ({ issue_id }) => {
       )}
       {data && (
         <TabPanels>
-          <TabPanel sx={{ h: "35vh", w: "100%", overflowY: "scroll" }}>
+          <TabPanel sx={{ h: "20vh", w: "100%", overflowY: "scroll" }}>
             <Text fontWeight={500} fontSize="md" pb={4}>
               {data.issue_details.issue_name}
             </Text>
@@ -402,7 +475,7 @@ const IssueDetail: React.FC<{ issue_id: string }> = ({ issue_id }) => {
             </DescriptionWrapper>
             {/* <pre>{data.issue_details.issue_description}</pre> */}
           </TabPanel>
-          <TabPanel sx={{ h: "35vh", w: "100%", overflowY: "scroll" }}>
+          <TabPanel sx={{ h: "20vh", w: "100%", overflowY: "scroll" }}>
             <DescriptionWrapper>
               <Box
                 dangerouslySetInnerHTML={{

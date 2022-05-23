@@ -303,7 +303,7 @@ export default function ReportPage() {
             <Box
               ml={10}
               height={"10px"}
-              width="calc(100% - 410px)"
+              width="calc(100% - 520px)"
               backgroundColor={"#38CB89"}
             />
             <Button ml={5} variant="accent-outline" onClick={onOpen}>
