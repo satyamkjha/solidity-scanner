@@ -18,6 +18,7 @@ import {
   IntegrationMenuIcon,
   BillingMenuIcon,
   CredshieldsIcon,
+  UserGuideIcon,
 } from "components/icons";
 
 import {
@@ -159,12 +160,13 @@ const Sidebar: React.FC<{
               my: 3,
               borderLeftRadius: "15px",
               transition: "0.3s background-color",
+              cursor: 'pointer'
             }}
             onClick={() => {
               window.open("https://docs.solidityscan.com/", "_blank");
             }}
           >
-            {React.cloneElement(<BillingMenuIcon size={24} />)}
+            {React.cloneElement(<UserGuideIcon size={24} />)}
             {!isCollapsed && (
               <Text ml={2} fontSize="sm">
                 {"User Guide"}

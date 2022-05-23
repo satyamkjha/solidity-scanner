@@ -413,6 +413,58 @@ export const BillingMenuIcon: React.FC<{ size: number; active?: boolean }> = ({
   );
 };
 
+export const UserGuideIcon: React.FC<{ size: number; active?: boolean }> = ({
+  size,
+  active,
+  ...props
+}) => {
+  return (
+    <svg
+      width={size}
+      height={size}
+      viewBox="0 0 24 24"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+      {...props}
+    >
+      <mask
+        id="prefix__a"
+        maskUnits="userSpaceOnUse"
+        x={0}
+        y={0}
+        width={size}
+        height={size}
+      >
+        <path fill="#C4C4C4" d="M0 0h24v24H0z" />
+      </mask>
+      <g mask="url(#prefix__a)">
+      <path fill-rule="evenodd" clip-rule="evenodd" d="M27.2104 1.95996H0.0859375V20.655H11.054C11.6281 21.4688 12.5756 22.0002 13.6472 22.0002C14.7188 22.0002 15.6663 21.4688 16.2404 20.655H27.2104V1.95996Z" fill="#AFA0ED"/>
+<circle cx="13.6486" cy="18.8283" r="1.83612" fill="#3300FF"/>
+<path d="M2.04688 18.6616V3.13804C2.29725 2.47036 2.89817 0.918006 3.29877 0.0500205C9.77527 -0.283819 12.5072 1.135 13.0636 1.88614H14.232C15.7009 -0.0501273 21.354 -0.0890751 23.9969 0.133485L25.3322 3.13804V18.6616H2.04688Z" fill="white"/>
+<path d="M3.38223 0.0498047V16.8253C6.30333 16.8253 12.4078 17.1925 13.0754 18.6614H14.243C14.8272 17.4929 19.0059 16.842 24.0803 16.9087V0.133265L25.3322 3.13782V18.6614H14.243H13.0754H2.04688V3.13782L3.38223 0.0498047Z" fill="#E5E5E5"/>
+<rect x="13.0625" y="1.88623" width="1.17166" height="16.7732" fill="#E5E5E5"/>
+<rect x="18.1562" y="6.47656" width="1.83612" height="7.17756" rx="0.91806" fill="white"/>
+<rect x="18.1562" y="6.47656" width="1.83612" height="7.17756" rx="0.91806" fill="#3300FF"/>
+<rect x="18.1562" y="3.30518" width="1.83612" height="1.83612" rx="0.91806" fill="white"/>
+<rect x="18.1562" y="3.30518" width="1.83612" height="1.83612" rx="0.91806" fill="#3300FF"/>
+      </g>
+      <defs>
+        <linearGradient
+          id="prefix__paint0_linearbilling"
+          x1={22.081}
+          y1={2.143}
+          x2={5.126}
+          y2={19.098}
+          gradientUnits="userSpaceOnUse"
+        >
+          <stop stopColor="#98FDAC" />
+          <stop offset={1} stopColor="#04B79C" />
+        </linearGradient>
+      </defs>
+    </svg>
+  );
+};
+
 export const SeverityIcon: React.FC<{ size?: number; variant: string }> = ({
   size = 8,
   variant,
