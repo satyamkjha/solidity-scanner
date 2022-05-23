@@ -223,7 +223,7 @@ const Billing: React.FC = () => {
               </>
             ) : (
               <>
-                <Flex width="100%" p={8}>
+                <Flex width="100%" pt={8}>
                   <Box sx={{ w: "100%" }}>
                     <CurrentPlan
                       name={plans.monthly[data.current_package].name}
@@ -256,10 +256,10 @@ const PricingPlan: React.FC<{
 
   const createStripePayment = async () => {
     let duration = "";
-    if(selectedPlan === 'ondemand'){
-      duration = "ondemand"
+    if (selectedPlan === "ondemand") {
+      duration = "ondemand";
     } else {
-      duration = "monthly"
+      duration = "monthly";
     }
     const { data } = await API.post<{
       status: string;
@@ -472,97 +472,72 @@ const PricingPlan: React.FC<{
                 <Text mx={6} fontSize={"xs"}>
                   {planData.description}
                 </Text>
-                <HStack mx={6} my={4} justify={"flex-start"} width={"100%"}>
-                  <HiCheckCircle size={20} color={successColor} />
+                <Flex
+          ml={5}
+          justifyContent="flex-start"
+          alignItems="flex-start"
+          flexDirection="column"
+        >
+          
+          <HStack mt={5} justify={"flex-start"} >
+          <HiCheckCircle size={20} color={successColor} />
 
-                  <Image
-                    h={'50px'}
-                    src="/pricing/coin.svg"
-                    alt="Product screenshot"
-                    p={1}
-                  />
-                  <Text fontSize={"md"} ml={5}>
-                    {planData.scan_count} Scan Credit
-                  </Text>
-                </HStack>
+          <Text fontSize={"sm"} ml={5}>
+            {planData.scan_count} Scan Credit
+          </Text>
+        </HStack>
+        <HStack mt={2} justify={"flex-start"} >
+          <HiCheckCircle size={20} color={successColor} />
 
-                <HStack mx={5} justifyContent={"flex-start"} width={"40%"}>
-                  <HiCheckCircle size={20} color={successColor} />
+          <Text fontSize={"sm"} ml={5}>
+             Vulnerabililty Score
+          </Text>
+        </HStack>
+        <HStack mt={2} justify={"flex-start"} >
+        {planData.name === "trial" ? (
+            <HiXCircle size={20} color={greyColor} />
+          ) : (
+            <HiCheckCircle size={20} color={successColor} />
+          )}
 
-                  <Image
-                    src="/pricing/score-icon.svg"
-                    alt="Product screenshot"
-                    p={4}
-                  />
-                  <Text fontSize={"md"} ml={5}>
-                    Vulnerability Score
-                  </Text>
-                </HStack>
+          <Text fontSize={"sm"} ml={5}>
+             Detailed Result
+          </Text>
+        </HStack>
+        <HStack mt={2} justify={"flex-start"} >
+        {planData.github ? (
+            <HiCheckCircle size={20} color={successColor} />
+          ) : (
+            <HiXCircle size={20} color={greyColor} />
+          )}
 
-                <HStack mx={5} justifyContent={"flex-start"} width={"40%"}>
-                  {planData.name === "trial" ? (
-                    <HiXCircle size={30} color={greyColor} />
-                  ) : (
-                    <HiCheckCircle size={30} color={successColor} />
-                  )}
-                  <Image
-                    h={"70px"}
-                    w={"70px"}
-                    src="/pricing/result-icon.svg"
-                    alt="Product screenshot"
-                    p={4}
-                  />
-                  <Text fontSize={"md"} ml={5}>
-                    Detailed Result
-                  </Text>
-                </HStack>
+          <Text fontSize={"sm"} ml={5}>
+            Private Github
+          </Text>
+        </HStack>
+        <HStack mt={2} justify={"flex-start"} >
+        {planData.report ? (
+            <HiCheckCircle size={20} color={successColor} />
+          ) : (
+            <HiXCircle size={20} color={greyColor} />
+          )}
 
-                <HStack mx={6} my={4} justifyContent={"flex-start"}>
-                  {planData.github ? (
-                    <HiCheckCircle size={30} color={successColor} />
-                  ) : (
-                    <HiXCircle size={30} color={greyColor} />
-                  )}
-                  <Image
-                    src="/pricing/github.svg"
-                    alt="Product screenshot"
-                    p={1}
-                  />
-                  <Text fontSize={"md"} ml={5}>
-                    Private Github
-                  </Text>
-                </HStack>
+          <Text fontSize={"sm"} ml={5}>
+            Generate Report
+          </Text>
+        </HStack>
+        <HStack mt={2} justify={"flex-start"} >
+        {planData.publishable_report ? (
+            <HiCheckCircle size={20} color={successColor} />
+          ) : (
+            <HiXCircle size={20} color={greyColor} />
+          )}
 
-                <HStack mx={6} my={4} justifyContent={"flex-start"}>
-                  {planData.report ? (
-                    <HiCheckCircle size={30} color={successColor} />
-                  ) : (
-                    <HiXCircle size={30} color={greyColor} />
-                  )}
-                  <Image
-                    src="/pricing/report.svg"
-                    alt="Product screenshot"
-                    p={1}
-                  />
-                  <Text fontSize={"md"} ml={5}>
-                    Generate Reports
-                  </Text>
-                </HStack>
-                <HStack mx={6} my={4} justifyContent={"flex-start"}>
-                  {planData.publishable_report ? (
-                    <HiCheckCircle size={30} color={successColor} />
-                  ) : (
-                    <HiXCircle size={30} color={greyColor} />
-                  )}
-                  <Image
-                    src="/pricing/publish.svg"
-                    alt="Product screenshot"
-                    p={1}
-                  />
-                  <Text fontSize={"md"} ml={5}>
-                    Publishable Reports
-                  </Text>
-                </HStack>
+          <Text fontSize={"sm"} ml={5}>
+          Publishable Report
+          </Text>
+        </HStack>
+        </Flex>
               </Box>
             </Flex>
           </ModalBody>
@@ -592,28 +567,47 @@ const CurrentPlan: React.FC<{
         border: "1px solid #38CB89",
       }}
     >
+      <Flex justifyContent={'space-between'} alignItems="center">
       <Flex alignItems="center">
         <Icon as={AiFillCheckCircle} color="#38CB89" fontSize="xl" mr={2} />
         <Text>Current Plan</Text>
+        </Flex>
+          <Flex alignItems="center" width={'25%'}>
+            <Icon
+              as={AiOutlineCalendar}
+              color="gray.500"
+              fontSize="2xl"
+              mr={2}
+            />
+            <Text>
+              <Text as="span" fontSize="2xl" fontWeight={700}>
+                {daysRemaining(new Date(packageRechargeDate), packageValidity)}
+              </Text>{" "}
+              days remaining
+            </Text>
+          </Flex>
       </Flex>
-      <Flex>
-        <Box ml={7} width="60%">
+      <Flex
+        justifyContent="space-between"
+        alignItems="flex-start"
+        flexDirection="row"
+        py={2}
+      >
+        <Box ml={7} mt={5} width="40%">
           {/* <Text sx={{ fontWeight: 500 }} fontSize="2xl" mt={8}>
             {name}
           </Text> */}
-          <Text mt={7} fontSize={"xl"}>
-            {plan.name}
-          </Text>
+          <Text fontSize={"xl"}>{plan.name}</Text>
           <Text as="span" mt={5} mb={10} fontWeight={300} fontSize="smaller">
             {plan.description}
           </Text>
-          <Divider mt={5} w={"60%"} />
+          <Divider mt={3} w={"60%"} />
 
           <HStack>
             <Heading
               verticalAlign={"center"}
               fontSize={"x-large"}
-              mt={4}
+              mt={3}
               mb={4}
             >
               {plan.amount === "Free" ? "Free" : `$ ${plan.amount}/mo`}
@@ -632,29 +626,6 @@ const CurrentPlan: React.FC<{
               </Text>
             )}
           </HStack>
-        </Box>
-        <Flex
-          width="40%"
-          py={4}
-          pr={4}
-          justifyContent="space-between"
-          alignItems="flex-end"
-          flexDirection="column"
-        >
-          <Flex alignItems="center" pt={4}>
-            <Icon
-              as={AiOutlineCalendar}
-              color="gray.500"
-              fontSize="2xl"
-              mr={2}
-            />
-            <Text>
-              <Text as="span" fontSize="2xl" fontWeight={700}>
-                {daysRemaining(new Date(packageRechargeDate), packageValidity)}
-              </Text>{" "}
-              days remaining
-            </Text>
-          </Flex>
           <Box mb={2}>
             <Text fontWeight={400} fontSize="md" mb={1} color="#4E5D78">
               Subscribed on
@@ -663,87 +634,75 @@ const CurrentPlan: React.FC<{
               {dateToDDMMMMYYYY(new Date(packageRechargeDate))}
             </Text>
           </Box>
-        </Flex>
-      </Flex>
-      <Flex
-        justifyContent={"flex-start"}
-        alignItems={"flex-start"}
-        flexWrap="wrap"
-        width={"100%"}
-        height={"fit-content"}
-        padding={2}
-        mt={5}
-      >
-        <HStack mx={5} justify={"flex-start"} width={"40%"}>
-          <HiCheckCircle size={30} color={successColor} />
+        </Box>
+        <Flex
+          width="25%"
+          justifyContent="flex-start"
+          alignItems="flex-start"
+          flexDirection="column"
+        >
+          
+          <HStack mt={5} justify={"flex-start"} >
+          <HiCheckCircle size={20} color={successColor} />
 
-          <Image src="/pricing/coin.svg" alt="Product screenshot" p={4} />
-          <Text fontSize={"md"} ml={5}>
+          <Text fontSize={"sm"} ml={5}>
             {plan.scan_count} Scan Credit
           </Text>
         </HStack>
-        <HStack mx={5} justifyContent={"flex-start"} width={"40%"}>
-          <HiCheckCircle size={30} color={successColor} />
+        <HStack mt={2} justify={"flex-start"} >
+          <HiCheckCircle size={20} color={successColor} />
 
-          <Image src="/pricing/score-icon.svg" alt="Product screenshot" p={4} />
-          <Text fontSize={"md"} ml={5}>
-            Vulnerability Score
+          <Text fontSize={"sm"} ml={5}>
+             Vulnerabililty Score
           </Text>
         </HStack>
-
-        <HStack mx={5} justifyContent={"flex-start"} width={"40%"}>
-          {plan.name === "trial" ? (
-            <HiXCircle size={30} color={greyColor} />
+        <HStack mt={2} justify={"flex-start"} >
+        {plan.name === "trial" ? (
+            <HiXCircle size={20} color={greyColor} />
           ) : (
-            <HiCheckCircle size={30} color={successColor} />
+            <HiCheckCircle size={20} color={successColor} />
           )}
-          <Image
-            h={"70px"}
-            w={"70px"}
-            src="/pricing/result-icon.svg"
-            alt="Product screenshot"
-            p={4}
-          />
-          <Text fontSize={"md"} ml={5}>
-            Detailed Result
+
+          <Text fontSize={"sm"} ml={5}>
+             Detailed Result
           </Text>
         </HStack>
-
-        <HStack mx={5} justifyContent={"flex-start"} width={"40%"}>
-          {plan.github ? (
-            <HiCheckCircle size={30} color={successColor} />
+        <HStack mt={2} justify={"flex-start"} >
+        {plan.github ? (
+            <HiCheckCircle size={20} color={successColor} />
           ) : (
-            <HiXCircle size={30} color={greyColor} />
+            <HiXCircle size={20} color={greyColor} />
           )}
-          <Image src="/pricing/github.svg" alt="Product screenshot" p={4} />
-          <Text fontSize={"md"} ml={5}>
+
+          <Text fontSize={"sm"} ml={5}>
             Private Github
           </Text>
         </HStack>
-
-        <HStack mx={5} justifyContent={"flex-start"} width={"40%"}>
-          {plan.report ? (
-            <HiCheckCircle size={30} color={successColor} />
+        <HStack mt={2} justify={"flex-start"} >
+        {plan.report ? (
+            <HiCheckCircle size={20} color={successColor} />
           ) : (
-            <HiXCircle size={30} color={greyColor} />
+            <HiXCircle size={20} color={greyColor} />
           )}
-          <Image src="/pricing/report.svg" alt="Product screenshot" p={4} />
-          <Text fontSize={"md"} ml={5}>
-            Generate Reports
+
+          <Text fontSize={"sm"} ml={5}>
+            Generate Report
           </Text>
         </HStack>
-        <HStack mx={5} justifyContent={"flex-start"} width={"40%"}>
-          {plan.publishable_report ? (
-            <HiCheckCircle size={30} color={successColor} />
+        <HStack mt={2} justify={"flex-start"} >
+        {plan.publishable_report ? (
+            <HiCheckCircle size={20} color={successColor} />
           ) : (
-            <HiXCircle size={30} color={greyColor} />
+            <HiXCircle size={20} color={greyColor} />
           )}
-          <Image src="/pricing/publish.svg" alt="Product screenshot" p={4} />
-          <Text fontSize={"md"} ml={5}>
-            Publishable Reports
+
+          <Text fontSize={"sm"} ml={5}>
+          Publishable Report
           </Text>
-        </HStack> 
+        </HStack>
+        </Flex>
       </Flex>
+      
     </Box>
   );
 };
@@ -762,10 +721,10 @@ const CoinPayments: React.FC<{ packageName: string; onClose: () => void }> = ({
     const left = window.innerWidth / 2 - width / 2;
     const top = window.innerHeight / 2 - height / 2;
     let duration = "";
-    if(packageName === "ondemand"){
-      duration = "ondemand"
+    if (packageName === "ondemand") {
+      duration = "ondemand";
     } else {
-      duration = "monthly"
+      duration = "monthly";
     }
     try {
       setLoading(true);
@@ -802,7 +761,9 @@ const CoinPayments: React.FC<{ packageName: string; onClose: () => void }> = ({
           <Flex alignItems="center">
             <CryptoIcon size={32} name={coin.toLowerCase()} />
             <Text ml={2} color="brand-dark" fontWeight={700} fontSize="3xl">
-              {packageName === "ondemand" ? parseFloat(data[coin].ondemand[packageName]).toPrecision(2) : parseFloat(data[coin].monthly[packageName]).toPrecision(2)}
+              {packageName === "ondemand"
+                ? parseFloat(data[coin].ondemand[packageName]).toPrecision(2)
+                : parseFloat(data[coin].monthly[packageName]).toPrecision(2)}
               <Text as="span" fontSize="md" fontWeight={700} ml={2}>
                 {coin}
               </Text>
