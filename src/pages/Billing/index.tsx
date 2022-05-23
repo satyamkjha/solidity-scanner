@@ -130,7 +130,7 @@ const Billing: React.FC = () => {
                   padding={2}
                   mt={5}
                 >
-                  <HStack mx={5} justify={"flex-start"} width={"30%"}>
+                  <HStack ml={5} justify={"flex-start"} width={"30%"}>
                     <HiCheckCircle size={30} color={successColor} />
 
                     <Image
@@ -143,7 +143,7 @@ const Billing: React.FC = () => {
                     </Text>
                   </HStack>
 
-                  <HStack mx={5} justifyContent={"flex-start"} width={"40%"}>
+                  <HStack ml={5} justifyContent={"flex-start"} width={"30%"}>
                     <HiCheckCircle size={30} color={successColor} />
 
                     <Image
@@ -156,7 +156,7 @@ const Billing: React.FC = () => {
                     </Text>
                   </HStack>
 
-                  <HStack mx={5} justifyContent={"flex-start"} width={"40%"}>
+                  <HStack ml={5} justifyContent={"flex-start"} width={"30%"}>
                     {selectedPlan === "trial" ? (
                       <HiXCircle size={30} color={greyColor} />
                     ) : (
@@ -173,7 +173,7 @@ const Billing: React.FC = () => {
                       Detailed Result
                     </Text>
                   </HStack>
-                  <HStack mx={5} justifyContent={"flex-start"} width={"50%"}>
+                  <HStack ml={5} justifyContent={"flex-start"} width={"30%"}>
                     {plans.monthly[selectedPlan].github ? (
                       <HiCheckCircle size={30} color={successColor} />
                     ) : (
@@ -189,7 +189,7 @@ const Billing: React.FC = () => {
                     </Text>
                   </HStack>
 
-                  <HStack mx={5} justifyContent={"flex-start"} width={"30%"}>
+                  <HStack ml={5} justifyContent={"flex-start"} width={"30%"}>
                     {plans.monthly[selectedPlan].report ? (
                       <HiCheckCircle size={30} color={successColor} />
                     ) : (
@@ -204,7 +204,7 @@ const Billing: React.FC = () => {
                       Generate Reports
                     </Text>
                   </HStack>
-                  <HStack mx={5} justifyContent={"flex-start"} width={"30%"}>
+                  <HStack ml={5} justifyContent={"flex-start"} width={"30%"}>
                     {plans.monthly[selectedPlan].publishable_report ? (
                       <HiCheckCircle size={30} color={successColor} />
                     ) : (
