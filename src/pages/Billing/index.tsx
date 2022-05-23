@@ -226,7 +226,7 @@ const Billing: React.FC = () => {
                       <HiXCircle size={30} color={greyColor} />
                     )}
                     <Image
-                      src="/pricing/publish.svg"
+                      src="/pricing/support-icon.svg"
                       alt="Product screenshot"
                       p={4}
                     />
@@ -321,10 +321,12 @@ const PricingPlan: React.FC<{
             ? `Save upto ${planData.discount}`
             : planData.name === "Beginner"
             ? "Starter"
-            : ""}
-          {planData.discount === null && planData.name === "On Demand"
+            : planData.name === "Custom"
+            ? "Customize your plan"
+            : planData.name === "On Demand"
             ? "Pay as you go"
             : ""}
+          
         </Text>
 
         {!selected && <Divider w={"90%"} />}
@@ -468,10 +470,12 @@ const PricingPlan: React.FC<{
                     ? `Save upto ${planData.discount}`
                     : planData.name === "Beginner"
                     ? "Starter"
-                    : ""}
-                  {planData.discount === null && planData.name === "On Demand"
+                    : planData.name === "Custom"
+                    ? "Customize your plan"
+                    : planData.name === "On Demand"
                     ? "Pay as you go"
                     : ""}
+                  
                 </Text>
                 <Text mx={6} mt={4} sx={{ fontWeight: 500 }}>
                   {planData.name}

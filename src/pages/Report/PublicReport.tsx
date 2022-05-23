@@ -31,7 +31,7 @@ export default function PublicReportPage() {
             <Box
               ml={10}
               height={"10px"}
-              width="calc(100% - 250px)"
+              width="calc(100% - 400px)"
               backgroundColor={"#38CB89"}
             />
           </Flex>
