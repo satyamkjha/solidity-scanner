@@ -152,7 +152,7 @@ const Billing: React.FC = () => {
                       p={4}
                     />
                     <Text fontSize={"md"} ml={5}>
-                      Vulnerability Score
+                      Security Score
                     </Text>
                   </HStack>
 
@@ -217,6 +217,21 @@ const Billing: React.FC = () => {
                     />
                     <Text fontSize={"md"} ml={5}>
                       Publishable Reports
+                    </Text>
+                  </HStack>
+                  <HStack ml={5} justifyContent={"flex-start"} width={"30%"}>
+                    {selectedPlan === 'custom' ? (
+                      <HiCheckCircle size={30} color={successColor} />
+                    ) : (
+                      <HiXCircle size={30} color={greyColor} />
+                    )}
+                    <Image
+                      src="/pricing/publish.svg"
+                      alt="Product screenshot"
+                      p={4}
+                    />
+                    <Text fontSize={"md"} ml={5}>
+                      White Glove Services
                     </Text>
                   </HStack>
                 </Flex>
@@ -473,71 +488,81 @@ const PricingPlan: React.FC<{
                   {planData.description}
                 </Text>
                 <Flex
-          ml={5}
-          justifyContent="flex-start"
-          alignItems="flex-start"
-          flexDirection="column"
-        >
-          
-          <HStack mt={5} justify={"flex-start"} >
-          <HiCheckCircle size={20} color={successColor} />
+                  ml={5}
+                  justifyContent="flex-start"
+                  alignItems="flex-start"
+                  flexDirection="column"
+                >
+                  <HStack mt={5} justify={"flex-start"}>
+                    <HiCheckCircle size={20} color={successColor} />
 
-          <Text fontSize={"sm"} ml={5}>
-            {planData.scan_count} Scan Credit
-          </Text>
-        </HStack>
-        <HStack mt={2} justify={"flex-start"} >
-          <HiCheckCircle size={20} color={successColor} />
+                    <Text fontSize={"sm"} ml={5}>
+                      {planData.scan_count} Scan Credit
+                    </Text>
+                  </HStack>
+                  <HStack mt={2} justify={"flex-start"}>
+                    <HiCheckCircle size={20} color={successColor} />
 
-          <Text fontSize={"sm"} ml={5}>
-             Vulnerabililty Score
-          </Text>
-        </HStack>
-        <HStack mt={2} justify={"flex-start"} >
-        {planData.name === "trial" ? (
-            <HiXCircle size={20} color={greyColor} />
-          ) : (
-            <HiCheckCircle size={20} color={successColor} />
-          )}
+                    <Text fontSize={"sm"} ml={5}>
+                      Security Score
+                    </Text>
+                  </HStack>
+                  <HStack mt={2} justify={"flex-start"}>
+                    {planData.name === "trial" ? (
+                      <HiXCircle size={20} color={greyColor} />
+                    ) : (
+                      <HiCheckCircle size={20} color={successColor} />
+                    )}
 
-          <Text fontSize={"sm"} ml={5}>
-             Detailed Result
-          </Text>
-        </HStack>
-        <HStack mt={2} justify={"flex-start"} >
-        {planData.github ? (
-            <HiCheckCircle size={20} color={successColor} />
-          ) : (
-            <HiXCircle size={20} color={greyColor} />
-          )}
+                    <Text fontSize={"sm"} ml={5}>
+                      Detailed Result
+                    </Text>
+                  </HStack>
+                  <HStack mt={2} justify={"flex-start"}>
+                    {planData.github ? (
+                      <HiCheckCircle size={20} color={successColor} />
+                    ) : (
+                      <HiXCircle size={20} color={greyColor} />
+                    )}
 
-          <Text fontSize={"sm"} ml={5}>
-            Private Github
-          </Text>
-        </HStack>
-        <HStack mt={2} justify={"flex-start"} >
-        {planData.report ? (
-            <HiCheckCircle size={20} color={successColor} />
-          ) : (
-            <HiXCircle size={20} color={greyColor} />
-          )}
+                    <Text fontSize={"sm"} ml={5}>
+                      Private Github
+                    </Text>
+                  </HStack>
+                  <HStack mt={2} justify={"flex-start"}>
+                    {planData.report ? (
+                      <HiCheckCircle size={20} color={successColor} />
+                    ) : (
+                      <HiXCircle size={20} color={greyColor} />
+                    )}
 
-          <Text fontSize={"sm"} ml={5}>
-            Generate Report
-          </Text>
-        </HStack>
-        <HStack mt={2} justify={"flex-start"} >
-        {planData.publishable_report ? (
-            <HiCheckCircle size={20} color={successColor} />
-          ) : (
-            <HiXCircle size={20} color={greyColor} />
-          )}
+                    <Text fontSize={"sm"} ml={5}>
+                      Generate Report
+                    </Text>
+                  </HStack>
+                  <HStack mt={2} justify={"flex-start"}>
+                    {planData.publishable_report ? (
+                      <HiCheckCircle size={20} color={successColor} />
+                    ) : (
+                      <HiXCircle size={20} color={greyColor} />
+                    )}
 
-          <Text fontSize={"sm"} ml={5}>
-          Publishable Report
-          </Text>
-        </HStack>
-        </Flex>
+                    <Text fontSize={"sm"} ml={5}>
+                      Publishable Report
+                    </Text>
+                  </HStack>
+                  <HStack mt={2} justify={"flex-start"}>
+                    {plan === 'custom' ? (
+                      <HiCheckCircle size={20} color={successColor} />
+                    ) : (
+                      <HiXCircle size={20} color={greyColor} />
+                    )}
+
+                    <Text fontSize={"sm"} ml={5}>
+                      White Glove Services
+                    </Text>
+                  </HStack>
+                </Flex>
               </Box>
             </Flex>
           </ModalBody>
@@ -567,25 +592,20 @@ const CurrentPlan: React.FC<{
         border: "1px solid #38CB89",
       }}
     >
-      <Flex justifyContent={'space-between'} alignItems="center">
-      <Flex alignItems="center">
-        <Icon as={AiFillCheckCircle} color="#38CB89" fontSize="xl" mr={2} />
-        <Text>Current Plan</Text>
+      <Flex justifyContent={"space-between"} alignItems="center">
+        <Flex alignItems="center">
+          <Icon as={AiFillCheckCircle} color="#38CB89" fontSize="xl" mr={2} />
+          <Text>Current Plan</Text>
         </Flex>
-          <Flex alignItems="center" width={'25%'}>
-            <Icon
-              as={AiOutlineCalendar}
-              color="gray.500"
-              fontSize="2xl"
-              mr={2}
-            />
-            <Text>
-              <Text as="span" fontSize="2xl" fontWeight={700}>
-                {daysRemaining(new Date(packageRechargeDate), packageValidity)}
-              </Text>{" "}
-              days remaining
-            </Text>
-          </Flex>
+        <Flex alignItems="center" width={"25%"}>
+          <Icon as={AiOutlineCalendar} color="gray.500" fontSize="2xl" mr={2} />
+          <Text>
+            <Text as="span" fontSize="2xl" fontWeight={700}>
+              {daysRemaining(new Date(packageRechargeDate), packageValidity)}
+            </Text>{" "}
+            days remaining
+          </Text>
+        </Flex>
       </Flex>
       <Flex
         justifyContent="space-between"
@@ -641,68 +661,77 @@ const CurrentPlan: React.FC<{
           alignItems="flex-start"
           flexDirection="column"
         >
-          
-          <HStack mt={5} justify={"flex-start"} >
-          <HiCheckCircle size={20} color={successColor} />
-
-          <Text fontSize={"sm"} ml={5}>
-            {plan.scan_count} Scan Credit
-          </Text>
-        </HStack>
-        <HStack mt={2} justify={"flex-start"} >
-          <HiCheckCircle size={20} color={successColor} />
-
-          <Text fontSize={"sm"} ml={5}>
-             Vulnerabililty Score
-          </Text>
-        </HStack>
-        <HStack mt={2} justify={"flex-start"} >
-        {plan.name === "trial" ? (
-            <HiXCircle size={20} color={greyColor} />
-          ) : (
+          <HStack mt={5} justify={"flex-start"}>
             <HiCheckCircle size={20} color={successColor} />
-          )}
 
-          <Text fontSize={"sm"} ml={5}>
-             Detailed Result
-          </Text>
-        </HStack>
-        <HStack mt={2} justify={"flex-start"} >
-        {plan.github ? (
+            <Text fontSize={"sm"} ml={5}>
+              {plan.scan_count} Scan Credit
+            </Text>
+          </HStack>
+          <HStack mt={2} justify={"flex-start"}>
             <HiCheckCircle size={20} color={successColor} />
-          ) : (
-            <HiXCircle size={20} color={greyColor} />
-          )}
 
-          <Text fontSize={"sm"} ml={5}>
-            Private Github
-          </Text>
-        </HStack>
-        <HStack mt={2} justify={"flex-start"} >
-        {plan.report ? (
-            <HiCheckCircle size={20} color={successColor} />
-          ) : (
-            <HiXCircle size={20} color={greyColor} />
-          )}
+            <Text fontSize={"sm"} ml={5}>
+              Security Score
+            </Text>
+          </HStack>
+          <HStack mt={2} justify={"flex-start"}>
+            {plan.name === "trial" ? (
+              <HiXCircle size={20} color={greyColor} />
+            ) : (
+              <HiCheckCircle size={20} color={successColor} />
+            )}
 
-          <Text fontSize={"sm"} ml={5}>
-            Generate Report
-          </Text>
-        </HStack>
-        <HStack mt={2} justify={"flex-start"} >
-        {plan.publishable_report ? (
-            <HiCheckCircle size={20} color={successColor} />
-          ) : (
-            <HiXCircle size={20} color={greyColor} />
-          )}
+            <Text fontSize={"sm"} ml={5}>
+              Detailed Result
+            </Text>
+          </HStack>
+          <HStack mt={2} justify={"flex-start"}>
+            {plan.github ? (
+              <HiCheckCircle size={20} color={successColor} />
+            ) : (
+              <HiXCircle size={20} color={greyColor} />
+            )}
 
-          <Text fontSize={"sm"} ml={5}>
-          Publishable Report
-          </Text>
-        </HStack>
+            <Text fontSize={"sm"} ml={5}>
+              Private Github
+            </Text>
+          </HStack>
+          <HStack mt={2} justify={"flex-start"}>
+            {plan.report ? (
+              <HiCheckCircle size={20} color={successColor} />
+            ) : (
+              <HiXCircle size={20} color={greyColor} />
+            )}
+
+            <Text fontSize={"sm"} ml={5}>
+              Generate Report
+            </Text>
+          </HStack>
+          <HStack mt={2} justify={"flex-start"}>
+            {plan.publishable_report ? (
+              <HiCheckCircle size={20} color={successColor} />
+            ) : (
+              <HiXCircle size={20} color={greyColor} />
+            )}
+
+            <Text fontSize={"sm"} ml={5}>
+              Publishable Report
+            </Text>
+          </HStack>
+          <HStack mt={2} justify={"flex-start"}>
+            {plan.name === 'Custom' ? (
+              <HiCheckCircle size={20} color={successColor} />
+            ) : (
+              <HiXCircle size={20} color={greyColor} />
+            )}
+
+            <Text fontSize={"sm"} ml={5}>
+             White Glove Services
+            </Text>
+          </HStack>
         </Flex>
       </Flex>
-      
     </Box>
   );
 };

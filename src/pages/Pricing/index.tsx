@@ -16,6 +16,14 @@ import {
   Heading,
   ListIcon,
   Fade,
+  VStack,
+  Popover,
+  PopoverArrow,
+  PopoverBody,
+  PopoverCloseButton,
+  PopoverContent,
+  PopoverHeader,
+  PopoverTrigger,
 } from "@chakra-ui/react";
 
 import Header from "components/header";
@@ -23,10 +31,12 @@ import Footer from "components/footer";
 import { PricingCard } from "./components/pricingCard";
 import { useState } from "react";
 import ContactUs from "components/contactus";
-import { HiCheckCircle, HiXCircle } from "react-icons/hi";
+import { HiCheckCircle, HiXCircle, HiInformationCircle } from "react-icons/hi";
 import { usePricingPlans } from "hooks/usePricingPlans";
 import { Plan } from "common/types";
 import Auth from "helpers/auth";
+import { FaLeaf } from "react-icons/fa";
+import { PublishReportInfo } from "components/infoModal";
 
 export default function PricingPage() {
   const [tab, setTab] = useState<string>("weekly");
@@ -36,10 +46,12 @@ export default function PricingPage() {
 
   const [selectedPlan, setSelectedPlan] = useState("");
 
+  const [openPublish, setOpenPublish] = useState(false);
+
   return (
     <>
       <Header />
-      <Container maxW="100vw" color="black">
+      <Container maxW="100vw" color="black" alignItems={"center"}>
         <Flex
           maxW="7xl"
           mx="auto"
@@ -122,170 +134,426 @@ export default function PricingPage() {
         {plans && (
           <ScaleFade initialScale={0.9} in={tab === "weekly"}>
             <Box
-              px={10}
-              w={"90vw"}
+              w={"100%"}
               as="section"
-              py="14"
               display="flex"
               flexDirection="row"
               justifyContent={"center"}
               alignContent={"center"}
             >
-              <Flex
-                as={"div"}
-                flexDirection="column"
-                justifyContent={"flex-end"}
+              <Box
+                w={"90vw"}
+                as="section"
+                py="14"
+                display="flex"
+                flexDirection="row"
+                justifyContent={"center"}
                 alignContent={"center"}
-                mb={"70px"}
-                mt={"90px"}
-                w={"18vw"}
               >
-                <Box
-                  as="div"
-                  py={"36px"}
-                  px={"100px"}
-                  display="flex"
-                  flexDirection="row"
+                <Flex
+                  as={"div"}
+                  flexDirection="column"
+                  justifyContent={"flex-start"}
+                  alignContent={"center"}
+                  mb={"70px"}
+                  w={"18vw"}
                 >
-                  <Text
-                    fontSize="2xl"
-                    fontWeight="700"
-                    my={1}
-                    textAlign="center"
-                    lineHeight="title"
+                  <Box
+                    as="div"
+                    h={"120px"}
+                    alignItems="center"
+                    px={"100px"}
+                    display="flex"
+                    flexDirection="row"
                   >
-                    Packages
-                  </Text>
-                </Box>
-                <Box
-                  as="div"
-                  py={"35px"}
-                  px={"25px"}
-                  display="flex"
-                  flexDirection="row"
-                  borderTopLeftRadius={"xl"}
-                  border="2px solid #D6D6D6"
-                  borderRightWidth={0}
-                  borderBottomWidth={0}
-                >
-                  <HStack spacing={1}>
-                    <Image src="/pricing/coin.svg" mx="auto" mr={4} />
                     <Text
-                      fontSize="lg"
+                      fontSize="2xl"
+                      fontWeight="700"
+                      my={1}
                       textAlign="center"
                       lineHeight="title"
-                      fontWeight={"300"}
                     >
-                      Scan Credit
+                      Packages
                     </Text>
-                  </HStack>
-                </Box>
-                <Box
-                  as="div"
-                  py={"35px"}
-                  px={"25px"}
-                  display="flex"
-                  flexDirection="row"
-                  borderLeft="2px solid #D6D6D6"
-                  backgroundColor={"#FAFAFB"}
+                  </Box>
+                  <Box
+                    as="div"
+                    h={"169px"}
+                    px={"20px"}
+                    display="flex"
+                    flexDirection="row"
+                    borderTopLeftRadius={"xl"}
+                    border="2px solid #D6D6D6"
+                    borderRightWidth={0}
+                    borderBottomWidth={0}
+                  >
+                    <HStack spacing={1}>
+                      <Text
+                        ml={15}
+                        fontSize="md"
+                        textAlign="center"
+                        lineHeight="title"
+                      >
+                        Recommended For
+                      </Text>
+                    </HStack>
+                  </Box>
+                  <Box
+                    as="div"
+                    h={"120px"}
+                    px={"20px"}
+                    display="flex"
+                    flexDirection="row"
+                    borderLeft="2px solid #D6D6D6"
+                    backgroundColor={"#FAFAFB"}
+                  >
+                    <HStack spacing={1}>
+                      <Image
+                        src="/pricing/coin.svg"
+                        h={"30px"}
+                        w={"30px"}
+                        mx="auto"
+                        mr={4}
+                      />
+                      <Text fontSize="md" textAlign="center" lineHeight="title">
+                        Scan Credit
+                      </Text>
+                    </HStack>
+                  </Box>
+                  <Box
+                    as="div"
+                    h={"120px"}
+                    px={"20px"}
+                    display="flex"
+                    flexDirection="row"
+                    borderLeft="2px solid #D6D6D6"
+                  >
+                    <HStack spacing={1}>
+                      <Image
+                        src="/pricing/score-icon.svg"
+                        h={"30px"}
+                        w={"30px"}
+                        mx="auto"
+                        mr={4}
+                      />
+                      <VStack spacing={1} align={"left"}>
+                        <Text
+                          fontSize="md"
+                          textAlign="center"
+                          lineHeight="title"
+                        >
+                          Security Score
+                        </Text>
+                      </VStack>
+                    </HStack>
+                  </Box>
+                  <Box
+                    as="div"
+                    h={"120px"}
+                    px={"20px"}
+                    display="flex"
+                    flexDirection="row"
+                    borderLeft="2px solid #D6D6D6"
+                    backgroundColor={"#FAFAFB"}
+                  >
+                    <HStack spacing={1}>
+                      <Image
+                        src="/pricing/result-icon.svg"
+                        h={"30px"}
+                        w={"30px"}
+                        mx="auto"
+                        mr={4}
+                      />
+                      <VStack spacing={1} align={"left"}>
+                        <HStack>
+                          <Text
+                            fontSize="md"
+                            textAlign="left"
+                            lineHeight="title"
+                          >
+                            Detailed Result
+                          </Text>
+                          <Popover>
+                            <PopoverTrigger>
+                              <HiInformationCircle color={"#808080"} />
+                            </PopoverTrigger>
+                            <PopoverContent p={5}>
+                              <PopoverArrow />
+                              <PopoverCloseButton />
+
+                              <PopoverBody>
+                                <Text
+                                  fontSize="sm"
+                                  textAlign="left"
+                                  lineHeight="title"
+                                  fontWeight={"300"}
+                                  mb={4}
+                                >
+                                  We can help you find bugs in your code and
+                                  provide you with the solution for it
+                                </Text>
+                                <Image src="/carousel/Screenshot 2.png" />
+                              </PopoverBody>
+                            </PopoverContent>
+                          </Popover>
+                        </HStack>
+                        <Text
+                          fontSize="xs"
+                          textAlign="left"
+                          lineHeight="title"
+                          fontWeight={"300"}
+                        >
+                          Get a detailed explanation of the issues
+                        </Text>
+                      </VStack>
+                    </HStack>
+                  </Box>
+                  <Box
+                    as="div"
+                    h={"120px"}
+                    px={"20px"}
+                    display="flex"
+                    flexDirection="row"
+                    borderLeft="2px solid #D6D6D6"
+                  >
+                    <HStack spacing={1}>
+                      <Image
+                        src="/pricing/github.svg"
+                        h={"30px"}
+                        w={"30px"}
+                        mx="auto"
+                        mr={4}
+                      />
+                      <VStack spacing={1} align={"left"}>
+                        <Text fontSize="md" textAlign="left" lineHeight="title">
+                          Private Github
+                        </Text>
+                        <Text
+                          fontSize="xs"
+                          textAlign="left"
+                          lineHeight="title"
+                          fontWeight={"300"}
+                        >
+                          Scan Private Github Repositories
+                        </Text>
+                      </VStack>
+                    </HStack>
+                  </Box>
+                  <Box
+                    as="div"
+                    h={"120px"}
+                    px={"20px"}
+                    display="flex"
+                    flexDirection="row"
+                    borderLeft="2px solid #D6D6D6"
+                    backgroundColor={"#FAFAFB"}
+                  >
+                    <HStack spacing={1}>
+                      <Image
+                        src="/pricing/report.svg"
+                        h={"30px"}
+                        w={"30px"}
+                        mx="auto"
+                        mr={4}
+                      />
+                      <VStack spacing={1} align={"left"}>
+                        <HStack>
+                          <Text
+                            fontSize="md"
+                            textAlign="left"
+                            lineHeight="title"
+                          >
+                            Generate Report
+                          </Text>
+                          <Popover>
+                            <PopoverTrigger>
+                              <HiInformationCircle color={"#808080"} />
+                            </PopoverTrigger>
+                            <PopoverContent p={5}>
+                              <PopoverArrow />
+                              <PopoverCloseButton />
+
+                              <PopoverBody>
+                                <Text
+                                  fontSize="sm"
+                                  textAlign="left"
+                                  lineHeight="title"
+                                  fontWeight={"300"}
+                                  mb={4}
+                                >
+                                  Generate a detailed report for the scan
+                                </Text>
+                                <Image src="/carousel/Screenshot 5.png" />
+                              </PopoverBody>
+                            </PopoverContent>
+                          </Popover>
+                        </HStack>
+                        <Text
+                          fontSize="xs"
+                          textAlign="left"
+                          lineHeight="title"
+                          fontWeight={"300"}
+                        >
+                          Generate Report for the scans that you have completed
+                        </Text>
+                      </VStack>
+                    </HStack>
+                  </Box>
+                  <Box
+                    as="div"
+                    h={"120px"}
+                    px={"20px"}
+                    display="flex"
+                    flexDirection="row"
+                    borderLeft="2px solid #D6D6D6"
+                    
+                  >
+                    <HStack spacing={1}>
+                      <Image
+                        src="/pricing/publish.svg"
+                        h={"30px"}
+                        w={"30px"}
+                        mx="auto"
+                        mr={4}
+                      />
+                      <VStack spacing={1} align={"left"}>
+                        <HStack>
+                          <Text
+                            fontSize="md"
+                            textAlign="left"
+                            lineHeight="title"
+                          >
+                            Publish Reports
+                          </Text>
+                          <Popover>
+                            <PopoverTrigger>
+                              <HiInformationCircle color={"#808080"} />
+                            </PopoverTrigger>
+                            <PopoverContent p={5}>
+                              <PopoverArrow />
+                              <PopoverCloseButton />
+
+                              <PopoverBody>
+                                <Text
+                                  fontSize="sm"
+                                  textAlign="left"
+                                  lineHeight="title"
+                                  fontWeight={"300"}
+                                  mb={4}
+                                >
+                                  You can publish a detailed report of the scan
+                                  conducted and then share it across your team
+                                  or organization using a public URL.
+                                </Text>
+                                <Image src="/carousel/Screenshot 5.png" />
+                              </PopoverBody>
+                            </PopoverContent>
+                          </Popover>
+                        </HStack>
+                        <Text
+                          fontSize="xs"
+                          textAlign="left"
+                          lineHeight="title"
+                          fontWeight={"300"}
+                        >
+                          Publish your reports to a public url
+                        </Text>
+                      </VStack>
+                    </HStack>
+                  </Box>
+                  <Box
+                    as="div"
+                    h={"120px"}
+                    px={"20px"}
+                    display="flex"
+                    flexDirection="row"
+                    borderLeft="2px solid #D6D6D6"
+                    borderBottom="2px solid #D6D6D6"
+                    borderBottomLeftRadius={"xl"}
+                    backgroundColor={"#FAFAFB"}
+                  >
+                    <HStack spacing={1}>
+                      <Image
+                        src="/pricing/support-icon.svg"
+                        h={"30px"}
+                        w={"30px"}
+                        mx="auto"
+                        mr={4}
+                      />
+                      <VStack spacing={1} align={"left"}>
+                        <HStack>
+                          <Text
+                            fontSize="md"
+                            textAlign="left"
+                            lineHeight="title"
+                          >
+                            White Glove Services
+                          </Text>
+                          {/* <Popover>
+                            <PopoverTrigger>
+                              <HiInformationCircle color={"#808080"} />
+                            </PopoverTrigger>
+                            <PopoverContent p={5}>
+                              <PopoverArrow />
+                              <PopoverCloseButton />
+
+                              <PopoverBody>
+                                <Text
+                                  fontSize="sm"
+                                  textAlign="left"
+                                  lineHeight="title"
+                                  fontWeight={"300"}
+                                  mb={4}
+                                >
+                                  You can publish a detailed report of the scan
+                                  conducted and then share it across your team
+                                  or organization using a public URL.
+                                </Text>
+                                <Image src="/carousel/Screenshot 5.png" />
+                              </PopoverBody>
+                            </PopoverContent>
+                          </Popover> */}
+                        </HStack>
+                        {/* <Text
+                          fontSize="xs"
+                          textAlign="left"
+                          lineHeight="title"
+                          fontWeight={"300"}
+                        >
+                          Publish your reports to a public url
+                        </Text> */}
+                      </VStack>
+                    </HStack>
+                  </Box>
+                </Flex>
+                <SimpleGrid
+                  columns={6}
+                  maxW="7xl"
+                  justifyItems="center"
+                  alignItems="flex-start"
+                  w={"72vw"}
                 >
-                  <HStack spacing={1}>
-                    <Image src="/pricing/score-icon.svg" mx="auto" mr={4} />
-                    <Text
-                      fontSize="lg"
-                      textAlign="center"
-                      lineHeight="title"
-                      fontWeight={"300"}
-                    >
-                      Vulnerability Score
-                    </Text>
-                  </HStack>
-                </Box>
-                <Box
-                  as="div"
-                  py={"36px"}
-                  px={"25px"}
-                  display="flex"
-                  flexDirection="row"
-                  borderLeft="2px solid #D6D6D6"
-                >
-                  <HStack spacing={1}>
-                    <Image src="/pricing/github.svg" mx="auto" mr={4} />
-                    <Text
-                      fontSize="lg"
-                      textAlign="center"
-                      lineHeight="title"
-                      fontWeight={"300"}
-                    >
-                      Private Github
-                    </Text>
-                  </HStack>
-                </Box>
-                <Box
-                  as="div"
-                  py={"35px"}
-                  px={"25px"}
-                  display="flex"
-                  flexDirection="row"
-                  borderLeft="2px solid #D6D6D6"
-                  backgroundColor={"#FAFAFB"}
-                >
-                  <HStack spacing={1}>
-                    <Image src="/pricing/report.svg" mx="auto" mr={4} />
-                    <Text
-                      fontSize="lg"
-                      textAlign="center"
-                      lineHeight="title"
-                      fontWeight={"300"}
-                    >
-                      Generate Report
-                    </Text>
-                  </HStack>
-                </Box>
-                <Box
-                  as="div"
-                  py={"36px"}
-                  px={"15px"}
-                  display="flex"
-                  flexDirection="row"
-                  borderLeft="2px solid #D6D6D6"
-                  borderBottom="2px solid #D6D6D6"
-                  borderBottomLeftRadius={"xl"}
-                >
-                  <HStack spacing={1}>
-                    <Image src="/pricing/publish.svg" mx="auto" mr={4} />
-                    <Text
-                      fontSize="lg"
-                      textAlign="center"
-                      lineHeight="title"
-                      fontWeight={"300"}
-                    >
-                      Publishable Reports
-                    </Text>
-                  </HStack>
-                </Box>
-              </Flex>
-              <SimpleGrid
-                columns={6}
-                maxW="7xl"
-                justifyItems="center"
-                alignItems="center"
-                w={"72vw"}
-              >
-                {Object.keys(plans.monthly).map((plan) => (
-                  <PricingColumn
-                    plan={plan}
-                    planData={plans.monthly[plan]}
-                    setSelectedPlan={setSelectedPlan}
-                    selectedPlan={selectedPlan}
-                  />
-                ))}
-              </SimpleGrid>
+                  {Object.keys(plans.monthly).map((plan) => (
+                    <PricingColumn
+                      plan={plan}
+                      planData={plans.monthly[plan]}
+                      setSelectedPlan={setSelectedPlan}
+                      selectedPlan={selectedPlan}
+                    />
+                  ))}
+                </SimpleGrid>
+              </Box>
             </Box>
           </ScaleFade>
         )}
       </Container>
       <ContactUs isOpen={isOpen} onClose={onClose} />
+      <PublishReportInfo
+        isOpen={openPublish}
+        onClose={() => {
+          setOpenPublish(false);
+        }}
+      />
       <Footer />
     </>
   );
@@ -313,6 +581,7 @@ export const PricingColumn: React.FC<{
 
   const history = useHistory();
   const mouse = selectedPlan === plan;
+  const { isOpen, onClose, onOpen } = useDisclosure();
 
   return (
     <Flex
@@ -323,9 +592,8 @@ export const PricingColumn: React.FC<{
       justifyContent={"flex-start"}
       alignContent={"flex-start"}
       overflow={"hidden"}
-      width={mouse ? "13vw" : "11vw"}
+      width={mouse ? "14vw" : "12vw"}
       mb={"70px"}
-      mt={"90px"}
       border={`2px solid ${mouse ? "#3E15F4" : "#D6D6D6"}`}
       _notLast={{
         borderRightWidth: mouse ? "2px" : "0px",
@@ -344,8 +612,9 @@ export const PricingColumn: React.FC<{
     >
       <Box
         as="div"
-        py={"25px"}
+        h={"120px"}
         px={"15px"}
+        justifyContent="center"
         display="flex"
         flexDirection="column"
         borderBottom="2px solid #D6D6D6"
@@ -355,19 +624,12 @@ export const PricingColumn: React.FC<{
           textAlign="center"
           lineHeight="title"
           fontWeight={"300"}
-        >
-          {/* {plan === 'trial' ? 'Free' : plan === 'starter' ? ''} */}
-        </Text>
-        <Text
-          fontSize="lg"
-          textAlign="center"
-          lineHeight="title"
-          fontWeight={"300"}
-        >
+        ></Text>
+        <Text fontSize="md" textAlign="center" lineHeight="title">
           {planData.name}
         </Text>
         <Heading
-          fontSize="2xl"
+          fontSize="xl"
           textAlign="center"
           lineHeight="title"
           fontWeight={900}
@@ -377,12 +639,31 @@ export const PricingColumn: React.FC<{
       </Box>
       <Box
         as="div"
-        py={"40px"}
-        px={"25px"}
+        h={"165px"}
+        px={"10px"}
         display="flex"
         flexDirection="row"
         justifyContent={"center"}
         alignItems={"center"}
+      >
+        <Text
+          fontSize="xs"
+          textAlign="center"
+          lineHeight="title"
+          fontWeight={"300"}
+        >
+          {planData.description}
+        </Text>
+      </Box>
+      <Box
+        as="div"
+        h={"120px"}
+        px={"15px"}
+        display="flex"
+        flexDirection="row"
+        justifyContent={"center"}
+        alignItems={"center"}
+        backgroundColor={"#FAFAFB"}
       >
         <Text
           fontSize="lg"
@@ -395,11 +676,10 @@ export const PricingColumn: React.FC<{
       </Box>
       <Box
         as="div"
-        py={"40px"}
-        px={"25px"}
+        h={"120px"}
+        px={"15px"}
         display="flex"
         flexDirection="row"
-        backgroundColor={"#FAFAFB"}
         justifyContent={"center"}
         alignItems={"center"}
       >
@@ -407,8 +687,24 @@ export const PricingColumn: React.FC<{
       </Box>
       <Box
         as="div"
-        py={"40px"}
-        px={"25px"}
+        h={"120px"}
+        px={"15px"}
+        display="flex"
+        flexDirection="row"
+        justifyContent={"center"}
+        alignItems={"center"}
+        backgroundColor={"#FAFAFB"}
+      >
+        {planData.name !== "trial" ? (
+          <HiCheckCircle size={30} color={successColor} />
+        ) : (
+          <HiXCircle size={30} color={greyColor} />
+        )}{" "}
+      </Box>
+      <Box
+        as="div"
+        h={"120px"}
+        px={"15px"}
         display="flex"
         flexDirection="row"
         justifyContent={"center"}
@@ -422,8 +718,8 @@ export const PricingColumn: React.FC<{
       </Box>
       <Box
         as="div"
-        py={"40px"}
-        px={"25px"}
+        h={"120px"}
+        px={"15px"}
         display="flex"
         flexDirection="row"
         justifyContent={"center"}
@@ -438,10 +734,10 @@ export const PricingColumn: React.FC<{
       </Box>
       <Box
         as="div"
-        py={"40px"}
-        px={"25px"}
+        h={"120px"}
+        px={"15px"}
         display="flex"
-        flexDirection="row"
+        flexDirection="column"
         justifyContent={"center"}
         alignItems={"center"}
       >
@@ -451,6 +747,58 @@ export const PricingColumn: React.FC<{
           <HiXCircle size={30} color={greyColor} />
         )}{" "}
       </Box>
+      <Box
+        as="div"
+        h={"120px"}
+        px={"15px"}
+        display="flex"
+        flexDirection="column"
+        justifyContent={"center"}
+        alignItems={"center"}
+        backgroundColor={"#FAFAFB"}
+      >
+        {plan === "custom" ? (
+          <HiCheckCircle size={30} color={successColor} />
+        ) : (
+          <HiXCircle size={30} color={greyColor} />
+        )}{" "}
+      </Box>
+      {mouse && (
+        <Box
+          as="div"
+          h={"50px"}
+          px={"15px"}
+          display="flex"
+          flexDirection="column"
+          justifyContent={"center"}
+          alignItems={"center"}
+          backgroundColor={"#FAFAFB"}
+        >
+          <Button
+            variant={'brand'}
+            mb={10}
+            onClick={() => {
+              if (plan === "custom") {
+                onOpen();
+              } else {
+                if (Auth.isUserAuthenticated()) {
+                  history.push("/billing");
+                } else {
+                  history.push("/signin");
+                }
+              }
+            }}
+          >
+            {plan === "custom"
+              ? "Contact Us"
+              : Auth.isUserAuthenticated()
+              ? "Choose"
+              : "Get Started"}
+          </Button>
+        </Box>
+      )}
+
+      <ContactUs isOpen={isOpen} onClose={onClose} />
     </Flex>
   );
 };
