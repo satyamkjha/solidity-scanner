@@ -723,7 +723,7 @@ export const PricingColumn: React.FC<{
         alignItems={"center"}
         backgroundColor={"#FAFAFB"}
       >
-        {planData.name !== "trial" ? (
+        {planData.name !== "Trial" ? (
           <HiCheckCircle size={30} color={successColor} />
         ) : (
           <HiXCircle size={30} color={greyColor} />
