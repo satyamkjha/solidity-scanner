@@ -155,7 +155,7 @@ export default function PricingPage() {
                   flexDirection="column"
                   justifyContent={"flex-start"}
                   alignContent={"center"}
-                  mb={"70px"}
+                  mb={"100px"}
                   w={"18vw"}
                 >
                   <Box
@@ -621,7 +621,7 @@ export const PricingColumn: React.FC<{
       alignContent={"flex-start"}
       overflow={"hidden"}
       width={mouse ? "14vw" : "12vw"}
-      mb={"70px"}
+      mb={mouse ? "0px" : "100px"}
       border={`2px solid ${mouse ? "#3E15F4" : "#D6D6D6"}`}
       _notLast={{
         borderRightWidth: mouse ? "2px" : "0px",
@@ -794,7 +794,7 @@ export const PricingColumn: React.FC<{
       {mouse && (
         <Box
           as="div"
-          h={"50px"}
+          h={"100px"}
           px={"15px"}
           display="flex"
           flexDirection="column"
@@ -804,7 +804,7 @@ export const PricingColumn: React.FC<{
         >
           <Button
             variant={'brand'}
-            mb={10}
+            my={5}
             onClick={() => {
               if (plan === "custom") {
                 onOpen();
