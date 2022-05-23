@@ -116,13 +116,25 @@ export default function ReportContainer({ summary_report }: Props) {
     "Dec",
   ];
 
+  function epoch (date: any) {
+    return Date.parse(date)
+  }
+
   let d = new Date();
 
   if (summary_report) {
     d = new Date(
       summary_report.project_summary_report.last_project_report_update_time
     );
-  }
+    console.log(epoch(d))
+
+    // summary_report.scan_summary.forEach((item, index) => {
+    //   d = new Date(item.scan_time)
+    //   scan_noepoch()
+    // })
+  } 
+
+  
 
   const issues: IssueItem[] = [];
 
@@ -942,15 +954,15 @@ export default function ReportContainer({ summary_report }: Props) {
               <Box w={"50%"} h="300px">
                 <ResponsivePie
                   data={pieData(
-                    summary_report.scan_summary[0].issue_severity_distribution
+                    summary_report.scan_summary[summary_report.scan_summary.length - 1].issue_severity_distribution
                       .critical,
-                    summary_report.scan_summary[0].issue_severity_distribution
+                    summary_report.scan_summary[summary_report.scan_summary.length - 1].issue_severity_distribution
                       .high,
-                    summary_report.scan_summary[0].issue_severity_distribution
+                    summary_report.scan_summary[summary_report.scan_summary.length - 1].issue_severity_distribution
                       .medium,
-                    summary_report.scan_summary[0].issue_severity_distribution
+                    summary_report.scan_summary[summary_report.scan_summary.length - 1].issue_severity_distribution
                       .low,
-                    summary_report.scan_summary[0].issue_severity_distribution
+                    summary_report.scan_summary[summary_report.scan_summary.length - 1].issue_severity_distribution
                       .informational
                   )}
                   margin={{ top: 40, right: 40, bottom: 40, left: 0 }}
@@ -978,46 +990,46 @@ export default function ReportContainer({ summary_report }: Props) {
                   label="Critical"
                   variant="critical"
                   count={
-                    summary_report.scan_summary[0].issue_severity_distribution
+                    summary_report.scan_summary[summary_report.scan_summary.length - 1].issue_severity_distribution
                       .critical
                   }
-                  total={summary_report.scan_summary[0].issues_count}
+                  total={summary_report.scan_summary[summary_report.scan_summary.length - 1].issues_count}
                 />
                 <VulnerabilityProgress
                   label="High"
                   variant="high"
                   count={
-                    summary_report.scan_summary[0].issue_severity_distribution
+                    summary_report.scan_summary[summary_report.scan_summary.length - 1].issue_severity_distribution
                       .high
                   }
-                  total={summary_report.scan_summary[0].issues_count}
+                  total={summary_report.scan_summary[summary_report.scan_summary.length - 1].issues_count}
                 />
                 <VulnerabilityProgress
                   label="Medium"
                   variant="medium"
                   count={
-                    summary_report.scan_summary[0].issue_severity_distribution
+                    summary_report.scan_summary[summary_report.scan_summary.length - 1].issue_severity_distribution
                       .medium
                   }
-                  total={summary_report.scan_summary[0].issues_count}
+                  total={summary_report.scan_summary[summary_report.scan_summary.length - 1].issues_count}
                 />
                 <VulnerabilityProgress
                   label="Low"
                   variant="low"
                   count={
-                    summary_report.scan_summary[0].issue_severity_distribution
+                    summary_report.scan_summary[summary_report.scan_summary.length - 1].issue_severity_distribution
                       .low
                   }
-                  total={summary_report.scan_summary[0].issues_count}
+                  total={summary_report.scan_summary[summary_report.scan_summary.length - 1].issues_count}
                 />
                 <VulnerabilityProgress
                   label="Informational"
                   variant="informational"
                   count={
-                    summary_report.scan_summary[0].issue_severity_distribution
+                    summary_report.scan_summary[summary_report.scan_summary.length - 1].issue_severity_distribution
                       .informational
                   }
-                  total={summary_report.scan_summary[0].issues_count}
+                  total={summary_report.scan_summary[summary_report.scan_summary.length - 1].issues_count}
                 />
               </Box>
             </Flex>
