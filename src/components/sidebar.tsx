@@ -160,7 +160,7 @@ const Sidebar: React.FC<{
               my: 3,
               borderLeftRadius: "15px",
               transition: "0.3s background-color",
-              cursor: 'pointer'
+              cursor: "pointer",
             }}
             onClick={() => {
               window.open("https://docs.solidityscan.com/", "_blank");
