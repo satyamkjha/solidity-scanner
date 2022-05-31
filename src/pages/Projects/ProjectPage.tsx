@@ -98,6 +98,22 @@ export const ProjectPage: React.FC = () => {
   const { projectId } = useParams<{ projectId: string }>();
   const { data, isLoading, refetch } = useScans(projectId);
 
+  let scanId: string = '';
+
+  const find_latest_scanid = (scans: ScanMeta[], count: number) => {
+    if(count < scans.length){
+      if(scans[count].scan_status !== 'scan_done'){
+        scanId = scans[count].scan_id
+      } else {
+        find_latest_scanid(scans, count++)
+      }
+    } else {
+      scanId = scans[count].scan_id     
+    }
+  }
+
+  
+
   useEffect(() => {
     let intervalId: NodeJS.Timeout;
     const refetchTillScanComplete = () => {
@@ -122,10 +138,17 @@ export const ProjectPage: React.FC = () => {
     };
 
     refetchTillScanComplete();
+
+    if(data){
+      find_latest_scanid(data.scans, 0)  
+    }
+    
     return () => {
       clearInterval(intervalId);
     };
   }, [data, refetch]);
+
+  
 
   return (
     <Box
@@ -176,6 +199,7 @@ export const ProjectPage: React.FC = () => {
                 <ScanDetails
                   scansRemaining={data.scans_remaining}
                   scans={data.scans}
+                  scanId={scanId}
                 />
               </Route>
             </Switch>
@@ -186,17 +210,18 @@ export const ProjectPage: React.FC = () => {
   );
 };
 
-const ScanDetails: React.FC<{ scansRemaining: number; scans: ScanMeta[] }> = ({
+const ScanDetails: React.FC<{ scansRemaining: number; scans: ScanMeta[], scanId: string }> = ({
   scansRemaining,
   scans,
+  scanId
 }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [isRescanLoading, setRescanLoading] = useState(false);
   const cancelRef = useRef<HTMLButtonElement | null>(null);
   const queryClient = useQueryClient();
   const [reportingStatus, setReportingStatus] = useState<string>();
-  const { projectId, scanId } =
-    useParams<{ projectId: string; scanId: string }>();
+  const { projectId } =
+    useParams<{ projectId: string }>();
   const history = useHistory();
   const { data, isLoading, refetch } = useScan(scanId);
 
@@ -477,11 +502,62 @@ const ScanDetails: React.FC<{ scansRemaining: number; scans: ScanMeta[] }> = ({
                   )}
                 </HStack>
               </Flex>
-              {data.scan_report.scan_status === "scan_incomplete" ? (
-                <IncompleteScan
-                  message={data.scan_report.scan_message}
-                  scansRemaining={scansRemaining}
-                />
+              {data.scan_report.scan_status === "scan_done" ? (
+                
+                <Tabs
+                index={tabIndex}
+                onChange={handleTabsChange}
+                variant="soft-rounded"
+                colorScheme="green"
+                isLazy
+              >
+                <TabList
+                  sx={{
+                    borderBottomWidth: "1px",
+                    borderBottomStyle: "solid",
+                    borderColor: "border",
+                    p: 4,
+                  }}
+                >
+                  <Tab mx={2}>Overview</Tab>
+                  <Tab mx={2}>Detailed Result</Tab>
+                  <Tab mx={2}>Scan History</Tab>
+                  <Tab mx={2}>Published Reports</Tab>
+                  {/* <Tab mx={2}>Advanced Scan(Beta)</Tab> */}
+                </TabList>
+                <TabPanels>
+                  <TabPanel>
+                    {data.scan_report.scan_summary && (
+                      <Overview
+                        data={data.scan_report.scan_summary}
+                        scansRemaining={scansRemaining}
+                      />
+                    )}
+                  </TabPanel>
+                  <TabPanel>
+                    {
+                      // profile.current_package === "trial" ? (
+                      //   <TrialWall />
+                      // ) : (
+                      data.scan_report.scan_details &&
+                        data.scan_report.scan_summary && (
+                          <Result
+                            scanSummary={data.scan_report.scan_summary}
+                            scanDetails={data.scan_report.scan_details}
+                            type="project"
+                          />
+                        )
+                      // )
+                    }
+                  </TabPanel>
+                  <TabPanel>
+                    <ScanHistory setTabIndex={setTabIndex} />
+                  </TabPanel>
+                  <TabPanel>
+                    <PublishedReports />
+                  </TabPanel>
+                </TabPanels>
+              </Tabs>
               ) : data.scan_report.scan_status === "scanning" ? (
                 <Flex
                   w="100%"
@@ -514,60 +590,10 @@ const ScanDetails: React.FC<{ scansRemaining: number; scans: ScanMeta[] }> = ({
                   />
                 </Flex>
               ) : (
-                <Tabs
-                  index={tabIndex}
-                  onChange={handleTabsChange}
-                  variant="soft-rounded"
-                  colorScheme="green"
-                  isLazy
-                >
-                  <TabList
-                    sx={{
-                      borderBottomWidth: "1px",
-                      borderBottomStyle: "solid",
-                      borderColor: "border",
-                      p: 4,
-                    }}
-                  >
-                    <Tab mx={2}>Overview</Tab>
-                    <Tab mx={2}>Detailed Result</Tab>
-                    <Tab mx={2}>Scan History</Tab>
-                    <Tab mx={2}>Published Reports</Tab>
-                    {/* <Tab mx={2}>Advanced Scan(Beta)</Tab> */}
-                  </TabList>
-                  <TabPanels>
-                    <TabPanel>
-                      {data.scan_report.scan_summary && (
-                        <Overview
-                          data={data.scan_report.scan_summary}
-                          scansRemaining={scansRemaining}
-                        />
-                      )}
-                    </TabPanel>
-                    <TabPanel>
-                      {
-                        // profile.current_package === "trial" ? (
-                        //   <TrialWall />
-                        // ) : (
-                        data.scan_report.scan_details &&
-                          data.scan_report.scan_summary && (
-                            <Result
-                              scanSummary={data.scan_report.scan_summary}
-                              scanDetails={data.scan_report.scan_details}
-                              type="project"
-                            />
-                          )
-                        // )
-                      }
-                    </TabPanel>
-                    <TabPanel>
-                      <ScanHistory setTabIndex={setTabIndex} />
-                    </TabPanel>
-                    <TabPanel>
-                      <PublishedReports />
-                    </TabPanel>
-                  </TabPanels>
-                </Tabs>
+                <IncompleteScan
+                message={data.scan_report.scan_message}
+                scansRemaining={scansRemaining}
+              />
               )}
             </>
           )
@@ -1121,7 +1147,7 @@ const ScanBlock: React.FC<{
   const history = useHistory();
   const { projectId } = useParams<{ projectId: string }>();
 
-  const { data, isLoading, refetch } = useScan(scan.scan_id);
+  const { data } = useScan(scan.scan_id);
 
   return (
     <Flex

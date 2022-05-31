@@ -285,7 +285,7 @@ export default function LandingPage() {
           </Heading>
           <Text color="subtle" fontSize="xl" mb={4}>
             Meet the experts behind the scenes. We are always excited to talk
-            about anything crypto ₿
+            about anything in crypto.
           </Text>
           <Flex
             as="div"
@@ -473,7 +473,7 @@ export default function LandingPage() {
                     fontSize="xl"
                     fontWeight={900}
                   >
-                    Security Researcher
+                    Research Team Lead
                   </Text>
                   <HStack>
                     <Image

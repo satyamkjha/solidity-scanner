@@ -188,16 +188,16 @@ export default function PricingPage() {
                     borderBottomWidth={0}
                   >
                     <HStack spacing={1}>
-                    <VStack spacing={1} align={"left"}>
-                      <Text
-                        ml={15}
-                        fontSize="md"
-                        textAlign="center"
-                        lineHeight="title"
-                      >
-                        Choose the subscription that suits you best
-                      </Text>
-                      {/* <Text
+                      <VStack spacing={1} align={"left"}>
+                        <Text
+                          ml={15}
+                          fontSize="md"
+                          textAlign="center"
+                          lineHeight="title"
+                        >
+                          Choose the subscription that suits you best
+                        </Text>
+                        {/* <Text
                           fontSize="xs"
                           textAlign="left"
                           lineHeight="title"
@@ -226,10 +226,10 @@ export default function PricingPage() {
                         mr={4}
                       />
                       <VStack spacing={1} align={"left"}>
-                      <Text fontSize="md" textAlign="left" lineHeight="title">
-                        Scan Credit
-                      </Text>
-                      <Text
+                        <Text fontSize="md" textAlign="left" lineHeight="title">
+                          Scan Credit
+                        </Text>
+                        <Text
                           fontSize="xs"
                           textAlign="left"
                           lineHeight="title"
@@ -237,7 +237,7 @@ export default function PricingPage() {
                         >
                           Use allotted credits to scan your solidity source code
                         </Text>
-                        </VStack>
+                      </VStack>
                     </HStack>
                   </Box>
                   <Box
@@ -257,11 +257,7 @@ export default function PricingPage() {
                         mr={4}
                       />
                       <VStack spacing={1} align={"left"}>
-                        <Text
-                          fontSize="md"
-                          textAlign="left"
-                          lineHeight="title"
-                        >
+                        <Text fontSize="md" textAlign="left" lineHeight="title">
                           Security Score
                         </Text>
                         <Text
@@ -434,7 +430,6 @@ export default function PricingPage() {
                     display="flex"
                     flexDirection="row"
                     borderLeft="2px solid #D6D6D6"
-                    
                   >
                     <HStack spacing={1}>
                       <Image
@@ -548,7 +543,8 @@ export default function PricingPage() {
                           lineHeight="title"
                           fontWeight={"300"}
                         >
-                          Verify your results and reports by web3 security experts
+                          Verify your results and reports by web3 security
+                          experts
                         </Text>
                       </VStack>
                     </HStack>
@@ -803,7 +799,7 @@ export const PricingColumn: React.FC<{
           backgroundColor={"#FAFAFB"}
         >
           <Button
-            variant={'brand'}
+            variant={"brand"}
             my={5}
             onClick={() => {
               if (plan === "custom") {

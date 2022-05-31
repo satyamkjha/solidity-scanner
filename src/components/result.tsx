@@ -269,7 +269,15 @@ const FileDetails: React.FC<FileDetailsProps> = ({ file, type }) => {
   });
   let highlightString = highlightArray.join(",");
 
-  console.log(highlightArray);
+  let codeObjArray = [];
+
+  line_nos_start.forEach((number, index) => {
+    codeObjArray.push({
+      lineStart: number,
+      lineEnd: line_nos_end[index],
+      code: "",
+    });
+  });
 
   const createGithubIssue = async () => {
     await mutation.mutateAsync();
@@ -286,6 +294,8 @@ const FileDetails: React.FC<FileDetailsProps> = ({ file, type }) => {
   const history = useHistory();
 
   const { data, isLoading } = useFileContent(scan_id, file_path, type);
+
+  console.log(data);
   return (
     <Box w="100%" position={"relative"} h={"100%"}>
       <Box
