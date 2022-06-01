@@ -98,22 +98,6 @@ export const ProjectPage: React.FC = () => {
   const { projectId } = useParams<{ projectId: string }>();
   const { data, isLoading, refetch } = useScans(projectId);
 
-  let scanId: string = '';
-
-  const find_latest_scanid = (scans: ScanMeta[], count: number) => {
-    if(count < scans.length){
-      if(scans[count].scan_status !== 'scan_done'){
-        scanId = scans[count].scan_id
-      } else {
-        find_latest_scanid(scans, count++)
-      }
-    } else {
-      scanId = scans[count].scan_id     
-    }
-  }
-
-  
-
   useEffect(() => {
     let intervalId: NodeJS.Timeout;
     const refetchTillScanComplete = () => {
@@ -139,16 +123,10 @@ export const ProjectPage: React.FC = () => {
 
     refetchTillScanComplete();
 
-    if(data){
-      find_latest_scanid(data.scans, 0)  
-    }
-    
     return () => {
       clearInterval(intervalId);
     };
   }, [data, refetch]);
-
-  
 
   return (
     <Box
@@ -199,7 +177,6 @@ export const ProjectPage: React.FC = () => {
                 <ScanDetails
                   scansRemaining={data.scans_remaining}
                   scans={data.scans}
-                  scanId={scanId}
                 />
               </Route>
             </Switch>
@@ -210,18 +187,17 @@ export const ProjectPage: React.FC = () => {
   );
 };
 
-const ScanDetails: React.FC<{ scansRemaining: number; scans: ScanMeta[], scanId: string }> = ({
+const ScanDetails: React.FC<{ scansRemaining: number; scans: ScanMeta[] }> = ({
   scansRemaining,
   scans,
-  scanId
 }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [isRescanLoading, setRescanLoading] = useState(false);
   const cancelRef = useRef<HTMLButtonElement | null>(null);
   const queryClient = useQueryClient();
   const [reportingStatus, setReportingStatus] = useState<string>();
-  const { projectId } =
-    useParams<{ projectId: string }>();
+  const { projectId, scanId } =
+    useParams<{ projectId: string; scanId: string }>();
   const history = useHistory();
   const { data, isLoading, refetch } = useScan(scanId);
 
@@ -502,63 +478,7 @@ const ScanDetails: React.FC<{ scansRemaining: number; scans: ScanMeta[], scanId:
                   )}
                 </HStack>
               </Flex>
-              {data.scan_report.scan_status === "scan_done" ? (
-                
-                <Tabs
-                index={tabIndex}
-                onChange={handleTabsChange}
-                variant="soft-rounded"
-                colorScheme="green"
-                isLazy
-              >
-                <TabList
-                  sx={{
-                    borderBottomWidth: "1px",
-                    borderBottomStyle: "solid",
-                    borderColor: "border",
-                    p: 4,
-                  }}
-                >
-                  <Tab mx={2}>Overview</Tab>
-                  <Tab mx={2}>Detailed Result</Tab>
-                  <Tab mx={2}>Scan History</Tab>
-                  <Tab mx={2}>Published Reports</Tab>
-                  {/* <Tab mx={2}>Advanced Scan(Beta)</Tab> */}
-                </TabList>
-                <TabPanels>
-                  <TabPanel>
-                    {data.scan_report.scan_summary && (
-                      <Overview
-                        data={data.scan_report.scan_summary}
-                        scansRemaining={scansRemaining}
-                      />
-                    )}
-                  </TabPanel>
-                  <TabPanel>
-                    {
-                      // profile.current_package === "trial" ? (
-                      //   <TrialWall />
-                      // ) : (
-                      data.scan_report.scan_details &&
-                        data.scan_report.scan_summary && (
-                          <Result
-                            scanSummary={data.scan_report.scan_summary}
-                            scanDetails={data.scan_report.scan_details}
-                            type="project"
-                          />
-                        )
-                      // )
-                    }
-                  </TabPanel>
-                  <TabPanel>
-                    <ScanHistory setTabIndex={setTabIndex} />
-                  </TabPanel>
-                  <TabPanel>
-                    <PublishedReports />
-                  </TabPanel>
-                </TabPanels>
-              </Tabs>
-              ) : data.scan_report.scan_status === "scanning" ? (
+              {data.scan_report.scan_status === "scanning" ? (
                 <Flex
                   w="100%"
                   h="60vh"
@@ -590,10 +510,68 @@ const ScanDetails: React.FC<{ scansRemaining: number; scans: ScanMeta[], scanId:
                   />
                 </Flex>
               ) : (
-                <IncompleteScan
-                message={data.scan_report.scan_message}
-                scansRemaining={scansRemaining}
-              />
+                <Tabs
+                  index={tabIndex}
+                  onChange={handleTabsChange}
+                  variant="soft-rounded"
+                  colorScheme="green"
+                  isLazy
+                >
+                  <TabList
+                    sx={{
+                      borderBottomWidth: "1px",
+                      borderBottomStyle: "solid",
+                      borderColor: "border",
+                      p: 4,
+                    }}
+                  >
+                    <Tab mx={2}>Overview</Tab>
+                    <Tab mx={2}>Detailed Result</Tab>
+                    <Tab mx={2}>Scan History</Tab>
+                    <Tab mx={2}>Published Reports</Tab>
+                    {/* <Tab mx={2}>Advanced Scan(Beta)</Tab> */}
+                  </TabList>
+                  <TabPanels>
+                    <TabPanel>
+                      <Overview
+                        scansRemaining={scansRemaining}
+                        scanData={data.scan_report}
+                      />
+                    </TabPanel>
+                    <TabPanel>
+                      {data.scan_report.scan_status === "scan_done" &&
+                      data.scan_report.scan_details &&
+                      data.scan_report.scan_summary ? (
+                        <Result
+                          scanSummary={data.scan_report.scan_summary}
+                          scanDetails={data.scan_report.scan_details}
+                          type="project"
+                        />
+                      ) : (
+                        <Flex
+                          w="97%"
+                          m={4}
+                          borderRadius="20px"
+                          bgColor="high-subtle"
+                          p={4}
+                        >
+                          <ScanErrorIcon size={28} />
+                          <Text fontSize={"xs"} color="high" ml={4}>
+                            {data.scan_report.scan_message
+                              ? data.scan_report.scan_message
+                              : data.scan_report.scan_status}
+                          </Text>
+                        </Flex>
+                      )}
+                    </TabPanel>
+                    <TabPanel>
+                      <ScanHistory setTabIndex={setTabIndex} />
+                    </TabPanel>
+                    <TabPanel>
+                      <PublishedReports />
+                    </TabPanel>
+                  </TabPanels>
+                </Tabs>
               )}
             </>
           )
@@ -1369,79 +1347,6 @@ const IncompleteScan: React.FC<{ message: string; scansRemaining: number }> = ({
         justifyContent="center"
         flexDirection="column"
       ></Flex>
-      <Flex w="100%" sx={{ flexDir: ["column", "column", "row"] }}>
-        <VStack w={["100%", "100%", "50%"]} mb={[8, 8, 0]}>
-          <Box w={["100%", "100%", "70%"]} h="300px">
-            <ErrorResponsivePie />
-          </Box>
-          <Box w={["70%", "70%", "60%"]}>
-            <ErrorVulnerabilityDistribution />
-          </Box>
-        </VStack>
-        <VStack
-          w={["100%", "100%", "50%"]}
-          alignItems="flex-start"
-          p={8}
-          spacing={5}
-        >
-          <HStack w="100%" justifyContent="space-between">
-            {scansRemaining && (
-              <Flex px={2}>
-                <LogoIcon size={40} />
-                <Box ml={2} mt="-4px">
-                  <Text>
-                    {scansRemaining.toLocaleString("en-US", {
-                      minimumIntegerDigits: 2,
-                      useGrouping: false,
-                    })}
-                  </Text>
-                  <Text fontSize="12px" color="subtle">
-                    Scans left
-                  </Text>
-                </Box>
-              </Flex>
-            )}
-          </HStack>
-          <Box sx={{ w: "100%", borderRadius: 15, bg: "bg.subtle", p: 4 }}>
-            <Text sx={{ fontSize: "sm", letterSpacing: "0.7px" }}>
-              SCAN STATISTICS
-            </Text>
-          </Box>
-
-          <VStack w="100%" px={4} spacing={8} fontSize="sm">
-            <HStack w="100%" justifyContent="space-between">
-              <Text>Status</Text>
-              <Text
-                sx={{
-                  color: "high",
-                  bg: "high-subtle",
-                  px: 3,
-                  py: 1,
-                  borderRadius: 20,
-                }}
-              >
-                Error
-              </Text>
-            </HStack>
-            <HStack w="100%" justifyContent="space-between">
-              <Text>Score</Text>
-              <Text color="subtle">--</Text>
-            </HStack>
-            <HStack w="100%" justifyContent="space-between">
-              <Text>Issue Count</Text>
-              <Text color="subtle">--</Text>
-            </HStack>
-            <HStack w="100%" justifyContent="space-between">
-              <Text>Duration</Text>
-              <Text color="subtle">--</Text>
-            </HStack>
-            <HStack w="100%" justifyContent="space-between">
-              <Text>Lines of code</Text>
-              <Text color="subtle">--</Text>
-            </HStack>
-          </VStack>
-        </VStack>
-      </Flex>
     </>
   );
 };

@@ -10,10 +10,12 @@ import {
   Image,
 } from "@chakra-ui/react";
 
-import VulnerabilityDistribution from "components/vulnDistribution";
-import PieChart from "components/pieChart";
-import { ScanSummary } from "common/types";
-import { LogoIcon } from "./icons";
+import VulnerabilityDistribution, {
+  ErrorVulnerabilityDistribution,
+} from "components/vulnDistribution";
+import PieChart, { ErrorResponsivePie } from "components/pieChart";
+import { Scan, ScanSummary } from "common/types";
+import { LogoIcon, ScanErrorIcon } from "./icons";
 
 const pieData = (
   critical: number,
@@ -54,131 +56,232 @@ const pieData = (
   },
 ];
 
-const Overview: React.FC<{ data: ScanSummary; scansRemaining?: number }> = ({
-  data,
-  scansRemaining,
-}) => {
-  const {
-    issues_count,
-    issue_severity_distribution: { critical, high, medium, low, informational },
-    scan_time_taken,
-    lines_analyzed_count,
-    score,
-  } = data;
-
-  console.log(issues_count);
+const Overview: React.FC<{
+  scanData: Scan;
+  scansRemaining?: number;
+}> = ({ scanData, scansRemaining }) => {
   return (
-    <Flex w="100%" sx={{ flexDir: ["column", "column", "row"] }}>
-      <VStack w={["100%", "100%", "50%"]} mb={[8, 8, 0]}>
-        <Box
-          w={["100%", "100%", "70%"]}
-          display="flex"
-          justifyContent="center"
-          alignItems={"center"}
-          h="300px"
-        >
-          {issues_count === 0 ? (
-            <Image src="/nobug.svg" alt="No Bugs Found" />
-          ) : (
-            <PieChart
-              data={pieData(critical, high, medium, low, informational)}
-            />
-          )}
-        </Box>
-        <Box w={["70%", "70%", "60%"]}>
-          <VulnerabilityDistribution
-            critical={critical}
-            high={high}
-            medium={medium}
-            low={low}
-            informational={informational}
-          />
-        </Box>
-      </VStack>
-      <VStack
-        w={["100%", "100%", "50%"]}
-        alignItems="flex-start"
-        p={8}
-        spacing={5}
-      >
-        <HStack w="100%" justifyContent="space-between">
-          {scansRemaining && (
-            <Flex px={2}>
-              <LogoIcon size={40} />
-              <Box ml={2} mt="-4px">
-                <Text>
-                  {scansRemaining.toLocaleString("en-US", {
-                    minimumIntegerDigits: 2,
-                    useGrouping: false,
-                  })}
-                </Text>
-                <Text fontSize="12px" color="subtle">
-                  Scans left
-                </Text>
-              </Box>
-            </Flex>
-          )}
-          <CircularProgress
-            value={(parseInt(score, 10) * 100) / 5}
-            color="accent"
-            thickness="4px"
-            size="65px"
-            capIsRound
+    <>
+      {scanData.scan_status === "scan_done" && scanData.scan_summary ? (
+        <Flex w="100%" sx={{ flexDir: ["column", "column", "row"] }}>
+          <VStack w={["100%", "100%", "50%"]} mb={[8, 8, 0]}>
+            <Box
+              w={["100%", "100%", "70%"]}
+              display="flex"
+              justifyContent="center"
+              alignItems={"center"}
+              h="300px"
+            >
+              {scanData.scan_summary.issues_count === 0 ? (
+                <Image src="/nobug.svg" alt="No Bugs Found" />
+              ) : (
+                <PieChart
+                  data={pieData(
+                    scanData.scan_summary.issue_severity_distribution.critical,
+                    scanData.scan_summary.issue_severity_distribution.high,
+                    scanData.scan_summary.issue_severity_distribution.medium,
+                    scanData.scan_summary.issue_severity_distribution.low,
+                    scanData.scan_summary.issue_severity_distribution
+                      .informational
+                  )}
+                />
+              )}
+            </Box>
+            <Box w={["70%", "70%", "60%"]}>
+              <VulnerabilityDistribution
+                critical={
+                  scanData.scan_summary.issue_severity_distribution.critical
+                }
+                high={scanData.scan_summary.issue_severity_distribution.high}
+                medium={
+                  scanData.scan_summary.issue_severity_distribution.medium
+                }
+                low={scanData.scan_summary.issue_severity_distribution.low}
+                informational={
+                  scanData.scan_summary.issue_severity_distribution
+                    .informational
+                }
+              />
+            </Box>
+          </VStack>
+          <VStack
+            w={["100%", "100%", "50%"]}
+            alignItems="flex-start"
+            p={8}
+            spacing={5}
           >
-            <CircularProgressLabel
-              sx={{ display: "flex", justifyContent: "center" }}
-            >
-              <Box>
-                <Text fontSize="14px" fontWeight={700} color="accent">
-                  {score}
-                </Text>
-                <Text fontSize="11px" color="subtle" mt="-4px">
-                  Score
-                </Text>
-              </Box>
-            </CircularProgressLabel>
-          </CircularProgress>
-        </HStack>
-        <Box sx={{ w: "100%", borderRadius: 15, bg: "bg.subtle", p: 4 }}>
-          <Text sx={{ fontSize: "sm", letterSpacing: "0.7px" }}>
-            SCAN STATISTICS
-          </Text>
-        </Box>
+            <HStack w="100%" justifyContent="space-between">
+              {scansRemaining && (
+                <Flex px={2}>
+                  <LogoIcon size={40} />
+                  <Box ml={2} mt="-4px">
+                    <Text>
+                      {scansRemaining.toLocaleString("en-US", {
+                        minimumIntegerDigits: 2,
+                        useGrouping: false,
+                      })}
+                    </Text>
+                    <Text fontSize="12px" color="subtle">
+                      Scans left
+                    </Text>
+                  </Box>
+                </Flex>
+              )}
+              <CircularProgress
+                value={(parseInt(scanData.scan_summary.score, 10) * 100) / 5}
+                color="accent"
+                thickness="4px"
+                size="65px"
+                capIsRound
+              >
+                <CircularProgressLabel
+                  sx={{ display: "flex", justifyContent: "center" }}
+                >
+                  <Box>
+                    <Text fontSize="14px" fontWeight={700} color="accent">
+                      {scanData.scan_summary.score}
+                    </Text>
+                    <Text fontSize="11px" color="subtle" mt="-4px">
+                      Score
+                    </Text>
+                  </Box>
+                </CircularProgressLabel>
+              </CircularProgress>
+            </HStack>
+            <Box sx={{ w: "100%", borderRadius: 15, bg: "bg.subtle", p: 4 }}>
+              <Text sx={{ fontSize: "sm", letterSpacing: "0.7px" }}>
+                SCAN STATISTICS
+              </Text>
+            </Box>
 
-        <VStack w="100%" px={4} spacing={8} fontSize="sm">
-          <HStack w="100%" justifyContent="space-between">
-            <Text>Status</Text>
-            <Text
-              sx={{
-                color: "green.500",
-                bg: "green.50",
-                px: 3,
-                py: 1,
-                borderRadius: 20,
-              }}
-            >
-              Completed
-            </Text>
-          </HStack>
-          <HStack w="100%" justifyContent="space-between">
-            <Text>Score</Text>
-            <Text color="subtle">{score}</Text>
-          </HStack>
-          <HStack w="100%" justifyContent="space-between">
-            <Text>Issue Count</Text>
-            <Text color="subtle">{issues_count}</Text>
-          </HStack>
-          <HStack w="100%" justifyContent="space-between">
-            <Text>Duration</Text>
-            <Text color="subtle">{scan_time_taken}</Text>
-          </HStack>
-          <HStack w="100%" justifyContent="space-between">
-            <Text>Lines of code</Text>
-            <Text color="subtle">{lines_analyzed_count}</Text>
-          </HStack>
-        </VStack>
-      </VStack>
-    </Flex>
+            <VStack w="100%" px={4} spacing={8} fontSize="sm">
+              <HStack w="100%" justifyContent="space-between">
+                <Text>Status</Text>
+                <Text
+                  sx={{
+                    color: "green.500",
+                    bg: "green.50",
+                    px: 3,
+                    py: 1,
+                    borderRadius: 20,
+                  }}
+                >
+                  Completed
+                </Text>
+              </HStack>
+              <HStack w="100%" justifyContent="space-between">
+                <Text>Score</Text>
+                <Text color="subtle">{scanData.scan_summary.score}</Text>
+              </HStack>
+              <HStack w="100%" justifyContent="space-between">
+                <Text>Issue Count</Text>
+                <Text color="subtle">{scanData.scan_summary.issues_count}</Text>
+              </HStack>
+              <HStack w="100%" justifyContent="space-between">
+                <Text>Duration</Text>
+                <Text color="subtle">
+                  {scanData.scan_summary.scan_time_taken}
+                </Text>
+              </HStack>
+              <HStack w="100%" justifyContent="space-between">
+                <Text>Lines of code</Text>
+                <Text color="subtle">
+                  {scanData.scan_summary.lines_analyzed_count}
+                </Text>
+              </HStack>
+            </VStack>
+          </VStack>
+        </Flex>
+      ) : (
+        <Flex w="100%" sx={{ flexDir: ["column", "column", "row"] }}>
+          <VStack w={["100%", "100%", "50%"]} mb={[8, 8, 0]}>
+            <Box w={["100%", "100%", "70%"]} h="300px">
+              <ErrorResponsivePie />
+            </Box>
+            <Box w={["70%", "70%", "60%"]}>
+              <ErrorVulnerabilityDistribution />
+            </Box>
+          </VStack>
+          <VStack
+            w={["100%", "100%", "50%"]}
+            alignItems="flex-start"
+            p={8}
+            spacing={5}
+          >
+            <HStack w="100%" justifyContent="space-between">
+              {scansRemaining && (
+                <Flex px={2}>
+                  <LogoIcon size={40} />
+                  <Box ml={2} mt="-4px">
+                    <Text>
+                      {scansRemaining.toLocaleString("en-US", {
+                        minimumIntegerDigits: 2,
+                        useGrouping: false,
+                      })}
+                    </Text>
+                    <Text fontSize="12px" color="subtle">
+                      Scans left
+                    </Text>
+                  </Box>
+                </Flex>
+              )}
+              <Flex
+                w="97%"
+                m={4}
+                borderRadius="20px"
+                bgColor="high-subtle"
+                p={4}
+              >
+                <ScanErrorIcon size={28} />
+                <Text fontSize={"xs"} color="high" ml={4}>
+                  {scanData.scan_message
+                    ? scanData.scan_message
+                    : scanData.scan_status}
+                </Text>
+              </Flex>
+            </HStack>
+            <Box sx={{ w: "100%", borderRadius: 15, bg: "bg.subtle", p: 4 }}>
+              <Text sx={{ fontSize: "sm", letterSpacing: "0.7px" }}>
+                SCAN STATISTICS
+              </Text>
+            </Box>
+
+            <VStack w="100%" px={4} spacing={8} fontSize="sm">
+              <HStack w="100%" justifyContent="space-between">
+                <Text>Status</Text>
+                <Text
+                  sx={{
+                    color: "high",
+                    bg: "high-subtle",
+                    px: 3,
+                    py: 1,
+                    borderRadius: 20,
+                  }}
+                >
+                  Error
+                </Text>
+              </HStack>
+              <HStack w="100%" justifyContent="space-between">
+                <Text>Score</Text>
+                <Text color="subtle">--</Text>
+              </HStack>
+              <HStack w="100%" justifyContent="space-between">
+                <Text>Issue Count</Text>
+                <Text color="subtle">--</Text>
+              </HStack>
+              <HStack w="100%" justifyContent="space-between">
+                <Text>Duration</Text>
+                <Text color="subtle">--</Text>
+              </HStack>
+              <HStack w="100%" justifyContent="space-between">
+                <Text>Lines of code</Text>
+                <Text color="subtle">--</Text>
+              </HStack>
+            </VStack>
+          </VStack>
+        </Flex>
+      )}
+    </>
   );
 };
 
