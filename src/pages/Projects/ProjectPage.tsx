@@ -98,17 +98,17 @@ export const ProjectPage: React.FC = () => {
   const { projectId } = useParams<{ projectId: string }>();
   const { data, isLoading, refetch } = useScans(projectId);
 
-  let scanId: string = '';
+  const [scanId, setScanId] = useState('');
 
   const find_latest_scanid = (scans: ScanMeta[], count: number) => {
     if(count < scans.length){
       if(scans[count].scan_status !== 'scan_done'){
-        scanId = scans[count].scan_id
+         setScanId(scans[count].scan_id)
       } else {
         find_latest_scanid(scans, count++)
       }
     } else {
-      scanId = scans[count].scan_id     
+      setScanId(scans[0].scan_id)
     }
   }
 
@@ -196,11 +196,11 @@ export const ProjectPage: React.FC = () => {
             </Flex>
             <Switch>
               <Route exact path="/projects/:projectId/:scanId">
-                <ScanDetails
+                {scanId !== '' && <ScanDetails
                   scansRemaining={data.scans_remaining}
                   scans={data.scans}
                   scanId={scanId}
-                />
+                />}    
               </Route>
             </Switch>
           </>
