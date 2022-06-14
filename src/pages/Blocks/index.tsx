@@ -191,7 +191,7 @@ const BlockCard: React.FC<{ scan: Scan }> = ({ scan }) => {
               > */}
               <Image
                 mx={3}
-                src={`/blockscan/${contract_platform}.svg`}
+                src={`/blockscan/${'cronos'}.svg`}
                 alt="Product screenshot"
                 h={"40px"}
                 w={"40px"}
