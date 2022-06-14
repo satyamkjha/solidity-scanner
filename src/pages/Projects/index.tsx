@@ -182,7 +182,7 @@ const ProjectCard: React.FC<{ project: Project }> = ({ project }) => {
 
   return (
     <>
-      {scan_status === "scan_done" ? (
+      {scan_status === "scan_done" || scan_status === 'scanning' ? (
         <Flex
           onClick={() => {
             if (scan_status === "scan_done")
