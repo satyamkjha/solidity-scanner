@@ -364,8 +364,8 @@ const ContractForm: React.FC = () => {
       { value: "testnet", label: "FTM Testnet" },
     ],
     cronos: [
-      { value: "mainnet", label: "FTM Mainnet" },
-      { value: "testnet", label: "FTM Testnet" },
+      { value: "mainnet", label: "Cronos Mainnet" },
+      { value: "testnet", label: "Cronos Testnet" },
     ],
   };
   const [platform, setPlatform] = React.useState("etherscan");
