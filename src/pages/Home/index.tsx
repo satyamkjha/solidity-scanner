@@ -30,10 +30,17 @@ import {
   VStack,
   Progress,
   CloseButton,
+  FormErrorMessage,
 } from "@chakra-ui/react";
 import { FaFileCode } from "react-icons/fa";
 import { AiOutlineProject } from "react-icons/ai";
-import { BlockCredit, SolidityFileIcon, UploadIcon } from "components/icons";
+import {
+  BlockCredit,
+  ProjectIcon,
+  ScanErrorIcon,
+  SolidityFileIcon,
+  UploadIcon,
+} from "components/icons";
 import API from "helpers/api";
 import { useOverview } from "hooks/useOverview";
 import { useProfile } from "hooks/useProfile";
@@ -41,6 +48,7 @@ import VulnerabilityProgress from "components/VulnerabilityProgress";
 import { useSupportedChains } from "hooks/useSupportedPlatforms";
 import { sentenceCapitalize } from "helpers/helperFunction";
 import { useDropzone } from "react-dropzone";
+import { url } from "inspector";
 
 const Home: React.FC = () => {
   const { data } = useOverview();
@@ -564,6 +572,11 @@ const UploadForm: React.FC = () => {
   const { data: profileData } = useProfile();
 
   const [step, setStep] = useState(0);
+  const [error, setError] = useState(false);
+  const [errorMsg, setErrorMsg] = useState("");
+
+  const [name, setName] = useState("");
+  const [urlList, setUrlList] = useState<string[]>([]);
 
   const {
     getRootProps,
@@ -572,7 +585,7 @@ const UploadForm: React.FC = () => {
     isDragAccept,
     isDragReject,
     acceptedFiles,
-  } = useDropzone({maxFiles:2});
+  } = useDropzone({ maxFiles: 5 });
 
   const style = useMemo(
     () => ({
@@ -586,55 +599,85 @@ const UploadForm: React.FC = () => {
 
   useEffect(() => {
     if (acceptedFiles.length !== 0) {
+      acceptedFiles.forEach((files) => {
+        if (!checkFileExt(files.name)) {
+          setErrorMsg(
+            "You can only upload solidity files with .sol extension for scanning."
+          );
+          return;
+        }
+      });
       setStep(1);
-      
-      
+      uploadFiles();
     }
   }, [acceptedFiles]);
 
   const uploadFiles = async () => {
-    let urlList = acceptedFiles.map(async (file)=> {
-      return await getPreassignedURL(acceptedFiles[0].name, acceptedFiles[0]);
-    })
-    console.log(urlList)
-  }
+    acceptedFiles.forEach((file) => {
+      getPreassignedURL(file.name, file);
+    });
+  };
+
+  useEffect(() => {
+    console.log(urlList.length, acceptedFiles.length)
+    if((urlList.length === acceptedFiles.length) && (urlList.length > 0)){
+      setStep(2)
+    }
+  }, [urlList])
 
   const checkFileExt = (fileName: string) => {
-    let fileExt = fileName.split('.')
-    if(fileExt[fileExt.length - 1] === "sol"){
-      return true
+    let fileExt = fileName.split(".");
+    if (fileExt[fileExt.length - 1] === "sol") {
+      return true;
     }
-    return false
-  }
+    return false;
+  };
 
   const getPreassignedURL = async (fileName: string, file: File) => {
     const { data } = await API.get<{ status: string; result: { url: string } }>(
       `/api-get-presigned-url?file_name=${fileName}`
     );
     let r = new FileReader();
-    r.onload = function () {
-      console.log(r.result);
+    r.onload = async function () {
       if (r.result) {
-        postDataToS3(r.result, data.result.url);
+        let uploadResult = await postDataToS3(r.result, data.result.url);
+        if (uploadResult) {
+          setUrlList([...urlList, data.result.url])
+          console.log(urlList)
+        } else {
+          setStep(0);
+          setError(true);
+          setErrorMsg("There was a problem while uploding the files.");
+        }
       }
     };
     r.readAsBinaryString(file);
-    return data.result.url
   };
 
-  
+  const postDataToS3 = async (
+    fileData: string | ArrayBuffer,
+    urlString: string
+  ) => {
+    const { data, status } = await API.put(urlString, fileData, {
+      headers: {
+        "Content-Type": "application/octet-stream",
+      },
+    });
 
-  const postDataToS3 = async (data: string | ArrayBuffer, urlString: string) => {
-    await API.put(urlString, data,{ headers: {
-      'Content-Type': 'application/octet-stream',
-  }});
+    if (status === 200) {
+      return true;
+    }
+    return false;
   };
 
-  const files = acceptedFiles.map((file) => (
-    <li key={file.name}>
-      {file.name} - {file.size} bytes
-    </li>
-  ));
+  const startFileScan = async () => {
+    const { data } = await API.post("", {
+      file_urls: urlList,
+      project_name: "files test",
+      project_visibility: "public",
+      project_type: "new",
+    });
+  };
 
   return (
     <>
@@ -708,6 +751,8 @@ const UploadForm: React.FC = () => {
               placeholder="Enter Project Name"
               variant="brand"
               size="lg"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
             />
           </InputGroup>
         </VStack>
@@ -715,13 +760,31 @@ const UploadForm: React.FC = () => {
         {step === 0 ? (
           <div {...getRootProps({ style })}>
             <input {...getInputProps()} />
-            <UploadIcon size={80} />
-            <p style={{ marginTop: "20px" }}>
-              Drag and drop or <span style={{ color: "#3300FF" }}> Browse</span>{" "}
-              to upload
-            </p>
+            {error ? (
+              <>
+                <ScanErrorIcon size={80} />
+                <p style={{ marginTop: "20px" }}>
+                  {errorMsg}. Please
+                  <span
+                    onClick={() => setError(false)}
+                    style={{ color: "#3300FF" }}
+                  >
+                    {" "}
+                    try again
+                  </span>
+                </p>
+              </>
+            ) : (
+              <>
+                <UploadIcon size={80} />
+                <p style={{ marginTop: "20px" }}>
+                  Drag and drop or{" "}
+                  <span style={{ color: "#3300FF" }}> Browse</span> to upload
+                </p>
+              </>
+            )}
           </div>
-        ) : (
+        ) : step === 1 ? (
           <Box
             sx={{ w: "100%", borderRadius: "20px", p: 10, my: 2 }}
             justifyContent="flex-start"
@@ -746,14 +809,55 @@ const UploadForm: React.FC = () => {
               <Spinner color={"gray.500"} />
             </HStack>
           </Box>
+        ) : (
+          <>
+            <Box
+              sx={{ w: "100%", borderRadius: "20px", p: 10, my: 2 }}
+              justifyContent="flex-start"
+              alignItems={"flex-start"}
+              background={"#FFFFFF"}
+              border={"1.5px dashed #D6D6D6"}
+              height="300px"
+              overflowY={"scroll"}
+            >
+              <VStack h="fit-content" spacing={2} width="100%">
+                <HStack width="100%" justify={"flex-end"}>
+                  <CloseButton onClick={() => setStep(0)} />
+                </HStack>
+                <HStack>
+                  <ProjectIcon size={30} />
+                  <Text>{name}</Text>
+                </HStack>
+                <Text fontSize={"10px"} color={"gray.500"}>
+                  0{acceptedFiles.length} files
+                </Text>
+                {acceptedFiles.map((file) => (
+                  <Box
+                    width={"100%"}
+                    justifyContent={"center"}
+                    alignItems="center"
+                    textAlign={"center"}
+                    fontSize="13px"
+                    borderRadius={4}
+                    color="gray.500"
+                    backgroundColor="#F8FAFC"
+                    py={3}
+                  >
+                    {file.name}
+                  </Box>
+                ))}
+              </VStack>
+            </Box>
+          </>
         )}
 
         <Button
           type="submit"
           variant="brand"
-          isDisabled={profileData?.credits === 0}
           mt={4}
           w="100%"
+          disabled={step !== 2}
+          onClick={startFileScan}
         >
           Start Scan
         </Button>

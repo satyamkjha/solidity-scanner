@@ -199,7 +199,7 @@ const ScanDetails: React.FC<{ scansRemaining: number; scans: ScanMeta[] }> = ({
   const { projectId, scanId } =
     useParams<{ projectId: string; scanId: string }>();
   const history = useHistory();
-  const { data, isLoading, refetch } = useScan(scanId);
+  const { data: scanData, isLoading, refetch } = useScan(scanId);
 
   const [tabIndex, setTabIndex] = React.useState(0);
 
@@ -219,21 +219,21 @@ const ScanDetails: React.FC<{ scansRemaining: number; scans: ScanMeta[] }> = ({
   const [open, setOpen] = useState(false);
 
   useEffect(() => {
-    setReportingStatus(data?.scan_report.reporting_status);
+    setReportingStatus(scanData?.scan_report.reporting_status);
     let intervalId: NodeJS.Timeout;
     const refetchTillScanComplete = () => {
       if (
-        data &&
-        (data.scan_report.scan_status === "scanning" ||
-          data.scan_report.reporting_status === "generating_report")
+        scanData &&
+        (scanData.scan_report.scan_status === "scanning" ||
+        scanData.scan_report.reporting_status === "generating_report")
       ) {
         intervalId = setInterval(async () => {
           await refetch();
           if (
-            (data && data.scan_report.scan_status === "scan_done") ||
-            data.scan_report.reporting_status === "report_generated"
+            (scanData && scanData.scan_report.scan_status === "scan_done") ||
+            scanData.scan_report.reporting_status === "report_generated"
           ) {
-            setReportingStatus(data?.scan_report.reporting_status);
+            setReportingStatus(scanData?.scan_report.reporting_status);
             clearInterval(intervalId);
           }
         }, 1000);
@@ -244,7 +244,7 @@ const ScanDetails: React.FC<{ scansRemaining: number; scans: ScanMeta[] }> = ({
     return () => {
       clearInterval(intervalId);
     };
-  }, [data, refetch]);
+  }, [scanData, refetch]);
 
   const onClose = () => setIsOpen(false);
 
@@ -275,8 +275,8 @@ const ScanDetails: React.FC<{ scansRemaining: number; scans: ScanMeta[] }> = ({
   };
 
   const scan_name =
-    data &&
-    scans.find((scan) => scan.scan_id === data.scan_report.scan_id)?.scan_name;
+  scanData &&
+    scans.find((scan) => scan.scan_id === scanData.scan_report.scan_id)?.scan_name;
 
   const [projectName, setProjectName] = useState("");
   const [repoUrl, setRepoUrl] = useState("");
@@ -311,18 +311,18 @@ const ScanDetails: React.FC<{ scansRemaining: number; scans: ScanMeta[] }> = ({
   };
 
   useEffect(() => {
-    if (data && data.scan_report.reporting_status === "report_generated") {
-      getReportData(projectId, data.scan_report.latest_report_id);
-      setProjectName(data.scan_report.project_name);
-      setRepoUrl(data.scan_report.project_url);
+    if (scanData && scanData.scan_report.reporting_status === "report_generated") {
+      getReportData(projectId, scanData.scan_report.latest_report_id);
+      setProjectName(scanData.scan_report.project_name);
+      setRepoUrl(scanData.scan_report.project_url);
       const d = new Date();
       setDatePublished(
         `${d.getDate()}-${monthNames[d.getMonth()]}-${d.getFullYear()}`
       );
     }
-  }, [data]);
+  }, [scanData]);
 
-  const reportId = data?.scan_report.latest_report_id;
+  const reportId = scanData?.scan_report.latest_report_id;
 
   const publishReport = async () => {
     const { data } = await API.post("/api-publish-report/", {
@@ -378,7 +378,7 @@ const ScanDetails: React.FC<{ scansRemaining: number; scans: ScanMeta[] }> = ({
             <Spinner />
           </Flex>
         ) : (
-          data &&
+          scanData &&
           profile &&
           plans && (
             <>
@@ -394,7 +394,8 @@ const ScanDetails: React.FC<{ scansRemaining: number; scans: ScanMeta[] }> = ({
                 }}
               >
                 <HStack spacing={[8]} mb={[4, 4, 0]}>
-                  <Tooltip label="Rescan" aria-label="A tooltip" mt={2}>
+
+                  {!scanData.scan_report.file_url_list &&  <Tooltip label="Rescan" aria-label="A tooltip" mt={2}>
                     <Button
                       size="sm"
                       colorScheme="white"
@@ -405,26 +406,27 @@ const ScanDetails: React.FC<{ scansRemaining: number; scans: ScanMeta[] }> = ({
                       _hover={{
                         opacity:
                           scansRemaining === 0 ||
-                          data.scan_report.scan_status === "scanning"
+                          scanData.scan_report.scan_status === "scanning"
                             ? 0.4
                             : 0.9,
                       }}
                       isDisabled={
                         scansRemaining === 0 ||
-                        data.scan_report.scan_status === "scanning"
+                        scanData.scan_report.scan_status === "scanning"
                       }
                     >
                       <Flex sx={{ flexDir: "column", alignItems: "center" }}>
                         <RescanIcon size={60} />
                       </Flex>
                     </Button>
-                  </Tooltip>
+                  </Tooltip>}
+                 
                 </HStack>
                 <HStack
                   spacing={8}
                   alignSelf={["flex-end", "flex-end", "auto"]}
                 >
-                  {data.scan_report.reporting_status === "report_generated" && (
+                  {scanData.scan_report.reporting_status === "report_generated" && (
                     <Button
                       variant="accent-ghost"
                       isDisabled={
@@ -442,7 +444,7 @@ const ScanDetails: React.FC<{ scansRemaining: number; scans: ScanMeta[] }> = ({
                       Publish Report
                     </Button>
                   )}
-                  {data.scan_report.scan_status === "scan_done" && (
+                  {scanData.scan_report.scan_status === "scan_done" && (
                     <Button
                       variant={"accent-outline"}
                       isDisabled={
@@ -456,7 +458,7 @@ const ScanDetails: React.FC<{ scansRemaining: number; scans: ScanMeta[] }> = ({
                           generateReport();
                         } else if (reportingStatus === "report_generated") {
                           window.open(
-                            `http://${document.location.host}/report/project/${projectId}/${data?.scan_report.latest_report_id}`,
+                            `http://${document.location.host}/report/project/${projectId}/${scanData?.scan_report.latest_report_id}`,
                             "_blank"
                           );
                         }
@@ -478,7 +480,7 @@ const ScanDetails: React.FC<{ scansRemaining: number; scans: ScanMeta[] }> = ({
                   )}
                 </HStack>
               </Flex>
-              {data.scan_report.scan_status === "scanning" ? (
+              {scanData.scan_report.scan_status === "scanning" ? (
                 <Flex
                   w="100%"
                   h="60vh"
@@ -535,16 +537,16 @@ const ScanDetails: React.FC<{ scansRemaining: number; scans: ScanMeta[] }> = ({
                     <TabPanel>
                       <Overview
                         scansRemaining={scansRemaining}
-                        scanData={data.scan_report}
+                        scanData={scanData.scan_report}
                       />
                     </TabPanel>
                     <TabPanel>
-                      {data.scan_report.scan_status === "scan_done" &&
-                      data.scan_report.scan_details &&
-                      data.scan_report.scan_summary ? (
+                      {scanData.scan_report.scan_status === "scan_done" &&
+                      scanData.scan_report.scan_details &&
+                      scanData.scan_report.scan_summary ? (
                         <Result
-                          scanSummary={data.scan_report.scan_summary}
-                          scanDetails={data.scan_report.scan_details}
+                          scanSummary={scanData.scan_report.scan_summary}
+                          scanDetails={scanData.scan_report.scan_details}
                           type="project"
                         />
                       ) : (
@@ -557,9 +559,9 @@ const ScanDetails: React.FC<{ scansRemaining: number; scans: ScanMeta[] }> = ({
                         >
                           <ScanErrorIcon size={28} />
                           <Text fontSize={"xs"} color="high" ml={4}>
-                            {data.scan_report.scan_message
-                              ? data.scan_report.scan_message
-                              : data.scan_report.scan_status}
+                            {scanData.scan_report.scan_message
+                              ? scanData.scan_report.scan_message
+                              : scanData.scan_report.scan_status}
                           </Text>
                         </Flex>
                       )}
