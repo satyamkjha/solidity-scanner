@@ -537,7 +537,7 @@ const BlockPage: React.FC = () => {
                 <TabPanels>
                   <TabPanel>
                     {scanData.scan_report.scan_summary && (
-                      <Overview data={scanData.scan_report.scan_summary} />
+                      <Overview scanData={scanData.scan_report} />
                     )}
                   </TabPanel>
                   <TabPanel>

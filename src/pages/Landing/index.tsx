@@ -650,7 +650,7 @@ export default function LandingPage() {
           <Heading fontSize="3xl" mb={4}>
             Fully automated smart contract audit system <br /> to help{" "}
             <Box as="span" sx={{ color: "accent" }}>
-              secure your poducts faster
+              secure your products faster
             </Box>
           </Heading>
           <Text color="subtle" fontSize="xl" mb={4}>
