@@ -673,7 +673,7 @@ const UploadForm: React.FC = () => {
   const startFileScan = async () => {
     const { data } = await API.post("", {
       file_urls: urlList,
-      project_name: "files test",
+      project_name: name,
       project_visibility: "public",
       project_type: "new",
     });
