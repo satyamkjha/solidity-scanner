@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useMemo } from "react";
 import { useQueryClient } from "react-query";
 import { useHistory, Link as RouterLink } from "react-router-dom";
 import { useForm } from "react-hook-form";
@@ -28,16 +28,27 @@ import {
   Link,
   useToast,
   VStack,
+  Progress,
+  CloseButton,
+  FormErrorMessage,
 } from "@chakra-ui/react";
 import { FaFileCode } from "react-icons/fa";
 import { AiOutlineProject } from "react-icons/ai";
-import { BlockCredit } from "components/icons";
+import {
+  BlockCredit,
+  ProjectIcon,
+  ScanErrorIcon,
+  SolidityFileIcon,
+  UploadIcon,
+} from "components/icons";
 import API from "helpers/api";
 import { useOverview } from "hooks/useOverview";
 import { useProfile } from "hooks/useProfile";
 import VulnerabilityProgress from "components/VulnerabilityProgress";
 import { useSupportedChains } from "hooks/useSupportedPlatforms";
 import { sentenceCapitalize } from "helpers/helperFunction";
+import { useDropzone } from "react-dropzone";
+import { url } from "inspector";
 
 const Home: React.FC = () => {
   const { data } = useOverview();
@@ -65,6 +76,7 @@ const Home: React.FC = () => {
             <TabList mb="1em">
               <Tab width="50%">GitHub Application</Tab>
               <Tab width="50%">Blockchain Contract</Tab>
+              <Tab width="50%">Upload Contract</Tab>
             </TabList>
             <TabPanels>
               <TabPanel>
@@ -72,6 +84,9 @@ const Home: React.FC = () => {
               </TabPanel>
               <TabPanel>
                 <ContractForm />
+              </TabPanel>
+              <TabPanel>
+                <UploadForm />
               </TabPanel>
             </TabPanels>
           </Tabs>
@@ -517,6 +532,337 @@ const ContractForm: React.FC = () => {
           </Button>
         </Stack>
       </form>
+    </>
+  );
+};
+
+const baseStyle = {
+  flex: 1,
+  display: "flex",
+  flexDirection: "column",
+  alignItems: "center",
+  padding: "40px 20px",
+  borderWidth: 2,
+  borderRadius: 5,
+  borderColor: "#eeeeee",
+  borderStyle: "dashed",
+  backgroundColor: "#ffffff",
+  color: "#000000",
+  outline: "none",
+  width: "100%",
+  marginTop: "20px",
+  transition: "border .24s ease-in-out",
+};
+
+const focusedStyle = {
+  borderColor: "#2196f3",
+};
+
+const acceptStyle = {
+  borderColor: "#00e676",
+};
+
+const rejectStyle = {
+  borderColor: "#ff1744",
+};
+
+const UploadForm: React.FC = () => {
+  const queryClient = useQueryClient();
+  const history = useHistory();
+  const { data: profileData } = useProfile();
+
+  const [step, setStep] = useState(0);
+  const [error, setError] = useState(false);
+  const [errorMsg, setErrorMsg] = useState("");
+
+  const [name, setName] = useState("");
+  const [urlList, setUrlList] = useState<string[]>([]);
+
+  const {
+    getRootProps,
+    getInputProps,
+    isFocused,
+    isDragAccept,
+    isDragReject,
+    acceptedFiles,
+  } = useDropzone({ maxFiles: 5 });
+
+  const style = useMemo(
+    () => ({
+      ...baseStyle,
+      ...(isFocused ? focusedStyle : {}),
+      ...(isDragAccept ? acceptStyle : {}),
+      ...(isDragReject ? rejectStyle : {}),
+    }),
+    [isFocused, isDragAccept, isDragReject]
+  );
+
+  useEffect(() => {
+    if (acceptedFiles.length !== 0) {
+      acceptedFiles.forEach((files) => {
+        if (!checkFileExt(files.name)) {
+          setErrorMsg(
+            "You can only upload solidity files with .sol extension for scanning."
+          );
+          return;
+        }
+      });
+      setStep(1);
+      uploadFiles();
+    }
+  }, [acceptedFiles]);
+
+  const uploadFiles = async () => {
+    acceptedFiles.forEach((file) => {
+      getPreassignedURL(file.name, file);
+    });
+  };
+
+  useEffect(() => {
+    console.log(urlList.length, acceptedFiles.length)
+    if((urlList.length === acceptedFiles.length) && (urlList.length > 0)){
+      setStep(2)
+    }
+  }, [urlList])
+
+  const checkFileExt = (fileName: string) => {
+    let fileExt = fileName.split(".");
+    if (fileExt[fileExt.length - 1] === "sol") {
+      return true;
+    }
+    return false;
+  };
+
+  const getPreassignedURL = async (fileName: string, file: File) => {
+    const { data } = await API.get<{ status: string; result: { url: string } }>(
+      `/api-get-presigned-url?file_name=${fileName}`
+    );
+    let r = new FileReader();
+    r.onload = async function () {
+      if (r.result) {
+        let uploadResult = await postDataToS3(r.result, data.result.url);
+        if (uploadResult) {
+          setUrlList([...urlList, data.result.url])
+          console.log(urlList)
+        } else {
+          setStep(0);
+          setError(true);
+          setErrorMsg("There was a problem while uploding the files.");
+        }
+      }
+    };
+    r.readAsBinaryString(file);
+  };
+
+  const postDataToS3 = async (
+    fileData: string | ArrayBuffer,
+    urlString: string
+  ) => {
+    const { data, status } = await API.put(urlString, fileData, {
+      headers: {
+        "Content-Type": "application/octet-stream",
+      },
+    });
+
+    if (status === 200) {
+      return true;
+    }
+    return false;
+  };
+
+  const startFileScan = async () => {
+    const { data } = await API.post("/api-project-scan/", {
+      file_urls: urlList,
+      project_name: name,
+      project_visibility: "public",
+      project_type: "new",
+    });
+    history.push("/projects");
+  };
+
+  return (
+    <>
+      <Text
+        sx={{
+          fontSize: "2xl",
+          fontWeight: 600,
+          mt: 6,
+          textAlign: "center",
+        }}
+      >
+        Upload contract
+      </Text>
+      <Flex
+        justifyContent="center"
+        alignItems="center"
+        flexDir="column"
+        w="100%"
+        py={4}
+        my={4}
+        bg={
+          (profileData?.credits || 0) > 0
+            ? "rgba(223, 255, 233, 0.5)"
+            : "high-subtle"
+        }
+        border="1px solid"
+        borderColor={(profileData?.credits || 0) > 0 ? "brand-dark" : "high"}
+        borderRadius="25px"
+      >
+        <Flex alignItems="center">
+          <BlockCredit />
+          <Text fontSize="2xl" fontWeight="700" ml={2}>
+            {profileData?.credits}
+          </Text>
+        </Flex>
+        <Text
+          sx={{
+            color: (profileData?.credits || 0) > 0 ? "low" : "high",
+            fontWeight: 600,
+            textAlign: "center",
+          }}
+        >
+          Contract scan credits
+        </Text>
+      </Flex>
+
+      <Text sx={{ color: "subtle", textAlign: "center", mb: 6 }}>
+        Upload the Contract files. The maximum no of files that you can upload
+        is 5 and the total file size cannot exceed 5 MB.
+      </Text>
+
+      <Flex
+        flexDir={"column"}
+        justifyContent={"flex-start"}
+        alignItems="flex-start"
+        my={8}
+        width={"100%"}
+      >
+        <VStack alignItems={"flex-start"} width="100%">
+          <Text mb={0} fontSize="sm">
+            Project Name
+          </Text>
+
+          <InputGroup mt={0} alignItems="center">
+            <InputLeftElement
+              height="48px"
+              children={<Icon as={AiOutlineProject} color="gray.300" />}
+            />
+            <Input
+              isRequired
+              placeholder="Enter Project Name"
+              variant="brand"
+              size="lg"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+            />
+          </InputGroup>
+        </VStack>
+
+        {step === 0 ? (
+          <div {...getRootProps({ style })}>
+            <input {...getInputProps()} />
+            {error ? (
+              <>
+                <ScanErrorIcon size={80} />
+                <p style={{ marginTop: "20px" }}>
+                  {errorMsg}. Please
+                  <span
+                    onClick={() => setError(false)}
+                    style={{ color: "#3300FF" }}
+                  >
+                    {" "}
+                    try again
+                  </span>
+                </p>
+              </>
+            ) : (
+              <>
+                <UploadIcon size={80} />
+                <p style={{ marginTop: "20px" }}>
+                  Drag and drop or{" "}
+                  <span style={{ color: "#3300FF" }}> Browse</span> to upload
+                </p>
+              </>
+            )}
+          </div>
+        ) : step === 1 ? (
+          <Box
+            sx={{ w: "100%", borderRadius: "20px", p: 10, my: 2 }}
+            justifyContent="flex-start"
+            alignItems={"flex-start"}
+            background={"#FFFFFF"}
+            border={"1.5px dashed #D6D6D6"}
+          >
+            <HStack justify={"space-between"}>
+              <HStack align={"flex-end"} my={4}>
+                <SolidityFileIcon size={25} />
+                <Text fontSize={"14px"}>{acceptedFiles[0].name}</Text>
+                <Text fontSize={"15px"}>|</Text>
+                <Text fontSize={"10px"} color={"gray.500"}>
+                  0{acceptedFiles.length} files
+                </Text>
+              </HStack>
+              <CloseButton onClick={() => setStep(0)} />
+            </HStack>
+            <Progress variant={"blue"} size="xs" value={70} />
+            <HStack mt={4} justify={"space-between"}>
+              <Text color={"gray.500"}>Uploading...</Text>
+              <Spinner color={"gray.500"} />
+            </HStack>
+          </Box>
+        ) : (
+          <>
+            <Box
+              sx={{ w: "100%", borderRadius: "20px", p: 10, my: 2 }}
+              justifyContent="flex-start"
+              alignItems={"flex-start"}
+              background={"#FFFFFF"}
+              border={"1.5px dashed #D6D6D6"}
+              height="300px"
+              overflowY={"scroll"}
+            >
+              <VStack h="fit-content" spacing={2} width="100%">
+                <HStack width="100%" justify={"flex-end"}>
+                  <CloseButton onClick={() => setStep(0)} />
+                </HStack>
+                <HStack>
+                  <ProjectIcon size={30} />
+                  <Text>{name}</Text>
+                </HStack>
+                <Text fontSize={"10px"} color={"gray.500"}>
+                  0{acceptedFiles.length} files
+                </Text>
+                {acceptedFiles.map((file) => (
+                  <Box
+                    width={"100%"}
+                    justifyContent={"center"}
+                    alignItems="center"
+                    textAlign={"center"}
+                    fontSize="13px"
+                    borderRadius={4}
+                    color="gray.500"
+                    backgroundColor="#F8FAFC"
+                    py={3}
+                  >
+                    {file.name}
+                  </Box>
+                ))}
+              </VStack>
+            </Box>
+          </>
+        )}
+
+        <Button
+          type="submit"
+          variant="brand"
+          mt={4}
+          w="100%"
+          disabled={step !== 2}
+          onClick={startFileScan}
+        >
+          Start Scan
+        </Button>
+      </Flex>
     </>
   );
 };
