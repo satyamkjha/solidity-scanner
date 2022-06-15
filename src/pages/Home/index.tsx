@@ -612,24 +612,27 @@ const UploadForm: React.FC = () => {
       });
       setStep(1);
       uploadFiles();
+    
     }
   }, [acceptedFiles]);
 
   const uploadFiles = async () => {
-    var results = []
-    acceptedFiles.forEach((file) => {
-      getPreassignedURL(file.name, file);
+    let results = await acceptedFiles.map(async (file) => {
+      return getPreassignedURL(file.name, file);
     });
+     Promise.all(results).then((res)=> {
+      console.log(res);
+      setUrlList([...res])
+      
+     })
   };
 
   useEffect(() => {
     console.log(count, acceptedFiles.length)
-    if(urlList.length === acceptedFiles.length){
-      if(urlList.length > 0){
+    if((urlList.length === acceptedFiles.length) && (urlList.length > 0) && (name !== '')){
         setStep(2)
-      } 
     }
-  }, [count])
+  }, [urlList])
 
   const checkFileExt = (fileName: string) => {
     let fileExt = fileName.split(".");
@@ -647,16 +650,19 @@ const UploadForm: React.FC = () => {
     r.onload = async function () {
       if (r.result) {
         let uploadResult = await postDataToS3(r.result, data.result.url);
-        if (uploadResult) {
-          setUrlList([...urlList, data.result.url])
-        } else {
-          setStep(0);
-          setError(true);
-          setErrorMsg("There was a problem while uploding the files.");
-        }
+        // if (uploadResult) {
+        //   setUrlList([...urlList, data.result.url])
+        // } else {
+        //   setStep(0);
+        //   setError(true);
+        //   setErrorMsg("There was a problem while uploding the files.");
+        // }
+        // setUrlList([...urlList, data.result.url])
       }
     };
     r.readAsBinaryString(file);
+
+    return data.result.url
   };
 
   const postDataToS3 = async (
