@@ -571,10 +571,11 @@ const UploadForm: React.FC = () => {
   const history = useHistory();
   const { data: profileData } = useProfile();
 
+  let count: number = 0;
+
   const [step, setStep] = useState(0);
   const [error, setError] = useState(false);
   const [errorMsg, setErrorMsg] = useState("");
-
   const [name, setName] = useState("");
   const [urlList, setUrlList] = useState<string[]>([]);
 
@@ -597,6 +598,8 @@ const UploadForm: React.FC = () => {
     [isFocused, isDragAccept, isDragReject]
   );
 
+
+
   useEffect(() => {
     if (acceptedFiles.length !== 0) {
       acceptedFiles.forEach((files) => {
@@ -609,19 +612,25 @@ const UploadForm: React.FC = () => {
       });
       setStep(1);
       uploadFiles();
+    
     }
   }, [acceptedFiles]);
 
   const uploadFiles = async () => {
-    acceptedFiles.forEach((file) => {
-      getPreassignedURL(file.name, file);
+    let results = await acceptedFiles.map(async (file) => {
+      return getPreassignedURL(file.name, file);
     });
+     Promise.all(results).then((res)=> {
+      console.log(res);
+      setUrlList([...res])
+      
+     })
   };
 
   useEffect(() => {
-    console.log(urlList.length, acceptedFiles.length)
-    if((urlList.length === acceptedFiles.length) && (urlList.length > 0)){
-      setStep(2)
+    console.log(count, acceptedFiles.length)
+    if((urlList.length === acceptedFiles.length) && (urlList.length > 0) && (name !== '')){
+        setStep(2)
     }
   }, [urlList])
 
@@ -641,29 +650,30 @@ const UploadForm: React.FC = () => {
     r.onload = async function () {
       if (r.result) {
         let uploadResult = await postDataToS3(r.result, data.result.url);
-        if (uploadResult) {
-          setUrlList([...urlList, data.result.url])
-          console.log(urlList)
-        } else {
-          setStep(0);
-          setError(true);
-          setErrorMsg("There was a problem while uploding the files.");
-        }
+        // if (uploadResult) {
+        //   setUrlList([...urlList, data.result.url])
+        // } else {
+        //   setStep(0);
+        //   setError(true);
+        //   setErrorMsg("There was a problem while uploding the files.");
+        // }
+        // setUrlList([...urlList, data.result.url])
       }
     };
     r.readAsBinaryString(file);
+
+    return data.result.url
   };
 
   const postDataToS3 = async (
     fileData: string | ArrayBuffer,
     urlString: string
   ) => {
-    const { data, status } = await API.put(urlString, fileData, {
+    const { status } = await API.put(urlString, fileData, {
       headers: {
         "Content-Type": "application/octet-stream",
       },
     });
-
     if (status === 200) {
       return true;
     }
@@ -857,7 +867,6 @@ const UploadForm: React.FC = () => {
           variant="brand"
           mt={4}
           w="100%"
-          disabled={step !== 2}
           onClick={startFileScan}
         >
           Start Scan
