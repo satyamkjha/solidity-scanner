@@ -571,10 +571,11 @@ const UploadForm: React.FC = () => {
   const history = useHistory();
   const { data: profileData } = useProfile();
 
+  let count: number = 0;
+
   const [step, setStep] = useState(0);
   const [error, setError] = useState(false);
   const [errorMsg, setErrorMsg] = useState("");
-
   const [name, setName] = useState("");
   const [urlList, setUrlList] = useState<string[]>([]);
 
@@ -597,6 +598,8 @@ const UploadForm: React.FC = () => {
     [isFocused, isDragAccept, isDragReject]
   );
 
+
+
   useEffect(() => {
     if (acceptedFiles.length !== 0) {
       acceptedFiles.forEach((files) => {
@@ -613,17 +616,20 @@ const UploadForm: React.FC = () => {
   }, [acceptedFiles]);
 
   const uploadFiles = async () => {
+    var results = []
     acceptedFiles.forEach((file) => {
       getPreassignedURL(file.name, file);
     });
   };
 
   useEffect(() => {
-    console.log(urlList.length, acceptedFiles.length)
-    if((urlList.length === acceptedFiles.length) && (urlList.length > 0)){
-      setStep(2)
+    console.log(count, acceptedFiles.length)
+    if(urlList.length === acceptedFiles.length){
+      if(urlList.length > 0){
+        setStep(2)
+      } 
     }
-  }, [urlList])
+  }, [count])
 
   const checkFileExt = (fileName: string) => {
     let fileExt = fileName.split(".");
@@ -643,7 +649,6 @@ const UploadForm: React.FC = () => {
         let uploadResult = await postDataToS3(r.result, data.result.url);
         if (uploadResult) {
           setUrlList([...urlList, data.result.url])
-          console.log(urlList)
         } else {
           setStep(0);
           setError(true);
@@ -658,12 +663,11 @@ const UploadForm: React.FC = () => {
     fileData: string | ArrayBuffer,
     urlString: string
   ) => {
-    const { data, status } = await API.put(urlString, fileData, {
+    const { status } = await API.put(urlString, fileData, {
       headers: {
         "Content-Type": "application/octet-stream",
       },
     });
-
     if (status === 200) {
       return true;
     }
@@ -857,7 +861,6 @@ const UploadForm: React.FC = () => {
           variant="brand"
           mt={4}
           w="100%"
-          disabled={step !== 2}
           onClick={startFileScan}
         >
           Start Scan
