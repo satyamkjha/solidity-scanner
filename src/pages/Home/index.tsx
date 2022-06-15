@@ -567,7 +567,7 @@ const UploadForm: React.FC = () => {
     isDragAccept,
     isDragReject,
     acceptedFiles,
-  } = useDropzone();
+  } = useDropzone({maxFiles:2});
 
   const style = useMemo(
     () => ({
@@ -579,38 +579,50 @@ const UploadForm: React.FC = () => {
     [isFocused, isDragAccept, isDragReject]
   );
 
-  var r = new FileReader();
-
-  const [urlString, setUrl] = useState("");
-
   useEffect(() => {
     if (acceptedFiles.length !== 0) {
       setStep(1);
-      getPreassignedURL(acceptedFiles[0].name);
+      
+      
     }
   }, [acceptedFiles]);
 
-  const getPreassignedURL = async (fileName: string) => {
+  const uploadFiles = async () => {
+    let urlList = acceptedFiles.map(async (file)=> {
+      return await getPreassignedURL(acceptedFiles[0].name, acceptedFiles[0]);
+    })
+    console.log(urlList)
+  }
+
+  const checkFileExt = (fileName: string) => {
+    let fileExt = fileName.split('.')
+    if(fileExt[fileExt.length - 1] === "sol"){
+      return true
+    }
+    return false
+  }
+
+  const getPreassignedURL = async (fileName: string, file: File) => {
     const { data } = await API.get<{ status: string; result: { url: string } }>(
       `/api-get-presigned-url?file_name=${fileName}`
     );
-    setUrl(data.result.url);   
+    let r = new FileReader();
+    r.onload = function () {
+      console.log(r.result);
+      if (r.result) {
+        postDataToS3(r.result, data.result.url);
+      }
+    };
+    r.readAsBinaryString(file);
+    return data.result.url
   };
 
-  useEffect(() => {
-    if(urlString !== ''){
-      r.onload = function () {
-        console.log(r.result);
-        if (r.result) {
-          postDataToS3(r.result);
-        }
-      };
-      r.readAsBinaryString(acceptedFiles[0]);
-    }
-  }, [urlString])
+  
 
-  const postDataToS3 = async (data: string | ArrayBuffer) => {
-    await API.post(urlString, data);
+  const postDataToS3 = async (data: string | ArrayBuffer, urlString: string) => {
+    await API.put(urlString, data,{ headers: {
+      'Content-Type': 'application/octet-stream',
+  }});
   };
 
   const files = acceptedFiles.map((file) => (
@@ -718,7 +730,7 @@ const UploadForm: React.FC = () => {
                 <Text fontSize={"14px"}>{acceptedFiles[0].name}</Text>
                 <Text fontSize={"15px"}>|</Text>
                 <Text fontSize={"10px"} color={"gray.500"}>
-                  {acceptedFiles.length} files
+                  0{acceptedFiles.length} files
                 </Text>
               </HStack>
               <CloseButton onClick={() => setStep(0)} />
