@@ -671,12 +671,13 @@ const UploadForm: React.FC = () => {
   };
 
   const startFileScan = async () => {
-    const { data } = await API.post("", {
+    const { data } = await API.post("/api-project-scan/", {
       file_urls: urlList,
       project_name: name,
       project_visibility: "public",
       project_type: "new",
     });
+    history.push("/projects");
   };
 
   return (
