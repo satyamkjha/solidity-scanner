@@ -632,7 +632,7 @@ const UploadForm: React.FC = () => {
     if((urlList.length === acceptedFiles.length) && (urlList.length > 0) && (name !== '')){
         setStep(2)
     }
-  }, [urlList])
+  }, [urlList, name])
 
   const checkFileExt = (fileName: string) => {
     let fileExt = fileName.split(".");
@@ -814,7 +814,7 @@ const UploadForm: React.FC = () => {
               </HStack>
               <CloseButton onClick={() => setStep(0)} />
             </HStack>
-            <Progress variant={"blue"} size="xs" value={70} />
+            <Progress variant={"blue"} size="xs" isIndeterminate />
             <HStack mt={4} justify={"space-between"}>
               <Text color={"gray.500"}>Uploading...</Text>
               <Spinner color={"gray.500"} />
@@ -823,7 +823,7 @@ const UploadForm: React.FC = () => {
         ) : (
           <>
             <Box
-              sx={{ w: "100%", borderRadius: "20px", p: 10, my: 2 }}
+              sx={{ w: "100%", borderRadius: "20px", px:20, pt:2, pb: 10, my: 2 }}
               justifyContent="flex-start"
               alignItems={"flex-start"}
               background={"#FFFFFF"}
