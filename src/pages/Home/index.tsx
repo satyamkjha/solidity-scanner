@@ -598,8 +598,6 @@ const UploadForm: React.FC = () => {
     [isFocused, isDragAccept, isDragReject]
   );
 
-
-
   useEffect(() => {
     if (acceptedFiles.length !== 0) {
       acceptedFiles.forEach((files) => {
@@ -611,7 +609,7 @@ const UploadForm: React.FC = () => {
         }
       });
       setStep(1);
-      uploadFiles();   
+      uploadFiles();
     }
   }, [acceptedFiles]);
 
@@ -619,19 +617,18 @@ const UploadForm: React.FC = () => {
     let results = await acceptedFiles.map(async (file) => {
       return getPreassignedURL(file.name, file);
     });
-     Promise.all(results).then((res)=> {
+    Promise.all(results).then((res) => {
       console.log(res);
-      setUrlList([...res])
-      
-     })
+      setUrlList([...res]);
+    });
   };
 
   useEffect(() => {
-    console.log(count, acceptedFiles.length)
-    if((urlList.length === acceptedFiles.length) && (urlList.length > 0)){
-        setStep(2)
+    console.log(count, acceptedFiles.length);
+    if (urlList.length === acceptedFiles.length && urlList.length > 0) {
+      setStep(2);
     }
-  }, [urlList])
+  }, [urlList]);
 
   const checkFileExt = (fileName: string) => {
     let fileExt = fileName.split(".");
@@ -661,7 +658,7 @@ const UploadForm: React.FC = () => {
     };
     r.readAsBinaryString(file);
 
-    return data.result.url
+    return data.result.url;
   };
 
   const postDataToS3 = async (
@@ -791,8 +788,9 @@ const UploadForm: React.FC = () => {
                   Drag and drop or{" "}
                   <span style={{ color: "#3300FF" }}> Browse</span> to upload
                 </p>
-                <p style={{ fontSize: '15px', color: '#D3D3D3'}}>
-                  You can upload upto 5 files whose sixe must not exceed above 5 MB
+                <p style={{ fontSize: "15px", color: "#D3D3D3" }}>
+                  You can upload upto 5 files whose sixe must not exceed above 5
+                  MB
                 </p>
               </>
             )}
@@ -814,10 +812,12 @@ const UploadForm: React.FC = () => {
                   0{acceptedFiles.length} files
                 </Text>
               </HStack>
-              <CloseButton onClick={() => {
-                setStep(0)
-                setUrlList([])
-              }} />
+              <CloseButton
+                onClick={() => {
+                  setStep(0);
+                  setUrlList([]);
+                }}
+              />
             </HStack>
             <Progress variant={"blue"} size="xs" isIndeterminate />
             <HStack mt={4} justify={"space-between"}>
@@ -828,7 +828,14 @@ const UploadForm: React.FC = () => {
         ) : (
           <>
             <Box
-              sx={{ w: "100%", borderRadius: "20px", px:20, pt:2, pb: 10, my: 2 }}
+              sx={{
+                w: "100%",
+                borderRadius: "20px",
+                px: 20,
+                pt: 2,
+                pb: 10,
+                my: 2,
+              }}
               justifyContent="flex-start"
               alignItems={"flex-start"}
               background={"#FFFFFF"}
@@ -838,10 +845,12 @@ const UploadForm: React.FC = () => {
             >
               <VStack h="fit-content" spacing={2} width="100%">
                 <HStack width="100%" justify={"flex-end"}>
-                  <CloseButton onClick={() => {
-                    setStep(0)
-                    setUrlList([])
-                  }} />
+                  <CloseButton
+                    onClick={() => {
+                      setStep(0);
+                      setUrlList([]);
+                    }}
+                  />
                 </HStack>
                 <HStack>
                   <ProjectIcon size={30} />
@@ -875,7 +884,7 @@ const UploadForm: React.FC = () => {
           variant="brand"
           mt={4}
           w="100%"
-          disabled={(step < 2) || (name === '')}
+          disabled={step < 2 || name === ""}
           onClick={startFileScan}
         >
           Start Scan

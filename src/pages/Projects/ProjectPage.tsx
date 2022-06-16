@@ -225,7 +225,7 @@ const ScanDetails: React.FC<{ scansRemaining: number; scans: ScanMeta[] }> = ({
       if (
         scanData &&
         (scanData.scan_report.scan_status === "scanning" ||
-        scanData.scan_report.reporting_status === "generating_report")
+          scanData.scan_report.reporting_status === "generating_report")
       ) {
         intervalId = setInterval(async () => {
           await refetch();
@@ -275,8 +275,9 @@ const ScanDetails: React.FC<{ scansRemaining: number; scans: ScanMeta[] }> = ({
   };
 
   const scan_name =
-  scanData &&
-    scans.find((scan) => scan.scan_id === scanData.scan_report.scan_id)?.scan_name;
+    scanData &&
+    scans.find((scan) => scan.scan_id === scanData.scan_report.scan_id)
+      ?.scan_name;
 
   const [projectName, setProjectName] = useState("");
   const [repoUrl, setRepoUrl] = useState("");
@@ -311,7 +312,10 @@ const ScanDetails: React.FC<{ scansRemaining: number; scans: ScanMeta[] }> = ({
   };
 
   useEffect(() => {
-    if (scanData && scanData.scan_report.reporting_status === "report_generated") {
+    if (
+      scanData &&
+      scanData.scan_report.reporting_status === "report_generated"
+    ) {
       getReportData(projectId, scanData.scan_report.latest_report_id);
       setProjectName(scanData.scan_report.project_name);
       setRepoUrl(scanData.scan_report.project_url);
@@ -394,39 +398,40 @@ const ScanDetails: React.FC<{ scansRemaining: number; scans: ScanMeta[] }> = ({
                 }}
               >
                 <HStack spacing={[8]} mb={[4, 4, 0]}>
-
-                  {!scanData.scan_report.file_url_list &&  <Tooltip label="Rescan" aria-label="A tooltip" mt={2}>
-                    <Button
-                      size="sm"
-                      colorScheme="white"
-                      transition="0.3s opacity"
-                      height="58px"
-                      width="58px"
-                      onClick={() => setIsOpen(true)}
-                      _hover={{
-                        opacity:
+                  {!scanData.scan_report.file_url_list && (
+                    <Tooltip label="Rescan" aria-label="A tooltip" mt={2}>
+                      <Button
+                        size="sm"
+                        colorScheme="white"
+                        transition="0.3s opacity"
+                        height="58px"
+                        width="58px"
+                        onClick={() => setIsOpen(true)}
+                        _hover={{
+                          opacity:
+                            scansRemaining === 0 ||
+                            scanData.scan_report.scan_status === "scanning"
+                              ? 0.4
+                              : 0.9,
+                        }}
+                        isDisabled={
                           scansRemaining === 0 ||
                           scanData.scan_report.scan_status === "scanning"
-                            ? 0.4
-                            : 0.9,
-                      }}
-                      isDisabled={
-                        scansRemaining === 0 ||
-                        scanData.scan_report.scan_status === "scanning"
-                      }
-                    >
-                      <Flex sx={{ flexDir: "column", alignItems: "center" }}>
-                        <RescanIcon size={60} />
-                      </Flex>
-                    </Button>
-                  </Tooltip>}
-                 
+                        }
+                      >
+                        <Flex sx={{ flexDir: "column", alignItems: "center" }}>
+                          <RescanIcon size={60} />
+                        </Flex>
+                      </Button>
+                    </Tooltip>
+                  )}
                 </HStack>
                 <HStack
                   spacing={8}
                   alignSelf={["flex-end", "flex-end", "auto"]}
                 >
-                  {scanData.scan_report.reporting_status === "report_generated" && (
+                  {scanData.scan_report.reporting_status ===
+                    "report_generated" && (
                     <Button
                       variant="accent-ghost"
                       isDisabled={
