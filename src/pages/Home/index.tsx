@@ -628,7 +628,7 @@ const UploadForm: React.FC = () => {
 
   useEffect(() => {
     console.log(count, acceptedFiles.length)
-    if((urlList.length === acceptedFiles.length) && (urlList.length > 0) && (name !== '')){
+    if((urlList.length === acceptedFiles.length) && (urlList.length > 0)){
         setStep(2)
     }
   }, [urlList])
@@ -875,7 +875,7 @@ const UploadForm: React.FC = () => {
           variant="brand"
           mt={4}
           w="100%"
-          disabled={step < 2 && name !== ''}
+          disabled={(step < 2) || (name === '')}
           onClick={startFileScan}
         >
           Start Scan
