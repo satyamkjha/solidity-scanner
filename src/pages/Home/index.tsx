@@ -611,8 +611,7 @@ const UploadForm: React.FC = () => {
         }
       });
       setStep(1);
-      uploadFiles();
-    
+      uploadFiles();   
     }
   }, [acceptedFiles]);
 
@@ -632,7 +631,7 @@ const UploadForm: React.FC = () => {
     if((urlList.length === acceptedFiles.length) && (urlList.length > 0) && (name !== '')){
         setStep(2)
     }
-  }, [urlList, name])
+  }, [urlList])
 
   const checkFileExt = (fileName: string) => {
     let fileExt = fileName.split(".");
@@ -792,6 +791,9 @@ const UploadForm: React.FC = () => {
                   Drag and drop or{" "}
                   <span style={{ color: "#3300FF" }}> Browse</span> to upload
                 </p>
+                <p style={{ fontSize: '15px', color: '#D3D3D3'}}>
+                  You can upload upto 5 files whose sixe must not exceed above 5 MB
+                </p>
               </>
             )}
           </div>
@@ -812,7 +814,10 @@ const UploadForm: React.FC = () => {
                   0{acceptedFiles.length} files
                 </Text>
               </HStack>
-              <CloseButton onClick={() => setStep(0)} />
+              <CloseButton onClick={() => {
+                setStep(0)
+                setUrlList([])
+              }} />
             </HStack>
             <Progress variant={"blue"} size="xs" isIndeterminate />
             <HStack mt={4} justify={"space-between"}>
@@ -833,7 +838,10 @@ const UploadForm: React.FC = () => {
             >
               <VStack h="fit-content" spacing={2} width="100%">
                 <HStack width="100%" justify={"flex-end"}>
-                  <CloseButton onClick={() => setStep(0)} />
+                  <CloseButton onClick={() => {
+                    setStep(0)
+                    setUrlList([])
+                  }} />
                 </HStack>
                 <HStack>
                   <ProjectIcon size={30} />
@@ -867,6 +875,7 @@ const UploadForm: React.FC = () => {
           variant="brand"
           mt={4}
           w="100%"
+          disabled={step < 2 && name !== ''}
           onClick={startFileScan}
         >
           Start Scan
