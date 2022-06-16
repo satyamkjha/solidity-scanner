@@ -53,6 +53,7 @@ export type Scan = {
   project_url: string;
   project_name: string;
   project_id: string;
+  file_url_list?: string[];
   contract_address?: string;
   contract_platform?: string;
   compilerversion?: string;

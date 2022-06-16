@@ -220,7 +220,7 @@ const Billing: React.FC = () => {
                     </Text>
                   </HStack>
                   <HStack ml={5} justifyContent={"flex-start"} width={"30%"}>
-                    {selectedPlan === 'custom' ? (
+                    {selectedPlan === "custom" ? (
                       <HiCheckCircle size={30} color={successColor} />
                     ) : (
                       <HiXCircle size={30} color={greyColor} />
@@ -326,7 +326,6 @@ const PricingPlan: React.FC<{
             : planData.name === "On Demand"
             ? "Pay as you go"
             : ""}
-          
         </Text>
 
         {!selected && <Divider w={"90%"} />}
@@ -475,7 +474,6 @@ const PricingPlan: React.FC<{
                     : planData.name === "On Demand"
                     ? "Pay as you go"
                     : ""}
-                  
                 </Text>
                 <Text mx={6} mt={4} sx={{ fontWeight: 500 }}>
                   {planData.name}
@@ -556,7 +554,7 @@ const PricingPlan: React.FC<{
                     </Text>
                   </HStack>
                   <HStack mt={2} justify={"flex-start"}>
-                    {plan === 'custom' ? (
+                    {plan === "custom" ? (
                       <HiCheckCircle size={20} color={successColor} />
                     ) : (
                       <HiXCircle size={20} color={greyColor} />
@@ -724,14 +722,14 @@ const CurrentPlan: React.FC<{
             </Text>
           </HStack>
           <HStack mt={2} justify={"flex-start"}>
-            {plan.name === 'Custom' ? (
+            {plan.name === "Custom" ? (
               <HiCheckCircle size={20} color={successColor} />
             ) : (
               <HiXCircle size={20} color={greyColor} />
             )}
 
             <Text fontSize={"sm"} ml={5}>
-             White Glove Services
+              White Glove Services
             </Text>
           </HStack>
         </Flex>

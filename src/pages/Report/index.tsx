@@ -19,7 +19,6 @@ import {
   ModalHeader,
   ModalOverlay,
   useDisclosure,
-  Checkbox,
   Accordion,
   AccordionButton,
   AccordionIcon,
@@ -28,6 +27,7 @@ import {
   useToast,
   Spinner,
 } from "@chakra-ui/react";
+import { Checkbox } from "react-input-checkbox";
 import { useReport } from "hooks/useReport";
 import { ResponsivePie } from "@nivo/pie";
 import { Logo, SeverityIcon } from "components/icons";
@@ -147,7 +147,8 @@ const UpdateRowComp = ({
           >
             {issue.status !== "FIXED" && (
               <Checkbox
-                isChecked={fps}
+                theme="material-checkbox"
+                value={fps}
                 onChange={() => {
                   if (wntFx) {
                     setwntFx(!wntFx);
@@ -163,8 +164,7 @@ const UpdateRowComp = ({
                   setFalsePositive([...newfalsePositive]);
                   setWontFix([...newwontfix]);
                 }}
-                size={"lg"}
-              ></Checkbox>
+              />
             )}
           </Flex>
           <Flex
@@ -177,7 +177,8 @@ const UpdateRowComp = ({
           >
             {issue.status !== "FIXED" && (
               <Checkbox
-                isChecked={wntFx}
+                theme="material-checkbox"
+                value={wntFx}
                 onChange={() => {
                   if (fps) {
                     setFps(!fps);
@@ -193,8 +194,7 @@ const UpdateRowComp = ({
                   setFalsePositive([...newfalsePositive]);
                   setWontFix([...newwontfix]);
                 }}
-                size={"lg"}
-              ></Checkbox>
+              />
             )}
           </Flex>
         </Flex>
