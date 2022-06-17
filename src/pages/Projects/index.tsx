@@ -326,25 +326,28 @@ const ProjectCard: React.FC<{ project: Project }> = ({ project }) => {
                   Last scanned {timeSince(new Date(date_updated))}
                 </Text>
               </Box>
-              <Tooltip label="Rescan" aria-label="A tooltip" mt={2}>
-                <Button
-                  size="sm"
-                  colorScheme="white"
-                  height="58px"
-                  width="58px"
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    setIsOpen(true);
-                  }}
-                  transition="0.3s opacity"
-                  _hover={{ opacity: scans_remaining === 0 ? 0.4 : 0.9 }}
-                  isDisabled={scans_remaining === 0}
-                >
-                  <Flex sx={{ flexDir: "column", alignItems: "center" }}>
-                    <RescanIcon size={60} />
-                  </Flex>
-                </Button>
-              </Tooltip>
+              {project.project_url === 'File Scan' && (
+                 <Tooltip label="Rescan" aria-label="A tooltip" mt={2}>
+                 <Button
+                   size="sm"
+                   colorScheme="white"
+                   height="58px"
+                   width="58px"
+                   onClick={(e) => {
+                     e.stopPropagation();
+                     setIsOpen(true);
+                   }}
+                   transition="0.3s opacity"
+                   _hover={{ opacity: scans_remaining === 0 ? 0.4 : 0.9 }}
+                   isDisabled={scans_remaining === 0}
+                 >
+                   <Flex sx={{ flexDir: "column", alignItems: "center" }}>
+                     <RescanIcon size={60} />
+                   </Flex>
+                 </Button>
+               </Tooltip>
+              )}
+             
             </Flex>
           </Flex>
           <Box

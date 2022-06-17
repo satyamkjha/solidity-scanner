@@ -681,7 +681,8 @@ const ScanDetails: React.FC<{ scansRemaining: number; scans: ScanMeta[] }> = ({
                       </Text>
                     </HStack>
                   </HStack>
-                  <HStack
+                  {repoUrl !== 'File Scan' && 
+                  (<HStack
                     alignItems="center"
                     spacing={3}
                     px={5}
@@ -713,9 +714,9 @@ const ScanDetails: React.FC<{ scansRemaining: number; scans: ScanMeta[] }> = ({
                         {repoUrl}
                       </Text>
                     </HStack>
-                  </HStack>
-
-                  <HStack
+                  </HStack>)}
+                  
+                    {commitHash && (<HStack
                     alignItems="center"
                     spacing={3}
                     px={5}
@@ -747,7 +748,8 @@ const ScanDetails: React.FC<{ scansRemaining: number; scans: ScanMeta[] }> = ({
                         {commitHash}
                       </Text>
                     </HStack>
-                  </HStack>
+                  </HStack>)}
+                  
 
                   <HStack
                     alignItems="center"
