@@ -326,7 +326,7 @@ const ProjectCard: React.FC<{ project: Project }> = ({ project }) => {
                   Last scanned {timeSince(new Date(date_updated))}
                 </Text>
               </Box>
-              {project.project_url === 'File Scan' && (
+              {project.project_url !== 'File Scan' && (
                  <Tooltip label="Rescan" aria-label="A tooltip" mt={2}>
                  <Button
                    size="sm"
