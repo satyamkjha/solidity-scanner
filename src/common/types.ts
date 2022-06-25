@@ -11,11 +11,27 @@ export type Profile = {
   current_package: string;
   projects_remaining: number;
   package_recharge_date: string;
+  package_end_date: string;
   package_validity: number;
   _integrations: {
     github: IntegrationData;
     slack: IntegrationData;
     jira: IntegrationData;
+  };
+  is_cancellable: boolean;
+  payment_method: string;
+  subscription?: {
+    end_date: string;
+    start_date: string;
+    renewal_date: string;
+  };
+  payment_type: string;
+  payment_via: string;
+  payment_details?: {
+    brand: string;
+    last_4_digits: string;
+    exp_year: number;
+    exp_month: number;
   };
 };
 
@@ -212,4 +228,31 @@ export type Plan = {
   github: boolean;
   report: boolean;
   publishable_report: boolean;
+};
+
+export type Transaction = {
+  date: string;
+  package: string;
+  currency: string;
+  amount: string;
+  order_id: string;
+  payment_status: string;
+  payment_platform: string;
+  payment_type: string;
+  invoice_url?: string;
+};
+
+export type TransactionList = {
+  data: Transaction[];
+};
+
+export type InvoiceList = {
+  data: Invoice[];
+};
+
+export type Invoice = {
+  invoice_id: string;
+  date: string;
+  invoice_status: string;
+  subscription: string;
 };

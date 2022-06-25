@@ -681,75 +681,77 @@ const ScanDetails: React.FC<{ scansRemaining: number; scans: ScanMeta[] }> = ({
                       </Text>
                     </HStack>
                   </HStack>
-                  {repoUrl !== 'File Scan' && 
-                  (<HStack
-                    alignItems="center"
-                    spacing={3}
-                    px={5}
-                    py={3}
-                    w={"100%"}
-                    fontSize="14px"
-                    bgColor={"white"}
-                    border={"2px solid #EDF2F7"}
-                    borderRadius={"16px"}
-                  >
-                    <Text
-                      fontSize="md"
-                      fontWeight={"600"}
-                      color={"gray.500"}
-                      width={"30%"}
-                    >
-                      Link to the repository{" "}
-                    </Text>
+                  {repoUrl !== "File Scan" && (
                     <HStack
                       alignItems="center"
                       spacing={3}
-                      width={"70%"}
+                      px={5}
+                      py={3}
+                      w={"100%"}
+                      fontSize="14px"
                       bgColor={"white"}
+                      border={"2px solid #EDF2F7"}
                       borderRadius={"16px"}
                     >
-                      <FaFileCode />
-
-                      <Text isTruncated fontSize="md" fontWeight={"600"}>
-                        {repoUrl}
+                      <Text
+                        fontSize="md"
+                        fontWeight={"600"}
+                        color={"gray.500"}
+                        width={"30%"}
+                      >
+                        Link to the repository{" "}
                       </Text>
+                      <HStack
+                        alignItems="center"
+                        spacing={3}
+                        width={"70%"}
+                        bgColor={"white"}
+                        borderRadius={"16px"}
+                      >
+                        <FaFileCode />
+
+                        <Text isTruncated fontSize="md" fontWeight={"600"}>
+                          {repoUrl}
+                        </Text>
+                      </HStack>
                     </HStack>
-                  </HStack>)}
-                  
-                    {commitHash && (<HStack
-                    alignItems="center"
-                    spacing={3}
-                    px={5}
-                    py={3}
-                    w={"100%"}
-                    fontSize="14px"
-                    bgColor={"white"}
-                    border={"2px solid #EDF2F7"}
-                    borderRadius={"16px"}
-                  >
-                    <Text
-                      fontSize="md"
-                      fontWeight={"600"}
-                      color={"gray.500"}
-                      width={"30%"}
-                    >
-                      Git commit hash{" "}
-                    </Text>
+                  )}
+
+                  {commitHash && (
                     <HStack
                       alignItems="center"
                       spacing={3}
-                      width={"70%"}
+                      px={5}
+                      py={3}
+                      w={"100%"}
+                      fontSize="14px"
                       bgColor={"white"}
+                      border={"2px solid #EDF2F7"}
                       borderRadius={"16px"}
                     >
-                      <FaGithub />
-
-                      <Text isTruncated fontSize="md" fontWeight={"600"}>
-                        {commitHash}
+                      <Text
+                        fontSize="md"
+                        fontWeight={"600"}
+                        color={"gray.500"}
+                        width={"30%"}
+                      >
+                        Git commit hash{" "}
                       </Text>
+                      <HStack
+                        alignItems="center"
+                        spacing={3}
+                        width={"70%"}
+                        bgColor={"white"}
+                        borderRadius={"16px"}
+                      >
+                        <FaGithub />
+
+                        <Text isTruncated fontSize="md" fontWeight={"600"}>
+                          {commitHash}
+                        </Text>
+                      </HStack>
                     </HStack>
-                  </HStack>)}
-                  
+                  )}
 
                   <HStack
                     alignItems="center"
