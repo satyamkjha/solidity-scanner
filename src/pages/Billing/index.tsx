@@ -93,7 +93,7 @@ const Billing: React.FC = () => {
             data.current_package === "expired" ||
             data.current_package === "ondemand" ? (
               <>
-                {transactionList.data[0].payment_status === "open" && (
+                {transactionList.data.length > 0 && transactionList.data[0].payment_status === "open" && (
                   <LatestInvoice
                     transactionData={transactionList.data[0]}
                     selectedPlan={transactionList.data[0].package}
