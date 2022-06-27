@@ -43,6 +43,7 @@ import {
   AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogOverlay,
+  toast,
 } from "@chakra-ui/react";
 
 import { AiOutlineCheckCircle } from "react-icons/ai";
@@ -533,9 +534,20 @@ const CurrentPlan: React.FC<{
   const successColor = "#289F4C";
   const greyColor = "#BDBDBD";
 
+  const toast = useToast()
+
   const cancelSubscription = async () => {
     const { data } = await API.delete("/api-cancel-stripe-subscription-beta/");
-    console.log(data);
+    if(data.status === 'success'){
+      toast({
+        title: data.message,
+        status: "success",
+        duration: 2000,
+        isClosable: true,
+        position: "bottom",
+      });
+      onClose()
+    }
   };
 
   const cancelRef = useRef<HTMLButtonElement | null>(null);
@@ -691,7 +703,7 @@ const CurrentPlan: React.FC<{
           </HStack>
           {isCancellable && (
             <Button
-              onClick={cancelSubscription}
+              onClick={()=>setIsOpen(!isOpen)}
               variant="accent-ghost"
               color={"red"}
               mt={5}
@@ -724,7 +736,7 @@ const CurrentPlan: React.FC<{
 
             <AlertDialogFooter>
               <Button ref={cancelRef} onClick={onClose} py={6}>
-                Cancel
+                No, my bad
               </Button>
               <Button
                 variant="brand"
@@ -1136,9 +1148,21 @@ const TransactionListCard: React.FC<{transactionList: Transaction[];}> = ({ tran
   const [isOpen, setIsOpen] = useState(false);
   const onClose = () => setIsOpen(false);
 
+  const toast = useToast();
+
+
   const cancelSubscription = async () => {
     const { data } = await API.delete("/api-cancel-stripe-subscription-beta/");
-    console.log(data);
+    if(data.status === 'success'){
+      toast({
+        title: data.message,
+        status: "success",
+        duration: 2000,
+        isClosable: true,
+        position: "bottom",
+      });
+      onClose()
+    }
   };
   return (
     <Box
@@ -1209,7 +1233,7 @@ const TransactionListCard: React.FC<{transactionList: Transaction[];}> = ({ tran
               {sentenceCapitalize(transaction.package)}
             </Text>
             <HStack w={'24%'} justify='flex-end'>
-            {transaction.payment_platform === 'stripe' && <Button
+            {transaction.payment_platform === 'stripe' && transaction.payment_status === 'open' && transaction.invoice_url && <Button
               variant="accent-ghost"
               color={"red"}
               onClick={()=>setIsOpen(!isOpen)}
@@ -1221,7 +1245,7 @@ const TransactionListCard: React.FC<{transactionList: Transaction[];}> = ({ tran
               />
               Cancel
             </Button>}
-            {transaction.payment_status === 'open' && <Button
+            {transaction.payment_status === 'open' && transaction.invoice_url && <Button
               variant="accent-ghost"
               color={"accent"}
               width={'fit-content'}
@@ -1254,7 +1278,7 @@ const TransactionListCard: React.FC<{transactionList: Transaction[];}> = ({ tran
 
             <AlertDialogFooter>
               <Button ref={cancelRef} onClick={onClose} py={6}>
-                Cancel
+                No, my bad
               </Button>
               <Button
                 variant="brand"
