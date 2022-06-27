@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { Link as RouterLink, useHistory, useLocation } from "react-router-dom";
 import {
@@ -42,6 +42,17 @@ const SignIn: React.FC = () => {
       isClosable: true,
     });
   }
+  const location = useLocation();
+
+  useEffect(() => {
+    const query = new URLSearchParams(location.search);
+    const campaign_type = query.get("utm_source");
+    const campaign_id = query.get("utm_campaign");
+    if (campaign_type) localStorage.setItem("campaign_type", campaign_type);
+    if (campaign_id) localStorage.setItem("campaign_id", campaign_id);
+  }, []);
+  
+
   return (
     <>
       <Flex

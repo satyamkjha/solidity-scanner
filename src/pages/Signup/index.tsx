@@ -1,6 +1,6 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { set, useForm } from "react-hook-form";
-import { Link as RouterLink } from "react-router-dom";
+import { Link as RouterLink, useLocation } from "react-router-dom";
 import {
   Flex,
   Heading,
@@ -32,10 +32,18 @@ const CustomFlex = motion(Flex);
 
 const SignUp: React.FC = () => {
   const [registered, setRegistered] = useState(false);
-
   const [email, setEmail] = useState("");
-
   const passwordChecker = new RegExp("^(?=.*?[A-Za-z])(?=.*?[0-9]).{6,}$");
+  const location = useLocation();
+  useEffect(() => {
+    const query = new URLSearchParams(location.search);
+    const campaign_type = query.get("utm_source");
+    const campaign_id = query.get("utm_campaign");
+    if (campaign_type) localStorage.setItem("campaign_type", campaign_type);
+    if (campaign_id) localStorage.setItem("campaign_id", campaign_id);
+  }, []);
+
+  
 
   return (
     <>
