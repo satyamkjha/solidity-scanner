@@ -15,7 +15,6 @@ import {
   Box,
 } from "@chakra-ui/react";
 import { motion } from "framer-motion";
-import { FcGoogle } from "react-icons/fc";
 import { FaPhoneAlt } from "react-icons/fa";
 import { FiAtSign } from "react-icons/fi";
 import { MdWork } from "react-icons/md";
@@ -42,8 +41,6 @@ const SignUp: React.FC = () => {
     if (campaign_type) localStorage.setItem("campaign_type", campaign_type);
     if (campaign_id) localStorage.setItem("campaign_id", campaign_id);
   }, []);
-
-  
 
   return (
     <>

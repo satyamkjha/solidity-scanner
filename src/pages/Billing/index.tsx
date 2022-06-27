@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useQueryClient } from "react-query";
 import CryptoIcon from "react-crypto-icons";
 
@@ -31,6 +31,18 @@ import {
   Image,
   Heading,
   HStack,
+  Badge,
+  Tab,
+  TabList,
+  Tabs,
+  TabPanel,
+  TabPanels,
+  AlertDialog,
+  AlertDialogBody,
+  AlertDialogContent,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogOverlay,
 } from "@chakra-ui/react";
 
 import { AiOutlineCheckCircle } from "react-icons/ai";
@@ -49,6 +61,8 @@ import ContactUs from "components/contactus";
 import { usePricingPlans } from "hooks/usePricingPlans";
 import { useTransactions } from "hooks/useTransactions";
 import { sentenceCapitalize } from "helpers/helperFunction";
+import { useInvoices } from "hooks/useInvoices";
+import ReactPaginate from "react-paginate";
 
 const Billing: React.FC = () => {
   const { data } = useProfile();
@@ -56,7 +70,7 @@ const Billing: React.FC = () => {
   const { data: plans } = usePricingPlans();
   const [selectedPlan, setSelectedPlan] = useState("pro");
 
-  const { data: transactionList } = useTransactions(1, 5);
+  const { data: transactionList } = useTransactions(1, 20);
 
   console.log(transactionList?.data);
 
@@ -84,82 +98,112 @@ const Billing: React.FC = () => {
       >
         <Text sx={{ color: "text", fontWeight: 600 }}>BILLING</Text>
         {!data || !plans || !transactionList ? (
-          <Flex w="100%" h="70vh" alignItems="center" justifyContent="center">
-            <Spinner />
-          </Flex>
-        ) : (
-          <>
-            {data.current_package === "trial" ||
-            data.current_package === "expired" ||
-            data.current_package === "ondemand" ? (
-              <>
-                {transactionList.data.length > 0 && transactionList.data[0].payment_status === "open" && (
-                  <LatestInvoice
-                    transactionData={transactionList.data[0]}
-                    selectedPlan={transactionList.data[0].package}
-                    planData={plans.monthly[transactionList.data[0].package]}
-                  />
-                )}
-                <Flex
-                  justifyContent={"flex-start"}
-                  alignItems={"flex-start"}
-                  flexWrap="wrap"
-                  width={"100%"}
-                  height={"fit-content"}
-                  padding={2}
-                  mt={5}
-                >
-                  {Object.keys(plans.monthly).map((plan) => {
-                    if (plan !== "trial")
-                      return (
-                        <PricingPlan
+                  <Flex
+                    w="100%"
+                    h="70vh"
+                    alignItems="center"
+                    justifyContent="center"
+                  >
+                    <Spinner />
+                  </Flex>
+                ) : (
+                  <Tabs mt={10} w={'100%'} variant="soft-rounded" colorScheme="green">
+          <TabList >
+            <Tab px={20}>Plans</Tab>
+            <Tab px={20}>Transactions</Tab>
+          </TabList>
+          <TabPanels width={'100%'}>
+            <TabPanel width={'100%'}>
+            <>
+                    {data.current_package === "trial" ||
+                    data.current_package === "expired" ||
+                    data.current_package === "ondemand" ? (
+                      <>
+                        {transactionList.data.length > 0 &&
+                          transactionList.data[0].payment_status === "open" && (
+                            <LatestInvoice
+                              transactionData={transactionList.data[0]}
+                              selectedPlan={transactionList.data[0].package}
+                              planData={
+                                plans.monthly[transactionList.data[0].package]
+                              }
+                            />
+                          )}
+                        <Flex
+                          justifyContent={"flex-start"}
+                          alignItems={"flex-start"}
+                          flexWrap="wrap"
+                          width={"100%"}
+                          height={"fit-content"}
+                          padding={2}
+                          mt={5}
+                        >
+                          {Object.keys(plans.monthly).map((plan) => {
+                            if (plan !== "trial")
+                              return (
+                                <PricingPlan
+                                  selectedPlan={selectedPlan}
+                                  setSelectedPlan={setSelectedPlan}
+                                  plan={plan}
+                                  planData={plans.monthly[plan]}
+                                />
+                              );
+                          })}
+                        </Flex>
+                        <Text sx={{ color: "text", fontWeight: 600 }} ml={5}>
+                          {plans.monthly[selectedPlan].name}
+                        </Text>
+                        <Text
+                          as="span"
+                          ml={5}
+                          mt={3}
+                          fontWeight={300}
+                          fontSize="smaller"
+                        >
+                          {plans.monthly[selectedPlan].description}
+                        </Text>
+                        <PricingDetails
+                          planData={plans.monthly[selectedPlan]}
                           selectedPlan={selectedPlan}
-                          setSelectedPlan={setSelectedPlan}
-                          plan={plan}
-                          planData={plans.monthly[plan]}
                         />
-                      );
-                  })}
-                </Flex>
-                <Text sx={{ color: "text", fontWeight: 600 }} ml={5}>
-                  {plans.monthly[selectedPlan].name}
-                </Text>
-                <Text
-                  as="span"
-                  ml={5}
-                  mt={3}
-                  fontWeight={300}
-                  fontSize="smaller"
-                >
-                  {plans.monthly[selectedPlan].description}
-                </Text>
-                <PricingDetails
-                  planData={plans.monthly[selectedPlan]}
-                  selectedPlan={selectedPlan}
-                />
-              </>
-            ) : (
-              <>
-                <VStack width="100%" pt={8}>
-                  <Box sx={{ w: "100%" }}>
-                    <CurrentPlan
-                      isCancellable={data.is_cancellable}
-                      name={plans.monthly[data.current_package].name}
-                      packageName={data.current_package}
-                      packageRechargeDate={data.package_recharge_date}
-                      packageValidity={data.package_validity}
-                      plan={plans.monthly[data.current_package]}
-                    />
-                  </Box>
-                  <HStack spacing={5} width={'100%'} pt={5}>
-                    {data.is_cancellable && <CardDetails profileData={data}/>}
-                  </HStack>
-                  {/* <Box sx={{ w: "%" }}></Box> */}
-                </VStack>
-              </>
-            )}
-          </>
-        )}
+                      </>
+                    ) : (
+                      <>
+                        <VStack width="100%" pt={8}>
+                          <Box sx={{ w: "100%" }}>
+                            <CurrentPlan
+                              isCancellable={data.is_cancellable}
+                              name={plans.monthly[data.current_package].name}
+                              packageName={data.current_package}
+                              packageRechargeDate={data.package_recharge_date}
+                              packageValidity={data.package_validity}
+                              plan={plans.monthly[data.current_package]}
+                            />
+                          </Box>
+                          <HStack
+                            spacing={5}
+                            align={"flex-start"}
+                            width={"100%"}
+                            pt={5}
+                          >
+                            {data.is_cancellable && (
+                              <CardDetails profileData={data} />
+                            )}
+                            {data.is_cancellable && <InvoiceList />}
+                          </HStack>
+                          {/* <Box sx={{ w: "%" }}></Box> */}
+                        </VStack>
+                      </>
+                    )}
+                  </>
+            </TabPanel>
+            <TabPanel>
+              <TransactionListCard transactionList={transactionList?.data} />
+            </TabPanel>
+          </TabPanels>
+        </Tabs>
+                )}
+        
       </Flex>
     </Box>
   );
@@ -180,7 +224,7 @@ const PricingPlan: React.FC<{
     } else {
       duration = "monthly";
     }
-    
+
     const { data } = await API.post<{
       status: string;
       checkout_url: string;
@@ -479,7 +523,7 @@ const PricingPlan: React.FC<{
 };
 
 const CurrentPlan: React.FC<{
-  isCancellable: boolean
+  isCancellable: boolean;
   name: string;
   packageName: string;
   packageRechargeDate: string;
@@ -494,6 +538,10 @@ const CurrentPlan: React.FC<{
     console.log(data);
   };
 
+  const cancelRef = useRef<HTMLButtonElement | null>(null);
+  const [isOpen, setIsOpen] = useState(false);
+  const onClose = () => setIsOpen(false);
+
   return (
     <Box
       sx={{
@@ -501,14 +549,15 @@ const CurrentPlan: React.FC<{
         background: "white",
         borderRadius: 15,
         p: 8,
-        
       }}
       filter={"drop-shadow(0px 4px 23px rgba(0, 0, 0, 0.15));"}
     >
       <Flex justifyContent={"space-between"} alignItems="center">
         <Flex alignItems="center" ml={7}>
           <Icon as={AiFillCheckCircle} color="#38CB89" fontSize="2xl" mr={2} />
-          <Text fontSize={'xl'} fontWeight={900}>Current Plan</Text>
+          <Text fontSize={"xl"} fontWeight={900}>
+            Current Plan
+          </Text>
         </Flex>
         <Flex alignItems="center" width={"25%"}>
           <Icon as={AiOutlineCalendar} color="gray.500" fontSize="2xl" mr={2} />
@@ -527,7 +576,6 @@ const CurrentPlan: React.FC<{
         pt={5}
       >
         <Box ml={7} width="40%">
-          
           <Text fontSize={"lg"}>{plan.name}</Text>
           <Text as="span" mt={5} mb={10} fontWeight={300} fontSize="smaller">
             {plan.description}
@@ -641,22 +689,54 @@ const CurrentPlan: React.FC<{
               White Glove Services
             </Text>
           </HStack>
-          {isCancellable && 
-        (<Button
-          onClick={cancelSubscription}
-          variant="accent-ghost"
-          color={"red"}
-          mt={5}
-          ml={-4}
-          
-        >
-          <HiXCircle size={20} color={'red.100'} style={{marginRight: '10px'}}  />
-          Cancel Subscription
-        </Button>)
-     }
+          {isCancellable && (
+            <Button
+              onClick={cancelSubscription}
+              variant="accent-ghost"
+              color={"red"}
+              mt={5}
+              ml={-4}
+            >
+              <HiXCircle
+                size={20}
+                color={"red.100"}
+                style={{ marginRight: "10px" }}
+              />
+              Cancel Subscription
+            </Button>
+          )}
         </Flex>
       </Flex>
-      
+      <AlertDialog
+        isOpen={isOpen}
+        leastDestructiveRef={cancelRef}
+        onClose={onClose}
+      >
+        <AlertDialogOverlay>
+          <AlertDialogContent>
+            <AlertDialogHeader fontSize="lg" fontWeight="bold">
+              Cancel Subscription
+            </AlertDialogHeader>
+
+            <AlertDialogBody>
+              Are you sure you want to cancel the subscription? 
+            </AlertDialogBody>
+
+            <AlertDialogFooter>
+              <Button ref={cancelRef} onClick={onClose} py={6}>
+                Cancel
+              </Button>
+              <Button
+                variant="brand"
+                onClick={cancelSubscription}
+                ml={3}
+              >
+                Yes
+              </Button>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialogOverlay>
+      </AlertDialog>
     </Box>
   );
 };
@@ -771,7 +851,6 @@ const PricingDetails: React.FC<{ planData: Plan; selectedPlan: string }> = ({
         width={"100%"}
         height={"fit-content"}
         padding={5}
-       
       >
         <HStack ml={5} justify={"flex-start"} width={"30%"}>
           <HiCheckCircle size={30} color={successColor} />
@@ -893,13 +972,9 @@ const LatestInvoice: React.FC<{
           Complete your open {transactionData.payment_platform} Payment
         </Text>
         <HStack p={10} w={"100%"} justify="space-between">
-          <VStack  w={"40%"} align="flex-start">
+          <VStack w={"40%"} align="flex-start">
             <HStack w={"100%"} justify="space-between">
-              <Text
-                fontSize={"lg"}
-                sx={{ color: "text", fontWeight: 900 }}
-                
-              >
+              <Text fontSize={"lg"} sx={{ color: "text", fontWeight: 900 }}>
                 {planData.name}
               </Text>
               <Heading fontSize={"x-large"}>
@@ -912,7 +987,6 @@ const LatestInvoice: React.FC<{
             </Text>
           </VStack>
           <Button
-            
             variant="brand"
             onClick={() => {
               window.open(`${transactionData.invoice_url}`, "_blank");
@@ -929,7 +1003,7 @@ const LatestInvoice: React.FC<{
 };
 
 const CardDetails: React.FC<{
-  profileData: Profile
+  profileData: Profile;
 }> = ({ profileData }) => {
   return (
     <Box
@@ -938,63 +1012,261 @@ const CardDetails: React.FC<{
         background: "white",
         borderRadius: 15,
         p: 8,
-        
       }}
       filter={"drop-shadow(0px 4px 23px rgba(0, 0, 0, 0.15));"}
     >
-      <Text fontSize={'lg'} fontWeight={900} color={'gray.500'}>
+      <Text fontSize={"lg"} fontWeight={900} color={"gray.500"}>
         Payment Details
       </Text>
-      <HStack mt={5} spacing={5} width={'100%'} align='center'>
-      <Image
-              
-              
-              
-              src={`/cards/${profileData.payment_details?.brand}.svg`}
-              alt="Product screenshot"
-              
-              zIndex={"10"}
-              sx={{
-                width: '60px',
-                
-              }}
-            />
-          <Text fontWeight={500} color={'gray.500'}>
-        ----
+      <HStack mt={5} spacing={5} width={"100%"} align="center">
+        <Image
+          src={`/cards/${profileData.payment_details?.brand}.svg`}
+          alt="Product screenshot"
+          zIndex={"10"}
+          sx={{
+            width: "60px",
+          }}
+        />
+        <Text fontWeight={500} color={"gray.500"}>
+          ----
+        </Text>
+        <Text fontWeight={500} color={"gray.500"}>
+          ----
+        </Text>
+        <Text fontWeight={500} color={"gray.500"}>
+          ----
+        </Text>
+        <Text fontWeight={500} color={"gray.500"}>
+          {profileData.payment_details?.last_4_digits}
+        </Text>
+      </HStack>
+      <HStack ml={"80px"} mt={3} spacing={5} width={"100%"} align="center">
+        <Text fontWeight={500} color={"gray.500"}>
+          {sentenceCapitalize(profileData.payment_details?.brand!)} Card
+        </Text>
+        <Box
+          as="div"
+          height={2}
+          width={2}
+          borderRadius={"50%"}
+          backgroundColor={"gray.500"}
+        ></Box>
+        <Text fontWeight={500} color={"gray.500"}>
+          Card Expires on {profileData.payment_details?.exp_month}/
+          {profileData.payment_details?.exp_year}
+        </Text>
+      </HStack>
+      <Text mt={10} fontWeight={500} color={"gray.500"}>
+        Next billed on {profileData.package_recharge_date}
       </Text>
-      <Text fontWeight={500} color={'gray.500'}>
-        ----
+      <Text mt={3} fontWeight={500} color={"gray.500"}>
+        Subscription Ends on {profileData.package_end_date}
       </Text>
-      <Text fontWeight={500} color={'gray.500'}>
-        ----
-      </Text>
-      <Text fontWeight={500} color={'gray.500'}>
-        {profileData.payment_details?.last_4_digits}
-      </Text>
-      
 
-            </HStack>
-            <HStack ml={'80px'} mt={3} spacing={5} width={'100%'} align='center'>
-            <Text fontWeight={500} color={'gray.500'}>
-        {sentenceCapitalize(profileData.payment_details?.brand!)} Card
-      </Text>
-      <Box as='div' height={2} width={2} borderRadius={'50%'} backgroundColor={'gray.500'}></Box>
-      <Text fontWeight={500} color={'gray.500'}>
-        Card Expires on {profileData.payment_details?.exp_month}/{profileData.payment_details?.exp_year}
-      </Text>
-      
-            </HStack>
-            <Text mt={10} fontWeight={500} color={'gray.500'}>
-              Next billed on {profileData.package_recharge_date}
-</Text>
-              <Text mt={3} fontWeight={500} color={'gray.500'}>
-              Subscription Ends on {profileData.package_end_date}
-        
-      </Text>
-      
-      <Text ml={20} mt={10} fontSize={'xs'} fontWeight={300} color={'gray.400'} textAlign='right'>
+      <Text
+        ml={20}
+        mt={10}
+        fontSize={"xs"}
+        fontWeight={300}
+        color={"gray.400"}
+        textAlign="right"
+      >
         * We do not store your card data or payment details.
       </Text>
+    </Box>
+  );
+};
+
+const monthNames = [
+  "Jan",
+  "Jan",
+  "Feb",
+  "March",
+  "April",
+  "May",
+  "June",
+  "July",
+  "Aug",
+  "Sept",
+  "Oct",
+  "Nov",
+  "Dec",
+];
+
+const InvoiceList: React.FC = () => {
+  const { data } = useInvoices(1, 5);
+
+  return (
+    <Box
+      sx={{
+        w: "50%",
+        background: "white",
+        borderRadius: 15,
+        p: 8,
+      }}
+      filter={"drop-shadow(0px 4px 23px rgba(0, 0, 0, 0.15));"}
+    >
+      <Text fontSize={"lg"} mb={7} fontWeight={900} color={"gray.500"}>
+        Invoices
+      </Text>
+
+      {data?.data.map((invoice) => {
+        let date = invoice.date.split("-");
+        return (
+          <HStack mt={3} justify="space-between" width={"100%"} align="center">
+            <Text fontWeight={500} color={"gray.500"}>
+              {date[2]} {monthNames[parseInt(date[1])]} {date[0]}
+            </Text>
+            <Badge
+              colorScheme={
+                invoice.invoice_status === "paid" ? "green" : "orange"
+              }
+            >
+              {invoice.invoice_status}
+            </Badge>
+          </HStack>
+        );
+      })}
+    </Box>
+  );
+};
+
+const TransactionListCard: React.FC<{transactionList: Transaction[];}> = ({ transactionList }) => {
+  const cancelRef = useRef<HTMLButtonElement | null>(null);
+  const [isOpen, setIsOpen] = useState(false);
+  const onClose = () => setIsOpen(false);
+
+  const cancelSubscription = async () => {
+    const { data } = await API.delete("/api-cancel-stripe-subscription-beta/");
+    console.log(data);
+  };
+  return (
+    <Box
+      sx={{
+        w: "100%",
+        background: "white",
+        borderRadius: 15,
+        p: 8,
+      }}
+      filter={"drop-shadow(0px 4px 23px rgba(0, 0, 0, 0.15));"}
+    >
+      <HStack p={4} borderRadius={10} backgroundColor={'gray.100'} mt={3} justify="space-between" width={"100%"} align="center">
+      <Text w={'14%'} fontWeight={500} color={"gray.500"}>
+              Status
+            </Text>
+            <Text w={'14%'} fontWeight={500} color={"gray.500"}>
+              Amount
+            </Text>
+            <Text w={'16%'} fontWeight={500} color={"gray.500"}>
+              Date
+            </Text>
+            <Text w={'18%'} fontWeight={500} color={"gray.500"}>
+              Payment Mode
+            </Text>
+            <Text w={'14%'} fontWeight={500} color={"gray.500"}>
+              Package
+            </Text>
+            <HStack w={'24%'} justify='flex-end'>
+            
+            </HStack>
+      </HStack>
+
+      {transactionList.map((transaction) => {
+        let date = transaction.date.split("-");
+        console.log(transaction)
+        return (
+          <HStack p={4} justify="space-between" width={"100%"} align="center">
+            {/* <Text fontWeight={500} color={"gray.500"}>
+              {date[2]} {monthNames[parseInt(date[1])]} {date[0]}
+            </Text>
+            <Badge
+              colorScheme={
+                invoice.invoice_status === "paid" ? "green" : "orange"
+              }
+            >
+              {invoice.invoice_status}
+            </Badge> */}
+            <Text w={'14%'} fontWeight={500} color={"gray.500"}>
+            <Badge
+              colorScheme={
+                transaction.payment_status === "success" ? "green" : transaction.payment_status === "failed" ? 'red' : "orange"
+              }
+            >
+              {transaction.payment_status} 
+            </Badge>
+            </Text>
+            <Text w={'14%'} fontWeight={500} color={"gray.500"}>
+              {parseFloat(transaction.amount).toFixed(2)} {transaction.currency.toUpperCase()}
+            </Text>
+            <Text w={'16%'} fontWeight={500} color={"gray.500"}>
+            {date[2]} {monthNames[parseInt(date[1])]} {date[0]}
+
+            </Text>
+            <Text w={'18%'} fontWeight={500} color={"gray.500"}>
+              {sentenceCapitalize(transaction.payment_platform)}
+            </Text>
+            <Text w={'14%'} fontWeight={500} color={"gray.500"}>
+              {sentenceCapitalize(transaction.package)}
+            </Text>
+            <HStack w={'24%'} justify='flex-end'>
+            {transaction.payment_platform === 'stripe' && <Button
+              variant="accent-ghost"
+              color={"red"}
+              onClick={()=>setIsOpen(!isOpen)}
+            >
+              <HiXCircle
+                size={20}
+                color={"red.100"}
+                style={{ marginRight: "10px" }}
+              />
+              Cancel
+            </Button>}
+            {transaction.payment_status === 'open' && <Button
+              variant="accent-ghost"
+              color={"accent"}
+              width={'fit-content'}
+              onClick={()=>{
+                window.open(transaction.invoice_url, '_blank')
+              }}
+            >
+              
+              Complete 
+            </Button>}
+            </HStack>
+
+          </HStack>
+        );
+      })}
+      <AlertDialog
+        isOpen={isOpen}
+        leastDestructiveRef={cancelRef}
+        onClose={onClose}
+      >
+        <AlertDialogOverlay>
+          <AlertDialogContent>
+            <AlertDialogHeader fontSize="lg" fontWeight="bold">
+              Cancel Subscription
+            </AlertDialogHeader>
+
+            <AlertDialogBody>
+              Are you sure you want to cancel the subscription? 
+            </AlertDialogBody>
+
+            <AlertDialogFooter>
+              <Button ref={cancelRef} onClick={onClose} py={6}>
+                Cancel
+              </Button>
+              <Button
+                variant="brand"
+                onClick={cancelSubscription}
+                ml={3}
+              >
+                Yes
+              </Button>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialogOverlay>
+      </AlertDialog>
     </Box>
   );
 };

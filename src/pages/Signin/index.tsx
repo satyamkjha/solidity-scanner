@@ -51,7 +51,6 @@ const SignIn: React.FC = () => {
     if (campaign_type) localStorage.setItem("campaign_type", campaign_type);
     if (campaign_id) localStorage.setItem("campaign_id", campaign_id);
   }, []);
-  
 
   return (
     <>
