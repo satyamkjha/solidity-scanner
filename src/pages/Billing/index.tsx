@@ -71,9 +71,8 @@ const Billing: React.FC = () => {
   const { data: plans } = usePricingPlans();
   const [selectedPlan, setSelectedPlan] = useState("pro");
 
-  const { data: transactionList } = useTransactions(1, 20);
+  const { data: transactionList } = useTransactions(1, 50);
 
-  console.log(transactionList?.data);
 
   return (
     <Box
@@ -758,7 +757,6 @@ const CoinPayments: React.FC<{ packageName: string; onClose: () => void }> = ({
   onClose,
 }) => {
   const { data, isLoading } = useAcceptedCoins();
-  console.log(data);
   const [coin, setCoin] = useState("");
   const [loading, setLoading] = useState(false);
   const handleSubmit = async () => {
@@ -1017,6 +1015,11 @@ const LatestInvoice: React.FC<{
 const CardDetails: React.FC<{
   profileData: Profile;
 }> = ({ profileData }) => {
+
+  console.log(profileData);
+  let package_recharge_date = new Date(profileData.package_recharge_date);
+  let package_end_date = new Date(profileData.package_end_date)
+
   return (
     <Box
       sx={{
@@ -1069,11 +1072,10 @@ const CardDetails: React.FC<{
         </Text>
       </HStack>
       <Text mt={10} fontWeight={500} color={"gray.500"}>
-        Next billed on {profileData.package_recharge_date}
+        Next billed on {`${package_recharge_date.getDate()} ${monthNames[package_recharge_date.getMonth()]} ${package_recharge_date.getFullYear()}`}
+
       </Text>
-      <Text mt={3} fontWeight={500} color={"gray.500"}>
-        Subscription Ends on {profileData.package_end_date}
-      </Text>
+      
 
       <Text
         ml={20}
@@ -1197,7 +1199,6 @@ const TransactionListCard: React.FC<{transactionList: Transaction[];}> = ({ tran
 
       {transactionList.map((transaction) => {
         let date = transaction.date.split("-");
-        console.log(transaction)
         return (
           <HStack p={4} justify="space-between" width={"100%"} align="center">
             {/* <Text fontWeight={500} color={"gray.500"}>
