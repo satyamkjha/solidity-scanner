@@ -64,6 +64,7 @@ import { useTransactions } from "hooks/useTransactions";
 import { sentenceCapitalize } from "helpers/helperFunction";
 import { useInvoices } from "hooks/useInvoices";
 import ReactPaginate from "react-paginate";
+import { server } from "typescript";
 
 const Billing: React.FC = () => {
   const { data } = useProfile();
@@ -1152,9 +1153,15 @@ const TransactionListCard: React.FC<{transactionList: Transaction[];}> = ({ tran
 
   const toast = useToast();
 
+  const [orderId, setOrderId] = useState('');
+  const [paymentPlatform, setPaymentPlatform] = useState('')
 
-  const cancelSubscription = async () => {
-    const { data } = await API.delete("/api-cancel-stripe-subscription-beta/");
+
+  const cancelPayment = async () => {
+    const { data } = await API.delete("/api-invalidate-order-beta/",{ data: {     
+      payment_platform: paymentPlatform,
+      order_id: orderId
+    }});
     if(data.status === 'success'){
       toast({
         title: data.message,
@@ -1176,31 +1183,29 @@ const TransactionListCard: React.FC<{transactionList: Transaction[];}> = ({ tran
       }}
       filter={"drop-shadow(0px 4px 23px rgba(0, 0, 0, 0.15));"}
     >
-      <HStack p={4} borderRadius={10} backgroundColor={'gray.100'} mt={3} justify="space-between" width={"100%"} align="center">
-      <Text w={'14%'} fontWeight={500} color={"gray.500"}>
+      <HStack p={4} borderRadius={10} backgroundColor={'gray.100'} mt={3} justify="flex-start" width={"100%"} align="center">
+      <Text w={'8%'} fontWeight={500} color={"gray.500"}>
               Status
             </Text>
-            <Text w={'14%'} fontWeight={500} color={"gray.500"}>
+            <Text w={'12%'} fontWeight={500} color={"gray.500"}>
               Amount
             </Text>
-            <Text w={'16%'} fontWeight={500} color={"gray.500"}>
+            <Text w={'14%'} fontWeight={500} color={"gray.500"}>
               Date
             </Text>
-            <Text w={'18%'} fontWeight={500} color={"gray.500"}>
+            <Text w={'14%'} fontWeight={500} color={"gray.500"}>
               Payment Mode
             </Text>
             <Text w={'14%'} fontWeight={500} color={"gray.500"}>
               Package
             </Text>
-            <HStack w={'24%'} justify='flex-end'>
             
-            </HStack>
       </HStack>
 
       {transactionList.map((transaction) => {
         let date = transaction.date.split("-");
         return (
-          <HStack p={4} justify="space-between" width={"100%"} align="center">
+          <HStack p={4} justify="flex-start" width={"100%"} align="center">
             {/* <Text fontWeight={500} color={"gray.500"}>
               {date[2]} {monthNames[parseInt(date[1])]} {date[0]}
             </Text>
@@ -1211,7 +1216,7 @@ const TransactionListCard: React.FC<{transactionList: Transaction[];}> = ({ tran
             >
               {invoice.invoice_status}
             </Badge> */}
-            <Text w={'14%'} fontWeight={500} color={"gray.500"}>
+            <Text w={'8%'} fontWeight={500} color={"gray.500"}>
             <Badge
               colorScheme={
                 transaction.payment_status === "success" ? "green" : transaction.payment_status === "failed" ? 'red' : "orange"
@@ -1220,49 +1225,62 @@ const TransactionListCard: React.FC<{transactionList: Transaction[];}> = ({ tran
               {transaction.payment_status} 
             </Badge>
             </Text>
-            <Text w={'14%'} fontWeight={500} color={"gray.500"}>
+            <Text w={'12%'} fontWeight={500} color={"gray.500"}>
               {parseFloat(transaction.amount).toFixed(2)} {transaction.currency.toUpperCase()}
             </Text>
-            <Text w={'16%'} fontWeight={500} color={"gray.500"}>
+            <Text w={'14%'} fontWeight={500} color={"gray.500"}>
             {date[2]} {monthNames[parseInt(date[1])]} {date[0]}
 
             </Text>
-            <Text w={'18%'} fontWeight={500} color={"gray.500"}>
+            <Text w={'14%'} fontWeight={500} color={"gray.500"}>
               {sentenceCapitalize(transaction.payment_platform)}
             </Text>
             <Text w={'14%'} fontWeight={500} color={"gray.500"}>
               {sentenceCapitalize(transaction.package)}
             </Text>
-            <HStack w={'24%'} justify='flex-end'>
-            {transaction.payment_platform === 'stripe' && transaction.payment_status === 'open' && transaction.invoice_url && <Button
+            <HStack w={'34%'} justify='flex-end'>
+            {transaction.payment_platform === 'stripe' && transaction.payment_status === 'open' && <Button
               variant="accent-ghost"
               color={"red"}
-              onClick={()=>setIsOpen(!isOpen)}
+              w={'fit-content'}
+              my={0}
+              py={0}
+              fontSize={'xs'}
+              onClick={()=>{
+                setIsOpen(!isOpen)
+                setOrderId(transaction.order_id)
+                setPaymentPlatform(transaction.payment_platform)
+              }}
             >
               <HiXCircle
-                size={20}
+                size={10}
                 color={"red.100"}
                 style={{ marginRight: "10px" }}
               />
-              Cancel
+              Cancel Payment
             </Button>}
             {transaction.payment_status === 'open' && transaction.invoice_url && <Button
               variant="accent-ghost"
               color={"accent"}
+              w={'fit-content'}
+              my={0}
+              py={0}
+              fontSize={'xs'}
               width={'fit-content'}
               onClick={()=>{
                 window.open(transaction.invoice_url, '_blank')
               }}
             >
               
-              Complete 
+              Complete Payment
             </Button>}
             </HStack>
+            
 
           </HStack>
         );
       })}
-      <AlertDialog
+        <AlertDialog
         isOpen={isOpen}
         leastDestructiveRef={cancelRef}
         onClose={onClose}
@@ -1283,7 +1301,7 @@ const TransactionListCard: React.FC<{transactionList: Transaction[];}> = ({ tran
               </Button>
               <Button
                 variant="brand"
-                onClick={cancelSubscription}
+                onClick={()=>{cancelPayment()}}
                 ml={3}
               >
                 Yes
