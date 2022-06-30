@@ -280,9 +280,12 @@ const PricingPlan: React.FC<{
         <Text mt={10} mx={5} fontSize={"sm"}>
           {planData.name}
         </Text>
-        <Heading fontSize={"x-large"} mt={1} mb={!selected ? 10 : 4}>
+        <Heading fontSize={"x-large"} my={1} >
           {planData.amount === "Free" ? "Free" : `$ ${planData.amount}`}
         </Heading>
+        <Text mb={!selected ? 10 : 4} mx={5} fontSize={"xs"}>
+          per month
+        </Text>
         {selected && (
           <Button
             my={5}
@@ -426,14 +429,21 @@ const PricingPlan: React.FC<{
                 <Text mx={6} mt={4} sx={{ fontWeight: 500 }}>
                   {planData.name}
                 </Text>
+                <HStack>
                 <Heading
-                  mx={6}
+                  ml={6}
+                  mr={1}
                   fontSize={"x-large"}
                   mt={1}
                   mb={!selected ? 10 : 4}
                 >
-                  {planData.amount === "Free" ? "Free" : `$ ${planData.amount}`}
+                  {planData.amount === "Free" ? "Free" : `$ ${planData.amount}`} 
                 </Heading>
+                <Text mx={6} fontSize={"xs"}>
+                  per month
+                </Text>
+                </HStack>
+                
                 <Text mx={6} fontSize={"xs"}>
                   {planData.description}
                 </Text>

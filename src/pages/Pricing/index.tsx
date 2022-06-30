@@ -666,6 +666,9 @@ export const PricingColumn: React.FC<{
         >
           {planData.amount === "Free" ? "Free" : `$ ${planData.amount}`}
         </Heading>
+        <Text textAlign="center" fontSize={"xs"}>
+                  per month
+                </Text>
       </Box>
       <Box
         as="div"
