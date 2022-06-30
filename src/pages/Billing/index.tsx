@@ -1252,11 +1252,7 @@ const TransactionListCard: React.FC<{transactionList: Transaction[];}> = ({ tran
                 setPaymentPlatform(transaction.payment_platform)
               }}
             >
-              <HiXCircle
-                size={10}
-                color={"red.100"}
-                style={{ marginRight: "10px" }}
-              />
+              
               Cancel Payment
             </Button>}
             {transaction.payment_status === 'open' && transaction.invoice_url && <Button
@@ -1288,11 +1284,11 @@ const TransactionListCard: React.FC<{transactionList: Transaction[];}> = ({ tran
         <AlertDialogOverlay>
           <AlertDialogContent>
             <AlertDialogHeader fontSize="lg" fontWeight="bold">
-              Cancel Subscription
+              Cancel Payment
             </AlertDialogHeader>
 
             <AlertDialogBody>
-              Are you sure you want to cancel the subscription? 
+              Are you sure you want to cancel the payment invoice? 
             </AlertDialogBody>
 
             <AlertDialogFooter>
