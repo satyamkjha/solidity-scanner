@@ -437,10 +437,10 @@ const PricingPlan: React.FC<{
                   mt={1}
                   mb={!selected ? 10 : 4}
                 >
-                  {planData.amount === "Free" ? "Free" : `$ ${planData.amount}`} 
+                  {planData.amount === "Free" ? "Free" : `$ ${planData.amount}`} / 
                 </Heading>
-                <Text mx={6} fontSize={"xs"}>
-                  per month
+                <Text mx={6} fontSize={"md"}>
+                 month
                 </Text>
                 </HStack>
                 
