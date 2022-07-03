@@ -93,6 +93,34 @@ export type Scan = {
   _updated: string;
 };
 
+export type MultiFileScanDetail = {
+    issue_id: string,
+    "template_details": {
+        "additional_meta": string,
+        "aggregation_key": string,
+        "description_keys": string[],
+        "issue_confidence": string,
+        "issue_id": string,
+        "issue_name": string,
+        "issue_severity": string,
+        "multi_file_supported": string,
+        "type": string,
+        "version": string
+    }
+    metric_wise_aggregated_findings: MetricWiseAggregatedFinding[]
+}
+
+export type MetricWiseAggregatedFinding = {
+    [key: string]: {
+        description_details: {
+            context_version: string
+            mostly_used_version: string
+            version_file_count: string
+            findings: Finding[]
+        }
+    }
+}
+
 {
   "scan_report": {
       "client_id": 23,
