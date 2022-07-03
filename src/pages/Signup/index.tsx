@@ -175,7 +175,7 @@ const RegisterForm: React.FC<{
   const [telegram, setTelegram] = useState("");
   const [linkedin, setLinkedin] = useState("");
   const [twitter, setTwitter] = useState("");
-  const [preffered, setPreffered] = useState("");
+  // const [preffered, setPreffered] = useState("");
 
   const [step, setStep] = useState(0);
 
@@ -204,7 +204,6 @@ const RegisterForm: React.FC<{
             linkedin: linkedin,
             twitter: twitter,
           },
-          preffered: preffered
         };
       } else {
         reqBody = {
@@ -213,6 +212,12 @@ const RegisterForm: React.FC<{
           company_name: companyName,
           contact_number: contactNumber,
           first_name: name,
+          socials: {
+            telegram: telegram,
+            discord: discord,
+            linkedin: linkedin,
+            twitter: twitter,
+          },
         };
       }
       const { data } = await API.post<AuthResponse>("/api-register/", reqBody);
@@ -352,16 +357,14 @@ const RegisterForm: React.FC<{
         )}
         {step === 1 && (
           <>
-            <FormControl id="preffered_mode">
-              <FormLabel fontSize="sm">
-                Choose your preffered mode of communication
-              </FormLabel>
+            {/* <FormControl id="preffered_mode">
+              
               <Select
-                placeholder="Select Preffered platform"
+                placeholder="Select Mode of communication"
                 value={preffered}
                 variant="brand"
                 h={"48px"}
-                isRequired
+                
                 onChange={(e) => {
                   setPreffered(e.target.value);
                 }}
@@ -371,14 +374,14 @@ const RegisterForm: React.FC<{
                 <option value="telegram">Telegram</option>
                 <option value="discord">Discord</option>
               </Select>
-            </FormControl>
+            </FormControl> */}
             <InputGroup mt={0} alignItems="center">
               <InputLeftElement
                 height="48px"
                 children={<Icon as={FaDiscord} color="gray.300" />}
               />
               <Input
-                isRequired
+                
                 placeholder="Discord (optional)"
                 variant="brand"
                 size="lg"
@@ -394,7 +397,7 @@ const RegisterForm: React.FC<{
                 children={<Icon as={FaTelegram} color="gray.300" />}
               />
               <Input
-                isRequired
+               
                 placeholder="Telegram (optional)"
                 variant="brand"
                 size="lg"
@@ -410,11 +413,11 @@ const RegisterForm: React.FC<{
                 children={<Icon as={FaLinkedin} color="gray.300" />}
               />
               <Input
-                isRequired
+                
                 placeholder="Linkedin (optional)"
                 variant="brand"
                 size="lg"
-                value={telegram}
+                value={linkedin}
                 onChange={(e) => {
                   setLinkedin(e.target.value);
                 }}
@@ -426,11 +429,11 @@ const RegisterForm: React.FC<{
                 children={<Icon as={FaTwitter} color="gray.300" />}
               />
               <Input
-                isRequired
+                
                 placeholder="Twitter (optional)"
                 variant="brand"
                 size="lg"
-                value={telegram}
+                value={twitter}
                 onChange={(e) => {
                   setTwitter(e.target.value);
                 }}
@@ -444,7 +447,7 @@ const RegisterForm: React.FC<{
           variant="brand"
           isLoading={formState.isSubmitting}
         >
-          Next
+          {step === 0 ? 'Next' : "Submit" }
         </Button>
       </Stack>
     </form>
