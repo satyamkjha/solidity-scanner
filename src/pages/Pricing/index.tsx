@@ -1,5 +1,5 @@
-import React from "react";
-import { Link as RouterLink, useHistory } from "react-router-dom";
+import React, { useEffect } from "react";
+import { Link as RouterLink, useHistory, useLocation } from "react-router-dom";
 import {
   Box,
   Container,
@@ -41,12 +41,18 @@ import { PublishReportInfo } from "components/infoModal";
 export default function PricingPage() {
   const [tab, setTab] = useState<string>("weekly");
   const { isOpen, onClose, onOpen } = useDisclosure();
-
   const { data: plans } = usePricingPlans();
-
   const [selectedPlan, setSelectedPlan] = useState("");
-
   const [openPublish, setOpenPublish] = useState(false);
+  const location = useLocation();
+
+  useEffect(() => {
+    const query = new URLSearchParams(location.search);
+    const campaign_type = query.get("utm_source");
+    const campaign_id = query.get("utm_campaign");
+    if (campaign_type) localStorage.setItem("campaign_type", campaign_type);
+    if (campaign_id) localStorage.setItem("campaign_id", campaign_id);
+  }, []);
 
   return (
     <>
@@ -660,6 +666,9 @@ export const PricingColumn: React.FC<{
         >
           {planData.amount === "Free" ? "Free" : `$ ${planData.amount}`}
         </Heading>
+        <Text textAlign="center" fontSize={"xs"}>
+          per month
+        </Text>
       </Box>
       <Box
         as="div"
