@@ -13,9 +13,18 @@ import {
   Input,
   Link,
   Box,
+  FormControl,
+  FormLabel,
+  Select,
 } from "@chakra-ui/react";
 import { motion } from "framer-motion";
-import { FaPhoneAlt } from "react-icons/fa";
+import {
+  FaDiscord,
+  FaLinkedin,
+  FaPhoneAlt,
+  FaTelegram,
+  FaTwitter,
+} from "react-icons/fa";
 import { FiAtSign } from "react-icons/fi";
 import { MdWork } from "react-icons/md";
 import { passwordStrength } from "check-password-strength";
@@ -26,6 +35,7 @@ import { Logo, MailSent } from "components/icons";
 
 import API from "helpers/api";
 import { AuthResponse } from "common/types";
+import { platform } from "os";
 
 const CustomFlex = motion(Flex);
 
@@ -161,37 +171,61 @@ const RegisterForm: React.FC<{
   const [name, setName] = useState("");
   const [companyName, setCompanyName] = useState("");
 
+  const [discord, setDiscord] = useState("");
+  const [telegram, setTelegram] = useState("");
+  const [linkedin, setLinkedin] = useState("");
+  const [twitter, setTwitter] = useState("");
+  // const [preffered, setPreffered] = useState("");
+
+  const [step, setStep] = useState(0);
+
   const onSubmit = async () => {
-    const campaign_type = localStorage.getItem("campaign_type");
-    const campaign_id = localStorage.getItem("campaign_id");
-
-    let reqBody = {};
-    if (campaign_type && campaign_id) {
-      reqBody = {
-        email: email,
-        password1: password,
-        company_name: companyName,
-        contact_number: contactNumber,
-        first_name: name,
-        campaign: {
-          campaign_type,
-          campaign_id,
-        },
-      };
+    if (step === 0) {
+      setStep(1);
     } else {
-      reqBody = {
-        email: email,
-        password1: password,
-        company_name: companyName,
-        contact_number: contactNumber,
-        first_name: name,
-      };
-    }
-    const { data } = await API.post<AuthResponse>("/api-register/", reqBody);
+      const campaign_type = localStorage.getItem("campaign_type");
+      const campaign_id = localStorage.getItem("campaign_id");
 
-    if (data.status === "success") {
-      setRegistered(true);
-      setEmail(email);
+      let reqBody = {};
+      if (campaign_type && campaign_id) {
+        reqBody = {
+          email: email,
+          password1: password,
+          company_name: companyName,
+          contact_number: contactNumber,
+          first_name: name,
+          campaign: {
+            campaign_type,
+            campaign_id,
+          },
+          socials: {
+            telegram: telegram,
+            discord: discord,
+            linkedin: linkedin,
+            twitter: twitter,
+          },
+        };
+      } else {
+        reqBody = {
+          email: email,
+          password1: password,
+          company_name: companyName,
+          contact_number: contactNumber,
+          first_name: name,
+          socials: {
+            telegram: telegram,
+            discord: discord,
+            linkedin: linkedin,
+            twitter: twitter,
+          },
+        };
+      }
+      const { data } = await API.post<AuthResponse>("/api-register/", reqBody);
+
+      if (data.status === "success") {
+        setRegistered(true);
+        setEmail(email);
+      }
     }
   };
 
@@ -222,106 +256,198 @@ const RegisterForm: React.FC<{
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
       <Stack spacing={6} mt={8} width={["300px", "400px", "500px"]}>
-        <InputGroup alignItems="center">
-          <InputLeftElement
-            height="48px"
-            children={<Icon as={FaUserAlt} color="gray.300" />}
-          />
-          <Input
-            isRequired
-            value={name}
-            type="text"
-            placeholder="Your name"
-            variant="brand"
-            size="lg"
-            onChange={(event) => setName(event.target.value)}
-          />
-        </InputGroup>
+        {step === 0 && (
+          <>
+            <InputGroup alignItems="center">
+              <InputLeftElement
+                height="48px"
+                children={<Icon as={FaUserAlt} color="gray.300" />}
+              />
+              <Input
+                isRequired
+                value={name}
+                type="text"
+                placeholder="Your name"
+                variant="brand"
+                size="lg"
+                onChange={(event) => setName(event.target.value)}
+              />
+            </InputGroup>
 
-        <InputGroup alignItems="center">
-          <InputLeftElement
-            height="48px"
-            children={<Icon as={MdWork} color="gray.300" />}
-          />
-          <Input
-            isRequired
-            value={companyName}
-            placeholder="Your company"
-            variant="brand"
-            size="lg"
-            onChange={(event) => setCompanyName(event.target.value)}
-          />
-        </InputGroup>
+            <InputGroup alignItems="center">
+              <InputLeftElement
+                height="48px"
+                children={<Icon as={MdWork} color="gray.300" />}
+              />
+              <Input
+                isRequired
+                value={companyName}
+                placeholder="Your company"
+                variant="brand"
+                size="lg"
+                onChange={(event) => setCompanyName(event.target.value)}
+              />
+            </InputGroup>
 
-        <InputGroup alignItems="center">
-          <InputLeftElement
-            height="48px"
-            children={<Icon as={FaPhoneAlt} color="gray.300" />}
-          />
-          <Input
-            value={contactNumber}
-            isRequired
-            placeholder="Your phone number"
-            variant="brand"
-            size="lg"
-            onChange={(event) => setContactNumber(event.target.value)}
-          />
-        </InputGroup>
+            <InputGroup alignItems="center">
+              <InputLeftElement
+                height="48px"
+                children={<Icon as={FaPhoneAlt} color="gray.300" />}
+              />
+              <Input
+                value={contactNumber}
+                isRequired
+                placeholder="Your phone number"
+                variant="brand"
+                size="lg"
+                onChange={(event) => setContactNumber(event.target.value)}
+              />
+            </InputGroup>
 
-        <InputGroup alignItems="center">
-          <InputLeftElement
-            height="48px"
-            children={<Icon as={FiAtSign} color="gray.300" />}
-          />
-          <Input
-            isRequired
-            value={email}
-            type="email"
-            placeholder="Your email"
-            variant="brand"
-            size="lg"
-            onChange={(event) => setEmail(event.target.value)}
-          />
-        </InputGroup>
+            <InputGroup alignItems="center">
+              <InputLeftElement
+                height="48px"
+                children={<Icon as={FiAtSign} color="gray.300" />}
+              />
+              <Input
+                isRequired
+                value={email}
+                type="email"
+                placeholder="Your email"
+                variant="brand"
+                size="lg"
+                onChange={(event) => setEmail(event.target.value)}
+              />
+            </InputGroup>
 
-        <InputGroup>
-          <InputLeftElement
-            height="48px"
-            color="gray.300"
-            children={<Icon as={FaLock} color="gray.300" />}
-          />
-          <Input
-            isRequired
-            value={password}
-            type="password"
-            placeholder="Create password"
-            variant="brand"
-            size="lg"
-            onChange={(event) => {
-              setPassword(event.target.value);
-              setPasswordError(passwordStrength(event.target.value));
-            }}
-          />
-        </InputGroup>
-        {passwordError &&
-          passwordError.length < 8 &&
-          passwordError.contains.length < 4 && (
-            <Text color={"subtle"} size={"xs"}>
-              Your password should contain a
-              {unique(passwordError.contains, charTypes).map(
-                (item) => ` ${item}, `
+            <InputGroup>
+              <InputLeftElement
+                height="48px"
+                color="gray.300"
+                children={<Icon as={FaLock} color="gray.300" />}
+              />
+              <Input
+                isRequired
+                value={password}
+                type="password"
+                placeholder="Create password"
+                variant="brand"
+                size="lg"
+                onChange={(event) => {
+                  setPassword(event.target.value);
+                  setPasswordError(passwordStrength(event.target.value));
+                }}
+              />
+            </InputGroup>
+            {passwordError &&
+              passwordError.length < 8 &&
+              passwordError.contains.length < 4 && (
+                <Text color={"subtle"} size={"xs"}>
+                  Your password should contain a
+                  {unique(passwordError.contains, charTypes).map(
+                    (item) => ` ${item}, `
+                  )}
+                  {passwordError.length < 8 &&
+                    ` and should have ${
+                      8 - passwordError.length
+                    } more characters`}
+                </Text>
               )}
-              {passwordError.length < 8 &&
-                ` and should have ${8 - passwordError.length} more characters`}
-            </Text>
-          )}
+          </>
+        )}
+        {step === 1 && (
+          <>
+            {/* <FormControl id="preffered_mode">
+              
+              <Select
+                placeholder="Select Mode of communication"
+                value={preffered}
+                variant="brand"
+                h={"48px"}
+                
+                onChange={(e) => {
+                  setPreffered(e.target.value);
+                }}
+              >
+                <option value="twitter">Twitter</option>
+                <option value="linkedin">Linkedin</option>
+                <option value="telegram">Telegram</option>
+                <option value="discord">Discord</option>
+              </Select>
+            </FormControl> */}
+            <InputGroup mt={0} alignItems="center">
+              <InputLeftElement
+                height="48px"
+                children={<Icon as={FaDiscord} color="gray.300" />}
+              />
+              <Input
+                
+                placeholder="Discord (optional)"
+                variant="brand"
+                size="lg"
+                value={discord}
+                onChange={(e) => {
+                  setDiscord(e.target.value);
+                }}
+              />
+            </InputGroup>
+            <InputGroup mt={0} alignItems="center">
+              <InputLeftElement
+                height="48px"
+                children={<Icon as={FaTelegram} color="gray.300" />}
+              />
+              <Input
+               
+                placeholder="Telegram (optional)"
+                variant="brand"
+                size="lg"
+                value={telegram}
+                onChange={(e) => {
+                  setTelegram(e.target.value);
+                }}
+              />
+            </InputGroup>
+            <InputGroup mt={0} alignItems="center">
+              <InputLeftElement
+                height="48px"
+                children={<Icon as={FaLinkedin} color="gray.300" />}
+              />
+              <Input
+                
+                placeholder="Linkedin (optional)"
+                variant="brand"
+                size="lg"
+                value={linkedin}
+                onChange={(e) => {
+                  setLinkedin(e.target.value);
+                }}
+              />
+            </InputGroup>
+            <InputGroup mt={0} alignItems="center">
+              <InputLeftElement
+                height="48px"
+                children={<Icon as={FaTwitter} color="gray.300" />}
+              />
+              <Input
+                
+                placeholder="Twitter (optional)"
+                variant="brand"
+                size="lg"
+                value={twitter}
+                onChange={(e) => {
+                  setTwitter(e.target.value);
+                }}
+              />
+            </InputGroup>
+          </>
+        )}
 
         <Button
           type="submit"
           variant="brand"
           isLoading={formState.isSubmitting}
         >
-          Sign Up
+          {step === 0 ? 'Next' : "Submit" }
         </Button>
       </Stack>
     </form>

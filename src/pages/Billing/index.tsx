@@ -74,7 +74,6 @@ const Billing: React.FC = () => {
 
   const { data: transactionList } = useTransactions(1, 50);
 
-
   return (
     <Box
       sx={{
@@ -99,112 +98,106 @@ const Billing: React.FC = () => {
       >
         <Text sx={{ color: "text", fontWeight: 600 }}>BILLING</Text>
         {!data || !plans || !transactionList ? (
-                  <Flex
-                    w="100%"
-                    h="70vh"
-                    alignItems="center"
-                    justifyContent="center"
-                  >
-                    <Spinner />
-                  </Flex>
-                ) : (
-                  <Tabs mt={10} w={'100%'} variant="soft-rounded" colorScheme="green">
-          <TabList >
-            <Tab px={20}>Plans</Tab>
-            <Tab px={20}>Transactions</Tab>
-          </TabList>
-          <TabPanels width={'100%'}>
-            <TabPanel width={'100%'}>
-            <>
-                    {data.current_package === "trial" ||
-                    data.current_package === "expired" ||
-                    data.current_package === "ondemand" ? (
-                      <>
-                        {transactionList.data.length > 0 &&
-                          transactionList.data[0].payment_status === "open" && (
-                            <LatestInvoice
-                              transactionData={transactionList.data[0]}
-                              selectedPlan={transactionList.data[0].package}
-                              planData={
-                                plans.monthly[transactionList.data[0].package]
-                              }
-                            />
-                          )}
-                        <Flex
-                          justifyContent={"flex-start"}
-                          alignItems={"flex-start"}
-                          flexWrap="wrap"
+          <Flex w="100%" h="70vh" alignItems="center" justifyContent="center">
+            <Spinner />
+          </Flex>
+        ) : (
+          <Tabs mt={10} w={"100%"} variant="soft-rounded" colorScheme="green">
+            <TabList>
+              <Tab px={20}>Plans</Tab>
+              <Tab px={20}>Transactions</Tab>
+            </TabList>
+            <TabPanels width={"100%"}>
+              <TabPanel width={"100%"}>
+                <>
+                  {data.current_package === "trial" ||
+                  data.current_package === "expired" ||
+                  data.current_package === "ondemand" ? (
+                    <>
+                      {transactionList.data.length > 0 &&
+                        transactionList.data[0].payment_status === "open" && (
+                          <LatestInvoice
+                            transactionData={transactionList.data[0]}
+                            selectedPlan={transactionList.data[0].package}
+                            planData={
+                              plans.monthly[transactionList.data[0].package]
+                            }
+                          />
+                        )}
+                      <Flex
+                        justifyContent={"flex-start"}
+                        alignItems={"flex-start"}
+                        flexWrap="wrap"
+                        width={"100%"}
+                        height={"fit-content"}
+                        padding={2}
+                        mt={5}
+                      >
+                        {Object.keys(plans.monthly).map((plan) => {
+                          if (plan !== "trial")
+                            return (
+                              <PricingPlan
+                                selectedPlan={selectedPlan}
+                                setSelectedPlan={setSelectedPlan}
+                                plan={plan}
+                                planData={plans.monthly[plan]}
+                              />
+                            );
+                        })}
+                      </Flex>
+                      <Text sx={{ color: "text", fontWeight: 600 }} ml={5}>
+                        {plans.monthly[selectedPlan].name}
+                      </Text>
+                      <Text
+                        as="span"
+                        ml={5}
+                        mt={3}
+                        fontWeight={300}
+                        fontSize="smaller"
+                      >
+                        {plans.monthly[selectedPlan].description}
+                      </Text>
+                      <PricingDetails
+                        planData={plans.monthly[selectedPlan]}
+                        selectedPlan={selectedPlan}
+                      />
+                    </>
+                  ) : (
+                    <>
+                      <VStack width="100%" pt={8}>
+                        <Box sx={{ w: "100%" }}>
+                          <CurrentPlan
+                            isCancellable={data.is_cancellable}
+                            name={plans.monthly[data.current_package].name}
+                            packageName={data.current_package}
+                            packageRechargeDate={data.package_recharge_date}
+                            packageValidity={data.package_validity}
+                            plan={plans.monthly[data.current_package]}
+                          />
+                        </Box>
+                        <HStack
+                          spacing={5}
+                          align={"flex-start"}
                           width={"100%"}
-                          height={"fit-content"}
-                          padding={2}
-                          mt={5}
+                          pt={5}
                         >
-                          {Object.keys(plans.monthly).map((plan) => {
-                            if (plan !== "trial")
-                              return (
-                                <PricingPlan
-                                  selectedPlan={selectedPlan}
-                                  setSelectedPlan={setSelectedPlan}
-                                  plan={plan}
-                                  planData={plans.monthly[plan]}
-                                />
-                              );
-                          })}
-                        </Flex>
-                        <Text sx={{ color: "text", fontWeight: 600 }} ml={5}>
-                          {plans.monthly[selectedPlan].name}
-                        </Text>
-                        <Text
-                          as="span"
-                          ml={5}
-                          mt={3}
-                          fontWeight={300}
-                          fontSize="smaller"
-                        >
-                          {plans.monthly[selectedPlan].description}
-                        </Text>
-                        <PricingDetails
-                          planData={plans.monthly[selectedPlan]}
-                          selectedPlan={selectedPlan}
-                        />
-                      </>
-                    ) : (
-                      <>
-                        <VStack width="100%" pt={8}>
-                          <Box sx={{ w: "100%" }}>
-                            <CurrentPlan
-                              isCancellable={data.is_cancellable}
-                              name={plans.monthly[data.current_package].name}
-                              packageName={data.current_package}
-                              packageRechargeDate={data.package_recharge_date}
-                              packageValidity={data.package_validity}
-                              plan={plans.monthly[data.current_package]}
-                            />
-                          </Box>
-                          <HStack
-                            spacing={5}
-                            align={"flex-start"}
-                            width={"100%"}
-                            pt={5}
-                          >
-                            {data.is_cancellable && (
-                              <CardDetails profileData={data} />
-                            )}
-                            {data.is_cancellable && <InvoiceList />}
-                          </HStack>
-                          {/* <Box sx={{ w: "%" }}></Box> */}
-                        </VStack>
-                      </>
-                    )}
-                  </>
-            </TabPanel>
-            <TabPanel>
-              <TransactionListCard transactionList={transactionList?.data} />
-            </TabPanel>
-          </TabPanels>
-        </Tabs>
-                )}
-        
+                          {data.is_cancellable && (
+                            <CardDetails profileData={data} />
+                          )}
+                          {data.is_cancellable && <InvoiceList />}
+                        </HStack>
+                        {/* <Box sx={{ w: "%" }}></Box> */}
+                      </VStack>
+                    </>
+                  )}
+                </>
+              </TabPanel>
+              <TabPanel>
+                <TransactionListCard transactionList={transactionList?.data} />
+              </TabPanel>
+            </TabPanels>
+          </Tabs>
+        )}
       </Flex>
     </Box>
   );
@@ -280,9 +273,12 @@ const PricingPlan: React.FC<{
         <Text mt={10} mx={5} fontSize={"sm"}>
           {planData.name}
         </Text>
-        <Heading fontSize={"x-large"} mt={1} mb={!selected ? 10 : 4}>
+        <Heading fontSize={"x-large"} my={1}>
           {planData.amount === "Free" ? "Free" : `$ ${planData.amount}`}
         </Heading>
+        <Text mb={!selected ? 10 : 4} mx={5} fontSize={"xs"}>
+          per month
+        </Text>
         {selected && (
           <Button
             my={5}
@@ -426,14 +422,24 @@ const PricingPlan: React.FC<{
                 <Text mx={6} mt={4} sx={{ fontWeight: 500 }}>
                   {planData.name}
                 </Text>
-                <Heading
-                  mx={6}
-                  fontSize={"x-large"}
-                  mt={1}
-                  mb={!selected ? 10 : 4}
-                >
-                  {planData.amount === "Free" ? "Free" : `$ ${planData.amount}`}
-                </Heading>
+                <HStack>
+                  <Heading
+                    ml={6}
+                    mr={1}
+                    fontSize={"x-large"}
+                    mt={1}
+                    mb={!selected ? 10 : 4}
+                  >
+                    {planData.amount === "Free"
+                      ? "Free"
+                      : `$ ${planData.amount}`}{" "}
+                    /
+                  </Heading>
+                  <Text mx={6} fontSize={"md"}>
+                    month
+                  </Text>
+                </HStack>
+
                 <Text mx={6} fontSize={"xs"}>
                   {planData.description}
                 </Text>
@@ -534,11 +540,11 @@ const CurrentPlan: React.FC<{
   const successColor = "#289F4C";
   const greyColor = "#BDBDBD";
 
-  const toast = useToast()
+  const toast = useToast();
 
   const cancelSubscription = async () => {
     const { data } = await API.delete("/api-cancel-stripe-subscription-beta/");
-    if(data.status === 'success'){
+    if (data.status === "success") {
       toast({
         title: data.message,
         status: "success",
@@ -546,7 +552,7 @@ const CurrentPlan: React.FC<{
         isClosable: true,
         position: "bottom",
       });
-      onClose()
+      onClose();
     }
   };
 
@@ -703,7 +709,7 @@ const CurrentPlan: React.FC<{
           </HStack>
           {isCancellable && (
             <Button
-              onClick={()=>setIsOpen(!isOpen)}
+              onClick={() => setIsOpen(!isOpen)}
               variant="accent-ghost"
               color={"red"}
               mt={5}
@@ -731,18 +737,14 @@ const CurrentPlan: React.FC<{
             </AlertDialogHeader>
 
             <AlertDialogBody>
-              Are you sure you want to cancel the subscription? 
+              Are you sure you want to cancel the subscription?
             </AlertDialogBody>
 
             <AlertDialogFooter>
               <Button ref={cancelRef} onClick={onClose} py={6}>
                 No, my bad
               </Button>
-              <Button
-                variant="brand"
-                onClick={cancelSubscription}
-                ml={3}
-              >
+              <Button variant="brand" onClick={cancelSubscription} ml={3}>
                 Yes
               </Button>
             </AlertDialogFooter>
@@ -1016,10 +1018,9 @@ const LatestInvoice: React.FC<{
 const CardDetails: React.FC<{
   profileData: Profile;
 }> = ({ profileData }) => {
-
   console.log(profileData);
   let package_recharge_date = new Date(profileData.package_recharge_date);
-  let package_end_date = new Date(profileData.package_end_date)
+  let package_end_date = new Date(profileData.package_end_date);
 
   return (
     <Box
@@ -1073,10 +1074,11 @@ const CardDetails: React.FC<{
         </Text>
       </HStack>
       <Text mt={10} fontWeight={500} color={"gray.500"}>
-        Next billed on {`${package_recharge_date.getDate()} ${monthNames[package_recharge_date.getMonth()]} ${package_recharge_date.getFullYear()}`}
-
+        Next billed on{" "}
+        {`${package_recharge_date.getDate()} ${
+          monthNames[package_recharge_date.getMonth()]
+        } ${package_recharge_date.getFullYear()}`}
       </Text>
-      
 
       <Text
         ml={20}
@@ -1146,23 +1148,26 @@ const InvoiceList: React.FC = () => {
   );
 };
 
-const TransactionListCard: React.FC<{transactionList: Transaction[];}> = ({ transactionList }) => {
+const TransactionListCard: React.FC<{ transactionList: Transaction[] }> = ({
+  transactionList,
+}) => {
   const cancelRef = useRef<HTMLButtonElement | null>(null);
   const [isOpen, setIsOpen] = useState(false);
   const onClose = () => setIsOpen(false);
 
   const toast = useToast();
 
-  const [orderId, setOrderId] = useState('');
-  const [paymentPlatform, setPaymentPlatform] = useState('')
-
+  const [orderId, setOrderId] = useState("");
+  const [paymentPlatform, setPaymentPlatform] = useState("");
 
   const cancelPayment = async () => {
-    const { data } = await API.delete("/api-invalidate-order-beta/",{ data: {     
-      payment_platform: paymentPlatform,
-      order_id: orderId
-    }});
-    if(data.status === 'success'){
+    const { data } = await API.delete("/api-invalidate-order-beta/", {
+      data: {
+        payment_platform: paymentPlatform,
+        order_id: orderId,
+      },
+    });
+    if (data.status === "success") {
       toast({
         title: data.message,
         status: "success",
@@ -1170,7 +1175,7 @@ const TransactionListCard: React.FC<{transactionList: Transaction[];}> = ({ tran
         isClosable: true,
         position: "bottom",
       });
-      onClose()
+      onClose();
     }
   };
   return (
@@ -1183,23 +1188,30 @@ const TransactionListCard: React.FC<{transactionList: Transaction[];}> = ({ tran
       }}
       filter={"drop-shadow(0px 4px 23px rgba(0, 0, 0, 0.15));"}
     >
-      <HStack p={4} borderRadius={10} backgroundColor={'gray.100'} mt={3} justify="flex-start" width={"100%"} align="center">
-      <Text w={'8%'} fontWeight={500} color={"gray.500"}>
-              Status
-            </Text>
-            <Text w={'12%'} fontWeight={500} color={"gray.500"}>
-              Amount
-            </Text>
-            <Text w={'14%'} fontWeight={500} color={"gray.500"}>
-              Date
-            </Text>
-            <Text w={'14%'} fontWeight={500} color={"gray.500"}>
-              Payment Mode
-            </Text>
-            <Text w={'14%'} fontWeight={500} color={"gray.500"}>
-              Package
-            </Text>
-            
+      <HStack
+        p={4}
+        borderRadius={10}
+        backgroundColor={"gray.100"}
+        mt={3}
+        justify="flex-start"
+        width={"100%"}
+        align="center"
+      >
+        <Text w={"8%"} fontWeight={500} color={"gray.500"}>
+          Status
+        </Text>
+        <Text w={"12%"} fontWeight={500} color={"gray.500"}>
+          Amount
+        </Text>
+        <Text w={"14%"} fontWeight={500} color={"gray.500"}>
+          Date
+        </Text>
+        <Text w={"14%"} fontWeight={500} color={"gray.500"}>
+          Payment Mode
+        </Text>
+        <Text w={"14%"} fontWeight={500} color={"gray.500"}>
+          Package
+        </Text>
       </HStack>
 
       {transactionList.map((transaction) => {
@@ -1216,67 +1228,73 @@ const TransactionListCard: React.FC<{transactionList: Transaction[];}> = ({ tran
             >
               {invoice.invoice_status}
             </Badge> */}
-            <Text w={'8%'} fontWeight={500} color={"gray.500"}>
-            <Badge
-              colorScheme={
-                transaction.payment_status === "success" ? "green" : transaction.payment_status === "failed" ? 'red' : "orange"
-              }
-            >
-              {transaction.payment_status} 
-            </Badge>
+            <Text w={"8%"} fontWeight={500} color={"gray.500"}>
+              <Badge
+                colorScheme={
+                  transaction.payment_status === "success"
+                    ? "green"
+                    : transaction.payment_status === "failed"
+                    ? "red"
+                    : "orange"
+                }
+              >
+                {transaction.payment_status}
+              </Badge>
             </Text>
-            <Text w={'12%'} fontWeight={500} color={"gray.500"}>
-              {parseFloat(transaction.amount).toFixed(2)} {transaction.currency.toUpperCase()}
+            <Text w={"12%"} fontWeight={500} color={"gray.500"}>
+              {parseFloat(transaction.amount).toFixed(2)}{" "}
+              {transaction.currency.toUpperCase()}
             </Text>
-            <Text w={'14%'} fontWeight={500} color={"gray.500"}>
-            {date[2]} {monthNames[parseInt(date[1])]} {date[0]}
-
+            <Text w={"14%"} fontWeight={500} color={"gray.500"}>
+              {date[2]} {monthNames[parseInt(date[1])]} {date[0]}
             </Text>
-            <Text w={'14%'} fontWeight={500} color={"gray.500"}>
+            <Text w={"14%"} fontWeight={500} color={"gray.500"}>
               {sentenceCapitalize(transaction.payment_platform)}
             </Text>
-            <Text w={'14%'} fontWeight={500} color={"gray.500"}>
+            <Text w={"14%"} fontWeight={500} color={"gray.500"}>
               {sentenceCapitalize(transaction.package)}
             </Text>
-            <HStack w={'34%'} justify='flex-end'>
-            {transaction.payment_platform === 'stripe' && transaction.payment_status === 'open' && <Button
-              variant="accent-ghost"
-              color={"red"}
-              w={'fit-content'}
-              my={0}
-              py={0}
-              fontSize={'xs'}
-              onClick={()=>{
-                setIsOpen(!isOpen)
-                setOrderId(transaction.order_id)
-                setPaymentPlatform(transaction.payment_platform)
-              }}
-            >
-              
-              Cancel Payment
-            </Button>}
-            {transaction.payment_status === 'open' && transaction.invoice_url && <Button
-              variant="accent-ghost"
-              color={"accent"}
-              w={'fit-content'}
-              my={0}
-              py={0}
-              fontSize={'xs'}
-              width={'fit-content'}
-              onClick={()=>{
-                window.open(transaction.invoice_url, '_blank')
-              }}
-            >
-              
-              Complete Payment
-            </Button>}
+            <HStack w={"34%"} justify="flex-end">
+              {transaction.payment_platform === "stripe" &&
+                transaction.payment_status === "open" && (
+                  <Button
+                    variant="accent-ghost"
+                    color={"red"}
+                    w={"fit-content"}
+                    my={0}
+                    py={0}
+                    fontSize={"xs"}
+                    onClick={() => {
+                      setIsOpen(!isOpen);
+                      setOrderId(transaction.order_id);
+                      setPaymentPlatform(transaction.payment_platform);
+                    }}
+                  >
+                    Cancel Payment
+                  </Button>
+                )}
+              {transaction.payment_status === "open" &&
+                transaction.invoice_url && (
+                  <Button
+                    variant="accent-ghost"
+                    color={"accent"}
+                    w={"fit-content"}
+                    my={0}
+                    py={0}
+                    fontSize={"xs"}
+                    width={"fit-content"}
+                    onClick={() => {
+                      window.open(transaction.invoice_url, "_blank");
+                    }}
+                  >
+                    Complete Payment
+                  </Button>
+                )}
             </HStack>
-            
-
           </HStack>
         );
       })}
-        <AlertDialog
+      <AlertDialog
         isOpen={isOpen}
         leastDestructiveRef={cancelRef}
         onClose={onClose}
@@ -1288,7 +1306,7 @@ const TransactionListCard: React.FC<{transactionList: Transaction[];}> = ({ tran
             </AlertDialogHeader>
 
             <AlertDialogBody>
-              Are you sure you want to cancel the payment invoice? 
+              Are you sure you want to cancel the payment invoice?
             </AlertDialogBody>
 
             <AlertDialogFooter>
@@ -1297,7 +1315,9 @@ const TransactionListCard: React.FC<{transactionList: Transaction[];}> = ({ tran
               </Button>
               <Button
                 variant="brand"
-                onClick={()=>{cancelPayment()}}
+                onClick={() => {
+                  cancelPayment();
+                }}
                 ml={3}
               >
                 Yes
