@@ -54,7 +54,7 @@ import {
   AiOutlineProject,
 } from "react-icons/ai";
 import Overview from "components/overview";
-import Result from "components/result";
+import Result, { MultifileResult } from "components/result";
 import AdvancedScan from "components/advancedScan";
 import {
   RescanIcon,
@@ -536,7 +536,7 @@ const ScanDetails: React.FC<{ scansRemaining: number; scans: ScanMeta[] }> = ({
                     <Tab mx={2}>Detailed Result</Tab>
                     <Tab mx={2}>Scan History</Tab>
                     <Tab mx={2}>Published Reports</Tab>
-                    {/* <Tab mx={2}>Advanced Scan(Beta)</Tab> */}
+                    <Tab mx={2}>Advanced Scan(Beta)</Tab>
                   </TabList>
                   <TabPanels>
                     <TabPanel>
@@ -576,6 +576,36 @@ const ScanDetails: React.FC<{ scansRemaining: number; scans: ScanMeta[] }> = ({
                     </TabPanel>
                     <TabPanel>
                       <PublishedReports />
+                    </TabPanel>
+                    <TabPanel>
+                      {scanData.scan_report.multi_file_scan_status ===
+                        "scan_done" &&
+                      scanData.scan_report.multi_file_scan_details &&
+                      scanData.scan_report.multi_file_scan_summary ? (
+                        <MultifileResult
+                          scanSummary={
+                            scanData.scan_report.multi_file_scan_summary
+                          }
+                          scanDetails={
+                            scanData.scan_report.multi_file_scan_details
+                          }
+                        />
+                      ) : (
+                        <Flex
+                          w="97%"
+                          m={4}
+                          borderRadius="20px"
+                          bgColor="high-subtle"
+                          p={4}
+                        >
+                          <ScanErrorIcon size={28} />
+                          <Text fontSize={"xs"} color="high" ml={4}>
+                            {scanData.scan_report.scan_message
+                              ? scanData.scan_report.scan_message
+                              : scanData.scan_report.scan_status}
+                          </Text>
+                        </Flex>
+                      )}
                     </TabPanel>
                   </TabPanels>
                 </Tabs>

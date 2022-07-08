@@ -381,7 +381,6 @@ const RegisterForm: React.FC<{
                 children={<Icon as={FaDiscord} color="gray.300" />}
               />
               <Input
-                
                 placeholder="Discord (optional)"
                 variant="brand"
                 size="lg"
@@ -397,7 +396,6 @@ const RegisterForm: React.FC<{
                 children={<Icon as={FaTelegram} color="gray.300" />}
               />
               <Input
-               
                 placeholder="Telegram (optional)"
                 variant="brand"
                 size="lg"
@@ -413,7 +411,6 @@ const RegisterForm: React.FC<{
                 children={<Icon as={FaLinkedin} color="gray.300" />}
               />
               <Input
-                
                 placeholder="Linkedin (optional)"
                 variant="brand"
                 size="lg"
@@ -429,7 +426,6 @@ const RegisterForm: React.FC<{
                 children={<Icon as={FaTwitter} color="gray.300" />}
               />
               <Input
-                
                 placeholder="Twitter (optional)"
                 variant="brand"
                 size="lg"
@@ -447,7 +443,7 @@ const RegisterForm: React.FC<{
           variant="brand"
           isLoading={formState.isSubmitting}
         >
-          {step === 0 ? 'Next' : "Submit" }
+          {step === 0 ? "Next" : "Submit"}
         </Button>
       </Stack>
     </form>

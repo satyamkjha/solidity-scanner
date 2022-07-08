@@ -91,6 +91,50 @@ export type Scan = {
   reporting_status: string;
   _created: string;
   _updated: string;
+  multi_file_scan_details: MultiFileScanDetail[];
+  multi_file_scan_status: string;
+  multi_file_scan_summary: MultiFileScanSummary;
+};
+
+export type MultiFileScanDetail = {
+  issue_id: string;
+  template_details: MultiFileTemplateDetail;
+  metric_wise_aggregated_findings: MetricWiseAggregatedFinding[];
+};
+
+export type MultiFileTemplateDetail = {
+  additional_meta: string;
+  aggregation_key: string;
+  description_keys: string[];
+  issue_confidence: string;
+  issue_id: string;
+  issue_name: string;
+  issue_severity: string;
+  multi_file_supported: string;
+  type: string;
+  version: string;
+};
+
+export type MultiFileScanSummary = {
+  count_files_analyzed: number;
+  issue_severity_distribution: IssueSeverityDistribution;
+  issues_count: number;
+  lines_analyzed_count: number;
+  scan_time_taken: number;
+  scans_ran: string[];
+  score: string;
+};
+
+export type MetricWiseAggregatedFinding = {
+  [key: string]: {
+    description_details: {
+      context_version?: string;
+      mostly_used_version?: string;
+      version_file_count?: string;
+      function_name?: string;
+    };
+    findings: Finding[];
+  };
 };
 
 export type ScanMeta = {
@@ -130,7 +174,6 @@ export type ScanDetail = {
 
 export type Finding = {
   file_path: string;
-  description: string;
   line_nos_start: number[];
   line_nos_end: number[];
 };
