@@ -62,9 +62,11 @@ type FilesState = {
     context_version?: string;
     mostly_used_version?: string;
     version_file_count?: string;
+    function_name?: string;
   };
   findings: Finding[];
-  issue_key: string;
+  bug_id: string;
+  issue_id: string;
   template_details: MultiFileTemplateDetail;
 };
 
@@ -318,7 +320,6 @@ const FileDetails: React.FC<FileDetailsProps> = ({ file, type }) => {
 
   const { data, isLoading } = useFileContent(scan_id, file_path, type);
 
-  console.log(data);
   return (
     <Box w="100%" position={"relative"} h={"100%"}>
       <Box
@@ -402,7 +403,11 @@ const FileDetails: React.FC<FileDetailsProps> = ({ file, type }) => {
           }}
         >
           <Box fontSize="sm" mb={2}>
-            <IssueDetail issue_id={issue_id} />
+            <IssueDetail
+              issue_id={issue_id}
+              context="single_file"
+              description_details={{}}
+            />
           </Box>
         </Box>
       </Box>
@@ -523,7 +528,11 @@ export const MultifileResult: React.FC<{
                     ? "#F5F2FF"
                     : "bg.subtle"
                 }
-                border={ files?.template_details.issue_confidence === "2" ? '1px solid #C1B1FF': ''}
+                border={
+                  files?.template_details.issue_confidence === "2"
+                    ? "1px solid #C1B1FF"
+                    : ""
+                }
               >
                 <WarningIcon color={"low"} mr={2} /> Certain
               </Text>
@@ -537,8 +546,11 @@ export const MultifileResult: React.FC<{
                     ? "#F5F2FF"
                     : "bg.subtle"
                 }
-                border={ files?.template_details.issue_confidence === "1" ? '1px solid #C1B1FF': ''}
-
+                border={
+                  files?.template_details.issue_confidence === "1"
+                    ? "1px solid #C1B1FF"
+                    : ""
+                }
               >
                 <WarningIcon color={"medium"} mr={2} /> Firm
               </Text>
@@ -552,7 +564,11 @@ export const MultifileResult: React.FC<{
                     ? "#F5F2FF"
                     : "bg.subtle"
                 }
-                border={ files?.template_details.issue_confidence === "0" ? '1px solid #C1B1FF': ''}
+                border={
+                  files?.template_details.issue_confidence === "0"
+                    ? "1px solid #C1B1FF"
+                    : ""
+                }
               >
                 <WarningIcon color={"high"} mr={2} /> Tentative
               </Text>
@@ -569,7 +585,7 @@ export const MultifileResult: React.FC<{
           }}
         >
           {files ? (
-            <MultiFileExplorer files={files} type={"project"} />
+            <MultiFileExplorer files={files} />
           ) : (
             <Flex
               sx={{
@@ -614,8 +630,6 @@ const MultifileIssues: React.FC<MultifileIssuesProps> = ({
         )
         .map(
           ({ issue_id, metric_wise_aggregated_findings, template_details }) => {
-            console.log(metric_wise_aggregated_findings);
-
             return (
               <AccordionItem id={issue_id} key={issue_id}>
                 {({ isExpanded }) => (
@@ -687,7 +701,7 @@ const MultifileIssues: React.FC<MultifileIssuesProps> = ({
                               sx={{
                                 cursor: "pointer",
                                 bg:
-                                  key === files?.issue_key
+                                  key === files?.bug_id
                                     ? "gray.200"
                                     : "gray.50",
                                 p: 3,
@@ -698,14 +712,15 @@ const MultifileIssues: React.FC<MultifileIssuesProps> = ({
                                 transition: "0.2s background",
                                 _hover: {
                                   bg:
-                                    key === files?.issue_key
+                                    key === files?.bug_id
                                       ? "gray.200"
                                       : "gray.100",
                                 },
                               }}
                               onClick={() =>
                                 setFiles({
-                                  issue_key: key,
+                                  bug_id: key,
+                                  issue_id: issue_id,
                                   findings:
                                     metric_wise_aggregated_findings[index][key]
                                       .findings,
@@ -770,7 +785,6 @@ const FileDataCont: React.FC<FileDataContProps> = ({ file }) => {
 
   const { data, isLoading } = useFileContent(scan_id, file_path, "project");
 
-  console.log(data);
   return (
     <>
       {isLoading && (
@@ -852,8 +866,15 @@ const MultiFileExplorer: React.FC<MultiFileExplorerProps> = ({ files }) => {
                   {files.findings.map((file) => (
                     <Tab mx={1} background={"white"}>
                       <Tooltip label={file.file_path} aria-label="A tooltip">
-                        <Text width={100} isTruncated>
-                          {file.file_path}
+                        <Text fontSize={"xs"} width={100} isTruncated>
+                          {file.file_path.length < 16
+                            ? file.file_path
+                            : file.file_path.slice(0, 4) +
+                              "..." +
+                              file.file_path.slice(
+                                file.file_path.length - 8,
+                                file.file_path.length
+                              )}
                         </Text>
                       </Tooltip>
                     </Tab>
@@ -865,7 +886,7 @@ const MultiFileExplorer: React.FC<MultiFileExplorerProps> = ({ files }) => {
                   <TabPanel p={2}>
                     <FileDataCont
                       file={{
-                        issue_id: files.issue_key,
+                        issue_id: files.issue_id,
                         file_path: file.file_path,
                         line_nos_start: file.line_nos_start,
                         line_nos_end: file.line_nos_end,
@@ -886,7 +907,11 @@ const MultiFileExplorer: React.FC<MultiFileExplorerProps> = ({ files }) => {
           }}
         >
           <Box fontSize="sm" mb={2}>
-            <IssueDetail issue_id={files.issue_key} />
+            <IssueDetail
+              issue_id={files.issue_id}
+              context="multi_file"
+              description_details={files.description_details}
+            />
           </Box>
         </Box>
       </Box>
@@ -949,8 +974,23 @@ const MultiFileExplorer: React.FC<MultiFileExplorerProps> = ({ files }) => {
   );
 };
 
-const IssueDetail: React.FC<{ issue_id: string }> = ({ issue_id }) => {
-  const { data, isLoading } = useIssueDetail(issue_id);
+const IssueDetail: React.FC<{
+  issue_id: string;
+  context: string;
+  description_details: {
+    context_version?: string;
+    mostly_used_version?: string;
+    version_file_count?: string;
+    function_name?: string;
+  };
+}> = ({ issue_id, context, description_details }) => {
+  const { data, isLoading } = useIssueDetail(issue_id, context);
+
+  const { context_version, mostly_used_version, version_file_count } =
+    description_details;
+
+  console.log(context_version);
+
   return (
     <Tabs size="sm" variant="soft-rounded" colorScheme="green">
       <TabList
@@ -984,11 +1024,12 @@ const IssueDetail: React.FC<{ issue_id: string }> = ({ issue_id }) => {
               {data.issue_details.issue_name}
             </Text>
             <DescriptionWrapper>
-              <Box
+              {/* <Box
                 dangerouslySetInnerHTML={{
-                  __html: data.issue_details.issue_description,
+                  __html: '`' + data.issue_details.issue_description + '`',
                 }}
-              />
+              /> */}
+              <Text></Text>
             </DescriptionWrapper>
             {/* <pre>{data.issue_details.issue_description}</pre> */}
           </TabPanel>
@@ -996,7 +1037,7 @@ const IssueDetail: React.FC<{ issue_id: string }> = ({ issue_id }) => {
             <DescriptionWrapper>
               <Box
                 dangerouslySetInnerHTML={{
-                  __html: data.issue_details.issue_remediation,
+                  __html: data.issue_details.issue_remediation.format(description_details),
                 }}
               />
             </DescriptionWrapper>
