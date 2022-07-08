@@ -33,6 +33,87 @@ export const LogoIcon: React.FC<{ size: number }> = ({ size, ...props }) => {
   );
 };
 
+export const MultifileIcon: React.FC<{ size: number }> = ({
+  size,
+  ...props
+}) => {
+  const gradientId = "_" + Math.random().toString(36).substr(2, 9);
+  return (
+    <svg
+      width={size}
+      fill="none"
+      height={(16 / 18) * size}
+      viewBox="0 0 18 16"
+      xmlns="http://www.w3.org/2000/svg"
+      {...props}
+    >
+      <rect
+        x="4.5"
+        y="2.75"
+        width="8.75"
+        height="12.25"
+        rx="4.375"
+        fill="#ECE8FF"
+      />
+      <path
+        d="M15.875 3.625L13.25 5.375M8.875 2.75C11.2912 2.75 13.25 4.317 13.25 6.25V11.5C13.25 13.433 11.2912 15 8.875 15C6.45875 15 4.5 13.433 4.5 11.5V6.25C4.5 4.317 6.45875 2.75 8.875 2.75Z"
+        stroke="#3E15F4"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+      />
+      <path d="M8.875 9.75V15" stroke="#3E15F4" stroke-linecap="round" />
+      <path
+        d="M15.875 3.625L13.25 5.375"
+        stroke="#3E15F4"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+      />
+      <path
+        d="M1.875 3.625L4.5 5.375"
+        stroke="#3E15F4"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+      />
+      <path
+        d="M15.875 14.125L13.25 12.375"
+        stroke="#3E15F4"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+      />
+      <path
+        d="M1.875 14.125L4.5 12.375"
+        stroke="#3E15F4"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+      />
+      <path
+        d="M16.75 8.875H13.25"
+        stroke="#3E15F4"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+      />
+      <path
+        d="M1 8.875H4.5"
+        stroke="#3E15F4"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+      />
+      <path
+        d="M7.125 1L8 2.75"
+        stroke="#3E15F4"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+      />
+      <path
+        d="M10.625 1L9.75 2.75"
+        stroke="#3E15F4"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+      />
+    </svg>
+  );
+};
+
 export const CredshieldsIcon: React.FC<{ size: number }> = ({
   size,
   ...props
@@ -140,6 +221,18 @@ export const Logo: React.FC = () => {
   );
 };
 
+export const MultifileBadge: React.FC = () => {
+  return (
+    <HStack backgroundColor={"#FFFFFF"} px={5} py={1} borderRadius={15}>
+      <MultifileIcon size={20} />
+
+      <Text fontSize={["xs", "sm", "sm"]} fontWeight={500} color="black">
+        MULTI
+      </Text>
+    </HStack>
+  );
+};
+
 export const MailSent: React.FC<{ size: number }> = ({ size, ...props }) => {
   return (
     <svg
@@ -201,7 +294,6 @@ export const HomeMenuIcon: React.FC<{ size: number; active?: boolean }> = ({
   ...props
 }) => {
   const iconColor = active ? "#04B79C" : "#3300FF";
-
   return (
     <svg
       width={21}
