@@ -869,10 +869,10 @@ const MultiFileExplorer: React.FC<MultiFileExplorerProps> = ({ files }) => {
                         <Text fontSize={"xs"} width={100} isTruncated>
                           {file.file_path.length < 16
                             ? file.file_path
-                            : file.file_path.slice(0, 4) +
+                            : file.file_path.slice(0, 6) +
                               "..." +
                               file.file_path.slice(
-                                file.file_path.length - 8,
+                                file.file_path.length - 10,
                                 file.file_path.length
                               )}
                         </Text>
@@ -1020,18 +1020,13 @@ const IssueDetail: React.FC<{
       {data && (
         <TabPanels>
           <TabPanel sx={{ h: "20vh", w: "100%", overflowY: "scroll" }}>
-            <Text fontWeight={500} fontSize="md" pb={4}>
-              {data.issue_details.issue_name}
-            </Text>
             <DescriptionWrapper>
-              {/* <Box
+              <Box
                 dangerouslySetInnerHTML={{
-                  __html: '`' + data.issue_details.issue_description + '`',
+                  __html: data.issue_details.issue_description,
                 }}
-              /> */}
-              <Text></Text>
+              />
             </DescriptionWrapper>
-            {/* <pre>{data.issue_details.issue_description}</pre> */}
           </TabPanel>
           <TabPanel sx={{ h: "20vh", w: "100%", overflowY: "scroll" }}>
             <DescriptionWrapper>
