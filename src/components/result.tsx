@@ -77,7 +77,7 @@ export const Result: React.FC<{
 }> = ({ scanSummary, scanDetails, type }) => {
   const [file, setFile] = useState<FileState | null>(null);
   const {
-    issue_severity_distribution: { critical, high, medium, low, informational },
+    issue_severity_distribution: { critical, high, medium, low, informational, gas },
   } = scanSummary;
 
   return (
@@ -96,6 +96,7 @@ export const Result: React.FC<{
               medium={medium}
               low={low}
               informational={informational}
+              gas={gas}
             />
           </Box>
           {/* <Score score={score} /> */}
@@ -476,7 +477,7 @@ export const MultifileResult: React.FC<{
 }> = ({ scanSummary, scanDetails }) => {
   const [files, setFiles] = useState<FilesState | null>(null);
   const {
-    issue_severity_distribution: { critical, high, medium, low, informational },
+    issue_severity_distribution: { critical, high, medium, low, informational, gas },
   } = scanSummary;
 
   return (
@@ -495,6 +496,7 @@ export const MultifileResult: React.FC<{
               medium={medium}
               low={low}
               informational={informational}
+              gas={gas}
             />
           </Box>
           {/* <Score score={score} /> */}
@@ -850,7 +852,7 @@ const MultiFileExplorer: React.FC<MultiFileExplorerProps> = ({ files }) => {
               h: "100%",
             }}
           >
-            <Tabs width={"100%"} variant="soft-rounded" colorScheme="messenger">
+            <Tabs defaultIndex={0} width={"100%"} variant="soft-rounded" colorScheme="messenger">
               <Flex
                 width={"100%"}
                 overflowX="scroll"
@@ -863,8 +865,8 @@ const MultiFileExplorer: React.FC<MultiFileExplorerProps> = ({ files }) => {
                 mb={2}
               >
                 <TabList my={3} width={"fit-content"}>
-                  {files.findings.map((file) => (
-                    <Tab mx={1} background={"white"}>
+                  {files.findings.map((file, index) => (
+                    <Tab  mx={1} background={"white"}>
                       <Tooltip label={file.file_path} aria-label="A tooltip">
                         <Text fontSize={"xs"} width={100} isTruncated>
                           {file.file_path.length < 16
@@ -882,8 +884,8 @@ const MultiFileExplorer: React.FC<MultiFileExplorerProps> = ({ files }) => {
                 </TabList>
               </Flex>
               <TabPanels>
-                {files.findings.map((file) => (
-                  <TabPanel p={2}>
+                {files.findings.map((file, index) => (
+                  <TabPanel key={index} p={2}>
                     <FileDataCont
                       file={{
                         issue_id: files.issue_id,
