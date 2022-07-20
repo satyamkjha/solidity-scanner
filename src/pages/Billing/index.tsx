@@ -258,8 +258,7 @@ const PricingPlan: React.FC<{
           textAlign="center"
           fontSize={"sm"}
         >
-          {
-             planData.name === "Beginner"
+          {planData.name === "Beginner"
             ? "Starter"
             : planData.name === "Custom"
             ? "Customize your plan"
@@ -275,8 +274,11 @@ const PricingPlan: React.FC<{
           {planData.name}
         </Text>
         <Heading fontSize={"x-large"} my={1}>
-          {planData.name === "Trial" ? "Free" : planData.name === 'Custom' ? '$--' :
-           `$ ${planData.amount}`}
+          {planData.name === "Trial"
+            ? "Free"
+            : planData.name === "Custom"
+            ? "$--"
+            : `$ ${planData.amount}`}
         </Heading>
         <Text mb={!selected ? 10 : 4} mx={5} fontSize={"xs"}>
           per month

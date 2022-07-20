@@ -164,7 +164,7 @@ export type IssueSeverityDistribution = {
   medium: number;
   low: number;
   informational: number;
-  gas?: number
+  gas?: number;
 };
 
 export type ScanDetail = {

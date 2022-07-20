@@ -1166,7 +1166,6 @@ const ScanBlock: React.FC<{
   const history = useHistory();
   const { projectId } = useParams<{ projectId: string }>();
 
-
   return (
     <Flex
       alignItems="center"

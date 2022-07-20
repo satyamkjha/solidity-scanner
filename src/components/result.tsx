@@ -29,7 +29,9 @@ import { AiOutlineCaretRight, AiFillGithub } from "react-icons/ai";
 
 import { CodeBlock, atomOneLight } from "react-code-blocks";
 
-import VulnerabilityDistribution from "components/vulnDistribution";
+import VulnerabilityDistribution, {
+  VulnerabilityDistributionFilter,
+} from "components/vulnDistribution";
 import { MultifileBadge, SeverityIcon } from "components/icons";
 
 import { useFileContent } from "hooks/useFileContent";
@@ -77,7 +79,14 @@ export const Result: React.FC<{
 }> = ({ scanSummary, scanDetails, type }) => {
   const [file, setFile] = useState<FileState | null>(null);
   const {
-    issue_severity_distribution: { critical, high, medium, low, informational, gas },
+    issue_severity_distribution: {
+      critical,
+      high,
+      medium,
+      low,
+      informational,
+      gas,
+    },
   } = scanSummary;
 
   return (
@@ -477,8 +486,26 @@ export const MultifileResult: React.FC<{
 }> = ({ scanSummary, scanDetails }) => {
   const [files, setFiles] = useState<FilesState | null>(null);
   const {
-    issue_severity_distribution: { critical, high, medium, low, informational, gas },
+    issue_severity_distribution: {
+      critical,
+      high,
+      medium,
+      low,
+      informational,
+      gas,
+    },
   } = scanSummary;
+
+  const [confidence, setConfidence] = useState([true, true, true]);
+
+  const [vulnerability, setVulnerability] = useState([
+    true,
+    true,
+    true,
+    true,
+    true,
+    true,
+  ]);
 
   return (
     <Flex w="100%" sx={{ flexDir: ["column", "column", "row"] }} py={2}>
@@ -489,14 +516,16 @@ export const MultifileResult: React.FC<{
         alignItems="flex-start"
       >
         <Flex w="100%" justifyContent="space-around">
-          <Box width="80%">
-            <VulnerabilityDistribution
+          <Box width="100%">
+            <VulnerabilityDistributionFilter
               critical={critical}
               high={high}
               medium={medium}
               low={low}
               informational={informational}
               gas={gas}
+              vulnerability={vulnerability}
+              setVulnerability={setVulnerability}
             />
           </Box>
           {/* <Score score={score} /> */}
@@ -506,7 +535,9 @@ export const MultifileResult: React.FC<{
             issues={scanDetails}
             files={files}
             setFiles={setFiles}
-          />
+            confidence={confidence}
+            vulnerability={vulnerability}
+            />
         </Box>
       </VStack>
       <VStack
@@ -518,64 +549,36 @@ export const MultifileResult: React.FC<{
       >
         <HStack mx={5} width={"100%"} justify={"space-between"}>
           <Text fontWeight={600}>Confidence Parameter</Text>
-          {files && (
-            <HStack mr={10}>
-              <Text
-                fontSize={"sm"}
-                px={4}
-                py={3}
-                borderRadius={15}
-                backgroundColor={
-                  files?.template_details.issue_confidence === "2"
-                    ? "#F5F2FF"
-                    : "bg.subtle"
-                }
-                border={
-                  files?.template_details.issue_confidence === "2"
-                    ? "1px solid #C1B1FF"
-                    : ""
-                }
-              >
-                <WarningIcon color={"low"} mr={2} /> Certain
-              </Text>
-              <Text
-                fontSize={"sm"}
-                px={4}
-                py={3}
-                borderRadius={15}
-                backgroundColor={
-                  files?.template_details.issue_confidence === "1"
-                    ? "#F5F2FF"
-                    : "bg.subtle"
-                }
-                border={
-                  files?.template_details.issue_confidence === "1"
-                    ? "1px solid #C1B1FF"
-                    : ""
-                }
-              >
-                <WarningIcon color={"medium"} mr={2} /> Firm
-              </Text>
-              <Text
-                fontSize={"sm"}
-                px={4}
-                py={3}
-                borderRadius={15}
-                backgroundColor={
-                  files?.template_details.issue_confidence === "0"
-                    ? "#F5F2FF"
-                    : "bg.subtle"
-                }
-                border={
-                  files?.template_details.issue_confidence === "0"
-                    ? "1px solid #C1B1FF"
-                    : ""
-                }
-              >
-                <WarningIcon color={"high"} mr={2} /> Tentative
-              </Text>
-            </HStack>
-          )}
+
+          <HStack mr={10}>
+            <Button
+              variant={confidence[2] ? "accent-outline" : "solid"}
+              py={0}
+              onClick={() =>
+                setConfidence([confidence[0], confidence[1], !confidence[2]])
+              }
+            >
+              <WarningIcon color={"low"} mr={2} /> Certain
+            </Button>
+            <Button
+              variant={confidence[1] ? "accent-outline" : "solid"}
+              py={0}
+              onClick={() =>
+                setConfidence([confidence[0], !confidence[1], confidence[2]])
+              }
+            >
+              <WarningIcon color={"medium"} mr={2} /> Firm
+            </Button>
+            <Button
+              variant={confidence[0] ? "accent-outline" : "solid"}
+              py={0}
+              onClick={() =>
+                setConfidence([!confidence[0], confidence[1], confidence[2]])
+              }
+            >
+              <WarningIcon color={"high"} mr={2} /> Tentative
+            </Button>
+          </HStack>
         </HStack>
 
         <Box
@@ -614,13 +617,37 @@ type MultifileIssuesProps = {
   issues: MultiFileScanDetail[];
   files: FilesState | null;
   setFiles: Dispatch<SetStateAction<FilesState | null>>;
+  confidence: boolean[];
+  vulnerability: boolean[];
 };
 
 const MultifileIssues: React.FC<MultifileIssuesProps> = ({
   issues,
   files,
   setFiles,
+  confidence,
+  vulnerability
 }) => {
+
+  const getVulnerabilityNumber = (issue_severity: string) => {
+    switch (issue_severity) {
+      case 'critical':
+        return 0;
+      case 'high': 
+        return 1;
+      case 'medium':
+        return 2;
+      case 'low':
+        return 3;
+      case 'informational':
+        return 4;
+      case 'gas':
+        return 5;
+      default:
+        return 0;
+    }
+  }
+
   return (
     <Accordion allowMultiple>
       {Array.from(issues)
@@ -633,120 +660,134 @@ const MultifileIssues: React.FC<MultifileIssuesProps> = ({
         .map(
           ({ issue_id, metric_wise_aggregated_findings, template_details }) => {
             return (
-              <AccordionItem id={issue_id} key={issue_id}>
-                {({ isExpanded }) => (
-                  <>
-                    <AccordionButton
-                      _hover={{
-                        bg: "rgba(47, 248, 107, 0.07)",
-                      }}
-                      _expanded={{
-                        bg: "rgba(47, 248, 107, 0.1)",
-                      }}
-                    >
-                      <Flex
-                        sx={{
-                          w: "100%",
-                          my: 2,
-                          alignItems: "center",
-                          justifyContent: "space-between",
-                        }}
-                      >
-                        <Flex sx={{ alignItems: "center" }}>
-                          <SeverityIcon
-                            variant={template_details.issue_severity}
-                          />
-                          <Text
-                            sx={{
-                              ml: 3,
-                              fontWeight: 600,
-                              color: "#4E5D78",
-                              maxW: 250,
-                              fontSize: "sm",
-                            }}
-                            isTruncated
-                          >
-                            {template_details.issue_name}
-                          </Text>
-                        </Flex>
-                        <Text
-                          sx={{
-                            mr: 3,
-                            fontSize: "sm",
-                            fontWeight: 600,
-                            color: "subtle",
+              <>
+                {confidence[parseInt(template_details.issue_confidence)] && vulnerability[getVulnerabilityNumber(template_details.issue_severity)] ? (
+                  <AccordionItem id={issue_id} key={issue_id}>
+                    {({ isExpanded }) => (
+                      <>
+                        <AccordionButton
+                          _hover={{
+                            bg: "rgba(47, 248, 107, 0.07)",
+                          }}
+                          _expanded={{
+                            bg: "rgba(47, 248, 107, 0.1)",
                           }}
                         >
-                          {metric_wise_aggregated_findings.length}
-                        </Text>
-                      </Flex>
-                      <Icon
-                        as={AiOutlineCaretRight}
-                        mr={2}
-                        color="subtle"
-                        fontSize="14px"
-                        transition="transform 0.2s"
-                        transform={
-                          isExpanded ? "rotate(90deg)" : "rotate(0deg)"
-                        }
-                      />
-                    </AccordionButton>
-                    <AccordionPanel pb={4}>
-                      {Object.keys(metric_wise_aggregated_findings).map(
-                        (key, index) =>
-                          Object.keys(
-                            metric_wise_aggregated_findings[index]
-                          ).map((key, item) => (
-                            <Box
-                              key={key}
-                              id={key}
+                          <Flex
+                            sx={{
+                              w: "100%",
+                              my: 2,
+                              alignItems: "center",
+                              justifyContent: "space-between",
+                            }}
+                          >
+                            <Flex sx={{ alignItems: "center" }}>
+                              <SeverityIcon
+                                variant={template_details.issue_severity}
+                              />
+                              <Text
+                                sx={{
+                                  ml: 3,
+                                  fontWeight: 600,
+                                  color: "#4E5D78",
+                                  maxW: 250,
+                                  fontSize: "sm",
+                                }}
+                                isTruncated
+                              >
+                                {template_details.issue_name}
+                              </Text>
+                            </Flex>
+                            <Text
                               sx={{
-                                cursor: "pointer",
-                                bg:
-                                  key === files?.bug_id
-                                    ? "gray.200"
-                                    : "gray.50",
-                                p: 3,
-                                my: 2,
-                                color: "text",
+                                mr: 3,
                                 fontSize: "sm",
-                                borderRadius: 15,
-                                transition: "0.2s background",
-                                _hover: {
-                                  bg:
-                                    key === files?.bug_id
-                                      ? "gray.200"
-                                      : "gray.100",
-                                },
+                                fontWeight: 600,
+                                color: "subtle",
                               }}
-                              onClick={() =>
-                                setFiles({
-                                  bug_id: key,
-                                  issue_id: issue_id,
-                                  findings:
-                                    metric_wise_aggregated_findings[index][key]
-                                      .findings,
-                                  description_details:
-                                    metric_wise_aggregated_findings[index][key]
-                                      .description_details,
-                                  template_details: template_details,
-                                })
-                              }
                             >
-                              <HStack justify={"space-between"}>
-                                <Text w={"50%"} isTruncated color={"gray.700"}>
-                                  {key}
-                                </Text>
-                                {metric_wise_aggregated_findings[index][key]
-                                  .findings.length > 1 && <MultifileBadge />}
-                              </HStack>
-                            </Box>
-                          ))
-                      )}
-                    </AccordionPanel>
-                  </>
+                              {metric_wise_aggregated_findings.length}
+                            </Text>
+                          </Flex>
+                          <Icon
+                            as={AiOutlineCaretRight}
+                            mr={2}
+                            color="subtle"
+                            fontSize="14px"
+                            transition="transform 0.2s"
+                            transform={
+                              isExpanded ? "rotate(90deg)" : "rotate(0deg)"
+                            }
+                          />
+                        </AccordionButton>
+                        <AccordionPanel pb={4}>
+                          {Object.keys(metric_wise_aggregated_findings).map(
+                            (key, index) =>
+                              Object.keys(
+                                metric_wise_aggregated_findings[index]
+                              ).map((key, item) => (
+                                <Box
+                                  key={key}
+                                  id={key}
+                                  sx={{
+                                    cursor: "pointer",
+                                    bg:
+                                      key === files?.bug_id
+                                        ? "gray.200"
+                                        : "gray.50",
+                                    p: 3,
+                                    my: 2,
+                                    color: "text",
+                                    fontSize: "sm",
+                                    borderRadius: 15,
+                                    transition: "0.2s background",
+                                    _hover: {
+                                      bg:
+                                        key === files?.bug_id
+                                          ? "gray.200"
+                                          : "gray.100",
+                                    },
+                                  }}
+                                  onClick={() =>
+                                    setFiles({
+                                      bug_id: key,
+                                      issue_id: issue_id,
+                                      findings:
+                                        metric_wise_aggregated_findings[index][
+                                          key
+                                        ].findings,
+                                      description_details:
+                                        metric_wise_aggregated_findings[index][
+                                          key
+                                        ].description_details,
+                                      template_details: template_details,
+                                    })
+                                  }
+                                >
+                                  <HStack justify={"space-between"}>
+                                    <Text
+                                      w={"50%"}
+                                      isTruncated
+                                      color={"gray.700"}
+                                    >
+                                      {key}
+                                    </Text>
+                                    {metric_wise_aggregated_findings[index][key]
+                                      .findings.length > 1 && (
+                                      <MultifileBadge />
+                                    )}
+                                  </HStack>
+                                </Box>
+                              ))
+                          )}
+                        </AccordionPanel>
+                      </>
+                    )}
+                  </AccordionItem>
+                ) : (
+                  <></>
                 )}
-              </AccordionItem>
+              </>
             );
           }
         )}
@@ -852,7 +893,12 @@ const MultiFileExplorer: React.FC<MultiFileExplorerProps> = ({ files }) => {
               h: "100%",
             }}
           >
-            <Tabs defaultIndex={0} width={"100%"} variant="soft-rounded" colorScheme="messenger">
+            <Tabs
+              defaultIndex={0}
+              width={"100%"}
+              variant="soft-rounded"
+              colorScheme="messenger"
+            >
               <Flex
                 width={"100%"}
                 overflowX="scroll"
@@ -866,7 +912,7 @@ const MultiFileExplorer: React.FC<MultiFileExplorerProps> = ({ files }) => {
               >
                 <TabList my={3} width={"fit-content"}>
                   {files.findings.map((file, index) => (
-                    <Tab  mx={1} background={"white"}>
+                    <Tab mx={1} background={"white"}>
                       <Tooltip label={file.file_path} aria-label="A tooltip">
                         <Text fontSize={"xs"} width={100} isTruncated>
                           {file.file_path.length < 16
@@ -1034,7 +1080,10 @@ const IssueDetail: React.FC<{
             <DescriptionWrapper>
               <Box
                 dangerouslySetInnerHTML={{
-                  __html: data.issue_details.issue_remediation.format(description_details),
+                  __html:
+                    data.issue_details.issue_remediation.format(
+                      description_details
+                    ),
                 }}
               />
             </DescriptionWrapper>

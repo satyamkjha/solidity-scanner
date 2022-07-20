@@ -48,6 +48,9 @@ export const theme = extendTheme({
       baseStyle: {
         borderRadius: "15px",
       },
+      _focus: {
+        outline: 0,
+      },
       variants: {
         brand: (props) => ({
           ...defaultTheme.components.Button.variants.outline(props),
