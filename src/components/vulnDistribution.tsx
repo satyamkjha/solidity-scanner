@@ -11,8 +11,6 @@ const VulnerabilityDistribution: React.FC<IssueSeverityDistribution> = ({
   informational,
   gas,
 }) => {
-  console.log(gas);
-
   return (
     <Flex
       sx={{
@@ -117,8 +115,16 @@ export const VulnerabilityDistributionFilter: React.FC<{
   gas?: number | undefined;
   vulnerability: boolean[];
   setVulnerability: React.Dispatch<React.SetStateAction<boolean[]>>;
-}> = ({ critical, high, medium, low, informational, gas, vulnerability, setVulnerability }) => {
-  console.log(gas);
+}> = ({
+  critical,
+  high,
+  medium,
+  low,
+  informational,
+  gas,
+  vulnerability,
+  setVulnerability,
+}) => {
   return (
     <Flex
       sx={{
@@ -132,11 +138,11 @@ export const VulnerabilityDistributionFilter: React.FC<{
         py={2}
         mx={2}
         height="fit-content"
-        variant={vulnerability[0] ? "solid":  "outline"}
+        variant={vulnerability[0] ? "solid" : "outline"}
         onClick={() => {
-          let newVulnerability = vulnerability
-          newVulnerability[0] = !newVulnerability[0]
-          setVulnerability([...newVulnerability])
+          let newVulnerability = vulnerability;
+          newVulnerability[0] = !newVulnerability[0];
+          setVulnerability([...newVulnerability]);
         }}
       >
         <Text sx={{ lineHeight: 1.2, fontWeight: 600 }}>{critical}</Text>
@@ -148,11 +154,11 @@ export const VulnerabilityDistributionFilter: React.FC<{
         py={2}
         mx={2}
         height="fit-content"
-        variant={vulnerability[1] ? "solid":  "outline"}
+        variant={vulnerability[1] ? "solid" : "outline"}
         onClick={() => {
-          let newVulnerability = vulnerability
-          newVulnerability[1] = !newVulnerability[1]
-          setVulnerability([...newVulnerability])
+          let newVulnerability = vulnerability;
+          newVulnerability[1] = !newVulnerability[1];
+          setVulnerability([...newVulnerability]);
         }}
       >
         <Text sx={{ lineHeight: 1.2, fontWeight: 600 }}>{high}</Text>
@@ -164,11 +170,11 @@ export const VulnerabilityDistributionFilter: React.FC<{
         py={2}
         mx={2}
         height="fit-content"
-        variant={vulnerability[2] ? "solid":  "outline"}
+        variant={vulnerability[2] ? "solid" : "outline"}
         onClick={() => {
-          let newVulnerability = vulnerability
-          newVulnerability[2] = !newVulnerability[2]
-          setVulnerability([...newVulnerability])
+          let newVulnerability = vulnerability;
+          newVulnerability[2] = !newVulnerability[2];
+          setVulnerability([...newVulnerability]);
         }}
       >
         <Text sx={{ lineHeight: 1.2, fontWeight: 600 }}>{medium}</Text>
@@ -182,11 +188,11 @@ export const VulnerabilityDistributionFilter: React.FC<{
         py={2}
         mx={2}
         height="fit-content"
-        variant={vulnerability[3] ? "solid":  "outline"}
+        variant={vulnerability[3] ? "solid" : "outline"}
         onClick={() => {
-          let newVulnerability = vulnerability
-          newVulnerability[3] = !newVulnerability[3]
-          setVulnerability([...newVulnerability])
+          let newVulnerability = vulnerability;
+          newVulnerability[3] = !newVulnerability[3];
+          setVulnerability([...newVulnerability]);
         }}
       >
         <Text sx={{ lineHeight: 1.2, fontWeight: 600 }}>{low}</Text>
@@ -198,11 +204,11 @@ export const VulnerabilityDistributionFilter: React.FC<{
         py={2}
         mx={2}
         height="fit-content"
-        variant={vulnerability[4] ? "solid":  "outline"}
+        variant={vulnerability[4] ? "solid" : "outline"}
         onClick={() => {
-          let newVulnerability = vulnerability
-          newVulnerability[4] = !newVulnerability[4]
-          setVulnerability([...newVulnerability])
+          let newVulnerability = vulnerability;
+          newVulnerability[4] = !newVulnerability[4];
+          setVulnerability([...newVulnerability]);
         }}
       >
         <Text sx={{ lineHeight: 1.2, fontWeight: 600 }}>{informational}</Text>
@@ -216,11 +222,11 @@ export const VulnerabilityDistributionFilter: React.FC<{
         py={2}
         mx={2}
         height="fit-content"
-        variant={vulnerability[5] ? "solid":  "outline"}
+        variant={vulnerability[5] ? "solid" : "outline"}
         onClick={() => {
-          let newVulnerability = vulnerability
-          newVulnerability[5] = !newVulnerability[5]
-          setVulnerability([...newVulnerability])
+          let newVulnerability = vulnerability;
+          newVulnerability[5] = !newVulnerability[5];
+          setVulnerability([...newVulnerability]);
         }}
       >
         <Text sx={{ lineHeight: 1.2, fontWeight: 600 }}>

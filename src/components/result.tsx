@@ -1,4 +1,4 @@
-import React, { useState, Dispatch, SetStateAction } from "react";
+import { useState, Dispatch, SetStateAction, useEffect } from "react";
 import { useHistory, useParams } from "react-router-dom";
 import styled from "@emotion/styled";
 import {
@@ -23,6 +23,10 @@ import {
   Stack,
   HStack,
   Tooltip,
+  FormControl,
+  FormLabel,
+  background,
+  ButtonGroup,
 } from "@chakra-ui/react";
 import { BiCodeCurly } from "react-icons/bi";
 import { AiOutlineCaretRight, AiFillGithub } from "react-icons/ai";
@@ -36,7 +40,7 @@ import { MultifileBadge, SeverityIcon } from "components/icons";
 
 import { useFileContent } from "hooks/useFileContent";
 import { useIssueDetail } from "hooks/useIssueDetail";
-
+import Select, { components } from "react-select";
 import {
   Finding,
   MetricWiseAggregatedFinding,
@@ -45,12 +49,15 @@ import {
   MultiFileTemplateDetail,
   ScanDetail,
   ScanSummary,
+  TemplateDetails,
 } from "common/types";
 import { severityPriority } from "common/values";
 import API from "helpers/api";
 import { useMutation } from "react-query";
 import { useProfile } from "hooks/useProfile";
 import { WarningIcon } from "@chakra-ui/icons";
+import React from "react";
+import { access } from "fs";
 
 type FileState = {
   issue_id: string;
@@ -68,6 +75,8 @@ type FilesState = {
   };
   findings: Finding[];
   bug_id: string;
+  bug_hash: string;
+  bug_status: string;
   issue_id: string;
   template_details: MultiFileTemplateDetail;
 };
@@ -480,11 +489,25 @@ const FileDetails: React.FC<FileDetailsProps> = ({ file, type }) => {
   );
 };
 
+const formatOptionLabel: React.FC<{
+  value: string;
+  label: string;
+}> = ({ value, label }) => (
+  <div style={{ display: "flex", flexDirection: "row" }}>
+    <Image mr={3} src={`/icons/${value}.svg`} />
+
+    <div>{label}</div>
+  </div>
+);
+
 export const MultifileResult: React.FC<{
   scanSummary: MultiFileScanSummary;
   scanDetails: MultiFileScanDetail[];
 }> = ({ scanSummary, scanDetails }) => {
   const [files, setFiles] = useState<FilesState | null>(null);
+
+  const { projectId, scanId } =
+    useParams<{ projectId: string; scanId: string }>();
   const {
     issue_severity_distribution: {
       critical,
@@ -506,6 +529,76 @@ export const MultifileResult: React.FC<{
     true,
     true,
   ]);
+
+  // const [action, setAction] = useState("");
+  const options = [
+    { value: "wont_fix", label: "Won't Fix" },
+    { value: "false_positive", label: "False Positive" },
+    { value: "discovered", label: "Reset Bug Status" },
+  ];
+  const toast = useToast();
+
+  const customStyles = {
+    option: (provided: any, state: any) => ({
+      ...provided,
+      borderBottom: "1px solid #f3f3f3",
+      backgroundColor: state.isSelected
+        ? "#E2E8F0"
+        : state.isFocused
+        ? "#FAFBFC"
+        : "#FFFFFF",
+      color: "#000000",
+    }),
+    menu: (provided: any, state: any) => ({
+      ...provided,
+      color: state.selectProps.menuColor,
+      borderRadius: 10,
+      border: "0px solid #ffffff",
+      overflowY: "hidden",
+    }),
+    control: () => ({
+      // none of react-select's styles are passed to <Control />
+      width: 300,
+      display: "flex",
+      flexDirection: "row",
+      backgroundColor: "#FAFBFC",
+      padding: 5,
+      borderRadius: 20,
+    }),
+    singleValue: (provided: any, state: any) => {
+      const opacity = state.isDisabled ? 0.5 : 1;
+      const transition = "opacity 300ms";
+
+      return { ...provided, opacity, transition };
+    },
+  };
+
+  // useEffect(() => {
+  //   if(files){
+  //     setAction(files.bug_status)
+  //   }
+  // }, [files])
+
+  const updateBugStatus = async (action: string) => {
+    if (files) {
+      const { data } = await API.post("/api-update-bug-status/", {
+        bug_ids: [files?.bug_hash],
+        scan_id: scanId,
+        project_id: projectId,
+        bug_status: action,
+      });
+      if (data.status === "success") {
+        toast({
+          title: "Bug Status Updated",
+          description: data.message,
+          status: "success",
+          duration: 3000,
+          isClosable: true,
+        });
+        setFiles({ ...files, bug_status: action });
+      }
+    }
+  };
 
   return (
     <Flex w="100%" sx={{ flexDir: ["column", "column", "row"] }} py={2}>
@@ -537,7 +630,7 @@ export const MultifileResult: React.FC<{
             setFiles={setFiles}
             confidence={confidence}
             vulnerability={vulnerability}
-            />
+          />
         </Box>
       </VStack>
       <VStack
@@ -580,6 +673,27 @@ export const MultifileResult: React.FC<{
             </Button>
           </HStack>
         </HStack>
+        {files?.bug_status !== "fixed" && (
+          <HStack mx={5} width={"100%"}>
+            <Text ml={5} w={"40%"} fontWeight={600}>
+              Take Action
+            </Text>
+
+            <Select
+              formatOptionLabel={formatOptionLabel}
+              options={options}
+              value={options.find((item) => files?.bug_status === item.value)}
+              placeholder="Select Action"
+              styles={customStyles}
+              onChange={(newValue) => {
+                if (newValue) {
+                  // setAction(newValue.value)
+                  updateBugStatus(newValue.value);
+                }
+              }}
+            />
+          </HStack>
+        )}
 
         <Box
           sx={{
@@ -626,27 +740,26 @@ const MultifileIssues: React.FC<MultifileIssuesProps> = ({
   files,
   setFiles,
   confidence,
-  vulnerability
+  vulnerability,
 }) => {
-
   const getVulnerabilityNumber = (issue_severity: string) => {
     switch (issue_severity) {
-      case 'critical':
+      case "critical":
         return 0;
-      case 'high': 
+      case "high":
         return 1;
-      case 'medium':
+      case "medium":
         return 2;
-      case 'low':
+      case "low":
         return 3;
-      case 'informational':
+      case "informational":
         return 4;
-      case 'gas':
+      case "gas":
         return 5;
       default:
         return 0;
     }
-  }
+  };
 
   return (
     <Accordion allowMultiple>
@@ -661,7 +774,10 @@ const MultifileIssues: React.FC<MultifileIssuesProps> = ({
           ({ issue_id, metric_wise_aggregated_findings, template_details }) => {
             return (
               <>
-                {confidence[parseInt(template_details.issue_confidence)] && vulnerability[getVulnerabilityNumber(template_details.issue_severity)] ? (
+                {confidence[parseInt(template_details.issue_confidence)] &&
+                vulnerability[
+                  getVulnerabilityNumber(template_details.issue_severity)
+                ] ? (
                   <AccordionItem id={issue_id} key={issue_id}>
                     {({ isExpanded }) => (
                       <>
@@ -725,60 +841,39 @@ const MultifileIssues: React.FC<MultifileIssuesProps> = ({
                             (key, index) =>
                               Object.keys(
                                 metric_wise_aggregated_findings[index]
-                              ).map((key, item) => (
-                                <Box
-                                  key={key}
-                                  id={key}
-                                  sx={{
-                                    cursor: "pointer",
-                                    bg:
-                                      key === files?.bug_id
-                                        ? "gray.200"
-                                        : "gray.50",
-                                    p: 3,
-                                    my: 2,
-                                    color: "text",
-                                    fontSize: "sm",
-                                    borderRadius: 15,
-                                    transition: "0.2s background",
-                                    _hover: {
-                                      bg:
-                                        key === files?.bug_id
-                                          ? "gray.200"
-                                          : "gray.100",
-                                    },
-                                  }}
-                                  onClick={() =>
-                                    setFiles({
-                                      bug_id: key,
-                                      issue_id: issue_id,
-                                      findings:
-                                        metric_wise_aggregated_findings[index][
-                                          key
-                                        ].findings,
+                              ).map((key) => {
+                                return (
+                                  <IssueBox
+                                    key={key}
+                                    bug_id={key}
+                                    files={files}
+                                    issue_id={issue_id}
+                                    metric_wise_aggregated_finding={{
                                       description_details:
                                         metric_wise_aggregated_findings[index][
                                           key
                                         ].description_details,
+                                      findings:
+                                        metric_wise_aggregated_findings[index][
+                                          key
+                                        ].findings,
+                                      bug_id: key,
+                                      bug_hash:
+                                        metric_wise_aggregated_findings[index][
+                                          key
+                                        ].bug_hash,
+                                      bug_status:
+                                        metric_wise_aggregated_findings[index][
+                                          key
+                                        ].bug_status,
+                                      issue_id: issue_id,
                                       template_details: template_details,
-                                    })
-                                  }
-                                >
-                                  <HStack justify={"space-between"}>
-                                    <Text
-                                      w={"50%"}
-                                      isTruncated
-                                      color={"gray.700"}
-                                    >
-                                      {key}
-                                    </Text>
-                                    {metric_wise_aggregated_findings[index][key]
-                                      .findings.length > 1 && (
-                                      <MultifileBadge />
-                                    )}
-                                  </HStack>
-                                </Box>
-                              ))
+                                    }}
+                                    template_details={template_details}
+                                    setFiles={setFiles}
+                                  />
+                                );
+                              })
                           )}
                         </AccordionPanel>
                       </>
@@ -792,6 +887,73 @@ const MultifileIssues: React.FC<MultifileIssuesProps> = ({
           }
         )}
     </Accordion>
+  );
+};
+
+const IssueBox: React.FC<{
+  bug_id: string;
+  files: FilesState | null;
+  issue_id: string;
+  metric_wise_aggregated_finding: FilesState;
+  template_details: MultiFileTemplateDetail;
+  setFiles: Dispatch<SetStateAction<FilesState | null>>;
+}> = ({
+  bug_id,
+  files,
+  issue_id,
+  metric_wise_aggregated_finding,
+  template_details,
+  setFiles,
+}) => {
+  const [status, setStatus] = useState(
+    metric_wise_aggregated_finding.bug_status
+  );
+
+  useEffect(() => {
+    if (files && files.bug_id === metric_wise_aggregated_finding.bug_id)
+      setStatus(files?.bug_status);
+  }, [files]);
+
+  return (
+    <Box
+      key={bug_id}
+      id={bug_id}
+      opacity={status === 'discovered' ? 1 : 0.3}
+      sx={{
+        cursor: "pointer",
+        bg: bug_id === files?.bug_id && status === 'discovered' ? "gray.300" :"gray.100",
+        p: 3,
+        my: 2,
+        color: "text",
+        fontSize: "sm",
+        borderRadius: 15,
+        transition: "0.2s background",
+        _hover: {
+          bg: bug_id === files?.bug_id ? "gray.300" :"gray.200",
+        },
+      }}
+      onClick={() =>
+        setFiles({
+          bug_id: bug_id,
+          issue_id: issue_id,
+          bug_hash: metric_wise_aggregated_finding.bug_hash,
+          bug_status: metric_wise_aggregated_finding.bug_status,
+          findings: metric_wise_aggregated_finding.findings,
+          description_details:
+            metric_wise_aggregated_finding.description_details,
+          template_details: template_details,
+        })
+      }
+    >
+      <HStack justify={"space-between"}>
+        <Text w={"50%"} isTruncated color={"gray.700"}>
+          {bug_id}
+        </Text>
+        {status !== "discovered" && (
+          <Image mr={3} src={`/icons/${status}.svg`} />
+        )}
+      </HStack>
+    </Box>
   );
 };
 
@@ -1036,8 +1198,6 @@ const IssueDetail: React.FC<{
 
   const { context_version, mostly_used_version, version_file_count } =
     description_details;
-
-  console.log(context_version);
 
   return (
     <Tabs size="sm" variant="soft-rounded" colorScheme="green">

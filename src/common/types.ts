@@ -133,6 +133,8 @@ export type MetricWiseAggregatedFinding = {
       version_file_count?: string;
       function_name?: string;
     };
+    bug_hash: string;
+    bug_status: string;
     findings: Finding[];
   };
 };
