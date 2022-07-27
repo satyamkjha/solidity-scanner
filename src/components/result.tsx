@@ -918,7 +918,7 @@ const IssueBox: React.FC<{
     <Box
       key={bug_id}
       id={bug_id}
-      opacity={status === 'discovered' ? 1 : 0.3}
+      opacity={status === 'discovered' ? 1 : 0.5}
       sx={{
         cursor: "pointer",
         bg: bug_id === files?.bug_id && status === 'discovered' ? "gray.300" :"gray.100",
