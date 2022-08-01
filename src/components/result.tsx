@@ -43,7 +43,6 @@ import { useIssueDetail } from "hooks/useIssueDetail";
 import Select, { components } from "react-select";
 import {
   Finding,
-  MetricWiseAggregatedFinding,
   MultiFileScanDetail,
   MultiFileScanSummary,
   MultiFileTemplateDetail,
@@ -506,6 +505,10 @@ export const MultifileResult: React.FC<{
 }> = ({ scanSummary, scanDetails }) => {
   const [files, setFiles] = useState<FilesState | null>(null);
 
+  const [issues, setIssues] = useState<MultiFileScanDetail[]>(scanDetails);
+
+  console.log(scanDetails);
+
   const { projectId, scanId } =
     useParams<{ projectId: string; scanId: string }>();
   const {
@@ -595,8 +598,31 @@ export const MultifileResult: React.FC<{
           duration: 3000,
           isClosable: true,
         });
-        setFiles({ ...files, bug_status: action });
       }
+
+      setIssues((prevState) => {
+        console.log(issues);
+
+        const newState = prevState.map((obj) => {
+          if (obj.issue_id === files.issue_id) {
+            const newList = obj.metric_wise_aggregated_findings.map((item) => {
+              if(item.bug_id === files.bug_id) {
+                return {...item, bug_status: action}
+              }
+
+              return item
+            })
+            return { ...obj, metric_wise_aggregated_findings: newList}
+          }
+
+          // 👇️ otherwise return object as is
+          return obj;
+        });
+
+        console.log(newState)
+
+        return newState;
+      });
     }
   };
 
@@ -625,7 +651,7 @@ export const MultifileResult: React.FC<{
         </Flex>
         <Box w="100%" minH="50vh">
           <MultifileIssues
-            issues={scanDetails}
+            issues={issues}
             files={files}
             setFiles={setFiles}
             confidence={confidence}
@@ -682,7 +708,7 @@ export const MultifileResult: React.FC<{
             <Select
               formatOptionLabel={formatOptionLabel}
               options={options}
-              value={options.find((item) => files?.bug_status === item.value)}
+              // value={options.find((item) => files?.bug_status === item.value)}
               placeholder="Select Action"
               styles={customStyles}
               onChange={(newValue) => {
@@ -837,43 +863,27 @@ const MultifileIssues: React.FC<MultifileIssuesProps> = ({
                           />
                         </AccordionButton>
                         <AccordionPanel pb={4}>
-                          {Object.keys(metric_wise_aggregated_findings).map(
-                            (key, index) =>
-                              Object.keys(
-                                metric_wise_aggregated_findings[index]
-                              ).map((key) => {
-                                return (
-                                  <IssueBox
-                                    key={key}
-                                    bug_id={key}
-                                    files={files}
-                                    issue_id={issue_id}
-                                    metric_wise_aggregated_finding={{
-                                      description_details:
-                                        metric_wise_aggregated_findings[index][
-                                          key
-                                        ].description_details,
-                                      findings:
-                                        metric_wise_aggregated_findings[index][
-                                          key
-                                        ].findings,
-                                      bug_id: key,
-                                      bug_hash:
-                                        metric_wise_aggregated_findings[index][
-                                          key
-                                        ].bug_hash,
-                                      bug_status:
-                                        metric_wise_aggregated_findings[index][
-                                          key
-                                        ].bug_status,
-                                      issue_id: issue_id,
-                                      template_details: template_details,
-                                    }}
-                                    template_details={template_details}
-                                    setFiles={setFiles}
-                                  />
-                                );
-                              })
+                          {metric_wise_aggregated_findings.map((item) =>
+                                <IssueBox
+                                  key={item.bug_id}
+                                  bug_id={item.bug_id}
+                                  files={files}
+                                  issue_id={issue_id}
+                                  metric_wise_aggregated_finding={{
+                                    description_details:
+                                      item.description_details,
+                                    findings: item.findings,
+                                    bug_id: item.bug_id,
+                                    bug_hash: item.bug_hash,
+                                    bug_status: item.bug_status,
+                                    issue_id: issue_id,
+                                    template_details: template_details,
+                                  }}
+                                  template_details={template_details}
+                                  setFiles={setFiles}
+                                />
+                              
+                            
                           )}
                         </AccordionPanel>
                       </>
@@ -905,23 +915,20 @@ const IssueBox: React.FC<{
   template_details,
   setFiles,
 }) => {
-  const [status, setStatus] = useState(
-    metric_wise_aggregated_finding.bug_status
-  );
-
-  useEffect(() => {
-    if (files && files.bug_id === metric_wise_aggregated_finding.bug_id)
-      setStatus(files?.bug_status);
-  }, [files]);
-
   return (
     <Box
       key={bug_id}
       id={bug_id}
-      opacity={status === 'discovered' ? 1 : 0.5}
+      opacity={
+        metric_wise_aggregated_finding.bug_status === "discovered" ? 1 : 0.5
+      }
       sx={{
         cursor: "pointer",
-        bg: bug_id === files?.bug_id && status === 'discovered' ? "gray.300" :"gray.100",
+        bg:
+          bug_id === files?.bug_id &&
+          metric_wise_aggregated_finding.bug_status === "discovered"
+            ? "gray.300"
+            : "gray.100",
         p: 3,
         my: 2,
         color: "text",
@@ -929,7 +936,7 @@ const IssueBox: React.FC<{
         borderRadius: 15,
         transition: "0.2s background",
         _hover: {
-          bg: bug_id === files?.bug_id ? "gray.300" :"gray.200",
+          bg: bug_id === files?.bug_id ? "gray.300" : "gray.200",
         },
       }}
       onClick={() =>
@@ -949,8 +956,11 @@ const IssueBox: React.FC<{
         <Text w={"50%"} isTruncated color={"gray.700"}>
           {bug_id}
         </Text>
-        {status !== "discovered" && (
-          <Image mr={3} src={`/icons/${status}.svg`} />
+        {metric_wise_aggregated_finding.bug_status !== "discovered" && (
+          <Image
+            mr={3}
+            src={`/icons/${metric_wise_aggregated_finding.bug_status}.svg`}
+          />
         )}
       </HStack>
     </Box>
