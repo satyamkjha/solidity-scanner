@@ -658,14 +658,14 @@ export const MultifileResult: React.FC<{
         h={["100%"]}
         alignItems="flex-start"
         spacing={5}
-        px={4}
+        pl={10}
       >
-        <HStack mx={5} width={"100%"} justify={"space-between"}>
+        <HStack  width={"100%"} justify={"space-between"}>
           <Text fontWeight={600}>Confidence Parameter</Text>
 
-          <HStack mr={10}>
+          <HStack>
             <Button
-              variant={confidence[2] ? "accent-outline" : "solid"}
+              variant={confidence[2] ? "solid" : "outline"}
               py={0}
               onClick={() =>
                 setConfidence([confidence[0], confidence[1], !confidence[2]])
@@ -674,7 +674,7 @@ export const MultifileResult: React.FC<{
               <WarningIcon color={"low"} mr={2} /> Certain
             </Button>
             <Button
-              variant={confidence[1] ? "accent-outline" : "solid"}
+              variant={confidence[1] ? "solid" : "outline"}
               py={0}
               onClick={() =>
                 setConfidence([confidence[0], !confidence[1], confidence[2]])
@@ -683,7 +683,7 @@ export const MultifileResult: React.FC<{
               <WarningIcon color={"medium"} mr={2} /> Firm
             </Button>
             <Button
-              variant={confidence[0] ? "accent-outline" : "solid"}
+              variant={confidence[0] ? "solid" : "outline"}
               py={0}
               onClick={() =>
                 setConfidence([!confidence[0], confidence[1], confidence[2]])
@@ -694,8 +694,8 @@ export const MultifileResult: React.FC<{
           </HStack>
         </HStack>
         {files?.bug_status !== "fixed" && (
-          <HStack mx={5} width={"100%"}>
-            <Text ml={5} w={"40%"} fontWeight={600}>
+          <HStack  justify='space-between' width={"100%"}>
+            <Text  fontWeight={600}>
               Take Action
             </Text>
 
@@ -721,7 +721,9 @@ export const MultifileResult: React.FC<{
             h: "100%",
             position: "sticky",
             top: 8,
+            
           }}
+          
         >
           {files ? (
             <MultiFileExplorer files={files} />
@@ -733,6 +735,7 @@ export const MultifileResult: React.FC<{
                 flexDir: "column",
                 alignItems: "center",
               }}
+              
               py={36}
             >
               <Icon as={BiCodeCurly} fontSize="40px" color="subtle" mb={4} />
