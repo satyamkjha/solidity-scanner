@@ -165,7 +165,7 @@ export type IssueSeverityDistribution = {
   medium: number;
   low: number;
   informational: number;
-  gas?: number;
+  gas: number;
 };
 
 export type ScanDetail = {
@@ -199,6 +199,7 @@ export type IssueDetails = {
 
 export type Overview = {
   issue_count_critical: number;
+  issue_count_gas: number;
   issue_count_high: number;
   issue_count_informational: number;
   issue_count_medium: number;

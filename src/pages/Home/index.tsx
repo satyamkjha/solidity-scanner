@@ -200,6 +200,12 @@ const Home: React.FC = () => {
                 count={data.overview.issue_count_informational}
                 total={data.overview.issue_count_total}
               />
+              <VulnerabilityProgress
+                label="Gas"
+                variant="gas"
+                count={data.overview.issue_count_gas}
+                total={data.overview.issue_count_total}
+              />
               <Flex
                 sx={{
                   w: "100%",
@@ -732,7 +738,7 @@ const UploadForm: React.FC = () => {
       </Flex>
 
       <Text sx={{ color: "subtle", textAlign: "center", mb: 6 }}>
-        Upload the Contract files. The maximum no of files that you can upload
+        Upload the Contract files. The maximum number of files that you can upload
         is 5 and the total file size cannot exceed 5 MB.
       </Text>
 
@@ -789,7 +795,7 @@ const UploadForm: React.FC = () => {
                   <span style={{ color: "#3300FF" }}> Browse</span> to upload
                 </p>
                 <p style={{ fontSize: "15px", color: "#D3D3D3" }}>
-                  You can upload upto 5 files whose sixe must not exceed above 5
+                  You can upload upto 5 files whose size must not exceed above 5
                   MB
                 </p>
               </>

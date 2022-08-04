@@ -602,25 +602,19 @@ export const MultifileResult: React.FC<{
 
       setIssues((prevState) => {
         console.log(issues);
-
         const newState = prevState.map((obj) => {
           if (obj.issue_id === files.issue_id) {
             const newList = obj.metric_wise_aggregated_findings.map((item) => {
               if(item.bug_id === files.bug_id) {
                 return {...item, bug_status: action}
               }
-
               return item
             })
             return { ...obj, metric_wise_aggregated_findings: newList}
           }
-
           // 👇️ otherwise return object as is
           return obj;
         });
-
-        console.log(newState)
-
         return newState;
       });
     }
@@ -1252,7 +1246,7 @@ const IssueDetail: React.FC<{
                 dangerouslySetInnerHTML={{
                   __html:
                     data.issue_details.issue_remediation.format(
-                      description_details
+                      {...description_details, }
                     ),
                 }}
               />

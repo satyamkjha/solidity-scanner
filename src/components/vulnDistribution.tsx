@@ -50,7 +50,7 @@ const VulnerabilityDistribution: React.FC<IssueSeverityDistribution> = ({
       </Box>
       <Box>
         <Text sx={{ lineHeight: 1.2, fontWeight: 600 }}>
-          {gas === undefined ? 0 : gas}
+          {gas ? gas : 0 }
         </Text>
         <Text sx={{ color: "subtle", fontSize: "xs" }}>Gas</Text>
         <Box sx={{ w: "24px", h: "3px", bgColor: "gas", ml: "1px", mt: 1 }} />

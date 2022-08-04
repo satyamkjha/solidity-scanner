@@ -22,7 +22,9 @@ const pieData = (
   high: number,
   medium: number,
   low: number,
-  informational: number
+  informational: number,
+  gas: number
+  
 ) => [
   {
     id: "critical",
@@ -54,6 +56,12 @@ const pieData = (
     value: informational,
     color: "#A0AEC0",
   },
+  {
+    id: "gas",
+    label: "Gas",
+    value: gas,
+    color: "#F795B4",
+  },
 ];
 
 const Overview: React.FC<{
@@ -82,7 +90,8 @@ const Overview: React.FC<{
                     scanData.scan_summary.issue_severity_distribution.medium,
                     scanData.scan_summary.issue_severity_distribution.low,
                     scanData.scan_summary.issue_severity_distribution
-                      .informational
+                      .informational,
+                    scanData.scan_summary.issue_severity_distribution.gas
                   )}
                 />
               )}
@@ -101,6 +110,7 @@ const Overview: React.FC<{
                   scanData.scan_summary.issue_severity_distribution
                     .informational
                 }
+                gas={scanData.scan_summary.issue_severity_distribution.gas}
               />
             </Box>
           </VStack>
@@ -194,13 +204,27 @@ const Overview: React.FC<{
         </Flex>
       ) : (
         <Flex w="100%" sx={{ flexDir: ["column", "column", "row"] }}>
-          <VStack w={["100%", "100%", "50%"]} mb={[8, 8, 0]}>
-            <Box w={["100%", "100%", "70%"]} h="300px">
+          <VStack w={["100%", "100%", "50%"]} spacing={5} mb={[8, 8, 0]}>
+            <Box w={["100%", "100%", "70%"]} h="200px">
               <ErrorResponsivePie />
             </Box>
-            <Box w={["70%", "70%", "60%"]}>
+            <Box w={["70%", "70%", "60%"]} sx={{marginBottom: 10}}>
               <ErrorVulnerabilityDistribution />
             </Box>
+            <Flex
+                w="100%"
+                m={5}
+                borderRadius="20px"
+                bgColor="high-subtle"
+                p={5}
+              >
+                <ScanErrorIcon size={28} />
+                <Text fontSize={"xs"} color="high" ml={4}>
+                  {scanData.scan_message
+                    ? scanData.scan_message
+                    : scanData.scan_status}
+                </Text>
+              </Flex>
           </VStack>
           <VStack
             w={["100%", "100%", "50%"]}
@@ -208,7 +232,6 @@ const Overview: React.FC<{
             p={8}
             spacing={5}
           >
-            <HStack w="100%" justifyContent="space-between">
               {scansRemaining && (
                 <Flex px={2}>
                   <LogoIcon size={40} />
@@ -225,21 +248,7 @@ const Overview: React.FC<{
                   </Box>
                 </Flex>
               )}
-              <Flex
-                w="97%"
-                m={4}
-                borderRadius="20px"
-                bgColor="high-subtle"
-                p={4}
-              >
-                <ScanErrorIcon size={28} />
-                <Text fontSize={"xs"} color="high" ml={4}>
-                  {scanData.scan_message
-                    ? scanData.scan_message
-                    : scanData.scan_status}
-                </Text>
-              </Flex>
-            </HStack>
+              
             <Box sx={{ w: "100%", borderRadius: 15, bg: "bg.subtle", p: 4 }}>
               <Text sx={{ fontSize: "sm", letterSpacing: "0.7px" }}>
                 SCAN STATISTICS

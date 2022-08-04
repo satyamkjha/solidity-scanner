@@ -256,6 +256,7 @@ const ProjectCard: React.FC<{ project: Project }> = ({ project }) => {
                 informational={
                   scan_summary?.issue_severity_distribution?.informational || 0
                 }
+                gas={scan_summary.issue_severity_distribution.gas}
               />
             </>
           ) : (

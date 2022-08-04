@@ -271,7 +271,7 @@ const ScanDetails: React.FC<{ scansRemaining: number; scans: ScanMeta[] }> = ({
     setRescanLoading(false);
     queryClient.invalidateQueries(["scans", projectId]);
     onClose();
-    history.push(`/projects/${projectId}/${data.scan_id}`);
+    history.push(`/projects/`);
   };
 
   const scan_name =
@@ -485,7 +485,7 @@ const ScanDetails: React.FC<{ scansRemaining: number; scans: ScanMeta[] }> = ({
                   )}
                 </HStack>
               </Flex>
-              {scanData.scan_report.scan_status === "scanning" ? (
+              {scanData.scan_report.scan_status === "scanning" || scanData.scan_report.scan_status === "initialised" ? (
                 <Flex
                   w="100%"
                   h="60vh"
@@ -600,9 +600,7 @@ const ScanDetails: React.FC<{ scansRemaining: number; scans: ScanMeta[] }> = ({
                         >
                           <ScanErrorIcon size={28} />
                           <Text fontSize={"xs"} color="high" ml={4}>
-                            {scanData.scan_report.scan_message
-                              ? scanData.scan_report.scan_message
-                              : scanData.scan_report.scan_status}
+                            {scanData.scan_report.multi_file_scan_status ? scanData.scan_report.multi_file_scan_status : 'Please do Rescan to carry out a Multifile Scan '}
                           </Text>
                         </Flex>
                       )}
