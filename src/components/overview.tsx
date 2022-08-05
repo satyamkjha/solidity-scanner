@@ -24,7 +24,6 @@ const pieData = (
   low: number,
   informational: number,
   gas: number
-  
 ) => [
   {
     id: "critical",
@@ -208,23 +207,23 @@ const Overview: React.FC<{
             <Box w={["100%", "100%", "70%"]} h="200px">
               <ErrorResponsivePie />
             </Box>
-            <Box w={["70%", "70%", "60%"]} sx={{marginBottom: 10}}>
+            <Box w={["70%", "70%", "60%"]} sx={{ marginBottom: 10 }}>
               <ErrorVulnerabilityDistribution />
             </Box>
             <Flex
-                w="100%"
-                m={5}
-                borderRadius="20px"
-                bgColor="high-subtle"
-                p={5}
-              >
-                <ScanErrorIcon size={28} />
-                <Text fontSize={"xs"} color="high" ml={4}>
-                  {scanData.scan_message
-                    ? scanData.scan_message
-                    : scanData.scan_status}
-                </Text>
-              </Flex>
+              w="100%"
+              m={5}
+              borderRadius="20px"
+              bgColor="high-subtle"
+              p={5}
+            >
+              <ScanErrorIcon size={28} />
+              <Text fontSize={"xs"} color="high" ml={4}>
+                {scanData.scan_message
+                  ? scanData.scan_message
+                  : scanData.scan_status}
+              </Text>
+            </Flex>
           </VStack>
           <VStack
             w={["100%", "100%", "50%"]}
@@ -232,23 +231,23 @@ const Overview: React.FC<{
             p={8}
             spacing={5}
           >
-              {scansRemaining && (
-                <Flex px={2}>
-                  <LogoIcon size={40} />
-                  <Box ml={2} mt="-4px">
-                    <Text>
-                      {scansRemaining.toLocaleString("en-US", {
-                        minimumIntegerDigits: 2,
-                        useGrouping: false,
-                      })}
-                    </Text>
-                    <Text fontSize="12px" color="subtle">
-                      Scans left
-                    </Text>
-                  </Box>
-                </Flex>
-              )}
-              
+            {scansRemaining && (
+              <Flex px={2}>
+                <LogoIcon size={40} />
+                <Box ml={2} mt="-4px">
+                  <Text>
+                    {scansRemaining.toLocaleString("en-US", {
+                      minimumIntegerDigits: 2,
+                      useGrouping: false,
+                    })}
+                  </Text>
+                  <Text fontSize="12px" color="subtle">
+                    Scans left
+                  </Text>
+                </Box>
+              </Flex>
+            )}
+
             <Box sx={{ w: "100%", borderRadius: 15, bg: "bg.subtle", p: 4 }}>
               <Text sx={{ fontSize: "sm", letterSpacing: "0.7px" }}>
                 SCAN STATISTICS

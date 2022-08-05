@@ -57,6 +57,7 @@ import { useProfile } from "hooks/useProfile";
 import { WarningIcon } from "@chakra-ui/icons";
 import React from "react";
 import { access } from "fs";
+import { sentenceCapitalize } from "helpers/helperFunction";
 
 type FileState = {
   issue_id: string;
@@ -491,18 +492,19 @@ const FileDetails: React.FC<FileDetailsProps> = ({ file, type }) => {
 const formatOptionLabel: React.FC<{
   value: string;
   label: string;
-}> = ({ value, label }) => (
+  icon: string
+}> = ({ label, icon }) => (
   <div style={{ display: "flex", flexDirection: "row" }}>
-    <Image mr={3} src={`/icons/${value}.svg`} />
-
+    <Image mr={3} src={`/icons/${icon}.svg`} />
     <div>{label}</div>
   </div>
 );
 
 export const MultifileResult: React.FC<{
+  is_latest_scan: boolean;
   scanSummary: MultiFileScanSummary;
   scanDetails: MultiFileScanDetail[];
-}> = ({ scanSummary, scanDetails }) => {
+}> = ({ scanSummary, scanDetails, is_latest_scan }) => {
   const [files, setFiles] = useState<FilesState | null>(null);
 
   const [issues, setIssues] = useState<MultiFileScanDetail[]>(scanDetails);
@@ -535,9 +537,10 @@ export const MultifileResult: React.FC<{
 
   // const [action, setAction] = useState("");
   const options = [
-    { value: "wont_fix", label: "Won't Fix" },
-    { value: "false_positive", label: "False Positive" },
-    { value: "discovered", label: "Reset Bug Status" },
+    { value: "discovered", icon: "", label: "Please Select an action", isDisabled: true},
+    { value: "wont_fix", icon: "wont_fix", label: "Won't Fix"},
+    { value: "false_positive",  icon: "false_positive", label: "False Positive"},
+    { value: "discovered", icon: "discovered", label: "Reset Bug Status"},
   ];
   const toast = useToast();
 
@@ -546,9 +549,9 @@ export const MultifileResult: React.FC<{
       ...provided,
       borderBottom: "1px solid #f3f3f3",
       backgroundColor: state.isSelected
-        ? "#E2E8F0"
+        ? "#FFFFFF"
         : state.isFocused
-        ? "#FAFBFC"
+        ? "#E6E6E6"
         : "#FFFFFF",
       color: "#000000",
     }),
@@ -569,7 +572,7 @@ export const MultifileResult: React.FC<{
       borderRadius: 20,
     }),
     singleValue: (provided: any, state: any) => {
-      const opacity = state.isDisabled ? 0.5 : 1;
+      const opacity = state.isDisabled ? 0.3 : 1;
       const transition = "opacity 300ms";
 
       return { ...provided, opacity, transition };
@@ -605,18 +608,21 @@ export const MultifileResult: React.FC<{
         const newState = prevState.map((obj) => {
           if (obj.issue_id === files.issue_id) {
             const newList = obj.metric_wise_aggregated_findings.map((item) => {
-              if(item.bug_id === files.bug_id) {
-                return {...item, bug_status: action}
+              if (item.bug_id === files.bug_id) {
+                return { ...item, bug_status: action };
               }
-              return item
-            })
-            return { ...obj, metric_wise_aggregated_findings: newList}
+              return item;
+            });
+            return { ...obj, metric_wise_aggregated_findings: newList };
           }
           // 👇️ otherwise return object as is
           return obj;
         });
         return newState;
       });
+      setFiles({
+        ...files, bug_status: action
+        })
     }
   };
 
@@ -660,7 +666,7 @@ export const MultifileResult: React.FC<{
         spacing={5}
         pl={10}
       >
-        <HStack  width={"100%"} justify={"space-between"}>
+        <HStack width={"100%"} justify={"space-between"}>
           <Text fontWeight={600}>Confidence Parameter</Text>
 
           <HStack>
@@ -693,16 +699,14 @@ export const MultifileResult: React.FC<{
             </Button>
           </HStack>
         </HStack>
-        {files?.bug_status !== "fixed" && (
-          <HStack  justify='space-between' width={"100%"}>
-            <Text  fontWeight={600}>
-              Take Action
-            </Text>
+        {files && files.bug_status !== "fixed" && is_latest_scan && (
+          <HStack justify="space-between" width={"100%"}>
+            <Text fontWeight={600}>Take Action</Text>
 
             <Select
               formatOptionLabel={formatOptionLabel}
               options={options}
-              // value={options.find((item) => files?.bug_status === item.value)}
+              value={options.find((item) => files?.bug_status === item.value)}
               placeholder="Select Action"
               styles={customStyles}
               onChange={(newValue) => {
@@ -714,6 +718,20 @@ export const MultifileResult: React.FC<{
             />
           </HStack>
         )}
+        {files && ((files.bug_status !== "discovered" && !is_latest_scan) ||
+          (files.bug_status === "fixed")) && (
+            <HStack justify="flex-end" width={"100%"}>
+              <HStack bg={"gray.100"} px={10} py={2} borderRadius={30}>
+                <Text mr={2} color={"gray.600"} fontWeight={500}>
+                  The issue has been marked as
+                </Text>
+                <Image mr={3} src={`/icons/${files.bug_status}.svg`} />
+                <Text fontWeight={700}>
+                  {sentenceCapitalize(files.bug_status.toLowerCase().replace("_", " "))}
+                </Text>
+              </HStack>
+            </HStack>
+          )}
 
         <Box
           sx={{
@@ -721,9 +739,7 @@ export const MultifileResult: React.FC<{
             h: "100%",
             position: "sticky",
             top: 8,
-            
           }}
-          
         >
           {files ? (
             <MultiFileExplorer files={files} />
@@ -735,7 +751,6 @@ export const MultifileResult: React.FC<{
                 flexDir: "column",
                 alignItems: "center",
               }}
-              
               py={36}
             >
               <Icon as={BiCodeCurly} fontSize="40px" color="subtle" mb={4} />
@@ -860,28 +875,25 @@ const MultifileIssues: React.FC<MultifileIssuesProps> = ({
                           />
                         </AccordionButton>
                         <AccordionPanel pb={4}>
-                          {metric_wise_aggregated_findings.map((item) =>
-                                <IssueBox
-                                  key={item.bug_id}
-                                  bug_id={item.bug_id}
-                                  files={files}
-                                  issue_id={issue_id}
-                                  metric_wise_aggregated_finding={{
-                                    description_details:
-                                      item.description_details,
-                                    findings: item.findings,
-                                    bug_id: item.bug_id,
-                                    bug_hash: item.bug_hash,
-                                    bug_status: item.bug_status,
-                                    issue_id: issue_id,
-                                    template_details: template_details,
-                                  }}
-                                  template_details={template_details}
-                                  setFiles={setFiles}
-                                />
-                              
-                            
-                          )}
+                          {metric_wise_aggregated_findings.map((item) => (
+                            <IssueBox
+                              key={item.bug_id}
+                              bug_id={item.bug_id}
+                              files={files}
+                              issue_id={issue_id}
+                              metric_wise_aggregated_finding={{
+                                description_details: item.description_details,
+                                findings: item.findings,
+                                bug_id: item.bug_id,
+                                bug_hash: item.bug_hash,
+                                bug_status: item.bug_status,
+                                issue_id: issue_id,
+                                template_details: template_details,
+                              }}
+                              template_details={template_details}
+                              setFiles={setFiles}
+                            />
+                          ))}
                         </AccordionPanel>
                       </>
                     )}
@@ -1125,6 +1137,7 @@ const MultiFileExplorer: React.FC<MultiFileExplorerProps> = ({ files }) => {
         >
           <Box fontSize="sm" mb={2}>
             <IssueDetail
+              files={files}
               issue_id={files.issue_id}
               context="multi_file"
               description_details={files.description_details}
@@ -1192,6 +1205,7 @@ const MultiFileExplorer: React.FC<MultiFileExplorerProps> = ({ files }) => {
 };
 
 const IssueDetail: React.FC<{
+  files?: FilesState;
   issue_id: string;
   context: string;
   description_details: {
@@ -1200,7 +1214,7 @@ const IssueDetail: React.FC<{
     version_file_count?: string;
     function_name?: string;
   };
-}> = ({ issue_id, context, description_details }) => {
+}> = ({ issue_id, context, description_details, files }) => {
   const { data, isLoading } = useIssueDetail(issue_id, context);
 
   const { context_version, mostly_used_version, version_file_count } =
@@ -1236,6 +1250,38 @@ const IssueDetail: React.FC<{
         <TabPanels>
           <TabPanel sx={{ h: "20vh", w: "100%", overflowY: "scroll" }}>
             <DescriptionWrapper>
+              {files && (
+                <Text
+                  px={5}
+                  py={2}
+                  mb={3}
+                  fontWeight='600'
+                  fontSize={17}
+                  borderRadius={12}
+                  color={"gray.600"}
+                  bg={"gray.200"}
+                  width="fit-content"
+                >
+                  {files.template_details.issue_confidence === "0" ? (
+                    <>
+                      <WarningIcon color={"high"} mr={2} /> {"Tentative"}
+                    </>
+                  ) : files.template_details.issue_confidence === "1" ? (
+                    <>
+                      <WarningIcon color={"medium"} mr={2} /> {"Firm"}
+                    </>
+                  ) : (
+                    <>
+                      <WarningIcon color={"low"} mr={2} /> {"Certain"}
+                    </>
+                  )}
+                </Text>
+              )}
+
+              <Text fontWeight={500} fontSize="md" pb={4}>
+                {data.issue_details.issue_name}
+              </Text>
+
               <Box
                 dangerouslySetInnerHTML={{
                   __html: data.issue_details.issue_description,
@@ -1247,10 +1293,9 @@ const IssueDetail: React.FC<{
             <DescriptionWrapper>
               <Box
                 dangerouslySetInnerHTML={{
-                  __html:
-                    data.issue_details.issue_remediation.format(
-                      {...description_details, }
-                    ),
+                  __html: data.issue_details.issue_remediation.format({
+                    ...description_details,
+                  }),
                 }}
               />
             </DescriptionWrapper>

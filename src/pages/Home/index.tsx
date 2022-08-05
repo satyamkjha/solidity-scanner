@@ -738,8 +738,8 @@ const UploadForm: React.FC = () => {
       </Flex>
 
       <Text sx={{ color: "subtle", textAlign: "center", mb: 6 }}>
-        Upload the Contract files. The maximum number of files that you can upload
-        is 5 and the total file size cannot exceed 5 MB.
+        Upload the Contract files. The maximum number of files that you can
+        upload is 5 and the total file size cannot exceed 5 MB.
       </Text>
 
       <Flex

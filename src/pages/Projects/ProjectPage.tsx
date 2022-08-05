@@ -485,7 +485,8 @@ const ScanDetails: React.FC<{ scansRemaining: number; scans: ScanMeta[] }> = ({
                   )}
                 </HStack>
               </Flex>
-              {scanData.scan_report.scan_status === "scanning" || scanData.scan_report.scan_status === "initialised" ? (
+              {scanData.scan_report.scan_status === "scanning" ||
+              scanData.scan_report.scan_status === "initialised" ? (
                 <Flex
                   w="100%"
                   h="60vh"
@@ -583,6 +584,7 @@ const ScanDetails: React.FC<{ scansRemaining: number; scans: ScanMeta[] }> = ({
                       scanData.scan_report.multi_file_scan_details &&
                       scanData.scan_report.multi_file_scan_summary ? (
                         <MultifileResult
+                          is_latest_scan={scanData.is_latest_scan}
                           scanSummary={
                             scanData.scan_report.multi_file_scan_summary
                           }
@@ -600,7 +602,9 @@ const ScanDetails: React.FC<{ scansRemaining: number; scans: ScanMeta[] }> = ({
                         >
                           <ScanErrorIcon size={28} />
                           <Text fontSize={"xs"} color="high" ml={4}>
-                            {scanData.scan_report.multi_file_scan_status ? scanData.scan_report.multi_file_scan_status : 'Please do Rescan to carry out a Multifile Scan '}
+                            {scanData.scan_report.multi_file_scan_status
+                              ? scanData.scan_report.multi_file_scan_status
+                              : "Please do Rescan to carry out a Multifile Scan "}
                           </Text>
                         </Flex>
                       )}

@@ -5,10 +5,10 @@ import API from "helpers/api";
 import { Scan, ScanDetail } from "common/types";
 
 const getScan = async (scan_id: string) => {
-  const { data } = await API.post<{ scan_report: Scan }>(
-    "/api-get-scan-details/",
-    { scan_id }
-  );
+  const { data } = await API.post<{
+    scan_report: Scan;
+    is_latest_scan: boolean;
+  }>("/api-get-scan-details/", { scan_id });
   return data;
 };
 
