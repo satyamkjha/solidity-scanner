@@ -38,7 +38,7 @@ import {
   border,
 } from "@chakra-ui/react";
 import Overview from "components/overview";
-import Result from "components/result";
+import Result, { MultifileResult } from "components/result";
 import TrialWall from "components/trialWall";
 import { AddIcon, LockIcon, MinusIcon } from "@chakra-ui/icons";
 import { useScan } from "hooks/useScan";
@@ -61,6 +61,7 @@ import { useReports } from "hooks/useReports";
 import { useReport } from "hooks/useReport";
 import { usePricingPlans } from "hooks/usePricingPlans";
 import { sentenceCapitalize } from "helpers/helperFunction";
+import { ScanErrorIcon } from "components/icons";
 
 const BlockPage: React.FC = () => {
   const { scanId } = useParams<{ scanId: string }>();
@@ -532,7 +533,7 @@ const BlockPage: React.FC = () => {
                   <Tab mx={2}>Overview</Tab>
                   <Tab mx={2}>Detailed Result</Tab>
                   <Tab mx={2}>Published Report</Tab>
-                  {/* <Tab mx={2}>Advanced Scan(Beta)</Tab> */}
+                  <Tab mx={2}>Advanced Scan(Beta)</Tab>
                 </TabList>
                 <TabPanels>
                   <TabPanel>
@@ -560,6 +561,37 @@ const BlockPage: React.FC = () => {
                       <PublishedReports scan_report={scanData.scan_report} />
                     )}
                   </TabPanel>
+                  <TabPanel>
+                      {scanData.scan_report.multi_file_scan_status ===
+                        "scan_done" &&
+                      scanData.scan_report.multi_file_scan_details &&
+                      scanData.scan_report.multi_file_scan_summary ? (
+                        <MultifileResult
+                          is_latest_scan={scanData.is_latest_scan}
+                          scanSummary={
+                            scanData.scan_report.multi_file_scan_summary
+                          }
+                          scanDetails={
+                            scanData.scan_report.multi_file_scan_details
+                          }
+                        />
+                      ) : (
+                        <Flex
+                          w="97%"
+                          m={4}
+                          borderRadius="20px"
+                          bgColor="high-subtle"
+                          p={4}
+                        >
+                          <ScanErrorIcon size={28} />
+                          <Text fontSize={"xs"} color="high" ml={4}>
+                            {scanData.scan_report.multi_file_scan_status
+                              ? scanData.scan_report.multi_file_scan_status
+                              : "Please do Rescan to carry out a Multifile Scan "}
+                          </Text>
+                        </Flex>
+                      )}
+                    </TabPanel>
                 </TabPanels>
               </Tabs>
             </Box>
