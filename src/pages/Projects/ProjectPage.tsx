@@ -584,6 +584,7 @@ const ScanDetails: React.FC<{ scansRemaining: number; scans: ScanMeta[] }> = ({
                       scanData.scan_report.multi_file_scan_details &&
                       scanData.scan_report.multi_file_scan_summary ? (
                         <MultifileResult
+                          type='project'
                           is_latest_scan={scanData.is_latest_scan}
                           scanSummary={
                             scanData.scan_report.multi_file_scan_summary

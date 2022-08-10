@@ -501,10 +501,11 @@ const formatOptionLabel: React.FC<{
 );
 
 export const MultifileResult: React.FC<{
+  type: string
   is_latest_scan: boolean;
   scanSummary: MultiFileScanSummary;
   scanDetails: MultiFileScanDetail[];
-}> = ({ scanSummary, scanDetails, is_latest_scan }) => {
+}> = ({ scanSummary, scanDetails, is_latest_scan, type }) => {
   const [files, setFiles] = useState<FilesState | null>(null);
 
   const [issues, setIssues] = useState<MultiFileScanDetail[]>(scanDetails);
@@ -742,7 +743,7 @@ export const MultifileResult: React.FC<{
           }}
         >
           {files ? (
-            <MultiFileExplorer files={files} />
+            <MultiFileExplorer files={files} type={type} />
           ) : (
             <Flex
               sx={{
@@ -976,8 +977,8 @@ const IssueBox: React.FC<{
   );
 };
 
-type FileDataContProps = { file: FileState };
-const FileDataCont: React.FC<FileDataContProps> = ({ file }) => {
+type FileDataContProps = { file: FileState, type: string };
+const FileDataCont: React.FC<FileDataContProps> = ({ file, type }) => {
   const { scanId: scan_id } = useParams<{ scanId: string }>();
   const { file_path, line_nos_end, line_nos_start } = file;
 
@@ -1007,7 +1008,7 @@ const FileDataCont: React.FC<FileDataContProps> = ({ file }) => {
     });
   });
 
-  const { data, isLoading } = useFileContent(scan_id, file_path, "project");
+  const { data, isLoading } = useFileContent(scan_id, file_path, type);
 
   return (
     <>
@@ -1043,8 +1044,8 @@ const FileDataCont: React.FC<FileDataContProps> = ({ file }) => {
   );
 };
 
-type MultiFileExplorerProps = { files: FilesState };
-const MultiFileExplorer: React.FC<MultiFileExplorerProps> = ({ files }) => {
+type MultiFileExplorerProps = { files: FilesState, type: string };
+const MultiFileExplorer: React.FC<MultiFileExplorerProps> = ({ files, type }) => {
   const { data: profileData } = useProfile();
   const history = useHistory();
 
@@ -1114,6 +1115,7 @@ const MultiFileExplorer: React.FC<MultiFileExplorerProps> = ({ files }) => {
                 {files.findings.map((file, index) => (
                   <TabPanel key={index} p={2}>
                     <FileDataCont
+                      type={type}
                       file={{
                         issue_id: files.issue_id,
                         file_path: file.file_path,
