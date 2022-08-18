@@ -44,6 +44,7 @@ import {
   AlertDialogHeader,
   AlertDialogOverlay,
   toast,
+  CloseButton,
 } from "@chakra-ui/react";
 
 import { AiOutlineCheckCircle } from "react-icons/ai";
@@ -167,6 +168,7 @@ const Billing: React.FC = () => {
                       <VStack width="100%" pt={8}>
                         <Box sx={{ w: "100%" }}>
                           <CurrentPlan
+                            subscription={data.subscription}
                             isCancellable={data.is_cancellable}
                             name={plans.monthly[data.current_package].name}
                             packageName={data.current_package}
@@ -540,7 +542,19 @@ const CurrentPlan: React.FC<{
   packageRechargeDate: string;
   packageValidity: number;
   plan: Plan;
-}> = ({ name, packageRechargeDate, packageValidity, plan, isCancellable }) => {
+  subscription?: {
+    end_date: string;
+    start_date: string;
+    renewal_date: string;
+  };
+}> = ({
+  name,
+  packageRechargeDate,
+  packageValidity,
+  plan,
+  isCancellable,
+  subscription,
+}) => {
   const successColor = "#289F4C";
   const greyColor = "#BDBDBD";
 
@@ -627,14 +641,6 @@ const CurrentPlan: React.FC<{
               </Text>
             )}
           </HStack>
-          <Box mb={2}>
-            <Text fontWeight={400} fontSize="md" mb={1} color="#4E5D78">
-              Subscribed on
-            </Text>
-            <Text fontWeight={500} fontSize="xl">
-              {dateToDDMMMMYYYY(new Date(packageRechargeDate))}
-            </Text>
-          </Box>
         </Box>
         <Flex
           width="25%"
@@ -711,47 +717,128 @@ const CurrentPlan: React.FC<{
               White Glove Services
             </Text>
           </HStack>
-          {isCancellable && (
-            <Button
-              onClick={() => setIsOpen(!isOpen)}
-              variant="accent-ghost"
-              color={"red"}
-              mt={5}
-              ml={-4}
-            >
-              <HiXCircle
-                size={20}
-                color={"red.100"}
-                style={{ marginRight: "10px" }}
-              />
-              Cancel Subscription
-            </Button>
-          )}
         </Flex>
       </Flex>
+      <Flex
+        mt={10}
+        px={7}
+        justifyContent={"space-between"}
+        
+        alignItems="center"
+      >
+        <HStack spacing={20}>
+          {subscription && (
+            <>
+              <Box>
+                <Text fontWeight={400} fontSize="md" mb={1} color="#4E5D78">
+                  Subscribed on
+                </Text>
+                <Text fontWeight={500} fontSize="lg">
+                  {dateToDDMMMMYYYY(new Date(packageRechargeDate))}
+                </Text>
+              </Box>
+              <Box>
+                <Text fontWeight={400} fontSize="md" mb={1} color="#4E5D78">
+                  Next Billed on
+                </Text>
+                <Text fontWeight={500} fontSize="lg">
+                  {dateToDDMMMMYYYY(new Date(subscription.renewal_date))}
+                </Text>
+              </Box>
+              <Box>
+                <Text fontWeight={400} fontSize="md" mb={1} color="#4E5D78">
+                  Recurring Payment
+                </Text>
+                <Text fontWeight={500} fontSize="lg">
+                  Stripe Payment
+                </Text>
+              </Box>
+            </>
+          )}
+        </HStack>
+
+        {isCancellable && (
+          <Button
+            onClick={() => setIsOpen(!isOpen)}
+            variant="accent-outline"
+            mr={10}
+          >
+            Cancel Subscription
+          </Button>
+        )}
+      </Flex>
+      {subscription && (
+        <Flex
+          mt={10}
+          mx={7}
+          p={5}
+          backgroundColor="#FFF8ED"
+          justifyContent={"flex-start"}
+          borderRadius="xl"
+          border={"1px solid #FFC661"}
+          alignItems="flex-start"
+        >
+          <Image src="/icons/info.svg" mr={5} />
+          <VStack alignItems={'flex-start'}>
+            <Text fontSize={"lg"} fontWeight={600} color="gray.600">
+              Recurring Payment
+            </Text>
+            <Text fontSize={"md"} fontWeight={400} color="gray.500">
+             Your card will be billed automatically on {" "}
+              {dateToDDMMMMYYYY(new Date(subscription.renewal_date))}. We do
+              not store your card information anywhere in our application.
+            </Text>
+          </VStack>
+        </Flex>
+      )}
+
       <AlertDialog
         isOpen={isOpen}
         leastDestructiveRef={cancelRef}
         onClose={onClose}
       >
         <AlertDialogOverlay>
-          <AlertDialogContent>
-            <AlertDialogHeader fontSize="lg" fontWeight="bold">
-              Cancel Subscription
-            </AlertDialogHeader>
+          <AlertDialogContent alignContent={"center"}>
+            <Flex
+              p={5}
+              flexDir={"column"}
+              justifyContent="flex-start"
+              alignItems={"center"}
+            >
+              <HStack w={"100%"} mb={5}>
+                <Text
+                  textAlign={"center"}
+                  w={"90%"}
+                  fontSize="lg"
+                  fontWeight="bold"
+                >
+                  Cancel Subscription
+                </Text>
+                <CloseButton onClick={onClose} />
+              </HStack>
 
-            <AlertDialogBody>
-              Are you sure you want to cancel the subscription?
-            </AlertDialogBody>
+              <Divider />
+              <Text mt={5}>
+                Are you sure you want to cancel the subscription?
+              </Text>
 
-            <AlertDialogFooter>
-              <Button ref={cancelRef} onClick={onClose} py={6}>
-                No, my bad
-              </Button>
-              <Button variant="brand" onClick={cancelSubscription} ml={3}>
-                Yes
-              </Button>
-            </AlertDialogFooter>
+              <Text fontSize={"lg"} mt={10}>
+                {plan.name}
+              </Text>
+              <Heading fontSize={"x-large"} mb={10}>
+                {plan.name === "Trial"
+                  ? "Free"
+                  : plan.name === "Custom"
+                  ? "$--"
+                  : `$ ${plan.amount}`}
+              </Heading>
+
+              <AlertDialogFooter>
+                <Button variant="brand" onClick={cancelSubscription} ml={3}>
+                  Cancel Subscription
+                </Button>
+              </AlertDialogFooter>
+            </Flex>
           </AlertDialogContent>
         </AlertDialogOverlay>
       </AlertDialog>
@@ -963,6 +1050,9 @@ const LatestInvoice: React.FC<{
   selectedPlan: string;
   transactionData: Transaction;
 }> = ({ planData, selectedPlan, transactionData }) => {
+  const successColor = "#289F4C";
+  const greyColor = "#BDBDBD";
+
   return (
     <>
       <Flex
@@ -972,46 +1062,124 @@ const LatestInvoice: React.FC<{
         w={"100%"}
         backgroundColor={"white"}
         borderRadius="xl"
+        border={"1px solid #3E15F4"}
         mr={5}
         my={5}
         overflow={"hidden"}
         filter={"drop-shadow(0px 4px 23px rgba(0, 0, 0, 0.15));"}
       >
-        <Text
-          w={"100%"}
-          fontSize={"md"}
-          fontWeight={600}
-          color={"white"}
-          backgroundColor={"accent"}
+        <HStack
+          width={"100%"}
           px={10}
           py={4}
+          mr={5}
+          backgroundColor={"#F5F2FF"}
+          borderBottom={"1px solid #3E15F4"}
         >
-          Complete your open {transactionData.payment_platform} Payment
-        </Text>
-        <HStack p={10} w={"100%"} justify="space-between">
+          <Image src="/icons/info.svg" />
+          <Text fontSize={"md"} fontWeight={600}>
+            Complete your open {transactionData.payment_platform} Payment
+          </Text>
+        </HStack>
+        <HStack p={10} w={"100%"} justify="space-between" align={"flex-start"}>
           <VStack w={"40%"} align="flex-start">
-            <HStack w={"100%"} justify="space-between">
-              <Text fontSize={"lg"} sx={{ color: "text", fontWeight: 900 }}>
-                {planData.name}
-              </Text>
-              <Heading fontSize={"x-large"}>
-                {planData.amount === "Free" ? "Free" : `$ ${planData.amount}`}
-              </Heading>
-            </HStack>
-
+            <Text fontSize={"lg"} sx={{ color: "text", fontWeight: 900 }}>
+              {planData.name}
+            </Text>
             <Text as="span" mt={10} fontWeight={300} fontSize="smaller">
               {planData.description}
             </Text>
+            <Heading fontSize={"x-large"}>
+              {planData.amount === "Free" ? "Free" : `$ ${planData.amount}`}
+            </Heading>
           </VStack>
-          <Button
-            variant="brand"
-            onClick={() => {
-              window.open(`${transactionData.invoice_url}`, "_blank");
-            }}
+          <Flex
+            ml={5}
+            justifyContent="flex-start"
+            alignItems="flex-start"
+            flexDirection="column"
           >
-            Complete Payment
-          </Button>
+            <HStack mt={5} justify={"flex-start"}>
+              <HiCheckCircle size={20} color={successColor} />
+
+              <Text fontSize={"sm"} ml={5}>
+                {planData.scan_count} Scan Credit
+              </Text>
+            </HStack>
+            <HStack mt={2} justify={"flex-start"}>
+              <HiCheckCircle size={20} color={successColor} />
+
+              <Text fontSize={"sm"} ml={5}>
+                Security Score
+              </Text>
+            </HStack>
+            <HStack mt={2} justify={"flex-start"}>
+              {planData.name === "trial" ? (
+                <HiXCircle size={20} color={greyColor} />
+              ) : (
+                <HiCheckCircle size={20} color={successColor} />
+              )}
+
+              <Text fontSize={"sm"} ml={5}>
+                Detailed Result
+              </Text>
+            </HStack>
+            <HStack mt={2} justify={"flex-start"}>
+              {planData.github ? (
+                <HiCheckCircle size={20} color={successColor} />
+              ) : (
+                <HiXCircle size={20} color={greyColor} />
+              )}
+
+              <Text fontSize={"sm"} ml={5}>
+                Private Github
+              </Text>
+            </HStack>
+            <HStack mt={2} justify={"flex-start"}>
+              {planData.report ? (
+                <HiCheckCircle size={20} color={successColor} />
+              ) : (
+                <HiXCircle size={20} color={greyColor} />
+              )}
+
+              <Text fontSize={"sm"} ml={5}>
+                Generate Report
+              </Text>
+            </HStack>
+            <HStack mt={2} justify={"flex-start"}>
+              {planData.publishable_report ? (
+                <HiCheckCircle size={20} color={successColor} />
+              ) : (
+                <HiXCircle size={20} color={greyColor} />
+              )}
+
+              <Text fontSize={"sm"} ml={5}>
+                Publishable Report
+              </Text>
+            </HStack>
+            <HStack mt={2} justify={"flex-start"}>
+              {selectedPlan === "custom" ? (
+                <HiCheckCircle size={20} color={successColor} />
+              ) : (
+                <HiXCircle size={20} color={greyColor} />
+              )}
+
+              <Text fontSize={"sm"} ml={5}>
+                White Glove Services
+              </Text>
+            </HStack>
+          </Flex>
         </HStack>
+        <Button
+          variant="brand"
+          mx={10}
+          mb={10}
+          onClick={() => {
+            window.open(`${transactionData.invoice_url}`, "_blank");
+          }}
+        >
+          Complete Payment
+        </Button>
 
         {/* <PricingDetails planData={planData} selectedPlan={selectedPlan} /> */}
       </Flex>

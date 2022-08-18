@@ -562,37 +562,37 @@ const BlockPage: React.FC = () => {
                     )}
                   </TabPanel>
                   <TabPanel>
-                      {scanData.scan_report.multi_file_scan_status ===
-                        "scan_done" &&
-                      scanData.scan_report.multi_file_scan_details &&
-                      scanData.scan_report.multi_file_scan_summary ? (
-                        <MultifileResult
-                        type={'block'}
-                          is_latest_scan={scanData.is_latest_scan}
-                          scanSummary={
-                            scanData.scan_report.multi_file_scan_summary
-                          }
-                          scanDetails={
-                            scanData.scan_report.multi_file_scan_details
-                          }
-                        />
-                      ) : (
-                        <Flex
-                          w="97%"
-                          m={4}
-                          borderRadius="20px"
-                          bgColor="high-subtle"
-                          p={4}
-                        >
-                          <ScanErrorIcon size={28} />
-                          <Text fontSize={"xs"} color="high" ml={4}>
-                            {scanData.scan_report.multi_file_scan_status
-                              ? scanData.scan_report.multi_file_scan_status
-                              : "Please do Rescan to carry out a Multifile Scan "}
-                          </Text>
-                        </Flex>
-                      )}
-                    </TabPanel>
+                    {scanData.scan_report.multi_file_scan_status ===
+                      "scan_done" &&
+                    scanData.scan_report.multi_file_scan_details &&
+                    scanData.scan_report.multi_file_scan_summary ? (
+                      <MultifileResult
+                        type={"block"}
+                        is_latest_scan={scanData.is_latest_scan}
+                        scanSummary={
+                          scanData.scan_report.multi_file_scan_summary
+                        }
+                        scanDetails={
+                          scanData.scan_report.multi_file_scan_details
+                        }
+                      />
+                    ) : (
+                      <Flex
+                        w="97%"
+                        m={4}
+                        borderRadius="20px"
+                        bgColor="high-subtle"
+                        p={4}
+                      >
+                        <ScanErrorIcon size={28} />
+                        <Text fontSize={"xs"} color="high" ml={4}>
+                          {scanData.scan_report.multi_file_scan_status
+                            ? scanData.scan_report.multi_file_scan_status
+                            : "Please do Rescan to carry out a Multifile Scan "}
+                        </Text>
+                      </Flex>
+                    )}
+                  </TabPanel>
                 </TabPanels>
               </Tabs>
             </Box>

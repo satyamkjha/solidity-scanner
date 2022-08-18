@@ -492,7 +492,7 @@ const FileDetails: React.FC<FileDetailsProps> = ({ file, type }) => {
 const formatOptionLabel: React.FC<{
   value: string;
   label: string;
-  icon: string
+  icon: string;
 }> = ({ label, icon }) => (
   <div style={{ display: "flex", flexDirection: "row" }}>
     <Image mr={3} src={`/icons/${icon}.svg`} />
@@ -501,7 +501,7 @@ const formatOptionLabel: React.FC<{
 );
 
 export const MultifileResult: React.FC<{
-  type: string
+  type: "block" | "project";
   is_latest_scan: boolean;
   scanSummary: MultiFileScanSummary;
   scanDetails: MultiFileScanDetail[];
@@ -538,10 +538,19 @@ export const MultifileResult: React.FC<{
 
   // const [action, setAction] = useState("");
   const options = [
-    { value: "discovered", icon: "", label: "Please Select an action", isDisabled: true},
-    { value: "wont_fix", icon: "wont_fix", label: "Won't Fix"},
-    { value: "false_positive",  icon: "false_positive", label: "False Positive"},
-    { value: "discovered", icon: "discovered", label: "Reset Bug Status"},
+    {
+      value: "discovered",
+      icon: "",
+      label: "Please Select an action",
+      isDisabled: true,
+    },
+    { value: "wont_fix", icon: "wont_fix", label: "Won't Fix" },
+    {
+      value: "false_positive",
+      icon: "false_positive",
+      label: "False Positive",
+    },
+    { value: "discovered", icon: "discovered", label: "Reset Bug Status" },
   ];
   const toast = useToast();
 
@@ -622,8 +631,9 @@ export const MultifileResult: React.FC<{
         return newState;
       });
       setFiles({
-        ...files, bug_status: action
-        })
+        ...files,
+        bug_status: action,
+      });
     }
   };
 
@@ -719,8 +729,9 @@ export const MultifileResult: React.FC<{
             />
           </HStack>
         )}
-        {files && ((files.bug_status !== "discovered" && !is_latest_scan) ||
-          (files.bug_status === "fixed")) && (
+        {files &&
+          ((files.bug_status !== "discovered" && !is_latest_scan) ||
+            files.bug_status === "fixed") && (
             <HStack justify="flex-end" width={"100%"}>
               <HStack bg={"gray.100"} px={10} py={2} borderRadius={30}>
                 <Text mr={2} color={"gray.600"} fontWeight={500}>
@@ -728,7 +739,9 @@ export const MultifileResult: React.FC<{
                 </Text>
                 <Image mr={3} src={`/icons/${files.bug_status}.svg`} />
                 <Text fontWeight={700}>
-                  {sentenceCapitalize(files.bug_status.toLowerCase().replace("_", " "))}
+                  {sentenceCapitalize(
+                    files.bug_status.toLowerCase().replace("_", " ")
+                  )}
                 </Text>
               </HStack>
             </HStack>
@@ -977,7 +990,7 @@ const IssueBox: React.FC<{
   );
 };
 
-type FileDataContProps = { file: FileState, type: string };
+type FileDataContProps = { file: FileState; type: "project" | "block" };
 const FileDataCont: React.FC<FileDataContProps> = ({ file, type }) => {
   const { scanId: scan_id } = useParams<{ scanId: string }>();
   const { file_path, line_nos_end, line_nos_start } = file;
@@ -1044,8 +1057,11 @@ const FileDataCont: React.FC<FileDataContProps> = ({ file, type }) => {
   );
 };
 
-type MultiFileExplorerProps = { files: FilesState, type: string };
-const MultiFileExplorer: React.FC<MultiFileExplorerProps> = ({ files, type }) => {
+type MultiFileExplorerProps = { files: FilesState; type: "project" | "block" };
+const MultiFileExplorer: React.FC<MultiFileExplorerProps> = ({
+  files,
+  type,
+}) => {
   const { data: profileData } = useProfile();
   const history = useHistory();
 
@@ -1257,7 +1273,7 @@ const IssueDetail: React.FC<{
                   px={5}
                   py={2}
                   mb={3}
-                  fontWeight='600'
+                  fontWeight="600"
                   fontSize={17}
                   borderRadius={12}
                   color={"gray.600"}

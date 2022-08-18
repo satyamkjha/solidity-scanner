@@ -13,7 +13,7 @@ interface CompProps {
 }
 
 const IssueDataComp = (props: CompProps) => {
-  const { data } = useIssueDetail(props.issueId, 'single');
+  const { data } = useIssueDetail(props.issueId, "single");
 
   return (
     <>
