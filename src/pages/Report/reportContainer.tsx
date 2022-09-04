@@ -127,11 +127,6 @@ export default function ReportContainer({ summary_report }: Props) {
       summary_report.project_summary_report.last_project_report_update_time
     );
     console.log(epoch(d));
-
-    // summary_report.scan_summary.forEach((item, index) => {
-    //   d = new Date(item.scan_time)
-    //   scan_noepoch()
-    // })
   }
 
   const issues: IssueItem[] = [];

@@ -719,13 +719,7 @@ const CurrentPlan: React.FC<{
           </HStack>
         </Flex>
       </Flex>
-      <Flex
-        mt={10}
-        px={7}
-        justifyContent={"space-between"}
-        
-        alignItems="center"
-      >
+      <Flex mt={10} px={7} justifyContent={"space-between"} alignItems="center">
         <HStack spacing={20}>
           {subscription && (
             <>
@@ -779,14 +773,14 @@ const CurrentPlan: React.FC<{
           alignItems="flex-start"
         >
           <Image src="/icons/info.svg" mr={5} />
-          <VStack alignItems={'flex-start'}>
+          <VStack alignItems={"flex-start"}>
             <Text fontSize={"lg"} fontWeight={600} color="gray.600">
               Recurring Payment
             </Text>
             <Text fontSize={"md"} fontWeight={400} color="gray.500">
-             Your card will be billed automatically on {" "}
-              {dateToDDMMMMYYYY(new Date(subscription.renewal_date))}. We do
-              not store your card information anywhere in our application.
+              Your card will be billed automatically on{" "}
+              {dateToDDMMMMYYYY(new Date(subscription.renewal_date))}. We do not
+              store your card information anywhere in our application.
             </Text>
           </VStack>
         </Flex>

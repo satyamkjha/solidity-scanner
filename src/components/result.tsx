@@ -1057,6 +1057,57 @@ const FileDataCont: React.FC<FileDataContProps> = ({ file, type }) => {
   );
 };
 
+const FileDataContTest: React.FC<FileDataContProps> = ({ file, type }) => {
+  const { scanId: scan_id } = useParams<{ scanId: string }>();
+  const { file_path, line_nos_end, line_nos_start } = file;
+
+  let highlightArray: string[] = [];
+
+  line_nos_start.map((number, index) => {
+    if (number.toString().length === line_nos_end[index].toString().length) {
+      highlightArray.push(`${number}-${line_nos_end[index]}`);
+    } else {
+      highlightArray.push(
+        `${number}-${Math.pow(10, number.toString().length) - 1}`
+      );
+      highlightArray.push(
+        `${Math.pow(10, number.toString().length)}-${line_nos_end[index]}`
+      );
+    }
+  });
+  let highlightString = highlightArray.join(",");
+
+  let codeObjArray = [];
+
+  line_nos_start.forEach((number, index) => {
+    codeObjArray.push({
+      lineStart: number,
+      lineEnd: line_nos_end[index],
+      code: "",
+    });
+  });
+
+  const { data, isLoading } = useFileContent(scan_id, file_path, type);
+
+  return (
+    <>
+      {isLoading && (
+        <Flex
+          sx={{
+            w: "100%",
+            justifyContent: "center",
+            alignItems: "center",
+            h: "35vh",
+          }}
+        >
+          <Spinner />
+        </Flex>
+      )}
+      {data && <pre>{data.file_contents}</pre>}
+    </>
+  );
+};
+
 type MultiFileExplorerProps = { files: FilesState; type: "project" | "block" };
 const MultiFileExplorer: React.FC<MultiFileExplorerProps> = ({
   files,
@@ -1130,7 +1181,7 @@ const MultiFileExplorer: React.FC<MultiFileExplorerProps> = ({
               <TabPanels>
                 {files.findings.map((file, index) => (
                   <TabPanel key={index} p={2}>
-                    <FileDataCont
+                    <FileDataContTest
                       type={type}
                       file={{
                         issue_id: files.issue_id,

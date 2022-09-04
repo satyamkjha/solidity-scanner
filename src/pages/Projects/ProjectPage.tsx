@@ -251,8 +251,9 @@ const ScanDetails: React.FC<{ scansRemaining: number; scans: ScanMeta[] }> = ({
   const generateReport = async () => {
     console.log("askdhakjsdh");
     setReportingStatus("generating_report");
-    const { data } = await API.post("/api-generate-report/", {
+    const { data } = await API.post("/api-generate-report-beta/", {
       project_id: projectId,
+      scan_id: scanId,
     });
     if (data.success) {
       setInterval(async () => {
@@ -295,9 +296,8 @@ const ScanDetails: React.FC<{ scansRemaining: number; scans: ScanMeta[] }> = ({
 
   const getReportData = async (project_id: string, report_id: string) => {
     const reportResponse = await API.post<{ summary_report: Report }>(
-      "/api-get-report/",
+      "/api-get-report-beta/",
       {
-        project_type: "project",
         project_id,
         report_id,
       }

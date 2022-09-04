@@ -150,14 +150,35 @@ export type ScanMeta = {
 };
 
 export type ScanSummary = {
+  bug_id_hash_vs_bug_id: {
+    [key: string]: string[];
+  };
   count_files_analyzed: number;
   issue_severity_distribution: IssueSeverityDistribution;
   score: string;
   issues_count: number;
   lines_analyzed_count: number;
+  latest_bug_count: number;
   scan_time_taken: number;
+  false_positive: [];
+  fixed: [];
+  wont_fix: [];
+  scan_time: string;
   scans_ran: string[];
 };
+
+// bug_id_hash_vs_bug_id: {--sKGE5QXElNBpMP8Kic8-bFYbo=: "SS_75_425", -1Cw6rJjyWZBqpRiY7UCqPbVGUs=: "SS_75_151",…}
+// count_files_analyzed: 100
+// false_positive: []
+// fixed: []
+// issue_severity_distribution: {critical: 63, gas: 189, high: 166, informational: 300, low: 761, medium: 301}
+// issues_count: 0
+// latest_bug_count: 1740
+// lines_analyzed_count: 7329
+// scan_time_taken: 8
+// scans_ran: ["static_template_based"]
+// score: 0.5
+// wont_fix: []
 
 export type IssueSeverityDistribution = {
   critical: number;
@@ -211,23 +232,15 @@ export type Overview = {
   upcoming_scan: string;
 };
 
-export type IssueItem = {
-  bug_id: string;
-  file_path: string;
-  issue_hash: string;
-  issue_name: string;
-  line_number_end: string;
-  line_number_start: string;
-  severity: string;
-  status: string;
-};
-
-export type Report = {
-  git_commit_hash: string;
+export interface Report {
   issues: {
-    [key: string]: IssueItem[];
+    [key: string]: {
+      issue_details: IssueItem[];
+      issue_id: string;
+      issue_name: string;
+    };
   };
-  report_id: string;
+  git_commit_hash: string;
   project_summary_report: {
     git_commit_hash?: string;
     project_id: string;
@@ -243,7 +256,19 @@ export type Report = {
     contract_name?: string;
     contract_platform?: string;
   };
-  scan_summary: ScanItem[];
+  scan_summary: ScanSummary[];
+}
+
+export type IssueItem = {
+  bug_hash: string;
+  bug_id: string;
+  bug_status: string;
+  findings: Finding[];
+  issue_confidence: string;
+  issue_description: string;
+  issue_name: string;
+  issue_remediation: string;
+  severity: string;
 };
 
 export type ReportsListItem = {
