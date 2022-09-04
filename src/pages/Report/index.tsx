@@ -45,7 +45,6 @@ import { sentenceCapitalize } from "helpers/helperFunction";
 import { AiOutlineProject } from "react-icons/ai";
 import { FaFileCode, FaInternetExplorer } from "react-icons/fa";
 import API from "helpers/api";
-import ReportContainer from "./reportContainer";
 import styled from "@emotion/styled";
 
 // interface UpdateProps {
@@ -915,6 +914,219 @@ export default function ReportPage() {
             )}
           </Flex>
 
+         
+
+          <Flex
+            as="div"
+            w="100%"
+            alignItems="flex-start"
+            justifyContent="flex-start"
+            flexDir={"column"}
+            py={20}
+          >
+            <Heading color={"#52FF00"} fontSize="4xl" my={10}>
+              Vulnerability{" "}
+              <Box
+                as="span"
+                sx={{
+                  color: "#000000",
+                  mx: 1,
+                }}
+              >
+                Details.
+              </Box>
+            </Heading>
+
+            {Object.keys(data.summary_report.issues).map((key, index) =>
+              data.summary_report.issues[key].issue_details.map((issue) => (
+                <Flex
+                  p={5}
+                  flexDir="column"
+                  alignItems="flex-start"
+                  justifyContent="flex-start"
+                  border={"1px solid #D9D9D9;"}
+                  my={5}
+                  width={'100%'}
+                >
+                  <Text
+                    fontSize="md"
+                    fontWeight={"normal"}
+                    color={"gray.400"}
+                    mb={1}
+                    width={"100%"}
+                  >
+                    Bug ID
+                  </Text>
+                  <Text
+                    fontSize="xl"
+                    fontWeight={"bold"}
+                    mb={10}
+                    width={"100%"}
+                  >
+                    {issue.bug_id}
+                  </Text>
+                  <HStack width={"100%"} mb={1}>
+                    <Text
+                      fontSize="md"
+                      fontWeight={"normal"}
+                      color={"gray.400"}
+                      mb={1}
+                      width={"15%"}
+                    >
+                      Severity
+                    </Text>
+                    <Text
+                      fontSize="md"
+                      fontWeight={"normal"}
+                      color={"gray.400"}
+                      mb={1}
+                      width={"15%"}
+                    >
+                      Confidence
+                    </Text>
+                    <Text
+                      fontSize="md"
+                      fontWeight={"normal"}
+                      color={"gray.400"}
+                      mb={1}
+                      width={"15%"}
+                    >
+                      Line nos
+                    </Text>
+                    <Text
+                      fontSize="md"
+                      fontWeight={"normal"}
+                      color={"gray.400"}
+                      mb={1}
+                      width={"15%"}
+                    >
+                      Action Taken
+                    </Text>
+                  </HStack>
+                  <HStack width={"100%"} mb={10}>
+                    <HStack width={"15%"}>
+                      <SeverityIcon variant={issue.severity} />
+                      <Text
+                        fontSize="lg"
+                        fontWeight={"bold"}
+                        ml={2}
+                        width={"100%"}
+                      >
+                        {sentenceCapitalize(issue.severity)}
+                      </Text>
+                    </HStack>
+                    <HStack width={"15%"}>
+                      <Text
+                        px={5}
+                        py={1}
+                        borderRadius={20}
+                        color={
+                          issue.issue_confidence === "2"
+                            ? "#289F4C"
+                            : issue.issue_confidence === "1"
+                            ? "#ED9801"
+                            : "#FF5630"
+                        }
+                        backgroundColor={
+                          issue.issue_confidence === "2"
+                            ? "#CFFFB8"
+                            : issue.issue_confidence === "1"
+                            ? "#FFF8EB"
+                            : "#FFF5F3"
+                        }
+                        fontSize="lg"
+                        fontWeight={"bold"}
+                      >
+                        {issue.issue_confidence === "2"
+                          ? "Certain"
+                          : issue.issue_confidence === "1"
+                          ? "Firm"
+                          : "Tentative"}
+                      </Text>
+                    </HStack>
+                    <Text w={"15%"} fontSize="lg" fontWeight={"bold"}>
+                      {issue.findings[0].line_nos_start}-
+                      {issue.findings[0].line_nos_end}
+                    </Text>
+                    <Text w={"15%"} fontSize="lg" fontWeight={"bold"}>
+                      {issue.bug_status === "fps" && "False Positive"}
+                      {issue.bug_status === "wp" && "Won't Fix"}
+                      {issue.bug_status === "discovered" && "Discovered"}
+                      {issue.bug_status === "fixed" && "Fixed"}
+                    </Text>
+                  </HStack>
+                  <Text
+                    fontSize="md"
+                    fontWeight={"normal"}
+                    color={"gray.400"}
+                    mb={1}
+                    width={"100%"}
+                  >
+                    Bug Type
+                  </Text>
+                  <Text
+                    fontSize="lg"
+                    fontWeight={"bols"}
+                    mb={10}
+                    width={"100%"}
+                  >
+                    {issue.issue_name}
+                  </Text>
+                  <Text
+                    fontSize="md"
+                    fontWeight={"normal"}
+                    color={"gray.400"}
+                    mb={1}
+                    width={"100%"}
+                  >
+                    File Location
+                  </Text>
+                  {issue.findings.map((finding) => (
+                    <Text
+                      fontSize="md"
+                      fontWeight={"bold"}
+                      mb={1}
+                      width={"100%"}
+                    >
+                      {finding.file_path}
+                    </Text>
+                  ))}
+
+                  <Divider my={10} />
+
+                  <HStack spacing={5} mb={5}>
+                    <IssueDescriptionIcons size={40} />
+
+                    <Text fontSize="md" fontWeight={"bold"} width={"100%"}>
+                      Issue Description
+                    </Text>
+                  </HStack>
+                  <DescriptionWrapper>
+                    <Box
+                      dangerouslySetInnerHTML={{
+                        __html: issue.issue_description,
+                      }}
+                    />
+                  </DescriptionWrapper>
+                  <HStack spacing={5} mt={10} mb={5}>
+                    <IssueRemediationIcons size={40} />
+
+                    <Text fontSize="md" fontWeight={"bold"} width={"100%"}>
+                      Issue Remediation
+                    </Text>
+                  </HStack>
+                  <DescriptionWrapper>
+                    <Box
+                      dangerouslySetInnerHTML={{
+                        __html: issue.issue_remediation,
+                      }}
+                    />
+                  </DescriptionWrapper>
+                </Flex>
+              ))
+            )}
+          </Flex>
+
           <Flex
             as="div"
             w="100%"
@@ -1160,216 +1372,6 @@ export default function ReportPage() {
                 </Flex>
               </Flex>
             ))}
-          </Flex>
-
-          <Flex
-            as="div"
-            w="100%"
-            alignItems="flex-start"
-            justifyContent="flex-start"
-            flexDir={"column"}
-            py={20}
-          >
-            <Heading color={"#52FF00"} fontSize="4xl" my={10}>
-              Vulnerability{" "}
-              <Box
-                as="span"
-                sx={{
-                  color: "#000000",
-                  mx: 1,
-                }}
-              >
-                Details.
-              </Box>
-            </Heading>
-
-            {Object.keys(data.summary_report.issues).map((key, index) =>
-              data.summary_report.issues[key].issue_details.map((issue) => (
-                <Flex
-                  p={5}
-                  flexDir="column"
-                  alignItems="flex-start"
-                  justifyContent="flex-start"
-                  border={"1px solid #D9D9D9;"}
-                  my={5}
-                >
-                  <Text
-                    fontSize="md"
-                    fontWeight={"normal"}
-                    color={"gray.400"}
-                    mb={1}
-                    width={"100%"}
-                  >
-                    Bug ID
-                  </Text>
-                  <Text
-                    fontSize="xl"
-                    fontWeight={"bold"}
-                    mb={10}
-                    width={"100%"}
-                  >
-                    {issue.bug_id}
-                  </Text>
-                  <HStack width={"100%"} mb={1}>
-                    <Text
-                      fontSize="md"
-                      fontWeight={"normal"}
-                      color={"gray.400"}
-                      mb={1}
-                      width={"15%"}
-                    >
-                      Severity
-                    </Text>
-                    <Text
-                      fontSize="md"
-                      fontWeight={"normal"}
-                      color={"gray.400"}
-                      mb={1}
-                      width={"15%"}
-                    >
-                      Confidence
-                    </Text>
-                    <Text
-                      fontSize="md"
-                      fontWeight={"normal"}
-                      color={"gray.400"}
-                      mb={1}
-                      width={"15%"}
-                    >
-                      Line nos
-                    </Text>
-                    <Text
-                      fontSize="md"
-                      fontWeight={"normal"}
-                      color={"gray.400"}
-                      mb={1}
-                      width={"15%"}
-                    >
-                      Action Taken
-                    </Text>
-                  </HStack>
-                  <HStack width={"100%"} mb={10}>
-                    <HStack width={"15%"}>
-                      <SeverityIcon variant={issue.severity} />
-                      <Text
-                        fontSize="lg"
-                        fontWeight={"bold"}
-                        ml={2}
-                        width={"100%"}
-                      >
-                        {sentenceCapitalize(issue.severity)}
-                      </Text>
-                    </HStack>
-                    <HStack width={"15%"}>
-                      <Text
-                        px={5}
-                        py={1}
-                        borderRadius={20}
-                        color={
-                          issue.issue_confidence === "2"
-                            ? "#289F4C"
-                            : issue.issue_confidence === "1"
-                            ? "#ED9801"
-                            : "#FF5630"
-                        }
-                        backgroundColor={
-                          issue.issue_confidence === "2"
-                            ? "#CFFFB8"
-                            : issue.issue_confidence === "1"
-                            ? "#FFF8EB"
-                            : "#FFF5F3"
-                        }
-                        fontSize="lg"
-                        fontWeight={"bold"}
-                      >
-                        {issue.issue_confidence === "2"
-                          ? "Certain"
-                          : issue.issue_confidence === "1"
-                          ? "Firm"
-                          : "Tentative"}
-                      </Text>
-                    </HStack>
-                    <Text w={"15%"} fontSize="lg" fontWeight={"bold"}>
-                      {issue.findings[0].line_nos_start}-
-                      {issue.findings[0].line_nos_end}
-                    </Text>
-                    <Text w={"15%"} fontSize="lg" fontWeight={"bold"}>
-                      {issue.bug_status === "fps" && "False Positive"}
-                      {issue.bug_status === "wp" && "Won't Fix"}
-                      {issue.bug_status === "discovered" && "Discovered"}
-                      {issue.bug_status === "fixed" && "Fixed"}
-                    </Text>
-                  </HStack>
-                  <Text
-                    fontSize="md"
-                    fontWeight={"normal"}
-                    color={"gray.400"}
-                    mb={1}
-                    width={"100%"}
-                  >
-                    Bug Type
-                  </Text>
-                  <Text
-                    fontSize="lg"
-                    fontWeight={"bols"}
-                    mb={10}
-                    width={"100%"}
-                  >
-                    {issue.issue_name}
-                  </Text>
-                  <Text
-                    fontSize="md"
-                    fontWeight={"normal"}
-                    color={"gray.400"}
-                    mb={1}
-                    width={"100%"}
-                  >
-                    File Location
-                  </Text>
-                  {issue.findings.map((finding) => (
-                    <Text
-                      fontSize="md"
-                      fontWeight={"bold"}
-                      mb={1}
-                      width={"100%"}
-                    >
-                      {finding.file_path}
-                    </Text>
-                  ))}
-
-                  <Divider my={10} />
-
-                  <HStack spacing={5} mb={5}>
-                    <IssueDescriptionIcons size={40} />
-
-                    <Text fontSize="md" fontWeight={"bold"} width={"100%"}>
-                      Issue Description
-                    </Text>
-                  </HStack>
-                  <DescriptionWrapper>
-                    <Box
-                      dangerouslySetInnerHTML={{
-                        __html: issue.issue_description,
-                      }}
-                    />
-                  </DescriptionWrapper>
-                  <HStack spacing={5} mt={10} mb={5}>
-                    <IssueRemediationIcons size={40} />
-
-                    <Text fontSize="md" fontWeight={"bold"} width={"100%"}>
-                      Issue Remediation
-                    </Text>
-                  </HStack>
-                  <DescriptionWrapper>
-                    <Box
-                      dangerouslySetInnerHTML={{
-                        __html: issue.issue_remediation,
-                      }}
-                    />
-                  </DescriptionWrapper>
-                </Flex>
-              ))
-            )}
           </Flex>
         </Container>
       ) : (

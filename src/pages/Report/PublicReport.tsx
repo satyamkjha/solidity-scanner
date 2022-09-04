@@ -2,7 +2,6 @@ import React from "react";
 import { useParams } from "react-router-dom";
 import { Flex, Box, Container } from "@chakra-ui/react";
 import { Logo } from "components/icons";
-import ReportContainer from "./reportContainer";
 import { usePublicReport } from "hooks/usePublicReport";
 
 export default function PublicReportPage() {
@@ -35,7 +34,7 @@ export default function PublicReportPage() {
               backgroundColor={"#38CB89"}
             />
           </Flex>
-          <ReportContainer summary_report={data.summary_report} />
+          {/* <ReportContainer summary_report={data.summary_report} /> */}
         </Container>
       )}
     </>
