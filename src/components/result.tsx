@@ -1011,15 +1011,9 @@ const FileDataCont: React.FC<FileDataContProps> = ({ file, type }) => {
   });
   let highlightString = highlightArray.join(",");
 
-  let codeObjArray = [];
+  console.log(highlightString)
 
-  line_nos_start.forEach((number, index) => {
-    codeObjArray.push({
-      lineStart: number,
-      lineEnd: line_nos_end[index],
-      code: "",
-    });
-  });
+  
 
   const { data, isLoading } = useFileContent(scan_id, file_path, type);
 
@@ -1060,6 +1054,8 @@ const FileDataCont: React.FC<FileDataContProps> = ({ file, type }) => {
 const FileDataContTest: React.FC<FileDataContProps> = ({ file, type }) => {
   const { scanId: scan_id } = useParams<{ scanId: string }>();
   const { file_path, line_nos_end, line_nos_start } = file;
+
+  console.log(line_nos_end, line_nos_start)
 
   let highlightArray: string[] = [];
 
@@ -1181,7 +1177,7 @@ const MultiFileExplorer: React.FC<MultiFileExplorerProps> = ({
               <TabPanels>
                 {files.findings.map((file, index) => (
                   <TabPanel key={index} p={2}>
-                    <FileDataContTest
+                    <FileDataCont
                       type={type}
                       file={{
                         issue_id: files.issue_id,
