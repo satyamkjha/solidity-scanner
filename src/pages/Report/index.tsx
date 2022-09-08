@@ -515,7 +515,7 @@ export default function ReportPage() {
                       color={"gray.600"}
                       my={4}
                     >
-                      Project Name
+                      Contract Name
                     </Text>
                     <Divider />
                   </>
@@ -529,42 +529,60 @@ export default function ReportPage() {
                   Contract Type
                 </Text>
                 <Divider />
-                <Text
-                  fontSize="lg"
-                  fontWeight={"bold"}
-                  color={"gray.600"}
-                  my={4}
-                >
-                  Contract Address
-                </Text>
-                <Divider />
-                <Text
-                  fontSize="lg"
-                  fontWeight={"bold"}
-                  color={"gray.600"}
-                  my={4}
-                >
-                  Contract Platform
-                </Text>
-                <Divider />
-                <Text
-                  fontSize="lg"
-                  fontWeight={"bold"}
-                  color={"gray.600"}
-                  my={4}
-                >
-                  Contract Chain
-                </Text>
-                <Divider />
-                <Text
-                  fontSize="lg"
-                  fontWeight={"bold"}
-                  color={"gray.600"}
-                  my={4}
-                >
-                  Contract URL
-                </Text>
-                <Divider />
+                {data.summary_report.project_summary_report
+                  .contract_address && (
+                  <>
+                    <Text
+                      fontSize="lg"
+                      fontWeight={"bold"}
+                      color={"gray.600"}
+                      my={4}
+                    >
+                      Contract Address
+                    </Text>
+                    <Divider />
+                  </>
+                )}
+                {data.summary_report.project_summary_report
+                  .contract_platform && (
+                  <>
+                    <Text
+                      fontSize="lg"
+                      fontWeight={"bold"}
+                      color={"gray.600"}
+                      my={4}
+                    >
+                      Contract Platform
+                    </Text>
+                    <Divider />
+                  </>
+                )}
+                {data.summary_report.project_summary_report.contract_chain && (
+                  <>
+                    <Text
+                      fontSize="lg"
+                      fontWeight={"bold"}
+                      color={"gray.600"}
+                      my={4}
+                    >
+                      Contract Chain
+                    </Text>
+                    <Divider />
+                  </>
+                )}
+                {data.summary_report.project_summary_report.contract_url && (
+                  <>
+                    <Text
+                      fontSize="lg"
+                      fontWeight={"bold"}
+                      color={"gray.600"}
+                      my={4}
+                    >
+                      Contract URL
+                    </Text>
+                    <Divider />
+                  </>
+                )}
                 <Text
                   fontSize="lg"
                   fontWeight={"bold"}
@@ -574,42 +592,59 @@ export default function ReportPage() {
                   Language
                 </Text>
                 <Divider />
-                <Text
-                  fontSize="lg"
-                  fontWeight={"bold"}
-                  color={"gray.600"}
-                  my={4}
-                >
-                  Codebase
-                </Text>
-                <Divider />
-                <Text
-                  fontSize="lg"
-                  fontWeight={"bold"}
-                  color={"gray.600"}
-                  my={4}
-                >
-                  Commit Hash
-                </Text>
-                <Divider />
-                <Text
-                  fontSize="lg"
-                  fontWeight={"bold"}
-                  color={"gray.600"}
-                  my={4}
-                >
-                  Website
-                </Text>
-                <Divider />
-                <Text
-                  fontSize="lg"
-                  fontWeight={"bold"}
-                  color={"gray.600"}
-                  my={4}
-                >
-                  Publishers/Owners Name
-                </Text>
-                <Divider />
+                {data.summary_report.project_summary_report.project_url && (
+                  <>
+                    <Text
+                      fontSize="lg"
+                      fontWeight={"bold"}
+                      color={"gray.600"}
+                      my={4}
+                    >
+                      Codebase
+                    </Text>
+                    <Divider />
+                  </>
+                )}
+                {data.summary_report.project_summary_report.git_commit_hash && (
+                  <>
+                    <Text
+                      fontSize="lg"
+                      fontWeight={"bold"}
+                      color={"gray.600"}
+                      my={4}
+                    >
+                      Commit Hash
+                    </Text>
+                    <Divider />
+                  </>
+                )}
+                {data.summary_report.project_summary_report.website && (
+                  <>
+                    <Text
+                      fontSize="lg"
+                      fontWeight={"bold"}
+                      color={"gray.600"}
+                      my={4}
+                    >
+                      Website
+                    </Text>
+                    <Divider />
+                  </>
+                )}
+                {data.summary_report.project_summary_report.publishers_name && (
+                  <>
+                    <Text
+                      fontSize="lg"
+                      fontWeight={"bold"}
+                      color={"gray.600"}
+                      my={4}
+                    >
+                      Publishers/Owners Name
+                    </Text>
+                    <Divider />
+                  </>
+                )}
+
                 <Text
                   fontSize="lg"
                   fontWeight={"bold"}
@@ -629,14 +664,94 @@ export default function ReportPage() {
                 py={3}
                 backgroundColor={"#FFFFFF"}
               >
-                <Text fontSize="lg" fontWeight={"normal"} my={4}>
-                  {data.summary_report.project_summary_report.project_name}
-                </Text>
-                <Divider />
+                {data.summary_report.project_summary_report.project_name && (
+                  <>
+                    <Text fontSize="lg" fontWeight={"normal"} my={4}>
+                      {data.summary_report.project_summary_report.project_name}
+                    </Text>
+                    <Divider />
+                  </>
+                )}
+                {data.summary_report.project_summary_report.contract_name && (
+                  <>
+                    <Text fontSize="lg" fontWeight={"normal"} my={4}>
+                      {data.summary_report.project_summary_report.contract_name}
+                    </Text>
+                    <Divider />
+                  </>
+                )}
                 <Text fontSize="lg" fontWeight={"normal"} my={4}>
                   {"Smart Contract"}
                 </Text>
                 <Divider />
+                {data.summary_report.project_summary_report
+                  .contract_address && (
+                  <>
+                  <Text fontSize="lg" fontWeight={"normal"} my={4}>
+                      {data.summary_report.project_summary_report.contract_address}
+                    </Text>
+                    <Divider />
+                  </>)}
+                  {data.summary_report.project_summary_report
+                  .contract_platform && (
+                  <>
+                   <Text fontSize="lg" fontWeight={"normal"} my={4}>
+                      {data.summary_report.project_summary_report.contract_platform}
+                    </Text>
+                    <Divider />
+                  </>)}
+                  {data.summary_report.project_summary_report
+                  .contract_chain && (
+                  <>
+                   <Text fontSize="lg" fontWeight={"normal"} my={4}>
+                      {data.summary_report.project_summary_report.contract_chain}
+                    </Text>
+                    <Divider />
+                  </>)}
+                  {data.summary_report.project_summary_report.contract_url && (
+                  <>
+                   <Text fontSize="lg" fontWeight={"normal"} my={4}>
+                      {data.summary_report.project_summary_report.contract_url}
+                    </Text>
+                    <Divider />
+                  </>)}
+                  <Text fontSize="lg" fontWeight={"normal"} my={4}>
+                    {'Solidity'}
+                    </Text>
+                    <Divider />
+                    {data.summary_report.project_summary_report.project_url && (
+                  <>
+                   <Text fontSize="lg" fontWeight={"normal"} my={4}>
+                   {data.summary_report.project_summary_report.project_url}
+        
+                    </Text>
+                    <Divider />
+                  </>)}
+                  {data.summary_report.project_summary_report.git_commit_hash && (
+                  <>
+                   <Text fontSize="lg" fontWeight={"normal"} my={4}>
+                   {data.summary_report.project_summary_report.git_commit_hash}
+        
+                    </Text>
+                    <Divider />
+                  </>)}
+                  {data.summary_report.project_summary_report.website && (
+                  <> <Text fontSize="lg" fontWeight={"normal"} my={4}>
+                  {data.summary_report.project_summary_report.website}
+       
+                   </Text>
+                   <Divider />
+                  </>)}
+                  {data.summary_report.project_summary_report.publishers_name && (
+                  <><Text fontSize="lg" fontWeight={"normal"} my={4}>
+                  {data.summary_report.project_summary_report.publishers_name}
+       
+                   </Text>
+                   <Divider /></>)}
+                   <Text fontSize="lg" fontWeight={"normal"} my={4}>
+                    {'Static Scanning'}
+                   </Text>
+                   <Divider />
               </Flex>
             </Flex>
           </Flex>
@@ -721,8 +836,8 @@ export default function ReportPage() {
                   }
                   total={
                     data.summary_report.scan_summary[
-                      data.summary_report.scan_summary.length - 1
-                    ].latest_bug_count
+                      0
+                    ].issues_count
                   }
                 />
                 <VulnerabilityProgress
@@ -734,9 +849,7 @@ export default function ReportPage() {
                     ].issue_severity_distribution.high
                   }
                   total={
-                    data.summary_report.scan_summary[
-                      data.summary_report.scan_summary.length - 1
-                    ].latest_bug_count
+                    data.summary_report.scan_summary[0].issues_count
                   }
                 />
                 <VulnerabilityProgress
@@ -748,9 +861,7 @@ export default function ReportPage() {
                     ].issue_severity_distribution.medium
                   }
                   total={
-                    data.summary_report.scan_summary[
-                      data.summary_report.scan_summary.length - 1
-                    ].latest_bug_count
+                    data.summary_report.scan_summary[0].issues_count
                   }
                 />
               </Box>
@@ -764,9 +875,7 @@ export default function ReportPage() {
                     ].issue_severity_distribution.low
                   }
                   total={
-                    data.summary_report.scan_summary[
-                      data.summary_report.scan_summary.length - 1
-                    ].latest_bug_count
+                    data.summary_report.scan_summary[0].issues_count
                   }
                 />
                 <VulnerabilityProgress
@@ -778,9 +887,7 @@ export default function ReportPage() {
                     ].issue_severity_distribution.informational
                   }
                   total={
-                    data.summary_report.scan_summary[
-                      data.summary_report.scan_summary.length - 1
-                    ].latest_bug_count
+                    data.summary_report.scan_summary[0].issues_count
                   }
                 />
                 <VulnerabilityProgress
@@ -792,9 +899,7 @@ export default function ReportPage() {
                     ].issue_severity_distribution.gas
                   }
                   total={
-                    data.summary_report.scan_summary[
-                      data.summary_report.scan_summary.length - 1
-                    ].latest_bug_count
+                    data.summary_report.scan_summary[0].issues_count
                   }
                 />
               </Box>
@@ -914,8 +1019,6 @@ export default function ReportPage() {
             )}
           </Flex>
 
-         
-
           <Flex
             as="div"
             w="100%"
@@ -946,7 +1049,7 @@ export default function ReportPage() {
                   justifyContent="flex-start"
                   border={"1px solid #D9D9D9;"}
                   my={5}
-                  width={'100%'}
+                  width={"100%"}
                 >
                   <Text
                     fontSize="md"

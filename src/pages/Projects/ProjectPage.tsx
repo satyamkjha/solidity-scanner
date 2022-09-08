@@ -251,7 +251,7 @@ const ScanDetails: React.FC<{ scansRemaining: number; scans: ScanMeta[] }> = ({
   const generateReport = async () => {
     console.log("askdhakjsdh");
     setReportingStatus("generating_report");
-    const { data } = await API.post("/api-generate-report-beta/", {
+    const { data } = await API.post("/api-generate-report/", {
       project_id: projectId,
       scan_id: scanId,
     });

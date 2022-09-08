@@ -79,7 +79,7 @@ const Overview: React.FC<{
               alignItems={"center"}
               h="300px"
             >
-              {scanData.scan_summary.issues_count === 0 ? (
+              {scanData.multi_file_scan_summary.issues_count === 0 ? (
                 <Image src="/nobug.svg" alt="No Bugs Found" />
               ) : (
                 <PieChart

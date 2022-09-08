@@ -539,7 +539,7 @@ export const MultifileResult: React.FC<{
   // const [action, setAction] = useState("");
   const options = [
     {
-      value: "discovered",
+      value: "pending_fix",
       icon: "",
       label: "Please Select an action",
       isDisabled: true,
@@ -550,7 +550,7 @@ export const MultifileResult: React.FC<{
       icon: "false_positive",
       label: "False Positive",
     },
-    { value: "discovered", icon: "discovered", label: "Reset Bug Status" },
+    { value: "pending_fix", icon: "pending_fix", label: "Reset Bug Status" },
   ];
   const toast = useToast();
 
@@ -730,7 +730,7 @@ export const MultifileResult: React.FC<{
           </HStack>
         )}
         {files &&
-          ((files.bug_status !== "discovered" && !is_latest_scan) ||
+          ((files.bug_status !== "pending_fix" && !is_latest_scan) ||
             files.bug_status === "fixed") && (
             <HStack justify="flex-end" width={"100%"}>
               <HStack bg={"gray.100"} px={10} py={2} borderRadius={30}>
@@ -943,13 +943,13 @@ const IssueBox: React.FC<{
       key={bug_id}
       id={bug_id}
       opacity={
-        metric_wise_aggregated_finding.bug_status === "discovered" ? 1 : 0.5
+        metric_wise_aggregated_finding.bug_status === "pending_fix" ? 1 : 0.5
       }
       sx={{
         cursor: "pointer",
         bg:
           bug_id === files?.bug_id &&
-          metric_wise_aggregated_finding.bug_status === "discovered"
+          metric_wise_aggregated_finding.bug_status === "pending_fix"
             ? "gray.300"
             : "gray.100",
         p: 3,
@@ -979,7 +979,7 @@ const IssueBox: React.FC<{
         <Text w={"50%"} isTruncated color={"gray.700"}>
           {bug_id}
         </Text>
-        {metric_wise_aggregated_finding.bug_status !== "discovered" && (
+        {metric_wise_aggregated_finding.bug_status !== "pending_fix" && (
           <Image
             mr={3}
             src={`/icons/${metric_wise_aggregated_finding.bug_status}.svg`}
@@ -1011,9 +1011,7 @@ const FileDataCont: React.FC<FileDataContProps> = ({ file, type }) => {
   });
   let highlightString = highlightArray.join(",");
 
-  console.log(highlightString)
-
-  
+  console.log(highlightString);
 
   const { data, isLoading } = useFileContent(scan_id, file_path, type);
 
@@ -1055,7 +1053,7 @@ const FileDataContTest: React.FC<FileDataContProps> = ({ file, type }) => {
   const { scanId: scan_id } = useParams<{ scanId: string }>();
   const { file_path, line_nos_end, line_nos_start } = file;
 
-  console.log(line_nos_end, line_nos_start)
+  console.log(line_nos_end, line_nos_start);
 
   let highlightArray: string[] = [];
 
