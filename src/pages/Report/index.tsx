@@ -1011,7 +1011,7 @@ export default function ReportPage() {
                     )} */}
                     {issue.bug_status === "fps" && "False Positive"}
                     {issue.bug_status === "wp" && "Won't Fix"}
-                    {issue.bug_status === "discovered" && "Discovered"}
+                    {issue.bug_status === "pending_fix" && "Pending Fix"}
                     {issue.bug_status === "fixed" && "Fixed"}
                   </Text>
                 </Flex>
