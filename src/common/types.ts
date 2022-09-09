@@ -80,6 +80,7 @@ export type Scan = {
   contract_chain?: string;
   value?: string;
   currency?: string;
+  report_regeneration_enabled: boolean;
   scan_type: string;
   scan_id: string;
   scan_init_time: string;

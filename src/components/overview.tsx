@@ -69,7 +69,8 @@ const Overview: React.FC<{
 }> = ({ scanData, scansRemaining }) => {
   return (
     <>
-      {scanData.multi_file_scan_status === "scan_done" && scanData.multi_file_scan_summary ? (
+      {scanData.multi_file_scan_status === "scan_done" &&
+      scanData.multi_file_scan_summary ? (
         <Flex w="100%" sx={{ flexDir: ["column", "column", "row"] }}>
           <VStack w={["100%", "100%", "50%"]} mb={[8, 8, 0]}>
             <Box
@@ -84,13 +85,18 @@ const Overview: React.FC<{
               ) : (
                 <PieChart
                   data={pieData(
-                    scanData.multi_file_scan_summary.issue_severity_distribution.critical,
-                    scanData.multi_file_scan_summary.issue_severity_distribution.high,
-                    scanData.multi_file_scan_summary.issue_severity_distribution.medium,
-                    scanData.multi_file_scan_summary.issue_severity_distribution.low,
+                    scanData.multi_file_scan_summary.issue_severity_distribution
+                      .critical,
+                    scanData.multi_file_scan_summary.issue_severity_distribution
+                      .high,
+                    scanData.multi_file_scan_summary.issue_severity_distribution
+                      .medium,
+                    scanData.multi_file_scan_summary.issue_severity_distribution
+                      .low,
                     scanData.multi_file_scan_summary.issue_severity_distribution
                       .informational,
-                    scanData.multi_file_scan_summary.issue_severity_distribution.gas
+                    scanData.multi_file_scan_summary.issue_severity_distribution
+                      .gas
                   )}
                 />
               )}
@@ -98,18 +104,29 @@ const Overview: React.FC<{
             <Box w={["70%", "70%", "60%"]}>
               <VulnerabilityDistribution
                 critical={
-                  scanData.multi_file_scan_summary.issue_severity_distribution.critical
+                  scanData.multi_file_scan_summary.issue_severity_distribution
+                    .critical
                 }
-                high={scanData.multi_file_scan_summary.issue_severity_distribution.high}
+                high={
+                  scanData.multi_file_scan_summary.issue_severity_distribution
+                    .high
+                }
                 medium={
-                  scanData.multi_file_scan_summary.issue_severity_distribution.medium
+                  scanData.multi_file_scan_summary.issue_severity_distribution
+                    .medium
                 }
-                low={scanData.multi_file_scan_summary.issue_severity_distribution.low}
+                low={
+                  scanData.multi_file_scan_summary.issue_severity_distribution
+                    .low
+                }
                 informational={
                   scanData.multi_file_scan_summary.issue_severity_distribution
                     .informational
                 }
-                gas={scanData.multi_file_scan_summary.issue_severity_distribution.gas}
+                gas={
+                  scanData.multi_file_scan_summary.issue_severity_distribution
+                    .gas
+                }
               />
             </Box>
           </VStack>
@@ -137,7 +154,10 @@ const Overview: React.FC<{
                 </Flex>
               )}
               <CircularProgress
-                value={(parseInt(scanData.multi_file_scan_summary.score, 10) * 100) / 5}
+                value={
+                  (parseInt(scanData.multi_file_scan_summary.score, 10) * 100) /
+                  5
+                }
                 color="accent"
                 thickness="4px"
                 size="65px"
@@ -180,11 +200,15 @@ const Overview: React.FC<{
               </HStack>
               <HStack w="100%" justifyContent="space-between">
                 <Text>Score</Text>
-                <Text color="subtle">{scanData.multi_file_scan_summary.score}</Text>
+                <Text color="subtle">
+                  {scanData.multi_file_scan_summary.score}
+                </Text>
               </HStack>
               <HStack w="100%" justifyContent="space-between">
                 <Text>Issue Count</Text>
-                <Text color="subtle">{scanData.multi_file_scan_summary.issues_count}</Text>
+                <Text color="subtle">
+                  {scanData.multi_file_scan_summary.issues_count}
+                </Text>
               </HStack>
               <HStack w="100%" justifyContent="space-between">
                 <Text>Duration</Text>

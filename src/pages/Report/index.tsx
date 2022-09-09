@@ -417,14 +417,14 @@ export default function ReportPage() {
               This report has been prepared for{" "}
               {data.summary_report.project_summary_report.project_name} using
               SolidityScan to scan and discover vulnerabilities and safe coding
-              practices in their smart contract including the libraries
-              used by the contract that are not officially recognized. The
-              SolidityScan tool runs a comprehensive static analysis on the
-              Solidity code and finds vulnerabilities ranging from minor gas
-              optimizations to major vulnerabilities leading to the loss of
-              funds. The coverage scope pays attention to all the informational
-              and critical vulnerabilities with over (100+) modules. The
-              scanning and auditing process covers the following areas:{" "}
+              practices in their smart contract including the libraries used by
+              the contract that are not officially recognized. The SolidityScan
+              tool runs a comprehensive static analysis on the Solidity code and
+              finds vulnerabilities ranging from minor gas optimizations to
+              major vulnerabilities leading to the loss of funds. The coverage
+              scope pays attention to all the informational and critical
+              vulnerabilities with over (100+) modules. The scanning and
+              auditing process covers the following areas:{" "}
             </Text>
 
             <Text
@@ -687,71 +687,93 @@ export default function ReportPage() {
                 {data.summary_report.project_summary_report
                   .contract_address && (
                   <>
-                  <Text fontSize="lg" fontWeight={"normal"} my={4}>
-                      {data.summary_report.project_summary_report.contract_address}
+                    <Text fontSize="lg" fontWeight={"normal"} my={4}>
+                      {
+                        data.summary_report.project_summary_report
+                          .contract_address
+                      }
                     </Text>
                     <Divider />
-                  </>)}
-                  {data.summary_report.project_summary_report
+                  </>
+                )}
+                {data.summary_report.project_summary_report
                   .contract_platform && (
                   <>
-                   <Text fontSize="lg" fontWeight={"normal"} my={4}>
-                      {data.summary_report.project_summary_report.contract_platform}
+                    <Text fontSize="lg" fontWeight={"normal"} my={4}>
+                      {
+                        data.summary_report.project_summary_report
+                          .contract_platform
+                      }
                     </Text>
                     <Divider />
-                  </>)}
-                  {data.summary_report.project_summary_report
-                  .contract_chain && (
+                  </>
+                )}
+                {data.summary_report.project_summary_report.contract_chain && (
                   <>
-                   <Text fontSize="lg" fontWeight={"normal"} my={4}>
-                      {data.summary_report.project_summary_report.contract_chain}
+                    <Text fontSize="lg" fontWeight={"normal"} my={4}>
+                      {
+                        data.summary_report.project_summary_report
+                          .contract_chain
+                      }
                     </Text>
                     <Divider />
-                  </>)}
-                  {data.summary_report.project_summary_report.contract_url && (
+                  </>
+                )}
+                {data.summary_report.project_summary_report.contract_url && (
                   <>
-                   <Text fontSize="lg" fontWeight={"normal"} my={4}>
+                    <Text fontSize="lg" fontWeight={"normal"} my={4}>
                       {data.summary_report.project_summary_report.contract_url}
                     </Text>
                     <Divider />
-                  </>)}
-                  <Text fontSize="lg" fontWeight={"normal"} my={4}>
-                    {'Solidity'}
-                    </Text>
-                    <Divider />
-                    {data.summary_report.project_summary_report.project_url && (
+                  </>
+                )}
+                <Text fontSize="lg" fontWeight={"normal"} my={4}>
+                  {"Solidity"}
+                </Text>
+                <Divider />
+                {data.summary_report.project_summary_report.project_url && (
                   <>
-                   <Text fontSize="lg" fontWeight={"normal"} my={4}>
-                   {data.summary_report.project_summary_report.project_url}
-        
+                    <Text fontSize="lg" fontWeight={"normal"} my={4}>
+                      {data.summary_report.project_summary_report.project_url}
                     </Text>
                     <Divider />
-                  </>)}
-                  {data.summary_report.project_summary_report.git_commit_hash && (
+                  </>
+                )}
+                {data.summary_report.project_summary_report.git_commit_hash && (
                   <>
-                   <Text fontSize="lg" fontWeight={"normal"} my={4}>
-                   {data.summary_report.project_summary_report.git_commit_hash}
-        
+                    <Text fontSize="lg" fontWeight={"normal"} my={4}>
+                      {
+                        data.summary_report.project_summary_report
+                          .git_commit_hash
+                      }
                     </Text>
                     <Divider />
-                  </>)}
-                  {data.summary_report.project_summary_report.website && (
-                  <> <Text fontSize="lg" fontWeight={"normal"} my={4}>
-                  {data.summary_report.project_summary_report.website}
-       
-                   </Text>
-                   <Divider />
-                  </>)}
-                  {data.summary_report.project_summary_report.publishers_name && (
-                  <><Text fontSize="lg" fontWeight={"normal"} my={4}>
-                  {data.summary_report.project_summary_report.publishers_name}
-       
-                   </Text>
-                   <Divider /></>)}
-                   <Text fontSize="lg" fontWeight={"normal"} my={4}>
-                    {'Static Scanning'}
-                   </Text>
-                   <Divider />
+                  </>
+                )}
+                {data.summary_report.project_summary_report.website && (
+                  <>
+                    {" "}
+                    <Text fontSize="lg" fontWeight={"normal"} my={4}>
+                      {data.summary_report.project_summary_report.website}
+                    </Text>
+                    <Divider />
+                  </>
+                )}
+                {data.summary_report.project_summary_report.publishers_name && (
+                  <>
+                    <Text fontSize="lg" fontWeight={"normal"} my={4}>
+                      {
+                        data.summary_report.project_summary_report
+                          .publishers_name
+                      }
+                    </Text>
+                    <Divider />
+                  </>
+                )}
+                <Text fontSize="lg" fontWeight={"normal"} my={4}>
+                  {"Static Scanning"}
+                </Text>
+                <Divider />
               </Flex>
             </Flex>
           </Flex>
@@ -834,11 +856,7 @@ export default function ReportPage() {
                       data.summary_report.scan_summary.length - 1
                     ].issue_severity_distribution.critical
                   }
-                  total={
-                    data.summary_report.scan_summary[
-                      0
-                    ].issues_count
-                  }
+                  total={data.summary_report.scan_summary[0].issues_count}
                 />
                 <VulnerabilityProgress
                   label="High"
@@ -848,9 +866,7 @@ export default function ReportPage() {
                       data.summary_report.scan_summary.length - 1
                     ].issue_severity_distribution.high
                   }
-                  total={
-                    data.summary_report.scan_summary[0].issues_count
-                  }
+                  total={data.summary_report.scan_summary[0].issues_count}
                 />
                 <VulnerabilityProgress
                   label="Medium"
@@ -860,9 +876,7 @@ export default function ReportPage() {
                       data.summary_report.scan_summary.length - 1
                     ].issue_severity_distribution.medium
                   }
-                  total={
-                    data.summary_report.scan_summary[0].issues_count
-                  }
+                  total={data.summary_report.scan_summary[0].issues_count}
                 />
               </Box>
               <Box w={"33%"} h="300px" px={15}>
@@ -874,9 +888,7 @@ export default function ReportPage() {
                       data.summary_report.scan_summary.length - 1
                     ].issue_severity_distribution.low
                   }
-                  total={
-                    data.summary_report.scan_summary[0].issues_count
-                  }
+                  total={data.summary_report.scan_summary[0].issues_count}
                 />
                 <VulnerabilityProgress
                   label="Informational"
@@ -886,9 +898,7 @@ export default function ReportPage() {
                       data.summary_report.scan_summary.length - 1
                     ].issue_severity_distribution.informational
                   }
-                  total={
-                    data.summary_report.scan_summary[0].issues_count
-                  }
+                  total={data.summary_report.scan_summary[0].issues_count}
                 />
                 <VulnerabilityProgress
                   label="Gas"
@@ -898,9 +908,7 @@ export default function ReportPage() {
                       data.summary_report.scan_summary.length - 1
                     ].issue_severity_distribution.gas
                   }
-                  total={
-                    data.summary_report.scan_summary[0].issues_count
-                  }
+                  total={data.summary_report.scan_summary[0].issues_count}
                 />
               </Box>
             </Flex>
@@ -1009,8 +1017,8 @@ export default function ReportPage() {
                     {/* {sentenceCapitalize(
                       issue.status.toLowerCase().replace("_", " ")
                     )} */}
-                    {issue.bug_status === "fps" && "False Positive"}
-                    {issue.bug_status === "wp" && "Won't Fix"}
+                    {issue.bug_status === "false_positive" && "False Positive"}
+                    {issue.bug_status === "wont_fix" && "Won't Fix"}
                     {issue.bug_status === "pending_fix" && "Pending Fix"}
                     {issue.bug_status === "fixed" && "Fixed"}
                   </Text>

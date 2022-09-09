@@ -117,7 +117,7 @@ const BlockPage: React.FC = () => {
 
   const generateReport = async (scanId: string, projectId: string) => {
     setReportingStatus("generating_report");
-    console.log(projectId, scanId)
+    console.log(projectId, scanId);
     const { data } = await API.post("/api-generate-report/", {
       project_id: projectId,
       scan_id: scanId,
@@ -311,20 +311,25 @@ const BlockPage: React.FC = () => {
                               mr={5}
                               isDisabled={
                                 reportingStatus === "generating_report" ||
-                                (profile.current_package !== "expired" &&
-                                  !plans.monthly[profile.current_package]
-                                    .report)
+                        (profile.current_package !== "expired" &&
+                          !plans.monthly[profile.current_package].report)
                               }
                               onClick={() => {
-                                if (reportingStatus === "report_generated") {
-                                  window.open(
-                                    `http://${document.location.host}/report/block/${scanData.scan_report.project_id}/${scanData.scan_report.latest_report_id}`,
-                                    "_blank"
-                                  );
-                                } else {
+                                if (
+                                  reportingStatus === "not_generated" ||
+                                  scanData.scan_report
+                                    .report_regeneration_enabled
+                                ) {
                                   generateReport(
                                     scanData.scan_report.scan_id,
                                     scanData.scan_report.project_id
+                                  );
+                                } else if (
+                                  reportingStatus === "report_generated"
+                                ) {
+                                  window.open(
+                                    `http://${document.location.host}/report/block/${scanData.scan_report.project_id}/${scanData.scan_report.latest_report_id}`,
+                                    "_blank"
                                   );
                                 }
                               }}
@@ -337,10 +342,13 @@ const BlockPage: React.FC = () => {
                                   .report && (
                                   <LockIcon color={"accent"} size="xs" mr={3} />
                                 )}
-                              {reportingStatus === "report_generated"
-                                ? "View Report"
-                                : reportingStatus === "generating_report"
+                              {reportingStatus === "generating_report"
                                 ? "Generating report..."
+                                : scanData.scan_report
+                                    .report_regeneration_enabled
+                                ? "Re-generate Report"
+                                : reportingStatus === "report_generated"
+                                ? "View Report"
                                 : "Generate Report"}
                             </Button>
                           )}
