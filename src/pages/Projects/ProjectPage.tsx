@@ -249,7 +249,6 @@ const ScanDetails: React.FC<{ scansRemaining: number; scans: ScanMeta[] }> = ({
   const onClose = () => setIsOpen(false);
 
   const generateReport = async () => {
-    console.log("askdhakjsdh");
     setReportingStatus("generating_report");
     const { data } = await API.post("/api-generate-report/", {
       project_id: projectId,
@@ -257,7 +256,6 @@ const ScanDetails: React.FC<{ scansRemaining: number; scans: ScanMeta[] }> = ({
     });
     if (data.success) {
       setInterval(async () => {
-        setReportingStatus("report_generated");
         await refetch();
       }, 5000);
     }
@@ -1168,8 +1166,8 @@ const ScanBlock: React.FC<{
 }> = ({ scan, isTrial, setTabIndex }) => {
   const [isDownloadLoading, setDownloadLoading] = useState(false);
   const history = useHistory();
-  const { projectId } = useParams<{ projectId: string }>();
-
+  const { projectId, scanId } = useParams<{ projectId: string, scanId: string }>();
+  const { data } = useScan(scanId)
   return (
     <Flex
       alignItems="center"

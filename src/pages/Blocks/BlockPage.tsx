@@ -115,14 +115,16 @@ const BlockPage: React.FC = () => {
     };
   }, [refetch]);
 
-  const generateReport = async (projectId: string) => {
+  const generateReport = async (scanId: string, projectId: string) => {
     setReportingStatus("generating_report");
-    const { data } = await API.post("/api-generate-report-block/", {
+    console.log(projectId, scanId)
+    const { data } = await API.post("/api-generate-report/", {
       project_id: projectId,
+      scan_id: scanId,
     });
+
     if (data.success) {
       setInterval(async () => {
-        setReportingStatus("report_generated");
         await refetch();
       }, 5000);
     }
@@ -321,6 +323,7 @@ const BlockPage: React.FC = () => {
                                   );
                                 } else {
                                   generateReport(
+                                    scanData.scan_report.scan_id,
                                     scanData.scan_report.project_id
                                   );
                                 }

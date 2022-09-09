@@ -417,7 +417,7 @@ export default function ReportPage() {
               This report has been prepared for{" "}
               {data.summary_report.project_summary_report.project_name} using
               SolidityScan to scan and discover vulnerabilities and safe coding
-              practices in company_name’s smart contract including the libraries
+              practices in their smart contract including the libraries
               used by the contract that are not officially recognized. The
               SolidityScan tool runs a comprehensive static analysis on the
               Solidity code and finds vulnerabilities ranging from minor gas
@@ -451,7 +451,7 @@ export default function ReportPage() {
             >
               The SolidityScan Team recommends running regular audit scans to
               identify any vulnerabilities that are introduced after{" "}
-              {data.summary_report.project_summary_report.project_name}
+              {data.summary_report.project_summary_report.project_name}{" "}
               introduces new features or refactors the code.
             </Text>
           </Flex>
