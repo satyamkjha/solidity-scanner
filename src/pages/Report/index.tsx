@@ -143,6 +143,8 @@ export default function ReportPage() {
             flexDir={"column"}
             py={20}
             pl={10}
+            marginTop={'100px'}
+            marginBottom={'400px'}
             backgroundSize="cover"
             backgroundRepeat={"no-repeat"}
             backgroundImage="url('/background/report_cover.png')"
