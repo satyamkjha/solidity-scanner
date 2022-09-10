@@ -211,6 +211,7 @@ const BlockCard: React.FC<{ scan: Scan }> = ({ scan }) => {
               informational={
                 scan_summary?.issue_severity_distribution?.informational || 0
               }
+              gas={scan_summary?.issue_severity_distribution.gas || 0}
             />
           </Flex>
         ) : scan_status === "download_failed" ||

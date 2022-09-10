@@ -28,14 +28,19 @@ import {
   Spinner,
   Divider,
   Badge,
+  VStack,
+  CircularProgress,
+  CircularProgressLabel,
 } from "@chakra-ui/react";
 import { Checkbox } from "react-input-checkbox";
 import { useReport } from "hooks/useReport";
 import { ResponsivePie } from "@nivo/pie";
 import {
+  GithubIcon,
   IssueDescriptionIcons,
   IssueRemediationIcons,
   Logo,
+  ProjectIcon,
   SeverityIcon,
 } from "components/icons";
 import { IssueItem } from "common/types";
@@ -46,192 +51,7 @@ import { AiOutlineProject } from "react-icons/ai";
 import { FaFileCode, FaInternetExplorer } from "react-icons/fa";
 import API from "helpers/api";
 import styled from "@emotion/styled";
-
-// interface UpdateProps {
-//   issue: IssueItem;
-//   wontfix: String[];
-//   falsePositive: String[];
-//   setFalsePositive: React.Dispatch<React.SetStateAction<String[]>>;
-//   setWontFix: React.Dispatch<React.SetStateAction<String[]>>;
-// }
-
-// const UpdateRowComp = ({
-//   issue,
-//   wontfix,
-//   falsePositive,
-//   setWontFix,
-//   setFalsePositive,
-// }: UpdateProps) => {
-//   const [fps, setFps] = useState<boolean>(issue.status === "FALSE_POSITIVE");
-//   const [wntFx, setwntFx] = useState<boolean>(issue.status === "WONT_FIX");
-
-//   return (
-//     <>
-//       <Flex
-//         as="div"
-//         w="100%"
-//         alignItems="flex-start"
-//         justifyContent="flex-start"
-//         flexDir={"column"}
-//         textAlign={["left", "left"]}
-//         py={3}
-//         px={[1, 10]}
-//         borderBottomWidth={1}
-//         borderBottomColor={"#E4E4E4"}
-//       >
-//         <Flex
-//           as="div"
-//           w="100%"
-//           alignItems="flex-start"
-//           justifyContent="flex-start"
-//           flexDir={"row"}
-//           textAlign={["left", "left"]}
-//         >
-//           <Text
-//             fontSize="md"
-//             fontWeight={"normal"}
-//             color={"gray.600"}
-//             width={"10%"}
-//           >
-//             {issue.bug_id}
-//           </Text>
-//           <Text
-//             mr={2}
-//             fontSize="md"
-//             fontWeight={"normal"}
-//             color={"gray.600"}
-//             width={"35%"}
-//           >
-//             {issue.file_path}
-//           </Text>
-//           <Text
-//             fontSize="md"
-//             fontWeight={"normal"}
-//             color={"gray.600"}
-//             width={"11%"}
-//           >
-//             {`L${issue.line_number_start} - L${issue.line_number_end}`}
-//           </Text>
-//           <Flex
-//             as="div"
-//             width={"14%"}
-//             height={"30px"}
-//             alignItems="center"
-//             justifyContent="flex-start"
-//             flexDir={"row"}
-//           >
-//             <SeverityIcon variant={issue.severity} />
-//             <Text
-//               fontSize="md"
-//               fontWeight={"normal"}
-//               color={"gray.600"}
-//               ml={2}
-//               width={"100%"}
-//             >
-//               {sentenceCapitalize(issue.severity)}
-//             </Text>
-//           </Flex>
-//           <Text
-//             fontSize="md"
-//             fontWeight={"normal"}
-//             color={"gray.600"}
-//             width={"14%"}
-//           >
-//             {/* {sentenceCapitalize(issue.status.toLowerCase().replace("_", " "))} */}
-//             {issue.status === "FALSE_POSITIVE" && "False Positive"}
-//             {issue.status === "WONT_FIX" && "Won't Fix"}
-//             {issue.status === "DISCOVERED" && "Discovered"}
-//             {issue.status === "FIXED" && "Fixed"}
-//           </Text>
-
-//           <Flex
-//             as="div"
-//             width={"10%"}
-//             height={"30px"}
-//             alignItems="center"
-//             justifyContent="flex-start"
-//             flexDir={"row"}
-//           >
-//             {issue.status !== "FIXED" && (
-//               <Checkbox
-//                 theme="material-checkbox"
-//                 value={fps}
-//                 onChange={() => {
-//                   if (wntFx) {
-//                     setwntFx(!wntFx);
-//                   }
-//                   setFps(!fps);
-//                   let newfalsePositive = falsePositive.filter(
-//                     (hash) => hash !== issue.issue_hash
-//                   );
-//                   let newwontfix = wontfix.filter(
-//                     (hash) => hash !== issue.issue_hash
-//                   );
-//                   newfalsePositive.push(issue.issue_hash);
-//                   setFalsePositive([...newfalsePositive]);
-//                   setWontFix([...newwontfix]);
-//                 }}
-//               />
-//             )}
-//           </Flex>
-//           <Flex
-//             as="div"
-//             width={"6%"}
-//             height={"30px"}
-//             alignItems="center"
-//             justifyContent="flex-start"
-//             flexDir={"row"}
-//           >
-//             {issue.status !== "FIXED" && (
-//               <Checkbox
-//                 theme="material-checkbox"
-//                 value={wntFx}
-//                 onChange={() => {
-//                   if (fps) {
-//                     setFps(!fps);
-//                   }
-//                   setwntFx(!wntFx);
-//                   let newfalsePositive = falsePositive.filter(
-//                     (hash) => hash !== issue.issue_hash
-//                   );
-//                   let newwontfix = wontfix.filter(
-//                     (hash) => hash !== issue.issue_hash
-//                   );
-//                   newwontfix.push(issue.issue_hash);
-//                   setFalsePositive([...newfalsePositive]);
-//                   setWontFix([...newwontfix]);
-//                 }}
-//               />
-//             )}
-//           </Flex>
-//         </Flex>
-//         {/* {wntFx && (
-
-//             <Flex
-//               as="div"
-//               w="100%"
-//               alignItems="flex-start"
-//               justifyContent="flex-start"
-//               flexDir={"column"}
-//               textAlign={["left", "left"]}
-//               pt={8}
-//             >
-//               <Textarea placeholder='Put your comments here' />
-//               <Flex
-//               as="div"
-//               w="100%"
-//               alignItems="flex-start"
-//               justifyContent="flex-end"
-//               flexDir={"row"}
-//               pt={2}
-//             ><Button>Comment</Button></Flex>
-//             </Flex>
-
-//         )} */}
-//       </Flex>
-//     </>
-//   );
-// };
+import Score from "components/score";
 
 const pieData = (
   critical: number,
@@ -322,6 +142,10 @@ export default function ReportPage() {
             justifyContent="flex-start"
             flexDir={"column"}
             py={20}
+            pl={10}
+            backgroundSize="cover"
+            backgroundRepeat={"no-repeat"}
+            backgroundImage="url('/background/report_cover.png')"
           >
             <Logo />
             <Text fontSize="2xl" color={"gray.400"} mt={20} mb={5}>
@@ -803,7 +627,83 @@ export default function ReportPage() {
               alignItems="center"
               justifyContent="space-between"
               flexDir={"row"}
-              marginBottom={10}
+              py={7}
+              px={10}
+              mb={10}
+              backgroundColor={"#FBFBFB"}
+            >
+              <VStack align={"flex-start"}>
+                <HStack>
+                  {data.summary_report.project_summary_report.project_url ? (
+                    <GithubIcon size={30} />
+                  ) : data.summary_report.project_summary_report
+                      .contract_platform ? (
+                    <Image
+                      src={`/blockscan/${data.summary_report.project_summary_report.contract_platform}.svg`}
+                      h={"30px"}
+                      w={"30px"}
+                    />
+                  ) : (
+                    <ProjectIcon size={30} />
+                  )}
+                  <Text fontSize="xl" fontWeight={"bold"}>
+                    {data.summary_report.project_summary_report.project_name}
+                    {data.summary_report.project_summary_report.contract_name}
+                  </Text>
+                </HStack>
+                <Text fontSize="md" fontWeight={"normal"}>
+                  {data.summary_report.project_summary_report.project_url}
+                  {data.summary_report.project_summary_report.contract_address}
+                </Text>
+              </VStack>
+              <HStack spacing={20}>
+                <VStack align={"flex-start"}>
+                  <Text
+                    fontSize="md"
+                    fontWeight={"normal"}
+                    color={"gray.400"}
+                    width={"100%"}
+                  >
+                    Lines of Code
+                  </Text>
+                  <Text fontSize="lg" fontWeight={"bold"}>
+                    {data.summary_report.scan_summary[0].lines_analyzed_count}
+                  </Text>
+                </VStack>
+
+                <CircularProgress
+                  value={
+                    (parseInt(data.summary_report.scan_summary[0].score, 10) *
+                      100) /
+                    5
+                  }
+                  color="accent"
+                  thickness="8px"
+                  size="100px"
+                  capIsRound
+                >
+                  <CircularProgressLabel
+                    sx={{ display: "flex", justifyContent: "center" }}
+                  >
+                    <Box>
+                      <Text fontSize="lg" fontWeight={900} color="accent">
+                        {data.summary_report.scan_summary[0].score}
+                      </Text>
+                      <Text fontSize="sm" color="subtle" mt="-4px">
+                        Score
+                      </Text>
+                    </Box>
+                  </CircularProgressLabel>
+                </CircularProgress>
+              </HStack>
+            </Flex>
+            <Flex
+              as="div"
+              w="100%"
+              alignItems="center"
+              justifyContent="space-between"
+              flexDir={"row"}
+              mb={5}
             >
               <Box w={"30%"} h="300px">
                 <ResponsivePie
@@ -912,7 +812,148 @@ export default function ReportPage() {
                 />
               </Box>
             </Flex>
-
+            <Divider
+              style={{
+                borderWidth: 1,
+                borderColor: "#d0d1cf",
+                backgroundColor: "#d0d1cf",
+              }}
+              mb={20}
+            />
+            <Flex
+              as="div"
+              w="100%"
+              alignItems="flex-start"
+              justifyContent="flex-start"
+              flexDir={"column"}
+              mb={10}
+            >
+              <Text fontSize="xl" fontWeight={"bold"} mb={10} width={"100%"}>
+                ACTION TAKEN
+              </Text>
+              <HStack mb={10} spacing={10} width={"100%"}>
+                <VStack align={"flex-start"} width={"20%"}>
+                  <Text
+                    fontSize="md"
+                    fontWeight={"bold"}
+                    color={"gray.400"}
+                    mb={1}
+                    width={"100%"}
+                  >
+                    Fixed
+                  </Text>
+                  <HStack
+                    width={"60%"}
+                    px={3}
+                    py={2}
+                    border="1px solid #E6E6E6;"
+                  >
+                    <Image height={7} width={7} src="/icons/fixed_color.svg" />
+                    <Text
+                      fontSize="2xl"
+                      fontWeight={"bold"}
+                      mb={10}
+                      width={"100%"}
+                    >
+                      {data.summary_report.scan_summary[0].fixed_count}
+                    </Text>
+                  </HStack>
+                </VStack>
+                <VStack align={"flex-start"} width={"20%"}>
+                  <Text
+                    fontSize="md"
+                    fontWeight={"bold"}
+                    color={"gray.400"}
+                    mb={1}
+                    width={"100%"}
+                  >
+                    False Positive
+                  </Text>
+                  <HStack
+                    width={"60%"}
+                    px={3}
+                    py={2}
+                    border="1px solid #E6E6E6;"
+                  >
+                    <Image
+                      height={7}
+                      width={7}
+                      src="/icons/false_positive_color.svg"
+                    />
+                    <Text
+                      fontSize="2xl"
+                      fontWeight={"bold"}
+                      mb={10}
+                      width={"100%"}
+                    >
+                      {data.summary_report.scan_summary[0].false_positive_count}
+                    </Text>
+                  </HStack>
+                </VStack>
+                <VStack align={"flex-start"} width={"20%"}>
+                  <Text
+                    fontSize="md"
+                    fontWeight={"bold"}
+                    color={"gray.400"}
+                    mb={1}
+                    width={"100%"}
+                  >
+                    Won't Fix
+                  </Text>
+                  <HStack
+                    width={"60%"}
+                    px={3}
+                    py={2}
+                    border="1px solid #E6E6E6;"
+                  >
+                    <Image
+                      height={7}
+                      width={7}
+                      src="/icons/wont_fix_color.svg"
+                    />
+                    <Text
+                      fontSize="2xl"
+                      fontWeight={"bold"}
+                      mb={10}
+                      width={"100%"}
+                    >
+                      {data.summary_report.scan_summary[0].wont_fix_count}
+                    </Text>
+                  </HStack>
+                </VStack>
+                <VStack align={"flex-start"} width={"20%"}>
+                  <Text
+                    fontSize="md"
+                    fontWeight={"bold"}
+                    color={"gray.400"}
+                    mb={1}
+                    width={"100%"}
+                  >
+                    Pending Fix
+                  </Text>
+                  <HStack
+                    width={"60%"}
+                    px={3}
+                    py={2}
+                    border="1px solid #E6E6E6;"
+                  >
+                    <Image
+                      height={7}
+                      width={7}
+                      src="/icons/pending_fix_color.svg"
+                    />
+                    <Text
+                      fontSize="2xl"
+                      fontWeight={"bold"}
+                      mb={10}
+                      width={"100%"}
+                    >
+                      {data.summary_report.scan_summary[0].pending_fix_count}
+                    </Text>
+                  </HStack>
+                </VStack>
+              </HStack>
+            </Flex>
             <Flex
               as="div"
               w="100%"
@@ -1007,21 +1048,24 @@ export default function ReportPage() {
                   >
                     {issue.issue_name}
                   </Text>
-
-                  <Text
-                    fontSize="md"
-                    fontWeight={"normal"}
-                    color={"gray.600"}
-                    width={"15%"}
-                  >
-                    {/* {sentenceCapitalize(
+                  <HStack width={"15%"}>
+                    <Image src={`/icons/${issue.bug_status}_color.svg`} />
+                    <Text
+                      fontSize="md"
+                      fontWeight={"normal"}
+                      color={"gray.600"}
+                    >
+                      {/* {sentenceCapitalize(
                       issue.status.toLowerCase().replace("_", " ")
                     )} */}
-                    {issue.bug_status === "false_positive" && "False Positive"}
-                    {issue.bug_status === "wont_fix" && "Won't Fix"}
-                    {issue.bug_status === "pending_fix" && "Pending Fix"}
-                    {issue.bug_status === "fixed" && "Fixed"}
-                  </Text>
+
+                      {issue.bug_status === "false_positive" &&
+                        "False Positive"}
+                      {issue.bug_status === "wont_fix" && "Won't Fix"}
+                      {issue.bug_status === "pending_fix" && "Pending Fix"}
+                      {issue.bug_status === "fixed" && "Fixed"}
+                    </Text>
+                  </HStack>
                 </Flex>
               ))
             )}
@@ -1483,6 +1527,110 @@ export default function ReportPage() {
                 </Flex>
               </Flex>
             ))}
+          </Flex>
+
+          <Flex
+            as="div"
+            w="100%"
+            alignItems="flex-start"
+            justifyContent="flex-start"
+            flexDir={"column"}
+            py={20}
+          >
+            <Heading color={"#52FF00"} fontSize="4xl" my={10}>
+              Disclaimer
+            </Heading>
+
+            <Text
+              fontSize="lg"
+              fontWeight={"normal"}
+              color={"gray.500"}
+              mt={8}
+              mb={4}
+            >
+              The Reports neither endorse nor condemn any specific project or
+              team, nor do they guarantee the security of any specific project.
+              The contents of this report do not, and should not be interpreted
+              as having any bearing on, the economics of tokens, token sales, or
+              any other goods, services, or assets.
+            </Text>
+
+            <Text
+              fontSize="lg"
+              fontWeight={"normal"}
+              color={"gray.500"}
+              mt={8}
+              mb={4}
+            >
+              The security audit is not meant to replace functional testing done
+              before a software release.
+            </Text>
+            <Text
+              fontSize="lg"
+              fontWeight={"normal"}
+              color={"gray.500"}
+              mt={8}
+              mb={4}
+            >
+              There is no warranty that all possible security issues of a
+              particular smart contract(s) will be found by the tool, i.e., It
+              is not guaranteed that there will not be any further findings
+              based solely on the results of this evaluation.
+            </Text>
+            <Text
+              fontSize="lg"
+              fontWeight={"normal"}
+              color={"gray.500"}
+              mt={8}
+              mb={4}
+            >
+              Emerging technologies such as Smart Contracts and Solidity carry a
+              high level of technical risk and uncertainty. There is no warranty
+              or representation made by this report to any Third Party in
+              regards to the quality of code, the business model or the
+              proprietors of any such business model, or the legal compliance of
+              any business.
+            </Text>
+            <Text
+              fontSize="lg"
+              fontWeight={"normal"}
+              color={"gray.500"}
+              mt={8}
+              mb={4}
+            >
+              In no way should a third party use these reports to make any
+              decisions about buying or selling a token, product, service, or
+              any other asset. It should be noted that this report is not
+              investment advice, is not intended to be relied on as investment
+              advice, and has no endorsement of this project or team. It does
+              not serve as a guarantee as to the project's absolute security.
+            </Text>
+            <Text
+              fontSize="lg"
+              fontWeight={"normal"}
+              color={"gray.500"}
+              mt={8}
+              mb={4}
+            >
+              The assessment provided by SolidityScan is subject to dependencies
+              and under continuing development. You agree that your access
+              and/or use, including but not limited to any services, reports,
+              and materials, will be at your sole risk on an as-is, where-is,
+              and as-available basis. SolidityScan owes no duty to any third
+              party by virtue of publishing these Reports.
+            </Text>
+            <Text
+              fontSize="lg"
+              fontWeight={"normal"}
+              color={"gray.500"}
+              mt={8}
+              mb={4}
+            >
+              As one audit-based assessment cannot be considered comprehensive,
+              we always recommend proceeding with several independent manual
+              audits including manual audit and a public bug bounty program to
+              ensure the security of the smart contracts.
+            </Text>
           </Flex>
         </Container>
       ) : (

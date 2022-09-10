@@ -153,33 +153,37 @@ export type ScanMeta = {
 export type ScanSummary = {
   bug_id_hash_vs_bug_id: {
     [key: string]: string[];
-  };
-  count_files_analyzed: number;
-  issue_severity_distribution: IssueSeverityDistribution;
-  score: string;
-  issues_count: number;
-  lines_analyzed_count: number;
-  latest_bug_count: number;
-  scan_time_taken: number;
-  false_positive: [];
-  fixed: [];
-  wont_fix: [];
-  scan_time: string;
-  scans_ran: string[];
+  }; //
+  count_files_analyzed: number; //
+  issue_severity_distribution: IssueSeverityDistribution; //
+  score: string; //
+  issues_count: number; //
+  lines_analyzed_count: number; //
+  latest_bug_count: number; //
+  scan_time_taken: number; //
+  false_positive: []; //
+  fixed: []; //
+  wont_fix: []; //
+  scans_ran: string[]; //
 };
 
-// bug_id_hash_vs_bug_id: {--sKGE5QXElNBpMP8Kic8-bFYbo=: "SS_75_425", -1Cw6rJjyWZBqpRiY7UCqPbVGUs=: "SS_75_151",…}
-// count_files_analyzed: 100
-// false_positive: []
-// fixed: []
-// issue_severity_distribution: {critical: 63, gas: 189, high: 166, informational: 300, low: 761, medium: 301}
-// issues_count: 0
-// latest_bug_count: 1740
-// lines_analyzed_count: 7329
-// scan_time_taken: 8
-// scans_ran: ["static_template_based"]
-// score: 0.5
-// wont_fix: []
+export type ScanSummaryItem = {
+  count_files_analyzed: number; //
+  issue_severity_distribution: IssueSeverityDistribution; //
+  score: string; //
+
+  issues_count: number; //
+  lines_analyzed_count: number; //
+
+  scan_time_taken: number; //
+  false_positive_count: number; //
+  fixed_count: number; //
+
+  wont_fix_count: number; //
+  scans_ran: string[]; //
+  scan_time: string; //
+  pending_fix_count: number; //
+};
 
 export type IssueSeverityDistribution = {
   critical: number;
@@ -257,7 +261,7 @@ export interface Report {
     contract_name?: string;
     contract_platform?: string;
   };
-  scan_summary: ScanSummary[];
+  scan_summary: ScanSummaryItem[];
 }
 
 export type IssueItem = {

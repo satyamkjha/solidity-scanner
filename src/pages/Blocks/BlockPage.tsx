@@ -311,8 +311,9 @@ const BlockPage: React.FC = () => {
                               mr={5}
                               isDisabled={
                                 reportingStatus === "generating_report" ||
-                        (profile.current_package !== "expired" &&
-                          !plans.monthly[profile.current_package].report)
+                                (profile.current_package !== "expired" &&
+                                  !plans.monthly[profile.current_package]
+                                    .report)
                               }
                               onClick={() => {
                                 if (

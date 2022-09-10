@@ -36,7 +36,7 @@ import { CodeBlock, atomOneLight } from "react-code-blocks";
 import VulnerabilityDistribution, {
   VulnerabilityDistributionFilter,
 } from "components/vulnDistribution";
-import { MultifileBadge, SeverityIcon } from "components/icons";
+import { MultifileBadge, MultifileIcon, SeverityIcon } from "components/icons";
 
 import { useFileContent } from "hooks/useFileContent";
 import { useIssueDetail } from "hooks/useIssueDetail";
@@ -979,12 +979,30 @@ const IssueBox: React.FC<{
         <Text w={"50%"} isTruncated color={"gray.700"}>
           {bug_id}
         </Text>
-        {metric_wise_aggregated_finding.bug_status !== "pending_fix" && (
-          <Image
-            mr={3}
-            src={`/icons/${metric_wise_aggregated_finding.bug_status}.svg`}
-          />
-        )}
+        <HStack>
+          {metric_wise_aggregated_finding.findings.length > 1 && (
+            <HStack
+              mr={
+                metric_wise_aggregated_finding.bug_status == "pending_fix"
+                  ? 8
+                  : 0
+              }
+              py={1}
+              px={3}
+              borderRadius={20}
+              backgroundColor={"white"}
+            >
+              <MultifileIcon size={20} /> <Text>MULTIFILE</Text>
+            </HStack>
+          )}
+
+          {metric_wise_aggregated_finding.bug_status !== "pending_fix" && (
+            <Image
+              mr={3}
+              src={`/icons/${metric_wise_aggregated_finding.bug_status}.svg`}
+            />
+          )}
+        </HStack>
       </HStack>
     </Box>
   );

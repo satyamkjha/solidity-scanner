@@ -220,19 +220,6 @@ const ScanDetails: React.FC<{ scansRemaining: number; scans: ScanMeta[] }> = ({
   const [next, setNext] = useState(false);
   const [open, setOpen] = useState(false);
 
-  const animationKeyframes = keyframes`
-  0% {left: 0}
-  1% {left: -3px}
-  2% {left: 5px}
-  3% {left: -8px}
-  4% {left: 8px}
-  5% {left: -5px}
-  6% {left: 3px}
-  7% {left: 0}
-`;
-
-const animation = `${animationKeyframes} 5s ease-in infinite`;
-
   useEffect(() => {
     setReportingStatus(scanData?.scan_report.reporting_status);
     let intervalId: NodeJS.Timeout;
@@ -465,8 +452,6 @@ const animation = `${animationKeyframes} 5s ease-in infinite`;
                   {scanData.scan_report.scan_status === "scan_done" && (
                     <Button
                       variant={"accent-outline"}
-                      as={motion.div}
-                      animation={animation}
                       isDisabled={
                         reportingStatus === "generating_report" ||
                         (profile.current_package !== "expired" &&
@@ -1261,12 +1246,14 @@ const ScanBlock: React.FC<{
             // history.push(`/report/${scan.project_id}/${data?.scan_report.latest_report_id}`)
           }}
         >
+          {scan.reporting_status === "generating_report" && (
+            <Spinner color="#806CCF" size="sm" mr={2} />
+          )}
           {scan.reporting_status === "report_generated"
             ? "View Report"
+            : scan.reporting_status === "generating_report"
+            ? "Generating Report"
             : "Report Not Generated"}
-          {scan.reporting_status === "generating_report" && (
-            <Spinner color="#806CCF" size="sm" ml={2} />
-          )}
         </Button>
       )}
     </Flex>
