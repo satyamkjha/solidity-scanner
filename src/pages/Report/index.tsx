@@ -1203,12 +1203,24 @@ export default function ReportPage() {
                       {issue.findings[0].line_nos_start}-
                       {issue.findings[0].line_nos_end}
                     </Text>
-                    <Text w={"15%"} fontSize="lg" fontWeight={"bold"}>
-                      {issue.bug_status === "fps" && "False Positive"}
-                      {issue.bug_status === "wp" && "Won't Fix"}
-                      {issue.bug_status === "discovered" && "Discovered"}
+                    <HStack width={"15%"}>
+                    <Image src={`/icons/${issue.bug_status}_color.svg`} />
+                    <Text
+                      fontSize="md"
+                      fontWeight={"normal"}
+                      color={"gray.600"}
+                    >
+                      {/* {sentenceCapitalize(
+                      issue.status.toLowerCase().replace("_", " ")
+                    )} */}
+
+                      {issue.bug_status === "false_positive" &&
+                        "False Positive"}
+                      {issue.bug_status === "wont_fix" && "Won't Fix"}
+                      {issue.bug_status === "pending_fix" && "Pending Fix"}
                       {issue.bug_status === "fixed" && "Fixed"}
                     </Text>
+                  </HStack>
                   </HStack>
                   <Text
                     fontSize="md"
