@@ -67,12 +67,7 @@ type FileState = {
 };
 
 type FilesState = {
-  description_details: {
-    context_version?: string;
-    mostly_used_version?: string;
-    version_file_count?: string;
-    function_name?: string;
-  };
+  description_details: any;
   findings: Finding[];
   bug_id: string;
   bug_hash: string;
@@ -99,68 +94,71 @@ export const Result: React.FC<{
   } = scanSummary;
 
   return (
-    <Flex w="100%" sx={{ flexDir: ["column", "column", "row"] }} py={2}>
-      <VStack
-        w={["100%", "100%", "40%"]}
-        spacing={8}
-        mb={[8, 8, 0]}
-        alignItems="flex-start"
-      >
-        <Flex w="100%" justifyContent="space-around">
-          <Box width="80%">
-            <VulnerabilityDistribution
-              critical={critical}
-              high={high}
-              medium={medium}
-              low={low}
-              informational={informational}
-              gas={gas}
-            />
-          </Box>
-          {/* <Score score={score} /> */}
-        </Flex>
-        <Box w="100%" minH="50vh">
-          <Issues issues={scanDetails} file={file} setFile={setFile} />
-        </Box>
-      </VStack>
-      <VStack
-        w={["100%", "100%", "60%"]}
-        h={["100%"]}
-        alignItems="flex-start"
-        spacing={5}
-        px={4}
-      >
-        <Box
-          sx={{
-            w: "100%",
-            h: "100%",
-            position: "sticky",
-            top: 8,
-          }}
+    <>
+      <Flex w="100%" sx={{ flexDir: ["column", "column", "row"] }} py={2}>
+        <VStack
+          w={["100%", "100%", "40%"]}
+          spacing={8}
+          mb={[8, 8, 0]}
+          alignItems="flex-start"
         >
-          {file ? (
-            <>
-              <FileDetails file={file} type={type} />
-            </>
-          ) : (
-            <Flex
-              sx={{
-                w: "100%",
-                bg: "bg.subtle",
-                flexDir: "column",
-                alignItems: "center",
-              }}
-              py={36}
-            >
-              <Icon as={BiCodeCurly} fontSize="40px" color="subtle" mb={4} />
-              <Text color="subtle">
-                Please select a file from an issue to see vulnerability details.
-              </Text>
-            </Flex>
-          )}
-        </Box>
-      </VStack>
-    </Flex>
+          <Flex w="100%" justifyContent="space-around">
+            <Box width="80%">
+              <VulnerabilityDistribution
+                critical={critical}
+                high={high}
+                medium={medium}
+                low={low}
+                informational={informational}
+                gas={gas}
+              />
+            </Box>
+            {/* <Score score={score} /> */}
+          </Flex>
+          <Box w="100%" minH="50vh">
+            <Issues issues={scanDetails} file={file} setFile={setFile} />
+          </Box>
+        </VStack>
+        <VStack
+          w={["100%", "100%", "60%"]}
+          h={["100%"]}
+          alignItems="flex-start"
+          spacing={5}
+          px={4}
+        >
+          <Box
+            sx={{
+              w: "100%",
+              h: "100%",
+              position: "sticky",
+              top: 8,
+            }}
+          >
+            {file ? (
+              <>
+                <FileDetails file={file} type={type} />
+              </>
+            ) : (
+              <Flex
+                sx={{
+                  w: "100%",
+                  bg: "bg.subtle",
+                  flexDir: "column",
+                  alignItems: "center",
+                }}
+                py={36}
+              >
+                <Icon as={BiCodeCurly} fontSize="40px" color="subtle" mb={4} />
+                <Text color="subtle">
+                  Please select a file from an issue to see vulnerability
+                  details.
+                </Text>
+              </Flex>
+            )}
+          </Box>
+        </VStack>
+      </Flex>
+    </>
   );
 };
 
@@ -510,7 +508,6 @@ export const MultifileResult: React.FC<{
 
   const [issues, setIssues] = useState<MultiFileScanDetail[]>(scanDetails);
 
-  console.log(scanDetails);
 
   const { projectId, scanId } =
     useParams<{ projectId: string; scanId: string }>();
@@ -1289,17 +1286,14 @@ const IssueDetail: React.FC<{
   files?: FilesState;
   issue_id: string;
   context: string;
-  description_details: {
-    context_version?: string;
-    mostly_used_version?: string;
-    version_file_count?: string;
-    function_name?: string;
-  };
+  description_details: any;
 }> = ({ issue_id, context, description_details, files }) => {
   const { data, isLoading } = useIssueDetail(issue_id, context);
 
-  const { context_version, mostly_used_version, version_file_count } =
-    description_details;
+  
+
+  let variableData = description_details;
+
 
   return (
     <Tabs size="sm" variant="soft-rounded" colorScheme="green">
@@ -1365,7 +1359,7 @@ const IssueDetail: React.FC<{
 
               <Box
                 dangerouslySetInnerHTML={{
-                  __html: data.issue_details.issue_description,
+                  __html: data.issue_details.issue_description.format({...variableData}),
                 }}
               />
             </DescriptionWrapper>
@@ -1374,9 +1368,7 @@ const IssueDetail: React.FC<{
             <DescriptionWrapper>
               <Box
                 dangerouslySetInnerHTML={{
-                  __html: data.issue_details.issue_remediation.format({
-                    ...description_details,
-                  }),
+                  __html: data.issue_details.issue_remediation.format({...variableData}),
                 }}
               />
             </DescriptionWrapper>

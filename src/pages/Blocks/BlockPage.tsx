@@ -170,9 +170,8 @@ const BlockPage: React.FC = () => {
 
   const getReportData = async (project_id: string, report_id: string) => {
     const reportResponse = await API.post<{ summary_report: Report }>(
-      "/api-get-report/",
+      "/api-get-report-beta/",
       {
-        project_type: "block",
         project_id,
         report_id,
       }
@@ -545,32 +544,11 @@ const BlockPage: React.FC = () => {
                   <Tab mx={2}>Overview</Tab>
                   <Tab mx={2}>Detailed Result</Tab>
                   <Tab mx={2}>Published Report</Tab>
-                  <Tab mx={2}>Advanced Scan(Beta)</Tab>
                 </TabList>
                 <TabPanels>
                   <TabPanel>
                     {scanData.scan_report.scan_summary && (
                       <Overview scanData={scanData.scan_report} />
-                    )}
-                  </TabPanel>
-                  <TabPanel>
-                    {
-                      // profile.current_package === "trial" ? (
-                      //   <TrialWall />
-                      // ) :
-                      scanData.scan_report.scan_details &&
-                        scanData.scan_report.scan_summary && (
-                          <Result
-                            scanSummary={scanData.scan_report.scan_summary}
-                            scanDetails={scanData.scan_report.scan_details}
-                            type="block"
-                          />
-                        )
-                    }
-                  </TabPanel>
-                  <TabPanel>
-                    {scanData.scan_report.project_id && (
-                      <PublishedReports scan_report={scanData.scan_report} />
                     )}
                   </TabPanel>
                   <TabPanel>
@@ -588,6 +566,13 @@ const BlockPage: React.FC = () => {
                           scanData.scan_report.multi_file_scan_details
                         }
                       />
+                    ) : scanData.scan_report.scan_details &&
+                      scanData.scan_report.scan_summary ? (
+                      <Result
+                        scanSummary={scanData.scan_report.scan_summary}
+                        scanDetails={scanData.scan_report.scan_details}
+                        type="block"
+                      />
                     ) : (
                       <Flex
                         w="97%"
@@ -603,6 +588,11 @@ const BlockPage: React.FC = () => {
                             : "Please do Rescan to carry out a Multifile Scan "}
                         </Text>
                       </Flex>
+                    )}
+                  </TabPanel>
+                  <TabPanel>
+                    {scanData.scan_report.project_id && (
+                      <PublishedReports scan_report={scanData.scan_report} />
                     )}
                   </TabPanel>
                 </TabPanels>

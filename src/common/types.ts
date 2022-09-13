@@ -127,12 +127,7 @@ export type MultiFileScanSummary = {
 };
 
 export type MetricWiseAggregatedFinding = {
-  description_details: {
-    context_version?: string;
-    mostly_used_version?: string;
-    version_file_count?: string;
-    function_name?: string;
-  };
+  description_details: any;
   bug_hash: string;
   bug_status: string;
   findings: Finding[];

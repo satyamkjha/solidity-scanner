@@ -143,8 +143,8 @@ export default function ReportPage() {
             flexDir={"column"}
             py={20}
             pl={10}
-            marginTop={'100px'}
-            marginBottom={'400px'}
+            marginTop={"100px"}
+            marginBottom={"400px"}
             backgroundSize="cover"
             backgroundRepeat={"no-repeat"}
             backgroundImage="url('/background/report_cover.png')"
@@ -1206,23 +1206,23 @@ export default function ReportPage() {
                       {issue.findings[0].line_nos_end}
                     </Text>
                     <HStack width={"15%"}>
-                    <Image src={`/icons/${issue.bug_status}_color.svg`} />
-                    <Text
-                      fontSize="md"
-                      fontWeight={"normal"}
-                      color={"gray.600"}
-                    >
-                      {/* {sentenceCapitalize(
+                      <Image src={`/icons/${issue.bug_status}_color.svg`} />
+                      <Text
+                        fontSize="md"
+                        fontWeight={"normal"}
+                        color={"gray.600"}
+                      >
+                        {/* {sentenceCapitalize(
                       issue.status.toLowerCase().replace("_", " ")
                     )} */}
 
-                      {issue.bug_status === "false_positive" &&
-                        "False Positive"}
-                      {issue.bug_status === "wont_fix" && "Won't Fix"}
-                      {issue.bug_status === "pending_fix" && "Pending Fix"}
-                      {issue.bug_status === "fixed" && "Fixed"}
-                    </Text>
-                  </HStack>
+                        {issue.bug_status === "false_positive" &&
+                          "False Positive"}
+                        {issue.bug_status === "wont_fix" && "Won't Fix"}
+                        {issue.bug_status === "pending_fix" && "Pending Fix"}
+                        {issue.bug_status === "fixed" && "Fixed"}
+                      </Text>
+                    </HStack>
                   </HStack>
                   <Text
                     fontSize="md"
