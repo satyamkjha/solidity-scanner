@@ -33,7 +33,7 @@
         let fString = this;
         for (const keys in options) {
           console.log(keys, options[keys])
-          fString = fString.replace("${" + keys + "}", options[keys]);
+          fString = fString.replace("${" + keys + "}", "<code>" + options[keys] + "</code>");
           console.log(fString);
         }
         return fString;

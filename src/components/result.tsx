@@ -1290,10 +1290,7 @@ const IssueDetail: React.FC<{
 }> = ({ issue_id, context, description_details, files }) => {
   const { data, isLoading } = useIssueDetail(issue_id, context);
 
-  
-
   let variableData = description_details;
-
 
   return (
     <Tabs size="sm" variant="soft-rounded" colorScheme="green">
