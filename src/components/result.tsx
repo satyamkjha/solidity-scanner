@@ -58,6 +58,7 @@ import { WarningIcon } from "@chakra-ui/icons";
 import React from "react";
 import { access } from "fs";
 import { sentenceCapitalize } from "helpers/helperFunction";
+import TrialWallCode, { TrialWallIssue } from "./trialWall";
 
 type FileState = {
   issue_id: string;
@@ -292,11 +293,8 @@ const FileDetails: React.FC<FileDetailsProps> = ({ file, type }) => {
       integration_service: "github",
     })
   );
-
   const { data: profileData } = useProfile();
-
   let highlightArray: string[] = [];
-
   line_nos_start.map((number, index) => {
     if (number.toString().length === line_nos_end[index].toString().length) {
       highlightArray.push(`${number}-${line_nos_end[index]}`);
@@ -310,9 +308,7 @@ const FileDetails: React.FC<FileDetailsProps> = ({ file, type }) => {
     }
   });
   let highlightString = highlightArray.join(",");
-
   let codeObjArray = [];
-
   line_nos_start.forEach((number, index) => {
     codeObjArray.push({
       lineStart: number,
@@ -320,7 +316,6 @@ const FileDetails: React.FC<FileDetailsProps> = ({ file, type }) => {
       code: "",
     });
   });
-
   const createGithubIssue = async () => {
     await mutation.mutateAsync();
     toast({
@@ -332,158 +327,89 @@ const FileDetails: React.FC<FileDetailsProps> = ({ file, type }) => {
       position: "bottom",
     });
   };
-
   const history = useHistory();
-
   const { data, isLoading } = useFileContent(scan_id, file_path, type);
-
   return (
-    <Box w="100%" position={"relative"} h={"100%"}>
-      <Box
-        zIndex={-1}
-        top={0}
-        left={0}
-        h={"100%"}
-        w="100%"
-        position={"absolute"}
-      >
-        <Box
-          sx={{
-            borderRadius: 15,
-            bg: "bg.subtle",
-            p: 4,
-            my: 2,
-          }}
-        >
-          <Flex
+    <>
+      {profileData && profileData.current_package === "trial" ? (
+        <TrialWallCode />
+      ) : (
+        <>
+          <Box
             sx={{
-              w: "100%",
-              justifyContent: "space-between",
-              alignItems: "center",
-              h: "100%",
+              borderRadius: 15,
+              bg: "bg.subtle",
+              p: 4,
+              my: 2,
             }}
           >
-            <Text
-              text="subtle"
-              fontSize="sm"
-              color="subtle"
-              mb={2}
-              maxW="70%"
-              isTruncated
-            >
-              {file_path}
-            </Text>
-            {/* <Button
-            size="sm"
-            isDisabled={mutation.isLoading}
-            isLoading={mutation.isLoading}
-            onClick={createGithubIssue}
-          >
-            <Icon as={AiFillGithub} color="subtle" mr={2} />
-            Create issue
-          </Button> */}
-          </Flex>
-          {isLoading && !profileData && (
             <Flex
               sx={{
                 w: "100%",
-                justifyContent: "center",
+                justifyContent: "space-between",
                 alignItems: "center",
-                h: "35vh",
+                h: "100%",
               }}
             >
-              <Spinner />
+              <Text
+                text="subtle"
+                fontSize="sm"
+                color="subtle"
+                mb={2}
+                maxW="70%"
+                isTruncated
+              >
+                {file_path}
+              </Text>
             </Flex>
-          )}
-          {data && (
-            <pre>
-              <CodeBlock
-                customStyle={{
-                  height: "35vh",
-                  fontSize: "14px",
-                  overflow: "scroll",
+            {isLoading && !profileData && (
+              <Flex
+                sx={{
+                  w: "100%",
+                  justifyContent: "center",
+                  alignItems: "center",
+                  h: "35vh",
                 }}
-                theme={atomOneLight}
-                showLineNumbers
-                text={data.file_contents}
-                highlight={highlightString}
-              />
-            </pre>
-          )}
-        </Box>
-        <Box
-          sx={{
-            borderRadius: 15,
-            bg: "bg.subtle",
-            p: 4,
-            my: 4,
-          }}
-        >
-          <Box fontSize="sm" mb={2}>
-            <IssueDetail
-              issue_id={issue_id}
-              context="single_file"
-              description_details={{}}
-            />
+              >
+                <Spinner />
+              </Flex>
+            )}
+            {data && (
+              <pre>
+                <CodeBlock
+                  customStyle={{
+                    height: "35vh",
+                    fontSize: "14px",
+                    overflow: "scroll",
+                  }}
+                  theme={atomOneLight}
+                  showLineNumbers
+                  text={data.file_contents}
+                  highlight={highlightString}
+                />
+              </pre>
+            )}
           </Box>
-        </Box>
-      </Box>
-      {profileData && profileData.current_package === "trial" && (
-        <Flex
-          justifyContent={"center"}
-          alignItems={"center"}
-          zIndex={"10"}
-          w={"100%"}
-          h={"76vh"}
-        >
-          <Flex
-            as={"div"}
+          <Box
             sx={{
-              backgroundColor: "rgba(255, 255, 255, 0.7)",
-              backdropFilter: "blur(8px)",
+              borderRadius: 15,
+              bg: "bg.subtle",
+              p: 4,
+              my: 4,
             }}
-            justifyContent={"center"}
-            alignItems={"center"}
-            mt={5}
-            w={"95%"}
-            h={"93%"}
-            borderRadius={5}
-            flexDir="column"
           >
-            <Image src="/trial-lock.svg" alt="Trial Lock" zIndex={"15"} />
-            <Text
-              mt={10}
-              textAlign={"center"}
-              w={"80%"}
-              fontWeight={700}
-              fontSize="md"
-              color="black"
-              mb={4}
-            >
-              Upgrade to use this feature
-            </Text>
-            <Text
-              textAlign={"center"}
-              w={"80%"}
-              fontWeight={300}
-              fontSize="sm"
-              color="black"
-              mb={8}
-            >
-              Upgrade from the trial plan to use this feature and much more.
-            </Text>
-            <Button
-              variant="brand"
-              onClick={() => {
-                history.push("/billing");
-              }}
-            >
-              Upgrade
-            </Button>
-          </Flex>
-        </Flex>
+            <Box fontSize="sm" mb={2}>
+              <IssueDetail
+                current_file_name=""
+                issue_id={issue_id}
+                context="single_file"
+                description_details={{}}
+              />
+            </Box>
+          </Box>
+        </>
       )}
-    </Box>
+    </>
   );
 };
 
@@ -507,7 +433,6 @@ export const MultifileResult: React.FC<{
   const [files, setFiles] = useState<FilesState | null>(null);
 
   const [issues, setIssues] = useState<MultiFileScanDetail[]>(scanDetails);
-
 
   const { projectId, scanId } =
     useParams<{ projectId: string; scanId: string }>();
@@ -585,12 +510,6 @@ export const MultifileResult: React.FC<{
       return { ...provided, opacity, transition };
     },
   };
-
-  // useEffect(() => {
-  //   if(files){
-  //     setAction(files.bug_status)
-  //   }
-  // }, [files])
 
   const updateBugStatus = async (action: string) => {
     if (files) {
@@ -676,7 +595,6 @@ export const MultifileResult: React.FC<{
       >
         <HStack width={"100%"} justify={"space-between"}>
           <Text fontWeight={600}>Confidence Parameter</Text>
-
           <HStack>
             <Button
               variant={confidence[2] ? "solid" : "outline"}
@@ -710,7 +628,6 @@ export const MultifileResult: React.FC<{
         {files && files.bug_status !== "fixed" && is_latest_scan && (
           <HStack justify="space-between" width={"100%"}>
             <Text fontWeight={600}>Take Action</Text>
-
             <Select
               formatOptionLabel={formatOptionLabel}
               options={options}
@@ -810,6 +727,8 @@ const MultifileIssues: React.FC<MultifileIssuesProps> = ({
     }
   };
 
+  const { data: profileData } = useProfile();
+
   return (
     <Accordion allowMultiple>
       {Array.from(issues)
@@ -886,25 +805,34 @@ const MultifileIssues: React.FC<MultifileIssuesProps> = ({
                           />
                         </AccordionButton>
                         <AccordionPanel pb={4}>
-                          {metric_wise_aggregated_findings.map((item) => (
-                            <IssueBox
-                              key={item.bug_id}
-                              bug_id={item.bug_id}
-                              files={files}
-                              issue_id={issue_id}
-                              metric_wise_aggregated_finding={{
-                                description_details: item.description_details,
-                                findings: item.findings,
-                                bug_id: item.bug_id,
-                                bug_hash: item.bug_hash,
-                                bug_status: item.bug_status,
-                                issue_id: issue_id,
-                                template_details: template_details,
-                              }}
-                              template_details={template_details}
-                              setFiles={setFiles}
-                            />
-                          ))}
+                          {profileData &&
+                          profileData.current_package === "trial" ? (
+                            <TrialWallIssue />
+                          ) : (
+                            <>
+                              ]{" "}
+                              {metric_wise_aggregated_findings.map((item) => (
+                                <IssueBox
+                                  key={item.bug_id}
+                                  bug_id={item.bug_id}
+                                  files={files}
+                                  issue_id={issue_id}
+                                  metric_wise_aggregated_finding={{
+                                    description_details:
+                                      item.description_details,
+                                    findings: item.findings,
+                                    bug_id: item.bug_id,
+                                    bug_hash: item.bug_hash,
+                                    bug_status: item.bug_status,
+                                    issue_id: issue_id,
+                                    template_details: template_details,
+                                  }}
+                                  template_details={template_details}
+                                  setFiles={setFiles}
+                                />
+                              ))}
+                            </>
+                          )}
                         </AccordionPanel>
                       </>
                     )}
@@ -973,7 +901,7 @@ const IssueBox: React.FC<{
       }
     >
       <HStack justify={"space-between"}>
-        <Text w={"50%"} isTruncated color={"gray.700"}>
+        <Text isTruncated color={"gray.700"}>
           {bug_id}
         </Text>
         <HStack>
@@ -995,7 +923,6 @@ const IssueBox: React.FC<{
 
           {metric_wise_aggregated_finding.bug_status !== "pending_fix" && (
             <Image
-              mr={3}
               src={`/icons/${metric_wise_aggregated_finding.bug_status}.svg`}
             />
           )}
@@ -1125,169 +1052,121 @@ const MultiFileExplorer: React.FC<MultiFileExplorerProps> = ({
   const { data: profileData } = useProfile();
   const history = useHistory();
 
+  const [currentFileName, setCurrentFileName] = useState(
+    files.findings[0].file_path
+  );
+
   return (
-    <Box w="100%" position={"relative"} h={"100%"}>
-      <Box
-        zIndex={-1}
-        top={0}
-        left={0}
-        h={"100%"}
-        w="100%"
-        position={"absolute"}
-      >
-        <Box
-          sx={{
-            borderRadius: 15,
-            bg: "bg.subtle",
-            p: 4,
-            my: 2,
-          }}
-        >
-          <Flex
+    <>
+      {profileData && profileData.current_package === "trial" ? (
+        <TrialWallCode />
+      ) : (
+        <>
+          <Box
             sx={{
-              w: "100%",
-              justifyContent: "flex-start",
-              alignItems: "center",
-              h: "100%",
+              borderRadius: 15,
+              bg: "bg.subtle",
+              p: 4,
+              my: 2,
             }}
           >
-            <Tabs
-              defaultIndex={0}
-              width={"100%"}
-              variant="soft-rounded"
-              colorScheme="messenger"
-            >
-              <Flex
-                width={"100%"}
-                overflowX="scroll"
-                flexDir={"row"}
-                justifyContent="flex-start"
-                align={"center"}
-                background={"gray.100"}
-                borderRadius={10}
-                px={3}
-                mb={2}
-              >
-                <TabList my={3} width={"fit-content"}>
-                  {files.findings.map((file, index) => (
-                    <Tab mx={1} background={"white"}>
-                      <Tooltip label={file.file_path} aria-label="A tooltip">
-                        <Text fontSize={"xs"} width={100} isTruncated>
-                          {file.file_path.length < 16
-                            ? file.file_path
-                            : file.file_path.slice(0, 6) +
-                              "..." +
-                              file.file_path.slice(
-                                file.file_path.length - 10,
-                                file.file_path.length
-                              )}
-                        </Text>
-                      </Tooltip>
-                    </Tab>
-                  ))}
-                </TabList>
-              </Flex>
-              <TabPanels>
-                {files.findings.map((file, index) => (
-                  <TabPanel key={index} p={2}>
-                    <FileDataCont
-                      type={type}
-                      file={{
-                        issue_id: files.issue_id,
-                        file_path: file.file_path,
-                        line_nos_start: file.line_nos_start,
-                        line_nos_end: file.line_nos_end,
-                      }}
-                    />
-                  </TabPanel>
-                ))}
-              </TabPanels>
-            </Tabs>
-          </Flex>
-        </Box>
-        <Box
-          sx={{
-            borderRadius: 15,
-            bg: "bg.subtle",
-            p: 4,
-            my: 4,
-          }}
-        >
-          <Box fontSize="sm" mb={2}>
-            <IssueDetail
-              files={files}
-              issue_id={files.issue_id}
-              context="multi_file"
-              description_details={files.description_details}
-            />
-          </Box>
-        </Box>
-      </Box>
-      {profileData && profileData.current_package === "trial" && (
-        <Flex
-          justifyContent={"center"}
-          alignItems={"center"}
-          zIndex={"10"}
-          w={"100%"}
-          h={"76vh"}
-        >
-          <Flex
-            as={"div"}
-            sx={{
-              backgroundColor: "rgba(255, 255, 255, 0.7)",
-              backdropFilter: "blur(8px)",
-            }}
-            justifyContent={"center"}
-            alignItems={"center"}
-            mt={5}
-            w={"95%"}
-            h={"93%"}
-            borderRadius={5}
-            flexDir="column"
-          >
-            <Image src="/trial-lock.svg" alt="Trial Lock" zIndex={"15"} />
-            <Text
-              mt={10}
-              textAlign={"center"}
-              w={"80%"}
-              fontWeight={700}
-              fontSize="md"
-              color="black"
-              mb={4}
-            >
-              Upgrade to use this feature
-            </Text>
-            <Text
-              textAlign={"center"}
-              w={"80%"}
-              fontWeight={300}
-              fontSize="sm"
-              color="black"
-              mb={8}
-            >
-              Upgrade from the trial plan to use this feature and much more.
-            </Text>
-            <Button
-              variant="brand"
-              onClick={() => {
-                history.push("/billing");
+            <Flex
+              sx={{
+                w: "100%",
+                justifyContent: "flex-start",
+                alignItems: "center",
+                h: "100%",
               }}
             >
-              Upgrade
-            </Button>
-          </Flex>
-        </Flex>
+              <Tabs
+                defaultIndex={0}
+                width={"100%"}
+                variant="soft-rounded"
+                colorScheme="messenger"
+              >
+                <Flex
+                  width={"100%"}
+                  overflowX="scroll"
+                  flexDir={"row"}
+                  justifyContent="flex-start"
+                  align={"center"}
+                  background={"gray.100"}
+                  borderRadius={10}
+                  px={3}
+                  mb={2}
+                >
+                  <TabList my={3} width={"fit-content"}>
+                    {files.findings.map((file, index) => (
+                      <Tab
+                        onClick={() => setCurrentFileName(file.file_path)}
+                        mx={1}
+                        background={"white"}
+                      >
+                        <Tooltip label={file.file_path} aria-label="A tooltip">
+                          <Text fontSize={"xs"} width={100} isTruncated>
+                            {file.file_path.length < 16
+                              ? file.file_path
+                              : file.file_path.slice(0, 6) +
+                                "..." +
+                                file.file_path.slice(
+                                  file.file_path.length - 10,
+                                  file.file_path.length
+                                )}
+                          </Text>
+                        </Tooltip>
+                      </Tab>
+                    ))}
+                  </TabList>
+                </Flex>
+                <TabPanels>
+                  {files.findings.map((file, index) => (
+                    <TabPanel key={index} p={2}>
+                      <FileDataCont
+                        type={type}
+                        file={{
+                          issue_id: files.issue_id,
+                          file_path: file.file_path,
+                          line_nos_start: file.line_nos_start,
+                          line_nos_end: file.line_nos_end,
+                        }}
+                      />
+                    </TabPanel>
+                  ))}
+                </TabPanels>
+              </Tabs>
+            </Flex>
+          </Box>
+          <Box
+            sx={{
+              borderRadius: 15,
+              bg: "bg.subtle",
+              p: 4,
+              my: 4,
+            }}
+          >
+            <Box fontSize="sm" mb={2}>
+              <IssueDetail
+                current_file_name={currentFileName}
+                files={files}
+                issue_id={files.issue_id}
+                context="multi_file"
+                description_details={files.description_details}
+              />
+            </Box>
+          </Box>
+        </>
       )}
-    </Box>
+    </>
   );
 };
 
 const IssueDetail: React.FC<{
+  current_file_name: string;
   files?: FilesState;
   issue_id: string;
   context: string;
   description_details: any;
-}> = ({ issue_id, context, description_details, files }) => {
+}> = ({ issue_id, context, description_details, files, current_file_name }) => {
   const { data, isLoading } = useIssueDetail(issue_id, context);
 
   let variableData = description_details;
@@ -1349,14 +1228,15 @@ const IssueDetail: React.FC<{
                   )}
                 </Text>
               )}
-
               <Text fontWeight={500} fontSize="md" pb={4}>
                 {data.issue_details.issue_name}
               </Text>
-
               <Box
                 dangerouslySetInnerHTML={{
-                  __html: data.issue_details.issue_description.format({...variableData}),
+                  __html: data.issue_details.issue_description.format({
+                    ...variableData,
+                    current_file_name,
+                  }),
                 }}
               />
             </DescriptionWrapper>
@@ -1365,7 +1245,10 @@ const IssueDetail: React.FC<{
             <DescriptionWrapper>
               <Box
                 dangerouslySetInnerHTML={{
-                  __html: data.issue_details.issue_remediation.format({...variableData}),
+                  __html: data.issue_details.issue_remediation.format({
+                    ...variableData,
+                    current_file_name,
+                  }),
                 }}
               />
             </DescriptionWrapper>

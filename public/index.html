@@ -24,7 +24,6 @@
     <title>Solidity Scan</title>
     <script>
       String.prototype.format = function (options) {
-
         // store arguments in an array
         var args = arguments;
         // use replace to iterate over the string
@@ -32,8 +31,11 @@
         // if yes, replace the match with the argument
         let fString = this;
         for (const keys in options) {
-          console.log(keys, options[keys])
-          fString = fString.replace("${" + keys + "}", "<code>" + options[keys] + "</code>");
+          console.log(keys, options[keys]);
+          fString = fString.replace(
+            "${" + keys + "}",
+            "<code>" + options[keys] + "</code>"
+          );
           console.log(fString);
         }
         return fString;
