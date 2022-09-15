@@ -58,7 +58,7 @@ import { WarningIcon } from "@chakra-ui/icons";
 import React from "react";
 import { access } from "fs";
 import { sentenceCapitalize } from "helpers/helperFunction";
-import TrialWallCode, { TrialWallIssue } from "./trialWall";
+import TrialWallCode, { TrialWall, TrialWallIssue } from "./trialWall";
 
 type FileState = {
   issue_id: string;
@@ -93,6 +93,8 @@ export const Result: React.FC<{
       gas,
     },
   } = scanSummary;
+
+  const { data: profileData } = useProfile();
 
   return (
     <>
@@ -135,7 +137,9 @@ export const Result: React.FC<{
               top: 8,
             }}
           >
-            {file ? (
+            {profileData && profileData.current_package ? (
+              <TrialWall />
+            ) : file ? (
               <>
                 <FileDetails file={file} type={type} />
               </>
@@ -332,7 +336,7 @@ const FileDetails: React.FC<FileDetailsProps> = ({ file, type }) => {
   return (
     <>
       {profileData && profileData.current_package === "trial" ? (
-        <TrialWallCode />
+        <TrialWall />
       ) : (
         <>
           <Box
@@ -457,6 +461,8 @@ export const MultifileResult: React.FC<{
     true,
     true,
   ]);
+
+  const { data: profileData } = useProfile();
 
   // const [action, setAction] = useState("");
   const options = [
@@ -669,7 +675,9 @@ export const MultifileResult: React.FC<{
             top: 8,
           }}
         >
-          {files ? (
+          {profileData && profileData.current_package === "trial" ? (
+            <TrialWall />
+          ) : files ? (
             <MultiFileExplorer files={files} type={type} />
           ) : (
             <Flex
@@ -739,7 +747,7 @@ const MultifileIssues: React.FC<MultifileIssuesProps> = ({
             : 1
         )
         .map(
-          ({ issue_id, metric_wise_aggregated_findings, template_details }) => {
+          ({ issue_id, metric_wise_aggregated_findings, template_details, no_of_findings }) => {
             return (
               <>
                 {confidence[parseInt(template_details.issue_confidence)] &&
@@ -790,7 +798,7 @@ const MultifileIssues: React.FC<MultifileIssuesProps> = ({
                                 color: "subtle",
                               }}
                             >
-                              {metric_wise_aggregated_findings.length}
+                              {no_of_findings}
                             </Text>
                           </Flex>
                           <Icon
@@ -810,7 +818,6 @@ const MultifileIssues: React.FC<MultifileIssuesProps> = ({
                             <TrialWallIssue />
                           ) : (
                             <>
-                              ]{" "}
                               {metric_wise_aggregated_findings.map((item) => (
                                 <IssueBox
                                   key={item.bug_id}
@@ -1059,7 +1066,7 @@ const MultiFileExplorer: React.FC<MultiFileExplorerProps> = ({
   return (
     <>
       {profileData && profileData.current_package === "trial" ? (
-        <TrialWallCode />
+        <TrialWall />
       ) : (
         <>
           <Box
