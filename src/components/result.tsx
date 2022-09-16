@@ -815,7 +815,7 @@ const MultifileIssues: React.FC<MultifileIssuesProps> = ({
                         <AccordionPanel pb={4}>
                           {profileData &&
                           profileData.current_package === "trial" ? (
-                            <TrialWallIssue />
+                            <TrialWallIssue severity={template_details.issue_severity} no_of_issue={no_of_findings} />
                           ) : (
                             <>
                               {metric_wise_aggregated_findings.map((item) => (

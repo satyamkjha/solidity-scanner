@@ -19,6 +19,7 @@ import { SeverityIcon } from "components/icons";
 
 import { dummyCode, dummyIssues } from "common/values";
 import { TrialWallIcon } from "components/icons";
+import { WarningTwoIcon } from "@chakra-ui/icons";
 export const TrialWall: React.FC = () => {
   return (
 
@@ -137,7 +138,7 @@ export const TrialWallIssueDescription: React.FC = () => {
   );
 };
 
-export const TrialWallIssue: React.FC = () => {
+export const TrialWallIssue: React.FC<{no_of_issue: number; severity: string}> = ({no_of_issue, severity}) => {
   return (
     <Flex
       w="100%"
@@ -172,8 +173,30 @@ export const TrialWallIssue: React.FC = () => {
         alignItems="center"
         justifyContent="flex-start"
         flexDir="column"
-        pt={4}
-      ></Flex>
+        pt={20}
+      >
+        <WarningTwoIcon color={severity} fontSize={50} />
+        <Text
+          textAlign={"center"}
+          w={"80%"}
+          fontWeight={700}
+          fontSize="md"
+          color="black"
+          mb={4}
+        >
+          {no_of_issue} Vulnerabilities found !
+        </Text>
+        <Text
+          textAlign={"center"}
+          w={"80%"}
+          fontWeight={300}
+          fontSize="sm"
+          color="black"
+          mb={8}
+        >
+          Upgrade from the trial plan to find more details about these vulnerabilities.
+        </Text>
+      </Flex>
     </Flex>
   );
 };
@@ -293,6 +316,8 @@ const DummyIssueDescp: React.FC = () => {
           p: 4,
           my: 2,
         }}
+        h={'20vh'}
+        overflow={'scroll'}
       >
         <Flex
           sx={{

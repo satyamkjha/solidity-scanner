@@ -388,7 +388,7 @@ const ContractForm: React.FC = () => {
       { value: "mainnet", label: "Cronos Mainnet" },
       { value: "testnet", label: "Cronos Testnet" },
     ],
-    celoscan: [
+    celo: [
       { value: "mainnet", label: "Celo Mainnet" },
       { value: "testnet", label: "Alfajores Testnet" },
     ]
@@ -510,7 +510,7 @@ const ContractForm: React.FC = () => {
               <option value="fantom">Fantom</option>
               <option value="cronos">Cronos</option>
               <option value="avalanche">Avalanche C-Chain</option>
-              <option value="celoscan">Celo</option>
+              <option value="celo">Celo</option>
             </Select>
           </FormControl>
 
