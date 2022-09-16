@@ -410,7 +410,33 @@ export const ReportContainer: React.FC<{ summary_report: Report }> = ({
                 <Divider />
               </>
             )}
-            {summary_report.project_summary_report.publishers_name && (
+            {summary_report.project_summary_report.date_published && (
+              <>
+                <Text
+                  fontSize="lg"
+                  fontWeight={"bold"}
+                  color={"gray.600"}
+                  my={4}
+                >
+                  Date Published
+                </Text>
+                <Divider />
+              </>
+            )}
+            {summary_report.project_summary_report.organization && (
+              <>
+                <Text
+                  fontSize="lg"
+                  fontWeight={"bold"}
+                  color={"gray.600"}
+                  my={4}
+                >
+                  Organization
+                </Text>
+                <Divider />
+              </>
+            )}
+            {summary_report.project_summary_report.report_owner && (
               <>
                 <Text
                   fontSize="lg"
@@ -519,10 +545,28 @@ export const ReportContainer: React.FC<{ summary_report: Report }> = ({
                 <Divider />
               </>
             )}
-            {summary_report.project_summary_report.publishers_name && (
+            {summary_report.project_summary_report.date_published && (
+              <>
+                {" "}
+                <Text fontSize="lg" fontWeight={"normal"} my={4}>
+                  {summary_report.project_summary_report.date_published}
+                </Text>
+                <Divider />
+              </>
+            )}
+            {summary_report.project_summary_report.organization && (
+              <>
+                {" "}
+                <Text fontSize="lg" fontWeight={"normal"} my={4}>
+                  {summary_report.project_summary_report.organization}
+                </Text>
+                <Divider />
+              </>
+            )}
+            {summary_report.project_summary_report.report_owner && (
               <>
                 <Text fontSize="lg" fontWeight={"normal"} my={4}>
-                  {summary_report.project_summary_report.publishers_name}
+                  {summary_report.project_summary_report.report_owner}
                 </Text>
                 <Divider />
               </>

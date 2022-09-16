@@ -250,12 +250,14 @@ export interface Report {
     last_project_report_update_time: string;
     last_scan_triggered_time: string;
     website?: string;
-    publishers_name?: string;
+    report_owner?: string;
     contract_address?: string;
     contract_chain?: string;
     contract_url?: string;
     contract_name?: string;
     contract_platform?: string;
+    organization: string;
+    date_published: string;
   };
   scan_summary: ScanSummaryItem[];
 }
