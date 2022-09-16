@@ -391,7 +391,7 @@ const ContractForm: React.FC = () => {
     celo: [
       { value: "mainnet", label: "Celo Mainnet" },
       { value: "testnet", label: "Alfajores Testnet" },
-    ]
+    ],
   };
   const [platform, setPlatform] = React.useState("etherscan");
   const [chain, setChain] = React.useState("");

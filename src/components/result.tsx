@@ -747,7 +747,12 @@ const MultifileIssues: React.FC<MultifileIssuesProps> = ({
             : 1
         )
         .map(
-          ({ issue_id, metric_wise_aggregated_findings, template_details, no_of_findings }) => {
+          ({
+            issue_id,
+            metric_wise_aggregated_findings,
+            template_details,
+            no_of_findings,
+          }) => {
             return (
               <>
                 {confidence[parseInt(template_details.issue_confidence)] &&
@@ -815,7 +820,10 @@ const MultifileIssues: React.FC<MultifileIssuesProps> = ({
                         <AccordionPanel pb={4}>
                           {profileData &&
                           profileData.current_package === "trial" ? (
-                            <TrialWallIssue severity={template_details.issue_severity} no_of_issue={no_of_findings} />
+                            <TrialWallIssue
+                              severity={template_details.issue_severity}
+                              no_of_issue={no_of_findings}
+                            />
                           ) : (
                             <>
                               {metric_wise_aggregated_findings.map((item) => (
@@ -1077,71 +1085,103 @@ const MultiFileExplorer: React.FC<MultiFileExplorerProps> = ({
               my: 2,
             }}
           >
-            <Flex
-              sx={{
-                w: "100%",
-                justifyContent: "flex-start",
-                alignItems: "center",
-                h: "100%",
-              }}
-            >
-              <Tabs
-                defaultIndex={0}
-                width={"100%"}
-                variant="soft-rounded"
-                colorScheme="messenger"
+            {files.bug_status === "fixed" ? (
+              <Flex
+                sx={{
+                  w: "100%",
+                  justifyContent: "space-between",
+                  alignItems: "center",
+                  h: "60vh",
+                  flexDir: 'column'
+                }}
               >
                 <Flex
+                    width={"100%"}
+                    overflowX="scroll"
+                    flexDir={"row"}
+                    justifyContent="flex-start"
+                    align={"center"}
+                    background={"gray.100"}
+                    borderRadius={10}
+                    px={3}
+                    mb={2}
+                    h={'50px'}
+                  ></Flex>
+                  <VStack mb={'10vh'}>
+                <Image src="/common/fixedIssueIcon.svg" />
+                <Text fontWeight={600}>This Issue has been fixed</Text>
+                </VStack>
+              </Flex>
+            ) : (
+              <Flex
+                sx={{
+                  w: "100%",
+                  justifyContent: "flex-start",
+                  alignItems: "center",
+                  h: "100%",
+                }}
+              >
+                <Tabs
+                  defaultIndex={0}
                   width={"100%"}
-                  overflowX="scroll"
-                  flexDir={"row"}
-                  justifyContent="flex-start"
-                  align={"center"}
-                  background={"gray.100"}
-                  borderRadius={10}
-                  px={3}
-                  mb={2}
+                  variant="soft-rounded"
+                  colorScheme="messenger"
                 >
-                  <TabList my={3} width={"fit-content"}>
+                  <Flex
+                    width={"100%"}
+                    overflowX="scroll"
+                    flexDir={"row"}
+                    justifyContent="flex-start"
+                    align={"center"}
+                    background={"gray.100"}
+                    borderRadius={10}
+                    px={3}
+                    mb={2}
+                  >
+                    <TabList my={3} width={"fit-content"}>
+                      {files.findings.map((file, index) => (
+                        <Tab
+                          onClick={() => setCurrentFileName(file.file_path)}
+                          mx={1}
+                          background={"white"}
+                        >
+                          <Tooltip
+                            label={file.file_path}
+                            aria-label="A tooltip"
+                          >
+                            <Text fontSize={"xs"} width={100} isTruncated>
+                              {file.file_path.length < 16
+                                ? file.file_path
+                                : file.file_path.slice(0, 6) +
+                                  "..." +
+                                  file.file_path.slice(
+                                    file.file_path.length - 10,
+                                    file.file_path.length
+                                  )}
+                            </Text>
+                          </Tooltip>
+                        </Tab>
+                      ))}
+                    </TabList>
+                  </Flex>
+                  <TabPanels>
                     {files.findings.map((file, index) => (
-                      <Tab
-                        onClick={() => setCurrentFileName(file.file_path)}
-                        mx={1}
-                        background={"white"}
-                      >
-                        <Tooltip label={file.file_path} aria-label="A tooltip">
-                          <Text fontSize={"xs"} width={100} isTruncated>
-                            {file.file_path.length < 16
-                              ? file.file_path
-                              : file.file_path.slice(0, 6) +
-                                "..." +
-                                file.file_path.slice(
-                                  file.file_path.length - 10,
-                                  file.file_path.length
-                                )}
-                          </Text>
-                        </Tooltip>
-                      </Tab>
+                      <TabPanel key={index} p={2}>
+                        <FileDataCont
+                          type={type}
+                          file={{
+                            issue_id: files.issue_id,
+                            file_path: file.file_path,
+                            line_nos_start: file.line_nos_start,
+                            line_nos_end: file.line_nos_end,
+                          }}
+                        />
+                      </TabPanel>
                     ))}
-                  </TabList>
-                </Flex>
-                <TabPanels>
-                  {files.findings.map((file, index) => (
-                    <TabPanel key={index} p={2}>
-                      <FileDataCont
-                        type={type}
-                        file={{
-                          issue_id: files.issue_id,
-                          file_path: file.file_path,
-                          line_nos_start: file.line_nos_start,
-                          line_nos_end: file.line_nos_end,
-                        }}
-                      />
-                    </TabPanel>
-                  ))}
-                </TabPanels>
-              </Tabs>
-            </Flex>
+                  </TabPanels>
+                </Tabs>
+              </Flex>
+            )}
           </Box>
           <Box
             sx={{

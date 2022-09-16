@@ -100,7 +100,7 @@ export type Scan = {
 export type MultiFileScanDetail = {
   issue_id: string;
   template_details: MultiFileTemplateDetail;
-  no_of_findings: number
+  no_of_findings: number;
   metric_wise_aggregated_findings: MetricWiseAggregatedFinding[];
 };
 

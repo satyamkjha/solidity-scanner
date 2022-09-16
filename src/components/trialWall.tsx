@@ -22,15 +22,12 @@ import { TrialWallIcon } from "components/icons";
 import { WarningTwoIcon } from "@chakra-ui/icons";
 export const TrialWall: React.FC = () => {
   return (
-
-<Flex
-      w="100%"
-      sx={{ flexDir: "column" }}
-      h="100vh"
-    >
-      <TrialWallCode/>
-      <TrialWallIssueDescription/>
-    </Flex>)}
+    <Flex w="100%" sx={{ flexDir: "column" }} h="100vh">
+      <TrialWallCode />
+      <TrialWallIssueDescription />
+    </Flex>
+  );
+};
 
 export const TrialWallCode: React.FC = () => {
   return (
@@ -128,17 +125,16 @@ export const TrialWallIssueDescription: React.FC = () => {
         alignItems="center"
         justifyContent="flex-start"
         flexDir="column"
-        mt={'50px'}
-      >
-        
-
-        
-      </Flex>
+        mt={"50px"}
+      ></Flex>
     </Flex>
   );
 };
 
-export const TrialWallIssue: React.FC<{no_of_issue: number; severity: string}> = ({no_of_issue, severity}) => {
+export const TrialWallIssue: React.FC<{
+  no_of_issue: number;
+  severity: string;
+}> = ({ no_of_issue, severity }) => {
   return (
     <Flex
       w="100%"
@@ -194,7 +190,8 @@ export const TrialWallIssue: React.FC<{no_of_issue: number; severity: string}> =
           color="black"
           mb={8}
         >
-          Upgrade from the trial plan to find more details about these vulnerabilities.
+          Upgrade from the trial plan to find more details about these
+          vulnerabilities.
         </Text>
       </Flex>
     </Flex>
@@ -316,8 +313,8 @@ const DummyIssueDescp: React.FC = () => {
           p: 4,
           my: 2,
         }}
-        h={'20vh'}
-        overflow={'scroll'}
+        h={"20vh"}
+        overflow={"scroll"}
       >
         <Flex
           sx={{
@@ -329,11 +326,11 @@ const DummyIssueDescp: React.FC = () => {
           mx={10}
           flexDir="row"
         >
-          <Text fontSize="md" color={'gray.600'} fontWeight={"bold"}>
+          <Text fontSize="md" color={"gray.600"} fontWeight={"bold"}>
             Vulnerability Description
           </Text>
 
-          <Text ml={10} fontSize="md" color={'gray.600'} fontWeight={"bold"}>
+          <Text ml={10} fontSize="md" color={"gray.600"} fontWeight={"bold"}>
             Remediation
           </Text>
         </Flex>
@@ -348,7 +345,13 @@ const DummyIssueDescp: React.FC = () => {
           bg={"gray.100"}
           width="fit-content"
         >
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+          Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
+          eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad
+          minim veniam, quis nostrud exercitation ullamco laboris nisi ut
+          aliquip ex ea commodo consequat. Duis aute irure dolor in
+          reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla
+          pariatur. Excepteur sint occaecat cupidatat non proident, sunt in
+          culpa qui officia deserunt mollit anim id est laborum.
         </Text>
       </Box>
     </Box>
