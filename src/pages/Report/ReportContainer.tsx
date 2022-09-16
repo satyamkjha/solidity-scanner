@@ -449,7 +449,19 @@ export const ReportContainer: React.FC<{ summary_report: Report }> = ({
                 <Divider />
               </>
             )}
-
+            {summary_report.project_summary_report.report_owner && (
+              <>
+                <Text
+                  fontSize="lg"
+                  fontWeight={"bold"}
+                  color={"gray.600"}
+                  my={4}
+                >
+                  Contact Email
+                </Text>
+                <Divider />
+              </>
+            )}
             <Text fontSize="lg" fontWeight={"bold"} color={"gray.600"} my={4}>
               Audit Methodology
             </Text>
@@ -567,6 +579,14 @@ export const ReportContainer: React.FC<{ summary_report: Report }> = ({
               <>
                 <Text fontSize="lg" fontWeight={"normal"} my={4}>
                   {summary_report.project_summary_report.report_owner}
+                </Text>
+                <Divider />
+              </>
+            )}
+            {summary_report.project_summary_report.email && (
+              <>
+                <Text fontSize="lg" fontWeight={"normal"} my={4}>
+                  {summary_report.project_summary_report.email}
                 </Text>
                 <Divider />
               </>
