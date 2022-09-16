@@ -1092,24 +1092,24 @@ const MultiFileExplorer: React.FC<MultiFileExplorerProps> = ({
                   justifyContent: "space-between",
                   alignItems: "center",
                   h: "60vh",
-                  flexDir: 'column'
+                  flexDir: "column",
                 }}
               >
                 <Flex
-                    width={"100%"}
-                    overflowX="scroll"
-                    flexDir={"row"}
-                    justifyContent="flex-start"
-                    align={"center"}
-                    background={"gray.100"}
-                    borderRadius={10}
-                    px={3}
-                    mb={2}
-                    h={'50px'}
-                  ></Flex>
-                  <VStack mb={'10vh'}>
-                <Image src="/common/fixedIssueIcon.svg" />
-                <Text fontWeight={600}>This Issue has been fixed</Text>
+                  width={"100%"}
+                  overflowX="scroll"
+                  flexDir={"row"}
+                  justifyContent="flex-start"
+                  align={"center"}
+                  background={"gray.100"}
+                  borderRadius={10}
+                  px={3}
+                  mb={2}
+                  h={"50px"}
+                ></Flex>
+                <VStack mb={"10vh"}>
+                  <Image src="/common/fixedIssueIcon.svg" />
+                  <Text fontWeight={600}>This Issue has been fixed</Text>
                 </VStack>
               </Flex>
             ) : (
