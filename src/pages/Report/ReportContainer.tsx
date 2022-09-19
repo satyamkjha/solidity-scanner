@@ -448,7 +448,7 @@ export const ReportContainer: React.FC<{ summary_report: Report }> = ({
                 <Divider />
               </>
             )}
-            {summary_report.project_summary_report.report_owner && (
+            {summary_report.project_summary_report.email && (
               <>
                 <Text
                   fontSize="lg"
