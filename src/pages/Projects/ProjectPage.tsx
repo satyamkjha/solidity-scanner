@@ -544,10 +544,13 @@ const ScanDetails: React.FC<{ scansRemaining: number; scans: ScanMeta[] }> = ({
                   </TabList>
                   <TabPanels>
                     <TabPanel>
-                      <Overview
-                        scansRemaining={scansRemaining}
-                        scanData={scanData.scan_report}
-                      />
+                      {(scanData.scan_report.multi_file_scan_summary ||
+                        scanData.scan_report.scan_summary) && (
+                        <Overview
+                          scansRemaining={scansRemaining}
+                          scanData={scanData.scan_report}
+                        />
+                      )}
                     </TabPanel>
                     <TabPanel>
                       {scanData.scan_report.multi_file_scan_status ===

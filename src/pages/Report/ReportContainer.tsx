@@ -125,7 +125,8 @@ export const ReportContainer: React.FC<{ summary_report: Report }> = ({
           {`${d.getDate()} ${monthNames[d.getMonth()]} ${d.getFullYear()}`}
         </Text>
         <Text fontSize="lg" width={"60%"} color={"gray.300"} mb={10}>
-        This security assessment report was prepared by SolidityScan.com, a cloud-based Smart Contract Scanner.
+          This security assessment report was prepared by SolidityScan.com, a
+          cloud-based Smart Contract Scanner.
         </Text>
         <Image src="/report-image.svg" />
       </Flex>
