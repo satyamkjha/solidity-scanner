@@ -50,9 +50,9 @@ export type Project = {
   scans_remaining: number;
   _latest_scan: {
     scan_id: string;
-    scan_status: string;
+    multi_file_scan_status: string;
     scan_message: string;
-    scan_summary: ScanSummary;
+    multi_file_scan_summary: MultiFileScanSummary;
   };
 };
 
@@ -80,6 +80,7 @@ export type Scan = {
   contract_chain?: string;
   value?: string;
   currency?: string;
+  report_regeneration_enabled: boolean;
   scan_type: string;
   scan_id: string;
   scan_init_time: string;
@@ -91,6 +92,47 @@ export type Scan = {
   reporting_status: string;
   _created: string;
   _updated: string;
+  multi_file_scan_details: MultiFileScanDetail[];
+  multi_file_scan_status: string;
+  multi_file_scan_summary: MultiFileScanSummary;
+};
+
+export type MultiFileScanDetail = {
+  issue_id: string;
+  template_details: MultiFileTemplateDetail;
+  no_of_findings: number;
+  metric_wise_aggregated_findings: MetricWiseAggregatedFinding[];
+};
+
+export type MultiFileTemplateDetail = {
+  additional_meta: string;
+  aggregation_key: string;
+  description_keys: string[];
+  issue_confidence: string;
+  issue_id: string;
+  issue_name: string;
+  issue_severity: string;
+  multi_file_supported: string;
+  type: string;
+  version: string;
+};
+
+export type MultiFileScanSummary = {
+  count_files_analyzed: number;
+  issue_severity_distribution: IssueSeverityDistribution;
+  issues_count: number;
+  lines_analyzed_count: number;
+  scan_time_taken: number;
+  scans_ran: string[];
+  score: string;
+};
+
+export type MetricWiseAggregatedFinding = {
+  description_details: any;
+  bug_hash: string;
+  bug_status: string;
+  findings: Finding[];
+  bug_id: string;
 };
 
 export type ScanMeta = {
@@ -105,13 +147,38 @@ export type ScanMeta = {
 };
 
 export type ScanSummary = {
-  count_files_analyzed: number;
-  issue_severity_distribution: IssueSeverityDistribution;
-  score: string;
-  issues_count: number;
-  lines_analyzed_count: number;
-  scan_time_taken: number;
-  scans_ran: string[];
+  bug_id_hash_vs_bug_id: {
+    [key: string]: string[];
+  }; //
+  count_files_analyzed: number; //
+  issue_severity_distribution: IssueSeverityDistribution; //
+  score: string; //
+  issues_count: number; //
+  lines_analyzed_count: number; //
+  latest_bug_count: number; //
+  scan_time_taken: number; //
+  false_positive: []; //
+  fixed: []; //
+  wont_fix: []; //
+  scans_ran: string[]; //
+};
+
+export type ScanSummaryItem = {
+  count_files_analyzed: number; //
+  issue_severity_distribution: IssueSeverityDistribution; //
+  score: string; //
+
+  issues_count: number; //
+  lines_analyzed_count: number; //
+
+  scan_time_taken: number; //
+  false_positive_count: number; //
+  fixed_count: number; //
+
+  wont_fix_count: number; //
+  scans_ran: string[]; //
+  scan_time: string; //
+  pending_fix_count: number; //
 };
 
 export type IssueSeverityDistribution = {
@@ -120,6 +187,7 @@ export type IssueSeverityDistribution = {
   medium: number;
   low: number;
   informational: number;
+  gas: number;
 };
 
 export type ScanDetail = {
@@ -130,7 +198,6 @@ export type ScanDetail = {
 
 export type Finding = {
   file_path: string;
-  description: string;
   line_nos_start: number[];
   line_nos_end: number[];
 };
@@ -154,6 +221,7 @@ export type IssueDetails = {
 
 export type Overview = {
   issue_count_critical: number;
+  issue_count_gas: number;
   issue_count_high: number;
   issue_count_informational: number;
   issue_count_medium: number;
@@ -165,23 +233,15 @@ export type Overview = {
   upcoming_scan: string;
 };
 
-export type IssueItem = {
-  bug_id: string;
-  file_path: string;
-  issue_hash: string;
-  issue_name: string;
-  line_number_end: string;
-  line_number_start: string;
-  severity: string;
-  status: string;
-};
-
-export type Report = {
-  git_commit_hash: string;
+export interface Report {
   issues: {
-    [key: string]: IssueItem[];
+    [key: string]: {
+      issue_details: IssueItem[];
+      issue_id: string;
+      issue_name: string;
+    };
   };
-  report_id: string;
+  git_commit_hash: string;
   project_summary_report: {
     git_commit_hash?: string;
     project_id: string;
@@ -190,14 +250,29 @@ export type Report = {
     last_project_report_update_time: string;
     last_scan_triggered_time: string;
     website?: string;
-    publishers_name?: string;
+    report_owner?: string;
     contract_address?: string;
     contract_chain?: string;
     contract_url?: string;
     contract_name?: string;
     contract_platform?: string;
+    organization: string;
+    date_published: string;
+    email: string;
   };
-  scan_summary: ScanItem[];
+  scan_summary: ScanSummaryItem[];
+}
+
+export type IssueItem = {
+  bug_hash: string;
+  bug_id: string;
+  bug_status: string;
+  findings: Finding[];
+  issue_confidence: string;
+  issue_description: string;
+  issue_name: string;
+  issue_remediation: string;
+  severity: string;
 };
 
 export type ReportsListItem = {

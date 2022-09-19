@@ -28,6 +28,7 @@ export const theme = extendTheme({
     high: "#FF5C00",
     medium: "#FFE600",
     low: "#38CB89",
+    gas: "#F795B4",
     "high-subtle": "#FFECE8",
     bg: {
       subtle: "#FAFBFC",
@@ -46,6 +47,9 @@ export const theme = extendTheme({
     Button: {
       baseStyle: {
         borderRadius: "15px",
+      },
+      _focus: {
+        outline: 0,
       },
       variants: {
         brand: (props) => ({
@@ -222,6 +226,11 @@ export const theme = extendTheme({
         critical: {
           filledTrack: {
             bgColor: "critical",
+          },
+        },
+        gas: {
+          filledTrack: {
+            bgColor: "gas",
           },
         },
         informational: {

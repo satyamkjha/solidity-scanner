@@ -1,5 +1,13 @@
 import React from "react";
-import { Flex, VStack, Box, Text, Icon, Button } from "@chakra-ui/react";
+import {
+  Flex,
+  VStack,
+  Box,
+  Text,
+  Icon,
+  Button,
+  HStack,
+} from "@chakra-ui/react";
 import { Link } from "react-router-dom";
 
 import { CodeBlock, atomOneLight } from "react-code-blocks";
@@ -11,48 +19,25 @@ import { SeverityIcon } from "components/icons";
 
 import { dummyCode, dummyIssues } from "common/values";
 import { TrialWallIcon } from "components/icons";
-
+import { WarningTwoIcon } from "@chakra-ui/icons";
 export const TrialWall: React.FC = () => {
+  return (
+    <Flex w="100%" sx={{ flexDir: "column" }} h="100vh">
+      <TrialWallCode />
+      <TrialWallIssueDescription />
+    </Flex>
+  );
+};
+
+export const TrialWallCode: React.FC = () => {
   return (
     <Flex
       w="100%"
-      sx={{ flexDir: ["column", "column", "row"] }}
+      sx={{ flexDir: ["column", "column", "column"] }}
       position="relative"
-      h="60vh"
+      h="70vh"
     >
-      <VStack
-        w={["100%", "100%", "40%"]}
-        spacing={8}
-        mb={[8, 8, 0]}
-        alignItems="flex-start"
-      >
-        <Flex w="100%" justifyContent="space-around">
-          <Box width="80%" mt={2}>
-            <VulnerabilityDistribution
-              critical={3}
-              high={3}
-              medium={3}
-              low={3}
-              informational={3}
-            />
-          </Box>
-        </Flex>
-        <Box w="100%" minH="50vh" display="flex" flexDir="column" pl={1}>
-          {dummyIssues.map(({ filesCount, issueTitle, severity }) => (
-            <DummyIssue
-              filesCount={filesCount}
-              issueTitle={issueTitle}
-              severity={severity}
-            />
-          ))}
-        </Box>
-      </VStack>
-      <VStack
-        w={["100%", "100%", "60%"]}
-        alignItems="flex-start"
-        spacing={5}
-        px={4}
-      >
+      <VStack w={"100%"} alignItems="flex-start" spacing={5} px={4}>
         <Box
           sx={{
             w: "100%",
@@ -66,27 +51,148 @@ export const TrialWall: React.FC = () => {
       <Flex
         w="100%"
         h="60vh"
+        mt={6}
         position="absolute"
         sx={{
           backdropFilter: "blur(6px)",
         }}
         bg="rgba(255,255,255,0.3)"
         alignItems="center"
-        justifyContent="center"
+        justifyContent="flex-start"
         flexDir="column"
+        pt={"100px"}
       >
         <TrialWallIcon />
-        <Text fontWeight={700} mt={6}>
+        <Text
+          textAlign={"center"}
+          w={"80%"}
+          fontWeight={700}
+          fontSize="md"
+          color="black"
+          mb={4}
+        >
           Upgrade to use this feature
         </Text>
-        {/* <Text fontSize="sm" mt={2}>
-          Upgrade to use this feature
-        </Text> */}
+
+        <Text
+          textAlign={"center"}
+          w={"80%"}
+          fontWeight={300}
+          fontSize="sm"
+          color="black"
+          mb={8}
+        >
+          Upgrade from the trial plan to use this feature and much more.
+        </Text>
+
         <Link to="/billing">
           <Button mt={4} variant="brand" width="250px">
             Upgrade
           </Button>
         </Link>
+      </Flex>
+    </Flex>
+  );
+};
+
+export const TrialWallIssueDescription: React.FC = () => {
+  return (
+    <Flex
+      w="100%"
+      sx={{ flexDir: ["column", "column", "column"] }}
+      position="relative"
+      h="30vh"
+    >
+      <VStack w={"100%"} alignItems="flex-start" spacing={5} px={4}>
+        <Box
+          sx={{
+            w: "100%",
+            position: "sticky",
+            top: 8,
+          }}
+        >
+          <DummyIssueDescp />
+        </Box>
+      </VStack>
+      <Flex
+        w="100%"
+        h="20vh"
+        position="absolute"
+        sx={{
+          backdropFilter: "blur(6px)",
+        }}
+        bg="rgba(255,255,255,0.3)"
+        alignItems="center"
+        justifyContent="flex-start"
+        flexDir="column"
+        mt={"50px"}
+      ></Flex>
+    </Flex>
+  );
+};
+
+export const TrialWallIssue: React.FC<{
+  no_of_issue: number;
+  severity: string;
+}> = ({ no_of_issue, severity }) => {
+  return (
+    <Flex
+      w="100%"
+      sx={{ flexDir: ["column", "column", "column"] }}
+      position="relative"
+    >
+      <VStack w={"100%"} alignItems="flex-start" spacing={5} px={4}>
+        <Box
+          sx={{
+            w: "100%",
+            position: "sticky",
+            top: 8,
+          }}
+        >
+          {dummyIssues.map(({ filesCount, issueTitle, severity }) => (
+            <DummyIssue
+              filesCount={filesCount}
+              issueTitle={issueTitle}
+              severity={severity}
+            />
+          ))}
+        </Box>
+      </VStack>
+      <Flex
+        w="100%"
+        h="100%"
+        position="absolute"
+        sx={{
+          backdropFilter: "blur(6px)",
+        }}
+        bg="rgba(255,255,255,0.3)"
+        alignItems="center"
+        justifyContent="flex-start"
+        flexDir="column"
+        pt={20}
+      >
+        <WarningTwoIcon color={severity} fontSize={50} />
+        <Text
+          textAlign={"center"}
+          w={"80%"}
+          fontWeight={700}
+          fontSize="md"
+          color="black"
+          mb={4}
+        >
+          {no_of_issue} Vulnerabilities found !
+        </Text>
+        <Text
+          textAlign={"center"}
+          w={"80%"}
+          fontWeight={300}
+          fontSize="sm"
+          color="black"
+          mb={8}
+        >
+          Upgrade from the trial plan to find more details about these
+          vulnerabilities.
+        </Text>
       </Flex>
     </Flex>
   );
@@ -98,17 +204,19 @@ const DummyIssue: React.FC<{
   severity: string;
 }> = ({ severity, filesCount, issueTitle }) => {
   return (
-    <Button my={1} py={6}>
+    <>
       <Flex
         sx={{
           w: "100%",
-          my: 2,
+          my: 3,
+
           alignItems: "center",
           justifyContent: "space-between",
+          backgroundColor: "gray.100",
         }}
+        h={10}
       >
         <Flex sx={{ alignItems: "center" }}>
-          <SeverityIcon variant={severity} />
           <Text
             sx={{
               ml: 3,
@@ -117,31 +225,34 @@ const DummyIssue: React.FC<{
               maxW: 250,
               fontSize: "sm",
             }}
+            w={"100%"}
             isTruncated
           >
             {issueTitle}
           </Text>
         </Flex>
-        <Text
-          sx={{
-            mr: 3,
-            fontSize: "sm",
-            fontWeight: 600,
-            color: "subtle",
-          }}
-        >
-          {filesCount} files
-        </Text>
+        <HStack>
+          <Text
+            sx={{
+              mr: 3,
+              fontSize: "sm",
+              fontWeight: 600,
+              color: "subtle",
+            }}
+          >
+            {filesCount} files
+          </Text>{" "}
+          <Icon
+            as={AiOutlineCaretRight}
+            mr={2}
+            color="subtle"
+            fontSize="14px"
+            transition="transform 0.2s"
+            transform="rotate(90deg)"
+          />
+        </HStack>
       </Flex>
-      <Icon
-        as={AiOutlineCaretRight}
-        mr={2}
-        color="subtle"
-        fontSize="14px"
-        transition="transform 0.2s"
-        transform="rotate(90deg)"
-      />
-    </Button>
+    </>
   );
 };
 
@@ -159,7 +270,7 @@ const DummyCode: React.FC = () => {
         <Flex
           sx={{
             w: "100%",
-            justifyContent: "space-between",
+            justifyContent: "flex-start",
             alignItems: "center",
           }}
         >
@@ -173,16 +284,12 @@ const DummyCode: React.FC = () => {
           >
             src/test/resources/rules/SOLIDITY_TRANSFER_IN_LOOP
           </Text>
-          <Button size="sm">
-            <Icon as={AiFillGithub} color="subtle" mr={2} />
-            Create issue
-          </Button>
         </Flex>
 
         <pre>
           <CodeBlock
             customStyle={{
-              height: "50vh",
+              height: "55vh",
               fontSize: "14px",
               overflow: "scroll",
             }}
@@ -191,6 +298,61 @@ const DummyCode: React.FC = () => {
             text={dummyCode}
           />
         </pre>
+      </Box>
+    </Box>
+  );
+};
+
+const DummyIssueDescp: React.FC = () => {
+  return (
+    <Box w="100%">
+      <Box
+        sx={{
+          borderRadius: 15,
+          bg: "bg.subtle",
+          p: 4,
+          my: 2,
+        }}
+        h={"20vh"}
+        overflow={"scroll"}
+      >
+        <Flex
+          sx={{
+            w: "100%",
+            justifyContent: "flex-start",
+            alignItems: "center",
+          }}
+          mb={5}
+          mx={10}
+          flexDir="row"
+        >
+          <Text fontSize="md" color={"gray.600"} fontWeight={"bold"}>
+            Vulnerability Description
+          </Text>
+
+          <Text ml={10} fontSize="md" color={"gray.600"} fontWeight={"bold"}>
+            Remediation
+          </Text>
+        </Flex>
+        <Text
+          px={5}
+          py={2}
+          mb={3}
+          fontWeight="300"
+          fontSize={14}
+          borderRadius={12}
+          color={"gray.600"}
+          bg={"gray.100"}
+          width="fit-content"
+        >
+          Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
+          eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad
+          minim veniam, quis nostrud exercitation ullamco laboris nisi ut
+          aliquip ex ea commodo consequat. Duis aute irure dolor in
+          reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla
+          pariatur. Excepteur sint occaecat cupidatat non proident, sunt in
+          culpa qui officia deserunt mollit anim id est laborum.
+        </Text>
       </Box>
     </Box>
   );

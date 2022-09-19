@@ -73,5 +73,40 @@ export const dummyCode = `
               i++;
           }
       }
+
+      function goodPrictice(address token) {
+        uint l = users.length;
+        uint i;
+        while(i < l) {
+            ERC20Token(token).transfer(users[i], balances[users[i]]);
+            i++;
+        }
+
+        function goodPrictice(address token) {
+          uint l = users.length;
+          uint i;
+          while(i < l) {
+              ERC20Token(token).transfer(users[i], balances[users[i]]);
+              i++;
+          }
+
+          function goodPrictice(address token) {
+            uint l = users.length;
+            uint i;
+            while(i < l) {
+                ERC20Token(token).transfer(users[i], balances[users[i]]);
+                i++;
+            }
+
+            function goodPrictice(address token) {
+              uint l = users.length;
+              uint i;
+              while(i < l) {
+                  ERC20Token(token).transfer(users[i], balances[users[i]]);
+                  i++;
+              }
+    }
+
+
   }
 `;

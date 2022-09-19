@@ -566,7 +566,7 @@ export default function LandingPage() {
                     <Image
                       onClick={() => {
                         window.open(
-                          "https://www.linkedin.com/in/itsmeroy2012/",
+                          "https://www.linkedin.com/in/ayush-tripathi51/",
                           "_blank"
                         );
                       }}

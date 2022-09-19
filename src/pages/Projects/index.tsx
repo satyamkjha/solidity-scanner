@@ -45,7 +45,8 @@ const Projects: React.FC = () => {
       if (
         data &&
         data.projects.some(
-          ({ _latest_scan }) => _latest_scan.scan_status === "scanning"
+          ({ _latest_scan }) =>
+            _latest_scan.multi_file_scan_status === "scanning"
         )
       ) {
         intervalId = setInterval(async () => {
@@ -53,7 +54,8 @@ const Projects: React.FC = () => {
           if (
             data &&
             data.projects.every(
-              ({ _latest_scan }) => _latest_scan.scan_status === "scan_done"
+              ({ _latest_scan }) =>
+                _latest_scan.multi_file_scan_status === "scan_done"
             )
           ) {
             clearInterval(intervalId);
@@ -165,7 +167,8 @@ const ProjectCard: React.FC<{ project: Project }> = ({ project }) => {
     _latest_scan,
   } = project;
 
-  const { scan_summary, scan_status, scan_message } = _latest_scan;
+  const { multi_file_scan_summary, multi_file_scan_status, scan_message } =
+    _latest_scan;
 
   const onClose = () => setIsOpen(false);
 
@@ -182,14 +185,18 @@ const ProjectCard: React.FC<{ project: Project }> = ({ project }) => {
 
   return (
     <>
-      {scan_status === "scan_done" || scan_status === "scanning" ? (
+      {multi_file_scan_status === "scan_done" ||
+      multi_file_scan_status === "scanning" ? (
         <Flex
           onClick={() => {
-            if (scan_status === "scan_done")
+            if (multi_file_scan_status === "scan_done")
               history.push(`/projects/${project_id}/${_latest_scan.scan_id}`);
           }}
           sx={{
-            cursor: scan_status === "scan_done" ? "pointer" : "not-allowed",
+            cursor:
+              multi_file_scan_status === "scan_done"
+                ? "pointer"
+                : "not-allowed",
             flexDir: "column",
             justifyContent: "space-between",
             w: "320px",
@@ -206,7 +213,7 @@ const ProjectCard: React.FC<{ project: Project }> = ({ project }) => {
             },
           }}
         >
-          {scan_status === "scan_done" ? (
+          {multi_file_scan_status === "scan_done" ? (
             <>
               <Flex
                 w="100%"
@@ -244,18 +251,29 @@ const ProjectCard: React.FC<{ project: Project }> = ({ project }) => {
                 )}
               </Flex>
               <Flex w="100%" alignItems="center" justifyContent="flex-start">
-                <Score score={scan_summary?.score || "0"} />
+                <Score score={multi_file_scan_summary?.score || "0"} />
               </Flex>
               <VulnerabilityDistribution
                 critical={
-                  scan_summary?.issue_severity_distribution?.critical || 0
+                  multi_file_scan_summary?.issue_severity_distribution
+                    ?.critical || 0
                 }
-                high={scan_summary?.issue_severity_distribution?.high || 0}
-                medium={scan_summary?.issue_severity_distribution?.medium || 0}
-                low={scan_summary?.issue_severity_distribution?.low || 0}
+                high={
+                  multi_file_scan_summary?.issue_severity_distribution?.high ||
+                  0
+                }
+                medium={
+                  multi_file_scan_summary?.issue_severity_distribution
+                    ?.medium || 0
+                }
+                low={
+                  multi_file_scan_summary?.issue_severity_distribution?.low || 0
+                }
                 informational={
-                  scan_summary?.issue_severity_distribution?.informational || 0
+                  multi_file_scan_summary?.issue_severity_distribution
+                    ?.informational || 0
                 }
+                gas={multi_file_scan_summary?.issue_severity_distribution?.gas}
               />
             </>
           ) : (

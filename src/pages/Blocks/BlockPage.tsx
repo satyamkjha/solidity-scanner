@@ -38,7 +38,7 @@ import {
   border,
 } from "@chakra-ui/react";
 import Overview from "components/overview";
-import Result from "components/result";
+import Result, { MultifileResult } from "components/result";
 import TrialWall from "components/trialWall";
 import { AddIcon, LockIcon, MinusIcon } from "@chakra-ui/icons";
 import { useScan } from "hooks/useScan";
@@ -61,6 +61,7 @@ import { useReports } from "hooks/useReports";
 import { useReport } from "hooks/useReport";
 import { usePricingPlans } from "hooks/usePricingPlans";
 import { sentenceCapitalize } from "helpers/helperFunction";
+import { ScanErrorIcon } from "components/icons";
 
 const BlockPage: React.FC = () => {
   const { scanId } = useParams<{ scanId: string }>();
@@ -114,14 +115,16 @@ const BlockPage: React.FC = () => {
     };
   }, [refetch]);
 
-  const generateReport = async (projectId: string) => {
+  const generateReport = async (scanId: string, projectId: string) => {
     setReportingStatus("generating_report");
-    const { data } = await API.post("/api-generate-report-block/", {
+    console.log(projectId, scanId);
+    const { data } = await API.post("/api-generate-report/", {
       project_id: projectId,
+      scan_id: scanId,
     });
+
     if (data.success) {
       setInterval(async () => {
-        setReportingStatus("report_generated");
         await refetch();
       }, 5000);
     }
@@ -167,9 +170,8 @@ const BlockPage: React.FC = () => {
 
   const getReportData = async (project_id: string, report_id: string) => {
     const reportResponse = await API.post<{ summary_report: Report }>(
-      "/api-get-report/",
+      "/api-get-report-beta/",
       {
-        project_type: "block",
         project_id,
         report_id,
       }
@@ -313,14 +315,21 @@ const BlockPage: React.FC = () => {
                                     .report)
                               }
                               onClick={() => {
-                                if (reportingStatus === "report_generated") {
+                                if (
+                                  reportingStatus === "not_generated" ||
+                                  scanData.scan_report
+                                    .report_regeneration_enabled
+                                ) {
+                                  generateReport(
+                                    scanData.scan_report.scan_id,
+                                    scanData.scan_report.project_id
+                                  );
+                                } else if (
+                                  reportingStatus === "report_generated"
+                                ) {
                                   window.open(
                                     `http://${document.location.host}/report/block/${scanData.scan_report.project_id}/${scanData.scan_report.latest_report_id}`,
                                     "_blank"
-                                  );
-                                } else {
-                                  generateReport(
-                                    scanData.scan_report.project_id
                                   );
                                 }
                               }}
@@ -333,10 +342,13 @@ const BlockPage: React.FC = () => {
                                   .report && (
                                   <LockIcon color={"accent"} size="xs" mr={3} />
                                 )}
-                              {reportingStatus === "report_generated"
-                                ? "View Report"
-                                : reportingStatus === "generating_report"
+                              {reportingStatus === "generating_report"
                                 ? "Generating report..."
+                                : scanData.scan_report
+                                    .report_regeneration_enabled
+                                ? "Re-generate Report"
+                                : reportingStatus === "report_generated"
+                                ? "View Report"
                                 : "Generate Report"}
                             </Button>
                           )}
@@ -532,28 +544,52 @@ const BlockPage: React.FC = () => {
                   <Tab mx={2}>Overview</Tab>
                   <Tab mx={2}>Detailed Result</Tab>
                   <Tab mx={2}>Published Report</Tab>
-                  {/* <Tab mx={2}>Advanced Scan(Beta)</Tab> */}
                 </TabList>
                 <TabPanels>
                   <TabPanel>
-                    {scanData.scan_report.scan_summary && (
+                    {(scanData.scan_report.multi_file_scan_summary ||
+                      scanData.scan_report.scan_summary) && (
                       <Overview scanData={scanData.scan_report} />
                     )}
                   </TabPanel>
                   <TabPanel>
-                    {
-                      // profile.current_package === "trial" ? (
-                      //   <TrialWall />
-                      // ) :
-                      scanData.scan_report.scan_details &&
-                        scanData.scan_report.scan_summary && (
-                          <Result
-                            scanSummary={scanData.scan_report.scan_summary}
-                            scanDetails={scanData.scan_report.scan_details}
-                            type="block"
-                          />
-                        )
-                    }
+                    {scanData.scan_report.multi_file_scan_status ===
+                      "scan_done" &&
+                    scanData.scan_report.multi_file_scan_details &&
+                    scanData.scan_report.multi_file_scan_summary ? (
+                      <MultifileResult
+                        type={"block"}
+                        is_latest_scan={scanData.is_latest_scan}
+                        scanSummary={
+                          scanData.scan_report.multi_file_scan_summary
+                        }
+                        scanDetails={
+                          scanData.scan_report.multi_file_scan_details
+                        }
+                      />
+                    ) : scanData.scan_report.scan_details &&
+                      scanData.scan_report.scan_summary ? (
+                      <Result
+                        scanSummary={scanData.scan_report.scan_summary}
+                        scanDetails={scanData.scan_report.scan_details}
+                        type="block"
+                      />
+                    ) : (
+                      <Flex
+                        w="97%"
+                        m={4}
+                        borderRadius="20px"
+                        bgColor="high-subtle"
+                        p={4}
+                      >
+                        <ScanErrorIcon size={28} />
+                        <Text fontSize={"xs"} color="high" ml={4}>
+                          {scanData.scan_report.multi_file_scan_status
+                            ? scanData.scan_report.multi_file_scan_status
+                            : "Please do Rescan to carry out a Multifile Scan "}
+                        </Text>
+                      </Flex>
+                    )}
                   </TabPanel>
                   <TabPanel>
                     {scanData.scan_report.project_id && (

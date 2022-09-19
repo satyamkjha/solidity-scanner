@@ -10,6 +10,7 @@ import {
 import FileDownload from "js-file-download";
 import {
   Flex,
+  keyframes,
   Box,
   Text,
   Link,
@@ -54,7 +55,7 @@ import {
   AiOutlineProject,
 } from "react-icons/ai";
 import Overview from "components/overview";
-import Result from "components/result";
+import Result, { MultifileResult } from "components/result";
 import AdvancedScan from "components/advancedScan";
 import {
   RescanIcon,
@@ -93,6 +94,7 @@ import { useReports } from "hooks/useReports";
 import { LockIcon } from "@chakra-ui/icons";
 import { profile } from "console";
 import { usePricingPlans } from "hooks/usePricingPlans";
+import { motion } from "framer-motion";
 
 export const ProjectPage: React.FC = () => {
   const { projectId } = useParams<{ projectId: string }>();
@@ -249,14 +251,13 @@ const ScanDetails: React.FC<{ scansRemaining: number; scans: ScanMeta[] }> = ({
   const onClose = () => setIsOpen(false);
 
   const generateReport = async () => {
-    console.log("askdhakjsdh");
     setReportingStatus("generating_report");
     const { data } = await API.post("/api-generate-report/", {
       project_id: projectId,
+      scan_id: scanId,
     });
     if (data.success) {
       setInterval(async () => {
-        setReportingStatus("report_generated");
         await refetch();
       }, 5000);
     }
@@ -271,7 +272,7 @@ const ScanDetails: React.FC<{ scansRemaining: number; scans: ScanMeta[] }> = ({
     setRescanLoading(false);
     queryClient.invalidateQueries(["scans", projectId]);
     onClose();
-    history.push(`/projects/${projectId}/${data.scan_id}`);
+    history.push(`/projects/`);
   };
 
   const scan_name =
@@ -295,9 +296,8 @@ const ScanDetails: React.FC<{ scansRemaining: number; scans: ScanMeta[] }> = ({
 
   const getReportData = async (project_id: string, report_id: string) => {
     const reportResponse = await API.post<{ summary_report: Report }>(
-      "/api-get-report/",
+      "/api-get-report-beta/",
       {
-        project_type: "project",
         project_id,
         report_id,
       }
@@ -458,8 +458,10 @@ const ScanDetails: React.FC<{ scansRemaining: number; scans: ScanMeta[] }> = ({
                           !plans.monthly[profile.current_package].report)
                       }
                       onClick={() => {
-                        console.log(reportingStatus);
-                        if (reportingStatus === "not_generated") {
+                        if (
+                          reportingStatus === "not_generated" ||
+                          scanData.scan_report.report_regeneration_enabled
+                        ) {
                           generateReport();
                         } else if (reportingStatus === "report_generated") {
                           window.open(
@@ -476,16 +478,19 @@ const ScanDetails: React.FC<{ scansRemaining: number; scans: ScanMeta[] }> = ({
                         !plans.monthly[profile.current_package].report && (
                           <LockIcon color={"accent"} size="xs" mr={3} />
                         )}
-                      {reportingStatus === "report_generated"
-                        ? "View Report"
-                        : reportingStatus === "generating_report"
+                      {reportingStatus === "generating_report"
                         ? "Generating report..."
+                        : scanData.scan_report.report_regeneration_enabled
+                        ? "Re-generate Report"
+                        : reportingStatus === "report_generated"
+                        ? "View Report"
                         : "Generate Report"}
                     </Button>
                   )}
                 </HStack>
               </Flex>
-              {scanData.scan_report.scan_status === "scanning" ? (
+              {scanData.scan_report.scan_status === "scanning" ||
+              scanData.scan_report.scan_status === "initialised" ? (
                 <Flex
                   w="100%"
                   h="60vh"
@@ -536,19 +541,34 @@ const ScanDetails: React.FC<{ scansRemaining: number; scans: ScanMeta[] }> = ({
                     <Tab mx={2}>Detailed Result</Tab>
                     <Tab mx={2}>Scan History</Tab>
                     <Tab mx={2}>Published Reports</Tab>
-                    {/* <Tab mx={2}>Advanced Scan(Beta)</Tab> */}
                   </TabList>
                   <TabPanels>
                     <TabPanel>
-                      <Overview
-                        scansRemaining={scansRemaining}
-                        scanData={scanData.scan_report}
-                      />
+                      {(scanData.scan_report.multi_file_scan_summary ||
+                        scanData.scan_report.scan_summary) && (
+                        <Overview
+                          scansRemaining={scansRemaining}
+                          scanData={scanData.scan_report}
+                        />
+                      )}
                     </TabPanel>
                     <TabPanel>
-                      {scanData.scan_report.scan_status === "scan_done" &&
-                      scanData.scan_report.scan_details &&
-                      scanData.scan_report.scan_summary ? (
+                      {scanData.scan_report.multi_file_scan_status ===
+                        "scan_done" &&
+                      scanData.scan_report.multi_file_scan_details &&
+                      scanData.scan_report.multi_file_scan_summary ? (
+                        <MultifileResult
+                          type="project"
+                          is_latest_scan={scanData.is_latest_scan}
+                          scanSummary={
+                            scanData.scan_report.multi_file_scan_summary
+                          }
+                          scanDetails={
+                            scanData.scan_report.multi_file_scan_details
+                          }
+                        />
+                      ) : scanData.scan_report.scan_details &&
+                        scanData.scan_report.scan_summary ? (
                         <Result
                           scanSummary={scanData.scan_report.scan_summary}
                           scanDetails={scanData.scan_report.scan_details}
@@ -564,9 +584,9 @@ const ScanDetails: React.FC<{ scansRemaining: number; scans: ScanMeta[] }> = ({
                         >
                           <ScanErrorIcon size={28} />
                           <Text fontSize={"xs"} color="high" ml={4}>
-                            {scanData.scan_report.scan_message
-                              ? scanData.scan_report.scan_message
-                              : scanData.scan_report.scan_status}
+                            {scanData.scan_report.multi_file_scan_status
+                              ? scanData.scan_report.multi_file_scan_status
+                              : "Please do Rescan to carry out a Multifile Scan "}
                           </Text>
                         </Flex>
                       )}
@@ -578,6 +598,7 @@ const ScanDetails: React.FC<{ scansRemaining: number; scans: ScanMeta[] }> = ({
                       <PublishedReports />
                     </TabPanel>
                   </TabPanels>
+                  <></>
                 </Tabs>
               )}
             </>
@@ -1134,10 +1155,9 @@ const ScanBlock: React.FC<{
 }> = ({ scan, isTrial, setTabIndex }) => {
   const [isDownloadLoading, setDownloadLoading] = useState(false);
   const history = useHistory();
-  const { projectId } = useParams<{ projectId: string }>();
-
-  const { data } = useScan(scan.scan_id);
-
+  const { projectId, scanId } =
+    useParams<{ projectId: string; scanId: string }>();
+  const { data } = useScan(scanId);
   return (
     <Flex
       alignItems="center"
@@ -1209,12 +1229,14 @@ const ScanBlock: React.FC<{
             // history.push(`/report/${scan.project_id}/${data?.scan_report.latest_report_id}`)
           }}
         >
+          {scan.reporting_status === "generating_report" && (
+            <Spinner color="#806CCF" size="sm" mr={2} />
+          )}
           {scan.reporting_status === "report_generated"
             ? "View Report"
+            : scan.reporting_status === "generating_report"
+            ? "Generating Report"
             : "Report Not Generated"}
-          {scan.reporting_status === "generating_report" && (
-            <Spinner color="#806CCF" size="sm" ml={2} />
-          )}
         </Button>
       )}
     </Flex>

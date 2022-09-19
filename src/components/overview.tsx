@@ -22,7 +22,8 @@ const pieData = (
   high: number,
   medium: number,
   low: number,
-  informational: number
+  informational: number,
+  gas: number
 ) => [
   {
     id: "critical",
@@ -54,6 +55,12 @@ const pieData = (
     value: informational,
     color: "#A0AEC0",
   },
+  {
+    id: "gas",
+    label: "Gas",
+    value: gas,
+    color: "#F795B4",
+  },
 ];
 
 const Overview: React.FC<{
@@ -62,7 +69,163 @@ const Overview: React.FC<{
 }> = ({ scanData, scansRemaining }) => {
   return (
     <>
-      {scanData.scan_status === "scan_done" && scanData.scan_summary ? (
+      {scanData.multi_file_scan_status === "scan_done" &&
+      scanData.multi_file_scan_summary ? (
+        <Flex w="100%" sx={{ flexDir: ["column", "column", "row"] }}>
+          <VStack w={["100%", "100%", "50%"]} mb={[8, 8, 0]}>
+            <Box
+              w={["100%", "100%", "70%"]}
+              display="flex"
+              justifyContent="center"
+              alignItems={"center"}
+              h="300px"
+            >
+              {scanData.multi_file_scan_summary.issues_count === 0 ? (
+                <Image src="/nobug.svg" alt="No Bugs Found" />
+              ) : (
+                <PieChart
+                  data={pieData(
+                    scanData.multi_file_scan_summary.issue_severity_distribution
+                      .critical,
+                    scanData.multi_file_scan_summary.issue_severity_distribution
+                      .high,
+                    scanData.multi_file_scan_summary.issue_severity_distribution
+                      .medium,
+                    scanData.multi_file_scan_summary.issue_severity_distribution
+                      .low,
+                    scanData.multi_file_scan_summary.issue_severity_distribution
+                      .informational,
+                    scanData.multi_file_scan_summary.issue_severity_distribution
+                      .gas
+                  )}
+                />
+              )}
+            </Box>
+            <Box w={["70%", "70%", "60%"]}>
+              <VulnerabilityDistribution
+                critical={
+                  scanData.multi_file_scan_summary.issue_severity_distribution
+                    .critical
+                }
+                high={
+                  scanData.multi_file_scan_summary.issue_severity_distribution
+                    .high
+                }
+                medium={
+                  scanData.multi_file_scan_summary.issue_severity_distribution
+                    .medium
+                }
+                low={
+                  scanData.multi_file_scan_summary.issue_severity_distribution
+                    .low
+                }
+                informational={
+                  scanData.multi_file_scan_summary.issue_severity_distribution
+                    .informational
+                }
+                gas={
+                  scanData.multi_file_scan_summary.issue_severity_distribution
+                    .gas
+                }
+              />
+            </Box>
+          </VStack>
+          <VStack
+            w={["100%", "100%", "50%"]}
+            alignItems="flex-start"
+            p={8}
+            spacing={5}
+          >
+            <HStack w="100%" justifyContent="space-between">
+              {scansRemaining && (
+                <Flex px={2}>
+                  <LogoIcon size={40} />
+                  <Box ml={2} mt="-4px">
+                    <Text>
+                      {scansRemaining.toLocaleString("en-US", {
+                        minimumIntegerDigits: 2,
+                        useGrouping: false,
+                      })}
+                    </Text>
+                    <Text fontSize="12px" color="subtle">
+                      Scans left
+                    </Text>
+                  </Box>
+                </Flex>
+              )}
+              <CircularProgress
+                value={
+                  (parseInt(scanData.multi_file_scan_summary.score, 10) * 100) /
+                  5
+                }
+                color="accent"
+                thickness="4px"
+                size="65px"
+                capIsRound
+              >
+                <CircularProgressLabel
+                  sx={{ display: "flex", justifyContent: "center" }}
+                >
+                  <Box>
+                    <Text fontSize="14px" fontWeight={700} color="accent">
+                      {scanData.multi_file_scan_summary.score}
+                    </Text>
+                    <Text fontSize="11px" color="subtle" mt="-4px">
+                      Score
+                    </Text>
+                  </Box>
+                </CircularProgressLabel>
+              </CircularProgress>
+            </HStack>
+            <Box sx={{ w: "100%", borderRadius: 15, bg: "bg.subtle", p: 4 }}>
+              <Text sx={{ fontSize: "sm", letterSpacing: "0.7px" }}>
+                SCAN STATISTICS
+              </Text>
+            </Box>
+
+            <VStack w="100%" px={4} spacing={8} fontSize="sm">
+              <HStack w="100%" justifyContent="space-between">
+                <Text>Status</Text>
+                <Text
+                  sx={{
+                    color: "green.500",
+                    bg: "green.50",
+                    px: 3,
+                    py: 1,
+                    borderRadius: 20,
+                  }}
+                >
+                  Completed
+                </Text>
+              </HStack>
+              <HStack w="100%" justifyContent="space-between">
+                <Text>Score</Text>
+                <Text color="subtle">
+                  {scanData.multi_file_scan_summary.score}
+                </Text>
+              </HStack>
+              <HStack w="100%" justifyContent="space-between">
+                <Text>Issue Count</Text>
+                <Text color="subtle">
+                  {scanData.multi_file_scan_summary.issues_count}
+                </Text>
+              </HStack>
+              <HStack w="100%" justifyContent="space-between">
+                <Text>Duration</Text>
+                <Text color="subtle">
+                  {scanData.multi_file_scan_summary.scan_time_taken}
+                </Text>
+              </HStack>
+              <HStack w="100%" justifyContent="space-between">
+                <Text>Lines of code</Text>
+                <Text color="subtle">
+                  {scanData.multi_file_scan_summary.lines_analyzed_count}
+                </Text>
+              </HStack>
+            </VStack>
+          </VStack>
+        </Flex>
+      ) : scanData.scan_status === "scan_done" && scanData.scan_summary ? (
         <Flex w="100%" sx={{ flexDir: ["column", "column", "row"] }}>
           <VStack w={["100%", "100%", "50%"]} mb={[8, 8, 0]}>
             <Box
@@ -82,7 +245,8 @@ const Overview: React.FC<{
                     scanData.scan_summary.issue_severity_distribution.medium,
                     scanData.scan_summary.issue_severity_distribution.low,
                     scanData.scan_summary.issue_severity_distribution
-                      .informational
+                      .informational,
+                    scanData.scan_summary.issue_severity_distribution.gas
                   )}
                 />
               )}
@@ -101,6 +265,7 @@ const Overview: React.FC<{
                   scanData.scan_summary.issue_severity_distribution
                     .informational
                 }
+                gas={scanData.scan_summary.issue_severity_distribution.gas}
               />
             </Box>
           </VStack>
@@ -194,13 +359,27 @@ const Overview: React.FC<{
         </Flex>
       ) : (
         <Flex w="100%" sx={{ flexDir: ["column", "column", "row"] }}>
-          <VStack w={["100%", "100%", "50%"]} mb={[8, 8, 0]}>
-            <Box w={["100%", "100%", "70%"]} h="300px">
+          <VStack w={["100%", "100%", "50%"]} spacing={5} mb={[8, 8, 0]}>
+            <Box w={["100%", "100%", "70%"]} h="200px">
               <ErrorResponsivePie />
             </Box>
-            <Box w={["70%", "70%", "60%"]}>
+            <Box w={["70%", "70%", "60%"]} sx={{ marginBottom: 10 }}>
               <ErrorVulnerabilityDistribution />
             </Box>
+            <Flex
+              w="100%"
+              m={5}
+              borderRadius="20px"
+              bgColor="high-subtle"
+              p={5}
+            >
+              <ScanErrorIcon size={28} />
+              <Text fontSize={"xs"} color="high" ml={4}>
+                {scanData.scan_message
+                  ? scanData.scan_message
+                  : scanData.scan_status}
+              </Text>
+            </Flex>
           </VStack>
           <VStack
             w={["100%", "100%", "50%"]}
@@ -208,38 +387,23 @@ const Overview: React.FC<{
             p={8}
             spacing={5}
           >
-            <HStack w="100%" justifyContent="space-between">
-              {scansRemaining && (
-                <Flex px={2}>
-                  <LogoIcon size={40} />
-                  <Box ml={2} mt="-4px">
-                    <Text>
-                      {scansRemaining.toLocaleString("en-US", {
-                        minimumIntegerDigits: 2,
-                        useGrouping: false,
-                      })}
-                    </Text>
-                    <Text fontSize="12px" color="subtle">
-                      Scans left
-                    </Text>
-                  </Box>
-                </Flex>
-              )}
-              <Flex
-                w="97%"
-                m={4}
-                borderRadius="20px"
-                bgColor="high-subtle"
-                p={4}
-              >
-                <ScanErrorIcon size={28} />
-                <Text fontSize={"xs"} color="high" ml={4}>
-                  {scanData.scan_message
-                    ? scanData.scan_message
-                    : scanData.scan_status}
-                </Text>
+            {scansRemaining && (
+              <Flex px={2}>
+                <LogoIcon size={40} />
+                <Box ml={2} mt="-4px">
+                  <Text>
+                    {scansRemaining.toLocaleString("en-US", {
+                      minimumIntegerDigits: 2,
+                      useGrouping: false,
+                    })}
+                  </Text>
+                  <Text fontSize="12px" color="subtle">
+                    Scans left
+                  </Text>
+                </Box>
               </Flex>
-            </HStack>
+            )}
+
             <Box sx={{ w: "100%", borderRadius: 15, bg: "bg.subtle", p: 4 }}>
               <Text sx={{ fontSize: "sm", letterSpacing: "0.7px" }}>
                 SCAN STATISTICS
