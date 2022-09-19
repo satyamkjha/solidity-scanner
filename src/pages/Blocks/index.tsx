@@ -140,12 +140,15 @@ const BlockCard: React.FC<{ scan: Scan }> = ({ scan }) => {
     contract_address,
     contractname,
     contract_platform,
+    multi_file_scan_status,
+    multi_file_scan_summary, 
+    multi_file_scan_details
   } = scan;
   return (
-    <Link to={scan_status === "scan_done" ? `/blocks/${scan_id}` : "/blocks"}>
+    <Link to={multi_file_scan_status === "scan_done" ? `/blocks/${scan_id}` : "/blocks"}>
       <Flex
         sx={{
-          cursor: scan_status === "scan_done" ? "pointer" : "not-allowed",
+          cursor: multi_file_scan_status === "scan_done" ? "pointer" : "not-allowed",
           flexDir: "column",
           justifyContent: "space-between",
           w: "320px",
@@ -170,7 +173,7 @@ const BlockCard: React.FC<{ scan: Scan }> = ({ scan }) => {
             Last scanned {timeSince(new Date(_updated))}
           </Text>
         </Box>
-        {scan_status === "scan_done" ? (
+        {multi_file_scan_status === "scan_done" ? (
           <Flex width={"100%"} flexDir="column" height="fit-content" p={5}>
             <Flex
               width={"100%"}
@@ -203,15 +206,15 @@ const BlockCard: React.FC<{ scan: Scan }> = ({ scan }) => {
             </Flex>
             <VulnerabilityDistribution
               critical={
-                scan_summary?.issue_severity_distribution?.critical || 0
+                multi_file_scan_summary?.issue_severity_distribution?.critical || 0
               }
-              high={scan_summary?.issue_severity_distribution?.high || 0}
-              medium={scan_summary?.issue_severity_distribution?.medium || 0}
-              low={scan_summary?.issue_severity_distribution?.low || 0}
+              high={multi_file_scan_summary?.issue_severity_distribution?.high || 0}
+              medium={multi_file_scan_summary?.issue_severity_distribution?.medium || 0}
+              low={multi_file_scan_summary?.issue_severity_distribution?.low || 0}
               informational={
-                scan_summary?.issue_severity_distribution?.informational || 0
+                multi_file_scan_summary?.issue_severity_distribution?.informational || 0
               }
-              gas={scan_summary?.issue_severity_distribution.gas || 0}
+              gas={multi_file_scan_summary?.issue_severity_distribution.gas || 0}
             />
           </Flex>
         ) : scan_status === "download_failed" ||
