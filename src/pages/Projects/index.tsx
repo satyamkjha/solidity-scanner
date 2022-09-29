@@ -185,12 +185,12 @@ const ProjectCard: React.FC<{ project: Project }> = ({ project }) => {
 
   return (
     <>
-      {(multi_file_scan_status === "scan_done" ||
-      multi_file_scan_status === "scanning") ? (
+      {multi_file_scan_status === "scan_done" ||
+      multi_file_scan_status === "scanning" ? (
         <Flex
           onClick={() => {
-            console.log(multi_file_scan_status)
-            if (multi_file_scan_status === "scan_done"){
+            console.log(multi_file_scan_status);
+            if (multi_file_scan_status === "scan_done") {
               history.push(`/projects/${project_id}/${_latest_scan.scan_id}`);
             }
           }}
