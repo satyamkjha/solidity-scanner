@@ -253,7 +253,7 @@ const ScanDetails: React.FC<{ scansRemaining: number; scans: ScanMeta[] }> = ({
     const refetchTillScanComplete = () => {
         intervalId = setInterval(async () => {
           await refetch(); 
-        }, 3000);
+        }, 5000);
       }
     refetchTillScanComplete();
     return () => {
