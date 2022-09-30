@@ -31,12 +31,10 @@
         // if yes, replace the match with the argument
         let fString = this;
         for (const keys in options) {
-          console.log(keys, options[keys]);
           fString = fString.replaceAll(
             "${" + keys + "}",
             "<code>" + options[keys] + "</code>"
           );
-          console.log(fString);
         }
         return fString;
       };

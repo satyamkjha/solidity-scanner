@@ -1,4 +1,11 @@
-import { useState, Dispatch, SetStateAction, useEffect } from "react";
+import {
+  useState,
+  Dispatch,
+  SetStateAction,
+  useEffect,
+  createRef,
+  useRef,
+} from "react";
 import { useHistory, useParams } from "react-router-dom";
 import styled from "@emotion/styled";
 import {
@@ -59,6 +66,7 @@ import React from "react";
 import { access } from "fs";
 import { sentenceCapitalize } from "helpers/helperFunction";
 import TrialWallCode, { TrialWall, TrialWallIssue } from "./trialWall";
+import useDynamicRefs from "use-dynamic-refs";
 
 type FileState = {
   issue_id: string;
@@ -536,7 +544,6 @@ export const MultifileResult: React.FC<{
       }
 
       setIssues((prevState) => {
-        console.log(issues);
         const newState = prevState.map((obj) => {
           if (obj.issue_id === files.issue_id) {
             const newList = obj.metric_wise_aggregated_findings.map((item) => {
@@ -582,7 +589,7 @@ export const MultifileResult: React.FC<{
           </Box>
           {/* <Score score={score} /> */}
         </Flex>
-        <Box w="100%" minH="50vh">
+        <Box w="100%" h={"100vh"} overflowY="scroll">
           <MultifileIssues
             issues={issues}
             files={files}
@@ -670,7 +677,7 @@ export const MultifileResult: React.FC<{
         <Box
           sx={{
             w: "100%",
-            h: "100%",
+
             position: "sticky",
             top: 8,
           }}
@@ -968,8 +975,6 @@ const FileDataCont: React.FC<FileDataContProps> = ({ file, type }) => {
   });
   let highlightString = highlightArray.join(",");
 
-  console.log(highlightString);
-
   const { data, isLoading } = useFileContent(scan_id, file_path, type);
 
   return (
@@ -1009,53 +1014,131 @@ const FileDataCont: React.FC<FileDataContProps> = ({ file, type }) => {
 const FileDataContTest: React.FC<FileDataContProps> = ({ file, type }) => {
   const { scanId: scan_id } = useParams<{ scanId: string }>();
   const { file_path, line_nos_end, line_nos_start } = file;
-
-  console.log(line_nos_end, line_nos_start);
-
-  let highlightArray: string[] = [];
-
-  line_nos_start.map((number, index) => {
-    if (number.toString().length === line_nos_end[index].toString().length) {
-      highlightArray.push(`${number}-${line_nos_end[index]}`);
-    } else {
-      highlightArray.push(
-        `${number}-${Math.pow(10, number.toString().length) - 1}`
-      );
-      highlightArray.push(
-        `${Math.pow(10, number.toString().length)}-${line_nos_end[index]}`
-      );
-    }
-  });
-  let highlightString = highlightArray.join(",");
-
-  let codeObjArray = [];
-
-  line_nos_start.forEach((number, index) => {
-    codeObjArray.push({
-      lineStart: number,
-      lineEnd: line_nos_end[index],
-      code: "",
-    });
-  });
-
   const { data, isLoading } = useFileContent(scan_id, file_path, type);
+
+  const [fileContent, setFileContent] = useState<string[] | undefined>();
+
+  useEffect(() => {
+    if (data) {
+      let dataArray = data.file_contents.split("\n");
+      setFileContent([...dataArray]);
+    }
+  }, [data]);
 
   return (
     <>
-      {isLoading && (
+      {isLoading ? (
         <Flex
           sx={{
             w: "100%",
             justifyContent: "center",
             alignItems: "center",
-            h: "35vh",
+            h: "50vh",
+            mt: 10,
           }}
         >
           <Spinner />
         </Flex>
+      ) : (
+        fileContent && (
+          <CodeExplorer
+            file_content={fileContent}
+            line_nos_start={line_nos_start}
+            line_nos_end={line_nos_end}
+          />
+        )
       )}
-      {data && <pre>{data.file_contents}</pre>}
-    </>
+̀    </>
+  );
+};
+
+const CodeExplorer: React.FC<{
+  file_content: string[];
+  line_nos_start: number[];
+  line_nos_end: number[];
+}> = ({ file_content, line_nos_start, line_nos_end }) => {
+  const elementRef = useRef<HTMLDivElement>(null);
+
+  const scrollToBottom = () => {
+    if (elementRef.current) {
+      elementRef.current.scrollIntoView({
+        behavior: "smooth",
+        block: "center",
+        inline: "start",
+      });
+    }
+  };
+
+  let count: number = 0;
+
+  useEffect(() => {
+    scrollToBottom();
+  }, [line_nos_start, line_nos_end, file_content]);
+
+  return (
+    <Flex
+      sx={{
+        w: "100%",
+        justifyContent: "flex-start",
+        alignItems: "flex-start",
+        flexDir: "column",
+        h: "50vh",
+        overflow: "scroll",
+        mt: 10,
+      }}
+    >
+      {file_content.map((item, index) => {
+        if (index + 1 > line_nos_end[count] && count <= line_nos_end.length)
+          count++;
+
+        return (
+          <>
+            {index + 1 === line_nos_start[count] ? (
+              <HStack
+                as={"div"}
+                ref={elementRef}
+                align={"flex-start"}
+                spacing={5}
+              >
+                <Text color={"gray.600"} fontWeight="normal">
+                  {index + 1}
+                </Text>
+                <pre
+                  style={{
+                    color:
+                      index + 1 <= line_nos_end[count] + 1 &&
+                      index + 1 >= line_nos_start[count]
+                        ? "#000000"
+                        : "#A0AEC0",
+                  }}
+                  key={index}
+                >
+                  {item}
+                </pre>
+              </HStack>
+            ) : (
+              <HStack as={"div"} align={"flex-start"} spacing={5}>
+                <Text color={"gray.600"} fontWeight="normal">
+                  {index + 1}
+                </Text>
+                <pre
+                  style={{
+                    color:
+                      index + 1 <= line_nos_end[count] + 1 &&
+                      index + 1 >= line_nos_start[count]
+                        ? "#000000"
+                        : "#A0AEC0",
+                  }}
+                  key={index}
+                >
+                  {item}
+                </pre>
+              </HStack>
+            )}
+          </>
+        );
+      })}
+    </Flex>
   );
 };
 
@@ -1167,7 +1250,7 @@ const MultiFileExplorer: React.FC<MultiFileExplorerProps> = ({
                   <TabPanels>
                     {files.findings.map((file, index) => (
                       <TabPanel key={index} p={2}>
-                        <FileDataCont
+                        <FileDataContTest
                           type={type}
                           file={{
                             issue_id: files.issue_id,
