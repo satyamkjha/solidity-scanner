@@ -220,33 +220,46 @@ const ScanDetails: React.FC<{ scansRemaining: number; scans: ScanMeta[] }> = ({
   const [next, setNext] = useState(false);
   const [open, setOpen] = useState(false);
 
+  // useEffect(() => {
+  //   setReportingStatus(scanData?.scan_report.reporting_status);
+  //   let intervalId: NodeJS.Timeout;
+  //   const refetchTillScanComplete = () => {
+  //     if (
+  //       scanData &&
+  //       (scanData.scan_report.scan_status === "scanning" ||
+  //         scanData.scan_report.reporting_status === "generating_report")
+  //     ) {
+  //       intervalId = setInterval(async () => {
+  //         await refetch();
+  //         if (
+  //           (scanData && scanData.scan_report.scan_status === "scan_done") ||
+  //           scanData.scan_report.reporting_status === "report_generated"
+  //         ) {
+  //           setReportingStatus(scanData?.scan_report.reporting_status);
+  //           clearInterval(intervalId);
+  //         }
+  //       }, 1000);
+  //     }
+  //   };
+
+  //   refetchTillScanComplete();
+  //   return () => {
+  //     clearInterval(intervalId);
+  //   };
+  // }, [scanData, refetch]);
+
   useEffect(() => {
-    setReportingStatus(scanData?.scan_report.reporting_status);
     let intervalId: NodeJS.Timeout;
     const refetchTillScanComplete = () => {
-      if (
-        scanData &&
-        (scanData.scan_report.scan_status === "scanning" ||
-          scanData.scan_report.reporting_status === "generating_report")
-      ) {
         intervalId = setInterval(async () => {
-          await refetch();
-          if (
-            (scanData && scanData.scan_report.scan_status === "scan_done") ||
-            scanData.scan_report.reporting_status === "report_generated"
-          ) {
-            setReportingStatus(scanData?.scan_report.reporting_status);
-            clearInterval(intervalId);
-          }
-        }, 1000);
+          await refetch(); 
+        }, 5000);
       }
-    };
-
     refetchTillScanComplete();
     return () => {
       clearInterval(intervalId);
     };
-  }, [scanData, refetch]);
+  }, []);
 
   const onClose = () => setIsOpen(false);
 

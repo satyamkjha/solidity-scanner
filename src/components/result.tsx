@@ -573,7 +573,6 @@ export const MultifileResult: React.FC<{
         spacing={8}
         mb={[8, 8, 0]}
         alignItems="flex-start"
-       
       >
         <Flex w="100%" justifyContent="space-around">
           <Box width="100%">
@@ -590,8 +589,7 @@ export const MultifileResult: React.FC<{
           </Box>
           {/* <Score score={score} /> */}
         </Flex>
-        <Box w="100%"  h={'70vh'}
-        overflowY='scroll'>
+        <Box w="100%" h={"100vh"} overflowY="scroll">
           <MultifileIssues
             issues={issues}
             files={files}
@@ -603,11 +601,10 @@ export const MultifileResult: React.FC<{
       </VStack>
       <VStack
         w={["100%", "100%", "60%"]}
-        h={["80vh"]}
+        h={["100%"]}
         alignItems="flex-start"
         spacing={5}
         pl={10}
-        overflowY={'scroll'}
       >
         <HStack width={"100%"} justify={"space-between"}>
           <Text fontWeight={600}>Confidence Parameter</Text>
@@ -680,7 +677,7 @@ export const MultifileResult: React.FC<{
         <Box
           sx={{
             w: "100%",
-            h: "100%",
+
             position: "sticky",
             top: 8,
           }}
@@ -1030,26 +1027,28 @@ const FileDataContTest: React.FC<FileDataContProps> = ({ file, type }) => {
 
   return (
     <>
-      {isLoading && (
+      {isLoading ? (
         <Flex
           sx={{
             w: "100%",
             justifyContent: "center",
             alignItems: "center",
-            h: "35vh",
+            h: "50vh",
+            mt: 10,
           }}
         >
           <Spinner />
         </Flex>
+      ) : (
+        fileContent && (
+          <CodeExplorer
+            file_content={fileContent}
+            line_nos_start={line_nos_start}
+            line_nos_end={line_nos_end}
+          />
+        )
       )}
-      {fileContent && (
-        <CodeExplorer
-          file_content={fileContent}
-          line_nos_start={line_nos_start}
-          line_nos_end={line_nos_end}
-        />
-      )}
-    </>
+̀    </>
   );
 };
 
@@ -1064,7 +1063,7 @@ const CodeExplorer: React.FC<{
     if (elementRef.current) {
       elementRef.current.scrollIntoView({
         behavior: "smooth",
-        block: "start",
+        block: "center",
         inline: "start",
       });
     }
@@ -1074,7 +1073,7 @@ const CodeExplorer: React.FC<{
 
   useEffect(() => {
     scrollToBottom();
-  }, [line_nos_start]);
+  }, [line_nos_start, line_nos_end, file_content]);
 
   return (
     <Flex
@@ -1083,9 +1082,8 @@ const CodeExplorer: React.FC<{
         justifyContent: "flex-start",
         alignItems: "flex-start",
         flexDir: "column",
-        h: "70vh",
+        h: "50vh",
         overflow: "scroll",
-
         mt: 10,
       }}
     >
