@@ -88,16 +88,12 @@ const BlockPage: React.FC = () => {
   const [datePublished, setDatePublished] = useState("");
 
   useEffect(() => {
-   
     let intervalId: NodeJS.Timeout;
     const refetchTillScanComplete = () => {
-      
-        intervalId = setInterval(async () => {
-          // setReportingStatus(scanData.scan_report.reporting_status);
-          await refetch();
-          
-        }, 5000);
-      
+      intervalId = setInterval(async () => {
+        // setReportingStatus(scanData.scan_report.reporting_status);
+        await refetch();
+      }, 5000);
     };
 
     refetchTillScanComplete();
