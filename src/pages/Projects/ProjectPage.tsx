@@ -251,10 +251,10 @@ const ScanDetails: React.FC<{ scansRemaining: number; scans: ScanMeta[] }> = ({
   useEffect(() => {
     let intervalId: NodeJS.Timeout;
     const refetchTillScanComplete = () => {
-        intervalId = setInterval(async () => {
-          await refetch(); 
-        }, 5000);
-      }
+      intervalId = setInterval(async () => {
+        await refetch();
+      }, 5000);
+    };
     refetchTillScanComplete();
     return () => {
       clearInterval(intervalId);
