@@ -516,7 +516,6 @@ const ContractForm: React.FC = () => {
               <option value="avalanche">Avalanche C-Chain</option>
               <option value="celo">Celo</option>
               <option value="aurora">Aurora</option>
-
             </Select>
           </FormControl>
 

@@ -68,7 +68,7 @@ const BlockPage: React.FC = () => {
 
   const { data: scanData, isLoading, refetch } = useScan(scanId);
 
-  const [reportingStatus, setReportingStatus] = useState<string>();
+  const [reportingStatus, setReportingStatus] = useState<string>("");
   const { data: profile, isLoading: isProfileLoading } = useProfile();
   const { data: plans, isLoading: isPlanLoading } = usePricingPlans();
   const toast = useToast();
@@ -91,16 +91,18 @@ const BlockPage: React.FC = () => {
     let intervalId: NodeJS.Timeout;
     const refetchTillScanComplete = () => {
       intervalId = setInterval(async () => {
-        // setReportingStatus(scanData.scan_report.reporting_status);
-        await refetch();
+        await refetch().then((res) => {
+          if (res.data) {
+            setReportingStatus(res.data?.scan_report.reporting_status);
+          }
+        });
       }, 5000);
     };
-
     refetchTillScanComplete();
     return () => {
       clearInterval(intervalId);
     };
-  }, [refetch]);
+  }, []);
 
   const generateReport = async (scanId: string, projectId: string) => {
     setReportingStatus("generating_report");
@@ -172,11 +174,11 @@ const BlockPage: React.FC = () => {
   };
 
   useEffect(() => {
-    setReportingStatus(scanData?.scan_report.reporting_status);
     if (
       scanData &&
       scanData.scan_report.reporting_status === "report_generated"
     ) {
+      setReportingStatus(scanData.scan_report.reporting_status);
       getReportData(
         scanData.scan_report.project_id,
         scanData.scan_report.latest_report_id
@@ -295,6 +297,7 @@ const BlockPage: React.FC = () => {
                             <Button
                               variant={"accent-outline"}
                               mr={5}
+                              isLoading={reportingStatus === ""}
                               isDisabled={
                                 reportingStatus === "generating_report" ||
                                 (profile.current_package !== "expired" &&
@@ -336,7 +339,9 @@ const BlockPage: React.FC = () => {
                                 ? "Re-generate Report"
                                 : reportingStatus === "report_generated"
                                 ? "View Report"
-                                : "Generate Report"}
+                                : reportingStatus === "not_generated"
+                                ? "Generate Report"
+                                : "Loading"}
                             </Button>
                           )}
                           <AccordionButton
