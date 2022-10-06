@@ -392,6 +392,10 @@ const ContractForm: React.FC = () => {
       { value: "mainnet", label: "Celo Mainnet" },
       { value: "testnet", label: "Alfajores Testnet" },
     ],
+    aurora: [
+      { value: "mainnet", label: "Aurora Mainnet" },
+      { value: "testnet", label: "Aurora Testnet" },
+    ],
   };
   const [platform, setPlatform] = React.useState("etherscan");
   const [chain, setChain] = React.useState("");
@@ -511,6 +515,7 @@ const ContractForm: React.FC = () => {
               <option value="cronos">Cronos</option>
               <option value="avalanche">Avalanche C-Chain</option>
               <option value="celo">Celo</option>
+              <option value="aurora">Aurora</option>
             </Select>
           </FormControl>
 

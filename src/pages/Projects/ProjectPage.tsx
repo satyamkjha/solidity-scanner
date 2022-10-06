@@ -197,7 +197,7 @@ const ScanDetails: React.FC<{ scansRemaining: number; scans: ScanMeta[] }> = ({
   const [isRescanLoading, setRescanLoading] = useState(false);
   const cancelRef = useRef<HTMLButtonElement | null>(null);
   const queryClient = useQueryClient();
-  const [reportingStatus, setReportingStatus] = useState<string>();
+  const [reportingStatus, setReportingStatus] = useState<string>("");
   const { projectId, scanId } =
     useParams<{ projectId: string; scanId: string }>();
   const history = useHistory();
@@ -251,10 +251,14 @@ const ScanDetails: React.FC<{ scansRemaining: number; scans: ScanMeta[] }> = ({
   useEffect(() => {
     let intervalId: NodeJS.Timeout;
     const refetchTillScanComplete = () => {
-        intervalId = setInterval(async () => {
-          await refetch(); 
-        }, 5000);
-      }
+      intervalId = setInterval(async () => {
+        await refetch().then((res) => {
+          if (res.data) {
+            setReportingStatus(res.data?.scan_report.reporting_status);
+          }
+        });
+      }, 5000);
+    };
     refetchTillScanComplete();
     return () => {
       clearInterval(intervalId);
@@ -329,6 +333,7 @@ const ScanDetails: React.FC<{ scansRemaining: number; scans: ScanMeta[] }> = ({
       scanData &&
       scanData.scan_report.reporting_status === "report_generated"
     ) {
+      setReportingStatus(scanData.scan_report.reporting_status);
       getReportData(projectId, scanData.scan_report.latest_report_id);
       setProjectName(scanData.scan_report.project_name);
       setRepoUrl(scanData.scan_report.project_url);
@@ -465,6 +470,7 @@ const ScanDetails: React.FC<{ scansRemaining: number; scans: ScanMeta[] }> = ({
                   {scanData.scan_report.scan_status === "scan_done" && (
                     <Button
                       variant={"accent-outline"}
+                      isLoading={reportingStatus === ""}
                       isDisabled={
                         reportingStatus === "generating_report" ||
                         (profile.current_package !== "expired" &&
@@ -497,7 +503,9 @@ const ScanDetails: React.FC<{ scansRemaining: number; scans: ScanMeta[] }> = ({
                         ? "Re-generate Report"
                         : reportingStatus === "report_generated"
                         ? "View Report"
-                        : "Generate Report"}
+                        : reportingStatus === "not_generated"
+                        ? "Generate Report"
+                        : "Loading"}
                     </Button>
                   )}
                 </HStack>
