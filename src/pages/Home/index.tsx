@@ -413,6 +413,7 @@ const ContractForm: React.FC = () => {
   };
 
   const options = [
+    { value: "etherscan", icon: "etherscan", label: "Ethereum" },
     { value: "bscscan", icon: "bscscan", label: "Binance" },
     {
       value: "polygonscan",
