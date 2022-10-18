@@ -283,7 +283,7 @@ const PricingPlan: React.FC<{
             : `$ ${planData.amount}`}
         </Heading>
         <Text mb={!selected ? 10 : 4} mx={5} fontSize={"xs"}>
-          per month
+        {plan === "trial" || plan === "ondemand" ? '' : 'per month'}
         </Text>
         {selected && (
           <Button
