@@ -73,12 +73,12 @@ export const Footer: React.FC = () => {
           justifyContent="flex-end"
           alignItems={"center"}
         >
-          {/* <Image
-              src="/facebook-social.svg"
+          <Image
+              src="/medium-social.svg"
               alt="Facebook"
               mx={3}
-              onClick={()=> window.open('https://www.instagram.com/credshields/', '_blank')}
-          /> */}
+              onClick={()=> window.open('https://credshields.medium.com/', '_blank')}
+          />
           <Image
             src="/discord-social.svg"
             alt="Instagram"

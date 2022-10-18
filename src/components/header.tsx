@@ -61,6 +61,15 @@ export const Header: React.FC = () => {
             >
               Docs
             </Link>
+            <Link
+              onClick={() => {
+                window.open("https://credshields.medium.com/", "_blank");
+              }}
+              variant="brand"
+              fontWeight="600"
+            >
+              Blog
+            </Link>
           </HStack>
         </Flex>
         <HStack spacing={4} sx={{ display: ["none", "none", "flex"] }}>

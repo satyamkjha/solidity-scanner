@@ -50,6 +50,7 @@ export const theme = extendTheme({
       },
       _focus: {
         outline: 0,
+        boxShadow: "none",
       },
       variants: {
         brand: (props) => ({

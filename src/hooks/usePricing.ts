@@ -5,12 +5,6 @@ const getAcceptedCoins = async () => {
   const { data } = await API.get<{
     [key: string]: {
       name: string;
-      monthly: {
-        [plan: string]: string;
-      };
-      ondemand: {
-        [plan: string]: string;
-      };
     };
   }>("/api-get-accepted-coins/");
   return data;
