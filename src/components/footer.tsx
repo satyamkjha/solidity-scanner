@@ -97,7 +97,7 @@ export const Footer: React.FC = () => {
             src="/instagram-social.svg"
             alt="Instagram"
             onClick={() =>
-              window.open("https://www.instagram.com/credshields/", "_blank")
+              window.open("https://www.instagram.com/solidityscan/", "_blank")
             }
             mx={3}
           />
@@ -106,7 +106,7 @@ export const Footer: React.FC = () => {
             alt="Twitter"
             mx={3}
             onClick={() =>
-              window.open("https://twitter.com/CredShields", "_blank")
+              window.open("https://twitter.com/solidityscan", "_blank")
             }
           />
         </Flex>
