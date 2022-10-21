@@ -12,6 +12,7 @@ import {
   Link as ChakraLink,
   useDisclosure,
   HStack,
+  VStack,
 } from "@chakra-ui/react";
 
 import {
@@ -41,6 +42,64 @@ export default function LandingPage() {
     if (campaign_type) localStorage.setItem("campaign_type", campaign_type);
     if (campaign_id) localStorage.setItem("campaign_id", campaign_id);
   }, []);
+
+  const teamsData = {
+    line1: [
+      {
+        name: "Shashank",
+        designation: "Co-Founder & CEO",
+        imgUrl: "/shashank.jpeg",
+        linkedinUrl: "https://www.linkedin.com/in/shashank-in/",
+        twitterUrl: "https://twitter.com/cyberboyIndi",
+      },
+      {
+        name: "Indranil Roy",
+        designation: "Co-Founder",
+        imgUrl: "/indranil.jpeg",
+        linkedinUrl: "https://www.linkedin.com/in/itsmeroy2012/",
+        twitterUrl: "https://twitter.com/itsmeroy2012",
+      },
+    ],
+    line2: [
+      {
+        name: "",
+        designation: "",
+        imgUrl: "",
+        linkedinUrl: "",
+        twitterUrl: "",
+      },
+      {
+        name: "",
+        designation: "",
+        imgUrl: "",
+        linkedinUrl: "",
+        twitterUrl: "",
+      },
+      {
+        name: "",
+        designation: "",
+        imgUrl: "",
+        linkedinUrl: "",
+        twitterUrl: "",
+      },
+    ],
+    line3: [
+      {
+        name: "",
+        designation: "",
+        imgUrl: "",
+        linkedinUrl: "",
+        twitterUrl: "",
+      },
+      {
+        name: "",
+        designation: "",
+        imgUrl: "",
+        linkedinUrl: "",
+        twitterUrl: "",
+      },
+    ],
+  };
 
   return (
     <>
@@ -302,68 +361,67 @@ export default function LandingPage() {
               flexDir={["row", "row", "row"]}
               justifyContent={"flex-start"}
             >
-              <Box
-                height={"130px"}
-                ml="50px"
-                mr="20px"
-                width="130px"
-                borderRadius={"50%"}
-                backgroundImage={"url(/shashank.jpeg)"}
-                backgroundSize="contain"
-                backgroundPosition={"center"}
-              />
-              <Flex
-                width="200px"
-                as="div"
-                alignItems="center"
-                flexDir={"row"}
-                mt={4}
-                justifyContent={"flex-start"}
-              >
-                <Flex
-                  as="div"
-                  alignItems="flex-start"
-                  flexDir={"column"}
-                  justifyContent={"center"}
+              <VStack spacing={0}>
+                <Box
+                  height={"200px"}
+                  mb={"-195px"}
+                  zIndex={10}
+                  width="200px"
+                  borderRadius={"50%"}
+                  backgroundImage={"url(/shashank.jpeg)"}
+                  backgroundSize="contain"
+                  backgroundPosition={"center"}
+                />
+                <Box
+                  height={"200px"}
+                  width="200px"
+                  borderRadius={"50%"}
+                  background={
+                    "linear-gradient(129.18deg, #52FF00 8.52%, #00EEFD 93.94%)"
+                  }
+                />
+
+                <Text
+                  marginTop={"15px !important"}
+                  textAlign={"left"}
+                  fontSize="xl"
                 >
-                  <Text textAlign={"left"} fontSize="xl">
-                    Shashank
-                  </Text>
-                  <Text
-                    textAlign={"left"}
-                    color={"subtle"}
-                    fontSize="xl"
-                    fontWeight={900}
-                  >
-                    Co-Founder
-                  </Text>
-                  <HStack>
-                    <Image
-                      onClick={() => {
-                        window.open(
-                          "https://www.linkedin.com/in/shashank-in/",
-                          "_blank"
-                        );
-                      }}
-                      src="/linkedin.svg"
-                      height={"40px"}
-                      width={"40px"}
-                    />
-                    <Image
-                      onClick={() => {
-                        window.open(
-                          "https://twitter.com/cyberboyIndia",
-                          "_blank"
-                        );
-                      }}
-                      src="/twitter.svg"
-                      height={"30px"}
-                      width={"30px"}
-                      borderRadius={"5px"}
-                    />
-                  </HStack>
-                </Flex>
-              </Flex>
+                  Shashank
+                </Text>
+                <Text
+                  textAlign={"left"}
+                  color={"gray.400"}
+                  fontSize="xl"
+                  fontWeight={500}
+                >
+                  Co-Founder & CEO
+                </Text>
+                <HStack marginTop={"15px !important"} spacing={5}>
+                  <Image
+                    onClick={() => {
+                      window.open(
+                        "https://www.linkedin.com/in/shashank-in/",
+                        "_blank"
+                      );
+                    }}
+                    src="/socials/linkedin.svg"
+                    height={"30px"}
+                    width={"30px"}
+                  />
+                  <Image
+                    onClick={() => {
+                      window.open(
+                        "https://twitter.com/cyberboyIndia",
+                        "_blank"
+                      );
+                    }}
+                    src="/socials/twitter.svg"
+                    height={"30px"}
+                    width={"30px"}
+                    borderRadius={"5px"}
+                  />
+                </HStack>
+              </VStack>
             </Flex>
             <Flex
               as="div"
@@ -434,7 +492,6 @@ export default function LandingPage() {
                 </Flex>
               </Flex>
             </Flex>
-            
           </Flex>
           <Flex
             as="div"
@@ -753,7 +810,7 @@ export default function LandingPage() {
                   justifyContent={"center"}
                 >
                   <Text textAlign={"left"} fontSize="xl">
-                  Siddharth Neekher
+                    Siddharth Neekher
                   </Text>
                   <Text
                     textAlign={"left"}
@@ -791,7 +848,6 @@ export default function LandingPage() {
                 </Flex>
               </Flex>
             </Flex>
-            
           </Flex>
         </Box>
 
