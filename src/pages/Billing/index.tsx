@@ -283,7 +283,7 @@ const PricingPlan: React.FC<{
             : `$ ${planData.amount}`}
         </Heading>
         <Text mb={!selected ? 10 : 4} mx={5} fontSize={"xs"}>
-          per month
+        {plan === "trial" || plan === "ondemand" ? '' : 'per month'}
         </Text>
         {selected && (
           <Button
@@ -860,7 +860,6 @@ const CoinPayments: React.FC<{ packageName: string; onClose: () => void }> = ({
     }
     try {
       setLoading(true);
-
       const { data } = await API.post<{
         checkout_url: string;
         status: string;
@@ -889,7 +888,7 @@ const CoinPayments: React.FC<{ packageName: string; onClose: () => void }> = ({
           width="200px"
           alt="CoinPayments Logo"
         />
-        {data && coin !== "" && (
+        {/* {data && coin !== "" && (
           <Flex alignItems="center">
             <CryptoIcon size={32} name={coin.toLowerCase()} />
             <Text ml={2} color="brand-dark" fontWeight={700} fontSize="3xl">
@@ -901,7 +900,7 @@ const CoinPayments: React.FC<{ packageName: string; onClose: () => void }> = ({
               </Text>
             </Text>
           </Flex>
-        )}
+        )} */}
       </Flex>
       <FormControl id="contract_platform">
         <FormLabel fontSize="sm">Select coin</FormLabel>

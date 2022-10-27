@@ -434,6 +434,17 @@ export default function LandingPage() {
                 </Flex>
               </Flex>
             </Flex>
+            
+          </Flex>
+          <Flex
+            as="div"
+            w="100%"
+            alignItems="center"
+            py={10}
+            my={10}
+            flexDir={["column", "column", "row"]}
+            justifyContent={"center"}
+          >
             <Flex
               as="div"
               alignItems="center"
@@ -500,16 +511,6 @@ export default function LandingPage() {
                 </Flex>
               </Flex>
             </Flex>
-          </Flex>
-          <Flex
-            as="div"
-            w="100%"
-            alignItems="center"
-            py={10}
-            my={10}
-            flexDir={["column", "column", "row"]}
-            justifyContent={"center"}
-          >
             <Flex
               as="div"
               alignItems="center"
@@ -642,6 +643,155 @@ export default function LandingPage() {
                 </Flex>
               </Flex>
             </Flex>
+          </Flex>
+          <Flex
+            as="div"
+            w="100%"
+            alignItems="center"
+            py={10}
+            my={10}
+            flexDir={["column", "column", "row"]}
+            justifyContent={"center"}
+          >
+            <Flex
+              as="div"
+              alignItems="center"
+              flexDir={["row", "row", "row"]}
+              justifyContent={"flex-start"}
+            >
+              <Box
+                height={"130px"}
+                ml="50px"
+                mr="20px"
+                width="130px"
+                borderRadius={"50%"}
+                backgroundImage={"url(/sankalp.jpeg)"}
+                backgroundSize="contain"
+                backgroundPosition={"center"}
+              />
+              <Flex
+                width="200px"
+                as="div"
+                alignItems="center"
+                flexDir={"row"}
+                mt={4}
+                justifyContent={"flex-start"}
+              >
+                <Flex
+                  as="div"
+                  alignItems="flex-start"
+                  flexDir={"column"}
+                  justifyContent={"center"}
+                >
+                  <Text textAlign={"left"} fontSize="xl">
+                    Sankalp Pandey
+                  </Text>
+                  <Text
+                    textAlign={"left"}
+                    color={"subtle"}
+                    fontSize="xl"
+                    fontWeight={900}
+                  >
+                    Growth Head
+                  </Text>
+                  <HStack>
+                    <Image
+                      onClick={() => {
+                        window.open(
+                          "https://www.linkedin.com/in/sky007/",
+                          "_blank"
+                        );
+                      }}
+                      src="/linkedin.svg"
+                      height={"40px"}
+                      width={"40px"}
+                    />
+                    <Image
+                      onClick={() => {
+                        window.open(
+                          "https://twitter.com/SKY_Sankalp",
+                          "_blank"
+                        );
+                      }}
+                      src="/twitter.svg"
+                      height={"30px"}
+                      width={"30px"}
+                      borderRadius={"5px"}
+                    />
+                  </HStack>
+                </Flex>
+              </Flex>
+            </Flex>
+            <Flex
+              as="div"
+              alignItems="center"
+              flexDir={["row", "row", "row"]}
+              justifyContent={"flex-start"}
+            >
+              <Box
+                height={"130px"}
+                ml="50px"
+                mr="20px"
+                width="130px"
+                borderRadius={"50%"}
+                backgroundImage={"url(/siddarth.jpeg)"}
+                backgroundSize="contain"
+                backgroundPosition={"center"}
+              />
+              <Flex
+                width="200px"
+                as="div"
+                alignItems="center"
+                flexDir={"row"}
+                mt={4}
+                justifyContent={"flex-start"}
+              >
+                <Flex
+                  as="div"
+                  alignItems="flex-start"
+                  flexDir={"column"}
+                  justifyContent={"center"}
+                >
+                  <Text textAlign={"left"} fontSize="xl">
+                  Siddharth Neekher
+                  </Text>
+                  <Text
+                    textAlign={"left"}
+                    color={"subtle"}
+                    fontSize="xl"
+                    fontWeight={900}
+                  >
+                    Lead User Interface Designer
+                  </Text>
+                  <HStack>
+                    <Image
+                      onClick={() => {
+                        window.open(
+                          "https://www.linkedin.com/in/siddharth-neekher-340519117/",
+                          "_blank"
+                        );
+                      }}
+                      src="/linkedin.svg"
+                      height={"40px"}
+                      width={"40px"}
+                    />
+                    <Image
+                      onClick={() => {
+                        window.open(
+                          "https://twitter.com/sidartdigital",
+                          "_blank"
+                        );
+                      }}
+                      src="/twitter.svg"
+                      height={"30px"}
+                      width={"30px"}
+                      borderRadius={"5px"}
+                    />
+                  </HStack>
+                </Flex>
+              </Flex>
+            </Flex>
+            
           </Flex>
         </Box>
 

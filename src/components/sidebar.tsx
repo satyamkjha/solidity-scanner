@@ -9,6 +9,7 @@ import {
   Icon,
   HStack,
   Heading,
+  Collapse,
 } from "@chakra-ui/react";
 import {
   LogoIcon,
@@ -46,7 +47,7 @@ const Sidebar: React.FC<{
         flexDir: "column",
         justifyContent: "space-between",
         overflow: "hidden",
-        transition: "width 0.3s ease",
+        transition: "width 0.6s ease",
       }}
     >
       <Flex
@@ -108,7 +109,7 @@ const Sidebar: React.FC<{
       </Flex>
       <Flex sx={{ width: "100%", justifyContent: "flex-end", pt: 24, pb: 24 }}>
         <Box sx={{ width: "85%" }}>
-          <Text
+          {/* <Text
             sx={{
               color: "subtle",
               ml: 3,
@@ -119,7 +120,7 @@ const Sidebar: React.FC<{
             }}
           >
             PAGES
-          </Text>
+          </Text> */}
 
           <SidebarItem
             to="/home"
@@ -225,6 +226,7 @@ export const SidebarItem: React.FC<SidebarItemProps> = ({
         }}
       >
         {React.cloneElement(icon, { active })}
+
         {!isCollapsed && (
           <Text ml={2} fontSize="sm">
             {label}

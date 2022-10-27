@@ -22,7 +22,6 @@ import {
   TabPanel,
   FormControl,
   FormLabel,
-  Select,
   Switch,
   HStack,
   Link,
@@ -31,6 +30,7 @@ import {
   Progress,
   CloseButton,
   FormErrorMessage,
+  Image,
 } from "@chakra-ui/react";
 import { FaFileCode } from "react-icons/fa";
 import { AiOutlineProject } from "react-icons/ai";
@@ -49,6 +49,7 @@ import { useSupportedChains } from "hooks/useSupportedPlatforms";
 import { sentenceCapitalize } from "helpers/helperFunction";
 import { useDropzone } from "react-dropzone";
 import { url } from "inspector";
+import Select from "react-select";
 
 const Home: React.FC = () => {
   const { data } = useOverview();
@@ -359,48 +360,134 @@ type ContractFormData = {
   // contract_platform: string;
 };
 
+const formatOptionLabel: React.FC<{
+  value: string;
+  label: string;
+  icon: string;
+}> = ({ label, icon }) => (
+  <div style={{ display: "flex", flexDirection: "row" }}>
+    {icon !== "" && (
+      <Image h={"20px"} w={"20px"} mr={3} src={`/blockscan/${icon}.svg`} />
+    )}
+    <div>{label}</div>
+  </div>
+);
+
 const ContractForm: React.FC = () => {
-  const contractChain: { [key: string]: { label: string; value: string }[] } = {
+  const contractChain: { [key: string]: { label: string; value: string; icon: string }[] } = {
     etherscan: [
-      { value: "mainnet", label: "Ethereum Mainnet" },
-      { value: "ropsten", label: "Ropsten Testnet" },
-      { value: "kovan", label: "Kovan Testnet" },
-      { value: "rinkeby", label: "Rinkeby Testnet" },
-      { value: "goerli", label: "Goerli Testnet" },
+      { value: "mainnet", label: "Ethereum Mainnet", icon: "" },
+      { value: "ropsten", label: "Ropsten Testnet", icon: "" },
+      { value: "kovan", label: "Kovan Testnet", icon: "" },
+      { value: "rinkeby", label: "Rinkeby Testnet", icon: "" },
+      { value: "goerli", label: "Goerli Testnet", icon: "" },
     ],
     bscscan: [
-      { value: "mainnet", label: "Bsc Mainnet" },
-      { value: "testnet", label: "Bsc Testnet" },
+      { value: "mainnet", label: "Bsc Mainnet", icon: "" },
+      { value: "testnet", label: "Bsc Testnet", icon: "" },
     ],
     polygonscan: [
-      { value: "mainnet", label: "Polygon Mainnet" },
-      { value: "testnet", label: "Polygon Testnet" },
+      { value: "mainnet", label: "Polygon Mainnet", icon: "" },
+      { value: "testnet", label: "Polygon Testnet", icon: "" },
     ],
     avalanche: [
-      { value: "mainnet", label: "Avalanche Mainnet" },
-      { value: "testnet", label: "Avalanche Fuji Testnet" },
+      { value: "mainnet", label: "Avalanche Mainnet", icon: "" },
+      { value: "testnet", label: "Avalanche Fuji Testnet", icon: "" },
     ],
     fantom: [
-      { value: "mainnet", label: "FTM Mainnet" },
-      { value: "testnet", label: "FTM Testnet" },
+      { value: "mainnet", label: "FTM Mainnet", icon: "" },
+      { value: "testnet", label: "FTM Testnet", icon: "" },
     ],
     cronos: [
-      { value: "mainnet", label: "Cronos Mainnet" },
-      { value: "testnet", label: "Cronos Testnet" },
+      { value: "mainnet", label: "Cronos Mainnet", icon: "" },
+      { value: "testnet", label: "Cronos Testnet", icon: "" },
     ],
     celo: [
-      { value: "mainnet", label: "Celo Mainnet" },
-      { value: "testnet", label: "Alfajores Testnet" },
+      { value: "mainnet", label: "Celo Mainnet", icon: "" },
+      { value: "testnet", label: "Alfajores Testnet", icon: "" },
     ],
     aurora: [
-      { value: "mainnet", label: "Aurora Mainnet" },
-      { value: "testnet", label: "Aurora Testnet" },
+      { value: "mainnet", label: "Aurora Mainnet", icon: "" },
+      { value: "testnet", label: "Aurora Testnet", icon: "" },
     ],
   };
-  const [platform, setPlatform] = React.useState("etherscan");
+
+  const options = [
+    { value: "etherscan", icon: "etherscan", label: "Ethereum" },
+    { value: "bscscan", icon: "bscscan", label: "Binance" },
+    {
+      value: "polygonscan",
+      icon: "polygonscan",
+      label: "Polygon",
+    },
+    {
+      value: "fantom",
+      icon: "fantom",
+      label: "Fantom",
+    },
+    {
+      value: "cronos",
+      icon: "cronos",
+      label: "Cronos",
+    },
+    {
+      value: "avalanche",
+      icon: "avalanche",
+      label: "Avalanche C-Chain",
+    },
+    {
+      value: "celo",
+      icon: "celo",
+      label: "Celo",
+    },
+    {
+      value: "aurora",
+      icon: "aurora",
+      label: "Aurora",
+    },
+  ];
+
+  const customStyles = {
+    option: (provided: any, state: any) => ({
+      ...provided,
+      borderBottom: "1px solid #f3f3f3",
+      backgroundColor: state.isSelected
+        ? "#FFFFFF"
+        : state.isFocused
+        ? "#E6E6E6"
+        : "#FFFFFF",
+      color: "#000000",
+    }),
+    menu: (provided: any, state: any) => ({
+      ...provided,
+      color: state.selectProps.menuColor,
+      borderRadius: 10,
+      border: "0px solid #ffffff",
+      overflowY: "hidden",
+      width: '500px'
+    }),
+    control: (state: any) => ({
+      // none of react-select's styles are passed to <Control />
+      display: "flex",
+      flexDirection: "row",
+      backgroundColor: "#FFFFFF",
+      width: '500px',
+      padding: 5,
+      borderRadius: 15,
+      border: state.isFocused ? "2px solid #52FF00" : "2px solid #EDF2F7",
+    }),
+    singleValue: (provided: any, state: any) => {
+      const opacity = state.isDisabled ? 0.3 : 1;
+      const transition = "opacity 300ms";
+
+      return { ...provided, opacity, transition };
+    },
+  };
+
+  const [platform, setPlatform] = React.useState("");
   const [chain, setChain] = React.useState("");
   const [chainList, setChainList] = React.useState<
-    { label: string; value: string }[]
+    { label: string; value: string; icon: string }[]
   >(contractChain["etherscan"]);
   const queryClient = useQueryClient();
   const { handleSubmit, register, formState } = useForm<ContractFormData>();
@@ -493,6 +580,22 @@ const ContractForm: React.FC = () => {
           <FormControl id="contract_platform">
             <FormLabel fontSize="sm">Contract platform</FormLabel>
             <Select
+              formatOptionLabel={formatOptionLabel}
+              options={options}
+              placeholder="Select Contract Platform"
+              styles={customStyles}
+              onChange={(newValue) => {
+                if (newValue) {
+                  // setAction(newValue.value)
+                  setPlatform(newValue.value);
+                  console.log(supportedChains);
+                  if (supportedChains) {
+                    setChainList(contractChain[newValue.value]);
+                  }
+                }
+              }}
+            />
+            {/* <Select
               placeholder="Select contract platform"
               value={platform}
               variant="brand"
@@ -516,12 +619,24 @@ const ContractForm: React.FC = () => {
               <option value="avalanche">Avalanche C-Chain</option>
               <option value="celo">Celo</option>
               <option value="aurora">Aurora</option>
-            </Select>
+            </Select> */}
           </FormControl>
 
           <FormControl id="contract_chain">
             <FormLabel fontSize="sm">Contract platform</FormLabel>
             <Select
+              formatOptionLabel={formatOptionLabel}
+              isDisabled={platform === ""}
+              options={chainList}
+              placeholder="Select Contract Chain"
+              styles={customStyles}
+              onChange={(newValue) => {
+                if (newValue) {
+                  setChain(newValue.value)
+                }
+              }}
+            />
+            {/* <Select
               placeholder="Select Platform Chain"
               value={chain}
               variant="brand"
@@ -535,7 +650,7 @@ const ContractForm: React.FC = () => {
               {chainList?.map((item) => (
                 <option value={item.value}>{item.label}</option>
               ))}
-            </Select>
+            </Select> */}
           </FormControl>
 
           <Button
