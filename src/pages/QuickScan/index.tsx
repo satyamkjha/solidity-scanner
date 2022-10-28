@@ -486,8 +486,8 @@ const QuickScan: React.FC = () => {
                     borderRadius={15}
                     px={5}
                     py={5}
-                    background={
-                      "linear-gradient(96.27deg, #FFF3F0 0.75%, #FFE0D9 96.71%)"
+                    background={parseFloat(scanReport.multi_file_scan_summary.score) < 2.5 ?
+                      "linear-gradient(96.27deg, #FFF3F0 0.75%, #FFE0D9 96.71%)" : parseFloat(scanReport.multi_file_scan_summary.score) >= 4.5 ? 'linear-gradient(96.27deg, #EFFFED 0.75%, #E6FFE2 96.71%)' : 'linear-gradient(96.27deg, #FFFAF2 0.75%, #FFF4E1 96.71%)'
                     }
                   >
                     <Text fontSize="md" mb={5}>
@@ -707,7 +707,7 @@ const QuickScan: React.FC = () => {
                             Molestie ultricies id lord posuere mauris proin.
                             Lorem ipsum dolor sit amet.
                           </Text>
-                          <Button variant="accent-ghost">
+                          <Button onClick={() => window.open('https://solidityscan.com/signup', '_blank')} variant="accent-ghost">
                             View Detailed Result < ArrowForwardIcon ml={5}/>
                           </Button>
                         </VStack>
