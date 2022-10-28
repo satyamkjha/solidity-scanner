@@ -355,77 +355,71 @@ export default function LandingPage() {
             flexDir={["column", "column", "row"]}
             justifyContent={"center"}
           >
-            {teamsData.line1.map((data) => <Flex
-              as="div"
-              alignItems="center"
-              flexDir={["row", "row", "row"]}
-              justifyContent={"flex-start"}
-              mx={10}
-            >
-              <VStack spacing={0}>
-                <Box
-                  height={"200px"}
-                  mb={"-195px"}
-                  zIndex={10}
-                  width="200px"
-                  borderRadius={"50%"}
-                  backgroundImage={`url(${data.imgUrl})`}
-                  backgroundSize="contain"
-                  backgroundPosition={"center"}
-                />
-                <Box
-                  height={"200px"}
-                  width="200px"
-                  borderRadius={"50%"}
-                  background={
-                    "linear-gradient(129.18deg, #52FF00 8.52%, #00EEFD 93.94%)"
-                  }
-                />
+            {teamsData.line1.map((data) => (
+              <Flex
+                as="div"
+                alignItems="center"
+                flexDir={["row", "row", "row"]}
+                justifyContent={"flex-start"}
+                mx={10}
+              >
+                <VStack spacing={0}>
+                  <Box
+                    height={"200px"}
+                    mb={"-195px"}
+                    zIndex={10}
+                    width="200px"
+                    borderRadius={"50%"}
+                    backgroundImage={`url(${data.imgUrl})`}
+                    backgroundSize="contain"
+                    backgroundPosition={"center"}
+                  />
+                  <Box
+                    height={"200px"}
+                    width="200px"
+                    borderRadius={"50%"}
+                    background={
+                      "linear-gradient(129.18deg, #52FF00 8.52%, #00EEFD 93.94%)"
+                    }
+                  />
 
-                <Text
-                  marginTop={"15px !important"}
-                  textAlign={"left"}
-                  fontSize="xl"
-                >
-                  {data.name}
-                </Text>
-                <Text
-                  textAlign={"left"}
-                  color={"gray.400"}
-                  fontSize="xl"
-                  fontWeight={500}
-                >
-                  {data.designation}
-                </Text>
-                <HStack marginTop={"15px !important"} spacing={5}>
-                  <Image
-                    onClick={() => {
-                      window.open(
-                        data.linkedinUrl,
-                        "_blank"
-                      );
-                    }}
-                    src="/socials/linkedin.svg"
-                    height={"30px"}
-                    width={"30px"}
-                  />
-                  <Image
-                    onClick={() => {
-                      window.open(
-                        data.twitterUrl,
-                        "_blank"
-                      );
-                    }}
-                    src="/socials/twitter.svg"
-                    height={"30px"}
-                    width={"30px"}
-                    borderRadius={"5px"}
-                  />
-                </HStack>
-              </VStack>
-            </Flex>)}
-            
-            
+                  <Text
+                    marginTop={"15px !important"}
+                    textAlign={"left"}
+                    fontSize="xl"
+                  >
+                    {data.name}
+                  </Text>
+                  <Text
+                    textAlign={"left"}
+                    color={"gray.400"}
+                    fontSize="xl"
+                    fontWeight={500}
+                  >
+                    {data.designation}
+                  </Text>
+                  <HStack marginTop={"15px !important"} spacing={5}>
+                    <Image
+                      onClick={() => {
+                        window.open(data.linkedinUrl, "_blank");
+                      }}
+                      src="/socials/linkedin.svg"
+                      height={"30px"}
+                      width={"30px"}
+                    />
+                    <Image
+                      onClick={() => {
+                        window.open(data.twitterUrl, "_blank");
+                      }}
+                      src="/socials/twitter.svg"
+                      height={"30px"}
+                      width={"30px"}
+                      borderRadius={"5px"}
+                    />
+                  </HStack>
+                </VStack>
+              </Flex>
+            ))}
           </Flex>
           <Flex
             as="div"
@@ -436,75 +430,71 @@ export default function LandingPage() {
             flexDir={["column", "column", "row"]}
             justifyContent={"center"}
           >
-            {teamsData.line2.map((data) => <Flex
-              as="div"
-              alignItems="center"
-              flexDir={["row", "row", "row"]}
-              justifyContent={"flex-start"}
-              mx={10}
-            >
-              <VStack spacing={0}>
-                <Box
-                  height={"200px"}
-                  mb={"-195px"}
-                  zIndex={10}
-                  width="200px"
-                  borderRadius={"50%"}
-                  backgroundImage={`url(${data.imgUrl})`}
-                  backgroundSize="contain"
-                  backgroundPosition={"center"}
-                />
-                <Box
-                  height={"200px"}
-                  width="200px"
-                  borderRadius={"50%"}
-                  background={
-                    "linear-gradient(129.18deg, #52FF00 8.52%, #00EEFD 93.94%)"
-                  }
-                />
+            {teamsData.line2.map((data) => (
+              <Flex
+                as="div"
+                alignItems="center"
+                flexDir={["row", "row", "row"]}
+                justifyContent={"flex-start"}
+                mx={10}
+              >
+                <VStack spacing={0}>
+                  <Box
+                    height={"200px"}
+                    mb={"-195px"}
+                    zIndex={10}
+                    width="200px"
+                    borderRadius={"50%"}
+                    backgroundImage={`url(${data.imgUrl})`}
+                    backgroundSize="contain"
+                    backgroundPosition={"center"}
+                  />
+                  <Box
+                    height={"200px"}
+                    width="200px"
+                    borderRadius={"50%"}
+                    background={
+                      "linear-gradient(129.18deg, #52FF00 8.52%, #00EEFD 93.94%)"
+                    }
+                  />
 
-                <Text
-                  marginTop={"15px !important"}
-                  textAlign={"left"}
-                  fontSize="xl"
-                >
-                  {data.name}
-                </Text>
-                <Text
-                  textAlign={"left"}
-                  color={"gray.400"}
-                  fontSize="xl"
-                  fontWeight={500}
-                >
-                  {data.designation}
-                </Text>
-                <HStack marginTop={"15px !important"} spacing={5}>
-                  <Image
-                    onClick={() => {
-                      window.open(
-                        data.linkedinUrl,
-                        "_blank"
-                      );
-                    }}
-                    src="/socials/linkedin.svg"
-                    height={"30px"}
-                    width={"30px"}
-                  />
-                  <Image
-                    onClick={() => {
-                      window.open(
-                        data.twitterUrl,
-                        "_blank"
-                      );
-                    }}
-                    src="/socials/twitter.svg"
-                    height={"30px"}
-                    width={"30px"}
-                    borderRadius={"5px"}
-                  />
-                </HStack>
-              </VStack>
-            </Flex>)}
+                  <Text
+                    marginTop={"15px !important"}
+                    textAlign={"left"}
+                    fontSize="xl"
+                  >
+                    {data.name}
+                  </Text>
+                  <Text
+                    textAlign={"left"}
+                    color={"gray.400"}
+                    fontSize="xl"
+                    fontWeight={500}
+                  >
+                    {data.designation}
+                  </Text>
+                  <HStack marginTop={"15px !important"} spacing={5}>
+                    <Image
+                      onClick={() => {
+                        window.open(data.linkedinUrl, "_blank");
+                      }}
+                      src="/socials/linkedin.svg"
+                      height={"30px"}
+                      width={"30px"}
+                    />
+                    <Image
+                      onClick={() => {
+                        window.open(data.twitterUrl, "_blank");
+                      }}
+                      src="/socials/twitter.svg"
+                      height={"30px"}
+                      width={"30px"}
+                      borderRadius={"5px"}
+                    />
+                  </HStack>
+                </VStack>
+              </Flex>
+            ))}
           </Flex>
           <Flex
             as="div"
@@ -515,75 +505,71 @@ export default function LandingPage() {
             flexDir={["column", "column", "row"]}
             justifyContent={"center"}
           >
-            {teamsData.line3.map((data) => <Flex
-              as="div"
-              alignItems="center"
-              flexDir={["row", "row", "row"]}
-              justifyContent={"flex-start"}
-              mx={10}
-            >
-              <VStack spacing={0}>
-                <Box
-                  height={"200px"}
-                  mb={"-195px"}
-                  zIndex={10}
-                  width="200px"
-                  borderRadius={"50%"}
-                  backgroundImage={`url(${data.imgUrl})`}
-                  backgroundSize="contain"
-                  backgroundPosition={"center"}
-                />
-                <Box
-                  height={"200px"}
-                  width="200px"
-                  borderRadius={"50%"}
-                  background={
-                    "linear-gradient(129.18deg, #52FF00 8.52%, #00EEFD 93.94%)"
-                  }
-                />
+            {teamsData.line3.map((data) => (
+              <Flex
+                as="div"
+                alignItems="center"
+                flexDir={["row", "row", "row"]}
+                justifyContent={"flex-start"}
+                mx={10}
+              >
+                <VStack spacing={0}>
+                  <Box
+                    height={"200px"}
+                    mb={"-195px"}
+                    zIndex={10}
+                    width="200px"
+                    borderRadius={"50%"}
+                    backgroundImage={`url(${data.imgUrl})`}
+                    backgroundSize="contain"
+                    backgroundPosition={"center"}
+                  />
+                  <Box
+                    height={"200px"}
+                    width="200px"
+                    borderRadius={"50%"}
+                    background={
+                      "linear-gradient(129.18deg, #52FF00 8.52%, #00EEFD 93.94%)"
+                    }
+                  />
 
-                <Text
-                  marginTop={"15px !important"}
-                  textAlign={"left"}
-                  fontSize="xl"
-                >
-                  {data.name}
-                </Text>
-                <Text
-                  textAlign={"left"}
-                  color={"gray.400"}
-                  fontSize="xl"
-                  fontWeight={500}
-                >
-                  {data.designation}
-                </Text>
-                <HStack marginTop={"15px !important"} spacing={5}>
-                  <Image
-                    onClick={() => {
-                      window.open(
-                        data.linkedinUrl,
-                        "_blank"
-                      );
-                    }}
-                    src="/socials/linkedin.svg"
-                    height={"30px"}
-                    width={"30px"}
-                  />
-                  <Image
-                    onClick={() => {
-                      window.open(
-                        data.twitterUrl,
-                        "_blank"
-                      );
-                    }}
-                    src="/socials/twitter.svg"
-                    height={"30px"}
-                    width={"30px"}
-                    borderRadius={"5px"}
-                  />
-                </HStack>
-              </VStack>
-            </Flex>)}
+                  <Text
+                    marginTop={"15px !important"}
+                    textAlign={"left"}
+                    fontSize="xl"
+                  >
+                    {data.name}
+                  </Text>
+                  <Text
+                    textAlign={"left"}
+                    color={"gray.400"}
+                    fontSize="xl"
+                    fontWeight={500}
+                  >
+                    {data.designation}
+                  </Text>
+                  <HStack marginTop={"15px !important"} spacing={5}>
+                    <Image
+                      onClick={() => {
+                        window.open(data.linkedinUrl, "_blank");
+                      }}
+                      src="/socials/linkedin.svg"
+                      height={"30px"}
+                      width={"30px"}
+                    />
+                    <Image
+                      onClick={() => {
+                        window.open(data.twitterUrl, "_blank");
+                      }}
+                      src="/socials/twitter.svg"
+                      height={"30px"}
+                      width={"30px"}
+                      borderRadius={"5px"}
+                    />
+                  </HStack>
+                </VStack>
+              </Flex>
+            ))}
           </Flex>
         </Box>
 

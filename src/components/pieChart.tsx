@@ -12,7 +12,7 @@ const MyResponsivePie: React.FC<{ data: PieData[] }> = ({ data }) => (
   <>
     <ResponsivePie
       data={data}
-      margin={{ top: 40, right: 40, bottom: 40, left: 0 }}
+      margin={{ top: 5, right: 5, bottom: 5, left: 5 }}
       colors={{ datum: "data.color" }}
       innerRadius={0.5}
       padAngle={0.7}
@@ -48,7 +48,7 @@ export const ErrorResponsivePie: React.FC = () => {
           color: "#E5E5E5",
         },
       ]}
-      margin={{ top: 40, right: 40, bottom: 40, left: 0 }}
+      margin={{ top: 5, right: 5, bottom: 5, left: 5 }}
       colors={{ datum: "data.color" }}
       // innerRadius={0.5}
       padAngle={0}

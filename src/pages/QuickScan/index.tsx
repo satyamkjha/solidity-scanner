@@ -42,6 +42,54 @@ import Select from "react-select";
 import API from "helpers/api";
 import { QuickScanResult } from "common/types";
 import { sentenceCapitalize } from "helpers/helperFunction";
+import PieChart from "components/pieChart";
+import { ArrowForwardIcon } from "@chakra-ui/icons";
+
+const pieData = (
+  critical: number,
+  high: number,
+  medium: number,
+  low: number,
+  informational: number,
+  gas: number
+) => [
+  {
+    id: "critical",
+    label: "Critical",
+    value: critical,
+    color: "#FF5C00",
+  },
+  {
+    id: "high",
+    label: "High",
+    value: high,
+    color: "#FF5C00",
+  },
+  {
+    id: "medium",
+    label: "Medium",
+    value: medium,
+    color: "#FFE600",
+  },
+  {
+    id: "low",
+    label: "Low",
+    value: low,
+    color: "#38CB89",
+  },
+  {
+    id: "informational",
+    label: "Informational",
+    value: informational,
+    color: "#A0AEC0",
+  },
+  {
+    id: "gas",
+    label: "Gas",
+    value: gas,
+    color: "#F795B4",
+  },
+];
 
 const formatOptionLabel: React.FC<{
   value: string;
@@ -400,8 +448,8 @@ const QuickScan: React.FC = () => {
                 borderTopLeftRadius={0}
                 borderBottomLeftRadius={0}
                 value={address}
-                onChange={(e)=> {
-                  setAddress(e.target.value)
+                onChange={(e) => {
+                  setAddress(e.target.value);
                 }}
               />
             </HStack>
@@ -513,7 +561,7 @@ const QuickScan: React.FC = () => {
 
                 <HStack w={"100%"} mt={10} spacing={"5%"}>
                   <Box
-                    w={"45%"}
+                    w={"47.5%"}
                     borderRadius={15}
                     p={5}
                     background={" #FAFBFC "}
@@ -560,18 +608,112 @@ const QuickScan: React.FC = () => {
                       <Divider />
                     </Box>
                   </Box>
-                  <Box
-                    w={"45%"}
-                    borderRadius={15}
-                    p={5}
-                    background={" #FAFBFC "}
-                    display="flex"
-                    flexDir={"column"}
-                    alignItems="flex-start"
-                    justifyContent={"flex-start"}
-                  >
-                    <Text fontSize="md">REPORT VERIFICATION</Text>
-                  </Box>
+                  {scanReport.is_approved ? (
+                    <Box
+                      w={"47.5%"}
+                      borderRadius={15}
+                      p={8}
+                      backgroundColor={"#02070E"}
+                      backgroundImage={"url('/background/verifiedAuditbg.png')"}
+                      display="flex"
+                      height={"280px"}
+                      flexDir={"row"}
+                      alignItems="flex-start"
+                      justifyContent={"flex-start"}
+                    >
+                      <Image
+                        mr={10}
+                        src="/common/verifiedAuditSeal.svg"
+                        height={"130px"}
+                        width={"130px"}
+                        borderRadius={"5px"}
+                      />
+                      <VStack alignItems={"flex-start"}>
+                        <Heading color={"white"} fontSize="2xl">
+                          {" "}
+                          Verified Contract
+                        </Heading>
+
+                        <Text textAlign={"left"} color={"white"} fontSize="md">
+                          Lorem ipsum dolor sit amet, consectetur adipiscing
+                          elit. Molestie ultricies id lord posuere mauris proin.
+                          Lorem ipsum dolor sit amet.Lorem ipsum{" "}
+                        </Text>
+
+                        <Button
+                          alignSelf={"flex-end"}
+                          type="submit"
+                          variant="brand"
+                        >
+                          ashdlkasd
+                        </Button>
+                      </VStack>
+                    </Box>
+                  ) : (
+                    <Box
+                      w={"47.5%"}
+                      borderRadius={15}
+                      p={5}
+                      background={" #FAFBFC "}
+                      display="flex"
+                      flexDir={"column"}
+                      alignItems="flex-start"
+                      justifyContent={"flex-start"}
+                    >
+                      <Text fontSize="md">DETAILED RESULT</Text>
+                      <Box
+                        w={"100%"}
+                        borderRadius={15}
+                        p={5}
+                        mt={5}
+                        background={" #FFFFFF "}
+                        display="flex"
+                        flexDir={"row"}
+                        alignItems="flex-start"
+                        justifyContent={"flex-start"}
+                      >
+                        <Box
+                          w={"200px"}
+                          display="flex"
+                          justifyContent="center"
+                          alignItems={"center"}
+                          h="180px"
+                        >
+                          {scanReport.multi_file_scan_summary.issues_count ===
+                          0 ? (
+                            <Image src="/nobug.svg" alt="No Bugs Found" />
+                          ) : (
+                            <PieChart
+                              data={pieData(
+                                scanReport.multi_file_scan_summary
+                                  .issue_severity_distribution.critical,
+                                scanReport.multi_file_scan_summary
+                                  .issue_severity_distribution.high,
+                                scanReport.multi_file_scan_summary
+                                  .issue_severity_distribution.medium,
+                                scanReport.multi_file_scan_summary
+                                  .issue_severity_distribution.low,
+                                scanReport.multi_file_scan_summary
+                                  .issue_severity_distribution.informational,
+                                scanReport.multi_file_scan_summary
+                                  .issue_severity_distribution.gas
+                              )}
+                            />
+                          )}
+                        </Box>
+                        <VStack ml={10} w={"calc(100% - 200px)"}>
+                          <Text textAlign={"left"} fontSize="sm">
+                            Lorem ipsum dolor sit amet,dormr adipiscing elit.
+                            Molestie ultricies id lord posuere mauris proin.
+                            Lorem ipsum dolor sit amet.
+                          </Text>
+                          <Button variant="accent-ghost">
+                            View Detailed Result < ArrowForwardIcon ml={5}/>
+                          </Button>
+                        </VStack>
+                      </Box>
+                    </Box>
+                  )}
                 </HStack>
 
                 <Box
@@ -599,13 +741,18 @@ const QuickScan: React.FC = () => {
                   >
                     {scanReport.quick_file_scan_details.map((item) => (
                       <>
-                        <HStack  my={5} width={"100%"}>
-                          <Image src={`/icons/${item.issue_status}.svg`}/>
-                          <VStack ml={'30px !important'} alignItems={'flex-start'}>
-                            <Heading   fontSize="md">
-                              {item.issue_id.split('_').join(' ')}
+                        <HStack my={5} width={"100%"}>
+                          <Image src={`/icons/${item.issue_status}.svg`} />
+                          <VStack
+                            ml={"30px !important"}
+                            alignItems={"flex-start"}
+                          >
+                            <Heading fontSize="md">
+                              {item.issue_id.split("_").join(" ")}
                             </Heading>
-                            <Text textAlign={'left'} fontSize="sm">{item.issue_description}</Text>
+                            <Text textAlign={"left"} fontSize="sm">
+                              {item.issue_description}
+                            </Text>
                           </VStack>
                         </HStack>
                         <Divider />
