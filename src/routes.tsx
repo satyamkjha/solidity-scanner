@@ -20,6 +20,10 @@ const Landing = lazy(
   () => import("pages/Landing" /* webpackChunkName: "Landing" */)
 );
 
+const QuickScan = lazy(
+  () => import("pages/QuickScan" /* webpackChunkName: "QuickScan" */)
+);
+
 const Report = lazy(
   () => import("pages/Report" /* webpackChunkName: "Landing" */)
 );
@@ -100,6 +104,15 @@ const Routes: React.FC = () => {
           </Route>
           <Route exact path="/">
             <Landing />
+          </Route>
+          <Route
+            exact
+            path="/quickscan/:blockAddress/:blockPlatform/:blockChain"
+          >
+            <QuickScan />
+          </Route>
+          <Route exact path="/quickscan/">
+            <QuickScan />
           </Route>
           <Route exact path="/report/:projectType/:projectId/:reportId">
             <Report />

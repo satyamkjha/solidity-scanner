@@ -62,41 +62,41 @@ export default function LandingPage() {
     ],
     line2: [
       {
-        name: "",
-        designation: "",
-        imgUrl: "",
-        linkedinUrl: "",
-        twitterUrl: "",
+        name: "Aditya D.",
+        designation: "Research Team Lead",
+        imgUrl: "/aditya.jpeg",
+        linkedinUrl: "https://www.linkedin.com/in/ad17ya/",
+        twitterUrl: "https://twitter.com/zombie007o",
       },
       {
-        name: "",
-        designation: "",
-        imgUrl: "",
-        linkedinUrl: "",
-        twitterUrl: "",
+        name: "Ayush Tripathi",
+        designation: "Backend Engineer",
+        imgUrl: "/ayush.jpeg",
+        linkedinUrl: "https://www.linkedin.com/in/ayush-tripathi51/",
+        twitterUrl: "https://twitter.com/TripathiAyush5",
       },
       {
-        name: "",
-        designation: "",
-        imgUrl: "",
-        linkedinUrl: "",
+        name: "Satyam Kumar Jha",
+        designation: "Frontend Engineer",
+        imgUrl: "/satyam.jpg",
+        linkedinUrl: "https://www.linkedin.com/in/satyamkjha/",
         twitterUrl: "",
       },
     ],
     line3: [
       {
-        name: "",
-        designation: "",
-        imgUrl: "",
-        linkedinUrl: "",
-        twitterUrl: "",
+        name: "Sankalp Pandey",
+        designation: "Growth Head",
+        imgUrl: "/sankalp.jpeg",
+        linkedinUrl: "https://www.linkedin.com/in/sky007/",
+        twitterUrl: "https://twitter.com/SKY_Sankalp",
       },
       {
-        name: "",
-        designation: "",
-        imgUrl: "",
-        linkedinUrl: "",
-        twitterUrl: "",
+        name: "Siddharth Neekher",
+        designation: "Lead User Interface Designer",
+        imgUrl: "/siddarth.jpeg",
+        linkedinUrl: "https://www.linkedin.com/in/siddharth-neekher-340519117/",
+        twitterUrl: "https://twitter.com/sidartdigital",
       },
     ],
   };
@@ -355,11 +355,12 @@ export default function LandingPage() {
             flexDir={["column", "column", "row"]}
             justifyContent={"center"}
           >
-            <Flex
+            {teamsData.line1.map((data) => <Flex
               as="div"
               alignItems="center"
               flexDir={["row", "row", "row"]}
               justifyContent={"flex-start"}
+              mx={10}
             >
               <VStack spacing={0}>
                 <Box
@@ -368,7 +369,7 @@ export default function LandingPage() {
                   zIndex={10}
                   width="200px"
                   borderRadius={"50%"}
-                  backgroundImage={"url(/shashank.jpeg)"}
+                  backgroundImage={`url(${data.imgUrl})`}
                   backgroundSize="contain"
                   backgroundPosition={"center"}
                 />
@@ -386,7 +387,7 @@ export default function LandingPage() {
                   textAlign={"left"}
                   fontSize="xl"
                 >
-                  Shashank
+                  {data.name}
                 </Text>
                 <Text
                   textAlign={"left"}
@@ -394,13 +395,13 @@ export default function LandingPage() {
                   fontSize="xl"
                   fontWeight={500}
                 >
-                  Co-Founder & CEO
+                  {data.designation}
                 </Text>
                 <HStack marginTop={"15px !important"} spacing={5}>
                   <Image
                     onClick={() => {
                       window.open(
-                        "https://www.linkedin.com/in/shashank-in/",
+                        data.linkedinUrl,
                         "_blank"
                       );
                     }}
@@ -411,7 +412,7 @@ export default function LandingPage() {
                   <Image
                     onClick={() => {
                       window.open(
-                        "https://twitter.com/cyberboyIndia",
+                        data.twitterUrl,
                         "_blank"
                       );
                     }}
@@ -422,76 +423,9 @@ export default function LandingPage() {
                   />
                 </HStack>
               </VStack>
-            </Flex>
-            <Flex
-              as="div"
-              alignItems="center"
-              flexDir={["row", "row", "row"]}
-              justifyContent={"flex-start"}
-            >
-              <Box
-                height={"130px"}
-                ml="50px"
-                mr="20px"
-                width="130px"
-                borderRadius={"50%"}
-                backgroundImage={"url(/indranil.jpeg)"}
-                backgroundSize="contain"
-                backgroundPosition={"center"}
-              />
-              <Flex
-                width="200px"
-                as="div"
-                alignItems="center"
-                flexDir={"row"}
-                mt={4}
-                justifyContent={"flex-start"}
-              >
-                <Flex
-                  as="div"
-                  alignItems="flex-start"
-                  flexDir={"column"}
-                  justifyContent={"center"}
-                >
-                  <Text textAlign={"left"} fontSize="xl">
-                    Indranil Roy
-                  </Text>
-                  <Text
-                    textAlign={"left"}
-                    color={"subtle"}
-                    fontSize="xl"
-                    fontWeight={900}
-                  >
-                    Co-Founder
-                  </Text>
-                  <HStack>
-                    <Image
-                      onClick={() => {
-                        window.open(
-                          "https://www.linkedin.com/in/itsmeroy2012/",
-                          "_blank"
-                        );
-                      }}
-                      src="/linkedin.svg"
-                      height={"40px"}
-                      width={"40px"}
-                    />
-                    <Image
-                      onClick={() => {
-                        window.open(
-                          "https://twitter.com/itsmeroy2012",
-                          "_blank"
-                        );
-                      }}
-                      src="/twitter.svg"
-                      height={"30px"}
-                      width={"30px"}
-                      borderRadius={"5px"}
-                    />
-                  </HStack>
-                </Flex>
-              </Flex>
-            </Flex>
+            </Flex>)}
+            
+            
           </Flex>
           <Flex
             as="div"
@@ -502,204 +436,75 @@ export default function LandingPage() {
             flexDir={["column", "column", "row"]}
             justifyContent={"center"}
           >
-            <Flex
+            {teamsData.line2.map((data) => <Flex
               as="div"
               alignItems="center"
               flexDir={["row", "row", "row"]}
               justifyContent={"flex-start"}
+              mx={10}
             >
-              <Box
-                height={"130px"}
-                ml="50px"
-                mr="20px"
-                width="130px"
-                borderRadius={"50%"}
-                backgroundImage={"url(/aditya.jpeg)"}
-                backgroundSize="contain"
-                backgroundPosition={"center"}
-              />
-              <Flex
-                width="200px"
-                as="div"
-                alignItems="center"
-                flexDir={"row"}
-                mt={4}
-                justifyContent={"flex-start"}
-              >
-                <Flex
-                  as="div"
-                  alignItems="flex-start"
-                  flexDir={"column"}
-                  justifyContent={"center"}
+              <VStack spacing={0}>
+                <Box
+                  height={"200px"}
+                  mb={"-195px"}
+                  zIndex={10}
+                  width="200px"
+                  borderRadius={"50%"}
+                  backgroundImage={`url(${data.imgUrl})`}
+                  backgroundSize="contain"
+                  backgroundPosition={"center"}
+                />
+                <Box
+                  height={"200px"}
+                  width="200px"
+                  borderRadius={"50%"}
+                  background={
+                    "linear-gradient(129.18deg, #52FF00 8.52%, #00EEFD 93.94%)"
+                  }
+                />
+
+                <Text
+                  marginTop={"15px !important"}
+                  textAlign={"left"}
+                  fontSize="xl"
                 >
-                  <Text textAlign={"left"} fontSize="xl">
-                    Aditya D.
-                  </Text>
-                  <Text
-                    textAlign={"left"}
-                    color={"subtle"}
-                    fontSize="xl"
-                    fontWeight={900}
-                  >
-                    Research Team Lead
-                  </Text>
-                  <HStack>
-                    <Image
-                      onClick={() => {
-                        window.open(
-                          "https://www.linkedin.com/in/ad17ya/",
-                          "_blank"
-                        );
-                      }}
-                      src="/linkedin.svg"
-                      height={"40px"}
-                      width={"40px"}
-                    />
-                    <Image
-                      onClick={() => {
-                        window.open("https://twitter.com/zombie007o", "_blank");
-                      }}
-                      src="/twitter.svg"
-                      height={"30px"}
-                      width={"30px"}
-                      borderRadius={"5px"}
-                    />
-                  </HStack>
-                </Flex>
-              </Flex>
-            </Flex>
-            <Flex
-              as="div"
-              alignItems="center"
-              flexDir={["row", "row", "row"]}
-              justifyContent={"flex-start"}
-            >
-              <Box
-                height={"130px"}
-                ml="50px"
-                mr="20px"
-                width="130px"
-                borderRadius={"50%"}
-                backgroundImage={"url(/ayush.jpeg)"}
-                backgroundSize="contain"
-                backgroundPosition={"center"}
-              />
-              <Flex
-                width="200px"
-                as="div"
-                alignItems="center"
-                flexDir={"row"}
-                mt={4}
-                justifyContent={"flex-start"}
-              >
-                <Flex
-                  as="div"
-                  alignItems="flex-start"
-                  flexDir={"column"}
-                  justifyContent={"center"}
+                  {data.name}
+                </Text>
+                <Text
+                  textAlign={"left"}
+                  color={"gray.400"}
+                  fontSize="xl"
+                  fontWeight={500}
                 >
-                  <Text textAlign={"left"} fontSize="xl">
-                    Ayush Tripathi
-                  </Text>
-                  <Text
-                    textAlign={"left"}
-                    color={"subtle"}
-                    fontSize="xl"
-                    fontWeight={900}
-                  >
-                    Backend Engineer
-                  </Text>
-                  <HStack>
-                    <Image
-                      onClick={() => {
-                        window.open(
-                          "https://twitter.com/TripathiAyush5",
-                          "_blank"
-                        );
-                      }}
-                      src="/linkedin.svg"
-                      height={"40px"}
-                      width={"40px"}
-                    />
-                    <Image
-                      onClick={() => {
-                        window.open(
-                          "https://www.linkedin.com/in/ayush-tripathi51/",
-                          "_blank"
-                        );
-                      }}
-                      src="/twitter.svg"
-                      height={"30px"}
-                      width={"30px"}
-                      borderRadius={"5px"}
-                    />
-                  </HStack>
-                </Flex>
-              </Flex>
-            </Flex>
-            <Flex
-              as="div"
-              alignItems="center"
-              flexDir={["row", "row", "row"]}
-              justifyContent={"flex-start"}
-            >
-              <Box
-                height={"130px"}
-                ml="50px"
-                mr="20px"
-                width="130px"
-                borderRadius={"50%"}
-                backgroundImage={"url(/satyam-img.jpg)"}
-                backgroundSize="contain"
-                backgroundPosition={"center"}
-              />
-              <Flex
-                width="200px"
-                as="div"
-                alignItems="center"
-                flexDir={"row"}
-                mt={4}
-                justifyContent={"flex-start"}
-              >
-                <Flex
-                  as="div"
-                  alignItems="flex-start"
-                  flexDir={"column"}
-                  justifyContent={"center"}
-                >
-                  <Text textAlign={"left"} fontSize="xl">
-                    Satyam Kumar Jha
-                  </Text>
-                  <Text
-                    textAlign={"left"}
-                    color={"subtle"}
-                    fontSize="xl"
-                    fontWeight={900}
-                  >
-                    Frontend Engineer
-                  </Text>
-                  <HStack>
-                    <Image
-                      onClick={() => {
-                        window.open(
-                          "https://www.linkedin.com/in/satyamkjha/",
-                          "_blank"
-                        );
-                      }}
-                      src="/linkedin.svg"
-                      height={"40px"}
-                      width={"40px"}
-                    />
-                    {/* <Image
-                    src="/twitter.svg"
+                  {data.designation}
+                </Text>
+                <HStack marginTop={"15px !important"} spacing={5}>
+                  <Image
+                    onClick={() => {
+                      window.open(
+                        data.linkedinUrl,
+                        "_blank"
+                      );
+                    }}
+                    src="/socials/linkedin.svg"
+                    height={"30px"}
+                    width={"30px"}
+                  />
+                  <Image
+                    onClick={() => {
+                      window.open(
+                        data.twitterUrl,
+                        "_blank"
+                      );
+                    }}
+                    src="/socials/twitter.svg"
                     height={"30px"}
                     width={"30px"}
                     borderRadius={"5px"}
-                  /> */}
-                  </HStack>
-                </Flex>
-              </Flex>
-            </Flex>
+                  />
+                </HStack>
+              </VStack>
+            </Flex>)}
           </Flex>
           <Flex
             as="div"
@@ -710,144 +515,75 @@ export default function LandingPage() {
             flexDir={["column", "column", "row"]}
             justifyContent={"center"}
           >
-            <Flex
+            {teamsData.line3.map((data) => <Flex
               as="div"
               alignItems="center"
               flexDir={["row", "row", "row"]}
               justifyContent={"flex-start"}
+              mx={10}
             >
-              <Box
-                height={"130px"}
-                ml="50px"
-                mr="20px"
-                width="130px"
-                borderRadius={"50%"}
-                backgroundImage={"url(/sankalp.jpeg)"}
-                backgroundSize="contain"
-                backgroundPosition={"center"}
-              />
-              <Flex
-                width="200px"
-                as="div"
-                alignItems="center"
-                flexDir={"row"}
-                mt={4}
-                justifyContent={"flex-start"}
-              >
-                <Flex
-                  as="div"
-                  alignItems="flex-start"
-                  flexDir={"column"}
-                  justifyContent={"center"}
+              <VStack spacing={0}>
+                <Box
+                  height={"200px"}
+                  mb={"-195px"}
+                  zIndex={10}
+                  width="200px"
+                  borderRadius={"50%"}
+                  backgroundImage={`url(${data.imgUrl})`}
+                  backgroundSize="contain"
+                  backgroundPosition={"center"}
+                />
+                <Box
+                  height={"200px"}
+                  width="200px"
+                  borderRadius={"50%"}
+                  background={
+                    "linear-gradient(129.18deg, #52FF00 8.52%, #00EEFD 93.94%)"
+                  }
+                />
+
+                <Text
+                  marginTop={"15px !important"}
+                  textAlign={"left"}
+                  fontSize="xl"
                 >
-                  <Text textAlign={"left"} fontSize="xl">
-                    Sankalp Pandey
-                  </Text>
-                  <Text
-                    textAlign={"left"}
-                    color={"subtle"}
-                    fontSize="xl"
-                    fontWeight={900}
-                  >
-                    Growth Head
-                  </Text>
-                  <HStack>
-                    <Image
-                      onClick={() => {
-                        window.open(
-                          "https://www.linkedin.com/in/sky007/",
-                          "_blank"
-                        );
-                      }}
-                      src="/linkedin.svg"
-                      height={"40px"}
-                      width={"40px"}
-                    />
-                    <Image
-                      onClick={() => {
-                        window.open(
-                          "https://twitter.com/SKY_Sankalp",
-                          "_blank"
-                        );
-                      }}
-                      src="/twitter.svg"
-                      height={"30px"}
-                      width={"30px"}
-                      borderRadius={"5px"}
-                    />
-                  </HStack>
-                </Flex>
-              </Flex>
-            </Flex>
-            <Flex
-              as="div"
-              alignItems="center"
-              flexDir={["row", "row", "row"]}
-              justifyContent={"flex-start"}
-            >
-              <Box
-                height={"130px"}
-                ml="50px"
-                mr="20px"
-                width="130px"
-                borderRadius={"50%"}
-                backgroundImage={"url(/siddarth.jpeg)"}
-                backgroundSize="contain"
-                backgroundPosition={"center"}
-              />
-              <Flex
-                width="200px"
-                as="div"
-                alignItems="center"
-                flexDir={"row"}
-                mt={4}
-                justifyContent={"flex-start"}
-              >
-                <Flex
-                  as="div"
-                  alignItems="flex-start"
-                  flexDir={"column"}
-                  justifyContent={"center"}
+                  {data.name}
+                </Text>
+                <Text
+                  textAlign={"left"}
+                  color={"gray.400"}
+                  fontSize="xl"
+                  fontWeight={500}
                 >
-                  <Text textAlign={"left"} fontSize="xl">
-                    Siddharth Neekher
-                  </Text>
-                  <Text
-                    textAlign={"left"}
-                    color={"subtle"}
-                    fontSize="xl"
-                    fontWeight={900}
-                  >
-                    Lead User Interface Designer
-                  </Text>
-                  <HStack>
-                    <Image
-                      onClick={() => {
-                        window.open(
-                          "https://www.linkedin.com/in/siddharth-neekher-340519117/",
-                          "_blank"
-                        );
-                      }}
-                      src="/linkedin.svg"
-                      height={"40px"}
-                      width={"40px"}
-                    />
-                    <Image
-                      onClick={() => {
-                        window.open(
-                          "https://twitter.com/sidartdigital",
-                          "_blank"
-                        );
-                      }}
-                      src="/twitter.svg"
-                      height={"30px"}
-                      width={"30px"}
-                      borderRadius={"5px"}
-                    />
-                  </HStack>
-                </Flex>
-              </Flex>
-            </Flex>
+                  {data.designation}
+                </Text>
+                <HStack marginTop={"15px !important"} spacing={5}>
+                  <Image
+                    onClick={() => {
+                      window.open(
+                        data.linkedinUrl,
+                        "_blank"
+                      );
+                    }}
+                    src="/socials/linkedin.svg"
+                    height={"30px"}
+                    width={"30px"}
+                  />
+                  <Image
+                    onClick={() => {
+                      window.open(
+                        data.twitterUrl,
+                        "_blank"
+                      );
+                    }}
+                    src="/socials/twitter.svg"
+                    height={"30px"}
+                    width={"30px"}
+                    borderRadius={"5px"}
+                  />
+                </HStack>
+              </VStack>
+            </Flex>)}
           </Flex>
         </Box>
 

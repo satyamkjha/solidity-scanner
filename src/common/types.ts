@@ -346,13 +346,11 @@ export type QuickScanResult = {
   quick_file_scan_details: QuickFileScanDetail[];
   multi_file_scan_status: string;
   multi_file_scan_summary: MultiFileScanSummary;
-}
+};
 
 export type QuickFileScanDetail = {
   issue_id: string;
   issue_description: string;
   issue_inference: string;
-  issue_status: string;  
+  issue_status: string;
 };
-
-
