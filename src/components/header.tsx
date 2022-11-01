@@ -37,7 +37,7 @@ export const Header: React.FC = () => {
         justifyContent="space-between"
         maxW="75vw"
         mx="auto"
-        py={8}
+        py={4}
       >
         <Flex alignItems="center">
           <RouterLink to="/">

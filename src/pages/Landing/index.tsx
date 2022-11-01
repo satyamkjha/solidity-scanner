@@ -43,6 +43,7 @@ export default function LandingPage() {
     if (campaign_id) localStorage.setItem("campaign_id", campaign_id);
   }, []);
 
+
   const teamsData = {
     line1: [
       {
@@ -54,7 +55,7 @@ export default function LandingPage() {
       },
       {
         name: "Indranil Roy",
-        designation: "Co-Founder",
+        designation: "CTO & Co-Founder",
         imgUrl: "/indranil.jpeg",
         linkedinUrl: "https://www.linkedin.com/in/itsmeroy2012/",
         twitterUrl: "https://twitter.com/itsmeroy2012",
@@ -70,7 +71,7 @@ export default function LandingPage() {
       },
       {
         name: "Ayush Tripathi",
-        designation: "Backend Engineer",
+        designation: "Lead Backend Engineer",
         imgUrl: "/ayush.jpeg",
         linkedinUrl: "https://www.linkedin.com/in/ayush-tripathi51/",
         twitterUrl: "https://twitter.com/TripathiAyush5",
@@ -86,14 +87,14 @@ export default function LandingPage() {
     line3: [
       {
         name: "Sankalp Pandey",
-        designation: "Growth Head",
+        designation: "Growth Lead",
         imgUrl: "/sankalp.jpeg",
         linkedinUrl: "https://www.linkedin.com/in/sky007/",
         twitterUrl: "https://twitter.com/SKY_Sankalp",
       },
       {
         name: "Siddharth Neekher",
-        designation: "Lead User Interface Designer",
+        designation: "UI/UX Designer",
         imgUrl: "/siddarth.jpeg",
         linkedinUrl: "https://www.linkedin.com/in/siddharth-neekher-340519117/",
         twitterUrl: "https://twitter.com/sidartdigital",

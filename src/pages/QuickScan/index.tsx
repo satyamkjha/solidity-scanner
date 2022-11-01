@@ -385,14 +385,14 @@ const QuickScan: React.FC = () => {
   return (
     <>
       <Header />
-      <Container maxW="80vw" color="black">
+      <Container maxW="100vw" p={0} color="black">
         <Flex
           as="section"
           w="100%"
           alignItems="center"
-          my={[10, 10, 0]}
+          p={0}
           textAlign={["center", "center"]}
-          py={24}
+          
           flexDir="column"
         >
           <Box
@@ -401,16 +401,21 @@ const QuickScan: React.FC = () => {
             alignItems={"center"}
             w={"100%"}
             px={[0, 0, 10]}
-            py={10}
+            py={20}
+            pb={"200px"}
+            background={"url('/background/quickscan_bg.jpeg')"}
+            backgroundSize='cover'
+            backgroundPosition={'center'}
+            backgroundRepeat='no-repeat'
           >
-            <Heading fontSize={["3xl", "4xl"]} mb={8}>
-              Solidity scan Quick Scan
+            <Heading color={'white'} fontSize={["3xl", "4xl"]} mb={8}>
+              Solidity scan <span style={{color:'#52FF00'}} > Quick Scan </span>
             </Heading>
             <Text fontSize="xl" color="subtle" mb={8}>
               Smart-contract scanning tool built to discover vulnerabilities &
               mitigate risks in your code.
             </Text>
-            <HStack mt={20} justify="center" w={"90%"} spacing={0}>
+            <HStack mt={20} justify="center" w={"70%"} spacing={0}>
               <Select
                 formatOptionLabel={formatOptionLabel}
                 options={options}
@@ -444,7 +449,7 @@ const QuickScan: React.FC = () => {
                 variant="brand"
                 size="lg"
                 height={50}
-                backgroundColor={"#FAFBFC"}
+                
                 borderTopLeftRadius={0}
                 borderBottomLeftRadius={0}
                 value={address}
@@ -456,6 +461,7 @@ const QuickScan: React.FC = () => {
 
             <Button
               mt={20}
+              
               w={"300px"}
               type="submit"
               variant="brand"
@@ -465,7 +471,7 @@ const QuickScan: React.FC = () => {
             </Button>
           </Box>
           {isLoading ? (
-            <Flex w="100%" h="70vh" alignItems="center" justifyContent="center">
+            <Flex background={'#FFFFFF'} mt={"-120px"} w="90%" h="70vh" alignItems="center" justifyContent="center">
               <Spinner />
             </Flex>
           ) : (
@@ -475,9 +481,12 @@ const QuickScan: React.FC = () => {
                 flexDir="column"
                 alignItems="center"
                 justifyContent={"flex-start"}
-                w={"100%"}
+                w={"90%"}
                 px={[0, 0, 10]}
+                mt={"-120px"}
                 py={10}
+                borderRadius={20}
+                background={'#FFFFFF'}
               >
                 <HStack w={"100%"} spacing={"5%"}>
                   <Box
