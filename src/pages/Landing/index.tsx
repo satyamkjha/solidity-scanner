@@ -115,7 +115,7 @@ export default function LandingPage() {
           py={24}
         >
           <Box w={["100%", "100%", "45%"]} px={[0, 0, 10]} py={10}>
-            <Heading fontSize={["3xl", "4xl"]} mb={8}>
+            <Heading as='h1' fontSize={["3xl", "4xl"]} mb={8}>
               Get your smart contracts audited by a smarter tool
             </Heading>
             <Text fontSize="xl" color="subtle" mb={8}>
@@ -146,7 +146,7 @@ export default function LandingPage() {
 
         {/* Section 2 */}
         <Box w="100%" as="section" sx={{ textAlign: "center" }} my={8}>
-          <Heading fontSize="3xl" mb={4}>
+          <Heading as='h1' fontSize="3xl" mb={4}>
             Scan.{" "}
             <Box
               as="span"
@@ -243,7 +243,7 @@ export default function LandingPage() {
             />
           </Box>
           <Box w={["100%", "100%", "50%"]} p={10}>
-            <Heading fontSize="3xl" mb={8}>
+            <Heading as='h2' fontSize="3xl" mb={8}>
               See your security posture evolve
             </Heading>
             <Text fontSize="xl" color="subtle" mb={8}>
@@ -271,7 +271,7 @@ export default function LandingPage() {
             />
           </Box>
           <Box w={["100%", "100%", "50%"]} p={10}>
-            <Heading fontSize="3xl" mb={8}>
+            <Heading as='h2' fontSize="3xl" mb={8}>
               Integrate with the services you already love
             </Heading>
             <Text fontSize="xl" color="subtle" mb={8}>
@@ -298,7 +298,7 @@ export default function LandingPage() {
             />
           </Box>
           <Box w={["100%", "100%", "50%"]} p={10}>
-            <Heading fontSize="3xl" mb={8}>
+            <Heading as='h2' fontSize="3xl" mb={8}>
               Built by us, for your contracts:
             </Heading>
             <Text fontSize="xl" color="subtle" mb={8}>
@@ -326,7 +326,7 @@ export default function LandingPage() {
             />
           </Box>
           <Box w={["100%", "100%", "50%"]} p={10}>
-            <Heading fontSize="3xl" mb={8}>
+            <Heading as='h2' fontSize="3xl" mb={8}>
               Publish reports and share your security score
             </Heading>
             <Text fontSize="xl" color="subtle" mb={8}>
@@ -339,7 +339,7 @@ export default function LandingPage() {
           </Box>
         </Flex>
         <Box w="100%" as="section" sx={{ textAlign: "center" }} my={24}>
-          <Heading fontSize="3xl" mb={4}>
+          <Heading as='h1' fontSize="3xl" mb={4}>
             Our Team
           </Heading>
           <Text color="subtle" fontSize="xl" mb={4}>
@@ -581,7 +581,7 @@ export default function LandingPage() {
 
         {/* Section 4 */}
         <Box w="100%" as="section" sx={{ textAlign: "center" }} my={8} mt={24}>
-          <Heading fontSize="3xl" mb={4}>
+          <Heading as='h2' fontSize="3xl" mb={4}>
             Fully automated smart contract audit system <br /> to help{" "}
             <Box as="span" sx={{ color: "accent" }}>
               secure your products faster
@@ -611,7 +611,7 @@ export default function LandingPage() {
               alignItems: "center",
             }}
           >
-            <Heading fontSize="3xl" mb={4} textAlign="center">
+            <Heading as='h1' fontSize="3xl" mb={4} textAlign="center">
               Request for a{" "}
               <Box as="span" sx={{ color: "accent" }}>
                 manual audit
@@ -638,7 +638,7 @@ export default function LandingPage() {
             color="#69C85A"
           >
             <Smile size={50} />
-            <Heading fontSize="4xl" my={4}>
+            <Heading as='h5' fontSize="4xl" my={4}>
               28,50,000,000+
             </Heading>
             <Text fontSize="md">
@@ -737,6 +737,7 @@ export default function LandingPage() {
               }}
             >
               <Heading
+              as='h2'
                 fontSize="3xl"
                 lineHeight="1.4"
                 mb={4}
