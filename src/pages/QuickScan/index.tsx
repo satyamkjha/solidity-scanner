@@ -392,7 +392,6 @@ const QuickScan: React.FC = () => {
           alignItems="center"
           p={0}
           textAlign={["center", "center"]}
-          
           flexDir="column"
         >
           <Box
@@ -404,12 +403,13 @@ const QuickScan: React.FC = () => {
             py={20}
             pb={"200px"}
             background={"url('/background/quickscan_bg.jpeg')"}
-            backgroundSize='cover'
-            backgroundPosition={'center'}
-            backgroundRepeat='no-repeat'
+            backgroundSize="cover"
+            backgroundPosition={"center"}
+            backgroundRepeat="no-repeat"
           >
-            <Heading color={'white'} fontSize={["3xl", "4xl"]} mb={8}>
-              Solidity scan <span style={{color:'#52FF00'}} > Quick Scan </span>
+            <Heading color={"white"} fontSize={["3xl", "4xl"]} mb={8}>
+              Solidity scan{" "}
+              <span style={{ color: "#52FF00" }}> Quick Scan </span>
             </Heading>
             <Text fontSize="xl" color="subtle" mb={8}>
               Smart-contract scanning tool built to discover vulnerabilities &
@@ -449,7 +449,6 @@ const QuickScan: React.FC = () => {
                 variant="brand"
                 size="lg"
                 height={50}
-                
                 borderTopLeftRadius={0}
                 borderBottomLeftRadius={0}
                 value={address}
@@ -461,7 +460,6 @@ const QuickScan: React.FC = () => {
 
             <Button
               mt={20}
-              
               w={"300px"}
               type="submit"
               variant="brand"
@@ -471,7 +469,14 @@ const QuickScan: React.FC = () => {
             </Button>
           </Box>
           {isLoading ? (
-            <Flex background={'#FFFFFF'} mt={"-120px"} w="90%" h="70vh" alignItems="center" justifyContent="center">
+            <Flex
+              background={"#FFFFFF"}
+              mt={"-120px"}
+              w="90%"
+              h="70vh"
+              alignItems="center"
+              justifyContent="center"
+            >
               <Spinner />
             </Flex>
           ) : (
@@ -486,7 +491,7 @@ const QuickScan: React.FC = () => {
                 mt={"-120px"}
                 py={10}
                 borderRadius={20}
-                background={'#FFFFFF'}
+                background={"#FFFFFF"}
               >
                 <HStack w={"100%"} spacing={"5%"}>
                   <Box
@@ -495,8 +500,14 @@ const QuickScan: React.FC = () => {
                     borderRadius={15}
                     px={5}
                     py={5}
-                    background={parseFloat(scanReport.multi_file_scan_summary.score) < 2.5 ?
-                      "linear-gradient(96.27deg, #FFF3F0 0.75%, #FFE0D9 96.71%)" : parseFloat(scanReport.multi_file_scan_summary.score) >= 4.5 ? 'linear-gradient(96.27deg, #EFFFED 0.75%, #E6FFE2 96.71%)' : 'linear-gradient(96.27deg, #FFFAF2 0.75%, #FFF4E1 96.71%)'
+                    background={
+                      parseFloat(scanReport.multi_file_scan_summary.score) < 2.5
+                        ? "linear-gradient(96.27deg, #FFF3F0 0.75%, #FFE0D9 96.71%)"
+                        : parseFloat(
+                            scanReport.multi_file_scan_summary.score
+                          ) >= 4.5
+                        ? "linear-gradient(96.27deg, #EFFFED 0.75%, #E6FFE2 96.71%)"
+                        : "linear-gradient(96.27deg, #FFFAF2 0.75%, #FFF4E1 96.71%)"
                     }
                   >
                     <Text fontSize="md" mb={5}>
@@ -716,8 +727,16 @@ const QuickScan: React.FC = () => {
                             Molestie ultricies id lord posuere mauris proin.
                             Lorem ipsum dolor sit amet.
                           </Text>
-                          <Button onClick={() => window.open('https://solidityscan.com/signup', '_blank')} variant="accent-ghost">
-                            View Detailed Result < ArrowForwardIcon ml={5}/>
+                          <Button
+                            onClick={() =>
+                              window.open(
+                                "https://solidityscan.com/signup",
+                                "_blank"
+                              )
+                            }
+                            variant="accent-ghost"
+                          >
+                            View Detailed Result <ArrowForwardIcon ml={5} />
                           </Button>
                         </VStack>
                       </Box>

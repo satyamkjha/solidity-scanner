@@ -43,7 +43,6 @@ export default function LandingPage() {
     if (campaign_id) localStorage.setItem("campaign_id", campaign_id);
   }, []);
 
-
   const teamsData = {
     line1: [
       {
@@ -138,9 +137,9 @@ export default function LandingPage() {
             <Image
               marginTop={"-60px"}
               src="/landing-image01.png"
-              alt="Product screenshot"
               transform="translateX(20px)"
               zIndex={"10"}
+              alt={"Run scans for your smat contracts"}
             />
           </Box>
         </Flex>
@@ -238,7 +237,7 @@ export default function LandingPage() {
           <Box width={["100%", "100%", "50%"]}>
             <Image
               src="/landing-image02.jpg"
-              alt="Product screenshot"
+              alt="Keep track of the bugs in your project"
               mx="auto"
               p={12}
             />
@@ -266,7 +265,7 @@ export default function LandingPage() {
           <Box width={["100%", "100%", "50%"]}>
             <Image
               src="/landing-image03.jpg"
-              alt="Product screenshot"
+              alt="Integrate with Microsoft Teams, Slack and Jira"
               mx="auto"
               p={12}
             />
@@ -293,7 +292,7 @@ export default function LandingPage() {
           <Box width={["100%", "100%", "50%"]}>
             <Image
               src="/landing-image04.jpg"
-              alt="Product screenshot"
+              alt="Customize and silence issues and set your own rules"
               mx="auto"
               p={12}
             />
@@ -321,7 +320,7 @@ export default function LandingPage() {
           <Box width={["100%", "100%", "50%"]}>
             <Image
               src="/landing-image06.jpg"
-              alt="Product screenshot"
+              alt="Publish reports and share your security score"
               mx="auto"
               p={12}
             />
@@ -407,6 +406,7 @@ export default function LandingPage() {
                       src="/socials/linkedin.svg"
                       height={"30px"}
                       width={"30px"}
+                      alt={"Linkedin"}
                     />
                     <Image
                       onClick={() => {
@@ -416,6 +416,7 @@ export default function LandingPage() {
                       height={"30px"}
                       width={"30px"}
                       borderRadius={"5px"}
+                      alt={"Twitter"}
                     />
                   </HStack>
                 </VStack>
@@ -482,6 +483,7 @@ export default function LandingPage() {
                       src="/socials/linkedin.svg"
                       height={"30px"}
                       width={"30px"}
+                      alt={"Linkedin"}
                     />
                     <Image
                       onClick={() => {
@@ -491,6 +493,7 @@ export default function LandingPage() {
                       height={"30px"}
                       width={"30px"}
                       borderRadius={"5px"}
+                      alt={"Twitter"}
                     />
                   </HStack>
                 </VStack>
@@ -557,6 +560,7 @@ export default function LandingPage() {
                       src="/socials/linkedin.svg"
                       height={"30px"}
                       width={"30px"}
+                      alt={"Linkedin"}
                     />
                     <Image
                       onClick={() => {
@@ -566,6 +570,7 @@ export default function LandingPage() {
                       height={"30px"}
                       width={"30px"}
                       borderRadius={"5px"}
+                      alt={"Twitter"}
                     />
                   </HStack>
                 </VStack>
@@ -586,15 +591,7 @@ export default function LandingPage() {
             Focus on what matters most, our robots handle the rest ☕️
           </Text>
           <ImageCarousel />
-          {/* <Image
-            src="/landing-image05.jpg"
-            transform="translateX(10%)"
-            py={10}
-            width={["70vw", "50vw"]}
-            mx="auto"
-          /> */}
         </Box>
-        {/* Section 5 */}
         <Box
           sx={{
             w: "100%",
