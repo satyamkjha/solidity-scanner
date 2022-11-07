@@ -110,3 +110,89 @@ export const dummyCode = `
 
   }
 `;
+
+export const teamsData = {
+  line1: [
+    {
+      name: "Shashank",
+      designation: "Co-Founder & CEO",
+      imgUrl: "/shashank.jpeg",
+      linkedinUrl: "https://www.linkedin.com/in/shashank-in/",
+      twitterUrl: "https://twitter.com/cyberboyIndi",
+    },
+    {
+      name: "Indranil Roy",
+      designation: "CTO & Co-Founder",
+      imgUrl: "/indranil.jpeg",
+      linkedinUrl: "https://www.linkedin.com/in/itsmeroy2012/",
+      twitterUrl: "https://twitter.com/itsmeroy2012",
+    },
+  ],
+  line2: [
+    {
+      name: "Aditya D.",
+      designation: "Research Team Lead",
+      imgUrl: "/aditya.jpeg",
+      linkedinUrl: "https://www.linkedin.com/in/ad17ya/",
+      twitterUrl: "https://twitter.com/zombie007o",
+    },
+    {
+      name: "Ayush Tripathi",
+      designation: "Lead Backend Engineer",
+      imgUrl: "/ayush.jpeg",
+      linkedinUrl: "https://www.linkedin.com/in/ayush-tripathi51/",
+      twitterUrl: "https://twitter.com/TripathiAyush5",
+    },
+    {
+      name: "Satyam Kumar Jha",
+      designation: "Frontend Engineer",
+      imgUrl: "/satyam.jpg",
+      linkedinUrl: "https://www.linkedin.com/in/satyamkjha/",
+      twitterUrl: "",
+    },
+  ],
+  line3: [
+    {
+      name: "Sankalp Pandey",
+      designation: "Growth Lead",
+      imgUrl: "/sankalp.jpeg",
+      linkedinUrl: "https://www.linkedin.com/in/sky007/",
+      twitterUrl: "https://twitter.com/SKY_Sankalp",
+    },
+    {
+      name: "Siddharth Neekher",
+      designation: "UI/UX Designer",
+      imgUrl: "/siddarth.jpeg",
+      linkedinUrl: "https://www.linkedin.com/in/siddharth-neekher-340519117/",
+      twitterUrl: "https://twitter.com/sidartdigital",
+    },
+  ],
+};
+
+export const userTestimonials = [
+  {
+    name: "Vitaly Dmitriyevich",
+    designation: "Co-Founder Ethereum",
+    testimonial: "Awesome tool! I am super happy with everything about this product. Its’s a little taste of everything all in one box."
+  },
+  {
+    name: "Vitaly Dmitriyevich",
+    designation: "Co-Founder Ethereum",
+    testimonial: "Awesome tool! I am super happy with everything about this product. Its’s a little taste of everything all in one box."
+  },
+  {
+    name: "Vitaly Dmitriyevich",
+    designation: "Co-Founder Ethereum",
+    testimonial: "Awesome tool! I am super happy with everything about this product. Its’s a little taste of everything all in one box."
+  },
+  {
+    name: "Vitaly Dmitriyevich",
+    designation: "Co-Founder Ethereum",
+    testimonial: "Awesome tool! I am super happy with everything about this product. Its’s a little taste of everything all in one box."
+  },
+  {
+    name: "Vitaly Dmitriyevich",
+    designation: "Co-Founder Ethereum",
+    testimonial: "Awesome tool! I am super happy with everything about this product. Its’s a little taste of everything all in one box."
+  }
+];
