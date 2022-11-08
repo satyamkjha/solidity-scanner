@@ -1,5 +1,6 @@
 import React, { useEffect } from "react";
 import { Link, useLocation } from "react-router-dom";
+import { teamsData } from "common/values"
 
 import {
   Flex,
@@ -30,6 +31,7 @@ import Header from "components/header";
 import Footer from "components/footer";
 import ImageCarousel from "./components/carousel";
 import ContactUs from "components/contactus";
+import UserTestimonial from "./components/testimonial";
 
 export default function LandingPage() {
   const { isOpen, onClose, onOpen } = useDisclosure();
@@ -42,64 +44,6 @@ export default function LandingPage() {
     if (campaign_type) localStorage.setItem("campaign_type", campaign_type);
     if (campaign_id) localStorage.setItem("campaign_id", campaign_id);
   }, []);
-
-  const teamsData = {
-    line1: [
-      {
-        name: "Shashank",
-        designation: "Co-Founder & CEO",
-        imgUrl: "/shashank.jpeg",
-        linkedinUrl: "https://www.linkedin.com/in/shashank-in/",
-        twitterUrl: "https://twitter.com/cyberboyIndi",
-      },
-      {
-        name: "Indranil Roy",
-        designation: "CTO & Co-Founder",
-        imgUrl: "/indranil.jpeg",
-        linkedinUrl: "https://www.linkedin.com/in/itsmeroy2012/",
-        twitterUrl: "https://twitter.com/itsmeroy2012",
-      },
-    ],
-    line2: [
-      {
-        name: "Aditya D.",
-        designation: "Research Team Lead",
-        imgUrl: "/aditya.jpeg",
-        linkedinUrl: "https://www.linkedin.com/in/ad17ya/",
-        twitterUrl: "https://twitter.com/zombie007o",
-      },
-      {
-        name: "Ayush Tripathi",
-        designation: "Lead Backend Engineer",
-        imgUrl: "/ayush.jpeg",
-        linkedinUrl: "https://www.linkedin.com/in/ayush-tripathi51/",
-        twitterUrl: "https://twitter.com/TripathiAyush5",
-      },
-      {
-        name: "Satyam Kumar Jha",
-        designation: "Frontend Engineer",
-        imgUrl: "/satyam.jpg",
-        linkedinUrl: "https://www.linkedin.com/in/satyamkjha/",
-        twitterUrl: "",
-      },
-    ],
-    line3: [
-      {
-        name: "Sankalp Pandey",
-        designation: "Growth Lead",
-        imgUrl: "/sankalp.jpeg",
-        linkedinUrl: "https://www.linkedin.com/in/sky007/",
-        twitterUrl: "https://twitter.com/SKY_Sankalp",
-      },
-      {
-        name: "Siddharth Neekher",
-        designation: "UI/UX Designer",
-        imgUrl: "/siddarth.jpeg",
-        linkedinUrl: "https://www.linkedin.com/in/siddharth-neekher-340519117/",
-        twitterUrl: "https://twitter.com/sidartdigital",
-      },
-    ],
-  };
 
   return (
     <>
@@ -339,7 +283,17 @@ export default function LandingPage() {
           </Box>
         </Flex>
         <Box w="100%" as="section" sx={{ textAlign: "center" }} my={24}>
-          <Heading as='h1' fontSize="3xl" mb={4}>
+          <Heading fontSize="3xl" mb={4}>
+            What People are Saying about us
+          </Heading>
+          <Text color="subtle" fontSize="xl" mb={4}>
+            Meet the experts behind the scenes. We are always excited to talk
+            about anything in crypto.
+          </Text>
+          <UserTestimonial />
+        </Box>
+        <Box w="100%" as="section" sx={{ textAlign: "center" }} my={24}>
+          <Heading fontSize="3xl" mb={4}>
             Our Team
           </Heading>
           <Text color="subtle" fontSize="xl" mb={4}>
@@ -737,7 +691,7 @@ export default function LandingPage() {
               }}
             >
               <Heading
-              as='h2'
+                as='h2'
                 fontSize="3xl"
                 lineHeight="1.4"
                 mb={4}
