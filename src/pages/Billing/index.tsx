@@ -66,6 +66,7 @@ import { sentenceCapitalize } from "helpers/helperFunction";
 import { useInvoices } from "hooks/useInvoices";
 import ReactPaginate from "react-paginate";
 import { server } from "typescript";
+import { CoinPaymentsIcon } from "components/icons";
 
 const Billing: React.FC = () => {
   const { data } = useProfile();
@@ -883,11 +884,7 @@ const CoinPayments: React.FC<{ packageName: string; onClose: () => void }> = ({
   return (
     <VStack width="100%" spacing={6} mt={4} alignItems="inherit">
       <Flex alignItems="flex-end" justifyContent="space-between">
-        <img
-          src="/coinpayments-logo.svg"
-          width="200px"
-          alt="CoinPayments Logo"
-        />
+        <CoinPaymentsIcon size={200} />
         {/* {data && coin !== "" && (
           <Flex alignItems="center">
             <CryptoIcon size={32} name={coin.toLowerCase()} />

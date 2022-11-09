@@ -1001,8 +1001,8 @@ export const ReportContainer: React.FC<{ summary_report: Report }> = ({
                 <Image src={`/icons/${issue.bug_status}_color.svg`} />
                 <Text fontSize="md" fontWeight={"normal"} color={"gray.600"}>
                   {/* {sentenceCapitalize(
-                      issue.status.toLowerCase().replace("_", " ")
-                    )} */}
+                        issue.status.toLowerCase().replace("_", " ")
+                      )} */}
 
                   {issue.bug_status === "false_positive" && "False Positive"}
                   {issue.bug_status === "wont_fix" && "Won't Fix"}
@@ -1141,8 +1141,8 @@ export const ReportContainer: React.FC<{ summary_report: Report }> = ({
                   <Image src={`/icons/${issue.bug_status}_color.svg`} />
                   <Text fontSize="md" fontWeight={"normal"} color={"gray.600"}>
                     {/* {sentenceCapitalize(
-                      issue.status.toLowerCase().replace("_", " ")
-                    )} */}
+                        issue.status.toLowerCase().replace("_", " ")
+                      )} */}
 
                     {issue.bug_status === "false_positive" && "False Positive"}
                     {issue.bug_status === "wont_fix" && "Won't Fix"}
@@ -1570,13 +1570,11 @@ const DescriptionWrapper = styled.div`
   p {
     font-weight: 300;
   }
-
   code {
     background: #cbd5e0;
     padding: 2px 4px;
     border-radius: 5px;
   }
-
   a {
     color: #4299e1;
     text-decoration: underline;

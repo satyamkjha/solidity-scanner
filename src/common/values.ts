@@ -173,26 +173,31 @@ export const userTestimonials = [
   {
     name: "Vitaly Dmitriyevich",
     designation: "Co-Founder Ethereum",
-    testimonial: "Awesome tool! I am super happy with everything about this product. Its’s a little taste of everything all in one box."
+    testimonial:
+      "Awesome tool! I am super happy with everything about this product. Its’s a little taste of everything all in one box.",
   },
   {
     name: "Vitaly Dmitriyevich",
     designation: "Co-Founder Ethereum",
-    testimonial: "Awesome tool! I am super happy with everything about this product. Its’s a little taste of everything all in one box."
+    testimonial:
+      "Awesome tool! I am super happy with everything about this product. Its’s a little taste of everything all in one box.",
   },
   {
     name: "Vitaly Dmitriyevich",
     designation: "Co-Founder Ethereum",
-    testimonial: "Awesome tool! I am super happy with everything about this product. Its’s a little taste of everything all in one box."
+    testimonial:
+      "Awesome tool! I am super happy with everything about this product. Its’s a little taste of everything all in one box.",
   },
   {
     name: "Vitaly Dmitriyevich",
     designation: "Co-Founder Ethereum",
-    testimonial: "Awesome tool! I am super happy with everything about this product. Its’s a little taste of everything all in one box."
+    testimonial:
+      "Awesome tool! I am super happy with everything about this product. Its’s a little taste of everything all in one box.",
   },
   {
     name: "Vitaly Dmitriyevich",
     designation: "Co-Founder Ethereum",
-    testimonial: "Awesome tool! I am super happy with everything about this product. Its’s a little taste of everything all in one box."
-  }
+    testimonial:
+      "Awesome tool! I am super happy with everything about this product. Its’s a little taste of everything all in one box.",
+  },
 ];
