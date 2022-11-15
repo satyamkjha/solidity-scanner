@@ -14,7 +14,7 @@ export const Footer: React.FC = () => {
   const history = useHistory();
 
   return (
-    <Container maxW="80vw" my={20}>
+    <Container maxW="90vw" my={20}>
       <Flex
         flexDirection={["column", "column", "row"]}
         justifyContent="space-between"

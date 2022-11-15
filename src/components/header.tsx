@@ -35,7 +35,7 @@ export const Header: React.FC = () => {
         as="header"
         alignItems="center"
         justifyContent="space-between"
-        maxW="75vw"
+        maxW="90vw"
         mx="auto"
         py={4}
       >
