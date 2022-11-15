@@ -611,7 +611,13 @@ const BlockPage: React.FC = () => {
           maxW="70vw"
           minW={"300px"}
         >
-          <ModalHeader p={10}>Publish Report</ModalHeader>
+          <ModalHeader
+            background="rgba(82, 255, 0, 0.04)"
+            backgroundImage="url('/background/pattern.png')"
+            py={10}
+          >
+            Publish Report
+          </ModalHeader>
           <ModalCloseButton />
           <ModalBody h={"fit-content"} w={"100%"} px={10}>
             <Flex
