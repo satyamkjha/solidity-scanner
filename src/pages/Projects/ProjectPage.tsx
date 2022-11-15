@@ -1059,7 +1059,7 @@ const ScanDetails: React.FC<{ scansRemaining: number; scans: ScanMeta[] }> = ({
               )}
               <Image
                 ml={"-10%"}
-                src="/publishreport.png"
+                src="/common/publishreport.png"
                 alt="Product screenshot"
                 w={"40%"}
                 h={"auto"}

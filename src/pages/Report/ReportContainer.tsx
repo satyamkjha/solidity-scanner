@@ -20,6 +20,7 @@ import {
   ProjectIcon,
   IssueDescriptionIcons,
   IssueRemediationIcons,
+  ReportCoverDots,
 } from "components/icons";
 import VulnerabilityProgress from "components/VulnerabilityProgress";
 import { sentenceCapitalize } from "helpers/helperFunction";
@@ -128,7 +129,7 @@ export const ReportContainer: React.FC<{ summary_report: Report }> = ({
           This security assessment report was prepared by SolidityScan.com, a
           cloud-based Smart Contract Scanner.
         </Text>
-        <Image src="/report-image.svg" />
+        <ReportCoverDots />
       </Flex>
       <Flex
         as="div"

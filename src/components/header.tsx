@@ -63,7 +63,7 @@ export const Header: React.FC = () => {
             </Link>
             <Link
               onClick={() => {
-                window.open("https://credshields.medium.com/", "_blank");
+                window.open("https://blog.solidityscan.com/", "_blank");
               }}
               variant="brand"
               fontWeight="600"

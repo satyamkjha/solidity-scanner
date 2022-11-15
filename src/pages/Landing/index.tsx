@@ -31,7 +31,6 @@ import Header from "components/header";
 import Footer from "components/footer";
 import ImageCarousel from "./components/carousel";
 import ContactUs from "components/contactus";
-import UserTestimonial from "./components/testimonial";
 
 export default function LandingPage() {
   const { isOpen, onClose, onOpen } = useDisclosure();
@@ -80,7 +79,7 @@ export default function LandingPage() {
           >
             <Image
               marginTop={"-60px"}
-              src="/landing-image01.png"
+              src="/landing/landing-image01.png"
               transform="translateX(20px)"
               zIndex={"10"}
               alt={"Run scans for your smat contracts"}
@@ -180,7 +179,7 @@ export default function LandingPage() {
         >
           <Box width={["100%", "100%", "50%"]}>
             <Image
-              src="/landing-image02.jpg"
+              src="/landing/landing-image02.jpeg"
               alt="Keep track of the bugs in your project"
               mx="auto"
               p={12}
@@ -208,7 +207,7 @@ export default function LandingPage() {
         >
           <Box width={["100%", "100%", "50%"]}>
             <Image
-              src="/landing-image03.jpg"
+              src="/landing/landing-image03.jpeg"
               alt="Integrate with Microsoft Teams, Slack and Jira"
               mx="auto"
               p={12}
@@ -235,7 +234,7 @@ export default function LandingPage() {
         >
           <Box width={["100%", "100%", "50%"]}>
             <Image
-              src="/landing-image04.jpg"
+              src="/landing/landing-image04.jpeg"
               alt="Customize and silence issues and set your own rules"
               mx="auto"
               p={12}
@@ -263,7 +262,7 @@ export default function LandingPage() {
         >
           <Box width={["100%", "100%", "50%"]}>
             <Image
-              src="/landing-image06.jpg"
+              src="/landing/landing-image06.jpeg"
               alt="Publish reports and share your security score"
               mx="auto"
               p={12}
@@ -282,7 +281,16 @@ export default function LandingPage() {
             </Text>
           </Box>
         </Flex>
-        <Box w="100%" as="section" sx={{ textAlign: "center" }} my={24}>
+        <Box
+          w="100%"
+          display={"flex"}
+          flexDir="column"
+          justifyContent={"flex-start"}
+          alignItems="center"
+          as="section"
+          sx={{ textAlign: "center" }}
+          my={30}
+        >
           <Heading fontSize="3xl" mb={4}>
             What People are Saying about us
           </Heading>
@@ -290,7 +298,33 @@ export default function LandingPage() {
             Meet the experts behind the scenes. We are always excited to talk
             about anything in crypto.
           </Text>
-          <UserTestimonial />
+          {/* <UserTestimonial /> */}
+          <Box
+            width={"50%"}
+            boxShadow="0px 16px 32px rgba(0, 0, 0, 0.13)"
+            borderRadius="15px"
+            my={20}
+          >
+            <VStack>
+              <Text fontSize="lg" mt="10">
+                Vitaly Dmitriyevich
+              </Text>
+              <Text color="subtle" fontSize="md">
+                Co-Founder Ethereum
+              </Text>
+              <Box>
+                <Text
+                  padding={"10"}
+                  fontSize="xl"
+                  fontStyle="italic"
+                  fontWeight="400"
+                >
+                  Awesome tool! I am super happy with everything about this
+                  product. Its’s a little taste of everything all in one box.",
+                </Text>
+              </Box>
+            </VStack>
+          </Box>
         </Box>
         <Box w="100%" as="section" sx={{ textAlign: "center" }} my={24}>
           <Heading fontSize="3xl" mb={4}>
@@ -549,7 +583,7 @@ export default function LandingPage() {
         <Box
           sx={{
             w: "100%",
-            backgroundImage: 'url("/pattern.jpg")',
+            backgroundImage: 'url("/background/pattern.png")',
             borderRadius: 20,
             overflow: "hidden",
             mb: 10,
@@ -669,7 +703,7 @@ export default function LandingPage() {
         <Box
           sx={{
             w: "100%",
-            backgroundImage: 'url("/pattern.jpg")',
+            backgroundImage: "url(/background/pattern.png)",
             borderRadius: 20,
             overflow: "hidden",
             mb: 10,

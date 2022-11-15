@@ -97,7 +97,7 @@ export default function TOSPage() {
               included or made available by the Service.
             </li>
             <li>
-              <strong>Website</strong> refers to Solidity Scan, accessible from
+              <strong>Website</strong> refers to SolidityScan, accessible from
               www.solidityscan.com.com
             </li>
 

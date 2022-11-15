@@ -182,7 +182,7 @@ export const ContactUs: React.FC<{ onClose(): any; isOpen: boolean }> = ({
               </Stack>
               <Image
                 ml={"-100px"}
-                src="/contactus.png"
+                src="/common/contactus.png"
                 alt="Product screenshot"
                 w={"50%"}
               />

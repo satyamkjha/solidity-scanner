@@ -37,11 +37,11 @@ import { Plan } from "common/types";
 import Auth from "helpers/auth";
 import { FaLeaf } from "react-icons/fa";
 import { PublishReportInfo } from "components/infoModal";
+import { pricingDetails } from "common/values";
 
 export default function PricingPage() {
   const [tab, setTab] = useState<string>("weekly");
   const { isOpen, onClose, onOpen } = useDisclosure();
-  const { data: plans } = usePricingPlans();
   const [selectedPlan, setSelectedPlan] = useState("");
   const [openPublish, setOpenPublish] = useState(false);
   const location = useLocation();
@@ -66,7 +66,7 @@ export default function PricingPage() {
           py={7}
           px={4}
           background="rgba(82, 255, 0, 0.04)"
-          backgroundImage="url(./pattern.png)"
+          backgroundImage="url('/background/pattern.png')"
           borderRadius="3xl"
         >
           <Text
@@ -137,7 +137,7 @@ export default function PricingPage() {
           {/* </Flex> */}
         </Flex>
 
-        {plans && (
+        {pricingDetails && (
           <ScaleFade initialScale={0.9} in={tab === "weekly"}>
             <Box
               w={"100%"}
@@ -563,10 +563,10 @@ export default function PricingPage() {
                   alignItems="flex-start"
                   w={"72vw"}
                 >
-                  {Object.keys(plans.monthly).map((plan) => (
+                  {Object.keys(pricingDetails.monthly).map((plan) => (
                     <PricingColumn
                       plan={plan}
-                      planData={plans.monthly[plan]}
+                      planData={pricingDetails.monthly[plan]}
                       setSelectedPlan={setSelectedPlan}
                       selectedPlan={selectedPlan}
                     />
@@ -667,7 +667,7 @@ export const PricingColumn: React.FC<{
           {planData.amount === "Free" ? "Free" : `$ ${planData.amount}`}
         </Heading>
         <Text textAlign="center" fontSize={"xs"}>
-          {plan === "trial" || plan === "ondemand" ? "" : "per month"}
+          {plan === "trial" || plan === "ondemand" ? "Perpetual" : "per month"}
         </Text>
       </Box>
       <Box
@@ -704,7 +704,7 @@ export const PricingColumn: React.FC<{
           lineHeight="title"
           fontWeight={"300"}
         >
-          {planData.scan_count}
+          {plan === "custom" ? "-" : planData.scan_count}
         </Text>
       </Box>
       <Box

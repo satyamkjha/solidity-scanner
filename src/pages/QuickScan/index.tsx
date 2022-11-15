@@ -408,7 +408,7 @@ const QuickScan: React.FC = () => {
             backgroundRepeat="no-repeat"
           >
             <Heading color={"white"} fontSize={["3xl", "4xl"]} mb={8}>
-              Solidity scan{" "}
+              SolidityScan{" "}
               <span style={{ color: "#52FF00" }}> Quick Scan </span>
             </Heading>
             <Text fontSize="xl" color="subtle" mb={8}>

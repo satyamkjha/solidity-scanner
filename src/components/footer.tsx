@@ -89,7 +89,11 @@ export const Footer: React.FC = () => {
           <Link mx={5} href="https://t.me/solidityscan" isExternal>
             <TelegramIcon size={50} />
           </Link>
-          <Link mx={5} href="https://www.instagram.com/solidityscan/" isExternal>
+          <Link
+            mx={5}
+            href="https://www.instagram.com/solidityscan/"
+            isExternal
+          >
             <InstagramIcon size={50} />
           </Link>
           <Link mx={5} href="https://twitter.com/solidityscan" isExternal>
