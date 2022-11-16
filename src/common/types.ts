@@ -343,6 +343,7 @@ export type QuickScanResult = {
   contract_chain?: string;
   currency?: string;
   is_approved: boolean;
+  latest_report_id: string;
   quick_file_scan_details: QuickFileScanDetail[];
   multi_file_scan_status: string;
   multi_file_scan_summary: MultiFileScanSummary;
@@ -350,6 +351,7 @@ export type QuickScanResult = {
 
 export type QuickFileScanDetail = {
   issue_id: string;
+  issue_name: string;
   issue_description: string;
   issue_inference: string;
   issue_status: string;

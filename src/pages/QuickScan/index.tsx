@@ -1,5 +1,6 @@
 import React, { useEffect } from "react";
 import { Link, useLocation, useParams } from "react-router-dom";
+import styled from "@emotion/styled";
 
 import {
   Flex,
@@ -284,11 +285,7 @@ const QuickScan: React.FC = () => {
     if (blockPlatform) setPlatform(blockPlatform);
     if (blockAddress && blockChain && blockPlatform) {
       setIsLoading(true);
-      API.post("/api-quick-scan-sse/", {
-        contract_address: blockAddress,
-        contract_platform: blockPlatform,
-        contract_chain: blockChain,
-      }).then(
+      API.get(`/api-quick-scan-sse/?contract_address=${blockAddress}&contract_platform=${blockPlatform}&contract_chain=${blockChain}`).then(
         (res) => {
           if (res.status === 200) {
             setScanReport(res.data.scan_report);
@@ -314,7 +311,6 @@ const QuickScan: React.FC = () => {
           });
         }
       );
-      setIsLoading(false);
     }
   }, []);
 
@@ -349,12 +345,11 @@ const QuickScan: React.FC = () => {
       });
       return;
     }
+   
     setIsLoading(true);
-    API.post("/api-quick-scan-sse/", {
-      contract_address: address,
-      contract_platform: platform,
-      contract_chain: chain,
-    }).then(
+    
+    API.get(`/api-quick-scan-sse/?contract_address=${address}&contract_platform=${platform}&contract_chain=${chain}`)
+      .then(
       (res) => {
         if (res.status === 200) {
           setScanReport(res.data.scan_report);
@@ -379,7 +374,7 @@ const QuickScan: React.FC = () => {
         });
       }
     );
-    setIsLoading(false);
+    setTimeout(() => setIsLoading(false), 2000)   
   };
 
   return (
@@ -459,12 +454,15 @@ const QuickScan: React.FC = () => {
             </HStack>
 
             <Button
+            isLoading={isLoading}
+            loadingText='Scanning'
               mt={20}
               w={"300px"}
               type="submit"
               variant="brand"
               onClick={generateQuickScan}
             >
+
               Start Scan
             </Button>
           </Box>
@@ -612,7 +610,7 @@ const QuickScan: React.FC = () => {
                       <HStack my={4} width={"100%"} justify={"space-between"}>
                         <Text fontSize="sm">Duration</Text>
                         <Text fontSize="sm">
-                          {scanReport.multi_file_scan_summary.scans_ran}
+                          {scanReport.multi_file_scan_summary.scan_time_taken} seconds
                         </Text>
                       </HStack>
                       <Divider />
@@ -655,17 +653,22 @@ const QuickScan: React.FC = () => {
                         </Heading>
 
                         <Text textAlign={"left"} color={"white"} fontSize="md">
-                          Lorem ipsum dolor sit amet, consectetur adipiscing
-                          elit. Molestie ultricies id lord posuere mauris proin.
-                          Lorem ipsum dolor sit amet.Lorem ipsum{" "}
+                        This contract has been manually verified by SolidityScan's internal security team as per the highest smart contract security standards.{" "}
                         </Text>
 
                         <Button
                           alignSelf={"flex-end"}
                           type="submit"
                           variant="brand"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            window.open(
+                              `http://${document.location.host}/published-report/project/${scanReport.latest_report_id}`,
+                              "_blank"
+                            );
+                          }}
                         >
-                          ashdlkasd
+                          VIEW PUBLISHED REPORT
                         </Button>
                       </VStack>
                     </Box>
@@ -723,14 +726,13 @@ const QuickScan: React.FC = () => {
                         </Box>
                         <VStack ml={10} w={"calc(100% - 200px)"}>
                           <Text textAlign={"left"} fontSize="sm">
-                            Lorem ipsum dolor sit amet,dormr adipiscing elit.
-                            Molestie ultricies id lord posuere mauris proin.
-                            Lorem ipsum dolor sit amet.
+                          This contract has been analyzed by more than 110 proprietary vulnerability patterns of SolidityScan. Vulnerability details and mechanisms to remediate the risks tailored specific to the contract are now available in the link below.
+
                           </Text>
                           <Button
                             onClick={() =>
                               window.open(
-                                "https://solidityscan.com/signup",
+                                "https://solidityscan.com/signup/?utm_source=quickscan&utm_medium=quickscan&utm_campaign=quickscan",
                                 "_blank"
                               )
                             }
@@ -776,11 +778,15 @@ const QuickScan: React.FC = () => {
                             alignItems={"flex-start"}
                           >
                             <Heading fontSize="md">
-                              {item.issue_id.split("_").join(" ")}
+                              {item.issue_name}
                             </Heading>
-                            <Text textAlign={"left"} fontSize="sm">
-                              {item.issue_description}
-                            </Text>
+                            <DescriptionWrapper>
+              <Box
+                dangerouslySetInnerHTML={{
+                  __html: item.issue_description,
+                }}
+              />
+            </DescriptionWrapper>
                           </VStack>
                         </HStack>
                         <Divider />
@@ -798,3 +804,25 @@ const QuickScan: React.FC = () => {
 };
 
 export default QuickScan;
+
+
+const DescriptionWrapper = styled.div`
+  p {
+    text-align: left;
+  }
+
+  code {
+    background: #cbd5e0;
+    padding: 2px 4px;
+    border-radius: 5px;
+  }
+
+  a {
+    color: #4299e1;
+    text-decoration: underline;
+    transition: 0.2s color;
+    &:hover {
+      color: #2b6cb0;
+    }
+  }
+`;
