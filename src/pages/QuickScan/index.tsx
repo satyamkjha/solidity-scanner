@@ -663,7 +663,7 @@ const QuickScan: React.FC = () => {
                           onClick={(e) => {
                             e.stopPropagation();
                             window.open(
-                              `http://${document.location.host}/published-report/project/${scanReport.latest_report_id}`,
+                              `http://${document.location.host}/published-report/block/${scanReport.latest_report_id}`,
                               "_blank"
                             );
                           }}
