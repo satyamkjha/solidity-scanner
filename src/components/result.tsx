@@ -677,7 +677,6 @@ export const MultifileResult: React.FC<{
         <Box
           sx={{
             w: "100%",
-
             position: "sticky",
             top: 8,
           }}

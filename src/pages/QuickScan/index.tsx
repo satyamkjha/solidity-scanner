@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useRef } from "react";
 import { Link, useLocation, useParams } from "react-router-dom";
 import styled from "@emotion/styled";
 
@@ -45,6 +45,7 @@ import { QuickScanResult } from "common/types";
 import { sentenceCapitalize } from "helpers/helperFunction";
 import PieChart from "components/pieChart";
 import { ArrowForwardIcon } from "@chakra-ui/icons";
+import { monthNames } from "common/values";
 
 const pieData = (
   critical: number,
@@ -279,36 +280,27 @@ const QuickScan: React.FC = () => {
     null
   );
 
+  let d = new Date();
+
+  const elementRef = useRef<HTMLDivElement>(null);
+
   useEffect(() => {
     if (blockAddress) setAddress(blockAddress);
     if (blockChain) setChain(blockChain);
     if (blockPlatform) setPlatform(blockPlatform);
     if (blockAddress && blockChain && blockPlatform) {
       setIsLoading(true);
-      API.get(`/api-quick-scan-sse/?contract_address=${blockAddress}&contract_platform=${blockPlatform}&contract_chain=${blockChain}`).then(
+      API.get(
+        `/api-quick-scan-sse/?contract_address=${blockAddress}&contract_platform=${blockPlatform}&contract_chain=${blockChain}`
+      ).then(
         (res) => {
           if (res.status === 200) {
             setScanReport(res.data.scan_report);
-          } else {
-            toast({
-              title: "Quick Scan Failed",
-              description:
-                "Scan has failed. Please check the values and re-scan.",
-              status: "error",
-              duration: 3000,
-              isClosable: true,
-            });
+            d = new Date(res.data.scan_report.published_date);
           }
         },
         (err) => {
-          toast({
-            title: "Quick Scan Failed",
-            description:
-              "Scan has failed. Please check the values and re-scan.",
-            status: "error",
-            duration: 3000,
-            isClosable: true,
-          });
+          return;
         }
       );
     }
@@ -345,36 +337,42 @@ const QuickScan: React.FC = () => {
       });
       return;
     }
-   
+
     setIsLoading(true);
-    
-    API.get(`/api-quick-scan-sse/?contract_address=${address}&contract_platform=${platform}&contract_chain=${chain}`)
-      .then(
+    setScanReport(null);
+    API.get(
+      `/api-quick-scan-sse/?contract_address=${address}&contract_platform=${platform}&contract_chain=${chain}`
+    ).then(
       (res) => {
         if (res.status === 200) {
           setScanReport(res.data.scan_report);
-        } else {
-          toast({
-            title: "Quick Scan Failed",
-            description:
-              "Scan has failed. Please check the values and re-scan.",
-            status: "error",
-            duration: 3000,
-            isClosable: true,
-          });
+          d = new Date(res.data.scan_report.published_date);
         }
       },
       (err) => {
-        toast({
-          title: "Quick Scan Failed",
-          description: "Scan has failed. Please check the values and re-scan.",
-          status: "error",
-          duration: 3000,
-          isClosable: true,
-        });
+        return;
       }
     );
-    setTimeout(() => setIsLoading(false), 2000)   
+    setTimeout(() => setIsLoading(false), 1000);
+  };
+
+  useEffect(() => {
+    if (scanReport !== null) {
+      setTimeout(() => {
+        setIsLoading(false)
+      }, 1000);
+      scrollToElement()
+    }
+  }, [scanReport]);
+
+  const scrollToElement = () => {
+    if (elementRef.current) {
+      elementRef.current.scrollIntoView({
+        behavior: "smooth",
+        block: "start",
+        inline: "start",
+      });
+    }
   };
 
   return (
@@ -454,130 +452,303 @@ const QuickScan: React.FC = () => {
             </HStack>
 
             <Button
-            isLoading={isLoading}
-            loadingText='Scanning'
+              isLoading={isLoading}
+              loadingText="Scanning"
               mt={20}
               w={"300px"}
               type="submit"
               variant="brand"
               onClick={generateQuickScan}
             >
-
               Start Scan
             </Button>
           </Box>
-          {isLoading ? (
-            <Flex
-              background={"#FFFFFF"}
-              mt={"-120px"}
-              w="90%"
-              h="70vh"
+
+          {scanReport !== null && (
+            <Box
+              ref={elementRef}
+              display={"flex"}
+              flexDir="column"
               alignItems="center"
-              justifyContent="center"
+              justifyContent={"flex-start"}
+              w={"90%"}
+              px={[0, 0, 10]}
+              mt={"-120px"}
+              py={10}
+              borderRadius={20}
+              background={"#FFFFFF"}
             >
-              <Spinner />
-            </Flex>
-          ) : (
-            scanReport !== null && (
-              <Box
-                display={"flex"}
-                flexDir="column"
-                alignItems="center"
-                justifyContent={"flex-start"}
-                w={"90%"}
-                px={[0, 0, 10]}
-                mt={"-120px"}
-                py={10}
-                borderRadius={20}
-                background={"#FFFFFF"}
-              >
-                <HStack w={"100%"} spacing={"5%"}>
-                  <Box
-                    w={"20%"}
-                    h={"250px"}
-                    borderRadius={15}
-                    px={5}
-                    py={5}
-                    background={
-                      parseFloat(scanReport.multi_file_scan_summary.score) < 2.5
-                        ? "linear-gradient(96.27deg, #FFF3F0 0.75%, #FFE0D9 96.71%)"
-                        : parseFloat(
-                            scanReport.multi_file_scan_summary.score
-                          ) >= 4.5
-                        ? "linear-gradient(96.27deg, #EFFFED 0.75%, #E6FFE2 96.71%)"
-                        : "linear-gradient(96.27deg, #FFFAF2 0.75%, #FFF4E1 96.71%)"
-                    }
+              <HStack w={"100%"} spacing={"5%"}>
+                <Box
+                  w={"20%"}
+                  h={"250px"}
+                  borderRadius={15}
+                  px={5}
+                  py={5}
+                  background={
+                    parseFloat(scanReport.multi_file_scan_summary.score) < 2.5
+                      ? "linear-gradient(96.27deg, #FFF3F0 0.75%, #FFE0D9 96.71%)"
+                      : parseFloat(scanReport.multi_file_scan_summary.score) >=
+                        4.5
+                      ? "linear-gradient(96.27deg, #EFFFED 0.75%, #E6FFE2 96.71%)"
+                      : "linear-gradient(96.27deg, #FFFAF2 0.75%, #FFF4E1 96.71%)"
+                  }
+                >
+                  <Text fontSize="md" mb={5}>
+                    Solidity Score
+                  </Text>
+                  <CircularProgress
+                    value={60}
+                    color="accent"
+                    thickness="8px"
+                    size="100px"
+                    capIsRound
+                    trackColor={"white"}
                   >
-                    <Text fontSize="md" mb={5}>
-                      Solidity Score
-                    </Text>
-                    <CircularProgress
-                      value={60}
-                      color="accent"
-                      thickness="8px"
-                      size="100px"
-                      capIsRound
-                      trackColor={"white"}
+                    <CircularProgressLabel
+                      sx={{ display: "flex", justifyContent: "center" }}
                     >
-                      <CircularProgressLabel
-                        sx={{ display: "flex", justifyContent: "center" }}
-                      >
-                        <Box>
-                          <Text fontSize="2xl" fontWeight={900} color="accent">
-                            {scanReport.multi_file_scan_summary.score}
-                          </Text>
-                        </Box>
-                      </CircularProgressLabel>
-                    </CircularProgress>
-                    <Text fontWeight={300} fontSize="sm" mt={5}>
-                      Your Solidity Score Low
-                    </Text>
-                  </Box>
+                      <Box>
+                        <Text fontSize="2xl" fontWeight={900} color="accent">
+                          {scanReport.multi_file_scan_summary.score}
+                        </Text>
+                      </Box>
+                    </CircularProgressLabel>
+                  </CircularProgress>
+                  <Text fontWeight={300} fontSize="sm" mt={5}>
+                    Your Solidity Score Low
+                  </Text>
+                </Box>
+                <Box
+                  w={"75%"}
+                  borderRadius={15}
+                  p={5}
+                  h={"250px"}
+                  background={" #FAFBFC "}
+                  display="flex"
+                  flexDir={"column"}
+                  alignItems="flex-start"
+                  justifyContent={"flex-start"}
+                >
+                  <Text fontSize="md">VULNERABILITIES DETECTED</Text>
+                  <HStack mt={5} width={"100%"} justify={"space-between"}>
+                    <Box
+                      w={"15%"}
+                      borderRadius={15}
+                      p={5}
+                      h={"160px"}
+                      background={" #FFFFFF "}
+                      display="flex"
+                      flexDir={"column"}
+                      alignItems="center"
+                      justifyContent={"center"}
+                    >
+                      <Text fontWeight={300} fontSize="md">
+                        Critical
+                      </Text>
+                      <Text fontSize="xl" my={3}>
+                        {
+                          scanReport.multi_file_scan_summary
+                            .issue_severity_distribution.critical
+                        }
+                      </Text>
+                      <SeverityIcon size={10} variant={"critical"} />
+                    </Box>
+                    <Box
+                      w={"15%"}
+                      borderRadius={15}
+                      p={5}
+                      h={"160px"}
+                      background={" #FFFFFF "}
+                      display="flex"
+                      flexDir={"column"}
+                      alignItems="center"
+                      justifyContent={"center"}
+                    >
+                      <Text fontWeight={300} fontSize="md">
+                        High
+                      </Text>
+                      <Text fontSize="xl" my={3}>
+                        {
+                          scanReport.multi_file_scan_summary
+                            .issue_severity_distribution.high
+                        }
+                      </Text>
+                      <SeverityIcon size={10} variant={"high"} />
+                    </Box>
+                    <Box
+                      w={"15%"}
+                      borderRadius={15}
+                      p={5}
+                      h={"160px"}
+                      background={" #FFFFFF "}
+                      display="flex"
+                      flexDir={"column"}
+                      alignItems="center"
+                      justifyContent={"center"}
+                    >
+                      <Text fontWeight={300} fontSize="md">
+                        Medium
+                      </Text>
+                      <Text fontSize="xl" my={3}>
+                        {
+                          scanReport.multi_file_scan_summary
+                            .issue_severity_distribution.medium
+                        }
+                      </Text>
+                      <SeverityIcon size={10} variant={"medium"} />
+                    </Box>
+                    <Box
+                      w={"15%"}
+                      borderRadius={15}
+                      p={5}
+                      h={"160px"}
+                      background={" #FFFFFF "}
+                      display="flex"
+                      flexDir={"column"}
+                      alignItems="center"
+                      justifyContent={"center"}
+                    >
+                      <Text fontWeight={300} fontSize="md">
+                        Informational
+                      </Text>
+                      <Text fontSize="xl" my={3}>
+                        {
+                          scanReport.multi_file_scan_summary
+                            .issue_severity_distribution.informational
+                        }
+                      </Text>
+                      <SeverityIcon size={10} variant={"informational"} />
+                    </Box>
+                    <Box
+                      w={"15%"}
+                      borderRadius={15}
+                      p={5}
+                      h={"160px"}
+                      background={" #FFFFFF "}
+                      display="flex"
+                      flexDir={"column"}
+                      alignItems="center"
+                      justifyContent={"center"}
+                    >
+                      <Text fontWeight={300} fontSize="md">
+                        Gas
+                      </Text>
+                      <Text fontSize="xl" my={3}>
+                        {
+                          scanReport.multi_file_scan_summary
+                            .issue_severity_distribution.gas
+                        }
+                      </Text>
+                      <SeverityIcon size={10} variant={"gas"} />
+                    </Box>
+                  </HStack>
+                </Box>
+              </HStack>
+
+              <HStack w={"100%"} mt={10} spacing={"5%"}>
+                <Box
+                  w={"47.5%"}
+                  borderRadius={15}
+                  p={5}
+                  background={" #FAFBFC "}
+                  display="flex"
+                  flexDir={"column"}
+                  alignItems="flex-start"
+                  justifyContent={"flex-start"}
+                >
+                  <Text fontSize="md">SCAN STATISTICS</Text>
                   <Box
-                    w={"75%"}
+                    w={"100%"}
                     borderRadius={15}
                     p={5}
-                    h={"250px"}
-                    background={" #FAFBFC "}
+                    mt={5}
+                    background={" #FFFFFF "}
                     display="flex"
                     flexDir={"column"}
+                    alignItems="center"
+                    justifyContent={"center"}
+                  >
+                    <HStack my={4} width={"100%"} justify={"space-between"}>
+                      <Text fontSize="sm">Score</Text>
+                      <Text fontSize="sm">
+                        {scanReport.multi_file_scan_summary.score + "/5"}
+                      </Text>
+                    </HStack>
+                    <Divider />
+                    <HStack my={4} width={"100%"} justify={"space-between"}>
+                      <Text fontSize="sm">Duration</Text>
+                      <Text fontSize="sm">
+                        {scanReport.multi_file_scan_summary.scan_time_taken}{" "}
+                        seconds
+                      </Text>
+                    </HStack>
+                    <Divider />
+                    <HStack my={4} width={"100%"} justify={"space-between"}>
+                      <Text fontSize="sm">Lines of Code</Text>
+                      <Text fontSize="sm">
+                        {
+                          scanReport.multi_file_scan_summary
+                            .lines_analyzed_count
+                        }
+                      </Text>
+                    </HStack>
+                    <Divider />
+                  </Box>
+                </Box>
+                {scanReport.is_approved ? (
+                  <Box
+                    w={"47.5%"}
+                    borderRadius={15}
+                    p={8}
+                    backgroundColor={"#02070E"}
+                    backgroundImage={"url('/background/verifiedAuditbg.png')"}
+                    display="flex"
+                    height={"280px"}
+                    flexDir={"row"}
                     alignItems="flex-start"
                     justifyContent={"flex-start"}
                   >
-                    <Text fontSize="md">VULNERABILITIES DETECTED</Text>
-                    <HStack mt={5} width={"100%"} justify={"space-between"}>
-                      {Object.keys(
-                        scanReport.multi_file_scan_summary
-                          .issue_severity_distribution
-                      ).map((key, index) => (
-                        <Box
-                          w={"15%"}
-                          borderRadius={15}
-                          p={5}
-                          h={"160px"}
-                          background={" #FFFFFF "}
-                          display="flex"
-                          flexDir={"column"}
-                          alignItems="center"
-                          justifyContent={"center"}
-                        >
-                          <Text fontWeight={300} fontSize="md">
-                            {sentenceCapitalize(key)}
-                          </Text>
-                          <Text fontSize="xl" my={3}>
-                            {
-                              scanReport.multi_file_scan_summary
-                                .issue_severity_distribution[key]
-                            }
-                          </Text>
-                          <SeverityIcon size={10} variant={key} />
-                        </Box>
-                      ))}
-                    </HStack>
-                  </Box>
-                </HStack>
+                    <Image
+                      mr={10}
+                      src="/common/verifiedAuditSeal.svg"
+                      height={"130px"}
+                      width={"130px"}
+                      borderRadius={"5px"}
+                    />
+                    <VStack alignItems={"flex-start"}>
+                      <Heading color={"white"} fontSize="2xl">
+                        {" "}
+                        Verified Contract
+                      </Heading>
 
-                <HStack w={"100%"} mt={10} spacing={"5%"}>
+                      <Text textAlign={"left"} color={"white"} fontSize="md">
+                        This contract has been manually verified by
+                        SolidityScan's internal security team as per the highest
+                        smart contract security standards as of{" "}
+                        {`${d.getDate()} ${
+                          monthNames[d.getMonth()]
+                        } ${d.getFullYear()}`}
+                        .{" "}
+                      </Text>
+
+                      <Button
+                        alignSelf={"flex-end"}
+                        type="submit"
+                        variant="brand"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          window.open(
+                            `http://${document.location.host}/published-report/block/${scanReport.latest_report_id}`,
+                            "_blank"
+                          );
+                        }}
+                      >
+                        VIEW PUBLISHED REPORT
+                      </Button>
+                    </VStack>
+                  </Box>
+                ) : (
                   <Box
                     w={"47.5%"}
                     borderRadius={15}
@@ -588,7 +759,7 @@ const QuickScan: React.FC = () => {
                     alignItems="flex-start"
                     justifyContent={"flex-start"}
                   >
-                    <Text fontSize="md">SCAN STATISTICS</Text>
+                    <Text fontSize="md">DETAILED RESULT</Text>
                     <Box
                       w={"100%"}
                       borderRadius={15}
@@ -596,206 +767,111 @@ const QuickScan: React.FC = () => {
                       mt={5}
                       background={" #FFFFFF "}
                       display="flex"
-                      flexDir={"column"}
-                      alignItems="center"
-                      justifyContent={"center"}
-                    >
-                      <HStack my={4} width={"100%"} justify={"space-between"}>
-                        <Text fontSize="sm">Score</Text>
-                        <Text fontSize="sm">
-                          {scanReport.multi_file_scan_summary.score + "/5"}
-                        </Text>
-                      </HStack>
-                      <Divider />
-                      <HStack my={4} width={"100%"} justify={"space-between"}>
-                        <Text fontSize="sm">Duration</Text>
-                        <Text fontSize="sm">
-                          {scanReport.multi_file_scan_summary.scan_time_taken} seconds
-                        </Text>
-                      </HStack>
-                      <Divider />
-                      <HStack my={4} width={"100%"} justify={"space-between"}>
-                        <Text fontSize="sm">Lines of Code</Text>
-                        <Text fontSize="sm">
-                          {
-                            scanReport.multi_file_scan_summary
-                              .lines_analyzed_count
-                          }
-                        </Text>
-                      </HStack>
-                      <Divider />
-                    </Box>
-                  </Box>
-                  {scanReport.is_approved ? (
-                    <Box
-                      w={"47.5%"}
-                      borderRadius={15}
-                      p={8}
-                      backgroundColor={"#02070E"}
-                      backgroundImage={"url('/background/verifiedAuditbg.png')"}
-                      display="flex"
-                      height={"280px"}
                       flexDir={"row"}
                       alignItems="flex-start"
                       justifyContent={"flex-start"}
                     >
-                      <Image
-                        mr={10}
-                        src="/common/verifiedAuditSeal.svg"
-                        height={"130px"}
-                        width={"130px"}
-                        borderRadius={"5px"}
-                      />
-                      <VStack alignItems={"flex-start"}>
-                        <Heading color={"white"} fontSize="2xl">
-                          {" "}
-                          Verified Contract
-                        </Heading>
-
-                        <Text textAlign={"left"} color={"white"} fontSize="md">
-                        This contract has been manually verified by SolidityScan's internal security team as per the highest smart contract security standards.{" "}
+                      <Box
+                        w={"200px"}
+                        display="flex"
+                        justifyContent="center"
+                        alignItems={"center"}
+                        h="180px"
+                      >
+                        {scanReport.multi_file_scan_summary.issues_count ===
+                        0 ? (
+                          <Image src="/nobug.svg" alt="No Bugs Found" />
+                        ) : (
+                          <PieChart
+                            data={pieData(
+                              scanReport.multi_file_scan_summary
+                                .issue_severity_distribution.critical,
+                              scanReport.multi_file_scan_summary
+                                .issue_severity_distribution.high,
+                              scanReport.multi_file_scan_summary
+                                .issue_severity_distribution.medium,
+                              scanReport.multi_file_scan_summary
+                                .issue_severity_distribution.low,
+                              scanReport.multi_file_scan_summary
+                                .issue_severity_distribution.informational,
+                              scanReport.multi_file_scan_summary
+                                .issue_severity_distribution.gas
+                            )}
+                          />
+                        )}
+                      </Box>
+                      <VStack ml={10} w={"calc(100% - 200px)"}>
+                        <Text textAlign={"left"} fontSize="sm">
+                          This contract has been analyzed by more than 110
+                          proprietary vulnerability patterns of SolidityScan.
+                          Vulnerability details and mechanisms to remediate the
+                          risks tailored specific to the contract are now
+                          available in the link below.
                         </Text>
-
                         <Button
-                          alignSelf={"flex-end"}
-                          type="submit"
-                          variant="brand"
-                          onClick={(e) => {
-                            e.stopPropagation();
+                          onClick={() =>
                             window.open(
-                              `http://${document.location.host}/published-report/block/${scanReport.latest_report_id}`,
+                              "https://solidityscan.com/signup/?utm_source=quickscan&utm_medium=quickscan&utm_campaign=quickscan",
                               "_blank"
-                            );
-                          }}
+                            )
+                          }
+                          variant="accent-ghost"
                         >
-                          VIEW PUBLISHED REPORT
+                          View Detailed Result <ArrowForwardIcon ml={5} />
                         </Button>
                       </VStack>
                     </Box>
-                  ) : (
-                    <Box
-                      w={"47.5%"}
-                      borderRadius={15}
-                      p={5}
-                      background={" #FAFBFC "}
-                      display="flex"
-                      flexDir={"column"}
-                      alignItems="flex-start"
-                      justifyContent={"flex-start"}
-                    >
-                      <Text fontSize="md">DETAILED RESULT</Text>
-                      <Box
-                        w={"100%"}
-                        borderRadius={15}
-                        p={5}
-                        mt={5}
-                        background={" #FFFFFF "}
-                        display="flex"
-                        flexDir={"row"}
-                        alignItems="flex-start"
-                        justifyContent={"flex-start"}
-                      >
-                        <Box
-                          w={"200px"}
-                          display="flex"
-                          justifyContent="center"
-                          alignItems={"center"}
-                          h="180px"
-                        >
-                          {scanReport.multi_file_scan_summary.issues_count ===
-                          0 ? (
-                            <Image src="/nobug.svg" alt="No Bugs Found" />
-                          ) : (
-                            <PieChart
-                              data={pieData(
-                                scanReport.multi_file_scan_summary
-                                  .issue_severity_distribution.critical,
-                                scanReport.multi_file_scan_summary
-                                  .issue_severity_distribution.high,
-                                scanReport.multi_file_scan_summary
-                                  .issue_severity_distribution.medium,
-                                scanReport.multi_file_scan_summary
-                                  .issue_severity_distribution.low,
-                                scanReport.multi_file_scan_summary
-                                  .issue_severity_distribution.informational,
-                                scanReport.multi_file_scan_summary
-                                  .issue_severity_distribution.gas
-                              )}
-                            />
-                          )}
-                        </Box>
-                        <VStack ml={10} w={"calc(100% - 200px)"}>
-                          <Text textAlign={"left"} fontSize="sm">
-                          This contract has been analyzed by more than 110 proprietary vulnerability patterns of SolidityScan. Vulnerability details and mechanisms to remediate the risks tailored specific to the contract are now available in the link below.
+                  </Box>
+                )}
+              </HStack>
 
-                          </Text>
-                          <Button
-                            onClick={() =>
-                              window.open(
-                                "https://solidityscan.com/signup/?utm_source=quickscan&utm_medium=quickscan&utm_campaign=quickscan",
-                                "_blank"
-                              )
-                            }
-                            variant="accent-ghost"
-                          >
-                            View Detailed Result <ArrowForwardIcon ml={5} />
-                          </Button>
-                        </VStack>
-                      </Box>
-                    </Box>
-                  )}
-                </HStack>
-
+              <Box
+                w={"100%"}
+                borderRadius={15}
+                p={5}
+                mt={10}
+                background={" #FAFBFC "}
+                display="flex"
+                flexDir={"column"}
+                alignItems="flex-start"
+                justifyContent={"flex-start"}
+              >
+                <Text fontSize="md">QUICK AUDIT SUMMARY</Text>
                 <Box
                   w={"100%"}
                   borderRadius={15}
-                  p={5}
-                  mt={10}
-                  background={" #FAFBFC "}
+                  p={10}
+                  mt={5}
+                  background={" #FFFFFF "}
                   display="flex"
                   flexDir={"column"}
-                  alignItems="flex-start"
-                  justifyContent={"flex-start"}
+                  alignItems="center"
+                  justifyContent={"center"}
                 >
-                  <Text fontSize="md">QUICK AUDIT SUMMARY</Text>
-                  <Box
-                    w={"100%"}
-                    borderRadius={15}
-                    p={10}
-                    mt={5}
-                    background={" #FFFFFF "}
-                    display="flex"
-                    flexDir={"column"}
-                    alignItems="center"
-                    justifyContent={"center"}
-                  >
-                    {scanReport.quick_file_scan_details.map((item) => (
-                      <>
-                        <HStack my={5} width={"100%"}>
-                          <Image src={`/icons/${item.issue_status}.svg`} />
-                          <VStack
-                            ml={"30px !important"}
-                            alignItems={"flex-start"}
-                          >
-                            <Heading fontSize="md">
-                              {item.issue_name}
-                            </Heading>
-                            <DescriptionWrapper>
-              <Box
-                dangerouslySetInnerHTML={{
-                  __html: item.issue_description,
-                }}
-              />
-            </DescriptionWrapper>
-                          </VStack>
-                        </HStack>
-                        <Divider />
-                      </>
-                    ))}
-                  </Box>
+                  {scanReport.quick_file_scan_details.map((item) => (
+                    <>
+                      <HStack my={5} width={"100%"}>
+                        <Image src={`/icons/${item.issue_status}.svg`} />
+                        <VStack
+                          ml={"30px !important"}
+                          alignItems={"flex-start"}
+                        >
+                          <Heading fontSize="md">{item.issue_name}</Heading>
+                          <DescriptionWrapper>
+                            <Box
+                              dangerouslySetInnerHTML={{
+                                __html: item.issue_description,
+                              }}
+                            />
+                          </DescriptionWrapper>
+                        </VStack>
+                      </HStack>
+                      <Divider />
+                    </>
+                  ))}
                 </Box>
               </Box>
-            )
+            </Box>
           )}
         </Flex>
       </Container>
@@ -804,7 +880,6 @@ const QuickScan: React.FC = () => {
 };
 
 export default QuickScan;
-
 
 const DescriptionWrapper = styled.div`
   p {

@@ -344,6 +344,7 @@ export type QuickScanResult = {
   currency?: string;
   is_approved: boolean;
   latest_report_id: string;
+  published_date: string;
   quick_file_scan_details: QuickFileScanDetail[];
   multi_file_scan_status: string;
   multi_file_scan_summary: MultiFileScanSummary;
