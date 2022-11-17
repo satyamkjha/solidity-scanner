@@ -359,9 +359,9 @@ const QuickScan: React.FC = () => {
   useEffect(() => {
     if (scanReport !== null) {
       setTimeout(() => {
-        setIsLoading(false)
+        setIsLoading(false);
       }, 1000);
-      scrollToElement()
+      scrollToElement();
     }
   }, [scanReport]);
 

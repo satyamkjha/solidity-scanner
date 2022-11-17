@@ -291,13 +291,13 @@ export default function LandingPage() {
           sx={{ textAlign: "center" }}
           my={30}
         >
-          <Heading fontSize="3xl" mb={4}>
+          <Heading fontSize="3xl" mb={10}>
             What People are Saying about us
           </Heading>
-          <Text color="subtle" fontSize="xl" mb={4}>
+          {/* <Text color="subtle" fontSize="xl" mb={4}>
             Meet the experts behind the scenes. We are always excited to talk
             about anything in crypto.
-          </Text>
+          </Text> */}
           {/* <UserTestimonial /> */}
           <Box
             width={"50%"}
@@ -307,10 +307,10 @@ export default function LandingPage() {
           >
             <VStack>
               <Text fontSize="lg" mt="10">
-                Vitaly Dmitriyevich
+                Gregory Makodzeba
               </Text>
               <Text color="subtle" fontSize="md">
-                Co-Founder Ethereum
+                Co-Founder at Soken
               </Text>
               <Box>
                 <Text
@@ -319,8 +319,15 @@ export default function LandingPage() {
                   fontStyle="italic"
                   fontWeight="400"
                 >
-                  Awesome tool! I am super happy with everything about this
-                  product. Its’s a little taste of everything all in one box.",
+                  Thanks to Solidity Scan team for building a comprehensive
+                  vulnerability scanner for smart contracts that will help you
+                  protect contracts from potential scams. It helps you not only
+                  find bugs in source code, but conveniently manage reports with
+                  the dashboard from your account. It is a nice tool not only
+                  for investors to know about the security of the contract they
+                  are investing in, but also for audit teams who conduct
+                  security testing and want to expand their tools for contract
+                  analysis.
                 </Text>
               </Box>
             </VStack>
