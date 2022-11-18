@@ -300,12 +300,20 @@ export default function LandingPage() {
           </Text> */}
           {/* <UserTestimonial /> */}
           <Box
-            width={"50%"}
+            width={"70%"}
             boxShadow="0px 16px 32px rgba(0, 0, 0, 0.13)"
             borderRadius="15px"
             my={20}
           >
             <VStack>
+              <Image
+                mt={'-50px'}
+                mb={'20px'}
+                height={"120px"}
+                width="120px"
+                src="/testimonials/gregory.jpeg"
+                borderRadius={"50%"}
+              />
               <Text fontSize="lg" mt="10">
                 Gregory Makodzeba
               </Text>
@@ -315,7 +323,7 @@ export default function LandingPage() {
               <Box>
                 <Text
                   padding={"10"}
-                  fontSize="xl"
+                  fontSize="lg"
                   fontStyle="italic"
                   fontWeight="400"
                 >
@@ -334,10 +342,10 @@ export default function LandingPage() {
           </Box>
         </Box>
         <Box w="100%" as="section" sx={{ textAlign: "center" }} my={24}>
-          <Heading fontSize="3xl" mb={4}>
+          <Heading fontSize="3xl" mb={5}>
             Our Team
           </Heading>
-          <Text color="subtle" fontSize="xl" mb={4}>
+          <Text color="subtle" fontSize="xl" mb={5}>
             Meet the experts behind the scenes. We are always excited to talk
             about anything in crypto.
           </Text>
@@ -346,7 +354,7 @@ export default function LandingPage() {
             w="100%"
             alignItems="center"
             py={10}
-            my={10}
+            my={20}
             flexDir={["column", "column", "row"]}
             justifyContent={"center"}
           >
@@ -418,7 +426,7 @@ export default function LandingPage() {
               </Flex>
             ))}
           </Flex>
-          <Flex
+          {/* <Flex
             as="div"
             w="100%"
             alignItems="center"
@@ -571,12 +579,12 @@ export default function LandingPage() {
                 </VStack>
               </Flex>
             ))}
-          </Flex>
+          </Flex> */}
         </Box>
 
         {/* Section 4 */}
-        <Box w="100%" as="section" sx={{ textAlign: "center" }} my={8} mt={24}>
-          <Heading as="h2" fontSize="3xl" mb={4}>
+        <Box w="100%" as="section" sx={{ textAlign: "center" }} mb={10} mt={20}>
+          <Heading as="h2" fontSize="3xl" my={5}>
             Fully automated smart contract audit system <br /> to help{" "}
             <Box as="span" sx={{ color: "accent" }}>
               secure your products faster
