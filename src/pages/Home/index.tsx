@@ -625,7 +625,7 @@ const ContractForm: React.FC = () => {
           </FormControl>
 
           <FormControl id="contract_chain">
-            <FormLabel fontSize="sm">Contract platform</FormLabel>
+            <FormLabel fontSize="sm">Contract Chain</FormLabel>
             <Select
               formatOptionLabel={formatOptionLabel}
               isDisabled={platform === ""}
