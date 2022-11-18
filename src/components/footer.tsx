@@ -2,12 +2,19 @@ import React from "react";
 import { Link as RouterLink, useHistory } from "react-router-dom";
 import { Flex, Container, Link, Image } from "@chakra-ui/react";
 
-import { Logo } from "components/icons";
+import {
+  DiscordIcon,
+  InstagramIcon,
+  Logo,
+  MediumIcon,
+  TelegramIcon,
+  TwiterIcon,
+} from "components/icons";
 export const Footer: React.FC = () => {
   const history = useHistory();
 
   return (
-    <Container maxW="80vw" my={20}>
+    <Container maxW="90vw" my={20}>
       <Flex
         flexDirection={["column", "column", "row"]}
         justifyContent="space-between"
@@ -73,42 +80,25 @@ export const Footer: React.FC = () => {
           justifyContent="flex-end"
           alignItems={"center"}
         >
-          <Image
-              src="/medium-social.svg"
-              alt="Facebook"
-              mx={3}
-              onClick={()=> window.open('https://credshields.medium.com/', '_blank')}
-          />
-          <Image
-            src="/discord-social.svg"
-            alt="Instagram"
-            onClick={() =>
-              window.open("https://discord.com/invite/9HhV4hGENw", "_blank")
-            }
-            mx={3}
-          />
-          <Image
-            src="/telegram-social.svg"
-            alt="Instagram"
-            onClick={() => window.open("https://t.me/solidityscan", "_blank")}
-            mx={3}
-          />
-          <Image
-            src="/instagram-social.svg"
-            alt="Instagram"
-            onClick={() =>
-              window.open("https://www.instagram.com/solidityscan/", "_blank")
-            }
-            mx={3}
-          />
-          <Image
-            src="/twitter-social.svg"
-            alt="Twitter"
-            mx={3}
-            onClick={() =>
-              window.open("https://twitter.com/solidityscan", "_blank")
-            }
-          />
+          <Link mx={5} href="https://blog.solidityscan.com/" isExternal>
+            <MediumIcon size={50} />
+          </Link>
+          <Link mx={5} href="https://discord.com/invite/9HhV4hGENw" isExternal>
+            <DiscordIcon size={50} />
+          </Link>
+          <Link mx={5} href="https://t.me/solidityscan" isExternal>
+            <TelegramIcon size={50} />
+          </Link>
+          <Link
+            mx={5}
+            href="https://www.instagram.com/solidityscan/"
+            isExternal
+          >
+            <InstagramIcon size={50} />
+          </Link>
+          <Link mx={5} href="https://twitter.com/solidityscan" isExternal>
+            <TwiterIcon size={50} />
+          </Link>
         </Flex>
       </Flex>
     </Container>

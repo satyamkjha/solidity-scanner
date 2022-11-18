@@ -374,7 +374,9 @@ const formatOptionLabel: React.FC<{
 );
 
 const ContractForm: React.FC = () => {
-  const contractChain: { [key: string]: { label: string; value: string; icon: string }[] } = {
+  const contractChain: {
+    [key: string]: { label: string; value: string; icon: string }[];
+  } = {
     etherscan: [
       { value: "mainnet", label: "Ethereum Mainnet", icon: "" },
       { value: "ropsten", label: "Ropsten Testnet", icon: "" },
@@ -464,14 +466,14 @@ const ContractForm: React.FC = () => {
       borderRadius: 10,
       border: "0px solid #ffffff",
       overflowY: "hidden",
-      width: '500px'
+      width: "500px",
     }),
     control: (state: any) => ({
       // none of react-select's styles are passed to <Control />
       display: "flex",
       flexDirection: "row",
       backgroundColor: "#FFFFFF",
-      width: '500px',
+      width: "500px",
       padding: 5,
       borderRadius: 15,
       border: state.isFocused ? "2px solid #52FF00" : "2px solid #EDF2F7",
@@ -623,7 +625,7 @@ const ContractForm: React.FC = () => {
           </FormControl>
 
           <FormControl id="contract_chain">
-            <FormLabel fontSize="sm">Contract platform</FormLabel>
+            <FormLabel fontSize="sm">Contract Chain</FormLabel>
             <Select
               formatOptionLabel={formatOptionLabel}
               isDisabled={platform === ""}
@@ -632,7 +634,7 @@ const ContractForm: React.FC = () => {
               styles={customStyles}
               onChange={(newValue) => {
                 if (newValue) {
-                  setChain(newValue.value)
+                  setChain(newValue.value);
                 }
               }}
             />

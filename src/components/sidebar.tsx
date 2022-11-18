@@ -69,7 +69,7 @@ const Sidebar: React.FC<{
                   fontWeight={700}
                   color="black"
                 >
-                  Solidity Scan
+                  SolidityScan
                 </Heading>
                 {profileData &&
                   (profileData.current_package === "expired" ? (

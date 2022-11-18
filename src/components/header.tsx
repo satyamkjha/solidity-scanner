@@ -35,9 +35,9 @@ export const Header: React.FC = () => {
         as="header"
         alignItems="center"
         justifyContent="space-between"
-        maxW="75vw"
+        maxW="90vw"
         mx="auto"
-        py={8}
+        py={4}
       >
         <Flex alignItems="center">
           <RouterLink to="/">
@@ -63,7 +63,7 @@ export const Header: React.FC = () => {
             </Link>
             <Link
               onClick={() => {
-                window.open("https://credshields.medium.com/", "_blank");
+                window.open("https://blog.solidityscan.com/", "_blank");
               }}
               variant="brand"
               fontWeight="600"

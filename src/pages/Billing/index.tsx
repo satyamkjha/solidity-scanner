@@ -66,13 +66,16 @@ import { sentenceCapitalize } from "helpers/helperFunction";
 import { useInvoices } from "hooks/useInvoices";
 import ReactPaginate from "react-paginate";
 import { server } from "typescript";
+import {
+  CoinPaymentsIcon,
+  StripeLogo,
+  StripePaymentsLogo,
+} from "components/icons";
+import { pricingDetails as plans } from "common/values";
 
 const Billing: React.FC = () => {
   const { data } = useProfile();
-
-  const { data: plans } = usePricingPlans();
   const [selectedPlan, setSelectedPlan] = useState("pro");
-
   const { data: transactionList } = useTransactions(1, 50);
 
   return (
@@ -262,7 +265,7 @@ const PricingPlan: React.FC<{
         >
           {planData.name === "Beginner"
             ? "Starter"
-            : planData.name === "Custom"
+            : planData.name === "Enterprise"
             ? "Customize your plan"
             : planData.name === "On Demand"
             ? "Pay as you go"
@@ -278,12 +281,12 @@ const PricingPlan: React.FC<{
         <Heading fontSize={"x-large"} my={1}>
           {planData.name === "Trial"
             ? "Free"
-            : planData.name === "Custom"
+            : planData.name === "Enterprise"
             ? "$--"
             : `$ ${planData.amount}`}
         </Heading>
         <Text mb={!selected ? 10 : 4} mx={5} fontSize={"xs"}>
-        {plan === "trial" || plan === "ondemand" ? '' : 'per month'}
+          {plan === "trial" || plan === "ondemand" ? "Perpetual" : "per month"}
         </Text>
         {selected && (
           <Button
@@ -327,13 +330,7 @@ const PricingPlan: React.FC<{
                       w="100%"
                       height={"fit-content"}
                     >
-                      <Image
-                        src="/stripe-pay.png"
-                        alt="pay"
-                        borderRadius="15px"
-                        w={"360px"}
-                        h={"90px"}
-                      />
+                      <StripePaymentsLogo size={200} />
                     </Box>
                     <Flex
                       flexDir={"row"}
@@ -354,13 +351,7 @@ const PricingPlan: React.FC<{
                         w={"300px"}
                       >
                         Pay with
-                        <Image
-                          src="/stripe.png"
-                          alt="pay"
-                          ml={"2.5px"}
-                          w={"70px"}
-                          h={"45px"}
-                        />
+                        <StripeLogo size={120} />
                       </Button>
                     </Flex>
                   </Box>
@@ -419,7 +410,7 @@ const PricingPlan: React.FC<{
                     ? `Save upto ${planData.discount}`
                     : planData.name === "Beginner"
                     ? "Starter"
-                    : planData.name === "Custom"
+                    : planData.name === "Enterprise"
                     ? "Customize your plan"
                     : planData.name === "On Demand"
                     ? "Pay as you go"
@@ -652,7 +643,8 @@ const CurrentPlan: React.FC<{
             <HiCheckCircle size={20} color={successColor} />
 
             <Text fontSize={"sm"} ml={5}>
-              {plan.scan_count} Scan Credit
+              {plan.name === "Enterprise" ? "-" : plan.scan_count}
+              Scan Credit
             </Text>
           </HStack>
           <HStack mt={2} justify={"flex-start"}>
@@ -707,7 +699,7 @@ const CurrentPlan: React.FC<{
             </Text>
           </HStack>
           <HStack mt={2} justify={"flex-start"}>
-            {plan.name === "Custom" ? (
+            {plan.name === "Enterprise" ? (
               <HiCheckCircle size={20} color={successColor} />
             ) : (
               <HiXCircle size={20} color={greyColor} />
@@ -822,7 +814,7 @@ const CurrentPlan: React.FC<{
               <Heading fontSize={"x-large"} mb={10}>
                 {plan.name === "Trial"
                   ? "Free"
-                  : plan.name === "Custom"
+                  : plan.name === "Enterprise"
                   ? "$--"
                   : `$ ${plan.amount}`}
               </Heading>
@@ -883,11 +875,7 @@ const CoinPayments: React.FC<{ packageName: string; onClose: () => void }> = ({
   return (
     <VStack width="100%" spacing={6} mt={4} alignItems="inherit">
       <Flex alignItems="flex-end" justifyContent="space-between">
-        <img
-          src="/coinpayments-logo.svg"
-          width="200px"
-          alt="CoinPayments Logo"
-        />
+        <CoinPaymentsIcon size={200} />
         {/* {data && coin !== "" && (
           <Flex alignItems="center">
             <CryptoIcon size={32} name={coin.toLowerCase()} />
@@ -1019,7 +1007,7 @@ const PricingDetails: React.FC<{ planData: Plan; selectedPlan: string }> = ({
           </Text>
         </HStack>
         <HStack ml={5} justifyContent={"flex-start"} width={"30%"}>
-          {selectedPlan === "custom" ? (
+          {selectedPlan === "Enterprise" ? (
             <HiCheckCircle size={30} color={successColor} />
           ) : (
             <HiXCircle size={30} color={greyColor} />
@@ -1151,7 +1139,7 @@ const LatestInvoice: React.FC<{
               </Text>
             </HStack>
             <HStack mt={2} justify={"flex-start"}>
-              {selectedPlan === "custom" ? (
+              {selectedPlan === "Enterprise" ? (
                 <HiCheckCircle size={20} color={successColor} />
               ) : (
                 <HiXCircle size={20} color={greyColor} />

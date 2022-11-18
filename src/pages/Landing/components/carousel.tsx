@@ -1,6 +1,7 @@
 import React from "react";
 import Carousel from "@brainhubeu/react-carousel";
 import "@brainhubeu/react-carousel/lib/style.css";
+import { Image } from "@chakra-ui/react";
 
 const ImageCarousel = () => {
   const styleObject = {
@@ -10,21 +11,98 @@ const ImageCarousel = () => {
     width: "90%",
   };
 
+  const imgSourceList = [
+    {
+      src: "/carousel/Screenshot_1.jpg",
+      alt: "View detailed scan result of your smart contracts on SolidityScan",
+    },
+    {
+      src: "/carousel/Screenshot_2.jpg",
+      alt: "Find Bugs highlighted and pin pointed in your code for an easy fix on SolidityScan",
+    },
+    {
+      src: "/carousel/Screenshot_3.jpg",
+      alt: "View, Manage and publish your reports and share it with your team on SolidityScan",
+    },
+    {
+      src: "/carousel/Screenshot_4.jpg",
+      alt: "View, Manage and publish your reports and share it with your team on SolidityScan",
+    },
+    {
+      src: "/carousel/Screenshot_5.jpg",
+      alt: "View, Manage and publish your reports and share it with your team on SolidityScan",
+    },
+    {
+      src: "/carousel/Screenshot_6.jpg",
+      alt: "View, Manage and publish your reports and share it with your team on SolidityScan",
+    },
+    {
+      src: "/carousel/Screenshot_7.jpg",
+      alt: "View, Manage and publish your reports and share it with your team on SolidityScan",
+    },
+    {
+      src: "/carousel/Screenshot_8.jpg",
+      alt: "Easily manage your projects and scans on SolidityScan",
+    },
+    {
+      src: "/carousel/Screenshot_9.jpg",
+      alt: "Integrate with Microsoft teams, Jira and Slack  on SolidityScan",
+    },
+    {
+      src: "/carousel/Screenshot_10.jpg",
+      alt: "Scan your projects directly from github on SolidityScan",
+    },
+    {
+      src: "/carousel/Screenshot_11.jpg",
+      alt: "Easily scan your blochain contract on SolidityScan",
+    },
+    {
+      src: "/carousel/Screenshot_12.jpg",
+      alt: "Get a detailed view of issues in your project on SolidityScan",
+    },
+    {
+      src: "/carousel/Screenshot_13.jpg",
+      alt: "Easily manage your scan histories on SolidityScan",
+    },
+    {
+      src: "/carousel/Screenshot_14.jpg",
+      alt: "Easily manage your scan histories on SolidityScan",
+    },
+    {
+      src: "/carousel/Screenshot_15.jpg",
+      alt: "Easily manage your scan histories on SolidityScan",
+    },
+    {
+      src: "/carousel/Screenshot_16.jpg",
+      alt: "Easily manage your scan histories on SolidityScan",
+    },
+    {
+      src: "/carousel/Screenshot_17.jpg",
+      alt: "Easily manage your scan histories on SolidityScan",
+    },
+    {
+      src: "/carousel/Screenshot_18.jpg",
+      alt: "Easily manage your scan histories on SolidityScan",
+    },
+    {
+      src: "/carousel/Screenshot_19.jpg",
+      alt: "Easily manage your scan histories on SolidityScan",
+    },
+    // {src:"/carousel/Screenshot_13.jpg", alt:""},
+  ];
+
   return (
     <Carousel plugins={["arrows", "infinite"]}>
-      <img style={styleObject} src="/carousel/Screenshot 1.png" />
-      <img style={styleObject} src="/carousel/Screenshot 2.png" />
-      <img style={styleObject} src="/carousel/Screenshot 3.png" />
-      <img style={styleObject} src="/carousel/Screenshot 4.png" />
-      <img style={styleObject} src="/carousel/Screenshot 5.png" />
-      <img style={styleObject} src="/carousel/Screenshot 6.png" />
-      <img style={styleObject} src="/carousel/Screenshot 7.png" />
-      <img style={styleObject} src="/carousel/Screenshot 8.png" />
-      <img style={styleObject} src="/carousel/Screenshot 9.png" />
-      <img style={styleObject} src="/carousel/Screenshot 10.png" />
-      <img style={styleObject} src="/carousel/Screenshot 11.png" />
-      <img style={styleObject} src="/carousel/Screenshot 12.png" />
-      <img style={styleObject} src="/carousel/Screenshot 13.png" />
+      {imgSourceList.map((src) => (
+        <Image
+          boxShadow="5px 5px 15px 15px #88888840"
+          borderRadius="25px"
+          src={src.src}
+          alt={src.alt}
+          margin="30px"
+          width="90%"
+        />
+      ))}
     </Carousel>
   );
 };

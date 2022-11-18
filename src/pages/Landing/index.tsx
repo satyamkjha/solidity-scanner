@@ -1,5 +1,6 @@
 import React, { useEffect } from "react";
 import { Link, useLocation } from "react-router-dom";
+import { teamsData } from "common/values";
 
 import {
   Flex,
@@ -12,6 +13,7 @@ import {
   Link as ChakraLink,
   useDisclosure,
   HStack,
+  VStack,
 } from "@chakra-ui/react";
 
 import {
@@ -56,7 +58,7 @@ export default function LandingPage() {
           py={24}
         >
           <Box w={["100%", "100%", "45%"]} px={[0, 0, 10]} py={10}>
-            <Heading fontSize={["3xl", "4xl"]} mb={8}>
+            <Heading as="h1" fontSize={["3xl", "4xl"]} mb={8}>
               Get your smart contracts audited by a smarter tool
             </Heading>
             <Text fontSize="xl" color="subtle" mb={8}>
@@ -77,17 +79,17 @@ export default function LandingPage() {
           >
             <Image
               marginTop={"-60px"}
-              src="/landing-image01.png"
-              alt="Product screenshot"
+              src="/landing/landing-image01.png"
               transform="translateX(20px)"
               zIndex={"10"}
+              alt={"Run scans for your smat contracts"}
             />
           </Box>
         </Flex>
 
         {/* Section 2 */}
         <Box w="100%" as="section" sx={{ textAlign: "center" }} my={8}>
-          <Heading fontSize="3xl" mb={4}>
+          <Heading as="h1" fontSize="3xl" mb={4}>
             Scan.{" "}
             <Box
               as="span"
@@ -177,14 +179,14 @@ export default function LandingPage() {
         >
           <Box width={["100%", "100%", "50%"]}>
             <Image
-              src="/landing-image02.jpg"
-              alt="Product screenshot"
+              src="/landing/landing-image02.jpeg"
+              alt="Keep track of the bugs in your project"
               mx="auto"
               p={12}
             />
           </Box>
           <Box w={["100%", "100%", "50%"]} p={10}>
-            <Heading fontSize="3xl" mb={8}>
+            <Heading as="h2" fontSize="3xl" mb={8}>
               See your security posture evolve
             </Heading>
             <Text fontSize="xl" color="subtle" mb={8}>
@@ -205,14 +207,14 @@ export default function LandingPage() {
         >
           <Box width={["100%", "100%", "50%"]}>
             <Image
-              src="/landing-image03.jpg"
-              alt="Product screenshot"
+              src="/landing/landing-image03.jpeg"
+              alt="Integrate with Microsoft Teams, Slack and Jira"
               mx="auto"
               p={12}
             />
           </Box>
           <Box w={["100%", "100%", "50%"]} p={10}>
-            <Heading fontSize="3xl" mb={8}>
+            <Heading as="h2" fontSize="3xl" mb={8}>
               Integrate with the services you already love
             </Heading>
             <Text fontSize="xl" color="subtle" mb={8}>
@@ -232,14 +234,14 @@ export default function LandingPage() {
         >
           <Box width={["100%", "100%", "50%"]}>
             <Image
-              src="/landing-image04.jpg"
-              alt="Product screenshot"
+              src="/landing/landing-image04.jpeg"
+              alt="Customize and silence issues and set your own rules"
               mx="auto"
               p={12}
             />
           </Box>
           <Box w={["100%", "100%", "50%"]} p={10}>
-            <Heading fontSize="3xl" mb={8}>
+            <Heading as="h2" fontSize="3xl" mb={8}>
               Built by us, for your contracts:
             </Heading>
             <Text fontSize="xl" color="subtle" mb={8}>
@@ -260,14 +262,14 @@ export default function LandingPage() {
         >
           <Box width={["100%", "100%", "50%"]}>
             <Image
-              src="/landing-image06.jpg"
-              alt="Product screenshot"
+              src="/landing/landing-image06.jpeg"
+              alt="Publish reports and share your security score"
               mx="auto"
               p={12}
             />
           </Box>
           <Box w={["100%", "100%", "50%"]} p={10}>
-            <Heading fontSize="3xl" mb={8}>
+            <Heading as="h2" fontSize="3xl" mb={8}>
               Publish reports and share your security score
             </Heading>
             <Text fontSize="xl" color="subtle" mb={8}>
@@ -279,11 +281,71 @@ export default function LandingPage() {
             </Text>
           </Box>
         </Flex>
+        <Box
+          w="100%"
+          display={"flex"}
+          flexDir="column"
+          justifyContent={"flex-start"}
+          alignItems="center"
+          as="section"
+          sx={{ textAlign: "center" }}
+          my={30}
+        >
+          <Heading fontSize="3xl" mb={10}>
+            What People are Saying about us
+          </Heading>
+          {/* <Text color="subtle" fontSize="xl" mb={4}>
+            Meet the experts behind the scenes. We are always excited to talk
+            about anything in crypto.
+          </Text> */}
+          {/* <UserTestimonial /> */}
+          <Box
+            width={"70%"}
+            boxShadow="0px 16px 32px rgba(0, 0, 0, 0.13)"
+            borderRadius="15px"
+            my={20}
+          >
+            <VStack>
+              <Image
+                mt={'-50px'}
+                mb={'20px'}
+                height={"120px"}
+                width="120px"
+                src="/testimonials/gregory.jpeg"
+                borderRadius={"50%"}
+              />
+              <Text fontSize="lg" mt="10">
+                Gregory Makodzeba
+              </Text>
+              <Text color="subtle" fontSize="md">
+                Co-Founder at Soken
+              </Text>
+              <Box>
+                <Text
+                  padding={"10"}
+                  fontSize="lg"
+                  fontStyle="italic"
+                  fontWeight="400"
+                >
+                  Thanks to Solidity Scan team for building a comprehensive
+                  vulnerability scanner for smart contracts that will help you
+                  protect contracts from potential scams. It helps you not only
+                  find bugs in source code, but conveniently manage reports with
+                  the dashboard from your account. It is a nice tool not only
+                  for investors to know about the security of the contract they
+                  are investing in, but also for audit teams who conduct
+                  security testing and want to expand their tools for contract
+                  analysis.
+                </Text>
+              </Box>
+            </VStack>
+          </Box>
+        </Box>
         <Box w="100%" as="section" sx={{ textAlign: "center" }} my={24}>
-          <Heading fontSize="3xl" mb={4}>
+          <Heading fontSize="3xl" mb={5}>
             Our Team
           </Heading>
-          <Text color="subtle" fontSize="xl" mb={4}>
+          <Text color="subtle" fontSize="xl" mb={5}>
             Meet the experts behind the scenes. We are always excited to talk
             about anything in crypto.
           </Text>
@@ -292,149 +354,154 @@ export default function LandingPage() {
             w="100%"
             alignItems="center"
             py={10}
+            my={20}
+            flexDir={["column", "column", "row"]}
+            justifyContent={"center"}
+          >
+            {teamsData.line1.map((data) => (
+              <Flex
+                as="div"
+                alignItems="center"
+                flexDir={["row", "row", "row"]}
+                justifyContent={"flex-start"}
+                mx={10}
+              >
+                <VStack spacing={0}>
+                  <Box
+                    height={"200px"}
+                    mb={"-195px"}
+                    zIndex={10}
+                    width="200px"
+                    borderRadius={"50%"}
+                    backgroundImage={`url(${data.imgUrl})`}
+                    backgroundSize="contain"
+                    backgroundPosition={"center"}
+                  />
+                  <Box
+                    height={"200px"}
+                    width="200px"
+                    borderRadius={"50%"}
+                    background={
+                      "linear-gradient(129.18deg, #52FF00 8.52%, #00EEFD 93.94%)"
+                    }
+                  />
+
+                  <Text
+                    marginTop={"15px !important"}
+                    textAlign={"left"}
+                    fontSize="xl"
+                  >
+                    {data.name}
+                  </Text>
+                  <Text
+                    textAlign={"left"}
+                    color={"gray.400"}
+                    fontSize="xl"
+                    fontWeight={500}
+                  >
+                    {data.designation}
+                  </Text>
+                  <HStack marginTop={"15px !important"} spacing={5}>
+                    <Image
+                      onClick={() => {
+                        window.open(data.linkedinUrl, "_blank");
+                      }}
+                      src="/socials/linkedin.svg"
+                      height={"30px"}
+                      width={"30px"}
+                      alt={"Linkedin"}
+                    />
+                    <Image
+                      onClick={() => {
+                        window.open(data.twitterUrl, "_blank");
+                      }}
+                      src="/socials/twitter.svg"
+                      height={"30px"}
+                      width={"30px"}
+                      borderRadius={"5px"}
+                      alt={"Twitter"}
+                    />
+                  </HStack>
+                </VStack>
+              </Flex>
+            ))}
+          </Flex>
+          {/* <Flex
+            as="div"
+            w="100%"
+            alignItems="center"
+            py={10}
             my={10}
             flexDir={["column", "column", "row"]}
             justifyContent={"center"}
           >
-            <Flex
-              as="div"
-              alignItems="center"
-              flexDir={["row", "row", "row"]}
-              justifyContent={"flex-start"}
-            >
-              <Box
-                height={"130px"}
-                ml="50px"
-                mr="20px"
-                width="130px"
-                borderRadius={"50%"}
-                backgroundImage={"url(/shashank.jpeg)"}
-                backgroundSize="contain"
-                backgroundPosition={"center"}
-              />
+            {teamsData.line2.map((data) => (
               <Flex
-                width="200px"
                 as="div"
                 alignItems="center"
-                flexDir={"row"}
-                mt={4}
+                flexDir={["row", "row", "row"]}
                 justifyContent={"flex-start"}
+                mx={10}
               >
-                <Flex
-                  as="div"
-                  alignItems="flex-start"
-                  flexDir={"column"}
-                  justifyContent={"center"}
-                >
-                  <Text textAlign={"left"} fontSize="xl">
-                    Shashank
+                <VStack spacing={0}>
+                  <Box
+                    height={"200px"}
+                    mb={"-195px"}
+                    zIndex={10}
+                    width="200px"
+                    borderRadius={"50%"}
+                    backgroundImage={`url(${data.imgUrl})`}
+                    backgroundSize="contain"
+                    backgroundPosition={"center"}
+                  />
+                  <Box
+                    height={"200px"}
+                    width="200px"
+                    borderRadius={"50%"}
+                    background={
+                      "linear-gradient(129.18deg, #52FF00 8.52%, #00EEFD 93.94%)"
+                    }
+                  />
+
+                  <Text
+                    marginTop={"15px !important"}
+                    textAlign={"left"}
+                    fontSize="xl"
+                  >
+                    {data.name}
                   </Text>
                   <Text
                     textAlign={"left"}
-                    color={"subtle"}
+                    color={"gray.400"}
                     fontSize="xl"
-                    fontWeight={900}
+                    fontWeight={500}
                   >
-                    Co-Founder
+                    {data.designation}
                   </Text>
-                  <HStack>
+                  <HStack marginTop={"15px !important"} spacing={5}>
                     <Image
                       onClick={() => {
-                        window.open(
-                          "https://www.linkedin.com/in/shashank-in/",
-                          "_blank"
-                        );
+                        window.open(data.linkedinUrl, "_blank");
                       }}
-                      src="/linkedin.svg"
-                      height={"40px"}
-                      width={"40px"}
+                      src="/socials/linkedin.svg"
+                      height={"30px"}
+                      width={"30px"}
+                      alt={"Linkedin"}
                     />
                     <Image
                       onClick={() => {
-                        window.open(
-                          "https://twitter.com/cyberboyIndia",
-                          "_blank"
-                        );
+                        window.open(data.twitterUrl, "_blank");
                       }}
-                      src="/twitter.svg"
+                      src="/socials/twitter.svg"
                       height={"30px"}
                       width={"30px"}
                       borderRadius={"5px"}
+                      alt={"Twitter"}
                     />
                   </HStack>
-                </Flex>
+                </VStack>
               </Flex>
-            </Flex>
-            <Flex
-              as="div"
-              alignItems="center"
-              flexDir={["row", "row", "row"]}
-              justifyContent={"flex-start"}
-            >
-              <Box
-                height={"130px"}
-                ml="50px"
-                mr="20px"
-                width="130px"
-                borderRadius={"50%"}
-                backgroundImage={"url(/indranil.jpeg)"}
-                backgroundSize="contain"
-                backgroundPosition={"center"}
-              />
-              <Flex
-                width="200px"
-                as="div"
-                alignItems="center"
-                flexDir={"row"}
-                mt={4}
-                justifyContent={"flex-start"}
-              >
-                <Flex
-                  as="div"
-                  alignItems="flex-start"
-                  flexDir={"column"}
-                  justifyContent={"center"}
-                >
-                  <Text textAlign={"left"} fontSize="xl">
-                    Indranil Roy
-                  </Text>
-                  <Text
-                    textAlign={"left"}
-                    color={"subtle"}
-                    fontSize="xl"
-                    fontWeight={900}
-                  >
-                    Co-Founder
-                  </Text>
-                  <HStack>
-                    <Image
-                      onClick={() => {
-                        window.open(
-                          "https://www.linkedin.com/in/itsmeroy2012/",
-                          "_blank"
-                        );
-                      }}
-                      src="/linkedin.svg"
-                      height={"40px"}
-                      width={"40px"}
-                    />
-                    <Image
-                      onClick={() => {
-                        window.open(
-                          "https://twitter.com/itsmeroy2012",
-                          "_blank"
-                        );
-                      }}
-                      src="/twitter.svg"
-                      height={"30px"}
-                      width={"30px"}
-                      borderRadius={"5px"}
-                    />
-                  </HStack>
-                </Flex>
-              </Flex>
-            </Flex>
-            
+            ))}
           </Flex>
           <Flex
             as="div"
@@ -445,359 +512,79 @@ export default function LandingPage() {
             flexDir={["column", "column", "row"]}
             justifyContent={"center"}
           >
-            <Flex
-              as="div"
-              alignItems="center"
-              flexDir={["row", "row", "row"]}
-              justifyContent={"flex-start"}
-            >
-              <Box
-                height={"130px"}
-                ml="50px"
-                mr="20px"
-                width="130px"
-                borderRadius={"50%"}
-                backgroundImage={"url(/aditya.jpeg)"}
-                backgroundSize="contain"
-                backgroundPosition={"center"}
-              />
+            {teamsData.line3.map((data) => (
               <Flex
-                width="200px"
                 as="div"
                 alignItems="center"
-                flexDir={"row"}
-                mt={4}
+                flexDir={["row", "row", "row"]}
                 justifyContent={"flex-start"}
+                mx={10}
               >
-                <Flex
-                  as="div"
-                  alignItems="flex-start"
-                  flexDir={"column"}
-                  justifyContent={"center"}
-                >
-                  <Text textAlign={"left"} fontSize="xl">
-                    Aditya D.
+                <VStack spacing={0}>
+                  <Box
+                    height={"200px"}
+                    mb={"-195px"}
+                    zIndex={10}
+                    width="200px"
+                    borderRadius={"50%"}
+                    backgroundImage={`url(${data.imgUrl})`}
+                    backgroundSize="contain"
+                    backgroundPosition={"center"}
+                  />
+                  <Box
+                    height={"200px"}
+                    width="200px"
+                    borderRadius={"50%"}
+                    background={
+                      "linear-gradient(129.18deg, #52FF00 8.52%, #00EEFD 93.94%)"
+                    }
+                  />
+
+                  <Text
+                    marginTop={"15px !important"}
+                    textAlign={"left"}
+                    fontSize="xl"
+                  >
+                    {data.name}
                   </Text>
                   <Text
                     textAlign={"left"}
-                    color={"subtle"}
+                    color={"gray.400"}
                     fontSize="xl"
-                    fontWeight={900}
+                    fontWeight={500}
                   >
-                    Research Team Lead
+                    {data.designation}
                   </Text>
-                  <HStack>
+                  <HStack marginTop={"15px !important"} spacing={5}>
                     <Image
                       onClick={() => {
-                        window.open(
-                          "https://www.linkedin.com/in/ad17ya/",
-                          "_blank"
-                        );
+                        window.open(data.linkedinUrl, "_blank");
                       }}
-                      src="/linkedin.svg"
-                      height={"40px"}
-                      width={"40px"}
+                      src="/socials/linkedin.svg"
+                      height={"30px"}
+                      width={"30px"}
+                      alt={"Linkedin"}
                     />
                     <Image
                       onClick={() => {
-                        window.open("https://twitter.com/zombie007o", "_blank");
+                        window.open(data.twitterUrl, "_blank");
                       }}
-                      src="/twitter.svg"
+                      src="/socials/twitter.svg"
                       height={"30px"}
                       width={"30px"}
                       borderRadius={"5px"}
+                      alt={"Twitter"}
                     />
                   </HStack>
-                </Flex>
+                </VStack>
               </Flex>
-            </Flex>
-            <Flex
-              as="div"
-              alignItems="center"
-              flexDir={["row", "row", "row"]}
-              justifyContent={"flex-start"}
-            >
-              <Box
-                height={"130px"}
-                ml="50px"
-                mr="20px"
-                width="130px"
-                borderRadius={"50%"}
-                backgroundImage={"url(/ayush.jpeg)"}
-                backgroundSize="contain"
-                backgroundPosition={"center"}
-              />
-              <Flex
-                width="200px"
-                as="div"
-                alignItems="center"
-                flexDir={"row"}
-                mt={4}
-                justifyContent={"flex-start"}
-              >
-                <Flex
-                  as="div"
-                  alignItems="flex-start"
-                  flexDir={"column"}
-                  justifyContent={"center"}
-                >
-                  <Text textAlign={"left"} fontSize="xl">
-                    Ayush Tripathi
-                  </Text>
-                  <Text
-                    textAlign={"left"}
-                    color={"subtle"}
-                    fontSize="xl"
-                    fontWeight={900}
-                  >
-                    Backend Engineer
-                  </Text>
-                  <HStack>
-                    <Image
-                      onClick={() => {
-                        window.open(
-                          "https://twitter.com/TripathiAyush5",
-                          "_blank"
-                        );
-                      }}
-                      src="/linkedin.svg"
-                      height={"40px"}
-                      width={"40px"}
-                    />
-                    <Image
-                      onClick={() => {
-                        window.open(
-                          "https://www.linkedin.com/in/ayush-tripathi51/",
-                          "_blank"
-                        );
-                      }}
-                      src="/twitter.svg"
-                      height={"30px"}
-                      width={"30px"}
-                      borderRadius={"5px"}
-                    />
-                  </HStack>
-                </Flex>
-              </Flex>
-            </Flex>
-            <Flex
-              as="div"
-              alignItems="center"
-              flexDir={["row", "row", "row"]}
-              justifyContent={"flex-start"}
-            >
-              <Box
-                height={"130px"}
-                ml="50px"
-                mr="20px"
-                width="130px"
-                borderRadius={"50%"}
-                backgroundImage={"url(/satyam-img.jpg)"}
-                backgroundSize="contain"
-                backgroundPosition={"center"}
-              />
-              <Flex
-                width="200px"
-                as="div"
-                alignItems="center"
-                flexDir={"row"}
-                mt={4}
-                justifyContent={"flex-start"}
-              >
-                <Flex
-                  as="div"
-                  alignItems="flex-start"
-                  flexDir={"column"}
-                  justifyContent={"center"}
-                >
-                  <Text textAlign={"left"} fontSize="xl">
-                    Satyam Kumar Jha
-                  </Text>
-                  <Text
-                    textAlign={"left"}
-                    color={"subtle"}
-                    fontSize="xl"
-                    fontWeight={900}
-                  >
-                    Frontend Engineer
-                  </Text>
-                  <HStack>
-                    <Image
-                      onClick={() => {
-                        window.open(
-                          "https://www.linkedin.com/in/satyamkjha/",
-                          "_blank"
-                        );
-                      }}
-                      src="/linkedin.svg"
-                      height={"40px"}
-                      width={"40px"}
-                    />
-                    {/* <Image
-                    src="/twitter.svg"
-                    height={"30px"}
-                    width={"30px"}
-                    borderRadius={"5px"}
-                  /> */}
-                  </HStack>
-                </Flex>
-              </Flex>
-            </Flex>
-          </Flex>
-          <Flex
-            as="div"
-            w="100%"
-            alignItems="center"
-            py={10}
-            my={10}
-            flexDir={["column", "column", "row"]}
-            justifyContent={"center"}
-          >
-            <Flex
-              as="div"
-              alignItems="center"
-              flexDir={["row", "row", "row"]}
-              justifyContent={"flex-start"}
-            >
-              <Box
-                height={"130px"}
-                ml="50px"
-                mr="20px"
-                width="130px"
-                borderRadius={"50%"}
-                backgroundImage={"url(/sankalp.jpeg)"}
-                backgroundSize="contain"
-                backgroundPosition={"center"}
-              />
-              <Flex
-                width="200px"
-                as="div"
-                alignItems="center"
-                flexDir={"row"}
-                mt={4}
-                justifyContent={"flex-start"}
-              >
-                <Flex
-                  as="div"
-                  alignItems="flex-start"
-                  flexDir={"column"}
-                  justifyContent={"center"}
-                >
-                  <Text textAlign={"left"} fontSize="xl">
-                    Sankalp Pandey
-                  </Text>
-                  <Text
-                    textAlign={"left"}
-                    color={"subtle"}
-                    fontSize="xl"
-                    fontWeight={900}
-                  >
-                    Growth Head
-                  </Text>
-                  <HStack>
-                    <Image
-                      onClick={() => {
-                        window.open(
-                          "https://www.linkedin.com/in/sky007/",
-                          "_blank"
-                        );
-                      }}
-                      src="/linkedin.svg"
-                      height={"40px"}
-                      width={"40px"}
-                    />
-                    <Image
-                      onClick={() => {
-                        window.open(
-                          "https://twitter.com/SKY_Sankalp",
-                          "_blank"
-                        );
-                      }}
-                      src="/twitter.svg"
-                      height={"30px"}
-                      width={"30px"}
-                      borderRadius={"5px"}
-                    />
-                  </HStack>
-                </Flex>
-              </Flex>
-            </Flex>
-            <Flex
-              as="div"
-              alignItems="center"
-              flexDir={["row", "row", "row"]}
-              justifyContent={"flex-start"}
-            >
-              <Box
-                height={"130px"}
-                ml="50px"
-                mr="20px"
-                width="130px"
-                borderRadius={"50%"}
-                backgroundImage={"url(/siddarth.jpeg)"}
-                backgroundSize="contain"
-                backgroundPosition={"center"}
-              />
-              <Flex
-                width="200px"
-                as="div"
-                alignItems="center"
-                flexDir={"row"}
-                mt={4}
-                justifyContent={"flex-start"}
-              >
-                <Flex
-                  as="div"
-                  alignItems="flex-start"
-                  flexDir={"column"}
-                  justifyContent={"center"}
-                >
-                  <Text textAlign={"left"} fontSize="xl">
-                  Siddharth Neekher
-                  </Text>
-                  <Text
-                    textAlign={"left"}
-                    color={"subtle"}
-                    fontSize="xl"
-                    fontWeight={900}
-                  >
-                    Lead User Interface Designer
-                  </Text>
-                  <HStack>
-                    <Image
-                      onClick={() => {
-                        window.open(
-                          "https://www.linkedin.com/in/siddharth-neekher-340519117/",
-                          "_blank"
-                        );
-                      }}
-                      src="/linkedin.svg"
-                      height={"40px"}
-                      width={"40px"}
-                    />
-                    <Image
-                      onClick={() => {
-                        window.open(
-                          "https://twitter.com/sidartdigital",
-                          "_blank"
-                        );
-                      }}
-                      src="/twitter.svg"
-                      height={"30px"}
-                      width={"30px"}
-                      borderRadius={"5px"}
-                    />
-                  </HStack>
-                </Flex>
-              </Flex>
-            </Flex>
-            
-          </Flex>
+            ))}
+          </Flex> */}
         </Box>
 
         {/* Section 4 */}
-        <Box w="100%" as="section" sx={{ textAlign: "center" }} my={8} mt={24}>
-          <Heading fontSize="3xl" mb={4}>
+        <Box w="100%" as="section" sx={{ textAlign: "center" }} mb={10} mt={20}>
+          <Heading as="h2" fontSize="3xl" my={5}>
             Fully automated smart contract audit system <br /> to help{" "}
             <Box as="span" sx={{ color: "accent" }}>
               secure your products faster
@@ -807,19 +594,11 @@ export default function LandingPage() {
             Focus on what matters most, our robots handle the rest ☕️
           </Text>
           <ImageCarousel />
-          {/* <Image
-            src="/landing-image05.jpg"
-            transform="translateX(10%)"
-            py={10}
-            width={["70vw", "50vw"]}
-            mx="auto"
-          /> */}
         </Box>
-        {/* Section 5 */}
         <Box
           sx={{
             w: "100%",
-            backgroundImage: 'url("/pattern.jpg")',
+            backgroundImage: 'url("/background/pattern.png")',
             borderRadius: 20,
             overflow: "hidden",
             mb: 10,
@@ -835,7 +614,7 @@ export default function LandingPage() {
               alignItems: "center",
             }}
           >
-            <Heading fontSize="3xl" mb={4} textAlign="center">
+            <Heading as="h1" fontSize="3xl" mb={4} textAlign="center">
               Request for a{" "}
               <Box as="span" sx={{ color: "accent" }}>
                 manual audit
@@ -862,7 +641,7 @@ export default function LandingPage() {
             color="#69C85A"
           >
             <Smile size={50} />
-            <Heading fontSize="4xl" my={4}>
+            <Heading as="h5" fontSize="4xl" my={4}>
               28,50,000,000+
             </Heading>
             <Text fontSize="md">
@@ -939,7 +718,7 @@ export default function LandingPage() {
         <Box
           sx={{
             w: "100%",
-            backgroundImage: 'url("/pattern.jpg")',
+            backgroundImage: "url(/background/pattern.png)",
             borderRadius: 20,
             overflow: "hidden",
             mb: 10,
@@ -961,6 +740,7 @@ export default function LandingPage() {
               }}
             >
               <Heading
+                as="h2"
                 fontSize="3xl"
                 lineHeight="1.4"
                 mb={4}

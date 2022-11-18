@@ -15,7 +15,7 @@ import VulnerabilityDistribution, {
 } from "components/vulnDistribution";
 import PieChart, { ErrorResponsivePie } from "components/pieChart";
 import { Scan, ScanSummary } from "common/types";
-import { LogoIcon, ScanErrorIcon } from "./icons";
+import { LogoIcon, NoBugIcon, ScanErrorIcon } from "./icons";
 
 const pieData = (
   critical: number,
@@ -81,7 +81,7 @@ const Overview: React.FC<{
               h="300px"
             >
               {scanData.multi_file_scan_summary.issues_count === 0 ? (
-                <Image src="/nobug.svg" alt="No Bugs Found" />
+                <NoBugIcon size={200} />
               ) : (
                 <PieChart
                   data={pieData(

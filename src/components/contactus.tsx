@@ -81,8 +81,8 @@ export const ContactUs: React.FC<{ onClose(): any; isOpen: boolean }> = ({
           minH={"fit-content"}
         >
           <ModalHeader
-            backgroundImage={'url("/pattern.jpg")'}
-            background={"rgba(82, 255, 0, 0.06)"}
+            background="rgba(82, 255, 0, 0.04)"
+            backgroundImage="url('/background/pattern.png')"
           >
             Contact Us
           </ModalHeader>
@@ -182,7 +182,7 @@ export const ContactUs: React.FC<{ onClose(): any; isOpen: boolean }> = ({
               </Stack>
               <Image
                 ml={"-100px"}
-                src="/contactus.png"
+                src="/common/contactus.png"
                 alt="Product screenshot"
                 w={"50%"}
               />

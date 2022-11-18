@@ -331,3 +331,29 @@ export type Invoice = {
   invoice_status: string;
   subscription: string;
 };
+
+export type QuickScanResult = {
+  contract_address?: string;
+  contract_platform?: string;
+  compilerversion?: string;
+  contract_url?: string;
+  contractname?: string;
+  evmversion?: string;
+  licensetype?: string;
+  contract_chain?: string;
+  currency?: string;
+  is_approved: boolean;
+  latest_report_id: string;
+  published_date: string;
+  quick_file_scan_details: QuickFileScanDetail[];
+  multi_file_scan_status: string;
+  multi_file_scan_summary: MultiFileScanSummary;
+};
+
+export type QuickFileScanDetail = {
+  issue_id: string;
+  issue_name: string;
+  issue_description: string;
+  issue_inference: string;
+  issue_status: string;
+};
