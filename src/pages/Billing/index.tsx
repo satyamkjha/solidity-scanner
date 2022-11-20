@@ -330,7 +330,7 @@ const PricingPlan: React.FC<{
                       w="100%"
                       height={"fit-content"}
                     >
-                      <StripePaymentsLogo size={200} />
+                      <StripePaymentsLogo size={400} />
                     </Box>
                     <Flex
                       flexDir={"row"}
