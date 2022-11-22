@@ -55,6 +55,10 @@ const SignUp = lazy(
   () => import("pages/Signup" /* webpackChunkName: "SignUp" */)
 );
 
+const CheckEmail = lazy(
+  () => import("pages/Signup/CheckEmail" /* webpackChunkName: "CheckEmail" */)
+);
+
 const Verify = lazy(
   () => import("pages/Signup/verify" /* webpackChunkName: "Verify" */)
 );
@@ -140,6 +144,9 @@ const Routes: React.FC = () => {
           </Route>
           <Route exact path="/signup">
             <SignUp />
+          </Route>
+          <Route exact path="/check-email">
+            <CheckEmail />
           </Route>
           <Route exact path="/verify">
             <Verify />

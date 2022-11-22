@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { set, useForm } from "react-hook-form";
-import { Link as RouterLink, useLocation } from "react-router-dom";
+import { Link as RouterLink, useHistory, useLocation } from "react-router-dom";
 import {
   Flex,
   Heading,
@@ -65,7 +65,6 @@ const SignUp: React.FC = () => {
           <Logo />
         </RouterLink>
       </Flex>
-      {!registered ? (
         <Flex align="center" direction="column" my={4}>
           <Heading fontSize="2xl">Getting Started</Heading>
           <Text color="subtle" my={3}>
@@ -114,33 +113,7 @@ const SignUp: React.FC = () => {
             </Box>
           </Link>
         </Flex>
-      ) : (
-        <CustomFlex
-          align="center"
-          direction="column"
-          my={36}
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-        >
-          <MailSent size={130} />
-          <Text fontSize="2xl" fontWeight={600} mb={4} mt={8}>
-            Verify your email
-          </Text>
-          <Text color="subtle">
-            We've sent a link to your email address:{" "}
-            <Box as="span" color="accent">
-              {email}
-            </Box>
-          </Text>
-          <Text mt={3} color="subtle">
-            Haven't received your email ? Have you checked your{" "}
-            <Box as="span" color={"black"} fontWeight={700}>
-              Spam/Promotions
-            </Box>{" "}
-            Folder?
-          </Text>
-        </CustomFlex>
-      )}
+      
     </>
   );
 };
@@ -160,6 +133,7 @@ const RegisterForm: React.FC<{
 }> = ({ setRegistered, setEmail, email }) => {
   const { handleSubmit, register, formState } = useForm<FormData>();
 
+  const history = useHistory()
   const [password, setPassword] = useState("");
   const [passwordError, setPasswordError] = useState<{
     contains: string[];
@@ -225,6 +199,8 @@ const RegisterForm: React.FC<{
       if (data.status === "success") {
         setRegistered(true);
         setEmail(email);
+        localStorage.setItem("current-registered-email", email);
+        history.push('/check-email');
       }
     }
   };
@@ -450,3 +426,4 @@ const RegisterForm: React.FC<{
   );
 };
 export default SignUp;
+
