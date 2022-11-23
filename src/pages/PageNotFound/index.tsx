@@ -40,13 +40,9 @@ import { Helmet } from "react-helmet";
 
 const CustomFlex = motion(Flex);
 
- const PageNotFound: React.FC = () => {
-
-  
-
+const PageNotFound: React.FC = () => {
   return (
     <>
-      
       <CustomFlex
         align="center"
         direction="column"
@@ -65,4 +61,4 @@ const CustomFlex = motion(Flex);
   );
 };
 
-export default PageNotFound
+export default PageNotFound;

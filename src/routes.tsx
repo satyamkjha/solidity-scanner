@@ -155,8 +155,8 @@ const Routes: React.FC = () => {
           <Route exact path="/forgot">
             <ForgotPassword />
           </Route>
-          <Route path="*"  >
-            <PageNotFound/>
+          <Route path="*">
+            <PageNotFound />
           </Route>
           <Layout>
             <Suspense fallback="">

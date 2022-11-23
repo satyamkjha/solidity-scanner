@@ -65,17 +65,17 @@ const SignUp: React.FC = () => {
           <Logo />
         </RouterLink>
       </Flex>
-        <Flex align="center" direction="column" my={4}>
-          <Heading fontSize="2xl">Getting Started</Heading>
-          <Text color="subtle" my={3}>
-            Create an account to continue!
-          </Text>
-          {/* <Button my={4} sx={{ fontSize: "13px", px: 8, py: 6 }} isDisabled>
+      <Flex align="center" direction="column" my={4}>
+        <Heading fontSize="2xl">Getting Started</Heading>
+        <Text color="subtle" my={3}>
+          Create an account to continue!
+        </Text>
+        {/* <Button my={4} sx={{ fontSize: "13px", px: 8, py: 6 }} isDisabled>
             <Icon as={FcGoogle} mr={2} fontSize="20px" />
             Sign Up with Google
           </Button> */}
 
-          {/* <Flex
+        {/* <Flex
             align="center"
             justify="center"
             width={["300px", "400px", "500px"]}
@@ -94,26 +94,25 @@ const SignUp: React.FC = () => {
               OR
             </Text>
           </Flex> */}
-          <RegisterForm
-            setRegistered={setRegistered}
-            setEmail={setEmail}
-            email={email}
-          />
-          <Link
-            as={RouterLink}
-            variant="subtle"
-            fontSize="sm"
-            mr={1}
-            mt={4}
-            to="/signin"
-          >
-            Already have an account?{" "}
-            <Box as="span" color="black" fontWeight={600}>
-              Sign In
-            </Box>
-          </Link>
-        </Flex>
-      
+        <RegisterForm
+          setRegistered={setRegistered}
+          setEmail={setEmail}
+          email={email}
+        />
+        <Link
+          as={RouterLink}
+          variant="subtle"
+          fontSize="sm"
+          mr={1}
+          mt={4}
+          to="/signin"
+        >
+          Already have an account?{" "}
+          <Box as="span" color="black" fontWeight={600}>
+            Sign In
+          </Box>
+        </Link>
+      </Flex>
     </>
   );
 };
@@ -133,7 +132,7 @@ const RegisterForm: React.FC<{
 }> = ({ setRegistered, setEmail, email }) => {
   const { handleSubmit, register, formState } = useForm<FormData>();
 
-  const history = useHistory()
+  const history = useHistory();
   const [password, setPassword] = useState("");
   const [passwordError, setPasswordError] = useState<{
     contains: string[];
@@ -200,7 +199,7 @@ const RegisterForm: React.FC<{
         setRegistered(true);
         setEmail(email);
         localStorage.setItem("current-registered-email", email);
-        history.push('/check-email');
+        history.push("/check-email");
       }
     }
   };
@@ -426,4 +425,3 @@ const RegisterForm: React.FC<{
   );
 };
 export default SignUp;
-

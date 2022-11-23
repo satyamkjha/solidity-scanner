@@ -11,7 +11,6 @@ import {
   TwiterIcon,
 } from "components/icons";
 export const Footer: React.FC = () => {
-
   return (
     <Container maxW="90vw" my={20}>
       <Flex

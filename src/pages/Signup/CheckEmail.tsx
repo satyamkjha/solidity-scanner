@@ -40,7 +40,7 @@ import { Helmet } from "react-helmet";
 
 const CustomFlex = motion(Flex);
 
- const CheckEmail: React.FC = () => {
+const CheckEmail: React.FC = () => {
   const [email, setEmail] = useState<string | null>("");
 
   useEffect(() => {
@@ -84,4 +84,4 @@ const CustomFlex = motion(Flex);
   );
 };
 
-export default CheckEmail
+export default CheckEmail;
