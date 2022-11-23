@@ -121,6 +121,7 @@ export const Header: React.FC = () => {
                       to="/pricing"
                       variant="brand"
                       fontWeight="600"
+                      w={"100%"}
                       p={1}
                       ml={3}
                     >
@@ -134,6 +135,7 @@ export const Header: React.FC = () => {
                       }}
                       variant="brand"
                       fontWeight="600"
+                      w={"100%"}
                       p={1}
                       ml={3}
                     >
@@ -147,6 +149,7 @@ export const Header: React.FC = () => {
                       }}
                       variant="brand"
                       fontWeight="600"
+                      w={"100%"}
                       p={1}
                       ml={3}
                     >
