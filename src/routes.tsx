@@ -15,6 +15,7 @@ import Auth from "helpers/auth";
 import API from "helpers/api";
 import PaymentSucess from "pages/Billing/payment";
 import PublicReportPage from "pages/Report/PublicReport";
+import PageNotFound, { CustomPageNotFound } from "pages/PageNotFound";
 
 const Landing = lazy(
   () => import("pages/Landing" /* webpackChunkName: "Landing" */)
@@ -154,7 +155,10 @@ const Routes: React.FC = () => {
           <Route exact path="/forgot">
             <ForgotPassword />
           </Route>
-
+          <Route exact path="/page-not-found">
+            <PageNotFound />
+          </Route>
+          
           <Layout>
             <Suspense fallback="">
               <Switch>
@@ -163,7 +167,7 @@ const Routes: React.FC = () => {
                 </PrivateRoute>
                 <PrivateRoute exact path="/profile">
                   <Profile />
-                </PrivateRoute>
+                </PrivateRoute>       
                 <PrivateRoute exact path="/projects">
                   <Projects />
                 </PrivateRoute>
@@ -182,9 +186,11 @@ const Routes: React.FC = () => {
                 <PrivateRoute exact path="/billing">
                   <Billing />
                 </PrivateRoute>
+                <Route path="*" component={CustomPageNotFound}/>
               </Switch>
             </Suspense>
           </Layout>
+          
         </Switch>
       </ErrorHandler>
     </Router>
