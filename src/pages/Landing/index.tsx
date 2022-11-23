@@ -307,8 +307,8 @@ export default function LandingPage() {
           >
             <VStack>
               <Image
-                mt={'-50px'}
-                mb={'20px'}
+                mt={"-50px"}
+                mb={"20px"}
                 height={"120px"}
                 width="120px"
                 src="/testimonials/gregory.jpeg"

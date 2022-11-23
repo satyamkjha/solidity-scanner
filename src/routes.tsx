@@ -15,6 +15,7 @@ import Auth from "helpers/auth";
 import API from "helpers/api";
 import PaymentSucess from "pages/Billing/payment";
 import PublicReportPage from "pages/Report/PublicReport";
+import PageNotFound from "pages/PageNotFound";
 
 const Landing = lazy(
   () => import("pages/Landing" /* webpackChunkName: "Landing" */)
@@ -53,6 +54,10 @@ const Reset = lazy(
 
 const SignUp = lazy(
   () => import("pages/Signup" /* webpackChunkName: "SignUp" */)
+);
+
+const CheckEmail = lazy(
+  () => import("pages/Signup/CheckEmail" /* webpackChunkName: "CheckEmail" */)
 );
 
 const Verify = lazy(
@@ -141,13 +146,18 @@ const Routes: React.FC = () => {
           <Route exact path="/signup">
             <SignUp />
           </Route>
+          <Route exact path="/check-email">
+            <CheckEmail />
+          </Route>
           <Route exact path="/verify">
             <Verify />
           </Route>
           <Route exact path="/forgot">
             <ForgotPassword />
           </Route>
-
+          <Route path="*">
+            <PageNotFound />
+          </Route>
           <Layout>
             <Suspense fallback="">
               <Switch>
