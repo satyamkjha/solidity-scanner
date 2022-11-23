@@ -142,7 +142,7 @@ export default function PricingPage() {
             <Box
               w={"100%"}
               as="section"
-              display="flex"
+              display={[null, null, "flex"]}
               flexDirection="row"
               justifyContent={"center"}
               alignContent={"center"}
@@ -153,8 +153,7 @@ export default function PricingPage() {
                 py="14"
                 display="flex"
                 flexDirection="row"
-                justifyContent={"center"}
-                alignContent={"center"}
+                overflow="auto"
               >
                 <Flex
                   as={"div"}
@@ -563,7 +562,7 @@ export default function PricingPage() {
                   minChildWidth={[145, 155, null, "10vW"]}
                   autoFlow="column"
                   flex={["1 1 0", null, null, "0 0 0"]}
-                  overflow={["auto", null, null, "visible"]}
+                  overflow={["visible", null, "auto", "visible"]}
                 >
                   {Object.keys(pricingDetails.monthly).map((plan) => (
                     <PricingColumn
