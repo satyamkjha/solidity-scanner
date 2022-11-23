@@ -153,6 +153,8 @@ export default function PricingPage() {
                 py="14"
                 display="flex"
                 flexDirection="row"
+                justifyContent={["flex-start","center"]}
+                alignContent={["flex-start","center"]}
                 overflow="auto"
               >
                 <Flex

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { set, useForm } from "react-hook-form";
-import { Link as RouterLink, useLocation } from "react-router-dom";
+import { Link as RouterLink, useHistory, useLocation } from "react-router-dom";
 import {
   Flex,
   Heading,
@@ -16,6 +16,7 @@ import {
   FormControl,
   FormLabel,
   Select,
+  Spinner,
 } from "@chakra-ui/react";
 import { motion } from "framer-motion";
 import {
@@ -62,3 +63,28 @@ const PageNotFound: React.FC = () => {
 };
 
 export default PageNotFound;
+
+export const CustomPageNotFound: React.FC = () => {
+
+  const history = useHistory()
+
+  useEffect(() => {
+    history.push('/page-not-found')
+  }, [])
+
+  return (
+    <>
+      <CustomFlex
+        align="center"
+        direction="column"
+        my={36}
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+      >
+        <Spinner/>
+      </CustomFlex>
+    </>
+  );
+};
+
+
