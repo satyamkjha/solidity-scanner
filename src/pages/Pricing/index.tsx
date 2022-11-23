@@ -142,19 +142,18 @@ export default function PricingPage() {
             <Box
               w={"100%"}
               as="section"
-              display="flex"
+              display={[null, null, "flex"]}
               flexDirection="row"
               justifyContent={"center"}
               alignContent={"center"}
             >
               <Box
                 w={"90vw"}
-                as="section"
+                as="div"
                 py="14"
                 display="flex"
                 flexDirection="row"
-                justifyContent={"center"}
-                alignContent={"center"}
+                overflow="auto"
               >
                 <Flex
                   as={"div"}
@@ -162,13 +161,13 @@ export default function PricingPage() {
                   justifyContent={"flex-start"}
                   alignContent={"center"}
                   mb={"100px"}
-                  w={"18vw"}
+                  w={[200, 200, 230, null, null, 300]}
                 >
                   <Box
                     as="div"
-                    h={"120px"}
+                    h={[220, 200, 180, 120]}
                     alignItems="center"
-                    px={"100px"}
+                    justifyContent="center"
                     display="flex"
                     flexDirection="row"
                   >
@@ -216,7 +215,7 @@ export default function PricingPage() {
                   </Box>
                   <Box
                     as="div"
-                    h={"120px"}
+                    h={[220, 200, 180, 120]}
                     px={"20px"}
                     display="flex"
                     flexDirection="row"
@@ -226,8 +225,8 @@ export default function PricingPage() {
                     <HStack spacing={1}>
                       <Image
                         src="/pricing/coin.svg"
-                        h={"30px"}
-                        w={"30px"}
+                        h={[6, 8]}
+                        w={[6, 8]}
                         mx="auto"
                         mr={4}
                       />
@@ -248,7 +247,7 @@ export default function PricingPage() {
                   </Box>
                   <Box
                     as="div"
-                    h={"120px"}
+                    h={[220, 200, 180, 120]}
                     px={"20px"}
                     display="flex"
                     flexDirection="row"
@@ -257,8 +256,8 @@ export default function PricingPage() {
                     <HStack spacing={1}>
                       <Image
                         src="/pricing/score-icon.svg"
-                        h={"30px"}
-                        w={"30px"}
+                        h={[6, 8]}
+                        w={[6, 8]}
                         mx="auto"
                         mr={4}
                       />
@@ -279,7 +278,7 @@ export default function PricingPage() {
                   </Box>
                   <Box
                     as="div"
-                    h={"120px"}
+                    h={[220, 200, 180, 120]}
                     px={"20px"}
                     display="flex"
                     flexDirection="row"
@@ -289,8 +288,8 @@ export default function PricingPage() {
                     <HStack spacing={1}>
                       <Image
                         src="/pricing/result-icon.svg"
-                        h={"30px"}
-                        w={"30px"}
+                        h={[6, 8]}
+                        w={[6, 8]}
                         mx="auto"
                         mr={4}
                       />
@@ -340,7 +339,7 @@ export default function PricingPage() {
                   </Box>
                   <Box
                     as="div"
-                    h={"120px"}
+                    h={[220, 200, 180, 120]}
                     px={"20px"}
                     display="flex"
                     flexDirection="row"
@@ -349,8 +348,8 @@ export default function PricingPage() {
                     <HStack spacing={1}>
                       <Image
                         src="/pricing/github.svg"
-                        h={"30px"}
-                        w={"30px"}
+                        h={[6, 8]}
+                        w={[6, 8]}
                         mx="auto"
                         mr={4}
                       />
@@ -371,7 +370,7 @@ export default function PricingPage() {
                   </Box>
                   <Box
                     as="div"
-                    h={"120px"}
+                    h={[220, 200, 180, 120]}
                     px={"20px"}
                     display="flex"
                     flexDirection="row"
@@ -381,8 +380,8 @@ export default function PricingPage() {
                     <HStack spacing={1}>
                       <Image
                         src="/pricing/report.svg"
-                        h={"30px"}
-                        w={"30px"}
+                        h={[6, 8]}
+                        w={[6, 8]}
                         mx="auto"
                         mr={4}
                       />
@@ -431,7 +430,7 @@ export default function PricingPage() {
                   </Box>
                   <Box
                     as="div"
-                    h={"120px"}
+                    h={[220, 200, 180, 120]}
                     px={"20px"}
                     display="flex"
                     flexDirection="row"
@@ -440,8 +439,8 @@ export default function PricingPage() {
                     <HStack spacing={1}>
                       <Image
                         src="/pricing/publish.svg"
-                        h={"30px"}
-                        w={"30px"}
+                        h={[6, 8]}
+                        w={[6, 8]}
                         mx="auto"
                         mr={4}
                       />
@@ -492,7 +491,7 @@ export default function PricingPage() {
                   </Box>
                   <Box
                     as="div"
-                    h={"120px"}
+                    h={[220, 200, 180, 120]}
                     px={"20px"}
                     display="flex"
                     flexDirection="row"
@@ -504,8 +503,8 @@ export default function PricingPage() {
                     <HStack spacing={1}>
                       <Image
                         src="/pricing/support-icon.svg"
-                        h={"30px"}
-                        w={"30px"}
+                        h={[6, 8]}
+                        w={[6, 8]}
                         mx="auto"
                         mr={4}
                       />
@@ -558,10 +557,12 @@ export default function PricingPage() {
                 </Flex>
                 <SimpleGrid
                   columns={6}
-                  maxW="7xl"
                   justifyItems="center"
                   alignItems="flex-start"
-                  w={"72vw"}
+                  minChildWidth={[145, 155, null, "10vW"]}
+                  autoFlow="column"
+                  flex={["1 1 0", null, null, "0 0 0"]}
+                  overflow={["visible", null, "auto", "visible"]}
                 >
                   {Object.keys(pricingDetails.monthly).map((plan) => (
                     <PricingColumn
@@ -622,8 +623,8 @@ export const PricingColumn: React.FC<{
       justifyContent={"flex-start"}
       alignContent={"flex-start"}
       overflow={"hidden"}
-      width={mouse ? "14vw" : "12vw"}
-      mb={mouse ? "0px" : "100px"}
+      width={mouse ? [145, 155, null, "14vW"] : [145, 155, null, "12vW"]}
+      mb={mouse ? "0px" : "160px"}
       border={`2px solid ${mouse ? "#3E15F4" : "#D6D6D6"}`}
       _notLast={{
         borderRightWidth: mouse ? "2px" : "0px",
@@ -642,7 +643,7 @@ export const PricingColumn: React.FC<{
     >
       <Box
         as="div"
-        h={"120px"}
+        h={[220, 200, 180, 120]}
         px={"15px"}
         justifyContent="center"
         display="flex"
@@ -672,7 +673,7 @@ export const PricingColumn: React.FC<{
       </Box>
       <Box
         as="div"
-        h={"165px"}
+        h={"175px"}
         px={"10px"}
         display="flex"
         flexDirection="row"
@@ -690,8 +691,8 @@ export const PricingColumn: React.FC<{
       </Box>
       <Box
         as="div"
-        h={"120px"}
-        px={"15px"}
+        h={[210, 190, 170, 110]}
+        px={"10px"}
         display="flex"
         flexDirection="row"
         justifyContent={"center"}
@@ -709,7 +710,7 @@ export const PricingColumn: React.FC<{
       </Box>
       <Box
         as="div"
-        h={"120px"}
+        h={[220, 200, 180, 120]}
         px={"15px"}
         display="flex"
         flexDirection="row"
@@ -720,7 +721,7 @@ export const PricingColumn: React.FC<{
       </Box>
       <Box
         as="div"
-        h={"120px"}
+        h={[220, 200, 180, 120]}
         px={"15px"}
         display="flex"
         flexDirection="row"
@@ -736,7 +737,7 @@ export const PricingColumn: React.FC<{
       </Box>
       <Box
         as="div"
-        h={"120px"}
+        h={[220, 200, 180, 120]}
         px={"15px"}
         display="flex"
         flexDirection="row"
@@ -751,7 +752,7 @@ export const PricingColumn: React.FC<{
       </Box>
       <Box
         as="div"
-        h={"120px"}
+        h={[220, 200, 180, 120]}
         px={"15px"}
         display="flex"
         flexDirection="row"
@@ -767,7 +768,7 @@ export const PricingColumn: React.FC<{
       </Box>
       <Box
         as="div"
-        h={"120px"}
+        h={[220, 200, 180, 120]}
         px={"15px"}
         display="flex"
         flexDirection="column"
@@ -782,7 +783,7 @@ export const PricingColumn: React.FC<{
       </Box>
       <Box
         as="div"
-        h={"120px"}
+        h={[220, 200, 180, 120]}
         px={"15px"}
         display="flex"
         flexDirection="column"
@@ -825,8 +826,8 @@ export const PricingColumn: React.FC<{
             {plan === "custom"
               ? "Contact Us"
               : Auth.isUserAuthenticated()
-              ? "Choose"
-              : "Get Started"}
+                ? "Choose"
+                : "Get Started"}
           </Button>
         </Box>
       )}
