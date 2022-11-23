@@ -15,6 +15,7 @@ import Auth from "helpers/auth";
 import API from "helpers/api";
 import PaymentSucess from "pages/Billing/payment";
 import PublicReportPage from "pages/Report/PublicReport";
+import PageNotFound from "pages/PageNotFound";
 
 const Landing = lazy(
   () => import("pages/Landing" /* webpackChunkName: "Landing" */)
@@ -154,7 +155,9 @@ const Routes: React.FC = () => {
           <Route exact path="/forgot">
             <ForgotPassword />
           </Route>
-
+          <Route path="*"  >
+            <PageNotFound/>
+          </Route>
           <Layout>
             <Suspense fallback="">
               <Switch>
