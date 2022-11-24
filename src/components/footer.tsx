@@ -20,6 +20,7 @@ export const Footer: React.FC = () => {
       >
         <Flex
           flexDirection="row"
+          justifyContent="center"
           alignItems={"flex-start"}
           width={["100%", "100%", "50%", "33%"]}
         >
