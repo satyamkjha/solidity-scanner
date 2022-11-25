@@ -88,7 +88,11 @@ const Integrations: React.FC = () => {
             title="GitHub"
             description="Connect you GitHub to directly create issues for vulnerabilities in your repo"
             icon={<GithubIcon size={63} />}
-            allowed={data._integrations.github.allowed}
+            allowed={
+              data.actions_supported
+                ? data.actions_supported.github_private
+                : data._integrations.github.allowed
+            }
             status={data._integrations.github.status}
             url={GITHUB_URL}
             providerUrlChecker="github.com"

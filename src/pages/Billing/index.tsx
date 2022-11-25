@@ -45,6 +45,7 @@ import {
   AlertDialogOverlay,
   toast,
   CloseButton,
+  Input,
 } from "@chakra-ui/react";
 
 import { AiOutlineCheckCircle } from "react-icons/ai";
@@ -109,6 +110,7 @@ const Billing: React.FC = () => {
           <Tabs mt={10} w={"100%"} variant="soft-rounded" colorScheme="green">
             <TabList>
               <Tab px={20}>Plans</Tab>
+              <Tab px={20}>Promo Code</Tab>
               <Tab px={20}>Transactions</Tab>
             </TabList>
             <TabPanels width={"100%"}>
@@ -196,6 +198,9 @@ const Billing: React.FC = () => {
                     </>
                   )}
                 </>
+              </TabPanel>
+              <TabPanel>
+                <PromoCodeCard profileData={data} />
               </TabPanel>
               <TabPanel>
                 <TransactionListCard transactionList={transactionList?.data} />
@@ -548,9 +553,7 @@ const CurrentPlan: React.FC<{
 }) => {
   const successColor = "#289F4C";
   const greyColor = "#BDBDBD";
-
   const toast = useToast();
-
   const cancelSubscription = async () => {
     const { data } = await API.delete("/api-cancel-stripe-subscription-beta/");
     if (data.status === "success") {
@@ -1479,6 +1482,95 @@ const TransactionListCard: React.FC<{ transactionList: Transaction[] }> = ({
           </AlertDialogContent>
         </AlertDialogOverlay>
       </AlertDialog>
+    </Box>
+  );
+};
+
+const PromoCodeCard: React.FC<{ profileData: Profile }> = ({ profileData }) => {
+  const [promoCode, setPromoCode] = useState("");
+  const [activePromo, setActivePromo] = useState<string | undefined>(
+    profileData.promo_code
+  );
+  const toast = useToast();
+  const applyPromoCode = () => {
+    API.get(`api-apply-promo/?code=${promoCode}`).then((res) => {
+      if (res.status === 200) {
+        toast({
+          title: res.data.message,
+          status: res.data.status,
+          duration: 2000,
+          isClosable: true,
+          position: "bottom",
+        });
+        setActivePromo(promoCode);
+      }
+    });
+  };
+
+  return (
+    <Box
+      sx={{
+        w: "100%",
+        background: "white",
+        borderRadius: 15,
+        p: 8,
+        h: "50vh",
+        my: 10,
+      }}
+      filter={"drop-shadow(0px 4px 23px rgba(0, 0, 0, 0.15));"}
+    >
+      <Text fontSize={"lg"} mb={7} fontWeight={900} color={"gray.500"}>
+        Activate Promo Code
+      </Text>
+      <Text mb={10} fontWeight={500} width="60%" color={"gray.500"}>
+        Have a Promo Code ?
+      </Text>
+      <HStack width={"100%"} spacing="5%">
+        <Input
+          isRequired
+          placeholder="Enter Promo Code"
+          variant="brand"
+          size="lg"
+          value={promoCode}
+          onChange={(e) => setPromoCode(e.target.value)}
+          width="60%"
+        />
+        <Button
+          variant="brand"
+          mt={4}
+          w="20%"
+          disabled={
+            promoCode.length < 0 ||
+            promoCode.length > 50 ||
+            profileData.current_package !== "trial" ||
+            activePromo !== undefined
+          }
+          onClick={applyPromoCode}
+        >
+          Apply Promo Code
+        </Button>
+      </HStack>
+      {activePromo && (
+        <Flex
+          mt={10}
+          p={3}
+          backgroundColor="#F8FFFA"
+          justifyContent={"flex-start"}
+          borderRadius="xl"
+          border={"1px solid #289F4C"}
+          alignItems="flex-start"
+        >
+          <HiCheckCircle size={30} color={"#289F4C"} />
+          <VStack ml={3} alignItems={"flex-start"}>
+            <Text fontSize={"lg"} fontWeight={600} color="gray.600">
+              {activePromo.toUpperCase()}
+            </Text>
+            <Text fontSize={"md"} fontWeight={400} color="gray.500">
+              {`${activePromo.toUpperCase()} has been activated`}
+            </Text>
+          </VStack>
+        </Flex>
+      )}
     </Box>
   );
 };

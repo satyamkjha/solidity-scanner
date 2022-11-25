@@ -279,17 +279,22 @@ const BlockPage: React.FC = () => {
                               variant="accent-ghost"
                               mr={5}
                               isDisabled={
-                                profile.current_package !== "expired" &&
-                                !plans.monthly[profile.current_package]
-                                  .publishable_report
+                                profile.actions_supported
+                                  ? !profile.actions_supported
+                                      .publishable_report
+                                  : profile.current_package !== "expired" &&
+                                    !plans.monthly[profile.current_package]
+                                      .publishable_report
                               }
                               onClick={() => setOpen(!open)}
                             >
-                              {profile.current_package !== "expired" &&
-                                !plans.monthly[profile.current_package]
-                                  .publishable_report && (
-                                  <LockIcon color={"accent"} size="xs" mr={3} />
-                                )}
+                              {(profile.actions_supported
+                                ? !profile.actions_supported.publishable_report
+                                : profile.current_package !== "expired" &&
+                                  !plans.monthly[profile.current_package]
+                                    .publishable_report) && (
+                                <LockIcon color={"accent"} size="xs" mr={3} />
+                              )}
                               Publish Report
                             </Button>
                           )}
@@ -302,7 +307,9 @@ const BlockPage: React.FC = () => {
                                 reportingStatus === "generating_report" ||
                                 (profile.current_package !== "expired" &&
                                   !plans.monthly[profile.current_package]
-                                    .report)
+                                    .report &&
+                                  profile.actions_supported &&
+                                  !profile.actions_supported.generate_report)
                               }
                               onClick={() => {
                                 if (
@@ -329,7 +336,9 @@ const BlockPage: React.FC = () => {
                               )}
                               {profile.current_package !== "expired" &&
                                 !plans.monthly[profile.current_package]
-                                  .report && (
+                                  .report &&
+                                profile.actions_supported &&
+                                !profile.actions_supported.generate_report && (
                                   <LockIcon color={"accent"} size="xs" mr={3} />
                                 )}
                               {reportingStatus === "generating_report"
@@ -535,7 +544,14 @@ const BlockPage: React.FC = () => {
                 >
                   <Tab mx={2}>Overview</Tab>
                   <Tab mx={2}>Detailed Result</Tab>
-                  <Tab mx={2}>Published Report</Tab>
+                  {profile.promo_code ? (
+                    profile.actions_supported &&
+                    profile.actions_supported.publishable_report && (
+                      <Tab mx={2}>Published Reports</Tab>
+                    )
+                  ) : (
+                    <Tab mx={2}>Published Reports</Tab>
+                  )}
                 </TabList>
                 <TabPanels>
                   <TabPanel>
@@ -584,8 +600,19 @@ const BlockPage: React.FC = () => {
                     )}
                   </TabPanel>
                   <TabPanel>
-                    {scanData.scan_report.project_id && (
-                      <PublishedReports scan_report={scanData.scan_report} />
+                    {scanData.scan_report.project_id && profile.promo_code ? (
+                      profile.actions_supported &&
+                      profile.actions_supported.publishable_report && (
+                        <TabPanel>
+                          <PublishedReports
+                            scan_report={scanData.scan_report}
+                          />
+                        </TabPanel>
+                      )
+                    ) : (
+                      <TabPanel>
+                        <PublishedReports scan_report={scanData.scan_report} />
+                      </TabPanel>
                     )}
                   </TabPanel>
                 </TabPanels>

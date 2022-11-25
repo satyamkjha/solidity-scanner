@@ -158,7 +158,7 @@ const Routes: React.FC = () => {
           <Route exact path="/page-not-found">
             <PageNotFound />
           </Route>
-          
+
           <Layout>
             <Suspense fallback="">
               <Switch>
@@ -167,7 +167,7 @@ const Routes: React.FC = () => {
                 </PrivateRoute>
                 <PrivateRoute exact path="/profile">
                   <Profile />
-                </PrivateRoute>       
+                </PrivateRoute>
                 <PrivateRoute exact path="/projects">
                   <Projects />
                 </PrivateRoute>
@@ -186,11 +186,10 @@ const Routes: React.FC = () => {
                 <PrivateRoute exact path="/billing">
                   <Billing />
                 </PrivateRoute>
-                <Route path="*" component={CustomPageNotFound}/>
+                <Route path="*" component={CustomPageNotFound} />
               </Switch>
             </Suspense>
           </Layout>
-          
         </Switch>
       </ErrorHandler>
     </Router>

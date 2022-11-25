@@ -153,8 +153,8 @@ export default function PricingPage() {
                 py="14"
                 display="flex"
                 flexDirection="row"
-                justifyContent={["flex-start","center"]}
-                alignContent={["flex-start","center"]}
+                justifyContent={["flex-start", "center"]}
+                alignContent={["flex-start", "center"]}
                 overflow="auto"
               >
                 <Flex
@@ -828,8 +828,8 @@ export const PricingColumn: React.FC<{
             {plan === "custom"
               ? "Contact Us"
               : Auth.isUserAuthenticated()
-                ? "Choose"
-                : "Get Started"}
+              ? "Choose"
+              : "Get Started"}
           </Button>
         </Box>
       )}

@@ -5,6 +5,7 @@ export type Severity = "high" | "medium" | "low";
 export type Profile = {
   name: string;
   email: string;
+  promo_code?: string;
   contact_number: string;
   credits: number;
   company_name: string;
@@ -32,6 +33,14 @@ export type Profile = {
     last_4_digits: string;
     exp_year: number;
     exp_month: number;
+  };
+  actions_supported?: {
+    file_scan: boolean;
+    view_report: boolean;
+    github_public: boolean;
+    github_private: boolean;
+    generate_report: boolean;
+    publishable_report: boolean;
   };
 };
 

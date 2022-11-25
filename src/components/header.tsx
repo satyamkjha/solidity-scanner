@@ -24,7 +24,7 @@ import { HamburgerIcon } from "@chakra-ui/icons";
 
 export const Header: React.FC = () => {
   const { isOpen, onClose, onOpen } = useDisclosure();
-  const [isDesktopView] = useMediaQuery('(min-width: 1024px)')
+  const [isDesktopView] = useMediaQuery("(min-width: 1024px)");
 
   return (
     <>
@@ -48,7 +48,7 @@ export const Header: React.FC = () => {
         mx="auto"
         py={4}
       >
-        <Flex alignItems="center" >
+        <Flex alignItems="center">
           <RouterLink to="/">
             <Logo />
           </RouterLink>
@@ -82,15 +82,13 @@ export const Header: React.FC = () => {
               </Link>
             </HStack>
           ) : (
-            <Box
-              as={"div"}
-              ml={["14%", "20%", "100%"]}>
+            <Box as={"div"} ml={["14%", "20%", "100%"]}>
               <Menu>
                 <MenuButton
                   as={IconButton}
-                  aria-label='Options'
+                  aria-label="Options"
                   icon={<HamburgerIcon />}
-                  variant='outline'
+                  variant="outline"
                   fontSize={"2xl"}
                 />
                 <MenuList>
@@ -108,9 +106,7 @@ export const Header: React.FC = () => {
                     <>
                       <MenuItem>
                         <RouterLink to="/home">
-                          <Button variant="ghost">
-                            Go to Dashboard
-                          </Button>
+                          <Button variant="ghost">Go to Dashboard</Button>
                         </RouterLink>
                       </MenuItem>
                     </>

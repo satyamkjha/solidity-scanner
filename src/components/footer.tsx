@@ -82,7 +82,11 @@ export const Footer: React.FC = () => {
           <Link mx={[2, 2, 5]} href="https://blog.solidityscan.com/" isExternal>
             <MediumIcon size={50} />
           </Link>
-          <Link mx={[2, 2, 5]} href="https://discord.com/invite/9HhV4hGENw" isExternal>
+          <Link
+            mx={[2, 2, 5]}
+            href="https://discord.com/invite/9HhV4hGENw"
+            isExternal
+          >
             <DiscordIcon size={50} />
           </Link>
           <Link mx={[2, 2, 5]} href="https://t.me/solidityscan" isExternal>
@@ -95,7 +99,11 @@ export const Footer: React.FC = () => {
           >
             <InstagramIcon size={50} />
           </Link>
-          <Link mx={[2, 2, 5]} href="https://twitter.com/solidityscan" isExternal>
+          <Link
+            mx={[2, 2, 5]}
+            href="https://twitter.com/solidityscan"
+            isExternal
+          >
             <TwiterIcon size={50} />
           </Link>
         </Flex>
