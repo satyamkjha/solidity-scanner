@@ -305,11 +305,11 @@ const BlockPage: React.FC = () => {
                               isLoading={reportingStatus === ""}
                               isDisabled={
                                 reportingStatus === "generating_report" ||
-                                (profile.current_package !== "expired" &&
-                                  !plans.monthly[profile.current_package]
-                                    .report &&
-                                  profile.actions_supported &&
-                                  !profile.actions_supported.generate_report)
+                                (profile.actions_supported
+                                  ? !profile.actions_supported.publishable_report
+                                  : profile.current_package !== "expired" &&
+                                    !plans.monthly[profile.current_package]
+                                      .publishable_report)
                               }
                               onClick={() => {
                                 if (
@@ -334,11 +334,11 @@ const BlockPage: React.FC = () => {
                               {reportingStatus === "generating_report" && (
                                 <Spinner color="#806CCF" size="xs" mr={3} />
                               )}
-                              {profile.current_package !== "expired" &&
-                                !plans.monthly[profile.current_package]
-                                  .report &&
-                                profile.actions_supported &&
-                                !profile.actions_supported.generate_report && (
+                              {profile.actions_supported
+                                  ? !profile.actions_supported.publishable_report
+                                  : profile.current_package !== "expired" &&
+                                    !plans.monthly[profile.current_package]
+                                      .publishable_report && (
                                   <LockIcon color={"accent"} size="xs" mr={3} />
                                 )}
                               {reportingStatus === "generating_report"

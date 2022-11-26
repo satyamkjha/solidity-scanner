@@ -453,20 +453,18 @@ const ScanDetails: React.FC<{ scansRemaining: number; scans: ScanMeta[] }> = ({
                     "report_generated" && (
                     <Button
                       variant="accent-ghost"
-                      isDisabled={
-                        profile.current_package !== "expired" &&
-                        !plans.monthly[profile.current_package]
-                          .publishable_report &&
-                        profile.actions_supported &&
-                        !profile.actions_supported.publishable_report
-                      }
+                      isDisabled={profile.actions_supported
+                        ? !profile.actions_supported.publishable_report
+                        : profile.current_package !== "expired" &&
+                          !plans.monthly[profile.current_package]
+                            .publishable_report}
                       onClick={() => setOpen(!open)}
                     >
-                      {profile.current_package !== "expired" &&
-                        !plans.monthly[profile.current_package]
-                          .publishable_report &&
-                        profile.actions_supported &&
-                        !profile.actions_supported.publishable_report && (
+                      {profile.actions_supported
+                                  ? !profile.actions_supported.publishable_report
+                                  : profile.current_package !== "expired" &&
+                                    !plans.monthly[profile.current_package]
+                                      .publishable_report && (
                           <LockIcon color={"accent"} size="xs" mr={3} />
                         )}
                       Publish Report
@@ -478,10 +476,11 @@ const ScanDetails: React.FC<{ scansRemaining: number; scans: ScanMeta[] }> = ({
                       isLoading={reportingStatus === ""}
                       isDisabled={
                         reportingStatus === "generating_report" ||
-                        (profile.current_package !== "expired" &&
-                          !plans.monthly[profile.current_package].report &&
-                          profile.actions_supported &&
-                          !profile.actions_supported.generate_report)
+                        (profile.actions_supported
+                          ? !profile.actions_supported.publishable_report
+                          : profile.current_package !== "expired" &&
+                            !plans.monthly[profile.current_package]
+                              .publishable_report)
                       }
                       onClick={() => {
                         if (
