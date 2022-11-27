@@ -20,6 +20,8 @@ import {
   Divider,
   useToast,
   Spinner,
+  Stack,
+  useMediaQuery,
 } from "@chakra-ui/react";
 
 import {
@@ -55,43 +57,43 @@ const pieData = (
   informational: number,
   gas: number
 ) => [
-  {
-    id: "critical",
-    label: "Critical",
-    value: critical,
-    color: "#FF5C00",
-  },
-  {
-    id: "high",
-    label: "High",
-    value: high,
-    color: "#FF5C00",
-  },
-  {
-    id: "medium",
-    label: "Medium",
-    value: medium,
-    color: "#FFE600",
-  },
-  {
-    id: "low",
-    label: "Low",
-    value: low,
-    color: "#38CB89",
-  },
-  {
-    id: "informational",
-    label: "Informational",
-    value: informational,
-    color: "#A0AEC0",
-  },
-  {
-    id: "gas",
-    label: "Gas",
-    value: gas,
-    color: "#F795B4",
-  },
-];
+    {
+      id: "critical",
+      label: "Critical",
+      value: critical,
+      color: "#FF5C00",
+    },
+    {
+      id: "high",
+      label: "High",
+      value: high,
+      color: "#FF5C00",
+    },
+    {
+      id: "medium",
+      label: "Medium",
+      value: medium,
+      color: "#FFE600",
+    },
+    {
+      id: "low",
+      label: "Low",
+      value: low,
+      color: "#38CB89",
+    },
+    {
+      id: "informational",
+      label: "Informational",
+      value: informational,
+      color: "#A0AEC0",
+    },
+    {
+      id: "gas",
+      label: "Gas",
+      value: gas,
+      color: "#F795B4",
+    },
+  ];
 
 const formatOptionLabel: React.FC<{
   value: string;
@@ -189,8 +191,8 @@ const QuickScan: React.FC = () => {
       backgroundColor: state.isSelected
         ? "#FFFFFF"
         : state.isFocused
-        ? "#E6E6E6"
-        : "#FFFFFF",
+          ? "#E6E6E6"
+          : "#FFFFFF",
       color: "#000000",
     }),
     menu: (provided: any, state: any) => ({
@@ -206,11 +208,14 @@ const QuickScan: React.FC = () => {
       display: "flex",
       flexDirection: "row",
       backgroundColor: "#FFFFFF",
-      width: "280px",
+      width: isDesktopView ? "280px" : "95%",
       padding: 5,
       margin: 0,
+      marginBottom: isDesktopView ? 0 : 10,
       borderTopLeftRadius: 15,
       borderBottomLeftRadius: 15,
+      borderTopRightRadius: isDesktopView ? 0 : 15,
+      borderBottomRightRadius: isDesktopView ? 0 : 15,
       border: state.isFocused ? "2px solid #52FF00" : "2px solid #EDF2F7",
     }),
     singleValue: (provided: any, state: any) => {
@@ -228,8 +233,8 @@ const QuickScan: React.FC = () => {
       backgroundColor: state.isSelected
         ? "#FFFFFF"
         : state.isFocused
-        ? "#E6E6E6"
-        : "#FFFFFF",
+          ? "#E6E6E6"
+          : "#FFFFFF",
       color: "#000000",
     }),
     menu: (provided: any, state: any) => ({
@@ -245,12 +250,14 @@ const QuickScan: React.FC = () => {
       display: "flex",
       flexDirection: "row",
       backgroundColor: "#FFFFFF",
-      width: "250px",
+      width: isDesktopView ? "250px" : "95%",
       padding: 5,
       borderTopLeftRadius: 0,
       borderBottomLeftRadius: 0,
+      borderRadius: isDesktopView ? 0 : 15,
       marginLeft: -2,
-      marginRight: -2,
+      marginRight: isDesktopView ? -2 : 0,
+      marginBottom: isDesktopView ? 0 : 10,
       border: state.isFocused ? "2px solid #52FF00" : "2px solid #EDF2F7",
     }),
     singleValue: (provided: any, state: any) => {
@@ -268,6 +275,7 @@ const QuickScan: React.FC = () => {
   }>();
 
   const toast = useToast();
+  const [isDesktopView] = useMediaQuery('(min-width: 1024px)');
 
   const [address, setAddress] = React.useState("");
   const [platform, setPlatform] = React.useState("");
@@ -408,7 +416,14 @@ const QuickScan: React.FC = () => {
               Smart-contract scanning tool built to discover vulnerabilities &
               mitigate risks in your code.
             </Text>
-            <HStack mt={20} justify="center" w={"70%"} spacing={0}>
+            <Stack
+              mt={20}
+              ml={[10, 10, 10, 0]}
+              justify="center"
+              w={["80%", "80%", "70%"]}
+              direction={["column", "column", "column", "row"]}
+              spacing={0}
+            >
               <Select
                 formatOptionLabel={formatOptionLabel}
                 options={options}
@@ -442,14 +457,15 @@ const QuickScan: React.FC = () => {
                 variant="brand"
                 size="lg"
                 height={50}
-                borderTopLeftRadius={0}
-                borderBottomLeftRadius={0}
+                borderTopLeftRadius={[15, 15, 15, 0]}
+                borderBottomLeftRadius={[15, 15, 15, 0]}
+                width={["95%", "95%", "95%", "100%"]}
                 value={address}
                 onChange={(e) => {
                   setAddress(e.target.value);
                 }}
               />
-            </HStack>
+            </Stack>
 
             <Button
               isLoading={isLoading}
@@ -474,24 +490,28 @@ const QuickScan: React.FC = () => {
               w={"90%"}
               px={[0, 0, 10]}
               mt={"-120px"}
-              py={10}
+              py={[0, 0, 0, 10]}
               borderRadius={20}
               background={"#FFFFFF"}
             >
-              <HStack w={"100%"} spacing={"5%"}>
+              <Stack
+                w={"100%"}
+                spacing={"5%"}
+                direction={["column", "column", "column", "row"]}
+              >
                 <Box
-                  w={"20%"}
+                  w={["100%", "100%", "100%", "20%"]}
                   h={"250px"}
                   borderRadius={15}
-                  px={5}
+                  px={[0, 0, 0, 5]}
                   py={5}
                   background={
                     parseFloat(scanReport.multi_file_scan_summary.score) < 2.5
                       ? "linear-gradient(96.27deg, #FFF3F0 0.75%, #FFE0D9 96.71%)"
                       : parseFloat(scanReport.multi_file_scan_summary.score) >=
                         4.5
-                      ? "linear-gradient(96.27deg, #EFFFED 0.75%, #E6FFE2 96.71%)"
-                      : "linear-gradient(96.27deg, #FFFAF2 0.75%, #FFF4E1 96.71%)"
+                        ? "linear-gradient(96.27deg, #EFFFED 0.75%, #E6FFE2 96.71%)"
+                        : "linear-gradient(96.27deg, #FFFAF2 0.75%, #FFF4E1 96.71%)"
                   }
                 >
                   <Text fontSize="md" mb={5}>
@@ -520,18 +540,18 @@ const QuickScan: React.FC = () => {
                   </Text>
                 </Box>
                 <Box
-                  w={"75%"}
+                  w={["100%", "100%", "100%", "75%"]}
                   borderRadius={15}
                   p={5}
                   h={"250px"}
                   background={" #FAFBFC "}
                   display="flex"
                   flexDir={"column"}
-                  alignItems="flex-start"
+                  alignItems={["center", "center", "center", "flex-start"]}
                   justifyContent={"flex-start"}
                 >
                   <Text fontSize="md">VULNERABILITIES DETECTED</Text>
-                  <HStack mt={5} width={"100%"} justify={"space-between"}>
+                  <HStack mt={5} width={["110%", "110%", "110%", "100%"]} justify={"space-between"}>
                     <Box
                       w={"15%"}
                       borderRadius={15}
@@ -587,7 +607,7 @@ const QuickScan: React.FC = () => {
                       alignItems="center"
                       justifyContent={"center"}
                     >
-                      <Text fontWeight={300} fontSize="md">
+                      <Text fontWeight={300} fontSize={["sm", "sm", "sm", "md"]}>
                         Medium
                       </Text>
                       <Text fontSize="xl" my={3}>
@@ -609,7 +629,7 @@ const QuickScan: React.FC = () => {
                       alignItems="center"
                       justifyContent={"center"}
                     >
-                      <Text fontWeight={300} fontSize="md">
+                      <Text fontWeight={300} fontSize={["sm", "sm", "sm", "md"]}>
                         Informational
                       </Text>
                       <Text fontSize="xl" my={3}>
@@ -644,7 +664,7 @@ const QuickScan: React.FC = () => {
                     </Box>
                   </HStack>
                 </Box>
-              </HStack>
+              </Stack>
 
               <HStack w={"100%"} mt={10} spacing={"5%"}>
                 <Box
@@ -726,9 +746,8 @@ const QuickScan: React.FC = () => {
                         This contract has been manually verified by
                         SolidityScan's internal security team as per the highest
                         smart contract security standards as of{" "}
-                        {`${d.getDate()} ${
-                          monthNames[d.getMonth()]
-                        } ${d.getFullYear()}`}
+                        {`${d.getDate()} ${monthNames[d.getMonth()]
+                          } ${d.getFullYear()}`}
                         .{" "}
                       </Text>
 
@@ -779,7 +798,7 @@ const QuickScan: React.FC = () => {
                         h="180px"
                       >
                         {scanReport.multi_file_scan_summary.issues_count ===
-                        0 ? (
+                          0 ? (
                           <Image src="/nobug.svg" alt="No Bugs Found" />
                         ) : (
                           <PieChart
