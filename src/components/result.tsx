@@ -145,7 +145,8 @@ export const Result: React.FC<{
               top: 8,
             }}
           >
-            {profileData && profileData.current_package ? (
+            {profileData && !profileData.promo_code
+             && profileData.current_package ? (
               <TrialWall />
             ) : file ? (
               <>
@@ -343,7 +344,7 @@ const FileDetails: React.FC<FileDetailsProps> = ({ file, type }) => {
   const { data, isLoading } = useFileContent(scan_id, file_path, type);
   return (
     <>
-      {profileData && profileData.current_package === "trial" ? (
+      {profileData && !profileData.promo_code && profileData.current_package === "trial" ? (
         <TrialWall />
       ) : (
         <>
@@ -681,7 +682,7 @@ export const MultifileResult: React.FC<{
             top: 8,
           }}
         >
-          {profileData && profileData.current_package === "trial" ? (
+          {profileData && !profileData.promo_code && profileData.current_package === "trial" ? (
             <TrialWall />
           ) : files ? (
             <MultiFileExplorer files={files} type={type} />
@@ -824,7 +825,7 @@ const MultifileIssues: React.FC<MultifileIssuesProps> = ({
                           />
                         </AccordionButton>
                         <AccordionPanel pb={4}>
-                          {profileData &&
+                          {profileData && !profileData.promo_code &&
                           profileData.current_package === "trial" ? (
                             <TrialWallIssue
                               severity={template_details.issue_severity}
@@ -1156,7 +1157,7 @@ const MultiFileExplorer: React.FC<MultiFileExplorerProps> = ({
 
   return (
     <>
-      {profileData && profileData.current_package === "trial" ? (
+      {profileData && !profileData.promo_code && profileData.current_package === "trial" ? (
         <TrialWall />
       ) : (
         <>
