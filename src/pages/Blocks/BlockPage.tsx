@@ -544,14 +544,9 @@ const BlockPage: React.FC = () => {
                 >
                   <Tab mx={2}>Overview</Tab>
                   <Tab mx={2}>Detailed Result</Tab>
-                  {profile.promo_code ? (
-                    profile.actions_supported &&
-                    profile.actions_supported.publishable_report && (
-                      <Tab mx={2}>Published Reports</Tab>
-                    )
-                  ) : (
+                 
                     <Tab mx={2}>Published Reports</Tab>
-                  )}
+                  
                 </TabList>
                 <TabPanels>
                   <TabPanel>
@@ -599,8 +594,7 @@ const BlockPage: React.FC = () => {
                       </Flex>
                     )}
                   </TabPanel>
-                  <TabPanel>
-                    {scanData.scan_report.project_id && profile.promo_code ? (
+                    {profile.promo_code ? (
                       profile.actions_supported &&
                       profile.actions_supported.publishable_report && (
                         <TabPanel>
@@ -614,7 +608,6 @@ const BlockPage: React.FC = () => {
                         <PublishedReports scan_report={scanData.scan_report} />
                       </TabPanel>
                     )}
-                  </TabPanel>
                 </TabPanels>
               </Tabs>
             </Box>
