@@ -467,7 +467,8 @@ const ContractForm: React.FC = () => {
     option: (provided: any, state: any) => ({
       ...provided,
       borderBottom: "1px solid #f3f3f3",
-      backgroundColor: state.isSelected
+      opacity: state.isDisabled ? 0.5 : 1,
+      backgroundColor: state.isDisabled ? "#ECECEC" : state.isSelected 
         ? "#FFFFFF"
         : state.isFocused
         ? "#E6E6E6"
