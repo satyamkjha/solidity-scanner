@@ -343,82 +343,80 @@ const FileDetails: React.FC<FileDetailsProps> = ({ file, type }) => {
   const history = useHistory();
   const { data, isLoading } = useFileContent(scan_id, file_path, type);
   return (
- 
-        <>
-          <Box
+    <>
+      <Box
+        sx={{
+          borderRadius: 15,
+          bg: "bg.subtle",
+          p: 4,
+          my: 2,
+        }}
+      >
+        <Flex
+          sx={{
+            w: "100%",
+            justifyContent: "space-between",
+            alignItems: "center",
+            h: "100%",
+          }}
+        >
+          <Text
+            text="subtle"
+            fontSize="sm"
+            color="subtle"
+            mb={2}
+            maxW="70%"
+            isTruncated
+          >
+            {file_path}
+          </Text>
+        </Flex>
+        {isLoading && !profileData && (
+          <Flex
             sx={{
-              borderRadius: 15,
-              bg: "bg.subtle",
-              p: 4,
-              my: 2,
+              w: "100%",
+              justifyContent: "center",
+              alignItems: "center",
+              h: "35vh",
             }}
           >
-            <Flex
-              sx={{
-                w: "100%",
-                justifyContent: "space-between",
-                alignItems: "center",
-                h: "100%",
+            <Spinner />
+          </Flex>
+        )}
+        {data && (
+          <pre>
+            <CodeBlock
+              customStyle={{
+                height: "35vh",
+                fontSize: "14px",
+                overflow: "scroll",
               }}
-            >
-              <Text
-                text="subtle"
-                fontSize="sm"
-                color="subtle"
-                mb={2}
-                maxW="70%"
-                isTruncated
-              >
-                {file_path}
-              </Text>
-            </Flex>
-            {isLoading && !profileData && (
-              <Flex
-                sx={{
-                  w: "100%",
-                  justifyContent: "center",
-                  alignItems: "center",
-                  h: "35vh",
-                }}
-              >
-                <Spinner />
-              </Flex>
-            )}
-            {data && (
-              <pre>
-                <CodeBlock
-                  customStyle={{
-                    height: "35vh",
-                    fontSize: "14px",
-                    overflow: "scroll",
-                  }}
-                  theme={atomOneLight}
-                  showLineNumbers
-                  text={data.file_contents}
-                  highlight={highlightString}
-                />
-              </pre>
-            )}
-          </Box>
-          <Box
-            sx={{
-              borderRadius: 15,
-              bg: "bg.subtle",
-              p: 4,
-              my: 4,
-            }}
-          >
-            <Box fontSize="sm" mb={2}>
-              <IssueDetail
-                current_file_name=""
-                issue_id={issue_id}
-                context="single_file"
-                description_details={{}}
-              />
-            </Box>
-          </Box>
-        </>
-      
+              theme={atomOneLight}
+              showLineNumbers
+              text={data.file_contents}
+              highlight={highlightString}
+            />
+          </pre>
+        )}
+      </Box>
+      <Box
+        sx={{
+          borderRadius: 15,
+          bg: "bg.subtle",
+          p: 4,
+          my: 4,
+        }}
+      >
+        <Box fontSize="sm" mb={2}>
+          <IssueDetail
+            current_file_name=""
+            issue_id={issue_id}
+            context="single_file"
+            description_details={{}}
+          />
+        </Box>
+      </Box>
+    </>
   );
 };
 
@@ -440,7 +438,14 @@ export const MultifileResult: React.FC<{
   scanDetails: MultiFileScanDetail[];
   profileData: Profile;
   details_enabled: boolean;
-}> = ({ scanSummary, scanDetails, is_latest_scan, type, profileData, details_enabled }) => {
+}> = ({
+  scanSummary,
+  scanDetails,
+  is_latest_scan,
+  type,
+  profileData,
+  details_enabled,
+}) => {
   const [files, setFiles] = useState<FilesState | null>(null);
 
   const [issues, setIssues] = useState<MultiFileScanDetail[]>(scanDetails);
@@ -468,7 +473,6 @@ export const MultifileResult: React.FC<{
     true,
     true,
   ]);
-
 
   // const [action, setAction] = useState("");
   const options = [
@@ -566,145 +570,146 @@ export const MultifileResult: React.FC<{
 
   return (
     <>
-    <Flex w="100%" sx={{ flexDir: ["column", "column", "row"] }} py={2}>
-      <VStack
-        w={["100%", "100%", "40%"]}
-        spacing={8}
-        mb={[8, 8, 0]}
-        alignItems="flex-start"
-      >
-        <Flex w="100%" justifyContent="space-around">
-          <Box width="100%">
-            <VulnerabilityDistributionFilter
-              critical={critical}
-              high={high}
-              medium={medium}
-              low={low}
-              informational={informational}
-              gas={gas}
+      <Flex w="100%" sx={{ flexDir: ["column", "column", "row"] }} py={2}>
+        <VStack
+          w={["100%", "100%", "40%"]}
+          spacing={8}
+          mb={[8, 8, 0]}
+          alignItems="flex-start"
+        >
+          <Flex w="100%" justifyContent="space-around">
+            <Box width="100%">
+              <VulnerabilityDistributionFilter
+                critical={critical}
+                high={high}
+                medium={medium}
+                low={low}
+                informational={informational}
+                gas={gas}
+                vulnerability={vulnerability}
+                setVulnerability={setVulnerability}
+              />
+            </Box>
+            {/* <Score score={score} /> */}
+          </Flex>
+          <Box w="100%" h={"100vh"} overflowY="scroll">
+            <MultifileIssues
+              profileData={profileData}
+              details_enabled={details_enabled}
+              issues={issues}
+              files={files}
+              setFiles={setFiles}
+              confidence={confidence}
               vulnerability={vulnerability}
-              setVulnerability={setVulnerability}
             />
           </Box>
-          {/* <Score score={score} /> */}
-        </Flex>
-        <Box w="100%" h={"100vh"} overflowY="scroll">
-          <MultifileIssues
-            profileData={profileData}
-            details_enabled={details_enabled}
-            issues={issues}
-            files={files}
-            setFiles={setFiles}
-            confidence={confidence}
-            vulnerability={vulnerability}
-          />
-        </Box>
-      </VStack>
-      <VStack
-        w={["100%", "100%", "60%"]}
-        h={["100%"]}
-        alignItems="flex-start"
-        spacing={5}
-        pl={10}
-      >
-        <HStack width={"100%"} justify={"space-between"}>
-          <Text fontWeight={600}>Confidence Parameter</Text>
-          <HStack>
-            <Button
-              variant={confidence[2] ? "solid" : "outline"}
-              py={0}
-              onClick={() =>
-                setConfidence([confidence[0], confidence[1], !confidence[2]])
-              }
-            >
-              <WarningIcon color={"low"} mr={2} /> Certain
-            </Button>
-            <Button
-              variant={confidence[1] ? "solid" : "outline"}
-              py={0}
-              onClick={() =>
-                setConfidence([confidence[0], !confidence[1], confidence[2]])
-              }
-            >
-              <WarningIcon color={"medium"} mr={2} /> Firm
-            </Button>
-            <Button
-              variant={confidence[0] ? "solid" : "outline"}
-              py={0}
-              onClick={() =>
-                setConfidence([!confidence[0], confidence[1], confidence[2]])
-              }
-            >
-              <WarningIcon color={"high"} mr={2} /> Tentative
-            </Button>
-          </HStack>
-        </HStack>
-        {files && files.bug_status !== "fixed" && is_latest_scan && (
-          <HStack justify="space-between" width={"100%"}>
-            <Text fontWeight={600}>Take Action</Text>
-            <Select
-              formatOptionLabel={formatOptionLabel}
-              options={options}
-              value={options.find((item) => files?.bug_status === item.value)}
-              placeholder="Select Action"
-              styles={customStyles}
-              onChange={(newValue) => {
-                if (newValue) {
-                  // setAction(newValue.value)
-                  updateBugStatus(newValue.value);
+        </VStack>
+        <VStack
+          w={["100%", "100%", "60%"]}
+          h={["100%"]}
+          alignItems="flex-start"
+          spacing={5}
+          pl={10}
+        >
+          <HStack width={"100%"} justify={"space-between"}>
+            <Text fontWeight={600}>Confidence Parameter</Text>
+            <HStack>
+              <Button
+                variant={confidence[2] ? "solid" : "outline"}
+                py={0}
+                onClick={() =>
+                  setConfidence([confidence[0], confidence[1], !confidence[2]])
                 }
-              }}
-            />
+              >
+                <WarningIcon color={"low"} mr={2} /> Certain
+              </Button>
+              <Button
+                variant={confidence[1] ? "solid" : "outline"}
+                py={0}
+                onClick={() =>
+                  setConfidence([confidence[0], !confidence[1], confidence[2]])
+                }
+              >
+                <WarningIcon color={"medium"} mr={2} /> Firm
+              </Button>
+              <Button
+                variant={confidence[0] ? "solid" : "outline"}
+                py={0}
+                onClick={() =>
+                  setConfidence([!confidence[0], confidence[1], confidence[2]])
+                }
+              >
+                <WarningIcon color={"high"} mr={2} /> Tentative
+              </Button>
+            </HStack>
           </HStack>
-        )}
-        {files &&
-          ((files.bug_status !== "pending_fix" && !is_latest_scan) ||
-            files.bug_status === "fixed") && (
-            <HStack justify="flex-end" width={"100%"}>
-              <HStack bg={"gray.100"} px={10} py={2} borderRadius={30}>
-                <Text mr={2} color={"gray.600"} fontWeight={500}>
-                  The issue has been marked as
-                </Text>
-                <Image mr={3} src={`/icons/${files.bug_status}.svg`} />
-                <Text fontWeight={700}>
-                  {sentenceCapitalize(
-                    files.bug_status.toLowerCase().replace("_", " ")
-                  )}
-                </Text>
-              </HStack>
+          {files && files.bug_status !== "fixed" && is_latest_scan && (
+            <HStack justify="space-between" width={"100%"}>
+              <Text fontWeight={600}>Take Action</Text>
+              <Select
+                formatOptionLabel={formatOptionLabel}
+                options={options}
+                value={options.find((item) => files?.bug_status === item.value)}
+                placeholder="Select Action"
+                styles={customStyles}
+                onChange={(newValue) => {
+                  if (newValue) {
+                    // setAction(newValue.value)
+                    updateBugStatus(newValue.value);
+                  }
+                }}
+              />
             </HStack>
           )}
+          {files &&
+            ((files.bug_status !== "pending_fix" && !is_latest_scan) ||
+              files.bug_status === "fixed") && (
+              <HStack justify="flex-end" width={"100%"}>
+                <HStack bg={"gray.100"} px={10} py={2} borderRadius={30}>
+                  <Text mr={2} color={"gray.600"} fontWeight={500}>
+                    The issue has been marked as
+                  </Text>
+                  <Image mr={3} src={`/icons/${files.bug_status}.svg`} />
+                  <Text fontWeight={700}>
+                    {sentenceCapitalize(
+                      files.bug_status.toLowerCase().replace("_", " ")
+                    )}
+                  </Text>
+                </HStack>
+              </HStack>
+            )}
 
-        <Box
-          sx={{
-            w: "100%",
-            position: "sticky",
-            top: 8,
-          }}
-        >
-          {!details_enabled ? (
-            <TrialWall />
-          ) : files ? (
-            <MultiFileExplorer files={files} type={type} />
-          ) : (
-            <Flex
-              sx={{
-                w: "100%",
-                bg: "bg.subtle",
-                flexDir: "column",
-                alignItems: "center",
-              }}
-              py={36}
-            >
-              <Icon as={BiCodeCurly} fontSize="40px" color="subtle" mb={4} />
-              <Text color="subtle">
-                Please select a file from an issue to see vulnerability details.
-              </Text>
-            </Flex>
-          )}
-        </Box>
-      </VStack>
-    </Flex>
+          <Box
+            sx={{
+              w: "100%",
+              position: "sticky",
+              top: 8,
+            }}
+          >
+            {!details_enabled ? (
+              <TrialWall />
+            ) : files ? (
+              <MultiFileExplorer files={files} type={type} />
+            ) : (
+              <Flex
+                sx={{
+                  w: "100%",
+                  bg: "bg.subtle",
+                  flexDir: "column",
+                  alignItems: "center",
+                }}
+                py={36}
+              >
+                <Icon as={BiCodeCurly} fontSize="40px" color="subtle" mb={4} />
+                <Text color="subtle">
+                  Please select a file from an issue to see vulnerability
+                  details.
+                </Text>
+              </Flex>
+            )}
+          </Box>
+        </VStack>
+      </Flex>
     </>
   );
 };
@@ -716,7 +721,7 @@ type MultifileIssuesProps = {
   confidence: boolean[];
   vulnerability: boolean[];
   profileData: Profile;
-  details_enabled: boolean
+  details_enabled: boolean;
 };
 
 const MultifileIssues: React.FC<MultifileIssuesProps> = ({
@@ -726,7 +731,7 @@ const MultifileIssues: React.FC<MultifileIssuesProps> = ({
   confidence,
   vulnerability,
   profileData,
-  details_enabled
+  details_enabled,
 }) => {
   const getVulnerabilityNumber = (issue_severity: string) => {
     switch (issue_severity) {
@@ -746,7 +751,6 @@ const MultifileIssues: React.FC<MultifileIssuesProps> = ({
         return 0;
     }
   };
-
 
   return (
     <Accordion allowMultiple>
@@ -1159,132 +1163,129 @@ const MultiFileExplorer: React.FC<MultiFileExplorerProps> = ({
   );
 
   return (
-        <>
-          <Box
+    <>
+      <Box
+        sx={{
+          borderRadius: 15,
+          bg: "bg.subtle",
+          p: 4,
+          my: 2,
+        }}
+      >
+        {files.bug_status === "fixed" ? (
+          <Flex
             sx={{
-              borderRadius: 15,
-              bg: "bg.subtle",
-              p: 4,
-              my: 2,
+              w: "100%",
+              justifyContent: "space-between",
+              alignItems: "center",
+              h: "60vh",
+              flexDir: "column",
             }}
           >
-            {files.bug_status === "fixed" ? (
-              <Flex
-                sx={{
-                  w: "100%",
-                  justifyContent: "space-between",
-                  alignItems: "center",
-                  h: "60vh",
-                  flexDir: "column",
-                }}
-              >
-                <Flex
-                  width={"100%"}
-                  overflowX="scroll"
-                  flexDir={"row"}
-                  justifyContent="flex-start"
-                  align={"center"}
-                  background={"gray.100"}
-                  borderRadius={10}
-                  px={3}
-                  mb={2}
-                  h={"50px"}
-                ></Flex>
-                <VStack mb={"10vh"}>
-                  <Image src="/common/fixedIssueIcon.svg" />
-                  <Text fontWeight={600}>This Issue has been fixed</Text>
-                </VStack>
-              </Flex>
-            ) : (
-              <Flex
-                sx={{
-                  w: "100%",
-                  justifyContent: "flex-start",
-                  alignItems: "center",
-                  h: "100%",
-                }}
-              >
-                <Tabs
-                  defaultIndex={0}
-                  width={"100%"}
-                  variant="soft-rounded"
-                  colorScheme="messenger"
-                >
-                  <Flex
-                    width={"100%"}
-                    overflowX="scroll"
-                    flexDir={"row"}
-                    justifyContent="flex-start"
-                    align={"center"}
-                    background={"gray.100"}
-                    borderRadius={10}
-                    px={3}
-                    mb={2}
-                  >
-                    <TabList my={3} width={"fit-content"}>
-                      {files.findings.map((file, index) => (
-                        <Tab
-                          onClick={() => setCurrentFileName(file.file_path)}
-                          mx={1}
-                          background={"white"}
-                        >
-                          <Tooltip
-                            label={file.file_path}
-                            aria-label="A tooltip"
-                          >
-                            <Text fontSize={"xs"} width={100} isTruncated>
-                              {file.file_path.length < 16
-                                ? file.file_path
-                                : file.file_path.slice(0, 6) +
-                                  "..." +
-                                  file.file_path.slice(
-                                    file.file_path.length - 10,
-                                    file.file_path.length
-                                  )}
-                            </Text>
-                          </Tooltip>
-                        </Tab>
-                      ))}
-                    </TabList>
-                  </Flex>
-                  <TabPanels>
-                    {files.findings.map((file, index) => (
-                      <TabPanel key={index} p={2}>
-                        <FileDataContTest
-                          type={type}
-                          file={{
-                            issue_id: files.issue_id,
-                            file_path: file.file_path,
-                            line_nos_start: file.line_nos_start,
-                            line_nos_end: file.line_nos_end,
-                          }}
-                        />
-                      </TabPanel>
-                    ))}
-                  </TabPanels>
-                </Tabs>
-              </Flex>
-            )}
-          </Box>
-          <Box
+            <Flex
+              width={"100%"}
+              overflowX="scroll"
+              flexDir={"row"}
+              justifyContent="flex-start"
+              align={"center"}
+              background={"gray.100"}
+              borderRadius={10}
+              px={3}
+              mb={2}
+              h={"50px"}
+            ></Flex>
+            <VStack mb={"10vh"}>
+              <Image src="/common/fixedIssueIcon.svg" />
+              <Text fontWeight={600}>This Issue has been fixed</Text>
+            </VStack>
+          </Flex>
+        ) : (
+          <Flex
             sx={{
-              borderRadius: 15,
-              bg: "bg.subtle",
-              p: 4,
-              my: 4,
+              w: "100%",
+              justifyContent: "flex-start",
+              alignItems: "center",
+              h: "100%",
             }}
           >
-            <Box fontSize="sm" mb={2}>
-              <IssueDetail
-                current_file_name={currentFileName}
-                files={files}
-                issue_id={files.issue_id}
-                context="multi_file"
-                description_details={files.description_details}
-              />
-            </Box>
-          </Box>
-        </>
+            <Tabs
+              defaultIndex={0}
+              width={"100%"}
+              variant="soft-rounded"
+              colorScheme="messenger"
+            >
+              <Flex
+                width={"100%"}
+                overflowX="scroll"
+                flexDir={"row"}
+                justifyContent="flex-start"
+                align={"center"}
+                background={"gray.100"}
+                borderRadius={10}
+                px={3}
+                mb={2}
+              >
+                <TabList my={3} width={"fit-content"}>
+                  {files.findings.map((file, index) => (
+                    <Tab
+                      onClick={() => setCurrentFileName(file.file_path)}
+                      mx={1}
+                      background={"white"}
+                    >
+                      <Tooltip label={file.file_path} aria-label="A tooltip">
+                        <Text fontSize={"xs"} width={100} isTruncated>
+                          {file.file_path.length < 16
+                            ? file.file_path
+                            : file.file_path.slice(0, 6) +
+                              "..." +
+                              file.file_path.slice(
+                                file.file_path.length - 10,
+                                file.file_path.length
+                              )}
+                        </Text>
+                      </Tooltip>
+                    </Tab>
+                  ))}
+                </TabList>
+              </Flex>
+              <TabPanels>
+                {files.findings.map((file, index) => (
+                  <TabPanel key={index} p={2}>
+                    <FileDataContTest
+                      type={type}
+                      file={{
+                        issue_id: files.issue_id,
+                        file_path: file.file_path,
+                        line_nos_start: file.line_nos_start,
+                        line_nos_end: file.line_nos_end,
+                      }}
+                    />
+                  </TabPanel>
+                ))}
+              </TabPanels>
+            </Tabs>
+          </Flex>
+        )}
+      </Box>
+      <Box
+        sx={{
+          borderRadius: 15,
+          bg: "bg.subtle",
+          p: 4,
+          my: 4,
+        }}
+      >
+        <Box fontSize="sm" mb={2}>
+          <IssueDetail
+            current_file_name={currentFileName}
+            files={files}
+            issue_id={files.issue_id}
+            context="multi_file"
+            description_details={files.description_details}
+          />
+        </Box>
+      </Box>
+    </>
   );
 };
 

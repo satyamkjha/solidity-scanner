@@ -54,12 +54,20 @@ export default function LandingPage() {
         <Flex
           as="section"
           w="100%"
-          alignItems="center"
-          my={[10, 10, 0]}
+          my={0}
           textAlign={["center", "left"]}
           py={24}
+          display={["flex"]}
+          flexDirection={["column", "column", "column", "row"]}
+          alignItems={"center"}
+          justifyContent={[
+            "flex-start",
+            "flex-start",
+            "flex-start",
+            "space-between",
+          ]}
         >
-          <Box w={["100%", "100%", "45%"]} px={[0, 0, 10]} py={10}>
+          <Box w={["100%", "100%", "100%", "45%"]} px={[0, 0, 10]} py={10}>
             <Heading as="h1" fontSize={["3xl", "4xl"]} mb={8}>
               Get your smart contracts audited by a smarter tool
             </Heading>
@@ -74,17 +82,17 @@ export default function LandingPage() {
             </Link>
           </Box>
           <Box
-            w="55%"
-            display={["none", "none", "flex"]}
+            w={["100%", "100%", "100%", "55%"]}
+            display={["flex"]}
             flexDirection="column"
             alignItems={"flex-end"}
           >
             <Image
-              marginTop={"-60px"}
+              marginTop={["0px", "0px", "0px", "-60px"]}
               src="/landing/landing-image01.png"
               transform="translateX(20px)"
               zIndex={"10"}
-              alt={"Run scans for your smat contracts"}
+              alt={"Run scans for your smart contracts"}
             />
           </Box>
         </Flex>
@@ -170,6 +178,67 @@ export default function LandingPage() {
             </Flex>{" "}
           </Flex>
         </Box>
+
+        <Flex
+          as="section"
+          w="100%"
+          my={0}
+          textAlign={["center", "left"]}
+          py={24}
+          backgroundImage={"url(/background/pattern.png)"}
+          display={["flex"]}
+          flexDirection={["column", "column", "column", "row"]}
+          alignItems={"center"}
+          justifyContent={[
+            "flex-start",
+            "flex-start",
+            "flex-start",
+            "space-between",
+          ]}
+        >
+          <Box w={["100%", "100%", "100%", "45%"]} px={[0, 0, 10]} py={10}>
+            <Heading wordBreak={"keep-all"} as="h1" fontSize={"3xl"} mb={8}>
+              SolidityScan{" "}
+              <Box
+                as="span"
+                sx={{
+                  background:
+                    "linear-gradient(129.18deg, #52FF00 8.52%, #00EEFD 93.94%)",
+                  backgroundClip: "text",
+                  WebkitTextFillColor: "transparent",
+                }}
+              >
+                QuickScan
+              </Box>
+            </Heading>
+            <Text fontSize={["lg", "lg", "xl"]} color="subtle" mb={8}>
+              An open to all quick scanning extension designed to view results
+              in simple terms. Initiate a smart contract scan by selecting from
+              a wide range of supported protocols and get a quick analysis
+              report within seconds.
+            </Text>
+            <Link to="/quickscan">
+              <Button variant="brand" w="200px">
+                Run Quick Scan
+              </Button>
+            </Link>
+          </Box>
+          <Box
+            w={["100%", "100%", "100%", "55%"]}
+            display={["flex"]}
+            flexDirection="column"
+            alignItems={"flex-end"}
+          >
+            <Image
+              marginTop={["0px", "0px", "0px", "-60px"]}
+              src="/landing/landing-image05.png"
+              transform="translateX(20px)"
+              zIndex={"10"}
+              alt={"Run quick scans for your smart contracts"}
+            />
+          </Box>
+        </Flex>
+
         {/* Section 3 */}
         <Flex
           as="section"

@@ -413,8 +413,7 @@ const QuickScan: React.FC = () => {
               <span style={{ color: "#52FF00" }}> Quick Scan </span>
             </Heading>
             <Text fontSize="xl" color="subtle" mb={8}>
-              Smart-contract scanning tool built to discover vulnerabilities &
-              mitigate risks in your code.
+            An open to all quick scanning extension designed to view results in simple terms. Initiate a smart contract scan by selecting from a wide range of supported protocols and get a quick analysis report within seconds.
             </Text>
             <Stack
               mt={20}
@@ -543,7 +542,7 @@ const QuickScan: React.FC = () => {
                   w={["100%", "100%", "100%", "75%"]}
                   borderRadius={15}
                   p={5}
-                  h={"250px"}
+                  h={["fit-content", "fit-content","250px"]}
                   background={" #FAFBFC "}
                   display="flex"
                   flexDir={"column"}
@@ -553,13 +552,15 @@ const QuickScan: React.FC = () => {
                   <Text fontSize="md">VULNERABILITIES DETECTED</Text>
                   <HStack
                     mt={5}
-                    width={["110%", "110%", "110%", "100%"]}
+                    width={["100%"]}
                     justify={"space-between"}
+                    flexWrap='wrap'
+                    spacing={0}
                   >
                     <Box
-                      w={"15%"}
+                      w={["30%", "30%", "15%"]}
                       borderRadius={15}
-                      p={5}
+                      m={2}
                       h={"160px"}
                       background={" #FFFFFF "}
                       display="flex"
@@ -579,9 +580,9 @@ const QuickScan: React.FC = () => {
                       <SeverityIcon size={10} variant={"critical"} />
                     </Box>
                     <Box
-                      w={"15%"}
+                      w={["30%", "30%", "15%"]}
                       borderRadius={15}
-                      p={5}
+                      m={2}
                       h={"160px"}
                       background={" #FFFFFF "}
                       display="flex"
@@ -601,9 +602,9 @@ const QuickScan: React.FC = () => {
                       <SeverityIcon size={10} variant={"high"} />
                     </Box>
                     <Box
-                      w={"15%"}
+                      w={["30%", "30%", "15%"]}
                       borderRadius={15}
-                      p={5}
+                      m={2}
                       h={"160px"}
                       background={" #FFFFFF "}
                       display="flex"
@@ -626,9 +627,34 @@ const QuickScan: React.FC = () => {
                       <SeverityIcon size={10} variant={"medium"} />
                     </Box>
                     <Box
-                      w={"15%"}
+                      w={["30%", "30%", "15%"]}
                       borderRadius={15}
-                      p={5}
+                      m={2}
+                      h={"160px"}
+                      background={" #FFFFFF "}
+                      display="flex"
+                      flexDir={"column"}
+                      alignItems="center"
+                      justifyContent={"center"}
+                    >
+                      <Text
+                        fontWeight={300}
+                        fontSize={["sm", "sm", "sm", "md"]}
+                      >
+                        Low
+                      </Text>
+                      <Text fontSize="xl" my={3}>
+                        {
+                          scanReport.multi_file_scan_summary
+                            .issue_severity_distribution.low
+                        }
+                      </Text>
+                      <SeverityIcon size={10} variant={"low"} />
+                    </Box>
+                    <Box
+                      w={["30%", "30%", "15%"]}
+                      borderRadius={15}
+                      m={2}
                       h={"160px"}
                       background={" #FFFFFF "}
                       display="flex"
@@ -651,9 +677,9 @@ const QuickScan: React.FC = () => {
                       <SeverityIcon size={10} variant={"informational"} />
                     </Box>
                     <Box
-                      w={"15%"}
+                      w={["30%", "30%", "15%"]}
                       borderRadius={15}
-                      p={5}
+                      m={2}
                       h={"160px"}
                       background={" #FFFFFF "}
                       display="flex"

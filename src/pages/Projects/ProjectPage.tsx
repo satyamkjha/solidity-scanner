@@ -501,12 +501,11 @@ const ScanDetails: React.FC<{ scansRemaining: number; scans: ScanMeta[] }> = ({
                         <Spinner color="#806CCF" size="xs" mr={3} />
                       )}
                       {profile.actions_supported
-                                ? !profile.actions_supported.generate_report
-                                : profile.current_package !== "expired" &&
-                                  !plans.monthly[profile.current_package]
-                                    .report && (
-                          <LockIcon color={"accent"} size="xs" mr={3} />
-                        )}
+                        ? !profile.actions_supported.generate_report
+                        : profile.current_package !== "expired" &&
+                          !plans.monthly[profile.current_package].report && (
+                            <LockIcon color={"accent"} size="xs" mr={3} />
+                          )}
                       {reportingStatus === "generating_report"
                         ? "Generating report..."
                         : scanData.scan_report.report_regeneration_enabled
@@ -610,7 +609,7 @@ const ScanDetails: React.FC<{ scansRemaining: number; scans: ScanMeta[] }> = ({
                       ) : scanData.scan_report.scan_details &&
                         scanData.scan_report.scan_summary ? (
                         <Result
-                        details_enabled={scanData.scan_report.details_enabled}
+                          details_enabled={scanData.scan_report.details_enabled}
                           profileData={profile}
                           scanSummary={scanData.scan_report.scan_summary}
                           scanDetails={scanData.scan_report.scan_details}

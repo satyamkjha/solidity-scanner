@@ -423,43 +423,48 @@ const ContractForm: React.FC = () => {
   };
 
   const options = [
-    { value: "etherscan", icon: "etherscan", label: "Ethereum", isDisabled: true },
+    {
+      value: "etherscan",
+      icon: "etherscan",
+      label: "Ethereum",
+      isDisabled: true,
+    },
     { value: "bscscan", icon: "bscscan", label: "Binance", isDisabled: true },
     {
       value: "avalanche",
       icon: "avalanche",
       label: "Avalanche C-Chain",
-      isDisabled: true
+      isDisabled: true,
     },
     {
       value: "polygonscan",
       icon: "polygonscan",
       label: "Polygon",
-      isDisabled: true
+      isDisabled: true,
     },
     {
       value: "fantom",
       icon: "fantom",
       label: "Fantom",
-      isDisabled: true
+      isDisabled: true,
     },
     {
       value: "cronos",
       icon: "cronos",
       label: "Cronos",
-      isDisabled: true
+      isDisabled: true,
     },
     {
       value: "celo",
       icon: "celo",
       label: "Celo",
-      isDisabled: true
+      isDisabled: true,
     },
     {
       value: "aurora",
       icon: "aurora",
       label: "Aurora",
-      isDisabled: true
+      isDisabled: true,
     },
   ];
 
@@ -468,7 +473,9 @@ const ContractForm: React.FC = () => {
       ...provided,
       borderBottom: "1px solid #f3f3f3",
       opacity: state.isDisabled ? 0.5 : 1,
-      backgroundColor: state.isDisabled ? "#ECECEC" : state.isSelected 
+      backgroundColor: state.isDisabled
+        ? "#ECECEC"
+        : state.isSelected
         ? "#FFFFFF"
         : state.isFocused
         ? "#E6E6E6"
@@ -606,11 +613,11 @@ const ContractForm: React.FC = () => {
                         value: item.value,
                         icon: item.icon,
                         label: item.label,
-                        isDisabled: !item.isDisabled
+                        isDisabled: !item.isDisabled,
                       };
-                    } 
+                    }
                   }
-                  return item
+                  return item;
                 })}
                 placeholder="Select Contract Platform"
                 styles={customStyles}
