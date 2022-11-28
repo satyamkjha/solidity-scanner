@@ -269,87 +269,95 @@ const ApplicationForm: React.FC = () => {
     profileData?._integrations?.github?.status === "successful";
   return (
     <>
-      <Text
-        sx={{
-          fontSize: "2xl",
-          fontWeight: 600,
-          my: 6,
-          textAlign: "center",
-        }}
-      >
-        Load application
-      </Text>
-
-      <Text sx={{ color: "subtle", textAlign: "center", mb: 6 }}>
-        Provide a link to a Git repository. See link examples and additional
-        restrictions in the User Guide (section Starting a scan from UI)
-        available on the User Guide page.
-      </Text>
-      <form onSubmit={handleSubmit(onSubmit)} style={{ width: "100%" }}>
-        <Stack spacing={6} my={8} width={"100%"}>
-          <InputGroup alignItems="center">
-            <InputLeftElement
-              height="48px"
-              children={<Icon as={AiOutlineProject} color="gray.300" />}
-            />
-            <Input
-              placeholder="Project name"
-              variant="brand"
-              size="lg"
-              {...register("project_name")}
-            />
-          </InputGroup>
-          <InputGroup alignItems="center" mb={4}>
-            <InputLeftElement
-              height="48px"
-              children={<Icon as={FaFileCode} color="gray.300" />}
-            />
-            <Input
-              isRequired
-              type="url"
-              placeholder="Link to the Github repository"
-              variant="brand"
-              size="lg"
-              {...register("project_url", { required: true })}
-            />
-          </InputGroup>
-
-          <HStack alignItems="center" spacing={6} fontSize="14px">
-            <Text>Public</Text>
-            <Switch
-              size="lg"
-              variant="brand"
-              isChecked={visibility}
-              onChange={() => setVisibility(!visibility)}
-            />
-            <Text>Private</Text>
-          </HStack>
-
-          {!isGithubIntegrated && visibility && (
-            <Alert status="warning" fontSize="14px">
-              <AlertIcon />
-              You need to connect your GitHub to start a private scan.
-              <Link
-                as={RouterLink}
-                to="/integrations"
-                variant="brand"
-                fontWeight="600"
-                ml={1}
-              >
-                Connect
-              </Link>
-            </Alert>
-          )}
-          <Button
-            type="submit"
-            variant="brand"
-            isDisabled={!isGithubIntegrated && visibility}
-            isLoading={formState.isSubmitting}
+      {profileData && (
+        <>
+          <Text
+            sx={{
+              fontSize: "2xl",
+              fontWeight: 600,
+              my: 6,
+              textAlign: "center",
+            }}
           >
-            Start Scan
-          </Button>
-        </Stack>
-      </form>
+            Load application
+          </Text>
+
+          <Text sx={{ color: "subtle", textAlign: "center", mb: 6 }}>
+            Provide a link to a Git repository. See link examples and additional
+            restrictions in the User Guide (section Starting a scan from UI)
+            available on the User Guide page.
+          </Text>
+          <form onSubmit={handleSubmit(onSubmit)} style={{ width: "100%" }}>
+            <Stack spacing={6} my={8} width={"100%"}>
+              <InputGroup alignItems="center">
+                <InputLeftElement
+                  height="48px"
+                  children={<Icon as={AiOutlineProject} color="gray.300" />}
+                />
+                <Input
+                  placeholder="Project name"
+                  variant="brand"
+                  size="lg"
+                  {...register("project_name")}
+                />
+              </InputGroup>
+              <InputGroup alignItems="center" mb={4}>
+                <InputLeftElement
+                  height="48px"
+                  children={<Icon as={FaFileCode} color="gray.300" />}
+                />
+                <Input
+                  isRequired
+                  type="url"
+                  placeholder="Link to the Github repository"
+                  variant="brand"
+                  size="lg"
+                  {...register("project_url", { required: true })}
+                />
+              </InputGroup>
+
+              <HStack alignItems="center" spacing={6} fontSize="14px">
+                <Text>Public</Text>
+                <Switch
+                  size="lg"
+                  variant="brand"
+                  isChecked={visibility}
+                  onChange={() => setVisibility(!visibility)}
+                />
+                <Text>Private</Text>
+              </HStack>
+
+              {!isGithubIntegrated && visibility && (
+                <Alert status="warning" fontSize="14px">
+                  <AlertIcon />
+                  You need to connect your GitHub to start a private scan.
+                  <Link
+                    as={RouterLink}
+                    to="/integrations"
+                    variant="brand"
+                    fontWeight="600"
+                    ml={1}
+                  >
+                    Connect
+                  </Link>
+                </Alert>
+              )}
+              <Button
+                type="submit"
+                variant="brand"
+                isDisabled={
+                  profileData.actions_supported
+                    ? !profileData.actions_supported.github_public
+                    : !isGithubIntegrated && visibility
+                }
+                isLoading={formState.isSubmitting}
+              >
+                Start Scan
+              </Button>
+            </Stack>
+          </form>
+        </>
+      )}
     </>
   );
 };
@@ -415,37 +423,48 @@ const ContractForm: React.FC = () => {
   };
 
   const options = [
-    { value: "etherscan", icon: "etherscan", label: "Ethereum" },
-    { value: "bscscan", icon: "bscscan", label: "Binance" },
+    {
+      value: "etherscan",
+      icon: "etherscan",
+      label: "Ethereum",
+      isDisabled: true,
+    },
+    { value: "bscscan", icon: "bscscan", label: "Binance", isDisabled: true },
+    {
+      value: "avalanche",
+      icon: "avalanche",
+      label: "Avalanche C-Chain",
+      isDisabled: true,
+    },
     {
       value: "polygonscan",
       icon: "polygonscan",
       label: "Polygon",
+      isDisabled: true,
     },
     {
       value: "fantom",
       icon: "fantom",
       label: "Fantom",
+      isDisabled: true,
     },
     {
       value: "cronos",
       icon: "cronos",
       label: "Cronos",
-    },
-    {
-      value: "avalanche",
-      icon: "avalanche",
-      label: "Avalanche C-Chain",
+      isDisabled: true,
     },
     {
       value: "celo",
       icon: "celo",
       label: "Celo",
+      isDisabled: true,
     },
     {
       value: "aurora",
       icon: "aurora",
       label: "Aurora",
+      isDisabled: true,
     },
   ];
 
@@ -453,7 +472,10 @@ const ContractForm: React.FC = () => {
     option: (provided: any, state: any) => ({
       ...provided,
       borderBottom: "1px solid #f3f3f3",
-      backgroundColor: state.isSelected
+      opacity: state.isDisabled ? 0.5 : 1,
+      backgroundColor: state.isDisabled
+        ? "#ECECEC"
+        : state.isSelected
         ? "#FFFFFF"
         : state.isFocused
         ? "#E6E6E6"
@@ -557,114 +579,88 @@ const ContractForm: React.FC = () => {
         additional restrictions in the User Guide (section Starting a scan from
         UI) available on the User Guide page.
       </Text>
-      <form onSubmit={handleSubmit(onSubmit)} style={{ width: "100%" }}>
-        <Stack spacing={6} my={8} width={"100%"}>
-          <VStack alignItems={"flex-start"}>
-            <Text mb={0} fontSize="sm">
-              Contract address
-            </Text>
+      {supportedChains && (
+        <form onSubmit={handleSubmit(onSubmit)} style={{ width: "100%" }}>
+          <Stack spacing={6} my={8} width={"100%"}>
+            <VStack alignItems={"flex-start"}>
+              <Text mb={0} fontSize="sm">
+                Contract address
+              </Text>
 
-            <InputGroup mt={0} alignItems="center">
-              <InputLeftElement
-                height="48px"
-                children={<Icon as={AiOutlineProject} color="gray.300" />}
-              />
-              <Input
-                isRequired
-                placeholder="0x808ed7A75n133f64069318Sa0q173c71rre44414"
-                variant="brand"
-                size="lg"
-                {...register("contract_address")}
-              />
-            </InputGroup>
-          </VStack>
+              <InputGroup mt={0} alignItems="center">
+                <InputLeftElement
+                  height="48px"
+                  children={<Icon as={AiOutlineProject} color="gray.300" />}
+                />
+                <Input
+                  isRequired
+                  placeholder="0x808ed7A75n133f64069318Sa0q173c71rre44414"
+                  variant="brand"
+                  size="lg"
+                  {...register("contract_address")}
+                />
+              </InputGroup>
+            </VStack>
 
-          <FormControl id="contract_platform">
-            <FormLabel fontSize="sm">Contract platform</FormLabel>
-            <Select
-              formatOptionLabel={formatOptionLabel}
-              options={options}
-              placeholder="Select Contract Platform"
-              styles={customStyles}
-              onChange={(newValue) => {
-                if (newValue) {
-                  // setAction(newValue.value)
-                  setPlatform(newValue.value);
-                  console.log(supportedChains);
-                  if (supportedChains) {
-                    setChainList(contractChain[newValue.value]);
+            <FormControl id="contract_platform">
+              <FormLabel fontSize="sm">Contract platform</FormLabel>
+              <Select
+                formatOptionLabel={formatOptionLabel}
+                options={options.map((item) => {
+                  for (const chain in supportedChains) {
+                    if (chain === item.value) {
+                      return {
+                        value: item.value,
+                        icon: item.icon,
+                        label: item.label,
+                        isDisabled: !item.isDisabled,
+                      };
+                    }
                   }
-                }
-              }}
-            />
-            {/* <Select
-              placeholder="Select contract platform"
-              value={platform}
-              variant="brand"
-              h={"48px"}
-              disabled={supportedChains == null}
-              isRequired
-              onChange={(e) => {
-                setPlatform(e.target.value);
-                console.log(supportedChains);
-                if (supportedChains) {
-                  setChainList(contractChain[e.target.value]);
-                  console.log(supportedChains[e.target.value]);
-                }
-              }}
-            >
-              <option value="etherscan">Ethereum</option>
-              <option value="bscscan">Binance</option>
-              <option value="polygonscan">Polygon</option>
-              <option value="fantom">Fantom</option>
-              <option value="cronos">Cronos</option>
-              <option value="avalanche">Avalanche C-Chain</option>
-              <option value="celo">Celo</option>
-              <option value="aurora">Aurora</option>
-            </Select> */}
-          </FormControl>
+                  return item;
+                })}
+                placeholder="Select Contract Platform"
+                styles={customStyles}
+                onChange={(newValue) => {
+                  if (newValue) {
+                    // setAction(newValue.value)
+                    setPlatform(newValue.value);
+                    console.log(supportedChains);
+                    if (supportedChains) {
+                      setChainList(contractChain[newValue.value]);
+                    }
+                  }
+                }}
+              />
+            </FormControl>
 
-          <FormControl id="contract_chain">
-            <FormLabel fontSize="sm">Contract Chain</FormLabel>
-            <Select
-              formatOptionLabel={formatOptionLabel}
-              isDisabled={platform === ""}
-              options={chainList}
-              placeholder="Select Contract Chain"
-              styles={customStyles}
-              onChange={(newValue) => {
-                if (newValue) {
-                  setChain(newValue.value);
-                }
-              }}
-            />
-            {/* <Select
-              placeholder="Select Platform Chain"
-              value={chain}
-              variant="brand"
-              h={"48px"}
-              disabled={supportedChains == null}
-              isRequired
-              onChange={(e) => {
-                setChain(e.target.value);
-              }}
-            >
-              {chainList?.map((item) => (
-                <option value={item.value}>{item.label}</option>
-              ))}
-            </Select> */}
-          </FormControl>
+            <FormControl id="contract_chain">
+              <FormLabel fontSize="sm">Contract Chain</FormLabel>
+              <Select
+                formatOptionLabel={formatOptionLabel}
+                isDisabled={platform === ""}
+                options={chainList}
+                placeholder="Select Contract Chain"
+                styles={customStyles}
+                onChange={(newValue) => {
+                  if (newValue) {
+                    setChain(newValue.value);
+                  }
+                }}
+              />
+            </FormControl>
 
-          <Button
-            type="submit"
-            variant="brand"
-            isLoading={formState.isSubmitting}
-            isDisabled={profileData?.credits === 0}
-          >
-            Start Scan
-          </Button>
-        </Stack>
-      </form>
+            <Button
+              type="submit"
+              variant="brand"
+              isLoading={formState.isSubmitting}
+              isDisabled={profileData?.credits === 0}
+            >
+              Start Scan
+            </Button>
+          </Stack>
+        </form>
+      )}
     </>
   );
 };
@@ -821,163 +817,135 @@ const UploadForm: React.FC = () => {
 
   return (
     <>
-      <Text
-        sx={{
-          fontSize: "2xl",
-          fontWeight: 600,
-          mt: 6,
-          textAlign: "center",
-        }}
-      >
-        Upload contract
-      </Text>
-      <Flex
-        justifyContent="center"
-        alignItems="center"
-        flexDir="column"
-        w="100%"
-        py={4}
-        my={4}
-        bg={
-          (profileData?.credits || 0) > 0
-            ? "rgba(223, 255, 233, 0.5)"
-            : "high-subtle"
-        }
-        border="1px solid"
-        borderColor={(profileData?.credits || 0) > 0 ? "brand-dark" : "high"}
-        borderRadius="25px"
-      >
-        <Flex alignItems="center">
-          <BlockCredit />
-          <Text fontSize="2xl" fontWeight="700" ml={2}>
-            {profileData?.credits}
-          </Text>
-        </Flex>
-        <Text
-          sx={{
-            color: (profileData?.credits || 0) > 0 ? "low" : "high",
-            fontWeight: 600,
-            textAlign: "center",
-          }}
-        >
-          Contract scan credits
-        </Text>
-      </Flex>
-
-      <Text sx={{ color: "subtle", textAlign: "center", mb: 6 }}>
-        Upload the Contract files. The maximum number of files that you can
-        upload is 5 and the total file size cannot exceed 5 MB.
-      </Text>
-
-      <Flex
-        flexDir={"column"}
-        justifyContent={"flex-start"}
-        alignItems="flex-start"
-        my={8}
-        width={"100%"}
-      >
-        <VStack alignItems={"flex-start"} width="100%">
-          <Text mb={0} fontSize="sm">
-            Project Name
-          </Text>
-
-          <InputGroup mt={0} alignItems="center">
-            <InputLeftElement
-              height="48px"
-              children={<Icon as={AiOutlineProject} color="gray.300" />}
-            />
-            <Input
-              isRequired
-              placeholder="Enter Project Name"
-              variant="brand"
-              size="lg"
-              value={name}
-              onChange={(e) => setName(e.target.value)}
-            />
-          </InputGroup>
-        </VStack>
-
-        {step === 0 ? (
-          <div {...getRootProps({ style })}>
-            <input {...getInputProps()} />
-            {error ? (
-              <>
-                <ScanErrorIcon size={80} />
-                <p style={{ marginTop: "20px" }}>
-                  {errorMsg}. Please
-                  <span
-                    onClick={() => setError(false)}
-                    style={{ color: "#3300FF" }}
-                  >
-                    {" "}
-                    try again
-                  </span>
-                </p>
-              </>
-            ) : (
-              <>
-                <UploadIcon size={80} />
-                <p style={{ marginTop: "20px" }}>
-                  Drag and drop or{" "}
-                  <span style={{ color: "#3300FF" }}> Browse</span> to upload
-                </p>
-                <p style={{ fontSize: "15px", color: "#D3D3D3" }}>
-                  You can upload upto 5 files whose size must not exceed above 5
-                  MB
-                </p>
-              </>
-            )}
-          </div>
-        ) : step === 1 ? (
-          <Box
-            sx={{ w: "100%", borderRadius: "20px", p: 10, my: 2 }}
-            justifyContent="flex-start"
-            alignItems={"flex-start"}
-            background={"#FFFFFF"}
-            border={"1.5px dashed #D6D6D6"}
+      {profileData && (
+        <>
+          <Text
+            sx={{
+              fontSize: "2xl",
+              fontWeight: 600,
+              mt: 6,
+              textAlign: "center",
+            }}
           >
-            <HStack justify={"space-between"}>
-              <HStack align={"flex-end"} my={4}>
-                <SolidityFileIcon size={25} />
-                <Text fontSize={"14px"}>{acceptedFiles[0].name}</Text>
-                <Text fontSize={"15px"}>|</Text>
-                <Text fontSize={"10px"} color={"gray.500"}>
-                  0{acceptedFiles.length} files
-                </Text>
-              </HStack>
-              <CloseButton
-                onClick={() => {
-                  setStep(0);
-                  setUrlList([]);
-                }}
-              />
-            </HStack>
-            <Progress variant={"blue"} size="xs" isIndeterminate />
-            <HStack mt={4} justify={"space-between"}>
-              <Text color={"gray.500"}>Uploading...</Text>
-              <Spinner color={"gray.500"} />
-            </HStack>
-          </Box>
-        ) : (
-          <>
-            <Box
+            Upload contract
+          </Text>
+          <Flex
+            justifyContent="center"
+            alignItems="center"
+            flexDir="column"
+            w="100%"
+            py={4}
+            my={4}
+            bg={
+              (profileData?.credits || 0) > 0
+                ? "rgba(223, 255, 233, 0.5)"
+                : "high-subtle"
+            }
+            border="1px solid"
+            borderColor={
+              (profileData?.credits || 0) > 0 ? "brand-dark" : "high"
+            }
+            borderRadius="25px"
+          >
+            <Flex alignItems="center">
+              <BlockCredit />
+              <Text fontSize="2xl" fontWeight="700" ml={2}>
+                {profileData?.credits}
+              </Text>
+            </Flex>
+            <Text
               sx={{
-                w: "100%",
-                borderRadius: "20px",
-                px: 20,
-                pt: 2,
-                pb: 10,
-                my: 2,
+                color: (profileData?.credits || 0) > 0 ? "low" : "high",
+                fontWeight: 600,
+                textAlign: "center",
               }}
-              justifyContent="flex-start"
-              alignItems={"flex-start"}
-              background={"#FFFFFF"}
-              border={"1.5px dashed #D6D6D6"}
-              height="300px"
-              overflowY={"scroll"}
             >
-              <VStack h="fit-content" spacing={2} width="100%">
-                <HStack width="100%" justify={"flex-end"}>
+              Contract scan credits
+            </Text>
+          </Flex>
+
+          <Text sx={{ color: "subtle", textAlign: "center", mb: 6 }}>
+            Upload the Contract files. The maximum number of files that you can
+            upload is 5 and the total file size cannot exceed 5 MB.
+          </Text>
+
+          <Flex
+            flexDir={"column"}
+            justifyContent={"flex-start"}
+            alignItems="flex-start"
+            my={8}
+            width={"100%"}
+          >
+            <VStack alignItems={"flex-start"} width="100%">
+              <Text mb={0} fontSize="sm">
+                Project Name
+              </Text>
+
+              <InputGroup mt={0} alignItems="center">
+                <InputLeftElement
+                  height="48px"
+                  children={<Icon as={AiOutlineProject} color="gray.300" />}
+                />
+                <Input
+                  isRequired
+                  placeholder="Enter Project Name"
+                  variant="brand"
+                  size="lg"
+                  value={name}
+                  onChange={(e) => setName(e.target.value)}
+                />
+              </InputGroup>
+            </VStack>
+
+            {step === 0 ? (
+              <div {...getRootProps({ style })}>
+                <input {...getInputProps()} />
+                {error ? (
+                  <>
+                    <ScanErrorIcon size={80} />
+                    <p style={{ marginTop: "20px" }}>
+                      {errorMsg}. Please
+                      <span
+                        onClick={() => setError(false)}
+                        style={{ color: "#3300FF" }}
+                      >
+                        {" "}
+                        try again
+                      </span>
+                    </p>
+                  </>
+                ) : (
+                  <>
+                    <UploadIcon size={80} />
+                    <p style={{ marginTop: "20px" }}>
+                      Drag and drop or{" "}
+                      <span style={{ color: "#3300FF" }}> Browse</span> to
+                      upload
+                    </p>
+                    <p style={{ fontSize: "15px", color: "#D3D3D3" }}>
+                      You can upload upto 5 files whose size must not exceed
+                      above 5 MB
+                    </p>
+                  </>
+                )}
+              </div>
+            ) : step === 1 ? (
+              <Box
+                sx={{ w: "100%", borderRadius: "20px", p: 10, my: 2 }}
+                justifyContent="flex-start"
+                alignItems={"flex-start"}
+                background={"#FFFFFF"}
+                border={"1.5px dashed #D6D6D6"}
+              >
+                <HStack justify={"space-between"}>
+                  <HStack align={"flex-end"} my={4}>
+                    <SolidityFileIcon size={25} />
+                    <Text fontSize={"14px"}>{acceptedFiles[0].name}</Text>
+                    <Text fontSize={"15px"}>|</Text>
+                    <Text fontSize={"10px"} color={"gray.500"}>
+                      0{acceptedFiles.length} files
+                    </Text>
+                  </HStack>
                   <CloseButton
                     onClick={() => {
                       setStep(0);
@@ -985,44 +953,84 @@ const UploadForm: React.FC = () => {
                     }}
                   />
                 </HStack>
-                <HStack>
-                  <ProjectIcon size={30} />
-                  <Text>{name}</Text>
+                <Progress variant={"blue"} size="xs" isIndeterminate />
+                <HStack mt={4} justify={"space-between"}>
+                  <Text color={"gray.500"}>Uploading...</Text>
+                  <Spinner color={"gray.500"} />
                 </HStack>
-                <Text fontSize={"10px"} color={"gray.500"}>
-                  0{acceptedFiles.length} files
-                </Text>
-                {acceptedFiles.map((file) => (
-                  <Box
-                    width={"100%"}
-                    justifyContent={"center"}
-                    alignItems="center"
-                    textAlign={"center"}
-                    fontSize="13px"
-                    borderRadius={4}
-                    color="gray.500"
-                    backgroundColor="#F8FAFC"
-                    py={3}
-                  >
-                    {file.name}
-                  </Box>
-                ))}
-              </VStack>
-            </Box>
-          </>
-        )}
+              </Box>
+            ) : (
+              <>
+                <Box
+                  sx={{
+                    w: "100%",
+                    borderRadius: "20px",
+                    px: 20,
+                    pt: 2,
+                    pb: 10,
+                    my: 2,
+                  }}
+                  justifyContent="flex-start"
+                  alignItems={"flex-start"}
+                  background={"#FFFFFF"}
+                  border={"1.5px dashed #D6D6D6"}
+                  height="300px"
+                  overflowY={"scroll"}
+                >
+                  <VStack h="fit-content" spacing={2} width="100%">
+                    <HStack width="100%" justify={"flex-end"}>
+                      <CloseButton
+                        onClick={() => {
+                          setStep(0);
+                          setUrlList([]);
+                        }}
+                      />
+                    </HStack>
+                    <HStack>
+                      <ProjectIcon size={30} />
+                      <Text>{name}</Text>
+                    </HStack>
+                    <Text fontSize={"10px"} color={"gray.500"}>
+                      0{acceptedFiles.length} files
+                    </Text>
+                    {acceptedFiles.map((file) => (
+                      <Box
+                        width={"100%"}
+                        justifyContent={"center"}
+                        alignItems="center"
+                        textAlign={"center"}
+                        fontSize="13px"
+                        borderRadius={4}
+                        color="gray.500"
+                        backgroundColor="#F8FAFC"
+                        py={3}
+                      >
+                        {file.name}
+                      </Box>
+                    ))}
+                  </VStack>
+                </Box>
+              </>
+            )}
 
-        <Button
-          type="submit"
-          variant="brand"
-          mt={4}
-          w="100%"
-          disabled={step < 2 || name === ""}
-          onClick={startFileScan}
-        >
-          Start Scan
-        </Button>
-      </Flex>
+            <Button
+              type="submit"
+              variant="brand"
+              mt={4}
+              w="100%"
+              disabled={
+                step < 2 ||
+                name === "" ||
+                (profileData.actions_supported &&
+                  !profileData.actions_supported.file_scan)
+              }
+              onClick={startFileScan}
+            >
+              Start Scan
+            </Button>
+          </Flex>
+        </>
+      )}
     </>
   );
 };

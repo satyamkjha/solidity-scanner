@@ -65,12 +65,11 @@ const PageNotFound: React.FC = () => {
 export default PageNotFound;
 
 export const CustomPageNotFound: React.FC = () => {
-
-  const history = useHistory()
+  const history = useHistory();
 
   useEffect(() => {
-    history.push('/page-not-found')
-  }, [])
+    history.push("/page-not-found");
+  }, []);
 
   return (
     <>
@@ -81,10 +80,8 @@ export const CustomPageNotFound: React.FC = () => {
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
       >
-        <Spinner/>
+        <Spinner />
       </CustomFlex>
     </>
   );
 };
-
-

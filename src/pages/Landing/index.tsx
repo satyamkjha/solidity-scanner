@@ -14,6 +14,7 @@ import {
   useDisclosure,
   HStack,
   VStack,
+  useMediaQuery,
 } from "@chakra-ui/react";
 
 import {
@@ -35,6 +36,7 @@ import ContactUs from "components/contactus";
 export default function LandingPage() {
   const { isOpen, onClose, onOpen } = useDisclosure();
   const location = useLocation();
+  const [isDesktopView] = useMediaQuery("(min-width: 1024px)");
 
   useEffect(() => {
     const query = new URLSearchParams(location.search);
@@ -47,21 +49,29 @@ export default function LandingPage() {
   return (
     <>
       <Header />
-      <Container maxW="80vw" color="black">
+      <Container maxW={["95vw", "95vw", "90vw", "80vw"]} color="black">
         {/* Section 1 */}
         <Flex
           as="section"
           w="100%"
-          alignItems="center"
-          my={[10, 10, 0]}
+          my={0}
           textAlign={["center", "left"]}
           py={24}
+          display={["flex"]}
+          flexDirection={["column", "column", "column", "row"]}
+          alignItems={"center"}
+          justifyContent={[
+            "flex-start",
+            "flex-start",
+            "flex-start",
+            "space-between",
+          ]}
         >
-          <Box w={["100%", "100%", "45%"]} px={[0, 0, 10]} py={10}>
+          <Box w={["100%", "100%", "100%", "45%"]} px={[0, 0, 10]} py={10}>
             <Heading as="h1" fontSize={["3xl", "4xl"]} mb={8}>
               Get your smart contracts audited by a smarter tool
             </Heading>
-            <Text fontSize="xl" color="subtle" mb={8}>
+            <Text fontSize={["lg", "lg", "xl"]} color="subtle" mb={8}>
               Smart-contract scanning tool built to discover vulnerabilities &
               mitigate risks in your code.
             </Text>
@@ -72,23 +82,23 @@ export default function LandingPage() {
             </Link>
           </Box>
           <Box
-            w="55%"
-            display={["none", "none", "flex"]}
+            w={["100%", "100%", "100%", "55%"]}
+            display={["flex"]}
             flexDirection="column"
             alignItems={"flex-end"}
           >
             <Image
-              marginTop={"-60px"}
+              marginTop={["0px", "0px", "0px", "-60px"]}
               src="/landing/landing-image01.png"
               transform="translateX(20px)"
               zIndex={"10"}
-              alt={"Run scans for your smat contracts"}
+              alt={"Run scans for your smart contracts"}
             />
           </Box>
         </Flex>
 
         {/* Section 2 */}
-        <Box w="100%" as="section" sx={{ textAlign: "center" }} my={8}>
+        <Box w="100%" as="section" sx={{ textAlign: "center" }} my={[4, 8]}>
           <Heading as="h1" fontSize="3xl" mb={4}>
             Scan.{" "}
             <Box
@@ -105,14 +115,14 @@ export default function LandingPage() {
             </Box>{" "}
             Publish.
           </Heading>
-          <Text color="subtle" fontSize="xl" mb={4}>
+          <Text color="subtle" fontSize={["lg", "lg", "xl"]} mb={4}>
             Simple, fast, effortless.
           </Text>
           <Flex
             sx={{
               w: "70%",
               justifyContent: "space-between",
-              my: 20,
+              my: [10, 10, 20],
               color: "#00006D",
               mx: "auto",
               flexDir: ["column", "column", "row"],
@@ -125,7 +135,7 @@ export default function LandingPage() {
                 mb: [8, 8, 0],
               }}
             >
-              <ScheduleScan size={140} />
+              <ScheduleScan size={isDesktopView ? 140 : 100} />
               <Text fontSize="sm" ml="2" mt={4} fontWeight={600}>
                 Initiate Scans
               </Text>
@@ -137,7 +147,7 @@ export default function LandingPage() {
                 mb: [8, 8, 0],
               }}
             >
-              <PublishReport size={140} />
+              <PublishReport size={isDesktopView ? 140 : 100} />
               <Text fontSize="sm" ml="2" mt={4} fontWeight={600}>
                 Publish Reports
               </Text>
@@ -149,7 +159,7 @@ export default function LandingPage() {
                 mb: [8, 8, 0],
               }}
             >
-              <VulnCheck size={140} />
+              <VulnCheck size={isDesktopView ? 140 : 100} />
               <Text fontSize="sm" ml="2" mt={4} fontWeight={600}>
                 100+ Vulnerability Checks
               </Text>
@@ -161,19 +171,80 @@ export default function LandingPage() {
                 mb: [8, 8, 0],
               }}
             >
-              <Integration size={140} />
+              <Integration size={isDesktopView ? 140 : 100} />
               <Text fontSize="sm" ml="2" mt={4} fontWeight={600}>
                 Easy Integrations
               </Text>
             </Flex>{" "}
           </Flex>
         </Box>
+
+        <Flex
+          as="section"
+          w="100%"
+          my={0}
+          textAlign={["center", "left"]}
+          py={24}
+          backgroundImage={"url(/background/pattern.png)"}
+          display={["flex"]}
+          flexDirection={["column", "column", "column", "row"]}
+          alignItems={"center"}
+          justifyContent={[
+            "flex-start",
+            "flex-start",
+            "flex-start",
+            "space-between",
+          ]}
+        >
+          <Box w={["100%", "100%", "100%", "45%"]} px={[0, 0, 10]} py={10}>
+            <Heading wordBreak={"keep-all"} as="h1" fontSize={"3xl"} mb={8}>
+              SolidityScan{" "}
+              <Box
+                as="span"
+                sx={{
+                  background:
+                    "linear-gradient(129.18deg, #52FF00 8.52%, #00EEFD 93.94%)",
+                  backgroundClip: "text",
+                  WebkitTextFillColor: "transparent",
+                }}
+              >
+                QuickScan
+              </Box>
+            </Heading>
+            <Text fontSize={["lg", "lg", "xl"]} color="subtle" mb={8}>
+              An open to all quick scanning extension designed to view results
+              in simple terms. Initiate a smart contract scan by selecting from
+              a wide range of supported protocols and get a quick analysis
+              report within seconds.
+            </Text>
+            <Link to="/quickscan">
+              <Button variant="brand" w="200px">
+                Run Quick Scan
+              </Button>
+            </Link>
+          </Box>
+          <Box
+            w={["100%", "100%", "100%", "55%"]}
+            display={["flex"]}
+            flexDirection="column"
+            alignItems={"flex-end"}
+          >
+            <Image
+              marginTop={["0px", "0px", "0px", "-60px"]}
+              src="/landing/landing-image05.png"
+              transform="translateX(20px)"
+              zIndex={"10"}
+              alt={"Run quick scans for your smart contracts"}
+            />
+          </Box>
+        </Flex>
+
         {/* Section 3 */}
         <Flex
           as="section"
           w="100%"
           alignItems="center"
-          py={10}
+          py={[5, 5, 10]}
           flexDir={["column", "column", "row"]}
           textAlign={["center", "center", "left"]}
         >
@@ -185,11 +256,11 @@ export default function LandingPage() {
               p={12}
             />
           </Box>
-          <Box w={["100%", "100%", "50%"]} p={10}>
+          <Box w={["100%", "100%", "50%"]} p={[5, 10]}>
             <Heading as="h2" fontSize="3xl" mb={8}>
               See your security posture evolve
             </Heading>
-            <Text fontSize="xl" color="subtle" mb={8}>
+            <Text fontSize={["lg", "lg", "xl"]} color="subtle" mb={8}>
               Upload specific contract code or provide code repositories link
               and we’ll take care of the rest. Set triggers to automatically run
               scans when developers make updates, and see trends on how your
@@ -201,7 +272,7 @@ export default function LandingPage() {
           as="section"
           w="100%"
           alignItems="center"
-          py={10}
+          py={[5, 5, 10]}
           flexDir={["column", "column", "row-reverse"]}
           textAlign={["center", "center", "left"]}
         >
@@ -213,11 +284,11 @@ export default function LandingPage() {
               p={12}
             />
           </Box>
-          <Box w={["100%", "100%", "50%"]} p={10}>
+          <Box w={["100%", "100%", "50%"]} p={[5, 10]}>
             <Heading as="h2" fontSize="3xl" mb={8}>
               Integrate with the services you already love
             </Heading>
-            <Text fontSize="xl" color="subtle" mb={8}>
+            <Text fontSize={["lg", "lg", "xl"]} color="subtle" mb={8}>
               Using Slack/ Microsoft teams or JIRA? Built-in integrations with
               most of the popular tools to automatically send out alerts or
               raise issue tickets, so your team sees everything in one place.
@@ -228,7 +299,7 @@ export default function LandingPage() {
           as="section"
           w="100%"
           alignItems="center"
-          py={10}
+          py={[5, 5, 10]}
           flexDir={["column", "column", "row"]}
           textAlign={["center", "center", "left"]}
         >
@@ -240,11 +311,11 @@ export default function LandingPage() {
               p={12}
             />
           </Box>
-          <Box w={["100%", "100%", "50%"]} p={10}>
+          <Box w={["100%", "100%", "50%"]} p={[5, 10]}>
             <Heading as="h2" fontSize="3xl" mb={8}>
               Built by us, for your contracts:
             </Heading>
-            <Text fontSize="xl" color="subtle" mb={8}>
+            <Text fontSize={["lg", "lg", "xl"]} color="subtle" mb={8}>
               Customize issues, silence specific issues or add your own rules to
               trigger alerts for. Request for assistance with issue remediation
               or get a manual audit from a team of security experts.
@@ -256,7 +327,7 @@ export default function LandingPage() {
           as="section"
           w="100%"
           alignItems="center"
-          py={10}
+          py={[5, 5, 10]}
           flexDir={["column", "column", "row-reverse"]}
           textAlign={["center", "center", "left"]}
         >
@@ -268,11 +339,11 @@ export default function LandingPage() {
               p={12}
             />
           </Box>
-          <Box w={["100%", "100%", "50%"]} p={10}>
+          <Box w={["100%", "100%", "50%"]} p={[5, 10]}>
             <Heading as="h2" fontSize="3xl" mb={8}>
               Publish reports and share your security score
             </Heading>
-            <Text fontSize="xl" color="subtle" mb={8}>
+            <Text fontSize={["lg", "lg", "xl"]} color="subtle" mb={8}>
               Share and validate your progress with the community with easily
               publishable reports. Your community and investors can use the
               report summary and be confident of your contracts' security. For
@@ -300,7 +371,7 @@ export default function LandingPage() {
           </Text> */}
           {/* <UserTestimonial /> */}
           <Box
-            width={"70%"}
+            width={["90%", "90%", "70%"]}
             boxShadow="0px 16px 32px rgba(0, 0, 0, 0.13)"
             borderRadius="15px"
             my={20}
@@ -323,7 +394,7 @@ export default function LandingPage() {
               <Box>
                 <Text
                   padding={"10"}
-                  fontSize="lg"
+                  fontSize={["sm", "sm", "lg"]}
                   fontStyle="italic"
                   fontWeight="400"
                 >
@@ -345,7 +416,7 @@ export default function LandingPage() {
           <Heading fontSize="3xl" mb={5}>
             Our Team
           </Heading>
-          <Text color="subtle" fontSize="xl" mb={5}>
+          <Text color="subtle" fontSize={["lg", "lg", "xl"]} mb={5}>
             Meet the experts behind the scenes. We are always excited to talk
             about anything in crypto.
           </Text>
@@ -354,7 +425,7 @@ export default function LandingPage() {
             w="100%"
             alignItems="center"
             py={10}
-            my={20}
+            my={[5, 5, 20]}
             flexDir={["column", "column", "row"]}
             justifyContent={"center"}
           >
@@ -365,6 +436,7 @@ export default function LandingPage() {
                 flexDir={["row", "row", "row"]}
                 justifyContent={"flex-start"}
                 mx={10}
+                my={[5, 5, 5, 0]}
               >
                 <VStack spacing={0}>
                   <Box
@@ -583,14 +655,20 @@ export default function LandingPage() {
         </Box>
 
         {/* Section 4 */}
-        <Box w="100%" as="section" sx={{ textAlign: "center" }} mb={10} mt={20}>
+        <Box
+          w="100%"
+          as="section"
+          sx={{ textAlign: "center" }}
+          mb={10}
+          mt={[10, 10, 20]}
+        >
           <Heading as="h2" fontSize="3xl" my={5}>
             Fully automated smart contract audit system <br /> to help{" "}
             <Box as="span" sx={{ color: "accent" }}>
               secure your products faster
             </Box>
           </Heading>
-          <Text color="subtle" fontSize="xl" mb={4}>
+          <Text color="subtle" fontSize={["lg", "lg", "xl"]} mb={4}>
             Focus on what matters most, our robots handle the rest ☕️
           </Text>
           <ImageCarousel />
@@ -607,7 +685,7 @@ export default function LandingPage() {
           <Flex
             sx={{
               px: 10,
-              py: 20,
+              py: [10, 20],
               w: "100%",
               bg: "rgba(82, 255, 0, 0.06)",
               flexDir: "column",
@@ -620,7 +698,12 @@ export default function LandingPage() {
                 manual audit
               </Box>{" "}
             </Heading>
-            <Text color="subtle" fontSize="xl" mb={4} textAlign="center">
+            <Text
+              color="subtle"
+              fontSize={["lg", "lg", "xl"]}
+              mb={4}
+              textAlign="center"
+            >
               Talk to our team of security experts for help on securing your
               Smart Contracts
             </Text>

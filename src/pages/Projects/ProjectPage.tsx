@@ -72,7 +72,7 @@ import API, { API_URL_DEV } from "helpers/api";
 import { useScans } from "hooks/useScans";
 import { useScan } from "hooks/useScan";
 
-import { Report, ReportsListItem, ScanMeta } from "common/types";
+import { Profile, Report, ReportsListItem, ScanMeta } from "common/types";
 import Score from "components/score";
 import { useProfile } from "hooks/useProfile";
 import {
@@ -95,6 +95,7 @@ import { LockIcon } from "@chakra-ui/icons";
 import { profile } from "console";
 import { usePricingPlans } from "hooks/usePricingPlans";
 import { motion } from "framer-motion";
+import { Profiler } from "inspector";
 
 export const ProjectPage: React.FC = () => {
   const { projectId } = useParams<{ projectId: string }>();
@@ -453,17 +454,21 @@ const ScanDetails: React.FC<{ scansRemaining: number; scans: ScanMeta[] }> = ({
                     <Button
                       variant="accent-ghost"
                       isDisabled={
-                        profile.current_package !== "expired" &&
-                        !plans.monthly[profile.current_package]
-                          .publishable_report
+                        profile.actions_supported
+                          ? !profile.actions_supported.publishable_report
+                          : profile.current_package !== "expired" &&
+                            !plans.monthly[profile.current_package]
+                              .publishable_report
                       }
                       onClick={() => setOpen(!open)}
                     >
-                      {profile.current_package !== "expired" &&
-                        !plans.monthly[profile.current_package]
-                          .publishable_report && (
-                          <LockIcon color={"accent"} size="xs" mr={3} />
-                        )}
+                      {profile.actions_supported
+                        ? !profile.actions_supported.publishable_report
+                        : profile.current_package !== "expired" &&
+                          !plans.monthly[profile.current_package]
+                            .publishable_report && (
+                            <LockIcon color={"accent"} size="xs" mr={3} />
+                          )}
                       Publish Report
                     </Button>
                   )}
@@ -473,8 +478,10 @@ const ScanDetails: React.FC<{ scansRemaining: number; scans: ScanMeta[] }> = ({
                       isLoading={reportingStatus === ""}
                       isDisabled={
                         reportingStatus === "generating_report" ||
-                        (profile.current_package !== "expired" &&
-                          !plans.monthly[profile.current_package].report)
+                        (profile.actions_supported
+                          ? !profile.actions_supported.generate_report
+                          : profile.current_package !== "expired" &&
+                            !plans.monthly[profile.current_package].report)
                       }
                       onClick={() => {
                         if (
@@ -493,10 +500,12 @@ const ScanDetails: React.FC<{ scansRemaining: number; scans: ScanMeta[] }> = ({
                       {reportingStatus === "generating_report" && (
                         <Spinner color="#806CCF" size="xs" mr={3} />
                       )}
-                      {profile.current_package !== "expired" &&
-                        !plans.monthly[profile.current_package].report && (
-                          <LockIcon color={"accent"} size="xs" mr={3} />
-                        )}
+                      {profile.actions_supported
+                        ? !profile.actions_supported.generate_report
+                        : profile.current_package !== "expired" &&
+                          !plans.monthly[profile.current_package].report && (
+                            <LockIcon color={"accent"} size="xs" mr={3} />
+                          )}
                       {reportingStatus === "generating_report"
                         ? "Generating report..."
                         : scanData.scan_report.report_regeneration_enabled
@@ -561,7 +570,14 @@ const ScanDetails: React.FC<{ scansRemaining: number; scans: ScanMeta[] }> = ({
                     <Tab mx={2}>Overview</Tab>
                     <Tab mx={2}>Detailed Result</Tab>
                     <Tab mx={2}>Scan History</Tab>
-                    <Tab mx={2}>Published Reports</Tab>
+                    {profile.promo_code ? (
+                      profile.actions_supported &&
+                      profile.actions_supported.publishable_report && (
+                        <Tab mx={2}>Published Reports</Tab>
+                      )
+                    ) : (
+                      <Tab mx={2}>Published Reports</Tab>
+                    )}
                   </TabList>
                   <TabPanels>
                     <TabPanel>
@@ -580,6 +596,8 @@ const ScanDetails: React.FC<{ scansRemaining: number; scans: ScanMeta[] }> = ({
                       scanData.scan_report.multi_file_scan_summary ? (
                         <MultifileResult
                           type="project"
+                          details_enabled={scanData.scan_report.details_enabled}
+                          profileData={profile}
                           is_latest_scan={scanData.is_latest_scan}
                           scanSummary={
                             scanData.scan_report.multi_file_scan_summary
@@ -591,6 +609,8 @@ const ScanDetails: React.FC<{ scansRemaining: number; scans: ScanMeta[] }> = ({
                       ) : scanData.scan_report.scan_details &&
                         scanData.scan_report.scan_summary ? (
                         <Result
+                          details_enabled={scanData.scan_report.details_enabled}
+                          profileData={profile}
                           scanSummary={scanData.scan_report.scan_summary}
                           scanDetails={scanData.scan_report.scan_details}
                           type="project"
@@ -615,9 +635,18 @@ const ScanDetails: React.FC<{ scansRemaining: number; scans: ScanMeta[] }> = ({
                     <TabPanel>
                       <ScanHistory setTabIndex={setTabIndex} />
                     </TabPanel>
-                    <TabPanel>
-                      <PublishedReports />
-                    </TabPanel>
+                    {profile.promo_code ? (
+                      profile.actions_supported &&
+                      profile.actions_supported.publishable_report && (
+                        <TabPanel>
+                          <PublishedReports profile={profile} />
+                        </TabPanel>
+                      )
+                    ) : (
+                      <TabPanel>
+                        <PublishedReports profile={profile} />
+                      </TabPanel>
+                    )}
                   </TabPanels>
                   <></>
                 </Tabs>
@@ -1136,14 +1165,14 @@ const ScanHistory: React.FC<{
             scan={scan}
             setTabIndex={setTabIndex}
             // isTrial={profile?.current_package === "trial"}
-            isTrial={false}
+            profile={profile}
           />
         ))}
     </Box>
   );
 };
 
-const PublishedReports: React.FC = () => {
+const PublishedReports: React.FC<{ profile: Profile }> = ({ profile }) => {
   const { projectId } = useParams<{ projectId: string }>();
   const { data } = useReports("project", projectId);
 
@@ -1155,7 +1184,10 @@ const PublishedReports: React.FC = () => {
         p: 4,
       }}
     >
-      {data && data?.reports.map((report) => <ReportBlock report={report} />)}
+      {data &&
+        data?.reports.map((report) => (
+          <ReportBlock profile={profile} report={report} />
+        ))}
     </Box>
   );
 };
@@ -1177,9 +1209,9 @@ const monthNames = [
 
 const ScanBlock: React.FC<{
   scan: ScanMeta;
-  isTrial: boolean;
   setTabIndex: React.Dispatch<React.SetStateAction<number>>;
-}> = ({ scan, isTrial, setTabIndex }) => {
+  profile: Profile;
+}> = ({ scan, setTabIndex, profile }) => {
   const [isDownloadLoading, setDownloadLoading] = useState(false);
   const history = useHistory();
   const { projectId, scanId } =
@@ -1245,7 +1277,12 @@ const ScanBlock: React.FC<{
       {scan.scan_status === "scan_done" && (
         <Button
           variant="accent-outline"
-          isDisabled={scan.reporting_status !== "report_generated" || isTrial}
+          isDisabled={
+            scan.reporting_status !== "report_generated" ||
+            (profile.actions_supported
+              ? !profile.actions_supported.generate_report
+              : profile.current_package === "trial")
+          }
           isLoading={isDownloadLoading}
           onClick={(e) => {
             e.stopPropagation();
@@ -1253,7 +1290,6 @@ const ScanBlock: React.FC<{
               `http://${document.location.host}/report/project/${projectId}/${data?.scan_report.latest_report_id}`,
               "_blank"
             );
-            // history.push(`/report/${scan.project_id}/${data?.scan_report.latest_report_id}`)
           }}
         >
           {scan.reporting_status === "generating_report" && (
@@ -1270,7 +1306,10 @@ const ScanBlock: React.FC<{
   );
 };
 
-const ReportBlock: React.FC<{ report: ReportsListItem }> = ({ report }) => {
+const ReportBlock: React.FC<{ report: ReportsListItem; profile: Profile }> = ({
+  report,
+  profile,
+}) => {
   const [isDownloadLoading, setDownloadLoading] = useState(false);
   const history = useHistory();
 
