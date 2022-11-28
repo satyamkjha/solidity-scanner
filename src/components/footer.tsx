@@ -12,7 +12,7 @@ import {
 } from "components/icons";
 export const Footer: React.FC = () => {
   return (
-    <Container maxW={['100vw', '100vw', '90vw']} my={20}>
+    <Container maxW={["100vw", "100vw", "90vw"]} my={20}>
       <Flex
         flexDirection={["column", "column", "column", "row"]}
         justifyContent="space-between"
@@ -32,7 +32,7 @@ export const Footer: React.FC = () => {
           flexDirection="row"
           justifyContent="space-between"
           alignItems={"center"}
-          >
+        >
           <Flex
             width={["50%", "50%", "70%", "60%"]}
             flexWrap={["nowrap", "nowrap", "wrap"]}
@@ -87,16 +87,15 @@ export const Footer: React.FC = () => {
             flexWrap={"wrap"}
             justifyContent={["flex-start"]}
             alignItems="center"
-            
             flexDirection={["row"]}
           >
-            <Link m={2}  href="https://blog.solidityscan.com/" isExternal>
+            <Link m={2} href="https://blog.solidityscan.com/" isExternal>
               <MediumIcon size={40} />
             </Link>
-            <Link m={2}  href="https://discord.com/invite/9HhV4hGENw" isExternal>
+            <Link m={2} href="https://discord.com/invite/9HhV4hGENw" isExternal>
               <DiscordIcon size={40} />
             </Link>
-            <Link m={2}  href="https://t.me/solidityscan" isExternal>
+            <Link m={2} href="https://t.me/solidityscan" isExternal>
               <TelegramIcon size={40} />
             </Link>
             <Link
@@ -106,7 +105,7 @@ export const Footer: React.FC = () => {
             >
               <InstagramIcon size={40} />
             </Link>
-            <Link m={2}  href="https://twitter.com/solidityscan" isExternal>
+            <Link m={2} href="https://twitter.com/solidityscan" isExternal>
               <TwiterIcon size={45} />
             </Link>
           </Flex>

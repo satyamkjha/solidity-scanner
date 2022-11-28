@@ -48,9 +48,7 @@ export const Header: React.FC = () => {
         mx="auto"
         py={4}
       >
-        <Flex
-          alignItems="center"
-          width={["100%", "100%", "100%", "auto"]} >
+        <Flex alignItems="center" width={["100%", "100%", "100%", "auto"]}>
           <RouterLink to="/">
             <Logo />
           </RouterLink>
@@ -86,15 +84,13 @@ export const Header: React.FC = () => {
           ) : (
             <>
               <Flex w={"100%"} />
-              <Box
-                as={"div"}
-                mr="2">
+              <Box as={"div"} mr="2">
                 <Menu>
                   <MenuButton
                     as={IconButton}
-                    aria-label='Options'
+                    aria-label="Options"
                     icon={<HamburgerIcon />}
-                    variant='outline'
+                    variant="outline"
                     fontSize={"2xl"}
                   />
                   <MenuList>
@@ -112,9 +108,7 @@ export const Header: React.FC = () => {
                       <>
                         <MenuItem>
                           <RouterLink to="/home">
-                            <Button variant="ghost">
-                              Go to Dashboard
-                            </Button>
+                            <Button variant="ghost">Go to Dashboard</Button>
                           </RouterLink>
                         </MenuItem>
                       </>
@@ -135,7 +129,10 @@ export const Header: React.FC = () => {
                     <MenuItem>
                       <Link
                         onClick={() => {
-                          window.open("https://docs.solidityscan.com/", "_blank");
+                          window.open(
+                            "https://docs.solidityscan.com/",
+                            "_blank"
+                          );
                         }}
                         variant="brand"
                         fontWeight="600"
@@ -149,7 +146,10 @@ export const Header: React.FC = () => {
                     <MenuItem al>
                       <Link
                         onClick={() => {
-                          window.open("https://blog.solidityscan.com/", "_blank");
+                          window.open(
+                            "https://blog.solidityscan.com/",
+                            "_blank"
+                          );
                         }}
                         variant="brand"
                         fontWeight="600"

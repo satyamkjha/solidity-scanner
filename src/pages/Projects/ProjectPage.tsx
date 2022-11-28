@@ -453,20 +453,22 @@ const ScanDetails: React.FC<{ scansRemaining: number; scans: ScanMeta[] }> = ({
                     "report_generated" && (
                     <Button
                       variant="accent-ghost"
-                      isDisabled={profile.actions_supported
-                        ? !profile.actions_supported.publishable_report
-                        : profile.current_package !== "expired" &&
-                          !plans.monthly[profile.current_package]
-                            .publishable_report}
+                      isDisabled={
+                        profile.actions_supported
+                          ? !profile.actions_supported.publishable_report
+                          : profile.current_package !== "expired" &&
+                            !plans.monthly[profile.current_package]
+                              .publishable_report
+                      }
                       onClick={() => setOpen(!open)}
                     >
                       {profile.actions_supported
-                                  ? !profile.actions_supported.publishable_report
-                                  : profile.current_package !== "expired" &&
-                                    !plans.monthly[profile.current_package]
-                                      .publishable_report && (
-                          <LockIcon color={"accent"} size="xs" mr={3} />
-                        )}
+                        ? !profile.actions_supported.publishable_report
+                        : profile.current_package !== "expired" &&
+                          !plans.monthly[profile.current_package]
+                            .publishable_report && (
+                            <LockIcon color={"accent"} size="xs" mr={3} />
+                          )}
                       Publish Report
                     </Button>
                   )}
@@ -477,10 +479,9 @@ const ScanDetails: React.FC<{ scansRemaining: number; scans: ScanMeta[] }> = ({
                       isDisabled={
                         reportingStatus === "generating_report" ||
                         (profile.actions_supported
-                          ? !profile.actions_supported.publishable_report
+                          ? !profile.actions_supported.generate_report
                           : profile.current_package !== "expired" &&
-                            !plans.monthly[profile.current_package]
-                              .publishable_report)
+                            !plans.monthly[profile.current_package].report)
                       }
                       onClick={() => {
                         if (
@@ -593,6 +594,8 @@ const ScanDetails: React.FC<{ scansRemaining: number; scans: ScanMeta[] }> = ({
                       scanData.scan_report.multi_file_scan_summary ? (
                         <MultifileResult
                           type="project"
+                          details_enabled={scanData.scan_report.details_enabled}
+                          profileData={profile}
                           is_latest_scan={scanData.is_latest_scan}
                           scanSummary={
                             scanData.scan_report.multi_file_scan_summary
@@ -604,6 +607,8 @@ const ScanDetails: React.FC<{ scansRemaining: number; scans: ScanMeta[] }> = ({
                       ) : scanData.scan_report.scan_details &&
                         scanData.scan_report.scan_summary ? (
                         <Result
+                        details_enabled={scanData.scan_report.details_enabled}
+                          profileData={profile}
                           scanSummary={scanData.scan_report.scan_summary}
                           scanDetails={scanData.scan_report.scan_details}
                           type="project"
@@ -1158,7 +1163,6 @@ const ScanHistory: React.FC<{
             scan={scan}
             setTabIndex={setTabIndex}
             // isTrial={profile?.current_package === "trial"}
-            isTrial={false}
             profile={profile}
           />
         ))}
@@ -1203,10 +1207,9 @@ const monthNames = [
 
 const ScanBlock: React.FC<{
   scan: ScanMeta;
-  isTrial: boolean;
   setTabIndex: React.Dispatch<React.SetStateAction<number>>;
   profile: Profile;
-}> = ({ scan, isTrial, setTabIndex, profile }) => {
+}> = ({ scan, setTabIndex, profile }) => {
   const [isDownloadLoading, setDownloadLoading] = useState(false);
   const history = useHistory();
   const { projectId, scanId } =
@@ -1274,9 +1277,9 @@ const ScanBlock: React.FC<{
           variant="accent-outline"
           isDisabled={
             scan.reporting_status !== "report_generated" ||
-            isTrial ||
-            (profile.actions_supported &&
-              !profile.actions_supported.view_report)
+            (profile.actions_supported
+              ? !profile.actions_supported.generate_report
+              : profile.current_package === "trial")
           }
           isLoading={isDownloadLoading}
           onClick={(e) => {

@@ -53,6 +53,7 @@ import {
   MultiFileScanDetail,
   MultiFileScanSummary,
   MultiFileTemplateDetail,
+  Profile,
   ScanDetail,
   ScanSummary,
   TemplateDetails,
@@ -89,7 +90,9 @@ export const Result: React.FC<{
   scanSummary: ScanSummary;
   scanDetails: ScanDetail[];
   type: "project" | "block";
-}> = ({ scanSummary, scanDetails, type }) => {
+  profileData: Profile;
+  details_enabled: boolean;
+}> = ({ scanSummary, scanDetails, type, profileData, details_enabled }) => {
   const [file, setFile] = useState<FileState | null>(null);
   const {
     issue_severity_distribution: {
@@ -101,8 +104,6 @@ export const Result: React.FC<{
       gas,
     },
   } = scanSummary;
-
-  const { data: profileData } = useProfile();
 
   return (
     <>
@@ -145,8 +146,7 @@ export const Result: React.FC<{
               top: 8,
             }}
           >
-            {profileData && !profileData.promo_code
-             && profileData.current_package ? (
+            {!details_enabled ? (
               <TrialWall />
             ) : file ? (
               <>
@@ -343,10 +343,7 @@ const FileDetails: React.FC<FileDetailsProps> = ({ file, type }) => {
   const history = useHistory();
   const { data, isLoading } = useFileContent(scan_id, file_path, type);
   return (
-    <>
-      {profileData && !profileData.promo_code && profileData.current_package === "trial" ? (
-        <TrialWall />
-      ) : (
+ 
         <>
           <Box
             sx={{
@@ -421,8 +418,7 @@ const FileDetails: React.FC<FileDetailsProps> = ({ file, type }) => {
             </Box>
           </Box>
         </>
-      )}
-    </>
+      
   );
 };
 
@@ -442,7 +438,9 @@ export const MultifileResult: React.FC<{
   is_latest_scan: boolean;
   scanSummary: MultiFileScanSummary;
   scanDetails: MultiFileScanDetail[];
-}> = ({ scanSummary, scanDetails, is_latest_scan, type }) => {
+  profileData: Profile;
+  details_enabled: boolean;
+}> = ({ scanSummary, scanDetails, is_latest_scan, type, profileData, details_enabled }) => {
   const [files, setFiles] = useState<FilesState | null>(null);
 
   const [issues, setIssues] = useState<MultiFileScanDetail[]>(scanDetails);
@@ -471,7 +469,6 @@ export const MultifileResult: React.FC<{
     true,
   ]);
 
-  const { data: profileData } = useProfile();
 
   // const [action, setAction] = useState("");
   const options = [
@@ -568,6 +565,7 @@ export const MultifileResult: React.FC<{
   };
 
   return (
+    <>
     <Flex w="100%" sx={{ flexDir: ["column", "column", "row"] }} py={2}>
       <VStack
         w={["100%", "100%", "40%"]}
@@ -592,6 +590,8 @@ export const MultifileResult: React.FC<{
         </Flex>
         <Box w="100%" h={"100vh"} overflowY="scroll">
           <MultifileIssues
+            profileData={profileData}
+            details_enabled={details_enabled}
             issues={issues}
             files={files}
             setFiles={setFiles}
@@ -682,7 +682,7 @@ export const MultifileResult: React.FC<{
             top: 8,
           }}
         >
-          {profileData && !profileData.promo_code && profileData.current_package === "trial" ? (
+          {!details_enabled ? (
             <TrialWall />
           ) : files ? (
             <MultiFileExplorer files={files} type={type} />
@@ -705,6 +705,7 @@ export const MultifileResult: React.FC<{
         </Box>
       </VStack>
     </Flex>
+    </>
   );
 };
 
@@ -714,6 +715,8 @@ type MultifileIssuesProps = {
   setFiles: Dispatch<SetStateAction<FilesState | null>>;
   confidence: boolean[];
   vulnerability: boolean[];
+  profileData: Profile;
+  details_enabled: boolean
 };
 
 const MultifileIssues: React.FC<MultifileIssuesProps> = ({
@@ -722,6 +725,8 @@ const MultifileIssues: React.FC<MultifileIssuesProps> = ({
   setFiles,
   confidence,
   vulnerability,
+  profileData,
+  details_enabled
 }) => {
   const getVulnerabilityNumber = (issue_severity: string) => {
     switch (issue_severity) {
@@ -742,7 +747,6 @@ const MultifileIssues: React.FC<MultifileIssuesProps> = ({
     }
   };
 
-  const { data: profileData } = useProfile();
 
   return (
     <Accordion allowMultiple>
@@ -825,8 +829,7 @@ const MultifileIssues: React.FC<MultifileIssuesProps> = ({
                           />
                         </AccordionButton>
                         <AccordionPanel pb={4}>
-                          {profileData && !profileData.promo_code &&
-                          profileData.current_package === "trial" ? (
+                          {!details_enabled ? (
                             <TrialWallIssue
                               severity={template_details.issue_severity}
                               no_of_issue={no_of_findings}
@@ -1156,10 +1159,6 @@ const MultiFileExplorer: React.FC<MultiFileExplorerProps> = ({
   );
 
   return (
-    <>
-      {profileData && !profileData.promo_code && profileData.current_package === "trial" ? (
-        <TrialWall />
-      ) : (
         <>
           <Box
             sx={{
@@ -1286,8 +1285,6 @@ const MultiFileExplorer: React.FC<MultiFileExplorerProps> = ({
             </Box>
           </Box>
         </>
-      )}
-    </>
   );
 };
 

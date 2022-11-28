@@ -347,7 +347,7 @@ const ApplicationForm: React.FC = () => {
                 variant="brand"
                 isDisabled={
                   profileData.actions_supported
-                    ? profileData.actions_supported.github_public
+                    ? !profileData.actions_supported.github_public
                     : !isGithubIntegrated && visibility
                 }
                 isLoading={formState.isSubmitting}
@@ -423,37 +423,43 @@ const ContractForm: React.FC = () => {
   };
 
   const options = [
-    { value: "etherscan", icon: "etherscan", label: "Ethereum" },
-    { value: "bscscan", icon: "bscscan", label: "Binance" },
+    { value: "etherscan", icon: "etherscan", label: "Ethereum", isDisabled: true },
+    { value: "bscscan", icon: "bscscan", label: "Binance", isDisabled: true },
+    {
+      value: "avalanche",
+      icon: "avalanche",
+      label: "Avalanche C-Chain",
+      isDisabled: true
+    },
     {
       value: "polygonscan",
       icon: "polygonscan",
       label: "Polygon",
+      isDisabled: true
     },
     {
       value: "fantom",
       icon: "fantom",
       label: "Fantom",
+      isDisabled: true
     },
     {
       value: "cronos",
       icon: "cronos",
       label: "Cronos",
-    },
-    {
-      value: "avalanche",
-      icon: "avalanche",
-      label: "Avalanche C-Chain",
+      isDisabled: true
     },
     {
       value: "celo",
       icon: "celo",
       label: "Celo",
+      isDisabled: true
     },
     {
       value: "aurora",
       icon: "aurora",
       label: "Aurora",
+      isDisabled: true
     },
   ];
 
@@ -592,12 +598,18 @@ const ContractForm: React.FC = () => {
               <FormLabel fontSize="sm">Contract platform</FormLabel>
               <Select
                 formatOptionLabel={formatOptionLabel}
-                options={options.filter((item) => {
+                options={options.map((item) => {
                   for (const chain in supportedChains) {
                     if (chain === item.value) {
-                      return true;
-                    }
+                      return {
+                        value: item.value,
+                        icon: item.icon,
+                        label: item.label,
+                        isDisabled: !item.isDisabled
+                      };
+                    } 
                   }
+                  return item
                 })}
                 placeholder="Select Contract Platform"
                 styles={customStyles}

@@ -306,10 +306,10 @@ const BlockPage: React.FC = () => {
                               isDisabled={
                                 reportingStatus === "generating_report" ||
                                 (profile.actions_supported
-                                  ? !profile.actions_supported.publishable_report
+                                  ? !profile.actions_supported.generate_report
                                   : profile.current_package !== "expired" &&
                                     !plans.monthly[profile.current_package]
-                                      .publishable_report)
+                                      .report)
                               }
                               onClick={() => {
                                 if (
@@ -335,12 +335,16 @@ const BlockPage: React.FC = () => {
                                 <Spinner color="#806CCF" size="xs" mr={3} />
                               )}
                               {profile.actions_supported
-                                  ? !profile.actions_supported.publishable_report
-                                  : profile.current_package !== "expired" &&
-                                    !plans.monthly[profile.current_package]
-                                      .publishable_report && (
-                                  <LockIcon color={"accent"} size="xs" mr={3} />
-                                )}
+                                ? !profile.actions_supported.publishable_report
+                                : profile.current_package !== "expired" &&
+                                  !plans.monthly[profile.current_package]
+                                    .publishable_report && (
+                                    <LockIcon
+                                      color={"accent"}
+                                      size="xs"
+                                      mr={3}
+                                    />
+                                  )}
                               {reportingStatus === "generating_report"
                                 ? "Generating report..."
                                 : scanData.scan_report
@@ -544,9 +548,8 @@ const BlockPage: React.FC = () => {
                 >
                   <Tab mx={2}>Overview</Tab>
                   <Tab mx={2}>Detailed Result</Tab>
-                 
-                    <Tab mx={2}>Published Reports</Tab>
-                  
+
+                  <Tab mx={2}>Published Reports</Tab>
                 </TabList>
                 <TabPanels>
                   <TabPanel>
@@ -561,6 +564,8 @@ const BlockPage: React.FC = () => {
                     scanData.scan_report.multi_file_scan_details &&
                     scanData.scan_report.multi_file_scan_summary ? (
                       <MultifileResult
+                        profileData={profile}
+                        details_enabled={scanData.scan_report.details_enabled}
                         type={"block"}
                         is_latest_scan={scanData.is_latest_scan}
                         scanSummary={
@@ -573,6 +578,8 @@ const BlockPage: React.FC = () => {
                     ) : scanData.scan_report.scan_details &&
                       scanData.scan_report.scan_summary ? (
                       <Result
+                        details_enabled={scanData.scan_report.details_enabled}
+                        profileData={profile}
                         scanSummary={scanData.scan_report.scan_summary}
                         scanDetails={scanData.scan_report.scan_details}
                         type="block"
@@ -594,20 +601,18 @@ const BlockPage: React.FC = () => {
                       </Flex>
                     )}
                   </TabPanel>
-                    {profile.promo_code ? (
-                      profile.actions_supported &&
-                      profile.actions_supported.publishable_report && (
-                        <TabPanel>
-                          <PublishedReports
-                            scan_report={scanData.scan_report}
-                          />
-                        </TabPanel>
-                      )
-                    ) : (
+                  {profile.promo_code ? (
+                    profile.actions_supported &&
+                    profile.actions_supported.publishable_report && (
                       <TabPanel>
                         <PublishedReports scan_report={scanData.scan_report} />
                       </TabPanel>
-                    )}
+                    )
+                  ) : (
+                    <TabPanel>
+                      <PublishedReports scan_report={scanData.scan_report} />
+                    </TabPanel>
+                  )}
                 </TabPanels>
               </Tabs>
             </Box>

@@ -36,7 +36,7 @@ import ContactUs from "components/contactus";
 export default function LandingPage() {
   const { isOpen, onClose, onOpen } = useDisclosure();
   const location = useLocation();
-  const [isDesktopView] = useMediaQuery('(min-width: 1024px)')
+  const [isDesktopView] = useMediaQuery("(min-width: 1024px)");
 
   useEffect(() => {
     const query = new URLSearchParams(location.search);
@@ -586,7 +586,13 @@ export default function LandingPage() {
         </Box>
 
         {/* Section 4 */}
-        <Box w="100%" as="section" sx={{ textAlign: "center" }} mb={10} mt={[10, 10, 20]}>
+        <Box
+          w="100%"
+          as="section"
+          sx={{ textAlign: "center" }}
+          mb={10}
+          mt={[10, 10, 20]}
+        >
           <Heading as="h2" fontSize="3xl" my={5}>
             Fully automated smart contract audit system <br /> to help{" "}
             <Box as="span" sx={{ color: "accent" }}>
@@ -623,7 +629,12 @@ export default function LandingPage() {
                 manual audit
               </Box>{" "}
             </Heading>
-            <Text color="subtle" fontSize={["lg", "lg", "xl"]} mb={4} textAlign="center">
+            <Text
+              color="subtle"
+              fontSize={["lg", "lg", "xl"]}
+              mb={4}
+              textAlign="center"
+            >
               Talk to our team of security experts for help on securing your
               Smart Contracts
             </Text>

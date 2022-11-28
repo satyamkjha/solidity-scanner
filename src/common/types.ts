@@ -34,6 +34,7 @@ export type Profile = {
     exp_year: number;
     exp_month: number;
   };
+
   actions_supported?: {
     file_scan: boolean;
     view_report: boolean;
@@ -99,6 +100,7 @@ export type Scan = {
   scan_summary?: ScanSummary;
   scan_details?: ScanDetail[];
   reporting_status: string;
+  details_enabled: boolean;
   _created: string;
   _updated: string;
   multi_file_scan_details: MultiFileScanDetail[];
