@@ -335,10 +335,10 @@ const BlockPage: React.FC = () => {
                                 <Spinner color="#806CCF" size="xs" mr={3} />
                               )}
                               {profile.actions_supported
-                                ? !profile.actions_supported.publishable_report
+                                ? !profile.actions_supported.generate_report
                                 : profile.current_package !== "expired" &&
                                   !plans.monthly[profile.current_package]
-                                    .publishable_report && (
+                                    .report && (
                                     <LockIcon
                                       color={"accent"}
                                       size="xs"

@@ -500,8 +500,11 @@ const ScanDetails: React.FC<{ scansRemaining: number; scans: ScanMeta[] }> = ({
                       {reportingStatus === "generating_report" && (
                         <Spinner color="#806CCF" size="xs" mr={3} />
                       )}
-                      {profile.current_package !== "expired" &&
-                        !plans.monthly[profile.current_package].report && (
+                      {profile.actions_supported
+                                ? !profile.actions_supported.generate_report
+                                : profile.current_package !== "expired" &&
+                                  !plans.monthly[profile.current_package]
+                                    .report && (
                           <LockIcon color={"accent"} size="xs" mr={3} />
                         )}
                       {reportingStatus === "generating_report"
