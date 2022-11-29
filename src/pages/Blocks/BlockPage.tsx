@@ -113,6 +113,9 @@ const BlockPage: React.FC = () => {
     });
 
     if (data.success) {
+
+      
+
       setInterval(async () => {
         await refetch();
       }, 5000);

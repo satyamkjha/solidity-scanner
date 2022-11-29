@@ -408,11 +408,21 @@ const QuickScan: React.FC = () => {
             backgroundPosition={"center"}
             backgroundRepeat="no-repeat"
           >
-            <Heading color={"white"} fontSize={["3xl", "4xl"]} mb={8}>
+            <Heading w={["90%", "90%", "80%", "60%"]} color={"white"} fontSize={["3xl", "4xl"]} mb={8}>
               SolidityScan{" "}
-              <span style={{ color: "#52FF00" }}> Quick Scan </span>
+              <Box
+                as="span"
+                sx={{
+                  background:
+                    "linear-gradient(129.18deg, #52FF00 8.52%, #00EEFD 93.94%)",
+                  backgroundClip: "text",
+                  WebkitTextFillColor: "transparent",
+                }}
+              >
+                QuickScan
+              </Box>
             </Heading>
-            <Text fontSize="xl" color="subtle" mb={8}>
+            <Text w={["90%", "90%", "80%", "60%"]} fontSize="xl" color="subtle" mb={8}>
             An open to all quick scanning extension designed to view results in simple terms. Initiate a smart contract scan by selecting from a wide range of supported protocols and get a quick analysis report within seconds.
             </Text>
             <Stack
