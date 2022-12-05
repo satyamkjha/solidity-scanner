@@ -4,35 +4,19 @@ import { Link as RouterLink, useHistory, useLocation } from "react-router-dom";
 import {
   Flex,
   Heading,
-  Stack,
   Text,
   Button,
-  Icon,
-  InputGroup,
-  InputLeftElement,
-  Input,
-  Link,
   Box,
-  FormControl,
-  FormLabel,
-  Select,
   Spinner,
+  HStack,
+  Image,
+  VStack
 } from "@chakra-ui/react";
 import { motion } from "framer-motion";
-import {
-  FaDiscord,
-  FaLinkedin,
-  FaPhoneAlt,
-  FaTelegram,
-  FaTwitter,
-} from "react-icons/fa";
-import { FiAtSign } from "react-icons/fi";
-import { MdWork } from "react-icons/md";
-import { passwordStrength } from "check-password-strength";
 
-import { FaLock, FaUserAlt } from "react-icons/fa";
+import Auth from "helpers/auth";
 
-import { Logo, MailSent } from "components/icons";
+import { LogoIcon } from "components/icons";
 
 import API from "helpers/api";
 import { AuthResponse } from "common/types";
@@ -47,16 +31,48 @@ const PageNotFound: React.FC = () => {
       <CustomFlex
         align="center"
         direction="column"
-        my={36}
+        my={[12, 12, 12, 16]}
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
       >
-        <Heading fontSize="5xl" fontWeight={600} mb={4} mt={8}>
-          Error 404
-        </Heading>
-        <Text fontSize="xl" color="subtle">
-          The page you are looking for can't be found
-        </Text>
+        <HStack spacing={4}>
+          <LogoIcon size={45} />
+          <Heading fontSize="4xl" fontWeight={700}>
+            Solidity Scan
+          </Heading>
+        </HStack>
+        <Box
+          w={["100%", "100%", "100%", "75%"]}
+          display={["flex"]}
+          flexDirection="column"
+          alignItems={"center"}
+          overflow="hidden"
+        >
+          <Image
+            marginTop={[24, 24, 24, 10]}
+            src="/error/404.png"
+            zIndex={"10"}
+            alt={"404 Page Not Found"}
+          />
+        </Box>
+        <VStack
+          my={[20, 20, 20, 4]}
+          mx="8"
+          spacing="2"
+          textAlign={"center"}
+        >
+          <Heading fontSize="2xl">
+            We are Sorry ...
+          </Heading>
+          <Text fontSize="md" color="subtle">
+            The page you are looking for can't be found
+          </Text>
+        </VStack>
+        <RouterLink to={Auth.isUserAuthenticated() ? "/home" : "/"}>
+          <Button variant="brand" mt={[4, 4, 4, 10]}>
+            Go Back to Homepage
+          </Button>
+        </RouterLink>
       </CustomFlex>
     </>
   );
@@ -76,7 +92,7 @@ export const CustomPageNotFound: React.FC = () => {
       <CustomFlex
         align="center"
         direction="column"
-        my={36}
+        my={[12, 12, 12, 16]}
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
       >
