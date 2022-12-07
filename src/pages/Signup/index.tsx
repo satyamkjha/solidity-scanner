@@ -236,52 +236,6 @@ const RegisterForm: React.FC<{
             <InputGroup alignItems="center">
               <InputLeftElement
                 height="48px"
-                children={<Icon as={FaUserAlt} color="gray.300" />}
-              />
-              <Input
-                isRequired
-                value={name}
-                type="text"
-                placeholder="Your name"
-                variant="brand"
-                size="lg"
-                onChange={(event) => setName(event.target.value)}
-              />
-            </InputGroup>
-
-            <InputGroup alignItems="center">
-              <InputLeftElement
-                height="48px"
-                children={<Icon as={MdWork} color="gray.300" />}
-              />
-              <Input
-                isRequired
-                value={companyName}
-                placeholder="Your company"
-                variant="brand"
-                size="lg"
-                onChange={(event) => setCompanyName(event.target.value)}
-              />
-            </InputGroup>
-
-            <InputGroup alignItems="center">
-              <InputLeftElement
-                height="48px"
-                children={<Icon as={FaPhoneAlt} color="gray.300" />}
-              />
-              <Input
-                value={contactNumber}
-                isRequired
-                placeholder="Your phone number"
-                variant="brand"
-                size="lg"
-                onChange={(event) => setContactNumber(event.target.value)}
-              />
-            </InputGroup>
-
-            <InputGroup alignItems="center">
-              <InputLeftElement
-                height="48px"
                 children={<Icon as={FiAtSign} color="gray.300" />}
               />
               <Input
@@ -294,6 +248,22 @@ const RegisterForm: React.FC<{
                 onChange={(event) => setEmail(event.target.value)}
               />
             </InputGroup>
+
+            <InputGroup alignItems="center">
+              <InputLeftElement
+                height="48px"
+                children={<Icon as={FaUserAlt} color="gray.300" />}
+              />
+              <Input
+                isRequired
+                value={name}
+                type="text"
+                placeholder="Your name"
+                variant="brand"
+                size="lg"
+                onChange={(event) => setName(event.target.value)}
+              />
+            </InputGroup> 
 
             <InputGroup>
               <InputLeftElement
@@ -313,7 +283,37 @@ const RegisterForm: React.FC<{
                   setPasswordError(passwordStrength(event.target.value));
                 }}
               />
+            </InputGroup>           
+
+            <InputGroup alignItems="center">
+              <InputLeftElement
+                height="48px"
+                children={<Icon as={MdWork} color="gray.300" />}
+              />
+              <Input
+                isRequired
+                value={companyName}
+                placeholder="Your company (Optional)"
+                variant="brand"
+                size="lg"
+                onChange={(event) => setCompanyName(event.target.value)}
+              />
             </InputGroup>
+
+            <InputGroup alignItems="center">
+              <InputLeftElement
+                height="48px"
+                children={<Icon as={FaPhoneAlt} color="gray.300" />}
+              />
+              <Input
+                value={contactNumber}
+                placeholder="Your phone number (Optional)"
+                variant="brand"
+                size="lg"
+                onChange={(event) => setContactNumber(event.target.value)}
+              />
+            </InputGroup>           
+            
             {passwordError &&
               passwordError.length < 8 &&
               passwordError.contains.length < 4 && (
@@ -332,24 +332,7 @@ const RegisterForm: React.FC<{
         )}
         {step === 1 && (
           <>
-            {/* <FormControl id="preffered_mode">
-              
-              <Select
-                placeholder="Select Mode of communication"
-                value={preffered}
-                variant="brand"
-                h={"48px"}
-                
-                onChange={(e) => {
-                  setPreffered(e.target.value);
-                }}
-              >
-                <option value="twitter">Twitter</option>
-                <option value="linkedin">Linkedin</option>
-                <option value="telegram">Telegram</option>
-                <option value="discord">Discord</option>
-              </Select>
-            </FormControl> */}
+            
             <InputGroup mt={0} alignItems="center">
               <InputLeftElement
                 height="48px"
