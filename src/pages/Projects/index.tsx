@@ -37,7 +37,7 @@ import { useProfile } from "hooks/useProfile";
 import InfiniteScroll from "react-infinite-scroll-component";
 
 const Projects: React.FC = () => {
-  const [isDesktopView] = useMediaQuery("(min-width: 2560px)");
+  const [isDesktopView] = useMediaQuery("(min-width: 1440px)");
 
   const [page, setPage] = useState<Page>();
   const [pagination, setPagination] = useState<Pagination>({
