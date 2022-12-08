@@ -15,6 +15,7 @@ import {
   AlertDialogHeader,
   AlertDialogContent,
   AlertDialogOverlay,
+  useMediaQuery,
 } from "@chakra-ui/react";
 
 import {
@@ -36,8 +37,13 @@ import { useProfile } from "hooks/useProfile";
 import InfiniteScroll from "react-infinite-scroll-component";
 
 const Projects: React.FC = () => {
+  const [isDesktopView] = useMediaQuery("(min-width: 2560px)");
+
   const [page, setPage] = useState<Page>();
-  const [pagination, setPagination] = useState<Pagination>({ pageNo: 1, perPageCount: 9 });
+  const [pagination, setPagination] = useState<Pagination>({
+    pageNo: 1,
+    perPageCount: isDesktopView ? 20 : 12
+  });
   const [hasMore, setHasMore] = useState(true);
 
   const { data: projects, isLoading, refetch } = useProjects(pagination);
