@@ -60,9 +60,9 @@ export type Project = {
   scans_remaining: number;
   _latest_scan: {
     scan_id: string;
-    scan_status: string;
+    multi_file_scan_status: string;
     scan_message: string;
-    scan_summary: MultiFileScanSummary;
+    multi_file_scan_summary: MultiFileScanSummary;
   };
 };
 
