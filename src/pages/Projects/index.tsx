@@ -37,7 +37,7 @@ import { useProfile } from "hooks/useProfile";
 import InfiniteScroll from "react-infinite-scroll-component";
 
 const Projects: React.FC = () => {
-  const [isDesktopView] = useMediaQuery("(min-width: 1440px)");
+  const [isDesktopView] = useMediaQuery("(min-width: 1920px)");
 
   const [page, setPage] = useState<Page>();
   const [pagination, setPagination] = useState<Pagination>({
@@ -197,11 +197,6 @@ const Projects: React.FC = () => {
             scrollableTarget="pageScroll"
           >
             {[...(projectList || [])]
-              .sort((project1, project2) =>
-                new Date(project1.date_updated) < new Date(project2.date_updated)
-                  ? 1
-                  : -1
-              )
               .map((project) => (
                 <ProjectCard
                   key={project.project_id}

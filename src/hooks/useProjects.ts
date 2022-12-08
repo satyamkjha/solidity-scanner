@@ -9,7 +9,7 @@ const getProjects = async (pageNo: number, perPageCount: number) => {
 };
 
 export const useProjects = (pagination: Pagination) => {
-  return useQuery<ProjectList>("projects", () =>
+  return useQuery<ProjectList>(["projects", pagination], () =>
     getProjects(pagination.pageNo, pagination.perPageCount)
   );
 };
