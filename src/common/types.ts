@@ -60,10 +60,15 @@ export type Project = {
   scans_remaining: number;
   _latest_scan: {
     scan_id: string;
-    multi_file_scan_status: string;
+    scan_status: string;
     scan_message: string;
-    multi_file_scan_summary: MultiFileScanSummary;
+    scan_summary: MultiFileScanSummary;
   };
+};
+
+export type ProjectList = {
+  data: Project[];
+  page: Page
 };
 
 export type AuthResponse = {
@@ -316,6 +321,17 @@ export type Plan = {
   publishable_report: boolean;
 };
 
+export type Page = {
+  count: number;
+  per_page: number;
+  total_pages: number;
+}
+
+export type Pagination = {
+  pageNo: number;
+  perPageCount: number;
+}
+
 export type Transaction = {
   date: string;
   package: string;
@@ -330,6 +346,7 @@ export type Transaction = {
 
 export type TransactionList = {
   data: Transaction[];
+  page: Page
 };
 
 export type InvoiceList = {
