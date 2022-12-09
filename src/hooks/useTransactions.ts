@@ -10,7 +10,7 @@ const getTransactions = async (page: number, page_no: number) => {
 };
 
 export const useTransactions = (page: number, page_no: number) => {
-  return useQuery<TransactionList>("transactions", () =>
+  return useQuery<TransactionList>(["transactions", page, page_no], () =>
     getTransactions(page, page_no)
   );
 };
