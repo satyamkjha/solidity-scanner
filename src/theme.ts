@@ -132,6 +132,26 @@ export const theme = extendTheme({
             },
           };
         },
+        error: (props) => {
+          return {
+            field: {
+              ...defaultTheme.components.Input.variants.outline(props).field,
+              borderRadius: "15px",
+              borderWidth: "2px",
+              fontSize: "15px",
+              borderColor: "#FF2400",
+              fontWeight: 500,
+              bg: "white",
+              _hover: {
+                borderColor: "gray.200",
+              },
+              _focus: {
+                borderColor: "#52FF00",
+                boxShadow: "0px 12px 23px rgba(107, 255, 55, 0.1)",
+              },
+            },
+          };
+        },
       },
     },
 

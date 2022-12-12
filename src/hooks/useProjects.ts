@@ -1,13 +1,15 @@
 import { useQuery } from "react-query";
 import API from "helpers/api";
 
-import { Project } from "common/types";
+import { Pagination, Project, ProjectList } from "common/types";
 
-const getProjects = async () => {
-  const { data } = await API.get<{ projects: Project[] }>("/api-get-projects");
+const getProjects = async (pageNo: number, perPageCount: number) => {
+  const { data } = await API.get(`/api-get-projects-beta/?page=${pageNo}&per_page=${perPageCount}`);
   return data;
 };
 
-export const useProjects = () => {
-  return useQuery("projects", getProjects);
+export const useProjects = (pagination: Pagination) => {
+  return useQuery<ProjectList>(["projects", pagination], () =>
+    getProjects(pagination.pageNo, pagination.perPageCount)
+  );
 };

@@ -15,6 +15,7 @@ import {
   AlertDialogHeader,
   AlertDialogContent,
   AlertDialogOverlay,
+  useMediaQuery,
 } from "@chakra-ui/react";
 
 import {
@@ -28,14 +29,25 @@ import VulnerabilityDistribution from "components/vulnDistribution";
 
 import API from "helpers/api";
 
-import { Project } from "common/types";
+import { Page, Pagination, Project } from "common/types";
 import { timeSince } from "common/functions";
 
 import { useProjects } from "hooks/useProjects";
 import { useProfile } from "hooks/useProfile";
+import InfiniteScroll from "react-infinite-scroll-component";
 
 const Projects: React.FC = () => {
-  const { data, isLoading, refetch } = useProjects();
+  const [isDesktopView] = useMediaQuery("(min-width: 1920px)");
+
+  const [page, setPage] = useState<Page>();
+  const [pagination, setPagination] = useState<Pagination>({
+    pageNo: 1,
+    perPageCount: isDesktopView ? 20 : 12
+  });
+  const [hasMore, setHasMore] = useState(true);
+
+  const { data: projects, isLoading, refetch } = useProjects(pagination);
+  const [projectList, setProjectList] = useState<Project[]>();
 
   const { data: profileData } = useProfile();
 
@@ -43,32 +55,65 @@ const Projects: React.FC = () => {
     let intervalId: NodeJS.Timeout;
     const refetchTillScanComplete = () => {
       if (
-        data &&
-        data.projects.some(
+        projectList &&
+        projectList.some(
           ({ _latest_scan }) =>
             _latest_scan.multi_file_scan_status === "scanning"
         )
       ) {
         intervalId = setInterval(async () => {
-          await refetch();
+          setPagination({ pageNo: 1, perPageCount: projectList.length });
+          setTimeout(async () => {
+            await refetch();
+          }, 10);
           if (
-            data &&
-            data.projects.every(
+            projectList &&
+            projectList.every(
               ({ _latest_scan }) =>
                 _latest_scan.multi_file_scan_status === "scan_done"
             )
           ) {
             clearInterval(intervalId);
           }
-        }, 3000);
+        }, 5000);
       }
     };
 
-    refetchTillScanComplete();
+    if (projects) {
+      let pList = projectList && pagination.pageNo > 1
+        ? projectList.concat(projects.data)
+        : projects.data;
+      setProjectList(pList);
+      setPage(projects.page);
+      refetchTillScanComplete();
+    }
     return () => {
       clearInterval(intervalId);
     };
-  }, [data, refetch]);
+  }, [projects, refetch]);
+
+  const refetchProjects = async () => {
+    if (projectList) {
+      setPagination({ pageNo: 1, perPageCount: projectList.length });
+      setTimeout(async () => {
+        await refetch();
+      }, 10);
+    }
+  }
+
+  const fetchMoreProjects = async () => {
+    if (page && pagination.pageNo >= page.total_pages) {
+      setHasMore(false);
+      return
+    }
+    setPagination({
+      pageNo: (pagination.pageNo + 1),
+      perPageCount: pagination.perPageCount
+    });
+    setTimeout(async () => {
+      await refetch();
+    }, 10);
+  }
 
   return (
     <Box
@@ -108,11 +153,11 @@ const Projects: React.FC = () => {
         )}
       </Flex>
 
-      {isLoading ? (
+      {!projectList ? (
         <Flex w="100%" h="70vh" alignItems="center" justifyContent="center">
           <Spinner />
         </Flex>
-      ) : data?.projects.length === 0 ? (
+      ) : projectList.length === 0 ? (
         <Flex
           w="100%"
           h="70vh"
@@ -138,22 +183,38 @@ const Projects: React.FC = () => {
             justifyItems: ["center", "center", "space-around"],
           }}
         >
-          {[...(data?.projects || [])]
-            .sort((project1, project2) =>
-              new Date(project1.date_updated) < new Date(project2.date_updated)
-                ? 1
-                : -1
-            )
-            .map((project) => (
-              <ProjectCard key={project.project_id} project={project} />
-            ))}
+          <InfiniteScroll
+            style={{
+              width: "100%",
+              display: "flex",
+              flexWrap: "wrap",
+              overflow: "visible"
+            }}
+            dataLength={projectList.length}
+            next={() => fetchMoreProjects()}
+            hasMore={hasMore}
+            loader={<Box w={"100%"} align="center"><Spinner /></Box>}
+            scrollableTarget="pageScroll"
+          >
+            {[...(projectList || [])]
+              .map((project) => (
+                <ProjectCard
+                  key={project.project_id}
+                  project={project}
+                  refetch={refetchProjects}
+                />
+              ))}
+          </InfiniteScroll>
         </Flex>
       )}
     </Box>
   );
 };
 
-const ProjectCard: React.FC<{ project: Project }> = ({ project }) => {
+const ProjectCard: React.FC<{
+  project: Project,
+  refetch: any
+}> = ({ project, refetch }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [isRescanLoading, setRescanLoading] = useState(false);
   const cancelRef = useRef<HTMLButtonElement | null>(null);
@@ -178,7 +239,7 @@ const ProjectCard: React.FC<{ project: Project }> = ({ project }) => {
       project_id,
       project_type: "existing",
     });
-    await queryClient.invalidateQueries("projects");
+    refetch();
     setRescanLoading(false);
     onClose();
   };
@@ -186,10 +247,9 @@ const ProjectCard: React.FC<{ project: Project }> = ({ project }) => {
   return (
     <>
       {multi_file_scan_status === "scan_done" ||
-      multi_file_scan_status === "scanning" ? (
+        multi_file_scan_status === "scanning" ? (
         <Flex
           onClick={() => {
-            console.log(multi_file_scan_status);
             if (multi_file_scan_status === "scan_done") {
               history.push(`/projects/${project_id}/${_latest_scan.scan_id}`);
             }

@@ -185,7 +185,7 @@ export default function LandingPage() {
           my={0}
           textAlign={["center", "left"]}
           py={24}
-          backgroundImage={"url(/background/pattern.png)"}
+          backgroundImage={"url(/background/pattern_mask.png)"}
           display={["flex"]}
           flexDirection={["column", "column", "column", "row"]}
           alignItems={"center"}
@@ -219,7 +219,7 @@ export default function LandingPage() {
             </Text>
             <Link to="/quickscan">
               <Button variant="brand" w="200px">
-                Run Quick Scan
+                Run QuickScan
               </Button>
             </Link>
           </Box>

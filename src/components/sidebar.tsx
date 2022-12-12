@@ -136,7 +136,7 @@ const Sidebar: React.FC<{
           />
           <SidebarItem
             to="/blocks"
-            label="Blocks"
+            label="Verified Contracts"
             icon={<BlockMenuIcon size={16} />}
             isCollapsed={isCollapsed}
           />
@@ -152,7 +152,6 @@ const Sidebar: React.FC<{
             icon={<BillingMenuIcon size={24} />}
             isCollapsed={isCollapsed}
           />
-
           <Flex
             sx={{
               width: "100%",

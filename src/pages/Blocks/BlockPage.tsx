@@ -113,6 +113,9 @@ const BlockPage: React.FC = () => {
     });
 
     if (data.success) {
+
+      
+
       setInterval(async () => {
         await refetch();
       }, 5000);
@@ -1209,6 +1212,7 @@ const ReportBlock: React.FC<{ report: ReportsListItem }> = ({ report }) => {
         <Button
           variant="accent-outline"
           isLoading={isDownloadLoading}
+          disabled={!report.is_approved}
           onClick={(e) => {
             e.stopPropagation();
             console.log("asdkbkalsd");
