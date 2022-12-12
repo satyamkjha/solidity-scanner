@@ -773,8 +773,8 @@ const UploadForm: React.FC = () => {
       return getPreassignedURL(file.name, file);
     });
     Promise.all(results).then((res) => {
-      console.log(res);
-      setUrlList([...res]);
+      if(res.length === acceptedFiles.length)
+        setUrlList([...res]);
     });
   };
 
