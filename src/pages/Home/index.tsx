@@ -266,7 +266,7 @@ const ApplicationForm: React.FC = () => {
     setNameError(null);
     setLinkError(null);
     await API.post("/api-project-scan/", {
-      filteredUrl,
+      project_url: filteredUrl,
       ...(project_name && project_name !== "" && { project_name }),
       project_type: "new",
       project_visibility: visibility ? "private" : "public",
