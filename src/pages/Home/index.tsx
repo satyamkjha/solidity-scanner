@@ -240,40 +240,45 @@ const ApplicationForm: React.FC = () => {
   const [visibility, setVisibility] = useState(false);
   const { handleSubmit, register, formState } = useForm<ApplicationFormData>();
   const history = useHistory();
+
+  const githubUrlRegex = /(http(s)?)(:(\/\/))((github.com)(\/)[\w@\:\-~]+(\/)[\w@\:\-~]+)(\.git)?/;
+
   const onSubmit = async ({
     project_url,
     project_name,
   }: ApplicationFormData) => {
-    if(project_name.length === 0) {
-      setNameError('Enter Project Name')
-      return
+    if (project_name.length === 0) {
+      setNameError("Please enter a Project Name of less than 50 characters.");
+      return;
     }
-    if (project_name.length > 50 ) {
-      setNameError('Project Name cannot exceed to more than 50 characters.')
-      return
+    if (project_name.length > 50) {
+      setNameError("Project Name cannot exceed to more than 50 characters.");
+      return;
     }
-    if(project_url.slice(-4) !== ".git"){
-      console.log(project_url.slice(-4))
-      setLinkError('Enter a github link')
-      return
+    let filteredUrlInput = githubUrlRegex.exec(project_url)
+    if (!filteredUrlInput) {
+      setLinkError("Please enter a valid Github repository link");
+      return;
     }
-    setNameError(null)
-      setLinkError(null)
-      await API.post("/api-project-scan/", {
-        project_url,
-        ...(project_name && project_name !== "" && { project_name }),
-        project_type: "new",
-        project_visibility: visibility ? "private" : "public",
-      });
-      queryClient.invalidateQueries("scans");
-      queryClient.invalidateQueries("profile");
-      
-      history.push("/projects");
+    const filteredUrl = filteredUrlInput[0]
+
     
+    setNameError(null);
+    setLinkError(null);
+    await API.post("/api-project-scan/", {
+      filteredUrl,
+      ...(project_name && project_name !== "" && { project_name }),
+      project_type: "new",
+      project_visibility: visibility ? "private" : "public",
+    });
+    queryClient.invalidateQueries("scans");
+    queryClient.invalidateQueries("profile");
+
+    history.push("/projects");
   };
 
   const [nameError, setNameError] = useState<null | string>(null);
-  const [linkError, setLinkError] = useState<null | string>(null)
+  const [linkError, setLinkError] = useState<null | string>(null);
 
   const isGithubIntegrated =
     profileData?._integrations?.github?.status === "successful";
@@ -292,57 +297,70 @@ const ApplicationForm: React.FC = () => {
             Load application
           </Text>
 
-          <Text sx={{ color: "subtle", textAlign: "center", mb: 6 }}>
-            Provide a link to a Git repository. See link examples and additional
-            restrictions in the User Guide (section Starting a scan from UI)
-            available on the User Guide page.
+          <Text sx={{ color: "subtle", textAlign: "left", mb: 4 }}>
+            Provide the address of your GitHub repository. Your results will
+            appear in the “Projects” section.
+          </Text>
+          <Text sx={{ color: "subtle", textAlign: "left", mb: 2 }}>
+            NOTE: Please verify the following to avoid scan failure:
+          </Text>
+          <Text
+            sx={{ color: "subtle", textAlign: "left", mb: 2, fontSize: "sm" }}
+          >
+            1. Ensure the link is to a GitHub repository containing Solidity
+            (.sol) files. It is recommended to use the HTTPS GitHub (.git)
+            cloning link of the repository.
+          </Text>
+          <Text
+            sx={{ color: "subtle", textAlign: "left", mb: 6, fontSize: "sm" }}
+          >
+            2. Verify if the repository is public, for private repositories,
+            please integrate your GitHub from the Integrations tab.
           </Text>
           <form onSubmit={handleSubmit(onSubmit)} style={{ width: "100%" }}>
             <Stack spacing={6} my={8} width={"100%"}>
-            <VStack alignItems={"flex-start"}>
-            <Text mb={0} fontSize="sm">
-              Project name
-              </Text>
-              <InputGroup alignItems="center">
-                
-                <InputLeftElement
-                  height="48px"
-                  children={<Icon as={AiOutlineProject} color="gray.300" />}
-                />
-                <Input
-                  placeholder="Project name"
-                  variant={nameError ? "error": "brand"}
-                  size="lg"
-                  {...register("project_name")}
-                />
-              </InputGroup>
-              <Text mb={0} color="#FF2400" fontSize="sm">
-               {nameError}
-              </Text>
+              <VStack alignItems={"flex-start"}>
+                <Text mb={0} fontSize="sm">
+                  Project name
+                </Text>
+                <InputGroup alignItems="center">
+                  <InputLeftElement
+                    height="48px"
+                    children={<Icon as={AiOutlineProject} color="gray.300" />}
+                  />
+                  <Input
+                    placeholder="Project name"
+                    variant={nameError ? "error" : "brand"}
+                    size="lg"
+                    {...register("project_name")}
+                  />
+                </InputGroup>
+                <Text mb={0} color="#FF2400" fontSize="sm">
+                  {nameError}
+                </Text>
               </VStack>
-              <VStack mb={5}  alignItems={"flex-start"}>
-              <Text mb={0} fontSize="sm">
-              Link to the Github repository
-              </Text>
-              <InputGroup alignItems="center" mb={4}>
-                <InputLeftElement
-                  height="48px"
-                  children={<Icon as={FaFileCode} color="gray.300" />}
-                />
-                <Input
-                  isRequired
-                  type="url"
-                  placeholder="https://github.com/yourproject/project.git"
-                  variant={linkError ? "error" : "brand"}
-                  size="lg"
-                  {...register("project_url", { required: true })}
-                />
-              </InputGroup>
-              <Text mb={0} color="#FF2400" fontSize="sm">
-               {linkError}
-              </Text>
+              <VStack mb={5} alignItems={"flex-start"}>
+                <Text mb={0} fontSize="sm">
+                  Link to the Github repository
+                </Text>
+                <InputGroup alignItems="center" mb={4}>
+                  <InputLeftElement
+                    height="48px"
+                    children={<Icon as={FaFileCode} color="gray.300" />}
+                  />
+                  <Input
+                    isRequired
+                    type="url"
+                    placeholder="https://github.com/yourproject/project.git"
+                    variant={linkError ? "error" : "brand"}
+                    size="lg"
+                    {...register("project_url", { required: true })}
+                  />
+                </InputGroup>
+                <Text mb={0} color="#FF2400" fontSize="sm">
+                  {linkError}
+                </Text>
               </VStack>
-
 
               <HStack alignItems="center" spacing={6} fontSize="14px">
                 <Text>Public</Text>
@@ -385,7 +403,7 @@ const ApplicationForm: React.FC = () => {
             </Stack>
           </form>
         </>
-       )} 
+      )}
     </>
   );
 };
@@ -547,6 +565,7 @@ const ContractForm: React.FC = () => {
   const { data: profileData } = useProfile();
   const { data: supportedChains } = useSupportedChains();
 
+
   const onSubmit = async ({ contract_address }: ContractFormData) => {
     await API.post("/api-start-scan-block/", {
       contract_address,
@@ -569,24 +588,21 @@ const ContractForm: React.FC = () => {
       >
         Load contract
       </Text>
-      
 
       <Text sx={{ color: "subtle", textAlign: "left", mb: 4 }}>
-      Provide the address of your smart contract deployed on the supported EVM chains. Your results will appear in the "Verified Contracts" tab.
-
-            </Text>
-            <Text sx={{ color: "subtle", textAlign: "left", mb: 2 }}>
-
-
-            NOTE: Please follow the constraints below to avoid scan failure:
-            </Text>
+        Provide the address of your smart contract deployed on the supported EVM
+        chains. Your results will appear in the "Verified Contracts" tab.
+      </Text>
+      <Text sx={{ color: "subtle", textAlign: "left", mb: 2 }}>
+        NOTE: Please follow the constraints below to avoid scan failure:
+      </Text>
       <Text sx={{ color: "subtle", textAlign: "left", mb: 2, fontSize: "sm" }}>
-      1. Navigate to the explorer of the particular blockchain (Ethereum - Etherscan.io).
-
+        1. Navigate to the explorer of the particular blockchain (Ethereum -
+        Etherscan.io).
       </Text>
       <Text sx={{ color: "subtle", textAlign: "left", mb: 6, fontSize: "sm" }}>
-      2. Use the search bar to get your smart contract and check if the source code is verified in the "Contract" tab of the selected explorer.
-
+        2. Use the search bar to get your smart contract and check if the source
+        code is verified in the "Contract" tab of the selected explorer.
       </Text>
       {supportedChains && (
         <form onSubmit={handleSubmit(onSubmit)} style={{ width: "100%" }}>
@@ -674,10 +690,6 @@ const ContractForm: React.FC = () => {
   );
 };
 
-
-
-
-
 const UploadForm: React.FC = () => {
   const queryClient = useQueryClient();
   const history = useHistory();
@@ -721,11 +733,11 @@ const UploadForm: React.FC = () => {
   const focusedStyle = {
     borderColor: "#2196f3",
   };
-  
+
   const acceptStyle = {
     borderColor: "#00e676",
   };
-  
+
   const rejectStyle = {
     borderColor: "#ff1744",
   };
@@ -736,38 +748,38 @@ const UploadForm: React.FC = () => {
       ...(isFocused ? focusedStyle : {}),
       ...(isDragAccept ? acceptStyle : {}),
       ...(isDragReject ? rejectStyle : {}),
-      ...(error ? rejectStyle: {})
+      ...(error ? rejectStyle : {}),
     }),
     [isFocused, isDragAccept, isDragReject, error]
   );
 
   useEffect(() => {
     if (acceptedFiles.length !== 0) {
-      firstCheck()
+      firstCheck();
     }
   }, [acceptedFiles]);
 
   const firstCheck = () => {
     let flag = true;
     acceptedFiles.forEach((files) => {
-      console.log(files.name)
+      console.log(files.name);
       if (!checkFileExt(files.name)) {
         setErrorMsg(
           "You can only upload solidity files with .sol extension for scanning."
         );
-        setError(true)
-        flag = false
-        return
+        setError(true);
+        flag = false;
+        return;
       }
     });
-    if(flag){
+    if (flag) {
       setStep(1);
       uploadFiles();
-      setErrorMsg(null)
-      setError(false)
-    } 
-  }
- 
+      setErrorMsg(null);
+      setError(false);
+    }
+  };
+
   const uploadFiles = async () => {
     let results = await acceptedFiles.map(async (file) => {
       return getPreassignedURL(file.name, file);
@@ -788,7 +800,7 @@ const UploadForm: React.FC = () => {
   const checkFileExt = (fileName: string) => {
     let fileExt = fileName.split(".");
     console.log(fileExt);
-    console.log(fileExt[fileExt.length - 1])
+    console.log(fileExt[fileExt.length - 1]);
     if (fileExt[fileExt.length - 1] === "sol") {
       return true;
     }
@@ -857,10 +869,27 @@ const UploadForm: React.FC = () => {
           >
             Upload contract
           </Text>
-         
-          <Text sx={{ color: "subtle", textAlign: "center", mb: 6 }}>
-            Upload the Contract files. The maximum number of files that you can
-            upload is 5 and the total file size cannot exceed 5 MB.
+
+          <Text sx={{ color: "subtle", textAlign: "left", mb: 4 }}>
+            Upload your Solidity files (.sol extension) as a project. Utilize
+            the “Project Name” field to refer to your scan results in the
+            “Projects” section.
+          </Text>
+          <Text sx={{ color: "subtle", textAlign: "left", mb: 2 }}>
+            NOTE: Please follow the constraints below to avoid scan failure:
+          </Text>
+          <Text
+            sx={{ color: "subtle", textAlign: "left", mb: 2, fontSize: "sm" }}
+          >
+            1. Files to be uploaded should be Solidity(.sol) files, preferably
+            compiled successfully. Incorrect syntax might render incorrect
+            results.
+          </Text>
+          <Text
+            sx={{ color: "subtle", textAlign: "left", mb: 6, fontSize: "sm" }}
+          >
+            2. A Maximum number of files that can be uploaded is 5 and file size
+            cannot exceed 5MB.
           </Text>
 
           <Flex
@@ -910,20 +939,23 @@ const UploadForm: React.FC = () => {
                   </>
                 ) : (
                   <> */}
-                    <UploadIcon size={80} />
-                    <p style={{ marginTop: "20px" }}>
-                      Drag and drop or{" "}
-                      <span style={{ color: "#3300FF" }}> Browse</span> to
-                      upload
-                    </p>
-                    <p style={{ fontSize: "15px", marginBottom: '20px' ,  color: "#D3D3D3" }}>
-                      You can upload upto 5 files with extension ".sol" whose size must not exceed
-                      above 5 MB
-                    </p>
-                    <p style={{ fontSize: "15px", color: "#FF2400" }}>
-                      {errorMsg}
-                    </p>
-                  {/* </>
+                <UploadIcon size={80} />
+                <p style={{ marginTop: "20px" }}>
+                  Drag and drop or{" "}
+                  <span style={{ color: "#3300FF" }}> Browse</span> to upload
+                </p>
+                <p
+                  style={{
+                    fontSize: "15px",
+                    marginBottom: "20px",
+                    color: "#D3D3D3",
+                  }}
+                >
+                  You can upload upto 5 files with extension ".sol" whose size
+                  must not exceed above 5 MB
+                </p>
+                <p style={{ fontSize: "15px", color: "#FF2400" }}>{errorMsg}</p>
+                {/* </>
                 )} */}
               </div>
             ) : step === 1 ? (
@@ -1033,3 +1065,6 @@ const UploadForm: React.FC = () => {
 };
 
 export default Home;
+
+
+
