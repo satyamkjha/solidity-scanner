@@ -237,7 +237,7 @@ const BlockCard: React.FC<{ scan: Scan }> = ({ scan }) => {
           </Flex>
         ) : scan_status === "download_failed" ||
           scan_status ===
-            "Download_failed, either invalid URL / or Github token expired, please re-integrate" ? (
+          "Download_failed, either invalid URL / or Github token expired, please re-integrate" ? (
           <Box
             sx={{
               p: 5,
@@ -251,7 +251,7 @@ const BlockCard: React.FC<{ scan: Scan }> = ({ scan }) => {
               <ScanErrorIcon size={28} />
             </Box>
             <Text sx={{ fontSize: "xs", color: "#FF5630", h: "46px" }}>
-              {"This scan has failed, please contact support"}
+              {"This scan has failed, lost credit will be reimbursed in a few minutes. Please contact support"}
             </Text>
           </Box>
         ) : (
