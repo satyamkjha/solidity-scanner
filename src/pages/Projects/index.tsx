@@ -118,25 +118,26 @@ const Projects: React.FC = () => {
   return (
     <Box
       sx={{
-        w: "100%",
         bg: "bg.subtle",
         borderRadius: "20px",
         py: 4,
-        px: 8,
+        px: [0, 0, 4],
         mx: [0, 0, 4],
         my: 4,
         minH: "78vh",
       }}
+      w='100%'
+      boxSizing={'border-box'}
     >
       <Flex
         sx={{
-          w: "100%",
           alignItems: "center",
           justifyContent: "space-between",
           my: 4,
         }}
+        w='100%'
       >
-        <Text sx={{ color: "subtle", fontWeight: 600 }}>PROJECTS</Text>
+        <Text sx={{ color: "subtle", fontWeight: 600, ml: 4 }}>PROJECTS</Text>
         {profileData && (
           <Flex ml={20} sx={{ display: ["none", "none", "flex"] }}>
             <ProjectIcon size={37} />
@@ -178,17 +179,20 @@ const Projects: React.FC = () => {
         </Flex>
       ) : (
         <Flex
-          sx={{
-            flexWrap: "wrap",
-            justifyItems: ["center", "center", "space-around"],
-          }}
+          alignItems={'row'}
+          flexWrap='wrap'
+          flexDir={'row'}
+          justifyItems={["center", "center", "space-around"]}
+          w='100%'
+          boxSizing={'border-box'}
         >
           <InfiniteScroll
             style={{
               width: "100%",
               display: "flex",
               flexWrap: "wrap",
-              overflow: "visible"
+              overflow: "hidden",
+              boxSizing: 'border-box'
             }}
             dataLength={projectList.length}
             next={() => fetchMoreProjects()}
@@ -261,11 +265,7 @@ const ProjectCard: React.FC<{
                 : "not-allowed",
             flexDir: "column",
             justifyContent: "space-between",
-            w: "320px",
             h: "230px",
-            my: 4,
-            mr: 8,
-            p: 5,
             borderRadius: 15,
             bg: "white",
             transition: "0.3s box-shadow",
@@ -273,7 +273,14 @@ const ProjectCard: React.FC<{
             _hover: {
               boxShadow: "0px 4px 24px rgba(0, 0, 0, 0.2)",
             },
+
           }}
+          boxSizing={'border-box'}
+          my={4}
+          mx={4}
+          p={5}
+          maxWidth='400px'
+          w={["90%","95%","45%", "320px"]}
         >
           {multi_file_scan_status === "scan_done" ? (
             <>
@@ -282,8 +289,8 @@ const ProjectCard: React.FC<{
                 alignItems="flex-start"
                 justifyContent="space-between"
               >
-                <Box>
-                  <Text sx={{ w: "220px" }} isTruncated>
+                <Box w='50%'>
+                  <Text isTruncated>
                     {project_name}
                   </Text>
                   <Text sx={{ fontSize: "sm", color: "subtle" }}>
@@ -339,8 +346,8 @@ const ProjectCard: React.FC<{
               />
             </>
           ) : (
-            <Box>
-              <Text sx={{ w: "100%", mb: 8 }} isTruncated>
+            <Box w='100%'>
+              <Text sx={{ w: "80%", mb: 8 }} isTruncated>
                 {project_name}
               </Text>
 
@@ -371,9 +378,9 @@ const ProjectCard: React.FC<{
           sx={{
             cursor: "pointer",
             my: 4,
-            mr: 8,
+            mx: 4,
             borderRadius: 15,
-            w: "320px",
+            
             h: "230px",
             bg: "white",
             transition: "0.3s box-shadow",
@@ -383,6 +390,8 @@ const ProjectCard: React.FC<{
             },
             overflow: "hidden",
           }}
+          maxW='400px'
+          w={["90%","95%","45%", "320px"]}
         >
           <Flex
             sx={{

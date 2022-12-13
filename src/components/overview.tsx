@@ -101,7 +101,7 @@ const Overview: React.FC<{
                 />
               )}
             </Box>
-            <Box w={["70%", "70%", "60%"]}>
+            <Box w={["100%", "80%", "60%"]}>
               <VulnerabilityDistribution
                 critical={
                   scanData.multi_file_scan_summary.issue_severity_distribution
@@ -133,7 +133,8 @@ const Overview: React.FC<{
           <VStack
             w={["100%", "100%", "50%"]}
             alignItems="flex-start"
-            p={8}
+            py={8}
+            px={[0, 0, 8]}
             spacing={5}
           >
             <HStack w="100%" justifyContent="space-between">
