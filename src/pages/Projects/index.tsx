@@ -42,7 +42,7 @@ const Projects: React.FC = () => {
   const [page, setPage] = useState<Page>();
   const [pagination, setPagination] = useState<Pagination>({
     pageNo: 1,
-    perPageCount: isDesktopView ? 20 : 12
+    perPageCount: isDesktopView ? 20 : 12,
   });
   const [hasMore, setHasMore] = useState(true);
 
@@ -80,9 +80,10 @@ const Projects: React.FC = () => {
     };
 
     if (projects) {
-      let pList = projectList && pagination.pageNo > 1
-        ? projectList.concat(projects.data)
-        : projects.data;
+      let pList =
+        projectList && pagination.pageNo > 1
+          ? projectList.concat(projects.data)
+          : projects.data;
       setProjectList(pList);
       setPage(projects.page);
       refetchTillScanComplete();
@@ -99,21 +100,21 @@ const Projects: React.FC = () => {
         await refetch();
       }, 10);
     }
-  }
+  };
 
   const fetchMoreProjects = async () => {
     if (page && pagination.pageNo >= page.total_pages) {
       setHasMore(false);
-      return
+      return;
     }
     setPagination({
-      pageNo: (pagination.pageNo + 1),
-      perPageCount: pagination.perPageCount
+      pageNo: pagination.pageNo + 1,
+      perPageCount: pagination.perPageCount,
     });
     setTimeout(async () => {
       await refetch();
     }, 10);
-  }
+  };
 
   return (
     <Box
@@ -126,8 +127,8 @@ const Projects: React.FC = () => {
         my: 4,
         minH: "78vh",
       }}
-      w='100%'
-      boxSizing={'border-box'}
+      w="100%"
+      boxSizing={"border-box"}
     >
       <Flex
         sx={{
@@ -135,7 +136,7 @@ const Projects: React.FC = () => {
           justifyContent: "space-between",
           my: 4,
         }}
-        w='100%'
+        w="100%"
       >
         <Text sx={{ color: "subtle", fontWeight: 600, ml: 4 }}>PROJECTS</Text>
         {profileData && (
@@ -179,12 +180,12 @@ const Projects: React.FC = () => {
         </Flex>
       ) : (
         <Flex
-          alignItems={'row'}
-          flexWrap='wrap'
-          flexDir={'row'}
+          alignItems={"row"}
+          flexWrap="wrap"
+          flexDir={"row"}
           justifyItems={["center", "center", "space-around"]}
-          w='100%'
-          boxSizing={'border-box'}
+          w="100%"
+          boxSizing={"border-box"}
         >
           <InfiniteScroll
             style={{
@@ -192,22 +193,25 @@ const Projects: React.FC = () => {
               display: "flex",
               flexWrap: "wrap",
               overflow: "hidden",
-              boxSizing: 'border-box'
+              boxSizing: "border-box",
             }}
             dataLength={projectList.length}
             next={() => fetchMoreProjects()}
             hasMore={hasMore}
-            loader={<Box w={"100%"} align="center"><Spinner /></Box>}
+            loader={
+              <Box w={"100%"} align="center">
+                <Spinner />
+              </Box>
+            }
             scrollableTarget="pageScroll"
           >
-            {[...(projectList || [])]
-              .map((project) => (
-                <ProjectCard
-                  key={project.project_id}
-                  project={project}
-                  refetch={refetchProjects}
-                />
-              ))}
+            {[...(projectList || [])].map((project) => (
+              <ProjectCard
+                key={project.project_id}
+                project={project}
+                refetch={refetchProjects}
+              />
+            ))}
           </InfiniteScroll>
         </Flex>
       )}
@@ -216,8 +220,8 @@ const Projects: React.FC = () => {
 };
 
 const ProjectCard: React.FC<{
-  project: Project,
-  refetch: any
+  project: Project;
+  refetch: any;
 }> = ({ project, refetch }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [isRescanLoading, setRescanLoading] = useState(false);
@@ -251,7 +255,7 @@ const ProjectCard: React.FC<{
   return (
     <>
       {multi_file_scan_status === "scan_done" ||
-        multi_file_scan_status === "scanning" ? (
+      multi_file_scan_status === "scanning" ? (
         <Flex
           onClick={() => {
             if (multi_file_scan_status === "scan_done") {
@@ -273,14 +277,13 @@ const ProjectCard: React.FC<{
             _hover: {
               boxShadow: "0px 4px 24px rgba(0, 0, 0, 0.2)",
             },
-
           }}
-          boxSizing={'border-box'}
+          boxSizing={"border-box"}
           my={4}
           mx={4}
           p={5}
-          maxWidth='400px'
-          w={["90%","95%","45%", "320px"]}
+          maxWidth="400px"
+          w={["90%", "95%", "45%", "320px"]}
         >
           {multi_file_scan_status === "scan_done" ? (
             <>
@@ -289,10 +292,8 @@ const ProjectCard: React.FC<{
                 alignItems="flex-start"
                 justifyContent="space-between"
               >
-                <Box w='50%'>
-                  <Text isTruncated>
-                    {project_name}
-                  </Text>
+                <Box w="50%">
+                  <Text isTruncated>{project_name}</Text>
                   <Text sx={{ fontSize: "sm", color: "subtle" }}>
                     Last scanned {timeSince(new Date(date_updated))}
                   </Text>
@@ -346,7 +347,7 @@ const ProjectCard: React.FC<{
               />
             </>
           ) : (
-            <Box w='100%'>
+            <Box w="100%">
               <Text sx={{ w: "80%", mb: 8 }} isTruncated>
                 {project_name}
               </Text>
@@ -380,7 +381,7 @@ const ProjectCard: React.FC<{
             my: 4,
             mx: 4,
             borderRadius: 15,
-            
+
             h: "230px",
             bg: "white",
             transition: "0.3s box-shadow",
@@ -390,8 +391,8 @@ const ProjectCard: React.FC<{
             },
             overflow: "hidden",
           }}
-          maxW='400px'
-          w={["90%","95%","45%", "320px"]}
+          maxW="400px"
+          w={["90%", "95%", "45%", "320px"]}
         >
           <Flex
             sx={{

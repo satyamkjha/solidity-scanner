@@ -81,17 +81,19 @@ const Billing: React.FC = () => {
 
   const [pageNo, setPageNo] = useState(1);
   const { data: transactions, refetch } = useTransactions(pageNo, 20);
-  const [transactionList, setTransactionList] = useState<Transaction[] | undefined>();
+  const [transactionList, setTransactionList] = useState<
+    Transaction[] | undefined
+  >();
   const [page, setPage] = useState<Page | undefined>();
 
   useEffect(() => {
     if (transactions) {
       let tList: Transaction[];
       if (transactionList) {
-        tList = transactionList.length < transactions.page.count
-          ? transactionList.concat(transactions.data)
-          : transactionList;
-
+        tList =
+          transactionList.length < transactions.page.count
+            ? transactionList.concat(transactions.data)
+            : transactionList;
       } else {
         tList = transactions.data;
       }
@@ -103,7 +105,7 @@ const Billing: React.FC = () => {
   const fetchMore = async () => {
     setPageNo(pageNo + 1);
     await refetch();
-  }
+  };
 
   return (
     <Box
@@ -143,17 +145,15 @@ const Billing: React.FC = () => {
               <TabPanel width={"100%"}>
                 <>
                   {data.current_package === "trial" ||
-                    data.current_package === "expired" ||
-                    data.current_package === "ondemand" ? (
+                  data.current_package === "expired" ||
+                  data.current_package === "ondemand" ? (
                     <>
                       {transactionList.length > 0 &&
                         transactionList[0].payment_status === "open" && (
                           <LatestInvoice
                             transactionData={transactionList[0]}
                             selectedPlan={transactionList[0].package}
-                            planData={
-                              plans.monthly[transactionList[0].package]
-                            }
+                            planData={plans.monthly[transactionList[0].package]}
                           />
                         )}
                       <Flex
@@ -233,7 +233,8 @@ const Billing: React.FC = () => {
                   transactionList={transactionList}
                   page={page}
                   pageNo={pageNo}
-                  fetchMore={fetchMore} />
+                  fetchMore={fetchMore}
+                />
               </TabPanel>
             </TabPanels>
           </Tabs>
@@ -301,12 +302,12 @@ const PricingPlan: React.FC<{
           {planData.name === "Beginner"
             ? "Starter"
             : planData.name === "Enterprise"
-              ? "Customize your plan"
-              : planData.name === "On Demand"
-                ? "Pay as you go"
-                : planData.discount
-                  ? `Save upto ${planData.discount}`
-                  : ""}
+            ? "Customize your plan"
+            : planData.name === "On Demand"
+            ? "Pay as you go"
+            : planData.discount
+            ? `Save upto ${planData.discount}`
+            : ""}
         </Text>
 
         {!selected && <Divider w={"90%"} />}
@@ -317,8 +318,8 @@ const PricingPlan: React.FC<{
           {planData.name === "Trial"
             ? "Free"
             : planData.name === "Enterprise"
-              ? "$--"
-              : `$ ${planData.amount}`}
+            ? "$--"
+            : `$ ${planData.amount}`}
         </Heading>
         <Text mb={!selected ? 10 : 4} mx={5} fontSize={"xs"}>
           {plan === "trial" || plan === "ondemand" ? "Perpetual" : "per month"}
@@ -444,12 +445,12 @@ const PricingPlan: React.FC<{
                   {planData.discount
                     ? `Save upto ${planData.discount}`
                     : planData.name === "Beginner"
-                      ? "Starter"
-                      : planData.name === "Enterprise"
-                        ? "Customize your plan"
-                        : planData.name === "On Demand"
-                          ? "Pay as you go"
-                          : ""}
+                    ? "Starter"
+                    : planData.name === "Enterprise"
+                    ? "Customize your plan"
+                    : planData.name === "On Demand"
+                    ? "Pay as you go"
+                    : ""}
                 </Text>
                 <Text mx={6} mt={4} sx={{ fontWeight: 500 }}>
                   {planData.name}
@@ -581,289 +582,289 @@ const CurrentPlan: React.FC<{
   isCancellable,
   subscription,
 }) => {
-    const successColor = "#289F4C";
-    const greyColor = "#BDBDBD";
-    const toast = useToast();
-    const cancelSubscription = async () => {
-      const { data } = await API.delete("/api-cancel-stripe-subscription-beta/");
-      if (data.status === "success") {
-        toast({
-          title: data.message,
-          status: "success",
-          duration: 2000,
-          isClosable: true,
-          position: "bottom",
-        });
-        onClose();
-      }
-    };
+  const successColor = "#289F4C";
+  const greyColor = "#BDBDBD";
+  const toast = useToast();
+  const cancelSubscription = async () => {
+    const { data } = await API.delete("/api-cancel-stripe-subscription-beta/");
+    if (data.status === "success") {
+      toast({
+        title: data.message,
+        status: "success",
+        duration: 2000,
+        isClosable: true,
+        position: "bottom",
+      });
+      onClose();
+    }
+  };
 
-    const cancelRef = useRef<HTMLButtonElement | null>(null);
-    const [isOpen, setIsOpen] = useState(false);
-    const onClose = () => setIsOpen(false);
+  const cancelRef = useRef<HTMLButtonElement | null>(null);
+  const [isOpen, setIsOpen] = useState(false);
+  const onClose = () => setIsOpen(false);
 
-    return (
-      <Box
-        sx={{
-          w: "100%",
-          background: "white",
-          borderRadius: 15,
-          p: 8,
-        }}
-        filter={"drop-shadow(0px 4px 23px rgba(0, 0, 0, 0.15));"}
+  return (
+    <Box
+      sx={{
+        w: "100%",
+        background: "white",
+        borderRadius: 15,
+        p: 8,
+      }}
+      filter={"drop-shadow(0px 4px 23px rgba(0, 0, 0, 0.15));"}
+    >
+      <Flex justifyContent={"space-between"} alignItems="center">
+        <Flex alignItems="center" ml={7}>
+          <Icon as={AiFillCheckCircle} color="#38CB89" fontSize="2xl" mr={2} />
+          <Text fontSize={"xl"} fontWeight={900}>
+            Current Plan
+          </Text>
+        </Flex>
+        <Flex alignItems="center" width={"25%"}>
+          <Icon as={AiOutlineCalendar} color="gray.500" fontSize="2xl" mr={2} />
+          <Text>
+            <Text as="span" fontSize="2xl" fontWeight={700}>
+              {daysRemaining(new Date(packageRechargeDate), packageValidity)}
+            </Text>{" "}
+            days remaining
+          </Text>
+        </Flex>
+      </Flex>
+      <Flex
+        justifyContent="space-between"
+        alignItems="flex-start"
+        flexDirection="row"
+        pt={5}
       >
-        <Flex justifyContent={"space-between"} alignItems="center">
-          <Flex alignItems="center" ml={7}>
-            <Icon as={AiFillCheckCircle} color="#38CB89" fontSize="2xl" mr={2} />
-            <Text fontSize={"xl"} fontWeight={900}>
-              Current Plan
-            </Text>
-          </Flex>
-          <Flex alignItems="center" width={"25%"}>
-            <Icon as={AiOutlineCalendar} color="gray.500" fontSize="2xl" mr={2} />
-            <Text>
-              <Text as="span" fontSize="2xl" fontWeight={700}>
-                {daysRemaining(new Date(packageRechargeDate), packageValidity)}
-              </Text>{" "}
-              days remaining
-            </Text>
-          </Flex>
-        </Flex>
-        <Flex
-          justifyContent="space-between"
-          alignItems="flex-start"
-          flexDirection="row"
-          pt={5}
-        >
-          <Box ml={7} width="40%">
-            <Text fontSize={"lg"}>{plan.name}</Text>
-            <Text as="span" mt={5} mb={10} fontWeight={300} fontSize="smaller">
-              {plan.description}
-            </Text>
-            <Divider mt={3} w={"60%"} />
+        <Box ml={7} width="40%">
+          <Text fontSize={"lg"}>{plan.name}</Text>
+          <Text as="span" mt={5} mb={10} fontWeight={300} fontSize="smaller">
+            {plan.description}
+          </Text>
+          <Divider mt={3} w={"60%"} />
 
-            <HStack>
-              <Heading
-                verticalAlign={"center"}
-                fontSize={"x-large"}
-                mt={3}
-                mb={4}
+          <HStack>
+            <Heading
+              verticalAlign={"center"}
+              fontSize={"x-large"}
+              mt={3}
+              mb={4}
+            >
+              {plan.amount === "Free" ? "Free" : `$ ${plan.amount}/mo`}
+            </Heading>
+            {plan.discount && (
+              <Text
+                color={"accent"}
+                backgroundColor={"white"}
+                textAlign="left"
+                fontWeight={600}
+                fontSize={"sm"}
+                mb={10}
+                ml={10}
               >
-                {plan.amount === "Free" ? "Free" : `$ ${plan.amount}/mo`}
-              </Heading>
-              {plan.discount && (
-                <Text
-                  color={"accent"}
-                  backgroundColor={"white"}
-                  textAlign="left"
-                  fontWeight={600}
-                  fontSize={"sm"}
-                  mb={10}
-                  ml={10}
-                >
-                  (Save upto {plan.discount})
-                </Text>
-              )}
-            </HStack>
-          </Box>
-          <Flex
-            width="25%"
-            justifyContent="flex-start"
-            alignItems="flex-start"
-            flexDirection="column"
-          >
-            <HStack mt={5} justify={"flex-start"}>
-              <HiCheckCircle size={20} color={successColor} />
-
-              <Text fontSize={"sm"} ml={5}>
-                {plan.name === "Enterprise" ? "-" : plan.scan_count}
-                Scan Credit
+                (Save upto {plan.discount})
               </Text>
-            </HStack>
-            <HStack mt={2} justify={"flex-start"}>
-              <HiCheckCircle size={20} color={successColor} />
-
-              <Text fontSize={"sm"} ml={5}>
-                Security Score
-              </Text>
-            </HStack>
-            <HStack mt={2} justify={"flex-start"}>
-              {plan.name === "trial" ? (
-                <HiXCircle size={20} color={greyColor} />
-              ) : (
-                <HiCheckCircle size={20} color={successColor} />
-              )}
-
-              <Text fontSize={"sm"} ml={5}>
-                Detailed Result
-              </Text>
-            </HStack>
-            <HStack mt={2} justify={"flex-start"}>
-              {plan.github ? (
-                <HiCheckCircle size={20} color={successColor} />
-              ) : (
-                <HiXCircle size={20} color={greyColor} />
-              )}
-
-              <Text fontSize={"sm"} ml={5}>
-                Private Github
-              </Text>
-            </HStack>
-            <HStack mt={2} justify={"flex-start"}>
-              {plan.report ? (
-                <HiCheckCircle size={20} color={successColor} />
-              ) : (
-                <HiXCircle size={20} color={greyColor} />
-              )}
-
-              <Text fontSize={"sm"} ml={5}>
-                Generate Report
-              </Text>
-            </HStack>
-            <HStack mt={2} justify={"flex-start"}>
-              {plan.publishable_report ? (
-                <HiCheckCircle size={20} color={successColor} />
-              ) : (
-                <HiXCircle size={20} color={greyColor} />
-              )}
-
-              <Text fontSize={"sm"} ml={5}>
-                Publishable Report
-              </Text>
-            </HStack>
-            <HStack mt={2} justify={"flex-start"}>
-              {plan.name === "Enterprise" ? (
-                <HiCheckCircle size={20} color={successColor} />
-              ) : (
-                <HiXCircle size={20} color={greyColor} />
-              )}
-
-              <Text fontSize={"sm"} ml={5}>
-                White Glove Services
-              </Text>
-            </HStack>
-          </Flex>
-        </Flex>
-        <Flex mt={10} px={7} justifyContent={"space-between"} alignItems="center">
-          <HStack spacing={20}>
-            {subscription && (
-              <>
-                <Box>
-                  <Text fontWeight={400} fontSize="md" mb={1} color="#4E5D78">
-                    Subscribed on
-                  </Text>
-                  <Text fontWeight={500} fontSize="lg">
-                    {dateToDDMMMMYYYY(new Date(packageRechargeDate))}
-                  </Text>
-                </Box>
-                <Box>
-                  <Text fontWeight={400} fontSize="md" mb={1} color="#4E5D78">
-                    Next Billed on
-                  </Text>
-                  <Text fontWeight={500} fontSize="lg">
-                    {dateToDDMMMMYYYY(new Date(subscription.renewal_date))}
-                  </Text>
-                </Box>
-                <Box>
-                  <Text fontWeight={400} fontSize="md" mb={1} color="#4E5D78">
-                    Recurring Payment
-                  </Text>
-                  <Text fontWeight={500} fontSize="lg">
-                    Stripe Payment
-                  </Text>
-                </Box>
-              </>
             )}
           </HStack>
-
-          {isCancellable && (
-            <Button
-              onClick={() => setIsOpen(!isOpen)}
-              variant="accent-outline"
-              mr={10}
-            >
-              Cancel Subscription
-            </Button>
-          )}
-        </Flex>
-        {subscription && (
-          <Flex
-            mt={10}
-            mx={7}
-            p={5}
-            backgroundColor="#FFF8ED"
-            justifyContent={"flex-start"}
-            borderRadius="xl"
-            border={"1px solid #FFC661"}
-            alignItems="flex-start"
-          >
-            <Image src="/icons/info.svg" mr={5} />
-            <VStack alignItems={"flex-start"}>
-              <Text fontSize={"lg"} fontWeight={600} color="gray.600">
-                Recurring Payment
-              </Text>
-              <Text fontSize={"md"} fontWeight={400} color="gray.500">
-                Your card will be billed automatically on{" "}
-                {dateToDDMMMMYYYY(new Date(subscription.renewal_date))}. We do not
-                store your card information anywhere in our application.
-              </Text>
-            </VStack>
-          </Flex>
-        )}
-
-        <AlertDialog
-          isOpen={isOpen}
-          leastDestructiveRef={cancelRef}
-          onClose={onClose}
+        </Box>
+        <Flex
+          width="25%"
+          justifyContent="flex-start"
+          alignItems="flex-start"
+          flexDirection="column"
         >
-          <AlertDialogOverlay>
-            <AlertDialogContent alignContent={"center"}>
-              <Flex
-                p={5}
-                flexDir={"column"}
-                justifyContent="flex-start"
-                alignItems={"center"}
-              >
-                <HStack w={"100%"} mb={5}>
-                  <Text
-                    textAlign={"center"}
-                    w={"90%"}
-                    fontSize="lg"
-                    fontWeight="bold"
-                  >
-                    Cancel Subscription
-                  </Text>
-                  <CloseButton onClick={onClose} />
-                </HStack>
+          <HStack mt={5} justify={"flex-start"}>
+            <HiCheckCircle size={20} color={successColor} />
 
-                <Divider />
-                <Text mt={5}>
-                  Are you sure you want to cancel the subscription?
+            <Text fontSize={"sm"} ml={5}>
+              {plan.name === "Enterprise" ? "-" : plan.scan_count}
+              Scan Credit
+            </Text>
+          </HStack>
+          <HStack mt={2} justify={"flex-start"}>
+            <HiCheckCircle size={20} color={successColor} />
+
+            <Text fontSize={"sm"} ml={5}>
+              Security Score
+            </Text>
+          </HStack>
+          <HStack mt={2} justify={"flex-start"}>
+            {plan.name === "trial" ? (
+              <HiXCircle size={20} color={greyColor} />
+            ) : (
+              <HiCheckCircle size={20} color={successColor} />
+            )}
+
+            <Text fontSize={"sm"} ml={5}>
+              Detailed Result
+            </Text>
+          </HStack>
+          <HStack mt={2} justify={"flex-start"}>
+            {plan.github ? (
+              <HiCheckCircle size={20} color={successColor} />
+            ) : (
+              <HiXCircle size={20} color={greyColor} />
+            )}
+
+            <Text fontSize={"sm"} ml={5}>
+              Private Github
+            </Text>
+          </HStack>
+          <HStack mt={2} justify={"flex-start"}>
+            {plan.report ? (
+              <HiCheckCircle size={20} color={successColor} />
+            ) : (
+              <HiXCircle size={20} color={greyColor} />
+            )}
+
+            <Text fontSize={"sm"} ml={5}>
+              Generate Report
+            </Text>
+          </HStack>
+          <HStack mt={2} justify={"flex-start"}>
+            {plan.publishable_report ? (
+              <HiCheckCircle size={20} color={successColor} />
+            ) : (
+              <HiXCircle size={20} color={greyColor} />
+            )}
+
+            <Text fontSize={"sm"} ml={5}>
+              Publishable Report
+            </Text>
+          </HStack>
+          <HStack mt={2} justify={"flex-start"}>
+            {plan.name === "Enterprise" ? (
+              <HiCheckCircle size={20} color={successColor} />
+            ) : (
+              <HiXCircle size={20} color={greyColor} />
+            )}
+
+            <Text fontSize={"sm"} ml={5}>
+              White Glove Services
+            </Text>
+          </HStack>
+        </Flex>
+      </Flex>
+      <Flex mt={10} px={7} justifyContent={"space-between"} alignItems="center">
+        <HStack spacing={20}>
+          {subscription && (
+            <>
+              <Box>
+                <Text fontWeight={400} fontSize="md" mb={1} color="#4E5D78">
+                  Subscribed on
                 </Text>
-
-                <Text fontSize={"lg"} mt={10}>
-                  {plan.name}
+                <Text fontWeight={500} fontSize="lg">
+                  {dateToDDMMMMYYYY(new Date(packageRechargeDate))}
                 </Text>
-                <Heading fontSize={"x-large"} mb={10}>
-                  {plan.name === "Trial"
-                    ? "Free"
-                    : plan.name === "Enterprise"
-                      ? "$--"
-                      : `$ ${plan.amount}`}
-                </Heading>
+              </Box>
+              <Box>
+                <Text fontWeight={400} fontSize="md" mb={1} color="#4E5D78">
+                  Next Billed on
+                </Text>
+                <Text fontWeight={500} fontSize="lg">
+                  {dateToDDMMMMYYYY(new Date(subscription.renewal_date))}
+                </Text>
+              </Box>
+              <Box>
+                <Text fontWeight={400} fontSize="md" mb={1} color="#4E5D78">
+                  Recurring Payment
+                </Text>
+                <Text fontWeight={500} fontSize="lg">
+                  Stripe Payment
+                </Text>
+              </Box>
+            </>
+          )}
+        </HStack>
 
-                <AlertDialogFooter>
-                  <Button variant="brand" onClick={cancelSubscription} ml={3}>
-                    Cancel Subscription
-                  </Button>
-                </AlertDialogFooter>
-              </Flex>
-            </AlertDialogContent>
-          </AlertDialogOverlay>
-        </AlertDialog>
-      </Box>
-    );
-  };
+        {isCancellable && (
+          <Button
+            onClick={() => setIsOpen(!isOpen)}
+            variant="accent-outline"
+            mr={10}
+          >
+            Cancel Subscription
+          </Button>
+        )}
+      </Flex>
+      {subscription && (
+        <Flex
+          mt={10}
+          mx={7}
+          p={5}
+          backgroundColor="#FFF8ED"
+          justifyContent={"flex-start"}
+          borderRadius="xl"
+          border={"1px solid #FFC661"}
+          alignItems="flex-start"
+        >
+          <Image src="/icons/info.svg" mr={5} />
+          <VStack alignItems={"flex-start"}>
+            <Text fontSize={"lg"} fontWeight={600} color="gray.600">
+              Recurring Payment
+            </Text>
+            <Text fontSize={"md"} fontWeight={400} color="gray.500">
+              Your card will be billed automatically on{" "}
+              {dateToDDMMMMYYYY(new Date(subscription.renewal_date))}. We do not
+              store your card information anywhere in our application.
+            </Text>
+          </VStack>
+        </Flex>
+      )}
+
+      <AlertDialog
+        isOpen={isOpen}
+        leastDestructiveRef={cancelRef}
+        onClose={onClose}
+      >
+        <AlertDialogOverlay>
+          <AlertDialogContent alignContent={"center"}>
+            <Flex
+              p={5}
+              flexDir={"column"}
+              justifyContent="flex-start"
+              alignItems={"center"}
+            >
+              <HStack w={"100%"} mb={5}>
+                <Text
+                  textAlign={"center"}
+                  w={"90%"}
+                  fontSize="lg"
+                  fontWeight="bold"
+                >
+                  Cancel Subscription
+                </Text>
+                <CloseButton onClick={onClose} />
+              </HStack>
+
+              <Divider />
+              <Text mt={5}>
+                Are you sure you want to cancel the subscription?
+              </Text>
+
+              <Text fontSize={"lg"} mt={10}>
+                {plan.name}
+              </Text>
+              <Heading fontSize={"x-large"} mb={10}>
+                {plan.name === "Trial"
+                  ? "Free"
+                  : plan.name === "Enterprise"
+                  ? "$--"
+                  : `$ ${plan.amount}`}
+              </Heading>
+
+              <AlertDialogFooter>
+                <Button variant="brand" onClick={cancelSubscription} ml={3}>
+                  Cancel Subscription
+                </Button>
+              </AlertDialogFooter>
+            </Flex>
+          </AlertDialogContent>
+        </AlertDialogOverlay>
+      </AlertDialog>
+    </Box>
+  );
+};
 
 const CoinPayments: React.FC<{ packageName: string; onClose: () => void }> = ({
   packageName,
@@ -1261,8 +1262,9 @@ const CardDetails: React.FC<{
       </HStack>
       <Text mt={10} fontWeight={500} color={"gray.500"}>
         Next billed on{" "}
-        {`${package_recharge_date.getDate()} ${monthNames[package_recharge_date.getMonth()]
-          } ${package_recharge_date.getFullYear()}`}
+        {`${package_recharge_date.getDate()} ${
+          monthNames[package_recharge_date.getMonth()]
+        } ${package_recharge_date.getFullYear()}`}
       </Text>
 
       <Text
@@ -1333,12 +1335,12 @@ const InvoiceList: React.FC = () => {
   );
 };
 
-const TransactionListCard: React.FC<{ transactionList: Transaction[], page: Page, pageNo: number, fetchMore: any }> = ({
-  transactionList,
-  page,
-  pageNo,
-  fetchMore
-}) => {
+const TransactionListCard: React.FC<{
+  transactionList: Transaction[];
+  page: Page;
+  pageNo: number;
+  fetchMore: any;
+}> = ({ transactionList, page, pageNo, fetchMore }) => {
   const cancelRef = useRef<HTMLButtonElement | null>(null);
   const [isOpen, setIsOpen] = useState(false);
   const onClose = () => setIsOpen(false);
@@ -1353,10 +1355,10 @@ const TransactionListCard: React.FC<{ transactionList: Transaction[], page: Page
   const fetchMoreTransactions = () => {
     if (pageNo >= page.total_pages) {
       setHasMore(false);
-      return null
+      return null;
     }
     fetchMore();
-  }
+  };
 
   const cancelPayment = async () => {
     const { data } = await API.delete("/api-invalidate-order-beta/", {
@@ -1416,13 +1418,23 @@ const TransactionListCard: React.FC<{ transactionList: Transaction[], page: Page
         dataLength={transactionList?.length}
         next={() => fetchMoreTransactions()}
         hasMore={hasMore}
-        loader={<Box w={"100%"} align="center"><Spinner /></Box>}
+        loader={
+          <Box w={"100%"} align="center">
+            <Spinner />
+          </Box>
+        }
         scrollableTarget="pageScroll"
       >
-        {(transactionList).map((transaction, index) => {
+        {transactionList.map((transaction, index) => {
           let date = transaction.date.split("-");
           return (
-            <HStack key={index} p={4} justify="flex-start" width={"100%"} align="center">
+            <HStack
+              key={index}
+              p={4}
+              justify="flex-start"
+              width={"100%"}
+              align="center"
+            >
               {/* <Text fontWeight={500} color={"gray.500"}>
                 {date[2]} {monthNames[parseInt(date[1])]} {date[0]}
               </Text>
@@ -1439,8 +1451,8 @@ const TransactionListCard: React.FC<{ transactionList: Transaction[], page: Page
                     transaction.payment_status === "success"
                       ? "green"
                       : transaction.payment_status === "failed"
-                        ? "red"
-                        : "orange"
+                      ? "red"
+                      : "orange"
                   }
                 >
                   {transaction.payment_status}

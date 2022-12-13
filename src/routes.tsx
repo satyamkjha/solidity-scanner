@@ -223,7 +223,7 @@ const ErrorHandler: React.FC = ({ children }) => {
           });
         } else {
           toast({
-            title: (error.response.data.message || error.response.data.detail),
+            title: error.response.data.message || error.response.data.detail,
             status: "error",
             isClosable: true,
             position: "bottom",

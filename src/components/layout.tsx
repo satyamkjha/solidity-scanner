@@ -160,9 +160,10 @@ const Layout: React.FC = ({ children }) => {
               "100%",
               "100%",
               "100%",
-              `calc(100% - ${isSidebarCollapsed
-                ? SIDEBAR_WIDTH_COLLAPSED
-                : SIDEBAR_WIDTH_EXPANDED
+              `calc(100% - ${
+                isSidebarCollapsed
+                  ? SIDEBAR_WIDTH_COLLAPSED
+                  : SIDEBAR_WIDTH_EXPANDED
               })`,
             ],
             height: "calc(100vh - 28px)",
@@ -206,17 +207,20 @@ const Layout: React.FC = ({ children }) => {
                 onClick={() => setShowSidebar(!showSidebar)}
               />
               {profileData && (
-                <Flex flexDir={['column', 'row', 'row']} justifyContent={'flex-start'} alignItems={'flex-start'}>
-                <Text fontWeight={600} fontSize={["xl", "xl" , "2xl" ]}>
-                  <Box as="span" role="img" aria-label="wave" mr={2}>
-                    👋
-                  </Box>{" "}
-                  Hi,{' '}
-                  
-                </Text>
-                <Text fontWeight={600} fontSize={["xl", "xl" , "2xl" ]}>
-                {profileData?.name}
-                </Text>
+                <Flex
+                  flexDir={["column", "row", "row"]}
+                  justifyContent={"flex-start"}
+                  alignItems={"flex-start"}
+                >
+                  <Text fontWeight={600} fontSize={["xl", "xl", "2xl"]}>
+                    <Box as="span" role="img" aria-label="wave" mr={2}>
+                      👋
+                    </Box>{" "}
+                    Hi,{" "}
+                  </Text>
+                  <Text fontWeight={600} fontSize={["xl", "xl", "2xl"]}>
+                    {profileData?.name}
+                  </Text>
                 </Flex>
               )}
 

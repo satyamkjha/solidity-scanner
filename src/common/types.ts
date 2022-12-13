@@ -68,7 +68,7 @@ export type Project = {
 
 export type ProjectList = {
   data: Project[];
-  page: Page
+  page: Page;
 };
 
 export type AuthResponse = {
@@ -325,12 +325,12 @@ export type Page = {
   count: number;
   per_page: number;
   total_pages: number;
-}
+};
 
 export type Pagination = {
   pageNo: number;
   perPageCount: number;
-}
+};
 
 export type Transaction = {
   date: string;
@@ -346,7 +346,7 @@ export type Transaction = {
 
 export type TransactionList = {
   data: Transaction[];
-  page: Page
+  page: Page;
 };
 
 export type InvoiceList = {

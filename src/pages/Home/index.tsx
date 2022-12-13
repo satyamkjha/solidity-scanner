@@ -241,7 +241,8 @@ const ApplicationForm: React.FC = () => {
   const { handleSubmit, register, formState } = useForm<ApplicationFormData>();
   const history = useHistory();
 
-  const githubUrlRegex = /(http(s)?)(:(\/\/))((github.com)(\/)[\w@\:\-~]+(\/)[\w@\:\-~]+)(\.git)?/;
+  const githubUrlRegex =
+    /(http(s)?)(:(\/\/))((github.com)(\/)[\w@\:\-~]+(\/)[\w@\:\-~]+)(\.git)?/;
 
   const onSubmit = async ({
     project_url,
@@ -255,14 +256,13 @@ const ApplicationForm: React.FC = () => {
       setNameError("Project Name cannot exceed to more than 50 characters.");
       return;
     }
-    let filteredUrlInput = githubUrlRegex.exec(project_url)
+    let filteredUrlInput = githubUrlRegex.exec(project_url);
     if (!filteredUrlInput) {
       setLinkError("Please enter a valid Github repository link");
       return;
     }
-    const filteredUrl = filteredUrlInput[0]
+    const filteredUrl = filteredUrlInput[0];
 
-    
     setNameError(null);
     setLinkError(null);
     await API.post("/api-project-scan/", {
@@ -563,7 +563,6 @@ const ContractForm: React.FC = () => {
   const { data: profileData } = useProfile();
   const { data: supportedChains } = useSupportedChains();
 
-
   const onSubmit = async ({ contract_address }: ContractFormData) => {
     await API.post("/api-start-scan-block/", {
       contract_address,
@@ -783,8 +782,7 @@ const UploadForm: React.FC = () => {
       return getPreassignedURL(file.name, file);
     });
     Promise.all(results).then((res) => {
-      if(res.length === acceptedFiles.length)
-        setUrlList([...res]);
+      if (res.length === acceptedFiles.length) setUrlList([...res]);
     });
   };
 
@@ -1063,6 +1061,3 @@ const UploadForm: React.FC = () => {
 };
 
 export default Home;
-
-
-
