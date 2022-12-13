@@ -534,14 +534,12 @@ const ContractForm: React.FC = () => {
       borderRadius: 10,
       border: "0px solid #ffffff",
       overflowY: "hidden",
-      width: "500px",
     }),
     control: (state: any) => ({
       // none of react-select's styles are passed to <Control />
       display: "flex",
       flexDirection: "row",
       backgroundColor: "#FFFFFF",
-      width: "500px",
       padding: 5,
       borderRadius: 15,
       border: state.isFocused ? "2px solid #52FF00" : "2px solid #EDF2F7",

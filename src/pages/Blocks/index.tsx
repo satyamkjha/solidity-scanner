@@ -19,6 +19,7 @@ import { Scan } from "common/types";
 import { timeSince } from "common/functions";
 import { useBlocks } from "hooks/useBlocks";
 import { useProfile } from "hooks/useProfile";
+import { useHistory } from "react-router-dom";
 
 const Blocks: React.FC = () => {
   const { data, isLoading, refetch } = useBlocks();
@@ -51,27 +52,28 @@ const Blocks: React.FC = () => {
   return (
     <Box
       sx={{
-        w: "100%",
         bg: "bg.subtle",
         borderRadius: "20px",
         py: 4,
-        px: 8,
+        px: [0, 0, 4],
         mx: [0, 0, 4],
         my: 4,
         minH: "78vh",
       }}
+      w='100%'
+      boxSizing={'border-box'}
     >
       <Flex
         sx={{
-          w: "100%",
           alignItems: "center",
           justifyContent: "space-between",
           my: 4,
         }}
+        w='100%'
       >
         <Flex alignItems="center">
-          <Text sx={{ color: "subtle", fontWeight: 600 }}> BLOCKS</Text>
-          <Flex alignItems="center" ml={2}>
+          <Text sx={{ color: "subtle", fontWeight: 600, ml: 4 }}> BLOCKS</Text>
+          <Flex alignItems="center" ml={2} display={["none", "none", "flex"]}>
             <BlockCredit />
             <Text fontSize="xl" fontWeight="700" ml={2}>
               {profileData?.credits}
@@ -116,6 +118,8 @@ const Blocks: React.FC = () => {
             flexWrap: "wrap",
             justifyItems: ["center", "center", "space-around"],
           }}
+          w='100%'
+          boxSizing={'border-box'}
         >
           {[...(data?.scans || [])]
             .sort((scan1, scan2) =>
@@ -144,24 +148,18 @@ const BlockCard: React.FC<{ scan: Scan }> = ({ scan }) => {
     multi_file_scan_summary,
     multi_file_scan_details,
   } = scan;
+
+  const history = useHistory();
+
   return (
-    <Link
-      to={
-        multi_file_scan_status === "scan_done"
-          ? `/blocks/${scan_id}`
-          : "/blocks"
-      }
-    >
+
       <Flex
         sx={{
           cursor:
             multi_file_scan_status === "scan_done" ? "pointer" : "not-allowed",
           flexDir: "column",
           justifyContent: "space-between",
-          w: "320px",
           h: "260px",
-          my: 4,
-          mr: 8,
           borderRadius: 15,
           bg: "white",
           transition: "0.3s box-shadow",
@@ -169,6 +167,18 @@ const BlockCard: React.FC<{ scan: Scan }> = ({ scan }) => {
           _hover: {
             boxShadow: "0px 4px 24px rgba(0, 0, 0, 0.2)",
           },
+        }}
+        maxWidth='500px'
+        my={4}
+          mx={4}
+        boxSizing={'border-box'}
+        w={["90%","95%","45%", "320px"]}
+        onClick={() => {
+          if (multi_file_scan_status === "scan_done") {
+            history.push(`/blocks/${scan_id}`)
+          } else {
+            history.push('/blocks')
+          }
         }}
       >
         <Box p={5}>
@@ -255,7 +265,7 @@ const BlockCard: React.FC<{ scan: Scan }> = ({ scan }) => {
             </Text>
           </Box>
         ) : (
-          <Box p={5}>
+          <Box p={5} w='100%'>
             <Flex
               sx={{
                 display: "inline-flex",
@@ -275,7 +285,6 @@ const BlockCard: React.FC<{ scan: Scan }> = ({ scan }) => {
           </Box>
         )}
       </Flex>
-    </Link>
   );
 };
 
