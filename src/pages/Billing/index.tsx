@@ -1602,6 +1602,8 @@ const PromoCodeCard: React.FC<{ profileData: Profile }> = ({ profileData }) => {
           mt={[4, 4, 0]}
           ml= {[0, 0, 4]}
           width={["100%", "100%","30%", "20%"]}
+          minW={'160px'}
+          maxW={'300px'}
           disabled={
             promoCode.length < 0 ||
             promoCode.length > 50 ||
