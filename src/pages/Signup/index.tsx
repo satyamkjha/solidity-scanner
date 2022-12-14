@@ -305,7 +305,6 @@ const RegisterForm: React.FC<{
                 children={<Icon as={MdWork} color="gray.300" />}
               />
               <Input
-                isRequired
                 value={companyName}
                 placeholder="Your company (Optional)"
                 variant="brand"
