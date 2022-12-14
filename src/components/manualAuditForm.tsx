@@ -27,6 +27,7 @@ import { FaDiscord, FaEnvelope, FaTelegram } from "react-icons/fa";
 import { GiLetterBomb } from "react-icons/gi";
 
 import axios from "axios";
+import { MailSent } from './icons';
 
 
 export const ManualAuditForm: React.FC<{ onClose(): any; isOpen: boolean }> = ({
@@ -224,13 +225,11 @@ export const ManualAuditForm: React.FC<{ onClose(): any; isOpen: boolean }> = ({
                                 w={"100%"}
                                 direction="column"
                                 alignItems={"center"}
+                                textAlign="center"
                             >
-                                <Image
-                                    my={6}
-                                    src="/icons/email_sent.svg"
-                                    alt="Product screenshot"
-                                    w={"20%"}
-                                />
+                                <Flex my={6}>
+                                    <MailSent size={180} />
+                                </Flex>
                                 <Text mt={6} fontSize={"xl"} fontWeight="700">Email sent successfully</Text>
                                 <Text my={4} color="subtle" w={"60%"}>
                                     Your request for Manual Audit has been submitted, our team will contact you shortly.
