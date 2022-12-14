@@ -93,9 +93,9 @@ import { useReport } from "hooks/useReport";
 import { useReports } from "hooks/useReports";
 import { LockIcon } from "@chakra-ui/icons";
 import { profile } from "console";
-import { usePricingPlans } from "hooks/usePricingPlans";
 import { motion } from "framer-motion";
 import { Profiler } from "inspector";
+import { pricingDetails as plans } from "common/values";
 
 export const ProjectPage: React.FC = () => {
   const { projectId } = useParams<{ projectId: string }>();
@@ -207,7 +207,6 @@ const ScanDetails: React.FC<{ scansRemaining: number; scans: ScanMeta[] }> = ({
   const [tabIndex, setTabIndex] = React.useState(0);
 
   const { data: profile, isLoading: isProfileLoading } = useProfile();
-  const { data: plans, isLoading: isPlanLoading } = usePricingPlans();
 
   const handleTabsChange = (index: number) => {
     setTabIndex(index);
@@ -396,7 +395,7 @@ const ScanDetails: React.FC<{ scansRemaining: number; scans: ScanMeta[] }> = ({
           p: 4,
         }}
       >
-        {isLoading || isProfileLoading || isPlanLoading ? (
+        {isLoading || isProfileLoading ? (
           <Flex w="100%" h="70vh" alignItems="center" justifyContent="center">
             <Spinner />
           </Flex>
