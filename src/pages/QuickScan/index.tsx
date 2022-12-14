@@ -57,43 +57,43 @@ const pieData = (
   informational: number,
   gas: number
 ) => [
-    {
-      id: "critical",
-      label: "Critical",
-      value: critical,
-      color: "#FF5C00",
-    },
-    {
-      id: "high",
-      label: "High",
-      value: high,
-      color: "#FF5C00",
-    },
-    {
-      id: "medium",
-      label: "Medium",
-      value: medium,
-      color: "#FFE600",
-    },
-    {
-      id: "low",
-      label: "Low",
-      value: low,
-      color: "#38CB89",
-    },
-    {
-      id: "informational",
-      label: "Informational",
-      value: informational,
-      color: "#A0AEC0",
-    },
-    {
-      id: "gas",
-      label: "Gas",
-      value: gas,
-      color: "#F795B4",
-    },
-  ];
+  {
+    id: "critical",
+    label: "Critical",
+    value: critical,
+    color: "#FF5C00",
+  },
+  {
+    id: "high",
+    label: "High",
+    value: high,
+    color: "#FF5C00",
+  },
+  {
+    id: "medium",
+    label: "Medium",
+    value: medium,
+    color: "#FFE600",
+  },
+  {
+    id: "low",
+    label: "Low",
+    value: low,
+    color: "#38CB89",
+  },
+  {
+    id: "informational",
+    label: "Informational",
+    value: informational,
+    color: "#A0AEC0",
+  },
+  {
+    id: "gas",
+    label: "Gas",
+    value: gas,
+    color: "#F795B4",
+  },
+];
 
 const formatOptionLabel: React.FC<{
   value: string;
@@ -191,8 +191,8 @@ const QuickScan: React.FC = () => {
       backgroundColor: state.isSelected
         ? "#FFFFFF"
         : state.isFocused
-          ? "#E6E6E6"
-          : "#FFFFFF",
+        ? "#E6E6E6"
+        : "#FFFFFF",
       color: "#000000",
     }),
     menu: (provided: any, state: any) => ({
@@ -233,8 +233,8 @@ const QuickScan: React.FC = () => {
       backgroundColor: state.isSelected
         ? "#FFFFFF"
         : state.isFocused
-          ? "#E6E6E6"
-          : "#FFFFFF",
+        ? "#E6E6E6"
+        : "#FFFFFF",
       color: "#000000",
     }),
     menu: (provided: any, state: any) => ({
@@ -350,20 +350,21 @@ const QuickScan: React.FC = () => {
     setScanReport(null);
     API.get(
       `/api-quick-scan-sse/?contract_address=${address}&contract_platform=${platform}&contract_chain=${chain}`
-    ).then(
-      (res) => {
-        if (res.status === 200) {
-          setScanReport(res.data.scan_report);
-          d = new Date(res.data.scan_report.published_date);
-        }
-      },
-      (err) => {
-        return;
-      }
     )
+      .then(
+        (res) => {
+          if (res.status === 200) {
+            setScanReport(res.data.scan_report);
+            d = new Date(res.data.scan_report.published_date);
+          }
+        },
+        (err) => {
+          return;
+        }
+      )
       .finally(() => {
         setIsLoading(false);
-      })
+      });
   };
 
   useEffect(() => {
@@ -410,7 +411,12 @@ const QuickScan: React.FC = () => {
             backgroundPosition={"center"}
             backgroundRepeat="no-repeat"
           >
-            <Heading w={["90%", "90%", "80%", "60%"]} color={"white"} fontSize={["3xl", "4xl"]} mb={8}>
+            <Heading
+              w={["90%", "90%", "80%", "60%"]}
+              color={"white"}
+              fontSize={["3xl", "4xl"]}
+              mb={8}
+            >
               SolidityScan{" "}
               <Box
                 as="span"
@@ -424,8 +430,16 @@ const QuickScan: React.FC = () => {
                 QuickScan
               </Box>
             </Heading>
-            <Text w={["90%", "90%", "80%", "60%"]} fontSize="xl" color="subtle" mb={8}>
-              An open to all quick scanning extension designed to view results in simple terms. Initiate a smart contract scan by selecting from a wide range of supported protocols and get a quick analysis report within seconds.
+            <Text
+              w={["90%", "90%", "80%", "60%"]}
+              fontSize="xl"
+              color="subtle"
+              mb={8}
+            >
+              An open to all quick scanning extension designed to view results
+              in simple terms. Initiate a smart contract scan by selecting from
+              a wide range of supported protocols and get a quick analysis
+              report within seconds.
             </Text>
             <Stack
               mt={20}
@@ -521,8 +535,8 @@ const QuickScan: React.FC = () => {
                       ? "linear-gradient(96.27deg, #FFF3F0 0.75%, #FFE0D9 96.71%)"
                       : parseFloat(scanReport.multi_file_scan_summary.score) >=
                         4.5
-                        ? "linear-gradient(96.27deg, #EFFFED 0.75%, #E6FFE2 96.71%)"
-                        : "linear-gradient(96.27deg, #FFFAF2 0.75%, #FFF4E1 96.71%)"
+                      ? "linear-gradient(96.27deg, #EFFFED 0.75%, #E6FFE2 96.71%)"
+                      : "linear-gradient(96.27deg, #FFFAF2 0.75%, #FFF4E1 96.71%)"
                   }
                 >
                   <Text fontSize="md" mb={5}>
@@ -566,7 +580,7 @@ const QuickScan: React.FC = () => {
                     mt={5}
                     width={["100%"]}
                     justify={"space-between"}
-                    flexWrap='wrap'
+                    flexWrap="wrap"
                     spacing={0}
                   >
                     <Box
@@ -799,8 +813,9 @@ const QuickScan: React.FC = () => {
                         This contract has been manually verified by
                         SolidityScan's internal security team as per the highest
                         smart contract security standards as of{" "}
-                        {`${d.getDate()} ${monthNames[d.getMonth()]
-                          } ${d.getFullYear()}`}
+                        {`${d.getDate()} ${
+                          monthNames[d.getMonth()]
+                        } ${d.getFullYear()}`}
                         .{" "}
                       </Text>
 
@@ -851,7 +866,7 @@ const QuickScan: React.FC = () => {
                         h="180px"
                       >
                         {scanReport.multi_file_scan_summary.issues_count ===
-                          0 ? (
+                        0 ? (
                           <Image src="/nobug.svg" alt="No Bugs Found" />
                         ) : (
                           <PieChart

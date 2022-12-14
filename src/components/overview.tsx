@@ -25,43 +25,43 @@ const pieData = (
   informational: number,
   gas: number
 ) => [
-    {
-      id: "critical",
-      label: "Critical",
-      value: critical,
-      color: "#FF5C00",
-    },
-    {
-      id: "high",
-      label: "High",
-      value: high,
-      color: "#FF5C00",
-    },
-    {
-      id: "medium",
-      label: "Medium",
-      value: medium,
-      color: "#FFE600",
-    },
-    {
-      id: "low",
-      label: "Low",
-      value: low,
-      color: "#38CB89",
-    },
-    {
-      id: "informational",
-      label: "Informational",
-      value: informational,
-      color: "#A0AEC0",
-    },
-    {
-      id: "gas",
-      label: "Gas",
-      value: gas,
-      color: "#F795B4",
-    },
-  ];
+  {
+    id: "critical",
+    label: "Critical",
+    value: critical,
+    color: "#FF5C00",
+  },
+  {
+    id: "high",
+    label: "High",
+    value: high,
+    color: "#FF5C00",
+  },
+  {
+    id: "medium",
+    label: "Medium",
+    value: medium,
+    color: "#FFE600",
+  },
+  {
+    id: "low",
+    label: "Low",
+    value: low,
+    color: "#38CB89",
+  },
+  {
+    id: "informational",
+    label: "Informational",
+    value: informational,
+    color: "#A0AEC0",
+  },
+  {
+    id: "gas",
+    label: "Gas",
+    value: gas,
+    color: "#F795B4",
+  },
+];
 
 const Overview: React.FC<{
   scanData: Scan;
@@ -70,7 +70,7 @@ const Overview: React.FC<{
   return (
     <>
       {scanData.multi_file_scan_status === "scan_done" &&
-        scanData.multi_file_scan_summary ? (
+      scanData.multi_file_scan_summary ? (
         <Flex w="100%" sx={{ flexDir: ["column", "column", "row"] }}>
           <VStack w={["100%", "100%", "50%"]} mb={[8, 8, 0]}>
             <Box
@@ -214,7 +214,8 @@ const Overview: React.FC<{
               <HStack w="100%" justifyContent="space-between">
                 <Text>Duration</Text>
                 <Text color="subtle">
-                  {scanData.multi_file_scan_summary.scan_time_taken + " second(s)"}
+                  {scanData.multi_file_scan_summary.scan_time_taken +
+                    " second(s)"}
                 </Text>
               </HStack>
               <HStack w="100%" justifyContent="space-between">

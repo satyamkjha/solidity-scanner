@@ -263,7 +263,7 @@ const RegisterForm: React.FC<{
                 size="lg"
                 onChange={(event) => setName(event.target.value)}
               />
-            </InputGroup> 
+            </InputGroup>
 
             <InputGroup>
               <InputLeftElement
@@ -283,7 +283,7 @@ const RegisterForm: React.FC<{
                   setPasswordError(passwordStrength(event.target.value));
                 }}
               />
-            </InputGroup>           
+            </InputGroup>
 
             <InputGroup alignItems="center">
               <InputLeftElement
@@ -312,8 +312,8 @@ const RegisterForm: React.FC<{
                 size="lg"
                 onChange={(event) => setContactNumber(event.target.value)}
               />
-            </InputGroup>           
-            
+            </InputGroup>
+
             {passwordError &&
               passwordError.length < 8 &&
               passwordError.contains.length < 4 && (
@@ -332,7 +332,6 @@ const RegisterForm: React.FC<{
         )}
         {step === 1 && (
           <>
-            
             <InputGroup mt={0} alignItems="center">
               <InputLeftElement
                 height="48px"
