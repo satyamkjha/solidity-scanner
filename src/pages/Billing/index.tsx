@@ -114,7 +114,7 @@ const Billing: React.FC = () => {
         bg: "bg.subtle",
         borderRadius: "20px",
         py: 4,
-        px: 8,
+        px: [0, 0, 8],
         mx: [0, 0, 4],
         my: 4,
         minH: "78vh",
@@ -129,13 +129,13 @@ const Billing: React.FC = () => {
           my: 4,
         }}
       >
-        <Text sx={{ color: "text", fontWeight: 600 }}>BILLING</Text>
+        <Text sx={{ color: "text", fontWeight: 600, ml: [4, 4, 0] }}>BILLING</Text>
         {!data || !plans || !transactionList || !page ? (
           <Flex w="100%" h="70vh" alignItems="center" justifyContent="center">
             <Spinner />
           </Flex>
         ) : (
-          <Tabs mt={10} w={"100%"} variant="soft-rounded" colorScheme="green">
+          <Tabs mt={[5, 5, 10]} w={"100%"} variant="soft-rounded" colorScheme="green">
             <TabList>
               <Tab px={20}>Plans</Tab>
               <Tab px={20}>Promo Code</Tab>
@@ -1575,19 +1575,19 @@ const PromoCodeCard: React.FC<{ profileData: Profile }> = ({ profileData }) => {
         w: "100%",
         background: "white",
         borderRadius: 15,
-        p: 8,
+        p: [4, 4, 8],
         h: "50vh",
-        my: 10,
+        my: [2, 2, 10],
       }}
       filter={"drop-shadow(0px 4px 23px rgba(0, 0, 0, 0.15));"}
     >
-      <Text fontSize={"lg"} mb={7} fontWeight={900} color={"gray.500"}>
+      <Text fontSize={"lg"} my={5} fontWeight={900} color={"gray.500"}>
         Activate Promo Code
       </Text>
-      <Text mb={10} fontWeight={500} width="60%" color={"gray.500"}>
+      <Text mb={7} fontWeight={500} width="60%" color={"gray.500"}>
         Have a Promo Code ?
       </Text>
-      <HStack width={"100%"} spacing="5%">
+      <Flex justifyContent={'flex-start'} alignItems={'flex-start'} flexDir={['column', 'column', 'row']} width={"100%"} spacing="5%">
         <Input
           isRequired
           placeholder="Enter Promo Code"
@@ -1595,12 +1595,15 @@ const PromoCodeCard: React.FC<{ profileData: Profile }> = ({ profileData }) => {
           size="lg"
           value={promoCode}
           onChange={(e) => setPromoCode(e.target.value)}
-          width="60%"
+          width={["100%", "100%","70%", "60%"]}
         />
         <Button
           variant="brand"
-          mt={4}
-          w="20%"
+          mt={[4, 4, 0]}
+          ml= {[0, 0, 4]}
+          width={["100%", "100%","30%", "20%"]}
+          minW={'160px'}
+          maxW={'300px'}
           disabled={
             promoCode.length < 0 ||
             promoCode.length > 50 ||
@@ -1611,7 +1614,7 @@ const PromoCodeCard: React.FC<{ profileData: Profile }> = ({ profileData }) => {
         >
           Apply Promo Code
         </Button>
-      </HStack>
+      </Flex>
       {activePromo && (
         <Flex
           mt={10}
