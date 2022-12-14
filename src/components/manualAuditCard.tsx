@@ -17,7 +17,7 @@ export default function ManualAuditCard() {
             >
                 <Box
                     w={"100%"}
-                    bgImage={"url('/background/manualAuditlg.svg')"}
+                    bgImage={"url('/background/manualAuditbg.svg')"}
                     bgSize="contain"
                     bgPosition={"right"}
                     bgRepeat={"no-repeat"}
