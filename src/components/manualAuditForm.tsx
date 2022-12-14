@@ -1,0 +1,263 @@
+import React, { useState } from 'react'
+
+import {
+    Button,
+    Flex,
+    Icon,
+    Input,
+    InputGroup,
+    InputLeftElement,
+    Image,
+    Modal,
+    ModalBody,
+    ModalCloseButton,
+    ModalContent,
+    ModalFooter,
+    ModalHeader,
+    ModalOverlay,
+    Stack,
+    Textarea,
+    useToast,
+    Box,
+    HStack,
+    Text,
+    Spinner
+} from '@chakra-ui/react';
+import { FaDiscord, FaEnvelope, FaTelegram } from "react-icons/fa";
+import { GiLetterBomb } from "react-icons/gi";
+
+import axios from "axios";
+
+
+export const ManualAuditForm: React.FC<{ onClose(): any; isOpen: boolean }> = ({
+    isOpen,
+    onClose,
+}) => {
+    const [mailSent, setMailSent] = useState(false);
+    const [loading, setLoading] = useState(false);
+
+    const [email, setEmail] = useState("");
+    const [subject, setSubject] = useState("");
+    const [discord, setDiscord] = useState("");
+    const [telegram, setTelegram] = useState("");
+    const [body, setBody] = useState("");
+    const toast = useToast();
+
+    const onSubmit = () => {
+        if (!email || !subject || !body) {
+            toast({
+                title: "Email, Subject and Body fields cannot be empty",
+                status: "error",
+                duration: 2000,
+                isClosable: true,
+                position: "bottom",
+            });
+            return;
+        }
+        setLoading(true);
+        axios.defaults.headers.post["Content-Type"] = "application/json";
+        axios
+            .post("https://formsubmit.co/ajax/info@credshields.com", {
+                email: email,
+                subject: subject,
+                discord: discord,
+                message: body,
+            })
+            .then((response) => {
+                if (response.data.success) {
+                    setMailSent(true);
+                    setEmail("");
+                    setBody("");
+                    setSubject("");
+                    setDiscord("");
+                    setTelegram("");
+                }
+            })
+            .catch((error) => {
+
+                console.log(error);
+            })
+            .finally(() => setLoading(false));
+    };
+    return (
+        <>
+            <Modal isOpen={isOpen} onClose={onClose} isCentered>
+                <ModalOverlay />
+                <ModalContent
+                    maxW="70vw"
+                    minW={"300px"}
+                    minH={"fit-content"}
+                    borderRadius="15px"
+                    mb={10}
+                >
+                    <ModalHeader m={6}>
+                        {!mailSent ? "Request Manual Audit" : "Request Sent"}
+                    </ModalHeader>
+                    <ModalCloseButton
+                        m={6}
+                        onClick={() => {
+                            setMailSent(false);
+                            onClose();
+                        }}
+                    />
+                    {!mailSent
+                        ? <ModalBody h={"fit-content"} w={"100%"} px={12}>
+                            <Flex
+                                justifyContent={"flex-start"}
+                                w={"100%"}
+                                flexDir="row"
+                            >
+                                <Box zIndex={"10"} w={"60%"}>
+                                    <Stack spacing={6} mt={4}>
+                                        <InputGroup mt={0} alignItems="center">
+                                            <InputLeftElement
+                                                height="48px"
+                                                children={<Icon as={FaEnvelope} color="gray.300" />}
+                                            />
+                                            <Input
+                                                isRequired
+                                                placeholder="Your Email"
+                                                variant="brand"
+                                                size="lg"
+                                                value={email}
+                                                onChange={(e) => {
+                                                    setEmail(e.target.value);
+                                                }}
+                                            />
+                                        </InputGroup>
+                                        <InputGroup mt={0} alignItems="center">
+                                            <InputLeftElement
+                                                height="48px"
+                                                children={<Icon as={GiLetterBomb} color="gray.300" />}
+                                            />
+                                            <Input
+                                                isRequired
+                                                placeholder="Subject of your Query"
+                                                variant="brand"
+                                                size="lg"
+                                                value={subject}
+                                                onChange={(e) => {
+                                                    setSubject(e.target.value);
+                                                }}
+                                            />
+                                        </InputGroup>
+                                        <InputGroup mt={0} alignItems="center">
+                                            <InputLeftElement
+                                                height="48px"
+                                                children={<Icon as={FaDiscord} color="gray.300" />}
+                                            />
+                                            <Input
+                                                isRequired
+                                                placeholder="Discord (Optional)"
+                                                variant="brand"
+                                                size="lg"
+                                                value={discord}
+                                                onChange={(e) => {
+                                                    setDiscord(e.target.value);
+                                                }}
+                                            />
+                                        </InputGroup>
+                                        <InputGroup mt={0} alignItems="center">
+                                            <InputLeftElement
+                                                height="48px"
+                                                children={<Icon as={FaTelegram} color="gray.300" />}
+                                            />
+                                            <Input
+                                                isRequired
+                                                placeholder="Telegram (Optional)"
+                                                variant="brand"
+                                                size="lg"
+                                                value={telegram}
+                                                onChange={(e) => {
+                                                    setTelegram(e.target.value);
+                                                }}
+                                            />
+                                        </InputGroup>
+                                        <Textarea
+                                            variant={"brand"}
+                                            placeholder="Enter your query here"
+                                            borderRadius={"16px"}
+                                            fontSize={"15px"}
+                                            borderColor={"gray.200"}
+                                            borderWidth={"1px"}
+                                            noOfLines={4}
+                                            value={body}
+                                            onChange={(e) => {
+                                                setBody(e.target.value);
+                                            }}
+                                            height={"120px"}
+                                            _hover={{ borderColor: "gray.300" }}
+                                            size="sm"
+                                            _focus={{
+                                                borderColor: "#52FF00",
+                                                boxShadow: "0px 12px 23px rgba(107, 255, 55, 0.1)",
+                                            }}
+                                        />
+                                    </Stack>
+                                    <Button
+                                        w={"40%"}
+                                        h={"50px"}
+                                        mt={12}
+                                        variant="dark"
+                                        borderRadius={10}
+                                        fontSize={"md"}
+                                        fontWeight={500}
+                                        onClick={() => {
+                                            onSubmit();
+                                        }}
+                                    >
+                                        {!loading ? "Submit" : <Spinner />}
+                                    </Button>
+                                </Box>
+                                <Image
+                                    mt={28}
+                                    mb={6}
+                                    src="/common/manualAudit.svg"
+                                    alt="Product screenshot"
+                                    w={"50%"}
+                                />
+                            </Flex>
+                        </ModalBody>
+                        : <ModalBody h={"fit-content"} w={"100%"} px={12}>
+                            <Flex
+                                justifyContent={"center"}
+                                w={"100%"}
+                                direction="column"
+                                alignItems={"center"}
+                            >
+                                <Image
+                                    my={6}
+                                    src="/icons/email_sent.svg"
+                                    alt="Product screenshot"
+                                    w={"20%"}
+                                />
+                                <Text mt={6} fontSize={"xl"} fontWeight="700">Email sent successfully</Text>
+                                <Text my={4} color="subtle" w={"60%"}>
+                                    Your request for Manual Audit has been submitted, our team will contact you shortly.
+                                </Text>
+                                <Button
+                                    w={"20%"}
+                                    h={"50px"}
+                                    mt={24}
+                                    mb={8}
+                                    variant="dark"
+                                    borderRadius={10}
+                                    fontSize={"md"}
+                                    fontWeight={500}
+                                    onClick={() => {
+                                        setMailSent(false);
+                                        onClose();
+                                    }}
+                                >
+                                    Close
+                                </Button>
+                            </Flex>
+                        </ModalBody>
+                    }
+                </ModalContent>
+            </Modal>
+        </>
+    );
+}
+
+export default ManualAuditForm
