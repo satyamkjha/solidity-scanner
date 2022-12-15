@@ -129,13 +129,20 @@ const Billing: React.FC = () => {
           my: 4,
         }}
       >
-        <Text sx={{ color: "text", fontWeight: 600, ml: [4, 4, 0] }}>BILLING</Text>
+        <Text sx={{ color: "text", fontWeight: 600, ml: [4, 4, 0] }}>
+          BILLING
+        </Text>
         {!data || !plans || !transactionList || !page ? (
           <Flex w="100%" h="70vh" alignItems="center" justifyContent="center">
             <Spinner />
           </Flex>
         ) : (
-          <Tabs mt={[5, 5, 10]} w={"100%"} variant="soft-rounded" colorScheme="green">
+          <Tabs
+            mt={[5, 5, 10]}
+            w={"100%"}
+            variant="soft-rounded"
+            colorScheme="green"
+          >
             <TabList>
               <Tab px={20}>Plans</Tab>
               <Tab px={20}>Promo Code</Tab>
@@ -1587,7 +1594,13 @@ const PromoCodeCard: React.FC<{ profileData: Profile }> = ({ profileData }) => {
       <Text mb={7} fontWeight={500} width="60%" color={"gray.500"}>
         Have a Promo Code ?
       </Text>
-      <Flex justifyContent={'flex-start'} alignItems={'flex-start'} flexDir={['column', 'column', 'row']} width={"100%"} spacing="5%">
+      <Flex
+        justifyContent={"flex-start"}
+        alignItems={"flex-start"}
+        flexDir={["column", "column", "row"]}
+        width={"100%"}
+        spacing="5%"
+      >
         <Input
           isRequired
           placeholder="Enter Promo Code"
@@ -1595,15 +1608,15 @@ const PromoCodeCard: React.FC<{ profileData: Profile }> = ({ profileData }) => {
           size="lg"
           value={promoCode}
           onChange={(e) => setPromoCode(e.target.value)}
-          width={["100%", "100%","70%", "60%"]}
+          width={["100%", "100%", "70%", "60%"]}
         />
         <Button
           variant="brand"
           mt={[4, 4, 0]}
-          ml= {[0, 0, 4]}
-          width={["100%", "100%","30%", "20%"]}
-          minW={'160px'}
-          maxW={'300px'}
+          ml={[0, 0, 4]}
+          width={["100%", "100%", "30%", "20%"]}
+          minW={"160px"}
+          maxW={"300px"}
           disabled={
             promoCode.length < 0 ||
             promoCode.length > 50 ||

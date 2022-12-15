@@ -71,7 +71,7 @@ export default function FAQPage() {
   return (
     <>
       <Header />
-      <Container maxW={["100vw", "100vw","80vw"]} color="black">
+      <Container maxW={["100vw", "100vw", "80vw"]} color="black">
         <Flex flexDirection="column" alignItems="center" pt={5} px={4}>
           <Text
             fontSize="3xl"
