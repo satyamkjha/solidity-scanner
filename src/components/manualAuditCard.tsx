@@ -1,12 +1,14 @@
 import { Button } from '@chakra-ui/button'
 import { useDisclosure } from '@chakra-ui/hooks';
 import { Box, Flex, HStack, Text } from '@chakra-ui/layout'
+import { useMediaQuery } from '@chakra-ui/media-query';
 import React from 'react'
 import { CredshieldsIcon } from './icons'
 import ManualAuditForm from './manualAuditForm';
 
 export default function ManualAuditCard() {
     const { isOpen, onClose, onOpen } = useDisclosure();
+    const [isDesktopView] = useMediaQuery("(min-width: 1024px)");
     return (
         <>
             <Flex
@@ -40,10 +42,14 @@ export default function ManualAuditCard() {
                         lineHeight={"150%"}>
                         Need a manual review by a dedicated team of security researchers? Fill up the form by clicking the button below and the CredShields audit team will reach out to you.
                     </Text>
-                    <HStack w="100%" justifyContent="space-between" mt={4}>
-                        <CredshieldsIcon size={90} />
+                    <HStack
+                        w="100%"
+                        mt={4}
+                        justifyContent="space-between"
+                        alignItems="center">
+                        <CredshieldsIcon size={isDesktopView ? 90 : 70} />
                         <Button px={5} variant="dark" onClick={onOpen}>
-                            <Text fontSize={["11px", "11px", "xs"]}> Request manual audit</Text>
+                            <Text fontSize="xs"> Request manual audit</Text>
                         </Button>
                     </HStack>
                 </Box>

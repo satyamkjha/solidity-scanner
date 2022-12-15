@@ -207,10 +207,10 @@ const BlockPage: React.FC = () => {
         bg: "bg.subtle",
         borderRadius: "20px",
         my: 4,
-        px: 8,
         py: 4,
         minH: "78vh",
       }}
+      px={[4, 4, 8]}
     >
       {isLoading || isProfileLoading || !plans ? (
         <Flex w="100%" h="70vh" alignItems="center" justifyContent="center">

@@ -47,7 +47,7 @@ export const ManualAuditForm: React.FC<{ onClose(): any; isOpen: boolean }> = ({
     const onSubmit = () => {
         if (!email || !subject || !body) {
             toast({
-                title: "Email, Subject and Body fields cannot be empty",
+                title: "Email, Subject and Body fields cannot be empty.",
                 status: "error",
                 duration: 2000,
                 isClosable: true,
@@ -75,7 +75,7 @@ export const ManualAuditForm: React.FC<{ onClose(): any; isOpen: boolean }> = ({
                 }
             })
             .catch((error) => {
-
+                setMailSent(false);
                 console.log(error);
             })
             .finally(() => setLoading(false));
@@ -91,25 +91,30 @@ export const ManualAuditForm: React.FC<{ onClose(): any; isOpen: boolean }> = ({
                     borderRadius="15px"
                     mb={10}
                 >
-                    <ModalHeader m={6}>
+                    <ModalHeader m={[2, 2, 6]} fontSize={["lg", "lg", "2xl"]}>
                         {!mailSent ? "Request Manual Audit" : "Request Sent"}
                     </ModalHeader>
                     <ModalCloseButton
-                        m={6}
+                        m={[2, 2, 6]}
                         onClick={() => {
                             setMailSent(false);
                             onClose();
                         }}
                     />
                     {!mailSent
-                        ? <ModalBody h={"fit-content"} w={"100%"} px={12}>
+                        ? <ModalBody h={"fit-content"} w={"100%"} px={[6, 6, 6, 12]}>
                             <Flex
-                                justifyContent={"flex-start"}
+                                justifyContent="flex-start"
                                 w={"100%"}
                                 flexDir="row"
                             >
-                                <Box zIndex={"10"} w={"60%"}>
-                                    <Stack spacing={6} mt={4}>
+                                <Flex
+                                    zIndex={"10"}
+                                    w={"100%"}
+                                    alignItems={["center", "center", "flex-start"]}
+                                    flexDir="column"
+                                >
+                                    <Stack spacing={6} mt={4} w={"100%"}>
                                         <InputGroup mt={0} alignItems="center">
                                             <InputLeftElement
                                                 height="48px"
@@ -209,17 +214,18 @@ export const ManualAuditForm: React.FC<{ onClose(): any; isOpen: boolean }> = ({
                                     >
                                         {!loading ? "Submit" : <Spinner />}
                                     </Button>
-                                </Box>
+                                </Flex>
                                 <Image
                                     mt={28}
                                     mb={6}
                                     src="/common/manualAudit.svg"
                                     alt="Product screenshot"
                                     w={"50%"}
+                                    display={["none", "none", "block"]}
                                 />
                             </Flex>
                         </ModalBody>
-                        : <ModalBody h={"fit-content"} w={"100%"} px={12}>
+                        : <ModalBody h={"fit-content"} w={"100%"} px={[6, 6, 6, 12]}>
                             <Flex
                                 justifyContent={"center"}
                                 w={"100%"}

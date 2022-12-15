@@ -47,6 +47,7 @@ import {
   useToast,
   Badge,
   Image,
+  useMediaQuery,
 } from "@chakra-ui/react";
 import {
   AiOutlineClockCircle,
@@ -138,10 +139,10 @@ export const ProjectPage: React.FC = () => {
         bg: "bg.subtle",
         borderRadius: "20px",
         my: 4,
-        px: 8,
         py: 4,
         minH: "78vh",
       }}
+      px={[4, 4, 4, 8]}
     >
       {isLoading ? (
         <Flex w="100%" h="70vh" alignItems="center" justifyContent="center">
@@ -580,7 +581,7 @@ const ScanDetails: React.FC<{ scansRemaining: number; scans: ScanMeta[] }> = ({
                     )}
                   </TabList>
                   <TabPanels>
-                    <TabPanel>
+                    <TabPanel p={[0, 0, 0, 4]}>
                       {(scanData.scan_report.multi_file_scan_summary ||
                         scanData.scan_report.scan_summary) && (
                           <Overview
