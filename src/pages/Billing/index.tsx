@@ -61,7 +61,6 @@ import { HiCheckCircle, HiXCircle } from "react-icons/hi";
 import { useParams } from "react-router-dom";
 import { placements } from "@popperjs/core";
 import ContactUs from "components/contactus";
-import { usePricingPlans } from "hooks/usePricingPlans";
 import { useTransactions } from "hooks/useTransactions";
 import { sentenceCapitalize } from "helpers/helperFunction";
 import { useInvoices } from "hooks/useInvoices";

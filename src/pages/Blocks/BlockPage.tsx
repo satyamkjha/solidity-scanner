@@ -59,9 +59,9 @@ import API from "helpers/api";
 import { Report, ReportsListItem, Scan } from "common/types";
 import { useReports } from "hooks/useReports";
 import { useReport } from "hooks/useReport";
-import { usePricingPlans } from "hooks/usePricingPlans";
 import { sentenceCapitalize } from "helpers/helperFunction";
 import { ScanErrorIcon } from "components/icons";
+import { pricingDetails as plans } from "common/values";
 
 const BlockPage: React.FC = () => {
   const { scanId } = useParams<{ scanId: string }>();
@@ -70,7 +70,6 @@ const BlockPage: React.FC = () => {
 
   const [reportingStatus, setReportingStatus] = useState<string>("");
   const { data: profile, isLoading: isProfileLoading } = useProfile();
-  const { data: plans, isLoading: isPlanLoading } = usePricingPlans();
   const toast = useToast();
 
   const [next, setNext] = useState(false);
