@@ -237,11 +237,11 @@ export const ManualAuditForm: React.FC<{ onClose(): any; isOpen: boolean }> = ({
                                     <MailSent size={180} />
                                 </Flex>
                                 <Text mt={6} fontSize={"xl"} fontWeight="700">Email sent successfully</Text>
-                                <Text my={4} color="subtle" w={"60%"}>
+                                <Text my={4} color="subtle" w={["100%", "100%", "60%"]}>
                                     Your request for Manual Audit has been submitted, our team will contact you shortly.
                                 </Text>
                                 <Button
-                                    w={"20%"}
+                                    w={["40%", "40%", "20%"]}
                                     h={"50px"}
                                     mt={24}
                                     mb={8}
