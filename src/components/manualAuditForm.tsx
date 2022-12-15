@@ -85,7 +85,7 @@ export const ManualAuditForm: React.FC<{ onClose(): any; isOpen: boolean }> = ({
             <Modal isOpen={isOpen} onClose={onClose} isCentered>
                 <ModalOverlay />
                 <ModalContent
-                    maxW="70vw"
+                    maxW={["90vw", "90vw", "70vw"]}
                     minW={"300px"}
                     minH={"fit-content"}
                     borderRadius="15px"
