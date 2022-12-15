@@ -35,7 +35,7 @@ const SignIn: React.FC = () => {
   const query = useQuery();
   const isPasswordReset = Boolean(query.get("isPasswordReset")?.toString());
   const toast = useToast();
-  
+
   if (isPasswordReset) {
     toast({
       title: "Password successfully reset.",
@@ -170,16 +170,26 @@ const LoginForm: React.FC = () => {
             {...register("password", { required: true })}
           />
           <InputRightElement
-                height="48px"
-                color="gray.300"
-                children={
-                  show ? (
-                    <ViewOffIcon color={'gray.500'} mr={5} boxSize={5} onClick={() => setShow(false)} />
-                  ) : (
-                    <ViewIcon color={'gray.500'} mr={5} boxSize={5} onClick={() => setShow(true)} />
-                  )
-                }
-              />
+            height="48px"
+            color="gray.300"
+            children={
+              show ? (
+                <ViewOffIcon
+                  color={"gray.500"}
+                  mr={5}
+                  boxSize={5}
+                  onClick={() => setShow(false)}
+                />
+              ) : (
+                <ViewIcon
+                  color={"gray.500"}
+                  mr={5}
+                  boxSize={5}
+                  onClick={() => setShow(true)}
+                />
+              )
+            }
+          />
         </InputGroup>
         <Flex width="100%" justify="flex-end">
           <Link
