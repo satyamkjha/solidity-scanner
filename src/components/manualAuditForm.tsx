@@ -60,7 +60,7 @@ export const ManualAuditForm: React.FC<{ onClose(): any; isOpen: boolean }> = ({
         axios
             .post("https://formsubmit.co/ajax/info@credshields.com", {
                 email: email,
-                subject: subject,
+                subject: "[Manual_Audit] " + subject,
                 discord: discord,
                 message: body,
             })
