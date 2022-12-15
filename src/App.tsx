@@ -33,6 +33,7 @@ const GlobalStyles = css`
 
 
 
+
 export const App = () => (
   <Suspense fallback="">
     <Helmet>
@@ -46,7 +47,7 @@ export const App = () => (
       ></script>
       </Helmet>
       
-      {process.env.NODE_ENV === "development" ? <></>: <Helmet><script>
+      {process.env.REACT_APP_ENVIRONMENT === "dev" ? <></>: <Helmet><script>
       {`(function (h, o, t, j, a, r) {
         h.hj =
           h.hj ||
