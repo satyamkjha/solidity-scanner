@@ -231,7 +231,7 @@ export default function LandingPage() {
           >
             <Image
               marginTop={["0px", "0px", "0px", "-60px"]}
-              src="/landing/landing-image05.png"
+              src="/landing/landing-image02.png"
               transform="translateX(20px)"
               zIndex={"10"}
               alt={"Run quick scans for your smart contracts"}
@@ -250,7 +250,7 @@ export default function LandingPage() {
         >
           <Box width={["100%", "100%", "50%"]}>
             <Image
-              src="/landing/landing-image02.jpeg"
+              src="/landing/landing-image03.jpeg"
               alt="Keep track of the bugs in your project"
               mx="auto"
               p={12}
@@ -278,7 +278,7 @@ export default function LandingPage() {
         >
           <Box width={["100%", "100%", "50%"]}>
             <Image
-              src="/landing/landing-image03.jpeg"
+              src="/landing/landing-image04.jpeg"
               alt="Integrate with Microsoft Teams, Slack and Jira"
               mx="auto"
               p={12}
@@ -286,12 +286,18 @@ export default function LandingPage() {
           </Box>
           <Box w={["100%", "100%", "50%"]} p={[5, 10]}>
             <Heading as="h2" fontSize="3xl" mb={8}>
-              Integrate with the services you already love
+              Supported Protocols
             </Heading>
             <Text fontSize={["lg", "lg", "xl"]} color="subtle" mb={8}>
-              Using Slack/ Microsoft teams or JIRA? Built-in integrations with
-              most of the popular tools to automatically send out alerts or
-              raise issue tickets, so your team sees everything in one place.
+              With tremendous growth across the Blockchain spectrum, there is a
+              wide variety of Protocol options for builders to choose from. In
+              our endeavor to retain the pinnacle in the Smart Contract Security
+              Audit Scan space, SolidityScan boasts of providing seamless
+              support for Ethereum, Polygon, Avalanche, Binance, Fantom, Cronos,
+              Celo, and many more. Inviting all buidlers to subscribe to the
+              world's fastest, most accurate, and secure smart contract
+              vulnerability analysis and auditing platform at the most
+              affordable price.
             </Text>
           </Box>
         </Flex>
@@ -305,7 +311,7 @@ export default function LandingPage() {
         >
           <Box width={["100%", "100%", "50%"]}>
             <Image
-              src="/landing/landing-image04.jpeg"
+              src="/landing/landing-image05.jpeg"
               alt="Customize and silence issues and set your own rules"
               mx="auto"
               p={12}
@@ -322,7 +328,6 @@ export default function LandingPage() {
             </Text>
           </Box>
         </Flex>
-
         <Flex
           as="section"
           w="100%"
@@ -349,6 +354,33 @@ export default function LandingPage() {
               report summary and be confident of your contracts' security. For
               the more technical minded, you can add the full bug reports
               available in the report too.
+            </Text>
+          </Box>
+        </Flex>
+        <Flex
+          as="section"
+          w="100%"
+          alignItems="center"
+          py={[5, 5, 10]}
+          flexDir={["column", "column", "row"]}
+          textAlign={["center", "center", "left"]}
+        >
+          <Box width={["100%", "100%", "50%"]}>
+            <Image
+              src="/landing/landing-image07.jpeg"
+              alt="Integrate with Microsoft Teams, Slack and Jira"
+              mx="auto"
+              p={12}
+            />
+          </Box>
+          <Box w={["100%", "100%", "50%"]} p={[5, 10]}>
+            <Heading as="h2" fontSize="3xl" mb={8}>
+              Integrate with the services you already love
+            </Heading>
+            <Text fontSize={["lg", "lg", "xl"]} color="subtle" mb={8}>
+              Using Slack/ Microsoft teams or JIRA? Built-in integrations with
+              most of the popular tools to automatically send out alerts or
+              raise issue tickets, so your team sees everything in one place.
             </Text>
           </Box>
         </Flex>

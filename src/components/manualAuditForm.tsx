@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState } from "react";
 
 import {
     Button,
@@ -24,7 +24,7 @@ import {
     Text,
     Spinner,
     VStack
-} from '@chakra-ui/react';
+} from "@chakra-ui/react";
 import { FaDiscord, FaEnvelope, FaTelegram } from "react-icons/fa";
 import { GiLetterBomb } from "react-icons/gi";
 

@@ -60,7 +60,7 @@ const Sidebar: React.FC<{
         justifyContent="center"
         pt={8}
         position="relative"
-      // overflow="hidden"
+        // overflow="hidden"
       >
         <Box position="absolute" width={isCollapsed ? "40px" : "100%"}>
           {isCollapsed ? (
@@ -75,11 +75,7 @@ const Sidebar: React.FC<{
                   setCollapsed(!isCollapsed);
                 }}
               >
-                <Icon
-                  as={ArrowForwardIcon}
-                  fontSize="xl"
-                  color="gray.500"
-                />{" "}
+                <Icon as={ArrowForwardIcon} fontSize="xl" color="gray.500" />{" "}
               </Button>
             </VStack>
           ) : (
@@ -125,11 +121,7 @@ const Sidebar: React.FC<{
                     setCollapsed(!isCollapsed);
                   }}
                 >
-                  <Icon
-                    as={ArrowBackIcon}
-                    fontSize="xl"
-                    color="gray.500"
-                  />{" "}
+                  <Icon as={ArrowBackIcon} fontSize="xl" color="gray.500" />{" "}
                 </Button>
               </Flex>
             </HStack>
@@ -209,7 +201,8 @@ const Sidebar: React.FC<{
         height={"205px"}
         justifyContent="center"
         p={5}
-        visibility={isCollapsed ? "hidden" : "visible"}>
+        visibility={isCollapsed ? "hidden" : "visible"}
+      >
         <Box
           width="92%"
           height={"100%"}
@@ -218,7 +211,8 @@ const Sidebar: React.FC<{
           bgImage={"url('/background/manualAuditbg.svg')"}
           bgSize="cover"
           borderRadius="15px"
-          boxShadow="0px 2px 23px rgba(0, 0, 0, 0.11)">
+          boxShadow="0px 2px 23px rgba(0, 0, 0, 0.11)"
+        >
           <CredshieldsIcon size={90} />
           <Button mt={7} px={5} variant="dark" onClick={onOpen}>
             <Text fontSize="xs"> Request manual audit</Text>

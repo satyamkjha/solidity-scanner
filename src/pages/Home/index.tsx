@@ -789,13 +789,13 @@ const UploadForm: React.FC = () => {
   useEffect(() => {
     console.log(count, acceptedFiles.length);
     if (urlList.length === acceptedFiles.length && urlList.length > 0) {
-      let flag = true
+      let flag = true;
       urlList.forEach((url) => {
-        if(url === "failed"){
-          flag = false
+        if (url === "failed") {
+          flag = false;
         }
-      })
-      if(flag) setStep(2)
+      });
+      if (flag) setStep(2);
     }
   }, [urlList]);
 
@@ -817,8 +817,8 @@ const UploadForm: React.FC = () => {
     r.onload = async function () {
       if (r.result) {
         let uploadResult = await postDataToS3(r.result, data.result.url);
-        if(!uploadResult){
-          return "failed"
+        if (!uploadResult) {
+          return "failed";
         }
       }
     };

@@ -88,8 +88,8 @@ export const theme = extendTheme({
             },
           },
           _active: {
-            background: "black"
-          }
+            background: "black",
+          },
         }),
         "accent-ghost": (props) => ({
           ...defaultTheme.components.Button.variants.ghost(props),
@@ -222,11 +222,11 @@ export const theme = extendTheme({
             color: "gray.600",
           },
         },
-        "accent": {
+        accent: {
           fontWeight: 400,
           color: "accent",
           _hover: {
-            textDecoration: "none"
+            textDecoration: "none",
           },
         },
         brand: {
@@ -246,12 +246,12 @@ export const theme = extendTheme({
         },
         filledTrack: !props.isIndeterminate
           ? {
-            bgColor: "#52FF00",
-          }
+              bgColor: "#52FF00",
+            }
           : {
-            bgImage:
-              "linear-gradient(to right,transparent 0%, #52FF00  30%, #00EEFD  40%,transparent 100%)",
-          },
+              bgImage:
+                "linear-gradient(to right,transparent 0%, #52FF00  30%, #00EEFD  40%,transparent 100%)",
+            },
       }),
       variants: {
         high: {

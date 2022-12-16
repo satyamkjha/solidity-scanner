@@ -9,7 +9,7 @@ import {
   CircularProgressLabel,
   Image,
   Divider,
-  Link
+  Link,
 } from "@chakra-ui/react";
 
 import VulnerabilityDistribution, {
@@ -69,12 +69,11 @@ const pieData = (
 const Overview: React.FC<{
   scanData: Scan;
   scansRemaining?: number;
-  onTabChange: any
+  onTabChange: any;
 }> = ({ scanData, scansRemaining, onTabChange }) => {
-
   const handleTabsChange = (index: number) => {
     onTabChange(index);
-  }
+  };
   return (
     <>
       {scanData.multi_file_scan_status === "scan_done" &&
@@ -153,11 +152,11 @@ const Overview: React.FC<{
               background={
                 parseFloat(scanData.multi_file_scan_summary.score) < 2.5
                   ? "linear-gradient(96.27deg, #FFF3F0 0.75%, #FFE0D9 96.71%)"
-                  : parseFloat(scanData.multi_file_scan_summary.score) >=
-                    4.5
+                  : parseFloat(scanData.multi_file_scan_summary.score) >= 4.5
                     ? "linear-gradient(96.27deg, #EFFFED 0.75%, #E6FFE2 96.71%)"
                     : "linear-gradient(96.27deg, #FFFAF2 0.75%, #FFF4E1 96.71%)"
-              }>
+              }
+            >
               <Flex
                 w="100%"
                 justifyContent={["center", "center", "center", "flex-start"]}
@@ -166,7 +165,8 @@ const Overview: React.FC<{
               >
                 <CircularProgress
                   value={
-                    (parseInt(scanData.multi_file_scan_summary.score, 10) * 100) /
+                    (parseInt(scanData.multi_file_scan_summary.score, 10) *
+                      100) /
                     5
                   }
                   color="accent"
@@ -189,14 +189,14 @@ const Overview: React.FC<{
                   </CircularProgressLabel>
                 </CircularProgress>
                 <VStack alignItems="flex-start" px={4}>
-                  <Text fontSize="18px" fontWeight={600} textAlign="center">Your Solidity Score is
+                  <Text fontSize="18px" fontWeight={600} textAlign="center">
+                    Your Solidity Score is
                     {parseFloat(scanData.multi_file_scan_summary.score) < 2.5
                       ? " LOW"
                       : parseFloat(scanData.multi_file_scan_summary.score) >=
                         4.5
                         ? " GREAT"
-                        : " AVERAGE"
-                    }
+                        : " AVERAGE"}
                   </Text>
                   <Text
                     color="subtle"
@@ -227,17 +227,20 @@ const Overview: React.FC<{
               <Box
                 px={[4, 4, 4, 8]}
                 py={6}
-                sx={{ w: "100%", borderRadius: 15 }}>
-                <Text
-                  fontSize="sm"
-                  fontWeight={600}
-                  letterSpacing={0.7}
-                >
+                sx={{ w: "100%", borderRadius: 15 }}
+              >
+                <Text fontSize="sm" fontWeight={600} letterSpacing={0.7}>
                   SCAN STATISTICS
                 </Text>
               </Box>
 
-              <VStack w="100%" px={[4, 4, 4, 8]} py={4} spacing={3} fontSize="sm">
+              <VStack
+                w="100%"
+                px={[4, 4, 4, 8]}
+                py={4}
+                spacing={3}
+                fontSize="sm"
+              >
                 <HStack w="100%" justifyContent="space-between">
                   <Text color="detail">Score</Text>
                   <Text color="detail">
@@ -255,7 +258,8 @@ const Overview: React.FC<{
                 <HStack w="100%" justifyContent="space-between">
                   <Text color="detail">Duration</Text>
                   <Text color="detail">
-                    {scanData.multi_file_scan_summary.scan_time_taken + " second(s)"}
+                    {scanData.multi_file_scan_summary.scan_time_taken +
+                      " second(s)"}
                   </Text>
                 </HStack>
                 <Divider />
@@ -269,7 +273,7 @@ const Overview: React.FC<{
             </Flex>
             <ManualAuditCard />
           </VStack>
-        </Flex >
+        </Flex>
       ) : scanData.scan_status === "scan_done" && scanData.scan_summary ? (
         <Flex w="100%" sx={{ flexDir: ["column", "column", "row"] }}>
           <VStack w={["100%", "100%", "50%"]} mb={[8, 8, 0]}>
@@ -328,20 +332,14 @@ const Overview: React.FC<{
               background={
                 parseFloat(scanData.scan_summary.score) < 2.5
                   ? "linear-gradient(96.27deg, #FFF3F0 0.75%, #FFE0D9 96.71%)"
-                  : parseFloat(scanData.scan_summary.score) >=
-                    4.5
+                  : parseFloat(scanData.scan_summary.score) >= 4.5
                     ? "linear-gradient(96.27deg, #EFFFED 0.75%, #E6FFE2 96.71%)"
                     : "linear-gradient(96.27deg, #FFFAF2 0.75%, #FFF4E1 96.71%)"
-              }>
-              <HStack
-                w="100%"
-                justifyContent="flex-start"
-              >
+              }
+            >
+              <HStack w="100%" justifyContent="flex-start">
                 <CircularProgress
-                  value={
-                    (parseInt(scanData.scan_summary.score, 10) * 100) /
-                    5
-                  }
+                  value={(parseInt(scanData.scan_summary.score, 10) * 100) / 5}
                   color="accent"
                   thickness="7px"
                   size="85px"
@@ -362,14 +360,13 @@ const Overview: React.FC<{
                   </CircularProgressLabel>
                 </CircularProgress>
                 <VStack alignItems="flex-start" px={4}>
-                  <Text fontSize="18px" fontWeight={600} >Your Solidity Score is
+                  <Text fontSize="18px" fontWeight={600}>
+                    Your Solidity Score is
                     {parseFloat(scanData.scan_summary.score) < 2.5
                       ? " LOW"
-                      : parseFloat(scanData.scan_summary.score) >=
-                        4.5
+                      : parseFloat(scanData.scan_summary.score) >= 4.5
                         ? " GREAT"
-                        : " AVERAGE"
-                    }
+                        : " AVERAGE"}
                   </Text>
                   <Text
                     color="subtle"

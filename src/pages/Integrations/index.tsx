@@ -169,7 +169,7 @@ const IntegrationChannel: React.FC<IntegrationChannelProps> = ({
   return (
     <Box width="100%" bg="white" borderRadius="5px" p={5}>
       <Flex
-        width={'100%'}
+        width={"100%"}
         justifyContent={["flex-start", "flex-start", "space-between"]}
         alignItems={["flex-start", "flex-start", "center"]}
         key={title}
@@ -177,11 +177,16 @@ const IntegrationChannel: React.FC<IntegrationChannelProps> = ({
         transition="0.2s opacity"
         {...props}
       >
-        <Flex w={['100%', '100%', '60%']} justifyContent={"flex-start"} alignItems="center" mb={[5, 5, 0]}>
+        <Flex
+          w={["100%", "100%", "60%"]}
+          justifyContent={"flex-start"}
+          alignItems="center"
+          mb={[5, 5, 0]}
+        >
           <Box w={["20%", "15%"]} mr={4}>
             {icon}
           </Box>
-          <Box w={["80%","85%"]} ml={4}>
+          <Box w={["80%", "85%"]} ml={4}>
             <Text fontWeight="600" fontSize="16px">
               {title}
             </Text>
