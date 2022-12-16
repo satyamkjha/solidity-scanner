@@ -4,6 +4,7 @@ import { Flex, Container, Spinner } from "@chakra-ui/react";
 import { useReport } from "hooks/useReport";
 import { ReportContainer } from "./ReportContainer";
 import { usePublicReport } from "hooks/usePublicReport";
+import { Text } from "@chakra-ui/react";
 
 export default function ReportPage() {
   const { reportId, projectType } =
@@ -12,6 +13,18 @@ export default function ReportPage() {
 
   return (
     <>
+      <Flex
+        sx={{
+          w: "100%",
+          justifyContent: "center",
+          py: 1,
+          bg: "brand-dark",
+        }}
+      >
+        <Text fontSize="12px" color="white" fontWeight={700}>
+          This report has been published and is available for public view.
+        </Text>
+      </Flex>
       {data ? (
         <ReportContainer summary_report={data.summary_report} />
       ) : (

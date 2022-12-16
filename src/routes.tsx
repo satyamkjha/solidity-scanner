@@ -99,8 +99,6 @@ const Billing = lazy(
   () => import("pages/Billing" /* webpackChunkName: "Billing" */)
 );
 
-
-
 const Routes: React.FC = () => {
   return (
     <Router>
