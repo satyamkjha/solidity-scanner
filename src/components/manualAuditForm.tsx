@@ -8,6 +8,7 @@ import {
     InputGroup,
     InputLeftElement,
     Image,
+    Link,
     Modal,
     ModalBody,
     ModalCloseButton,
@@ -21,13 +22,14 @@ import {
     Box,
     HStack,
     Text,
-    Spinner
+    Spinner,
+    VStack
 } from '@chakra-ui/react';
 import { FaDiscord, FaEnvelope, FaTelegram } from "react-icons/fa";
 import { GiLetterBomb } from "react-icons/gi";
 
 import axios from "axios";
-import { MailSent } from './icons';
+import { CredshieldsIcon, MailSent } from './icons';
 
 
 export const ManualAuditForm: React.FC<{ onClose(): any; isOpen: boolean }> = ({
@@ -110,7 +112,7 @@ export const ManualAuditForm: React.FC<{ onClose(): any; isOpen: boolean }> = ({
                             >
                                 <Flex
                                     zIndex={"10"}
-                                    w={"100%"}
+                                    w={"60%"}
                                     alignItems={["center", "center", "flex-start"]}
                                     flexDir="column"
                                 >
@@ -203,7 +205,7 @@ export const ManualAuditForm: React.FC<{ onClose(): any; isOpen: boolean }> = ({
                                     <Button
                                         w={"40%"}
                                         h={"50px"}
-                                        mt={12}
+                                        mt={16}
                                         variant="dark"
                                         borderRadius={10}
                                         fontSize={"md"}
@@ -215,14 +217,44 @@ export const ManualAuditForm: React.FC<{ onClose(): any; isOpen: boolean }> = ({
                                         {!loading ? "Submit" : <Spinner />}
                                     </Button>
                                 </Flex>
-                                <Image
-                                    mt={28}
-                                    mb={6}
-                                    src="/common/manualAudit.svg"
-                                    alt="Product screenshot"
+                                <VStack
                                     w={"50%"}
-                                    display={["none", "none", "block"]}
-                                />
+                                    alignItems="center"
+                                    display={["none", "none", "flex"]}
+                                >
+                                    <Flex
+                                        mt={"-16"}
+                                        mb={"6"}
+                                        w={"75%"}
+                                        alignItems="center"
+                                        justifyContent="center"
+                                        direction="column"
+                                    >
+                                        <CredshieldsIcon size={185} hidePoweredBy={true} />
+                                        <Text
+                                            mt={6}
+                                            fontSize="14px"
+                                            fonWeight="400"
+                                            textAlign="center"
+                                        >
+                                            Follow the link to check out the published audit reports of our portfolio clients
+                                        </Text>
+                                        <Link
+                                            variant={"brand"}
+                                            href="https://github.com/Credshields/Audit-Reports"
+                                            target={"_blank"}
+                                            fontSize={"14px"}
+                                            fontWeight="700"
+                                        >Click here</Link>
+                                    </Flex>
+                                    <Image
+                                        mt={28}
+                                        mb={6}
+                                        src="/common/manualAudit.svg"
+                                        alt="Product screenshot"
+                                        w={"90%"}
+                                    />
+                                </VStack>
                             </Flex>
                         </ModalBody>
                         : <ModalBody h={"fit-content"} w={"100%"} px={[6, 6, 6, 12]}>

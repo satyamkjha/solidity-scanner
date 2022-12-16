@@ -142,7 +142,7 @@ const Overview: React.FC<{
             w={["100%", "100%", "60%"]}
             alignItems={["center", "center", "center", "flex-start"]}
             py={8}
-            px={[0, 0, 8]}
+            px={[0, 0, 4]}
             spacing={5}
           >
             <Box
@@ -203,7 +203,7 @@ const Overview: React.FC<{
                     fontSize="14px"
                     fontWeight={400}
                   >
-                    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Molestie ultricies id posuere mauris proin.
+                    The SolidityScan score is calculated based on lines of code and weights assigned to each issue depending on the severity and confidence. To improve your score, view the detailed result and leverage the remediation solutions provided.
                   </Text>
                 </VStack>
               </Flex>
@@ -376,7 +376,7 @@ const Overview: React.FC<{
                     fontSize="14px"
                     fontWeight={400}
                   >
-                    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Molestie ultricies id posuere mauris proin.
+                    The SolidityScan score is calculated based on lines of code and weights assigned to each issue depending on the severity and confidence. To improve your score, view the detailed result and leverage the remediation solutions provided.
                   </Text>
                 </VStack>
               </HStack>
