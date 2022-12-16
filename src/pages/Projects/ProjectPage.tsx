@@ -92,7 +92,7 @@ import {
 } from "react-icons/fa";
 import { useReport } from "hooks/useReport";
 import { useReports } from "hooks/useReports";
-import { LockIcon } from "@chakra-ui/icons";
+import { CheckCircleIcon, CheckIcon, LockIcon, TimeIcon } from "@chakra-ui/icons";
 import { profile } from "console";
 import { motion } from "framer-motion";
 import { Profiler } from "inspector";
@@ -213,41 +213,9 @@ const ScanDetails: React.FC<{ scansRemaining: number; scans: ScanMeta[] }> = ({
     setTabIndex(index);
   };
 
-  // data &&=
-  // const { data } = useReport(projectId, data?.scan_report.latest_report_id)
-
   const toast = useToast();
-
   const [next, setNext] = useState(false);
   const [open, setOpen] = useState(false);
-
-  // useEffect(() => {
-  //   setReportingStatus(scanData?.scan_report.reporting_status);
-  //   let intervalId: NodeJS.Timeout;
-  //   const refetchTillScanComplete = () => {
-  //     if (
-  //       scanData &&
-  //       (scanData.scan_report.scan_status === "scanning" ||
-  //         scanData.scan_report.reporting_status === "generating_report")
-  //     ) {
-  //       intervalId = setInterval(async () => {
-  //         await refetch();
-  //         if (
-  //           (scanData && scanData.scan_report.scan_status === "scan_done") ||
-  //           scanData.scan_report.reporting_status === "report_generated"
-  //         ) {
-  //           setReportingStatus(scanData?.scan_report.reporting_status);
-  //           clearInterval(intervalId);
-  //         }
-  //       }, 1000);
-  //     }
-  //   };
-
-  //   refetchTillScanComplete();
-  //   return () => {
-  //     clearInterval(intervalId);
-  //   };
-  // }, [scanData, refetch]);
 
   useEffect(() => {
     let intervalId: NodeJS.Timeout;
@@ -311,6 +279,7 @@ const ScanDetails: React.FC<{ scansRemaining: number; scans: ScanMeta[] }> = ({
   const [webSwitch, setWebSwitch] = useState(true);
   const [pubEmail, setPubEmail] = useState("");
   const [emailSwitch, setEmailSwitch] = useState(true);
+  const [publishStatus, setPublishStatus] = useState("");
 
   const getReportData = async (project_id: string, report_id: string) => {
     const reportResponse = await API.post<{ summary_report: Report }>(
@@ -329,6 +298,28 @@ const ScanDetails: React.FC<{ scansRemaining: number; scans: ScanMeta[] }> = ({
     );
   };
 
+  const checkReportPublished = async (
+    project_id: string,
+    report_id: string
+  ) => {
+    const reportResponse = await API.post<{ reports: ReportsListItem[] }>(
+      "/api-get-reports/",
+      {
+        project_type: "project",
+        project_id,
+        report_id,
+      }
+    );
+    if (reportResponse.data.reports.length === 0) {
+      setPublishStatus("Not-Published");
+      return;
+    }
+    if (reportResponse.data.reports[0].is_approved)
+      setPublishStatus("Approved");
+    else setPublishStatus("Waiting For Approval");
+    return;
+  };
+
   useEffect(() => {
     if (
       scanData &&
@@ -338,6 +329,7 @@ const ScanDetails: React.FC<{ scansRemaining: number; scans: ScanMeta[] }> = ({
       getReportData(projectId, scanData.scan_report.latest_report_id);
       setProjectName(scanData.scan_report.project_name);
       setRepoUrl(scanData.scan_report.project_url);
+      checkReportPublished(projectId, scanData.scan_report.latest_report_id);
       const d = new Date();
       setDatePublished(
         `${d.getDate()}-${monthNames[d.getMonth()]}-${d.getFullYear()}`
@@ -383,6 +375,7 @@ const ScanDetails: React.FC<{ scansRemaining: number; scans: ScanMeta[] }> = ({
       });
       setOpen(false);
     }
+    checkReportPublished(projectId, reportId)
   };
 
   return (
@@ -443,35 +436,53 @@ const ScanDetails: React.FC<{ scansRemaining: number; scans: ScanMeta[] }> = ({
                         </Flex>
                       </Button>
                     </Tooltip>
-                  )}
+                )}
                 </HStack>
                 <HStack
                   spacing={8}
                   alignSelf={["flex-end", "flex-end", "auto"]}
                 >
                   {scanData.scan_report.reporting_status ===
-                    "report_generated" && (
-                    <Button
-                      variant="accent-ghost"
-                      isDisabled={
-                        profile.actions_supported
+                    "report_generated" &&
+                    publishStatus !== "" &&
+                    (publishStatus === "Not-Published" ? (
+                      <Button
+                        variant="accent-ghost"
+                        isDisabled={
+                          profile.actions_supported
+                            ? !profile.actions_supported.publishable_report
+                            : profile.current_package !== "expired" &&
+                              !plans.monthly[profile.current_package]
+                                .publishable_report
+                        }
+                        onClick={() => setOpen(!open)}
+                      >
+                        {profile.actions_supported
                           ? !profile.actions_supported.publishable_report
                           : profile.current_package !== "expired" &&
                             !plans.monthly[profile.current_package]
-                              .publishable_report
-                      }
-                      onClick={() => setOpen(!open)}
-                    >
-                      {profile.actions_supported
-                        ? !profile.actions_supported.publishable_report
-                        : profile.current_package !== "expired" &&
-                          !plans.monthly[profile.current_package]
-                            .publishable_report && (
-                            <LockIcon color={"accent"} size="xs" mr={3} />
-                          )}
-                      Publish Report
-                    </Button>
-                  )}
+                              .publishable_report && (
+                              <LockIcon color={"accent"} size="xs" mr={3} />
+                            )}
+                        Publish Report
+                      </Button>
+                    ) : (
+                      <HStack>
+                        {publishStatus === "Approved" ? (
+                          <CheckCircleIcon color={"#03C04A"} />
+                        ) : (
+                          <TimeIcon color={"#FF5C00"} />
+                        )}
+                        <Text
+                          color={
+                            publishStatus === "Approved" ? "#03C04A" : "#FF5C00"
+                          }
+                          sx={{ fontSize: "md", fontWeight: 600, ml: 2 }}
+                        >
+                          {publishStatus}
+                        </Text>
+                      </HStack>
+                    ))}
                   {scanData.scan_report.scan_status === "scan_done" && (
                     <Button
                       variant={"accent-outline"}
@@ -490,10 +501,17 @@ const ScanDetails: React.FC<{ scansRemaining: number; scans: ScanMeta[] }> = ({
                         ) {
                           generateReport();
                         } else if (reportingStatus === "report_generated") {
-                          window.open(
-                            `http://${document.location.host}/report/project/${projectId}/${scanData?.scan_report.latest_report_id}`,
-                            "_blank"
-                          );
+                          if (publishStatus === "Approved") {
+                            window.open(
+                              `http://${document.location.host}/published-report/project/${scanData.scan_report.latest_report_id}`,
+                              "_blank"
+                            );
+                          } else {
+                            window.open(
+                              `http://${document.location.host}/report/project/${projectId}/${scanData?.scan_report.latest_report_id}`,
+                              "_blank"
+                            );
+                          }
                         }
                       }}
                     >
@@ -1406,11 +1424,17 @@ const ReportBlock: React.FC<{ report: ReportsListItem; profile: Profile }> = ({
           isLoading={isDownloadLoading}
           onClick={(e) => {
             e.stopPropagation();
-            window.open(
-              `http://${document.location.host}/report/project/${report.project_id}/${report.report_id}`,
-              "_blank"
-            );
-            // history.push(`/report/${scan.project_id}/${data?.scan_report.latest_report_id}`)
+            if (report.is_approved) {
+              window.open(
+                `http://${document.location.host}/published-report/project/${report.report_id}`,
+                "_blank"
+              );
+            } else {
+              window.open(
+                `http://${document.location.host}/report/project/${report.project_id}/${report.report_id}`,
+                "_blank"
+              );
+            }
           }}
         >
           View Report

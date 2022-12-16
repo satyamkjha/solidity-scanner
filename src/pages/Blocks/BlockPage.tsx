@@ -40,7 +40,7 @@ import {
 import Overview from "components/overview";
 import Result, { MultifileResult } from "components/result";
 import TrialWall from "components/trialWall";
-import { AddIcon, LockIcon, MinusIcon } from "@chakra-ui/icons";
+import { AddIcon, CheckCircleIcon, LockIcon, MinusIcon, TimeIcon } from "@chakra-ui/icons";
 import { useScan } from "hooks/useScan";
 import { useProfile } from "hooks/useProfile";
 import { BiChevronDownCircle, BiChevronUpCircle } from "react-icons/bi";
@@ -69,6 +69,8 @@ const BlockPage: React.FC = () => {
   const { data: scanData, isLoading, refetch } = useScan(scanId);
 
   const [reportingStatus, setReportingStatus] = useState<string>("");
+  const [publishStatus, setPublishStatus] = useState("");
+
   const { data: profile, isLoading: isProfileLoading } = useProfile();
   const toast = useToast();
 
@@ -160,6 +162,9 @@ const BlockPage: React.FC = () => {
       });
       setOpen(false);
     }
+    if(scanData){
+      checkReportPublished(scanData.scan_report.project_id, scanData.scan_report.latest_report_id)
+    }
   };
 
   const getReportData = async (project_id: string, report_id: string) => {
@@ -178,6 +183,28 @@ const BlockPage: React.FC = () => {
     );
   };
 
+  const checkReportPublished = async (
+    project_id: string,
+    report_id: string
+  ) => {
+    const reportResponse = await API.post<{ reports: ReportsListItem[] }>(
+      "/api-get-reports/",
+      {
+        project_type: "block",
+        project_id,
+        report_id,
+      }
+    );
+    if (reportResponse.data.reports.length === 0) {
+      setPublishStatus("Not-Published");
+      return;
+    }
+    if (reportResponse.data.reports[0].is_approved)
+      setPublishStatus("Approved");
+    else setPublishStatus("Waiting For Approval");
+    return;
+  };
+
   useEffect(() => {
     if (
       scanData &&
@@ -185,6 +212,10 @@ const BlockPage: React.FC = () => {
     ) {
       setReportingStatus(scanData.scan_report.reporting_status);
       getReportData(
+        scanData.scan_report.project_id,
+        scanData.scan_report.latest_report_id
+      );
+      checkReportPublished(
         scanData.scan_report.project_id,
         scanData.scan_report.latest_report_id
       );
@@ -279,7 +310,9 @@ const BlockPage: React.FC = () => {
                           height="fit-content"
                         >
                           {scanData.scan_report.reporting_status ===
-                            "report_generated" && (
+                            "report_generated" && publishStatus !== "" &&
+                            (publishStatus === "Not-Published" ?
+                            (
                             <Button
                               variant="accent-ghost"
                               mr={5}
@@ -302,11 +335,25 @@ const BlockPage: React.FC = () => {
                               )}
                               Publish Report
                             </Button>
+                          ): <HStack>
+                          {publishStatus === "Approved" ? (
+                            <CheckCircleIcon color={"#03C04A"} />
+                          ) : (
+                            <TimeIcon color={"#FF5C00"} />
                           )}
+                          <Text
+                            color={
+                              publishStatus === "Approved" ? "#03C04A" : "#FF5C00"
+                            }
+                            sx={{ fontSize: "md", fontWeight: 600, ml: 2 }}
+                          >
+                            {publishStatus}
+                          </Text>
+                        </HStack>)}
                           {scanData.scan_report.scan_status !== "scanning" && (
                             <Button
                               variant={"accent-outline"}
-                              mr={5}
+                              mx={5}
                               isLoading={reportingStatus === ""}
                               isDisabled={
                                 reportingStatus === "generating_report" ||
@@ -329,10 +376,18 @@ const BlockPage: React.FC = () => {
                                 } else if (
                                   reportingStatus === "report_generated"
                                 ) {
-                                  window.open(
-                                    `http://${document.location.host}/report/block/${scanData.scan_report.project_id}/${scanData.scan_report.latest_report_id}`,
-                                    "_blank"
-                                  );
+                                  if (publishStatus === "Approved") {
+                                    window.open(
+                                      `http://${document.location.host}/published-report/block/${scanData.scan_report.latest_report_id}`,
+                                      "_blank"
+                                    );
+                                  } else {
+                                    window.open(
+                                      `http://${document.location.host}/report/block/${scanData.scan_report.project_id}/${scanData.scan_report.latest_report_id}`,
+                                      "_blank"
+                                    );
+                                  }
+                                  
                                 }
                               }}
                             >
@@ -1259,11 +1314,17 @@ const ReportBlock: React.FC<{ report: ReportsListItem }> = ({ report }) => {
           isLoading={isDownloadLoading}
           onClick={(e) => {
             e.stopPropagation();
-            window.open(
-              `http://${document.location.host}/report/block/${report.project_id}/${report.report_id}`,
-              "_blank"
-            );
-            // history.push(`/report/${scan.project_id}/${data?.scan_report.latest_report_id}`)
+            if (report.is_approved) {
+              window.open(
+                `http://${document.location.host}/published-report/block/${report.report_id}`,
+                "_blank"
+              );
+            } else {
+              window.open(
+                `http://${document.location.host}/report/block/${report.project_id}/${report.report_id}`,
+                "_blank"
+              );
+            }            
           }}
         >
           View Report
