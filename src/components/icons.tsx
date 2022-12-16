@@ -226,7 +226,7 @@ export const MultifileIcon: React.FC<{ size: number }> = ({
   );
 };
 
-export const CredshieldsIcon: React.FC<{ size: number, hidePoweredBy?: boolean, }> = ({
+export const CredshieldsIcon: React.FC<{ size: number, hidePoweredBy?: boolean }> = ({
   size,
   hidePoweredBy,
   ...props
