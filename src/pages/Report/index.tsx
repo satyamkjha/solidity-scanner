@@ -21,8 +21,7 @@ export default function ReportPage() {
         }}
       >
         <Text fontSize="12px" color="white" fontWeight={700}>
-          This report has not been published and is not available for public
-          view.
+        You are viewing this report in private mode, accessible only using an authenticated account. This is not a public report.
         </Text>
       </Flex>
       {data ? (

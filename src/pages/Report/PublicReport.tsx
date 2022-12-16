@@ -13,18 +13,7 @@ export default function ReportPage() {
 
   return (
     <>
-      <Flex
-        sx={{
-          w: "100%",
-          justifyContent: "center",
-          py: 1,
-          bg: "brand-dark",
-        }}
-      >
-        <Text fontSize="12px" color="white" fontWeight={700}>
-          This report has been published and is available for public view.
-        </Text>
-      </Flex>
+      
       {data ? (
         <ReportContainer summary_report={data.summary_report} />
       ) : (
