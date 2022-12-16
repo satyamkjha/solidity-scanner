@@ -4,6 +4,7 @@ import { Flex, Container, Spinner } from "@chakra-ui/react";
 import { useReport } from "hooks/useReport";
 import { ReportContainer } from "./ReportContainer";
 import { usePublicReport } from "hooks/usePublicReport";
+import { Text } from "@chakra-ui/react";
 
 export default function ReportPage() {
   const { reportId, projectType } =
@@ -12,6 +13,7 @@ export default function ReportPage() {
 
   return (
     <>
+      
       {data ? (
         <ReportContainer summary_report={data.summary_report} />
       ) : (

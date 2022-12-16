@@ -36,8 +36,7 @@ const GlobalStyles = css`
 
 export const App = () => (
   <Suspense fallback="">
-    <Helmet>
-      
+      <Helmet>
       <script
         type="text/javascript"
         id="hs-script-loader"
@@ -61,9 +60,10 @@ export const App = () => (
         r.src = t + h._hjSettings.hjid + j + h._hjSettings.hjsv;
         a.appendChild(r);
       })(window, document, "https://static.hotjar.com/c/hotjar-", ".js?sv=");`}
-    </script></Helmet>}
-    
-    
+        </script>
+      </Helmet>
+    }
+
     <QueryClientProvider client={queryClient}>
       <ChakraProvider theme={theme}>
         <Global styles={GlobalStyles} />

@@ -40,7 +40,7 @@ import {
 import Overview from "components/overview";
 import Result, { MultifileResult } from "components/result";
 import TrialWall from "components/trialWall";
-import { AddIcon, LockIcon, MinusIcon } from "@chakra-ui/icons";
+import { AddIcon, CheckCircleIcon, LockIcon, MinusIcon, TimeIcon } from "@chakra-ui/icons";
 import { useScan } from "hooks/useScan";
 import { useProfile } from "hooks/useProfile";
 import { BiChevronDownCircle, BiChevronUpCircle } from "react-icons/bi";
@@ -69,6 +69,8 @@ const BlockPage: React.FC = () => {
   const { data: scanData, isLoading, refetch } = useScan(scanId);
 
   const [reportingStatus, setReportingStatus] = useState<string>("");
+  const [publishStatus, setPublishStatus] = useState("");
+
   const { data: profile, isLoading: isProfileLoading } = useProfile();
   const toast = useToast();
 
@@ -105,7 +107,6 @@ const BlockPage: React.FC = () => {
     };
   }, []);
 
-
   const handleTabsChange = (index: number) => {
     setTabIndex(index);
   };
@@ -119,9 +120,6 @@ const BlockPage: React.FC = () => {
     });
 
     if (data.success) {
-
-
-
       setInterval(async () => {
         await refetch();
       }, 5000);
@@ -164,6 +162,9 @@ const BlockPage: React.FC = () => {
       });
       setOpen(false);
     }
+    if(scanData){
+      checkReportPublished(scanData.scan_report.project_id, scanData.scan_report.latest_report_id)
+    }
   };
 
   const getReportData = async (project_id: string, report_id: string) => {
@@ -182,6 +183,28 @@ const BlockPage: React.FC = () => {
     );
   };
 
+  const checkReportPublished = async (
+    project_id: string,
+    report_id: string
+  ) => {
+    const reportResponse = await API.post<{ reports: ReportsListItem[] }>(
+      "/api-get-reports/",
+      {
+        project_type: "block",
+        project_id,
+        report_id,
+      }
+    );
+    if (reportResponse.data.reports.length === 0) {
+      setPublishStatus("Not-Published");
+      return;
+    }
+    if (reportResponse.data.reports[0].is_approved)
+      setPublishStatus("Approved");
+    else setPublishStatus("Waiting For Approval");
+    return;
+  };
+
   useEffect(() => {
     if (
       scanData &&
@@ -189,6 +212,10 @@ const BlockPage: React.FC = () => {
     ) {
       setReportingStatus(scanData.scan_report.reporting_status);
       getReportData(
+        scanData.scan_report.project_id,
+        scanData.scan_report.latest_report_id
+      );
+      checkReportPublished(
         scanData.scan_report.project_id,
         scanData.scan_report.latest_report_id
       );
@@ -283,42 +310,58 @@ const BlockPage: React.FC = () => {
                           height="fit-content"
                         >
                           {scanData.scan_report.reporting_status ===
-                            "report_generated" && (
-                              <Button
-                                variant="accent-ghost"
-                                mr={5}
-                                isDisabled={
-                                  profile.actions_supported
-                                    ? !profile.actions_supported
+                            "report_generated" && publishStatus !== "" &&
+                            (publishStatus === "Not-Published" ?
+                            (
+                            <Button
+                              variant="accent-ghost"
+                              mr={5}
+                              isDisabled={
+                                profile.actions_supported
+                                  ? !profile.actions_supported
                                       .publishable_report
-                                    : profile.current_package !== "expired" &&
+                                  : profile.current_package !== "expired" &&
                                     !plans.monthly[profile.current_package]
                                       .publishable_report
-                                }
-                                onClick={() => setOpen(!open)}
-                              >
-                                {(profile.actions_supported
-                                  ? !profile.actions_supported.publishable_report
-                                  : profile.current_package !== "expired" &&
+                              }
+                              onClick={() => setOpen(!open)}
+                            >
+                              {(profile.actions_supported
+                                ? !profile.actions_supported.publishable_report
+                                : profile.current_package !== "expired" &&
                                   !plans.monthly[profile.current_package]
                                     .publishable_report) && (
-                                    <LockIcon color={"accent"} size="xs" mr={3} />
-                                  )}
-                                Publish Report
-                              </Button>
-                            )}
+                                <LockIcon color={"accent"} size="xs" mr={3} />
+                              )}
+                              Publish Report
+                            </Button>
+                          ): <HStack>
+                          {publishStatus === "Approved" ? (
+                            <CheckCircleIcon color={"#03C04A"} />
+                          ) : (
+                            <TimeIcon color={"#FF5C00"} />
+                          )}
+                          <Text
+                            color={
+                              publishStatus === "Approved" ? "#03C04A" : "#FF5C00"
+                            }
+                            sx={{ fontSize: "md", fontWeight: 600, ml: 2 }}
+                          >
+                            {publishStatus}
+                          </Text>
+                        </HStack>)}
                           {scanData.scan_report.scan_status !== "scanning" && (
                             <Button
                               variant={"accent-outline"}
-                              mr={5}
+                              mx={5}
                               isLoading={reportingStatus === ""}
                               isDisabled={
                                 reportingStatus === "generating_report" ||
                                 (profile.actions_supported
                                   ? !profile.actions_supported.generate_report
                                   : profile.current_package !== "expired" &&
-                                  !plans.monthly[profile.current_package]
-                                    .report)
+                                    !plans.monthly[profile.current_package]
+                                      .report)
                               }
                               onClick={() => {
                                 if (
@@ -333,10 +376,18 @@ const BlockPage: React.FC = () => {
                                 } else if (
                                   reportingStatus === "report_generated"
                                 ) {
-                                  window.open(
-                                    `http://${document.location.host}/report/block/${scanData.scan_report.project_id}/${scanData.scan_report.latest_report_id}`,
-                                    "_blank"
-                                  );
+                                  if (publishStatus === "Approved") {
+                                    window.open(
+                                      `http://${document.location.host}/published-report/block/${scanData.scan_report.latest_report_id}`,
+                                      "_blank"
+                                    );
+                                  } else {
+                                    window.open(
+                                      `http://${document.location.host}/report/block/${scanData.scan_report.project_id}/${scanData.scan_report.latest_report_id}`,
+                                      "_blank"
+                                    );
+                                  }
+                                  
                                 }
                               }}
                             >
@@ -346,24 +397,24 @@ const BlockPage: React.FC = () => {
                               {profile.actions_supported
                                 ? !profile.actions_supported.generate_report
                                 : profile.current_package !== "expired" &&
-                                !plans.monthly[profile.current_package]
-                                  .report && (
-                                  <LockIcon
-                                    color={"accent"}
-                                    size="xs"
-                                    mr={3}
-                                  />
-                                )}
+                                  !plans.monthly[profile.current_package]
+                                    .report && (
+                                    <LockIcon
+                                      color={"accent"}
+                                      size="xs"
+                                      mr={3}
+                                    />
+                                  )}
                               {reportingStatus === "generating_report"
                                 ? "Generating report..."
                                 : scanData.scan_report
-                                  .report_regeneration_enabled
-                                  ? "Re-generate Report"
-                                  : reportingStatus === "report_generated"
-                                    ? "View Report"
-                                    : reportingStatus === "not_generated"
-                                      ? "Generate Report"
-                                      : "Loading"}
+                                    .report_regeneration_enabled
+                                ? "Re-generate Report"
+                                : reportingStatus === "report_generated"
+                                ? "View Report"
+                                : reportingStatus === "not_generated"
+                                ? "Generate Report"
+                                : "Loading"}
                             </Button>
                           )}
                           <AccordionButton
@@ -435,12 +486,12 @@ const BlockPage: React.FC = () => {
                                 fontSize="18px"
                               >
                                 {scanData.scan_report.contract_platform ===
-                                  "fantom"
+                                "fantom"
                                   ? "FTMScan"
                                   : scanData.scan_report.contract_platform ===
                                     "avalanche"
-                                    ? "Snowtrace"
-                                    : sentenceCapitalize(
+                                  ? "Snowtrace"
+                                  : sentenceCapitalize(
                                       scanData.scan_report.contract_platform
                                     )}
                               </Text>
@@ -549,7 +600,8 @@ const BlockPage: React.FC = () => {
                 index={tabIndex}
                 onChange={handleTabsChange}
                 variant="soft-rounded"
-                colorScheme="green">
+                colorScheme="green"
+              >
                 <TabList
                   sx={{
                     borderBottomWidth: "1px",
@@ -568,17 +620,17 @@ const BlockPage: React.FC = () => {
                   <TabPanel>
                     {(scanData.scan_report.multi_file_scan_summary ||
                       scanData.scan_report.scan_summary) && (
-                        <Overview
-                          scanData={scanData.scan_report}
-                          onTabChange={handleTabsChange}
-                        />
-                      )}
+                      <Overview
+                        scanData={scanData.scan_report}
+                        onTabChange={handleTabsChange}
+                      />
+                    )}
                   </TabPanel>
                   <TabPanel>
                     {scanData.scan_report.multi_file_scan_status ===
                       "scan_done" &&
-                      scanData.scan_report.multi_file_scan_details &&
-                      scanData.scan_report.multi_file_scan_summary ? (
+                    scanData.scan_report.multi_file_scan_details &&
+                    scanData.scan_report.multi_file_scan_summary ? (
                       <MultifileResult
                         profileData={profile}
                         details_enabled={scanData.scan_report.details_enabled}
@@ -1262,11 +1314,17 @@ const ReportBlock: React.FC<{ report: ReportsListItem }> = ({ report }) => {
           isLoading={isDownloadLoading}
           onClick={(e) => {
             e.stopPropagation();
-            window.open(
-              `http://${document.location.host}/report/block/${report.project_id}/${report.report_id}`,
-              "_blank"
-            );
-            // history.push(`/report/${scan.project_id}/${data?.scan_report.latest_report_id}`)
+            if (report.is_approved) {
+              window.open(
+                `http://${document.location.host}/published-report/block/${report.report_id}`,
+                "_blank"
+              );
+            } else {
+              window.open(
+                `http://${document.location.host}/report/block/${report.project_id}/${report.report_id}`,
+                "_blank"
+              );
+            }            
           }}
         >
           View Report

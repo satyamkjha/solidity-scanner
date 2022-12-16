@@ -103,9 +103,19 @@ const Reset: React.FC = () => {
                 color="gray.300"
                 children={
                   show ? (
-                    <ViewOffIcon color={'gray.500'} mr={5} boxSize={5} onClick={() => setShow(false)} />
+                    <ViewOffIcon
+                      color={"gray.500"}
+                      mr={5}
+                      boxSize={5}
+                      onClick={() => setShow(false)}
+                    />
                   ) : (
-                    <ViewIcon color={'gray.500'} mr={5} boxSize={5} onClick={() => setShow(true)} />
+                    <ViewIcon
+                      color={"gray.500"}
+                      mr={5}
+                      boxSize={5}
+                      onClick={() => setShow(true)}
+                    />
                   )
                 }
               />
