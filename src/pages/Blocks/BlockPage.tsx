@@ -105,7 +105,6 @@ const BlockPage: React.FC = () => {
     };
   }, []);
 
-
   const handleTabsChange = (index: number) => {
     setTabIndex(index);
   };
@@ -119,9 +118,6 @@ const BlockPage: React.FC = () => {
     });
 
     if (data.success) {
-
-
-
       setInterval(async () => {
         await refetch();
       }, 5000);
@@ -284,29 +280,29 @@ const BlockPage: React.FC = () => {
                         >
                           {scanData.scan_report.reporting_status ===
                             "report_generated" && (
-                              <Button
-                                variant="accent-ghost"
-                                mr={5}
-                                isDisabled={
-                                  profile.actions_supported
-                                    ? !profile.actions_supported
+                            <Button
+                              variant="accent-ghost"
+                              mr={5}
+                              isDisabled={
+                                profile.actions_supported
+                                  ? !profile.actions_supported
                                       .publishable_report
-                                    : profile.current_package !== "expired" &&
+                                  : profile.current_package !== "expired" &&
                                     !plans.monthly[profile.current_package]
                                       .publishable_report
-                                }
-                                onClick={() => setOpen(!open)}
-                              >
-                                {(profile.actions_supported
-                                  ? !profile.actions_supported.publishable_report
-                                  : profile.current_package !== "expired" &&
+                              }
+                              onClick={() => setOpen(!open)}
+                            >
+                              {(profile.actions_supported
+                                ? !profile.actions_supported.publishable_report
+                                : profile.current_package !== "expired" &&
                                   !plans.monthly[profile.current_package]
                                     .publishable_report) && (
-                                    <LockIcon color={"accent"} size="xs" mr={3} />
-                                  )}
-                                Publish Report
-                              </Button>
-                            )}
+                                <LockIcon color={"accent"} size="xs" mr={3} />
+                              )}
+                              Publish Report
+                            </Button>
+                          )}
                           {scanData.scan_report.scan_status !== "scanning" && (
                             <Button
                               variant={"accent-outline"}
@@ -317,8 +313,8 @@ const BlockPage: React.FC = () => {
                                 (profile.actions_supported
                                   ? !profile.actions_supported.generate_report
                                   : profile.current_package !== "expired" &&
-                                  !plans.monthly[profile.current_package]
-                                    .report)
+                                    !plans.monthly[profile.current_package]
+                                      .report)
                               }
                               onClick={() => {
                                 if (
@@ -346,24 +342,24 @@ const BlockPage: React.FC = () => {
                               {profile.actions_supported
                                 ? !profile.actions_supported.generate_report
                                 : profile.current_package !== "expired" &&
-                                !plans.monthly[profile.current_package]
-                                  .report && (
-                                  <LockIcon
-                                    color={"accent"}
-                                    size="xs"
-                                    mr={3}
-                                  />
-                                )}
+                                  !plans.monthly[profile.current_package]
+                                    .report && (
+                                    <LockIcon
+                                      color={"accent"}
+                                      size="xs"
+                                      mr={3}
+                                    />
+                                  )}
                               {reportingStatus === "generating_report"
                                 ? "Generating report..."
                                 : scanData.scan_report
-                                  .report_regeneration_enabled
-                                  ? "Re-generate Report"
-                                  : reportingStatus === "report_generated"
-                                    ? "View Report"
-                                    : reportingStatus === "not_generated"
-                                      ? "Generate Report"
-                                      : "Loading"}
+                                    .report_regeneration_enabled
+                                ? "Re-generate Report"
+                                : reportingStatus === "report_generated"
+                                ? "View Report"
+                                : reportingStatus === "not_generated"
+                                ? "Generate Report"
+                                : "Loading"}
                             </Button>
                           )}
                           <AccordionButton
@@ -435,12 +431,12 @@ const BlockPage: React.FC = () => {
                                 fontSize="18px"
                               >
                                 {scanData.scan_report.contract_platform ===
-                                  "fantom"
+                                "fantom"
                                   ? "FTMScan"
                                   : scanData.scan_report.contract_platform ===
                                     "avalanche"
-                                    ? "Snowtrace"
-                                    : sentenceCapitalize(
+                                  ? "Snowtrace"
+                                  : sentenceCapitalize(
                                       scanData.scan_report.contract_platform
                                     )}
                               </Text>
@@ -549,7 +545,8 @@ const BlockPage: React.FC = () => {
                 index={tabIndex}
                 onChange={handleTabsChange}
                 variant="soft-rounded"
-                colorScheme="green">
+                colorScheme="green"
+              >
                 <TabList
                   sx={{
                     borderBottomWidth: "1px",
@@ -568,17 +565,17 @@ const BlockPage: React.FC = () => {
                   <TabPanel>
                     {(scanData.scan_report.multi_file_scan_summary ||
                       scanData.scan_report.scan_summary) && (
-                        <Overview
-                          scanData={scanData.scan_report}
-                          onTabChange={handleTabsChange}
-                        />
-                      )}
+                      <Overview
+                        scanData={scanData.scan_report}
+                        onTabChange={handleTabsChange}
+                      />
+                    )}
                   </TabPanel>
                   <TabPanel>
                     {scanData.scan_report.multi_file_scan_status ===
                       "scan_done" &&
-                      scanData.scan_report.multi_file_scan_details &&
-                      scanData.scan_report.multi_file_scan_summary ? (
+                    scanData.scan_report.multi_file_scan_details &&
+                    scanData.scan_report.multi_file_scan_summary ? (
                       <MultifileResult
                         profileData={profile}
                         details_enabled={scanData.scan_report.details_enabled}
