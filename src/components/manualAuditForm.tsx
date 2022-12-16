@@ -113,6 +113,7 @@ export const ManualAuditForm: React.FC<{ onClose(): any; isOpen: boolean }> = ({
                                 <Flex
                                     zIndex={"10"}
                                     w={"60%"}
+                                    mb={10}
                                     alignItems={["center", "center", "flex-start"]}
                                     flexDir="column"
                                 >
@@ -249,7 +250,6 @@ export const ManualAuditForm: React.FC<{ onClose(): any; isOpen: boolean }> = ({
                                     </Flex>
                                     <Image
                                         mt={28}
-                                        mb={6}
                                         src="/common/manualAudit.svg"
                                         alt="Product screenshot"
                                         w={"90%"}
