@@ -241,7 +241,8 @@ const ApplicationForm: React.FC = () => {
   const { handleSubmit, register, formState } = useForm<ApplicationFormData>();
   const history = useHistory();
 
-  const githubUrlRegex = /(http(s)?)(:(\/\/))((github.com)(\/)[\w@\:\-~]+(\/)[\w@\:\-~]+)(\.git)?/;
+  const githubUrlRegex =
+    /(http(s)?)(:(\/\/))((github.com)(\/)[\w@\:\-~]+(\/)[\w@\:\-~]+)(\.git)?/;
 
   const onSubmit = async ({
     project_url,
@@ -255,14 +256,13 @@ const ApplicationForm: React.FC = () => {
       setNameError("Project Name cannot exceed to more than 50 characters.");
       return;
     }
-    let filteredUrlInput = githubUrlRegex.exec(project_url)
+    let filteredUrlInput = githubUrlRegex.exec(project_url);
     if (!filteredUrlInput) {
       setLinkError("Please enter a valid Github repository link");
       return;
     }
-    const filteredUrl = filteredUrlInput[0]
+    const filteredUrl = filteredUrlInput[0];
 
-    
     setNameError(null);
     setLinkError(null);
     await API.post("/api-project-scan/", {
@@ -534,14 +534,12 @@ const ContractForm: React.FC = () => {
       borderRadius: 10,
       border: "0px solid #ffffff",
       overflowY: "hidden",
-      width: "500px",
     }),
     control: (state: any) => ({
       // none of react-select's styles are passed to <Control />
       display: "flex",
       flexDirection: "row",
       backgroundColor: "#FFFFFF",
-      width: "500px",
       padding: 5,
       borderRadius: 15,
       border: state.isFocused ? "2px solid #52FF00" : "2px solid #EDF2F7",
@@ -564,7 +562,6 @@ const ContractForm: React.FC = () => {
   const history = useHistory();
   const { data: profileData } = useProfile();
   const { data: supportedChains } = useSupportedChains();
-
 
   const onSubmit = async ({ contract_address }: ContractFormData) => {
     await API.post("/api-start-scan-block/", {
@@ -785,15 +782,20 @@ const UploadForm: React.FC = () => {
       return getPreassignedURL(file.name, file);
     });
     Promise.all(results).then((res) => {
-      if(res.length === acceptedFiles.length)
-        setUrlList([...res]);
+      if (res.length === acceptedFiles.length) setUrlList([...res]);
     });
   };
 
   useEffect(() => {
     console.log(count, acceptedFiles.length);
     if (urlList.length === acceptedFiles.length && urlList.length > 0) {
-      setStep(2);
+      let flag = true;
+      urlList.forEach((url) => {
+        if (url === "failed") {
+          flag = false;
+        }
+      });
+      if (flag) setStep(2);
     }
   }, [urlList]);
 
@@ -815,14 +817,9 @@ const UploadForm: React.FC = () => {
     r.onload = async function () {
       if (r.result) {
         let uploadResult = await postDataToS3(r.result, data.result.url);
-        // if (uploadResult) {
-        //   setUrlList([...urlList, data.result.url])
-        // } else {
-        //   setStep(0);
-        //   setError(true);
-        //   setErrorMsg("There was a problem while uploding the files.");
-        // }
-        // setUrlList([...urlList, data.result.url])
+        if (!uploadResult) {
+          return "failed";
+        }
       }
     };
     r.readAsBinaryString(file);
@@ -1065,6 +1062,3 @@ const UploadForm: React.FC = () => {
 };
 
 export default Home;
-
-
-

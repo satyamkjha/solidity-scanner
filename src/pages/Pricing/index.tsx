@@ -32,7 +32,6 @@ import { PricingCard } from "./components/pricingCard";
 import { useState } from "react";
 import ContactUs from "components/contactus";
 import { HiCheckCircle, HiXCircle, HiInformationCircle } from "react-icons/hi";
-import { usePricingPlans } from "hooks/usePricingPlans";
 import { Plan } from "common/types";
 import Auth from "helpers/auth";
 import { FaLeaf } from "react-icons/fa";

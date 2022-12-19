@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import { useLocation, useHistory } from "react-router-dom";
 import {
@@ -11,6 +11,7 @@ import {
   InputGroup,
   InputLeftElement,
   Input,
+  InputRightElement,
 } from "@chakra-ui/react";
 import { FiAtSign } from "react-icons/fi";
 import { FaLock } from "react-icons/fa";
@@ -20,6 +21,7 @@ import { Logo } from "components/icons";
 import API from "helpers/api";
 
 import { AuthResponse } from "common/types";
+import { ViewIcon, ViewOffIcon } from "@chakra-ui/icons";
 
 function useQuery() {
   return new URLSearchParams(useLocation().search);
@@ -35,6 +37,7 @@ const Reset: React.FC = () => {
   const history = useHistory();
   const token = query.get("token")?.toString();
   const { handleSubmit, register, formState } = useForm<FormData>();
+  const [show, setShow] = useState(false);
 
   const onSubmit = async ({ email, password }: FormData) => {
     const { data } = await API.post<AuthResponse>("/api-forgot-password/", {
@@ -89,11 +92,32 @@ const Reset: React.FC = () => {
               />
               <Input
                 isRequired
-                type="password"
+                type={show ? "text" : "password"}
                 placeholder="New Password"
                 variant="brand"
                 size="lg"
                 {...register("password", { required: true })}
+              />
+              <InputRightElement
+                height="48px"
+                color="gray.300"
+                children={
+                  show ? (
+                    <ViewOffIcon
+                      color={"gray.500"}
+                      mr={5}
+                      boxSize={5}
+                      onClick={() => setShow(false)}
+                    />
+                  ) : (
+                    <ViewIcon
+                      color={"gray.500"}
+                      mr={5}
+                      boxSize={5}
+                      onClick={() => setShow(true)}
+                    />
+                  )
+                }
               />
             </InputGroup>
 

@@ -16,6 +16,7 @@ import {
   FormControl,
   FormLabel,
   Select,
+  InputRightElement,
 } from "@chakra-ui/react";
 import { motion } from "framer-motion";
 import {
@@ -36,6 +37,7 @@ import { Logo, MailSent } from "components/icons";
 import API from "helpers/api";
 import { AuthResponse } from "common/types";
 import { platform } from "os";
+import { ViewOffIcon, ViewIcon } from "@chakra-ui/icons";
 
 const CustomFlex = motion(Flex);
 
@@ -132,6 +134,7 @@ const RegisterForm: React.FC<{
 }> = ({ setRegistered, setEmail, email }) => {
   const { handleSubmit, register, formState } = useForm<FormData>();
 
+  const [show, setShow] = useState(false);
   const history = useHistory();
   const [password, setPassword] = useState("");
   const [passwordError, setPasswordError] = useState<{
@@ -263,7 +266,7 @@ const RegisterForm: React.FC<{
                 size="lg"
                 onChange={(event) => setName(event.target.value)}
               />
-            </InputGroup> 
+            </InputGroup>
 
             <InputGroup>
               <InputLeftElement
@@ -274,7 +277,7 @@ const RegisterForm: React.FC<{
               <Input
                 isRequired
                 value={password}
-                type="password"
+                type={show ? "text" : "password"}
                 placeholder="Create password"
                 variant="brand"
                 size="lg"
@@ -283,7 +286,28 @@ const RegisterForm: React.FC<{
                   setPasswordError(passwordStrength(event.target.value));
                 }}
               />
-            </InputGroup>           
+              <InputRightElement
+                height="48px"
+                color="gray.300"
+                children={
+                  show ? (
+                    <ViewOffIcon
+                      color={"gray.500"}
+                      mr={5}
+                      boxSize={5}
+                      onClick={() => setShow(false)}
+                    />
+                  ) : (
+                    <ViewIcon
+                      color={"gray.500"}
+                      mr={5}
+                      boxSize={5}
+                      onClick={() => setShow(true)}
+                    />
+                  )
+                }
+              />
+            </InputGroup>
 
             <InputGroup alignItems="center">
               <InputLeftElement
@@ -291,7 +315,6 @@ const RegisterForm: React.FC<{
                 children={<Icon as={MdWork} color="gray.300" />}
               />
               <Input
-                isRequired
                 value={companyName}
                 placeholder="Your company (Optional)"
                 variant="brand"
@@ -312,8 +335,8 @@ const RegisterForm: React.FC<{
                 size="lg"
                 onChange={(event) => setContactNumber(event.target.value)}
               />
-            </InputGroup>           
-            
+            </InputGroup>
+
             {passwordError &&
               passwordError.length < 8 &&
               passwordError.contains.length < 4 && (
@@ -332,7 +355,6 @@ const RegisterForm: React.FC<{
         )}
         {step === 1 && (
           <>
-            
             <InputGroup mt={0} alignItems="center">
               <InputLeftElement
                 height="48px"

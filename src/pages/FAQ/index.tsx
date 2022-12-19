@@ -71,7 +71,7 @@ export default function FAQPage() {
   return (
     <>
       <Header />
-      <Container maxW="80vw" color="black">
+      <Container maxW={["100vw", "100vw", "80vw"]} color="black">
         <Flex flexDirection="column" alignItems="center" pt={5} px={4}>
           <Text
             fontSize="3xl"
@@ -101,7 +101,7 @@ export default function FAQPage() {
           minH="60vh"
         >
           {content.map(({ question, answer }) => (
-            <Collapse key={question} my={2} width={[1, 4 / 5]} title={question}>
+            <Collapse key={question} my={2} width={"100%"} title={question}>
               {answer}
             </Collapse>
           ))}

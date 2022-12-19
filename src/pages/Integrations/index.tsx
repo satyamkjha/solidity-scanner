@@ -97,7 +97,7 @@ const Integrations: React.FC = () => {
           <IntegrationChannel
             title="JIRA"
             description="Connect JIRA to export vulnerabilities"
-            icon={<JiraIcon size={76} />}
+            icon={<JiraIcon size={73} />}
             allowed={data._integrations.jira.allowed}
             status={data._integrations.jira.status}
             url={JIRA_URL}
@@ -106,7 +106,7 @@ const Integrations: React.FC = () => {
           <IntegrationChannel
             title="Slack"
             description="Connect slack to receive updates about vulnerabilities directly to slack"
-            icon={<SlackIcon size={76} />}
+            icon={<SlackIcon size={73} />}
             allowed={data._integrations.slack.allowed}
             status={data._integrations.slack.status}
             url={SLACK_URL}
@@ -169,16 +169,24 @@ const IntegrationChannel: React.FC<IntegrationChannelProps> = ({
   return (
     <Box width="100%" bg="white" borderRadius="5px" p={5}>
       <Flex
-        width="100%"
-        justifyContent="space-between"
-        alignItems="center"
+        width={"100%"}
+        justifyContent={["flex-start", "flex-start", "space-between"]}
+        alignItems={["flex-start", "flex-start", "center"]}
         key={title}
+        flexDir={["column", "column", "row"]}
         transition="0.2s opacity"
         {...props}
       >
-        <Flex alignItems="center">
-          {icon}
-          <Box ml={8}>
+        <Flex
+          w={["100%", "100%", "60%"]}
+          justifyContent={"flex-start"}
+          alignItems="center"
+          mb={[5, 5, 0]}
+        >
+          <Box w={["20%", "15%"]} mr={4}>
+            {icon}
+          </Box>
+          <Box w={["80%", "85%"]} ml={4}>
             <Text fontWeight="600" fontSize="16px">
               {title}
             </Text>

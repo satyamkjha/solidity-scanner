@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { Link as RouterLink, useHistory, useLocation } from "react-router-dom";
 import {
@@ -14,6 +14,7 @@ import {
   Link,
   Box,
   useToast,
+  InputRightElement,
 } from "@chakra-ui/react";
 import { FcGoogle } from "react-icons/fc";
 import { FiAtSign } from "react-icons/fi";
@@ -24,6 +25,7 @@ import { Logo } from "components/icons";
 import API from "helpers/api";
 import Auth from "helpers/auth";
 import { AuthResponse } from "common/types";
+import { ViewIcon, ViewOffIcon } from "@chakra-ui/icons";
 
 function useQuery() {
   return new URLSearchParams(useLocation().search);
@@ -33,6 +35,7 @@ const SignIn: React.FC = () => {
   const query = useQuery();
   const isPasswordReset = Boolean(query.get("isPasswordReset")?.toString());
   const toast = useToast();
+
   if (isPasswordReset) {
     toast({
       title: "Password successfully reset.",
@@ -120,7 +123,7 @@ type FormData = {
 
 const LoginForm: React.FC = () => {
   const { handleSubmit, register, formState } = useForm<FormData>();
-
+  const [show, setShow] = useState(false);
   const history = useHistory();
   const onSubmit = async ({ email, password }: FormData) => {
     const { data } = await API.post<AuthResponse>("/api-login/", {
@@ -160,11 +163,32 @@ const LoginForm: React.FC = () => {
           />
           <Input
             isRequired
-            type="password"
+            type={show ? "text" : "password"}
             placeholder="Password"
             variant="brand"
             size="lg"
             {...register("password", { required: true })}
+          />
+          <InputRightElement
+            height="48px"
+            color="gray.300"
+            children={
+              show ? (
+                <ViewOffIcon
+                  color={"gray.500"}
+                  mr={5}
+                  boxSize={5}
+                  onClick={() => setShow(false)}
+                />
+              ) : (
+                <ViewIcon
+                  color={"gray.500"}
+                  mr={5}
+                  boxSize={5}
+                  onClick={() => setShow(true)}
+                />
+              )
+            }
           />
         </InputGroup>
         <Flex width="100%" justify="flex-end">

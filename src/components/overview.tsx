@@ -8,6 +8,8 @@ import {
   CircularProgress,
   CircularProgressLabel,
   Image,
+  Divider,
+  Link,
 } from "@chakra-ui/react";
 
 import VulnerabilityDistribution, {
@@ -15,7 +17,8 @@ import VulnerabilityDistribution, {
 } from "components/vulnDistribution";
 import PieChart, { ErrorResponsivePie } from "components/pieChart";
 import { Scan, ScanSummary } from "common/types";
-import { LogoIcon, NoBugIcon, ScanErrorIcon } from "./icons";
+import { CredshieldsIcon, LogoIcon, NoBugIcon, ScanErrorIcon } from "./icons";
+import ManualAuditCard from "./manualAuditCard";
 
 const pieData = (
   critical: number,
@@ -66,13 +69,17 @@ const pieData = (
 const Overview: React.FC<{
   scanData: Scan;
   scansRemaining?: number;
-}> = ({ scanData, scansRemaining }) => {
+  onTabChange: any;
+}> = ({ scanData, scansRemaining, onTabChange }) => {
+  const handleTabsChange = (index: number) => {
+    onTabChange(index);
+  };
   return (
     <>
       {scanData.multi_file_scan_status === "scan_done" &&
         scanData.multi_file_scan_summary ? (
         <Flex w="100%" sx={{ flexDir: ["column", "column", "row"] }}>
-          <VStack w={["100%", "100%", "50%"]} mb={[8, 8, 0]}>
+          <VStack w={["100%", "100%", "40%"]} mb={[8, 8, 0]}>
             <Box
               w={["100%", "100%", "70%"]}
               display="flex"
@@ -101,7 +108,7 @@ const Overview: React.FC<{
                 />
               )}
             </Box>
-            <Box w={["70%", "70%", "60%"]}>
+            <Box w={["100%", "80%", "60%"]}>
               <VulnerabilityDistribution
                 critical={
                   scanData.multi_file_scan_summary.issue_severity_distribution
@@ -131,98 +138,140 @@ const Overview: React.FC<{
             </Box>
           </VStack>
           <VStack
-            w={["100%", "100%", "50%"]}
-            alignItems="flex-start"
-            p={8}
+            w={["100%", "100%", "60%"]}
+            alignItems={["center", "center", "center", "flex-start"]}
+            py={8}
+            px={[0, 0, 4]}
             spacing={5}
           >
-            <HStack w="100%" justifyContent="space-between">
-              {scansRemaining && (
-                <Flex px={2}>
-                  <LogoIcon size={40} />
-                  <Box ml={2} mt="-4px">
-                    <Text>
-                      {scansRemaining.toLocaleString("en-US", {
-                        minimumIntegerDigits: 2,
-                        useGrouping: false,
-                      })}
-                    </Text>
-                    <Text fontSize="12px" color="subtle">
-                      Scans left
-                    </Text>
-                  </Box>
-                </Flex>
-              )}
-              <CircularProgress
-                value={
-                  (parseInt(scanData.multi_file_scan_summary.score, 10) * 100) /
-                  5
-                }
-                color="accent"
-                thickness="4px"
-                size="65px"
-                capIsRound
+            <Box
+              w="100%"
+              px={[4, 4, 4, 8]}
+              py={6}
+              borderRadius={"15px"}
+              background={
+                parseFloat(scanData.multi_file_scan_summary.score) < 2.5
+                  ? "linear-gradient(96.27deg, #FFF3F0 0.75%, #FFE0D9 96.71%)"
+                  : parseFloat(scanData.multi_file_scan_summary.score) >= 4.5
+                    ? "linear-gradient(96.27deg, #EFFFED 0.75%, #E6FFE2 96.71%)"
+                    : "linear-gradient(96.27deg, #FFFAF2 0.75%, #FFF4E1 96.71%)"
+              }
+            >
+              <Flex
+                w="100%"
+                justifyContent={["center", "center", "center", "flex-start"]}
+                alignItems={["center", "center", "center", "flex-start"]}
+                direction={["column", "column", "row"]}
               >
-                <CircularProgressLabel
-                  sx={{ display: "flex", justifyContent: "center" }}
+                <CircularProgress
+                  value={
+                    (parseInt(scanData.multi_file_scan_summary.score, 10) *
+                      100) /
+                    5
+                  }
+                  color="accent"
+                  thickness="7px"
+                  size="85px"
+                  p={2}
+                  capIsRound
+                  background="white"
+                  borderRadius={"50%"}
+                  border={"1px solid #EEEEEE"}
                 >
-                  <Box>
-                    <Text fontSize="14px" fontWeight={700} color="accent">
-                      {scanData.multi_file_scan_summary.score}
-                    </Text>
-                    <Text fontSize="11px" color="subtle" mt="-4px">
-                      Score
-                    </Text>
-                  </Box>
-                </CircularProgressLabel>
-              </CircularProgress>
-            </HStack>
-            <Box sx={{ w: "100%", borderRadius: 15, bg: "bg.subtle", p: 4 }}>
-              <Text sx={{ fontSize: "sm", letterSpacing: "0.7px" }}>
-                SCAN STATISTICS
-              </Text>
+                  <CircularProgressLabel
+                    sx={{ display: "flex", justifyContent: "center" }}
+                  >
+                    <Box>
+                      <Text fontSize="22px" fontWeight={600} color="accent">
+                        {scanData.multi_file_scan_summary.score}
+                      </Text>
+                    </Box>
+                  </CircularProgressLabel>
+                </CircularProgress>
+                <VStack alignItems="flex-start" px={4}>
+                  <Text fontSize="18px" fontWeight={600} textAlign="center">
+                    Your Solidity Score is
+                    {parseFloat(scanData.multi_file_scan_summary.score) < 2.5
+                      ? " LOW"
+                      : parseFloat(scanData.multi_file_scan_summary.score) >=
+                        4.5
+                        ? " GREAT"
+                        : " AVERAGE"}
+                  </Text>
+                  <Text
+                    color="subtle"
+                    fontSize="14px"
+                    fontWeight={400}
+                  >
+                    The SolidityScan score is calculated based on lines of code and weights assigned to each issue depending on the severity and confidence. To improve your score, view the detailed result and leverage the remediation solutions provided.
+                  </Text>
+                </VStack>
+              </Flex>
+              <Flex mt={4} justifyContent="end">
+                <Link
+                  variant="accent"
+                  fontSize="sm"
+                  onClick={() => handleTabsChange(1)}
+                >
+                  View Detailed Result ⟶
+                </Link>
+              </Flex>
             </Box>
+            <Flex
+              direction={"column"}
+              width="100%"
+              justifyContent="center"
+              bg="bg.subtle"
+              borderRadius={"15px"}
+            >
+              <Box
+                px={[4, 4, 4, 8]}
+                py={6}
+                sx={{ w: "100%", borderRadius: 15 }}
+              >
+                <Text fontSize="sm" fontWeight={600} letterSpacing={0.7}>
+                  SCAN STATISTICS
+                </Text>
+              </Box>
 
-            <VStack w="100%" px={4} spacing={8} fontSize="sm">
-              <HStack w="100%" justifyContent="space-between">
-                <Text>Status</Text>
-                <Text
-                  sx={{
-                    color: "green.500",
-                    bg: "green.50",
-                    px: 3,
-                    py: 1,
-                    borderRadius: 20,
-                  }}
-                >
-                  Completed
-                </Text>
-              </HStack>
-              <HStack w="100%" justifyContent="space-between">
-                <Text>Score</Text>
-                <Text color="subtle">
-                  {scanData.multi_file_scan_summary.score + "/5"}
-                </Text>
-              </HStack>
-              <HStack w="100%" justifyContent="space-between">
-                <Text>Issue Count</Text>
-                <Text color="subtle">
-                  {scanData.multi_file_scan_summary.issues_count}
-                </Text>
-              </HStack>
-              <HStack w="100%" justifyContent="space-between">
-                <Text>Duration</Text>
-                <Text color="subtle">
-                  {scanData.multi_file_scan_summary.scan_time_taken + " second(s)"}
-                </Text>
-              </HStack>
-              <HStack w="100%" justifyContent="space-between">
-                <Text>Lines of code</Text>
-                <Text color="subtle">
-                  {scanData.multi_file_scan_summary.lines_analyzed_count}
-                </Text>
-              </HStack>
-            </VStack>
+              <VStack
+                w="100%"
+                px={[4, 4, 4, 8]}
+                py={4}
+                spacing={3}
+                fontSize="sm"
+              >
+                <HStack w="100%" justifyContent="space-between">
+                  <Text color="detail">Score</Text>
+                  <Text color="detail">
+                    {scanData.multi_file_scan_summary.score + "/5"}
+                  </Text>
+                </HStack>
+                <Divider />
+                <HStack w="100%" justifyContent="space-between">
+                  <Text color="detail">Issue Count</Text>
+                  <Text color="detail">
+                    {scanData.multi_file_scan_summary.issues_count}
+                  </Text>
+                </HStack>
+                <Divider />
+                <HStack w="100%" justifyContent="space-between">
+                  <Text color="detail">Duration</Text>
+                  <Text color="detail">
+                    {scanData.multi_file_scan_summary.scan_time_taken +
+                      " second(s)"}
+                  </Text>
+                </HStack>
+                <Divider />
+                <HStack w="100%" justifyContent="space-between">
+                  <Text color="detail">Lines of code</Text>
+                  <Text color="detail">
+                    {scanData.multi_file_scan_summary.lines_analyzed_count}
+                  </Text>
+                </HStack>
+              </VStack>
+            </Flex>
+            <ManualAuditCard />
           </VStack>
         </Flex>
       ) : scanData.scan_status === "scan_done" && scanData.scan_summary ? (
@@ -275,44 +324,69 @@ const Overview: React.FC<{
             p={8}
             spacing={5}
           >
-            <HStack w="100%" justifyContent="space-between">
-              {scansRemaining && (
-                <Flex px={2}>
-                  <LogoIcon size={40} />
-                  <Box ml={2} mt="-4px">
-                    <Text>
-                      {scansRemaining.toLocaleString("en-US", {
-                        minimumIntegerDigits: 2,
-                        useGrouping: false,
-                      })}
-                    </Text>
-                    <Text fontSize="12px" color="subtle">
-                      Scans left
-                    </Text>
-                  </Box>
-                </Flex>
-              )}
-              <CircularProgress
-                value={(parseInt(scanData.scan_summary.score, 10) * 100) / 5}
-                color="accent"
-                thickness="4px"
-                size="65px"
-                capIsRound
-              >
-                <CircularProgressLabel
-                  sx={{ display: "flex", justifyContent: "center" }}
+            <Box
+              w="100%"
+              px={8}
+              py={6}
+              borderRadius={"15px"}
+              background={
+                parseFloat(scanData.scan_summary.score) < 2.5
+                  ? "linear-gradient(96.27deg, #FFF3F0 0.75%, #FFE0D9 96.71%)"
+                  : parseFloat(scanData.scan_summary.score) >= 4.5
+                    ? "linear-gradient(96.27deg, #EFFFED 0.75%, #E6FFE2 96.71%)"
+                    : "linear-gradient(96.27deg, #FFFAF2 0.75%, #FFF4E1 96.71%)"
+              }
+            >
+              <HStack w="100%" justifyContent="flex-start">
+                <CircularProgress
+                  value={(parseInt(scanData.scan_summary.score, 10) * 100) / 5}
+                  color="accent"
+                  thickness="7px"
+                  size="85px"
+                  p={2}
+                  capIsRound
+                  background="white"
+                  borderRadius={"50%"}
+                  border={"1px solid #EEEEEE"}
                 >
-                  <Box>
-                    <Text fontSize="14px" fontWeight={700} color="accent">
-                      {scanData.scan_summary.score}
-                    </Text>
-                    <Text fontSize="11px" color="subtle" mt="-4px">
-                      Score
-                    </Text>
-                  </Box>
-                </CircularProgressLabel>
-              </CircularProgress>
-            </HStack>
+                  <CircularProgressLabel
+                    sx={{ display: "flex", justifyContent: "center" }}
+                  >
+                    <Box>
+                      <Text fontSize="22px" fontWeight={600} color="accent">
+                        {scanData.scan_summary.score}
+                      </Text>
+                    </Box>
+                  </CircularProgressLabel>
+                </CircularProgress>
+                <VStack alignItems="flex-start" px={4}>
+                  <Text fontSize="18px" fontWeight={600}>
+                    Your Solidity Score is
+                    {parseFloat(scanData.scan_summary.score) < 2.5
+                      ? " LOW"
+                      : parseFloat(scanData.scan_summary.score) >= 4.5
+                        ? " GREAT"
+                        : " AVERAGE"}
+                  </Text>
+                  <Text
+                    color="subtle"
+                    fontSize="14px"
+                    fontWeight={400}
+                  >
+                    The SolidityScan score is calculated based on lines of code and weights assigned to each issue depending on the severity and confidence. To improve your score, view the detailed result and leverage the remediation solutions provided.
+                  </Text>
+                </VStack>
+              </HStack>
+              <Flex mt={4} justifyContent="end">
+                <Link
+                  variant="accent"
+                  fontSize="sm"
+                  onClick={() => handleTabsChange(1)}
+                >
+                  View Detailed Result ⟶
+                </Link>
+              </Flex>
+            </Box>
             <Box sx={{ w: "100%", borderRadius: 15, bg: "bg.subtle", p: 4 }}>
               <Text sx={{ fontSize: "sm", letterSpacing: "0.7px" }}>
                 SCAN STATISTICS
@@ -355,6 +429,7 @@ const Overview: React.FC<{
                 </Text>
               </HStack>
             </VStack>
+            <ManualAuditCard />
           </VStack>
         </Flex>
       ) : (
@@ -443,6 +518,7 @@ const Overview: React.FC<{
               </HStack>
             </VStack>
           </VStack>
+          <ManualAuditCard />
         </Flex>
       )}
     </>

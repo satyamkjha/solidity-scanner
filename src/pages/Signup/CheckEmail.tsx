@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { set, useForm } from "react-hook-form";
-import { Link as RouterLink, useLocation } from "react-router-dom";
+import { Link as RouterLink, useHistory, useLocation } from "react-router-dom";
 import {
   Flex,
   Heading,
@@ -37,17 +37,32 @@ import API from "helpers/api";
 import { AuthResponse } from "common/types";
 import { platform } from "os";
 import { Helmet } from "react-helmet";
+import Auth from "helpers/auth";
+
 
 const CustomFlex = motion(Flex);
 
 const CheckEmail: React.FC = () => {
   const [email, setEmail] = useState<string | null>("");
-
+  const history = useHistory()
   useEffect(() => {
     if (localStorage.getItem("current-registered-email")) {
       setEmail(localStorage.getItem("current-registered-email"));
       localStorage.removeItem("current-registered-email");
     }
+    let intervalId: NodeJS.Timeout;
+    const checkIfAuthenticated = () => {
+      intervalId = setInterval(async () => {
+        if(Auth.isUserAuthenticated()){
+          history.push('/home')
+        }
+      }, 2000);
+    };
+    checkIfAuthenticated();
+    return () => {
+      clearInterval(intervalId);
+    };
+
   }, []);
 
   return (
@@ -85,3 +100,4 @@ const CheckEmail: React.FC = () => {
 };
 
 export default CheckEmail;
+

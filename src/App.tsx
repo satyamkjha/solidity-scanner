@@ -31,9 +31,12 @@ const GlobalStyles = css`
   }
 `;
 
+
+
+
 export const App = () => (
   <Suspense fallback="">
-    <Helmet>
+      <Helmet>
       <script
         type="text/javascript"
         id="hs-script-loader"
@@ -41,7 +44,7 @@ export const App = () => (
         defer
         src="//js-eu1.hs-scripts.com/24889894.js"
       ></script>
-    </Helmet>
+      </Helmet>
     <QueryClientProvider client={queryClient}>
       <ChakraProvider theme={theme}>
         <Global styles={GlobalStyles} />

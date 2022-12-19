@@ -10,7 +10,7 @@ import {
   Spinner,
   HStack,
   Image,
-  VStack
+  VStack,
 } from "@chakra-ui/react";
 import { motion } from "framer-motion";
 
@@ -55,15 +55,8 @@ const PageNotFound: React.FC = () => {
             alt={"404 Page Not Found"}
           />
         </Box>
-        <VStack
-          my={[20, 20, 20, 4]}
-          mx="8"
-          spacing="2"
-          textAlign={"center"}
-        >
-          <Heading fontSize="2xl">
-            We are Sorry ...
-          </Heading>
+        <VStack my={[20, 20, 20, 4]} mx="8" spacing="2" textAlign={"center"}>
+          <Heading fontSize="2xl">We are Sorry ...</Heading>
           <Text fontSize="md" color="subtle">
             The page you are looking for can't be found
           </Text>

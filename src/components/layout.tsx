@@ -128,7 +128,7 @@ const Layout: React.FC = ({ children }) => {
             position: "fixed",
             top: 0,
             left: 0,
-            display: ["block", "block", "none"],
+            display: ["block", "block", "block", "none"],
             width: isSidebarCollapsed
               ? SIDEBAR_WIDTH_COLLAPSED
               : SIDEBAR_WIDTH_EXPANDED,
@@ -147,7 +147,7 @@ const Layout: React.FC = ({ children }) => {
             setCollapsed={setSidebarCollapsed}
           />
         </Box>
-        <Box sx={{ display: ["none", "none", "block"] }}>
+        <Box sx={{ display: ["none", "none", "none", "block"] }}>
           <Sidebar
             isCollapsed={isSidebarCollapsed}
             setCollapsed={setSidebarCollapsed}
@@ -159,9 +159,11 @@ const Layout: React.FC = ({ children }) => {
             width: [
               "100%",
               "100%",
-              `calc(100% - ${isSidebarCollapsed
-                ? SIDEBAR_WIDTH_COLLAPSED
-                : SIDEBAR_WIDTH_EXPANDED
+              "100%",
+              `calc(100% - ${
+                isSidebarCollapsed
+                  ? SIDEBAR_WIDTH_COLLAPSED
+                  : SIDEBAR_WIDTH_EXPANDED
               })`,
             ],
             height: "calc(100vh - 28px)",
@@ -196,7 +198,7 @@ const Layout: React.FC = ({ children }) => {
                   color: "gray.400",
                   fontSize: "24px",
                   mr: 4,
-                  display: ["block", "block", "none"],
+                  display: ["block", "block", "block", "none"],
                   transition: "0.2s color",
                 }}
                 _hover={{
@@ -205,15 +207,21 @@ const Layout: React.FC = ({ children }) => {
                 onClick={() => setShowSidebar(!showSidebar)}
               />
               {profileData && (
-                <Text fontWeight={600} fontSize="2xl">
-                  <Box as="span" role="img" aria-label="wave" mr={2}>
-                    👋
-                  </Box>{" "}
-                  Hi {profileData?.name}
-                  {/* <Box as="span" ml={4} color="subtle" fontSize="sm">
-                  CREDITS: {profileData?.credits}
-                </Box> */}
-                </Text>
+                <Flex
+                  flexDir={["column", "row", "row"]}
+                  justifyContent={"flex-start"}
+                  alignItems={"flex-start"}
+                >
+                  <Text fontWeight={600} fontSize={["xl", "xl", "2xl"]}>
+                    <Box as="span" role="img" aria-label="wave" mr={2}>
+                      👋
+                    </Box>{" "}
+                    Hi,{" "}
+                  </Text>
+                  <Text fontWeight={600} fontSize={["xl", "xl", "2xl"]}>
+                    {profileData?.name}
+                  </Text>
+                </Flex>
               )}
 
               {profileData && (

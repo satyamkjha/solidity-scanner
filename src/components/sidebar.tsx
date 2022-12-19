@@ -10,6 +10,8 @@ import {
   HStack,
   Heading,
   Collapse,
+  useDisclosure,
+  VStack,
 } from "@chakra-ui/react";
 import {
   LogoIcon,
@@ -28,12 +30,15 @@ import {
 } from "common/constants";
 
 import { useProfile } from "hooks/useProfile";
+import ManualAuditForm from "./manualAuditForm";
+import { ArrowBackIcon, ArrowForwardIcon } from "@chakra-ui/icons";
 
 const Sidebar: React.FC<{
   isCollapsed: boolean;
   setCollapsed: React.Dispatch<React.SetStateAction<boolean>>;
 }> = ({ isCollapsed, setCollapsed }) => {
   const { data: profileData } = useProfile();
+  const { isOpen, onClose, onOpen } = useDisclosure();
 
   return (
     <Flex
@@ -57,57 +62,73 @@ const Sidebar: React.FC<{
         position="relative"
         // overflow="hidden"
       >
-        <Box position="absolute" width={isCollapsed ? "40px" : "220px"}>
+        <Box position="absolute" width={isCollapsed ? "40px" : "100%"}>
           {isCollapsed ? (
-            <LogoIcon size={40} />
+            <VStack spacing={8}>
+              <LogoIcon size={40} />
+              <Button
+                w="33px"
+                h="33px"
+                borderRadius={"10px"}
+                bgColor={"#ECECEC"}
+                onClick={() => {
+                  setCollapsed(!isCollapsed);
+                }}
+              >
+                <Icon as={ArrowForwardIcon} fontSize="xl" color="gray.500" />{" "}
+              </Button>
+            </VStack>
           ) : (
-            <HStack>
-              <LogoIcon size={30} />
-              <Box>
-                <Heading
-                  fontSize={["lg", "lg", "lg"]}
-                  fontWeight={700}
-                  color="black"
+            <HStack justifyContent="flex-end">
+              <HStack mr={8}>
+                <LogoIcon size={30} />
+                <Box>
+                  <Heading
+                    fontSize={["lg", "lg", "lg"]}
+                    fontWeight={700}
+                    color="black"
+                  >
+                    SolidityScan
+                  </Heading>
+                  {profileData &&
+                    (profileData.current_package === "expired" ? (
+                      <Text
+                        fontSize="12px"
+                        sx={{
+                          color: "red.500",
+                          bg: "high-subtle",
+                          px: 3,
+                          borderRadius: 20,
+                          w: "74px",
+                        }}
+                      >
+                        EXPIRED
+                      </Text>
+                    ) : (
+                      <Text fontSize="13px">
+                        {profileData.current_package.toUpperCase()}
+                      </Text>
+                    ))}
+                </Box>
+              </HStack>
+              <Flex justifyContent="end">
+                <Button
+                  w="33px"
+                  h="33px"
+                  borderRadius={"10px 0 0 10px"}
+                  bgColor={"#ECECEC"}
+                  onClick={() => {
+                    setCollapsed(!isCollapsed);
+                  }}
                 >
-                  SolidityScan
-                </Heading>
-                {profileData &&
-                  (profileData.current_package === "expired" ? (
-                    <Text
-                      fontSize="12px"
-                      sx={{
-                        color: "red.500",
-                        bg: "high-subtle",
-                        px: 3,
-                        borderRadius: 20,
-                        w: "74px",
-                      }}
-                    >
-                      EXPIRED
-                    </Text>
-                  ) : (
-                    <Text fontSize="13px">
-                      {profileData.current_package.toUpperCase()}
-                    </Text>
-                  ))}
-              </Box>
-              <Box>
-                <Text
-                  ml={-2}
-                  mr={-2}
-                  fontSize={["2xl", "2xl", "3xl"]}
-                  fontWeight={100}
-                  color="gray.300"
-                >
-                  |
-                </Text>
-              </Box>
-              <CredshieldsIcon size={45} />
+                  <Icon as={ArrowBackIcon} fontSize="xl" color="gray.500" />{" "}
+                </Button>
+              </Flex>
             </HStack>
           )}
         </Box>
       </Flex>
-      <Flex sx={{ width: "100%", justifyContent: "flex-end", pt: 24, pb: 24 }}>
+      <Flex sx={{ width: "100%", justifyContent: "flex-end", pt: 32, pb: 4 }}>
         <Box sx={{ width: "85%" }}>
           {/* <Text
             sx={{
@@ -175,21 +196,30 @@ const Sidebar: React.FC<{
           </Flex>
         </Box>
       </Flex>
-      <Flex width="100%" justifyContent="center" pb={8} px={4}>
-        <Button
-          w="100%"
-          onClick={() => {
-            setCollapsed(!isCollapsed);
-          }}
+      <Flex
+        width="100%"
+        height={"205px"}
+        justifyContent="center"
+        p={5}
+        visibility={isCollapsed ? "hidden" : "visible"}
+      >
+        <Box
+          width="92%"
+          height={"100%"}
+          p={4}
+          pl={5}
+          bgImage={"url('/background/manualAuditbg.svg')"}
+          bgSize="cover"
+          borderRadius="15px"
+          boxShadow="0px 2px 23px rgba(0, 0, 0, 0.11)"
         >
-          <Icon
-            as={isCollapsed ? BsArrowsExpand : BsArrowsCollapse}
-            fontSize="2xl"
-            transform="rotate(90deg)"
-            color="gray.500"
-          />{" "}
-        </Button>
+          <CredshieldsIcon size={90} />
+          <Button mt={7} px={5} variant="dark" onClick={onOpen}>
+            <Text fontSize="xs"> Request manual audit</Text>
+          </Button>
+        </Box>
       </Flex>
+      <ManualAuditForm isOpen={isOpen} onClose={onClose} />
     </Flex>
   );
 };
@@ -227,7 +257,7 @@ export const SidebarItem: React.FC<SidebarItemProps> = ({
         {React.cloneElement(icon, { active })}
 
         {!isCollapsed && (
-          <Text ml={2} fontSize="sm">
+          <Text ml={2} fontSize="sm" whiteSpace={"nowrap"}>
             {label}
           </Text>
         )}

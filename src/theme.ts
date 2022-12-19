@@ -21,6 +21,7 @@ export const theme = extendTheme({
     accent: "#3300FF",
     text: "#323B4B",
     subtle: "#8A94A6",
+    detail: "#4E5D78",
     border: "#F3F3F3",
     blue: "#3E15F4",
     informational: "#A0AEC0",
@@ -73,6 +74,23 @@ export const theme = extendTheme({
               "linear-gradient(129.18deg, #52FF00 8.52%, #00EEFD 93.94%)",
           },
         }),
+        dark: (props) => ({
+          ...defaultTheme.components.Button.variants.outline(props),
+          background: "black",
+          color: "white",
+          fontSize: "12px",
+          borderRadius: "6px",
+          py: 2,
+          _hover: {
+            background: "#1c1c1c",
+            _disabled: {
+              background: "#3d3d3d",
+            },
+          },
+          _active: {
+            background: "black",
+          },
+        }),
         "accent-ghost": (props) => ({
           ...defaultTheme.components.Button.variants.ghost(props),
           background: "white",
@@ -117,13 +135,13 @@ export const theme = extendTheme({
             field: {
               ...defaultTheme.components.Input.variants.outline(props).field,
               borderRadius: "15px",
-              borderWidth: "2px",
-              fontSize: "15px",
-              borderColor: "gray.100",
-              fontWeight: 500,
+              borderWidth: "1px",
+              fontSize: "16px",
+              borderColor: "gray.200",
+              fontWeight: 400,
               bg: "white",
               _hover: {
-                borderColor: "gray.200",
+                borderColor: "gray.300",
               },
               _focus: {
                 borderColor: "#52FF00",
@@ -202,6 +220,13 @@ export const theme = extendTheme({
           _hover: {
             textDecoration: "none",
             color: "gray.600",
+          },
+        },
+        accent: {
+          fontWeight: 400,
+          color: "accent",
+          _hover: {
+            textDecoration: "none",
           },
         },
         brand: {
