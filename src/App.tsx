@@ -31,12 +31,11 @@ const GlobalStyles = css`
   }
 `;
 
-
-
+console.log(process.env)
 
 export const App = () => (
   <Suspense fallback="">
-      <Helmet>
+    <Helmet>
       <script
         type="text/javascript"
         id="hs-script-loader"
@@ -44,25 +43,8 @@ export const App = () => (
         defer
         src="//js-eu1.hs-scripts.com/24889894.js"
       ></script>
-      </Helmet>
-      
-      {process.env.REACT_APP_ENVIRONMENT === "dev" ? <></>: <Helmet><script>
-      {`(function (h, o, t, j, a, r) {
-        h.hj =
-          h.hj ||
-          function () {
-            (h.hj.q = h.hj.q || []).push(arguments);
-          };
-        h._hjSettings = { hjid: 3239945, hjsv: 6 };
-        a = o.getElementsByTagName("head")[0];
-        r = o.createElement("script");
-        r.async = 1;
-        r.src = t + h._hjSettings.hjid + j + h._hjSettings.hjsv;
-        a.appendChild(r);
-      })(window, document, "https://static.hotjar.com/c/hotjar-", ".js?sv=");`}
-        </script>
-      </Helmet>
-    }
+    </Helmet>
+    
 
     <QueryClientProvider client={queryClient}>
       <ChakraProvider theme={theme}>
