@@ -28,43 +28,43 @@ const pieData = (
   informational: number,
   gas: number
 ) => [
-  {
-    id: "critical",
-    label: "Critical",
-    value: critical,
-    color: "#FF5C00",
-  },
-  {
-    id: "high",
-    label: "High",
-    value: high,
-    color: "#FF5C00",
-  },
-  {
-    id: "medium",
-    label: "Medium",
-    value: medium,
-    color: "#FFE600",
-  },
-  {
-    id: "low",
-    label: "Low",
-    value: low,
-    color: "#38CB89",
-  },
-  {
-    id: "informational",
-    label: "Informational",
-    value: informational,
-    color: "#A0AEC0",
-  },
-  {
-    id: "gas",
-    label: "Gas",
-    value: gas,
-    color: "#F795B4",
-  },
-];
+    {
+      id: "critical",
+      label: "Critical",
+      value: critical,
+      color: "#FF5C00",
+    },
+    {
+      id: "high",
+      label: "High",
+      value: high,
+      color: "#FF5C00",
+    },
+    {
+      id: "medium",
+      label: "Medium",
+      value: medium,
+      color: "#FFE600",
+    },
+    {
+      id: "low",
+      label: "Low",
+      value: low,
+      color: "#38CB89",
+    },
+    {
+      id: "informational",
+      label: "Informational",
+      value: informational,
+      color: "#A0AEC0",
+    },
+    {
+      id: "gas",
+      label: "Gas",
+      value: gas,
+      color: "#F795B4",
+    },
+  ];
 
 const Overview: React.FC<{
   scanData: Scan;
@@ -77,7 +77,7 @@ const Overview: React.FC<{
   return (
     <>
       {scanData.multi_file_scan_status === "scan_done" &&
-      scanData.multi_file_scan_summary ? (
+        scanData.multi_file_scan_summary ? (
         <Flex w="100%" sx={{ flexDir: ["column", "column", "row"] }}>
           <VStack w={["100%", "100%", "40%"]} mb={[8, 8, 0]}>
             <Box
@@ -141,7 +141,7 @@ const Overview: React.FC<{
             w={["100%", "100%", "60%"]}
             alignItems={["center", "center", "center", "flex-start"]}
             py={8}
-            px={[0, 0, 8]}
+            px={[0, 0, 4]}
             spacing={5}
           >
             <Box
@@ -153,8 +153,8 @@ const Overview: React.FC<{
                 parseFloat(scanData.multi_file_scan_summary.score) < 2.5
                   ? "linear-gradient(96.27deg, #FFF3F0 0.75%, #FFE0D9 96.71%)"
                   : parseFloat(scanData.multi_file_scan_summary.score) >= 4.5
-                  ? "linear-gradient(96.27deg, #EFFFED 0.75%, #E6FFE2 96.71%)"
-                  : "linear-gradient(96.27deg, #FFFAF2 0.75%, #FFF4E1 96.71%)"
+                    ? "linear-gradient(96.27deg, #EFFFED 0.75%, #E6FFE2 96.71%)"
+                    : "linear-gradient(96.27deg, #FFFAF2 0.75%, #FFF4E1 96.71%)"
               }
             >
               <Flex
@@ -195,12 +195,15 @@ const Overview: React.FC<{
                       ? " LOW"
                       : parseFloat(scanData.multi_file_scan_summary.score) >=
                         4.5
-                      ? " GREAT"
-                      : " AVERAGE"}
+                        ? " GREAT"
+                        : " AVERAGE"}
                   </Text>
-                  <Text color="subtle" fontSize="14px" fontWeight={400}>
-                    Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-                    Molestie ultricies id posuere mauris proin.
+                  <Text
+                    color="subtle"
+                    fontSize="14px"
+                    fontWeight={400}
+                  >
+                    The SolidityScan score is calculated based on lines of code and weights assigned to each issue depending on the severity and confidence. To improve your score, view the detailed result and leverage the remediation solutions provided.
                   </Text>
                 </VStack>
               </Flex>
@@ -330,8 +333,8 @@ const Overview: React.FC<{
                 parseFloat(scanData.scan_summary.score) < 2.5
                   ? "linear-gradient(96.27deg, #FFF3F0 0.75%, #FFE0D9 96.71%)"
                   : parseFloat(scanData.scan_summary.score) >= 4.5
-                  ? "linear-gradient(96.27deg, #EFFFED 0.75%, #E6FFE2 96.71%)"
-                  : "linear-gradient(96.27deg, #FFFAF2 0.75%, #FFF4E1 96.71%)"
+                    ? "linear-gradient(96.27deg, #EFFFED 0.75%, #E6FFE2 96.71%)"
+                    : "linear-gradient(96.27deg, #FFFAF2 0.75%, #FFF4E1 96.71%)"
               }
             >
               <HStack w="100%" justifyContent="flex-start">
@@ -362,12 +365,15 @@ const Overview: React.FC<{
                     {parseFloat(scanData.scan_summary.score) < 2.5
                       ? " LOW"
                       : parseFloat(scanData.scan_summary.score) >= 4.5
-                      ? " GREAT"
-                      : " AVERAGE"}
+                        ? " GREAT"
+                        : " AVERAGE"}
                   </Text>
-                  <Text color="subtle" fontSize="14px" fontWeight={400}>
-                    Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-                    Molestie ultricies id posuere mauris proin.
+                  <Text
+                    color="subtle"
+                    fontSize="14px"
+                    fontWeight={400}
+                  >
+                    The SolidityScan score is calculated based on lines of code and weights assigned to each issue depending on the severity and confidence. To improve your score, view the detailed result and leverage the remediation solutions provided.
                   </Text>
                 </VStack>
               </HStack>
