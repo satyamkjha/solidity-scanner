@@ -64,6 +64,7 @@ export const ManualAuditForm: React.FC<{ onClose(): any; isOpen: boolean }> = ({
                 email: email,
                 subject: "[Manual_Audit] " + subject,
                 discord: discord,
+                telegram: telegram,
                 message: body,
             })
             .then((response) => {
@@ -112,7 +113,7 @@ export const ManualAuditForm: React.FC<{ onClose(): any; isOpen: boolean }> = ({
                             >
                                 <Flex
                                     zIndex={"10"}
-                                    w={"60%"}
+                                    w={["100%", "100%", "100%", "60%"]}
                                     mb={10}
                                     alignItems={["center", "center", "flex-start"]}
                                     flexDir="column"
@@ -125,6 +126,7 @@ export const ManualAuditForm: React.FC<{ onClose(): any; isOpen: boolean }> = ({
                                             />
                                             <Input
                                                 isRequired
+                                                type="email"
                                                 placeholder="Your Email"
                                                 variant="brand"
                                                 size="lg"
