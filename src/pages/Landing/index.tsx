@@ -31,7 +31,7 @@ import {
 import Header from "components/header";
 import Footer from "components/footer";
 import ImageCarousel from "./components/carousel";
-import ContactUs from "components/contactus";
+import ManualAuditForm from "components/manualAuditForm";
 
 export default function LandingPage() {
   const { isOpen, onClose, onOpen } = useDisclosure();
@@ -887,7 +887,7 @@ export default function LandingPage() {
         </Box>
       </Container>
       <Footer />
-      <ContactUs isOpen={isOpen} onClose={onClose} />
+      <ManualAuditForm isOpen={isOpen} onClose={onClose} />
     </>
   );
 }
