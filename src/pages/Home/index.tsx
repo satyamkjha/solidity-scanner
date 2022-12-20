@@ -789,7 +789,7 @@ const UploadForm: React.FC = () => {
   };
 
   const uploadFiles = async () => {
-    let results = [];
+    let results: any[] = [];
     urlList.forEach((item) => {
       results.push(new Promise((resolve, reject) => {
         let r = new FileReader();
@@ -798,6 +798,7 @@ const UploadForm: React.FC = () => {
             if(r.result){
               postDataToS3(r.result, item.url).then(
                 (res) => {
+                  console.log('returning data');
                   resolve(res);
                 },
                 () => {
@@ -806,6 +807,7 @@ const UploadForm: React.FC = () => {
               );
             }
         };
+        console.log('function completed, retruned null')
       }))
       
     });
@@ -816,7 +818,10 @@ const UploadForm: React.FC = () => {
         if(item) count++
       })
       if(count === acceptedFiles.length){
+        console.log('uploading files')
         setStep(2)
+      } else {
+        setStep(0)
       }
     }, () => {
       setStep(0)
