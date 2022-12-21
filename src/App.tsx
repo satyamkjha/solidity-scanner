@@ -39,7 +39,7 @@ export const App : React.FC = () => {
   
   return (
   <Suspense fallback="">
-      <Helmet>
+    <Helmet>
       <script
         type="text/javascript"
         id="hs-script-loader"

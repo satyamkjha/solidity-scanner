@@ -13,7 +13,6 @@ export default function ReportPage() {
 
   return (
     <>
-      
       {data ? (
         <ReportContainer summary_report={data.summary_report} />
       ) : (

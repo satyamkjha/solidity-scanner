@@ -21,7 +21,8 @@ export default function ReportPage() {
         }}
       >
         <Text fontSize="12px" color="white" fontWeight={700}>
-        You are viewing this report in private mode, accessible only using an authenticated account. This is not a public report.
+          You are viewing this report in private mode, accessible only using an
+          authenticated account. This is not a public report.
         </Text>
       </Flex>
       {data ? (

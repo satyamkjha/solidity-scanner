@@ -39,12 +39,11 @@ import { platform } from "os";
 import { Helmet } from "react-helmet";
 import Auth from "helpers/auth";
 
-
 const CustomFlex = motion(Flex);
 
 const CheckEmail: React.FC = () => {
   const [email, setEmail] = useState<string | null>("");
-  const history = useHistory()
+  const history = useHistory();
   useEffect(() => {
     if (localStorage.getItem("current-registered-email")) {
       setEmail(localStorage.getItem("current-registered-email"));
@@ -53,8 +52,8 @@ const CheckEmail: React.FC = () => {
     let intervalId: NodeJS.Timeout;
     const checkIfAuthenticated = () => {
       intervalId = setInterval(async () => {
-        if(Auth.isUserAuthenticated()){
-          history.push('/home')
+        if (Auth.isUserAuthenticated()) {
+          history.push("/home");
         }
       }, 2000);
     };
@@ -62,7 +61,6 @@ const CheckEmail: React.FC = () => {
     return () => {
       clearInterval(intervalId);
     };
-
   }, []);
 
   return (
@@ -100,4 +98,3 @@ const CheckEmail: React.FC = () => {
 };
 
 export default CheckEmail;
-
