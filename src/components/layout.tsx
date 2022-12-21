@@ -66,6 +66,10 @@ const Layout: React.FC = ({ children }) => {
     };
   }, [showSidebar]);
 
+  
+  
+  
+
   return (
     <>
       {profileData && (
