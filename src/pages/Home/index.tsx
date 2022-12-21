@@ -466,6 +466,10 @@ const ContractForm: React.FC = () => {
       { value: "mainnet", label: "Aurora Mainnet", icon: "" },
       { value: "testnet", label: "Aurora Testnet", icon: "" },
     ],
+    arbiscan: [
+      { value: "mainnet", label: "Arbiscan Mainnet", icon: "" },
+      { value: "testnet", label: "Arbiscan Testnet", icon: "" },
+    ],
   };
 
   const options = [
@@ -498,6 +502,12 @@ const ContractForm: React.FC = () => {
       value: "cronos",
       icon: "cronos",
       label: "Cronos",
+      isDisabled: true,
+    },
+    {
+      value: "arbiscan",
+      icon: "arbiscan",
+      label: "arbiscan",
       isDisabled: true,
     },
     {
@@ -585,7 +595,6 @@ const ContractForm: React.FC = () => {
       >
         Load contract
       </Text>
-
       <Text sx={{ color: "subtle", textAlign: "left", mb: 4 }}>
         Provide the address of your smart contract deployed on the supported EVM
         chains. Your results will appear in the "Verified Contracts" tab.
@@ -623,7 +632,6 @@ const ContractForm: React.FC = () => {
                 />
               </InputGroup>
             </VStack>
-
             <FormControl id="contract_platform">
               <FormLabel fontSize="sm">Contract platform</FormLabel>
               <Select
@@ -655,7 +663,6 @@ const ContractForm: React.FC = () => {
                 }}
               />
             </FormControl>
-
             <FormControl id="contract_chain">
               <FormLabel fontSize="sm">Contract Chain</FormLabel>
               <Select
@@ -671,7 +678,6 @@ const ContractForm: React.FC = () => {
                 }}
               />
             </FormControl>
-
             <Button
               type="submit"
               variant="brand"
