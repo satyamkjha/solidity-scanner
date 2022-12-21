@@ -798,27 +798,28 @@ const UploadForm: React.FC = () => {
             if(r.result){
               postDataToS3(r.result, item.url).then(
                 (res) => {
-                  console.log('returning data');
                   resolve(res);
                 },
                 () => {
-                  reject(false);
+                  postDataToS3(r.result, item.url).then((res) => {
+                    resolve(res)
+                  }, () => {
+                    reject(false)
+                  })
                 }
               );
+            } else {
+              reject(false)
             }
         };
-        console.log('function completed, retruned null')
       }))
-      
     });
     Promise.all(results).then((res) => {
       let count = 0
-      console.log(res);   
       res.forEach((item) => {
         if(item) count++
       })
       if(count === acceptedFiles.length){
-        console.log('uploading files')
         setStep(2)
       } else {
         setStep(0)
