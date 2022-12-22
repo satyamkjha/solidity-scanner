@@ -507,7 +507,7 @@ const ContractForm: React.FC = () => {
     {
       value: "arbiscan",
       icon: "arbiscan",
-      label: "arbiscan",
+      label: "Arbiscan",
       isDisabled: true,
     },
     {
