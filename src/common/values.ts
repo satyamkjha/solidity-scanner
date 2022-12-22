@@ -120,7 +120,7 @@ export const teamsData = {
       designation: "Co-Founder & CEO",
       imgUrl: "/teams/shashank.jpeg",
       linkedinUrl: "https://www.linkedin.com/in/shashank-in/",
-      twitterUrl: "https://twitter.com/cyberboyIndi",
+      twitterUrl: "https://twitter.com/cyberboyIndia",
     },
     {
       name: "Indranil Roy",
