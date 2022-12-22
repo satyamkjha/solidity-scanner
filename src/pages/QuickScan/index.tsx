@@ -34,8 +34,7 @@ import {
   Smile,
   PublishReport,
   SeverityIcon,
-  PassIcon,
-  FailIcon,
+ 
 } from "components/icons";
 
 import Header from "components/header";
@@ -48,6 +47,8 @@ import { sentenceCapitalize } from "helpers/helperFunction";
 import PieChart from "components/pieChart";
 import { ArrowForwardIcon } from "@chakra-ui/icons";
 import { monthNames } from "common/values";
+import SignupBox from "components/signupBox";
+import Infographics from "components/infographics";
 
 const pieData = (
   critical: number,
@@ -988,7 +989,299 @@ const QuickScan: React.FC = () => {
               </Box>
             </Box>
           )}
+
+{scanReport === null && (
+  <Box
+  ref={elementRef}
+  display={"flex"}
+  flexDir="column"
+  alignItems="center"
+  justifyContent={"flex-start"}
+  w={"90%"}
+  px={[0, 0, 10]}
+  mt={"-120px"}
+  py={[0, 0, 0, 10]}
+  borderRadius={20}
+  background={"#FFFFFF"}
+>
+<Stack
+                w={"100%"}
+                spacing={"5%"}
+                mb={20}
+                direction={["column", "column", "column", "row"]}
+              >
+                <Box
+                  w={["100%", "100%", "100%", "20%"]}
+                  h={"250px"}
+                  borderRadius={15}
+                  px={[0, 0, 0, 5]}
+                  py={5}
+                  background={
+                    parseFloat(0.00) < 2.5
+                      ? "linear-gradient(96.27deg, #FFF3F0 0.75%, #FFE0D9 96.71%)"
+                      : parseFloat(0.00) >=
+                        4.5
+                      ? "linear-gradient(96.27deg, #EFFFED 0.75%, #E6FFE2 96.71%)"
+                      : "linear-gradient(96.27deg, #FFFAF2 0.75%, #FFF4E1 96.71%)"
+                  }
+                >
+                  <Text fontSize="md" mb={5}>
+                    Solidity Score
+                  </Text>
+                  <CircularProgress
+                    value={60}
+                    color="accent"
+                    thickness="8px"
+                    size="100px"
+                    capIsRound
+                    trackColor={"white"}
+                  >
+                    <CircularProgressLabel
+                      sx={{ display: "flex", justifyContent: "center" }}
+                    >
+                      <Box>
+                        <Text fontSize="2xl" fontWeight={900} color="accent">
+                          {0.00}
+                        </Text>
+                      </Box>
+                    </CircularProgressLabel>
+                  </CircularProgress>
+                  <Text fontWeight={300} fontSize="sm" mt={5}>
+                    Your Solidity Score Low
+                  </Text>
+                </Box>
+                <Box
+                  w={["100%", "100%", "100%", "75%"]}
+                  borderRadius={15}
+                  p={5}
+                  h={["fit-content", "fit-content", "250px"]}
+                  background={" #FAFBFC "}
+                  display="flex"
+                  flexDir={"column"}
+                  alignItems={["center", "center", "center", "flex-start"]}
+                  justifyContent={"flex-start"}
+                >
+                  <Text fontSize="md">VULNERABILITIES DETECTED</Text>
+                  <HStack
+                    mt={5}
+                    width={["100%"]}
+                    justify={"space-between"}
+                    flexWrap="wrap"
+                    spacing={0}
+                  >
+                    <Box
+                      w={["30%", "30%", "15%"]}
+                      borderRadius={15}
+                      m={2}
+                      h={"160px"}
+                      background={" #FFFFFF "}
+                      display="flex"
+                      flexDir={"column"}
+                      alignItems="center"
+                      justifyContent={"center"}
+                    >
+                      <Text fontWeight={300} fontSize="md">
+                        Critical
+                      </Text>
+                      <Text fontSize="xl" my={3}>
+                        {0}
+                      </Text>
+                      <SeverityIcon size={10} variant={"critical"} />
+                    </Box>
+                    <Box
+                      w={["30%", "30%", "15%"]}
+                      borderRadius={15}
+                      m={2}
+                      h={"160px"}
+                      background={" #FFFFFF "}
+                      display="flex"
+                      flexDir={"column"}
+                      alignItems="center"
+                      justifyContent={"center"}
+                    >
+                      <Text fontWeight={300} fontSize="md">
+                        High
+                      </Text>
+                      <Text fontSize="xl" my={3}>
+                      {0}
+                      </Text>
+                      <SeverityIcon size={10} variant={"high"} />
+                    </Box>
+                    <Box
+                      w={["30%", "30%", "15%"]}
+                      borderRadius={15}
+                      m={2}
+                      h={"160px"}
+                      background={" #FFFFFF "}
+                      display="flex"
+                      flexDir={"column"}
+                      alignItems="center"
+                      justifyContent={"center"}
+                    >
+                      <Text
+                        fontWeight={300}
+                        fontSize={["sm", "sm", "sm", "md"]}
+                      >
+                        Medium
+                      </Text>
+                      <Text fontSize="xl" my={3}>
+                      {0}
+                      </Text>
+                      <SeverityIcon size={10} variant={"medium"} />
+                    </Box>
+                    <Box
+                      w={["30%", "30%", "15%"]}
+                      borderRadius={15}
+                      m={2}
+                      h={"160px"}
+                      background={" #FFFFFF "}
+                      display="flex"
+                      flexDir={"column"}
+                      alignItems="center"
+                      justifyContent={"center"}
+                    >
+                      <Text
+                        fontWeight={300}
+                        fontSize={["sm", "sm", "sm", "md"]}
+                      >
+                        Low
+                      </Text>
+                      <Text fontSize="xl" my={3}>
+                      {0}
+                      </Text>
+                      <SeverityIcon size={10} variant={"low"} />
+                    </Box>
+                    <Box
+                      w={["30%", "30%", "15%"]}
+                      borderRadius={15}
+                      m={2}
+                      h={"160px"}
+                      background={" #FFFFFF "}
+                      display="flex"
+                      flexDir={"column"}
+                      alignItems="center"
+                      justifyContent={"center"}
+                    >
+                      <Text
+                        fontWeight={300}
+                        fontSize={["sm", "sm", "sm", "md"]}
+                      >
+                        Informational
+                      </Text>
+                      <Text fontSize="xl" my={3}>
+                      {0}
+                      </Text>
+                      <SeverityIcon size={10} variant={"informational"} />
+                    </Box>
+                    <Box
+                      w={["30%", "30%", "15%"]}
+                      borderRadius={15}
+                      m={2}
+                      h={"160px"}
+                      background={" #FFFFFF "}
+                      display="flex"
+                      flexDir={"column"}
+                      alignItems="center"
+                      justifyContent={"center"}
+                    >
+                      <Text fontWeight={300} fontSize="md">
+                        Gas
+                      </Text>
+                      <Text fontSize="xl" my={3}>
+                      {0}
+                      </Text>
+                      <SeverityIcon size={10} variant={"gas"} />
+                    </Box>
+                  </HStack>
+                </Box>
+              </Stack>
+              <Heading mt={10} as="h1" fontSize="3xl" mb={4}>
+            Recent Scanned 
+            <Box
+              as="span"
+              color='#3300FF'
+            >
+              Contracts
+            </Box>{" "}
+            
+
+
+
+          </Heading>
+          <Text w={['100%', "100%", "70%"]} color="subtle" fontSize={["lg", "lg", "xl"]} mb={4}>
+          Lorem ipsum dolor sit amet, consectetur adipiscing elit. Molestie ultricies id posuere mauris proin duis placerat lorem. Sed pellentesque.
+          </Text>
+             
+          <Box
+                w={"100%"}
+                borderRadius={15}
+                p={5}
+                mt={10}
+                background={" #FAFBFC "}
+                display="flex"
+                flexDir={"column"}
+                alignItems={["center", "center", "center", "flex-start"]}
+                justifyContent={"flex-start"}
+              >
+                <HStack justifyContent={'flex-start'} alignItems='flex-start' w='100%' spacing={0}>
+                <Text w={'25%'} fontSize="sm">Contract Address</Text>
+                <Text w={'10%'} fontSize="sm">Score</Text>
+                <Text w={'20%'} fontSize="sm">Blockscan</Text>
+                <Text w={'35%'} fontSize="sm">Actions</Text>
+                </HStack>
+                <Box
+                  w={"100%"}
+                  borderRadius={15}
+                  p={[4, 4, 4, 10]}
+                  mt={5}
+                  background={" #FFFFFF "}
+                  display="flex"
+                  flexDir={"column"}
+                  alignItems={[
+                    "flex-start",
+                    "flex-start",
+                    "flex-start",
+                    "center",
+                  ]}
+                  justifyContent={"center"}
+                >
+                  
+                </Box>
+              </Box>
+  </Box>)}
+
+            <Box
+              ref={elementRef}
+              display={"flex"}
+              flexDir="column"
+              alignItems="center"
+              justifyContent={"flex-start"}
+              w={"90%"}
+              px={[0, 0, 10]}
+             
+              py={[0, 0, 0, 10]}
+              borderRadius={20}
+              background={"#FFFFFF"}
+            > 
+            <Heading as="h1" fontSize="3xl" mb={4}>
+            Why{" "}
+            <Box
+              as="span"
+              color='#3300FF'
+            >
+              SolidityScan ?
+            </Box>{" "}
+            
+          </Heading>
+          <Text color="subtle" fontSize={["lg", "lg", "xl"]} mb={4}>
+          Smart-contract scanning tool built to discover vulnerabilities & mitigate risks in your code.
+          </Text>
+            <Infographics />
+            <SignupBox />
+            </Box>
         </Flex>
+        
+        <Footer />
       </Container>
     </>
   );
