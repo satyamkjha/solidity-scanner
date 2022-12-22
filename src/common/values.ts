@@ -173,34 +173,25 @@ export const teamsData = {
 
 export const userTestimonials = [
   {
-    name: "Vitaly Dmitriyevich",
-    designation: "Co-Founder Ethereum",
+    name: "Gregory Makodzeba",
+    designation: "Co-Founder, Soken",
+    imageUrl: "/testimonials/gregory.jpeg",
     testimonial:
-      "Awesome tool! I am super happy with everything about this product. Its’s a little taste of everything all in one box.",
+      "Thanks to Solidity Scan team for building a comprehensive vulnerability scanner for smart contracts that will help you protect contracts from potential scams. It helps you not only find bugs in source code, but conveniently manage reports with the dashboard from your account. It is a nice tool not only for investors to know about the security of the contract they are investing in, but also for audit teams who conduct security testing and want to expand their tools for contract analysis."
   },
   {
-    name: "Vitaly Dmitriyevich",
-    designation: "Co-Founder Ethereum",
+    name: "Stefan Creadore",
+    designation: "Founder and Lead Developer, Exzo Network",
+    imageUrl: "/testimonials/stefan.svg",
     testimonial:
-      "Awesome tool! I am super happy with everything about this product. Its’s a little taste of everything all in one box.",
+      "I highly recommend using SolidityScan for any development team as it will help projects of all sizes save money and scale their development efforts. I conducted a personal review of the results obtained from our audit from a leading manual audit firm and an automated audit from SolidityScan, the results were almost identical, which is why we have decided to continue working with SolidityScan. It saves weeks on our timelines for security auditing, and troubleshooting, and provides a smooth workflow to enhance development proficiency."
   },
   {
-    name: "Vitaly Dmitriyevich",
-    designation: "Co-Founder Ethereum",
+    name: "Jon Greenwood",
+    designation: "Integrations, GovernorDAO",
+    imageUrl: "/testimonials/jon.svg",
     testimonial:
-      "Awesome tool! I am super happy with everything about this product. Its’s a little taste of everything all in one box.",
-  },
-  {
-    name: "Vitaly Dmitriyevich",
-    designation: "Co-Founder Ethereum",
-    testimonial:
-      "Awesome tool! I am super happy with everything about this product. Its’s a little taste of everything all in one box.",
-  },
-  {
-    name: "Vitaly Dmitriyevich",
-    designation: "Co-Founder Ethereum",
-    testimonial:
-      "Awesome tool! I am super happy with everything about this product. Its’s a little taste of everything all in one box.",
+      "A perfect tool for startup projects in Web 3.0 ! Personally used this as a reference tool while morphing contracts and governance protocols to have a second set of eyes in real-time. Nothing beats actual audits, but the access and ease of use of Solidity Scan make it a no-brainer !"
   },
 ];
 
@@ -293,3 +284,47 @@ export const monthNames = [
   "Nov",
   "Dec",
 ];
+
+export const features = [
+  {
+    heading: "See your security posture evolve",
+    text: "Upload specific contract code or provide code repositories linkand we’ll take care of the rest. Set triggers to automatically run scans when developers make updates, and see trends on how you code quality has improved.",
+    imageSrc: "/landing/landing-image03.jpeg"
+  },
+  {
+    heading: "Supported Protocols",
+    text: `With tremendous growth across the Blockchain spectrum, there is a
+      wide variety of Protocol options for builders to choose from. In
+      our endeavor to retain the pinnacle in the Smart Contract Security
+      Audit Scan space, SolidityScan boasts of providing seamless
+      support for Ethereum, Polygon, Avalanche, Binance, Fantom, Cronos,
+      Celo, and many more. Inviting all buidlers to subscribe to the
+      world's fastest, most accurate, and secure smart contract
+      vulnerability analysis and auditing platform at the most
+      affordable price.`,
+    imageSrc: "/landing/landing-image04.jpeg"
+  },
+  {
+    heading: "Built by us, for your contracts",
+    text: `Customize issues, silence specific issues or add your own rules to
+      trigger alerts for. Request for assistance with issue remediation
+      or get a manual audit from a team of security experts.`,
+    imageSrc: "/landing/landing-image05.jpeg"
+  },
+  {
+    heading: "Publish reports and share your security score",
+    text: `Share and validate your progress with the community with easily
+      publishable reports. Your community and investors can use the
+      report summary and be confident of your contracts' security. For
+      the more technical minded, you can add the full bug reports
+      available in the report too.`,
+    imageSrc: "/landing/landing-image06.jpeg"
+  },
+  {
+    heading: "Integrate with the services you already love",
+    text: `Using Slack/ Microsoft teams or JIRA? Built-in integrations with
+      most of the popular tools to automatically send out alerts or
+      raise issue tickets, so your team sees everything in one place.`,
+    imageSrc: "/landing/landing-image07.jpeg"
+  }
+]
