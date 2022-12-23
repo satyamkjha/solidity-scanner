@@ -470,7 +470,7 @@ const ContractForm: React.FC = () => {
     ],
     arbiscan: [
       { value: "mainnet", label: "Arbiscan Mainnet", icon: "" },
-      { value: "testnet", label: "Arbiscan Testnet", icon: "" },
+      { value: "goerli", label: "Arbiscan Goerli", icon: "" },
     ],
   };
 
