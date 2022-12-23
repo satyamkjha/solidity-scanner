@@ -4,7 +4,7 @@ import "@fontsource/inter/400.css";
 import "@fontsource/inter/500.css";
 import "@fontsource/inter/600.css";
 
-import React, { Suspense } from "react";
+import React, { Suspense, useEffect } from "react";
 import { Helmet } from "react-helmet";
 import { QueryClient, QueryClientProvider } from "react-query";
 import { ReactQueryDevtools } from "react-query/devtools";
@@ -33,10 +33,13 @@ const GlobalStyles = css`
 
 
 
-
-export const App = () => (
+export const App : React.FC = () => { 
+  
+  
+  
+  return (
   <Suspense fallback="">
-      <Helmet>
+    <Helmet>
       <script
         type="text/javascript"
         id="hs-script-loader"
@@ -45,8 +48,8 @@ export const App = () => (
         src="//js-eu1.hs-scripts.com/24889894.js"
       ></script>
       </Helmet>
-      
-      {process.env.REACT_APP_ENVIRONMENT === "dev" ? <></>: <Helmet><script>
+      {process.env.REACT_APP_ENVIRONMENT === "prod" ?  <Helmet>
+      <script>
       {`(function (h, o, t, j, a, r) {
         h.hj =
           h.hj ||
@@ -60,10 +63,10 @@ export const App = () => (
         r.src = t + h._hjSettings.hjid + j + h._hjSettings.hjsv;
         a.appendChild(r);
       })(window, document, "https://static.hotjar.com/c/hotjar-", ".js?sv=");`}
-        </script>
-      </Helmet>
-    }
-
+      </script>
+      </Helmet>: <></> }
+    
+      
     <QueryClientProvider client={queryClient}>
       <ChakraProvider theme={theme}>
         <Global styles={GlobalStyles} />
@@ -72,4 +75,4 @@ export const App = () => (
       <ReactQueryDevtools initialIsOpen={false} />
     </QueryClientProvider>
   </Suspense>
-);
+)};

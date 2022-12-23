@@ -92,7 +92,12 @@ import {
 } from "react-icons/fa";
 import { useReport } from "hooks/useReport";
 import { useReports } from "hooks/useReports";
-import { CheckCircleIcon, CheckIcon, LockIcon, TimeIcon } from "@chakra-ui/icons";
+import {
+  CheckCircleIcon,
+  CheckIcon,
+  LockIcon,
+  TimeIcon,
+} from "@chakra-ui/icons";
 import { profile } from "console";
 import { motion } from "framer-motion";
 import { Profiler } from "inspector";
@@ -375,7 +380,7 @@ const ScanDetails: React.FC<{ scansRemaining: number; scans: ScanMeta[] }> = ({
       });
       setOpen(false);
     }
-    checkReportPublished(projectId, reportId)
+    checkReportPublished(projectId, reportId);
   };
 
   return (
@@ -436,7 +441,7 @@ const ScanDetails: React.FC<{ scansRemaining: number; scans: ScanMeta[] }> = ({
                         </Flex>
                       </Button>
                     </Tooltip>
-                )}
+                  )}
                 </HStack>
                 <HStack
                   spacing={8}

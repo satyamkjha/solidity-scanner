@@ -40,7 +40,13 @@ import {
 import Overview from "components/overview";
 import Result, { MultifileResult } from "components/result";
 import TrialWall from "components/trialWall";
-import { AddIcon, CheckCircleIcon, LockIcon, MinusIcon, TimeIcon } from "@chakra-ui/icons";
+import {
+  AddIcon,
+  CheckCircleIcon,
+  LockIcon,
+  MinusIcon,
+  TimeIcon,
+} from "@chakra-ui/icons";
 import { useScan } from "hooks/useScan";
 import { useProfile } from "hooks/useProfile";
 import { BiChevronDownCircle, BiChevronUpCircle } from "react-icons/bi";
@@ -162,8 +168,11 @@ const BlockPage: React.FC = () => {
       });
       setOpen(false);
     }
-    if(scanData){
-      checkReportPublished(scanData.scan_report.project_id, scanData.scan_report.latest_report_id)
+    if (scanData) {
+      checkReportPublished(
+        scanData.scan_report.project_id,
+        scanData.scan_report.latest_report_id
+      );
     }
   };
 
@@ -310,46 +319,55 @@ const BlockPage: React.FC = () => {
                           height="fit-content"
                         >
                           {scanData.scan_report.reporting_status ===
-                            "report_generated" && publishStatus !== "" &&
-                            (publishStatus === "Not-Published" ?
-                            (
-                            <Button
-                              variant="accent-ghost"
-                              mr={5}
-                              isDisabled={
-                                profile.actions_supported
+                            "report_generated" &&
+                            publishStatus !== "" &&
+                            (publishStatus === "Not-Published" ? (
+                              <Button
+                                variant="accent-ghost"
+                                mr={5}
+                                isDisabled={
+                                  profile.actions_supported
+                                    ? !profile.actions_supported
+                                        .publishable_report
+                                    : profile.current_package !== "expired" &&
+                                      !plans.monthly[profile.current_package]
+                                        .publishable_report
+                                }
+                                onClick={() => setOpen(!open)}
+                              >
+                                {(profile.actions_supported
                                   ? !profile.actions_supported
                                       .publishable_report
                                   : profile.current_package !== "expired" &&
                                     !plans.monthly[profile.current_package]
-                                      .publishable_report
-                              }
-                              onClick={() => setOpen(!open)}
-                            >
-                              {(profile.actions_supported
-                                ? !profile.actions_supported.publishable_report
-                                : profile.current_package !== "expired" &&
-                                  !plans.monthly[profile.current_package]
-                                    .publishable_report) && (
-                                <LockIcon color={"accent"} size="xs" mr={3} />
-                              )}
-                              Publish Report
-                            </Button>
-                          ): <HStack>
-                          {publishStatus === "Approved" ? (
-                            <CheckCircleIcon color={"#03C04A"} />
-                          ) : (
-                            <TimeIcon color={"#FF5C00"} />
-                          )}
-                          <Text
-                            color={
-                              publishStatus === "Approved" ? "#03C04A" : "#FF5C00"
-                            }
-                            sx={{ fontSize: "md", fontWeight: 600, ml: 2 }}
-                          >
-                            {publishStatus}
-                          </Text>
-                        </HStack>)}
+                                      .publishable_report) && (
+                                  <LockIcon color={"accent"} size="xs" mr={3} />
+                                )}
+                                Publish Report
+                              </Button>
+                            ) : (
+                              <HStack>
+                                {publishStatus === "Approved" ? (
+                                  <CheckCircleIcon color={"#03C04A"} />
+                                ) : (
+                                  <TimeIcon color={"#FF5C00"} />
+                                )}
+                                <Text
+                                  color={
+                                    publishStatus === "Approved"
+                                      ? "#03C04A"
+                                      : "#FF5C00"
+                                  }
+                                  sx={{
+                                    fontSize: "md",
+                                    fontWeight: 600,
+                                    ml: 2,
+                                  }}
+                                >
+                                  {publishStatus}
+                                </Text>
+                              </HStack>
+                            ))}
                           {scanData.scan_report.scan_status !== "scanning" && (
                             <Button
                               variant={"accent-outline"}
@@ -387,7 +405,6 @@ const BlockPage: React.FC = () => {
                                       "_blank"
                                     );
                                   }
-                                  
                                 }
                               }}
                             >
@@ -1324,7 +1341,7 @@ const ReportBlock: React.FC<{ report: ReportsListItem }> = ({ report }) => {
                 `http://${document.location.host}/report/block/${report.project_id}/${report.report_id}`,
                 "_blank"
               );
-            }            
+            }
           }}
         >
           View Report
