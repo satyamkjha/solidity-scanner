@@ -579,9 +579,11 @@ export const ReportContainer: React.FC<{ summary_report: Report }> = ({
             >
               Audit Methodology
             </Text>
-            <Text fontSize="lg" fontWeight={"normal"} mb={4}>
-              {"Static Scanning"}
-            </Text>
+            {!isDesktopView &&
+              <Text fontSize="lg" fontWeight={"normal"} mb={4}>
+                {"Static Scanning"}
+              </Text>
+            }
           </Flex>
           {isDesktopView && <Flex
             as="div"
@@ -711,7 +713,6 @@ export const ReportContainer: React.FC<{ summary_report: Report }> = ({
             <Text fontSize="lg" fontWeight={"normal"} my={4}>
               {"Static Scanning"}
             </Text>
-            <Divider />
           </Flex>}
         </Flex>
       </Flex>
