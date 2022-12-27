@@ -20,11 +20,19 @@ import { Logo } from "components/icons";
 
 import Auth from "helpers/auth";
 import ContactUs from "./contactus";
-import { HamburgerIcon } from "@chakra-ui/icons";
+import { CloseIcon, HamburgerIcon } from "@chakra-ui/icons";
+import API from "helpers/api";
 
 export const Header: React.FC = () => {
   const { isOpen, onClose, onOpen } = useDisclosure();
   const [isDesktopView] = useMediaQuery("(min-width: 1024px)");
+  const history = useHistory();
+
+  const logout = async () => {
+    await API.get("api-logout");
+    Auth.deauthenticateUser();
+    history.push("/signin");
+  };
 
   return (
     <>
@@ -85,7 +93,7 @@ export const Header: React.FC = () => {
             <>
               <Flex w={"100%"} />
               <Box as={"div"} mr="2">
-                <Menu>
+                <Menu autoSelect={false} offset={[0, -40]}>
                   <MenuButton
                     as={IconButton}
                     aria-label="Options"
@@ -93,23 +101,26 @@ export const Header: React.FC = () => {
                     variant="outline"
                     fontSize={"2xl"}
                   />
-                  <MenuList>
-                    {!Auth.isUserAuthenticated() ? (
+                  <MenuList w={"250px"} pt="0">
+                    <MenuItem
+                      p={4}
+                      background="linear-gradient(269.8deg, #F9F9F9 0.83%, rgba(249, 249, 249, 0) 114.35%)">
+                      <CloseIcon ml={"auto"} color={"#B0B7C3"} onClick={onClose}/>
+                    </MenuItem>
+                    {Auth.isUserAuthenticated() && (
                       <>
                         <MenuItem>
-                          <RouterLink to="/signin">
-                            <Button variant="ghost" sx={{ p: 6 }}>
-                              Sign In
-                            </Button>
-                          </RouterLink>
-                        </MenuItem>
-                      </>
-                    ) : (
-                      <>
-                        <MenuItem>
-                          <RouterLink to="/home">
-                            <Button variant="ghost">Go to Dashboard</Button>
-                          </RouterLink>
+                        <Link
+                          as={RouterLink}
+                          to="/home"
+                          variant="ghost"
+                          fontWeight="400"
+                          w={"100%"}
+                          p={1}
+                          ml={3}
+                        >
+                          Go to Dashboard
+                        </Link>
                         </MenuItem>
                       </>
                     )}
@@ -117,8 +128,8 @@ export const Header: React.FC = () => {
                       <Link
                         as={RouterLink}
                         to="/pricing"
-                        variant="brand"
-                        fontWeight="600"
+                        variant="ghost"
+                        fontWeight="400"
                         w={"100%"}
                         p={1}
                         ml={3}
@@ -134,8 +145,8 @@ export const Header: React.FC = () => {
                             "_blank"
                           );
                         }}
-                        variant="brand"
-                        fontWeight="600"
+                        variant="ghost"
+                        fontWeight="400"
                         w={"100%"}
                         p={1}
                         ml={3}
@@ -151,8 +162,8 @@ export const Header: React.FC = () => {
                             "_blank"
                           );
                         }}
-                        variant="brand"
-                        fontWeight="600"
+                        variant="ghost"
+                        fontWeight="400"
                         w={"100%"}
                         p={1}
                         ml={3}
@@ -161,10 +172,40 @@ export const Header: React.FC = () => {
                       </Link>
                     </MenuItem>
                     <MenuItem>
-                      <Button variant="brand" onClick={onOpen}>
-                        Contact Us
-                      </Button>
+                      <Link
+                          onClick={onOpen}
+                          variant="ghost"
+                          fontWeight="400"
+                          w={"100%"}
+                          p={1}
+                          ml={3}
+                        >
+                          Contact Us
+                      </Link>
                     </MenuItem>
+                    { !Auth.isUserAuthenticated() ? (
+                      <MenuItem mt={20}>
+                        <RouterLink to="/signin">
+                          <Button variant="brand" p={6} ml={4} w="100%">
+                            Sign In
+                          </Button>
+                        </RouterLink>
+                      </MenuItem>
+                    ) : (
+                      <MenuItem  mt={20}>
+                      <Link
+                          onClick={logout}
+                          variant="ghost"
+                          fontWeight="400"
+                          w={"100%"}
+                          p={1}
+                          ml={3}
+                        >
+                          Sign Out
+                      </Link>
+                    </MenuItem>
+                    )
+                    }
                   </MenuList>
                 </Menu>
               </Box>
