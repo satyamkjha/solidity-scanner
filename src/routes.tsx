@@ -16,6 +16,7 @@ import API from "helpers/api";
 import PaymentSucess from "pages/Billing/payment";
 import PublicReportPage from "pages/Report/PublicReport";
 import PageNotFound, { CustomPageNotFound } from "pages/PageNotFound";
+import { Helmet } from "react-helmet";
 
 const Landing = lazy(
   () => import("pages/Landing" /* webpackChunkName: "Landing" */)
@@ -99,9 +100,13 @@ const Billing = lazy(
   () => import("pages/Billing" /* webpackChunkName: "Billing" */)
 );
 
+
+
+
 const Routes: React.FC = () => {
   return (
     <Router>
+      
       <ErrorHandler>
         <Switch>
           <Route exact path="/published-report/:projectType/:reportId">

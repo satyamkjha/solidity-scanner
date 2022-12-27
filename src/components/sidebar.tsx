@@ -128,7 +128,11 @@ const Sidebar: React.FC<{
           )}
         </Box>
       </Flex>
-      <Flex sx={{ width: "100%", justifyContent: "flex-end", pt: 32, pb: 4 }}>
+      <Flex
+        sx={{ width: "100%", justifyContent: "flex-end" }}
+        pt={["28", "28", "28", "24", "32"]}
+        pb={["3", "3", "3", "3", "4"]}
+        >
         <Box sx={{ width: "85%" }}>
           {/* <Text
             sx={{
@@ -177,12 +181,12 @@ const Sidebar: React.FC<{
             sx={{
               width: "100%",
               alignItems: "center",
-              p: 3,
-              my: 3,
               borderLeftRadius: "15px",
               transition: "0.3s background-color",
               cursor: "pointer",
             }}
+            p={[2.5, 2.5, 2.5, 2.5, 3]}
+            my={[2, 2, 2, 2, 3]}
             onClick={() => {
               window.open("https://docs.solidityscan.com/", "_blank");
             }}
@@ -198,7 +202,7 @@ const Sidebar: React.FC<{
       </Flex>
       <Flex
         width="100%"
-        height={"205px"}
+        height={["185px", "185px", "185px", "205px"]}
         justifyContent="center"
         p={5}
         visibility={isCollapsed ? "hidden" : "visible"}
@@ -206,7 +210,7 @@ const Sidebar: React.FC<{
         <Box
           width="92%"
           height={"100%"}
-          p={4}
+          p={[3, 3, 3, 4]}
           pl={5}
           bgImage={"url('/background/manualAuditbg.svg')"}
           bgSize="cover"
@@ -214,7 +218,7 @@ const Sidebar: React.FC<{
           boxShadow="0px 2px 23px rgba(0, 0, 0, 0.11)"
         >
           <CredshieldsIcon size={90} />
-          <Button mt={7} px={5} variant="dark" onClick={onOpen}>
+          <Button mt={[5, 5, 5, 7]} px={5} variant="dark" onClick={onOpen}>
             <Text fontSize="xs"> Request manual audit</Text>
           </Button>
         </Box>
@@ -247,12 +251,12 @@ export const SidebarItem: React.FC<SidebarItemProps> = ({
         sx={{
           width: "100%",
           alignItems: "center",
-          p: 3,
-          my: 3,
           borderLeftRadius: "15px",
           transition: "0.3s background-color",
           background: active ? "rgba(47, 248, 107, 0.1)" : "transparent",
         }}
+        p={[2.5, 2.5, 2.5, 2.5, 3]}
+        my={[2, 2, 2, 2, 3]}
       >
         {React.cloneElement(icon, { active })}
 

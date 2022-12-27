@@ -50,6 +50,8 @@ import { sentenceCapitalize } from "helpers/helperFunction";
 import { useDropzone } from "react-dropzone";
 import { url } from "inspector";
 import Select from "react-select";
+import { resolve } from "dns";
+import { rejects } from "assert";
 
 const Home: React.FC = () => {
   const { data } = useOverview();
@@ -466,6 +468,10 @@ const ContractForm: React.FC = () => {
       { value: "mainnet", label: "Aurora Mainnet", icon: "" },
       { value: "testnet", label: "Aurora Testnet", icon: "" },
     ],
+    arbiscan: [
+      { value: "mainnet", label: "Arbiscan Mainnet", icon: "" },
+      { value: "goerli", label: "Arbiscan Goerli", icon: "" },
+    ],
   };
 
   const options = [
@@ -498,6 +504,12 @@ const ContractForm: React.FC = () => {
       value: "cronos",
       icon: "cronos",
       label: "Cronos",
+      isDisabled: true,
+    },
+    {
+      value: "arbiscan",
+      icon: "arbiscan",
+      label: "Arbiscan",
       isDisabled: true,
     },
     {
@@ -585,7 +597,6 @@ const ContractForm: React.FC = () => {
       >
         Load contract
       </Text>
-
       <Text sx={{ color: "subtle", textAlign: "left", mb: 4 }}>
         Provide the address of your smart contract deployed on the supported EVM
         chains. Your results will appear in the "Verified Contracts" tab.
@@ -623,7 +634,6 @@ const ContractForm: React.FC = () => {
                 />
               </InputGroup>
             </VStack>
-
             <FormControl id="contract_platform">
               <FormLabel fontSize="sm">Contract platform</FormLabel>
               <Select
@@ -647,7 +657,6 @@ const ContractForm: React.FC = () => {
                   if (newValue) {
                     // setAction(newValue.value)
                     setPlatform(newValue.value);
-                    console.log(supportedChains);
                     if (supportedChains) {
                       setChainList(contractChain[newValue.value]);
                     }
@@ -655,7 +664,6 @@ const ContractForm: React.FC = () => {
                 }}
               />
             </FormControl>
-
             <FormControl id="contract_chain">
               <FormLabel fontSize="sm">Contract Chain</FormLabel>
               <Select
@@ -671,7 +679,6 @@ const ContractForm: React.FC = () => {
                 }}
               />
             </FormControl>
-
             <Button
               type="submit"
               variant="brand"
@@ -698,7 +705,9 @@ const UploadForm: React.FC = () => {
   const [error, setError] = useState(false);
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
   const [name, setName] = useState("");
-  const [urlList, setUrlList] = useState<string[]>([]);
+  const [urlList, setUrlList] = useState<
+    { url: string; name: string; file: File }[]
+  >([]);
 
   const {
     getRootProps,
@@ -759,7 +768,6 @@ const UploadForm: React.FC = () => {
   const firstCheck = () => {
     let flag = true;
     acceptedFiles.forEach((files) => {
-      console.log(files.name);
       if (!checkFileExt(files.name)) {
         setErrorMsg(
           "You can only upload solidity files with .sol extension for scanning."
@@ -771,13 +779,13 @@ const UploadForm: React.FC = () => {
     });
     if (flag) {
       setStep(1);
-      uploadFiles();
+      getPreassignedURLList();
       setErrorMsg(null);
       setError(false);
     }
   };
 
-  const uploadFiles = async () => {
+  const getPreassignedURLList = async () => {
     let results = await acceptedFiles.map(async (file) => {
       return getPreassignedURL(file.name, file);
     });
@@ -786,23 +794,55 @@ const UploadForm: React.FC = () => {
     });
   };
 
+  const uploadFiles = async () => {
+    let results: any[] = [];
+    urlList.forEach((item) => {
+      results.push(new Promise((resolve, reject) => {
+        let r = new FileReader();
+        r.readAsBinaryString(item.file);
+        r.onload = () => {  
+            if(r.result){
+              postDataToS3(r.result, item.url).then(
+                (res) => {
+                  resolve(res);
+                },
+                () => {
+                  postDataToS3(r.result, item.url).then((res) => {
+                    resolve(res)
+                  }, () => {
+                    reject(false)
+                  })
+                }
+              );
+            } else {
+              reject(false)
+            }
+        };
+      }))
+    });
+    Promise.all(results).then((res) => {
+      let count = 0
+      res.forEach((item) => {
+        if(item) count++
+      })
+      if(count === acceptedFiles.length){
+        setStep(2)
+      } else {
+        setStep(0)
+      }
+    }, () => {
+      setStep(0)
+    });
+  };
+
   useEffect(() => {
-    console.log(count, acceptedFiles.length);
     if (urlList.length === acceptedFiles.length && urlList.length > 0) {
-      let flag = true;
-      urlList.forEach((url) => {
-        if (url === "failed") {
-          flag = false;
-        }
-      });
-      if (flag) setStep(2);
+     uploadFiles()
     }
   }, [urlList]);
 
   const checkFileExt = (fileName: string) => {
     let fileExt = fileName.split(".");
-    console.log(fileExt);
-    console.log(fileExt[fileExt.length - 1]);
     if (fileExt[fileExt.length - 1] === "sol") {
       return true;
     }
@@ -813,18 +853,21 @@ const UploadForm: React.FC = () => {
     const { data } = await API.get<{ status: string; result: { url: string } }>(
       `/api-get-presigned-url?file_name=${fileName}`
     );
-    let r = new FileReader();
-    r.onload = async function () {
-      if (r.result) {
-        let uploadResult = await postDataToS3(r.result, data.result.url);
-        if (!uploadResult) {
-          return "failed";
-        }
-      }
+    return {
+      url: data.result.url,
+      name: fileName,
+      file: file,
     };
-    r.readAsBinaryString(file);
-
-    return data.result.url;
+    // let r = new FileReader();
+    // r.onload = async function () {
+    //   if (r.result) {
+    //     let uploadResult = await postDataToS3(r.result, data.result.url);
+    //     if (!uploadResult) {
+    //       return "failed";
+    //     }
+    //   }
+    // };
+    // r.readAsBinaryString(file);
   };
 
   const postDataToS3 = async (
@@ -843,8 +886,10 @@ const UploadForm: React.FC = () => {
   };
 
   const startFileScan = async () => {
-    const { data } = await API.post("/api-project-scan/", {
-      file_urls: urlList,
+
+    let urlData = urlList.map((item) => item.url)
+    await API.post("/api-project-scan/", {
+      file_urls: urlData,
       project_name: name,
       project_visibility: "public",
       project_type: "new",
