@@ -367,7 +367,7 @@ export const ReportContainer: React.FC<{ summary_report: Report }> = ({
                 >
                   Contract Address
                 </Text>
-                {!isDesktopView && <Text fontSize="lg" fontWeight={"normal"} mb={4}>
+                {!isDesktopView && <Text fontSize="lg" fontWeight={"normal"} mb={4} wordBreak="break-word">
                   {summary_report.project_summary_report.contract_address}
                 </Text>
                 }
@@ -403,7 +403,7 @@ export const ReportContainer: React.FC<{ summary_report: Report }> = ({
                 >
                   Contract Chain
                 </Text>
-                {!isDesktopView && <Text fontSize="lg" fontWeight={"normal"} mb={4}>
+                {!isDesktopView && <Text fontSize="lg" fontWeight={"normal"} mb={4} wordBreak="break-word">
                   {summary_report.project_summary_report.contract_chain}
                 </Text>
                 }
@@ -421,7 +421,7 @@ export const ReportContainer: React.FC<{ summary_report: Report }> = ({
                 >
                   Contract URL
                 </Text>
-                {!isDesktopView && <Text fontSize="lg" fontWeight={"normal"} mb={4}>
+                {!isDesktopView && <Text fontSize="lg" fontWeight={"normal"} mb={4} wordBreak="break-word">
                   {summary_report.project_summary_report.contract_url}
                 </Text>
                 }
@@ -452,7 +452,7 @@ export const ReportContainer: React.FC<{ summary_report: Report }> = ({
                 >
                   Codebase
                 </Text>
-                {!isDesktopView && <Text fontSize="lg" fontWeight={"normal"} mb={4} wordBreak="break-all">
+                {!isDesktopView && <Text fontSize="lg" fontWeight={"normal"} mb={4} wordBreak="break-word">
                   {summary_report.project_summary_report.project_url}
                 </Text>}
                 <Divider />
@@ -469,7 +469,7 @@ export const ReportContainer: React.FC<{ summary_report: Report }> = ({
                 >
                   Commit Hash
                 </Text>
-                {!isDesktopView && <Text fontSize="lg" fontWeight={"normal"} mb={4}>
+                {!isDesktopView && <Text fontSize="lg" fontWeight={"normal"} mb={4} wordBreak="break-word">
                   {summary_report.project_summary_report.git_commit_hash}
                 </Text>
                 }
@@ -489,7 +489,7 @@ export const ReportContainer: React.FC<{ summary_report: Report }> = ({
                 </Text>
                 {!isDesktopView && <>
                   {" "}
-                  <Text fontSize="lg" fontWeight={"normal"} mb={4}>
+                  <Text fontSize="lg" fontWeight={"normal"} mb={4} wordBreak="break-word">
                     {summary_report.project_summary_report.website}
                   </Text>
                   <Divider />
