@@ -1276,7 +1276,7 @@ export const ReportContainer: React.FC<{ summary_report: Report }> = ({
               <Text fontSize="xl" fontWeight={"bold"} mb={10} width={"100%"}>
                 {issue.bug_id}
               </Text>
-              <Flex width={"100%"} mb={[6, 6, 6, 1]} flexWrap="wrap">
+              <Flex width={"100%"} mb={6} flexWrap="wrap">
                 <VStack
                   width={["50%", "50%", "50%", "15%"]}
                   mb={[4, 4, 4, 0]}
