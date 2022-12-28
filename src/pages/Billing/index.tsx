@@ -187,9 +187,9 @@ const Billing: React.FC = () => {
                         {plans.monthly[selectedPlan].name}
                       </Text>
                       <Text
-                        as="span"
+                        as="div"
                         ml={5}
-                        mt={3}
+                        mt={1}
                         fontWeight={300}
                         fontSize="smaller"
                       >
@@ -471,11 +471,14 @@ const PricingPlan: React.FC<{
                   >
                     {planData.amount === "Free"
                       ? "Free"
-                      : `$ ${planData.amount}`}{" "}
-                    /
+                      : planData.name === "On Demand"
+                        ? `$ ${planData.amount}`
+                        : `$ ${planData.amount + " /"}`}
                   </Heading>
                   <Text mx={6} fontSize={"md"}>
-                    month
+                    {planData.name === "On Demand" || planData.amount === "Free"
+                      ? ""
+                      : "month"}
                   </Text>
                 </HStack>
 

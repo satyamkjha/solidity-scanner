@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 
-import { Box, Text, VStack } from "@chakra-ui/react";
+import { Box, Text, VStack, Image } from "@chakra-ui/react";
 
 import { Swiper, SwiperSlide } from "swiper/react";
 import { EffectCoverflow, Navigation, Pagination } from "swiper";
@@ -19,7 +19,7 @@ export class UserTestimonial extends Component {
           320: {
             slidesPerView: 1,
             height: 600,
-            width: 250,
+            width: 300,
           },
 
           768: {
@@ -50,35 +50,58 @@ export class UserTestimonial extends Component {
         pagination={{
           clickable: true,
         }}
-        style={{ marginTop: "50px" }}
+        style={{ marginTop: "50px", paddingTop: "50px" }}
         modules={[EffectCoverflow, Navigation, Pagination]}
       >
         {userTestimonials.map((data, index) => (
           <SwiperSlide
             key={index}
-            style={{ height: "calc(100% - 60px)", width: "100%" }}
+            style={{ height: "calc(100% - 60px)", width: "100%"}}
           >
             <Box
-              margin={"20px"}
+              w= {["95%", "95%", "90%", "92%"]}
+              margin={[4]}
+              marginLeft={[7, 7, "auto"]}
+              marginRight={"auto"}
               boxShadow="0px 16px 32px rgba(0, 0, 0, 0.13)"
               borderRadius="15px"
             >
               <VStack>
-                <Text fontSize="lg" mt="10">
+                <Image
+                  mt={"-50px"}
+                  mb={2}
+                  height={"120px"}
+                  width="120px"
+                  src={data.imageUrl}
+                  borderRadius={"50%"}
+                />
+                <Text fontSize="lg">
                   {data.name}
                 </Text>
-                <Text color="subtle" fontSize="md">
+                <Text color="subtle" fontSize="md" px={2}>
                   {data.designation}
                 </Text>
                 <Box>
+                  <Image
+                    src="/testimonials/quoteStart.svg"
+                    ml={4}
+                  />
                   <Text
-                    padding={"10"}
-                    fontSize="xl"
+                    padding={[ "4", "4", "8", "10"]}
+                    mt={-20}
+                    fontSize={["sm", "sm", "sm", "md"]}
                     fontStyle="italic"
                     fontWeight="400"
                   >
-                    {'"' + data.testimonial + '"'}
+                    {'"' + data.testimonial + ' "'}
                   </Text>
+                  <Image
+                    src="/testimonials/quoteEnd.svg"
+                    mb={10}
+                    ml={"auto"}
+                    mr={4}
+                    mt={-20}
+                  />
                 </Box>
               </VStack>
             </Box>

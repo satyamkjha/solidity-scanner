@@ -120,7 +120,7 @@ export const teamsData = {
       designation: "Co-Founder & CEO",
       imgUrl: "/teams/shashank.jpeg",
       linkedinUrl: "https://www.linkedin.com/in/shashank-in/",
-      twitterUrl: "https://twitter.com/cyberboyIndi",
+      twitterUrl: "https://twitter.com/cyberboyIndia",
     },
     {
       name: "Indranil Roy",
@@ -173,34 +173,25 @@ export const teamsData = {
 
 export const userTestimonials = [
   {
-    name: "Vitaly Dmitriyevich",
-    designation: "Co-Founder Ethereum",
+    name: "Gregory Makodzeba",
+    designation: "Co-Founder, Soken",
+    imageUrl: "/testimonials/gregory.jpeg",
     testimonial:
-      "Awesome tool! I am super happy with everything about this product. Its’s a little taste of everything all in one box.",
+      "Thanks to Solidity Scan team for building a comprehensive vulnerability scanner for smart contracts that will help you protect contracts from potential scams. It helps you not only find bugs in source code, but conveniently manage reports with the dashboard from your account. It is a nice tool not only for investors to know about the security of the contract they are investing in, but also for audit teams who conduct security testing and want to expand their tools for contract analysis."
   },
   {
-    name: "Vitaly Dmitriyevich",
-    designation: "Co-Founder Ethereum",
+    name: "Stefan Creadore",
+    designation: "Founder and Lead Developer, Exzo Network",
+    imageUrl: "/testimonials/stefan.svg",
     testimonial:
-      "Awesome tool! I am super happy with everything about this product. Its’s a little taste of everything all in one box.",
+      "I highly recommend using SolidityScan for any development team as it will help projects of all sizes save money and scale their development efforts. I conducted a personal review of the results obtained from our audit from a leading manual audit firm and an automated audit from SolidityScan, the results were almost identical, which is why we have decided to continue working with SolidityScan. It saves weeks on our timelines for security auditing, and troubleshooting, and provides a smooth workflow to enhance development proficiency."
   },
   {
-    name: "Vitaly Dmitriyevich",
-    designation: "Co-Founder Ethereum",
+    name: "Jon Greenwood",
+    designation: "Integrations, GovernorDAO",
+    imageUrl: "/testimonials/jon.svg",
     testimonial:
-      "Awesome tool! I am super happy with everything about this product. Its’s a little taste of everything all in one box.",
-  },
-  {
-    name: "Vitaly Dmitriyevich",
-    designation: "Co-Founder Ethereum",
-    testimonial:
-      "Awesome tool! I am super happy with everything about this product. Its’s a little taste of everything all in one box.",
-  },
-  {
-    name: "Vitaly Dmitriyevich",
-    designation: "Co-Founder Ethereum",
-    testimonial:
-      "Awesome tool! I am super happy with everything about this product. Its’s a little taste of everything all in one box.",
+      "A perfect tool for startup projects in Web 3.0 ! Personally used this as a reference tool while morphing contracts and governance protocols to have a second set of eyes in real-time. Nothing beats actual audits, but the access and ease of use of Solidity Scan make it a no-brainer !"
   },
 ];
 

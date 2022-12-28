@@ -1028,7 +1028,7 @@ const QuickScan: React.FC = () => {
             </Box>
           )}
 
-          {scanReport === null && (
+          {scanReport === null && process.env.REACT_APP_ENVIRONMENT === "dev" && (
             <Box
               ref={elementRef}
               display={"flex"}
@@ -1234,7 +1234,7 @@ const QuickScan: React.FC = () => {
               </Stack>
               <Heading mt={10} as="h1" fontSize="3xl" mb={4}>
                 Recent Scanned
-                <Box as="span" color="#3300FF">
+                <Box ml={2} as="span" color="#3300FF">
                   Contracts
                 </Box>{" "}
               </Heading>

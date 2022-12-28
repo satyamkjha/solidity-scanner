@@ -34,6 +34,7 @@ import ImageCarousel from "./components/carousel";
 import ManualAuditForm from "components/manualAuditForm";
 import Infographics from "components/infographics";
 import SignupBox from "components/signupBox";
+import UserTestimonial from "./components/testimonial";
 
 export default function LandingPage() {
   const { isOpen, onClose, onOpen } = useDisclosure();
@@ -330,13 +331,9 @@ export default function LandingPage() {
         </Flex>
         <Box
           w="100%"
-          display={"flex"}
-          flexDir="column"
-          justifyContent={"flex-start"}
-          alignItems="center"
           as="section"
           sx={{ textAlign: "center" }}
-          my={30}
+          my={28}
         >
           <Heading fontSize="3xl" mb={10}>
             What People are Saying about us
@@ -345,48 +342,7 @@ export default function LandingPage() {
             Meet the experts behind the scenes. We are always excited to talk
             about anything in crypto.
           </Text> */}
-          {/* <UserTestimonial /> */}
-          <Box
-            width={["90%", "90%", "70%"]}
-            boxShadow="0px 16px 32px rgba(0, 0, 0, 0.13)"
-            borderRadius="15px"
-            my={20}
-          >
-            <VStack>
-              <Image
-                mt={"-50px"}
-                mb={"20px"}
-                height={"120px"}
-                width="120px"
-                src="/testimonials/gregory.jpeg"
-                borderRadius={"50%"}
-              />
-              <Text fontSize="lg" mt="10">
-                Gregory Makodzeba
-              </Text>
-              <Text color="subtle" fontSize="md">
-                Co-Founder at Soken
-              </Text>
-              <Box>
-                <Text
-                  padding={"10"}
-                  fontSize={["sm", "sm", "lg"]}
-                  fontStyle="italic"
-                  fontWeight="400"
-                >
-                  Thanks to Solidity Scan team for building a comprehensive
-                  vulnerability scanner for smart contracts that will help you
-                  protect contracts from potential scams. It helps you not only
-                  find bugs in source code, but conveniently manage reports with
-                  the dashboard from your account. It is a nice tool not only
-                  for investors to know about the security of the contract they
-                  are investing in, but also for audit teams who conduct
-                  security testing and want to expand their tools for contract
-                  analysis.
-                </Text>
-              </Box>
-            </VStack>
-          </Box>
+          <UserTestimonial />
         </Box>
         <Box w="100%" as="section" sx={{ textAlign: "center" }} my={24}>
           <Heading fontSize="3xl" mb={5}>

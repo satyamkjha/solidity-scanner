@@ -8,9 +8,13 @@ import {
   useMediaQuery,
 } from "@chakra-ui/react";
 import React from "react";
+import { useHistory } from "react-router-dom";
 
 export const SignupBox: React.FC = () => {
   const [isDesktopView] = useMediaQuery("(min-width: 1024px)");
+
+  const history = useHistory()
+
   return (
     <Box
       sx={{
@@ -59,11 +63,11 @@ export const SignupBox: React.FC = () => {
             w: ["100%", "30%"],
           }}
         >
-          <Link to="/signup">
-            <Button variant="brand" w="100%" my={10}>
+          
+            <Button onClick={() => history.push("/signup")} variant="brand" w="100%" my={10}>
               Signup For Free Trial
             </Button>
-          </Link>
+        
         </Box>
       </Flex>
     </Box>
