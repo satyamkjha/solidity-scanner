@@ -32,6 +32,8 @@ import Header from "components/header";
 import Footer from "components/footer";
 import ImageCarousel from "./components/carousel";
 import ManualAuditForm from "components/manualAuditForm";
+import Infographics from "components/infographics";
+import SignupBox from "components/signupBox";
 import UserTestimonial from "./components/testimonial";
 
 export default function LandingPage() {
@@ -119,65 +121,7 @@ export default function LandingPage() {
           <Text color="subtle" fontSize={["lg", "lg", "xl"]} mb={4}>
             Simple, fast, effortless.
           </Text>
-          <Flex
-            sx={{
-              w: "70%",
-              justifyContent: "space-between",
-              my: [10, 10, 20],
-              color: "#00006D",
-              mx: "auto",
-              flexDir: ["column", "column", "row"],
-            }}
-          >
-            <Flex
-              sx={{
-                flexDir: "column",
-                alignItems: "center",
-                mb: [8, 8, 0],
-              }}
-            >
-              <ScheduleScan size={isDesktopView ? 140 : 100} />
-              <Text fontSize="sm" ml="2" mt={4} fontWeight={600}>
-                Initiate Scans
-              </Text>
-            </Flex>
-            <Flex
-              sx={{
-                flexDir: "column",
-                alignItems: "center",
-                mb: [8, 8, 0],
-              }}
-            >
-              <PublishReport size={isDesktopView ? 140 : 100} />
-              <Text fontSize="sm" ml="2" mt={4} fontWeight={600}>
-                Publish Reports
-              </Text>
-            </Flex>
-            <Flex
-              sx={{
-                flexDir: "column",
-                alignItems: "center",
-                mb: [8, 8, 0],
-              }}
-            >
-              <VulnCheck size={isDesktopView ? 140 : 100} />
-              <Text fontSize="sm" ml="2" mt={4} fontWeight={600}>
-                100+ Vulnerability Checks
-              </Text>
-            </Flex>
-            <Flex
-              sx={{
-                flexDir: "column",
-                alignItems: "center",
-                mb: [8, 8, 0],
-              }}
-            >
-              <Integration size={isDesktopView ? 140 : 100} />
-              <Text fontSize="sm" ml="2" mt={4} fontWeight={600}>
-                Easy Integrations
-              </Text>
-            </Flex>{" "}
-          </Flex>
+          <Infographics />
         </Box>
 
         <Flex
@@ -786,61 +730,7 @@ export default function LandingPage() {
           </Flex>
         </Box>
         {/* Section 6 */}
-        <Box
-          sx={{
-            w: "100%",
-            backgroundImage: "url(/background/pattern.png)",
-            borderRadius: 20,
-            overflow: "hidden",
-            mb: 10,
-          }}
-        >
-          <Flex
-            sx={{
-              px: [2, 2, 10],
-              py: [8, 8, 20],
-              w: "100%",
-              bg: "rgba(82, 255, 0, 0.06)",
-              flexDir: ["column", "column", "row"],
-              alignItems: "center",
-            }}
-          >
-            <Box
-              sx={{
-                w: ["100%", "70%"],
-              }}
-            >
-              <Heading
-                as="h2"
-                fontSize="3xl"
-                lineHeight="1.4"
-                mb={4}
-                textAlign={["center", "center", "left"]}
-              >
-                Start securing your
-                <br />
-                <Box as="span" sx={{ color: "accent" }}>
-                  contracts
-                </Box>{" "}
-                today
-              </Heading>
-              <Text color="accent" textAlign={["center", "center", "left"]}>
-                Have more questions? Talk to our team and get a demo now.
-              </Text>
-            </Box>
-            <Box
-              sx={{
-                w: ["100%", "30%"],
-              }}
-            >
-              <Link to="/signup">
-                <Button variant="brand" w="100%" my={10}>
-                  Signup For Free Trial
-                </Button>
-              </Link>
-            </Box>
-          </Flex>
-        </Box>
+        <SignupBox />
       </Container>
       <Footer />
       <ManualAuditForm isOpen={isOpen} onClose={onClose} />

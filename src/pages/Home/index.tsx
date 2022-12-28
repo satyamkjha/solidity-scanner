@@ -797,47 +797,55 @@ const UploadForm: React.FC = () => {
   const uploadFiles = async () => {
     let results: any[] = [];
     urlList.forEach((item) => {
-      results.push(new Promise((resolve, reject) => {
-        let r = new FileReader();
-        r.readAsBinaryString(item.file);
-        r.onload = () => {  
-            if(r.result){
+      results.push(
+        new Promise((resolve, reject) => {
+          let r = new FileReader();
+          r.readAsBinaryString(item.file);
+          r.onload = () => {
+            if (r.result) {
               postDataToS3(r.result, item.url).then(
                 (res) => {
                   resolve(res);
                 },
                 () => {
-                  postDataToS3(r.result, item.url).then((res) => {
-                    resolve(res)
-                  }, () => {
-                    reject(false)
-                  })
+                  postDataToS3(r.result, item.url).then(
+                    (res) => {
+                      resolve(res);
+                    },
+                    () => {
+                      reject(false);
+                    }
+                  );
                 }
               );
             } else {
-              reject(false)
+              reject(false);
             }
-        };
-      }))
+          };
+        })
+      );
     });
-    Promise.all(results).then((res) => {
-      let count = 0
-      res.forEach((item) => {
-        if(item) count++
-      })
-      if(count === acceptedFiles.length){
-        setStep(2)
-      } else {
-        setStep(0)
+    Promise.all(results).then(
+      (res) => {
+        let count = 0;
+        res.forEach((item) => {
+          if (item) count++;
+        });
+        if (count === acceptedFiles.length) {
+          setStep(2);
+        } else {
+          setStep(0);
+        }
+      },
+      () => {
+        setStep(0);
       }
-    }, () => {
-      setStep(0)
-    });
+    );
   };
 
   useEffect(() => {
     if (urlList.length === acceptedFiles.length && urlList.length > 0) {
-     uploadFiles()
+      uploadFiles();
     }
   }, [urlList]);
 
@@ -886,8 +894,7 @@ const UploadForm: React.FC = () => {
   };
 
   const startFileScan = async () => {
-
-    let urlData = urlList.map((item) => item.url)
+    let urlData = urlList.map((item) => item.url);
     await API.post("/api-project-scan/", {
       file_urls: urlData,
       project_name: name,
