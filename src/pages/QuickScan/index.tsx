@@ -150,37 +150,37 @@ const QuickScan: React.FC = () => {
   };
 
   const options = [
-    { value: "etherscan", icon: "etherscan", label: "Ethereum" },
-    { value: "bscscan", icon: "bscscan", label: "Binance" },
+    { value: "etherscan", icon: "etherscan", label: "Ethereum - (etherscan.io)" },
+    { value: "bscscan", icon: "bscscan", label: "Binance - (bscscan.com)" },
     {
       value: "polygonscan",
       icon: "polygonscan",
-      label: "Polygon",
+      label: "Polygon - (polygonscan.com)",
     },
     {
       value: "fantom",
       icon: "fantom",
-      label: "Fantom",
+      label: "Fantom - (ftmscan.com)",
     },
     {
       value: "cronos",
       icon: "cronos",
-      label: "Cronos",
+      label: "Cronos - (cronoscan.com)",
     },
     {
       value: "avalanche",
       icon: "avalanche",
-      label: "Avalanche C-Chain",
+      label: "Avalanche C-Chain - (snowtrace.io)",
     },
     {
       value: "celo",
       icon: "celo",
-      label: "Celo",
+      label: "Celo - (celoscan.io)",
     },
     {
       value: "aurora",
       icon: "aurora",
-      label: "Aurora",
+      label: "Aurora - (aurorascan.dev)",
     },
   ];
 
@@ -201,14 +201,15 @@ const QuickScan: React.FC = () => {
       borderRadius: 10,
       border: "0px solid #ffffff",
       overflowY: "hidden",
-      width: "280px",
+      width: "300px",
+      textAlign: "left"
     }),
     control: (state: any) => ({
       // none of react-select's styles are passed to <Control />
       display: "flex",
       flexDirection: "row",
       backgroundColor: "#FFFFFF",
-      width: isDesktopView ? "280px" : "95%",
+      width: isDesktopView ? "300px" : "95%",
       padding: 5,
       margin: 0,
       marginBottom: isDesktopView ? 0 : 10,
