@@ -1,5 +1,5 @@
 import React, { useEffect, useRef } from "react";
-import { Link, useLocation, useParams } from "react-router-dom";
+import { useLocation, useParams } from "react-router-dom";
 import styled from "@emotion/styled";
 
 import {
@@ -10,7 +10,7 @@ import {
   Heading,
   Button,
   Image,
-  Link as ChakraLink,
+  Link,
   useDisclosure,
   HStack,
   VStack,
@@ -48,6 +48,8 @@ import { ArrowForwardIcon, ExternalLinkIcon } from "@chakra-ui/icons";
 import { monthNames } from "common/values";
 import SignupBox from "components/signupBox";
 import Infographics from "components/infographics";
+import { blockScans } from "common/values";
+import { useRecentQuickScans } from "hooks/useRecentQuickScans";
 
 const pieData = (
   critical: number,
@@ -288,6 +290,7 @@ const QuickScan: React.FC = () => {
   const [scanReport, setScanReport] = React.useState<QuickScanResult | null>(
     null
   );
+  const {data: recentScans, isLoading: recentScansLoading} = useRecentQuickScans();
 
   let d = new Date();
 
@@ -386,45 +389,6 @@ const QuickScan: React.FC = () => {
       });
     }
   };
-
-
-  const scanData = [{
-    address: '0xDAFEA492D9c6733ae3d56b7Ed1ADB60692c98Bc5',
-    score: ' 4.5',
-    blockImage: 'etherscan',
-    blockchain: 'Ethereum'
-   },
-   {
-    address: '0xDAFEA492D9c6733ae3d56b7Ed1ADB60692c98Bc5',
-    score: ' 4.5',
-    blockImage: 'bscscan',
-    blockchain: 'Binance'
-   },
-   {
-    address: '0xDAFEA492D9c6733ae3d56b7Ed1ADB60692c98Bc5',
-    score: ' 4.5',
-    blockImage: 'polygonscan',
-    blockchain: 'Polygon'
-   },
-   {
-    address: '0xDAFEA492D9c6733ae3d56b7Ed1ADB60692c98Bc5',
-    score: ' 4.5',
-    blockImage: 'avalanche',
-    blockchain: 'Avalanche'
-   },
-   {
-    address: '0xDAFEA492D9c6733ae3d56b7Ed1ADB60692c98Bc5',
-    score: ' 4.5',
-    blockImage: 'fantom',
-    blockchain: 'Fantom'
-   },
-   {
-    address: '0xDAFEA492D9c6733ae3d56b7Ed1ADB60692c98Bc5',
-    score: ' 4.5',
-    blockImage: 'celo',
-    blockchain: 'Celo'
-   },
-  ]
 
   return (
     <>
@@ -1239,7 +1203,7 @@ const QuickScan: React.FC = () => {
                   Contracts
                 </Box>{" "}
               </Heading>
-              <Text
+              {/* <Text
                 w={["100%", "100%", "70%"]}
                 color="subtle"
                 fontSize={["lg", "lg", "xl"]}
@@ -1248,7 +1212,7 @@ const QuickScan: React.FC = () => {
                 Lorem ipsum dolor sit amet, consectetur adipiscing elit.
                 Molestie ultricies id posuere mauris proin duis placerat lorem.
                 Sed pellentesque.
-              </Text>
+              </Text> */}
 
               <Box
                 w={"100%"}
@@ -1282,7 +1246,7 @@ const QuickScan: React.FC = () => {
                     w={"10%"}
                     fontSize="sm"
                   >
-                    Score
+                    Security Score
                   </Text>
                   <Text
                     fontWeight={600}
@@ -1323,59 +1287,74 @@ const QuickScan: React.FC = () => {
                     alignItems={"flex-start"}
                     spacing={5}
                   >
-                    {scanData.map((item) => (
-                      <HStack
-                      justifyContent='space-between'
-                      alignItems="center"
-                      w="100%"
-                      spacing={0}
-                    >
-                      <Text
-                        color={'#8A94A6'}
-                        textAlign={"left"}
-                        w={"25%"}
-                        fontSize="sm"
-                        isTruncated
-                      >
-                        {item.address}
-                      </Text>
-                      <Text
-                        color={'#3300FF'}
-                        textAlign={"left"}
-                        w={"10%"}
-                        fontSize="md"
-                        fontWeight={700}
-                      >
-                        {item.score}
-                      </Text>
-                      <HStack w={"20%"} justifyContent='flex-start' alignItems={'center'} spacing={3}>
-                      <Image height={"20px"} width={"20px"} src={`/blockscan/${item.blockImage}.svg`} />
-                      <Text
-                        color={'#8A94A6'}
-                        textAlign={"left"}
-                        
-                        fontSize="sm"
-                      >
-                        {item.blockchain}
-                      </Text>
-                      </HStack>
-                      <HStack w={"35%"} justifyContent='flex-start' alignItems={'center'} spacing={3}>
-                      <Button fontWeight={100} fontSize={13} height={9} borderColor='#000000' variant={'outline'} color='#000000'>
-                        View Report
-                      </Button>
-                      <Text
-                        color={'#8A94A6'}
-                        textAlign={"left"}
-                        
-                        fontSize="sm"
-                      >
-                        View Contract
-                      </Text>
-                      <ExternalLinkIcon color={'#8A94A6'} />
-                      </HStack>
-                      
-                    </HStack>
-                    ))}
+                    {recentScansLoading
+                      ? <Flex w={"100%"} alignItems={"center"} justifyContent="center">
+                          <Spinner />
+                        </Flex>
+                      : recentScans.scans.map((item: any) => (
+                        <HStack
+                          justifyContent='space-between'
+                          alignItems="center"
+                          w="100%"
+                          spacing={0}
+                        >
+                          <Text
+                            color={'#8A94A6'}
+                            textAlign={"left"}
+                            w={"25%"}
+                            fontSize="sm"
+                            isTruncated
+                          >
+                            {item.contract_address}
+                          </Text>
+                          <Text
+                            color={'#3300FF'}
+                            textAlign={"left"}
+                            w={"10%"}
+                            fontSize="md"
+                            fontWeight={700}
+                          >
+                            {item.score + "/5"}
+                          </Text>
+                          <HStack w={"20%"} justifyContent='flex-start' alignItems={'center'} spacing={3}>
+                            <Image height={"20px"} width={"20px"} src={`/blockscan/${item.contract_platform}.svg`} />
+                            <Text
+                              color={'#8A94A6'}
+                              textAlign={"left"}
+                              fontSize="sm"
+                            >
+                              {blockScans[item.contract_platform]}
+                            </Text>
+                          </HStack>
+                          <HStack w={"35%"} justifyContent='flex-start' alignItems={'center'} spacing={3}>
+                            <Link variant="subtle-without-underline" href={item.scanner_reference_url}  isExternal>
+                              <Button
+                                fontWeight={100}
+                                fontSize={13}
+                                height={9}
+                                borderColor='#000000'
+                                variant={'outline'}
+                                color='#000000'
+                              >
+                                View Scan
+                              </Button>
+                            </Link>
+                            <Link href={item.contract_url} isExternal>
+                              <HStack>
+                                <Text
+                                  color={'#323B4B'}
+                                  textAlign={"left"}
+                                  fontSize="sm"
+                                >
+                                  View Contract
+                                </Text>
+                                <ExternalLinkIcon color={'#323B4B'} />
+                              </HStack>
+                            </Link>
+                          </HStack>
+
+                        </HStack>
+                      ))}
                     
                   </VStack>
                 </Box>
