@@ -284,3 +284,14 @@ export const monthNames = [
   "Nov",
   "Dec",
 ];
+
+export const blockScans: { [key: string]: string } = {
+  etherscan: "Ethereum",
+  bscscan: "Binance",
+  polygonscan: "Polygon",
+  fantom: "Fantom",
+  cronos: "Cronos",
+  avalanche: "Avalanche C-Chain",
+  celo: "Celo",
+  aurora: "Aurora"
+}
