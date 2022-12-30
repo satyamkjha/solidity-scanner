@@ -132,7 +132,7 @@ const Sidebar: React.FC<{
         sx={{ width: "100%", justifyContent: "flex-end" }}
         pt={["28", "28", "28", "24", "32"]}
         pb={["3", "3", "3", "3", "4"]}
-        >
+      >
         <Box sx={{ width: "85%" }}>
           {/* <Text
             sx={{

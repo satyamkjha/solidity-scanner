@@ -472,8 +472,8 @@ const PricingPlan: React.FC<{
                     {planData.amount === "Free"
                       ? "Free"
                       : planData.name === "On Demand"
-                        ? `$ ${planData.amount}`
-                        : `$ ${planData.amount + " /"}`}
+                      ? `$ ${planData.amount}`
+                      : `$ ${planData.amount + " /"}`}
                   </Heading>
                   <Text mx={6} fontSize={"md"}>
                     {planData.name === "On Demand" || planData.amount === "Free"

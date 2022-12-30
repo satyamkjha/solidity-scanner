@@ -56,10 +56,10 @@ export class UserTestimonial extends Component {
         {userTestimonials.map((data, index) => (
           <SwiperSlide
             key={index}
-            style={{ height: "calc(100% - 60px)", width: "100%"}}
+            style={{ height: "calc(100% - 60px)", width: "100%" }}
           >
             <Box
-              w= {["95%", "95%", "90%", "92%"]}
+              w={["95%", "95%", "90%", "92%"]}
               margin={[4]}
               marginLeft={[7, 7, "auto"]}
               marginRight={"auto"}
@@ -75,19 +75,14 @@ export class UserTestimonial extends Component {
                   src={data.imageUrl}
                   borderRadius={"50%"}
                 />
-                <Text fontSize="lg">
-                  {data.name}
-                </Text>
+                <Text fontSize="lg">{data.name}</Text>
                 <Text color="subtle" fontSize="md" px={2}>
                   {data.designation}
                 </Text>
                 <Box>
-                  <Image
-                    src="/testimonials/quoteStart.svg"
-                    ml={4}
-                  />
+                  <Image src="/testimonials/quoteStart.svg" ml={4} />
                   <Text
-                    padding={[ "4", "4", "8", "10"]}
+                    padding={["4", "4", "8", "10"]}
                     mt={-20}
                     fontSize={["sm", "sm", "sm", "md"]}
                     fontStyle="italic"

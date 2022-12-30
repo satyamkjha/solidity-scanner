@@ -13,7 +13,7 @@ import { useHistory } from "react-router-dom";
 export const SignupBox: React.FC = () => {
   const [isDesktopView] = useMediaQuery("(min-width: 1024px)");
 
-  const history = useHistory()
+  const history = useHistory();
 
   return (
     <Box
@@ -63,11 +63,14 @@ export const SignupBox: React.FC = () => {
             w: ["100%", "30%"],
           }}
         >
-          
-            <Button onClick={() => history.push("/signup")} variant="brand" w="100%" my={10}>
-              Signup For Free Trial
-            </Button>
-        
+          <Button
+            onClick={() => history.push("/signup")}
+            variant="brand"
+            w="100%"
+            my={10}
+          >
+            Signup For Free Trial
+          </Button>
         </Box>
       </Flex>
     </Box>

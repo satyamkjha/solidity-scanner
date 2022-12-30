@@ -22,6 +22,11 @@ import {
   Spinner,
   Stack,
   useMediaQuery,
+  IconButton,
+  Menu,
+  MenuButton,
+  MenuItem,
+  MenuList,
 } from "@chakra-ui/react";
 
 import {
@@ -50,6 +55,7 @@ import SignupBox from "components/signupBox";
 import Infographics from "components/infographics";
 import { blockScans } from "common/values";
 import { useRecentQuickScans } from "hooks/useRecentQuickScans";
+import { FaEllipsisH, FaEllipsisV } from "react-icons/fa";
 
 const pieData = (
   critical: number,
@@ -152,7 +158,11 @@ const QuickScan: React.FC = () => {
   };
 
   const options = [
-    { value: "etherscan", icon: "etherscan", label: "Ethereum - (etherscan.io)" },
+    {
+      value: "etherscan",
+      icon: "etherscan",
+      label: "Ethereum - (etherscan.io)",
+    },
     { value: "bscscan", icon: "bscscan", label: "Binance - (bscscan.com)" },
     {
       value: "polygonscan",
@@ -204,7 +214,7 @@ const QuickScan: React.FC = () => {
       border: "0px solid #ffffff",
       overflowY: "hidden",
       width: "300px",
-      textAlign: "left"
+      textAlign: "left",
     }),
     control: (state: any) => ({
       // none of react-select's styles are passed to <Control />
@@ -290,7 +300,8 @@ const QuickScan: React.FC = () => {
   const [scanReport, setScanReport] = React.useState<QuickScanResult | null>(
     null
   );
-  const {data: recentScans, isLoading: recentScansLoading} = useRecentQuickScans();
+  const { data: recentScans, isLoading: recentScansLoading } =
+    useRecentQuickScans();
 
   let d = new Date();
 
@@ -590,7 +601,7 @@ const QuickScan: React.FC = () => {
                     <Box
                       w={["30%", "30%", "15%"]}
                       borderRadius={15}
-                      m={2}
+                      
                       h={"160px"}
                       background={" #FFFFFF "}
                       display="flex"
@@ -612,7 +623,7 @@ const QuickScan: React.FC = () => {
                     <Box
                       w={["30%", "30%", "15%"]}
                       borderRadius={15}
-                      m={2}
+                      
                       h={"160px"}
                       background={" #FFFFFF "}
                       display="flex"
@@ -634,7 +645,7 @@ const QuickScan: React.FC = () => {
                     <Box
                       w={["30%", "30%", "15%"]}
                       borderRadius={15}
-                      m={2}
+                      
                       h={"160px"}
                       background={" #FFFFFF "}
                       display="flex"
@@ -659,7 +670,7 @@ const QuickScan: React.FC = () => {
                     <Box
                       w={["30%", "30%", "15%"]}
                       borderRadius={15}
-                      m={2}
+                      
                       h={"160px"}
                       background={" #FFFFFF "}
                       display="flex"
@@ -684,7 +695,7 @@ const QuickScan: React.FC = () => {
                     <Box
                       w={["30%", "30%", "15%"]}
                       borderRadius={15}
-                      m={2}
+                      
                       h={"160px"}
                       background={" #FFFFFF "}
                       display="flex"
@@ -709,7 +720,7 @@ const QuickScan: React.FC = () => {
                     <Box
                       w={["30%", "30%", "15%"]}
                       borderRadius={15}
-                      m={2}
+                      
                       h={"160px"}
                       background={" #FFFFFF "}
                       display="flex"
@@ -993,15 +1004,15 @@ const QuickScan: React.FC = () => {
             </Box>
           )}
 
-          {scanReport === null && process.env.REACT_APP_ENVIRONMENT === "dev" && (
+          {scanReport === null && (
             <Box
               ref={elementRef}
               display={"flex"}
               flexDir="column"
               alignItems="center"
               justifyContent={"flex-start"}
-              w={"90%"}
-              px={[0, 0, 10]}
+              w={["90%"]}
+              px={[0, 0, 0, 10]}
               mt={"-120px"}
               py={[0, 0, 0, 10]}
               borderRadius={20}
@@ -1068,13 +1079,15 @@ const QuickScan: React.FC = () => {
                     mt={5}
                     width={["100%"]}
                     justify={"space-between"}
+                    alignContent='space-between'
                     flexWrap="wrap"
                     spacing={0}
+                    h={"350px"}
                   >
                     <Box
                       w={["30%", "30%", "15%"]}
                       borderRadius={15}
-                      m={2}
+                      
                       h={"160px"}
                       background={" #FFFFFF "}
                       display="flex"
@@ -1093,7 +1106,7 @@ const QuickScan: React.FC = () => {
                     <Box
                       w={["30%", "30%", "15%"]}
                       borderRadius={15}
-                      m={2}
+                      
                       h={"160px"}
                       background={" #FFFFFF "}
                       display="flex"
@@ -1112,7 +1125,7 @@ const QuickScan: React.FC = () => {
                     <Box
                       w={["30%", "30%", "15%"]}
                       borderRadius={15}
-                      m={2}
+                      
                       h={"160px"}
                       background={" #FFFFFF "}
                       display="flex"
@@ -1134,7 +1147,7 @@ const QuickScan: React.FC = () => {
                     <Box
                       w={["30%", "30%", "15%"]}
                       borderRadius={15}
-                      m={2}
+                      
                       h={"160px"}
                       background={" #FFFFFF "}
                       display="flex"
@@ -1156,7 +1169,7 @@ const QuickScan: React.FC = () => {
                     <Box
                       w={["30%", "30%", "15%"]}
                       borderRadius={15}
-                      m={2}
+                      
                       h={"160px"}
                       background={" #FFFFFF "}
                       display="flex"
@@ -1178,7 +1191,7 @@ const QuickScan: React.FC = () => {
                     <Box
                       w={["30%", "30%", "15%"]}
                       borderRadius={15}
-                      m={2}
+                      
                       h={"160px"}
                       background={" #FFFFFF "}
                       display="flex"
@@ -1203,34 +1216,27 @@ const QuickScan: React.FC = () => {
                   Contracts
                 </Box>{" "}
               </Heading>
-              {/* <Text
-                w={["100%", "100%", "70%"]}
-                color="subtle"
-                fontSize={["lg", "lg", "xl"]}
-                mb={4}
-              >
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-                Molestie ultricies id posuere mauris proin duis placerat lorem.
-                Sed pellentesque.
-              </Text> */}
 
               <Box
                 w={"100%"}
                 borderRadius={15}
-                p={5}
-                mt={10}
-                background={" #FAFBFC "}
+                p={[0, 0, 5]}
+                mt={[0, 0, 10]}
+                
+                background={["#FFFFFF", "#FFFFFF", "#FAFBFC"]}
                 display="flex"
                 flexDir={"column"}
                 alignItems={["center", "center", "center", "flex-start"]}
                 justifyContent={"flex-start"}
               >
                 <HStack
-                  justifyContent='space-between'
+                  justifyContent="space-between"
                   alignItems="flex-start"
                   w="100%"
                   p={5}
+                  py={0}
                   spacing={0}
+                  display={["none", "none", "flex"]}
                 >
                   <Text
                     fontWeight={600}
@@ -1285,77 +1291,133 @@ const QuickScan: React.FC = () => {
                     width={"100%"}
                     justifyContent="flex-start"
                     alignItems={"flex-start"}
-                    spacing={5}
+                    spacing={4}
                   >
-                    {recentScansLoading
-                      ? <Flex w={"100%"} alignItems={"center"} justifyContent="center">
-                          <Spinner />
-                        </Flex>
-                      : recentScans.scans.map((item: any) => (
-                        <HStack
-                          justifyContent='space-between'
-                          alignItems="center"
-                          w="100%"
-                          spacing={0}
-                        >
-                          <Text
-                            color={'#8A94A6'}
-                            textAlign={"left"}
-                            w={"25%"}
-                            fontSize="sm"
-                            isTruncated
+                    {recentScansLoading ? (
+                      <Flex
+                        w={"100%"}
+                        alignItems={"center"}
+                        justifyContent="center"
+                      >
+                        <Spinner />
+                      </Flex>
+                    ) : (
+                      recentScans.scans.map((item: any) => (
+                        <>
+                          <HStack
+                            justifyContent="space-between"
+                            alignItems="center"
+                            w="100%"
+                            spacing={0}
                           >
-                            {item.contract_address}
-                          </Text>
-                          <Text
-                            color={'#3300FF'}
-                            textAlign={"left"}
-                            w={"10%"}
-                            fontSize="md"
-                            fontWeight={700}
-                          >
-                            {item.score + "/5"}
-                          </Text>
-                          <HStack w={"20%"} justifyContent='flex-start' alignItems={'center'} spacing={3}>
-                            <Image height={"20px"} width={"20px"} src={`/blockscan/${item.contract_platform}.svg`} />
+                            <Image
+                              display={["block", "block", "none"]}
+                              height={"20px"}
+                              width={"20px"}
+                              src={`/blockscan/${item.contract_platform}.svg`}
+                            />
                             <Text
-                              color={'#8A94A6'}
+                              color={"#8A94A6"}
                               textAlign={"left"}
+                              w={["50%", "50%", "25%"]}
                               fontSize="sm"
+                              isTruncated
                             >
-                              {blockScans[item.contract_platform]}
+                              {item.contract_address}
                             </Text>
-                          </HStack>
-                          <HStack w={"35%"} justifyContent='flex-start' alignItems={'center'} spacing={3}>
-                            <Link variant="subtle-without-underline" href={item.scanner_reference_url}  isExternal>
-                              <Button
-                                fontWeight={100}
-                                fontSize={13}
-                                height={9}
-                                borderColor='#000000'
-                                variant={'outline'}
-                                color='#000000'
+                            <Text
+                              color={"#3300FF"}
+                              textAlign={"center"}
+                              w={["20%", "20%", "10%"]}
+                              fontSize="md"
+                              fontWeight={700}
+                            >
+                              {item.score}
+                              <Box as={"span"} color="gray.500" fontSize={"xs"}>
+                                /5
+                              </Box>
+                            </Text>
+                            <HStack
+                              display={["none", "none", "flex"]}
+                              w={"20%"}
+                              justifyContent="flex-start"
+                              alignItems={"center"}
+                              spacing={3}
+                            >
+                              <Image
+                                height={"20px"}
+                                width={"20px"}
+                                src={`/blockscan/${item.contract_platform}.svg`}
+                              />
+                              <Text
+                                color={"#8A94A6"}
+                                textAlign={"left"}
+                                fontSize="sm"
                               >
-                                View Scan
-                              </Button>
-                            </Link>
-                            <Link href={item.contract_url} isExternal>
-                              <HStack>
-                                <Text
-                                  color={'#323B4B'}
-                                  textAlign={"left"}
-                                  fontSize="sm"
+                                {blockScans[item.contract_platform]}
+                              </Text>
+                            </HStack>
+                            <HStack
+                              display={["none", "none", "flex"]}
+                              w={"35%"}
+                              justifyContent="flex-start"
+                              alignItems={"center"}
+                              spacing={3}
+                            >
+                              <Link
+                                variant="subtle-without-underline"
+                                href={item.scanner_reference_url}
+                                isExternal
+                              >
+                                <Button
+                                  fontWeight={100}
+                                  fontSize={13}
+                                  height={9}
+                                  borderColor="#000000"
+                                  variant={"outline"}
+                                  color="#000000"
                                 >
-                                  View Contract
-                                </Text>
-                                <ExternalLinkIcon color={'#323B4B'} />
-                              </HStack>
-                            </Link>
+                                  View Scan
+                                </Button>
+                              </Link>
+                              <Link href={item.contract_url} isExternal>
+                                <HStack>
+                                  <Text
+                                    color={"#323B4B"}
+                                    textAlign={"left"}
+                                    fontSize="sm"
+                                  >
+                                    View Contract
+                                  </Text>
+                                  <ExternalLinkIcon color={"#323B4B"} />
+                                </HStack>
+                              </Link>
+                            </HStack>
+                            <Menu isLazy>
+                              <MenuButton
+                                display={["block", "block", "none"]}
+                                aria-label="Options"
+                              >
+                                <FaEllipsisV color={"#8A94A6"} />
+                              </MenuButton>
+                              <MenuList p={2}>
+                                <Link
+                                  href={item.scanner_reference_url}
+                                  isExternal
+                                >
+                                  <MenuItem>View Scan</MenuItem>
+                                </Link>
+                                <Divider my={1} />
+                                <Link href={item.contract_url} isExternal>
+                                  <MenuItem>View Contract</MenuItem>
+                                </Link>
+                              </MenuList>
+                            </Menu>
                           </HStack>
-
-                        </HStack>
-                      ))}
-                    
+                          <Divider />
+                        </>
+                      ))
+                    )}
                   </VStack>
                 </Box>
               </Box>
@@ -1370,7 +1432,7 @@ const QuickScan: React.FC = () => {
             justifyContent={"flex-start"}
             w={"90%"}
             px={[0, 0, 10]}
-            py={[0, 0, 0, 10]}
+            py={10}
             borderRadius={20}
             background={"#FFFFFF"}
           >

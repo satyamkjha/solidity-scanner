@@ -260,7 +260,7 @@ const ProjectCard: React.FC<{
   return (
     <>
       {multi_file_scan_status === "scan_done" ||
-        multi_file_scan_status === "scanning" ? (
+      multi_file_scan_status === "scanning" ? (
         <Flex
           onClick={() => {
             if (multi_file_scan_status === "scan_done") {
