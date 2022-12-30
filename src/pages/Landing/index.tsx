@@ -329,12 +329,7 @@ export default function LandingPage() {
             </Text>
           </Box>
         </Flex>
-        <Box
-          w="100%"
-          as="section"
-          sx={{ textAlign: "center" }}
-          my={28}
-        >
+        <Box w="100%" as="section" sx={{ textAlign: "center" }} my={28}>
           <Heading fontSize="3xl" mb={10}>
             What People are Saying about us
           </Heading>

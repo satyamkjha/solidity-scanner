@@ -481,7 +481,12 @@ const ContractForm: React.FC = () => {
       label: "Ethereum - (etherscan.io)",
       isDisabled: true,
     },
-    { value: "bscscan", icon: "bscscan", label: "Binance - (bscscan.com)", isDisabled: true },
+    {
+      value: "bscscan",
+      icon: "bscscan",
+      label: "Binance - (bscscan.com)",
+      isDisabled: true,
+    },
     {
       value: "avalanche",
       icon: "avalanche",
