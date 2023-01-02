@@ -478,50 +478,55 @@ const ContractForm: React.FC = () => {
     {
       value: "etherscan",
       icon: "etherscan",
-      label: "Ethereum",
+      label: "Ethereum - (etherscan.io)",
       isDisabled: true,
     },
-    { value: "bscscan", icon: "bscscan", label: "Binance", isDisabled: true },
+    {
+      value: "bscscan",
+      icon: "bscscan",
+      label: "Binance - (bscscan.com)",
+      isDisabled: true,
+    },
     {
       value: "avalanche",
       icon: "avalanche",
-      label: "Avalanche C-Chain",
+      label: "Avalanche C-Chain - (snowtrace.io)",
       isDisabled: true,
     },
     {
       value: "polygonscan",
       icon: "polygonscan",
-      label: "Polygon",
+      label: "Polygon - (polygonscan.com)",
       isDisabled: true,
     },
     {
       value: "fantom",
       icon: "fantom",
-      label: "Fantom",
+      label: "Fantom - (ftmscan.com)",
       isDisabled: true,
     },
     {
       value: "cronos",
       icon: "cronos",
-      label: "Cronos",
+      label: "Cronos - (cronoscan.com)",
       isDisabled: true,
     },
     {
       value: "arbiscan",
       icon: "arbiscan",
-      label: "Arbiscan",
+      label: "Arbiscan - (arbiscan.io)",
       isDisabled: true,
     },
     {
       value: "celo",
       icon: "celo",
-      label: "Celo",
+      label: "Celo - (celoscan.io)",
       isDisabled: true,
     },
     {
       value: "aurora",
       icon: "aurora",
-      label: "Aurora",
+      label: "Aurora - (aurorascan.dev)",
       isDisabled: true,
     },
   ];
@@ -797,47 +802,55 @@ const UploadForm: React.FC = () => {
   const uploadFiles = async () => {
     let results: any[] = [];
     urlList.forEach((item) => {
-      results.push(new Promise((resolve, reject) => {
-        let r = new FileReader();
-        r.readAsBinaryString(item.file);
-        r.onload = () => {  
-            if(r.result){
+      results.push(
+        new Promise((resolve, reject) => {
+          let r = new FileReader();
+          r.readAsBinaryString(item.file);
+          r.onload = () => {
+            if (r.result) {
               postDataToS3(r.result, item.url).then(
                 (res) => {
                   resolve(res);
                 },
                 () => {
-                  postDataToS3(r.result, item.url).then((res) => {
-                    resolve(res)
-                  }, () => {
-                    reject(false)
-                  })
+                  postDataToS3(r.result, item.url).then(
+                    (res) => {
+                      resolve(res);
+                    },
+                    () => {
+                      reject(false);
+                    }
+                  );
                 }
               );
             } else {
-              reject(false)
+              reject(false);
             }
-        };
-      }))
+          };
+        })
+      );
     });
-    Promise.all(results).then((res) => {
-      let count = 0
-      res.forEach((item) => {
-        if(item) count++
-      })
-      if(count === acceptedFiles.length){
-        setStep(2)
-      } else {
-        setStep(0)
+    Promise.all(results).then(
+      (res) => {
+        let count = 0;
+        res.forEach((item) => {
+          if (item) count++;
+        });
+        if (count === acceptedFiles.length) {
+          setStep(2);
+        } else {
+          setStep(0);
+        }
+      },
+      () => {
+        setStep(0);
       }
-    }, () => {
-      setStep(0)
-    });
+    );
   };
 
   useEffect(() => {
     if (urlList.length === acceptedFiles.length && urlList.length > 0) {
-     uploadFiles()
+      uploadFiles();
     }
   }, [urlList]);
 
@@ -886,8 +899,7 @@ const UploadForm: React.FC = () => {
   };
 
   const startFileScan = async () => {
-
-    let urlData = urlList.map((item) => item.url)
+    let urlData = urlList.map((item) => item.url);
     await API.post("/api-project-scan/", {
       file_urls: urlData,
       project_name: name,

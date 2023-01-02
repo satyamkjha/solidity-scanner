@@ -1,5 +1,5 @@
 import React, { useEffect, useRef } from "react";
-import { Link, useLocation, useParams } from "react-router-dom";
+import { useLocation, useParams } from "react-router-dom";
 import styled from "@emotion/styled";
 
 import {
@@ -10,7 +10,7 @@ import {
   Heading,
   Button,
   Image,
-  Link as ChakraLink,
+  Link,
   useDisclosure,
   HStack,
   VStack,
@@ -22,6 +22,11 @@ import {
   Spinner,
   Stack,
   useMediaQuery,
+  IconButton,
+  Menu,
+  MenuButton,
+  MenuItem,
+  MenuList,
 } from "@chakra-ui/react";
 
 import {
@@ -34,8 +39,6 @@ import {
   Smile,
   PublishReport,
   SeverityIcon,
-  PassIcon,
-  FailIcon,
 } from "components/icons";
 
 import Header from "components/header";
@@ -46,8 +49,13 @@ import API from "helpers/api";
 import { QuickScanResult } from "common/types";
 import { sentenceCapitalize } from "helpers/helperFunction";
 import PieChart from "components/pieChart";
-import { ArrowForwardIcon } from "@chakra-ui/icons";
+import { ArrowForwardIcon, ExternalLinkIcon } from "@chakra-ui/icons";
 import { monthNames } from "common/values";
+import SignupBox from "components/signupBox";
+import Infographics from "components/infographics";
+import { blockScans } from "common/values";
+import { useRecentQuickScans } from "hooks/useRecentQuickScans";
+import { FaEllipsisH, FaEllipsisV } from "react-icons/fa";
 
 const pieData = (
   critical: number,
@@ -150,37 +158,41 @@ const QuickScan: React.FC = () => {
   };
 
   const options = [
-    { value: "etherscan", icon: "etherscan", label: "Ethereum" },
-    { value: "bscscan", icon: "bscscan", label: "Binance" },
+    {
+      value: "etherscan",
+      icon: "etherscan",
+      label: "Ethereum - (etherscan.io)",
+    },
+    { value: "bscscan", icon: "bscscan", label: "Binance - (bscscan.com)" },
     {
       value: "polygonscan",
       icon: "polygonscan",
-      label: "Polygon",
+      label: "Polygon - (polygonscan.com)",
     },
     {
       value: "fantom",
       icon: "fantom",
-      label: "Fantom",
+      label: "Fantom - (ftmscan.com)",
     },
     {
       value: "cronos",
       icon: "cronos",
-      label: "Cronos",
+      label: "Cronos - (cronoscan.com)",
     },
     {
       value: "avalanche",
       icon: "avalanche",
-      label: "Avalanche C-Chain",
+      label: "Avalanche C-Chain - (snowtrace.io)",
     },
     {
       value: "celo",
       icon: "celo",
-      label: "Celo",
+      label: "Celo - (celoscan.io)",
     },
     {
       value: "aurora",
       icon: "aurora",
-      label: "Aurora",
+      label: "Aurora - (aurorascan.dev)",
     },
   ];
 
@@ -201,14 +213,15 @@ const QuickScan: React.FC = () => {
       borderRadius: 10,
       border: "0px solid #ffffff",
       overflowY: "hidden",
-      width: "280px",
+      width: "300px",
+      textAlign: "left",
     }),
     control: (state: any) => ({
       // none of react-select's styles are passed to <Control />
       display: "flex",
       flexDirection: "row",
       backgroundColor: "#FFFFFF",
-      width: isDesktopView ? "280px" : "95%",
+      width: isDesktopView ? "300px" : "95%",
       padding: 5,
       margin: 0,
       marginBottom: isDesktopView ? 0 : 10,
@@ -287,6 +300,8 @@ const QuickScan: React.FC = () => {
   const [scanReport, setScanReport] = React.useState<QuickScanResult | null>(
     null
   );
+  const { data: recentScans, isLoading: recentScansLoading } =
+    useRecentQuickScans();
 
   let d = new Date();
 
@@ -586,7 +601,7 @@ const QuickScan: React.FC = () => {
                     <Box
                       w={["30%", "30%", "15%"]}
                       borderRadius={15}
-                      m={2}
+                      
                       h={"160px"}
                       background={" #FFFFFF "}
                       display="flex"
@@ -608,7 +623,7 @@ const QuickScan: React.FC = () => {
                     <Box
                       w={["30%", "30%", "15%"]}
                       borderRadius={15}
-                      m={2}
+                      
                       h={"160px"}
                       background={" #FFFFFF "}
                       display="flex"
@@ -630,7 +645,7 @@ const QuickScan: React.FC = () => {
                     <Box
                       w={["30%", "30%", "15%"]}
                       borderRadius={15}
-                      m={2}
+                      
                       h={"160px"}
                       background={" #FFFFFF "}
                       display="flex"
@@ -655,7 +670,7 @@ const QuickScan: React.FC = () => {
                     <Box
                       w={["30%", "30%", "15%"]}
                       borderRadius={15}
-                      m={2}
+                      
                       h={"160px"}
                       background={" #FFFFFF "}
                       display="flex"
@@ -680,7 +695,7 @@ const QuickScan: React.FC = () => {
                     <Box
                       w={["30%", "30%", "15%"]}
                       borderRadius={15}
-                      m={2}
+                      
                       h={"160px"}
                       background={" #FFFFFF "}
                       display="flex"
@@ -705,7 +720,7 @@ const QuickScan: React.FC = () => {
                     <Box
                       w={["30%", "30%", "15%"]}
                       borderRadius={15}
-                      m={2}
+                      
                       h={"160px"}
                       background={" #FFFFFF "}
                       display="flex"
@@ -988,7 +1003,455 @@ const QuickScan: React.FC = () => {
               </Box>
             </Box>
           )}
+
+          {scanReport === null && (
+            <Box
+              ref={elementRef}
+              display={"flex"}
+              flexDir="column"
+              alignItems="center"
+              justifyContent={"flex-start"}
+              w={["90%"]}
+              px={[0, 0, 0, 10]}
+              mt={"-120px"}
+              py={[0, 0, 0, 10]}
+              borderRadius={20}
+              background={"#FFFFFF"}
+            >
+              <Stack
+                w={"100%"}
+                spacing={"5%"}
+                mb={20}
+                direction={["column", "column", "column", "row"]}
+              >
+                <Box
+                  w={["100%", "100%", "100%", "20%"]}
+                  h={"250px"}
+                  borderRadius={15}
+                  px={[0, 0, 0, 5]}
+                  py={5}
+                  background={
+                    parseFloat(0.0) < 2.5
+                      ? "linear-gradient(96.27deg, #FFF3F0 0.75%, #FFE0D9 96.71%)"
+                      : parseFloat(0.0) >= 4.5
+                      ? "linear-gradient(96.27deg, #EFFFED 0.75%, #E6FFE2 96.71%)"
+                      : "linear-gradient(96.27deg, #FFFAF2 0.75%, #FFF4E1 96.71%)"
+                  }
+                >
+                  <Text fontSize="md" mb={5}>
+                    Solidity Score
+                  </Text>
+                  <CircularProgress
+                    value={60}
+                    color="accent"
+                    thickness="8px"
+                    size="100px"
+                    capIsRound
+                    trackColor={"white"}
+                  >
+                    <CircularProgressLabel
+                      sx={{ display: "flex", justifyContent: "center" }}
+                    >
+                      <Box>
+                        <Text fontSize="2xl" fontWeight={900} color="accent">
+                          {0.0}
+                        </Text>
+                      </Box>
+                    </CircularProgressLabel>
+                  </CircularProgress>
+                  <Text fontWeight={300} fontSize="sm" mt={5}>
+                    Your Solidity Score Low
+                  </Text>
+                </Box>
+                <Box
+                  w={["100%", "100%", "100%", "75%"]}
+                  borderRadius={15}
+                  p={5}
+                  h={["fit-content", "fit-content", "250px"]}
+                  background={" #FAFBFC "}
+                  display="flex"
+                  flexDir={"column"}
+                  alignItems={["center", "center", "center", "flex-start"]}
+                  justifyContent={"flex-start"}
+                >
+                  <Text fontSize="md">VULNERABILITIES DETECTED</Text>
+                  <HStack
+                    mt={5}
+                    width={["100%"]}
+                    justify={"space-between"}
+                    alignContent='space-between'
+                    flexWrap="wrap"
+                    spacing={0}
+                    h={"350px"}
+                  >
+                    <Box
+                      w={["30%", "30%", "15%"]}
+                      borderRadius={15}
+                      
+                      h={"160px"}
+                      background={" #FFFFFF "}
+                      display="flex"
+                      flexDir={"column"}
+                      alignItems="center"
+                      justifyContent={"center"}
+                    >
+                      <Text fontWeight={300} fontSize="md">
+                        Critical
+                      </Text>
+                      <Text fontSize="xl" my={3}>
+                        {0}
+                      </Text>
+                      <SeverityIcon size={10} variant={"critical"} />
+                    </Box>
+                    <Box
+                      w={["30%", "30%", "15%"]}
+                      borderRadius={15}
+                      
+                      h={"160px"}
+                      background={" #FFFFFF "}
+                      display="flex"
+                      flexDir={"column"}
+                      alignItems="center"
+                      justifyContent={"center"}
+                    >
+                      <Text fontWeight={300} fontSize="md">
+                        High
+                      </Text>
+                      <Text fontSize="xl" my={3}>
+                        {0}
+                      </Text>
+                      <SeverityIcon size={10} variant={"high"} />
+                    </Box>
+                    <Box
+                      w={["30%", "30%", "15%"]}
+                      borderRadius={15}
+                      
+                      h={"160px"}
+                      background={" #FFFFFF "}
+                      display="flex"
+                      flexDir={"column"}
+                      alignItems="center"
+                      justifyContent={"center"}
+                    >
+                      <Text
+                        fontWeight={300}
+                        fontSize={["sm", "sm", "sm", "md"]}
+                      >
+                        Medium
+                      </Text>
+                      <Text fontSize="xl" my={3}>
+                        {0}
+                      </Text>
+                      <SeverityIcon size={10} variant={"medium"} />
+                    </Box>
+                    <Box
+                      w={["30%", "30%", "15%"]}
+                      borderRadius={15}
+                      
+                      h={"160px"}
+                      background={" #FFFFFF "}
+                      display="flex"
+                      flexDir={"column"}
+                      alignItems="center"
+                      justifyContent={"center"}
+                    >
+                      <Text
+                        fontWeight={300}
+                        fontSize={["sm", "sm", "sm", "md"]}
+                      >
+                        Low
+                      </Text>
+                      <Text fontSize="xl" my={3}>
+                        {0}
+                      </Text>
+                      <SeverityIcon size={10} variant={"low"} />
+                    </Box>
+                    <Box
+                      w={["30%", "30%", "15%"]}
+                      borderRadius={15}
+                      
+                      h={"160px"}
+                      background={" #FFFFFF "}
+                      display="flex"
+                      flexDir={"column"}
+                      alignItems="center"
+                      justifyContent={"center"}
+                    >
+                      <Text
+                        fontWeight={300}
+                        fontSize={["sm", "sm", "sm", "md"]}
+                      >
+                        Informational
+                      </Text>
+                      <Text fontSize="xl" my={3}>
+                        {0}
+                      </Text>
+                      <SeverityIcon size={10} variant={"informational"} />
+                    </Box>
+                    <Box
+                      w={["30%", "30%", "15%"]}
+                      borderRadius={15}
+                      
+                      h={"160px"}
+                      background={" #FFFFFF "}
+                      display="flex"
+                      flexDir={"column"}
+                      alignItems="center"
+                      justifyContent={"center"}
+                    >
+                      <Text fontWeight={300} fontSize="md">
+                        Gas
+                      </Text>
+                      <Text fontSize="xl" my={3}>
+                        {0}
+                      </Text>
+                      <SeverityIcon size={10} variant={"gas"} />
+                    </Box>
+                  </HStack>
+                </Box>
+              </Stack>
+              <Heading mt={10} as="h1" fontSize="3xl" mb={4}>
+                Recent Scanned
+                <Box ml={2} as="span" color="#3300FF">
+                  Contracts
+                </Box>{" "}
+              </Heading>
+
+              <Box
+                w={"100%"}
+                borderRadius={15}
+                p={[0, 0, 5]}
+                mt={[0, 0, 10]}
+                
+                background={["#FFFFFF", "#FFFFFF", "#FAFBFC"]}
+                display="flex"
+                flexDir={"column"}
+                alignItems={["center", "center", "center", "flex-start"]}
+                justifyContent={"flex-start"}
+              >
+                <HStack
+                  justifyContent="space-between"
+                  alignItems="flex-start"
+                  w="100%"
+                  p={5}
+                  py={0}
+                  spacing={0}
+                  display={["none", "none", "flex"]}
+                >
+                  <Text
+                    fontWeight={600}
+                    textAlign={"left"}
+                    w={"25%"}
+                    fontSize="sm"
+                  >
+                    Contract Address
+                  </Text>
+                  <Text
+                    fontWeight={600}
+                    textAlign={"left"}
+                    w={"10%"}
+                    fontSize="sm"
+                  >
+                    Security Score
+                  </Text>
+                  <Text
+                    fontWeight={600}
+                    textAlign={"left"}
+                    w={"20%"}
+                    fontSize="sm"
+                  >
+                    Blockscan
+                  </Text>
+                  <Text
+                    fontWeight={600}
+                    textAlign={"left"}
+                    w={"35%"}
+                    fontSize="sm"
+                  >
+                    Actions
+                  </Text>
+                </HStack>
+                <Box
+                  w={"100%"}
+                  borderRadius={15}
+                  p={5}
+                  mt={5}
+                  background={" #FFFFFF "}
+                  display="flex"
+                  flexDir={"column"}
+                  alignItems={[
+                    "flex-start",
+                    "flex-start",
+                    "flex-start",
+                    "center",
+                  ]}
+                  justifyContent={"center"}
+                >
+                  <VStack
+                    width={"100%"}
+                    justifyContent="flex-start"
+                    alignItems={"flex-start"}
+                    spacing={4}
+                  >
+                    {recentScansLoading ? (
+                      <Flex
+                        w={"100%"}
+                        alignItems={"center"}
+                        justifyContent="center"
+                      >
+                        <Spinner />
+                      </Flex>
+                    ) : (
+                      recentScans.scans.map((item: any) => (
+                        <>
+                          <HStack
+                            justifyContent="space-between"
+                            alignItems="center"
+                            w="100%"
+                            spacing={0}
+                          >
+                            <Image
+                              display={["block", "block", "none"]}
+                              height={"20px"}
+                              width={"20px"}
+                              src={`/blockscan/${item.contract_platform}.svg`}
+                            />
+                            <Text
+                              color={"#8A94A6"}
+                              textAlign={"left"}
+                              w={["50%", "50%", "25%"]}
+                              fontSize="sm"
+                              isTruncated
+                            >
+                              {item.contract_address}
+                            </Text>
+                            <Text
+                              color={"#3300FF"}
+                              textAlign={"center"}
+                              w={["20%", "20%", "10%"]}
+                              fontSize="md"
+                              fontWeight={700}
+                            >
+                              {item.score}
+                              <Box as={"span"} color="gray.500" fontSize={"xs"}>
+                                /5
+                              </Box>
+                            </Text>
+                            <HStack
+                              display={["none", "none", "flex"]}
+                              w={"20%"}
+                              justifyContent="flex-start"
+                              alignItems={"center"}
+                              spacing={3}
+                            >
+                              <Image
+                                height={"20px"}
+                                width={"20px"}
+                                src={`/blockscan/${item.contract_platform}.svg`}
+                              />
+                              <Text
+                                color={"#8A94A6"}
+                                textAlign={"left"}
+                                fontSize="sm"
+                              >
+                                {blockScans[item.contract_platform]}
+                              </Text>
+                            </HStack>
+                            <HStack
+                              display={["none", "none", "flex"]}
+                              w={"35%"}
+                              justifyContent="flex-start"
+                              alignItems={"center"}
+                              spacing={3}
+                            >
+                              <Link
+                                variant="subtle-without-underline"
+                                href={item.scanner_reference_url}
+                                isExternal
+                              >
+                                <Button
+                                  fontWeight={100}
+                                  fontSize={13}
+                                  height={9}
+                                  borderColor="#000000"
+                                  variant={"outline"}
+                                  color="#000000"
+                                >
+                                  View Scan
+                                </Button>
+                              </Link>
+                              <Link href={item.contract_url} isExternal>
+                                <HStack>
+                                  <Text
+                                    color={"#323B4B"}
+                                    textAlign={"left"}
+                                    fontSize="sm"
+                                  >
+                                    View Contract
+                                  </Text>
+                                  <ExternalLinkIcon color={"#323B4B"} />
+                                </HStack>
+                              </Link>
+                            </HStack>
+                            <Menu isLazy>
+                              <MenuButton
+                                display={["block", "block", "none"]}
+                                aria-label="Options"
+                              >
+                                <FaEllipsisV color={"#8A94A6"} />
+                              </MenuButton>
+                              <MenuList p={2}>
+                                <Link
+                                  href={item.scanner_reference_url}
+                                  isExternal
+                                >
+                                  <MenuItem>View Scan</MenuItem>
+                                </Link>
+                                <Divider my={1} />
+                                <Link href={item.contract_url} isExternal>
+                                  <MenuItem>View Contract</MenuItem>
+                                </Link>
+                              </MenuList>
+                            </Menu>
+                          </HStack>
+                          <Divider />
+                        </>
+                      ))
+                    )}
+                  </VStack>
+                </Box>
+              </Box>
+            </Box>
+          )}
+
+          <Box
+            ref={elementRef}
+            display={"flex"}
+            flexDir="column"
+            alignItems="center"
+            justifyContent={"flex-start"}
+            w={"90%"}
+            px={[0, 0, 10]}
+            py={10}
+            borderRadius={20}
+            background={"#FFFFFF"}
+          >
+            <Heading as="h1" fontSize="3xl" mb={4}>
+              Why{" "}
+              <Box as="span" color="#3300FF">
+                SolidityScan ?
+              </Box>{" "}
+            </Heading>
+            <Text color="subtle" fontSize={["lg", "lg", "xl"]} mb={4}>
+              Smart-contract scanning tool built to discover vulnerabilities &
+              mitigate risks in your code.
+            </Text>
+            <Infographics />
+            <SignupBox />
+          </Box>
         </Flex>
+
+        <Footer />
       </Container>
     </>
   );

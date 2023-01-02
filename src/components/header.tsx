@@ -104,23 +104,28 @@ export const Header: React.FC = () => {
                   <MenuList w={"250px"} pt="0">
                     <MenuItem
                       p={4}
-                      background="linear-gradient(269.8deg, #F9F9F9 0.83%, rgba(249, 249, 249, 0) 114.35%)">
-                      <CloseIcon ml={"auto"} color={"#B0B7C3"} onClick={onClose}/>
+                      background="linear-gradient(269.8deg, #F9F9F9 0.83%, rgba(249, 249, 249, 0) 114.35%)"
+                    >
+                      <CloseIcon
+                        ml={"auto"}
+                        color={"#B0B7C3"}
+                        onClick={onClose}
+                      />
                     </MenuItem>
                     {Auth.isUserAuthenticated() && (
                       <>
                         <MenuItem>
-                        <Link
-                          as={RouterLink}
-                          to="/home"
-                          variant="ghost"
-                          fontWeight="400"
-                          w={"100%"}
-                          p={1}
-                          ml={3}
-                        >
-                          Go to Dashboard
-                        </Link>
+                          <Link
+                            as={RouterLink}
+                            to="/home"
+                            variant="ghost"
+                            fontWeight="400"
+                            w={"100%"}
+                            p={1}
+                            ml={3}
+                          >
+                            Go to Dashboard
+                          </Link>
                         </MenuItem>
                       </>
                     )}
@@ -173,17 +178,17 @@ export const Header: React.FC = () => {
                     </MenuItem>
                     <MenuItem>
                       <Link
-                          onClick={onOpen}
-                          variant="ghost"
-                          fontWeight="400"
-                          w={"100%"}
-                          p={1}
-                          ml={3}
-                        >
-                          Contact Us
+                        onClick={onOpen}
+                        variant="ghost"
+                        fontWeight="400"
+                        w={"100%"}
+                        p={1}
+                        ml={3}
+                      >
+                        Contact Us
                       </Link>
                     </MenuItem>
-                    { !Auth.isUserAuthenticated() ? (
+                    {!Auth.isUserAuthenticated() ? (
                       <MenuItem mt={20}>
                         <RouterLink to="/signin">
                           <Button variant="brand" p={6} ml={4} w="100%">
@@ -192,8 +197,8 @@ export const Header: React.FC = () => {
                         </RouterLink>
                       </MenuItem>
                     ) : (
-                      <MenuItem  mt={20}>
-                      <Link
+                      <MenuItem mt={20}>
+                        <Link
                           onClick={logout}
                           variant="ghost"
                           fontWeight="400"
@@ -202,10 +207,9 @@ export const Header: React.FC = () => {
                           ml={3}
                         >
                           Sign Out
-                      </Link>
-                    </MenuItem>
-                    )
-                    }
+                        </Link>
+                      </MenuItem>
+                    )}
                   </MenuList>
                 </Menu>
               </Box>

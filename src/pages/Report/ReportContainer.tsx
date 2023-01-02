@@ -50,43 +50,43 @@ export const ReportContainer: React.FC<{ summary_report: Report }> = ({
     informational: number,
     gas: number
   ) => [
-      {
-        id: "critical",
-        label: "Critical",
-        value: critical,
-        color: "#FF5C00",
-      },
-      {
-        id: "high",
-        label: "High",
-        value: high,
-        color: "#FF5C00",
-      },
-      {
-        id: "medium",
-        label: "Medium",
-        value: medium,
-        color: "#FFE600",
-      },
-      {
-        id: "low",
-        label: "Low",
-        value: low,
-        color: "#38CB89",
-      },
-      {
-        id: "informational",
-        label: "Informational",
-        value: informational,
-        color: "#A0AEC0",
-      },
-      {
-        id: "gas",
-        label: "Gas",
-        value: gas,
-        color: "#F795B4",
-      },
-    ];
+    {
+      id: "critical",
+      label: "Critical",
+      value: critical,
+      color: "#FF5C00",
+    },
+    {
+      id: "high",
+      label: "High",
+      value: high,
+      color: "#FF5C00",
+    },
+    {
+      id: "medium",
+      label: "Medium",
+      value: medium,
+      color: "#FFE600",
+    },
+    {
+      id: "low",
+      label: "Low",
+      value: low,
+      color: "#38CB89",
+    },
+    {
+      id: "informational",
+      label: "Informational",
+      value: informational,
+      color: "#A0AEC0",
+    },
+    {
+      id: "gas",
+      label: "Gas",
+      value: gas,
+      color: "#F795B4",
+    },
+  ];
 
   const monthNames = [
     "Jan",
@@ -121,7 +121,12 @@ export const ReportContainer: React.FC<{ summary_report: Report }> = ({
         marginBottom={[2, 2, 2, "400px"]}
         backgroundSize="cover"
         backgroundRepeat={"no-repeat"}
-        backgroundImage={[null, null, null, "url('/background/report_cover.png')"]}
+        backgroundImage={[
+          null,
+          null,
+          null,
+          "url('/background/report_cover.png')",
+        ]}
       >
         <Logo />
         <Text fontSize="2xl" color={"gray.400"} mt={[10, 10, 10, 20]} mb={5}>
@@ -138,9 +143,20 @@ export const ReportContainer: React.FC<{ summary_report: Report }> = ({
           h={["50vh", "50vh", "50vh", "auto"]}
           backgroundSize="cover"
           backgroundRepeat={"no-repeat"}
-          backgroundImage={["url('/background/report_cover.svg')", null, null, null, ""]}
+          backgroundImage={[
+            "url('/background/report_cover.svg')",
+            null,
+            null,
+            null,
+            "",
+          ]}
         >
-          <Text fontSize="lg" width={["100%", "100%", "100%", "60%"]} color={"gray.300"} mb={10}>
+          <Text
+            fontSize="lg"
+            width={["100%", "100%", "100%", "60%"]}
+            color={"gray.300"}
+            mb={10}
+          >
             This security assessment report was prepared by SolidityScan.com, a
             cloud-based Smart Contract Scanner.
           </Text>
@@ -155,7 +171,6 @@ export const ReportContainer: React.FC<{ summary_report: Report }> = ({
         flexDir={"column"}
         py={20}
       >
-
         <Flex
           sx={{
             color: "#000000",
@@ -167,7 +182,10 @@ export const ReportContainer: React.FC<{ summary_report: Report }> = ({
           <Heading color={"#52FF00"} fontSize="4xl">
             Table of
           </Heading>
-          <Text fontSize="4xl" fontWeight={400}> &nbsp;Contents. </Text>
+          <Text fontSize="4xl" fontWeight={400}>
+            {" "}
+            &nbsp;Contents.{" "}
+          </Text>
         </Flex>
         <Text fontSize="xl" fontWeight={"bold"} mt={16} mb={4}>
           Project Summary
@@ -189,7 +207,9 @@ export const ReportContainer: React.FC<{ summary_report: Report }> = ({
                 {summary_report.issues[key].issue_name}
               </Text>
             </HStack>
-            {index !== Object.keys(summary_report.issues).length - 1 && <Divider />}
+            {index !== Object.keys(summary_report.issues).length - 1 && (
+              <Divider />
+            )}
           </>
         ))}
         <Text fontSize="xl" fontWeight={"bold"} mt={4} mb={4}>
@@ -219,14 +239,12 @@ export const ReportContainer: React.FC<{ summary_report: Report }> = ({
           <Heading color={"#52FF00"} fontSize="4xl">
             Project
           </Heading>
-          <Text fontSize="4xl" fontWeight={400}> &nbsp;Summary </Text>
+          <Text fontSize="4xl" fontWeight={400}>
+            {" "}
+            &nbsp;Summary{" "}
+          </Text>
         </Flex>
-        <Text
-          fontSize="lg"
-          fontWeight={"300"}
-          mt={[6, 6, 6, 12]}
-          mb={4}
-        >
+        <Text fontSize="lg" fontWeight={"300"} mt={[6, 6, 6, 12]} mb={4}>
           This report has been prepared for{" "}
           {summary_report.project_summary_report.project_name} using
           SolidityScan to scan and discover vulnerabilities and safe coding
@@ -240,12 +258,7 @@ export const ReportContainer: React.FC<{ summary_report: Report }> = ({
           following areas:{" "}
         </Text>
 
-        <Text
-          fontSize="lg"
-          fontWeight={"300"}
-          mt={4}
-          mb={4}
-        >
+        <Text fontSize="lg" fontWeight={"300"} mt={4} mb={4}>
           Various common and uncommon attack vectors will be investigated to
           ensure that the smart contracts are secure from malicious actors. The
           scanner modules find and flag issues related to Gas optimizations that
@@ -254,12 +267,7 @@ export const ReportContainer: React.FC<{ summary_report: Report }> = ({
           compliance It makes sure that the officially recognized libraries used
           in the code are secure and up to date
         </Text>
-        <Text
-          fontSize="lg"
-          fontWeight={"300"}
-          mt={4}
-          mb={4}
-        >
+        <Text fontSize="lg" fontWeight={"300"} mt={4} mb={4}>
           The SolidityScan Team recommends running regular audit scans to
           identify any vulnerabilities that are introduced after{" "}
           {summary_report.project_summary_report.project_name} introduces new
@@ -285,7 +293,10 @@ export const ReportContainer: React.FC<{ summary_report: Report }> = ({
           <Heading color={"#52FF00"} fontSize="4xl">
             Audit
           </Heading>
-          <Text fontSize="4xl" fontWeight={400}> &nbsp;Summary </Text>
+          <Text fontSize="4xl" fontWeight={400}>
+            {" "}
+            &nbsp;Summary{" "}
+          </Text>
         </Flex>
         <Flex
           as="div"
@@ -316,11 +327,11 @@ export const ReportContainer: React.FC<{ summary_report: Report }> = ({
                 >
                   Project Name
                 </Text>
-                {!isDesktopView &&
+                {!isDesktopView && (
                   <Text fontSize="lg" fontWeight={"normal"} mb={4}>
                     {summary_report.project_summary_report.project_name}
                   </Text>
-                }
+                )}
                 <Divider />
               </>
             )}
@@ -335,10 +346,11 @@ export const ReportContainer: React.FC<{ summary_report: Report }> = ({
                 >
                   Contract Name
                 </Text>
-                {!isDesktopView && <Text fontSize="lg" fontWeight={"normal"} mb={4}>
-                  {summary_report.project_summary_report.contract_name}
-                </Text>
-                }
+                {!isDesktopView && (
+                  <Text fontSize="lg" fontWeight={"normal"} mb={4}>
+                    {summary_report.project_summary_report.contract_name}
+                  </Text>
+                )}
                 <Divider />
               </>
             )}
@@ -351,10 +363,11 @@ export const ReportContainer: React.FC<{ summary_report: Report }> = ({
             >
               Contract Type
             </Text>
-            {!isDesktopView && <Text fontSize="lg" fontWeight={"normal"} mb={4}>
-              {"Smart Contract"}
-            </Text>
-            }
+            {!isDesktopView && (
+              <Text fontSize="lg" fontWeight={"normal"} mb={4}>
+                {"Smart Contract"}
+              </Text>
+            )}
             <Divider />
             {summary_report.project_summary_report.contract_address && (
               <>
@@ -367,10 +380,16 @@ export const ReportContainer: React.FC<{ summary_report: Report }> = ({
                 >
                   Contract Address
                 </Text>
-                {!isDesktopView && <Text fontSize="lg" fontWeight={"normal"} mb={4}>
-                  {summary_report.project_summary_report.contract_address}
-                </Text>
-                }
+                {!isDesktopView && (
+                  <Text
+                    fontSize="lg"
+                    fontWeight={"normal"}
+                    mb={4}
+                    wordBreak="break-word"
+                  >
+                    {summary_report.project_summary_report.contract_address}
+                  </Text>
+                )}
                 <Divider />
               </>
             )}
@@ -385,10 +404,11 @@ export const ReportContainer: React.FC<{ summary_report: Report }> = ({
                 >
                   Contract Platform
                 </Text>
-                {!isDesktopView && <Text fontSize="lg" fontWeight={"normal"} mb={4}>
-                  {summary_report.project_summary_report.contract_platform}
-                </Text>
-                }
+                {!isDesktopView && (
+                  <Text fontSize="lg" fontWeight={"normal"} mb={4}>
+                    {summary_report.project_summary_report.contract_platform}
+                  </Text>
+                )}
                 <Divider />
               </>
             )}
@@ -403,10 +423,16 @@ export const ReportContainer: React.FC<{ summary_report: Report }> = ({
                 >
                   Contract Chain
                 </Text>
-                {!isDesktopView && <Text fontSize="lg" fontWeight={"normal"} mb={4}>
-                  {summary_report.project_summary_report.contract_chain}
-                </Text>
-                }
+                {!isDesktopView && (
+                  <Text
+                    fontSize="lg"
+                    fontWeight={"normal"}
+                    mb={4}
+                    wordBreak="break-word"
+                  >
+                    {summary_report.project_summary_report.contract_chain}
+                  </Text>
+                )}
                 <Divider />
               </>
             )}
@@ -421,10 +447,16 @@ export const ReportContainer: React.FC<{ summary_report: Report }> = ({
                 >
                   Contract URL
                 </Text>
-                {!isDesktopView && <Text fontSize="lg" fontWeight={"normal"} mb={4}>
-                  {summary_report.project_summary_report.contract_url}
-                </Text>
-                }
+                {!isDesktopView && (
+                  <Text
+                    fontSize="lg"
+                    fontWeight={"normal"}
+                    mb={4}
+                    wordBreak="break-word"
+                  >
+                    {summary_report.project_summary_report.contract_url}
+                  </Text>
+                )}
                 <Divider />
               </>
             )}
@@ -433,13 +465,15 @@ export const ReportContainer: React.FC<{ summary_report: Report }> = ({
               fontWeight={"bold"}
               color={"gray.600"}
               my={[1, 1, 1, 4]}
-              mt={[4, 4, 4, 4]}>
+              mt={[4, 4, 4, 4]}
+            >
               Language
             </Text>
-            {!isDesktopView && <Text fontSize="lg" fontWeight={"normal"} mb={4}>
-              {"Solidity"}
-            </Text>
-            }
+            {!isDesktopView && (
+              <Text fontSize="lg" fontWeight={"normal"} mb={4}>
+                {"Solidity"}
+              </Text>
+            )}
             <Divider />
             {summary_report.project_summary_report.project_url && (
               <>
@@ -452,9 +486,16 @@ export const ReportContainer: React.FC<{ summary_report: Report }> = ({
                 >
                   Codebase
                 </Text>
-                {!isDesktopView && <Text fontSize="lg" fontWeight={"normal"} mb={4} wordBreak="break-all">
-                  {summary_report.project_summary_report.project_url}
-                </Text>}
+                {!isDesktopView && (
+                  <Text
+                    fontSize="lg"
+                    fontWeight={"normal"}
+                    mb={4}
+                    wordBreak="break-word"
+                  >
+                    {summary_report.project_summary_report.project_url}
+                  </Text>
+                )}
                 <Divider />
               </>
             )}
@@ -469,10 +510,16 @@ export const ReportContainer: React.FC<{ summary_report: Report }> = ({
                 >
                   Commit Hash
                 </Text>
-                {!isDesktopView && <Text fontSize="lg" fontWeight={"normal"} mb={4}>
-                  {summary_report.project_summary_report.git_commit_hash}
-                </Text>
-                }
+                {!isDesktopView && (
+                  <Text
+                    fontSize="lg"
+                    fontWeight={"normal"}
+                    mb={4}
+                    wordBreak="break-word"
+                  >
+                    {summary_report.project_summary_report.git_commit_hash}
+                  </Text>
+                )}
                 <Divider />
               </>
             )}
@@ -487,14 +534,20 @@ export const ReportContainer: React.FC<{ summary_report: Report }> = ({
                 >
                   Website
                 </Text>
-                {!isDesktopView && <>
-                  {" "}
-                  <Text fontSize="lg" fontWeight={"normal"} mb={4}>
-                    {summary_report.project_summary_report.website}
-                  </Text>
-                  <Divider />
-                </>
-                }
+                {!isDesktopView && (
+                  <>
+                    {" "}
+                    <Text
+                      fontSize="lg"
+                      fontWeight={"normal"}
+                      mb={4}
+                      wordBreak="break-word"
+                    >
+                      {summary_report.project_summary_report.website}
+                    </Text>
+                    <Divider />
+                  </>
+                )}
                 <Divider />
               </>
             )}
@@ -509,10 +562,11 @@ export const ReportContainer: React.FC<{ summary_report: Report }> = ({
                 >
                   Date Published
                 </Text>
-                {!isDesktopView && <Text fontSize="lg" fontWeight={"normal"} mb={4}>
-                  {summary_report.project_summary_report.date_published}
-                </Text>
-                }
+                {!isDesktopView && (
+                  <Text fontSize="lg" fontWeight={"normal"} mb={4}>
+                    {summary_report.project_summary_report.date_published}
+                  </Text>
+                )}
                 <Divider />
               </>
             )}
@@ -527,10 +581,11 @@ export const ReportContainer: React.FC<{ summary_report: Report }> = ({
                 >
                   Organization
                 </Text>
-                {!isDesktopView && <Text fontSize="lg" fontWeight={"normal"} mb={4}>
-                  {summary_report.project_summary_report.organization}
-                </Text>
-                }
+                {!isDesktopView && (
+                  <Text fontSize="lg" fontWeight={"normal"} mb={4}>
+                    {summary_report.project_summary_report.organization}
+                  </Text>
+                )}
                 <Divider />
               </>
             )}
@@ -545,10 +600,11 @@ export const ReportContainer: React.FC<{ summary_report: Report }> = ({
                 >
                   Publishers/Owners Name
                 </Text>
-                {!isDesktopView && <Text fontSize="lg" fontWeight={"normal"} mb={4}>
-                  {summary_report.project_summary_report.report_owner}
-                </Text>
-                }
+                {!isDesktopView && (
+                  <Text fontSize="lg" fontWeight={"normal"} mb={4}>
+                    {summary_report.project_summary_report.report_owner}
+                  </Text>
+                )}
                 <Divider />
               </>
             )}
@@ -563,10 +619,11 @@ export const ReportContainer: React.FC<{ summary_report: Report }> = ({
                 >
                   Contact Email
                 </Text>
-                {!isDesktopView && <Text fontSize="lg" fontWeight={"normal"} mb={4}>
-                  {summary_report.project_summary_report.email}
-                </Text>
-                }
+                {!isDesktopView && (
+                  <Text fontSize="lg" fontWeight={"normal"} mb={4}>
+                    {summary_report.project_summary_report.email}
+                  </Text>
+                )}
                 <Divider />
               </>
             )}
@@ -579,141 +636,143 @@ export const ReportContainer: React.FC<{ summary_report: Report }> = ({
             >
               Audit Methodology
             </Text>
-            {!isDesktopView &&
+            {!isDesktopView && (
               <Text fontSize="lg" fontWeight={"normal"} mb={4}>
                 {"Static Scanning"}
               </Text>
-            }
+            )}
           </Flex>
-          {isDesktopView && <Flex
-            as="div"
-            w="75%"
-            alignItems="flex-start"
-            justifyContent="flex-start"
-            flexDir={"column"}
-            px={5}
-            py={3}
-            backgroundColor={"#FFFFFF"}
-          >
-            {summary_report.project_summary_report.project_name && (
-              <>
-                <Text fontSize="lg" fontWeight={"normal"} my={4}>
-                  {summary_report.project_summary_report.project_name}
-                </Text>
-                <Divider />
-              </>
-            )}
-            {summary_report.project_summary_report.contract_name && (
-              <>
-                <Text fontSize="lg" fontWeight={"normal"} my={4}>
-                  {summary_report.project_summary_report.contract_name}
-                </Text>
-                <Divider />
-              </>
-            )}
-            <Text fontSize="lg" fontWeight={"normal"} my={4}>
-              {"Smart Contract"}
-            </Text>
-            <Divider />
-            {summary_report.project_summary_report.contract_address && (
-              <>
-                <Text fontSize="lg" fontWeight={"normal"} my={4}>
-                  {summary_report.project_summary_report.contract_address}
-                </Text>
-                <Divider />
-              </>
-            )}
-            {summary_report.project_summary_report.contract_platform && (
-              <>
-                <Text fontSize="lg" fontWeight={"normal"} my={4}>
-                  {summary_report.project_summary_report.contract_platform}
-                </Text>
-                <Divider />
-              </>
-            )}
-            {summary_report.project_summary_report.contract_chain && (
-              <>
-                <Text fontSize="lg" fontWeight={"normal"} my={4}>
-                  {summary_report.project_summary_report.contract_chain}
-                </Text>
-                <Divider />
-              </>
-            )}
-            {summary_report.project_summary_report.contract_url && (
-              <>
-                <Text fontSize="lg" fontWeight={"normal"} my={4}>
-                  {summary_report.project_summary_report.contract_url}
-                </Text>
-                <Divider />
-              </>
-            )}
-            <Text fontSize="lg" fontWeight={"normal"} my={4}>
-              {"Solidity"}
-            </Text>
-            <Divider />
-            {summary_report.project_summary_report.project_url && (
-              <>
-                <Text fontSize="lg" fontWeight={"normal"} my={4}>
-                  {summary_report.project_summary_report.project_url}
-                </Text>
-                <Divider />
-              </>
-            )}
-            {summary_report.project_summary_report.git_commit_hash && (
-              <>
-                <Text fontSize="lg" fontWeight={"normal"} my={4}>
-                  {summary_report.project_summary_report.git_commit_hash}
-                </Text>
-                <Divider />
-              </>
-            )}
-            {summary_report.project_summary_report.website && (
-              <>
-                {" "}
-                <Text fontSize="lg" fontWeight={"normal"} my={4}>
-                  {summary_report.project_summary_report.website}
-                </Text>
-                <Divider />
-              </>
-            )}
-            {summary_report.project_summary_report.date_published && (
-              <>
-                {" "}
-                <Text fontSize="lg" fontWeight={"normal"} my={4}>
-                  {summary_report.project_summary_report.date_published}
-                </Text>
-                <Divider />
-              </>
-            )}
-            {summary_report.project_summary_report.organization && (
-              <>
-                {" "}
-                <Text fontSize="lg" fontWeight={"normal"} my={4}>
-                  {summary_report.project_summary_report.organization}
-                </Text>
-                <Divider />
-              </>
-            )}
-            {summary_report.project_summary_report.report_owner && (
-              <>
-                <Text fontSize="lg" fontWeight={"normal"} my={4}>
-                  {summary_report.project_summary_report.report_owner}
-                </Text>
-                <Divider />
-              </>
-            )}
-            {summary_report.project_summary_report.email && (
-              <>
-                <Text fontSize="lg" fontWeight={"normal"} my={4}>
-                  {summary_report.project_summary_report.email}
-                </Text>
-                <Divider />
-              </>
-            )}
-            <Text fontSize="lg" fontWeight={"normal"} my={4}>
-              {"Static Scanning"}
-            </Text>
-          </Flex>}
+          {isDesktopView && (
+            <Flex
+              as="div"
+              w="75%"
+              alignItems="flex-start"
+              justifyContent="flex-start"
+              flexDir={"column"}
+              px={5}
+              py={3}
+              backgroundColor={"#FFFFFF"}
+            >
+              {summary_report.project_summary_report.project_name && (
+                <>
+                  <Text fontSize="lg" fontWeight={"normal"} my={4}>
+                    {summary_report.project_summary_report.project_name}
+                  </Text>
+                  <Divider />
+                </>
+              )}
+              {summary_report.project_summary_report.contract_name && (
+                <>
+                  <Text fontSize="lg" fontWeight={"normal"} my={4}>
+                    {summary_report.project_summary_report.contract_name}
+                  </Text>
+                  <Divider />
+                </>
+              )}
+              <Text fontSize="lg" fontWeight={"normal"} my={4}>
+                {"Smart Contract"}
+              </Text>
+              <Divider />
+              {summary_report.project_summary_report.contract_address && (
+                <>
+                  <Text fontSize="lg" fontWeight={"normal"} my={4}>
+                    {summary_report.project_summary_report.contract_address}
+                  </Text>
+                  <Divider />
+                </>
+              )}
+              {summary_report.project_summary_report.contract_platform && (
+                <>
+                  <Text fontSize="lg" fontWeight={"normal"} my={4}>
+                    {summary_report.project_summary_report.contract_platform}
+                  </Text>
+                  <Divider />
+                </>
+              )}
+              {summary_report.project_summary_report.contract_chain && (
+                <>
+                  <Text fontSize="lg" fontWeight={"normal"} my={4}>
+                    {summary_report.project_summary_report.contract_chain}
+                  </Text>
+                  <Divider />
+                </>
+              )}
+              {summary_report.project_summary_report.contract_url && (
+                <>
+                  <Text fontSize="lg" fontWeight={"normal"} my={4}>
+                    {summary_report.project_summary_report.contract_url}
+                  </Text>
+                  <Divider />
+                </>
+              )}
+              <Text fontSize="lg" fontWeight={"normal"} my={4}>
+                {"Solidity"}
+              </Text>
+              <Divider />
+              {summary_report.project_summary_report.project_url && (
+                <>
+                  <Text fontSize="lg" fontWeight={"normal"} my={4}>
+                    {summary_report.project_summary_report.project_url}
+                  </Text>
+                  <Divider />
+                </>
+              )}
+              {summary_report.project_summary_report.git_commit_hash && (
+                <>
+                  <Text fontSize="lg" fontWeight={"normal"} my={4}>
+                    {summary_report.project_summary_report.git_commit_hash}
+                  </Text>
+                  <Divider />
+                </>
+              )}
+              {summary_report.project_summary_report.website && (
+                <>
+                  {" "}
+                  <Text fontSize="lg" fontWeight={"normal"} my={4}>
+                    {summary_report.project_summary_report.website}
+                  </Text>
+                  <Divider />
+                </>
+              )}
+              {summary_report.project_summary_report.date_published && (
+                <>
+                  {" "}
+                  <Text fontSize="lg" fontWeight={"normal"} my={4}>
+                    {summary_report.project_summary_report.date_published}
+                  </Text>
+                  <Divider />
+                </>
+              )}
+              {summary_report.project_summary_report.organization && (
+                <>
+                  {" "}
+                  <Text fontSize="lg" fontWeight={"normal"} my={4}>
+                    {summary_report.project_summary_report.organization}
+                  </Text>
+                  <Divider />
+                </>
+              )}
+              {summary_report.project_summary_report.report_owner && (
+                <>
+                  <Text fontSize="lg" fontWeight={"normal"} my={4}>
+                    {summary_report.project_summary_report.report_owner}
+                  </Text>
+                  <Divider />
+                </>
+              )}
+              {summary_report.project_summary_report.email && (
+                <>
+                  <Text fontSize="lg" fontWeight={"normal"} my={4}>
+                    {summary_report.project_summary_report.email}
+                  </Text>
+                  <Divider />
+                </>
+              )}
+              <Text fontSize="lg" fontWeight={"normal"} my={4}>
+                {"Static Scanning"}
+              </Text>
+            </Flex>
+          )}
         </Flex>
       </Flex>
       <Flex
@@ -735,7 +794,10 @@ export const ReportContainer: React.FC<{ summary_report: Report }> = ({
           <Heading color={"#52FF00"} fontSize="4xl">
             Findings
           </Heading>
-          <Text fontSize="4xl" fontWeight={400}> &nbsp;Summary </Text>
+          <Text fontSize="4xl" fontWeight={400}>
+            {" "}
+            &nbsp;Summary{" "}
+          </Text>
         </Flex>
         <Box w="100%" mb={6} border={"1px solid #D9D9D9;"}>
           <Flex
@@ -774,7 +836,12 @@ export const ReportContainer: React.FC<{ summary_report: Report }> = ({
             </VStack>
             <Stack
               spacing={[4, 4, 4, 20]}
-              direction={["column-reverse", "column-reverse", "column-reverse", "row"]}
+              direction={[
+                "column-reverse",
+                "column-reverse",
+                "column-reverse",
+                "row",
+              ]}
               align={["center", "center", "center", "flex-start"]}
             >
               <VStack align={["center", "center", "center", "flex-start"]}>
@@ -823,7 +890,11 @@ export const ReportContainer: React.FC<{ summary_report: Report }> = ({
             flexDir={["column", "column", "column", "row"]}
             mb={5}
           >
-            <Box w={["100%", "100%", "100%", "30%"]} h="300px" ml={[10, 10, 10, 0]}>
+            <Box
+              w={["100%", "100%", "100%", "30%"]}
+              h="300px"
+              ml={[10, 10, 10, 0]}
+            >
               <ResponsivePie
                 data={pieData(
                   summary_report.scan_summary[
@@ -865,10 +936,7 @@ export const ReportContainer: React.FC<{ summary_report: Report }> = ({
                 }}
               />
             </Box>
-            <Box
-              w={["100%", "100%", "100%", "30%"]}
-              px={[0, 0, 0, 15]}
-            >
+            <Box w={["100%", "100%", "100%", "30%"]} px={[0, 0, 0, 15]}>
               <VulnerabilityProgress
                 label="Critical"
                 variant="critical"
@@ -900,10 +968,7 @@ export const ReportContainer: React.FC<{ summary_report: Report }> = ({
                 total={summary_report.scan_summary[0].issues_count}
               />
             </Box>
-            <Box
-              w={["100%", "100%", "100%", "30%"]}
-              px={[0, 0, 0, 15]}
-            >
+            <Box w={["100%", "100%", "100%", "30%"]} px={[0, 0, 0, 15]}>
               <VulnerabilityProgress
                 label="Low"
                 variant="low"
@@ -968,10 +1033,7 @@ export const ReportContainer: React.FC<{ summary_report: Report }> = ({
               spacing={0}
               direction={["column", "column", "column", "row"]}
             >
-              <HStack
-                spacing={[0, 0, 0, 10]}
-                width={"100%"}
-              >
+              <HStack spacing={[0, 0, 0, 10]} width={"100%"}>
                 <VStack
                   align={["center", "center", "center", "flex-start"]}
                   textAlign={["center", "center", "center", "left"]}
@@ -1060,8 +1122,17 @@ export const ReportContainer: React.FC<{ summary_report: Report }> = ({
                     alignItems={["center"]}
                     border={["none", "none", "none", "1px solid #E6E6E6;"]}
                   >
-                    <Image height={7} width={7} src="/icons/wont_fix_color.svg" />
-                    <Text fontSize="2xl" fontWeight={"bold"} mb={10} width={"100%"}>
+                    <Image
+                      height={7}
+                      width={7}
+                      src="/icons/wont_fix_color.svg"
+                    />
+                    <Text
+                      fontSize="2xl"
+                      fontWeight={"bold"}
+                      mb={10}
+                      width={"100%"}
+                    >
                       {summary_report.scan_summary[0].wont_fix_count}
                     </Text>
                   </HStack>
@@ -1093,7 +1164,12 @@ export const ReportContainer: React.FC<{ summary_report: Report }> = ({
                       width={7}
                       src="/icons/pending_fix_color.svg"
                     />
-                    <Text fontSize="2xl" fontWeight={"bold"} mb={10} width={"100%"}>
+                    <Text
+                      fontSize="2xl"
+                      fontWeight={"bold"}
+                      mb={10}
+                      width={"100%"}
+                    >
                       {summary_report.scan_summary[0].pending_fix_count}
                     </Text>
                   </HStack>
@@ -1119,7 +1195,7 @@ export const ReportContainer: React.FC<{ summary_report: Report }> = ({
             px={[1, 1, 1, 10]}
             backgroundColor={"#F5F5F5"}
           >
-            {isDesktopView &&
+            {isDesktopView && (
               <Text
                 fontSize="md"
                 fontWeight={"extrabold"}
@@ -1128,7 +1204,7 @@ export const ReportContainer: React.FC<{ summary_report: Report }> = ({
               >
                 Bug ID
               </Text>
-            }
+            )}
             <Text
               fontSize="md"
               fontWeight={"extrabold"}
@@ -1169,7 +1245,7 @@ export const ReportContainer: React.FC<{ summary_report: Report }> = ({
                 borderBottomWidth={1}
                 borderBottomColor={"#E4E4E4"}
               >
-                {isDesktopView &&
+                {isDesktopView && (
                   <Text
                     fontSize="md"
                     fontWeight={"normal"}
@@ -1178,7 +1254,7 @@ export const ReportContainer: React.FC<{ summary_report: Report }> = ({
                   >
                     {issue.bug_id}
                   </Text>
-                }
+                )}
                 <Flex
                   as="div"
                   w={["50%", "50%", "50%", "20%"]}
@@ -1227,7 +1303,6 @@ export const ReportContainer: React.FC<{ summary_report: Report }> = ({
               </Flex>
             ))
           )}
-
         </Flex>
       </Flex>
 
@@ -1250,7 +1325,10 @@ export const ReportContainer: React.FC<{ summary_report: Report }> = ({
           <Heading color={"#52FF00"} fontSize="4xl">
             Vulnerability
           </Heading>
-          <Text fontSize="4xl" fontWeight={400}> &nbsp;Details </Text>
+          <Text fontSize="4xl" fontWeight={400}>
+            {" "}
+            &nbsp;Details{" "}
+          </Text>
         </Flex>
 
         {Object.keys(summary_report.issues).map((key, index) =>
@@ -1280,7 +1358,8 @@ export const ReportContainer: React.FC<{ summary_report: Report }> = ({
                 <VStack
                   width={["50%", "50%", "50%", "15%"]}
                   mb={[4, 4, 4, 0]}
-                  alignItems="flex-start">
+                  alignItems="flex-start"
+                >
                   <Text
                     fontSize="md"
                     fontWeight={"normal"}
@@ -1291,7 +1370,12 @@ export const ReportContainer: React.FC<{ summary_report: Report }> = ({
                   </Text>
                   <HStack>
                     <SeverityIcon variant={issue.severity} />
-                    <Text fontSize="lg" fontWeight={"bold"} ml={2} width={"100%"}>
+                    <Text
+                      fontSize="lg"
+                      fontWeight={"bold"}
+                      ml={2}
+                      width={"100%"}
+                    >
                       {sentenceCapitalize(issue.severity)}
                     </Text>
                   </HStack>
@@ -1318,15 +1402,15 @@ export const ReportContainer: React.FC<{ summary_report: Report }> = ({
                         issue.issue_confidence === "2"
                           ? "#289F4C"
                           : issue.issue_confidence === "1"
-                            ? "#ED9801"
-                            : "#FF5630"
+                          ? "#ED9801"
+                          : "#FF5630"
                       }
                       backgroundColor={
                         issue.issue_confidence === "2"
                           ? "#CFFFB8"
                           : issue.issue_confidence === "1"
-                            ? "#FFF8EB"
-                            : "#FFF5F3"
+                          ? "#FFF8EB"
+                          : "#FFF5F3"
                       }
                       fontSize="lg"
                       fontWeight={"bold"}
@@ -1334,8 +1418,8 @@ export const ReportContainer: React.FC<{ summary_report: Report }> = ({
                       {issue.issue_confidence === "2"
                         ? "Certain"
                         : issue.issue_confidence === "1"
-                          ? "Firm"
-                          : "Tentative"}
+                        ? "Firm"
+                        : "Tentative"}
                     </Text>
                   </HStack>
                 </VStack>
@@ -1372,12 +1456,17 @@ export const ReportContainer: React.FC<{ summary_report: Report }> = ({
                   </Text>
                   <HStack>
                     <Image src={`/icons/${issue.bug_status}_color.svg`} />
-                    <Text fontSize="md" fontWeight={"normal"} color={"gray.600"}>
+                    <Text
+                      fontSize="md"
+                      fontWeight={"normal"}
+                      color={"gray.600"}
+                    >
                       {/* {sentenceCapitalize(
                           issue.status.toLowerCase().replace("_", " ")
                         )} */}
 
-                      {issue.bug_status === "false_positive" && "False Positive"}
+                      {issue.bug_status === "false_positive" &&
+                        "False Positive"}
                       {issue.bug_status === "wont_fix" && "Won't Fix"}
                       {issue.bug_status === "pending_fix" && "Pending Fix"}
                       {issue.bug_status === "fixed" && "Fixed"}
@@ -1466,79 +1555,84 @@ export const ReportContainer: React.FC<{ summary_report: Report }> = ({
           <Heading color={"#52FF00"} fontSize="4xl">
             Scan
           </Heading>
-          <Text fontSize="4xl" fontWeight={400}> &nbsp;History </Text>
+          <Text fontSize="4xl" fontWeight={400}>
+            {" "}
+            &nbsp;History{" "}
+          </Text>
         </Flex>
-        {isDesktopView && <Flex
-          as="section"
-          w="100%"
-          alignItems="center"
-          justifyContent="flex-end"
-          flexDir={"row"}
-          textAlign={["left", "left"]}
-          py={2}
-          px={[1, 10]}
-        >
-          <SeverityIcon variant={"critical"} />
-          <Text
-            fontSize="md"
-            fontWeight={"normal"}
-            color={"gray.600"}
-            ml={2}
-            mr={5}
+        {isDesktopView && (
+          <Flex
+            as="section"
+            w="100%"
+            alignItems="center"
+            justifyContent="flex-end"
+            flexDir={"row"}
+            textAlign={["left", "left"]}
+            py={2}
+            px={[1, 10]}
           >
-            Critical
-          </Text>
-          <SeverityIcon variant={"high"} />
-          <Text
-            fontSize="md"
-            fontWeight={"normal"}
-            color={"gray.600"}
-            ml={2}
-            mr={5}
-          >
-            High
-          </Text>
-          <SeverityIcon variant={"medium"} />
-          <Text
-            fontSize="md"
-            fontWeight={"normal"}
-            color={"gray.600"}
-            ml={2}
-            mr={5}
-          >
-            Medium
-          </Text>
-          <SeverityIcon variant={"low"} />
-          <Text
-            fontSize="md"
-            fontWeight={"normal"}
-            color={"gray.600"}
-            ml={2}
-            mr={5}
-          >
-            Low
-          </Text>
-          <SeverityIcon variant={"informational"} />
-          <Text
-            fontSize="md"
-            fontWeight={"normal"}
-            color={"gray.600"}
-            ml={2}
-            mr={5}
-          >
-            Informational
-          </Text>
-          <SeverityIcon variant={"gas"} />
-          <Text
-            fontSize="md"
-            fontWeight={"normal"}
-            color={"gray.600"}
-            ml={2}
-            mr={5}
-          >
-            Gas
-          </Text>
-        </Flex>}
+            <SeverityIcon variant={"critical"} />
+            <Text
+              fontSize="md"
+              fontWeight={"normal"}
+              color={"gray.600"}
+              ml={2}
+              mr={5}
+            >
+              Critical
+            </Text>
+            <SeverityIcon variant={"high"} />
+            <Text
+              fontSize="md"
+              fontWeight={"normal"}
+              color={"gray.600"}
+              ml={2}
+              mr={5}
+            >
+              High
+            </Text>
+            <SeverityIcon variant={"medium"} />
+            <Text
+              fontSize="md"
+              fontWeight={"normal"}
+              color={"gray.600"}
+              ml={2}
+              mr={5}
+            >
+              Medium
+            </Text>
+            <SeverityIcon variant={"low"} />
+            <Text
+              fontSize="md"
+              fontWeight={"normal"}
+              color={"gray.600"}
+              ml={2}
+              mr={5}
+            >
+              Low
+            </Text>
+            <SeverityIcon variant={"informational"} />
+            <Text
+              fontSize="md"
+              fontWeight={"normal"}
+              color={"gray.600"}
+              ml={2}
+              mr={5}
+            >
+              Informational
+            </Text>
+            <SeverityIcon variant={"gas"} />
+            <Text
+              fontSize="md"
+              fontWeight={"normal"}
+              color={"gray.600"}
+              ml={2}
+              mr={5}
+            >
+              Gas
+            </Text>
+          </Flex>
+        )}
         <Flex
           as="section"
           w="100%"
@@ -1575,14 +1669,16 @@ export const ReportContainer: React.FC<{ summary_report: Report }> = ({
           >
             Score
           </Text>
-          {isDesktopView && <Text
-            fontSize="md"
-            fontWeight={"extrabold"}
-            color={"gray.600"}
-            width={"50%"}
-          >
-            Scan Overview
-          </Text>}
+          {isDesktopView && (
+            <Text
+              fontSize="md"
+              fontWeight={"extrabold"}
+              color={"gray.600"}
+              width={"50%"}
+            >
+              Scan Overview
+            </Text>
+          )}
         </Flex>
 
         {summary_report.scan_summary.map((scan, index) => (
@@ -1624,75 +1720,77 @@ export const ReportContainer: React.FC<{ summary_report: Report }> = ({
               {scan.score}
             </Text>
 
-            {isDesktopView && <Flex
-              as="div"
-              w="50%"
-              height={"30px"}
-              alignItems="center"
-              justifyContent="flex-start"
-              flexDir={"row"}
-            >
-              <SeverityIcon variant={"critical"} />
-              <Text
-                fontSize="md"
-                fontWeight={"normal"}
-                color={"gray.600"}
-                ml={2}
-                width={"18%"}
+            {isDesktopView && (
+              <Flex
+                as="div"
+                w="50%"
+                height={"30px"}
+                alignItems="center"
+                justifyContent="flex-start"
+                flexDir={"row"}
               >
-                {scan.issue_severity_distribution.critical}
-              </Text>
-              <SeverityIcon variant={"high"} />
-              <Text
-                fontSize="md"
-                fontWeight={"normal"}
-                color={"gray.600"}
-                ml={2}
-                width={"18%"}
-              >
-                {scan.issue_severity_distribution.high}
-              </Text>
-              <SeverityIcon variant={"medium"} />
-              <Text
-                fontSize="md"
-                fontWeight={"normal"}
-                color={"gray.600"}
-                ml={2}
-                width={"18%"}
-              >
-                {scan.issue_severity_distribution.medium}
-              </Text>
-              <SeverityIcon variant={"low"} />
-              <Text
-                fontSize="md"
-                fontWeight={"normal"}
-                color={"gray.600"}
-                ml={2}
-                width={"18%"}
-              >
-                {scan.issue_severity_distribution.low}
-              </Text>
-              <SeverityIcon variant={"informational"} />
-              <Text
-                fontSize="md"
-                fontWeight={"normal"}
-                color={"gray.600"}
-                ml={2}
-                width={"18%"}
-              >
-                {scan.issue_severity_distribution.informational}
-              </Text>
-              <SeverityIcon variant={"gas"} />
-              <Text
-                fontSize="md"
-                fontWeight={"normal"}
-                color={"gray.600"}
-                ml={2}
-                width={"18%"}
-              >
-                {scan.issue_severity_distribution.gas}
-              </Text>
-            </Flex>}
+                <SeverityIcon variant={"critical"} />
+                <Text
+                  fontSize="md"
+                  fontWeight={"normal"}
+                  color={"gray.600"}
+                  ml={2}
+                  width={"18%"}
+                >
+                  {scan.issue_severity_distribution.critical}
+                </Text>
+                <SeverityIcon variant={"high"} />
+                <Text
+                  fontSize="md"
+                  fontWeight={"normal"}
+                  color={"gray.600"}
+                  ml={2}
+                  width={"18%"}
+                >
+                  {scan.issue_severity_distribution.high}
+                </Text>
+                <SeverityIcon variant={"medium"} />
+                <Text
+                  fontSize="md"
+                  fontWeight={"normal"}
+                  color={"gray.600"}
+                  ml={2}
+                  width={"18%"}
+                >
+                  {scan.issue_severity_distribution.medium}
+                </Text>
+                <SeverityIcon variant={"low"} />
+                <Text
+                  fontSize="md"
+                  fontWeight={"normal"}
+                  color={"gray.600"}
+                  ml={2}
+                  width={"18%"}
+                >
+                  {scan.issue_severity_distribution.low}
+                </Text>
+                <SeverityIcon variant={"informational"} />
+                <Text
+                  fontSize="md"
+                  fontWeight={"normal"}
+                  color={"gray.600"}
+                  ml={2}
+                  width={"18%"}
+                >
+                  {scan.issue_severity_distribution.informational}
+                </Text>
+                <SeverityIcon variant={"gas"} />
+                <Text
+                  fontSize="md"
+                  fontWeight={"normal"}
+                  color={"gray.600"}
+                  ml={2}
+                  width={"18%"}
+                >
+                  {scan.issue_severity_distribution.gas}
+                </Text>
+              </Flex>
+            )}
           </Flex>
         ))}
       </Flex>

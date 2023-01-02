@@ -52,6 +52,17 @@ const Projects: React.FC = () => {
   const { data: profileData } = useProfile();
 
   useEffect(() => {
+    if (projects) {
+      let pList =
+        projectList && pagination.pageNo > 1
+          ? projectList.concat(projects.data)
+          : projects.data;
+      setProjectList(pList);
+      setPage(projects.page);
+    }
+  }, [projects, refetch]);
+
+  useEffect(() => {
     let intervalId: NodeJS.Timeout;
     const refetchTillScanComplete = () => {
       if (
@@ -79,19 +90,13 @@ const Projects: React.FC = () => {
       }
     };
 
-    if (projects) {
-      let pList =
-        projectList && pagination.pageNo > 1
-          ? projectList.concat(projects.data)
-          : projects.data;
-      setProjectList(pList);
-      setPage(projects.page);
+    if (projectList) {
       refetchTillScanComplete();
     }
     return () => {
       clearInterval(intervalId);
     };
-  }, [projects, refetch]);
+  }, [projectList]);
 
   const refetchProjects = async () => {
     if (projectList) {

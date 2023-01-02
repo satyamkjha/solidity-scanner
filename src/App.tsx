@@ -31,26 +31,22 @@ const GlobalStyles = css`
   }
 `;
 
-
-
-export const App : React.FC = () => { 
-  
-  
-  
+export const App: React.FC = () => {
   return (
-  <Suspense fallback="">
-    <Helmet>
-      <script
-        type="text/javascript"
-        id="hs-script-loader"
-        async
-        defer
-        src="//js-eu1.hs-scripts.com/24889894.js"
-      ></script>
+    <Suspense fallback="">
+      <Helmet>
+        <script
+          type="text/javascript"
+          id="hs-script-loader"
+          async
+          defer
+          src="//js-eu1.hs-scripts.com/24889894.js"
+        ></script>
       </Helmet>
-      {process.env.REACT_APP_ENVIRONMENT === "prod" ?  <Helmet>
-      <script>
-      {`(function (h, o, t, j, a, r) {
+      {process.env.REACT_APP_ENVIRONMENT === "prod" ? (
+        <Helmet>
+          <script>
+            {`(function (h, o, t, j, a, r) {
         h.hj =
           h.hj ||
           function () {
@@ -63,16 +59,19 @@ export const App : React.FC = () => {
         r.src = t + h._hjSettings.hjid + j + h._hjSettings.hjsv;
         a.appendChild(r);
       })(window, document, "https://static.hotjar.com/c/hotjar-", ".js?sv=");`}
-      </script>
-      </Helmet>: <></> }
-    
-      
-    <QueryClientProvider client={queryClient}>
-      <ChakraProvider theme={theme}>
-        <Global styles={GlobalStyles} />
-        <Routes />
-      </ChakraProvider>
-      <ReactQueryDevtools initialIsOpen={false} />
-    </QueryClientProvider>
-  </Suspense>
-)};
+          </script>
+        </Helmet>
+      ) : (
+        <></>
+      )}
+
+      <QueryClientProvider client={queryClient}>
+        <ChakraProvider theme={theme}>
+          <Global styles={GlobalStyles} />
+          <Routes />
+        </ChakraProvider>
+        <ReactQueryDevtools initialIsOpen={false} />
+      </QueryClientProvider>
+    </Suspense>
+  );
+};
