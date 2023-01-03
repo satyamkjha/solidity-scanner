@@ -48,6 +48,7 @@ import {
   Badge,
   Image,
   useMediaQuery,
+  Stack,
 } from "@chakra-ui/react";
 import {
   AiOutlineClockCircle,
@@ -285,6 +286,9 @@ const ScanDetails: React.FC<{ scansRemaining: number; scans: ScanMeta[] }> = ({
   const [pubEmail, setPubEmail] = useState("");
   const [emailSwitch, setEmailSwitch] = useState(true);
   const [publishStatus, setPublishStatus] = useState("");
+  const [publishInfoSwitch, setPublishInfoSwitch] = useState(true);
+  
+  const [isDesktopView] = useMediaQuery("(min-width: 1024px)");
 
   const getReportData = async (project_id: string, report_id: string) => {
     const reportResponse = await API.post<{ summary_report: Report }>(
@@ -352,19 +356,19 @@ const ScanDetails: React.FC<{ scansRemaining: number; scans: ScanMeta[] }> = ({
       additional_details: {
         report_owner: {
           value: pubName,
-          is_public: nameSwitch,
+          is_public: isDesktopView ? nameSwitch : publishInfoSwitch,
         },
         website: {
           value: pubWeb,
-          is_public: webSwitch,
+          is_public: isDesktopView ? webSwitch : publishInfoSwitch,
         },
         organization: {
           value: pubOrg,
-          is_public: orgSwitch,
+          is_public: isDesktopView ? orgSwitch : publishInfoSwitch,
         },
         contact_email: {
           value: pubEmail,
-          is_public: emailSwitch,
+          is_public: isDesktopView ? emailSwitch : publishInfoSwitch,
         },
       },
     });
@@ -427,7 +431,7 @@ const ScanDetails: React.FC<{ scansRemaining: number; scans: ScanMeta[] }> = ({
                         _hover={{
                           opacity:
                             scansRemaining === 0 ||
-                            scanData.scan_report.scan_status === "scanning"
+                              scanData.scan_report.scan_status === "scanning"
                               ? 0.4
                               : 0.9,
                         }}
@@ -457,18 +461,18 @@ const ScanDetails: React.FC<{ scansRemaining: number; scans: ScanMeta[] }> = ({
                           profile.actions_supported
                             ? !profile.actions_supported.publishable_report
                             : profile.current_package !== "expired" &&
-                              !plans.monthly[profile.current_package]
-                                .publishable_report
+                            !plans.monthly[profile.current_package]
+                              .publishable_report
                         }
                         onClick={() => setOpen(!open)}
                       >
                         {profile.actions_supported
                           ? !profile.actions_supported.publishable_report
                           : profile.current_package !== "expired" &&
-                            !plans.monthly[profile.current_package]
-                              .publishable_report && (
-                              <LockIcon color={"accent"} size="xs" mr={3} />
-                            )}
+                          !plans.monthly[profile.current_package]
+                            .publishable_report && (
+                            <LockIcon color={"accent"} size="xs" mr={3} />
+                          )}
                         Publish Report
                       </Button>
                     ) : (
@@ -497,7 +501,7 @@ const ScanDetails: React.FC<{ scansRemaining: number; scans: ScanMeta[] }> = ({
                         (profile.actions_supported
                           ? !profile.actions_supported.generate_report
                           : profile.current_package !== "expired" &&
-                            !plans.monthly[profile.current_package].report)
+                          !plans.monthly[profile.current_package].report)
                       }
                       onClick={() => {
                         if (
@@ -526,24 +530,24 @@ const ScanDetails: React.FC<{ scansRemaining: number; scans: ScanMeta[] }> = ({
                       {profile.actions_supported
                         ? !profile.actions_supported.generate_report
                         : profile.current_package !== "expired" &&
-                          !plans.monthly[profile.current_package].report && (
-                            <LockIcon color={"accent"} size="xs" mr={3} />
-                          )}
+                        !plans.monthly[profile.current_package].report && (
+                          <LockIcon color={"accent"} size="xs" mr={3} />
+                        )}
                       {reportingStatus === "generating_report"
                         ? "Generating report..."
                         : scanData.scan_report.report_regeneration_enabled
-                        ? "Re-generate Report"
-                        : reportingStatus === "report_generated"
-                        ? "View Report"
-                        : reportingStatus === "not_generated"
-                        ? "Generate Report"
-                        : "Loading"}
+                          ? "Re-generate Report"
+                          : reportingStatus === "report_generated"
+                            ? "View Report"
+                            : reportingStatus === "not_generated"
+                              ? "Generate Report"
+                              : "Loading"}
                     </Button>
                   )}
                 </HStack>
               </Flex>
               {scanData.scan_report.scan_status === "scanning" ||
-              scanData.scan_report.scan_status === "initialised" ? (
+                scanData.scan_report.scan_status === "initialised" ? (
                 <Flex
                   w="100%"
                   h="60vh"
@@ -606,18 +610,18 @@ const ScanDetails: React.FC<{ scansRemaining: number; scans: ScanMeta[] }> = ({
                     <TabPanel p={[0, 0, 0, 4]}>
                       {(scanData.scan_report.multi_file_scan_summary ||
                         scanData.scan_report.scan_summary) && (
-                        <Overview
-                          scansRemaining={scansRemaining}
-                          scanData={scanData.scan_report}
-                          onTabChange={handleTabsChange}
-                        />
-                      )}
+                          <Overview
+                            scansRemaining={scansRemaining}
+                            scanData={scanData.scan_report}
+                            onTabChange={handleTabsChange}
+                          />
+                        )}
                     </TabPanel>
                     <TabPanel>
                       {scanData.scan_report.multi_file_scan_status ===
                         "scan_done" &&
-                      scanData.scan_report.multi_file_scan_details &&
-                      scanData.scan_report.multi_file_scan_summary ? (
+                        scanData.scan_report.multi_file_scan_details &&
+                        scanData.scan_report.multi_file_scan_summary ? (
                         <MultifileResult
                           type="project"
                           details_enabled={scanData.scan_report.details_enabled}
@@ -725,16 +729,16 @@ const ScanDetails: React.FC<{ scansRemaining: number; scans: ScanMeta[] }> = ({
         <ModalOverlay />
         <ModalContent
           bg="bg.subtle"
-          h={"650px"}
+          h={["auto", "auto", "auto", "650px"]}
           minH={"fit-content"}
-          overflowY={"scroll"}
-          overflowX={"scroll"}
-          maxW="70vw"
+          maxW={["90vw", "90vw", "70vw"]}
           minW={"300px"}
+          borderRadius="15px"
         >
           <ModalHeader
             background="rgba(82, 255, 0, 0.04)"
             backgroundImage="url('/background/pattern.png')"
+            textAlign={["center", "center", "center", "left"]}
             py={10}
           >
             Publish Report
@@ -748,9 +752,10 @@ const ScanDetails: React.FC<{ scansRemaining: number; scans: ScanMeta[] }> = ({
               flexDir="row"
             >
               {!next && (
-                <VStack zIndex={"10"} w={"70%"} spacing={2}>
-                  <HStack
-                    alignItems="center"
+                <VStack zIndex={"10"} w={["100%", "100%", "100%", "70%"]} spacing={2}>
+                  <Stack
+                    direction={["column", "column", "column", "row"]}
+                    alignItems={["left", "left", "left", "center"]}
                     spacing={3}
                     px={5}
                     py={3}
@@ -764,14 +769,14 @@ const ScanDetails: React.FC<{ scansRemaining: number; scans: ScanMeta[] }> = ({
                       fontSize="md"
                       fontWeight={"600"}
                       color={"gray.500"}
-                      width={"30%"}
+                      width={["100%", "100%", "100%", "30%"]}
                     >
                       Project Name
                     </Text>
                     <HStack
                       alignItems="center"
                       spacing={3}
-                      width={"70%"}
+                      width={["100%", "100%", "100%", "70%"]}
                       bgColor={"white"}
                       borderRadius={"16px"}
                     >
@@ -781,10 +786,11 @@ const ScanDetails: React.FC<{ scansRemaining: number; scans: ScanMeta[] }> = ({
                         {projectName}
                       </Text>
                     </HStack>
-                  </HStack>
+                  </Stack>
                   {repoUrl !== "File Scan" && (
-                    <HStack
-                      alignItems="center"
+                    <Stack
+                      direction={["column", "column", "column", "row"]}
+                      alignItems={["left", "left", "left", "center"]}
                       spacing={3}
                       px={5}
                       py={3}
@@ -798,14 +804,14 @@ const ScanDetails: React.FC<{ scansRemaining: number; scans: ScanMeta[] }> = ({
                         fontSize="md"
                         fontWeight={"600"}
                         color={"gray.500"}
-                        width={"30%"}
+                        width={["100%", "100%", "100%", "30%"]}
                       >
                         Link to the repository{" "}
                       </Text>
                       <HStack
                         alignItems="center"
                         spacing={3}
-                        width={"70%"}
+                        width={["100%", "100%", "100%", "70%"]}
                         bgColor={"white"}
                         borderRadius={"16px"}
                       >
@@ -815,12 +821,13 @@ const ScanDetails: React.FC<{ scansRemaining: number; scans: ScanMeta[] }> = ({
                           {repoUrl}
                         </Text>
                       </HStack>
-                    </HStack>
+                    </Stack>
                   )}
 
                   {commitHash && (
-                    <HStack
-                      alignItems="center"
+                    <Stack
+                      direction={["column", "column", "column", "row"]}
+                      alignItems={["left", "left", "left", "center"]}
                       spacing={3}
                       px={5}
                       py={3}
@@ -834,14 +841,14 @@ const ScanDetails: React.FC<{ scansRemaining: number; scans: ScanMeta[] }> = ({
                         fontSize="md"
                         fontWeight={"600"}
                         color={"gray.500"}
-                        width={"30%"}
+                        width={["100%", "100%", "100%", "30%"]}
                       >
                         Git commit hash{" "}
                       </Text>
                       <HStack
                         alignItems="center"
                         spacing={3}
-                        width={"70%"}
+                        width={["100%", "100%", "100%", "70%"]}
                         bgColor={"white"}
                         borderRadius={"16px"}
                       >
@@ -851,11 +858,12 @@ const ScanDetails: React.FC<{ scansRemaining: number; scans: ScanMeta[] }> = ({
                           {commitHash}
                         </Text>
                       </HStack>
-                    </HStack>
+                    </Stack>
                   )}
 
-                  <HStack
-                    alignItems="center"
+                  <Stack
+                    direction={["column", "column", "column", "row"]}
+                    alignItems={["left", "left", "left", "center"]}
                     spacing={3}
                     px={5}
                     py={3}
@@ -869,14 +877,14 @@ const ScanDetails: React.FC<{ scansRemaining: number; scans: ScanMeta[] }> = ({
                       fontSize="md"
                       fontWeight={"600"}
                       color={"gray.500"}
-                      width={"30%"}
+                      width={["100%", "100%", "100%", "30%"]}
                     >
                       Latest Report Update
                     </Text>
                     <HStack
                       alignItems="center"
                       spacing={3}
-                      width={"70%"}
+                      width={["100%", "100%", "100%", "70%"]}
                       bgColor={"white"}
                       borderRadius={"16px"}
                     >
@@ -886,10 +894,11 @@ const ScanDetails: React.FC<{ scansRemaining: number; scans: ScanMeta[] }> = ({
                         {lastTimeUpdate}
                       </Text>
                     </HStack>
-                  </HStack>
+                  </Stack>
 
-                  <HStack
-                    alignItems="center"
+                  <Stack
+                    direction={["column", "column", "column", "row"]}
+                    alignItems={["left", "left", "left", "center"]}
                     spacing={3}
                     px={5}
                     py={3}
@@ -903,14 +912,14 @@ const ScanDetails: React.FC<{ scansRemaining: number; scans: ScanMeta[] }> = ({
                       fontSize="md"
                       fontWeight={"600"}
                       color={"gray.500"}
-                      width={"30%"}
+                      width={["100%", "100%", "100%", "30%"]}
                     >
                       Date Published
                     </Text>
                     <HStack
                       alignItems="center"
                       spacing={3}
-                      width={"70%"}
+                      width={["100%", "100%", "100%", "70%"]}
                       bgColor={"white"}
                       borderRadius={"16px"}
                     >
@@ -920,11 +929,25 @@ const ScanDetails: React.FC<{ scansRemaining: number; scans: ScanMeta[] }> = ({
                         {datePublished}
                       </Text>
                     </HStack>
-                  </HStack>
+                  </Stack>
                 </VStack>
               )}
               {next && (
-                <VStack zIndex={"10"} w={"70%"} spacing={6}>
+                <VStack zIndex={"10"} w={["100%", "100%", "100%", "70%"]} spacing={6}>
+                  {!isDesktopView &&
+                    <HStack my={6}>
+                      <Text>Private</Text>
+                      <SwitchComp
+                        isChecked={publishInfoSwitch}
+                        onChange={() => {
+                          setPublishInfoSwitch(!publishInfoSwitch);
+                        }}
+                        size="lg"
+                        variant="brand"
+                      />
+                      <Text>Public</Text>
+                    </HStack>
+                  }
                   <HStack
                     alignItems="center"
                     spacing={3}
@@ -962,16 +985,20 @@ const ScanDetails: React.FC<{ scansRemaining: number; scans: ScanMeta[] }> = ({
                         }}
                       />
                     </InputGroup>
-                    <Text>Private</Text>
-                    <SwitchComp
-                      isChecked={nameSwitch}
-                      onChange={() => {
-                        setNameSwitch(!nameSwitch);
-                      }}
-                      size="lg"
-                      variant="brand"
-                    />
-                    <Text>Public</Text>
+                    {isDesktopView &&
+                      <>
+                        <Text>Private</Text>
+                        <SwitchComp
+                          isChecked={nameSwitch}
+                          onChange={() => {
+                            setNameSwitch(!nameSwitch);
+                          }}
+                          size="lg"
+                          variant="brand"
+                        />
+                        <Text>Public</Text>
+                      </>
+                    }
                   </HStack>
                   <HStack
                     alignItems="center"
@@ -1008,16 +1035,20 @@ const ScanDetails: React.FC<{ scansRemaining: number; scans: ScanMeta[] }> = ({
                         }}
                       />
                     </InputGroup>
-                    <Text>Private</Text>
-                    <SwitchComp
-                      isChecked={emailSwitch}
-                      onChange={() => {
-                        setEmailSwitch(!emailSwitch);
-                      }}
-                      size="lg"
-                      variant="brand"
-                    />
-                    <Text> Public</Text>
+                    {isDesktopView &&
+                      <>
+                        <Text>Private</Text>
+                        <SwitchComp
+                          isChecked={emailSwitch}
+                          onChange={() => {
+                            setEmailSwitch(!emailSwitch);
+                          }}
+                          size="lg"
+                          variant="brand"
+                        />
+                        <Text> Public</Text>
+                      </>
+                    }
                   </HStack>
 
                   <HStack
@@ -1057,16 +1088,20 @@ const ScanDetails: React.FC<{ scansRemaining: number; scans: ScanMeta[] }> = ({
                         }}
                       />
                     </InputGroup>
-                    <Text>Private</Text>
-                    <SwitchComp
-                      isChecked={webSwitch}
-                      onChange={() => {
-                        setWebSwitch(!webSwitch);
-                      }}
-                      size="lg"
-                      variant="brand"
-                    />
-                    <Text>Public</Text>
+                    {isDesktopView &&
+                      <>
+                        <Text>Private</Text>
+                        <SwitchComp
+                          isChecked={webSwitch}
+                          onChange={() => {
+                            setWebSwitch(!webSwitch);
+                          }}
+                          size="lg"
+                          variant="brand"
+                        />
+                        <Text>Public</Text>
+                      </>
+                    }
                   </HStack>
                   <HStack
                     alignItems="center"
@@ -1103,16 +1138,20 @@ const ScanDetails: React.FC<{ scansRemaining: number; scans: ScanMeta[] }> = ({
                         }}
                       />
                     </InputGroup>
-                    <Text>Private</Text>
-                    <SwitchComp
-                      isChecked={orgSwitch}
-                      onChange={() => {
-                        setOrgSwitch(!orgSwitch);
-                      }}
-                      size="lg"
-                      variant="brand"
-                    />
-                    <Text>Public</Text>
+                    {isDesktopView &&
+                      <>
+                        <Text>Private</Text>
+                        <SwitchComp
+                          isChecked={orgSwitch}
+                          onChange={() => {
+                            setOrgSwitch(!orgSwitch);
+                          }}
+                          size="lg"
+                          variant="brand"
+                        />
+                        <Text>Public</Text>
+                      </>
+                    }
                   </HStack>
                 </VStack>
               )}
@@ -1122,6 +1161,7 @@ const ScanDetails: React.FC<{ scansRemaining: number; scans: ScanMeta[] }> = ({
                 alt="Product screenshot"
                 w={"40%"}
                 h={"auto"}
+                display={["none", "none", "none", "block"]}
               />
             </Flex>
           </ModalBody>
@@ -1132,6 +1172,7 @@ const ScanDetails: React.FC<{ scansRemaining: number; scans: ScanMeta[] }> = ({
                 w={"100px"}
                 variant={"ghost"}
                 mr={3}
+                my={[4, 4, 4, 0]}
                 onClick={() => {
                   setNext(false);
                 }}
@@ -1140,9 +1181,10 @@ const ScanDetails: React.FC<{ scansRemaining: number; scans: ScanMeta[] }> = ({
               </Button>
             )}
             <Button
-              w={"100px"}
+              w={["100%", "100%", "100%", "100px"]}
               variant={"brand"}
               mr={3}
+              my={[4, 4, 4, 0]}
               onClick={() => {
                 if (next) {
                   publishReport();
@@ -1322,8 +1364,8 @@ const ScanBlock: React.FC<{
           {scan.reporting_status === "report_generated"
             ? "View Report"
             : scan.reporting_status === "generating_report"
-            ? "Generating Report"
-            : "Report Not Generated"}
+              ? "Generating Report"
+              : "Report Not Generated"}
         </Button>
       )}
     </Flex>

@@ -92,7 +92,7 @@ const ImageCarousel = () => {
   ];
 
   return (
-    <Carousel plugins={["arrows", "infinite"]}>
+    <Carousel plugins={["arrows"]}>
       {imgSourceList.map((src) => (
         <Image
           boxShadow="5px 5px 15px 15px #88888840"
