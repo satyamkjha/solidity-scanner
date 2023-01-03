@@ -36,6 +36,8 @@ import {
   useToast,
   Badge,
   border,
+  Stack,
+  useMediaQuery,
 } from "@chakra-ui/react";
 import Overview from "components/overview";
 import Result, { MultifileResult } from "components/result";
@@ -94,7 +96,10 @@ const BlockPage: React.FC = () => {
   const [lastTimeUpdate, setLastTimeUpdate] = useState("");
   const [datePublished, setDatePublished] = useState("");
 
+  const [publishInfoSwitch, setPublishInfoSwitch] = useState(true);
+
   const [tabIndex, setTabIndex] = React.useState(0);
+  const [isDesktopView] = useMediaQuery("(min-width: 1024px)");
 
   useEffect(() => {
     let intervalId: NodeJS.Timeout;
@@ -140,19 +145,19 @@ const BlockPage: React.FC = () => {
       additional_details: {
         report_owner: {
           value: pubName,
-          is_public: nameSwitch,
+          is_public: isDesktopView ? nameSwitch : publishInfoSwitch,
         },
         website: {
           value: pubWeb,
-          is_public: webSwitch,
+          is_public: isDesktopView ? webSwitch : publishInfoSwitch,
         },
         organization: {
           value: pubOrg,
-          is_public: orgSwitch,
+          is_public: isDesktopView ? orgSwitch : publishInfoSwitch,
         },
         contact_email: {
           value: pubEmail,
-          is_public: emailSwitch,
+          is_public: isDesktopView ? emailSwitch : publishInfoSwitch,
         },
       },
     });
@@ -328,21 +333,21 @@ const BlockPage: React.FC = () => {
                                 isDisabled={
                                   profile.actions_supported
                                     ? !profile.actions_supported
-                                        .publishable_report
+                                      .publishable_report
                                     : profile.current_package !== "expired" &&
-                                      !plans.monthly[profile.current_package]
-                                        .publishable_report
+                                    !plans.monthly[profile.current_package]
+                                      .publishable_report
                                 }
                                 onClick={() => setOpen(!open)}
                               >
                                 {(profile.actions_supported
                                   ? !profile.actions_supported
-                                      .publishable_report
+                                    .publishable_report
                                   : profile.current_package !== "expired" &&
-                                    !plans.monthly[profile.current_package]
-                                      .publishable_report) && (
-                                  <LockIcon color={"accent"} size="xs" mr={3} />
-                                )}
+                                  !plans.monthly[profile.current_package]
+                                    .publishable_report) && (
+                                    <LockIcon color={"accent"} size="xs" mr={3} />
+                                  )}
                                 Publish Report
                               </Button>
                             ) : (
@@ -378,8 +383,8 @@ const BlockPage: React.FC = () => {
                                 (profile.actions_supported
                                   ? !profile.actions_supported.generate_report
                                   : profile.current_package !== "expired" &&
-                                    !plans.monthly[profile.current_package]
-                                      .report)
+                                  !plans.monthly[profile.current_package]
+                                    .report)
                               }
                               onClick={() => {
                                 if (
@@ -414,24 +419,24 @@ const BlockPage: React.FC = () => {
                               {profile.actions_supported
                                 ? !profile.actions_supported.generate_report
                                 : profile.current_package !== "expired" &&
-                                  !plans.monthly[profile.current_package]
-                                    .report && (
-                                    <LockIcon
-                                      color={"accent"}
-                                      size="xs"
-                                      mr={3}
-                                    />
-                                  )}
+                                !plans.monthly[profile.current_package]
+                                  .report && (
+                                  <LockIcon
+                                    color={"accent"}
+                                    size="xs"
+                                    mr={3}
+                                  />
+                                )}
                               {reportingStatus === "generating_report"
                                 ? "Generating report..."
                                 : scanData.scan_report
-                                    .report_regeneration_enabled
-                                ? "Re-generate Report"
-                                : reportingStatus === "report_generated"
-                                ? "View Report"
-                                : reportingStatus === "not_generated"
-                                ? "Generate Report"
-                                : "Loading"}
+                                  .report_regeneration_enabled
+                                  ? "Re-generate Report"
+                                  : reportingStatus === "report_generated"
+                                    ? "View Report"
+                                    : reportingStatus === "not_generated"
+                                      ? "Generate Report"
+                                      : "Loading"}
                             </Button>
                           )}
                           <AccordionButton
@@ -503,12 +508,12 @@ const BlockPage: React.FC = () => {
                                 fontSize="18px"
                               >
                                 {scanData.scan_report.contract_platform ===
-                                "fantom"
+                                  "fantom"
                                   ? "FTMScan"
                                   : scanData.scan_report.contract_platform ===
                                     "avalanche"
-                                  ? "Snowtrace"
-                                  : sentenceCapitalize(
+                                    ? "Snowtrace"
+                                    : sentenceCapitalize(
                                       scanData.scan_report.contract_platform
                                     )}
                               </Text>
@@ -637,17 +642,17 @@ const BlockPage: React.FC = () => {
                   <TabPanel>
                     {(scanData.scan_report.multi_file_scan_summary ||
                       scanData.scan_report.scan_summary) && (
-                      <Overview
-                        scanData={scanData.scan_report}
-                        onTabChange={handleTabsChange}
-                      />
-                    )}
+                        <Overview
+                          scanData={scanData.scan_report}
+                          onTabChange={handleTabsChange}
+                        />
+                      )}
                   </TabPanel>
                   <TabPanel>
                     {scanData.scan_report.multi_file_scan_status ===
                       "scan_done" &&
-                    scanData.scan_report.multi_file_scan_details &&
-                    scanData.scan_report.multi_file_scan_summary ? (
+                      scanData.scan_report.multi_file_scan_details &&
+                      scanData.scan_report.multi_file_scan_summary ? (
                       <MultifileResult
                         profileData={profile}
                         details_enabled={scanData.scan_report.details_enabled}
@@ -714,22 +719,22 @@ const BlockPage: React.FC = () => {
         <ModalOverlay />
         <ModalContent
           bg="bg.subtle"
-          h={"650px"}
+          h={["auto", "auto", "auto", "650px"]}
           minH={"fit-content"}
-          overflowY={"scroll"}
-          overflowX={"scroll"}
-          maxW="70vw"
+          maxW={["90vw", "90vw", "70vw"]}
           minW={"300px"}
+          borderRadius="15px"
         >
           <ModalHeader
             background="rgba(82, 255, 0, 0.04)"
             backgroundImage="url('/background/pattern.png')"
-            py={10}
+            textAlign={["center", "center", "center", "left"]}
+            py={[6, 6, 6, 10]}
           >
             Publish Report
           </ModalHeader>
           <ModalCloseButton />
-          <ModalBody h={"fit-content"} w={"100%"} px={10}>
+          <ModalBody h={"fit-content"} w={"100%"} px={[4, 4, 4, 10]}>
             <Flex
               justifyContent={"flex-start"}
               alignItems={"flex-start"}
@@ -737,10 +742,11 @@ const BlockPage: React.FC = () => {
               flexDir="row"
             >
               {!next && (
-                <VStack zIndex={"10"} w={"70%"} spacing={2}>
-                  <HStack
-                    alignItems="center"
-                    spacing={3}
+                <VStack zIndex={"10"} w={["100%", "100%", "100%", "70%"]} spacing={2}>
+                  <Stack
+                    direction={["column", "column", "column", "row"]}
+                    alignItems={["left", "left", "left", "center"]}
+                    spacing={[2, 2, 2, 3]}
                     px={5}
                     py={3}
                     w={"100%"}
@@ -753,14 +759,14 @@ const BlockPage: React.FC = () => {
                       fontSize="md"
                       fontWeight={"600"}
                       color={"gray.500"}
-                      width={"30%"}
+                      width={["100%", "100%", "100%", "30%"]}
                     >
                       Contract Name
                     </Text>
                     <HStack
                       alignItems="center"
                       spacing={3}
-                      width={"70%"}
+                      width={["100%", "100%", "100%", "70%"]}
                       bgColor={"white"}
                       borderRadius={"16px"}
                     >
@@ -768,10 +774,11 @@ const BlockPage: React.FC = () => {
                         {scanData?.scan_report.contractname}
                       </Text>
                     </HStack>
-                  </HStack>
-                  <HStack
-                    alignItems="center"
-                    spacing={3}
+                  </Stack>
+                  <Stack
+                    direction={["column", "column", "column", "row"]}
+                    alignItems={["left", "left", "left", "center"]}
+                    spacing={[2, 2, 2, 3]}
                     px={5}
                     py={3}
                     mb={4}
@@ -785,14 +792,14 @@ const BlockPage: React.FC = () => {
                       fontSize="md"
                       fontWeight={"600"}
                       color={"gray.500"}
-                      width={"30%"}
+                      width={["100%", "100%", "100%", "30%"]}
                     >
                       Contract Address{" "}
                     </Text>
                     <HStack
                       alignItems="center"
                       spacing={3}
-                      width={"70%"}
+                      width={["100%", "100%", "100%", "70%"]}
                       bgColor={"white"}
                       borderRadius={"16px"}
                     >
@@ -800,11 +807,12 @@ const BlockPage: React.FC = () => {
                         {scanData?.scan_report.contract_address}
                       </Text>
                     </HStack>
-                  </HStack>
+                  </Stack>
 
-                  <HStack
-                    alignItems="center"
-                    spacing={3}
+                  <Stack
+                    direction={["column", "column", "column", "row"]}
+                    alignItems={["left", "left", "left", "center"]}
+                    spacing={[2, 2, 2, 3]}
                     px={5}
                     py={3}
                     mb={4}
@@ -818,14 +826,14 @@ const BlockPage: React.FC = () => {
                       fontSize="md"
                       fontWeight={"600"}
                       color={"gray.500"}
-                      width={"30%"}
+                      width={["100%", "100%", "100%", "30%"]}
                     >
                       Contract Platform{" "}
                     </Text>
                     <HStack
                       alignItems="center"
                       spacing={3}
-                      width={"70%"}
+                      width={["100%", "100%", "100%", "70%"]}
                       bgColor={"white"}
                       borderRadius={"16px"}
                     >
@@ -833,11 +841,12 @@ const BlockPage: React.FC = () => {
                         {scanData?.scan_report.contract_platform}
                       </Text>
                     </HStack>
-                  </HStack>
+                  </Stack>
 
-                  <HStack
-                    alignItems="center"
-                    spacing={3}
+                  <Stack
+                    direction={["column", "column", "column", "row"]}
+                    alignItems={["left", "left", "left", "center"]}
+                    spacing={[2, 2, 2, 3]}
                     px={5}
                     py={3}
                     mb={4}
@@ -851,14 +860,14 @@ const BlockPage: React.FC = () => {
                       fontSize="md"
                       fontWeight={"600"}
                       color={"gray.500"}
-                      width={"30%"}
+                      width={["100%", "100%", "100%", "30%"]}
                     >
                       Contract Chain{" "}
                     </Text>
                     <HStack
                       alignItems="center"
                       spacing={3}
-                      width={"70%"}
+                      width={["100%", "100%", "100%", "70%"]}
                       bgColor={"white"}
                       borderRadius={"16px"}
                     >
@@ -866,11 +875,12 @@ const BlockPage: React.FC = () => {
                         {scanData?.scan_report.contract_chain}
                       </Text>
                     </HStack>
-                  </HStack>
+                  </Stack>
 
-                  <HStack
-                    alignItems="center"
-                    spacing={3}
+                  <Stack
+                    direction={["column", "column", "column", "row"]}
+                    alignItems={["left", "left", "left", "center"]}
+                    spacing={[2, 2, 2, 3]}
                     px={5}
                     py={3}
                     mb={4}
@@ -884,24 +894,25 @@ const BlockPage: React.FC = () => {
                       fontSize="md"
                       fontWeight={"600"}
                       color={"gray.500"}
-                      width={"30%"}
+                      width={["100%", "100%", "100%", "30%"]}
                     >
                       Contract URL{" "}
                     </Text>
 
                     <Text
-                      width={"70%"}
+                      width={["100%", "100%", "100%", "70%"]}
                       isTruncated
                       fontSize="md"
                       fontWeight={"600"}
                     >
                       {scanData?.scan_report.contract_url}
                     </Text>
-                  </HStack>
+                  </Stack>
 
-                  <HStack
-                    alignItems="center"
-                    spacing={3}
+                  <Stack
+                    direction={["column", "column", "column", "row"]}
+                    alignItems={["left", "left", "left", "center"]}
+                    spacing={[2, 2, 2, 3]}
                     px={5}
                     py={3}
                     mb={4}
@@ -915,14 +926,14 @@ const BlockPage: React.FC = () => {
                       fontSize="md"
                       fontWeight={"600"}
                       color={"gray.500"}
-                      width={"30%"}
+                      width={["100%", "100%", "100%", "30%"]}
                     >
                       Latest Report Update
                     </Text>
                     <HStack
                       alignItems="center"
                       spacing={3}
-                      width={"70%"}
+                      width={["100%", "100%", "100%", "70%"]}
                       bgColor={"white"}
                       borderRadius={"16px"}
                     >
@@ -930,11 +941,12 @@ const BlockPage: React.FC = () => {
                         {lastTimeUpdate}
                       </Text>
                     </HStack>
-                  </HStack>
+                  </Stack>
 
-                  <HStack
-                    alignItems="center"
-                    spacing={3}
+                  <Stack
+                    direction={["column", "column", "column", "row"]}
+                    alignItems={["left", "left", "left", "center"]}
+                    spacing={[2, 2, 2, 3]}
                     px={5}
                     py={3}
                     w={"100%"}
@@ -947,14 +959,14 @@ const BlockPage: React.FC = () => {
                       fontSize="md"
                       fontWeight={"600"}
                       color={"gray.500"}
-                      width={"30%"}
+                      width={["100%", "100%", "100%", "30%"]}
                     >
                       Date Published
                     </Text>
                     <HStack
                       alignItems="center"
                       spacing={3}
-                      width={"70%"}
+                      width={["100%", "100%", "100%", "70%"]}
                       bgColor={"white"}
                       borderRadius={"16px"}
                     >
@@ -962,11 +974,25 @@ const BlockPage: React.FC = () => {
                         {datePublished}
                       </Text>
                     </HStack>
-                  </HStack>
+                  </Stack>
                 </VStack>
               )}
               {next && (
-                <VStack zIndex={"10"} w={"70%"} spacing={6}>
+                <VStack zIndex={"10"} w={["100%", "100%", "100%", "70%"]} spacing={6}>
+                  {!isDesktopView &&
+                      <HStack my={6}>
+                        <Text>Private</Text>
+                        <SwitchComp
+                          isChecked={publishInfoSwitch}
+                          onChange={() => {
+                            setPublishInfoSwitch(!publishInfoSwitch);
+                          }}
+                          size="lg"
+                          variant="brand"
+                        />
+                        <Text>Public</Text>
+                      </HStack>
+                    }
                   <HStack
                     alignItems="center"
                     spacing={3}
@@ -1004,16 +1030,20 @@ const BlockPage: React.FC = () => {
                         }}
                       />
                     </InputGroup>
-                    <Text>Private</Text>
-                    <SwitchComp
-                      isChecked={nameSwitch}
-                      onChange={() => {
-                        setNameSwitch(!nameSwitch);
-                      }}
-                      size="lg"
-                      variant="brand"
-                    />
-                    <Text>Public</Text>
+                    {isDesktopView &&
+                      <>
+                        <Text>Private</Text>
+                        <SwitchComp
+                          isChecked={nameSwitch}
+                          onChange={() => {
+                            setNameSwitch(!nameSwitch);
+                          }}
+                          size="lg"
+                          variant="brand"
+                        />
+                        <Text>Public</Text>
+                      </>
+                    }
                   </HStack>
                   <HStack
                     alignItems="center"
@@ -1050,16 +1080,20 @@ const BlockPage: React.FC = () => {
                         }}
                       />
                     </InputGroup>
-                    <Text>Private</Text>
-                    <SwitchComp
-                      isChecked={emailSwitch}
-                      onChange={() => {
-                        setEmailSwitch(!emailSwitch);
-                      }}
-                      size="lg"
-                      variant="brand"
-                    />
-                    <Text> Public</Text>
+                    {isDesktopView &&
+                      <>
+                        <Text>Private</Text>
+                        <SwitchComp
+                          isChecked={emailSwitch}
+                          onChange={() => {
+                            setEmailSwitch(!emailSwitch);
+                          }}
+                          size="lg"
+                          variant="brand"
+                        />
+                        <Text> Public</Text>
+                      </>
+                    }
                   </HStack>
 
                   <HStack
@@ -1099,16 +1133,20 @@ const BlockPage: React.FC = () => {
                         }}
                       />
                     </InputGroup>
-                    <Text>Private</Text>
-                    <SwitchComp
-                      isChecked={webSwitch}
-                      onChange={() => {
-                        setWebSwitch(!webSwitch);
-                      }}
-                      size="lg"
-                      variant="brand"
-                    />
-                    <Text>Public</Text>
+                    {isDesktopView &&
+                      <>
+                        <Text>Private</Text>
+                        <SwitchComp
+                          isChecked={webSwitch}
+                          onChange={() => {
+                            setWebSwitch(!webSwitch);
+                          }}
+                          size="lg"
+                          variant="brand"
+                        />
+                        <Text>Public</Text>
+                      </>
+                    }
                   </HStack>
                   <HStack
                     alignItems="center"
@@ -1145,16 +1183,20 @@ const BlockPage: React.FC = () => {
                         }}
                       />
                     </InputGroup>
-                    <Text>Private</Text>
-                    <SwitchComp
-                      isChecked={orgSwitch}
-                      onChange={() => {
-                        setOrgSwitch(!orgSwitch);
-                      }}
-                      size="lg"
-                      variant="brand"
-                    />
-                    <Text>Public</Text>
+                    {isDesktopView &&
+                      <>
+                        <Text>Private</Text>
+                        <SwitchComp
+                          isChecked={orgSwitch}
+                          onChange={() => {
+                            setOrgSwitch(!orgSwitch);
+                          }}
+                          size="lg"
+                          variant="brand"
+                        />
+                        <Text>Public</Text>
+                      </>
+                    }
                   </HStack>
                 </VStack>
               )}
@@ -1164,6 +1206,7 @@ const BlockPage: React.FC = () => {
                 alt="Product screenshot"
                 w={"40%"}
                 h={"auto"}
+                display={["none", "none", "none", "block"]}
               />
             </Flex>
           </ModalBody>
@@ -1174,6 +1217,7 @@ const BlockPage: React.FC = () => {
                 w={"100px"}
                 variant={"ghost"}
                 mr={3}
+                my={[4, 4, 4, 0]}
                 onClick={() => {
                   setNext(false);
                 }}
@@ -1182,9 +1226,10 @@ const BlockPage: React.FC = () => {
               </Button>
             )}
             <Button
-              w={"100px"}
+              w={["100%", "100%", "100%", "100px"]}
               variant={"brand"}
               mr={3}
+              my={[4, 4, 4, 0]}
               onClick={() => {
                 if (next) {
                   publishReport();
