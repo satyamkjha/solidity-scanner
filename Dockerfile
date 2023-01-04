@@ -5,17 +5,17 @@ COPY ./yarn.lock .
 RUN yarn install
 COPY . .
 ARG ENVIRONMENT
-ENV REACT_APP_ENVIRONMENT=${ENVIRONMENT} 
+ENV REACT_APP_ENVIRONMENT=${ENVIRONMENT}
 RUN yarn build
 
-FROM nginx
+# FROM nginx
 
-WORKDIR /usr/share/nginx/html
-RUN rm -rf ./*
+# WORKDIR /usr/share/nginx/html
+# RUN rm -rf ./*
 
-COPY --from=builder /app/build .
-COPY --from=builder /app/.env /.env
+# COPY --from=builder /app/build .
+# COPY --from=builder /app/.env /.env
 
-EXPOSE 80
+# EXPOSE 80
 
-ENTRYPOINT [ "nginx", "-g", "daemon off;" ]
+# ENTRYPOINT [ "nginx", "-g", "daemon off;" ]
