@@ -47,6 +47,7 @@ import {
   CloseButton,
   Input,
 } from "@chakra-ui/react";
+import "./billing.css";
 
 import { AiOutlineCheckCircle } from "react-icons/ai";
 import { AiOutlineCalendar, AiFillCheckCircle } from "react-icons/ai";
@@ -73,6 +74,8 @@ import {
 } from "components/icons";
 import { pricingDetails as plans } from "common/values";
 import InfiniteScroll from "react-infinite-scroll-component";
+import { Swiper, SwiperSlide, useSwiper } from "swiper/react";
+import { EffectCoverflow, FreeMode, Navigation, Pagination } from "swiper";
 
 const Billing: React.FC = () => {
   const { data } = useProfile();
@@ -108,27 +111,28 @@ const Billing: React.FC = () => {
 
   return (
     <Box
+      w={"100%"}
+      boxSizing="border-box"
       sx={{
-        w: "100%",
         bg: "bg.subtle",
         borderRadius: "20px",
         py: 4,
-        px: 0,
+        px: [0, 0, 4],
         mx: [0, 0, 4],
         my: 4,
         minH: "78vh",
       }}
     >
       <Flex
+        w={"100%"}
         sx={{
-          w: "100%",
           flexDir: "column",
           alignItems: "flex-start",
           justifyContent: "flex-start",
           my: 4,
         }}
       >
-        <Text sx={{ color: "text", fontWeight: 600, ml: [5, 5, 10] }}>
+        <Text sx={{ color: "text", fontWeight: 600, ml: [3, 3, 5] }}>
           BILLING
         </Text>
         {!data || !plans || !transactionList || !page ? (
@@ -137,7 +141,7 @@ const Billing: React.FC = () => {
           </Flex>
         ) : (
           <Tabs
-            mt={[5, 5, 10]}
+            mt={[3, 3, 5]}
             mx={0}
             px={0}
             w={"100%"}
@@ -150,7 +154,7 @@ const Billing: React.FC = () => {
               flexDir={"row"}
               justifyContent="flex-start"
               align={"center"}
-              ml={[5, 5, 10]}
+              ml={[3, 3, 5]}
             >
               <TabList my={3} width={"fit-content"} zIndex={0}>
                 <Tab
@@ -163,26 +167,31 @@ const Billing: React.FC = () => {
                 <Tab
                   minW={["150px", "150px", "200px"]}
                   bgColor={"#F5F5F5"}
-                  mx={5}
+                  mx={[2, 3, 5]}
                 >
                   Promo Code
                 </Tab>
                 <Tab
                   minW={["150px", "150px", "200px"]}
                   bgColor={"#F5F5F5"}
-                  mx={5}
+                  mx={[2, 3, 5]}
                 >
                   Transactions
                 </Tab>
               </TabList>
             </Flex>
             <TabPanels width={"100%"}>
-              <TabPanel width={"100%"} p={0}>
+              <TabPanel width={"100%"}>
                 <>
                   {data.current_package === "trial" ||
                   data.current_package === "expired" ||
                   data.current_package === "ondemand" ? (
-                    <>
+                    <Flex
+                      justifyContent={"flex-start"}
+                      alignItems={["center", "center", "center", "flex-start"]}
+                      width={"100%"}
+                      flexDir="column"
+                    >
                       {transactionList.length > 0 &&
                         transactionList[0].payment_status === "open" && (
                           <LatestInvoice
@@ -191,7 +200,108 @@ const Billing: React.FC = () => {
                             planData={plans.monthly[transactionList[0].package]}
                           />
                         )}
+                      <Text
+                        display={["block", "block", "block", "none"]}
+                        fontSize="xl"
+                        mt={7}
+                        width={"100%"}
+                        textAlign="center"
+                        sx={{ color: "text", fontWeight: 600 }}
+                      >
+                        {plans.monthly[selectedPlan].name}
+                      </Text>
+                      <Text
+                        display={["block", "block", "block", "none"]}
+                        width={["90%", "90%", "70%", "60%"]}
+                        textAlign="center"
+                        mt={3}
+                        height='70px'
+                        fontWeight={300}
+                        fontSize="smaller"
+                      >
+                        {plans.monthly[selectedPlan].description}
+                      </Text>
+                      <Box
+                        display={["flex", "flex", "flex", "none"]}
+                        justifyContent={"flex-start"}
+                        alignItems={"flex-start"}
+                        width={"100%"}
+                        height={"fit-content"}
+                      >
+                        <Swiper
+                          initialSlide={4}
+                          onSlideChange={(swiper) => {
+                            setSelectedPlan(Object.keys(plans.monthly)[swiper.activeIndex])
+                          }}
+                          breakpoints={{
+                            250: {
+                              slidesPerView: 1,
+                            },
+                            
+                            340: {
+                              slidesPerView: 2,
+                              spaceBetween: 90,
+                            },
+                            450: {
+                              slidesPerView: 2,
+                              spaceBetween: 10,
+                            },
+                            540: {
+                              height: 200,
+                              slidesPerView: 3,
+                              spaceBetween: 120,
+                            },
+                            600: {
+                              height: 200,
+                              slidesPerView: 3,
+                              spaceBetween: 70,
+                            },
+                            650: {
+                              height: 200,
+                              slidesPerView: 3,
+                              spaceBetween: 10,
+                            },
+                            740: {
+                              slidesPerView: 4,
+                              spaceBetween: 120,
+                            },
+                            830: {
+                              slidesPerView: 4,
+                              spaceBetween: 60,
+                            },
+                            920: {
+                              slidesPerView: 4,
+                              spaceBetween: 10,
+                            },
+                          }}
+                          centeredSlides={true}                          
+                          style={{
+                            paddingTop: "50px",
+                            paddingLeft: "20px",
+                            width: "100%",
+                          }}
+                        >
+                          {Object.keys(plans.monthly).map((plan, index) => {
+
+                            
+
+                            return (
+                              <SwiperSlide
+                                key={index}
+                              >
+                                <PricingPlan
+                                  selectedPlan={selectedPlan}
+                                  setSelectedPlan={setSelectedPlan}
+                                  plan={plan}
+                                  planData={plans.monthly[plan]}
+                                />
+                              </SwiperSlide>
+                            );
+                          })}
+                        </Swiper>
+                      </Box>
                       <Flex
+                        display={["none", "none", "none", "flex"]}
                         justifyContent={"flex-start"}
                         alignItems={"flex-start"}
                         width={"100%"}
@@ -199,14 +309,19 @@ const Billing: React.FC = () => {
                         overflowX={["scroll", "scroll", "scroll", "visible"]}
                       >
                         <Flex
-                          justifyContent={"flex-start"}
+                          justifyContent={[
+                            "center",
+                            "center",
+                            "center",
+                            "flex-start",
+                            "flex-start",
+                          ]}
                           alignItems={"flex-start"}
                           width={"fit-content"}
                           height={"fit-content"}
                           wrap={["nowrap", "nowrap", "nowrap", "wrap"]}
                           padding={2}
                           mt={5}
-                          ml={[5, 5, 10]}
                         >
                           {Object.keys(plans.monthly).map((plan) => {
                             if (plan !== "trial")
@@ -222,15 +337,19 @@ const Billing: React.FC = () => {
                         </Flex>
                       </Flex>
                       <Text
+                        display={["none", "none", "none", "flex"]}
                         sx={{ color: "text", fontWeight: 600 }}
-                        ml={[5, 5, 10]}
+                        ml={[0, 0, 3, 3, 5]}
                       >
                         {plans.monthly[selectedPlan].name}
                       </Text>
                       <Text
+                        display={["none", "none", "none", "flex"]}
                         as="div"
-                        ml={[5, 5, 10]}
+                        ml={[0, 0, 3, 3, 5]}
                         mt={1}
+                        height='40px'
+                        width="70%"
                         fontWeight={300}
                         fontSize="smaller"
                       >
@@ -240,22 +359,20 @@ const Billing: React.FC = () => {
                         planData={plans.monthly[selectedPlan]}
                         selectedPlan={selectedPlan}
                       />
-                    </>
+                    </Flex>
                   ) : (
                     <>
-                      <VStack w="100%" pt={8} ml={[5, 5, 10]}>
-                        
-                          <CurrentPlan
-                            subscription={data.subscription}
-                            isCancellable={data.is_cancellable}
-                            name={plans.monthly[data.current_package].name}
-                            packageName={data.current_package}
-                            packageRechargeDate={data.package_recharge_date}
-                            packageValidity={data.package_validity}
-                            plan={plans.monthly[data.current_package]}
-                          />
-                        
-                        <HStack
+                      <CurrentPlan
+                        subscription={data.subscription}
+                        isCancellable={data.is_cancellable}
+                        name={plans.monthly[data.current_package].name}
+                        packageName={data.current_package}
+                        packageRechargeDate={data.package_recharge_date}
+                        packageValidity={data.package_validity}
+                        plan={plans.monthly[data.current_package]}
+                      />
+
+                      {/* <HStack
                           spacing={5}
                           align={"flex-start"}
                           width={"100%"}
@@ -265,9 +382,7 @@ const Billing: React.FC = () => {
                             <CardDetails profileData={data} />
                           )}
                           {data.is_cancellable && <InvoiceList />}
-                        </HStack>
-                        {/* <Box sx={{ w: "%" }}></Box> */}
-                      </VStack>
+                        </HStack> */}
                     </>
                   )}
                 </>
@@ -655,24 +770,29 @@ const CurrentPlan: React.FC<{
 
   return (
     <Box
-    p={[5, 5, 10]}
-    width={["90%", "100%"]}
       sx={{
-        
+        w: "100%",
+        p: [5, 5, 10],
+        // mt: [3, 3, 5],
+        // ml: [3, 3, 5],
         background: "white",
         borderRadius: 15,
-        
       }}
       filter={"drop-shadow(0px 4px 23px rgba(0, 0, 0, 0.15));"}
     >
-      <Flex w={"100%"} flexDir={['column', 'column', 'row']} justifyContent={["flex-start", "flex-start", "space-between"]} alignItems="flex-start">
+      <Flex
+        w={"100%"}
+        flexDir={["column", "column", "row"]}
+        justifyContent={["flex-start", "flex-start", "space-between"]}
+        alignItems="flex-start"
+      >
         <Flex
-          w={["100%", "100%", "50%" ]}
+          w={["100%", "100%", "60%"]}
           flexDir="column"
           justifyContent={"flex-start"}
           alignItems="flex-start"
         >
-          <Flex alignItems="center" >
+          <Flex alignItems="center">
             <Icon
               as={AiFillCheckCircle}
               color="#38CB89"
@@ -683,75 +803,91 @@ const CurrentPlan: React.FC<{
               Current Plan
             </Text>
           </Flex>
-          <Box mt={5}>
-            <Text fontSize={"lg"}>{plan.name}</Text>
-            <Text as="span" mt={5} mb={10} fontWeight={300} fontSize="smaller">
-              {plan.description}
-            </Text>
-            <Divider mt={3} w={"60%"} />
+          <Text mt={5} fontSize={"lg"}>
+            {plan.name}
+          </Text>
+          <Text
+            as="span"
+            mt={2}
+            mb={3}
+            fontWeight={300}
+            fontSize="smaller"
+            width={["100%", "100%", "100%", "80%", "60%"]}
+          >
+            {plan.description}
+          </Text>
+          <Divider mt={3} w={"60%"} />
 
-            <HStack>
-              <Heading
-                verticalAlign={"center"}
-                fontSize={"x-large"}
-                mt={3}
-                mb={4}
+          <HStack>
+            <Heading
+              verticalAlign={"center"}
+              fontSize={"x-large"}
+              mt={3}
+              mb={4}
+            >
+              {plan.amount === "Free" ? "Free" : `$ ${plan.amount}/mo`}
+            </Heading>
+            {plan.discount && (
+              <Text
+                color={"accent"}
+                backgroundColor={"white"}
+                textAlign="left"
+                fontWeight={600}
+                fontSize={"sm"}
+                mb={10}
+                ml={10}
               >
-                {plan.amount === "Free" ? "Free" : `$ ${plan.amount}/mo`}
-              </Heading>
-              {plan.discount && (
-                <Text
-                  color={"accent"}
-                  backgroundColor={"white"}
-                  textAlign="left"
-                  fontWeight={600}
-                  fontSize={"sm"}
-                  mb={10}
-                  ml={10}
-                >
-                  (Save upto {plan.discount})
-                </Text>
-              )}
-            </HStack>
-          </Box>
-          <HStack spacing={20}>
-          {subscription && (
-            <>
-              <Box>
-                <Text fontWeight={400} fontSize="md" mb={1} color="#4E5D78">
-                  Subscribed on
-                </Text>
-                <Text fontWeight={500} fontSize="lg">
-                  {dateToDDMMMMYYYY(new Date(packageRechargeDate))}
-                </Text>
-              </Box>
-              <Box>
-                <Text fontWeight={400} fontSize="md" mb={1} color="#4E5D78">
-                  Next Billed on
-                </Text>
-                <Text fontWeight={500} fontSize="lg">
-                  {dateToDDMMMMYYYY(new Date(subscription.renewal_date))}
-                </Text>
-              </Box>
-              <Box>
-                <Text fontWeight={400} fontSize="md" mb={1} color="#4E5D78">
-                  Recurring Payment
-                </Text>
-                <Text fontWeight={500} fontSize="lg">
-                  Stripe Payment
-                </Text>
-              </Box>
-            </>
-          )}
+                (Save upto {plan.discount})
+              </Text>
+            )}
           </HStack>
+          <Flex
+            mt={5}
+            justifyContent={"space-between"}
+            flexWrap="wrap"
+            maxW="600px"
+            alignItems="center"
+            w={"100%"}
+            flexDir={"row"}
+          >
+            {subscription && (
+              <>
+                <Box mt={5} w="170px">
+                  <Text fontWeight={400} fontSize="sm" mb={1} color="#4E5D78">
+                    Subscribed on
+                  </Text>
+                  <Text fontWeight={500} fontSize="md">
+                    {dateToDDMMMMYYYY(new Date(packageRechargeDate))}
+                  </Text>
+                </Box>
+                <Box mt={5} w="170px">
+                  <Text fontWeight={400} fontSize="sm" mb={1} color="#4E5D78">
+                    Next Billed on
+                  </Text>
+                  <Text fontWeight={500} fontSize="md">
+                    {dateToDDMMMMYYYY(new Date(subscription.renewal_date))}
+                  </Text>
+                </Box>
+                <Box mt={5} w="170px">
+                  <Text fontWeight={400} fontSize="sm" mb={1} color="#4E5D78">
+                    Recurring Payment
+                  </Text>
+                  <Text fontWeight={500} fontSize="md">
+                    Stripe Payment
+                  </Text>
+                </Box>
+              </>
+            )}
+          </Flex>
         </Flex>
         <Flex
-          w={["100%", "100%", "30%" ]}
+          w={["100%", "100%", "25%"]}
+          mt={[10, 10, 0]}
           flexDir="column"
           justifyContent={"flex-start"}
           alignItems="flex-start"
         >
-          <Flex alignItems="center" >
+          <Flex alignItems="center">
             <Icon
               as={AiOutlineCalendar}
               color="gray.500"
@@ -765,8 +901,9 @@ const CurrentPlan: React.FC<{
               days remaining
             </Text>
           </Flex>
+          <Divider mt={3} />
           <Flex
-            mt={5}
+            mt={3}
             justifyContent="flex-start"
             alignItems="flex-start"
             flexDirection="column"
@@ -843,20 +980,21 @@ const CurrentPlan: React.FC<{
             </HStack>
           </Flex>
           {isCancellable && (
-          <Button
-            onClick={() => setIsOpen(!isOpen)}
-            variant="accent-outline"
-            mr={10}
-          >
-            Cancel Subscription
-          </Button>
-        )}
+            <Button
+              onClick={() => setIsOpen(!isOpen)}
+              variant="accent-outline"
+              mr={10}
+              mt={10}
+            >
+              Cancel Subscription
+            </Button>
+          )}
         </Flex>
       </Flex>
       {subscription && (
         <Flex
           mt={10}
-          mx={7}
+          mx={0}
           p={5}
           backgroundColor="#FFF8ED"
           justifyContent={"flex-start"}
@@ -1030,15 +1168,19 @@ const PricingDetails: React.FC<{ planData: Plan; selectedPlan: string }> = ({
   return (
     <>
       <Flex
-        justifyContent={"flex-start"}
+        justifyContent={["center", "center", "center", "flex-start"]}
         alignItems={"flex-start"}
         flexWrap="wrap"
         width={"100%"}
         height={"fit-content"}
-        padding={5}
-        ml={[0, 0, 5]}
+        mt={5}
       >
-        <HStack ml={5} justify={"flex-start"} width={["100%", "45%", "30%"]}>
+        <HStack
+          ml={5}
+          justify={"flex-start"}
+          minW="270px"
+          width={["70%", "45%", "30%"]}
+        >
           <HiCheckCircle size={30} color={successColor} />
 
           <Image src="/pricing/coin.svg" p={4} />
@@ -1050,7 +1192,8 @@ const PricingDetails: React.FC<{ planData: Plan; selectedPlan: string }> = ({
         <HStack
           ml={5}
           justifyContent={"flex-start"}
-          width={["100%", "45%", "30%"]}
+          minW="270px"
+          width={["70%", "45%", "30%"]}
         >
           <HiCheckCircle size={30} color={successColor} />
 
@@ -1063,7 +1206,8 @@ const PricingDetails: React.FC<{ planData: Plan; selectedPlan: string }> = ({
         <HStack
           ml={5}
           justifyContent={"flex-start"}
-          width={["100%", "45%", "30%"]}
+          minW="270px"
+          width={["70%", "45%", "30%"]}
         >
           {selectedPlan === "trial" ? (
             <HiXCircle size={30} color={greyColor} />
@@ -1084,7 +1228,8 @@ const PricingDetails: React.FC<{ planData: Plan; selectedPlan: string }> = ({
         <HStack
           ml={5}
           justifyContent={"flex-start"}
-          width={["100%", "45%", "30%"]}
+          minW="270px"
+          width={["70%", "45%", "30%"]}
         >
           {planData.github ? (
             <HiCheckCircle size={30} color={successColor} />
@@ -1100,7 +1245,8 @@ const PricingDetails: React.FC<{ planData: Plan; selectedPlan: string }> = ({
         <HStack
           ml={5}
           justifyContent={"flex-start"}
-          width={["100%", "45%", "30%"]}
+          minW="270px"
+          width={["70%", "45%", "30%"]}
         >
           {planData.report ? (
             <HiCheckCircle size={30} color={successColor} />
@@ -1115,7 +1261,8 @@ const PricingDetails: React.FC<{ planData: Plan; selectedPlan: string }> = ({
         <HStack
           ml={5}
           justifyContent={"flex-start"}
-          width={["100%", "45%", "30%"]}
+          minW="270px"
+          width={["70%", "45%", "30%"]}
         >
           {planData.publishable_report ? (
             <HiCheckCircle size={30} color={successColor} />
@@ -1130,7 +1277,8 @@ const PricingDetails: React.FC<{ planData: Plan; selectedPlan: string }> = ({
         <HStack
           ml={5}
           justifyContent={"flex-start"}
-          width={["100%", "45%", "30%"]}
+          minW="270px"
+          width={["70%", "45%", "30%"]}
         >
           {selectedPlan === "Enterprise" ? (
             <HiCheckCircle size={30} color={successColor} />
@@ -1169,14 +1317,14 @@ const LatestInvoice: React.FC<{
         backgroundColor={"white"}
         borderRadius="xl"
         border={"1px solid #3E15F4"}
-        mr={5}
+        
         my={5}
         overflow={"hidden"}
         filter={"drop-shadow(0px 4px 23px rgba(0, 0, 0, 0.15));"}
       >
         <HStack
           width={"100%"}
-          px={10}
+          px={[5, 5, 10]}
           py={4}
           mr={5}
           backgroundColor={"#F5F2FF"}
@@ -1187,25 +1335,31 @@ const LatestInvoice: React.FC<{
             Complete your open {transactionData.payment_platform} Payment
           </Text>
         </HStack>
-        <HStack p={10} w={"100%"} justify="space-between" align={"flex-start"}>
-          <VStack w={"40%"} align="flex-start">
+        <Flex
+          p={[5, 5, 10]}
+          flexDir={["column", "column", "row"]}
+          w={"100%"}
+          justify={["flex-start", "flex-start", "space-between"]}
+          align={"flex-start"}
+        >
+          <VStack w={["100%", "100%", "40%"]} align="flex-start">
             <Text fontSize={"lg"} sx={{ color: "text", fontWeight: 900 }}>
               {planData.name}
             </Text>
             <Text as="span" mt={10} fontWeight={300} fontSize="smaller">
               {planData.description}
             </Text>
-            <Heading fontSize={"x-large"}>
+            <Heading mt={3} fontSize={"x-large"}>
               {planData.amount === "Free" ? "Free" : `$ ${planData.amount}`}
             </Heading>
           </VStack>
           <Flex
-            ml={5}
+            mt={[5, 5, 3]}
             justifyContent="flex-start"
             alignItems="flex-start"
             flexDirection="column"
           >
-            <HStack mt={5} justify={"flex-start"}>
+            <HStack mt={2} justify={"flex-start"}>
               <HiCheckCircle size={20} color={successColor} />
 
               <Text fontSize={"sm"} ml={5}>
@@ -1275,10 +1429,11 @@ const LatestInvoice: React.FC<{
               </Text>
             </HStack>
           </Flex>
-        </HStack>
+        </Flex>
         <Button
           variant="brand"
-          mx={10}
+          ml={[5, 5, 10]}
+          mt={[5, 5, -10]}
           mb={10}
           onClick={() => {
             window.open(`${transactionData.invoice_url}`, "_blank");
@@ -1475,7 +1630,7 @@ const TransactionListCard: React.FC<{
         w: "100%",
         background: "white",
         borderRadius: 15,
-        p: 8,
+        p: 4,
       }}
       filter={"drop-shadow(0px 4px 23px rgba(0, 0, 0, 0.15));"}
     >
@@ -1484,25 +1639,27 @@ const TransactionListCard: React.FC<{
         borderRadius={10}
         backgroundColor={"gray.100"}
         mt={3}
-        justify="flex-start"
+        justify="space-between"
         width={"100%"}
         align="center"
       >
-        <Text w={"8%"} fontWeight={500} color={"gray.500"}>
+        <Text w={"10%"} fontWeight={500} color={"gray.500"}>
           Status
         </Text>
         <Text w={"12%"} fontWeight={500} color={"gray.500"}>
           Amount
         </Text>
-        <Text w={"14%"} fontWeight={500} color={"gray.500"}>
+        <Text w={"12%"} fontWeight={500} color={"gray.500"}>
           Date
         </Text>
-        <Text w={"14%"} fontWeight={500} color={"gray.500"}>
+        <Text w={"150px"} fontWeight={500} color={"gray.500"}>
           Payment Mode
         </Text>
-        <Text w={"14%"} fontWeight={500} color={"gray.500"}>
+        <Text w={"150px"} fontWeight={500} color={"gray.500"}>
           Package
         </Text>
+        <Box w={"calc(55% - 300px)"}/>
+          
       </HStack>
 
       <InfiniteScroll
@@ -1522,21 +1679,12 @@ const TransactionListCard: React.FC<{
             <HStack
               key={index}
               p={4}
-              justify="flex-start"
+              justify="space-between"
               width={"100%"}
               align="center"
             >
-              {/* <Text fontWeight={500} color={"gray.500"}>
-                {date[2]} {monthNames[parseInt(date[1])]} {date[0]}
-              </Text>
-              <Badge
-                colorScheme={
-                  invoice.invoice_status === "paid" ? "green" : "orange"
-                }
-              >
-                {invoice.invoice_status}
-              </Badge> */}
-              <Text w={"8%"} fontWeight={500} color={"gray.500"}>
+             
+              <Text w={"10%"} fontWeight={500} color={"gray.500"}>
                 <Badge
                   colorScheme={
                     transaction.payment_status === "success"
@@ -1553,16 +1701,16 @@ const TransactionListCard: React.FC<{
                 {parseFloat(transaction.amount).toFixed(2)}{" "}
                 {transaction.currency.toUpperCase()}
               </Text>
-              <Text w={"14%"} fontWeight={500} color={"gray.500"}>
+              <Text w={"12%"} fontWeight={500} color={"gray.500"}>
                 {date[2]} {monthNames[parseInt(date[1])]} {date[0]}
               </Text>
-              <Text w={"14%"} fontWeight={500} color={"gray.500"}>
+              <Text minW={'150px'} w='150px' fontWeight={500} color={"gray.500"}>
                 {sentenceCapitalize(transaction.payment_platform)}
               </Text>
-              <Text w={"14%"} fontWeight={500} color={"gray.500"}>
+              <Text minW={'150px'} w='150px' fontWeight={500} color={"gray.500"}>
                 {sentenceCapitalize(transaction.package)}
               </Text>
-              <HStack w={"34%"} justify="flex-end">
+              <HStack w={"calc(55% - 300px)"} flexWrap='wrap' justify="flex-end">
                 {transaction.payment_platform === "stripe" &&
                   transaction.payment_status === "open" && (
                     <Button
@@ -1668,8 +1816,7 @@ const PromoCodeCard: React.FC<{ profileData: Profile }> = ({ profileData }) => {
         borderRadius: 15,
         p: [4, 4, 8],
         h: "50vh",
-        my: [2, 2, 2],
-        ml: [5, 5, 10],
+        // ml: [5, 5, 10],
       }}
       filter={"drop-shadow(0px 4px 23px rgba(0, 0, 0, 0.15));"}
     >
@@ -1701,7 +1848,7 @@ const PromoCodeCard: React.FC<{ profileData: Profile }> = ({ profileData }) => {
           ml={[0, 0, 4]}
           width={["100%", "100%", "30%", "20%"]}
           minW={"160px"}
-          maxW={"300px"}
+          maxW={"360px"}
           disabled={
             promoCode.length < 0 ||
             promoCode.length > 50 ||
