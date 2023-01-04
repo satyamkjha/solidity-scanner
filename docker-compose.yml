@@ -10,4 +10,4 @@ services:
     ports:
       - "45947:80"
     env_file:
-      - ./.env
+      - .env
