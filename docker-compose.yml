@@ -12,4 +12,4 @@ services:
     env_file:
       - .env
     command: >
-      sh -c "yarn start"
+      sh -c "yarn global add serve && serve -s build"
