@@ -1,0 +1,13 @@
+version: "3.8"
+services:
+  solidity-frontend:
+    image: 132830644905.dkr.ecr.us-east-2.amazonaws.com/solidityscan-frontend:$ENV
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        - ENVIRONMENT=${ENVIRONMENT}
+    ports:
+      - "45947:80"
+    env_file:
+      - ./.env
