@@ -2,14 +2,14 @@ import React, { Component } from "react";
 
 import { Box, Text, VStack, Image } from "@chakra-ui/react";
 
-import { Swiper, SwiperSlide } from "swiper/react";
+import { Swiper, SwiperSlide, useSwiperSlide } from "swiper/react";
 import { EffectCoverflow, Navigation, Pagination } from "swiper";
 import "./testimonial.css";
 
 import { userTestimonials } from "common/values";
 
-export class UserTestimonial extends Component {
-  render() {
+const UserTestimonial: React.FC = () => {
+  {
     return (
       <Swiper
         initialSlide={1}
@@ -103,6 +103,6 @@ export class UserTestimonial extends Component {
       </Swiper>
     );
   }
-}
+};
 
 export default UserTestimonial;
