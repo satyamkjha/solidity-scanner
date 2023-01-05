@@ -46,6 +46,7 @@ import {
   toast,
   CloseButton,
   Input,
+  ModalHeader,
 } from "@chakra-ui/react";
 import "./billing.css";
 
@@ -502,8 +503,14 @@ const PricingPlan: React.FC<{
       <Modal isOpen={isOpen} onClose={onClose} size="4xl">
         <ModalOverlay />
         <ModalContent width={ ['90%', '100%']} maxW={['450px', '450px', '750px']} backgroundColor="bg.subtle">
+        <ModalHeader
+            
+            
+          >
+            Select Payment Method
+          </ModalHeader>
           <ModalCloseButton />
-          <ModalBody  py={12}>
+          <ModalBody pb={6}>
             <Flex w="100%" h='fit-content'>
               <Box m={[0, 0, 2]} width={["100%", "100%", "65%"]}>
                 <Flex
@@ -577,8 +584,8 @@ const PricingPlan: React.FC<{
                   width="100%"
                   bg="#F6F9FC"
                   mt={6}
-                  py={6}
-                  px={8}
+                  py={[4, 6]}
+                  px={[4, 8]}
                   borderRadius="15px"
                   // h="320px"
                   boxShadow="0px 0px 5px rgba(0, 0, 0, 0.2)"
@@ -1156,6 +1163,7 @@ const CoinPayments: React.FC<{ packageName: string; onClose: () => void }> = ({
           isDisabled={coin === "" || isLoading}
           isLoading={loading}
           onClick={handleSubmit}
+          width={['100%', '200px']}
         >
           Make Payment
         </Button>
@@ -1322,8 +1330,8 @@ const LatestInvoice: React.FC<{
         backgroundColor={"white"}
         borderRadius="xl"
         border={"1px solid #3E15F4"}
-        
-        my={5}
+        maxW='1000px'
+        mb={5}
         overflow={"hidden"}
         filter={"drop-shadow(0px 4px 23px rgba(0, 0, 0, 0.15));"}
       >
@@ -1438,7 +1446,7 @@ const LatestInvoice: React.FC<{
         <Button
           variant="brand"
           ml={[5, 5, 10]}
-          mt={[5, 5, -10]}
+          mt={[5, 5, -20]}
           mb={10}
           onClick={() => {
             window.open(`${transactionData.invoice_url}`, "_blank");
@@ -1817,6 +1825,7 @@ const PromoCodeCard: React.FC<{ profileData: Profile }> = ({ profileData }) => {
     <Box
       sx={{
         w: "100%",
+        maxW: '1000px',
         background: "white",
         borderRadius: 15,
         p: [4, 4, 8],
