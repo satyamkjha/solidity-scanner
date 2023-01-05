@@ -576,7 +576,12 @@ const QuickScan: React.FC = () => {
                     </CircularProgressLabel>
                   </CircularProgress>
                   <Text fontWeight={300} fontSize="sm" mt={5}>
-                    Your Solidity Score Low
+                    Your Solidity Score is {parseFloat(scanReport.multi_file_scan_summary.score) < 2.5
+                      ? " LOW"
+                      : parseFloat(scanReport.multi_file_scan_summary.score) >=
+                        4.5
+                      ? " GREAT"
+                      : " AVERAGE"}
                   </Text>
                 </Box>
                 <Box
