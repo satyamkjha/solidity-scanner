@@ -67,7 +67,17 @@ const Layout: React.FC = ({ children }) => {
   }, [showSidebar]);
 
   return (
-    <>
+    <Box
+      as="div"
+      // width={[
+      //   "calc(100vw)",
+      //   "100vw",
+      //   "calc(100vw - 40px)",
+      //   "calc(100vw - 40px)",
+      //   "calc(100vw - 40px)",
+      // ]}
+      height="100vh"
+    >
       {profileData && (
         <>
           {profileData.current_package === "expired" ? (
@@ -118,21 +128,25 @@ const Layout: React.FC = ({ children }) => {
         </>
       )}
       <Flex
+        w="100%"
+        h="100%"
         sx={{
-          width: "100%",
           color: "black",
         }}
       >
         <Box
+          width={
+            isSidebarCollapsed
+              ? SIDEBAR_WIDTH_COLLAPSED
+              : SIDEBAR_WIDTH_EXPANDED
+          }
+          height="calc(100vh)"
           sx={{
             position: "fixed",
             top: 0,
             left: 0,
             display: ["block", "block", "block", "none"],
-            width: isSidebarCollapsed
-              ? SIDEBAR_WIDTH_COLLAPSED
-              : SIDEBAR_WIDTH_EXPANDED,
-            height: "calc(100vh - 26px)",
+
             transform: showSidebar
               ? "translate3d(0px,0px,0px)"
               : "translate3d(-280px,0,0px)",
@@ -154,21 +168,20 @@ const Layout: React.FC = ({ children }) => {
           />
         </Box>
         <Box
+          width={[
+            "100%",
+            "100%",
+            "100%",
+            `calc(100% - ${
+              isSidebarCollapsed
+                ? SIDEBAR_WIDTH_COLLAPSED
+                : SIDEBAR_WIDTH_EXPANDED
+            } `,
+          ]}
+          boxSizing="border-box"
           id="pageScroll"
-          sx={{
-            width: [
-              "100%",
-              "100%",
-              "100%",
-              `calc(100% - ${
-                isSidebarCollapsed
-                  ? SIDEBAR_WIDTH_COLLAPSED
-                  : SIDEBAR_WIDTH_EXPANDED
-              })`,
-            ],
-            height: "calc(100vh - 28px)",
-            overflowY: "scroll",
-          }}
+          height="calc(100vh)"
+          overflowY="scroll"
         >
           {/* <Flex
             sx={{
@@ -183,14 +196,14 @@ const Layout: React.FC = ({ children }) => {
             </Text>
           </Flex> */}
           <Flex
+            w="100%"
             sx={{
-              width: "100%",
               p: 8,
               alignItems: "center",
               justifyContent: "space-between",
             }}
           >
-            <Flex sx={{ width: "100%", alignItems: "center" }}>
+            <Flex width="100%" sx={{ alignItems: "center" }}>
               <Icon
                 as={GiHamburgerMenu}
                 sx={{
@@ -290,10 +303,10 @@ const Layout: React.FC = ({ children }) => {
               </MenuList>
             </Menu>
           </Flex>
-          <Box px={4}>{children}</Box>
+          <Box width={"100%"}>{children}</Box>
         </Box>
       </Flex>
-    </>
+    </Box>
   );
 };
 
