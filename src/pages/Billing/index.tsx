@@ -501,11 +501,11 @@ const PricingPlan: React.FC<{
       </Flex>
       <Modal isOpen={isOpen} onClose={onClose} size="4xl">
         <ModalOverlay />
-        <ModalContent backgroundColor="bg.subtle">
+        <ModalContent width={ ['90%', '100%']} maxW={['450px', '450px', '750px']} backgroundColor="bg.subtle">
           <ModalCloseButton />
-          <ModalBody py={12}>
-            <Flex w="100%">
-              <Box width="65%" m={2}>
+          <ModalBody  py={12}>
+            <Flex w="100%" h='fit-content'>
+              <Box m={[0, 0, 2]} width={["100%", "100%", "65%"]}>
                 <Flex
                   cursor="pointer"
                   width="100%"
@@ -587,10 +587,15 @@ const PricingPlan: React.FC<{
                 </Flex>
               </Box>
               <Box
+                display={['none', 'none', 'flex']}
+                flexDir='column'
+                justifyContent={'flex-start'}
+                alignItems='flex-start'
                 width="35%"
                 bg="white"
+                height={'100%'}
                 m={2}
-                pb={6}
+                pb={10}
                 overflow="hidden"
                 borderRadius="15px"
                 border="1px solid"
@@ -598,8 +603,8 @@ const PricingPlan: React.FC<{
               >
                 <Text
                   w={"100%"}
-                  color={selected ? "white" : "accent"}
-                  backgroundColor={selected ? "accent" : "white"}
+                  color={"white"}
+                  backgroundColor={"accent"}
                   py={3}
                   textAlign="center"
                   fontSize={"sm"}
