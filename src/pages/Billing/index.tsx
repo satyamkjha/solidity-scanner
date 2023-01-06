@@ -116,9 +116,10 @@ const Billing: React.FC = () => {
 
   return (
     <Box
-      w={"100%"}
+      
       boxSizing="border-box"
       sx={{
+        w: ["100%", "100%", "calc(100% - 2rem)"],
         bg: "bg.subtle",
         borderRadius: "20px",
         py: 4,
@@ -1926,7 +1927,9 @@ const TransactionListCard: React.FC<{
                   borderRadius: 15,
                   px: 4,
                   pb: 5,
-                  m: 4,
+                  my: 4,
+                  mx: 3,
+                  
                 }}
                 key={index}
                 justifyContent="space-between"

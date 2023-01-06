@@ -1055,7 +1055,6 @@ const FileDataContTest: React.FC<FileDataContProps> = ({ file, type }) => {
           />
         )
       )}
-      ̀{" "}
     </>
   );
 };
@@ -1092,7 +1091,16 @@ const CodeExplorer: React.FC<{
         flexDir: "column",
         h: "50vh",
         overflow: "scroll",
-        mt: 10,
+      }}
+    >
+      <Flex
+      sx={{
+        w: "100%",
+        justifyContent: "flex-start",
+        alignItems: "flex-start",
+        flexDir: "column",
+        h: "fit-content",
+        
       }}
     >
       {file_content.map((item, index) => {
@@ -1108,11 +1116,12 @@ const CodeExplorer: React.FC<{
                 align={"flex-start"}
                 spacing={5}
               >
-                <Text color={"gray.600"} fontWeight="normal">
+                <Text color={"gray.600"} fontSize='13px' fontWeight="normal">
                   {index + 1}
                 </Text>
                 <pre
                   style={{
+                    fontSize: '13px',
                     color:
                       index + 1 <= line_nos_end[count] + 1 &&
                       index + 1 >= line_nos_start[count]
@@ -1126,11 +1135,12 @@ const CodeExplorer: React.FC<{
               </HStack>
             ) : (
               <HStack as={"div"} align={"flex-start"} spacing={5}>
-                <Text color={"gray.600"} fontWeight="normal">
+                <Text color={"gray.600"} fontSize='13px' fontWeight="normal">
                   {index + 1}
                 </Text>
                 <pre
                   style={{
+                    fontSize: '13px',
                     color:
                       index + 1 <= line_nos_end[count] + 1 &&
                       index + 1 >= line_nos_start[count]
@@ -1146,6 +1156,7 @@ const CodeExplorer: React.FC<{
           </>
         );
       })}
+      </Flex>
     </Flex>
   );
 };
@@ -1250,7 +1261,7 @@ const MultiFileExplorer: React.FC<MultiFileExplorerProps> = ({
               </Flex>
               <TabPanels>
                 {files.findings.map((file, index) => (
-                  <TabPanel key={index} p={2}>
+                  <TabPanel  key={index} px={2} pt={2} pb={0} >
                     <FileDataContTest
                       type={type}
                       file={{

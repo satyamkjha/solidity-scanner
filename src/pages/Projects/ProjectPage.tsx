@@ -141,10 +141,11 @@ export const ProjectPage: React.FC = () => {
   return (
     <Box
       sx={{
-        w: "100%",
+        w: ["100%", "100%", "calc(100% - 2rem)"],
         bg: "bg.subtle",
         borderRadius: "20px",
         my: 4,
+        mx: [0, 0, 4],
         py: 4,
         minH: "78vh",
       }}

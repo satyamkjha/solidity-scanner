@@ -128,25 +128,21 @@ const Layout: React.FC = ({ children }) => {
         </>
       )}
       <Flex
-        w="100%"
-        h="100%"
         sx={{
+          width: "100%",
           color: "black",
         }}
       >
         <Box
-          width={
-            isSidebarCollapsed
-              ? SIDEBAR_WIDTH_COLLAPSED
-              : SIDEBAR_WIDTH_EXPANDED
-          }
-          height="calc(100vh)"
           sx={{
             position: "fixed",
             top: 0,
             left: 0,
             display: ["block", "block", "block", "none"],
-
+            width: isSidebarCollapsed
+              ? SIDEBAR_WIDTH_COLLAPSED
+              : SIDEBAR_WIDTH_EXPANDED,
+            height: "calc(100vh - 26px)",
             transform: showSidebar
               ? "translate3d(0px,0px,0px)"
               : "translate3d(-280px,0,0px)",
@@ -168,20 +164,21 @@ const Layout: React.FC = ({ children }) => {
           />
         </Box>
         <Box
-          width={[
-            "100%",
-            "100%",
-            "100%",
-            `calc(100% - ${
-              isSidebarCollapsed
-                ? SIDEBAR_WIDTH_COLLAPSED
-                : SIDEBAR_WIDTH_EXPANDED
-            } `,
-          ]}
-          boxSizing="border-box"
           id="pageScroll"
-          height="calc(100vh)"
-          overflowY="scroll"
+          sx={{
+            width: [
+              "100%",
+              "100%",
+              "100%",
+              `calc(100% - ${
+                isSidebarCollapsed
+                  ? SIDEBAR_WIDTH_COLLAPSED
+                  : SIDEBAR_WIDTH_EXPANDED
+              })`,
+            ],
+            height: "calc(100vh)",
+            overflowY: "scroll",
+          }}
         >
           {/* <Flex
             sx={{
