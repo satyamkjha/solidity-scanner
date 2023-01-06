@@ -110,7 +110,11 @@ export const ManualAuditForm: React.FC<{ onClose(): any; isOpen: boolean }> = ({
           />
           {!mailSent ? (
             <ModalBody h={"fit-content"} w={"100%"} px={[6, 6, 6, 12]}>
-              <Flex justifyContent="flex-start" w={"100%"} direction={["column", "column", "column", "row"]}>
+              <Flex
+                justifyContent="flex-start"
+                w={"100%"}
+                direction={["column", "column", "column", "row"]}
+              >
                 <Flex
                   zIndex={"10"}
                   w={["100%", "100%", "100%", "60%"]}
@@ -118,7 +122,7 @@ export const ManualAuditForm: React.FC<{ onClose(): any; isOpen: boolean }> = ({
                   alignItems={["center", "center", "flex-start"]}
                   flexDir="column"
                 >
-                  <Stack zIndex={"10"}  spacing={6} mt={4} w={"100%"}>
+                  <Stack zIndex={"10"} spacing={6} mt={4} w={"100%"}>
                     <InputGroup mt={0} alignItems="center">
                       <InputLeftElement
                         height="48px"

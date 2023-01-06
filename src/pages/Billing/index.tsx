@@ -46,6 +46,8 @@ import {
   toast,
   CloseButton,
   Input,
+  ModalHeader,
+  useMediaQuery,
 } from "@chakra-ui/react";
 import "./billing.css";
 
@@ -76,6 +78,9 @@ import { pricingDetails as plans } from "common/values";
 import InfiniteScroll from "react-infinite-scroll-component";
 import { Swiper, SwiperSlide, useSwiper } from "swiper/react";
 import { EffectCoverflow, FreeMode, Navigation, Pagination } from "swiper";
+
+const successColor = "#289F4C";
+const greyColor = "#BDBDBD";
 
 const Billing: React.FC = () => {
   const { data } = useProfile();
@@ -215,7 +220,7 @@ const Billing: React.FC = () => {
                         width={["90%", "90%", "70%", "60%"]}
                         textAlign="center"
                         mt={3}
-                        height='70px'
+                        height="70px"
                         fontWeight={300}
                         fontSize="smaller"
                       >
@@ -231,13 +236,15 @@ const Billing: React.FC = () => {
                         <Swiper
                           initialSlide={4}
                           onSlideChange={(swiper) => {
-                            setSelectedPlan(Object.keys(plans.monthly)[swiper.activeIndex])
+                            setSelectedPlan(
+                              Object.keys(plans.monthly)[swiper.activeIndex]
+                            );
                           }}
                           breakpoints={{
                             250: {
                               slidesPerView: 1,
                             },
-                            
+
                             340: {
                               slidesPerView: 2,
                               spaceBetween: 90,
@@ -274,7 +281,7 @@ const Billing: React.FC = () => {
                               spaceBetween: 10,
                             },
                           }}
-                          centeredSlides={true}                          
+                          centeredSlides={true}
                           style={{
                             paddingTop: "50px",
                             paddingLeft: "20px",
@@ -282,14 +289,9 @@ const Billing: React.FC = () => {
                           }}
                         >
                           {Object.keys(plans.monthly).map((plan, index) => {
-
-                            
-
                             return (
-                              <SwiperSlide
-                                key={index}
-                              >
-                                <PricingPlan
+                              <SwiperSlide key={index}>
+                                <PlanCard
                                   selectedPlan={selectedPlan}
                                   setSelectedPlan={setSelectedPlan}
                                   plan={plan}
@@ -326,7 +328,7 @@ const Billing: React.FC = () => {
                           {Object.keys(plans.monthly).map((plan) => {
                             if (plan !== "trial")
                               return (
-                                <PricingPlan
+                                <PlanCard
                                   selectedPlan={selectedPlan}
                                   setSelectedPlan={setSelectedPlan}
                                   plan={plan}
@@ -348,7 +350,7 @@ const Billing: React.FC = () => {
                         as="div"
                         ml={[0, 0, 3, 3, 5]}
                         mt={1}
-                        height='40px'
+                        height="40px"
                         width="70%"
                         fontWeight={300}
                         fontSize="smaller"
@@ -406,7 +408,7 @@ const Billing: React.FC = () => {
   );
 };
 
-const PricingPlan: React.FC<{
+const PlanCard: React.FC<{
   plan: string;
   planData: Plan;
   setSelectedPlan: React.Dispatch<React.SetStateAction<string>>;
@@ -414,27 +416,9 @@ const PricingPlan: React.FC<{
 }> = ({ plan, planData, selectedPlan, setSelectedPlan }) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [open, setOpen] = useState(false);
-  const createStripePayment = async () => {
-    let duration = "";
-    if (selectedPlan === "ondemand") {
-      duration = "ondemand";
-    } else {
-      duration = "monthly";
-    }
-
-    const { data } = await API.post<{
-      status: string;
-      checkout_url: string;
-    }>("/api-create-stripe-subscription-beta/", {
-      package: selectedPlan,
-      duration: duration,
-    });
-    window.open(`${data.checkout_url}`, "_blank");
-  };
   const selected = selectedPlan === plan;
-
-  const successColor = "#289F4C";
-  const greyColor = "#BDBDBD";
+  const [isLargerThan767] = useMediaQuery(["(min-width : 768px)"]);
+  const [nextStep, setNextStep] = useState<boolean>(false);
 
   return (
     <>
@@ -491,241 +475,496 @@ const PricingPlan: React.FC<{
             my={5}
             variant="brand"
             onClick={() => {
-              if (plan === "custom") setOpen(true);
-              else onOpen();
+              if (plan === "custom") onOpen();
+              else setOpen(true);
             }}
           >
             {plan === "custom" ? "Contact Us" : "Select Plan"}
           </Button>
         )}
       </Flex>
-      <Modal isOpen={isOpen} onClose={onClose} size="4xl">
+      <Modal
+        isOpen={open}
+        onClose={() => {
+          setOpen(false);
+          setNextStep(false);
+        }}
+        size="4xl"
+      >
         <ModalOverlay />
-        <ModalContent backgroundColor="bg.subtle">
+        <ModalContent
+          width={["90%", "90%", "100%"]}
+          maxW={["450px", "450px", "750px"]}
+          backgroundColor="white"
+        >
+          <ModalHeader textAlign={"center"}>
+            {isLargerThan767 || nextStep
+              ? "Select Payment Method"
+              : "Selected Plan"}
+          </ModalHeader>
           <ModalCloseButton />
-          <ModalBody py={12}>
-            <Flex w="100%">
-              <Box width="65%" m={2}>
-                <Flex
-                  cursor="pointer"
-                  width="100%"
-                  bg="#F6F9FC"
-                  pb={6}
-                  borderRadius="15px"
-                  h="fit-content"
-                  boxShadow="0px 0px 5px rgba(0, 0, 0, 0.2)"
-                >
-                  <Box
-                    flexDir={"column"}
-                    justifyContent={"center"}
-                    alignItems={"center"}
-                    w="100%"
-                  >
-                    <Box
-                      flexDir={"row"}
-                      justifyContent={"flex-start"}
-                      alignItems={"center"}
-                      w="100%"
-                      height={"fit-content"}
-                    >
-                      <StripePaymentsLogo size={400} />
-                    </Box>
-                    <Flex
-                      flexDir={"row"}
-                      justifyContent="center"
-                      alignItems="center"
-                      w="100%"
-                      height={"fit-content"}
-                      px={4}
-                    >
-                      <Button
-                        onClick={createStripePayment}
-                        style={{
-                          padding: "1.3rem",
-                          backgroundColor: "#5a1cff",
-                          color: "#FFFFFF",
-                          borderRadius: "30px",
-                        }}
-                        w={"300px"}
-                      >
-                        Pay with
-                        <StripeLogo size={120} />
-                      </Button>
-                    </Flex>
-                  </Box>
-                </Flex>
-                <Flex
-                  align="center"
-                  justify="center"
-                  color="subtle"
-                  px={5}
-                  mt={6}
-                  sx={{
-                    height: 0.5,
-                    borderColor: "#EDF2F7",
-                    borderStyle: "solid",
-                    borderLeftWidth: ["130px", "180px", "240px"],
-                    borderRightWidth: ["130px", "180px", "240px"],
+          <ModalBody justifyContent={"center"} display="flex" pb={6}>
+            {isLargerThan767 ? (
+              <Flex w="100%" h="fit-content">
+                <SelectPaymentMethod
+                  selectedPlan={selectedPlan}
+                  onClose={() => {
+                    setOpen(false);
+                    setNextStep(false);
+                  }}
+                />
+                <PlanDescription plan={selectedPlan} planData={planData} />
+              </Flex>
+            ) : nextStep ? (
+              <SelectPaymentMethod
+                selectedPlan={selectedPlan}
+                onClose={() => {
+                  setOpen(false);
+                  setNextStep(false);
+                }}
+              />
+            ) : (
+              <Flex
+                w={"100%"}
+                flexDir={"column"}
+                justifyContent="flex-start"
+                alignItems={"center"}
+              >
+                <PaymentCardData plan={plan} planData={planData} />
+                <Text
+                  borderBottom={" 1px solid #3300FF"}
+                  my={5}
+                  cursor={"pointer"}
+                  color="#3300FF"
+                  onClick={() => {
+                    setOpen(false);
+                    setNextStep(false);
                   }}
                 >
-                  <Text fontWeight={600} color="subtle">
-                    OR
-                  </Text>
-                </Flex>
-                <Flex
-                  cursor="pointer"
-                  width="100%"
-                  bg="#F6F9FC"
-                  mt={6}
-                  py={6}
-                  px={8}
-                  borderRadius="15px"
-                  // h="320px"
-                  boxShadow="0px 0px 5px rgba(0, 0, 0, 0.2)"
-                >
-                  <CoinPayments packageName={selectedPlan} onClose={onClose} />
-                </Flex>
-              </Box>
-              <Box
-                width="35%"
-                bg="white"
-                m={2}
-                pb={6}
-                overflow="hidden"
-                borderRadius="15px"
-                border="1px solid"
-                borderColor="gray.300"
-              >
-                <Text
-                  w={"100%"}
-                  color={selected ? "white" : "accent"}
-                  backgroundColor={selected ? "accent" : "white"}
-                  py={3}
-                  textAlign="center"
-                  fontSize={"sm"}
-                >
-                  {planData.discount
-                    ? `Save upto ${planData.discount}`
-                    : planData.name === "Beginner"
-                    ? "Starter"
-                    : planData.name === "Enterprise"
-                    ? "Customize your plan"
-                    : planData.name === "On Demand"
-                    ? "Pay as you go"
-                    : ""}
+                  Change Plan
                 </Text>
-                <Text mx={6} mt={4} sx={{ fontWeight: 500 }}>
-                  {planData.name}
-                </Text>
-                <HStack>
-                  <Heading
-                    ml={6}
-                    mr={1}
-                    fontSize={"x-large"}
-                    mt={1}
-                    mb={!selected ? 10 : 4}
-                  >
-                    {planData.amount === "Free"
-                      ? "Free"
-                      : planData.name === "On Demand"
-                      ? `$ ${planData.amount}`
-                      : `$ ${planData.amount + " /"}`}
-                  </Heading>
-                  <Text mx={6} fontSize={"md"}>
-                    {planData.name === "On Demand" || planData.amount === "Free"
-                      ? ""
-                      : "month"}
-                  </Text>
-                </HStack>
-
-                <Text mx={6} fontSize={"xs"}>
-                  {planData.description}
-                </Text>
-                <Flex
-                  ml={5}
-                  justifyContent="flex-start"
-                  alignItems="flex-start"
-                  flexDirection="column"
+                <Button
+                  my={5}
+                  w="200px"
+                  variant="brand"
+                  onClick={() => {
+                    setNextStep(true);
+                  }}
                 >
-                  <HStack mt={5} justify={"flex-start"}>
-                    <HiCheckCircle size={20} color={successColor} />
-
-                    <Text fontSize={"sm"} ml={5}>
-                      {planData.scan_count} Scan Credit
-                    </Text>
-                  </HStack>
-                  <HStack mt={2} justify={"flex-start"}>
-                    <HiCheckCircle size={20} color={successColor} />
-
-                    <Text fontSize={"sm"} ml={5}>
-                      Security Score
-                    </Text>
-                  </HStack>
-                  <HStack mt={2} justify={"flex-start"}>
-                    {planData.name === "trial" ? (
-                      <HiXCircle size={20} color={greyColor} />
-                    ) : (
-                      <HiCheckCircle size={20} color={successColor} />
-                    )}
-
-                    <Text fontSize={"sm"} ml={5}>
-                      Detailed Result
-                    </Text>
-                  </HStack>
-                  <HStack mt={2} justify={"flex-start"}>
-                    {planData.github ? (
-                      <HiCheckCircle size={20} color={successColor} />
-                    ) : (
-                      <HiXCircle size={20} color={greyColor} />
-                    )}
-
-                    <Text fontSize={"sm"} ml={5}>
-                      Private Github
-                    </Text>
-                  </HStack>
-                  <HStack mt={2} justify={"flex-start"}>
-                    {planData.report ? (
-                      <HiCheckCircle size={20} color={successColor} />
-                    ) : (
-                      <HiXCircle size={20} color={greyColor} />
-                    )}
-
-                    <Text fontSize={"sm"} ml={5}>
-                      Generate Report
-                    </Text>
-                  </HStack>
-                  <HStack mt={2} justify={"flex-start"}>
-                    {planData.publishable_report ? (
-                      <HiCheckCircle size={20} color={successColor} />
-                    ) : (
-                      <HiXCircle size={20} color={greyColor} />
-                    )}
-
-                    <Text fontSize={"sm"} ml={5}>
-                      Publishable Report
-                    </Text>
-                  </HStack>
-                  <HStack mt={2} justify={"flex-start"}>
-                    {plan === "custom" ? (
-                      <HiCheckCircle size={20} color={successColor} />
-                    ) : (
-                      <HiXCircle size={20} color={greyColor} />
-                    )}
-
-                    <Text fontSize={"sm"} ml={5}>
-                      White Glove Services
-                    </Text>
-                  </HStack>
-                </Flex>
-              </Box>
-            </Flex>
+                  Proceed to Payment
+                </Button>
+              </Flex>
+            )}
           </ModalBody>
         </ModalContent>
       </Modal>
-      <ContactUs isOpen={open} onClose={() => setOpen(false)} />
+      <ContactUs isOpen={isOpen} onClose={onClose} />
     </>
   );
 };
+
+const PaymentCardData: React.FC<{
+  plan: string;
+  planData: Plan;
+}> = ({ planData }) => {
+  return (
+    <Flex
+      alignItems={"flex-start"}
+      justifyContent={"flex-start"}
+      flexDir={["column"]}
+      maxW="280px"
+      width={"90%"}
+      backgroundColor={"#F7F9FC"}
+      borderRadius="xl"
+      mr={5}
+      mb={5}
+      pb={5}
+      overflow={"hidden"}
+      zIndex={100}
+      filter={"drop-shadow(0px 2px 13px rgba(0, 0, 0, 0.15));"}
+    >
+      <Text
+        w={"100%"}
+        color={"white"}
+        backgroundColor={"accent"}
+        py={4}
+        fontWeight={700}
+        textAlign="center"
+        fontSize={"md"}
+      >
+        {planData.name === "Beginner"
+          ? "Starter"
+          : planData.name === "Enterprise"
+          ? "Customize your plan"
+          : planData.name === "On Demand"
+          ? "Pay as you go"
+          : planData.discount
+          ? `Save upto ${planData.discount}`
+          : ""}
+      </Text>
+      <Divider w={"90%"} />
+      <Text mt={7} ml={5} fontWeight={700} fontSize={"2xl"}>
+        {planData.name}
+      </Text>
+      <Text mx={5} mt={2} mb={2} fontSize={"sm"}>
+        {planData.description}
+      </Text>
+      <HStack>
+        <Heading ml={6} mb={4} mr={0} fontSize={"x-large"} mt={1}>
+          {planData.amount === "Free"
+            ? "Free"
+            : planData.name === "On Demand"
+            ? `$ ${planData.amount}`
+            : `$ ${planData.amount + " /"}`}
+        </Heading>
+        <Text mx={6} fontSize={"md"}>
+          {planData.name === "On Demand" || planData.amount === "Free"
+            ? ""
+            : "month"}
+        </Text>
+      </HStack>
+    </Flex>
+  );
+};
+
+const SelectPaymentMethod: React.FC<{
+  selectedPlan: string;
+  onClose: () => void;
+}> = ({ selectedPlan, onClose }) => {
+  const createStripePayment = async () => {
+    let duration = "";
+    if (selectedPlan === "ondemand") {
+      duration = "ondemand";
+    } else {
+      duration = "monthly";
+    }
+
+    const { data, status } = await API.post<{
+      status: string;
+      checkout_url: string;
+    }>("/api-create-stripe-subscription-beta/", {
+      package: selectedPlan,
+      duration: duration,
+    });
+
+    if (status === 200) {
+      window.open(`${data.checkout_url}`, "_blank");
+      onClose();
+    }
+  };
+
+  const { data, isLoading } = useAcceptedCoins();
+  const [coin, setCoin] = useState("");
+  const [loading, setLoading] = useState(false);
+  const handleSubmit = async () => {
+    const width = 600;
+    const height = 800;
+    const left = window.innerWidth / 2 - width / 2;
+    const top = window.innerHeight / 2 - height / 2;
+    let duration = "";
+    if (selectedPlan === "ondemand") {
+      duration = "ondemand";
+    } else {
+      duration = "monthly";
+    }
+    try {
+      setLoading(true);
+      const { data } = await API.post<{
+        checkout_url: string;
+        status: string;
+        status_url: string;
+      }>("api-create-order-cp/", {
+        package: selectedPlan,
+        currency: coin,
+        duration: duration,
+      });
+      setLoading(false);
+      const popup = window.open(
+        data.checkout_url,
+        "",
+        `toolbar=no, location=no, directories=no, status=no, menubar=no, scrollbars=no, resizable=no, copyhistory=no, width=${width}, height=${height}, top=${top}, left=${left}`
+      );
+      onClose();
+    } catch (e) {
+      setLoading(false);
+    }
+  };
+
+  const [isLargerThan400, isLargerThan500] = useMediaQuery([
+    "(min-width : 400px)",
+  ]);
+
+  return (
+    <Box m={[0, 0, 2]} width={["100%", "100%", "65%"]}>
+      <Flex
+        cursor="pointer"
+        width="100%"
+        bg="#F7F9FC"
+        pb={6}
+        borderRadius="15px"
+        h="fit-content"
+        boxShadow="0px 0px 5px rgba(0, 0, 0, 0.2)"
+      >
+        <Box
+          flexDir={"column"}
+          justifyContent={"center"}
+          alignItems={"center"}
+          w="100%"
+        >
+          <Box
+            flexDir={"row"}
+            justifyContent={"flex-start"}
+            alignItems={"center"}
+            w="100%"
+            height={"fit-content"}
+          >
+            {isLargerThan500 ? (
+              <StripePaymentsLogo size={400} />
+            ) : isLargerThan400 ? (
+              <StripePaymentsLogo size={300} />
+            ) : (
+              <StripePaymentsLogo size={250} />
+            )}
+          </Box>
+          <Flex
+            flexDir={"row"}
+            justifyContent="center"
+            alignItems="center"
+            w="100%"
+            height={"fit-content"}
+            px={4}
+          >
+            <Button
+              onClick={createStripePayment}
+              style={{
+                padding: "1.3rem",
+                backgroundColor: "#5a1cff",
+                color: "#FFFFFF",
+                borderRadius: "30px",
+              }}
+              w={"300px"}
+            >
+              Pay with
+              <StripeLogo size={120} />
+            </Button>
+          </Flex>
+        </Box>
+      </Flex>
+      <Flex
+        align="center"
+        justify="center"
+        color="subtle"
+        px={5}
+        mt={6}
+        sx={{
+          height: 0.5,
+          borderColor: "#EDF2F7",
+          borderStyle: "solid",
+          borderLeftWidth: ["130px", "180px", "240px"],
+          borderRightWidth: ["130px", "180px", "240px"],
+        }}
+      >
+        <Text fontWeight={600} color="subtle">
+          OR
+        </Text>
+      </Flex>
+      <Flex
+        cursor="pointer"
+        width="100%"
+        bg="#F7F9FC"
+        mt={6}
+        py={[4, 6]}
+        px={[4, 8]}
+        borderRadius="15px"
+        // h="320px"
+        boxShadow="0px 0px 5px rgba(0, 0, 0, 0.2)"
+      >
+        <VStack width="100%" spacing={6} mt={4} alignItems="inherit">
+          <Flex alignItems="flex-end" justifyContent="space-between">
+            <CoinPaymentsIcon size={200} />
+            {/* {data && coin !== "" && (
+          <Flex alignItems="center">
+            <CryptoIcon size={32} name={coin.toLowerCase()} />
+            <Text ml={2} color="brand-dark" fontWeight={700} fontSize="3xl">
+              {packageName === "ondemand"
+                ? parseFloat(data[coin].ondemand[packageName]).toPrecision(2)
+                : parseFloat(data[coin].monthly[packageName]).toPrecision(2)}
+              <Text as="span" fontSize="md" fontWeight={700} ml={2}>
+                {coin}
+              </Text>
+            </Text>
+          </Flex>
+        )} */}
+          </Flex>
+          <FormControl id="contract_platform">
+            <FormLabel fontSize="sm">Select coin</FormLabel>
+            <Select
+              placeholder="Select coin"
+              value={coin}
+              isRequired
+              isDisabled={isLoading}
+              onChange={(e) => setCoin(e.target.value)}
+            >
+              {data &&
+                Object.keys(data).map((key) => (
+                  <option key={key} value={key}>
+                    {data[key].name}
+                  </option>
+                ))}
+            </Select>
+          </FormControl>
+          <Flex justifyContent="flex-end">
+            <Button
+              variant="brand"
+              isDisabled={coin === "" || isLoading}
+              isLoading={loading}
+              onClick={handleSubmit}
+              width={["100%", "200px"]}
+            >
+              Make Payment
+            </Button>
+          </Flex>
+        </VStack>
+      </Flex>
+    </Box>
+  );
+};
+
+const PlanDescription: React.FC<{
+  plan: string;
+  planData: Plan;
+}> = ({ plan, planData }) => (
+  <Box
+    flexDir="column"
+    justifyContent={"flex-start"}
+    alignItems="flex-start"
+    width="35%"
+    bg="#F7F9FC"
+    height={"100%"}
+    m={2}
+    pb={4}
+    overflow="hidden"
+    borderRadius="15px"
+    border="1px solid"
+    borderColor="gray.300"
+  >
+    <Text
+      w={"100%"}
+      color={"white"}
+      backgroundColor={"accent"}
+      py={3}
+      textAlign="center"
+      fontSize={"sm"}
+    >
+      {planData.discount
+        ? `Save upto ${planData.discount}`
+        : planData.name === "Beginner"
+        ? "Starter"
+        : planData.name === "Enterprise"
+        ? "Customize your plan"
+        : planData.name === "On Demand"
+        ? "Pay as you go"
+        : ""}
+    </Text>
+    <Text mx={6} fontSize="xl" mt={4} sx={{ fontWeight: 500 }}>
+      {planData.name}
+    </Text>
+    <Text mx={6} mb={2} fontSize={"xs"}>
+      {planData.description}
+    </Text>
+    <HStack>
+      <Heading ml={6} mb={4} mr={0} fontSize={"x-large"} mt={1}>
+        {planData.amount === "Free"
+          ? "Free"
+          : planData.name === "On Demand"
+          ? `$ ${planData.amount}`
+          : `$ ${planData.amount + " /"}`}
+      </Heading>
+      <Text mx={6} fontSize={"md"}>
+        {planData.name === "On Demand" || planData.amount === "Free"
+          ? ""
+          : "month"}
+      </Text>
+    </HStack>
+
+    <Flex
+      ml={5}
+      justifyContent="flex-start"
+      alignItems="flex-start"
+      flexDirection="column"
+    >
+      <HStack mt={2} justify={"flex-start"}>
+        <HiCheckCircle size={20} color={successColor} />
+
+        <Text fontSize={"sm"} ml={5}>
+          {planData.scan_count} Scan Credit
+        </Text>
+      </HStack>
+      <HStack mt={2} justify={"flex-start"}>
+        <HiCheckCircle size={20} color={successColor} />
+
+        <Text fontSize={"sm"} ml={5}>
+          Security Score
+        </Text>
+      </HStack>
+      <HStack mt={2} justify={"flex-start"}>
+        {planData.name === "trial" ? (
+          <HiXCircle size={20} color={greyColor} />
+        ) : (
+          <HiCheckCircle size={20} color={successColor} />
+        )}
+
+        <Text fontSize={"sm"} ml={5}>
+          Detailed Result
+        </Text>
+      </HStack>
+      <HStack mt={2} justify={"flex-start"}>
+        {planData.github ? (
+          <HiCheckCircle size={20} color={successColor} />
+        ) : (
+          <HiXCircle size={20} color={greyColor} />
+        )}
+
+        <Text fontSize={"sm"} ml={5}>
+          Private Github
+        </Text>
+      </HStack>
+      <HStack mt={2} justify={"flex-start"}>
+        {planData.report ? (
+          <HiCheckCircle size={20} color={successColor} />
+        ) : (
+          <HiXCircle size={20} color={greyColor} />
+        )}
+
+        <Text fontSize={"sm"} ml={5}>
+          Generate Report
+        </Text>
+      </HStack>
+      <HStack mt={2} justify={"flex-start"}>
+        {planData.publishable_report ? (
+          <HiCheckCircle size={20} color={successColor} />
+        ) : (
+          <HiXCircle size={20} color={greyColor} />
+        )}
+
+        <Text fontSize={"sm"} ml={5}>
+          Publishable Report
+        </Text>
+      </HStack>
+      <HStack mt={2} justify={"flex-start"}>
+        {plan === "custom" ? (
+          <HiCheckCircle size={20} color={successColor} />
+        ) : (
+          <HiXCircle size={20} color={greyColor} />
+        )}
+
+        <Text fontSize={"sm"} ml={5}>
+          White Glove Services
+        </Text>
+      </HStack>
+    </Flex>
+  </Box>
+);
 
 const CurrentPlan: React.FC<{
   isCancellable: boolean;
@@ -1070,95 +1309,6 @@ const CurrentPlan: React.FC<{
   );
 };
 
-const CoinPayments: React.FC<{ packageName: string; onClose: () => void }> = ({
-  packageName,
-  onClose,
-}) => {
-  const { data, isLoading } = useAcceptedCoins();
-  const [coin, setCoin] = useState("");
-  const [loading, setLoading] = useState(false);
-  const handleSubmit = async () => {
-    const width = 600;
-    const height = 800;
-    const left = window.innerWidth / 2 - width / 2;
-    const top = window.innerHeight / 2 - height / 2;
-    let duration = "";
-    if (packageName === "ondemand") {
-      duration = "ondemand";
-    } else {
-      duration = "monthly";
-    }
-    try {
-      setLoading(true);
-      const { data } = await API.post<{
-        checkout_url: string;
-        status: string;
-        status_url: string;
-      }>("api-create-order-cp/", {
-        package: packageName,
-        currency: coin,
-        duration: duration,
-      });
-      setLoading(false);
-      const popup = window.open(
-        data.checkout_url,
-        "",
-        `toolbar=no, location=no, directories=no, status=no, menubar=no, scrollbars=no, resizable=no, copyhistory=no, width=${width}, height=${height}, top=${top}, left=${left}`
-      );
-      onClose();
-    } catch (e) {
-      setLoading(false);
-    }
-  };
-  return (
-    <VStack width="100%" spacing={6} mt={4} alignItems="inherit">
-      <Flex alignItems="flex-end" justifyContent="space-between">
-        <CoinPaymentsIcon size={200} />
-        {/* {data && coin !== "" && (
-          <Flex alignItems="center">
-            <CryptoIcon size={32} name={coin.toLowerCase()} />
-            <Text ml={2} color="brand-dark" fontWeight={700} fontSize="3xl">
-              {packageName === "ondemand"
-                ? parseFloat(data[coin].ondemand[packageName]).toPrecision(2)
-                : parseFloat(data[coin].monthly[packageName]).toPrecision(2)}
-              <Text as="span" fontSize="md" fontWeight={700} ml={2}>
-                {coin}
-              </Text>
-            </Text>
-          </Flex>
-        )} */}
-      </Flex>
-      <FormControl id="contract_platform">
-        <FormLabel fontSize="sm">Select coin</FormLabel>
-        <Select
-          placeholder="Select coin"
-          value={coin}
-          isRequired
-          isDisabled={isLoading}
-          onChange={(e) => setCoin(e.target.value)}
-        >
-          {data &&
-            Object.keys(data).map((key) => (
-              <option key={key} value={key}>
-                {data[key].name}
-              </option>
-            ))}
-        </Select>
-      </FormControl>
-      <Flex justifyContent="flex-end">
-        <Button
-          variant="brand"
-          isDisabled={coin === "" || isLoading}
-          isLoading={loading}
-          onClick={handleSubmit}
-        >
-          Make Payment
-        </Button>
-      </Flex>
-    </VStack>
-  );
-};
-
 const PricingDetails: React.FC<{ planData: Plan; selectedPlan: string }> = ({
   planData,
   selectedPlan,
@@ -1317,8 +1467,8 @@ const LatestInvoice: React.FC<{
         backgroundColor={"white"}
         borderRadius="xl"
         border={"1px solid #3E15F4"}
-        
-        my={5}
+        maxW="1000px"
+        mb={5}
         overflow={"hidden"}
         filter={"drop-shadow(0px 4px 23px rgba(0, 0, 0, 0.15));"}
       >
@@ -1433,7 +1583,7 @@ const LatestInvoice: React.FC<{
         <Button
           variant="brand"
           ml={[5, 5, 10]}
-          mt={[5, 5, -10]}
+          mt={[5, 5, -20]}
           mb={10}
           onClick={() => {
             window.open(`${transactionData.invoice_url}`, "_blank");
@@ -1590,14 +1740,10 @@ const TransactionListCard: React.FC<{
   const cancelRef = useRef<HTMLButtonElement | null>(null);
   const [isOpen, setIsOpen] = useState(false);
   const onClose = () => setIsOpen(false);
-
   const toast = useToast();
-
   const [orderId, setOrderId] = useState("");
   const [paymentPlatform, setPaymentPlatform] = useState("");
-
   const [hasMore, setHasMore] = useState(true);
-
   const fetchMoreTransactions = () => {
     if (pageNo >= page.total_pages) {
       setHasMore(false);
@@ -1605,6 +1751,7 @@ const TransactionListCard: React.FC<{
     }
     fetchMore();
   };
+  const [isLargerThan800] = useMediaQuery("(min-width: 800px)");
 
   const cancelPayment = async () => {
     const { data } = await API.delete("/api-invalidate-order-beta/", {
@@ -1625,139 +1772,307 @@ const TransactionListCard: React.FC<{
     }
   };
   return (
-    <Box
-      sx={{
-        w: "100%",
-        background: "white",
-        borderRadius: 15,
-        p: 4,
-      }}
-      filter={"drop-shadow(0px 4px 23px rgba(0, 0, 0, 0.15));"}
-    >
-      <HStack
-        p={4}
-        borderRadius={10}
-        backgroundColor={"gray.100"}
-        mt={3}
-        justify="space-between"
-        width={"100%"}
-        align="center"
-      >
-        <Text w={"10%"} fontWeight={500} color={"gray.500"}>
-          Status
-        </Text>
-        <Text w={"12%"} fontWeight={500} color={"gray.500"}>
-          Amount
-        </Text>
-        <Text w={"12%"} fontWeight={500} color={"gray.500"}>
-          Date
-        </Text>
-        <Text w={"150px"} fontWeight={500} color={"gray.500"}>
-          Payment Mode
-        </Text>
-        <Text w={"150px"} fontWeight={500} color={"gray.500"}>
-          Package
-        </Text>
-        <Box w={"calc(55% - 300px)"}/>
-          
-      </HStack>
+    <>
+      {isLargerThan800 ? (
+        <Box
+          sx={{
+            w: "100%",
+            background: "white",
+            borderRadius: 15,
+            p: 4,
+          }}
+          filter={"drop-shadow(0px 4px 23px rgba(0, 0, 0, 0.15));"}
+        >
+          <HStack
+            p={4}
+            borderRadius={10}
+            backgroundColor={"gray.100"}
+            mt={3}
+            justify="space-between"
+            width={"100%"}
+            align="center"
+          >
+            <Text w={"10%"} fontWeight={500} color={"gray.500"}>
+              Status
+            </Text>
+            <Text w={"12%"} fontWeight={500} color={"gray.500"}>
+              Amount
+            </Text>
+            <Text w={"12%"} fontWeight={500} color={"gray.500"}>
+              Date
+            </Text>
+            <Text w={"130px"} fontWeight={500} color={"gray.500"}>
+              Payment Mode
+            </Text>
+            <Text w={"130px"} fontWeight={500} color={"gray.500"}>
+              Package
+            </Text>
+            <Box w={"calc(55% - 260px)"} />
+          </HStack>
 
-      <InfiniteScroll
-        dataLength={transactionList?.length}
-        next={() => fetchMoreTransactions()}
-        hasMore={hasMore}
-        loader={
-          <Box w={"100%"} align="center">
-            <Spinner />
-          </Box>
-        }
-        scrollableTarget="pageScroll"
-      >
-        {transactionList.map((transaction, index) => {
-          let date = transaction.date.split("-");
-          return (
-            <HStack
-              key={index}
-              p={4}
-              justify="space-between"
-              width={"100%"}
-              align="center"
-            >
-             
-              <Text w={"10%"} fontWeight={500} color={"gray.500"}>
-                <Badge
-                  colorScheme={
-                    transaction.payment_status === "success"
-                      ? "green"
-                      : transaction.payment_status === "failed"
-                      ? "red"
-                      : "orange"
-                  }
+          <InfiniteScroll
+            dataLength={transactionList?.length}
+            next={() => fetchMoreTransactions()}
+            hasMore={hasMore}
+            loader={
+              <Box w={"100%"} align="center">
+                <Spinner />
+              </Box>
+            }
+            scrollableTarget="pageScroll"
+          >
+            {transactionList.map((transaction, index) => {
+              let date = transaction.date.split("-");
+              return (
+                <HStack
+                  key={index}
+                  p={4}
+                  justify="space-between"
+                  width={"100%"}
+                  align="center"
                 >
-                  {transaction.payment_status}
-                </Badge>
-              </Text>
-              <Text w={"12%"} fontWeight={500} color={"gray.500"}>
-                {parseFloat(transaction.amount).toFixed(2)}{" "}
-                {transaction.currency.toUpperCase()}
-              </Text>
-              <Text w={"12%"} fontWeight={500} color={"gray.500"}>
-                {date[2]} {monthNames[parseInt(date[1])]} {date[0]}
-              </Text>
-              <Text minW={'150px'} w='150px' fontWeight={500} color={"gray.500"}>
-                {sentenceCapitalize(transaction.payment_platform)}
-              </Text>
-              <Text minW={'150px'} w='150px' fontWeight={500} color={"gray.500"}>
-                {sentenceCapitalize(transaction.package)}
-              </Text>
-              <HStack w={"calc(55% - 300px)"} flexWrap='wrap' justify="flex-end">
-                {transaction.payment_platform === "stripe" &&
-                  transaction.payment_status === "open" && (
-                    <Button
-                      variant="accent-ghost"
-                      color={"red"}
-                      w={"fit-content"}
-                      my={0}
-                      py={0}
-                      fontSize={"xs"}
-                      onClick={() => {
-                        setIsOpen(!isOpen);
-                        setOrderId(transaction.order_id);
-                        setPaymentPlatform(transaction.payment_platform);
-                      }}
+                  <Text w={"10%"} fontWeight={500} color={"gray.500"}>
+                    <Badge
+                      colorScheme={
+                        transaction.payment_status === "success"
+                          ? "green"
+                          : transaction.payment_status === "failed"
+                          ? "red"
+                          : "orange"
+                      }
                     >
-                      Cancel Payment
-                    </Button>
-                  )}
-                {transaction.payment_status === "open" &&
-                  transaction.invoice_url && (
-                    <Button
-                      variant="accent-ghost"
-                      color={"accent"}
-                      w={"fit-content"}
-                      my={0}
-                      py={0}
-                      fontSize={"xs"}
-                      width={"fit-content"}
-                      onClick={() => {
-                        window.open(transaction.invoice_url, "_blank");
-                      }}
+                      {transaction.payment_status}
+                    </Badge>
+                  </Text>
+                  <Text w={"12%"} fontWeight={500} color={"gray.500"}>
+                    {parseFloat(transaction.amount).toFixed(2)}{" "}
+                    {transaction.currency.toUpperCase()}
+                  </Text>
+                  <Text w={"12%"} fontWeight={500} color={"gray.500"}>
+                    {date[2]} {monthNames[parseInt(date[1])]} {date[0]}
+                  </Text>
+                  <Text w="130px" fontWeight={500} color={"gray.500"}>
+                    {sentenceCapitalize(transaction.payment_platform)}
+                  </Text>
+                  <Text w="130px" fontWeight={500} color={"gray.500"}>
+                    {sentenceCapitalize(transaction.package)}
+                  </Text>
+                  <HStack
+                    w={"calc(55% - 260px)"}
+                    flexWrap="wrap"
+                    justify="flex-end"
+                  >
+                    {transaction.payment_platform === "stripe" &&
+                      transaction.payment_status === "open" && (
+                        <Button
+                          variant="accent-ghost"
+                          color={"red"}
+                          w={"fit-content"}
+                          my={0}
+                          py={0}
+                          fontSize={"sm"}
+                          onClick={() => {
+                            setIsOpen(!isOpen);
+                            setOrderId(transaction.order_id);
+                            setPaymentPlatform(transaction.payment_platform);
+                          }}
+                        >
+                          Cancel Payment
+                        </Button>
+                      )}
+                    {transaction.payment_status === "open" &&
+                      transaction.invoice_url && (
+                        <Button
+                          variant="accent-ghost"
+                          color={"accent"}
+                          w={"fit-content"}
+                          my={0}
+                          py={0}
+                          fontSize={"sm"}
+                          width={"fit-content"}
+                          onClick={() => {
+                            window.open(transaction.invoice_url, "_blank");
+                          }}
+                        >
+                          Complete Payment
+                        </Button>
+                      )}
+                  </HStack>
+                </HStack>
+              );
+            })}
+          </InfiniteScroll>
+        </Box>
+      ) : (
+        <InfiniteScroll
+          dataLength={transactionList?.length}
+          next={() => fetchMoreTransactions()}
+          hasMore={hasMore}
+          loader={
+            <Box w={"100%"} align="center">
+              <Spinner />
+            </Box>
+          }
+          scrollableTarget="pageScroll"
+        >
+          {" "}
+          {transactionList.map((transaction, index) => {
+            let date = transaction.date.split("-");
+            return (
+              <Flex
+                sx={{
+                  w: "calc(100% - 2rem)",
+                  background: "white",
+                  borderRadius: 15,
+                  px: 4,
+                  pb: 5,
+                  m: 4,
+                }}
+                key={index}
+                justifyContent="space-between"
+                flexDir={"row"}
+                alignItems="flex-start"
+                filter={"drop-shadow(0px 2px 8px rgba(0, 0, 0, 0.15));"}
+              >
+                <Flex
+                  justifyContent="flex-start"
+                  flexDir={"row"}
+                  alignItems="flex-start"
+                  flexWrap={"wrap"}
+                  w={'calc(100% - 60px)'}
+                >
+                  <VStack
+                    mt={5}
+                    alignItems={"flex-start"}
+                    spacing={1}
+                    
+                    width="180px"
+                  >
+                    <Text fontSize={"sm"} color="gray.400">
+                      Plan Name
+                    </Text>
+                    <Text fontSize={"md"}>
+                      {sentenceCapitalize(transaction.package)}
+                    </Text>
+                  </VStack>
+                  <VStack
+                    mt={5}
+                    alignItems={"flex-start"}
+                    spacing={1}
+                    width="120px"
+                  >
+                    <Text fontSize={"sm"} color="gray.400">
+                      Status
+                    </Text>
+                    <Text
+                      fontSize={"md"}
+                      color={
+                        transaction.payment_status === "success"
+                          ? "green"
+                          : transaction.payment_status === "failed"
+                          ? "red"
+                          : "orange"
+                      }
                     >
-                      Complete Payment
-                    </Button>
-                  )}
-              </HStack>
-            </HStack>
-          );
-        })}
-      </InfiniteScroll>
+                      {sentenceCapitalize(transaction.payment_status)}
+                    </Text>
+                  </VStack>
+                  <VStack
+                    mt={5}
+                    alignItems={"flex-start"}
+                    spacing={1}
+                    width="180px"
+                  >
+                    <Text fontSize={"sm"} color="gray.400">
+                      Amount
+                    </Text>
+                    <Text fontSize={"md"}>
+                      {"$"} {parseFloat(transaction.amount).toFixed(2)}{" "}
+                      {transaction.currency.toUpperCase()}
+                    </Text>
+                  </VStack>
+                  <VStack
+                    mt={5}
+                    alignItems={"flex-start"}
+                    spacing={1}
+                    width="180px"
+                  >
+                    <Text fontSize={"sm"} color="gray.400">
+                      Payment Mode
+                    </Text>
+                    <Text fontSize={"md"}>
+                      {sentenceCapitalize(transaction.payment_platform)}
+                    </Text>
+                  </VStack>
+                  <VStack width={"180px"} spacing={3} mt={5} alignItems="flex-start" >
+                    {transaction.payment_platform === "stripe" &&
+                      transaction.payment_status === "open" && (
+                        <Button
+                          bgColor={'#FF563010'}
+                          color={"red"}
+                          w={"fit-content"}
+                          my={0}
+                          py={0}
+                          fontSize={"sm"}
+                          onClick={() => {
+                            setIsOpen(!isOpen);
+                            setOrderId(transaction.order_id);
+                            setPaymentPlatform(transaction.payment_platform);
+                          }}
+                        >
+                          Cancel Payment
+                        </Button>
+                      )}
+                    {transaction.payment_status === "open" &&
+                      transaction.invoice_url && (
+                        <Button
+                          bgColor={'#3E15F410'}
+                          color={"accent"}
+                          w={"fit-content"}
+                          my={0}
+                          py={0}
+                          fontSize={"sm"}
+                          width={"fit-content"}
+                          onClick={() => {
+                            window.open(transaction.invoice_url, "_blank");
+                          }}
+                        >
+                          Complete Payment
+                        </Button>
+                      )}
+                  </VStack>
+                </Flex>
+                <Box
+                  mt={5}
+                  sx={{
+                    width: "60px",
+                    height: "60px",
+                    p: 2,
+                    bg: "#F7F7F7",
+                    color: "#4E5D78",
+                    borderRadius: "50%",
+                    textAlign: "center",
+                  }}
+                >
+                  <Text fontSize="xl" fontWeight="600">
+                    {date[2]}
+                  </Text>
+                  <Text fontSize="12px" mt="-4px">
+                    {monthNames[parseInt(date[1])]}
+                  </Text>
+                </Box>
+              </Flex>
+            );
+          })}
+        </InfiniteScroll>
+      )}
       <AlertDialog
         isOpen={isOpen}
         leastDestructiveRef={cancelRef}
         onClose={onClose}
       >
         <AlertDialogOverlay>
-          <AlertDialogContent>
+          <AlertDialogContent w='80%'>
             <AlertDialogHeader fontSize="lg" fontWeight="bold">
               Cancel Payment
             </AlertDialogHeader>
@@ -1783,7 +2098,7 @@ const TransactionListCard: React.FC<{
           </AlertDialogContent>
         </AlertDialogOverlay>
       </AlertDialog>
-    </Box>
+    </>
   );
 };
 
@@ -1812,6 +2127,7 @@ const PromoCodeCard: React.FC<{ profileData: Profile }> = ({ profileData }) => {
     <Box
       sx={{
         w: "100%",
+        maxW: "1000px",
         background: "white",
         borderRadius: 15,
         p: [4, 4, 8],

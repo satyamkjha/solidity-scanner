@@ -33,9 +33,9 @@ const REDIRECT_URI =
 const JIRA_URL = `https://auth.atlassian.com/authorize?audience=api.atlassian.com&client_id=${JIRA_CLIENT_ID}&scope=${JIRA_SCOPE}&redirect_uri=${REDIRECT_URI}&state=${getCookie(
   "csrftoken"
 )}&response_type=code&prompt=consent`;
-const GITHUB_URL = `https://github.com/apps/${process.env.REACT_APP_GITHUB_APP_NAME}/installations/new?state=${getCookie(
-  "csrftoken"
-)}`;
+const GITHUB_URL = `https://github.com/apps/${
+  process.env.REACT_APP_GITHUB_APP_NAME
+}/installations/new?state=${getCookie("csrftoken")}`;
 const SLACK_URL = `https://slack.com/oauth/v2/authorize?client_id=${SLACK_CLIENT_ID}&scope=${SLACK_SCOPE}&user_scope=&redirect_uri=${REDIRECT_URI}&state=${getCookie(
   "csrftoken"
 )}`;
