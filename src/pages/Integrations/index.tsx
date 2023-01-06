@@ -47,7 +47,7 @@ const Integrations: React.FC = () => {
   return (
     <Box
       sx={{
-        w: "100%",
+        w: ["100%", "100%", "calc(100% - 2rem)"],
         bg: "bg.subtle",
         borderRadius: "20px",
         py: 4,
