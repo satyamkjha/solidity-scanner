@@ -1754,6 +1754,8 @@ const TransactionListCard: React.FC<{
   };
   const [isLargerThan800] = useMediaQuery("(min-width: 800px)");
 
+  console.log(transactionList);
+
   const cancelPayment = async () => {
     const { data } = await API.delete("/api-invalidate-order-beta/", {
       data: {
@@ -1816,97 +1818,101 @@ const TransactionListCard: React.FC<{
             next={() => fetchMoreTransactions()}
             hasMore={hasMore}
             loader={
-              <Box w={"100%"} align="center">
+              <Box w={"100%"} h="50vh" display={'flex'} justifyContent="center" alignItems={'center'}>
                 <Spinner />
               </Box>
             }
             scrollableTarget="pageScroll"
-          >
-            {transactionList.map((transaction, index) => {
-              let date = transaction.date.split("-");
-              return (
-                <HStack
-                  key={index}
-                  p={4}
-                  justify="space-between"
-                  width={"100%"}
-                  align="center"
-                >
-                  <Text w={"10%"} fontWeight={500} color={"gray.500"}>
-                    <Badge
-                      colorScheme={
-                        transaction.payment_status === "success"
-                          ? "green"
-                          : transaction.payment_status === "failed"
-                          ? "red"
-                          : "orange"
-                      }
-                    >
-                      {transaction.payment_status}
-                    </Badge>
-                  </Text>
-                  <Text w={"12%"} fontWeight={500} color={"gray.500"}>
-                    {parseFloat(transaction.amount).toFixed(2)}{" "}
-                    {transaction.currency.toUpperCase()}
-                  </Text>
-                  <Text w={"12%"} fontWeight={500} color={"gray.500"}>
-                    {date[2]} {monthNames[parseInt(date[1])]} {date[0]}
-                  </Text>
-                  <Text w="130px" fontWeight={500} color={"gray.500"}>
-                    {sentenceCapitalize(transaction.payment_platform)}
-                  </Text>
-                  <Text w="130px" fontWeight={500} color={"gray.500"}>
-                    {sentenceCapitalize(transaction.package)}
-                  </Text>
-                  <HStack
-                    w={"calc(55% - 260px)"}
-                    flexWrap="wrap"
-                    justify="flex-end"
+          > {transactionList.length > 0 ? transactionList.map((transaction, index) => {
+            let date = transaction.date.split("-");
+            return (
+              <HStack
+                key={index}
+                p={4}
+                justify="space-between"
+                width={"100%"}
+                align="center"
+              >
+                <Text w={"10%"} fontWeight={500} color={"gray.500"}>
+                  <Badge
+                    colorScheme={
+                      transaction.payment_status === "success"
+                        ? "green"
+                        : transaction.payment_status === "failed"
+                        ? "red"
+                        : "orange"
+                    }
                   >
-                    {transaction.payment_platform === "stripe" &&
-                      transaction.payment_status === "open" && (
-                        <Button
-                          variant="accent-ghost"
-                          color={"red"}
-                          w={"fit-content"}
-                          my={0}
-                          py={0}
-                          fontSize={"sm"}
-                          onClick={() => {
-                            setIsOpen(!isOpen);
-                            setOrderId(transaction.order_id);
-                            setPaymentPlatform(transaction.payment_platform);
-                          }}
-                        >
-                          Cancel Payment
-                        </Button>
-                      )}
-                    {transaction.payment_status === "open" &&
-                      transaction.invoice_url && (
-                        <Button
-                          variant="accent-ghost"
-                          color={"accent"}
-                          w={"fit-content"}
-                          my={0}
-                          py={0}
-                          fontSize={"sm"}
-                          width={"fit-content"}
-                          onClick={() => {
-                            window.open(transaction.invoice_url, "_blank");
-                          }}
-                        >
-                          Complete Payment
-                        </Button>
-                      )}
-                  </HStack>
+                    {transaction.payment_status}
+                  </Badge>
+                </Text>
+                <Text w={"12%"} fontWeight={500} color={"gray.500"}>
+                  {parseFloat(transaction.amount).toFixed(2)}{" "}
+                  {transaction.currency.toUpperCase()}
+                </Text>
+                <Text w={"12%"} fontWeight={500} color={"gray.500"}>
+                  {date[2]} {monthNames[parseInt(date[1])]} {date[0]}
+                </Text>
+                <Text w="130px" fontWeight={500} color={"gray.500"}>
+                  {sentenceCapitalize(transaction.payment_platform)}
+                </Text>
+                <Text w="130px" fontWeight={500} color={"gray.500"}>
+                  {sentenceCapitalize(transaction.package)}
+                </Text>
+                <HStack
+                  w={"calc(55% - 260px)"}
+                  flexWrap="wrap"
+                  justify="flex-end"
+                >
+                  {transaction.payment_platform === "stripe" &&
+                    transaction.payment_status === "open" && (
+                      <Button
+                        variant="accent-ghost"
+                        color={"red"}
+                        w={"fit-content"}
+                        my={0}
+                        py={0}
+                        fontSize={"sm"}
+                        onClick={() => {
+                          setIsOpen(!isOpen);
+                          setOrderId(transaction.order_id);
+                          setPaymentPlatform(transaction.payment_platform);
+                        }}
+                      >
+                        Cancel Payment
+                      </Button>
+                    )}
+                  {transaction.payment_status === "open" &&
+                    transaction.invoice_url && (
+                      <Button
+                        variant="accent-ghost"
+                        color={"accent"}
+                        w={"fit-content"}
+                        my={0}
+                        py={0}
+                        fontSize={"sm"}
+                        width={"fit-content"}
+                        onClick={() => {
+                          window.open(transaction.invoice_url, "_blank");
+                        }}
+                      >
+                        Complete Payment
+                      </Button>
+                    )}
                 </HStack>
-              );
-            })}
+              </HStack>
+            );
+          }) : <>
+           <Box w={"100%"} h="50vh" display={'flex'} justifyContent="center" alignItems={'center'} >
+                  <Text> There are not transactions to show. </Text>
+              </Box>
+          </>}
+            
           </InfiniteScroll>
         </Box>
       ) : (
         <InfiniteScroll
-          dataLength={transactionList?.length}
+          dataLength={transactionList.length}
           next={() => fetchMoreTransactions()}
           hasMore={hasMore}
           loader={

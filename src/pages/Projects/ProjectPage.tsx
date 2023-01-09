@@ -130,9 +130,7 @@ export const ProjectPage: React.FC = () => {
         }, 10000);
       }
     };
-
     refetchTillScanComplete();
-
     return () => {
       clearInterval(intervalId);
     };
