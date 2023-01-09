@@ -1754,8 +1754,6 @@ const TransactionListCard: React.FC<{
   };
   const [isLargerThan800] = useMediaQuery("(min-width: 800px)");
 
-  console.log(transactionList);
-
   const cancelPayment = async () => {
     const { data } = await API.delete("/api-invalidate-order-beta/", {
       data: {
