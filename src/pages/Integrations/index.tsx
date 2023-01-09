@@ -19,7 +19,6 @@ import OauthHelper from "components/oauthHelper";
 import { useProfile } from "hooks/useProfile";
 import { getCookie } from "common/functions";
 import {
-  GITHUB_APP_NAME,
   JIRA_CLIENT_ID,
   JIRA_SCOPE,
   SLACK_CLIENT_ID,
@@ -34,9 +33,9 @@ const REDIRECT_URI =
 const JIRA_URL = `https://auth.atlassian.com/authorize?audience=api.atlassian.com&client_id=${JIRA_CLIENT_ID}&scope=${JIRA_SCOPE}&redirect_uri=${REDIRECT_URI}&state=${getCookie(
   "csrftoken"
 )}&response_type=code&prompt=consent`;
-const GITHUB_URL = `https://github.com/apps/${GITHUB_APP_NAME}/installations/new?state=${getCookie(
-  "csrftoken"
-)}`;
+const GITHUB_URL = `https://github.com/apps/${
+  process.env.REACT_APP_GITHUB_APP_NAME
+}/installations/new?state=${getCookie("csrftoken")}`;
 const SLACK_URL = `https://slack.com/oauth/v2/authorize?client_id=${SLACK_CLIENT_ID}&scope=${SLACK_SCOPE}&user_scope=&redirect_uri=${REDIRECT_URI}&state=${getCookie(
   "csrftoken"
 )}`;
@@ -48,7 +47,7 @@ const Integrations: React.FC = () => {
   return (
     <Box
       sx={{
-        w: "100%",
+        w: ["100%", "100%", "calc(100% - 2rem)"],
         bg: "bg.subtle",
         borderRadius: "20px",
         py: 4,

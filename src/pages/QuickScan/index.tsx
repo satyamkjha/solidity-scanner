@@ -606,7 +606,6 @@ const QuickScan: React.FC = () => {
                     <Box
                       w={["30%", "30%", "15%"]}
                       borderRadius={15}
-                      
                       h={"160px"}
                       background={" #FFFFFF "}
                       display="flex"
@@ -628,7 +627,6 @@ const QuickScan: React.FC = () => {
                     <Box
                       w={["30%", "30%", "15%"]}
                       borderRadius={15}
-                      
                       h={"160px"}
                       background={" #FFFFFF "}
                       display="flex"
@@ -650,7 +648,6 @@ const QuickScan: React.FC = () => {
                     <Box
                       w={["30%", "30%", "15%"]}
                       borderRadius={15}
-                      
                       h={"160px"}
                       background={" #FFFFFF "}
                       display="flex"
@@ -675,7 +672,6 @@ const QuickScan: React.FC = () => {
                     <Box
                       w={["30%", "30%", "15%"]}
                       borderRadius={15}
-                      
                       h={"160px"}
                       background={" #FFFFFF "}
                       display="flex"
@@ -700,7 +696,6 @@ const QuickScan: React.FC = () => {
                     <Box
                       w={["30%", "30%", "15%"]}
                       borderRadius={15}
-                      
                       h={"160px"}
                       background={" #FFFFFF "}
                       display="flex"
@@ -725,7 +720,6 @@ const QuickScan: React.FC = () => {
                     <Box
                       w={["30%", "30%", "15%"]}
                       borderRadius={15}
-                      
                       h={"160px"}
                       background={" #FFFFFF "}
                       display="flex"
@@ -1084,7 +1078,7 @@ const QuickScan: React.FC = () => {
                     mt={5}
                     width={["100%"]}
                     justify={"space-between"}
-                    alignContent='space-between'
+                    alignContent="space-between"
                     flexWrap="wrap"
                     spacing={0}
                     h={"350px"}
@@ -1092,7 +1086,6 @@ const QuickScan: React.FC = () => {
                     <Box
                       w={["30%", "30%", "15%"]}
                       borderRadius={15}
-                      
                       h={"160px"}
                       background={" #FFFFFF "}
                       display="flex"
@@ -1111,7 +1104,6 @@ const QuickScan: React.FC = () => {
                     <Box
                       w={["30%", "30%", "15%"]}
                       borderRadius={15}
-                      
                       h={"160px"}
                       background={" #FFFFFF "}
                       display="flex"
@@ -1130,7 +1122,6 @@ const QuickScan: React.FC = () => {
                     <Box
                       w={["30%", "30%", "15%"]}
                       borderRadius={15}
-                      
                       h={"160px"}
                       background={" #FFFFFF "}
                       display="flex"
@@ -1152,7 +1143,6 @@ const QuickScan: React.FC = () => {
                     <Box
                       w={["30%", "30%", "15%"]}
                       borderRadius={15}
-                      
                       h={"160px"}
                       background={" #FFFFFF "}
                       display="flex"
@@ -1174,7 +1164,6 @@ const QuickScan: React.FC = () => {
                     <Box
                       w={["30%", "30%", "15%"]}
                       borderRadius={15}
-                      
                       h={"160px"}
                       background={" #FFFFFF "}
                       display="flex"
@@ -1196,7 +1185,6 @@ const QuickScan: React.FC = () => {
                     <Box
                       w={["30%", "30%", "15%"]}
                       borderRadius={15}
-                      
                       h={"160px"}
                       background={" #FFFFFF "}
                       display="flex"
@@ -1227,7 +1215,6 @@ const QuickScan: React.FC = () => {
                 borderRadius={15}
                 p={[0, 0, 5]}
                 mt={[0, 0, 10]}
-                
                 background={["#FFFFFF", "#FFFFFF", "#FAFBFC"]}
                 display="flex"
                 flexDir={"column"}

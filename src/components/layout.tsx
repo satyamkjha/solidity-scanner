@@ -67,7 +67,17 @@ const Layout: React.FC = ({ children }) => {
   }, [showSidebar]);
 
   return (
-    <>
+    <Box
+      as="div"
+      // width={[
+      //   "calc(100vw)",
+      //   "100vw",
+      //   "calc(100vw - 40px)",
+      //   "calc(100vw - 40px)",
+      //   "calc(100vw - 40px)",
+      // ]}
+      height="100vh"
+    >
       {profileData && (
         <>
           {profileData.current_package === "expired" ? (
@@ -166,7 +176,7 @@ const Layout: React.FC = ({ children }) => {
                   : SIDEBAR_WIDTH_EXPANDED
               })`,
             ],
-            height: "calc(100vh - 28px)",
+            height: "calc(100vh)",
             overflowY: "scroll",
           }}
         >
@@ -183,14 +193,14 @@ const Layout: React.FC = ({ children }) => {
             </Text>
           </Flex> */}
           <Flex
+            w="100%"
             sx={{
-              width: "100%",
               p: 8,
               alignItems: "center",
               justifyContent: "space-between",
             }}
           >
-            <Flex sx={{ width: "100%", alignItems: "center" }}>
+            <Flex width="100%" sx={{ alignItems: "center" }}>
               <Icon
                 as={GiHamburgerMenu}
                 sx={{
@@ -290,10 +300,10 @@ const Layout: React.FC = ({ children }) => {
               </MenuList>
             </Menu>
           </Flex>
-          <Box px={4}>{children}</Box>
+          <Box width={"100%"}>{children}</Box>
         </Box>
       </Flex>
-    </>
+    </Box>
   );
 };
 

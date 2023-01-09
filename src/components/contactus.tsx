@@ -83,6 +83,7 @@ export const ContactUs: React.FC<{ onClose(): any; isOpen: boolean }> = ({
           <ModalHeader
             background="rgba(82, 255, 0, 0.04)"
             backgroundImage="url('/background/pattern.png')"
+            textAlign={["center", "center", "center", "left"]}
           >
             Contact Us
           </ModalHeader>
@@ -198,9 +199,9 @@ export const ContactUs: React.FC<{ onClose(): any; isOpen: boolean }> = ({
           </ModalBody>
           <ModalFooter>
             <Button
-              w={"100px"}
+              w={["100%", "100%", "100%", "100px"]}
               variant="brand"
-              mr={"50px"}
+              mr={[0, 0, 0, "50px"]}
               mb={5}
               onClick={() => {
                 onSubmit();
