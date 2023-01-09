@@ -1,0 +1,15 @@
+version: "3.8"
+services:
+  solidity-frontend:
+    image: 132830644905.dkr.ecr.us-east-2.amazonaws.com/solidityscan-frontend:$ENV
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        - ENVIRONMENT=${ENVIRONMENT}
+    ports:
+      - "45947:3000"
+    env_file:
+      - .env
+    command: >
+      sh -c "yarn global add serve && serve -s build"

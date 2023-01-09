@@ -84,7 +84,7 @@ export const ManualAuditForm: React.FC<{ onClose(): any; isOpen: boolean }> = ({
   };
   return (
     <>
-      <Modal isOpen={isOpen} onClose={onClose} isCentered>
+      <Modal isOpen={isOpen} onClose={onClose}>
         <ModalOverlay />
         <ModalContent
           maxW={["90vw", "90vw", "70vw"]}
@@ -93,7 +93,12 @@ export const ManualAuditForm: React.FC<{ onClose(): any; isOpen: boolean }> = ({
           borderRadius="15px"
           mb={10}
         >
-          <ModalHeader m={[2, 2, 6]} fontSize={["lg", "lg", "2xl"]}>
+          <ModalHeader
+            m={[2, 2, 6]}
+            mt={[10, 10, 10, 6]}
+            textAlign={["center", "center", "center", "left"]}
+            fontSize={["lg", "lg", "2xl"]}
+          >
             {!mailSent ? "Request Manual Audit" : "Request Sent"}
           </ModalHeader>
           <ModalCloseButton
@@ -105,7 +110,11 @@ export const ManualAuditForm: React.FC<{ onClose(): any; isOpen: boolean }> = ({
           />
           {!mailSent ? (
             <ModalBody h={"fit-content"} w={"100%"} px={[6, 6, 6, 12]}>
-              <Flex justifyContent="flex-start" w={"100%"} flexDir="row">
+              <Flex
+                justifyContent="flex-start"
+                w={"100%"}
+                direction={["column", "column", "column", "row"]}
+              >
                 <Flex
                   zIndex={"10"}
                   w={["100%", "100%", "100%", "60%"]}
@@ -113,7 +122,7 @@ export const ManualAuditForm: React.FC<{ onClose(): any; isOpen: boolean }> = ({
                   alignItems={["center", "center", "flex-start"]}
                   flexDir="column"
                 >
-                  <Stack spacing={6} mt={4} w={"100%"}>
+                  <Stack zIndex={"10"} spacing={6} mt={4} w={"100%"}>
                     <InputGroup mt={0} alignItems="center">
                       <InputLeftElement
                         height="48px"
@@ -201,9 +210,9 @@ export const ManualAuditForm: React.FC<{ onClose(): any; isOpen: boolean }> = ({
                     />
                   </Stack>
                   <Button
-                    w={"40%"}
+                    w={["100%", "100%", "100%", "40%"]}
                     h={"50px"}
-                    mt={16}
+                    mt={[10, 10, 10, 16]}
                     variant="dark"
                     borderRadius={10}
                     fontSize={"md"}
@@ -216,14 +225,14 @@ export const ManualAuditForm: React.FC<{ onClose(): any; isOpen: boolean }> = ({
                   </Button>
                 </Flex>
                 <VStack
-                  w={"50%"}
+                  w={["100%", "100%", "100%", "50%"]}
                   alignItems="center"
-                  display={["none", "none", "flex"]}
+                  my={[10, 10, 10, 0]}
                 >
                   <Flex
                     mt={"-16"}
                     mb={"6"}
-                    w={"75%"}
+                    w={["100%", "100%", "100%", "75%"]}
                     alignItems="center"
                     justifyContent="center"
                     direction="column"
@@ -232,7 +241,7 @@ export const ManualAuditForm: React.FC<{ onClose(): any; isOpen: boolean }> = ({
                     <Text
                       mt={6}
                       fontSize="14px"
-                      fonWeight="400"
+                      fontWeight="400"
                       textAlign="center"
                     >
                       Follow the link to check out the published audit reports

@@ -124,6 +124,7 @@ const Projects: React.FC = () => {
   return (
     <Box
       sx={{
+        w: ["100%", "100%", "calc(100% - 2rem)"],
         bg: "bg.subtle",
         borderRadius: "20px",
         py: 4,
@@ -132,7 +133,6 @@ const Projects: React.FC = () => {
         my: 4,
         minH: "78vh",
       }}
-      w="100%"
       boxSizing={"border-box"}
     >
       <Flex

@@ -2,14 +2,14 @@ import React, { Component } from "react";
 
 import { Box, Text, VStack, Image } from "@chakra-ui/react";
 
-import { Swiper, SwiperSlide } from "swiper/react";
+import { Swiper, SwiperSlide, useSwiperSlide } from "swiper/react";
 import { EffectCoverflow, Navigation, Pagination } from "swiper";
 import "./testimonial.css";
 
 import { userTestimonials } from "common/values";
 
-export class UserTestimonial extends Component {
-  render() {
+const UserTestimonial: React.FC = () => {
+  {
     return (
       <Swiper
         initialSlide={1}
@@ -19,9 +19,7 @@ export class UserTestimonial extends Component {
           320: {
             slidesPerView: 1,
             height: 600,
-            width: 300,
           },
-
           768: {
             slidesPerView: 1,
             height: 400,
@@ -59,9 +57,9 @@ export class UserTestimonial extends Component {
             style={{ height: "calc(100% - 60px)", width: "100%" }}
           >
             <Box
-              w={["95%", "95%", "90%", "92%"]}
+              w={["85%", "85%", "90%", "92%"]}
               margin={[4]}
-              marginLeft={[7, 7, "auto"]}
+              marginLeft={"auto"}
               marginRight={"auto"}
               boxShadow="0px 16px 32px rgba(0, 0, 0, 0.13)"
               borderRadius="15px"
@@ -105,6 +103,6 @@ export class UserTestimonial extends Component {
       </Swiper>
     );
   }
-}
+};
 
 export default UserTestimonial;

@@ -138,24 +138,24 @@ const Routes: React.FC = () => {
           <Route exact path="/privacy-policy">
             <PrivacyPolicy />
           </Route>
-          <Route exact path="/signin">
+          <RedirectRoute exact path="/signin">
             <SignIn />
-          </Route>
+          </RedirectRoute>
           <Route exact path="/reset">
             <Reset />
           </Route>
-          <Route exact path="/signup">
+          <RedirectRoute exact path="/signup">
             <SignUp />
-          </Route>
+          </RedirectRoute>
           <Route exact path="/check-email">
             <CheckEmail />
           </Route>
           <Route exact path="/verify">
             <Verify />
           </Route>
-          <Route exact path="/forgot">
+          <RedirectRoute exact path="/forgot">
             <ForgotPassword />
-          </Route>
+          </RedirectRoute>
           <Route exact path="/page-not-found">
             <PageNotFound />
           </Route>
@@ -255,6 +255,26 @@ const PrivateRoute: React.FC<RouteProps> = ({ children, ...rest }) => {
               state: { from: location },
             }}
           />
+        )
+      }
+    />
+  );
+};
+
+const RedirectRoute: React.FC<RouteProps> = ({ children, ...rest }) => {
+  return (
+    <Route
+      {...rest}
+      render={({ location }) =>
+        Auth.isUserAuthenticated() ? (
+          <Redirect
+            to={{
+              pathname: "/home",
+              state: { from: location },
+            }}
+          />
+        ) : (
+          children
         )
       }
     />
