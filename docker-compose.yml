@@ -10,6 +10,6 @@ services:
     ports:
       - "45947:3000"
     env_file:
-      - .env
+      - frontend.env
     command: >
       sh -c "yarn global add serve && serve -s build"
