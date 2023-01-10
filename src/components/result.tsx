@@ -438,6 +438,7 @@ export const MultifileResult: React.FC<{
   scanDetails: MultiFileScanDetail[];
   profileData: Profile;
   details_enabled: boolean;
+  refetch(): any
 }> = ({
   scanSummary,
   scanDetails,
@@ -445,6 +446,7 @@ export const MultifileResult: React.FC<{
   type,
   profileData,
   details_enabled,
+  refetch
 }) => {
   const [files, setFiles] = useState<FilesState | null>(null);
 
@@ -656,6 +658,7 @@ export const MultifileResult: React.FC<{
                   if (newValue) {
                     // setAction(newValue.value)
                     updateBugStatus(newValue.value);
+                    refetch()
                   }
                 }}
               />

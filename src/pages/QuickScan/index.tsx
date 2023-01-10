@@ -309,8 +309,16 @@ const QuickScan: React.FC = () => {
 
   useEffect(() => {
     if (blockAddress) setAddress(blockAddress);
-    if (blockChain) setChain(blockChain);
-    if (blockPlatform) setPlatform(blockPlatform);
+    
+    if (blockPlatform) {
+      setPlatform(blockPlatform);
+      setChainList(contractChain[blockPlatform])
+    }
+
+    if(blockChain){
+      setChain(blockChain)
+    }
+    
     if (blockAddress && blockChain && blockPlatform) {
       setIsLoading(true);
       API.get(
@@ -328,6 +336,8 @@ const QuickScan: React.FC = () => {
       );
     }
   }, []);
+
+  
 
   const generateQuickScan = () => {
     if (platform === "") {
