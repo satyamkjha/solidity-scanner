@@ -385,3 +385,13 @@ export type QuickFileScanDetail = {
   issue_inference: string;
   issue_status: string;
 };
+
+export type FilesState = {
+  description_details: any;
+  findings: Finding[];
+  bug_id: string;
+  bug_hash: string;
+  bug_status: string;
+  issue_id: string;
+  template_details: MultiFileTemplateDetail;
+};
