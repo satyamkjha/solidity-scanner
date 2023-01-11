@@ -52,7 +52,7 @@ export default function LandingPage() {
   return (
     <>
       <Header />
-      <Container maxW={["95vw", "95vw", "90vw", "80vw"]} color="black">
+      <Container maxW={["95vw", "95vw", "90vw", "100vw"]} color="black">
         {/* Section 1 */}
         <Flex
           as="section"
@@ -60,6 +60,7 @@ export default function LandingPage() {
           my={0}
           textAlign={["center", "left"]}
           py={24}
+          px={[0, 0, 0, 24]}
           display={["flex"]}
           flexDirection={["column", "column", "column", "row"]}
           alignItems={"center"}
@@ -101,7 +102,7 @@ export default function LandingPage() {
         </Flex>
 
         {/* Section 2 */}
-        <Box w="100%" as="section" sx={{ textAlign: "center" }} my={[4, 8]}>
+        <Box w="100%" as="section" sx={{ textAlign: "center" }} my={[4, 8]} px={[0, 0, 0, 24]}>
           <Heading as="h1" fontSize="3xl" mb={4}>
             Scan.{" "}
             <Box
@@ -130,6 +131,7 @@ export default function LandingPage() {
           my={0}
           textAlign={["center", "left"]}
           py={24}
+          px={[0, 0, 0, 24]}
           backgroundImage={"url(/background/pattern_mask.png)"}
           display={["flex"]}
           flexDirection={["column", "column", "column", "row"]}
@@ -190,6 +192,7 @@ export default function LandingPage() {
           w="100%"
           alignItems="center"
           py={[5, 5, 10]}
+          px={[0, 0, 0, 24]}
           flexDir={["column", "column", "row"]}
           textAlign={["center", "center", "left"]}
         >
@@ -218,6 +221,7 @@ export default function LandingPage() {
           w="100%"
           alignItems="center"
           py={[5, 5, 10]}
+          px={[0, 0, 0, 24]}
           flexDir={["column", "column", "row-reverse"]}
           textAlign={["center", "center", "left"]}
         >
@@ -251,6 +255,7 @@ export default function LandingPage() {
           w="100%"
           alignItems="center"
           py={[5, 5, 10]}
+          px={[0, 0, 0, 24]}
           flexDir={["column", "column", "row"]}
           textAlign={["center", "center", "left"]}
         >
@@ -278,6 +283,7 @@ export default function LandingPage() {
           w="100%"
           alignItems="center"
           py={[5, 5, 10]}
+          px={[0, 0, 0, 24]}
           flexDir={["column", "column", "row-reverse"]}
           textAlign={["center", "center", "left"]}
         >
@@ -307,6 +313,7 @@ export default function LandingPage() {
           w="100%"
           alignItems="center"
           py={[5, 5, 10]}
+          px={[0, 0, 0, 24]}
           flexDir={["column", "column", "row"]}
           textAlign={["center", "center", "left"]}
         >
@@ -329,7 +336,7 @@ export default function LandingPage() {
             </Text>
           </Box>
         </Flex>
-        <Box w="100%" as="section" sx={{ textAlign: "center" }} my={28}>
+        <Box w="100%" as="section" sx={{ textAlign: "center" }} my={28} px={[0, 0, 0, 24]}>
           <Heading fontSize="3xl" mb={10}>
             What People are Saying about us
           </Heading>
@@ -339,7 +346,7 @@ export default function LandingPage() {
           </Text> */}
           <UserTestimonial />
         </Box>
-        <Box w="100%" as="section" sx={{ textAlign: "center" }} my={24}>
+        <Box w="100%" as="section" sx={{ textAlign: "center" }} my={24} px={[0, 0, 0, 24]}>
           <Heading fontSize="3xl" mb={5}>
             Our Team
           </Heading>
@@ -588,6 +595,7 @@ export default function LandingPage() {
           sx={{ textAlign: "center" }}
           mb={10}
           mt={[10, 10, 20]}
+          px={[0, 0, 0, 24]}
         >
           <Heading as="h2" fontSize="3xl" my={5}>
             Fully automated smart contract audit system <br /> to help{" "}
@@ -601,8 +609,9 @@ export default function LandingPage() {
           <ImageCarousel />
         </Box>
         <Box
+          mx={[0, 0, 0, 24]}
           sx={{
-            w: "100%",
+            w: ["100%", "100%", "100%", "85%"],
             backgroundImage: 'url("/background/pattern.png")',
             borderRadius: 20,
             overflow: "hidden",
@@ -639,7 +648,7 @@ export default function LandingPage() {
             </Button>
           </Flex>
         </Box>
-        <Box w="100%" as="section" sx={{ textAlign: "center" }} my={8}>
+        <Box w="100%" as="section" sx={{ textAlign: "center" }} my={8} px={[0, 0, 0, 24]}>
           <Flex
             sx={{
               w: ["100%"],
