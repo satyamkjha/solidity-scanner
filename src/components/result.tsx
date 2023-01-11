@@ -463,40 +463,8 @@ export const MultifileResult: React.FC<{
   // const [action, setAction] = useState("");
   const toast = useToast();
 
-  const customStyles = {
-    option: (provided: any, state: any) => ({
-      ...provided,
-      borderBottom: "1px solid #f3f3f3",
-      backgroundColor: state.isSelected
-        ? "#FFFFFF"
-        : state.isFocused
-        ? "#E6E6E6"
-        : "#FFFFFF",
-      color: "#000000",
-    }),
-    menu: (provided: any, state: any) => ({
-      ...provided,
-      color: state.selectProps.menuColor,
-      borderRadius: 10,
-      border: "0px solid #ffffff",
-      overflowY: "hidden",
-    }),
-    control: () => ({
-      // none of react-select's styles are passed to <Control />
-      width: 300,
-      display: "flex",
-      flexDirection: "row",
-      backgroundColor: "#FAFBFC",
-      padding: 5,
-      borderRadius: 20,
-    }),
-    singleValue: (provided: any, state: any) => {
-      const opacity = state.isDisabled ? 0.3 : 1;
-      const transition = "opacity 300ms";
+  const [isDesktopView] = useMediaQuery("(min-width: 1024px)");
 
-      return { ...provided, opacity, transition };
-    },
-  };
 
   const updateBugStatus = async (action: string) => {
     if (files) {
@@ -621,15 +589,17 @@ export const MultifileResult: React.FC<{
             />
           </Box>
         </VStack>
-        <DetailedResult
-          type={type}
-          is_latest_scan={is_latest_scan}
-          files={files}
-          confidence={confidence}
-          setConfidence={setConfidence}
-          details_enabled={true}
-          updateBugStatus={updateBugStatus}
-        />
+
+        {isDesktopView &&
+          <DetailedResult
+            type={type}
+            is_latest_scan={is_latest_scan}
+            files={files}
+            confidence={confidence}
+            setConfidence={setConfidence}
+            details_enabled={details_enabled}
+            updateBugStatus={updateBugStatus}
+          />}
       </Flex>
     </>
   );
