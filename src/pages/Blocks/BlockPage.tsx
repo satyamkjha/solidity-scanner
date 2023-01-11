@@ -101,22 +101,28 @@ const BlockPage: React.FC = () => {
   const [tabIndex, setTabIndex] = React.useState(0);
   const [isDesktopView] = useMediaQuery("(min-width: 1024px)");
 
+  // useEffect(() => {
+  //   let intervalId: NodeJS.Timeout;
+  //   const refetchTillScanComplete = () => {
+  //     intervalId = setInterval(async () => {
+  //       await refetch().then((res) => {
+  //         if (res.data) {
+  //           setReportingStatus(res.data?.scan_report.reporting_status);
+  //         }
+  //       });
+  //     }, 5000);
+  //   };
+  //   refetchTillScanComplete();
+  //   return () => {
+  //     clearInterval(intervalId);
+  //   };
+  // }, []);
+
   useEffect(() => {
-    let intervalId: NodeJS.Timeout;
-    const refetchTillScanComplete = () => {
-      intervalId = setInterval(async () => {
-        await refetch().then((res) => {
-          if (res.data) {
-            setReportingStatus(res.data?.scan_report.reporting_status);
-          }
-        });
-      }, 5000);
-    };
-    refetchTillScanComplete();
-    return () => {
-      clearInterval(intervalId);
-    };
-  }, []);
+    if(scanData){
+      setReportingStatus(scanData.scan_report.reporting_status)
+    }
+  }, [scanData]);
 
   const handleTabsChange = (index: number) => {
     setTabIndex(index);
@@ -130,10 +136,19 @@ const BlockPage: React.FC = () => {
       scan_id: scanId,
     });
 
-    if (data.success) {
-      setInterval(async () => {
-        await refetch();
+    let intervalId: NodeJS.Timeout;
+    const refetchTillReportGenerates = () => {
+      intervalId = setInterval(async () => {
+        await refetch().then((res) => {
+          if(res.data?.scan_report.reporting_status === 'report_generated'){
+            clearInterval(intervalId);
+            setReportingStatus('report_generated')
+          } 
+        });
       }, 5000);
+    }
+    if (data.success) {
+      refetchTillReportGenerates()
     }
   };
 
@@ -665,6 +680,7 @@ const BlockPage: React.FC = () => {
                         scanDetails={
                           scanData.scan_report.multi_file_scan_details
                         }
+                        refetch={refetch}
                       />
                     ) : scanData.scan_report.scan_details &&
                       scanData.scan_report.scan_summary ? (
