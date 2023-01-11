@@ -134,7 +134,7 @@ export const VulnerabilityDistributionFilter: React.FC<{
       <Button
         flexDir={"column"}
         py={2}
-        mx={2}
+        mx={[0, 0, 0, 2]}
         height="fit-content"
         variant={vulnerability[0] ? "solid" : "outline"}
         onClick={() => {
