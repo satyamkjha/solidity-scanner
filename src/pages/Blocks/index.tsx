@@ -61,7 +61,6 @@ const Blocks: React.FC = () => {
         my: 4,
         minH: "78vh",
       }}
-      
       boxSizing={"border-box"}
     >
       <Flex

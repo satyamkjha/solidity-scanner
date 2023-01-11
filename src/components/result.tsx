@@ -438,7 +438,7 @@ export const MultifileResult: React.FC<{
   scanDetails: MultiFileScanDetail[];
   profileData: Profile;
   details_enabled: boolean;
-  refetch(): any
+  refetch(): any;
 }> = ({
   scanSummary,
   scanDetails,
@@ -446,7 +446,7 @@ export const MultifileResult: React.FC<{
   type,
   profileData,
   details_enabled,
-  refetch
+  refetch,
 }) => {
   const [files, setFiles] = useState<FilesState | null>(null);
 
@@ -658,7 +658,7 @@ export const MultifileResult: React.FC<{
                   if (newValue) {
                     // setAction(newValue.value)
                     updateBugStatus(newValue.value);
-                    refetch()
+                    refetch();
                   }
                 }}
               />
@@ -1097,68 +1097,67 @@ const CodeExplorer: React.FC<{
       }}
     >
       <Flex
-      sx={{
-        w: "100%",
-        justifyContent: "flex-start",
-        alignItems: "flex-start",
-        flexDir: "column",
-        h: "fit-content",
-        
-      }}
-    >
-      {file_content.map((item, index) => {
-        if (index + 1 > line_nos_end[count] && count <= line_nos_end.length)
-          count++;
+        sx={{
+          w: "100%",
+          justifyContent: "flex-start",
+          alignItems: "flex-start",
+          flexDir: "column",
+          h: "fit-content",
+        }}
+      >
+        {file_content.map((item, index) => {
+          if (index + 1 > line_nos_end[count] && count <= line_nos_end.length)
+            count++;
 
-        return (
-          <>
-            {index + 1 === line_nos_start[count] ? (
-              <HStack
-                as={"div"}
-                ref={elementRef}
-                align={"flex-start"}
-                spacing={5}
-              >
-                <Text color={"gray.600"} fontSize='13px' fontWeight="normal">
-                  {index + 1}
-                </Text>
-                <pre
-                  style={{
-                    fontSize: '13px',
-                    color:
-                      index + 1 <= line_nos_end[count] + 1 &&
-                      index + 1 >= line_nos_start[count]
-                        ? "#000000"
-                        : "#A0AEC0",
-                  }}
-                  key={index}
+          return (
+            <>
+              {index + 1 === line_nos_start[count] ? (
+                <HStack
+                  as={"div"}
+                  ref={elementRef}
+                  align={"flex-start"}
+                  spacing={5}
                 >
-                  {item}
-                </pre>
-              </HStack>
-            ) : (
-              <HStack as={"div"} align={"flex-start"} spacing={5}>
-                <Text color={"gray.600"} fontSize='13px' fontWeight="normal">
-                  {index + 1}
-                </Text>
-                <pre
-                  style={{
-                    fontSize: '13px',
-                    color:
-                      index + 1 <= line_nos_end[count] + 1 &&
-                      index + 1 >= line_nos_start[count]
-                        ? "#000000"
-                        : "#A0AEC0",
-                  }}
-                  key={index}
-                >
-                  {item}
-                </pre>
-              </HStack>
-            )}
-          </>
-        );
-      })}
+                  <Text color={"gray.600"} fontSize="13px" fontWeight="normal">
+                    {index + 1}
+                  </Text>
+                  <pre
+                    style={{
+                      fontSize: "13px",
+                      color:
+                        index + 1 <= line_nos_end[count] + 1 &&
+                        index + 1 >= line_nos_start[count]
+                          ? "#000000"
+                          : "#A0AEC0",
+                    }}
+                    key={index}
+                  >
+                    {item}
+                  </pre>
+                </HStack>
+              ) : (
+                <HStack as={"div"} align={"flex-start"} spacing={5}>
+                  <Text color={"gray.600"} fontSize="13px" fontWeight="normal">
+                    {index + 1}
+                  </Text>
+                  <pre
+                    style={{
+                      fontSize: "13px",
+                      color:
+                        index + 1 <= line_nos_end[count] + 1 &&
+                        index + 1 >= line_nos_start[count]
+                          ? "#000000"
+                          : "#A0AEC0",
+                    }}
+                    key={index}
+                  >
+                    {item}
+                  </pre>
+                </HStack>
+              )}
+            </>
+          );
+        })}
       </Flex>
     </Flex>
   );
@@ -1264,7 +1263,7 @@ const MultiFileExplorer: React.FC<MultiFileExplorerProps> = ({
               </Flex>
               <TabPanels>
                 {files.findings.map((file, index) => (
-                  <TabPanel  key={index} px={2} pt={2} pb={0} >
+                  <TabPanel key={index} px={2} pt={2} pb={0}>
                     <FileDataContTest
                       type={type}
                       file={{

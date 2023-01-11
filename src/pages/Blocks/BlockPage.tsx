@@ -119,8 +119,8 @@ const BlockPage: React.FC = () => {
   // }, []);
 
   useEffect(() => {
-    if(scanData){
-      setReportingStatus(scanData.scan_report.reporting_status)
+    if (scanData) {
+      setReportingStatus(scanData.scan_report.reporting_status);
     }
   }, [scanData]);
 
@@ -140,15 +140,15 @@ const BlockPage: React.FC = () => {
     const refetchTillReportGenerates = () => {
       intervalId = setInterval(async () => {
         await refetch().then((res) => {
-          if(res.data?.scan_report.reporting_status === 'report_generated'){
+          if (res.data?.scan_report.reporting_status === "report_generated") {
             clearInterval(intervalId);
-            setReportingStatus('report_generated')
-          } 
+            setReportingStatus("report_generated");
+          }
         });
       }, 5000);
-    }
+    };
     if (data.success) {
-      refetchTillReportGenerates()
+      refetchTillReportGenerates();
     }
   };
 
