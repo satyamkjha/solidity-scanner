@@ -9,6 +9,22 @@ export const severityPriority: { [key: string]: number } = {
   informational: 6,
 };
 
+export const issueActions = [
+  {
+    value: "pending_fix",
+    icon: "",
+    label: "Please Select an action",
+    isDisabled: true,
+  },
+  { value: "wont_fix", icon: "wont_fix", label: "Won't Fix" },
+  {
+    value: "false_positive",
+    icon: "false_positive",
+    label: "False Positive",
+  },
+  { value: "pending_fix", icon: "pending_fix", label: "Reset Bug Status" },
+];
+
 export const dummyIssues = [
   {
     severity: "high",

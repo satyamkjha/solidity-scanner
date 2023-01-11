@@ -157,10 +157,14 @@ export const ProjectPage: React.FC = () => {
         data && (
           <>
             <Flex
-              sx={{ justifyContent: "space-between", alignItems: "center" }}
+              sx={{
+                alignItems: ["flex-start", "flex-start", "flex-start", "center"]
+              }}
+              direction={["column", "column", "column", "row"]}
             >
               <Text sx={{ fontSize: "xl", fontWeight: 600, ml: 2 }}>
                 {data.project_name}
+                </Text>
                 <Link
                   fontSize="14px"
                   ml={3}
@@ -170,13 +174,14 @@ export const ProjectPage: React.FC = () => {
                 >
                   {data.project_url}
                 </Link>
-              </Text>
 
               <Link
                 as={RouterLink}
                 to="/projects"
                 variant="subtle-without-underline"
                 fontSize="md"
+                ml="auto"
+                display={["none", "none", "none", "block"]}
               >
                 ← back
               </Link>
@@ -409,12 +414,12 @@ const ScanDetails: React.FC<{ scansRemaining: number; scans: ScanMeta[] }> = ({
               <Flex
                 sx={{
                   justifyContent: ["flex-start", "flex-start", "space-between"],
-                  alignItems: ["flex-start", "flex-start", "center"],
+                  alignItems: ["center"],
                   pb: 4,
                   px: 6,
                   borderBottom: "1px solid",
                   borderColor: "border",
-                  flexDir: ["column", "column", "row"],
+                  flexDir: ["column", "column", "column", "row"],
                 }}
               >
                 <HStack spacing={[8]} mb={[4, 4, 0]}>
@@ -446,9 +451,10 @@ const ScanDetails: React.FC<{ scansRemaining: number; scans: ScanMeta[] }> = ({
                     </Tooltip>
                   )}
                 </HStack>
-                <HStack
-                  spacing={8}
-                  alignSelf={["flex-end", "flex-end", "auto"]}
+                <Stack
+                  spacing={[4, 4, 4, 8]}
+                  direction={["column-reverse", "column-reverse", "column-reverse", "row"]}
+                  mt={[4, 4, 4, 0]}
                 >
                   {scanData.scan_report.reporting_status ===
                     "report_generated" &&
@@ -543,7 +549,7 @@ const ScanDetails: React.FC<{ scansRemaining: number; scans: ScanMeta[] }> = ({
                         : "Loading"}
                     </Button>
                   )}
-                </HStack>
+                </Stack>
               </Flex>
               {scanData.scan_report.scan_status === "scanning" ||
               scanData.scan_report.scan_status === "initialised" ? (
@@ -583,28 +589,61 @@ const ScanDetails: React.FC<{ scansRemaining: number; scans: ScanMeta[] }> = ({
                   onChange={handleTabsChange}
                   variant="soft-rounded"
                   colorScheme="green"
+                  w={"100%"}
                   isLazy
                 >
-                  <TabList
-                    sx={{
-                      borderBottomWidth: "1px",
-                      borderBottomStyle: "solid",
-                      borderColor: "border",
-                      p: 4,
-                    }}
+                  <Flex
+                    width={"100%"}
+                    overflow={["scroll", "scroll", "scroll", "visible"]}
+                    flexDir={"row"}
+                    justifyContent="flex-start"
+                    align={"center"}
+                    ml={[2, 2, 2, 5]}
                   >
-                    <Tab mx={2}>Overview</Tab>
-                    <Tab mx={2}>Detailed Result</Tab>
-                    <Tab mx={2}>Scan History</Tab>
-                    {profile.promo_code ? (
-                      profile.actions_supported &&
-                      profile.actions_supported.publishable_report && (
-                        <Tab mx={2}>Published Reports</Tab>
-                      )
-                    ) : (
-                      <Tab mx={2}>Published Reports</Tab>
-                    )}
-                  </TabList>
+                    <TabList
+                      sx={{
+                        borderBottomWidth: "1px",
+                        borderBottomStyle: "solid",
+                        borderColor: "border",
+                        p: 4,
+                      }}
+                    >
+                      <Tab
+                        minW={"150px"}
+                        bgColor={"#F5F5F5"}
+                      >
+                        Overview
+                      </Tab>
+                      <Tab
+                        minW={"150px"}
+                        bgColor={"#F5F5F5"}
+                        ml={4}
+                      >
+                        Detailed Result
+                      </Tab>
+                      <Tab
+                        minW={"150px"}
+                        bgColor={"#F5F5F5"}
+                        ml={4}
+                      >
+                        Scan History
+                      </Tab>
+                      {profile.promo_code ? (
+                        profile.actions_supported &&
+                        profile.actions_supported.publishable_report && (
+                          <Tab
+                          minW={"175px"}
+                          bgColor={"#F5F5F5"}
+                          mx={2}>Published Reports</Tab>
+                        )
+                      ) : (
+                        <Tab
+                          minW={"175px"}
+                          bgColor={"#F5F5F5"}
+                          mx={2}>Published Reports</Tab>
+                      )}
+                    </TabList>
+                  </Flex>
                   <TabPanels>
                     <TabPanel p={[0, 0, 0, 4]}>
                       {(scanData.scan_report.multi_file_scan_summary ||
@@ -616,7 +655,7 @@ const ScanDetails: React.FC<{ scansRemaining: number; scans: ScanMeta[] }> = ({
                         />
                       )}
                     </TabPanel>
-                    <TabPanel>
+                    <TabPanel p={[0, 0, 0, 4]}>
                       {scanData.scan_report.multi_file_scan_status ===
                         "scan_done" &&
                       scanData.scan_report.multi_file_scan_details &&
@@ -659,18 +698,18 @@ const ScanDetails: React.FC<{ scansRemaining: number; scans: ScanMeta[] }> = ({
                         </Flex>
                       )}
                     </TabPanel>
-                    <TabPanel>
+                    <TabPanel p={[0, 0, 0, 4]}>
                       <ScanHistory setTabIndex={setTabIndex} />
                     </TabPanel>
                     {profile.promo_code ? (
                       profile.actions_supported &&
                       profile.actions_supported.publishable_report && (
-                        <TabPanel>
+                        <TabPanel p={[0, 0, 0, 4]}>
                           <PublishedReports profile={profile} />
                         </TabPanel>
                       )
                     ) : (
-                      <TabPanel>
+                      <TabPanel p={[0, 0, 0, 4]}>
                         <PublishedReports profile={profile} />
                       </TabPanel>
                     )}
