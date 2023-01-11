@@ -99,22 +99,28 @@ const BlockPage: React.FC = () => {
   const [tabIndex, setTabIndex] = React.useState(0);
   const [isDesktopView] = useMediaQuery("(min-width: 1024px)");
 
+  // useEffect(() => {
+  //   let intervalId: NodeJS.Timeout;
+  //   const refetchTillScanComplete = () => {
+  //     intervalId = setInterval(async () => {
+  //       await refetch().then((res) => {
+  //         if (res.data) {
+  //           setReportingStatus(res.data?.scan_report.reporting_status);
+  //         }
+  //       });
+  //     }, 5000);
+  //   };
+  //   refetchTillScanComplete();
+  //   return () => {
+  //     clearInterval(intervalId);
+  //   };
+  // }, []);
+
   useEffect(() => {
-    let intervalId: NodeJS.Timeout;
-    const refetchTillScanComplete = () => {
-      intervalId = setInterval(async () => {
-        await refetch().then((res) => {
-          if (res.data) {
-            setReportingStatus(res.data?.scan_report.reporting_status);
+    if (scanData) {
+      setReportingStatus(scanData.scan_report.reporting_status)
     }
-        });
-      }, 5000);
-    };
-    refetchTillScanComplete();
-    return () => {
-      clearInterval(intervalId);
-    };
-  }, []);
+  }, [scanData]);
 
   const handleTabsChange = (index: number) => {
     setTabIndex(index);
@@ -128,10 +134,19 @@ const BlockPage: React.FC = () => {
       scan_id: scanId,
     });
 
-    if (data.success) {
-      setInterval(async () => {
-        await refetch();
+    let intervalId: NodeJS.Timeout;
+    const refetchTillReportGenerates = () => {
+      intervalId = setInterval(async () => {
+        await refetch().then((res) => {
+          if (res.data?.scan_report.reporting_status === 'report_generated') {
+            clearInterval(intervalId);
+            setReportingStatus('report_generated')
+          }
+        });
       }, 5000);
+    }
+    if (data.success) {
+      refetchTillReportGenerates()
     }
   };
 
@@ -265,58 +280,58 @@ const BlockPage: React.FC = () => {
               w="100%"
               sx={{ justifyContent: "space-between", alignItems: "center" }}
             >
-                <Accordion allowMultiple w="100%">
-                  <AccordionItem borderTopWidth={0} style={{borderBottomWidth: "0 !important"}}>
-                    {({ isExpanded }) => (
-                      <>
-                        <VStack align={"left"} spacing={0} w="100%">
-                          <HStack
-                            w="100%"
+              <Accordion allowMultiple w="100%">
+                <AccordionItem borderTopWidth={0} style={{ borderBottomWidth: "0 !important" }}>
+                  {({ isExpanded }) => (
+                    <>
+                      <VStack align={"left"} spacing={0} w="100%">
+                        <HStack
+                          w="100%"
+                          display={["flex", "flex", "flex", "none"]}
+                        >
+                          <Image
+                            src={`/blockscan/${scanData.scan_report.contract_platform}-scan.svg`}
+                            alt="Product screenshot"
+                            h={"20px"}
+                            w={"20px"}
+                          />
+                          <Text
+                            isTruncated
+                            width={"80%"}
+                            sx={{
+                              fontSize: "xl",
+                              fontWeight: 600,
+                              mx: 2,
+                              maxW: "250px",
+                            }}
+                          >
+                            {scanData.scan_report.contractname
+                              ? scanData.scan_report.contractname
+                              : scanData.scan_report.contract_address}
+                          </Text>
+                          <AccordionButton
+                            width={"fit-content"}
+                            borderRadius="48px"
                             display={["flex", "flex", "flex", "none"]}
                           >
-                            <Image
-                              src={`/blockscan/${scanData.scan_report.contract_platform}-scan.svg`}
-                              alt="Product screenshot"
-                              h={"20px"}
-                              w={"20px"}
-                            />
-                            <Text
-                              isTruncated
-                              width={"80%"}
-                              sx={{
-                                fontSize: "xl",
-                                fontWeight: 600,
-                                mx: 2,
-                                maxW: "250px",
-                              }}
-                            >
-                              {scanData.scan_report.contractname
-                                ? scanData.scan_report.contractname
-                                : scanData.scan_report.contract_address}
-                            </Text>
-                            <AccordionButton
-                              width={"fit-content"}
-                              borderRadius="48px"
-                              display={["flex", "flex", "flex", "none"]}
-                            >
-                              {isExpanded ? (
-                                <BiChevronUpCircle />
-                              ) : (
-                                <BiChevronDownCircle />
-                              )}
-                            </AccordionButton>
-                          </HStack>
-                          <Text sx={{ fontSize: "xl", fontWeight: 600, ml: 2 }}>
-                            <Text as="span" fontSize={["12px", "12px", "12px", "14px"]} ml={[0, 0, 0, 3]} color="gray.500">
-                              {scanData.scan_report?.contract_address}
-                            </Text>
+                            {isExpanded ? (
+                              <BiChevronUpCircle />
+                            ) : (
+                              <BiChevronDownCircle />
+                            )}
+                          </AccordionButton>
+                        </HStack>
+                        <Text sx={{ fontSize: "xl", fontWeight: 600, ml: 2 }}>
+                          <Text as="span" fontSize={["12px", "12px", "12px", "14px"]} ml={[0, 0, 0, 3]} color="gray.500">
+                            {scanData.scan_report?.contract_address}
                           </Text>
-                        </VStack>
-                        <ContractDetails scanData={scanData} />
-                      </>
-                    )}
-                  </AccordionItem>
-                </Accordion>
+                        </Text>
+                      </VStack>
+                      <ContractDetails scanData={scanData} />
+                    </>
+                  )}
+                </AccordionItem>
+              </Accordion>
               <Link
                 as={RouterLink}
                 to="/blocks"
@@ -385,21 +400,21 @@ const BlockPage: React.FC = () => {
                                 isDisabled={
                                   profile.actions_supported
                                     ? !profile.actions_supported
-                                        .publishable_report
+                                      .publishable_report
                                     : profile.current_package !== "expired" &&
-                                      !plans.monthly[profile.current_package]
-                                        .publishable_report
+                                    !plans.monthly[profile.current_package]
+                                      .publishable_report
                                 }
                                 onClick={() => setOpen(!open)}
                               >
                                 {(profile.actions_supported
                                   ? !profile.actions_supported
-                                      .publishable_report
+                                    .publishable_report
                                   : profile.current_package !== "expired" &&
-                                    !plans.monthly[profile.current_package]
-                                      .publishable_report) && (
-                                  <LockIcon color={"accent"} size="xs" mr={3} />
-                                )}
+                                  !plans.monthly[profile.current_package]
+                                    .publishable_report) && (
+                                    <LockIcon color={"accent"} size="xs" mr={3} />
+                                  )}
                                 Publish Report
                               </Button>
                             ) : (
@@ -437,8 +452,8 @@ const BlockPage: React.FC = () => {
                                 (profile.actions_supported
                                   ? !profile.actions_supported.generate_report
                                   : profile.current_package !== "expired" &&
-                                    !plans.monthly[profile.current_package]
-                                      .report)
+                                  !plans.monthly[profile.current_package]
+                                    .report)
                               }
                               onClick={() => {
                                 if (
@@ -473,24 +488,24 @@ const BlockPage: React.FC = () => {
                               {profile.actions_supported
                                 ? !profile.actions_supported.generate_report
                                 : profile.current_package !== "expired" &&
-                                  !plans.monthly[profile.current_package]
-                                    .report && (
-                                    <LockIcon
-                                      color={"accent"}
-                                      size="xs"
-                                      mr={3}
-                                    />
-                                  )}
+                                !plans.monthly[profile.current_package]
+                                  .report && (
+                                  <LockIcon
+                                    color={"accent"}
+                                    size="xs"
+                                    mr={3}
+                                  />
+                                )}
                               {reportingStatus === "generating_report"
                                 ? "Generating report..."
                                 : scanData.scan_report
-                                    .report_regeneration_enabled
-                                ? "Re-generate Report"
-                                : reportingStatus === "report_generated"
-                                ? "View Report"
-                                : reportingStatus === "not_generated"
-                                ? "Generate Report"
-                                : "Loading"}
+                                  .report_regeneration_enabled
+                                  ? "Re-generate Report"
+                                  : reportingStatus === "report_generated"
+                                    ? "View Report"
+                                    : reportingStatus === "not_generated"
+                                      ? "Generate Report"
+                                      : "Loading"}
                             </Button>
                           )}
                           <AccordionButton
@@ -586,6 +601,7 @@ const BlockPage: React.FC = () => {
                           scanDetails={
                             scanData.scan_report.multi_file_scan_details
                           }
+                          refetch={refetch}
                         />
                       ) : scanData.scan_report.scan_details &&
                         scanData.scan_report.scan_summary ? (

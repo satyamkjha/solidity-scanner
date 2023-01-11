@@ -108,33 +108,33 @@ export const ProjectPage: React.FC = () => {
   const { projectId } = useParams<{ projectId: string }>();
   const { data, isLoading, refetch } = useScans(projectId);
 
-  useEffect(() => {
-    let intervalId: NodeJS.Timeout;
-    const refetchTillScanComplete = () => {
-      if (
-        data &&
-        data.scans.some(
-          ({ reporting_status }) => reporting_status === "generating_report"
-        )
-      ) {
-        intervalId = setInterval(async () => {
-          await refetch();
-          if (
-            data &&
-            data.scans.some(
-              ({ reporting_status }) => reporting_status !== "generating_report"
-            )
-          ) {
-            clearInterval(intervalId);
-          }
-        }, 10000);
-      }
-    };
-    refetchTillScanComplete();
-    return () => {
-      clearInterval(intervalId);
-    };
-  }, [data, refetch]);
+  // useEffect(() => {
+  //   let intervalId: NodeJS.Timeout;
+  //   const refetchTillScanComplete = () => {
+  //     if (
+  //       data &&
+  //       data.scans.some(
+  //         ({ reporting_status }) => reporting_status === "generating_report"
+  //       )
+  //     ) {
+  //       intervalId = setInterval(async () => {
+  //         await refetch();
+  //         if (
+  //           data &&
+  //           data.scans.some(
+  //             ({ reporting_status }) => reporting_status !== "generating_report"
+  //           )
+  //         ) {
+  //           clearInterval(intervalId);
+  //         }
+  //       }, 10000);
+  //     }
+  //   };
+  //   refetchTillScanComplete();
+  //   return () => {
+  //     clearInterval(intervalId);
+  //   };
+  // }, [data, refetch]);
 
   return (
     <Box
@@ -164,16 +164,16 @@ export const ProjectPage: React.FC = () => {
             >
               <Text sx={{ fontSize: "xl", fontWeight: 600, ml: 2 }}>
                 {data.project_name}
-                </Text>
-                <Link
-                  fontSize="14px"
-                  ml={3}
-                  variant="subtle"
-                  target="_blank"
-                  href={data.project_url}
-                >
-                  {data.project_url}
-                </Link>
+              </Text>
+              <Link
+                fontSize="14px"
+                ml={3}
+                variant="subtle"
+                target="_blank"
+                href={data.project_url}
+              >
+                {data.project_url}
+              </Link>
 
               <Link
                 as={RouterLink}
@@ -228,21 +228,10 @@ const ScanDetails: React.FC<{ scansRemaining: number; scans: ScanMeta[] }> = ({
   const [open, setOpen] = useState(false);
 
   useEffect(() => {
-    let intervalId: NodeJS.Timeout;
-    const refetchTillScanComplete = () => {
-      intervalId = setInterval(async () => {
-        await refetch().then((res) => {
-          if (res.data) {
-            setReportingStatus(res.data?.scan_report.reporting_status);
-          }
-        });
-      }, 5000);
-    };
-    refetchTillScanComplete();
-    return () => {
-      clearInterval(intervalId);
-    };
-  }, []);
+    if (scanData) {
+      setReportingStatus(scanData.scan_report.reporting_status)
+    }
+  }, [scanData]);
 
   const onClose = () => setIsOpen(false);
 
@@ -252,10 +241,19 @@ const ScanDetails: React.FC<{ scansRemaining: number; scans: ScanMeta[] }> = ({
       project_id: projectId,
       scan_id: scanId,
     });
-    if (data.success) {
-      setInterval(async () => {
-        await refetch();
+    let intervalId: NodeJS.Timeout;
+    const refetchTillReportGenerates = () => {
+      intervalId = setInterval(async () => {
+        await refetch().then((res) => {
+          if (res.data?.scan_report.reporting_status === 'report_generated') {
+            clearInterval(intervalId);
+            setReportingStatus('report_generated')
+          }
+        });
       }, 5000);
+    }
+    if (data.success) {
+      refetchTillReportGenerates()
     }
   };
 
@@ -435,7 +433,7 @@ const ScanDetails: React.FC<{ scansRemaining: number; scans: ScanMeta[] }> = ({
                         _hover={{
                           opacity:
                             scansRemaining === 0 ||
-                            scanData.scan_report.scan_status === "scanning"
+                              scanData.scan_report.scan_status === "scanning"
                               ? 0.4
                               : 0.9,
                         }}
@@ -461,23 +459,24 @@ const ScanDetails: React.FC<{ scansRemaining: number; scans: ScanMeta[] }> = ({
                     publishStatus !== "" &&
                     (publishStatus === "Not-Published" ? (
                       <Button
-                        variant="accent-ghost"
+                        variant={"accent-outline"}
+                        bg={"white"}
                         isDisabled={
                           profile.actions_supported
                             ? !profile.actions_supported.publishable_report
                             : profile.current_package !== "expired" &&
-                              !plans.monthly[profile.current_package]
-                                .publishable_report
+                            !plans.monthly[profile.current_package]
+                              .publishable_report
                         }
                         onClick={() => setOpen(!open)}
                       >
                         {profile.actions_supported
                           ? !profile.actions_supported.publishable_report
                           : profile.current_package !== "expired" &&
-                            !plans.monthly[profile.current_package]
-                              .publishable_report && (
-                              <LockIcon color={"accent"} size="xs" mr={3} />
-                            )}
+                          !plans.monthly[profile.current_package]
+                            .publishable_report && (
+                            <LockIcon color={"accent"} size="xs" mr={3} />
+                          )}
                         Publish Report
                       </Button>
                     ) : (
@@ -506,7 +505,7 @@ const ScanDetails: React.FC<{ scansRemaining: number; scans: ScanMeta[] }> = ({
                         (profile.actions_supported
                           ? !profile.actions_supported.generate_report
                           : profile.current_package !== "expired" &&
-                            !plans.monthly[profile.current_package].report)
+                          !plans.monthly[profile.current_package].report)
                       }
                       onClick={() => {
                         if (
@@ -535,24 +534,24 @@ const ScanDetails: React.FC<{ scansRemaining: number; scans: ScanMeta[] }> = ({
                       {profile.actions_supported
                         ? !profile.actions_supported.generate_report
                         : profile.current_package !== "expired" &&
-                          !plans.monthly[profile.current_package].report && (
-                            <LockIcon color={"accent"} size="xs" mr={3} />
-                          )}
+                        !plans.monthly[profile.current_package].report && (
+                          <LockIcon color={"accent"} size="xs" mr={3} />
+                        )}
                       {reportingStatus === "generating_report"
                         ? "Generating report..."
                         : scanData.scan_report.report_regeneration_enabled
-                        ? "Re-generate Report"
-                        : reportingStatus === "report_generated"
-                        ? "View Report"
-                        : reportingStatus === "not_generated"
-                        ? "Generate Report"
-                        : "Loading"}
+                          ? "Re-generate Report"
+                          : reportingStatus === "report_generated"
+                            ? "View Report"
+                            : reportingStatus === "not_generated"
+                              ? "Generate Report"
+                              : "Loading"}
                     </Button>
                   )}
                 </Stack>
               </Flex>
               {scanData.scan_report.scan_status === "scanning" ||
-              scanData.scan_report.scan_status === "initialised" ? (
+                scanData.scan_report.scan_status === "initialised" ? (
                 <Flex
                   w="100%"
                   h="60vh"
@@ -632,9 +631,9 @@ const ScanDetails: React.FC<{ scansRemaining: number; scans: ScanMeta[] }> = ({
                         profile.actions_supported &&
                         profile.actions_supported.publishable_report && (
                           <Tab
-                          minW={"175px"}
-                          bgColor={"#F5F5F5"}
-                          mx={2}>Published Reports</Tab>
+                            minW={"175px"}
+                            bgColor={"#F5F5F5"}
+                            mx={2}>Published Reports</Tab>
                         )
                       ) : (
                         <Tab
@@ -648,18 +647,18 @@ const ScanDetails: React.FC<{ scansRemaining: number; scans: ScanMeta[] }> = ({
                     <TabPanel p={[0, 0, 0, 4]}>
                       {(scanData.scan_report.multi_file_scan_summary ||
                         scanData.scan_report.scan_summary) && (
-                        <Overview
-                          scansRemaining={scansRemaining}
-                          scanData={scanData.scan_report}
-                          onTabChange={handleTabsChange}
-                        />
-                      )}
+                          <Overview
+                            scansRemaining={scansRemaining}
+                            scanData={scanData.scan_report}
+                            onTabChange={handleTabsChange}
+                          />
+                        )}
                     </TabPanel>
                     <TabPanel p={[0, 0, 0, 4]}>
                       {scanData.scan_report.multi_file_scan_status ===
                         "scan_done" &&
-                      scanData.scan_report.multi_file_scan_details &&
-                      scanData.scan_report.multi_file_scan_summary ? (
+                        scanData.scan_report.multi_file_scan_details &&
+                        scanData.scan_report.multi_file_scan_summary ? (
                         <MultifileResult
                           type="project"
                           details_enabled={scanData.scan_report.details_enabled}
@@ -671,6 +670,7 @@ const ScanDetails: React.FC<{ scansRemaining: number; scans: ScanMeta[] }> = ({
                           scanDetails={
                             scanData.scan_report.multi_file_scan_details
                           }
+                          refetch={refetch}
                         />
                       ) : scanData.scan_report.scan_details &&
                         scanData.scan_report.scan_summary ? (
@@ -895,14 +895,12 @@ const ScanDetails: React.FC<{ scansRemaining: number; scans: ScanMeta[] }> = ({
                         borderRadius={"16px"}
                       >
                         <FaGithub />
-
                         <Text isTruncated fontSize="md" fontWeight={"600"}>
                           {commitHash}
                         </Text>
                       </HStack>
                     </Stack>
                   )}
-
                   <Stack
                     direction={["column", "column", "column", "row"]}
                     alignItems={["left", "left", "left", "center"]}
@@ -931,13 +929,11 @@ const ScanDetails: React.FC<{ scansRemaining: number; scans: ScanMeta[] }> = ({
                       borderRadius={"16px"}
                     >
                       <FaCalendarAlt />
-
                       <Text fontSize="md" fontWeight={"600"}>
                         {lastTimeUpdate}
                       </Text>
                     </HStack>
                   </Stack>
-
                   <Stack
                     direction={["column", "column", "column", "row"]}
                     alignItems={["left", "left", "left", "center"]}
@@ -966,7 +962,6 @@ const ScanDetails: React.FC<{ scansRemaining: number; scans: ScanMeta[] }> = ({
                       borderRadius={"16px"}
                     >
                       <FaRegCalendarCheck />
-
                       <Text fontSize="md" fontWeight={"600"}>
                         {datePublished}
                       </Text>
@@ -1324,23 +1319,22 @@ const ScanBlock: React.FC<{
   setTabIndex: React.Dispatch<React.SetStateAction<number>>;
   profile: Profile;
 }> = ({ scan, setTabIndex, profile }) => {
-  const [isDownloadLoading, setDownloadLoading] = useState(false);
   const history = useHistory();
   const { projectId, scanId } =
     useParams<{ projectId: string; scanId: string }>();
   const { data } = useScan(scanId);
   return (
     <Flex
-      alignItems="center"
+      alignItems="flex-start"
       justifyContent="space-between"
+      flexDir={'row'}
       sx={{
         cursor: "pointer",
         w: "100%",
         bg: "white",
         my: 4,
-        p: 4,
-        px: 10,
-        borderRadius: "5px",
+        px: [5, 5, 7, 10],
+        borderRadius: "10px",
         transition: "0.3s box-shadow",
         boxShadow: "0px 4px 20px rgba(0, 0, 0, 0.05)",
         _hover: {
@@ -1352,50 +1346,40 @@ const ScanBlock: React.FC<{
         history.push(`/projects/${projectId}/${scan.scan_id}`);
       }}
     >
-      <Flex alignItems="center">
-        <Box
-          sx={{
-            width: "60px",
-            height: "60px",
-            p: 2,
-            bg: "#F7F7F7",
-            color: "#4E5D78",
-            borderRadius: "50%",
-            textAlign: "center",
-          }}
-        >
-          <Text fontSize="xl" fontWeight="600">
-            {new Date(scan.scan_time).getDate()}
-          </Text>
-          <Text fontSize="12px" mt="-4px">
-            {monthNames[new Date(scan.scan_time).getMonth()]}
-          </Text>
-        </Box>
-        <Text fontSize="xl" mx={16}>
+      <Flex width={'calc(100% - 60px)'} justifyContent="flex-start" flexWrap={'wrap'} alignItems={'flex-start'} flexDir='row'>
+
+        <Text mr={10} textAlign={'left'} mt={5} fontSize="xl">
           {scan.scan_name}
         </Text>
         {scan.scan_status === "scan_incomplete" ? (
           <Flex
             p={3}
             sx={{ bgColor: "high-subtle", borderRadius: "20px" }}
-            ml={3}
+            mt={5}
+            mr={10}
           >
             <ScanErrorIcon size={28} />
           </Flex>
         ) : (
-          <Score score={scan.scan_score} />
+          <Box
+            mr={10}
+            mt={5}
+          >
+            <Score score={scan.scan_score} />
+          </Box>
         )}
-      </Flex>
-      {scan.scan_status === "scan_done" && (
+
         <Button
           variant="accent-outline"
+          minW='200px'
+          mr={10}
+          my={5}
           isDisabled={
             scan.reporting_status !== "report_generated" ||
             (profile.actions_supported
               ? !profile.actions_supported.generate_report
               : profile.current_package === "trial")
           }
-          isLoading={isDownloadLoading}
           onClick={(e) => {
             e.stopPropagation();
             window.open(
@@ -1410,10 +1394,31 @@ const ScanBlock: React.FC<{
           {scan.reporting_status === "report_generated"
             ? "View Report"
             : scan.reporting_status === "generating_report"
-            ? "Generating Report"
-            : "Report Not Generated"}
+              ? "Generating Report"
+              : "Report Not Generated"}
         </Button>
-      )}
+
+
+
+      </Flex>
+      <Box
+        sx={{
+          width: "60px",
+          height: "60px",
+          my: 5,
+          bg: "#F7F7F7",
+          color: "#4E5D78",
+          borderRadius: "50%",
+          textAlign: "center",
+        }}
+      >
+        <Text fontSize="xl" fontWeight="600">
+          {new Date(scan.scan_time).getDate()}
+        </Text>
+        <Text fontSize="12px" mt="-4px">
+          {monthNames[new Date(scan.scan_time).getMonth()]}
+        </Text>
+      </Box>
     </Flex>
   );
 };
