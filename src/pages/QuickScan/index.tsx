@@ -309,16 +309,16 @@ const QuickScan: React.FC = () => {
 
   useEffect(() => {
     if (blockAddress) setAddress(blockAddress);
-    
+
     if (blockPlatform) {
       setPlatform(blockPlatform);
-      setChainList(contractChain[blockPlatform])
+      setChainList(contractChain[blockPlatform]);
     }
 
-    if(blockChain){
-      setChain(blockChain)
+    if (blockChain) {
+      setChain(blockChain);
     }
-    
+
     if (blockAddress && blockChain && blockPlatform) {
       setIsLoading(true);
       API.get(
@@ -336,8 +336,6 @@ const QuickScan: React.FC = () => {
       );
     }
   }, []);
-
-  
 
   const generateQuickScan = () => {
     if (platform === "") {
@@ -586,7 +584,8 @@ const QuickScan: React.FC = () => {
                     </CircularProgressLabel>
                   </CircularProgress>
                   <Text fontWeight={300} fontSize="sm" mt={5}>
-                    Your Solidity Score is {parseFloat(scanReport.multi_file_scan_summary.score) < 2.5
+                    Your Solidity Score is{" "}
+                    {parseFloat(scanReport.multi_file_scan_summary.score) < 2.5
                       ? " LOW"
                       : parseFloat(scanReport.multi_file_scan_summary.score) >=
                         4.5
@@ -1040,9 +1039,9 @@ const QuickScan: React.FC = () => {
                   px={[0, 0, 0, 5]}
                   py={5}
                   background={
-                    parseFloat(0.0) < 2.5
+                    parseFloat('0.0') < 2.5
                       ? "linear-gradient(96.27deg, #FFF3F0 0.75%, #FFE0D9 96.71%)"
-                      : parseFloat(0.0) >= 4.5
+                      : parseFloat('0.0') >= 4.5
                       ? "linear-gradient(96.27deg, #EFFFED 0.75%, #E6FFE2 96.71%)"
                       : "linear-gradient(96.27deg, #FFFAF2 0.75%, #FFF4E1 96.71%)"
                   }

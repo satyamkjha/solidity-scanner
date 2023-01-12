@@ -49,12 +49,14 @@ import {
   Image,
   useMediaQuery,
   Stack,
+  IconButton,
 } from "@chakra-ui/react";
 import {
   AiOutlineClockCircle,
   AiOutlineDownload,
   AiFillLock,
   AiOutlineProject,
+  AiOutlineLock,
 } from "react-icons/ai";
 import Overview from "components/overview";
 import Result, { MultifileResult } from "components/result";
@@ -83,6 +85,7 @@ import {
   FaCalendarAlt,
   FaCalendarCheck,
   FaCalendarDay,
+  FaCopy,
   FaEnvelope,
   FaFileCode,
   FaGithub,
@@ -98,11 +101,14 @@ import {
   CheckIcon,
   LockIcon,
   TimeIcon,
+  ViewIcon,
 } from "@chakra-ui/icons";
 import { profile } from "console";
 import { motion } from "framer-motion";
 import { Profiler } from "inspector";
-import { pricingDetails as plans } from "common/values";
+import { monthNames, pricingDetails as plans } from "common/values";
+import { MdPeopleOutline } from "react-icons/md";
+import PublishedReports from "components/publishedReports";
 
 export const ProjectPage: React.FC = () => {
   const { projectId } = useParams<{ projectId: string }>();
@@ -251,9 +257,9 @@ const ScanDetails: React.FC<{ scansRemaining: number; scans: ScanMeta[] }> = ({
           }
         });
       }, 5000);
-    }
+    };
     if (data.success) {
-      refetchTillReportGenerates()
+      refetchTillReportGenerates();
     }
   };
 
@@ -705,12 +711,12 @@ const ScanDetails: React.FC<{ scansRemaining: number; scans: ScanMeta[] }> = ({
                       profile.actions_supported &&
                       profile.actions_supported.publishable_report && (
                         <TabPanel p={[0, 0, 0, 4]}>
-                          <PublishedReports profile={profile} />
+                          <PublishedReports type='project' scan_report={scanData.scan_report} profile={profile} />
                         </TabPanel>
                       )
                     ) : (
                       <TabPanel p={[0, 0, 0, 4]}>
-                        <PublishedReports profile={profile} />
+                        <PublishedReports type='project' scan_report={scanData.scan_report} profile={profile} />
                       </TabPanel>
                     )}
                   </TabPanels>
@@ -1279,40 +1285,9 @@ const ScanHistory: React.FC<{
   );
 };
 
-const PublishedReports: React.FC<{ profile: Profile }> = ({ profile }) => {
-  const { projectId } = useParams<{ projectId: string }>();
-  const { data } = useReports("project", projectId);
 
-  return (
-    <Box
-      sx={{
-        w: "100%",
-        borderRadius: "20px",
-        p: 4,
-      }}
-    >
-      {data &&
-        data?.reports.map((report) => (
-          <ReportBlock profile={profile} report={report} />
-        ))}
-    </Box>
-  );
-};
 
-const monthNames = [
-  "Jan",
-  "Feb",
-  "Mar",
-  "Apr",
-  "May",
-  "Jun",
-  "Jul",
-  "Aug",
-  "Sep",
-  "Oct",
-  "Nov",
-  "Dec",
-];
+
 
 const ScanBlock: React.FC<{
   scan: ScanMeta;
@@ -1327,7 +1302,7 @@ const ScanBlock: React.FC<{
     <Flex
       alignItems="flex-start"
       justifyContent="space-between"
-      flexDir={'row'}
+      flexDir={"row"}
       sx={{
         cursor: "pointer",
         w: "100%",
@@ -1346,9 +1321,14 @@ const ScanBlock: React.FC<{
         history.push(`/projects/${projectId}/${scan.scan_id}`);
       }}
     >
-      <Flex width={'calc(100% - 60px)'} justifyContent="flex-start" flexWrap={'wrap'} alignItems={'flex-start'} flexDir='row'>
-
-        <Text mr={10} textAlign={'left'} mt={5} fontSize="xl">
+      <Flex
+        width={"calc(100% - 60px)"}
+        justifyContent="flex-start"
+        flexWrap={"wrap"}
+        alignItems={"flex-start"}
+        flexDir="row"
+      >
+        <Text mr={10} textAlign={"left"} mt={5} fontSize="xl">
           {scan.scan_name}
         </Text>
         {scan.scan_status === "scan_incomplete" ? (
@@ -1361,17 +1341,14 @@ const ScanBlock: React.FC<{
             <ScanErrorIcon size={28} />
           </Flex>
         ) : (
-          <Box
-            mr={10}
-            mt={5}
-          >
+          <Box mr={10} mt={5}>
             <Score score={scan.scan_score} />
           </Box>
         )}
 
         <Button
           variant="accent-outline"
-          minW='200px'
+          minW="200px"
           mr={10}
           my={5}
           isDisabled={
@@ -1397,9 +1374,6 @@ const ScanBlock: React.FC<{
               ? "Generating Report"
               : "Report Not Generated"}
         </Button>
-
-
-
       </Flex>
       <Box
         sx={{
@@ -1423,124 +1397,7 @@ const ScanBlock: React.FC<{
   );
 };
 
-const ReportBlock: React.FC<{ report: ReportsListItem; profile: Profile }> = ({
-  report,
-  profile,
-}) => {
-  const [isDownloadLoading, setDownloadLoading] = useState(false);
-  const history = useHistory();
 
-  const toast = useToast();
-
-  return (
-    <Flex
-      alignItems="center"
-      justifyContent="space-between"
-      sx={{
-        cursor: "pointer",
-        w: "100%",
-        bg: "white",
-        my: 4,
-        p: 2,
-        px: 10,
-        borderRadius: "10px",
-        transition: "0.3s box-shadow",
-        boxShadow: "0px 4px 20px rgba(0, 0, 0, 0.05)",
-        _hover: {
-          boxShadow: "0px 4px 20px rgba(0, 0, 0, 0.2)",
-        },
-      }}
-    >
-      <Flex alignItems="center">
-        <Box
-          sx={{
-            width: "60px",
-            height: "60px",
-            p: 2,
-            bg: "#F7F7F7",
-            color: "#4E5D78",
-            borderRadius: "50%",
-            textAlign: "center",
-          }}
-        >
-          <Text fontSize="xl" fontWeight="600">
-            {report.date_published.slice(0, 2)}
-          </Text>
-          <Text fontSize="12px" mt="-4px">
-            {report.date_published.slice(3, 6)}
-          </Text>
-        </Box>
-
-        <Badge
-          fontSize="sm"
-          ml={5}
-          p={2}
-          borderRadius={10}
-          colorScheme={report.is_approved ? "green" : "red"}
-        >
-          {report.is_approved ? "Approved" : "Waiting for Approval"}
-        </Badge>
-      </Flex>
-      <Flex alignItems="center">
-        <Button
-          variant="accent-outline"
-          isLoading={isDownloadLoading}
-          disabled={!report.is_approved}
-          onClick={(e) => {
-            e.stopPropagation();
-            console.log("asdkbkalsd");
-            navigator.clipboard
-              .writeText(
-                `http://${document.location.host}/published-report/project/${report.report_id}`
-              )
-              .then(
-                () =>
-                  toast({
-                    title: "Copied Report URL",
-                    description: "",
-                    status: "success",
-                    duration: 1000,
-                    isClosable: true,
-                  }),
-                () =>
-                  toast({
-                    title: "Could not Copy Report URL",
-                    description: "",
-                    status: "error",
-                    duration: 3000,
-                    isClosable: true,
-                  })
-              );
-          }}
-        >
-          <FaRegCopy style={{ marginRight: "1rem" }} />
-          Copy Report URL
-        </Button>
-        <Button
-          variant="accent-outline"
-          ml={5}
-          isLoading={isDownloadLoading}
-          onClick={(e) => {
-            e.stopPropagation();
-            if (report.is_approved) {
-              window.open(
-                `http://${document.location.host}/published-report/project/${report.report_id}`,
-                "_blank"
-              );
-            } else {
-              window.open(
-                `http://${document.location.host}/report/project/${report.project_id}/${report.report_id}`,
-                "_blank"
-              );
-            }
-          }}
-        >
-          View Report
-        </Button>
-      </Flex>
-    </Flex>
-  );
-};
 
 const IncompleteScan: React.FC<{ message: string; scansRemaining: number }> = ({
   message,

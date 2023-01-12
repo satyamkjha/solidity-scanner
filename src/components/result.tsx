@@ -424,7 +424,7 @@ export const MultifileResult: React.FC<{
   scanDetails: MultiFileScanDetail[];
   profileData: Profile;
   details_enabled: boolean;
-  refetch(): any
+  refetch(): any;
 }> = ({
   scanSummary,
   scanDetails,
@@ -432,7 +432,7 @@ export const MultifileResult: React.FC<{
   type,
   profileData,
   details_enabled,
-  refetch
+  refetch,
 }) => {
     const [files, setFiles] = useState<FilesState | null>(null);
 
@@ -1230,7 +1230,7 @@ export const MultiFileExplorer: React.FC<MultiFileExplorerProps> = ({
               </Flex>
               <TabPanels>
                 {files.findings.map((file, index) => (
-                  <TabPanel key={index} px={2} pt={2} pb={0} >
+                  <TabPanel key={index} px={2} pt={2} pb={0}>
                     <FileDataContTest
                       type={type}
                       file={{
