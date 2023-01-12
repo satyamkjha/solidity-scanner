@@ -94,8 +94,6 @@ import {
   FaRegCalendarCheck,
   FaRegCopy,
 } from "react-icons/fa";
-import { useReport } from "hooks/useReport";
-import { useReports } from "hooks/useReports";
 import {
   CheckCircleIcon,
   CheckIcon,
@@ -113,34 +111,6 @@ import PublishedReports from "components/publishedReports";
 export const ProjectPage: React.FC = () => {
   const { projectId } = useParams<{ projectId: string }>();
   const { data, isLoading, refetch } = useScans(projectId);
-
-  // useEffect(() => {
-  //   let intervalId: NodeJS.Timeout;
-  //   const refetchTillScanComplete = () => {
-  //     if (
-  //       data &&
-  //       data.scans.some(
-  //         ({ reporting_status }) => reporting_status === "generating_report"
-  //       )
-  //     ) {
-  //       intervalId = setInterval(async () => {
-  //         await refetch();
-  //         if (
-  //           data &&
-  //           data.scans.some(
-  //             ({ reporting_status }) => reporting_status !== "generating_report"
-  //           )
-  //         ) {
-  //           clearInterval(intervalId);
-  //         }
-  //       }, 10000);
-  //     }
-  //   };
-  //   refetchTillScanComplete();
-  //   return () => {
-  //     clearInterval(intervalId);
-  //   };
-  // }, [data, refetch]);
 
   return (
     <Box
@@ -705,7 +675,7 @@ const ScanDetails: React.FC<{ scansRemaining: number; scans: ScanMeta[] }> = ({
                       )}
                     </TabPanel>
                     <TabPanel p={[0, 0, 0, 4]}>
-                      <ScanHistory setTabIndex={setTabIndex} />
+                      <ScanHistory profile={profile} scans={scans} setTabIndex={setTabIndex} />
                     </TabPanel>
                     {profile.promo_code ? (
                       profile.actions_supported &&
@@ -1255,13 +1225,10 @@ interface Props {
 
 const ScanHistory: React.FC<{
   setTabIndex: React.Dispatch<React.SetStateAction<number>>;
-}> = ({ setTabIndex }) => {
-  const { data: profile } = useProfile();
+  profile: Profile
+  scans: ScanMeta[]
+}> = ({ setTabIndex, profile, scans }) => {
 
-  const { projectId } = useParams<{ projectId: string }>();
-  const { data } = useScans(projectId);
-
-  const scans = data?.scans;
 
   return (
     <Box

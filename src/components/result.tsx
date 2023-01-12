@@ -136,7 +136,7 @@ export const Result: React.FC<{
               <TrialWall />
             ) : file ? (
               <>
-                <FileDetails file={file} type={type} />
+                <FileDetails file={file} type={type} profileData={profileData} />
               </>
             ) : (
               <Flex
@@ -279,8 +279,8 @@ const Issues: React.FC<IssuesProps> = ({ issues, file, setFile }) => {
   );
 };
 
-type FileDetailsProps = { file: FileState; type: "project" | "block" };
-const FileDetails: React.FC<FileDetailsProps> = ({ file, type }) => {
+type FileDetailsProps = { file: FileState; type: "project" | "block"; profileData: Profile };
+const FileDetails: React.FC<FileDetailsProps> = ({ file, type, profileData }) => {
   const { scanId: scan_id } = useParams<{ scanId: string }>();
   const toast = useToast();
   const { file_path, issue_id, line_nos_end, line_nos_start } = file;
@@ -292,7 +292,6 @@ const FileDetails: React.FC<FileDetailsProps> = ({ file, type }) => {
       integration_service: "github",
     })
   );
-  const { data: profileData } = useProfile();
   let highlightArray: string[] = [];
   line_nos_start.map((number, index) => {
     if (number.toString().length === line_nos_end[index].toString().length) {
@@ -357,7 +356,7 @@ const FileDetails: React.FC<FileDetailsProps> = ({ file, type }) => {
             {file_path}
           </Text>
         </Flex>
-        {isLoading && !profileData && (
+        {isLoading && (
           <Flex
             sx={{
               w: "100%",
