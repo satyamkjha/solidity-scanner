@@ -66,8 +66,9 @@ import API from "helpers/api";
 import { Report, ReportsListItem, Scan } from "common/types";
 import { useReports } from "hooks/useReports";
 import { ScanErrorIcon } from "components/icons";
-import { pricingDetails as plans } from "common/values";
+import { monthNames, pricingDetails as plans } from "common/values";
 import ContractDetails from "components/contractDetails";
+import PublishedReports from "components/publishedReports";
 
 const BlockPage: React.FC = () => {
   const { scanId } = useParams<{ scanId: string }>();
@@ -632,13 +633,13 @@ const BlockPage: React.FC = () => {
                     {profile.promo_code ? (
                       profile.actions_supported &&
                       profile.actions_supported.publishable_report && (
-                        <TabPanel>
-                          <PublishedReports scan_report={scanData.scan_report} />
+                        <TabPanel p={4} >
+                          <PublishedReports type='block'  profile={profile} scan_report={scanData.scan_report} />
                         </TabPanel>
                       )
                     ) : (
-                      <TabPanel>
-                        <PublishedReports scan_report={scanData.scan_report} />
+                      <TabPanel p={4} >
+                        <PublishedReports type='block' profile={profile} scan_report={scanData.scan_report} />
                       </TabPanel>
                     )}
                   </TabPanels>
@@ -1196,149 +1197,3 @@ const BlockPage: React.FC = () => {
 
 export default BlockPage;
 
-const PublishedReports: React.FC<{ scan_report: Scan }> = ({ scan_report }) => {
-  const { data } = useReports("block", scan_report.project_id);
-
-  return (
-    <Box
-      sx={{
-        w: "100%",
-        borderRadius: "20px",
-        p: 4,
-      }}
-    >
-      {data && data?.reports.map((report) => <ReportBlock report={report} />)}
-    </Box>
-  );
-};
-
-const monthNames = [
-  "Jan",
-  "Feb",
-  "Mar",
-  "Apr",
-  "May",
-  "Jun",
-  "Jul",
-  "Aug",
-  "Sep",
-  "Oct",
-  "Nov",
-  "Dec",
-];
-
-const ReportBlock: React.FC<{ report: ReportsListItem }> = ({ report }) => {
-  const [isDownloadLoading, setDownloadLoading] = useState(false);
-  const history = useHistory();
-
-  const toast = useToast();
-
-  return (
-    <Flex
-      alignItems="center"
-      justifyContent="space-between"
-      sx={{
-        cursor: "pointer",
-        w: "100%",
-        bg: "white",
-        my: 4,
-        p: 2,
-        px: 10,
-        borderRadius: "10px",
-        transition: "0.3s box-shadow",
-        boxShadow: "0px 4px 20px rgba(0, 0, 0, 0.05)",
-        _hover: {
-          boxShadow: "0px 4px 20px rgba(0, 0, 0, 0.2)",
-        },
-      }}
-    >
-      <Flex alignItems="center">
-        <Box
-          sx={{
-            width: "60px",
-            height: "60px",
-            p: 2,
-            bg: "#F7F7F7",
-            color: "#4E5D78",
-            borderRadius: "50%",
-            textAlign: "center",
-          }}
-        >
-          <Text fontSize="xl" fontWeight="600">
-            {report.date_published.slice(0, 2)}
-          </Text>
-          <Text fontSize="12px" mt="-4px">
-            {report.date_published.slice(3, 6)}
-          </Text>
-        </Box>
-
-        <Badge
-          fontSize="sm"
-          ml={5}
-          p={2}
-          borderRadius={10}
-          colorScheme={report.is_approved ? "green" : "red"}
-        >
-          {report.is_approved ? "Approved" : "Waiting for Approval"}
-        </Badge>
-      </Flex>
-      <Flex alignItems="center">
-        <Button
-          variant="accent-outline"
-          isLoading={isDownloadLoading}
-          disabled={!report.is_approved}
-          onClick={(e) => {
-            e.stopPropagation();
-            console.log("asdkbkalsd");
-            navigator.clipboard
-              .writeText(
-                `http://${document.location.host}/published-report/block/${report.report_id}`
-              )
-              .then(
-                () =>
-                  toast({
-                    title: "Copied Report URL",
-                    description: "",
-                    status: "success",
-                    duration: 1000,
-                    isClosable: true,
-                  }),
-                () =>
-                  toast({
-                    title: "Could not Copy Report URL",
-                    description: "",
-                    status: "error",
-                    duration: 3000,
-                    isClosable: true,
-                  })
-              );
-          }}
-        >
-          <FaRegCopy style={{ marginRight: "1rem" }} />
-          Copy Report URL
-        </Button>
-        <Button
-          variant="accent-outline"
-          ml={5}
-          isLoading={isDownloadLoading}
-          onClick={(e) => {
-            e.stopPropagation();
-            if (report.is_approved) {
-              window.open(
-                `http://${document.location.host}/published-report/block/${report.report_id}`,
-                "_blank"
-              );
-            } else {
-              window.open(
-                `http://${document.location.host}/report/block/${report.project_id}/${report.report_id}`,
-                "_blank"
-              );
-            }
-          }}
-        >
-          View Report
-        </Button>
-      </Flex>
-    </Flex>
-  );
-};

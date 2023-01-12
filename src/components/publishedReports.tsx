@@ -1,6 +1,6 @@
 import { CheckCircleIcon, TimeIcon, ViewIcon } from "@chakra-ui/icons";
 import { useToast, Flex, Box, HStack, IconButton, Text } from "@chakra-ui/react";
-import { ReportsListItem, Profile } from "common/types";
+import { ReportsListItem, Profile, Scan } from "common/types";
 import { useReports } from "hooks/useReports";
 import React, { useState } from "react";
 import Icon from "react-crypto-icons";
@@ -187,9 +187,8 @@ const ReportBlock: React.FC<{ report: ReportsListItem; profile: Profile }> = ({
     );
   };
 
-const PublishedReports: React.FC<{ profile: Profile }> = ({ profile }) => {
-    const { projectId } = useParams<{ projectId: string }>();
-    const { data } = useReports("project", projectId);
+const PublishedReports: React.FC<{ profile: Profile, scan_report: Scan, type: string }> = ({ profile, scan_report, type }) => {
+    const { data } = useReports(type, scan_report.project_id);
   
     return (
       <Box

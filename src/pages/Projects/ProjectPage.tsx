@@ -711,12 +711,12 @@ const ScanDetails: React.FC<{ scansRemaining: number; scans: ScanMeta[] }> = ({
                       profile.actions_supported &&
                       profile.actions_supported.publishable_report && (
                         <TabPanel p={[0, 0, 0, 4]}>
-                          <PublishedReports profile={profile} />
+                          <PublishedReports type='project' scan_report={scanData.scan_report} profile={profile} />
                         </TabPanel>
                       )
                     ) : (
                       <TabPanel p={[0, 0, 0, 4]}>
-                        <PublishedReports profile={profile} />
+                        <PublishedReports type='project' scan_report={scanData.scan_report} profile={profile} />
                       </TabPanel>
                     )}
                   </TabPanels>
