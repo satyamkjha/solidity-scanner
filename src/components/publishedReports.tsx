@@ -10,9 +10,10 @@ import { FaCopy } from "react-icons/fa";
 import { MdPeopleOutline, MdSettings } from "react-icons/md";
 import { useHistory, useParams } from "react-router-dom";
 
-const ReportBlock: React.FC<{ report: ReportsListItem; profile: Profile }> = ({
+const ReportBlock: React.FC<{ report: ReportsListItem; profile: Profile; type: string }> = ({
     report,
     profile,
+    type
   }) => {
     const [isDownloadLoading, setDownloadLoading] = useState(false);
     const history = useHistory();
@@ -106,7 +107,7 @@ const ReportBlock: React.FC<{ report: ReportsListItem; profile: Profile }> = ({
                 console.log("asdkbkalsd");
                 navigator.clipboard
                   .writeText(
-                    `http://${document.location.host}/published-report/project/${report.report_id}`
+                    `http://${document.location.host}/published-report/${type}/${report.report_id}`
                   )
                   .then(
                     () =>
@@ -171,12 +172,12 @@ const ReportBlock: React.FC<{ report: ReportsListItem; profile: Profile }> = ({
               e.stopPropagation();
               if (report.is_approved) {
                 window.open(
-                  `http://${document.location.host}/published-report/project/${report.report_id}`,
+                  `http://${document.location.host}/published-report/${type}/${report.report_id}`,
                   "_blank"
                 );
               } else {
                 window.open(
-                  `http://${document.location.host}/report/project/${report.project_id}/${report.report_id}`,
+                  `http://${document.location.host}/report/${type}/${report.project_id}/${report.report_id}`,
                   "_blank"
                 );
               }
@@ -200,7 +201,7 @@ const PublishedReports: React.FC<{ profile: Profile, scan_report: Scan, type: st
       >
         {data &&
           data?.reports.map((report) => (
-            <ReportBlock profile={profile} report={report} />
+            <ReportBlock type={type} profile={profile} report={report} />
           ))}
       </Box>
     );
