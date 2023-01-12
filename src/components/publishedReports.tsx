@@ -4,9 +4,10 @@ import { ReportsListItem, Profile } from "common/types";
 import { useReports } from "hooks/useReports";
 import React, { useState } from "react";
 import Icon from "react-crypto-icons";
-import { AiOutlineLock } from "react-icons/ai";
+import { AiFillCopy, AiOutlineLock } from "react-icons/ai";
+import { BsPeople, BsPeopleFill } from "react-icons/bs";
 import { FaCopy } from "react-icons/fa";
-import { MdPeopleOutline } from "react-icons/md";
+import { MdPeopleOutline, MdSettings } from "react-icons/md";
 import { useHistory, useParams } from "react-router-dom";
 
 const ReportBlock: React.FC<{ report: ReportsListItem; profile: Profile }> = ({
@@ -66,7 +67,6 @@ const ReportBlock: React.FC<{ report: ReportsListItem; profile: Profile }> = ({
           flexWrap={"wrap"}
           height="fit-content"
         >
-          
   
           <HStack width={["210px"]} my={3}>
             {report.is_approved ? (
@@ -84,9 +84,9 @@ const ReportBlock: React.FC<{ report: ReportsListItem; profile: Profile }> = ({
   
           <HStack width={["130px"]} my={3} >
             {report.is_approved ? (
-              <Icon as={MdPeopleOutline} />
+               <BsPeople />
             ) : (
-              <Icon as={AiOutlineLock} />
+              <AiOutlineLock />
             )}
             <Text sx={{ fontSize: "md", fontWeight: 600, ml: 2 }}>
               {report.is_approved ? "Public" : "Private"}
@@ -94,7 +94,7 @@ const ReportBlock: React.FC<{ report: ReportsListItem; profile: Profile }> = ({
           </HStack>
           {report.is_approved && (
             <HStack  my={3} width={["260px"]}
-            mr={5}><Icon as={FaCopy} color="#3E15F4" mr={1} />
+            mr={5}><AiFillCopy color="#3E15F4" />
             <Text
               
               align="left"
