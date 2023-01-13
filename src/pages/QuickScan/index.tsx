@@ -155,6 +155,10 @@ const QuickScan: React.FC = () => {
       { value: "mainnet", label: "Aurora Mainnet", icon: "" },
       { value: "testnet", label: "Aurora Testnet", icon: "" },
     ],
+    arbiscan: [
+      { value: "mainnet", label: "Arbiscan Mainnet", icon: "" },
+      { value: "goerli", label: "Arbiscan Goerli", icon: "" },
+    ],
   };
 
   const options = [
@@ -185,6 +189,11 @@ const QuickScan: React.FC = () => {
       label: "Avalanche C-Chain - (snowtrace.io)",
     },
     {
+      value: "arbiscan",
+      icon: "arbiscan",
+      label: "Arbiscan - (arbiscan.io)",
+    },
+    {
       value: "celo",
       icon: "celo",
       label: "Celo - (celoscan.io)",
@@ -194,6 +203,7 @@ const QuickScan: React.FC = () => {
       icon: "aurora",
       label: "Aurora - (aurorascan.dev)",
     },
+    
   ];
 
   const customStylesPlatform = {
