@@ -188,8 +188,7 @@ const ReportBlock: React.FC<{ report: ReportsListItem; profile: Profile; type: s
     );
   };
 
-const PublishedReports: React.FC<{ profile: Profile, scan_report: Scan, type: string }> = ({ profile, scan_report, type }) => {
-    const { data } = useReports(type, scan_report.project_id);
+const PublishedReports: React.FC<{ profile: Profile, type: string, reports: ReportsListItem[] }> = ({ profile, type, reports }) => {
   
     return (
       <Box
@@ -199,8 +198,7 @@ const PublishedReports: React.FC<{ profile: Profile, scan_report: Scan, type: st
           p: [0, 0, 4],
         }}
       >
-        {data &&
-          data?.reports.map((report) => (
+        {reports.map((report) => (
             <ReportBlock type={type} profile={profile} report={report} />
           ))}
       </Box>

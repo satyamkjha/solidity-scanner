@@ -213,6 +213,7 @@ const ScanDetails: React.FC<{ scansRemaining: number; scans: ScanMeta[] }> = ({
 }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [isRescanLoading, setRescanLoading] = useState(false);
+  
   const cancelRef = useRef<HTMLButtonElement | null>(null);
   const queryClient = useQueryClient();
   const [reportingStatus, setReportingStatus] = useState<string>("");
@@ -220,7 +221,7 @@ const ScanDetails: React.FC<{ scansRemaining: number; scans: ScanMeta[] }> = ({
     useParams<{ projectId: string; scanId: string }>();
   const history = useHistory();
   const { data: scanData, isLoading, refetch } = useScan(scanId);
-
+  const { data: reportList, refetch: refetchReprtList } = useReports('project', projectId)
   const [tabIndex, setTabIndex] = React.useState(0);
 
   const { data: profile, isLoading: isProfileLoading } = useProfile();
@@ -232,6 +233,7 @@ const ScanDetails: React.FC<{ scansRemaining: number; scans: ScanMeta[] }> = ({
   const toast = useToast();
   const [next, setNext] = useState(false);
   const [open, setOpen] = useState(false);
+  
 
   useEffect(() => {
     if (scanData) {
@@ -300,7 +302,7 @@ const ScanDetails: React.FC<{ scansRemaining: number; scans: ScanMeta[] }> = ({
 
   const getReportData = async (project_id: string, report_id: string) => {
     const reportResponse = await API.post<{ summary_report: Report }>(
-      "/api-get-report-beta/",
+      "/api-get-report/",
       {
         project_id,
         report_id,
@@ -343,7 +345,6 @@ const ScanDetails: React.FC<{ scansRemaining: number; scans: ScanMeta[] }> = ({
       scanData.scan_report.reporting_status === "report_generated"
     ) {
       setReportingStatus(scanData.scan_report.reporting_status);
-      getReportData(projectId, scanData.scan_report.latest_report_id);
       setProjectName(scanData.scan_report.project_name);
       setRepoUrl(scanData.scan_report.project_url);
       checkReportPublished(projectId, scanData.scan_report.latest_report_id);
@@ -393,6 +394,7 @@ const ScanDetails: React.FC<{ scansRemaining: number; scans: ScanMeta[] }> = ({
       setOpen(false);
     }
     checkReportPublished(projectId, reportId);
+    refetchReprtList()
   };
 
   return (
@@ -474,7 +476,12 @@ const ScanDetails: React.FC<{ scansRemaining: number; scans: ScanMeta[] }> = ({
                             !plans.monthly[profile.current_package]
                               .publishable_report
                         }
-                        onClick={() => setOpen(!open)}
+                        onClick={() => {
+                          if(commitHash == ""){
+                            getReportData(projectId, scanData.scan_report.latest_report_id);
+                          }
+                          setOpen(!open)
+                        }}
                       >
                         {profile.actions_supported
                           ? !profile.actions_supported.publishable_report
