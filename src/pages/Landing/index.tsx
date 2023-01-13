@@ -102,7 +102,13 @@ export default function LandingPage() {
         </Flex>
 
         {/* Section 2 */}
-        <Box w="100%" as="section" sx={{ textAlign: "center" }} my={[4, 8]} px={[0, 0, 0, 24]}>
+        <Box
+          w="100%"
+          as="section"
+          sx={{ textAlign: "center" }}
+          my={[4, 8]}
+          px={[0, 0, 0, 24]}
+        >
           <Heading as="h1" fontSize="3xl" mb={4}>
             Scan.{" "}
             <Box
@@ -336,7 +342,13 @@ export default function LandingPage() {
             </Text>
           </Box>
         </Flex>
-        <Box w="100%" as="section" sx={{ textAlign: "center" }} my={28} px={[0, 0, 0, 24]}>
+        <Box
+          w="100%"
+          as="section"
+          sx={{ textAlign: "center" }}
+          my={28}
+          px={[0, 0, 0, 24]}
+        >
           <Heading fontSize="3xl" mb={10}>
             What People are Saying about us
           </Heading>
@@ -346,7 +358,13 @@ export default function LandingPage() {
           </Text> */}
           <UserTestimonial />
         </Box>
-        <Box w="100%" as="section" sx={{ textAlign: "center" }} my={24} px={[0, 0, 0, 24]}>
+        <Box
+          w="100%"
+          as="section"
+          sx={{ textAlign: "center" }}
+          my={24}
+          px={[0, 0, 0, 24]}
+        >
           <Heading fontSize="3xl" mb={5}>
             Our Team
           </Heading>
@@ -648,7 +666,13 @@ export default function LandingPage() {
             </Button>
           </Flex>
         </Box>
-        <Box w="100%" as="section" sx={{ textAlign: "center" }} my={8} px={[0, 0, 0, 24]}>
+        <Box
+          w="100%"
+          as="section"
+          sx={{ textAlign: "center" }}
+          my={8}
+          px={[0, 0, 0, 24]}
+        >
           <Flex
             sx={{
               w: ["100%"],

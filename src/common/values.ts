@@ -9,8 +9,6 @@ export const severityPriority: { [key: string]: number } = {
   informational: 6,
 };
 
-
-
 export const issueActions = [
   {
     value: "pending_fix",
