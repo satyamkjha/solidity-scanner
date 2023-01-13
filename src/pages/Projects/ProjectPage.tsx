@@ -1262,9 +1262,6 @@ const ScanBlock: React.FC<{
   profile: Profile;
 }> = ({ scan, setTabIndex, profile }) => {
   const history = useHistory();
-  const { projectId, scanId } =
-    useParams<{ projectId: string; scanId: string }>();
-  const { data } = useScan(scanId);
   return (
     <Flex
       alignItems="flex-start"
@@ -1283,10 +1280,7 @@ const ScanBlock: React.FC<{
           boxShadow: "0px 4px 20px rgba(0, 0, 0, 0.2)",
         },
       }}
-      onClick={() => {
-        setTabIndex(0);
-        history.push(`/projects/${projectId}/${scan.scan_id}`);
-      }}
+      
     >
       <Flex
         width={"calc(100% - 60px)"}
@@ -1295,9 +1289,19 @@ const ScanBlock: React.FC<{
         alignItems={"flex-start"}
         flexDir="row"
       >
-        <Text mr={10} textAlign={"left"} mt={5} fontSize="xl">
-          {scan.scan_name}
-        </Text>
+        <VStack
+                    mt={5}
+                    alignItems={"flex-start"}
+                    spacing={1}
+                    width="130px"
+                  >
+                    <Text fontSize={"sm"} color="gray.400">
+                      Scan Name
+                    </Text>
+                    <Text fontSize={"md"}>
+                      {scan.scan_name}
+                    </Text>
+                  </VStack>
         {scan.scan_status === "scan_incomplete" ? (
           <Flex
             p={3}
@@ -1308,16 +1312,53 @@ const ScanBlock: React.FC<{
             <ScanErrorIcon size={28} />
           </Flex>
         ) : (
-          <Box mr={10} mt={5}>
-            <Score score={scan.scan_score} />
-          </Box>
+<VStack
+                    mt={5}
+                    alignItems={"flex-start"}
+                    spacing={1}
+                    width="120px"
+                  >
+                    <Text fontSize={"sm"} color="gray.400">
+                      Score
+                    </Text>
+                    <Text
+          sx={{
+            color: "accent",
+            fontSize: "xl",
+            fontWeight: 600,
+            mx: "auto",
+            lineHeight: 1,
+          }}
+        >
+          {scan.scan_score}
+        </Text>
+                  </VStack>
         )}
-
+        <Button
+          variant="accent-outline"
+          minW="200px"
+          bg={"white"}
+          mr={10}
+          my={5}
+          isDisabled={
+            scan.reporting_status !== "report_generated" ||
+            (profile.actions_supported
+              ? !profile.actions_supported.generate_report
+              : profile.current_package === "trial")
+          }
+          onClick={() => {
+            setTabIndex(0);
+            history.push(`/projects/${scan.project_id}/${scan.scan_id}`);
+          }}
+        >
+          View Scan Result
+        </Button>
         <Button
           variant="accent-outline"
           minW="200px"
           mr={10}
-          my={5}
+          mt={[0, 0, 5]}
+          mb={5}
           isDisabled={
             scan.reporting_status !== "report_generated" ||
             (profile.actions_supported
@@ -1327,7 +1368,7 @@ const ScanBlock: React.FC<{
           onClick={(e) => {
             e.stopPropagation();
             window.open(
-              `http://${document.location.host}/report/project/${projectId}/${data?.scan_report.latest_report_id}`,
+              `http://${document.location.host}/report/project/${scan.project_id}/${scan.latest_report_id}`,
               "_blank"
             );
           }}
