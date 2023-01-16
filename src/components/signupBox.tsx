@@ -17,8 +17,9 @@ export const SignupBox: React.FC = () => {
 
   return (
     <Box
+      mx={[0, 0, 0, 24]}
       sx={{
-        w: "100%",
+        w: ["100%", "100%", "100%", "85%"],
         backgroundImage: "url(/background/pattern.png)",
         borderRadius: 20,
         overflow: "hidden",

@@ -4,8 +4,6 @@ COPY ./package.json .
 COPY ./yarn.lock .
 RUN yarn install
 COPY . .
-ARG REACT_APP_ENVIRONMENT
-ENV REACT_APP_ENVIRONMENT=${REACT_APP_ENVIRONMENT}
 RUN yarn build
 
 # FROM nginx

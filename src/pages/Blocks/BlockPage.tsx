@@ -41,7 +41,6 @@ import {
 } from "@chakra-ui/react";
 import Overview from "components/overview";
 import Result, { MultifileResult } from "components/result";
-import TrialWall from "components/trialWall";
 import {
   AddIcon,
   CheckCircleIcon,
@@ -66,10 +65,10 @@ import {
 import API from "helpers/api";
 import { Report, ReportsListItem, Scan } from "common/types";
 import { useReports } from "hooks/useReports";
-import { useReport } from "hooks/useReport";
-import { sentenceCapitalize } from "helpers/helperFunction";
 import { ScanErrorIcon } from "components/icons";
-import { pricingDetails as plans } from "common/values";
+import { monthNames, pricingDetails as plans } from "common/values";
+import ContractDetails from "components/contractDetails";
+import PublishedReports from "components/publishedReports";
 
 const BlockPage: React.FC = () => {
   const { scanId } = useParams<{ scanId: string }>();
@@ -101,22 +100,28 @@ const BlockPage: React.FC = () => {
   const [tabIndex, setTabIndex] = React.useState(0);
   const [isDesktopView] = useMediaQuery("(min-width: 1024px)");
 
+  // useEffect(() => {
+  //   let intervalId: NodeJS.Timeout;
+  //   const refetchTillScanComplete = () => {
+  //     intervalId = setInterval(async () => {
+  //       await refetch().then((res) => {
+  //         if (res.data) {
+  //           setReportingStatus(res.data?.scan_report.reporting_status);
+  //         }
+  //       });
+  //     }, 5000);
+  //   };
+  //   refetchTillScanComplete();
+  //   return () => {
+  //     clearInterval(intervalId);
+  //   };
+  // }, []);
+
   useEffect(() => {
-    let intervalId: NodeJS.Timeout;
-    const refetchTillScanComplete = () => {
-      intervalId = setInterval(async () => {
-        await refetch().then((res) => {
-          if (res.data) {
-            setReportingStatus(res.data?.scan_report.reporting_status);
-          }
-        });
-      }, 5000);
-    };
-    refetchTillScanComplete();
-    return () => {
-      clearInterval(intervalId);
-    };
-  }, []);
+    if (scanData) {
+      setReportingStatus(scanData.scan_report.reporting_status);
+    }
+  }, [scanData]);
 
   const handleTabsChange = (index: number) => {
     setTabIndex(index);
@@ -130,10 +135,19 @@ const BlockPage: React.FC = () => {
       scan_id: scanId,
     });
 
-    if (data.success) {
-      setInterval(async () => {
-        await refetch();
+    let intervalId: NodeJS.Timeout;
+    const refetchTillReportGenerates = () => {
+      intervalId = setInterval(async () => {
+        await refetch().then((res) => {
+          if (res.data?.scan_report.reporting_status === "report_generated") {
+            clearInterval(intervalId);
+            setReportingStatus("report_generated");
+          }
+        });
       }, 5000);
+    };
+    if (data.success) {
+      refetchTillReportGenerates();
     }
   };
 
@@ -264,18 +278,67 @@ const BlockPage: React.FC = () => {
           <>
             {" "}
             <Flex
+              w="100%"
               sx={{ justifyContent: "space-between", alignItems: "center" }}
             >
-              <Text sx={{ fontSize: "xl", fontWeight: 600, ml: 2 }}>
-                <Text as="span" fontSize="14px" ml={3} color="gray.500">
-                  {scanData.scan_report?.contract_address}
-                </Text>
-              </Text>
+              <Accordion allowMultiple w={["100%", "100%", "100%", "90%"]}>
+                <AccordionItem borderTopWidth={0} borderBottomWidth={"0 !important"}>
+                  {({ isExpanded }) => (
+                    <>
+                      <VStack align={"left"} spacing={0} w="100%">
+                        <HStack
+                          w="100%"
+                          display={["flex", "flex", "flex", "none"]}
+                        >
+                          <Image
+                            src={`/blockscan/${scanData.scan_report.contract_platform}-scan.svg`}
+                            alt="Product screenshot"
+                            h={"20px"}
+                            w={"20px"}
+                          />
+                          <Text
+                            isTruncated
+                            width={"80%"}
+                            sx={{
+                              fontSize: "xl",
+                              fontWeight: 600,
+                              mx: 2,
+                              maxW: "250px",
+                            }}
+                          >
+                            {scanData.scan_report.contractname
+                              ? scanData.scan_report.contractname
+                              : scanData.scan_report.contract_address}
+                          </Text>
+                          <AccordionButton
+                            width={"fit-content"}
+                            borderRadius="48px"
+                            display={["flex", "flex", "flex", "none"]}
+                          >
+                            {isExpanded ? (
+                              <BiChevronUpCircle />
+                            ) : (
+                              <BiChevronDownCircle />
+                            )}
+                          </AccordionButton>
+                        </HStack>
+                        <Text sx={{ fontSize: "xl", fontWeight: 600, ml: 2 }}>
+                          <Text as="span" fontSize={["12px", "12px", "12px", "14px"]} ml={[0, 0, 0, 3]} color="gray.500">
+                            {scanData.scan_report?.contract_address}
+                          </Text>
+                        </Text>
+                      </VStack>
+                      <ContractDetails scanData={scanData} />
+                    </>
+                  )}
+                </AccordionItem>
+              </Accordion>
               <Link
                 as={RouterLink}
                 to="/blocks"
                 variant="subtle-without-underline"
                 fontSize="md"
+                display={["none", "none", "none", "block"]}
               >
                 ← back
               </Link>
@@ -305,6 +368,7 @@ const BlockPage: React.FC = () => {
                       >
                         <Text
                           isTruncated
+                          display={["none", "none", "none", "block"]}
                           sx={{
                             fontSize: "lg",
                             fontWeight: 600,
@@ -318,10 +382,10 @@ const BlockPage: React.FC = () => {
                         </Text>
                         <Flex
                           as={"div"}
-                          flexDirection={"row"}
-                          justifyContent="flex-end"
+                          flexDirection={["column-reverse", "column-reverse", "column-reverse", "row"]}
+                          justifyContent={["center", "center", "center", "flex-end"]}
                           alignItems={"center"}
-                          width={"fit-content"}
+                          width={["100%", "100%", "100%", "fit-content"]}
                           height="fit-content"
                         >
                           {scanData.scan_report.reporting_status ===
@@ -329,30 +393,33 @@ const BlockPage: React.FC = () => {
                             publishStatus !== "" &&
                             (publishStatus === "Not-Published" ? (
                               <Button
-                                variant="accent-ghost"
-                                mr={5}
+                                variant={"accent-outline"}
+                                bg={"white"}
+                                w={["80%", "80%", "50%", "auto"]}
+                                mx={["auto", "auto", "auto", "0"]}
+                                mr={["auto", "auto", "auto", 5]}
                                 isDisabled={
                                   profile.actions_supported
                                     ? !profile.actions_supported
-                                        .publishable_report
+                                      .publishable_report
                                     : profile.current_package !== "expired" &&
-                                      !plans.monthly[profile.current_package]
-                                        .publishable_report
+                                    !plans.monthly[profile.current_package]
+                                      .publishable_report
                                 }
                                 onClick={() => setOpen(!open)}
                               >
                                 {(profile.actions_supported
                                   ? !profile.actions_supported
-                                      .publishable_report
+                                    .publishable_report
                                   : profile.current_package !== "expired" &&
-                                    !plans.monthly[profile.current_package]
-                                      .publishable_report) && (
-                                  <LockIcon color={"accent"} size="xs" mr={3} />
-                                )}
+                                  !plans.monthly[profile.current_package]
+                                    .publishable_report) && (
+                                    <LockIcon color={"accent"} size="xs" mr={3} />
+                                  )}
                                 Publish Report
                               </Button>
                             ) : (
-                              <HStack>
+                              <HStack my={[4, 4, 4, 0]}>
                                 {publishStatus === "Approved" ? (
                                   <CheckCircleIcon color={"#03C04A"} />
                                 ) : (
@@ -377,15 +444,17 @@ const BlockPage: React.FC = () => {
                           {scanData.scan_report.scan_status !== "scanning" && (
                             <Button
                               variant={"accent-outline"}
-                              mx={5}
+                              w={["80%", "80%", "50%", "auto"]}
+                              mx={["auto", "auto", "auto", 5]}
+                              mb={[4, 4, 4, 0]}
                               isLoading={reportingStatus === ""}
                               isDisabled={
                                 reportingStatus === "generating_report" ||
                                 (profile.actions_supported
                                   ? !profile.actions_supported.generate_report
                                   : profile.current_package !== "expired" &&
-                                    !plans.monthly[profile.current_package]
-                                      .report)
+                                  !plans.monthly[profile.current_package]
+                                    .report)
                               }
                               onClick={() => {
                                 if (
@@ -420,29 +489,30 @@ const BlockPage: React.FC = () => {
                               {profile.actions_supported
                                 ? !profile.actions_supported.generate_report
                                 : profile.current_package !== "expired" &&
-                                  !plans.monthly[profile.current_package]
-                                    .report && (
-                                    <LockIcon
-                                      color={"accent"}
-                                      size="xs"
-                                      mr={3}
-                                    />
-                                  )}
+                                !plans.monthly[profile.current_package]
+                                  .report && (
+                                  <LockIcon
+                                    color={"accent"}
+                                    size="xs"
+                                    mr={3}
+                                  />
+                                )}
                               {reportingStatus === "generating_report"
                                 ? "Generating report..."
                                 : scanData.scan_report
-                                    .report_regeneration_enabled
-                                ? "Re-generate Report"
-                                : reportingStatus === "report_generated"
-                                ? "View Report"
-                                : reportingStatus === "not_generated"
-                                ? "Generate Report"
-                                : "Loading"}
+                                  .report_regeneration_enabled
+                                  ? "Re-generate Report"
+                                  : reportingStatus === "report_generated"
+                                    ? "View Report"
+                                    : reportingStatus === "not_generated"
+                                      ? "Generate Report"
+                                      : "Loading"}
                             </Button>
                           )}
                           <AccordionButton
                             width={"fit-content"}
                             borderRadius="48px"
+                            display={["none", "none", "none", "flex"]}
                           >
                             {isExpanded ? (
                               <BiChevronUpCircle />
@@ -452,260 +522,129 @@ const BlockPage: React.FC = () => {
                           </AccordionButton>
                         </Flex>
                       </Flex>
-
-                      <AccordionPanel backgroundColor={"#FAFBFC"} pb={4}>
-                        <Flex
-                          flexDirection={"row"}
-                          justifyContent="flex-start"
-                          alignItems={"flex-start"}
-                          width={"100%"}
-                          height="fit-content"
-                          flexWrap={"wrap"}
-                          textAlign={"left"}
-                          p={6}
-                        >
-                          <HStack
-                            py={2}
-                            px={9}
-                            borderRadius={36}
-                            backgroundColor={"white"}
-                            cursor="pointer"
-                            onClick={() =>
-                              window.open(
-                                `${scanData.scan_report.contract_url}`,
-                                "_blank"
-                              )
-                            }
-                            boxShadow="0px 1px 1px rgba(0, 0, 0, 0.09)"
-                          >
-                            <Text
-                              minW={"50px"}
-                              width={"100%"}
-                              as="p"
-                              fontSize="12px"
-                            >
-                              View on
-                            </Text>
-                            <Text
-                              width={"100%"}
-                              color="gray.200"
-                              as="p"
-                              fontSize="16px"
-                            >
-                              |
-                            </Text>
-                            <Image
-                              src={`/blockscan/${scanData.scan_report.contract_platform}-scan.svg`}
-                              alt="Product screenshot"
-                              mx="auto"
-                              h={"20px"}
-                              w={"20px"}
-                            />
-                            {scanData.scan_report.contract_platform && (
-                              <Text
-                                fontWeight={"700"}
-                                width={"fit-content"}
-                                as="p"
-                                fontSize="18px"
-                              >
-                                {scanData.scan_report.contract_platform ===
-                                "fantom"
-                                  ? "FTMScan"
-                                  : scanData.scan_report.contract_platform ===
-                                    "avalanche"
-                                  ? "Snowtrace"
-                                  : sentenceCapitalize(
-                                      scanData.scan_report.contract_platform
-                                    )}
-                              </Text>
-                            )}
-                          </HStack>
-                        </Flex>
-                        <Flex
-                          flexDirection={"row"}
-                          justifyContent="flex-start"
-                          alignItems={"flex-start"}
-                          width={"100%"}
-                          height="fit-content"
-                          flexWrap={"wrap"}
-                          textAlign={"left"}
-                          p={6}
-                        >
-                          <VStack textAlign={"left"} width={"33.33%"}>
-                            <Text
-                              width={"100%"}
-                              as="p"
-                              fontSize="14px"
-                              color="gray.500"
-                            >
-                              Contract Name
-                            </Text>
-                            <Text width={"100%"} as="p" fontSize="14px">
-                              {scanData?.scan_report.contractname}
-                            </Text>
-                          </VStack>
-                          <VStack textAlign={"left"} width={"33.33%"}>
-                            <Text
-                              width={"100%"}
-                              as="p"
-                              fontSize="14px"
-                              color="gray.500"
-                            >
-                              Compiler Version
-                            </Text>
-                            <Text width={"100%"} as="p" fontSize="14px">
-                              {scanData?.scan_report.compilerversion}
-                            </Text>
-                          </VStack>
-                          <VStack textAlign={"left"} width={"33.33%"}>
-                            <Text
-                              width={"100%"}
-                              as="p"
-                              fontSize="14px"
-                              color="gray.500"
-                            >
-                              EVM Version
-                            </Text>
-                            <Text width={"100%"} as="p" fontSize="14px">
-                              {scanData?.scan_report.evmversion}
-                            </Text>
-                          </VStack>
-                          <VStack textAlign={"left"} width={"33.33%"}>
-                            <Text
-                              width={"100%"}
-                              as="p"
-                              fontSize="14px"
-                              color="gray.500"
-                              mt={10}
-                            >
-                              License Type
-                            </Text>
-                            <Text width={"100%"} as="p" fontSize="14px">
-                              {scanData?.scan_report.licensetype}
-                            </Text>
-                          </VStack>
-                          <VStack textAlign={"left"} width={"33.33%"}>
-                            <Text
-                              width={"100%"}
-                              as="p"
-                              fontSize="14px"
-                              color="gray.500"
-                              mt={10}
-                            >
-                              Balance
-                            </Text>
-                            <Text width={"100%"} as="p" fontSize="14px">
-                              {scanData?.scan_report.value}{" "}
-                              {scanData.scan_report.currency}
-                            </Text>
-                          </VStack>
-                          <VStack textAlign={"left"} width={"33.33%"}>
-                            <Text
-                              width={"100%"}
-                              as="p"
-                              fontSize="14px"
-                              color="gray.500"
-                              mt={10}
-                            >
-                              Contract Chain
-                            </Text>
-                            <Text width={"100%"} as="p" fontSize="14px">
-                              {scanData?.scan_report.contract_chain}{" "}
-                            </Text>
-                          </VStack>
-                        </Flex>
-                      </AccordionPanel>
+                      <ContractDetails scanData={scanData} />
                     </>
                   )}
                 </AccordionItem>
               </Accordion>
-              <Tabs
-                index={tabIndex}
-                onChange={handleTabsChange}
-                variant="soft-rounded"
-                colorScheme="green"
+              <Flex
+                w={"100%"}
+                sx={{
+                  flexDir: "column",
+                  alignItems: "flex-start",
+                  justifyContent: "flex-start",
+                  my: 4,
+                }}
               >
-                <TabList
-                  sx={{
-                    borderBottomWidth: "1px",
-                    borderBottomStyle: "solid",
-                    borderColor: "border",
-                    py: 4,
-                    px: 4,
-                  }}
+                <Tabs
+                  index={tabIndex}
+                  onChange={handleTabsChange}
+                  mx={0}
+                  px={0}
+                  w={"100%"}
+                  variant="soft-rounded"
+                  colorScheme="green"
                 >
-                  <Tab mx={2}>Overview</Tab>
-                  <Tab mx={2}>Detailed Result</Tab>
-
-                  <Tab mx={2}>Published Reports</Tab>
-                </TabList>
-                <TabPanels>
-                  <TabPanel>
-                    {(scanData.scan_report.multi_file_scan_summary ||
-                      scanData.scan_report.scan_summary) && (
-                      <Overview
-                        scanData={scanData.scan_report}
-                        onTabChange={handleTabsChange}
-                      />
-                    )}
-                  </TabPanel>
-                  <TabPanel>
-                    {scanData.scan_report.multi_file_scan_status ===
-                      "scan_done" &&
-                    scanData.scan_report.multi_file_scan_details &&
-                    scanData.scan_report.multi_file_scan_summary ? (
-                      <MultifileResult
-                        profileData={profile}
-                        details_enabled={scanData.scan_report.details_enabled}
-                        type={"block"}
-                        is_latest_scan={scanData.is_latest_scan}
-                        scanSummary={
-                          scanData.scan_report.multi_file_scan_summary
-                        }
-                        scanDetails={
-                          scanData.scan_report.multi_file_scan_details
-                        }
-                      />
-                    ) : scanData.scan_report.scan_details &&
-                      scanData.scan_report.scan_summary ? (
-                      <Result
-                        details_enabled={scanData.scan_report.details_enabled}
-                        profileData={profile}
-                        scanSummary={scanData.scan_report.scan_summary}
-                        scanDetails={scanData.scan_report.scan_details}
-                        type="block"
-                      />
-                    ) : (
-                      <Flex
-                        w="97%"
-                        m={4}
-                        borderRadius="20px"
-                        bgColor="high-subtle"
-                        p={4}
+                  <Flex
+                    width={"100%"}
+                    overflow={["scroll", "scroll", "scroll", "visible"]}
+                    flexDir={"row"}
+                    justifyContent="flex-start"
+                    align={"center"}
+                    ml={[3, 3, 5]}
+                  >
+                    <TabList my={3} width={"fit-content"} zIndex={0}>
+                      <Tab
+                        minW={"150px"}
+                        bgColor={"#F5F5F5"}
                       >
-                        <ScanErrorIcon size={28} />
-                        <Text fontSize={"xs"} color="high" ml={4}>
-                          {scanData.scan_report.multi_file_scan_status
-                            ? scanData.scan_report.multi_file_scan_status
-                            : "Please do Rescan to carry out a Multifile Scan "}
-                        </Text>
-                      </Flex>
-                    )}
-                  </TabPanel>
-                  {profile.promo_code ? (
-                    profile.actions_supported &&
-                    profile.actions_supported.publishable_report && (
-                      <TabPanel>
-                        <PublishedReports scan_report={scanData.scan_report} />
-                      </TabPanel>
-                    )
-                  ) : (
+                        Overview
+                      </Tab>
+                      <Tab
+                        minW={"150px"}
+                        bgColor={"#F5F5F5"}
+                        ml={4}
+                      >
+                        Detailed Result
+                      </Tab>
+                      <Tab
+                        minW={"175px"}
+                        bgColor={"#F5F5F5"}
+                        ml={4}
+                      >
+                        Published Reports
+                      </Tab>
+                    </TabList>
+                  </Flex>
+                  <TabPanels>
                     <TabPanel>
-                      <PublishedReports scan_report={scanData.scan_report} />
+                      {(scanData.scan_report.multi_file_scan_summary ||
+                        scanData.scan_report.scan_summary) && (
+                          <Overview
+                            scanData={scanData.scan_report}
+                            onTabChange={handleTabsChange}
+                          />
+                        )}
                     </TabPanel>
-                  )}
-                </TabPanels>
-              </Tabs>
+                    <TabPanel p={[2, 2, 2, 4]}>
+                      {scanData.scan_report.multi_file_scan_status ===
+                        "scan_done" &&
+                        scanData.scan_report.multi_file_scan_details &&
+                        scanData.scan_report.multi_file_scan_summary ? (
+                        <MultifileResult
+                          profileData={profile}
+                          details_enabled={scanData.scan_report.details_enabled}
+                          type={"block"}
+                          is_latest_scan={scanData.is_latest_scan}
+                          scanSummary={
+                            scanData.scan_report.multi_file_scan_summary
+                          }
+                          scanDetails={
+                            scanData.scan_report.multi_file_scan_details
+                          }
+                          refetch={refetch}
+                        />
+                      ) : scanData.scan_report.scan_details &&
+                        scanData.scan_report.scan_summary ? (
+                        <Result
+                          details_enabled={scanData.scan_report.details_enabled}
+                          profileData={profile}
+                          scanSummary={scanData.scan_report.scan_summary}
+                          scanDetails={scanData.scan_report.scan_details}
+                          type="block"
+                        />
+                      ) : (
+                        <Flex
+                          w="97%"
+                          m={4}
+                          borderRadius="20px"
+                          bgColor="high-subtle"
+                          p={4}
+                        >
+                          <ScanErrorIcon size={28} />
+                          <Text fontSize={"xs"} color="high" ml={4}>
+                            {scanData.scan_report.multi_file_scan_status
+                              ? scanData.scan_report.multi_file_scan_status
+                              : "Please do Rescan to carry out a Multifile Scan "}
+                          </Text>
+                        </Flex>
+                      )}
+                    </TabPanel>
+                    {profile.promo_code ? (
+                      profile.actions_supported &&
+                      profile.actions_supported.publishable_report && (
+                        <TabPanel p={4} >
+                          <PublishedReports type='block'  profile={profile} scan_report={scanData.scan_report} />
+                        </TabPanel>
+                      )
+                    ) : (
+                      <TabPanel p={4} >
+                        <PublishedReports type='block' profile={profile} scan_report={scanData.scan_report} />
+                      </TabPanel>
+                    )}
+                  </TabPanels>
+                </Tabs>
+              </Flex>
             </Box>
           </>
         )
@@ -1258,149 +1197,3 @@ const BlockPage: React.FC = () => {
 
 export default BlockPage;
 
-const PublishedReports: React.FC<{ scan_report: Scan }> = ({ scan_report }) => {
-  const { data } = useReports("block", scan_report.project_id);
-
-  return (
-    <Box
-      sx={{
-        w: "100%",
-        borderRadius: "20px",
-        p: 4,
-      }}
-    >
-      {data && data?.reports.map((report) => <ReportBlock report={report} />)}
-    </Box>
-  );
-};
-
-const monthNames = [
-  "Jan",
-  "Feb",
-  "Mar",
-  "Apr",
-  "May",
-  "Jun",
-  "Jul",
-  "Aug",
-  "Sep",
-  "Oct",
-  "Nov",
-  "Dec",
-];
-
-const ReportBlock: React.FC<{ report: ReportsListItem }> = ({ report }) => {
-  const [isDownloadLoading, setDownloadLoading] = useState(false);
-  const history = useHistory();
-
-  const toast = useToast();
-
-  return (
-    <Flex
-      alignItems="center"
-      justifyContent="space-between"
-      sx={{
-        cursor: "pointer",
-        w: "100%",
-        bg: "white",
-        my: 4,
-        p: 2,
-        px: 10,
-        borderRadius: "10px",
-        transition: "0.3s box-shadow",
-        boxShadow: "0px 4px 20px rgba(0, 0, 0, 0.05)",
-        _hover: {
-          boxShadow: "0px 4px 20px rgba(0, 0, 0, 0.2)",
-        },
-      }}
-    >
-      <Flex alignItems="center">
-        <Box
-          sx={{
-            width: "60px",
-            height: "60px",
-            p: 2,
-            bg: "#F7F7F7",
-            color: "#4E5D78",
-            borderRadius: "50%",
-            textAlign: "center",
-          }}
-        >
-          <Text fontSize="xl" fontWeight="600">
-            {report.date_published.slice(0, 2)}
-          </Text>
-          <Text fontSize="12px" mt="-4px">
-            {report.date_published.slice(3, 6)}
-          </Text>
-        </Box>
-
-        <Badge
-          fontSize="sm"
-          ml={5}
-          p={2}
-          borderRadius={10}
-          colorScheme={report.is_approved ? "green" : "red"}
-        >
-          {report.is_approved ? "Approved" : "Waiting for Approval"}
-        </Badge>
-      </Flex>
-      <Flex alignItems="center">
-        <Button
-          variant="accent-outline"
-          isLoading={isDownloadLoading}
-          disabled={!report.is_approved}
-          onClick={(e) => {
-            e.stopPropagation();
-            console.log("asdkbkalsd");
-            navigator.clipboard
-              .writeText(
-                `http://${document.location.host}/published-report/block/${report.report_id}`
-              )
-              .then(
-                () =>
-                  toast({
-                    title: "Copied Report URL",
-                    description: "",
-                    status: "success",
-                    duration: 1000,
-                    isClosable: true,
-                  }),
-                () =>
-                  toast({
-                    title: "Could not Copy Report URL",
-                    description: "",
-                    status: "error",
-                    duration: 3000,
-                    isClosable: true,
-                  })
-              );
-          }}
-        >
-          <FaRegCopy style={{ marginRight: "1rem" }} />
-          Copy Report URL
-        </Button>
-        <Button
-          variant="accent-outline"
-          ml={5}
-          isLoading={isDownloadLoading}
-          onClick={(e) => {
-            e.stopPropagation();
-            if (report.is_approved) {
-              window.open(
-                `http://${document.location.host}/published-report/block/${report.report_id}`,
-                "_blank"
-              );
-            } else {
-              window.open(
-                `http://${document.location.host}/report/block/${report.project_id}/${report.report_id}`,
-                "_blank"
-              );
-            }
-          }}
-        >
-          View Report
-        </Button>
-      </Flex>
-    </Flex>
-  );
-};

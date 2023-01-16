@@ -16,7 +16,7 @@ const UserTestimonial: React.FC = () => {
         slidesPerView={2}
         spaceBetween={150}
         breakpoints={{
-          320: {
+          280: {
             slidesPerView: 1,
             height: 600,
           },

@@ -5,8 +5,6 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-      args:
-        - REACT_APP_ENVIRONMENT=${REACT_APP_ENVIRONMENT}
     ports:
       - "45947:3000"
     env_file:
