@@ -64,6 +64,10 @@ export const DetailedResult: React.FC<{
 
         return { ...provided, opacity, transition };
       },
+      container: (provided: any, state: any) => ({
+        ...provided,
+        width: isDesktopView ? "auto" : "80%"
+      })
     };
 
     return (
@@ -116,6 +120,7 @@ export const DetailedResult: React.FC<{
             alignItems={"center"}
             width={"100%"}
             direction={["column", "column", "column", "row"]}
+            mt={[4, 4, 4, 0]}
           >
             <Text fontWeight={600}>Take Action</Text>
             <Select
@@ -135,7 +140,7 @@ export const DetailedResult: React.FC<{
         {files &&
           ((files.bug_status !== "pending_fix" && !is_latest_scan) ||
             files.bug_status === "fixed") && (
-            <HStack justify="flex-end" width={"100%"}>
+            <HStack justify="flex-end" width={"100%"} mt={[4, 4, 4, 0]}>
               <HStack bg={"gray.100"} px={10} py={2} borderRadius={30}>
                 <Text mr={2} color={"gray.600"} fontWeight={500}>
                   The issue has been marked as

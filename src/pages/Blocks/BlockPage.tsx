@@ -395,9 +395,9 @@ const BlockPage: React.FC = () => {
                               <Button
                                 variant={"accent-outline"}
                                 bg={"white"}
-                                mr={5}
                                 w={["80%", "80%", "50%", "auto"]}
                                 mx={["auto", "auto", "auto", "0"]}
+                                mr={["auto", "auto", "auto", 5]}
                                 isDisabled={
                                   profile.actions_supported
                                     ? !profile.actions_supported

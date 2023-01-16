@@ -423,6 +423,7 @@ const ScanDetails: React.FC<{ scansRemaining: number; scans: ScanMeta[] }> = ({
                   alignItems: ["center"],
                   pb: 4,
                   px: 6,
+                  w: "100%",
                   borderBottom: "1px solid",
                   borderColor: "border",
                   flexDir: ["column", "column", "column", "row"],
@@ -457,10 +458,12 @@ const ScanDetails: React.FC<{ scansRemaining: number; scans: ScanMeta[] }> = ({
                     </Tooltip>
                   )}
                 </HStack>
-                <Stack
-                  spacing={[4, 4, 4, 8]}
-                  direction={["column-reverse", "column-reverse", "column-reverse", "row"]}
+                <Flex
+                  flexDir={["column-reverse", "column-reverse", "column-reverse", "row"]}
                   mt={[4, 4, 4, 0]}
+                  justifyContent={["center", "center", "center", "flex-end"]}
+                  alignItems={"center"}
+                  width={["100%", "100%", "100%", "fit-content"]}
                 >
                   {scanData.scan_report.reporting_status ===
                     "report_generated" &&
@@ -469,6 +472,8 @@ const ScanDetails: React.FC<{ scansRemaining: number; scans: ScanMeta[] }> = ({
                       <Button
                         variant={"accent-outline"}
                         bg={"white"}
+                        w={["80%", "80%", "50%", "auto"]}
+                        mx={["auto", "auto", "auto", 4]}
                         isDisabled={
                           profile.actions_supported
                             ? !profile.actions_supported.publishable_report
@@ -513,6 +518,9 @@ const ScanDetails: React.FC<{ scansRemaining: number; scans: ScanMeta[] }> = ({
                     <Button
                       variant={"accent-outline"}
                       isLoading={reportingStatus === ""}
+                      w={["80%", "80%", "50%", "auto"]}
+                      mx={["auto", "auto", "auto", 4]}
+                      mb={[4, 4, 4, 0]}
                       isDisabled={
                         reportingStatus === "generating_report" ||
                         (profile.actions_supported
@@ -561,7 +569,7 @@ const ScanDetails: React.FC<{ scansRemaining: number; scans: ScanMeta[] }> = ({
                               : "Loading"}
                     </Button>
                   )}
-                </Stack>
+                </Flex>
               </Flex>
               {scanData.scan_report.scan_status === "scanning" ||
                 scanData.scan_report.scan_status === "initialised" ? (
