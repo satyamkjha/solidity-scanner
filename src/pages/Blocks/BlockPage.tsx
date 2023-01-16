@@ -280,8 +280,8 @@ const BlockPage: React.FC = () => {
               w="100%"
               sx={{ justifyContent: "space-between", alignItems: "center" }}
             >
-              <Accordion allowMultiple w="100%">
-                <AccordionItem borderTopWidth={0} style={{ borderBottomWidth: "0 !important" }}>
+              <Accordion allowMultiple w={["100%", "100%", "100%", "90%"]}>
+                <AccordionItem borderTopWidth={0} borderBottomWidth={"0 !important"}>
                   {({ isExpanded }) => (
                     <>
                       <VStack align={"left"} spacing={0} w="100%">
