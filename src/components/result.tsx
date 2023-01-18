@@ -1393,7 +1393,10 @@ const IssueDetail: React.FC<{
               />
             </DescriptionWrapper>
           </TabPanel>
-          <TabPanel sx={{ h: "20vh", w: "100%", overflowY: "scroll" }}>
+          <TabPanel
+            sx={{ w: "100%", overflowY: "scroll" }}
+            h={["fit-content", "fit-content", "fit-content", "20vh"]}
+          >
             <DescriptionWrapper>
               <Box
                 dangerouslySetInnerHTML={{

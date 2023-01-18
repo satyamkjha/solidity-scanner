@@ -283,11 +283,8 @@ const BlockPage: React.FC = () => {
               w="100%"
               sx={{ justifyContent: "space-between", alignItems: "center" }}
             >
-              <Accordion allowMultiple w="100%">
-                <AccordionItem
-                  borderTopWidth={0}
-                  style={{ borderBottomWidth: "0 !important" }}
-                >
+              <Accordion allowMultiple w={["100%", "100%", "100%", "90%"]}>
+                <AccordionItem borderTopWidth={0} borderBottomWidth={"0 !important"}>
                   {({ isExpanded }) => (
                     <>
                       <VStack align={"left"} spacing={0} w="100%">
@@ -415,9 +412,9 @@ const BlockPage: React.FC = () => {
                               <Button
                                 variant={"accent-outline"}
                                 bg={"white"}
-                                mr={5}
                                 w={["80%", "80%", "50%", "auto"]}
                                 mx={["auto", "auto", "auto", "0"]}
+                                mr={["auto", "auto", "auto", 5]}
                                 isDisabled={
                                   profile.actions_supported
                                     ? !profile.actions_supported
