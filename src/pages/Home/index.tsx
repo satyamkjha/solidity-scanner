@@ -864,7 +864,7 @@ const UploadForm: React.FC = () => {
 
   const getPreassignedURL = async (fileName: string, file: File) => {
     const { data } = await API.get<{ status: string; result: { url: string } }>(
-      `/api-get-presigned-url?file_name=${fileName}`
+      `/api-get-presigned-url/?file_name=${fileName}`
     );
     return {
       url: data.result.url,
