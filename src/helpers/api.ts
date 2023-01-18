@@ -1,4 +1,5 @@
 import axios from "axios";
+import Auth from "./auth";
 // import Auth from './auth';
 
 export const API_URL_PROD = process.env.REACT_APP_API_URL_PROD;
@@ -9,7 +10,7 @@ const API = axios.create({
   headers: {
     "Content-Type": "application/json",
   },
-  withCredentials: true,
+  withCredentials: Auth.isUserAuthenticated(),
   xsrfCookieName: "csrftoken",
   xsrfHeaderName: "X-CSRFToken",
 });
