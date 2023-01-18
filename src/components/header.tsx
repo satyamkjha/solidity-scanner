@@ -29,7 +29,7 @@ export const Header: React.FC = () => {
   const history = useHistory();
 
   const logout = async () => {
-    await API.get("api-logout");
+    await API.get("/api-logout/");
     Auth.deauthenticateUser();
     history.push("/signin");
   };

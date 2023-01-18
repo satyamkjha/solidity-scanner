@@ -25,7 +25,7 @@ class Auth {
    */
   static deauthenticateUser(): void {
     localStorage.removeItem("authenticated");
-    // this.removeCookies();
+    this.removeCookies();
   }
 
   static removeCookies(): void {
