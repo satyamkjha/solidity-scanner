@@ -32,7 +32,7 @@ class Auth {
     const cookies = Cookies.get();
     //iterate over the cookies object and remove each cookie
     Object.keys(cookies).forEach(key => {
-        Cookies.remove(key);
+      Cookies.remove(key);
     });
   }
 
