@@ -373,6 +373,7 @@ export const MailSent: React.FC<{ size: number }> = ({ size, ...props }) => {
   );
 };
 
+
 export const MailLock: React.FC<{ size: number }> = ({ size, ...props }) => {
   return (
     <svg

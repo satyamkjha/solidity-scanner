@@ -30,7 +30,7 @@ export const Header: React.FC = () => {
 
   const logout = async () => {
     await API.get("/api-logout/");
-    Auth.deauthenticateUser();
+  Auth.deauthenticateUser();
     history.push("/signin");
   };
 

@@ -15,10 +15,14 @@ import {
   Box,
   useToast,
   InputRightElement,
+  HStack,
+  Divider,
+  Image
 } from "@chakra-ui/react";
 import { FcGoogle } from "react-icons/fc";
 import { FiAtSign } from "react-icons/fi";
 import { FaLock } from "react-icons/fa";
+import MetaMaskSDK from '@metamask/sdk';
 
 import { Logo } from "components/icons";
 
@@ -121,6 +125,12 @@ type FormData = {
   password: string;
 };
 
+
+new MetaMaskSDK({
+  useDeeplink: false,
+  communicationLayerPreference: "socket",
+});
+
 const LoginForm: React.FC = () => {
   const { handleSubmit, register, formState } = useForm<FormData>();
   const [show, setShow] = useState(false);
@@ -136,6 +146,135 @@ const LoginForm: React.FC = () => {
       history.push("/home");
     }
   };
+
+  const [chain, setChain] = useState("");
+  const [account, setAccount] = useState("");
+  const [response, setResponse] = useState("");
+
+  const connect = () => {
+    window.ethereum
+      .request({
+        method: "eth_requestAccounts",
+        params: [],
+      })
+      .then((res) => console.log("request accounts", res))
+      .catch((e) => console.log("request accounts ERR", e));
+  };
+
+  const addEthereumChain = () => {
+    window.ethereum
+      .request({
+        method: "wallet_addEthereumChain",
+        params: [
+          {
+            chainId: "0x89",
+            chainName: "Polygon",
+            blockExplorerUrls: ["https://polygonscan.com"],
+            nativeCurrency: { symbol: "MATIC", decimals: 18 },
+            rpcUrls: ["https://polygon-rpc.com/"],
+          },
+        ],
+      })
+      .then((res) => console.log("add", res))
+      .catch((e) => console.log("ADD ERR", e));
+  };
+
+  useEffect(() => {
+    window.ethereum.on("chainChanged", (chain) => {
+      console.log(chain);
+      setChain(chain);
+    });
+    window.ethereum.on("accountsChanged", (accounts) => {
+      console.log(accounts);
+      setAccount(accounts?.[0]);
+    });
+  }, []);
+
+  const sign = async () => {
+    const msgParams = JSON.stringify({
+      domain: {
+        // Defining the chain aka Rinkeby testnet or Ethereum Main Net
+        chainId: parseInt(window.ethereum.chainId, 16),
+        // Give a user friendly name to the specific contract you are signing for.
+        name: "Ether Mail",
+        // If name isn't enough add verifying contract to make sure you are establishing contracts with the proper entity
+        verifyingContract: "0xCcCCccccCCCCcCCCCCCcCcCccCcCCCcCcccccccC",
+        // Just let's you know the latest version. Definitely make sure the field name is correct.
+        version: "1",
+      },
+
+      // Defining the message signing data content.
+      message: {
+        /*
+         - Anything you want. Just a JSON Blob that encodes the data you want to send
+         - No required fields
+         - This is DApp Specific
+         - Be as explicit as possible when building out the message schema.
+        */
+        contents: "Hello, Bob!",
+        attachedMoneyInEth: 4.2,
+        from: {
+          name: "Cow",
+          wallets: [
+            "0xCD2a3d9F938E13CD947Ec05AbC7FE734Df8DD826",
+            "0xDeaDbeefdEAdbeefdEadbEEFdeadbeEFdEaDbeeF",
+          ],
+        },
+        to: [
+          {
+            name: "Bob",
+            wallets: [
+              "0xbBbBBBBbbBBBbbbBbbBbbbbBBbBbbbbBbBbbBBbB",
+              "0xB0BdaBea57B0BDABeA57b0bdABEA57b0BDabEa57",
+              "0xB0B0b0b0b0b0B000000000000000000000000000",
+            ],
+          },
+        ],
+      },
+      // Refers to the keys of the *types* object below.
+      primaryType: "Mail",
+      types: {
+        // TODO: Clarify if EIP712Domain refers to the domain the contract is hosted on
+        EIP712Domain: [
+          { name: "name", type: "string" },
+          { name: "version", type: "string" },
+          { name: "chainId", type: "uint256" },
+          { name: "verifyingContract", type: "address" },
+        ],
+        // Not an EIP712Domain definition
+        Group: [
+          { name: "name", type: "string" },
+          { name: "members", type: "Person[]" },
+        ],
+        // Refer to PrimaryType
+        Mail: [
+          { name: "from", type: "Person" },
+          { name: "to", type: "Person[]" },
+          { name: "contents", type: "string" },
+        ],
+        // Not an EIP712Domain definition
+        Person: [
+          { name: "name", type: "string" },
+          { name: "wallets", type: "address[]" },
+        ],
+      },
+    });
+
+    var from = window.ethereum.selectedAddress;
+
+    var params = [from, msgParams];
+    var method = "eth_signTypedData_v4";
+
+    try {
+      const resp = await window.ethereum.request({ method, params });
+      setResponse(resp);
+    } catch (e) {
+      console.log(e);
+    }
+  };
+
+
+
 
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
@@ -209,6 +348,26 @@ const LoginForm: React.FC = () => {
         >
           Sign In
         </Button>
+        <HStack spacing={5}>
+          <Divider background={'#FAFBFC'} width={'43%'}/>
+          <Text  color="subtle" my={3}>
+          OR
+        </Text>
+        <Divider background={'#FAFBFC'} width={'45%'}/>
+        </HStack>
+        <Button
+          py={6}
+          onClick={connect}
+          background='#F2F2F2'
+          width={'fit-content'}
+          alignSelf='center'
+          px={10}
+          color='#8B8B8B'
+        >
+          <Image mr={2} src='/common/MetaMask_Fox.svg' height='35px' width='35px'/>
+          Sign In with MetaMask
+        </Button>
+        
       </Stack>
     </form>
   );

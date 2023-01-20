@@ -312,4 +312,5 @@ export const blockScans: { [key: string]: string } = {
   avalanche: "Avalanche C-Chain",
   celo: "Celo",
   aurora: "Aurora",
+  
 };
