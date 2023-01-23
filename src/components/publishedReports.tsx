@@ -22,8 +22,6 @@ const ReportBlock: React.FC<{
   profile: Profile;
   type: string;
 }> = ({ report, profile, type }) => {
-  const [isDownloadLoading, setDownloadLoading] = useState(false);
-  const history = useHistory();
 
   const toast = useToast();
 
