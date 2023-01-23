@@ -177,7 +177,7 @@ const Issues: React.FC<IssuesProps> = ({ issues, file, setFile }) => {
       {Array.from(issues)
         .sort((issue1, issue2) =>
           severityPriority[issue1.template_details.issue_severity] >
-          severityPriority[issue2.template_details.issue_severity]
+            severityPriority[issue2.template_details.issue_severity]
             ? -1
             : 1
         )
@@ -445,186 +445,186 @@ export const MultifileResult: React.FC<{
   details_enabled,
   refetch,
 }) => {
-  const [files, setFiles] = useState<FilesState | null>(null);
+    const [files, setFiles] = useState<FilesState | null>(null);
 
-  const [issues, setIssues] = useState<MultiFileScanDetail[]>(scanDetails);
+    const [issues, setIssues] = useState<MultiFileScanDetail[]>(scanDetails);
 
-  const { projectId, scanId } =
-    useParams<{ projectId: string; scanId: string }>();
-  const {
-    issue_severity_distribution: {
-      critical,
-      high,
-      medium,
-      low,
-      informational,
-      gas,
-    },
-  } = scanSummary;
+    const { projectId, scanId } =
+      useParams<{ projectId: string; scanId: string }>();
+    const {
+      issue_severity_distribution: {
+        critical,
+        high,
+        medium,
+        low,
+        informational,
+        gas,
+      },
+    } = scanSummary;
 
-  const [confidence, setConfidence] = useState([true, true, true]);
+    const [confidence, setConfidence] = useState([true, true, true]);
 
-  const [vulnerability, setVulnerability] = useState([
-    true,
-    true,
-    true,
-    true,
-    true,
-    true,
-  ]);
+    const [vulnerability, setVulnerability] = useState([
+      true,
+      true,
+      true,
+      true,
+      true,
+      true,
+    ]);
 
-  // const [action, setAction] = useState("");
-  const toast = useToast();
+    // const [action, setAction] = useState("");
+    const toast = useToast();
 
-  const [isDesktopView] = useMediaQuery("(min-width: 1024px)");
+    const [isDesktopView] = useMediaQuery("(min-width: 1024px)");
 
-  const updateBugStatus = async (action: string) => {
-    if (files) {
-      const { data } = await API.post("/api-update-bug-status/", {
-        bug_ids: [files?.bug_hash],
-        scan_id: scanId,
-        project_id: projectId,
-        bug_status: action,
-      });
-      if (data.status === "success") {
-        toast({
-          title: "Bug Status Updated",
-          description: data.message,
-          status: "success",
-          duration: 3000,
-          isClosable: true,
+    const updateBugStatus = async (action: string) => {
+      if (files) {
+        const { data } = await API.post("/api-update-bug-status/", {
+          bug_ids: [files?.bug_hash],
+          scan_id: scanId,
+          project_id: projectId,
+          bug_status: action,
+        });
+        if (data.status === "success") {
+          toast({
+            title: "Bug Status Updated",
+            description: data.message,
+            status: "success",
+            duration: 3000,
+            isClosable: true,
+          });
+        }
+
+        setIssues((prevState) => {
+          const newState = prevState.map((obj) => {
+            if (obj.issue_id === files.issue_id) {
+              const newList = obj.metric_wise_aggregated_findings.map((item) => {
+                if (item.bug_id === files.bug_id) {
+                  return { ...item, bug_status: action };
+                }
+                return item;
+              });
+              return { ...obj, metric_wise_aggregated_findings: newList };
+            }
+            // 👇️ otherwise return object as is
+            return obj;
+          });
+          return newState;
+        });
+        setFiles({
+          ...files,
+          bug_status: action,
         });
       }
+      refetch();
+    };
 
-      setIssues((prevState) => {
-        const newState = prevState.map((obj) => {
-          if (obj.issue_id === files.issue_id) {
-            const newList = obj.metric_wise_aggregated_findings.map((item) => {
-              if (item.bug_id === files.bug_id) {
-                return { ...item, bug_status: action };
-              }
-              return item;
-            });
-            return { ...obj, metric_wise_aggregated_findings: newList };
-          }
-          // 👇️ otherwise return object as is
-          return obj;
-        });
-        return newState;
-      });
-      setFiles({
-        ...files,
-        bug_status: action,
-      });
-    }
-    refetch();
-  };
-
-  return (
-    <>
-      <Flex
-        w="100%"
-        sx={{ flexDir: ["column", "column", "column", "row"] }}
-        py={2}
-      >
-        <VStack
-          w={["100%", "100%", "100%", "40%"]}
-          spacing={8}
-          mb={[8, 8, 0]}
-          alignItems="flex-start"
+    return (
+      <>
+        <Flex
+          w="100%"
+          sx={{ flexDir: ["column", "column", "column", "row"] }}
+          py={2}
         >
-          <Flex w="100%" justifyContent="space-around">
-            <Box width="100%">
-              <VulnerabilityDistributionFilter
-                critical={critical}
-                high={high}
-                medium={medium}
-                low={low}
-                informational={informational}
-                gas={gas}
+          <VStack
+            w={["100%", "100%", "100%", "40%"]}
+            spacing={8}
+            mb={[8, 8, 0]}
+            alignItems="flex-start"
+          >
+            <Flex w="100%" justifyContent="space-around">
+              <Box width="100%">
+                <VulnerabilityDistributionFilter
+                  critical={critical}
+                  high={high}
+                  medium={medium}
+                  low={low}
+                  informational={informational}
+                  gas={gas}
+                  vulnerability={vulnerability}
+                  setVulnerability={setVulnerability}
+                />
+              </Box>
+              {/* <Score score={score} /> */}
+            </Flex>
+            <VStack
+              width={"100%"}
+              justify={"center"}
+              display={["flex", "flex", "flex", "none"]}
+            >
+              <Text fontWeight={600}>Confidence Parameter</Text>
+              <HStack>
+                <Button
+                  variant={confidence[2] ? "solid" : "outline"}
+                  py={0}
+                  fontWeight="400"
+                  borderRadius={"27px"}
+                  onClick={() =>
+                    setConfidence([confidence[0], confidence[1], !confidence[2]])
+                  }
+                >
+                  <WarningIcon color={"low"} mr={2} /> Certain
+                </Button>
+                <Button
+                  variant={confidence[1] ? "solid" : "outline"}
+                  py={0}
+                  fontWeight="400"
+                  borderRadius={"27px"}
+                  onClick={() =>
+                    setConfidence([confidence[0], !confidence[1], confidence[2]])
+                  }
+                >
+                  <WarningIcon color={"medium"} mr={2} /> Firm
+                </Button>
+                <Button
+                  variant={confidence[0] ? "solid" : "outline"}
+                  py={0}
+                  fontWeight="400"
+                  borderRadius={"27px"}
+                  onClick={() =>
+                    setConfidence([!confidence[0], confidence[1], confidence[2]])
+                  }
+                >
+                  <WarningIcon color={"high"} mr={2} /> Tentative
+                </Button>
+              </HStack>
+            </VStack>
+            <Box
+              w="100%"
+              h={["100%", "100%", "100%", "100vh"]}
+              overflowY="scroll"
+            >
+              <MultifileIssues
+                type={type}
+                profileData={profileData}
+                details_enabled={details_enabled}
+                is_latest_scan={is_latest_scan}
+                issues={issues}
+                files={files}
+                setFiles={setFiles}
+                confidence={confidence}
                 vulnerability={vulnerability}
-                setVulnerability={setVulnerability}
+                updateBugStatus={updateBugStatus}
               />
             </Box>
-            {/* <Score score={score} /> */}
-          </Flex>
-          <VStack
-            width={"100%"}
-            justify={"center"}
-            display={["flex", "flex", "flex", "none"]}
-          >
-            <Text fontWeight={600}>Confidence Parameter</Text>
-            <HStack>
-              <Button
-                variant={confidence[2] ? "solid" : "outline"}
-                py={0}
-                fontWeight="400"
-                borderRadius={"27px"}
-                onClick={() =>
-                  setConfidence([confidence[0], confidence[1], !confidence[2]])
-                }
-              >
-                <WarningIcon color={"low"} mr={2} /> Certain
-              </Button>
-              <Button
-                variant={confidence[1] ? "solid" : "outline"}
-                py={0}
-                fontWeight="400"
-                borderRadius={"27px"}
-                onClick={() =>
-                  setConfidence([confidence[0], !confidence[1], confidence[2]])
-                }
-              >
-                <WarningIcon color={"medium"} mr={2} /> Firm
-              </Button>
-              <Button
-                variant={confidence[0] ? "solid" : "outline"}
-                py={0}
-                fontWeight="400"
-                borderRadius={"27px"}
-                onClick={() =>
-                  setConfidence([!confidence[0], confidence[1], confidence[2]])
-                }
-              >
-                <WarningIcon color={"high"} mr={2} /> Tentative
-              </Button>
-            </HStack>
           </VStack>
-          <Box
-            w="100%"
-            h={["100%", "100%", "100%", "100vh"]}
-            overflowY="scroll"
-          >
-            <MultifileIssues
+
+          {isDesktopView && (
+            <DetailedResult
               type={type}
-              profileData={profileData}
-              details_enabled={details_enabled}
               is_latest_scan={is_latest_scan}
-              issues={issues}
               files={files}
-              setFiles={setFiles}
               confidence={confidence}
-              vulnerability={vulnerability}
+              setConfidence={setConfidence}
+              details_enabled={details_enabled}
               updateBugStatus={updateBugStatus}
             />
-          </Box>
-        </VStack>
-
-        {isDesktopView && (
-          <DetailedResult
-            type={type}
-            is_latest_scan={is_latest_scan}
-            files={files}
-            confidence={confidence}
-            setConfidence={setConfidence}
-            details_enabled={details_enabled}
-            updateBugStatus={updateBugStatus}
-          />
-        )}
-      </Flex>
-    </>
-  );
-};
+          )}
+        </Flex>
+      </>
+    );
+  };
 
 type MultifileIssuesProps = {
   type: "block" | "project";
@@ -676,7 +676,7 @@ const MultifileIssues: React.FC<MultifileIssuesProps> = ({
       {Array.from(issues)
         .sort((issue1, issue2) =>
           severityPriority[issue1.template_details.issue_severity] >
-          severityPriority[issue2.template_details.issue_severity]
+            severityPriority[issue2.template_details.issue_severity]
             ? -1
             : 1
         )
@@ -693,9 +693,9 @@ const MultifileIssues: React.FC<MultifileIssuesProps> = ({
             return (
               <>
                 {confidence[parseInt(template_details.issue_confidence)] &&
-                vulnerability[
+                  vulnerability[
                   getVulnerabilityNumber(template_details.issue_severity)
-                ] ? (
+                  ] ? (
                   <AccordionItem id={issue_id} key={issue_id} w={"98%"}>
                     {({ isExpanded }) => (
                       <>
@@ -763,33 +763,35 @@ const MultifileIssues: React.FC<MultifileIssuesProps> = ({
                             />
                           ) : (
                             <>
-                              <Accordion allowMultiple={false} allowToggle>
-                                {metric_wise_aggregated_findings.map(
-                                  (item, index) => (
-                                    <IssueBox
-                                      key={item.bug_id + index}
-                                      type={type}
-                                      bug_id={item.bug_id}
-                                      files={files}
-                                      issue_id={issue_id}
-                                      metric_wise_aggregated_finding={{
-                                        description_details:
-                                          item.description_details,
-                                        findings: item.findings,
-                                        bug_id: item.bug_id,
-                                        bug_hash: item.bug_hash,
-                                        bug_status: item.bug_status,
-                                        issue_id: issue_id,
-                                        template_details: template_details,
-                                      }}
-                                      template_details={template_details}
-                                      is_latest_scan={is_latest_scan}
-                                      setFiles={setFiles}
-                                      updateBugStatus={updateBugStatus}
-                                    />
-                                  )
-                                )}
-                              </Accordion>
+                              {isExpanded && (
+                                <Accordion allowMultiple={false} allowToggle>
+                                  {metric_wise_aggregated_findings.map(
+                                    (item, index) => (
+                                      <IssueBox
+                                        key={item.bug_id + index}
+                                        type={type}
+                                        bug_id={item.bug_id}
+                                        files={files}
+                                        issue_id={issue_id}
+                                        metric_wise_aggregated_finding={{
+                                          description_details:
+                                            item.description_details,
+                                          findings: item.findings,
+                                          bug_id: item.bug_id,
+                                          bug_hash: item.bug_hash,
+                                          bug_status: item.bug_status,
+                                          issue_id: issue_id,
+                                          template_details: template_details,
+                                        }}
+                                        template_details={template_details}
+                                        is_latest_scan={is_latest_scan}
+                                        setFiles={setFiles}
+                                        updateBugStatus={updateBugStatus}
+                                      />
+                                    )
+                                  )}
+                                </Accordion>
+                              )}
                             </>
                           )}
                         </AccordionPanel>
@@ -828,147 +830,147 @@ const IssueBox: React.FC<{
   setFiles,
   updateBugStatus,
 }) => {
-  const [isDesktopView] = useMediaQuery("(min-width: 1024px)");
-  console.log("issue");
-  return (
-    <>
-      {isDesktopView ? (
-        <Box
-          key={bug_id}
-          id={bug_id}
-          opacity={
-            metric_wise_aggregated_finding.bug_status === "pending_fix"
-              ? 1
-              : 0.5
-          }
-          p={[0, 0, 0, 3]}
-          borderRadius={[0, 0, 0, 15]}
-          sx={{
-            cursor: "pointer",
-            bg:
-              bug_id === files?.bug_id &&
+    const [isDesktopView] = useMediaQuery("(min-width: 1024px)");
+    console.log("issue");
+    return (
+      <>
+        {isDesktopView ? (
+          <Box
+            key={bug_id}
+            id={bug_id}
+            opacity={
               metric_wise_aggregated_finding.bug_status === "pending_fix"
-                ? "gray.300"
-                : "gray.100",
-            my: 2,
-            color: "text",
-            fontSize: "sm",
-            transition: "0.2s background",
-            _hover: {
-              bg: bug_id === files?.bug_id ? "gray.300" : "gray.200",
-            },
-          }}
-          onClick={() =>
-            setFiles({
-              bug_id: bug_id,
-              issue_id: issue_id,
-              bug_hash: metric_wise_aggregated_finding.bug_hash,
-              bug_status: metric_wise_aggregated_finding.bug_status,
-              findings: metric_wise_aggregated_finding.findings,
-              description_details:
-                metric_wise_aggregated_finding.description_details,
-              template_details: template_details,
-            })
-          }
-        >
-          <HStack justify={"space-between"}>
-            <Text isTruncated color={"gray.700"}>
-              {bug_id}
-            </Text>
-            <HStack>
-              {metric_wise_aggregated_finding.findings.length > 1 && (
-                <HStack
-                  mr={
-                    metric_wise_aggregated_finding.bug_status == "pending_fix"
-                      ? 8
-                      : 0
-                  }
-                  py={1}
-                  px={3}
-                  borderRadius={20}
-                  backgroundColor={"white"}
-                >
-                  <MultifileIcon size={20} /> <Text>MULTIFILE</Text>
-                </HStack>
-              )}
-
-              {metric_wise_aggregated_finding.bug_status !== "pending_fix" && (
-                <Image
-                  src={`/icons/${metric_wise_aggregated_finding.bug_status}.svg`}
-                />
-              )}
-            </HStack>
-          </HStack>
-        </Box>
-      ) : (
-        <AccordionItem>
-          {({ isExpanded }) => (
-            <>
-              <AccordionButton
-                bg={"#F8FAFC"}
-                p={0}
-                onClick={() =>
-                  setFiles({
-                    bug_id: bug_id,
-                    issue_id: issue_id,
-                    bug_hash: metric_wise_aggregated_finding.bug_hash,
-                    bug_status: metric_wise_aggregated_finding.bug_status,
-                    findings: metric_wise_aggregated_finding.findings,
-                    description_details:
-                      metric_wise_aggregated_finding.description_details,
-                    template_details: template_details,
-                  })
-                }
-              >
-                <HStack justify={"space-between"} p={4} w="100%">
-                  <Text isTruncated color={"gray.700"}>
-                    {bug_id}
-                  </Text>
-                  <HStack>
-                    {metric_wise_aggregated_finding.findings.length > 1 && (
-                      <HStack
-                        mr={
-                          metric_wise_aggregated_finding.bug_status ==
-                          "pending_fix"
-                            ? 8
-                            : 0
-                        }
-                        py={1}
-                        px={3}
-                        borderRadius={20}
-                        backgroundColor={"white"}
-                      >
-                        <MultifileIcon size={20} /> <Text>MULTIFILE</Text>
-                      </HStack>
-                    )}
-
-                    {metric_wise_aggregated_finding.bug_status !==
-                      "pending_fix" && (
-                      <Image
-                        src={`/icons/${metric_wise_aggregated_finding.bug_status}.svg`}
-                      />
-                    )}
+                ? 1
+                : 0.5
+            }
+            p={[0, 0, 0, 3]}
+            borderRadius={[0, 0, 0, 15]}
+            sx={{
+              cursor: "pointer",
+              bg:
+                bug_id === files?.bug_id &&
+                  metric_wise_aggregated_finding.bug_status === "pending_fix"
+                  ? "gray.300"
+                  : "gray.100",
+              my: 2,
+              color: "text",
+              fontSize: "sm",
+              transition: "0.2s background",
+              _hover: {
+                bg: bug_id === files?.bug_id ? "gray.300" : "gray.200",
+              },
+            }}
+            onClick={() =>
+              setFiles({
+                bug_id: bug_id,
+                issue_id: issue_id,
+                bug_hash: metric_wise_aggregated_finding.bug_hash,
+                bug_status: metric_wise_aggregated_finding.bug_status,
+                findings: metric_wise_aggregated_finding.findings,
+                description_details:
+                  metric_wise_aggregated_finding.description_details,
+                template_details: template_details,
+              })
+            }
+          >
+            <HStack justify={"space-between"}>
+              <Text isTruncated color={"gray.700"}>
+                {bug_id}
+              </Text>
+              <HStack>
+                {metric_wise_aggregated_finding.findings.length > 1 && (
+                  <HStack
+                    mr={
+                      metric_wise_aggregated_finding.bug_status == "pending_fix"
+                        ? 8
+                        : 0
+                    }
+                    py={1}
+                    px={3}
+                    borderRadius={20}
+                    backgroundColor={"white"}
+                  >
+                    <MultifileIcon size={20} /> <Text>MULTIFILE</Text>
                   </HStack>
-                </HStack>
-              </AccordionButton>
-              <AccordionPanel p={0}>
-                {isExpanded && (
-                  <DetailedResult
-                    type={type}
-                    is_latest_scan={is_latest_scan}
-                    files={files}
-                    details_enabled={true}
-                    updateBugStatus={updateBugStatus}
+                )}
+
+                {metric_wise_aggregated_finding.bug_status !== "pending_fix" && (
+                  <Image
+                    src={`/icons/${metric_wise_aggregated_finding.bug_status}.svg`}
                   />
                 )}
-              </AccordionPanel>
-            </>
-          )}
-        </AccordionItem>
-      )}
-    </>
-  );
-};
+              </HStack>
+            </HStack>
+          </Box>
+        ) : (
+          <AccordionItem>
+            {({ isExpanded }) => (
+              <>
+                <AccordionButton
+                  bg={"#F8FAFC"}
+                  p={0}
+                  onClick={() =>
+                    setFiles({
+                      bug_id: bug_id,
+                      issue_id: issue_id,
+                      bug_hash: metric_wise_aggregated_finding.bug_hash,
+                      bug_status: metric_wise_aggregated_finding.bug_status,
+                      findings: metric_wise_aggregated_finding.findings,
+                      description_details:
+                        metric_wise_aggregated_finding.description_details,
+                      template_details: template_details,
+                    })
+                  }
+                >
+                  <HStack justify={"space-between"} p={4} w="100%">
+                    <Text isTruncated color={"gray.700"}>
+                      {bug_id}
+                    </Text>
+                    <HStack>
+                      {metric_wise_aggregated_finding.findings.length > 1 && (
+                        <HStack
+                          mr={
+                            metric_wise_aggregated_finding.bug_status ==
+                              "pending_fix"
+                              ? 8
+                              : 0
+                          }
+                          py={1}
+                          px={3}
+                          borderRadius={20}
+                          backgroundColor={"white"}
+                        >
+                          <MultifileIcon size={20} /> <Text>MULTIFILE</Text>
+                        </HStack>
+                      )}
+
+                      {metric_wise_aggregated_finding.bug_status !==
+                        "pending_fix" && (
+                          <Image
+                            src={`/icons/${metric_wise_aggregated_finding.bug_status}.svg`}
+                          />
+                        )}
+                    </HStack>
+                  </HStack>
+                </AccordionButton>
+                <AccordionPanel p={0}>
+                  {isExpanded && (
+                    <DetailedResult
+                      type={type}
+                      is_latest_scan={is_latest_scan}
+                      files={files}
+                      details_enabled={true}
+                      updateBugStatus={updateBugStatus}
+                    />
+                  )}
+                </AccordionPanel>
+              </>
+            )}
+          </AccordionItem>
+        )}
+      </>
+    );
+  };
 
 type FileDataContProps = { file: FileState; type: "project" | "block" };
 const FileDataCont: React.FC<FileDataContProps> = ({ file, type }) => {
@@ -1074,15 +1076,18 @@ const CodeExplorer: React.FC<{
   line_nos_end: number[];
 }> = ({ file_content, line_nos_start, line_nos_end }) => {
   const elementRef = useRef<HTMLDivElement>(null);
+  const [isDesktopView] = useMediaQuery("(min-width: 1024px)");
 
   const scrollToBottom = () => {
-    if (elementRef.current) {
-      elementRef.current.scrollIntoView({
-        behavior: "smooth",
-        block: "center",
-        inline: "start",
-      });
-    }
+    setTimeout(() => {
+      if (elementRef.current) {
+        elementRef.current.scrollIntoView({
+          behavior: "smooth",
+          block: "center",
+          inline: "start",
+        });
+      }
+    }, isDesktopView ? 0 : 500);
   };
 
   let count: number = 0;
@@ -1133,7 +1138,7 @@ const CodeExplorer: React.FC<{
                       fontSize: "13px",
                       color:
                         index + 1 <= line_nos_end[count] + 1 &&
-                        index + 1 >= line_nos_start[count]
+                          index + 1 >= line_nos_start[count]
                           ? "#000000"
                           : "#A0AEC0",
                     }}
@@ -1152,7 +1157,7 @@ const CodeExplorer: React.FC<{
                       fontSize: "13px",
                       color:
                         index + 1 <= line_nos_end[count] + 1 &&
-                        index + 1 >= line_nos_start[count]
+                          index + 1 >= line_nos_start[count]
                           ? "#000000"
                           : "#A0AEC0",
                     }}
@@ -1243,11 +1248,11 @@ export const MultiFileExplorer: React.FC<MultiFileExplorerProps> = ({
                           {file.file_path.length < 16
                             ? file.file_path
                             : file.file_path.slice(0, 6) +
-                              "..." +
-                              file.file_path.slice(
-                                file.file_path.length - 10,
-                                file.file_path.length
-                              )}
+                            "..." +
+                            file.file_path.slice(
+                              file.file_path.length - 10,
+                              file.file_path.length
+                            )}
                         </Text>
                       </Tooltip>
                     </Tab>
@@ -1393,7 +1398,12 @@ const IssueDetail: React.FC<{
               />
             </DescriptionWrapper>
           </TabPanel>
-          <TabPanel sx={{ h: "20vh", w: "100%", overflowY: "scroll" }}>
+          <TabPanel sx={{
+            h: ["fit-content", "fit-content", "fit-content", "20vh"],
+            w: "100%",
+            overflowY: "scroll"
+          }}
+          >
             <DescriptionWrapper>
               <Box
                 dangerouslySetInnerHTML={{

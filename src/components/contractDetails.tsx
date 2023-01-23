@@ -7,7 +7,7 @@ export const ContractDetails: React.FC<{
   scanData: any;
 }> = ({ scanData }) => {
   return (
-    <AccordionPanel backgroundColor={"#F4F5F6"} pb={4}>
+    <AccordionPanel backgroundColor={"#F4F5F6"} pb={4} mt={[4, 4, 4, 0]}>
       <Flex
         flexDirection={"row"}
         justifyContent="flex-start"
