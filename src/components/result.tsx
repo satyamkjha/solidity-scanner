@@ -763,9 +763,12 @@ const MultifileIssues: React.FC<MultifileIssuesProps> = ({
                             />
                           ) : (
                             <>
-                              <Accordion allowMultiple={false} allowToggle>
-                                {metric_wise_aggregated_findings.map(
-                                  (item, index) => (
+                              {isExpanded &&
+                                <Accordion
+                                  allowMultiple={false}
+                                  allowToggle
+                                >
+                                  {metric_wise_aggregated_findings.map((item, index) => (
                                     <IssueBox
                                       key={item.bug_id + index}
                                       type={type}
@@ -787,9 +790,9 @@ const MultifileIssues: React.FC<MultifileIssuesProps> = ({
                                       setFiles={setFiles}
                                       updateBugStatus={updateBugStatus}
                                     />
-                                  )
-                                )}
-                              </Accordion>
+                                  ))}
+                                </Accordion>
+                              }
                             </>
                           )}
                         </AccordionPanel>
@@ -1074,15 +1077,18 @@ const CodeExplorer: React.FC<{
   line_nos_end: number[];
 }> = ({ file_content, line_nos_start, line_nos_end }) => {
   const elementRef = useRef<HTMLDivElement>(null);
+  const [isDesktopView] = useMediaQuery("(min-width: 1024px)");
 
   const scrollToBottom = () => {
-    if (elementRef.current) {
-      elementRef.current.scrollIntoView({
-        behavior: "smooth",
-        block: "center",
-        inline: "start",
-      });
-    }
+    setTimeout(() => {
+      if (elementRef.current) {
+        elementRef.current.scrollIntoView({
+          behavior: "smooth",
+          block: "center",
+          inline: "start",
+        });
+      }
+    }, isDesktopView ? 0 : 500)
   };
 
   let count: number = 0;

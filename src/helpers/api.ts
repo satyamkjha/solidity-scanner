@@ -1,4 +1,5 @@
 import axios from "axios";
+import Auth from "./auth";
 // import Auth from './auth';
 
 export const API_URL_PROD = process.env.REACT_APP_API_URL_PROD;

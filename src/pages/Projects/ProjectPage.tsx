@@ -114,7 +114,7 @@ export const ProjectPage: React.FC = () => {
         py: 4,
         minH: "78vh",
       }}
-      px={[4, 4, 4, 8]}
+      px={[2, 2, 2, 8]}
     >
       {isLoading ? (
         <Flex w="100%" h="70vh" alignItems="center" justifyContent="center">
@@ -586,7 +586,7 @@ const ScanDetails: React.FC<{ scansRemaining: number; scans: ScanMeta[] }> = ({
                     flexDir={"row"}
                     justifyContent="flex-start"
                     align={"center"}
-                    ml={[2, 2, 2, 5]}
+                    ml={[0, 0, 0, 5]}
                   >
                     <TabList
                       sx={{
