@@ -831,7 +831,6 @@ const IssueBox: React.FC<{
   updateBugStatus,
 }) => {
     const [isDesktopView] = useMediaQuery("(min-width: 1024px)");
-    console.log("issue");
     return (
       <>
         {isDesktopView ? (
