@@ -1,5 +1,16 @@
 import { WarningIcon } from "@chakra-ui/icons";
-import { HStack, VStack, Text, Button, Box, Flex, Icon, Image, Stack, useMediaQuery } from "@chakra-ui/react";
+import {
+  HStack,
+  VStack,
+  Text,
+  Button,
+  Box,
+  Flex,
+  Icon,
+  Image,
+  Stack,
+  useMediaQuery,
+} from "@chakra-ui/react";
 import { FilesState, MultiFileTemplateDetail } from "common/types";
 import { issueActions } from "common/values";
 import { sentenceCapitalize } from "helpers/helperFunction";
@@ -10,7 +21,6 @@ import TrialWall from "./trialWall";
 
 import Select from "react-select";
 
-
 export const DetailedResult: React.FC<{
   type: "block" | "project";
   is_latest_scan: boolean;
@@ -18,7 +28,7 @@ export const DetailedResult: React.FC<{
   confidence?: boolean[];
   setConfidence?: Dispatch<SetStateAction<boolean[]>>;
   details_enabled: boolean;
-  updateBugStatus: any
+  updateBugStatus: any;
 }> = ({
   type,
   is_latest_scan,
@@ -28,7 +38,6 @@ export const DetailedResult: React.FC<{
   details_enabled,
   updateBugStatus,
 }) => {
-
     const [isDesktopView] = useMediaQuery("(min-width: 1024px)");
 
     const customStyles = {
@@ -78,42 +87,44 @@ export const DetailedResult: React.FC<{
         spacing={5}
         pl={[0, 0, 0, 10]}
       >
-        {confidence && setConfidence && <HStack
-          width={"100%"}
-          justify={"space-between"}
-          display={["none", "none", "none", "flex"]}
-        >
-          <Text fontWeight={600}>Confidence Parameter</Text>
-          <HStack>
-            <Button
-              variant={confidence[2] ? "solid" : "outline"}
-              py={0}
-              onClick={() =>
-                setConfidence([confidence[0], confidence[1], !confidence[2]])
-              }
-            >
-              <WarningIcon color={"low"} mr={2} /> Certain
-            </Button>
-            <Button
-              variant={confidence[1] ? "solid" : "outline"}
-              py={0}
-              onClick={() =>
-                setConfidence([confidence[0], !confidence[1], confidence[2]])
-              }
-            >
-              <WarningIcon color={"medium"} mr={2} /> Firm
-            </Button>
-            <Button
-              variant={confidence[0] ? "solid" : "outline"}
-              py={0}
-              onClick={() =>
-                setConfidence([!confidence[0], confidence[1], confidence[2]])
-              }
-            >
-              <WarningIcon color={"high"} mr={2} /> Tentative
-            </Button>
+        {confidence && setConfidence && (
+          <HStack
+            width={"100%"}
+            justify={"space-between"}
+            display={["none", "none", "none", "flex"]}
+          >
+            <Text fontWeight={600}>Confidence Parameter</Text>
+            <HStack>
+              <Button
+                variant={confidence[2] ? "solid" : "outline"}
+                py={0}
+                onClick={() =>
+                  setConfidence([confidence[0], confidence[1], !confidence[2]])
+                }
+              >
+                <WarningIcon color={"low"} mr={2} /> Certain
+              </Button>
+              <Button
+                variant={confidence[1] ? "solid" : "outline"}
+                py={0}
+                onClick={() =>
+                  setConfidence([confidence[0], !confidence[1], confidence[2]])
+                }
+              >
+                <WarningIcon color={"medium"} mr={2} /> Firm
+              </Button>
+              <Button
+                variant={confidence[0] ? "solid" : "outline"}
+                py={0}
+                onClick={() =>
+                  setConfidence([!confidence[0], confidence[1], confidence[2]])
+                }
+              >
+                <WarningIcon color={"high"} mr={2} /> Tentative
+              </Button>
+            </HStack>
           </HStack>
-        </HStack>}
+        )}
         {files && files.bug_status !== "fixed" && is_latest_scan && (
           <Stack
             justify="space-between"
@@ -126,7 +137,9 @@ export const DetailedResult: React.FC<{
             <Select
               formatOptionLabel={formatOptionLabel}
               options={issueActions}
-              value={issueActions.find((item) => files?.bug_status === item.value)}
+              value={issueActions.find(
+                (item) => files?.bug_status === item.value
+              )}
               placeholder="Select Action"
               styles={customStyles}
               onChange={(newValue) => {
@@ -178,14 +191,13 @@ export const DetailedResult: React.FC<{
             >
               <Icon as={BiCodeCurly} fontSize="40px" color="subtle" mb={4} />
               <Text color="subtle">
-                Please select a file from an issue to see vulnerability
-                details.
+                Please select a file from an issue to see vulnerability details.
               </Text>
             </Flex>
           )}
         </Box>
       </VStack>
-    )
+    );
   };
 
 const formatOptionLabel: React.FC<{
@@ -199,4 +211,4 @@ const formatOptionLabel: React.FC<{
   </div>
 );
 
-export default DetailedResult
+export default DetailedResult;

@@ -79,6 +79,7 @@ const BlockPage: React.FC = () => {
   const [publishStatus, setPublishStatus] = useState("");
 
   const { data: profile, isLoading: isProfileLoading } = useProfile();
+  const { data: reportList, refetch: refetchReportList } = useReports('block', scanData?.scan_report.project_id)
   const toast = useToast();
 
   const [next, setNext] = useState(false);
@@ -193,6 +194,7 @@ const BlockPage: React.FC = () => {
         scanData.scan_report.latest_report_id
       );
     }
+    refetchReportList()
   };
 
   const getReportData = async (project_id: string, report_id: string) => {
@@ -274,7 +276,7 @@ const BlockPage: React.FC = () => {
       ) : (
         scanData &&
         profile &&
-        plans && (
+        plans && reportList && (
           <>
             {" "}
             <Flex
@@ -323,7 +325,12 @@ const BlockPage: React.FC = () => {
                           </AccordionButton>
                         </HStack>
                         <Text sx={{ fontSize: "xl", fontWeight: 600, ml: 2 }}>
-                          <Text as="span" fontSize={["12px", "12px", "12px", "14px"]} ml={[0, 0, 0, 3]} color="gray.500">
+                          <Text
+                            as="span"
+                            fontSize={["12px", "12px", "12px", "14px"]}
+                            ml={[0, 0, 0, 3]}
+                            color="gray.500"
+                          >
                             {scanData.scan_report?.contract_address}
                           </Text>
                         </Text>
@@ -382,8 +389,18 @@ const BlockPage: React.FC = () => {
                         </Text>
                         <Flex
                           as={"div"}
-                          flexDirection={["column-reverse", "column-reverse", "column-reverse", "row"]}
-                          justifyContent={["center", "center", "center", "flex-end"]}
+                          flexDirection={[
+                            "column-reverse",
+                            "column-reverse",
+                            "column-reverse",
+                            "row",
+                          ]}
+                          justifyContent={[
+                            "center",
+                            "center",
+                            "center",
+                            "flex-end",
+                          ]}
                           alignItems={"center"}
                           width={["100%", "100%", "100%", "fit-content"]}
                           height="fit-content"
@@ -554,24 +571,13 @@ const BlockPage: React.FC = () => {
                     ml={[3, 3, 5]}
                   >
                     <TabList my={3} width={"fit-content"} zIndex={0}>
-                      <Tab
-                        minW={"150px"}
-                        bgColor={"#F5F5F5"}
-                      >
+                      <Tab minW={"150px"} bgColor={"#F5F5F5"}>
                         Overview
                       </Tab>
-                      <Tab
-                        minW={"150px"}
-                        bgColor={"#F5F5F5"}
-                        ml={4}
-                      >
+                      <Tab minW={"150px"} bgColor={"#F5F5F5"} ml={4}>
                         Detailed Result
                       </Tab>
-                      <Tab
-                        minW={"175px"}
-                        bgColor={"#F5F5F5"}
-                        ml={4}
-                      >
+                      <Tab minW={"175px"} bgColor={"#F5F5F5"} ml={4}>
                         Published Reports
                       </Tab>
                     </TabList>
@@ -633,13 +639,24 @@ const BlockPage: React.FC = () => {
                     {profile.promo_code ? (
                       profile.actions_supported &&
                       profile.actions_supported.publishable_report && (
-                        <TabPanel p={4} >
-                          <PublishedReports type='block'  profile={profile} scan_report={scanData.scan_report} />
+                        <TabPanel p={4}>
+                          <PublishedReports
+                            type="block"
+                            reportList={reportList.reports}
+                            profile={profile}
+                            scan_report={scanData.scan_report}
+
+                          />
                         </TabPanel>
                       )
                     ) : (
-                      <TabPanel p={4} >
-                        <PublishedReports type='block' profile={profile} scan_report={scanData.scan_report} />
+                      <TabPanel p={4}>
+                        <PublishedReports
+                          type="block"
+                          reportList={reportList.reports}
+                          profile={profile}
+                          scan_report={scanData.scan_report}
+                        />
                       </TabPanel>
                     )}
                   </TabPanels>
@@ -1196,4 +1213,3 @@ const BlockPage: React.FC = () => {
 };
 
 export default BlockPage;
-

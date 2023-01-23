@@ -136,7 +136,11 @@ export const Result: React.FC<{
               <TrialWall />
             ) : file ? (
               <>
-                <FileDetails file={file} type={type} />
+                <FileDetails
+                  file={file}
+                  type={type}
+                  profileData={profileData}
+                />
               </>
             ) : (
               <Flex
@@ -279,8 +283,16 @@ const Issues: React.FC<IssuesProps> = ({ issues, file, setFile }) => {
   );
 };
 
-type FileDetailsProps = { file: FileState; type: "project" | "block" };
-const FileDetails: React.FC<FileDetailsProps> = ({ file, type }) => {
+type FileDetailsProps = {
+  file: FileState;
+  type: "project" | "block";
+  profileData: Profile;
+};
+const FileDetails: React.FC<FileDetailsProps> = ({
+  file,
+  type,
+  profileData,
+}) => {
   const { scanId: scan_id } = useParams<{ scanId: string }>();
   const toast = useToast();
   const { file_path, issue_id, line_nos_end, line_nos_start } = file;
@@ -292,7 +304,6 @@ const FileDetails: React.FC<FileDetailsProps> = ({ file, type }) => {
       integration_service: "github",
     })
   );
-  const { data: profileData } = useProfile();
   let highlightArray: string[] = [];
   line_nos_start.map((number, index) => {
     if (number.toString().length === line_nos_end[index].toString().length) {
@@ -357,7 +368,7 @@ const FileDetails: React.FC<FileDetailsProps> = ({ file, type }) => {
             {file_path}
           </Text>
         </Flex>
-        {isLoading && !profileData && (
+        {isLoading && (
           <Flex
             sx={{
               w: "100%",
@@ -467,7 +478,6 @@ export const MultifileResult: React.FC<{
 
     const [isDesktopView] = useMediaQuery("(min-width: 1024px)");
 
-
     const updateBugStatus = async (action: string) => {
       if (files) {
         const { data } = await API.post("/api-update-bug-status/", {
@@ -512,7 +522,11 @@ export const MultifileResult: React.FC<{
 
     return (
       <>
-        <Flex w="100%" sx={{ flexDir: ["column", "column", "column", "row"] }} py={2}>
+        <Flex
+          w="100%"
+          sx={{ flexDir: ["column", "column", "column", "row"] }}
+          py={2}
+        >
           <VStack
             w={["100%", "100%", "100%", "40%"]}
             spacing={8}
@@ -576,7 +590,11 @@ export const MultifileResult: React.FC<{
                 </Button>
               </HStack>
             </VStack>
-            <Box w="100%" h={["100%", "100%", "100%", "100vh"]} overflowY="scroll">
+            <Box
+              w="100%"
+              h={["100%", "100%", "100%", "100vh"]}
+              overflowY="scroll"
+            >
               <MultifileIssues
                 type={type}
                 profileData={profileData}
@@ -592,7 +610,7 @@ export const MultifileResult: React.FC<{
             </Box>
           </VStack>
 
-          {isDesktopView &&
+          {isDesktopView && (
             <DetailedResult
               type={type}
               is_latest_scan={is_latest_scan}
@@ -601,7 +619,8 @@ export const MultifileResult: React.FC<{
               setConfidence={setConfidence}
               details_enabled={details_enabled}
               updateBugStatus={updateBugStatus}
-            />}
+            />
+          )}
         </Flex>
       </>
     );
@@ -617,7 +636,7 @@ type MultifileIssuesProps = {
   profileData: Profile;
   details_enabled: boolean;
   is_latest_scan: boolean;
-  updateBugStatus: any
+  updateBugStatus: any;
 };
 
 const MultifileIssues: React.FC<MultifileIssuesProps> = ({
@@ -630,7 +649,7 @@ const MultifileIssues: React.FC<MultifileIssuesProps> = ({
   vulnerability,
   profileData,
   details_enabled,
-  updateBugStatus
+  updateBugStatus,
 }) => {
   const getVulnerabilityNumber = (issue_severity: string) => {
     switch (issue_severity) {
@@ -662,12 +681,15 @@ const MultifileIssues: React.FC<MultifileIssuesProps> = ({
             : 1
         )
         .map(
-          ({
-            issue_id,
-            metric_wise_aggregated_findings,
-            template_details,
-            no_of_findings,
-          }, index) => {
+          (
+            {
+              issue_id,
+              metric_wise_aggregated_findings,
+              template_details,
+              no_of_findings,
+            },
+            index
+          ) => {
             return (
               <>
                 {confidence[parseInt(template_details.issue_confidence)] &&
@@ -704,7 +726,7 @@ const MultifileIssues: React.FC<MultifileIssuesProps> = ({
                                   fontWeight: 600,
                                   color: "#4E5D78",
                                   fontSize: "sm",
-                                  textAlign: "left"
+                                  textAlign: "left",
                                 }}
                                 isTruncated
                               >
@@ -721,7 +743,6 @@ const MultifileIssues: React.FC<MultifileIssuesProps> = ({
                             >
                               {no_of_findings}
                             </Text>
-
                           </HStack>
                           <Icon
                             as={AiOutlineCaretRight}
@@ -742,36 +763,35 @@ const MultifileIssues: React.FC<MultifileIssuesProps> = ({
                             />
                           ) : (
                             <>
-                              {isExpanded &&
-                                <Accordion
-                                  allowMultiple={false}
-                                  allowToggle
-                                >
-                                  {metric_wise_aggregated_findings.map((item, index) => (
-                                    <IssueBox
-                                      key={item.bug_id + index}
-                                      type={type}
-                                      bug_id={item.bug_id}
-                                      files={files}
-                                      issue_id={issue_id}
-                                      metric_wise_aggregated_finding={{
-                                        description_details:
-                                          item.description_details,
-                                        findings: item.findings,
-                                        bug_id: item.bug_id,
-                                        bug_hash: item.bug_hash,
-                                        bug_status: item.bug_status,
-                                        issue_id: issue_id,
-                                        template_details: template_details,
-                                      }}
-                                      template_details={template_details}
-                                      is_latest_scan={is_latest_scan}
-                                      setFiles={setFiles}
-                                      updateBugStatus={updateBugStatus}
-                                    />
-                                  ))}
+                              {isExpanded && (
+                                <Accordion allowMultiple={false} allowToggle>
+                                  {metric_wise_aggregated_findings.map(
+                                    (item, index) => (
+                                      <IssueBox
+                                        key={item.bug_id + index}
+                                        type={type}
+                                        bug_id={item.bug_id}
+                                        files={files}
+                                        issue_id={issue_id}
+                                        metric_wise_aggregated_finding={{
+                                          description_details:
+                                            item.description_details,
+                                          findings: item.findings,
+                                          bug_id: item.bug_id,
+                                          bug_hash: item.bug_hash,
+                                          bug_status: item.bug_status,
+                                          issue_id: issue_id,
+                                          template_details: template_details,
+                                        }}
+                                        template_details={template_details}
+                                        is_latest_scan={is_latest_scan}
+                                        setFiles={setFiles}
+                                        updateBugStatus={updateBugStatus}
+                                      />
+                                    )
+                                  )}
                                 </Accordion>
-                              }
+                              )}
                             </>
                           )}
                         </AccordionPanel>
@@ -798,7 +818,7 @@ const IssueBox: React.FC<{
   metric_wise_aggregated_finding: FilesState;
   template_details: MultiFileTemplateDetail;
   setFiles: Dispatch<SetStateAction<FilesState | null>>;
-  updateBugStatus: any
+  updateBugStatus: any;
 }> = ({
   type,
   bug_id,
@@ -813,12 +833,14 @@ const IssueBox: React.FC<{
     const [isDesktopView] = useMediaQuery("(min-width: 1024px)");
     return (
       <>
-        {isDesktopView
-          ? <Box
+        {isDesktopView ? (
+          <Box
             key={bug_id}
             id={bug_id}
             opacity={
-              metric_wise_aggregated_finding.bug_status === "pending_fix" ? 1 : 0.5
+              metric_wise_aggregated_finding.bug_status === "pending_fix"
+                ? 1
+                : 0.5
             }
             p={[0, 0, 0, 3]}
             borderRadius={[0, 0, 0, 15]}
@@ -879,11 +901,13 @@ const IssueBox: React.FC<{
               </HStack>
             </HStack>
           </Box>
-          : <AccordionItem>
+        ) : (
+          <AccordionItem>
             {({ isExpanded }) => (
               <>
                 <AccordionButton
-                  bg={"#F8FAFC"} p={0}
+                  bg={"#F8FAFC"}
+                  p={0}
                   onClick={() =>
                     setFiles({
                       bug_id: bug_id,
@@ -905,7 +929,8 @@ const IssueBox: React.FC<{
                       {metric_wise_aggregated_finding.findings.length > 1 && (
                         <HStack
                           mr={
-                            metric_wise_aggregated_finding.bug_status == "pending_fix"
+                            metric_wise_aggregated_finding.bug_status ==
+                              "pending_fix"
                               ? 8
                               : 0
                           }
@@ -918,27 +943,30 @@ const IssueBox: React.FC<{
                         </HStack>
                       )}
 
-                      {metric_wise_aggregated_finding.bug_status !== "pending_fix" && (
-                        <Image
-                          src={`/icons/${metric_wise_aggregated_finding.bug_status}.svg`}
-                        />
-                      )}
+                      {metric_wise_aggregated_finding.bug_status !==
+                        "pending_fix" && (
+                          <Image
+                            src={`/icons/${metric_wise_aggregated_finding.bug_status}.svg`}
+                          />
+                        )}
                     </HStack>
                   </HStack>
                 </AccordionButton>
                 <AccordionPanel p={0}>
-                  {isExpanded && <DetailedResult
-                    type={type}
-                    is_latest_scan={is_latest_scan}
-                    files={files}
-                    details_enabled={true}
-                    updateBugStatus={updateBugStatus}
-                  />}
+                  {isExpanded && (
+                    <DetailedResult
+                      type={type}
+                      is_latest_scan={is_latest_scan}
+                      files={files}
+                      details_enabled={true}
+                      updateBugStatus={updateBugStatus}
+                    />
+                  )}
                 </AccordionPanel>
               </>
             )}
           </AccordionItem>
-        }
+        )}
       </>
     );
   };
@@ -1058,7 +1086,7 @@ const CodeExplorer: React.FC<{
           inline: "start",
         });
       }
-    }, isDesktopView ? 0 : 500)
+    }, isDesktopView ? 0 : 500);
   };
 
   let count: number = 0;
@@ -1085,7 +1113,6 @@ const CodeExplorer: React.FC<{
           alignItems: "flex-start",
           flexDir: "column",
           h: "fit-content",
-
         }}
       >
         {file_content.map((item, index) => {
@@ -1102,12 +1129,12 @@ const CodeExplorer: React.FC<{
                   align={"flex-start"}
                   spacing={5}
                 >
-                  <Text color={"gray.600"} fontSize='13px' fontWeight="normal">
+                  <Text color={"gray.600"} fontSize="13px" fontWeight="normal">
                     {index + 1}
                   </Text>
                   <pre
                     style={{
-                      fontSize: '13px',
+                      fontSize: "13px",
                       color:
                         index + 1 <= line_nos_end[count] + 1 &&
                           index + 1 >= line_nos_start[count]
@@ -1121,12 +1148,12 @@ const CodeExplorer: React.FC<{
                 </HStack>
               ) : (
                 <HStack as={"div"} key={index} align={"flex-start"} spacing={5}>
-                  <Text color={"gray.600"} fontSize='13px' fontWeight="normal">
+                  <Text color={"gray.600"} fontSize="13px" fontWeight="normal">
                     {index + 1}
                   </Text>
                   <pre
                     style={{
-                      fontSize: '13px',
+                      fontSize: "13px",
                       color:
                         index + 1 <= line_nos_end[count] + 1 &&
                           index + 1 >= line_nos_start[count]
@@ -1152,7 +1179,6 @@ export const MultiFileExplorer: React.FC<MultiFileExplorerProps> = ({
   files,
   type,
 }) => {
-
   const [currentFileName, setCurrentFileName] = useState(
     files.findings[0].file_path
   );
@@ -1285,7 +1311,12 @@ const IssueDetail: React.FC<{
   let variableData = description_details;
 
   return (
-    <Tabs size="sm" variant="soft-rounded" colorScheme="green" w={["100%", "100%", "100%", "auto"]}>
+    <Tabs
+      size="sm"
+      variant="soft-rounded"
+      colorScheme="green"
+      w={["100%", "100%", "100%", "auto"]}
+    >
       <Flex
         w={["100%", "100%", "100%", "auto"]}
         overflowX={["scroll", "scroll", "scroll", "visible"]}
@@ -1299,8 +1330,12 @@ const IssueDetail: React.FC<{
           }}
           px={[0, 0, 0, 4]}
         >
-          <Tab minW={"200px"} mx={[0, 0, 0, 2]}>Vulnerability Description</Tab>
-          <Tab minW={"150px"} mx={[0, 0, 0, 2]}>Remediation</Tab>
+          <Tab minW={"200px"} mx={[0, 0, 0, 2]}>
+            Vulnerability Description
+          </Tab>
+          <Tab minW={"150px"} mx={[0, 0, 0, 2]}>
+            Remediation
+          </Tab>
         </TabList>
       </Flex>
       {isLoading && (
@@ -1362,9 +1397,11 @@ const IssueDetail: React.FC<{
               />
             </DescriptionWrapper>
           </TabPanel>
-          <TabPanel
-            sx={{ w: "100%", overflowY: "scroll" }}
-            h={["fit-content", "fit-content", "fit-content", "20vh"]}
+          <TabPanel sx={{
+            h: ["fit-content", "fit-content", "fit-content", "20vh"],
+            w: "100%",
+            overflowY: "scroll"
+          }}
           >
             <DescriptionWrapper>
               <Box
