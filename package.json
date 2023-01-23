@@ -30,6 +30,7 @@
     "focus-visible": "^5.2.0",
     "framer-motion": "^4.0.0",
     "i": "^0.3.7",
+    "js-cookie": "^3.0.1",
     "js-file-download": "^0.4.12",
     "npm": "^8.5.5",
     "react": "^17.0.2",
@@ -81,6 +82,7 @@
   },
   "devDependencies": {
     "@types/brainhubeu__react-carousel": "^2.0.3",
+    "@types/js-cookie": "^3.0.2",
     "prettier": "^2.5.1",
     "types": "^0.1.1"
   }

@@ -22,8 +22,6 @@ const ReportBlock: React.FC<{
   profile: Profile;
   type: string;
 }> = ({ report, profile, type }) => {
-  const [isDownloadLoading, setDownloadLoading] = useState(false);
-  const history = useHistory();
 
   const toast = useToast();
 
@@ -190,8 +188,8 @@ const PublishedReports: React.FC<{
   profile: Profile;
   scan_report: Scan;
   type: string;
-}> = ({ profile, scan_report, type }) => {
-  const { data } = useReports(type, scan_report.project_id);
+  reportList: ReportsListItem[]
+}> = ({ profile, type, reportList }) => {
 
   return (
     <Box
@@ -201,8 +199,8 @@ const PublishedReports: React.FC<{
         p: [0, 0, 4],
       }}
     >
-      {data &&
-        data?.reports.map((report) => (
+      {reportList &&
+        reportList.map((report) => (
           <ReportBlock type={type} profile={profile} report={report} />
         ))}
     </Box>
