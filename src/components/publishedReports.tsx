@@ -1,5 +1,12 @@
 import { CheckCircleIcon, TimeIcon, ViewIcon } from "@chakra-ui/icons";
-import { useToast, Flex, Box, HStack, IconButton, Text } from "@chakra-ui/react";
+import {
+  useToast,
+  Flex,
+  Box,
+  HStack,
+  IconButton,
+  Text,
+} from "@chakra-ui/react";
 import { ReportsListItem, Profile, Scan } from "common/types";
 import { useReports } from "hooks/useReports";
 import React, { useState } from "react";
@@ -10,19 +17,17 @@ import { FaCopy } from "react-icons/fa";
 import { MdPeopleOutline, MdSettings } from "react-icons/md";
 import { useHistory, useParams } from "react-router-dom";
 
-const ReportBlock: React.FC<{ report: ReportsListItem; profile: Profile; type: string }> = ({
-  report,
-  profile,
-  type
-}) => {
-  const [isDownloadLoading, setDownloadLoading] = useState(false);
-  const history = useHistory();
+const ReportBlock: React.FC<{
+  report: ReportsListItem;
+  profile: Profile;
+  type: string;
+}> = ({ report, profile, type }) => {
 
   const toast = useToast();
 
   return (
     <Flex
-      alignItems={["flex-start", 'center']}
+      alignItems={["flex-start", "center"]}
       justifyContent="space-between"
       sx={{
         cursor: "pointer",
@@ -51,7 +56,7 @@ const ReportBlock: React.FC<{ report: ReportsListItem; profile: Profile; type: s
           borderRadius: "50%",
           textAlign: "center",
           mr: 7,
-          mt: 2
+          mt: 2,
         }}
       >
         <Text fontSize="xl" fontWeight="600">
@@ -68,7 +73,6 @@ const ReportBlock: React.FC<{ report: ReportsListItem; profile: Profile; type: s
         flexWrap={"wrap"}
         height="fit-content"
       >
-
         <HStack width={["210px"]} my={3}>
           {report.is_approved ? (
             <CheckCircleIcon color={"#03C04A"} />
@@ -83,23 +87,17 @@ const ReportBlock: React.FC<{ report: ReportsListItem; profile: Profile; type: s
           </Text>
         </HStack>
 
-        <HStack width={["130px"]} my={3} >
-          {report.is_approved ? (
-            <BsPeople />
-          ) : (
-            <AiOutlineLock />
-          )}
+        <HStack width={["130px"]} my={3}>
+          {report.is_approved ? <BsPeople /> : <AiOutlineLock />}
           <Text sx={{ fontSize: "md", fontWeight: 600, ml: 2 }}>
             {report.is_approved ? "Public" : "Private"}
           </Text>
         </HStack>
         {report.is_approved && (
-          <HStack my={3} width={["260px"]}
-            mr={5}><AiFillCopy color="#3E15F4" />
+          <HStack my={3} width={["260px"]} mr={5}>
+            <AiFillCopy color="#3E15F4" />
             <Text
-
               align="left"
-
               fontSize="md"
               color="#3E15F4"
               onClick={(e) => {
@@ -129,10 +127,9 @@ const ReportBlock: React.FC<{ report: ReportsListItem; profile: Profile; type: s
                   );
               }}
             >
-
               Copy link to Published Report
-
-            </Text></HStack>
+            </Text>
+          </HStack>
         )}
       </Flex>
       <Flex
@@ -152,7 +149,6 @@ const ReportBlock: React.FC<{ report: ReportsListItem; profile: Profile; type: s
             color: "#4E5D78",
             borderRadius: "50%",
             textAlign: "center",
-
           }}
         >
           <Text fontSize="xl" fontWeight="600">
@@ -188,9 +184,13 @@ const ReportBlock: React.FC<{ report: ReportsListItem; profile: Profile; type: s
   );
 };
 
-const PublishedReports: React.FC<{ profile: Profile, type: string, scan_report: Scan }> = ({ profile, type, scan_report }) => {
+const PublishedReports: React.FC<{
+  profile: Profile;
+  scan_report: Scan;
+  type: string;
+  reportList: ReportsListItem[]
+}> = ({ profile, type, reportList }) => {
 
-  const { data } = useReports(type, scan_report.project_id);
   return (
     <Box
       sx={{
@@ -199,11 +199,12 @@ const PublishedReports: React.FC<{ profile: Profile, type: string, scan_report: 
         p: [0, 0, 4],
       }}
     >
-      {data?.reports.map((report) => (
-        <ReportBlock type={type} profile={profile} report={report} />
-      ))}
+      {reportList &&
+        reportList.map((report) => (
+          <ReportBlock type={type} profile={profile} report={report} />
+        ))}
     </Box>
   );
 };
 
-export default PublishedReports
+export default PublishedReports;
