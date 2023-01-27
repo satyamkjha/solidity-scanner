@@ -114,13 +114,13 @@ const Profile: React.FC = () => {
                   <Input
                     borderRadius="15px"
                     size="lg"
-                    
+                    isRequired
                     isDisabled={formState.isSubmitting}
                     type="text"
                     w="100%"
                     maxW="400px"
                     defaultValue={data.name}
-                    {...register("first_name", { required: false })}
+                    {...register("first_name", { required: true })}
                   />
                 ) : (
                   <Text fontSize="lg">{data.name}</Text>
