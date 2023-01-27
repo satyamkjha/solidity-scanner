@@ -152,12 +152,10 @@ const LoginForm: React.FC = () => {
 
   if (process.env.REACT_APP_FEATURE_GATE_CONFIG) {
     env_var = JSON.parse(process.env.REACT_APP_FEATURE_GATE_CONFIG);
-    console.log(env_var);
   }
 
   const ethereum = MMSDK.getProvider();
 
-  console.log(ethereum);
 
   const connect = () => {
     ethereum.request({ method: "eth_requestAccounts", params: [] });

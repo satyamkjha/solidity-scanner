@@ -104,7 +104,6 @@ const ReportBlock: React.FC<{
               color="#3E15F4"
               onClick={(e) => {
                 e.stopPropagation();
-                console.log("asdkbkalsd");
                 navigator.clipboard
                   .writeText(
                     `http://${document.location.host}/published-report/${type}/${report.report_id}`

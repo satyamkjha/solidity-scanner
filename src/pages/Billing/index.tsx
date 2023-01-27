@@ -424,7 +424,6 @@ const PlanCard: React.FC<{
   const [isLargerThan767] = useMediaQuery(["(min-width : 768px)"]);
   const [nextStep, setNextStep] = useState<boolean>(false);
 
-  console.log(profile)
 
   return (
     <>
@@ -1617,7 +1616,6 @@ const LatestInvoice: React.FC<{
 const CardDetails: React.FC<{
   profileData: Profile;
 }> = ({ profileData }) => {
-  console.log(profileData);
   let package_recharge_date = new Date(profileData.package_recharge_date);
   let package_end_date = new Date(profileData.package_end_date);
 

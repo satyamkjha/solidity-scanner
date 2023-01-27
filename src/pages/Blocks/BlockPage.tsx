@@ -129,7 +129,6 @@ const BlockPage: React.FC = () => {
 
   const generateReport = async (scanId: string, projectId: string) => {
     setReportingStatus("generating_report");
-    console.log(projectId, scanId);
     const { data } = await API.post("/api-generate-report/", {
       project_id: projectId,
       scan_id: scanId,
