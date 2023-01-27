@@ -203,7 +203,6 @@ const QuickScan: React.FC = () => {
       icon: "aurora",
       label: "Aurora - (aurorascan.dev)",
     },
-    
   ];
 
   const customStylesPlatform = {
@@ -1049,9 +1048,9 @@ const QuickScan: React.FC = () => {
                   px={[0, 0, 0, 5]}
                   py={5}
                   background={
-                    parseFloat('0.0') < 2.5
+                    parseFloat("0.0") < 2.5
                       ? "linear-gradient(96.27deg, #FFF3F0 0.75%, #FFE0D9 96.71%)"
-                      : parseFloat('0.0') >= 4.5
+                      : parseFloat("0.0") >= 4.5
                       ? "linear-gradient(96.27deg, #EFFFED 0.75%, #E6FFE2 96.71%)"
                       : "linear-gradient(96.27deg, #FFFAF2 0.75%, #FFF4E1 96.71%)"
                   }

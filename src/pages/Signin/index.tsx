@@ -17,12 +17,12 @@ import {
   InputRightElement,
   HStack,
   Divider,
-  Image
+  Image,
 } from "@chakra-ui/react";
 import { FcGoogle } from "react-icons/fc";
 import { FiAtSign } from "react-icons/fi";
 import { FaLock } from "react-icons/fa";
-import MetaMaskSDK from '@metamask/sdk';
+import MetaMaskSDK from "@metamask/sdk";
 
 import { Logo } from "components/icons";
 
@@ -30,6 +30,7 @@ import API from "helpers/api";
 import Auth from "helpers/auth";
 import { AuthResponse } from "common/types";
 import { ViewIcon, ViewOffIcon } from "@chakra-ui/icons";
+import { EBADF } from "constants";
 
 function useQuery() {
   return new URLSearchParams(useLocation().search);
@@ -50,6 +51,8 @@ const SignIn: React.FC = () => {
     });
   }
   const location = useLocation();
+
+  // const env_var = JSON.parse(process.env.REACT_APP_FEATURE_GATE_CONFIG)
 
   useEffect(() => {
     const query = new URLSearchParams(location.search);
@@ -125,9 +128,6 @@ type FormData = {
   password: string;
 };
 
-
-
-
 const LoginForm: React.FC = () => {
   const { handleSubmit, register, formState } = useForm<FormData>();
   const [show, setShow] = useState(false);
@@ -148,37 +148,48 @@ const LoginForm: React.FC = () => {
     }
   };
 
-  const [chain, setChain] = useState("");
-  const [account, setAccount] = useState("");
-  const [response, setResponse] = useState("");
+  let env_var;
+
+  if (process.env.REACT_APP_FEATURE_GATE_CONFIG) {
+    env_var = JSON.parse(process.env.REACT_APP_FEATURE_GATE_CONFIG);
+    console.log(env_var);
+  }
 
   const ethereum = MMSDK.getProvider();
 
   console.log(ethereum);
 
   const connect = () => {
-    ethereum.request({ method: 'eth_requestAccounts', params: [] });
-    if(window.ethereum.selectedAddress){
-      sign()
+    ethereum.request({ method: "eth_requestAccounts", params: [] });
+    if (window.ethereum.selectedAddress) {
+      getNonce(window.ethereum.selectedAddress);
     }
-  }
+  };
 
- 
-  const exampleMessage = 'Example `personal_sign` message.';
+  const getNonce = async (address: string) => {
+    const { data } = await API.get<{
+      status: string;
+      nonce: string;
+    }>(`/api-metamask-login/?public_address=${address}`);
+    if (data.status === "success") {
+      sign(address, data.nonce);
+    }
+  };
 
-  const msgParams = `0x${Buffer.from(exampleMessage, 'utf8').toString('hex')}`
-
-  const sign = async () => {
+  const sign = async (address: string, nonce: string) => {
     var from = window.ethereum.selectedAddress;
-    var params = [from, msgParams];
-
-		var method = 'personal_sign';
-    const data = await ethereum.request({ method, params });
-    console.log(`sign:`, data, 'address:', window.ethereum.selectedAddress)
-  }
-  
-
-
+    var params = [from, nonce];
+    var method = "personal_sign";
+    const signature = await ethereum.request({ method, params });
+    const { data } = await API.post(`/api-metamask-login/`, {
+      address: address,
+      signature,
+    });
+    if (data.status === "success") {
+      Auth.authenticateUser();
+      history.push("/home");
+    }
+  };
 
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
@@ -252,26 +263,34 @@ const LoginForm: React.FC = () => {
         >
           Sign In
         </Button>
-        <HStack spacing={5}>
-          <Divider background={'#FAFBFC'} width={'43%'}/>
-          <Text  color="subtle" my={3}>
-          OR
-        </Text>
-        <Divider background={'#FAFBFC'} width={'45%'}/>
-        </HStack>
-        <Button
-        onClick={connect}
-          py={6}
-          background='#F2F2F2'
-          width={'fit-content'}
-          alignSelf='center'
-          px={10}
-          color='#8B8B8B'
-        >
-          <Image mr={2} src='/common/MetaMask_Fox.svg' height='35px' width='35px'/>
-          Sign In with MetaMask
-        </Button>
-        
+        {env_var.metamask_integration.enabled && (
+          <>
+            <HStack spacing={5}>
+              <Divider background={"#FAFBFC"} width={"43%"} />
+              <Text color="subtle" my={3}>
+                OR
+              </Text>
+              <Divider background={"#FAFBFC"} width={"45%"} />
+            </HStack>
+            <Button
+              onClick={connect}
+              py={6}
+              background="#F2F2F2"
+              width={"fit-content"}
+              alignSelf="center"
+              px={10}
+              color="#8B8B8B"
+            >
+              <Image
+                mr={2}
+                src="/common/MetaMask_Fox.svg"
+                height="35px"
+                width="35px"
+              />
+              Sign In with MetaMask
+            </Button>
+          </>
+        )}
       </Stack>
     </form>
   );

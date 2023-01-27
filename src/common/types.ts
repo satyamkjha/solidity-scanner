@@ -8,8 +8,10 @@ export type Profile = {
   promo_code?: string;
   contact_number: string;
   credits: number;
+  public_address?: string;
   company_name: string;
   current_package: string;
+  email_verified: boolean;
   projects_remaining: number;
   package_recharge_date: string;
   package_end_date: string;

@@ -1,4 +1,4 @@
-import Cookies from 'js-cookie'
+import Cookies from "js-cookie";
 class Auth {
   /**
    * Authenticate a user. Save sessionId string in Local Storage
@@ -31,7 +31,7 @@ class Auth {
   static removeCookies(): void {
     const cookies = Cookies.get();
     //iterate over the cookies object and remove each cookie
-    Object.keys(cookies).forEach(key => {
+    Object.keys(cookies).forEach((key) => {
       Cookies.remove(key);
     });
   }
