@@ -79,6 +79,7 @@ const BlockPage: React.FC = () => {
   const [publishStatus, setPublishStatus] = useState("");
 
   const { data: profile, isLoading: isProfileLoading } = useProfile();
+  const { data: reportList, refetch: refetchReportList } = useReports('block', scanData?.scan_report.project_id)
   const toast = useToast();
 
   const [next, setNext] = useState(false);
@@ -192,6 +193,7 @@ const BlockPage: React.FC = () => {
         scanData.scan_report.latest_report_id
       );
     }
+    refetchReportList()
   };
 
   const getReportData = async (project_id: string, report_id: string) => {
@@ -273,7 +275,7 @@ const BlockPage: React.FC = () => {
       ) : (
         scanData &&
         profile &&
-        plans && (
+        plans && reportList && (
           <>
             {" "}
             <Flex
@@ -642,8 +644,10 @@ const BlockPage: React.FC = () => {
                         <TabPanel p={4}>
                           <PublishedReports
                             type="block"
+                            reportList={reportList.reports}
                             profile={profile}
                             scan_report={scanData.scan_report}
+
                           />
                         </TabPanel>
                       )
@@ -651,6 +655,7 @@ const BlockPage: React.FC = () => {
                       <TabPanel p={4}>
                         <PublishedReports
                           type="block"
+                          reportList={reportList.reports}
                           profile={profile}
                           scan_report={scanData.scan_report}
                         />

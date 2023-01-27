@@ -60,24 +60,14 @@ import {
 } from "react-icons/ai";
 import Overview from "components/overview";
 import Result, { MultifileResult } from "components/result";
-import AdvancedScan from "components/advancedScan";
-import {
-  RescanIcon,
-  LogoIcon,
-  ScanErrorIcon,
-  GithubIcon,
-  ProjectIcon,
-} from "components/icons";
-import { ErrorResponsivePie } from "components/pieChart";
-import { ErrorVulnerabilityDistribution } from "components/vulnDistribution";
+import { RescanIcon, LogoIcon, ScanErrorIcon } from "components/icons";
 
-import API, { API_URL_DEV } from "helpers/api";
+import API from "helpers/api";
 
 import { useScans } from "hooks/useScans";
 import { useScan } from "hooks/useScan";
 
 import { Profile, Report, ReportsListItem, ScanMeta } from "common/types";
-import Score from "components/score";
 import { useProfile } from "hooks/useProfile";
 import {
   FaBuilding,
@@ -94,8 +84,6 @@ import {
   FaRegCalendarCheck,
   FaRegCopy,
 } from "react-icons/fa";
-import { useReport } from "hooks/useReport";
-import { useReports } from "hooks/useReports";
 import {
   CheckCircleIcon,
   CheckIcon,
@@ -109,38 +97,11 @@ import { Profiler } from "inspector";
 import { monthNames, pricingDetails as plans } from "common/values";
 import { MdPeopleOutline } from "react-icons/md";
 import PublishedReports from "components/publishedReports";
+import { useReports } from "hooks/useReports";
 
 export const ProjectPage: React.FC = () => {
   const { projectId } = useParams<{ projectId: string }>();
   const { data, isLoading, refetch } = useScans(projectId);
-
-  // useEffect(() => {
-  //   let intervalId: NodeJS.Timeout;
-  //   const refetchTillScanComplete = () => {
-  //     if (
-  //       data &&
-  //       data.scans.some(
-  //         ({ reporting_status }) => reporting_status === "generating_report"
-  //       )
-  //     ) {
-  //       intervalId = setInterval(async () => {
-  //         await refetch();
-  //         if (
-  //           data &&
-  //           data.scans.some(
-  //             ({ reporting_status }) => reporting_status !== "generating_report"
-  //           )
-  //         ) {
-  //           clearInterval(intervalId);
-  //         }
-  //       }, 10000);
-  //     }
-  //   };
-  //   refetchTillScanComplete();
-  //   return () => {
-  //     clearInterval(intervalId);
-  //   };
-  // }, [data, refetch]);
 
   return (
     <Box
@@ -153,7 +114,7 @@ export const ProjectPage: React.FC = () => {
         py: 4,
         minH: "78vh",
       }}
-      px={[4, 4, 4, 8]}
+      px={[2, 2, 2, 8]}
     >
       {isLoading ? (
         <Flex w="100%" h="70vh" alignItems="center" justifyContent="center">
@@ -422,7 +383,9 @@ const ScanDetails: React.FC<{ scansRemaining: number; scans: ScanMeta[] }> = ({
         ) : (
           scanData &&
           profile &&
-          plans && (
+          plans &&
+          reportList &&
+          (
             <>
               <Flex
                 sx={{
@@ -633,7 +596,7 @@ const ScanDetails: React.FC<{ scansRemaining: number; scans: ScanMeta[] }> = ({
                     flexDir={"row"}
                     justifyContent="flex-start"
                     align={"center"}
-                    ml={[2, 2, 2, 5]}
+                    ml={[0, 0, 0, 5]}
                   >
                     <TabList
                       sx={{
@@ -722,7 +685,11 @@ const ScanDetails: React.FC<{ scansRemaining: number; scans: ScanMeta[] }> = ({
                       )}
                     </TabPanel>
                     <TabPanel p={[0, 0, 0, 4]}>
-                      <ScanHistory setTabIndex={setTabIndex} />
+                      <ScanHistory
+                        profile={profile}
+                        scans={scans}
+                        setTabIndex={setTabIndex}
+                      />
                     </TabPanel>
                     {profile.promo_code ? (
                       profile.actions_supported &&
@@ -731,6 +698,7 @@ const ScanDetails: React.FC<{ scansRemaining: number; scans: ScanMeta[] }> = ({
                           <PublishedReports
                             type="project"
                             scan_report={scanData.scan_report}
+                            reportList={reportList.reports}
                             profile={profile}
                           />
                         </TabPanel>
@@ -740,6 +708,7 @@ const ScanDetails: React.FC<{ scansRemaining: number; scans: ScanMeta[] }> = ({
                         <PublishedReports
                           type="project"
                           scan_report={scanData.scan_report}
+                          reportList={reportList.reports}
                           profile={profile}
                         />
                       </TabPanel>
@@ -1280,14 +1249,9 @@ interface Props {
 
 const ScanHistory: React.FC<{
   setTabIndex: React.Dispatch<React.SetStateAction<number>>;
-}> = ({ setTabIndex }) => {
-  const { data: profile } = useProfile();
-
-  const { projectId } = useParams<{ projectId: string }>();
-  const { data } = useScans(projectId);
-
-  const scans = data?.scans;
-
+  profile: Profile;
+  scans: ScanMeta[];
+}> = ({ setTabIndex, profile, scans }) => {
   return (
     <Box
       sx={{
@@ -1316,9 +1280,6 @@ const ScanBlock: React.FC<{
   profile: Profile;
 }> = ({ scan, setTabIndex, profile }) => {
   const history = useHistory();
-  const { projectId, scanId } =
-    useParams<{ projectId: string; scanId: string }>();
-  const { data } = useScan(scanId);
   return (
     <Flex
       alignItems="flex-start"
@@ -1337,10 +1298,6 @@ const ScanBlock: React.FC<{
           boxShadow: "0px 4px 20px rgba(0, 0, 0, 0.2)",
         },
       }}
-      onClick={() => {
-        setTabIndex(0);
-        history.push(`/projects/${projectId}/${scan.scan_id}`);
-      }}
     >
       <Flex
         width={"calc(100% - 60px)"}
@@ -1349,9 +1306,12 @@ const ScanBlock: React.FC<{
         alignItems={"flex-start"}
         flexDir="row"
       >
-        <Text mr={10} textAlign={"left"} mt={5} fontSize="xl">
-          {scan.scan_name}
-        </Text>
+        <VStack mt={5} alignItems={"flex-start"} spacing={1} width="130px">
+          <Text fontSize={"sm"} color="gray.400">
+            Scan Name
+          </Text>
+          <Text fontSize={"md"}>{scan.scan_name}</Text>
+        </VStack>
         {scan.scan_status === "scan_incomplete" ? (
           <Flex
             p={3}
@@ -1362,39 +1322,77 @@ const ScanBlock: React.FC<{
             <ScanErrorIcon size={28} />
           </Flex>
         ) : (
-          <Box mr={10} mt={5}>
-            <Score score={scan.scan_score} />
-          </Box>
+          <VStack mt={5} alignItems={"flex-start"} spacing={1} width="120px">
+            <Text fontSize={"sm"} color="gray.400">
+              Score
+            </Text>
+            <Text
+              sx={{
+                color: "accent",
+                fontSize: "xl",
+                fontWeight: 600,
+                mx: "auto",
+                lineHeight: 1,
+              }}
+            >
+              {scan.scan_score}
+            </Text>
+          </VStack>
         )}
-
-        <Button
-          variant="accent-outline"
-          minW="200px"
-          mr={10}
-          my={5}
-          isDisabled={
-            scan.reporting_status !== "report_generated" ||
-            (profile.actions_supported
-              ? !profile.actions_supported.generate_report
-              : profile.current_package === "trial")
-          }
-          onClick={(e) => {
-            e.stopPropagation();
-            window.open(
-              `http://${document.location.host}/report/project/${projectId}/${data?.scan_report.latest_report_id}`,
-              "_blank"
-            );
-          }}
+        <Flex
+          justifyContent={"flex-start"}
+          alignItems="flex-start"
+          flexDir={["column", "column", "row"]}
         >
-          {scan.reporting_status === "generating_report" && (
-            <Spinner color="#806CCF" size="sm" mr={2} />
-          )}
-          {scan.reporting_status === "report_generated"
-            ? "View Report"
-            : scan.reporting_status === "generating_report"
-            ? "Generating Report"
-            : "Report Not Generated"}
-        </Button>
+          <Button
+            variant="accent-outline"
+            minW="200px"
+            bg={"white"}
+            mr={10}
+            my={5}
+            isDisabled={
+              scan.reporting_status !== "report_generated" ||
+              (profile.actions_supported
+                ? !profile.actions_supported.generate_report
+                : profile.current_package === "trial")
+            }
+            onClick={() => {
+              setTabIndex(0);
+              history.push(`/projects/${scan.project_id}/${scan.scan_id}`);
+            }}
+          >
+            View Scan Result
+          </Button>
+          <Button
+            variant="accent-outline"
+            minW="200px"
+            mr={10}
+            mt={[0, 0, 5]}
+            mb={5}
+            isDisabled={
+              scan.reporting_status !== "report_generated" ||
+              (profile.actions_supported
+                ? !profile.actions_supported.generate_report
+                : profile.current_package === "trial")
+            }
+            onClick={(e) => {
+              e.stopPropagation();
+              window.open(
+                `http://${document.location.host}/report/project/${scan.project_id}/${scan.latest_report_id}`,
+                "_blank"
+              );
+            }}
+          >
+            {scan.reporting_status === "generating_report" && (
+              <Spinner color="#806CCF" size="sm" mr={2} />
+            )}
+            {scan.reporting_status === "report_generated"
+              ? "View Report"
+              : scan.reporting_status === "generating_report"
+                ? "Generating Report"
+                : "Report Not Generated"}
+          </Button>
+        </Flex>
       </Flex>
       <Box
         sx={{

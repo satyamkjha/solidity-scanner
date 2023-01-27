@@ -162,6 +162,7 @@ export type ScanMeta = {
   project_id: string;
   scan_score: string;
   scan_name: string;
+  latest_report_id: string;
 };
 
 export type ScanSummary = {
