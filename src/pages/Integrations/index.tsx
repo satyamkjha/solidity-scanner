@@ -40,7 +40,6 @@ const SLACK_URL = `https://slack.com/oauth/v2/authorize?client_id=${SLACK_CLIENT
   "csrftoken"
 )}`;
 
-console.log(JIRA_URL);
 
 const Integrations: React.FC = () => {
   const { data } = useProfile();

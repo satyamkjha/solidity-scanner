@@ -130,7 +130,6 @@ const BlockPage: React.FC = () => {
 
   const generateReport = async (scanId: string, projectId: string) => {
     setReportingStatus("generating_report");
-    console.log(projectId, scanId);
     const { data } = await API.post("/api-generate-report/", {
       project_id: projectId,
       scan_id: scanId,
@@ -284,7 +283,10 @@ const BlockPage: React.FC = () => {
               sx={{ justifyContent: "space-between", alignItems: "center" }}
             >
               <Accordion allowMultiple w={["100%", "100%", "100%", "90%"]}>
-                <AccordionItem borderTopWidth={0} borderBottomWidth={"0 !important"}>
+                <AccordionItem
+                  borderTopWidth={0}
+                  borderBottomWidth={"0 !important"}
+                >
                   {({ isExpanded }) => (
                     <>
                       <VStack align={"left"} spacing={0} w="100%">
@@ -418,21 +420,21 @@ const BlockPage: React.FC = () => {
                                 isDisabled={
                                   profile.actions_supported
                                     ? !profile.actions_supported
-                                      .publishable_report
+                                        .publishable_report
                                     : profile.current_package !== "expired" &&
-                                    !plans.monthly[profile.current_package]
-                                      .publishable_report
+                                      !plans.monthly[profile.current_package]
+                                        .publishable_report
                                 }
                                 onClick={() => setOpen(!open)}
                               >
                                 {(profile.actions_supported
                                   ? !profile.actions_supported
-                                    .publishable_report
+                                      .publishable_report
                                   : profile.current_package !== "expired" &&
-                                  !plans.monthly[profile.current_package]
-                                    .publishable_report) && (
-                                    <LockIcon color={"accent"} size="xs" mr={3} />
-                                  )}
+                                    !plans.monthly[profile.current_package]
+                                      .publishable_report) && (
+                                  <LockIcon color={"accent"} size="xs" mr={3} />
+                                )}
                                 Publish Report
                               </Button>
                             ) : (
@@ -470,8 +472,8 @@ const BlockPage: React.FC = () => {
                                 (profile.actions_supported
                                   ? !profile.actions_supported.generate_report
                                   : profile.current_package !== "expired" &&
-                                  !plans.monthly[profile.current_package]
-                                    .report)
+                                    !plans.monthly[profile.current_package]
+                                      .report)
                               }
                               onClick={() => {
                                 if (
@@ -506,24 +508,24 @@ const BlockPage: React.FC = () => {
                               {profile.actions_supported
                                 ? !profile.actions_supported.generate_report
                                 : profile.current_package !== "expired" &&
-                                !plans.monthly[profile.current_package]
-                                  .report && (
-                                  <LockIcon
-                                    color={"accent"}
-                                    size="xs"
-                                    mr={3}
-                                  />
-                                )}
+                                  !plans.monthly[profile.current_package]
+                                    .report && (
+                                    <LockIcon
+                                      color={"accent"}
+                                      size="xs"
+                                      mr={3}
+                                    />
+                                  )}
                               {reportingStatus === "generating_report"
                                 ? "Generating report..."
                                 : scanData.scan_report
-                                  .report_regeneration_enabled
-                                  ? "Re-generate Report"
-                                  : reportingStatus === "report_generated"
-                                    ? "View Report"
-                                    : reportingStatus === "not_generated"
-                                      ? "Generate Report"
-                                      : "Loading"}
+                                    .report_regeneration_enabled
+                                ? "Re-generate Report"
+                                : reportingStatus === "report_generated"
+                                ? "View Report"
+                                : reportingStatus === "not_generated"
+                                ? "Generate Report"
+                                : "Loading"}
                             </Button>
                           )}
                           <AccordionButton
@@ -586,17 +588,17 @@ const BlockPage: React.FC = () => {
                     <TabPanel>
                       {(scanData.scan_report.multi_file_scan_summary ||
                         scanData.scan_report.scan_summary) && (
-                          <Overview
-                            scanData={scanData.scan_report}
-                            onTabChange={handleTabsChange}
-                          />
-                        )}
+                        <Overview
+                          scanData={scanData.scan_report}
+                          onTabChange={handleTabsChange}
+                        />
+                      )}
                     </TabPanel>
                     <TabPanel p={[2, 2, 2, 4]}>
                       {scanData.scan_report.multi_file_scan_status ===
                         "scan_done" &&
-                        scanData.scan_report.multi_file_scan_details &&
-                        scanData.scan_report.multi_file_scan_summary ? (
+                      scanData.scan_report.multi_file_scan_details &&
+                      scanData.scan_report.multi_file_scan_summary ? (
                         <MultifileResult
                           profileData={profile}
                           details_enabled={scanData.scan_report.details_enabled}

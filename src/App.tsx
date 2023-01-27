@@ -32,7 +32,6 @@ const GlobalStyles = css`
 `;
 
 export const App: React.FC = () => {
-  console.log(process.env.REACT_APP_ENVIRONMENT);
   return (
     <Suspense fallback="">
       <Helmet>
