@@ -148,6 +148,32 @@ const LoginForm: React.FC = () => {
     }
   };
 
+  function checkBrowser(): boolean {
+          
+    // Get the user-agent string
+    let userAgentString = 
+        navigator.userAgent.toLowerCase();
+  
+    // Detect Brave
+    if(navigator.brave) return false
+    
+    // Detect Chrome
+    if(userAgentString.indexOf('chrome') > -1 && !!window.chrome) return true
+    
+    // Detect Opera
+    if(userAgentString.indexOf('opr') > -1 && !!window.opr) return true
+    
+    // Detect Firefox
+    if(userAgentString.indexOf('firefox') > -1) return true
+    
+    // Detect Edge
+    if(userAgentString.indexOf('edg/') > -1) return true
+
+    return false
+}
+
+
+
   let env_var;
 
   if (process.env.REACT_APP_FEATURE_GATE_CONFIG) {
@@ -156,11 +182,11 @@ const LoginForm: React.FC = () => {
 
   const ethereum = MMSDK.getProvider();
 
-
-  const connect = () => {
-    ethereum.request({ method: "eth_requestAccounts", params: [] });
+  const connect = async () => {
+    await ethereum.request({ method: "eth_requestAccounts", params: [] });
     if (window.ethereum.selectedAddress) {
       getNonce(window.ethereum.selectedAddress);
+      console.log(window.ethereum);
     }
   };
 
@@ -261,7 +287,7 @@ const LoginForm: React.FC = () => {
         >
           Sign In
         </Button>
-        {env_var.metamask_integration.enabled && (
+        {env_var.metamask_integration.enabled && checkBrowser() && (
           <>
             <HStack spacing={5}>
               <Divider background={"#FAFBFC"} width={"43%"} />
