@@ -132,7 +132,6 @@ const Profile: React.FC = () => {
                   <Input
                     borderRadius="15px"
                     size="lg"
-                    
                     isDisabled={formState.isSubmitting}
                     type="text"
                     w="100%"
@@ -150,7 +149,6 @@ const Profile: React.FC = () => {
                   <Input
                     borderRadius="15px"
                     size="lg"
-                    
                     isDisabled={formState.isSubmitting}
                     type="text"
                     w="100%"
@@ -204,7 +202,6 @@ const Profile: React.FC = () => {
         </Box>
       )}
       {!data?.public_address && <ChangePasswordForm />}
-      
     </Box>
   );
 };

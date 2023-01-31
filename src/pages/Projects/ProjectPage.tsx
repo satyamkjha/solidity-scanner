@@ -384,8 +384,7 @@ const ScanDetails: React.FC<{ scansRemaining: number; scans: ScanMeta[] }> = ({
           scanData &&
           profile &&
           plans &&
-          reportList &&
-          (
+          reportList && (
             <>
               <Flex
                 sx={{
@@ -1389,8 +1388,8 @@ const ScanBlock: React.FC<{
             {scan.reporting_status === "report_generated"
               ? "View Report"
               : scan.reporting_status === "generating_report"
-                ? "Generating Report"
-                : "Report Not Generated"}
+              ? "Generating Report"
+              : "Report Not Generated"}
           </Button>
         </Flex>
       </Flex>

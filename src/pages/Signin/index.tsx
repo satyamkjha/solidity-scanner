@@ -31,6 +31,7 @@ import Auth from "helpers/auth";
 import { AuthResponse } from "common/types";
 import { ViewIcon, ViewOffIcon } from "@chakra-ui/icons";
 import { EBADF } from "constants";
+import MetaMaskLogin from "components/metamaskSignin";
 
 function useQuery() {
   return new URLSearchParams(useLocation().search);
@@ -80,6 +81,7 @@ const SignIn: React.FC = () => {
         <Text color="subtle" my={3}>
           Welcome back, you’ve been missed!
         </Text>
+        <MetaMaskLogin />
         {/* <Button my={4} sx={{ fontSize: "13px", px: 8, py: 6 }} isDisabled>
           <Icon as={FcGoogle} mr={2} fontSize="20px" />
           Sign In with Google
@@ -132,57 +134,13 @@ const LoginForm: React.FC = () => {
   const { handleSubmit, register, formState } = useForm<FormData>();
   const [show, setShow] = useState(false);
   const history = useHistory();
-  const MMSDK = new MetaMaskSDK({
-    useDeeplink: true,
-    communicationLayerPreference: "socket",
-  });
+
   const onSubmit = async ({ email, password }: FormData) => {
     const { data } = await API.post<AuthResponse>("/api-login/", {
       email,
       password,
     });
 
-    if (data.status === "success") {
-      Auth.authenticateUser();
-      history.push("/home");
-    }
-  };
-
-  let env_var;
-
-  if (process.env.REACT_APP_FEATURE_GATE_CONFIG) {
-    env_var = JSON.parse(process.env.REACT_APP_FEATURE_GATE_CONFIG);
-  }
-
-  const ethereum = MMSDK.getProvider();
-
-
-  const connect = () => {
-    ethereum.request({ method: "eth_requestAccounts", params: [] });
-    if (window.ethereum.selectedAddress) {
-      getNonce(window.ethereum.selectedAddress);
-    }
-  };
-
-  const getNonce = async (address: string) => {
-    const { data } = await API.get<{
-      status: string;
-      nonce: string;
-    }>(`/api-metamask-login/?public_address=${address}`);
-    if (data.status === "success") {
-      sign(address, data.nonce);
-    }
-  };
-
-  const sign = async (address: string, nonce: string) => {
-    var from = window.ethereum.selectedAddress;
-    var params = [from, nonce];
-    var method = "personal_sign";
-    const signature = await ethereum.request({ method, params });
-    const { data } = await API.post(`/api-metamask-login/`, {
-      address: address,
-      signature,
-    });
     if (data.status === "success") {
       Auth.authenticateUser();
       history.push("/home");
@@ -261,34 +219,6 @@ const LoginForm: React.FC = () => {
         >
           Sign In
         </Button>
-        {env_var.metamask_integration.enabled && (
-          <>
-            <HStack spacing={5}>
-              <Divider background={"#FAFBFC"} width={"43%"} />
-              <Text color="subtle" my={3}>
-                OR
-              </Text>
-              <Divider background={"#FAFBFC"} width={"45%"} />
-            </HStack>
-            <Button
-              onClick={connect}
-              py={6}
-              background="#F2F2F2"
-              width={"fit-content"}
-              alignSelf="center"
-              px={10}
-              color="#8B8B8B"
-            >
-              <Image
-                mr={2}
-                src="/common/MetaMask_Fox.svg"
-                height="35px"
-                width="35px"
-              />
-              Sign In with MetaMask
-            </Button>
-          </>
-        )}
       </Stack>
     </form>
   );
