@@ -4,6 +4,7 @@ import API from "helpers/api";
 import Auth from "helpers/auth";
 import React from "react";
 import { useHistory } from "react-router-dom";
+import UAParser from "ua-parser-js";
 
 const MetaMaskLogin: React.FC = () => {
   const history = useHistory();
@@ -18,31 +19,20 @@ const MetaMaskLogin: React.FC = () => {
     env_var = JSON.parse(process.env.REACT_APP_FEATURE_GATE_CONFIG);
   }
 
+
+
+  
+
   function checkBrowser(): boolean {
-    // Get the user-agent string
-    let userAgentString = navigator.userAgent.toLowerCase();
 
     // Detect Brave
     if (navigator.brave)
-      return env_var.metamask_integration.browser_based_restrictions.brave;
+      return false;  
+    
+    const UserAgentInstance = new UAParser();
+    const browserName = UserAgentInstance.getBrowser().name
 
-    // Detect Chrome
-    if (userAgentString.indexOf("chrome") > -1 && !!window.chrome)
-      return env_var.metamask_integration.browser_based_restrictions.chrome;
-
-    // Detect Opera
-    if (userAgentString.indexOf("opr") > -1 && !!window.opr)
-      return env_var.metamask_integration.browser_based_restrictions.opr;
-
-    // Detect Firefox
-    if (userAgentString.indexOf("firefox") > -1)
-      return env_var.metamask_integration.browser_based_restrictions.firefox;
-
-    // Detect Edge
-    if (userAgentString.indexOf("edg/") > -1)
-      return env_var.metamask_integration.browser_based_restrictions.edg;
-
-    return false;
+    return browserName && env_var.metamask_integration.supported_browser.includes(browserName.toLowerCase())
   }
 
   const ethereum = MMSDK.getProvider();
@@ -51,7 +41,6 @@ const MetaMaskLogin: React.FC = () => {
     await ethereum.request({ method: "eth_requestAccounts", params: [] });
     if (window.ethereum.selectedAddress) {
       getNonce(window.ethereum.selectedAddress);
-      console.log(window.ethereum);
     }
   };
 
