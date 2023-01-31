@@ -22,7 +22,6 @@ const ReportBlock: React.FC<{
   profile: Profile;
   type: string;
 }> = ({ report, profile, type }) => {
-
   const toast = useToast();
 
   return (
@@ -187,9 +186,8 @@ const PublishedReports: React.FC<{
   profile: Profile;
   scan_report: Scan;
   type: string;
-  reportList: ReportsListItem[]
+  reportList: ReportsListItem[];
 }> = ({ profile, type, reportList }) => {
-
   return (
     <Box
       sx={{
