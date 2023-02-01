@@ -24,6 +24,7 @@ import {
   PopoverContent,
   PopoverHeader,
   PopoverTrigger,
+  Spinner,
 } from "@chakra-ui/react";
 
 import Header from "components/header";
@@ -36,7 +37,8 @@ import { Plan } from "common/types";
 import Auth from "helpers/auth";
 import { FaLeaf } from "react-icons/fa";
 import { PublishReportInfo } from "components/infoModal";
-import { pricingDetails } from "common/values";
+import { usePricingPlans } from "hooks/usePricingPlans";
+import { SpinnerIcon } from "@chakra-ui/icons";
 
 export default function PricingPage() {
   const [tab, setTab] = useState<string>("weekly");
@@ -52,6 +54,8 @@ export default function PricingPage() {
     if (campaign_type) localStorage.setItem("campaign_type", campaign_type);
     if (campaign_id) localStorage.setItem("campaign_id", campaign_id);
   }, []);
+
+    const { data: pricingDetails, isLoading } = usePricingPlans()
 
   return (
     <>
@@ -135,9 +139,15 @@ export default function PricingPage() {
             </ActionButton> */}
           {/* </Flex> */}
         </Flex>
-
-        {pricingDetails && (
-          <ScaleFade initialScale={0.9} in={tab === "weekly"}>
+        {isLoading ?   <Box
+              w={"100%"}
+              h='50vh'
+              as="section"
+              display={[null, null, "flex"]}
+              flexDirection="row"
+              justifyContent={"center"}
+              alignItems={"center"}
+            ><Spinner/> </Box> : pricingDetails && <ScaleFade initialScale={0.9} in={tab === "weekly"}>
             <Box
               w={"100%"}
               as="section"
@@ -576,8 +586,9 @@ export default function PricingPage() {
                 </SimpleGrid>
               </Box>
             </Box>
-          </ScaleFade>
-        )}
+          </ScaleFade>}
+       
+       
       </Container>
       <ContactUs isOpen={isOpen} onClose={onClose} />
       <PublishReportInfo
@@ -837,3 +848,5 @@ export const PricingColumn: React.FC<{
     </Flex>
   );
 };
+
+
