@@ -19,10 +19,6 @@ const MetaMaskLogin: React.FC = () => {
     env_var = JSON.parse(process.env.REACT_APP_FEATURE_GATE_CONFIG);
   }
 
-
-
-  
-
   function checkBrowser(): boolean {
 
     // Detect Brave
@@ -88,7 +84,7 @@ const MetaMaskLogin: React.FC = () => {
               height="35px"
               width="35px"
             />
-            Connect with MetaMask
+            Continue with MetaMask
           </Button>
           <HStack spacing={5} width={["300px", "400px", "500px"]}>
             <Divider background={"#000000"} width={"43%"} />
