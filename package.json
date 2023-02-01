@@ -11,6 +11,7 @@
     "@emotion/styled": "^11.0.0",
     "@fontsource/inter": "^4.3.0",
     "@fontsource/poppins": "^4.3.0",
+    "@metamask/sdk": "^0.1.0",
     "@nivo/core": "^0.74.0",
     "@nivo/pie": "^0.74.0",
     "@paypal/react-paypal-js": "^7.2.1",
@@ -23,6 +24,7 @@
     "@types/react-dom": "^16.9.0",
     "@types/react-helmet": "^6.1.2",
     "@types/react-router-dom": "^5.1.7",
+    "@types/ua-parser-js": "^0.7.36",
     "add": "^2.0.6",
     "axios": "^0.21.1",
     "check-password-strength": "^2.0.5",
@@ -54,6 +56,7 @@
     "react-select": "^5.4.0",
     "swiper": "^8.4.4",
     "typescript": "^3.9.5",
+    "ua-parser-js": "^1.0.33",
     "use-dynamic-refs": "^1.0.0",
     "web-vitals": "^0.2.2",
     "yarn": "^1.22.19"

@@ -203,7 +203,6 @@ const QuickScan: React.FC = () => {
       icon: "aurora",
       label: "Aurora - (aurorascan.dev)",
     },
-    
   ];
 
   const customStylesPlatform = {

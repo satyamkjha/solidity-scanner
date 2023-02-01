@@ -31,9 +31,9 @@ import API from "helpers/api";
 import Auth from "helpers/auth";
 
 type ProfileFormData = {
-  first_name: string;
-  company_name: string;
-  contact_number: string;
+  first_name?: string;
+  company_name?: string;
+  contact_number?: string;
 };
 const Profile: React.FC = () => {
   const [isEditable, setEditable] = useState(false);
@@ -132,13 +132,12 @@ const Profile: React.FC = () => {
                   <Input
                     borderRadius="15px"
                     size="lg"
-                    isRequired
                     isDisabled={formState.isSubmitting}
                     type="text"
                     w="100%"
                     maxW="400px"
                     defaultValue={data.company_name}
-                    {...register("company_name", { required: true })}
+                    {...register("company_name", { required: false })}
                   />
                 ) : (
                   <Text fontSize="lg">{data.company_name}</Text>
@@ -150,39 +149,59 @@ const Profile: React.FC = () => {
                   <Input
                     borderRadius="15px"
                     size="lg"
-                    isRequired
                     isDisabled={formState.isSubmitting}
                     type="text"
                     w="100%"
                     maxW="400px"
                     defaultValue={data.contact_number}
-                    {...register("contact_number", { required: true })}
+                    {...register("contact_number", { required: false })}
                   />
                 ) : (
                   <Text fontSize="lg">{data.contact_number}</Text>
                 )}
               </FormControl>
-              <FormControl id="email">
-                <FormLabel color="subtle">Email ID</FormLabel>
-                {isEditable ? (
-                  <Input
-                    borderRadius="15px"
-                    size="lg"
-                    isDisabled
-                    type="email"
-                    w="100%"
-                    maxW="400px"
-                    value={data.email}
-                  />
-                ) : (
-                  <Text fontSize="lg">{data.email}</Text>
-                )}
-              </FormControl>
+              {data.email_verified && (
+                <FormControl id="email">
+                  <FormLabel color="subtle">Email ID</FormLabel>
+                  {isEditable ? (
+                    <Input
+                      borderRadius="15px"
+                      size="lg"
+                      isDisabled
+                      type="email"
+                      w="100%"
+                      maxW="400px"
+                      value={data.email}
+                    />
+                  ) : (
+                    <Text fontSize="lg">{data.email}</Text>
+                  )}
+                </FormControl>
+              )}
+
+              {data.public_address && (
+                <FormControl id="public_address">
+                  <FormLabel color="subtle">Public Address</FormLabel>
+                  {isEditable ? (
+                    <Input
+                      borderRadius="15px"
+                      size="lg"
+                      isDisabled
+                      type="email"
+                      w="100%"
+                      maxW="400px"
+                      value={data.email}
+                    />
+                  ) : (
+                    <Text fontSize="lg">{data.public_address}</Text>
+                  )}
+                </FormControl>
+              )}
             </VStack>
           </form>
         </Box>
       )}
-      <ChangePasswordForm />
+      {!data?.public_address && <ChangePasswordForm />}
     </Box>
   );
 };

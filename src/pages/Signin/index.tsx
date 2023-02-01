@@ -15,10 +15,14 @@ import {
   Box,
   useToast,
   InputRightElement,
+  HStack,
+  Divider,
+  Image,
 } from "@chakra-ui/react";
 import { FcGoogle } from "react-icons/fc";
 import { FiAtSign } from "react-icons/fi";
 import { FaLock } from "react-icons/fa";
+import MetaMaskSDK from "@metamask/sdk";
 
 import { Logo } from "components/icons";
 
@@ -26,6 +30,8 @@ import API from "helpers/api";
 import Auth from "helpers/auth";
 import { AuthResponse } from "common/types";
 import { ViewIcon, ViewOffIcon } from "@chakra-ui/icons";
+import { EBADF } from "constants";
+import MetaMaskLogin from "components/metamaskSignin";
 
 function useQuery() {
   return new URLSearchParams(useLocation().search);
@@ -46,6 +52,8 @@ const SignIn: React.FC = () => {
     });
   }
   const location = useLocation();
+
+  // const env_var = JSON.parse(process.env.REACT_APP_FEATURE_GATE_CONFIG)
 
   useEffect(() => {
     const query = new URLSearchParams(location.search);
@@ -73,6 +81,7 @@ const SignIn: React.FC = () => {
         <Text color="subtle" my={3}>
           Welcome back, you’ve been missed!
         </Text>
+        <MetaMaskLogin />
         {/* <Button my={4} sx={{ fontSize: "13px", px: 8, py: 6 }} isDisabled>
           <Icon as={FcGoogle} mr={2} fontSize="20px" />
           Sign In with Google
@@ -125,6 +134,7 @@ const LoginForm: React.FC = () => {
   const { handleSubmit, register, formState } = useForm<FormData>();
   const [show, setShow] = useState(false);
   const history = useHistory();
+
   const onSubmit = async ({ email, password }: FormData) => {
     const { data } = await API.post<AuthResponse>("/api-login/", {
       email,

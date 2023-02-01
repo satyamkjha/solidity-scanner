@@ -22,7 +22,6 @@ const ReportBlock: React.FC<{
   profile: Profile;
   type: string;
 }> = ({ report, profile, type }) => {
-
   const toast = useToast();
 
   return (
@@ -102,7 +101,6 @@ const ReportBlock: React.FC<{
               color="#3E15F4"
               onClick={(e) => {
                 e.stopPropagation();
-                console.log("asdkbkalsd");
                 navigator.clipboard
                   .writeText(
                     `http://${document.location.host}/published-report/${type}/${report.report_id}`
@@ -188,9 +186,8 @@ const PublishedReports: React.FC<{
   profile: Profile;
   scan_report: Scan;
   type: string;
-  reportList: ReportsListItem[]
+  reportList: ReportsListItem[];
 }> = ({ profile, type, reportList }) => {
-
   return (
     <Box
       sx={{

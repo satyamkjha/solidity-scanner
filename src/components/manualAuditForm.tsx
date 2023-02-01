@@ -78,7 +78,6 @@ export const ManualAuditForm: React.FC<{ onClose(): any; isOpen: boolean }> = ({
       })
       .catch((error) => {
         setMailSent(false);
-        console.log(error);
       })
       .finally(() => setLoading(false));
   };

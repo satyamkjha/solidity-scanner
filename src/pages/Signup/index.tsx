@@ -38,6 +38,7 @@ import API from "helpers/api";
 import { AuthResponse } from "common/types";
 import { platform } from "os";
 import { ViewOffIcon, ViewIcon } from "@chakra-ui/icons";
+import MetaMaskLogin from "components/metamaskSignin";
 
 const CustomFlex = motion(Flex);
 
@@ -72,6 +73,7 @@ const SignUp: React.FC = () => {
         <Text color="subtle" my={3}>
           Create an account to continue!
         </Text>
+        <MetaMaskLogin />
         {/* <Button my={4} sx={{ fontSize: "13px", px: 8, py: 6 }} isDisabled>
             <Icon as={FcGoogle} mr={2} fontSize="20px" />
             Sign Up with Google

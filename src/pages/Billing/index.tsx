@@ -78,6 +78,7 @@ import { pricingDetails as plans } from "common/values";
 import InfiniteScroll from "react-infinite-scroll-component";
 import { Swiper, SwiperSlide, useSwiper } from "swiper/react";
 import { EffectCoverflow, FreeMode, Navigation, Pagination } from "swiper";
+import { profile } from "console";
 
 const successColor = "#289F4C";
 const greyColor = "#BDBDBD";
@@ -296,6 +297,7 @@ const Billing: React.FC = () => {
                                   setSelectedPlan={setSelectedPlan}
                                   plan={plan}
                                   planData={plans.monthly[plan]}
+                                  profile={data}
                                 />
                               </SwiperSlide>
                             );
@@ -333,6 +335,7 @@ const Billing: React.FC = () => {
                                   setSelectedPlan={setSelectedPlan}
                                   plan={plan}
                                   planData={plans.monthly[plan]}
+                                  profile={data}
                                 />
                               );
                           })}
@@ -413,7 +416,8 @@ const PlanCard: React.FC<{
   planData: Plan;
   setSelectedPlan: React.Dispatch<React.SetStateAction<string>>;
   selectedPlan: string;
-}> = ({ plan, planData, selectedPlan, setSelectedPlan }) => {
+  profile: Profile;
+}> = ({ plan, planData, selectedPlan, setSelectedPlan, profile }) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [open, setOpen] = useState(false);
   const selected = selectedPlan === plan;
@@ -507,6 +511,7 @@ const PlanCard: React.FC<{
             {isLargerThan767 ? (
               <Flex w="100%" h="fit-content">
                 <SelectPaymentMethod
+                  profile={profile}
                   selectedPlan={selectedPlan}
                   onClose={() => {
                     setOpen(false);
@@ -517,6 +522,7 @@ const PlanCard: React.FC<{
               </Flex>
             ) : nextStep ? (
               <SelectPaymentMethod
+                profile={profile}
                 selectedPlan={selectedPlan}
                 onClose={() => {
                   setOpen(false);
@@ -630,7 +636,8 @@ const PaymentCardData: React.FC<{
 const SelectPaymentMethod: React.FC<{
   selectedPlan: string;
   onClose: () => void;
-}> = ({ selectedPlan, onClose }) => {
+  profile: Profile;
+}> = ({ selectedPlan, onClose, profile }) => {
   const createStripePayment = async () => {
     let duration = "";
     if (selectedPlan === "ondemand") {
@@ -696,87 +703,94 @@ const SelectPaymentMethod: React.FC<{
 
   return (
     <Box m={[0, 0, 2]} width={["100%", "100%", "65%"]}>
-      <Flex
-        cursor="pointer"
-        width="100%"
-        bg="#F7F9FC"
-        pb={6}
-        borderRadius="15px"
-        h="fit-content"
-        boxShadow="0px 0px 5px rgba(0, 0, 0, 0.2)"
-      >
-        <Box
-          flexDir={"column"}
-          justifyContent={"center"}
-          alignItems={"center"}
-          w="100%"
-        >
-          <Box
-            flexDir={"row"}
-            justifyContent={"flex-start"}
-            alignItems={"center"}
-            w="100%"
-            height={"fit-content"}
-          >
-            {isLargerThan500 ? (
-              <StripePaymentsLogo size={400} />
-            ) : isLargerThan400 ? (
-              <StripePaymentsLogo size={300} />
-            ) : (
-              <StripePaymentsLogo size={250} />
-            )}
-          </Box>
-          <Flex
-            flexDir={"row"}
-            justifyContent="center"
-            alignItems="center"
-            w="100%"
-            height={"fit-content"}
-            px={4}
-          >
-            <Button
-              onClick={createStripePayment}
-              style={{
-                padding: "1.3rem",
-                backgroundColor: "#5a1cff",
-                color: "#FFFFFF",
-                borderRadius: "30px",
-              }}
-              w={"300px"}
+      <>
+        {!profile.public_address && (
+          <>
+            <Flex
+              cursor="pointer"
+              width="100%"
+              bg="#F7F9FC"
+              pb={6}
+              borderRadius="15px"
+              h="fit-content"
+              boxShadow="0px 0px 5px rgba(0, 0, 0, 0.2)"
             >
-              Pay with
-              <StripeLogo size={120} />
-            </Button>
-          </Flex>
-        </Box>
-      </Flex>
-      <Flex
-        align="center"
-        justify="center"
-        color="subtle"
-        px={5}
-        mt={6}
-        sx={{
-          height: 0.5,
-          borderColor: "#EDF2F7",
-          borderStyle: "solid",
-          borderLeftWidth: ["130px", "180px", "240px"],
-          borderRightWidth: ["130px", "180px", "240px"],
-        }}
-      >
-        <Text fontWeight={600} color="subtle">
-          OR
-        </Text>
-      </Flex>
+              <Box
+                flexDir={"column"}
+                justifyContent={"center"}
+                alignItems={"center"}
+                w="100%"
+              >
+                <Box
+                  flexDir={"row"}
+                  justifyContent={"flex-start"}
+                  alignItems={"center"}
+                  w="100%"
+                  height={"fit-content"}
+                >
+                  {isLargerThan500 ? (
+                    <StripePaymentsLogo size={400} />
+                  ) : isLargerThan400 ? (
+                    <StripePaymentsLogo size={300} />
+                  ) : (
+                    <StripePaymentsLogo size={250} />
+                  )}
+                </Box>
+                <Flex
+                  flexDir={"row"}
+                  justifyContent="center"
+                  alignItems="center"
+                  w="100%"
+                  height={"fit-content"}
+                  px={4}
+                >
+                  <Button
+                    onClick={createStripePayment}
+                    style={{
+                      padding: "1.3rem",
+                      backgroundColor: "#5a1cff",
+                      color: "#FFFFFF",
+                      borderRadius: "30px",
+                    }}
+                    w={"300px"}
+                  >
+                    Pay with
+                    <StripeLogo size={120} />
+                  </Button>
+                </Flex>
+              </Box>
+            </Flex>
+            <Flex
+              align="center"
+              justify="center"
+              color="subtle"
+              px={5}
+              mt={6}
+              sx={{
+                height: 0.5,
+                borderColor: "#EDF2F7",
+                borderStyle: "solid",
+                borderLeftWidth: ["130px", "180px", "240px"],
+                borderRightWidth: ["130px", "180px", "240px"],
+              }}
+            >
+              <Text fontWeight={600} color="subtle">
+                OR
+              </Text>
+            </Flex>
+          </>
+        )}
+      </>
       <Flex
         cursor="pointer"
         width="100%"
         bg="#F7F9FC"
-        mt={6}
+        mt={profile.public_address ? 0 : 6}
         py={[4, 6]}
         px={[4, 8]}
         borderRadius="15px"
-        // h="320px"
+        h={profile.public_address ? "100%" : "fit-content"}
+        minH="350px"
         boxShadow="0px 0px 5px rgba(0, 0, 0, 0.2)"
       >
         <VStack width="100%" spacing={6} mt={4} alignItems="inherit">
@@ -1601,7 +1615,6 @@ const LatestInvoice: React.FC<{
 const CardDetails: React.FC<{
   profileData: Profile;
 }> = ({ profileData }) => {
-  console.log(profileData);
   let package_recharge_date = new Date(profileData.package_recharge_date);
   let package_end_date = new Date(profileData.package_end_date);
 

@@ -52,8 +52,8 @@ export const ContractDetails: React.FC<{
               {scanData.scan_report.contract_platform === "fantom"
                 ? "FTMScan"
                 : scanData.scan_report.contract_platform === "avalanche"
-                  ? "Snowtrace"
-                  : sentenceCapitalize(scanData.scan_report.contract_platform)}
+                ? "Snowtrace"
+                : sentenceCapitalize(scanData.scan_report.contract_platform)}
             </Text>
           )}
         </HStack>

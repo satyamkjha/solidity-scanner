@@ -49,9 +49,13 @@ const Layout: React.FC = ({ children }) => {
   };
 
   const logout = async () => {
-    await API.get("/api-logout/");
-    Auth.deauthenticateUser();
-    history.push("/signin");
+    const { data } = await API.get<{ message: string; status: string }>(
+      "/api-logout/"
+    );
+    if (data.status === "success") {
+      Auth.deauthenticateUser();
+      history.push("/signin");
+    }
   };
 
   useEffect(() => {
@@ -170,9 +174,10 @@ const Layout: React.FC = ({ children }) => {
               "100%",
               "100%",
               "100%",
-              `calc(100% - ${isSidebarCollapsed
-                ? SIDEBAR_WIDTH_COLLAPSED
-                : SIDEBAR_WIDTH_EXPANDED
+              `calc(100% - ${
+                isSidebarCollapsed
+                  ? SIDEBAR_WIDTH_COLLAPSED
+                  : SIDEBAR_WIDTH_EXPANDED
               })`,
             ],
             height: "calc(100vh)",
@@ -199,7 +204,7 @@ const Layout: React.FC = ({ children }) => {
               justifyContent: "space-between",
             }}
           >
-            <Flex width="100%" sx={{ alignItems: "center" }}>
+            <Flex width="90%" sx={{ alignItems: "center" }}>
               <Icon
                 as={GiHamburgerMenu}
                 sx={{
@@ -216,21 +221,17 @@ const Layout: React.FC = ({ children }) => {
                 onClick={() => setShowSidebar(!showSidebar)}
               />
               {profileData && (
-                <Flex
-                  flexDir={["column", "row", "row"]}
-                  justifyContent={"flex-start"}
-                  alignItems={"flex-start"}
+                <Text
+                  fontWeight={600}
+                  width="70%"
+                  isTruncated
+                  fontSize={["xl", "xl", "2xl"]}
                 >
-                  <Text fontWeight={600} fontSize={["xl", "xl", "2xl"]}>
-                    <Box as="span" role="img" aria-label="wave" mr={2}>
-                      👋
-                    </Box>{" "}
-                    Hi,{" "}
-                  </Text>
-                  <Text fontWeight={600} fontSize={["xl", "xl", "2xl"]}>
-                    {profileData?.name}
-                  </Text>
-                </Flex>
+                  <Box as="span" role="img" aria-label="wave" mr={2}>
+                    👋
+                  </Box>{" "}
+                  Hi {profileData?.name}
+                </Text>
               )}
 
               {profileData && (
