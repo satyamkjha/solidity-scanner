@@ -4,6 +4,7 @@ COPY ./package.json .
 COPY ./yarn.lock .
 RUN yarn install
 COPY . .
+RUN apk --no-cache add curl
 RUN yarn build
 
 # FROM nginx
