@@ -20,15 +20,18 @@ const MetaMaskLogin: React.FC = () => {
   }
 
   function checkBrowser(): boolean {
-
     // Detect Brave
-    if (navigator.brave)
-      return false;  
-    
-    const UserAgentInstance = new UAParser();
-    const browserName = UserAgentInstance.getBrowser().name
+    if (navigator.brave) return false;
 
-    return browserName && env_var.metamask_integration.supported_browser.includes(browserName.toLowerCase())
+    const UserAgentInstance = new UAParser();
+    const browserName = UserAgentInstance.getBrowser().name;
+
+    return (
+      browserName &&
+      env_var.metamask_integration.supported_browser.includes(
+        browserName.toLowerCase()
+      )
+    );
   }
 
   const ethereum = MMSDK.getProvider();

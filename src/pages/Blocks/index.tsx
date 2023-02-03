@@ -239,7 +239,8 @@ const BlockCard: React.FC<{ scan: Scan }> = ({ scan }) => {
             gas={multi_file_scan_summary?.issue_severity_distribution.gas || 0}
           />
         </Flex>
-      ) : multi_file_scan_status === "scanning" || multi_file_scan_status === "initialised" ? (
+      ) : multi_file_scan_status === "scanning" ||
+        multi_file_scan_status === "initialised" ? (
         <Box p={5} w="100%">
           <Flex
             sx={{
