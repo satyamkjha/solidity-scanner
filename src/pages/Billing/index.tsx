@@ -1447,7 +1447,7 @@ const PricingDetails: React.FC<{ planData: Plan; selectedPlan: string }> = ({
           minW="270px"
           width={["70%", "45%", "30%"]}
         >
-          {selectedPlan === "Enterprise" ? (
+          {selectedPlan === "custom" ? (
             <HiCheckCircle size={30} color={successColor} />
           ) : (
             <HiXCircle size={30} color={greyColor} />
