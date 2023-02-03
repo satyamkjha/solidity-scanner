@@ -472,6 +472,10 @@ const ContractForm: React.FC = () => {
       { value: "mainnet", label: "Arbiscan Mainnet", icon: "" },
       { value: "goerli", label: "Arbiscan Goerli", icon: "" },
     ],
+    reefscan: [
+      { value: "mainnet", label: "ReefScan Mainnet", icon: "" },
+      { value: "testnet", label: "ReefScan Goerli", icon: "" },
+    ],
   };
 
   const options = [
@@ -527,6 +531,12 @@ const ContractForm: React.FC = () => {
       value: "aurora",
       icon: "aurora",
       label: "Aurora - (aurorascan.dev)",
+      isDisabled: true,
+    },
+    {
+      value: "reefscan",
+      icon: "reefscan",
+      label: "ReefScan - (reefscan.com)",
       isDisabled: true,
     },
   ];
