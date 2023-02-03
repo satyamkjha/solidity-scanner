@@ -474,7 +474,7 @@ const ContractForm: React.FC = () => {
     ],
     reefscan: [
       { value: "mainnet", label: "ReefScan Mainnet", icon: "" },
-      { value: "testnet", label: "ReefScan Goerli", icon: "" },
+      { value: "testnet", label: "ReefScan Testnet", icon: "" },
     ],
   };
 
