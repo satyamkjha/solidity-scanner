@@ -581,14 +581,25 @@ const ContractForm: React.FC = () => {
   const { data: supportedChains } = useSupportedChains();
 
   const onSubmit = async ({ contract_address }: ContractFormData) => {
-    await API.post("/api-start-scan-block/", {
+    const { data } = await API.post<{
+      contract_verified: boolean;
+      message: string;
+      status: string;
+    }>("/api-get-contract-status/", {
       contract_address,
       contract_platform: platform,
       contract_chain: chain,
-    });
-    queryClient.invalidateQueries("scans");
-    queryClient.invalidateQueries("profile");
-    history.push("/blocks");
+    }); 
+    if(data.contract_verified){
+      await API.post("/api-start-scan-block/", {
+        contract_address,
+        contract_platform: platform,
+        contract_chain: chain,
+      });
+      queryClient.invalidateQueries("scans");
+      queryClient.invalidateQueries("profile");
+      history.push("/blocks");
+    }
   };
   return (
     <>
