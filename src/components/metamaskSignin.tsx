@@ -2,6 +2,7 @@ import { Button, HStack, Divider, Text, Image } from "@chakra-ui/react";
 import MetaMaskSDK from "@metamask/sdk";
 import API from "helpers/api";
 import Auth from "helpers/auth";
+import { getFeatureGateConfig } from "helpers/helperFunction";
 import React from "react";
 import { useHistory } from "react-router-dom";
 import UAParser from "ua-parser-js";
@@ -13,11 +14,7 @@ const MetaMaskLogin: React.FC = () => {
     communicationLayerPreference: "socket",
   });
 
-  let env_var;
-
-  if (process.env.REACT_APP_FEATURE_GATE_CONFIG) {
-    env_var = JSON.parse(process.env.REACT_APP_FEATURE_GATE_CONFIG);
-  }
+ 
 
   function checkBrowser(): boolean {
     // Detect Brave
@@ -28,7 +25,7 @@ const MetaMaskLogin: React.FC = () => {
 
     return (
       browserName &&
-      env_var.metamask_integration.supported_browser.includes(
+      getFeatureGateConfig().metamask_integration.supported_browser.includes(
         browserName.toLowerCase()
       )
     );
@@ -69,7 +66,7 @@ const MetaMaskLogin: React.FC = () => {
   };
   return (
     <>
-      {env_var.metamask_integration.enabled && checkBrowser() && (
+      {getFeatureGateConfig().metamask_integration.enabled && checkBrowser() && (
         <>
           <Button
             onClick={connect}

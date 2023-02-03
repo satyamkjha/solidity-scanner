@@ -46,7 +46,7 @@ import { useOverview } from "hooks/useOverview";
 import { useProfile } from "hooks/useProfile";
 import VulnerabilityProgress from "components/VulnerabilityProgress";
 import { useSupportedChains } from "hooks/useSupportedPlatforms";
-import { sentenceCapitalize } from "helpers/helperFunction";
+import { getFeatureGateConfig, sentenceCapitalize } from "helpers/helperFunction";
 import { useDropzone } from "react-dropzone";
 import { url } from "inspector";
 import Select from "react-select";
@@ -478,6 +478,7 @@ const ContractForm: React.FC = () => {
     ],
   };
 
+
   const options = [
     {
       value: "etherscan",
@@ -590,6 +591,8 @@ const ContractForm: React.FC = () => {
   const { data: profileData } = useProfile();
   const { data: supportedChains } = useSupportedChains();
 
+  const platform_supported = getFeatureGateConfig().platform_supported
+
   const onSubmit = async ({ contract_address }: ContractFormData) => {
     await API.post("/api-start-scan-block/", {
       contract_address,
@@ -655,7 +658,7 @@ const ContractForm: React.FC = () => {
                 formatOptionLabel={formatOptionLabel}
                 options={options.map((item) => {
                   for (const chain in supportedChains) {
-                    if (chain === item.value) {
+                    if (chain === item.value && platform_supported.includes(chain)) {
                       return {
                         value: item.value,
                         icon: item.icon,
