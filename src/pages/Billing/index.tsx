@@ -74,11 +74,11 @@ import {
   StripeLogo,
   StripePaymentsLogo,
 } from "components/icons";
-import { pricingDetails as plans } from "common/values";
 import InfiniteScroll from "react-infinite-scroll-component";
 import { Swiper, SwiperSlide, useSwiper } from "swiper/react";
 import { EffectCoverflow, FreeMode, Navigation, Pagination } from "swiper";
 import { profile } from "console";
+import { usePricingPlans } from "hooks/usePricingPlans";
 
 const successColor = "#289F4C";
 const greyColor = "#BDBDBD";
@@ -93,6 +93,9 @@ const Billing: React.FC = () => {
     Transaction[] | undefined
   >();
   const [page, setPage] = useState<Page | undefined>();
+
+  const { data: plans } = usePricingPlans()
+
 
   useEffect(() => {
     if (transactions) {
@@ -1444,7 +1447,7 @@ const PricingDetails: React.FC<{ planData: Plan; selectedPlan: string }> = ({
           minW="270px"
           width={["70%", "45%", "30%"]}
         >
-          {selectedPlan === "Enterprise" ? (
+          {selectedPlan === "custom" ? (
             <HiCheckCircle size={30} color={successColor} />
           ) : (
             <HiXCircle size={30} color={greyColor} />

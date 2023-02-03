@@ -94,10 +94,11 @@ import {
 import { profile } from "console";
 import { motion } from "framer-motion";
 import { Profiler } from "inspector";
-import { monthNames, pricingDetails as plans } from "common/values";
+import { monthNames } from "common/values";
 import { MdPeopleOutline } from "react-icons/md";
 import PublishedReports from "components/publishedReports";
 import { useReports } from "hooks/useReports";
+import { usePricingPlans } from "hooks/usePricingPlans";
 
 export const ProjectPage: React.FC = () => {
   const { projectId } = useParams<{ projectId: string }>();
@@ -186,6 +187,7 @@ const ScanDetails: React.FC<{ scansRemaining: number; scans: ScanMeta[] }> = ({
   const { projectId, scanId } =
     useParams<{ projectId: string; scanId: string }>();
   const history = useHistory();
+  const { data: plans } = usePricingPlans()
   const { data: scanData, isLoading, refetch } = useScan(scanId);
   const { data: reportList, refetch: refetchReprtList } = useReports(
     "project",

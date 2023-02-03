@@ -66,9 +66,10 @@ import API from "helpers/api";
 import { Report, ReportsListItem, Scan } from "common/types";
 import { useReports } from "hooks/useReports";
 import { ScanErrorIcon } from "components/icons";
-import { monthNames, pricingDetails as plans } from "common/values";
+import { monthNames } from "common/values";
 import ContractDetails from "components/contractDetails";
 import PublishedReports from "components/publishedReports";
+import { usePricingPlans } from "hooks/usePricingPlans";
 
 const BlockPage: React.FC = () => {
   const { scanId } = useParams<{ scanId: string }>();
@@ -84,7 +85,8 @@ const BlockPage: React.FC = () => {
     scanData?.scan_report.project_id
   );
   const toast = useToast();
-
+  
+  const { data: plans } = usePricingPlans()
   const [next, setNext] = useState(false);
   const [open, setOpen] = useState(false);
 
