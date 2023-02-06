@@ -14,6 +14,7 @@ import {
   MenuItem,
   Link,
   Image,
+  HStack,
 } from "@chakra-ui/react";
 import { GiHamburgerMenu } from "react-icons/gi";
 import { BiUser, BiPowerOff } from "react-icons/bi";
@@ -204,7 +205,8 @@ const Layout: React.FC = ({ children }) => {
               justifyContent: "space-between",
             }}
           >
-            <Flex width="90%" sx={{ alignItems: "center" }}>
+            <Flex width="90%" sx={{ alignItems: "center", justifyContent: 'space-between' }}>
+              <HStack width={['100%','100%', '60%', '50%', '60%']}>
               <Icon
                 as={GiHamburgerMenu}
                 sx={{
@@ -223,7 +225,7 @@ const Layout: React.FC = ({ children }) => {
               {profileData && (
                 <Text
                   fontWeight={600}
-                  width="70%"
+                  width={["80%"]}
                   isTruncated
                   fontSize={["xl", "xl", "2xl"]}
                 >
@@ -233,6 +235,7 @@ const Layout: React.FC = ({ children }) => {
                   Hi {profileData?.name}
                 </Text>
               )}
+              </HStack>
 
               {profileData && (
                 <Flex ml={20} sx={{ display: ["none", "none", "flex"] }}>

@@ -122,9 +122,7 @@ const QuickScan: React.FC = () => {
   } = {
     etherscan: [
       { value: "mainnet", label: "Ethereum Mainnet", icon: "" },
-      { value: "ropsten", label: "Ropsten Testnet", icon: "" },
-      { value: "kovan", label: "Kovan Testnet", icon: "" },
-      { value: "rinkeby", label: "Rinkeby Testnet", icon: "" },
+      { value: "sepolia", label: "Sepolia Testnet", icon: "" },
       { value: "goerli", label: "Goerli Testnet", icon: "" },
     ],
     bscscan: [
@@ -959,7 +957,8 @@ const QuickScan: React.FC = () => {
                 alignItems={["center", "center", "center", "flex-start"]}
                 justifyContent={"flex-start"}
               >
-                <Text fontSize="md">QUICK AUDIT SUMMARY</Text>
+                <Text fontSize="md">THREAT SCAN SUMMARY</Text>
+                <Text fontSize="sm" my={5} color={'gray.400'} textAlign='left'>ThreatScan, a smart contract analysis tool, is built by the SolidityScan team. It is designed to assist users in identifying potential rug pull scams by providing an in-depth analysis of a smart contract's code and highlighting any potential red flags that may indicate a scam.</Text>
                 <Box
                   w={"100%"}
                   borderRadius={15}

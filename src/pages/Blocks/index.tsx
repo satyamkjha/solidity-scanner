@@ -239,28 +239,8 @@ const BlockCard: React.FC<{ scan: Scan }> = ({ scan }) => {
             gas={multi_file_scan_summary?.issue_severity_distribution.gas || 0}
           />
         </Flex>
-      ) : scan_status === "download_failed" ||
-        scan_status ===
-          "Download_failed, either invalid URL / or Github token expired, please re-integrate" ? (
-        <Box
-          sx={{
-            p: 5,
-            pl: 10,
-            backgroundColor: "high-subtle",
-            position: "relative",
-            borderBottomRadius: 15,
-          }}
-        >
-          <Box position="absolute" transform="translate3d(-30px, -34px,0)">
-            <ScanErrorIcon size={28} />
-          </Box>
-          <Text sx={{ fontSize: "xs", color: "#FF5630", h: "46px" }}>
-            {
-              "This scan has failed, lost credit will be reimbursed in a few minutes. Please contact support"
-            }
-          </Text>
-        </Box>
-      ) : (
+      ) : multi_file_scan_status === "scanning" ||
+        multi_file_scan_status === "initialised" ? (
         <Box p={5} w="100%">
           <Flex
             sx={{
@@ -278,6 +258,25 @@ const BlockCard: React.FC<{ scan: Scan }> = ({ scan }) => {
             </Text>
           </Flex>
           <Progress value={20} isIndeterminate size="xs" />
+        </Box>
+      ) : (
+        <Box
+          sx={{
+            p: 5,
+            pl: 10,
+            backgroundColor: "high-subtle",
+            position: "relative",
+            borderBottomRadius: 15,
+          }}
+        >
+          <Box position="absolute" transform="translate3d(-30px, -34px,0)">
+            <ScanErrorIcon size={28} />
+          </Box>
+          <Text sx={{ fontSize: "xs", color: "#FF5630", h: "46px" }}>
+            {scan_status === "download_failed"
+              ? "This scan has failed, lost credit will be reimbursed in a few minutes. Please contact support"
+              : scan_status}
+          </Text>
         </Box>
       )}
     </Flex>

@@ -11,3 +11,9 @@ services:
       - .env
     command: >
       sh -c "yarn global add serve && serve -s build"
+    healthcheck:
+      test: curl --fail http://localhost:3000 || exit 1
+      interval: 30s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
