@@ -122,7 +122,6 @@ const QuickScan: React.FC = () => {
   } = {
     etherscan: [
       { value: "mainnet", label: "Ethereum Mainnet", icon: "" },
-      { value: "ropsten", label: "Ropsten Testnet", icon: "" },
       { value: "sepolia", label: "Sepolia Testnet", icon: "" },
       { value: "goerli", label: "Goerli Testnet", icon: "" },
     ],
