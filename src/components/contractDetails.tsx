@@ -83,7 +83,9 @@ export const ContractDetails: React.FC<{
             Contract Name
           </Text>
           <Text width={"100%"} as="p" fontSize="14px">
-            {scanData?.scan_report.contractname}
+            {scanData.scan_report.contractname
+              ? scanData.scan_report.contractname
+              : "NA"}
           </Text>
         </VStack>
         <VStack
@@ -101,7 +103,9 @@ export const ContractDetails: React.FC<{
             Compiler Version
           </Text>
           <Text width={"100%"} as="p" fontSize="14px">
-            {scanData?.scan_report.compilerversion}
+            {scanData.scan_report.compilerversion
+              ? scanData.scan_report.compilerversion
+              : "NA"}
           </Text>
         </VStack>
         <VStack
@@ -119,7 +123,9 @@ export const ContractDetails: React.FC<{
             EVM Version
           </Text>
           <Text width={"100%"} as="p" fontSize="14px">
-            {scanData?.scan_report.evmversion}
+            {scanData.scan_report.evmversion
+              ? scanData.scan_report.evmversion
+              : "NA"}
           </Text>
         </VStack>
         <VStack
@@ -137,7 +143,9 @@ export const ContractDetails: React.FC<{
             License Type
           </Text>
           <Text width={"100%"} as="p" fontSize="14px">
-            {scanData?.scan_report.licensetype}
+            {scanData.scan_report.licensetype
+              ? scanData.scan_report.licensetype
+              : "NA"}
           </Text>
         </VStack>
         <VStack
@@ -155,7 +163,9 @@ export const ContractDetails: React.FC<{
             Balance
           </Text>
           <Text width={"100%"} as="p" fontSize="14px">
-            {scanData?.scan_report.value} {scanData.scan_report.currency}
+            {scanData.scan_report.value && scanData.scan_report.currency
+              ? `${scanData.scan_report.value} ${scanData.scan_report.currency}`
+              : "NA"}
           </Text>
         </VStack>
         <VStack
@@ -173,7 +183,7 @@ export const ContractDetails: React.FC<{
             Contract Chain
           </Text>
           <Text width={"100%"} as="p" fontSize="14px">
-            {scanData?.scan_report.contract_chain}{" "}
+            {scanData.scan_report.contract_chain ? scanData.scan_report.contract_chain : 'NA'}
           </Text>
         </VStack>
       </Flex>
