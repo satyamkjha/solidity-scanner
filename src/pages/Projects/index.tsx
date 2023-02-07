@@ -74,9 +74,6 @@ const Projects: React.FC = () => {
       ) {
         intervalId = setInterval(async () => {
           setPagination({ pageNo: 1, perPageCount: projectList.length });
-          setTimeout(async () => {
-            await refetch();
-          }, 10);
           if (
             projectList &&
             projectList.every(
@@ -98,6 +95,10 @@ const Projects: React.FC = () => {
     };
   }, [projectList]);
 
+  useEffect(() => {
+    refetch()
+  }, [pagination])
+
   const refetchProjects = async () => {
     if (projectList) {
       setPagination({ pageNo: 1, perPageCount: projectList.length });
@@ -116,9 +117,6 @@ const Projects: React.FC = () => {
       pageNo: pagination.pageNo + 1,
       perPageCount: pagination.perPageCount,
     });
-    setTimeout(async () => {
-      await refetch();
-    }, 10);
   };
 
   return (
@@ -260,7 +258,7 @@ const ProjectCard: React.FC<{
   return (
     <>
       {multi_file_scan_status === "scan_done" ||
-      multi_file_scan_status === "scanning" ? (
+        multi_file_scan_status === "scanning" ? (
         <Flex
           onClick={() => {
             if (multi_file_scan_status === "scan_done") {
