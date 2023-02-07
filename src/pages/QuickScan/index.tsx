@@ -333,7 +333,7 @@ const QuickScan: React.FC = () => {
   }, []);
 
   const runQuickScan = async (address: string, platform: string, chain: string) => {
-    const { data } = await API.post<{
+    API.post<{
       contract_verified: boolean;
       message: string;
       status: string;
@@ -341,29 +341,32 @@ const QuickScan: React.FC = () => {
       contract_address: address,
       contract_platform: platform,
       contract_chain: chain,
-    }); 
-    if(data.contract_verified){
-      API.get(
-        `/api-quick-scan-sse/?contract_address=${address}&contract_platform=${platform}&contract_chain=${chain}`
-      )
-        .then(
-          (res) => {
-            if (res.status === 200) {
-              setScanReport(res.data.scan_report);
-              d = new Date(res.data.scan_report.published_date);
-            }
-          },
-          (err) => {
-            return;
-          }
+    }).then((res) => {
+      if(res.data.contract_verified){
+        API.get(
+          `/api-quick-scan-sse/?contract_address=${address}&contract_platform=${platform}&contract_chain=${chain}`
         )
-        .finally(() => {
-          setIsLoading(false);
-        });
-    }
+          .then(
+            (res) => {
+              if (res.status === 200) {
+                setScanReport(res.data.scan_report);
+                d = new Date(res.data.scan_report.published_date);
+              }
+            },
+            (err) => {
+              return;
+            }
+          )
+          .finally(() => {
+            setIsLoading(false);
+          });
+      }
+    }, (err) => {
+      setIsLoading(false);
+    }); 
   }
 
-  const submitQuickScan = () => {
+  const generateQuickScan = () => {
     if (platform === "") {
       toast({
         title: "Platform not selected",

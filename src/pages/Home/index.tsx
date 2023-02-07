@@ -610,7 +610,7 @@ const ContractForm: React.FC = () => {
       queryClient.invalidateQueries("scans");
       queryClient.invalidateQueries("profile");
       history.push("/blocks");
-    }
+    } 
   };
   return (
     <>
