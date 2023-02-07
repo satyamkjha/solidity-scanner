@@ -328,21 +328,43 @@ const QuickScan: React.FC = () => {
 
     if (blockAddress && blockChain && blockPlatform) {
       setIsLoading(true);
-      API.get(
-        `/api-quick-scan-sse/?contract_address=${blockAddress}&contract_platform=${blockPlatform}&contract_chain=${blockChain}`
-      ).then(
-        (res) => {
-          if (res.status === 200) {
-            setScanReport(res.data.scan_report);
-            d = new Date(res.data.scan_report.published_date);
-          }
-        },
-        (err) => {
-          return;
-        }
-      );
+      runQuickScan(blockAddress, blockPlatform, blockChain)
     }
   }, []);
+
+  const runQuickScan = async (address: string, platform: string, chain: string) => {
+    API.post<{
+      contract_verified: boolean;
+      message: string;
+      status: string;
+    }>("/api-get-contract-status/", {
+      contract_address: address,
+      contract_platform: platform,
+      contract_chain: chain,
+    }).then((res) => {
+      if(res.data.contract_verified){
+        API.get(
+          `/api-quick-scan-sse/?contract_address=${address}&contract_platform=${platform}&contract_chain=${chain}`
+        )
+          .then(
+            (res) => {
+              if (res.status === 200) {
+                setScanReport(res.data.scan_report);
+                d = new Date(res.data.scan_report.published_date);
+              }
+            },
+            (err) => {
+              return;
+            }
+          )
+          .finally(() => {
+            setIsLoading(false);
+          });
+      }
+    }, (err) => {
+      setIsLoading(false);
+    }); 
+  }
 
   const generateQuickScan = () => {
     if (platform === "") {
@@ -378,23 +400,7 @@ const QuickScan: React.FC = () => {
 
     setIsLoading(true);
     setScanReport(null);
-    API.get(
-      `/api-quick-scan-sse/?contract_address=${address}&contract_platform=${platform}&contract_chain=${chain}`
-    )
-      .then(
-        (res) => {
-          if (res.status === 200) {
-            setScanReport(res.data.scan_report);
-            d = new Date(res.data.scan_report.published_date);
-          }
-        },
-        (err) => {
-          return;
-        }
-      )
-      .finally(() => {
-        setIsLoading(false);
-      });
+    runQuickScan(address, platform, chain)
   };
 
   useEffect(() => {
