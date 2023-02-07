@@ -366,7 +366,7 @@ export default function LandingPage() {
           px={[0, 0, 0, 24]}
         >
           <Heading fontSize="3xl" mb={5}>
-            Our Team
+            Meet the Founders
           </Heading>
           <Text color="subtle" fontSize={["lg", "lg", "xl"]} mb={5}>
             Meet the experts behind the scenes. We are always excited to talk

@@ -46,7 +46,7 @@ import { useOverview } from "hooks/useOverview";
 import { useProfile } from "hooks/useProfile";
 import VulnerabilityProgress from "components/VulnerabilityProgress";
 import { useSupportedChains } from "hooks/useSupportedPlatforms";
-import { sentenceCapitalize } from "helpers/helperFunction";
+import { getFeatureGateConfig, sentenceCapitalize } from "helpers/helperFunction";
 import { useDropzone } from "react-dropzone";
 import { url } from "inspector";
 import Select from "react-select";
@@ -435,9 +435,7 @@ const ContractForm: React.FC = () => {
   } = {
     etherscan: [
       { value: "mainnet", label: "Ethereum Mainnet", icon: "" },
-      { value: "ropsten", label: "Ropsten Testnet", icon: "" },
-      { value: "kovan", label: "Kovan Testnet", icon: "" },
-      { value: "rinkeby", label: "Rinkeby Testnet", icon: "" },
+      { value: "sepolia", label: "Sepolia Testnet", icon: "" },
       { value: "goerli", label: "Goerli Testnet", icon: "" },
     ],
     bscscan: [
@@ -472,7 +470,12 @@ const ContractForm: React.FC = () => {
       { value: "mainnet", label: "Arbiscan Mainnet", icon: "" },
       { value: "goerli", label: "Arbiscan Goerli", icon: "" },
     ],
+    reefscan: [
+      { value: "mainnet", label: "ReefScan Mainnet", icon: "" },
+      // { value: "testnet", label: "ReefScan Testnet", icon: "" },
+    ],
   };
+
 
   const options = [
     {
@@ -529,6 +532,12 @@ const ContractForm: React.FC = () => {
       label: "Aurora - (aurorascan.dev)",
       isDisabled: true,
     },
+    {
+      value: "reefscan",
+      icon: "reefscan",
+      label: "ReefScan - (reefscan.com)",
+      isDisabled: true,
+    },
   ];
 
   const customStyles = {
@@ -579,6 +588,8 @@ const ContractForm: React.FC = () => {
   const history = useHistory();
   const { data: profileData } = useProfile();
   const { data: supportedChains } = useSupportedChains();
+
+  const platform_supported = getFeatureGateConfig().platform_supported
 
   const onSubmit = async ({ contract_address }: ContractFormData) => {
     const { data } = await API.post<{
@@ -656,7 +667,7 @@ const ContractForm: React.FC = () => {
                 formatOptionLabel={formatOptionLabel}
                 options={options.map((item) => {
                   for (const chain in supportedChains) {
-                    if (chain === item.value) {
+                    if (chain === item.value && platform_supported.includes(chain)) {
                       return {
                         value: item.value,
                         icon: item.icon,
