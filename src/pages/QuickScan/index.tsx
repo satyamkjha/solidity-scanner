@@ -334,11 +334,13 @@ const QuickScan: React.FC = () => {
   }, []);
 
   useEffect(() => {
-    const query = new URLSearchParams(location.search);
-    const campaign_type = query.get("utm_source") || "quickscan";
-    const campaign_id = query.get("utm_campaign") || "quickscan";
-    if (campaign_type) localStorage.setItem("campaign_type", campaign_type);
-    if (campaign_id) localStorage.setItem("campaign_id", campaign_id);
+    if (!localStorage.getItem("campaign_id") && !localStorage.getItem("campaign_type")) {
+      const query = new URLSearchParams(location.search);
+      const campaign_type = query.get("utm_source") || "quickscan";
+      const campaign_id = query.get("utm_campaign") || "quickscan";
+      localStorage.setItem("campaign_type", campaign_type);
+      localStorage.setItem("campaign_id", campaign_id);
+    }
   }, []);
 
   const runQuickScan = async (address: string, platform: string, chain: string) => {
