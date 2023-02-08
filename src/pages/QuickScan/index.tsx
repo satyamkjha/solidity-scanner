@@ -333,6 +333,14 @@ const QuickScan: React.FC = () => {
     }
   }, []);
 
+  useEffect(() => {
+    const query = new URLSearchParams(location.search);
+    const campaign_type = query.get("utm_source") || "quickscan";
+    const campaign_id = query.get("utm_campaign") || "quickscan";
+    if (campaign_type) localStorage.setItem("campaign_type", campaign_type);
+    if (campaign_id) localStorage.setItem("campaign_id", campaign_id);
+  }, []);
+
   const runQuickScan = async (address: string, platform: string, chain: string) => {
     API.post<{
       contract_verified: boolean;
@@ -366,14 +374,6 @@ const QuickScan: React.FC = () => {
       setIsLoading(false);
     });
   }
-
-  useEffect(() => {
-    const query = new URLSearchParams(location.search);
-    const campaign_type = query.get("utm_source");
-    const campaign_id = query.get("utm_campaign");
-    if (campaign_type) localStorage.setItem("campaign_type", campaign_type);
-    if (campaign_id) localStorage.setItem("campaign_id", campaign_id);
-  }, []);
 
   const generateQuickScan = () => {
     if (platform === "") {
