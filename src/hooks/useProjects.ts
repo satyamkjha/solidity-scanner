@@ -2,10 +2,11 @@ import { useQuery } from "react-query";
 import API from "helpers/api";
 
 import { Pagination, Project, ProjectList } from "common/types";
+import { API_PATH } from "helpers/routeManager";
 
 const getProjects = async (pageNo: number, perPageCount: number) => {
   const { data } = await API.get(
-    `/api-get-projects-beta/?page=${pageNo}&per_page=${perPageCount}`
+    `${API_PATH.API_GET_PROJECTS_BETA}?page=${pageNo}&per_page=${perPageCount}`
   );
   return data;
 };

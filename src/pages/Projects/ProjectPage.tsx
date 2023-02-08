@@ -99,6 +99,7 @@ import { MdPeopleOutline } from "react-icons/md";
 import PublishedReports from "components/publishedReports";
 import { useReports } from "hooks/useReports";
 import { usePricingPlans } from "hooks/usePricingPlans";
+import { API_PATH } from "helpers/routeManager";
 
 export const ProjectPage: React.FC = () => {
   const { projectId } = useParams<{ projectId: string }>();
@@ -215,7 +216,7 @@ const ScanDetails: React.FC<{ scansRemaining: number; scans: ScanMeta[] }> = ({
 
   const generateReport = async () => {
     setReportingStatus("generating_report");
-    const { data } = await API.post("/api-generate-report/", {
+    const { data } = await API.post(API_PATH.API_GENERATE_REPORT, {
       project_id: projectId,
       scan_id: scanId,
     });
@@ -237,7 +238,7 @@ const ScanDetails: React.FC<{ scansRemaining: number; scans: ScanMeta[] }> = ({
 
   const rescan = async () => {
     setRescanLoading(true);
-    const { data } = await API.post<{ scan_id: string }>("/api-project-scan/", {
+    const { data } = await API.post<{ scan_id: string }>(API_PATH.API_PROJECT_SCAN, {
       project_id: projectId,
       project_type: "existing",
     });
@@ -272,7 +273,7 @@ const ScanDetails: React.FC<{ scansRemaining: number; scans: ScanMeta[] }> = ({
 
   const getReportData = async (project_id: string, report_id: string) => {
     const reportResponse = await API.post<{ summary_report: Report }>(
-      "/api-get-report/",
+      API_PATH.API_GET_REPORTS,
       {
         project_id,
         report_id,
@@ -292,7 +293,7 @@ const ScanDetails: React.FC<{ scansRemaining: number; scans: ScanMeta[] }> = ({
     report_id: string
   ) => {
     const reportResponse = await API.post<{ reports: ReportsListItem[] }>(
-      "/api-get-reports/",
+      API_PATH.API_GET_REPORTS,
       {
         project_type: "project",
         project_id,
@@ -328,7 +329,7 @@ const ScanDetails: React.FC<{ scansRemaining: number; scans: ScanMeta[] }> = ({
   const reportId = scanData?.scan_report.latest_report_id;
 
   const publishReport = async () => {
-    const { data } = await API.post("/api-publish-report/", {
+    const { data } = await API.post(API_PATH.API_GET_PUBLISHED_REPORT, {
       project_type: "project",
       project_id: projectId,
       report_id: reportId,

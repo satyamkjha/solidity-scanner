@@ -56,6 +56,7 @@ import Infographics from "components/infographics";
 import { blockScans } from "common/values";
 import { useRecentQuickScans } from "hooks/useRecentQuickScans";
 import { FaEllipsisH, FaEllipsisV } from "react-icons/fa";
+import { API_PATH } from "helpers/routeManager";
 
 const pieData = (
   critical: number,
@@ -337,14 +338,14 @@ const QuickScan: React.FC = () => {
       contract_verified: boolean;
       message: string;
       status: string;
-    }>("/api-get-contract-status/", {
+    }>(API_PATH.API_GET_CONTRACT_STATUS, {
       contract_address: address,
       contract_platform: platform,
       contract_chain: chain,
     }).then((res) => {
       if(res.data.contract_verified){
         API.get(
-          `/api-quick-scan-sse/?contract_address=${address}&contract_platform=${platform}&contract_chain=${chain}`
+          `${API_PATH.API_QUICK_SCAN_SSE}?contract_address=${address}&contract_platform=${platform}&contract_chain=${chain}`
         )
           .then(
             (res) => {

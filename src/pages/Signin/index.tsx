@@ -32,6 +32,7 @@ import { AuthResponse } from "common/types";
 import { ViewIcon, ViewOffIcon } from "@chakra-ui/icons";
 import { EBADF } from "constants";
 import MetaMaskLogin from "components/metamaskSignin";
+import { API_PATH } from "helpers/routeManager";
 
 function useQuery() {
   return new URLSearchParams(useLocation().search);
@@ -136,7 +137,7 @@ const LoginForm: React.FC = () => {
   const history = useHistory();
 
   const onSubmit = async ({ email, password }: FormData) => {
-    const { data } = await API.post<AuthResponse>("/api-login/", {
+    const { data } = await API.post<AuthResponse>(API_PATH.API_LOGIN, {
       email,
       password,
     });
