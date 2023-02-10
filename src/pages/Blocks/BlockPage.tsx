@@ -70,6 +70,7 @@ import { monthNames } from "common/values";
 import ContractDetails from "components/contractDetails";
 import PublishedReports from "components/publishedReports";
 import { usePricingPlans } from "hooks/usePricingPlans";
+import { API_PATH } from "helpers/routeManager";
 
 const BlockPage: React.FC = () => {
   const { scanId } = useParams<{ scanId: string }>();
@@ -135,7 +136,7 @@ const BlockPage: React.FC = () => {
 
   const generateReport = async (scanId: string, projectId: string) => {
     setReportingStatus("generating_report");
-    const { data } = await API.post("/api-generate-report/", {
+    const { data } = await API.post(API_PATH.API_GENERATE_REPORT, {
       project_id: projectId,
       scan_id: scanId,
     });
@@ -157,7 +158,7 @@ const BlockPage: React.FC = () => {
   };
 
   const publishReport = async () => {
-    const { data } = await API.post("/api-publish-report/", {
+    const { data } = await API.post(API_PATH.API_GET_PUBLISHED_REPORT, {
       project_type: "block",
       project_id: scanData?.scan_report.project_id,
       report_id: scanData?.scan_report.latest_report_id,
@@ -203,7 +204,7 @@ const BlockPage: React.FC = () => {
 
   const getReportData = async (project_id: string, report_id: string) => {
     const reportResponse = await API.post<{ summary_report: Report }>(
-      "/api-get-report-beta/",
+      API_PATH.API_GET_REPORT_BETA,
       {
         project_id,
         report_id,
@@ -222,7 +223,7 @@ const BlockPage: React.FC = () => {
     report_id: string
   ) => {
     const reportResponse = await API.post<{ reports: ReportsListItem[] }>(
-      "/api-get-reports/",
+      API_PATH.API_GET_REPORTS,
       {
         project_type: "block",
         project_id,

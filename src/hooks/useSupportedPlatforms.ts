@@ -1,9 +1,10 @@
 import { useQuery } from "react-query";
 import API from "helpers/api";
 import { Profile } from "common/types";
+import { API_PATH } from "helpers/routeManager";
 
 const getSupportedChains = async () => {
-  const { data } = await API.get("/api-get-supported-chains/");
+  const { data } = await API.get(API_PATH.API_GET_SUPPORTED_CHAINS);
   return data;
 };
 

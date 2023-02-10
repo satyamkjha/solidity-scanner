@@ -39,6 +39,7 @@ import { AuthResponse } from "common/types";
 import { platform } from "os";
 import { ViewOffIcon, ViewIcon } from "@chakra-ui/icons";
 import MetaMaskLogin from "components/metamaskSignin";
+import { API_PATH } from "helpers/routeManager";
 
 const CustomFlex = motion(Flex);
 
@@ -198,7 +199,7 @@ const RegisterForm: React.FC<{
           },
         };
       }
-      const { data } = await API.post<AuthResponse>("/api-register/", reqBody);
+      const { data } = await API.post<AuthResponse>(API_PATH.API_REGISTER, reqBody);
 
       if (data.status === "success") {
         setRegistered(true);

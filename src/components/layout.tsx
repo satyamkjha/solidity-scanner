@@ -1,7 +1,6 @@
 import React, { useState, useRef, useEffect } from "react";
 import { useHistory, Link as RouterLink } from "react-router-dom";
 import { motion } from "framer-motion";
-
 import {
   Flex,
   Box,
@@ -30,6 +29,7 @@ import {
 } from "common/constants";
 import API from "helpers/api";
 import Auth from "helpers/auth";
+import { API_PATH } from "helpers/routeManager";
 
 const MotionFlex = motion(Flex);
 
@@ -39,6 +39,8 @@ const Layout: React.FC = ({ children }) => {
   const ref = useRef<HTMLDivElement>(null);
   const history = useHistory();
   const { data: profileData } = useProfile();
+
+
 
   const handleClickOutside = (e: MouseEvent) => {
     if (ref.current && ref.current.contains(e.target as Node)) {
@@ -51,7 +53,7 @@ const Layout: React.FC = ({ children }) => {
 
   const logout = async () => {
     const { data } = await API.get<{ message: string; status: string }>(
-      "/api-logout/"
+      API_PATH.API_LOGOUT
     );
     if (data.status === "success") {
       Auth.deauthenticateUser();

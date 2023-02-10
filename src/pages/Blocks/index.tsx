@@ -23,6 +23,7 @@ import { useProfile } from "hooks/useProfile";
 import { useHistory } from "react-router-dom";
 import InfiniteScroll from "react-infinite-scroll-component";
 import API from "helpers/api";
+import { API_PATH } from "helpers/routeManager";
 
 const Blocks: React.FC = () => {
   const [isDesktopView] = useMediaQuery("(min-width: 1920px)");
@@ -84,7 +85,7 @@ const Blocks: React.FC = () => {
         const { data } = await API.post<{
           scan_report: Scan;
           is_latest_scan: boolean;
-        }>("/api-get-scan-details/", { scan_id: scan.scan_id });
+        }>(API_PATH.API_GET_SCAN_DETAILS, { scan_id: scan.scan_id });
         let scanL = [...scanList];
         data.scan_report._updated = scan._updated
         scanL[index] = data.scan_report;

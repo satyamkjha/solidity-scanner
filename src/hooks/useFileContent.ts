@@ -1,6 +1,7 @@
 import { useQuery } from "react-query";
 
 import API from "helpers/api";
+import { API_PATH } from "helpers/routeManager";
 
 const getFileContent = async (
   scan_id: string,
@@ -9,8 +10,8 @@ const getFileContent = async (
 ) => {
   const { data } = await API.post(
     type === "project"
-      ? "/api-get-file-content/"
-      : "/api-get-file-content-block/",
+      ? API_PATH.API_GET_FILE_CONTENT
+      : API_PATH.API_GET_FILE_CONTENT_BLOCK,
     {
       scan_id,
       file_path,

@@ -1,13 +1,14 @@
 import { useQuery } from "react-query";
 import API from "helpers/api";
 import { Plan } from "common/types";
+import { API_PATH } from "helpers/routeManager";
 
 const getPricingPlans = async () => {
   const { data } = await API.get<{
     monthly: {
       [plan: string]: Plan;
     };
-  }>("/api-get-prices/");
+  }>(API_PATH.API_GET_PRICING);
   return data;
 };
 

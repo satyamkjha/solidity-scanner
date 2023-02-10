@@ -2,10 +2,11 @@ import { useQuery } from "react-query";
 
 import API from "helpers/api";
 import { Report } from "common/types";
+import { API_PATH } from "helpers/routeManager";
 
 const getReport = async (project_id: string, report_id: string) => {
   const { data } = await API.post<{ summary_report: Report }>(
-    "/api-get-report-beta/",
+    API_PATH.API_GET_REPORT_BETA,
     {
       project_id,
       report_id,

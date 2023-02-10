@@ -26,6 +26,7 @@ import {
 } from "common/constants";
 
 import API from "helpers/api";
+import { API_PATH } from "helpers/routeManager";
 const REDIRECT_URI =
   process.env.NODE_ENV === "production"
     ? "https://solidityscan.com/integrations/"
@@ -142,7 +143,7 @@ const IntegrationChannel: React.FC<IntegrationChannelProps> = ({
   const onSuccess = async (code: string) => {
     try {
       setLoading(true);
-      await API.post(`/api-authenticate-${title.toLowerCase()}/`, {
+      await API.post(`${API_PATH.API_AUTHENTICATE_INTEGRATIONS}${title.toLowerCase()}/`, {
         code,
       });
       setLoading(false);
@@ -155,7 +156,7 @@ const IntegrationChannel: React.FC<IntegrationChannelProps> = ({
   const onDisconnect = async () => {
     try {
       setLoading(true);
-      await API.post(`/api-delete-${title.toLowerCase()}/`, {});
+      await API.post(`${API_PATH.API_DELETE_INTEGRATIONS}${title.toLowerCase()}/`, {});
       await queryClient.refetchQueries("profile");
       setLoading(false);
     } catch (e) {

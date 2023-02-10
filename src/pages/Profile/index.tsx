@@ -29,6 +29,7 @@ import { useProfile } from "hooks/useProfile";
 
 import API from "helpers/api";
 import Auth from "helpers/auth";
+import { API_PATH } from "helpers/routeManager";
 
 type ProfileFormData = {
   first_name?: string;
@@ -46,7 +47,7 @@ const Profile: React.FC = () => {
     contact_number,
     first_name,
   }: ProfileFormData) => {
-    await API.post("/api-update-profile/", {
+    await API.post(API_PATH.API_UPDATE_PROFILE, {
       company_name,
       contact_number,
       first_name,
@@ -235,7 +236,7 @@ const ChangePasswordForm: React.FC = () => {
       return;
     }
     try {
-      await API.post("/api-change-password/", { password, new_password });
+      await API.post(API_PATH.API_CHANGE_PASSWORD, { password, new_password });
       Auth.deauthenticateUser();
       history.push("/signin?isPasswordReset=true");
     } catch (e) {

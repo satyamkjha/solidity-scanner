@@ -22,6 +22,7 @@ import API from "helpers/api";
 
 import { AuthResponse } from "common/types";
 import { ViewIcon, ViewOffIcon } from "@chakra-ui/icons";
+import { API_PATH } from "helpers/routeManager";
 
 function useQuery() {
   return new URLSearchParams(useLocation().search);
@@ -40,7 +41,7 @@ const Reset: React.FC = () => {
   const [show, setShow] = useState(false);
 
   const onSubmit = async ({ email, password }: FormData) => {
-    const { data } = await API.post<AuthResponse>("/api-forgot-password/", {
+    const { data } = await API.post<AuthResponse>(API_PATH.API_FORGOT_PASSWORD, {
       email,
       token,
       password,
