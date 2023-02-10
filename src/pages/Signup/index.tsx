@@ -248,6 +248,7 @@ const RegisterForm: React.FC<{
                 isRequired
                 value={email}
                 type="email"
+                name='email'
                 placeholder="Your email"
                 variant="brand"
                 size="lg"
@@ -262,6 +263,7 @@ const RegisterForm: React.FC<{
               />
               <Input
                 isRequired
+                name='name'
                 value={name}
                 type="text"
                 placeholder="Your name"
@@ -280,6 +282,7 @@ const RegisterForm: React.FC<{
               <Input
                 isRequired
                 value={password}
+                name='password'
                 type={show ? "text" : "password"}
                 placeholder="Create password"
                 variant="brand"
