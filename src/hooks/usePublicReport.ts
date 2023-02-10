@@ -4,6 +4,7 @@ import { Report } from "common/types";
 import axios from "axios";
 import { API_URL_PROD, API_URL_DEV } from "helpers/api";
 import Auth from "helpers/auth";
+import { API_PATH } from "helpers/routeManager";
 
 const API = axios.create({
   baseURL: process.env.NODE_ENV === "production" ? API_URL_PROD : API_URL_DEV,
@@ -17,7 +18,7 @@ const API = axios.create({
 
 const getPublicReport = async (project_type: string, report_id: string) => {
   const { data } = await API.post<{ summary_report: Report }>(
-    "/api-get-published-report/",
+    API_PATH.API_GET_PUBLISHED_REPORT,
     {
       project_type,
       report_id,

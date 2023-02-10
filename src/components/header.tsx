@@ -22,6 +22,7 @@ import Auth from "helpers/auth";
 import ContactUs from "./contactus";
 import { CloseIcon, HamburgerIcon } from "@chakra-ui/icons";
 import API from "helpers/api";
+import { API_PATH } from "helpers/routeManager";
 
 export const Header: React.FC = () => {
   const { isOpen, onClose, onOpen } = useDisclosure();
@@ -29,7 +30,7 @@ export const Header: React.FC = () => {
   const history = useHistory();
 
   const logout = async () => {
-    await API.get("/api-logout/");
+    await API.get(API_PATH.API_LOGOUT);
     Auth.deauthenticateUser();
     history.push("/signin");
   };

@@ -79,6 +79,7 @@ import { Swiper, SwiperSlide, useSwiper } from "swiper/react";
 import { EffectCoverflow, FreeMode, Navigation, Pagination } from "swiper";
 import { profile } from "console";
 import { usePricingPlans } from "hooks/usePricingPlans";
+import { API_PATH } from "helpers/routeManager";
 
 const successColor = "#289F4C";
 const greyColor = "#BDBDBD";
@@ -652,7 +653,7 @@ const SelectPaymentMethod: React.FC<{
     const { data, status } = await API.post<{
       status: string;
       checkout_url: string;
-    }>("/api-create-stripe-subscription-beta/", {
+    }>(API_PATH.API_CREATE_SUBSCRIPTION_BETA, {
       package: selectedPlan,
       duration: duration,
     });
@@ -683,7 +684,7 @@ const SelectPaymentMethod: React.FC<{
         checkout_url: string;
         status: string;
         status_url: string;
-      }>("api-create-order-cp/", {
+      }>(API_PATH.API_CREATE_ORDER_CP, {
         package: selectedPlan,
         currency: coin,
         duration: duration,
@@ -1007,7 +1008,7 @@ const CurrentPlan: React.FC<{
   const greyColor = "#BDBDBD";
   const toast = useToast();
   const cancelSubscription = async () => {
-    const { data } = await API.delete("/api-cancel-stripe-subscription-beta/");
+    const { data } = await API.delete(API_PATH.API_CANCEL_STRIPE_SUBSCRIPTION_BETA);
     if (data.status === "success") {
       toast({
         title: data.message,
@@ -1770,7 +1771,7 @@ const TransactionListCard: React.FC<{
   const [isLargerThan800] = useMediaQuery("(min-width: 800px)");
 
   const cancelPayment = async () => {
-    const { data } = await API.delete("/api-invalidate-order-beta/", {
+    const { data } = await API.delete(API_PATH.API_INVALIDATE_ORDER_BETA, {
       data: {
         payment_platform: paymentPlatform,
         order_id: orderId,

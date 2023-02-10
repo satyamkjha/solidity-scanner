@@ -35,6 +35,7 @@ import { timeSince } from "common/functions";
 import { useProjects } from "hooks/useProjects";
 import { useProfile } from "hooks/useProfile";
 import InfiniteScroll from "react-infinite-scroll-component";
+import { API_PATH } from "helpers/routeManager";
 
 const Projects: React.FC = () => {
   const [isDesktopView] = useMediaQuery("(min-width: 1920px)");
@@ -246,7 +247,7 @@ const ProjectCard: React.FC<{
 
   const rescan = async () => {
     setRescanLoading(true);
-    await API.post("/api-project-scan/", {
+    await API.post(API_PATH.API_PROJECT_SCAN, {
       project_id,
       project_type: "existing",
     });
