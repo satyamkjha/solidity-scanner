@@ -1,3 +1,5 @@
+import UAParser from "ua-parser-js";
+
 export const sentenceCapitalize = (string: string) => {
   return string.charAt(0).toUpperCase() + string.slice(1);
 };
@@ -17,3 +19,19 @@ export const getFeatureGateConfig = () => {
 
   return feature_gate_config;
 };
+
+export const getBrowserName = (): string => {
+  const UserAgentInstance = new UAParser();
+    let browserName = UserAgentInstance.getBrowser().name;
+ 
+    if(browserName) return browserName
+    else return 'NA'
+}
+
+export const getDeviceType = (): string => {
+  const UserAgentInstance = new UAParser();
+    let deviceType = UserAgentInstance.getDevice().type;
+ 
+    if(deviceType) return deviceType
+    else return 'NA'
+}
