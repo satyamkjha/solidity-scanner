@@ -73,6 +73,11 @@ export type ProjectList = {
   page: Page;
 };
 
+export type ScanList = {
+  data: Scan[];
+  page: Page;
+};
+
 export type AuthResponse = {
   status: string;
   message: string;

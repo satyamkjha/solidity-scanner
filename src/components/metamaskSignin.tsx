@@ -2,34 +2,20 @@ import { Button, HStack, Divider, Text, Image } from "@chakra-ui/react";
 import MetaMaskSDK from "@metamask/sdk";
 import API from "helpers/api";
 import Auth from "helpers/auth";
-import { getFeatureGateConfig } from "helpers/helperFunction";
+import { getBrowserName, getDeviceType, getFeatureGateConfig } from "helpers/helperFunction";
+import { API_PATH } from "helpers/routeManager";
 import React from "react";
 import { useHistory } from "react-router-dom";
-import UAParser from "ua-parser-js";
 
 const MetaMaskLogin: React.FC = () => {
   const history = useHistory();
   const MMSDK = new MetaMaskSDK({
     useDeeplink: true,
     communicationLayerPreference: "socket",
-  });
+  }); 
 
- 
+  
 
-  function checkBrowser(): boolean {
-    // Detect Brave
-    if (navigator.brave) return false;
-
-    const UserAgentInstance = new UAParser();
-    const browserName = UserAgentInstance.getBrowser().name;
-
-    return (
-      browserName &&
-      getFeatureGateConfig().metamask_integration.supported_browser.includes(
-        browserName.toLowerCase()
-      )
-    );
-  }
 
   const ethereum = MMSDK.getProvider();
 
@@ -40,11 +26,28 @@ const MetaMaskLogin: React.FC = () => {
     }
   };
 
+  const checkBrowserAndDevice  = (): boolean => {
+
+   
+    // Detect Brave
+    if (navigator.brave) return false;
+
+    //Check if Mobile
+    if (getDeviceType() === 'mobile') return getFeatureGateConfig().metamask_integration.mobile_enabled
+    
+    return (
+      getBrowserName() &&
+      getFeatureGateConfig().metamask_integration.supported_browser.includes(
+        getBrowserName().toLowerCase()
+      )
+    );
+  }
+
   const getNonce = async (address: string) => {
     const { data } = await API.get<{
       status: string;
       nonce: string;
-    }>(`/api-metamask-login/?public_address=${address}`);
+    }>(`${API_PATH.API_METAMASK_LOGIN}?public_address=${address}`);
     if (data.status === "success") {
       sign(address, data.nonce);
     }
@@ -55,7 +58,7 @@ const MetaMaskLogin: React.FC = () => {
     var params = [from, nonce];
     var method = "personal_sign";
     const signature = await ethereum.request({ method, params });
-    const { data } = await API.post(`/api-metamask-login/`, {
+    const { data } = await API.post(API_PATH.API_METAMASK_LOGIN, {
       address: address,
       signature,
     });
@@ -66,7 +69,7 @@ const MetaMaskLogin: React.FC = () => {
   };
   return (
     <>
-      {getFeatureGateConfig().metamask_integration.enabled && checkBrowser() && (
+      {getFeatureGateConfig().metamask_integration.enabled && checkBrowserAndDevice() && (
         <>
           <Button
             onClick={connect}

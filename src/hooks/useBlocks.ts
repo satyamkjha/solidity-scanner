@@ -1,13 +1,18 @@
 import { useQuery } from "react-query";
 import API from "helpers/api";
 
-import { Scan } from "common/types";
+import { Pagination, ScanList } from "common/types";
+import { API_PATH } from "helpers/routeManager";
 
-const getBlocks = async () => {
-  const { data } = await API.get<{ scans: Scan[] }>("/api-get-task-status/");
-  return { scans: data.scans.filter(({ scan_type }) => scan_type === "block") };
+const getBlocks = async (pagination: Pagination) => {
+  const { data } = await API.get(
+    `${API_PATH.API_GET_TASK_STATUS}?page=${pagination.pageNo}&per_page=${pagination.perPageCount}`
+  );
+  return data;
 };
 
-export const useBlocks = () => {
-  return useQuery("blocks", getBlocks);
+export const useBlocks = (pagination: Pagination) => {
+  return useQuery<ScanList>(["blocks", pagination], () =>
+    getBlocks(pagination)
+  );
 };

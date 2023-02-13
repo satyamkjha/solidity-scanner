@@ -1,5 +1,5 @@
 import React, { useEffect, useRef } from "react";
-import { useLocation, useParams } from "react-router-dom";
+import { Link as RouterLink, useLocation, useParams } from "react-router-dom";
 import styled from "@emotion/styled";
 
 import {
@@ -56,6 +56,7 @@ import Infographics from "components/infographics";
 import { blockScans } from "common/values";
 import { useRecentQuickScans } from "hooks/useRecentQuickScans";
 import { FaEllipsisH, FaEllipsisV } from "react-icons/fa";
+import { API_PATH } from "helpers/routeManager";
 
 const pieData = (
   critical: number,
@@ -65,43 +66,43 @@ const pieData = (
   informational: number,
   gas: number
 ) => [
-  {
-    id: "critical",
-    label: "Critical",
-    value: critical,
-    color: "#FF5C00",
-  },
-  {
-    id: "high",
-    label: "High",
-    value: high,
-    color: "#FF5C00",
-  },
-  {
-    id: "medium",
-    label: "Medium",
-    value: medium,
-    color: "#FFE600",
-  },
-  {
-    id: "low",
-    label: "Low",
-    value: low,
-    color: "#38CB89",
-  },
-  {
-    id: "informational",
-    label: "Informational",
-    value: informational,
-    color: "#A0AEC0",
-  },
-  {
-    id: "gas",
-    label: "Gas",
-    value: gas,
-    color: "#F795B4",
-  },
-];
+    {
+      id: "critical",
+      label: "Critical",
+      value: critical,
+      color: "#FF5C00",
+    },
+    {
+      id: "high",
+      label: "High",
+      value: high,
+      color: "#FF5C00",
+    },
+    {
+      id: "medium",
+      label: "Medium",
+      value: medium,
+      color: "#FFE600",
+    },
+    {
+      id: "low",
+      label: "Low",
+      value: low,
+      color: "#38CB89",
+    },
+    {
+      id: "informational",
+      label: "Informational",
+      value: informational,
+      color: "#A0AEC0",
+    },
+    {
+      id: "gas",
+      label: "Gas",
+      value: gas,
+      color: "#F795B4",
+    },
+  ];
 
 const formatOptionLabel: React.FC<{
   value: string;
@@ -210,8 +211,8 @@ const QuickScan: React.FC = () => {
       backgroundColor: state.isSelected
         ? "#FFFFFF"
         : state.isFocused
-        ? "#E6E6E6"
-        : "#FFFFFF",
+          ? "#E6E6E6"
+          : "#FFFFFF",
       color: "#000000",
     }),
     menu: (provided: any, state: any) => ({
@@ -253,8 +254,8 @@ const QuickScan: React.FC = () => {
       backgroundColor: state.isSelected
         ? "#FFFFFF"
         : state.isFocused
-        ? "#E6E6E6"
-        : "#FFFFFF",
+          ? "#E6E6E6"
+          : "#FFFFFF",
       color: "#000000",
     }),
     menu: (provided: any, state: any) => ({
@@ -309,6 +310,7 @@ const QuickScan: React.FC = () => {
   );
   const { data: recentScans, isLoading: recentScansLoading } =
     useRecentQuickScans();
+  const location = useLocation();
 
   let d = new Date();
 
@@ -328,21 +330,53 @@ const QuickScan: React.FC = () => {
 
     if (blockAddress && blockChain && blockPlatform) {
       setIsLoading(true);
-      API.get(
-        `/api-quick-scan-sse/?contract_address=${blockAddress}&contract_platform=${blockPlatform}&contract_chain=${blockChain}`
-      ).then(
-        (res) => {
-          if (res.status === 200) {
-            setScanReport(res.data.scan_report);
-            d = new Date(res.data.scan_report.published_date);
-          }
-        },
-        (err) => {
-          return;
-        }
-      );
+      runQuickScan(blockAddress, blockPlatform, blockChain)
     }
   }, []);
+
+  useEffect(() => {
+    if (!localStorage.getItem("campaign_id") && !localStorage.getItem("campaign_type")) {
+      const query = new URLSearchParams(location.search);
+      const campaign_type = query.get("utm_source") || "quickscan";
+      const campaign_id = query.get("utm_campaign") || "quickscan";
+      localStorage.setItem("campaign_type", campaign_type);
+      localStorage.setItem("campaign_id", campaign_id);
+    }
+  }, []);
+
+  const runQuickScan = async (address: string, platform: string, chain: string) => {
+    API.post<{
+      contract_verified: boolean;
+      message: string;
+      status: string;
+    }>(API_PATH.API_GET_CONTRACT_STATUS, {
+      contract_address: address,
+      contract_platform: platform,
+      contract_chain: chain,
+    }).then((res) => {
+      if (res.data.contract_verified) {
+        API.get(
+          `${API_PATH.API_QUICK_SCAN_SSE}?contract_address=${address}&contract_platform=${platform}&contract_chain=${chain}`
+        )
+          .then(
+            (res) => {
+              if (res.status === 200) {
+                setScanReport(res.data.scan_report);
+                d = new Date(res.data.scan_report.published_date);
+              }
+            },
+            (err) => {
+              return;
+            }
+          )
+          .finally(() => {
+            setIsLoading(false);
+          });
+      }
+    }, (err) => {
+      setIsLoading(false);
+    });
+  }
 
   const generateQuickScan = () => {
     if (platform === "") {
@@ -378,23 +412,7 @@ const QuickScan: React.FC = () => {
 
     setIsLoading(true);
     setScanReport(null);
-    API.get(
-      `/api-quick-scan-sse/?contract_address=${address}&contract_platform=${platform}&contract_chain=${chain}`
-    )
-      .then(
-        (res) => {
-          if (res.status === 200) {
-            setScanReport(res.data.scan_report);
-            d = new Date(res.data.scan_report.published_date);
-          }
-        },
-        (err) => {
-          return;
-        }
-      )
-      .finally(() => {
-        setIsLoading(false);
-      });
+    runQuickScan(address, platform, chain)
   };
 
   useEffect(() => {
@@ -565,8 +583,8 @@ const QuickScan: React.FC = () => {
                       ? "linear-gradient(96.27deg, #FFF3F0 0.75%, #FFE0D9 96.71%)"
                       : parseFloat(scanReport.multi_file_scan_summary.score) >=
                         4.5
-                      ? "linear-gradient(96.27deg, #EFFFED 0.75%, #E6FFE2 96.71%)"
-                      : "linear-gradient(96.27deg, #FFFAF2 0.75%, #FFF4E1 96.71%)"
+                        ? "linear-gradient(96.27deg, #EFFFED 0.75%, #E6FFE2 96.71%)"
+                        : "linear-gradient(96.27deg, #FFFAF2 0.75%, #FFF4E1 96.71%)"
                   }
                 >
                   <Text fontSize="md" mb={5}>
@@ -596,8 +614,8 @@ const QuickScan: React.FC = () => {
                       ? " LOW"
                       : parseFloat(scanReport.multi_file_scan_summary.score) >=
                         4.5
-                      ? " GREAT"
-                      : " AVERAGE"}
+                        ? " GREAT"
+                        : " AVERAGE"}
                   </Text>
                 </Box>
                 <Box
@@ -843,9 +861,8 @@ const QuickScan: React.FC = () => {
                         This contract has been manually verified by
                         SolidityScan's internal security team as per the highest
                         smart contract security standards as of{" "}
-                        {`${d.getDate()} ${
-                          monthNames[d.getMonth()]
-                        } ${d.getFullYear()}`}
+                        {`${d.getDate()} ${monthNames[d.getMonth()]
+                          } ${d.getFullYear()}`}
                         .{" "}
                       </Text>
 
@@ -896,7 +913,7 @@ const QuickScan: React.FC = () => {
                         h="180px"
                       >
                         {scanReport.multi_file_scan_summary.issues_count ===
-                        0 ? (
+                          0 ? (
                           <Image src="/nobug.svg" alt="No Bugs Found" />
                         ) : (
                           <PieChart
@@ -929,17 +946,13 @@ const QuickScan: React.FC = () => {
                           risks tailored specific to the contract are now
                           available in the link below.
                         </Text>
-                        <Button
-                          onClick={() =>
-                            window.open(
-                              "https://solidityscan.com/signup/?utm_source=quickscan&utm_medium=quickscan&utm_campaign=quickscan",
-                              "_blank"
-                            )
-                          }
-                          variant="accent-ghost"
-                        >
-                          View Detailed Result <ArrowForwardIcon ml={5} />
-                        </Button>
+                        <RouterLink to="/signup">
+                          <Button
+                            variant="accent-ghost"
+                          >
+                            View Detailed Result <ArrowForwardIcon ml={5} />
+                          </Button>
+                        </RouterLink>
                       </VStack>
                     </Box>
                   </Box>
@@ -1050,8 +1063,8 @@ const QuickScan: React.FC = () => {
                     parseFloat("0.0") < 2.5
                       ? "linear-gradient(96.27deg, #FFF3F0 0.75%, #FFE0D9 96.71%)"
                       : parseFloat("0.0") >= 4.5
-                      ? "linear-gradient(96.27deg, #EFFFED 0.75%, #E6FFE2 96.71%)"
-                      : "linear-gradient(96.27deg, #FFFAF2 0.75%, #FFF4E1 96.71%)"
+                        ? "linear-gradient(96.27deg, #EFFFED 0.75%, #E6FFE2 96.71%)"
+                        : "linear-gradient(96.27deg, #FFFAF2 0.75%, #FFF4E1 96.71%)"
                   }
                 >
                   <Text fontSize="md" mb={5}>

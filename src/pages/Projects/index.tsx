@@ -35,6 +35,7 @@ import { timeSince } from "common/functions";
 import { useProjects } from "hooks/useProjects";
 import { useProfile } from "hooks/useProfile";
 import InfiniteScroll from "react-infinite-scroll-component";
+import { API_PATH } from "helpers/routeManager";
 
 const Projects: React.FC = () => {
   const [isDesktopView] = useMediaQuery("(min-width: 1920px)");
@@ -74,9 +75,6 @@ const Projects: React.FC = () => {
       ) {
         intervalId = setInterval(async () => {
           setPagination({ pageNo: 1, perPageCount: projectList.length });
-          setTimeout(async () => {
-            await refetch();
-          }, 10);
           if (
             projectList &&
             projectList.every(
@@ -98,6 +96,10 @@ const Projects: React.FC = () => {
     };
   }, [projectList]);
 
+  useEffect(() => {
+    refetch()
+  }, [pagination])
+
   const refetchProjects = async () => {
     if (projectList) {
       setPagination({ pageNo: 1, perPageCount: projectList.length });
@@ -116,9 +118,6 @@ const Projects: React.FC = () => {
       pageNo: pagination.pageNo + 1,
       perPageCount: pagination.perPageCount,
     });
-    setTimeout(async () => {
-      await refetch();
-    }, 10);
   };
 
   return (
@@ -248,7 +247,7 @@ const ProjectCard: React.FC<{
 
   const rescan = async () => {
     setRescanLoading(true);
-    await API.post("/api-project-scan/", {
+    await API.post(API_PATH.API_PROJECT_SCAN, {
       project_id,
       project_type: "existing",
     });
@@ -260,7 +259,7 @@ const ProjectCard: React.FC<{
   return (
     <>
       {multi_file_scan_status === "scan_done" ||
-      multi_file_scan_status === "scanning" ? (
+        multi_file_scan_status === "scanning" ? (
         <Flex
           onClick={() => {
             if (multi_file_scan_status === "scan_done") {

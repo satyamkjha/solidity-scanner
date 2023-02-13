@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import {
   Flex,
@@ -9,33 +9,59 @@ import {
   Spinner,
   HStack,
   Image,
+  useMediaQuery,
 } from "@chakra-ui/react";
 
 import { LogoIcon, BlockCredit, ScanErrorIcon } from "components/icons";
 import Score from "components/score";
 import VulnerabilityDistribution from "components/vulnDistribution";
 
-import { Scan } from "common/types";
+import { Page, Pagination, Scan } from "common/types";
 import { timeSince } from "common/functions";
 import { useBlocks } from "hooks/useBlocks";
 import { useProfile } from "hooks/useProfile";
 import { useHistory } from "react-router-dom";
+import InfiniteScroll from "react-infinite-scroll-component";
+import API from "helpers/api";
+import { API_PATH } from "helpers/routeManager";
 
 const Blocks: React.FC = () => {
-  const { data, isLoading, refetch } = useBlocks();
+  const [isDesktopView] = useMediaQuery("(min-width: 1920px)");
+
+  const [page, setPage] = useState<Page>();
+  const [pagination, setPagination] = useState<Pagination>({
+    pageNo: 1,
+    perPageCount: isDesktopView ? 20 : 12,
+  });
+  const [hasMore, setHasMore] = useState(true);
+
+  const { data: scans, isLoading, refetch } = useBlocks(pagination);
   const { data: profileData } = useProfile();
+  const [scanList, setScanList] = useState<Scan[]>();
+
+  useEffect(() => {
+    if (scans) {
+      let sList =
+        scanList && pagination.pageNo > 1
+          ? scanList.concat(scans.data)
+          : scans.data;
+      setScanList(sList);
+      setPage(scans.page);
+    }
+  }, [scans, refetch]);
+
   useEffect(() => {
     let intervalId: NodeJS.Timeout;
     const refetchTillScanComplete = () => {
       if (
-        data &&
-        data.scans.some(({ scan_status }) => scan_status !== "scan_done")
+        scanList &&
+        scanList.some(({ scan_status }) => scan_status !== "scan_done")
       ) {
         intervalId = setInterval(async () => {
-          await refetch();
+          await fetchScan();
           if (
-            data &&
-            data.scans.every(({ scan_status }) => scan_status === "scan_done")
+            scanList &&
+            scanList.every(({ scan_status }) => scan_status === "scan_done")
           ) {
             clearInterval(intervalId);
           }
@@ -47,7 +73,36 @@ const Blocks: React.FC = () => {
     return () => {
       clearInterval(intervalId);
     };
-  }, [data, refetch]);
+  }, [scanList]);
+
+  useEffect(() => {
+    refetch()
+  }, [pagination])
+
+  const fetchScan = async () => {
+    scanList?.forEach(async (scan, index) => {
+      if (scan.multi_file_scan_status === "scanning" || scan.multi_file_scan_status === "initialised") {
+        const { data } = await API.post<{
+          scan_report: Scan;
+          is_latest_scan: boolean;
+        }>(API_PATH.API_GET_SCAN_DETAILS, { scan_id: scan.scan_id });
+        let scanL = [...scanList];
+        data.scan_report._updated = scan._updated
+        scanL[index] = data.scan_report;
+        setScanList(scanL);
+      }
+    })
+  }
+  const fetchMoreBlocks = async () => {
+    if (page && pagination.pageNo >= page.total_pages) {
+      setHasMore(false);
+      return;
+    }
+    setPagination({
+      pageNo: pagination.pageNo + 1,
+      perPageCount: pagination.perPageCount,
+    });
+  };
 
   return (
     <Box
@@ -89,11 +144,11 @@ const Blocks: React.FC = () => {
         </Flex>
       </Flex>
 
-      {isLoading ? (
+      {!scanList ? (
         <Flex w="100%" h="70vh" alignItems="center" justifyContent="center">
           <Spinner />
         </Flex>
-      ) : data?.scans.length === 0 ? (
+      ) : scanList.length === 0 ? (
         <Flex
           w="100%"
           h="70vh"
@@ -121,13 +176,32 @@ const Blocks: React.FC = () => {
           w="100%"
           boxSizing={"border-box"}
         >
-          {[...(data?.scans || [])]
-            .sort((scan1, scan2) =>
-              new Date(scan1._updated) < new Date(scan2._updated) ? 1 : -1
-            )
-            .map((scan) => (
-              <BlockCard key={scan.scan_id} scan={scan} />
-            ))}
+          <InfiniteScroll
+            style={{
+              width: "100%",
+              display: "flex",
+              flexWrap: "wrap",
+              overflow: "hidden",
+              boxSizing: "border-box",
+            }}
+            dataLength={scanList.length}
+            next={fetchMoreBlocks}
+            hasMore={hasMore}
+            loader={
+              <Box w={"100%"} align="center">
+                <Spinner />
+              </Box>
+            }
+            scrollableTarget="pageScroll"
+          >
+            {[...(scanList || [])]
+              // .sort((scan1, scan2) =>
+              //   new Date(scan1._updated) < new Date(scan2._updated) ? 1 : -1
+              // )
+              .map((scan) => (
+                <BlockCard key={scan.scan_id} scan={scan} />
+              ))}
+          </InfiniteScroll>
         </Flex>
       )}
     </Box>

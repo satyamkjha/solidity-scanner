@@ -52,6 +52,7 @@ import { url } from "inspector";
 import Select from "react-select";
 import { resolve } from "dns";
 import { rejects } from "assert";
+import { API_PATH } from "helpers/routeManager";
 
 const Home: React.FC = () => {
   const { data } = useOverview();
@@ -267,7 +268,7 @@ const ApplicationForm: React.FC = () => {
 
     setNameError(null);
     setLinkError(null);
-    await API.post("/api-project-scan/", {
+    await API.post(API_PATH.API_PROJECT_SCAN, {
       project_url: filteredUrl,
       ...(project_name && project_name !== "" && { project_name }),
       project_type: "new",
@@ -592,14 +593,25 @@ const ContractForm: React.FC = () => {
   const platform_supported = getFeatureGateConfig().platform_supported
 
   const onSubmit = async ({ contract_address }: ContractFormData) => {
-    await API.post("/api-start-scan-block/", {
+    const { data } = await API.post<{
+      contract_verified: boolean;
+      message: string;
+      status: string;
+    }>(API_PATH.API_GET_CONTRACT_STATUS, {
       contract_address,
       contract_platform: platform,
       contract_chain: chain,
-    });
-    queryClient.invalidateQueries("scans");
-    queryClient.invalidateQueries("profile");
-    history.push("/blocks");
+    }); 
+    if(data.contract_verified){
+      await API.post(API_PATH.API_START_SCAN_BLOCK, {
+        contract_address,
+        contract_platform: platform,
+        contract_chain: chain,
+      });
+      queryClient.invalidateQueries("scans");
+      queryClient.invalidateQueries("profile");
+      history.push("/blocks");
+    } 
   };
   return (
     <>
@@ -875,7 +887,7 @@ const UploadForm: React.FC = () => {
 
   const getPreassignedURL = async (fileName: string, file: File) => {
     const { data } = await API.get<{ status: string; result: { url: string } }>(
-      `/api-get-presigned-url/?file_name=${fileName}`
+      `${API_PATH.API_GET_PREASSIGNED_URL}?file_name=${fileName}`
     );
     return {
       url: data.result.url,
@@ -911,7 +923,7 @@ const UploadForm: React.FC = () => {
 
   const startFileScan = async () => {
     let urlData = urlList.map((item) => item.url);
-    await API.post("/api-project-scan/", {
+    await API.post(API_PATH.API_PROJECT_SCAN, {
       file_urls: urlData,
       project_name: name,
       project_visibility: "public",
