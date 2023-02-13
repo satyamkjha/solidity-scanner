@@ -653,7 +653,7 @@ const SelectPaymentMethod: React.FC<{
     const { data, status } = await API.post<{
       status: string;
       checkout_url: string;
-    }>(API_PATH.API_CREATE_SUBSCRIPTION_BETA, {
+    }>(API_PATH.API_CREATE_STRIPE_SUBSCRIPTION_BETA, {
       package: selectedPlan,
       duration: duration,
     });
