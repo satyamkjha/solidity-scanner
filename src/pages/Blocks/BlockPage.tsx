@@ -86,8 +86,8 @@ const BlockPage: React.FC = () => {
     scanData?.scan_report.project_id
   );
   const toast = useToast();
-  
-  const { data: plans } = usePricingPlans()
+
+  const { data: plans } = usePricingPlans();
   const [next, setNext] = useState(false);
   const [open, setOpen] = useState(false);
 
@@ -267,12 +267,11 @@ const BlockPage: React.FC = () => {
         w: ["100%", "100%", "calc(100% - 2rem)"],
         bg: "bg.subtle",
         borderRadius: "20px",
-        my: 4,
-        mx: [0, 0, 4],
-        py: 4,
+        mx: [0, 0, 2],
+        py: 2,
         minH: "78vh",
       }}
-      px={[4, 4, 8]}
+      px={[2, 2, 4]}
     >
       {isLoading || isProfileLoading || !plans ? (
         <Flex w="100%" h="70vh" alignItems="center" justifyContent="center">
@@ -364,8 +363,8 @@ const BlockPage: React.FC = () => {
                 w: "100%",
                 bg: "white",
                 borderRadius: "20px",
-                my: 4,
-                py: 4,
+                mt: 4,
+                py: 2,
               }}
             >
               <Accordion allowMultiple borderBottomWidth={0}>
@@ -559,17 +558,15 @@ const BlockPage: React.FC = () => {
                   flexDir: "column",
                   alignItems: "flex-start",
                   justifyContent: "flex-start",
-                  my: 4,
                 }}
               >
                 <Tabs
                   index={tabIndex}
                   onChange={handleTabsChange}
-                  mx={0}
-                  px={0}
                   w={"100%"}
                   variant="soft-rounded"
                   colorScheme="green"
+                  isLazy
                 >
                   <Flex
                     width={"100%"}
@@ -577,22 +574,48 @@ const BlockPage: React.FC = () => {
                     flexDir={"row"}
                     justifyContent="flex-start"
                     align={"center"}
-                    ml={[3, 3, 5]}
+                    ml={0}
                   >
-                    <TabList my={3} width={"fit-content"} zIndex={0}>
-                      <Tab minW={"150px"} bgColor={"#F5F5F5"}>
+                    <TabList
+                      sx={{
+                        borderBottomWidth: "1px",
+                        borderBottomStyle: "solid",
+                        borderColor: "border",
+                        p: 3,
+                        w: "100%",
+                      }}
+                      zIndex={0}
+                    >
+                      <Tab
+                        fontSize={"sm"}
+                        h="35px"
+                        minW={"150px"}
+                        bgColor={"#F5F5F5"}
+                      >
                         Overview
                       </Tab>
-                      <Tab minW={"150px"} bgColor={"#F5F5F5"} ml={4}>
+                      <Tab
+                        fontSize={"sm"}
+                        h="35px"
+                        minW={"150px"}
+                        bgColor={"#F5F5F5"}
+                        ml={4}
+                      >
                         Detailed Result
                       </Tab>
-                      <Tab minW={"175px"} bgColor={"#F5F5F5"} ml={4}>
+                      <Tab
+                        fontSize={"sm"}
+                        h="35px"
+                        minW={"175px"}
+                        bgColor={"#F5F5F5"}
+                        ml={4}
+                      >
                         Published Reports
                       </Tab>
                     </TabList>
                   </Flex>
                   <TabPanels>
-                    <TabPanel>
+                    <TabPanel p={[0, 0, 0, 2]}>
                       {(scanData.scan_report.multi_file_scan_summary ||
                         scanData.scan_report.scan_summary) && (
                         <Overview
@@ -601,7 +624,7 @@ const BlockPage: React.FC = () => {
                         />
                       )}
                     </TabPanel>
-                    <TabPanel p={[2, 2, 2, 4]}>
+                    <TabPanel p={[0, 0, 0, 2]}>
                       {scanData.scan_report.multi_file_scan_status ===
                         "scan_done" &&
                       scanData.scan_report.multi_file_scan_details &&
@@ -648,7 +671,7 @@ const BlockPage: React.FC = () => {
                     {profile.promo_code ? (
                       profile.actions_supported &&
                       profile.actions_supported.publishable_report && (
-                        <TabPanel p={4}>
+                        <TabPanel p={[0, 0, 0, 2]}>
                           <PublishedReports
                             type="block"
                             reportList={reportList.reports}
@@ -658,7 +681,7 @@ const BlockPage: React.FC = () => {
                         </TabPanel>
                       )
                     ) : (
-                      <TabPanel p={4}>
+                      <TabPanel p={[0, 0, 0, 2]}>
                         <PublishedReports
                           type="block"
                           reportList={reportList.reports}

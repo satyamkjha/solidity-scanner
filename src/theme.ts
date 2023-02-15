@@ -95,8 +95,8 @@ export const theme = extendTheme({
           ...defaultTheme.components.Button.variants.ghost(props),
           background: "white",
           color: "#3300FF",
-          fontSize: "15px",
-          py: 6,
+          fontSize: "14px",
+          py: 4,
           _hover: {
             background: "#f7f5ff",
           },
@@ -108,9 +108,9 @@ export const theme = extendTheme({
           ...defaultTheme.components.Button.variants.outline(props),
           background: "#F5F2FF",
           color: "#000000",
-          fontSize: "15px",
+          fontSize: "14px",
           borderColor: "#C1B1FF",
-          py: 6,
+          py: 4,
           _hover: {
             background: "#f7f5ff",
           },

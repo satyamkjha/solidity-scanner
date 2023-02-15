@@ -111,12 +111,13 @@ export const ProjectPage: React.FC = () => {
         w: ["100%", "100%", "calc(100% - 2rem)"],
         bg: "bg.subtle",
         borderRadius: "20px",
-        my: 4,
+        my: 2,
         mx: [0, 0, 4],
-        py: 4,
+        pt: 3,
+        pb: 1,
         minH: "78vh",
       }}
-      px={[2, 2, 2, 8]}
+      px={[2, 2, 2, 4]}
     >
       {isLoading ? (
         <Flex w="100%" h="70vh" alignItems="center" justifyContent="center">
@@ -188,7 +189,7 @@ const ScanDetails: React.FC<{ scansRemaining: number; scans: ScanMeta[] }> = ({
   const { projectId, scanId } =
     useParams<{ projectId: string; scanId: string }>();
   const history = useHistory();
-  const { data: plans } = usePricingPlans()
+  const { data: plans } = usePricingPlans();
   const { data: scanData, isLoading, refetch } = useScan(scanId);
   const { data: reportList, refetch: refetchReprtList } = useReports(
     "project",
@@ -238,10 +239,13 @@ const ScanDetails: React.FC<{ scansRemaining: number; scans: ScanMeta[] }> = ({
 
   const rescan = async () => {
     setRescanLoading(true);
-    const { data } = await API.post<{ scan_id: string }>(API_PATH.API_PROJECT_SCAN, {
-      project_id: projectId,
-      project_type: "existing",
-    });
+    const { data } = await API.post<{ scan_id: string }>(
+      API_PATH.API_PROJECT_SCAN,
+      {
+        project_id: projectId,
+        project_type: "existing",
+      }
+    );
     setRescanLoading(false);
     queryClient.invalidateQueries(["scans", projectId]);
     onClose();
@@ -375,8 +379,9 @@ const ScanDetails: React.FC<{ scansRemaining: number; scans: ScanMeta[] }> = ({
           w: "100%",
           bg: "white",
           borderRadius: "20px",
-          my: 4,
-          p: 4,
+          my: 2,
+          p: 2,
+          pb: 0,
         }}
       >
         {isLoading || isProfileLoading ? (
@@ -393,7 +398,7 @@ const ScanDetails: React.FC<{ scansRemaining: number; scans: ScanMeta[] }> = ({
                 sx={{
                   justifyContent: ["flex-start", "flex-start", "space-between"],
                   alignItems: ["center"],
-                  pb: 4,
+                  pb: 1,
                   px: 6,
                   w: "100%",
                   borderBottom: "1px solid",
@@ -414,7 +419,7 @@ const ScanDetails: React.FC<{ scansRemaining: number; scans: ScanMeta[] }> = ({
                         _hover={{
                           opacity:
                             scansRemaining === 0 ||
-                              scanData.scan_report.scan_status === "scanning"
+                            scanData.scan_report.scan_status === "scanning"
                               ? 0.4
                               : 0.9,
                         }}
@@ -424,7 +429,7 @@ const ScanDetails: React.FC<{ scansRemaining: number; scans: ScanMeta[] }> = ({
                         }
                       >
                         <Flex sx={{ flexDir: "column", alignItems: "center" }}>
-                          <RescanIcon size={60} />
+                          <RescanIcon size={50} />
                         </Flex>
                       </Button>
                     </Tooltip>
@@ -455,8 +460,8 @@ const ScanDetails: React.FC<{ scansRemaining: number; scans: ScanMeta[] }> = ({
                           profile.actions_supported
                             ? !profile.actions_supported.publishable_report
                             : profile.current_package !== "expired" &&
-                            !plans.monthly[profile.current_package]
-                              .publishable_report
+                              !plans.monthly[profile.current_package]
+                                .publishable_report
                         }
                         onClick={() => {
                           if (commitHash == "") {
@@ -471,10 +476,10 @@ const ScanDetails: React.FC<{ scansRemaining: number; scans: ScanMeta[] }> = ({
                         {profile.actions_supported
                           ? !profile.actions_supported.publishable_report
                           : profile.current_package !== "expired" &&
-                          !plans.monthly[profile.current_package]
-                            .publishable_report && (
-                            <LockIcon color={"accent"} size="xs" mr={3} />
-                          )}
+                            !plans.monthly[profile.current_package]
+                              .publishable_report && (
+                              <LockIcon color={"accent"} size="xs" mr={3} />
+                            )}
                         Publish Report
                       </Button>
                     ) : (
@@ -506,7 +511,7 @@ const ScanDetails: React.FC<{ scansRemaining: number; scans: ScanMeta[] }> = ({
                         (profile.actions_supported
                           ? !profile.actions_supported.generate_report
                           : profile.current_package !== "expired" &&
-                          !plans.monthly[profile.current_package].report)
+                            !plans.monthly[profile.current_package].report)
                       }
                       onClick={() => {
                         if (
@@ -535,24 +540,24 @@ const ScanDetails: React.FC<{ scansRemaining: number; scans: ScanMeta[] }> = ({
                       {profile.actions_supported
                         ? !profile.actions_supported.generate_report
                         : profile.current_package !== "expired" &&
-                        !plans.monthly[profile.current_package].report && (
-                          <LockIcon color={"accent"} size="xs" mr={3} />
-                        )}
+                          !plans.monthly[profile.current_package].report && (
+                            <LockIcon color={"accent"} size="xs" mr={3} />
+                          )}
                       {reportingStatus === "generating_report"
                         ? "Generating report..."
                         : scanData.scan_report.report_regeneration_enabled
-                          ? "Re-generate Report"
-                          : reportingStatus === "report_generated"
-                            ? "View Report"
-                            : reportingStatus === "not_generated"
-                              ? "Generate Report"
-                              : "Loading"}
+                        ? "Re-generate Report"
+                        : reportingStatus === "report_generated"
+                        ? "View Report"
+                        : reportingStatus === "not_generated"
+                        ? "Generate Report"
+                        : "Loading"}
                     </Button>
                   )}
                 </Flex>
               </Flex>
               {scanData.scan_report.scan_status === "scanning" ||
-                scanData.scan_report.scan_status === "initialised" ? (
+              scanData.scan_report.scan_status === "initialised" ? (
                 <Flex
                   w="100%"
                   h="60vh"
@@ -598,55 +603,85 @@ const ScanDetails: React.FC<{ scansRemaining: number; scans: ScanMeta[] }> = ({
                     flexDir={"row"}
                     justifyContent="flex-start"
                     align={"center"}
-                    ml={[0, 0, 0, 5]}
+                    ml={[0, 0, 0, 0]}
                   >
                     <TabList
                       sx={{
                         borderBottomWidth: "1px",
                         borderBottomStyle: "solid",
                         borderColor: "border",
-                        p: 4,
+                        p: 3,
+                        w: "100%",
                       }}
                     >
-                      <Tab minW={"150px"} bgColor={"#F5F5F5"}>
+                      <Tab
+                        fontSize={"sm"}
+                        h="35px"
+                        minW={"120px"}
+                        bgColor={"#F5F5F5"}
+                      >
                         Overview
                       </Tab>
-                      <Tab minW={"150px"} bgColor={"#F5F5F5"} ml={4}>
+                      <Tab
+                        fontSize={"sm"}
+                        h="35px"
+                        minW={"120px"}
+                        bgColor={"#F5F5F5"}
+                        ml={4}
+                      >
                         Detailed Result
                       </Tab>
-                      <Tab minW={"150px"} bgColor={"#F5F5F5"} ml={4}>
+                      <Tab
+                        fontSize={"sm"}
+                        h="35px"
+                        minW={"120px"}
+                        bgColor={"#F5F5F5"}
+                        ml={4}
+                      >
                         Scan History
                       </Tab>
                       {profile.promo_code ? (
                         profile.actions_supported &&
                         profile.actions_supported.publishable_report && (
-                          <Tab minW={"175px"} bgColor={"#F5F5F5"} mx={2}>
+                          <Tab
+                            fontSize={"sm"}
+                            h="35px"
+                            minW={"120px"}
+                            bgColor={"#F5F5F5"}
+                            mx={2}
+                          >
                             Published Reports
                           </Tab>
                         )
                       ) : (
-                        <Tab minW={"175px"} bgColor={"#F5F5F5"} mx={2}>
+                        <Tab
+                          fontSize={"sm"}
+                          h="35px"
+                          minW={"120px"}
+                          bgColor={"#F5F5F5"}
+                          mx={2}
+                        >
                           Published Reports
                         </Tab>
                       )}
                     </TabList>
                   </Flex>
                   <TabPanels>
-                    <TabPanel p={[0, 0, 0, 4]}>
+                    <TabPanel p={[0, 0, 0, 2]}>
                       {(scanData.scan_report.multi_file_scan_summary ||
                         scanData.scan_report.scan_summary) && (
-                          <Overview
-                            scansRemaining={scansRemaining}
-                            scanData={scanData.scan_report}
-                            onTabChange={handleTabsChange}
-                          />
-                        )}
+                        <Overview
+                          scansRemaining={scansRemaining}
+                          scanData={scanData.scan_report}
+                          onTabChange={handleTabsChange}
+                        />
+                      )}
                     </TabPanel>
-                    <TabPanel p={[0, 0, 0, 4]}>
+                    <TabPanel p={[0, 0, 0, 2]}>
                       {scanData.scan_report.multi_file_scan_status ===
                         "scan_done" &&
-                        scanData.scan_report.multi_file_scan_details &&
-                        scanData.scan_report.multi_file_scan_summary ? (
+                      scanData.scan_report.multi_file_scan_details &&
+                      scanData.scan_report.multi_file_scan_summary ? (
                         <MultifileResult
                           type="project"
                           details_enabled={scanData.scan_report.details_enabled}
@@ -686,7 +721,7 @@ const ScanDetails: React.FC<{ scansRemaining: number; scans: ScanMeta[] }> = ({
                         </Flex>
                       )}
                     </TabPanel>
-                    <TabPanel p={[0, 0, 0, 4]}>
+                    <TabPanel p={[0, 0, 0, 2]}>
                       <ScanHistory
                         profile={profile}
                         scans={scans}
@@ -696,7 +731,7 @@ const ScanDetails: React.FC<{ scansRemaining: number; scans: ScanMeta[] }> = ({
                     {profile.promo_code ? (
                       profile.actions_supported &&
                       profile.actions_supported.publishable_report && (
-                        <TabPanel p={[0, 0, 0, 4]}>
+                        <TabPanel p={[0, 0, 0, 2]}>
                           <PublishedReports
                             type="project"
                             scan_report={scanData.scan_report}
@@ -706,7 +741,7 @@ const ScanDetails: React.FC<{ scansRemaining: number; scans: ScanMeta[] }> = ({
                         </TabPanel>
                       )
                     ) : (
-                      <TabPanel p={[0, 0, 0, 4]}>
+                      <TabPanel p={[0, 0, 0, 2]}>
                         <PublishedReports
                           type="project"
                           scan_report={scanData.scan_report}
@@ -1259,7 +1294,9 @@ const ScanHistory: React.FC<{
       sx={{
         w: "100%",
         borderRadius: "20px",
-        p: 4,
+        px: 2,
+        h: "65vh",
+        overflowY: "scroll",
       }}
     >
       {profile &&
@@ -1385,8 +1422,8 @@ const ScanBlock: React.FC<{
             {scan.reporting_status === "report_generated"
               ? "View Report"
               : scan.reporting_status === "generating_report"
-                ? "Generating Report"
-                : "Report Not Generated"}
+              ? "Generating Report"
+              : "Report Not Generated"}
           </Button>
         </Flex>
       </Flex>

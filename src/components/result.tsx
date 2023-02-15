@@ -31,6 +31,9 @@ import {
   HStack,
   Tooltip,
   useMediaQuery,
+  Divider,
+  IconButton,
+  Textarea,
 } from "@chakra-ui/react";
 import { BiCodeCurly } from "react-icons/bi";
 import { AiOutlineCaretRight, AiFillGithub } from "react-icons/ai";
@@ -47,6 +50,7 @@ import { useIssueDetail } from "hooks/useIssueDetail";
 import Select, { components } from "react-select";
 import {
   FilesState,
+  MetricWiseAggregatedFinding,
   MultiFileScanDetail,
   MultiFileScanSummary,
   MultiFileTemplateDetail,
@@ -58,12 +62,19 @@ import { severityPriority } from "common/values";
 import API from "helpers/api";
 import { useMutation } from "react-query";
 import { useProfile } from "hooks/useProfile";
-import { WarningIcon } from "@chakra-ui/icons";
+import {
+  ArrowUpIcon,
+  CloseIcon,
+  EditIcon,
+  WarningIcon,
+} from "@chakra-ui/icons";
 import React from "react";
 import { access } from "fs";
 import TrialWallCode, { TrialWall, TrialWallIssue } from "./trialWall";
 import useDynamicRefs from "use-dynamic-refs";
 import DetailedResult from "./detailedResult";
+import { sentenceCapitalize } from "helpers/helperFunction";
+import { FaCompressAlt, FaExpandAlt } from "react-icons/fa";
 
 type FileState = {
   issue_id: string;
@@ -590,11 +601,7 @@ export const MultifileResult: React.FC<{
               </Button>
             </HStack>
           </VStack>
-          <Box
-            w="100%"
-            h={["100%", "100%", "100%", "100vh"]}
-            overflowY="scroll"
-          >
+          <Box w="100%" h={["100%", "100%", "100%", "47vh"]} overflowY="scroll">
             <MultifileIssues
               type={type}
               profileData={profileData}
@@ -774,14 +781,7 @@ const MultifileIssues: React.FC<MultifileIssuesProps> = ({
                                         files={files}
                                         issue_id={issue_id}
                                         metric_wise_aggregated_finding={{
-                                          description_details:
-                                            item.description_details,
-                                          findings: item.findings,
-                                          bug_id: item.bug_id,
-                                          bug_hash: item.bug_hash,
-                                          bug_status: item.bug_status,
-                                          issue_id: issue_id,
-                                          template_details: template_details,
+                                          ...item,
                                         }}
                                         template_details={template_details}
                                         is_latest_scan={is_latest_scan}
@@ -815,7 +815,7 @@ const IssueBox: React.FC<{
   files: FilesState | null;
   issue_id: string;
   is_latest_scan: boolean;
-  metric_wise_aggregated_finding: FilesState;
+  metric_wise_aggregated_finding: MetricWiseAggregatedFinding;
   template_details: MultiFileTemplateDetail;
   setFiles: Dispatch<SetStateAction<FilesState | null>>;
   updateBugStatus: any;
@@ -859,7 +859,7 @@ const IssueBox: React.FC<{
               bg: bug_id === files?.bug_id ? "gray.300" : "gray.200",
             },
           }}
-          onClick={() =>
+          onClick={() => {
             setFiles({
               bug_id: bug_id,
               issue_id: issue_id,
@@ -869,8 +869,10 @@ const IssueBox: React.FC<{
               description_details:
                 metric_wise_aggregated_finding.description_details,
               template_details: template_details,
-            })
-          }
+              comment: metric_wise_aggregated_finding.comment,
+            });
+            console.log(metric_wise_aggregated_finding);
+          }}
         >
           <HStack justify={"space-between"}>
             <Text isTruncated color={"gray.700"}>
@@ -918,6 +920,7 @@ const IssueBox: React.FC<{
                     description_details:
                       metric_wise_aggregated_finding.description_details,
                     template_details: template_details,
+                    comment: metric_wise_aggregated_finding.comment,
                   })
                 }
               >
@@ -1002,7 +1005,7 @@ const FileDataCont: React.FC<FileDataContProps> = ({ file, type }) => {
             w: "100%",
             justifyContent: "center",
             alignItems: "center",
-            h: "35vh",
+            h: "100%",
           }}
         >
           <Spinner />
@@ -1050,7 +1053,7 @@ const FileDataContTest: React.FC<FileDataContProps> = ({ file, type }) => {
             w: "100%",
             justifyContent: "center",
             alignItems: "center",
-            h: "50vh",
+            h: "100%",
             mt: 10,
           }}
         >
@@ -1107,6 +1110,7 @@ const CodeExplorer: React.FC<{
         flexDir: "column",
         h: "50vh",
         overflow: "scroll",
+        pl: "15px",
       }}
     >
       <Flex
@@ -1177,14 +1181,37 @@ const CodeExplorer: React.FC<{
   );
 };
 
-type MultiFileExplorerProps = { files: FilesState; type: "project" | "block" };
+type MultiFileExplorerProps = {
+  files: FilesState;
+  type: "project" | "block";
+  handleTabsChange: (index: number) => void;
+  tabIndex: number;
+  openIssueBox: boolean;
+  setOpenIssueBox: React.Dispatch<React.SetStateAction<boolean>>;
+};
 export const MultiFileExplorer: React.FC<MultiFileExplorerProps> = ({
   files,
   type,
+  handleTabsChange,
+  tabIndex,
+  openIssueBox,
+  setOpenIssueBox,
 }) => {
   const [currentFileName, setCurrentFileName] = useState(
     files.findings[0].file_path
   );
+
+  const [fullScreen, setFullScreen] = useState(false);
+
+  const getFileIndex = () => {
+    files.findings.forEach((elem, index) => {
+      if (elem.file_path === currentFileName) {
+        return index;
+      }
+    });
+
+    return 0;
+  };
 
   return (
     <>
@@ -1192,15 +1219,15 @@ export const MultiFileExplorer: React.FC<MultiFileExplorerProps> = ({
         sx={{
           borderRadius: 15,
           bg: "bg.subtle",
-          p: 4,
-          my: 2,
+          position: "relative",
+          h: "57vh",
         }}
       >
         {files.bug_status === "fixed" ? (
           <Flex
             sx={{
               w: "100%",
-              justifyContent: "space-between",
+              justifyContent: "center",
               alignItems: "center",
               h: ["35vh", "35vh", "35vh", "60vh"],
               flexDir: "column",
@@ -1212,91 +1239,274 @@ export const MultiFileExplorer: React.FC<MultiFileExplorerProps> = ({
             </VStack>
           </Flex>
         ) : (
-          <Flex
-            sx={{
-              w: "100%",
-              justifyContent: "flex-start",
-              alignItems: "center",
-              h: "100%",
-            }}
-          >
-            <Tabs
-              defaultIndex={0}
-              width={"100%"}
-              variant="soft-rounded"
-              colorScheme="messenger"
+          <>
+            <Flex
+              sx={{
+                w: "100%",
+                justifyContent: "flex-start",
+                alignItems: "center",
+                h: "100%",
+                position: "absolute",
+                top: "0px",
+                left: "0px",
+              }}
             >
-              <Flex
-                width={"100%"}
-                overflowX="scroll"
-                flexDir={"row"}
-                justifyContent="flex-start"
-                align={"center"}
-                background={"gray.100"}
-                borderRadius={10}
-                px={3}
-                mb={2}
+              <Tabs
+                defaultIndex={0}
+                width={"calc(100%)"}
+                variant="soft-rounded"
+                colorScheme="messenger"
               >
-                <TabList my={3} width={"fit-content"}>
+                <Flex
+                  width={"100%"}
+                  overflowX="scroll"
+                  flexDir={"row"}
+                  justifyContent="flex-start"
+                  align={"center"}
+                  background={"#FAFBFC"}
+                  borderRadius={10}
+                  px={0}
+                  mb={2}
+                >
+                  <TabList
+                    px={0}
+                    my={0}
+                    width={"fit-content"}
+                    w="100%"
+                    borderColor={"#C4C4C4"}
+                    borderBottomWidth={"1px"}
+                  >
+                    {files.findings.map((file, index) => (
+                      <Tab
+                        key={index}
+                        onClick={() => setCurrentFileName(file.file_path)}
+                        background={"gray.100"}
+                        borderRadius="0px"
+                        borderRightWidth={"1px"}
+                        borderColor={"#C4C4C4"}
+                        _selected={{
+                          background: "white",
+                        }}
+                      >
+                        <Tooltip label={file.file_path} aria-label="A tooltip">
+                          <Text fontSize={"xs"} width={100} isTruncated>
+                            {file.file_path.length < 16
+                              ? file.file_path
+                              : file.file_path.slice(0, 6) +
+                                "..." +
+                                file.file_path.slice(
+                                  file.file_path.length - 10,
+                                  file.file_path.length
+                                )}
+                          </Text>
+                        </Tooltip>
+                      </Tab>
+                    ))}
+                  </TabList>
+                </Flex>
+                <TabPanels>
                   {files.findings.map((file, index) => (
-                    <Tab
-                      key={index}
-                      onClick={() => setCurrentFileName(file.file_path)}
-                      mx={1}
-                      background={"white"}
-                    >
-                      <Tooltip label={file.file_path} aria-label="A tooltip">
-                        <Text fontSize={"xs"} width={100} isTruncated>
-                          {file.file_path.length < 16
-                            ? file.file_path
-                            : file.file_path.slice(0, 6) +
-                              "..." +
-                              file.file_path.slice(
-                                file.file_path.length - 10,
-                                file.file_path.length
-                              )}
-                        </Text>
-                      </Tooltip>
-                    </Tab>
+                    <TabPanel key={index} px={2} pt={2} pb={0}>
+                      <FileDataContTest
+                        type={type}
+                        file={{
+                          issue_id: files.issue_id,
+                          file_path: file.file_path,
+                          line_nos_start: file.line_nos_start,
+                          line_nos_end: file.line_nos_end,
+                        }}
+                      />
+                    </TabPanel>
                   ))}
-                </TabList>
-              </Flex>
-              <TabPanels>
-                {files.findings.map((file, index) => (
-                  <TabPanel key={index} px={2} pt={2} pb={0}>
-                    <FileDataContTest
-                      type={type}
-                      file={{
-                        issue_id: files.issue_id,
-                        file_path: file.file_path,
-                        line_nos_start: file.line_nos_start,
-                        line_nos_end: file.line_nos_end,
-                      }}
-                    />
-                  </TabPanel>
-                ))}
-              </TabPanels>
-            </Tabs>
-          </Flex>
+                </TabPanels>
+              </Tabs>
+            </Flex>
+            {openIssueBox && (
+              <Box
+                sx={{
+                  borderRadius: 15,
+                  bg: "white",
+                  p: 3,
+                  pb: 1,
+                  w: "calc(100% - 20px)",
+                  position: "absolute",
+                  bottom: "10px",
+                  left: "10px",
+                  display: "flex",
+                  justifyContent: "flex-start",
+                  alignItems: "flex-start",
+                  flexDir: "column",
+                }}
+              >
+                <HStack
+                  width={"100%"}
+                  justifyContent={"space-between"}
+                  alignItems="flex-start"
+                  mb={1}
+                >
+                  <HStack width={"80%"}>
+                    <VStack width={"23%"} alignItems="flex-start">
+                      <Text
+                        fontSize="xs"
+                        fontWeight={"normal"}
+                        color={"gray.400"}
+                        mb={1}
+                      >
+                        Severity
+                      </Text>
+                      <HStack>
+                        <SeverityIcon
+                          variant={files.template_details.issue_severity}
+                        />
+                        <Text
+                          fontSize="sm"
+                          fontWeight={"bold"}
+                          ml={2}
+                          width={"100%"}
+                        >
+                          {sentenceCapitalize(
+                            files.template_details.issue_severity
+                          )}
+                        </Text>
+                      </HStack>
+                    </VStack>
+                    <VStack
+                      width={"23%"}
+                      mb={[4, 4, 4, 0]}
+                      alignItems="flex-start"
+                    >
+                      <Text
+                        fontSize="xs"
+                        fontWeight={"normal"}
+                        color={"gray.400"}
+                        mb={0}
+                      >
+                        Confidence
+                      </Text>
+                      <Text
+                        px={3}
+                        py={1}
+                        borderRadius={20}
+                        color={
+                          files.template_details.issue_confidence === "2"
+                            ? "#289F4C"
+                            : files.template_details.issue_confidence === "1"
+                            ? "#ED9801"
+                            : "#FF5630"
+                        }
+                        backgroundColor={
+                          files.template_details.issue_confidence === "2"
+                            ? "#CFFFB8"
+                            : files.template_details.issue_confidence === "1"
+                            ? "#FFF8EB"
+                            : "#FFF5F3"
+                        }
+                        fontSize="xs"
+                        fontWeight={"bold"}
+                      >
+                        {files.template_details.issue_confidence === "2"
+                          ? "Certain"
+                          : files.template_details.issue_confidence === "1"
+                          ? "Firm"
+                          : "Tentative"}
+                      </Text>
+                    </VStack>
+                    <VStack
+                      width={"23%"}
+                      my={[4, 4, 4, 0]}
+                      alignItems="flex-start"
+                    >
+                      <Text
+                        fontSize="xs"
+                        fontWeight={"normal"}
+                        color={"gray.400"}
+                        mb={1}
+                      >
+                        Line nos
+                      </Text>
+                      <Text fontSize="sm" fontWeight={"bold"}>
+                        {files.findings[getFileIndex()].line_nos_start}-
+                        {files.findings[getFileIndex()].line_nos_end}
+                      </Text>
+                    </VStack>
+                    <VStack
+                      width={"31%"}
+                      my={[4, 4, 4, 0]}
+                      alignItems="flex-start"
+                    >
+                      <Text
+                        fontSize="xs"
+                        fontWeight={"normal"}
+                        color={"gray.400"}
+                        mb={1}
+                      >
+                        Action Taken
+                      </Text>
+                      <HStack>
+                        <Image src={`/icons/${files.bug_status}_color.svg`} />
+                        <Text
+                          fontSize="sm"
+                          fontWeight={"normal"}
+                          color={"gray.600"}
+                        >
+                          {/* {sentenceCapitalize(
+                          issue.status.toLowerCase().replace("_", " ")
+                        )} */}
+
+                          {files.bug_status === "false_positive" &&
+                            "False Positive"}
+                          {files.bug_status === "wont_fix" && "Won't Fix"}
+                          {files.bug_status === "pending_fix" && "Pending Fix"}
+                          {files.bug_status === "fixed" && "Fixed"}
+                        </Text>
+                      </HStack>
+                    </VStack>
+                  </HStack>
+                  <HStack justifyContent={"flex-end"} alignItems="flex-start">
+                    <Tooltip
+                      label={fullScreen ? "Minimize" : "Expand"}
+                      fontSize="md"
+                    >
+                      <IconButton
+                        fontSize={"lg"}
+                        p={0}
+                        onClick={() => {
+                          setFullScreen(!fullScreen);
+                        }}
+                        bgColor="white"
+                        aria-label="Handle Size"
+                        icon={fullScreen ? <FaCompressAlt /> : <FaExpandAlt />}
+                      />
+                    </Tooltip>
+                    <Tooltip label="Close Box" fontSize="md">
+                      <IconButton
+                        fontSize={"lg"}
+                        p={0}
+                        onClick={() => setOpenIssueBox(false)}
+                        bgColor="white"
+                        aria-label="Close Box"
+                        icon={<CloseIcon />}
+                      />
+                    </Tooltip>
+                  </HStack>
+                </HStack>
+                <Divider mb={2} />
+                <Box fontSize="sm" w="100%" mb={2}>
+                  <IssueDetail
+                    handleTabsChange={handleTabsChange}
+                    tabIndex={tabIndex}
+                    fullScreen={fullScreen}
+                    current_file_name={currentFileName}
+                    files={files}
+                    issue_id={files.issue_id}
+                    context="multi_file"
+                    description_details={files.description_details}
+                  />
+                </Box>
+              </Box>
+            )}
+          </>
         )}
-      </Box>
-      <Box
-        sx={{
-          borderRadius: 15,
-          bg: "bg.subtle",
-          p: 4,
-          my: 4,
-        }}
-      >
-        <Box fontSize="sm" mb={2}>
-          <IssueDetail
-            current_file_name={currentFileName}
-            files={files}
-            issue_id={files.issue_id}
-            context="multi_file"
-            description_details={files.description_details}
-          />
-        </Box>
       </Box>
     </>
   );
@@ -1304,24 +1514,68 @@ export const MultiFileExplorer: React.FC<MultiFileExplorerProps> = ({
 
 const IssueDetail: React.FC<{
   current_file_name: string;
-  files?: FilesState;
+  files: FilesState;
   issue_id: string;
   context: string;
   description_details: any;
-}> = ({ issue_id, context, description_details, files, current_file_name }) => {
+  fullScreen: boolean;
+  handleTabsChange: (index: number) => void;
+  tabIndex: number;
+}> = ({
+  issue_id,
+  context,
+  description_details,
+  files,
+  current_file_name,
+  fullScreen,
+  handleTabsChange,
+  tabIndex,
+}) => {
   const { data, isLoading } = useIssueDetail(issue_id, context);
 
   let variableData = description_details;
 
+  const { scanId, projectId } =
+    useParams<{ scanId: string; projectId: string }>();
+
+  const height = fullScreen ? "35vh" : "15vh";
+
+  const [editComment, setEditComment] = React.useState(false);
+
+  const [comment, setComment] = React.useState(files?.comment);
+  const toast = useToast();
+
+  const updateComment = async () => {
+    const { data } = await API.post("/api-update-bug-status/", {
+      bug_ids: [files.bug_hash],
+      scan_id: scanId,
+      project_id: projectId,
+      bug_status: files.bug_status,
+      comment: comment,
+    });
+    if (data.status === "success") {
+      toast({
+        title: "Comment Updated",
+        description: data.message,
+        status: "success",
+        duration: 3000,
+        isClosable: true,
+      });
+      setEditComment(false);
+    }
+  };
+
   return (
     <Tabs
+      onChange={handleTabsChange}
+      index={tabIndex}
       size="sm"
       variant="soft-rounded"
       colorScheme="green"
-      w={["100%", "100%", "100%", "auto"]}
+      w={["100%", "100%", "100%", "100%"]}
     >
       <Flex
-        w={["100%", "100%", "100%", "auto"]}
+        w={["100%", "100%", "100%", "100%"]}
         overflowX={["scroll", "scroll", "scroll", "visible"]}
       >
         <TabList
@@ -1329,15 +1583,46 @@ const IssueDetail: React.FC<{
             borderBottomWidth: "1px",
             borderBottomStyle: "solid",
             borderColor: "border",
-            pb: 4,
+            pb: 2,
+            w: "100%",
           }}
-          px={[0, 0, 0, 4]}
+          px={[0, 0, 0, 0]}
         >
-          <Tab minW={"200px"} mx={[0, 0, 0, 2]}>
+          <Tab
+            bgColor={"#FFFFFF"}
+            _selected={{
+              bgColor: "#4E5D78",
+              color: "#FFFFFF",
+            }}
+            color="#4E5D78"
+            minW={"200px"}
+            mx={[0, 0, 0, 2]}
+          >
             Vulnerability Description
           </Tab>
-          <Tab minW={"150px"} mx={[0, 0, 0, 2]}>
+          <Tab
+            bgColor={"#FFFFFF"}
+            _selected={{
+              bgColor: "#4E5D78",
+              color: "#FFFFFF",
+            }}
+            color="#4E5D78"
+            minW={"150px"}
+            mx={[0, 0, 0, 2]}
+          >
             Remediation
+          </Tab>
+          <Tab
+            bgColor={"#FFFFFF"}
+            _selected={{
+              bgColor: "#4E5D78",
+              color: "#FFFFFF",
+            }}
+            color="#4E5D78"
+            minW={"150px"}
+            mx={[0, 0, 0, 2]}
+          >
+            Comments
           </Tab>
         </TabList>
       </Flex>
@@ -1347,46 +1632,19 @@ const IssueDetail: React.FC<{
             w: "100%",
             justifyContent: "center",
             alignItems: "center",
-            h: "20vh",
+            h: height,
           }}
         >
           <Spinner />
         </Flex>
       )}
       {data && (
-        <TabPanels>
+        <TabPanels w="100%">
           <TabPanel
             sx={{ w: "100%", overflowY: "scroll" }}
-            h={["fit-content", "fit-content", "fit-content", "20vh"]}
+            h={["fit-content", "fit-content", "fit-content", height]}
           >
             <DescriptionWrapper>
-              {files && (
-                <Text
-                  px={5}
-                  py={2}
-                  mb={3}
-                  fontWeight="600"
-                  fontSize={17}
-                  borderRadius={12}
-                  color={"gray.600"}
-                  bg={"gray.200"}
-                  width="fit-content"
-                >
-                  {files.template_details.issue_confidence === "0" ? (
-                    <>
-                      <WarningIcon color={"high"} mr={2} /> {"Tentative"}
-                    </>
-                  ) : files.template_details.issue_confidence === "1" ? (
-                    <>
-                      <WarningIcon color={"medium"} mr={2} /> {"Firm"}
-                    </>
-                  ) : (
-                    <>
-                      <WarningIcon color={"low"} mr={2} /> {"Certain"}
-                    </>
-                  )}
-                </Text>
-              )}
               <Text fontWeight={500} fontSize="md" pb={4}>
                 {data.issue_details.issue_name}
               </Text>
@@ -1402,7 +1660,7 @@ const IssueDetail: React.FC<{
           </TabPanel>
           <TabPanel
             sx={{
-              h: ["fit-content", "fit-content", "fit-content", "20vh"],
+              h: ["fit-content", "fit-content", "fit-content", height],
               w: "100%",
               overflowY: "scroll",
             }}
@@ -1418,6 +1676,74 @@ const IssueDetail: React.FC<{
               />
             </DescriptionWrapper>
           </TabPanel>
+          <TabPanel
+            sx={{
+              h: ["fit-content", "fit-content", "fit-content", height],
+              w: "100%",
+              overflowY: "scroll",
+              justifyContent: "space-between",
+              alignItems: "flex-start",
+              display: "flex",
+              flexDir: "row",
+            }}
+          >
+            {editComment ? (
+              <VStack
+                w="100%"
+                bgColor={"#F6F6F6"}
+                borderRadius={"16px"}
+                height={"130px"}
+                alignItems="flex-end"
+              >
+                <Textarea
+                  placeholder="Add Comments"
+                  fontSize={"12px"}
+                  bgColor={"#F6F6F6"}
+                  borderWidth={0}
+                  noOfLines={3}
+                  borderRadius={"16px"}
+                  value={comment}
+                  _selected={{
+                    borderWidth: "0px",
+                  }}
+                  onChange={(e) => {
+                    setComment(e.target.value);
+                  }}
+                  height={"60px"}
+                  _hover={{ borderColor: "gray.300" }}
+                  _focus={{
+                    boxShadow: "0px 12px 23px rgba(107, 255, 55, 0.0)",
+                  }}
+                />
+                <IconButton
+                  fontSize={"lg"}
+                  p={0}
+                  mt={0}
+                  borderRadius="50%"
+                  onClick={() => updateComment()}
+                  bgColor="#B8B8B8"
+                  aria-label="Edit Comment"
+                  icon={<ArrowUpIcon />}
+                />
+              </VStack>
+            ) : (
+              <>
+                <Text w="90%" fontSize={"xs"}>
+                  {comment}
+                </Text>
+                <Tooltip label="Edit Comment" fontSize="md">
+                  <IconButton
+                    fontSize={"lg"}
+                    p={0}
+                    onClick={() => setEditComment(true)}
+                    bgColor="white"
+                    aria-label="Edit Comment"
+                    icon={<EditIcon />}
+                  />
+                </Tooltip>
+              </>
+            )}
+          </TabPanel>
         </TabPanels>
       )}
     </Tabs>
@@ -1425,6 +1751,10 @@ const IssueDetail: React.FC<{
 };
 
 const DescriptionWrapper = styled.div`
+p {
+  font-size: 12px;
+}
+
   code {
     background: #cbd5e0;
     padding: 2px 4px;
@@ -1438,7 +1768,8 @@ const DescriptionWrapper = styled.div`
     &:hover {
       color: #2b6cb0;
     }
-  }
+
+  
 `;
 
 export default Result;
