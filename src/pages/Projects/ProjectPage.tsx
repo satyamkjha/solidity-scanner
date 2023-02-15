@@ -111,12 +111,13 @@ export const ProjectPage: React.FC = () => {
         w: ["100%", "100%", "calc(100% - 2rem)"],
         bg: "bg.subtle",
         borderRadius: "20px",
-        my: 4,
+        my: 2,
         mx: [0, 0, 4],
-        py: 4,
+        pt: 3,
+        pb: 1,
         minH: "78vh",
       }}
-      px={[2, 2, 2, 8]}
+      px={[2, 2, 2, 4]}
     >
       {isLoading ? (
         <Flex w="100%" h="70vh" alignItems="center" justifyContent="center">
@@ -378,8 +379,9 @@ const ScanDetails: React.FC<{ scansRemaining: number; scans: ScanMeta[] }> = ({
           w: "100%",
           bg: "white",
           borderRadius: "20px",
-          my: 4,
-          p: 4,
+          my: 2,
+          p: 2,
+          pb: 0,
         }}
       >
         {isLoading || isProfileLoading ? (
@@ -396,7 +398,7 @@ const ScanDetails: React.FC<{ scansRemaining: number; scans: ScanMeta[] }> = ({
                 sx={{
                   justifyContent: ["flex-start", "flex-start", "space-between"],
                   alignItems: ["center"],
-                  pb: 4,
+                  pb: 1,
                   px: 6,
                   w: "100%",
                   borderBottom: "1px solid",
@@ -427,7 +429,7 @@ const ScanDetails: React.FC<{ scansRemaining: number; scans: ScanMeta[] }> = ({
                         }
                       >
                         <Flex sx={{ flexDir: "column", alignItems: "center" }}>
-                          <RescanIcon size={60} />
+                          <RescanIcon size={50} />
                         </Flex>
                       </Button>
                     </Tooltip>
@@ -601,41 +603,71 @@ const ScanDetails: React.FC<{ scansRemaining: number; scans: ScanMeta[] }> = ({
                     flexDir={"row"}
                     justifyContent="flex-start"
                     align={"center"}
-                    ml={[0, 0, 0, 5]}
+                    ml={[0, 0, 0, 0]}
                   >
                     <TabList
                       sx={{
                         borderBottomWidth: "1px",
                         borderBottomStyle: "solid",
                         borderColor: "border",
-                        p: 4,
+                        p: 3,
+                        w: "100%",
                       }}
                     >
-                      <Tab minW={"150px"} bgColor={"#F5F5F5"}>
+                      <Tab
+                        fontSize={"sm"}
+                        h="35px"
+                        minW={"120px"}
+                        bgColor={"#F5F5F5"}
+                      >
                         Overview
                       </Tab>
-                      <Tab minW={"150px"} bgColor={"#F5F5F5"} ml={4}>
+                      <Tab
+                        fontSize={"sm"}
+                        h="35px"
+                        minW={"120px"}
+                        bgColor={"#F5F5F5"}
+                        ml={4}
+                      >
                         Detailed Result
                       </Tab>
-                      <Tab minW={"150px"} bgColor={"#F5F5F5"} ml={4}>
+                      <Tab
+                        fontSize={"sm"}
+                        h="35px"
+                        minW={"120px"}
+                        bgColor={"#F5F5F5"}
+                        ml={4}
+                      >
                         Scan History
                       </Tab>
                       {profile.promo_code ? (
                         profile.actions_supported &&
                         profile.actions_supported.publishable_report && (
-                          <Tab minW={"175px"} bgColor={"#F5F5F5"} mx={2}>
+                          <Tab
+                            fontSize={"sm"}
+                            h="35px"
+                            minW={"120px"}
+                            bgColor={"#F5F5F5"}
+                            mx={2}
+                          >
                             Published Reports
                           </Tab>
                         )
                       ) : (
-                        <Tab minW={"175px"} bgColor={"#F5F5F5"} mx={2}>
+                        <Tab
+                          fontSize={"sm"}
+                          h="35px"
+                          minW={"120px"}
+                          bgColor={"#F5F5F5"}
+                          mx={2}
+                        >
                           Published Reports
                         </Tab>
                       )}
                     </TabList>
                   </Flex>
                   <TabPanels>
-                    <TabPanel p={[0, 0, 0, 4]}>
+                    <TabPanel p={[0, 0, 0, 2]}>
                       {(scanData.scan_report.multi_file_scan_summary ||
                         scanData.scan_report.scan_summary) && (
                         <Overview
@@ -645,7 +677,7 @@ const ScanDetails: React.FC<{ scansRemaining: number; scans: ScanMeta[] }> = ({
                         />
                       )}
                     </TabPanel>
-                    <TabPanel p={[0, 0, 0, 4]}>
+                    <TabPanel p={[0, 0, 0, 2]}>
                       {scanData.scan_report.multi_file_scan_status ===
                         "scan_done" &&
                       scanData.scan_report.multi_file_scan_details &&
@@ -689,7 +721,7 @@ const ScanDetails: React.FC<{ scansRemaining: number; scans: ScanMeta[] }> = ({
                         </Flex>
                       )}
                     </TabPanel>
-                    <TabPanel p={[0, 0, 0, 4]}>
+                    <TabPanel p={[0, 0, 0, 2]}>
                       <ScanHistory
                         profile={profile}
                         scans={scans}
@@ -699,7 +731,7 @@ const ScanDetails: React.FC<{ scansRemaining: number; scans: ScanMeta[] }> = ({
                     {profile.promo_code ? (
                       profile.actions_supported &&
                       profile.actions_supported.publishable_report && (
-                        <TabPanel p={[0, 0, 0, 4]}>
+                        <TabPanel p={[0, 0, 0, 2]}>
                           <PublishedReports
                             type="project"
                             scan_report={scanData.scan_report}
@@ -709,7 +741,7 @@ const ScanDetails: React.FC<{ scansRemaining: number; scans: ScanMeta[] }> = ({
                         </TabPanel>
                       )
                     ) : (
-                      <TabPanel p={[0, 0, 0, 4]}>
+                      <TabPanel p={[0, 0, 0, 2]}>
                         <PublishedReports
                           type="project"
                           scan_report={scanData.scan_report}
@@ -1262,7 +1294,9 @@ const ScanHistory: React.FC<{
       sx={{
         w: "100%",
         borderRadius: "20px",
-        p: 4,
+        px: 2,
+        h: "65vh",
+        overflowY: "scroll",
       }}
     >
       {profile &&

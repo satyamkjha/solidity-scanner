@@ -82,9 +82,7 @@ const Projects = lazy(
 
 const ProjectPage = lazy(
   () =>
-    import(
-      "pages/Projects/NewProjectPage" /* webpackChunkName: "ProjectPage" */
-    )
+    import("pages/Projects/ProjectPage" /* webpackChunkName: "ProjectPage" */)
 );
 
 const Blocks = lazy(
@@ -92,7 +90,7 @@ const Blocks = lazy(
 );
 
 const BlockPage = lazy(
-  () => import("pages/Blocks/NewBlockPage" /* webpackChunkName: "BlockPage" */)
+  () => import("pages/Blocks/BlockPage" /* webpackChunkName: "BlockPage" */)
 );
 const Integrations = lazy(
   () => import("pages/Integrations" /* webpackChunkName: "Integration" */)

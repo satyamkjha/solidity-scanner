@@ -10,16 +10,19 @@ import {
   Image,
   Stack,
   useMediaQuery,
+  IconButton,
+  Tooltip,
 } from "@chakra-ui/react";
 import { FilesState, MultiFileTemplateDetail } from "common/types";
 import { issueActions } from "common/values";
 import { sentenceCapitalize } from "helpers/helperFunction";
 import React, { Dispatch, SetStateAction } from "react";
-import { BiCodeCurly } from "react-icons/bi";
+import { BiBulb, BiCodeCurly, BiComment } from "react-icons/bi";
 import { MultiFileExplorer } from "./result";
 import TrialWall from "./trialWall";
 
 import Select from "react-select";
+import { HiOutlineDocumentText } from "react-icons/hi";
 
 export const DetailedResult: React.FC<{
   type: "block" | "project";
@@ -39,6 +42,14 @@ export const DetailedResult: React.FC<{
   updateBugStatus,
 }) => {
   const [isDesktopView] = useMediaQuery("(min-width: 1024px)");
+
+  const [openIssueBox, setOpenIssueBox] = React.useState(true);
+  const [tabIndex, setTabIndex] = React.useState(0);
+
+  const handleTabsChange = (index: number) => {
+    setOpenIssueBox(true);
+    setTabIndex(index);
+  };
 
   const customStyles = {
     option: (provided: any, state: any) => ({
@@ -60,7 +71,7 @@ export const DetailedResult: React.FC<{
     }),
     control: () => ({
       // none of react-select's styles are passed to <Control />
-      width: isDesktopView ? 300 : "100%",
+      width: isDesktopView ? 270 : "100%",
       display: "flex",
       flexDirection: "row",
       backgroundColor: "#FAFBFC",
@@ -84,10 +95,10 @@ export const DetailedResult: React.FC<{
       w={["100%", "100%", "100%", "60%"]}
       h={["100%"]}
       alignItems="flex-start"
-      spacing={5}
+      spacing={2}
       pl={[0, 0, 0, 10]}
     >
-      {confidence && setConfidence && (
+      {/* {confidence && setConfidence && (
         <HStack
           width={"100%"}
           justify={"space-between"}
@@ -124,7 +135,7 @@ export const DetailedResult: React.FC<{
             </Button>
           </HStack>
         </HStack>
-      )}
+      )} */}
       {files && files.bug_status !== "fixed" && is_latest_scan && (
         <Stack
           justify="space-between"
@@ -133,21 +144,54 @@ export const DetailedResult: React.FC<{
           direction={["column", "column", "column", "row"]}
           mt={[4, 4, 4, 0]}
         >
-          <Text fontWeight={600}>Take Action</Text>
-          <Select
-            formatOptionLabel={formatOptionLabel}
-            options={issueActions}
-            value={issueActions.find(
-              (item) => files?.bug_status === item.value
-            )}
-            placeholder="Select Action"
-            styles={customStyles}
-            onChange={(newValue) => {
-              if (newValue) {
-                updateBugStatus(newValue.value);
-              }
-            }}
-          />
+          <HStack>
+            <Text fontWeight={600} mr={5}>
+              Take Action
+            </Text>
+            <Select
+              formatOptionLabel={formatOptionLabel}
+              options={issueActions}
+              value={issueActions.find(
+                (item) => files?.bug_status === item.value
+              )}
+              placeholder="Select Action"
+              styles={customStyles}
+              onChange={(newValue) => {
+                if (newValue) {
+                  updateBugStatus(newValue.value);
+                }
+              }}
+            />
+          </HStack>
+          <HStack>
+            <Tooltip label="View Issue Description" fontSize="md">
+              <IconButton
+                fontSize={"lg"}
+                p={0}
+                aria-label="Issue Description"
+                onClick={() => handleTabsChange(0)}
+                icon={<HiOutlineDocumentText />}
+              />
+            </Tooltip>
+            <Tooltip label="View Issue Remediation" fontSize="md">
+              <IconButton
+                fontSize={"lg"}
+                p={0}
+                onClick={() => handleTabsChange(1)}
+                aria-label="Search database"
+                icon={<BiBulb />}
+              />
+            </Tooltip>
+            <Tooltip label="View Issue Comments" fontSize="md">
+              <IconButton
+                fontSize={"lg"}
+                p={0}
+                onClick={() => handleTabsChange(2)}
+                aria-label="Search database"
+                icon={<BiComment />}
+              />
+            </Tooltip>
+          </HStack>
         </Stack>
       )}
       {files &&
@@ -171,14 +215,20 @@ export const DetailedResult: React.FC<{
       <Box
         sx={{
           w: "100%",
-          position: "sticky",
-          top: 8,
+          top: 5,
         }}
       >
         {!details_enabled ? (
           <TrialWall />
         ) : files ? (
-          <MultiFileExplorer files={files} type={type} />
+          <MultiFileExplorer
+            handleTabsChange={handleTabsChange}
+            tabIndex={tabIndex}
+            openIssueBox={openIssueBox}
+            setOpenIssueBox={setOpenIssueBox}
+            files={files}
+            type={type}
+          />
         ) : (
           <Flex
             sx={{
