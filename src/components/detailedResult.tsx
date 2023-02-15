@@ -12,17 +12,19 @@ import {
   useMediaQuery,
   IconButton,
   Tooltip,
+  useDisclosure,
 } from "@chakra-ui/react";
 import { FilesState, MultiFileTemplateDetail } from "common/types";
 import { issueActions } from "common/values";
 import { sentenceCapitalize } from "helpers/helperFunction";
-import React, { Dispatch, SetStateAction } from "react";
+import React, { Dispatch, SetStateAction, useState } from "react";
 import { BiBulb, BiCodeCurly, BiComment } from "react-icons/bi";
 import { MultiFileExplorer } from "./result";
 import TrialWall from "./trialWall";
 
 import Select from "react-select";
 import { HiOutlineDocumentText } from "react-icons/hi";
+import CommentForm from "./commentForm";
 
 export const DetailedResult: React.FC<{
   type: "block" | "project";
@@ -42,6 +44,8 @@ export const DetailedResult: React.FC<{
   updateBugStatus,
 }) => {
   const [isDesktopView] = useMediaQuery("(min-width: 1024px)");
+  const { isOpen, onClose, onOpen } = useDisclosure();
+  const [bugStatus, setBugStatus] = useState<string | null>(null);
 
   const [openIssueBox, setOpenIssueBox] = React.useState(true);
   const [tabIndex, setTabIndex] = React.useState(0);
@@ -98,44 +102,6 @@ export const DetailedResult: React.FC<{
       spacing={2}
       pl={[0, 0, 0, 10]}
     >
-      {/* {confidence && setConfidence && (
-        <HStack
-          width={"100%"}
-          justify={"space-between"}
-          display={["none", "none", "none", "flex"]}
-        >
-          <Text fontWeight={600}>Confidence Parameter</Text>
-          <HStack>
-            <Button
-              variant={confidence[2] ? "solid" : "outline"}
-              py={0}
-              onClick={() =>
-                setConfidence([confidence[0], confidence[1], !confidence[2]])
-              }
-            >
-              <WarningIcon color={"low"} mr={2} /> Certain
-            </Button>
-            <Button
-              variant={confidence[1] ? "solid" : "outline"}
-              py={0}
-              onClick={() =>
-                setConfidence([confidence[0], !confidence[1], confidence[2]])
-              }
-            >
-              <WarningIcon color={"medium"} mr={2} /> Firm
-            </Button>
-            <Button
-              variant={confidence[0] ? "solid" : "outline"}
-              py={0}
-              onClick={() =>
-                setConfidence([!confidence[0], confidence[1], confidence[2]])
-              }
-            >
-              <WarningIcon color={"high"} mr={2} /> Tentative
-            </Button>
-          </HStack>
-        </HStack>
-      )} */}
       {files && files.bug_status !== "fixed" && is_latest_scan && (
         <Stack
           justify="space-between"
@@ -158,7 +124,12 @@ export const DetailedResult: React.FC<{
               styles={customStyles}
               onChange={(newValue) => {
                 if (newValue) {
-                  updateBugStatus(newValue.value);
+                  if (newValue.value === "wont_fix") {
+                    onOpen();
+                    setBugStatus(newValue.value);
+                  } else {
+                    updateBugStatus(newValue.value);
+                  }
                 }
               }}
             />
@@ -246,6 +217,12 @@ export const DetailedResult: React.FC<{
           </Flex>
         )}
       </Box>
+      <CommentForm
+        isOpen={isOpen}
+        onClose={onClose}
+        updateBugStatus={updateBugStatus}
+        status={bugStatus}
+      />
     </VStack>
   );
 };

@@ -186,8 +186,10 @@ const ScanDetails: React.FC<{ scansRemaining: number; scans: ScanMeta[] }> = ({
   const cancelRef = useRef<HTMLButtonElement | null>(null);
   const queryClient = useQueryClient();
   const [reportingStatus, setReportingStatus] = useState<string>("");
-  const { projectId, scanId } =
-    useParams<{ projectId: string; scanId: string }>();
+  const { projectId, scanId } = useParams<{
+    projectId: string;
+    scanId: string;
+  }>();
   const history = useHistory();
   const { data: plans } = usePricingPlans();
   const { data: scanData, isLoading, refetch } = useScan(scanId);

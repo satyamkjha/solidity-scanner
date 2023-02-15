@@ -25,7 +25,7 @@ export const theme = extendTheme({
     border: "#F3F3F3",
     blue: "#3E15F4",
     informational: "#A0AEC0",
-    critical: "#FF5C00",
+    critical: "#960D00",
     high: "#FF5C00",
     medium: "#FFE600",
     low: "#38CB89",

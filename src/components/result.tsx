@@ -31,13 +31,15 @@ import {
   HStack,
   Tooltip,
   useMediaQuery,
+  Checkbox,
   Divider,
   IconButton,
   Textarea,
 } from "@chakra-ui/react";
 import { BiCodeCurly } from "react-icons/bi";
 import { AiOutlineCaretRight, AiFillGithub } from "react-icons/ai";
-
+import { RxDoubleArrowDown, RxDoubleArrowUp } from "react-icons/rx";
+import { FiFilter, FiCheck } from "react-icons/fi";
 import { CodeBlock, atomOneLight } from "react-code-blocks";
 
 import VulnerabilityDistribution, {
@@ -73,6 +75,8 @@ import { access } from "fs";
 import TrialWallCode, { TrialWall, TrialWallIssue } from "./trialWall";
 import useDynamicRefs from "use-dynamic-refs";
 import DetailedResult from "./detailedResult";
+import { DetailFilter } from "./detailFilter";
+import { IssueContainer } from "./issueContainer";
 import { sentenceCapitalize } from "helpers/helperFunction";
 import { FaCompressAlt, FaExpandAlt } from "react-icons/fa";
 
@@ -460,8 +464,10 @@ export const MultifileResult: React.FC<{
 
   const [issues, setIssues] = useState<MultiFileScanDetail[]>(scanDetails);
 
-  const { projectId, scanId } =
-    useParams<{ projectId: string; scanId: string }>();
+  const { projectId, scanId } = useParams<{
+    projectId: string;
+    scanId: string;
+  }>();
   const {
     issue_severity_distribution: {
       critical,
@@ -484,18 +490,22 @@ export const MultifileResult: React.FC<{
     true,
   ]);
 
+  const [selectedBugs, setSelectedBugs] = useState<string[]>([]);
+
   // const [action, setAction] = useState("");
   const toast = useToast();
 
   const [isDesktopView] = useMediaQuery("(min-width: 1024px)");
 
-  const updateBugStatus = async (action: string) => {
+  const updateBugStatus = async (action: string, comment?: string) => {
+    console.log(selectedBugs);
     if (files) {
       const { data } = await API.post("/api-update-bug-status/", {
-        bug_ids: [files?.bug_hash],
+        bug_ids: selectedBugs,
         scan_id: scanId,
         project_id: projectId,
         bug_status: action,
+        comment: comment,
       });
       if (data.status === "success") {
         toast({
@@ -506,13 +516,12 @@ export const MultifileResult: React.FC<{
           isClosable: true,
         });
       }
-
       setIssues((prevState) => {
         const newState = prevState.map((obj) => {
           if (obj.issue_id === files.issue_id) {
             const newList = obj.metric_wise_aggregated_findings.map((item) => {
-              if (item.bug_id === files.bug_id) {
-                return { ...item, bug_status: action };
+              if (selectedBugs.includes(item.bug_hash)) {
+                return { ...item, bug_status: action, comment: comment };
               }
               return item;
             });
@@ -526,6 +535,7 @@ export const MultifileResult: React.FC<{
       setFiles({
         ...files,
         bug_status: action,
+        comment: comment,
       });
     }
     refetch();
@@ -536,71 +546,26 @@ export const MultifileResult: React.FC<{
       <Flex
         w="100%"
         sx={{ flexDir: ["column", "column", "column", "row"] }}
-        py={2}
+        pb={2}
       >
         <VStack
           w={["100%", "100%", "100%", "40%"]}
-          spacing={8}
+          spacing={4}
           mb={[8, 8, 0]}
           alignItems="flex-start"
         >
-          <Flex w="100%" justifyContent="space-around">
-            <Box width="100%">
-              <VulnerabilityDistributionFilter
-                critical={critical}
-                high={high}
-                medium={medium}
-                low={low}
-                informational={informational}
-                gas={gas}
-                vulnerability={vulnerability}
-                setVulnerability={setVulnerability}
-              />
-            </Box>
-            {/* <Score score={score} /> */}
-          </Flex>
-          <VStack
-            width={"100%"}
-            justify={"center"}
-            display={["flex", "flex", "flex", "none"]}
-          >
-            <Text fontWeight={600}>Confidence Parameter</Text>
-            <HStack>
-              <Button
-                variant={confidence[2] ? "solid" : "outline"}
-                py={0}
-                fontWeight="400"
-                borderRadius={"27px"}
-                onClick={() =>
-                  setConfidence([confidence[0], confidence[1], !confidence[2]])
-                }
-              >
-                <WarningIcon color={"low"} mr={2} /> Certain
-              </Button>
-              <Button
-                variant={confidence[1] ? "solid" : "outline"}
-                py={0}
-                fontWeight="400"
-                borderRadius={"27px"}
-                onClick={() =>
-                  setConfidence([confidence[0], !confidence[1], confidence[2]])
-                }
-              >
-                <WarningIcon color={"medium"} mr={2} /> Firm
-              </Button>
-              <Button
-                variant={confidence[0] ? "solid" : "outline"}
-                py={0}
-                fontWeight="400"
-                borderRadius={"27px"}
-                onClick={() =>
-                  setConfidence([!confidence[0], confidence[1], confidence[2]])
-                }
-              >
-                <WarningIcon color={"high"} mr={2} /> Tentative
-              </Button>
-            </HStack>
-          </VStack>
+          <DetailFilter
+            critical={critical}
+            high={high}
+            medium={medium}
+            low={low}
+            informational={informational}
+            gas={gas}
+            vulnerability={vulnerability}
+            setVulnerability={setVulnerability}
+            confidence={confidence}
+            setConfidence={setConfidence}
+          />
           <Box w="100%" h={["100%", "100%", "100%", "47vh"]} overflowY="scroll">
             <MultifileIssues
               type={type}
@@ -610,6 +575,8 @@ export const MultifileResult: React.FC<{
               issues={issues}
               files={files}
               setFiles={setFiles}
+              selectedBugs={selectedBugs}
+              setSelectedBugs={setSelectedBugs}
               confidence={confidence}
               vulnerability={vulnerability}
               updateBugStatus={updateBugStatus}
@@ -638,6 +605,8 @@ type MultifileIssuesProps = {
   issues: MultiFileScanDetail[];
   files: FilesState | null;
   setFiles: Dispatch<SetStateAction<FilesState | null>>;
+  selectedBugs: string[];
+  setSelectedBugs: Dispatch<SetStateAction<string[] | null>>;
   confidence: boolean[];
   vulnerability: boolean[];
   profileData: Profile;
@@ -652,6 +621,8 @@ const MultifileIssues: React.FC<MultifileIssuesProps> = ({
   files,
   is_latest_scan,
   setFiles,
+  selectedBugs,
+  setSelectedBugs,
   confidence,
   vulnerability,
   profileData,
@@ -703,101 +674,23 @@ const MultifileIssues: React.FC<MultifileIssuesProps> = ({
                 vulnerability[
                   getVulnerabilityNumber(template_details.issue_severity)
                 ] ? (
-                  <AccordionItem id={issue_id} key={issue_id} w={"98%"}>
-                    {({ isExpanded }) => (
-                      <>
-                        <AccordionButton
-                          pr={[2, 2, 2, 4]}
-                          _hover={{
-                            bg: "rgba(47, 248, 107, 0.07)",
-                          }}
-                          _expanded={{
-                            bg: "rgba(47, 248, 107, 0.1)",
-                          }}
-                        >
-                          <HStack
-                            sx={{
-                              w: "100%",
-                              my: 2,
-                              alignItems: "center",
-                            }}
-                          >
-                            <HStack w="90%">
-                              <SeverityIcon
-                                variant={template_details.issue_severity}
-                              />
-                              <Text
-                                sx={{
-                                  ml: 3,
-                                  maxW: [230, 230, 400, 250],
-                                  fontWeight: 600,
-                                  color: "#4E5D78",
-                                  fontSize: "sm",
-                                  textAlign: "left",
-                                }}
-                                isTruncated
-                              >
-                                {template_details.issue_name}
-                              </Text>
-                            </HStack>
-                            <Text
-                              sx={{
-                                ml: "auto",
-                                fontSize: "sm",
-                                fontWeight: 600,
-                                color: "subtle",
-                              }}
-                            >
-                              {no_of_findings}
-                            </Text>
-                          </HStack>
-                          <Icon
-                            as={AiOutlineCaretRight}
-                            mr={[0, 0, 0, 2]}
-                            color="subtle"
-                            fontSize="14px"
-                            transition="transform 0.2s"
-                            transform={
-                              isExpanded ? "rotate(90deg)" : "rotate(0deg)"
-                            }
-                          />
-                        </AccordionButton>
-                        <AccordionPanel p={[0, 0, 0, 4]} pb={4}>
-                          {!details_enabled ? (
-                            <TrialWallIssue
-                              severity={template_details.issue_severity}
-                              no_of_issue={no_of_findings}
-                            />
-                          ) : (
-                            <>
-                              {isExpanded && (
-                                <Accordion allowMultiple={false} allowToggle>
-                                  {metric_wise_aggregated_findings.map(
-                                    (item, index) => (
-                                      <IssueBox
-                                        key={item.bug_id + index}
-                                        type={type}
-                                        bug_id={item.bug_id}
-                                        files={files}
-                                        issue_id={issue_id}
-                                        metric_wise_aggregated_finding={{
-                                          ...item,
-                                        }}
-                                        template_details={template_details}
-                                        is_latest_scan={is_latest_scan}
-                                        setFiles={setFiles}
-                                        updateBugStatus={updateBugStatus}
-                                      />
-                                    )
-                                  )}
-                                </Accordion>
-                              )}
-                            </>
-                          )}
-                        </AccordionPanel>
-                      </>
-                    )}
-                  </AccordionItem>
+                  <IssueContainer
+                    key={issue_id + index}
+                    type={type}
+                    files={files}
+                    issue_id={issue_id}
+                    metric_wise_aggregated_findings={
+                      metric_wise_aggregated_findings
+                    }
+                    template_details={template_details}
+                    no_of_findings={no_of_findings}
+                    is_latest_scan={is_latest_scan}
+                    details_enabled={details_enabled}
+                    setFiles={setFiles}
+                    selectedBugs={selectedBugs}
+                    setSelectedBugs={setSelectedBugs}
+                    updateBugStatus={updateBugStatus}
+                  />
                 ) : (
                   <></>
                 )}
@@ -809,7 +702,7 @@ const MultifileIssues: React.FC<MultifileIssuesProps> = ({
   );
 };
 
-const IssueBox: React.FC<{
+export const IssueBox: React.FC<{
   type: "block" | "project";
   bug_id: string;
   files: FilesState | null;
@@ -817,6 +710,8 @@ const IssueBox: React.FC<{
   is_latest_scan: boolean;
   metric_wise_aggregated_finding: MetricWiseAggregatedFinding;
   template_details: MultiFileTemplateDetail;
+  isSelected: boolean;
+  updateBugHashList: any;
   setFiles: Dispatch<SetStateAction<FilesState | null>>;
   updateBugStatus: any;
 }> = ({
@@ -827,10 +722,19 @@ const IssueBox: React.FC<{
   is_latest_scan,
   metric_wise_aggregated_finding,
   template_details,
+  isSelected,
+  updateBugHashList,
   setFiles,
   updateBugStatus,
 }) => {
   const [isDesktopView] = useMediaQuery("(min-width: 1024px)");
+
+  const [isHovered, setIsHovered] = useState(false);
+  const [isChecked, setIsChecked] = useState(isSelected);
+
+  useEffect(() => {
+    updateBugHashList(metric_wise_aggregated_finding.bug_hash, isChecked);
+  }, [isChecked]);
   return (
     <>
       {isDesktopView ? (
@@ -843,7 +747,7 @@ const IssueBox: React.FC<{
               : 0.5
           }
           p={[0, 0, 0, 3]}
-          borderRadius={[0, 0, 0, 15]}
+          mb={0.5}
           sx={{
             cursor: "pointer",
             bg:
@@ -851,7 +755,6 @@ const IssueBox: React.FC<{
               metric_wise_aggregated_finding.bug_status === "pending_fix"
                 ? "gray.300"
                 : "gray.100",
-            my: 2,
             color: "text",
             fontSize: "sm",
             transition: "0.2s background",
@@ -871,13 +774,25 @@ const IssueBox: React.FC<{
               template_details: template_details,
               comment: metric_wise_aggregated_finding.comment,
             });
-            console.log(metric_wise_aggregated_finding);
+            setIsChecked(true);
           }}
+          onMouseEnter={() => setIsHovered(true)}
+          onMouseLeave={() => setIsHovered(false)}
         >
-          <HStack justify={"space-between"}>
-            <Text isTruncated color={"gray.700"}>
-              {bug_id}
-            </Text>
+          <HStack justify={"space-between"} ml={2}>
+            <Flex gap={2}>
+              {(isHovered || isChecked) && (
+                <Checkbox
+                  colorScheme={"purple"}
+                  iconColor={"#EDEDED"}
+                  isChecked={isChecked}
+                  onChange={() => setIsChecked(!isChecked)}
+                ></Checkbox>
+              )}
+              <Text isTruncated color={"gray.700"}>
+                {bug_id}
+              </Text>
+            </Flex>
             <HStack>
               {metric_wise_aggregated_finding.findings.length > 1 && (
                 <HStack
@@ -1535,14 +1450,16 @@ const IssueDetail: React.FC<{
 
   let variableData = description_details;
 
-  const { scanId, projectId } =
-    useParams<{ scanId: string; projectId: string }>();
+  const { scanId, projectId } = useParams<{
+    scanId: string;
+    projectId: string;
+  }>();
 
   const height = fullScreen ? "35vh" : "15vh";
 
   const [editComment, setEditComment] = React.useState(false);
 
-  const [comment, setComment] = React.useState(files?.comment);
+  const [comment, setComment] = React.useState(files.comment);
   const toast = useToast();
 
   const updateComment = async () => {
