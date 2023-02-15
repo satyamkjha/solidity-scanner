@@ -82,7 +82,9 @@ const Projects = lazy(
 
 const ProjectPage = lazy(
   () =>
-    import("pages/Projects/ProjectPage" /* webpackChunkName: "ProjectPage" */)
+    import(
+      "pages/Projects/NewProjectPage" /* webpackChunkName: "ProjectPage" */
+    )
 );
 
 const Blocks = lazy(
@@ -90,7 +92,7 @@ const Blocks = lazy(
 );
 
 const BlockPage = lazy(
-  () => import("pages/Blocks/BlockPage" /* webpackChunkName: "BlockPage" */)
+  () => import("pages/Blocks/NewBlockPage" /* webpackChunkName: "BlockPage" */)
 );
 const Integrations = lazy(
   () => import("pages/Integrations" /* webpackChunkName: "Integration" */)
@@ -172,13 +174,13 @@ const Routes: React.FC = () => {
                 <PrivateRoute exact path="/projects">
                   <Projects />
                 </PrivateRoute>
-                <PrivateRoute path="/projects/:projectId">
+                <PrivateRoute path="/projects/:projectId/:scanId">
                   <ProjectPage />
                 </PrivateRoute>
                 <PrivateRoute exact path="/blocks">
                   <Blocks />
                 </PrivateRoute>
-                <PrivateRoute exact path="/blocks/:scanId">
+                <PrivateRoute exact path="/blocks/:scanId/:projectId">
                   <BlockPage />
                 </PrivateRoute>
                 <PrivateRoute exact path="/integrations">
