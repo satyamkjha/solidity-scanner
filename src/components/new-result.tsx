@@ -1108,8 +1108,9 @@ const CodeExplorer: React.FC<{
         justifyContent: "flex-start",
         alignItems: "flex-start",
         flexDir: "column",
-        h: "45vh",
+        h: "50vh",
         overflow: "scroll",
+        pl: "15px",
       }}
     >
       <Flex
@@ -1226,7 +1227,7 @@ export const MultiFileExplorer: React.FC<MultiFileExplorerProps> = ({
           <Flex
             sx={{
               w: "100%",
-              justifyContent: "space-between",
+              justifyContent: "center",
               alignItems: "center",
               h: ["35vh", "35vh", "35vh", "60vh"],
               flexDir: "column",
@@ -1246,13 +1247,13 @@ export const MultiFileExplorer: React.FC<MultiFileExplorerProps> = ({
                 alignItems: "center",
                 h: "100%",
                 position: "absolute",
-                top: "5px",
-                left: "15px",
+                top: "0px",
+                left: "0px",
               }}
             >
               <Tabs
                 defaultIndex={0}
-                width={"calc(100% - 30px)"}
+                width={"calc(100%)"}
                 variant="soft-rounded"
                 colorScheme="messenger"
               >
@@ -1262,18 +1263,30 @@ export const MultiFileExplorer: React.FC<MultiFileExplorerProps> = ({
                   flexDir={"row"}
                   justifyContent="flex-start"
                   align={"center"}
-                  background={"gray.100"}
+                  background={"#FAFBFC"}
                   borderRadius={10}
-                  px={3}
+                  px={0}
                   mb={2}
                 >
-                  <TabList my={3} width={"fit-content"}>
+                  <TabList
+                    px={0}
+                    my={0}
+                    width={"fit-content"}
+                    w="100%"
+                    borderColor={"#C4C4C4"}
+                    borderBottomWidth={"1px"}
+                  >
                     {files.findings.map((file, index) => (
                       <Tab
                         key={index}
                         onClick={() => setCurrentFileName(file.file_path)}
-                        mx={1}
-                        background={"white"}
+                        background={"gray.100"}
+                        borderRadius="0px"
+                        borderRightWidth={"1px"}
+                        borderColor={"#C4C4C4"}
+                        _selected={{
+                          background: "white",
+                        }}
                       >
                         <Tooltip label={file.file_path} aria-label="A tooltip">
                           <Text fontSize={"xs"} width={100} isTruncated>
@@ -1315,10 +1328,10 @@ export const MultiFileExplorer: React.FC<MultiFileExplorerProps> = ({
                   bg: "white",
                   p: 3,
                   pb: 1,
-                  w: "calc(100% - 30px)",
+                  w: "calc(100% - 20px)",
                   position: "absolute",
-                  bottom: "5px",
-                  left: "15px",
+                  bottom: "10px",
+                  left: "10px",
                   display: "flex",
                   justifyContent: "flex-start",
                   alignItems: "flex-start",
