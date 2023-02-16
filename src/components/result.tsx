@@ -595,6 +595,7 @@ export const MultifileResult: React.FC<{
             files={files}
             setFiles={setFiles}
             details_enabled={details_enabled}
+            selectedBugs={selectedBugs}
             updateBugStatus={updateBugStatus}
           />
         )}
@@ -785,13 +786,12 @@ export const IssueBox: React.FC<{
               template_details: template_details,
               comment: metric_wise_aggregated_finding.comment,
             });
-            setIsChecked(true);
           }}
           onMouseEnter={() => setIsHovered(true)}
           onMouseLeave={() => setIsHovered(false)}
         >
           <HStack justify={"space-between"} ml={2}>
-            <Flex gap={2}>
+            <HStack w="50%">
               {(isHovered || isChecked) && (
                 <Checkbox
                   name={bug_id}
@@ -805,7 +805,7 @@ export const IssueBox: React.FC<{
               <Text isTruncated color={"gray.700"}>
                 {bug_id}
               </Text>
-            </Flex>
+            </HStack>
             <HStack>
               {metric_wise_aggregated_finding.findings.length > 1 && (
                 <HStack
@@ -890,6 +890,7 @@ export const IssueBox: React.FC<{
                     is_latest_scan={is_latest_scan}
                     files={files}
                     details_enabled={true}
+                    selectedBugs={selectedBugs}
                     updateBugStatus={updateBugStatus}
                   />
                 )}

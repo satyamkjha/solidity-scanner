@@ -3,13 +3,8 @@ import {
   AccordionButton,
   AccordionItem,
   AccordionPanel,
-  Box,
-  Button,
-  Flex,
   HStack,
-  VStack,
   Text,
-  Link,
   Checkbox,
   Icon,
 } from "@chakra-ui/react";

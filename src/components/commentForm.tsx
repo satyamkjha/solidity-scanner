@@ -93,6 +93,7 @@ export const CommentForm: React.FC<{
                 onClick={() => {
                   if (comment) {
                     updateBugStatus(status, comment);
+                    setComment("");
                     onClose();
                   }
                 }}
