@@ -18,16 +18,17 @@ export const CommentForm: React.FC<{
   isOpen: boolean;
   updateBugStatus: any;
   status: string;
-}> = ({ isOpen, onClose, updateBugStatus, status }) => {
+  selectedBugs: string[];
+}> = ({ isOpen, onClose, updateBugStatus, status, selectedBugs }) => {
   const [comment, setComment] = useState<string>();
   return (
     <>
       <Modal isOpen={isOpen} onClose={onClose}>
         <ModalOverlay />
         <ModalContent
-          maxW={["90vw", "90vw", "50vw"]}
+          maxW={["90vw", "90vw", "40vw"]}
           minW={"300px"}
-          minH={"fit-content"}
+          minH={"600px"}
           borderRadius="15px"
           mb={10}
         >
@@ -54,10 +55,19 @@ export const CommentForm: React.FC<{
               textAlign="center"
             >
               <Text my={4} color="subtle" w={["100%"]}>
-                You are about to confirm the Won’t Fix action on the Lorem ipsum
-                dolor sit amet, consectetur adipiscing elit. Ac a tempor rutrum
-                posuere turpis sit amet, consectetur adipiscing elit. Ac a
-                tempor rutrum
+                You are about to confirm the{" "}
+                <Text as={"span"} color="black" fontWeight={"bold"}>
+                  Won’t Fix
+                </Text>{" "}
+                action on{" "}
+                <Text as={"span"} color="black" fontWeight={"bold"}>
+                  {selectedBugs.length}
+                </Text>{" "}
+                bug(s).{" "}
+                <Text color="subtle" w={["100%"]}>
+                  Please add your comment below and click on confirm to
+                  continue.
+                </Text>
               </Text>
               <Textarea
                 variant={"brand"}

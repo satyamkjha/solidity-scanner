@@ -273,16 +273,17 @@ const IssueBox: React.FC<{
         >
           <HStack justify={"space-between"} ml={2}>
             <HStack w="50%">
-              {(isHovered || isChecked) && (
-                <Checkbox
-                  name={bug_id}
-                  colorScheme={"purple"}
-                  borderColor={"gray.500"}
-                  checked={isChecked}
-                  isChecked={isChecked}
-                  onChange={() => setIsChecked(!isChecked)}
-                ></Checkbox>
-              )}
+              {(isHovered || isChecked) &&
+                metric_wise_aggregated_finding.bug_status !== "fixed" && (
+                  <Checkbox
+                    name={bug_id}
+                    colorScheme={"purple"}
+                    borderColor={"gray.500"}
+                    checked={isChecked}
+                    isChecked={isChecked}
+                    onChange={() => setIsChecked(!isChecked)}
+                  ></Checkbox>
+                )}
               <Text isTruncated color={"gray.700"}>
                 {bug_id}
               </Text>
