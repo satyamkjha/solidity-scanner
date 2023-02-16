@@ -86,8 +86,8 @@ const BlockPage: React.FC = () => {
     scanData?.scan_report.project_id
   );
   const toast = useToast();
-  
-  const { data: plans } = usePricingPlans()
+
+  const { data: plans } = usePricingPlans();
   const [next, setNext] = useState(false);
   const [open, setOpen] = useState(false);
 
@@ -158,7 +158,7 @@ const BlockPage: React.FC = () => {
   };
 
   const publishReport = async () => {
-    const { data } = await API.post(API_PATH.API_GET_PUBLISHED_REPORT, {
+    const { data } = await API.post(API_PATH.API_PUBLISH_REPORT, {
       project_type: "block",
       project_id: scanData?.scan_report.project_id,
       report_id: scanData?.scan_report.latest_report_id,
