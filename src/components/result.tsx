@@ -537,9 +537,14 @@ export const MultifileResult: React.FC<{
         bug_status: action,
         comment: comment,
       });
+      setSelectedBugs([]);
     }
     refetch();
   };
+
+  useEffect(() => {
+    if (!selectedBugs) setIssues(issues);
+  }, [selectedBugs]);
 
   return (
     <>
@@ -606,7 +611,7 @@ type MultifileIssuesProps = {
   files: FilesState | null;
   setFiles: Dispatch<SetStateAction<FilesState | null>>;
   selectedBugs: string[];
-  setSelectedBugs: Dispatch<SetStateAction<string[] | null>>;
+  setSelectedBugs: Dispatch<SetStateAction<string[]>>;
   confidence: boolean[];
   vulnerability: boolean[];
   profileData: Profile;
@@ -711,6 +716,7 @@ export const IssueBox: React.FC<{
   metric_wise_aggregated_finding: MetricWiseAggregatedFinding;
   template_details: MultiFileTemplateDetail;
   isSelected: boolean;
+  selectedBugs: string[];
   updateBugHashList: any;
   setFiles: Dispatch<SetStateAction<FilesState | null>>;
   updateBugStatus: any;
@@ -723,6 +729,7 @@ export const IssueBox: React.FC<{
   metric_wise_aggregated_finding,
   template_details,
   isSelected,
+  selectedBugs,
   updateBugHashList,
   setFiles,
   updateBugStatus,
@@ -735,6 +742,12 @@ export const IssueBox: React.FC<{
   useEffect(() => {
     updateBugHashList(metric_wise_aggregated_finding.bug_hash, isChecked);
   }, [isChecked]);
+
+  useEffect(() => {
+    if (selectedBugs && selectedBugs.length === 0) {
+      setIsChecked(isSelected);
+    }
+  }, [selectedBugs]);
   return (
     <>
       {isDesktopView ? (
@@ -783,8 +796,10 @@ export const IssueBox: React.FC<{
             <Flex gap={2}>
               {(isHovered || isChecked) && (
                 <Checkbox
+                  name={bug_id}
                   colorScheme={"purple"}
-                  iconColor={"#EDEDED"}
+                  borderColor={"gray.500"}
+                  checked={isChecked}
                   isChecked={isChecked}
                   onChange={() => setIsChecked(!isChecked)}
                 ></Checkbox>
@@ -1429,13 +1444,13 @@ export const MultiFileExplorer: React.FC<MultiFileExplorerProps> = ({
 
 const IssueDetail: React.FC<{
   current_file_name: string;
-  files: FilesState;
+  files?: FilesState;
   issue_id: string;
   context: string;
   description_details: any;
-  fullScreen: boolean;
-  handleTabsChange: (index: number) => void;
-  tabIndex: number;
+  fullScreen?: boolean;
+  handleTabsChange?: (index: number) => void;
+  tabIndex?: number;
 }> = ({
   issue_id,
   context,
@@ -1459,15 +1474,15 @@ const IssueDetail: React.FC<{
 
   const [editComment, setEditComment] = React.useState(false);
 
-  const [comment, setComment] = React.useState(files.comment);
+  const [comment, setComment] = React.useState(files?.comment);
   const toast = useToast();
 
   const updateComment = async () => {
     const { data } = await API.post("/api-update-bug-status/", {
-      bug_ids: [files.bug_hash],
+      bug_ids: [files?.bug_hash],
       scan_id: scanId,
       project_id: projectId,
-      bug_status: files.bug_status,
+      bug_status: files?.bug_status,
       comment: comment,
     });
     if (data.status === "success") {

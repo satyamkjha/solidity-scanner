@@ -33,7 +33,7 @@ export const IssueContainer: React.FC<{
   files: FilesState | null;
   setFiles: Dispatch<SetStateAction<FilesState | null>>;
   selectedBugs: string[];
-  setSelectedBugs: Dispatch<SetStateAction<string[] | null>>;
+  setSelectedBugs: Dispatch<SetStateAction<string[]>>;
   details_enabled: boolean;
   is_latest_scan: boolean;
   updateBugStatus: any;
@@ -69,6 +69,12 @@ export const IssueContainer: React.FC<{
     }
   }, [isChecked]);
 
+  useEffect(() => {
+    if (selectedBugs && selectedBugs.length === 0) {
+      setIsChecked(false);
+    }
+  }, [selectedBugs]);
+
   const updateBugHashList = (hash: string, isBugChecked: boolean) => {
     if (isBugChecked) {
       if (!selectedBugs.includes(hash)) {
@@ -102,12 +108,17 @@ export const IssueContainer: React.FC<{
               }}
             >
               <HStack w="90%">
-                {(isHovered || isChecked) && (
+                {isHovered || isChecked ? (
                   <Checkbox
+                    name={issue_id}
                     colorScheme={"purple"}
+                    borderColor={"gray.500"}
+                    checked={isChecked}
                     isChecked={isChecked}
                     onChange={() => setIsChecked(!isChecked)}
                   ></Checkbox>
+                ) : (
+                  <></>
                 )}
                 <SeverityIcon variant={template_details.issue_severity} />
                 <Text
@@ -173,6 +184,7 @@ export const IssueContainer: React.FC<{
                         template_details={template_details}
                         is_latest_scan={is_latest_scan}
                         isSelected={isChecked}
+                        selectedBugs={selectedBugs}
                         setFiles={setFiles}
                         updateBugHashList={updateBugHashList}
                         updateBugStatus={updateBugStatus}
