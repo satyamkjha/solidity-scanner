@@ -79,6 +79,7 @@ import { DetailFilter } from "./detailFilter";
 import { IssueContainer } from "./issueContainer";
 import { sentenceCapitalize } from "helpers/helperFunction";
 import { FaCompressAlt, FaExpandAlt } from "react-icons/fa";
+import { API_PATH } from "helpers/routeManager";
 
 type FileState = {
   issue_id: string;
@@ -499,7 +500,7 @@ export const MultifileResult: React.FC<{
 
   const updateBugStatus = async (action: string, comment?: string) => {
     if (files) {
-      const { data } = await API.post("/api-update-bug-status/", {
+      const { data } = await API.post(API_PATH.API_UPDATE_BUG_STATUS, {
         bug_ids: selectedBugs,
         scan_id: scanId,
         bug_status: action,
@@ -1324,7 +1325,7 @@ const IssueDetail: React.FC<{
 
   const updateComment = async () => {
     if (comment && comment !== "") {
-      const { data } = await API.post("/api-update-bug-status/", {
+      const { data } = await API.post(API_PATH.API_UPDATE_BUG_STATUS, {
         bug_ids: [files?.bug_hash],
         scan_id: scanId,
         bug_status: files?.bug_status,
