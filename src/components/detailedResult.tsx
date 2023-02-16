@@ -17,7 +17,7 @@ import {
 import { FilesState, MultiFileTemplateDetail } from "common/types";
 import { issueActions } from "common/values";
 import { sentenceCapitalize } from "helpers/helperFunction";
-import React, { Dispatch, SetStateAction, useState } from "react";
+import React, { Dispatch, SetStateAction, useEffect, useState } from "react";
 import { BiBulb, BiCodeCurly, BiComment } from "react-icons/bi";
 import { MultiFileExplorer } from "./result";
 import TrialWall from "./trialWall";
@@ -30,25 +30,34 @@ export const DetailedResult: React.FC<{
   type: "block" | "project";
   is_latest_scan: boolean;
   files: FilesState | null;
-   details_enabled: boolean;
-  updateBugStatus: (action: string, comment?: string) => Promise<void>;
+  details_enabled: boolean;
+  selectedBugs: string[];
+  updateBugStatus: any;
   setFiles: Dispatch<SetStateAction<FilesState | null>>;
 }> = ({
   type,
   is_latest_scan,
   files,
-  
   details_enabled,
+  selectedBugs,
   updateBugStatus,
   setFiles,
 }) => {
   const [isDesktopView] = useMediaQuery("(min-width: 1024px)");
   const { isOpen, onClose, onOpen } = useDisclosure();
   const [bugStatus, setBugStatus] = useState<string | null>(null);
+  const [isDisabled, setIsDisabled] = useState<boolean>(true);
 
   const [openIssueBox, setOpenIssueBox] = React.useState(true);
   const [tabIndex, setTabIndex] = React.useState(0);
 
+  useEffect(() => {
+    if (selectedBugs && selectedBugs.length) {
+      setIsDisabled(false);
+    } else {
+      setIsDisabled(true);
+    }
+  }, [selectedBugs]);
   const handleTabsChange = (index: number) => {
     setOpenIssueBox(true);
     setTabIndex(index);
@@ -121,6 +130,7 @@ export const DetailedResult: React.FC<{
               )}
               placeholder="Select Action"
               styles={customStyles}
+              isDisabled={isDisabled}
               onChange={(newValue) => {
                 if (newValue) {
                   if (newValue.value === "wont_fix") {
