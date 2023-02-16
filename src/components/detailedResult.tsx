@@ -237,6 +237,7 @@ export const DetailedResult: React.FC<{
         onClose={onClose}
         updateBugStatus={updateBugStatus}
         status={bugStatus}
+        selectedBugs={selectedBugs}
       />
     </VStack>
   );
