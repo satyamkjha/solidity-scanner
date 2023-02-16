@@ -1483,6 +1483,12 @@ const IssueDetail: React.FC<{
   const [comment, setComment] = React.useState<string | null>(null);
   const toast = useToast();
 
+  useEffect(() => {
+    setEditComment(false);
+    console.log(files.comment);
+    console.log(files);
+  }, [files]);
+
   const updateComment = async () => {
     if (comment && comment !== "") {
       const { data } = await API.post("/api-update-bug-status/", {
@@ -1504,7 +1510,6 @@ const IssueDetail: React.FC<{
           ...files,
           comment: comment,
         });
-        setEditComment(false);
       }
     }
   };
