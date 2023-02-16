@@ -238,25 +238,21 @@ const IssueBox: React.FC<{
         <Box
           key={bug_id}
           id={bug_id}
-          opacity={
-            metric_wise_aggregated_finding.bug_status === "pending_fix"
-              ? 1
-              : 0.5
-          }
           p={[0, 0, 0, 3]}
           mb={0.5}
           sx={{
             cursor: "pointer",
             bg:
-              bug_id === files?.bug_id &&
-              metric_wise_aggregated_finding.bug_status === "pending_fix"
+              bug_id === files?.bug_id
                 ? "gray.300"
-                : "gray.100",
+                : metric_wise_aggregated_finding.bug_status === "pending_fix"
+                ? "gray.100"
+                : "gray.50",
             color: "text",
             fontSize: "sm",
             transition: "0.2s background",
             _hover: {
-              bg: bug_id === files?.bug_id ? "gray.300" : "gray.200",
+              bg: "gray.200",
             },
           }}
           onClick={() => {

@@ -79,6 +79,7 @@ import { DetailFilter } from "./detailFilter";
 import { IssueContainer } from "./issueContainer";
 import { sentenceCapitalize } from "helpers/helperFunction";
 import { FaCompressAlt, FaExpandAlt } from "react-icons/fa";
+import { API_PATH } from "helpers/routeManager";
 
 type FileState = {
   issue_id: string;
@@ -499,10 +500,9 @@ export const MultifileResult: React.FC<{
 
   const updateBugStatus = async (action: string, comment?: string) => {
     if (files) {
-      const { data } = await API.post("/api-update-bug-status/", {
+      const { data } = await API.post(API_PATH.API_UPDATE_BUG_STATUS, {
         bug_ids: selectedBugs,
         scan_id: scanId,
-        project_id: projectId,
         bug_status: action,
         comment: comment,
       });
@@ -1236,7 +1236,13 @@ export const MultiFileExplorer: React.FC<MultiFileExplorerProps> = ({
                         }}
                         bgColor="white"
                         aria-label="Handle Size"
-                        icon={fullScreen ? <FaCompressAlt /> : <FaExpandAlt />}
+                        icon={
+                          fullScreen ? (
+                            <FaCompressAlt color="#8A94A6" />
+                          ) : (
+                            <FaExpandAlt color="#8A94A6" />
+                          )
+                        }
                       />
                     </Tooltip>
                     <Tooltip label="Close Box" fontSize="md">
@@ -1246,7 +1252,7 @@ export const MultiFileExplorer: React.FC<MultiFileExplorerProps> = ({
                         onClick={() => setOpenIssueBox(false)}
                         bgColor="white"
                         aria-label="Close Box"
-                        icon={<CloseIcon />}
+                        icon={<CloseIcon color="#8A94A6" />}
                       />
                     </Tooltip>
                   </HStack>
@@ -1319,10 +1325,9 @@ const IssueDetail: React.FC<{
 
   const updateComment = async () => {
     if (comment && comment !== "") {
-      const { data } = await API.post("/api-update-bug-status/", {
+      const { data } = await API.post(API_PATH.API_UPDATE_BUG_STATUS, {
         bug_ids: [files?.bug_hash],
         scan_id: scanId,
-        project_id: projectId,
         bug_status: files?.bug_status,
         comment: comment,
       });
