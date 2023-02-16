@@ -157,6 +157,7 @@ export type MetricWiseAggregatedFinding = {
   findings: Finding[];
   bug_id: string;
   comment?: string;
+  scan_id: string;
 };
 
 export type ScanMeta = {

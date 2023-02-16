@@ -335,7 +335,7 @@ const ScanDetails: React.FC<{ scansRemaining: number; scans: ScanMeta[] }> = ({
   const reportId = scanData?.scan_report.latest_report_id;
 
   const publishReport = async () => {
-    const { data } = await API.post(API_PATH.API_GET_PUBLISHED_REPORT, {
+    const { data } = await API.post(API_PATH.API_PUBLISH_REPORT, {
       project_type: "project",
       project_id: projectId,
       report_id: reportId,

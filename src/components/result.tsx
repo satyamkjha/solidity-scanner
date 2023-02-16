@@ -498,7 +498,6 @@ export const MultifileResult: React.FC<{
   const [isDesktopView] = useMediaQuery("(min-width: 1024px)");
 
   const updateBugStatus = async (action: string, comment?: string) => {
-    console.log(selectedBugs);
     if (files) {
       const { data } = await API.post("/api-update-bug-status/", {
         bug_ids: selectedBugs,
@@ -594,8 +593,7 @@ export const MultifileResult: React.FC<{
             type={type}
             is_latest_scan={is_latest_scan}
             files={files}
-            confidence={confidence}
-            setConfidence={setConfidence}
+            setFiles={setFiles}
             details_enabled={details_enabled}
             updateBugStatus={updateBugStatus}
           />
@@ -840,7 +838,7 @@ export const IssueBox: React.FC<{
               <AccordionButton
                 bg={"#F8FAFC"}
                 p={0}
-                onClick={() =>
+                onClick={() => {
                   setFiles({
                     bug_id: bug_id,
                     issue_id: issue_id,
@@ -851,8 +849,8 @@ export const IssueBox: React.FC<{
                       metric_wise_aggregated_finding.description_details,
                     template_details: template_details,
                     comment: metric_wise_aggregated_finding.comment,
-                  })
-                }
+                  });
+                }}
               >
                 <HStack justify={"space-between"} p={4} w="100%">
                   <Text isTruncated color={"gray.700"}>
@@ -1016,7 +1014,7 @@ const CodeExplorer: React.FC<{
         if (elementRef.current) {
           elementRef.current.scrollIntoView({
             behavior: "smooth",
-            block: "center",
+            block: "start",
             inline: "start",
           });
         }
@@ -1117,6 +1115,7 @@ type MultiFileExplorerProps = {
   handleTabsChange: (index: number) => void;
   tabIndex: number;
   openIssueBox: boolean;
+  setFiles: Dispatch<SetStateAction<FilesState | null>>;
   setOpenIssueBox: React.Dispatch<React.SetStateAction<boolean>>;
 };
 export const MultiFileExplorer: React.FC<MultiFileExplorerProps> = ({
@@ -1126,6 +1125,7 @@ export const MultiFileExplorer: React.FC<MultiFileExplorerProps> = ({
   tabIndex,
   openIssueBox,
   setOpenIssueBox,
+  setFiles,
 }) => {
   const [currentFileName, setCurrentFileName] = useState(
     files.findings[0].file_path
@@ -1195,8 +1195,7 @@ export const MultiFileExplorer: React.FC<MultiFileExplorerProps> = ({
                   align={"center"}
                   background={"#FAFBFC"}
                   borderRadius={10}
-                  px={0}
-                  mb={2}
+                  p={0}
                 >
                   <TabList
                     px={0}
@@ -1216,6 +1215,8 @@ export const MultiFileExplorer: React.FC<MultiFileExplorerProps> = ({
                         borderColor={"#C4C4C4"}
                         _selected={{
                           background: "white",
+                          borderBottomColor: "#3300FF",
+                          borderBottomWidth: "2px",
                         }}
                       >
                         <Tooltip label={file.file_path} aria-label="A tooltip">
@@ -1266,6 +1267,8 @@ export const MultiFileExplorer: React.FC<MultiFileExplorerProps> = ({
                   justifyContent: "flex-start",
                   alignItems: "flex-start",
                   flexDir: "column",
+                  boxShadow:
+                    "0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19)",
                 }}
               >
                 <HStack
@@ -1430,6 +1433,7 @@ export const MultiFileExplorer: React.FC<MultiFileExplorerProps> = ({
                     files={files}
                     issue_id={files.issue_id}
                     context="multi_file"
+                    setFiles={setFiles}
                     description_details={files.description_details}
                   />
                 </Box>
@@ -1444,19 +1448,21 @@ export const MultiFileExplorer: React.FC<MultiFileExplorerProps> = ({
 
 const IssueDetail: React.FC<{
   current_file_name: string;
-  files?: FilesState;
+  files: FilesState;
   issue_id: string;
   context: string;
   description_details: any;
   fullScreen?: boolean;
   handleTabsChange?: (index: number) => void;
   tabIndex?: number;
+  setFiles: Dispatch<SetStateAction<FilesState | null>>;
 }> = ({
   issue_id,
   context,
   description_details,
   files,
   current_file_name,
+  setFiles,
   fullScreen,
   handleTabsChange,
   tabIndex,
@@ -1474,26 +1480,32 @@ const IssueDetail: React.FC<{
 
   const [editComment, setEditComment] = React.useState(false);
 
-  const [comment, setComment] = React.useState(files?.comment);
+  const [comment, setComment] = React.useState<string | null>(null);
   const toast = useToast();
 
   const updateComment = async () => {
-    const { data } = await API.post("/api-update-bug-status/", {
-      bug_ids: [files?.bug_hash],
-      scan_id: scanId,
-      project_id: projectId,
-      bug_status: files?.bug_status,
-      comment: comment,
-    });
-    if (data.status === "success") {
-      toast({
-        title: "Comment Updated",
-        description: data.message,
-        status: "success",
-        duration: 3000,
-        isClosable: true,
+    if (comment && comment !== "") {
+      const { data } = await API.post("/api-update-bug-status/", {
+        bug_ids: [files?.bug_hash],
+        scan_id: scanId,
+        project_id: projectId,
+        bug_status: files?.bug_status,
+        comment: comment,
       });
-      setEditComment(false);
+      if (data.status === "success") {
+        toast({
+          title: "Comment Updated",
+          description: data.message,
+          status: "success",
+          duration: 3000,
+          isClosable: true,
+        });
+        setFiles({
+          ...files,
+          comment: comment,
+        });
+        setEditComment(false);
+      }
     }
   };
 
@@ -1652,28 +1664,40 @@ const IssueDetail: React.FC<{
                   p={0}
                   mt={0}
                   borderRadius="50%"
-                  onClick={() => updateComment()}
-                  bgColor="#B8B8B8"
+                  onClick={() => {
+                    if (comment !== "" && comment) {
+                      updateComment();
+                    }
+                  }}
+                  bgColor={comment !== "" && comment ? "#3300FF" : "#B8B8B8"}
                   aria-label="Edit Comment"
+                  color={comment !== "" && comment ? "#FFFFFF" : "#000000"}
                   icon={<ArrowUpIcon />}
                 />
               </VStack>
             ) : (
-              <>
-                <Text w="90%" fontSize={"xs"}>
-                  {comment}
-                </Text>
-                <Tooltip label="Edit Comment" fontSize="md">
-                  <IconButton
-                    fontSize={"lg"}
-                    p={0}
-                    onClick={() => setEditComment(true)}
-                    bgColor="white"
-                    aria-label="Edit Comment"
-                    icon={<EditIcon />}
-                  />
-                </Tooltip>
-              </>
+              files.comment && (
+                <>
+                  <Text w="90%" fontSize={"xs"}>
+                    {files.comment}
+                  </Text>
+                  <Tooltip label="Edit Comment" fontSize="md">
+                    <IconButton
+                      fontSize={"lg"}
+                      p={0}
+                      onClick={() => {
+                        setEditComment(true);
+                        if (files.comment) {
+                          setComment(files.comment);
+                        }
+                      }}
+                      bgColor="white"
+                      aria-label="Edit Comment"
+                      icon={<EditIcon />}
+                    />
+                  </Tooltip>
+                </>
+              )
             )}
           </TabPanel>
         </TabPanels>

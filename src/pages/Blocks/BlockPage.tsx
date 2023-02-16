@@ -158,7 +158,7 @@ const BlockPage: React.FC = () => {
   };
 
   const publishReport = async () => {
-    const { data } = await API.post(API_PATH.API_GET_PUBLISHED_REPORT, {
+    const { data } = await API.post(API_PATH.API_PUBLISH_REPORT, {
       project_type: "block",
       project_id: scanData?.scan_report.project_id,
       report_id: scanData?.scan_report.latest_report_id,
