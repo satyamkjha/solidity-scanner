@@ -204,7 +204,7 @@ const BlockPage: React.FC = () => {
 
   const getReportData = async (project_id: string, report_id: string) => {
     const reportResponse = await API.post<{ summary_report: Report }>(
-      API_PATH.API_GET_REPORT_BETA,
+      API_PATH.API_GET_REPORT,
       {
         project_id,
         report_id,
