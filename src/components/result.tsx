@@ -502,7 +502,6 @@ export const MultifileResult: React.FC<{
       const { data } = await API.post("/api-update-bug-status/", {
         bug_ids: selectedBugs,
         scan_id: scanId,
-        project_id: projectId,
         bug_status: action,
         comment: comment,
       });
@@ -1236,7 +1235,13 @@ export const MultiFileExplorer: React.FC<MultiFileExplorerProps> = ({
                         }}
                         bgColor="white"
                         aria-label="Handle Size"
-                        icon={fullScreen ? <FaCompressAlt /> : <FaExpandAlt />}
+                        icon={
+                          fullScreen ? (
+                            <FaCompressAlt color="#8A94A6" />
+                          ) : (
+                            <FaExpandAlt color="#8A94A6" />
+                          )
+                        }
                       />
                     </Tooltip>
                     <Tooltip label="Close Box" fontSize="md">
@@ -1246,7 +1251,7 @@ export const MultiFileExplorer: React.FC<MultiFileExplorerProps> = ({
                         onClick={() => setOpenIssueBox(false)}
                         bgColor="white"
                         aria-label="Close Box"
-                        icon={<CloseIcon />}
+                        icon={<CloseIcon color="#8A94A6" />}
                       />
                     </Tooltip>
                   </HStack>
@@ -1322,7 +1327,6 @@ const IssueDetail: React.FC<{
       const { data } = await API.post("/api-update-bug-status/", {
         bug_ids: [files?.bug_hash],
         scan_id: scanId,
-        project_id: projectId,
         bug_status: files?.bug_status,
         comment: comment,
       });

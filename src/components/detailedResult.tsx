@@ -117,6 +117,7 @@ export const DetailedResult: React.FC<{
           width={"100%"}
           direction={["column", "column", "column", "row"]}
           mt={[4, 4, 4, 0]}
+          mb={[0, 0, 0, 2]}
         >
           <HStack>
             <Text fontWeight={600} mr={5}>
