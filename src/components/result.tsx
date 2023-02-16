@@ -542,6 +542,30 @@ export const MultifileResult: React.FC<{
   };
 
   useEffect(() => {
+    if (files) {
+      setIssues((prevState) => {
+        const newState = prevState.map((obj) => {
+          if (obj.issue_id === files.issue_id) {
+            const newList = obj.metric_wise_aggregated_findings.map((item) => {
+              if (
+                files.bug_id === item.bug_id &&
+                files.bug_status === "wont_fix"
+              ) {
+                return { ...item, comment: files.comment };
+              }
+              return item;
+            });
+            return { ...obj, metric_wise_aggregated_findings: newList };
+          }
+          // 👇️ otherwise return object as is
+          return obj;
+        });
+        return newState;
+      });
+    }
+  }, [files]);
+
+  useEffect(() => {
     if (!selectedBugs) setIssues(issues);
   }, [selectedBugs]);
 
@@ -703,203 +727,6 @@ const MultifileIssues: React.FC<MultifileIssuesProps> = ({
           }
         )}
     </Accordion>
-  );
-};
-
-export const IssueBox: React.FC<{
-  type: "block" | "project";
-  bug_id: string;
-  files: FilesState | null;
-  issue_id: string;
-  is_latest_scan: boolean;
-  metric_wise_aggregated_finding: MetricWiseAggregatedFinding;
-  template_details: MultiFileTemplateDetail;
-  isSelected: boolean;
-  selectedBugs: string[];
-  updateBugHashList: any;
-  setFiles: Dispatch<SetStateAction<FilesState | null>>;
-  updateBugStatus: any;
-}> = ({
-  type,
-  bug_id,
-  files,
-  issue_id,
-  is_latest_scan,
-  metric_wise_aggregated_finding,
-  template_details,
-  isSelected,
-  selectedBugs,
-  updateBugHashList,
-  setFiles,
-  updateBugStatus,
-}) => {
-  const [isDesktopView] = useMediaQuery("(min-width: 1024px)");
-
-  const [isHovered, setIsHovered] = useState(false);
-  const [isChecked, setIsChecked] = useState(isSelected);
-
-  useEffect(() => {
-    updateBugHashList(metric_wise_aggregated_finding.bug_hash, isChecked);
-  }, [isChecked]);
-
-  useEffect(() => {
-    if (selectedBugs && selectedBugs.length === 0) {
-      setIsChecked(isSelected);
-    }
-  }, [selectedBugs]);
-  return (
-    <>
-      {isDesktopView ? (
-        <Box
-          key={bug_id}
-          id={bug_id}
-          opacity={
-            metric_wise_aggregated_finding.bug_status === "pending_fix"
-              ? 1
-              : 0.5
-          }
-          p={[0, 0, 0, 3]}
-          mb={0.5}
-          sx={{
-            cursor: "pointer",
-            bg:
-              bug_id === files?.bug_id &&
-              metric_wise_aggregated_finding.bug_status === "pending_fix"
-                ? "gray.300"
-                : "gray.100",
-            color: "text",
-            fontSize: "sm",
-            transition: "0.2s background",
-            _hover: {
-              bg: bug_id === files?.bug_id ? "gray.300" : "gray.200",
-            },
-          }}
-          onClick={() => {
-            setFiles({
-              bug_id: bug_id,
-              issue_id: issue_id,
-              bug_hash: metric_wise_aggregated_finding.bug_hash,
-              bug_status: metric_wise_aggregated_finding.bug_status,
-              findings: metric_wise_aggregated_finding.findings,
-              description_details:
-                metric_wise_aggregated_finding.description_details,
-              template_details: template_details,
-              comment: metric_wise_aggregated_finding.comment,
-            });
-          }}
-          onMouseEnter={() => setIsHovered(true)}
-          onMouseLeave={() => setIsHovered(false)}
-        >
-          <HStack justify={"space-between"} ml={2}>
-            <HStack w="50%">
-              {(isHovered || isChecked) && (
-                <Checkbox
-                  name={bug_id}
-                  colorScheme={"purple"}
-                  borderColor={"gray.500"}
-                  checked={isChecked}
-                  isChecked={isChecked}
-                  onChange={() => setIsChecked(!isChecked)}
-                ></Checkbox>
-              )}
-              <Text isTruncated color={"gray.700"}>
-                {bug_id}
-              </Text>
-            </HStack>
-            <HStack>
-              {metric_wise_aggregated_finding.findings.length > 1 && (
-                <HStack
-                  mr={
-                    metric_wise_aggregated_finding.bug_status == "pending_fix"
-                      ? 8
-                      : 0
-                  }
-                  py={1}
-                  px={3}
-                  borderRadius={20}
-                  backgroundColor={"white"}
-                >
-                  <MultifileIcon size={20} /> <Text>MULTIFILE</Text>
-                </HStack>
-              )}
-
-              {metric_wise_aggregated_finding.bug_status !== "pending_fix" && (
-                <Image
-                  src={`/icons/${metric_wise_aggregated_finding.bug_status}.svg`}
-                />
-              )}
-            </HStack>
-          </HStack>
-        </Box>
-      ) : (
-        <AccordionItem>
-          {({ isExpanded }) => (
-            <>
-              <AccordionButton
-                bg={"#F8FAFC"}
-                p={0}
-                onClick={() => {
-                  setFiles({
-                    bug_id: bug_id,
-                    issue_id: issue_id,
-                    bug_hash: metric_wise_aggregated_finding.bug_hash,
-                    bug_status: metric_wise_aggregated_finding.bug_status,
-                    findings: metric_wise_aggregated_finding.findings,
-                    description_details:
-                      metric_wise_aggregated_finding.description_details,
-                    template_details: template_details,
-                    comment: metric_wise_aggregated_finding.comment,
-                  });
-                }}
-              >
-                <HStack justify={"space-between"} p={4} w="100%">
-                  <Text isTruncated color={"gray.700"}>
-                    {bug_id}
-                  </Text>
-                  <HStack>
-                    {metric_wise_aggregated_finding.findings.length > 1 && (
-                      <HStack
-                        mr={
-                          metric_wise_aggregated_finding.bug_status ==
-                          "pending_fix"
-                            ? 8
-                            : 0
-                        }
-                        py={1}
-                        px={3}
-                        borderRadius={20}
-                        backgroundColor={"white"}
-                      >
-                        <MultifileIcon size={20} /> <Text>MULTIFILE</Text>
-                      </HStack>
-                    )}
-
-                    {metric_wise_aggregated_finding.bug_status !==
-                      "pending_fix" && (
-                      <Image
-                        src={`/icons/${metric_wise_aggregated_finding.bug_status}.svg`}
-                      />
-                    )}
-                  </HStack>
-                </HStack>
-              </AccordionButton>
-              <AccordionPanel p={0}>
-                {isExpanded && (
-                  <DetailedResult
-                    type={type}
-                    is_latest_scan={is_latest_scan}
-                    files={files}
-                    details_enabled={true}
-                    selectedBugs={selectedBugs}
-                    updateBugStatus={updateBugStatus}
-                  />
-                )}
-              </AccordionPanel>
-            </>
-          )}
-        </AccordionItem>
-      )}
-    </>
   );
 };
 
