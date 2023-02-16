@@ -188,7 +188,7 @@ const ScanDetails: React.FC<{ scansRemaining: number; scans: ScanMeta[] }> = ({
   const { projectId, scanId } =
     useParams<{ projectId: string; scanId: string }>();
   const history = useHistory();
-  const { data: plans } = usePricingPlans()
+  const { data: plans } = usePricingPlans();
   const { data: scanData, isLoading, refetch } = useScan(scanId);
   const { data: reportList, refetch: refetchReprtList } = useReports(
     "project",
@@ -238,10 +238,13 @@ const ScanDetails: React.FC<{ scansRemaining: number; scans: ScanMeta[] }> = ({
 
   const rescan = async () => {
     setRescanLoading(true);
-    const { data } = await API.post<{ scan_id: string }>(API_PATH.API_PROJECT_SCAN, {
-      project_id: projectId,
-      project_type: "existing",
-    });
+    const { data } = await API.post<{ scan_id: string }>(
+      API_PATH.API_PROJECT_SCAN,
+      {
+        project_id: projectId,
+        project_type: "existing",
+      }
+    );
     setRescanLoading(false);
     queryClient.invalidateQueries(["scans", projectId]);
     onClose();
@@ -329,7 +332,7 @@ const ScanDetails: React.FC<{ scansRemaining: number; scans: ScanMeta[] }> = ({
   const reportId = scanData?.scan_report.latest_report_id;
 
   const publishReport = async () => {
-    const { data } = await API.post(API_PATH.API_GET_PUBLISHED_REPORT, {
+    const { data } = await API.post(API_PATH.API_PUBLISH_REPORT, {
       project_type: "project",
       project_id: projectId,
       report_id: reportId,
@@ -414,7 +417,7 @@ const ScanDetails: React.FC<{ scansRemaining: number; scans: ScanMeta[] }> = ({
                         _hover={{
                           opacity:
                             scansRemaining === 0 ||
-                              scanData.scan_report.scan_status === "scanning"
+                            scanData.scan_report.scan_status === "scanning"
                               ? 0.4
                               : 0.9,
                         }}
@@ -455,8 +458,8 @@ const ScanDetails: React.FC<{ scansRemaining: number; scans: ScanMeta[] }> = ({
                           profile.actions_supported
                             ? !profile.actions_supported.publishable_report
                             : profile.current_package !== "expired" &&
-                            !plans.monthly[profile.current_package]
-                              .publishable_report
+                              !plans.monthly[profile.current_package]
+                                .publishable_report
                         }
                         onClick={() => {
                           if (commitHash == "") {
@@ -471,10 +474,10 @@ const ScanDetails: React.FC<{ scansRemaining: number; scans: ScanMeta[] }> = ({
                         {profile.actions_supported
                           ? !profile.actions_supported.publishable_report
                           : profile.current_package !== "expired" &&
-                          !plans.monthly[profile.current_package]
-                            .publishable_report && (
-                            <LockIcon color={"accent"} size="xs" mr={3} />
-                          )}
+                            !plans.monthly[profile.current_package]
+                              .publishable_report && (
+                              <LockIcon color={"accent"} size="xs" mr={3} />
+                            )}
                         Publish Report
                       </Button>
                     ) : (
@@ -506,7 +509,7 @@ const ScanDetails: React.FC<{ scansRemaining: number; scans: ScanMeta[] }> = ({
                         (profile.actions_supported
                           ? !profile.actions_supported.generate_report
                           : profile.current_package !== "expired" &&
-                          !plans.monthly[profile.current_package].report)
+                            !plans.monthly[profile.current_package].report)
                       }
                       onClick={() => {
                         if (
@@ -535,24 +538,24 @@ const ScanDetails: React.FC<{ scansRemaining: number; scans: ScanMeta[] }> = ({
                       {profile.actions_supported
                         ? !profile.actions_supported.generate_report
                         : profile.current_package !== "expired" &&
-                        !plans.monthly[profile.current_package].report && (
-                          <LockIcon color={"accent"} size="xs" mr={3} />
-                        )}
+                          !plans.monthly[profile.current_package].report && (
+                            <LockIcon color={"accent"} size="xs" mr={3} />
+                          )}
                       {reportingStatus === "generating_report"
                         ? "Generating report..."
                         : scanData.scan_report.report_regeneration_enabled
-                          ? "Re-generate Report"
-                          : reportingStatus === "report_generated"
-                            ? "View Report"
-                            : reportingStatus === "not_generated"
-                              ? "Generate Report"
-                              : "Loading"}
+                        ? "Re-generate Report"
+                        : reportingStatus === "report_generated"
+                        ? "View Report"
+                        : reportingStatus === "not_generated"
+                        ? "Generate Report"
+                        : "Loading"}
                     </Button>
                   )}
                 </Flex>
               </Flex>
               {scanData.scan_report.scan_status === "scanning" ||
-                scanData.scan_report.scan_status === "initialised" ? (
+              scanData.scan_report.scan_status === "initialised" ? (
                 <Flex
                   w="100%"
                   h="60vh"
@@ -635,18 +638,18 @@ const ScanDetails: React.FC<{ scansRemaining: number; scans: ScanMeta[] }> = ({
                     <TabPanel p={[0, 0, 0, 4]}>
                       {(scanData.scan_report.multi_file_scan_summary ||
                         scanData.scan_report.scan_summary) && (
-                          <Overview
-                            scansRemaining={scansRemaining}
-                            scanData={scanData.scan_report}
-                            onTabChange={handleTabsChange}
-                          />
-                        )}
+                        <Overview
+                          scansRemaining={scansRemaining}
+                          scanData={scanData.scan_report}
+                          onTabChange={handleTabsChange}
+                        />
+                      )}
                     </TabPanel>
                     <TabPanel p={[0, 0, 0, 4]}>
                       {scanData.scan_report.multi_file_scan_status ===
                         "scan_done" &&
-                        scanData.scan_report.multi_file_scan_details &&
-                        scanData.scan_report.multi_file_scan_summary ? (
+                      scanData.scan_report.multi_file_scan_details &&
+                      scanData.scan_report.multi_file_scan_summary ? (
                         <MultifileResult
                           type="project"
                           details_enabled={scanData.scan_report.details_enabled}
@@ -1385,8 +1388,8 @@ const ScanBlock: React.FC<{
             {scan.reporting_status === "report_generated"
               ? "View Report"
               : scan.reporting_status === "generating_report"
-                ? "Generating Report"
-                : "Report Not Generated"}
+              ? "Generating Report"
+              : "Report Not Generated"}
           </Button>
         </Flex>
       </Flex>
