@@ -172,15 +172,7 @@ export const IssueContainer: React.FC<{
                         bug_id={item.bug_id}
                         files={files}
                         issue_id={issue_id}
-                        metric_wise_aggregated_finding={{
-                          description_details: item.description_details,
-                          findings: item.findings,
-                          bug_id: item.bug_id,
-                          bug_hash: item.bug_hash,
-                          bug_status: item.bug_status,
-                          issue_id: issue_id,
-                          template_details: template_details,
-                        }}
+                        metric_wise_aggregated_finding={item}
                         template_details={template_details}
                         is_latest_scan={is_latest_scan}
                         isSelected={isChecked}

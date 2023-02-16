@@ -30,18 +30,17 @@ export const DetailedResult: React.FC<{
   type: "block" | "project";
   is_latest_scan: boolean;
   files: FilesState | null;
-  confidence?: boolean[];
-  setConfidence?: Dispatch<SetStateAction<boolean[]>>;
-  details_enabled: boolean;
-  updateBugStatus: any;
+   details_enabled: boolean;
+  updateBugStatus: (action: string, comment?: string) => Promise<void>;
+  setFiles: Dispatch<SetStateAction<FilesState | null>>;
 }> = ({
   type,
   is_latest_scan,
   files,
-  confidence,
-  setConfidence,
+  
   details_enabled,
   updateBugStatus,
+  setFiles,
 }) => {
   const [isDesktopView] = useMediaQuery("(min-width: 1024px)");
   const { isOpen, onClose, onOpen } = useDisclosure();
@@ -138,28 +137,31 @@ export const DetailedResult: React.FC<{
             <Tooltip label="View Issue Description" fontSize="md">
               <IconButton
                 fontSize={"lg"}
-                p={0}
                 aria-label="Issue Description"
                 onClick={() => handleTabsChange(0)}
-                icon={<HiOutlineDocumentText />}
+                icon={
+                  <HiOutlineDocumentText
+                    color={tabIndex === 0 ? "#3300FF" : "#8A94A6"}
+                  />
+                }
               />
             </Tooltip>
             <Tooltip label="View Issue Remediation" fontSize="md">
               <IconButton
                 fontSize={"lg"}
-                p={0}
                 onClick={() => handleTabsChange(1)}
                 aria-label="Search database"
-                icon={<BiBulb />}
+                icon={<BiBulb color={tabIndex === 1 ? "#3300FF" : "#8A94A6"} />}
               />
             </Tooltip>
             <Tooltip label="View Issue Comments" fontSize="md">
               <IconButton
                 fontSize={"lg"}
-                p={0}
                 onClick={() => handleTabsChange(2)}
                 aria-label="Search database"
-                icon={<BiComment />}
+                icon={
+                  <BiComment color={tabIndex === 2 ? "#3300FF" : "#8A94A6"} />
+                }
               />
             </Tooltip>
           </HStack>
@@ -199,16 +201,19 @@ export const DetailedResult: React.FC<{
             setOpenIssueBox={setOpenIssueBox}
             files={files}
             type={type}
+            setFiles={setFiles}
           />
         ) : (
           <Flex
             sx={{
               w: "100%",
               bg: "bg.subtle",
+              justifyContent: "center",
               flexDir: "column",
               alignItems: "center",
+              h: "60vh",
+              borderRadius: 15,
             }}
-            py={36}
           >
             <Icon as={BiCodeCurly} fontSize="40px" color="subtle" mb={4} />
             <Text color="subtle">

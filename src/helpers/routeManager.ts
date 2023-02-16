@@ -39,6 +39,7 @@ export const API_PATH = {
   API_GET_REPORTS: "/api-get-reports/",
   API_GET_REPORT_BETA: "/api-get-report-beta/",
   API_GET_PUBLISHED_REPORT: "/api-get-published-report/",
+  API_PUBLISH_REPORT: "/api-publish-report",
 
   //INTEGRATIONS
   API_AUTHENTICATE_INTEGRATIONS: "/api-authenticate-",
@@ -52,5 +53,5 @@ export const API_PATH = {
   API_INVALIDATE_ORDER_BETA: "/api-invalidate-order-beta/",
   API_CREATE_ORDER_CP: "api-create-order-cp/",
   API_GET_TRANSACTION: "/api-get-transactions-beta/",
-  API_GET_INVOICES: "/api-get-invoices-beta/"
+  API_GET_INVOICES: "/api-get-invoices-beta/",
 };
