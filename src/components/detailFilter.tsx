@@ -124,14 +124,19 @@ export const DetailFilter: React.FC<{
                 </HStack>
               </AccordionButton>
             </Flex>
-            <AccordionPanel background={"#FAFBFC"} borderBottomRadius={15}>
+            <AccordionPanel
+              background={"#FAFBFC"}
+              borderBottomRadius={15}
+              pb={2}
+            >
               <Flex w="100%" justifyContent="space-around">
                 <Box
                   width="100%"
                   background={"white"}
                   borderRadius={15}
-                  p={4}
-                  my={1}
+                  px={4}
+                  py={3}
+                  mt={1}
                 >
                   <Text color={"#4E5D78"} fontWeight={400} fontSize="sm">
                     By Vulnerability Parameter
@@ -155,17 +160,20 @@ export const DetailFilter: React.FC<{
                 alignItems={"flex-start"}
                 background={"white"}
                 borderRadius={15}
-                p={4}
+                px={4}
+                py={3}
                 mt={2}
               >
                 <Text color={"#4E5D78"} fontWeight={400} fontSize="sm">
                   By Confidence Parameter
                 </Text>
-                <HStack pt={2}>
+                <HStack>
                   <Button
+                    height="fit-content"
                     variant={"solid"}
                     color={"low"}
                     background={"#EEFFE6"}
+                    py={2}
                     fontWeight="500"
                     fontSize={"sm"}
                     borderRadius={"27px"}
@@ -180,10 +188,11 @@ export const DetailFilter: React.FC<{
                     {confidenceParam[2] && <FiCheck />}&nbsp;Certain
                   </Button>
                   <Button
+                    height="fit-content"
                     variant={"solid"}
                     color={"#ED9801"}
                     background={"#FFF8EB"}
-                    px={4}
+                    py={2}
                     fontWeight="500"
                     borderRadius={"27px"}
                     onClick={() =>
@@ -197,10 +206,11 @@ export const DetailFilter: React.FC<{
                     {confidenceParam[1] && <FiCheck />}&nbsp;Firm
                   </Button>
                   <Button
+                    height="fit-content"
                     variant={"solid"}
                     color={"high"}
                     background={"#FFF5F3"}
-                    px={4}
+                    py={2}
                     fontWeight="500"
                     fontSize={"sm"}
                     borderRadius={"27px"}
@@ -216,7 +226,7 @@ export const DetailFilter: React.FC<{
                   </Button>
                 </HStack>
               </VStack>
-              <Flex mt={3} justifyContent="center">
+              <Flex mt={1.5} justifyContent="center">
                 <Link
                   alignItems={"center"}
                   textAlign="center"

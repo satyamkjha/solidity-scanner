@@ -976,7 +976,7 @@ export const MultiFileExplorer: React.FC<MultiFileExplorerProps> = ({
       <Box
         sx={{
           borderRadius: 15,
-          bg: "bg.subtle",
+          bg: "rgba(243, 243, 243, 0.75)",
           position: "relative",
           h: "57vh",
         }}
@@ -998,88 +998,76 @@ export const MultiFileExplorer: React.FC<MultiFileExplorerProps> = ({
           </Flex>
         ) : (
           <>
-            <Flex
-              sx={{
-                w: "100%",
-                justifyContent: "flex-start",
-                alignItems: "center",
-                h: "100%",
-                position: "absolute",
-                top: "0px",
-                left: "0px",
-              }}
+            <Tabs
+              defaultIndex={0}
+              width={"calc(100%)"}
+              variant="soft-rounded"
+              colorScheme="messenger"
             >
-              <Tabs
-                defaultIndex={0}
-                width={"calc(100%)"}
-                variant="soft-rounded"
-                colorScheme="messenger"
+              <Flex
+                width={"100%"}
+                overflowX="auto"
+                flexDir={"row"}
+                justifyContent="flex-start"
+                align={"center"}
+                background={"#FAFBFC"}
+                borderRadius={10}
+                p={0}
               >
-                <Flex
-                  width={"100%"}
-                  overflowX="scroll"
-                  flexDir={"row"}
-                  justifyContent="flex-start"
-                  align={"center"}
-                  background={"#FAFBFC"}
-                  borderRadius={10}
-                  p={0}
+                <TabList
+                  px={0}
+                  my={0}
+                  w="100%"
+                  h="100%"
+                  borderColor={"#C4C4C4"}
+                  borderBottomWidth={"1px"}
                 >
-                  <TabList
-                    px={0}
-                    my={0}
-                    width={"fit-content"}
-                    w="100%"
-                    borderColor={"#C4C4C4"}
-                    borderBottomWidth={"1px"}
-                  >
-                    {files.findings.map((file, index) => (
-                      <Tab
-                        key={index}
-                        onClick={() => setCurrentFileName(file.file_path)}
-                        background={"gray.100"}
-                        borderRadius="0px"
-                        borderRightWidth={"1px"}
-                        borderColor={"#C4C4C4"}
-                        _selected={{
-                          background: "white",
-                          borderBottomColor: "#3300FF",
-                          borderBottomWidth: "2px",
-                        }}
-                      >
-                        <Tooltip label={file.file_path} aria-label="A tooltip">
-                          <Text fontSize={"xs"} width={100} isTruncated>
-                            {file.file_path.length < 16
-                              ? file.file_path
-                              : file.file_path.slice(0, 6) +
-                                "..." +
-                                file.file_path.slice(
-                                  file.file_path.length - 10,
-                                  file.file_path.length
-                                )}
-                          </Text>
-                        </Tooltip>
-                      </Tab>
-                    ))}
-                  </TabList>
-                </Flex>
-                <TabPanels>
                   {files.findings.map((file, index) => (
-                    <TabPanel key={index} px={2} pt={2} pb={0}>
-                      <FileDataContTest
-                        type={type}
-                        file={{
-                          issue_id: files.issue_id,
-                          file_path: file.file_path,
-                          line_nos_start: file.line_nos_start,
-                          line_nos_end: file.line_nos_end,
-                        }}
-                      />
-                    </TabPanel>
+                    <Tab
+                      key={index}
+                      onClick={() => setCurrentFileName(file.file_path)}
+                      background={"gray.100"}
+                      borderRadius="0px"
+                      borderRightWidth={"1px"}
+                      borderColor={"#C4C4C4"}
+                      _selected={{
+                        background: "white",
+                        borderBottomColor: "#3300FF",
+                        borderBottomWidth: "2px",
+                      }}
+                    >
+                      <Tooltip label={file.file_path} aria-label="A tooltip">
+                        <Text fontSize={"xs"} width={100} isTruncated>
+                          {file.file_path.length < 16
+                            ? file.file_path
+                            : file.file_path.slice(0, 6) +
+                              "..." +
+                              file.file_path.slice(
+                                file.file_path.length - 10,
+                                file.file_path.length
+                              )}
+                        </Text>
+                      </Tooltip>
+                    </Tab>
                   ))}
-                </TabPanels>
-              </Tabs>
-            </Flex>
+                </TabList>
+              </Flex>
+              <TabPanels>
+                {files.findings.map((file, index) => (
+                  <TabPanel key={index} px={2} pt={2} pb={0}>
+                    <FileDataContTest
+                      type={type}
+                      file={{
+                        issue_id: files.issue_id,
+                        file_path: file.file_path,
+                        line_nos_start: file.line_nos_start,
+                        line_nos_end: file.line_nos_end,
+                      }}
+                    />
+                  </TabPanel>
+                ))}
+              </TabPanels>
+            </Tabs>
             {openIssueBox && (
               <Box
                 sx={{

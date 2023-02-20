@@ -1,3 +1,4 @@
+import { CheckIcon, MinusIcon } from "@chakra-ui/icons";
 import {
   Accordion,
   AccordionButton,
@@ -51,15 +52,19 @@ export const IssueContainer: React.FC<{
 }) => {
   const [isHovered, setIsHovered] = useState(false);
   const [isChecked, setIsChecked] = useState(false);
+  const [checkedChildren, setCheckedChildren] = useState<
+    (string | undefined)[]
+  >([]);
 
   useEffect(() => {
-    let bugHashList = metric_wise_aggregated_findings.map(
-      (item) => item.bug_hash
-    );
+    let bugHashList = metric_wise_aggregated_findings.map((item) => {
+      if (item.bug_status !== "fixed") return item.bug_hash;
+    });
     if (isChecked) {
       const updatedSet = new Set([...selectedBugs, ...bugHashList]);
+      setCheckedChildren([...bugHashList]);
       setSelectedBugs(Array.from(updatedSet));
-    } else {
+    } else if (checkedChildren.length === 0) {
       const filterdList = selectedBugs.filter(
         (item) => !bugHashList.includes(item)
       );
@@ -70,15 +75,31 @@ export const IssueContainer: React.FC<{
   useEffect(() => {
     if (selectedBugs && selectedBugs.length === 0) {
       setIsChecked(false);
+      setCheckedChildren([]);
     }
   }, [selectedBugs]);
 
+  useEffect(() => {
+    console.log(checkedChildren);
+    if (checkedChildren.length === metric_wise_aggregated_findings.length) {
+      setIsChecked(true);
+    }
+  }, [checkedChildren]);
+
+  const onIssueCheck = () => {
+    setCheckedChildren([]);
+    setIsChecked(!isChecked);
+  };
+
   const updateBugHashList = (hash: string, isBugChecked: boolean) => {
     if (isBugChecked) {
+      setCheckedChildren([...checkedChildren, hash]);
       if (!selectedBugs.includes(hash)) {
         setSelectedBugs([...selectedBugs, hash]);
       }
     } else {
+      setCheckedChildren(checkedChildren.slice(0, checkedChildren.length - 1));
+      setIsChecked(false);
       setSelectedBugs(selectedBugs.filter((item) => item !== hash));
     }
   };
@@ -106,14 +127,22 @@ export const IssueContainer: React.FC<{
               }}
             >
               <HStack w="90%">
-                {isHovered || isChecked ? (
+                {isHovered || isChecked || checkedChildren.length > 0 ? (
                   <Checkbox
                     name={issue_id}
                     colorScheme={"purple"}
                     borderColor={"gray.500"}
-                    checked={isChecked}
-                    isChecked={isChecked}
-                    onChange={() => setIsChecked(!isChecked)}
+                    icon={
+                      isChecked ? (
+                        <CheckIcon />
+                      ) : checkedChildren.length > 0 ? (
+                        <MinusIcon />
+                      ) : (
+                        <></>
+                      )
+                    }
+                    isChecked={checkedChildren.length > 0 ? true : isChecked}
+                    onChange={() => onIssueCheck()}
                   ></Checkbox>
                 ) : (
                   <></>
@@ -279,7 +308,6 @@ const IssueBox: React.FC<{
                     name={bug_id}
                     colorScheme={"purple"}
                     borderColor={"gray.500"}
-                    checked={isChecked}
                     isChecked={isChecked}
                     onChange={() => setIsChecked(!isChecked)}
                   ></Checkbox>

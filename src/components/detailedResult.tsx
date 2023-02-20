@@ -87,7 +87,7 @@ export const DetailedResult: React.FC<{
       display: "flex",
       flexDirection: "row",
       backgroundColor: "#FAFBFC",
-      padding: 5,
+      padding: 4,
       borderRadius: 20,
     }),
     singleValue: (provided: any, state: any) => {
@@ -116,7 +116,7 @@ export const DetailedResult: React.FC<{
           alignItems={"center"}
           width={"100%"}
           direction={["column", "column", "column", "row"]}
-          mt={[4, 4, 4, 0]}
+          mt={[4, 4, 4, 2]}
           mb={[0, 0, 0, 2]}
         >
           <HStack>

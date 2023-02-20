@@ -128,9 +128,9 @@ export const VulnerabilityDistributionFilter: React.FC<{
     <Flex
       sx={{
         alignItems: "center",
-        mt: 4,
+        mt: 2.5,
         flexWrap: "wrap",
-        gap: 2,
+        gap: 5,
       }}
     >
       <Button
