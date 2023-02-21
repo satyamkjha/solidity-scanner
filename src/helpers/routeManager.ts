@@ -38,9 +38,9 @@ export const API_PATH = {
   //REPORT
   API_GENERATE_REPORT: "/api-generate-report/",
   API_GET_REPORTS: "/api-get-reports/",
-  API_GET_REPORT_BETA: "/api-get-report-beta/",
+  API_GET_REPORT: "/api-get-report/",
   API_GET_PUBLISHED_REPORT: "/api-get-published-report/",
-  API_PUBLISH_REPORT: "/api-publish-report",
+  API_PUBLISH_REPORT: "/api-publish-report/",
 
   //INTEGRATIONS
   API_AUTHENTICATE_INTEGRATIONS: "/api-authenticate-",

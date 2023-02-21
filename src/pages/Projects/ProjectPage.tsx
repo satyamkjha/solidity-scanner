@@ -279,10 +279,11 @@ const ScanDetails: React.FC<{ scansRemaining: number; scans: ScanMeta[] }> = ({
 
   const getReportData = async (project_id: string, report_id: string) => {
     const reportResponse = await API.post<{ summary_report: Report }>(
-      API_PATH.API_GET_REPORTS,
+      API_PATH.API_GET_REPORT,
       {
         project_id,
         report_id,
+        project_type: "project",
       }
     );
     setCommitHash(reportResponse.data.summary_report.git_commit_hash);

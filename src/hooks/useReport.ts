@@ -6,7 +6,7 @@ import { API_PATH } from "helpers/routeManager";
 
 const getReport = async (project_id: string, report_id: string) => {
   const { data } = await API.post<{ summary_report: Report }>(
-    API_PATH.API_GET_REPORT_BETA,
+    API_PATH.API_GET_REPORT,
     {
       project_id,
       report_id,
