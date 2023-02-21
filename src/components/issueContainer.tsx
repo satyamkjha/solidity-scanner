@@ -57,9 +57,10 @@ export const IssueContainer: React.FC<{
   >([]);
 
   useEffect(() => {
-    let bugHashList = metric_wise_aggregated_findings.map((item) => {
-      if (item.bug_status !== "fixed") return item.bug_hash;
+    let pendingFixes = metric_wise_aggregated_findings.filter((item) => {
+      if (item.bug_status !== "fixed") return item;
     });
+    let bugHashList = pendingFixes.map((item) => item.bug_hash);
     if (isChecked) {
       const updatedSet = new Set([...selectedBugs, ...bugHashList]);
       setCheckedChildren([...bugHashList]);
@@ -80,7 +81,6 @@ export const IssueContainer: React.FC<{
   }, [selectedBugs]);
 
   useEffect(() => {
-    console.log(checkedChildren);
     if (checkedChildren.length === metric_wise_aggregated_findings.length) {
       setIsChecked(true);
     }
