@@ -524,13 +524,13 @@ const BlockPage: React.FC = () => {
                                   )}
                               {reportingStatus === "generating_report"
                                 ? "Generating report..."
+                                : reportingStatus === "not_generated"
+                                ? "Generate Report"
                                 : scanData.scan_report
                                     .report_regeneration_enabled
                                 ? "Re-generate Report"
                                 : reportingStatus === "report_generated"
                                 ? "View Report"
-                                : reportingStatus === "not_generated"
-                                ? "Generate Report"
                                 : "Loading"}
                             </Button>
                           )}
