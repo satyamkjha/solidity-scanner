@@ -504,6 +504,7 @@ export const MultifileResult: React.FC<{
       const { data } = await API.post(API_PATH.API_UPDATE_BUG_STATUS, {
         bug_ids: selectedBugs,
         scan_id: scanId,
+        project_id: projectId,
         bug_status: action,
         comment: comment,
         scan_type: type,
@@ -1320,6 +1321,7 @@ const IssueDetail: React.FC<{
       const { data } = await API.post(API_PATH.API_UPDATE_BUG_STATUS, {
         bug_ids: [files?.bug_hash],
         scan_id: scanId,
+        project_id: projectId,
         bug_status: files?.bug_status,
         comment: comment,
         scan_type: type,
