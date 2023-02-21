@@ -422,6 +422,7 @@ const FileDetails: React.FC<FileDetailsProps> = ({
       >
         <Box fontSize="sm" mb={2}>
           <IssueDetail
+            type={type}
             current_file_name=""
             issue_id={issue_id}
             context="single_file"
@@ -505,6 +506,7 @@ export const MultifileResult: React.FC<{
         scan_id: scanId,
         bug_status: action,
         comment: comment,
+        scan_type: type,
       });
       if (data.status === "success") {
         toast({
@@ -578,6 +580,7 @@ export const MultifileResult: React.FC<{
       >
         <VStack
           w={["100%", "100%", "100%", "40%"]}
+          h={["100%", "100%", "100%", "62vh"]}
           spacing={4}
           mb={[8, 8, 0]}
           alignItems="flex-start"
@@ -594,7 +597,7 @@ export const MultifileResult: React.FC<{
             confidence={confidence}
             setConfidence={setConfidence}
           />
-          <Box w="100%" h={["100%", "100%", "100%", "47vh"]} overflowY="scroll">
+          <Box w="100%" h={["100%", "100%", "100%", "auto"]} overflowY="scroll">
             <MultifileIssues
               type={type}
               profileData={profileData}
@@ -1248,6 +1251,7 @@ export const MultiFileExplorer: React.FC<MultiFileExplorerProps> = ({
                 <Divider mb={2} />
                 <Box fontSize="sm" w="100%" mb={2}>
                   <IssueDetail
+                    type={type}
                     handleTabsChange={handleTabsChange}
                     tabIndex={tabIndex}
                     fullScreen={fullScreen}
@@ -1269,6 +1273,7 @@ export const MultiFileExplorer: React.FC<MultiFileExplorerProps> = ({
 };
 
 const IssueDetail: React.FC<{
+  type: "project" | "block";
   current_file_name: string;
   files: FilesState;
   issue_id: string;
@@ -1279,6 +1284,7 @@ const IssueDetail: React.FC<{
   tabIndex?: number;
   setFiles: Dispatch<SetStateAction<FilesState | null>>;
 }> = ({
+  type,
   issue_id,
   context,
   description_details,
@@ -1307,8 +1313,6 @@ const IssueDetail: React.FC<{
 
   useEffect(() => {
     setEditComment(false);
-    console.log(files.comment);
-    console.log(files);
   }, [files]);
 
   const updateComment = async () => {
@@ -1318,6 +1322,7 @@ const IssueDetail: React.FC<{
         scan_id: scanId,
         bug_status: files?.bug_status,
         comment: comment,
+        scan_type: type,
       });
       if (data.status === "success") {
         toast({
@@ -1462,8 +1467,9 @@ const IssueDetail: React.FC<{
                 w="100%"
                 bgColor={"#F6F6F6"}
                 borderRadius={"16px"}
-                height={"130px"}
+                height={"110px"}
                 alignItems="flex-end"
+                spacing={-4}
               >
                 <Textarea
                   placeholder="Add Comments"
@@ -1485,21 +1491,22 @@ const IssueDetail: React.FC<{
                     boxShadow: "0px 12px 23px rgba(107, 255, 55, 0.0)",
                   }}
                 />
-                <IconButton
-                  fontSize={"lg"}
-                  p={0}
-                  mt={0}
-                  borderRadius="50%"
-                  onClick={() => {
-                    if (comment !== "" && comment) {
-                      updateComment();
-                    }
-                  }}
-                  bgColor={comment !== "" && comment ? "#3300FF" : "#B8B8B8"}
-                  aria-label="Edit Comment"
-                  color={comment !== "" && comment ? "#FFFFFF" : "#000000"}
-                  icon={<ArrowUpIcon />}
-                />
+                <Flex px={1}>
+                  <IconButton
+                    fontSize={"lg"}
+                    p={0}
+                    borderRadius="50%"
+                    onClick={() => {
+                      if (comment !== "" && comment) {
+                        updateComment();
+                      }
+                    }}
+                    bgColor={comment !== "" && comment ? "#3300FF" : "#B8B8B8"}
+                    aria-label="Edit Comment"
+                    color={comment !== "" && comment ? "#FFFFFF" : "#000000"}
+                    icon={<ArrowUpIcon />}
+                  />
+                </Flex>
               </VStack>
             ) : (
               files.comment && (
