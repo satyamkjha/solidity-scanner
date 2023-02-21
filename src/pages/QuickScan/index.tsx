@@ -57,6 +57,7 @@ import { blockScans } from "common/values";
 import { useRecentQuickScans } from "hooks/useRecentQuickScans";
 import { FaEllipsisH, FaEllipsisV } from "react-icons/fa";
 import { API_PATH } from "helpers/routeManager";
+import { ThreatScoreMeter } from "components/threatScoreMeter";
 
 const pieData = (
   critical: number,
@@ -66,43 +67,43 @@ const pieData = (
   informational: number,
   gas: number
 ) => [
-    {
-      id: "critical",
-      label: "Critical",
-      value: critical,
-      color: "#FF5C00",
-    },
-    {
-      id: "high",
-      label: "High",
-      value: high,
-      color: "#FF5C00",
-    },
-    {
-      id: "medium",
-      label: "Medium",
-      value: medium,
-      color: "#FFE600",
-    },
-    {
-      id: "low",
-      label: "Low",
-      value: low,
-      color: "#38CB89",
-    },
-    {
-      id: "informational",
-      label: "Informational",
-      value: informational,
-      color: "#A0AEC0",
-    },
-    {
-      id: "gas",
-      label: "Gas",
-      value: gas,
-      color: "#F795B4",
-    },
-  ];
+  {
+    id: "critical",
+    label: "Critical",
+    value: critical,
+    color: "#FF5C00",
+  },
+  {
+    id: "high",
+    label: "High",
+    value: high,
+    color: "#FF5C00",
+  },
+  {
+    id: "medium",
+    label: "Medium",
+    value: medium,
+    color: "#FFE600",
+  },
+  {
+    id: "low",
+    label: "Low",
+    value: low,
+    color: "#38CB89",
+  },
+  {
+    id: "informational",
+    label: "Informational",
+    value: informational,
+    color: "#A0AEC0",
+  },
+  {
+    id: "gas",
+    label: "Gas",
+    value: gas,
+    color: "#F795B4",
+  },
+];
 
 const formatOptionLabel: React.FC<{
   value: string;
@@ -211,8 +212,8 @@ const QuickScan: React.FC = () => {
       backgroundColor: state.isSelected
         ? "#FFFFFF"
         : state.isFocused
-          ? "#E6E6E6"
-          : "#FFFFFF",
+        ? "#E6E6E6"
+        : "#FFFFFF",
       color: "#000000",
     }),
     menu: (provided: any, state: any) => ({
@@ -254,8 +255,8 @@ const QuickScan: React.FC = () => {
       backgroundColor: state.isSelected
         ? "#FFFFFF"
         : state.isFocused
-          ? "#E6E6E6"
-          : "#FFFFFF",
+        ? "#E6E6E6"
+        : "#FFFFFF",
       color: "#000000",
     }),
     menu: (provided: any, state: any) => ({
@@ -330,12 +331,15 @@ const QuickScan: React.FC = () => {
 
     if (blockAddress && blockChain && blockPlatform) {
       setIsLoading(true);
-      runQuickScan(blockAddress, blockPlatform, blockChain)
+      runQuickScan(blockAddress, blockPlatform, blockChain);
     }
   }, []);
 
   useEffect(() => {
-    if (!localStorage.getItem("campaign_id") && !localStorage.getItem("campaign_type")) {
+    if (
+      !localStorage.getItem("campaign_id") &&
+      !localStorage.getItem("campaign_type")
+    ) {
       const query = new URLSearchParams(location.search);
       const campaign_type = query.get("utm_source") || "quickscan";
       const campaign_id = query.get("utm_campaign") || "quickscan";
@@ -344,7 +348,11 @@ const QuickScan: React.FC = () => {
     }
   }, []);
 
-  const runQuickScan = async (address: string, platform: string, chain: string) => {
+  const runQuickScan = async (
+    address: string,
+    platform: string,
+    chain: string
+  ) => {
     API.post<{
       contract_verified: boolean;
       message: string;
@@ -353,30 +361,33 @@ const QuickScan: React.FC = () => {
       contract_address: address,
       contract_platform: platform,
       contract_chain: chain,
-    }).then((res) => {
-      if (res.data.contract_verified) {
-        API.get(
-          `${API_PATH.API_QUICK_SCAN_SSE}?contract_address=${address}&contract_platform=${platform}&contract_chain=${chain}`
-        )
-          .then(
-            (res) => {
-              if (res.status === 200) {
-                setScanReport(res.data.scan_report);
-                d = new Date(res.data.scan_report.published_date);
-              }
-            },
-            (err) => {
-              return;
-            }
+    }).then(
+      (res) => {
+        if (res.data.contract_verified) {
+          API.get(
+            `${API_PATH.API_QUICK_SCAN_SSE}?contract_address=${address}&contract_platform=${platform}&contract_chain=${chain}`
           )
-          .finally(() => {
-            setIsLoading(false);
-          });
+            .then(
+              (res) => {
+                if (res.status === 200) {
+                  setScanReport(res.data.scan_report);
+                  d = new Date(res.data.scan_report.published_date);
+                }
+              },
+              (err) => {
+                return;
+              }
+            )
+            .finally(() => {
+              setIsLoading(false);
+            });
+        }
+      },
+      (err) => {
+        setIsLoading(false);
       }
-    }, (err) => {
-      setIsLoading(false);
-    });
-  }
+    );
+  };
 
   const generateQuickScan = () => {
     if (platform === "") {
@@ -412,7 +423,7 @@ const QuickScan: React.FC = () => {
 
     setIsLoading(true);
     setScanReport(null);
-    runQuickScan(address, platform, chain)
+    runQuickScan(address, platform, chain);
   };
 
   useEffect(() => {
@@ -583,11 +594,11 @@ const QuickScan: React.FC = () => {
                       ? "linear-gradient(96.27deg, #FFF3F0 0.75%, #FFE0D9 96.71%)"
                       : parseFloat(scanReport.multi_file_scan_summary.score) >=
                         4.5
-                        ? "linear-gradient(96.27deg, #EFFFED 0.75%, #E6FFE2 96.71%)"
-                        : "linear-gradient(96.27deg, #FFFAF2 0.75%, #FFF4E1 96.71%)"
+                      ? "linear-gradient(96.27deg, #EFFFED 0.75%, #E6FFE2 96.71%)"
+                      : "linear-gradient(96.27deg, #FFFAF2 0.75%, #FFF4E1 96.71%)"
                   }
                 >
-                  <Text fontSize="md" mb={5}>
+                  <Text fontSize="md" fontWeight={600} mb={5}>
                     Solidity Score
                   </Text>
                   <CircularProgress
@@ -614,8 +625,8 @@ const QuickScan: React.FC = () => {
                       ? " LOW"
                       : parseFloat(scanReport.multi_file_scan_summary.score) >=
                         4.5
-                        ? " GREAT"
-                        : " AVERAGE"}
+                      ? " GREAT"
+                      : " AVERAGE"}
                   </Text>
                 </Box>
                 <Box
@@ -629,7 +640,9 @@ const QuickScan: React.FC = () => {
                   alignItems={["center", "center", "center", "flex-start"]}
                   justifyContent={"flex-start"}
                 >
-                  <Text fontSize="md">VULNERABILITIES DETECTED</Text>
+                  <Text fontSize="md" fontWeight={600}>
+                    VULNERABILITIES DETECTED
+                  </Text>
                   <HStack
                     mt={5}
                     width={["100%"]}
@@ -792,7 +805,9 @@ const QuickScan: React.FC = () => {
                   alignItems={["center", "center", "center", "flex-start"]}
                   justifyContent={"flex-start"}
                 >
-                  <Text fontSize="md">SCAN STATISTICS</Text>
+                  <Text fontSize="md" fontWeight={600}>
+                    SCAN STATISTICS
+                  </Text>
                   <Box
                     w={"100%"}
                     borderRadius={15}
@@ -861,8 +876,9 @@ const QuickScan: React.FC = () => {
                         This contract has been manually verified by
                         SolidityScan's internal security team as per the highest
                         smart contract security standards as of{" "}
-                        {`${d.getDate()} ${monthNames[d.getMonth()]
-                          } ${d.getFullYear()}`}
+                        {`${d.getDate()} ${
+                          monthNames[d.getMonth()]
+                        } ${d.getFullYear()}`}
                         .{" "}
                       </Text>
 
@@ -893,7 +909,9 @@ const QuickScan: React.FC = () => {
                     alignItems={["center", "center", "center", "flex-start"]}
                     justifyContent={"flex-start"}
                   >
-                    <Text fontSize="md">DETAILED RESULT</Text>
+                    <Text fontSize="md" fontWeight={600}>
+                      DETAILED RESULT
+                    </Text>
                     <Box
                       w={"100%"}
                       borderRadius={15}
@@ -913,7 +931,7 @@ const QuickScan: React.FC = () => {
                         h="180px"
                       >
                         {scanReport.multi_file_scan_summary.issues_count ===
-                          0 ? (
+                        0 ? (
                           <Image src="/nobug.svg" alt="No Bugs Found" />
                         ) : (
                           <PieChart
@@ -947,9 +965,7 @@ const QuickScan: React.FC = () => {
                           available in the link below.
                         </Text>
                         <RouterLink to="/signup">
-                          <Button
-                            variant="accent-ghost"
-                          >
+                          <Button variant="accent-ghost">
                             View Detailed Result <ArrowForwardIcon ml={5} />
                           </Button>
                         </RouterLink>
@@ -958,7 +974,6 @@ const QuickScan: React.FC = () => {
                   </Box>
                 )}
               </Stack>
-
               <Box
                 w={"100%"}
                 borderRadius={15}
@@ -970,8 +985,9 @@ const QuickScan: React.FC = () => {
                 alignItems={["center", "center", "center", "flex-start"]}
                 justifyContent={"flex-start"}
               >
-                <Text fontSize="md">THREAT SCAN SUMMARY</Text>
-                <Text fontSize="sm" my={5} color={'gray.400'} textAlign='left'>ThreatScan, a smart contract analysis tool, is built by the SolidityScan team. It is designed to assist users in identifying potential rug pull scams by providing an in-depth analysis of a smart contract's code and highlighting any potential red flags that may indicate a scam.</Text>
+                <Text fontSize="md" fontWeight={600}>
+                  THREAT SCAN SUMMARY
+                </Text>
                 <Box
                   w={"100%"}
                   borderRadius={15}
@@ -988,6 +1004,33 @@ const QuickScan: React.FC = () => {
                   ]}
                   justifyContent={"center"}
                 >
+                  <Stack
+                    direction={["column", "column", "column", "row"]}
+                    alignItems="center"
+                    mt={4}
+                    mb={10}
+                    spacing={10}
+                  >
+                    <VStack>
+                      <ThreatScoreMeter
+                        percentage={
+                          scanReport.multi_file_scan_summary.threat_score
+                        }
+                      />
+                      <Text color={"detail"} fontWeight="600">
+                        Threat Score
+                      </Text>
+                    </VStack>
+                    <Text fontSize="md" textAlign="left">
+                      ThreatScan, a smart contract analysis tool, is built by
+                      the SolidityScan team. It is designed to assist users in
+                      identifying potential rug pull scams by providing an
+                      in-depth analysis of a smart contract's code and
+                      highlighting any potential red flags that may indicate a
+                      scam.
+                    </Text>
+                  </Stack>
+                  <Divider />
                   {scanReport.quick_file_scan_details.map((item) =>
                     isDesktopView ? (
                       <>
@@ -1063,11 +1106,11 @@ const QuickScan: React.FC = () => {
                     parseFloat("0.0") < 2.5
                       ? "linear-gradient(96.27deg, #FFF3F0 0.75%, #FFE0D9 96.71%)"
                       : parseFloat("0.0") >= 4.5
-                        ? "linear-gradient(96.27deg, #EFFFED 0.75%, #E6FFE2 96.71%)"
-                        : "linear-gradient(96.27deg, #FFFAF2 0.75%, #FFF4E1 96.71%)"
+                      ? "linear-gradient(96.27deg, #EFFFED 0.75%, #E6FFE2 96.71%)"
+                      : "linear-gradient(96.27deg, #FFFAF2 0.75%, #FFF4E1 96.71%)"
                   }
                 >
-                  <Text fontSize="md" mb={5}>
+                  <Text fontSize="md" fontWeight={600} mb={5}>
                     Solidity Score
                   </Text>
                   <CircularProgress
@@ -1103,7 +1146,9 @@ const QuickScan: React.FC = () => {
                   alignItems={["center", "center", "center", "flex-start"]}
                   justifyContent={"flex-start"}
                 >
-                  <Text fontSize="md">VULNERABILITIES DETECTED</Text>
+                  <Text fontSize="md" fontWeight={600}>
+                    VULNERABILITIES DETECTED
+                  </Text>
                   <HStack
                     mt={5}
                     width={["100%"]}
@@ -1252,12 +1297,13 @@ const QuickScan: React.FC = () => {
                 justifyContent={"flex-start"}
               >
                 <HStack
-                  justifyContent="space-between"
+                  justifyContent="flex-start"
                   alignItems="flex-start"
                   w="100%"
                   p={5}
                   py={0}
-                  spacing={0}
+                  ml={4}
+                  spacing={4}
                   display={["none", "none", "flex"]}
                 >
                   <Text
@@ -1287,7 +1333,15 @@ const QuickScan: React.FC = () => {
                   <Text
                     fontWeight={600}
                     textAlign={"left"}
-                    w={"35%"}
+                    w={"10%"}
+                    fontSize="sm"
+                  >
+                    ThreatScore
+                  </Text>
+                  <Text
+                    fontWeight={600}
+                    textAlign={"left"}
+                    w={"25%"}
                     fontSize="sm"
                   >
                     Actions
@@ -1327,10 +1381,10 @@ const QuickScan: React.FC = () => {
                       recentScans.scans.map((item: any) => (
                         <>
                           <HStack
-                            justifyContent="space-between"
+                            justifyContent="flex-start"
                             alignItems="center"
                             w="100%"
-                            spacing={0}
+                            spacing={[5, 5, 4, 4]}
                           >
                             <Image
                               display={["block", "block", "none"]}
@@ -1349,7 +1403,7 @@ const QuickScan: React.FC = () => {
                             </Text>
                             <Text
                               color={"#3300FF"}
-                              textAlign={"center"}
+                              textAlign={"left"}
                               w={["20%", "20%", "10%"]}
                               fontSize="md"
                               fontWeight={700}
@@ -1379,12 +1433,41 @@ const QuickScan: React.FC = () => {
                                 {blockScans[item.contract_platform]}
                               </Text>
                             </HStack>
+                            <Flex w={"10%"}>
+                              {isDesktopView ? (
+                                <ThreatScoreMeter
+                                  percentage={Math.round(item.threat_score)}
+                                  diameter={75}
+                                  strokeWidth={4}
+                                  fontSize="md"
+                                  subtleFontSize="xx-small"
+                                  textMarginTop={-6}
+                                />
+                              ) : (
+                                <Text
+                                  textAlign={"left"}
+                                  fontSize="md"
+                                  fontWeight={700}
+                                  pr={2}
+                                >
+                                  {Math.round(item.threat_score)}
+                                  <Box
+                                    as={"span"}
+                                    color="gray.500"
+                                    fontSize={"xs"}
+                                  >
+                                    /100
+                                  </Box>
+                                </Text>
+                              )}
+                            </Flex>
                             <HStack
                               display={["none", "none", "flex"]}
-                              w={"35%"}
+                              w={"25%"}
                               justifyContent="flex-start"
                               alignItems={"center"}
                               spacing={3}
+                              ml={4}
                             >
                               <Link
                                 variant="subtle-without-underline"
@@ -1484,6 +1567,7 @@ export default QuickScan;
 const DescriptionWrapper = styled.div`
   p {
     text-align: left;
+    color: #4e5d78;
   }
 
   code {
