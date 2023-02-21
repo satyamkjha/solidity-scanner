@@ -148,6 +148,7 @@ export type MultiFileScanSummary = {
   scan_time_taken: number;
   scans_ran: string[];
   score: string;
+  threat_score: string;
 };
 
 export type MetricWiseAggregatedFinding = {
