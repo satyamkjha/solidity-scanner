@@ -37,7 +37,6 @@ import { AiOutlineProject } from "react-icons/ai";
 import {
   BlockCredit,
   ProjectIcon,
-  ScanErrorIcon,
   SolidityFileIcon,
   UploadIcon,
 } from "components/icons";
@@ -46,12 +45,9 @@ import { useOverview } from "hooks/useOverview";
 import { useProfile } from "hooks/useProfile";
 import VulnerabilityProgress from "components/VulnerabilityProgress";
 import { useSupportedChains } from "hooks/useSupportedPlatforms";
-import { getFeatureGateConfig, sentenceCapitalize } from "helpers/helperFunction";
+import { getFeatureGateConfig } from "helpers/helperFunction";
 import { useDropzone } from "react-dropzone";
-import { url } from "inspector";
 import Select from "react-select";
-import { resolve } from "dns";
-import { rejects } from "assert";
 import { API_PATH } from "helpers/routeManager";
 
 const Home: React.FC = () => {
@@ -477,7 +473,6 @@ const ContractForm: React.FC = () => {
     ],
   };
 
-
   const options = [
     {
       value: "etherscan",
@@ -590,7 +585,7 @@ const ContractForm: React.FC = () => {
   const { data: profileData } = useProfile();
   const { data: supportedChains } = useSupportedChains();
 
-  const platform_supported = getFeatureGateConfig().platform_supported
+  const platform_supported = getFeatureGateConfig().platform_supported;
 
   const onSubmit = async ({ contract_address }: ContractFormData) => {
     const { data } = await API.post<{
@@ -601,8 +596,8 @@ const ContractForm: React.FC = () => {
       contract_address,
       contract_platform: platform,
       contract_chain: chain,
-    }); 
-    if(data.contract_verified){
+    });
+    if (data.contract_verified) {
       await API.post(API_PATH.API_START_SCAN_BLOCK, {
         contract_address,
         contract_platform: platform,
@@ -611,7 +606,7 @@ const ContractForm: React.FC = () => {
       queryClient.invalidateQueries("scans");
       queryClient.invalidateQueries("profile");
       history.push("/blocks");
-    } 
+    }
   };
   return (
     <>
@@ -668,7 +663,10 @@ const ContractForm: React.FC = () => {
                 formatOptionLabel={formatOptionLabel}
                 options={options.map((item) => {
                   for (const chain in supportedChains) {
-                    if (chain === item.value && platform_supported.includes(chain)) {
+                    if (
+                      chain === item.value &&
+                      platform_supported.includes(chain)
+                    ) {
                       return {
                         value: item.value,
                         icon: item.icon,
@@ -680,10 +678,10 @@ const ContractForm: React.FC = () => {
                   return item;
                 })}
                 placeholder="Select Contract Platform"
+                value={options.find((item) => platform === item.value)}
                 styles={customStyles}
                 onChange={(newValue) => {
                   if (newValue) {
-                    // setAction(newValue.value)
                     setPlatform(newValue.value);
                     if (supportedChains) {
                       setChainList(contractChain[newValue.value]);
@@ -700,6 +698,7 @@ const ContractForm: React.FC = () => {
                 options={chainList}
                 placeholder="Select Contract Chain"
                 styles={customStyles}
+                value={chainList.find((item) => chain === item.value)}
                 onChange={(newValue) => {
                   if (newValue) {
                     setChain(newValue.value);
