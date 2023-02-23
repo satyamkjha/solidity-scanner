@@ -1,11 +1,4 @@
-import {
-  useState,
-  Dispatch,
-  SetStateAction,
-  useEffect,
-  createRef,
-  useRef,
-} from "react";
+import { useState, Dispatch, SetStateAction, useEffect, useRef } from "react";
 import { useHistory, useParams } from "react-router-dom";
 import styled from "@emotion/styled";
 import {
@@ -24,62 +17,47 @@ import {
   Tab,
   TabPanel,
   Spinner,
-  Button,
   useToast,
   Image,
-  Stack,
   HStack,
   Tooltip,
   useMediaQuery,
-  Checkbox,
   Divider,
   IconButton,
   Textarea,
+  useDisclosure,
 } from "@chakra-ui/react";
 import { BiCodeCurly } from "react-icons/bi";
-import { AiOutlineCaretRight, AiFillGithub } from "react-icons/ai";
-import { RxDoubleArrowDown, RxDoubleArrowUp } from "react-icons/rx";
-import { FiFilter, FiCheck } from "react-icons/fi";
+import { AiOutlineCaretRight } from "react-icons/ai";
 import { CodeBlock, atomOneLight } from "react-code-blocks";
 
-import VulnerabilityDistribution, {
-  VulnerabilityDistributionFilter,
-} from "components/vulnDistribution";
-import { MultifileBadge, MultifileIcon, SeverityIcon } from "components/icons";
+import VulnerabilityDistribution from "components/vulnDistribution";
+import { SeverityIcon } from "components/icons";
 
 import { useFileContent } from "hooks/useFileContent";
 import { useIssueDetail } from "hooks/useIssueDetail";
-import Select, { components } from "react-select";
+import Select from "react-select";
 import {
   FilesState,
-  MetricWiseAggregatedFinding,
   MultiFileScanDetail,
   MultiFileScanSummary,
-  MultiFileTemplateDetail,
   Profile,
   ScanDetail,
   ScanSummary,
 } from "common/types";
-import { severityPriority } from "common/values";
+import { issueActions, severityPriority } from "common/values";
 import API from "helpers/api";
 import { useMutation } from "react-query";
-import { useProfile } from "hooks/useProfile";
-import {
-  ArrowUpIcon,
-  CloseIcon,
-  EditIcon,
-  WarningIcon,
-} from "@chakra-ui/icons";
+import { ArrowUpIcon, CloseIcon, EditIcon } from "@chakra-ui/icons";
 import React from "react";
-import { access } from "fs";
-import TrialWallCode, { TrialWall, TrialWallIssue } from "./trialWall";
-import useDynamicRefs from "use-dynamic-refs";
+import { TrialWall } from "./trialWall";
 import DetailedResult from "./detailedResult";
 import { DetailFilter } from "./detailFilter";
 import { IssueContainer } from "./issueContainer";
 import { sentenceCapitalize } from "helpers/helperFunction";
 import { FaCompressAlt, FaExpandAlt } from "react-icons/fa";
 import { API_PATH } from "helpers/routeManager";
+import CommentForm from "./commentForm";
 
 type FileState = {
   issue_id: string;
@@ -445,6 +423,45 @@ const formatOptionLabel: React.FC<{
   </div>
 );
 
+const customStyles = {
+  option: (provided: any, state: any) => ({
+    ...provided,
+    borderBottom: "1px solid #f3f3f3",
+    backgroundColor: state.isSelected
+      ? "#FFFFFF"
+      : state.isFocused
+      ? "#E6E6E6"
+      : "#FFFFFF",
+    color: "#000000",
+  }),
+  menu: (provided: any, state: any) => ({
+    ...provided,
+    color: state.selectProps.menuColor,
+    borderRadius: 10,
+    border: "0px solid #ffffff",
+    overflowY: "hidden",
+  }),
+  control: () => ({
+    // none of react-select's styles are passed to <Control />
+    width: "100%",
+    display: "flex",
+    flexDirection: "row",
+    backgroundColor: "#FAFBFC",
+    padding: 4,
+    borderRadius: 20,
+  }),
+  singleValue: (provided: any, state: any) => {
+    const opacity = state.isDisabled ? 0.3 : 1;
+    const transition = "opacity 300ms";
+
+    return { ...provided, opacity, transition };
+  },
+  container: (provided: any, state: any) => ({
+    ...provided,
+    width: "100%",
+  }),
+};
+
 export const MultifileResult: React.FC<{
   type: "block" | "project";
   is_latest_scan: boolean;
@@ -494,6 +511,11 @@ export const MultifileResult: React.FC<{
 
   const [selectedBugs, setSelectedBugs] = useState<string[]>([]);
 
+  const { isOpen, onClose, onOpen } = useDisclosure();
+  const [bugStatus, setBugStatus] = useState<string | null>(null);
+  const [isDisabled, setIsDisabled] = useState<boolean>(true);
+  const [filterExpanded, setFilterExpanded] = useState<boolean>(false);
+
   // const [action, setAction] = useState("");
   const toast = useToast();
 
@@ -518,22 +540,6 @@ export const MultifileResult: React.FC<{
           isClosable: true,
         });
       }
-      setIssues((prevState) => {
-        const newState = prevState.map((obj) => {
-          if (obj.issue_id === files.issue_id) {
-            const newList = obj.metric_wise_aggregated_findings.map((item) => {
-              if (selectedBugs.includes(item.bug_hash)) {
-                return { ...item, bug_status: action, comment: comment };
-              }
-              return item;
-            });
-            return { ...obj, metric_wise_aggregated_findings: newList };
-          }
-          // 👇️ otherwise return object as is
-          return obj;
-        });
-        return newState;
-      });
       setFiles({
         ...files,
         bug_status: action,
@@ -543,6 +549,10 @@ export const MultifileResult: React.FC<{
     }
     refetch();
   };
+
+  useEffect(() => {
+    setIssues(scanDetails);
+  }, [scanDetails]);
 
   useEffect(() => {
     if (files) {
@@ -570,6 +580,11 @@ export const MultifileResult: React.FC<{
 
   useEffect(() => {
     if (!selectedBugs) setIssues(issues);
+    if (selectedBugs && selectedBugs.length) {
+      setIsDisabled(false);
+    } else {
+      setIsDisabled(true);
+    }
   }, [selectedBugs]);
 
   return (
@@ -593,11 +608,45 @@ export const MultifileResult: React.FC<{
             low={low}
             informational={informational}
             gas={gas}
-            vulnerability={vulnerability}
+            setFilterExpanded={setFilterExpanded}
             setVulnerability={setVulnerability}
-            confidence={confidence}
             setConfidence={setConfidence}
           />
+          {details_enabled && (
+            <HStack
+              display={["flex", "flex", "flex", "none"]}
+              position={"sticky"}
+              top={filterExpanded ? "285px" : "50px"}
+              background="white"
+              zIndex={10}
+              w={"100%"}
+              py={2}
+            >
+              <Text fontWeight={600} ml={2} mr={5} whiteSpace="nowrap">
+                Take Action
+              </Text>
+              <Select
+                formatOptionLabel={formatOptionLabel}
+                options={issueActions}
+                value={issueActions.find(
+                  (item) => files?.bug_status === item.value
+                )}
+                placeholder="Select Action"
+                styles={customStyles}
+                isDisabled={isDisabled}
+                onChange={(newValue) => {
+                  if (newValue) {
+                    if (newValue.value === "wont_fix") {
+                      onOpen();
+                      setBugStatus(newValue.value);
+                    } else {
+                      updateBugStatus(newValue.value);
+                    }
+                  }
+                }}
+              />
+            </HStack>
+          )}
           <Box w="100%" h={["100%", "100%", "100%", "auto"]} overflowY="scroll">
             <MultifileIssues
               type={type}
@@ -628,6 +677,13 @@ export const MultifileResult: React.FC<{
           />
         )}
       </Flex>
+      <CommentForm
+        isOpen={isOpen}
+        onClose={onClose}
+        updateBugStatus={updateBugStatus}
+        status={bugStatus}
+        selectedBugs={selectedBugs}
+      />
     </>
   );
 };
@@ -841,18 +897,25 @@ const CodeExplorer: React.FC<{
   const [isDesktopView] = useMediaQuery("(min-width: 1024px)");
 
   const scrollToBottom = () => {
-    setTimeout(
-      () => {
+    if (isDesktopView) {
+      if (elementRef.current) {
+        elementRef.current.scrollIntoView({
+          behavior: "smooth",
+          block: "start",
+          inline: "start",
+        });
+      }
+    } else {
+      setTimeout(() => {
         if (elementRef.current) {
           elementRef.current.scrollIntoView({
+            block: "end",
+            inline: "center",
             behavior: "smooth",
-            block: "start",
-            inline: "start",
           });
         }
-      },
-      isDesktopView ? 0 : 500
-    );
+      }, 500);
+    }
   };
 
   let count: number = 0;
@@ -868,7 +931,7 @@ const CodeExplorer: React.FC<{
         justifyContent: "flex-start",
         alignItems: "flex-start",
         flexDir: "column",
-        h: "50vh",
+        h: ["65vh", "65vh", "65vh", "50vh"],
         overflow: "scroll",
         pl: "15px",
       }}
@@ -895,6 +958,9 @@ const CodeExplorer: React.FC<{
                   ref={elementRef}
                   align={"flex-start"}
                   spacing={5}
+                  sx={{
+                    scrollMarginTop: "-60vh",
+                  }}
                 >
                   <Text color={"gray.600"} fontSize="13px" fontWeight="normal">
                     {index + 1}
@@ -982,7 +1048,11 @@ export const MultiFileExplorer: React.FC<MultiFileExplorerProps> = ({
           borderRadius: 15,
           bg: "rgba(243, 243, 243, 0.75)",
           position: "relative",
-          h: "57vh",
+          mb: 2,
+          h:
+            files.bug_status === "fixed"
+              ? "fit-content"
+              : ["70vh", "70vh", "70vh", "56vh"],
         }}
       >
         {files.bug_status === "fixed" ? (
@@ -991,11 +1061,11 @@ export const MultiFileExplorer: React.FC<MultiFileExplorerProps> = ({
               w: "100%",
               justifyContent: "center",
               alignItems: "center",
-              h: ["35vh", "35vh", "35vh", "60vh"],
+              h: ["35vh", "35vh", "35vh", "55vh"],
               flexDir: "column",
             }}
           >
-            <VStack mb={[8, 8, 8, "10vh"]}>
+            <VStack mb={4}>
               <Image src="/common/fixedIssueIcon.svg" />
               <Text fontWeight={600}>This Issue has been fixed</Text>
             </VStack>
@@ -1078,6 +1148,7 @@ export const MultiFileExplorer: React.FC<MultiFileExplorerProps> = ({
                   borderRadius: 15,
                   bg: "white",
                   p: 3,
+                  pr: 2,
                   pb: 1,
                   w: "calc(100% - 20px)",
                   position: "absolute",
@@ -1087,8 +1158,6 @@ export const MultiFileExplorer: React.FC<MultiFileExplorerProps> = ({
                   justifyContent: "flex-start",
                   alignItems: "flex-start",
                   flexDir: "column",
-                  boxShadow:
-                    "0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19)",
                 }}
               >
                 <HStack
@@ -1097,13 +1166,22 @@ export const MultiFileExplorer: React.FC<MultiFileExplorerProps> = ({
                   alignItems="flex-start"
                   mb={1}
                 >
-                  <HStack width={"80%"}>
-                    <VStack width={"23%"} alignItems="flex-start">
+                  <Flex
+                    gridColumnGap={4}
+                    gridRowGap={0}
+                    flexWrap={["wrap", "wrap", "wrap", "nowrap"]}
+                    width={"80%"}
+                  >
+                    <VStack
+                      width={["40%", "40%", "40%", "23%"]}
+                      alignItems="flex-start"
+                      spacing={1}
+                    >
                       <Text
                         fontSize="xs"
                         fontWeight={"normal"}
                         color={"gray.400"}
-                        mb={1}
+                        mb={[0, 0, 0, 1]}
                       >
                         Severity
                       </Text>
@@ -1124,9 +1202,9 @@ export const MultiFileExplorer: React.FC<MultiFileExplorerProps> = ({
                       </HStack>
                     </VStack>
                     <VStack
-                      width={"23%"}
-                      mb={[4, 4, 4, 0]}
+                      width={["40%", "40%", "40%", "23%"]}
                       alignItems="flex-start"
+                      spacing={1}
                     >
                       <Text
                         fontSize="xs"
@@ -1165,15 +1243,16 @@ export const MultiFileExplorer: React.FC<MultiFileExplorerProps> = ({
                       </Text>
                     </VStack>
                     <VStack
-                      width={"23%"}
+                      width={["40%", "40%", "40%", "23%"]}
                       my={[4, 4, 4, 0]}
                       alignItems="flex-start"
+                      spacing={1}
                     >
                       <Text
                         fontSize="xs"
                         fontWeight={"normal"}
                         color={"gray.400"}
-                        mb={1}
+                        mb={[0, 0, 0, 1]}
                       >
                         Line nos
                       </Text>
@@ -1183,15 +1262,16 @@ export const MultiFileExplorer: React.FC<MultiFileExplorerProps> = ({
                       </Text>
                     </VStack>
                     <VStack
-                      width={"31%"}
+                      width={["40%", "40%", "40%", "31%"]}
                       my={[4, 4, 4, 0]}
                       alignItems="flex-start"
+                      spacing={1}
                     >
                       <Text
                         fontSize="xs"
                         fontWeight={"normal"}
                         color={"gray.400"}
-                        mb={1}
+                        mb={[0, 0, 0, 1]}
                       >
                         Action Taken
                       </Text>
@@ -1214,7 +1294,7 @@ export const MultiFileExplorer: React.FC<MultiFileExplorerProps> = ({
                         </Text>
                       </HStack>
                     </VStack>
-                  </HStack>
+                  </Flex>
                   <HStack justifyContent={"flex-end"} alignItems="flex-start">
                     <Tooltip
                       label={fullScreen ? "Minimize" : "Expand"}
@@ -1307,14 +1387,28 @@ const IssueDetail: React.FC<{
 
   const height = fullScreen ? "35vh" : "15vh";
 
+  const [isDesktopView] = useMediaQuery("(min-width: 1024px)");
+
   const [editComment, setEditComment] = React.useState(false);
 
   const [comment, setComment] = React.useState<string | null>(null);
+  const tabRefs = useRef<(HTMLButtonElement | null)[]>([]);
   const toast = useToast();
 
   useEffect(() => {
     setEditComment(false);
   }, [files]);
+
+  useEffect(() => {
+    if (tabIndex !== undefined && !isDesktopView) {
+      console.log(tabIndex);
+      tabRefs.current[tabIndex].scrollIntoView({
+        behavior: "smooth",
+        block: "nearest",
+        inline: "center",
+      });
+    }
+  }, [tabIndex]);
 
   const updateComment = async () => {
     if (comment && comment !== "") {
@@ -1366,6 +1460,7 @@ const IssueDetail: React.FC<{
           px={[0, 0, 0, 0]}
         >
           <Tab
+            ref={(el) => (tabRefs.current[0] = el)}
             bgColor={"#FFFFFF"}
             _selected={{
               bgColor: "#4E5D78",
@@ -1378,6 +1473,7 @@ const IssueDetail: React.FC<{
             Vulnerability Description
           </Tab>
           <Tab
+            ref={(el) => (tabRefs.current[1] = el)}
             bgColor={"#FFFFFF"}
             _selected={{
               bgColor: "#4E5D78",
@@ -1390,6 +1486,7 @@ const IssueDetail: React.FC<{
             Remediation
           </Tab>
           <Tab
+            ref={(el) => (tabRefs.current[2] = el)}
             bgColor={"#FFFFFF"}
             _selected={{
               bgColor: "#4E5D78",
@@ -1417,10 +1514,7 @@ const IssueDetail: React.FC<{
       )}
       {data && (
         <TabPanels w="100%">
-          <TabPanel
-            sx={{ w: "100%", overflowY: "scroll" }}
-            h={["fit-content", "fit-content", "fit-content", height]}
-          >
+          <TabPanel sx={{ w: "100%", overflowY: "scroll" }} h={[height]}>
             <DescriptionWrapper>
               <Text fontWeight={500} fontSize="md" pb={4}>
                 {data.issue_details.issue_name}

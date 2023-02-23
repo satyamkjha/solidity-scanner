@@ -385,6 +385,7 @@ const ScanDetails: React.FC<{ scansRemaining: number; scans: ScanMeta[] }> = ({
           my: 2,
           p: 2,
           pb: 0,
+          pr: 0,
         }}
       >
         {isLoading || isProfileLoading ? (
@@ -628,9 +629,10 @@ const ScanDetails: React.FC<{ scansRemaining: number; scans: ScanMeta[] }> = ({
                       <Tab
                         fontSize={"sm"}
                         h="35px"
-                        minW={"120px"}
+                        minW={"150px"}
                         bgColor={"#F5F5F5"}
                         ml={4}
+                        whiteSpace="nowrap"
                       >
                         Detailed Result
                       </Tab>
@@ -640,6 +642,7 @@ const ScanDetails: React.FC<{ scansRemaining: number; scans: ScanMeta[] }> = ({
                         minW={"120px"}
                         bgColor={"#F5F5F5"}
                         ml={4}
+                        whiteSpace="nowrap"
                       >
                         Scan History
                       </Tab>
@@ -649,9 +652,10 @@ const ScanDetails: React.FC<{ scansRemaining: number; scans: ScanMeta[] }> = ({
                           <Tab
                             fontSize={"sm"}
                             h="35px"
-                            minW={"120px"}
+                            minW={"175px"}
                             bgColor={"#F5F5F5"}
                             mx={2}
+                            whiteSpace="nowrap"
                           >
                             Published Reports
                           </Tab>
@@ -660,9 +664,10 @@ const ScanDetails: React.FC<{ scansRemaining: number; scans: ScanMeta[] }> = ({
                         <Tab
                           fontSize={"sm"}
                           h="35px"
-                          minW={"120px"}
+                          minW={"175px"}
                           bgColor={"#F5F5F5"}
                           mx={2}
+                          whiteSpace="nowrap"
                         >
                           Published Reports
                         </Tab>

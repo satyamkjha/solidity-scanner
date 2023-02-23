@@ -599,6 +599,7 @@ const BlockPage: React.FC = () => {
                         h="35px"
                         minW={"150px"}
                         bgColor={"#F5F5F5"}
+                        whiteSpace="nowrap"
                         ml={4}
                       >
                         Detailed Result
@@ -609,6 +610,7 @@ const BlockPage: React.FC = () => {
                         minW={"175px"}
                         bgColor={"#F5F5F5"}
                         ml={4}
+                        whiteSpace="nowrap"
                       >
                         Published Reports
                       </Tab>

@@ -1,9 +1,7 @@
-import { WarningIcon } from "@chakra-ui/icons";
 import {
   HStack,
   VStack,
   Text,
-  Button,
   Box,
   Flex,
   Icon,
@@ -14,7 +12,7 @@ import {
   Tooltip,
   useDisclosure,
 } from "@chakra-ui/react";
-import { FilesState, MultiFileTemplateDetail } from "common/types";
+import { FilesState } from "common/types";
 import { issueActions } from "common/values";
 import { sentenceCapitalize } from "helpers/helperFunction";
 import React, { Dispatch, SetStateAction, useEffect, useState } from "react";
@@ -119,7 +117,7 @@ export const DetailedResult: React.FC<{
           mt={[4, 4, 4, 2]}
           mb={[0, 0, 0, 2]}
         >
-          <HStack>
+          <HStack display={["none", "none", "none", "flex"]}>
             <Text fontWeight={600} mr={5}>
               Take Action
             </Text>

@@ -23,9 +23,8 @@ export const DetailFilter: React.FC<{
   low: number;
   informational: number;
   gas?: number | undefined;
-  vulnerability: boolean[];
+  setFilterExpanded: Dispatch<SetStateAction<boolean>>;
   setVulnerability: Dispatch<SetStateAction<boolean[]>>;
-  confidence: boolean[];
   setConfidence: Dispatch<SetStateAction<boolean[]>>;
 }> = ({
   critical,
@@ -34,9 +33,8 @@ export const DetailFilter: React.FC<{
   low,
   informational,
   gas,
-  vulnerability,
+  setFilterExpanded,
   setVulnerability,
-  confidence,
   setConfidence,
 }) => {
   const [filterCount, setFilterCount] = useState(0);
@@ -80,7 +78,16 @@ export const DetailFilter: React.FC<{
   }, [filterCount]);
 
   return (
-    <Accordion w="100%" borderBottomWidth={0} allowToggle>
+    <Accordion
+      w="100%"
+      borderBottomWidth={0}
+      allowToggle
+      position={["sticky", "sticky", "sticky", "relative"]}
+      top={[0, 0, 0, "auto"]}
+      background="white"
+      zIndex={1}
+      id="detailed_filter"
+    >
       <AccordionItem w="100%" borderWidth={"0 !important"}>
         {({ isExpanded }) => (
           <>
@@ -93,6 +100,7 @@ export const DetailFilter: React.FC<{
                 w={"max-content"}
                 background="#FAFBFC"
                 borderRadius={"11px"}
+                onClick={() => setFilterExpanded(!isExpanded)}
               >
                 <HStack spacing={4} p={0}>
                   <HStack spacing={-2}>
@@ -103,7 +111,7 @@ export const DetailFilter: React.FC<{
                         w="18px"
                         h="18px"
                         mt={-3}
-                        zIndex={10}
+                        zIndex={1}
                         textAlign="center"
                         color={"white"}
                         fontSize={"xs"}

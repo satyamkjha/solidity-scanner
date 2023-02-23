@@ -50,6 +50,13 @@ export const IssueContainer: React.FC<{
   details_enabled,
   updateBugStatus,
 }) => {
+  let pendingFixes =
+    details_enabled &&
+    metric_wise_aggregated_findings.filter((item) => {
+      if (item.bug_status !== "fixed") return item;
+    });
+  const bugHashList = pendingFixes && pendingFixes.map((item) => item.bug_hash);
+
   const [isHovered, setIsHovered] = useState(false);
   const [isChecked, setIsChecked] = useState(false);
   const [checkedChildren, setCheckedChildren] = useState<
@@ -57,10 +64,6 @@ export const IssueContainer: React.FC<{
   >([]);
 
   useEffect(() => {
-    let pendingFixes = metric_wise_aggregated_findings.filter((item) => {
-      if (item.bug_status !== "fixed") return item;
-    });
-    let bugHashList = pendingFixes.map((item) => item.bug_hash);
     if (isChecked) {
       const updatedSet = new Set([...selectedBugs, ...bugHashList]);
       setCheckedChildren([...bugHashList]);
@@ -75,13 +78,18 @@ export const IssueContainer: React.FC<{
 
   useEffect(() => {
     if (selectedBugs && selectedBugs.length === 0) {
-      setIsChecked(false);
       setCheckedChildren([]);
+      setIsChecked(false);
+    } else {
+      selectedBugs.forEach((bug, index) => {
+        if (bugHashList.includes(bug) && !checkedChildren.includes(bug))
+          setCheckedChildren([...checkedChildren, bug]);
+      });
     }
   }, [selectedBugs]);
 
   useEffect(() => {
-    if (checkedChildren.length === metric_wise_aggregated_findings.length) {
+    if (checkedChildren?.length === metric_wise_aggregated_findings?.length) {
       setIsChecked(true);
     }
   }, [checkedChildren]);
@@ -93,14 +101,14 @@ export const IssueContainer: React.FC<{
 
   const updateBugHashList = (hash: string, isBugChecked: boolean) => {
     if (isBugChecked) {
-      setCheckedChildren([...checkedChildren, hash]);
-      if (!selectedBugs.includes(hash)) {
+      if (!checkedChildren.includes(hash))
+        setCheckedChildren([...checkedChildren, hash]);
+      if (!selectedBugs.includes(hash))
         setSelectedBugs([...selectedBugs, hash]);
-      }
     } else {
-      setCheckedChildren(checkedChildren.slice(0, checkedChildren.length - 1));
-      setIsChecked(false);
+      setCheckedChildren(checkedChildren.filter((item) => item !== hash));
       setSelectedBugs(selectedBugs.filter((item) => item !== hash));
+      setIsChecked(false);
     }
   };
   return (
@@ -127,7 +135,11 @@ export const IssueContainer: React.FC<{
               }}
             >
               <HStack w="90%">
-                {isHovered || isChecked || checkedChildren.length > 0 ? (
+                {details_enabled &&
+                (isHovered ||
+                  isChecked ||
+                  isExpanded ||
+                  checkedChildren.length > 0) ? (
                   <Checkbox
                     name={issue_id}
                     colorScheme={"purple"}
@@ -202,7 +214,9 @@ export const IssueContainer: React.FC<{
                         metric_wise_aggregated_finding={item}
                         template_details={template_details}
                         is_latest_scan={is_latest_scan}
-                        isSelected={isChecked}
+                        isSelected={
+                          isChecked || checkedChildren.includes(item.bug_hash)
+                        }
                         selectedBugs={selectedBugs}
                         setFiles={setFiles}
                         updateBugHashList={updateBugHashList}
@@ -257,10 +271,8 @@ const IssueBox: React.FC<{
   }, [isChecked]);
 
   useEffect(() => {
-    if (selectedBugs && selectedBugs.length === 0) {
-      setIsChecked(isSelected);
-    }
-  }, [selectedBugs]);
+    setIsChecked(isSelected);
+  }, [isSelected]);
   return (
     <>
       {isDesktopView ? (
@@ -363,9 +375,27 @@ const IssueBox: React.FC<{
                 }}
               >
                 <HStack justify={"space-between"} p={4} w="100%">
-                  <Text isTruncated color={"gray.700"}>
-                    {bug_id}
-                  </Text>
+                  <HStack
+                    w={
+                      metric_wise_aggregated_finding.findings.length > 1
+                        ? "50%"
+                        : "80%"
+                    }
+                  >
+                    {(isHovered || isChecked || !isDesktopView) &&
+                      metric_wise_aggregated_finding.bug_status !== "fixed" && (
+                        <Checkbox
+                          name={bug_id}
+                          colorScheme={"purple"}
+                          borderColor={"gray.500"}
+                          isChecked={isChecked}
+                          onChange={() => setIsChecked(!isChecked)}
+                        ></Checkbox>
+                      )}
+                    <Text isTruncated color={"gray.700"}>
+                      {bug_id}
+                    </Text>
+                  </HStack>
                   <HStack>
                     {metric_wise_aggregated_finding.findings.length > 1 && (
                       <HStack
