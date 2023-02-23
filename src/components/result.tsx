@@ -910,7 +910,7 @@ const CodeExplorer: React.FC<{
         if (elementRef.current) {
           elementRef.current.scrollIntoView({
             block: "end",
-            inline: "center",
+            inline: "start",
             behavior: "smooth",
           });
         }
@@ -931,7 +931,7 @@ const CodeExplorer: React.FC<{
         justifyContent: "flex-start",
         alignItems: "flex-start",
         flexDir: "column",
-        h: ["65vh", "65vh", "65vh", "50vh"],
+        h: ["62vh", "62vh", "62vh", "50vh"],
         overflow: "scroll",
         pl: "15px",
       }}
