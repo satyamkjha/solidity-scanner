@@ -78,7 +78,7 @@ const Overview: React.FC<{
     <>
       {scanData.multi_file_scan_status === "scan_done" &&
       scanData.multi_file_scan_summary ? (
-        <Flex w="100%" sx={{ flexDir: ["column", "column", "row"] }}>
+        <Flex w="100%" sx={{ flexDir: ["column", "column", "row"] }} my={4}>
           <VStack w={["100%", "100%", "40%"]} mb={[8, 8, 0]}>
             <Box
               w={["100%", "100%", "70%"]}
@@ -140,11 +140,11 @@ const Overview: React.FC<{
           <VStack
             w={["100%", "100%", "60%"]}
             alignItems={["center", "center", "center", "flex-start"]}
-            py={2}
+            pt={2}
             px={[0, 0, 4]}
             spacing={5}
             h="63vh"
-            overflowY={"scroll"}
+            overflowY={["visible", "visible", "visible", "scroll"]}
           >
             <Box
               w="100%"

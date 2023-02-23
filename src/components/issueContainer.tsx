@@ -50,12 +50,14 @@ export const IssueContainer: React.FC<{
   details_enabled,
   updateBugStatus,
 }) => {
-  let pendingFixes =
-    details_enabled &&
-    metric_wise_aggregated_findings.filter((item) => {
+  let pendingFixes;
+  let bugHashList: string[];
+  if (details_enabled) {
+    pendingFixes = metric_wise_aggregated_findings.filter((item) => {
       if (item.bug_status !== "fixed") return item;
     });
-  const bugHashList = pendingFixes && pendingFixes.map((item) => item.bug_hash);
+    bugHashList = pendingFixes && pendingFixes.map((item) => item.bug_hash);
+  }
 
   const [isHovered, setIsHovered] = useState(false);
   const [isChecked, setIsChecked] = useState(false);
@@ -136,6 +138,7 @@ export const IssueContainer: React.FC<{
             >
               <HStack w="90%">
                 {details_enabled &&
+                pendingFixes.length > 0 &&
                 (isHovered ||
                   isChecked ||
                   isExpanded ||

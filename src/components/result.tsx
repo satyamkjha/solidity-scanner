@@ -959,7 +959,7 @@ const CodeExplorer: React.FC<{
                   align={"flex-start"}
                   spacing={5}
                   sx={{
-                    scrollMarginTop: "-60vh",
+                    scrollMarginTop: isDesktopView ? 20 : "-60vh",
                   }}
                 >
                   <Text color={"gray.600"} fontSize="13px" fontWeight="normal">
