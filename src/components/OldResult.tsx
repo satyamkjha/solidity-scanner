@@ -64,6 +64,10 @@ import { access } from "fs";
 import TrialWallCode, { TrialWall, TrialWallIssue } from "./trialWall";
 import useDynamicRefs from "use-dynamic-refs";
 import DetailedResult from "./detailedResult";
+import OldVulnerabilityDistribution, {
+  OldVulnerabilityDistributionFilter,
+} from "./oldVulnDistribution";
+import OldDetailedResult from "./oldDetailedResult";
 
 type FileState = {
   issue_id: string;
@@ -102,7 +106,7 @@ export const OldResult: React.FC<{
         >
           <Flex w="100%" justifyContent="space-around">
             <Box width="80%">
-              <VulnerabilityDistribution
+              <OldVulnerabilityDistribution
                 critical={critical}
                 high={high}
                 medium={medium}
@@ -428,7 +432,7 @@ const formatOptionLabel: React.FC<{
   </div>
 );
 
-export const MultifileResult: React.FC<{
+export const OldMultifileResult: React.FC<{
   type: "block" | "project";
   is_latest_scan: boolean;
   scanSummary: MultiFileScanSummary;
@@ -535,7 +539,7 @@ export const MultifileResult: React.FC<{
         >
           <Flex w="100%" justifyContent="space-around">
             <Box width="100%">
-              <VulnerabilityDistributionFilter
+              <OldVulnerabilityDistributionFilter
                 critical={critical}
                 high={high}
                 medium={medium}
@@ -611,7 +615,7 @@ export const MultifileResult: React.FC<{
         </VStack>
 
         {isDesktopView && (
-          <DetailedResult
+          <OldDetailedResult
             type={type}
             is_latest_scan={is_latest_scan}
             files={files}
@@ -954,7 +958,7 @@ const IssueBox: React.FC<{
               </AccordionButton>
               <AccordionPanel p={0}>
                 {isExpanded && (
-                  <DetailedResult
+                  <OldDetailedResult
                     type={type}
                     is_latest_scan={is_latest_scan}
                     files={files}
@@ -1178,7 +1182,7 @@ const CodeExplorer: React.FC<{
 };
 
 type MultiFileExplorerProps = { files: FilesState; type: "project" | "block" };
-export const MultiFileExplorer: React.FC<MultiFileExplorerProps> = ({
+export const OldMultiFileExplorer: React.FC<MultiFileExplorerProps> = ({
   files,
   type,
 }) => {

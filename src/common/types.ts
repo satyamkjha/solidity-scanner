@@ -300,7 +300,7 @@ export type IssueItem = {
   issue_name: string;
   issue_remediation: string;
   severity: string;
-  comment: string;
+  comment?: string;
 };
 
 export type ReportsListItem = {

@@ -1402,7 +1402,7 @@ const IssueDetail: React.FC<{
   useEffect(() => {
     if (tabIndex !== undefined && !isDesktopView) {
       console.log(tabIndex);
-      tabRefs.current[tabIndex].scrollIntoView({
+      tabRefs.current[tabIndex]?.scrollIntoView({
         behavior: "smooth",
         block: "nearest",
         inline: "center",
