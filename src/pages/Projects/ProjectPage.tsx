@@ -100,6 +100,8 @@ import PublishedReports from "components/publishedReports";
 import { useReports } from "hooks/useReports";
 import { usePricingPlans } from "hooks/usePricingPlans";
 import { API_PATH } from "helpers/routeManager";
+import { getFeatureGateConfig } from "helpers/helperFunction";
+import OldResult from "components/OldResult";
 
 export const ProjectPage: React.FC = () => {
   const { projectId } = useParams<{ projectId: string }>();
@@ -273,6 +275,7 @@ const ScanDetails: React.FC<{ scansRemaining: number; scans: ScanMeta[] }> = ({
   const [publishInfoSwitch, setPublishInfoSwitch] = useState(true);
 
   const [isDesktopView] = useMediaQuery("(min-width: 1024px)");
+  const showOldUi = getFeatureGateConfig().show_old_detail_ui;
 
   const getReportData = async (project_id: string, report_id: string) => {
     const reportResponse = await API.post<{ summary_report: Report }>(
@@ -666,13 +669,27 @@ const ScanDetails: React.FC<{ scansRemaining: number; scans: ScanMeta[] }> = ({
                         />
                       ) : scanData.scan_report.scan_details &&
                         scanData.scan_report.scan_summary ? (
-                        <Result
-                          details_enabled={scanData.scan_report.details_enabled}
-                          profileData={profile}
-                          scanSummary={scanData.scan_report.scan_summary}
-                          scanDetails={scanData.scan_report.scan_details}
-                          type="project"
-                        />
+                        showOldUi ? (
+                          <OldResult
+                            details_enabled={
+                              scanData.scan_report.details_enabled
+                            }
+                            profileData={profile}
+                            scanSummary={scanData.scan_report.scan_summary}
+                            scanDetails={scanData.scan_report.scan_details}
+                            type="project"
+                          />
+                        ) : (
+                          <Result
+                            details_enabled={
+                              scanData.scan_report.details_enabled
+                            }
+                            profileData={profile}
+                            scanSummary={scanData.scan_report.scan_summary}
+                            scanDetails={scanData.scan_report.scan_details}
+                            type="project"
+                          />
+                        )
                       ) : (
                         <Flex
                           w="97%"

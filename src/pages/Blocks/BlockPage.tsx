@@ -71,6 +71,8 @@ import ContractDetails from "components/contractDetails";
 import PublishedReports from "components/publishedReports";
 import { usePricingPlans } from "hooks/usePricingPlans";
 import { API_PATH } from "helpers/routeManager";
+import { getFeatureGateConfig } from "helpers/helperFunction";
+import OldResult from "components/OldResult";
 
 const BlockPage: React.FC = () => {
   const { scanId } = useParams<{ scanId: string }>();
@@ -106,6 +108,7 @@ const BlockPage: React.FC = () => {
 
   const [tabIndex, setTabIndex] = React.useState(0);
   const [isDesktopView] = useMediaQuery("(min-width: 1024px)");
+  const showOldUi = getFeatureGateConfig().show_old_detail_ui;
 
   // useEffect(() => {
   //   let intervalId: NodeJS.Timeout;
@@ -621,13 +624,27 @@ const BlockPage: React.FC = () => {
                         />
                       ) : scanData.scan_report.scan_details &&
                         scanData.scan_report.scan_summary ? (
-                        <Result
-                          details_enabled={scanData.scan_report.details_enabled}
-                          profileData={profile}
-                          scanSummary={scanData.scan_report.scan_summary}
-                          scanDetails={scanData.scan_report.scan_details}
-                          type="block"
-                        />
+                        showOldUi ? (
+                          <OldResult
+                            details_enabled={
+                              scanData.scan_report.details_enabled
+                            }
+                            profileData={profile}
+                            scanSummary={scanData.scan_report.scan_summary}
+                            scanDetails={scanData.scan_report.scan_details}
+                            type="block"
+                          />
+                        ) : (
+                          <Result
+                            details_enabled={
+                              scanData.scan_report.details_enabled
+                            }
+                            profileData={profile}
+                            scanSummary={scanData.scan_report.scan_summary}
+                            scanDetails={scanData.scan_report.scan_details}
+                            type="block"
+                          />
+                        )
                       ) : (
                         <Flex
                           w="97%"
