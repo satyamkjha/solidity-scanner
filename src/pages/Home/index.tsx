@@ -428,47 +428,132 @@ const formatOptionLabel: React.FC<{
 
 const ContractForm: React.FC = () => {
   const contractChain: {
-    [key: string]: { label: string; value: string; icon: string }[];
+    [key: string]: {
+      label: string;
+      value: string;
+      icon: string;
+      isDisabled: boolean;
+    }[];
   } = {
     etherscan: [
-      { value: "mainnet", label: "Ethereum Mainnet", icon: "" },
-      { value: "sepolia", label: "Sepolia Testnet", icon: "" },
-      { value: "goerli", label: "Goerli Testnet", icon: "" },
+      { value: "", label: "Select Chain", icon: "", isDisabled: true },
+      {
+        value: "mainnet",
+        label: "Ethereum Mainnet",
+        icon: "",
+        isDisabled: false,
+      },
+      {
+        value: "sepolia",
+        label: "Sepolia Testnet",
+        icon: "",
+        isDisabled: false,
+      },
+      { value: "goerli", label: "Goerli Testnet", icon: "", isDisabled: false },
     ],
     bscscan: [
-      { value: "mainnet", label: "Bsc Mainnet", icon: "" },
-      { value: "testnet", label: "Bsc Testnet", icon: "" },
+      { value: "", label: "Select Chain", icon: "", isDisabled: true },
+      { value: "mainnet", label: "Bsc Mainnet", icon: "", isDisabled: false },
+      { value: "testnet", label: "Bsc Testnet", icon: "", isDisabled: false },
     ],
     polygonscan: [
-      { value: "mainnet", label: "Polygon Mainnet", icon: "" },
-      { value: "testnet", label: "Polygon Testnet", icon: "" },
+      { value: "", label: "Select Chain", icon: "", isDisabled: true },
+      {
+        value: "mainnet",
+        label: "Polygon Mainnet",
+        icon: "",
+        isDisabled: false,
+      },
+      {
+        value: "testnet",
+        label: "Polygon Testnet",
+        icon: "",
+        isDisabled: false,
+      },
     ],
     avalanche: [
-      { value: "mainnet", label: "Avalanche Mainnet", icon: "" },
-      { value: "testnet", label: "Avalanche Fuji Testnet", icon: "" },
+      { value: "", label: "Select Chain", icon: "", isDisabled: true },
+      {
+        value: "mainnet",
+        label: "Avalanche Mainnet",
+        icon: "",
+        isDisabled: false,
+      },
+      {
+        value: "testnet",
+        label: "Avalanche Fuji Testnet",
+        icon: "",
+        isDisabled: false,
+      },
     ],
     fantom: [
-      { value: "mainnet", label: "FTM Mainnet", icon: "" },
-      { value: "testnet", label: "FTM Testnet", icon: "" },
+      { value: "", label: "Select Chain", icon: "", isDisabled: true },
+      { value: "mainnet", label: "FTM Mainnet", icon: "", isDisabled: false },
+      { value: "testnet", label: "FTM Testnet", icon: "", isDisabled: false },
     ],
     cronos: [
-      { value: "mainnet", label: "Cronos Mainnet", icon: "" },
-      { value: "testnet", label: "Cronos Testnet", icon: "" },
+      { value: "", label: "Select Chain", icon: "", isDisabled: true },
+      {
+        value: "mainnet",
+        label: "Cronos Mainnet",
+        icon: "",
+        isDisabled: false,
+      },
+      {
+        value: "testnet",
+        label: "Cronos Testnet",
+        icon: "",
+        isDisabled: false,
+      },
     ],
     celo: [
-      { value: "mainnet", label: "Celo Mainnet", icon: "" },
-      { value: "testnet", label: "Alfajores Testnet", icon: "" },
+      { value: "", label: "Select Chain", icon: "", isDisabled: true },
+      { value: "mainnet", label: "Celo Mainnet", icon: "", isDisabled: false },
+      {
+        value: "testnet",
+        label: "Alfajores Testnet",
+        icon: "",
+        isDisabled: false,
+      },
     ],
     aurora: [
-      { value: "mainnet", label: "Aurora Mainnet", icon: "" },
-      { value: "testnet", label: "Aurora Testnet", icon: "" },
+      { value: "", label: "Select Chain", icon: "", isDisabled: true },
+      {
+        value: "mainnet",
+        label: "Aurora Mainnet",
+        icon: "",
+        isDisabled: false,
+      },
+      {
+        value: "testnet",
+        label: "Aurora Testnet",
+        icon: "",
+        isDisabled: false,
+      },
     ],
     arbiscan: [
-      { value: "mainnet", label: "Arbiscan Mainnet", icon: "" },
-      { value: "goerli", label: "Arbiscan Goerli", icon: "" },
+      { value: "", label: "Select Chain", icon: "", isDisabled: true },
+      {
+        value: "mainnet",
+        label: "Arbiscan Mainnet",
+        icon: "",
+        isDisabled: false,
+      },
+      {
+        value: "goerli",
+        label: "Arbiscan Goerli",
+        icon: "",
+        isDisabled: false,
+      },
     ],
     reefscan: [
-      { value: "mainnet", label: "ReefScan Mainnet", icon: "" },
+      { value: "", label: "Select Chain", icon: "", isDisabled: true },
+      {
+        value: "mainnet",
+        label: "ReefScan Mainnet",
+        icon: "",
+        isDisabled: false,
+      },
       // { value: "testnet", label: "ReefScan Testnet", icon: "" },
     ],
   };
@@ -685,6 +770,7 @@ const ContractForm: React.FC = () => {
                     setPlatform(newValue.value);
                     if (supportedChains) {
                       setChainList(contractChain[newValue.value]);
+                      setChain("");
                     }
                   }
                 }}
