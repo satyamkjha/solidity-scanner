@@ -128,7 +128,6 @@ const QuickScan: React.FC = () => {
     }[];
   } = {
     etherscan: [
-      { value: "", label: "Select Chain", icon: "", isDisabled: true },
       {
         value: "mainnet",
         label: "Ethereum Mainnet",
@@ -144,7 +143,6 @@ const QuickScan: React.FC = () => {
       { value: "goerli", label: "Goerli Testnet", icon: "", isDisabled: false },
     ],
     bscscan: [
-      { value: "", label: "Select Chain", icon: "", isDisabled: true },
       { value: "mainnet", label: "Bsc Mainnet", icon: "", isDisabled: false },
       { value: "testnet", label: "Bsc Testnet", icon: "", isDisabled: false },
     ],
@@ -161,10 +159,8 @@ const QuickScan: React.FC = () => {
         icon: "",
         isDisabled: false,
       },
-      { value: "", label: "Select Chain", icon: "", isDisabled: true },
     ],
     avalanche: [
-      { value: "", label: "Select Chain", icon: "", isDisabled: true },
       {
         value: "mainnet",
         label: "Avalanche Mainnet",
@@ -179,12 +175,10 @@ const QuickScan: React.FC = () => {
       },
     ],
     fantom: [
-      { value: "", label: "Select Chain", icon: "", isDisabled: true },
       { value: "mainnet", label: "FTM Mainnet", icon: "", isDisabled: false },
       { value: "testnet", label: "FTM Testnet", icon: "", isDisabled: false },
     ],
     cronos: [
-      { value: "", label: "Select Chain", icon: "", isDisabled: true },
       {
         value: "mainnet",
         label: "Cronos Mainnet",
@@ -224,7 +218,6 @@ const QuickScan: React.FC = () => {
       },
     ],
     arbiscan: [
-      { value: "", label: "Select Chain", icon: "", isDisabled: true },
       {
         value: "mainnet",
         label: "Arbiscan Mainnet",
@@ -239,7 +232,6 @@ const QuickScan: React.FC = () => {
       },
     ],
     reefscan: [
-      { value: "", label: "Select Chain", icon: "", isDisabled: true },
       {
         value: "mainnet",
         label: "ReefScan Mainnet",
@@ -390,7 +382,11 @@ const QuickScan: React.FC = () => {
 
   const [address, setAddress] = React.useState("");
   const [platform, setPlatform] = React.useState("");
-  const [chain, setChain] = React.useState("");
+  const [chain, setChain] = React.useState<{
+    label: string;
+    value: string;
+    icon: string;
+  } | null>(null);
   const [chainList, setChainList] = React.useState<
     { label: string; value: string; icon: string }[]
   >(contractChain["etherscan"]);
@@ -412,11 +408,15 @@ const QuickScan: React.FC = () => {
     if (blockPlatform) {
       setPlatform(blockPlatform);
       setChainList(contractChain[blockPlatform]);
-      setChain("");
+      setChain(null);
     }
 
     if (blockChain) {
-      setChain(blockChain);
+      contractChain[blockPlatform].forEach((item) => {
+        if (item.value === blockChain) {
+          setChain(item);
+        }
+      });
     }
 
     if (blockAddress && blockChain && blockPlatform) {
@@ -490,7 +490,7 @@ const QuickScan: React.FC = () => {
       });
       return;
     }
-    if (chain === "") {
+    if (chain && chain.value === "") {
       toast({
         title: "Chain not selected",
         description: "Please select a Chain to perform the scan",
@@ -513,7 +513,9 @@ const QuickScan: React.FC = () => {
 
     setIsLoading(true);
     setScanReport(null);
-    runQuickScan(address, platform, chain);
+    if (chain) {
+      runQuickScan(address, platform, chain.value);
+    }
   };
 
   useEffect(() => {
@@ -601,6 +603,7 @@ const QuickScan: React.FC = () => {
               <Select
                 formatOptionLabel={formatOptionLabel}
                 options={options}
+                isSearchable={false}
                 value={options.find((item) => platform === item.value)}
                 placeholder="Select Contract Platform"
                 styles={customStylesPlatform}
@@ -616,13 +619,14 @@ const QuickScan: React.FC = () => {
               <Select
                 formatOptionLabel={formatOptionLabel}
                 isDisabled={platform === ""}
-                value={chainList.find((item) => chain === item.value)}
+                isSearchable={false}
+                value={chain}
                 options={chainList}
                 placeholder="Select Contract Chain"
                 styles={customStylesChain}
                 onChange={(newValue) => {
                   if (newValue) {
-                    setChain(newValue.value);
+                    setChain(newValue);
                   }
                 }}
               />

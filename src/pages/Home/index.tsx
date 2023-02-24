@@ -436,7 +436,6 @@ const ContractForm: React.FC = () => {
     }[];
   } = {
     etherscan: [
-      { value: "", label: "Select Chain", icon: "", isDisabled: true },
       {
         value: "mainnet",
         label: "Ethereum Mainnet",
@@ -452,12 +451,10 @@ const ContractForm: React.FC = () => {
       { value: "goerli", label: "Goerli Testnet", icon: "", isDisabled: false },
     ],
     bscscan: [
-      { value: "", label: "Select Chain", icon: "", isDisabled: true },
       { value: "mainnet", label: "Bsc Mainnet", icon: "", isDisabled: false },
       { value: "testnet", label: "Bsc Testnet", icon: "", isDisabled: false },
     ],
     polygonscan: [
-      { value: "", label: "Select Chain", icon: "", isDisabled: true },
       {
         value: "mainnet",
         label: "Polygon Mainnet",
@@ -472,7 +469,6 @@ const ContractForm: React.FC = () => {
       },
     ],
     avalanche: [
-      { value: "", label: "Select Chain", icon: "", isDisabled: true },
       {
         value: "mainnet",
         label: "Avalanche Mainnet",
@@ -487,12 +483,10 @@ const ContractForm: React.FC = () => {
       },
     ],
     fantom: [
-      { value: "", label: "Select Chain", icon: "", isDisabled: true },
       { value: "mainnet", label: "FTM Mainnet", icon: "", isDisabled: false },
       { value: "testnet", label: "FTM Testnet", icon: "", isDisabled: false },
     ],
     cronos: [
-      { value: "", label: "Select Chain", icon: "", isDisabled: true },
       {
         value: "mainnet",
         label: "Cronos Mainnet",
@@ -507,7 +501,6 @@ const ContractForm: React.FC = () => {
       },
     ],
     celo: [
-      { value: "", label: "Select Chain", icon: "", isDisabled: true },
       { value: "mainnet", label: "Celo Mainnet", icon: "", isDisabled: false },
       {
         value: "testnet",
@@ -517,7 +510,6 @@ const ContractForm: React.FC = () => {
       },
     ],
     aurora: [
-      { value: "", label: "Select Chain", icon: "", isDisabled: true },
       {
         value: "mainnet",
         label: "Aurora Mainnet",
@@ -532,7 +524,6 @@ const ContractForm: React.FC = () => {
       },
     ],
     arbiscan: [
-      { value: "", label: "Select Chain", icon: "", isDisabled: true },
       {
         value: "mainnet",
         label: "Arbiscan Mainnet",
@@ -547,7 +538,6 @@ const ContractForm: React.FC = () => {
       },
     ],
     reefscan: [
-      { value: "", label: "Select Chain", icon: "", isDisabled: true },
       {
         value: "mainnet",
         label: "ReefScan Mainnet",
@@ -660,7 +650,11 @@ const ContractForm: React.FC = () => {
   };
 
   const [platform, setPlatform] = React.useState("");
-  const [chain, setChain] = React.useState("");
+  const [chain, setChain] = React.useState<{
+    label: string;
+    value: string;
+    icon: string;
+  } | null>(null);
   const [chainList, setChainList] = React.useState<
     { label: string; value: string; icon: string }[]
   >(contractChain["etherscan"]);
@@ -680,13 +674,13 @@ const ContractForm: React.FC = () => {
     }>(API_PATH.API_GET_CONTRACT_STATUS, {
       contract_address,
       contract_platform: platform,
-      contract_chain: chain,
+      contract_chain: chain?.value,
     });
     if (data.contract_verified) {
       await API.post(API_PATH.API_START_SCAN_BLOCK, {
         contract_address,
         contract_platform: platform,
-        contract_chain: chain,
+        contract_chain: chain?.value,
       });
       queryClient.invalidateQueries("scans");
       queryClient.invalidateQueries("profile");
@@ -763,6 +757,7 @@ const ContractForm: React.FC = () => {
                   return item;
                 })}
                 placeholder="Select Contract Platform"
+                isSearchable={false}
                 value={options.find((item) => platform === item.value)}
                 styles={customStyles}
                 onChange={(newValue) => {
@@ -770,7 +765,7 @@ const ContractForm: React.FC = () => {
                     setPlatform(newValue.value);
                     if (supportedChains) {
                       setChainList(contractChain[newValue.value]);
-                      setChain("");
+                      setChain(null);
                     }
                   }
                 }}
@@ -780,14 +775,15 @@ const ContractForm: React.FC = () => {
               <FormLabel fontSize="sm">Contract Chain</FormLabel>
               <Select
                 formatOptionLabel={formatOptionLabel}
+                isSearchable={false}
                 isDisabled={platform === ""}
                 options={chainList}
+                value={chain}
                 placeholder="Select Contract Chain"
                 styles={customStyles}
-                value={chainList.find((item) => chain === item.value)}
                 onChange={(newValue) => {
                   if (newValue) {
-                    setChain(newValue.value);
+                    setChain(newValue);
                   }
                 }}
               />
@@ -912,29 +908,21 @@ const UploadForm: React.FC = () => {
     urlList.forEach((item) => {
       results.push(
         new Promise((resolve, reject) => {
-          let r = new FileReader();
-          r.readAsBinaryString(item.file);
-          r.onload = () => {
-            if (r.result) {
-              postDataToS3(r.result, item.url).then(
+          postDataToS3(item.file, item.url).then(
+            (res) => {
+              resolve(res);
+            },
+            () => {
+              postDataToS3(item.file, item.url).then(
                 (res) => {
                   resolve(res);
                 },
                 () => {
-                  postDataToS3(r.result, item.url).then(
-                    (res) => {
-                      resolve(res);
-                    },
-                    () => {
-                      reject(false);
-                    }
-                  );
+                  reject(false);
                 }
               );
-            } else {
-              reject(false);
             }
-          };
+          );
         })
       );
     });
@@ -991,10 +979,7 @@ const UploadForm: React.FC = () => {
     // r.readAsBinaryString(file);
   };
 
-  const postDataToS3 = async (
-    fileData: string | ArrayBuffer,
-    urlString: string
-  ) => {
+  const postDataToS3 = async (fileData: File, urlString: string) => {
     const { status } = await API.put(urlString, fileData, {
       headers: {
         "Content-Type": "application/octet-stream",

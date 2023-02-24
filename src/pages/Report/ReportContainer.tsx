@@ -1500,12 +1500,9 @@ export const ReportContainer: React.FC<{ summary_report: Report }> = ({
                   {finding.file_path}
                 </Text>
               ))}
-
               <Divider mt={5} />
-
               <HStack spacing={5} mt={5} mb={3}>
                 <IssueDescriptionIcons size={40} />
-
                 <Text fontSize="md" fontWeight={"bold"} width={"100%"}>
                   Issue Description
                 </Text>
@@ -1519,7 +1516,6 @@ export const ReportContainer: React.FC<{ summary_report: Report }> = ({
               </DescriptionWrapper>
               <HStack spacing={5} mt={5} mb={3}>
                 <IssueRemediationIcons size={40} />
-
                 <Text fontSize="md" fontWeight={"bold"} width={"100%"}>
                   Issue Remediation
                 </Text>
