@@ -1346,15 +1346,15 @@ export const ReportContainer: React.FC<{ summary_report: Report }> = ({
                 fontSize="md"
                 fontWeight={"normal"}
                 color={"gray.400"}
-                mb={1}
                 width={"100%"}
+                mb={1}
               >
                 Bug ID
               </Text>
-              <Text fontSize="xl" fontWeight={"bold"} mb={10} width={"100%"}>
+              <Text fontSize="xl" fontWeight={"bold"} mb={5} width={"100%"}>
                 {issue.bug_id}
               </Text>
-              <Flex width={"100%"} mb={6} flexWrap="wrap">
+              <Flex width={"100%"} mb={3} flexWrap="wrap">
                 <VStack
                   width={["50%", "50%", "50%", "15%"]}
                   mb={[4, 4, 4, 0]}
@@ -1483,7 +1483,7 @@ export const ReportContainer: React.FC<{ summary_report: Report }> = ({
               >
                 Bug Type
               </Text>
-              <Text fontSize="lg" fontWeight={"bols"} mb={10} width={"100%"}>
+              <Text fontSize="lg" fontWeight={"bols"} mb={5} width={"100%"}>
                 {issue.issue_name}
               </Text>
               <Text
@@ -1500,12 +1500,9 @@ export const ReportContainer: React.FC<{ summary_report: Report }> = ({
                   {finding.file_path}
                 </Text>
               ))}
-
-              <Divider my={10} />
-
-              <HStack spacing={5} mb={5}>
+              <Divider mt={5} />
+              <HStack spacing={5} mt={5} mb={3}>
                 <IssueDescriptionIcons size={40} />
-
                 <Text fontSize="md" fontWeight={"bold"} width={"100%"}>
                   Issue Description
                 </Text>
@@ -1517,9 +1514,8 @@ export const ReportContainer: React.FC<{ summary_report: Report }> = ({
                   }}
                 />
               </DescriptionWrapper>
-              <HStack spacing={5} mt={10} mb={5}>
+              <HStack spacing={5} mt={5} mb={3}>
                 <IssueRemediationIcons size={40} />
-
                 <Text fontSize="md" fontWeight={"bold"} width={"100%"}>
                   Issue Remediation
                 </Text>
