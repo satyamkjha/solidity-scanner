@@ -1527,6 +1527,17 @@ export const ReportContainer: React.FC<{ summary_report: Report }> = ({
                   }}
                 />
               </DescriptionWrapper>
+              {issue.comment !== "" && issue.bug_status === "wont_fix" && (
+                <>
+                  <HStack spacing={5} mt={10} mb={5}>
+                    <IssueRemediationIcons size={40} />
+                    <Text fontSize="md" fontWeight={"bold"} width={"100%"}>
+                      Comments
+                    </Text>
+                  </HStack>
+                  <Text>{issue.comment}</Text>
+                </>
+              )}
             </Flex>
           ))
         )}

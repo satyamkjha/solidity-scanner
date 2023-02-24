@@ -7,15 +7,13 @@ import {
   Icon,
   Button,
   HStack,
+  useMediaQuery,
 } from "@chakra-ui/react";
 import { Link } from "react-router-dom";
 
 import { CodeBlock, atomOneLight } from "react-code-blocks";
 
-import { AiOutlineCaretRight, AiFillGithub } from "react-icons/ai";
-
-import VulnerabilityDistribution from "components/vulnDistribution";
-import { SeverityIcon } from "components/icons";
+import { AiOutlineCaretRight } from "react-icons/ai";
 
 import { dummyCode, dummyIssues } from "common/values";
 import { TrialWallIcon } from "components/icons";
@@ -135,6 +133,7 @@ export const TrialWallIssue: React.FC<{
   no_of_issue: number;
   severity: string;
 }> = ({ no_of_issue, severity }) => {
+  const [isDesktopView] = useMediaQuery("(min-width: 1024px)");
   return (
     <Flex
       w="100%"
@@ -193,6 +192,13 @@ export const TrialWallIssue: React.FC<{
           Upgrade from the trial plan to find more details about these
           vulnerabilities.
         </Text>
+        {!isDesktopView && (
+          <Link to="/billing">
+            <Button mt={2} px={4} variant="brand" width="100%">
+              Upgrade
+            </Button>
+          </Link>
+        )}
       </Flex>
     </Flex>
   );
