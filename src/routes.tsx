@@ -172,13 +172,13 @@ const Routes: React.FC = () => {
                 <PrivateRoute exact path="/projects">
                   <Projects />
                 </PrivateRoute>
-                <PrivateRoute path="/projects/:projectId">
+                <PrivateRoute path="/projects/:projectId/:scanId">
                   <ProjectPage />
                 </PrivateRoute>
                 <PrivateRoute exact path="/blocks">
                   <Blocks />
                 </PrivateRoute>
-                <PrivateRoute exact path="/blocks/:scanId">
+                <PrivateRoute exact path="/blocks/:scanId/:projectId">
                   <BlockPage />
                 </PrivateRoute>
                 <PrivateRoute exact path="/integrations">

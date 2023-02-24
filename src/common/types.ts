@@ -157,6 +157,8 @@ export type MetricWiseAggregatedFinding = {
   bug_status: string;
   findings: Finding[];
   bug_id: string;
+  comment?: string;
+  scan_id: string;
 };
 
 export type ScanMeta = {
@@ -298,6 +300,7 @@ export type IssueItem = {
   issue_name: string;
   issue_remediation: string;
   severity: string;
+  comment?: string;
 };
 
 export type ReportsListItem = {
@@ -402,5 +405,6 @@ export type FilesState = {
   bug_hash: string;
   bug_status: string;
   issue_id: string;
+  comment?: string;
   template_details: MultiFileTemplateDetail;
 };

@@ -1,44 +1,65 @@
-import { WarningIcon } from "@chakra-ui/icons";
 import {
   HStack,
   VStack,
   Text,
-  Button,
   Box,
   Flex,
   Icon,
   Image,
   Stack,
   useMediaQuery,
+  IconButton,
+  Tooltip,
+  useDisclosure,
 } from "@chakra-ui/react";
-import { FilesState, MultiFileTemplateDetail } from "common/types";
+import { FilesState } from "common/types";
 import { issueActions } from "common/values";
 import { sentenceCapitalize } from "helpers/helperFunction";
-import React, { Dispatch, SetStateAction } from "react";
-import { BiCodeCurly } from "react-icons/bi";
+import React, { Dispatch, SetStateAction, useEffect, useState } from "react";
+import { BiBulb, BiCodeCurly, BiComment } from "react-icons/bi";
 import { MultiFileExplorer } from "./result";
 import TrialWall from "./trialWall";
 
 import Select from "react-select";
+import { HiOutlineDocumentText } from "react-icons/hi";
+import CommentForm from "./commentForm";
 
 export const DetailedResult: React.FC<{
   type: "block" | "project";
   is_latest_scan: boolean;
   files: FilesState | null;
-  confidence?: boolean[];
-  setConfidence?: Dispatch<SetStateAction<boolean[]>>;
   details_enabled: boolean;
+  selectedBugs: string[];
   updateBugStatus: any;
+  setFiles: Dispatch<SetStateAction<FilesState | null>>;
 }> = ({
   type,
   is_latest_scan,
   files,
-  confidence,
-  setConfidence,
   details_enabled,
+  selectedBugs,
   updateBugStatus,
+  setFiles,
 }) => {
   const [isDesktopView] = useMediaQuery("(min-width: 1024px)");
+  const { isOpen, onClose, onOpen } = useDisclosure();
+  const [bugStatus, setBugStatus] = useState<string | null>(null);
+  const [isDisabled, setIsDisabled] = useState<boolean>(true);
+
+  const [openIssueBox, setOpenIssueBox] = React.useState(true);
+  const [tabIndex, setTabIndex] = React.useState(0);
+
+  useEffect(() => {
+    if (selectedBugs && selectedBugs.length) {
+      setIsDisabled(false);
+    } else {
+      setIsDisabled(true);
+    }
+  }, [selectedBugs]);
+  const handleTabsChange = (index: number) => {
+    setOpenIssueBox(true);
+    setTabIndex(index);
+  };
 
   const customStyles = {
     option: (provided: any, state: any) => ({
@@ -60,11 +81,11 @@ export const DetailedResult: React.FC<{
     }),
     control: () => ({
       // none of react-select's styles are passed to <Control />
-      width: isDesktopView ? 300 : "100%",
+      width: isDesktopView ? 270 : "100%",
       display: "flex",
       flexDirection: "row",
       backgroundColor: "#FAFBFC",
-      padding: 5,
+      padding: 4,
       borderRadius: 20,
     }),
     singleValue: (provided: any, state: any) => {
@@ -84,70 +105,75 @@ export const DetailedResult: React.FC<{
       w={["100%", "100%", "100%", "60%"]}
       h={["100%"]}
       alignItems="flex-start"
-      spacing={5}
+      spacing={2}
       pl={[0, 0, 0, 10]}
     >
-      {confidence && setConfidence && (
-        <HStack
-          width={"100%"}
-          justify={"space-between"}
-          display={["none", "none", "none", "flex"]}
-        >
-          <Text fontWeight={600}>Confidence Parameter</Text>
-          <HStack>
-            <Button
-              variant={confidence[2] ? "solid" : "outline"}
-              py={0}
-              onClick={() =>
-                setConfidence([confidence[0], confidence[1], !confidence[2]])
-              }
-            >
-              <WarningIcon color={"low"} mr={2} /> Certain
-            </Button>
-            <Button
-              variant={confidence[1] ? "solid" : "outline"}
-              py={0}
-              onClick={() =>
-                setConfidence([confidence[0], !confidence[1], confidence[2]])
-              }
-            >
-              <WarningIcon color={"medium"} mr={2} /> Firm
-            </Button>
-            <Button
-              variant={confidence[0] ? "solid" : "outline"}
-              py={0}
-              onClick={() =>
-                setConfidence([!confidence[0], confidence[1], confidence[2]])
-              }
-            >
-              <WarningIcon color={"high"} mr={2} /> Tentative
-            </Button>
-          </HStack>
-        </HStack>
-      )}
       {files && files.bug_status !== "fixed" && is_latest_scan && (
         <Stack
           justify="space-between"
           alignItems={"center"}
           width={"100%"}
           direction={["column", "column", "column", "row"]}
-          mt={[4, 4, 4, 0]}
+          mt={[4, 4, 4, 2]}
+          mb={[0, 0, 0, 2]}
         >
-          <Text fontWeight={600}>Take Action</Text>
-          <Select
-            formatOptionLabel={formatOptionLabel}
-            options={issueActions}
-            value={issueActions.find(
-              (item) => files?.bug_status === item.value
-            )}
-            placeholder="Select Action"
-            styles={customStyles}
-            onChange={(newValue) => {
-              if (newValue) {
-                updateBugStatus(newValue.value);
-              }
-            }}
-          />
+          <HStack display={["none", "none", "none", "flex"]}>
+            <Text fontWeight={600} mr={5}>
+              Take Action
+            </Text>
+            <Select
+              formatOptionLabel={formatOptionLabel}
+              options={issueActions}
+              value={issueActions.find(
+                (item) => files?.bug_status === item.value
+              )}
+              placeholder="Select Action"
+              styles={customStyles}
+              isDisabled={isDisabled}
+              onChange={(newValue) => {
+                if (newValue) {
+                  if (newValue.value === "wont_fix") {
+                    onOpen();
+                    setBugStatus(newValue.value);
+                  } else {
+                    updateBugStatus(newValue.value);
+                  }
+                }
+              }}
+            />
+          </HStack>
+          <HStack>
+            <Tooltip label="View Issue Description" fontSize="md">
+              <IconButton
+                fontSize={"lg"}
+                aria-label="Issue Description"
+                onClick={() => handleTabsChange(0)}
+                icon={
+                  <HiOutlineDocumentText
+                    color={tabIndex === 0 ? "#3300FF" : "#8A94A6"}
+                  />
+                }
+              />
+            </Tooltip>
+            <Tooltip label="View Issue Remediation" fontSize="md">
+              <IconButton
+                fontSize={"lg"}
+                onClick={() => handleTabsChange(1)}
+                aria-label="Search database"
+                icon={<BiBulb color={tabIndex === 1 ? "#3300FF" : "#8A94A6"} />}
+              />
+            </Tooltip>
+            <Tooltip label="View Issue Comments" fontSize="md">
+              <IconButton
+                fontSize={"lg"}
+                onClick={() => handleTabsChange(2)}
+                aria-label="Search database"
+                icon={
+                  <BiComment color={tabIndex === 2 ? "#3300FF" : "#8A94A6"} />
+                }
+              />
+            </Tooltip>
+          </HStack>
         </Stack>
       )}
       {files &&
@@ -171,23 +197,32 @@ export const DetailedResult: React.FC<{
       <Box
         sx={{
           w: "100%",
-          position: "sticky",
-          top: 8,
+          top: 5,
         }}
       >
         {!details_enabled ? (
           <TrialWall />
         ) : files ? (
-          <MultiFileExplorer files={files} type={type} />
+          <MultiFileExplorer
+            handleTabsChange={handleTabsChange}
+            tabIndex={tabIndex}
+            openIssueBox={openIssueBox}
+            setOpenIssueBox={setOpenIssueBox}
+            files={files}
+            type={type}
+            setFiles={setFiles}
+          />
         ) : (
           <Flex
             sx={{
               w: "100%",
               bg: "bg.subtle",
+              justifyContent: "center",
               flexDir: "column",
               alignItems: "center",
+              h: "60vh",
+              borderRadius: 15,
             }}
-            py={36}
           >
             <Icon as={BiCodeCurly} fontSize="40px" color="subtle" mb={4} />
             <Text color="subtle">
@@ -196,6 +231,13 @@ export const DetailedResult: React.FC<{
           </Flex>
         )}
       </Box>
+      <CommentForm
+        isOpen={isOpen}
+        onClose={onClose}
+        updateBugStatus={updateBugStatus}
+        status={bugStatus}
+        selectedBugs={selectedBugs}
+      />
     </VStack>
   );
 };

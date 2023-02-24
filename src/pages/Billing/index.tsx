@@ -95,8 +95,7 @@ const Billing: React.FC = () => {
   >();
   const [page, setPage] = useState<Page | undefined>();
 
-  const { data: plans } = usePricingPlans()
-
+  const { data: plans } = usePricingPlans();
 
   useEffect(() => {
     if (transactions) {
@@ -1008,7 +1007,9 @@ const CurrentPlan: React.FC<{
   const greyColor = "#BDBDBD";
   const toast = useToast();
   const cancelSubscription = async () => {
-    const { data } = await API.delete(API_PATH.API_CANCEL_STRIPE_SUBSCRIPTION_BETA);
+    const { data } = await API.delete(
+      API_PATH.API_CANCEL_STRIPE_SUBSCRIPTION_BETA
+    );
     if (data.status === "success") {
       toast({
         title: data.message,

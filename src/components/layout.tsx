@@ -40,8 +40,6 @@ const Layout: React.FC = ({ children }) => {
   const history = useHistory();
   const { data: profileData } = useProfile();
 
-
-
   const handleClickOutside = (e: MouseEvent) => {
     if (ref.current && ref.current.contains(e.target as Node)) {
       // inside click
@@ -202,41 +200,45 @@ const Layout: React.FC = ({ children }) => {
           <Flex
             w="100%"
             sx={{
-              p: 8,
+              px: 8,
+              py: 5,
               alignItems: "center",
               justifyContent: "space-between",
             }}
           >
-            <Flex width="90%" sx={{ alignItems: "center", justifyContent: 'space-between' }}>
-              <HStack width={['100%','100%', '60%', '50%', '60%']}>
-              <Icon
-                as={GiHamburgerMenu}
-                sx={{
-                  cursor: "pointer",
-                  color: "gray.400",
-                  fontSize: "24px",
-                  mr: 4,
-                  display: ["block", "block", "block", "none"],
-                  transition: "0.2s color",
-                }}
-                _hover={{
-                  color: "gray.500",
-                }}
-                onClick={() => setShowSidebar(!showSidebar)}
-              />
-              {profileData && (
-                <Text
-                  fontWeight={600}
-                  width={["80%"]}
-                  isTruncated
-                  fontSize={["xl", "xl", "2xl"]}
-                >
-                  <Box as="span" role="img" aria-label="wave" mr={2}>
-                    👋
-                  </Box>{" "}
-                  Hi {profileData?.name}
-                </Text>
-              )}
+            <Flex
+              width="90%"
+              sx={{ alignItems: "center", justifyContent: "space-between" }}
+            >
+              <HStack width={["100%", "100%", "60%", "50%", "60%"]}>
+                <Icon
+                  as={GiHamburgerMenu}
+                  sx={{
+                    cursor: "pointer",
+                    color: "gray.400",
+                    fontSize: "24px",
+                    mr: 4,
+                    display: ["block", "block", "block", "none"],
+                    transition: "0.2s color",
+                  }}
+                  _hover={{
+                    color: "gray.500",
+                  }}
+                  onClick={() => setShowSidebar(!showSidebar)}
+                />
+                {profileData && (
+                  <Text
+                    fontWeight={600}
+                    width={["80%"]}
+                    isTruncated
+                    fontSize={["xl", "xl", "2xl"]}
+                  >
+                    <Box as="span" role="img" aria-label="wave" mr={2}>
+                      👋
+                    </Box>{" "}
+                    Hi {profileData?.name}
+                  </Text>
+                )}
               </HStack>
 
               {profileData && (

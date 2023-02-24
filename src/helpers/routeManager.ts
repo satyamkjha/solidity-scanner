@@ -29,6 +29,7 @@ export const API_PATH = {
   API_GET_FILE_CONTENT: "/api-get-file-content/",
   API_GET_FILE_CONTENT_BLOCK: "/api-get-file-content-block/",
   API_GET_ISSUE_DETAILS: "/api-get-issue-details/",
+  API_UPDATE_BUG_STATUS: "/api-update-bug-status/",
 
   //QUICKSCAN
   API_GET_LATEST_QS: "/api-latest-qs/",

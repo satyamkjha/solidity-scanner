@@ -45,7 +45,7 @@
     "react-ga": "^3.3.0",
     "react-helmet": "^6.1.0",
     "react-hook-form": "^7.6.2",
-    "react-icons": "^4.2.0",
+    "react-icons": "^4.7.1",
     "react-infinite-scroll-component": "^6.1.0",
     "react-input-checkbox": "^1.1.0",
     "react-js-pagination": "^3.0.3",
@@ -62,7 +62,7 @@
     "yarn": "^1.22.19"
   },
   "scripts": {
-    "start": "PORT=3001 react-scripts start",
+    "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
