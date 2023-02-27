@@ -3,7 +3,7 @@ import React, { Component } from "react";
 
 export const ThreatScoreMeter = ({
   strokeWidth = 11,
-  diameter = 180,
+  diameter = 200,
   fontSize = "2xl",
   textMarginTop = -10,
   subtleFontSize = "xs",
@@ -31,7 +31,7 @@ export const ThreatScoreMeter = ({
     >
       <svg
         width={diameter}
-        height={diameter / 2 + 10}
+        height={diameter / 2}
         style={{
           transform: "rotateY(180deg)",
           backgroundImage: "url(/background/meterBg.svg)",
@@ -45,7 +45,7 @@ export const ThreatScoreMeter = ({
         <circle
           cx={coordinateForCircle}
           cy={coordinateForCircle}
-          r={radius + 2}
+          r={radius}
           fill="none"
           stroke={"#D9D9D9"}
           strokeWidth={strokeWidth}
@@ -58,7 +58,7 @@ export const ThreatScoreMeter = ({
         <circle
           cx={coordinateForCircle}
           cy={coordinateForCircle}
-          r={radius + 2}
+          r={radius}
           fill="none"
           stroke={
             percentage > 80
