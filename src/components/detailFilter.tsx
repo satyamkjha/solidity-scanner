@@ -95,6 +95,19 @@ export const DetailFilter: React.FC<{
               <Text fontWeight={"600"} whiteSpace="nowrap">
                 Filter Parameter
               </Text>
+              <Text
+                fontSize="12px"
+                sx={{
+                  color: "green.500",
+                  bg: "green.50",
+                  px: 3,
+                  borderRadius: 20,
+                  mt: -5,
+                  ml: -1,
+                }}
+              >
+                NEW
+              </Text>
               <AccordionButton
                 ml="auto"
                 w={"max-content"}
