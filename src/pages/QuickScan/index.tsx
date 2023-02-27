@@ -1532,11 +1532,11 @@ const QuickScan: React.FC = () => {
                               {isDesktopView ? (
                                 <ThreatScoreMeter
                                   percentage={Math.round(item.threat_score)}
-                                  diameter={75}
+                                  diameter={85}
                                   strokeWidth={4}
                                   fontSize="md"
                                   subtleFontSize="xx-small"
-                                  textMarginTop={-6}
+                                  textMarginTop={-5}
                                 />
                               ) : (
                                 <Text
