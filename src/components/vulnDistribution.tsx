@@ -23,7 +23,9 @@ const VulnerabilityDistribution: React.FC<IssueSeverityDistribution> = ({
       <Box>
         <Text sx={{ lineHeight: 1.2, fontWeight: 600 }}>{critical}</Text>
         <Text sx={{ color: "subtle", fontSize: "xs" }}>Crit</Text>
-        <Box sx={{ w: "24px", h: "3px", bgColor: "high", ml: "1px", mt: 1 }} />
+        <Box
+          sx={{ w: "24px", h: "3px", bgColor: "critical", ml: "1px", mt: 1 }}
+        />
       </Box>
       <Box>
         <Text sx={{ lineHeight: 1.2, fontWeight: 600 }}>{high}</Text>

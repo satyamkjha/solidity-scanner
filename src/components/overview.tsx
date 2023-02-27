@@ -32,7 +32,7 @@ const pieData = (
     id: "critical",
     label: "Critical",
     value: critical,
-    color: "#FF5C00",
+    color: "#960D00",
   },
   {
     id: "high",
