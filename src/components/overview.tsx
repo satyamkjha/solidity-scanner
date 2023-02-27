@@ -32,7 +32,7 @@ const pieData = (
     id: "critical",
     label: "Critical",
     value: critical,
-    color: "#FF5C00",
+    color: "#960D00",
   },
   {
     id: "high",
@@ -78,7 +78,7 @@ const Overview: React.FC<{
     <>
       {scanData.multi_file_scan_status === "scan_done" &&
       scanData.multi_file_scan_summary ? (
-        <Flex w="100%" sx={{ flexDir: ["column", "column", "row"] }}>
+        <Flex w="100%" sx={{ flexDir: ["column", "column", "row"] }} my={4}>
           <VStack w={["100%", "100%", "40%"]} mb={[8, 8, 0]}>
             <Box
               w={["100%", "100%", "70%"]}
@@ -140,9 +140,11 @@ const Overview: React.FC<{
           <VStack
             w={["100%", "100%", "60%"]}
             alignItems={["center", "center", "center", "flex-start"]}
-            py={8}
+            pt={2}
             px={[0, 0, 4]}
             spacing={5}
+            h="63vh"
+            overflowY={["visible", "visible", "visible", "scroll"]}
           >
             <Box
               w="100%"
@@ -274,7 +276,7 @@ const Overview: React.FC<{
           </VStack>
         </Flex>
       ) : scanData.scan_status === "scan_done" && scanData.scan_summary ? (
-        <Flex w="100%" sx={{ flexDir: ["column", "column", "row"] }}>
+        <Flex w="100%" h="50vh" sx={{ flexDir: ["column", "column", "row"] }}>
           <VStack w={["100%", "100%", "50%"]} mb={[8, 8, 0]}>
             <Box
               w={["100%", "100%", "70%"]}
@@ -321,6 +323,7 @@ const Overview: React.FC<{
             w={["100%", "100%", "50%"]}
             alignItems="flex-start"
             p={8}
+            h="63vh"
             spacing={5}
           >
             <Box
@@ -459,6 +462,7 @@ const Overview: React.FC<{
             alignItems="flex-start"
             p={8}
             spacing={5}
+            h="63vh"
           >
             {scansRemaining && (
               <Flex px={2}>

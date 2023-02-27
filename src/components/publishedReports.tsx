@@ -193,7 +193,9 @@ const PublishedReports: React.FC<{
       sx={{
         w: "100%",
         borderRadius: "20px",
-        p: [0, 0, 4],
+        px: [0, 0, 4],
+        h: "63vh",
+        overflowY: "scroll",
       }}
     >
       {reportList &&

@@ -37,7 +37,6 @@ import { AiOutlineProject } from "react-icons/ai";
 import {
   BlockCredit,
   ProjectIcon,
-  ScanErrorIcon,
   SolidityFileIcon,
   UploadIcon,
 } from "components/icons";
@@ -46,12 +45,9 @@ import { useOverview } from "hooks/useOverview";
 import { useProfile } from "hooks/useProfile";
 import VulnerabilityProgress from "components/VulnerabilityProgress";
 import { useSupportedChains } from "hooks/useSupportedPlatforms";
-import { getFeatureGateConfig, sentenceCapitalize } from "helpers/helperFunction";
+import { getFeatureGateConfig } from "helpers/helperFunction";
 import { useDropzone } from "react-dropzone";
-import { url } from "inspector";
 import Select from "react-select";
-import { resolve } from "dns";
-import { rejects } from "assert";
 import { API_PATH } from "helpers/routeManager";
 
 const Home: React.FC = () => {
@@ -432,51 +428,125 @@ const formatOptionLabel: React.FC<{
 
 const ContractForm: React.FC = () => {
   const contractChain: {
-    [key: string]: { label: string; value: string; icon: string }[];
+    [key: string]: {
+      label: string;
+      value: string;
+      icon: string;
+      isDisabled: boolean;
+    }[];
   } = {
     etherscan: [
-      { value: "mainnet", label: "Ethereum Mainnet", icon: "" },
-      { value: "sepolia", label: "Sepolia Testnet", icon: "" },
-      { value: "goerli", label: "Goerli Testnet", icon: "" },
+      {
+        value: "mainnet",
+        label: "Ethereum Mainnet",
+        icon: "",
+        isDisabled: false,
+      },
+      {
+        value: "sepolia",
+        label: "Sepolia Testnet",
+        icon: "",
+        isDisabled: false,
+      },
+      { value: "goerli", label: "Goerli Testnet", icon: "", isDisabled: false },
     ],
     bscscan: [
-      { value: "mainnet", label: "Bsc Mainnet", icon: "" },
-      { value: "testnet", label: "Bsc Testnet", icon: "" },
+      { value: "mainnet", label: "Bsc Mainnet", icon: "", isDisabled: false },
+      { value: "testnet", label: "Bsc Testnet", icon: "", isDisabled: false },
     ],
     polygonscan: [
-      { value: "mainnet", label: "Polygon Mainnet", icon: "" },
-      { value: "testnet", label: "Polygon Testnet", icon: "" },
+      {
+        value: "mainnet",
+        label: "Polygon Mainnet",
+        icon: "",
+        isDisabled: false,
+      },
+      {
+        value: "testnet",
+        label: "Polygon Testnet",
+        icon: "",
+        isDisabled: false,
+      },
     ],
     avalanche: [
-      { value: "mainnet", label: "Avalanche Mainnet", icon: "" },
-      { value: "testnet", label: "Avalanche Fuji Testnet", icon: "" },
+      {
+        value: "mainnet",
+        label: "Avalanche Mainnet",
+        icon: "",
+        isDisabled: false,
+      },
+      {
+        value: "testnet",
+        label: "Avalanche Fuji Testnet",
+        icon: "",
+        isDisabled: false,
+      },
     ],
     fantom: [
-      { value: "mainnet", label: "FTM Mainnet", icon: "" },
-      { value: "testnet", label: "FTM Testnet", icon: "" },
+      { value: "mainnet", label: "FTM Mainnet", icon: "", isDisabled: false },
+      { value: "testnet", label: "FTM Testnet", icon: "", isDisabled: false },
     ],
     cronos: [
-      { value: "mainnet", label: "Cronos Mainnet", icon: "" },
-      { value: "testnet", label: "Cronos Testnet", icon: "" },
+      {
+        value: "mainnet",
+        label: "Cronos Mainnet",
+        icon: "",
+        isDisabled: false,
+      },
+      {
+        value: "testnet",
+        label: "Cronos Testnet",
+        icon: "",
+        isDisabled: false,
+      },
     ],
     celo: [
-      { value: "mainnet", label: "Celo Mainnet", icon: "" },
-      { value: "testnet", label: "Alfajores Testnet", icon: "" },
+      { value: "mainnet", label: "Celo Mainnet", icon: "", isDisabled: false },
+      {
+        value: "testnet",
+        label: "Alfajores Testnet",
+        icon: "",
+        isDisabled: false,
+      },
     ],
     aurora: [
-      { value: "mainnet", label: "Aurora Mainnet", icon: "" },
-      { value: "testnet", label: "Aurora Testnet", icon: "" },
+      {
+        value: "mainnet",
+        label: "Aurora Mainnet",
+        icon: "",
+        isDisabled: false,
+      },
+      {
+        value: "testnet",
+        label: "Aurora Testnet",
+        icon: "",
+        isDisabled: false,
+      },
     ],
     arbiscan: [
-      { value: "mainnet", label: "Arbiscan Mainnet", icon: "" },
-      { value: "goerli", label: "Arbiscan Goerli", icon: "" },
+      {
+        value: "mainnet",
+        label: "Arbiscan Mainnet",
+        icon: "",
+        isDisabled: false,
+      },
+      {
+        value: "goerli",
+        label: "Arbiscan Goerli",
+        icon: "",
+        isDisabled: false,
+      },
     ],
     reefscan: [
-      { value: "mainnet", label: "ReefScan Mainnet", icon: "" },
+      {
+        value: "mainnet",
+        label: "ReefScan Mainnet",
+        icon: "",
+        isDisabled: false,
+      },
       // { value: "testnet", label: "ReefScan Testnet", icon: "" },
     ],
   };
-
 
   const options = [
     {
@@ -580,7 +650,11 @@ const ContractForm: React.FC = () => {
   };
 
   const [platform, setPlatform] = React.useState("");
-  const [chain, setChain] = React.useState("");
+  const [chain, setChain] = React.useState<{
+    label: string;
+    value: string;
+    icon: string;
+  } | null>(null);
   const [chainList, setChainList] = React.useState<
     { label: string; value: string; icon: string }[]
   >(contractChain["etherscan"]);
@@ -590,7 +664,7 @@ const ContractForm: React.FC = () => {
   const { data: profileData } = useProfile();
   const { data: supportedChains } = useSupportedChains();
 
-  const platform_supported = getFeatureGateConfig().platform_supported
+  const platform_supported = getFeatureGateConfig().platform_supported;
 
   const onSubmit = async ({ contract_address }: ContractFormData) => {
     const { data } = await API.post<{
@@ -600,18 +674,18 @@ const ContractForm: React.FC = () => {
     }>(API_PATH.API_GET_CONTRACT_STATUS, {
       contract_address,
       contract_platform: platform,
-      contract_chain: chain,
-    }); 
-    if(data.contract_verified){
+      contract_chain: chain?.value,
+    });
+    if (data.contract_verified) {
       await API.post(API_PATH.API_START_SCAN_BLOCK, {
         contract_address,
         contract_platform: platform,
-        contract_chain: chain,
+        contract_chain: chain?.value,
       });
       queryClient.invalidateQueries("scans");
       queryClient.invalidateQueries("profile");
       history.push("/blocks");
-    } 
+    }
   };
   return (
     <>
@@ -668,7 +742,10 @@ const ContractForm: React.FC = () => {
                 formatOptionLabel={formatOptionLabel}
                 options={options.map((item) => {
                   for (const chain in supportedChains) {
-                    if (chain === item.value && platform_supported.includes(chain)) {
+                    if (
+                      chain === item.value &&
+                      platform_supported.includes(chain)
+                    ) {
                       return {
                         value: item.value,
                         icon: item.icon,
@@ -680,13 +757,15 @@ const ContractForm: React.FC = () => {
                   return item;
                 })}
                 placeholder="Select Contract Platform"
+                isSearchable={false}
+                value={options.find((item) => platform === item.value)}
                 styles={customStyles}
                 onChange={(newValue) => {
                   if (newValue) {
-                    // setAction(newValue.value)
                     setPlatform(newValue.value);
                     if (supportedChains) {
                       setChainList(contractChain[newValue.value]);
+                      setChain(null);
                     }
                   }
                 }}
@@ -696,13 +775,15 @@ const ContractForm: React.FC = () => {
               <FormLabel fontSize="sm">Contract Chain</FormLabel>
               <Select
                 formatOptionLabel={formatOptionLabel}
+                isSearchable={false}
                 isDisabled={platform === ""}
                 options={chainList}
+                value={chain}
                 placeholder="Select Contract Chain"
                 styles={customStyles}
                 onChange={(newValue) => {
                   if (newValue) {
-                    setChain(newValue.value);
+                    setChain(newValue);
                   }
                 }}
               />
@@ -827,29 +908,21 @@ const UploadForm: React.FC = () => {
     urlList.forEach((item) => {
       results.push(
         new Promise((resolve, reject) => {
-          let r = new FileReader();
-          r.readAsBinaryString(item.file);
-          r.onload = () => {
-            if (r.result) {
-              postDataToS3(r.result, item.url).then(
+          postDataToS3(item.file, item.url).then(
+            (res) => {
+              resolve(res);
+            },
+            () => {
+              postDataToS3(item.file, item.url).then(
                 (res) => {
                   resolve(res);
                 },
                 () => {
-                  postDataToS3(r.result, item.url).then(
-                    (res) => {
-                      resolve(res);
-                    },
-                    () => {
-                      reject(false);
-                    }
-                  );
+                  reject(false);
                 }
               );
-            } else {
-              reject(false);
             }
-          };
+          );
         })
       );
     });
@@ -906,10 +979,7 @@ const UploadForm: React.FC = () => {
     // r.readAsBinaryString(file);
   };
 
-  const postDataToS3 = async (
-    fileData: string | ArrayBuffer,
-    urlString: string
-  ) => {
+  const postDataToS3 = async (fileData: File, urlString: string) => {
     const { status } = await API.put(urlString, fileData, {
       headers: {
         "Content-Type": "application/octet-stream",

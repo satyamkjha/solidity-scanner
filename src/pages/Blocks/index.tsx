@@ -76,23 +76,26 @@ const Blocks: React.FC = () => {
   }, [scanList]);
 
   useEffect(() => {
-    refetch()
-  }, [pagination])
+    refetch();
+  }, [pagination]);
 
   const fetchScan = async () => {
     scanList?.forEach(async (scan, index) => {
-      if (scan.multi_file_scan_status === "scanning" || scan.multi_file_scan_status === "initialised") {
+      if (
+        scan.multi_file_scan_status === "scanning" ||
+        scan.multi_file_scan_status === "initialised"
+      ) {
         const { data } = await API.post<{
           scan_report: Scan;
           is_latest_scan: boolean;
         }>(API_PATH.API_GET_SCAN_DETAILS, { scan_id: scan.scan_id });
         let scanL = [...scanList];
-        data.scan_report._updated = scan._updated
+        data.scan_report._updated = scan._updated;
         scanL[index] = data.scan_report;
         setScanList(scanL);
       }
-    })
-  }
+    });
+  };
   const fetchMoreBlocks = async () => {
     if (page && pagination.pageNo >= page.total_pages) {
       setHasMore(false);
@@ -221,6 +224,7 @@ const BlockCard: React.FC<{ scan: Scan }> = ({ scan }) => {
     multi_file_scan_status,
     multi_file_scan_summary,
     multi_file_scan_details,
+    project_id,
   } = scan;
 
   const history = useHistory();
@@ -248,7 +252,7 @@ const BlockCard: React.FC<{ scan: Scan }> = ({ scan }) => {
       w={["90%", "95%", "45%", "320px"]}
       onClick={() => {
         if (multi_file_scan_status === "scan_done") {
-          history.push(`/blocks/${scan_id}`);
+          history.push(`/blocks/${scan_id}/${project_id}`);
         } else {
           history.push("/blocks");
         }

@@ -13,7 +13,7 @@ export const issueActions = [
   {
     value: "pending_fix",
     icon: "",
-    label: "Please Select an action",
+    label: "Select action",
     isDisabled: true,
   },
   { value: "wont_fix", icon: "wont_fix", label: "Won't Fix" },
