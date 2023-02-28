@@ -618,7 +618,7 @@ export const MultifileResult: React.FC<{
               position={"sticky"}
               top={filterExpanded ? "285px" : "50px"}
               background="white"
-              zIndex={10}
+              zIndex={1}
               w={"100%"}
               py={2}
             >
@@ -1531,7 +1531,7 @@ const IssueDetail: React.FC<{
           </TabPanel>
           <TabPanel
             sx={{
-              h: ["fit-content", "fit-content", "fit-content", height],
+              h: height,
               w: "100%",
               overflowY: "scroll",
             }}
@@ -1549,7 +1549,7 @@ const IssueDetail: React.FC<{
           </TabPanel>
           <TabPanel
             sx={{
-              h: ["fit-content", "fit-content", "fit-content", height],
+              h: height,
               w: "100%",
               overflowY: "scroll",
               justifyContent: "space-between",
