@@ -64,16 +64,9 @@ const SignIn: React.FC = () => {
   // const env_var = JSON.parse(process.env.REACT_APP_FEATURE_GATE_CONFIG)
 
   useEffect(() => {
-    const query = new URLSearchParams(location.search);
-
-    const authenticated = query.get("authenticated");
-    console.log(Cookies.get("csrftoken"));
-    if (authenticated && Cookies.get("csrftoken")) {
-      localStorage.setItem("authenticated", "true");
-      <Redirect to={"/home"} />;
-    }
-    const campaign_type = query.get("utm_source");
-    const campaign_id = query.get("utm_campaign");
+    const searchParams = new URLSearchParams(location.search);
+    const campaign_type = searchParams.get("utm_source");
+    const campaign_id = searchParams.get("utm_campaign");
     if (campaign_type) localStorage.setItem("campaign_type", campaign_type);
     if (campaign_id) localStorage.setItem("campaign_id", campaign_id);
   }, []);
