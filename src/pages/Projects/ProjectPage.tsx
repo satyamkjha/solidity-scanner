@@ -657,7 +657,7 @@ const ScanDetails: React.FC<{ scansRemaining: number; scans: ScanMeta[] }> = ({
                             h="35px"
                             minW={"175px"}
                             bgColor={"#F5F5F5"}
-                            mx={2}
+                            mx={4}
                             whiteSpace="nowrap"
                           >
                             Published Reports
@@ -669,7 +669,7 @@ const ScanDetails: React.FC<{ scansRemaining: number; scans: ScanMeta[] }> = ({
                           h="35px"
                           minW={"175px"}
                           bgColor={"#F5F5F5"}
-                          mx={2}
+                          mx={4}
                           whiteSpace="nowrap"
                         >
                           Published Reports
