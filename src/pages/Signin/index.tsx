@@ -67,8 +67,8 @@ const SignIn: React.FC = () => {
     const query = new URLSearchParams(location.search);
 
     const authenticated = query.get("authenticated");
-    console.log(Cookies.get("sessionid"));
-    if (authenticated && Cookies.get("sessionid")) {
+    console.log(Cookies.get("csrftoken"));
+    if (authenticated && Cookies.get("csrftoken")) {
       localStorage.setItem("authenticated", "true");
       <Redirect to={"/home"} />;
     }
