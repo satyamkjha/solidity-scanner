@@ -1,6 +1,11 @@
 import React, { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
-import { Link as RouterLink, useHistory, useLocation } from "react-router-dom";
+import {
+  Link as RouterLink,
+  Redirect,
+  useHistory,
+  useLocation,
+} from "react-router-dom";
 import {
   Flex,
   Heading,
@@ -33,6 +38,8 @@ import { ViewIcon, ViewOffIcon } from "@chakra-ui/icons";
 import { EBADF } from "constants";
 import MetaMaskLogin from "components/metamaskSignin";
 import { API_PATH } from "helpers/routeManager";
+import GoogleSignIn from "components/googleSignin";
+import Cookies from "js-cookie";
 
 function useQuery() {
   return new URLSearchParams(useLocation().search);
@@ -58,6 +65,13 @@ const SignIn: React.FC = () => {
 
   useEffect(() => {
     const query = new URLSearchParams(location.search);
+
+    const authenticated = query.get("authenticated");
+    console.log(Cookies.get("sessionid"));
+    if (authenticated && Cookies.get("sessionid")) {
+      localStorage.setItem("authenticated", "true");
+      <Redirect to={"/home"} />;
+    }
     const campaign_type = query.get("utm_source");
     const campaign_id = query.get("utm_campaign");
     if (campaign_type) localStorage.setItem("campaign_type", campaign_type);
@@ -82,7 +96,18 @@ const SignIn: React.FC = () => {
         <Text color="subtle" my={3}>
           Welcome back, you’ve been missed!
         </Text>
-        <MetaMaskLogin />
+        <Stack spacing={4} direction={["column", "column", "column", "row"]}>
+          <MetaMaskLogin />
+          <GoogleSignIn />
+        </Stack>
+
+        <HStack spacing={5} width={["300px", "400px", "550px"]}>
+          <Divider background={"#000000"} width={"43%"} />
+          <Text color="subtle" my={3}>
+            OR
+          </Text>
+          <Divider background={"#FAFBFC"} width={"45%"} />
+        </HStack>
         {/* <Button my={4} sx={{ fontSize: "13px", px: 8, py: 6 }} isDisabled>
           <Icon as={FcGoogle} mr={2} fontSize="20px" />
           Sign In with Google
@@ -150,7 +175,7 @@ const LoginForm: React.FC = () => {
 
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
-      <Stack spacing={6} mt={8} width={["300px", "400px", "500px"]}>
+      <Stack spacing={6} mt={8} width={["300px", "400px", "550px"]}>
         <InputGroup alignItems="center">
           <InputLeftElement
             height="48px"

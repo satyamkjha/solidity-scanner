@@ -13,10 +13,9 @@ import {
   Input,
   Link,
   Box,
-  FormControl,
-  FormLabel,
-  Select,
   InputRightElement,
+  HStack,
+  Divider,
 } from "@chakra-ui/react";
 import { motion } from "framer-motion";
 import {
@@ -32,14 +31,14 @@ import { passwordStrength } from "check-password-strength";
 
 import { FaLock, FaUserAlt } from "react-icons/fa";
 
-import { Logo, MailSent } from "components/icons";
+import { Logo } from "components/icons";
 
 import API from "helpers/api";
 import { AuthResponse } from "common/types";
-import { platform } from "os";
 import { ViewOffIcon, ViewIcon } from "@chakra-ui/icons";
 import MetaMaskLogin from "components/metamaskSignin";
 import { API_PATH } from "helpers/routeManager";
+import GoogleSignIn from "components/googleSignin";
 
 const CustomFlex = motion(Flex);
 
@@ -74,11 +73,17 @@ const SignUp: React.FC = () => {
         <Text color="subtle" my={3}>
           Create an account to continue!
         </Text>
-        <MetaMaskLogin />
-        {/* <Button my={4} sx={{ fontSize: "13px", px: 8, py: 6 }} isDisabled>
-            <Icon as={FcGoogle} mr={2} fontSize="20px" />
-            Sign Up with Google
-          </Button> */}
+        <Stack spacing={4} direction={["column", "column", "column", "row"]}>
+          <MetaMaskLogin />
+          <GoogleSignIn />
+        </Stack>
+        <HStack spacing={5} width={["300px", "400px", "550px"]}>
+          <Divider background={"#000000"} width={"43%"} />
+          <Text color="subtle" my={3}>
+            OR
+          </Text>
+          <Divider background={"#FAFBFC"} width={"45%"} />
+        </HStack>
 
         {/* <Flex
             align="center"
@@ -199,7 +204,10 @@ const RegisterForm: React.FC<{
           },
         };
       }
-      const { data } = await API.post<AuthResponse>(API_PATH.API_REGISTER, reqBody);
+      const { data } = await API.post<AuthResponse>(
+        API_PATH.API_REGISTER,
+        reqBody
+      );
 
       if (data.status === "success") {
         setRegistered(true);
@@ -236,7 +244,7 @@ const RegisterForm: React.FC<{
 
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
-      <Stack spacing={6} mt={8} width={["300px", "400px", "500px"]}>
+      <Stack spacing={6} mt={8} width={["300px", "400px", "550px"]}>
         {step === 0 && (
           <>
             <InputGroup alignItems="center">
@@ -248,7 +256,7 @@ const RegisterForm: React.FC<{
                 isRequired
                 value={email}
                 type="email"
-                name='email'
+                name="email"
                 placeholder="Your email"
                 variant="brand"
                 size="lg"
@@ -263,7 +271,7 @@ const RegisterForm: React.FC<{
               />
               <Input
                 isRequired
-                name='name'
+                name="name"
                 value={name}
                 type="text"
                 placeholder="Your name"
@@ -282,7 +290,7 @@ const RegisterForm: React.FC<{
               <Input
                 isRequired
                 value={password}
-                name='password'
+                name="password"
                 type={show ? "text" : "password"}
                 placeholder="Create password"
                 variant="brand"
