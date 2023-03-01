@@ -71,7 +71,15 @@ export default function LandingPage() {
             "space-between",
           ]}
         >
-          <Box w={["100%", "100%", "100%", "45%"]} px={[0, 0, 10]} py={10}>
+          <Box
+            w={["100%", "100%", "100%", "45%"]}
+            px={[0, 0, 10]}
+            py={5}
+            justifyContent="center"
+            display={"flex"}
+            flexDir="column"
+            alignItems={["center", "center", "center", "flex-start"]}
+          >
             <Heading as="h1" fontSize={["3xl", "4xl"]} mb={8}>
               Get your smart contracts audited by a smarter tool
             </Heading>
@@ -84,6 +92,16 @@ export default function LandingPage() {
                 Signup For Free Trial
               </Button>
             </Link>
+            <a
+              href="https://www.producthunt.com/posts/solidityscan?utm_source=badge-featured&utm_medium=badge&utm_souce=badge-solidityscan"
+              target="_blank"
+            >
+              <img
+                src="https://api.producthunt.com/widgets/embed-image/v1/featured.svg?post_id=381735&theme=light"
+                alt="SolidityScan - The&#0032;Ultimate&#0032;EVM&#0032;Compatible&#0032;Smart&#0032;Contract&#0032;Analysis&#0032;Tool&#0033; | Product Hunt"
+                style={{ width: "250px", height: "54px", marginTop: "50px" }}
+              />
+            </a>
           </Box>
           <Box
             w={["100%", "100%", "100%", "55%"]}
