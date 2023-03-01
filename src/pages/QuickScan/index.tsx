@@ -284,6 +284,11 @@ const QuickScan: React.FC = () => {
       icon: "aurora",
       label: "Aurora - (aurorascan.dev)",
     },
+    {
+      value: "buildbear",
+      icon: "buildbear",
+      label: "Buildbear - (buildbear.io)",
+    },
   ];
 
   const customStylesPlatform = {
@@ -382,6 +387,7 @@ const QuickScan: React.FC = () => {
 
   const [address, setAddress] = React.useState("");
   const [platform, setPlatform] = React.useState("");
+  const [node_id, setNodeId] = React.useState("");
   const [chain, setChain] = React.useState<{
     label: string;
     value: string;
@@ -616,20 +622,37 @@ const QuickScan: React.FC = () => {
                   }
                 }}
               />
-              <Select
-                formatOptionLabel={formatOptionLabel}
-                isDisabled={platform === ""}
-                isSearchable={false}
-                value={chain}
-                options={chainList}
-                placeholder="Select Contract Chain"
-                styles={customStylesChain}
-                onChange={(newValue) => {
-                  if (newValue) {
-                    setChain(newValue);
-                  }
-                }}
-              />
+
+              {platform === "buildbear" ? (
+                <Input
+                  isRequired
+                  placeholder="Type or paste your contract address here..."
+                  variant="brand"
+                  size="lg"
+                  height={50}
+                  borderRadius={[15, 15, 15, 0]}
+                  width={["95%", "95%", "95%", "100%"]}
+                  value={node_id}
+                  onChange={(e) => {
+                    setNodeId(e.target.value);
+                  }}
+                />
+              ) : (
+                <Select
+                  formatOptionLabel={formatOptionLabel}
+                  isDisabled={platform === ""}
+                  isSearchable={false}
+                  value={chain}
+                  options={chainList}
+                  placeholder="Select Contract Chain"
+                  styles={customStylesChain}
+                  onChange={(newValue) => {
+                    if (newValue) {
+                      setChain(newValue);
+                    }
+                  }}
+                />
+              )}
               <Input
                 isRequired
                 placeholder="Type or paste your contract address here..."

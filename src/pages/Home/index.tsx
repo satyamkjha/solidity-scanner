@@ -410,6 +410,7 @@ const ApplicationForm: React.FC = () => {
 type ContractFormData = {
   // contract_name: string;
   contract_address: string;
+  node_id: string;
   // contract_platform: string;
 };
 
@@ -609,6 +610,12 @@ const ContractForm: React.FC = () => {
       label: "ReefScan - (reefscan.com)",
       isDisabled: true,
     },
+    {
+      value: "buildbear",
+      icon: "buildbear",
+      label: "Buildbear - (buildbear.io)",
+      isDisabled: true,
+    },
   ];
 
   const customStyles = {
@@ -771,23 +778,65 @@ const ContractForm: React.FC = () => {
                 }}
               />
             </FormControl>
-            <FormControl id="contract_chain">
-              <FormLabel fontSize="sm">Contract Chain</FormLabel>
-              <Select
-                formatOptionLabel={formatOptionLabel}
-                isSearchable={false}
-                isDisabled={platform === ""}
-                options={chainList}
-                value={chain}
-                placeholder="Select Contract Chain"
-                styles={customStyles}
-                onChange={(newValue) => {
-                  if (newValue) {
-                    setChain(newValue);
-                  }
-                }}
-              />
-            </FormControl>
+
+            {platform === "buildbear" ? (
+              <VStack alignItems={"flex-start"}>
+                <Text mb={0} fontSize="sm">
+                  Contract address
+                </Text>
+
+                <InputGroup mt={0} alignItems="center">
+                  <InputLeftElement
+                    height="48px"
+                    children={<Icon as={AiOutlineProject} color="gray.300" />}
+                  />
+                  <Input
+                    isRequired
+                    placeholder="0x808ed7A75n133f64069318Sa0q173c71rre44414"
+                    variant="brand"
+                    size="lg"
+                    {...register("contract_address")}
+                  />
+                </InputGroup>
+              </VStack>
+            ) : (
+              <FormControl id="contract_chain">
+                <FormLabel fontSize="sm">Contract Chain</FormLabel>
+                <Select
+                  formatOptionLabel={formatOptionLabel}
+                  isSearchable={false}
+                  isDisabled={platform === ""}
+                  options={chainList}
+                  value={chain}
+                  placeholder="Select Contract Chain"
+                  styles={customStyles}
+                  onChange={(newValue) => {
+                    if (newValue) {
+                      setChain(newValue);
+                    }
+                  }}
+                />
+              </FormControl>
+            )}
+            <VStack alignItems={"flex-start"}>
+              <Text mb={0} fontSize="sm">
+                Node ID
+              </Text>
+
+              <InputGroup mt={0} alignItems="center">
+                <InputLeftElement
+                  height="48px"
+                  children={<Icon as={AiOutlineProject} color="gray.300" />}
+                />
+                <Input
+                  isRequired
+                  placeholder="0x808ed7A75n133f64069318Sa0q173c71rre44414"
+                  variant="brand"
+                  size="lg"
+                  {...register("node_id")}
+                />
+              </InputGroup>
+            </VStack>
             <Button
               type="submit"
               variant="brand"
