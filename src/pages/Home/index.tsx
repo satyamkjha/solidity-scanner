@@ -686,7 +686,7 @@ const ContractForm: React.FC = () => {
       req = {
         contract_address: contract_address,
         contract_platform: platform,
-        contract_chain: chain,
+        contract_chain: chain?.value,
       };
     }
 

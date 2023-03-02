@@ -563,8 +563,12 @@ const QuickScan: React.FC = () => {
     }
     setIsLoading(true);
     setScanReport(null);
-    if (chain) {
-      runQuickScan(address, platform, chain.value, ref);
+    if (platform === "buildbear") {
+      runQuickScan(address, platform, node_id, ref);
+    } else {
+      if (chain) {
+        runQuickScan(address, platform, chain.value, ref);
+      }
     }
   };
 
