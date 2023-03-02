@@ -408,3 +408,13 @@ export type FilesState = {
   comment?: string;
   template_details: MultiFileTemplateDetail;
 };
+
+export type RecentQSItem = {
+  contract_address: string;
+  contract_platform: string;
+  contract_url: string;
+  is_report_approved: boolean;
+  scanner_reference_url: string;
+  score: string;
+  threat_score: string;
+};

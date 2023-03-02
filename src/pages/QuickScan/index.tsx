@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { Link as RouterLink, useLocation, useParams } from "react-router-dom";
 import styled from "@emotion/styled";
 
@@ -46,7 +46,7 @@ import Footer from "components/footer";
 import ContactUs from "components/contactus";
 import Select from "react-select";
 import API from "helpers/api";
-import { QuickScanResult } from "common/types";
+import { QuickScanResult, RecentQSItem } from "common/types";
 import { sentenceCapitalize } from "helpers/helperFunction";
 import PieChart from "components/pieChart";
 import { ArrowForwardIcon, ExternalLinkIcon } from "@chakra-ui/icons";
@@ -319,7 +319,6 @@ const QuickScan: React.FC = () => {
       width: isDesktopView ? "300px" : "95%",
       padding: 5,
       margin: 0,
-      marginBottom: isDesktopView ? 0 : 10,
       borderTopLeftRadius: 15,
       borderBottomLeftRadius: 15,
       borderTopRightRadius: isDesktopView ? 0 : 15,
@@ -358,7 +357,7 @@ const QuickScan: React.FC = () => {
       display: "flex",
       flexDirection: "row",
       backgroundColor: "#FFFFFF",
-      width: isDesktopView ? "250px" : "95%",
+      width: isDesktopView ? "300px" : "95%",
       padding: 5,
       borderTopLeftRadius: 0,
       borderBottomLeftRadius: 0,
@@ -400,15 +399,32 @@ const QuickScan: React.FC = () => {
   const [scanReport, setScanReport] = React.useState<QuickScanResult | null>(
     null
   );
-  const { data: recentScans, isLoading: recentScansLoading } =
-    useRecentQuickScans();
   const location = useLocation();
+  const query = new URLSearchParams(location.search);
+  const ref = query.get("ref");
+  const [recentScans, setRecentScans] = useState<RecentQSItem[]>([]);
+  const [isRecentScansLoading, setIsRecentScansLoading] =
+    useState<boolean>(false);
 
   let d = new Date();
 
   const elementRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
+    if (ref) {
+      localStorage.setItem("campaign_type", ref);
+      localStorage.setItem("campaign_id", ref);
+      sessionStorage.setItem("ref", ref);
+    } else if (
+      !localStorage.getItem("campaign_id") &&
+      !localStorage.getItem("campaign_type")
+    ) {
+      const campaign_type = query.get("utm_source") || "quickscan";
+      const campaign_id = query.get("utm_campaign") || "quickscan";
+      localStorage.setItem("campaign_type", campaign_type);
+      localStorage.setItem("campaign_id", campaign_id);
+    }
+
     if (blockAddress) setAddress(blockAddress);
 
     if (blockPlatform) {
@@ -417,52 +433,76 @@ const QuickScan: React.FC = () => {
       setChain(null);
     }
 
-    if (blockChain) {
-      contractChain[blockPlatform].forEach((item) => {
-        if (item.value === blockChain) {
-          setChain(item);
-        }
-      });
+    if (blockPlatform === "buildbear") {
+      setNodeId(blockChain);
+    } else {
+      if (blockChain) {
+        contractChain[blockPlatform].forEach((item) => {
+          if (item.value === blockChain) {
+            setChain(item);
+          }
+        });
+      }
     }
 
     if (blockAddress && blockChain && blockPlatform) {
       setIsLoading(true);
-      runQuickScan(blockAddress, blockPlatform, blockChain);
+      runQuickScan(blockAddress, blockPlatform, blockChain, ref);
+    } else {
+      if (ref) {
+        runRecentQuickScan(ref);
+      } else {
+        const refSession = sessionStorage.getItem("ref");
+        runRecentQuickScan(refSession);
+      }
     }
   }, []);
 
-  useEffect(() => {
-    if (
-      !localStorage.getItem("campaign_id") &&
-      !localStorage.getItem("campaign_type")
-    ) {
-      const query = new URLSearchParams(location.search);
-      const campaign_type = query.get("utm_source") || "quickscan";
-      const campaign_id = query.get("utm_campaign") || "quickscan";
-      localStorage.setItem("campaign_type", campaign_type);
-      localStorage.setItem("campaign_id", campaign_id);
+  const runRecentQuickScan = async (ref: string | null) => {
+    setIsRecentScansLoading(true);
+    const { data } = await API.get<{ scans: RecentQSItem[] }>(
+      `${API_PATH.API_GET_LATEST_QS}?ref=${ref}`
+    );
+    if (data) {
+      setRecentScans(data.scans);
     }
-  }, []);
+    setIsRecentScansLoading(false);
+  };
 
   const runQuickScan = async (
     address: string,
     platform: string,
-    chain: string
+    chain: string,
+    ref: string | null
   ) => {
+    let req = {};
+    if (platform === "buildbear") {
+      req = {
+        contract_address: address,
+        contract_platform: platform,
+        node_id: chain,
+      };
+    } else {
+      req = {
+        contract_address: address,
+        contract_platform: platform,
+        contract_chain: chain,
+      };
+    }
     API.post<{
       contract_verified: boolean;
       message: string;
       status: string;
-    }>(API_PATH.API_GET_CONTRACT_STATUS, {
-      contract_address: address,
-      contract_platform: platform,
-      contract_chain: chain,
-    }).then(
+    }>(API_PATH.API_GET_CONTRACT_STATUS, req).then(
       (res) => {
         if (res.data.contract_verified) {
-          API.get(
-            `${API_PATH.API_QUICK_SCAN_SSE}?contract_address=${address}&contract_platform=${platform}&contract_chain=${chain}`
-          )
+          let api_url = "";
+          if (platform === "buildbear") {
+            api_url = `${API_PATH.API_QUICK_SCAN_SSE}?contract_address=${address}&contract_platform=${platform}&node_id=${chain}&ref=${ref}`;
+          } else {
+            api_url = `${API_PATH.API_QUICK_SCAN_SSE}?contract_address=${address}&contract_platform=${platform}&contract_chain=${chain}&ref=${ref}`;
+          }
+          API.get(api_url)
             .then(
               (res) => {
                 if (res.status === 200) {
@@ -516,11 +556,10 @@ const QuickScan: React.FC = () => {
       });
       return;
     }
-
     setIsLoading(true);
     setScanReport(null);
     if (chain) {
-      runQuickScan(address, platform, chain.value);
+      runQuickScan(address, platform, chain.value, ref);
     }
   };
 
@@ -604,7 +643,7 @@ const QuickScan: React.FC = () => {
               justify="center"
               w={["80%", "80%", "70%"]}
               direction={["column", "column", "column", "row"]}
-              spacing={0}
+              spacing={isDesktopView ? 0 : 2}
             >
               <Select
                 formatOptionLabel={formatOptionLabel}
@@ -618,7 +657,7 @@ const QuickScan: React.FC = () => {
                     // setAction(newValue.value)
                     setPlatform(newValue.value);
                     setChainList(contractChain[newValue.value]);
-                    setChain("");
+                    setChain(null);
                   }
                 }}
               />
@@ -626,12 +665,12 @@ const QuickScan: React.FC = () => {
               {platform === "buildbear" ? (
                 <Input
                   isRequired
-                  placeholder="Type or paste your contract address here..."
+                  placeholder="Node ID"
                   variant="brand"
                   size="lg"
                   height={50}
                   borderRadius={[15, 15, 15, 0]}
-                  width={["95%", "95%", "95%", "100%"]}
+                  width={["95%", "95%", "95%", "300px"]}
                   value={node_id}
                   onChange={(e) => {
                     setNodeId(e.target.value);
@@ -655,13 +694,13 @@ const QuickScan: React.FC = () => {
               )}
               <Input
                 isRequired
-                placeholder="Type or paste your contract address here..."
+                placeholder="Contract Address"
                 variant="brand"
                 size="lg"
                 height={50}
                 borderTopLeftRadius={[15, 15, 15, 0]}
                 borderBottomLeftRadius={[15, 15, 15, 0]}
-                width={["95%", "95%", "95%", "100%"]}
+                width={["95%", "95%", "95%", "500px"]}
                 value={address}
                 onChange={(e) => {
                   setAddress(e.target.value);
@@ -1487,7 +1526,7 @@ const QuickScan: React.FC = () => {
                     alignItems={"flex-start"}
                     spacing={4}
                   >
-                    {recentScansLoading ? (
+                    {isRecentScansLoading ? (
                       <Flex
                         w={"100%"}
                         alignItems={"center"}
@@ -1496,7 +1535,7 @@ const QuickScan: React.FC = () => {
                         <Spinner />
                       </Flex>
                     ) : (
-                      recentScans.scans.map((item: any) => (
+                      recentScans.map((item: any) => (
                         <>
                           <HStack
                             justifyContent="flex-start"

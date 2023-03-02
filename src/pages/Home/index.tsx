@@ -667,28 +667,36 @@ const ContractForm: React.FC = () => {
   >(contractChain["etherscan"]);
   const queryClient = useQueryClient();
   const { handleSubmit, register, formState } = useForm<ContractFormData>();
+
   const history = useHistory();
   const { data: profileData } = useProfile();
   const { data: supportedChains } = useSupportedChains();
 
   const platform_supported = getFeatureGateConfig().platform_supported;
 
-  const onSubmit = async ({ contract_address }: ContractFormData) => {
+  const onSubmit = async ({ contract_address, node_id }: ContractFormData) => {
+    let req = {};
+    if (platform === "buildbear") {
+      req = {
+        contract_address: contract_address,
+        contract_platform: platform,
+        node_id: node_id,
+      };
+    } else {
+      req = {
+        contract_address: contract_address,
+        contract_platform: platform,
+        contract_chain: chain,
+      };
+    }
+
     const { data } = await API.post<{
       contract_verified: boolean;
       message: string;
       status: string;
-    }>(API_PATH.API_GET_CONTRACT_STATUS, {
-      contract_address,
-      contract_platform: platform,
-      contract_chain: chain?.value,
-    });
+    }>(API_PATH.API_GET_CONTRACT_STATUS, req);
     if (data.contract_verified) {
-      await API.post(API_PATH.API_START_SCAN_BLOCK, {
-        contract_address,
-        contract_platform: platform,
-        contract_chain: chain?.value,
-      });
+      await API.post(API_PATH.API_START_SCAN_BLOCK, req);
       queryClient.invalidateQueries("scans");
       queryClient.invalidateQueries("profile");
       history.push("/blocks");
@@ -782,7 +790,7 @@ const ContractForm: React.FC = () => {
             {platform === "buildbear" ? (
               <VStack alignItems={"flex-start"}>
                 <Text mb={0} fontSize="sm">
-                  Contract address
+                  Node ID
                 </Text>
 
                 <InputGroup mt={0} alignItems="center">
@@ -795,7 +803,7 @@ const ContractForm: React.FC = () => {
                     placeholder="0x808ed7A75n133f64069318Sa0q173c71rre44414"
                     variant="brand"
                     size="lg"
-                    {...register("contract_address")}
+                    {...register("node_id")}
                   />
                 </InputGroup>
               </VStack>
@@ -818,25 +826,7 @@ const ContractForm: React.FC = () => {
                 />
               </FormControl>
             )}
-            <VStack alignItems={"flex-start"}>
-              <Text mb={0} fontSize="sm">
-                Node ID
-              </Text>
 
-              <InputGroup mt={0} alignItems="center">
-                <InputLeftElement
-                  height="48px"
-                  children={<Icon as={AiOutlineProject} color="gray.300" />}
-                />
-                <Input
-                  isRequired
-                  placeholder="0x808ed7A75n133f64069318Sa0q173c71rre44414"
-                  variant="brand"
-                  size="lg"
-                  {...register("node_id")}
-                />
-              </InputGroup>
-            </VStack>
             <Button
               type="submit"
               variant="brand"
