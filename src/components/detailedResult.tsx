@@ -146,6 +146,7 @@ export const DetailedResult: React.FC<{
             <Tooltip label="View Issue Description" fontSize="md">
               <IconButton
                 fontSize={"lg"}
+                background="#FAFBFC"
                 aria-label="Issue Description"
                 onClick={() => handleTabsChange(0)}
                 icon={
@@ -158,16 +159,18 @@ export const DetailedResult: React.FC<{
             <Tooltip label="View Issue Remediation" fontSize="md">
               <IconButton
                 fontSize={"lg"}
+                background="#FAFBFC"
                 onClick={() => handleTabsChange(1)}
-                aria-label="Search database"
+                aria-label="Issue Remediation"
                 icon={<BiBulb color={tabIndex === 1 ? "#3300FF" : "#8A94A6"} />}
               />
             </Tooltip>
             <Tooltip label="View Issue Comments" fontSize="md">
               <IconButton
                 fontSize={"lg"}
+                background="#FAFBFC"
                 onClick={() => handleTabsChange(2)}
-                aria-label="Search database"
+                aria-label="Issue Comments"
                 icon={
                   <BiComment color={tabIndex === 2 ? "#3300FF" : "#8A94A6"} />
                 }

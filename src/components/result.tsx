@@ -55,9 +55,9 @@ import DetailedResult from "./detailedResult";
 import { DetailFilter } from "./detailFilter";
 import { IssueContainer } from "./issueContainer";
 import { sentenceCapitalize } from "helpers/helperFunction";
-import { FaCompressAlt, FaExpandAlt } from "react-icons/fa";
 import { API_PATH } from "helpers/routeManager";
 import CommentForm from "./commentForm";
+import { BsArrowsAngleExpand, BsArrowsAngleContract } from "react-icons/bs";
 
 type FileState = {
   issue_id: string;
@@ -618,7 +618,7 @@ export const MultifileResult: React.FC<{
               position={"sticky"}
               top={filterExpanded ? "285px" : "50px"}
               background="white"
-              zIndex={10}
+              zIndex={1}
               w={"100%"}
               py={2}
             >
@@ -1164,7 +1164,7 @@ export const MultiFileExplorer: React.FC<MultiFileExplorerProps> = ({
                   width={"100%"}
                   justifyContent={"space-between"}
                   alignItems="flex-start"
-                  mb={1}
+                  mb={3}
                 >
                   <Flex
                     gridColumnGap={4}
@@ -1310,9 +1310,15 @@ export const MultiFileExplorer: React.FC<MultiFileExplorerProps> = ({
                         aria-label="Handle Size"
                         icon={
                           fullScreen ? (
-                            <FaCompressAlt color="#8A94A6" />
+                            <BsArrowsAngleContract
+                              strokeWidth={1}
+                              color="#8A94A6"
+                            />
                           ) : (
-                            <FaExpandAlt color="#8A94A6" />
+                            <BsArrowsAngleExpand
+                              strokeWidth={1}
+                              color="#8A94A6"
+                            />
                           )
                         }
                       />
@@ -1531,7 +1537,7 @@ const IssueDetail: React.FC<{
           </TabPanel>
           <TabPanel
             sx={{
-              h: ["fit-content", "fit-content", "fit-content", height],
+              h: height,
               w: "100%",
               overflowY: "scroll",
             }}
@@ -1549,7 +1555,7 @@ const IssueDetail: React.FC<{
           </TabPanel>
           <TabPanel
             sx={{
-              h: ["fit-content", "fit-content", "fit-content", height],
+              h: height,
               w: "100%",
               overflowY: "scroll",
               justifyContent: "space-between",
