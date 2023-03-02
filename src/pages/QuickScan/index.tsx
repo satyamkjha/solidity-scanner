@@ -460,9 +460,11 @@ const QuickScan: React.FC = () => {
 
   const runRecentQuickScan = async (ref: string | null) => {
     setIsRecentScansLoading(true);
-    const { data } = await API.get<{ scans: RecentQSItem[] }>(
-      `${API_PATH.API_GET_LATEST_QS}?ref=${ref}`
-    );
+    let api_url = API_PATH.API_GET_LATEST_QS;
+    if (ref) {
+      api_url = api_url + `?ref=${ref}`;
+    }
+    const { data } = await API.get<{ scans: RecentQSItem[] }>(api_url);
     if (data) {
       setRecentScans(data.scans);
     }
@@ -498,9 +500,12 @@ const QuickScan: React.FC = () => {
         if (res.data.contract_verified) {
           let api_url = "";
           if (platform === "buildbear") {
-            api_url = `${API_PATH.API_QUICK_SCAN_SSE}?contract_address=${address}&contract_platform=${platform}&node_id=${chain}&ref=${ref}`;
+            api_url = `${API_PATH.API_QUICK_SCAN_SSE}?contract_address=${address}&contract_platform=${platform}&node_id=${chain}`;
           } else {
-            api_url = `${API_PATH.API_QUICK_SCAN_SSE}?contract_address=${address}&contract_platform=${platform}&contract_chain=${chain}&ref=${ref}`;
+            api_url = `${API_PATH.API_QUICK_SCAN_SSE}?contract_address=${address}&contract_platform=${platform}&contract_chain=${chain}`;
+          }
+          if (ref) {
+            api_url = api_url + `&ref=${ref}`;
           }
           API.get(api_url)
             .then(
