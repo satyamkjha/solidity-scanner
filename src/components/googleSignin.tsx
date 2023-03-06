@@ -9,7 +9,7 @@ export default function GoogleSignIn() {
     <Link
       href={
         process.env.REACT_APP_API_URL_PROD +
-        "/accounts/google/login/?process=login"
+        "accounts/google/login/?process=login"
       }
       _hover={{
         textDecoration: "none",
