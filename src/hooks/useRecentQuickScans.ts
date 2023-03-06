@@ -2,11 +2,11 @@ import { useQuery } from "react-query";
 import API from "helpers/api";
 import { API_PATH } from "helpers/routeManager";
 
-const getRecentQs = async () => {
-  const { data } = await API.get(API_PATH.API_GET_LATEST_QS);
+const getRecentQs = async (ref: string | null) => {
+  const { data } = await API.get(`${API_PATH.API_GET_LATEST_QS}?ref=${ref}`);
   return data;
 };
 
-export const useRecentQuickScans = () => {
-  return useQuery("blocks", getRecentQs);
+export const useRecentQuickScans = (ref: string | null) => {
+  return useQuery(["blocks", ref], () => getRecentQs(ref));
 };

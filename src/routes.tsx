@@ -6,6 +6,7 @@ import {
   Redirect,
   RouteProps,
   useHistory,
+  useLocation,
 } from "react-router-dom";
 import { useToast } from "@chakra-ui/react";
 
@@ -17,6 +18,7 @@ import PaymentSucess from "pages/Billing/payment";
 import PublicReportPage from "pages/Report/PublicReport";
 import PageNotFound, { CustomPageNotFound } from "pages/PageNotFound";
 import { Helmet } from "react-helmet";
+import Cookies from "js-cookie";
 
 const Landing = lazy(
   () => import("pages/Landing" /* webpackChunkName: "Landing" */)
@@ -262,6 +264,18 @@ const PrivateRoute: React.FC<RouteProps> = ({ children, ...rest }) => {
 };
 
 const RedirectRoute: React.FC<RouteProps> = ({ children, ...rest }) => {
+  const location = useLocation();
+  console.log(location.pathname);
+  console.log(Cookies.get("csrftoken"));
+  const searchParams = new URLSearchParams(location.search);
+  const authenticated = searchParams.get("authenticated");
+  if (
+    location.pathname === "/signin" &&
+    authenticated &&
+    Cookies.get("csrftoken")
+  ) {
+    localStorage.setItem("authenticated", "true");
+  }
   return (
     <Route
       {...rest}
