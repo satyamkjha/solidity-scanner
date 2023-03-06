@@ -800,7 +800,7 @@ const ContractForm: React.FC = () => {
                   />
                   <Input
                     isRequired
-                    placeholder="0x808ed7A75n133f64069318Sa0q173c71rre44414"
+                    placeholder="Node ID"
                     variant="brand"
                     size="lg"
                     {...register("node_id")}
