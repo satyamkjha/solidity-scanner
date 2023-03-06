@@ -834,7 +834,7 @@ const UploadForm: React.FC = () => {
     alignItems: "center",
     padding: "40px 20px",
     borderWidth: 2,
-    borderRadius: 5,
+    borderRadius: "20px",
     borderColor: "#eeeeee",
     borderStyle: "dashed",
     backgroundColor: "#ffffff",
@@ -1150,7 +1150,7 @@ const UploadForm: React.FC = () => {
                   alignItems={"flex-start"}
                   background={"#FFFFFF"}
                   border={"1.5px dashed #D6D6D6"}
-                  height="300px"
+                  maxH="300px"
                   overflowY={"scroll"}
                 >
                   <VStack h="fit-content" spacing={2} width="100%">

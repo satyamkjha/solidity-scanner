@@ -77,7 +77,7 @@ const SignUp: React.FC = () => {
           <MetaMaskLogin />
           <GoogleSignIn />
         </Stack>
-        <HStack spacing={5} width={["300px", "400px", "550px"]}>
+        <HStack spacing={5} width={["300px", "400px", "600px"]}>
           <Divider background={"#000000"} width={"43%"} />
           <Text color="subtle" my={3}>
             OR
@@ -244,7 +244,7 @@ const RegisterForm: React.FC<{
 
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
-      <Stack spacing={6} mt={8} width={["300px", "400px", "550px"]}>
+      <Stack spacing={6} mt={8} width={["300px", "400px", "600px"]}>
         {step === 0 && (
           <>
             <InputGroup alignItems="center">

@@ -22,10 +22,10 @@ export default function GoogleSignIn() {
         fontWeight={500}
         width={"fit-content"}
         alignSelf="center"
-        px={6}
+        px={10}
         color="#8B8B8B"
       >
-        <Icon as={FcGoogle} mr={2} fontSize="20px" />
+        <Icon as={FcGoogle} mr={2} fontSize="28px" />
         Continue with Google
       </Button>
     </Link>
