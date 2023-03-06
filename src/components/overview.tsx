@@ -71,6 +71,14 @@ const Overview: React.FC<{
   scansRemaining?: number;
   onTabChange: any;
 }> = ({ scanData, scansRemaining, onTabChange }) => {
+  const vulnerabilityCount = Object.keys(
+    scanData.multi_file_scan_summary?.issue_severity_distribution
+  ).reduce(
+    (sum, item) =>
+      sum + scanData.multi_file_scan_summary.issue_severity_distribution[item],
+    0
+  );
+
   const handleTabsChange = (index: number) => {
     onTabChange(index);
   };
@@ -87,7 +95,8 @@ const Overview: React.FC<{
               alignItems={"center"}
               h="300px"
             >
-              {scanData.multi_file_scan_summary.issues_count === 0 ? (
+              {scanData.multi_file_scan_summary.issues_count === 0 ||
+              vulnerabilityCount === 0 ? (
                 <NoBugIcon size={200} />
               ) : (
                 <PieChart
