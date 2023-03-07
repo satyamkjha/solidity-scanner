@@ -39,10 +39,12 @@ import { ViewOffIcon, ViewIcon } from "@chakra-ui/icons";
 import MetaMaskLogin from "components/metamaskSignin";
 import { API_PATH } from "helpers/routeManager";
 import GoogleSignIn from "components/googleSignin";
+import { getFeatureGateConfig } from "helpers/helperFunction";
 
 const CustomFlex = motion(Flex);
 
 const SignUp: React.FC = () => {
+  const googleLoginEnabled = getFeatureGateConfig().enable_google_signin;
   const [registered, setRegistered] = useState(false);
   const [email, setEmail] = useState("");
   const passwordChecker = new RegExp("^(?=.*?[A-Za-z])(?=.*?[0-9]).{6,}$");
@@ -75,7 +77,7 @@ const SignUp: React.FC = () => {
         </Text>
         <Stack spacing={4} direction={["column", "column", "column", "row"]}>
           <MetaMaskLogin />
-          <GoogleSignIn />
+          {googleLoginEnabled && <GoogleSignIn />}
         </Stack>
         <HStack spacing={5} width={["300px", "400px", "600px"]}>
           <Divider background={"#000000"} width={"43%"} />

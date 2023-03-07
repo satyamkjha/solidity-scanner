@@ -40,6 +40,7 @@ import MetaMaskLogin from "components/metamaskSignin";
 import { API_PATH } from "helpers/routeManager";
 import GoogleSignIn from "components/googleSignin";
 import Cookies from "js-cookie";
+import { getFeatureGateConfig } from "helpers/helperFunction";
 
 function useQuery() {
   return new URLSearchParams(useLocation().search);
@@ -49,6 +50,7 @@ const SignIn: React.FC = () => {
   const query = useQuery();
   const isPasswordReset = Boolean(query.get("isPasswordReset")?.toString());
   const toast = useToast();
+  const googleLoginEnabled = getFeatureGateConfig().enable_google_signin;
 
   if (isPasswordReset) {
     toast({
@@ -91,7 +93,7 @@ const SignIn: React.FC = () => {
         </Text>
         <Stack spacing={4} direction={["column", "column", "column", "row"]}>
           <MetaMaskLogin />
-          <GoogleSignIn />
+          {googleLoginEnabled && <GoogleSignIn />}
         </Stack>
 
         <HStack spacing={5} width={["300px", "400px", "600px"]}>
