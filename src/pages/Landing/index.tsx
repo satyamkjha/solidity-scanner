@@ -362,6 +362,18 @@ export default function LandingPage() {
               the more technical minded, you can add the full bug reports
               available in the report too.
             </Text>
+
+            <Button
+              onClick={() =>
+                window.open(
+                  "https://github.com/Credshields/Audit-Reports/",
+                  "_blank"
+                )
+              }
+              variant={"cta-outline"}
+            >
+              View Audit Reports
+            </Button>
           </Box>
         </Flex>
         <Flex
