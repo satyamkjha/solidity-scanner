@@ -118,6 +118,20 @@ export const theme = extendTheme({
             background: "#efebff",
           },
         }),
+        "cta-outline": (props) => ({
+          ...defaultTheme.components.Button.variants.outline(props),
+          background: "#FFFFFF",
+          color: "#3300FF",
+          fontSize: "16px",
+          borderColor: "#3300FF",
+          border: "2px solid #3300FF",
+          py: 7,
+          px: 10,
+          _hover: {
+            background: "#3300FF",
+            color: "#FFFFFF",
+          },
+        }),
       },
     },
     Input: {
