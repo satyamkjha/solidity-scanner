@@ -378,7 +378,7 @@ export default function LandingPage() {
             <Button
               onClick={() =>
                 window.open(
-                  "https://github.com/Credshields/Audit-Reports/",
+                  "https://solidityscan.com/published-report/project/d393242670c81938",
                   "_blank"
                 )
               }
