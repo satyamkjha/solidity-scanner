@@ -15,6 +15,7 @@ import {
   HStack,
   VStack,
   useMediaQuery,
+  Stack,
 } from "@chakra-ui/react";
 
 import {
@@ -72,7 +73,7 @@ export default function LandingPage() {
           ]}
         >
           <Box
-            w={["100%", "100%", "100%", "45%"]}
+            w={["100%", "100%", "100%", "50%"]}
             px={[0, 0, 10]}
             py={5}
             justifyContent="center"
@@ -87,11 +88,22 @@ export default function LandingPage() {
               Smart-contract scanning tool built to discover vulnerabilities &
               mitigate risks in your code.
             </Text>
-            <Link to="/signup">
-              <Button variant="brand" w="200px">
-                Signup For Free Trial
-              </Button>
-            </Link>
+            <Flex
+              justifyContent={"flex-start"}
+              alignItems="flex-start"
+              flexDir={["column", "row"]}
+            >
+              <Link to="/signup">
+                <Button variant="brand" fontSize={"16px"} py={7} w="200px">
+                  Signup For Free Trial
+                </Button>
+              </Link>
+              <Link to="/quickscan">
+                <Button ml={[0, 5]} mt={[5, 0]} variant="cta-outline" w="200px">
+                  Run QuickScan Once
+                </Button>
+              </Link>
+            </Flex>
             <a
               href="https://www.producthunt.com/posts/solidityscan?utm_source=badge-featured&utm_medium=badge&utm_souce=badge-solidityscan"
               target="_blank"
@@ -366,7 +378,7 @@ export default function LandingPage() {
             <Button
               onClick={() =>
                 window.open(
-                  "https://github.com/Credshields/Audit-Reports/",
+                  "https://solidityscan.com/published-report/project/d393242670c81938",
                   "_blank"
                 )
               }
