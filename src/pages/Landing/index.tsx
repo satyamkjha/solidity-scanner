@@ -15,6 +15,7 @@ import {
   HStack,
   VStack,
   useMediaQuery,
+  Stack,
 } from "@chakra-ui/react";
 
 import {
@@ -72,7 +73,7 @@ export default function LandingPage() {
           ]}
         >
           <Box
-            w={["100%", "100%", "100%", "45%"]}
+            w={["100%", "100%", "100%", "50%"]}
             px={[0, 0, 10]}
             py={5}
             justifyContent="center"
@@ -87,11 +88,22 @@ export default function LandingPage() {
               Smart-contract scanning tool built to discover vulnerabilities &
               mitigate risks in your code.
             </Text>
-            <Link to="/signup">
-              <Button variant="brand" w="200px">
-                Signup For Free Trial
-              </Button>
-            </Link>
+            <Flex
+              justifyContent={"flex-start"}
+              alignItems="flex-start"
+              flexDir={["column", "row"]}
+            >
+              <Link to="/signup">
+                <Button variant="brand" fontSize={"16px"} py={7} w="200px">
+                  Signup For Free Trial
+                </Button>
+              </Link>
+              <Link to="/quickscan">
+                <Button ml={[0, 5]} mt={[5, 0]} variant="cta-outline" w="200px">
+                  Run A QuickScan
+                </Button>
+              </Link>
+            </Flex>
             <a
               href="https://www.producthunt.com/posts/solidityscan?utm_source=badge-featured&utm_medium=badge&utm_souce=badge-solidityscan"
               target="_blank"
@@ -210,6 +222,38 @@ export default function LandingPage() {
           </Box>
         </Flex>
 
+        <Flex
+          as="section"
+          w="100%"
+          my={0}
+          textAlign={["center", "left"]}
+          py={[5, 5, 10, 20]}
+          px={[0, 0, 0, 24]}
+          backgroundImage={"url(/background/pattern_mask.png)"}
+          display={["flex"]}
+          flexDirection={"column"}
+          alignItems={"center"}
+          justifyContent={"center"}
+        >
+          <Box
+            borderColor={"#3300FF"}
+            width="100%"
+            height={["180px", "260px", "340px", "450px", "580px", "650px"]}
+            borderRadius={["5px"]}
+          >
+            <iframe
+              style={{
+                width: "100%",
+                height: "100%",
+              }}
+              src="https://www.youtube.com/embed/psu3GTKS_us"
+              title="SolidityScan by CredShields - Intro"
+              frameborder="0"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+              allowfullscreen
+            ></iframe>
+          </Box>
+        </Flex>
         {/* Section 3 */}
         <Flex
           as="section"
@@ -330,6 +374,18 @@ export default function LandingPage() {
               the more technical minded, you can add the full bug reports
               available in the report too.
             </Text>
+
+            <Button
+              onClick={() =>
+                window.open(
+                  "https://solidityscan.com/published-report/project/d393242670c81938",
+                  "_blank"
+                )
+              }
+              variant={"cta-outline"}
+            >
+              View Audit Reports
+            </Button>
           </Box>
         </Flex>
         <Flex
