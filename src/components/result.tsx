@@ -1000,13 +1000,6 @@ const CodeExplorer: React.FC<{
                     align={"flex-start"}
                     spacing={5}
                   >
-                    <Text
-                      color={"gray.600"}
-                      fontSize="13px"
-                      fontWeight="normal"
-                    >
-                      {index + 1}
-                    </Text>
                     <pre
                       style={{
                         fontSize: "13px",
