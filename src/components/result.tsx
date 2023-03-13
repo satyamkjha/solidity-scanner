@@ -1000,6 +1000,13 @@ const CodeExplorer: React.FC<{
                     align={"flex-start"}
                     spacing={5}
                   >
+                    <Text
+                      color={"gray.600"}
+                      fontSize="13px"
+                      fontWeight="normal"
+                    >
+                      {index + 1}
+                    </Text>
                     <pre
                       style={{
                         fontSize: "13px",
@@ -1020,9 +1027,6 @@ const CodeExplorer: React.FC<{
           })}
           {values.map((value) => (
             <HStack as={"div"} key={value} align={"flex-start"} spacing={5}>
-              <Text color={"gray.600"} fontSize="13px" fontWeight="normal">
-                {value + 1}
-              </Text>
               <pre
                 style={{
                   fontSize: "13px",
