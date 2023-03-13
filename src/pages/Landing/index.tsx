@@ -100,7 +100,7 @@ export default function LandingPage() {
               </Link>
               <Link to="/quickscan">
                 <Button ml={[0, 5]} mt={[5, 0]} variant="cta-outline" w="200px">
-                  Run QuickScan Once
+                  Run A QuickScan
                 </Button>
               </Link>
             </Flex>
