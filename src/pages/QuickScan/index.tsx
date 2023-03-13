@@ -240,7 +240,7 @@ const QuickScan: React.FC = () => {
       },
       {
         value: "goerli",
-        label: "Optimism Testnet",
+        label: "Optimism Goerli Testnet",
         icon: "",
         isDisabled: false,
       },
@@ -297,7 +297,7 @@ const QuickScan: React.FC = () => {
     {
       value: "optimism",
       icon: "optimism",
-      label: "Optimism - (reefscan.com)",
+      label: "Optimism - (optimism.io)",
     },
   ];
 
