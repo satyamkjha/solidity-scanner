@@ -12,6 +12,7 @@ import {
   useMediaQuery,
   Image,
 } from "@chakra-ui/react";
+import { getBugStatusNumber } from "common/functions";
 import {
   FilesState,
   MetricWiseAggregatedFinding,
@@ -35,6 +36,7 @@ export const IssueContainer: React.FC<{
   setSelectedBugs: Dispatch<SetStateAction<string[]>>;
   details_enabled: boolean;
   is_latest_scan: boolean;
+  bugStatusFilter: boolean[];
   updateBugStatus: any;
 }> = ({
   type,
@@ -48,6 +50,7 @@ export const IssueContainer: React.FC<{
   selectedBugs,
   setSelectedBugs,
   details_enabled,
+  bugStatusFilter,
   updateBugStatus,
 }) => {
   let pendingFixes;
@@ -207,25 +210,31 @@ export const IssueContainer: React.FC<{
               <>
                 {isExpanded && (
                   <Accordion allowMultiple={false} allowToggle>
-                    {metric_wise_aggregated_findings.map((item, index) => (
-                      <IssueBox
-                        key={item.bug_id + index}
-                        type={type}
-                        bug_id={item.bug_id}
-                        files={files}
-                        issue_id={issue_id}
-                        metric_wise_aggregated_finding={item}
-                        template_details={template_details}
-                        is_latest_scan={is_latest_scan}
-                        isSelected={
-                          isChecked || checkedChildren.includes(item.bug_hash)
-                        }
-                        selectedBugs={selectedBugs}
-                        setFiles={setFiles}
-                        updateBugHashList={updateBugHashList}
-                        updateBugStatus={updateBugStatus}
-                      />
-                    ))}
+                    {metric_wise_aggregated_findings.map(
+                      (item, index) =>
+                        bugStatusFilter[
+                          getBugStatusNumber(item.bug_status)
+                        ] && (
+                          <IssueBox
+                            key={item.bug_id + index}
+                            type={type}
+                            bug_id={item.bug_id}
+                            files={files}
+                            issue_id={issue_id}
+                            metric_wise_aggregated_finding={item}
+                            template_details={template_details}
+                            is_latest_scan={is_latest_scan}
+                            isSelected={
+                              isChecked ||
+                              checkedChildren.includes(item.bug_hash)
+                            }
+                            selectedBugs={selectedBugs}
+                            setFiles={setFiles}
+                            updateBugHashList={updateBugHashList}
+                            updateBugStatus={updateBugStatus}
+                          />
+                        )
+                    )}
                   </Accordion>
                 )}
               </>
@@ -276,6 +285,7 @@ const IssueBox: React.FC<{
   useEffect(() => {
     setIsChecked(isSelected);
   }, [isSelected]);
+
   return (
     <>
       {isDesktopView ? (

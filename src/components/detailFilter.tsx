@@ -9,6 +9,7 @@ import {
   HStack,
   VStack,
   Text,
+  Image,
   Link,
 } from "@chakra-ui/react";
 import React, { Dispatch, SetStateAction, useEffect, useState } from "react";
@@ -26,6 +27,7 @@ export const DetailFilter: React.FC<{
   setFilterExpanded: Dispatch<SetStateAction<boolean>>;
   setVulnerability: Dispatch<SetStateAction<boolean[]>>;
   setConfidence: Dispatch<SetStateAction<boolean[]>>;
+  setBugStatusFilter: Dispatch<SetStateAction<boolean[]>>;
 }> = ({
   critical,
   high,
@@ -36,8 +38,10 @@ export const DetailFilter: React.FC<{
   setFilterExpanded,
   setVulnerability,
   setConfidence,
+  setBugStatusFilter,
 }) => {
   const [filterCount, setFilterCount] = useState(0);
+  const [bugStatusParam, setBugStatusParam] = useState([false, false, false]);
   const [confidenceParam, setConfidenceParam] = useState([false, false, false]);
   const [vulnerabilityParams, setVulnerabilityParams] = useState([
     false,
@@ -52,7 +56,9 @@ export const DetailFilter: React.FC<{
     setConfidence([...conf]);
     setConfidenceParam([...conf]);
     setFilterCount(
-      conf.filter(Boolean).length + vulnerabilityParams.filter(Boolean).length
+      conf.filter(Boolean).length +
+        vulnerabilityParams.filter(Boolean).length +
+        bugStatusParam.filter(Boolean).length
     );
   };
 
@@ -60,11 +66,24 @@ export const DetailFilter: React.FC<{
     setVulnerability([...vern]);
     setVulnerabilityParams([...vern]);
     setFilterCount(
-      confidenceParam.filter(Boolean).length + vern.filter(Boolean).length
+      confidenceParam.filter(Boolean).length +
+        vern.filter(Boolean).length +
+        bugStatusParam.filter(Boolean).length
+    );
+  };
+
+  const setBugStatusFilters = (status: boolean[]) => {
+    setBugStatusFilter([...status]);
+    setBugStatusParam([...status]);
+    setFilterCount(
+      status.filter(Boolean).length +
+        vulnerabilityParams.filter(Boolean).length +
+        confidenceParam.filter(Boolean).length
     );
   };
 
   const clearFilter = () => {
+    setBugStatusParam([false, false, false]);
     setConfidenceParam([false, false, false]);
     setVulnerabilityParams([false, false, false, false, false, false]);
     setFilterCount(0);
@@ -72,6 +91,7 @@ export const DetailFilter: React.FC<{
 
   useEffect(() => {
     if (!filterCount) {
+      setBugStatusFilter([true, true, true]);
       setConfidence([true, true, true]);
       setVulnerability([true, true, true, true, true, true]);
     }
@@ -246,6 +266,88 @@ export const DetailFilter: React.FC<{
                     {confidenceParam[0] && <FiCheck />}&nbsp;Tentative
                   </Button>
                 </HStack>
+              </VStack>
+              <VStack
+                width={"100%"}
+                justify={"center"}
+                alignItems={"flex-start"}
+                background={"white"}
+                borderRadius={15}
+                px={4}
+                py={3}
+                mt={2}
+              >
+                <Text color={"#4E5D78"} fontWeight={400} fontSize="sm">
+                  By Bug Status
+                </Text>
+                <Flex flexWrap={"wrap"} gridGap={1.5}>
+                  <Button
+                    height="fit-content"
+                    variant={bugStatusParam[0] ? "outline" : "solid"}
+                    borderColor={bugStatusParam[0] ? "#ED9801" : "none"}
+                    backgroundColor={bugStatusParam[0] ? "white" : "#F8F8F8"}
+                    py={1.5}
+                    fontWeight={"normal"}
+                    color={"gray.600"}
+                    fontSize={"sm"}
+                    borderRadius={"27px"}
+                    onClick={() =>
+                      setBugStatusFilters([
+                        !bugStatusParam[0],
+                        bugStatusParam[1],
+                        bugStatusParam[2],
+                        bugStatusParam[3],
+                      ])
+                    }
+                  >
+                    <Image src={`/icons/pending_fix_color.svg`} />
+                    &nbsp;Pending Fixes
+                  </Button>
+                  <Button
+                    height="fit-content"
+                    variant={bugStatusParam[1] ? "outline" : "solid"}
+                    borderColor={bugStatusParam[1] ? "black" : "none"}
+                    backgroundColor={bugStatusParam[1] ? "white" : "#F8F8F8"}
+                    py={1.5}
+                    fontWeight={"normal"}
+                    color={"gray.600"}
+                    fontSize={"sm"}
+                    borderRadius={"27px"}
+                    onClick={() =>
+                      setBugStatusFilters([
+                        bugStatusParam[0],
+                        !bugStatusParam[1],
+                        bugStatusParam[2],
+                        bugStatusParam[3],
+                      ])
+                    }
+                  >
+                    <Image src={`/icons/wont_fix.svg`} w="20px" />
+                    &nbsp;Won't Fix
+                  </Button>
+                  <Button
+                    height="fit-content"
+                    variant={bugStatusParam[2] ? "outline" : "solid"}
+                    borderColor={bugStatusParam[2] ? "#3300FF" : "none"}
+                    backgroundColor={bugStatusParam[2] ? "white" : "#F8F8F8"}
+                    py={1.5}
+                    fontWeight={"normal"}
+                    color={"gray.600"}
+                    fontSize={"sm"}
+                    borderRadius={"27px"}
+                    onClick={() =>
+                      setBugStatusFilters([
+                        bugStatusParam[0],
+                        bugStatusParam[1],
+                        !bugStatusParam[2],
+                        bugStatusParam[3],
+                      ])
+                    }
+                  >
+                    <Image src={`/icons/false_positive_color.svg`} />
+                    &nbsp;False Positive
+                  </Button>
+                </Flex>
               </VStack>
               <Flex mt={1.5} justifyContent="center">
                 <Link

@@ -16,8 +16,8 @@ import VulnerabilityDistribution, {
   ErrorVulnerabilityDistribution,
 } from "components/vulnDistribution";
 import PieChart, { ErrorResponsivePie } from "components/pieChart";
-import { Scan, ScanSummary } from "common/types";
-import { CredshieldsIcon, LogoIcon, NoBugIcon, ScanErrorIcon } from "./icons";
+import { Scan } from "common/types";
+import { LogoIcon, NoBugIcon, ScanErrorIcon } from "./icons";
 import ManualAuditCard from "./manualAuditCard";
 
 const pieData = (
