@@ -53,3 +53,18 @@ export function dateToDDMMMMYYYY(date: Date): string {
   ];
   return `${date.getDate()} ${months[date.getMonth()]} ${date.getFullYear()}`;
 }
+
+export const getBugStatusNumber = (bug_status: string) => {
+  switch (bug_status) {
+    case "pending_fix":
+      return 0;
+    case "wont_fix":
+      return 1;
+    case "false_positive":
+      return 2;
+    case "fixed":
+      return 3;
+    default:
+      return 0;
+  }
+};
