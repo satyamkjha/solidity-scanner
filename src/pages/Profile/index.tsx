@@ -24,6 +24,7 @@ import {
   AiOutlineSave,
   AiOutlineEye,
   AiOutlineEyeInvisible,
+  AiFillInfoCircle,
 } from "react-icons/ai";
 import { useProfile } from "hooks/useProfile";
 
@@ -35,9 +36,14 @@ type ProfileFormData = {
   first_name?: string;
   company_name?: string;
   contact_number?: string;
+  email?: string;
 };
 const Profile: React.FC = () => {
+  const toast = useToast();
+
   const [isEditable, setEditable] = useState(false);
+  const [emailSend, setEmailSend] = useState(false);
+  const [metaMaskEmail, setMetaMaskEmail] = useState("");
 
   const { data } = useProfile();
   const queryClient = useQueryClient();
@@ -46,12 +52,33 @@ const Profile: React.FC = () => {
     company_name,
     contact_number,
     first_name,
+    email,
   }: ProfileFormData) => {
     await API.post(API_PATH.API_UPDATE_PROFILE, {
       company_name,
       contact_number,
       first_name,
     });
+    if (email) {
+      setMetaMaskEmail(email);
+      const { data } = await API.post(API_PATH.API_UPDATE_EMAIL, {
+        email,
+      });
+      if (data.status === "success") {
+        setEmailSend(true);
+        toast({
+          title: "Verification email sent",
+          description: "We've sent a link to your registered email address.",
+          status: "success",
+          duration: 5000,
+          isClosable: true,
+          position: "bottom",
+        });
+      } else {
+        setEmailSend(false);
+        setMetaMaskEmail("");
+      }
+    }
     queryClient.invalidateQueries("profile");
     setEditable(false);
   };
@@ -180,6 +207,48 @@ const Profile: React.FC = () => {
                 </FormControl>
               )}
 
+              {!data.email_verified && data.public_address && (
+                <FormControl id="email">
+                  <FormLabel color="subtle">Email ID</FormLabel>
+                  {isEditable ? (
+                    <Input
+                      borderRadius="15px"
+                      size="lg"
+                      isDisabled={formState.isSubmitting}
+                      type="email"
+                      w="100%"
+                      maxW="400px"
+                      defaultValue={
+                        data.email.includes(data.public_address)
+                          ? metaMaskEmail
+                          : data.email
+                      }
+                      {...register("email", { required: false })}
+                    />
+                  ) : (
+                    <Flex w="100%">
+                      <Text fontSize="lg">
+                        {data.email.includes(data.public_address)
+                          ? metaMaskEmail
+                          : data.email}
+                      </Text>
+                      {!data.email.includes(data.public_address) && (
+                        <Text fontSize="sm" ml={"auto"} mr={4}>
+                          <Icon
+                            as={AiFillInfoCircle}
+                            color="accent"
+                            mr={2}
+                            fontSize={"md"}
+                          />
+                          {emailSend
+                            ? "Email verification pending. Check your inbox for the verification link."
+                            : "Email verification pending"}
+                        </Text>
+                      )}
+                    </Flex>
+                  )}
+                </FormControl>
+              )}
               {data.public_address && (
                 <FormControl id="public_address">
                   <FormLabel color="subtle">Public Address</FormLabel>
