@@ -12,6 +12,7 @@ export type Profile = {
   company_name: string;
   current_package: string;
   email_verified: boolean;
+  verification_email_sent: boolean;
   projects_remaining: number;
   package_recharge_date: string;
   package_end_date: string;

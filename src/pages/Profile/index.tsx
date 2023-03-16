@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { useHistory } from "react-router-dom";
 import { useQueryClient } from "react-query";
@@ -17,6 +17,7 @@ import {
   Spinner,
   InputProps,
   useToast,
+  Link,
 } from "@chakra-ui/react";
 
 import {
@@ -31,6 +32,7 @@ import { useProfile } from "hooks/useProfile";
 import API from "helpers/api";
 import Auth from "helpers/auth";
 import { API_PATH } from "helpers/routeManager";
+import { AuthResponse } from "common/types";
 
 type ProfileFormData = {
   first_name?: string;
@@ -48,6 +50,15 @@ const Profile: React.FC = () => {
   const { data } = useProfile();
   const queryClient = useQueryClient();
   const { handleSubmit, register, formState } = useForm<ProfileFormData>();
+
+  useEffect(() => {
+    if (data) {
+      setEmailSend(data.verification_email_sent);
+      if (data.verification_email_sent && !data.email_verified)
+        setMetaMaskEmail(data.email);
+    }
+  }, [data]);
+
   const onSave = async ({
     company_name,
     contact_number,
@@ -61,7 +72,7 @@ const Profile: React.FC = () => {
     });
     if (email) {
       setMetaMaskEmail(email);
-      const { data } = await API.post(API_PATH.API_UPDATE_EMAIL, {
+      const { data } = await API.put(API_PATH.API_UPDATE_EMAIL, {
         email,
       });
       if (data.status === "success") {
@@ -81,6 +92,16 @@ const Profile: React.FC = () => {
     }
     queryClient.invalidateQueries("profile");
     setEditable(false);
+  };
+
+  const onResendEmail = async () => {
+    const { data } = await API.post<AuthResponse>(API_PATH.API_SEND_EMAIL, {
+      email: metaMaskEmail,
+    });
+
+    if (data.status === "success") {
+      setEmailSend(true);
+    }
   };
 
   return (
@@ -209,41 +230,50 @@ const Profile: React.FC = () => {
 
               {!data.email_verified && data.public_address && (
                 <FormControl id="email">
-                  <FormLabel color="subtle">Email ID</FormLabel>
+                  <FormLabel color="subtle">
+                    <Flex w={"100%"}>
+                      <Text>Email</Text>
+                      <Text fontSize="sm" ml={"auto"}>
+                        <Icon
+                          as={AiFillInfoCircle}
+                          color="accent"
+                          mr={2}
+                          fontSize={"md"}
+                        />
+                        {emailSend
+                          ? "Email verification is pending. Check your inbox for the verification link."
+                          : "Email verification is pending"}
+                      </Text>
+                    </Flex>
+                  </FormLabel>
                   {isEditable ? (
                     <Input
                       borderRadius="15px"
                       size="lg"
-                      isDisabled={formState.isSubmitting}
+                      isDisabled={
+                        data.verification_email_sent && formState.isSubmitting
+                      }
                       type="email"
                       w="100%"
                       maxW="400px"
-                      defaultValue={
-                        data.email.includes(data.public_address)
-                          ? metaMaskEmail
-                          : data.email
-                      }
+                      defaultValue={metaMaskEmail}
                       {...register("email", { required: false })}
                     />
                   ) : (
-                    <Flex w="100%">
-                      <Text fontSize="lg">
-                        {data.email.includes(data.public_address)
-                          ? metaMaskEmail
-                          : data.email}
+                    <Flex w="100%" alignItems={"center"}>
+                      <Text fontSize="lg" mr={4}>
+                        {metaMaskEmail}
                       </Text>
-                      {!data.email.includes(data.public_address) && (
-                        <Text fontSize="sm" ml={"auto"} mr={4}>
-                          <Icon
-                            as={AiFillInfoCircle}
-                            color="accent"
-                            mr={2}
-                            fontSize={"md"}
-                          />
-                          {emailSend
-                            ? "Email verification pending. Check your inbox for the verification link."
-                            : "Email verification pending"}
-                        </Text>
+                      {data.verification_email_sent && (
+                        <Link
+                          color="accent"
+                          whiteSpace={"nowrap"}
+                          ml="auto"
+                          mr={4}
+                          onClick={() => onResendEmail()}
+                        >
+                          Resend verification email
+                        </Link>
                       )}
                     </Flex>
                   )}
