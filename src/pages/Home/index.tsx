@@ -451,6 +451,20 @@ const ContractForm: React.FC = () => {
       },
       { value: "goerli", label: "Goerli Testnet", icon: "", isDisabled: false },
     ],
+    optimism: [
+      {
+        value: "mainnet",
+        label: "Optimism Mainnet",
+        icon: "",
+        isDisabled: false,
+      },
+      {
+        value: "goerli",
+        label: "Optimism Goerli Testnet",
+        icon: "",
+        isDisabled: false,
+      },
+    ],
     bscscan: [
       { value: "mainnet", label: "Bsc Mainnet", icon: "", isDisabled: false },
       { value: "testnet", label: "Bsc Testnet", icon: "", isDisabled: false },
@@ -608,6 +622,12 @@ const ContractForm: React.FC = () => {
       value: "reefscan",
       icon: "reefscan",
       label: "ReefScan - (reefscan.com)",
+      isDisabled: true,
+    },
+    {
+      value: "optimism",
+      icon: "optimism",
+      label: "Optimism - (optimism.io)",
       isDisabled: true,
     },
     {

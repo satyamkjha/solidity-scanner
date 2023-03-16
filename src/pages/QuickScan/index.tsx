@@ -231,14 +231,19 @@ const QuickScan: React.FC = () => {
         isDisabled: false,
       },
     ],
-    reefscan: [
+    optimism: [
       {
         value: "mainnet",
-        label: "ReefScan Mainnet",
+        label: "Optimism Mainnet",
         icon: "",
         isDisabled: false,
       },
-      // { value: "testnet", label: "ReefScan Testnet", icon: "" },
+      {
+        value: "goerli",
+        label: "Optimism Goerli Testnet",
+        icon: "",
+        isDisabled: false,
+      },
     ],
   };
 
@@ -288,6 +293,11 @@ const QuickScan: React.FC = () => {
       value: "buildbear",
       icon: "buildbear",
       label: "Buildbear - (buildbear.io)",
+    },
+    {
+      value: "optimism",
+      icon: "optimism",
+      label: "Optimism - (optimism.io)",
     },
   ];
 
