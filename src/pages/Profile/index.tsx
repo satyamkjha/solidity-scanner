@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { useHistory } from "react-router-dom";
 import { useQueryClient } from "react-query";
+import { FiCheck } from "react-icons/fi";
 import {
   Flex,
   Box,
@@ -17,7 +18,8 @@ import {
   Spinner,
   InputProps,
   useToast,
-  Link,
+  Stack,
+  Tooltip,
 } from "@chakra-ui/react";
 
 import {
@@ -33,12 +35,12 @@ import API from "helpers/api";
 import Auth from "helpers/auth";
 import { API_PATH } from "helpers/routeManager";
 import { AuthResponse } from "common/types";
+import { InfoIcon } from "@chakra-ui/icons";
 
 type ProfileFormData = {
   first_name?: string;
   company_name?: string;
   contact_number?: string;
-  email?: string;
 };
 const Profile: React.FC = () => {
   const toast = useToast();
@@ -46,6 +48,7 @@ const Profile: React.FC = () => {
   const [isEditable, setEditable] = useState(false);
   const [emailSend, setEmailSend] = useState(false);
   const [metaMaskEmail, setMetaMaskEmail] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
 
   const { data } = useProfile();
   const queryClient = useQueryClient();
@@ -63,45 +66,59 @@ const Profile: React.FC = () => {
     company_name,
     contact_number,
     first_name,
-    email,
   }: ProfileFormData) => {
     await API.post(API_PATH.API_UPDATE_PROFILE, {
       company_name,
       contact_number,
       first_name,
     });
-    if (email) {
-      setMetaMaskEmail(email);
+    queryClient.invalidateQueries("profile");
+    setEditable(false);
+  };
+
+  const updateEmail = async () => {
+    if (metaMaskEmail) {
+      setIsLoading(true);
       const { data } = await API.put(API_PATH.API_UPDATE_EMAIL, {
-        email,
+        email: metaMaskEmail,
       });
+      setIsLoading(false);
       if (data.status === "success") {
         setEmailSend(true);
         toast({
           title: "Verification email sent",
-          description: "We've sent a link to your registered email address.",
+          description: `We've sent a link to your email ${metaMaskEmail}.`,
           status: "success",
           duration: 5000,
           isClosable: true,
           position: "bottom",
         });
+        queryClient.invalidateQueries("profile");
       } else {
         setEmailSend(false);
         setMetaMaskEmail("");
       }
     }
-    queryClient.invalidateQueries("profile");
-    setEditable(false);
   };
 
   const onResendEmail = async () => {
+    setIsLoading(true);
     const { data } = await API.post<AuthResponse>(API_PATH.API_SEND_EMAIL, {
       email: metaMaskEmail,
     });
 
     if (data.status === "success") {
       setEmailSend(true);
+      toast({
+        title: "Verification email sent",
+        description: `We've sent a link to your email ${metaMaskEmail}.`,
+        status: "success",
+        duration: 5000,
+        isClosable: true,
+        position: "bottom",
+      });
     }
+    setIsLoading(false);
   };
 
   return (
@@ -209,6 +226,26 @@ const Profile: React.FC = () => {
                   <Text fontSize="lg">{data.contact_number}</Text>
                 )}
               </FormControl>
+
+              {data.public_address && (
+                <FormControl id="public_address">
+                  <FormLabel color="subtle">Public Address</FormLabel>
+                  {isEditable ? (
+                    <Input
+                      borderRadius="15px"
+                      size="lg"
+                      isDisabled
+                      type="email"
+                      w="100%"
+                      maxW="400px"
+                      value={data.public_address}
+                    />
+                  ) : (
+                    <Text fontSize="lg">{data.public_address}</Text>
+                  )}
+                </FormControl>
+              )}
+
               {data.email_verified && (
                 <FormControl id="email">
                   <FormLabel color="subtle">Email ID</FormLabel>
@@ -232,68 +269,50 @@ const Profile: React.FC = () => {
                 <FormControl id="email">
                   <FormLabel color="subtle">
                     <Flex w={"100%"}>
-                      <Text>Email</Text>
-                      <Text fontSize="sm" ml={"auto"}>
-                        <Icon
-                          as={AiFillInfoCircle}
-                          color="accent"
-                          mr={2}
-                          fontSize={"md"}
-                        />
-                        {emailSend
-                          ? "Email verification is pending. Check your inbox for the verification link."
-                          : "Email verification is pending"}
-                      </Text>
+                      Email
+                      <Tooltip
+                        label="Email verification is pending"
+                        placement="top"
+                      >
+                        <InfoIcon color={"accent"} ml={1} fontSize="sm" />
+                      </Tooltip>
                     </Flex>
                   </FormLabel>
-                  {isEditable ? (
+                  <Stack
+                    spacing={6}
+                    direction={["column", "column", "column", "row"]}
+                  >
                     <Input
                       borderRadius="15px"
                       size="lg"
-                      isDisabled={
-                        data.verification_email_sent && formState.isSubmitting
-                      }
+                      isDisabled={data.verification_email_sent}
                       type="email"
                       w="100%"
                       maxW="400px"
                       defaultValue={metaMaskEmail}
-                      {...register("email", { required: false })}
+                      onChange={(e) => setMetaMaskEmail(e.target.value)}
                     />
-                  ) : (
-                    <Flex w="100%" alignItems={"center"}>
-                      <Text fontSize="lg" mr={4}>
-                        {metaMaskEmail}
-                      </Text>
-                      {data.verification_email_sent && (
-                        <Link
-                          color="accent"
-                          whiteSpace={"nowrap"}
-                          ml="auto"
-                          mr={4}
-                          onClick={() => onResendEmail()}
-                        >
-                          Resend verification email
-                        </Link>
+                    <Button
+                      variant={"brand"}
+                      onClick={!emailSend ? updateEmail : onResendEmail}
+                      disabled={!metaMaskEmail}
+                      px={10}
+                      minW={"150px"}
+                    >
+                      {isLoading ? (
+                        <Spinner />
+                      ) : emailSend ? (
+                        "Resend Email"
+                      ) : (
+                        "Verify Email"
                       )}
-                    </Flex>
-                  )}
-                </FormControl>
-              )}
-              {data.public_address && (
-                <FormControl id="public_address">
-                  <FormLabel color="subtle">Public Address</FormLabel>
-                  {isEditable ? (
-                    <Input
-                      borderRadius="15px"
-                      size="lg"
-                      isDisabled
-                      type="email"
-                      w="100%"
-                      maxW="400px"
-                      value={data.email}
-                    />
-                  ) : (
-                    <Text fontSize="lg">{data.public_address}</Text>
+                    </Button>
+                  </Stack>
+                  {emailSend && (
+                    <Text color="success" my={2}>
+                      <Icon as={FiCheck} /> email sent successfully. Check your
+                      inbox for verification link.
+                    </Text>
                   )}
                 </FormControl>
               )}
