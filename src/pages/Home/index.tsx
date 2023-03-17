@@ -418,8 +418,8 @@ const formatOptionLabel: React.FC<{
   value: string;
   label: string;
   icon: string;
-}> = ({ label, icon }) => (
-  <div style={{ display: "flex", flexDirection: "row" }}>
+}> = ({ value, label, icon }) => (
+  <div id={value} style={{ display: "flex", flexDirection: "row" }}>
     {icon !== "" && (
       <Image h={"20px"} w={"20px"} mr={3} src={`/blockscan/${icon}.svg`} />
     )}

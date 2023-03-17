@@ -417,8 +417,8 @@ const formatOptionLabel: React.FC<{
   value: string;
   label: string;
   icon: string;
-}> = ({ label, icon }) => (
-  <div style={{ display: "flex", flexDirection: "row" }}>
+}> = ({ value, label, icon }) => (
+  <div id={value} style={{ display: "flex", flexDirection: "row" }}>
     <Image mr={3} src={`/icons/${icon}.svg`} />
     <div>{label}</div>
   </div>
