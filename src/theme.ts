@@ -31,6 +31,7 @@ export const theme = extendTheme({
     low: "#38CB89",
     gas: "#F795B4",
     "high-subtle": "#FFECE8",
+    success: "#289F4C",
     bg: {
       subtle: "#FAFBFC",
     },
