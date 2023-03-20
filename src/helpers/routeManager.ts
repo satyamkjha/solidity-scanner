@@ -12,7 +12,7 @@ export const API_PATH = {
   //PROFILE
   API_PROFILE: "/api-profile/",
   API_UPDATE_PROFILE: "/api-update-profile/",
-  API_UPDATE_EMAIL: "/api-update-email",
+  API_UPDATE_EMAIL: "/api-update-email/",
   API_GET_USER_OVERVIEW: "/api-get-user-overview/",
 
   //START_SCAN
