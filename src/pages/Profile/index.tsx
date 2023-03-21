@@ -49,6 +49,7 @@ const Profile: React.FC = () => {
   const [emailSend, setEmailSend] = useState(false);
   const [metaMaskEmail, setMetaMaskEmail] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState("");
 
   const { data } = useProfile();
   const queryClient = useQueryClient();
@@ -61,6 +62,16 @@ const Profile: React.FC = () => {
         setMetaMaskEmail(data.email);
     }
   }, [data]);
+
+  const validateEmail = (value: string) => {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(value)) {
+      setError("Please enter a valid email address.");
+      return false;
+    }
+    setError("");
+    return true;
+  };
 
   const onSave = async ({
     company_name,
@@ -77,7 +88,7 @@ const Profile: React.FC = () => {
   };
 
   const updateEmail = async () => {
-    if (metaMaskEmail) {
+    if (metaMaskEmail && validateEmail(metaMaskEmail)) {
       setIsLoading(true);
       const { data } = await API.put(API_PATH.API_UPDATE_EMAIL, {
         email: metaMaskEmail,
@@ -314,6 +325,9 @@ const Profile: React.FC = () => {
                       inbox for verification link.
                     </Text>
                   )}
+                  <Text my={2} color="#FF2400" fontSize="sm">
+                    {error}
+                  </Text>
                 </FormControl>
               )}
             </VStack>
