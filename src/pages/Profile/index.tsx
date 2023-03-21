@@ -1,7 +1,8 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { useHistory } from "react-router-dom";
 import { useQueryClient } from "react-query";
+import { FiCheck } from "react-icons/fi";
 import {
   Flex,
   Box,
@@ -17,6 +18,8 @@ import {
   Spinner,
   InputProps,
   useToast,
+  Stack,
+  Tooltip,
 } from "@chakra-ui/react";
 
 import {
@@ -24,12 +27,15 @@ import {
   AiOutlineSave,
   AiOutlineEye,
   AiOutlineEyeInvisible,
+  AiFillInfoCircle,
 } from "react-icons/ai";
 import { useProfile } from "hooks/useProfile";
 
 import API from "helpers/api";
 import Auth from "helpers/auth";
 import { API_PATH } from "helpers/routeManager";
+import { AuthResponse } from "common/types";
+import { InfoIcon } from "@chakra-ui/icons";
 
 type ProfileFormData = {
   first_name?: string;
@@ -37,11 +43,36 @@ type ProfileFormData = {
   contact_number?: string;
 };
 const Profile: React.FC = () => {
+  const toast = useToast();
+
   const [isEditable, setEditable] = useState(false);
+  const [emailSend, setEmailSend] = useState(false);
+  const [metaMaskEmail, setMetaMaskEmail] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState("");
 
   const { data } = useProfile();
   const queryClient = useQueryClient();
   const { handleSubmit, register, formState } = useForm<ProfileFormData>();
+
+  useEffect(() => {
+    if (data) {
+      setEmailSend(data.verification_email_sent);
+      if (data.verification_email_sent && !data.email_verified)
+        setMetaMaskEmail(data.email);
+    }
+  }, [data]);
+
+  const validateEmail = (value: string) => {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(value)) {
+      setError("Please enter a valid email address.");
+      return false;
+    }
+    setError("");
+    return true;
+  };
+
   const onSave = async ({
     company_name,
     contact_number,
@@ -54,6 +85,51 @@ const Profile: React.FC = () => {
     });
     queryClient.invalidateQueries("profile");
     setEditable(false);
+  };
+
+  const updateEmail = async () => {
+    if (metaMaskEmail && validateEmail(metaMaskEmail)) {
+      setIsLoading(true);
+      const { data } = await API.put(API_PATH.API_UPDATE_EMAIL, {
+        email: metaMaskEmail,
+      });
+      setIsLoading(false);
+      if (data.status === "success") {
+        setEmailSend(true);
+        toast({
+          title: "Verification email sent",
+          description: `We've sent a link to your email ${metaMaskEmail}.`,
+          status: "success",
+          duration: 5000,
+          isClosable: true,
+          position: "bottom",
+        });
+        queryClient.invalidateQueries("profile");
+      } else {
+        setEmailSend(false);
+        setMetaMaskEmail("");
+      }
+    }
+  };
+
+  const onResendEmail = async () => {
+    setIsLoading(true);
+    const { data } = await API.post<AuthResponse>(API_PATH.API_SEND_EMAIL, {
+      email: metaMaskEmail,
+    });
+
+    if (data.status === "success") {
+      setEmailSend(true);
+      toast({
+        title: "Verification email sent",
+        description: `We've sent a link to your email ${metaMaskEmail}.`,
+        status: "success",
+        duration: 5000,
+        isClosable: true,
+        position: "bottom",
+      });
+    }
+    setIsLoading(false);
   };
 
   return (
@@ -161,6 +237,26 @@ const Profile: React.FC = () => {
                   <Text fontSize="lg">{data.contact_number}</Text>
                 )}
               </FormControl>
+
+              {data.public_address && (
+                <FormControl id="public_address">
+                  <FormLabel color="subtle">Public Address</FormLabel>
+                  {isEditable ? (
+                    <Input
+                      borderRadius="15px"
+                      size="lg"
+                      isDisabled
+                      type="email"
+                      w="100%"
+                      maxW="400px"
+                      value={data.public_address}
+                    />
+                  ) : (
+                    <Text fontSize="lg">{data.public_address}</Text>
+                  )}
+                </FormControl>
+              )}
+
               {data.email_verified && (
                 <FormControl id="email">
                   <FormLabel color="subtle">Email ID</FormLabel>
@@ -180,22 +276,58 @@ const Profile: React.FC = () => {
                 </FormControl>
               )}
 
-              {data.public_address && (
-                <FormControl id="public_address">
-                  <FormLabel color="subtle">Public Address</FormLabel>
-                  {isEditable ? (
+              {!data.email_verified && data.public_address && (
+                <FormControl id="email">
+                  <FormLabel color="subtle">
+                    <Flex w={"100%"}>
+                      Email
+                      <Tooltip
+                        label="Email verification is pending"
+                        placement="top"
+                      >
+                        <InfoIcon color={"accent"} ml={1} fontSize="sm" />
+                      </Tooltip>
+                    </Flex>
+                  </FormLabel>
+                  <Stack
+                    spacing={6}
+                    direction={["column", "column", "column", "row"]}
+                  >
                     <Input
                       borderRadius="15px"
                       size="lg"
-                      isDisabled
+                      isDisabled={data.verification_email_sent}
                       type="email"
                       w="100%"
                       maxW="400px"
-                      value={data.email}
+                      defaultValue={metaMaskEmail}
+                      onChange={(e) => setMetaMaskEmail(e.target.value)}
                     />
-                  ) : (
-                    <Text fontSize="lg">{data.public_address}</Text>
+                    <Button
+                      variant={"brand"}
+                      onClick={!emailSend ? updateEmail : onResendEmail}
+                      disabled={!metaMaskEmail}
+                      px={10}
+                      minW={"150px"}
+                    >
+                      {isLoading ? (
+                        <Spinner />
+                      ) : emailSend ? (
+                        "Resend Email"
+                      ) : (
+                        "Verify Email"
+                      )}
+                    </Button>
+                  </Stack>
+                  {emailSend && (
+                    <Text color="success" my={2}>
+                      <Icon as={FiCheck} /> email sent successfully. Check your
+                      inbox for verification link.
+                    </Text>
                   )}
+                  <Text my={2} color="#FF2400" fontSize="sm">
+                    {error}
+                  </Text>
                 </FormControl>
               )}
             </VStack>

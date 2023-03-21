@@ -39,6 +39,7 @@ import { useIssueDetail } from "hooks/useIssueDetail";
 import Select from "react-select";
 import {
   FilesState,
+  MetricWiseAggregatedFinding,
   MultiFileScanDetail,
   MultiFileScanSummary,
   Profile,
@@ -57,8 +58,8 @@ import { IssueContainer } from "./issueContainer";
 import { sentenceCapitalize } from "helpers/helperFunction";
 import { API_PATH } from "helpers/routeManager";
 import CommentForm from "./commentForm";
+import { getBugStatusNumber } from "common/functions";
 import { BsArrowsAngleExpand, BsArrowsAngleContract } from "react-icons/bs";
-
 type FileState = {
   issue_id: string;
   file_path: string;
@@ -416,8 +417,8 @@ const formatOptionLabel: React.FC<{
   value: string;
   label: string;
   icon: string;
-}> = ({ label, icon }) => (
-  <div style={{ display: "flex", flexDirection: "row" }}>
+}> = ({ value, label, icon }) => (
+  <div id={value} style={{ display: "flex", flexDirection: "row" }}>
     <Image mr={3} src={`/icons/${icon}.svg`} />
     <div>{label}</div>
   </div>
@@ -498,8 +499,13 @@ export const MultifileResult: React.FC<{
     },
   } = scanSummary;
 
+  const [bugStatusFilter, setBugStatusFilter] = useState([
+    true,
+    true,
+    true,
+    true,
+  ]);
   const [confidence, setConfidence] = useState([true, true, true]);
-
   const [vulnerability, setVulnerability] = useState([
     true,
     true,
@@ -611,12 +617,13 @@ export const MultifileResult: React.FC<{
             setFilterExpanded={setFilterExpanded}
             setVulnerability={setVulnerability}
             setConfidence={setConfidence}
+            setBugStatusFilter={setBugStatusFilter}
           />
           {details_enabled && (
             <HStack
               display={["flex", "flex", "flex", "none"]}
               position={"sticky"}
-              top={filterExpanded ? "285px" : "50px"}
+              top={filterExpanded ? "455px" : "50px"}
               background="white"
               zIndex={1}
               w={"100%"}
@@ -661,6 +668,7 @@ export const MultifileResult: React.FC<{
               confidence={confidence}
               vulnerability={vulnerability}
               updateBugStatus={updateBugStatus}
+              bugStatusFilter={bugStatusFilter}
             />
           </Box>
         </VStack>
@@ -697,6 +705,7 @@ type MultifileIssuesProps = {
   setSelectedBugs: Dispatch<SetStateAction<string[]>>;
   confidence: boolean[];
   vulnerability: boolean[];
+  bugStatusFilter: boolean[];
   profileData: Profile;
   details_enabled: boolean;
   is_latest_scan: boolean;
@@ -713,10 +722,13 @@ const MultifileIssues: React.FC<MultifileIssuesProps> = ({
   setSelectedBugs,
   confidence,
   vulnerability,
-  profileData,
+  bugStatusFilter,
   details_enabled,
   updateBugStatus,
 }) => {
+  const [isDesktopView] = useMediaQuery("(min-width: 1024px)");
+  let issue_count: number;
+
   const getVulnerabilityNumber = (issue_severity: string) => {
     switch (issue_severity) {
       case "critical":
@@ -735,7 +747,22 @@ const MultifileIssues: React.FC<MultifileIssuesProps> = ({
         return 0;
     }
   };
-  const [isDesktopView] = useMediaQuery("(min-width: 1024px)");
+
+  const checkBugStatusFilter = (
+    metric_wise_aggregated_findings: MetricWiseAggregatedFinding[]
+  ) => {
+    if (details_enabled) {
+      const conditionMet = metric_wise_aggregated_findings.filter(
+        (bug) => bugStatusFilter[getBugStatusNumber(bug.bug_status)]
+      );
+      if (conditionMet && conditionMet.length) {
+        issue_count = conditionMet.length;
+        return true;
+      } else return false;
+    } else {
+      return true;
+    }
+  };
 
   return (
     <Accordion allowMultiple={isDesktopView} allowToggle>
@@ -761,7 +788,8 @@ const MultifileIssues: React.FC<MultifileIssuesProps> = ({
                 {confidence[parseInt(template_details.issue_confidence)] &&
                 vulnerability[
                   getVulnerabilityNumber(template_details.issue_severity)
-                ] ? (
+                ] &&
+                checkBugStatusFilter(metric_wise_aggregated_findings) ? (
                   <IssueContainer
                     key={issue_id + index}
                     type={type}
@@ -771,12 +799,13 @@ const MultifileIssues: React.FC<MultifileIssuesProps> = ({
                       metric_wise_aggregated_findings
                     }
                     template_details={template_details}
-                    no_of_findings={no_of_findings}
+                    no_of_findings={issue_count ? issue_count : no_of_findings}
                     is_latest_scan={is_latest_scan}
                     details_enabled={details_enabled}
                     setFiles={setFiles}
                     selectedBugs={selectedBugs}
                     setSelectedBugs={setSelectedBugs}
+                    bugStatusFilter={bugStatusFilter}
                     updateBugStatus={updateBugStatus}
                   />
                 ) : (
@@ -1444,7 +1473,6 @@ const IssueDetail: React.FC<{
 
   useEffect(() => {
     if (tabIndex !== undefined && !isDesktopView) {
-      console.log(tabIndex);
       tabRefs.current[tabIndex]?.scrollIntoView({
         behavior: "smooth",
         block: "nearest",

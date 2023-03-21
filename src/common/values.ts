@@ -237,4 +237,5 @@ export const blockScans: { [key: string]: string } = {
   aurora: "Aurora",
   arbiscan: "Arbiscan",
   buildbear: "Buildbear",
+  optimism: "Optimism",
 };
