@@ -623,7 +623,7 @@ export const MultifileResult: React.FC<{
             <HStack
               display={["flex", "flex", "flex", "none"]}
               position={"sticky"}
-              top={filterExpanded ? "285px" : "50px"}
+              top={filterExpanded ? "455px" : "50px"}
               background="white"
               zIndex={1}
               w={"100%"}
@@ -751,13 +751,17 @@ const MultifileIssues: React.FC<MultifileIssuesProps> = ({
   const checkBugStatusFilter = (
     metric_wise_aggregated_findings: MetricWiseAggregatedFinding[]
   ) => {
-    const conditionMet = metric_wise_aggregated_findings.filter(
-      (bug) => bugStatusFilter[getBugStatusNumber(bug.bug_status)]
-    );
-    if (conditionMet && conditionMet.length) {
-      issue_count = conditionMet.length;
+    if (details_enabled) {
+      const conditionMet = metric_wise_aggregated_findings.filter(
+        (bug) => bugStatusFilter[getBugStatusNumber(bug.bug_status)]
+      );
+      if (conditionMet && conditionMet.length) {
+        issue_count = conditionMet.length;
+        return true;
+      } else return false;
+    } else {
       return true;
-    } else return false;
+    }
   };
 
   return (
