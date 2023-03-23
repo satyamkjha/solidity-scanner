@@ -265,8 +265,6 @@ const PrivateRoute: React.FC<RouteProps> = ({ children, ...rest }) => {
 
 const RedirectRoute: React.FC<RouteProps> = ({ children, ...rest }) => {
   const location = useLocation();
-  console.log(location.pathname);
-  console.log(Cookies.get("csrftoken"));
   const searchParams = new URLSearchParams(location.search);
   const authenticated = searchParams.get("authenticated");
   if (
