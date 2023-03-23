@@ -101,6 +101,7 @@ import { useReports } from "hooks/useReports";
 import { usePricingPlans } from "hooks/usePricingPlans";
 import { API_PATH } from "helpers/routeManager";
 import { getFeatureGateConfig } from "helpers/helperFunction";
+import { PDFDownloadButton } from "pages/PDFDoc";
 
 export const ProjectPage: React.FC = () => {
   const { projectId } = useParams<{ projectId: string }>();
@@ -452,6 +453,7 @@ const ScanDetails: React.FC<{ scansRemaining: number; scans: ScanMeta[] }> = ({
                   alignItems={"center"}
                   width={["100%", "100%", "100%", "fit-content"]}
                 >
+                  {/* <PDFDownloadButton /> */}
                   {scanData.scan_report.reporting_status ===
                     "report_generated" &&
                     publishStatus !== "" &&
