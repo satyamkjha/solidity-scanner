@@ -19,6 +19,7 @@ import PublicReportPage from "pages/Report/PublicReport";
 import PageNotFound, { CustomPageNotFound } from "pages/PageNotFound";
 import { Helmet } from "react-helmet";
 import Cookies from "js-cookie";
+import { MyDoc, PDFDoc } from "pages/PDFDoc";
 
 const Landing = lazy(
   () => import("pages/Landing" /* webpackChunkName: "Landing" */)
@@ -146,6 +147,9 @@ const Routes: React.FC = () => {
           <Route exact path="/reset">
             <Reset />
           </Route>
+          <Route exact path="/mydoc">
+            <PDFDoc />
+          </Route>
           <RedirectRoute exact path="/signup">
             <SignUp />
           </RedirectRoute>
@@ -186,6 +190,7 @@ const Routes: React.FC = () => {
                 <PrivateRoute exact path="/integrations">
                   <Integrations />
                 </PrivateRoute>
+
                 <PrivateRoute exact path="/billing">
                   <Billing />
                 </PrivateRoute>
