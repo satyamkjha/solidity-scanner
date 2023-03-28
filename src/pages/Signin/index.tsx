@@ -41,6 +41,7 @@ import { API_PATH } from "helpers/routeManager";
 import GoogleSignIn from "components/googleSignin";
 import Cookies from "js-cookie";
 import { getFeatureGateConfig } from "helpers/helperFunction";
+import reCAPTCHA from "helpers/reCAPTCHA";
 
 function useQuery() {
   return new URLSearchParams(useLocation().search);
@@ -155,11 +156,17 @@ const LoginForm: React.FC = () => {
   const { handleSubmit, register, formState } = useForm<FormData>();
   const [show, setShow] = useState(false);
   const history = useHistory();
+  const recaptcha = new reCAPTCHA(
+    process.env.REACT_APP_RECAPTCHA_SITE_KEY!,
+    "signin"
+  );
 
   const onSubmit = async ({ email, password }: FormData) => {
+    const recaptcha_token = await recaptcha.getToken();
     const { data } = await API.post<AuthResponse>(API_PATH.API_LOGIN, {
       email,
       password,
+      recaptcha_token,
     });
 
     if (data.status === "success") {

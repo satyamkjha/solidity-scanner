@@ -36,6 +36,7 @@ import Auth from "helpers/auth";
 import { API_PATH } from "helpers/routeManager";
 import { AuthResponse } from "common/types";
 import { InfoIcon } from "@chakra-ui/icons";
+import reCAPTCHA from "helpers/reCAPTCHA";
 
 type ProfileFormData = {
   first_name?: string;
@@ -54,6 +55,10 @@ const Profile: React.FC = () => {
   const { data } = useProfile();
   const queryClient = useQueryClient();
   const { handleSubmit, register, formState } = useForm<ProfileFormData>();
+  const recaptcha = new reCAPTCHA(
+    process.env.REACT_APP_RECAPTCHA_SITE_KEY!,
+    "send-email"
+  );
 
   useEffect(() => {
     if (data) {
@@ -114,8 +119,10 @@ const Profile: React.FC = () => {
 
   const onResendEmail = async () => {
     setIsLoading(true);
+    const recaptcha_token = await recaptcha.getToken();
     const { data } = await API.post<AuthResponse>(API_PATH.API_SEND_EMAIL, {
       email: metaMaskEmail,
+      recaptcha_token,
     });
 
     if (data.status === "success") {
