@@ -109,6 +109,7 @@ export const ReportContainer: React.FC<{ summary_report: Report }> = ({
 
   const handlePrint = useReactToPrint({
     content: () => componentRef.current,
+    footer: () => <p>{"asjdhkjashd"} </p>,
   });
 
   return (
@@ -121,6 +122,7 @@ export const ReportContainer: React.FC<{ summary_report: Report }> = ({
           "@page": {
             margin: "30px",
             border: "1px solid #D9D9D9;",
+            marginBottom: "40px",
           },
         }}
         overflow={"hidden"}
