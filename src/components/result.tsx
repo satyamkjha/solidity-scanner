@@ -1091,9 +1091,11 @@ export const MultiFileExplorer: React.FC<MultiFileExplorerProps> = ({
   setOpenIssueBox,
   setFiles,
 }) => {
-  const [currentFileName, setCurrentFileName] = useState(
-    files.findings[0].file_path
-  );
+  const [currentFileName, setCurrentFileName] = useState("");
+
+  useEffect(() => {
+    setCurrentFileName(files.findings[0].file_path);
+  }, [files]);
 
   const [fullScreen, setFullScreen] = useState(false);
 
@@ -1176,7 +1178,15 @@ export const MultiFileExplorer: React.FC<MultiFileExplorerProps> = ({
                         borderBottomWidth: "2px",
                       }}
                     >
-                      <Tooltip label={file.file_path} aria-label="A tooltip">
+                      <Tooltip
+                        sx={{
+                          hyphens: "none",
+                          wordBreak: "keep-all",
+                        }}
+                        w="1000px"
+                        label={file.file_path}
+                        aria-label="A tooltip"
+                      >
                         <Text fontSize={"xs"} width={100} isTruncated>
                           {file.file_path.length < 16
                             ? file.file_path

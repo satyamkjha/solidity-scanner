@@ -194,7 +194,6 @@ const QuickScan: React.FC = () => {
       },
     ],
     celo: [
-      { value: "", label: "Select Chain", icon: "", isDisabled: true },
       { value: "mainnet", label: "Celo Mainnet", icon: "", isDisabled: false },
       {
         value: "testnet",
@@ -204,7 +203,6 @@ const QuickScan: React.FC = () => {
       },
     ],
     aurora: [
-      { value: "", label: "Select Chain", icon: "", isDisabled: true },
       {
         value: "mainnet",
         label: "Aurora Mainnet",

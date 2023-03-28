@@ -135,6 +135,7 @@ export const theme = extendTheme({
         }),
       },
     },
+
     Input: {
       parts: ["field", "addon"],
       sizes: {
