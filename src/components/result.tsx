@@ -1176,7 +1176,23 @@ export const MultiFileExplorer: React.FC<MultiFileExplorerProps> = ({
                         borderBottomWidth: "2px",
                       }}
                     >
-                      <Tooltip label={file.file_path} aria-label="A tooltip">
+                      <Tooltip
+                        sx={{
+                          hyphens: "none",
+                          wordBreak: "keep-all",
+                        }}
+                        w="1000px"
+                        label={
+                          <p
+                            style={{
+                              wordBreak: "keep-all",
+                            }}
+                          >
+                            {file.file_path}
+                          </p>
+                        }
+                        aria-label="A tooltip"
+                      >
                         <Text fontSize={"xs"} width={100} isTruncated>
                           {file.file_path.length < 16
                             ? file.file_path
