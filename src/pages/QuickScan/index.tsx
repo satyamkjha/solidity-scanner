@@ -58,6 +58,7 @@ import { useRecentQuickScans } from "hooks/useRecentQuickScans";
 import { FaEllipsisH, FaEllipsisV } from "react-icons/fa";
 import { API_PATH } from "helpers/routeManager";
 import { ThreatScoreMeter } from "components/threatScoreMeter";
+import reCAPTCHA from "helpers/reCAPTCHA";
 
 const pieData = (
   critical: number,
@@ -418,6 +419,11 @@ const QuickScan: React.FC = () => {
 
   let d = new Date();
 
+  const recaptcha = new reCAPTCHA(
+    process.env.REACT_APP_RECAPTCHA_SITE_KEY!,
+    "quickScan"
+  );
+
   const elementRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -487,20 +493,12 @@ const QuickScan: React.FC = () => {
     chain: string,
     ref: string | null
   ) => {
-    let req = {};
-    if (platform === "buildbear") {
-      req = {
-        contract_address: address,
-        contract_platform: platform,
-        node_id: chain,
-      };
-    } else {
-      req = {
-        contract_address: address,
-        contract_platform: platform,
-        contract_chain: chain,
-      };
-    }
+    const recaptcha_token = await recaptcha.getToken();
+    const req = {
+      contract_address: address,
+      contract_platform: platform,
+      [platform === "buildbear" ? "node_id" : "contract_chain"]: chain,
+    };
     API.post<{
       contract_verified: boolean;
       message: string;
@@ -508,12 +506,12 @@ const QuickScan: React.FC = () => {
     }>(API_PATH.API_GET_CONTRACT_STATUS, req).then(
       (res) => {
         if (res.data.contract_verified) {
-          let api_url = "";
-          if (platform === "buildbear") {
-            api_url = `${API_PATH.API_QUICK_SCAN_SSE}?contract_address=${address}&contract_platform=${platform}&node_id=${chain}`;
-          } else {
-            api_url = `${API_PATH.API_QUICK_SCAN_SSE}?contract_address=${address}&contract_platform=${platform}&contract_chain=${chain}`;
-          }
+          let api_url = `${
+            API_PATH.API_QUICK_SCAN_SSE
+          }?contract_address=${address}&contract_platform=${platform}&${
+            platform === "buildbear" ? "node_id" : "contract_chain"
+          }=${chain}&recaptcha_token=${recaptcha_token}`;
+
           if (ref) {
             api_url = api_url + `&ref=${ref}`;
           }
