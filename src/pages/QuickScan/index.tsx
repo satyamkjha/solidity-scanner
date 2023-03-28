@@ -417,7 +417,11 @@ const QuickScan: React.FC = () => {
 
   let d = new Date();
 
-  const recaptcha = new reCAPTCHA(
+  const recaptcha1 = new reCAPTCHA(
+    process.env.REACT_APP_RECAPTCHA_SITE_KEY!,
+    "quickScan_verify"
+  );
+  const recaptcha2 = new reCAPTCHA(
     process.env.REACT_APP_RECAPTCHA_SITE_KEY!,
     "quickScan"
   );
@@ -491,7 +495,9 @@ const QuickScan: React.FC = () => {
     chain: string,
     ref: string | null
   ) => {
-    const recaptcha_token = await recaptcha.getToken();
+    const Recaptchatoken1 = await recaptcha1.getToken();
+    const Recaptchatoken2 = await recaptcha2.getToken();
+
     const req = {
       contract_address: address,
       contract_platform: platform,
@@ -501,19 +507,29 @@ const QuickScan: React.FC = () => {
       contract_verified: boolean;
       message: string;
       status: string;
-    }>(API_PATH.API_GET_CONTRACT_STATUS, req).then(
+    }>(API_PATH.API_GET_CONTRACT_STATUS, req, {
+      headers: {
+        "Content-Type": "application/json",
+        Recaptchatoken: Recaptchatoken1,
+      },
+    }).then(
       (res) => {
         if (res.data.contract_verified) {
           let api_url = `${
             API_PATH.API_QUICK_SCAN_SSE
           }?contract_address=${address}&contract_platform=${platform}&${
             platform === "buildbear" ? "node_id" : "contract_chain"
-          }=${chain}&recaptcha_token=${recaptcha_token}`;
+          }=${chain}`;
 
           if (ref) {
             api_url = api_url + `&ref=${ref}`;
           }
-          API.get(api_url)
+          API.get(api_url, {
+            headers: {
+              "Content-Type": "application/json",
+              Recaptchatoken: Recaptchatoken2,
+            },
+          })
             .then(
               (res) => {
                 if (res.status === 200) {

@@ -171,7 +171,7 @@ const RegisterForm: React.FC<{
   const [step, setStep] = useState(0);
 
   const onSubmit = async () => {
-    const recaptcha_token = await recaptcha.getToken();
+    const Recaptchatoken = await recaptcha.getToken();
     if (step === 0) {
       setStep(1);
     } else {
@@ -197,11 +197,16 @@ const RegisterForm: React.FC<{
                 campaign_id,
               }
             : undefined,
-        recaptcha_token,
       };
       const { data } = await API.post<AuthResponse>(
         API_PATH.API_REGISTER,
-        reqBody
+        reqBody,
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Recaptchatoken,
+          },
+        }
       );
 
       if (data.status === "success") {

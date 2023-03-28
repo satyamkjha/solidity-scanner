@@ -162,12 +162,20 @@ const LoginForm: React.FC = () => {
   );
 
   const onSubmit = async ({ email, password }: FormData) => {
-    const recaptcha_token = await recaptcha.getToken();
-    const { data } = await API.post<AuthResponse>(API_PATH.API_LOGIN, {
-      email,
-      password,
-      recaptcha_token,
-    });
+    const Recaptchatoken = await recaptcha.getToken();
+    const { data } = await API.post<AuthResponse>(
+      API_PATH.API_LOGIN,
+      {
+        email,
+        password,
+      },
+      {
+        headers: {
+          "Content-Type": "application/json",
+          Recaptchatoken,
+        },
+      }
+    );
 
     if (data.status === "success") {
       Auth.authenticateUser();

@@ -46,14 +46,19 @@ const Reset: React.FC = () => {
   );
 
   const onSubmit = async ({ email, password }: FormData) => {
-    const recaptcha_token = await recaptcha.getToken();
+    const Recaptchatoken = await recaptcha.getToken();
     const { data } = await API.post<AuthResponse>(
       API_PATH.API_FORGOT_PASSWORD,
       {
         email,
         token,
         password,
-        recaptcha_token,
+      },
+      {
+        headers: {
+          "Content-Type": "application/json",
+          Recaptchatoken,
+        },
       }
     );
 

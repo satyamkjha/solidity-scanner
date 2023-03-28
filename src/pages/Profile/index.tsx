@@ -119,11 +119,19 @@ const Profile: React.FC = () => {
 
   const onResendEmail = async () => {
     setIsLoading(true);
-    const recaptcha_token = await recaptcha.getToken();
-    const { data } = await API.post<AuthResponse>(API_PATH.API_SEND_EMAIL, {
-      email: metaMaskEmail,
-      recaptcha_token,
-    });
+    const Recaptchatoken = await recaptcha.getToken();
+    const { data } = await API.post<AuthResponse>(
+      API_PATH.API_SEND_EMAIL,
+      {
+        email: metaMaskEmail,
+      },
+      {
+        headers: {
+          "Content-Type": "application/json",
+          Recaptchatoken,
+        },
+      }
+    );
 
     if (data.status === "success") {
       setEmailSend(true);
