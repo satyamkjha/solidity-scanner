@@ -106,25 +106,14 @@ export const ReportContainer: React.FC<{ summary_report: Report }> = ({
   ];
 
   const componentRef = useRef();
+
   const handlePrint = useReactToPrint({
     content: () => componentRef.current,
   });
 
-  useEffect(() => {
-    handlePrint();
-  }, []);
-
-  const printStyles = `
-    @media print {
-      @page {
-        margin: 1in;
-      }
-    }
-  `;
-
   return (
     <>
-      {/* <Button onClick={handlePrint}> TEST PRINT </Button> */}
+      <Button onClick={handlePrint}> TEST PRINT </Button>
       <Container
         maxW={"100vw"}
         color="black"
@@ -199,6 +188,22 @@ export const ReportContainer: React.FC<{ summary_report: Report }> = ({
 
         {/* Table of Contents */}
         <Flex
+          sx={{
+            color: "#000000",
+            mx: 1,
+          }}
+          py={10}
+          alignItems="center"
+        >
+          <Heading color={"#52FF00"} fontSize="4xl">
+            Table of
+          </Heading>
+          <Text fontSize="4xl" fontWeight={400}>
+            {" "}
+            &nbsp;Contents.{" "}
+          </Text>
+        </Flex>
+        <Flex
           as="div"
           w="100%"
           alignItems="flex-start"
@@ -211,22 +216,7 @@ export const ReportContainer: React.FC<{ summary_report: Report }> = ({
           py={[4, 4, 4, 20]}
           px={[6, 6, 6, 10]}
         >
-          <Flex
-            sx={{
-              color: "#000000",
-              mx: 1,
-            }}
-            alignItems="center"
-          >
-            <Heading color={"#52FF00"} fontSize="4xl">
-              Table of
-            </Heading>
-            <Text fontSize="4xl" fontWeight={400}>
-              {" "}
-              &nbsp;Contents.{" "}
-            </Text>
-          </Flex>
-          <Text fontSize="xl" fontWeight={"bold"} mt={16} mb={4}>
+          <Text fontSize="xl" fontWeight={"bold"} mt={4} mb={4}>
             Project Summary
           </Text>
           <Text fontSize="xl" fontWeight={"bold"} mt={4} mb={4}>
@@ -261,6 +251,22 @@ export const ReportContainer: React.FC<{ summary_report: Report }> = ({
 
         {/* Project Summary */}
         <Flex
+          sx={{
+            color: "#000000",
+            mx: 1,
+          }}
+          py={10}
+          alignItems="center"
+        >
+          <Heading color={"#52FF00"} fontSize="4xl">
+            Project
+          </Heading>
+          <Text fontSize="4xl" fontWeight={400}>
+            {" "}
+            &nbsp;Summary{" "}
+          </Text>
+        </Flex>
+        <Flex
           as="div"
           w="100%"
           alignItems="flex-start"
@@ -273,22 +279,6 @@ export const ReportContainer: React.FC<{ summary_report: Report }> = ({
           py={[4, 4, 4, 20]}
           px={[6, 6, 6, 10]}
         >
-          <Flex
-            sx={{
-              color: "#000000",
-              mx: 1,
-            }}
-            my={10}
-            alignItems="center"
-          >
-            <Heading color={"#52FF00"} fontSize="4xl">
-              Project
-            </Heading>
-            <Text fontSize="4xl" fontWeight={400}>
-              {" "}
-              &nbsp;Summary{" "}
-            </Text>
-          </Flex>
           <Text fontSize="lg" fontWeight={"300"} mt={[6, 6, 6, 12]} mb={4}>
             This report has been prepared for{" "}
             {summary_report.project_summary_report.project_name} using
@@ -322,6 +312,22 @@ export const ReportContainer: React.FC<{ summary_report: Report }> = ({
 
         {/* Audit Summary */}
         <Flex
+          sx={{
+            color: "#000000",
+            mx: 1,
+          }}
+          py={10}
+          alignItems="center"
+        >
+          <Heading color={"#52FF00"} fontSize="4xl">
+            Audit
+          </Heading>
+          <Text fontSize="4xl" fontWeight={400}>
+            {" "}
+            &nbsp;Summary{" "}
+          </Text>
+        </Flex>
+        <Flex
           as="div"
           w="100%"
           alignItems="flex-start"
@@ -332,24 +338,7 @@ export const ReportContainer: React.FC<{ summary_report: Report }> = ({
           }}
           border={"1px solid #D9D9D9;"}
           py={[4, 4, 4, 20]}
-          px={[6, 6, 6, 10]}
         >
-          <Flex
-            sx={{
-              color: "#000000",
-              mx: 1,
-            }}
-            my={10}
-            alignItems="center"
-          >
-            <Heading color={"#52FF00"} fontSize="4xl">
-              Audit
-            </Heading>
-            <Text fontSize="4xl" fontWeight={400}>
-              {" "}
-              &nbsp;Summary{" "}
-            </Text>
-          </Flex>
           <Flex
             as="div"
             w="100%"
@@ -357,7 +346,6 @@ export const ReportContainer: React.FC<{ summary_report: Report }> = ({
             justifyContent="flex-start"
             flexDir={"row"}
             p={0}
-            border={"1px solid #D9D9D9;"}
           >
             <Flex
               as="div"
@@ -367,7 +355,7 @@ export const ReportContainer: React.FC<{ summary_report: Report }> = ({
               flexDir={"column"}
               px={5}
               py={3}
-              backgroundColor={"#FBFBFB"}
+              // backgroundColor={"#FBFBFB"}
             >
               {summary_report.project_summary_report.project_name && (
                 <>
@@ -379,11 +367,11 @@ export const ReportContainer: React.FC<{ summary_report: Report }> = ({
                   >
                     Project Name
                   </Text>
-                  {!isDesktopView && (
-                    <Text fontSize="lg" fontWeight={"normal"} mb={4}>
-                      {summary_report.project_summary_report.project_name}
-                    </Text>
-                  )}
+                  {/* {!isDesktopView && ( */}
+                  <Text fontSize="lg" fontWeight={"normal"} mb={4}>
+                    {summary_report.project_summary_report.project_name}
+                  </Text>
+                  {/* )} */}
                   <Divider />
                 </>
               )}
@@ -398,11 +386,11 @@ export const ReportContainer: React.FC<{ summary_report: Report }> = ({
                   >
                     Contract Name
                   </Text>
-                  {!isDesktopView && (
-                    <Text fontSize="lg" fontWeight={"normal"} mb={4}>
-                      {summary_report.project_summary_report.contract_name}
-                    </Text>
-                  )}
+                  {/* {!isDesktopView && ( */}
+                  <Text fontSize="lg" fontWeight={"normal"} mb={4}>
+                    {summary_report.project_summary_report.contract_name}
+                  </Text>
+                  {/* )} */}
                   <Divider />
                 </>
               )}
@@ -415,11 +403,11 @@ export const ReportContainer: React.FC<{ summary_report: Report }> = ({
               >
                 Contract Type
               </Text>
-              {!isDesktopView && (
-                <Text fontSize="lg" fontWeight={"normal"} mb={4}>
-                  {"Smart Contract"}
-                </Text>
-              )}
+              {/* {!isDesktopView && ( */}
+              <Text fontSize="lg" fontWeight={"normal"} mb={4}>
+                {"Smart Contract"}
+              </Text>
+              {/* )} */}
               <Divider />
               {summary_report.project_summary_report.contract_address && (
                 <>
@@ -432,16 +420,16 @@ export const ReportContainer: React.FC<{ summary_report: Report }> = ({
                   >
                     Contract Address
                   </Text>
-                  {!isDesktopView && (
-                    <Text
-                      fontSize="lg"
-                      fontWeight={"normal"}
-                      mb={4}
-                      wordBreak="break-word"
-                    >
-                      {summary_report.project_summary_report.contract_address}
-                    </Text>
-                  )}
+                  {/* {!isDesktopView && ( */}
+                  <Text
+                    fontSize="lg"
+                    fontWeight={"normal"}
+                    mb={4}
+                    wordBreak="break-word"
+                  >
+                    {summary_report.project_summary_report.contract_address}
+                  </Text>
+                  {/* )} */}
                   <Divider />
                 </>
               )}
@@ -456,11 +444,11 @@ export const ReportContainer: React.FC<{ summary_report: Report }> = ({
                   >
                     Contract Platform
                   </Text>
-                  {!isDesktopView && (
-                    <Text fontSize="lg" fontWeight={"normal"} mb={4}>
-                      {summary_report.project_summary_report.contract_platform}
-                    </Text>
-                  )}
+                  {/* {!isDesktopView && ( */}
+                  <Text fontSize="lg" fontWeight={"normal"} mb={4}>
+                    {summary_report.project_summary_report.contract_platform}
+                  </Text>
+                  {/* )} */}
                   <Divider />
                 </>
               )}
@@ -475,16 +463,16 @@ export const ReportContainer: React.FC<{ summary_report: Report }> = ({
                   >
                     Contract Chain
                   </Text>
-                  {!isDesktopView && (
-                    <Text
-                      fontSize="lg"
-                      fontWeight={"normal"}
-                      mb={4}
-                      wordBreak="break-word"
-                    >
-                      {summary_report.project_summary_report.contract_chain}
-                    </Text>
-                  )}
+                  {/* {!isDesktopView && ( */}
+                  <Text
+                    fontSize="lg"
+                    fontWeight={"normal"}
+                    mb={4}
+                    wordBreak="break-word"
+                  >
+                    {summary_report.project_summary_report.contract_chain}
+                  </Text>
+                  {/* )} */}
                   <Divider />
                 </>
               )}
@@ -499,16 +487,16 @@ export const ReportContainer: React.FC<{ summary_report: Report }> = ({
                   >
                     Contract URL
                   </Text>
-                  {!isDesktopView && (
-                    <Text
-                      fontSize="lg"
-                      fontWeight={"normal"}
-                      mb={4}
-                      wordBreak="break-word"
-                    >
-                      {summary_report.project_summary_report.contract_url}
-                    </Text>
-                  )}
+                  {/* {!isDesktopView && ( */}
+                  <Text
+                    fontSize="lg"
+                    fontWeight={"normal"}
+                    mb={4}
+                    wordBreak="break-word"
+                  >
+                    {summary_report.project_summary_report.contract_url}
+                  </Text>
+                  {/* )} */}
                   <Divider />
                 </>
               )}
@@ -521,11 +509,11 @@ export const ReportContainer: React.FC<{ summary_report: Report }> = ({
               >
                 Language
               </Text>
-              {!isDesktopView && (
-                <Text fontSize="lg" fontWeight={"normal"} mb={4}>
-                  {"Solidity"}
-                </Text>
-              )}
+              {/* {!isDesktopView && ( */}
+              <Text fontSize="lg" fontWeight={"normal"} mb={4}>
+                {"Solidity"}
+              </Text>
+              {/* )} */}
               <Divider />
               {summary_report.project_summary_report.project_url && (
                 <>
@@ -538,16 +526,16 @@ export const ReportContainer: React.FC<{ summary_report: Report }> = ({
                   >
                     Codebase
                   </Text>
-                  {!isDesktopView && (
-                    <Text
-                      fontSize="lg"
-                      fontWeight={"normal"}
-                      mb={4}
-                      wordBreak="break-word"
-                    >
-                      {summary_report.project_summary_report.project_url}
-                    </Text>
-                  )}
+                  {/* {!isDesktopView && ( */}
+                  <Text
+                    fontSize="lg"
+                    fontWeight={"normal"}
+                    mb={4}
+                    wordBreak="break-word"
+                  >
+                    {summary_report.project_summary_report.project_url}
+                  </Text>
+                  {/* )} */}
                   <Divider />
                 </>
               )}
@@ -562,16 +550,16 @@ export const ReportContainer: React.FC<{ summary_report: Report }> = ({
                   >
                     Commit Hash
                   </Text>
-                  {!isDesktopView && (
-                    <Text
-                      fontSize="lg"
-                      fontWeight={"normal"}
-                      mb={4}
-                      wordBreak="break-word"
-                    >
-                      {summary_report.project_summary_report.git_commit_hash}
-                    </Text>
-                  )}
+                  {/* {!isDesktopView && ( */}
+                  <Text
+                    fontSize="lg"
+                    fontWeight={"normal"}
+                    mb={4}
+                    wordBreak="break-word"
+                  >
+                    {summary_report.project_summary_report.git_commit_hash}
+                  </Text>
+                  {/* )} */}
                   <Divider />
                 </>
               )}
@@ -586,20 +574,20 @@ export const ReportContainer: React.FC<{ summary_report: Report }> = ({
                   >
                     Website
                   </Text>
-                  {!isDesktopView && (
-                    <>
-                      {" "}
-                      <Text
-                        fontSize="lg"
-                        fontWeight={"normal"}
-                        mb={4}
-                        wordBreak="break-word"
-                      >
-                        {summary_report.project_summary_report.website}
-                      </Text>
-                      <Divider />
-                    </>
-                  )}
+                  {/* {!isDesktopView && ( */}
+                  <>
+                    {" "}
+                    <Text
+                      fontSize="lg"
+                      fontWeight={"normal"}
+                      mb={4}
+                      wordBreak="break-word"
+                    >
+                      {summary_report.project_summary_report.website}
+                    </Text>
+                    <Divider />
+                  </>
+                  {/* )} */}
                   <Divider />
                 </>
               )}
@@ -614,11 +602,11 @@ export const ReportContainer: React.FC<{ summary_report: Report }> = ({
                   >
                     Date Published
                   </Text>
-                  {!isDesktopView && (
-                    <Text fontSize="lg" fontWeight={"normal"} mb={4}>
-                      {summary_report.project_summary_report.date_published}
-                    </Text>
-                  )}
+                  {/* {!isDesktopView && ( */}
+                  <Text fontSize="lg" fontWeight={"normal"} mb={4}>
+                    {summary_report.project_summary_report.date_published}
+                  </Text>
+                  {/* )} */}
                   <Divider />
                 </>
               )}
@@ -633,11 +621,11 @@ export const ReportContainer: React.FC<{ summary_report: Report }> = ({
                   >
                     Organization
                   </Text>
-                  {!isDesktopView && (
-                    <Text fontSize="lg" fontWeight={"normal"} mb={4}>
-                      {summary_report.project_summary_report.organization}
-                    </Text>
-                  )}
+                  {/* {!isDesktopView && ( */}
+                  <Text fontSize="lg" fontWeight={"normal"} mb={4}>
+                    {summary_report.project_summary_report.organization}
+                  </Text>
+                  {/* )} */}
                   <Divider />
                 </>
               )}
@@ -652,11 +640,11 @@ export const ReportContainer: React.FC<{ summary_report: Report }> = ({
                   >
                     Publishers/Owners Name
                   </Text>
-                  {!isDesktopView && (
-                    <Text fontSize="lg" fontWeight={"normal"} mb={4}>
-                      {summary_report.project_summary_report.report_owner}
-                    </Text>
-                  )}
+                  {/* {!isDesktopView && ( */}
+                  <Text fontSize="lg" fontWeight={"normal"} mb={4}>
+                    {summary_report.project_summary_report.report_owner}
+                  </Text>
+                  {/* )} */}
                   <Divider />
                 </>
               )}
@@ -671,11 +659,11 @@ export const ReportContainer: React.FC<{ summary_report: Report }> = ({
                   >
                     Contact Email
                   </Text>
-                  {!isDesktopView && (
-                    <Text fontSize="lg" fontWeight={"normal"} mb={4}>
-                      {summary_report.project_summary_report.email}
-                    </Text>
-                  )}
+                  {/* {!isDesktopView && ( */}
+                  <Text fontSize="lg" fontWeight={"normal"} mb={4}>
+                    {summary_report.project_summary_report.email}
+                  </Text>
+                  {/* )} */}
                   <Divider />
                 </>
               )}
@@ -688,13 +676,13 @@ export const ReportContainer: React.FC<{ summary_report: Report }> = ({
               >
                 Audit Methodology
               </Text>
-              {!isDesktopView && (
-                <Text fontSize="lg" fontWeight={"normal"} mb={4}>
-                  {"Static Scanning"}
-                </Text>
-              )}
+              {/* {!isDesktopView && ( */}
+              <Text fontSize="lg" fontWeight={"normal"} mb={4}>
+                {"Static Scanning"}
+              </Text>
+              {/* )} */}
             </Flex>
-            {isDesktopView && (
+            {/* {isDesktopView && (
               <Flex
                 as="div"
                 w="75%"
@@ -824,47 +812,53 @@ export const ReportContainer: React.FC<{ summary_report: Report }> = ({
                   {"Static Scanning"}
                 </Text>
               </Flex>
-            )}
+            )} */}
           </Flex>
         </Flex>
 
         {/* Findings Summary */}
+        <Flex
+          sx={{
+            color: "#000000",
+            mx: 1,
+          }}
+          py={10}
+          alignItems="center"
+        >
+          <Heading color={"#52FF00"} fontSize="4xl">
+            Findings
+          </Heading>
+          <Text fontSize="4xl" fontWeight={400}>
+            {" "}
+            &nbsp;Summary{" "}
+          </Text>
+        </Flex>
         <Flex
           as="div"
           w="100%"
           alignItems="flex-start"
           justifyContent="flex-start"
           flexDir={"column"}
-          sx={{
-            pageBreakAfter: "always",
-          }}
-          border={"1px solid #D9D9D9;"}
+          // border={"1px solid #D9D9D9;"}
           py={[4, 4, 4, 20]}
-          px={[6, 6, 6, 10]}
+          // px={[6, 6, 6, 10]}
         >
-          <Flex
+          <Box
             sx={{
-              color: "#000000",
-              mx: 1,
+              pageBreakAfter: "always",
             }}
-            my={10}
-            alignItems="center"
+            alignItems="flex-start"
+            justifyContent="flex-start"
+            flexDir={"column"}
+            w="100%"
+            border={"1px solid #D9D9D9;"}
           >
-            <Heading color={"#52FF00"} fontSize="4xl">
-              Findings
-            </Heading>
-            <Text fontSize="4xl" fontWeight={400}>
-              {" "}
-              &nbsp;Summary{" "}
-            </Text>
-          </Flex>
-          {/* <Box w="100%" mb={6} border={"1px solid #D9D9D9;"}>
             <Flex
               as="div"
               w="100%"
               alignItems="center"
               justifyContent="space-between"
-              flexDir={["column", "column", "column", "row"]}
+              flexDir={["row"]}
               py={7}
               px={[4, 4, 4, 10]}
               mb={[4, 4, 4, 0]}
@@ -893,18 +887,7 @@ export const ReportContainer: React.FC<{ summary_report: Report }> = ({
                   {summary_report.project_summary_report.project_url}
                   {summary_report.project_summary_report.contract_address}
                 </Text>
-              </VStack>
-              <Stack
-                spacing={[4, 4, 4, 20]}
-                direction={[
-                  "column-reverse",
-                  "column-reverse",
-                  "column-reverse",
-                  "row",
-                ]}
-                align={["center", "center", "center", "flex-start"]}
-              >
-                <VStack align={["center", "center", "center", "flex-start"]}>
+                <HStack align={"flex-start"}>
                   <Text
                     fontSize="md"
                     fontWeight={"normal"}
@@ -916,46 +899,40 @@ export const ReportContainer: React.FC<{ summary_report: Report }> = ({
                   <Text fontSize="lg" fontWeight={"bold"}>
                     {summary_report.scan_summary[0].lines_analyzed_count}
                   </Text>
-                </VStack>
+                </HStack>
+              </VStack>
 
-                <CircularProgress
-                  value={
-                    (parseInt(summary_report.scan_summary[0].score, 10) * 100) /
-                    5
-                  }
-                  color="accent"
-                  thickness="8px"
-                  size="100px"
-                  capIsRound
+              <CircularProgress
+                value={
+                  (parseInt(summary_report.scan_summary[0].score, 10) * 100) / 5
+                }
+                color="accent"
+                thickness="8px"
+                size="100px"
+                capIsRound
+              >
+                <CircularProgressLabel
+                  sx={{ display: "flex", justifyContent: "center" }}
                 >
-                  <CircularProgressLabel
-                    sx={{ display: "flex", justifyContent: "center" }}
-                  >
-                    <Box>
-                      <Text fontSize="lg" fontWeight={900} color="accent">
-                        {summary_report.scan_summary[0].score}
-                      </Text>
-                      <Text fontSize="sm" color="subtle" mt="-4px">
-                        Score
-                      </Text>
-                    </Box>
-                  </CircularProgressLabel>
-                </CircularProgress>
-              </Stack>
+                  <Box>
+                    <Text fontSize="lg" fontWeight={900} color="accent">
+                      {summary_report.scan_summary[0].score}
+                    </Text>
+                    <Text fontSize="sm" color="subtle" mt="-4px">
+                      Score
+                    </Text>
+                  </Box>
+                </CircularProgressLabel>
+              </CircularProgress>
             </Flex>
             <Flex
               as="div"
               w="100%"
+              h="fit-content"
               alignItems="center"
-              justifyContent={["center", "center", "center", "space-between"]}
-              flexDir={["column", "column", "column", "row"]}
-              mb={5}
+              justifyContent="center"
             >
-              <Box
-                w={["100%", "100%", "100%", "30%"]}
-                h="300px"
-                ml={[10, 10, 10, 0]}
-              >
+              <Box h="300px" w="300px">
                 <ResponsivePie
                   data={pieData(
                     summary_report.scan_summary[
@@ -997,7 +974,17 @@ export const ReportContainer: React.FC<{ summary_report: Report }> = ({
                   }}
                 />
               </Box>
-              <Box w={["100%", "100%", "100%", "30%"]} px={[0, 0, 0, 15]}>
+            </Flex>
+            <Flex
+              as="div"
+              w="100%"
+              alignItems="center"
+              justifyContent={["space-between", "space-between"]}
+              flexDir={["row"]}
+              flexWrap="wrap"
+              mb={5}
+            >
+              <Box w={["50%"]} px={[0, 0, 0, 15]}>
                 <VulnerabilityProgress
                   label="Critical"
                   variant="critical"
@@ -1029,7 +1016,7 @@ export const ReportContainer: React.FC<{ summary_report: Report }> = ({
                   total={summary_report.scan_summary[0].issues_count}
                 />
               </Box>
-              <Box w={["100%", "100%", "100%", "30%"]} px={[0, 0, 0, 15]}>
+              <Box w={["50%"]} px={[0, 0, 0, 15]}>
                 <VulnerabilityProgress
                   label="Low"
                   variant="low"
@@ -1062,202 +1049,197 @@ export const ReportContainer: React.FC<{ summary_report: Report }> = ({
                 />
               </Box>
             </Flex>
-            <Divider
-              style={{
-                borderWidth: 1,
-                borderColor: "#d0d1cf",
-                backgroundColor: "#d0d1cf",
-              }}
-              mb={20}
-              mx={[0, 0, 0, 6]}
-            />
-            <Flex
-              as="div"
-              w="100%"
-              alignItems={["center", "center", "center", "flex-start"]}
-              justifyContent={["center", "center", "center", "flex-start"]}
-              flexDir={"column"}
-              px={[0, 0, 0, 6]}
+          </Box>
+          <Flex
+            as="div"
+            w="100%"
+            border={"1px solid #D9D9D9;"}
+            alignItems={["center", "center", "center", "flex-start"]}
+            justifyContent={["center", "center", "center", "flex-start"]}
+            flexDir={"column"}
+            px={[0, 0, 0, 6]}
+            mb={10}
+          >
+            <Text
+              fontSize="lg"
+              fontWeight={"bold"}
+              my={10}
+              width={"100%"}
+              textAlign={["center", "center", "center", "left"]}
             >
-              <Text
-                fontSize="lg"
-                fontWeight={"bold"}
-                mb={10}
-                width={"100%"}
-                textAlign={["center", "center", "center", "left"]}
-              >
-                ACTION TAKEN
-              </Text>
-              <Stack
-                w="100%"
-                mb={[4, 4, 4, 10]}
-                spacing={0}
-                direction={["column", "column", "column", "row"]}
-              >
-                <HStack spacing={[0, 0, 0, 10]} width={"100%"}>
-                  <VStack
-                    align={["center", "center", "center", "flex-start"]}
-                    textAlign={["center", "center", "center", "left"]}
-                    width={["100%", "100%", "100%", "40%"]}
-                    borderRight={["1px solid #F3F3F3", null, null, "none"]}
-                    borderBottom={["1px solid #F3F3F3", null, null, "none"]}
-                    py={[6, 6, 6, 0]}
+              ACTION TAKEN
+            </Text>
+            <Stack
+              w="100%"
+              spacing={0}
+              direction={["column", "column", "column", "row"]}
+            >
+              <HStack spacing={[0, 0, 0, 10]} width={"100%"}>
+                <VStack
+                  align={["center", "center", "center", "flex-start"]}
+                  textAlign={["center", "center", "center", "left"]}
+                  width={["100%", "100%", "100%", "40%"]}
+                  borderTop={["1px solid #F3F3F3", null, null, "none"]}
+                  borderRight={["1px solid #F3F3F3", null, null, "none"]}
+                  borderBottom={["1px solid #F3F3F3", null, null, "none"]}
+                  py={[6, 6, 6, 0]}
+                >
+                  <Text
+                    fontSize="md"
+                    fontWeight={"bold"}
+                    color={"gray.400"}
+                    mb={[0, 0, 0, 1]}
+                    width={"100%"}
                   >
+                    Fixed
+                  </Text>
+                  <HStack
+                    width={["auto", "auto", "auto", "60%"]}
+                    px={3}
+                    py={[0, 0, 0, 2]}
+                    alignItems={["center"]}
+                    border={["none", "none", "none", "1px solid #E6E6E6;"]}
+                  >
+                    <Image height={7} width={7} src="/icons/fixed_color.svg" />
+                    <Text fontSize="2xl" fontWeight={"bold"} width={"100%"}>
+                      {summary_report.scan_summary[0].fixed_count}
+                    </Text>
+                  </HStack>
+                </VStack>
+                <VStack
+                  align={["center", "center", "center", "flex-start"]}
+                  textAlign={["center", "center", "center", "left"]}
+                  width={["100%", "100%", "100%", "40%"]}
+                  borderTop={["1px solid #F3F3F3", null, null, "none"]}
+                  borderBottom={["1px solid #F3F3F3", null, null, "none"]}
+                  py={[6, 6, 6, 0]}
+                >
+                  <Text
+                    fontSize="md"
+                    fontWeight={"bold"}
+                    color={"gray.400"}
+                    mb={[0, 0, 0, 1]}
+                    width={"100%"}
+                  >
+                    False Positive
+                  </Text>
+                  <HStack
+                    width={["auto", "auto", "auto", "60%"]}
+                    px={3}
+                    py={[0, 0, 0, 2]}
+                    alignItems={["center"]}
+                    border={["none", "none", "none", "1px solid #E6E6E6;"]}
+                  >
+                    <Image
+                      height={7}
+                      width={7}
+                      src="/icons/false_positive_color.svg"
+                    />
+                    <Text fontSize="2xl" fontWeight={"bold"} width={"100%"}>
+                      {summary_report.scan_summary[0].false_positive_count}
+                    </Text>
+                  </HStack>
+                </VStack>
+              </HStack>
+              <HStack spacing={[0, 0, 0, 10]} width={"100%"}>
+                <VStack
+                  align={["center", "center", "center", "flex-start"]}
+                  textAlign={["center", "center", "center", "left"]}
+                  width={["100%", "100%", "100%", "40%"]}
+                  borderRight={["1px solid #F3F3F3", null, null, "none"]}
+                  py={[6, 6, 6, 0]}
+                >
+                  <Text
+                    fontSize="md"
+                    fontWeight={"bold"}
+                    color={"gray.400"}
+                    mb={[0, 0, 0, 1]}
+                    width={"100%"}
+                  >
+                    Won't Fix
+                  </Text>
+                  <HStack
+                    width={["auto", "auto", "auto", "60%"]}
+                    px={3}
+                    py={[0, 0, 0, 2]}
+                    alignItems={["center"]}
+                    border={["none", "none", "none", "1px solid #E6E6E6;"]}
+                  >
+                    <Image
+                      height={7}
+                      width={7}
+                      src="/icons/wont_fix_color.svg"
+                    />
                     <Text
-                      fontSize="md"
+                      fontSize="2xl"
                       fontWeight={"bold"}
-                      color={"gray.400"}
-                      mb={[0, 0, 0, 1]}
+                      mb={10}
                       width={"100%"}
                     >
-                      Fixed
+                      {summary_report.scan_summary[0].wont_fix_count}
                     </Text>
-                    <HStack
-                      width={["auto", "auto", "auto", "60%"]}
-                      px={3}
-                      py={[0, 0, 0, 2]}
-                      alignItems={["center"]}
-                      border={["none", "none", "none", "1px solid #E6E6E6;"]}
-                    >
-                      <Image
-                        height={7}
-                        width={7}
-                        src="/icons/fixed_color.svg"
-                      />
-                      <Text fontSize="2xl" fontWeight={"bold"} width={"100%"}>
-                        {summary_report.scan_summary[0].fixed_count}
-                      </Text>
-                    </HStack>
-                  </VStack>
-                  <VStack
-                    align={["center", "center", "center", "flex-start"]}
-                    textAlign={["center", "center", "center", "left"]}
-                    width={["100%", "100%", "100%", "40%"]}
-                    borderBottom={["1px solid #F3F3F3", null, null, "none"]}
-                    py={[6, 6, 6, 0]}
+                  </HStack>
+                </VStack>
+                <VStack
+                  align={["center", "center", "center", "flex-start"]}
+                  textAlign={["center", "center", "center", "left"]}
+                  width={["100%", "100%", "100%", "40%"]}
+                  py={[6, 6, 6, 0]}
+                >
+                  <Text
+                    fontSize="md"
+                    fontWeight={"bold"}
+                    color={"gray.400"}
+                    mb={[0, 0, 0, 1]}
+                    width={"100%"}
                   >
+                    Pending Fix
+                  </Text>
+                  <HStack
+                    width={["auto", "auto", "auto", "60%"]}
+                    px={3}
+                    py={[0, 0, 0, 2]}
+                    alignItems={["center"]}
+                    border={["none", "none", "none", "1px solid #E6E6E6;"]}
+                  >
+                    <Image
+                      height={7}
+                      width={7}
+                      src="/icons/pending_fix_color.svg"
+                    />
                     <Text
-                      fontSize="md"
+                      fontSize="2xl"
                       fontWeight={"bold"}
-                      color={"gray.400"}
-                      mb={[0, 0, 0, 1]}
+                      mb={10}
                       width={"100%"}
                     >
-                      False Positive
+                      {summary_report.scan_summary[0].pending_fix_count}
                     </Text>
-                    <HStack
-                      width={["auto", "auto", "auto", "60%"]}
-                      px={3}
-                      py={[0, 0, 0, 2]}
-                      alignItems={["center"]}
-                      border={["none", "none", "none", "1px solid #E6E6E6;"]}
-                    >
-                      <Image
-                        height={7}
-                        width={7}
-                        src="/icons/false_positive_color.svg"
-                      />
-                      <Text fontSize="2xl" fontWeight={"bold"} width={"100%"}>
-                        {summary_report.scan_summary[0].false_positive_count}
-                      </Text>
-                    </HStack>
-                  </VStack>
-                </HStack>
-                <HStack spacing={[0, 0, 0, 10]} width={"100%"}>
-                  <VStack
-                    align={["center", "center", "center", "flex-start"]}
-                    textAlign={["center", "center", "center", "left"]}
-                    width={["100%", "100%", "100%", "40%"]}
-                    borderRight={["1px solid #F3F3F3", null, null, "none"]}
-                    py={[6, 6, 6, 0]}
-                  >
-                    <Text
-                      fontSize="md"
-                      fontWeight={"bold"}
-                      color={"gray.400"}
-                      mb={[0, 0, 0, 1]}
-                      width={"100%"}
-                    >
-                      Won't Fix
-                    </Text>
-                    <HStack
-                      width={["auto", "auto", "auto", "60%"]}
-                      px={3}
-                      py={[0, 0, 0, 2]}
-                      alignItems={["center"]}
-                      border={["none", "none", "none", "1px solid #E6E6E6;"]}
-                    >
-                      <Image
-                        height={7}
-                        width={7}
-                        src="/icons/wont_fix_color.svg"
-                      />
-                      <Text
-                        fontSize="2xl"
-                        fontWeight={"bold"}
-                        mb={10}
-                        width={"100%"}
-                      >
-                        {summary_report.scan_summary[0].wont_fix_count}
-                      </Text>
-                    </HStack>
-                  </VStack>
-                  <VStack
-                    align={["center", "center", "center", "flex-start"]}
-                    textAlign={["center", "center", "center", "left"]}
-                    width={["100%", "100%", "100%", "40%"]}
-                    py={[6, 6, 6, 0]}
-                  >
-                    <Text
-                      fontSize="md"
-                      fontWeight={"bold"}
-                      color={"gray.400"}
-                      mb={[0, 0, 0, 1]}
-                      width={"100%"}
-                    >
-                      Pending Fix
-                    </Text>
-                    <HStack
-                      width={["auto", "auto", "auto", "60%"]}
-                      px={3}
-                      py={[0, 0, 0, 2]}
-                      alignItems={["center"]}
-                      border={["none", "none", "none", "1px solid #E6E6E6;"]}
-                    >
-                      <Image
-                        height={7}
-                        width={7}
-                        src="/icons/pending_fix_color.svg"
-                      />
-                      <Text
-                        fontSize="2xl"
-                        fontWeight={"bold"}
-                        mb={10}
-                        width={"100%"}
-                      >
-                        {summary_report.scan_summary[0].pending_fix_count}
-                      </Text>
-                    </HStack>
-                  </VStack>
-                </HStack>
-              </Stack>
-            </Flex>
-          </Box> */}
+                  </HStack>
+                </VStack>
+              </HStack>
+            </Stack>
+          </Flex>
           <Flex
             w="100%"
-            pr={[4, 4, 4, 0]}
+            // pr={[4, 4, 4, 0]}
             overflow={["scroll", "scroll", "scroll", "auto"]}
             direction="column"
+            sx={{
+              pageBreakAfter: "always",
+            }}
           >
             <Flex
               as="div"
-              w={["170%", "170%", "170%", "100%"]}
+              w={"100%"}
               alignItems="flex-start"
               justifyContent="flex-start"
               flexDir={"row"}
               textAlign={["left", "left"]}
               py={5}
-              px={[1, 1, 1, 10]}
+              px={2}
+              border={"1px solid #D9D9D9;"}
+              // px={[1, 1, 1, 10]}
               backgroundColor={"#F5F5F5"}
             >
               {isDesktopView && (
@@ -1265,7 +1247,7 @@ export const ReportContainer: React.FC<{ summary_report: Report }> = ({
                   fontSize="md"
                   fontWeight={"extrabold"}
                   color={"gray.600"}
-                  width={"15%"}
+                  width={"17%"}
                 >
                   Bug ID
                 </Text>
@@ -1274,7 +1256,7 @@ export const ReportContainer: React.FC<{ summary_report: Report }> = ({
                 fontSize="md"
                 fontWeight={"extrabold"}
                 color={"gray.600"}
-                width={["50%", "50%", "50%", "20%"]}
+                width={"20%"}
                 pl={[2, 2, 2, 0]}
               >
                 Severity
@@ -1283,7 +1265,7 @@ export const ReportContainer: React.FC<{ summary_report: Report }> = ({
                 fontSize="md"
                 fontWeight={"extrabold"}
                 color={"gray.600"}
-                width={["120%", "120%", "120%", "50%"]}
+                width={"45%"}
               >
                 Bug Type
               </Text>
@@ -1291,7 +1273,7 @@ export const ReportContainer: React.FC<{ summary_report: Report }> = ({
                 fontSize="md"
                 fontWeight={"extrabold"}
                 color={"gray.600"}
-                width={["50%", "50%", "50%", "15%"]}
+                width={"18%"}
               >
                 Status
               </Text>
@@ -1300,29 +1282,30 @@ export const ReportContainer: React.FC<{ summary_report: Report }> = ({
               summary_report.issues[key].issue_details.map((issue) => (
                 <Flex
                   as="section"
-                  w={["170%", "170%", "170%", "100%"]}
+                  w={"100%"}
                   alignItems="flex-start"
                   justifyContent="flex-start"
                   flexDir={"row"}
                   textAlign={["left", "left"]}
                   py={5}
-                  px={[1, 10]}
-                  borderBottomWidth={1}
-                  borderBottomColor={"#E4E4E4"}
+                  px={2}
+                  border={"1px solid #D9D9D9;"}
+                  // borderBottomWidth={1}
+                  // borderBottomColor={"#E4E4E4"}
                 >
                   {isDesktopView && (
                     <Text
                       fontSize="md"
                       fontWeight={"normal"}
                       color={"gray.600"}
-                      width={"15%"}
+                      width={"17%"}
                     >
                       {issue.bug_id}
                     </Text>
                   )}
                   <Flex
                     as="div"
-                    w={["50%", "50%", "50%", "20%"]}
+                    w={"20%"}
                     height={"30px"}
                     alignItems="center"
                     justifyContent="flex-start"
@@ -1344,11 +1327,12 @@ export const ReportContainer: React.FC<{ summary_report: Report }> = ({
                     fontSize={["sm", "sm", "sm", "md"]}
                     fontWeight={"normal"}
                     color={"gray.600"}
-                    width={["120%", "120%", "120%", "50%"]}
+                    width={"45%"}
+                    pr={1}
                   >
                     {issue.issue_name}
                   </Text>
-                  <HStack width={["50%", "50%", "50%", "15%"]}>
+                  <HStack width={"18%"}>
                     <Image src={`/icons/${issue.bug_status}_color.svg`} />
                     <Text
                       fontSize={["sm", "sm", "sm", "md"]}
@@ -1372,20 +1356,20 @@ export const ReportContainer: React.FC<{ summary_report: Report }> = ({
           </Flex>
         </Flex>
 
+        {/* Vulnerability Details */}
         <Flex
           as="div"
           w="100%"
           alignItems="flex-start"
           justifyContent="flex-start"
           flexDir={"column"}
-          py={20}
         >
           <Flex
             sx={{
               color: "#000000",
               mx: 1,
             }}
-            my={10}
+            py={10}
             alignItems="center"
           >
             <Heading color={"#52FF00"} fontSize="4xl">
@@ -1612,6 +1596,23 @@ export const ReportContainer: React.FC<{ summary_report: Report }> = ({
           )}
         </Flex>
 
+        {/* Scan History */}
+        <Flex
+          sx={{
+            color: "#000000",
+            mx: 1,
+          }}
+          py={10}
+          alignItems="center"
+        >
+          <Heading color={"#52FF00"} fontSize="4xl">
+            Scan
+          </Heading>
+          <Text fontSize="4xl" fontWeight={400}>
+            {" "}
+            &nbsp;History{" "}
+          </Text>
+        </Flex>
         <Flex
           as="div"
           w="100%"
@@ -1621,26 +1622,7 @@ export const ReportContainer: React.FC<{ summary_report: Report }> = ({
           sx={{
             pageBreakAfter: "always",
           }}
-          border={"1px solid #D9D9D9;"}
-          py={[4, 4, 4, 20]}
-          px={[6, 6, 6, 10]}
         >
-          <Flex
-            sx={{
-              color: "#000000",
-              mx: 1,
-            }}
-            my={10}
-            alignItems="center"
-          >
-            <Heading color={"#52FF00"} fontSize="4xl">
-              Scan
-            </Heading>
-            <Text fontSize="4xl" fontWeight={400}>
-              {" "}
-              &nbsp;History{" "}
-            </Text>
-          </Flex>
           {isDesktopView && (
             <Flex
               as="section"
@@ -1649,8 +1631,10 @@ export const ReportContainer: React.FC<{ summary_report: Report }> = ({
               justifyContent="flex-end"
               flexDir={"row"}
               textAlign={["left", "left"]}
-              py={2}
+              pt={7}
+              pb={2}
               px={[1, 10]}
+              border={"1px solid #D9D9D9;"}
             >
               <SeverityIcon variant={"critical"} />
               <Text
@@ -1723,6 +1707,7 @@ export const ReportContainer: React.FC<{ summary_report: Report }> = ({
             textAlign={["left", "left"]}
             py={5}
             px={[1, 10]}
+            border={"1px solid #D9D9D9;"}
             backgroundColor={"#F5F5F5"}
           >
             <Text
@@ -1772,8 +1757,12 @@ export const ReportContainer: React.FC<{ summary_report: Report }> = ({
               textAlign={["left", "left"]}
               py={5}
               px={[1, 10]}
-              borderBottomWidth={1}
-              borderBottomColor={"#E4E4E4"}
+              border={"1px solid #D9D9D9;"}
+              sx={{
+                pageBreakAfter: index === 10 ? "always" : "avoid",
+              }}
+              // borderBottomWidth={1}
+              // borderBottomColor={"#E4E4E4"}
             >
               <Text
                 fontSize="md"
@@ -1876,6 +1865,10 @@ export const ReportContainer: React.FC<{ summary_report: Report }> = ({
           ))}
         </Flex>
 
+        {/* Disclaimer */}
+        <Heading my={10} color={"#52FF00"} fontSize="4xl">
+          Disclaimer
+        </Heading>
         <Flex
           as="div"
           w="100%"
@@ -1889,10 +1882,6 @@ export const ReportContainer: React.FC<{ summary_report: Report }> = ({
           py={[4, 4, 4, 20]}
           px={[6, 6, 6, 10]}
         >
-          <Heading color={"#52FF00"} fontSize="4xl" my={10}>
-            Disclaimer
-          </Heading>
-
           <Text
             fontSize="lg"
             fontWeight={"normal"}
@@ -1956,6 +1945,20 @@ export const ReportContainer: React.FC<{ summary_report: Report }> = ({
             has no endorsement of this project or team. It does not serve as a
             guarantee as to the project's absolute security.
           </Text>
+        </Flex>
+        <Flex
+          as="div"
+          w="100%"
+          alignItems="flex-start"
+          justifyContent="flex-start"
+          flexDir={"column"}
+          sx={{
+            pageBreakAfter: "always",
+          }}
+          border={"1px solid #D9D9D9;"}
+          py={[4, 4, 4, 20]}
+          px={[6, 6, 6, 10]}
+        >
           <Text
             fontSize="lg"
             fontWeight={"normal"}
