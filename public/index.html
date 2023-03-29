@@ -50,12 +50,20 @@
       work correctly both with client-side routing and a non-root public URL.
       Learn how to configure a non-root public URL by running `npm run build`.
     -->
+  <!-- <script src="https://unpkg.com/pagedjs/dist/paged.polyfill.js"></script> -->
 
   <style>
-    @media print {
-      a[href]:after {
-        content: none !important;
-      }
+    #content {
+      display: table !important;
+    }
+
+    #pageFooter {
+      display: table-footer-group !important;
+    }
+
+    #pageFooter:after {
+      counter-increment: page !important;
+      content: counter(page) !important;
     }
 
     /* width */

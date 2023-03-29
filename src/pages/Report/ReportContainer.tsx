@@ -109,7 +109,6 @@ export const ReportContainer: React.FC<{ summary_report: Report }> = ({
 
   const handlePrint = useReactToPrint({
     content: () => componentRef.current,
-    footer: () => <p>{"asjdhkjashd"} </p>,
   });
 
   return (
@@ -120,9 +119,11 @@ export const ReportContainer: React.FC<{ summary_report: Report }> = ({
         color="black"
         sx={{
           "@page": {
-            margin: "30px",
+            margin: "40px",
             border: "1px solid #D9D9D9;",
-            marginBottom: "40px",
+            "@top-left": {
+              content: "none",
+            },
           },
         }}
         overflow={"hidden"}
@@ -1060,7 +1061,7 @@ export const ReportContainer: React.FC<{ summary_report: Report }> = ({
             justifyContent={["center", "center", "center", "flex-start"]}
             flexDir={"column"}
             px={[0, 0, 0, 6]}
-            mb={10}
+            my={10}
           >
             <Text
               fontSize="lg"
