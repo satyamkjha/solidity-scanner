@@ -95,12 +95,10 @@ import { profile } from "console";
 import { motion } from "framer-motion";
 import { Profiler } from "inspector";
 import { monthNames } from "common/values";
-import { MdPeopleOutline } from "react-icons/md";
 import PublishedReports from "components/publishedReports";
 import { useReports } from "hooks/useReports";
 import { usePricingPlans } from "hooks/usePricingPlans";
 import { API_PATH } from "helpers/routeManager";
-import { getFeatureGateConfig } from "helpers/helperFunction";
 
 export const ProjectPage: React.FC = () => {
   const { projectId } = useParams<{ projectId: string }>();
@@ -112,13 +110,11 @@ export const ProjectPage: React.FC = () => {
         w: ["100%", "100%", "calc(100% - 2rem)"],
         bg: "bg.subtle",
         borderRadius: "20px",
-        my: 2,
-        mx: [0, 0, 4],
-        pt: 3,
-        pb: 1,
+        mx: [0, 0, 2],
+        py: 3,
         minH: "78vh",
       }}
-      px={[2, 2, 2, 4]}
+      px={[2, 2, 2, 3]}
     >
       {isLoading ? (
         <Flex w="100%" h="70vh" alignItems="center" justifyContent="center">
@@ -126,61 +122,24 @@ export const ProjectPage: React.FC = () => {
         </Flex>
       ) : (
         data && (
-          <>
-            <Flex
-              sx={{
-                alignItems: [
-                  "flex-start",
-                  "flex-start",
-                  "flex-start",
-                  "center",
-                ],
-              }}
-              direction={["column", "column", "column", "row"]}
-            >
-              <Text sx={{ fontSize: "xl", fontWeight: 600, ml: 2 }}>
-                {data.project_name}
-              </Text>
-              <Link
-                fontSize="14px"
-                ml={3}
-                variant="subtle"
-                target="_blank"
-                href={data.project_url}
-              >
-                {data.project_url}
-              </Link>
-
-              <Link
-                as={RouterLink}
-                to="/projects"
-                variant="subtle-without-underline"
-                fontSize="md"
-                ml="auto"
-                display={["none", "none", "none", "block"]}
-              >
-                ← back
-              </Link>
-            </Flex>
-            <Switch>
-              <Route exact path="/projects/:projectId/:scanId">
-                <ScanDetails
-                  scansRemaining={data.scans_remaining}
-                  scans={data.scans}
-                />
-              </Route>
-            </Switch>
-          </>
+          <ScanDetails
+            scansRemaining={data.scans_remaining}
+            scans={data.scans}
+            project_name={data.project_name}
+            project_url={data.project_url}
+          />
         )
       )}
     </Box>
   );
 };
 
-const ScanDetails: React.FC<{ scansRemaining: number; scans: ScanMeta[] }> = ({
-  scansRemaining,
-  scans,
-}) => {
+const ScanDetails: React.FC<{
+  scansRemaining: number;
+  scans: ScanMeta[];
+  project_name: string;
+  project_url: string;
+}> = ({ scansRemaining, scans, project_name, project_url }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [isRescanLoading, setRescanLoading] = useState(false);
 
@@ -383,10 +342,7 @@ const ScanDetails: React.FC<{ scansRemaining: number; scans: ScanMeta[] }> = ({
           w: "100%",
           bg: "white",
           borderRadius: "20px",
-          my: 2,
           p: 2,
-          pb: 0,
-          pr: 0,
         }}
       >
         {isLoading || isProfileLoading ? (
@@ -411,7 +367,12 @@ const ScanDetails: React.FC<{ scansRemaining: number; scans: ScanMeta[] }> = ({
                   flexDir: ["column", "column", "column", "row"],
                 }}
               >
-                <HStack spacing={[8]} mb={[4, 4, 0]}>
+                <Flex
+                  flexDir={["column", "column", "column", "row"]}
+                  justifyContent="flex-start"
+                  alignItems={"center"}
+                  mb={[4, 4, 0]}
+                >
                   {!scanData.scan_report.file_url_list && (
                     <Tooltip label="Rescan" aria-label="A tooltip" mt={2}>
                       <Button
@@ -420,6 +381,7 @@ const ScanDetails: React.FC<{ scansRemaining: number; scans: ScanMeta[] }> = ({
                         transition="0.3s opacity"
                         height="58px"
                         width="58px"
+                        mr={[0, 0, 0, 6]}
                         onClick={() => setIsOpen(true)}
                         _hover={{
                           opacity:
@@ -439,7 +401,25 @@ const ScanDetails: React.FC<{ scansRemaining: number; scans: ScanMeta[] }> = ({
                       </Button>
                     </Tooltip>
                   )}
-                </HStack>
+                  <VStack
+                    mt={[2, 2, 2, 0]}
+                    alignItems={["center", "center", "center", "flex-start"]}
+                  >
+                    <Text sx={{ fontSize: "xl", fontWeight: 600 }}>
+                      {project_name}
+                    </Text>
+                    <Link
+                      fontSize="14px"
+                      variant="subtle"
+                      target="_blank"
+                      href={project_url}
+                      isTruncated
+                      width={["70%", "70%", "70%", "fit-content"]}
+                    >
+                      {project_url}
+                    </Link>
+                  </VStack>
+                </Flex>
                 <Flex
                   flexDir={[
                     "column-reverse",
