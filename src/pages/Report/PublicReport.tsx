@@ -1,20 +1,52 @@
-import React from "react";
+import React, { useRef } from "react";
 import { useParams } from "react-router-dom";
-import { Flex, Container, Spinner } from "@chakra-ui/react";
+import {
+  Flex,
+  Container,
+  Spinner,
+  Button,
+  HStack,
+  Box,
+  useMediaQuery,
+} from "@chakra-ui/react";
 import { useReport } from "hooks/useReport";
-import { ReportContainer } from "./ReportContainer";
+import { PrintContainer } from "./PrintContainer";
 import { usePublicReport } from "hooks/usePublicReport";
 import { Text } from "@chakra-ui/react";
+import { useReactToPrint } from "react-to-print";
+import { ReportContainer } from "./ReportContainer";
 
 export default function ReportPage() {
-  const { reportId, projectType } =
-    useParams<{ reportId: string; projectType: string }>();
+  const { reportId, projectType } = useParams<{
+    reportId: string;
+    projectType: string;
+  }>();
   const { data } = usePublicReport(projectType, reportId);
+
+  const componentRef = useRef();
+
+  const handlePrint = useReactToPrint({
+    content: () => componentRef.current,
+  });
+
+  const [isLargenThan790, isSmallerThan800] = useMediaQuery([
+    "(min-width: 790px)",
+    "(max-width: 800px)",
+  ]);
 
   return (
     <>
+      <HStack w="100%" height={"fit-content"}>
+        <Button onClick={handlePrint}> TEST PRINT </Button>
+      </HStack>
       {data ? (
-        <ReportContainer summary_report={data.summary_report} />
+        <Box w="100vw" ref={componentRef}>
+          {isLargenThan790 && isSmallerThan800 ? (
+            <PrintContainer summary_report={data.summary_report} />
+          ) : (
+            <ReportContainer summary_report={data.summary_report} />
+          )}
+        </Box>
       ) : (
         <Container
           py={12}
