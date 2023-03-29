@@ -595,14 +595,10 @@ export const MultifileResult: React.FC<{
 
   return (
     <>
-      <Flex
-        w="100%"
-        sx={{ flexDir: ["column", "column", "column", "row"] }}
-        pb={2}
-      >
+      <Flex w="100%" sx={{ flexDir: ["column", "column", "column", "row"] }}>
         <VStack
           w={["100%", "100%", "100%", "40%"]}
-          h={["100%", "100%", "100%", "62vh"]}
+          h={["100%", "100%", "100%", "625px"]}
           spacing={4}
           mb={[8, 8, 0]}
           alignItems="flex-start"
@@ -876,7 +872,7 @@ const FileDataCont: React.FC<FileDataContProps> = ({ file, type }) => {
   );
 };
 
-const FileDataContTest: React.FC<FileDataContProps> = ({ file, type }) => {
+const FileDataContainer: React.FC<FileDataContProps> = ({ file, type }) => {
   const { scanId: scan_id } = useParams<{ scanId: string }>();
   const { file_path, line_nos_end, line_nos_start } = file;
   const { data, isLoading } = useFileContent(scan_id, file_path, type);
@@ -899,7 +895,6 @@ const FileDataContTest: React.FC<FileDataContProps> = ({ file, type }) => {
             justifyContent: "center",
             alignItems: "center",
             h: "100%",
-            mt: 10,
           }}
         >
           <Spinner />
@@ -969,7 +964,7 @@ const CodeExplorer: React.FC<{
         justifyContent: "flex-start",
         alignItems: "flex-start",
         flexDir: "column",
-        h: ["62vh", "62vh", "62vh", "50vh"],
+        h: ["600px", "600px", "600px", "515px"],
         overflow: "scroll",
         pl: "15px",
       }}
@@ -1116,11 +1111,8 @@ export const MultiFileExplorer: React.FC<MultiFileExplorerProps> = ({
           borderRadius: 15,
           bg: "rgba(243, 243, 243, 0.75)",
           position: "relative",
-          mb: 2,
-          h:
-            files.bug_status === "fixed"
-              ? "fit-content"
-              : ["70vh", "70vh", "70vh", "56vh"],
+          h: ["650px", "650px", "650px", "565px"],
+          mb: [3, 3, 3, 0],
         }}
       >
         {files.bug_status === "fixed" ? (
@@ -1129,7 +1121,7 @@ export const MultiFileExplorer: React.FC<MultiFileExplorerProps> = ({
               w: "100%",
               justifyContent: "center",
               alignItems: "center",
-              h: ["35vh", "35vh", "35vh", "55vh"],
+              h: "100%",
               flexDir: "column",
             }}
           >
@@ -1178,15 +1170,7 @@ export const MultiFileExplorer: React.FC<MultiFileExplorerProps> = ({
                         borderBottomWidth: "2px",
                       }}
                     >
-                      <Tooltip
-                        sx={{
-                          hyphens: "none",
-                          wordBreak: "keep-all",
-                        }}
-                        w="1000px"
-                        label={file.file_path}
-                        aria-label="A tooltip"
-                      >
+                      <Tooltip label={file.file_path} aria-label="A tooltip">
                         <Text fontSize={"xs"} width={100} isTruncated>
                           {file.file_path.length < 16
                             ? file.file_path
@@ -1205,7 +1189,7 @@ export const MultiFileExplorer: React.FC<MultiFileExplorerProps> = ({
               <TabPanels>
                 {files.findings.map((file, index) => (
                   <TabPanel key={index} px={2} pt={2} pb={0}>
-                    <FileDataContTest
+                    <FileDataContainer
                       type={type}
                       file={{
                         issue_id: files.issue_id,
@@ -1223,9 +1207,7 @@ export const MultiFileExplorer: React.FC<MultiFileExplorerProps> = ({
                 sx={{
                   borderRadius: 15,
                   bg: "white",
-                  p: 3,
-                  pr: 2,
-                  pb: 1,
+                  px: 3,
                   w: "calc(100% - 20px)",
                   position: "absolute",
                   bottom: "10px",
@@ -1239,8 +1221,8 @@ export const MultiFileExplorer: React.FC<MultiFileExplorerProps> = ({
                 <HStack
                   width={"100%"}
                   justifyContent={"space-between"}
-                  alignItems="flex-start"
-                  mb={3}
+                  alignItems="center"
+                  py={1}
                 >
                   <Flex
                     gridColumnGap={4}
@@ -1248,128 +1230,83 @@ export const MultiFileExplorer: React.FC<MultiFileExplorerProps> = ({
                     flexWrap={["wrap", "wrap", "wrap", "nowrap"]}
                     width={"80%"}
                   >
-                    <VStack
+                    <HStack
+                      my={[2, 2, 2, 0]}
                       width={["40%", "40%", "40%", "23%"]}
-                      alignItems="flex-start"
-                      spacing={1}
                     >
+                      <SeverityIcon
+                        variant={files.template_details.issue_severity}
+                      />
                       <Text
-                        fontSize="xs"
-                        fontWeight={"normal"}
-                        color={"gray.400"}
-                        mb={[0, 0, 0, 1]}
-                      >
-                        Severity
-                      </Text>
-                      <HStack>
-                        <SeverityIcon
-                          variant={files.template_details.issue_severity}
-                        />
-                        <Text
-                          fontSize="sm"
-                          fontWeight={"bold"}
-                          ml={2}
-                          width={"100%"}
-                        >
-                          {sentenceCapitalize(
-                            files.template_details.issue_severity
-                          )}
-                        </Text>
-                      </HStack>
-                    </VStack>
-                    <VStack
-                      width={["40%", "40%", "40%", "23%"]}
-                      alignItems="flex-start"
-                      spacing={1}
-                    >
-                      <Text
-                        fontSize="xs"
-                        fontWeight={"normal"}
-                        color={"gray.400"}
-                        mb={0}
-                      >
-                        Confidence
-                      </Text>
-                      <Text
-                        px={3}
-                        py={1}
-                        borderRadius={20}
-                        color={
-                          files.template_details.issue_confidence === "2"
-                            ? "#289F4C"
-                            : files.template_details.issue_confidence === "1"
-                            ? "#ED9801"
-                            : "#FF5630"
-                        }
-                        backgroundColor={
-                          files.template_details.issue_confidence === "2"
-                            ? "#CFFFB8"
-                            : files.template_details.issue_confidence === "1"
-                            ? "#FFF8EB"
-                            : "#FFF5F3"
-                        }
-                        fontSize="xs"
+                        fontSize="sm"
                         fontWeight={"bold"}
+                        ml={2}
+                        width={"100%"}
                       >
-                        {files.template_details.issue_confidence === "2"
-                          ? "Certain"
-                          : files.template_details.issue_confidence === "1"
-                          ? "Firm"
-                          : "Tentative"}
+                        {sentenceCapitalize(
+                          files.template_details.issue_severity
+                        )}
                       </Text>
-                    </VStack>
-                    <VStack
+                    </HStack>
+                    <Text
                       width={["40%", "40%", "40%", "23%"]}
-                      my={[4, 4, 4, 0]}
-                      alignItems="flex-start"
-                      spacing={1}
+                      px={3}
+                      py={1}
+                      my={[2, 2, 2, 0]}
+                      borderRadius={20}
+                      color={
+                        files.template_details.issue_confidence === "2"
+                          ? "#289F4C"
+                          : files.template_details.issue_confidence === "1"
+                          ? "#ED9801"
+                          : "#FF5630"
+                      }
+                      backgroundColor={
+                        files.template_details.issue_confidence === "2"
+                          ? "#CFFFB8"
+                          : files.template_details.issue_confidence === "1"
+                          ? "#FFF8EB"
+                          : "#FFF5F3"
+                      }
+                      fontSize="xs"
+                      fontWeight={"bold"}
                     >
-                      <Text
-                        fontSize="xs"
-                        fontWeight={"normal"}
-                        color={"gray.400"}
-                        mb={[0, 0, 0, 1]}
-                      >
-                        Line nos
-                      </Text>
-                      <Text fontSize="sm" fontWeight={"bold"}>
-                        {files.findings[getFileIndex()].line_nos_start}-
-                        {files.findings[getFileIndex()].line_nos_end}
-                      </Text>
-                    </VStack>
-                    <VStack
+                      {files.template_details.issue_confidence === "2"
+                        ? "Certain"
+                        : files.template_details.issue_confidence === "1"
+                        ? "Firm"
+                        : "Tentative"}
+                    </Text>
+                    <Text
+                      width={["40%", "40%", "40%", "23%"]}
+                      my={[2, 2, 2, 0]}
+                      fontSize="sm"
+                      fontWeight={"bold"}
+                    >
+                      {files.findings[getFileIndex()].line_nos_start}-
+                      {files.findings[getFileIndex()].line_nos_end}
+                    </Text>
+                    <HStack
                       width={["40%", "40%", "40%", "31%"]}
-                      my={[4, 4, 4, 0]}
-                      alignItems="flex-start"
-                      spacing={1}
+                      my={[2, 2, 2, 0]}
                     >
+                      <Image src={`/icons/${files.bug_status}_color.svg`} />
                       <Text
-                        fontSize="xs"
+                        fontSize="sm"
                         fontWeight={"normal"}
-                        color={"gray.400"}
-                        mb={[0, 0, 0, 1]}
+                        color={"gray.600"}
                       >
-                        Action Taken
-                      </Text>
-                      <HStack>
-                        <Image src={`/icons/${files.bug_status}_color.svg`} />
-                        <Text
-                          fontSize="sm"
-                          fontWeight={"normal"}
-                          color={"gray.600"}
-                        >
-                          {/* {sentenceCapitalize(
+                        {/* {sentenceCapitalize(
                           issue.status.toLowerCase().replace("_", " ")
                         )} */}
 
-                          {files.bug_status === "false_positive" &&
-                            "False Positive"}
-                          {files.bug_status === "wont_fix" && "Won't Fix"}
-                          {files.bug_status === "pending_fix" && "Pending Fix"}
-                          {files.bug_status === "fixed" && "Fixed"}
-                        </Text>
-                      </HStack>
-                    </VStack>
+                        {files.bug_status === "false_positive" &&
+                          "False Positive"}
+                        {files.bug_status === "wont_fix" && "Won't Fix"}
+                        {files.bug_status === "pending_fix" && "Pending Fix"}
+                        {files.bug_status === "fixed" && "Fixed"}
+                      </Text>
+                    </HStack>
                   </Flex>
                   <HStack justifyContent={"flex-end"} alignItems="flex-start">
                     <Tooltip
@@ -1411,8 +1348,8 @@ export const MultiFileExplorer: React.FC<MultiFileExplorerProps> = ({
                     </Tooltip>
                   </HStack>
                 </HStack>
-                <Divider mb={2} />
-                <Box fontSize="sm" w="100%" mb={2}>
+                <Divider mb={[3, 3, 3, 2]} />
+                <Box fontSize="sm" w="100%">
                   <IssueDetail
                     type={type}
                     handleTabsChange={handleTabsChange}
@@ -1467,7 +1404,9 @@ const IssueDetail: React.FC<{
     projectId: string;
   }>();
 
-  const height = fullScreen ? "35vh" : "15vh";
+  const height = fullScreen
+    ? ["430px", "430px", "430px", "410px"]
+    : ["170px", "170px", "200px", "100px"];
 
   const [isDesktopView] = useMediaQuery("(min-width: 1024px)");
 
@@ -1535,7 +1474,7 @@ const IssueDetail: React.FC<{
             borderBottomWidth: "1px",
             borderBottomStyle: "solid",
             borderColor: "border",
-            pb: 2,
+            pb: [3, 3, 3, 2],
             w: "fit-content",
           }}
           px={[0, 0, 0, 0]}
@@ -1595,9 +1534,12 @@ const IssueDetail: React.FC<{
       )}
       {data && (
         <TabPanels w="100%">
-          <TabPanel sx={{ w: "100%", overflowY: "scroll" }} h={[height]}>
+          <TabPanel
+            sx={{ w: "100%", overflowY: "scroll", py: [3, 3, 3, 1], px: 2 }}
+            h={height}
+          >
             <DescriptionWrapper>
-              <Text fontWeight={500} fontSize="md" pb={4}>
+              <Text fontWeight={500} fontSize="md" pb={2}>
                 {data.issue_details.issue_name}
               </Text>
               <Box
@@ -1615,6 +1557,8 @@ const IssueDetail: React.FC<{
               h: height,
               w: "100%",
               overflowY: "scroll",
+              py: [3, 3, 3, 1],
+              px: 2,
             }}
           >
             <DescriptionWrapper>
@@ -1637,6 +1581,8 @@ const IssueDetail: React.FC<{
               alignItems: "flex-start",
               display: "flex",
               flexDir: "row",
+              py: [3, 3, 3, 1],
+              px: 2,
             }}
           >
             {editComment ? (
