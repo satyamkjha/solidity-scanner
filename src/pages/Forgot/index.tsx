@@ -22,6 +22,7 @@ import { Logo, MailSent } from "components/icons";
 import { AuthResponse } from "common/types";
 import API from "helpers/api";
 import { API_PATH } from "helpers/routeManager";
+import reCAPTCHA from "helpers/reCAPTCHA";
 
 const CustomFlex = motion(Flex);
 
@@ -91,11 +92,25 @@ const ForgotPasswordForm: React.FC<{
   setEmail: React.Dispatch<React.SetStateAction<string>>;
 }> = ({ setMailSent, setEmail }) => {
   const { handleSubmit, register, formState } = useForm<FormData>();
+  const recaptcha = new reCAPTCHA(
+    process.env.REACT_APP_RECAPTCHA_SITE_KEY!,
+    "send-email"
+  );
 
   const onSubmit = async ({ email }: FormData) => {
-    const { data } = await API.post<AuthResponse>(API_PATH.API_SEND_EMAIL, {
-      email,
-    });
+    const Recaptchatoken = await recaptcha.getToken();
+    const { data } = await API.post<AuthResponse>(
+      API_PATH.API_SEND_EMAIL,
+      {
+        email,
+      },
+      {
+        headers: {
+          "Content-Type": "application/json",
+          Recaptchatoken,
+        },
+      }
+    );
 
     if (data.status === "success") {
       setMailSent(true);

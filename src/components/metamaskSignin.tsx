@@ -20,10 +20,6 @@ const MetaMaskLogin: React.FC = () => {
 
   const ethereum = MMSDK.getProvider();
 
-  // console.log(ethereum)
-
-  console.log(window.ethereum);
-
   const connect = async () => {
     await ethereum.request({ method: "eth_requestAccounts", params: [] });
     if (window.ethereum.selectedAddress) {

@@ -36,6 +36,7 @@ import Auth from "helpers/auth";
 import { API_PATH } from "helpers/routeManager";
 import { AuthResponse } from "common/types";
 import { InfoIcon } from "@chakra-ui/icons";
+import reCAPTCHA from "helpers/reCAPTCHA";
 
 type ProfileFormData = {
   first_name?: string;
@@ -49,10 +50,15 @@ const Profile: React.FC = () => {
   const [emailSend, setEmailSend] = useState(false);
   const [metaMaskEmail, setMetaMaskEmail] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState("");
 
   const { data } = useProfile();
   const queryClient = useQueryClient();
   const { handleSubmit, register, formState } = useForm<ProfileFormData>();
+  const recaptcha = new reCAPTCHA(
+    process.env.REACT_APP_RECAPTCHA_SITE_KEY!,
+    "send-email"
+  );
 
   useEffect(() => {
     if (data) {
@@ -61,6 +67,16 @@ const Profile: React.FC = () => {
         setMetaMaskEmail(data.email);
     }
   }, [data]);
+
+  const validateEmail = (value: string) => {
+    const emailRegex = /^([a-zA-Z0-9._%-+]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,})$/;
+    if (!emailRegex.test(value)) {
+      setError("Please enter a valid email address.");
+      return false;
+    }
+    setError("");
+    return true;
+  };
 
   const onSave = async ({
     company_name,
@@ -77,7 +93,7 @@ const Profile: React.FC = () => {
   };
 
   const updateEmail = async () => {
-    if (metaMaskEmail) {
+    if (metaMaskEmail && validateEmail(metaMaskEmail)) {
       setIsLoading(true);
       const { data } = await API.put(API_PATH.API_UPDATE_EMAIL, {
         email: metaMaskEmail,
@@ -103,9 +119,19 @@ const Profile: React.FC = () => {
 
   const onResendEmail = async () => {
     setIsLoading(true);
-    const { data } = await API.post<AuthResponse>(API_PATH.API_SEND_EMAIL, {
-      email: metaMaskEmail,
-    });
+    const Recaptchatoken = await recaptcha.getToken();
+    const { data } = await API.post<AuthResponse>(
+      API_PATH.API_SEND_EMAIL,
+      {
+        email: metaMaskEmail,
+      },
+      {
+        headers: {
+          "Content-Type": "application/json",
+          Recaptchatoken,
+        },
+      }
+    );
 
     if (data.status === "success") {
       setEmailSend(true);
@@ -314,6 +340,9 @@ const Profile: React.FC = () => {
                       inbox for verification link.
                     </Text>
                   )}
+                  <Text my={2} color="#FF2400" fontSize="sm">
+                    {error}
+                  </Text>
                 </FormControl>
               )}
             </VStack>

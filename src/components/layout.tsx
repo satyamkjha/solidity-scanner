@@ -74,13 +74,7 @@ const Layout: React.FC = ({ children }) => {
   return (
     <Box
       as="div"
-      // width={[
-      //   "calc(100vw)",
-      //   "100vw",
-      //   "calc(100vw - 40px)",
-      //   "calc(100vw - 40px)",
-      //   "calc(100vw - 40px)",
-      // ]}
+     
       height="100vh"
     >
       {profileData && (

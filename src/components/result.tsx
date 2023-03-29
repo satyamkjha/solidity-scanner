@@ -623,7 +623,7 @@ export const MultifileResult: React.FC<{
             <HStack
               display={["flex", "flex", "flex", "none"]}
               position={"sticky"}
-              top={filterExpanded ? "285px" : "50px"}
+              top={filterExpanded ? "455px" : "50px"}
               background="white"
               zIndex={1}
               w={"100%"}
@@ -751,13 +751,17 @@ const MultifileIssues: React.FC<MultifileIssuesProps> = ({
   const checkBugStatusFilter = (
     metric_wise_aggregated_findings: MetricWiseAggregatedFinding[]
   ) => {
-    const conditionMet = metric_wise_aggregated_findings.filter(
-      (bug) => bugStatusFilter[getBugStatusNumber(bug.bug_status)]
-    );
-    if (conditionMet && conditionMet.length) {
-      issue_count = conditionMet.length;
+    if (details_enabled) {
+      const conditionMet = metric_wise_aggregated_findings.filter(
+        (bug) => bugStatusFilter[getBugStatusNumber(bug.bug_status)]
+      );
+      if (conditionMet && conditionMet.length) {
+        issue_count = conditionMet.length;
+        return true;
+      } else return false;
+    } else {
       return true;
-    } else return false;
+    }
   };
 
   return (
@@ -1087,9 +1091,11 @@ export const MultiFileExplorer: React.FC<MultiFileExplorerProps> = ({
   setOpenIssueBox,
   setFiles,
 }) => {
-  const [currentFileName, setCurrentFileName] = useState(
-    files.findings[0].file_path
-  );
+  const [currentFileName, setCurrentFileName] = useState("");
+
+  useEffect(() => {
+    setCurrentFileName(files.findings[0].file_path);
+  }, [files]);
 
   const [fullScreen, setFullScreen] = useState(false);
 
@@ -1172,7 +1178,15 @@ export const MultiFileExplorer: React.FC<MultiFileExplorerProps> = ({
                         borderBottomWidth: "2px",
                       }}
                     >
-                      <Tooltip label={file.file_path} aria-label="A tooltip">
+                      <Tooltip
+                        sx={{
+                          hyphens: "none",
+                          wordBreak: "keep-all",
+                        }}
+                        w="1000px"
+                        label={file.file_path}
+                        aria-label="A tooltip"
+                      >
                         <Text fontSize={"xs"} width={100} isTruncated>
                           {file.file_path.length < 16
                             ? file.file_path

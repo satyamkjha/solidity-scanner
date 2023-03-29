@@ -23,6 +23,7 @@ import API from "helpers/api";
 import { AuthResponse } from "common/types";
 import { ViewIcon, ViewOffIcon } from "@chakra-ui/icons";
 import { API_PATH } from "helpers/routeManager";
+import reCAPTCHA from "helpers/reCAPTCHA";
 
 function useQuery() {
   return new URLSearchParams(useLocation().search);
@@ -39,13 +40,27 @@ const Reset: React.FC = () => {
   const token = query.get("token")?.toString();
   const { handleSubmit, register, formState } = useForm<FormData>();
   const [show, setShow] = useState(false);
+  const recaptcha = new reCAPTCHA(
+    process.env.REACT_APP_RECAPTCHA_SITE_KEY!,
+    "forgot-password-set"
+  );
 
   const onSubmit = async ({ email, password }: FormData) => {
-    const { data } = await API.post<AuthResponse>(API_PATH.API_FORGOT_PASSWORD, {
-      email,
-      token,
-      password,
-    });
+    const Recaptchatoken = await recaptcha.getToken();
+    const { data } = await API.post<AuthResponse>(
+      API_PATH.API_FORGOT_PASSWORD,
+      {
+        email,
+        token,
+        password,
+      },
+      {
+        headers: {
+          "Content-Type": "application/json",
+          Recaptchatoken,
+        },
+      }
+    );
 
     if (data.status === "success") {
       history.push("/signin?isPasswordReset=true");
