@@ -72,6 +72,14 @@ export const Header: React.FC = () => {
                 Pricing
               </Link>
               <Link
+                as={RouterLink}
+                to="/detectors"
+                variant="brand"
+                fontWeight="600"
+              >
+                What we Detect
+              </Link>
+              <Link
                 onClick={() => {
                   window.open("https://docs.solidityscan.com/", "_blank");
                 }}
@@ -141,6 +149,19 @@ export const Header: React.FC = () => {
                         ml={3}
                       >
                         Pricing
+                      </Link>
+                    </MenuItem>
+                    <MenuItem>
+                      <Link
+                        as={RouterLink}
+                        to="/detectors"
+                        variant="ghost"
+                        fontWeight="400"
+                        w={"100%"}
+                        p={1}
+                        ml={3}
+                      >
+                        What we Detect
                       </Link>
                     </MenuItem>
                     <MenuItem>
