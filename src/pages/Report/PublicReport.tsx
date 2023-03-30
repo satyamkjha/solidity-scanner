@@ -25,23 +25,25 @@ export default function ReportPage() {
 
   const componentRef = useRef();
 
+  const [printView, setPrintView] = useState(false);
+
   const handlePrint = useReactToPrint({
     content: () => componentRef.current,
   });
 
-  const [isLargenThan790, isSmallerThan800] = useMediaQuery([
-    "(min-width: 790px)",
-    "(max-width: 800px)",
-  ]);
+  const printReport = () => {
+    setPrintView(true);
+    setTimeout(() => handlePrint(), 500);
+  };
 
   return (
     <>
       <HStack w="100%" height={"fit-content"}>
-        <Button onClick={handlePrint}> TEST PRINT </Button>
+        <Button onClick={printReport}> TEST PRINT </Button>
       </HStack>
       {data ? (
         <Box w="100vw" ref={componentRef}>
-          {isLargenThan790 && isSmallerThan800 ? (
+          {printView ? (
             <PrintContainer summary_report={data.summary_report} />
           ) : (
             <ReportContainer summary_report={data.summary_report} />
