@@ -419,3 +419,10 @@ export type RecentQSItem = {
   score: string;
   threat_score: string;
 };
+
+export type DetectorItemProp = {
+  attackCategory: string;
+  swc: string[];
+  nod: number;
+  description: string;
+};
