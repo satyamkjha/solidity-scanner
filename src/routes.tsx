@@ -102,6 +102,10 @@ const Billing = lazy(
   () => import("pages/Billing" /* webpackChunkName: "Billing" */)
 );
 
+const Detectors = lazy(
+  () => import("pages/Detectors" /* webpackChunkName: "Detectors" */)
+);
+
 const Routes: React.FC = () => {
   return (
     <Router>
@@ -130,6 +134,9 @@ const Routes: React.FC = () => {
           </Route>
           <Route exact path="/pricing">
             <Pricing />
+          </Route>
+          <Route exact path="/detectors">
+            <Detectors />
           </Route>
           <Route exact path="/faq">
             <FAQ />
