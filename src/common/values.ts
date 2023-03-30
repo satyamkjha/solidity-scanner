@@ -1,4 +1,4 @@
-import { Plan } from "./types";
+import { DetectorItemProp, Plan } from "./types";
 
 export const severityPriority: { [key: string]: number } = {
   "0": 10,
@@ -239,3 +239,272 @@ export const blockScans: { [key: string]: string } = {
   buildbear: "Buildbear",
   optimism: "Optimism",
 };
+
+export const detectorData: DetectorItemProp[] = [
+  {
+    attackCategory: "Compiler Version Issues",
+    swc: ["SWC-102", "SWC-103"],
+    nod: 5,
+    description:
+      "Vulnerabilities related to outdated, floating, multiple, and too recent pragma compiler version in Solidity.",
+  },
+  {
+    attackCategory: "Low-level Calls",
+    swc: ["SWC-127"],
+    nod: 7,
+    description:
+      "Vulnerabilities related to low-level calls in solidity such as .call(), delegatecall(), assembly usage, and misconfigurations if they are used incorrectly leading to contract and token compromise.     ",
+  },
+  {
+    attackCategory: "Gas Optimizations/Bugs",
+    swc: ["SWC-128", "SWC-134"],
+    nod: 26,
+    description:
+      "Gas optimization techniques that saves deployment as well as transactional costs, obtained from observing a huge dataset of smart contracts.",
+  },
+  {
+    attackCategory: "Best Practices",
+    swc: ["SWC-104"],
+    nod: 9,
+    description:
+      "The best practices that should be followed during development that do not necessarily represent a vulnerability but might lead to one due to logical implementations.",
+  },
+  {
+    attackCategory: "Missing Return Values",
+    swc: ["SWC-104"],
+    nod: 1,
+    description:
+      "Vulnerabilities related to missing validation on return values from low level and external calls.",
+  },
+  {
+    attackCategory: "Access Control",
+    swc: ["SWC-100", "SWC-105", "SWC-106", "SWC-108"],
+    nod: 5,
+    description:
+      "Access control vulnerabilities due to missing validations, misconfigurations, or overly-permissive function visibilities.",
+  },
+  {
+    attackCategory: "Block Value Dependence",
+    swc: ["SWC-116", "SWC-105", "SWC-106", "SWC-108"],
+    nod: 5,
+    description:
+      "Block value dependency vulnerabilities such as block.timestamp and block.number, which can be predicted or manipulated leading to logical issues.",
+  },
+  {
+    attackCategory: "Logical Issues",
+    swc: [""],
+    nod: 2,
+    description:
+      "Business logic vulnerabilities with varied severity depending on the implementation of the contract.",
+  },
+  {
+    attackCategory: "Arithmetic Operations",
+    swc: ["SWC-101", "SWC-129"],
+    nod: 3,
+    description:
+      "Vulnerabilities related to improper and incorrect arithmetic operations such as precision loss and integer overflows and underflows, among many others.     ",
+  },
+  {
+    attackCategory: "Missing Input Validation",
+    swc: [""],
+    nod: 1,
+    description:
+      "Vulnerabilities introduced due to missing input validation on business-critical parameters related to ETH present and deposited in the contract.     ",
+  },
+  {
+    attackCategory: "Re-entrancy",
+    swc: ["SWC-107"],
+    nod: 1,
+    description:
+      "Multiple types of Re-entrancy vulnerabilities that allow malicious actors to call back into the functions, with severity ranging from low to critical, depending upon the affected logic",
+  },
+  {
+    attackCategory: "Outdated Libraries",
+    swc: [""],
+    nod: 1,
+    description:
+      "Vulnerabilities in outdated libraries and packages such as that of OpenZeppelin, containing multiple CVEs and exploits.",
+  },
+  {
+    attackCategory: "Improper Array Operations",
+    swc: ["SWC-124", "SWC-128"],
+    nod: 3,
+    description:
+      "Incorrect and vulnerable usage of arrays and mapping, missing input validations on length, incorrect deletions, and denial of service due to their manipulation.     ",
+  },
+  {
+    attackCategory: "Frontrunning Attacks",
+    swc: [""],
+    nod: 2,
+    description:
+      "Frontrunning or sandwich attacks such as those found in ERC20’s approve function.     ",
+  },
+  {
+    attackCategory: "Improper Functions",
+    swc: [""],
+    nod: 4,
+    description:
+      "Vulnerabilities related to misconfigured function definitions, their incorrect behavior, missing best practices in return valus, etc    ",
+  },
+  {
+    attackCategory: "Shadowing Variables and Functions",
+    swc: [""],
+    nod: 1,
+    description:
+      "Variable and function shadowing that overrides intended behavior of the contract using data from a narrower scope, creating confusion and unexpected consequences.",
+  },
+  {
+    attackCategory: "Signature Malleability",
+    swc: ["SWC-117", "SWC-121", "SWC-122"],
+    nod: 2,
+    description:
+      "Signature related attacks in Solidity often leading to authorization bypasses and contract compromise or DoS due to improper signature calculations. ",
+  },
+  {
+    attackCategory: "Delegate Call",
+    swc: ["SWC-112"],
+    nod: 2,
+    description:
+      "Vulnerabilities related to Delegate Calls that modify the contract’s state by allowing attacker-controlled data inside delegate calls, and when using them in a payable loop.",
+  },
+  {
+    attackCategory: "Missing Two-step Validations",
+    swc: [""],
+    nod: 1,
+    description:
+      "Vulnerabilities related to missing best practices during modification of business-critical parameters when they are not using proper 2-factor authentication.     ",
+  },
+  {
+    attackCategory: "Incorrect ERC Interfaces",
+    swc: [""],
+    nod: 2,
+    description:
+      "Incorrect usage of ERC interfaces that do not conform with the current ERC specification leading to vulnerabilities when interacting with other tokens.    ",
+  },
+  {
+    attackCategory: "Transaction Order Depedence",
+    swc: ["SWC-114"],
+    nod: 6,
+    description:
+      "Incorrect usage of ERC interfaces that do not conform with the current ERC specification leading to vulnerabilities when interacting with other tokens.     ",
+  },
+  {
+    attackCategory: "Events",
+    swc: [""],
+    nod: 4,
+    description:
+      "Event-related vulnerabilities and missing best practices such as missing indexed keywords on sensitive fields, superfluous fields, and missed events on critical functions.",
+  },
+  {
+    attackCategory: "Bad Source of Randomness",
+    swc: ["SWC-120"],
+    nod: 2,
+    description:
+      "Vulnerabilities related to pseudorandom number generators and their incorrect usage including block values that can be predicted and the logic reverse engineered. ",
+  },
+  {
+    attackCategory: "Denial of Service",
+    swc: ["SWC-113", "SWC-128"],
+    nod: 2,
+    description:
+      "Denial of Service vulnerabilities often found in smart contracts due to attacker controlled parameters such as those inside arrays and loops.",
+  },
+  {
+    attackCategory: "Strict Equalit Checks",
+    swc: ["SWC-116"],
+    nod: 2,
+    description:
+      "Strict equality validations in timestamps and Ether balance of the contract that can often be manipulated by attackers leading to inconsistencies. ",
+  },
+  {
+    attackCategory: "Data Visibility",
+    swc: [""],
+    nod: 2,
+    description:
+      "Incorrect visibility of parameters and functions that expose sensitive data due to wrong use of modifiers and storing private data on chain.    ",
+  },
+  {
+    attackCategory: "Fallback Vulnerabilities",
+    swc: [""],
+    nod: 6,
+    description:
+      "Vulnerabilities related to fallback and receive functions in solidity and their incorrect usage.    ",
+  },
+  {
+    attackCategory: "Misc",
+    swc: ["SWC-109", "SWC-130"],
+    nod: 3,
+    description:
+      "Miscellaneous category containing vulnerabilities that do not fit in any of the other categories.",
+  },
+  {
+    attackCategory: "Deprecated Variables",
+    swc: ["SWC-111"],
+    nod: 3,
+    description:
+      "Usage of deprecated variables, parameters, and functions that are not supported in recent versions of solidity and other external libraries.",
+  },
+  {
+    attackCategory: "Dead Code",
+    swc: ["SWC-131", "SWC-135"],
+    nod: 1,
+    description:
+      "Unnecessary and redundant code blocks found in the contract that are not needed and take up useless deployment cost.",
+  },
+  {
+    attackCategory: "Inheritence Vulnerabilities",
+    swc: ["SWC-125"],
+    nod: 1,
+    description:
+      "Vulnerabilities related to incorrect and missing inheritance and import statements.",
+  },
+  {
+    attackCategory: "Assert & Require Issues",
+    swc: ["SWC-123"],
+    nod: 4,
+    description:
+      "Vulnerabilities related to assert violations, missing best practices in assert and require statements, and state changes in those functions. ",
+  },
+  {
+    attackCategory: "Authorization through tx origin",
+    swc: ["SWC-115"],
+    nod: 1,
+    description:
+      "Usage of tx.origin for sensitive authorization transactions that could potentially be manipulated depending on the function logic.",
+  },
+  {
+    attackCategory: "Incorrect Constructor Name",
+    swc: ["SWC-118"],
+    nod: 1,
+    description:
+      "Constructor-related vulnerabilities, including incorrect constructor names, misconfigured constructors, and missing input validations in them.",
+  },
+  {
+    attackCategory: "Shadowing State Variables",
+    swc: ["SWC-119"],
+    nod: 2,
+    description:
+      "Shadowing when same variable names are used across multiple inherited contracts leading to ambiguities.    ",
+  },
+  {
+    attackCategory: "Insufficient Gas Griefing",
+    swc: ["SWC-126"],
+    nod: 1,
+    description:
+      "Vulnerabilities introduced during transaction relaying allowing gas griefing and censoring transactions.",
+  },
+  {
+    attackCategory: "Hash Collision with Multiple Variable Length Arguments",
+    swc: ["SWC-133"],
+    nod: 1,
+    description:
+      "Hash collision when multiple variable length arguments are used while packing them during abi encoding.",
+  },
+  {
+    attackCategory: "Unencrypted Private On-chain data",
+    swc: ["SWC-136"],
+    nod: 1,
+    description:
+      "Secrets stored in private variables can be read and obtained by any external users or contracts on chain making them insecure for storing sensitive data. ",
+  },
+];
