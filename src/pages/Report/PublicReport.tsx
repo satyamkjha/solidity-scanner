@@ -1,4 +1,4 @@
-import React, { useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useParams } from "react-router-dom";
 import {
   Flex,
@@ -33,8 +33,13 @@ export default function ReportPage() {
 
   const printReport = () => {
     setPrintView(true);
-    setTimeout(() => handlePrint(), 500);
   };
+
+  useEffect(() => {
+    if (printView) {
+      setTimeout(() => handlePrint(), 500);
+    }
+  }, [printView]);
 
   return (
     <>

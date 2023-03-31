@@ -269,10 +269,10 @@ const BlockPage: React.FC = () => {
         bg: "bg.subtle",
         borderRadius: "20px",
         mx: [0, 0, 2],
-        py: 2,
+        py: 3,
         minH: "78vh",
       }}
-      px={[2, 2, 4]}
+      px={[2, 2, 2, 3]}
     >
       {isLoading || isProfileLoading || !plans ? (
         <Flex w="100%" h="70vh" alignItems="center" justifyContent="center">
@@ -284,7 +284,6 @@ const BlockPage: React.FC = () => {
         plans &&
         reportList && (
           <>
-            {" "}
             <Flex
               w="100%"
               sx={{ justifyContent: "space-between", alignItems: "center" }}
@@ -296,76 +295,66 @@ const BlockPage: React.FC = () => {
                 >
                   {({ isExpanded }) => (
                     <>
-                      <VStack align={"left"} spacing={0} w="100%">
-                        <HStack
-                          w="100%"
-                          display={["flex", "flex", "flex", "none"]}
-                        >
-                          <Image
-                            src={`/blockscan/${scanData.scan_report.contract_platform}-scan.svg`}
-                            alt="Product screenshot"
-                            h={"20px"}
-                            w={"20px"}
-                          />
+                      <HStack
+                        w="100%"
+                        display={["flex", "flex", "flex", "none"]}
+                        justifyContent="space-between"
+                        px={3}
+                        mb={3}
+                      >
+                        <VStack alignItems={"flex-start"}>
+                          <HStack justifyContent="flex-start">
+                            <Image
+                              src={`/blockscan/${scanData.scan_report.contract_platform}-scan.svg`}
+                              alt="Product screenshot"
+                              h={"20px"}
+                              w={"20px"}
+                            />
+                            <Text
+                              isTruncated
+                              width={"80%"}
+                              sx={{
+                                fontSize: "xl",
+                                fontWeight: 600,
+                                mx: 2,
+                                maxW: "250px",
+                              }}
+                            >
+                              {scanData.scan_report.contractname
+                                ? scanData.scan_report.contractname
+                                : scanData.scan_report.contract_address}
+                            </Text>
+                          </HStack>
                           <Text
-                            isTruncated
-                            width={"80%"}
-                            sx={{
-                              fontSize: "xl",
-                              fontWeight: 600,
-                              mx: 2,
-                              maxW: "250px",
-                            }}
-                          >
-                            {scanData.scan_report.contractname
-                              ? scanData.scan_report.contractname
-                              : scanData.scan_report.contract_address}
-                          </Text>
-                          <AccordionButton
-                            width={"fit-content"}
-                            borderRadius="48px"
-                            display={["flex", "flex", "flex", "none"]}
-                          >
-                            {isExpanded ? (
-                              <BiChevronUpCircle />
-                            ) : (
-                              <BiChevronDownCircle />
-                            )}
-                          </AccordionButton>
-                        </HStack>
-                        <Text sx={{ fontSize: "xl", fontWeight: 600, ml: 2 }}>
-                          <Text
-                            as="span"
                             fontSize={["12px", "12px", "12px", "14px"]}
-                            ml={[0, 0, 0, 3]}
                             color="gray.500"
                           >
                             {scanData.scan_report?.contract_address}
                           </Text>
-                        </Text>
-                      </VStack>
+                        </VStack>
+                        <AccordionButton
+                          width={"fit-content"}
+                          borderRadius="48px"
+                          display={["flex", "flex", "flex", "none"]}
+                        >
+                          {isExpanded ? (
+                            <BiChevronUpCircle size={20} />
+                          ) : (
+                            <BiChevronDownCircle size={20} />
+                          )}
+                        </AccordionButton>
+                      </HStack>
                       <ContractDetails scanData={scanData} />
                     </>
                   )}
                 </AccordionItem>
               </Accordion>
-              <Link
-                as={RouterLink}
-                to="/blocks"
-                variant="subtle-without-underline"
-                fontSize="md"
-                display={["none", "none", "none", "block"]}
-              >
-                ← back
-              </Link>
             </Flex>
             <Box
               sx={{
                 w: "100%",
                 bg: "white",
                 borderRadius: "20px",
-                mt: 4,
-                py: 2,
               }}
             >
               <Accordion allowMultiple borderBottomWidth={0}>
@@ -378,24 +367,43 @@ const BlockPage: React.FC = () => {
                         alignItems={"center"}
                         width={"100%"}
                         height="fit-content"
-                        pt={2}
-                        pb={5}
+                        py={3}
                         px={4}
                       >
-                        <Text
-                          isTruncated
+                        <VStack
                           display={["none", "none", "none", "block"]}
-                          sx={{
-                            fontSize: "lg",
-                            fontWeight: 600,
-                            ml: 2,
-                            maxW: "250px",
-                          }}
+                          alignItems={"flex-start"}
+                          ml={2}
                         >
-                          {scanData.scan_report.contractname
-                            ? scanData.scan_report.contractname
-                            : scanData.scan_report.contract_address}
-                        </Text>
+                          <HStack justifyContent="flex-start">
+                            <Image
+                              src={`/blockscan/${scanData.scan_report.contract_platform}-scan.svg`}
+                              alt="Product screenshot"
+                              h={"20px"}
+                              w={"20px"}
+                            />
+                            <Text
+                              isTruncated
+                              width={"80%"}
+                              sx={{
+                                fontSize: "xl",
+                                fontWeight: 600,
+                                mx: 2,
+                                maxW: "250px",
+                              }}
+                            >
+                              {scanData.scan_report.contractname
+                                ? scanData.scan_report.contractname
+                                : scanData.scan_report.contract_address}
+                            </Text>
+                          </HStack>
+                          <Text
+                            fontSize={["12px", "12px", "12px", "14px"]}
+                            color="gray.500"
+                          >
+                            {scanData.scan_report?.contract_address}
+                          </Text>
+                        </VStack>
                         <Flex
                           as={"div"}
                           flexDirection={[
@@ -541,9 +549,9 @@ const BlockPage: React.FC = () => {
                             display={["none", "none", "none", "flex"]}
                           >
                             {isExpanded ? (
-                              <BiChevronUpCircle />
+                              <BiChevronUpCircle size={20} />
                             ) : (
-                              <BiChevronDownCircle />
+                              <BiChevronDownCircle size={20} />
                             )}
                           </AccordionButton>
                         </Flex>

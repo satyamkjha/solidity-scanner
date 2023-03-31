@@ -53,6 +53,16 @@ export const Footer: React.FC = () => {
             </Link>
             <Link
               as={RouterLink}
+              to="/detectors"
+              variant="brand"
+              w={["auto", "auto", "50%"]}
+              mb={4}
+              fontWeight="600"
+            >
+              What we Detect
+            </Link>
+            <Link
+              as={RouterLink}
               to="/terms-of-service"
               variant="brand"
               w={["auto", "auto", "50%"]}
