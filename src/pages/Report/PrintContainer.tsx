@@ -108,11 +108,11 @@ export const PrintContainer: React.FC<{ summary_report: Report }> = ({
   return (
     <>
       <Container
-        maxW={"100vw"}
+        maxW={"900px"}
         color="black"
         sx={{
           "@page": {
-            margin: "40px",
+            margin: "30px",
             border: "1px solid #D9D9D9;",
             "@top-left": {
               content: "none",
