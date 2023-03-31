@@ -40,7 +40,7 @@ export default function ReportPage() {
 
   useEffect(() => {
     if (printView) {
-      setTimeout(() => handlePrint(), 500);
+      setTimeout(() => handlePrint(), 100);
     }
   }, [printView]);
 
