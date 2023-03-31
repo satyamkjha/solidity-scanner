@@ -54,6 +54,7 @@
     "react-router-dom": "^5.2.0",
     "react-scripts": "4.0.3",
     "react-select": "^5.4.0",
+    "react-to-print": "^2.14.12",
     "swiper": "^8.4.4",
     "typescript": "^3.9.5",
     "ua-parser-js": "^1.0.33",

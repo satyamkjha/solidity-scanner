@@ -432,6 +432,7 @@ const ScanDetails: React.FC<{
                   alignItems={"center"}
                   width={["100%", "100%", "100%", "fit-content"]}
                 >
+                  {/* <PDFDownloadButton /> */}
                   {scanData.scan_report.reporting_status ===
                     "report_generated" &&
                     publishStatus !== "" &&

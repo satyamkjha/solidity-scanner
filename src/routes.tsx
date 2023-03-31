@@ -153,6 +153,7 @@ const Routes: React.FC = () => {
           <Route exact path="/reset">
             <Reset />
           </Route>
+
           <RedirectRoute exact path="/signup">
             <SignUp />
           </RedirectRoute>
@@ -193,6 +194,7 @@ const Routes: React.FC = () => {
                 <PrivateRoute exact path="/integrations">
                   <Integrations />
                 </PrivateRoute>
+
                 <PrivateRoute exact path="/billing">
                   <Billing />
                 </PrivateRoute>
