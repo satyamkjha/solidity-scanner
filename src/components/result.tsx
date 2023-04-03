@@ -419,7 +419,7 @@ const formatOptionLabel: React.FC<{
   icon: string;
 }> = ({ value, label, icon }) => (
   <div id={value} style={{ display: "flex", flexDirection: "row" }}>
-    <Image mr={3} src={`/icons/${icon}.svg`} />
+    {icon !== "" && <Image mr={3} src={`/icons/${icon}.svg`} />}
     <div>{label}</div>
   </div>
 );
@@ -1544,10 +1544,12 @@ const IssueDetail: React.FC<{
               </Text>
               <Box
                 dangerouslySetInnerHTML={{
-                  __html: data.issue_details.issue_description.format({
-                    ...variableData,
-                    current_file_name,
-                  }),
+                  __html: files.issue_description
+                    ? files.issue_description
+                    : data.issue_details.issue_description.format({
+                        ...variableData,
+                        current_file_name,
+                      }),
                 }}
               />
             </DescriptionWrapper>
@@ -1564,10 +1566,12 @@ const IssueDetail: React.FC<{
             <DescriptionWrapper>
               <Box
                 dangerouslySetInnerHTML={{
-                  __html: data.issue_details.issue_remediation.format({
-                    ...variableData,
-                    current_file_name,
-                  }),
+                  __html: files.issue_remediation
+                    ? files.issue_remediation
+                    : data.issue_details.issue_remediation.format({
+                        ...variableData,
+                        current_file_name,
+                      }),
                 }}
               />
             </DescriptionWrapper>
