@@ -318,7 +318,7 @@ export const PrintContainer: React.FC<{ summary_report: Report }> = ({
             color: "#000000",
             mx: 1,
           }}
-          py={10}
+          py={5}
           alignItems="center"
         >
           <Heading color={"#52FF00"} fontSize="4xl">
