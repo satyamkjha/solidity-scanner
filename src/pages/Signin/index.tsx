@@ -147,11 +147,6 @@ const SignIn: React.FC = () => {
   );
 };
 
-type FormData = {
-  email: string;
-  password: string;
-};
-
 const LoginForm: React.FC = () => {
   const [show, setShow] = useState(false);
   const history = useHistory();
@@ -168,7 +163,7 @@ const LoginForm: React.FC = () => {
   const onSubmit = async () => {
     const Recaptchatoken = await recaptcha.getToken();
     setIsLoading(true);
-    const { data, status } = await API.post<AuthResponse>(
+    API.post<AuthResponse>(
       API_PATH.API_LOGIN,
       {
         email,
@@ -180,14 +175,18 @@ const LoginForm: React.FC = () => {
           Recaptchatoken,
         },
       }
-    );
-    if (status === 200) {
-      if (data.status === "success") {
-        Auth.authenticateUser();
-        history.push("/home");
+    ).then(
+      (res) => {
+        if (res.data.status === "success") {
+          Auth.authenticateUser();
+          history.push("/home");
+        }
+        setIsLoading(false);
+      },
+      (err) => {
+        setIsLoading(false);
       }
-    }
-    setIsLoading(false);
+    );
   };
 
   return (
@@ -220,12 +219,12 @@ const LoginForm: React.FC = () => {
           placeholder="Password"
           variant="brand"
           size="lg"
+          value={password}
           onChange={(e) => setPassword(e.target.value)}
         />
         <InputRightElement
           height="48px"
           color="gray.300"
-          value={password}
           children={
             show ? (
               <ViewOffIcon
