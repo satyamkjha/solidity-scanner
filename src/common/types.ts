@@ -160,6 +160,8 @@ export type MetricWiseAggregatedFinding = {
   bug_id: string;
   comment?: string;
   scan_id: string;
+  issue_description?: string;
+  issue_remediation?: string;
 };
 
 export type ScanMeta = {
@@ -408,6 +410,8 @@ export type FilesState = {
   issue_id: string;
   comment?: string;
   template_details: MultiFileTemplateDetail;
+  issue_description: string | undefined;
+  issue_remediation: string | undefined;
 };
 
 export type RecentQSItem = {
