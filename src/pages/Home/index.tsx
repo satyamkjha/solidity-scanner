@@ -407,13 +407,6 @@ const ApplicationForm: React.FC = () => {
   );
 };
 
-type ContractFormData = {
-  // contract_name: string;
-  contract_address: string;
-  node_id: string;
-  // contract_platform: string;
-};
-
 const formatOptionLabel: React.FC<{
   value: string;
   label: string;
@@ -676,6 +669,9 @@ const ContractForm: React.FC = () => {
     },
   };
 
+  const [contractAddress, setContractAddress] = useState("");
+  const [nodeId, setNodeId] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
   const [platform, setPlatform] = React.useState("");
   const [chain, setChain] = React.useState<{
     label: string;
@@ -686,7 +682,6 @@ const ContractForm: React.FC = () => {
     { label: string; value: string; icon: string }[]
   >(contractChain["etherscan"]);
   const queryClient = useQueryClient();
-  const { handleSubmit, register, formState } = useForm<ContractFormData>();
 
   const history = useHistory();
   const { data: profileData } = useProfile();
@@ -694,33 +689,40 @@ const ContractForm: React.FC = () => {
 
   const platform_supported = getFeatureGateConfig().platform_supported;
 
-  const onSubmit = async ({ contract_address, node_id }: ContractFormData) => {
+  const onSubmit = async () => {
     let req = {};
     if (platform === "buildbear") {
       req = {
-        contract_address: contract_address,
+        contract_address: contractAddress,
         contract_platform: platform,
-        node_id: node_id,
+        node_id: nodeId,
       };
     } else {
       req = {
-        contract_address: contract_address,
+        contract_address: contractAddress,
         contract_platform: platform,
         contract_chain: chain?.value,
       };
     }
-
-    const { data } = await API.post<{
+    setIsLoading(true);
+    API.post<{
       contract_verified: boolean;
       message: string;
       status: string;
-    }>(API_PATH.API_GET_CONTRACT_STATUS, req);
-    if (data.contract_verified) {
-      await API.post(API_PATH.API_START_SCAN_BLOCK, req);
-      queryClient.invalidateQueries("scans");
-      queryClient.invalidateQueries("profile");
-      history.push("/blocks");
-    }
+    }>(API_PATH.API_GET_CONTRACT_STATUS, req).then(
+      async (res) => {
+        if (res.data.contract_verified) {
+          await API.post(API_PATH.API_START_SCAN_BLOCK, req);
+          queryClient.invalidateQueries("scans");
+          queryClient.invalidateQueries("profile");
+          history.push("/blocks");
+          setIsLoading(false);
+        }
+      },
+      (err) => {
+        setIsLoading(false);
+      }
+    );
   };
   return (
     <>
@@ -750,11 +752,67 @@ const ContractForm: React.FC = () => {
         code is verified in the "Contract" tab of the selected explorer.
       </Text>
       {supportedChains && (
-        <form onSubmit={handleSubmit(onSubmit)} style={{ width: "100%" }}>
-          <Stack spacing={6} my={8} width={"100%"}>
+        <Stack spacing={6} my={8} width={"100%"}>
+          <VStack alignItems={"flex-start"}>
+            <Text mb={0} fontSize="sm">
+              Contract address
+            </Text>
+
+            <InputGroup mt={0} alignItems="center">
+              <InputLeftElement
+                height="48px"
+                children={<Icon as={AiOutlineProject} color="gray.300" />}
+              />
+              <Input
+                isRequired
+                placeholder="0x808ed7A75n133f64069318Sa0q173c71rre44414"
+                variant="brand"
+                size="lg"
+                value={contractAddress}
+                onChange={(e) => setContractAddress(e.target.value)}
+              />
+            </InputGroup>
+          </VStack>
+          <FormControl id="contract_platform">
+            <FormLabel fontSize="sm">Contract platform</FormLabel>
+            <Select
+              formatOptionLabel={formatOptionLabel}
+              options={options.map((item) => {
+                for (const chain in supportedChains) {
+                  if (
+                    chain === item.value &&
+                    platform_supported.includes(chain)
+                  ) {
+                    return {
+                      value: item.value,
+                      icon: item.icon,
+                      label: item.label,
+                      isDisabled: !item.isDisabled,
+                    };
+                  }
+                }
+                return item;
+              })}
+              placeholder="Select Contract Platform"
+              isSearchable={true}
+              value={options.find((item) => platform === item.value)}
+              styles={customStyles}
+              onChange={(newValue) => {
+                if (newValue) {
+                  setPlatform(newValue.value);
+                  if (supportedChains) {
+                    setChainList(contractChain[newValue.value]);
+                    setChain(null);
+                  }
+                }
+              }}
+            />
+          </FormControl>
+
+          {platform === "buildbear" ? (
             <VStack alignItems={"flex-start"}>
               <Text mb={0} fontSize="sm">
-                Contract address
+                Node ID
               </Text>
 
               <InputGroup mt={0} alignItems="center">
@@ -764,99 +822,44 @@ const ContractForm: React.FC = () => {
                 />
                 <Input
                   isRequired
-                  placeholder="0x808ed7A75n133f64069318Sa0q173c71rre44414"
+                  placeholder="Node ID"
                   variant="brand"
                   size="lg"
-                  {...register("contract_address")}
+                  value={nodeId}
+                  onChange={(e) => setNodeId(e.target.value)}
                 />
               </InputGroup>
             </VStack>
-            <FormControl id="contract_platform">
-              <FormLabel fontSize="sm">Contract platform</FormLabel>
+          ) : (
+            <FormControl id="contract_chain">
+              <FormLabel fontSize="sm">Contract Chain</FormLabel>
               <Select
                 formatOptionLabel={formatOptionLabel}
-                options={options.map((item) => {
-                  for (const chain in supportedChains) {
-                    if (
-                      chain === item.value &&
-                      platform_supported.includes(chain)
-                    ) {
-                      return {
-                        value: item.value,
-                        icon: item.icon,
-                        label: item.label,
-                        isDisabled: !item.isDisabled,
-                      };
-                    }
-                  }
-                  return item;
-                })}
-                placeholder="Select Contract Platform"
                 isSearchable={false}
-                value={options.find((item) => platform === item.value)}
+                isDisabled={platform === ""}
+                options={chainList}
+                value={chain}
+                placeholder="Select Contract Chain"
                 styles={customStyles}
                 onChange={(newValue) => {
                   if (newValue) {
-                    setPlatform(newValue.value);
-                    if (supportedChains) {
-                      setChainList(contractChain[newValue.value]);
-                      setChain(null);
-                    }
+                    setChain(newValue);
                   }
                 }}
               />
             </FormControl>
+          )}
 
-            {platform === "buildbear" ? (
-              <VStack alignItems={"flex-start"}>
-                <Text mb={0} fontSize="sm">
-                  Node ID
-                </Text>
-
-                <InputGroup mt={0} alignItems="center">
-                  <InputLeftElement
-                    height="48px"
-                    children={<Icon as={AiOutlineProject} color="gray.300" />}
-                  />
-                  <Input
-                    isRequired
-                    placeholder="Node ID"
-                    variant="brand"
-                    size="lg"
-                    {...register("node_id")}
-                  />
-                </InputGroup>
-              </VStack>
-            ) : (
-              <FormControl id="contract_chain">
-                <FormLabel fontSize="sm">Contract Chain</FormLabel>
-                <Select
-                  formatOptionLabel={formatOptionLabel}
-                  isSearchable={false}
-                  isDisabled={platform === ""}
-                  options={chainList}
-                  value={chain}
-                  placeholder="Select Contract Chain"
-                  styles={customStyles}
-                  onChange={(newValue) => {
-                    if (newValue) {
-                      setChain(newValue);
-                    }
-                  }}
-                />
-              </FormControl>
-            )}
-
-            <Button
-              type="submit"
-              variant="brand"
-              isLoading={formState.isSubmitting}
-              isDisabled={profileData?.credits === 0}
-            >
-              Start Scan
-            </Button>
-          </Stack>
-        </form>
+          <Button
+            type="submit"
+            variant="brand"
+            onClick={onSubmit}
+            isLoading={isLoading}
+            isDisabled={profileData?.credits === 0}
+          >
+            Start Scan
+          </Button>
+        </Stack>
       )}
     </>
   );
