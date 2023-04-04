@@ -106,6 +106,10 @@ const Detectors = lazy(
   () => import("pages/Detectors" /* webpackChunkName: "Detectors" */)
 );
 
+const LeaderBoard = lazy(
+  () => import("pages/LeaderBoard" /* webpackChunkName: "LeaderBoard" */)
+);
+
 const Routes: React.FC = () => {
   return (
     <Router>
@@ -137,6 +141,9 @@ const Routes: React.FC = () => {
           </Route>
           <Route exact path="/detectors">
             <Detectors />
+          </Route>
+          <Route exact path="/leaderboard">
+            <LeaderBoard />
           </Route>
           <Route exact path="/faq">
             <FAQ />
