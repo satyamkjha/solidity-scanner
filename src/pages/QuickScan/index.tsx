@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import { Link as RouterLink, useLocation, useParams } from "react-router-dom";
 import styled from "@emotion/styled";
-
+import { getReCaptchaHeaders } from "helpers/helperFunction";
 import {
   Flex,
   Box,
@@ -495,8 +495,8 @@ const QuickScan: React.FC = () => {
     chain: string,
     ref: string | null
   ) => {
-    const Recaptchatoken1 = await recaptcha1.getToken();
-    const Recaptchatoken2 = await recaptcha2.getToken();
+    let reqHeaders1 = await getReCaptchaHeaders("quickScan_verify");
+    let reqHeaders2 = await getReCaptchaHeaders("quickScan");
 
     const req = {
       contract_address: address,
@@ -508,10 +508,7 @@ const QuickScan: React.FC = () => {
       message: string;
       status: string;
     }>(API_PATH.API_GET_CONTRACT_STATUS, req, {
-      headers: {
-        "Content-Type": "application/json",
-        Recaptchatoken: Recaptchatoken1,
-      },
+      headers: reqHeaders1,
     }).then(
       (res) => {
         if (res.data.contract_verified) {
@@ -525,10 +522,7 @@ const QuickScan: React.FC = () => {
             api_url = api_url + `&ref=${ref}`;
           }
           API.get(api_url, {
-            headers: {
-              "Content-Type": "application/json",
-              Recaptchatoken: Recaptchatoken2,
-            },
+            headers: reqHeaders2,
           })
             .then(
               (res) => {
