@@ -147,23 +147,23 @@ const SignIn: React.FC = () => {
   );
 };
 
-type FormData = {
-  email: string;
-  password: string;
-};
-
 const LoginForm: React.FC = () => {
-  const { handleSubmit, register, formState } = useForm<FormData>();
   const [show, setShow] = useState(false);
   const history = useHistory();
+
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
+
   const recaptcha = new reCAPTCHA(
     process.env.REACT_APP_RECAPTCHA_SITE_KEY!,
     "signin"
   );
 
-  const onSubmit = async ({ email, password }: FormData) => {
+  const onSubmit = async () => {
     const Recaptchatoken = await recaptcha.getToken();
-    const { data } = await API.post<AuthResponse>(
+    setIsLoading(true);
+    API.post<AuthResponse>(
       API_PATH.API_LOGIN,
       {
         email,
@@ -175,88 +175,95 @@ const LoginForm: React.FC = () => {
           Recaptchatoken,
         },
       }
+    ).then(
+      (res) => {
+        if (res.data.status === "success") {
+          Auth.authenticateUser();
+          history.push("/home");
+        }
+        setIsLoading(false);
+      },
+      (err) => {
+        setIsLoading(false);
+      }
     );
-
-    if (data.status === "success") {
-      Auth.authenticateUser();
-      history.push("/home");
-    }
   };
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)}>
-      <Stack spacing={6} mt={8} width={["300px", "400px", "600px"]}>
-        <InputGroup alignItems="center">
-          <InputLeftElement
-            height="48px"
-            children={<Icon as={FiAtSign} color="gray.300" />}
-          />
-          <Input
-            isRequired
-            type="email"
-            placeholder="Your email"
-            variant="brand"
-            size="lg"
-            {...register("email", { required: true })}
-          />
-        </InputGroup>
-
-        <InputGroup>
-          <InputLeftElement
-            height="48px"
-            color="gray.300"
-            children={<Icon as={FaLock} color="gray.300" />}
-          />
-          <Input
-            isRequired
-            type={show ? "text" : "password"}
-            placeholder="Password"
-            variant="brand"
-            size="lg"
-            {...register("password", { required: true })}
-          />
-          <InputRightElement
-            height="48px"
-            color="gray.300"
-            children={
-              show ? (
-                <ViewOffIcon
-                  color={"gray.500"}
-                  mr={5}
-                  boxSize={5}
-                  onClick={() => setShow(false)}
-                />
-              ) : (
-                <ViewIcon
-                  color={"gray.500"}
-                  mr={5}
-                  boxSize={5}
-                  onClick={() => setShow(true)}
-                />
-              )
-            }
-          />
-        </InputGroup>
-        <Flex width="100%" justify="flex-end">
-          <Link
-            as={RouterLink}
-            variant="subtle"
-            fontSize="sm"
-            mr={1}
-            to="/forgot"
-          >
-            Forgot Password?
-          </Link>
-        </Flex>
-        <Button
-          type="submit"
+    <Stack spacing={6} mt={8} width={["300px", "400px", "600px"]}>
+      <InputGroup alignItems="center">
+        <InputLeftElement
+          height="48px"
+          children={<Icon as={FiAtSign} color="gray.300" />}
+        />
+        <Input
+          isRequired
+          type="email"
+          placeholder="Your email"
           variant="brand"
-          isLoading={formState.isSubmitting}
+          value={email}
+          size="lg"
+          onChange={(e) => setEmail(e.target.value)}
+        />
+      </InputGroup>
+
+      <InputGroup>
+        <InputLeftElement
+          height="48px"
+          color="gray.300"
+          children={<Icon as={FaLock} color="gray.300" />}
+        />
+        <Input
+          isRequired
+          type={show ? "text" : "password"}
+          placeholder="Password"
+          variant="brand"
+          size="lg"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+        />
+        <InputRightElement
+          height="48px"
+          color="gray.300"
+          children={
+            show ? (
+              <ViewOffIcon
+                color={"gray.500"}
+                mr={5}
+                boxSize={5}
+                onClick={() => setShow(false)}
+              />
+            ) : (
+              <ViewIcon
+                color={"gray.500"}
+                mr={5}
+                boxSize={5}
+                onClick={() => setShow(true)}
+              />
+            )
+          }
+        />
+      </InputGroup>
+      <Flex width="100%" justify="flex-end">
+        <Link
+          as={RouterLink}
+          variant="subtle"
+          fontSize="sm"
+          mr={1}
+          to="/forgot"
         >
-          Sign In
-        </Button>
-      </Stack>
-    </form>
+          Forgot Password?
+        </Link>
+      </Flex>
+      <Button
+        type="submit"
+        variant="brand"
+        onClick={onSubmit}
+        isLoading={isLoading}
+      >
+        Sign In
+      </Button>
+    </Stack>
   );
 };
 export default SignIn;
