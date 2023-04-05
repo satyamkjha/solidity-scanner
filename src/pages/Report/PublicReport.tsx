@@ -71,12 +71,14 @@ export default function ReportPage() {
       )}
 
       {data ? (
-        <Box w="100vw" ref={componentRef}>
-          {printView ? (
-            <PrintContainer summary_report={data.summary_report} />
-          ) : (
-            <ReportContainer summary_report={data.summary_report} />
-          )}
+        <Box display="none">
+          <Box w="100vw" ref={componentRef}>
+            {printView ? (
+              <PrintContainer summary_report={data.summary_report} />
+            ) : (
+              <ReportContainer summary_report={data.summary_report} />
+            )}
+          </Box>
         </Box>
       ) : (
         <Container
