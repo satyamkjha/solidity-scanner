@@ -38,6 +38,11 @@ import {
   border,
   Stack,
   useMediaQuery,
+  MenuButton,
+  Menu,
+  IconButton,
+  MenuList,
+  MenuItem,
 } from "@chakra-ui/react";
 import Overview from "components/overview";
 import Result, { MultifileResult } from "components/result";
@@ -49,6 +54,7 @@ import {
   TimeIcon,
 } from "@chakra-ui/icons";
 import { useScan } from "hooks/useScan";
+import { ArrowDownIcon } from "@chakra-ui/icons";
 import { useProfile } from "hooks/useProfile";
 import { BiChevronDownCircle, BiChevronUpCircle } from "react-icons/bi";
 import { AiOutlineProject } from "react-icons/ai";
@@ -261,6 +267,13 @@ const BlockPage: React.FC = () => {
       );
     }
   }, [scanData]);
+
+  const generatePDF = async () => {
+    const publishReportData = await getPublicReport(
+      "block",
+      scanData.scan_report.latest_report_id
+    );
+  };
 
   return (
     <Box
@@ -475,7 +488,45 @@ const BlockPage: React.FC = () => {
                                 </Text>
                               </HStack>
                             ))}
-                          {scanData.scan_report.scan_status !== "scanning" && (
+                          {scanData.scan_report.scan_status !== "scanning" &&
+                          publishStatus === "Approved" ? (
+                            <HStack
+                              borderRadius={"5px"}
+                              backgroundColor={"#F5F2FF"}
+                              px={5}
+                              py={2}
+                            >
+                              <Text
+                                color="#3E15F4"
+                                onClick={() => {
+                                  window.open(
+                                    `http://${document.location.host}/published-report/block/${scanData.scan_report.latest_report_id}`,
+                                    "_blank"
+                                  );
+                                }}
+                                fontSize="sm"
+                              >
+                                View Report
+                              </Text>
+                              <Text color="#3E15F4" fontSize="sm">
+                                |
+                              </Text>
+                              <Menu>
+                                <MenuButton
+                                  as={Button}
+                                  aria-label="Options"
+                                  variant="unstyled"
+                                >
+                                  <ArrowDownIcon color="#3E15F4" />
+                                </MenuButton>
+                                <MenuList>
+                                  <MenuItem onClick={() => generatePDF()}>
+                                    Download PDF
+                                  </MenuItem>
+                                </MenuList>
+                              </Menu>
+                            </HStack>
+                          ) : (
                             <Button
                               variant={"accent-outline"}
                               w={["80%", "80%", "50%", "auto"]}
@@ -503,17 +554,10 @@ const BlockPage: React.FC = () => {
                                 } else if (
                                   reportingStatus === "report_generated"
                                 ) {
-                                  if (publishStatus === "Approved") {
-                                    window.open(
-                                      `http://${document.location.host}/published-report/block/${scanData.scan_report.latest_report_id}`,
-                                      "_blank"
-                                    );
-                                  } else {
-                                    window.open(
-                                      `http://${document.location.host}/report/block/${scanData.scan_report.project_id}/${scanData.scan_report.latest_report_id}`,
-                                      "_blank"
-                                    );
-                                  }
+                                  window.open(
+                                    `http://${document.location.host}/report/block/${scanData.scan_report.project_id}/${scanData.scan_report.latest_report_id}`,
+                                    "_blank"
+                                  );
                                 }
                               }}
                             >
