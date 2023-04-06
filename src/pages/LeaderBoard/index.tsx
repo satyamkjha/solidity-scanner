@@ -68,10 +68,10 @@ const HackComp: React.FC = () => {
             <Text fontSize="sm">Rug Pull</Text>
           </HStack>
         </HStack>
-        {/* <Text fontSize="xs" color="#78909C">
+        <Text fontSize="xs" color="#78909C">
           Total Loss
-        </Text> */}
-        {/* <HStack mt={5} w="80%" flexWrap="wrap">
+        </Text>
+        <HStack mt={5} w="80%" flexWrap="wrap">
           <HStack mr={3}>
             <Image
               mr={1}
@@ -96,10 +96,10 @@ const HackComp: React.FC = () => {
               56,000 ETH,
             </Heading>
           </HStack>
-        </HStack> */}
+        </HStack>
       </VStack>
 
-      {/* <HStack
+      <HStack
         justifyContent="space-between"
         alignItems="center"
         w="100%"
@@ -108,10 +108,11 @@ const HackComp: React.FC = () => {
         <Text fontSize="xs" color="#78909C">
           March 27, 2023
         </Text>
+        M
         <Button variant="text" color="#3300FF">
-          Learn More
+          Learn ore
         </Button>
-      </HStack> */}
+      </HStack>
     </Flex>
   );
 };
@@ -161,6 +162,26 @@ const ArticleComp: React.FC = () => {
 };
 
 const LeaderBoard: React.FC = () => {
+  const attackTrendsData = [
+    { title: "Contract Vulnerability", color: "#9C003D", number: "56" },
+    { title: "Rug Pull", color: "#F46D43", number: "34" },
+    // { title: "Contract", color: "", number: "" },
+    // { title: "Contract", color: "", number: "" },
+    // { title: "Contract", color: "", number: "" },
+    // { title: "Contract", color: "", number: "" },
+    // { title: "Contract", color: "", number: "" },
+    // { title: "Contract", color: "", number: "" },
+    // { title: "Contract", color: "", number: "" },
+    // { title: "Contract", color: "", number: "" },
+  ];
+
+  const headingData = [
+    { title: "The total amount hacked ", data: "$6.27B" },
+    { title: "Number of hacks", data: "205" },
+    { title: "Security Breaches", data: "155" },
+    { title: "Security Breaches", data: "155" },
+  ];
+
   return (
     <>
       <Header />
@@ -176,17 +197,122 @@ const LeaderBoard: React.FC = () => {
           <Box
             flexDir={"column"}
             display={"flex"}
-            alignItems={"center"}
+            alignItems={"flex-start"}
+            justifyContent={"flex-start"}
             w={"100%"}
-            px={[0, 0, 10]}
-            py={20}
-            h="750px"
+            px={[0, 0, 20]}
+            py={10}
+            h="800px"
             pb={"200px"}
             background={"url('/background/leaderboard_bg.png')"}
             backgroundSize="cover"
             backgroundPosition={"center"}
             backgroundRepeat="no-repeat"
-          ></Box>
+          >
+            <Text color="#B0B7C3" fontSize={"2xl"}>
+              Web3 Hack Statistics, Hackerboard
+            </Text>
+            <Flex
+              flexDir={"row"}
+              display={"flex"}
+              alignItems={"flex-start"}
+              justifyContent={"space-between"}
+              w={"100%"}
+              mt={5}
+            >
+              <Flex
+                flexDir={"column"}
+                display={"flex"}
+                alignItems={"flex-start"}
+                justifyContent={"flex-start"}
+                w={"25%"}
+                h="fit-content"
+              >
+                <Heading
+                  fontSize={["3xl", "6xl"]}
+                  mb={3}
+                  sx={{
+                    background:
+                      "linear-gradient(129.18deg, #52FF00 8.52%, #00EEFD 93.94%)",
+                    backgroundClip: "text",
+                    WebkitTextFillColor: "transparent",
+                  }}
+                >
+                  $ 6.27B
+                </Heading>
+                <Text color="#8A94A6" fontSize={"lg"}>
+                  The total amount hacked
+                </Text>
+                <HStack mt={7} mb={2} w="100%" justifyContent={"space-between"}>
+                  <Heading color={"white"} fontSize={"2xl"}>
+                    Attack Trends
+                  </Heading>
+                  <Heading color={"white"} fontSize={"2xl"}>
+                    205
+                  </Heading>
+                </HStack>
+                {attackTrendsData.map((item) => (
+                  <HStack mt={3} w="100%" justifyContent={"space-between"}>
+                    <HStack>
+                      <SeverityIcon variant={item.color} />
+                      <Text color="#FFFFFF" fontSize={"md"}>
+                        {item.title}
+                      </Text>
+                    </HStack>
+                    <Text color="#FFFFFF" fontSize={"md"}>
+                      {item.number}
+                    </Text>
+                  </HStack>
+                ))}
+              </Flex>
+              <Flex
+                flexDir={"column"}
+                display={"flex"}
+                alignItems={"flex-start"}
+                justifyContent={"flex-start"}
+                w={"70%"}
+                h="fit-content"
+              >
+                <Box
+                  backgroundColor={"#060316"}
+                  height="450px"
+                  width="100%"
+                ></Box>
+                <Flex
+                  sx={{
+                    mt: 7,
+                    w: "100%",
+                    justifyContent: "space-between",
+                    flexDir: "row",
+                  }}
+                >
+                  {headingData.map((item) => (
+                    <Flex
+                      sx={{
+                        flexDir: "column",
+                        alignItems: "flex-start",
+                        mb: [8, 8, 0],
+                        ml: [20, 20, 0],
+                      }}
+                    >
+                      <Text color={"#D9D9D9"} fontSize="sm" fontWeight={400}>
+                        {item.title}
+                      </Text>
+                      <Heading
+                        as="h1"
+                        color="#FFFFFF"
+                        mt={2}
+                        fontSize={["3xl", "4xl"]}
+                        mb={8}
+                      >
+                        {item.data}
+                      </Heading>
+                    </Flex>
+                  ))}
+                </Flex>
+              </Flex>
+            </Flex>
+          </Box>
 
           <Box
             display={"flex"}
