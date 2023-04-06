@@ -1545,7 +1545,10 @@ const IssueDetail: React.FC<{
               <Box
                 dangerouslySetInnerHTML={{
                   __html: files.issue_description
-                    ? files.issue_description
+                    ? files.issue_description.format({
+                        ...variableData,
+                        current_file_name,
+                      })
                     : data.issue_details.issue_description.format({
                         ...variableData,
                         current_file_name,
@@ -1567,7 +1570,10 @@ const IssueDetail: React.FC<{
               <Box
                 dangerouslySetInnerHTML={{
                   __html: files.issue_remediation
-                    ? files.issue_remediation
+                    ? files.issue_remediation.format({
+                        ...variableData,
+                        current_file_name,
+                      })
                     : data.issue_details.issue_remediation.format({
                         ...variableData,
                         current_file_name,
