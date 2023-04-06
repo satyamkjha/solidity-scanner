@@ -165,14 +165,14 @@ const LeaderBoard: React.FC = () => {
   const attackTrendsData = [
     { title: "Contract Vulnerability", color: "#9C003D", number: "56" },
     { title: "Rug Pull", color: "#F46D43", number: "34" },
-    // { title: "Contract", color: "", number: "" },
-    // { title: "Contract", color: "", number: "" },
-    // { title: "Contract", color: "", number: "" },
-    // { title: "Contract", color: "", number: "" },
-    // { title: "Contract", color: "", number: "" },
-    // { title: "Contract", color: "", number: "" },
-    // { title: "Contract", color: "", number: "" },
-    // { title: "Contract", color: "", number: "" },
+    { title: "Flash Loan Attack", color: "#FEE08B", number: "09" },
+    { title: "Scam", color: "#E6F598", number: "04" },
+    { title: "Honeypot", color: "#66C2A5", number: "03" },
+    { title: "Access Control", color: "#3288BD", number: "07" },
+    { title: "Lorem ipsum dolor sit", color: "#5E4FA2", number: "01" },
+    { title: "Lorem ipsum dolor sit", color: "#7D7D7D", number: "01" },
+    { title: "Lorem ipsum dolor sit", color: "#A7A7A7", number: "01" },
+    { title: "Lorem ipsum dolor sit", color: "#EBEBEB", number: "01" },
   ];
 
   const headingData = [
