@@ -8,6 +8,8 @@ import {
   useHistory,
 } from "react-router-dom";
 import FileDownload from "js-file-download";
+import { ArrowDownIcon } from "@chakra-ui/icons";
+
 import {
   Flex,
   keyframes,
@@ -50,6 +52,10 @@ import {
   useMediaQuery,
   Stack,
   IconButton,
+  Menu,
+  MenuButton,
+  MenuList,
+  MenuItem,
 } from "@chakra-ui/react";
 import {
   AiOutlineClockCircle,
@@ -99,6 +105,9 @@ import PublishedReports from "components/publishedReports";
 import { useReports } from "hooks/useReports";
 import { usePricingPlans } from "hooks/usePricingPlans";
 import { API_PATH } from "helpers/routeManager";
+import { useReactToPrint } from "react-to-print";
+import { PrintContainer } from "pages/Report/PrintContainer";
+import { getPublicReport } from "hooks/usePublicReport";
 
 export const ProjectPage: React.FC = () => {
   const { projectId } = useParams<{ projectId: string }>();
@@ -335,6 +344,35 @@ const ScanDetails: React.FC<{
     refetchReprtList();
   };
 
+  const [summaryReport, setSummaryReport] = useState<Report | null>(null);
+  const [printLoading, setPrintLoading] = useState<boolean>(false);
+  const componentRef = useRef();
+
+  const generatePDF = async () => {
+    setPrintLoading(true);
+    const publishReportData = await getPublicReport(
+      "project",
+      scanData.scan_report.latest_report_id
+    );
+
+    console.log(publishReportData);
+
+    if (publishReportData.summary_report) {
+      setSummaryReport(publishReportData.summary_report);
+    }
+  };
+
+  const handlePrint = useReactToPrint({
+    content: () => componentRef.current,
+    onAfterPrint: () => setPrintLoading(false),
+  });
+
+  useEffect(() => {
+    if (summaryReport) {
+      setTimeout(() => handlePrint(), 100);
+    }
+  }, [summaryReport]);
+
   return (
     <>
       <Box
@@ -485,7 +523,60 @@ const ScanDetails: React.FC<{
                         </Text>
                       </HStack>
                     ))}
-                  {scanData.scan_report.scan_status === "scan_done" && (
+                  {scanData.scan_report.scan_status === "scan_done" &&
+                  publishStatus === "Approved" ? (
+                    <HStack
+                      borderRadius={"15px"}
+                      backgroundColor={"#F5F2FF"}
+                      pl={7}
+                      pr={3}
+                      py={1}
+                      ml={5}
+                    >
+                      <Text
+                        color="#3E15F4"
+                        cursor={"pointer"}
+                        onClick={() => {
+                          window.open(
+                            `http://${document.location.host}/published-report/block/${scanData.scan_report.latest_report_id}`,
+                            "_blank"
+                          );
+                        }}
+                        fontSize="sm"
+                        mr={2}
+                      >
+                        View Report
+                      </Text>
+                      <Text color="#3E15F4" fontSize="sm">
+                        |
+                      </Text>
+                      <Menu>
+                        <MenuButton
+                          as={Button}
+                          aria-label="Options"
+                          variant="unstyled"
+                        >
+                          {printLoading ? (
+                            <Spinner fontSize={40} color="#3E15F4" />
+                          ) : (
+                            <ArrowDownIcon color="#3E15F4" />
+                          )}
+                        </MenuButton>
+                        <MenuList>
+                          <MenuItem onClick={() => generatePDF()}>
+                            Download PDF
+                          </MenuItem>
+                        </MenuList>
+                      </Menu>
+                      {summaryReport && (
+                        <Box display={"none"}>
+                          <Box w="100vw" ref={componentRef}>
+                            <PrintContainer summary_report={summaryReport} />
+                          </Box>
+                        </Box>
+                      )}
+                    </HStack>
+                  ) : (
                     <Button
                       variant={"accent-outline"}
                       isLoading={reportingStatus === ""}

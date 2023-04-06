@@ -6,16 +6,21 @@ import {
   HStack,
   IconButton,
   Text,
+  Spinner,
 } from "@chakra-ui/react";
 import { ReportsListItem, Profile, Scan } from "common/types";
 import { useReports } from "hooks/useReports";
-import React, { useState } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import Icon from "react-crypto-icons";
 import { AiFillCopy, AiOutlineLock } from "react-icons/ai";
 import { BsPeople, BsPeopleFill } from "react-icons/bs";
 import { FaCopy } from "react-icons/fa";
 import { MdPeopleOutline, MdSettings } from "react-icons/md";
 import { useHistory, useParams } from "react-router-dom";
+import { ArrowDownIcon } from "@chakra-ui/icons";
+import { useReactToPrint } from "react-to-print";
+import { getPublicReport } from "hooks/usePublicReport";
+import { PrintContainer } from "pages/Report/PrintContainer";
 
 const ReportBlock: React.FC<{
   report: ReportsListItem;
@@ -23,6 +28,32 @@ const ReportBlock: React.FC<{
   type: string;
 }> = ({ report, profile, type }) => {
   const toast = useToast();
+
+  const [summaryReport, setSummaryReport] = useState<Report | null>(null);
+  const [printLoading, setPrintLoading] = useState<boolean>(false);
+  const componentRef = useRef();
+
+  const generatePDF = async () => {
+    setPrintLoading(true);
+    const publishReportData = await getPublicReport(type, report.report_id);
+
+    console.log(publishReportData);
+
+    if (publishReportData.summary_report) {
+      setSummaryReport(publishReportData.summary_report);
+    }
+  };
+
+  const handlePrint = useReactToPrint({
+    content: () => componentRef.current,
+    onAfterPrint: () => setPrintLoading(false),
+  });
+
+  useEffect(() => {
+    if (summaryReport) {
+      setTimeout(() => handlePrint(), 100);
+    }
+  }, [summaryReport]);
 
   return (
     <Flex
@@ -67,7 +98,7 @@ const ReportBlock: React.FC<{
       </Box>
       <Flex
         justifyContent={"flex-start"}
-        width={["calc(100% - 60px)", "calc(100% - 160px)"]}
+        width={["calc(100% - 60px)", "calc(100% - 200px)"]}
         alignItems="center"
         flexWrap={"wrap"}
         height="fit-content"
@@ -156,27 +187,53 @@ const ReportBlock: React.FC<{
             {report.date_published.slice(3, 6)}
           </Text>
         </Box>
-        <IconButton
-          my={5}
-          mr={[0, 5, 5]}
-          aria-label="View Report"
-          backgroundColor={"#F5F2FF"}
-          icon={<ViewIcon color={"#806CCF"} />}
-          onClick={(e) => {
-            e.stopPropagation();
-            if (report.is_approved) {
-              window.open(
-                `http://${document.location.host}/published-report/${type}/${report.report_id}`,
-                "_blank"
-              );
-            } else {
-              window.open(
-                `http://${document.location.host}/report/${type}/${report.project_id}/${report.report_id}`,
-                "_blank"
-              );
-            }
-          }}
-        />
+        <HStack spacing={3} mr={[0, 5, 10]}>
+          {report.is_approved && (
+            <IconButton
+              my={5}
+              mr={[0, 5, 5]}
+              aria-label="View Report"
+              backgroundColor={"#F5F2FF"}
+              icon={
+                printLoading ? (
+                  <Spinner fontSize={40} color="#3E15F4" />
+                ) : (
+                  <ArrowDownIcon color="#3E15F4" />
+                )
+              }
+              onClick={(e) => {
+                generatePDF();
+              }}
+            />
+          )}
+          {summaryReport && (
+            <Box display={"none"}>
+              <Box w="100vw" ref={componentRef}>
+                <PrintContainer summary_report={summaryReport} />
+              </Box>
+            </Box>
+          )}
+          <IconButton
+            my={5}
+            aria-label="View Report"
+            backgroundColor={"#F5F2FF"}
+            icon={<ViewIcon color={"#806CCF"} />}
+            onClick={(e) => {
+              e.stopPropagation();
+              if (report.is_approved) {
+                window.open(
+                  `http://${document.location.host}/published-report/${type}/${report.report_id}`,
+                  "_blank"
+                );
+              } else {
+                window.open(
+                  `http://${document.location.host}/report/${type}/${report.project_id}/${report.report_id}`,
+                  "_blank"
+                );
+              }
+            }}
+          />
+        </HStack>
       </Flex>
     </Flex>
   );

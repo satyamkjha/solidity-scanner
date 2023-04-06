@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { Link as RouterLink, useHistory, useParams } from "react-router-dom";
 
 import {
@@ -77,7 +77,9 @@ import ContractDetails from "components/contractDetails";
 import PublishedReports from "components/publishedReports";
 import { usePricingPlans } from "hooks/usePricingPlans";
 import { API_PATH } from "helpers/routeManager";
-import { getFeatureGateConfig } from "helpers/helperFunction";
+import { getPublicReport } from "hooks/usePublicReport";
+import { useReactToPrint } from "react-to-print";
+import { PrintContainer } from "pages/Report/PrintContainer";
 
 const BlockPage: React.FC = () => {
   const { scanId } = useParams<{ scanId: string }>();
@@ -268,12 +270,34 @@ const BlockPage: React.FC = () => {
     }
   }, [scanData]);
 
+  const [summaryReport, setSummaryReport] = useState<Report | null>(null);
+  const [printLoading, setPrintLoading] = useState<boolean>(false);
+  const componentRef = useRef();
+
   const generatePDF = async () => {
+    setPrintLoading(true);
     const publishReportData = await getPublicReport(
       "block",
       scanData.scan_report.latest_report_id
     );
+
+    console.log(publishReportData);
+
+    if (publishReportData.summary_report) {
+      setSummaryReport(publishReportData.summary_report);
+    }
   };
+
+  const handlePrint = useReactToPrint({
+    content: () => componentRef.current,
+    onAfterPrint: () => setPrintLoading(false),
+  });
+
+  useEffect(() => {
+    if (summaryReport) {
+      setTimeout(() => handlePrint(), 100);
+    }
+  }, [summaryReport]);
 
   return (
     <Box
@@ -491,13 +515,16 @@ const BlockPage: React.FC = () => {
                           {scanData.scan_report.scan_status !== "scanning" &&
                           publishStatus === "Approved" ? (
                             <HStack
-                              borderRadius={"5px"}
+                              borderRadius={"15px"}
                               backgroundColor={"#F5F2FF"}
-                              px={5}
-                              py={2}
+                              pl={7}
+                              pr={3}
+                              py={1}
+                              ml={5}
                             >
                               <Text
                                 color="#3E15F4"
+                                cursor={"pointer"}
                                 onClick={() => {
                                   window.open(
                                     `http://${document.location.host}/published-report/block/${scanData.scan_report.latest_report_id}`,
@@ -505,6 +532,7 @@ const BlockPage: React.FC = () => {
                                   );
                                 }}
                                 fontSize="sm"
+                                mr={2}
                               >
                                 View Report
                               </Text>
@@ -517,7 +545,11 @@ const BlockPage: React.FC = () => {
                                   aria-label="Options"
                                   variant="unstyled"
                                 >
-                                  <ArrowDownIcon color="#3E15F4" />
+                                  {printLoading ? (
+                                    <Spinner fontSize={40} color="#3E15F4" />
+                                  ) : (
+                                    <ArrowDownIcon color="#3E15F4" />
+                                  )}
                                 </MenuButton>
                                 <MenuList>
                                   <MenuItem onClick={() => generatePDF()}>
@@ -525,6 +557,15 @@ const BlockPage: React.FC = () => {
                                   </MenuItem>
                                 </MenuList>
                               </Menu>
+                              {summaryReport && (
+                                <Box display={"none"}>
+                                  <Box w="100vw" ref={componentRef}>
+                                    <PrintContainer
+                                      summary_report={summaryReport}
+                                    />
+                                  </Box>
+                                </Box>
+                              )}
                             </HStack>
                           ) : (
                             <Button
