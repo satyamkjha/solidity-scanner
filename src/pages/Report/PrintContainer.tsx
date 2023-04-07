@@ -30,6 +30,7 @@ import VulnerabilityProgress from "components/VulnerabilityProgress";
 import { sentenceCapitalize } from "helpers/helperFunction";
 import React, { useEffect, useRef } from "react";
 import styled from "@emotion/styled";
+import { VictoryPie } from "victory";
 
 export const PrintContainer: React.FC<{ summary_report: Report }> = ({
   summary_report,
@@ -44,7 +45,10 @@ export const PrintContainer: React.FC<{ summary_report: Report }> = ({
 
   const [isDesktopView] = useMediaQuery(["(min-width: 1024px)"]);
 
-  const pieData = (
+  let counter1 = 0;
+  let counter2 = 0;
+
+  const victoryPieData = (
     critical: number,
     high: number,
     medium: number,
@@ -53,40 +57,28 @@ export const PrintContainer: React.FC<{ summary_report: Report }> = ({
     gas: number
   ) => [
     {
-      id: "critical",
-      label: "Critical",
-      value: critical,
-      color: "#960D00",
+      x: critical > 0 ? `Critical: ${critical}` : " ",
+      y: critical,
     },
     {
-      id: "high",
-      label: "High",
-      value: high,
-      color: "#FF5C00",
+      x: high > 0 ? `High: ${high}` : " ",
+      y: high,
     },
     {
-      id: "medium",
-      label: "Medium",
-      value: medium,
-      color: "#FFE600",
+      x: medium > 0 ? `Medium: ${medium}` : " ",
+      y: medium,
     },
     {
-      id: "low",
-      label: "Low",
-      value: low,
-      color: "#38CB89",
+      x: low > 0 ? `Low: ${low}` : "",
+      y: low,
     },
     {
-      id: "informational",
-      label: "Informational",
-      value: informational,
-      color: "#A0AEC0",
+      x: informational > 0 ? `Informational: ${informational}` : " ",
+      y: informational,
     },
     {
-      id: "gas",
-      label: "Gas",
-      value: gas,
-      color: "#F795B4",
+      x: gas > 0 ? `Gas: ${gas}` : " ",
+      y: gas,
     },
   ];
 
@@ -108,20 +100,21 @@ export const PrintContainer: React.FC<{ summary_report: Report }> = ({
   return (
     <>
       <Container
-        maxW={"900px"}
-        color="black"
         sx={{
           "@page": {
             margin: "30px",
             border: "1px solid #D9D9D9;",
-            "@top-left": {
-              content: "none",
+            "@bottom-left": {
+              display: "none",
             },
           },
         }}
+        maxW={"900px"}
+        color="black"
         overflow={"hidden"}
       >
         {/* Cover Section */}
+        <h6></h6>
         <Flex
           as="div"
           w="100%"
@@ -182,6 +175,7 @@ export const PrintContainer: React.FC<{ summary_report: Report }> = ({
         </Flex>
 
         {/* Table of Contents */}
+        <h6></h6>
         <Flex
           sx={{
             color: "#000000",
@@ -245,6 +239,7 @@ export const PrintContainer: React.FC<{ summary_report: Report }> = ({
         </Flex>
 
         {/* Project Summary */}
+        <h6></h6>
         <Flex
           sx={{
             color: "#000000",
@@ -306,12 +301,13 @@ export const PrintContainer: React.FC<{ summary_report: Report }> = ({
         </Flex>
 
         {/* Audit Summary */}
+        <h6></h6>
         <Flex
           sx={{
             color: "#000000",
             mx: 1,
           }}
-          py={10}
+          py={5}
           alignItems="center"
         >
           <Heading color={"#52FF00"} fontSize="4xl">
@@ -812,6 +808,7 @@ export const PrintContainer: React.FC<{ summary_report: Report }> = ({
         </Flex>
 
         {/* Findings Summary */}
+        <h6></h6>
         <Flex
           sx={{
             color: "#000000",
@@ -828,453 +825,474 @@ export const PrintContainer: React.FC<{ summary_report: Report }> = ({
             &nbsp;Summary{" "}
           </Text>
         </Flex>
-        <Flex
-          as="div"
-          w="100%"
+
+        <Box
+          sx={{
+            pageBreakAfter: "always",
+          }}
           alignItems="flex-start"
           justifyContent="flex-start"
           flexDir={"column"}
-          // border={"1px solid #D9D9D9;"}
-          py={[4, 4, 4, 20]}
-          // px={[6, 6, 6, 10]}
+          w="100%"
+          border={"1px solid #D9D9D9;"}
         >
-          <Box
-            sx={{
-              pageBreakAfter: "always",
-            }}
-            alignItems="flex-start"
-            justifyContent="flex-start"
-            flexDir={"column"}
-            w="100%"
-            border={"1px solid #D9D9D9;"}
-          >
-            <Flex
-              as="div"
-              w="100%"
-              alignItems="center"
-              justifyContent="space-between"
-              flexDir={["row"]}
-              py={7}
-              px={[4, 4, 4, 10]}
-              mb={[4, 4, 4, 0]}
-              backgroundColor={"#FBFBFB"}
-            >
-              <VStack align={["flex-start"]} mb={[4, 4, 4, 0]}>
-                <HStack>
-                  {summary_report.project_summary_report.project_url ? (
-                    <GithubIcon size={30} />
-                  ) : summary_report.project_summary_report
-                      .contract_platform ? (
-                    <Image
-                      src={`/blockscan/${summary_report.project_summary_report.contract_platform}.svg`}
-                      h={"30px"}
-                      w={"30px"}
-                    />
-                  ) : (
-                    <ProjectIcon size={30} />
-                  )}
-                  <Text fontSize="xl" fontWeight={"bold"}>
-                    {summary_report.project_summary_report.project_name}
-                    {summary_report.project_summary_report.contract_name}
-                  </Text>
-                </HStack>
-                <Text fontSize="md" fontWeight={"normal"} wordBreak="break-all">
-                  {summary_report.project_summary_report.project_url}
-                  {summary_report.project_summary_report.contract_address}
-                </Text>
-                <HStack align={"flex-start"}>
-                  <Text
-                    fontSize="md"
-                    fontWeight={"normal"}
-                    color={"gray.400"}
-                    width={"100%"}
-                  >
-                    Lines of Code
-                  </Text>
-                  <Text fontSize="lg" fontWeight={"bold"}>
-                    {summary_report.scan_summary[0].lines_analyzed_count}
-                  </Text>
-                </HStack>
-              </VStack>
-
-              <CircularProgress
-                value={
-                  (parseInt(summary_report.scan_summary[0].score, 10) * 100) / 5
-                }
-                color="accent"
-                thickness="8px"
-                size="100px"
-                capIsRound
-              >
-                <CircularProgressLabel
-                  sx={{ display: "flex", justifyContent: "center" }}
-                >
-                  <Box>
-                    <Text fontSize="lg" fontWeight={900} color="accent">
-                      {summary_report.scan_summary[0].score}
-                    </Text>
-                    <Text fontSize="sm" color="subtle" mt="-4px">
-                      Score
-                    </Text>
-                  </Box>
-                </CircularProgressLabel>
-              </CircularProgress>
-            </Flex>
-            <Flex
-              as="div"
-              w="100%"
-              h="fit-content"
-              alignItems="center"
-              justifyContent="center"
-            >
-              <Box h="300px" w="300px">
-                <ResponsivePie
-                  data={pieData(
-                    summary_report.scan_summary[
-                      summary_report.scan_summary.length - 1
-                    ].issue_severity_distribution.critical,
-                    summary_report.scan_summary[
-                      summary_report.scan_summary.length - 1
-                    ].issue_severity_distribution.high,
-                    summary_report.scan_summary[
-                      summary_report.scan_summary.length - 1
-                    ].issue_severity_distribution.medium,
-                    summary_report.scan_summary[
-                      summary_report.scan_summary.length - 1
-                    ].issue_severity_distribution.low,
-                    summary_report.scan_summary[
-                      summary_report.scan_summary.length - 1
-                    ].issue_severity_distribution.informational,
-                    summary_report.scan_summary[
-                      summary_report.scan_summary.length - 1
-                    ].issue_severity_distribution.gas
-                  )}
-                  margin={{ top: 40, right: 40, bottom: 40, left: 0 }}
-                  colors={{ datum: "data.color" }}
-                  innerRadius={0.5}
-                  padAngle={0.7}
-                  cornerRadius={3}
-                  activeOuterRadiusOffset={8}
-                  borderWidth={1}
-                  borderColor={{ from: "color", modifiers: [["darker", 0.2]] }}
-                  enableArcLinkLabels={false}
-                  arcLinkLabelsSkipAngle={10}
-                  arcLinkLabelsTextColor="#333333"
-                  arcLinkLabelsThickness={2}
-                  arcLinkLabelsColor={{ from: "color" }}
-                  arcLabelsSkipAngle={10}
-                  arcLabelsTextColor={{
-                    from: "color",
-                    modifiers: [["darker", 2]],
-                  }}
-                />
-              </Box>
-            </Flex>
-            <Flex
-              as="div"
-              w="100%"
-              alignItems="center"
-              justifyContent={["space-between", "space-between"]}
-              flexDir={["row"]}
-              flexWrap="wrap"
-              mb={5}
-            >
-              <Box w={["50%"]} px={[0, 0, 0, 15]}>
-                <VulnerabilityProgress
-                  label="Critical"
-                  variant="critical"
-                  count={
-                    summary_report.scan_summary[
-                      summary_report.scan_summary.length - 1
-                    ].issue_severity_distribution.critical
-                  }
-                  total={summary_report.scan_summary[0].issues_count}
-                />
-                <VulnerabilityProgress
-                  label="High"
-                  variant="high"
-                  count={
-                    summary_report.scan_summary[
-                      summary_report.scan_summary.length - 1
-                    ].issue_severity_distribution.high
-                  }
-                  total={summary_report.scan_summary[0].issues_count}
-                />
-                <VulnerabilityProgress
-                  label="Medium"
-                  variant="medium"
-                  count={
-                    summary_report.scan_summary[
-                      summary_report.scan_summary.length - 1
-                    ].issue_severity_distribution.medium
-                  }
-                  total={summary_report.scan_summary[0].issues_count}
-                />
-              </Box>
-              <Box w={["50%"]} px={[0, 0, 0, 15]}>
-                <VulnerabilityProgress
-                  label="Low"
-                  variant="low"
-                  count={
-                    summary_report.scan_summary[
-                      summary_report.scan_summary.length - 1
-                    ].issue_severity_distribution.low
-                  }
-                  total={summary_report.scan_summary[0].issues_count}
-                />
-                <VulnerabilityProgress
-                  label="Informational"
-                  variant="informational"
-                  count={
-                    summary_report.scan_summary[
-                      summary_report.scan_summary.length - 1
-                    ].issue_severity_distribution.informational
-                  }
-                  total={summary_report.scan_summary[0].issues_count}
-                />
-                <VulnerabilityProgress
-                  label="Gas"
-                  variant="gas"
-                  count={
-                    summary_report.scan_summary[
-                      summary_report.scan_summary.length - 1
-                    ].issue_severity_distribution.gas
-                  }
-                  total={summary_report.scan_summary[0].issues_count}
-                />
-              </Box>
-            </Flex>
-          </Box>
           <Flex
             as="div"
             w="100%"
-            border={"1px solid #D9D9D9;"}
-            alignItems={["center", "center", "center", "flex-start"]}
-            justifyContent={["center", "center", "center", "flex-start"]}
-            flexDir={"column"}
-            px={[0, 0, 0, 6]}
-            my={10}
+            alignItems="center"
+            justifyContent="space-between"
+            flexDir={["row"]}
+            py={7}
+            px={[4, 4, 4, 10]}
+            mb={[4, 4, 4, 0]}
+            backgroundColor={"#FBFBFB"}
           >
-            <Text
-              fontSize="lg"
-              fontWeight={"bold"}
-              my={10}
-              width={"100%"}
-              textAlign={["center", "center", "center", "left"]}
-            >
-              ACTION TAKEN
-            </Text>
-            <Stack
-              w="100%"
-              spacing={0}
-              direction={["column", "column", "column", "row"]}
-            >
-              <HStack spacing={[0, 0, 0, 10]} width={"100%"}>
-                <VStack
-                  align={["center", "center", "center", "flex-start"]}
-                  textAlign={["center", "center", "center", "left"]}
-                  width={["100%", "100%", "100%", "40%"]}
-                  borderTop={["1px solid #F3F3F3", null, null, "none"]}
-                  borderRight={["1px solid #F3F3F3", null, null, "none"]}
-                  borderBottom={["1px solid #F3F3F3", null, null, "none"]}
-                  py={[6, 6, 6, 0]}
-                >
-                  <Text
-                    fontSize="md"
-                    fontWeight={"bold"}
-                    color={"gray.400"}
-                    mb={[0, 0, 0, 1]}
-                    width={"100%"}
-                  >
-                    Fixed
-                  </Text>
-                  <HStack
-                    width={["auto", "auto", "auto", "60%"]}
-                    px={3}
-                    py={[0, 0, 0, 2]}
-                    alignItems={["center"]}
-                    border={["none", "none", "none", "1px solid #E6E6E6;"]}
-                  >
-                    <Image height={7} width={7} src="/icons/fixed_color.svg" />
-                    <Text fontSize="2xl" fontWeight={"bold"} width={"100%"}>
-                      {summary_report.scan_summary[0].fixed_count}
-                    </Text>
-                  </HStack>
-                </VStack>
-                <VStack
-                  align={["center", "center", "center", "flex-start"]}
-                  textAlign={["center", "center", "center", "left"]}
-                  width={["100%", "100%", "100%", "40%"]}
-                  borderTop={["1px solid #F3F3F3", null, null, "none"]}
-                  borderBottom={["1px solid #F3F3F3", null, null, "none"]}
-                  py={[6, 6, 6, 0]}
-                >
-                  <Text
-                    fontSize="md"
-                    fontWeight={"bold"}
-                    color={"gray.400"}
-                    mb={[0, 0, 0, 1]}
-                    width={"100%"}
-                  >
-                    False Positive
-                  </Text>
-                  <HStack
-                    width={["auto", "auto", "auto", "60%"]}
-                    px={3}
-                    py={[0, 0, 0, 2]}
-                    alignItems={["center"]}
-                    border={["none", "none", "none", "1px solid #E6E6E6;"]}
-                  >
-                    <Image
-                      height={7}
-                      width={7}
-                      src="/icons/false_positive_color.svg"
-                    />
-                    <Text fontSize="2xl" fontWeight={"bold"} width={"100%"}>
-                      {summary_report.scan_summary[0].false_positive_count}
-                    </Text>
-                  </HStack>
-                </VStack>
+            <VStack align={["flex-start"]} mb={[4, 4, 4, 0]}>
+              <HStack>
+                {summary_report.project_summary_report.project_url ? (
+                  <GithubIcon size={30} />
+                ) : summary_report.project_summary_report.contract_platform ? (
+                  <Image
+                    src={`/blockscan/${summary_report.project_summary_report.contract_platform}.svg`}
+                    h={"30px"}
+                    w={"30px"}
+                  />
+                ) : (
+                  <ProjectIcon size={30} />
+                )}
+                <Text fontSize="xl" fontWeight={"bold"}>
+                  {summary_report.project_summary_report.project_name}
+                  {summary_report.project_summary_report.contract_name}
+                </Text>
               </HStack>
-              <HStack spacing={[0, 0, 0, 10]} width={"100%"}>
-                <VStack
-                  align={["center", "center", "center", "flex-start"]}
-                  textAlign={["center", "center", "center", "left"]}
-                  width={["100%", "100%", "100%", "40%"]}
-                  borderRight={["1px solid #F3F3F3", null, null, "none"]}
-                  py={[6, 6, 6, 0]}
-                >
-                  <Text
-                    fontSize="md"
-                    fontWeight={"bold"}
-                    color={"gray.400"}
-                    mb={[0, 0, 0, 1]}
-                    width={"100%"}
-                  >
-                    Won't Fix
-                  </Text>
-                  <HStack
-                    width={["auto", "auto", "auto", "60%"]}
-                    px={3}
-                    py={[0, 0, 0, 2]}
-                    alignItems={["center"]}
-                    border={["none", "none", "none", "1px solid #E6E6E6;"]}
-                  >
-                    <Image
-                      height={7}
-                      width={7}
-                      src="/icons/wont_fix_color.svg"
-                    />
-                    <Text
-                      fontSize="2xl"
-                      fontWeight={"bold"}
-                      mb={10}
-                      width={"100%"}
-                    >
-                      {summary_report.scan_summary[0].wont_fix_count}
-                    </Text>
-                  </HStack>
-                </VStack>
-                <VStack
-                  align={["center", "center", "center", "flex-start"]}
-                  textAlign={["center", "center", "center", "left"]}
-                  width={["100%", "100%", "100%", "40%"]}
-                  py={[6, 6, 6, 0]}
-                >
-                  <Text
-                    fontSize="md"
-                    fontWeight={"bold"}
-                    color={"gray.400"}
-                    mb={[0, 0, 0, 1]}
-                    width={"100%"}
-                  >
-                    Pending Fix
-                  </Text>
-                  <HStack
-                    width={["auto", "auto", "auto", "60%"]}
-                    px={3}
-                    py={[0, 0, 0, 2]}
-                    alignItems={["center"]}
-                    border={["none", "none", "none", "1px solid #E6E6E6;"]}
-                  >
-                    <Image
-                      height={7}
-                      width={7}
-                      src="/icons/pending_fix_color.svg"
-                    />
-                    <Text
-                      fontSize="2xl"
-                      fontWeight={"bold"}
-                      mb={10}
-                      width={"100%"}
-                    >
-                      {summary_report.scan_summary[0].pending_fix_count}
-                    </Text>
-                  </HStack>
-                </VStack>
-              </HStack>
-            </Stack>
-          </Flex>
-          <Flex
-            w="100%"
-            // pr={[4, 4, 4, 0]}
-            overflow={["scroll", "scroll", "scroll", "auto"]}
-            direction="column"
-            sx={{
-              pageBreakAfter: "always",
-            }}
-          >
-            <Flex
-              as="div"
-              w={"100%"}
-              alignItems="flex-start"
-              justifyContent="flex-start"
-              flexDir={"row"}
-              textAlign={["left", "left"]}
-              py={5}
-              px={2}
-              border={"1px solid #D9D9D9;"}
-              // px={[1, 1, 1, 10]}
-              backgroundColor={"#F5F5F5"}
-            >
-              {isDesktopView && (
+              <Text fontSize="md" fontWeight={"normal"} wordBreak="break-all">
+                {summary_report.project_summary_report.project_url}
+                {summary_report.project_summary_report.contract_address}
+              </Text>
+              <HStack align={"flex-start"}>
                 <Text
                   fontSize="md"
-                  fontWeight={"extrabold"}
-                  color={"gray.600"}
-                  width={"17%"}
+                  fontWeight={"normal"}
+                  color={"gray.400"}
+                  width={"100%"}
                 >
-                  Bug ID
+                  Lines of Code
                 </Text>
-              )}
-              <Text
-                fontSize="md"
-                fontWeight={"extrabold"}
-                color={"gray.600"}
-                width={"20%"}
-                pl={[2, 2, 2, 0]}
+                <Text fontSize="lg" fontWeight={"bold"}>
+                  {summary_report.scan_summary[0].lines_analyzed_count}
+                </Text>
+              </HStack>
+            </VStack>
+
+            <CircularProgress
+              value={
+                (parseInt(summary_report.scan_summary[0].score, 10) * 100) / 5
+              }
+              color="accent"
+              thickness="8px"
+              size="100px"
+              capIsRound
+            >
+              <CircularProgressLabel
+                sx={{ display: "flex", justifyContent: "center" }}
               >
-                Severity
-              </Text>
-              <Text
-                fontSize="md"
-                fontWeight={"extrabold"}
-                color={"gray.600"}
-                width={"45%"}
+                <Box>
+                  <Text fontSize="lg" fontWeight={900} color="accent">
+                    {summary_report.scan_summary[0].score}
+                  </Text>
+                  <Text fontSize="sm" color="subtle" mt="-4px">
+                    Score
+                  </Text>
+                </Box>
+              </CircularProgressLabel>
+            </CircularProgress>
+          </Flex>
+          <Flex
+            as="div"
+            w="100%"
+            h="fit-content"
+            alignItems="center"
+            justifyContent="center"
+          >
+            <Box h="300px" w="100%">
+              {/* <ResponsivePie
+                data={pieData(
+                  summary_report.scan_summary[
+                    summary_report.scan_summary.length - 1
+                  ].issue_severity_distribution.critical,
+                  summary_report.scan_summary[
+                    summary_report.scan_summary.length - 1
+                  ].issue_severity_distribution.high,
+                  summary_report.scan_summary[
+                    summary_report.scan_summary.length - 1
+                  ].issue_severity_distribution.medium,
+                  summary_report.scan_summary[
+                    summary_report.scan_summary.length - 1
+                  ].issue_severity_distribution.low,
+                  summary_report.scan_summary[
+                    summary_report.scan_summary.length - 1
+                  ].issue_severity_distribution.informational,
+                  summary_report.scan_summary[
+                    summary_report.scan_summary.length - 1
+                  ].issue_severity_distribution.gas
+                )}
+                margin={{ top: 40, right: 40, bottom: 40, left: 0 }}
+                colors={{ datum: "data.color" }}
+                innerRadius={0.5}
+                padAngle={0.7}
+                cornerRadius={3}
+                activeOuterRadiusOffset={8}
+                borderWidth={1}
+                borderColor={{ from: "color", modifiers: [["darker", 0.2]] }}
+                enableArcLinkLabels={false}
+                arcLinkLabelsSkipAngle={10}
+                arcLinkLabelsTextColor="#333333"
+                arcLinkLabelsThickness={2}
+                arcLinkLabelsColor={{ from: "color" }}
+                arcLabelsSkipAngle={10}
+                arcLabelsTextColor={{
+                  from: "color",
+                  modifiers: [["darker", 2]],
+                }}
+              /> */}
+              <VictoryPie
+                data={victoryPieData(
+                  summary_report.scan_summary[
+                    summary_report.scan_summary.length - 1
+                  ].issue_severity_distribution.critical,
+                  summary_report.scan_summary[
+                    summary_report.scan_summary.length - 1
+                  ].issue_severity_distribution.high,
+                  summary_report.scan_summary[
+                    summary_report.scan_summary.length - 1
+                  ].issue_severity_distribution.medium,
+                  summary_report.scan_summary[
+                    summary_report.scan_summary.length - 1
+                  ].issue_severity_distribution.low,
+                  summary_report.scan_summary[
+                    summary_report.scan_summary.length - 1
+                  ].issue_severity_distribution.informational,
+                  summary_report.scan_summary[
+                    summary_report.scan_summary.length - 1
+                  ].issue_severity_distribution.gas
+                )}
+                innerRadius={70}
+                cornerRadius={5}
+                style={{
+                  labels: { fill: "black", fontSize: 20, fontWeight: "bold" },
+                }}
+                colorScale={[
+                  "#960D00",
+                  "#FF5C00",
+                  "#FFE600",
+                  "#38CB89",
+                  "#A0AEC0",
+                  "#F795B4",
+                ]}
+              ></VictoryPie>
+            </Box>
+          </Flex>
+          <Flex
+            as="div"
+            w="100%"
+            alignItems="center"
+            justifyContent={["space-between", "space-between"]}
+            flexDir={["row"]}
+            flexWrap="wrap"
+            mb={5}
+          >
+            <Box w={["50%"]} px={[0, 0, 0, 15]}>
+              <VulnerabilityProgress
+                label="Critical"
+                variant="critical"
+                count={
+                  summary_report.scan_summary[
+                    summary_report.scan_summary.length - 1
+                  ].issue_severity_distribution.critical
+                }
+                total={summary_report.scan_summary[0].issues_count}
+              />
+              <VulnerabilityProgress
+                label="High"
+                variant="high"
+                count={
+                  summary_report.scan_summary[
+                    summary_report.scan_summary.length - 1
+                  ].issue_severity_distribution.high
+                }
+                total={summary_report.scan_summary[0].issues_count}
+              />
+              <VulnerabilityProgress
+                label="Medium"
+                variant="medium"
+                count={
+                  summary_report.scan_summary[
+                    summary_report.scan_summary.length - 1
+                  ].issue_severity_distribution.medium
+                }
+                total={summary_report.scan_summary[0].issues_count}
+              />
+            </Box>
+            <Box w={["50%"]} px={[0, 0, 0, 15]}>
+              <VulnerabilityProgress
+                label="Low"
+                variant="low"
+                count={
+                  summary_report.scan_summary[
+                    summary_report.scan_summary.length - 1
+                  ].issue_severity_distribution.low
+                }
+                total={summary_report.scan_summary[0].issues_count}
+              />
+              <VulnerabilityProgress
+                label="Informational"
+                variant="informational"
+                count={
+                  summary_report.scan_summary[
+                    summary_report.scan_summary.length - 1
+                  ].issue_severity_distribution.informational
+                }
+                total={summary_report.scan_summary[0].issues_count}
+              />
+              <VulnerabilityProgress
+                label="Gas"
+                variant="gas"
+                count={
+                  summary_report.scan_summary[
+                    summary_report.scan_summary.length - 1
+                  ].issue_severity_distribution.gas
+                }
+                total={summary_report.scan_summary[0].issues_count}
+              />
+            </Box>
+          </Flex>
+        </Box>
+        <h6></h6>
+        <Flex
+          as="div"
+          w="100%"
+          border={"1px solid #D9D9D9;"}
+          alignItems={["center", "center", "center", "flex-start"]}
+          justifyContent={["center", "center", "center", "flex-start"]}
+          flexDir={"column"}
+          px={[0, 0, 0, 6]}
+          my={10}
+        >
+          <Text
+            fontSize="lg"
+            fontWeight={"bold"}
+            my={10}
+            width={"100%"}
+            textAlign={["center", "center", "center", "left"]}
+          >
+            ACTION TAKEN
+          </Text>
+          <Stack
+            w="100%"
+            spacing={0}
+            direction={["column", "column", "column", "row"]}
+          >
+            <HStack spacing={[0, 0, 0, 10]} width={"100%"}>
+              <VStack
+                align={["center", "center", "center", "flex-start"]}
+                textAlign={["center", "center", "center", "left"]}
+                width={["100%", "100%", "100%", "40%"]}
+                borderTop={["1px solid #F3F3F3", null, null, "none"]}
+                borderRight={["1px solid #F3F3F3", null, null, "none"]}
+                borderBottom={["1px solid #F3F3F3", null, null, "none"]}
+                py={[6, 6, 6, 0]}
               >
-                Bug Type
-              </Text>
-              <Text
-                fontSize="md"
-                fontWeight={"extrabold"}
-                color={"gray.600"}
-                width={"18%"}
+                <Text
+                  fontSize="md"
+                  fontWeight={"bold"}
+                  color={"gray.400"}
+                  mb={[0, 0, 0, 1]}
+                  width={"100%"}
+                >
+                  Fixed
+                </Text>
+                <HStack
+                  width={["auto", "auto", "auto", "60%"]}
+                  px={3}
+                  py={[0, 0, 0, 2]}
+                  alignItems={["center"]}
+                  border={["none", "none", "none", "1px solid #E6E6E6;"]}
+                >
+                  <Image height={7} width={7} src="/icons/fixed_color.svg" />
+                  <Text fontSize="2xl" fontWeight={"bold"} width={"100%"}>
+                    {summary_report.scan_summary[0].fixed_count}
+                  </Text>
+                </HStack>
+              </VStack>
+              <VStack
+                align={["center", "center", "center", "flex-start"]}
+                textAlign={["center", "center", "center", "left"]}
+                width={["100%", "100%", "100%", "40%"]}
+                borderTop={["1px solid #F3F3F3", null, null, "none"]}
+                borderBottom={["1px solid #F3F3F3", null, null, "none"]}
+                py={[6, 6, 6, 0]}
               >
-                Status
-              </Text>
-            </Flex>
-            {Object.keys(summary_report.issues).map((key, index) =>
-              summary_report.issues[key].issue_details.map((issue) => (
+                <Text
+                  fontSize="md"
+                  fontWeight={"bold"}
+                  color={"gray.400"}
+                  mb={[0, 0, 0, 1]}
+                  width={"100%"}
+                >
+                  False Positive
+                </Text>
+                <HStack
+                  width={["auto", "auto", "auto", "60%"]}
+                  px={3}
+                  py={[0, 0, 0, 2]}
+                  alignItems={["center"]}
+                  border={["none", "none", "none", "1px solid #E6E6E6;"]}
+                >
+                  <Image
+                    height={7}
+                    width={7}
+                    src="/icons/false_positive_color.svg"
+                  />
+                  <Text fontSize="2xl" fontWeight={"bold"} width={"100%"}>
+                    {summary_report.scan_summary[0].false_positive_count}
+                  </Text>
+                </HStack>
+              </VStack>
+            </HStack>
+            <HStack spacing={[0, 0, 0, 10]} width={"100%"}>
+              <VStack
+                align={["center", "center", "center", "flex-start"]}
+                textAlign={["center", "center", "center", "left"]}
+                width={["100%", "100%", "100%", "40%"]}
+                borderRight={["1px solid #F3F3F3", null, null, "none"]}
+                py={[6, 6, 6, 0]}
+              >
+                <Text
+                  fontSize="md"
+                  fontWeight={"bold"}
+                  color={"gray.400"}
+                  mb={[0, 0, 0, 1]}
+                  width={"100%"}
+                >
+                  Won't Fix
+                </Text>
+                <HStack
+                  width={["auto", "auto", "auto", "60%"]}
+                  px={3}
+                  py={[0, 0, 0, 2]}
+                  alignItems={["center"]}
+                  border={["none", "none", "none", "1px solid #E6E6E6;"]}
+                >
+                  <Image height={7} width={7} src="/icons/wont_fix_color.svg" />
+                  <Text
+                    fontSize="2xl"
+                    fontWeight={"bold"}
+                    mb={10}
+                    width={"100%"}
+                  >
+                    {summary_report.scan_summary[0].wont_fix_count}
+                  </Text>
+                </HStack>
+              </VStack>
+              <VStack
+                align={["center", "center", "center", "flex-start"]}
+                textAlign={["center", "center", "center", "left"]}
+                width={["100%", "100%", "100%", "40%"]}
+                py={[6, 6, 6, 0]}
+              >
+                <Text
+                  fontSize="md"
+                  fontWeight={"bold"}
+                  color={"gray.400"}
+                  mb={[0, 0, 0, 1]}
+                  width={"100%"}
+                >
+                  Pending Fix
+                </Text>
+                <HStack
+                  width={["auto", "auto", "auto", "60%"]}
+                  px={3}
+                  py={[0, 0, 0, 2]}
+                  alignItems={["center"]}
+                  border={["none", "none", "none", "1px solid #E6E6E6;"]}
+                >
+                  <Image
+                    height={7}
+                    width={7}
+                    src="/icons/pending_fix_color.svg"
+                  />
+                  <Text
+                    fontSize="2xl"
+                    fontWeight={"bold"}
+                    mb={10}
+                    width={"100%"}
+                  >
+                    {summary_report.scan_summary[0].pending_fix_count}
+                  </Text>
+                </HStack>
+              </VStack>
+            </HStack>
+          </Stack>
+        </Flex>
+
+        <Flex
+          as="div"
+          w={"100%"}
+          alignItems="flex-start"
+          justifyContent="flex-start"
+          flexDir={"row"}
+          textAlign={["left", "left"]}
+          py={5}
+          px={2}
+          border={"1px solid #D9D9D9;"}
+          // px={[1, 1, 1, 10]}
+          backgroundColor={"#F5F5F5"}
+        >
+          {isDesktopView && (
+            <Text
+              fontSize="md"
+              fontWeight={"extrabold"}
+              color={"gray.600"}
+              width={"17%"}
+            >
+              Bug ID
+            </Text>
+          )}
+          <Text
+            fontSize="md"
+            fontWeight={"extrabold"}
+            color={"gray.600"}
+            width={"20%"}
+            pl={[2, 2, 2, 0]}
+          >
+            Severity
+          </Text>
+          <Text
+            fontSize="md"
+            fontWeight={"extrabold"}
+            color={"gray.600"}
+            width={"45%"}
+          >
+            Bug Type
+          </Text>
+          <Text
+            fontSize="md"
+            fontWeight={"extrabold"}
+            color={"gray.600"}
+            width={"18%"}
+          >
+            Status
+          </Text>
+        </Flex>
+
+        {Object.keys(summary_report.issues).map((key, index) =>
+          summary_report.issues[key].issue_details.map((issue) => {
+            counter1++;
+            return (
+              <>
+                {((counter1 - 1) / 7) % 2 === 1 && (
+                  <h6 style={{ pageBreakAfter: "avoid" }}></h6>
+                )}
                 <Flex
                   as="section"
                   w={"100%"}
@@ -1285,6 +1303,10 @@ export const PrintContainer: React.FC<{ summary_report: Report }> = ({
                   py={5}
                   px={2}
                   border={"1px solid #D9D9D9;"}
+                  sx={{
+                    pageBreakAfter:
+                      (counter1 / 7) % 2 === 1 ? "always" : "avoid",
+                  }}
                   // borderBottomWidth={1}
                   // borderBottomColor={"#E4E4E4"}
                 >
@@ -1346,252 +1368,267 @@ export const PrintContainer: React.FC<{ summary_report: Report }> = ({
                     </Text>
                   </HStack>
                 </Flex>
-              ))
-            )}
-          </Flex>
-        </Flex>
+              </>
+            );
+          })
+        )}
+        {counter1 % 7 !== 0 && (
+          <Box
+            height={"1px"}
+            width={"1px"}
+            sx={{
+              pageBreakAfter: "always",
+            }}
+          ></Box>
+        )}
 
         {/* Vulnerability Details */}
-        <Flex
-          as="div"
-          w="100%"
-          alignItems="flex-start"
-          justifyContent="flex-start"
-          flexDir={"column"}
-        >
-          <Flex
-            sx={{
-              color: "#000000",
-              mx: 1,
-            }}
-            py={10}
-            alignItems="center"
-          >
-            <Heading color={"#52FF00"} fontSize="4xl">
-              Vulnerability
-            </Heading>
-            <Text fontSize="4xl" fontWeight={400}>
-              {" "}
-              &nbsp;Details{" "}
-            </Text>
-          </Flex>
+        <h6></h6>
 
-          {Object.keys(summary_report.issues).map((key, index) =>
-            summary_report.issues[key].issue_details.map((issue) => (
-              <Flex
-                p={5}
-                flexDir="column"
-                alignItems="flex-start"
-                justifyContent="flex-start"
-                border={"1px solid #D9D9D9;"}
-                my={5}
-                width={"100%"}
-                sx={{
-                  pageBreakAfter: "always",
-                }}
-              >
-                <Text
-                  fontSize="md"
-                  fontWeight={"normal"}
-                  color={"gray.400"}
+        <Flex
+          sx={{
+            color: "#000000",
+            mx: 1,
+          }}
+          py={10}
+          alignItems="center"
+        >
+          <Heading color={"#52FF00"} fontSize="4xl">
+            Vulnerability
+          </Heading>
+          <Text fontSize="4xl" fontWeight={400}>
+            {" "}
+            &nbsp;Details{" "}
+          </Text>
+        </Flex>
+
+        {Object.keys(summary_report.issues).map((key) =>
+          summary_report.issues[key].issue_details.map((issue) => {
+            counter2++;
+            return (
+              <>
+                {counter2 !== 1 && <h6></h6>}
+                <Flex
+                  p={5}
+                  flexDir="column"
+                  alignItems="flex-start"
+                  justifyContent="flex-start"
+                  border={"1px solid #D9D9D9;"}
+                  my={5}
                   width={"100%"}
-                  mb={1}
+                  sx={{
+                    pageBreakAfter: "always",
+                  }}
                 >
-                  Bug ID
-                </Text>
-                <Text fontSize="xl" fontWeight={"bold"} mb={5} width={"100%"}>
-                  {issue.bug_id}
-                </Text>
-                <Flex width={"100%"} mb={3} flexWrap="wrap">
-                  <VStack
-                    width={["50%", "50%", "50%", "15%"]}
-                    mb={[4, 4, 4, 0]}
-                    alignItems="flex-start"
+                  <Text
+                    fontSize="md"
+                    fontWeight={"normal"}
+                    color={"gray.400"}
+                    width={"100%"}
+                    mb={1}
                   >
-                    <Text
-                      fontSize="md"
-                      fontWeight={"normal"}
-                      color={"gray.400"}
-                      mb={1}
+                    Bug ID
+                  </Text>
+                  <Text fontSize="xl" fontWeight={"bold"} mb={5} width={"100%"}>
+                    {issue.bug_id}
+                  </Text>
+                  <Flex width={"100%"} mb={3} flexWrap="wrap">
+                    <VStack
+                      width={["50%", "50%", "50%", "15%"]}
+                      mb={[4, 4, 4, 0]}
+                      alignItems="flex-start"
                     >
-                      Severity
-                    </Text>
-                    <HStack>
-                      <SeverityIcon variant={issue.severity} />
-                      <Text
-                        fontSize="lg"
-                        fontWeight={"bold"}
-                        ml={2}
-                        width={"100%"}
-                      >
-                        {sentenceCapitalize(issue.severity)}
-                      </Text>
-                    </HStack>
-                  </VStack>
-                  <VStack
-                    width={["50%", "50%", "50%", "15%"]}
-                    mb={[4, 4, 4, 0]}
-                    alignItems="flex-start"
-                  >
-                    <Text
-                      fontSize="md"
-                      fontWeight={"normal"}
-                      color={"gray.400"}
-                      mb={1}
-                    >
-                      Confidence
-                    </Text>
-                    <HStack>
-                      <Text
-                        px={5}
-                        py={1}
-                        borderRadius={20}
-                        color={
-                          issue.issue_confidence === "2"
-                            ? "#289F4C"
-                            : issue.issue_confidence === "1"
-                            ? "#ED9801"
-                            : "#FF5630"
-                        }
-                        backgroundColor={
-                          issue.issue_confidence === "2"
-                            ? "#CFFFB8"
-                            : issue.issue_confidence === "1"
-                            ? "#FFF8EB"
-                            : "#FFF5F3"
-                        }
-                        fontSize="lg"
-                        fontWeight={"bold"}
-                      >
-                        {issue.issue_confidence === "2"
-                          ? "Certain"
-                          : issue.issue_confidence === "1"
-                          ? "Firm"
-                          : "Tentative"}
-                      </Text>
-                    </HStack>
-                  </VStack>
-                  <VStack
-                    width={["50%", "50%", "50%", "15%"]}
-                    my={[4, 4, 4, 0]}
-                    alignItems="flex-start"
-                  >
-                    <Text
-                      fontSize="md"
-                      fontWeight={"normal"}
-                      color={"gray.400"}
-                      mb={1}
-                    >
-                      Line nos
-                    </Text>
-                    <Text fontSize="lg" fontWeight={"bold"}>
-                      {issue.findings[0].line_nos_start}-
-                      {issue.findings[0].line_nos_end}
-                    </Text>
-                  </VStack>
-                  <VStack
-                    width={["50%", "50%", "50%", "15%"]}
-                    my={[4, 4, 4, 0]}
-                    alignItems="flex-start"
-                  >
-                    <Text
-                      fontSize="md"
-                      fontWeight={"normal"}
-                      color={"gray.400"}
-                      mb={1}
-                    >
-                      Action Taken
-                    </Text>
-                    <HStack>
-                      <Image src={`/icons/${issue.bug_status}_color.svg`} />
                       <Text
                         fontSize="md"
                         fontWeight={"normal"}
-                        color={"gray.600"}
+                        color={"gray.400"}
+                        mb={1}
                       >
-                        {/* {sentenceCapitalize(
+                        Severity
+                      </Text>
+                      <HStack>
+                        <SeverityIcon variant={issue.severity} />
+                        <Text
+                          fontSize="lg"
+                          fontWeight={"bold"}
+                          ml={2}
+                          width={"100%"}
+                        >
+                          {sentenceCapitalize(issue.severity)}
+                        </Text>
+                      </HStack>
+                    </VStack>
+                    <VStack
+                      width={["50%", "50%", "50%", "15%"]}
+                      mb={[4, 4, 4, 0]}
+                      alignItems="flex-start"
+                    >
+                      <Text
+                        fontSize="md"
+                        fontWeight={"normal"}
+                        color={"gray.400"}
+                        mb={1}
+                      >
+                        Confidence
+                      </Text>
+                      <HStack>
+                        <Text
+                          px={5}
+                          py={1}
+                          borderRadius={20}
+                          color={
+                            issue.issue_confidence === "2"
+                              ? "#289F4C"
+                              : issue.issue_confidence === "1"
+                              ? "#ED9801"
+                              : "#FF5630"
+                          }
+                          backgroundColor={
+                            issue.issue_confidence === "2"
+                              ? "#CFFFB8"
+                              : issue.issue_confidence === "1"
+                              ? "#FFF8EB"
+                              : "#FFF5F3"
+                          }
+                          fontSize="lg"
+                          fontWeight={"bold"}
+                        >
+                          {issue.issue_confidence === "2"
+                            ? "Certain"
+                            : issue.issue_confidence === "1"
+                            ? "Firm"
+                            : "Tentative"}
+                        </Text>
+                      </HStack>
+                    </VStack>
+                    <VStack
+                      width={["50%", "50%", "50%", "15%"]}
+                      my={[4, 4, 4, 0]}
+                      alignItems="flex-start"
+                    >
+                      <Text
+                        fontSize="md"
+                        fontWeight={"normal"}
+                        color={"gray.400"}
+                        mb={1}
+                      >
+                        Line nos
+                      </Text>
+                      <Text fontSize="lg" fontWeight={"bold"}>
+                        {issue.findings[0].line_nos_start}-
+                        {issue.findings[0].line_nos_end}
+                      </Text>
+                    </VStack>
+                    <VStack
+                      width={["50%", "50%", "50%", "15%"]}
+                      my={[4, 4, 4, 0]}
+                      alignItems="flex-start"
+                    >
+                      <Text
+                        fontSize="md"
+                        fontWeight={"normal"}
+                        color={"gray.400"}
+                        mb={1}
+                      >
+                        Action Taken
+                      </Text>
+                      <HStack>
+                        <Image src={`/icons/${issue.bug_status}_color.svg`} />
+                        <Text
+                          fontSize="md"
+                          fontWeight={"normal"}
+                          color={"gray.600"}
+                        >
+                          {/* {sentenceCapitalize(
                           issue.status.toLowerCase().replace("_", " ")
                         )} */}
 
-                        {issue.bug_status === "false_positive" &&
-                          "False Positive"}
-                        {issue.bug_status === "wont_fix" && "Won't Fix"}
-                        {issue.bug_status === "pending_fix" && "Pending Fix"}
-                        {issue.bug_status === "fixed" && "Fixed"}
-                      </Text>
-                    </HStack>
-                  </VStack>
+                          {issue.bug_status === "false_positive" &&
+                            "False Positive"}
+                          {issue.bug_status === "wont_fix" && "Won't Fix"}
+                          {issue.bug_status === "pending_fix" && "Pending Fix"}
+                          {issue.bug_status === "fixed" && "Fixed"}
+                        </Text>
+                      </HStack>
+                    </VStack>
+                  </Flex>
+                  <Text
+                    fontSize="md"
+                    fontWeight={"normal"}
+                    color={"gray.400"}
+                    mb={1}
+                    width={"100%"}
+                  >
+                    Bug Type
+                  </Text>
+                  <Text fontSize="lg" fontWeight={"bols"} mb={5} width={"100%"}>
+                    {issue.issue_name}
+                  </Text>
+                  <Text
+                    fontSize="md"
+                    fontWeight={"normal"}
+                    color={"gray.400"}
+                    mb={1}
+                    width={"100%"}
+                  >
+                    File Location
+                  </Text>
+                  {issue.findings.map((finding) => (
+                    <Text
+                      fontSize="md"
+                      fontWeight={"bold"}
+                      mb={1}
+                      width={"100%"}
+                    >
+                      {finding.file_path}
+                    </Text>
+                  ))}
+                  <Divider mt={5} />
+                  <HStack spacing={5} mt={5} mb={3}>
+                    <IssueDescriptionIcons size={40} />
+                    <Text fontSize="md" fontWeight={"bold"} width={"100%"}>
+                      Issue Description
+                    </Text>
+                  </HStack>
+                  <DescriptionWrapper>
+                    <Box
+                      dangerouslySetInnerHTML={{
+                        __html: issue.issue_description,
+                      }}
+                    />
+                  </DescriptionWrapper>
+                  <HStack spacing={5} mt={5} mb={3}>
+                    <IssueRemediationIcons size={40} />
+                    <Text fontSize="md" fontWeight={"bold"} width={"100%"}>
+                      Issue Remediation
+                    </Text>
+                  </HStack>
+                  <DescriptionWrapper>
+                    <Box
+                      dangerouslySetInnerHTML={{
+                        __html: issue.issue_remediation,
+                      }}
+                    />
+                  </DescriptionWrapper>
+                  {issue.comment !== "" && issue.bug_status === "wont_fix" && (
+                    <>
+                      <HStack spacing={5} mt={10} mb={5}>
+                        <IssueRemediationIcons size={40} />
+                        <Text fontSize="md" fontWeight={"bold"} width={"100%"}>
+                          Comments
+                        </Text>
+                      </HStack>
+                      <Text>{issue.comment}</Text>
+                    </>
+                  )}
                 </Flex>
-                <Text
-                  fontSize="md"
-                  fontWeight={"normal"}
-                  color={"gray.400"}
-                  mb={1}
-                  width={"100%"}
-                >
-                  Bug Type
-                </Text>
-                <Text fontSize="lg" fontWeight={"bols"} mb={5} width={"100%"}>
-                  {issue.issue_name}
-                </Text>
-                <Text
-                  fontSize="md"
-                  fontWeight={"normal"}
-                  color={"gray.400"}
-                  mb={1}
-                  width={"100%"}
-                >
-                  File Location
-                </Text>
-                {issue.findings.map((finding) => (
-                  <Text fontSize="md" fontWeight={"bold"} mb={1} width={"100%"}>
-                    {finding.file_path}
-                  </Text>
-                ))}
-                <Divider mt={5} />
-                <HStack spacing={5} mt={5} mb={3}>
-                  <IssueDescriptionIcons size={40} />
-                  <Text fontSize="md" fontWeight={"bold"} width={"100%"}>
-                    Issue Description
-                  </Text>
-                </HStack>
-                <DescriptionWrapper>
-                  <Box
-                    dangerouslySetInnerHTML={{
-                      __html: issue.issue_description,
-                    }}
-                  />
-                </DescriptionWrapper>
-                <HStack spacing={5} mt={5} mb={3}>
-                  <IssueRemediationIcons size={40} />
-                  <Text fontSize="md" fontWeight={"bold"} width={"100%"}>
-                    Issue Remediation
-                  </Text>
-                </HStack>
-                <DescriptionWrapper>
-                  <Box
-                    dangerouslySetInnerHTML={{
-                      __html: issue.issue_remediation,
-                    }}
-                  />
-                </DescriptionWrapper>
-                {issue.comment !== "" && issue.bug_status === "wont_fix" && (
-                  <>
-                    <HStack spacing={5} mt={10} mb={5}>
-                      <IssueRemediationIcons size={40} />
-                      <Text fontSize="md" fontWeight={"bold"} width={"100%"}>
-                        Comments
-                      </Text>
-                    </HStack>
-                    <Text>{issue.comment}</Text>
-                  </>
-                )}
-              </Flex>
-            ))
-          )}
-        </Flex>
+              </>
+            );
+          })
+        )}
 
         {/* Scan History */}
+        <h6></h6>
         <Flex
           sx={{
             color: "#000000",
@@ -1861,6 +1898,7 @@ export const PrintContainer: React.FC<{ summary_report: Report }> = ({
         </Flex>
 
         {/* Disclaimer */}
+        <h6></h6>
         <Heading my={10} color={"#52FF00"} fontSize="4xl">
           Disclaimer
         </Heading>
@@ -1941,6 +1979,7 @@ export const PrintContainer: React.FC<{ summary_report: Report }> = ({
             guarantee as to the project's absolute security.
           </Text>
         </Flex>
+        <h6></h6>
         <Flex
           as="div"
           w="100%"
@@ -1950,6 +1989,7 @@ export const PrintContainer: React.FC<{ summary_report: Report }> = ({
           sx={{
             pageBreakAfter: "always",
           }}
+          mt={5}
           border={"1px solid #D9D9D9;"}
           py={[4, 4, 4, 20]}
           px={[6, 6, 6, 10]}

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { Link as RouterLink, useHistory, useParams } from "react-router-dom";
 
 import {
@@ -38,6 +38,11 @@ import {
   border,
   Stack,
   useMediaQuery,
+  MenuButton,
+  Menu,
+  IconButton,
+  MenuList,
+  MenuItem,
 } from "@chakra-ui/react";
 import Overview from "components/overview";
 import Result, { MultifileResult } from "components/result";
@@ -49,6 +54,7 @@ import {
   TimeIcon,
 } from "@chakra-ui/icons";
 import { useScan } from "hooks/useScan";
+import { ArrowDownIcon } from "@chakra-ui/icons";
 import { useProfile } from "hooks/useProfile";
 import { BiChevronDownCircle, BiChevronUpCircle } from "react-icons/bi";
 import { AiOutlineProject } from "react-icons/ai";
@@ -71,7 +77,9 @@ import ContractDetails from "components/contractDetails";
 import PublishedReports from "components/publishedReports";
 import { usePricingPlans } from "hooks/usePricingPlans";
 import { API_PATH } from "helpers/routeManager";
-import { getFeatureGateConfig } from "helpers/helperFunction";
+import { getPublicReport } from "hooks/usePublicReport";
+import { useReactToPrint } from "react-to-print";
+import { PrintContainer } from "pages/Report/PrintContainer";
 
 const BlockPage: React.FC = () => {
   const { scanId } = useParams<{ scanId: string }>();
@@ -107,23 +115,6 @@ const BlockPage: React.FC = () => {
 
   const [tabIndex, setTabIndex] = React.useState(0);
   const [isDesktopView] = useMediaQuery("(min-width: 1024px)");
-
-  // useEffect(() => {
-  //   let intervalId: NodeJS.Timeout;
-  //   const refetchTillScanComplete = () => {
-  //     intervalId = setInterval(async () => {
-  //       await refetch().then((res) => {
-  //         if (res.data) {
-  //           setReportingStatus(res.data?.scan_report.reporting_status);
-  //         }
-  //       });
-  //     }, 5000);
-  //   };
-  //   refetchTillScanComplete();
-  //   return () => {
-  //     clearInterval(intervalId);
-  //   };
-  // }, []);
 
   useEffect(() => {
     if (scanData) {
@@ -242,25 +233,56 @@ const BlockPage: React.FC = () => {
   };
 
   useEffect(() => {
-    if (
-      scanData &&
-      scanData.scan_report.reporting_status === "report_generated"
-    ) {
-      setReportingStatus(scanData.scan_report.reporting_status);
-      getReportData(
-        scanData.scan_report.project_id,
-        scanData.scan_report.latest_report_id
-      );
-      checkReportPublished(
-        scanData.scan_report.project_id,
-        scanData.scan_report.latest_report_id
-      );
-      const d = new Date();
-      setDatePublished(
-        `${d.getDate()}-${monthNames[d.getMonth()]}-${d.getFullYear()}`
-      );
+    if (scanData) {
+      if (scanData.scan_report.reporting_status === "report_generated") {
+        setReportingStatus(scanData.scan_report.reporting_status);
+        getReportData(
+          scanData.scan_report.project_id,
+          scanData.scan_report.latest_report_id
+        );
+        checkReportPublished(
+          scanData.scan_report.project_id,
+          scanData.scan_report.latest_report_id
+        );
+        const d = new Date();
+        setDatePublished(
+          `${d.getDate()}-${monthNames[d.getMonth()]}-${d.getFullYear()}`
+        );
+      } else {
+        setPublishStatus("Not-Generated");
+      }
     }
   }, [scanData]);
+
+  const [summaryReport, setSummaryReport] = useState<Report | null>(null);
+  const [printLoading, setPrintLoading] = useState<boolean>(false);
+  const componentRef = useRef();
+
+  const generatePDF = async () => {
+    setPrintLoading(true);
+    const publishReportData = await getPublicReport(
+      "block",
+      scanData.scan_report.latest_report_id
+    );
+
+
+    if (publishReportData.summary_report) {
+      setSummaryReport(publishReportData.summary_report);
+    }
+  };
+
+  const handlePrint = useReactToPrint({
+    content: () => componentRef.current,
+  });
+
+  useEffect(() => {
+    if (summaryReport) {
+      setTimeout(() => {
+        handlePrint();
+        setPrintLoading(false);
+      }, 100);
+    }
+  }, [summaryReport]);
 
   return (
     <Box
@@ -425,6 +447,7 @@ const BlockPage: React.FC = () => {
                           {scanData.scan_report.reporting_status ===
                             "report_generated" &&
                             publishStatus !== "" &&
+                            publishStatus !== "Not-Generated" &&
                             (publishStatus === "Not-Published" ? (
                               <Button
                                 variant={"accent-outline"}
@@ -475,74 +498,124 @@ const BlockPage: React.FC = () => {
                                 </Text>
                               </HStack>
                             ))}
-                          {scanData.scan_report.scan_status !== "scanning" && (
-                            <Button
-                              variant={"accent-outline"}
-                              w={["80%", "80%", "50%", "auto"]}
-                              mx={["auto", "auto", "auto", 5]}
-                              mb={[4, 4, 4, 0]}
-                              isLoading={reportingStatus === ""}
-                              isDisabled={
-                                reportingStatus === "generating_report" ||
-                                (profile.actions_supported
-                                  ? !profile.actions_supported.generate_report
-                                  : profile.current_package !== "expired" &&
-                                    !plans.monthly[profile.current_package]
-                                      .report)
-                              }
-                              onClick={() => {
-                                if (
-                                  reportingStatus === "not_generated" ||
-                                  scanData.scan_report
-                                    .report_regeneration_enabled
-                                ) {
-                                  generateReport(
-                                    scanData.scan_report.scan_id,
-                                    scanData.scan_report.project_id
-                                  );
-                                } else if (
-                                  reportingStatus === "report_generated"
-                                ) {
-                                  if (publishStatus === "Approved") {
+                          {scanData.scan_report.scan_status === "scan_done" &&
+                            reportingStatus !== "" &&
+                            publishStatus !== "" &&
+                            (publishStatus === "Approved" ? (
+                              <HStack
+                                borderRadius={"15px"}
+                                backgroundColor={"#F5F2FF"}
+                                pl={7}
+                                pr={3}
+                                py={1}
+                                ml={5}
+                                border="1px solid #806CCF"
+                              >
+                                <Text
+                                  color="#3E15F4"
+                                  cursor={"pointer"}
+                                  onClick={() => {
                                     window.open(
                                       `http://${document.location.host}/published-report/block/${scanData.scan_report.latest_report_id}`,
                                       "_blank"
                                     );
-                                  } else {
+                                  }}
+                                  fontSize="sm"
+                                  mr={2}
+                                >
+                                  View Report
+                                </Text>
+                                <Text color="#3E15F4" fontSize="sm">
+                                  |
+                                </Text>
+                                <Menu>
+                                  <MenuButton
+                                    as={Button}
+                                    aria-label="Options"
+                                    variant="unstyled"
+                                  >
+                                    {printLoading ? (
+                                      <Spinner fontSize={40} color="#3E15F4" />
+                                    ) : (
+                                      <ArrowDownIcon color="#3E15F4" />
+                                    )}
+                                  </MenuButton>
+                                  <MenuList>
+                                    <MenuItem onClick={() => generatePDF()}>
+                                      Download PDF
+                                    </MenuItem>
+                                  </MenuList>
+                                </Menu>
+                                {summaryReport && (
+                                  <Box display={"none"}>
+                                    <Box w="100vw" ref={componentRef}>
+                                      <PrintContainer
+                                        summary_report={summaryReport}
+                                      />
+                                    </Box>
+                                  </Box>
+                                )}
+                              </HStack>
+                            ) : (
+                              <Button
+                                variant={"accent-outline"}
+                                w={["80%", "80%", "50%", "auto"]}
+                                mx={["auto", "auto", "auto", 5]}
+                                mb={[4, 4, 4, 0]}
+                                isDisabled={
+                                  reportingStatus === "generating_report" ||
+                                  (profile.actions_supported
+                                    ? !profile.actions_supported.generate_report
+                                    : profile.current_package !== "expired" &&
+                                      !plans.monthly[profile.current_package]
+                                        .report)
+                                }
+                                onClick={() => {
+                                  if (
+                                    reportingStatus === "not_generated" ||
+                                    scanData.scan_report
+                                      .report_regeneration_enabled
+                                  ) {
+                                    generateReport(
+                                      scanData.scan_report.scan_id,
+                                      scanData.scan_report.project_id
+                                    );
+                                  } else if (
+                                    reportingStatus === "report_generated"
+                                  ) {
                                     window.open(
                                       `http://${document.location.host}/report/block/${scanData.scan_report.project_id}/${scanData.scan_report.latest_report_id}`,
                                       "_blank"
                                     );
                                   }
-                                }
-                              }}
-                            >
-                              {reportingStatus === "generating_report" && (
-                                <Spinner color="#806CCF" size="xs" mr={3} />
-                              )}
-                              {profile.actions_supported
-                                ? !profile.actions_supported.generate_report
-                                : profile.current_package !== "expired" &&
-                                  !plans.monthly[profile.current_package]
-                                    .report && (
-                                    <LockIcon
-                                      color={"accent"}
-                                      size="xs"
-                                      mr={3}
-                                    />
-                                  )}
-                              {reportingStatus === "generating_report"
-                                ? "Generating report..."
-                                : reportingStatus === "not_generated"
-                                ? "Generate Report"
-                                : scanData.scan_report
-                                    .report_regeneration_enabled
-                                ? "Re-generate Report"
-                                : reportingStatus === "report_generated"
-                                ? "View Report"
-                                : "Loading"}
-                            </Button>
-                          )}
+                                }}
+                              >
+                                {reportingStatus === "generating_report" && (
+                                  <Spinner color="#806CCF" size="xs" mr={3} />
+                                )}
+                                {profile.actions_supported
+                                  ? !profile.actions_supported.generate_report
+                                  : profile.current_package !== "expired" &&
+                                    !plans.monthly[profile.current_package]
+                                      .report && (
+                                      <LockIcon
+                                        color={"accent"}
+                                        size="xs"
+                                        mr={3}
+                                      />
+                                    )}
+                                {reportingStatus === "generating_report"
+                                  ? "Generating report..."
+                                  : reportingStatus === "not_generated"
+                                  ? "Generate Report"
+                                  : scanData.scan_report
+                                      .report_regeneration_enabled
+                                  ? "Re-generate Report"
+                                  : reportingStatus === "report_generated"
+                                  ? "View Report"
+                                  : "Loading"}
+                              </Button>
+                            ))}
                           <AccordionButton
                             width={"fit-content"}
                             borderRadius="48px"

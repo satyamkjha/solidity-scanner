@@ -41,7 +41,7 @@ export const DetailFilter: React.FC<{
   setBugStatusFilter,
 }) => {
   const [filterCount, setFilterCount] = useState(0);
-  const [bugStatusParam, setBugStatusParam] = useState([false, false, false]);
+  const [bugStatusParam, setBugStatusParam] = useState([false, false, false, false]);
   const [confidenceParam, setConfidenceParam] = useState([false, false, false]);
   const [vulnerabilityParams, setVulnerabilityParams] = useState([
     false,
@@ -83,7 +83,7 @@ export const DetailFilter: React.FC<{
   };
 
   const clearFilter = () => {
-    setBugStatusParam([false, false, false]);
+    setBugStatusParam([false, false, false, false]);
     setConfidenceParam([false, false, false]);
     setVulnerabilityParams([false, false, false, false, false, false]);
     setFilterCount(0);
@@ -91,7 +91,7 @@ export const DetailFilter: React.FC<{
 
   useEffect(() => {
     if (!filterCount) {
-      setBugStatusFilter([true, true, true]);
+      setBugStatusFilter([true, true, true, true]);
       setConfidence([true, true, true]);
       setVulnerability([true, true, true, true, true, true]);
     }
