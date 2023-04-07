@@ -515,122 +515,123 @@ const BlockPage: React.FC = () => {
                               </HStack>
                             ))}
                           {scanData.scan_report.scan_status !== "scanning" &&
-                          publishStatus === "Approved" ? (
-                            <HStack
-                              borderRadius={"15px"}
-                              backgroundColor={"#F5F2FF"}
-                              pl={7}
-                              pr={3}
-                              py={1}
-                              ml={5}
-                              border="1px solid #806CCF"
-                            >
-                              <Text
-                                color="#3E15F4"
-                                cursor={"pointer"}
-                                onClick={() => {
-                                  window.open(
-                                    `http://${document.location.host}/published-report/block/${scanData.scan_report.latest_report_id}`,
-                                    "_blank"
-                                  );
-                                }}
-                                fontSize="sm"
-                                mr={2}
+                            reportingStatus !== "" &&
+                            publishStatus !== "" &&
+                            (publishStatus === "Approved" ? (
+                              <HStack
+                                borderRadius={"15px"}
+                                backgroundColor={"#F5F2FF"}
+                                pl={7}
+                                pr={3}
+                                py={1}
+                                ml={5}
+                                border="1px solid #806CCF"
                               >
-                                View Report
-                              </Text>
-                              <Text color="#3E15F4" fontSize="sm">
-                                |
-                              </Text>
-                              <Menu>
-                                <MenuButton
-                                  as={Button}
-                                  aria-label="Options"
-                                  variant="unstyled"
+                                <Text
+                                  color="#3E15F4"
+                                  cursor={"pointer"}
+                                  onClick={() => {
+                                    window.open(
+                                      `http://${document.location.host}/published-report/block/${scanData.scan_report.latest_report_id}`,
+                                      "_blank"
+                                    );
+                                  }}
+                                  fontSize="sm"
+                                  mr={2}
                                 >
-                                  {printLoading ? (
-                                    <Spinner fontSize={40} color="#3E15F4" />
-                                  ) : (
-                                    <ArrowDownIcon color="#3E15F4" />
-                                  )}
-                                </MenuButton>
-                                <MenuList>
-                                  <MenuItem onClick={() => generatePDF()}>
-                                    Download PDF
-                                  </MenuItem>
-                                </MenuList>
-                              </Menu>
-                              {summaryReport && (
-                                <Box display={"none"}>
-                                  <Box w="100vw" ref={componentRef}>
-                                    <PrintContainer
-                                      summary_report={summaryReport}
-                                    />
+                                  View Report
+                                </Text>
+                                <Text color="#3E15F4" fontSize="sm">
+                                  |
+                                </Text>
+                                <Menu>
+                                  <MenuButton
+                                    as={Button}
+                                    aria-label="Options"
+                                    variant="unstyled"
+                                  >
+                                    {printLoading ? (
+                                      <Spinner fontSize={40} color="#3E15F4" />
+                                    ) : (
+                                      <ArrowDownIcon color="#3E15F4" />
+                                    )}
+                                  </MenuButton>
+                                  <MenuList>
+                                    <MenuItem onClick={() => generatePDF()}>
+                                      Download PDF
+                                    </MenuItem>
+                                  </MenuList>
+                                </Menu>
+                                {summaryReport && (
+                                  <Box display={"none"}>
+                                    <Box w="100vw" ref={componentRef}>
+                                      <PrintContainer
+                                        summary_report={summaryReport}
+                                      />
+                                    </Box>
                                   </Box>
-                                </Box>
-                              )}
-                            </HStack>
-                          ) : (
-                            <Button
-                              variant={"accent-outline"}
-                              w={["80%", "80%", "50%", "auto"]}
-                              mx={["auto", "auto", "auto", 5]}
-                              mb={[4, 4, 4, 0]}
-                              isLoading={reportingStatus === ""}
-                              isDisabled={
-                                reportingStatus === "generating_report" ||
-                                (profile.actions_supported
+                                )}
+                              </HStack>
+                            ) : (
+                              <Button
+                                variant={"accent-outline"}
+                                w={["80%", "80%", "50%", "auto"]}
+                                mx={["auto", "auto", "auto", 5]}
+                                mb={[4, 4, 4, 0]}
+                                isDisabled={
+                                  reportingStatus === "generating_report" ||
+                                  (profile.actions_supported
+                                    ? !profile.actions_supported.generate_report
+                                    : profile.current_package !== "expired" &&
+                                      !plans.monthly[profile.current_package]
+                                        .report)
+                                }
+                                onClick={() => {
+                                  if (
+                                    reportingStatus === "not_generated" ||
+                                    scanData.scan_report
+                                      .report_regeneration_enabled
+                                  ) {
+                                    generateReport(
+                                      scanData.scan_report.scan_id,
+                                      scanData.scan_report.project_id
+                                    );
+                                  } else if (
+                                    reportingStatus === "report_generated"
+                                  ) {
+                                    window.open(
+                                      `http://${document.location.host}/report/block/${scanData.scan_report.project_id}/${scanData.scan_report.latest_report_id}`,
+                                      "_blank"
+                                    );
+                                  }
+                                }}
+                              >
+                                {reportingStatus === "generating_report" && (
+                                  <Spinner color="#806CCF" size="xs" mr={3} />
+                                )}
+                                {profile.actions_supported
                                   ? !profile.actions_supported.generate_report
                                   : profile.current_package !== "expired" &&
                                     !plans.monthly[profile.current_package]
-                                      .report)
-                              }
-                              onClick={() => {
-                                if (
-                                  reportingStatus === "not_generated" ||
-                                  scanData.scan_report
-                                    .report_regeneration_enabled
-                                ) {
-                                  generateReport(
-                                    scanData.scan_report.scan_id,
-                                    scanData.scan_report.project_id
-                                  );
-                                } else if (
-                                  reportingStatus === "report_generated"
-                                ) {
-                                  window.open(
-                                    `http://${document.location.host}/report/block/${scanData.scan_report.project_id}/${scanData.scan_report.latest_report_id}`,
-                                    "_blank"
-                                  );
-                                }
-                              }}
-                            >
-                              {reportingStatus === "generating_report" && (
-                                <Spinner color="#806CCF" size="xs" mr={3} />
-                              )}
-                              {profile.actions_supported
-                                ? !profile.actions_supported.generate_report
-                                : profile.current_package !== "expired" &&
-                                  !plans.monthly[profile.current_package]
-                                    .report && (
-                                    <LockIcon
-                                      color={"accent"}
-                                      size="xs"
-                                      mr={3}
-                                    />
-                                  )}
-                              {reportingStatus === "generating_report"
-                                ? "Generating report..."
-                                : reportingStatus === "not_generated"
-                                ? "Generate Report"
-                                : scanData.scan_report
-                                    .report_regeneration_enabled
-                                ? "Re-generate Report"
-                                : reportingStatus === "report_generated"
-                                ? "View Report"
-                                : "Loading"}
-                            </Button>
-                          )}
+                                      .report && (
+                                      <LockIcon
+                                        color={"accent"}
+                                        size="xs"
+                                        mr={3}
+                                      />
+                                    )}
+                                {reportingStatus === "generating_report"
+                                  ? "Generating report..."
+                                  : reportingStatus === "not_generated"
+                                  ? "Generate Report"
+                                  : scanData.scan_report
+                                      .report_regeneration_enabled
+                                  ? "Re-generate Report"
+                                  : reportingStatus === "report_generated"
+                                  ? "View Report"
+                                  : "Loading"}
+                              </Button>
+                            ))}
                           <AccordionButton
                             width={"fit-content"}
                             borderRadius="48px"
