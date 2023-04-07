@@ -37,7 +37,6 @@ const ReportBlock: React.FC<{
     setPrintLoading(true);
     const publishReportData = await getPublicReport(type, report.report_id);
 
-    console.log(publishReportData);
 
     if (publishReportData.summary_report) {
       setSummaryReport(publishReportData.summary_report);

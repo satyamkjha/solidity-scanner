@@ -268,7 +268,6 @@ const ScanDetails: React.FC<{
     project_id: string,
     report_id: string
   ) => {
-    console.log("asdsa");
     const reportResponse = await API.post<{ reports: ReportsListItem[] }>(
       API_PATH.API_GET_REPORTS,
       {
@@ -278,7 +277,6 @@ const ScanDetails: React.FC<{
       }
     );
     if (reportResponse.data.reports.length === 0) {
-      console.log("Not-Published");
       setPublishStatus("Not-Published");
       return;
     }
@@ -357,9 +355,6 @@ const ScanDetails: React.FC<{
       "project",
       scanData.scan_report.latest_report_id
     );
-
-    console.log(publishReportData);
-
     if (publishReportData.summary_report) {
       setSummaryReport(publishReportData.summary_report);
     }

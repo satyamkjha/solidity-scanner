@@ -265,7 +265,6 @@ const BlockPage: React.FC = () => {
       scanData.scan_report.latest_report_id
     );
 
-    console.log(publishReportData);
 
     if (publishReportData.summary_report) {
       setSummaryReport(publishReportData.summary_report);
