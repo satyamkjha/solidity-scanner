@@ -111,12 +111,7 @@ export default function LandingPage() {
               <img
                 src="https://api.producthunt.com/widgets/embed-image/v1/top-post-topic-badge.svg?post_id=381735&theme=light&period=monthly&topic_id=267"
                 alt="SolidityScan - The&#0032;ultimate&#0032;EVM&#0032;compatible&#0032;smart&#0032;contract&#0032;analysis&#0032;tool | Product Hunt"
-                style={{
-                  width: "250px",
-                  height: "54px",
-                }}
-                width="250"
-                height="54"
+                style={{ width: "250px", height: "54px", marginTop: "30px" }}
               />
             </a>
           </Box>
