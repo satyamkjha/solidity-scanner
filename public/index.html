@@ -52,7 +52,25 @@
     -->
   <!-- <script src="https://unpkg.com/pagedjs/dist/paged.polyfill.js"></script> -->
 
+  <!-- "@page": {
+    margin: "30px",
+    marginBottom: "40px",
+    border: "1px solid #D9D9D9;",
+    "@bottom-left-corner": {
+      marginBottom: "10px",
+    },
+  }, -->
+
   <style>
+    h6 {
+      counter-increment: myIndex;
+
+    }
+
+    h6::before {
+      content: "Page " counter(myIndex);
+    }
+
     /* width */
     @media (min-width: 1024px) {
       ::-webkit-scrollbar {
