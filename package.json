@@ -27,6 +27,7 @@
     "@types/ua-parser-js": "^0.7.36",
     "add": "^2.0.6",
     "axios": "^0.21.1",
+    "chart.js": "^4.2.0",
     "check-password-strength": "^2.0.5",
     "dotenv": "^16.0.3",
     "focus-visible": "^5.2.0",
@@ -36,6 +37,7 @@
     "js-file-download": "^0.4.12",
     "npm": "^8.5.5",
     "react": "^17.0.2",
+    "react-chartjs-2": "^5.2.0",
     "react-code-blocks": "^0.0.8",
     "react-collapsed": "^3.0.2",
     "react-cookie": "^4.0.3",
@@ -59,6 +61,7 @@
     "typescript": "^3.9.5",
     "ua-parser-js": "^1.0.33",
     "use-dynamic-refs": "^1.0.0",
+    "victory": "^36.6.8",
     "web-vitals": "^0.2.2",
     "yarn": "^1.22.19"
   },
