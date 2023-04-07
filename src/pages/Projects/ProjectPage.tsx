@@ -268,6 +268,7 @@ const ScanDetails: React.FC<{
     project_id: string,
     report_id: string
   ) => {
+    console.log("asdsa");
     const reportResponse = await API.post<{ reports: ReportsListItem[] }>(
       API_PATH.API_GET_REPORTS,
       {
@@ -277,6 +278,7 @@ const ScanDetails: React.FC<{
       }
     );
     if (reportResponse.data.reports.length === 0) {
+      console.log("Not-Published");
       setPublishStatus("Not-Published");
       return;
     }
@@ -287,18 +289,19 @@ const ScanDetails: React.FC<{
   };
 
   useEffect(() => {
-    if (
-      scanData &&
-      scanData.scan_report.reporting_status === "report_generated"
-    ) {
-      setReportingStatus(scanData.scan_report.reporting_status);
-      setProjectName(scanData.scan_report.project_name);
-      setRepoUrl(scanData.scan_report.project_url);
-      checkReportPublished(projectId, scanData.scan_report.latest_report_id);
-      const d = new Date();
-      setDatePublished(
-        `${d.getDate()}-${monthNames[d.getMonth()]}-${d.getFullYear()}`
-      );
+    if (scanData) {
+      if (scanData.scan_report.reporting_status === "report_generated") {
+        setReportingStatus(scanData.scan_report.reporting_status);
+        setProjectName(scanData.scan_report.project_name);
+        setRepoUrl(scanData.scan_report.project_url);
+        checkReportPublished(projectId, scanData.scan_report.latest_report_id);
+        const d = new Date();
+        setDatePublished(
+          `${d.getDate()}-${monthNames[d.getMonth()]}-${d.getFullYear()}`
+        );
+      } else {
+        setPublishStatus("Not-Generated");
+      }
     }
   }, [scanData]);
 
@@ -476,6 +479,7 @@ const ScanDetails: React.FC<{
                   {scanData.scan_report.reporting_status ===
                     "report_generated" &&
                     publishStatus !== "" &&
+                    publishStatus !== "Not-Generated" &&
                     (publishStatus === "Not-Published" ? (
                       <Button
                         variant={"accent-outline"}
@@ -601,17 +605,10 @@ const ScanDetails: React.FC<{
                           ) {
                             generateReport();
                           } else if (reportingStatus === "report_generated") {
-                            if (publishStatus === "Approved") {
-                              window.open(
-                                `http://${document.location.host}/published-report/project/${scanData.scan_report.latest_report_id}`,
-                                "_blank"
-                              );
-                            } else {
-                              window.open(
-                                `http://${document.location.host}/report/project/${projectId}/${scanData?.scan_report.latest_report_id}`,
-                                "_blank"
-                              );
-                            }
+                            window.open(
+                              `http://${document.location.host}/report/project/${projectId}/${scanData?.scan_report.latest_report_id}`,
+                              "_blank"
+                            );
                           }
                         }}
                       >

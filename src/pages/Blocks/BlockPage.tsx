@@ -116,23 +116,6 @@ const BlockPage: React.FC = () => {
   const [tabIndex, setTabIndex] = React.useState(0);
   const [isDesktopView] = useMediaQuery("(min-width: 1024px)");
 
-  // useEffect(() => {
-  //   let intervalId: NodeJS.Timeout;
-  //   const refetchTillScanComplete = () => {
-  //     intervalId = setInterval(async () => {
-  //       await refetch().then((res) => {
-  //         if (res.data) {
-  //           setReportingStatus(res.data?.scan_report.reporting_status);
-  //         }
-  //       });
-  //     }, 5000);
-  //   };
-  //   refetchTillScanComplete();
-  //   return () => {
-  //     clearInterval(intervalId);
-  //   };
-  // }, []);
-
   useEffect(() => {
     if (scanData) {
       setReportingStatus(scanData.scan_report.reporting_status);
@@ -250,23 +233,24 @@ const BlockPage: React.FC = () => {
   };
 
   useEffect(() => {
-    if (
-      scanData &&
-      scanData.scan_report.reporting_status === "report_generated"
-    ) {
-      setReportingStatus(scanData.scan_report.reporting_status);
-      getReportData(
-        scanData.scan_report.project_id,
-        scanData.scan_report.latest_report_id
-      );
-      checkReportPublished(
-        scanData.scan_report.project_id,
-        scanData.scan_report.latest_report_id
-      );
-      const d = new Date();
-      setDatePublished(
-        `${d.getDate()}-${monthNames[d.getMonth()]}-${d.getFullYear()}`
-      );
+    if (scanData) {
+      if (scanData.scan_report.reporting_status === "report_generated") {
+        setReportingStatus(scanData.scan_report.reporting_status);
+        getReportData(
+          scanData.scan_report.project_id,
+          scanData.scan_report.latest_report_id
+        );
+        checkReportPublished(
+          scanData.scan_report.project_id,
+          scanData.scan_report.latest_report_id
+        );
+        const d = new Date();
+        setDatePublished(
+          `${d.getDate()}-${monthNames[d.getMonth()]}-${d.getFullYear()}`
+        );
+      } else {
+        setPublishStatus("Not-Generated");
+      }
     }
   }, [scanData]);
 
@@ -464,6 +448,7 @@ const BlockPage: React.FC = () => {
                           {scanData.scan_report.reporting_status ===
                             "report_generated" &&
                             publishStatus !== "" &&
+                            publishStatus !== "Not-Generated" &&
                             (publishStatus === "Not-Published" ? (
                               <Button
                                 variant={"accent-outline"}
@@ -514,7 +499,7 @@ const BlockPage: React.FC = () => {
                                 </Text>
                               </HStack>
                             ))}
-                          {scanData.scan_report.scan_status !== "scanning" &&
+                          {scanData.scan_report.scan_status === "scan_done" &&
                             reportingStatus !== "" &&
                             publishStatus !== "" &&
                             (publishStatus === "Approved" ? (

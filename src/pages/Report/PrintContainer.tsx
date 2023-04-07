@@ -57,27 +57,27 @@ export const PrintContainer: React.FC<{ summary_report: Report }> = ({
     gas: number
   ) => [
     {
-      x: critical,
+      x: critical > 0 ? `Critical: ${critical}` : " ",
       y: critical,
     },
     {
-      x: high,
+      x: high > 0 ? `High: ${high}` : " ",
       y: high,
     },
     {
-      x: medium,
+      x: medium > 0 ? `Medium: ${medium}` : " ",
       y: medium,
     },
     {
-      x: low,
+      x: low > 0 ? `Low: ${low}` : "",
       y: low,
     },
     {
-      x: informational,
+      x: informational > 0 ? `Informational: ${informational}` : " ",
       y: informational,
     },
     {
-      x: gas,
+      x: gas > 0 ? `Gas: ${gas}` : " ",
       y: gas,
     },
   ];
@@ -914,7 +914,7 @@ export const PrintContainer: React.FC<{ summary_report: Report }> = ({
             alignItems="center"
             justifyContent="center"
           >
-            <Box h="300px" w="300px">
+            <Box h="300px" w="100%">
               {/* <ResponsivePie
                 data={pieData(
                   summary_report.scan_summary[
@@ -1371,6 +1371,15 @@ export const PrintContainer: React.FC<{ summary_report: Report }> = ({
               </>
             );
           })
+        )}
+        {counter1 % 7 !== 0 && (
+          <Box
+            height={"1px"}
+            width={"1px"}
+            sx={{
+              pageBreakAfter: "always",
+            }}
+          ></Box>
         )}
 
         {/* Vulnerability Details */}
