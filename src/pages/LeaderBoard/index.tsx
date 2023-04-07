@@ -23,20 +23,70 @@ import {
   Stack,
   useMediaQuery,
   IconButton,
+  FormControl,
   Menu,
   MenuButton,
   MenuItem,
   MenuList,
+  SlideFade,
+  ScaleFade,
 } from "@chakra-ui/react";
 
 import Header from "components/header";
 import Footer from "components/footer";
-
+import Select from "react-select";
+import { monthNames } from "common/values";
 import SignupBox from "components/signupBox";
 import Infographics from "components/infographics";
 import { DetectorIcon } from "components/icons";
 import { DetectorItemProp } from "common/types";
 import { detectorData } from "common/values";
+import {
+  VictoryArea,
+  VictoryChart,
+  VictoryTooltip,
+  VictoryAxis,
+  VictoryVoronoiContainer,
+  VictoryTheme,
+} from "victory";
+import { Search2Icon } from "@chakra-ui/icons";
+
+const customStyles = {
+  option: (provided: any, state: any) => ({
+    ...provided,
+    borderBottom: "1px solid #f3f3f340",
+    opacity: state.isDisabled ? 0.5 : 1,
+    backgroundColor: "#FFFFFF00",
+    color: "#FFFFFF",
+  }),
+  menu: (provided: any, state: any) => ({
+    ...provided,
+    color: "#FFFFFF",
+    borderRadius: 10,
+    backdropFilter: "blur(6px)",
+    border: "0px solid #ffffff",
+    backgroundColor: "#FFFFFF40",
+    overflowY: "hidden",
+  }),
+  control: (state: any) => ({
+    // none of react-select's styles are passed to <Control />
+    display: "flex",
+    justifyContent: "flex-start",
+    flexDirection: "row",
+    backgroundColor: "#FFFFFF00",
+    color: "#FFFFFF",
+    padding: 5,
+    borderRadius: 15,
+    border: state.isFocused ? "2px solid #52FF0020" : "2px solid #EDF2F720",
+  }),
+  singleValue: (provided: any, state: any) => {
+    const opacity = state.isDisabled ? 0.3 : 1;
+    const transition = "opacity 300ms";
+    const color = "#FFFFFF";
+
+    return { ...provided, opacity, transition, color };
+  },
+};
 
 const HackComp: React.FC = () => {
   return (
@@ -161,7 +211,31 @@ const ArticleComp: React.FC = () => {
   );
 };
 
+const formatOptionLabel: React.FC<{
+  value: string;
+  label: string;
+  icon: string;
+}> = ({ value, label, icon }) => (
+  <div id={value} style={{ display: "flex", flexDirection: "row" }}>
+    {icon !== "" && (
+      <Image h={"20px"} w={"20px"} mr={3} src={`/blockscan/${icon}.svg`} />
+    )}
+    <div>{label}</div>
+  </div>
+);
+
+const formatOptionLabelFilter: React.FC<{
+  value: string;
+  label: string;
+}> = ({ value, label }) => (
+  <div id={value} style={{ display: "flex", flexDirection: "row" }}>
+    <div>{label}</div>
+  </div>
+);
+
 const LeaderBoard: React.FC = () => {
+  const [isDesktopView] = useMediaQuery("(min-width: 1024px)");
+
   const attackTrendsData = [
     { title: "Contract Vulnerability", color: "#9C003D", number: "56" },
     { title: "Rug Pull", color: "#F46D43", number: "34" },
@@ -181,6 +255,165 @@ const LeaderBoard: React.FC = () => {
     { title: "Security Breaches", data: "155" },
     { title: "Security Breaches", data: "155" },
   ];
+
+  const data = [
+    { x: 1, y: 240, label: "Point 1" },
+    { x: 5, y: 210, label: "Point 2" },
+    { x: 9, y: 150, label: "Point 3" },
+    { x: 13, y: 170, label: "Point 4" },
+    { x: 17, y: 190, label: "Point 5" },
+    { x: 21, y: 160, label: "Point 6" },
+    { x: 25, y: 180, label: "Point 7" },
+    { x: 29, y: 250, label: "Point 8" },
+  ];
+
+  const options = [
+    {
+      value: "etherscan",
+      icon: "etherscan",
+      label: "Ethereum - (etherscan.io)",
+    },
+    {
+      value: "bscscan",
+      icon: "bscscan",
+      label: "Binance - (bscscan.com)",
+    },
+    {
+      value: "avalanche",
+      icon: "avalanche",
+      label: "Avalanche C-Chain - (snowtrace.io)",
+    },
+    {
+      value: "polygonscan",
+      icon: "polygonscan",
+      label: "Polygon - (polygonscan.com)",
+    },
+    {
+      value: "fantom",
+      icon: "fantom",
+      label: "Fantom - (ftmscan.com)",
+    },
+    {
+      value: "cronos",
+      icon: "cronos",
+      label: "Cronos - (cronoscan.com)",
+    },
+    {
+      value: "arbiscan",
+      icon: "arbiscan",
+      label: "Arbiscan - (arbiscan.io)",
+    },
+    {
+      value: "celo",
+      icon: "celo",
+      label: "Celo - (celoscan.io)",
+    },
+    {
+      value: "aurora",
+      icon: "aurora",
+      label: "Aurora - (aurorascan.dev)",
+    },
+    {
+      value: "reefscan",
+      icon: "reefscan",
+      label: "ReefScan - (reefscan.com)",
+    },
+    {
+      value: "optimism",
+      icon: "optimism",
+      label: "Optimism - (optimism.io)",
+    },
+    {
+      value: "buildbear",
+      icon: "buildbear",
+      label: "Buildbear - (buildbear.io)",
+    },
+  ];
+
+  const customStylesStart = {
+    option: (provided: any, state: any) => ({
+      ...provided,
+      borderBottom: "1px solid #f3f3f3",
+      backgroundColor: state.isSelected
+        ? "#FFFFFF"
+        : state.isFocused
+        ? "#E6E6E6"
+        : "#FFFFFF",
+      color: "#000000",
+    }),
+    menu: (provided: any, state: any) => ({
+      ...provided,
+      color: state.selectProps.menuColor,
+      borderRadius: 10,
+      border: "0px solid #ffffff",
+      overflowY: "hidden",
+      width: "300px",
+      textAlign: "left",
+    }),
+    control: (state: any) => ({
+      // none of react-select's styles are passed to <Control />
+      display: "flex",
+      flexDirection: "row",
+      backgroundColor: "#FFFFFF",
+      padding: 5,
+      margin: 0,
+      borderTopLeftRadius: 15,
+      borderBottomLeftRadius: 15,
+      borderTopRightRadius: isDesktopView ? 0 : 15,
+      borderBottomRightRadius: isDesktopView ? 0 : 15,
+      border: state.isFocused ? "2px solid #52FF00" : "2px solid #EDF2F7",
+    }),
+    singleValue: (provided: any, state: any) => {
+      const opacity = state.isDisabled ? 0.3 : 1;
+      const transition = "opacity 300ms";
+
+      return { ...provided, opacity, transition };
+    },
+  };
+
+  const customStylesMiddle = {
+    option: (provided: any, state: any) => ({
+      ...provided,
+      borderBottom: "1px solid #f3f3f3",
+      backgroundColor: state.isSelected
+        ? "#FFFFFF"
+        : state.isFocused
+        ? "#E6E6E6"
+        : "#FFFFFF",
+      color: "#000000",
+    }),
+    menu: (provided: any, state: any) => ({
+      ...provided,
+      color: state.selectProps.menuColor,
+      borderRadius: 10,
+      border: "0px solid #ffffff",
+      overflowY: "hidden",
+      width: "250px",
+    }),
+    control: (state: any) => ({
+      // none of react-select's styles are passed to <Control />
+      display: "flex",
+      flexDirection: "row",
+      backgroundColor: "#FFFFFF",
+      padding: 5,
+      borderTopLeftRadius: 0,
+      borderBottomLeftRadius: 0,
+      borderRadius: isDesktopView ? 0 : 15,
+      marginLeft: isDesktopView ? -2 : 0,
+      marginRight: isDesktopView ? -2 : 0,
+      marginBottom: isDesktopView ? 0 : 10,
+      border: state.isFocused ? "2px solid #52FF00" : "2px solid #EDF2F7",
+    }),
+    singleValue: (provided: any, state: any) => {
+      const opacity = state.isDisabled ? 0.3 : 1;
+      const transition = "opacity 300ms";
+
+      return { ...provided, opacity, transition };
+    },
+  };
+
+  const [searchBar, setSearchBar] = useState(false);
+  const [searchTerm, setSearchTerm] = useState("");
 
   return (
     <>
@@ -273,11 +506,148 @@ const LeaderBoard: React.FC = () => {
                 w={"70%"}
                 h="fit-content"
               >
-                <Box
-                  backgroundColor={"#060316"}
-                  height="450px"
+                <svg
+                  style={{ height: 0 }}
+                  fill="none"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <defs>
+                    <linearGradient
+                      id="my_gradient"
+                      x1="398.727"
+                      y1="-74"
+                      x2="398.727"
+                      y2="215.327"
+                      gradientUnits="userSpaceOnUse"
+                    >
+                      <stop stop-color="#4489E9" />
+                      <stop offset="1" stop-color="#0C59C2" stop-opacity="0" />
+                    </linearGradient>
+                  </defs>
+                </svg>
+
+                <HStack w="100%" mb={5} justifyContent="space-between">
+                  <FormControl width="400px">
+                    <Select
+                      formatOptionLabel={formatOptionLabel}
+                      isSearchable={true}
+                      options={options}
+                      placeholder="Select BlockChain"
+                      styles={customStyles}
+                      onChange={(newValue) => {}}
+                    />
+                  </FormControl>
+                  <HStack mr={5}>
+                    <Text px={5} color="#FFFFFF">
+                      1 D
+                    </Text>
+                    <Text px={5} color="#FFFFFF">
+                      1 W
+                    </Text>
+                    <Text px={5} color="#FFFFFF">
+                      1 M
+                    </Text>
+                    <Text
+                      background="linear-gradient(129.18deg, #52FF00 8.52%, #00EEFD 93.94%)"
+                      px={5}
+                      color="#000000"
+                      borderRadius={3}
+                    >
+                      1 Y
+                    </Text>
+                    <Text px={2} color="#000000" borderRadius={3}>
+                      {" "}
+                    </Text>
+                    <FormControl width="150px">
+                      <Select
+                        formatOptionLabel={formatOptionLabelFilter}
+                        isSearchable={true}
+                        options={monthNames.map((item) => ({
+                          value: item,
+                          label: item,
+                        }))}
+                        placeholder="Month"
+                        styles={customStyles}
+                        onChange={(newValue) => {}}
+                      />
+                    </FormControl>
+                  </HStack>
+                </HStack>
+                <Flex
+                  justifyContent={"center"}
+                  alignItems={"center"}
                   width="100%"
-                ></Box>
+                  flexDir={"column"}
+                  height="fit-content"
+                  backgroundColor={"#060316"}
+                  borderRadius={"40px"}
+                >
+                  <HStack
+                    w="100%"
+                    px={20}
+                    mt={10}
+                    mb={"-60px"}
+                    justifyContent={"flex-end"}
+                  >
+                    <Text color="#424242">June 2023</Text>
+                  </HStack>
+                  <VictoryChart
+                    containerComponent={<VictoryVoronoiContainer />}
+                    width={600}
+                    domain={{ x: [0, 30], y: [140, 280] }}
+                    height={250}
+                    theme={{
+                      ...VictoryTheme.material,
+                      axis: {
+                        ...VictoryTheme.material.axis,
+                        style: {
+                          ...VictoryTheme.material.axis?.style,
+                          grid: {
+                            ...VictoryTheme.material.axis?.style?.grid,
+                            stroke: "#2D2D2D",
+                          },
+                        },
+                      },
+                    }}
+                  >
+                    <VictoryArea
+                      data={data}
+                      style={{
+                        data: {
+                          stroke: "#4489E9",
+                          strokeWidth: 2,
+                          fill: "url(#my_gradient)",
+                        },
+                        labels: { fontSize: 12 },
+                      }}
+                      interpolation="cardinal"
+                      labelComponent={
+                        <VictoryTooltip
+                          style={{ fontSize: 10 }}
+                          flyoutStyle={{
+                            stroke: "#c43a31",
+                            strokeWidth: 0,
+                            fill: "#fff",
+                          }}
+                          cornerRadius={2}
+                          pointerLength={4}
+                          pointerWidth={8}
+                        />
+                      }
+                      labels={({ datum }) => datum.label}
+                    />
+                    <VictoryAxis
+                      crossAxis
+                      domain={[0, 30]}
+                      theme={VictoryTheme.material}
+                    />
+                    <VictoryAxis
+                      dependentAxis
+                      domain={[140, 280]}
+                      theme={VictoryTheme.material}
+                    />
+                  </VictoryChart>
+                </Flex>
                 <Flex
                   sx={{
                     mt: 7,
@@ -322,7 +692,7 @@ const LeaderBoard: React.FC = () => {
             w={["90%"]}
             px={[0, 0, 0, 10]}
             mt={"-60px"}
-            mb={"120px"}
+            mb={"60px"}
             py={[0, 0, 0, 10]}
             borderRadius={20}
             background={"#FFFFFF"}
@@ -350,6 +720,90 @@ const LeaderBoard: React.FC = () => {
             alignItems={["center", "center", "center", "flex-start"]}
             justifyContent={"flex-start"}
           >
+            <HStack spacing={0} ml={[4, 4, 4, 0]} justify="center" w="100%">
+              {searchBar ? (
+                <Input
+                  isRequired
+                  placeholder="Search ...."
+                  variant="brand"
+                  size="lg"
+                  px={10}
+                  height={50}
+                  borderTopRightRadius={[15, 15, 15, 0]}
+                  borderBottomRightRadius={[15, 15, 15, 0]}
+                  width={"89%"}
+                  value={searchTerm}
+                  onChange={(e) => {
+                    setSearchTerm(e.target.value);
+                  }}
+                />
+              ) : (
+                <>
+                  <FormControl w="21%">
+                    <Select
+                      formatOptionLabel={formatOptionLabel}
+                      options={options}
+                      isSearchable={false}
+                      placeholder="Select Blockchain"
+                      styles={customStylesStart}
+                    />
+                  </FormControl>
+                  <FormControl w="17%">
+                    <Select
+                      formatOptionLabel={formatOptionLabelFilter}
+                      isSearchable={false}
+                      options={[]}
+                      placeholder="Select Category"
+                      styles={customStylesMiddle}
+                    />
+                  </FormControl>
+                  <FormControl w="17%">
+                    <Select
+                      formatOptionLabel={formatOptionLabelFilter}
+                      isSearchable={false}
+                      options={monthNames.map((item) => ({
+                        value: item,
+                        label: item,
+                      }))}
+                      placeholder="Select Month"
+                      styles={customStylesMiddle}
+                    />
+                  </FormControl>
+                  <FormControl w="17%">
+                    <Select
+                      formatOptionLabel={formatOptionLabelFilter}
+                      isSearchable={false}
+                      options={[]}
+                      placeholder="Select Year"
+                      styles={customStylesMiddle}
+                    />
+                  </FormControl>
+                  <FormControl w="17%">
+                    <Select
+                      formatOptionLabel={formatOptionLabelFilter}
+                      isSearchable={false}
+                      options={[]}
+                      placeholder="Sort By"
+                      styles={customStylesMiddle}
+                    />
+                  </FormControl>
+                </>
+              )}
+
+              <Flex
+                display={"flex"}
+                backgroundColor={"#FAFBFC"}
+                justifyContent={"center"}
+                alignItems={"center"}
+                width={"8%"}
+                height="50px"
+                border={"2px solid #EDF2F7"}
+                borderRightRadius={15}
+                onClick={() => setSearchBar(!searchBar)}
+              >
+                <Search2Icon color={"#B0B7C3"} />
+              </Flex>
+            </HStack>
             <Flex
               w={"100%"}
               mt={5}
