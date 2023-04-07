@@ -30,6 +30,7 @@ import VulnerabilityProgress from "components/VulnerabilityProgress";
 import { sentenceCapitalize } from "helpers/helperFunction";
 import React, { useEffect, useRef } from "react";
 import styled from "@emotion/styled";
+import { VictoryPie } from "victory";
 
 export const PrintContainer: React.FC<{ summary_report: Report }> = ({
   summary_report,
@@ -47,7 +48,7 @@ export const PrintContainer: React.FC<{ summary_report: Report }> = ({
   let counter1 = 0;
   let counter2 = 0;
 
-  const pieData = (
+  const victoryPieData = (
     critical: number,
     high: number,
     medium: number,
@@ -56,40 +57,28 @@ export const PrintContainer: React.FC<{ summary_report: Report }> = ({
     gas: number
   ) => [
     {
-      id: "critical",
-      label: "Critical",
-      value: critical,
-      color: "#960D00",
+      x: critical,
+      y: critical,
     },
     {
-      id: "high",
-      label: "High",
-      value: high,
-      color: "#FF5C00",
+      x: high,
+      y: high,
     },
     {
-      id: "medium",
-      label: "Medium",
-      value: medium,
-      color: "#FFE600",
+      x: medium,
+      y: medium,
     },
     {
-      id: "low",
-      label: "Low",
-      value: low,
-      color: "#38CB89",
+      x: low,
+      y: low,
     },
     {
-      id: "informational",
-      label: "Informational",
-      value: informational,
-      color: "#A0AEC0",
+      x: informational,
+      y: informational,
     },
     {
-      id: "gas",
-      label: "Gas",
-      value: gas,
-      color: "#F795B4",
+      x: gas,
+      y: gas,
     },
   ];
 
@@ -926,7 +915,7 @@ export const PrintContainer: React.FC<{ summary_report: Report }> = ({
             justifyContent="center"
           >
             <Box h="300px" w="300px">
-              <ResponsivePie
+              {/* <ResponsivePie
                 data={pieData(
                   summary_report.scan_summary[
                     summary_report.scan_summary.length - 1
@@ -965,7 +954,42 @@ export const PrintContainer: React.FC<{ summary_report: Report }> = ({
                   from: "color",
                   modifiers: [["darker", 2]],
                 }}
-              />
+              /> */}
+              <VictoryPie
+                data={victoryPieData(
+                  summary_report.scan_summary[
+                    summary_report.scan_summary.length - 1
+                  ].issue_severity_distribution.critical,
+                  summary_report.scan_summary[
+                    summary_report.scan_summary.length - 1
+                  ].issue_severity_distribution.high,
+                  summary_report.scan_summary[
+                    summary_report.scan_summary.length - 1
+                  ].issue_severity_distribution.medium,
+                  summary_report.scan_summary[
+                    summary_report.scan_summary.length - 1
+                  ].issue_severity_distribution.low,
+                  summary_report.scan_summary[
+                    summary_report.scan_summary.length - 1
+                  ].issue_severity_distribution.informational,
+                  summary_report.scan_summary[
+                    summary_report.scan_summary.length - 1
+                  ].issue_severity_distribution.gas
+                )}
+                innerRadius={70}
+                cornerRadius={5}
+                style={{
+                  labels: { fill: "black", fontSize: 20, fontWeight: "bold" },
+                }}
+                colorScale={[
+                  "#960D00",
+                  "#FF5C00",
+                  "#FFE600",
+                  "#38CB89",
+                  "#A0AEC0",
+                  "#F795B4",
+                ]}
+              ></VictoryPie>
             </Box>
           </Flex>
           <Flex

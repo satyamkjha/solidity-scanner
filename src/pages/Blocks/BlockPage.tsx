@@ -290,12 +290,14 @@ const BlockPage: React.FC = () => {
 
   const handlePrint = useReactToPrint({
     content: () => componentRef.current,
-    onAfterPrint: () => setPrintLoading(false),
   });
 
   useEffect(() => {
     if (summaryReport) {
-      setTimeout(() => handlePrint(), 100);
+      setTimeout(() => {
+        handlePrint();
+        setPrintLoading(false);
+      }, 100);
     }
   }, [summaryReport]);
 
@@ -521,6 +523,7 @@ const BlockPage: React.FC = () => {
                               pr={3}
                               py={1}
                               ml={5}
+                              border="1px solid #806CCF"
                             >
                               <Text
                                 color="#3E15F4"

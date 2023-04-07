@@ -46,12 +46,14 @@ const ReportBlock: React.FC<{
 
   const handlePrint = useReactToPrint({
     content: () => componentRef.current,
-    onAfterPrint: () => setPrintLoading(false),
   });
 
   useEffect(() => {
     if (summaryReport) {
-      setTimeout(() => handlePrint(), 100);
+      setTimeout(() => {
+        handlePrint();
+        setPrintLoading(false);
+      }, 100);
     }
   }, [summaryReport]);
 

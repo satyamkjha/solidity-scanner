@@ -364,12 +364,14 @@ const ScanDetails: React.FC<{
 
   const handlePrint = useReactToPrint({
     content: () => componentRef.current,
-    onAfterPrint: () => setPrintLoading(false),
   });
 
   useEffect(() => {
     if (summaryReport) {
-      setTimeout(() => handlePrint(), 100);
+      setTimeout(() => {
+        handlePrint();
+        setPrintLoading(false);
+      }, 100);
     }
   }, [summaryReport]);
 
@@ -527,6 +529,7 @@ const ScanDetails: React.FC<{
                   publishStatus === "Approved" ? (
                     <HStack
                       borderRadius={"15px"}
+                      border="1px solid #806CCF"
                       backgroundColor={"#F5F2FF"}
                       pl={7}
                       pr={3}
@@ -538,7 +541,7 @@ const ScanDetails: React.FC<{
                         cursor={"pointer"}
                         onClick={() => {
                           window.open(
-                            `http://${document.location.host}/published-report/block/${scanData.scan_report.latest_report_id}`,
+                            `http://${document.location.host}/published-report/project/${scanData.scan_report.latest_report_id}`,
                             "_blank"
                           );
                         }}
