@@ -470,9 +470,9 @@ const ScanDetails: React.FC<{
                   alignItems={"center"}
                   width={["100%", "100%", "100%", "fit-content"]}
                 >
-                  {/* <PDFDownloadButton /> */}
-                  {scanData.scan_report.reporting_status ===
-                    "report_generated" &&
+                  {!scanData.scan_report.report_regeneration_enabled &&
+                    scanData.scan_report.reporting_status ===
+                      "report_generated" &&
                     publishStatus !== "" &&
                     publishStatus !== "Not-Generated" &&
                     (publishStatus === "Not-Published" ? (
@@ -524,10 +524,23 @@ const ScanDetails: React.FC<{
                         </Text>
                       </HStack>
                     ))}
+
                   {scanData.scan_report.scan_status === "scan_done" &&
                     reportingStatus !== "" &&
                     publishStatus !== "" &&
-                    (publishStatus === "Approved" ? (
+                    (scanData.scan_report.report_regeneration_enabled ? (
+                      <Button
+                        variant={"accent-outline"}
+                        w={["80%", "80%", "50%", "auto"]}
+                        mx={["auto", "auto", "auto", 4]}
+                        mb={[4, 4, 4, 0]}
+                        onClick={() => {
+                          generateReport();
+                        }}
+                      >
+                        Re-Generate Report
+                      </Button>
+                    ) : publishStatus === "Approved" ? (
                       <HStack
                         borderRadius={"15px"}
                         border="1px solid #806CCF"
@@ -594,10 +607,7 @@ const ScanDetails: React.FC<{
                               !plans.monthly[profile.current_package].report)
                         }
                         onClick={() => {
-                          if (
-                            reportingStatus === "not_generated" ||
-                            scanData.scan_report.report_regeneration_enabled
-                          ) {
+                          if (reportingStatus === "not_generated") {
                             generateReport();
                           } else if (reportingStatus === "report_generated") {
                             window.open(
@@ -620,8 +630,6 @@ const ScanDetails: React.FC<{
                           ? "Generating report..."
                           : reportingStatus === "not_generated"
                           ? "Generate Report"
-                          : scanData.scan_report.report_regeneration_enabled
-                          ? "Re-generate Report"
                           : reportingStatus === "report_generated"
                           ? "View Report"
                           : "Loading"}
