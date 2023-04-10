@@ -373,6 +373,13 @@ const ScanDetails: React.FC<{
     }
   }, [summaryReport]);
 
+  const checkIfGeneratingReport = () =>
+    reportingStatus === "generating_report" ||
+    (profile.actions_supported
+      ? !profile.actions_supported.generate_report
+      : profile.current_package !== "expired" &&
+        !plans.monthly[profile.current_package].report);
+
   return (
     <>
       <Box
@@ -537,13 +544,7 @@ const ScanDetails: React.FC<{
                         onClick={() => {
                           generateReport();
                         }}
-                        isDisabled={
-                          reportingStatus === "generating_report" ||
-                          (profile.actions_supported
-                            ? !profile.actions_supported.generate_report
-                            : profile.current_package !== "expired" &&
-                              !plans.monthly[profile.current_package].report)
-                        }
+                        isDisabled={checkIfGeneratingReport()}
                       >
                         {reportingStatus === "generating_report" && (
                           <Spinner color="#806CCF" size="xs" mr={3} />
@@ -609,13 +610,7 @@ const ScanDetails: React.FC<{
                         w={["80%", "80%", "50%", "auto"]}
                         mx={["auto", "auto", "auto", 4]}
                         mb={[4, 4, 4, 0]}
-                        isDisabled={
-                          reportingStatus === "generating_report" ||
-                          (profile.actions_supported
-                            ? !profile.actions_supported.generate_report
-                            : profile.current_package !== "expired" &&
-                              !plans.monthly[profile.current_package].report)
-                        }
+                        isDisabled={checkIfGeneratingReport()}
                         onClick={() => {
                           if (reportingStatus === "not_generated") {
                             generateReport();
