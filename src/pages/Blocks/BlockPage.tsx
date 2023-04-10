@@ -265,7 +265,6 @@ const BlockPage: React.FC = () => {
       scanData.scan_report.latest_report_id
     );
 
-
     if (publishReportData.summary_report) {
       setSummaryReport(publishReportData.summary_report);
     }
@@ -283,6 +282,13 @@ const BlockPage: React.FC = () => {
       }, 100);
     }
   }, [summaryReport]);
+
+  const checkIfGeneratingReport = () =>
+    reportingStatus === "generating_report" ||
+    (profile.actions_supported
+      ? !profile.actions_supported.generate_report
+      : profile.current_package !== "expired" &&
+        !plans.monthly[profile.current_package].report);
 
   return (
     <Box
@@ -444,8 +450,9 @@ const BlockPage: React.FC = () => {
                           width={["100%", "100%", "100%", "fit-content"]}
                           height="fit-content"
                         >
-                          {scanData.scan_report.reporting_status ===
-                            "report_generated" &&
+                          {!scanData.scan_report.report_regeneration_enabled &&
+                            scanData.scan_report.reporting_status ===
+                              "report_generated" &&
                             publishStatus !== "" &&
                             publishStatus !== "Not-Generated" &&
                             (publishStatus === "Not-Published" ? (
@@ -501,7 +508,27 @@ const BlockPage: React.FC = () => {
                           {scanData.scan_report.scan_status === "scan_done" &&
                             reportingStatus !== "" &&
                             publishStatus !== "" &&
-                            (publishStatus === "Approved" ? (
+                            (scanData.scan_report
+                              .report_regeneration_enabled ? (
+                              <Button
+                                variant={"accent-outline"}
+                                w={["80%", "80%", "50%", "auto"]}
+                                mx={["auto", "auto", "auto", 4]}
+                                mb={[4, 4, 4, 0]}
+                                onClick={() => {
+                                  generateReport(
+                                    scanData.scan_report.scan_id,
+                                    scanData.scan_report.project_id
+                                  );
+                                }}
+                                isDisabled={checkIfGeneratingReport()}
+                              >
+                                {reportingStatus === "generating_report" && (
+                                  <Spinner color="#806CCF" size="xs" mr={3} />
+                                )}
+                                Re-Generate Report
+                              </Button>
+                            ) : publishStatus === "Approved" ? (
                               <HStack
                                 borderRadius={"15px"}
                                 backgroundColor={"#F5F2FF"}
@@ -562,14 +589,7 @@ const BlockPage: React.FC = () => {
                                 w={["80%", "80%", "50%", "auto"]}
                                 mx={["auto", "auto", "auto", 5]}
                                 mb={[4, 4, 4, 0]}
-                                isDisabled={
-                                  reportingStatus === "generating_report" ||
-                                  (profile.actions_supported
-                                    ? !profile.actions_supported.generate_report
-                                    : profile.current_package !== "expired" &&
-                                      !plans.monthly[profile.current_package]
-                                        .report)
-                                }
+                                isDisabled={checkIfGeneratingReport()}
                                 onClick={() => {
                                   if (
                                     reportingStatus === "not_generated" ||
