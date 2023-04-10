@@ -1290,7 +1290,7 @@ export const PrintContainer: React.FC<{ summary_report: Report }> = ({
             counter1++;
             return (
               <>
-                {((counter1 - 1) / 7) % 2 === 1 && (
+                {((counter1 - 1) / 6) % 2 === 1 && (
                   <h6 style={{ pageBreakAfter: "avoid" }}></h6>
                 )}
                 <Flex
@@ -1305,7 +1305,7 @@ export const PrintContainer: React.FC<{ summary_report: Report }> = ({
                   border={"1px solid #D9D9D9;"}
                   sx={{
                     pageBreakAfter:
-                      (counter1 / 7) % 2 === 1 ? "always" : "avoid",
+                      (counter1 / 6) % 2 === 1 ? "always" : "avoid",
                   }}
                   // borderBottomWidth={1}
                   // borderBottomColor={"#E4E4E4"}
@@ -1372,7 +1372,7 @@ export const PrintContainer: React.FC<{ summary_report: Report }> = ({
             );
           })
         )}
-        {counter1 % 7 !== 0 && (
+        {(counter1 - 1) % 6 !== 0 && (
           <Box
             height={"1px"}
             width={"1px"}
