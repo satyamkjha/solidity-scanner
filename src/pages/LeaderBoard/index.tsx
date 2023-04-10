@@ -1,6 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import { Link as RouterLink, useLocation, useParams } from "react-router-dom";
 import styled from "@emotion/styled";
+import { FiCheck, FiFilter } from "react-icons/fi";
 import { SeverityIcon } from "components/icons";
 import {
   Flex,
@@ -30,6 +31,13 @@ import {
   MenuList,
   SlideFade,
   ScaleFade,
+  Popover,
+  PopoverTrigger,
+  Portal,
+  PopoverContent,
+  PopoverArrow,
+  PopoverCloseButton,
+  PopoverBody,
 } from "@chakra-ui/react";
 
 import Header from "components/header";
@@ -88,14 +96,78 @@ const customStyles = {
   },
 };
 
+const options = [
+  {
+    value: "etherscan",
+    icon: "etherscan",
+    label: "Ethereum - (etherscan.io)",
+  },
+  {
+    value: "bscscan",
+    icon: "bscscan",
+    label: "Binance - (bscscan.com)",
+  },
+  {
+    value: "avalanche",
+    icon: "avalanche",
+    label: "Avalanche C-Chain - (snowtrace.io)",
+  },
+  {
+    value: "polygonscan",
+    icon: "polygonscan",
+    label: "Polygon - (polygonscan.com)",
+  },
+  {
+    value: "fantom",
+    icon: "fantom",
+    label: "Fantom - (ftmscan.com)",
+  },
+  {
+    value: "cronos",
+    icon: "cronos",
+    label: "Cronos - (cronoscan.com)",
+  },
+  {
+    value: "arbiscan",
+    icon: "arbiscan",
+    label: "Arbiscan - (arbiscan.io)",
+  },
+  {
+    value: "celo",
+    icon: "celo",
+    label: "Celo - (celoscan.io)",
+  },
+  {
+    value: "aurora",
+    icon: "aurora",
+    label: "Aurora - (aurorascan.dev)",
+  },
+  {
+    value: "reefscan",
+    icon: "reefscan",
+    label: "ReefScan - (reefscan.com)",
+  },
+  {
+    value: "optimism",
+    icon: "optimism",
+    label: "Optimism - (optimism.io)",
+  },
+  {
+    value: "buildbear",
+    icon: "buildbear",
+    label: "Buildbear - (buildbear.io)",
+  },
+];
+
 const HackComp: React.FC = () => {
   return (
     <Flex
       justifyContent="space-between"
       alignItems="center"
       flexDir="column"
-      w="calc(33.33% - 15px)"
-      maxW="450px"
+      w={["100%", "100%", "50%", "calc(33.33% - 15px)"]}
+      maxW={["550px"]}
+      minW={["0px", "300px"]}
       height="250px"
       borderRadius="25px"
       mr={"15px"}
@@ -121,10 +193,10 @@ const HackComp: React.FC = () => {
         <Text fontSize="xs" color="#78909C">
           Total Loss
         </Text>
-        <HStack mt={5} w="80%" flexWrap="wrap">
+        <HStack mt={5} w={["100%", "100%", "80%"]} flexWrap="wrap">
           <HStack mr={3}>
             <Image
-              mr={1}
+              mr={0}
               src={`/blockscan/etherscan.svg`}
               alt="Product screenshot"
               h={"25px"}
@@ -136,7 +208,7 @@ const HackComp: React.FC = () => {
           </HStack>
           <HStack>
             <Image
-              mr={1}
+              mr={0}
               src={`/blockscan/bscscan.svg`}
               alt="Product screenshot"
               h={"25px"}
@@ -211,6 +283,233 @@ const ArticleComp: React.FC = () => {
   );
 };
 
+const ChartComp: React.FC = () => {
+  const data = [
+    { x: 1, y: 240, label: "Point 1" },
+    { x: 5, y: 210, label: "Point 2" },
+    { x: 9, y: 150, label: "Point 3" },
+    { x: 13, y: 170, label: "Point 4" },
+    { x: 17, y: 190, label: "Point 5" },
+    { x: 21, y: 160, label: "Point 6" },
+    { x: 25, y: 180, label: "Point 7" },
+    { x: 29, y: 250, label: "Point 8" },
+  ];
+  return (
+    <Flex
+      justifyContent={"center"}
+      alignItems={"center"}
+      width="100%"
+      my={[5, 5, 0]}
+      flexDir={"column"}
+      height={["fit-content"]}
+      backgroundColor={"#060316"}
+      borderRadius={["15px", "15px", "30px", "40px"]}
+    >
+      <svg style={{ height: 0 }} fill="none" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <linearGradient
+            id="my_gradient"
+            x1="398.727"
+            y1="-74"
+            x2="398.727"
+            y2="215.327"
+            gradientUnits="userSpaceOnUse"
+          >
+            <stop stop-color="#4489E9" />
+            <stop offset="1" stop-color="#0C59C2" stop-opacity="0" />
+          </linearGradient>
+        </defs>
+      </svg>
+      <HStack w="100%" px={20} mt={10} mb={"-60px"} justifyContent={"flex-end"}>
+        <Text color="#424242">June 2023</Text>
+      </HStack>
+      <VictoryChart
+        containerComponent={<VictoryVoronoiContainer />}
+        width={600}
+        domain={{ x: [0, 30], y: [140, 280] }}
+        height={250}
+        theme={{
+          ...VictoryTheme.material,
+          axis: {
+            ...VictoryTheme.material.axis,
+            style: {
+              ...VictoryTheme.material.axis?.style,
+              grid: {
+                ...VictoryTheme.material.axis?.style?.grid,
+                stroke: "#2D2D2D",
+              },
+            },
+          },
+        }}
+      >
+        <VictoryArea
+          data={data}
+          style={{
+            data: {
+              stroke: "#4489E9",
+              strokeWidth: 2,
+              fill: "url(#my_gradient)",
+            },
+            labels: { fontSize: 12 },
+          }}
+          interpolation="cardinal"
+          labelComponent={
+            <VictoryTooltip
+              style={{ fontSize: 10 }}
+              flyoutStyle={{
+                stroke: "#c43a31",
+                strokeWidth: 0,
+                fill: "#fff",
+              }}
+              cornerRadius={2}
+              pointerLength={4}
+              pointerWidth={8}
+            />
+          }
+          labels={({ datum }) => datum.label}
+        />
+        <VictoryAxis crossAxis domain={[0, 30]} theme={VictoryTheme.material} />
+        <VictoryAxis
+          dependentAxis
+          domain={[140, 280]}
+          theme={VictoryTheme.material}
+        />
+      </VictoryChart>
+    </Flex>
+  );
+};
+
+const HackCummulativeDataComp: React.FC = () => {
+  const headingData = [
+    { title: "The total amount hacked ", data: "$6.27B" },
+    { title: "Number of hacks", data: "205" },
+    { title: "Security Breaches", data: "155" },
+    { title: "Security Breaches", data: "155" },
+  ];
+
+  return (
+    <Flex
+      sx={{
+        mt: 7,
+        px: [3, 3, 0],
+        w: "100%",
+        justifyContent: ["flex-start", "flex-start", "space-between"],
+        flexDir: "row",
+        flexWrap: ["wrap", "wrap", "nowrap"],
+      }}
+    >
+      {headingData.map((item) => (
+        <Flex
+          sx={{
+            flexDir: "column",
+            alignItems: "flex-start",
+            w: ["50%", "50%", "fit-content"],
+          }}
+        >
+          <Text color={"#D9D9D9"} fontSize="sm" fontWeight={400}>
+            {item.title}
+          </Text>
+          <Heading
+            as="h1"
+            color="#FFFFFF"
+            mt={2}
+            fontSize={["3xl", "4xl"]}
+            mb={8}
+          >
+            {item.data}
+          </Heading>
+        </Flex>
+      ))}
+    </Flex>
+  );
+};
+
+const ChartFilterComp: React.FC = () => {
+  return (
+    <HStack
+      w="100%"
+      mb={5}
+      justifyContent={[
+        "flex-start",
+        "flex-start",
+        "flex-start",
+        "flex-start",
+        "space-between",
+      ]}
+    >
+      <FormControl
+        width={[
+          "calc(100% - 60px)",
+          "calc(100% - 60px)",
+          "calc(100% - 60px)",
+          "calc(100% - 60px)",
+          "400px",
+        ]}
+        mr={3}
+      >
+        <Select
+          formatOptionLabel={formatOptionLabel}
+          isSearchable={true}
+          options={options}
+          placeholder="Select BlockChain"
+          styles={customStyles}
+          onChange={(newValue) => {}}
+        />
+      </FormControl>
+      <Popover display={["flex", "flex", "flex", "flex", "none"]}>
+        <PopoverTrigger>
+          <Button variant="unstyled">
+            <FiFilter color={"#FFFFFF80"} size={24} />
+          </Button>
+        </PopoverTrigger>
+        <Portal>
+          <PopoverContent>
+            <PopoverArrow />
+            <PopoverCloseButton />
+            <PopoverBody>ahsjdkljalkshjdklasjdkl</PopoverBody>
+          </PopoverContent>
+        </Portal>
+      </Popover>
+
+      <HStack mr={5} display={["none", "none", "none", "none", "flex"]}>
+        <Text px={5} color="#FFFFFF">
+          1 D
+        </Text>
+        <Text px={5} color="#FFFFFF">
+          1 W
+        </Text>
+        <Text px={5} color="#FFFFFF">
+          1 M
+        </Text>
+        <Text
+          background="linear-gradient(129.18deg, #52FF00 8.52%, #00EEFD 93.94%)"
+          px={5}
+          color="#000000"
+          borderRadius={3}
+        >
+          1 Y
+        </Text>
+        <Text px={2} color="#000000" borderRadius={3}>
+          {" "}
+        </Text>
+        <FormControl width="150px">
+          <Select
+            formatOptionLabel={formatOptionLabelFilter}
+            isSearchable={true}
+            options={monthNames.map((item) => ({
+              value: item,
+              label: item,
+            }))}
+            placeholder="Month"
+            styles={customStyles}
+            onChange={(newValue) => {}}
+          />
+        </FormControl>
+      </HStack>
+    </HStack>
+  );
+};
+
 const formatOptionLabel: React.FC<{
   value: string;
   label: string;
@@ -247,87 +546,6 @@ const LeaderBoard: React.FC = () => {
     { title: "Lorem ipsum dolor sit", color: "#7D7D7D", number: "01" },
     { title: "Lorem ipsum dolor sit", color: "#A7A7A7", number: "01" },
     { title: "Lorem ipsum dolor sit", color: "#EBEBEB", number: "01" },
-  ];
-
-  const headingData = [
-    { title: "The total amount hacked ", data: "$6.27B" },
-    { title: "Number of hacks", data: "205" },
-    { title: "Security Breaches", data: "155" },
-    { title: "Security Breaches", data: "155" },
-  ];
-
-  const data = [
-    { x: 1, y: 240, label: "Point 1" },
-    { x: 5, y: 210, label: "Point 2" },
-    { x: 9, y: 150, label: "Point 3" },
-    { x: 13, y: 170, label: "Point 4" },
-    { x: 17, y: 190, label: "Point 5" },
-    { x: 21, y: 160, label: "Point 6" },
-    { x: 25, y: 180, label: "Point 7" },
-    { x: 29, y: 250, label: "Point 8" },
-  ];
-
-  const options = [
-    {
-      value: "etherscan",
-      icon: "etherscan",
-      label: "Ethereum - (etherscan.io)",
-    },
-    {
-      value: "bscscan",
-      icon: "bscscan",
-      label: "Binance - (bscscan.com)",
-    },
-    {
-      value: "avalanche",
-      icon: "avalanche",
-      label: "Avalanche C-Chain - (snowtrace.io)",
-    },
-    {
-      value: "polygonscan",
-      icon: "polygonscan",
-      label: "Polygon - (polygonscan.com)",
-    },
-    {
-      value: "fantom",
-      icon: "fantom",
-      label: "Fantom - (ftmscan.com)",
-    },
-    {
-      value: "cronos",
-      icon: "cronos",
-      label: "Cronos - (cronoscan.com)",
-    },
-    {
-      value: "arbiscan",
-      icon: "arbiscan",
-      label: "Arbiscan - (arbiscan.io)",
-    },
-    {
-      value: "celo",
-      icon: "celo",
-      label: "Celo - (celoscan.io)",
-    },
-    {
-      value: "aurora",
-      icon: "aurora",
-      label: "Aurora - (aurorascan.dev)",
-    },
-    {
-      value: "reefscan",
-      icon: "reefscan",
-      label: "ReefScan - (reefscan.com)",
-    },
-    {
-      value: "optimism",
-      icon: "optimism",
-      label: "Optimism - (optimism.io)",
-    },
-    {
-      value: "buildbear",
-      icon: "buildbear",
-      label: "Buildbear - (buildbear.io)",
-    },
   ];
 
   const customStylesStart = {
@@ -433,10 +651,11 @@ const LeaderBoard: React.FC = () => {
             alignItems={"flex-start"}
             justifyContent={"flex-start"}
             w={"100%"}
-            px={[0, 0, 20]}
+            px={[4, 4, 20]}
             py={10}
-            h="800px"
+            h={["fit-content", "fit-content", "fit-content", "800px"]}
             pb={"200px"}
+            backgorundColor="#04080D"
             background={"url('/background/leaderboard_bg.png')"}
             backgroundSize="cover"
             backgroundPosition={"center"}
@@ -446,7 +665,7 @@ const LeaderBoard: React.FC = () => {
               Web3 Hack Statistics, Hackerboard
             </Text>
             <Flex
-              flexDir={"row"}
+              flexDir={["column", "column", "column", "row"]}
               display={"flex"}
               alignItems={"flex-start"}
               justifyContent={"space-between"}
@@ -456,13 +675,13 @@ const LeaderBoard: React.FC = () => {
               <Flex
                 flexDir={"column"}
                 display={"flex"}
-                alignItems={"flex-start"}
+                alignItems={["center", "center", "center", "flex-start"]}
                 justifyContent={"flex-start"}
-                w={"25%"}
+                w={["100%", "100%", "100%", "25%"]}
                 h="fit-content"
               >
                 <Heading
-                  fontSize={["3xl", "6xl"]}
+                  fontSize={["5xl", "6xl"]}
                   mb={3}
                   sx={{
                     background:
@@ -473,9 +692,20 @@ const LeaderBoard: React.FC = () => {
                 >
                   $ 6.27B
                 </Heading>
-                <Text color="#8A94A6" fontSize={"lg"}>
+                <Text mb={4} color="#8A94A6" fontSize={"lg"}>
                   The total amount hacked
                 </Text>
+                <Flex
+                  w="100%"
+                  flexDir="column"
+                  display={["flex", "flex", "flex", "none"]}
+                  justifyContent={"flex-start"}
+                  alignItem={"center"}
+                >
+                  <ChartFilterComp />
+                  <ChartComp />
+                  <HackCummulativeDataComp />
+                </Flex>
                 <HStack mt={7} mb={2} w="100%" justifyContent={"space-between"}>
                   <Heading color={"white"} fontSize={"2xl"}>
                     Attack Trends
@@ -500,186 +730,15 @@ const LeaderBoard: React.FC = () => {
               </Flex>
               <Flex
                 flexDir={"column"}
-                display={"flex"}
+                display={["none", "none", "none", "flex"]}
                 alignItems={"flex-start"}
                 justifyContent={"flex-start"}
                 w={"70%"}
                 h="fit-content"
               >
-                <svg
-                  style={{ height: 0 }}
-                  fill="none"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <defs>
-                    <linearGradient
-                      id="my_gradient"
-                      x1="398.727"
-                      y1="-74"
-                      x2="398.727"
-                      y2="215.327"
-                      gradientUnits="userSpaceOnUse"
-                    >
-                      <stop stop-color="#4489E9" />
-                      <stop offset="1" stop-color="#0C59C2" stop-opacity="0" />
-                    </linearGradient>
-                  </defs>
-                </svg>
-
-                <HStack w="100%" mb={5} justifyContent="space-between">
-                  <FormControl width="400px">
-                    <Select
-                      formatOptionLabel={formatOptionLabel}
-                      isSearchable={true}
-                      options={options}
-                      placeholder="Select BlockChain"
-                      styles={customStyles}
-                      onChange={(newValue) => {}}
-                    />
-                  </FormControl>
-                  <HStack mr={5}>
-                    <Text px={5} color="#FFFFFF">
-                      1 D
-                    </Text>
-                    <Text px={5} color="#FFFFFF">
-                      1 W
-                    </Text>
-                    <Text px={5} color="#FFFFFF">
-                      1 M
-                    </Text>
-                    <Text
-                      background="linear-gradient(129.18deg, #52FF00 8.52%, #00EEFD 93.94%)"
-                      px={5}
-                      color="#000000"
-                      borderRadius={3}
-                    >
-                      1 Y
-                    </Text>
-                    <Text px={2} color="#000000" borderRadius={3}>
-                      {" "}
-                    </Text>
-                    <FormControl width="150px">
-                      <Select
-                        formatOptionLabel={formatOptionLabelFilter}
-                        isSearchable={true}
-                        options={monthNames.map((item) => ({
-                          value: item,
-                          label: item,
-                        }))}
-                        placeholder="Month"
-                        styles={customStyles}
-                        onChange={(newValue) => {}}
-                      />
-                    </FormControl>
-                  </HStack>
-                </HStack>
-                <Flex
-                  justifyContent={"center"}
-                  alignItems={"center"}
-                  width="100%"
-                  flexDir={"column"}
-                  height="fit-content"
-                  backgroundColor={"#060316"}
-                  borderRadius={"40px"}
-                >
-                  <HStack
-                    w="100%"
-                    px={20}
-                    mt={10}
-                    mb={"-60px"}
-                    justifyContent={"flex-end"}
-                  >
-                    <Text color="#424242">June 2023</Text>
-                  </HStack>
-                  <VictoryChart
-                    containerComponent={<VictoryVoronoiContainer />}
-                    width={600}
-                    domain={{ x: [0, 30], y: [140, 280] }}
-                    height={250}
-                    theme={{
-                      ...VictoryTheme.material,
-                      axis: {
-                        ...VictoryTheme.material.axis,
-                        style: {
-                          ...VictoryTheme.material.axis?.style,
-                          grid: {
-                            ...VictoryTheme.material.axis?.style?.grid,
-                            stroke: "#2D2D2D",
-                          },
-                        },
-                      },
-                    }}
-                  >
-                    <VictoryArea
-                      data={data}
-                      style={{
-                        data: {
-                          stroke: "#4489E9",
-                          strokeWidth: 2,
-                          fill: "url(#my_gradient)",
-                        },
-                        labels: { fontSize: 12 },
-                      }}
-                      interpolation="cardinal"
-                      labelComponent={
-                        <VictoryTooltip
-                          style={{ fontSize: 10 }}
-                          flyoutStyle={{
-                            stroke: "#c43a31",
-                            strokeWidth: 0,
-                            fill: "#fff",
-                          }}
-                          cornerRadius={2}
-                          pointerLength={4}
-                          pointerWidth={8}
-                        />
-                      }
-                      labels={({ datum }) => datum.label}
-                    />
-                    <VictoryAxis
-                      crossAxis
-                      domain={[0, 30]}
-                      theme={VictoryTheme.material}
-                    />
-                    <VictoryAxis
-                      dependentAxis
-                      domain={[140, 280]}
-                      theme={VictoryTheme.material}
-                    />
-                  </VictoryChart>
-                </Flex>
-                <Flex
-                  sx={{
-                    mt: 7,
-                    w: "100%",
-                    justifyContent: "space-between",
-                    flexDir: "row",
-                  }}
-                >
-                  {headingData.map((item) => (
-                    <Flex
-                      sx={{
-                        flexDir: "column",
-                        alignItems: "flex-start",
-                        mb: [8, 8, 0],
-                        ml: [20, 20, 0],
-                      }}
-                    >
-                      <Text color={"#D9D9D9"} fontSize="sm" fontWeight={400}>
-                        {item.title}
-                      </Text>
-                      <Heading
-                        as="h1"
-                        color="#FFFFFF"
-                        mt={2}
-                        fontSize={["3xl", "4xl"]}
-                        mb={8}
-                      >
-                        {item.data}
-                      </Heading>
-                    </Flex>
-                  ))}
-                </Flex>
+                <ChartFilterComp />
+                <ChartComp />
+                <HackCummulativeDataComp />
               </Flex>
             </Flex>
           </Box>
@@ -690,9 +749,9 @@ const LeaderBoard: React.FC = () => {
             alignItems="center"
             justifyContent={"flex-start"}
             w={["90%"]}
-            px={[0, 0, 0, 10]}
+            px={[4, 4, 7, 10]}
             mt={"-60px"}
-            mb={"60px"}
+            mb={["30px", "30px", "60px"]}
             py={[0, 0, 0, 10]}
             borderRadius={20}
             background={"#FFFFFF"}
@@ -710,17 +769,23 @@ const LeaderBoard: React.FC = () => {
           </Box>
 
           <Box
-            w={"90%"}
+            w={["100%", "100%", "95%", "90%"]}
             borderRadius={15}
             p={5}
-            my={10}
+            my={[5, 5, 5, 10]}
             background={" #FAFBFC "}
             display="flex"
             flexDir={"column"}
             alignItems={["center", "center", "center", "flex-start"]}
             justifyContent={"flex-start"}
           >
-            <HStack spacing={0} ml={[4, 4, 4, 0]} justify="center" w="100%">
+            <HStack
+              display={["none", "none", "none", "flex"]}
+              spacing={0}
+              ml={[4, 4, 4, 0]}
+              justify="center"
+              w="100%"
+            >
               {searchBar ? (
                 <Input
                   isRequired
@@ -808,10 +873,10 @@ const LeaderBoard: React.FC = () => {
               w={"100%"}
               mt={5}
               display="flex"
-              flexDir={"row"}
+              flexDir={["column", "row", "row"]}
               alignItems={["flex-start", "flex-start", "flex-start", "center"]}
               justifyContent={"flex-start"}
-              flexWrap="wrap"
+              flexWrap={["nowrap", "wrap", "wrap"]}
             >
               <HackComp />
               <HackComp />
