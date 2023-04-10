@@ -40,6 +40,7 @@ import MetaMaskLogin from "components/metamaskSignin";
 import { API_PATH } from "helpers/routeManager";
 import GoogleSignIn from "components/googleSignin";
 import { getFeatureGateConfig } from "helpers/helperFunction";
+import { getReCaptchaHeaders } from "helpers/helperFunction";
 
 const CustomFlex = motion(Flex);
 
@@ -161,54 +162,43 @@ const RegisterForm: React.FC<{
   const [telegram, setTelegram] = useState("");
   const [linkedin, setLinkedin] = useState("");
   const [twitter, setTwitter] = useState("");
-  // const [preffered, setPreffered] = useState("");
 
   const [step, setStep] = useState(0);
 
   const onSubmit = async () => {
+    let reqHeaders = await getReCaptchaHeaders("register");
     if (step === 0) {
       setStep(1);
     } else {
       const campaign_type = localStorage.getItem("campaign_type");
       const campaign_id = localStorage.getItem("campaign_id");
 
-      let reqBody = {};
-      if (campaign_type && campaign_id) {
-        reqBody = {
-          email: email,
-          password1: password,
-          company_name: companyName,
-          contact_number: contactNumber,
-          first_name: name,
-          campaign: {
-            campaign_type,
-            campaign_id,
-          },
-          socials: {
-            telegram: telegram,
-            discord: discord,
-            linkedin: linkedin,
-            twitter: twitter,
-          },
-        };
-      } else {
-        reqBody = {
-          email: email,
-          password1: password,
-          company_name: companyName,
-          contact_number: contactNumber,
-          first_name: name,
-          socials: {
-            telegram: telegram,
-            discord: discord,
-            linkedin: linkedin,
-            twitter: twitter,
-          },
-        };
-      }
+      let reqBody = {
+        email: email,
+        password1: password,
+        company_name: companyName,
+        contact_number: contactNumber,
+        first_name: name,
+        socials: {
+          telegram: telegram,
+          discord: discord,
+          linkedin: linkedin,
+          twitter: twitter,
+        },
+        campaign:
+          campaign_type && campaign_id
+            ? {
+                campaign_type,
+                campaign_id,
+              }
+            : undefined,
+      };
       const { data } = await API.post<AuthResponse>(
         API_PATH.API_REGISTER,
-        reqBody
+        reqBody,
+        {
+          headers: reqHeaders,
+        }
       );
 
       if (data.status === "success") {

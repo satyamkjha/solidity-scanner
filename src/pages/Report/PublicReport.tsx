@@ -1,20 +1,64 @@
-import React from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useParams } from "react-router-dom";
-import { Flex, Container, Spinner } from "@chakra-ui/react";
+import {
+  Flex,
+  Container,
+  Spinner,
+  Button,
+  HStack,
+  Box,
+  useMediaQuery,
+} from "@chakra-ui/react";
 import { useReport } from "hooks/useReport";
-import { ReportContainer } from "./ReportContainer";
+import { PrintContainer } from "./PrintContainer";
 import { usePublicReport } from "hooks/usePublicReport";
 import { Text } from "@chakra-ui/react";
+import { useReactToPrint } from "react-to-print";
+import { ReportContainer } from "./ReportContainer";
+import { DownloadIcon } from "@chakra-ui/icons";
+import { getFeatureGateConfig } from "helpers/helperFunction";
 
 export default function ReportPage() {
-  const { reportId, projectType } =
-    useParams<{ reportId: string; projectType: string }>();
+  const { reportId, projectType } = useParams<{
+    reportId: string;
+    projectType: string;
+  }>();
   const { data } = usePublicReport(projectType, reportId);
+
+  const componentRef = useRef();
+
+  const handlePrint = useReactToPrint({
+    content: () => componentRef.current,
+  });
+
+  const printReport = () => {
+    setTimeout(() => handlePrint(), 100);
+  };
 
   return (
     <>
+      {getFeatureGateConfig().pdf_report_generation && (
+        <HStack my={5} w="90%" height={"fit-content"} justifyContent="flex-end">
+          <Button
+            variant={"accent-outline"}
+            w={["250px"]}
+            onClick={printReport}
+          >
+            <DownloadIcon mr={5} />
+            Download Report
+          </Button>
+        </HStack>
+      )}
+
       {data ? (
-        <ReportContainer summary_report={data.summary_report} />
+        <>
+          <Box display={"none"}>
+            <Box w="100vw" ref={componentRef}>
+              <PrintContainer summary_report={data.summary_report} />
+            </Box>
+          </Box>
+          <ReportContainer summary_report={data.summary_report} />
+        </>
       ) : (
         <Container
           py={12}

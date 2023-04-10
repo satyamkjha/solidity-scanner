@@ -153,6 +153,7 @@ const Routes: React.FC = () => {
           <Route exact path="/reset">
             <Reset />
           </Route>
+
           <RedirectRoute exact path="/signup">
             <SignUp />
           </RedirectRoute>
@@ -193,6 +194,7 @@ const Routes: React.FC = () => {
                 <PrivateRoute exact path="/integrations">
                   <Integrations />
                 </PrivateRoute>
+
                 <PrivateRoute exact path="/billing">
                   <Billing />
                 </PrivateRoute>
@@ -272,8 +274,6 @@ const PrivateRoute: React.FC<RouteProps> = ({ children, ...rest }) => {
 
 const RedirectRoute: React.FC<RouteProps> = ({ children, ...rest }) => {
   const location = useLocation();
-  console.log(location.pathname);
-  console.log(Cookies.get("csrftoken"));
   const searchParams = new URLSearchParams(location.search);
   const authenticated = searchParams.get("authenticated");
   if (

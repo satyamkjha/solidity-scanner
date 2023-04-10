@@ -16,7 +16,10 @@ const API = axios.create({
   xsrfHeaderName: "X-CSRFToken",
 });
 
-const getPublicReport = async (project_type: string, report_id: string) => {
+export const getPublicReport = async (
+  project_type: string,
+  report_id: string
+) => {
   const { data } = await API.post<{ summary_report: Report }>(
     API_PATH.API_GET_PUBLISHED_REPORT,
     {

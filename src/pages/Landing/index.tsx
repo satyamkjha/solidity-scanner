@@ -105,13 +105,13 @@ export default function LandingPage() {
               </Link>
             </Flex>
             <a
-              href="https://www.producthunt.com/posts/solidityscan?utm_source=badge-featured&utm_medium=badge&utm_souce=badge-solidityscan"
+              href="https://www.producthunt.com/posts/solidityscan?utm_source=badge-top-post-topic-badge&utm_medium=badge&utm_souce=badge-solidityscan"
               target="_blank"
             >
               <img
-                src="https://api.producthunt.com/widgets/embed-image/v1/featured.svg?post_id=381735&theme=light"
-                alt="SolidityScan - The&#0032;Ultimate&#0032;EVM&#0032;Compatible&#0032;Smart&#0032;Contract&#0032;Analysis&#0032;Tool&#0033; | Product Hunt"
-                style={{ width: "250px", height: "54px", marginTop: "50px" }}
+                src="https://api.producthunt.com/widgets/embed-image/v1/top-post-topic-badge.svg?post_id=381735&theme=light&period=monthly&topic_id=267"
+                alt="SolidityScan - The&#0032;ultimate&#0032;EVM&#0032;compatible&#0032;smart&#0032;contract&#0032;analysis&#0032;tool | Product Hunt"
+                style={{ width: "250px", height: "54px", marginTop: "30px" }}
               />
             </a>
           </Box>

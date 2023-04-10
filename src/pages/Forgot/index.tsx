@@ -18,7 +18,7 @@ import { motion } from "framer-motion";
 import { FiAtSign } from "react-icons/fi";
 
 import { Logo, MailSent } from "components/icons";
-
+import { getReCaptchaHeaders } from "helpers/helperFunction";
 import { AuthResponse } from "common/types";
 import API from "helpers/api";
 import { API_PATH } from "helpers/routeManager";
@@ -93,9 +93,16 @@ const ForgotPasswordForm: React.FC<{
   const { handleSubmit, register, formState } = useForm<FormData>();
 
   const onSubmit = async ({ email }: FormData) => {
-    const { data } = await API.post<AuthResponse>(API_PATH.API_SEND_EMAIL, {
-      email,
-    });
+    let reqHeaders = await getReCaptchaHeaders("send_email");
+    const { data } = await API.post<AuthResponse>(
+      API_PATH.API_SEND_EMAIL,
+      {
+        email,
+      },
+      {
+        headers: reqHeaders,
+      }
+    );
 
     if (data.status === "success") {
       setMailSent(true);

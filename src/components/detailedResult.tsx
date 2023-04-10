@@ -114,8 +114,8 @@ export const DetailedResult: React.FC<{
           alignItems={"center"}
           width={"100%"}
           direction={["column", "column", "column", "row"]}
-          mt={[4, 4, 4, 2]}
-          mb={[0, 0, 0, 2]}
+          mt={[4, 4, 4, 1]}
+          mb={[0, 0, 0, 1]}
         >
           <HStack display={["none", "none", "none", "flex"]}>
             <Text fontWeight={600} mr={5}>
@@ -183,7 +183,7 @@ export const DetailedResult: React.FC<{
         ((files.bug_status !== "pending_fix" && !is_latest_scan) ||
           files.bug_status === "fixed") && (
           <HStack justify="flex-end" width={"100%"} mt={[4, 4, 4, 0]}>
-            <HStack bg={"gray.100"} px={10} py={2} borderRadius={30}>
+            <HStack bg={"gray.100"} px={10} py={1} borderRadius={30}>
               <Text mr={2} color={"gray.600"} fontWeight={500}>
                 The issue has been marked as
               </Text>
@@ -223,7 +223,7 @@ export const DetailedResult: React.FC<{
               justifyContent: "center",
               flexDir: "column",
               alignItems: "center",
-              h: "60vh",
+              h: "625px",
               borderRadius: 15,
             }}
           >
@@ -251,7 +251,7 @@ const formatOptionLabel: React.FC<{
   icon: string;
 }> = ({ label, icon }) => (
   <div style={{ display: "flex", flexDirection: "row" }}>
-    <Image mr={3} src={`/icons/${icon}.svg`} />
+    {icon !== "" && <Image mr={3} src={`/icons/${icon}.svg`} />}
     <div>{label}</div>
   </div>
 );

@@ -2,12 +2,15 @@ import React from "react";
 import { useParams } from "react-router-dom";
 import { Flex, Container, Spinner } from "@chakra-ui/react";
 import { useReport } from "hooks/useReport";
-import { ReportContainer } from "./ReportContainer";
+import { PrintContainer } from "./PrintContainer";
 import { Text } from "@chakra-ui/react";
+import { ReportContainer } from "./ReportContainer";
 
 export default function ReportPage() {
-  const { reportId, projectId } =
-    useParams<{ reportId: string; projectId: string }>();
+  const { reportId, projectId } = useParams<{
+    reportId: string;
+    projectId: string;
+  }>();
   const { data } = useReport(projectId, reportId);
 
   return (

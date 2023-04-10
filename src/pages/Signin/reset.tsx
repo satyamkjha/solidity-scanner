@@ -23,29 +23,33 @@ import API from "helpers/api";
 import { AuthResponse } from "common/types";
 import { ViewIcon, ViewOffIcon } from "@chakra-ui/icons";
 import { API_PATH } from "helpers/routeManager";
+import { getReCaptchaHeaders } from "helpers/helperFunction";
 
 function useQuery() {
   return new URLSearchParams(useLocation().search);
 }
 
-type FormData = {
-  email: string;
-  password: string;
-};
-
 const Reset: React.FC = () => {
   const query = useQuery();
   const history = useHistory();
   const token = query.get("token")?.toString();
-  const { handleSubmit, register, formState } = useForm<FormData>();
   const [show, setShow] = useState(false);
 
-  const onSubmit = async ({ email, password }: FormData) => {
-    const { data } = await API.post<AuthResponse>(API_PATH.API_FORGOT_PASSWORD, {
-      email,
-      token,
-      password,
-    });
+  const [password, setPassword] = useState("");
+  const [email, setEmail] = useState("");
+  const onSubmit = async () => {
+    let reqHeaders = await getReCaptchaHeaders("forgot_password_set");
+    const { data } = await API.post<AuthResponse>(
+      API_PATH.API_FORGOT_PASSWORD,
+      {
+        email,
+        token,
+        password,
+      },
+      {
+        headers: reqHeaders,
+      }
+    );
 
     if (data.status === "success") {
       history.push("/signin?isPasswordReset=true");
@@ -68,69 +72,65 @@ const Reset: React.FC = () => {
           Enter your details to reset your password
         </Text>
 
-        <form onSubmit={handleSubmit(onSubmit)}>
-          <Stack spacing={6} mt={8} width={["300px", "400px", "500px"]}>
-            <InputGroup alignItems="center">
-              <InputLeftElement
-                height="48px"
-                children={<Icon as={FiAtSign} color="gray.300" />}
-              />
-              <Input
-                isRequired
-                type="email"
-                placeholder="Your email"
-                variant="brand"
-                size="lg"
-                {...register("email", { required: true })}
-              />
-            </InputGroup>
-
-            <InputGroup>
-              <InputLeftElement
-                height="48px"
-                color="gray.300"
-                children={<Icon as={FaLock} color="gray.300" />}
-              />
-              <Input
-                isRequired
-                type={show ? "text" : "password"}
-                placeholder="New Password"
-                variant="brand"
-                size="lg"
-                {...register("password", { required: true })}
-              />
-              <InputRightElement
-                height="48px"
-                color="gray.300"
-                children={
-                  show ? (
-                    <ViewOffIcon
-                      color={"gray.500"}
-                      mr={5}
-                      boxSize={5}
-                      onClick={() => setShow(false)}
-                    />
-                  ) : (
-                    <ViewIcon
-                      color={"gray.500"}
-                      mr={5}
-                      boxSize={5}
-                      onClick={() => setShow(true)}
-                    />
-                  )
-                }
-              />
-            </InputGroup>
-
-            <Button
-              type="submit"
+        <Stack spacing={6} mt={8} width={["300px", "400px", "500px"]}>
+          <InputGroup alignItems="center">
+            <InputLeftElement
+              height="48px"
+              children={<Icon as={FiAtSign} color="gray.300" />}
+            />
+            <Input
+              isRequired
+              type="email"
+              placeholder="Your email"
               variant="brand"
-              isLoading={formState.isSubmitting}
-            >
-              Update Password
-            </Button>
-          </Stack>
-        </form>
+              size="lg"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+            />
+          </InputGroup>
+
+          <InputGroup>
+            <InputLeftElement
+              height="48px"
+              color="gray.300"
+              children={<Icon as={FaLock} color="gray.300" />}
+            />
+            <Input
+              isRequired
+              type={show ? "text" : "password"}
+              placeholder="New Password"
+              variant="brand"
+              size="lg"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+            />
+            <InputRightElement
+              height="48px"
+              color="gray.300"
+              children={
+                show ? (
+                  <ViewOffIcon
+                    color={"gray.500"}
+                    mr={5}
+                    boxSize={5}
+                    onClick={() => setShow(false)}
+                  />
+                ) : (
+                  <ViewIcon
+                    color={"gray.500"}
+                    mr={5}
+                    boxSize={5}
+                    onClick={() => setShow(true)}
+                  />
+                )
+              }
+            />
+          </InputGroup>
+
+          <Button type="submit" variant="brand" onClick={onSubmit}>
+            Update Password
+          </Button>
+        </Stack>
       </Flex>
     </>
   );

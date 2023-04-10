@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import { Link as RouterLink, useLocation, useParams } from "react-router-dom";
 import styled from "@emotion/styled";
-
+import { getReCaptchaHeaders } from "helpers/helperFunction";
 import {
   Flex,
   Box,
@@ -58,6 +58,7 @@ import { useRecentQuickScans } from "hooks/useRecentQuickScans";
 import { FaEllipsisH, FaEllipsisV } from "react-icons/fa";
 import { API_PATH } from "helpers/routeManager";
 import { ThreatScoreMeter } from "components/threatScoreMeter";
+import reCAPTCHA from "helpers/reCAPTCHA";
 
 const pieData = (
   critical: number,
@@ -193,7 +194,6 @@ const QuickScan: React.FC = () => {
       },
     ],
     celo: [
-      { value: "", label: "Select Chain", icon: "", isDisabled: true },
       { value: "mainnet", label: "Celo Mainnet", icon: "", isDisabled: false },
       {
         value: "testnet",
@@ -203,7 +203,6 @@ const QuickScan: React.FC = () => {
       },
     ],
     aurora: [
-      { value: "", label: "Select Chain", icon: "", isDisabled: true },
       {
         value: "mainnet",
         label: "Aurora Mainnet",
@@ -418,6 +417,15 @@ const QuickScan: React.FC = () => {
 
   let d = new Date();
 
+  const recaptcha1 = new reCAPTCHA(
+    process.env.REACT_APP_RECAPTCHA_SITE_KEY!,
+    "quickScan_verify"
+  );
+  const recaptcha2 = new reCAPTCHA(
+    process.env.REACT_APP_RECAPTCHA_SITE_KEY!,
+    "quickScan"
+  );
+
   const elementRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -487,37 +495,35 @@ const QuickScan: React.FC = () => {
     chain: string,
     ref: string | null
   ) => {
-    let req = {};
-    if (platform === "buildbear") {
-      req = {
-        contract_address: address,
-        contract_platform: platform,
-        node_id: chain,
-      };
-    } else {
-      req = {
-        contract_address: address,
-        contract_platform: platform,
-        contract_chain: chain,
-      };
-    }
+    let reqHeaders1 = await getReCaptchaHeaders("quickScan_verify");
+    let reqHeaders2 = await getReCaptchaHeaders("quickScan");
+
+    const req = {
+      contract_address: address,
+      contract_platform: platform,
+      [platform === "buildbear" ? "node_id" : "contract_chain"]: chain,
+    };
     API.post<{
       contract_verified: boolean;
       message: string;
       status: string;
-    }>(API_PATH.API_GET_CONTRACT_STATUS, req).then(
+    }>(API_PATH.API_GET_CONTRACT_STATUS, req, {
+      headers: reqHeaders1,
+    }).then(
       (res) => {
         if (res.data.contract_verified) {
-          let api_url = "";
-          if (platform === "buildbear") {
-            api_url = `${API_PATH.API_QUICK_SCAN_SSE}?contract_address=${address}&contract_platform=${platform}&node_id=${chain}`;
-          } else {
-            api_url = `${API_PATH.API_QUICK_SCAN_SSE}?contract_address=${address}&contract_platform=${platform}&contract_chain=${chain}`;
-          }
+          let api_url = `${
+            API_PATH.API_QUICK_SCAN_SSE
+          }?contract_address=${address}&contract_platform=${platform}&${
+            platform === "buildbear" ? "node_id" : "contract_chain"
+          }=${chain}`;
+
           if (ref) {
             api_url = api_url + `&ref=${ref}`;
           }
-          API.get(api_url)
+          API.get(api_url, {
+            headers: reqHeaders2,
+          })
             .then(
               (res) => {
                 if (res.status === 200) {

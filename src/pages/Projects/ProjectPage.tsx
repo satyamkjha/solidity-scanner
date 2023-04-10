@@ -8,6 +8,8 @@ import {
   useHistory,
 } from "react-router-dom";
 import FileDownload from "js-file-download";
+import { ArrowDownIcon } from "@chakra-ui/icons";
+
 import {
   Flex,
   keyframes,
@@ -50,6 +52,10 @@ import {
   useMediaQuery,
   Stack,
   IconButton,
+  Menu,
+  MenuButton,
+  MenuList,
+  MenuItem,
 } from "@chakra-ui/react";
 import {
   AiOutlineClockCircle,
@@ -95,12 +101,13 @@ import { profile } from "console";
 import { motion } from "framer-motion";
 import { Profiler } from "inspector";
 import { monthNames } from "common/values";
-import { MdPeopleOutline } from "react-icons/md";
 import PublishedReports from "components/publishedReports";
 import { useReports } from "hooks/useReports";
 import { usePricingPlans } from "hooks/usePricingPlans";
 import { API_PATH } from "helpers/routeManager";
-import { getFeatureGateConfig } from "helpers/helperFunction";
+import { useReactToPrint } from "react-to-print";
+import { PrintContainer } from "pages/Report/PrintContainer";
+import { getPublicReport } from "hooks/usePublicReport";
 
 export const ProjectPage: React.FC = () => {
   const { projectId } = useParams<{ projectId: string }>();
@@ -112,13 +119,11 @@ export const ProjectPage: React.FC = () => {
         w: ["100%", "100%", "calc(100% - 2rem)"],
         bg: "bg.subtle",
         borderRadius: "20px",
-        my: 2,
-        mx: [0, 0, 4],
-        pt: 3,
-        pb: 1,
+        mx: [0, 0, 2],
+        py: 3,
         minH: "78vh",
       }}
-      px={[2, 2, 2, 4]}
+      px={[2, 2, 2, 3]}
     >
       {isLoading ? (
         <Flex w="100%" h="70vh" alignItems="center" justifyContent="center">
@@ -126,61 +131,24 @@ export const ProjectPage: React.FC = () => {
         </Flex>
       ) : (
         data && (
-          <>
-            <Flex
-              sx={{
-                alignItems: [
-                  "flex-start",
-                  "flex-start",
-                  "flex-start",
-                  "center",
-                ],
-              }}
-              direction={["column", "column", "column", "row"]}
-            >
-              <Text sx={{ fontSize: "xl", fontWeight: 600, ml: 2 }}>
-                {data.project_name}
-              </Text>
-              <Link
-                fontSize="14px"
-                ml={3}
-                variant="subtle"
-                target="_blank"
-                href={data.project_url}
-              >
-                {data.project_url}
-              </Link>
-
-              <Link
-                as={RouterLink}
-                to="/projects"
-                variant="subtle-without-underline"
-                fontSize="md"
-                ml="auto"
-                display={["none", "none", "none", "block"]}
-              >
-                ← back
-              </Link>
-            </Flex>
-            <Switch>
-              <Route exact path="/projects/:projectId/:scanId">
-                <ScanDetails
-                  scansRemaining={data.scans_remaining}
-                  scans={data.scans}
-                />
-              </Route>
-            </Switch>
-          </>
+          <ScanDetails
+            scansRemaining={data.scans_remaining}
+            scans={data.scans}
+            project_name={data.project_name}
+            project_url={data.project_url}
+          />
         )
       )}
     </Box>
   );
 };
 
-const ScanDetails: React.FC<{ scansRemaining: number; scans: ScanMeta[] }> = ({
-  scansRemaining,
-  scans,
-}) => {
+const ScanDetails: React.FC<{
+  scansRemaining: number;
+  scans: ScanMeta[];
+  project_name: string;
+  project_url: string;
+}> = ({ scansRemaining, scans, project_name, project_url }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [isRescanLoading, setRescanLoading] = useState(false);
 
@@ -319,18 +287,19 @@ const ScanDetails: React.FC<{ scansRemaining: number; scans: ScanMeta[] }> = ({
   };
 
   useEffect(() => {
-    if (
-      scanData &&
-      scanData.scan_report.reporting_status === "report_generated"
-    ) {
-      setReportingStatus(scanData.scan_report.reporting_status);
-      setProjectName(scanData.scan_report.project_name);
-      setRepoUrl(scanData.scan_report.project_url);
-      checkReportPublished(projectId, scanData.scan_report.latest_report_id);
-      const d = new Date();
-      setDatePublished(
-        `${d.getDate()}-${monthNames[d.getMonth()]}-${d.getFullYear()}`
-      );
+    if (scanData) {
+      if (scanData.scan_report.reporting_status === "report_generated") {
+        setReportingStatus(scanData.scan_report.reporting_status);
+        setProjectName(scanData.scan_report.project_name);
+        setRepoUrl(scanData.scan_report.project_url);
+        checkReportPublished(projectId, scanData.scan_report.latest_report_id);
+        const d = new Date();
+        setDatePublished(
+          `${d.getDate()}-${monthNames[d.getMonth()]}-${d.getFullYear()}`
+        );
+      } else {
+        setPublishStatus("Not-Generated");
+      }
     }
   }, [scanData]);
 
@@ -376,6 +345,41 @@ const ScanDetails: React.FC<{ scansRemaining: number; scans: ScanMeta[] }> = ({
     refetchReprtList();
   };
 
+  const [summaryReport, setSummaryReport] = useState<Report | null>(null);
+  const [printLoading, setPrintLoading] = useState<boolean>(false);
+  const componentRef = useRef();
+
+  const generatePDF = async () => {
+    setPrintLoading(true);
+    const publishReportData = await getPublicReport(
+      "project",
+      scanData.scan_report.latest_report_id
+    );
+    if (publishReportData.summary_report) {
+      setSummaryReport(publishReportData.summary_report);
+    }
+  };
+
+  const handlePrint = useReactToPrint({
+    content: () => componentRef.current,
+  });
+
+  useEffect(() => {
+    if (summaryReport) {
+      setTimeout(() => {
+        handlePrint();
+        setPrintLoading(false);
+      }, 100);
+    }
+  }, [summaryReport]);
+
+  const checkIfGeneratingReport = () =>
+    reportingStatus === "generating_report" ||
+    (profile.actions_supported
+      ? !profile.actions_supported.generate_report
+      : profile.current_package !== "expired" &&
+        !plans.monthly[profile.current_package].report);
+
   return (
     <>
       <Box
@@ -383,10 +387,7 @@ const ScanDetails: React.FC<{ scansRemaining: number; scans: ScanMeta[] }> = ({
           w: "100%",
           bg: "white",
           borderRadius: "20px",
-          my: 2,
           p: 2,
-          pb: 0,
-          pr: 0,
         }}
       >
         {isLoading || isProfileLoading ? (
@@ -411,7 +412,12 @@ const ScanDetails: React.FC<{ scansRemaining: number; scans: ScanMeta[] }> = ({
                   flexDir: ["column", "column", "column", "row"],
                 }}
               >
-                <HStack spacing={[8]} mb={[4, 4, 0]}>
+                <Flex
+                  flexDir={["column", "column", "column", "row"]}
+                  justifyContent="flex-start"
+                  alignItems={"center"}
+                  mb={[4, 4, 0]}
+                >
                   {!scanData.scan_report.file_url_list && (
                     <Tooltip label="Rescan" aria-label="A tooltip" mt={2}>
                       <Button
@@ -420,6 +426,7 @@ const ScanDetails: React.FC<{ scansRemaining: number; scans: ScanMeta[] }> = ({
                         transition="0.3s opacity"
                         height="58px"
                         width="58px"
+                        mr={[0, 0, 0, 6]}
                         onClick={() => setIsOpen(true)}
                         _hover={{
                           opacity:
@@ -439,7 +446,25 @@ const ScanDetails: React.FC<{ scansRemaining: number; scans: ScanMeta[] }> = ({
                       </Button>
                     </Tooltip>
                   )}
-                </HStack>
+                  <VStack
+                    mt={[2, 2, 2, 0]}
+                    alignItems={["center", "center", "center", "flex-start"]}
+                  >
+                    <Text sx={{ fontSize: "xl", fontWeight: 600 }}>
+                      {project_name}
+                    </Text>
+                    <Link
+                      fontSize="14px"
+                      variant="subtle"
+                      target="_blank"
+                      href={project_url}
+                      isTruncated
+                      width={["70%", "70%", "70%", "fit-content"]}
+                    >
+                      {project_url}
+                    </Link>
+                  </VStack>
+                </Flex>
                 <Flex
                   flexDir={[
                     "column-reverse",
@@ -452,9 +477,11 @@ const ScanDetails: React.FC<{ scansRemaining: number; scans: ScanMeta[] }> = ({
                   alignItems={"center"}
                   width={["100%", "100%", "100%", "fit-content"]}
                 >
-                  {scanData.scan_report.reporting_status ===
-                    "report_generated" &&
+                  {!scanData.scan_report.report_regeneration_enabled &&
+                    scanData.scan_report.reporting_status ===
+                      "report_generated" &&
                     publishStatus !== "" &&
+                    publishStatus !== "Not-Generated" &&
                     (publishStatus === "Not-Published" ? (
                       <Button
                         variant={"accent-outline"}
@@ -504,61 +531,115 @@ const ScanDetails: React.FC<{ scansRemaining: number; scans: ScanMeta[] }> = ({
                         </Text>
                       </HStack>
                     ))}
-                  {scanData.scan_report.scan_status === "scan_done" && (
-                    <Button
-                      variant={"accent-outline"}
-                      isLoading={reportingStatus === ""}
-                      w={["80%", "80%", "50%", "auto"]}
-                      mx={["auto", "auto", "auto", 4]}
-                      mb={[4, 4, 4, 0]}
-                      isDisabled={
-                        reportingStatus === "generating_report" ||
-                        (profile.actions_supported
-                          ? !profile.actions_supported.generate_report
-                          : profile.current_package !== "expired" &&
-                            !plans.monthly[profile.current_package].report)
-                      }
-                      onClick={() => {
-                        if (
-                          reportingStatus === "not_generated" ||
-                          scanData.scan_report.report_regeneration_enabled
-                        ) {
+
+                  {scanData.scan_report.scan_status === "scan_done" &&
+                    reportingStatus !== "" &&
+                    publishStatus !== "" &&
+                    (scanData.scan_report.report_regeneration_enabled ? (
+                      <Button
+                        variant={"accent-outline"}
+                        w={["80%", "80%", "50%", "auto"]}
+                        mx={["auto", "auto", "auto", 4]}
+                        mb={[4, 4, 4, 0]}
+                        onClick={() => {
                           generateReport();
-                        } else if (reportingStatus === "report_generated") {
-                          if (publishStatus === "Approved") {
+                        }}
+                        isDisabled={checkIfGeneratingReport()}
+                      >
+                        {reportingStatus === "generating_report" && (
+                          <Spinner color="#806CCF" size="xs" mr={3} />
+                        )}
+                        Re-Generate Report
+                      </Button>
+                    ) : publishStatus === "Approved" ? (
+                      <HStack
+                        borderRadius={"15px"}
+                        border="1px solid #806CCF"
+                        backgroundColor={"#F5F2FF"}
+                        pl={7}
+                        pr={3}
+                        py={1}
+                        ml={5}
+                      >
+                        <Text
+                          color="#3E15F4"
+                          cursor={"pointer"}
+                          onClick={() => {
                             window.open(
                               `http://${document.location.host}/published-report/project/${scanData.scan_report.latest_report_id}`,
                               "_blank"
                             );
-                          } else {
+                          }}
+                          fontSize="sm"
+                          mr={2}
+                        >
+                          View Report
+                        </Text>
+                        <Text color="#3E15F4" fontSize="sm">
+                          |
+                        </Text>
+                        <Menu>
+                          <MenuButton
+                            as={Button}
+                            aria-label="Options"
+                            variant="unstyled"
+                          >
+                            {printLoading ? (
+                              <Spinner fontSize={40} color="#3E15F4" />
+                            ) : (
+                              <ArrowDownIcon color="#3E15F4" />
+                            )}
+                          </MenuButton>
+                          <MenuList>
+                            <MenuItem onClick={() => generatePDF()}>
+                              Download PDF
+                            </MenuItem>
+                          </MenuList>
+                        </Menu>
+                        {summaryReport && (
+                          <Box display={"none"}>
+                            <Box w="100vw" ref={componentRef}>
+                              <PrintContainer summary_report={summaryReport} />
+                            </Box>
+                          </Box>
+                        )}
+                      </HStack>
+                    ) : (
+                      <Button
+                        variant={"accent-outline"}
+                        w={["80%", "80%", "50%", "auto"]}
+                        mx={["auto", "auto", "auto", 4]}
+                        mb={[4, 4, 4, 0]}
+                        isDisabled={checkIfGeneratingReport()}
+                        onClick={() => {
+                          if (reportingStatus === "not_generated") {
+                            generateReport();
+                          } else if (reportingStatus === "report_generated") {
                             window.open(
                               `http://${document.location.host}/report/project/${projectId}/${scanData?.scan_report.latest_report_id}`,
                               "_blank"
                             );
                           }
-                        }
-                      }}
-                    >
-                      {reportingStatus === "generating_report" && (
-                        <Spinner color="#806CCF" size="xs" mr={3} />
-                      )}
-                      {profile.actions_supported
-                        ? !profile.actions_supported.generate_report
-                        : profile.current_package !== "expired" &&
-                          !plans.monthly[profile.current_package].report && (
-                            <LockIcon color={"accent"} size="xs" mr={3} />
-                          )}
-                      {reportingStatus === "generating_report"
-                        ? "Generating report..."
-                        : reportingStatus === "not_generated"
-                        ? "Generate Report"
-                        : scanData.scan_report.report_regeneration_enabled
-                        ? "Re-generate Report"
-                        : reportingStatus === "report_generated"
-                        ? "View Report"
-                        : "Loading"}
-                    </Button>
-                  )}
+                        }}
+                      >
+                        {reportingStatus === "generating_report" && (
+                          <Spinner color="#806CCF" size="xs" mr={3} />
+                        )}
+                        {profile.actions_supported
+                          ? !profile.actions_supported.generate_report
+                          : profile.current_package !== "expired" &&
+                            !plans.monthly[profile.current_package].report && (
+                              <LockIcon color={"accent"} size="xs" mr={3} />
+                            )}
+                        {reportingStatus === "generating_report"
+                          ? "Generating report..."
+                          : reportingStatus === "not_generated"
+                          ? "Generate Report"
+                          : reportingStatus === "report_generated"
+                          ? "View Report"
+                          : "Loading"}
+                      </Button>
+                    ))}
                 </Flex>
               </Flex>
               {scanData.scan_report.scan_status === "scanning" ||

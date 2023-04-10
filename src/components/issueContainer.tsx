@@ -320,6 +320,10 @@ const IssueBox: React.FC<{
                 metric_wise_aggregated_finding.description_details,
               template_details: template_details,
               comment: metric_wise_aggregated_finding.comment,
+              issue_description:
+                metric_wise_aggregated_finding.issue_description,
+              issue_remediation:
+                metric_wise_aggregated_finding.issue_remediation,
             });
           }}
           onMouseEnter={() => setIsHovered(true)}
@@ -384,6 +388,10 @@ const IssueBox: React.FC<{
                       metric_wise_aggregated_finding.description_details,
                     template_details: template_details,
                     comment: metric_wise_aggregated_finding.comment,
+                    issue_description:
+                      metric_wise_aggregated_finding.issue_description,
+                    issue_remediation:
+                      metric_wise_aggregated_finding.issue_remediation,
                   });
                 }}
               >
