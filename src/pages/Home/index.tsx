@@ -718,8 +718,8 @@ const ContractForm: React.FC = () => {
               req
             );
             setIsLoading(false);
-            if (res.data) {
-              if (res.data.success) {
+            if (responseData.status === 200) {
+              if (responseData.data.status === "success") {
                 queryClient.invalidateQueries("scans");
                 queryClient.invalidateQueries("profile");
                 history.push("/blocks");
