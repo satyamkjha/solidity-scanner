@@ -31,6 +31,7 @@ import {
   CloseButton,
   FormErrorMessage,
   Image,
+  Divider,
 } from "@chakra-ui/react";
 import { FaFileCode } from "react-icons/fa";
 import { AiOutlineProject } from "react-icons/ai";
@@ -279,131 +280,161 @@ const ApplicationForm: React.FC = () => {
   const [nameError, setNameError] = useState<null | string>(null);
   const [linkError, setLinkError] = useState<null | string>(null);
 
+  const [step, setStep] = useState(1);
+
   const isGithubIntegrated =
     profileData?._integrations?.github?.status === "successful";
   return (
-    <>
+    <Flex flexDir="column" justifyContent={"flex-start"} alignItems="center">
       {profileData && (
-        <>
-          <Text
-            sx={{
-              fontSize: "2xl",
-              fontWeight: 600,
-              my: 6,
-              textAlign: "center",
-            }}
-          >
-            Load application
-          </Text>
+        <Flex
+          flexDir="column"
+          backgroundColor="#FCFCFC"
+          px={7}
+          py={5}
+          borderRadius={20}
+          border="1px solid #ECECEC"
+        >
+          <HStack w="100%" justifyContent="space-between" mb={4}>
+            <Text
+              sx={{
+                fontSize: "2xl",
+                fontWeight: 600,
+                textAlign: "center",
+              }}
+            >
+              Project Information
+            </Text>
+            <HStack spacing={5}>
+              <Image
+                height="60px"
+                width="60px"
+                src={`/common/step_${step}.svg`}
+              />
+              <Text
+                sx={{
+                  fontSize: "lg",
+                  fontWeight: 800,
+
+                  textAlign: "center",
+                }}
+              >
+                {`Step ${step}/3`}
+              </Text>
+            </HStack>
+          </HStack>
 
           <Text sx={{ color: "subtle", textAlign: "left", mb: 4 }}>
-            Provide the address of your GitHub repository. Your results will
-            appear in the “Projects” section.
+            Provide a link to Git or Subversion repository. See link examples
+            and additional restrictions in the User Guide (section Starting a
+            scan from UI) available on the{" "}
+            <Box
+              onClick={() =>
+                window.open("https://docs.solidityscan.com/", "_blank")
+              }
+              cursor="pointer"
+              color="#3300FF"
+              as="span"
+            >
+              User Guide{" "}
+            </Box>
+            page.
           </Text>
-          <Text sx={{ color: "subtle", textAlign: "left", mb: 2 }}>
-            NOTE: Please verify the following to avoid scan failure:
-          </Text>
-          <Text
-            sx={{ color: "subtle", textAlign: "left", mb: 2, fontSize: "sm" }}
-          >
-            1. Ensure the link is to a GitHub repository containing Solidity
-            (.sol) files. It is recommended to use the HTTPS GitHub (.git)
-            cloning link of the repository.
-          </Text>
-          <Text
-            sx={{ color: "subtle", textAlign: "left", mb: 6, fontSize: "sm" }}
-          >
-            2. Verify if the repository is public, for private repositories,
-            please integrate your GitHub from the Integrations tab.
-          </Text>
-          <form onSubmit={handleSubmit(onSubmit)} style={{ width: "100%" }}>
-            <Stack spacing={6} my={8} width={"100%"}>
-              <VStack alignItems={"flex-start"}>
-                <Text mb={0} fontSize="sm">
-                  Project name
-                </Text>
-                <InputGroup alignItems="center">
-                  <InputLeftElement
-                    height="48px"
-                    children={<Icon as={AiOutlineProject} color="gray.300" />}
-                  />
-                  <Input
-                    placeholder="Project name"
-                    variant={nameError ? "error" : "brand"}
-                    size="lg"
-                    {...register("project_name")}
-                  />
-                </InputGroup>
-                <Text mb={0} color="#FF2400" fontSize="sm">
-                  {nameError}
-                </Text>
-              </VStack>
-              <VStack mb={5} alignItems={"flex-start"}>
-                <Text mb={0} fontSize="sm">
-                  Link to the Github repository
-                </Text>
-                <InputGroup alignItems="center" mb={4}>
-                  <InputLeftElement
-                    height="48px"
-                    children={<Icon as={FaFileCode} color="gray.300" />}
-                  />
-                  <Input
-                    isRequired
-                    type="url"
-                    placeholder="https://github.com/yourproject/project.git"
-                    variant={linkError ? "error" : "brand"}
-                    size="lg"
-                    {...register("project_url", { required: true })}
-                  />
-                </InputGroup>
-                <Text mb={0} color="#FF2400" fontSize="sm">
-                  {linkError}
-                </Text>
-              </VStack>
+          <Divider color="gray.700" borderWidth="2px" />
+          {step === 1 ? (
+            <form onSubmit={handleSubmit(onSubmit)} style={{ width: "100%" }}>
+              <Stack spacing={6} my={8} width={"100%"}>
+                <VStack alignItems={"flex-start"}>
+                  <Text mb={0} fontSize="sm">
+                    Project name
+                  </Text>
+                  <InputGroup alignItems="center">
+                    <InputLeftElement
+                      height="48px"
+                      children={<Icon as={AiOutlineProject} color="gray.300" />}
+                    />
+                    <Input
+                      placeholder="Project name"
+                      variant={nameError ? "error" : "brand"}
+                      size="lg"
+                      {...register("project_name")}
+                    />
+                  </InputGroup>
+                  <Text mb={0} color="#FF2400" fontSize="sm">
+                    {nameError}
+                  </Text>
+                </VStack>
+                <VStack mb={5} alignItems={"flex-start"}>
+                  <Text mb={0} fontSize="sm">
+                    Link to the Github repository
+                  </Text>
+                  <InputGroup alignItems="center" mb={4}>
+                    <InputLeftElement
+                      height="48px"
+                      children={<Icon as={FaFileCode} color="gray.300" />}
+                    />
+                    <Input
+                      isRequired
+                      type="url"
+                      placeholder="https://github.com/yourproject/project.git"
+                      variant={linkError ? "error" : "brand"}
+                      size="lg"
+                      {...register("project_url", { required: true })}
+                    />
+                  </InputGroup>
+                  <Text mb={0} color="#FF2400" fontSize="sm">
+                    {linkError}
+                  </Text>
+                </VStack>
 
-              <HStack alignItems="center" spacing={6} fontSize="14px">
-                <Text>Public</Text>
-                <Switch
-                  size="lg"
-                  variant="brand"
-                  isChecked={visibility}
-                  onChange={() => setVisibility(!visibility)}
-                />
-                <Text>Private</Text>
-              </HStack>
-
-              {!isGithubIntegrated && visibility && (
-                <Alert status="warning" fontSize="14px">
-                  <AlertIcon />
-                  You need to connect your GitHub to start a private scan.
-                  <Link
-                    as={RouterLink}
-                    to="/integrations"
+                <HStack alignItems="center" spacing={6} fontSize="14px">
+                  <Text>Public</Text>
+                  <Switch
+                    size="lg"
                     variant="brand"
-                    fontWeight="600"
-                    ml={1}
-                  >
-                    Connect
-                  </Link>
-                </Alert>
-              )}
-              <Button
-                type="submit"
-                variant="brand"
-                // isDisabled={
-                //   // profileData.actions_supported
-                //   //   ? !profileData.actions_supported.github_public
-                //   //   : !isGithubIntegrated && visibility
-                // }
-                isLoading={formState.isSubmitting}
-              >
-                Start Scan
-              </Button>
-            </Stack>
-          </form>
-        </>
+                    isChecked={visibility}
+                    onChange={() => setVisibility(!visibility)}
+                  />
+                  <Text>Private</Text>
+                </HStack>
+
+                {!isGithubIntegrated && visibility && (
+                  <Alert status="warning" fontSize="14px">
+                    <AlertIcon />
+                    You need to connect your GitHub to start a private scan.
+                    <Link
+                      as={RouterLink}
+                      to="/integrations"
+                      variant="brand"
+                      fontWeight="600"
+                      ml={1}
+                    >
+                      Connect
+                    </Link>
+                  </Alert>
+                )}
+              </Stack>
+            </form>
+          ) : step === 2 ? (
+            <></>
+          ) : step === 3 ? (
+            <></>
+          ) : (
+            <></>
+          )}
+        </Flex>
       )}
-    </>
+      <Flex flexDir="row" alignItem>
+        <Button
+          type="submit"
+          variant="brand"
+          onClick={onSubmit}
+          isDisabled={profileData?.credits === 0}
+        >
+          Start Scan
+        </Button>
+      </Flex>
+    </Flex>
   );
 };
 
