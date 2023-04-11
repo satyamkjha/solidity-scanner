@@ -8,6 +8,8 @@ import {
   useHistory,
 } from "react-router-dom";
 import FileDownload from "js-file-download";
+import { ArrowDownIcon } from "@chakra-ui/icons";
+
 import {
   Flex,
   keyframes,
@@ -50,6 +52,10 @@ import {
   useMediaQuery,
   Stack,
   IconButton,
+  Menu,
+  MenuButton,
+  MenuList,
+  MenuItem,
 } from "@chakra-ui/react";
 import {
   AiOutlineClockCircle,
@@ -99,6 +105,9 @@ import PublishedReports from "components/publishedReports";
 import { useReports } from "hooks/useReports";
 import { usePricingPlans } from "hooks/usePricingPlans";
 import { API_PATH } from "helpers/routeManager";
+import { useReactToPrint } from "react-to-print";
+import { PrintContainer } from "pages/Report/PrintContainer";
+import { getPublicReport } from "hooks/usePublicReport";
 
 export const ProjectPage: React.FC = () => {
   const { projectId } = useParams<{ projectId: string }>();
@@ -278,18 +287,19 @@ const ScanDetails: React.FC<{
   };
 
   useEffect(() => {
-    if (
-      scanData &&
-      scanData.scan_report.reporting_status === "report_generated"
-    ) {
-      setReportingStatus(scanData.scan_report.reporting_status);
-      setProjectName(scanData.scan_report.project_name);
-      setRepoUrl(scanData.scan_report.project_url);
-      checkReportPublished(projectId, scanData.scan_report.latest_report_id);
-      const d = new Date();
-      setDatePublished(
-        `${d.getDate()}-${monthNames[d.getMonth()]}-${d.getFullYear()}`
-      );
+    if (scanData) {
+      if (scanData.scan_report.reporting_status === "report_generated") {
+        setReportingStatus(scanData.scan_report.reporting_status);
+        setProjectName(scanData.scan_report.project_name);
+        setRepoUrl(scanData.scan_report.project_url);
+        checkReportPublished(projectId, scanData.scan_report.latest_report_id);
+        const d = new Date();
+        setDatePublished(
+          `${d.getDate()}-${monthNames[d.getMonth()]}-${d.getFullYear()}`
+        );
+      } else {
+        setPublishStatus("Not-Generated");
+      }
     }
   }, [scanData]);
 
@@ -334,6 +344,41 @@ const ScanDetails: React.FC<{
     checkReportPublished(projectId, reportId);
     refetchReprtList();
   };
+
+  const [summaryReport, setSummaryReport] = useState<Report | null>(null);
+  const [printLoading, setPrintLoading] = useState<boolean>(false);
+  const componentRef = useRef();
+
+  const generatePDF = async () => {
+    setPrintLoading(true);
+    const publishReportData = await getPublicReport(
+      "project",
+      scanData.scan_report.latest_report_id
+    );
+    if (publishReportData.summary_report) {
+      setSummaryReport(publishReportData.summary_report);
+    }
+  };
+
+  const handlePrint = useReactToPrint({
+    content: () => componentRef.current,
+  });
+
+  useEffect(() => {
+    if (summaryReport) {
+      setTimeout(() => {
+        handlePrint();
+        setPrintLoading(false);
+      }, 100);
+    }
+  }, [summaryReport]);
+
+  const checkIfGeneratingReport = () =>
+    reportingStatus === "generating_report" ||
+    (profile.actions_supported
+      ? !profile.actions_supported.generate_report
+      : profile.current_package !== "expired" &&
+        !plans.monthly[profile.current_package].report);
 
   return (
     <>
@@ -432,10 +477,11 @@ const ScanDetails: React.FC<{
                   alignItems={"center"}
                   width={["100%", "100%", "100%", "fit-content"]}
                 >
-                  {/* <PDFDownloadButton /> */}
-                  {scanData.scan_report.reporting_status ===
-                    "report_generated" &&
+                  {!scanData.scan_report.report_regeneration_enabled &&
+                    scanData.scan_report.reporting_status ===
+                      "report_generated" &&
                     publishStatus !== "" &&
+                    publishStatus !== "Not-Generated" &&
                     (publishStatus === "Not-Published" ? (
                       <Button
                         variant={"accent-outline"}
@@ -485,61 +531,115 @@ const ScanDetails: React.FC<{
                         </Text>
                       </HStack>
                     ))}
-                  {scanData.scan_report.scan_status === "scan_done" && (
-                    <Button
-                      variant={"accent-outline"}
-                      isLoading={reportingStatus === ""}
-                      w={["80%", "80%", "50%", "auto"]}
-                      mx={["auto", "auto", "auto", 4]}
-                      mb={[4, 4, 4, 0]}
-                      isDisabled={
-                        reportingStatus === "generating_report" ||
-                        (profile.actions_supported
-                          ? !profile.actions_supported.generate_report
-                          : profile.current_package !== "expired" &&
-                            !plans.monthly[profile.current_package].report)
-                      }
-                      onClick={() => {
-                        if (
-                          reportingStatus === "not_generated" ||
-                          scanData.scan_report.report_regeneration_enabled
-                        ) {
+
+                  {scanData.scan_report.scan_status === "scan_done" &&
+                    reportingStatus !== "" &&
+                    publishStatus !== "" &&
+                    (scanData.scan_report.report_regeneration_enabled ? (
+                      <Button
+                        variant={"accent-outline"}
+                        w={["80%", "80%", "50%", "auto"]}
+                        mx={["auto", "auto", "auto", 4]}
+                        mb={[4, 4, 4, 0]}
+                        onClick={() => {
                           generateReport();
-                        } else if (reportingStatus === "report_generated") {
-                          if (publishStatus === "Approved") {
+                        }}
+                        isDisabled={checkIfGeneratingReport()}
+                      >
+                        {reportingStatus === "generating_report" && (
+                          <Spinner color="#806CCF" size="xs" mr={3} />
+                        )}
+                        Re-Generate Report
+                      </Button>
+                    ) : publishStatus === "Approved" ? (
+                      <HStack
+                        borderRadius={"15px"}
+                        border="1px solid #806CCF"
+                        backgroundColor={"#F5F2FF"}
+                        pl={7}
+                        pr={3}
+                        py={1}
+                        ml={5}
+                      >
+                        <Text
+                          color="#3E15F4"
+                          cursor={"pointer"}
+                          onClick={() => {
                             window.open(
                               `http://${document.location.host}/published-report/project/${scanData.scan_report.latest_report_id}`,
                               "_blank"
                             );
-                          } else {
+                          }}
+                          fontSize="sm"
+                          mr={2}
+                        >
+                          View Report
+                        </Text>
+                        <Text color="#3E15F4" fontSize="sm">
+                          |
+                        </Text>
+                        <Menu>
+                          <MenuButton
+                            as={Button}
+                            aria-label="Options"
+                            variant="unstyled"
+                          >
+                            {printLoading ? (
+                              <Spinner fontSize={40} color="#3E15F4" />
+                            ) : (
+                              <ArrowDownIcon color="#3E15F4" />
+                            )}
+                          </MenuButton>
+                          <MenuList>
+                            <MenuItem onClick={() => generatePDF()}>
+                              Download PDF
+                            </MenuItem>
+                          </MenuList>
+                        </Menu>
+                        {summaryReport && (
+                          <Box display={"none"}>
+                            <Box w="100vw" ref={componentRef}>
+                              <PrintContainer summary_report={summaryReport} />
+                            </Box>
+                          </Box>
+                        )}
+                      </HStack>
+                    ) : (
+                      <Button
+                        variant={"accent-outline"}
+                        w={["80%", "80%", "50%", "auto"]}
+                        mx={["auto", "auto", "auto", 4]}
+                        mb={[4, 4, 4, 0]}
+                        isDisabled={checkIfGeneratingReport()}
+                        onClick={() => {
+                          if (reportingStatus === "not_generated") {
+                            generateReport();
+                          } else if (reportingStatus === "report_generated") {
                             window.open(
                               `http://${document.location.host}/report/project/${projectId}/${scanData?.scan_report.latest_report_id}`,
                               "_blank"
                             );
                           }
-                        }
-                      }}
-                    >
-                      {reportingStatus === "generating_report" && (
-                        <Spinner color="#806CCF" size="xs" mr={3} />
-                      )}
-                      {profile.actions_supported
-                        ? !profile.actions_supported.generate_report
-                        : profile.current_package !== "expired" &&
-                          !plans.monthly[profile.current_package].report && (
-                            <LockIcon color={"accent"} size="xs" mr={3} />
-                          )}
-                      {reportingStatus === "generating_report"
-                        ? "Generating report..."
-                        : reportingStatus === "not_generated"
-                        ? "Generate Report"
-                        : scanData.scan_report.report_regeneration_enabled
-                        ? "Re-generate Report"
-                        : reportingStatus === "report_generated"
-                        ? "View Report"
-                        : "Loading"}
-                    </Button>
-                  )}
+                        }}
+                      >
+                        {reportingStatus === "generating_report" && (
+                          <Spinner color="#806CCF" size="xs" mr={3} />
+                        )}
+                        {profile.actions_supported
+                          ? !profile.actions_supported.generate_report
+                          : profile.current_package !== "expired" &&
+                            !plans.monthly[profile.current_package].report && (
+                              <LockIcon color={"accent"} size="xs" mr={3} />
+                            )}
+                        {reportingStatus === "generating_report"
+                          ? "Generating report..."
+                          : reportingStatus === "not_generated"
+                          ? "Generate Report"
+                          : reportingStatus === "report_generated"
+                          ? "View Report"
+                          : "Loading"}
+                      </Button>
+                    ))}
                 </Flex>
               </Flex>
               {scanData.scan_report.scan_status === "scanning" ||

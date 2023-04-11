@@ -40,8 +40,10 @@ import MetaMaskLogin from "components/metamaskSignin";
 import { API_PATH } from "helpers/routeManager";
 import GoogleSignIn from "components/googleSignin";
 import Cookies from "js-cookie";
-import { getFeatureGateConfig } from "helpers/helperFunction";
-import reCAPTCHA from "helpers/reCAPTCHA";
+import {
+  getFeatureGateConfig,
+  getReCaptchaHeaders,
+} from "helpers/helperFunction";
 
 function useQuery() {
   return new URLSearchParams(useLocation().search);
@@ -131,13 +133,8 @@ const LoginForm: React.FC = () => {
   const [password, setPassword] = useState("");
   const [isLoading, setIsLoading] = useState(false);
 
-  const recaptcha = new reCAPTCHA(
-    process.env.REACT_APP_RECAPTCHA_SITE_KEY!,
-    "signin"
-  );
-
   const onSubmit = async () => {
-    const Recaptchatoken = await recaptcha.getToken();
+    let reqHeaders = await getReCaptchaHeaders("signin");
     setIsLoading(true);
     API.post<AuthResponse>(
       API_PATH.API_LOGIN,
@@ -146,10 +143,7 @@ const LoginForm: React.FC = () => {
         password,
       },
       {
-        headers: {
-          "Content-Type": "application/json",
-          Recaptchatoken,
-        },
+        headers: reqHeaders,
       }
     ).then(
       (res) => {
