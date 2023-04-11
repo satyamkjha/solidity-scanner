@@ -330,7 +330,9 @@ const ApplicationForm: React.FC = () => {
             </HStack>
           </HStack>
 
-          <Text sx={{ color: "subtle", textAlign: "left", mb: 4 }}>
+          <Text
+            sx={{ color: "subtle", fontSize: "md", textAlign: "left", mb: 4 }}
+          >
             Provide a link to Git or Subversion repository. See link examples
             and additional restrictions in the User Guide (section Starting a
             scan from UI) available on the{" "}
@@ -424,16 +426,54 @@ const ApplicationForm: React.FC = () => {
           ) : step === 2 ? (
             <></>
           ) : step === 3 ? (
-            <VStack justifyContent="flex-start" alignItems={"flex-start"}>
+            <VStack
+              mt={8}
+              spacing={3}
+              justifyContent="flex-start"
+              alignItems={"flex-start"}
+            >
               <Text
                 sx={{
-                  fontSize: "xl",
+                  fontSize: "lg",
                   fontWeight: 500,
                   textAlign: "center",
                 }}
               >
                 Turn on Github Synchronisation
               </Text>
+              <Text
+                sx={{
+                  color: "subtle",
+                  fontSize: "sm",
+                  textAlign: "left",
+                }}
+              >
+                Provide a link to Git or Subversion repository. See link
+                examples and additional restrictions in the User Guide (section
+                Starting a scan from UI) available on the{" "}
+              </Text>
+              <Switch size="lg" variant="brand" />
+              <Text
+                sx={{
+                  fontSize: "lg",
+                  fontWeight: 500,
+                  textAlign: "center",
+                }}
+              >
+                Turn on Slack Alerts
+              </Text>
+              <Text
+                sx={{
+                  color: "subtle",
+                  fontSize: "sm",
+                  textAlign: "left",
+                }}
+              >
+                Provide a link to Git or Subversion repository. See link
+                examples and additional restrictions in the User Guide (section
+                Starting a scan from UI) available on the{" "}
+              </Text>
+              <Switch size="lg" variant="brand" />
             </VStack>
           ) : (
             <></>
