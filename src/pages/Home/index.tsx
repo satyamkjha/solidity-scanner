@@ -261,19 +261,21 @@ const ApplicationForm: React.FC = () => {
       return;
     }
     const filteredUrl = filteredUrlInput[0];
-
     setNameError(null);
     setLinkError(null);
-    await API.post(API_PATH.API_PROJECT_SCAN, {
+    const responseData = await API.post(API_PATH.API_PROJECT_SCAN, {
       project_url: filteredUrl,
       ...(project_name && project_name !== "" && { project_name }),
       project_type: "new",
       project_visibility: visibility ? "private" : "public",
     });
-    queryClient.invalidateQueries("scans");
-    queryClient.invalidateQueries("profile");
-
-    history.push("/projects");
+    if (responseData.status === 200) {
+      if (responseData.data.status === "success") {
+        queryClient.invalidateQueries("scans");
+        queryClient.invalidateQueries("profile");
+        history.push("/projects");
+      }
+    }
   };
 
   const [nameError, setNameError] = useState<null | string>(null);
