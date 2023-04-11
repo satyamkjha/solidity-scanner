@@ -303,7 +303,13 @@ const ApplicationForm: React.FC = () => {
                 textAlign: "center",
               }}
             >
-              Project Information
+              {step === 1
+                ? "Project Information"
+                : step === 2
+                ? "Project Folders"
+                : step === 3
+                ? "Project Settings"
+                : ""}
             </Text>
             <HStack spacing={5}>
               <Image
@@ -418,20 +424,58 @@ const ApplicationForm: React.FC = () => {
           ) : step === 2 ? (
             <></>
           ) : step === 3 ? (
-            <></>
+            <VStack justifyContent="flex-start" alignItems={"flex-start"}>
+              <Text
+                sx={{
+                  fontSize: "xl",
+                  fontWeight: 500,
+                  textAlign: "center",
+                }}
+              >
+                Turn on Github Synchronisation
+              </Text>
+            </VStack>
           ) : (
             <></>
           )}
         </Flex>
       )}
-      <Flex flexDir="row" alignItem>
+      <Flex
+        w="100%"
+        flexDir="row"
+        alignItems="center"
+        justifyContent="flex-end"
+        py={3}
+      >
+        {step > 1 && (
+          <Button
+            type="submit"
+            width="200px"
+            variant="accent-outline"
+            mr={5}
+            py={6}
+            onClick={() => {
+              if (step > 1) {
+                setStep(step - 1);
+              }
+            }}
+            isDisabled={profileData?.credits === 0}
+          >
+            Prev
+          </Button>
+        )}
         <Button
           type="submit"
           variant="brand"
-          onClick={onSubmit}
+          width="200px"
+          onClick={() => {
+            if (step < 3) {
+              setStep(step + 1);
+            }
+          }}
           isDisabled={profileData?.credits === 0}
         >
-          Start Scan
+          {step > 2 ? "Start Scan" : "Next"}
         </Button>
       </Flex>
     </Flex>
