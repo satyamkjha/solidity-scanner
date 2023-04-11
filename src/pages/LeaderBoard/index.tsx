@@ -38,6 +38,9 @@ import {
   PopoverArrow,
   PopoverCloseButton,
   PopoverBody,
+  Icon,
+  InputGroup,
+  InputRightElement,
 } from "@chakra-ui/react";
 
 import Header from "components/header";
@@ -57,9 +60,10 @@ import {
   VictoryVoronoiContainer,
   VictoryTheme,
 } from "victory";
-import { Search2Icon } from "@chakra-ui/icons";
+import { SearchIcon, Search2Icon } from "@chakra-ui/icons";
+import { FaFileCode } from "react-icons/fa";
 
-const customStyles = {
+const customTranslucentDropdown = {
   option: (provided: any, state: any) => ({
     ...provided,
     borderBottom: "1px solid #f3f3f340",
@@ -93,6 +97,44 @@ const customStyles = {
     const color = "#FFFFFF";
 
     return { ...provided, opacity, transition, color };
+  },
+};
+
+const customDropdown = {
+  option: (provided: any, state: any) => ({
+    ...provided,
+    borderBottom: "1px solid #f3f3f3",
+    opacity: state.isDisabled ? 0.5 : 1,
+    backgroundColor: state.isDisabled
+      ? "#ECECEC"
+      : state.isSelected
+      ? "#FFFFFF"
+      : state.isFocused
+      ? "#E6E6E6"
+      : "#FFFFFF",
+    color: "#000000",
+  }),
+  menu: (provided: any, state: any) => ({
+    ...provided,
+    color: state.selectProps.menuColor,
+    borderRadius: 10,
+    border: "0px solid #ffffff",
+    overflowY: "hidden",
+  }),
+  control: (state: any) => ({
+    // none of react-select's styles are passed to <Control />
+    display: "flex",
+    flexDirection: "row",
+    backgroundColor: "#FFFFFF",
+    padding: 5,
+    borderRadius: 15,
+    border: state.isFocused ? "2px solid #52FF00" : "2px solid #EDF2F7",
+  }),
+  singleValue: (provided: any, state: any) => {
+    const opacity = state.isDisabled ? 0.3 : 1;
+    const transition = "opacity 300ms";
+
+    return { ...provided, opacity, transition };
   },
 };
 
@@ -283,17 +325,76 @@ const ArticleComp: React.FC = () => {
   );
 };
 
-const ChartComp: React.FC = () => {
-  const data = [
-    { x: 1, y: 240, label: "Point 1" },
-    { x: 5, y: 210, label: "Point 2" },
-    { x: 9, y: 150, label: "Point 3" },
-    { x: 13, y: 170, label: "Point 4" },
-    { x: 17, y: 190, label: "Point 5" },
-    { x: 21, y: 160, label: "Point 6" },
-    { x: 25, y: 180, label: "Point 7" },
-    { x: 29, y: 250, label: "Point 8" },
-  ];
+const ChartComp: React.FC<{ monthValue: string }> = ({ monthValue }) => {
+  const data = {
+    Jan: [
+      { x: 1, y: 240, label: "Point 1" },
+      { x: 5, y: 210, label: "Point 2" },
+      { x: 9, y: 150, label: "Point 3" },
+      { x: 13, y: 170, label: "Point 4" },
+      { x: 17, y: 190, label: "Point 5" },
+      { x: 21, y: 160, label: "Point 6" },
+      { x: 25, y: 180, label: "Point 7" },
+      { x: 29, y: 250, label: "Point 8" },
+    ],
+    Feb: [
+      { x: 1, y: 190, label: "Point 1" },
+      { x: 5, y: 230, label: "Point 2" },
+      { x: 9, y: 200, label: "Point 3" },
+      { x: 13, y: 130, label: "Point 4" },
+      { x: 17, y: 290, label: "Point 5" },
+      { x: 21, y: 150, label: "Point 6" },
+      { x: 25, y: 200, label: "Point 7" },
+      { x: 29, y: 240, label: "Point 8" },
+    ],
+    March: [
+      { x: 1, y: 140, label: "Point 1" },
+      { x: 5, y: 260, label: "Point 2" },
+      { x: 9, y: 180, label: "Point 3" },
+      { x: 13, y: 150, label: "Point 4" },
+      { x: 17, y: 170, label: "Point 5" },
+      { x: 21, y: 230, label: "Point 6" },
+      { x: 25, y: 150, label: "Point 7" },
+      { x: 29, y: 200, label: "Point 8" },
+    ],
+  };
+
+  const [
+    is300Pixel,
+    is450Pixel,
+    is600Pixel,
+    is750Pixel,
+    is1000Pixel,
+    is1250Pixel,
+  ] = useMediaQuery([
+    "(max-width: 300px)",
+    "(max-width: 450px)",
+    "(max-width: 600px)",
+    "(max-width: 750px)",
+    "(max-width: 1000px)",
+    "(max-width: 1250px)",
+  ]);
+
+  const getHeight = () => {
+    let height: number = 0;
+    if (is300Pixel) {
+      height = 1100;
+    } else if (is450Pixel) {
+      height = 900;
+    } else if (is600Pixel) {
+      height = 700;
+    } else if (is750Pixel) {
+      height = 500;
+    } else if (is1000Pixel) {
+      height = 400;
+    } else if (is1250Pixel) {
+      height = 325;
+    } else {
+      height = 250;
+    }
+    return height;
+  };
+
   return (
     <Flex
       justifyContent={"center"}
@@ -321,13 +422,13 @@ const ChartComp: React.FC = () => {
         </defs>
       </svg>
       <HStack w="100%" px={20} mt={10} mb={"-60px"} justifyContent={"flex-end"}>
-        <Text color="#424242">June 2023</Text>
+        <Text color="#424242">{monthValue} 2023</Text>
       </HStack>
       <VictoryChart
         containerComponent={<VictoryVoronoiContainer />}
         width={600}
         domain={{ x: [0, 30], y: [140, 280] }}
-        height={250}
+        height={getHeight()}
         theme={{
           ...VictoryTheme.material,
           axis: {
@@ -343,7 +444,7 @@ const ChartComp: React.FC = () => {
         }}
       >
         <VictoryArea
-          data={data}
+          data={data[monthValue]}
           style={{
             data: {
               stroke: "#4489E9",
@@ -424,7 +525,9 @@ const HackCummulativeDataComp: React.FC = () => {
   );
 };
 
-const ChartFilterComp: React.FC = () => {
+const ChartFilterComp: React.FC<{
+  setMonthValue: React.Dispatch<React.SetStateAction<string>>;
+}> = ({ setMonthValue }) => {
   return (
     <HStack
       w="100%"
@@ -452,47 +555,95 @@ const ChartFilterComp: React.FC = () => {
           isSearchable={true}
           options={options}
           placeholder="Select BlockChain"
-          styles={customStyles}
-          onChange={(newValue) => {}}
+          styles={customTranslucentDropdown}
         />
       </FormControl>
-      <Popover display={["flex", "flex", "flex", "flex", "none"]}>
+      <Popover>
         <PopoverTrigger>
-          <Button variant="unstyled">
+          <Button
+            variant="unstyled"
+            display={["flex", "flex", "flex", "flex", "none"]}
+          >
             <FiFilter color={"#FFFFFF80"} size={24} />
           </Button>
         </PopoverTrigger>
         <Portal>
-          <PopoverContent>
+          <PopoverContent w="fit-content">
             <PopoverArrow />
             <PopoverCloseButton />
-            <PopoverBody>ahsjdkljalkshjdklasjdkl</PopoverBody>
+            <PopoverBody w="fit-content">
+              <TimeFilterComp setMonthValue={setMonthValue} />
+            </PopoverBody>
           </PopoverContent>
         </Portal>
       </Popover>
+      <Box display={["none", "none", "none", "none", "flex"]}>
+        <TimeFilterComp setMonthValue={setMonthValue} />
+      </Box>
+    </HStack>
+  );
+};
 
-      <HStack mr={5} display={["none", "none", "none", "none", "flex"]}>
-        <Text px={5} color="#FFFFFF">
-          1 D
-        </Text>
-        <Text px={5} color="#FFFFFF">
-          1 W
-        </Text>
-        <Text px={5} color="#FFFFFF">
-          1 M
-        </Text>
-        <Text
-          background="linear-gradient(129.18deg, #52FF00 8.52%, #00EEFD 93.94%)"
-          px={5}
-          color="#000000"
-          borderRadius={3}
+const TimeFilterComp: React.FC<{
+  setMonthValue: React.Dispatch<React.SetStateAction<string>>;
+}> = ({ setMonthValue }) => {
+  const color = ["#000000", "#000000", "#000000", "#000000", "#FFFFFF"];
+
+  const [isLargerThan1280] = useMediaQuery("(min-width: 1280px)");
+
+  return (
+    <Flex
+      w="100%"
+      height={"100%"}
+      justifyContent={"center"}
+      alignItems={"center"}
+      flexDir={"column"}
+    >
+      <Flex
+        justify={"flex-start"}
+        alignItems={"center"}
+        mx={0}
+        mt={[7, 7, 7, 7, 0]}
+        borderRadius={10}
+        w="fit-content"
+        height={"fit-content"}
+        flexDir={["column", "column", "column", "column", "row"]}
+        backgroundColor={[
+          "#EDF2F7",
+          "#EDF2F7",
+          "#EDF2F7",
+          "#EDF2F7",
+          "#EDF2F700",
+        ]}
+        py={[10, 10, 10, 10, 0]}
+      >
+        <HStack spacing={5}>
+          <Text px={5} py={1} color={color}>
+            1D
+          </Text>
+          <Text px={5} py={1} color={color}>
+            1W
+          </Text>
+          <Text px={5} py={1} color={color}>
+            1M
+          </Text>
+          <Text
+            background="linear-gradient(129.18deg, #52FF00 8.52%, #00EEFD 93.94%)"
+            px={5}
+            py={1}
+            color="#000000"
+            borderRadius={3}
+          >
+            1Y
+          </Text>
+          <Text px={2} color="#000000" borderRadius={3}>
+            {" "}
+          </Text>
+        </HStack>
+        <FormControl
+          mt={[5, 5, 5, 5, 0]}
+          width={["90%", "90%", "90%", "90%", "150px"]}
         >
-          1 Y
-        </Text>
-        <Text px={2} color="#000000" borderRadius={3}>
-          {" "}
-        </Text>
-        <FormControl width="150px">
           <Select
             formatOptionLabel={formatOptionLabelFilter}
             isSearchable={true}
@@ -500,13 +651,28 @@ const ChartFilterComp: React.FC = () => {
               value: item,
               label: item,
             }))}
+            onChange={(newValue) => {
+              if (newValue) {
+                setMonthValue(newValue.value);
+              }
+            }}
             placeholder="Month"
-            styles={customStyles}
-            onChange={(newValue) => {}}
+            styles={
+              isLargerThan1280 ? customTranslucentDropdown : customDropdown
+            }
           />
         </FormControl>
-      </HStack>
-    </HStack>
+      </Flex>
+      <Button
+        color="#3300FF"
+        my={5}
+        textDecoration={"underline"}
+        variant="link"
+        display={["flex", "flex", "flex", "flex", "none"]}
+      >
+        Clear Filters
+      </Button>
+    </Flex>
   );
 };
 
@@ -633,6 +799,8 @@ const LeaderBoard: React.FC = () => {
   const [searchBar, setSearchBar] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
 
+  const [monthValue, setMonthValue] = useState("Jan");
+
   return (
     <>
       <Header />
@@ -702,8 +870,8 @@ const LeaderBoard: React.FC = () => {
                   justifyContent={"flex-start"}
                   alignItem={"center"}
                 >
-                  <ChartFilterComp />
-                  <ChartComp />
+                  <ChartFilterComp setMonthValue={setMonthValue} />
+                  <ChartComp monthValue={monthValue} />
                   <HackCummulativeDataComp />
                 </Flex>
                 <HStack mt={7} mb={2} w="100%" justifyContent={"space-between"}>
@@ -736,8 +904,8 @@ const LeaderBoard: React.FC = () => {
                 w={"70%"}
                 h="fit-content"
               >
-                <ChartFilterComp />
-                <ChartComp />
+                <ChartFilterComp setMonthValue={setMonthValue} />
+                <ChartComp monthValue={monthValue} />
                 <HackCummulativeDataComp />
               </Flex>
             </Flex>
@@ -780,7 +948,7 @@ const LeaderBoard: React.FC = () => {
             justifyContent={"flex-start"}
           >
             <HStack
-              display={["none", "none", "none", "flex"]}
+              display={["none", "none", "none", "none", "flex"]}
               spacing={0}
               ml={[4, 4, 4, 0]}
               justify="center"
@@ -813,7 +981,7 @@ const LeaderBoard: React.FC = () => {
                       styles={customStylesStart}
                     />
                   </FormControl>
-                  <FormControl w="17%">
+                  <FormControl w="21%">
                     <Select
                       formatOptionLabel={formatOptionLabelFilter}
                       isSearchable={false}
@@ -822,7 +990,7 @@ const LeaderBoard: React.FC = () => {
                       styles={customStylesMiddle}
                     />
                   </FormControl>
-                  <FormControl w="17%">
+                  <FormControl w="19%">
                     <Select
                       formatOptionLabel={formatOptionLabelFilter}
                       isSearchable={false}
@@ -834,7 +1002,7 @@ const LeaderBoard: React.FC = () => {
                       styles={customStylesMiddle}
                     />
                   </FormControl>
-                  <FormControl w="17%">
+                  <FormControl w="19%">
                     <Select
                       formatOptionLabel={formatOptionLabelFilter}
                       isSearchable={false}
@@ -843,7 +1011,7 @@ const LeaderBoard: React.FC = () => {
                       styles={customStylesMiddle}
                     />
                   </FormControl>
-                  <FormControl w="17%">
+                  <FormControl w="14%">
                     <Select
                       formatOptionLabel={formatOptionLabelFilter}
                       isSearchable={false}
@@ -869,6 +1037,121 @@ const LeaderBoard: React.FC = () => {
                 <Search2Icon color={"#B0B7C3"} />
               </Flex>
             </HStack>
+
+            <InputGroup
+              display={["flex", "flex", "flex", "flex", "none"]}
+              alignItems="center"
+              mb={4}
+            >
+              <Input type="text" variant={"brand"} size="lg" />
+              <InputRightElement
+                height="48px"
+                fontSize="2xl"
+                width="fit-content"
+                children={
+                  <HStack spacing={2} mr={2}>
+                    <SearchIcon color="gray.300" />{" "}
+                    <Text color="gray.300"> |</Text>
+                    <Popover>
+                      <PopoverTrigger>
+                        <Button
+                          fontSize="2xl"
+                          variant="unstyled"
+                          display={["flex", "flex", "flex", "flex", "none"]}
+                        >
+                          <Icon as={FiFilter} color="gray.300" />
+                        </Button>
+                      </PopoverTrigger>
+                      <Portal>
+                        <PopoverContent w="fit-content">
+                          <PopoverArrow />
+                          <PopoverCloseButton />
+                          <PopoverBody
+                            display={"flex"}
+                            justifyContent="flex-start"
+                            alignItems={"center"}
+                            flexDir={"column"}
+                            w="fit-content"
+                          >
+                            <Flex
+                              justify={"flex-start"}
+                              alignItems={"center"}
+                              mx={0}
+                              mt={7}
+                              borderRadius={10}
+                              w="fit-content"
+                              height={"fit-content"}
+                              flexDir={"column"}
+                              backgroundColor={"#EDF2F7"}
+                              pb={5}
+                            >
+                              <FormControl mt={5} mx={3} w="280px">
+                                <Select
+                                  formatOptionLabel={formatOptionLabel}
+                                  options={options}
+                                  isSearchable={false}
+                                  placeholder="Select Blockchain"
+                                  styles={customDropdown}
+                                />
+                              </FormControl>
+                              <FormControl mt={5} mx={3} w="280px">
+                                <Select
+                                  formatOptionLabel={formatOptionLabelFilter}
+                                  isSearchable={false}
+                                  options={[]}
+                                  placeholder="Select Category"
+                                  styles={customDropdown}
+                                />
+                              </FormControl>
+                              <FormControl mt={5} mx={3} w="280px">
+                                <Select
+                                  formatOptionLabel={formatOptionLabelFilter}
+                                  isSearchable={false}
+                                  options={monthNames.map((item) => ({
+                                    value: item,
+                                    label: item,
+                                  }))}
+                                  placeholder="Select Month"
+                                  styles={customDropdown}
+                                />
+                              </FormControl>
+                              <FormControl mt={5} mx={3} w="280px">
+                                <Select
+                                  formatOptionLabel={formatOptionLabelFilter}
+                                  isSearchable={false}
+                                  options={[]}
+                                  placeholder="Select Year"
+                                  styles={customDropdown}
+                                />
+                              </FormControl>
+                              <FormControl mt={5} mx={3} w="280px">
+                                <Select
+                                  formatOptionLabel={formatOptionLabelFilter}
+                                  isSearchable={false}
+                                  options={[]}
+                                  placeholder="Sort By"
+                                  styles={customDropdown}
+                                />
+                              </FormControl>
+                            </Flex>
+                            <Button
+                              color="#3300FF"
+                              my={5}
+                              textDecoration={"underline"}
+                              variant="link"
+                              display={["flex", "flex", "flex", "flex", "none"]}
+                            >
+                              Clear Filters
+                            </Button>
+                          </PopoverBody>
+                        </PopoverContent>
+                      </Portal>
+                    </Popover>
+                  </HStack>
+                }
+              />
+            </InputGroup>
+
             <Flex
               w={"100%"}
               mt={5}
