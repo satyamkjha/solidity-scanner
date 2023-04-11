@@ -711,11 +711,22 @@ const ContractForm: React.FC = () => {
       status: string;
     }>(API_PATH.API_GET_CONTRACT_STATUS, req).then(
       async (res) => {
-        if (res.data.contract_verified) {
-          await API.post(API_PATH.API_START_SCAN_BLOCK, req);
-          queryClient.invalidateQueries("scans");
-          queryClient.invalidateQueries("profile");
-          history.push("/blocks");
+        if (res.data) {
+          if (res.data.contract_verified) {
+            const responseData = await API.post(
+              API_PATH.API_START_SCAN_BLOCK,
+              req
+            );
+            setIsLoading(false);
+            if (res.data) {
+              if (res.data.success) {
+                queryClient.invalidateQueries("scans");
+                queryClient.invalidateQueries("profile");
+                history.push("/blocks");
+              }
+            }
+          }
+        } else {
           setIsLoading(false);
         }
       },
