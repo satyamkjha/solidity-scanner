@@ -37,8 +37,10 @@ const Reset: React.FC = () => {
 
   const [password, setPassword] = useState("");
   const [email, setEmail] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
   const onSubmit = async () => {
     let reqHeaders = await getReCaptchaHeaders("forgot_password_set");
+    setIsLoading(true);
     const { data } = await API.post<AuthResponse>(
       API_PATH.API_FORGOT_PASSWORD,
       {
@@ -50,7 +52,7 @@ const Reset: React.FC = () => {
         headers: reqHeaders,
       }
     );
-
+    setIsLoading(false);
     if (data.status === "success") {
       history.push("/signin?isPasswordReset=true");
     }
@@ -127,7 +129,12 @@ const Reset: React.FC = () => {
             />
           </InputGroup>
 
-          <Button type="submit" variant="brand" onClick={onSubmit}>
+          <Button
+            type="submit"
+            variant="brand"
+            isLoading={isLoading}
+            onClick={onSubmit}
+          >
             Update Password
           </Button>
         </Stack>

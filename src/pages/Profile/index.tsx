@@ -80,13 +80,23 @@ const Profile: React.FC = () => {
     contact_number,
     first_name,
   }: ProfileFormData) => {
-    await API.post(API_PATH.API_UPDATE_PROFILE, {
+    const { data } = await API.post(API_PATH.API_UPDATE_PROFILE, {
       company_name,
       contact_number,
       first_name,
     });
+
     queryClient.invalidateQueries("profile");
-    setEditable(false);
+    if (data.status === "success") {
+      toast({
+        title: "Profile Updated successfully",
+        status: "success",
+        duration: 2000,
+        isClosable: true,
+        position: "bottom",
+      });
+      setEditable(false);
+    }
   };
 
   const updateEmail = async () => {
@@ -123,10 +133,7 @@ const Profile: React.FC = () => {
         email: metaMaskEmail,
       },
       {
-        headers: {
-          "Content-Type": "application/json",
-          Recaptchatoken,
-        },
+        headers: reqHeaders,
       }
     );
 
@@ -383,9 +390,14 @@ const ChangePasswordForm: React.FC = () => {
       return;
     }
     try {
-      await API.post(API_PATH.API_CHANGE_PASSWORD, { password, new_password });
-      Auth.deauthenticateUser();
-      history.push("/signin?isPasswordReset=true");
+      const { data } = await API.post(API_PATH.API_CHANGE_PASSWORD, {
+        password,
+        new_password,
+      });
+      if (data.status === "success") {
+        Auth.deauthenticateUser();
+        history.push("/signin?isPasswordReset=true");
+      }
     } catch (e) {
       console.log(e);
     }
