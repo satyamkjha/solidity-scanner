@@ -50,6 +50,8 @@ import { getFeatureGateConfig } from "helpers/helperFunction";
 import { useDropzone } from "react-dropzone";
 import Select from "react-select";
 import { API_PATH } from "helpers/routeManager";
+import ConfigSettings from "components/projectConfigSettings";
+import InfoSettings from "components/projectInfoSettings";
 
 const Home: React.FC = () => {
   const { data } = useOverview();
@@ -237,55 +239,55 @@ const ApplicationForm: React.FC = () => {
   const toast = useToast();
   const queryClient = useQueryClient();
   const { data: profileData } = useProfile();
-  const [visibility, setVisibility] = useState(false);
-  const { handleSubmit, register, formState } = useForm<ApplicationFormData>();
   const history = useHistory();
 
   const githubUrlRegex =
     /(http(s)?)(:(\/\/))((github.com)(\/)[\w@\:\-~]+(\/)[\w@\:\-~]+)(\.git)?/;
 
-  const onSubmit = async ({
-    project_url,
-    project_name,
-  }: ApplicationFormData) => {
-    if (project_name.length === 0) {
-      setNameError("Please enter a Project Name of less than 50 characters.");
-      return;
-    }
-    if (project_name.length > 50) {
-      setNameError("Project Name cannot exceed to more than 50 characters.");
-      return;
-    }
-    let filteredUrlInput = githubUrlRegex.exec(project_url);
-    if (!filteredUrlInput) {
-      setLinkError("Please enter a valid Github repository link");
-      return;
-    }
-    const filteredUrl = filteredUrlInput[0];
-    setNameError(null);
-    setLinkError(null);
-    const responseData = await API.post(API_PATH.API_PROJECT_SCAN, {
-      project_url: filteredUrl,
-      ...(project_name && project_name !== "" && { project_name }),
-      project_type: "new",
-      project_visibility: visibility ? "private" : "public",
-    });
-    if (responseData.status === 200) {
-      if (responseData.data.status === "success") {
-        queryClient.invalidateQueries("scans");
-        queryClient.invalidateQueries("profile");
-        history.push("/projects");
-      }
-    }
-  };
+  // const onSubmit = async ({
+  //   project_url,
+  //   project_name,
+  // }: ApplicationFormData) => {
+  //   if (project_name.length === 0) {
+  //     setNameError("Please enter a Project Name of less than 50 characters.");
+  //     return;
+  //   }
+  //   if (project_name.length > 50) {
+  //     setNameError("Project Name cannot exceed to more than 50 characters.");
+  //     return;
+  //   }
+  //   let filteredUrlInput = githubUrlRegex.exec(project_url);
+  //   if (!filteredUrlInput) {
+  //     setLinkError("Please enter a valid Github repository link");
+  //     return;
+  //   }
+  //   const filteredUrl = filteredUrlInput[0];
+  //   setNameError(null);
+  //   setLinkError(null);
+  //   const responseData = await API.post(API_PATH.API_PROJECT_SCAN, {
+  //     project_url: filteredUrl,
+  //     ...(project_name && project_name !== "" && { project_name }),
+  //     project_type: "new",
+  //     project_visibility: visibility ? "private" : "public",
+  //   });
+  //   if (responseData.status === 200) {
+  //     if (responseData.data.status === "success") {
+  //       queryClient.invalidateQueries("scans");
+  //       queryClient.invalidateQueries("profile");
+  //       history.push("/projects");
+  //     }
+  //   }
+  // };
 
+  const [projectName, setProjectName] = useState("");
+  const [githubLink, setGithubLink] = useState("");
+  const [visibility, setVisibility] = useState(false);
   const [nameError, setNameError] = useState<null | string>(null);
   const [linkError, setLinkError] = useState<null | string>(null);
-
   const [step, setStep] = useState(1);
-
   const isGithubIntegrated =
     profileData?._integrations?.github?.status === "successful";
+
   return (
     <Flex flexDir="column" justifyContent={"flex-start"} alignItems="center">
       {profileData && (
@@ -352,131 +354,11 @@ const ApplicationForm: React.FC = () => {
           </Text>
           <Divider color="gray.700" borderWidth="2px" />
           {step === 1 ? (
-            <form onSubmit={handleSubmit(onSubmit)} style={{ width: "100%" }}>
-              <Stack spacing={6} my={8} width={"100%"}>
-                <VStack alignItems={"flex-start"}>
-                  <Text mb={0} fontSize="sm">
-                    Project name
-                  </Text>
-                  <InputGroup alignItems="center">
-                    <InputLeftElement
-                      height="48px"
-                      children={<Icon as={AiOutlineProject} color="gray.300" />}
-                    />
-                    <Input
-                      placeholder="Project name"
-                      variant={nameError ? "error" : "brand"}
-                      size="lg"
-                      {...register("project_name")}
-                    />
-                  </InputGroup>
-                  <Text mb={0} color="#FF2400" fontSize="sm">
-                    {nameError}
-                  </Text>
-                </VStack>
-                <VStack mb={5} alignItems={"flex-start"}>
-                  <Text mb={0} fontSize="sm">
-                    Link to the Github repository
-                  </Text>
-                  <InputGroup alignItems="center" mb={4}>
-                    <InputLeftElement
-                      height="48px"
-                      children={<Icon as={FaFileCode} color="gray.300" />}
-                    />
-                    <Input
-                      isRequired
-                      type="url"
-                      placeholder="https://github.com/yourproject/project.git"
-                      variant={linkError ? "error" : "brand"}
-                      size="lg"
-                      {...register("project_url", { required: true })}
-                    />
-                  </InputGroup>
-                  <Text mb={0} color="#FF2400" fontSize="sm">
-                    {linkError}
-                  </Text>
-                </VStack>
-
-                <HStack alignItems="center" spacing={6} fontSize="14px">
-                  <Text>Public</Text>
-                  <Switch
-                    size="lg"
-                    variant="brand"
-                    isChecked={visibility}
-                    onChange={() => setVisibility(!visibility)}
-                  />
-                  <Text>Private</Text>
-                </HStack>
-
-                {!isGithubIntegrated && visibility && (
-                  <Alert status="warning" fontSize="14px">
-                    <AlertIcon />
-                    You need to connect your GitHub to start a private scan.
-                    <Link
-                      as={RouterLink}
-                      to="/integrations"
-                      variant="brand"
-                      fontWeight="600"
-                      ml={1}
-                    >
-                      Connect
-                    </Link>
-                  </Alert>
-                )}
-              </Stack>
-            </form>
+            <InfoSettings />
           ) : step === 2 ? (
             <></>
           ) : step === 3 ? (
-            <VStack
-              mt={8}
-              spacing={3}
-              justifyContent="flex-start"
-              alignItems={"flex-start"}
-            >
-              <Text
-                sx={{
-                  fontSize: "lg",
-                  fontWeight: 500,
-                  textAlign: "center",
-                }}
-              >
-                Turn on Github Synchronisation
-              </Text>
-              <Text
-                sx={{
-                  color: "subtle",
-                  fontSize: "sm",
-                  textAlign: "left",
-                }}
-              >
-                Provide a link to Git or Subversion repository. See link
-                examples and additional restrictions in the User Guide (section
-                Starting a scan from UI) available on the{" "}
-              </Text>
-              <Switch size="lg" variant="brand" />
-              <Text
-                sx={{
-                  fontSize: "lg",
-                  fontWeight: 500,
-                  textAlign: "center",
-                }}
-              >
-                Turn on Slack Alerts
-              </Text>
-              <Text
-                sx={{
-                  color: "subtle",
-                  fontSize: "sm",
-                  textAlign: "left",
-                }}
-              >
-                Provide a link to Git or Subversion repository. See link
-                examples and additional restrictions in the User Guide (section
-                Starting a scan from UI) available on the{" "}
-              </Text>
-              <Switch size="lg" variant="brand" />
-            </VStack>
+            <ConfigSettings />
           ) : (
             <></>
           )}
@@ -1171,16 +1053,6 @@ const UploadForm: React.FC = () => {
       name: fileName,
       file: file,
     };
-    // let r = new FileReader();
-    // r.onload = async function () {
-    //   if (r.result) {
-    //     let uploadResult = await postDataToS3(r.result, data.result.url);
-    //     if (!uploadResult) {
-    //       return "failed";
-    //     }
-    //   }
-    // };
-    // r.readAsBinaryString(file);
   };
 
   const postDataToS3 = async (fileData: File, urlString: string) => {
