@@ -554,6 +554,14 @@ const ContractForm: React.FC = () => {
       },
       // { value: "testnet", label: "ReefScan Testnet", icon: "" },
     ],
+    xdc: [
+      {
+        value: "mainnet",
+        label: "XDC Mainnet",
+        icon: "",
+        isDisabled: false,
+      },
+    ],
   };
 
   const options = [
@@ -627,6 +635,12 @@ const ContractForm: React.FC = () => {
       value: "buildbear",
       icon: "buildbear",
       label: "Buildbear - (buildbear.io)",
+      isDisabled: true,
+    },
+    {
+      value: "xdc",
+      icon: "xdc",
+      label: "XDC - (blockchain.io)",
       isDisabled: true,
     },
   ];
