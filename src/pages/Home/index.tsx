@@ -640,7 +640,7 @@ const ContractForm: React.FC = () => {
     {
       value: "xdc",
       icon: "xdc",
-      label: "XDC - (blockchain.io)",
+      label: "XDC - (blocksscan.io)",
       isDisabled: true,
     },
   ];

@@ -780,7 +780,7 @@ export default function LandingPage() {
             >
               <User size={36} />
               <Heading fontSize="3xl" my={4}>
-                100 +
+                120 +
               </Heading>
               <Text>Code patterns detected</Text>
             </Flex>
@@ -810,7 +810,7 @@ export default function LandingPage() {
             >
               <Work size={36} />
               <Heading fontSize="3xl" my={4}>
-                2.4M $
+                2.2B $
               </Heading>
               <Text>Worth of contracts secured</Text>
             </Flex>
