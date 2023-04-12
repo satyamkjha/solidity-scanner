@@ -244,6 +244,14 @@ const QuickScan: React.FC = () => {
         isDisabled: false,
       },
     ],
+    xdc: [
+      {
+        value: "mainnet",
+        label: "XDC Mainnet",
+        icon: "",
+        isDisabled: false,
+      },
+    ],
   };
 
   const options = [
@@ -297,6 +305,11 @@ const QuickScan: React.FC = () => {
       value: "optimism",
       icon: "optimism",
       label: "Optimism - (optimism.io)",
+    },
+    {
+      value: "xdc",
+      icon: "xdc",
+      label: "XDC - (blockchain.io)",
     },
   ];
 
@@ -673,7 +686,7 @@ const QuickScan: React.FC = () => {
               <Select
                 formatOptionLabel={formatOptionLabel}
                 options={options}
-                isSearchable={false}
+                isSearchable={true}
                 value={options.find((item) => platform === item.value)}
                 placeholder="Select Contract Platform"
                 styles={customStylesPlatform}

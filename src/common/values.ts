@@ -238,6 +238,7 @@ export const blockScans: { [key: string]: string } = {
   arbiscan: "Arbiscan",
   buildbear: "Buildbear",
   optimism: "Optimism",
+  xdc: "XDC",
 };
 
 export const detectorData: DetectorItemProp[] = [
