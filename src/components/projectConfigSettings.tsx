@@ -1,13 +1,28 @@
-import { VStack, Text, Switch } from "@chakra-ui/react";
+import {
+  VStack,
+  Text,
+  Switch,
+  HStack,
+  Alert,
+  AlertIcon,
+  Link,
+} from "@chakra-ui/react";
 import React from "react";
+import GithubConnectAlert from "./githubConnectAlert";
 
-const ConfigSettings: React.FC = () => {
+const ConfigSettings: React.FC<{
+  githubSync: boolean;
+  setGithubSync: React.Dispatch<React.SetStateAction<boolean>>;
+  isGithubIntegrated: boolean;
+}> = ({ githubSync, setGithubSync, isGithubIntegrated }) => {
   return (
     <VStack
       mt={8}
       spacing={3}
       justifyContent="flex-start"
       alignItems={"flex-start"}
+      minHeight="300px"
+      height="35vh"
     >
       <Text
         sx={{
@@ -29,7 +44,12 @@ const ConfigSettings: React.FC = () => {
         additional restrictions in the User Guide (section Starting a scan from
         UI) available on the{" "}
       </Text>
-      <Switch size="lg" variant="brand" />
+      <Switch
+        size="lg"
+        variant="brand"
+        onChange={() => setGithubSync(!githubSync)}
+      />
+      {!isGithubIntegrated && githubSync && <GithubConnectAlert />}
       <Text
         sx={{
           fontSize: "lg",
@@ -50,7 +70,10 @@ const ConfigSettings: React.FC = () => {
         additional restrictions in the User Guide (section Starting a scan from
         UI) available on the{" "}
       </Text>
-      <Switch size="lg" variant="brand" />
+      <HStack spacing={5}>
+        <Switch isDisabled={true} size="lg" variant="brand" />
+        <Text color="gray.500">Coming Soon</Text>
+      </HStack>
     </VStack>
   );
 };

@@ -533,6 +533,50 @@ export const ProjectsMenuIcon: React.FC<{ size: number; active?: boolean }> = ({
   );
 };
 
+export const FolderIcon: React.FC<{ size: number; active: boolean }> = ({
+  size,
+  active,
+  ...props
+}) => {
+  const iconColor = active ? "#79B8FF" : "#D9D9D9";
+  return (
+    <svg
+      width={size}
+      height={(12 / 16) * size}
+      viewBox="0 0 16 12"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      <path
+        d="M0 2C0 1.46957 0.210714 0.960859 0.585786 0.585786C0.960859 0.210714 1.46957 0 2 0H7L9 2H14C14.5304 2 15.0391 2.21071 15.4142 2.58579C15.7893 2.96086 16 3.46957 16 4V10C16 10.5304 15.7893 11.0391 15.4142 11.4142C15.0391 11.7893 14.5304 12 14 12H2C1.46957 12 0.960859 11.7893 0.585786 11.4142C0.210714 11.0391 0 10.5304 0 10V2Z"
+        fill={iconColor}
+      />
+    </svg>
+  );
+};
+
+export const SimpleFileIcon: React.FC<{ size: number }> = ({
+  size,
+  ...props
+}) => {
+  return (
+    <svg
+      width={size}
+      height={(17 / 13) * size}
+      viewBox="0 0 13 17"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      <path
+        d="M7.20898 1.41406H2.25065C1.87493 1.41406 1.51459 1.56332 1.24892 1.82899C0.98324 2.09467 0.833984 2.45501 0.833984 2.83073V14.1641C0.833984 14.5398 0.98324 14.9001 1.24892 15.1658C1.51459 15.4315 1.87493 15.5807 2.25065 15.5807H10.7507C11.1264 15.5807 11.4867 15.4315 11.7524 15.1658C12.0181 14.9001 12.1673 14.5398 12.1673 14.1641V6.3724L7.20898 1.41406Z"
+        stroke="#4E5D78"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+      />
+    </svg>
+  );
+};
+
 export const SolidityFileIcon: React.FC<{ size: number; active?: boolean }> = ({
   size,
   active,

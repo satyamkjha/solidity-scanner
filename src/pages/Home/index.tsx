@@ -52,6 +52,7 @@ import Select from "react-select";
 import { API_PATH } from "helpers/routeManager";
 import ConfigSettings from "components/projectConfigSettings";
 import InfoSettings from "components/projectInfoSettings";
+import FolderSettings from "components/projectFolderSettings";
 
 const Home: React.FC = () => {
   const { data } = useOverview();
@@ -282,6 +283,7 @@ const ApplicationForm: React.FC = () => {
   const [projectName, setProjectName] = useState("");
   const [githubLink, setGithubLink] = useState("");
   const [visibility, setVisibility] = useState(false);
+  const [githubSync, setGithubSync] = useState(false);
   const [nameError, setNameError] = useState<null | string>(null);
   const [linkError, setLinkError] = useState<null | string>(null);
   const [step, setStep] = useState(1);
@@ -352,13 +354,26 @@ const ApplicationForm: React.FC = () => {
             </Box>
             page.
           </Text>
-          <Divider color="gray.700" borderWidth="2px" />
+          <Divider color="gray.700" borderWidth="1px" />
           {step === 1 ? (
-            <InfoSettings />
+            <InfoSettings
+              nameError={nameError}
+              linkError={linkError}
+              visibility={visibility}
+              projectName={projectName}
+              githubLink={githubLink}
+              isGithubIntegrated={isGithubIntegrated}
+              setProjectName={setProjectName}
+              setGithubLink={setGithubLink}
+              setVisibility={setVisibility}
+            />
           ) : step === 2 ? (
-            <></>
+            <FolderSettings />
           ) : step === 3 ? (
-            <ConfigSettings />
+            <ConfigSettings
+              githubSync={githubSync}
+              setGithubSync={setGithubSync}
+            />
           ) : (
             <></>
           )}

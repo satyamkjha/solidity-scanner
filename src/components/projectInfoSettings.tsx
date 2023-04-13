@@ -16,6 +16,7 @@ import Icon from "react-crypto-icons";
 import { AiOutlineProject } from "react-icons/ai";
 import { FaFileCode } from "react-icons/fa";
 import { Link as RouterLink } from "react-router-dom";
+import GithubConnectAlert from "./githubConnectAlert";
 
 const InfoSettings: React.FC<{
   nameError: string | null;
@@ -39,7 +40,7 @@ const InfoSettings: React.FC<{
   setVisibility,
 }) => {
   return (
-    <Stack spacing={6} my={8} width={"100%"}>
+    <Stack minHeight="300px" height="35vh" spacing={6} mt={8} width={"100%"}>
       <VStack alignItems={"flex-start"}>
         <Text mb={0} fontSize="sm">
           Project name
@@ -47,7 +48,7 @@ const InfoSettings: React.FC<{
         <InputGroup alignItems="center">
           <InputLeftElement
             height="48px"
-            children={<AiOutlineProject color={"#ECECEC"} />}
+            children={<AiOutlineProject color={"#A0AEC0"} />}
           />
           <Input
             placeholder="Project name"
@@ -68,7 +69,7 @@ const InfoSettings: React.FC<{
         <InputGroup alignItems="center" mb={4}>
           <InputLeftElement
             height="48px"
-            children={<Icon as={FaFileCode} color="gray.300" />}
+            children={<FaFileCode color={"#CBD5E0"} />}
           />
           <Input
             isRequired
@@ -96,21 +97,7 @@ const InfoSettings: React.FC<{
         <Text>Private</Text>
       </HStack>
 
-      {!isGithubIntegrated && visibility && (
-        <Alert status="warning" fontSize="14px">
-          <AlertIcon />
-          You need to connect your GitHub to start a private scan.
-          <Link
-            as={RouterLink}
-            to="/integrations"
-            variant="brand"
-            fontWeight="600"
-            ml={1}
-          >
-            Connect
-          </Link>
-        </Alert>
-      )}
+      {!isGithubIntegrated && visibility && <GithubConnectAlert />}
     </Stack>
   );
 };
