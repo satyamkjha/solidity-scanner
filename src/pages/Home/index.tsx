@@ -231,11 +231,6 @@ const Home: React.FC = () => {
   );
 };
 
-type ApplicationFormData = {
-  project_url: string;
-  project_name: string;
-};
-
 const ApplicationForm: React.FC = () => {
   const toast = useToast();
   const queryClient = useQueryClient();
@@ -304,9 +299,9 @@ const ApplicationForm: React.FC = () => {
           <HStack w="100%" justifyContent="space-between" mb={4}>
             <Text
               sx={{
-                fontSize: "2xl",
+                fontSize: ["xl", "xl", "2xl"],
                 fontWeight: 600,
-                textAlign: "center",
+                textAlign: "left",
               }}
             >
               {step === 1
@@ -317,7 +312,7 @@ const ApplicationForm: React.FC = () => {
                 ? "Project Settings"
                 : ""}
             </Text>
-            <HStack spacing={5}>
+            <HStack justifyContent={"flex-end"} spacing={[0, 0, 5]}>
               <Image
                 height="60px"
                 width="60px"
@@ -325,8 +320,8 @@ const ApplicationForm: React.FC = () => {
               />
               <Text
                 sx={{
-                  fontSize: "lg",
-                  fontWeight: 800,
+                  fontSize: ["md", "md", "lg"],
+                  fontWeight: 700,
 
                   textAlign: "center",
                 }}
@@ -373,6 +368,7 @@ const ApplicationForm: React.FC = () => {
             <ConfigSettings
               githubSync={githubSync}
               setGithubSync={setGithubSync}
+              isGithubIntegrated={isGithubIntegrated}
             />
           ) : (
             <></>
@@ -381,17 +377,18 @@ const ApplicationForm: React.FC = () => {
       )}
       <Flex
         w="100%"
-        flexDir="row"
+        flexDir={["column", "column", "column", "row"]}
         alignItems="center"
-        justifyContent="flex-end"
+        justifyContent={["flex-start", "flex-start", "flex-start", "flex-end"]}
         py={3}
       >
         {step > 1 && (
           <Button
             type="submit"
-            width="200px"
+            width={["100%", "100%", "100%", "200px"]}
             variant="accent-outline"
-            mr={5}
+            mr={[0, 0, 0, 5]}
+            mb={[3, 3, 3, 0]}
             py={6}
             onClick={() => {
               if (step > 1) {
@@ -406,7 +403,7 @@ const ApplicationForm: React.FC = () => {
         <Button
           type="submit"
           variant="brand"
-          width="200px"
+          width={["100%", "100%", "100%", "200px"]}
           onClick={() => {
             if (step < 3) {
               setStep(step + 1);

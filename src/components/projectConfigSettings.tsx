@@ -19,10 +19,11 @@ const ConfigSettings: React.FC<{
     <VStack
       mt={8}
       spacing={3}
+      width={"100%"}
       justifyContent="flex-start"
       alignItems={"flex-start"}
       minHeight="300px"
-      height="35vh"
+      height={["fit-content", "fit-content", "fit-content", "35vh"]}
     >
       <Text
         sx={{
