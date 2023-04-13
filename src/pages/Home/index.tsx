@@ -240,45 +240,50 @@ const ApplicationForm: React.FC = () => {
   const githubUrlRegex =
     /(http(s)?)(:(\/\/))((github.com)(\/)[\w@\:\-~]+(\/)[\w@\:\-~]+)(\.git)?/;
 
-  // const onSubmit = async ({
-  //   project_url,
-  //   project_name,
-  // }: ApplicationFormData) => {
-  //   if (project_name.length === 0) {
-  //     setNameError("Please enter a Project Name of less than 50 characters.");
-  //     return;
-  //   }
-  //   if (project_name.length > 50) {
-  //     setNameError("Project Name cannot exceed to more than 50 characters.");
-  //     return;
-  //   }
-  //   let filteredUrlInput = githubUrlRegex.exec(project_url);
-  //   if (!filteredUrlInput) {
-  //     setLinkError("Please enter a valid Github repository link");
-  //     return;
-  //   }
-  //   const filteredUrl = filteredUrlInput[0];
-  //   setNameError(null);
-  //   setLinkError(null);
-  //   const responseData = await API.post(API_PATH.API_PROJECT_SCAN, {
-  //     project_url: filteredUrl,
-  //     ...(project_name && project_name !== "" && { project_name }),
-  //     project_type: "new",
-  //     project_visibility: visibility ? "private" : "public",
-  //   });
-  //   if (responseData.status === 200) {
-  //     if (responseData.data.status === "success") {
-  //       queryClient.invalidateQueries("scans");
-  //       queryClient.invalidateQueries("profile");
-  //       history.push("/projects");
-  //     }
-  //   }
-  // };
+  const runValidation = () => {
+    if (projectName.length === 0) {
+      setNameError("Please enter a Project Name of less than 50 characters.");
+      return false;
+    }
+    if (projectName.length > 50) {
+      setNameError("Project Name cannot exceed to more than 50 characters.");
+      return false;
+    }
+    let filteredUrlInput = githubUrlRegex.exec(githubLink);
+    if (!filteredUrlInput) {
+      setLinkError("Please enter a valid Github repository link");
+      return false;
+    }
+    const filteredUrl = filteredUrlInput[0];
+    setGithubLink(filteredUrl);
+    setNameError(null);
+    setLinkError(null);
+    return true;
+  };
+
+  const runScan = async () => {
+    if (!runValidation()) return;
+    const responseData = await API.post(API_PATH.API_PROJECT_SCAN, {
+      project_url: githubLink,
+      project_name: projectName,
+      project_type: "new",
+      project_visibility: visibility ? "private" : "public",
+      skip_file_paths: skipFilePaths,
+    });
+    if (responseData.status === 200) {
+      if (responseData.data.status === "success") {
+        queryClient.invalidateQueries("scans");
+        queryClient.invalidateQueries("profile");
+        history.push("/projects");
+      }
+    }
+  };
 
   const [projectName, setProjectName] = useState("");
   const [githubLink, setGithubLink] = useState("");
   const [visibility, setVisibility] = useState(false);
   const [githubSync, setGithubSync] = useState(false);
+  const [skipFilePaths, setSkipFilePaths] = useState<string[]>([]);
   const [nameError, setNameError] = useState<null | string>(null);
   const [linkError, setLinkError] = useState<null | string>(null);
   const [step, setStep] = useState(1);
