@@ -23,7 +23,7 @@ const ConfigSettings: React.FC<{
       justifyContent="flex-start"
       alignItems={"flex-start"}
       minHeight="300px"
-      height={["fit-content", "fit-content", "fit-content", "35vh"]}
+      height={["fit-content", "fit-content", "fit-content", "40vh"]}
     >
       <Text
         sx={{

@@ -73,7 +73,7 @@ const Home: React.FC = () => {
             borderRadius: "20px",
             p: 4,
             mx: [0, 0, 4],
-            my: 4,
+            my: 2,
           }}
         >
           <Tabs variant="soft-rounded" colorScheme="green">
@@ -83,13 +83,13 @@ const Home: React.FC = () => {
               <Tab width="50%">Upload Contract</Tab>
             </TabList>
             <TabPanels>
-              <TabPanel>
+              <TabPanel p={0}>
                 <ApplicationForm />
               </TabPanel>
-              <TabPanel>
+              <TabPanel p={0}>
                 <ContractForm />
               </TabPanel>
-              <TabPanel>
+              <TabPanel p={0}>
                 <UploadForm />
               </TabPanel>
             </TabPanels>
@@ -100,7 +100,7 @@ const Home: React.FC = () => {
             sx={{
               w: ["100%", "100%", "40%"],
               mx: [0, 0, 4],
-              my: 4,
+              my: 2,
               justifyContent: "center",
             }}
           >
@@ -112,7 +112,7 @@ const Home: React.FC = () => {
             sx={{
               w: ["100%", "100%", "40%"],
               mx: [0, 0, 4],
-              my: 4,
+              my: 2,
             }}
           >
             <Text sx={{ color: "subtle", fontSize: "sm", px: 4 }}>
@@ -314,19 +314,23 @@ const ApplicationForm: React.FC = () => {
             </Text>
             <HStack justifyContent={"flex-end"} spacing={[0, 0, 5]}>
               <Image
-                height="60px"
-                width="60px"
+                height={["40px", "40px", "60px"]}
+                width={["40px", "40px", "60px"]}
                 src={`/common/step_${step}.svg`}
               />
               <Text
                 sx={{
                   fontSize: ["md", "md", "lg"],
                   fontWeight: 700,
-
+                  lineHeight: "20px",
                   textAlign: "center",
                 }}
               >
-                {`Step ${step}/3`}
+                {"STEP"}{" "}
+                <Box fontSize={["xl", "xl", "2xl"]} as="span">
+                  {step}/
+                </Box>
+                {3}
               </Text>
             </HStack>
           </HStack>
@@ -380,7 +384,7 @@ const ApplicationForm: React.FC = () => {
         flexDir={["column", "column", "column", "row"]}
         alignItems="center"
         justifyContent={["flex-start", "flex-start", "flex-start", "flex-end"]}
-        py={3}
+        pt={3}
       >
         {step > 1 && (
           <Button
@@ -761,29 +765,44 @@ const ContractForm: React.FC = () => {
     );
   };
   return (
-    <>
+    <Flex
+      flexDir="column"
+      backgroundColor="#FCFCFC"
+      px={7}
+      py={5}
+      justifyContent={"flex-start"}
+      alignItems="center"
+      borderRadius={20}
+      border="1px solid #ECECEC"
+    >
       <Text
+        w="100%"
         sx={{
           fontSize: "2xl",
           fontWeight: 600,
-          mt: 6,
           textAlign: "center",
         }}
       >
         Load contract
       </Text>
-      <Text sx={{ color: "subtle", textAlign: "left", mb: 4 }}>
+      <Text w="100%" sx={{ color: "subtle", textAlign: "left", mb: 4 }}>
         Provide the address of your smart contract deployed on the supported EVM
         chains. Your results will appear in the "Verified Contracts" tab.
       </Text>
-      <Text sx={{ color: "subtle", textAlign: "left", mb: 2 }}>
+      <Text w="100%" sx={{ color: "subtle", textAlign: "left", mb: 2 }}>
         NOTE: Please follow the constraints below to avoid scan failure:
       </Text>
-      <Text sx={{ color: "subtle", textAlign: "left", mb: 2, fontSize: "sm" }}>
+      <Text
+        w="100%"
+        sx={{ color: "subtle", textAlign: "left", mb: 2, fontSize: "sm" }}
+      >
         1. Navigate to the explorer of the particular blockchain (Ethereum -
         Etherscan.io).
       </Text>
-      <Text sx={{ color: "subtle", textAlign: "left", mb: 6, fontSize: "sm" }}>
+      <Text
+        w="100%"
+        sx={{ color: "subtle", textAlign: "left", mb: 6, fontSize: "sm" }}
+      >
         2. Use the search bar to get your smart contract and check if the source
         code is verified in the "Contract" tab of the selected explorer.
       </Text>
@@ -897,7 +916,7 @@ const ContractForm: React.FC = () => {
           </Button>
         </Stack>
       )}
-    </>
+    </Flex>
   );
 };
 
@@ -1093,27 +1112,37 @@ const UploadForm: React.FC = () => {
   return (
     <>
       {profileData && (
-        <>
+        <Flex
+          flexDir="column"
+          backgroundColor="#FCFCFC"
+          px={7}
+          py={5}
+          justifyContent={"flex-start"}
+          alignItems="center"
+          borderRadius={20}
+          border="1px solid #ECECEC"
+        >
           <Text
+            w="100%"
             sx={{
               fontSize: "2xl",
               fontWeight: 600,
-              mt: 6,
               textAlign: "center",
             }}
           >
             Upload contract
           </Text>
 
-          <Text sx={{ color: "subtle", textAlign: "left", mb: 4 }}>
+          <Text w="100%" sx={{ color: "subtle", textAlign: "left", mb: 4 }}>
             Upload your Solidity files (.sol extension) as a project. Utilize
             the “Project Name” field to refer to your scan results in the
             “Projects” section.
           </Text>
-          <Text sx={{ color: "subtle", textAlign: "left", mb: 2 }}>
+          <Text w="100%" sx={{ color: "subtle", textAlign: "left", mb: 2 }}>
             NOTE: Please follow the constraints below to avoid scan failure:
           </Text>
           <Text
+            w="100%"
             sx={{ color: "subtle", textAlign: "left", mb: 2, fontSize: "sm" }}
           >
             1. Files to be uploaded should be Solidity(.sol) files, preferably
@@ -1121,7 +1150,8 @@ const UploadForm: React.FC = () => {
             results.
           </Text>
           <Text
-            sx={{ color: "subtle", textAlign: "left", mb: 6, fontSize: "sm" }}
+            w="100%"
+            sx={{ color: "subtle", textAlign: "left", mb: 3, fontSize: "sm" }}
           >
             2. A Maximum number of files that can be uploaded is 5 and file size
             cannot exceed 5MB.
@@ -1131,7 +1161,6 @@ const UploadForm: React.FC = () => {
             flexDir={"column"}
             justifyContent={"flex-start"}
             alignItems="flex-start"
-            my={8}
             width={"100%"}
           >
             <VStack alignItems={"flex-start"} width="100%">
@@ -1293,7 +1322,7 @@ const UploadForm: React.FC = () => {
               Start Scan
             </Button>
           </Flex>
-        </>
+        </Flex>
       )}
     </>
   );

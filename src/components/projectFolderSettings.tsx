@@ -11,6 +11,8 @@ import {
 } from "@chakra-ui/react";
 import Select from "react-select";
 import { FolderIcon, SimpleFileIcon } from "./icons";
+import { AiOutlineFile } from "react-icons/ai";
+import { ChevronDownIcon, ChevronRightIcon } from "@chakra-ui/icons";
 
 const formatOptionLabel: React.FC<{
   value: string;
@@ -92,10 +94,11 @@ const FileList: React.FC<{
   return (
     <Flex
       height="fit-content"
+      width={"100%"}
       flexDir="column"
       justifyContent="flex-start"
       alignItems="flex-start"
-      ml={5}
+      pl={7}
     >
       {fileList.map((item) => (
         <FileItem fileItem={item} />
@@ -113,30 +116,39 @@ const FileItem: React.FC<{
 
   return (
     <>
-      <HStack
-        mb={2}
-        spacing={5}
+      <Flex
+        p={2}
+        width={"100%"}
+        cursor={"pointer"}
+        onClick={() => setShow(!show)}
         justifyContent="flex-start"
         alignItems="center"
+        borderRadius={5}
+        _hover={{
+          backgroundColor: "gray.100",
+        }}
       >
+        {fileItem.sha && (show ? <ChevronDownIcon /> : <ChevronRightIcon />)}
         <Checkbox
+          ml={fileItem.sha ? 1 : 7}
+          mr={3}
           isChecked={isChecked}
           colorScheme={"purple"}
           borderColor={"gray.500"}
           onChange={() => setIsChecked(!isChecked)}
         ></Checkbox>
         {fileItem.type === "file" ? (
-          <SimpleFileIcon size={20} />
+          <AiOutlineFile
+            color={isChecked ? "#4E5D78" : "#4E5D7880"}
+            size={20}
+          />
         ) : (
           <FolderIcon active={isChecked} size={20} />
         )}
-        <Text
-          onClick={() => setShow(!show)}
-          color={isChecked ? "#4E5D78" : "#4E5D7880"}
-        >
+        <Text ml={3} color={isChecked ? "#4E5D78" : "#4E5D7880"}>
           {fileItem.path}
         </Text>
-      </HStack>
+      </Flex>
       {fileItem.sha && show && <FileList fileList={fileData} />}
     </>
   );
@@ -146,7 +158,7 @@ const FolderSettings: React.FC = () => {
   return (
     <Flex
       minHeight="300px"
-      height="35vh"
+      height="40vh"
       mt={8}
       flexDir="column"
       justifyContent="flex-start"
@@ -174,7 +186,7 @@ const FolderSettings: React.FC = () => {
         flexDir="column"
         justifyContent="flex-start"
         alignItems="flex-start"
-        overflowX={"scroll"}
+        overflow={"scroll"}
       >
         <FileList fileList={fileData} />
       </Flex>

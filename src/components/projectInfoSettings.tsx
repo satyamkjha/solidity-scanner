@@ -40,7 +40,7 @@ const InfoSettings: React.FC<{
   setVisibility,
 }) => {
   return (
-    <Stack minHeight="300px" height="35vh" spacing={6} mt={8} width={"100%"}>
+    <Stack minHeight="300px" height="40vh" spacing={6} mt={8} width={"100%"}>
       <VStack alignItems={"flex-start"}>
         <Text mb={0} fontSize="sm">
           Project name
