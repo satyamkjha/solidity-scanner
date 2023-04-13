@@ -108,6 +108,7 @@ import { API_PATH } from "helpers/routeManager";
 import { useReactToPrint } from "react-to-print";
 import { PrintContainer } from "pages/Report/PrintContainer";
 import { getPublicReport } from "hooks/usePublicReport";
+import ProjectCustomSettings from "components/projectCustomSettings";
 
 export const ProjectPage: React.FC = () => {
   const { projectId } = useParams<{ projectId: string }>();
@@ -736,7 +737,7 @@ const ScanDetails: React.FC<{
                             h="35px"
                             minW={"175px"}
                             bgColor={"#F5F5F5"}
-                            mx={4}
+                            ml={4}
                             whiteSpace="nowrap"
                           >
                             Published Reports
@@ -748,12 +749,22 @@ const ScanDetails: React.FC<{
                           h="35px"
                           minW={"175px"}
                           bgColor={"#F5F5F5"}
-                          mx={4}
+                          ml={4}
                           whiteSpace="nowrap"
                         >
                           Published Reports
                         </Tab>
                       )}
+                      <Tab
+                        fontSize={"sm"}
+                        h="35px"
+                        minW={"175px"}
+                        bgColor={"#F5F5F5"}
+                        mx={4}
+                        whiteSpace="nowrap"
+                      >
+                        Custom Settings
+                      </Tab>
                     </TabList>
                   </Flex>
                   <TabPanels>
@@ -840,8 +851,14 @@ const ScanDetails: React.FC<{
                         />
                       </TabPanel>
                     )}
+                    <TabPanel p={[0, 0, 0, 2]}>
+                      <ProjectCustomSettings
+                        isGithubIntegrated={
+                          profile._integrations?.github?.status === "successful"
+                        }
+                      />
+                    </TabPanel>
                   </TabPanels>
-                  <></>
                 </Tabs>
               )}
             </>

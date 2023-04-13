@@ -3,6 +3,7 @@ import {
   Flex,
   HStack,
   Text,
+  Stack,
   FormControl,
   Divider,
   VStack,
@@ -98,7 +99,7 @@ const FileList: React.FC<{
       flexDir="column"
       justifyContent="flex-start"
       alignItems="flex-start"
-      pl={7}
+      pl={[2, 2, 7]}
     >
       {fileList.map((item) => (
         <FileItem fileItem={item} />
@@ -130,7 +131,7 @@ const FileItem: React.FC<{
       >
         {fileItem.sha && (show ? <ChevronDownIcon /> : <ChevronRightIcon />)}
         <Checkbox
-          ml={fileItem.sha ? 1 : 7}
+          ml={fileItem.sha ? 1 : [5, 5, 7]}
           mr={3}
           isChecked={isChecked}
           colorScheme={"purple"}
@@ -157,16 +158,15 @@ const FileItem: React.FC<{
 const FolderSettings: React.FC = () => {
   return (
     <Flex
-      minHeight="300px"
-      height="40vh"
-      mt={8}
+      minHeight="400px"
+      height={["fit-content", "fit-content", "fit-content", "40vh"]}
       flexDir="column"
       justifyContent="flex-start"
       alignItems="flex-start"
     >
-      <HStack mt={-5} spacing={5}>
+      <Stack flexDir={["column", "column", "row"]} spacing={[3, 3, 5]} w="100%">
         <Text>Select your branch</Text>
-        <FormControl id="select_branch" width={"300px"}>
+        <FormControl id="select_branch" width={["100%", "100%", "300px"]}>
           <Select
             formatOptionLabel={formatOptionLabel}
             isSearchable={true}
@@ -177,11 +177,12 @@ const FolderSettings: React.FC = () => {
             onChange={(newValue) => {}}
           />
         </FormControl>
-      </HStack>
+      </Stack>
       <Divider mt={3} color="gray.700" borderWidth="1px" />
       <Flex
         height="calc(100% - 10px)"
         mt={3}
+        ml={[-2, -2, 0]}
         width={"100%"}
         flexDir="column"
         justifyContent="flex-start"

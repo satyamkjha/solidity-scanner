@@ -291,7 +291,7 @@ const ApplicationForm: React.FC = () => {
         <Flex
           flexDir="column"
           backgroundColor="#FCFCFC"
-          px={7}
+          px={[4, 4, 7]}
           py={5}
           borderRadius={20}
           border="1px solid #ECECEC"
@@ -302,6 +302,7 @@ const ApplicationForm: React.FC = () => {
                 fontSize: ["xl", "xl", "2xl"],
                 fontWeight: 600,
                 textAlign: "left",
+                w: "60%",
               }}
             >
               {step === 1
@@ -317,6 +318,7 @@ const ApplicationForm: React.FC = () => {
                 height={["40px", "40px", "60px"]}
                 width={["40px", "40px", "60px"]}
                 src={`/common/step_${step}.svg`}
+                mr={2}
               />
               <Text
                 sx={{
@@ -326,7 +328,7 @@ const ApplicationForm: React.FC = () => {
                   textAlign: "center",
                 }}
               >
-                {"STEP"}{" "}
+                {"STEP"} <br />
                 <Box fontSize={["xl", "xl", "2xl"]} as="span">
                   {step}/
                 </Box>
@@ -353,7 +355,7 @@ const ApplicationForm: React.FC = () => {
             </Box>
             page.
           </Text>
-          <Divider color="gray.700" borderWidth="1px" />
+          <Divider color="gray.700" borderWidth="1px" mb={3} />
           {step === 1 ? (
             <InfoSettings
               nameError={nameError}

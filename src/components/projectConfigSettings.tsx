@@ -1,12 +1,4 @@
-import {
-  VStack,
-  Text,
-  Switch,
-  HStack,
-  Alert,
-  AlertIcon,
-  Link,
-} from "@chakra-ui/react";
+import { VStack, Text, Switch, HStack } from "@chakra-ui/react";
 import React from "react";
 import GithubConnectAlert from "./githubConnectAlert";
 
@@ -17,19 +9,19 @@ const ConfigSettings: React.FC<{
 }> = ({ githubSync, setGithubSync, isGithubIntegrated }) => {
   return (
     <VStack
-      mt={8}
       spacing={3}
+      pt={3}
       width={"100%"}
       justifyContent="flex-start"
       alignItems={"flex-start"}
-      minHeight="300px"
+      minHeight="400px"
       height={["fit-content", "fit-content", "fit-content", "40vh"]}
     >
       <Text
         sx={{
           fontSize: "lg",
           fontWeight: 500,
-          textAlign: "center",
+          textAlign: "left",
         }}
       >
         Turn on Github Synchronisation
