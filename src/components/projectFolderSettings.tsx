@@ -9,6 +9,7 @@ import {
   VStack,
   Checkbox,
   Collapse,
+  Button,
 } from "@chakra-ui/react";
 import Select from "react-select";
 import { FolderIcon, SimpleFileIcon } from "./icons";
@@ -91,7 +92,8 @@ const branches = ["master", "test", "dev", "lang"];
 
 const FileList: React.FC<{
   fileList: { path: string; type: string; sha?: string }[];
-}> = ({ fileList }) => {
+  view: "github_app" | "detailed_result" | "scan_history";
+}> = ({ fileList, view }) => {
   return (
     <Flex
       height="fit-content"
@@ -102,7 +104,7 @@ const FileList: React.FC<{
       pl={[2, 2, 7]}
     >
       {fileList.map((item) => (
-        <FileItem fileItem={item} />
+        <FileItem view={view} fileItem={item} />
       ))}
     </Flex>
   );
@@ -110,7 +112,8 @@ const FileList: React.FC<{
 
 const FileItem: React.FC<{
   fileItem: { path: string; type: string; sha?: string };
-}> = ({ fileItem }) => {
+  view: "github_app" | "detailed_result" | "scan_history";
+}> = ({ fileItem, view }) => {
   const [isChecked, setIsChecked] = React.useState(true);
 
   const [show, setShow] = React.useState(false);
@@ -119,6 +122,7 @@ const FileItem: React.FC<{
     <>
       <Flex
         p={2}
+        pl={fileItem.type === "file" ? 8 : 2}
         width={"100%"}
         cursor={"pointer"}
         onClick={() => setShow(!show)}
@@ -129,15 +133,18 @@ const FileItem: React.FC<{
           backgroundColor: "gray.100",
         }}
       >
-        {fileItem.sha && (show ? <ChevronDownIcon /> : <ChevronRightIcon />)}
-        <Checkbox
-          ml={fileItem.sha ? 1 : [5, 5, 7]}
-          mr={3}
-          isChecked={isChecked}
-          colorScheme={"purple"}
-          borderColor={"gray.500"}
-          onChange={() => setIsChecked(!isChecked)}
-        ></Checkbox>
+        {fileItem.sha &&
+          (show ? <ChevronDownIcon mr={2} /> : <ChevronRightIcon mr={2} />)}
+        {view !== "scan_history" && (
+          <Checkbox
+            mr={3}
+            isChecked={isChecked}
+            colorScheme={"purple"}
+            borderColor={"gray.500"}
+            onChange={() => setIsChecked(!isChecked)}
+          ></Checkbox>
+        )}
+
         {fileItem.type === "file" ? (
           <AiOutlineFile
             color={isChecked ? "#4E5D78" : "#4E5D7880"}
@@ -150,34 +157,77 @@ const FileItem: React.FC<{
           {fileItem.path}
         </Text>
       </Flex>
-      {fileItem.sha && show && <FileList fileList={fileData} />}
+      {fileItem.sha && show && <FileList view={view} fileList={fileData} />}
     </>
   );
 };
 
-const FolderSettings: React.FC = () => {
+const FolderSettings: React.FC<{
+  view: "github_app" | "detailed_result" | "scan_history";
+}> = ({ view }) => {
   return (
     <Flex
-      minHeight="400px"
-      height={["fit-content", "fit-content", "fit-content", "40vh"]}
+      minHeight={view === "github_app" ? "400px" : "300px"}
+      height={[
+        "fit-content",
+        "fit-content",
+        "fit-content",
+        view === "github_app" ? "40vh" : "30vh",
+      ]}
       flexDir="column"
       justifyContent="flex-start"
       alignItems="flex-start"
     >
-      <Stack flexDir={["column", "column", "row"]} spacing={[3, 3, 5]} w="100%">
-        <Text>Select your branch</Text>
-        <FormControl id="select_branch" width={["100%", "100%", "300px"]}>
-          <Select
-            formatOptionLabel={formatOptionLabel}
-            isSearchable={true}
-            isDisabled={false}
-            options={branches.map((item) => ({ value: item, label: item }))}
-            placeholder="Select Branch"
-            styles={customStyles}
-            onChange={(newValue) => {}}
-          />
-        </FormControl>
-      </Stack>
+      {view !== "scan_history" && (
+        <Flex
+          alignItems="center"
+          justifyContent={"flex-start"}
+          flexDir={["column", "column", "row"]}
+          w="100%"
+        >
+          <Text color="gray.500" mr={[0, 0, 5]} mb={[3, 3, 0]}>
+            {view === "detailed_result"
+              ? "Selected Branch"
+              : "Select your branch"}
+          </Text>
+          {view === "github_app" ? (
+            <FormControl id="select_branch" width={["100%", "100%", "300px"]}>
+              <Select
+                formatOptionLabel={formatOptionLabel}
+                isSearchable={true}
+                isDisabled={false}
+                options={branches.map((item) => ({ value: item, label: item }))}
+                placeholder="Select Branch"
+                styles={customStyles}
+                onChange={(newValue) => {}}
+              />
+            </FormControl>
+          ) : (
+            <Text
+              borderRadius={15}
+              border={"1px solid #B0B7C3"}
+              py={3}
+              px={10}
+              color="gray.700"
+            >
+              development
+            </Text>
+          )}
+
+          {view === "detailed_result" && (
+            <Button
+              px={10}
+              ml={[0, 0, 7]}
+              mt={[3, 3, 0]}
+              width={["100%", "100%", "200px"]}
+              variant="brand"
+            >
+              Update
+            </Button>
+          )}
+        </Flex>
+      )}
+
       <Divider mt={3} color="gray.700" borderWidth="1px" />
       <Flex
         height="calc(100% - 10px)"
@@ -189,7 +239,7 @@ const FolderSettings: React.FC = () => {
         alignItems="flex-start"
         overflow={"scroll"}
       >
-        <FileList fileList={fileData} />
+        <FileList view={view} fileList={fileData} />
       </Flex>
     </Flex>
   );

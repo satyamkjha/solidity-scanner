@@ -43,7 +43,7 @@ const InfoSettings: React.FC<{
     <Stack
       minHeight="400px"
       spacing={6}
-      mt={3}
+      mt={0}
       height={["fit-content", "fit-content", "fit-content", "40vh"]}
       width={"100%"}
     >

@@ -56,6 +56,7 @@ import {
   MenuButton,
   MenuList,
   MenuItem,
+  Collapse,
 } from "@chakra-ui/react";
 import {
   AiOutlineClockCircle,
@@ -96,6 +97,8 @@ import {
   LockIcon,
   TimeIcon,
   ViewIcon,
+  ChevronUpIcon,
+  ChevronDownIcon,
 } from "@chakra-ui/icons";
 import { profile } from "console";
 import { motion } from "framer-motion";
@@ -109,6 +112,7 @@ import { useReactToPrint } from "react-to-print";
 import { PrintContainer } from "pages/Report/PrintContainer";
 import { getPublicReport } from "hooks/usePublicReport";
 import ProjectCustomSettings from "components/projectCustomSettings";
+import FolderSettings from "components/projectFolderSettings";
 
 export const ProjectPage: React.FC = () => {
   const { projectId } = useParams<{ projectId: string }>();
@@ -722,13 +726,14 @@ const ScanDetails: React.FC<{
                       <Tab
                         fontSize={"sm"}
                         h="35px"
-                        minW={"120px"}
+                        minW={"175px"}
                         bgColor={"#F5F5F5"}
                         ml={4}
                         whiteSpace="nowrap"
                       >
-                        Scan History
+                        Custom Settings
                       </Tab>
+
                       {profile.promo_code ? (
                         profile.actions_supported &&
                         profile.actions_supported.publishable_report && (
@@ -758,12 +763,12 @@ const ScanDetails: React.FC<{
                       <Tab
                         fontSize={"sm"}
                         h="35px"
-                        minW={"175px"}
+                        minW={"120px"}
                         bgColor={"#F5F5F5"}
                         mx={4}
                         whiteSpace="nowrap"
                       >
-                        Custom Settings
+                        Scan History
                       </Tab>
                     </TabList>
                   </Flex>
@@ -823,12 +828,13 @@ const ScanDetails: React.FC<{
                       )}
                     </TabPanel>
                     <TabPanel p={[0, 0, 0, 2]}>
-                      <ScanHistory
-                        profile={profile}
-                        scans={scans}
-                        setTabIndex={setTabIndex}
+                      <ProjectCustomSettings
+                        isGithubIntegrated={
+                          profile._integrations?.github?.status === "successful"
+                        }
                       />
                     </TabPanel>
+
                     {profile.promo_code ? (
                       profile.actions_supported &&
                       profile.actions_supported.publishable_report && (
@@ -852,10 +858,10 @@ const ScanDetails: React.FC<{
                       </TabPanel>
                     )}
                     <TabPanel p={[0, 0, 0, 2]}>
-                      <ProjectCustomSettings
-                        isGithubIntegrated={
-                          profile._integrations?.github?.status === "successful"
-                        }
+                      <ScanHistory
+                        profile={profile}
+                        scans={scans}
+                        setTabIndex={setTabIndex}
                       />
                     </TabPanel>
                   </TabPanels>
@@ -1426,133 +1432,169 @@ const ScanBlock: React.FC<{
   profile: Profile;
 }> = ({ scan, setTabIndex, profile }) => {
   const history = useHistory();
+
+  const [show, setShow] = useState(false);
+
   return (
-    <Flex
-      alignItems="flex-start"
-      justifyContent="space-between"
-      flexDir={"row"}
-      sx={{
-        cursor: "pointer",
-        w: "100%",
-        bg: "white",
-        my: 4,
-        px: [5, 5, 7, 10],
-        borderRadius: "10px",
-        transition: "0.3s box-shadow",
-        boxShadow: "0px 4px 20px rgba(0, 0, 0, 0.05)",
-        _hover: {
-          boxShadow: "0px 4px 20px rgba(0, 0, 0, 0.2)",
-        },
-      }}
-    >
+    <>
       <Flex
-        width={"calc(100% - 60px)"}
+        alignItems="flex-start"
         justifyContent="flex-start"
-        flexWrap={"wrap"}
-        alignItems={"flex-start"}
-        flexDir="row"
-      >
-        <VStack mt={5} alignItems={"flex-start"} spacing={1} width="130px">
-          <Text fontSize={"sm"} color="gray.400">
-            Scan Name
-          </Text>
-          <Text fontSize={"md"}>{scan.scan_name}</Text>
-        </VStack>
-        {scan.scan_status === "scan_incomplete" ? (
-          <Flex
-            p={3}
-            sx={{ bgColor: "high-subtle", borderRadius: "20px" }}
-            mt={5}
-            mr={10}
-          >
-            <ScanErrorIcon size={28} />
-          </Flex>
-        ) : (
-          <VStack mt={5} alignItems={"flex-start"} spacing={1} width="120px">
-            <Text fontSize={"sm"} color="gray.400">
-              Score
-            </Text>
-            <Text
-              sx={{
-                color: "accent",
-                fontSize: "xl",
-                fontWeight: 600,
-                mx: "auto",
-                lineHeight: 1,
-              }}
-            >
-              {scan.scan_score}
-            </Text>
-          </VStack>
-        )}
-        <Flex
-          justifyContent={"flex-start"}
-          alignItems="flex-start"
-          flexDir={["column", "column", "row"]}
-        >
-          <Button
-            variant="accent-outline"
-            minW="200px"
-            bg={"white"}
-            mr={10}
-            my={5}
-            onClick={() => {
-              setTabIndex(0);
-              history.push(`/projects/${scan.project_id}/${scan.scan_id}`);
-            }}
-          >
-            View Scan Result
-          </Button>
-          <Button
-            variant="accent-outline"
-            minW="200px"
-            mr={10}
-            mt={[0, 0, 5]}
-            mb={5}
-            isDisabled={
-              scan.reporting_status !== "report_generated" ||
-              (profile.actions_supported
-                ? !profile.actions_supported.generate_report
-                : profile.current_package === "trial")
-            }
-            onClick={(e) => {
-              e.stopPropagation();
-              window.open(
-                `http://${document.location.host}/report/project/${scan.project_id}/${scan.latest_report_id}`,
-                "_blank"
-              );
-            }}
-          >
-            {scan.reporting_status === "generating_report" && (
-              <Spinner color="#806CCF" size="sm" mr={2} />
-            )}
-            {scan.reporting_status === "report_generated"
-              ? "View Report"
-              : scan.reporting_status === "generating_report"
-              ? "Generating Report"
-              : "Report Not Generated"}
-          </Button>
-        </Flex>
-      </Flex>
-      <Box
+        flexDir={"column"}
         sx={{
-          width: "60px",
-          height: "60px",
-          my: 5,
-          bg: "#F7F7F7",
-          color: "#4E5D78",
-          borderRadius: "50%",
-          textAlign: "center",
+          cursor: "pointer",
+          w: "100%",
+          bg: "white",
+          my: 4,
+          px: [5, 5, 7, 10],
+          borderRadius: "10px",
+          transition: "0.3s box-shadow",
+          boxShadow: "0px 4px 20px rgba(0, 0, 0, 0.05)",
+          _hover: {
+            boxShadow: "0px 4px 20px rgba(0, 0, 0, 0.2)",
+          },
         }}
       >
-        <Text fontSize="xl" fontWeight="600">
-          {new Date(scan.scan_time).getDate()}
-        </Text>
-        <Text fontSize="12px" mt="-4px">
-          {monthNames[new Date(scan.scan_time).getMonth()]}
-        </Text>
-      </Box>
-    </Flex>
+        <Flex w="100%" justifyContent="space-between">
+          <Flex
+            width={"calc(100% - 60px)"}
+            justifyContent="flex-start"
+            flexWrap={"wrap"}
+            alignItems={"flex-start"}
+            flexDir="row"
+          >
+            <VStack mt={5} alignItems={"flex-start"} spacing={1} width="130px">
+              <Text fontSize={"sm"} color="gray.400">
+                Scan Name
+              </Text>
+              <Text fontSize={"md"}>{scan.scan_name}</Text>
+            </VStack>
+            {scan.scan_status === "scan_incomplete" ? (
+              <Flex
+                p={3}
+                sx={{ bgColor: "high-subtle", borderRadius: "20px" }}
+                mt={5}
+                mr={10}
+              >
+                <ScanErrorIcon size={28} />
+              </Flex>
+            ) : (
+              <VStack
+                mt={5}
+                alignItems={"flex-start"}
+                spacing={1}
+                width="120px"
+              >
+                <Text fontSize={"sm"} color="gray.400">
+                  Score
+                </Text>
+                <Text
+                  sx={{
+                    color: "accent",
+                    fontSize: "xl",
+                    fontWeight: 600,
+                    mx: "auto",
+                    lineHeight: 1,
+                  }}
+                >
+                  {scan.scan_score}
+                </Text>
+              </VStack>
+            )}
+            <Flex
+              justifyContent={"flex-start"}
+              alignItems="flex-start"
+              flexDir={["column", "column", "row"]}
+            >
+              <Button
+                variant="accent-outline"
+                minW="200px"
+                bg={"white"}
+                mr={10}
+                my={[3, 3, 7]}
+                mt={[5, 5, 7]}
+                onClick={() => {
+                  setTabIndex(0);
+                  history.push(`/projects/${scan.project_id}/${scan.scan_id}`);
+                }}
+              >
+                View Scan Result
+              </Button>
+
+              <Button
+                variant="accent-outline"
+                minW="200px"
+                bg={"white"}
+                mr={10}
+                my={[3, 3, 7]}
+                isDisabled={
+                  scan.reporting_status !== "report_generated" ||
+                  (profile.actions_supported
+                    ? !profile.actions_supported.generate_report
+                    : profile.current_package === "trial")
+                }
+                onClick={(e) => {
+                  e.stopPropagation();
+                  window.open(
+                    `http://${document.location.host}/report/project/${scan.project_id}/${scan.latest_report_id}`,
+                    "_blank"
+                  );
+                }}
+              >
+                {scan.reporting_status === "generating_report" && (
+                  <Spinner color="#806CCF" size="sm" mr={2} />
+                )}
+                {scan.reporting_status === "report_generated"
+                  ? "View Report"
+                  : scan.reporting_status === "generating_report"
+                  ? "Generating Report"
+                  : "Report Not Generated"}
+              </Button>
+              <Button
+                variant="accent-outline"
+                minW="200px"
+                mr={10}
+                my={[3, 3, 7]}
+                mb={[5, 5, 7]}
+                onClick={() => {
+                  setShow(!show);
+                }}
+              >
+                {show ? "Hide Skipped files" : "View Skipped files"}{" "}
+                {show ? <ChevronUpIcon ml={2} /> : <ChevronDownIcon ml={2} />}
+              </Button>
+            </Flex>
+          </Flex>
+          <Box
+            sx={{
+              width: "60px",
+              height: "60px",
+              my: 5,
+              bg: "#F7F7F7",
+              color: "#4E5D78",
+              borderRadius: "50%",
+              textAlign: "center",
+            }}
+          >
+            <Text fontSize="xl" fontWeight="600">
+              {new Date(scan.scan_time).getDate()}
+            </Text>
+            <Text fontSize="12px" mt="-4px">
+              {monthNames[new Date(scan.scan_time).getMonth()]}
+            </Text>
+          </Box>
+        </Flex>
+        <Collapse
+          style={{
+            width: "100%",
+          }}
+          in={show}
+          animateOpacity
+        >
+          <FolderSettings view="scan_history" />
+        </Collapse>
+      </Flex>
+    </>
   );
 };
 

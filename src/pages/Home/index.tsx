@@ -374,9 +374,10 @@ const ApplicationForm: React.FC = () => {
               setVisibility={setVisibility}
             />
           ) : step === 2 ? (
-            <FolderSettings />
+            <FolderSettings view="github_app" />
           ) : step === 3 ? (
             <ConfigSettings
+              view="github_app"
               githubSync={githubSync}
               setGithubSync={setGithubSync}
               isGithubIntegrated={isGithubIntegrated}

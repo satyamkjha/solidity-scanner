@@ -12,6 +12,7 @@ import {
   AccordionIcon,
   AccordionButton,
   AccordionPanel,
+  Button,
 } from "@chakra-ui/react";
 import React from "react";
 import GithubConnectAlert from "./githubConnectAlert";
@@ -99,7 +100,7 @@ const ProjectCustomSettings: React.FC<{
             w="100%"
             height="fit-content"
           >
-            <FolderSettings />
+            <FolderSettings view="detailed_result" />
           </AccordionPanel>
         </AccordionItem>
         <AccordionItem
@@ -165,6 +166,7 @@ const ProjectCustomSettings: React.FC<{
             height="fit-content"
           >
             <ConfigSettings
+              view="detailed_result"
               githubSync={githubSync}
               setGithubSync={setGithubSync}
               isGithubIntegrated={isGithubIntegrated}

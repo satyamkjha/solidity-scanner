@@ -6,7 +6,8 @@ const ConfigSettings: React.FC<{
   githubSync: boolean;
   setGithubSync: React.Dispatch<React.SetStateAction<boolean>>;
   isGithubIntegrated: boolean;
-}> = ({ githubSync, setGithubSync, isGithubIntegrated }) => {
+  view: "github_app" | "detailed_result" | "scan_history";
+}> = ({ githubSync, setGithubSync, isGithubIntegrated, view }) => {
   return (
     <VStack
       spacing={3}
@@ -14,8 +15,13 @@ const ConfigSettings: React.FC<{
       width={"100%"}
       justifyContent="flex-start"
       alignItems={"flex-start"}
-      minHeight="400px"
-      height={["fit-content", "fit-content", "fit-content", "40vh"]}
+      minHeight={view === "github_app" ? "400px" : "200px"}
+      height={[
+        "fit-content",
+        "fit-content",
+        "fit-content",
+        view === "github_app" ? "40vh" : "fit-content",
+      ]}
     >
       <Text
         sx={{
