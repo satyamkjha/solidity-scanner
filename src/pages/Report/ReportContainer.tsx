@@ -1530,12 +1530,18 @@ export const ReportContainer: React.FC<{ summary_report: Report }> = ({
               {issue.comment !== "" && issue.bug_status === "wont_fix" && (
                 <>
                   <HStack spacing={5} mt={10} mb={5}>
-                    <IssueRemediationIcons size={40} />
+                    <IssueDescriptionIcons size={40} />
                     <Text fontSize="md" fontWeight={"bold"} width={"100%"}>
                       Comments
                     </Text>
                   </HStack>
-                  <Text>{issue.comment}</Text>
+                  <Text
+                    fontWeight={300}
+                    fontSize={"16px"}
+                    wordBreak="break-all"
+                  >
+                    {issue.comment}
+                  </Text>
                 </>
               )}
             </Flex>
@@ -1911,15 +1917,29 @@ export const ReportContainer: React.FC<{ summary_report: Report }> = ({
 const DescriptionWrapper = styled.div`
   p {
     font-weight: 300;
+    word-break: break-all;
   }
+
+  ul,
+  ol {
+    margin-left: 20px;
+  }
+
+  li {
+    font-weight: 400;
+    font-size: 16px;
+  }
+
   code {
     background: #cbd5e0;
     padding: 2px 4px;
     border-radius: 5px;
+    word-break: break-all;
   }
   a {
     color: #4299e1;
     text-decoration: underline;
+    word-break: break-all;
     transition: 0.2s color;
     &:hover {
       color: #2b6cb0;

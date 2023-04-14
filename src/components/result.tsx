@@ -1682,6 +1682,15 @@ p {
     padding: 2px 4px;
     border-radius: 5px;
   }
+ul, ol {
+  margin-left: 20px
+}
+
+  li {
+    font-weight: 300;
+    font-size: 12px
+  }
+
 
   a {
     color: #4299e1;
