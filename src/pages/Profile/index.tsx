@@ -80,13 +80,23 @@ const Profile: React.FC = () => {
     contact_number,
     first_name,
   }: ProfileFormData) => {
-    await API.post(API_PATH.API_UPDATE_PROFILE, {
+    const { data } = await API.post(API_PATH.API_UPDATE_PROFILE, {
       company_name,
       contact_number,
       first_name,
     });
+
     queryClient.invalidateQueries("profile");
-    setEditable(false);
+    if (data.status === "success") {
+      toast({
+        title: "Profile Updated successfully",
+        status: "success",
+        duration: 2000,
+        isClosable: true,
+        position: "bottom",
+      });
+      setEditable(false);
+    }
   };
 
   const updateEmail = async () => {
@@ -123,10 +133,7 @@ const Profile: React.FC = () => {
         email: metaMaskEmail,
       },
       {
-        headers: {
-          "Content-Type": "application/json",
-          Recaptchatoken,
-        },
+        headers: reqHeaders,
       }
     );
 
@@ -364,15 +371,14 @@ const ChangePasswordForm: React.FC = () => {
   const history = useHistory();
   const toast = useToast();
 
-  const { handleSubmit, register, formState } =
-    useForm<PasswordChangeFormData>();
+  const [password, setPassword] = useState("");
+  const [newPassword, setNewPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
 
-  const onSubmit = async ({
-    password,
-    new_password,
-    confirm_password,
-  }: PasswordChangeFormData) => {
-    if (new_password !== confirm_password) {
+  const [isLoading, setIsLoading] = useState(false);
+
+  const onSubmit = async () => {
+    if (newPassword !== confirmPassword) {
       toast({
         title: "Passwords do not match",
         status: "error",
@@ -382,56 +388,64 @@ const ChangePasswordForm: React.FC = () => {
       });
       return;
     }
+    setIsLoading(true);
     try {
-      await API.post(API_PATH.API_CHANGE_PASSWORD, { password, new_password });
-      Auth.deauthenticateUser();
-      history.push("/signin?isPasswordReset=true");
+      const { data } = await API.post(API_PATH.API_CHANGE_PASSWORD, {
+        password: password,
+        new_password: newPassword,
+      });
+      if (data.status === "success") {
+        Auth.deauthenticateUser();
+        history.push("/signin?isPasswordReset=true");
+      }
     } catch (e) {
       console.log(e);
     }
+    setIsLoading(false);
   };
 
   return (
     <Box w="100%" bgColor="white" borderRadius="20px" p={4} px={6} mt={8}>
       <Text fontSize="xl">Security</Text>
+      <Box py={6}>
+        <ViewableInputGroup
+          key="password"
+          label="Old Password"
+          value={password}
+          setValue={setPassword}
+        />
+        <ViewableInputGroup
+          key="new_password"
+          label="New Password"
+          value={newPassword}
+          setValue={setNewPassword}
+        />
+        <ViewableInputGroup
+          key="confirm_password"
+          label="Confirm Password"
+          value={confirmPassword}
+          setValue={setConfirmPassword}
+        />
 
-      <form style={{ width: "100%" }} onSubmit={handleSubmit(onSubmit)}>
-        <Box py={6}>
-          <ViewableInputGroup
-            key="password"
-            label="Old Password"
-            isRequired
-            {...register("password", { required: true })}
-          />
-          <ViewableInputGroup
-            key="new_password"
-            label="New Password"
-            isRequired
-            {...register("new_password", { required: true })}
-          />
-          <ViewableInputGroup
-            key="confirm_password"
-            label="Confirm Password"
-            isRequired
-            {...register("confirm_password", { required: true })}
-          />
-
-          <Button
-            variant="brand"
-            type="submit"
-            isLoading={formState.isSubmitting}
-          >
-            Change Password
-          </Button>
-        </Box>
-      </form>
+        <Button
+          variant="brand"
+          type="submit"
+          onClick={onSubmit}
+          isLoading={isLoading}
+        >
+          Change Password
+        </Button>
+      </Box>
     </Box>
   );
 };
 
-const ViewableInputGroup: React.FC<
-  InputProps & { label: string; key: string }
-> = ({ label, key, ...props }) => {
+const ViewableInputGroup: React.FC<{
+  label: string;
+  key: string;
+  value: string;
+  setValue: React.Dispatch<React.SetStateAction<string>>;
+}> = ({ label, key, value, setValue }) => {
   const [isViewable, setViewable] = useState(false);
   return (
     <FormControl id={key} mb={4}>
@@ -440,7 +454,8 @@ const ViewableInputGroup: React.FC<
         <Input
           borderRadius="15px"
           type={isViewable ? "text" : "password"}
-          {...props}
+          value={value}
+          onChange={(e) => setValue(e.target.value)}
         />
         <InputRightElement>
           <Icon
