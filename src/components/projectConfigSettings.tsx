@@ -1,13 +1,20 @@
-import { VStack, Text, Switch, HStack } from "@chakra-ui/react";
+import { VStack, Text, Switch, HStack, Spinner } from "@chakra-ui/react";
 import React from "react";
 import GithubConnectAlert from "./githubConnectAlert";
 
 const ConfigSettings: React.FC<{
   githubSync: boolean;
-  setGithubSync: React.Dispatch<React.SetStateAction<boolean>>;
+  onToggleFunction: () => Promise<void>;
   isGithubIntegrated: boolean;
+  isLoading?: boolean;
   view: "github_app" | "detailed_result" | "scan_history";
-}> = ({ githubSync, setGithubSync, isGithubIntegrated, view }) => {
+}> = ({
+  githubSync,
+  onToggleFunction,
+  isGithubIntegrated,
+  view,
+  isLoading,
+}) => {
   return (
     <VStack
       spacing={3}
@@ -43,11 +50,16 @@ const ConfigSettings: React.FC<{
         additional restrictions in the User Guide (section Starting a scan from
         UI) available on the{" "}
       </Text>
-      <Switch
-        size="lg"
-        variant="brand"
-        onChange={() => setGithubSync(!githubSync)}
-      />
+      <HStack spacing={5}>
+        <Switch
+          size="lg"
+          variant="brand"
+          isDisabled={isLoading}
+          isChecked={githubSync}
+          onChange={onToggleFunction}
+        />
+        {isLoading && <Spinner color="gray.400" />}
+      </HStack>
       {!isGithubIntegrated && githubSync && <GithubConnectAlert />}
       <Text
         sx={{

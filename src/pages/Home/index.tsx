@@ -53,6 +53,7 @@ import { API_PATH } from "helpers/routeManager";
 import ConfigSettings from "components/projectConfigSettings";
 import InfoSettings from "components/projectInfoSettings";
 import FolderSettings from "components/projectFolderSettings";
+import { TreeItem } from "common/types";
 
 const Home: React.FC = () => {
   const { data } = useOverview();
@@ -232,10 +233,23 @@ const Home: React.FC = () => {
 };
 
 const ApplicationForm: React.FC = () => {
-  const toast = useToast();
   const queryClient = useQueryClient();
   const { data: profileData } = useProfile();
   const history = useHistory();
+  const [projectName, setProjectName] = useState("");
+  const [githubLink, setGithubLink] = useState("");
+  const [visibility, setVisibility] = useState(false);
+  const [githubSync, setGithubSync] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const [repoTree, setRepoTree] = useState<TreeItem | null>(null);
+  const [branches, setBranches] = useState<string[]>([]);
+  const [branch, setBranch] = useState<string>("");
+  const [skipFilePaths, setSkipFilePaths] = useState<string[]>([]);
+  const [nameError, setNameError] = useState<null | string>(null);
+  const [linkError, setLinkError] = useState<null | string>(null);
+  const [step, setStep] = useState(1);
+  const isGithubIntegrated =
+    profileData?._integrations?.github?.status === "successful";
 
   const githubUrlRegex =
     /(http(s)?)(:(\/\/))((github.com)(\/)[\w@\:\-~]+(\/)[\w@\:\-~]+)(\.git)?/;
@@ -263,32 +277,47 @@ const ApplicationForm: React.FC = () => {
 
   const runScan = async () => {
     if (!runValidation()) return;
-    const responseData = await API.post(API_PATH.API_PROJECT_SCAN, {
-      project_url: githubLink,
-      project_name: projectName,
-      project_type: "new",
-      project_visibility: visibility ? "private" : "public",
-      skip_file_paths: skipFilePaths,
-    });
-    if (responseData.status === 200) {
-      if (responseData.data.status === "success") {
+    try {
+      const { data } = await API.post(API_PATH.API_PROJECT_SCAN, {
+        project_url: githubLink,
+        project_name: projectName,
+        project_type: "new",
+        project_branch: branch,
+        recur_scans: githubSync,
+        project_visibility: visibility ? "private" : "public",
+        skip_file_paths: skipFilePaths,
+      });
+
+      if (data.status === "success") {
         queryClient.invalidateQueries("scans");
         queryClient.invalidateQueries("profile");
         history.push("/projects");
       }
+    } catch (e) {
+      console.log(e);
     }
   };
 
-  const [projectName, setProjectName] = useState("");
-  const [githubLink, setGithubLink] = useState("");
-  const [visibility, setVisibility] = useState(false);
-  const [githubSync, setGithubSync] = useState(false);
-  const [skipFilePaths, setSkipFilePaths] = useState<string[]>([]);
-  const [nameError, setNameError] = useState<null | string>(null);
-  const [linkError, setLinkError] = useState<null | string>(null);
-  const [step, setStep] = useState(1);
-  const isGithubIntegrated =
-    profileData?._integrations?.github?.status === "successful";
+  const getBranches = async () => {
+    setIsLoading(true);
+    try {
+      const { data } = await API.post<{
+        status: string;
+        default_tree: TreeItem;
+        branches: string[];
+      }>(API_PATH.API_GET_BRANCHES, {
+        project_url: githubLink,
+      });
+      if (data.status === "success") {
+        setRepoTree(data.default_tree);
+        setBranches(data.branches);
+        setBranch(data.branches[0]);
+      }
+    } catch (e) {
+      console.log(e);
+    }
+    setIsLoading(false);
+  };
 
   return (
     <Flex flexDir="column" justifyContent={"flex-start"} alignItems="center">
@@ -374,12 +403,35 @@ const ApplicationForm: React.FC = () => {
               setVisibility={setVisibility}
             />
           ) : step === 2 ? (
-            <FolderSettings view="github_app" />
+            <>
+              {isLoading ? (
+                <Flex
+                  w="100%"
+                  h="45vh"
+                  justifyContent="center"
+                  alignItems="center"
+                >
+                  <Spinner color="gray.500" />
+                </Flex>
+              ) : (
+                repoTree && (
+                  <FolderSettings
+                    view="github_app"
+                    fileData={repoTree}
+                    branches={branches}
+                    branch={branch}
+                    setBranch={setBranch}
+                    skipFilePaths={skipFilePaths}
+                    setSkipFilePaths={setSkipFilePaths}
+                  />
+                )
+              )}
+            </>
           ) : step === 3 ? (
             <ConfigSettings
               view="github_app"
               githubSync={githubSync}
-              setGithubSync={setGithubSync}
+              onToggleFunction={async () => setGithubSync(!githubSync)}
               isGithubIntegrated={isGithubIntegrated}
             />
           ) : (
@@ -407,7 +459,7 @@ const ApplicationForm: React.FC = () => {
                 setStep(step - 1);
               }
             }}
-            isDisabled={profileData?.credits === 0}
+            isDisabled={profileData?.credits === 0 || isLoading}
           >
             Prev
           </Button>
@@ -415,10 +467,18 @@ const ApplicationForm: React.FC = () => {
         <Button
           type="submit"
           variant="brand"
+          isLoading={isLoading}
           width={["100%", "100%", "100%", "200px"]}
           onClick={() => {
-            if (step < 3) {
-              setStep(step + 1);
+            if (step === 1) {
+              if (runValidation()) {
+                getBranches();
+                setStep(2);
+              }
+            } else if (step === 2) {
+              setStep(3);
+            } else {
+              runScan();
             }
           }}
           isDisabled={profileData?.credits === 0}

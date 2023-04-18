@@ -13,16 +13,113 @@ import {
   AccordionButton,
   AccordionPanel,
   Button,
+  useToast,
 } from "@chakra-ui/react";
-import React from "react";
+import React, { useState, useEffect } from "react";
 import GithubConnectAlert from "./githubConnectAlert";
 import FolderSettings from "./projectFolderSettings";
 import ConfigSettings from "./projectConfigSettings";
+import API from "helpers/api";
+import { API_PATH } from "helpers/routeManager";
+import { TreeItem } from "common/types";
 
 const ProjectCustomSettings: React.FC<{
   isGithubIntegrated: boolean;
-}> = ({ isGithubIntegrated }) => {
-  const [githubSync, setGithubSync] = React.useState(false);
+  project_url: string;
+  project_id: string;
+  webhook_enabled: boolean;
+  project_skip_files: string[];
+  repoTree: TreeItem;
+  project_branch: string;
+}> = ({
+  isGithubIntegrated,
+  project_id,
+  project_url,
+  webhook_enabled,
+  repoTree,
+  project_skip_files,
+  project_branch,
+}) => {
+  const [githubSync, setGithubSync] = React.useState<boolean>(webhook_enabled);
+  const [isLoading, setIsLoading] = React.useState<boolean>(false);
+  const [skipFilePaths, setSkipFilePaths] = useState<string[]>([
+    ...project_skip_files,
+  ]);
+  const toast = useToast();
+  const onToggleSwitch = async () => {
+    setIsLoading(true);
+    try {
+      const { data, status } = await API.post(
+        API_PATH.API_TOGGLE_PROJECT_SYNCHRONIZATION,
+        {
+          project_url: project_url,
+          project_id: project_id,
+          recur_scans: !githubSync,
+        }
+      );
+      if (status === 201) {
+        toast({
+          title: "Webhooks enabled for the project",
+          status: "success",
+          duration: 9000,
+          isClosable: true,
+          position: "bottom",
+        });
+        setGithubSync(!githubSync);
+      } else if (status === 204) {
+        toast({
+          title: "Webhooks diabled for the project",
+          status: "success",
+          duration: 9000,
+          isClosable: true,
+          position: "bottom",
+        });
+        setGithubSync(!githubSync);
+      } else {
+        toast({
+          title: data.message,
+          status: "error",
+          duration: 9000,
+          isClosable: true,
+          position: "bottom",
+        });
+      }
+    } catch (e) {
+      console.log(e);
+    }
+    setIsLoading(false);
+  };
+
+  const updateSkipPathRequests = async () => {
+    setIsLoading(true);
+
+    try {
+      const { data } = await API.post<{ status: string; message: string }>(
+        API_PATH.API_UPDATE_SKIP_FILE_PATHS,
+        {
+          project_id: project_id,
+          skip_file_paths: skipFilePaths,
+        }
+      );
+      if (data.status === "success") {
+        toast({
+          description: data.message,
+          status: "success",
+          duration: 3000,
+          isClosable: true,
+          position: "bottom",
+        });
+      }
+    } catch (e) {
+      console.log(e);
+    }
+    setIsLoading(false);
+  };
+
+  useEffect(() => {
+    setGithubSync(webhook_enabled);
+    setSkipFilePaths([...project_skip_files]);
+  }, []);
 
   return (
     <Flex
@@ -37,7 +134,7 @@ const ProjectCustomSettings: React.FC<{
         overflowY: "scroll",
       }}
     >
-      <Accordion allowMultiple w={["100%", "100%", "100%", "100%"]}>
+      <Accordion allowToggle w={["100%", "100%", "100%", "100%"]}>
         <AccordionItem
           alignItems="center"
           justifyContent="flex-start"
@@ -100,7 +197,15 @@ const ProjectCustomSettings: React.FC<{
             w="100%"
             height="fit-content"
           >
-            <FolderSettings view="detailed_result" />
+            <FolderSettings
+              isLoading={isLoading}
+              fileData={repoTree}
+              branch={project_branch}
+              skipFilePaths={skipFilePaths}
+              updateSkipPathRequests={updateSkipPathRequests}
+              setSkipFilePaths={setSkipFilePaths}
+              view="detailed_result"
+            />
           </AccordionPanel>
         </AccordionItem>
         <AccordionItem
@@ -168,7 +273,8 @@ const ProjectCustomSettings: React.FC<{
             <ConfigSettings
               view="detailed_result"
               githubSync={githubSync}
-              setGithubSync={setGithubSync}
+              isLoading={isLoading}
+              onToggleFunction={onToggleSwitch}
               isGithubIntegrated={isGithubIntegrated}
             />
           </AccordionPanel>

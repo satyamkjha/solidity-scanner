@@ -72,9 +72,15 @@ import { RescanIcon, LogoIcon, ScanErrorIcon } from "components/icons";
 import API from "helpers/api";
 
 import { useScans } from "hooks/useScans";
-import { useScan } from "hooks/useScan";
+import { useScan, getScan } from "hooks/useScan";
 
-import { Profile, Report, ReportsListItem, ScanMeta } from "common/types";
+import {
+  Profile,
+  Report,
+  ReportsListItem,
+  ScanMeta,
+  TreeItem,
+} from "common/types";
 import { useProfile } from "hooks/useProfile";
 import {
   FaBuilding,
@@ -117,6 +123,42 @@ import FolderSettings from "components/projectFolderSettings";
 export const ProjectPage: React.FC = () => {
   const { projectId } = useParams<{ projectId: string }>();
   const { data, isLoading, refetch } = useScans(projectId);
+  const [repoTree, setRepoTree] = useState<TreeItem | null>(null);
+
+  const getRepoTree = async (
+    project_url: string,
+    project_id: string,
+    project_branch: string
+  ) => {
+    try {
+      const { data } = await API.post<{ status: string; tree: TreeItem }>(
+        API_PATH.API_REPO_TREE,
+        {
+          project_url:
+            project_url.slice(-4) === ".git"
+              ? project_url.slice(0, project_url.length - 4)
+              : project_url,
+          project_id,
+          project_branch,
+        }
+      );
+      if (data) {
+        setRepoTree(data.tree);
+      }
+    } catch (e) {
+      console.log(e);
+    }
+  };
+
+  useEffect(() => {
+    if (data && data.project_url !== "File Scan") {
+      getRepoTree(
+        data.project_url,
+        projectId,
+        data.project_branch ? data.project_branch : "HEAD"
+      );
+    }
+  }, [data]);
 
   return (
     <Box
@@ -141,6 +183,8 @@ export const ProjectPage: React.FC = () => {
             scans={data.scans}
             project_name={data.project_name}
             project_url={data.project_url}
+            repoTree={repoTree}
+            project_branch={data.project_branch ? data.project_branch : "HEAD"}
           />
         )
       )}
@@ -153,7 +197,16 @@ const ScanDetails: React.FC<{
   scans: ScanMeta[];
   project_name: string;
   project_url: string;
-}> = ({ scansRemaining, scans, project_name, project_url }) => {
+  repoTree: TreeItem | null;
+  project_branch: string;
+}> = ({
+  scansRemaining,
+  scans,
+  project_name,
+  project_url,
+  repoTree,
+  project_branch,
+}) => {
   const [isOpen, setIsOpen] = useState(false);
   const [isRescanLoading, setRescanLoading] = useState(false);
 
@@ -723,16 +776,20 @@ const ScanDetails: React.FC<{
                       >
                         Detailed Result
                       </Tab>
-                      <Tab
-                        fontSize={"sm"}
-                        h="35px"
-                        minW={"175px"}
-                        bgColor={"#F5F5F5"}
-                        ml={4}
-                        whiteSpace="nowrap"
-                      >
-                        Custom Settings
-                      </Tab>
+                      {scanData.scan_report.project_skip_files &&
+                        scanData.scan_report.project_url &&
+                        scanData.scan_report.project_url !== "File Scan" && (
+                          <Tab
+                            fontSize={"sm"}
+                            h="35px"
+                            minW={"175px"}
+                            bgColor={"#F5F5F5"}
+                            ml={4}
+                            whiteSpace="nowrap"
+                          >
+                            Custom Settings
+                          </Tab>
+                        )}
 
                       {profile.promo_code ? (
                         profile.actions_supported &&
@@ -760,16 +817,18 @@ const ScanDetails: React.FC<{
                           Published Reports
                         </Tab>
                       )}
-                      <Tab
-                        fontSize={"sm"}
-                        h="35px"
-                        minW={"120px"}
-                        bgColor={"#F5F5F5"}
-                        mx={4}
-                        whiteSpace="nowrap"
-                      >
-                        Scan History
-                      </Tab>
+                      {repoTree && (
+                        <Tab
+                          fontSize={"sm"}
+                          h="35px"
+                          minW={"120px"}
+                          bgColor={"#F5F5F5"}
+                          mx={4}
+                          whiteSpace="nowrap"
+                        >
+                          Scan History
+                        </Tab>
+                      )}
                     </TabList>
                   </Flex>
                   <TabPanels>
@@ -828,11 +887,29 @@ const ScanDetails: React.FC<{
                       )}
                     </TabPanel>
                     <TabPanel p={[0, 0, 0, 2]}>
-                      <ProjectCustomSettings
-                        isGithubIntegrated={
-                          profile._integrations?.github?.status === "successful"
-                        }
-                      />
+                      {repoTree &&
+                        scanData.scan_report.project_skip_files &&
+                        scanData.scan_report.project_url &&
+                        scanData.scan_report.project_url !== "File Scan" && (
+                          <ProjectCustomSettings
+                            project_skip_files={
+                              scanData.scan_report.project_skip_files
+                            }
+                            project_branch={project_branch}
+                            repoTree={repoTree}
+                            webhook_enabled={
+                              scanData.webhook_enabled
+                                ? scanData.webhook_enabled
+                                : false
+                            }
+                            project_url={scanData.scan_report.project_url}
+                            project_id={scanData.scan_report.project_id}
+                            isGithubIntegrated={
+                              profile._integrations?.github?.status ===
+                              "successful"
+                            }
+                          />
+                        )}
                     </TabPanel>
 
                     {profile.promo_code ? (
@@ -857,13 +934,16 @@ const ScanDetails: React.FC<{
                         />
                       </TabPanel>
                     )}
-                    <TabPanel p={[0, 0, 0, 2]}>
-                      <ScanHistory
-                        profile={profile}
-                        scans={scans}
-                        setTabIndex={setTabIndex}
-                      />
-                    </TabPanel>
+                    {repoTree && (
+                      <TabPanel p={[0, 0, 0, 2]}>
+                        <ScanHistory
+                          repoTree={repoTree}
+                          profile={profile}
+                          scans={scans}
+                          setTabIndex={setTabIndex}
+                        />
+                      </TabPanel>
+                    )}
                   </TabPanels>
                 </Tabs>
               )}
@@ -1401,7 +1481,8 @@ const ScanHistory: React.FC<{
   setTabIndex: React.Dispatch<React.SetStateAction<number>>;
   profile: Profile;
   scans: ScanMeta[];
-}> = ({ setTabIndex, profile, scans }) => {
+  repoTree: TreeItem;
+}> = ({ setTabIndex, profile, scans, repoTree }) => {
   return (
     <Box
       sx={{
@@ -1418,7 +1499,7 @@ const ScanHistory: React.FC<{
             key={scan.scan_id}
             scan={scan}
             setTabIndex={setTabIndex}
-            // isTrial={profile?.current_package === "trial"}
+            repoTree={repoTree}
             profile={profile}
           />
         ))}
@@ -1430,10 +1511,26 @@ const ScanBlock: React.FC<{
   scan: ScanMeta;
   setTabIndex: React.Dispatch<React.SetStateAction<number>>;
   profile: Profile;
-}> = ({ scan, setTabIndex, profile }) => {
+  repoTree: TreeItem;
+}> = ({ scan, setTabIndex, profile, repoTree }) => {
   const history = useHistory();
-
   const [show, setShow] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const [skipFilePaths, setSkipFilePaths] = useState<string[] | null>(null);
+
+  const getScanRequest = async () => {
+    setIsLoading(true);
+    try {
+      const responseData = await getScan(scan.scan_id);
+      if (responseData && responseData.scan_report.skip_file_paths) {
+        setSkipFilePaths(responseData.scan_report.skip_file_paths);
+      }
+      setShow(true);
+    } catch (e) {
+      console.log(e);
+    }
+    setIsLoading(false);
+  };
 
   return (
     <>
@@ -1550,14 +1647,22 @@ const ScanBlock: React.FC<{
                   ? "Generating Report"
                   : "Report Not Generated"}
               </Button>
+
               <Button
                 variant="accent-outline"
                 minW="200px"
                 mr={10}
                 my={[3, 3, 7]}
                 mb={[5, 5, 7]}
+                isLoading={isLoading}
                 onClick={() => {
-                  setShow(!show);
+                  if (show) {
+                    setShow(false);
+                  } else if (skipFilePaths) {
+                    setShow(true);
+                  } else {
+                    getScanRequest();
+                  }
                 }}
               >
                 {show ? "Hide Skipped files" : "View Skipped files"}{" "}
@@ -1591,7 +1696,13 @@ const ScanBlock: React.FC<{
           in={show}
           animateOpacity
         >
-          <FolderSettings view="scan_history" />
+          {skipFilePaths && (
+            <FolderSettings
+              view="scan_history"
+              fileData={repoTree}
+              skipFilePaths={skipFilePaths}
+            />
+          )}
         </Collapse>
       </Flex>
     </>

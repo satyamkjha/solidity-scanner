@@ -10,6 +10,7 @@ const getScans = async (project_id: string) => {
     project_id: string;
     project_name: string;
     project_url: string;
+    project_branch?: string;
     scans: ScanMeta[];
   }>(API_PATH.API_GET_SCANS, {
     project_id,

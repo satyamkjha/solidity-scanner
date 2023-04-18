@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import {
   Flex,
   HStack,
@@ -15,6 +15,8 @@ import Select from "react-select";
 import { FolderIcon, SimpleFileIcon } from "./icons";
 import { AiOutlineFile } from "react-icons/ai";
 import { ChevronDownIcon, ChevronRightIcon } from "@chakra-ui/icons";
+import { type } from "os";
+import { TreeItem } from "common/types";
 
 const formatOptionLabel: React.FC<{
   value: string;
@@ -25,30 +27,70 @@ const formatOptionLabel: React.FC<{
   </div>
 );
 
-const fileData: { path: string; type: string; sha?: string }[] = [
-  {
-    path: "skljdklsajdlkajsldk",
-    type: "folder",
-    sha: "ashdkashdkjhaskljd",
-  },
-  {
-    path: "skljdklsajdlkajsldk",
-    type: "folder",
-    sha: "ashdkashdkjhaskljd",
-  },
-  {
-    path: "skljdklsajdlkajsldk",
-    type: "file",
-  },
-  {
-    path: "skljdklsajdlkajsldk",
-    type: "file",
-  },
-  {
-    path: "skljdklsajdlkajsldk",
-    type: "file",
-  },
-];
+const fileData: TreeItem = {
+  name: "root",
+  path: ".",
+  tree: [
+    {
+      name: "assets",
+      path: "./assets",
+      blobs: ["eth-bsc-swap.png"],
+      tree: [],
+    },
+    {
+      name: "contracts",
+      path: "./assets/contracts",
+      tree: [
+        {
+          name: "bep20",
+          path: "./assets/contracts",
+          tree: [],
+          blobs: ["BEP20TokenImplementation.sol", "BEP20UpgradeableProxy.sol"],
+        },
+        {
+          name: "interfaces",
+          tree: [],
+          path: "./assets/interfaces",
+          blobs: [
+            "IBEP20.sol",
+            "IERC20Query.sol",
+            "IProxyInitialize.sol",
+            "ISwap.sol",
+          ],
+        },
+        {
+          name: "test",
+          tree: [],
+          path: "./assets/contracts/test",
+          blobs: [
+            "ERC20ABC.sol",
+            "ERC20DEF.sol",
+            "ERC20EMPTYNAME.sol",
+            "ERC20EMPTYSYMBOL.sol",
+          ],
+        },
+      ],
+      blobs: [
+        "BSCSwapAgentImpl.sol",
+        "BSCSwapAgentImpl.template",
+        "BSCSwapAgentUpgradeableProxy.sol",
+        "ETHSwapAgentImpl.sol",
+        "ETHSwapAgentImpl.template",
+        "ETHSwapAgentUpgradeableProxy.sol",
+        "Migrations.sol",
+      ],
+    },
+  ],
+  blobs: [
+    "BSCSwapAgentImpl.sol",
+    "BSCSwapAgentImpl.template",
+    "BSCSwapAgentUpgradeableProxy.sol",
+    "ETHSwapAgentImpl.sol",
+    "ETHSwapAgentImpl.template",
+    "ETHSwapAgentUpgradeableProxy.sol",
+    "Migrations.sol",
+  ],
+};
 
 const customStyles = {
   option: (provided: any, state: any) => ({
@@ -91,9 +133,20 @@ const customStyles = {
 const branches = ["master", "test", "dev", "lang"];
 
 const FileList: React.FC<{
-  fileList: { path: string; type: string; sha?: string }[];
+  fileList: TreeItem;
   view: "github_app" | "detailed_result" | "scan_history";
-}> = ({ fileList, view }) => {
+  skipped: boolean;
+  addFilePath: (path: string) => void;
+  deleteFilePath: (path: string) => void;
+  skipFilePaths: string[];
+}> = ({
+  fileList,
+  view,
+  skipped,
+  addFilePath,
+  deleteFilePath,
+  skipFilePaths,
+}) => {
   return (
     <Flex
       height="fit-content"
@@ -103,26 +156,63 @@ const FileList: React.FC<{
       alignItems="flex-start"
       pl={[2, 2, 7]}
     >
-      {fileList.map((item) => (
-        <FileItem view={view} fileItem={item} />
+      {fileList.tree.map((item) => (
+        <FolderItem
+          addFilePath={addFilePath}
+          deleteFilePath={deleteFilePath}
+          skipFilePaths={skipFilePaths}
+          view={view}
+          folderItem={item}
+          skipped={skipped || skipFilePaths.includes(`${item.path}/`)}
+        />
+      ))}
+      {fileList.blobs.map((item) => (
+        <FileItem
+          addFilePath={addFilePath}
+          deleteFilePath={deleteFilePath}
+          skipFilePaths={skipFilePaths}
+          view={view}
+          fileName={item}
+          filePath={fileList.path}
+          skipped={
+            skipped ||
+            skipFilePaths.includes(
+              `${fileList.path}${fileList.path !== "" ? "/" : ""}${item}/`
+            )
+          }
+        />
       ))}
     </Flex>
   );
 };
 
-const FileItem: React.FC<{
-  fileItem: { path: string; type: string; sha?: string };
+const FolderItem: React.FC<{
+  folderItem: TreeItem;
+  skipped: boolean;
+  addFilePath: (path: string) => void;
+  deleteFilePath: (path: string) => void;
+  skipFilePaths: string[];
   view: "github_app" | "detailed_result" | "scan_history";
-}> = ({ fileItem, view }) => {
-  const [isChecked, setIsChecked] = React.useState(true);
-
+}> = ({
+  folderItem,
+  view,
+  skipped,
+  addFilePath,
+  deleteFilePath,
+  skipFilePaths,
+}) => {
+  const [isChecked, setIsChecked] = React.useState(!skipped);
   const [show, setShow] = React.useState(false);
+
+  useEffect(() => {
+    setIsChecked(!skipped);
+  }, []);
 
   return (
     <>
       <Flex
         p={2}
-        pl={fileItem.type === "file" ? 8 : 2}
+        pl={2}
         width={"100%"}
         cursor={"pointer"}
         onClick={() => setShow(!show)}
@@ -133,38 +223,149 @@ const FileItem: React.FC<{
           backgroundColor: "gray.100",
         }}
       >
-        {fileItem.sha &&
-          (show ? <ChevronDownIcon mr={2} /> : <ChevronRightIcon mr={2} />)}
+        {show ? <ChevronDownIcon mr={2} /> : <ChevronRightIcon mr={2} />}
         {view !== "scan_history" && (
           <Checkbox
             mr={3}
             isChecked={isChecked}
             colorScheme={"purple"}
             borderColor={"gray.500"}
-            onChange={() => setIsChecked(!isChecked)}
+            onChange={() => {
+              if (isChecked) {
+                addFilePath(`${folderItem.path}/`);
+              } else {
+                deleteFilePath(`${folderItem.path}/`);
+              }
+              setIsChecked(!isChecked);
+            }}
           ></Checkbox>
         )}
-
-        {fileItem.type === "file" ? (
-          <AiOutlineFile
-            color={isChecked ? "#4E5D78" : "#4E5D7880"}
-            size={20}
-          />
-        ) : (
-          <FolderIcon active={isChecked} size={20} />
-        )}
+        <FolderIcon active={isChecked} size={20} />
         <Text ml={3} color={isChecked ? "#4E5D78" : "#4E5D7880"}>
-          {fileItem.path}
+          {folderItem.name}
         </Text>
       </Flex>
-      {fileItem.sha && show && <FileList view={view} fileList={fileData} />}
+      {show && (
+        <FileList
+          addFilePath={addFilePath}
+          deleteFilePath={deleteFilePath}
+          skipFilePaths={skipFilePaths}
+          view={view}
+          fileList={folderItem}
+          skipped={!isChecked}
+        />
+      )}
     </>
+  );
+};
+
+const FileItem: React.FC<{
+  fileName: string;
+  filePath: string;
+  skipped: boolean;
+  addFilePath: (path: string) => void;
+  deleteFilePath: (path: string) => void;
+  skipFilePaths: string[];
+  view: "github_app" | "detailed_result" | "scan_history";
+}> = ({
+  fileName,
+  filePath,
+  view,
+  skipped,
+  addFilePath,
+  deleteFilePath,
+  skipFilePaths,
+}) => {
+  const [isChecked, setIsChecked] = React.useState(!skipped);
+  const [show, setShow] = React.useState(false);
+
+  useEffect(() => {
+    setIsChecked(!skipped);
+  }, []);
+
+  return (
+    <Flex
+      p={2}
+      pl={8}
+      width={"100%"}
+      cursor={"pointer"}
+      onClick={() => setShow(!show)}
+      justifyContent="flex-start"
+      alignItems="center"
+      borderRadius={5}
+      _hover={{
+        backgroundColor: "gray.100",
+      }}
+    >
+      {view !== "scan_history" && (
+        <Checkbox
+          mr={3}
+          isChecked={isChecked}
+          colorScheme={"purple"}
+          borderColor={"gray.500"}
+          onChange={() => {
+            if (isChecked) {
+              addFilePath(
+                `${filePath}${filePath !== "" ? "/" : ""}${fileName}/`
+              );
+            } else {
+              deleteFilePath(
+                `${filePath}${filePath !== "" ? "/" : ""}${fileName}/`
+              );
+            }
+            setIsChecked(!isChecked);
+          }}
+        ></Checkbox>
+      )}
+      <AiOutlineFile color={isChecked ? "#4E5D78" : "#4E5D7880"} size={20} />
+      <Text ml={3} color={isChecked ? "#4E5D78" : "#4E5D7880"}>
+        {fileName}
+      </Text>
+    </Flex>
   );
 };
 
 const FolderSettings: React.FC<{
   view: "github_app" | "detailed_result" | "scan_history";
-}> = ({ view }) => {
+  fileData: TreeItem;
+  branches?: string[];
+  branch?: string;
+  setBranch?: React.Dispatch<React.SetStateAction<string>>;
+  skipFilePaths: string[];
+  setSkipFilePaths?: React.Dispatch<React.SetStateAction<string[]>>;
+  updateSkipPathRequests?: () => Promise<void>;
+  isLoading?: boolean;
+}> = ({
+  view,
+  branches,
+  fileData,
+  skipFilePaths,
+  setSkipFilePaths,
+  branch,
+  setBranch,
+  updateSkipPathRequests,
+  isLoading,
+}) => {
+  const addFilePath = (path: string) => {
+    setSkipFilePaths && setSkipFilePaths([...skipFilePaths, path]);
+  };
+
+  const deleteFilePath = (path: string) => {
+    const newPath = skipFilePaths.filter((item) => item !== path);
+    setSkipFilePaths && setSkipFilePaths([...newPath]);
+  };
+
+  const [selectValue, setSelectValue] = useState<any>();
+
+  useEffect(() => {
+    if (branch) {
+      setSelectValue({
+        value: branch,
+        label: branch,
+      });
+    }
+  }, []);
+
   return (
     <Flex
       minHeight={view === "github_app" ? "400px" : "300px"}
@@ -196,10 +397,16 @@ const FolderSettings: React.FC<{
                 formatOptionLabel={formatOptionLabel}
                 isSearchable={true}
                 isDisabled={false}
+                value={selectValue}
                 options={branches.map((item) => ({ value: item, label: item }))}
                 placeholder="Select Branch"
                 styles={customStyles}
-                onChange={(newValue) => {}}
+                onChange={(newValue) => {
+                  if (newValue && setBranch) {
+                    setBranch(newValue.value);
+                    setSelectValue(newValue);
+                  }
+                }}
               />
             </FormControl>
           ) : (
@@ -210,7 +417,7 @@ const FolderSettings: React.FC<{
               px={10}
               color="gray.700"
             >
-              development
+              {branch}
             </Text>
           )}
 
@@ -221,6 +428,8 @@ const FolderSettings: React.FC<{
               mt={[3, 3, 0]}
               width={["100%", "100%", "200px"]}
               variant="brand"
+              isLoading={isLoading}
+              onClick={updateSkipPathRequests}
             >
               Update
             </Button>
@@ -239,7 +448,14 @@ const FolderSettings: React.FC<{
         alignItems="flex-start"
         overflow={"scroll"}
       >
-        <FileList view={view} fileList={fileData} />
+        <FileList
+          addFilePath={addFilePath}
+          deleteFilePath={deleteFilePath}
+          skipFilePaths={skipFilePaths}
+          view={view}
+          fileList={fileData}
+          skipped={false}
+        />
       </Flex>
     </Flex>
   );

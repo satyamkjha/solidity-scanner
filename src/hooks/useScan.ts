@@ -5,10 +5,11 @@ import API from "helpers/api";
 import { Scan, ScanDetail } from "common/types";
 import { API_PATH } from "helpers/routeManager";
 
-const getScan = async (scan_id: string) => {
+export const getScan = async (scan_id: string) => {
   const { data } = await API.post<{
     scan_report: Scan;
     is_latest_scan: boolean;
+    webhook_enabled?: boolean;
   }>(API_PATH.API_GET_SCAN_DETAILS, { scan_id });
   return data;
 };
