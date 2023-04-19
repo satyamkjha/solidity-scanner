@@ -2,6 +2,7 @@ import { AccordionPanel } from "@chakra-ui/accordion";
 import { Flex, HStack, Text, Image, VStack } from "@chakra-ui/react";
 import { sentenceCapitalize } from "helpers/helperFunction";
 import React from "react";
+import { blockExplorer } from "common/values";
 
 export const ContractDetails: React.FC<{
   scanData: any;
@@ -49,11 +50,7 @@ export const ContractDetails: React.FC<{
               as="p"
               fontSize="18px"
             >
-              {scanData.scan_report.contract_platform === "fantom"
-                ? "FTMScan"
-                : scanData.scan_report.contract_platform === "avalanche"
-                ? "Snowtrace"
-                : sentenceCapitalize(scanData.scan_report.contract_platform)}
+              {blockExplorer[scanData.scan_report.contract_platform]}
             </Text>
           )}
         </HStack>
@@ -183,7 +180,9 @@ export const ContractDetails: React.FC<{
             Contract Chain
           </Text>
           <Text width={"100%"} as="p" fontSize="14px">
-            {scanData.scan_report.contract_chain ? scanData.scan_report.contract_chain : 'NA'}
+            {scanData.scan_report.contract_chain
+              ? scanData.scan_report.contract_chain
+              : "NA"}
           </Text>
         </VStack>
       </Flex>
