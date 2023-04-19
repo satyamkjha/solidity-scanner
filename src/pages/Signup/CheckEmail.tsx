@@ -39,8 +39,6 @@ import { platform } from "os";
 import { Helmet } from "react-helmet";
 import Auth from "helpers/auth";
 
-const CustomFlex = motion(Flex);
-
 const CheckEmail: React.FC = () => {
   const [email, setEmail] = useState<string | null>("");
   const history = useHistory();
@@ -53,7 +51,7 @@ const CheckEmail: React.FC = () => {
     const checkIfAuthenticated = () => {
       intervalId = setInterval(async () => {
         if (Auth.isUserAuthenticated()) {
-          history.push("/home");
+          // history.push("/home");
         }
       }, 2000);
     };
@@ -71,10 +69,14 @@ const CheckEmail: React.FC = () => {
           {`  gtag('event', 'conversion', {'send_to': 'AW-11015092885/e-hACNzf-4IYEJX1s4Qp'});`}
         </script>
       </Helmet>
-      <CustomFlex
-        align="center"
+      <Flex
+        alignItems="center"
+        justifyContent="center"
         direction="column"
+        w="100%"
+        height="100%"
         my={36}
+        px={5}
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
       >
@@ -82,17 +84,17 @@ const CheckEmail: React.FC = () => {
         <Text fontSize="2xl" fontWeight={600} mb={4} mt={8}>
           Verify your email
         </Text>
-        <Text color="subtle">
+        <Text textAlign="center" color="subtle">
           We've sent a link to your registered email address.
         </Text>
-        <Text mt={3} color="subtle">
+        <Text textAlign="center" mt={3} color="subtle">
           Haven't received your email ? Have you checked your{" "}
           <Box as="span" color={"black"} fontWeight={700}>
             Spam/Promotions
           </Box>{" "}
           Folder?
         </Text>
-      </CustomFlex>
+      </Flex>
     </>
   );
 };

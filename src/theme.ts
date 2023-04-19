@@ -94,7 +94,7 @@ export const theme = extendTheme({
         }),
         "accent-ghost": (props) => ({
           ...defaultTheme.components.Button.variants.ghost(props),
-          background: "white",
+          background: "#FFFFFF00",
           color: "#3300FF",
           fontSize: "14px",
           py: 4,

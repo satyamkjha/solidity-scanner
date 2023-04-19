@@ -56,6 +56,7 @@ import {
   MenuButton,
   MenuList,
   MenuItem,
+  Collapse,
 } from "@chakra-ui/react";
 import {
   AiOutlineClockCircle,
@@ -71,9 +72,15 @@ import { RescanIcon, LogoIcon, ScanErrorIcon } from "components/icons";
 import API from "helpers/api";
 
 import { useScans } from "hooks/useScans";
-import { useScan } from "hooks/useScan";
+import { useScan, getScan } from "hooks/useScan";
 
-import { Profile, Report, ReportsListItem, ScanMeta } from "common/types";
+import {
+  Profile,
+  Report,
+  ReportsListItem,
+  ScanMeta,
+  TreeItem,
+} from "common/types";
 import { useProfile } from "hooks/useProfile";
 import {
   FaBuilding,
@@ -96,6 +103,8 @@ import {
   LockIcon,
   TimeIcon,
   ViewIcon,
+  ChevronUpIcon,
+  ChevronDownIcon,
 } from "@chakra-ui/icons";
 import { profile } from "console";
 import { motion } from "framer-motion";
@@ -108,10 +117,35 @@ import { API_PATH } from "helpers/routeManager";
 import { useReactToPrint } from "react-to-print";
 import { PrintContainer } from "pages/Report/PrintContainer";
 import { getPublicReport } from "hooks/usePublicReport";
+import ProjectCustomSettings from "components/projectCustomSettings";
+import FolderSettings from "components/projectFolderSettings";
+import { getRepoTree } from "hooks/getRepoTree";
 
 export const ProjectPage: React.FC = () => {
   const { projectId } = useParams<{ projectId: string }>();
   const { data, isLoading, refetch } = useScans(projectId);
+  const [repoTree, setRepoTree] = useState<TreeItem | null>(null);
+
+  const getRepoTreeReq = async (
+    project_url: string,
+    project_branch: string
+  ) => {
+    const responseData = await getRepoTree(project_url, project_branch);
+    if (responseData) {
+      if (responseData.status === "success") {
+        setRepoTree(responseData.tree);
+      }
+    }
+  };
+
+  useEffect(() => {
+    if (data && data.project_url !== "File Scan") {
+      getRepoTreeReq(
+        data.project_url,
+        data.project_branch ? data.project_branch : "HEAD"
+      );
+    }
+  }, [data]);
 
   return (
     <Box
@@ -136,6 +170,8 @@ export const ProjectPage: React.FC = () => {
             scans={data.scans}
             project_name={data.project_name}
             project_url={data.project_url}
+            repoTree={repoTree}
+            project_branch={data.project_branch ? data.project_branch : "HEAD"}
           />
         )
       )}
@@ -148,7 +184,16 @@ const ScanDetails: React.FC<{
   scans: ScanMeta[];
   project_name: string;
   project_url: string;
-}> = ({ scansRemaining, scans, project_name, project_url }) => {
+  repoTree: TreeItem | null;
+  project_branch: string;
+}> = ({
+  scansRemaining,
+  scans,
+  project_name,
+  project_url,
+  repoTree,
+  project_branch,
+}) => {
   const [isOpen, setIsOpen] = useState(false);
   const [isRescanLoading, setRescanLoading] = useState(false);
 
@@ -515,7 +560,7 @@ const ScanDetails: React.FC<{
                         Publish Report
                       </Button>
                     ) : (
-                      <HStack>
+                      <HStack mb={[5, 5, 5, 0]}>
                         {publishStatus === "Approved" ? (
                           <CheckCircleIcon color={"#03C04A"} />
                         ) : (
@@ -685,7 +730,7 @@ const ScanDetails: React.FC<{
                 >
                   <Flex
                     width={"100%"}
-                    overflow={["scroll", "scroll", "scroll", "visible"]}
+                    overflow={"scroll"}
                     flexDir={"row"}
                     justifyContent="flex-start"
                     align={"center"}
@@ -718,16 +763,21 @@ const ScanDetails: React.FC<{
                       >
                         Detailed Result
                       </Tab>
-                      <Tab
-                        fontSize={"sm"}
-                        h="35px"
-                        minW={"120px"}
-                        bgColor={"#F5F5F5"}
-                        ml={4}
-                        whiteSpace="nowrap"
-                      >
-                        Scan History
-                      </Tab>
+                      {scanData.scan_report.project_skip_files &&
+                        scanData.scan_report.project_url &&
+                        scanData.scan_report.project_url !== "File Scan" && (
+                          <Tab
+                            fontSize={"sm"}
+                            h="35px"
+                            minW={"175px"}
+                            bgColor={"#F5F5F5"}
+                            ml={4}
+                            whiteSpace="nowrap"
+                          >
+                            Custom Settings
+                          </Tab>
+                        )}
+
                       {profile.promo_code ? (
                         profile.actions_supported &&
                         profile.actions_supported.publishable_report && (
@@ -736,7 +786,7 @@ const ScanDetails: React.FC<{
                             h="35px"
                             minW={"175px"}
                             bgColor={"#F5F5F5"}
-                            mx={4}
+                            ml={4}
                             whiteSpace="nowrap"
                           >
                             Published Reports
@@ -748,10 +798,22 @@ const ScanDetails: React.FC<{
                           h="35px"
                           minW={"175px"}
                           bgColor={"#F5F5F5"}
-                          mx={4}
+                          ml={4}
                           whiteSpace="nowrap"
                         >
                           Published Reports
+                        </Tab>
+                      )}
+                      {repoTree && (
+                        <Tab
+                          fontSize={"sm"}
+                          h="35px"
+                          minW={"120px"}
+                          bgColor={"#F5F5F5"}
+                          mx={4}
+                          whiteSpace="nowrap"
+                        >
+                          Scan History
                         </Tab>
                       )}
                     </TabList>
@@ -812,12 +874,31 @@ const ScanDetails: React.FC<{
                       )}
                     </TabPanel>
                     <TabPanel p={[0, 0, 0, 2]}>
-                      <ScanHistory
-                        profile={profile}
-                        scans={scans}
-                        setTabIndex={setTabIndex}
-                      />
+                      {repoTree &&
+                        scanData.scan_report.project_skip_files &&
+                        scanData.scan_report.project_url &&
+                        scanData.scan_report.project_url !== "File Scan" && (
+                          <ProjectCustomSettings
+                            project_skip_files={
+                              scanData.scan_report.project_skip_files
+                            }
+                            project_branch={project_branch}
+                            repoTree={repoTree}
+                            webhook_enabled={
+                              scanData.webhook_enabled
+                                ? scanData.webhook_enabled
+                                : false
+                            }
+                            project_url={scanData.scan_report.project_url}
+                            project_id={scanData.scan_report.project_id}
+                            isGithubIntegrated={
+                              profile._integrations?.github?.status ===
+                              "successful"
+                            }
+                          />
+                        )}
                     </TabPanel>
+
                     {profile.promo_code ? (
                       profile.actions_supported &&
                       profile.actions_supported.publishable_report && (
@@ -840,8 +921,17 @@ const ScanDetails: React.FC<{
                         />
                       </TabPanel>
                     )}
+                    {repoTree && (
+                      <TabPanel p={[0, 0, 0, 2]}>
+                        <ScanHistory
+                          repoTree={repoTree}
+                          profile={profile}
+                          scans={scans}
+                          setTabIndex={setTabIndex}
+                        />
+                      </TabPanel>
+                    )}
                   </TabPanels>
-                  <></>
                 </Tabs>
               )}
             </>
@@ -1378,7 +1468,8 @@ const ScanHistory: React.FC<{
   setTabIndex: React.Dispatch<React.SetStateAction<number>>;
   profile: Profile;
   scans: ScanMeta[];
-}> = ({ setTabIndex, profile, scans }) => {
+  repoTree: TreeItem;
+}> = ({ setTabIndex, profile, scans, repoTree }) => {
   return (
     <Box
       sx={{
@@ -1395,7 +1486,7 @@ const ScanHistory: React.FC<{
             key={scan.scan_id}
             scan={scan}
             setTabIndex={setTabIndex}
-            // isTrial={profile?.current_package === "trial"}
+            repoTree={repoTree}
             profile={profile}
           />
         ))}
@@ -1407,135 +1498,208 @@ const ScanBlock: React.FC<{
   scan: ScanMeta;
   setTabIndex: React.Dispatch<React.SetStateAction<number>>;
   profile: Profile;
-}> = ({ scan, setTabIndex, profile }) => {
+  repoTree: TreeItem;
+}> = ({ scan, setTabIndex, profile, repoTree }) => {
   const history = useHistory();
+  const [show, setShow] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const [skipFilePaths, setSkipFilePaths] = useState<string[] | null>(null);
+
+  const getScanRequest = async () => {
+    setIsLoading(true);
+    try {
+      const responseData = await getScan(scan.scan_id);
+      if (responseData && responseData.scan_report.skip_file_paths) {
+        setSkipFilePaths(responseData.scan_report.skip_file_paths);
+      }
+      setShow(true);
+    } catch (e) {
+      console.log(e);
+    }
+    setIsLoading(false);
+  };
+
   return (
-    <Flex
-      alignItems="flex-start"
-      justifyContent="space-between"
-      flexDir={"row"}
-      sx={{
-        cursor: "pointer",
-        w: "100%",
-        bg: "white",
-        my: 4,
-        px: [5, 5, 7, 10],
-        borderRadius: "10px",
-        transition: "0.3s box-shadow",
-        boxShadow: "0px 4px 20px rgba(0, 0, 0, 0.05)",
-        _hover: {
-          boxShadow: "0px 4px 20px rgba(0, 0, 0, 0.2)",
-        },
-      }}
-    >
+    <>
       <Flex
-        width={"calc(100% - 60px)"}
+        alignItems="flex-start"
         justifyContent="flex-start"
-        flexWrap={"wrap"}
-        alignItems={"flex-start"}
-        flexDir="row"
-      >
-        <VStack mt={5} alignItems={"flex-start"} spacing={1} width="130px">
-          <Text fontSize={"sm"} color="gray.400">
-            Scan Name
-          </Text>
-          <Text fontSize={"md"}>{scan.scan_name}</Text>
-        </VStack>
-        {scan.scan_status === "scan_incomplete" ? (
-          <Flex
-            p={3}
-            sx={{ bgColor: "high-subtle", borderRadius: "20px" }}
-            mt={5}
-            mr={10}
-          >
-            <ScanErrorIcon size={28} />
-          </Flex>
-        ) : (
-          <VStack mt={5} alignItems={"flex-start"} spacing={1} width="120px">
-            <Text fontSize={"sm"} color="gray.400">
-              Score
-            </Text>
-            <Text
-              sx={{
-                color: "accent",
-                fontSize: "xl",
-                fontWeight: 600,
-                mx: "auto",
-                lineHeight: 1,
-              }}
-            >
-              {scan.scan_score}
-            </Text>
-          </VStack>
-        )}
-        <Flex
-          justifyContent={"flex-start"}
-          alignItems="flex-start"
-          flexDir={["column", "column", "row"]}
-        >
-          <Button
-            variant="accent-outline"
-            minW="200px"
-            bg={"white"}
-            mr={10}
-            my={5}
-            onClick={() => {
-              setTabIndex(0);
-              history.push(`/projects/${scan.project_id}/${scan.scan_id}`);
-            }}
-          >
-            View Scan Result
-          </Button>
-          <Button
-            variant="accent-outline"
-            minW="200px"
-            mr={10}
-            mt={[0, 0, 5]}
-            mb={5}
-            isDisabled={
-              scan.reporting_status !== "report_generated" ||
-              (profile.actions_supported
-                ? !profile.actions_supported.generate_report
-                : profile.current_package === "trial")
-            }
-            onClick={(e) => {
-              e.stopPropagation();
-              window.open(
-                `http://${document.location.host}/report/project/${scan.project_id}/${scan.latest_report_id}`,
-                "_blank"
-              );
-            }}
-          >
-            {scan.reporting_status === "generating_report" && (
-              <Spinner color="#806CCF" size="sm" mr={2} />
-            )}
-            {scan.reporting_status === "report_generated"
-              ? "View Report"
-              : scan.reporting_status === "generating_report"
-              ? "Generating Report"
-              : "Report Not Generated"}
-          </Button>
-        </Flex>
-      </Flex>
-      <Box
+        flexDir={"column"}
         sx={{
-          width: "60px",
-          height: "60px",
-          my: 5,
-          bg: "#F7F7F7",
-          color: "#4E5D78",
-          borderRadius: "50%",
-          textAlign: "center",
+          cursor: "pointer",
+          w: "100%",
+          bg: "white",
+          my: 4,
+          px: [5, 5, 7, 10],
+          borderRadius: "10px",
+          transition: "0.3s box-shadow",
+          boxShadow: "0px 4px 20px rgba(0, 0, 0, 0.05)",
+          _hover: {
+            boxShadow: "0px 4px 20px rgba(0, 0, 0, 0.2)",
+          },
         }}
       >
-        <Text fontSize="xl" fontWeight="600">
-          {new Date(scan.scan_time).getDate()}
-        </Text>
-        <Text fontSize="12px" mt="-4px">
-          {monthNames[new Date(scan.scan_time).getMonth()]}
-        </Text>
-      </Box>
-    </Flex>
+        <Flex
+          w="100%"
+          h="fit-content"
+          flexDir={"row"}
+          alignItems={["flex-start", "flex-start", "center"]}
+          justifyContent="space-between"
+          py={3}
+        >
+          <Flex
+            width={"calc(100% - 60px)"}
+            justifyContent="flex-start"
+            flexWrap={"wrap"}
+            alignItems={"flex-start"}
+            flexDir="row"
+          >
+            <VStack my={2} alignItems={"flex-start"} spacing={1} width="130px">
+              <Text fontSize={"sm"} color="gray.400">
+                Scan Name
+              </Text>
+              <Text fontSize={"md"}>{scan.scan_name}</Text>
+            </VStack>
+            {scan.scan_status === "scan_incomplete" ? (
+              <Flex
+                p={3}
+                sx={{ bgColor: "high-subtle", borderRadius: "20px" }}
+                mr={10}
+                my={2}
+              >
+                <ScanErrorIcon size={28} />
+              </Flex>
+            ) : (
+              <VStack
+                my={2}
+                alignItems={"flex-start"}
+                spacing={1}
+                width="120px"
+              >
+                <Text fontSize={"sm"} color="gray.400">
+                  Score
+                </Text>
+                <Text
+                  sx={{
+                    color: "accent",
+                    fontSize: "xl",
+                    fontWeight: 600,
+                    mx: "auto",
+                    lineHeight: 1,
+                  }}
+                >
+                  {scan.scan_score}
+                </Text>
+              </VStack>
+            )}
+            <Flex
+              justifyContent={"flex-start"}
+              alignItems="flex-start"
+              flexWrap={"wrap"}
+              width={"fit-content"}
+              flexDir={["column", "row", "row"]}
+            >
+              <Button
+                variant="accent-outline"
+                minW="200px"
+                bg={"white"}
+                mr={10}
+                my={2}
+                onClick={() => {
+                  setTabIndex(0);
+                  history.push(`/projects/${scan.project_id}/${scan.scan_id}`);
+                }}
+              >
+                View Scan Result
+              </Button>
+
+              <Button
+                variant="accent-outline"
+                minW="200px"
+                bg={"white"}
+                mr={10}
+                my={2}
+                isDisabled={
+                  scan.reporting_status !== "report_generated" ||
+                  (profile.actions_supported
+                    ? !profile.actions_supported.generate_report
+                    : profile.current_package === "trial")
+                }
+                onClick={(e) => {
+                  e.stopPropagation();
+                  window.open(
+                    `http://${document.location.host}/report/project/${scan.project_id}/${scan.latest_report_id}`,
+                    "_blank"
+                  );
+                }}
+              >
+                {scan.reporting_status === "generating_report" && (
+                  <Spinner color="#806CCF" size="sm" mr={2} />
+                )}
+                {scan.reporting_status === "report_generated"
+                  ? "View Report"
+                  : scan.reporting_status === "generating_report"
+                  ? "Generating Report"
+                  : "Report Not Generated"}
+              </Button>
+
+              <Button
+                variant="accent-outline"
+                minW="200px"
+                mr={10}
+                my={2}
+                isLoading={isLoading}
+                onClick={() => {
+                  if (show) {
+                    setShow(false);
+                  } else if (skipFilePaths) {
+                    setShow(true);
+                  } else {
+                    getScanRequest();
+                  }
+                }}
+              >
+                {show ? "Hide Skipped files" : "View Skipped files"}{" "}
+                {show ? <ChevronUpIcon ml={2} /> : <ChevronDownIcon ml={2} />}
+              </Button>
+            </Flex>
+          </Flex>
+          <Box
+            sx={{
+              width: "60px",
+              height: "60px",
+              my: 2,
+              bg: "#F7F7F7",
+              color: "#4E5D78",
+              borderRadius: "50%",
+              textAlign: "center",
+            }}
+          >
+            <Text fontSize="xl" fontWeight="600">
+              {new Date(scan.scan_time).getDate()}
+            </Text>
+            <Text fontSize="12px" mt="-4px">
+              {monthNames[new Date(scan.scan_time).getMonth()]}
+            </Text>
+          </Box>
+        </Flex>
+        <Collapse
+          style={{
+            width: "100%",
+          }}
+          in={show}
+          animateOpacity
+        >
+          {skipFilePaths && (
+            <FolderSettings
+              view="scan_history"
+              fileData={repoTree}
+              skipFilePaths={skipFilePaths}
+            />
+          )}
+        </Collapse>
+      </Flex>
+    </>
   );
 };
 

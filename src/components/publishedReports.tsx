@@ -8,7 +8,7 @@ import {
   Text,
   Spinner,
 } from "@chakra-ui/react";
-import { ReportsListItem, Profile, Scan } from "common/types";
+import { ReportsListItem, Profile, Scan, Report } from "common/types";
 import { useReports } from "hooks/useReports";
 import React, { useState, useRef, useEffect } from "react";
 import Icon from "react-crypto-icons";
@@ -36,7 +36,6 @@ const ReportBlock: React.FC<{
   const generatePDF = async () => {
     setPrintLoading(true);
     const publishReportData = await getPublicReport(type, report.report_id);
-
 
     if (publishReportData.summary_report) {
       setSummaryReport(publishReportData.summary_report);
@@ -256,10 +255,15 @@ const PublishedReports: React.FC<{
         overflowY: "scroll",
       }}
     >
-      {reportList &&
+      {reportList && reportList.length > 0 ? (
         reportList.map((report) => (
           <ReportBlock type={type} profile={profile} report={report} />
-        ))}
+        ))
+      ) : (
+        <Flex justifyContent="center" alignItems="center" w="100%" h="100%">
+          You have not published any reports yet.
+        </Flex>
+      )}
     </Box>
   );
 };
