@@ -377,23 +377,23 @@ const ApplicationForm: React.FC = () => {
                 ? "Project Settings"
                 : ""}
             </Text>
-            <HStack justifyContent={"flex-end"} spacing={[0, 0, 5]}>
+            <HStack justifyContent={"flex-end"} spacing={3}>
               <Image
-                height={["40px", "40px", "60px"]}
-                width={["40px", "40px", "60px"]}
+                height={["30px", "30px", "40px"]}
+                width={["30px", "30px", "40px"]}
                 src={`/common/step_${step}.svg`}
-                mr={2}
               />
               <Text
                 sx={{
                   fontSize: ["md", "md", "lg"],
                   fontWeight: 700,
                   lineHeight: "20px",
-                  textAlign: "center",
+                  textAlign: "left",
+                  width: "fit-content",
                 }}
               >
-                {"STEP"} <br />
-                <Box fontSize={["xl", "xl", "2xl"]} as="span">
+                {"STEP"}{" "}
+                <Box ml={1} fontSize={["xl", "xl", "2xl"]} as="span">
                   {step}/
                 </Box>
                 {3}
@@ -864,7 +864,7 @@ const ContractForm: React.FC = () => {
         sx={{
           fontSize: "2xl",
           fontWeight: 600,
-          textAlign: "center",
+          textAlign: "left",
         }}
       >
         Load contract
@@ -1211,7 +1211,7 @@ const UploadForm: React.FC = () => {
             sx={{
               fontSize: "2xl",
               fontWeight: 600,
-              textAlign: "center",
+              textAlign: "left",
             }}
           >
             Upload contract
