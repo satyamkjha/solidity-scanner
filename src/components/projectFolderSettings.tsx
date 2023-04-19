@@ -373,7 +373,7 @@ const FolderSettings: React.FC<{
         "fit-content",
         "fit-content",
         "fit-content",
-        view === "github_app" ? "40vh" : "30vh",
+        view === "github_app" ? "35vh" : "30vh",
       ]}
       flexDir="column"
       justifyContent="flex-start"

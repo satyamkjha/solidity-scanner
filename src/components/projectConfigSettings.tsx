@@ -27,7 +27,7 @@ const ConfigSettings: React.FC<{
         "fit-content",
         "fit-content",
         "fit-content",
-        view === "github_app" ? "40vh" : "fit-content",
+        view === "github_app" ? "35vh" : "fit-content",
       ]}
     >
       <Text

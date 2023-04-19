@@ -44,7 +44,7 @@ const InfoSettings: React.FC<{
       minHeight="400px"
       spacing={6}
       mt={0}
-      height={["fit-content", "fit-content", "fit-content", "40vh"]}
+      height={["fit-content", "fit-content", "fit-content", "35vh"]}
       width={"100%"}
     >
       <VStack alignItems={"flex-start"}>
