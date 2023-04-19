@@ -10,6 +10,7 @@ import {
   Checkbox,
   Collapse,
   Button,
+  Spinner,
 } from "@chakra-ui/react";
 import Select from "react-select";
 import { FolderIcon, SimpleFileIcon } from "./icons";
@@ -177,7 +178,7 @@ const FileList: React.FC<{
           skipped={
             skipped ||
             skipFilePaths.includes(
-              `${fileList.path}${fileList.path !== "" ? "/" : ""}${item}/`
+              `${fileList.path}${fileList.path !== "" ? "/" : ""}${item}`
             )
           }
         />
@@ -306,11 +307,11 @@ const FileItem: React.FC<{
           onChange={() => {
             if (isChecked) {
               addFilePath(
-                `${filePath}${filePath !== "" ? "/" : ""}${fileName}/`
+                `${filePath}${filePath !== "" ? "/" : ""}${fileName}`
               );
             } else {
               deleteFilePath(
-                `${filePath}${filePath !== "" ? "/" : ""}${fileName}/`
+                `${filePath}${filePath !== "" ? "/" : ""}${fileName}`
               );
             }
             setIsChecked(!isChecked);
@@ -396,7 +397,7 @@ const FolderSettings: React.FC<{
               <Select
                 formatOptionLabel={formatOptionLabel}
                 isSearchable={true}
-                isDisabled={false}
+                isDisabled={isLoading}
                 value={selectValue}
                 options={branches.map((item) => ({ value: item, label: item }))}
                 placeholder="Select Branch"
@@ -448,14 +449,20 @@ const FolderSettings: React.FC<{
         alignItems="flex-start"
         overflow={"scroll"}
       >
-        <FileList
-          addFilePath={addFilePath}
-          deleteFilePath={deleteFilePath}
-          skipFilePaths={skipFilePaths}
-          view={view}
-          fileList={fileData}
-          skipped={false}
-        />
+        {isLoading ? (
+          <Flex w="100%" h="100%" justifyContent="center" alignItems="center">
+            <Spinner color="gray.500" />
+          </Flex>
+        ) : (
+          <FileList
+            addFilePath={addFilePath}
+            deleteFilePath={deleteFilePath}
+            skipFilePaths={skipFilePaths}
+            view={view}
+            fileList={fileData}
+            skipped={false}
+          />
+        )}
       </Flex>
     </Flex>
   );

@@ -119,42 +119,29 @@ import { PrintContainer } from "pages/Report/PrintContainer";
 import { getPublicReport } from "hooks/usePublicReport";
 import ProjectCustomSettings from "components/projectCustomSettings";
 import FolderSettings from "components/projectFolderSettings";
+import { getRepoTree } from "hooks/getRepoTree";
 
 export const ProjectPage: React.FC = () => {
   const { projectId } = useParams<{ projectId: string }>();
   const { data, isLoading, refetch } = useScans(projectId);
   const [repoTree, setRepoTree] = useState<TreeItem | null>(null);
 
-  const getRepoTree = async (
+  const getRepoTreeReq = async (
     project_url: string,
-    project_id: string,
     project_branch: string
   ) => {
-    try {
-      const { data } = await API.post<{ status: string; tree: TreeItem }>(
-        API_PATH.API_REPO_TREE,
-        {
-          project_url:
-            project_url.slice(-4) === ".git"
-              ? project_url.slice(0, project_url.length - 4)
-              : project_url,
-          project_id,
-          project_branch,
-        }
-      );
-      if (data) {
-        setRepoTree(data.tree);
+    const responseData = await getRepoTree(project_url, project_branch);
+    if (responseData) {
+      if (responseData.status === "success") {
+        setRepoTree(responseData.tree);
       }
-    } catch (e) {
-      console.log(e);
     }
   };
 
   useEffect(() => {
     if (data && data.project_url !== "File Scan") {
-      getRepoTree(
+      getRepoTreeReq(
         data.project_url,
-        projectId,
         data.project_branch ? data.project_branch : "HEAD"
       );
     }

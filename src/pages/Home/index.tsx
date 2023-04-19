@@ -1,6 +1,7 @@
 import React, { useEffect, useState, useMemo } from "react";
 import { useQueryClient } from "react-query";
 import { useHistory, Link as RouterLink } from "react-router-dom";
+import { getRepoTree } from "hooks/getRepoTree";
 import { useForm } from "react-hook-form";
 import {
   Alert,
@@ -319,6 +320,27 @@ const ApplicationForm: React.FC = () => {
     setIsLoading(false);
   };
 
+  const getRepoTreeReq = async (
+    project_url: string,
+    project_branch: string
+  ) => {
+    setIsLoading(true);
+    const responseData = await getRepoTree(project_url, project_branch);
+    if (responseData) {
+      if (responseData.status === "success") {
+        setRepoTree(responseData.tree);
+      }
+    }
+    setIsLoading(false);
+  };
+
+  useEffect(() => {
+    console.log(branch);
+    if (step > 1 && branch !== "") {
+      getRepoTreeReq(githubLink, branch);
+    }
+  }, [branch]);
+
   return (
     <Flex flexDir="column" justifyContent={"flex-start"} alignItems="center">
       {profileData && (
@@ -403,30 +425,16 @@ const ApplicationForm: React.FC = () => {
               setVisibility={setVisibility}
             />
           ) : step === 2 ? (
-            <>
-              {isLoading ? (
-                <Flex
-                  w="100%"
-                  h="45vh"
-                  justifyContent="center"
-                  alignItems="center"
-                >
-                  <Spinner color="gray.500" />
-                </Flex>
-              ) : (
-                repoTree && (
-                  <FolderSettings
-                    view="github_app"
-                    fileData={repoTree}
-                    branches={branches}
-                    branch={branch}
-                    setBranch={setBranch}
-                    skipFilePaths={skipFilePaths}
-                    setSkipFilePaths={setSkipFilePaths}
-                  />
-                )
-              )}
-            </>
+            <FolderSettings
+              isLoading={isLoading}
+              view="github_app"
+              fileData={repoTree}
+              branches={branches}
+              branch={branch}
+              setBranch={setBranch}
+              skipFilePaths={skipFilePaths}
+              setSkipFilePaths={setSkipFilePaths}
+            />
           ) : step === 3 ? (
             <ConfigSettings
               view="github_app"
