@@ -28,71 +28,6 @@ const formatOptionLabel: React.FC<{
   </div>
 );
 
-const fileData: TreeItem = {
-  name: "root",
-  path: ".",
-  tree: [
-    {
-      name: "assets",
-      path: "./assets",
-      blobs: ["eth-bsc-swap.png"],
-      tree: [],
-    },
-    {
-      name: "contracts",
-      path: "./assets/contracts",
-      tree: [
-        {
-          name: "bep20",
-          path: "./assets/contracts",
-          tree: [],
-          blobs: ["BEP20TokenImplementation.sol", "BEP20UpgradeableProxy.sol"],
-        },
-        {
-          name: "interfaces",
-          tree: [],
-          path: "./assets/interfaces",
-          blobs: [
-            "IBEP20.sol",
-            "IERC20Query.sol",
-            "IProxyInitialize.sol",
-            "ISwap.sol",
-          ],
-        },
-        {
-          name: "test",
-          tree: [],
-          path: "./assets/contracts/test",
-          blobs: [
-            "ERC20ABC.sol",
-            "ERC20DEF.sol",
-            "ERC20EMPTYNAME.sol",
-            "ERC20EMPTYSYMBOL.sol",
-          ],
-        },
-      ],
-      blobs: [
-        "BSCSwapAgentImpl.sol",
-        "BSCSwapAgentImpl.template",
-        "BSCSwapAgentUpgradeableProxy.sol",
-        "ETHSwapAgentImpl.sol",
-        "ETHSwapAgentImpl.template",
-        "ETHSwapAgentUpgradeableProxy.sol",
-        "Migrations.sol",
-      ],
-    },
-  ],
-  blobs: [
-    "BSCSwapAgentImpl.sol",
-    "BSCSwapAgentImpl.template",
-    "BSCSwapAgentUpgradeableProxy.sol",
-    "ETHSwapAgentImpl.sol",
-    "ETHSwapAgentImpl.template",
-    "ETHSwapAgentUpgradeableProxy.sol",
-    "Migrations.sol",
-  ],
-};
-
 const customStyles = {
   option: (provided: any, state: any) => ({
     ...provided,
@@ -131,8 +66,6 @@ const customStyles = {
   },
 };
 
-const branches = ["master", "test", "dev", "lang"];
-
 const FileList: React.FC<{
   fileList: TreeItem;
   view: "github_app" | "detailed_result" | "scan_history";
@@ -157,8 +90,9 @@ const FileList: React.FC<{
       alignItems="flex-start"
       pl={[2, 2, 7]}
     >
-      {fileList.tree.map((item) => (
+      {fileList.tree.map((item, index) => (
         <FolderItem
+          key={index}
           addFilePath={addFilePath}
           deleteFilePath={deleteFilePath}
           skipFilePaths={skipFilePaths}
@@ -167,8 +101,9 @@ const FileList: React.FC<{
           skipped={skipped || skipFilePaths.includes(`${item.path}/`)}
         />
       ))}
-      {fileList.blobs.map((item) => (
+      {fileList.blobs.map((item, index) => (
         <FileItem
+          key={index}
           addFilePath={addFilePath}
           deleteFilePath={deleteFilePath}
           skipFilePaths={skipFilePaths}

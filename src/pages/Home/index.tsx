@@ -335,7 +335,6 @@ const ApplicationForm: React.FC = () => {
   };
 
   useEffect(() => {
-    console.log(branch);
     if (step > 1 && branch !== "") {
       getRepoTreeReq(githubLink, branch);
     }

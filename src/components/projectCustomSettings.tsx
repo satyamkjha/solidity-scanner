@@ -158,7 +158,7 @@ const ProjectCustomSettings: React.FC<{
           <HStack
             width="100%"
             justifyContent="space-between"
-            alignItem="center"
+            alignItems="center"
           >
             <VStack
               justifyContent="flex-start"
@@ -231,7 +231,7 @@ const ProjectCustomSettings: React.FC<{
           <HStack
             width="100%"
             justifyContent="space-between"
-            alignItem="center"
+            alignItems="center"
           >
             <VStack
               justifyContent="flex-start"
