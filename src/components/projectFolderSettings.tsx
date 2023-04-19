@@ -304,7 +304,7 @@ const FolderSettings: React.FC<{
 
   return (
     <Flex
-      minHeight={view === "github_app" ? "400px" : "300px"}
+      minHeight={view === "github_app" ? "350px" : "300px"}
       height={[
         "fit-content",
         "fit-content",

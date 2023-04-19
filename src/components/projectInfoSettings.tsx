@@ -41,7 +41,7 @@ const InfoSettings: React.FC<{
 }) => {
   return (
     <Stack
-      minHeight="400px"
+      minHeight="350px"
       spacing={6}
       mt={0}
       height={["fit-content", "fit-content", "fit-content", "35vh"]}
