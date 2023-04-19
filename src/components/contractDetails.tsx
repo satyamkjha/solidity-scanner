@@ -53,6 +53,8 @@ export const ContractDetails: React.FC<{
                 ? "FTMScan"
                 : scanData.scan_report.contract_platform === "avalanche"
                 ? "Snowtrace"
+                : scanData.scan_report.contract_platform === "xdc"
+                ? "(xdc.blocksscan.io)"
                 : sentenceCapitalize(scanData.scan_report.contract_platform)}
             </Text>
           )}
@@ -183,7 +185,9 @@ export const ContractDetails: React.FC<{
             Contract Chain
           </Text>
           <Text width={"100%"} as="p" fontSize="14px">
-            {scanData.scan_report.contract_chain ? scanData.scan_report.contract_chain : 'NA'}
+            {scanData.scan_report.contract_chain
+              ? scanData.scan_report.contract_chain
+              : "NA"}
           </Text>
         </VStack>
       </Flex>
