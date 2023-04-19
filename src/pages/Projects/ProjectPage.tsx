@@ -730,7 +730,7 @@ const ScanDetails: React.FC<{
                 >
                   <Flex
                     width={"100%"}
-                    overflow={["scroll", "scroll", "scroll", "visible"]}
+                    overflow={"scroll"}
                     flexDir={"row"}
                     justifyContent="flex-start"
                     align={"center"}
@@ -1539,7 +1539,14 @@ const ScanBlock: React.FC<{
           },
         }}
       >
-        <Flex w="100%" justifyContent="space-between">
+        <Flex
+          w="100%"
+          h="fit-content"
+          flexDir={"row"}
+          alignItems={["flex-start", "flex-start", "center"]}
+          justifyContent="space-between"
+          py={3}
+        >
           <Flex
             width={"calc(100% - 60px)"}
             justifyContent="flex-start"
@@ -1547,7 +1554,7 @@ const ScanBlock: React.FC<{
             alignItems={"flex-start"}
             flexDir="row"
           >
-            <VStack mt={5} alignItems={"flex-start"} spacing={1} width="130px">
+            <VStack my={2} alignItems={"flex-start"} spacing={1} width="130px">
               <Text fontSize={"sm"} color="gray.400">
                 Scan Name
               </Text>
@@ -1557,14 +1564,14 @@ const ScanBlock: React.FC<{
               <Flex
                 p={3}
                 sx={{ bgColor: "high-subtle", borderRadius: "20px" }}
-                mt={5}
                 mr={10}
+                my={2}
               >
                 <ScanErrorIcon size={28} />
               </Flex>
             ) : (
               <VStack
-                mt={5}
+                my={2}
                 alignItems={"flex-start"}
                 spacing={1}
                 width="120px"
@@ -1588,15 +1595,16 @@ const ScanBlock: React.FC<{
             <Flex
               justifyContent={"flex-start"}
               alignItems="flex-start"
-              flexDir={["column", "column", "row"]}
+              flexWrap={"wrap"}
+              width={"fit-content"}
+              flexDir={["column", "row", "row"]}
             >
               <Button
                 variant="accent-outline"
                 minW="200px"
                 bg={"white"}
                 mr={10}
-                my={[3, 3, 7]}
-                mt={[5, 5, 7]}
+                my={2}
                 onClick={() => {
                   setTabIndex(0);
                   history.push(`/projects/${scan.project_id}/${scan.scan_id}`);
@@ -1610,7 +1618,7 @@ const ScanBlock: React.FC<{
                 minW="200px"
                 bg={"white"}
                 mr={10}
-                my={[3, 3, 7]}
+                my={2}
                 isDisabled={
                   scan.reporting_status !== "report_generated" ||
                   (profile.actions_supported
@@ -1639,8 +1647,7 @@ const ScanBlock: React.FC<{
                 variant="accent-outline"
                 minW="200px"
                 mr={10}
-                my={[3, 3, 7]}
-                mb={[5, 5, 7]}
+                my={2}
                 isLoading={isLoading}
                 onClick={() => {
                   if (show) {
@@ -1661,7 +1668,7 @@ const ScanBlock: React.FC<{
             sx={{
               width: "60px",
               height: "60px",
-              my: 5,
+              my: 2,
               bg: "#F7F7F7",
               color: "#4E5D78",
               borderRadius: "50%",

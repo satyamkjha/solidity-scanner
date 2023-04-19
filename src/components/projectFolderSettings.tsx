@@ -151,7 +151,7 @@ const FileList: React.FC<{
   return (
     <Flex
       height="fit-content"
-      width={"100%"}
+      width={"fit-content"}
       flexDir="column"
       justifyContent="flex-start"
       alignItems="flex-start"
@@ -214,7 +214,7 @@ const FolderItem: React.FC<{
       <Flex
         p={2}
         pl={2}
-        width={"100%"}
+        width={"fit-content"}
         cursor={"pointer"}
         onClick={() => setShow(!show)}
         justifyContent="flex-start"
@@ -288,7 +288,7 @@ const FileItem: React.FC<{
     <Flex
       p={2}
       pl={8}
-      width={"100%"}
+      width={"fit-content"}
       cursor={"pointer"}
       onClick={() => setShow(!show)}
       justifyContent="flex-start"
@@ -376,6 +376,7 @@ const FolderSettings: React.FC<{
         "fit-content",
         view === "github_app" ? "35vh" : "30vh",
       ]}
+      width={"100%"}
       flexDir="column"
       justifyContent="flex-start"
       alignItems="flex-start"
@@ -399,7 +400,11 @@ const FolderSettings: React.FC<{
                 isSearchable={true}
                 isDisabled={isLoading}
                 value={selectValue}
-                options={branches.map((item) => ({ value: item, label: item }))}
+                options={
+                  branches
+                    ? branches.map((item) => ({ value: item, label: item }))
+                    : []
+                }
                 placeholder="Select Branch"
                 styles={customStyles}
                 onChange={(newValue) => {
@@ -447,7 +452,8 @@ const FolderSettings: React.FC<{
         flexDir="column"
         justifyContent="flex-start"
         alignItems="flex-start"
-        overflow={"scroll"}
+        overflowX={"scroll"}
+        overflowY={"scroll"}
       >
         {isLoading ? (
           <Flex w="100%" h="100%" justifyContent="center" alignItems="center">

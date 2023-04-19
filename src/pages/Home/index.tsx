@@ -78,14 +78,14 @@ const Home: React.FC = () => {
             my: 2,
           }}
         >
-          <Tabs variant="soft-rounded" colorScheme="green">
+          <Tabs variant="soft-rounded" colorScheme="green" w="100%">
             <TabList mb="1em">
               <Tab width="50%">GitHub Application</Tab>
               <Tab width="50%">Verified Contracts</Tab>
               <Tab width="50%">Upload Contract</Tab>
             </TabList>
-            <TabPanels>
-              <TabPanel p={0}>
+            <TabPanels w="100%">
+              <TabPanel w="100%" p={0}>
                 <ApplicationForm />
               </TabPanel>
               <TabPanel p={0}>
@@ -342,13 +342,21 @@ const ApplicationForm: React.FC = () => {
   }, [branch]);
 
   return (
-    <Flex flexDir="column" justifyContent={"flex-start"} alignItems="center">
+    <Flex
+      flexDir="column"
+      w="100%"
+      justifyContent={"flex-start"}
+      alignItems="flex-start"
+    >
       {profileData && (
         <Flex
           flexDir="column"
+          justifyContent={"flex-start"}
+          alignItems="flex-start"
           backgroundColor="#FCFCFC"
           px={[4, 4, 7]}
           py={5}
+          w="100%"
           borderRadius={20}
           border="1px solid #ECECEC"
         >
