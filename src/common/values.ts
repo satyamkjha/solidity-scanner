@@ -241,6 +241,22 @@ export const blockScans: { [key: string]: string } = {
   xdc: "XDC",
 };
 
+export const blockExplorer: { [key: string]: string } = {
+  etherscan: "Etherscan",
+  bscscan: "Bscscan",
+  polygonscan: "Polygonscan",
+  fantom: "FTMScan",
+  cronos: "Cronoscan",
+  avalanche: "Snowtrace",
+  celo: "Celo",
+  aurora: "Aurora",
+  arbiscan: "Arbiscan",
+  buildbear: "Buildbear",
+  optimism: "Optimism",
+  xdc: "(xdc.blocksscan.io)",
+  reefscan: "Reefscan",
+};
+
 export const detectorData: DetectorItemProp[] = [
   {
     attackCategory: "Compiler Version Issues",
