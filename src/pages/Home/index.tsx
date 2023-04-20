@@ -301,6 +301,7 @@ const ApplicationForm: React.FC = () => {
 
   const getBranches = async () => {
     setIsLoading(true);
+    setBranch("");
     try {
       const { data } = await API.post<{
         status: string;
