@@ -126,26 +126,19 @@ export const ProjectPage: React.FC = () => {
   const { data, isLoading, refetch } = useScans(projectId);
   const [repoTree, setRepoTree] = useState<TreeItem | null>(null);
 
-  const getRepoTreeReq = async (
-    project_url: string,
-    project_branch: string
-  ) => {
-    const responseData = await getRepoTree(project_url, project_branch);
-    if (responseData) {
-      if (responseData.status === "success") {
-        setRepoTree(responseData.tree);
-      }
-    }
-  };
-
-  useEffect(() => {
-    if (data && data.project_url !== "File Scan") {
-      getRepoTreeReq(
+  const getRepoTreeReq = async () => {
+    if (data && data.project_url !== "File Scan" && repoTree === null) {
+      const responseData = await getRepoTree(
         data.project_url,
         data.project_branch ? data.project_branch : "HEAD"
       );
+      if (responseData) {
+        if (responseData.status === "success") {
+          setRepoTree(responseData.tree);
+        }
+      }
     }
-  }, [data]);
+  };
 
   return (
     <Box
@@ -168,6 +161,7 @@ export const ProjectPage: React.FC = () => {
           <ScanDetails
             scansRemaining={data.scans_remaining}
             scans={data.scans}
+            getRepoTreeReq={getRepoTreeReq}
             project_name={data.project_name}
             project_url={data.project_url}
             repoTree={repoTree}
@@ -186,6 +180,10 @@ const ScanDetails: React.FC<{
   project_url: string;
   repoTree: TreeItem | null;
   project_branch: string;
+  getRepoTreeReq: (
+    project_url: string,
+    project_branch: string
+  ) => Promise<void>;
 }> = ({
   scansRemaining,
   scans,
@@ -193,6 +191,7 @@ const ScanDetails: React.FC<{
   project_url,
   repoTree,
   project_branch,
+  getRepoTreeReq,
 }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [isRescanLoading, setRescanLoading] = useState(false);
@@ -804,18 +803,16 @@ const ScanDetails: React.FC<{
                           Published Reports
                         </Tab>
                       )}
-                      {repoTree && (
-                        <Tab
-                          fontSize={"sm"}
-                          h="35px"
-                          minW={"120px"}
-                          bgColor={"#F5F5F5"}
-                          mx={4}
-                          whiteSpace="nowrap"
-                        >
-                          Scan History
-                        </Tab>
-                      )}
+                      <Tab
+                        fontSize={"sm"}
+                        h="35px"
+                        minW={"120px"}
+                        bgColor={"#F5F5F5"}
+                        mx={4}
+                        whiteSpace="nowrap"
+                      >
+                        Scan History
+                      </Tab>
                     </TabList>
                   </Flex>
                   <TabPanels>
@@ -874,8 +871,7 @@ const ScanDetails: React.FC<{
                       )}
                     </TabPanel>
                     <TabPanel p={[0, 0, 0, 2]}>
-                      {repoTree &&
-                        scanData.scan_report.project_skip_files &&
+                      {scanData.scan_report.project_skip_files &&
                         scanData.scan_report.project_url &&
                         scanData.scan_report.project_url !== "File Scan" && (
                           <ProjectCustomSettings
@@ -889,6 +885,7 @@ const ScanDetails: React.FC<{
                                 ? scanData.webhook_enabled
                                 : false
                             }
+                            getRepoTreeReq={getRepoTreeReq}
                             project_url={scanData.scan_report.project_url}
                             project_id={scanData.scan_report.project_id}
                             isGithubIntegrated={
@@ -921,16 +918,16 @@ const ScanDetails: React.FC<{
                         />
                       </TabPanel>
                     )}
-                    {repoTree && (
-                      <TabPanel p={[0, 0, 0, 2]}>
-                        <ScanHistory
-                          repoTree={repoTree}
-                          profile={profile}
-                          scans={scans}
-                          setTabIndex={setTabIndex}
-                        />
-                      </TabPanel>
-                    )}
+
+                    <TabPanel p={[0, 0, 0, 2]}>
+                      <ScanHistory
+                        getRepoTreeReq={getRepoTreeReq}
+                        repoTree={repoTree}
+                        profile={profile}
+                        scans={scans}
+                        setTabIndex={setTabIndex}
+                      />
+                    </TabPanel>
                   </TabPanels>
                 </Tabs>
               )}
@@ -1468,8 +1465,12 @@ const ScanHistory: React.FC<{
   setTabIndex: React.Dispatch<React.SetStateAction<number>>;
   profile: Profile;
   scans: ScanMeta[];
-  repoTree: TreeItem;
-}> = ({ setTabIndex, profile, scans, repoTree }) => {
+  repoTree: TreeItem | null;
+  getRepoTreeReq: (
+    project_url: string,
+    project_branch: string
+  ) => Promise<void>;
+}> = ({ setTabIndex, profile, scans, repoTree, getRepoTreeReq }) => {
   return (
     <Box
       sx={{
@@ -1488,6 +1489,7 @@ const ScanHistory: React.FC<{
             setTabIndex={setTabIndex}
             repoTree={repoTree}
             profile={profile}
+            getRepoTreeReq={getRepoTreeReq}
           />
         ))}
     </Box>
@@ -1498,8 +1500,12 @@ const ScanBlock: React.FC<{
   scan: ScanMeta;
   setTabIndex: React.Dispatch<React.SetStateAction<number>>;
   profile: Profile;
-  repoTree: TreeItem;
-}> = ({ scan, setTabIndex, profile, repoTree }) => {
+  repoTree: TreeItem | null;
+  getRepoTreeReq: (
+    project_url: string,
+    project_branch: string
+  ) => Promise<void>;
+}> = ({ scan, setTabIndex, profile, repoTree, getRepoTreeReq }) => {
   const history = useHistory();
   const [show, setShow] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
@@ -1507,14 +1513,15 @@ const ScanBlock: React.FC<{
 
   const getScanRequest = async () => {
     setIsLoading(true);
-    try {
-      const responseData = await getScan(scan.scan_id);
-      if (responseData && responseData.scan_report.skip_file_paths) {
-        setSkipFilePaths(responseData.scan_report.skip_file_paths);
+    if (skipFilePaths === null) {
+      try {
+        const responseData = await getScan(scan.scan_id);
+        if (responseData && responseData.scan_report.skip_file_paths) {
+          setSkipFilePaths(responseData.scan_report.skip_file_paths);
+        }
+      } catch (e) {
+        console.log(e);
       }
-      setShow(true);
-    } catch (e) {
-      console.log(e);
     }
     setIsLoading(false);
   };
@@ -1649,13 +1656,13 @@ const ScanBlock: React.FC<{
                 mr={10}
                 my={2}
                 isLoading={isLoading}
-                onClick={() => {
+                onClick={async () => {
                   if (show) {
                     setShow(false);
-                  } else if (skipFilePaths) {
-                    setShow(true);
                   } else {
+                    getRepoTreeReq();
                     getScanRequest();
+                    setShow(true);
                   }
                 }}
               >
@@ -1690,7 +1697,7 @@ const ScanBlock: React.FC<{
           in={show}
           animateOpacity
         >
-          {skipFilePaths && (
+          {skipFilePaths && repoTree && (
             <FolderSettings
               view="scan_history"
               fileData={repoTree}

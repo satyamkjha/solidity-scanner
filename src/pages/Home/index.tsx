@@ -335,8 +335,12 @@ const ApplicationForm: React.FC = () => {
   };
 
   useEffect(() => {
-    if (step > 1 && branch !== "") {
-      getRepoTreeReq(githubLink, branch);
+    if (branch !== "") {
+      if (step > 1) {
+        getRepoTreeReq(githubLink, branch);
+      } else {
+        setStep(2);
+      }
     }
   }, [branch]);
 
@@ -432,16 +436,18 @@ const ApplicationForm: React.FC = () => {
               setVisibility={setVisibility}
             />
           ) : step === 2 ? (
-            <FolderSettings
-              isLoading={isLoading}
-              view="github_app"
-              fileData={repoTree}
-              branches={branches}
-              branch={branch}
-              setBranch={setBranch}
-              skipFilePaths={skipFilePaths}
-              setSkipFilePaths={setSkipFilePaths}
-            />
+            repoTree && (
+              <FolderSettings
+                isLoading={isLoading}
+                view="github_app"
+                fileData={repoTree}
+                branches={branches}
+                branch={branch}
+                setBranch={setBranch}
+                skipFilePaths={skipFilePaths}
+                setSkipFilePaths={setSkipFilePaths}
+              />
+            )
           ) : step === 3 ? (
             <ConfigSettings
               view="github_app"
@@ -488,7 +494,6 @@ const ApplicationForm: React.FC = () => {
             if (step === 1) {
               if (runValidation()) {
                 getBranches();
-                setStep(2);
               }
             } else if (step === 2) {
               setStep(3);

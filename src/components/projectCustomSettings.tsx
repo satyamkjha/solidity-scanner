@@ -14,6 +14,7 @@ import {
   AccordionPanel,
   Button,
   useToast,
+  Spinner,
 } from "@chakra-ui/react";
 import React, { useState, useEffect } from "react";
 import GithubConnectAlert from "./githubConnectAlert";
@@ -29,8 +30,12 @@ const ProjectCustomSettings: React.FC<{
   project_id: string;
   webhook_enabled: boolean;
   project_skip_files: string[];
-  repoTree: TreeItem;
+  repoTree: TreeItem | null;
   project_branch: string;
+  getRepoTreeReq: (
+    project_url: string,
+    project_branch: string
+  ) => Promise<void>;
 }> = ({
   isGithubIntegrated,
   project_id,
@@ -39,6 +44,7 @@ const ProjectCustomSettings: React.FC<{
   repoTree,
   project_skip_files,
   project_branch,
+  getRepoTreeReq,
 }) => {
   const [githubSync, setGithubSync] = React.useState<boolean>(webhook_enabled);
   const [isLoading, setIsLoading] = React.useState<boolean>(false);
@@ -155,37 +161,42 @@ const ProjectCustomSettings: React.FC<{
             },
           }}
         >
-          <HStack
-            width="100%"
-            justifyContent="space-between"
-            alignItems="center"
+          <AccordionButton
+            w="100%"
+            h="fit-content"
+            p={0}
+            _hover={{ backgroundColor: "white" }}
+            onClick={async () => getRepoTreeReq()}
           >
-            <VStack
-              justifyContent="flex-start"
-              spacing={3}
-              alignItems="flex-start"
-              w={["calc(100% - 60px)", "calc(100% - 60px)", "80%", "70%"]}
+            <HStack
+              width="100%"
+              justifyContent="space-between"
+              alignItems="center"
             >
-              <Text fontWeight={500} fontSize="xl">
-                Project Folders
-              </Text>
-              <Text fontWeight={400} color="gray.400" fontSize="md">
-                Lorem ipsum dolor sit amet consectetur. Lorem pharetra sed
-                consequat velit arcu. Dictum volutpat arcu pellentesque risus mi
-                non. Ornare phasellus lorem egestas fringilla enim. Posuere in
-                ac odio
-              </Text>
-            </VStack>
-            <AccordionButton
-              width={["50px", "50px", "50px"]}
-              height={["50px", "50px", "50px"]}
-              justifyContent="center"
-              borderRadius="50%"
-            >
+              <VStack
+                justifyContent="flex-start"
+                spacing={3}
+                alignItems="flex-start"
+                w={["calc(100% - 60px)", "calc(100% - 60px)", "80%", "70%"]}
+              >
+                <Text fontWeight={500} fontSize="xl">
+                  Project Folders
+                </Text>
+                <Text
+                  fontWeight={400}
+                  color="gray.400"
+                  textAlign="left"
+                  fontSize="md"
+                >
+                  Lorem ipsum dolor sit amet consectetur. Lorem pharetra sed
+                  consequat velit arcu. Dictum volutpat arcu pellentesque risus
+                  mi non. Ornare phasellus lorem egestas fringilla enim. Posuere
+                  in ac odio
+                </Text>
+              </VStack>
               <AccordionIcon />
-            </AccordionButton>
-          </HStack>
-
+            </HStack>
+          </AccordionButton>
           <AccordionPanel
             flexDir="column"
             backgroundColor="#FCFCFC"
@@ -197,15 +208,26 @@ const ProjectCustomSettings: React.FC<{
             w="100%"
             height="fit-content"
           >
-            <FolderSettings
-              isLoading={isLoading}
-              fileData={repoTree}
-              branch={project_branch}
-              skipFilePaths={skipFilePaths}
-              updateSkipPathRequests={updateSkipPathRequests}
-              setSkipFilePaths={setSkipFilePaths}
-              view="detailed_result"
-            />
+            {repoTree ? (
+              <FolderSettings
+                isLoading={isLoading}
+                fileData={repoTree}
+                branch={project_branch}
+                skipFilePaths={skipFilePaths}
+                updateSkipPathRequests={updateSkipPathRequests}
+                setSkipFilePaths={setSkipFilePaths}
+                view="detailed_result"
+              />
+            ) : (
+              <Flex
+                w="100%"
+                h="100%"
+                justifyContent="center"
+                alignItems="center"
+              >
+                <Spinner color="gray.500" />
+              </Flex>
+            )}
           </AccordionPanel>
         </AccordionItem>
         <AccordionItem
@@ -228,37 +250,41 @@ const ProjectCustomSettings: React.FC<{
             },
           }}
         >
-          <HStack
-            width="100%"
-            justifyContent="space-between"
-            alignItems="center"
+          <AccordionButton
+            w="100%"
+            h="fit-content"
+            p={0}
+            _hover={{ backgroundColor: "white" }}
           >
-            <VStack
-              justifyContent="flex-start"
-              spacing={3}
-              alignItems="flex-start"
-              w={["calc(100% - 60px)", "calc(100% - 60px)", "80%", "70%"]}
+            <HStack
+              width="100%"
+              justifyContent="space-between"
+              alignItems="center"
             >
-              <Text fontWeight={500} fontSize="xl">
-                Project Settings
-              </Text>
-              <Text fontWeight={400} color="gray.400" fontSize="md">
-                Lorem ipsum dolor sit amet consectetur. Lorem pharetra sed
-                consequat velit arcu. Dictum volutpat arcu pellentesque risus mi
-                non. Ornare phasellus lorem egestas fringilla enim. Posuere in
-                ac odio
-              </Text>
-            </VStack>
-            <AccordionButton
-              width={["50px", "50px", "50px"]}
-              height={["50px", "50px", "50px"]}
-              justifyContent="center"
-              borderRadius="50%"
-            >
+              <VStack
+                justifyContent="flex-start"
+                spacing={3}
+                alignItems="flex-start"
+                w={["calc(100% - 60px)", "calc(100% - 60px)", "80%", "70%"]}
+              >
+                <Text fontWeight={500} fontSize="xl">
+                  Project Settings
+                </Text>
+                <Text
+                  fontWeight={400}
+                  color="gray.400"
+                  textAlign="left"
+                  fontSize="md"
+                >
+                  Lorem ipsum dolor sit amet consectetur. Lorem pharetra sed
+                  consequat velit arcu. Dictum volutpat arcu pellentesque risus
+                  mi non. Ornare phasellus lorem egestas fringilla enim. Posuere
+                  in ac odio
+                </Text>
+              </VStack>
               <AccordionIcon />
-            </AccordionButton>
-          </HStack>
-
+            </HStack>
+          </AccordionButton>
           <AccordionPanel
             flexDir="column"
             backgroundColor="#FCFCFC"
