@@ -265,7 +265,7 @@ const FolderSettings: React.FC<{
   view: "github_app" | "detailed_result" | "scan_history";
   fileData: TreeItem;
   branches?: string[];
-  branch?: string;
+  branch: string;
   setBranch?: React.Dispatch<React.SetStateAction<string>>;
   skipFilePaths: string[];
   setSkipFilePaths?: React.Dispatch<React.SetStateAction<string[]>>;
@@ -291,16 +291,10 @@ const FolderSettings: React.FC<{
     setSkipFilePaths && setSkipFilePaths([...newPath]);
   };
 
-  const [selectValue, setSelectValue] = useState<any>();
-
-  useEffect(() => {
-    if (branch) {
-      setSelectValue({
-        value: branch,
-        label: branch,
-      });
-    }
-  }, []);
+  const [selectValue, setSelectValue] = useState({
+    value: branch,
+    label: branch,
+  });
 
   return (
     <Flex
@@ -333,8 +327,9 @@ const FolderSettings: React.FC<{
               <Select
                 formatOptionLabel={formatOptionLabel}
                 isSearchable={true}
+                isClearable={true}
                 isDisabled={isLoading}
-                value={selectValue}
+                defaultValue={selectValue}
                 options={
                   branches
                     ? branches.map((item) => ({ value: item, label: item }))
