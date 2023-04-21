@@ -251,6 +251,7 @@ const ApplicationForm: React.FC = () => {
   const [step, setStep] = useState(1);
   const isGithubIntegrated =
     profileData?._integrations?.github?.status === "successful";
+  const toast = useToast();
 
   const githubUrlRegex =
     /(http(s)?)(:(\/\/))((github.com)(\/)[\w@\:\-~]+(\/)[\w@\:\-~]+)(\.git)?/;
@@ -293,6 +294,14 @@ const ApplicationForm: React.FC = () => {
         queryClient.invalidateQueries("scans");
         queryClient.invalidateQueries("profile");
         history.push("/projects");
+      } else {
+        toast({
+          title: data.message,
+          status: "error",
+          duration: 3000,
+          isClosable: true,
+          position: "bottom",
+        });
       }
     } catch (e) {
       console.log(e);
@@ -404,25 +413,44 @@ const ApplicationForm: React.FC = () => {
               </Text>
             </HStack>
           </HStack>
-
-          <Text
-            sx={{ color: "subtle", fontSize: "md", textAlign: "left", mb: 4 }}
-          >
-            Provide a link to Git or Subversion repository. See link examples
-            and additional restrictions in the User Guide (section Starting a
-            scan from UI) available on the{" "}
-            <Box
-              onClick={() =>
-                window.open("https://docs.solidityscan.com/", "_blank")
-              }
-              cursor="pointer"
-              color="#3300FF"
-              as="span"
+          {step === 1 ? (
+            <Text
+              sx={{
+                fontSize: "sm",
+                color: "subtle",
+                textAlign: "left",
+                mb: 4,
+              }}
             >
-              User Guide{" "}
-            </Box>
-            page.
-          </Text>
+              Provide a link to your Github repository.
+            </Text>
+          ) : step === 2 ? (
+            <Text
+              sx={{
+                fontSize: "sm",
+                color: "subtle",
+                textAlign: "left",
+                mb: 4,
+              }}
+            >
+              Select the branch and its corresponding directories and files to
+              be scanned.
+            </Text>
+          ) : step === 3 ? (
+            <Text
+              sx={{
+                fontSize: "sm",
+                color: "subtle",
+                textAlign: "left",
+                mb: 4,
+              }}
+            >
+              Configure your project settings.
+            </Text>
+          ) : (
+            <></>
+          )}
+
           <Divider color="gray.700" borderWidth="1px" mb={3} />
           {step === 1 ? (
             <InfoSettings
@@ -867,36 +895,43 @@ const ContractForm: React.FC = () => {
       <Text
         w="100%"
         sx={{
-          fontSize: "2xl",
+          fontSize: "xl",
           fontWeight: 600,
           textAlign: "left",
+          mb: 2,
         }}
       >
         Load contract
       </Text>
-      <Text w="100%" sx={{ color: "subtle", textAlign: "left", mb: 4 }}>
+      <Text
+        w="100%"
+        sx={{ fontSize: "sm", color: "subtle", textAlign: "left", mb: 4 }}
+      >
         Provide the address of your smart contract deployed on the supported EVM
         chains. Your results will appear in the "Verified Contracts" tab.
       </Text>
-      <Text w="100%" sx={{ color: "subtle", textAlign: "left", mb: 2 }}>
+      <Text
+        w="100%"
+        sx={{ fontSize: "sm", color: "subtle", textAlign: "left", mb: 2 }}
+      >
         NOTE: Please follow the constraints below to avoid scan failure:
       </Text>
       <Text
         w="100%"
-        sx={{ color: "subtle", textAlign: "left", mb: 2, fontSize: "sm" }}
+        sx={{ color: "subtle", textAlign: "left", mb: 2, fontSize: "xs" }}
       >
         1. Navigate to the explorer of the particular blockchain (Ethereum -
         Etherscan.io).
       </Text>
       <Text
         w="100%"
-        sx={{ color: "subtle", textAlign: "left", mb: 6, fontSize: "sm" }}
+        sx={{ color: "subtle", textAlign: "left", mb: 4, fontSize: "xs" }}
       >
         2. Use the search bar to get your smart contract and check if the source
         code is verified in the "Contract" tab of the selected explorer.
       </Text>
       {supportedChains && (
-        <Stack spacing={6} my={8} width={"100%"}>
+        <Stack spacing={6} my={0} width={"100%"}>
           <VStack alignItems={"flex-start"}>
             <Text mb={0} fontSize="sm">
               Contract address
@@ -1038,7 +1073,7 @@ const UploadForm: React.FC = () => {
     display: "flex",
     flexDirection: "column",
     alignItems: "center",
-    padding: "40px 20px",
+    padding: "20px 20px",
     borderWidth: 2,
     borderRadius: "20px",
     borderColor: "#eeeeee",
@@ -1214,25 +1249,32 @@ const UploadForm: React.FC = () => {
           <Text
             w="100%"
             sx={{
-              fontSize: "2xl",
+              fontSize: "xl",
               fontWeight: 600,
               textAlign: "left",
+              mb: 2,
             }}
           >
             Upload contract
           </Text>
 
-          <Text w="100%" sx={{ color: "subtle", textAlign: "left", mb: 4 }}>
+          <Text
+            w="100%"
+            sx={{ fontSize: "sm", color: "subtle", textAlign: "left", mb: 2 }}
+          >
             Upload your Solidity files (.sol extension) as a project. Utilize
             the “Project Name” field to refer to your scan results in the
             “Projects” section.
           </Text>
-          <Text w="100%" sx={{ color: "subtle", textAlign: "left", mb: 2 }}>
+          <Text
+            w="100%"
+            sx={{ fontSize: "sm", color: "subtle", textAlign: "left", mb: 2 }}
+          >
             NOTE: Please follow the constraints below to avoid scan failure:
           </Text>
           <Text
             w="100%"
-            sx={{ color: "subtle", textAlign: "left", mb: 2, fontSize: "sm" }}
+            sx={{ color: "subtle", textAlign: "left", mb: 2, fontSize: "xs" }}
           >
             1. Files to be uploaded should be Solidity(.sol) files, preferably
             compiled successfully. Incorrect syntax might render incorrect
@@ -1240,7 +1282,7 @@ const UploadForm: React.FC = () => {
           </Text>
           <Text
             w="100%"
-            sx={{ color: "subtle", textAlign: "left", mb: 3, fontSize: "sm" }}
+            sx={{ color: "subtle", textAlign: "left", mb: 3, fontSize: "xs" }}
           >
             2. A Maximum number of files that can be uploaded is 5 and file size
             cannot exceed 5MB.
@@ -1276,22 +1318,6 @@ const UploadForm: React.FC = () => {
             {step === 0 ? (
               <div {...getRootProps({ style })}>
                 <input {...getInputProps()} />
-                {/* {error ? (
-                  <>
-                    <ScanErrorIcon size={80} />
-                    <p style={{ marginTop: "20px" }}>
-                      {errorMsg}. Please
-                      <span
-                        onClick={() => setError(false)}
-                        style={{ color: "#3300FF" }}
-                      >
-                        {" "}
-                        try again
-                      </span>
-                    </p>
-                  </>
-                ) : (
-                  <> */}
                 <UploadIcon size={80} />
                 <p style={{ marginTop: "20px" }}>
                   Drag and drop or{" "}
@@ -1300,7 +1326,7 @@ const UploadForm: React.FC = () => {
                 <p
                   style={{
                     fontSize: "15px",
-                    marginBottom: "20px",
+                    marginBottom: "10px",
                     color: "#D3D3D3",
                   }}
                 >

@@ -15,6 +15,8 @@ const ConfigSettings: React.FC<{
   view,
   isLoading,
 }) => {
+  const [connectAlert, setConnectAlert] = React.useState(false);
+
   return (
     <VStack
       spacing={3}
@@ -22,12 +24,12 @@ const ConfigSettings: React.FC<{
       width={"100%"}
       justifyContent="flex-start"
       alignItems={"flex-start"}
-      minHeight={view === "github_app" ? "350px" : "200px"}
+      minHeight={view === "github_app" ? "400px" : "200px"}
       height={[
         "fit-content",
         "fit-content",
         "fit-content",
-        view === "github_app" ? "35vh" : "fit-content",
+        view === "github_app" ? "50vh" : "fit-content",
       ]}
     >
       <Text
@@ -37,7 +39,7 @@ const ConfigSettings: React.FC<{
           textAlign: "left",
         }}
       >
-        Turn on Github Synchronisation
+        Enable GitHub Actions
       </Text>
       <Text
         sx={{
@@ -46,9 +48,7 @@ const ConfigSettings: React.FC<{
           textAlign: "left",
         }}
       >
-        Provide a link to Git or Subversion repository. See link examples and
-        additional restrictions in the User Guide (section Starting a scan from
-        UI) available on the{" "}
+        Trigger automatic scans via Github actions
       </Text>
       <HStack spacing={5}>
         <Switch
@@ -56,11 +56,19 @@ const ConfigSettings: React.FC<{
           variant="brand"
           isDisabled={isLoading}
           isChecked={githubSync}
-          onChange={onToggleFunction}
+          onChange={() => {
+            if (isGithubIntegrated) {
+              onToggleFunction();
+            } else {
+              setConnectAlert(!connectAlert);
+            }
+          }}
         />
         {isLoading && <Spinner color="gray.400" />}
       </HStack>
-      {!isGithubIntegrated && githubSync && <GithubConnectAlert />}
+      {!isGithubIntegrated && connectAlert && (
+        <GithubConnectAlert msg="You need to connect your GitHub to enable webhooks" />
+      )}
       <Text
         sx={{
           fontSize: "lg",
@@ -77,9 +85,7 @@ const ConfigSettings: React.FC<{
           textAlign: "left",
         }}
       >
-        Provide a link to Git or Subversion repository. See link examples and
-        additional restrictions in the User Guide (section Starting a scan from
-        UI) available on the{" "}
+        Get scan results and alerts on your Slack channels
       </Text>
       <HStack spacing={5}>
         <Switch isDisabled={true} size="lg" variant="brand" />

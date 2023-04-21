@@ -63,18 +63,9 @@ const ProjectCustomSettings: React.FC<{
           recur_scans: !githubSync,
         }
       );
-      if (status === 201) {
+      if (data.status === "success") {
         toast({
-          title: "Webhooks enabled for the project",
-          status: "success",
-          duration: 9000,
-          isClosable: true,
-          position: "bottom",
-        });
-        setGithubSync(!githubSync);
-      } else if (status === 204) {
-        toast({
-          title: "Webhooks diabled for the project",
+          title: data.message,
           status: "success",
           duration: 9000,
           isClosable: true,
@@ -188,10 +179,7 @@ const ProjectCustomSettings: React.FC<{
                   textAlign="left"
                   fontSize="md"
                 >
-                  Lorem ipsum dolor sit amet consectetur. Lorem pharetra sed
-                  consequat velit arcu. Dictum volutpat arcu pellentesque risus
-                  mi non. Ornare phasellus lorem egestas fringilla enim. Posuere
-                  in ac odio
+                  Update directories and files to be scanned.
                 </Text>
               </VStack>
               <AccordionIcon />
@@ -276,10 +264,7 @@ const ProjectCustomSettings: React.FC<{
                   textAlign="left"
                   fontSize="md"
                 >
-                  Lorem ipsum dolor sit amet consectetur. Lorem pharetra sed
-                  consequat velit arcu. Dictum volutpat arcu pellentesque risus
-                  mi non. Ornare phasellus lorem egestas fringilla enim. Posuere
-                  in ac odio
+                  Configure your project settings.
                 </Text>
               </VStack>
               <AccordionIcon />
