@@ -11,11 +11,24 @@ import {
   Collapse,
   Button,
   Spinner,
+  Popover,
+  PopoverArrow,
+  PopoverBody,
+  PopoverCloseButton,
+  PopoverContent,
+  PopoverHeader,
+  PopoverTrigger,
 } from "@chakra-ui/react";
 import Select from "react-select";
 import { FolderIcon, SimpleFileIcon } from "./icons";
 import { AiOutlineFile } from "react-icons/ai";
-import { ChevronDownIcon, ChevronRightIcon } from "@chakra-ui/icons";
+import { FaCodeBranch } from "react-icons/fa";
+import {
+  ChevronDownIcon,
+  ChevronRightIcon,
+  RepeatClockIcon,
+  InfoIcon,
+} from "@chakra-ui/icons";
 import { type } from "os";
 import { TreeItem } from "common/types";
 
@@ -327,67 +340,90 @@ const FolderSettings: React.FC<{
           flexDir={["column", "column", "row"]}
           w="100%"
         >
-          <Text color="gray.500" mr={[0, 0, 5]} mb={[3, 3, 0]}>
-            {view === "detailed_result"
-              ? "Selected Branch"
-              : "Select your branch"}
-          </Text>
-          {view === "github_app" ? (
-            <FormControl id="select_branch" width={["100%", "100%", "300px"]}>
-              <Select
-                formatOptionLabel={formatOptionLabel}
-                isSearchable={true}
-                isClearable={true}
-                isDisabled={isLoading}
-                defaultValue={selectValue}
-                options={
-                  branches
-                    ? branches.map((item) => ({ value: item, label: item }))
-                    : []
-                }
-                placeholder="Select Branch"
-                styles={customStyles}
-                onChange={(newValue) => {
-                  if (newValue && setBranch) {
-                    setBranch(newValue.value);
-                    setSelectValue(newValue);
+          {view === "github_app" && (
+            <>
+              <Text color="gray.500" mr={[0, 0, 5]} mb={[3, 3, 0]}>
+                Select your branch
+              </Text>
+              <FormControl id="select_branch" width={["100%", "100%", "300px"]}>
+                <Select
+                  formatOptionLabel={formatOptionLabel}
+                  isSearchable={true}
+                  isClearable={true}
+                  isDisabled={isLoading}
+                  defaultValue={selectValue}
+                  options={
+                    branches
+                      ? branches.map((item) => ({ value: item, label: item }))
+                      : []
                   }
-                }}
-              />
-            </FormControl>
-          ) : (
-            <Text
-              borderRadius={15}
-              border={"1px solid #B0B7C3"}
-              py={3}
-              px={10}
-              color="gray.700"
-            >
-              {branch}
-            </Text>
-          )}
-
-          {view === "detailed_result" && (
-            <Button
-              px={10}
-              ml={[0, 0, 7]}
-              mt={[3, 3, 0]}
-              width={["100%", "100%", "200px"]}
-              variant="brand"
-              isLoading={isLoading}
-              onClick={updateSkipPathRequests}
-            >
-              Update
-            </Button>
+                  placeholder="Select Branch"
+                  styles={customStyles}
+                  onChange={(newValue) => {
+                    if (newValue && setBranch) {
+                      setBranch(newValue.value);
+                      setSelectValue(newValue);
+                    }
+                  }}
+                />
+              </FormControl>
+            </>
           )}
         </Flex>
       )}
+      {view === "detailed_result" && (
+        <Flex
+          alignItems="center"
+          justifyContent={["flex-start", "flex-start", "space-between"]}
+          flexDir={["column", "column", "row"]}
+          w="100%"
+        >
+          <HStack spacing={3}>
+            <FaCodeBranch />
+            <Text>{branch}</Text>
+          </HStack>
+          <HStack spacing={3}>
+            <Button
+              px={10}
+              width={["100%", "100%", "150px"]}
+              variant="accent-outline"
+              isLoading={isLoading}
+              color="#3E15F4"
+              onClick={updateSkipPathRequests}
+            >
+              <RepeatClockIcon mr={3} />
+              Update
+            </Button>
+            <Popover placement="bottom-end">
+              <PopoverTrigger>
+                <InfoIcon color="#d7cdfa" />
+              </PopoverTrigger>
+              <PopoverContent p={3}>
+                <PopoverArrow />
+                <PopoverCloseButton />
 
+                <PopoverBody>
+                  <Text
+                    fontSize="sm"
+                    textAlign="left"
+                    lineHeight="title"
+                    fontWeight={"300"}
+                    mb={0}
+                  >
+                    Files you have selected to be skipped will not be scanned in
+                    the future scans.
+                  </Text>
+                </PopoverBody>
+              </PopoverContent>
+            </Popover>
+          </HStack>
+        </Flex>
+      )}
       <Divider mt={3} color="gray.700" borderWidth="1px" />
       <Flex
         height="calc(100% - 10px)"
         mt={3}
-        ml={[-2, -2, 0]}
+        ml={[-2, -2, -5]}
         width={"100%"}
         flexDir="column"
         justifyContent="flex-start"

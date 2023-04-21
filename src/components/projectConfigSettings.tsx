@@ -39,7 +39,7 @@ const ConfigSettings: React.FC<{
           textAlign: "left",
         }}
       >
-        Turn on Github Synchronisation
+        Enable GitHub Actions
       </Text>
       <Text
         sx={{
@@ -48,9 +48,7 @@ const ConfigSettings: React.FC<{
           textAlign: "left",
         }}
       >
-        Provide a link to Git or Subversion repository. See link examples and
-        additional restrictions in the User Guide (section Starting a scan from
-        UI) available on the{" "}
+        Trigger automatic scans via Github actions
       </Text>
       <HStack spacing={5}>
         <Switch
@@ -87,9 +85,7 @@ const ConfigSettings: React.FC<{
           textAlign: "left",
         }}
       >
-        Provide a link to Git or Subversion repository. See link examples and
-        additional restrictions in the User Guide (section Starting a scan from
-        UI) available on the{" "}
+        Get scan results and alerts on your Slack channels
       </Text>
       <HStack spacing={5}>
         <Switch isDisabled={true} size="lg" variant="brand" />
