@@ -895,36 +895,43 @@ const ContractForm: React.FC = () => {
       <Text
         w="100%"
         sx={{
-          fontSize: "2xl",
+          fontSize: "xl",
           fontWeight: 600,
           textAlign: "left",
+          mb: 2,
         }}
       >
         Load contract
       </Text>
-      <Text w="100%" sx={{ color: "subtle", textAlign: "left", mb: 4 }}>
+      <Text
+        w="100%"
+        sx={{ fontSize: "sm", color: "subtle", textAlign: "left", mb: 4 }}
+      >
         Provide the address of your smart contract deployed on the supported EVM
         chains. Your results will appear in the "Verified Contracts" tab.
       </Text>
-      <Text w="100%" sx={{ color: "subtle", textAlign: "left", mb: 2 }}>
+      <Text
+        w="100%"
+        sx={{ fontSize: "sm", color: "subtle", textAlign: "left", mb: 2 }}
+      >
         NOTE: Please follow the constraints below to avoid scan failure:
       </Text>
       <Text
         w="100%"
-        sx={{ color: "subtle", textAlign: "left", mb: 2, fontSize: "sm" }}
+        sx={{ color: "subtle", textAlign: "left", mb: 2, fontSize: "xs" }}
       >
         1. Navigate to the explorer of the particular blockchain (Ethereum -
         Etherscan.io).
       </Text>
       <Text
         w="100%"
-        sx={{ color: "subtle", textAlign: "left", mb: 6, fontSize: "sm" }}
+        sx={{ color: "subtle", textAlign: "left", mb: 4, fontSize: "xs" }}
       >
         2. Use the search bar to get your smart contract and check if the source
         code is verified in the "Contract" tab of the selected explorer.
       </Text>
       {supportedChains && (
-        <Stack spacing={6} my={8} width={"100%"}>
+        <Stack spacing={6} my={0} width={"100%"}>
           <VStack alignItems={"flex-start"}>
             <Text mb={0} fontSize="sm">
               Contract address
@@ -1066,7 +1073,7 @@ const UploadForm: React.FC = () => {
     display: "flex",
     flexDirection: "column",
     alignItems: "center",
-    padding: "40px 20px",
+    padding: "20px 20px",
     borderWidth: 2,
     borderRadius: "20px",
     borderColor: "#eeeeee",
@@ -1242,25 +1249,32 @@ const UploadForm: React.FC = () => {
           <Text
             w="100%"
             sx={{
-              fontSize: "2xl",
+              fontSize: "xl",
               fontWeight: 600,
               textAlign: "left",
+              mb: 2,
             }}
           >
             Upload contract
           </Text>
 
-          <Text w="100%" sx={{ color: "subtle", textAlign: "left", mb: 4 }}>
+          <Text
+            w="100%"
+            sx={{ fontSize: "sm", color: "subtle", textAlign: "left", mb: 2 }}
+          >
             Upload your Solidity files (.sol extension) as a project. Utilize
             the “Project Name” field to refer to your scan results in the
             “Projects” section.
           </Text>
-          <Text w="100%" sx={{ color: "subtle", textAlign: "left", mb: 2 }}>
+          <Text
+            w="100%"
+            sx={{ fontSize: "sm", color: "subtle", textAlign: "left", mb: 2 }}
+          >
             NOTE: Please follow the constraints below to avoid scan failure:
           </Text>
           <Text
             w="100%"
-            sx={{ color: "subtle", textAlign: "left", mb: 2, fontSize: "sm" }}
+            sx={{ color: "subtle", textAlign: "left", mb: 2, fontSize: "xs" }}
           >
             1. Files to be uploaded should be Solidity(.sol) files, preferably
             compiled successfully. Incorrect syntax might render incorrect
@@ -1268,7 +1282,7 @@ const UploadForm: React.FC = () => {
           </Text>
           <Text
             w="100%"
-            sx={{ color: "subtle", textAlign: "left", mb: 3, fontSize: "sm" }}
+            sx={{ color: "subtle", textAlign: "left", mb: 3, fontSize: "xs" }}
           >
             2. A Maximum number of files that can be uploaded is 5 and file size
             cannot exceed 5MB.
@@ -1304,22 +1318,6 @@ const UploadForm: React.FC = () => {
             {step === 0 ? (
               <div {...getRootProps({ style })}>
                 <input {...getInputProps()} />
-                {/* {error ? (
-                  <>
-                    <ScanErrorIcon size={80} />
-                    <p style={{ marginTop: "20px" }}>
-                      {errorMsg}. Please
-                      <span
-                        onClick={() => setError(false)}
-                        style={{ color: "#3300FF" }}
-                      >
-                        {" "}
-                        try again
-                      </span>
-                    </p>
-                  </>
-                ) : (
-                  <> */}
                 <UploadIcon size={80} />
                 <p style={{ marginTop: "20px" }}>
                   Drag and drop or{" "}
@@ -1328,7 +1326,7 @@ const UploadForm: React.FC = () => {
                 <p
                   style={{
                     fontSize: "15px",
-                    marginBottom: "20px",
+                    marginBottom: "10px",
                     color: "#D3D3D3",
                   }}
                 >
