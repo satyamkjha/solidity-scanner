@@ -11,7 +11,7 @@ import {
   Text,
   Link,
 } from "@chakra-ui/react";
-import React from "react";
+import React, { useState } from "react";
 import Icon from "react-crypto-icons";
 import { AiOutlineProject } from "react-icons/ai";
 import { FaFileCode } from "react-icons/fa";
@@ -39,6 +39,8 @@ const InfoSettings: React.FC<{
   setGithubLink,
   setVisibility,
 }) => {
+  const [connectAlert, setConnectAlert] = useState(false);
+
   return (
     <Stack
       minHeight="350px"
@@ -98,12 +100,22 @@ const InfoSettings: React.FC<{
           size="lg"
           variant="brand"
           isChecked={visibility}
-          onChange={() => setVisibility(!visibility)}
+          onChange={() => {
+            if (isGithubIntegrated) {
+              setVisibility(!visibility);
+            } else {
+              setConnectAlert(!connectAlert);
+            }
+          }}
         />
         <Text>Private</Text>
       </HStack>
 
-      {!isGithubIntegrated && visibility && <GithubConnectAlert />}
+      {!isGithubIntegrated && connectAlert && (
+        <GithubConnectAlert
+          msg={"You need to connect your GitHub to start a private scan."}
+        />
+      )}
     </Stack>
   );
 };

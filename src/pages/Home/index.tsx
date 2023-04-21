@@ -251,6 +251,7 @@ const ApplicationForm: React.FC = () => {
   const [step, setStep] = useState(1);
   const isGithubIntegrated =
     profileData?._integrations?.github?.status === "successful";
+  const toast = useToast();
 
   const githubUrlRegex =
     /(http(s)?)(:(\/\/))((github.com)(\/)[\w@\:\-~]+(\/)[\w@\:\-~]+)(\.git)?/;
@@ -293,6 +294,14 @@ const ApplicationForm: React.FC = () => {
         queryClient.invalidateQueries("scans");
         queryClient.invalidateQueries("profile");
         history.push("/projects");
+      } else {
+        toast({
+          title: data.message,
+          status: "error",
+          duration: 3000,
+          isClosable: true,
+          position: "bottom",
+        });
       }
     } catch (e) {
       console.log(e);

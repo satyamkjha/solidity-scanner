@@ -222,7 +222,7 @@ const FileItem: React.FC<{
   return (
     <Flex
       p={2}
-      pl={8}
+      pl={view !== "scan_history" && fileName.slice(-4) !== ".sol" ? "60px" : 8}
       width={"fit-content"}
       cursor={"pointer"}
       onClick={() => setShow(!show)}
@@ -233,7 +233,7 @@ const FileItem: React.FC<{
         backgroundColor: "gray.100",
       }}
     >
-      {view !== "scan_history" && (
+      {view !== "scan_history" && fileName.slice(-4) === ".sol" && (
         <Checkbox
           mr={3}
           isChecked={isChecked}
@@ -253,8 +253,18 @@ const FileItem: React.FC<{
           }}
         ></Checkbox>
       )}
-      <AiOutlineFile color={isChecked ? "#4E5D78" : "#4E5D7880"} size={20} />
-      <Text ml={3} color={isChecked ? "#4E5D78" : "#4E5D7880"}>
+      <AiOutlineFile
+        color={
+          isChecked && fileName.slice(-4) === ".sol" ? "#4E5D78" : "#4E5D7880"
+        }
+        size={20}
+      />
+      <Text
+        ml={3}
+        color={
+          isChecked && fileName.slice(-4) === ".sol" ? "#4E5D78" : "#4E5D7880"
+        }
+      >
         {fileName}
       </Text>
     </Flex>

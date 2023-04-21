@@ -15,6 +15,8 @@ const ConfigSettings: React.FC<{
   view,
   isLoading,
 }) => {
+  const [connectAlert, setConnectAlert] = React.useState(false);
+
   return (
     <VStack
       spacing={3}
@@ -56,11 +58,19 @@ const ConfigSettings: React.FC<{
           variant="brand"
           isDisabled={isLoading}
           isChecked={githubSync}
-          onChange={onToggleFunction}
+          onChange={() => {
+            if (isGithubIntegrated) {
+              onToggleFunction();
+            } else {
+              setConnectAlert(!connectAlert);
+            }
+          }}
         />
         {isLoading && <Spinner color="gray.400" />}
       </HStack>
-      {!isGithubIntegrated && githubSync && <GithubConnectAlert />}
+      {!isGithubIntegrated && connectAlert && (
+        <GithubConnectAlert msg="You need to connect your GitHub to enable webhooks" />
+      )}
       <Text
         sx={{
           fontSize: "lg",
