@@ -63,18 +63,9 @@ const ProjectCustomSettings: React.FC<{
           recur_scans: !githubSync,
         }
       );
-      if (status === 201) {
+      if (data.status === "success") {
         toast({
-          title: "Webhooks enabled for the project",
-          status: "success",
-          duration: 9000,
-          isClosable: true,
-          position: "bottom",
-        });
-        setGithubSync(!githubSync);
-      } else if (status === 204) {
-        toast({
-          title: "Webhooks diabled for the project",
+          title: data.message,
           status: "success",
           duration: 9000,
           isClosable: true,
