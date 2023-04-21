@@ -321,12 +321,12 @@ const FolderSettings: React.FC<{
 
   return (
     <Flex
-      minHeight={view === "github_app" ? "350px" : "300px"}
+      minHeight={view === "github_app" ? "400px" : "300px"}
       height={[
         "fit-content",
         "fit-content",
         "fit-content",
-        view === "github_app" ? "35vh" : "30vh",
+        view === "github_app" ? "50vh" : "30vh",
       ]}
       width={"100%"}
       flexDir="column"
@@ -410,8 +410,8 @@ const FolderSettings: React.FC<{
                     fontWeight={"300"}
                     mb={0}
                   >
-                    Files you have selected to be skipped will not be scanned in
-                    the future scans.
+                    Files you have not selected will be skipped and will not be
+                    scanned in future.
                   </Text>
                 </PopoverBody>
               </PopoverContent>

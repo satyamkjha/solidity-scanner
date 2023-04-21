@@ -43,12 +43,44 @@ const InfoSettings: React.FC<{
 
   return (
     <Stack
-      minHeight="350px"
-      spacing={6}
+      minHeight="400px"
+      spacing={3}
       mt={0}
-      height={["fit-content", "fit-content", "fit-content", "35vh"]}
+      height={["fit-content", "fit-content", "fit-content", "50vh"]}
       width={"100%"}
     >
+      <Text
+        sx={{
+          fontSize: "sm",
+          color: "subtle",
+          textAlign: "left",
+        }}
+      >
+        NOTE: Please verify the following to avoid scan failure:
+      </Text>
+      <Text
+        sx={{
+          color: "subtle",
+          textAlign: "left",
+          mb: 2,
+          fontSize: "xs",
+        }}
+      >
+        1. Ensure the link is to a GitHub repository containing Solidity (.sol)
+        files. It is recommended to use the HTTPS GitHub (.git) cloning link of
+        the repository.
+      </Text>
+      <Text
+        sx={{
+          color: "subtle",
+          textAlign: "left",
+          mb: 6,
+          fontSize: "xs",
+        }}
+      >
+        2. Verify if the repository is public, for private repositories, please
+        integrate your GitHub from the Integrations tab.
+      </Text>
       <VStack alignItems={"flex-start"}>
         <Text mb={0} fontSize="sm">
           Project name

@@ -188,10 +188,7 @@ const ProjectCustomSettings: React.FC<{
                   textAlign="left"
                   fontSize="md"
                 >
-                  Lorem ipsum dolor sit amet consectetur. Lorem pharetra sed
-                  consequat velit arcu. Dictum volutpat arcu pellentesque risus
-                  mi non. Ornare phasellus lorem egestas fringilla enim. Posuere
-                  in ac odio
+                  Update directories and files to be scanned.
                 </Text>
               </VStack>
               <AccordionIcon />
@@ -276,10 +273,7 @@ const ProjectCustomSettings: React.FC<{
                   textAlign="left"
                   fontSize="md"
                 >
-                  Lorem ipsum dolor sit amet consectetur. Lorem pharetra sed
-                  consequat velit arcu. Dictum volutpat arcu pellentesque risus
-                  mi non. Ornare phasellus lorem egestas fringilla enim. Posuere
-                  in ac odio
+                  Configure your project settings.
                 </Text>
               </VStack>
               <AccordionIcon />

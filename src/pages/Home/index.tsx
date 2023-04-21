@@ -413,25 +413,44 @@ const ApplicationForm: React.FC = () => {
               </Text>
             </HStack>
           </HStack>
-
-          <Text
-            sx={{ color: "subtle", fontSize: "md", textAlign: "left", mb: 4 }}
-          >
-            Provide a link to Git or Subversion repository. See link examples
-            and additional restrictions in the User Guide (section Starting a
-            scan from UI) available on the{" "}
-            <Box
-              onClick={() =>
-                window.open("https://docs.solidityscan.com/", "_blank")
-              }
-              cursor="pointer"
-              color="#3300FF"
-              as="span"
+          {step === 1 ? (
+            <Text
+              sx={{
+                fontSize: "sm",
+                color: "subtle",
+                textAlign: "left",
+                mb: 4,
+              }}
             >
-              User Guide{" "}
-            </Box>
-            page.
-          </Text>
+              Provide a link to your Github repository.
+            </Text>
+          ) : step === 2 ? (
+            <Text
+              sx={{
+                fontSize: "sm",
+                color: "subtle",
+                textAlign: "left",
+                mb: 4,
+              }}
+            >
+              Select the branch and its corresponding directories and files to
+              be scanned.
+            </Text>
+          ) : step === 3 ? (
+            <Text
+              sx={{
+                fontSize: "sm",
+                color: "subtle",
+                textAlign: "left",
+                mb: 4,
+              }}
+            >
+              Configure your project settings.
+            </Text>
+          ) : (
+            <></>
+          )}
+
           <Divider color="gray.700" borderWidth="1px" mb={3} />
           {step === 1 ? (
             <InfoSettings
