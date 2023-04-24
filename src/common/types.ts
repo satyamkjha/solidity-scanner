@@ -185,7 +185,6 @@ export type ScanMeta = {
   scan_score: string;
   scan_name: string;
   latest_report_id: string;
-  // skip_file_paths?: string[];
 };
 
 export type ScanSummary = {
