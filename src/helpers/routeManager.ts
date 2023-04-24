@@ -31,6 +31,10 @@ export const API_PATH = {
   API_GET_FILE_CONTENT_BLOCK: "/api-get-file-content-block/",
   API_GET_ISSUE_DETAILS: "/api-get-issue-details/",
   API_UPDATE_BUG_STATUS: "/api-update-bug-status/",
+  API_TOGGLE_PROJECT_SYNCHRONIZATION: "/api-toggle-project-synchronization/",
+  API_REPO_TREE: "/api-repo-tree/",
+  API_GET_BRANCHES: "/api-get-branches/",
+  API_UPDATE_SKIP_FILE_PATHS: "/api-update-skip-file-paths/",
 
   //QUICKSCAN
   API_GET_LATEST_QS: "/api-latest-qs/",
