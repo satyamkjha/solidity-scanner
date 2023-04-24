@@ -180,10 +180,7 @@ const ScanDetails: React.FC<{
   project_url: string;
   repoTree: TreeItem | null;
   project_branch: string;
-  getRepoTreeReq: (
-    project_url: string,
-    project_branch: string
-  ) => Promise<void>;
+  getRepoTreeReq: () => Promise<void>;
 }> = ({
   scansRemaining,
   scans,
@@ -497,16 +494,18 @@ const ScanDetails: React.FC<{
                     <Text sx={{ fontSize: "xl", fontWeight: 600 }}>
                       {project_name}
                     </Text>
-                    <Link
-                      fontSize="14px"
-                      variant="subtle"
-                      target="_blank"
-                      href={project_url}
-                      isTruncated
-                      width={["70%", "70%", "70%", "fit-content"]}
-                    >
-                      {project_url}
-                    </Link>
+                    {project_url !== "File Scan" && (
+                      <Link
+                        fontSize="14px"
+                        variant="subtle"
+                        target="_blank"
+                        href={project_url}
+                        isTruncated
+                        width={["70%", "70%", "70%", "fit-content"]}
+                      >
+                        {project_url}
+                      </Link>
+                    )}
                   </VStack>
                 </Flex>
                 <Flex
@@ -870,10 +869,10 @@ const ScanDetails: React.FC<{
                         </Flex>
                       )}
                     </TabPanel>
-                    <TabPanel p={[0, 0, 0, 2]}>
-                      {scanData.scan_report.project_skip_files &&
-                        scanData.scan_report.project_url &&
-                        scanData.scan_report.project_url !== "File Scan" && (
+                    {scanData.scan_report.project_skip_files &&
+                      scanData.scan_report.project_url &&
+                      scanData.scan_report.project_url !== "File Scan" && (
+                        <TabPanel p={[0, 0, 0, 2]}>
                           <ProjectCustomSettings
                             project_skip_files={
                               scanData.scan_report.project_skip_files
@@ -893,8 +892,8 @@ const ScanDetails: React.FC<{
                               "successful"
                             }
                           />
-                        )}
-                    </TabPanel>
+                        </TabPanel>
+                      )}
 
                     {profile.promo_code ? (
                       profile.actions_supported &&
@@ -921,6 +920,7 @@ const ScanDetails: React.FC<{
 
                     <TabPanel p={[0, 0, 0, 2]}>
                       <ScanHistory
+                        project_url={project_url}
                         getRepoTreeReq={getRepoTreeReq}
                         repoTree={repoTree}
                         profile={profile}
@@ -1466,11 +1466,16 @@ const ScanHistory: React.FC<{
   profile: Profile;
   scans: ScanMeta[];
   repoTree: TreeItem | null;
-  getRepoTreeReq: (
-    project_url: string,
-    project_branch: string
-  ) => Promise<void>;
-}> = ({ setTabIndex, profile, scans, repoTree, getRepoTreeReq }) => {
+  getRepoTreeReq: () => Promise<void>;
+  project_url: string;
+}> = ({
+  setTabIndex,
+  profile,
+  scans,
+  repoTree,
+  getRepoTreeReq,
+  project_url,
+}) => {
   return (
     <Box
       sx={{
@@ -1488,6 +1493,7 @@ const ScanHistory: React.FC<{
             scan={scan}
             setTabIndex={setTabIndex}
             repoTree={repoTree}
+            project_url={project_url}
             profile={profile}
             getRepoTreeReq={getRepoTreeReq}
           />
@@ -1501,11 +1507,16 @@ const ScanBlock: React.FC<{
   setTabIndex: React.Dispatch<React.SetStateAction<number>>;
   profile: Profile;
   repoTree: TreeItem | null;
-  getRepoTreeReq: (
-    project_url: string,
-    project_branch: string
-  ) => Promise<void>;
-}> = ({ scan, setTabIndex, profile, repoTree, getRepoTreeReq }) => {
+  getRepoTreeReq: () => Promise<void>;
+  project_url: string;
+}> = ({
+  scan,
+  setTabIndex,
+  profile,
+  repoTree,
+  getRepoTreeReq,
+  project_url,
+}) => {
   const history = useHistory();
   const [show, setShow] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
@@ -1649,26 +1660,27 @@ const ScanBlock: React.FC<{
                   ? "Generating Report"
                   : "Report Not Generated"}
               </Button>
-
-              <Button
-                variant="accent-outline"
-                minW="200px"
-                mr={10}
-                my={2}
-                isLoading={isLoading}
-                onClick={async () => {
-                  if (show) {
-                    setShow(false);
-                  } else {
-                    getRepoTreeReq();
-                    getScanRequest();
-                    setShow(true);
-                  }
-                }}
-              >
-                {show ? "Hide Skipped files" : "View Skipped files"}{" "}
-                {show ? <ChevronUpIcon ml={2} /> : <ChevronDownIcon ml={2} />}
-              </Button>
+              {project_url !== "File Scan" && (
+                <Button
+                  variant="accent-outline"
+                  minW="200px"
+                  mr={10}
+                  my={2}
+                  isLoading={isLoading}
+                  onClick={async () => {
+                    if (show) {
+                      setShow(false);
+                    } else {
+                      getRepoTreeReq();
+                      getScanRequest();
+                      setShow(true);
+                    }
+                  }}
+                >
+                  {show ? "Hide Skipped files" : "View Skipped files"}{" "}
+                  {show ? <ChevronUpIcon ml={2} /> : <ChevronDownIcon ml={2} />}
+                </Button>
+              )}
             </Flex>
           </Flex>
           <Box
