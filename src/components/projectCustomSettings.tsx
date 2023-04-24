@@ -32,10 +32,7 @@ const ProjectCustomSettings: React.FC<{
   project_skip_files: string[];
   repoTree: TreeItem | null;
   project_branch: string;
-  getRepoTreeReq: (
-    project_url: string,
-    project_branch: string
-  ) => Promise<void>;
+  getRepoTreeReq: () => Promise<void>;
 }> = ({
   isGithubIntegrated,
   project_id,

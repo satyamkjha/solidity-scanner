@@ -57,6 +57,12 @@ import {
   MenuList,
   MenuItem,
   Collapse,
+  Popover,
+  PopoverArrow,
+  PopoverBody,
+  PopoverCloseButton,
+  PopoverContent,
+  PopoverTrigger,
 } from "@chakra-ui/react";
 import {
   AiOutlineClockCircle,
@@ -68,7 +74,7 @@ import {
 import Overview from "components/overview";
 import Result, { MultifileResult } from "components/result";
 import { RescanIcon, LogoIcon, ScanErrorIcon } from "components/icons";
-
+import { InfoIcon } from "@chakra-ui/icons";
 import API from "helpers/api";
 
 import { useScans } from "hooks/useScans";
@@ -1661,25 +1667,61 @@ const ScanBlock: React.FC<{
                   : "Report Not Generated"}
               </Button>
               {project_url !== "File Scan" && (
-                <Button
-                  variant="accent-outline"
-                  minW="200px"
-                  mr={10}
-                  my={2}
-                  isLoading={isLoading}
-                  onClick={async () => {
-                    if (show) {
-                      setShow(false);
-                    } else {
-                      getRepoTreeReq();
-                      getScanRequest();
-                      setShow(true);
-                    }
-                  }}
-                >
-                  {show ? "Hide Skipped files" : "View Skipped files"}{" "}
-                  {show ? <ChevronUpIcon ml={2} /> : <ChevronDownIcon ml={2} />}
-                </Button>
+                <HStack spacing={3} mr={10} my={2}>
+                  <Button
+                    variant="accent-outline"
+                    minW="200px"
+                    isLoading={isLoading}
+                    onClick={async () => {
+                      if (show) {
+                        setShow(false);
+                      } else {
+                        getRepoTreeReq();
+                        getScanRequest();
+                        setShow(true);
+                      }
+                    }}
+                  >
+                    {show ? "Hide Scanned Files" : "View Scanned Files"}{" "}
+                    {show ? (
+                      <ChevronUpIcon ml={2} />
+                    ) : (
+                      <ChevronDownIcon ml={2} />
+                    )}
+                  </Button>
+                  <Popover width="500px" placement="bottom-end">
+                    <PopoverTrigger>
+                      <InfoIcon color="#d7cdfa" />
+                    </PopoverTrigger>
+                    <PopoverContent p={1}>
+                      <PopoverArrow />
+                      <PopoverCloseButton />
+
+                      <PopoverBody>
+                        <Text
+                          fontSize="sm"
+                          textAlign="left"
+                          lineHeight="title"
+                          fontWeight={"300"}
+                          mb={0}
+                        >
+                          The scanned files have been highlighted while the
+                          remaining ones were skipped. To modify settings for
+                          future scans, please refer to the{" "}
+                          <Box
+                            textDecoration="underline"
+                            as="span"
+                            color="#3E15F4"
+                            mr={1}
+                          >
+                            Custom Settings
+                          </Box>
+                          option.
+                        </Text>
+                      </PopoverBody>
+                    </PopoverContent>
+                  </Popover>
+                </HStack>
               )}
             </Flex>
           </Flex>
