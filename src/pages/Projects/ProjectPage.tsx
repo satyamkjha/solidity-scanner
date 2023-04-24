@@ -1689,14 +1689,13 @@ const ScanBlock: React.FC<{
                       <ChevronDownIcon ml={2} />
                     )}
                   </Button>
-                  <Popover width="500px" placement="bottom-end">
+                  <Popover placement="bottom-end">
                     <PopoverTrigger>
                       <InfoIcon color="#d7cdfa" />
                     </PopoverTrigger>
                     <PopoverContent p={1}>
                       <PopoverArrow />
                       <PopoverCloseButton />
-
                       <PopoverBody>
                         <Text
                           fontSize="sm"

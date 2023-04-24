@@ -185,8 +185,8 @@ const ProjectCustomSettings: React.FC<{
           <AccordionPanel
             flexDir="column"
             backgroundColor="#FCFCFC"
-            px={[3, 3, 5, 7]}
-            py={5}
+            px={[3, 3, 5]}
+            py={3}
             mt={5}
             borderRadius={20}
             border="1px solid #ECECEC"
@@ -270,8 +270,8 @@ const ProjectCustomSettings: React.FC<{
           <AccordionPanel
             flexDir="column"
             backgroundColor="#FCFCFC"
-            px={7}
-            py={5}
+            px={[3, 3, 5]}
+            py={3}
             mt={5}
             borderRadius={20}
             border="1px solid #ECECEC"
