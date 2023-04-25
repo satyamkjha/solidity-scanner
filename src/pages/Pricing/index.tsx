@@ -88,15 +88,88 @@ export default function PricingPage() {
                 justifyContent="flex-start"
                 alignItems={"center"}
                 w={"100%"}
-                px={[0, 0, 10]}
-                py={10}
+                px={[5, 10, 10]}
+                py={"100px"}
                 h="1000px"
                 backgroundColor="#FFFFFF"
                 background={"url('/background/pricing_background.jpg')"}
                 backgroundSize="cover"
                 backgroundPosition={"center"}
                 backgroundRepeat="no-repeat"
-              ></Flex>
+              >
+                <Heading
+                  color={"white"}
+                  fontSize={["3xl", "3xl", "4xl", "4xl", "5xl"]}
+                  mb={10}
+                  textAlign="center"
+                >
+                  Choose the plan that{" "}
+                  <Box
+                    as="span"
+                    sx={{
+                      background:
+                        "linear-gradient(129.18deg, #52FF00 8.52%, #00EEFD 93.94%)",
+                      backgroundClip: "text",
+                      WebkitTextFillColor: "transparent",
+                    }}
+                  >
+                    fits{" "}
+                  </Box>
+                  your{" "}
+                  <Box
+                    as="span"
+                    sx={{
+                      background:
+                        "linear-gradient(129.18deg, #52FF00 8.52%, #00EEFD 93.94%)",
+                      backgroundClip: "text",
+                      WebkitTextFillColor: "transparent",
+                    }}
+                  >
+                    needs.
+                  </Box>
+                </Heading>
+                <Text
+                  w={["90%", "90%", "80%", "70%", "60%"]}
+                  textAlign="center"
+                  fontSize={["md", "lg", "xl"]}
+                  color="#B0B7C3"
+                  fontWeight={300}
+                >
+                  Enterprise Dealing in Crypto Development or Security with
+                  Large Team Size. Get your scan results and reports vetted by
+                  our security professionals
+                </Text>
+                <Text
+                  w={["90%", "90%", "80%", "70%", "60%"]}
+                  my={14}
+                  textAlign="center"
+                  fontSize={["md", "lg", "xl"]}
+                  color="#2FF86B"
+                  fontWeight={700}
+                >
+                  Try our trial version now and get two free scans upon signing
+                  up!
+                </Text>
+                <Button width="200px" variant="brand">
+                  Start Free Trial
+                </Button>
+                <HStack
+                  width="100%"
+                  alignItems={"flex-start"}
+                  justifyContent="center"
+                  pt={14}
+                  spacing={5}
+                  height="300px"
+                >
+                  <Text color="#FFFFFF" fontSize="md" fontWeight={300}>
+                    Pay Monthly
+                  </Text>
+                  <Switch size="lg" variant="brand" />
+                  <Text fontSize="md" fontWeight={300}>
+                    Pay Yearly
+                  </Text>
+                </HStack>
+              </Flex>
               <Flex
                 w="90%"
                 flexDir={"column"}
@@ -243,32 +316,171 @@ export default function PricingPage() {
                   })}
                 </Grid>
               </Flex>
+              <Box
+                display={"flex"}
+                flexDir={["column", "column", "column", "row"]}
+                alignItems="center"
+                justifyContent={[
+                  "flex-start",
+                  "flex-start",
+                  "flex-start",
+                  "space-between",
+                ]}
+                w={"90%"}
+                h={[
+                  "fit-content",
+                  "fit-content",
+                  "fit-content",
+                  "350px",
+                  "300px",
+                ]}
+                mt={20}
+                px={10}
+                py={[10, 10, 10, 5]}
+                borderRadius="25px"
+                background={"url('/background/custom_plan_bg.png')"}
+                backgroundSize="cover"
+                backgroundPosition={"center"}
+                backgroundRepeat="no-repeat"
+              >
+                <VStack
+                  w={["100%", "90%", "90%", "60%"]}
+                  mb={[10, 10, 10, 0]}
+                  justifyContent="flex-start"
+                  alignItems="flex-start"
+                >
+                  <Heading
+                    as="h1"
+                    color="#B0B7C3"
+                    fontFamily={"Inter"}
+                    fontSize="3xl"
+                    mb={8}
+                  >
+                    Try our{" "}
+                    <Box
+                      fontWeight={900}
+                      fontFamily={"Poppins"}
+                      as="span"
+                      color="#FFFFFF"
+                    >
+                      Enterprise version{" "}
+                    </Box>
+                    now and get two free scans upon signing up!{" "}
+                  </Heading>
+                  <Text fontSize="xl" color="#B0B7C3" fontWeight={300}>
+                    Enterprise Dealing in Crypto Development or Security with
+                    Large Team Size. Get your scan results and reports vetted by
+                    our security professionals
+                  </Text>
+                </VStack>
+                <VStack
+                  mt={[10, 10, 10, 0]}
+                  w={["100%", "90%", "90%", "30%"]}
+                  justifyContent="flex-start"
+                  alignItems="flex-start"
+                  spacing={7}
+                  maxWidth="300px"
+                >
+                  <HStack
+                    width="100%"
+                    alignItems={"center"}
+                    justifyContent="flex-start"
+                    spacing={5}
+                  >
+                    <Image width="50px" height="50px" src="/pricing/coin.svg" />
+                    <Heading fontSize="2xl" color="#FFFFFF" fontWeight={400}>
+                      Unlimited Scans
+                    </Heading>
+                  </HStack>
+                  <HStack
+                    width="100%"
+                    alignItems={"center"}
+                    justifyContent="flex-start"
+                    spacing={5}
+                  >
+                    <Image
+                      width="50px"
+                      height="50px"
+                      src="/icons/detectorIcon.svg"
+                    />
+                    <Heading fontSize="2xl" color="#FFFFFF" fontWeight={400}>
+                      All Detectors
+                    </Heading>
+                  </HStack>
+
+                  <Button
+                    width="100%"
+                    py={6}
+                    color="white"
+                    mt={5}
+                    variant="outline"
+                  >
+                    Contact Sales
+                  </Button>
+                </VStack>
+              </Box>
+              <Box
+                display={"flex"}
+                flexDir="column"
+                alignItems="center"
+                justifyContent={"flex-start"}
+                w={"95%"}
+                textAlign="center"
+                px={[0, 0, 10]}
+                my={20}
+                py={10}
+                borderRadius={20}
+                background={"#FFFFFF"}
+              >
+                <Heading as="h1" fontSize="3xl" mb={8}>
+                  Exploring SolidityScan's{" "}
+                  <Box as="span" color="#3300FF">
+                    Capabilities{" "}
+                  </Box>
+                  and{" "}
+                  <Box textDecoration="underline" as="span" color="#3300FF">
+                    Analysis Features{" "}
+                  </Box>
+                </Heading>
+                <Text
+                  color="subtle"
+                  width={["95%", "90%", "70%"]}
+                  fontSize={["lg", "lg", "xl"]}
+                  mb={4}
+                >
+                  Lorem ipsum dolor sit amet consectetur. Lectus laoreet
+                  facilisis enim id risus nec urna enim. Elementum euismod
+                  tincidunt in nibh in lorem eget quisque. Eget euismod etiam
+                  tincidunt felis blandit nec.
+                </Text>
+              </Box>
+              <Box
+                display={"flex"}
+                flexDir="column"
+                alignItems="center"
+                justifyContent={"flex-start"}
+                textAlign="center"
+                w={"90%"}
+                px={[0, 0, 10]}
+                my={20}
+                py={10}
+                borderRadius={20}
+                background={"#FFFFFF"}
+              >
+                <Heading as="h1" fontSize="3xl" mb={4}>
+                  Why{" "}
+                  <Box textDecoration="underline" as="span" color="#3300FF">
+                    SolidityScan ?
+                  </Box>{" "}
+                </Heading>
+                <Text color="subtle" fontSize={["lg", "lg", "xl"]} mb={4}>
+                  Smart-contract scanning tool built to discover vulnerabilities
+                  & mitigate risks in your code.
+                </Text>
+                <Infographics />
+                <SignupBox />
+              </Box>
             </Flex>
-            <Box
-              display={"flex"}
-              flexDir="column"
-              alignItems="center"
-              justifyContent={"flex-start"}
-              w={"95%"}
-              px={[0, 0, 10]}
-              my={20}
-              py={10}
-              borderRadius={20}
-              background={"#FFFFFF"}
-            >
-              <Heading as="h1" fontSize="3xl" mb={4}>
-                Why{" "}
-                <Box as="span" color="#3300FF">
-                  SolidityScan ?
-                </Box>{" "}
-              </Heading>
-              <Text color="subtle" fontSize={["lg", "lg", "xl"]} mb={4}>
-                Smart-contract scanning tool built to discover vulnerabilities &
-                mitigate risks in your code.
-              </Text>
-              <Infographics />
-              <SignupBox />
-            </Box>
           </>
         )
       )}

@@ -61,6 +61,7 @@ export const theme = extendTheme({
             "linear-gradient(129.18deg, #52FF00 8.52%, #00EEFD 93.94%)",
           color: "black",
           fontSize: "15px",
+          border: "none",
           py: 6,
           _hover: {
             background:
