@@ -208,14 +208,11 @@ export type ScanSummaryItem = {
   count_files_analyzed: number; //
   issue_severity_distribution: IssueSeverityDistribution; //
   score: string; //
-
   issues_count: number; //
   lines_analyzed_count: number; //
-
   scan_time_taken: number; //
   false_positive_count: number; //
   fixed_count: number; //
-
   wont_fix_count: number; //
   scans_ran: string[]; //
   scan_time: string; //

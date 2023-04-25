@@ -8,24 +8,25 @@ import {
   Flex,
   SimpleGrid,
   ButtonProps,
-  Link,
   ScaleFade,
   useDisclosure,
   HStack,
   Image,
   Heading,
-  ListIcon,
-  Fade,
   VStack,
   Popover,
   PopoverArrow,
   PopoverBody,
   PopoverCloseButton,
   PopoverContent,
-  PopoverHeader,
   PopoverTrigger,
   Spinner,
+  Grid,
+  GridItem,
+  Switch,
 } from "@chakra-ui/react";
+import SignupBox from "components/signupBox";
+import Infographics from "components/infographics";
 
 import Header from "components/header";
 import Footer from "components/footer";
@@ -55,798 +56,201 @@ export default function PricingPage() {
     if (campaign_id) localStorage.setItem("campaign_id", campaign_id);
   }, []);
 
-    const { data: pricingDetails, isLoading } = usePricingPlans()
+  const { data: pricingDetails, isLoading } = usePricingPlans();
 
   return (
     <>
       <Header />
-      {isLoading ? <Box
-              w={"100%"}
-              h='60vh'
-              as="section"
-              display={[null, null, "flex"]}
-              flexDirection="row"
-              justifyContent={"center"}
-              alignItems={"center"}
-            ><Spinner/> </Box> : pricingDetails && <Container maxW="100vw" color="black" alignItems={"center"}>
+      {isLoading ? (
+        <Box
+          w={"100%"}
+          h="60vh"
+          as="section"
+          display={[null, null, "flex"]}
+          flexDirection="row"
+          justifyContent={"center"}
+          alignItems={"center"}
+        >
+          <Spinner />{" "}
+        </Box>
+      ) : (
+        pricingDetails && (
+          <>
             <Flex
-              maxW="7xl"
-              mx="auto"
-              flexDirection="column"
-              alignItems="center"
-              py={7}
-              px={4}
-              background="rgba(82, 255, 0, 0.04)"
-              backgroundImage="url('/background/pattern.png')"
-              borderRadius="3xl"
+              w="100%"
+              flexDir={"column"}
+              alignItems={"center"}
+              justifyContent="flex-start"
+              p={0}
             >
-              <Text
-                fontSize="4xl"
-                fontWeight="700"
-                my={1}
-                color="#323B4B"
-                textAlign="center"
-                lineHeight="title"
+              <Flex
+                flexDir={"column"}
+                justifyContent="flex-start"
+                alignItems={"center"}
+                w={"100%"}
+                px={[0, 0, 10]}
+                py={10}
+                h="1000px"
+                backgroundColor="#FFFFFF"
+                background={"url('/background/pricing_background.jpg')"}
+                backgroundSize="cover"
+                backgroundPosition={"center"}
+                backgroundRepeat="no-repeat"
+              ></Flex>
+              <Flex
+                w="90%"
+                flexDir={"column"}
+                alignItems={"center"}
+                justifyContent="flex-start"
+                backgroundColor="#FFFFFF00"
+                mt={"-150px"}
               >
-                Pricing
-              </Text>
-              <Text
-                color="#323B4B"
-                width={["100%", "50%"]}
-                lineHeight="title"
-                fontWeight="500"
-                textAlign="center"
-                fontSize="lg"
-                fontFamily="Inter"
-                my={3}
-              >
-                Signup for a trial and get two scans free.
-              </Text>
-              {/* <Flex
-                flexDirection="row"
-                alignItems="center"
-                mt={7}
-                px={2}
-                py={2}
-                background="#FFFFFF"
-                borderRadius="full"
-                maxW="85vw"
-              > */}
-              {/* <ActionButton
-                  onClick={() => setTab("weekly")}
-                  fontSize="lg"
-                  py={1}
-                  px={10}
-                  borderRadius="full"
-                  mr={1}
-                  variant={tab === "weekly" ? "brand" : "ghost"}
+                <Grid
+                  backgroundColor="#FFFFFF00"
+                  w="100%"
+                  templateColumns={[
+                    "repeat(1, 1fr)",
+                    "repeat(1, 1fr)",
+                    "repeat(2, 1fr)",
+                    "repeat(2, 1fr)",
+                    "repeat(4, 1fr)",
+                  ]}
+                  gap={5}
                 >
-                  Weekly
-                </ActionButton> */}
-              {/* <ActionButton
-                  onClick={() => setTab("monthly")}
-                  fontSize="lg"
-                  py={1}
-                  px={10}
-                  borderRadius="full"
-                  mx={1}
-                  variant={tab === "monthly" ? "brand" : "ghost"}
-                >
-                  Monthly
-                </ActionButton> */}
-              {/* <ActionButton
-                  onClick={() => setTab("yearly")}
-                  fontSize="lg"
-                  py={1}
-                  px={10}
-                  borderRadius="full"
-                  ml={1}
-                  variant={tab === "yearly" ? "brand" : "ghost"}
-                >
-                  Yearly
-                </ActionButton> */}
-              {/* </Flex> */}
-            </Flex>
-            <ScaleFade initialScale={0.9} in={tab === "weekly"}>
-                <Box
-                  w={"100%"}
-                  as="section"
-                  display={[null, null, "flex"]}
-                  flexDirection="row"
-                  justifyContent={"center"}
-                  alignContent={"center"}
-                >
-                  <Box
-                    w={"90vw"}
-                    as="div"
-                    py="14"
-                    display="flex"
-                    flexDirection="row"
-                    justifyContent={["flex-start", "center"]}
-                    alignContent={["flex-start", "center"]}
-                    overflow="auto"
-                  >
-                    <Flex
-                      as={"div"}
-                      flexDirection="column"
-                      justifyContent={"flex-start"}
-                      alignContent={"center"}
-                      mb={"100px"}
-                      w={[200, 200, 230, null, null, 300]}
-                    >
-                      <Box
-                        as="div"
-                        h={[220, 200, 180, 120]}
-                        alignItems="center"
-                        justifyContent="center"
-                        display="flex"
-                        flexDirection="row"
-                      >
-                        <Text
-                          fontSize="2xl"
-                          fontWeight="700"
-                          my={1}
-                          textAlign="center"
-                          lineHeight="title"
+                  {Object.keys(pricingDetails.monthly).map((plan) => {
+                    if (plan !== "custom" && plan !== "trial")
+                      return (
+                        <GridItem
+                          sx={{
+                            boxShadow: "0px 4px 24px rgba(0, 0, 0, 0.1)",
+                            bg: "#FFFFFF",
+                            w: "100%",
+                            h: "800px",
+                            p: 7,
+                            borderRadius: 20,
+                            display: "flex",
+                            flexDir: "column",
+                            justifyContent: "flex-start",
+                            alignItems: "center",
+                          }}
                         >
-                          Packages
-                        </Text>
-                      </Box>
-                      <Box
-                        as="div"
-                        h={"169px"}
-                        px={"20px"}
-                        display="flex"
-                        flexDirection="row"
-                        borderTopLeftRadius={"xl"}
-                        border="2px solid #D6D6D6"
-                        borderRightWidth={0}
-                        borderBottomWidth={0}
-                      >
-                        <HStack spacing={1}>
-                          <VStack spacing={1} align={"left"}>
-                            <Text
-                              ml={15}
-                              fontSize="md"
-                              textAlign="center"
-                              lineHeight="title"
-                            >
-                              Choose the subscription that suits you best
+                          <HStack
+                            width="100%"
+                            alignItems={"center"}
+                            justifyContent="flex-start"
+                            mb={8}
+                          >
+                            <Image
+                              width="50px"
+                              height="50px"
+                              src={`/pricing/${plan}-heading.svg`}
+                            />
+                            <Text fontSize="3xl" fontWeight={500}>
+                              {pricingDetails.monthly[plan].name}
                             </Text>
-                            {/* <Text
-                              fontSize="xs"
-                              textAlign="left"
-                              lineHeight="title"
-                              fontWeight={"300"}
-                            >
-                              Publish your reports to a public url
-                            </Text> */}
-                          </VStack>
-                        </HStack>
-                      </Box>
-                      <Box
-                        as="div"
-                        h={[220, 200, 180, 120]}
-                        px={"20px"}
-                        display="flex"
-                        flexDirection="row"
-                        borderLeft="2px solid #D6D6D6"
-                        backgroundColor={"#FAFAFB"}
-                      >
-                        <HStack spacing={1}>
-                          <Image
-                            src="/pricing/coin.svg"
-                            h={[6, 8]}
-                            w={[6, 8]}
+                          </HStack>
+                          <Text height="140px" fontSize="lg" fontWeight={300}>
+                            {pricingDetails.monthly[plan].description}
+                          </Text>
+                          <Heading
+                            fontSize="4xl"
+                            textAlign="left"
+                            lineHeight="title"
+                            fontWeight={900}
+                            mb={5}
+                            width="100%"
+                          >
+                            {`$ ${pricingDetails.monthly[plan].amount}`}
+                          </Heading>
+                          <HStack
+                            width="100%"
+                            alignItems={"center"}
+                            justifyContent="flex-start"
+                            mb={20}
+                          >
+                            <Text fontSize="md" fontWeight={300}>
+                              Monthly
+                            </Text>
+                            <Switch size="lg" variant="brand" />
+                            <Text fontSize="md" fontWeight={300}>
+                              Yearly
+                            </Text>
+                          </HStack>
+                          <Text
+                            fontSize="md"
+                            mb={3}
+                            color="gray.400"
+                            fontWeight={300}
+                            width="100%"
+                          >
+                            No of Scans
+                          </Text>
+                          <HStack
+                            width="100%"
+                            alignItems={"center"}
+                            justifyContent="flex-start"
+                            mb={10}
+                            spacing={2}
+                          >
+                            <Image
+                              width="30px"
+                              height="30px"
+                              src="/pricing/coin.svg"
+                            />
+                            <Text fontSize="2xl" fontWeight={900}>
+                              {pricingDetails.monthly[plan].scan_count}
+                            </Text>
+                            <Text fontSize="2xl" fontWeight={400}>
+                              Scans
+                            </Text>
+                          </HStack>
+                          <Text
+                            fontSize="md"
+                            mb={3}
+                            color="gray.400"
+                            fontWeight={300}
+                            width="100%"
+                          >
+                            Vulnerability Detectors coverage
+                          </Text>
+                          <HStack
+                            width="100%"
+                            alignItems={"center"}
+                            justifyContent="flex-start"
+                            mb={10}
+                            spacing={2}
+                          >
+                            <Image
+                              width="30px"
+                              height="30px"
+                              src="/icons/detectorIcon.svg"
+                            />
+                            <Text fontSize="2xl" fontWeight={400}>
+                              All Detectors
+                            </Text>
+                          </HStack>
+                          <Button
+                            width="200px"
                             mx="auto"
-                            mr={4}
-                          />
-                          <VStack spacing={1} align={"left"}>
-                            <Text fontSize="md" textAlign="left" lineHeight="title">
-                              Scan Credit
-                            </Text>
-                            <Text
-                              fontSize="xs"
-                              textAlign="left"
-                              lineHeight="title"
-                              fontWeight={"300"}
-                            >
-                              Use allotted credits to scan your solidity source code
-                            </Text>
-                          </VStack>
-                        </HStack>
-                      </Box>
-                      <Box
-                        as="div"
-                        h={[220, 200, 180, 120]}
-                        px={"20px"}
-                        display="flex"
-                        flexDirection="row"
-                        borderLeft="2px solid #D6D6D6"
-                      >
-                        <HStack spacing={1}>
-                          <Image
-                            src="/pricing/score-icon.svg"
-                            h={[6, 8]}
-                            w={[6, 8]}
-                            mx="auto"
-                            mr={4}
-                          />
-                          <VStack spacing={1} align={"left"}>
-                            <Text fontSize="md" textAlign="left" lineHeight="title">
-                              Security Score
-                            </Text>
-                            <Text
-                              fontSize="xs"
-                              textAlign="left"
-                              lineHeight="title"
-                              fontWeight={"300"}
-                            >
-                              Get a security score tagged to all your scans
-                            </Text>
-                          </VStack>
-                        </HStack>
-                      </Box>
-                      <Box
-                        as="div"
-                        h={[220, 200, 180, 120]}
-                        px={"20px"}
-                        display="flex"
-                        flexDirection="row"
-                        borderLeft="2px solid #D6D6D6"
-                        backgroundColor={"#FAFAFB"}
-                      >
-                        <HStack spacing={1}>
-                          <Image
-                            src="/pricing/result-icon.svg"
-                            h={[6, 8]}
-                            w={[6, 8]}
-                            mx="auto"
-                            mr={4}
-                          />
-                          <VStack spacing={1} align={"left"}>
-                            <HStack>
-                              <Text
-                                fontSize="md"
-                                textAlign="left"
-                                lineHeight="title"
-                              >
-                                Detailed Result
-                              </Text>
-                              <Popover>
-                                <PopoverTrigger>
-                                  <HiInformationCircle color={"#808080"} />
-                                </PopoverTrigger>
-                                <PopoverContent p={5}>
-                                  <PopoverArrow />
-                                  <PopoverCloseButton />
-    
-                                  <PopoverBody>
-                                    <Text
-                                      fontSize="sm"
-                                      textAlign="left"
-                                      lineHeight="title"
-                                      fontWeight={"300"}
-                                      mb={4}
-                                    >
-                                      We can help you find bugs in your code and
-                                      provide you with the solution for it
-                                    </Text>
-                                    <Image src="/carousel/Screenshot 2.png" />
-                                  </PopoverBody>
-                                </PopoverContent>
-                              </Popover>
-                            </HStack>
-                            <Text
-                              fontSize="xs"
-                              textAlign="left"
-                              lineHeight="title"
-                              fontWeight={"300"}
-                            >
-                              Get a detailed explanation of the issues
-                            </Text>
-                          </VStack>
-                        </HStack>
-                      </Box>
-                      <Box
-                        as="div"
-                        h={[220, 200, 180, 120]}
-                        px={"20px"}
-                        display="flex"
-                        flexDirection="row"
-                        borderLeft="2px solid #D6D6D6"
-                      >
-                        <HStack spacing={1}>
-                          <Image
-                            src="/pricing/github.svg"
-                            h={[6, 8]}
-                            w={[6, 8]}
-                            mx="auto"
-                            mr={4}
-                          />
-                          <VStack spacing={1} align={"left"}>
-                            <Text fontSize="md" textAlign="left" lineHeight="title">
-                              Private Github
-                            </Text>
-                            <Text
-                              fontSize="xs"
-                              textAlign="left"
-                              lineHeight="title"
-                              fontWeight={"300"}
-                            >
-                              Scan Private Github Repositories
-                            </Text>
-                          </VStack>
-                        </HStack>
-                      </Box>
-                      <Box
-                        as="div"
-                        h={[220, 200, 180, 120]}
-                        px={"20px"}
-                        display="flex"
-                        flexDirection="row"
-                        borderLeft="2px solid #D6D6D6"
-                        backgroundColor={"#FAFAFB"}
-                      >
-                        <HStack spacing={1}>
-                          <Image
-                            src="/pricing/report.svg"
-                            h={[6, 8]}
-                            w={[6, 8]}
-                            mx="auto"
-                            mr={4}
-                          />
-                          <VStack spacing={1} align={"left"}>
-                            <HStack>
-                              <Text
-                                fontSize="md"
-                                textAlign="left"
-                                lineHeight="title"
-                              >
-                                Generate Report
-                              </Text>
-                              <Popover>
-                                <PopoverTrigger>
-                                  <HiInformationCircle color={"#808080"} />
-                                </PopoverTrigger>
-                                <PopoverContent p={5}>
-                                  <PopoverArrow />
-                                  <PopoverCloseButton />
-    
-                                  <PopoverBody>
-                                    <Text
-                                      fontSize="sm"
-                                      textAlign="left"
-                                      lineHeight="title"
-                                      fontWeight={"300"}
-                                      mb={4}
-                                    >
-                                      Generate a detailed report for the scan
-                                    </Text>
-                                    <Image src="/carousel/Screenshot 5.png" />
-                                  </PopoverBody>
-                                </PopoverContent>
-                              </Popover>
-                            </HStack>
-                            <Text
-                              fontSize="xs"
-                              textAlign="left"
-                              lineHeight="title"
-                              fontWeight={"300"}
-                            >
-                              Generate Report for the scans that you have completed
-                            </Text>
-                          </VStack>
-                        </HStack>
-                      </Box>
-                      <Box
-                        as="div"
-                        h={[220, 200, 180, 120]}
-                        px={"20px"}
-                        display="flex"
-                        flexDirection="row"
-                        borderLeft="2px solid #D6D6D6"
-                      >
-                        <HStack spacing={1}>
-                          <Image
-                            src="/pricing/publish.svg"
-                            h={[6, 8]}
-                            w={[6, 8]}
-                            mx="auto"
-                            mr={4}
-                          />
-                          <VStack spacing={1} align={"left"}>
-                            <HStack>
-                              <Text
-                                fontSize="md"
-                                textAlign="left"
-                                lineHeight="title"
-                              >
-                                Publish Reports
-                              </Text>
-                              <Popover>
-                                <PopoverTrigger>
-                                  <HiInformationCircle color={"#808080"} />
-                                </PopoverTrigger>
-                                <PopoverContent p={5}>
-                                  <PopoverArrow />
-                                  <PopoverCloseButton />
-    
-                                  <PopoverBody>
-                                    <Text
-                                      fontSize="sm"
-                                      textAlign="left"
-                                      lineHeight="title"
-                                      fontWeight={"300"}
-                                      mb={4}
-                                    >
-                                      You can publish a detailed report of the scan
-                                      conducted and then share it across your team
-                                      or organization using a public URL.
-                                    </Text>
-                                    <Image src="/carousel/Screenshot 5.png" />
-                                  </PopoverBody>
-                                </PopoverContent>
-                              </Popover>
-                            </HStack>
-                            <Text
-                              fontSize="xs"
-                              textAlign="left"
-                              lineHeight="title"
-                              fontWeight={"300"}
-                            >
-                              Publish your reports to a public url
-                            </Text>
-                          </VStack>
-                        </HStack>
-                      </Box>
-                      <Box
-                        as="div"
-                        h={[220, 200, 180, 120]}
-                        px={"20px"}
-                        display="flex"
-                        flexDirection="row"
-                        borderLeft="2px solid #D6D6D6"
-                        borderBottom="2px solid #D6D6D6"
-                        borderBottomLeftRadius={"xl"}
-                        backgroundColor={"#FAFAFB"}
-                      >
-                        <HStack spacing={1}>
-                          <Image
-                            src="/pricing/support-icon.svg"
-                            h={[6, 8]}
-                            w={[6, 8]}
-                            mx="auto"
-                            mr={4}
-                          />
-                          <VStack spacing={1} align={"left"}>
-                            <HStack>
-                              <Text
-                                fontSize="md"
-                                textAlign="left"
-                                lineHeight="title"
-                              >
-                                White Glove Services
-                              </Text>
-                              {/* <Popover>
-                                <PopoverTrigger>
-                                  <HiInformationCircle color={"#808080"} />
-                                </PopoverTrigger>
-                                <PopoverContent p={5}>
-                                  <PopoverArrow />
-                                  <PopoverCloseButton />
-    
-                                  <PopoverBody>
-                                    <Text
-                                      fontSize="sm"
-                                      textAlign="left"
-                                      lineHeight="title"
-                                      fontWeight={"300"}
-                                      mb={4}
-                                    >
-                                      You can publish a detailed report of the scan
-                                      conducted and then share it across your team
-                                      or organization using a public URL.
-                                    </Text>
-                                    <Image src="/carousel/Screenshot 5.png" />
-                                  </PopoverBody>
-                                </PopoverContent>
-                              </Popover> */}
-                            </HStack>
-                            <Text
-                              fontSize="xs"
-                              textAlign="left"
-                              lineHeight="title"
-                              fontWeight={"300"}
-                            >
-                              Verify your results and reports by web3 security
-                              experts
-                            </Text>
-                          </VStack>
-                        </HStack>
-                      </Box>
-                    </Flex>
-                    <SimpleGrid
-                      columns={6}
-                      justifyItems="center"
-                      alignItems="flex-start"
-                      minChildWidth={[145, 155, null, "10vW"]}
-                      autoFlow="column"
-                      flex={["1 1 0", null, null, "0 0 0"]}
-                      overflow={["visible", null, "auto", "visible"]}
-                    >
-                      {Object.keys(pricingDetails.monthly).map((plan) => (
-                        <PricingColumn
-                          plan={plan}
-                          planData={pricingDetails.monthly[plan]}
-                          setSelectedPlan={setSelectedPlan}
-                          selectedPlan={selectedPlan}
-                        />
-                      ))}
-                    </SimpleGrid>
-                  </Box>
-                </Box>
-              </ScaleFade>
-          </Container>}
-      
-      
-      <ContactUs isOpen={isOpen} onClose={onClose} />
-      <PublishReportInfo
-        isOpen={openPublish}
-        onClose={() => {
-          setOpenPublish(false);
-        }}
-      />
+                            py={6}
+                            alignContent={"center"}
+                            variant="gray-outline"
+                          >
+                            Choose Plan
+                          </Button>
+                        </GridItem>
+                      );
+                  })}
+                </Grid>
+              </Flex>
+            </Flex>
+            <Infographics />
+            <SignupBox />
+          </>
+        )
+      )}
+
       <Footer />
     </>
   );
 }
-
-export const ActionButton = (props: ButtonProps) => (
-  <Button
-    variant="brand"
-    size="lg"
-    w="full"
-    fontWeight="extrabold"
-    py={{ md: "8" }}
-    {...props}
-  />
-);
-
-export const PricingColumn: React.FC<{
-  plan: string;
-  planData: Plan;
-  selectedPlan: string;
-  setSelectedPlan: React.Dispatch<React.SetStateAction<string>>;
-}> = ({ plan, planData, selectedPlan, setSelectedPlan }) => {
-  const successColor = "#289F4C";
-  const greyColor = "#808080";
-
-  const history = useHistory();
-  const mouse = selectedPlan === plan;
-  const { isOpen, onClose, onOpen } = useDisclosure();
-
-  return (
-    <Flex
-      as={"div"}
-      onMouseOver={() => setSelectedPlan(plan)}
-      onMouseLeave={() => setSelectedPlan("")}
-      flexDirection="column"
-      justifyContent={"flex-start"}
-      alignContent={"flex-start"}
-      overflow={"hidden"}
-      width={mouse ? [145, 155, null, "14vW"] : [145, 155, null, "12vW"]}
-      mb={mouse ? "0px" : "160px"}
-      border={`2px solid ${mouse ? "#3E15F4" : "#D6D6D6"}`}
-      _notLast={{
-        borderRightWidth: mouse ? "2px" : "0px",
-      }}
-      _last={{
-        borderTopRightRadius: mouse ? "24px" : "12px",
-        borderBottomRightRadius: mouse ? "24px" : "12px",
-      }}
-      _first={{
-        borderTopLeftRadius: mouse ? "24px" : "12px",
-        borderBottomLeftRadius: mouse ? "24px" : "0px",
-      }}
-      borderRadius={mouse ? "24px" : "0px"}
-      zIndex={mouse ? 10 : 0}
-      background={mouse ? "#FFFFFF" : ""}
-    >
-      <Box
-        as="div"
-        h={[220, 200, 180, 120]}
-        px={"15px"}
-        justifyContent="center"
-        display="flex"
-        flexDirection="column"
-        borderBottom="2px solid #D6D6D6"
-      >
-        <Text
-          fontSize="sm"
-          textAlign="center"
-          lineHeight="title"
-          fontWeight={"300"}
-        ></Text>
-        <Text fontSize="md" textAlign="center" lineHeight="title">
-          {planData.name}
-        </Text>
-        <Heading
-          fontSize="xl"
-          textAlign="center"
-          lineHeight="title"
-          fontWeight={900}
-        >
-          {planData.amount === "Free" ? "Free" : `$ ${planData.amount}`}
-        </Heading>
-        <Text textAlign="center" fontSize={"xs"}>
-          {plan === "trial" || plan === "ondemand" ? "Perpetual" : "per month"}
-        </Text>
-      </Box>
-      <Box
-        as="div"
-        h={"175px"}
-        px={"10px"}
-        display="flex"
-        flexDirection="row"
-        justifyContent={"center"}
-        alignItems={"center"}
-      >
-        <Text
-          fontSize="xs"
-          textAlign="center"
-          lineHeight="title"
-          fontWeight={"300"}
-        >
-          {planData.description}
-        </Text>
-      </Box>
-      <Box
-        as="div"
-        h={[210, 190, 170, 110]}
-        px={"10px"}
-        display="flex"
-        flexDirection="row"
-        justifyContent={"center"}
-        alignItems={"center"}
-        backgroundColor={"#FAFAFB"}
-      >
-        <Text
-          fontSize="lg"
-          textAlign="center"
-          lineHeight="title"
-          fontWeight={"300"}
-        >
-          {plan === "custom" ? "-" : planData.scan_count}
-        </Text>
-      </Box>
-      <Box
-        as="div"
-        h={[220, 200, 180, 120]}
-        px={"15px"}
-        display="flex"
-        flexDirection="row"
-        justifyContent={"center"}
-        alignItems={"center"}
-      >
-        <HiCheckCircle size={30} color={successColor} />
-      </Box>
-      <Box
-        as="div"
-        h={[220, 200, 180, 120]}
-        px={"15px"}
-        display="flex"
-        flexDirection="row"
-        justifyContent={"center"}
-        alignItems={"center"}
-        backgroundColor={"#FAFAFB"}
-      >
-        {planData.name !== "Trial" ? (
-          <HiCheckCircle size={30} color={successColor} />
-        ) : (
-          <HiXCircle size={30} color={greyColor} />
-        )}{" "}
-      </Box>
-      <Box
-        as="div"
-        h={[220, 200, 180, 120]}
-        px={"15px"}
-        display="flex"
-        flexDirection="row"
-        justifyContent={"center"}
-        alignItems={"center"}
-      >
-        {planData.github ? (
-          <HiCheckCircle size={30} color={successColor} />
-        ) : (
-          <HiXCircle size={30} color={greyColor} />
-        )}{" "}
-      </Box>
-      <Box
-        as="div"
-        h={[220, 200, 180, 120]}
-        px={"15px"}
-        display="flex"
-        flexDirection="row"
-        justifyContent={"center"}
-        alignItems={"center"}
-        backgroundColor={"#FAFAFB"}
-      >
-        {planData.report ? (
-          <HiCheckCircle size={30} color={successColor} />
-        ) : (
-          <HiXCircle size={30} color={greyColor} />
-        )}{" "}
-      </Box>
-      <Box
-        as="div"
-        h={[220, 200, 180, 120]}
-        px={"15px"}
-        display="flex"
-        flexDirection="column"
-        justifyContent={"center"}
-        alignItems={"center"}
-      >
-        {planData.publishable_report ? (
-          <HiCheckCircle size={30} color={successColor} />
-        ) : (
-          <HiXCircle size={30} color={greyColor} />
-        )}{" "}
-      </Box>
-      <Box
-        as="div"
-        h={[220, 200, 180, 120]}
-        px={"15px"}
-        display="flex"
-        flexDirection="column"
-        justifyContent={"center"}
-        alignItems={"center"}
-        backgroundColor={"#FAFAFB"}
-      >
-        {plan === "custom" ? (
-          <HiCheckCircle size={30} color={successColor} />
-        ) : (
-          <HiXCircle size={30} color={greyColor} />
-        )}{" "}
-      </Box>
-      {mouse && (
-        <Box
-          as="div"
-          h={"100px"}
-          px={"15px"}
-          display="flex"
-          flexDirection="column"
-          justifyContent={"center"}
-          alignItems={"center"}
-          backgroundColor={"#FAFAFB"}
-        >
-          <Button
-            variant={"brand"}
-            my={5}
-            onClick={() => {
-              if (plan === "custom") {
-                onOpen();
-              } else {
-                if (Auth.isUserAuthenticated()) {
-                  history.push("/billing");
-                } else {
-                  history.push("/signin");
-                }
-              }
-            }}
-          >
-            {plan === "custom"
-              ? "Contact Us"
-              : Auth.isUserAuthenticated()
-              ? "Choose"
-              : "Get Started"}
-          </Button>
-        </Box>
-      )}
-
-      <ContactUs isOpen={isOpen} onClose={onClose} />
-    </Flex>
-  );
-};
-
-
