@@ -1730,9 +1730,9 @@ const QuickScan: React.FC = () => {
             flexDir="column"
             alignItems="center"
             justifyContent={"flex-start"}
-            w={"90%"}
+            w={"95%"}
             px={[0, 0, 10]}
-            py={10}
+            py={20}
             borderRadius={20}
             background={"#FFFFFF"}
           >

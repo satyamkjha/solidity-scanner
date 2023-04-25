@@ -244,8 +244,31 @@ export default function PricingPage() {
                 </Grid>
               </Flex>
             </Flex>
-            <Infographics />
-            <SignupBox />
+            <Box
+              display={"flex"}
+              flexDir="column"
+              alignItems="center"
+              justifyContent={"flex-start"}
+              w={"95%"}
+              px={[0, 0, 10]}
+              my={20}
+              py={10}
+              borderRadius={20}
+              background={"#FFFFFF"}
+            >
+              <Heading as="h1" fontSize="3xl" mb={4}>
+                Why{" "}
+                <Box as="span" color="#3300FF">
+                  SolidityScan ?
+                </Box>{" "}
+              </Heading>
+              <Text color="subtle" fontSize={["lg", "lg", "xl"]} mb={4}>
+                Smart-contract scanning tool built to discover vulnerabilities &
+                mitigate risks in your code.
+              </Text>
+              <Infographics />
+              <SignupBox />
+            </Box>
           </>
         )
       )}
