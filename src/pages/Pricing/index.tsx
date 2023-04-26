@@ -48,6 +48,8 @@ export default function PricingPage() {
   const [openPublish, setOpenPublish] = useState(false);
   const location = useLocation();
 
+  const [duration, setDuration] = useState("monthly");
+
   useEffect(() => {
     const query = new URLSearchParams(location.search);
     const campaign_type = query.get("utm_source");
