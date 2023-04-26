@@ -1,20 +1,16 @@
 import {
-  Box,
-  Flex,
   Heading,
-  // Icon,
-  List,
-  ListIcon,
-  ListItem,
   Text,
-  useColorModeValue,
-  VStack,
-  FlexProps,
-  BoxProps,
+  Button,
+  GridItem,
+  HStack,
+  Switch,
+  Image,
+  Flex,
 } from "@chakra-ui/react";
+import { Plan } from "common/types";
 import * as React from "react";
-import { HiCheckCircle } from "react-icons/hi";
-import { HiXCircle } from "react-icons/hi";
+import { useState } from "react";
 
 export interface PricingCardData {
   features: string[];
@@ -23,134 +19,169 @@ export interface PricingCardData {
   nonfeatures?: string[];
 }
 
-interface PricingCardProps extends CardProps {
-  custom?: boolean;
-  data: PricingCardData;
-  icon?: React.ElementType;
-  button: React.ReactElement;
+interface PricingCardProps {
+  globalDuration: "monthly" | "yearly" | "on-demand";
+  plan: string;
+  pricingDetails: {
+    [key: string]: {
+      [plan: string]: Plan;
+    };
+  };
 }
 
 export const PricingCard = (props: PricingCardProps) => {
-  const { data, icon, button, custom, ...rest } = props;
-  const { features, price, name, nonfeatures } = data;
-  const accentColor = "#19A398";
-  const successColor = "#289F4C";
-  const greyColor = "#808080";
+  const { globalDuration, plan, pricingDetails } = props;
+  const [duration, setDuration] = useState<"monthly" | "yearly" | "on-demand">(
+    globalDuration
+  );
+
+  React.useEffect(() => {
+    setDuration(globalDuration);
+  }, [globalDuration]);
 
   return (
-    <Card rounded={{ sm: "xl" }} {...rest}>
-      <VStack spacing={6}>
-        {/* <Icon aria-hidden as={icon} fontSize="4xl" color={accentColor} /> */}
-        <Heading size="md" fontWeight="extrabold">
-          {name}
-        </Heading>
-      </VStack>
-      <Flex
-        align="flex-end"
-        justify="center"
-        fontWeight="extrabold"
-        color={accentColor}
-        my="8"
+    <GridItem
+      sx={{
+        boxShadow: "0px 4px 24px rgba(0, 0, 0, 0.1)",
+        bg: "#FFFFFF",
+        w: "100%",
+        h: "800px",
+        p: 7,
+        borderRadius: 20,
+        display: "flex",
+        flexDir: "column",
+        justifyContent: "flex-start",
+        alignItems: "center",
+      }}
+    >
+      <HStack
+        width="100%"
+        alignItems={"center"}
+        justifyContent="flex-start"
+        mb={8}
       >
-        {!custom && (
-          <>
-            <Heading size="3xl" fontWeight="inherit" lineHeight="0.9em">
-              {price}
-            </Heading>
-            <Text fontWeight="inherit" fontSize="2xl">
-              / mo
+        <Image
+          width="50px"
+          height="50px"
+          src={`/pricing/${plan}-heading.svg`}
+        />
+        <Text fontSize="3xl" fontWeight={500}>
+          {pricingDetails[duration][plan].name}
+        </Text>
+      </HStack>
+      <Text
+        height="140px"
+        mb={5}
+        w="100%"
+        textAlign={"left"}
+        fontSize="lg"
+        fontWeight={300}
+      >
+        {pricingDetails[duration][plan].description}
+      </Text>
+      <Flex
+        flexDir="column"
+        w="100%"
+        justifyContent={"flex-start"}
+        alignItems={"flex-start"}
+        h="200px"
+      >
+        <Flex
+          flexDir="row"
+          w="100%"
+          justifyContent={"flex-start"}
+          alignItems={"flex-end"}
+          mb={5}
+        >
+          <Heading fontSize="4xl" lineHeight="title" fontWeight={900}>
+            {`$ ${pricingDetails[duration][plan].amount}`}
+          </Heading>
+          <Text fontSize="4xl" fontWeight={300}>
+            /
+          </Text>
+          <Text mb={2} fontSize="lg" fontWeight={300}>
+            {duration}
+          </Text>
+        </Flex>
+        {duration !== "on-demand" && (
+          <HStack
+            width="100%"
+            alignItems={"center"}
+            justifyContent="flex-start"
+            mb={20}
+          >
+            <Text
+              color={duration === "monthly" ? "#000000" : "gray.400"}
+              fontSize="md"
+              fontWeight={300}
+            >
+              Monthly
             </Text>
-          </>
+            <Switch
+              size="lg"
+              variant="brand"
+              isChecked={duration === "yearly"}
+              onChange={() => {
+                if (duration === "monthly") {
+                  setDuration("yearly");
+                } else {
+                  setDuration("monthly");
+                }
+              }}
+            />
+            <Text
+              color={duration === "yearly" ? "#000000" : "gray.400"}
+              fontSize="md"
+              fontWeight={300}
+            >
+              Yearly
+            </Text>
+          </HStack>
         )}
       </Flex>
-      <List spacing="6" mb="8" maxW="28ch" mx="auto">
-        {features.map((feature, index) => (
-          <ListItem
-            fontWeight="medium"
-            fontSize="lg"
-            key={index}
-            color="#4E5D78"
-          >
-            <ListIcon
-              fontSize="xl"
-              as={HiCheckCircle}
-              marginEnd={2}
-              color={successColor}
-            />
-            {feature}
-          </ListItem>
-        ))}
-        {nonfeatures?.map((nonfeature, index) => (
-          <ListItem
-            fontWeight="medium"
-            fontSize="lg"
-            key={index}
-            color="#8A94A6"
-          >
-            <ListIcon
-              fontSize="xl"
-              as={HiXCircle}
-              marginEnd={2}
-              color={greyColor}
-            />
-            {nonfeature}
-          </ListItem>
-        ))}
-      </List>
-      {button}
-    </Card>
-  );
-};
 
-export interface CardProps extends BoxProps {
-  isPopular?: boolean;
-}
-
-export const Card = (props: CardProps) => {
-  const { children, isPopular, ...rest } = props;
-  return (
-    <Box
-      bg={useColorModeValue("white", "gray.700")}
-      position="relative"
-      px="6"
-      pb="6"
-      pt="16"
-      overflow="hidden"
-      shadow="lg"
-      maxW="md"
-      width="100%"
-      {...rest}
-    >
-      {isPopular && <CardBadge>Popular</CardBadge>}
-      {children}
-    </Box>
-  );
-};
-
-export const CardBadge = (props: FlexProps) => {
-  const { children, ...flexProps } = props;
-  return (
-    <Flex
-      bg="accent"
-      position="absolute"
-      right={-20}
-      top={6}
-      width="240px"
-      transform="rotate(45deg)"
-      py={2}
-      justifyContent="center"
-      alignItems="center"
-      {...flexProps}
-    >
-      <Text
-        fontSize="xs"
-        textTransform="uppercase"
-        fontWeight="bold"
-        letterSpacing="wider"
-        color={useColorModeValue("white", "gray.800")}
-      >
-        {children}
+      <Text fontSize="md" mb={3} color="gray.400" fontWeight={300} width="100%">
+        No of Scans
       </Text>
-    </Flex>
+      <HStack
+        width="100%"
+        alignItems={"center"}
+        justifyContent="flex-start"
+        mb={10}
+        spacing={2}
+      >
+        <Image width="30px" height="30px" src="/pricing/coin.svg" />
+        <Text fontSize="2xl" fontWeight={900}>
+          {pricingDetails[duration][plan].scan_count}
+        </Text>
+        <Text fontSize="2xl" fontWeight={400}>
+          Scans
+        </Text>
+      </HStack>
+      <Text fontSize="md" mb={3} color="gray.400" fontWeight={300} width="100%">
+        Vulnerability Detectors coverage
+      </Text>
+      <HStack
+        width="100%"
+        alignItems={"center"}
+        justifyContent="flex-start"
+        mb={10}
+        spacing={2}
+      >
+        <Image width="30px" height="30px" src="/icons/detectorIcon.svg" />
+        <Text fontSize="2xl" fontWeight={400}>
+          All Detectors
+        </Text>
+      </HStack>
+      <Button
+        width="200px"
+        mx="auto"
+        py={6}
+        alignContent={"center"}
+        variant="gray-outline"
+      >
+        Choose Plan
+      </Button>
+    </GridItem>
   );
 };

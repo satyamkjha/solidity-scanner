@@ -2,6 +2,41 @@ import React from "react";
 import { HStack, Heading, Box, Text } from "@chakra-ui/react";
 import { constants } from "os";
 
+export const CurlyArrow: React.FC<{ size: number; color: string }> = ({
+  size,
+  color,
+  ...props
+}) => {
+  return (
+    <svg
+      width={size}
+      height={(58 / 70) * size}
+      viewBox="0 0 70 58"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      <path
+        d="M22.3535 53.9922C20.0616 53.7197 14.85 52.9359 12.3385 51.981"
+        stroke={color}
+        stroke-width="1.42285"
+        stroke-linecap="round"
+      />
+      <path
+        d="M61.8872 16.2249C57.9668 23.4843 51.8053 30.8017 43.3404 32.6028C37.9308 33.7537 31.5099 31.1282 28.7364 26.3241C26.1171 21.787 25.3734 16.0928 29.2144 12.0803C31.2165 9.98882 33.8822 9.04244 36.4893 10.7074C40.4724 13.251 40.902 19.9309 39.9094 24.025C36.8116 36.8017 25.5622 48.6124 12.7406 51.7802"
+        stroke={color}
+        stroke-width="1.42285"
+        stroke-linecap="round"
+      />
+      <path
+        d="M12.3438 51.9922C13.6627 50.0982 16.5394 45.6823 17.4943 43.1708"
+        stroke={color}
+        stroke-width="1.42285"
+        stroke-linecap="round"
+      />
+    </svg>
+  );
+};
+
 export const LogoIcon: React.FC<{ size: number }> = ({ size, ...props }) => {
   const gradientId = "_" + Math.random().toString(36).substr(2, 9);
   return (
