@@ -2,9 +2,76 @@ import React from "react";
 import { HStack, Heading, Box, Text } from "@chakra-ui/react";
 import { constants } from "os";
 
-export const CurlyArrow: React.FC<{ size: number; color: string }> = ({
+export const CurlyArrowBlue: React.FC<{ size: number }> = ({
   size,
-  color,
+  ...props
+}) => {
+  return (
+    <svg
+      width={size}
+      height={size}
+      viewBox="0 0 50 50"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      <path
+        d="M4.58008 22.2422C4.23861 20.5968 3.57541 16.8174 3.65432 14.8627"
+        stroke="#3300FF"
+        stroke-width="1.42285"
+        stroke-linecap="round"
+      />
+      <path
+        d="M39.8003 40.8117C33.8822 39.7824 27.4061 37.2192 24.2065 31.791C22.1618 28.3219 22.4907 23.282 25.1667 20.2569C27.6941 17.3999 31.4537 15.5706 35.1117 17.2954C37.0184 18.1944 38.2878 19.8162 37.7407 22.001C36.9049 25.3388 32.3921 27.1791 29.3361 27.4398C19.7987 28.2535 9.04456 23.2158 3.89451 15.0953"
+        stroke="#3300FF"
+        stroke-width="1.42285"
+        stroke-linecap="round"
+      />
+      <path
+        d="M3.6543 14.8672C5.26679 15.3402 8.98044 16.3059 10.9352 16.3848"
+        stroke="#3300FF"
+        stroke-width="1.42285"
+        stroke-linecap="round"
+      />
+    </svg>
+  );
+};
+
+export const CurlyArrowUp: React.FC<{ size: number }> = ({
+  size,
+  ...props
+}) => {
+  return (
+    <svg
+      width={size}
+      height={(53 / 50) * size}
+      viewBox="0 0 53 50"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      <path
+        d="M31.1074 4.69531C32.8351 4.52337 36.7904 4.25289 38.7903 4.54652"
+        stroke="white"
+        stroke-width="1.42285"
+        stroke-linecap="round"
+      />
+      <path
+        d="M8.20079 38.8614C9.90181 32.8927 13.2395 26.5174 19.1648 23.8201C22.9514 22.0964 28.094 22.9824 30.9112 26.0609C33.5718 28.9682 35.0426 33.03 32.8728 36.6009C31.7417 38.4622 29.9374 39.5902 27.7521 38.7905C24.4134 37.5689 23.0133 32.732 23.0777 29.5637C23.2786 19.6759 29.624 9.17417 38.5275 4.76562"
+        stroke="white"
+        stroke-width="1.42285"
+        stroke-linecap="round"
+      />
+      <path
+        d="M38.7832 4.54688C38.1219 6.15222 36.7258 9.86287 36.4322 11.8627"
+        stroke="white"
+        stroke-width="1.42285"
+        stroke-linecap="round"
+      />
+    </svg>
+  );
+};
+
+export const CurlyArrowDown: React.FC<{ size: number }> = ({
+  size,
   ...props
 }) => {
   return (
@@ -17,19 +84,19 @@ export const CurlyArrow: React.FC<{ size: number; color: string }> = ({
     >
       <path
         d="M22.3535 53.9922C20.0616 53.7197 14.85 52.9359 12.3385 51.981"
-        stroke={color}
+        stroke="white"
         stroke-width="1.42285"
         stroke-linecap="round"
       />
       <path
         d="M61.8872 16.2249C57.9668 23.4843 51.8053 30.8017 43.3404 32.6028C37.9308 33.7537 31.5099 31.1282 28.7364 26.3241C26.1171 21.787 25.3734 16.0928 29.2144 12.0803C31.2165 9.98882 33.8822 9.04244 36.4893 10.7074C40.4724 13.251 40.902 19.9309 39.9094 24.025C36.8116 36.8017 25.5622 48.6124 12.7406 51.7802"
-        stroke={color}
+        stroke="white"
         stroke-width="1.42285"
         stroke-linecap="round"
       />
       <path
         d="M12.3438 51.9922C13.6627 50.0982 16.5394 45.6823 17.4943 43.1708"
-        stroke={color}
+        stroke="white"
         stroke-width="1.42285"
         stroke-linecap="round"
       />

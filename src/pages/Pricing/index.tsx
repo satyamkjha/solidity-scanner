@@ -42,7 +42,7 @@ import { usePricingPlans } from "hooks/usePricingPlans";
 import { SpinnerIcon } from "@chakra-ui/icons";
 import CustomPlanCard from "./components/customPlanCard";
 import PricingTable from "./components/pricingTable";
-import { CurlyArrow } from "components/icons";
+import { CurlyArrowDown, CurlyArrowUp } from "components/icons";
 
 export default function PricingPage() {
   const [tab, setTab] = useState<string>("weekly");
@@ -169,9 +169,9 @@ export default function PricingPage() {
                 <Flex
                   flexDir={"row"}
                   position={"relative"}
-                  alignItems={"flex-end"}
+                  alignItems={["flex-start", "flex-start", "flex-end"]}
                   justifyContent="center"
-                  pb={10}
+                  py={10}
                   spacing={5}
                   height="200px"
                   width="400px"
@@ -203,19 +203,42 @@ export default function PricingPage() {
                   >
                     Pay Yearly
                   </Text>
-                  <Flex
-                    flexDir={"column"}
-                    justifyItems={""}
-                    position={"absolute"}
-                    top="70px"
-                    right={"0px"}
-                  >
-                    <CurlyArrow size={70} color={"#FFFFFF"} />
-                  </Flex>
+                  {duration === "yearly" && (
+                    <Flex
+                      flexDir={"column"}
+                      justifyContent={"flex-start"}
+                      alignItems={"flex-start"}
+                      position={"absolute"}
+                      top={["100px", "100px", "30px"]}
+                      right={["150px", "150px", "-50px"]}
+                    >
+                      <Box display={["block", "block", "none"]}>
+                        <CurlyArrowUp size={50} />
+                      </Box>
+                      <Text
+                        fontSize={"md"}
+                        ml={[-10, -10, 10]}
+                        color="gray.200"
+                        fontWeight={900}
+                      >
+                        Just pay for
+                      </Text>
+                      <Heading
+                        ml={[-10, -10, 10]}
+                        fontSize={"md"}
+                        color="#FFFFFF"
+                      >
+                        10 MONTHS
+                      </Heading>
+                      <Box display={["none", "none", "block"]}>
+                        <CurlyArrowDown size={70} />
+                      </Box>
+                    </Flex>
+                  )}
                 </Flex>
               </Flex>
               <Flex
-                w="90%"
+                w={["95%", "95%", "95%", "95%", "90%"]}
                 flexDir={"column"}
                 alignItems={"center"}
                 justifyContent="flex-start"
@@ -229,10 +252,10 @@ export default function PricingPage() {
                     "repeat(1, 1fr)",
                     "repeat(1, 1fr)",
                     "repeat(2, 1fr)",
-                    "repeat(2, 1fr)",
+                    "repeat(4, 1fr)",
                     "repeat(4, 1fr)",
                   ]}
-                  gap={5}
+                  gap={6}
                 >
                   {Object.keys(pricingDetails.pricing_data["on-demand"]).map(
                     (plan) => {

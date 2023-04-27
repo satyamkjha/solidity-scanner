@@ -21,7 +21,7 @@ const CustomPlanCard = () => {
         "flex-start",
         "space-between",
       ]}
-      w={"90%"}
+      w={["95%", "95%", "95%", "95%", "90%"]}
       h={["fit-content", "fit-content", "fit-content", "350px", "300px"]}
       mt={20}
       px={10}

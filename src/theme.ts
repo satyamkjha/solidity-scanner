@@ -10,6 +10,13 @@ const config: { initialColorMode: ColorMode; useSystemColorMode: boolean } = {
 };
 
 export const theme = extendTheme({
+  breakpoints: {
+    sm: "330px",
+    md: "768px",
+    lg: "1350px",
+    xl: "1600px",
+    "2xl": "1920px",
+  },
   config,
   fonts: {
     heading: "Poppins",
@@ -150,7 +157,6 @@ export const theme = extendTheme({
         }),
       },
     },
-
     Input: {
       parts: ["field", "addon"],
       sizes: {
@@ -203,7 +209,6 @@ export const theme = extendTheme({
         },
       },
     },
-
     Select: {
       parts: ["field", "addon"],
       sizes: {
@@ -334,6 +339,17 @@ export const theme = extendTheme({
           },
           thumb: {
             bg: "linear-gradient(129.18deg, #52FF00 8.52%, #00EEFD 93.94%)",
+          },
+        },
+        accent: {
+          track: {
+            bg: "gray.100",
+            _checked: {
+              bg: "gray.100",
+            },
+          },
+          thumb: {
+            bg: "#3300FF",
           },
         },
       },
