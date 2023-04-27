@@ -27,6 +27,7 @@ import {
 
 import API from "helpers/api";
 import { API_PATH } from "helpers/routeManager";
+import PrivateApiIntegration from "components/privateApiIntegration";
 const REDIRECT_URI =
   process.env.NODE_ENV === "production"
     ? "https://solidityscan.com/integrations/"
@@ -82,6 +83,8 @@ const Integrations: React.FC = () => {
 
       {data && (
         <VStack spacing={8} my={16}>
+          <PrivateApiIntegration />
+
           <IntegrationChannel
             title="GitHub"
             description="Connect you GitHub to directly create issues for vulnerabilities in your repo"
@@ -143,9 +146,12 @@ const IntegrationChannel: React.FC<IntegrationChannelProps> = ({
   const onSuccess = async (code: string) => {
     try {
       setLoading(true);
-      await API.post(`${API_PATH.API_AUTHENTICATE_INTEGRATIONS}${title.toLowerCase()}/`, {
-        code,
-      });
+      await API.post(
+        `${API_PATH.API_AUTHENTICATE_INTEGRATIONS}${title.toLowerCase()}/`,
+        {
+          code,
+        }
+      );
       setLoading(false);
       queryClient.invalidateQueries("profile");
     } catch (e) {
@@ -156,7 +162,10 @@ const IntegrationChannel: React.FC<IntegrationChannelProps> = ({
   const onDisconnect = async () => {
     try {
       setLoading(true);
-      await API.post(`${API_PATH.API_DELETE_INTEGRATIONS}${title.toLowerCase()}/`, {});
+      await API.post(
+        `${API_PATH.API_DELETE_INTEGRATIONS}${title.toLowerCase()}/`,
+        {}
+      );
       await queryClient.refetchQueries("profile");
       setLoading(false);
     } catch (e) {
