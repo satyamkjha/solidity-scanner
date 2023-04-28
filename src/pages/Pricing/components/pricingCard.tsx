@@ -13,7 +13,7 @@ import { Plan } from "common/types";
 import { CurlyArrowBlue } from "components/icons";
 import * as React from "react";
 import { useState } from "react";
-import { getAssetsURL } from "helpers/helperFunction";
+import { getAssetsURL, sentenceCapitalize } from "helpers/helperFunction";
 import Auth from "helpers/auth";
 import { useHistory } from "react-router-dom";
 
@@ -117,7 +117,7 @@ export const PricingCard: React.FC<{
               src={`${assetsURL}pricing/${plan}-heading.svg`}
             />
             <Text fontSize="3xl" fontWeight={500}>
-              {pricingDetails[duration][plan].name}
+              {sentenceCapitalize(pricingDetails[duration][plan].name)}
             </Text>
           </HStack>
           {plan === "pro" && (

@@ -98,7 +98,11 @@ const PricingTable: React.FC<PricingData> = ({
                 {table.data.map((row) => (
                   <Tr>
                     <Td border="1px solid #D6D6D6">{row.title}</Td>
-                    <Td textAlign="center" border="1px solid #D6D6D6">
+                    <Td
+                      bgColor={row.trial ? "#FFFFFF" : "#FCFCFF"}
+                      textAlign="center"
+                      border="1px solid #D6D6D6"
+                    >
                       {typeof row.trial !== "boolean" ? (
                         row.trial
                       ) : row.trial ? (
@@ -107,7 +111,11 @@ const PricingTable: React.FC<PricingData> = ({
                         ""
                       )}
                     </Td>
-                    <Td textAlign="center" border="1px solid #D6D6D6">
+                    <Td
+                      bgColor={row.ondemand ? "#FFFFFF" : "#FCFCFF"}
+                      textAlign="center"
+                      border="1px solid #D6D6D6"
+                    >
                       {typeof row.ondemand !== "boolean" ? (
                         row.ondemand
                       ) : row.ondemand ? (
@@ -116,7 +124,11 @@ const PricingTable: React.FC<PricingData> = ({
                         ""
                       )}
                     </Td>
-                    <Td textAlign="center" border="1px solid #D6D6D6">
+                    <Td
+                      bgColor={row.beginner ? "#FFFFFF" : "#FCFCFF"}
+                      textAlign="center"
+                      border="1px solid #D6D6D6"
+                    >
                       {typeof row.beginner !== "boolean" ? (
                         row.beginner
                       ) : row.beginner ? (
@@ -125,7 +137,11 @@ const PricingTable: React.FC<PricingData> = ({
                         ""
                       )}
                     </Td>
-                    <Td textAlign="center" border="1px solid #D6D6D6">
+                    <Td
+                      bgColor={row.intermediate ? "#FFFFFF" : "#FCFCFF"}
+                      textAlign="center"
+                      border="1px solid #D6D6D6"
+                    >
                       {typeof row.intermediate !== "boolean" ? (
                         row.intermediate
                       ) : row.intermediate ? (
@@ -134,7 +150,11 @@ const PricingTable: React.FC<PricingData> = ({
                         ""
                       )}
                     </Td>
-                    <Td textAlign="center" border="1px solid #D6D6D6">
+                    <Td
+                      bgColor={row.pro ? "#FFFFFF" : "#FCFCFF"}
+                      textAlign="center"
+                      border="1px solid #D6D6D6"
+                    >
                       {typeof row.pro !== "boolean" ? (
                         row.pro
                       ) : row.pro ? (
@@ -143,7 +163,11 @@ const PricingTable: React.FC<PricingData> = ({
                         ""
                       )}
                     </Td>
-                    <Td textAlign="center" border="1px solid #D6D6D6">
+                    <Td
+                      bgColor={row.custom ? "#FFFFFF" : "#FCFCFF"}
+                      textAlign="center"
+                      border="1px solid #D6D6D6"
+                    >
                       {typeof row.custom !== "boolean" ? (
                         row.custom
                       ) : row.custom ? (
