@@ -76,7 +76,7 @@ import Result, { MultifileResult } from "components/result";
 import { RescanIcon, LogoIcon, ScanErrorIcon } from "components/icons";
 import { InfoIcon } from "@chakra-ui/icons";
 import API from "helpers/api";
-
+import { restructureRepoTree } from "helpers/helperFunction";
 import { useScans } from "hooks/useScans";
 import { useScan, getScan } from "hooks/useScan";
 
@@ -141,6 +141,7 @@ export const ProjectPage: React.FC = () => {
       if (responseData) {
         if (responseData.status === "success") {
           setRepoTree(responseData.tree);
+          console.log(restructureRepoTree(responseData.tree));
         }
       }
     }
@@ -198,7 +199,6 @@ const ScanDetails: React.FC<{
 }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [isRescanLoading, setRescanLoading] = useState(false);
-
   const cancelRef = useRef<HTMLButtonElement | null>(null);
   const queryClient = useQueryClient();
   const [reportingStatus, setReportingStatus] = useState<string>("");
@@ -1752,6 +1752,7 @@ const ScanBlock: React.FC<{
         >
           {skipFilePaths && repoTree && (
             <FolderSettings
+              branch=""
               view="scan_history"
               fileData={repoTree}
               skipFilePaths={skipFilePaths}

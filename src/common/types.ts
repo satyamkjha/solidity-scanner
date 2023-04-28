@@ -175,6 +175,19 @@ export type TreeItem = {
   blobs: string[];
 };
 
+export type TreeItemUP = {
+  name: string;
+  path: string;
+  tree: TreeItemUP[];
+  isChildCheck: boolean;
+  checked: boolean;
+  blobs: {
+    path: string;
+    checked: boolean;
+    name: string;
+  }[];
+};
+
 export type ScanMeta = {
   scan_id: string;
   scan_time: string;

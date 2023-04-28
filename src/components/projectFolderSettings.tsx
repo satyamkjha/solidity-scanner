@@ -29,7 +29,8 @@ import {
   InfoIcon,
 } from "@chakra-ui/icons";
 import { type } from "os";
-import { TreeItem } from "common/types";
+import { TreeItem, TreeItemUP } from "common/types";
+import { restructureRepoTree } from "helpers/helperFunction";
 
 const formatOptionLabel: React.FC<{
   value: string;
@@ -79,7 +80,7 @@ const customStyles = {
 };
 
 const FileList: React.FC<{
-  fileList: TreeItem;
+  fileList: TreeItemUP;
   view: "github_app" | "detailed_result" | "scan_history";
   skipped: boolean;
   addFilePath: (path: string) => void;
@@ -102,32 +103,22 @@ const FileList: React.FC<{
       alignItems="flex-start"
       pl={[2, 2, 7]}
     >
-      {fileList.tree.map((item, index) => (
+      {fileList.tree.map((item) => (
         <FolderItem
-          key={index}
           addFilePath={addFilePath}
           deleteFilePath={deleteFilePath}
           skipFilePaths={skipFilePaths}
           view={view}
           folderItem={item}
-          skipped={skipped || skipFilePaths.includes(`${item.path}/`)}
         />
       ))}
-      {fileList.blobs.map((item, index) => (
+      {fileList.blobs.map((item) => (
         <FileItem
-          key={index}
           addFilePath={addFilePath}
           deleteFilePath={deleteFilePath}
           skipFilePaths={skipFilePaths}
           view={view}
-          fileName={item}
-          filePath={fileList.path}
-          skipped={
-            skipped ||
-            skipFilePaths.includes(
-              `${fileList.path}${fileList.path !== "" ? "/" : ""}${item}`
-            )
-          }
+          fileItem={item}
         />
       ))}
     </Flex>
@@ -135,25 +126,19 @@ const FileList: React.FC<{
 };
 
 const FolderItem: React.FC<{
-  folderItem: TreeItem;
-  skipped: boolean;
+  folderItem: TreeItemUP;
   addFilePath: (path: string) => void;
   deleteFilePath: (path: string) => void;
   skipFilePaths: string[];
   view: "github_app" | "detailed_result" | "scan_history";
-}> = ({
-  folderItem,
-  view,
-  skipped,
-  addFilePath,
-  deleteFilePath,
-  skipFilePaths,
-}) => {
-  const [isChecked, setIsChecked] = React.useState(!skipped);
+}> = ({ folderItem, view, addFilePath, deleteFilePath, skipFilePaths }) => {
+  const [isChecked, setIsChecked] = React.useState(
+    folderItem.checked && folderItem.isChildCheck
+  );
   const [show, setShow] = React.useState(false);
 
   useEffect(() => {
-    setIsChecked(!skipped);
+    setIsChecked(folderItem.checked && folderItem.isChildCheck);
   }, []);
 
   return (
@@ -208,33 +193,31 @@ const FolderItem: React.FC<{
 };
 
 const FileItem: React.FC<{
-  fileName: string;
-  filePath: string;
-  skipped: boolean;
+  fileItem: {
+    path: string;
+    checked: boolean;
+    name: string;
+  };
   addFilePath: (path: string) => void;
   deleteFilePath: (path: string) => void;
   skipFilePaths: string[];
   view: "github_app" | "detailed_result" | "scan_history";
-}> = ({
-  fileName,
-  filePath,
-  view,
-  skipped,
-  addFilePath,
-  deleteFilePath,
-  skipFilePaths,
-}) => {
-  const [isChecked, setIsChecked] = React.useState(!skipped);
+}> = ({ fileItem, view, addFilePath, deleteFilePath, skipFilePaths }) => {
+  const [isChecked, setIsChecked] = React.useState(fileItem.checked);
   const [show, setShow] = React.useState(false);
 
   useEffect(() => {
-    setIsChecked(!skipped);
+    setIsChecked(fileItem.checked);
   }, []);
 
   return (
     <Flex
       p={2}
-      pl={view !== "scan_history" && fileName.slice(-4) !== ".sol" ? "60px" : 8}
+      pl={
+        view !== "scan_history" && fileItem.name.slice(-4) !== ".sol"
+          ? "60px"
+          : 8
+      }
       width={"fit-content"}
       cursor={"pointer"}
       onClick={() => setShow(!show)}
@@ -245,39 +228,43 @@ const FileItem: React.FC<{
         backgroundColor: "gray.100",
       }}
     >
-      {view !== "scan_history" && fileName.slice(-4) === ".sol" && (
+      {view !== "scan_history" && fileItem.name.slice(-4) === ".sol" && (
         <Checkbox
           mr={3}
           isChecked={isChecked}
           colorScheme={"purple"}
           borderColor={"gray.500"}
           onChange={() => {
-            if (isChecked) {
-              addFilePath(
-                `${filePath}${filePath !== "" ? "/" : ""}${fileName}`
-              );
-            } else {
-              deleteFilePath(
-                `${filePath}${filePath !== "" ? "/" : ""}${fileName}`
-              );
-            }
+            // if (isChecked) {
+            //   addFilePath(
+            //     `${filePath}${filePath !== "" ? "/" : ""}${fileName}`
+            //   );
+            // } else {
+            //   deleteFilePath(
+            //     `${filePath}${filePath !== "" ? "/" : ""}${fileName}`
+            //   );
+            // }
             setIsChecked(!isChecked);
           }}
         ></Checkbox>
       )}
       <AiOutlineFile
         color={
-          isChecked && fileName.slice(-4) === ".sol" ? "#4E5D78" : "#4E5D7880"
+          isChecked && fileItem.name.slice(-4) === ".sol"
+            ? "#4E5D78"
+            : "#4E5D7880"
         }
         size={20}
       />
       <Text
         ml={3}
         color={
-          isChecked && fileName.slice(-4) === ".sol" ? "#4E5D78" : "#4E5D7880"
+          isChecked && fileItem.name.slice(-4) === ".sol"
+            ? "#4E5D78"
+            : "#4E5D7880"
         }
       >
-        {fileName}
+        {fileItem.name}
       </Text>
     </Flex>
   );
@@ -304,6 +291,10 @@ const FolderSettings: React.FC<{
   updateSkipPathRequests,
   isLoading,
 }) => {
+
+
+  
+  
   const addFilePath = (path: string) => {
     setSkipFilePaths && setSkipFilePaths([...skipFilePaths, path]);
   };
@@ -317,6 +308,14 @@ const FolderSettings: React.FC<{
     value: branch,
     label: branch,
   });
+
+  const [repoTreeUP, setRepoTreeUP] = useState<TreeItemUP>();
+
+  useEffect(() => {
+    if (fileData) {
+      setRepoTreeUP(restructureRepoTree(fileData));
+    }
+  }, []);
 
   return (
     <Flex
@@ -435,14 +434,16 @@ const FolderSettings: React.FC<{
             <Spinner color="gray.500" />
           </Flex>
         ) : (
-          <FileList
-            addFilePath={addFilePath}
-            deleteFilePath={deleteFilePath}
-            skipFilePaths={skipFilePaths}
-            view={view}
-            fileList={fileData}
-            skipped={false}
-          />
+          repoTreeUP && (
+            <FileList
+              addFilePath={addFilePath}
+              deleteFilePath={deleteFilePath}
+              skipFilePaths={skipFilePaths}
+              view={view}
+              fileList={repoTreeUP}
+              skipped={false}
+            />
+          )
         )}
       </Flex>
     </Flex>
