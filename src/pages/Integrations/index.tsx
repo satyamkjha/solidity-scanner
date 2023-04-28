@@ -83,7 +83,6 @@ const Integrations: React.FC = () => {
 
       {data && (
         <VStack spacing={8} my={16}>
-          <PrivateApiIntegration />
 
           <IntegrationChannel
             title="GitHub"
@@ -94,6 +93,8 @@ const Integrations: React.FC = () => {
             url={GITHUB_URL}
             providerUrlChecker="github.com"
           />
+
+          <PrivateApiIntegration />
 
           <IntegrationChannel
             title="JIRA"

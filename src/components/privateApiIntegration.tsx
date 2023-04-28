@@ -65,28 +65,34 @@ export default function PrivateApiIntegration() {
             <Text fontSize="13px" fontWeight="400" opacity={0.8} maxW="500px">
               This is the description
             </Text>
-            <HStack spacing={0} mt={2}>
-              <InputGroup size="md" w="100%" maxW="400px">
-                <Input
-                  borderRadius="10px"
-                  borderRightRadius={0}
-                  type={isViewable ? "text" : "password"}
-                  value={accessKey}
-                  isReadOnly={true}
-                />
-                <InputRightElement>
-                  <Icon
-                    cursor="pointer"
-                    color="gray.500"
-                    as={isViewable ? AiOutlineEyeInvisible : AiOutlineEye}
-                    onClick={() => setViewable(!isViewable)}
+            {accessKey && (
+              <HStack spacing={0} mt={2}>
+                <InputGroup size="md" w="100%" maxW="400px">
+                  <Input
+                    borderRadius="10px"
+                    borderRightRadius={0}
+                    type={isViewable ? "text" : "password"}
+                    value={accessKey}
+                    isReadOnly={true}
                   />
-                </InputRightElement>
-              </InputGroup>
-              <Button borderLeftRadius={0} borderRadius="10px" onClick={onCopy}>
-                {hasCopied ? <CheckIcon /> : <CopyIcon />}
-              </Button>
-            </HStack>
+                  <InputRightElement>
+                    <Icon
+                      cursor="pointer"
+                      color="gray.500"
+                      as={isViewable ? AiOutlineEyeInvisible : AiOutlineEye}
+                      onClick={() => setViewable(!isViewable)}
+                    />
+                  </InputRightElement>
+                </InputGroup>
+                <Button
+                  borderLeftRadius={0}
+                  borderRadius="10px"
+                  onClick={onCopy}
+                >
+                  {hasCopied ? <CheckIcon /> : <CopyIcon />}
+                </Button>
+              </HStack>
+            )}
           </Box>
         </Flex>
         <Button
