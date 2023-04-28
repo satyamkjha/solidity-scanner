@@ -26,7 +26,9 @@ export default function PrivateApiIntegration() {
   const { onCopy, hasCopied } = useClipboard(accessKey);
 
   useEffect(() => {
-    setAccessKey(data.api_key);
+    if (data && data.api_key) {
+      setAccessKey(data.api_key);
+    }
   }, [data]);
 
   const getAccessKey = async () => {
