@@ -11,6 +11,13 @@ const config: { initialColorMode: ColorMode; useSystemColorMode: boolean } = {
 
 export const theme = extendTheme({
   config,
+  breakpoints: {
+    sm: "330px",
+    md: "768px",
+    lg: "1350px",
+    xl: "1600px",
+    "2xl": "1920px",
+  },
   fonts: {
     heading: "Poppins",
     body: "Inter",
