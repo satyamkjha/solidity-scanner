@@ -33,23 +33,18 @@ import Footer from "components/footer";
 import { PricingCard } from "./components/pricingCard";
 import { useState } from "react";
 import ContactUs from "components/contactus";
-import { HiCheckCircle, HiXCircle, HiInformationCircle } from "react-icons/hi";
-import { Plan } from "common/types";
 import Auth from "helpers/auth";
-import { FaLeaf } from "react-icons/fa";
-import { PublishReportInfo } from "components/infoModal";
 import { usePricingPlans } from "hooks/usePricingPlans";
-import { SpinnerIcon } from "@chakra-ui/icons";
 import CustomPlanCard from "./components/customPlanCard";
 import PricingTable from "./components/pricingTable";
 import { CurlyArrowDown, CurlyArrowUp } from "components/icons";
+import { getAssetsURL } from "helpers/helperFunction";
+import { pricing_table_data, pricing_data } from "common/values";
 
-export default function PricingPage() {
-  const [tab, setTab] = useState<string>("weekly");
-  const { isOpen, onClose, onOpen } = useDisclosure();
+const PricingPage: React.FC = () => {
   const [selectedPlan, setSelectedPlan] = useState("");
-  const [openPublish, setOpenPublish] = useState(false);
   const location = useLocation();
+  const history = useHistory();
 
   const [duration, setDuration] = useState<"monthly" | "yearly" | "on-demand">(
     "monthly"
@@ -63,18 +58,14 @@ export default function PricingPage() {
     if (campaign_id) localStorage.setItem("campaign_id", campaign_id);
   }, []);
 
-  useEffect(() => {
-    if (pricingDetails) {
-      console.log(Object.keys(pricingDetails?.pricing_data[duration]));
-    }
-  }, [duration]);
+  // const { data: pricingDetails, isLoading } = usePricingPlans();
 
-  const { data: pricingDetails, isLoading } = usePricingPlans();
+  const assetsURL = getAssetsURL();
 
   return (
     <>
       <Header />
-      {isLoading ? (
+      {/* {isLoading ? (
         <Box
           w={"100%"}
           h="60vh"
@@ -88,234 +79,251 @@ export default function PricingPage() {
         </Box>
       ) : (
         pricingDetails && (
-          <>
-            <Flex
-              w="100%"
-              flexDir={"column"}
-              alignItems={"center"}
-              justifyContent="flex-start"
-              p={0}
+          <> */}
+      <Flex
+        w="100%"
+        flexDir={"column"}
+        alignItems={"center"}
+        justifyContent="flex-start"
+        p={0}
+      >
+        <Flex
+          flexDir={"column"}
+          justifyContent="flex-start"
+          alignItems={"center"}
+          w={"100%"}
+          px={[5, 10, 10]}
+          py={"60px"}
+          h={["1100px", "1000px", "800px", "720px", "720px"]}
+          backgroundColor="#FFFFFF"
+          style={{
+            backgroundSize: "cover",
+            backgroundPosition: "center",
+            backgroundRepeat: "no-repeat",
+          }}
+          background={[
+            `url('${assetsURL}pricing/pricing_bg_xs.jpg')`,
+            `url('${assetsURL}pricing/pricing_bg_sm.jpg')`,
+            `url('${assetsURL}pricing/pricing_bg_md.jpg')`,
+            `url('${assetsURL}pricing/pricing_bg_lg.jpg')`,
+            `url('${assetsURL}pricing/pricing_bg_xl.jpg')`,
+          ]}
+        >
+          <Heading
+            color={"white"}
+            fontSize={["3xl", "3xl", "4xl", "4xl", "5xl"]}
+            mb={7}
+            textAlign="center"
+          >
+            Choose the plan that{" "}
+            <Box
+              as="span"
+              sx={{
+                background:
+                  "linear-gradient(129.18deg, #52FF00 8.52%, #00EEFD 93.94%)",
+                backgroundClip: "text",
+                WebkitTextFillColor: "transparent",
+              }}
             >
+              fits{" "}
+            </Box>
+            your{" "}
+            <Box
+              as="span"
+              sx={{
+                background:
+                  "linear-gradient(129.18deg, #52FF00 8.52%, #00EEFD 93.94%)",
+                backgroundClip: "text",
+                WebkitTextFillColor: "transparent",
+              }}
+            >
+              needs.
+            </Box>
+          </Heading>
+          <Text
+            w={["90%", "90%", "80%", "70%", "60%"]}
+            textAlign="center"
+            fontSize={["md", "lg", "xl"]}
+            color="#B0B7C3"
+            fontWeight={300}
+          >
+            Enterprise Dealing in Crypto Development or Security with Large Team
+            Size. Get your scan results and reports vetted by our security
+            professionals
+          </Text>
+          <Text
+            w={["90%", "90%", "80%", "70%", "60%"]}
+            my={8}
+            textAlign="center"
+            fontSize={["md", "lg", "xl"]}
+            color="#2FF86B"
+            fontWeight={700}
+          >
+            Try our trial version now and get two free scans upon signing up!
+          </Text>
+          <Button
+            width="200px"
+            onClick={() => history.push("/signin")}
+            variant="brand"
+          >
+            Start Free Trial
+          </Button>
+          <Flex
+            flexDir={"row"}
+            position={"relative"}
+            py={10}
+            alignItems={["flex-start", "flex-start", "flex-end"]}
+            justifyContent="center"
+            height={["100px", "100px", "140px"]}
+            width="300px"
+          >
+            <Text
+              color={duration === "monthly" ? "#FFFFFF" : "gray.400"}
+              fontSize="md"
+              fontWeight={300}
+            >
+              Pay Monthly
+            </Text>
+            <Switch
+              mx={5}
+              size="lg"
+              variant="brand"
+              isChecked={duration === "yearly"}
+              onChange={() => {
+                if (duration === "monthly") {
+                  setDuration("yearly");
+                } else {
+                  setDuration("monthly");
+                }
+              }}
+            />
+            <Text
+              color={duration === "yearly" ? "#FFFFFF" : "gray.400"}
+              fontSize="md"
+              fontWeight={300}
+            >
+              Pay Yearly
+            </Text>
+            {duration === "yearly" && (
               <Flex
                 flexDir={"column"}
-                justifyContent="flex-start"
-                alignItems={"center"}
-                w={"100%"}
-                px={[5, 10, 10]}
-                py={"100px"}
-                h="1000px"
-                backgroundColor="#FFFFFF"
-                background={"url('/background/pricing_background.jpg')"}
-                backgroundSize="cover"
-                backgroundPosition={"center"}
-                backgroundRepeat="no-repeat"
-              >
-                <Heading
-                  color={"white"}
-                  fontSize={["3xl", "3xl", "4xl", "4xl", "5xl"]}
-                  mb={10}
-                  textAlign="center"
-                >
-                  Choose the plan that{" "}
-                  <Box
-                    as="span"
-                    sx={{
-                      background:
-                        "linear-gradient(129.18deg, #52FF00 8.52%, #00EEFD 93.94%)",
-                      backgroundClip: "text",
-                      WebkitTextFillColor: "transparent",
-                    }}
-                  >
-                    fits{" "}
-                  </Box>
-                  your{" "}
-                  <Box
-                    as="span"
-                    sx={{
-                      background:
-                        "linear-gradient(129.18deg, #52FF00 8.52%, #00EEFD 93.94%)",
-                      backgroundClip: "text",
-                      WebkitTextFillColor: "transparent",
-                    }}
-                  >
-                    needs.
-                  </Box>
-                </Heading>
-                <Text
-                  w={["90%", "90%", "80%", "70%", "60%"]}
-                  textAlign="center"
-                  fontSize={["md", "lg", "xl"]}
-                  color="#B0B7C3"
-                  fontWeight={300}
-                >
-                  Enterprise Dealing in Crypto Development or Security with
-                  Large Team Size. Get your scan results and reports vetted by
-                  our security professionals
-                </Text>
-                <Text
-                  w={["90%", "90%", "80%", "70%", "60%"]}
-                  my={14}
-                  textAlign="center"
-                  fontSize={["md", "lg", "xl"]}
-                  color="#2FF86B"
-                  fontWeight={700}
-                >
-                  Try our trial version now and get two free scans upon signing
-                  up!
-                </Text>
-                <Button width="200px" variant="brand">
-                  Start Free Trial
-                </Button>
-                <Flex
-                  flexDir={"row"}
-                  position={"relative"}
-                  alignItems={["flex-start", "flex-start", "flex-end"]}
-                  justifyContent="center"
-                  py={10}
-                  spacing={5}
-                  height="200px"
-                  width="400px"
-                >
-                  <Text
-                    color={duration === "monthly" ? "#FFFFFF" : "gray.400"}
-                    fontSize="md"
-                    fontWeight={300}
-                  >
-                    Pay Monthly
-                  </Text>
-                  <Switch
-                    mx={5}
-                    size="lg"
-                    variant="brand"
-                    isChecked={duration === "yearly"}
-                    onChange={() => {
-                      if (duration === "monthly") {
-                        setDuration("yearly");
-                      } else {
-                        setDuration("monthly");
-                      }
-                    }}
-                  />
-                  <Text
-                    color={duration === "yearly" ? "#FFFFFF" : "gray.400"}
-                    fontSize="md"
-                    fontWeight={300}
-                  >
-                    Pay Yearly
-                  </Text>
-                  {duration === "yearly" && (
-                    <Flex
-                      flexDir={"column"}
-                      justifyContent={"flex-start"}
-                      alignItems={"flex-start"}
-                      position={"absolute"}
-                      top={["100px", "100px", "30px"]}
-                      right={["150px", "150px", "-50px"]}
-                    >
-                      <Box display={["block", "block", "none"]}>
-                        <CurlyArrowUp size={50} />
-                      </Box>
-                      <Text
-                        fontSize={"md"}
-                        ml={[-10, -10, 10]}
-                        color="gray.200"
-                        fontWeight={900}
-                      >
-                        Just pay for
-                      </Text>
-                      <Heading
-                        ml={[-10, -10, 10]}
-                        fontSize={"md"}
-                        color="#FFFFFF"
-                      >
-                        10 MONTHS
-                      </Heading>
-                      <Box display={["none", "none", "block"]}>
-                        <CurlyArrowDown size={70} />
-                      </Box>
-                    </Flex>
-                  )}
-                </Flex>
-              </Flex>
-              <Flex
-                w={["95%", "95%", "95%", "95%", "90%"]}
-                flexDir={"column"}
-                alignItems={"center"}
-                justifyContent="flex-start"
-                backgroundColor="#FFFFFF00"
-                mt={"-150px"}
-              >
-                <Grid
-                  backgroundColor="#FFFFFF00"
-                  w="100%"
-                  templateColumns={[
-                    "repeat(1, 1fr)",
-                    "repeat(1, 1fr)",
-                    "repeat(2, 1fr)",
-                    "repeat(4, 1fr)",
-                    "repeat(4, 1fr)",
-                  ]}
-                  gap={6}
-                >
-                  {Object.keys(pricingDetails.pricing_data["on-demand"]).map(
-                    (plan) => {
-                      if (plan !== "custom" && plan !== "trial")
-                        return (
-                          <PricingCard
-                            globalDuration={"on-demand"}
-                            plan={plan}
-                            pricingDetails={pricingDetails.pricing_data}
-                          />
-                        );
-                    }
-                  )}
-                  {Object.keys(pricingDetails.pricing_data[duration])
-                    .sort((a, b) => a[0].localeCompare(b[0]))
-                    .map((plan) => {
-                      if (plan !== "custom" && plan !== "trial")
-                        return (
-                          <PricingCard
-                            globalDuration={duration}
-                            plan={plan}
-                            pricingDetails={pricingDetails.pricing_data}
-                          />
-                        );
-                    })}
-                </Grid>
-              </Flex>
-              <CustomPlanCard />
-              <PricingTable />
-              <Box
-                display={"flex"}
-                flexDir="column"
-                alignItems="center"
                 justifyContent={"flex-start"}
-                textAlign="center"
-                w={"90%"}
-                px={[0, 0, 10]}
-                my={20}
-                py={10}
-                borderRadius={20}
-                background={"#FFFFFF"}
+                alignItems={"flex-start"}
+                position={"absolute"}
+                top={["70px", "70px", "-30px"]}
+                right={["150px", "70px", "-100px"]}
               >
-                <Heading as="h1" fontSize="3xl" mb={4}>
-                  Why{" "}
-                  <Box textDecoration="underline" as="span" color="#3300FF">
-                    SolidityScan ?
-                  </Box>{" "}
-                </Heading>
-                <Text color="subtle" fontSize={["lg", "lg", "xl"]} mb={4}>
-                  Smart-contract scanning tool built to discover vulnerabilities
-                  & mitigate risks in your code.
+                <Box display={["block", "block", "none"]}>
+                  <CurlyArrowUp size={50} />
+                </Box>
+                <Text
+                  fontSize={"md"}
+                  ml={[-10, -10, 10]}
+                  color="gray.200"
+                  fontWeight={900}
+                >
+                  Just pay for
                 </Text>
-                <Infographics />
-                <SignupBox />
-              </Box>
-            </Flex>
-          </>
+                <Heading ml={[-10, -10, 10]} fontSize={"md"} color="#FFFFFF">
+                  10 MONTHS
+                </Heading>
+                <Box display={["none", "none", "block"]}>
+                  <CurlyArrowDown size={70} />
+                </Box>
+              </Flex>
+            )}
+          </Flex>
+        </Flex>
+        <Flex
+          w={["95%", "95%", "95%", "95%", "90%"]}
+          flexDir={"column"}
+          maxW="1920px"
+          h={["fit-content", "fit-content", "fit-content", "850px"]}
+          alignItems={"center"}
+          justifyContent="flex-end"
+          backgroundColor="#FFFFFF00"
+          mt={"-300px"}
+        >
+          <Grid
+            backgroundColor="#FFFFFF00"
+            w="100%"
+            h="fit-content"
+            templateColumns={[
+              "repeat(1, 1fr)",
+              "repeat(1, 1fr)",
+              "repeat(2, 1fr)",
+              "repeat(4, 1fr)",
+              "repeat(4, 1fr)",
+            ]}
+            gap={6}
+          >
+            {Object.keys(pricing_data["on-demand"]).map((plan) => {
+              if (plan !== "custom" && plan !== "trial")
+                return (
+                  <PricingCard
+                    globalDuration={"on-demand"}
+                    plan={plan}
+                    selectedPlan={selectedPlan}
+                    setSelectedPlan={setSelectedPlan}
+                    pricingDetails={pricing_data}
+                  />
+                );
+            })}
+            {Object.keys(pricing_data[duration])
+              .sort((a, b) => a[0].localeCompare(b[0]))
+              .map((plan) => {
+                if (plan !== "custom" && plan !== "trial")
+                  return (
+                    <PricingCard
+                      globalDuration={duration}
+                      plan={plan}
+                      selectedPlan={selectedPlan}
+                      setSelectedPlan={setSelectedPlan}
+                      pricingDetails={pricing_data}
+                    />
+                  );
+              })}
+          </Grid>
+        </Flex>
+        <CustomPlanCard />
+        <PricingTable
+          pricing_data={pricing_data}
+          pricing_table_data={pricing_table_data}
+        />
+        <Box
+          display={"flex"}
+          flexDir="column"
+          alignItems="center"
+          justifyContent={"flex-start"}
+          textAlign="center"
+          w={"90%"}
+          maxW="1920px"
+          px={[0, 0, 10]}
+          my={20}
+          py={10}
+          borderRadius={20}
+          background={"#FFFFFF"}
+        >
+          <Heading as="h1" fontSize="3xl" mb={4}>
+            Why{" "}
+            <Box textDecoration="underline" as="span" color="#3300FF">
+              SolidityScan ?
+            </Box>{" "}
+          </Heading>
+          <Text color="subtle" fontSize={["lg", "lg", "xl"]} mb={4}>
+            Smart-contract scanning tool built to discover vulnerabilities &
+            mitigate risks in your code.
+          </Text>
+          <Infographics />
+          <SignupBox />
+        </Box>
+      </Flex>
+      {/* </>
         )
-      )}
+      )} */}
       <Footer />
     </>
   );
-}
+};
+
+export default PricingPage;

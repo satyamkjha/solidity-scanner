@@ -6,10 +6,16 @@ import {
   Box,
   VStack,
   Text,
+  useDisclosure,
 } from "@chakra-ui/react";
 import React from "react";
+import { getAssetsURL } from "helpers/helperFunction";
+import ContactUs from "components/contactus";
 
 const CustomPlanCard = () => {
+  const assetsURL = getAssetsURL();
+  const { isOpen, onClose, onOpen } = useDisclosure();
+
   return (
     <Box
       display={"flex"}
@@ -31,6 +37,7 @@ const CustomPlanCard = () => {
       backgroundSize="cover"
       backgroundPosition={"center"}
       backgroundRepeat="no-repeat"
+      maxW="1920px"
     >
       <VStack
         w={["100%", "90%", "90%", "60%"]}
@@ -87,10 +94,22 @@ const CustomPlanCard = () => {
           </Heading>
         </HStack>
 
-        <Button width="100%" py={6} color="white" mt={5} variant="outline">
+        <Button
+          width="100%"
+          onClick={onOpen}
+          py={6}
+          color="white"
+          mt={5}
+          variant="outline"
+          _hover={{
+            color: "#000000",
+            bgColor: "#FFFFFF",
+          }}
+        >
           Contact Sales
         </Button>
       </VStack>
+      <ContactUs onClose={onClose} isOpen={isOpen} />
     </Box>
   );
 };

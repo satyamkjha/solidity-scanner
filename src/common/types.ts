@@ -168,6 +168,26 @@ export type MetricWiseAggregatedFinding = {
   issue_remediation?: string;
 };
 
+export type PricingData = {
+  pricing_data: {
+    [key: string]: {
+      [plan: string]: Plan;
+    };
+  };
+  pricing_table_data: {
+    title: string;
+    data: {
+      beginner: boolean | string | number;
+      custom: boolean | string | number;
+      intermediate: boolean | string | number;
+      ondemand: boolean | string | number;
+      pro: boolean | string | number;
+      title: string;
+      trial: boolean | string | number;
+    }[];
+  }[];
+};
+
 export type TreeItem = {
   name: string;
   path: string;

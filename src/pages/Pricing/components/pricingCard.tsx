@@ -13,15 +13,11 @@ import { Plan } from "common/types";
 import { CurlyArrowBlue } from "components/icons";
 import * as React from "react";
 import { useState } from "react";
+import { getAssetsURL } from "helpers/helperFunction";
+import Auth from "helpers/auth";
+import { useHistory } from "react-router-dom";
 
-export interface PricingCardData {
-  features: string[];
-  name: string;
-  price?: string;
-  nonfeatures?: string[];
-}
-
-interface PricingCardProps {
+export const PricingCard: React.FC<{
   globalDuration: "monthly" | "yearly" | "on-demand";
   plan: string;
   pricingDetails: {
@@ -29,58 +25,93 @@ interface PricingCardProps {
       [plan: string]: Plan;
     };
   };
-}
-
-export const PricingCard = (props: PricingCardProps) => {
-  const { globalDuration, plan, pricingDetails } = props;
+  selectedPlan: string;
+  setSelectedPlan: React.Dispatch<React.SetStateAction<string>>;
+}> = ({
+  globalDuration,
+  plan,
+  pricingDetails,
+  selectedPlan,
+  setSelectedPlan,
+}) => {
   const [duration, setDuration] = useState<"monthly" | "yearly" | "on-demand">(
     globalDuration
   );
+  const assetsURL = getAssetsURL();
+  const mouse = selectedPlan === plan;
 
   React.useEffect(() => {
     setDuration(globalDuration);
   }, [globalDuration]);
 
+  const history = useHistory();
+
   return (
     <GridItem
       sx={{
         w: "100%",
-        h: "800px",
-        display: "flex",
-        flexDir: "column",
-        justifyContent: "flex-start",
-        alignItems: "center",
+        h: "fit-content",
       }}
+      alignSelf={"end"}
+      display="flex"
+      flexDir="column"
+      alignItems={"flex-end"}
+      justifyContent="flex-end"
+      onClick={() => setSelectedPlan(plan)}
+      onMouseOver={() => setSelectedPlan(plan)}
+      onMouseLeave={() => setSelectedPlan("")}
     >
+      <Flex
+        h="80px"
+        flexDir="row"
+        alignItems={"flex-start"}
+        justifyContent="center"
+        backgroundColor="#3300FF"
+        color="#FFFFFF"
+        py={2}
+        opacity={mouse ? 1 : 0}
+        w="60%"
+        borderRadius={20}
+      >
+        Save upto 50%
+      </Flex>
       <Flex
         sx={{
           boxShadow: "0px 4px 24px rgba(0, 0, 0, 0.1)",
           bg: "#FFFFFF",
           w: "100%",
-          maxWidth: "450px",
-          h: "800px",
-          p: 7,
+          h: mouse ? "750px" : "700px",
+          transition: "height 0.25s",
+          border: mouse ? "3px solid  #3300FF" : "none",
+          py: 7,
           borderRadius: 20,
           display: "flex",
           flexDir: "column",
           justifyContent: "flex-start",
           alignItems: "center",
+          mt: -10,
         }}
       >
         <HStack
           width="100%"
           alignItems={"center"}
-          justifyContent="flex-start"
+          justifyContent="space-between"
           mb={8}
+          pl={7}
         >
-          <Image
-            width="50px"
-            height="50px"
-            src={`/pricing/${plan}-heading.svg`}
-          />
-          <Text fontSize="3xl" fontWeight={500}>
-            {pricingDetails[duration][plan].name}
-          </Text>
+          <HStack justifyContent="flex-start">
+            <Image
+              width="50px"
+              height="50px"
+              src={`/pricing/${plan}-heading.svg`}
+            />
+            <Text fontSize="3xl" fontWeight={500}>
+              {pricingDetails[duration][plan].name}
+            </Text>
+          </HStack>
+          {plan === "pro" && (
+            <Image src={`${assetsURL}pricing/popular-badge.svg`} />
+          )}
         </HStack>
         <Text
           height="140px"
@@ -89,6 +120,7 @@ export const PricingCard = (props: PricingCardProps) => {
           textAlign={"left"}
           fontSize="lg"
           fontWeight={300}
+          px={7}
         >
           {pricingDetails[duration][plan].description}
         </Text>
@@ -98,6 +130,7 @@ export const PricingCard = (props: PricingCardProps) => {
           justifyContent={"flex-start"}
           alignItems={"flex-start"}
           h="200px"
+          px={7}
         >
           <Flex
             flexDir="row"
@@ -181,6 +214,7 @@ export const PricingCard = (props: PricingCardProps) => {
           color="gray.400"
           fontWeight={300}
           width="100%"
+          px={7}
         >
           No of Scans
         </Text>
@@ -190,6 +224,7 @@ export const PricingCard = (props: PricingCardProps) => {
           justifyContent="flex-start"
           mb={10}
           spacing={2}
+          px={7}
         >
           <Image width="30px" height="30px" src="/pricing/coin.svg" />
           <Text fontSize="2xl" fontWeight={900}>
@@ -205,6 +240,7 @@ export const PricingCard = (props: PricingCardProps) => {
           color="gray.400"
           fontWeight={300}
           width="100%"
+          px={7}
         >
           Vulnerability Detectors coverage
         </Text>
@@ -214,6 +250,7 @@ export const PricingCard = (props: PricingCardProps) => {
           justifyContent="flex-start"
           mb={10}
           spacing={2}
+          px={7}
         >
           <Image width="30px" height="30px" src="/icons/detectorIcon.svg" />
           <Text fontSize="2xl" fontWeight={400}>
@@ -225,9 +262,16 @@ export const PricingCard = (props: PricingCardProps) => {
           mx="auto"
           py={6}
           alignContent={"center"}
-          variant="gray-outline"
+          variant={mouse ? "brand" : "gray-outline"}
+          onClick={() => {
+            if (Auth.isUserAuthenticated()) {
+              history.push("/billing");
+            } else {
+              history.push("/signin");
+            }
+          }}
         >
-          Choose Plan
+          {mouse ? "Select" : "Choose"} Plan
         </Button>
       </Flex>
     </GridItem>

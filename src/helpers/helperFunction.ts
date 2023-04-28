@@ -5,6 +5,14 @@ export const sentenceCapitalize = (string: string) => {
   return string.charAt(0).toUpperCase() + string.slice(1);
 };
 
+export const snakeToNormal = (snakeCase: string): string => {
+  const words = snakeCase.split("_");
+  const normalWords = words.map(
+    (word) => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()
+  );
+  return normalWords.join(" ");
+};
+
 export const camelCaseToNormal = (string: string) => {
   const result = string.replace(/([A-Z])/g, " $1");
   const finalResult = result.charAt(0).toUpperCase() + result.slice(1);
@@ -19,6 +27,13 @@ export const getFeatureGateConfig = () => {
   }
 
   return feature_gate_config;
+};
+
+export const getAssetsURL = () => {
+  if (process.env.REACT_APP_ASSETS_URL) {
+    return process.env.REACT_APP_ASSETS_URL;
+  }
+  return "";
 };
 
 export const getBrowserName = (): string => {
@@ -43,7 +58,6 @@ export const getReCaptchaHeaders = async (action: string) => {
     action
   );
   const Recaptchatoken = await recaptcha.getToken();
-
 
   if (getFeatureGateConfig().reCAPTCHA_enabled) {
     return {
