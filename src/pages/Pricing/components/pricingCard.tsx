@@ -114,7 +114,7 @@ export const PricingCard: React.FC<{
             <Image
               width="50px"
               height="50px"
-              src={`/pricing/${plan}-heading.svg`}
+              src={`${assetsURL}pricing/${plan}-heading.svg`}
             />
             <Text fontSize="3xl" fontWeight={500}>
               {pricingDetails[duration][plan].name}
