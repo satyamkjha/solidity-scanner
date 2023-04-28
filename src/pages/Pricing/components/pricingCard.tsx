@@ -73,7 +73,11 @@ export const PricingCard: React.FC<{
         w="60%"
         borderRadius={20}
       >
-        Save upto 50%
+        {plan === "on-demand"
+          ? "Pay as you Go"
+          : plan === "beginner"
+          ? "Good Starter Plan"
+          : `Save upto ${pricingDetails[duration][plan].discount}`}
       </Flex>
       <Flex
         sx={{
@@ -85,6 +89,13 @@ export const PricingCard: React.FC<{
           border: mouse ? "3px solid  #3300FF" : "none",
           py: 7,
           borderRadius: 20,
+          backgroundColor: "#FFFFFF",
+          background: `url('${assetsURL}pricing/card_bg_${
+            mouse ? "blue" : "grey"
+          }.png')`,
+          backgroundSize: "cover",
+          backgroundPosition: "center",
+          backgroundRepeat: "no-repeat",
           display: "flex",
           flexDir: "column",
           justifyContent: "flex-start",
