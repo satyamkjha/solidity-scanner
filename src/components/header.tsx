@@ -26,7 +26,7 @@ import { API_PATH } from "helpers/routeManager";
 
 export const Header: React.FC = () => {
   const { isOpen, onClose, onOpen } = useDisclosure();
-  const [isDesktopView] = useMediaQuery("(min-width: 1024px)");
+  const [isDesktopView] = useMediaQuery("(min-width: 1350px)");
   const history = useHistory();
 
   const logout = async () => {
