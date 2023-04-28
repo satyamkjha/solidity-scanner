@@ -99,8 +99,8 @@ const SignIn: React.FC = () => {
           {googleLoginEnabled && <GoogleSignIn />}
         </Stack>
 
-        <HStack spacing={5} width={["300px", "400px", "600px"]}>
-          <Divider background={"#000000"} width={"43%"} />
+        <HStack spacing={5} width={["90%", "80%", "600px"]}>
+          <Divider background={"#FAFBFC"} width={"43%"} />
           <Text color="subtle" my={3}>
             OR
           </Text>
@@ -162,7 +162,7 @@ const LoginForm: React.FC = () => {
   };
 
   return (
-    <Stack spacing={6} mt={8} width={["300px", "400px", "600px"]}>
+    <Stack spacing={6} mt={8} width={["90%", "80%", "600px"]}>
       <InputGroup alignItems="center">
         <InputLeftElement
           height="48px"

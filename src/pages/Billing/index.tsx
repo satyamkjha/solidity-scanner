@@ -206,7 +206,11 @@ const Billing: React.FC = () => {
                           <LatestInvoice
                             transactionData={transactionList[0]}
                             selectedPlan={transactionList[0].package}
-                            planData={plans.monthly[transactionList[0].package]}
+                            planData={
+                              plans.pricing_data["monthly"][
+                                transactionList[0].package
+                              ]
+                            }
                           />
                         )}
                       <Text
@@ -217,7 +221,7 @@ const Billing: React.FC = () => {
                         textAlign="center"
                         sx={{ color: "text", fontWeight: 600 }}
                       >
-                        {plans.monthly[selectedPlan].name}
+                        {plans.pricing_data["monthly"][selectedPlan].name}
                       </Text>
                       <Text
                         display={["block", "block", "block", "none"]}
@@ -228,7 +232,10 @@ const Billing: React.FC = () => {
                         fontWeight={300}
                         fontSize="smaller"
                       >
-                        {plans.monthly[selectedPlan].description}
+                        {
+                          plans.pricing_data["monthly"][selectedPlan]
+                            .description
+                        }
                       </Text>
                       <Box
                         display={["flex", "flex", "flex", "none"]}
@@ -241,7 +248,9 @@ const Billing: React.FC = () => {
                           initialSlide={4}
                           onSlideChange={(swiper) => {
                             setSelectedPlan(
-                              Object.keys(plans.monthly)[swiper.activeIndex]
+                              Object.keys(plans.pricing_data["monthly"])[
+                                swiper.activeIndex
+                              ]
                             );
                           }}
                           breakpoints={{
@@ -292,19 +301,23 @@ const Billing: React.FC = () => {
                             width: "100%",
                           }}
                         >
-                          {Object.keys(plans.monthly).map((plan, index) => {
-                            return (
-                              <SwiperSlide key={index}>
-                                <PlanCard
-                                  selectedPlan={selectedPlan}
-                                  setSelectedPlan={setSelectedPlan}
-                                  plan={plan}
-                                  planData={plans.monthly[plan]}
-                                  profile={data}
-                                />
-                              </SwiperSlide>
-                            );
-                          })}
+                          {Object.keys(plans.pricing_data["monthly"]).map(
+                            (plan, index) => {
+                              return (
+                                <SwiperSlide key={index}>
+                                  <PlanCard
+                                    selectedPlan={selectedPlan}
+                                    setSelectedPlan={setSelectedPlan}
+                                    plan={plan}
+                                    planData={
+                                      plans.pricing_data["monthly"][plan]
+                                    }
+                                    profile={data}
+                                  />
+                                </SwiperSlide>
+                              );
+                            }
+                          )}
                         </Swiper>
                       </Box>
                       <Flex
@@ -330,18 +343,22 @@ const Billing: React.FC = () => {
                           padding={2}
                           mt={5}
                         >
-                          {Object.keys(plans.monthly).map((plan) => {
-                            if (plan !== "trial")
-                              return (
-                                <PlanCard
-                                  selectedPlan={selectedPlan}
-                                  setSelectedPlan={setSelectedPlan}
-                                  plan={plan}
-                                  planData={plans.monthly[plan]}
-                                  profile={data}
-                                />
-                              );
-                          })}
+                          {Object.keys(plans.pricing_data["monthly"]).map(
+                            (plan) => {
+                              if (plan !== "trial")
+                                return (
+                                  <PlanCard
+                                    selectedPlan={selectedPlan}
+                                    setSelectedPlan={setSelectedPlan}
+                                    plan={plan}
+                                    planData={
+                                      plans.pricing_data["monthly"][plan]
+                                    }
+                                    profile={data}
+                                  />
+                                );
+                            }
+                          )}
                         </Flex>
                       </Flex>
                       <Text
@@ -349,7 +366,7 @@ const Billing: React.FC = () => {
                         sx={{ color: "text", fontWeight: 600 }}
                         ml={[0, 0, 3, 3, 5]}
                       >
-                        {plans.monthly[selectedPlan].name}
+                        {plans.pricing_data["monthly"][selectedPlan].name}
                       </Text>
                       <Text
                         display={["none", "none", "none", "flex"]}
@@ -361,10 +378,13 @@ const Billing: React.FC = () => {
                         fontWeight={300}
                         fontSize="smaller"
                       >
-                        {plans.monthly[selectedPlan].description}
+                        {
+                          plans.pricing_data["monthly"][selectedPlan]
+                            .description
+                        }
                       </Text>
                       <PricingDetails
-                        planData={plans.monthly[selectedPlan]}
+                        planData={plans.pricing_data["monthly"][selectedPlan]}
                         selectedPlan={selectedPlan}
                       />
                     </Flex>
@@ -373,11 +393,16 @@ const Billing: React.FC = () => {
                       <CurrentPlan
                         subscription={data.subscription}
                         isCancellable={data.is_cancellable}
-                        name={plans.monthly[data.current_package].name}
+                        name={
+                          plans.pricing_data["monthly"][data.current_package]
+                            .name
+                        }
                         packageName={data.current_package}
                         packageRechargeDate={data.package_recharge_date}
                         packageValidity={data.package_validity}
-                        plan={plans.monthly[data.current_package]}
+                        plan={
+                          plans.pricing_data["monthly"][data.current_package]
+                        }
                       />
 
                       {/* <HStack

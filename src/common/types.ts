@@ -168,6 +168,26 @@ export type MetricWiseAggregatedFinding = {
   issue_remediation?: string;
 };
 
+export type PricingData = {
+  pricing_data: {
+    [key: string]: {
+      [plan: string]: Plan;
+    };
+  };
+  pricing_table_data: {
+    title: string;
+    data: {
+      beginner: boolean | string | number;
+      custom: boolean | string | number;
+      intermediate: boolean | string | number;
+      ondemand: boolean | string | number;
+      pro: boolean | string | number;
+      title: string;
+      trial: boolean | string | number;
+    }[];
+  }[];
+};
+
 export type TreeItem = {
   name: string;
   path: string;
@@ -221,14 +241,11 @@ export type ScanSummaryItem = {
   count_files_analyzed: number; //
   issue_severity_distribution: IssueSeverityDistribution; //
   score: string; //
-
   issues_count: number; //
   lines_analyzed_count: number; //
-
   scan_time_taken: number; //
   false_positive_count: number; //
   fixed_count: number; //
-
   wont_fix_count: number; //
   scans_ran: string[]; //
   scan_time: string; //

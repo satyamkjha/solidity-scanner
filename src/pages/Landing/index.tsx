@@ -91,7 +91,7 @@ export default function LandingPage() {
             <Flex
               justifyContent={"flex-start"}
               alignItems="flex-start"
-              flexDir={["column", "row"]}
+              flexDir={["column", "column", "row"]}
             >
               <Link to="/signup">
                 <Button variant="brand" fontSize={"16px"} py={7} w="200px">
@@ -99,7 +99,12 @@ export default function LandingPage() {
                 </Button>
               </Link>
               <Link to="/quickscan">
-                <Button ml={[0, 5]} mt={[5, 0]} variant="cta-outline" w="200px">
+                <Button
+                  ml={[0, 0, 5]}
+                  mt={[5, 5, 0]}
+                  variant="cta-outline"
+                  w="200px"
+                >
                   Run A QuickScan
                 </Button>
               </Link>
