@@ -37,8 +37,11 @@ import Infographics from "components/infographics";
 import { DetectorIcon } from "components/icons";
 import { DetectorItemProp } from "common/types";
 import { detectorData } from "common/values";
+import { getAssetsURL } from "helpers/helperFunction";
 
 const DetectorItem: React.FC<{ item: DetectorItemProp }> = ({ item }) => {
+  const assetsURL = getAssetsURL();
+
   return (
     <Flex
       sx={{
@@ -100,7 +103,7 @@ const DetectorItem: React.FC<{ item: DetectorItemProp }> = ({ item }) => {
               No. of Detectors
             </Text>
             <HStack spacing={5} width="100%" justifyContent={"center"}>
-              <DetectorIcon size={35} />
+              <Image src={`${assetsURL}detectors/detectorIcon.svg`} />
               <Text fontSize={["2xl"]} fontWeight={900}>
                 {item.nod}
               </Text>
@@ -119,7 +122,7 @@ const DetectorItem: React.FC<{ item: DetectorItemProp }> = ({ item }) => {
         display={["none", "none", "flex"]}
         justifyContent="space-between"
       >
-        <Image src="/icons/detectorIcon.svg" />
+        <Image src={`${assetsURL}detectors/detectorIcon.svg`} />
         <VStack alignItems={"flex-start"}>
           <Text color="#78909C" fontSize={["sm"]} fontWeight={500}>
             No. of Detector
@@ -140,6 +143,9 @@ const Detectors: React.FC = () => {
     { title: "SWC Coverage", data: "36/36" },
     { title: "Upcoming Vulnerability Detectors", data: "46" },
   ];
+
+  const assetsURL = getAssetsURL();
+  const sizes = ["xs", "sm", "md", "lg", "xl"];
 
   return (
     <>
@@ -197,7 +203,7 @@ const Detectors: React.FC = () => {
               alignItems={"flex-end"}
             >
               <Image
-                src="/common/detector_hero.png"
+                src={`${assetsURL}detectors/detector_icon_lg.png`}
                 transform="translateX(20px)"
                 zIndex={"10"}
                 alt={"Run scans for your smart contracts"}
