@@ -19,7 +19,7 @@ import {
   PopoverTrigger,
 } from "@chakra-ui/react";
 import Select from "react-select";
-import { FolderIcon, SimpleFileIcon } from "./icons";
+import { FolderIcon } from "./icons";
 import { AiOutlineFile } from "react-icons/ai";
 import { FaCodeBranch } from "react-icons/fa";
 import {
@@ -28,9 +28,8 @@ import {
   RepeatClockIcon,
   InfoIcon,
 } from "@chakra-ui/icons";
-import { type } from "os";
 import { TreeItem, TreeItemUP } from "common/types";
-import { restructureRepoTree } from "helpers/helperFunction";
+import { restructureRepoTree, generatePathArray } from "helpers/fileStructure";
 
 const formatOptionLabel: React.FC<{
   value: string;
@@ -291,25 +290,63 @@ const FolderSettings: React.FC<{
   updateSkipPathRequests,
   isLoading,
 }) => {
-
-
-  
-  
-  const addFilePath = (path: string) => {
-    setSkipFilePaths && setSkipFilePaths([...skipFilePaths, path]);
-  };
-
-  const deleteFilePath = (path: string) => {
-    const newPath = skipFilePaths.filter((item) => item !== path);
-    setSkipFilePaths && setSkipFilePaths([...newPath]);
-  };
-
   const [selectValue, setSelectValue] = useState({
     value: branch,
     label: branch,
   });
 
   const [repoTreeUP, setRepoTreeUP] = useState<TreeItemUP>();
+  const addFilePath = (path: string) => {
+    setSkipFilePaths && setSkipFilePaths([...skipFilePaths, path]);
+  };
+  const deleteFilePath = (path: string) => {
+    const newPath = skipFilePaths.filter((item) => item !== path);
+    setSkipFilePaths && setSkipFilePaths([...newPath]);
+  };
+  const updateCheck = (path: string, check: boolean) => {
+    if (repoTreeUP) {
+      let newRepoTreeUP = repoTreeUP;
+      const pathArray = generatePathArray(path);
+      let depth = pathArray.length - 1;
+
+      const updateChild = () => {};
+
+      const updateFolderCheck = () => {};
+      // will be provided with a list of trees and will return an updated list of trees
+
+      const updateFileCheck = () => {}
+      //will be provided with a list of blobs and will return and updated list of blobs
+
+      newRepoTreeUP.blobs.map((blob) => {
+        if (pathArray[depth] === blob.path) {
+          return { ...blob, checked: check };
+          // updateChild()
+        }
+      });
+
+      newRepoTreeUP.tree.map((item) => {
+        if (pathArray[depth] === item.path) {
+          depth--;
+          if (depth === 0) {
+            // tick all children same check and return updated tree ..... pass the tree and check
+            return;
+          } else {
+            const newTree = updateFolderCheck();
+            return { ...item, tree: newTree };
+          }
+        }
+      });
+
+
+      //update the tree with the global var and update the blob with the global var
+      // update parent child check if any
+
+      // state update
+
+
+
+    }
+  };
 
   useEffect(() => {
     if (fileData) {

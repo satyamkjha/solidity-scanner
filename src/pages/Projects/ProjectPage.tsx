@@ -76,7 +76,7 @@ import Result, { MultifileResult } from "components/result";
 import { RescanIcon, LogoIcon, ScanErrorIcon } from "components/icons";
 import { InfoIcon } from "@chakra-ui/icons";
 import API from "helpers/api";
-import { restructureRepoTree } from "helpers/helperFunction";
+import { restructureRepoTree } from "helpers/fileStructure";
 import { useScans } from "hooks/useScans";
 import { useScan, getScan } from "hooks/useScan";
 
