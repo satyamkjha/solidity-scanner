@@ -24,8 +24,9 @@ export const getFeatureGateConfig = () => {
 export const getAssetsURL = () => {
   if (process.env.REACT_APP_ASSETS_URL) {
     return process.env.REACT_APP_ASSETS_URL;
+  } else {
+    return "";
   }
-  return "";
 };
 
 export const getBrowserName = (): string => {
