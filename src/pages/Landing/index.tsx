@@ -224,7 +224,7 @@ export default function LandingPage() {
             w={["100%", "100%", "100%", "55%"]}
             p={0}
             display={"flex"}
-            mr={[10, 10, 10, 0]}
+            mr={[10, 10, 10,]}
             flexDirection="column"
             alignItems={["center", "center", "center", "flex-end"]}
           >
