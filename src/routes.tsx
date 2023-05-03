@@ -249,7 +249,7 @@ const ErrorHandler: React.FC = ({ children }) => {
           });
         }
 
-        return Promise.reject(error);
+        return error;
       }
     );
     return () => {

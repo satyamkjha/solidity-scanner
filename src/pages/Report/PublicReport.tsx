@@ -27,22 +27,13 @@ export default function ReportPage() {
 
   const componentRef = useRef();
 
-  const [printView, setPrintView] = useState(false);
-
   const handlePrint = useReactToPrint({
     content: () => componentRef.current,
-    onAfterPrint: () => setPrintView(false),
   });
 
   const printReport = () => {
-    setPrintView(true);
+    setTimeout(() => handlePrint(), 100);
   };
-
-  useEffect(() => {
-    if (printView) {
-      setTimeout(() => handlePrint(), 100);
-    }
-  }, [printView]);
 
   return (
     <>
@@ -58,28 +49,16 @@ export default function ReportPage() {
           </Button>
         </HStack>
       )}
-      {printView && getFeatureGateConfig().pdf_report_generation && (
-        <Text
-          width={"100%"}
-          textAlign="center"
-          fontSize="2xl"
-          color={"gray.400"}
-          mb={3}
-        >
-          Print View
-        </Text>
-      )}
 
       {data ? (
-        <Box display="none">
-          <Box w="100vw" ref={componentRef}>
-            {printView ? (
+        <>
+          <Box display={"none"}>
+            <Box w="100vw" ref={componentRef}>
               <PrintContainer summary_report={data.summary_report} />
-            ) : (
-              <ReportContainer summary_report={data.summary_report} />
-            )}
+            </Box>
           </Box>
-        </Box>
+          <ReportContainer summary_report={data.summary_report} />
+        </>
       ) : (
         <Container
           py={12}

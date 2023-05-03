@@ -134,14 +134,14 @@ export const teamsData = {
     {
       name: "Shashank",
       designation: "Co-Founder & CEO",
-      imgUrl: "/teams/shashank.jpeg",
+      imgUrl: "landing/teams/shashank.jpeg",
       linkedinUrl: "https://www.linkedin.com/in/shashank-in/",
       twitterUrl: "https://twitter.com/cyberboyIndia",
     },
     {
       name: "Indranil Roy",
       designation: "CTO & Co-Founder",
-      imgUrl: "/teams/indranil.jpeg",
+      imgUrl: "landing/teams/indranil.jpeg",
       linkedinUrl: "https://www.linkedin.com/in/itsmeroy2012/",
       twitterUrl: "https://twitter.com/itsmeroy2012",
     },
@@ -191,21 +191,21 @@ export const userTestimonials = [
   {
     name: "Gregory Makodzeba",
     designation: "Co-Founder, Soken",
-    imageUrl: "/testimonials/gregory.jpeg",
+    imageUrl: "gregory.jpeg",
     testimonial:
       "Thanks to Solidity Scan team for building a comprehensive vulnerability scanner for smart contracts that will help you protect contracts from potential scams. It helps you not only find bugs in source code, but conveniently manage reports with the dashboard from your account. It is a nice tool not only for investors to know about the security of the contract they are investing in, but also for audit teams who conduct security testing and want to expand their tools for contract analysis.",
   },
   {
     name: "Stefan Creadore",
     designation: "Founder and Lead Developer, Exzo Network",
-    imageUrl: "/testimonials/stefan.svg",
+    imageUrl: "stefan.svg",
     testimonial:
       "I highly recommend using SolidityScan for any development team as it will help projects of all sizes save money and scale their development efforts. I conducted a personal review of the results obtained from our audit from a leading manual audit firm and an automated audit from SolidityScan, the results were almost identical, which is why we have decided to continue working with SolidityScan. It saves weeks on our timelines for security auditing, and troubleshooting, and provides a smooth workflow to enhance development proficiency.",
   },
   {
     name: "Jon Greenwood",
     designation: "Integrations, GovernorDAO",
-    imageUrl: "/testimonials/jon.svg",
+    imageUrl: "jon.svg",
     testimonial:
       "A perfect tool for startup projects in Web 3.0 ! Personally used this as a reference tool while morphing contracts and governance protocols to have a second set of eyes in real-time. Nothing beats actual audits, but the access and ease of use of Solidity Scan make it a no-brainer !",
   },
@@ -238,6 +238,23 @@ export const blockScans: { [key: string]: string } = {
   arbiscan: "Arbiscan",
   buildbear: "Buildbear",
   optimism: "Optimism",
+  xdc: "XDC",
+};
+
+export const blockExplorer: { [key: string]: string } = {
+  etherscan: "Etherscan",
+  bscscan: "Bscscan",
+  polygonscan: "Polygonscan",
+  fantom: "FTMScan",
+  cronos: "Cronoscan",
+  avalanche: "Snowtrace",
+  celo: "Celo",
+  aurora: "Aurora",
+  arbiscan: "Arbiscan",
+  buildbear: "Buildbear",
+  optimism: "Optimism",
+  xdc: "(xdc.blocksscan.io)",
+  reefscan: "Reefscan",
 };
 
 export const detectorData: DetectorItemProp[] = [

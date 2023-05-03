@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import { Link as RouterLink, useLocation, useParams } from "react-router-dom";
 import styled from "@emotion/styled";
-
+import { getAssetsURL, getReCaptchaHeaders } from "helpers/helperFunction";
 import {
   Flex,
   Box,
@@ -244,6 +244,14 @@ const QuickScan: React.FC = () => {
         isDisabled: false,
       },
     ],
+    xdc: [
+      {
+        value: "mainnet",
+        label: "XDC Mainnet",
+        icon: "",
+        isDisabled: false,
+      },
+    ],
   };
 
   const options = [
@@ -297,6 +305,11 @@ const QuickScan: React.FC = () => {
       value: "optimism",
       icon: "optimism",
       label: "Optimism - (optimism.io)",
+    },
+    {
+      value: "xdc",
+      icon: "xdc",
+      label: "XDC - (xdc.blocksscan.io)",
     },
   ];
 
@@ -495,8 +508,8 @@ const QuickScan: React.FC = () => {
     chain: string,
     ref: string | null
   ) => {
-    const Recaptchatoken1 = await recaptcha1.getToken();
-    const Recaptchatoken2 = await recaptcha2.getToken();
+    let reqHeaders1 = await getReCaptchaHeaders("quickScan_verify");
+    let reqHeaders2 = await getReCaptchaHeaders("quickScan");
 
     const req = {
       contract_address: address,
@@ -508,10 +521,7 @@ const QuickScan: React.FC = () => {
       message: string;
       status: string;
     }>(API_PATH.API_GET_CONTRACT_STATUS, req, {
-      headers: {
-        "Content-Type": "application/json",
-        Recaptchatoken: Recaptchatoken1,
-      },
+      headers: reqHeaders1,
     }).then(
       (res) => {
         if (res.data.contract_verified) {
@@ -525,10 +535,7 @@ const QuickScan: React.FC = () => {
             api_url = api_url + `&ref=${ref}`;
           }
           API.get(api_url, {
-            headers: {
-              "Content-Type": "application/json",
-              Recaptchatoken: Recaptchatoken2,
-            },
+            headers: reqHeaders2,
           })
             .then(
               (res) => {
@@ -613,6 +620,8 @@ const QuickScan: React.FC = () => {
     }
   };
 
+  const assetsURL = getAssetsURL();
+
   return (
     <>
       <Header />
@@ -633,7 +642,7 @@ const QuickScan: React.FC = () => {
             px={[0, 0, 10]}
             py={20}
             pb={"200px"}
-            background={"url('/background/quickscan_bg.jpeg')"}
+            background={`url('${assetsURL}quickscan/quickscan_bg_lg.png')`}
             backgroundSize="cover"
             backgroundPosition={"center"}
             backgroundRepeat="no-repeat"
@@ -679,7 +688,7 @@ const QuickScan: React.FC = () => {
               <Select
                 formatOptionLabel={formatOptionLabel}
                 options={options}
-                isSearchable={false}
+                isSearchable={true}
                 value={options.find((item) => platform === item.value)}
                 placeholder="Select Contract Platform"
                 styles={customStylesPlatform}
@@ -1611,7 +1620,7 @@ const QuickScan: React.FC = () => {
                               <Image
                                 height={"20px"}
                                 width={"20px"}
-                                src={`/blockscan/${item.contract_platform}.svg`}
+                                src={`${assetsURL}blockscan/${item.contract_platform}.svg`}
                               />
                               <Text
                                 color={"#8A94A6"}

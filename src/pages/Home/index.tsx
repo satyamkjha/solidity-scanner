@@ -1,6 +1,7 @@
 import React, { useEffect, useState, useMemo } from "react";
 import { useQueryClient } from "react-query";
 import { useHistory, Link as RouterLink } from "react-router-dom";
+import { getRepoTree } from "hooks/getRepoTree";
 import { useForm } from "react-hook-form";
 import {
   Alert,
@@ -31,6 +32,7 @@ import {
   CloseButton,
   FormErrorMessage,
   Image,
+  Divider,
 } from "@chakra-ui/react";
 import { FaFileCode } from "react-icons/fa";
 import { AiOutlineProject } from "react-icons/ai";
@@ -49,6 +51,10 @@ import { getFeatureGateConfig } from "helpers/helperFunction";
 import { useDropzone } from "react-dropzone";
 import Select from "react-select";
 import { API_PATH } from "helpers/routeManager";
+import ConfigSettings from "components/projectConfigSettings";
+import InfoSettings from "components/projectInfoSettings";
+import FolderSettings from "components/projectFolderSettings";
+import { TreeItem } from "common/types";
 
 const Home: React.FC = () => {
   const { data } = useOverview();
@@ -69,23 +75,23 @@ const Home: React.FC = () => {
             borderRadius: "20px",
             p: 4,
             mx: [0, 0, 4],
-            my: 4,
+            my: 2,
           }}
         >
-          <Tabs variant="soft-rounded" colorScheme="green">
+          <Tabs variant="soft-rounded" colorScheme="green" w="100%">
             <TabList mb="1em">
               <Tab width="50%">GitHub Application</Tab>
               <Tab width="50%">Verified Contracts</Tab>
               <Tab width="50%">Upload Contract</Tab>
             </TabList>
-            <TabPanels>
-              <TabPanel>
+            <TabPanels w="100%">
+              <TabPanel w="100%" p={0}>
                 <ApplicationForm />
               </TabPanel>
-              <TabPanel>
+              <TabPanel p={0}>
                 <ContractForm />
               </TabPanel>
-              <TabPanel>
+              <TabPanel p={0}>
                 <UploadForm />
               </TabPanel>
             </TabPanels>
@@ -96,7 +102,7 @@ const Home: React.FC = () => {
             sx={{
               w: ["100%", "100%", "40%"],
               mx: [0, 0, 4],
-              my: 4,
+              my: 2,
               justifyContent: "center",
             }}
           >
@@ -108,7 +114,7 @@ const Home: React.FC = () => {
             sx={{
               w: ["100%", "100%", "40%"],
               mx: [0, 0, 4],
-              my: 4,
+              my: 2,
             }}
           >
             <Text sx={{ color: "subtle", fontSize: "sm", px: 4 }}>
@@ -227,183 +233,309 @@ const Home: React.FC = () => {
   );
 };
 
-type ApplicationFormData = {
-  project_url: string;
-  project_name: string;
-};
-
 const ApplicationForm: React.FC = () => {
-  const toast = useToast();
   const queryClient = useQueryClient();
   const { data: profileData } = useProfile();
-  const [visibility, setVisibility] = useState(false);
-  const { handleSubmit, register, formState } = useForm<ApplicationFormData>();
   const history = useHistory();
+  const [projectName, setProjectName] = useState("");
+  const [githubLink, setGithubLink] = useState("");
+  const [visibility, setVisibility] = useState(false);
+  const [githubSync, setGithubSync] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const [repoTree, setRepoTree] = useState<TreeItem | null>(null);
+  const [branches, setBranches] = useState<string[]>([]);
+  const [branch, setBranch] = useState<string>("");
+  const [skipFilePaths, setSkipFilePaths] = useState<string[]>([]);
+  const [nameError, setNameError] = useState<null | string>(null);
+  const [linkError, setLinkError] = useState<null | string>(null);
+  const [step, setStep] = useState(1);
+  const isGithubIntegrated =
+    profileData?._integrations?.github?.status === "successful";
+  const toast = useToast();
 
   const githubUrlRegex =
     /(http(s)?)(:(\/\/))((github.com)(\/)[\w@\:\-~]+(\/)[\w@\:\-~]+)(\.git)?/;
 
-  const onSubmit = async ({
-    project_url,
-    project_name,
-  }: ApplicationFormData) => {
-    if (project_name.length === 0) {
+  const runValidation = () => {
+    if (projectName.length === 0) {
       setNameError("Please enter a Project Name of less than 50 characters.");
-      return;
+      return false;
     }
-    if (project_name.length > 50) {
+    if (projectName.length > 50) {
       setNameError("Project Name cannot exceed to more than 50 characters.");
-      return;
+      return false;
     }
-    let filteredUrlInput = githubUrlRegex.exec(project_url);
+    let filteredUrlInput = githubUrlRegex.exec(githubLink);
     if (!filteredUrlInput) {
       setLinkError("Please enter a valid Github repository link");
-      return;
+      return false;
     }
     const filteredUrl = filteredUrlInput[0];
-
+    setGithubLink(filteredUrl);
     setNameError(null);
     setLinkError(null);
-    await API.post(API_PATH.API_PROJECT_SCAN, {
-      project_url: filteredUrl,
-      ...(project_name && project_name !== "" && { project_name }),
-      project_type: "new",
-      project_visibility: visibility ? "private" : "public",
-    });
-    queryClient.invalidateQueries("scans");
-    queryClient.invalidateQueries("profile");
-
-    history.push("/projects");
+    return true;
   };
 
-  const [nameError, setNameError] = useState<null | string>(null);
-  const [linkError, setLinkError] = useState<null | string>(null);
+  const runScan = async () => {
+    if (!runValidation()) return;
+    try {
+      const { data } = await API.post(API_PATH.API_PROJECT_SCAN, {
+        project_url: githubLink,
+        project_name: projectName,
+        project_type: "new",
+        project_branch: branch,
+        recur_scans: githubSync,
+        project_visibility: visibility ? "private" : "public",
+        skip_file_paths: skipFilePaths,
+      });
 
-  const isGithubIntegrated =
-    profileData?._integrations?.github?.status === "successful";
+      if (data.status === "success") {
+        queryClient.invalidateQueries("scans");
+        queryClient.invalidateQueries("profile");
+        history.push("/projects");
+      } else {
+        toast({
+          title: data.message,
+          status: "error",
+          duration: 3000,
+          isClosable: true,
+          position: "bottom",
+        });
+      }
+    } catch (e) {
+      console.log(e);
+    }
+  };
+
+  const getBranches = async () => {
+    setIsLoading(true);
+    setBranch("");
+    try {
+      const { data } = await API.post<{
+        status: string;
+        default_tree: TreeItem;
+        branches: string[];
+      }>(API_PATH.API_GET_BRANCHES, {
+        project_url: githubLink,
+      });
+      if (data.status === "success") {
+        setRepoTree(data.default_tree);
+        setBranches(data.branches);
+        setBranch(data.branches[0]);
+      }
+    } catch (e) {
+      console.log(e);
+    }
+    setIsLoading(false);
+  };
+
+  const getRepoTreeReq = async (
+    project_url: string,
+    project_branch: string
+  ) => {
+    setIsLoading(true);
+    const responseData = await getRepoTree(project_url, project_branch);
+    if (responseData) {
+      if (responseData.status === "success") {
+        setRepoTree(responseData.tree);
+      }
+    }
+    setIsLoading(false);
+  };
+
+  useEffect(() => {
+    if (branch !== "") {
+      if (step > 1) {
+        getRepoTreeReq(githubLink, branch);
+      } else {
+        setStep(2);
+      }
+    }
+  }, [branch]);
+
   return (
-    <>
+    <Flex
+      flexDir="column"
+      w="100%"
+      justifyContent={"flex-start"}
+      alignItems="flex-start"
+    >
       {profileData && (
-        <>
-          <Text
-            sx={{
-              fontSize: "2xl",
-              fontWeight: 600,
-              my: 6,
-              textAlign: "center",
-            }}
-          >
-            Load application
-          </Text>
-
-          <Text sx={{ color: "subtle", textAlign: "left", mb: 4 }}>
-            Provide the address of your GitHub repository. Your results will
-            appear in the “Projects” section.
-          </Text>
-          <Text sx={{ color: "subtle", textAlign: "left", mb: 2 }}>
-            NOTE: Please verify the following to avoid scan failure:
-          </Text>
-          <Text
-            sx={{ color: "subtle", textAlign: "left", mb: 2, fontSize: "sm" }}
-          >
-            1. Ensure the link is to a GitHub repository containing Solidity
-            (.sol) files. It is recommended to use the HTTPS GitHub (.git)
-            cloning link of the repository.
-          </Text>
-          <Text
-            sx={{ color: "subtle", textAlign: "left", mb: 6, fontSize: "sm" }}
-          >
-            2. Verify if the repository is public, for private repositories,
-            please integrate your GitHub from the Integrations tab.
-          </Text>
-          <form onSubmit={handleSubmit(onSubmit)} style={{ width: "100%" }}>
-            <Stack spacing={6} my={8} width={"100%"}>
-              <VStack alignItems={"flex-start"}>
-                <Text mb={0} fontSize="sm">
-                  Project name
-                </Text>
-                <InputGroup alignItems="center">
-                  <InputLeftElement
-                    height="48px"
-                    children={<Icon as={AiOutlineProject} color="gray.300" />}
-                  />
-                  <Input
-                    placeholder="Project name"
-                    variant={nameError ? "error" : "brand"}
-                    size="lg"
-                    {...register("project_name")}
-                  />
-                </InputGroup>
-                <Text mb={0} color="#FF2400" fontSize="sm">
-                  {nameError}
-                </Text>
-              </VStack>
-              <VStack mb={5} alignItems={"flex-start"}>
-                <Text mb={0} fontSize="sm">
-                  Link to the Github repository
-                </Text>
-                <InputGroup alignItems="center" mb={4}>
-                  <InputLeftElement
-                    height="48px"
-                    children={<Icon as={FaFileCode} color="gray.300" />}
-                  />
-                  <Input
-                    isRequired
-                    type="url"
-                    placeholder="https://github.com/yourproject/project.git"
-                    variant={linkError ? "error" : "brand"}
-                    size="lg"
-                    {...register("project_url", { required: true })}
-                  />
-                </InputGroup>
-                <Text mb={0} color="#FF2400" fontSize="sm">
-                  {linkError}
-                </Text>
-              </VStack>
-
-              <HStack alignItems="center" spacing={6} fontSize="14px">
-                <Text>Public</Text>
-                <Switch
-                  size="lg"
-                  variant="brand"
-                  isChecked={visibility}
-                  onChange={() => setVisibility(!visibility)}
-                />
-                <Text>Private</Text>
-              </HStack>
-
-              {!isGithubIntegrated && visibility && (
-                <Alert status="warning" fontSize="14px">
-                  <AlertIcon />
-                  You need to connect your GitHub to start a private scan.
-                  <Link
-                    as={RouterLink}
-                    to="/integrations"
-                    variant="brand"
-                    fontWeight="600"
-                    ml={1}
-                  >
-                    Connect
-                  </Link>
-                </Alert>
-              )}
-              <Button
-                type="submit"
-                variant="brand"
-                // isDisabled={
-                //   // profileData.actions_supported
-                //   //   ? !profileData.actions_supported.github_public
-                //   //   : !isGithubIntegrated && visibility
-                // }
-                isLoading={formState.isSubmitting}
+        <Flex
+          flexDir="column"
+          justifyContent={"flex-start"}
+          alignItems="flex-start"
+          backgroundColor="#FCFCFC"
+          px={[4, 4, 7]}
+          py={5}
+          w="100%"
+          borderRadius={20}
+          border="1px solid #ECECEC"
+        >
+          <HStack w="100%" justifyContent="space-between" mb={4}>
+            <Text
+              sx={{
+                fontSize: ["xl", "xl", "2xl"],
+                fontWeight: 600,
+                textAlign: "left",
+                w: "60%",
+              }}
+            >
+              {step === 1
+                ? "Project Information"
+                : step === 2
+                ? "Project Folders"
+                : step === 3
+                ? "Project Settings"
+                : ""}
+            </Text>
+            <HStack justifyContent={"flex-end"} spacing={3}>
+              <Image
+                height={["30px", "30px", "40px"]}
+                width={["30px", "30px", "40px"]}
+                src={`/common/step_${step}.svg`}
+              />
+              <Text
+                sx={{
+                  fontSize: ["md", "md", "lg"],
+                  fontWeight: 700,
+                  lineHeight: "20px",
+                  textAlign: "left",
+                  width: "fit-content",
+                }}
               >
-                Start Scan
-              </Button>
-            </Stack>
-          </form>
-        </>
+                {"STEP"}{" "}
+                <Box ml={1} fontSize={["xl", "xl", "2xl"]} as="span">
+                  {step}/
+                </Box>
+                {3}
+              </Text>
+            </HStack>
+          </HStack>
+          {step === 1 ? (
+            <Text
+              sx={{
+                fontSize: "sm",
+                color: "subtle",
+                textAlign: "left",
+                mb: 4,
+              }}
+            >
+              Provide a link to your Github repository.
+            </Text>
+          ) : step === 2 ? (
+            <Text
+              sx={{
+                fontSize: "sm",
+                color: "subtle",
+                textAlign: "left",
+                mb: 4,
+              }}
+            >
+              Select the branch and its corresponding directories and files to
+              be scanned.
+            </Text>
+          ) : step === 3 ? (
+            <Text
+              sx={{
+                fontSize: "sm",
+                color: "subtle",
+                textAlign: "left",
+                mb: 4,
+              }}
+            >
+              Configure your project settings.
+            </Text>
+          ) : (
+            <></>
+          )}
+
+          <Divider color="gray.700" borderWidth="1px" mb={3} />
+          {step === 1 ? (
+            <InfoSettings
+              nameError={nameError}
+              linkError={linkError}
+              visibility={visibility}
+              projectName={projectName}
+              githubLink={githubLink}
+              isGithubIntegrated={isGithubIntegrated}
+              setProjectName={setProjectName}
+              setGithubLink={setGithubLink}
+              setVisibility={setVisibility}
+            />
+          ) : step === 2 ? (
+            repoTree && (
+              <FolderSettings
+                isLoading={isLoading}
+                view="github_app"
+                fileData={repoTree}
+                branches={branches}
+                branch={branch}
+                setBranch={setBranch}
+                skipFilePaths={skipFilePaths}
+                setSkipFilePaths={setSkipFilePaths}
+              />
+            )
+          ) : step === 3 ? (
+            <ConfigSettings
+              view="github_app"
+              githubSync={githubSync}
+              onToggleFunction={async () => setGithubSync(!githubSync)}
+              isGithubIntegrated={isGithubIntegrated}
+            />
+          ) : (
+            <></>
+          )}
+        </Flex>
       )}
-    </>
+      <Flex
+        w="100%"
+        flexDir={["column", "column", "column", "row"]}
+        alignItems="center"
+        justifyContent={["flex-start", "flex-start", "flex-start", "flex-end"]}
+        pt={3}
+      >
+        {step > 1 && (
+          <Button
+            type="submit"
+            width={["100%", "100%", "100%", "200px"]}
+            variant="accent-outline"
+            mr={[0, 0, 0, 5]}
+            mb={[3, 3, 3, 0]}
+            py={6}
+            onClick={() => {
+              if (step > 1) {
+                setStep(step - 1);
+              }
+            }}
+            isDisabled={profileData?.credits === 0 || isLoading}
+          >
+            Prev
+          </Button>
+        )}
+        <Button
+          type="submit"
+          variant="brand"
+          isLoading={isLoading}
+          width={["100%", "100%", "100%", "200px"]}
+          onClick={() => {
+            if (step === 1) {
+              if (runValidation()) {
+                getBranches();
+              }
+            } else if (step === 2) {
+              setStep(3);
+            } else {
+              runScan();
+            }
+          }}
+          isDisabled={profileData?.credits === 0}
+        >
+          {step > 2 ? "Start Scan" : "Next"}
+        </Button>
+      </Flex>
+    </Flex>
   );
 };
 
@@ -554,6 +686,14 @@ const ContractForm: React.FC = () => {
       },
       // { value: "testnet", label: "ReefScan Testnet", icon: "" },
     ],
+    xdc: [
+      {
+        value: "mainnet",
+        label: "XDC Mainnet",
+        icon: "",
+        isDisabled: false,
+      },
+    ],
   };
 
   const options = [
@@ -627,6 +767,12 @@ const ContractForm: React.FC = () => {
       value: "buildbear",
       icon: "buildbear",
       label: "Buildbear - (buildbear.io)",
+      isDisabled: true,
+    },
+    {
+      value: "xdc",
+      icon: "xdc",
+      label: "XDC - (xdc.blocksscan.io)",
       isDisabled: true,
     },
   ];
@@ -711,11 +857,22 @@ const ContractForm: React.FC = () => {
       status: string;
     }>(API_PATH.API_GET_CONTRACT_STATUS, req).then(
       async (res) => {
-        if (res.data.contract_verified) {
-          await API.post(API_PATH.API_START_SCAN_BLOCK, req);
-          queryClient.invalidateQueries("scans");
-          queryClient.invalidateQueries("profile");
-          history.push("/blocks");
+        if (res.data) {
+          if (res.data.contract_verified) {
+            const responseData = await API.post(
+              API_PATH.API_START_SCAN_BLOCK,
+              req
+            );
+            setIsLoading(false);
+            if (responseData.status === 200) {
+              if (responseData.data.status === "success") {
+                queryClient.invalidateQueries("scans");
+                queryClient.invalidateQueries("profile");
+                history.push("/blocks");
+              }
+            }
+          }
+        } else {
           setIsLoading(false);
         }
       },
@@ -725,34 +882,56 @@ const ContractForm: React.FC = () => {
     );
   };
   return (
-    <>
+    <Flex
+      flexDir="column"
+      backgroundColor="#FCFCFC"
+      px={7}
+      py={5}
+      justifyContent={"flex-start"}
+      alignItems="center"
+      borderRadius={20}
+      border="1px solid #ECECEC"
+    >
       <Text
+        w="100%"
         sx={{
-          fontSize: "2xl",
+          fontSize: "xl",
           fontWeight: 600,
-          mt: 6,
-          textAlign: "center",
+          textAlign: "left",
+          mb: 2,
         }}
       >
         Load contract
       </Text>
-      <Text sx={{ color: "subtle", textAlign: "left", mb: 4 }}>
+      <Text
+        w="100%"
+        sx={{ fontSize: "sm", color: "subtle", textAlign: "left", mb: 4 }}
+      >
         Provide the address of your smart contract deployed on the supported EVM
         chains. Your results will appear in the "Verified Contracts" tab.
       </Text>
-      <Text sx={{ color: "subtle", textAlign: "left", mb: 2 }}>
+      <Text
+        w="100%"
+        sx={{ fontSize: "sm", color: "subtle", textAlign: "left", mb: 2 }}
+      >
         NOTE: Please follow the constraints below to avoid scan failure:
       </Text>
-      <Text sx={{ color: "subtle", textAlign: "left", mb: 2, fontSize: "sm" }}>
+      <Text
+        w="100%"
+        sx={{ color: "subtle", textAlign: "left", mb: 2, fontSize: "xs" }}
+      >
         1. Navigate to the explorer of the particular blockchain (Ethereum -
         Etherscan.io).
       </Text>
-      <Text sx={{ color: "subtle", textAlign: "left", mb: 6, fontSize: "sm" }}>
+      <Text
+        w="100%"
+        sx={{ color: "subtle", textAlign: "left", mb: 4, fontSize: "xs" }}
+      >
         2. Use the search bar to get your smart contract and check if the source
         code is verified in the "Contract" tab of the selected explorer.
       </Text>
       {supportedChains && (
-        <Stack spacing={6} my={8} width={"100%"}>
+        <Stack spacing={6} my={0} width={"100%"}>
           <VStack alignItems={"flex-start"}>
             <Text mb={0} fontSize="sm">
               Contract address
@@ -861,7 +1040,7 @@ const ContractForm: React.FC = () => {
           </Button>
         </Stack>
       )}
-    </>
+    </Flex>
   );
 };
 
@@ -894,7 +1073,7 @@ const UploadForm: React.FC = () => {
     display: "flex",
     flexDirection: "column",
     alignItems: "center",
-    padding: "40px 20px",
+    padding: "20px 20px",
     borderWidth: 2,
     borderRadius: "20px",
     borderColor: "#eeeeee",
@@ -1029,16 +1208,6 @@ const UploadForm: React.FC = () => {
       name: fileName,
       file: file,
     };
-    // let r = new FileReader();
-    // r.onload = async function () {
-    //   if (r.result) {
-    //     let uploadResult = await postDataToS3(r.result, data.result.url);
-    //     if (!uploadResult) {
-    //       return "failed";
-    //     }
-    //   }
-    // };
-    // r.readAsBinaryString(file);
   };
 
   const postDataToS3 = async (fileData: File, urlString: string) => {
@@ -1067,35 +1236,53 @@ const UploadForm: React.FC = () => {
   return (
     <>
       {profileData && (
-        <>
+        <Flex
+          flexDir="column"
+          backgroundColor="#FCFCFC"
+          px={7}
+          py={5}
+          justifyContent={"flex-start"}
+          alignItems="center"
+          borderRadius={20}
+          border="1px solid #ECECEC"
+        >
           <Text
+            w="100%"
             sx={{
-              fontSize: "2xl",
+              fontSize: "xl",
               fontWeight: 600,
-              mt: 6,
-              textAlign: "center",
+              textAlign: "left",
+              mb: 2,
             }}
           >
             Upload contract
           </Text>
 
-          <Text sx={{ color: "subtle", textAlign: "left", mb: 4 }}>
+          <Text
+            w="100%"
+            sx={{ fontSize: "sm", color: "subtle", textAlign: "left", mb: 2 }}
+          >
             Upload your Solidity files (.sol extension) as a project. Utilize
             the “Project Name” field to refer to your scan results in the
             “Projects” section.
           </Text>
-          <Text sx={{ color: "subtle", textAlign: "left", mb: 2 }}>
+          <Text
+            w="100%"
+            sx={{ fontSize: "sm", color: "subtle", textAlign: "left", mb: 2 }}
+          >
             NOTE: Please follow the constraints below to avoid scan failure:
           </Text>
           <Text
-            sx={{ color: "subtle", textAlign: "left", mb: 2, fontSize: "sm" }}
+            w="100%"
+            sx={{ color: "subtle", textAlign: "left", mb: 2, fontSize: "xs" }}
           >
             1. Files to be uploaded should be Solidity(.sol) files, preferably
             compiled successfully. Incorrect syntax might render incorrect
             results.
           </Text>
           <Text
-            sx={{ color: "subtle", textAlign: "left", mb: 6, fontSize: "sm" }}
+            w="100%"
+            sx={{ color: "subtle", textAlign: "left", mb: 3, fontSize: "xs" }}
           >
             2. A Maximum number of files that can be uploaded is 5 and file size
             cannot exceed 5MB.
@@ -1105,7 +1292,6 @@ const UploadForm: React.FC = () => {
             flexDir={"column"}
             justifyContent={"flex-start"}
             alignItems="flex-start"
-            my={8}
             width={"100%"}
           >
             <VStack alignItems={"flex-start"} width="100%">
@@ -1132,22 +1318,6 @@ const UploadForm: React.FC = () => {
             {step === 0 ? (
               <div {...getRootProps({ style })}>
                 <input {...getInputProps()} />
-                {/* {error ? (
-                  <>
-                    <ScanErrorIcon size={80} />
-                    <p style={{ marginTop: "20px" }}>
-                      {errorMsg}. Please
-                      <span
-                        onClick={() => setError(false)}
-                        style={{ color: "#3300FF" }}
-                      >
-                        {" "}
-                        try again
-                      </span>
-                    </p>
-                  </>
-                ) : (
-                  <> */}
                 <UploadIcon size={80} />
                 <p style={{ marginTop: "20px" }}>
                   Drag and drop or{" "}
@@ -1156,7 +1326,7 @@ const UploadForm: React.FC = () => {
                 <p
                   style={{
                     fontSize: "15px",
-                    marginBottom: "20px",
+                    marginBottom: "10px",
                     color: "#D3D3D3",
                   }}
                 >
@@ -1267,7 +1437,7 @@ const UploadForm: React.FC = () => {
               Start Scan
             </Button>
           </Flex>
-        </>
+        </Flex>
       )}
     </>
   );

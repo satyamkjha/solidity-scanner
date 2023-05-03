@@ -40,7 +40,7 @@ import MetaMaskLogin from "components/metamaskSignin";
 import { API_PATH } from "helpers/routeManager";
 import GoogleSignIn from "components/googleSignin";
 import { getFeatureGateConfig } from "helpers/helperFunction";
-import reCAPTCHA from "helpers/reCAPTCHA";
+import { getReCaptchaHeaders } from "helpers/helperFunction";
 
 const CustomFlex = motion(Flex);
 
@@ -144,10 +144,6 @@ const RegisterForm: React.FC<{
   email: string;
 }> = ({ setRegistered, setEmail, email }) => {
   const { handleSubmit, register, formState } = useForm<FormData>();
-  const recaptcha = new reCAPTCHA(
-    process.env.REACT_APP_RECAPTCHA_SITE_KEY!,
-    "register"
-  );
 
   const [show, setShow] = useState(false);
   const history = useHistory();
@@ -166,12 +162,11 @@ const RegisterForm: React.FC<{
   const [telegram, setTelegram] = useState("");
   const [linkedin, setLinkedin] = useState("");
   const [twitter, setTwitter] = useState("");
-  // const [preffered, setPreffered] = useState("");
 
   const [step, setStep] = useState(0);
 
   const onSubmit = async () => {
-    const Recaptchatoken = await recaptcha.getToken();
+    let reqHeaders = await getReCaptchaHeaders("register");
     if (step === 0) {
       setStep(1);
     } else {
@@ -202,10 +197,7 @@ const RegisterForm: React.FC<{
         API_PATH.API_REGISTER,
         reqBody,
         {
-          headers: {
-            "Content-Type": "application/json",
-            Recaptchatoken,
-          },
+          headers: reqHeaders,
         }
       );
 

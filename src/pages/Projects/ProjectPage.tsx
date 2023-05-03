@@ -8,6 +8,8 @@ import {
   useHistory,
 } from "react-router-dom";
 import FileDownload from "js-file-download";
+import { ArrowDownIcon } from "@chakra-ui/icons";
+
 import {
   Flex,
   keyframes,
@@ -50,6 +52,17 @@ import {
   useMediaQuery,
   Stack,
   IconButton,
+  Menu,
+  MenuButton,
+  MenuList,
+  MenuItem,
+  Collapse,
+  Popover,
+  PopoverArrow,
+  PopoverBody,
+  PopoverCloseButton,
+  PopoverContent,
+  PopoverTrigger,
 } from "@chakra-ui/react";
 import {
   AiOutlineClockCircle,
@@ -61,13 +74,19 @@ import {
 import Overview from "components/overview";
 import Result, { MultifileResult } from "components/result";
 import { RescanIcon, LogoIcon, ScanErrorIcon } from "components/icons";
-
+import { InfoIcon } from "@chakra-ui/icons";
 import API from "helpers/api";
 
 import { useScans } from "hooks/useScans";
-import { useScan } from "hooks/useScan";
+import { useScan, getScan } from "hooks/useScan";
 
-import { Profile, Report, ReportsListItem, ScanMeta } from "common/types";
+import {
+  Profile,
+  Report,
+  ReportsListItem,
+  ScanMeta,
+  TreeItem,
+} from "common/types";
 import { useProfile } from "hooks/useProfile";
 import {
   FaBuilding,
@@ -90,6 +109,8 @@ import {
   LockIcon,
   TimeIcon,
   ViewIcon,
+  ChevronUpIcon,
+  ChevronDownIcon,
 } from "@chakra-ui/icons";
 import { profile } from "console";
 import { motion } from "framer-motion";
@@ -99,10 +120,31 @@ import PublishedReports from "components/publishedReports";
 import { useReports } from "hooks/useReports";
 import { usePricingPlans } from "hooks/usePricingPlans";
 import { API_PATH } from "helpers/routeManager";
+import { useReactToPrint } from "react-to-print";
+import { PrintContainer } from "pages/Report/PrintContainer";
+import { getPublicReport } from "hooks/usePublicReport";
+import ProjectCustomSettings from "components/projectCustomSettings";
+import FolderSettings from "components/projectFolderSettings";
+import { getRepoTree } from "hooks/getRepoTree";
 
 export const ProjectPage: React.FC = () => {
   const { projectId } = useParams<{ projectId: string }>();
   const { data, isLoading, refetch } = useScans(projectId);
+  const [repoTree, setRepoTree] = useState<TreeItem | null>(null);
+
+  const getRepoTreeReq = async () => {
+    if (data && data.project_url !== "File Scan" && repoTree === null) {
+      const responseData = await getRepoTree(
+        data.project_url,
+        data.project_branch ? data.project_branch : "HEAD"
+      );
+      if (responseData) {
+        if (responseData.status === "success") {
+          setRepoTree(responseData.tree);
+        }
+      }
+    }
+  };
 
   return (
     <Box
@@ -125,8 +167,11 @@ export const ProjectPage: React.FC = () => {
           <ScanDetails
             scansRemaining={data.scans_remaining}
             scans={data.scans}
+            getRepoTreeReq={getRepoTreeReq}
             project_name={data.project_name}
             project_url={data.project_url}
+            repoTree={repoTree}
+            project_branch={data.project_branch ? data.project_branch : "HEAD"}
           />
         )
       )}
@@ -139,7 +184,18 @@ const ScanDetails: React.FC<{
   scans: ScanMeta[];
   project_name: string;
   project_url: string;
-}> = ({ scansRemaining, scans, project_name, project_url }) => {
+  repoTree: TreeItem | null;
+  project_branch: string;
+  getRepoTreeReq: () => Promise<void>;
+}> = ({
+  scansRemaining,
+  scans,
+  project_name,
+  project_url,
+  repoTree,
+  project_branch,
+  getRepoTreeReq,
+}) => {
   const [isOpen, setIsOpen] = useState(false);
   const [isRescanLoading, setRescanLoading] = useState(false);
 
@@ -278,18 +334,19 @@ const ScanDetails: React.FC<{
   };
 
   useEffect(() => {
-    if (
-      scanData &&
-      scanData.scan_report.reporting_status === "report_generated"
-    ) {
-      setReportingStatus(scanData.scan_report.reporting_status);
-      setProjectName(scanData.scan_report.project_name);
-      setRepoUrl(scanData.scan_report.project_url);
-      checkReportPublished(projectId, scanData.scan_report.latest_report_id);
-      const d = new Date();
-      setDatePublished(
-        `${d.getDate()}-${monthNames[d.getMonth()]}-${d.getFullYear()}`
-      );
+    if (scanData) {
+      if (scanData.scan_report.reporting_status === "report_generated") {
+        setReportingStatus(scanData.scan_report.reporting_status);
+        setProjectName(scanData.scan_report.project_name);
+        setRepoUrl(scanData.scan_report.project_url);
+        checkReportPublished(projectId, scanData.scan_report.latest_report_id);
+        const d = new Date();
+        setDatePublished(
+          `${d.getDate()}-${monthNames[d.getMonth()]}-${d.getFullYear()}`
+        );
+      } else {
+        setPublishStatus("Not-Generated");
+      }
     }
   }, [scanData]);
 
@@ -334,6 +391,41 @@ const ScanDetails: React.FC<{
     checkReportPublished(projectId, reportId);
     refetchReprtList();
   };
+
+  const [summaryReport, setSummaryReport] = useState<Report | null>(null);
+  const [printLoading, setPrintLoading] = useState<boolean>(false);
+  const componentRef = useRef();
+
+  const generatePDF = async () => {
+    setPrintLoading(true);
+    const publishReportData = await getPublicReport(
+      "project",
+      scanData.scan_report.latest_report_id
+    );
+    if (publishReportData.summary_report) {
+      setSummaryReport(publishReportData.summary_report);
+    }
+  };
+
+  const handlePrint = useReactToPrint({
+    content: () => componentRef.current,
+  });
+
+  useEffect(() => {
+    if (summaryReport) {
+      setTimeout(() => {
+        handlePrint();
+        setPrintLoading(false);
+      }, 100);
+    }
+  }, [summaryReport]);
+
+  const checkIfGeneratingReport = () =>
+    reportingStatus === "generating_report" ||
+    (profile.actions_supported
+      ? !profile.actions_supported.generate_report
+      : profile.current_package !== "expired" &&
+        !plans.monthly[profile.current_package].report);
 
   return (
     <>
@@ -408,16 +500,18 @@ const ScanDetails: React.FC<{
                     <Text sx={{ fontSize: "xl", fontWeight: 600 }}>
                       {project_name}
                     </Text>
-                    <Link
-                      fontSize="14px"
-                      variant="subtle"
-                      target="_blank"
-                      href={project_url}
-                      isTruncated
-                      width={["70%", "70%", "70%", "fit-content"]}
-                    >
-                      {project_url}
-                    </Link>
+                    {project_url !== "File Scan" && (
+                      <Link
+                        fontSize="14px"
+                        variant="subtle"
+                        target="_blank"
+                        href={project_url}
+                        isTruncated
+                        width={["70%", "70%", "70%", "fit-content"]}
+                      >
+                        {project_url}
+                      </Link>
+                    )}
                   </VStack>
                 </Flex>
                 <Flex
@@ -432,10 +526,11 @@ const ScanDetails: React.FC<{
                   alignItems={"center"}
                   width={["100%", "100%", "100%", "fit-content"]}
                 >
-                  {/* <PDFDownloadButton /> */}
-                  {scanData.scan_report.reporting_status ===
-                    "report_generated" &&
+                  {!scanData.scan_report.report_regeneration_enabled &&
+                    scanData.scan_report.reporting_status ===
+                      "report_generated" &&
                     publishStatus !== "" &&
+                    publishStatus !== "Not-Generated" &&
                     (publishStatus === "Not-Published" ? (
                       <Button
                         variant={"accent-outline"}
@@ -469,7 +564,7 @@ const ScanDetails: React.FC<{
                         Publish Report
                       </Button>
                     ) : (
-                      <HStack>
+                      <HStack mb={[5, 5, 5, 0]}>
                         {publishStatus === "Approved" ? (
                           <CheckCircleIcon color={"#03C04A"} />
                         ) : (
@@ -485,61 +580,115 @@ const ScanDetails: React.FC<{
                         </Text>
                       </HStack>
                     ))}
-                  {scanData.scan_report.scan_status === "scan_done" && (
-                    <Button
-                      variant={"accent-outline"}
-                      isLoading={reportingStatus === ""}
-                      w={["80%", "80%", "50%", "auto"]}
-                      mx={["auto", "auto", "auto", 4]}
-                      mb={[4, 4, 4, 0]}
-                      isDisabled={
-                        reportingStatus === "generating_report" ||
-                        (profile.actions_supported
-                          ? !profile.actions_supported.generate_report
-                          : profile.current_package !== "expired" &&
-                            !plans.monthly[profile.current_package].report)
-                      }
-                      onClick={() => {
-                        if (
-                          reportingStatus === "not_generated" ||
-                          scanData.scan_report.report_regeneration_enabled
-                        ) {
+
+                  {scanData.scan_report.scan_status === "scan_done" &&
+                    reportingStatus !== "" &&
+                    publishStatus !== "" &&
+                    (scanData.scan_report.report_regeneration_enabled ? (
+                      <Button
+                        variant={"accent-outline"}
+                        w={["80%", "80%", "50%", "auto"]}
+                        mx={["auto", "auto", "auto", 4]}
+                        mb={[4, 4, 4, 0]}
+                        onClick={() => {
                           generateReport();
-                        } else if (reportingStatus === "report_generated") {
-                          if (publishStatus === "Approved") {
+                        }}
+                        isDisabled={checkIfGeneratingReport()}
+                      >
+                        {reportingStatus === "generating_report" && (
+                          <Spinner color="#806CCF" size="xs" mr={3} />
+                        )}
+                        Re-Generate Report
+                      </Button>
+                    ) : publishStatus === "Approved" ? (
+                      <HStack
+                        borderRadius={"15px"}
+                        border="1px solid #806CCF"
+                        backgroundColor={"#F5F2FF"}
+                        pl={7}
+                        pr={3}
+                        py={1}
+                        ml={5}
+                      >
+                        <Text
+                          color="#3E15F4"
+                          cursor={"pointer"}
+                          onClick={() => {
                             window.open(
                               `http://${document.location.host}/published-report/project/${scanData.scan_report.latest_report_id}`,
                               "_blank"
                             );
-                          } else {
+                          }}
+                          fontSize="sm"
+                          mr={2}
+                        >
+                          View Report
+                        </Text>
+                        <Text color="#3E15F4" fontSize="sm">
+                          |
+                        </Text>
+                        <Menu>
+                          <MenuButton
+                            as={Button}
+                            aria-label="Options"
+                            variant="unstyled"
+                          >
+                            {printLoading ? (
+                              <Spinner fontSize={40} color="#3E15F4" />
+                            ) : (
+                              <ArrowDownIcon color="#3E15F4" />
+                            )}
+                          </MenuButton>
+                          <MenuList>
+                            <MenuItem onClick={() => generatePDF()}>
+                              Download PDF
+                            </MenuItem>
+                          </MenuList>
+                        </Menu>
+                        {summaryReport && (
+                          <Box display={"none"}>
+                            <Box w="100vw" ref={componentRef}>
+                              <PrintContainer summary_report={summaryReport} />
+                            </Box>
+                          </Box>
+                        )}
+                      </HStack>
+                    ) : (
+                      <Button
+                        variant={"accent-outline"}
+                        w={["80%", "80%", "50%", "auto"]}
+                        mx={["auto", "auto", "auto", 4]}
+                        mb={[4, 4, 4, 0]}
+                        isDisabled={checkIfGeneratingReport()}
+                        onClick={() => {
+                          if (reportingStatus === "not_generated") {
+                            generateReport();
+                          } else if (reportingStatus === "report_generated") {
                             window.open(
                               `http://${document.location.host}/report/project/${projectId}/${scanData?.scan_report.latest_report_id}`,
                               "_blank"
                             );
                           }
-                        }
-                      }}
-                    >
-                      {reportingStatus === "generating_report" && (
-                        <Spinner color="#806CCF" size="xs" mr={3} />
-                      )}
-                      {profile.actions_supported
-                        ? !profile.actions_supported.generate_report
-                        : profile.current_package !== "expired" &&
-                          !plans.monthly[profile.current_package].report && (
-                            <LockIcon color={"accent"} size="xs" mr={3} />
-                          )}
-                      {reportingStatus === "generating_report"
-                        ? "Generating report..."
-                        : reportingStatus === "not_generated"
-                        ? "Generate Report"
-                        : scanData.scan_report.report_regeneration_enabled
-                        ? "Re-generate Report"
-                        : reportingStatus === "report_generated"
-                        ? "View Report"
-                        : "Loading"}
-                    </Button>
-                  )}
+                        }}
+                      >
+                        {reportingStatus === "generating_report" && (
+                          <Spinner color="#806CCF" size="xs" mr={3} />
+                        )}
+                        {profile.actions_supported
+                          ? !profile.actions_supported.generate_report
+                          : profile.current_package !== "expired" &&
+                            !plans.monthly[profile.current_package].report && (
+                              <LockIcon color={"accent"} size="xs" mr={3} />
+                            )}
+                        {reportingStatus === "generating_report"
+                          ? "Generating report..."
+                          : reportingStatus === "not_generated"
+                          ? "Generate Report"
+                          : reportingStatus === "report_generated"
+                          ? "View Report"
+                          : "Loading"}
+                      </Button>
+                    ))}
                 </Flex>
               </Flex>
               {scanData.scan_report.scan_status === "scanning" ||
@@ -585,7 +734,7 @@ const ScanDetails: React.FC<{
                 >
                   <Flex
                     width={"100%"}
-                    overflow={["scroll", "scroll", "scroll", "visible"]}
+                    overflow={"scroll"}
                     flexDir={"row"}
                     justifyContent="flex-start"
                     align={"center"}
@@ -618,16 +767,21 @@ const ScanDetails: React.FC<{
                       >
                         Detailed Result
                       </Tab>
-                      <Tab
-                        fontSize={"sm"}
-                        h="35px"
-                        minW={"120px"}
-                        bgColor={"#F5F5F5"}
-                        ml={4}
-                        whiteSpace="nowrap"
-                      >
-                        Scan History
-                      </Tab>
+                      {scanData.scan_report.project_skip_files &&
+                        scanData.scan_report.project_url &&
+                        scanData.scan_report.project_url !== "File Scan" && (
+                          <Tab
+                            fontSize={"sm"}
+                            h="35px"
+                            minW={"175px"}
+                            bgColor={"#F5F5F5"}
+                            ml={4}
+                            whiteSpace="nowrap"
+                          >
+                            Custom Settings
+                          </Tab>
+                        )}
+
                       {profile.promo_code ? (
                         profile.actions_supported &&
                         profile.actions_supported.publishable_report && (
@@ -636,7 +790,7 @@ const ScanDetails: React.FC<{
                             h="35px"
                             minW={"175px"}
                             bgColor={"#F5F5F5"}
-                            mx={4}
+                            ml={4}
                             whiteSpace="nowrap"
                           >
                             Published Reports
@@ -648,12 +802,22 @@ const ScanDetails: React.FC<{
                           h="35px"
                           minW={"175px"}
                           bgColor={"#F5F5F5"}
-                          mx={4}
+                          ml={4}
                           whiteSpace="nowrap"
                         >
                           Published Reports
                         </Tab>
                       )}
+                      <Tab
+                        fontSize={"sm"}
+                        h="35px"
+                        minW={"120px"}
+                        bgColor={"#F5F5F5"}
+                        mx={4}
+                        whiteSpace="nowrap"
+                      >
+                        Scan History
+                      </Tab>
                     </TabList>
                   </Flex>
                   <TabPanels>
@@ -711,13 +875,32 @@ const ScanDetails: React.FC<{
                         </Flex>
                       )}
                     </TabPanel>
-                    <TabPanel p={[0, 0, 0, 2]}>
-                      <ScanHistory
-                        profile={profile}
-                        scans={scans}
-                        setTabIndex={setTabIndex}
-                      />
-                    </TabPanel>
+                    {scanData.scan_report.project_skip_files &&
+                      scanData.scan_report.project_url &&
+                      scanData.scan_report.project_url !== "File Scan" && (
+                        <TabPanel p={[0, 0, 0, 2]}>
+                          <ProjectCustomSettings
+                            project_skip_files={
+                              scanData.scan_report.project_skip_files
+                            }
+                            project_branch={project_branch}
+                            repoTree={repoTree}
+                            webhook_enabled={
+                              scanData.webhook_enabled
+                                ? scanData.webhook_enabled
+                                : false
+                            }
+                            getRepoTreeReq={getRepoTreeReq}
+                            project_url={scanData.scan_report.project_url}
+                            project_id={scanData.scan_report.project_id}
+                            isGithubIntegrated={
+                              profile._integrations?.github?.status ===
+                              "successful"
+                            }
+                          />
+                        </TabPanel>
+                      )}
+
                     {profile.promo_code ? (
                       profile.actions_supported &&
                       profile.actions_supported.publishable_report && (
@@ -740,8 +923,18 @@ const ScanDetails: React.FC<{
                         />
                       </TabPanel>
                     )}
+
+                    <TabPanel p={[0, 0, 0, 2]}>
+                      <ScanHistory
+                        project_url={project_url}
+                        getRepoTreeReq={getRepoTreeReq}
+                        repoTree={repoTree}
+                        profile={profile}
+                        scans={scans}
+                        setTabIndex={setTabIndex}
+                      />
+                    </TabPanel>
                   </TabPanels>
-                  <></>
                 </Tabs>
               )}
             </>
@@ -1278,7 +1471,17 @@ const ScanHistory: React.FC<{
   setTabIndex: React.Dispatch<React.SetStateAction<number>>;
   profile: Profile;
   scans: ScanMeta[];
-}> = ({ setTabIndex, profile, scans }) => {
+  repoTree: TreeItem | null;
+  getRepoTreeReq: () => Promise<void>;
+  project_url: string;
+}> = ({
+  setTabIndex,
+  profile,
+  scans,
+  repoTree,
+  getRepoTreeReq,
+  project_url,
+}) => {
   return (
     <Box
       sx={{
@@ -1295,8 +1498,10 @@ const ScanHistory: React.FC<{
             key={scan.scan_id}
             scan={scan}
             setTabIndex={setTabIndex}
-            // isTrial={profile?.current_package === "trial"}
+            repoTree={repoTree}
+            project_url={project_url}
             profile={profile}
+            getRepoTreeReq={getRepoTreeReq}
           />
         ))}
     </Box>
@@ -1307,135 +1512,254 @@ const ScanBlock: React.FC<{
   scan: ScanMeta;
   setTabIndex: React.Dispatch<React.SetStateAction<number>>;
   profile: Profile;
-}> = ({ scan, setTabIndex, profile }) => {
+  repoTree: TreeItem | null;
+  getRepoTreeReq: () => Promise<void>;
+  project_url: string;
+}> = ({
+  scan,
+  setTabIndex,
+  profile,
+  repoTree,
+  getRepoTreeReq,
+  project_url,
+}) => {
   const history = useHistory();
+  const [show, setShow] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const [skipFilePaths, setSkipFilePaths] = useState<string[] | null>(null);
+
+  const getScanRequest = async () => {
+    setIsLoading(true);
+    if (skipFilePaths === null) {
+      try {
+        const responseData = await getScan(scan.scan_id);
+        if (responseData && responseData.scan_report.skip_file_paths) {
+          setSkipFilePaths(responseData.scan_report.skip_file_paths);
+        }
+      } catch (e) {
+        console.log(e);
+      }
+    }
+    setIsLoading(false);
+  };
+
   return (
-    <Flex
-      alignItems="flex-start"
-      justifyContent="space-between"
-      flexDir={"row"}
-      sx={{
-        cursor: "pointer",
-        w: "100%",
-        bg: "white",
-        my: 4,
-        px: [5, 5, 7, 10],
-        borderRadius: "10px",
-        transition: "0.3s box-shadow",
-        boxShadow: "0px 4px 20px rgba(0, 0, 0, 0.05)",
-        _hover: {
-          boxShadow: "0px 4px 20px rgba(0, 0, 0, 0.2)",
-        },
-      }}
-    >
+    <>
       <Flex
-        width={"calc(100% - 60px)"}
+        alignItems="flex-start"
         justifyContent="flex-start"
-        flexWrap={"wrap"}
-        alignItems={"flex-start"}
-        flexDir="row"
-      >
-        <VStack mt={5} alignItems={"flex-start"} spacing={1} width="130px">
-          <Text fontSize={"sm"} color="gray.400">
-            Scan Name
-          </Text>
-          <Text fontSize={"md"}>{scan.scan_name}</Text>
-        </VStack>
-        {scan.scan_status === "scan_incomplete" ? (
-          <Flex
-            p={3}
-            sx={{ bgColor: "high-subtle", borderRadius: "20px" }}
-            mt={5}
-            mr={10}
-          >
-            <ScanErrorIcon size={28} />
-          </Flex>
-        ) : (
-          <VStack mt={5} alignItems={"flex-start"} spacing={1} width="120px">
-            <Text fontSize={"sm"} color="gray.400">
-              Score
-            </Text>
-            <Text
-              sx={{
-                color: "accent",
-                fontSize: "xl",
-                fontWeight: 600,
-                mx: "auto",
-                lineHeight: 1,
-              }}
-            >
-              {scan.scan_score}
-            </Text>
-          </VStack>
-        )}
-        <Flex
-          justifyContent={"flex-start"}
-          alignItems="flex-start"
-          flexDir={["column", "column", "row"]}
-        >
-          <Button
-            variant="accent-outline"
-            minW="200px"
-            bg={"white"}
-            mr={10}
-            my={5}
-            onClick={() => {
-              setTabIndex(0);
-              history.push(`/projects/${scan.project_id}/${scan.scan_id}`);
-            }}
-          >
-            View Scan Result
-          </Button>
-          <Button
-            variant="accent-outline"
-            minW="200px"
-            mr={10}
-            mt={[0, 0, 5]}
-            mb={5}
-            isDisabled={
-              scan.reporting_status !== "report_generated" ||
-              (profile.actions_supported
-                ? !profile.actions_supported.generate_report
-                : profile.current_package === "trial")
-            }
-            onClick={(e) => {
-              e.stopPropagation();
-              window.open(
-                `http://${document.location.host}/report/project/${scan.project_id}/${scan.latest_report_id}`,
-                "_blank"
-              );
-            }}
-          >
-            {scan.reporting_status === "generating_report" && (
-              <Spinner color="#806CCF" size="sm" mr={2} />
-            )}
-            {scan.reporting_status === "report_generated"
-              ? "View Report"
-              : scan.reporting_status === "generating_report"
-              ? "Generating Report"
-              : "Report Not Generated"}
-          </Button>
-        </Flex>
-      </Flex>
-      <Box
+        flexDir={"column"}
         sx={{
-          width: "60px",
-          height: "60px",
-          my: 5,
-          bg: "#F7F7F7",
-          color: "#4E5D78",
-          borderRadius: "50%",
-          textAlign: "center",
+          cursor: "pointer",
+          w: "100%",
+          bg: "white",
+          my: 4,
+          px: [5, 5, 7, 10],
+          borderRadius: "10px",
+          transition: "0.3s box-shadow",
+          boxShadow: "0px 4px 20px rgba(0, 0, 0, 0.05)",
+          _hover: {
+            boxShadow: "0px 4px 20px rgba(0, 0, 0, 0.2)",
+          },
         }}
       >
-        <Text fontSize="xl" fontWeight="600">
-          {new Date(scan.scan_time).getDate()}
-        </Text>
-        <Text fontSize="12px" mt="-4px">
-          {monthNames[new Date(scan.scan_time).getMonth()]}
-        </Text>
-      </Box>
-    </Flex>
+        <Flex
+          w="100%"
+          h="fit-content"
+          flexDir={"row"}
+          alignItems={["flex-start", "flex-start", "center"]}
+          justifyContent="space-between"
+          py={3}
+        >
+          <Flex
+            width={"calc(100% - 60px)"}
+            justifyContent="flex-start"
+            flexWrap={"wrap"}
+            alignItems={"flex-start"}
+            flexDir="row"
+          >
+            <VStack my={2} alignItems={"flex-start"} spacing={1} width="130px">
+              <Text fontSize={"sm"} color="gray.400">
+                Scan Name
+              </Text>
+              <Text fontSize={"md"}>{scan.scan_name}</Text>
+            </VStack>
+            {scan.scan_status === "scan_incomplete" ? (
+              <Flex
+                p={3}
+                sx={{ bgColor: "high-subtle", borderRadius: "20px" }}
+                mr={10}
+                my={2}
+              >
+                <ScanErrorIcon size={28} />
+              </Flex>
+            ) : (
+              <VStack
+                my={2}
+                alignItems={"flex-start"}
+                spacing={1}
+                width="120px"
+              >
+                <Text fontSize={"sm"} color="gray.400">
+                  Score
+                </Text>
+                <Text
+                  sx={{
+                    color: "accent",
+                    fontSize: "xl",
+                    fontWeight: 600,
+                    mx: "auto",
+                    lineHeight: 1,
+                  }}
+                >
+                  {scan.scan_score}
+                </Text>
+              </VStack>
+            )}
+            <Flex
+              justifyContent={"flex-start"}
+              alignItems="flex-start"
+              flexWrap={"wrap"}
+              width={"fit-content"}
+              flexDir={["column", "row", "row"]}
+            >
+              <Button
+                variant="accent-outline"
+                minW="200px"
+                bg={"white"}
+                mr={10}
+                my={2}
+                onClick={() => {
+                  setTabIndex(0);
+                  history.push(`/projects/${scan.project_id}/${scan.scan_id}`);
+                }}
+              >
+                View Scan Result
+              </Button>
+
+              <Button
+                variant="accent-outline"
+                minW="200px"
+                bg={"white"}
+                mr={10}
+                my={2}
+                isDisabled={
+                  scan.reporting_status !== "report_generated" ||
+                  (profile.actions_supported
+                    ? !profile.actions_supported.generate_report
+                    : profile.current_package === "trial")
+                }
+                onClick={(e) => {
+                  e.stopPropagation();
+                  window.open(
+                    `http://${document.location.host}/report/project/${scan.project_id}/${scan.latest_report_id}`,
+                    "_blank"
+                  );
+                }}
+              >
+                {scan.reporting_status === "generating_report" && (
+                  <Spinner color="#806CCF" size="sm" mr={2} />
+                )}
+                {scan.reporting_status === "report_generated"
+                  ? "View Report"
+                  : scan.reporting_status === "generating_report"
+                  ? "Generating Report"
+                  : "Report Not Generated"}
+              </Button>
+              {project_url !== "File Scan" && (
+                <HStack spacing={3} mr={10} my={2}>
+                  <Button
+                    variant="accent-outline"
+                    minW="200px"
+                    isLoading={isLoading}
+                    onClick={async () => {
+                      if (show) {
+                        setShow(false);
+                      } else {
+                        getRepoTreeReq();
+                        getScanRequest();
+                        setShow(true);
+                      }
+                    }}
+                  >
+                    {show ? "Hide Scanned Files" : "View Scanned Files"}{" "}
+                    {show ? (
+                      <ChevronUpIcon ml={2} />
+                    ) : (
+                      <ChevronDownIcon ml={2} />
+                    )}
+                  </Button>
+                  <Popover placement="bottom-end">
+                    <PopoverTrigger>
+                      <InfoIcon color="#d7cdfa" />
+                    </PopoverTrigger>
+                    <PopoverContent p={1}>
+                      <PopoverArrow />
+                      <PopoverCloseButton />
+                      <PopoverBody>
+                        <Text
+                          fontSize="sm"
+                          textAlign="left"
+                          lineHeight="title"
+                          fontWeight={"300"}
+                          mb={0}
+                        >
+                          The scanned files have been highlighted while the
+                          remaining ones were skipped. To modify settings for
+                          future scans, please refer to the{" "}
+                          <Box
+                            textDecoration="underline"
+                            as="span"
+                            color="#3E15F4"
+                            mr={1}
+                          >
+                            Custom Settings
+                          </Box>
+                          option.
+                        </Text>
+                      </PopoverBody>
+                    </PopoverContent>
+                  </Popover>
+                </HStack>
+              )}
+            </Flex>
+          </Flex>
+          <Box
+            sx={{
+              width: "60px",
+              height: "60px",
+              my: 2,
+              bg: "#F7F7F7",
+              color: "#4E5D78",
+              borderRadius: "50%",
+              textAlign: "center",
+            }}
+          >
+            <Text fontSize="xl" fontWeight="600">
+              {new Date(scan.scan_time).getDate()}
+            </Text>
+            <Text fontSize="12px" mt="-4px">
+              {monthNames[new Date(scan.scan_time).getMonth()]}
+            </Text>
+          </Box>
+        </Flex>
+        <Collapse
+          style={{
+            width: "100%",
+          }}
+          in={show}
+          animateOpacity
+        >
+          {skipFilePaths && repoTree && (
+            <FolderSettings
+              view="scan_history"
+              fileData={repoTree}
+              skipFilePaths={skipFilePaths}
+            />
+          )}
+        </Collapse>
+      </Flex>
+    </>
   );
 };
 

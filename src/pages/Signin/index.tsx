@@ -40,8 +40,10 @@ import MetaMaskLogin from "components/metamaskSignin";
 import { API_PATH } from "helpers/routeManager";
 import GoogleSignIn from "components/googleSignin";
 import Cookies from "js-cookie";
-import { getFeatureGateConfig } from "helpers/helperFunction";
-import reCAPTCHA from "helpers/reCAPTCHA";
+import {
+  getFeatureGateConfig,
+  getReCaptchaHeaders,
+} from "helpers/helperFunction";
 
 function useQuery() {
   return new URLSearchParams(useLocation().search);
@@ -104,30 +106,6 @@ const SignIn: React.FC = () => {
           </Text>
           <Divider background={"#FAFBFC"} width={"45%"} />
         </HStack>
-        {/* <Button my={4} sx={{ fontSize: "13px", px: 8, py: 6 }} isDisabled>
-          <Icon as={FcGoogle} mr={2} fontSize="20px" />
-          Sign In with Google
-        </Button> */}
-
-        {/* <Flex
-          align="center"
-          justify="center"
-          width={["300px", "400px", "500px"]}
-          color="subtle"
-          px={5}
-          mt={8}
-          sx={{
-            height: 0.5,
-            borderColor: "#EDF2F7",
-            borderStyle: "solid",
-            borderLeftWidth: ["130px", "180px", "220px"],
-            borderRightWidth: ["130px", "180px", "220px"],
-          }}
-        >
-          <Text fontWeight={600} color="subtle">
-            OR
-          </Text>
-        </Flex> */}
         <LoginForm />
         <Link
           as={RouterLink}
@@ -155,13 +133,8 @@ const LoginForm: React.FC = () => {
   const [password, setPassword] = useState("");
   const [isLoading, setIsLoading] = useState(false);
 
-  const recaptcha = new reCAPTCHA(
-    process.env.REACT_APP_RECAPTCHA_SITE_KEY!,
-    "signin"
-  );
-
   const onSubmit = async () => {
-    const Recaptchatoken = await recaptcha.getToken();
+    let reqHeaders = await getReCaptchaHeaders("signin");
     setIsLoading(true);
     API.post<AuthResponse>(
       API_PATH.API_LOGIN,
@@ -170,16 +143,15 @@ const LoginForm: React.FC = () => {
         password,
       },
       {
-        headers: {
-          "Content-Type": "application/json",
-          Recaptchatoken,
-        },
+        headers: reqHeaders,
       }
     ).then(
       (res) => {
-        if (res.data.status === "success") {
-          Auth.authenticateUser();
-          history.push("/home");
+        if (res.status === 200) {
+          if (res.data.status === "success") {
+            Auth.authenticateUser();
+            history.push("/home");
+          }
         }
         setIsLoading(false);
       },

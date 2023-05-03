@@ -1545,7 +1545,10 @@ const IssueDetail: React.FC<{
               <Box
                 dangerouslySetInnerHTML={{
                   __html: files.issue_description
-                    ? files.issue_description
+                    ? files.issue_description.format({
+                        ...variableData,
+                        current_file_name,
+                      })
                     : data.issue_details.issue_description.format({
                         ...variableData,
                         current_file_name,
@@ -1567,7 +1570,10 @@ const IssueDetail: React.FC<{
               <Box
                 dangerouslySetInnerHTML={{
                   __html: files.issue_remediation
-                    ? files.issue_remediation
+                    ? files.issue_remediation.format({
+                        ...variableData,
+                        current_file_name,
+                      })
                     : data.issue_details.issue_remediation.format({
                         ...variableData,
                         current_file_name,
@@ -1676,6 +1682,15 @@ p {
     padding: 2px 4px;
     border-radius: 5px;
   }
+ul, ol {
+  margin-left: 20px
+}
+
+  li {
+    font-weight: 300;
+    font-size: 12px
+  }
+
 
   a {
     color: #4299e1;
