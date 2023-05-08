@@ -5,8 +5,10 @@ import { API_PATH } from "helpers/routeManager";
 
 const getPricingPlans = async () => {
   const { data } = await API.get<{
-    monthly: {
-      [plan: string]: Plan;
+    pricing_data: {
+      monthly: {
+        [plan: string]: Plan;
+      };
     };
   }>(API_PATH.API_GET_PRICING);
   return data;

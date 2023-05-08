@@ -37,13 +37,19 @@ export const getDeviceType = (): string => {
   else return "NA";
 };
 
+export const getAssetsURL = () => {
+  if (process.env.REACT_APP_ASSETS_URL) {
+    return process.env.REACT_APP_ASSETS_URL;
+  }
+  return "";
+};
+
 export const getReCaptchaHeaders = async (action: string) => {
   const recaptcha = new reCAPTCHA(
     process.env.REACT_APP_RECAPTCHA_SITE_KEY!,
     action
   );
   const Recaptchatoken = await recaptcha.getToken();
-
 
   if (getFeatureGateConfig().reCAPTCHA_enabled) {
     return {
