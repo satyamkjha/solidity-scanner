@@ -38,10 +38,7 @@ export const getDeviceType = (): string => {
 };
 
 export const getAssetsURL = () => {
-  if (process.env.REACT_APP_ASSETS_URL) {
-    return process.env.REACT_APP_ASSETS_URL;
-  }
-  return "";
+  return process.env.REACT_APP_ASSETS_URL || "";
 };
 
 export const getReCaptchaHeaders = async (action: string) => {
