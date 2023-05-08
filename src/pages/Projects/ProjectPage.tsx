@@ -422,10 +422,12 @@ const ScanDetails: React.FC<{
 
   const checkIfGeneratingReport = () =>
     reportingStatus === "generating_report" ||
-    (profile.actions_supported
-      ? !profile.actions_supported.generate_report
-      : profile.current_package !== "expired" &&
-        !plans.monthly[profile.current_package].report);
+    (profile &&
+      plans &&
+      (profile.actions_supported
+        ? !profile.actions_supported.generate_report
+        : profile.current_package !== "expired" &&
+          !plans.pricing_data.monthly[profile.current_package].report));
 
   return (
     <>
@@ -541,8 +543,9 @@ const ScanDetails: React.FC<{
                           profile.actions_supported
                             ? !profile.actions_supported.publishable_report
                             : profile.current_package !== "expired" &&
-                              !plans.monthly[profile.current_package]
-                                .publishable_report
+                              !plans.pricing_data.monthly[
+                                profile.current_package
+                              ].publishable_report
                         }
                         onClick={() => {
                           if (commitHash == "") {
@@ -557,7 +560,7 @@ const ScanDetails: React.FC<{
                         {profile.actions_supported
                           ? !profile.actions_supported.publishable_report
                           : profile.current_package !== "expired" &&
-                            !plans.monthly[profile.current_package]
+                            !plans.pricing_data.monthly[profile.current_package]
                               .publishable_report && (
                               <LockIcon color={"accent"} size="xs" mr={3} />
                             )}
@@ -677,7 +680,8 @@ const ScanDetails: React.FC<{
                         {profile.actions_supported
                           ? !profile.actions_supported.generate_report
                           : profile.current_package !== "expired" &&
-                            !plans.monthly[profile.current_package].report && (
+                            !plans.pricing_data.monthly[profile.current_package]
+                              .report && (
                               <LockIcon color={"accent"} size="xs" mr={3} />
                             )}
                         {reportingStatus === "generating_report"

@@ -45,6 +45,10 @@ export const getDeviceType = (): string => {
   else return "NA";
 };
 
+export const getAssetsURL = () => {
+  return process.env.REACT_APP_ASSETS_URL || "";
+};
+
 export const getReCaptchaHeaders = async (action: string) => {
   const recaptcha = new reCAPTCHA(
     process.env.REACT_APP_RECAPTCHA_SITE_KEY!,
