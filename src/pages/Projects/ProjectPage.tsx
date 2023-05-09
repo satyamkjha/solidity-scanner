@@ -404,9 +404,10 @@ const ScanDetails: React.FC<{
                 sx={{
                   justifyContent: ["flex-start", "flex-start", "space-between"],
                   alignItems: ["center"],
-                  pb: 1,
+                  pb: 3,
                   px: 6,
                   w: "100%",
+                  h: "fit-content",
                   borderBottom: "1px solid",
                   borderColor: "border",
                   flexDir: ["column", "column", "column", "row"],
@@ -453,16 +454,18 @@ const ScanDetails: React.FC<{
                     <Text sx={{ fontSize: "xl", fontWeight: 600 }}>
                       {project_name}
                     </Text>
-                    <Link
-                      fontSize="14px"
-                      variant="subtle"
-                      target="_blank"
-                      href={project_url}
-                      isTruncated
-                      width={["70%", "70%", "70%", "fit-content"]}
-                    >
-                      {project_url}
-                    </Link>
+                    {project_url !== "File Scan" && (
+                      <Link
+                        fontSize="14px"
+                        variant="subtle"
+                        target="_blank"
+                        href={project_url}
+                        isTruncated
+                        width={["70%", "70%", "70%", "fit-content"]}
+                      >
+                        {project_url}
+                      </Link>
+                    )}
                   </VStack>
                 </Flex>
                 <Flex
@@ -585,7 +588,7 @@ const ScanDetails: React.FC<{
                             variant="unstyled"
                           >
                             {printLoading ? (
-                              <Spinner fontSize={40} color="#3E15F4" />
+                              <Spinner size="sm" color="#3E15F4" />
                             ) : (
                               <ArrowDownIcon color="#3E15F4" />
                             )}
@@ -1409,6 +1412,11 @@ const ScanBlock: React.FC<{
   profile: Profile;
 }> = ({ scan, setTabIndex, profile }) => {
   const history = useHistory();
+
+  const { scanId } = useParams<{
+    scanId: string;
+  }>();
+
   return (
     <Flex
       alignItems="flex-start"
@@ -1422,6 +1430,7 @@ const ScanBlock: React.FC<{
         px: [5, 5, 7, 10],
         borderRadius: "10px",
         transition: "0.3s box-shadow",
+        border: scanId === scan.scan_id ? "1px solid #3300FF80" : "none",
         boxShadow: "0px 4px 20px rgba(0, 0, 0, 0.05)",
         _hover: {
           boxShadow: "0px 4px 20px rgba(0, 0, 0, 0.2)",
