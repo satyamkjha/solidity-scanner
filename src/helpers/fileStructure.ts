@@ -1,7 +1,7 @@
 import { TreeItem, TreeItemUP } from "common/types";
 
 export const restructureRepoTree = (
-  repoTree: TreeItem | TreeItemUP,
+  repoTree: TreeItem,
   check: boolean
 ): TreeItemUP => {
   let tempRepoTree = { ...repoTree, isChildCheck: check, checked: check };
@@ -21,6 +21,27 @@ export const restructureRepoTree = (
   let newTree = tempRepoTree.tree.map((item) =>
     restructureRepoTree(item, check)
   );
+
+  let newRepoTree = { ...tempRepoTree, blobs: newBlobs, tree: newTree };
+  return newRepoTree;
+};
+
+export const updateChildTree = (
+  repoTree: TreeItemUP,
+  check: boolean
+): TreeItemUP => {
+  let tempRepoTree = { ...repoTree, isChildCheck: check, checked: check };
+
+  // console.log(generatePathArray(tempRepoTree.path));
+  let newBlobs = tempRepoTree.blobs.map((blob) => ({
+    ...blob,
+    checked: check,
+  }));
+  //   newBlobs.forEach((item) => {
+  //     console.log(item.path);
+  //     console.log(generatePathArray(item.path));
+  //   });
+  let newTree = tempRepoTree.tree.map((item) => updateChildTree(item, check));
 
   let newRepoTree = { ...tempRepoTree, blobs: newBlobs, tree: newTree };
   return newRepoTree;

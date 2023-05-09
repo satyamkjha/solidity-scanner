@@ -29,7 +29,11 @@ import {
   InfoIcon,
 } from "@chakra-ui/icons";
 import { TreeItem, TreeItemUP } from "common/types";
-import { restructureRepoTree, generatePathArray } from "helpers/fileStructure";
+import {
+  restructureRepoTree,
+  generatePathArray,
+  updateChildTree,
+} from "helpers/fileStructure";
 
 const formatOptionLabel: React.FC<{
   value: string;
@@ -81,18 +85,8 @@ const customStyles = {
 const FileList: React.FC<{
   fileList: TreeItemUP;
   view: "github_app" | "detailed_result" | "scan_history";
-  skipped: boolean;
-  addFilePath: (path: string) => void;
-  deleteFilePath: (path: string) => void;
-  skipFilePaths: string[];
-}> = ({
-  fileList,
-  view,
-  skipped,
-  addFilePath,
-  deleteFilePath,
-  skipFilePaths,
-}) => {
+  updateCheck: (path: string, check: boolean) => void;
+}> = ({ fileList, view, updateCheck }) => {
   return (
     <Flex
       height="fit-content"
@@ -103,22 +97,10 @@ const FileList: React.FC<{
       pl={[2, 2, 7]}
     >
       {fileList.tree.map((item) => (
-        <FolderItem
-          addFilePath={addFilePath}
-          deleteFilePath={deleteFilePath}
-          skipFilePaths={skipFilePaths}
-          view={view}
-          folderItem={item}
-        />
+        <FolderItem view={view} folderItem={item} updateCheck={updateCheck} />
       ))}
       {fileList.blobs.map((item) => (
-        <FileItem
-          addFilePath={addFilePath}
-          deleteFilePath={deleteFilePath}
-          skipFilePaths={skipFilePaths}
-          view={view}
-          fileItem={item}
-        />
+        <FileItem view={view} fileItem={item} updateCheck={updateCheck} />
       ))}
     </Flex>
   );
@@ -126,19 +108,15 @@ const FileList: React.FC<{
 
 const FolderItem: React.FC<{
   folderItem: TreeItemUP;
-  addFilePath: (path: string) => void;
-  deleteFilePath: (path: string) => void;
-  skipFilePaths: string[];
   view: "github_app" | "detailed_result" | "scan_history";
-}> = ({ folderItem, view, addFilePath, deleteFilePath, skipFilePaths }) => {
-  const [isChecked, setIsChecked] = React.useState(
-    folderItem.checked && folderItem.isChildCheck
-  );
+  updateCheck: (path: string, check: boolean) => void;
+}> = ({ folderItem, view, updateCheck }) => {
+  // const [isChecked, setIsChecked] = React.useState(folderItem.checked);
   const [show, setShow] = React.useState(false);
 
-  useEffect(() => {
-    setIsChecked(folderItem.checked && folderItem.isChildCheck);
-  }, []);
+  // useEffect(() => {
+  //   setIsChecked(folderItem.checked);
+  // }, [folderItem.checked]);
 
   return (
     <>
@@ -159,33 +137,23 @@ const FolderItem: React.FC<{
         {view !== "scan_history" && (
           <Checkbox
             mr={3}
-            isChecked={isChecked}
+            isChecked={folderItem.checked}
             colorScheme={"purple"}
             borderColor={"gray.500"}
             onChange={() => {
-              if (isChecked) {
-                addFilePath(`${folderItem.path}/`);
-              } else {
-                deleteFilePath(`${folderItem.path}/`);
-              }
-              setIsChecked(!isChecked);
+              updateCheck(folderItem.path, !folderItem.checked);
+
+              // setIsChecked(!isChecked);
             }}
           ></Checkbox>
         )}
-        <FolderIcon active={isChecked} size={20} />
-        <Text ml={3} color={isChecked ? "#4E5D78" : "#4E5D7880"}>
+        <FolderIcon active={folderItem.checked} size={20} />
+        <Text ml={3} color={folderItem.checked ? "#4E5D78" : "#4E5D7880"}>
           {folderItem.name}
         </Text>
       </Flex>
       {show && (
-        <FileList
-          addFilePath={addFilePath}
-          deleteFilePath={deleteFilePath}
-          skipFilePaths={skipFilePaths}
-          view={view}
-          fileList={folderItem}
-          skipped={!isChecked}
-        />
+        <FileList view={view} fileList={folderItem} updateCheck={updateCheck} />
       )}
     </>
   );
@@ -197,17 +165,15 @@ const FileItem: React.FC<{
     checked: boolean;
     name: string;
   };
-  addFilePath: (path: string) => void;
-  deleteFilePath: (path: string) => void;
-  skipFilePaths: string[];
   view: "github_app" | "detailed_result" | "scan_history";
-}> = ({ fileItem, view, addFilePath, deleteFilePath, skipFilePaths }) => {
-  const [isChecked, setIsChecked] = React.useState(fileItem.checked);
+  updateCheck: (path: string, check: boolean) => void;
+}> = ({ fileItem, view, updateCheck }) => {
+  // const [isChecked, setIsChecked] = React.useState(fileItem.checked);
   const [show, setShow] = React.useState(false);
 
-  useEffect(() => {
-    setIsChecked(fileItem.checked);
-  }, []);
+  // useEffect(() => {
+  //   setIsChecked(fileItem.checked);
+  // }, [fileItem.checked]);
 
   return (
     <Flex
@@ -230,26 +196,18 @@ const FileItem: React.FC<{
       {view !== "scan_history" && fileItem.name.slice(-4) === ".sol" && (
         <Checkbox
           mr={3}
-          isChecked={isChecked}
+          isChecked={fileItem.checked}
           colorScheme={"purple"}
           borderColor={"gray.500"}
           onChange={() => {
-            // if (isChecked) {
-            //   addFilePath(
-            //     `${filePath}${filePath !== "" ? "/" : ""}${fileName}`
-            //   );
-            // } else {
-            //   deleteFilePath(
-            //     `${filePath}${filePath !== "" ? "/" : ""}${fileName}`
-            //   );
-            // }
-            setIsChecked(!isChecked);
+            updateCheck(fileItem.path, !fileItem.checked);
+            // setIsChecked(!isChecked);
           }}
         ></Checkbox>
       )}
       <AiOutlineFile
         color={
-          isChecked && fileItem.name.slice(-4) === ".sol"
+          fileItem.checked && fileItem.name.slice(-4) === ".sol"
             ? "#4E5D78"
             : "#4E5D7880"
         }
@@ -258,7 +216,7 @@ const FileItem: React.FC<{
       <Text
         ml={3}
         color={
-          isChecked && fileItem.name.slice(-4) === ".sol"
+          fileItem.checked && fileItem.name.slice(-4) === ".sol"
             ? "#4E5D78"
             : "#4E5D7880"
         }
@@ -307,24 +265,47 @@ const FolderSettings: React.FC<{
     if (repoTreeUP) {
       let newRepoTreeUP = repoTreeUP;
       const pathArray = generatePathArray(path);
-      let depth = pathArray.length - 1;
+      let depth = 0;
 
-      const updateChild = () => {};
+      // const updateParent = (tree: TreeItemUP[]): TreeItemUP[] => {
+      //   const currDepth = depth;
+      //   let newTree = tree.map((item) => {
+      //     if (pathArray[depth] === item.path) {
+      //       depth++;
+      //       if (currDepth === pathArray.length - 1) {
+      //         const newChildTree = updateChildTree(item, check);
+      //         // tick all children same check and return updated tree ..... pass the tree and check
+      //         return newChildTree;
+      //       } else {
+      //         if (pathArray[currDepth].slice(-1) === "/") {
+      //           let newChildTree = updateFolderCheck(item.tree);
+      //           return { ...item, tree: newChildTree };
+      //         }
+      //         let newChildBlobs = updateFileCheck(item.blobs);
+      //         return { ...item, blobs: newChildBlobs };
+      //       }
+      //     }
+      //     return item;
+      //   });
+      //   return newTree;
+      // };
 
       const updateFolderCheck = (tree: TreeItemUP[]): TreeItemUP[] => {
+        const currDepth = depth;
         let newTree = tree.map((item) => {
           if (pathArray[depth] === item.path) {
-            depth--;
-            if (depth === 0) {
-              const newChildTree = restructureRepoTree(item, check);
+            depth++;
+            if (currDepth === pathArray.length - 1) {
+              const newChildTree = updateChildTree(item, check);
               // tick all children same check and return updated tree ..... pass the tree and check
               return newChildTree;
             } else {
-              if (pathArray[depth].slice(-1) === "/") {
+              if (pathArray[currDepth].slice(-1) === "/") {
                 let newChildTree = updateFolderCheck(item.tree);
                 return { ...item, tree: newChildTree };
               }
               let newChildBlobs = updateFileCheck(item.blobs);
+              
               return { ...item, blobs: newChildBlobs };
             }
           }
@@ -373,7 +354,7 @@ const FolderSettings: React.FC<{
       //   }
       // });
 
-      if (pathArray[depth] === "/") {
+      if (pathArray[depth].slice(-1) === "/") {
         let updatedTree = updateFolderCheck(newRepoTreeUP.tree);
         newRepoTreeUP = { ...newRepoTreeUP, tree: updatedTree };
       } else {
@@ -381,6 +362,9 @@ const FolderSettings: React.FC<{
         newRepoTreeUP = { ...newRepoTreeUP, blobs: updatedBlobs };
       }
 
+      depth = 0;
+
+      setRepoTreeUP(newRepoTreeUP);
       //update the tree with the global var and update the blob with the global var
       // update parent child check if any
 
@@ -513,12 +497,9 @@ const FolderSettings: React.FC<{
         ) : (
           repoTreeUP && (
             <FileList
-              addFilePath={addFilePath}
-              deleteFilePath={deleteFilePath}
-              skipFilePaths={skipFilePaths}
               view={view}
               fileList={repoTreeUP}
-              skipped={false}
+              updateCheck={updateCheck}
             />
           )
         )}
