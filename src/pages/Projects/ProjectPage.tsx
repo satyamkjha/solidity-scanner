@@ -141,7 +141,7 @@ export const ProjectPage: React.FC = () => {
       if (responseData) {
         if (responseData.status === "success") {
           setRepoTree(responseData.tree);
-          console.log(restructureRepoTree(responseData.tree));
+          console.log(restructureRepoTree(responseData.tree, true));
         }
       }
     }

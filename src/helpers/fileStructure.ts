@@ -1,19 +1,26 @@
-export const restructureRepoTree = (repoTree: TreeItem): TreeItemUP => {
-  let tempRepoTree = { ...repoTree, isChildCheck: true, checked: true };
+import { TreeItem, TreeItemUP } from "common/types";
+
+export const restructureRepoTree = (
+  repoTree: TreeItem | TreeItemUP,
+  check: boolean
+): TreeItemUP => {
+  let tempRepoTree = { ...repoTree, isChildCheck: check, checked: check };
   if (tempRepoTree.name !== "root") {
     tempRepoTree = { ...tempRepoTree, path: `${tempRepoTree.path}/` };
   }
   // console.log(generatePathArray(tempRepoTree.path));
   let newBlobs = tempRepoTree.blobs.map((blob) => ({
     path: `${tempRepoTree.path}${blob}`,
-    checked: true,
+    checked: check,
     name: blob,
   }));
   //   newBlobs.forEach((item) => {
   //     console.log(item.path);
   //     console.log(generatePathArray(item.path));
   //   });
-  let newTree = tempRepoTree.tree.map((item) => restructureRepoTree(item));
+  let newTree = tempRepoTree.tree.map((item) =>
+    restructureRepoTree(item, check)
+  );
 
   let newRepoTree = { ...tempRepoTree, blobs: newBlobs, tree: newTree };
   return newRepoTree;

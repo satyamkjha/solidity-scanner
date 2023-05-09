@@ -311,46 +311,85 @@ const FolderSettings: React.FC<{
 
       const updateChild = () => {};
 
-      const updateFolderCheck = () => {};
+      const updateFolderCheck = (tree: TreeItemUP[]): TreeItemUP[] => {
+        let newTree = tree.map((item) => {
+          if (pathArray[depth] === item.path) {
+            depth--;
+            if (depth === 0) {
+              const newChildTree = restructureRepoTree(item, check);
+              // tick all children same check and return updated tree ..... pass the tree and check
+              return newChildTree;
+            } else {
+              if (pathArray[depth].slice(-1) === "/") {
+                let newChildTree = updateFolderCheck(item.tree);
+                return { ...item, tree: newChildTree };
+              }
+              let newChildBlobs = updateFileCheck(item.blobs);
+              return { ...item, blobs: newChildBlobs };
+            }
+          }
+        });
+        return newTree;
+      };
       // will be provided with a list of trees and will return an updated list of trees
 
-      const updateFileCheck = () => {}
-      //will be provided with a list of blobs and will return and updated list of blobs
-
-      newRepoTreeUP.blobs.map((blob) => {
-        if (pathArray[depth] === blob.path) {
-          return { ...blob, checked: check };
-          // updateChild()
-        }
-      });
-
-      newRepoTreeUP.tree.map((item) => {
-        if (pathArray[depth] === item.path) {
-          depth--;
-          if (depth === 0) {
-            // tick all children same check and return updated tree ..... pass the tree and check
-            return;
+      const updateFileCheck = (
+        blobs: {
+          path: string;
+          checked: boolean;
+          name: string;
+        }[]
+      ) => {
+        const newBlobs = blobs.map((blob) => {
+          if (pathArray[depth] === blob.path) {
+            return { ...blob, checked: check };
           } else {
-            const newTree = updateFolderCheck();
-            return { ...item, tree: newTree };
+            return { ...blob };
           }
-        }
-      });
+        });
+        return newBlobs;
+      };
+      //will be provided with a list of blobs and will return an updated list of blobs
 
+      // newRepoTreeUP.blobs.map((blob) => {
+      //   if (pathArray[depth] === blob.path) {
+      //     return { ...blob, checked: check };
+      //     // updateChild()
+      //   }
+      // });
+
+      // newRepoTreeUP.tree.map((item) => {
+      //   if (pathArray[depth] === item.path) {
+      //     depth--;
+      //     if (depth === 0) {
+      //       const newChildTree = restructureRepoTree(item, true);
+      //       // tick all children same check and return updated tree ..... pass the tree and check
+      //       return newChildTree;
+      //     } else {
+      //       const newChildTree = updateFolderCheck();
+      //       return { ...item, tree: newChildTree };
+      //     }
+      //   }
+      // });
+
+      if (pathArray[depth] === "/") {
+        let updatedTree = updateFolderCheck(newRepoTreeUP.tree);
+        newRepoTreeUP = { ...newRepoTreeUP, tree: updatedTree };
+      } else {
+        let updatedBlobs = updateFileCheck(newRepoTreeUP.blobs);
+        newRepoTreeUP = { ...newRepoTreeUP, blobs: updatedBlobs };
+      }
 
       //update the tree with the global var and update the blob with the global var
       // update parent child check if any
 
       // state update
-
-
-
     }
   };
 
   useEffect(() => {
     if (fileData) {
-      setRepoTreeUP(restructureRepoTree(fileData));
+      setRepoTreeUP(restructureRepoTree(fileData, true));
     }
   }, []);
 
