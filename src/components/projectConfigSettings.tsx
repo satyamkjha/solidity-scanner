@@ -1,38 +1,45 @@
-import {
-  VStack,
-  Text,
-  Switch,
-  HStack,
-  Alert,
-  AlertIcon,
-  Link,
-} from "@chakra-ui/react";
+import { VStack, Text, Switch, HStack, Spinner } from "@chakra-ui/react";
 import React from "react";
 import GithubConnectAlert from "./githubConnectAlert";
 
 const ConfigSettings: React.FC<{
   githubSync: boolean;
-  setGithubSync: React.Dispatch<React.SetStateAction<boolean>>;
+  onToggleFunction: () => Promise<void>;
   isGithubIntegrated: boolean;
-}> = ({ githubSync, setGithubSync, isGithubIntegrated }) => {
+  isLoading?: boolean;
+  view: "github_app" | "detailed_result" | "scan_history";
+}> = ({
+  githubSync,
+  onToggleFunction,
+  isGithubIntegrated,
+  view,
+  isLoading,
+}) => {
+  const [connectAlert, setConnectAlert] = React.useState(false);
+
   return (
     <VStack
-      mt={8}
       spacing={3}
+      pt={3}
       width={"100%"}
       justifyContent="flex-start"
       alignItems={"flex-start"}
-      minHeight="300px"
-      height={["fit-content", "fit-content", "fit-content", "40vh"]}
+      minHeight={view === "github_app" ? "400px" : "200px"}
+      height={[
+        "fit-content",
+        "fit-content",
+        "fit-content",
+        view === "github_app" ? "50vh" : "fit-content",
+      ]}
     >
       <Text
         sx={{
           fontSize: "lg",
           fontWeight: 500,
-          textAlign: "center",
+          textAlign: "left",
         }}
       >
-        Turn on Github Synchronisation
+        Enable GitHub Actions
       </Text>
       <Text
         sx={{
@@ -41,16 +48,27 @@ const ConfigSettings: React.FC<{
           textAlign: "left",
         }}
       >
-        Provide a link to Git or Subversion repository. See link examples and
-        additional restrictions in the User Guide (section Starting a scan from
-        UI) available on the{" "}
+        Trigger automatic scans via Github actions
       </Text>
-      <Switch
-        size="lg"
-        variant="brand"
-        onChange={() => setGithubSync(!githubSync)}
-      />
-      {!isGithubIntegrated && githubSync && <GithubConnectAlert />}
+      <HStack spacing={5}>
+        <Switch
+          size="lg"
+          variant="brand"
+          isDisabled={isLoading}
+          isChecked={githubSync}
+          onChange={() => {
+            if (isGithubIntegrated) {
+              onToggleFunction();
+            } else {
+              setConnectAlert(!connectAlert);
+            }
+          }}
+        />
+        {isLoading && <Spinner color="gray.400" />}
+      </HStack>
+      {!isGithubIntegrated && connectAlert && (
+        <GithubConnectAlert msg="You need to connect your GitHub to enable webhooks" />
+      )}
       <Text
         sx={{
           fontSize: "lg",
@@ -67,9 +85,7 @@ const ConfigSettings: React.FC<{
           textAlign: "left",
         }}
       >
-        Provide a link to Git or Subversion repository. See link examples and
-        additional restrictions in the User Guide (section Starting a scan from
-        UI) available on the{" "}
+        Get scan results and alerts on your Slack channels
       </Text>
       <HStack spacing={5}>
         <Switch isDisabled={true} size="lg" variant="brand" />

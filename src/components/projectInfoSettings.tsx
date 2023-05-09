@@ -11,7 +11,7 @@ import {
   Text,
   Link,
 } from "@chakra-ui/react";
-import React from "react";
+import React, { useState } from "react";
 import Icon from "react-crypto-icons";
 import { AiOutlineProject } from "react-icons/ai";
 import { FaFileCode } from "react-icons/fa";
@@ -39,8 +39,48 @@ const InfoSettings: React.FC<{
   setGithubLink,
   setVisibility,
 }) => {
+  const [connectAlert, setConnectAlert] = useState(false);
+
   return (
-    <Stack minHeight="300px" height="40vh" spacing={6} mt={8} width={"100%"}>
+    <Stack
+      minHeight="400px"
+      spacing={3}
+      mt={0}
+      height={["fit-content", "fit-content", "fit-content", "50vh"]}
+      width={"100%"}
+    >
+      <Text
+        sx={{
+          fontSize: "sm",
+          color: "subtle",
+          textAlign: "left",
+        }}
+      >
+        NOTE: Please verify the following to avoid scan failure:
+      </Text>
+      <Text
+        sx={{
+          color: "subtle",
+          textAlign: "left",
+          mb: 2,
+          fontSize: "xs",
+        }}
+      >
+        1. Ensure the link is to a GitHub repository containing Solidity (.sol)
+        files. It is recommended to use the HTTPS GitHub (.git) cloning link of
+        the repository.
+      </Text>
+      <Text
+        sx={{
+          color: "subtle",
+          textAlign: "left",
+          mb: 6,
+          fontSize: "xs",
+        }}
+      >
+        2. Verify if the repository is public, for private repositories, please
+        integrate your GitHub from the Integrations tab.
+      </Text>
       <VStack alignItems={"flex-start"}>
         <Text mb={0} fontSize="sm">
           Project name
@@ -92,12 +132,22 @@ const InfoSettings: React.FC<{
           size="lg"
           variant="brand"
           isChecked={visibility}
-          onChange={() => setVisibility(!visibility)}
+          onChange={() => {
+            if (isGithubIntegrated) {
+              setVisibility(!visibility);
+            } else {
+              setConnectAlert(!connectAlert);
+            }
+          }}
         />
         <Text>Private</Text>
       </HStack>
 
-      {!isGithubIntegrated && visibility && <GithubConnectAlert />}
+      {!isGithubIntegrated && connectAlert && (
+        <GithubConnectAlert
+          msg={"You need to connect your GitHub to start a private scan."}
+        />
+      )}
     </Stack>
   );
 };

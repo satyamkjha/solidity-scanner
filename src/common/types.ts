@@ -89,10 +89,12 @@ export type AuthResponse = {
 export type Scan = {
   client_id: number;
   latest_report_id: string;
-  project_url: string;
-  project_name: string;
+  project_url?: string;
+  project_branch?: string;
+  project_name?: string;
   project_id: string;
   file_url_list?: string[];
+  webhooks_enabled?: boolean;
   contract_address?: string;
   contract_platform?: string;
   compilerversion?: string;
@@ -119,6 +121,8 @@ export type Scan = {
   multi_file_scan_details: MultiFileScanDetail[];
   multi_file_scan_status: string;
   multi_file_scan_summary: MultiFileScanSummary;
+  project_skip_files?: string[];
+  skip_file_paths?: string[];
 };
 
 export type MultiFileScanDetail = {
@@ -162,6 +166,13 @@ export type MetricWiseAggregatedFinding = {
   scan_id: string;
   issue_description?: string;
   issue_remediation?: string;
+};
+
+export type TreeItem = {
+  name: string;
+  path: string;
+  tree: TreeItem[];
+  blobs: string[];
 };
 
 export type ScanMeta = {

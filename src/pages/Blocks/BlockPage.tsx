@@ -333,7 +333,7 @@ const BlockPage: React.FC = () => {
                         <VStack alignItems={"flex-start"}>
                           <HStack justifyContent="flex-start">
                             <Image
-                              src={`/blockscan/${scanData.scan_report.contract_platform}-scan.svg`}
+                              src={`/blockscan/${scanData.scan_report.contract_platform}.svg`}
                               alt="Product screenshot"
                               h={"20px"}
                               w={"20px"}
@@ -405,7 +405,7 @@ const BlockPage: React.FC = () => {
                         >
                           <HStack justifyContent="flex-start">
                             <Image
-                              src={`/blockscan/${scanData.scan_report.contract_platform}-scan.svg`}
+                              src={`/blockscan/${scanData.scan_report.contract_platform}.svg`}
                               alt="Product screenshot"
                               h={"20px"}
                               w={"20px"}

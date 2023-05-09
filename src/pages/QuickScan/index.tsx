@@ -309,7 +309,7 @@ const QuickScan: React.FC = () => {
     {
       value: "xdc",
       icon: "xdc",
-      label: "XDC - (blockchain.io)",
+      label: "XDC - (xdc.blocksscan.io)",
     },
   ];
 
