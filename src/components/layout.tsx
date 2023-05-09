@@ -72,11 +72,7 @@ const Layout: React.FC = ({ children }) => {
   }, [showSidebar]);
 
   return (
-    <Box
-      as="div"
-     
-      height="100vh"
-    >
+    <Box as="div" height="100vh">
       {profileData && (
         <>
           {profileData.current_package === "expired" ? (
@@ -154,12 +150,14 @@ const Layout: React.FC = ({ children }) => {
           <Sidebar
             isCollapsed={isSidebarCollapsed}
             setCollapsed={setSidebarCollapsed}
+            setShowSidebar={setShowSidebar}
           />
         </Box>
         <Box sx={{ display: ["none", "none", "none", "block"] }}>
           <Sidebar
             isCollapsed={isSidebarCollapsed}
             setCollapsed={setSidebarCollapsed}
+            setShowSidebar={setShowSidebar}
           />
         </Box>
         <Box
