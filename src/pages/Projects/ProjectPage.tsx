@@ -1753,6 +1753,7 @@ const ScanBlock: React.FC<{
         >
           {skipFilePaths && repoTree && (
             <FolderSettings
+              branch=""
               view="scan_history"
               fileData={repoTree}
               skipFilePaths={skipFilePaths}
