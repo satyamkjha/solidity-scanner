@@ -328,6 +328,7 @@ const FolderSettings: React.FC<{
               return { ...item, blobs: newChildBlobs };
             }
           }
+          return item;
         });
         return newTree;
       };
