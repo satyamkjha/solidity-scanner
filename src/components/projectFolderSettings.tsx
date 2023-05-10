@@ -27,12 +27,15 @@ import {
   ChevronRightIcon,
   RepeatClockIcon,
   InfoIcon,
+  CheckIcon,
+  MinusIcon,
 } from "@chakra-ui/icons";
 import { TreeItem, TreeItemUP } from "common/types";
 import {
   restructureRepoTree,
   generatePathArray,
   updateChildTree,
+  updateCheckedValue,
 } from "helpers/fileStructure";
 
 const formatOptionLabel: React.FC<{
@@ -137,7 +140,8 @@ const FolderItem: React.FC<{
         {view !== "scan_history" && (
           <Checkbox
             mr={3}
-            isChecked={folderItem.checked}
+            isChecked={folderItem.isChildCheck}
+            icon={folderItem.checked ? <CheckIcon /> : <MinusIcon />}
             colorScheme={"purple"}
             borderColor={"gray.500"}
             onChange={() => {
@@ -169,7 +173,7 @@ const FileItem: React.FC<{
   updateCheck: (path: string, check: boolean) => void;
 }> = ({ fileItem, view, updateCheck }) => {
   // const [isChecked, setIsChecked] = React.useState(fileItem.checked);
-  const [show, setShow] = React.useState(false);
+  // const [show, setShow] = React.useState(false);
 
   // useEffect(() => {
   //   setIsChecked(fileItem.checked);
@@ -185,7 +189,7 @@ const FileItem: React.FC<{
       }
       width={"fit-content"}
       cursor={"pointer"}
-      onClick={() => setShow(!show)}
+      // onClick={() => setShow(!show)}
       justifyContent="flex-start"
       alignItems="center"
       borderRadius={5}
@@ -254,127 +258,22 @@ const FolderSettings: React.FC<{
   });
 
   const [repoTreeUP, setRepoTreeUP] = useState<TreeItemUP>();
-  const addFilePath = (path: string) => {
-    setSkipFilePaths && setSkipFilePaths([...skipFilePaths, path]);
-  };
-  const deleteFilePath = (path: string) => {
-    const newPath = skipFilePaths.filter((item) => item !== path);
-    setSkipFilePaths && setSkipFilePaths([...newPath]);
-  };
+
   const updateCheck = (path: string, check: boolean) => {
     if (repoTreeUP) {
-      let newRepoTreeUP = repoTreeUP;
-      const pathArray = generatePathArray(path);
-      let depth = 0;
-
-      // const updateParent = (tree: TreeItemUP[]): TreeItemUP[] => {
-      //   const currDepth = depth;
-      //   let newTree = tree.map((item) => {
-      //     if (pathArray[depth] === item.path) {
-      //       depth++;
-      //       if (currDepth === pathArray.length - 1) {
-      //         const newChildTree = updateChildTree(item, check);
-      //         // tick all children same check and return updated tree ..... pass the tree and check
-      //         return newChildTree;
-      //       } else {
-      //         if (pathArray[currDepth].slice(-1) === "/") {
-      //           let newChildTree = updateFolderCheck(item.tree);
-      //           return { ...item, tree: newChildTree };
-      //         }
-      //         let newChildBlobs = updateFileCheck(item.blobs);
-      //         return { ...item, blobs: newChildBlobs };
-      //       }
-      //     }
-      //     return item;
-      //   });
-      //   return newTree;
-      // };
-
-      const updateFolderCheck = (tree: TreeItemUP[]): TreeItemUP[] => {
-        const currDepth = depth;
-        let newTree = tree.map((item) => {
-          if (pathArray[depth] === item.path) {
-            depth++;
-            if (currDepth === pathArray.length - 1) {
-              const newChildTree = updateChildTree(item, check);
-              // tick all children same check and return updated tree ..... pass the tree and check
-              return newChildTree;
-            } else {
-              if (pathArray[currDepth].slice(-1) === "/") {
-                let newChildTree = updateFolderCheck(item.tree);
-                return { ...item, tree: newChildTree };
-              }
-              let newChildBlobs = updateFileCheck(item.blobs);
-              
-              return { ...item, blobs: newChildBlobs };
-            }
-          }
-          return item;
-        });
-        return newTree;
-      };
-      // will be provided with a list of trees and will return an updated list of trees
-
-      const updateFileCheck = (
-        blobs: {
-          path: string;
-          checked: boolean;
-          name: string;
-        }[]
-      ) => {
-        const newBlobs = blobs.map((blob) => {
-          if (pathArray[depth] === blob.path) {
-            return { ...blob, checked: check };
-          } else {
-            return { ...blob };
-          }
-        });
-        return newBlobs;
-      };
-      //will be provided with a list of blobs and will return an updated list of blobs
-
-      // newRepoTreeUP.blobs.map((blob) => {
-      //   if (pathArray[depth] === blob.path) {
-      //     return { ...blob, checked: check };
-      //     // updateChild()
-      //   }
-      // });
-
-      // newRepoTreeUP.tree.map((item) => {
-      //   if (pathArray[depth] === item.path) {
-      //     depth--;
-      //     if (depth === 0) {
-      //       const newChildTree = restructureRepoTree(item, true);
-      //       // tick all children same check and return updated tree ..... pass the tree and check
-      //       return newChildTree;
-      //     } else {
-      //       const newChildTree = updateFolderCheck();
-      //       return { ...item, tree: newChildTree };
-      //     }
-      //   }
-      // });
-
-      if (pathArray[depth].slice(-1) === "/") {
-        let updatedTree = updateFolderCheck(newRepoTreeUP.tree);
-        newRepoTreeUP = { ...newRepoTreeUP, tree: updatedTree };
-      } else {
-        let updatedBlobs = updateFileCheck(newRepoTreeUP.blobs);
-        newRepoTreeUP = { ...newRepoTreeUP, blobs: updatedBlobs };
-      }
-
-      depth = 0;
-
+      let newRepoTreeUP = updateCheckedValue(path, check, repoTreeUP);
       setRepoTreeUP(newRepoTreeUP);
-      //update the tree with the global var and update the blob with the global var
-      // update parent child check if any
-
-      // state update
     }
   };
 
   useEffect(() => {
     if (fileData) {
-      setRepoTreeUP(restructureRepoTree(fileData, true));
+      let newRepoTreeUP = restructureRepoTree(fileData, true);
+
+      skipFilePaths.forEach((path) => {
+        newRepoTreeUP = updateCheckedValue(path, false, newRepoTreeUP);
+      });
+      setRepoTreeUP(newRepoTreeUP);
     }
   }, []);
 
