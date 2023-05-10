@@ -1096,7 +1096,7 @@ const FileNameTab: React.FC<{ file_path: string }> = ({ file_path }) => {
                 setShowCheck(true);
                 setTimeout(() => setShowCheck(false), 2000);
               },
-              () => console.log("Could not copu to clipboard")
+              () => console.log("Could not copy to clipboard")
             );
           }}
         />
