@@ -51,9 +51,9 @@ export const generatePathArray = (path: string): string[] => {
     lastElement = `${lastElement}${item}/`;
     return lastElement;
   });
-  // if (path.slice(-1) !== "/") {
-  //   pathArray.push(path);
-  // }
+  if (path.slice(-1) !== "/") {
+    pathArray.push(path);
+  }
   return pathArray;
 };
 
@@ -204,4 +204,38 @@ export const updateCheckedValue = (
 
   return newRepoTreeUP;
   // initializing traversing based on if the first path to be checked is of a file or folder.
+};
+
+export const getSkipFilePaths = (repoTreeUP: TreeItemUP): string[] => {
+  let skipFilePaths: string[] = [];
+
+  const traverseTree = (treeList: TreeItemUP[]) => {
+    treeList.map((tree) => {
+      if (!tree.checked && !tree.isChildCheck) {
+        skipFilePaths.push(tree.path);
+      } else if (!tree.checked && tree.isChildCheck) {
+        traverseTree(tree.tree);
+        traverseBlobs(tree.blobs);
+      }
+    });
+  };
+
+  const traverseBlobs = (
+    blobs: {
+      path: string;
+      checked: boolean;
+      name: string;
+    }[]
+  ) => {
+    blobs.forEach((blob) => {
+      if (!blob.checked) {
+        skipFilePaths.push(blob.path);
+      }
+    });
+  };
+
+  traverseTree(repoTreeUP.tree);
+  traverseBlobs(repoTreeUP.blobs);
+
+  return skipFilePaths;
 };

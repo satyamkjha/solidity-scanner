@@ -145,9 +145,10 @@ const FolderItem: React.FC<{
             colorScheme={"purple"}
             borderColor={"gray.500"}
             onChange={() => {
-              updateCheck(folderItem.path, !folderItem.checked);
-
-              // setIsChecked(!isChecked);
+              updateCheck(
+                folderItem.path,
+                !(folderItem.checked || folderItem.isChildCheck)
+              );
             }}
           ></Checkbox>
         )}
@@ -233,20 +234,18 @@ const FileItem: React.FC<{
 
 const FolderSettings: React.FC<{
   view: "github_app" | "detailed_result" | "scan_history";
-  fileData: TreeItem;
+  repoTreeUP: TreeItemUP;
+  setRepoTreeUP: React.Dispatch<React.SetStateAction<TreeItemUP>>;
   branches?: string[];
   branch: string;
   setBranch?: React.Dispatch<React.SetStateAction<string>>;
-  skipFilePaths: string[];
-  setSkipFilePaths?: React.Dispatch<React.SetStateAction<string[]>>;
   updateSkipPathRequests?: () => Promise<void>;
   isLoading?: boolean;
 }> = ({
   view,
   branches,
-  fileData,
-  skipFilePaths,
-  setSkipFilePaths,
+  repoTreeUP,
+  setRepoTreeUP,
   branch,
   setBranch,
   updateSkipPathRequests,
@@ -257,25 +256,12 @@ const FolderSettings: React.FC<{
     label: branch,
   });
 
-  const [repoTreeUP, setRepoTreeUP] = useState<TreeItemUP>();
-
   const updateCheck = (path: string, check: boolean) => {
     if (repoTreeUP) {
       let newRepoTreeUP = updateCheckedValue(path, check, repoTreeUP);
       setRepoTreeUP(newRepoTreeUP);
     }
   };
-
-  useEffect(() => {
-    if (fileData) {
-      let newRepoTreeUP = restructureRepoTree(fileData, true);
-
-      skipFilePaths.forEach((path) => {
-        newRepoTreeUP = updateCheckedValue(path, false, newRepoTreeUP);
-      });
-      setRepoTreeUP(newRepoTreeUP);
-    }
-  }, []);
 
   return (
     <Flex
@@ -394,13 +380,11 @@ const FolderSettings: React.FC<{
             <Spinner color="gray.500" />
           </Flex>
         ) : (
-          repoTreeUP && (
-            <FileList
-              view={view}
-              fileList={repoTreeUP}
-              updateCheck={updateCheck}
-            />
-          )
+          <FileList
+            view={view}
+            fileList={repoTreeUP}
+            updateCheck={updateCheck}
+          />
         )}
       </Flex>
     </Flex>
