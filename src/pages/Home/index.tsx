@@ -1170,9 +1170,12 @@ const UploadForm: React.FC = () => {
     Promise.all(results).then(
       (res) => {
         let count = 0;
+        // res here is an array of boolean. Using this check if all the files are uploaded or not. Also give an option to remove a file if needed.
+        
         res.forEach((item) => {
           if (item) count++;
         });
+        // Add a flag to allow to go to step 2. Do not use count. Here in this step you also need to give an option to delete or remmove a file.
         if (count === acceptedFiles.length) {
           setStep(2);
         } else {
