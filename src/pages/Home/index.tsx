@@ -327,7 +327,7 @@ const ApplicationForm: React.FC = () => {
       });
       if (data.status === "success") {
         if (data.default_tree) {
-          updateRepoTree(data.default_tree);
+          setRepoTreeUP(restructureRepoTree(data.default_tree, true));
         }
         setBranches(data.branches);
         setBranch(data.branches[0]);
@@ -338,14 +338,6 @@ const ApplicationForm: React.FC = () => {
     setIsLoading(false);
   };
 
-  const updateRepoTree = (treeItem: TreeItem) => {
-    let newRepoTreeUP = restructureRepoTree(treeItem, true);
-    // skipFilePaths.forEach((path) => {
-    //   newRepoTreeUP = updateCheckedValue(path, false, newRepoTreeUP);
-    // });
-    setRepoTreeUP(newRepoTreeUP);
-  };
-
   const getRepoTreeReq = async (
     project_url: string,
     project_branch: string
@@ -354,7 +346,7 @@ const ApplicationForm: React.FC = () => {
     const responseData = await getRepoTree(project_url, project_branch);
     if (responseData) {
       if (responseData.status === "success") {
-        updateRepoTree(responseData.tree);
+        setRepoTreeUP(restructureRepoTree(responseData.tree, true));
       }
     }
     setIsLoading(false);

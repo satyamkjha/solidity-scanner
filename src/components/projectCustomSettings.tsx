@@ -17,12 +17,16 @@ import {
   Spinner,
 } from "@chakra-ui/react";
 import React, { useState, useEffect } from "react";
-import GithubConnectAlert from "./githubConnectAlert";
 import FolderSettings from "./projectFolderSettings";
 import ConfigSettings from "./projectConfigSettings";
 import API from "helpers/api";
 import { API_PATH } from "helpers/routeManager";
-import { TreeItem } from "common/types";
+import { TreeItem, TreeItemUP } from "common/types";
+import {
+  getSkipFilePaths,
+  restructureRepoTree,
+  updateCheckedValue,
+} from "helpers/fileStructure";
 
 const ProjectCustomSettings: React.FC<{
   isGithubIntegrated: boolean;
@@ -48,6 +52,8 @@ const ProjectCustomSettings: React.FC<{
   const [skipFilePaths, setSkipFilePaths] = useState<string[]>([
     ...project_skip_files,
   ]);
+  const [repoTreeUP, setRepoTreeUP] = useState<TreeItemUP>();
+
   const toast = useToast();
   const onToggleSwitch = async () => {
     setIsLoading(true);
@@ -113,6 +119,13 @@ const ProjectCustomSettings: React.FC<{
   useEffect(() => {
     setGithubSync(webhook_enabled);
     setSkipFilePaths([...project_skip_files]);
+    if (repoTree) {
+      let newRepoTreeUP = restructureRepoTree(repoTree, true);
+      project_skip_files.forEach((path) => {
+        newRepoTreeUP = updateCheckedValue(path, false, newRepoTreeUP);
+      });
+      setRepoTreeUP(newRepoTreeUP);
+    }
   }, []);
 
   return (
