@@ -1,12 +1,7 @@
 import React, { useState } from "react";
-import { Link as RouterLink } from "react-router-dom";
-
 import {
   Flex,
-  HStack,
   Button,
-  Link,
-  Text,
   Modal,
   ModalBody,
   ModalCloseButton,
@@ -23,10 +18,10 @@ import {
   useToast,
   Image,
 } from "@chakra-ui/react";
-import { AiOutlineProject } from "react-icons/ai";
 import { FaDiscord, FaEnvelope, FaTelegram } from "react-icons/fa";
 import { GiLetterBomb } from "react-icons/gi";
 import axios from "axios";
+import { getAssetsURL } from "helpers/helperFunction";
 
 export const ContactUs: React.FC<{ onClose(): any; isOpen: boolean }> = ({
   isOpen,
@@ -38,6 +33,8 @@ export const ContactUs: React.FC<{ onClose(): any; isOpen: boolean }> = ({
   const [telegram, setTelegram] = useState("");
   const [body, setBody] = useState("");
   const toast = useToast();
+
+  const assetsURL = getAssetsURL();
 
   const onSubmit = () => {
     axios.defaults.headers.post["Content-Type"] = "application/json";
@@ -190,7 +187,7 @@ export const ContactUs: React.FC<{ onClose(): any; isOpen: boolean }> = ({
               </Flex>
               <Image
                 ml={"-100px"}
-                src="/common/contactus.png"
+                src={`${assetsURL}common/contactus.png`}
                 alt="Product screenshot"
                 w={"50%"}
                 display={["none", "none", "block"]}
