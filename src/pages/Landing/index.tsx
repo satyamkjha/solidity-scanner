@@ -36,11 +36,14 @@ import ManualAuditForm from "components/manualAuditForm";
 import Infographics from "components/infographics";
 import SignupBox from "components/signupBox";
 import UserTestimonial from "./components/testimonial";
+import { getAssetsURL } from "helpers/helperFunction";
 
 export default function LandingPage() {
   const { isOpen, onClose, onOpen } = useDisclosure();
   const location = useLocation();
   const [isDesktopView] = useMediaQuery("(min-width: 1024px)");
+
+  const assetsURL = getAssetsURL();
 
   useEffect(() => {
     const query = new URLSearchParams(location.search);
@@ -53,7 +56,7 @@ export default function LandingPage() {
   return (
     <>
       <Header />
-      <Container maxW={["95vw", "95vw", "90vw", "100vw"]} color="black">
+      <Container maxW={["95vw", "95vw", "95vw", "100vw"]} color="black">
         {/* Section 1 */}
         <Flex
           as="section"
@@ -76,6 +79,7 @@ export default function LandingPage() {
             w={["100%", "100%", "100%", "50%"]}
             px={[0, 0, 10]}
             py={5}
+            textAlign={"center"}
             justifyContent="center"
             display={"flex"}
             flexDir="column"
@@ -128,7 +132,7 @@ export default function LandingPage() {
           >
             <Image
               marginTop={["0px", "0px", "0px", "-60px"]}
-              src="/landing/landing-image01.png"
+              src={`${assetsURL}landing/landing_hero.png`}
               transform="translateX(20px)"
               zIndex={"10"}
               alt={"Run scans for your smart contracts"}
@@ -173,7 +177,7 @@ export default function LandingPage() {
           textAlign={["center", "left"]}
           py={24}
           px={[0, 0, 0, 24]}
-          backgroundImage={"url(/background/pattern_mask.png)"}
+          backgroundImage={`url('${assetsURL}background/pattern_mask.png')`}
           display={["flex"]}
           flexDirection={["column", "column", "column", "row"]}
           alignItems={"center"}
@@ -184,7 +188,12 @@ export default function LandingPage() {
             "space-between",
           ]}
         >
-          <Box w={["100%", "100%", "100%", "45%"]} px={[0, 0, 10]} py={10}>
+          <Box
+            textAlign={"center"}
+            w={["100%", "100%", "100%", "45%"]}
+            px={[0, 0, 10]}
+            py={10}
+          >
             <Heading wordBreak={"keep-all"} as="h1" fontSize={"3xl"} mb={8}>
               SolidityScan{" "}
               <Box
@@ -213,13 +222,15 @@ export default function LandingPage() {
           </Box>
           <Box
             w={["100%", "100%", "100%", "55%"]}
-            display={["flex"]}
+            p={0}
+            display={"flex"}
+            mr={[10, 10, 10,]}
             flexDirection="column"
-            alignItems={"flex-end"}
+            alignItems={["center", "center", "center", "flex-end"]}
           >
             <Image
               marginTop={["0px", "0px", "0px", "-60px"]}
-              src="/landing/landing-image02.png"
+              src={`${assetsURL}landing/quickscan_hero.png`}
               transform="translateX(20px)"
               zIndex={"10"}
               alt={"Run quick scans for your smart contracts"}
@@ -234,7 +245,7 @@ export default function LandingPage() {
           textAlign={["center", "left"]}
           py={[5, 5, 10, 20]}
           px={[0, 0, 0, 24]}
-          backgroundImage={"url(/background/pattern_mask.png)"}
+          backgroundImage={`url(${assetsURL}background/pattern_mask.png)`}
           display={["flex"]}
           flexDirection={"column"}
           alignItems={"center"}
@@ -269,15 +280,14 @@ export default function LandingPage() {
           flexDir={["column", "column", "row"]}
           textAlign={["center", "center", "left"]}
         >
-          <Box width={["100%", "100%", "50%"]}>
+          <Box width={["100%", "100%", "50%"]} p={[5, 5, 5, 10]}>
             <Image
-              src="/landing/landing-image03.jpeg"
+              src={`${assetsURL}landing/landing_1.png`}
               alt="Keep track of the bugs in your project"
               mx="auto"
-              p={12}
             />
           </Box>
-          <Box w={["100%", "100%", "50%"]} p={[5, 10]}>
+          <Box w={["100%", "100%", "50%"]} p={[5, 5, 5, 10]}>
             <Heading as="h2" fontSize="3xl" mb={8}>
               See your security posture evolve
             </Heading>
@@ -298,15 +308,14 @@ export default function LandingPage() {
           flexDir={["column", "column", "row-reverse"]}
           textAlign={["center", "center", "left"]}
         >
-          <Box width={["100%", "100%", "50%"]}>
+          <Box width={["100%", "100%", "50%"]} p={[5, 5, 5, 10]}>
             <Image
-              src="/landing/landing-image04.jpeg"
+              src={`${assetsURL}landing/landing_2.png`}
               alt="Integrate with Microsoft Teams, Slack and Jira"
               mx="auto"
-              p={12}
             />
           </Box>
-          <Box w={["100%", "100%", "50%"]} p={[5, 10]}>
+          <Box w={["100%", "100%", "50%"]} p={[5, 5, 5, 10]}>
             <Heading as="h2" fontSize="3xl" mb={8}>
               Supported Protocols
             </Heading>
@@ -332,15 +341,14 @@ export default function LandingPage() {
           flexDir={["column", "column", "row"]}
           textAlign={["center", "center", "left"]}
         >
-          <Box width={["100%", "100%", "50%"]}>
+          <Box width={["100%", "100%", "50%"]} p={[5, 5, 5, 10]}>
             <Image
-              src="/landing/landing-image05.jpeg"
+              src={`${assetsURL}landing/landing_3.png`}
               alt="Customize and silence issues and set your own rules"
               mx="auto"
-              p={12}
             />
           </Box>
-          <Box w={["100%", "100%", "50%"]} p={[5, 10]}>
+          <Box w={["100%", "100%", "50%"]} p={[5, 5, 5, 10]}>
             <Heading as="h2" fontSize="3xl" mb={8}>
               Built by us, for your contracts:
             </Heading>
@@ -360,15 +368,14 @@ export default function LandingPage() {
           flexDir={["column", "column", "row-reverse"]}
           textAlign={["center", "center", "left"]}
         >
-          <Box width={["100%", "100%", "50%"]}>
+          <Box width={["100%", "100%", "50%"]} p={[5, 5, 5, 10]}>
             <Image
-              src="/landing/landing-image06.jpeg"
+              src={`${assetsURL}landing/landing_4.png`}
               alt="Publish reports and share your security score"
               mx="auto"
-              p={12}
             />
           </Box>
-          <Box w={["100%", "100%", "50%"]} p={[5, 10]}>
+          <Box w={["100%", "100%", "50%"]} p={[5, 5, 5, 10]}>
             <Heading as="h2" fontSize="3xl" mb={8}>
               Publish reports and share your security score
             </Heading>
@@ -402,15 +409,14 @@ export default function LandingPage() {
           flexDir={["column", "column", "row"]}
           textAlign={["center", "center", "left"]}
         >
-          <Box width={["100%", "100%", "50%"]}>
+          <Box width={["100%", "100%", "50%"]} p={[5, 5, 5, 10]}>
             <Image
-              src="/landing/landing-image07.jpeg"
+              src={`${assetsURL}landing/landing_5.png`}
               alt="Integrate with Microsoft Teams, Slack and Jira"
               mx="auto"
-              p={12}
             />
           </Box>
-          <Box w={["100%", "100%", "50%"]} p={[5, 10]}>
+          <Box w={["100%", "100%", "50%"]} p={[5, 5, 5, 10]}>
             <Heading as="h2" fontSize="3xl" mb={8}>
               Integrate with the services you already love
             </Heading>
@@ -476,7 +482,7 @@ export default function LandingPage() {
                     zIndex={10}
                     width="200px"
                     borderRadius={"50%"}
-                    backgroundImage={`url(${data.imgUrl})`}
+                    backgroundImage={`url(${assetsURL}${data.imgUrl})`}
                     backgroundSize="contain"
                     backgroundPosition={"center"}
                   />
@@ -509,7 +515,7 @@ export default function LandingPage() {
                       onClick={() => {
                         window.open(data.linkedinUrl, "_blank");
                       }}
-                      src="/socials/linkedin.svg"
+                      src={`${assetsURL}landing/socials/linkedin.svg`}
                       height={"30px"}
                       width={"30px"}
                       alt={"Linkedin"}
@@ -518,7 +524,7 @@ export default function LandingPage() {
                       onClick={() => {
                         window.open(data.twitterUrl, "_blank");
                       }}
-                      src="/socials/twitter.svg"
+                      src={`${assetsURL}landing/socials/twitter.svg`}
                       height={"30px"}
                       width={"30px"}
                       borderRadius={"5px"}
@@ -709,7 +715,7 @@ export default function LandingPage() {
           mx={[0, 0, 0, 24]}
           sx={{
             w: ["100%", "100%", "100%", "85%"],
-            backgroundImage: 'url("/background/pattern.png")',
+            backgroundImage: `url('${assetsURL}background/pattern.png')`,
             borderRadius: 20,
             overflow: "hidden",
             mb: 10,

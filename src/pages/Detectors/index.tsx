@@ -145,7 +145,6 @@ const Detectors: React.FC = () => {
   ];
 
   const assetsURL = getAssetsURL();
-  const sizes = ["xs", "sm", "md", "lg", "xl"];
 
   return (
     <>

@@ -9,18 +9,20 @@ import {
 } from "@chakra-ui/react";
 import React from "react";
 import { useHistory } from "react-router-dom";
+import { getAssetsURL } from "helpers/helperFunction";
 
 export const SignupBox: React.FC = () => {
   const [isDesktopView] = useMediaQuery("(min-width: 1024px)");
 
   const history = useHistory();
+  const assetsURL = getAssetsURL();
 
   return (
     <Box
       mx={[0, 0, 0, 24]}
       sx={{
         w: ["100%", "100%", "100%", "85%"],
-        backgroundImage: "url(/background/pattern.png)",
+        backgroundImage: `url(${assetsURL}background/pattern.png)`,
         borderRadius: 20,
         overflow: "hidden",
       }}

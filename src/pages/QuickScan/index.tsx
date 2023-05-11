@@ -642,10 +642,7 @@ const QuickScan: React.FC = () => {
             px={[0, 0, 10]}
             py={20}
             pb={"200px"}
-            background={[
-              `url('${assetsURL}quickscan/quickscan_bg_xs.png')`,
-              `url('${assetsURL}quickscan/quickscan_bg_lg.png')`,
-            ]}
+            background={`url('${assetsURL}quickscan/quickscan_bg_lg.png')`}
             backgroundSize="cover"
             backgroundPosition={"center"}
             backgroundRepeat="no-repeat"
@@ -1623,7 +1620,7 @@ const QuickScan: React.FC = () => {
                               <Image
                                 height={"20px"}
                                 width={"20px"}
-                                src={`/blockscan/${item.contract_platform}.svg`}
+                                src={`${assetsURL}blockscan/${item.contract_platform}.svg`}
                               />
                               <Text
                                 color={"#8A94A6"}

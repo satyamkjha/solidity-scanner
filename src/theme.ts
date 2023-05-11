@@ -18,6 +18,13 @@ export const theme = extendTheme({
     "2xl": "1920px",
   },
   config,
+  breakpoints: {
+    sm: "330px",
+    md: "768px",
+    lg: "1350px",
+    xl: "1600px",
+    "2xl": "1920px",
+  },
   fonts: {
     heading: "Poppins",
     body: "Inter",

@@ -1,9 +1,12 @@
-import { Flex, Text, useMediaQuery } from "@chakra-ui/react";
+import { Flex, Text, useMediaQuery, Image } from "@chakra-ui/react";
 import React from "react";
 import { ScheduleScan, PublishReport, VulnCheck, Integration } from "./icons";
+import { getAssetsURL } from "helpers/helperFunction";
 
 export const Infographics: React.FC = () => {
   const [isDesktopView] = useMediaQuery("(min-width: 1024px)");
+
+  const assetsURL = getAssetsURL();
 
   return (
     <Flex
@@ -23,7 +26,11 @@ export const Infographics: React.FC = () => {
           mb: [8, 8, 0],
         }}
       >
-        <ScheduleScan size={isDesktopView ? 140 : 100} />
+        <Image
+          src={`${assetsURL}landing/infographic_1.svg`}
+          height={"140px"}
+          width={"140px"}
+        />
         <Text fontSize="sm" ml="2" mt={4} fontWeight={600}>
           Initiate Scans
         </Text>
@@ -35,7 +42,11 @@ export const Infographics: React.FC = () => {
           mb: [8, 8, 0],
         }}
       >
-        <PublishReport size={isDesktopView ? 140 : 100} />
+        <Image
+          src={`${assetsURL}landing/infographic_2.svg`}
+          height={"140px"}
+          width={"140px"}
+        />
         <Text fontSize="sm" ml="2" mt={4} fontWeight={600}>
           Publish Reports
         </Text>
@@ -47,7 +58,11 @@ export const Infographics: React.FC = () => {
           mb: [8, 8, 0],
         }}
       >
-        <VulnCheck size={isDesktopView ? 140 : 100} />
+        <Image
+          src={`${assetsURL}landing/infographic_3.svg`}
+          height={"140px"}
+          width={"140px"}
+        />
         <Text fontSize="sm" ml="2" mt={4} fontWeight={600}>
           100+ Vulnerability Checks
         </Text>
@@ -59,7 +74,11 @@ export const Infographics: React.FC = () => {
           mb: [8, 8, 0],
         }}
       >
-        <Integration size={isDesktopView ? 140 : 100} />
+        <Image
+          src={`${assetsURL}landing/infographic_4.svg`}
+          height={"140px"}
+          width={"140px"}
+        />
         <Text fontSize="sm" ml="2" mt={4} fontWeight={600}>
           Easy Integrations
         </Text>
