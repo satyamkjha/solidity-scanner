@@ -263,6 +263,8 @@ const FolderSettings: React.FC<{
     }
   };
 
+  const [allCheck, setAllCheck] = useState(false);
+
   return (
     <Flex
       minHeight={view === "github_app" ? "400px" : "300px"}
@@ -380,11 +382,31 @@ const FolderSettings: React.FC<{
             <Spinner color="gray.500" />
           </Flex>
         ) : (
-          <FileList
-            view={view}
-            fileList={repoTreeUP}
-            updateCheck={updateCheck}
-          />
+          <Flex
+            w="fit-content"
+            h="fit-content"
+            justifyContent="flex-start"
+            alignItems="flex-start"
+            flexDir={"column"}
+          >
+            <HStack spacing={5} ml={5} mb={2}>
+              <Checkbox
+                isChecked={allCheck}
+                colorScheme={"purple"}
+                borderColor={"gray.500"}
+                onChange={() => {
+                  setAllCheck(!allCheck);
+                  setRepoTreeUP(updateChildTree(repoTreeUP, !allCheck));
+                }}
+              ></Checkbox>
+              <Text>{allCheck ? "De-Select" : "Select"} all Files</Text>
+            </HStack>
+            <FileList
+              view={view}
+              fileList={repoTreeUP}
+              updateCheck={updateCheck}
+            />
+          </Flex>
         )}
       </Flex>
     </Flex>
