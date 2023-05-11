@@ -263,7 +263,7 @@ const FolderSettings: React.FC<{
     }
   };
 
-  const [allCheck, setAllCheck] = useState(false);
+  const [allCheck, setAllCheck] = useState(true);
 
   return (
     <Flex
@@ -389,18 +389,21 @@ const FolderSettings: React.FC<{
             alignItems="flex-start"
             flexDir={"column"}
           >
-            <HStack spacing={5} ml={5} mb={2}>
-              <Checkbox
-                isChecked={allCheck}
-                colorScheme={"purple"}
-                borderColor={"gray.500"}
-                onChange={() => {
-                  setAllCheck(!allCheck);
-                  setRepoTreeUP(updateChildTree(repoTreeUP, !allCheck));
-                }}
-              ></Checkbox>
-              <Text>{allCheck ? "De-Select" : "Select"} all Files</Text>
-            </HStack>
+            {view !== "scan_history" && (
+              <HStack spacing={5} ml={5} mb={2}>
+                <Checkbox
+                  isChecked={allCheck}
+                  colorScheme={"purple"}
+                  borderColor={"gray.500"}
+                  onChange={() => {
+                    setAllCheck(!allCheck);
+                    setRepoTreeUP(updateChildTree(repoTreeUP, !allCheck));
+                  }}
+                ></Checkbox>
+                <Text>{allCheck ? "De-Select" : "Select"} all Files</Text>
+              </HStack>
+            )}
+
             <FileList
               view={view}
               fileList={repoTreeUP}
