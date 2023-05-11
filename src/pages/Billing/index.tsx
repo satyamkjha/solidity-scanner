@@ -207,7 +207,7 @@ const Billing: React.FC = () => {
                             transactionData={transactionList[0]}
                             selectedPlan={transactionList[0].package}
                             planData={
-                              plans.pricing_data["monthly"][
+                              plans.pricing_data.monthly[
                                 transactionList[0].package
                               ]
                             }
@@ -221,7 +221,7 @@ const Billing: React.FC = () => {
                         textAlign="center"
                         sx={{ color: "text", fontWeight: 600 }}
                       >
-                        {plans.pricing_data["monthly"][selectedPlan].name}
+                        {plans.pricing_data.monthly[selectedPlan].name}
                       </Text>
                       <Text
                         display={["block", "block", "block", "none"]}
@@ -232,10 +232,7 @@ const Billing: React.FC = () => {
                         fontWeight={300}
                         fontSize="smaller"
                       >
-                        {
-                          plans.pricing_data["monthly"][selectedPlan]
-                            .description
-                        }
+                        {plans.pricing_data.monthly[selectedPlan].description}
                       </Text>
                       <Box
                         display={["flex", "flex", "flex", "none"]}
@@ -248,7 +245,7 @@ const Billing: React.FC = () => {
                           initialSlide={4}
                           onSlideChange={(swiper) => {
                             setSelectedPlan(
-                              Object.keys(plans.pricing_data["monthly"])[
+                              Object.keys(plans.pricing_data.monthly)[
                                 swiper.activeIndex
                               ]
                             );
@@ -301,7 +298,7 @@ const Billing: React.FC = () => {
                             width: "100%",
                           }}
                         >
-                          {Object.keys(plans.pricing_data["monthly"]).map(
+                          {Object.keys(plans.pricing_data.monthly).map(
                             (plan, index) => {
                               return (
                                 <SwiperSlide key={index}>
@@ -309,9 +306,7 @@ const Billing: React.FC = () => {
                                     selectedPlan={selectedPlan}
                                     setSelectedPlan={setSelectedPlan}
                                     plan={plan}
-                                    planData={
-                                      plans.pricing_data["monthly"][plan]
-                                    }
+                                    planData={plans.pricing_data.monthly[plan]}
                                     profile={data}
                                   />
                                 </SwiperSlide>
@@ -343,7 +338,7 @@ const Billing: React.FC = () => {
                           padding={2}
                           mt={5}
                         >
-                          {Object.keys(plans.pricing_data["monthly"]).map(
+                          {Object.keys(plans.pricing_data.monthly).map(
                             (plan) => {
                               if (plan !== "trial")
                                 return (
@@ -351,9 +346,7 @@ const Billing: React.FC = () => {
                                     selectedPlan={selectedPlan}
                                     setSelectedPlan={setSelectedPlan}
                                     plan={plan}
-                                    planData={
-                                      plans.pricing_data["monthly"][plan]
-                                    }
+                                    planData={plans.pricing_data.monthly[plan]}
                                     profile={data}
                                   />
                                 );
@@ -366,7 +359,7 @@ const Billing: React.FC = () => {
                         sx={{ color: "text", fontWeight: 600 }}
                         ml={[0, 0, 3, 3, 5]}
                       >
-                        {plans.pricing_data["monthly"][selectedPlan].name}
+                        {plans.pricing_data.monthly[selectedPlan].name}
                       </Text>
                       <Text
                         display={["none", "none", "none", "flex"]}
@@ -378,13 +371,10 @@ const Billing: React.FC = () => {
                         fontWeight={300}
                         fontSize="smaller"
                       >
-                        {
-                          plans.pricing_data["monthly"][selectedPlan]
-                            .description
-                        }
+                        {plans.pricing_data.monthly[selectedPlan].description}
                       </Text>
                       <PricingDetails
-                        planData={plans.pricing_data["monthly"][selectedPlan]}
+                        planData={plans.pricing_data.monthly[selectedPlan]}
                         selectedPlan={selectedPlan}
                       />
                     </Flex>
@@ -394,15 +384,12 @@ const Billing: React.FC = () => {
                         subscription={data.subscription}
                         isCancellable={data.is_cancellable}
                         name={
-                          plans.pricing_data["monthly"][data.current_package]
-                            .name
+                          plans.pricing_data.monthly[data.current_package].name
                         }
                         packageName={data.current_package}
                         packageRechargeDate={data.package_recharge_date}
                         packageValidity={data.package_validity}
-                        plan={
-                          plans.pricing_data["monthly"][data.current_package]
-                        }
+                        plan={plans.pricing_data.monthly[data.current_package]}
                       />
 
                       {/* <HStack
@@ -495,7 +482,7 @@ const PlanCard: React.FC<{
         <Heading fontSize={"x-large"} my={1}>
           {planData.name === "Trial"
             ? "Free"
-            : planData.name === "Enterprise"
+            : planData.name === "Custom"
             ? "$--"
             : `$ ${planData.amount}`}
         </Heading>

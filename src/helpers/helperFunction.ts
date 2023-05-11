@@ -30,13 +30,6 @@ export const getFeatureGateConfig = () => {
   return feature_gate_config;
 };
 
-export const getAssetsURL = () => {
-  if (process.env.REACT_APP_ASSETS_URL) {
-    return process.env.REACT_APP_ASSETS_URL;
-  }
-  return "";
-};
-
 export const getBrowserName = (): string => {
   const UserAgentInstance = new UAParser();
   let browserName = UserAgentInstance.getBrowser().name;
@@ -51,6 +44,10 @@ export const getDeviceType = (): string => {
 
   if (deviceType) return deviceType;
   else return "NA";
+};
+
+export const getAssetsURL = () => {
+  return process.env.REACT_APP_ASSETS_URL || "";
 };
 
 export const getReCaptchaHeaders = async (action: string) => {
@@ -71,5 +68,3 @@ export const getReCaptchaHeaders = async (action: string) => {
     };
   }
 };
-
-
