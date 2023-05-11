@@ -8,20 +8,14 @@ export const restructureRepoTree = (
   if (tempRepoTree.name !== "root") {
     tempRepoTree = { ...tempRepoTree, path: `${tempRepoTree.path}/` };
   }
-  // console.log(generatePathArray(tempRepoTree.path));
   let newBlobs = tempRepoTree.blobs.map((blob) => ({
     path: `${tempRepoTree.path}${blob}`,
     checked: check,
     name: blob,
   }));
-  //   newBlobs.forEach((item) => {
-  //     console.log(item.path);
-  //     console.log(generatePathArray(item.path));
-  //   });
   let newTree = tempRepoTree.tree.map((item) =>
     restructureRepoTree(item, check)
   );
-
   let newRepoTree = { ...tempRepoTree, blobs: newBlobs, tree: newTree };
   return newRepoTree;
 };
@@ -31,14 +25,11 @@ export const updateChildTree = (
   check: boolean
 ): TreeItemUP => {
   let tempRepoTree = { ...repoTree, isChildCheck: check, checked: check };
-
   let newBlobs = tempRepoTree.blobs.map((blob) => ({
     ...blob,
     checked: check,
   }));
-
   let newTree = tempRepoTree.tree.map((item) => updateChildTree(item, check));
-
   let newRepoTree = { ...tempRepoTree, blobs: newBlobs, tree: newTree };
   return newRepoTree;
 };
@@ -65,29 +56,6 @@ export const updateCheckedValue = (
   let newRepoTreeUP = repoTreeUP;
   const pathArray = generatePathArray(path);
   let depth = 0;
-
-  // const updateParent = (tree: TreeItemUP[]): TreeItemUP[] => {
-  //   const currDepth = depth;
-  //   let newTree = tree.map((item) => {
-  //     if (pathArray[depth] === item.path) {
-  //       depth++;
-  //       if (currDepth === pathArray.length - 1) {
-  //         const newChildTree = updateChildTree(item, check);
-  //         // tick all children same check and return updated tree ..... pass the tree and check
-  //         return newChildTree;
-  //       } else {
-  //         if (pathArray[currDepth].slice(-1) === "/") {
-  //           let newChildTree = updateFolderCheck(item.tree);
-  //           return { ...item, tree: newChildTree };
-  //         }
-  //         let newChildBlobs = updateFileCheck(item.blobs);
-  //         return { ...item, blobs: newChildBlobs };
-  //       }
-  //     }
-  //     return item;
-  //   });
-  //   return newTree;
-  // };
 
   const updateParent = (treeItem: TreeItemUP): TreeItemUP => {
     let count = 0;
@@ -174,27 +142,6 @@ export const updateCheckedValue = (
     return newTreeItem;
   };
   //will be provided with a list of blobs and will return an updated list of blobs
-
-  // newRepoTreeUP.blobs.map((blob) => {
-  //   if (pathArray[depth] === blob.path) {
-  //     return { ...blob, checked: check };
-  //     // updateChild()
-  //   }
-  // });
-
-  // newRepoTreeUP.tree.map((item) => {
-  //   if (pathArray[depth] === item.path) {
-  //     depth--;
-  //     if (depth === 0) {
-  //       const newChildTree = restructureRepoTree(item, true);
-  //       // tick all children same check and return updated tree ..... pass the tree and check
-  //       return newChildTree;
-  //     } else {
-  //       const newChildTree = updateFolderCheck();
-  //       return { ...item, tree: newChildTree };
-  //     }
-  //   }
-  // });
 
   if (pathArray[depth].slice(-1) === "/") {
     newRepoTreeUP = updateFolderCheck(newRepoTreeUP);

@@ -622,8 +622,6 @@ const QuickScan: React.FC = () => {
 
   const assetsURL = getAssetsURL();
 
-  console.log(assetsURL);
-
   return (
     <>
       <Header />

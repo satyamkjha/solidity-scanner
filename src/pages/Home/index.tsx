@@ -247,7 +247,7 @@ const ApplicationForm: React.FC = () => {
   const [visibility, setVisibility] = useState(false);
   const [githubSync, setGithubSync] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-  const [repoTreeUP, setRepoTreeUP] = useState<TreeItemUP>();
+  const [repoTreeUP, setRepoTreeUP] = useState<TreeItemUP | null>(null);
   const [branches, setBranches] = useState<string[]>([]);
   const [branch, setBranch] = useState<string>("");
   const [nameError, setNameError] = useState<null | string>(null);
@@ -282,10 +282,9 @@ const ApplicationForm: React.FC = () => {
   };
 
   const runScan = async () => {
-    if (!runValidation()) return;
+    if (!runValidation() || !repoTreeUP) return;
     try {
       const skipFilePaths = getSkipFilePaths(repoTreeUP);
-
       const { data } = await API.post(API_PATH.API_PROJECT_SCAN, {
         project_url: githubLink,
         project_name: projectName,
@@ -534,7 +533,6 @@ const ApplicationForm: React.FC = () => {
             } else if (step === 2) {
               setStep(3);
             } else {
-              // console.log(getSkipFilePaths(repoTreeUP));
               runScan();
             }
           }}

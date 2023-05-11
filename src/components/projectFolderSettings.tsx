@@ -235,7 +235,7 @@ const FileItem: React.FC<{
 const FolderSettings: React.FC<{
   view: "github_app" | "detailed_result" | "scan_history";
   repoTreeUP: TreeItemUP;
-  setRepoTreeUP: React.Dispatch<React.SetStateAction<TreeItemUP>>;
+  setRepoTreeUP: React.Dispatch<React.SetStateAction<TreeItemUP | null>>;
   branches?: string[];
   branch: string;
   setBranch?: React.Dispatch<React.SetStateAction<string>>;
