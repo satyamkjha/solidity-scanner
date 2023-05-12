@@ -9,10 +9,10 @@ import {
   Spinner,
   useClipboard,
   Divider,
-  HStack,
   Image,
   Link,
   useDisclosure,
+  useToast,
 } from "@chakra-ui/react";
 import { useAccessKey } from "hooks/useAccessKey";
 import API from "helpers/api";
@@ -32,6 +32,7 @@ export default function PrivateApi() {
   const [actionType, setActionType] = useState("regenerate");
   const { isOpen, onClose, onOpen } = useDisclosure();
   const assetsUrl = getAssetsURL();
+  const toast = useToast();
 
   useEffect(() => {
     if (data && data.api_key) {
@@ -39,6 +40,17 @@ export default function PrivateApi() {
       setIsFirstTime(false);
     }
   }, [data]);
+
+  const onKeyCopy = () => {
+    onCopy();
+    toast({
+      title: "Access key copied",
+      status: "success",
+      duration: 1500,
+      isClosable: true,
+      position: "bottom",
+    });
+  };
 
   const getAccessKey = async () => {
     if (accessKey) {
@@ -200,22 +212,20 @@ export default function PrivateApi() {
               <>
                 {accessKey ? (
                   <>
-                    <Flex w="100%" display={["flex", "flex", "flex", "none"]}>
-                      <Text color="blue">
-                        Click here to copy the access code
-                      </Text>
-                      <Flex
-                        onClick={onCopy}
-                        color="blue"
-                        ml={2}
-                        cursor="pointer"
-                      >
-                        {hasCopied ? (
-                          <CheckIcon />
-                        ) : (
-                          <Icon as={HiDuplicate} fontSize="2xl" />
-                        )}
-                      </Flex>
+                    <Flex
+                      w="100%"
+                      align={"center"}
+                      cursor="pointer"
+                      color="blue"
+                      display={["flex", "flex", "flex", "none"]}
+                      onClick={onKeyCopy}
+                    >
+                      <Text>Click here to copy the access key</Text>
+                      {hasCopied ? (
+                        <CheckIcon ml={2} />
+                      ) : (
+                        <Icon as={HiDuplicate} fontSize="2xl" ml={2} />
+                      )}
                     </Flex>
                     <Divider
                       my={6}
@@ -243,23 +253,18 @@ export default function PrivateApi() {
                       flexDir={["column", "column", "column", "row"]}
                       mb={[6, 6, 6, 0]}
                     >
-                      <Text
-                        color="blue"
-                        display={["none", "none", "none", "block"]}
-                      >
-                        Click here to copy the access code
-                      </Text>
                       <Flex
-                        onClick={onCopy}
-                        color="blue"
-                        ml={2}
+                        align={"center"}
                         cursor="pointer"
-                        display={["none", "none", "none", "block"]}
+                        color="blue"
+                        display={["none", "none", "none", "flex"]}
+                        onClick={onKeyCopy}
                       >
+                        <Text>Click here to copy the access key</Text>
                         {hasCopied ? (
-                          <CheckIcon />
+                          <CheckIcon ml={2} />
                         ) : (
-                          <Icon as={HiDuplicate} fontSize="2xl" />
+                          <Icon as={HiDuplicate} fontSize="2xl" ml={2} />
                         )}
                       </Flex>
                       <Text
@@ -277,6 +282,7 @@ export default function PrivateApi() {
                             variant={"outline"}
                             borderWidth={"1px"}
                             borderColor={"blackAlpha.600"}
+                            borderRadius={"8px"}
                             fontWeight={500}
                             px={8}
                             ml={4}
@@ -296,10 +302,14 @@ export default function PrivateApi() {
                         variant={"outline"}
                         borderWidth={"1px"}
                         borderColor={"#FF5630"}
+                        borderRadius={"8px"}
                         color={"#FF5630"}
                         fontWeight={500}
                         px={8}
                         ml={4}
+                        _hover={{
+                          bgColor: "#FFF5F3",
+                        }}
                       >
                         Delete Key
                       </Button>
