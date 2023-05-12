@@ -103,7 +103,7 @@ const DetectorItem: React.FC<{ item: DetectorItemProp }> = ({ item }) => {
               No. of Detectors
             </Text>
             <HStack spacing={5} width="100%" justifyContent={"center"}>
-              <DetectorIcon size={35} />
+              <Image src={`${assetsURL}detectors/detectorIcon.svg`} />
               <Text fontSize={["2xl"]} fontWeight={900}>
                 {item.nod}
               </Text>

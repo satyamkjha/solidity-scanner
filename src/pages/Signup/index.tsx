@@ -81,7 +81,7 @@ const SignUp: React.FC = () => {
           {googleLoginEnabled && <GoogleSignIn />}
         </Stack>
         <HStack spacing={5} width={["300px", "400px", "600px"]}>
-          <Divider background={"#000000"} width={"43%"} />
+          <Divider background={"#FAFBFC"} width={"43%"} />
           <Text color="subtle" my={3}>
             OR
           </Text>
@@ -235,8 +235,16 @@ const RegisterForm: React.FC<{
   }
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)}>
-      <Stack spacing={6} mt={8} width={["300px", "400px", "600px"]}>
+    <form
+      style={{
+        width: "100%",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+      }}
+      onSubmit={handleSubmit(onSubmit)}
+    >
+      <Stack spacing={6} mt={8} width={["90%", "80%", "600px"]}>
         {step === 0 && (
           <>
             <InputGroup alignItems="center">

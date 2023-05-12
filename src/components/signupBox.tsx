@@ -25,7 +25,6 @@ export const SignupBox: React.FC = () => {
         backgroundImage: `url(${assetsURL}background/pattern.png)`,
         borderRadius: 20,
         overflow: "hidden",
-        mb: 10,
       }}
     >
       <Flex
@@ -40,7 +39,7 @@ export const SignupBox: React.FC = () => {
       >
         <Box
           sx={{
-            w: ["100%", "70%"],
+            w: ["100%", "100%", "70%"],
           }}
         >
           <Heading
@@ -63,13 +62,14 @@ export const SignupBox: React.FC = () => {
         </Box>
         <Box
           sx={{
-            w: ["100%", "30%"],
+            w: ["80%", "70%", "30%"],
           }}
         >
           <Button
             onClick={() => history.push("/signup")}
             variant="brand"
             w="100%"
+            minWidth="200px"
             my={10}
           >
             Signup For Free Trial
