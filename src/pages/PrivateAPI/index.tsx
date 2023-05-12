@@ -46,6 +46,7 @@ export default function PrivateApi() {
       onOpen();
     } else {
       setIsSpinning(true);
+      setViewable(true);
       const { data } = await API.get(API_PATH.API_CREATE_ACCESS_KEY);
       setAccessKey(data.api_key);
       setIsSpinning(false);
@@ -267,7 +268,7 @@ export default function PrivateApi() {
                         ml={[0, 0, 0, "auto"]}
                         mb={[4, 4, 4, 0]}
                       >
-                        created on 12 May 2023
+                        {data.created_at || ""}
                       </Text>
                       {!isFirstTime && (
                         <>
