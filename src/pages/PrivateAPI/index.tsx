@@ -70,6 +70,7 @@ export default function PrivateApi() {
       const { data } = await API.get(API_PATH.API_REVOKE_ACCESS_KEY);
       setAccessKey("");
       setViewable(true);
+      setIsFirstTime(false);
     }
     setIsSpinning(false);
   };
@@ -117,6 +118,7 @@ export default function PrivateApi() {
         >
           <Flex
             m={6}
+            mb={[2, 2, 2, 6]}
             align="center"
             flexDir={[
               "column-reverse",
@@ -238,6 +240,7 @@ export default function PrivateApi() {
                     <Flex
                       align="center"
                       flexDir={["column", "column", "column", "row"]}
+                      mb={[6, 6, 6, 0]}
                     >
                       <Text
                         color="blue"
@@ -302,7 +305,7 @@ export default function PrivateApi() {
                     </Flex>
                   </>
                 ) : (
-                  <VStack spacing={4}>
+                  <VStack spacing={4} mb={[6, 6, 6, 0]}>
                     <Image
                       src={assetsUrl + "background/private_api_cover.svg"}
                       my={2}
