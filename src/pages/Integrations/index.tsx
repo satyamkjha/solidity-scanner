@@ -27,7 +27,6 @@ import {
 
 import API from "helpers/api";
 import { API_PATH } from "helpers/routeManager";
-import PrivateApiIntegration from "components/privateApiIntegration";
 const REDIRECT_URI =
   process.env.NODE_ENV === "production"
     ? "https://solidityscan.com/integrations/"
@@ -83,7 +82,6 @@ const Integrations: React.FC = () => {
 
       {data && (
         <VStack spacing={8} my={16}>
-
           <IntegrationChannel
             title="GitHub"
             description="Connect you GitHub to directly create issues for vulnerabilities in your repo"
@@ -93,9 +91,6 @@ const Integrations: React.FC = () => {
             url={GITHUB_URL}
             providerUrlChecker="github.com"
           />
-
-          <PrivateApiIntegration />
-
           <IntegrationChannel
             title="JIRA"
             description="Connect JIRA to export vulnerabilities"

@@ -22,7 +22,7 @@ import TrialWall from "./trialWall";
 
 import Select from "react-select";
 import { HiOutlineDocumentText } from "react-icons/hi";
-import CommentForm from "./commentForm";
+import ConfirmActionForm from "./confirmActionForm";
 
 export const DetailedResult: React.FC<{
   type: "block" | "project";
@@ -56,9 +56,14 @@ export const DetailedResult: React.FC<{
       setIsDisabled(true);
     }
   }, [selectedBugs]);
+
   const handleTabsChange = (index: number) => {
     setOpenIssueBox(true);
     setTabIndex(index);
+  };
+
+  const onActionConfirm = (comment: string) => {
+    updateBugStatus(bugStatus, comment);
   };
 
   const customStyles = {
@@ -234,12 +239,28 @@ export const DetailedResult: React.FC<{
           </Flex>
         )}
       </Box>
-      <CommentForm
+      <ConfirmActionForm
         isOpen={isOpen}
         onClose={onClose}
-        updateBugStatus={updateBugStatus}
-        status={bugStatus}
-        selectedBugs={selectedBugs}
+        onActionConfirm={onActionConfirm}
+        addComment={true}
+        modalHeader={"Confirm Action"}
+        modelText={
+          <Text my={4} color="subtle" w={["100%"]}>
+            You are about to confirm the{" "}
+            <Text as={"span"} color="black" fontWeight={"bold"}>
+              Won’t Fix
+            </Text>{" "}
+            action on{" "}
+            <Text as={"span"} color="black" fontWeight={"bold"}>
+              {selectedBugs.length}
+            </Text>{" "}
+            bug(s).{" "}
+            <Text color="subtle" w={["100%"]}>
+              Please add your comment below and click on confirm to continue.
+            </Text>
+          </Text>
+        }
       />
     </VStack>
   );

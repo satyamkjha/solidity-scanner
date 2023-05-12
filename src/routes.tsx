@@ -19,6 +19,7 @@ import PublicReportPage from "pages/Report/PublicReport";
 import PageNotFound, { CustomPageNotFound } from "pages/PageNotFound";
 import { Helmet } from "react-helmet";
 import Cookies from "js-cookie";
+import PrivateApi from "pages/PrivateAPI";
 
 const Landing = lazy(
   () => import("pages/Landing" /* webpackChunkName: "Landing" */)
@@ -193,6 +194,9 @@ const Routes: React.FC = () => {
                 </PrivateRoute>
                 <PrivateRoute exact path="/integrations">
                   <Integrations />
+                </PrivateRoute>
+                <PrivateRoute exact path="/private-api">
+                  <PrivateApi />
                 </PrivateRoute>
 
                 <PrivateRoute exact path="/billing">

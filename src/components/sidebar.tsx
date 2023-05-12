@@ -1,4 +1,4 @@
-import React, { ReactElement } from "react";
+import React, { ReactElement, useState } from "react";
 import { Link, useRouteMatch } from "react-router-dom";
 import { BsArrowsCollapse, BsArrowsExpand } from "react-icons/bs";
 import {
@@ -39,6 +39,7 @@ const Sidebar: React.FC<{
 }> = ({ isCollapsed, setCollapsed }) => {
   const { data: profileData } = useProfile();
   const { isOpen, onClose, onOpen } = useDisclosure();
+  const [transitionDone, setTransitionDone] = useState(true);
 
   return (
     <Flex
@@ -72,7 +73,11 @@ const Sidebar: React.FC<{
                 borderRadius={"10px"}
                 bgColor={"#ECECEC"}
                 onClick={() => {
+                  setTransitionDone(false);
                   setCollapsed(!isCollapsed);
+                  setTimeout(() => {
+                    setTransitionDone(true);
+                  }, 600);
                 }}
               >
                 <Icon as={ArrowForwardIcon} fontSize="xl" color="gray.500" />{" "}
@@ -130,7 +135,7 @@ const Sidebar: React.FC<{
       </Flex>
       <Flex
         sx={{ width: "100%", justifyContent: "flex-end" }}
-        pt={["28", "28", "28", "24", "32"]}
+        pt={["28", "28", "28", "24", "28"]}
         pb={["3", "3", "3", "3", "4"]}
       >
         <Box sx={{ width: "85%" }}>
@@ -152,30 +157,42 @@ const Sidebar: React.FC<{
             label="Home"
             icon={<HomeMenuIcon size={16} />}
             isCollapsed={isCollapsed}
+            transitionDone={transitionDone}
           />
           <SidebarItem
             to="/projects"
             label="Projects"
             icon={<ProjectsMenuIcon size={16} />}
             isCollapsed={isCollapsed}
+            transitionDone={transitionDone}
           />
           <SidebarItem
             to="/blocks"
             label="Verified Contracts"
             icon={<BlockMenuIcon size={16} />}
             isCollapsed={isCollapsed}
+            transitionDone={transitionDone}
           />
           <SidebarItem
             to="/integrations"
             label="Integrations"
             icon={<IntegrationMenuIcon size={24} />}
             isCollapsed={isCollapsed}
+            transitionDone={transitionDone}
+          />
+          <SidebarItem
+            to="/private-api"
+            label="Private API"
+            icon={<IntegrationMenuIcon size={24} />}
+            isCollapsed={isCollapsed}
+            transitionDone={transitionDone}
           />
           <SidebarItem
             to={`/billing`}
             label="Billing"
             icon={<BillingMenuIcon size={24} />}
             isCollapsed={isCollapsed}
+            transitionDone={transitionDone}
           />
           <Flex
             sx={{
@@ -192,7 +209,7 @@ const Sidebar: React.FC<{
             }}
           >
             {React.cloneElement(<UserGuideIcon size={24} />)}
-            {!isCollapsed && (
+            {!isCollapsed && transitionDone && (
               <Text ml={2} fontSize="sm">
                 {"User Guide"}
               </Text>
@@ -233,6 +250,7 @@ type SidebarItemProps = {
   label: string;
   icon: ReactElement;
   isCollapsed: boolean;
+  transitionDone: boolean;
 };
 
 export const SidebarItem: React.FC<SidebarItemProps> = ({
@@ -240,6 +258,7 @@ export const SidebarItem: React.FC<SidebarItemProps> = ({
   label,
   icon,
   isCollapsed,
+  transitionDone,
 }) => {
   const match = useRouteMatch({
     path: to,
@@ -256,11 +275,11 @@ export const SidebarItem: React.FC<SidebarItemProps> = ({
           background: active ? "rgba(47, 248, 107, 0.1)" : "transparent",
         }}
         p={[2.5, 2.5, 2.5, 2.5, 3]}
-        my={[2, 2, 2, 2, 3]}
+        my={2}
       >
         {React.cloneElement(icon, { active })}
 
-        {!isCollapsed && (
+        {!isCollapsed && transitionDone && (
           <Text ml={2} fontSize="sm" whiteSpace={"nowrap"}>
             {label}
           </Text>
