@@ -361,12 +361,12 @@ export default function PrivateApi() {
           <VStack>
             <Text my={4} w={["100%"]} fontSize={"lg"} fontWeight={600}>
               {actionType === "regenerate"
-                ? "are you sure you want to Regenerate the  key?"
+                ? "are you sure you want to regenerate the  key?"
                 : "are you sure you want to delete the current key?"}
             </Text>
             <Text color="detail" fontWeight={400}>
               {actionType === "regenerate"
-                ? "Regenerating the key will generate a new API key and invalidate the current key. Please ensure that you have updated any applications or services that use this key with the new key before proceeding."
+                ? "Regenerating the key will generate a new API key and invalidate the current key. After regenerating, please remember to update any applications or services that use the current key with the new key to avoid any service disruptions."
                 : "This action will revoke access to all APIs integrated with this key. Please ensure that you have updated any applications or services that use this key before proceeding."}
             </Text>
           </VStack>
