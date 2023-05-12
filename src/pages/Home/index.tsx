@@ -54,7 +54,12 @@ import { API_PATH } from "helpers/routeManager";
 import ConfigSettings from "components/projectConfigSettings";
 import InfoSettings from "components/projectInfoSettings";
 import FolderSettings from "components/projectFolderSettings";
-import { TreeItem } from "common/types";
+import { TreeItem, TreeItemUP } from "common/types";
+import {
+  getSkipFilePaths,
+  restructureRepoTree,
+  updateCheckedValue,
+} from "helpers/fileStructure";
 
 const Home: React.FC = () => {
   const { data } = useOverview();
@@ -242,10 +247,9 @@ const ApplicationForm: React.FC = () => {
   const [visibility, setVisibility] = useState(false);
   const [githubSync, setGithubSync] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-  const [repoTree, setRepoTree] = useState<TreeItem | null>(null);
+  const [repoTreeUP, setRepoTreeUP] = useState<TreeItemUP | null>(null);
   const [branches, setBranches] = useState<string[]>([]);
   const [branch, setBranch] = useState<string>("");
-  const [skipFilePaths, setSkipFilePaths] = useState<string[]>([]);
   const [nameError, setNameError] = useState<null | string>(null);
   const [linkError, setLinkError] = useState<null | string>(null);
   const [step, setStep] = useState(1);
@@ -278,8 +282,9 @@ const ApplicationForm: React.FC = () => {
   };
 
   const runScan = async () => {
-    if (!runValidation()) return;
+    if (!runValidation() || !repoTreeUP) return;
     try {
+      const skipFilePaths = getSkipFilePaths(repoTreeUP);
       const { data } = await API.post(API_PATH.API_PROJECT_SCAN, {
         project_url: githubLink,
         project_name: projectName,
@@ -320,7 +325,9 @@ const ApplicationForm: React.FC = () => {
         project_url: githubLink,
       });
       if (data.status === "success") {
-        setRepoTree(data.default_tree);
+        if (data.default_tree) {
+          setRepoTreeUP(restructureRepoTree(data.default_tree, true));
+        }
         setBranches(data.branches);
         setBranch(data.branches[0]);
       }
@@ -338,7 +345,7 @@ const ApplicationForm: React.FC = () => {
     const responseData = await getRepoTree(project_url, project_branch);
     if (responseData) {
       if (responseData.status === "success") {
-        setRepoTree(responseData.tree);
+        setRepoTreeUP(restructureRepoTree(responseData.tree, true));
       }
     }
     setIsLoading(false);
@@ -465,16 +472,15 @@ const ApplicationForm: React.FC = () => {
               setVisibility={setVisibility}
             />
           ) : step === 2 ? (
-            repoTree && (
+            repoTreeUP && (
               <FolderSettings
                 isLoading={isLoading}
                 view="github_app"
-                fileData={repoTree}
+                repoTreeUP={repoTreeUP}
+                setRepoTreeUP={setRepoTreeUP}
                 branches={branches}
                 branch={branch}
                 setBranch={setBranch}
-                skipFilePaths={skipFilePaths}
-                setSkipFilePaths={setSkipFilePaths}
               />
             )
           ) : step === 3 ? (
@@ -1170,9 +1176,12 @@ const UploadForm: React.FC = () => {
     Promise.all(results).then(
       (res) => {
         let count = 0;
+        // res here is an array of boolean. Using this check if all the files are uploaded or not. Also give an option to remove a file if needed.
+
         res.forEach((item) => {
           if (item) count++;
         });
+        // Add a flag to allow to go to step 2. Do not use count. Here in this step you also need to give an option to delete or remmove a file.
         if (count === acceptedFiles.length) {
           setStep(2);
         } else {

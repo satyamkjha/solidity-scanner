@@ -1,6 +1,6 @@
 import { useQuery } from "react-query";
 import API from "helpers/api";
-import { Plan } from "common/types";
+import { Plan, PricingData } from "common/types";
 import { API_PATH } from "helpers/routeManager";
 
 const getPricingPlans = async () => {

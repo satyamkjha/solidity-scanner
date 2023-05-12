@@ -17,12 +17,10 @@ import {
 } from "@chakra-ui/react";
 import { GiHamburgerMenu } from "react-icons/gi";
 import { BiUser, BiPowerOff } from "react-icons/bi";
-
+import { getAssetsURL } from "helpers/helperFunction";
 import Sidebar from "components/sidebar";
 import { ProfileIconOne, ProjectIcon } from "components/icons";
-
 import { useProfile } from "hooks/useProfile";
-
 import {
   SIDEBAR_WIDTH_EXPANDED,
   SIDEBAR_WIDTH_COLLAPSED,
@@ -39,6 +37,8 @@ const Layout: React.FC = ({ children }) => {
   const ref = useRef<HTMLDivElement>(null);
   const history = useHistory();
   const { data: profileData } = useProfile();
+
+  const assetsURL = getAssetsURL();
 
   const handleClickOutside = (e: MouseEvent) => {
     if (ref.current && ref.current.contains(e.target as Node)) {

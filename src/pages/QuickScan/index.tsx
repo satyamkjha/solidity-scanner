@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import { Link as RouterLink, useLocation, useParams } from "react-router-dom";
 import styled from "@emotion/styled";
-import { getReCaptchaHeaders } from "helpers/helperFunction";
+import { getAssetsURL, getReCaptchaHeaders } from "helpers/helperFunction";
 import {
   Flex,
   Box,
@@ -620,6 +620,8 @@ const QuickScan: React.FC = () => {
     }
   };
 
+  const assetsURL = getAssetsURL();
+
   return (
     <>
       <Header />
@@ -640,7 +642,7 @@ const QuickScan: React.FC = () => {
             px={[0, 0, 10]}
             py={20}
             pb={"200px"}
-            background={"url('/background/quickscan_bg.jpeg')"}
+            background={`url('${assetsURL}quickscan/quickscan_bg_lg.png')`}
             backgroundSize="cover"
             backgroundPosition={"center"}
             backgroundRepeat="no-repeat"
@@ -1618,7 +1620,7 @@ const QuickScan: React.FC = () => {
                               <Image
                                 height={"20px"}
                                 width={"20px"}
-                                src={`/blockscan/${item.contract_platform}.svg`}
+                                src={`${assetsURL}blockscan/${item.contract_platform}.svg`}
                               />
                               <Text
                                 color={"#8A94A6"}
@@ -1730,9 +1732,9 @@ const QuickScan: React.FC = () => {
             flexDir="column"
             alignItems="center"
             justifyContent={"flex-start"}
-            w={"90%"}
+            w={"95%"}
             px={[0, 0, 10]}
-            py={10}
+            py={20}
             borderRadius={20}
             background={"#FFFFFF"}
           >

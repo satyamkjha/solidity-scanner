@@ -17,12 +17,16 @@ import {
   Spinner,
 } from "@chakra-ui/react";
 import React, { useState, useEffect } from "react";
-import GithubConnectAlert from "./githubConnectAlert";
 import FolderSettings from "./projectFolderSettings";
 import ConfigSettings from "./projectConfigSettings";
 import API from "helpers/api";
 import { API_PATH } from "helpers/routeManager";
-import { TreeItem } from "common/types";
+import { TreeItem, TreeItemUP } from "common/types";
+import {
+  getSkipFilePaths,
+  restructureRepoTree,
+  updateCheckedValue,
+} from "helpers/fileStructure";
 
 const ProjectCustomSettings: React.FC<{
   isGithubIntegrated: boolean;
@@ -45,9 +49,8 @@ const ProjectCustomSettings: React.FC<{
 }) => {
   const [githubSync, setGithubSync] = React.useState<boolean>(webhook_enabled);
   const [isLoading, setIsLoading] = React.useState<boolean>(false);
-  const [skipFilePaths, setSkipFilePaths] = useState<string[]>([
-    ...project_skip_files,
-  ]);
+  const [repoTreeUP, setRepoTreeUP] = useState<TreeItemUP | null>(null);
+
   const toast = useToast();
   const onToggleSwitch = async () => {
     setIsLoading(true);
@@ -86,34 +89,45 @@ const ProjectCustomSettings: React.FC<{
 
   const updateSkipPathRequests = async () => {
     setIsLoading(true);
-
-    try {
-      const { data } = await API.post<{ status: string; message: string }>(
-        API_PATH.API_UPDATE_SKIP_FILE_PATHS,
-        {
-          project_id: project_id,
-          skip_file_paths: skipFilePaths,
+    if (repoTreeUP) {
+      const skipFilePaths = getSkipFilePaths(repoTreeUP);
+      try {
+        const { data } = await API.post<{ status: string; message: string }>(
+          API_PATH.API_UPDATE_SKIP_FILE_PATHS,
+          {
+            project_id: project_id,
+            skip_file_paths: skipFilePaths,
+          }
+        );
+        if (data.status === "success") {
+          toast({
+            description: data.message,
+            status: "success",
+            duration: 3000,
+            isClosable: true,
+            position: "bottom",
+          });
         }
-      );
-      if (data.status === "success") {
-        toast({
-          description: data.message,
-          status: "success",
-          duration: 3000,
-          isClosable: true,
-          position: "bottom",
-        });
+      } catch (e) {
+        console.log(e);
       }
-    } catch (e) {
-      console.log(e);
     }
     setIsLoading(false);
   };
 
   useEffect(() => {
     setGithubSync(webhook_enabled);
-    setSkipFilePaths([...project_skip_files]);
   }, []);
+
+  useEffect(() => {
+    if (repoTree) {
+      let newRepoTreeUP = restructureRepoTree(repoTree, true);
+      project_skip_files.forEach((path) => {
+        newRepoTreeUP = updateCheckedValue(path, false, newRepoTreeUP);
+      });
+      setRepoTreeUP(newRepoTreeUP);
+    }
+  }, [repoTree]);
 
   return (
     <Flex
@@ -193,14 +207,13 @@ const ProjectCustomSettings: React.FC<{
             w="100%"
             height="fit-content"
           >
-            {repoTree ? (
+            {repoTreeUP ? (
               <FolderSettings
                 isLoading={isLoading}
-                fileData={repoTree}
+                repoTreeUP={repoTreeUP}
+                setRepoTreeUP={setRepoTreeUP}
                 branch={project_branch}
-                skipFilePaths={skipFilePaths}
                 updateSkipPathRequests={updateSkipPathRequests}
-                setSkipFilePaths={setSkipFilePaths}
                 view="detailed_result"
               />
             ) : (

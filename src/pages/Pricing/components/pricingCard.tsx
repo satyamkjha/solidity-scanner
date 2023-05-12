@@ -1,156 +1,290 @@
 import {
-  Box,
-  Flex,
   Heading,
-  // Icon,
-  List,
-  ListIcon,
-  ListItem,
   Text,
-  useColorModeValue,
-  VStack,
-  FlexProps,
-  BoxProps,
+  Button,
+  GridItem,
+  HStack,
+  Switch,
+  Image,
+  Flex,
+  Box,
 } from "@chakra-ui/react";
+import { Plan } from "common/types";
+import { CurlyArrowBlue } from "components/icons";
 import * as React from "react";
-import { HiCheckCircle } from "react-icons/hi";
-import { HiXCircle } from "react-icons/hi";
+import { useState } from "react";
+import { getAssetsURL, sentenceCapitalize } from "helpers/helperFunction";
+import Auth from "helpers/auth";
+import { useHistory } from "react-router-dom";
 
-export interface PricingCardData {
-  features: string[];
-  name: string;
-  price?: string;
-  nonfeatures?: string[];
-}
+export const PricingCard: React.FC<{
+  globalDuration: "monthly" | "yearly" | "on-demand";
+  plan: string;
+  pricingDetails: {
+    [key: string]: {
+      [plan: string]: Plan;
+    };
+  };
+  selectedPlan: string;
+  setSelectedPlan: React.Dispatch<React.SetStateAction<string>>;
+}> = ({
+  globalDuration,
+  plan,
+  pricingDetails,
+  selectedPlan,
+  setSelectedPlan,
+}) => {
+  const [duration, setDuration] = useState<"monthly" | "yearly" | "on-demand">(
+    globalDuration
+  );
+  const assetsURL = getAssetsURL();
+  const mouse = selectedPlan === plan;
 
-interface PricingCardProps extends CardProps {
-  custom?: boolean;
-  data: PricingCardData;
-  icon?: React.ElementType;
-  button: React.ReactElement;
-}
+  React.useEffect(() => {
+    setDuration(globalDuration);
+  }, [globalDuration]);
 
-export const PricingCard = (props: PricingCardProps) => {
-  const { data, icon, button, custom, ...rest } = props;
-  const { features, price, name, nonfeatures } = data;
-  const accentColor = "#19A398";
-  const successColor = "#289F4C";
-  const greyColor = "#808080";
+  const history = useHistory();
 
   return (
-    <Card rounded={{ sm: "xl" }} {...rest}>
-      <VStack spacing={6}>
-        {/* <Icon aria-hidden as={icon} fontSize="4xl" color={accentColor} /> */}
-        <Heading size="md" fontWeight="extrabold">
-          {name}
-        </Heading>
-      </VStack>
+    <GridItem
+      sx={{
+        w: "100%",
+        h: "fit-content",
+      }}
+      alignSelf={"end"}
+      display="flex"
+      flexDir="column"
+      alignItems={"flex-end"}
+      justifyContent="flex-end"
+      onClick={() => setSelectedPlan(plan)}
+      onMouseOver={() => setSelectedPlan(plan)}
+      onMouseLeave={() => setSelectedPlan("")}
+    >
       <Flex
-        align="flex-end"
-        justify="center"
-        fontWeight="extrabold"
-        color={accentColor}
-        my="8"
+        h="80px"
+        flexDir="row"
+        alignItems={"flex-start"}
+        justifyContent="center"
+        backgroundColor="#3300FF"
+        color="#FFFFFF"
+        py={2}
+        opacity={mouse ? 1 : 0}
+        w="60%"
+        borderRadius={20}
       >
-        {!custom && (
-          <>
-            <Heading size="3xl" fontWeight="inherit" lineHeight="0.9em">
-              {price}
-            </Heading>
-            <Text fontWeight="inherit" fontSize="2xl">
-              / mo
-            </Text>
-          </>
-        )}
+        {plan === "on-demand"
+          ? "Pay as you Go"
+          : plan === "beginner"
+          ? "Good Starter Plan"
+          : `Save upto ${pricingDetails[duration][plan].discount}`}
       </Flex>
-      <List spacing="6" mb="8" maxW="28ch" mx="auto">
-        {features.map((feature, index) => (
-          <ListItem
-            fontWeight="medium"
-            fontSize="lg"
-            key={index}
-            color="#4E5D78"
-          >
-            <ListIcon
-              fontSize="xl"
-              as={HiCheckCircle}
-              marginEnd={2}
-              color={successColor}
-            />
-            {feature}
-          </ListItem>
-        ))}
-        {nonfeatures?.map((nonfeature, index) => (
-          <ListItem
-            fontWeight="medium"
-            fontSize="lg"
-            key={index}
-            color="#8A94A6"
-          >
-            <ListIcon
-              fontSize="xl"
-              as={HiXCircle}
-              marginEnd={2}
-              color={greyColor}
-            />
-            {nonfeature}
-          </ListItem>
-        ))}
-      </List>
-      {button}
-    </Card>
-  );
-};
-
-export interface CardProps extends BoxProps {
-  isPopular?: boolean;
-}
-
-export const Card = (props: CardProps) => {
-  const { children, isPopular, ...rest } = props;
-  return (
-    <Box
-      bg={useColorModeValue("white", "gray.700")}
-      position="relative"
-      px="6"
-      pb="6"
-      pt="16"
-      overflow="hidden"
-      shadow="lg"
-      maxW="md"
-      width="100%"
-      {...rest}
-    >
-      {isPopular && <CardBadge>Popular</CardBadge>}
-      {children}
-    </Box>
-  );
-};
-
-export const CardBadge = (props: FlexProps) => {
-  const { children, ...flexProps } = props;
-  return (
-    <Flex
-      bg="accent"
-      position="absolute"
-      right={-20}
-      top={6}
-      width="240px"
-      transform="rotate(45deg)"
-      py={2}
-      justifyContent="center"
-      alignItems="center"
-      {...flexProps}
-    >
-      <Text
-        fontSize="xs"
-        textTransform="uppercase"
-        fontWeight="bold"
-        letterSpacing="wider"
-        color={useColorModeValue("white", "gray.800")}
+      <Flex
+        sx={{
+          boxShadow: "0px 4px 24px rgba(0, 0, 0, 0.1)",
+          bg: "#FFFFFF",
+          w: "100%",
+          h: mouse ? "750px" : "700px",
+          transition: "height 0.25s",
+          border: mouse ? "3px solid  #3300FF" : "none",
+          py: 7,
+          borderRadius: 20,
+          backgroundColor: "#FFFFFF",
+          background: `url('${assetsURL}pricing/card_bg_${
+            mouse ? "blue" : "grey"
+          }.png')`,
+          backgroundSize: "cover",
+          backgroundPosition: "center",
+          backgroundRepeat: "no-repeat",
+          display: "flex",
+          flexDir: "column",
+          justifyContent: "flex-start",
+          alignItems: "center",
+          mt: -10,
+        }}
       >
-        {children}
-      </Text>
-    </Flex>
+        <HStack
+          width="100%"
+          alignItems={"center"}
+          justifyContent="space-between"
+          mb={8}
+          pl={7}
+        >
+          <HStack justifyContent="flex-start">
+            <Image
+              width="50px"
+              height="50px"
+              src={`${assetsURL}pricing/${plan}-heading.svg`}
+            />
+            <Text fontSize="3xl" fontWeight={500}>
+              {sentenceCapitalize(pricingDetails[duration][plan].name)}
+            </Text>
+          </HStack>
+          {plan === "pro" && (
+            <Image src={`${assetsURL}pricing/popular-badge.svg`} />
+          )}
+        </HStack>
+        <Text
+          height="140px"
+          mb={5}
+          w="100%"
+          textAlign={"left"}
+          fontSize="lg"
+          fontWeight={300}
+          px={7}
+        >
+          {pricingDetails[duration][plan].description}
+        </Text>
+        <Flex
+          flexDir="column"
+          w="100%"
+          justifyContent={"flex-start"}
+          alignItems={"flex-start"}
+          h="200px"
+          px={7}
+        >
+          <Flex
+            flexDir="row"
+            w="100%"
+            justifyContent={"flex-start"}
+            alignItems={"flex-end"}
+            mb={3}
+          >
+            <Heading fontSize="4xl" lineHeight="title" fontWeight={900}>
+              {`$ ${pricingDetails[duration][plan].amount}`}
+            </Heading>
+            <Text fontSize="4xl" fontWeight={300}>
+              /
+            </Text>
+            <Text mb={2} fontSize="lg" fontWeight={300}>
+              {duration}
+            </Text>
+          </Flex>
+          {duration !== "on-demand" && (
+            <Flex
+              flexDir={"row"}
+              position={"relative"}
+              alignItems={"flex-start"}
+              justifyContent="flex-start"
+              width="250px"
+            >
+              <Text
+                color={duration === "monthly" ? "#000000" : "gray.400"}
+                fontSize="sm"
+                fontWeight={300}
+              >
+                Pay Monthly
+              </Text>
+              <Switch
+                mx={5}
+                size="lg"
+                variant={duration === "yearly" ? "accent" : "brand"}
+                isChecked={duration === "yearly"}
+                onChange={() => {
+                  if (duration === "monthly") {
+                    setDuration("yearly");
+                  } else {
+                    setDuration("monthly");
+                  }
+                }}
+              />
+              <Text
+                color={duration === "yearly" ? "#000000" : "gray.400"}
+                fontSize="sm"
+                fontWeight={300}
+              >
+                Pay Yearly
+              </Text>
+              {duration === "yearly" && (
+                <Flex
+                  flexDir={"column"}
+                  justifyContent={"flex-start"}
+                  alignItems={"flex-start"}
+                  position={"absolute"}
+                  top={"20px"}
+                  right={"-10px"}
+                >
+                  <Box>
+                    <CurlyArrowBlue size={50} />
+                  </Box>
+                  <Text fontSize={"md"} color="#3300FF" fontWeight={900}>
+                    You save
+                  </Text>
+                  <Heading fontSize={"xl"} color="#3300FF">
+                    $999
+                  </Heading>
+                </Flex>
+              )}
+            </Flex>
+          )}
+        </Flex>
+
+        <Text
+          fontSize="md"
+          mb={3}
+          color="gray.400"
+          fontWeight={300}
+          width="100%"
+          px={7}
+        >
+          No of Scans
+        </Text>
+        <HStack
+          width="100%"
+          alignItems={"center"}
+          justifyContent="flex-start"
+          mb={10}
+          spacing={2}
+          px={7}
+        >
+          <Image width="30px" height="30px" src="/pricing/coin.svg" />
+          <Text fontSize="2xl" fontWeight={900}>
+            {pricingDetails[duration][plan].scan_count}
+          </Text>
+          <Text fontSize="2xl" fontWeight={400}>
+            Scans
+          </Text>
+        </HStack>
+        <Text
+          fontSize="md"
+          mb={3}
+          color="gray.400"
+          fontWeight={300}
+          width="100%"
+          px={7}
+        >
+          Vulnerability Detectors coverage
+        </Text>
+        <HStack
+          width="100%"
+          alignItems={"center"}
+          justifyContent="flex-start"
+          mb={10}
+          spacing={2}
+          px={7}
+        >
+          <Image width="30px" height="30px" src="/icons/detectorIcon.svg" />
+          <Text fontSize="2xl" fontWeight={400}>
+            All Detectors
+          </Text>
+        </HStack>
+        <Button
+          width="200px"
+          mx="auto"
+          py={6}
+          alignContent={"center"}
+          variant={mouse ? "brand" : "gray-outline"}
+          onClick={() => {
+            if (Auth.isUserAuthenticated()) {
+              history.push("/billing");
+            } else {
+              history.push("/signin");
+            }
+          }}
+        >
+          {mouse ? "Select" : "Choose"} Plan
+        </Button>
+      </Flex>
+    </GridItem>
   );
 };
