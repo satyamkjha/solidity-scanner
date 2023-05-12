@@ -669,6 +669,37 @@ export const IntegrationMenuIcon: React.FC<{
   );
 };
 
+export const PrivateApiMenuIcon: React.FC<{
+  size: number;
+  active?: boolean;
+}> = ({ size, active, ...props }) => {
+  const iconColor = active ? "#04B79C" : "#3300FF";
+  return (
+    <svg
+    width={size}
+    height={(size * 22) / 28}
+      viewBox="0 0 22 22"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+      {...props}
+    >
+      <rect
+        width="22"
+        height="22"
+        rx="2"
+        fill={active ? "#AFEFD5" : "#B0A1ED"}
+      />
+      <path
+        d="M9.35 17.4193L12.65 4.58594M15.95 7.79427L19.25 11.0026L15.95 14.2109M6.05 14.2109L2.75 11.0026L6.05 7.79427"
+        stroke={iconColor}
+        stroke-width="2"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+      />
+    </svg>
+  );
+};
+
 export const BillingMenuIcon: React.FC<{ size: number; active?: boolean }> = ({
   size,
   active,
@@ -677,7 +708,7 @@ export const BillingMenuIcon: React.FC<{ size: number; active?: boolean }> = ({
   const iconColor = active ? "#04B79C" : "#3300FF";
   return (
     <svg
-      width="24"
+      width={"24"}
       height="24"
       viewBox="0 0 24 24"
       fill="none"

@@ -22,6 +22,7 @@ import {
   BillingMenuIcon,
   CredshieldsIcon,
   UserGuideIcon,
+  PrivateApiMenuIcon,
 } from "components/icons";
 
 import {
@@ -183,7 +184,7 @@ const Sidebar: React.FC<{
           <SidebarItem
             to="/private-api"
             label="Private API"
-            icon={<IntegrationMenuIcon size={24} />}
+            icon={<PrivateApiMenuIcon size={24} />}
             isCollapsed={isCollapsed}
             transitionDone={transitionDone}
           />
