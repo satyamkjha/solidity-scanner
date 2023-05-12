@@ -73,6 +73,7 @@ export const theme = extendTheme({
           ...defaultTheme.components.Button.variants.outline(props),
           background:
             "linear-gradient(129.18deg, #52FF00 8.52%, #00EEFD 93.94%)",
+          boxShadow: "0px 4px 23px rgba(47, 248, 107, 0.45)",
           color: "black",
           fontSize: "15px",
           border: "none",
