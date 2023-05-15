@@ -101,11 +101,7 @@ const ReportBlock: React.FC<{
       </Box>
       <Flex
         justifyContent={"flex-start"}
-        width={[
-          "calc(100% - 60px)",
-          "calc(100% - 120px)",
-          "calc(100% - 120px)",
-        ]}
+        width={["calc(100% - 60px)", "calc(100% - 60px)", "calc(100% - 120px)"]}
         alignItems="center"
         flexWrap={"wrap"}
         height="fit-content"
