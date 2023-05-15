@@ -230,6 +230,20 @@ const QuickScan: React.FC = () => {
         isDisabled: false,
       },
     ],
+    reefscan: [
+      {
+        value: "mainnet",
+        label: "ReefScan Mainnet",
+        icon: "",
+        isDisabled: false,
+      },
+      {
+        value: "testnet",
+        label: "ReefScan Testnet",
+        icon: "",
+        isDisabled: false,
+      },
+    ],
     optimism: [
       {
         value: "mainnet",
@@ -295,6 +309,11 @@ const QuickScan: React.FC = () => {
       value: "aurora",
       icon: "aurora",
       label: "Aurora - (aurorascan.dev)",
+    },
+    {
+      value: "reefscan",
+      icon: "reefscan",
+      label: "ReefScan - (reefscan.io)",
     },
     {
       value: "buildbear",
@@ -392,7 +411,6 @@ const QuickScan: React.FC = () => {
     singleValue: (provided: any, state: any) => {
       const opacity = state.isDisabled ? 0.3 : 1;
       const transition = "opacity 300ms";
-
       return { ...provided, opacity, transition };
     },
   };
@@ -404,7 +422,7 @@ const QuickScan: React.FC = () => {
   }>();
 
   const toast = useToast();
-  const [isDesktopView] = useMediaQuery("(min-width: 1024px)");
+  const [isDesktopView] = useMediaQuery("(min-width: 1350px)");
 
   const [address, setAddress] = React.useState("");
   const [platform, setPlatform] = React.useState("");

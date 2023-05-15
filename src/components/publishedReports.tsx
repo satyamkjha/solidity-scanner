@@ -7,6 +7,7 @@ import {
   IconButton,
   Text,
   Spinner,
+  useMediaQuery,
 } from "@chakra-ui/react";
 import { ReportsListItem, Profile, Scan, Report } from "common/types";
 import { useReports } from "hooks/useReports";
@@ -46,6 +47,8 @@ const ReportBlock: React.FC<{
     content: () => componentRef.current,
   });
 
+  const [isMobileView] = useMediaQuery("(max-width: 500px)");
+
   useEffect(() => {
     if (summaryReport) {
       setTimeout(() => {
@@ -76,7 +79,7 @@ const ReportBlock: React.FC<{
       height="fit-content"
     >
       <Box
-        display={["none", "block"]}
+        display={isMobileView ? "none" : "block"}
         sx={{
           width: "60px",
           height: "60px",
@@ -169,7 +172,7 @@ const ReportBlock: React.FC<{
         height={"100%"}
       >
         <Box
-          display={["block", "none"]}
+          display={isMobileView ? "block" : "none"}
           sx={{
             width: "60px",
             height: "60px",
