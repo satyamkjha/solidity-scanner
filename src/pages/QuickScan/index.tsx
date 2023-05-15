@@ -411,7 +411,6 @@ const QuickScan: React.FC = () => {
     singleValue: (provided: any, state: any) => {
       const opacity = state.isDisabled ? 0.3 : 1;
       const transition = "opacity 300ms";
-
       return { ...provided, opacity, transition };
     },
   };

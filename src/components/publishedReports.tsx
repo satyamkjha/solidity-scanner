@@ -7,6 +7,7 @@ import {
   IconButton,
   Text,
   Spinner,
+  useMediaQuery,
 } from "@chakra-ui/react";
 import { ReportsListItem, Profile, Scan, Report } from "common/types";
 import { useReports } from "hooks/useReports";
@@ -46,6 +47,8 @@ const ReportBlock: React.FC<{
     content: () => componentRef.current,
   });
 
+  const [isMobileView] = useMediaQuery("(max-width: 500px)");
+
   useEffect(() => {
     if (summaryReport) {
       setTimeout(() => {
@@ -76,7 +79,7 @@ const ReportBlock: React.FC<{
       height="fit-content"
     >
       <Box
-        display={["none", "block"]}
+        display={isMobileView ? "none" : "block"}
         sx={{
           width: "60px",
           height: "60px",
@@ -98,7 +101,11 @@ const ReportBlock: React.FC<{
       </Box>
       <Flex
         justifyContent={"flex-start"}
-        width={["calc(100% - 60px)", "calc(100% - 200px)"]}
+        width={[
+          "calc(100% - 60px)",
+          "calc(100% - 120px)",
+          "calc(100% - 120px)",
+        ]}
         alignItems="center"
         flexWrap={"wrap"}
         height="fit-content"
@@ -165,11 +172,11 @@ const ReportBlock: React.FC<{
         flexDir={["column"]}
         justifyContent={"flex-start"}
         alignItems={"center"}
-        width={["60px"]}
+        width={["60px", "60px", "120px"]}
         height={"100%"}
       >
         <Box
-          display={["block", "none"]}
+          display={isMobileView ? "block" : "none"}
           sx={{
             width: "60px",
             height: "60px",
@@ -187,11 +194,16 @@ const ReportBlock: React.FC<{
             {report.date_published.slice(3, 6)}
           </Text>
         </Box>
-        <HStack spacing={3} mr={[0, 5, 10]}>
+        <Flex
+          flexDir={["column", "column", "row"]}
+          width="100%"
+          alignItems="center"
+          justifyContent={["flex-start", "flex-start", "flex-end"]}
+        >
           {report.is_approved && (
             <IconButton
-              my={5}
-              mr={[0, 5, 5]}
+              my={[2, 2, 5]}
+              mr={[0, 0, 5]}
               aria-label="View Report"
               backgroundColor={"#F5F2FF"}
               icon={
@@ -214,7 +226,7 @@ const ReportBlock: React.FC<{
             </Box>
           )}
           <IconButton
-            my={5}
+            my={[2, 2, 5]}
             aria-label="View Report"
             backgroundColor={"#F5F2FF"}
             icon={<ViewIcon color={"#806CCF"} />}
@@ -233,7 +245,7 @@ const ReportBlock: React.FC<{
               }
             }}
           />
-        </HStack>
+        </Flex>
       </Flex>
     </Flex>
   );
