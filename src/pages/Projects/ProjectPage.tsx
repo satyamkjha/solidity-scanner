@@ -498,6 +498,8 @@ const ScanDetails: React.FC<{
                   <VStack
                     mt={[2, 2, 2, 0]}
                     alignItems={["center", "center", "center", "flex-start"]}
+                    justifyContent={"flex-start"}
+                    spacing={0}
                   >
                     <Text sx={{ fontSize: "xl", fontWeight: 600 }}>
                       {project_name}

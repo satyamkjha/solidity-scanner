@@ -128,40 +128,47 @@ export const ReportContainer: React.FC<{ summary_report: Report }> = ({
           "url('/background/report_cover.png')",
         ]}
       >
-        <Logo />
-        <Text fontSize="2xl" color={"gray.400"} mt={[10, 10, 10, 20]} mb={5}>
-          Security Assessment
-        </Text>
-        <Heading fontSize={["3xl", "4xl"]} mb={3}>
-          {summary_report.project_summary_report.project_name}
-        </Heading>
-        <Text fontSize="xl" mb={20}>
-          {`${d.getDate()} ${monthNames[d.getMonth()]} ${d.getFullYear()}`}
-        </Text>
-        <Box
-          w="100%"
-          h={["50vh", "50vh", "50vh", "auto"]}
-          backgroundSize="cover"
-          backgroundRepeat={"no-repeat"}
-          backgroundImage={[
-            "url('/background/report_cover.svg')",
-            null,
-            null,
-            null,
-            "",
-          ]}
+        <Flex
+          alignItems="flex-start"
+          justifyContent="flex-start"
+          flexDir={"column"}
+          width={["100%", "100%", "100%", "80%", "70%"]}
         >
-          <Text
-            fontSize="lg"
-            width={["100%", "100%", "100%", "60%"]}
-            color={"gray.300"}
-            mb={10}
-          >
-            This security assessment report was prepared by SolidityScan.com, a
-            cloud-based Smart Contract Scanner.
+          <Logo />
+          <Text fontSize="2xl" color={"gray.400"} mt={[10, 10, 10, 20]} mb={5}>
+            Security Assessment
           </Text>
-          <ReportCoverDots />
-        </Box>
+          <Heading fontSize={["3xl", "4xl"]} mb={3}>
+            {summary_report.project_summary_report.project_name}
+          </Heading>
+          <Text fontSize="xl" mb={20}>
+            {`${d.getDate()} ${monthNames[d.getMonth()]} ${d.getFullYear()}`}
+          </Text>
+          <Box
+            w="100%"
+            h={["50vh", "50vh", "50vh", "auto"]}
+            backgroundSize="cover"
+            backgroundRepeat={"no-repeat"}
+            backgroundImage={[
+              "url('/background/report_cover.svg')",
+              null,
+              null,
+              null,
+              "",
+            ]}
+          >
+            <Text
+              fontSize="lg"
+              width={["100%", "100%", "100%", "60%"]}
+              color={"gray.300"}
+              mb={10}
+            >
+              This security assessment report was prepared by SolidityScan.com,
+              a cloud-based Smart Contract Scanner.
+            </Text>
+            <ReportCoverDots />
+          </Box>
+        </Flex>
       </Flex>
       <Flex
         as="div"

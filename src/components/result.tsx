@@ -602,7 +602,9 @@ export const MultifileResult: React.FC<{
           h={["100%", "100%", "100%", "625px"]}
           spacing={4}
           mb={[8, 8, 0]}
+          pr={[0, 0, 0, 4]}
           alignItems="flex-start"
+          borderRight="1px solid #E2E8F0"
         >
           <DetailFilter
             critical={critical}
@@ -1277,35 +1279,37 @@ export const MultiFileExplorer: React.FC<MultiFileExplorerProps> = ({
                         )}
                       </Text>
                     </HStack>
-                    <Text
-                      width={["40%", "40%", "40%", "23%"]}
-                      px={3}
-                      py={1}
-                      my={[2, 2, 2, 0]}
-                      borderRadius={20}
-                      color={
-                        files.template_details.issue_confidence === "2"
-                          ? "#289F4C"
+                    <Flex width={["40%", "40%", "40%", "23%"]}>
+                      <Text
+                        width="fit-content"
+                        px={3}
+                        py={1}
+                        my={[2, 2, 2, 0]}
+                        borderRadius={20}
+                        color={
+                          files.template_details.issue_confidence === "2"
+                            ? "#289F4C"
+                            : files.template_details.issue_confidence === "1"
+                            ? "#ED9801"
+                            : "#FF5630"
+                        }
+                        backgroundColor={
+                          files.template_details.issue_confidence === "2"
+                            ? "#CFFFB8"
+                            : files.template_details.issue_confidence === "1"
+                            ? "#FFF8EB"
+                            : "#FFF5F3"
+                        }
+                        fontSize="xs"
+                        fontWeight={"bold"}
+                      >
+                        {files.template_details.issue_confidence === "2"
+                          ? "Certain"
                           : files.template_details.issue_confidence === "1"
-                          ? "#ED9801"
-                          : "#FF5630"
-                      }
-                      backgroundColor={
-                        files.template_details.issue_confidence === "2"
-                          ? "#CFFFB8"
-                          : files.template_details.issue_confidence === "1"
-                          ? "#FFF8EB"
-                          : "#FFF5F3"
-                      }
-                      fontSize="xs"
-                      fontWeight={"bold"}
-                    >
-                      {files.template_details.issue_confidence === "2"
-                        ? "Certain"
-                        : files.template_details.issue_confidence === "1"
-                        ? "Firm"
-                        : "Tentative"}
-                    </Text>
+                          ? "Firm"
+                          : "Tentative"}
+                      </Text>
+                    </Flex>
                     <Text
                       width={["40%", "40%", "40%", "23%"]}
                       my={[2, 2, 2, 0]}

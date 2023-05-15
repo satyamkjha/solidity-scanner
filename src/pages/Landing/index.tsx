@@ -252,27 +252,25 @@ export default function LandingPage() {
           justifyContent={"center"}
         >
           <Flex
-            width="fit-content"
-            height={"fit-content"}
             borderRadius={"40px"}
             borderColor="#3300FF"
             borderStyle="solid"
-            borderTopWidth={"2px"}
-            borderBottomWidth={"2px"}
-            padding={10}
+            borderTopWidth={[0, 0, "2px"]}
+            borderBottomWidth={[0, 0, "2px"]}
+            padding={[0, 0, 4, 5, 10]}
             justifyContent={"center"}
+            width={["250px", "300px", "700px", "1244px"]}
+            height={["141px", "169px", "394px", "700px"]}
           >
             <iframe
               style={{
-                width: "1244px",
-                height: "700px",
                 borderRadius: "30px",
+                width: "100%",
+                height: "100%",
               }}
               src="https://www.youtube.com/embed/psu3GTKS_us"
               title="SolidityScan by CredShields - Intro"
-              frameborder="0"
               allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-              allowfullscreen
             ></iframe>
           </Flex>
         </Flex>
