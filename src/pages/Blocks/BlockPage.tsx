@@ -566,7 +566,7 @@ const BlockPage: React.FC = () => {
                                     variant="unstyled"
                                   >
                                     {printLoading ? (
-                                      <Spinner fontSize={40} color="#3E15F4" />
+                                      <Spinner size="sm" color="#3E15F4" />
                                     ) : (
                                       <ArrowDownIcon color="#3E15F4" />
                                     )}

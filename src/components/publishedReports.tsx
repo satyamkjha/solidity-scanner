@@ -98,7 +98,7 @@ const ReportBlock: React.FC<{
       </Box>
       <Flex
         justifyContent={"flex-start"}
-        width={["calc(100% - 60px)", "calc(100% - 200px)"]}
+        width={["calc(100% - 60px)", "calc(100% - 60px)", "calc(100% - 120px)"]}
         alignItems="center"
         flexWrap={"wrap"}
         height="fit-content"
@@ -165,7 +165,7 @@ const ReportBlock: React.FC<{
         flexDir={["column"]}
         justifyContent={"flex-start"}
         alignItems={"center"}
-        width={["60px"]}
+        width={["60px", "60px", "120px"]}
         height={"100%"}
       >
         <Box
@@ -187,11 +187,16 @@ const ReportBlock: React.FC<{
             {report.date_published.slice(3, 6)}
           </Text>
         </Box>
-        <HStack spacing={3} mr={[0, 5, 10]}>
+        <Flex
+          flexDir={["column", "column", "row"]}
+          width="100%"
+          alignItems="center"
+          justifyContent={["flex-start", "flex-start", "flex-end"]}
+        >
           {report.is_approved && (
             <IconButton
-              my={5}
-              mr={[0, 5, 5]}
+              my={[2, 2, 5]}
+              mr={[0, 0, 5]}
               aria-label="View Report"
               backgroundColor={"#F5F2FF"}
               icon={
@@ -214,7 +219,7 @@ const ReportBlock: React.FC<{
             </Box>
           )}
           <IconButton
-            my={5}
+            my={[2, 2, 5]}
             aria-label="View Report"
             backgroundColor={"#F5F2FF"}
             icon={<ViewIcon color={"#806CCF"} />}
@@ -233,7 +238,7 @@ const ReportBlock: React.FC<{
               }
             }}
           />
-        </HStack>
+        </Flex>
       </Flex>
     </Flex>
   );

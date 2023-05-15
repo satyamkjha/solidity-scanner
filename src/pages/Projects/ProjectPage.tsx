@@ -453,9 +453,10 @@ const ScanDetails: React.FC<{
                 sx={{
                   justifyContent: ["flex-start", "flex-start", "space-between"],
                   alignItems: ["center"],
-                  pb: 1,
+                  pb: 3,
                   px: 6,
                   w: "100%",
+                  h: "fit-content",
                   borderBottom: "1px solid",
                   borderColor: "border",
                   flexDir: ["column", "column", "column", "row"],
@@ -637,7 +638,7 @@ const ScanDetails: React.FC<{
                             variant="unstyled"
                           >
                             {printLoading ? (
-                              <Spinner fontSize={40} color="#3E15F4" />
+                              <Spinner size="sm" color="#3E15F4" />
                             ) : (
                               <ArrowDownIcon color="#3E15F4" />
                             )}

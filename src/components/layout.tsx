@@ -150,12 +150,14 @@ const Layout: React.FC = ({ children }) => {
           <Sidebar
             isCollapsed={isSidebarCollapsed}
             setCollapsed={setSidebarCollapsed}
+            setShowSidebar={setShowSidebar}
           />
         </Box>
         <Box sx={{ display: ["none", "none", "none", "block"] }}>
           <Sidebar
             isCollapsed={isSidebarCollapsed}
             setCollapsed={setSidebarCollapsed}
+            setShowSidebar={setShowSidebar}
           />
         </Box>
         <Box
