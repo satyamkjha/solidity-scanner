@@ -76,7 +76,7 @@ import Result, { MultifileResult } from "components/result";
 import { RescanIcon, LogoIcon, ScanErrorIcon } from "components/icons";
 import { InfoIcon } from "@chakra-ui/icons";
 import API from "helpers/api";
-
+import { restructureRepoTree, updateCheckedValue } from "helpers/fileStructure";
 import { useScans } from "hooks/useScans";
 import { useScan, getScan } from "hooks/useScan";
 
@@ -86,6 +86,7 @@ import {
   ReportsListItem,
   ScanMeta,
   TreeItem,
+  TreeItemUP,
 } from "common/types";
 import { useProfile } from "hooks/useProfile";
 import {
@@ -198,7 +199,6 @@ const ScanDetails: React.FC<{
 }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [isRescanLoading, setRescanLoading] = useState(false);
-
   const cancelRef = useRef<HTMLButtonElement | null>(null);
   const queryClient = useQueryClient();
   const [reportingStatus, setReportingStatus] = useState<string>("");
@@ -453,9 +453,10 @@ const ScanDetails: React.FC<{
                 sx={{
                   justifyContent: ["flex-start", "flex-start", "space-between"],
                   alignItems: ["center"],
-                  pb: 1,
+                  pb: 3,
                   px: 6,
                   w: "100%",
+                  h: "fit-content",
                   borderBottom: "1px solid",
                   borderColor: "border",
                   flexDir: ["column", "column", "column", "row"],
@@ -637,7 +638,7 @@ const ScanDetails: React.FC<{
                             variant="unstyled"
                           >
                             {printLoading ? (
-                              <Spinner fontSize={40} color="#3E15F4" />
+                              <Spinner size="sm" color="#3E15F4" />
                             ) : (
                               <ArrowDownIcon color="#3E15F4" />
                             )}
@@ -1530,11 +1531,12 @@ const ScanBlock: React.FC<{
   const history = useHistory();
   const [show, setShow] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-  const [skipFilePaths, setSkipFilePaths] = useState<string[] | null>(null);
+  const [repoTreeUP, setRepoTreeUP] = useState<TreeItemUP | null>(null);
+  const [skipFilePaths, setSkipFilePaths] = useState<string[]>();
 
   const getScanRequest = async () => {
     setIsLoading(true);
-    if (skipFilePaths === null) {
+    if (repoTreeUP === null) {
       try {
         const responseData = await getScan(scan.scan_id);
         if (responseData && responseData.scan_report.skip_file_paths) {
@@ -1546,6 +1548,16 @@ const ScanBlock: React.FC<{
     }
     setIsLoading(false);
   };
+
+  useEffect(() => {
+    if (repoTree && skipFilePaths) {
+      let newRepoTreeUP = restructureRepoTree(repoTree, true);
+      skipFilePaths.forEach((path) => {
+        newRepoTreeUP = updateCheckedValue(path, false, newRepoTreeUP);
+      });
+      setRepoTreeUP(newRepoTreeUP);
+    }
+  }, [skipFilePaths, repoTree]);
 
   return (
     <>
@@ -1680,8 +1692,8 @@ const ScanBlock: React.FC<{
                       if (show) {
                         setShow(false);
                       } else {
-                        getRepoTreeReq();
-                        getScanRequest();
+                        await getRepoTreeReq();
+                        await getScanRequest();
                         setShow(true);
                       }
                     }}
@@ -1754,11 +1766,12 @@ const ScanBlock: React.FC<{
           in={show}
           animateOpacity
         >
-          {skipFilePaths && repoTree && (
+          {repoTreeUP && (
             <FolderSettings
+              branch=""
               view="scan_history"
-              fileData={repoTree}
-              skipFilePaths={skipFilePaths}
+              repoTreeUP={repoTreeUP}
+              setRepoTreeUP={setRepoTreeUP}
             />
           )}
         </Collapse>

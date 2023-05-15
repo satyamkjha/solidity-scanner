@@ -33,6 +33,7 @@ import { CodeBlock, atomOneLight } from "react-code-blocks";
 
 import VulnerabilityDistribution from "components/vulnDistribution";
 import { SeverityIcon } from "components/icons";
+import { AiOutlineCopy } from "react-icons/ai";
 
 import { useFileContent } from "hooks/useFileContent";
 import { useIssueDetail } from "hooks/useIssueDetail";
@@ -49,7 +50,7 @@ import {
 import { issueActions, severityPriority } from "common/values";
 import API from "helpers/api";
 import { useMutation } from "react-query";
-import { ArrowUpIcon, CloseIcon, EditIcon } from "@chakra-ui/icons";
+import { ArrowUpIcon, CloseIcon, EditIcon, CheckIcon } from "@chakra-ui/icons";
 import React from "react";
 import { TrialWall } from "./trialWall";
 import DetailedResult from "./detailedResult";
@@ -761,7 +762,7 @@ const MultifileIssues: React.FC<MultifileIssuesProps> = ({
   };
 
   return (
-    <Accordion allowMultiple={isDesktopView} allowToggle>
+    <Accordion allowToggle>
       {Array.from(issues)
         .sort((issue1, issue2) =>
           severityPriority[issue1.template_details.issue_severity] >
@@ -1068,6 +1069,44 @@ const CodeExplorer: React.FC<{
   );
 };
 
+const FileNameTab: React.FC<{ file_path: string }> = ({ file_path }) => {
+  const [isHovered, setIsHovered] = useState(false);
+  const [showCheck, setShowCheck] = useState(false);
+
+  return (
+    <HStack
+      justifyContent="flex-start"
+      alignItems="center"
+      height="100%"
+      width="200px"
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => setIsHovered(false)}
+    >
+      <Tooltip label={file_path} aria-label="A tooltip">
+        <Text fontSize={"xs"} w="150px" isTruncated>
+          {file_path}
+        </Text>
+      </Tooltip>
+      {isHovered && !showCheck && (
+        <AiOutlineCopy
+          onClick={(e) => {
+            e.stopPropagation();
+            navigator.clipboard.writeText(file_path).then(
+              () => {
+                setShowCheck(true);
+                setTimeout(() => setShowCheck(false), 2000);
+              },
+              () => console.log("Could not copy to clipboard")
+            );
+          }}
+        />
+      )}
+
+      {showCheck && <CheckIcon color="#38CB89" />}
+    </HStack>
+  );
+};
+
 type MultiFileExplorerProps = {
   files: FilesState;
   type: "project" | "block";
@@ -1164,24 +1203,14 @@ export const MultiFileExplorer: React.FC<MultiFileExplorerProps> = ({
                       borderRadius="0px"
                       borderRightWidth={"1px"}
                       borderColor={"#C4C4C4"}
+                      w="200px"
                       _selected={{
                         background: "white",
                         borderBottomColor: "#3300FF",
                         borderBottomWidth: "2px",
                       }}
                     >
-                      <Tooltip label={file.file_path} aria-label="A tooltip">
-                        <Text fontSize={"xs"} width={100} isTruncated>
-                          {file.file_path.length < 16
-                            ? file.file_path
-                            : file.file_path.slice(0, 6) +
-                              "..." +
-                              file.file_path.slice(
-                                file.file_path.length - 10,
-                                file.file_path.length
-                              )}
-                        </Text>
-                      </Tooltip>
+                      <FileNameTab file_path={file.file_path} />
                     </Tab>
                   ))}
                 </TabList>

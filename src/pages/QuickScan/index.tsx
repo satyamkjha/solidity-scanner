@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import { Link as RouterLink, useLocation, useParams } from "react-router-dom";
 import styled from "@emotion/styled";
-import { getReCaptchaHeaders } from "helpers/helperFunction";
+import { getAssetsURL, getReCaptchaHeaders } from "helpers/helperFunction";
 import {
   Flex,
   Box,
@@ -230,6 +230,20 @@ const QuickScan: React.FC = () => {
         isDisabled: false,
       },
     ],
+    reefscan: [
+      {
+        value: "mainnet",
+        label: "ReefScan Mainnet",
+        icon: "",
+        isDisabled: false,
+      },
+      {
+        value: "testnet",
+        label: "ReefScan Testnet",
+        icon: "",
+        isDisabled: false,
+      },
+    ],
     optimism: [
       {
         value: "mainnet",
@@ -295,6 +309,11 @@ const QuickScan: React.FC = () => {
       value: "aurora",
       icon: "aurora",
       label: "Aurora - (aurorascan.dev)",
+    },
+    {
+      value: "reefscan",
+      icon: "reefscan",
+      label: "ReefScan - (reefscan.io)",
     },
     {
       value: "buildbear",
@@ -392,7 +411,6 @@ const QuickScan: React.FC = () => {
     singleValue: (provided: any, state: any) => {
       const opacity = state.isDisabled ? 0.3 : 1;
       const transition = "opacity 300ms";
-
       return { ...provided, opacity, transition };
     },
   };
@@ -404,7 +422,7 @@ const QuickScan: React.FC = () => {
   }>();
 
   const toast = useToast();
-  const [isDesktopView] = useMediaQuery("(min-width: 1024px)");
+  const [isDesktopView] = useMediaQuery("(min-width: 1350px)");
 
   const [address, setAddress] = React.useState("");
   const [platform, setPlatform] = React.useState("");
@@ -620,6 +638,8 @@ const QuickScan: React.FC = () => {
     }
   };
 
+  const assetsURL = getAssetsURL();
+
   return (
     <>
       <Header />
@@ -640,7 +660,7 @@ const QuickScan: React.FC = () => {
             px={[0, 0, 10]}
             py={20}
             pb={"200px"}
-            background={"url('/background/quickscan_bg.jpeg')"}
+            background={`url('${assetsURL}quickscan/quickscan_bg_lg.png')`}
             backgroundSize="cover"
             backgroundPosition={"center"}
             backgroundRepeat="no-repeat"
@@ -1618,7 +1638,7 @@ const QuickScan: React.FC = () => {
                               <Image
                                 height={"20px"}
                                 width={"20px"}
-                                src={`/blockscan/${item.contract_platform}.svg`}
+                                src={`${assetsURL}blockscan/${item.contract_platform}.svg`}
                               />
                               <Text
                                 color={"#8A94A6"}
@@ -1730,9 +1750,9 @@ const QuickScan: React.FC = () => {
             flexDir="column"
             alignItems="center"
             justifyContent={"flex-start"}
-            w={"90%"}
+            w={"95%"}
             px={[0, 0, 10]}
-            py={10}
+            py={20}
             borderRadius={20}
             background={"#FFFFFF"}
           >

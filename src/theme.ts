@@ -10,6 +10,13 @@ const config: { initialColorMode: ColorMode; useSystemColorMode: boolean } = {
 };
 
 export const theme = extendTheme({
+  breakpoints: {
+    sm: "330px",
+    md: "768px",
+    lg: "1350px",
+    xl: "1600px",
+    "2xl": "1920px",
+  },
   config,
   fonts: {
     heading: "Poppins",
@@ -61,6 +68,7 @@ export const theme = extendTheme({
             "linear-gradient(129.18deg, #52FF00 8.52%, #00EEFD 93.94%)",
           color: "black",
           fontSize: "15px",
+          border: "none",
           py: 6,
           _hover: {
             background:
@@ -119,6 +127,20 @@ export const theme = extendTheme({
             background: "#efebff",
           },
         }),
+        "gray-outline": (props) => ({
+          ...defaultTheme.components.Button.variants.outline(props),
+          background: "#FFFFFF",
+          color: "#828282",
+          fontSize: "16px",
+          borderColor: "#828282",
+          py: 8,
+          _hover: {
+            background: "#f0f0f0",
+          },
+          _active: {
+            background: "#f0f0f0",
+          },
+        }),
         "cta-outline": (props) => ({
           ...defaultTheme.components.Button.variants.outline(props),
           background: "#FFFFFF",
@@ -135,7 +157,6 @@ export const theme = extendTheme({
         }),
       },
     },
-
     Input: {
       parts: ["field", "addon"],
       sizes: {
@@ -188,7 +209,6 @@ export const theme = extendTheme({
         },
       },
     },
-
     Select: {
       parts: ["field", "addon"],
       sizes: {
@@ -319,6 +339,17 @@ export const theme = extendTheme({
           },
           thumb: {
             bg: "linear-gradient(129.18deg, #52FF00 8.52%, #00EEFD 93.94%)",
+          },
+        },
+        accent: {
+          track: {
+            bg: "gray.100",
+            _checked: {
+              bg: "gray.100",
+            },
+          },
+          thumb: {
+            bg: "#3300FF",
           },
         },
       },

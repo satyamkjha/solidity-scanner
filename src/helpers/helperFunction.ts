@@ -1,8 +1,17 @@
 import UAParser from "ua-parser-js";
 import reCAPTCHA from "helpers/reCAPTCHA";
+import { TreeItem, TreeItemUP } from "common/types";
 
 export const sentenceCapitalize = (string: string) => {
   return string.charAt(0).toUpperCase() + string.slice(1);
+};
+
+export const snakeToNormal = (snakeCase: string): string => {
+  const words = snakeCase.split("_");
+  const normalWords = words.map(
+    (word) => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()
+  );
+  return normalWords.join(" ");
 };
 
 export const camelCaseToNormal = (string: string) => {

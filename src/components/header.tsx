@@ -26,7 +26,7 @@ import { API_PATH } from "helpers/routeManager";
 
 export const Header: React.FC = () => {
   const { isOpen, onClose, onOpen } = useDisclosure();
-  const [isDesktopView] = useMediaQuery("(min-width: 1024px)");
+  const [isDesktopView] = useMediaQuery("(min-width: 1350px)");
   const history = useHistory();
 
   const logout = async () => {
@@ -55,7 +55,7 @@ export const Header: React.FC = () => {
         justifyContent="space-between"
         maxW={["95vw", "95vw", "90vw"]}
         mx="auto"
-        py={4}
+        py={1}
       >
         <Flex alignItems="center" width={["100%", "100%", "100%", "auto"]}>
           <RouterLink to="/">

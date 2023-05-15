@@ -19,7 +19,7 @@ import {
   PopoverTrigger,
 } from "@chakra-ui/react";
 import Select from "react-select";
-import { FolderIcon, SimpleFileIcon } from "./icons";
+import { FolderIcon } from "./icons";
 import { AiOutlineFile } from "react-icons/ai";
 import { FaCodeBranch } from "react-icons/fa";
 import {
@@ -27,9 +27,16 @@ import {
   ChevronRightIcon,
   RepeatClockIcon,
   InfoIcon,
+  CheckIcon,
+  MinusIcon,
 } from "@chakra-ui/icons";
-import { type } from "os";
-import { TreeItem } from "common/types";
+import { TreeItem, TreeItemUP } from "common/types";
+import {
+  restructureRepoTree,
+  generatePathArray,
+  updateChildTree,
+  updateCheckedValue,
+} from "helpers/fileStructure";
 
 const formatOptionLabel: React.FC<{
   value: string;
@@ -79,20 +86,10 @@ const customStyles = {
 };
 
 const FileList: React.FC<{
-  fileList: TreeItem;
+  fileList: TreeItemUP;
   view: "github_app" | "detailed_result" | "scan_history";
-  skipped: boolean;
-  addFilePath: (path: string) => void;
-  deleteFilePath: (path: string) => void;
-  skipFilePaths: string[];
-}> = ({
-  fileList,
-  view,
-  skipped,
-  addFilePath,
-  deleteFilePath,
-  skipFilePaths,
-}) => {
+  updateCheck: (path: string, check: boolean) => void;
+}> = ({ fileList, view, updateCheck }) => {
   return (
     <Flex
       height="fit-content"
@@ -102,59 +99,27 @@ const FileList: React.FC<{
       alignItems="flex-start"
       pl={[2, 2, 7]}
     >
-      {fileList.tree.map((item, index) => (
-        <FolderItem
-          key={index}
-          addFilePath={addFilePath}
-          deleteFilePath={deleteFilePath}
-          skipFilePaths={skipFilePaths}
-          view={view}
-          folderItem={item}
-          skipped={skipped || skipFilePaths.includes(`${item.path}/`)}
-        />
+      {fileList.tree.map((item) => (
+        <FolderItem view={view} folderItem={item} updateCheck={updateCheck} />
       ))}
-      {fileList.blobs.map((item, index) => (
-        <FileItem
-          key={index}
-          addFilePath={addFilePath}
-          deleteFilePath={deleteFilePath}
-          skipFilePaths={skipFilePaths}
-          view={view}
-          fileName={item}
-          filePath={fileList.path}
-          skipped={
-            skipped ||
-            skipFilePaths.includes(
-              `${fileList.path}${fileList.path !== "" ? "/" : ""}${item}`
-            )
-          }
-        />
+      {fileList.blobs.map((item) => (
+        <FileItem view={view} fileItem={item} updateCheck={updateCheck} />
       ))}
     </Flex>
   );
 };
 
 const FolderItem: React.FC<{
-  folderItem: TreeItem;
-  skipped: boolean;
-  addFilePath: (path: string) => void;
-  deleteFilePath: (path: string) => void;
-  skipFilePaths: string[];
+  folderItem: TreeItemUP;
   view: "github_app" | "detailed_result" | "scan_history";
-}> = ({
-  folderItem,
-  view,
-  skipped,
-  addFilePath,
-  deleteFilePath,
-  skipFilePaths,
-}) => {
-  const [isChecked, setIsChecked] = React.useState(!skipped);
+  updateCheck: (path: string, check: boolean) => void;
+}> = ({ folderItem, view, updateCheck }) => {
+  // const [isChecked, setIsChecked] = React.useState(folderItem.checked);
   const [show, setShow] = React.useState(false);
 
-  useEffect(() => {
-    setIsChecked(!skipped);
-  }, []);
+  // useEffect(() => {
+  //   setIsChecked(folderItem.checked);
+  // }, [folderItem.checked]);
 
   return (
     <>
@@ -175,69 +140,57 @@ const FolderItem: React.FC<{
         {view !== "scan_history" && (
           <Checkbox
             mr={3}
-            isChecked={isChecked}
+            isChecked={folderItem.isChildCheck}
+            icon={folderItem.checked ? <CheckIcon /> : <MinusIcon />}
             colorScheme={"purple"}
             borderColor={"gray.500"}
             onChange={() => {
-              if (isChecked) {
-                addFilePath(`${folderItem.path}/`);
-              } else {
-                deleteFilePath(`${folderItem.path}/`);
-              }
-              setIsChecked(!isChecked);
+              updateCheck(
+                folderItem.path,
+                !(folderItem.checked || folderItem.isChildCheck)
+              );
             }}
           ></Checkbox>
         )}
-        <FolderIcon active={isChecked} size={20} />
-        <Text ml={3} color={isChecked ? "#4E5D78" : "#4E5D7880"}>
+        <FolderIcon active={folderItem.checked} size={20} />
+        <Text ml={3} color={folderItem.checked ? "#4E5D78" : "#4E5D7880"}>
           {folderItem.name}
         </Text>
       </Flex>
       {show && (
-        <FileList
-          addFilePath={addFilePath}
-          deleteFilePath={deleteFilePath}
-          skipFilePaths={skipFilePaths}
-          view={view}
-          fileList={folderItem}
-          skipped={!isChecked}
-        />
+        <FileList view={view} fileList={folderItem} updateCheck={updateCheck} />
       )}
     </>
   );
 };
 
 const FileItem: React.FC<{
-  fileName: string;
-  filePath: string;
-  skipped: boolean;
-  addFilePath: (path: string) => void;
-  deleteFilePath: (path: string) => void;
-  skipFilePaths: string[];
+  fileItem: {
+    path: string;
+    checked: boolean;
+    name: string;
+  };
   view: "github_app" | "detailed_result" | "scan_history";
-}> = ({
-  fileName,
-  filePath,
-  view,
-  skipped,
-  addFilePath,
-  deleteFilePath,
-  skipFilePaths,
-}) => {
-  const [isChecked, setIsChecked] = React.useState(!skipped);
-  const [show, setShow] = React.useState(false);
+  updateCheck: (path: string, check: boolean) => void;
+}> = ({ fileItem, view, updateCheck }) => {
+  // const [isChecked, setIsChecked] = React.useState(fileItem.checked);
+  // const [show, setShow] = React.useState(false);
 
-  useEffect(() => {
-    setIsChecked(!skipped);
-  }, []);
+  // useEffect(() => {
+  //   setIsChecked(fileItem.checked);
+  // }, [fileItem.checked]);
 
   return (
     <Flex
       p={2}
-      pl={view !== "scan_history" && fileName.slice(-4) !== ".sol" ? "60px" : 8}
+      pl={
+        view !== "scan_history" && fileItem.name.slice(-4) !== ".sol"
+          ? "60px"
+          : 8
+      }
       width={"fit-content"}
       cursor={"pointer"}
-      onClick={() => setShow(!show)}
+      // onClick={() => setShow(!show)}
       justifyContent="flex-start"
       alignItems="center"
       borderRadius={5}
@@ -245,39 +198,35 @@ const FileItem: React.FC<{
         backgroundColor: "gray.100",
       }}
     >
-      {view !== "scan_history" && fileName.slice(-4) === ".sol" && (
+      {view !== "scan_history" && fileItem.name.slice(-4) === ".sol" && (
         <Checkbox
           mr={3}
-          isChecked={isChecked}
+          isChecked={fileItem.checked}
           colorScheme={"purple"}
           borderColor={"gray.500"}
           onChange={() => {
-            if (isChecked) {
-              addFilePath(
-                `${filePath}${filePath !== "" ? "/" : ""}${fileName}`
-              );
-            } else {
-              deleteFilePath(
-                `${filePath}${filePath !== "" ? "/" : ""}${fileName}`
-              );
-            }
-            setIsChecked(!isChecked);
+            updateCheck(fileItem.path, !fileItem.checked);
+            // setIsChecked(!isChecked);
           }}
         ></Checkbox>
       )}
       <AiOutlineFile
         color={
-          isChecked && fileName.slice(-4) === ".sol" ? "#4E5D78" : "#4E5D7880"
+          fileItem.checked && fileItem.name.slice(-4) === ".sol"
+            ? "#4E5D78"
+            : "#4E5D7880"
         }
         size={20}
       />
       <Text
         ml={3}
         color={
-          isChecked && fileName.slice(-4) === ".sol" ? "#4E5D78" : "#4E5D7880"
+          fileItem.checked && fileItem.name.slice(-4) === ".sol"
+            ? "#4E5D78"
+            : "#4E5D7880"
         }
       >
-        {fileName}
+        {fileItem.name}
       </Text>
     </Flex>
   );
@@ -285,38 +234,36 @@ const FileItem: React.FC<{
 
 const FolderSettings: React.FC<{
   view: "github_app" | "detailed_result" | "scan_history";
-  fileData: TreeItem;
+  repoTreeUP: TreeItemUP;
+  setRepoTreeUP: React.Dispatch<React.SetStateAction<TreeItemUP | null>>;
   branches?: string[];
   branch: string;
   setBranch?: React.Dispatch<React.SetStateAction<string>>;
-  skipFilePaths: string[];
-  setSkipFilePaths?: React.Dispatch<React.SetStateAction<string[]>>;
   updateSkipPathRequests?: () => Promise<void>;
   isLoading?: boolean;
 }> = ({
   view,
   branches,
-  fileData,
-  skipFilePaths,
-  setSkipFilePaths,
+  repoTreeUP,
+  setRepoTreeUP,
   branch,
   setBranch,
   updateSkipPathRequests,
   isLoading,
 }) => {
-  const addFilePath = (path: string) => {
-    setSkipFilePaths && setSkipFilePaths([...skipFilePaths, path]);
-  };
-
-  const deleteFilePath = (path: string) => {
-    const newPath = skipFilePaths.filter((item) => item !== path);
-    setSkipFilePaths && setSkipFilePaths([...newPath]);
-  };
-
   const [selectValue, setSelectValue] = useState({
     value: branch,
     label: branch,
   });
+
+  const updateCheck = (path: string, check: boolean) => {
+    if (repoTreeUP) {
+      let newRepoTreeUP = updateCheckedValue(path, check, repoTreeUP);
+      setRepoTreeUP(newRepoTreeUP);
+    }
+  };
+
+  const [allCheck, setAllCheck] = useState(true);
 
   return (
     <Flex
@@ -435,14 +382,34 @@ const FolderSettings: React.FC<{
             <Spinner color="gray.500" />
           </Flex>
         ) : (
-          <FileList
-            addFilePath={addFilePath}
-            deleteFilePath={deleteFilePath}
-            skipFilePaths={skipFilePaths}
-            view={view}
-            fileList={fileData}
-            skipped={false}
-          />
+          <Flex
+            w="fit-content"
+            h="fit-content"
+            justifyContent="flex-start"
+            alignItems="flex-start"
+            flexDir={"column"}
+          >
+            {view !== "scan_history" && (
+              <HStack spacing={5} ml={5} mb={2}>
+                <Checkbox
+                  isChecked={allCheck}
+                  colorScheme={"purple"}
+                  borderColor={"gray.500"}
+                  onChange={() => {
+                    setAllCheck(!allCheck);
+                    setRepoTreeUP(updateChildTree(repoTreeUP, !allCheck));
+                  }}
+                ></Checkbox>
+                <Text>{allCheck ? "De-Select" : "Select"} all Files</Text>
+              </HStack>
+            )}
+
+            <FileList
+              view={view}
+              fileList={repoTreeUP}
+              updateCheck={updateCheck}
+            />
+          </Flex>
         )}
       </Flex>
     </Flex>
