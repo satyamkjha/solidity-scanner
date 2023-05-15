@@ -12,6 +12,7 @@ import {
   Collapse,
   useDisclosure,
   VStack,
+  useMediaQuery,
 } from "@chakra-ui/react";
 import {
   LogoIcon,
@@ -37,10 +38,12 @@ import { ArrowBackIcon, ArrowForwardIcon } from "@chakra-ui/icons";
 const Sidebar: React.FC<{
   isCollapsed: boolean;
   setCollapsed: React.Dispatch<React.SetStateAction<boolean>>;
-}> = ({ isCollapsed, setCollapsed }) => {
+  setShowSidebar: React.Dispatch<React.SetStateAction<boolean>>;
+}> = ({ isCollapsed, setCollapsed, setShowSidebar }) => {
   const { data: profileData } = useProfile();
   const { isOpen, onClose, onOpen } = useDisclosure();
   const [transitionDone, setTransitionDone] = useState(true);
+  const [isDesktopView] = useMediaQuery("(min-width: 1024px)");
 
   return (
     <Flex
@@ -124,7 +127,11 @@ const Sidebar: React.FC<{
                   borderRadius={"10px 0 0 10px"}
                   bgColor={"#ECECEC"}
                   onClick={() => {
-                    setCollapsed(!isCollapsed);
+                    if (isDesktopView) {
+                      setCollapsed(!isCollapsed);
+                    } else {
+                      setShowSidebar(false);
+                    }
                   }}
                 >
                   <Icon as={ArrowBackIcon} fontSize="xl" color="gray.500" />{" "}

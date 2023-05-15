@@ -782,7 +782,7 @@ const MultifileIssues: React.FC<MultifileIssuesProps> = ({
   };
 
   return (
-    <Accordion allowMultiple={isDesktopView} allowToggle>
+    <Accordion allowToggle>
       {Array.from(issues)
         .sort((issue1, issue2) =>
           severityPriority[issue1.template_details.issue_severity] >
