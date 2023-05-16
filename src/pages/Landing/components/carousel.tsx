@@ -1,7 +1,7 @@
 import React from "react";
 import Carousel from "@brainhubeu/react-carousel";
 import "@brainhubeu/react-carousel/lib/style.css";
-import { Image } from "@chakra-ui/react";
+import { Image, Box, Heading, Text } from "@chakra-ui/react";
 import { getAssetsURL } from "helpers/helperFunction";
 
 const ImageCarousel = () => {
@@ -43,18 +43,36 @@ const ImageCarousel = () => {
   const assetsURL = getAssetsURL();
 
   return (
-    <Carousel plugins={["arrows"]}>
-      {imgSourceList.map((src) => (
-        <Image
-          // boxShadow="5px 5px 15px 15px #88888840"
-          // borderRadius="25px"
-          src={`${assetsURL}${src.src}`}
-          alt={src.alt}
-          // margin="30px"
-          width="90%"
-        />
-      ))}
-    </Carousel>
+    <Box
+      w="100%"
+      as="section"
+      sx={{ textAlign: "center" }}
+      mb={10}
+      mt={[10, 10, 20]}
+      px={[0, 0, 0, 24]}
+    >
+      <Heading as="h2" fontSize="3xl" my={5}>
+        Fully automated smart contract audit system <br /> to help{" "}
+        <Box as="span" sx={{ color: "accent" }}>
+          secure your products faster
+        </Box>
+      </Heading>
+      <Text color="subtle" fontSize={["lg", "lg", "xl"]} mb={4}>
+        Focus on what matters most, our robots handle the rest ☕️
+      </Text>
+      <Carousel plugins={["arrows"]}>
+        {imgSourceList.map((src) => (
+          <Image
+            // boxShadow="5px 5px 15px 15px #88888840"
+            // borderRadius="25px"
+            src={`${assetsURL}${src.src}`}
+            alt={src.alt}
+            // margin="30px"
+            width="90%"
+          />
+        ))}
+      </Carousel>
+    </Box>
   );
 };
 
