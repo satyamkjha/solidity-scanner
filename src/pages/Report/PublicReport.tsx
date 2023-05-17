@@ -38,7 +38,13 @@ export default function ReportPage() {
   return (
     <>
       {getFeatureGateConfig().pdf_report_generation && (
-        <HStack my={5} w="90%" height={"fit-content"} justifyContent="flex-end">
+        <HStack
+          mr={10}
+          my={5}
+          w={["100%", "100%", "90%"]}
+          height={"fit-content"}
+          justifyContent={["center", "center", "flex-end"]}
+        >
           <Button
             variant={"accent-outline"}
             w={["250px"]}
