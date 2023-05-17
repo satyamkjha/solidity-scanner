@@ -8,14 +8,13 @@ import {
   Heading,
   Button,
   Image,
-  Stack,
-  Skeleton,
 } from "@chakra-ui/react";
 
 import Header from "components/header";
 import Footer from "components/footer";
 import Infographics from "components/infographics";
 import { getAssetsURL } from "helpers/helperFunction";
+import LoadingSkeleton from "./components/loadingSkeleton";
 
 const QuickScan = lazy(() => import("./components/quickScan"));
 const ProductVideo = lazy(() => import("./components/productVideo"));
@@ -159,11 +158,9 @@ export default function LandingPage() {
 
         <Suspense
           fallback={
-            <Stack>
-              <Skeleton height="40px" />
-              <Skeleton height="40px" />
-              <Skeleton height="40px" />
-            </Stack>
+            <Box px={[0, 0, 0, 24]} w={"100%"}>
+              <LoadingSkeleton />
+            </Box>
           }
         >
           <QuickScan />
