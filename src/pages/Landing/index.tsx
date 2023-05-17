@@ -224,7 +224,7 @@ export default function LandingPage() {
             w={["100%", "100%", "100%", "55%"]}
             p={0}
             display={"flex"}
-            mr={[10, 10, 10,]}
+            mr={[10, 10, 10]}
             flexDirection="column"
             alignItems={["center", "center", "center", "flex-end"]}
           >
@@ -251,24 +251,28 @@ export default function LandingPage() {
           alignItems={"center"}
           justifyContent={"center"}
         >
-          <Box
-            borderColor={"#3300FF"}
-            width="100%"
-            height={["180px", "260px", "340px", "450px", "580px", "650px"]}
-            borderRadius={["5px"]}
+          <Flex
+            borderRadius={"40px"}
+            borderColor="#3300FF"
+            borderStyle="solid"
+            borderTopWidth={[0, 0, "2px"]}
+            borderBottomWidth={[0, 0, "2px"]}
+            padding={[0, 0, 4, 5, 10]}
+            justifyContent={"center"}
+            width={["250px", "300px", "700px", "1244px"]}
+            height={["141px", "169px", "394px", "700px"]}
           >
             <iframe
               style={{
+                borderRadius: "30px",
                 width: "100%",
                 height: "100%",
               }}
               src="https://www.youtube.com/embed/psu3GTKS_us"
               title="SolidityScan by CredShields - Intro"
-              frameborder="0"
               allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-              allowfullscreen
             ></iframe>
-          </Box>
+          </Flex>
         </Flex>
         {/* Section 3 */}
         <Flex
