@@ -59,7 +59,7 @@ export default function PrivateApi() {
     } else {
       setIsSpinning(true);
       setViewable(true);
-      const { data } = await API.get(API_PATH.API_CREATE_ACCESS_KEY);
+      const { data } = await API.post(API_PATH.API_CREATE_ACCESS_KEY);
       setAccessKey(data.api_key);
       setIsSpinning(false);
       setIsFirstTime(true);
@@ -76,11 +76,11 @@ export default function PrivateApi() {
   const onActionConfirm = async () => {
     setIsSpinning(true);
     if (actionType === "regenerate") {
-      const { data } = await API.get(API_PATH.API_REGENERATE_ACCESS_KEY);
+      const { data } = await API.post(API_PATH.API_REGENERATE_ACCESS_KEY);
       setAccessKey(data.api_key);
       setIsFirstTime(false);
     } else if (actionType === "delete") {
-      const { data } = await API.get(API_PATH.API_REVOKE_ACCESS_KEY);
+      const { data } = await API.post(API_PATH.API_REVOKE_ACCESS_KEY);
       setAccessKey("");
       setViewable(true);
       setIsFirstTime(false);
