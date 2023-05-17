@@ -454,7 +454,11 @@ const PlanCard: React.FC<{
         onClick={() => setSelectedPlan(plan)}
         overflow={"hidden"}
         zIndex={selected ? 100 : 0}
-        filter={"drop-shadow(0px 2px 13px rgba(0, 0, 0, 0.15));"}
+        filter={
+          selected
+            ? "drop-shadow(0px 2px 13px rgba(0, 0, 0, 0.2));"
+            : "drop-shadow(0px 2px 13px rgba(0, 0, 0, 0.04));"
+        }
       >
         <Text
           w={"100%"}

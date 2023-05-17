@@ -57,7 +57,10 @@ export default function ReportPage() {
               <PrintContainer summary_report={data.summary_report} />
             </Box>
           </Box>
-          <ReportContainer summary_report={data.summary_report} />
+          <ReportContainer
+            summary_report={data.summary_report}
+            isPublicReport={true}
+          />
         </>
       ) : (
         <Container

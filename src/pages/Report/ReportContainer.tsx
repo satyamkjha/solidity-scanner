@@ -29,9 +29,10 @@ import { sentenceCapitalize } from "helpers/helperFunction";
 import React from "react";
 import styled from "@emotion/styled";
 
-export const ReportContainer: React.FC<{ summary_report: Report }> = ({
-  summary_report,
-}) => {
+export const ReportContainer: React.FC<{
+  summary_report: Report;
+  isPublicReport: boolean;
+}> = ({ summary_report, isPublicReport }) => {
   let d = new Date();
 
   if (summary_report) {
@@ -113,8 +114,13 @@ export const ReportContainer: React.FC<{ summary_report: Report }> = ({
         as="div"
         w="100%"
         alignItems="flex-start"
-        justifyContent="flex-start"
-        flexDir={"column"}
+        justifyContent={[
+          "flex-start",
+          "flex-start",
+          "flex-start",
+          "space-between",
+        ]}
+        flexDir={"row"}
         py={[4, 4, 4, 20]}
         pl={[6, 6, 6, 10]}
         marginTop={[6, 6, 6, "100px"]}
@@ -169,6 +175,13 @@ export const ReportContainer: React.FC<{ summary_report: Report }> = ({
             <ReportCoverDots />
           </Box>
         </Flex>
+        {isPublicReport && (
+          <Image
+            height={250}
+            width={250}
+            src="/common/verified_report_badge.svg"
+          />
+        )}
       </Flex>
       <Flex
         as="div"
@@ -1376,7 +1389,7 @@ export const ReportContainer: React.FC<{ summary_report: Report }> = ({
                     Severity
                   </Text>
                   <HStack>
-                    <SeverityIcon variant={issue.severity} />
+                    <SeverityIcon size={12} variant={issue.severity} />
                     <Text
                       fontSize="lg"
                       fontWeight={"bold"}
@@ -1522,7 +1535,11 @@ export const ReportContainer: React.FC<{ summary_report: Report }> = ({
                 />
               </DescriptionWrapper>
               <HStack spacing={5} mt={5} mb={3}>
-                <IssueRemediationIcons size={40} />
+                <Image
+                  src="/common/issue_remediation.svg"
+                  height={8}
+                  width={8}
+                />
                 <Text fontSize="md" fontWeight={"bold"} width={"100%"}>
                   Issue Remediation
                 </Text>
