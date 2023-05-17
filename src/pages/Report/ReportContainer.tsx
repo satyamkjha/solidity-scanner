@@ -25,13 +25,14 @@ import {
   ReportCoverDots,
 } from "components/icons";
 import VulnerabilityProgress from "components/VulnerabilityProgress";
-import { sentenceCapitalize } from "helpers/helperFunction";
+import { getAssetsURL, sentenceCapitalize } from "helpers/helperFunction";
 import React from "react";
 import styled from "@emotion/styled";
 
-export const ReportContainer: React.FC<{ summary_report: Report }> = ({
-  summary_report,
-}) => {
+export const ReportContainer: React.FC<{
+  summary_report: Report;
+  isPublicReport: boolean;
+}> = ({ summary_report, isPublicReport }) => {
   let d = new Date();
 
   if (summary_report) {
@@ -41,6 +42,8 @@ export const ReportContainer: React.FC<{ summary_report: Report }> = ({
   }
 
   const [isDesktopView] = useMediaQuery("(min-width: 1024px)");
+
+  const assetsURL = getAssetsURL();
 
   const pieData = (
     critical: number,
@@ -113,8 +116,13 @@ export const ReportContainer: React.FC<{ summary_report: Report }> = ({
         as="div"
         w="100%"
         alignItems="flex-start"
-        justifyContent="flex-start"
-        flexDir={"column"}
+        justifyContent={[
+          "flex-start",
+          "flex-start",
+          "flex-start",
+          "space-between",
+        ]}
+        flexDir={"row"}
         py={[4, 4, 4, 20]}
         pl={[6, 6, 6, 10]}
         marginTop={[6, 6, 6, "100px"]}
@@ -125,43 +133,56 @@ export const ReportContainer: React.FC<{ summary_report: Report }> = ({
           null,
           null,
           null,
-          "url('/background/report_cover.png')",
+          `url('${assetsURL}report/report_cover.png')`,
         ]}
       >
-        <Logo />
-        <Text fontSize="2xl" color={"gray.400"} mt={[10, 10, 10, 20]} mb={5}>
-          Security Assessment
-        </Text>
-        <Heading fontSize={["3xl", "4xl"]} mb={3}>
-          {summary_report.project_summary_report.project_name}
-        </Heading>
-        <Text fontSize="xl" mb={20}>
-          {`${d.getDate()} ${monthNames[d.getMonth()]} ${d.getFullYear()}`}
-        </Text>
-        <Box
-          w="100%"
-          h={["50vh", "50vh", "50vh", "auto"]}
-          backgroundSize="cover"
-          backgroundRepeat={"no-repeat"}
-          backgroundImage={[
-            "url('/background/report_cover.svg')",
-            null,
-            null,
-            null,
-            "",
-          ]}
+        <Flex
+          alignItems="flex-start"
+          justifyContent="flex-start"
+          flexDir={"column"}
+          width={["100%", "100%", "100%", "80%", "70%"]}
         >
-          <Text
-            fontSize="lg"
-            width={["100%", "100%", "100%", "60%"]}
-            color={"gray.300"}
-            mb={10}
-          >
-            This security assessment report was prepared by SolidityScan.com, a
-            cloud-based Smart Contract Scanner.
+          <Logo />
+          <Text fontSize="2xl" color={"gray.400"} mt={[10, 10, 10, 20]} mb={5}>
+            Security Assessment
           </Text>
-          <ReportCoverDots />
-        </Box>
+          <Heading fontSize={["3xl", "4xl"]} mb={3}>
+            {summary_report.project_summary_report.project_name}
+          </Heading>
+          <Text fontSize="xl" mb={20}>
+            {`${d.getDate()} ${monthNames[d.getMonth()]} ${d.getFullYear()}`}
+          </Text>
+          <Box w="100%" h={["50vh", "50vh", "50vh", "auto"]}>
+            <Text
+              fontSize="lg"
+              width={["100%", "100%", "80%", "60%"]}
+              color={"gray.300"}
+              mb={10}
+            >
+              This security assessment report was prepared by SolidityScan.com,
+              a cloud-based Smart Contract Scanner.
+            </Text>
+            <ReportCoverDots />
+            <HStack justifyContent={"flex-end"}>
+              {isPublicReport && (
+                <Image
+                  display={["block", "block", "none"]}
+                  height={150}
+                  width={150}
+                  src={`${assetsURL}report/verified_report_badge.svg`}
+                />
+              )}
+            </HStack>
+          </Box>
+        </Flex>
+        {isPublicReport && (
+          <Image
+            display={["none", "none", "block"]}
+            height={[150, 150, 150, 250]}
+            width={[150, 150, 150, 250]}
+            src={`${assetsURL}report/verified_report_badge.svg`}
+          />
+        )}
       </Flex>
       <Flex
         as="div"
@@ -817,7 +838,7 @@ export const ReportContainer: React.FC<{ summary_report: Report }> = ({
                   <GithubIcon size={30} />
                 ) : summary_report.project_summary_report.contract_platform ? (
                   <Image
-                    src={`/blockscan/${summary_report.project_summary_report.contract_platform}.svg`}
+                    src={`${assetsURL}blockscan/${summary_report.project_summary_report.contract_platform}.svg`}
                     h={"30px"}
                     w={"30px"}
                   />
@@ -1058,7 +1079,11 @@ export const ReportContainer: React.FC<{ summary_report: Report }> = ({
                     alignItems={["center"]}
                     border={["none", "none", "none", "1px solid #E6E6E6;"]}
                   >
-                    <Image height={7} width={7} src="/icons/fixed_color.svg" />
+                    <Image
+                      height={7}
+                      width={7}
+                      src={`${assetsURL}report/fixed_color.svg`}
+                    />
                     <Text fontSize="2xl" fontWeight={"bold"} width={"100%"}>
                       {summary_report.scan_summary[0].fixed_count}
                     </Text>
@@ -1090,7 +1115,7 @@ export const ReportContainer: React.FC<{ summary_report: Report }> = ({
                     <Image
                       height={7}
                       width={7}
-                      src="/icons/false_positive_color.svg"
+                      src={`${assetsURL}report/false_positive_color.svg`}
                     />
                     <Text fontSize="2xl" fontWeight={"bold"} width={"100%"}>
                       {summary_report.scan_summary[0].false_positive_count}
@@ -1125,7 +1150,7 @@ export const ReportContainer: React.FC<{ summary_report: Report }> = ({
                     <Image
                       height={7}
                       width={7}
-                      src="/icons/wont_fix_color.svg"
+                      src={`${assetsURL}report/wont_fix_color.svg`}
                     />
                     <Text
                       fontSize="2xl"
@@ -1162,7 +1187,7 @@ export const ReportContainer: React.FC<{ summary_report: Report }> = ({
                     <Image
                       height={7}
                       width={7}
-                      src="/icons/pending_fix_color.svg"
+                      src={`${assetsURL}report/pending_fix_color.svg`}
                     />
                     <Text
                       fontSize="2xl"
@@ -1284,7 +1309,9 @@ export const ReportContainer: React.FC<{ summary_report: Report }> = ({
                   {issue.issue_name}
                 </Text>
                 <HStack width={["50%", "50%", "50%", "15%"]}>
-                  <Image src={`/icons/${issue.bug_status}_color.svg`} />
+                  <Image
+                    src={`${assetsURL}report/${issue.bug_status}_color.svg`}
+                  />
                   <Text
                     fontSize={["sm", "sm", "sm", "md"]}
                     fontWeight={"normal"}
@@ -1369,7 +1396,7 @@ export const ReportContainer: React.FC<{ summary_report: Report }> = ({
                     Severity
                   </Text>
                   <HStack>
-                    <SeverityIcon variant={issue.severity} />
+                    <SeverityIcon size={12} variant={issue.severity} />
                     <Text
                       fontSize="lg"
                       fontWeight={"bold"}
@@ -1455,7 +1482,9 @@ export const ReportContainer: React.FC<{ summary_report: Report }> = ({
                     Action Taken
                   </Text>
                   <HStack>
-                    <Image src={`/icons/${issue.bug_status}_color.svg`} />
+                    <Image
+                      src={`${assetsURL}report/${issue.bug_status}_color.svg`}
+                    />
                     <Text
                       fontSize="md"
                       fontWeight={"normal"}
@@ -1502,7 +1531,11 @@ export const ReportContainer: React.FC<{ summary_report: Report }> = ({
               ))}
               <Divider mt={5} />
               <HStack spacing={5} mt={5} mb={3}>
-                <IssueDescriptionIcons size={40} />
+                <Image
+                  src={`${assetsURL}report/issue_description.svg`}
+                  height={8}
+                  width={8}
+                />
                 <Text fontSize="md" fontWeight={"bold"} width={"100%"}>
                   Issue Description
                 </Text>
@@ -1515,7 +1548,11 @@ export const ReportContainer: React.FC<{ summary_report: Report }> = ({
                 />
               </DescriptionWrapper>
               <HStack spacing={5} mt={5} mb={3}>
-                <IssueRemediationIcons size={40} />
+                <Image
+                  src={`${assetsURL}report/issue_remediation.svg`}
+                  height={8}
+                  width={8}
+                />
                 <Text fontSize="md" fontWeight={"bold"} width={"100%"}>
                   Issue Remediation
                 </Text>
@@ -1530,7 +1567,11 @@ export const ReportContainer: React.FC<{ summary_report: Report }> = ({
               {issue.comment !== "" && issue.bug_status === "wont_fix" && (
                 <>
                   <HStack spacing={5} mt={10} mb={5}>
-                    <IssueDescriptionIcons size={40} />
+                    <Image
+                      src={`${assetsURL}report/comment.svg`}
+                      height={8}
+                      width={8}
+                    />
                     <Text fontSize="md" fontWeight={"bold"} width={"100%"}>
                       Comments
                     </Text>
