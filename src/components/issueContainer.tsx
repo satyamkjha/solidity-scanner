@@ -23,6 +23,7 @@ import { AiOutlineCaretRight } from "react-icons/ai";
 import DetailedResult from "./detailedResult";
 import { MultifileIcon, SeverityIcon } from "./icons";
 import { TrialWallIssue } from "./trialWall";
+import InputCheckbox from "./styled-components/inputCheckbox";
 
 export const IssueContainer: React.FC<{
   type: "block" | "project";
@@ -152,7 +153,7 @@ export const IssueContainer: React.FC<{
                     borderColor={"gray.500"}
                     icon={
                       isChecked ? (
-                        <CheckIcon />
+                        <CheckIcon w={3} h={3} />
                       ) : checkedChildren.length > 0 ? (
                         <MinusIcon />
                       ) : (
@@ -333,13 +334,10 @@ const IssueBox: React.FC<{
             <HStack w="50%">
               {(isHovered || isChecked) &&
                 metric_wise_aggregated_finding.bug_status !== "fixed" && (
-                  <Checkbox
-                    name={bug_id}
-                    colorScheme={"purple"}
-                    borderColor={"gray.500"}
-                    isChecked={isChecked}
-                    onChange={() => setIsChecked(!isChecked)}
-                  ></Checkbox>
+                  <InputCheckbox
+                    checked={isChecked}
+                    onChange={(e) => setIsChecked(!isChecked)}
+                  />
                 )}
               <Text isTruncated color={"gray.700"}>
                 {bug_id}
