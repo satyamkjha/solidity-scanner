@@ -50,7 +50,7 @@ const Projects: React.FC = () => {
   const { data: projects, isLoading, refetch } = useProjects(pagination);
   const [projectList, setProjectList] = useState<Project[]>();
 
-  const { data: profileData } = useProfile();
+  const { data: profileData, refetch: refetchProfile } = useProfile();
 
   useEffect(() => {
     if (projects) {
@@ -97,8 +97,8 @@ const Projects: React.FC = () => {
   }, [projectList]);
 
   useEffect(() => {
-    refetch()
-  }, [pagination])
+    refetch();
+  }, [pagination]);
 
   const refetchProjects = async () => {
     if (projectList) {
@@ -213,6 +213,7 @@ const Projects: React.FC = () => {
               <ProjectCard
                 key={project.project_id}
                 project={project}
+                refetchProfile={refetchProfile}
                 refetch={refetchProjects}
               />
             ))}
@@ -226,7 +227,8 @@ const Projects: React.FC = () => {
 const ProjectCard: React.FC<{
   project: Project;
   refetch: any;
-}> = ({ project, refetch }) => {
+  refetchProfile: any;
+}> = ({ project, refetch, refetchProfile }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [isRescanLoading, setRescanLoading] = useState(false);
   const cancelRef = useRef<HTMLButtonElement | null>(null);
@@ -253,13 +255,14 @@ const ProjectCard: React.FC<{
     });
     refetch();
     setRescanLoading(false);
+    refetchProfile();
     onClose();
   };
 
   return (
     <>
       {multi_file_scan_status === "scan_done" ||
-        multi_file_scan_status === "scanning" ? (
+      multi_file_scan_status === "scanning" ? (
         <Flex
           onClick={() => {
             if (multi_file_scan_status === "scan_done") {

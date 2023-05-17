@@ -30,6 +30,16 @@ export const getFeatureGateConfig = () => {
   return feature_gate_config;
 };
 
+export const getIssuesData = () => {
+  let issueData: any;
+
+  if (process.env.REACT_APP_ISSUES_DATA) {
+    issueData = JSON.parse(process.env.REACT_APP_ISSUES_DATA);
+  }
+
+  return issueData;
+};
+
 export const getBrowserName = (): string => {
   const UserAgentInstance = new UAParser();
   let browserName = UserAgentInstance.getBrowser().name;
