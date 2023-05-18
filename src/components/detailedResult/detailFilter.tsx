@@ -15,7 +15,7 @@ import {
 import React, { Dispatch, SetStateAction, useEffect, useState } from "react";
 import { FiCheck, FiFilter } from "react-icons/fi";
 import { RxDoubleArrowDown, RxDoubleArrowUp } from "react-icons/rx";
-import { VulnerabilityDistributionFilter } from "./vulnDistribution";
+import { VulnerabilityDistributionFilter } from "../vulnDistribution";
 
 export const DetailFilter: React.FC<{
   critical: number;
@@ -41,7 +41,12 @@ export const DetailFilter: React.FC<{
   setBugStatusFilter,
 }) => {
   const [filterCount, setFilterCount] = useState(0);
-  const [bugStatusParam, setBugStatusParam] = useState([false, false, false, false]);
+  const [bugStatusParam, setBugStatusParam] = useState([
+    false,
+    false,
+    false,
+    false,
+  ]);
   const [confidenceParam, setConfidenceParam] = useState([false, false, false]);
   const [vulnerabilityParams, setVulnerabilityParams] = useState([
     false,

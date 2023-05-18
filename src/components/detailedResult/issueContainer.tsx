@@ -20,7 +20,7 @@ import {
 } from "common/types";
 import React, { Dispatch, SetStateAction, useEffect, useState } from "react";
 import { AiOutlineCaretRight } from "react-icons/ai";
-import DetailedResult from "./detailedResult";
+import DetailedResult from "./detailedResult/detailedResult";
 import { MultifileIcon, SeverityIcon } from "./icons";
 import { TrialWallIssue } from "./trialWall";
 

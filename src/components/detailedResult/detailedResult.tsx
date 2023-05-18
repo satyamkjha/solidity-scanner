@@ -17,14 +17,13 @@ import { issueActions } from "common/values";
 import { sentenceCapitalize } from "helpers/helperFunction";
 import React, { Dispatch, SetStateAction, useEffect, useState } from "react";
 import { BiBulb, BiCodeCurly, BiComment } from "react-icons/bi";
-import { MultiFileExplorer } from "./result";
-import TrialWall from "./trialWall";
-
+import { MultiFileExplorer } from "../result";
+import TrialWall from "../trialWall";
 import Select from "react-select";
 import { HiOutlineDocumentText } from "react-icons/hi";
 import CommentForm from "./commentForm";
 
-export const DetailedResult: React.FC<{
+const DetailedResult: React.FC<{
   type: "block" | "project";
   is_latest_scan: boolean;
   files: FilesState | null;
