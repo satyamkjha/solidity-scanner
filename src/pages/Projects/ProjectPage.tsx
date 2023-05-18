@@ -127,6 +127,7 @@ import { getPublicReport } from "hooks/usePublicReport";
 import ProjectCustomSettings from "components/projectCustomSettings";
 import FolderSettings from "components/projectFolderSettings";
 import { getRepoTree } from "hooks/getRepoTree";
+import { getAssetsURL } from "helpers/helperFunction";
 
 export const ProjectPage: React.FC = () => {
   const { projectId } = useParams<{ projectId: string }>();
@@ -197,6 +198,7 @@ const ScanDetails: React.FC<{
   project_branch,
   getRepoTreeReq,
 }) => {
+  const assetsURL = getAssetsURL();
   const [isOpen, setIsOpen] = useState(false);
   const [isRescanLoading, setRescanLoading] = useState(false);
   const cancelRef = useRef<HTMLButtonElement | null>(null);
@@ -1002,7 +1004,7 @@ const ScanDetails: React.FC<{
         >
           <ModalHeader
             background="rgba(82, 255, 0, 0.04)"
-            backgroundImage="url('/background/pattern.png')"
+            backgroundImage={`url('${assetsURL}background/pattern.png')`}
             textAlign={["center", "center", "center", "left"]}
             py={10}
           >
@@ -1425,7 +1427,7 @@ const ScanDetails: React.FC<{
               )}
               <Image
                 ml={"-10%"}
-                src="/common/publishreport.png"
+                src={`${assetsURL}common/publishreport.png`}
                 alt="Product screenshot"
                 w={"40%"}
                 h={"auto"}

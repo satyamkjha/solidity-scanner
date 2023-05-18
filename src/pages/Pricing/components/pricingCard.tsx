@@ -237,7 +237,11 @@ export const PricingCard: React.FC<{
           spacing={2}
           px={7}
         >
-          <Image width="30px" height="30px" src="/pricing/coin.svg" />
+          <Image
+            width="30px"
+            height="30px"
+            src={`${assetsURL}pricing/coin.svg`}
+          />
           <Text fontSize="2xl" fontWeight={900}>
             {pricingDetails[duration][plan].scan_count}
           </Text>
@@ -263,7 +267,11 @@ export const PricingCard: React.FC<{
           spacing={2}
           px={7}
         >
-          <Image width="30px" height="30px" src="/icons/detectorIcon.svg" />
+          <Image
+            width="30px"
+            height="30px"
+            src={`${assetsURL}icons/detectorIcon.svg`}
+          />
           <Text fontSize="2xl" fontWeight={400}>
             All Detectors
           </Text>

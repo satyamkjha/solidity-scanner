@@ -110,14 +110,23 @@ const formatOptionLabel: React.FC<{
   value: string;
   label: string;
   icon: string;
-}> = ({ value, label, icon }) => (
-  <div id={value} style={{ display: "flex", flexDirection: "row" }}>
-    {icon !== "" && (
-      <Image h={"20px"} w={"20px"} mr={3} src={`/blockscan/${icon}.svg`} />
-    )}
-    <div>{label}</div>
-  </div>
-);
+}> = ({ value, label, icon }) => {
+  const assetsURL = getAssetsURL();
+
+  return (
+    <div id={value} style={{ display: "flex", flexDirection: "row" }}>
+      {icon !== "" && (
+        <Image
+          h={"20px"}
+          w={"20px"}
+          mr={3}
+          src={`${assetsURL}blockscan/${icon}.svg`}
+        />
+      )}
+      <div>{label}</div>
+    </div>
+  );
+};
 
 const QuickScan: React.FC = () => {
   const contractChain: {
@@ -1067,7 +1076,7 @@ const QuickScan: React.FC = () => {
                     borderRadius={15}
                     p={8}
                     backgroundColor={"#02070E"}
-                    backgroundImage={"url('/background/verifiedAuditbg.png')"}
+                    backgroundImage={`url('${assetsURL}background/verifiedAuditbg.png')`}
                     display="flex"
                     height={"280px"}
                     flexDir={"row"}
@@ -1076,7 +1085,7 @@ const QuickScan: React.FC = () => {
                   >
                     <Image
                       mr={10}
-                      src="/common/verifiedAuditSeal.svg"
+                      src={`${assetsURL}common/verifiedAuditSeal.svg`}
                       height={"130px"}
                       width={"130px"}
                       borderRadius={"5px"}
@@ -1250,7 +1259,9 @@ const QuickScan: React.FC = () => {
                     isDesktopView ? (
                       <>
                         <HStack my={5} width={"100%"}>
-                          <Image src={`/icons/${item.issue_status}.svg`} />
+                          <Image
+                            src={`${assetsURL}icons/${item.issue_status}.svg`}
+                          />
                           <VStack
                             ml={"30px !important"}
                             alignItems={"flex-start"}
@@ -1271,7 +1282,9 @@ const QuickScan: React.FC = () => {
                       <>
                         <VStack my={5} width={"100%"} alignItems={"flex-start"}>
                           <HStack mb={2}>
-                            <Image src={`/icons/${item.issue_status}.svg`} />
+                            <Image
+                              src={`${assetsURL}icons/${item.issue_status}.svg`}
+                            />
                             <Heading fontSize="md">{item.issue_name}</Heading>
                           </HStack>
                           <DescriptionWrapper>
@@ -1605,7 +1618,7 @@ const QuickScan: React.FC = () => {
                               display={["block", "block", "none"]}
                               height={"20px"}
                               width={"20px"}
-                              src={`/blockscan/${item.contract_platform}.svg`}
+                              src={`${assetsURL}blockscan/${item.contract_platform}.svg`}
                             />
                             <Text
                               color={"#8A94A6"}

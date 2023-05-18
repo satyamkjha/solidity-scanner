@@ -33,7 +33,6 @@ export const ContactUs: React.FC<{ onClose(): any; isOpen: boolean }> = ({
   const [telegram, setTelegram] = useState("");
   const [body, setBody] = useState("");
   const toast = useToast();
-
   const assetsURL = getAssetsURL();
 
   const onSubmit = () => {
@@ -79,7 +78,7 @@ export const ContactUs: React.FC<{ onClose(): any; isOpen: boolean }> = ({
         >
           <ModalHeader
             background="rgba(82, 255, 0, 0.04)"
-            backgroundImage="url('/background/pattern.png')"
+            backgroundImage={`url('${assetsURL}background/pattern.png')`}
             textAlign={["center", "center", "center", "left"]}
           >
             Contact Us

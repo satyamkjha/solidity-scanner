@@ -14,7 +14,7 @@ import {
 } from "@chakra-ui/react";
 import { FilesState } from "common/types";
 import { issueActions } from "common/values";
-import { sentenceCapitalize } from "helpers/helperFunction";
+import { sentenceCapitalize, getAssetsURL } from "helpers/helperFunction";
 import React, { Dispatch, SetStateAction, useEffect, useState } from "react";
 import { BiBulb, BiCodeCurly, BiComment } from "react-icons/bi";
 import { MultiFileExplorer } from "./result";
@@ -41,6 +41,7 @@ export const DetailedResult: React.FC<{
   updateBugStatus,
   setFiles,
 }) => {
+  const assetsURL = getAssetsURL();
   const [isDesktopView] = useMediaQuery("(min-width: 1024px)");
   const { isOpen, onClose, onOpen } = useDisclosure();
   const [bugStatus, setBugStatus] = useState<string | null>(null);
@@ -192,7 +193,7 @@ export const DetailedResult: React.FC<{
               <Text mr={2} color={"gray.600"} fontWeight={500}>
                 The issue has been marked as
               </Text>
-              <Image mr={3} src={`/icons/${files.bug_status}.svg`} />
+              <Image mr={3} src={`${assetsURL}icons/${files.bug_status}.svg`} />
               <Text fontWeight={700}>
                 {sentenceCapitalize(
                   files.bug_status.toLowerCase().replace("_", " ")
@@ -270,11 +271,15 @@ const formatOptionLabel: React.FC<{
   value: string;
   label: string;
   icon: string;
-}> = ({ label, icon }) => (
-  <div style={{ display: "flex", flexDirection: "row" }}>
-    {icon !== "" && <Image mr={3} src={`/icons/${icon}.svg`} />}
-    <div>{label}</div>
-  </div>
-);
+}> = ({ label, icon }) => {
+  const assetsURL = getAssetsURL();
+
+  return (
+    <div style={{ display: "flex", flexDirection: "row" }}>
+      {icon !== "" && <Image mr={3} src={`${assetsURL}icons/${icon}.svg`} />}
+      <div>{label}</div>
+    </div>
+  );
+};
 
 export default DetailedResult;

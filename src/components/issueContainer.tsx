@@ -24,6 +24,7 @@ import DetailedResult from "./detailedResult";
 import { MultifileIcon, SeverityIcon } from "./icons";
 import { TrialWallIssue } from "./trialWall";
 import InputCheckbox from "./styled-components/inputCheckbox";
+import { getAssetsURL } from "helpers/helperFunction";
 
 export const IssueContainer: React.FC<{
   type: "block" | "project";
@@ -274,6 +275,7 @@ const IssueBox: React.FC<{
   setFiles,
   updateBugStatus,
 }) => {
+  const assetsURL = getAssetsURL();
   const [isDesktopView] = useMediaQuery("(min-width: 1024px)");
 
   const [isHovered, setIsHovered] = useState(false);
@@ -362,7 +364,7 @@ const IssueBox: React.FC<{
 
               {metric_wise_aggregated_finding.bug_status !== "pending_fix" && (
                 <Image
-                  src={`/icons/${metric_wise_aggregated_finding.bug_status}.svg`}
+                  src={`${assetsURL}icons/${metric_wise_aggregated_finding.bug_status}.svg`}
                 />
               )}
             </HStack>
@@ -436,7 +438,7 @@ const IssueBox: React.FC<{
                     {metric_wise_aggregated_finding.bug_status !==
                       "pending_fix" && (
                       <Image
-                        src={`/icons/${metric_wise_aggregated_finding.bug_status}.svg`}
+                        src={`${assetsURL}icons/${metric_wise_aggregated_finding.bug_status}.svg`}
                       />
                     )}
                   </HStack>

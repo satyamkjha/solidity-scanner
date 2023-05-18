@@ -56,7 +56,7 @@ import { TrialWall } from "./trialWall";
 import DetailedResult from "./detailedResult";
 import { DetailFilter } from "./detailFilter";
 import { IssueContainer } from "./issueContainer";
-import { sentenceCapitalize } from "helpers/helperFunction";
+import { sentenceCapitalize, getAssetsURL } from "helpers/helperFunction";
 import { API_PATH } from "helpers/routeManager";
 import ConfirmActionForm from "./confirmActionForm";
 import { getBugStatusNumber } from "common/functions";
@@ -418,12 +418,16 @@ const formatOptionLabel: React.FC<{
   value: string;
   label: string;
   icon: string;
-}> = ({ value, label, icon }) => (
-  <div id={value} style={{ display: "flex", flexDirection: "row" }}>
-    {icon !== "" && <Image mr={3} src={`/icons/${icon}.svg`} />}
-    <div>{label}</div>
-  </div>
-);
+}> = ({ value, label, icon }) => {
+  const assetsURL = getAssetsURL();
+
+  return (
+    <div id={value} style={{ display: "flex", flexDirection: "row" }}>
+      {icon !== "" && <Image mr={3} src={`${assetsURL}icons/${icon}.svg`} />}
+      <div>{label}</div>
+    </div>
+  );
+};
 
 const customStyles = {
   option: (provided: any, state: any) => ({
@@ -1148,6 +1152,7 @@ export const MultiFileExplorer: React.FC<MultiFileExplorerProps> = ({
   setFiles,
 }) => {
   const [currentFileName, setCurrentFileName] = useState("");
+  const assetsURL = getAssetsURL();
 
   useEffect(() => {
     setCurrentFileName(files.findings[0].file_path);
@@ -1187,7 +1192,7 @@ export const MultiFileExplorer: React.FC<MultiFileExplorerProps> = ({
             }}
           >
             <VStack mb={4}>
-              <Image src="/common/fixedIssueIcon.svg" />
+              <Image src={`${assetsURL}common/fixedIssueIcon.svg`} />
               <Text fontWeight={600}>This Issue has been fixed</Text>
             </VStack>
           </Flex>
@@ -1343,7 +1348,9 @@ export const MultiFileExplorer: React.FC<MultiFileExplorerProps> = ({
                       width={["40%", "40%", "40%", "31%"]}
                       my={[2, 2, 2, 0]}
                     >
-                      <Image src={`/icons/${files.bug_status}_color.svg`} />
+                      <Image
+                        src={`${assetsURL}icons/${files.bug_status}_color.svg`}
+                      />
                       <Text
                         fontSize="sm"
                         fontWeight={"normal"}
