@@ -39,6 +39,7 @@ import { FaLeaf } from "react-icons/fa";
 import { PublishReportInfo } from "components/infoModal";
 import { usePricingPlans } from "hooks/usePricingPlans";
 import { SpinnerIcon } from "@chakra-ui/icons";
+import { getAssetsURL } from "helpers/helperFunction";
 
 export default function PricingPage() {
   const [tab, setTab] = useState<string>("weekly");
@@ -46,6 +47,7 @@ export default function PricingPage() {
   const [selectedPlan, setSelectedPlan] = useState("");
   const [openPublish, setOpenPublish] = useState(false);
   const location = useLocation();
+  const assetsURL = getAssetsURL();
 
   useEffect(() => {
     const query = new URLSearchParams(location.search);
@@ -83,7 +85,7 @@ export default function PricingPage() {
               py={7}
               px={4}
               background="rgba(82, 255, 0, 0.04)"
-              backgroundImage="url('/background/pattern.png')"
+              backgroundImage={`url('${assetsURL}background/pattern.png')`}
               borderRadius="3xl"
             >
               <Text
@@ -241,7 +243,7 @@ export default function PricingPage() {
                     >
                       <HStack spacing={1}>
                         <Image
-                          src="/pricing/coin.svg"
+                          src={`${assetsURL}pricing/coin.svg`}
                           h={[6, 8]}
                           w={[6, 8]}
                           mx="auto"
@@ -277,7 +279,7 @@ export default function PricingPage() {
                     >
                       <HStack spacing={1}>
                         <Image
-                          src="/pricing/score-icon.svg"
+                          src={`${assetsURL}pricing/score-icon.svg`}
                           h={[6, 8]}
                           w={[6, 8]}
                           mx="auto"
@@ -313,7 +315,7 @@ export default function PricingPage() {
                     >
                       <HStack spacing={1}>
                         <Image
-                          src="/pricing/result-icon.svg"
+                          src={`${assetsURL}pricing/result-icon.svg`}
                           h={[6, 8]}
                           w={[6, 8]}
                           mx="auto"
@@ -373,7 +375,7 @@ export default function PricingPage() {
                     >
                       <HStack spacing={1}>
                         <Image
-                          src="/pricing/github.svg"
+                          src={`${assetsURL}pricing/github.svg`}
                           h={[6, 8]}
                           w={[6, 8]}
                           mx="auto"
@@ -409,7 +411,7 @@ export default function PricingPage() {
                     >
                       <HStack spacing={1}>
                         <Image
-                          src="/pricing/report.svg"
+                          src={`${assetsURL}pricing/report.svg`}
                           h={[6, 8]}
                           w={[6, 8]}
                           mx="auto"
@@ -469,7 +471,7 @@ export default function PricingPage() {
                     >
                       <HStack spacing={1}>
                         <Image
-                          src="/pricing/publish.svg"
+                          src={`${assetsURL}pricing/publish.svg`}
                           h={[6, 8]}
                           w={[6, 8]}
                           mx="auto"
@@ -533,7 +535,7 @@ export default function PricingPage() {
                     >
                       <HStack spacing={1}>
                         <Image
-                          src="/pricing/support-icon.svg"
+                          src={`${assetsURL}pricing/support-icon.svg`}
                           h={[6, 8]}
                           w={[6, 8]}
                           mx="auto"
