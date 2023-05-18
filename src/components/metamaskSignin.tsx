@@ -6,10 +6,12 @@ import {
   getBrowserName,
   getDeviceType,
   getFeatureGateConfig,
+  getAssetsURL,
 } from "helpers/helperFunction";
 import { API_PATH } from "helpers/routeManager";
 import React, { useState } from "react";
 import { useHistory } from "react-router-dom";
+const assetsURL = getAssetsURL();
 
 const MetaMaskLogin: React.FC = () => {
   const history = useHistory();
@@ -91,7 +93,7 @@ const MetaMaskLogin: React.FC = () => {
             >
               <Image
                 mr={2}
-                src="/common/MetaMask_Fox.svg"
+                src={`${assetsURL}common/MetaMask_Fox.svg`}
                 height="35px"
                 width="35px"
               />

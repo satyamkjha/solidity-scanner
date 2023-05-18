@@ -24,6 +24,7 @@ import { useHistory } from "react-router-dom";
 import InfiniteScroll from "react-infinite-scroll-component";
 import API from "helpers/api";
 import { API_PATH } from "helpers/routeManager";
+import { getAssetsURL } from "helpers/helperFunction";
 
 const Blocks: React.FC = () => {
   const [isDesktopView] = useMediaQuery("(min-width: 1920px)");
@@ -227,6 +228,7 @@ const BlockCard: React.FC<{ scan: Scan }> = ({ scan }) => {
     project_id,
   } = scan;
 
+  const assetsURL = getAssetsURL();
   const history = useHistory();
 
   return (
@@ -288,7 +290,7 @@ const BlockCard: React.FC<{ scan: Scan }> = ({ scan }) => {
               > */}
             <Image
               mx={3}
-              src={`/blockscan/${contract_platform}.svg`}
+              src={`${assetsURL}blockscan/${contract_platform}.svg`}
               alt="Product screenshot"
               h={"40px"}
               w={"40px"}

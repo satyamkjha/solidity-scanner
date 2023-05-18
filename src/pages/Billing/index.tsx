@@ -65,7 +65,7 @@ import { useParams } from "react-router-dom";
 import { placements } from "@popperjs/core";
 import ContactUs from "components/contactus";
 import { useTransactions } from "hooks/useTransactions";
-import { sentenceCapitalize } from "helpers/helperFunction";
+import { sentenceCapitalize, getAssetsURL } from "helpers/helperFunction";
 import { useInvoices } from "hooks/useInvoices";
 import ReactPaginate from "react-paginate";
 import { server } from "typescript";
@@ -1037,6 +1037,8 @@ const CurrentPlan: React.FC<{
   const successColor = "#289F4C";
   const greyColor = "#BDBDBD";
   const toast = useToast();
+  const assetsURL = getAssetsURL();
+
   const cancelSubscription = async () => {
     const { data } = await API.delete(
       API_PATH.API_CANCEL_STRIPE_SUBSCRIPTION_BETA
@@ -1291,7 +1293,7 @@ const CurrentPlan: React.FC<{
           border={"1px solid #FFC661"}
           alignItems="flex-start"
         >
-          <Image src="/icons/info.svg" mr={5} />
+          <Image src={`${assetsURL}icons/info.svg`} mr={5} />
           <VStack alignItems={"flex-start"}>
             <Text fontSize={"lg"} fontWeight={600} color="gray.600">
               Recurring Payment
@@ -1365,6 +1367,8 @@ const PricingDetails: React.FC<{ planData: Plan; selectedPlan: string }> = ({
 }) => {
   const successColor = "#289F4C";
   const greyColor = "#BDBDBD";
+  const assetsURL = getAssetsURL();
+
   return (
     <>
       <Flex
@@ -1383,7 +1387,7 @@ const PricingDetails: React.FC<{ planData: Plan; selectedPlan: string }> = ({
         >
           <HiCheckCircle size={30} color={successColor} />
 
-          <Image src="/pricing/coin.svg" p={4} />
+          <Image src={`${assetsURL}pricing/coin.svg`} p={4} />
           <Text fontSize={"md"} ml={5}>
             {planData.scan_count} Scan Credit
           </Text>
@@ -1397,7 +1401,7 @@ const PricingDetails: React.FC<{ planData: Plan; selectedPlan: string }> = ({
         >
           <HiCheckCircle size={30} color={successColor} />
 
-          <Image src="/pricing/score-icon.svg" p={4} />
+          <Image src={`${assetsURL}pricing/score-icon.svg`} p={4} />
           <Text fontSize={"md"} ml={5}>
             Security Score
           </Text>
@@ -1417,7 +1421,7 @@ const PricingDetails: React.FC<{ planData: Plan; selectedPlan: string }> = ({
           <Image
             h={"70px"}
             w={"70px"}
-            src="/pricing/result-icon.svg"
+            src={`${assetsURL}pricing/result-icon.svg`}
             alt="Product screenshot"
             p={4}
           />
@@ -1436,7 +1440,7 @@ const PricingDetails: React.FC<{ planData: Plan; selectedPlan: string }> = ({
           ) : (
             <HiXCircle size={30} color={greyColor} />
           )}
-          <Image src="/pricing/github.svg" p={4} />
+          <Image src={`${assetsURL}pricing/github.svg`} p={4} />
           <Text fontSize={"md"} ml={5}>
             Private Github
           </Text>
@@ -1453,7 +1457,7 @@ const PricingDetails: React.FC<{ planData: Plan; selectedPlan: string }> = ({
           ) : (
             <HiXCircle size={30} color={greyColor} />
           )}
-          <Image src="/pricing/report.svg" p={4} />
+          <Image src={`${assetsURL}pricing/report.svg`} p={4} />
           <Text fontSize={"md"} ml={5}>
             Generate Reports
           </Text>
@@ -1469,7 +1473,7 @@ const PricingDetails: React.FC<{ planData: Plan; selectedPlan: string }> = ({
           ) : (
             <HiXCircle size={30} color={greyColor} />
           )}
-          <Image src="/pricing/publish.svg" p={4} />
+          <Image src={`${assetsURL}pricing/publish.svg`} p={4} />
           <Text fontSize={"md"} ml={5}>
             Publishable Reports
           </Text>
@@ -1486,7 +1490,7 @@ const PricingDetails: React.FC<{ planData: Plan; selectedPlan: string }> = ({
             <HiXCircle size={30} color={greyColor} />
           )}
           <Image
-            src="/pricing/support-icon.svg"
+            src={`${assetsURL}pricing/support-icon.svg`}
             alt="Product screenshot"
             p={4}
           />
@@ -1506,6 +1510,7 @@ const LatestInvoice: React.FC<{
 }> = ({ planData, selectedPlan, transactionData }) => {
   const successColor = "#289F4C";
   const greyColor = "#BDBDBD";
+  const assetsURL = getAssetsURL();
 
   return (
     <>
@@ -1530,7 +1535,7 @@ const LatestInvoice: React.FC<{
           backgroundColor={"#F5F2FF"}
           borderBottom={"1px solid #3E15F4"}
         >
-          <Image src="/icons/info.svg" />
+          <Image src={`${assetsURL}icons/info.svg`} />
           <Text fontSize={"md"} fontWeight={600}>
             Complete your open {transactionData.payment_platform} Payment
           </Text>
@@ -1651,6 +1656,7 @@ const LatestInvoice: React.FC<{
 const CardDetails: React.FC<{
   profileData: Profile;
 }> = ({ profileData }) => {
+  const assetsURL = getAssetsURL();
   let package_recharge_date = new Date(profileData.package_recharge_date);
   let package_end_date = new Date(profileData.package_end_date);
 
@@ -1669,7 +1675,7 @@ const CardDetails: React.FC<{
       </Text>
       <HStack mt={5} spacing={5} width={"100%"} align="center">
         <Image
-          src={`/cards/${profileData.payment_details?.brand}.svg`}
+          src={`${assetsURL}cards/${profileData.payment_details?.brand}.svg`}
           alt="Product screenshot"
           zIndex={"10"}
           sx={{

@@ -25,14 +25,18 @@ export default function ReportPage() {
   }>();
   const { data } = usePublicReport(projectType, reportId);
 
+  const [printLoading, setPrintLoading] = useState<boolean>(false);
+
   const componentRef = useRef();
 
   const handlePrint = useReactToPrint({
     content: () => componentRef.current,
+    onAfterPrint: () => setPrintLoading(false),
   });
 
   const printReport = () => {
-    setTimeout(() => handlePrint(), 100);
+    setPrintLoading(true);
+    handlePrint();
   };
 
   return (
@@ -49,8 +53,13 @@ export default function ReportPage() {
             variant={"accent-outline"}
             w={["250px"]}
             onClick={printReport}
+            disabled={printLoading}
           >
-            <DownloadIcon mr={5} />
+            {printLoading ? (
+              <Spinner size="sm" mr={5} color="#3E15F4" />
+            ) : (
+              <DownloadIcon mr={5} />
+            )}
             Download Report
           </Button>
         </HStack>

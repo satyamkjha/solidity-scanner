@@ -154,12 +154,14 @@ const Layout: React.FC = ({ children }) => {
           <Sidebar
             isCollapsed={isSidebarCollapsed}
             setCollapsed={setSidebarCollapsed}
+            setShowSidebar={setShowSidebar}
           />
         </Box>
         <Box sx={{ display: ["none", "none", "none", "block"] }}>
           <Sidebar
             isCollapsed={isSidebarCollapsed}
             setCollapsed={setSidebarCollapsed}
+            setShowSidebar={setShowSidebar}
           />
         </Box>
         <Box
@@ -237,7 +239,7 @@ const Layout: React.FC = ({ children }) => {
 
               {profileData && (
                 <Flex ml={20} sx={{ display: ["none", "none", "flex"] }}>
-                  <Image src="/pricing/coin.svg" mx="auto" />
+                  <Image src={`${assetsURL}pricing/coin.svg`} mx="auto" />
                   <Text fontWeight={600} fontSize="2xl" ml={4}>
                     {profileData.credits.toLocaleString("en-US", {
                       minimumIntegerDigits: 2,

@@ -12,6 +12,7 @@ import {
   Collapse,
   useDisclosure,
   VStack,
+  useMediaQuery,
 } from "@chakra-ui/react";
 import {
   LogoIcon,
@@ -32,13 +33,17 @@ import {
 import { useProfile } from "hooks/useProfile";
 import ManualAuditForm from "./manualAuditForm";
 import { ArrowBackIcon, ArrowForwardIcon } from "@chakra-ui/icons";
+import { getAssetsURL } from "helpers/helperFunction";
 
 const Sidebar: React.FC<{
   isCollapsed: boolean;
   setCollapsed: React.Dispatch<React.SetStateAction<boolean>>;
-}> = ({ isCollapsed, setCollapsed }) => {
+  setShowSidebar: React.Dispatch<React.SetStateAction<boolean>>;
+}> = ({ isCollapsed, setCollapsed, setShowSidebar }) => {
   const { data: profileData } = useProfile();
   const { isOpen, onClose, onOpen } = useDisclosure();
+  const [isDesktopView] = useMediaQuery("(min-width: 1024px)");
+  const assetsURL = getAssetsURL();
 
   return (
     <Flex
@@ -118,7 +123,11 @@ const Sidebar: React.FC<{
                   borderRadius={"10px 0 0 10px"}
                   bgColor={"#ECECEC"}
                   onClick={() => {
-                    setCollapsed(!isCollapsed);
+                    if (isDesktopView) {
+                      setCollapsed(!isCollapsed);
+                    } else {
+                      setShowSidebar(false);
+                    }
                   }}
                 >
                   <Icon as={ArrowBackIcon} fontSize="xl" color="gray.500" />{" "}
@@ -212,7 +221,7 @@ const Sidebar: React.FC<{
           height={"100%"}
           p={[3, 3, 3, 4]}
           pl={5}
-          bgImage={"url('/background/manualAuditbg.svg')"}
+          bgImage={`url('${assetsURL}background/manualAuditbg.svg')`}
           bgSize="cover"
           borderRadius="15px"
           boxShadow="0px 2px 23px rgba(0, 0, 0, 0.11)"

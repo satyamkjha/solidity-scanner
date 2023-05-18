@@ -16,10 +16,6 @@ import {
   ModalOverlay,
   Image,
 } from "@chakra-ui/react";
-import { AiOutlineProject } from "react-icons/ai";
-import { FaDiscord, FaEnvelope, FaTelegram } from "react-icons/fa";
-import { GiLetterBomb } from "react-icons/gi";
-import axios from "axios";
 
 export const PublishReportInfo: React.FC<{
   onClose(): any;

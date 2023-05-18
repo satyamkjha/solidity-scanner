@@ -47,7 +47,7 @@ import { useOverview } from "hooks/useOverview";
 import { useProfile } from "hooks/useProfile";
 import VulnerabilityProgress from "components/VulnerabilityProgress";
 import { useSupportedChains } from "hooks/useSupportedPlatforms";
-import { getFeatureGateConfig } from "helpers/helperFunction";
+import { getFeatureGateConfig, getAssetsURL } from "helpers/helperFunction";
 import { useDropzone } from "react-dropzone";
 import Select from "react-select";
 import { API_PATH } from "helpers/routeManager";
@@ -239,6 +239,7 @@ const Home: React.FC = () => {
 };
 
 const ApplicationForm: React.FC = () => {
+  const assetsURL = getAssetsURL();
   const queryClient = useQueryClient();
   const { data: profileData } = useProfile();
   const history = useHistory();
@@ -401,7 +402,7 @@ const ApplicationForm: React.FC = () => {
               <Image
                 height={["30px", "30px", "40px"]}
                 width={["30px", "30px", "40px"]}
-                src={`/common/step_${step}.svg`}
+                src={`${assetsURL}common/step_${step}.svg`}
               />
               <Text
                 sx={{
@@ -549,14 +550,23 @@ const formatOptionLabel: React.FC<{
   value: string;
   label: string;
   icon: string;
-}> = ({ value, label, icon }) => (
-  <div id={value} style={{ display: "flex", flexDirection: "row" }}>
-    {icon !== "" && (
-      <Image h={"20px"} w={"20px"} mr={3} src={`/blockscan/${icon}.svg`} />
-    )}
-    <div>{label}</div>
-  </div>
-);
+}> = ({ value, label, icon }) => {
+  const assetsURL = getAssetsURL();
+
+  return (
+    <div id={value} style={{ display: "flex", flexDirection: "row" }}>
+      {icon !== "" && (
+        <Image
+          h={"20px"}
+          w={"20px"}
+          mr={3}
+          src={`${assetsURL}blockscan/${icon}.svg`}
+        />
+      )}
+      <div>{label}</div>
+    </div>
+  );
+};
 
 const ContractForm: React.FC = () => {
   const contractChain: {
