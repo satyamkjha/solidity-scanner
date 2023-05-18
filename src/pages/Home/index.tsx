@@ -296,7 +296,7 @@ const ApplicationForm: React.FC = () => {
       });
 
       if (data.status === "success") {
-        queryClient.invalidateQueries("scans");
+        queryClient.invalidateQueries("scan_list");
         queryClient.invalidateQueries("profile");
         history.push("/projects");
       } else {
@@ -872,7 +872,7 @@ const ContractForm: React.FC = () => {
             setIsLoading(false);
             if (responseData.status === 200) {
               if (responseData.data.status === "success") {
-                queryClient.invalidateQueries("scans");
+                queryClient.invalidateQueries("scan_list");
                 queryClient.invalidateQueries("profile");
                 history.push("/blocks");
               }

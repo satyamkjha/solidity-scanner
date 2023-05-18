@@ -265,7 +265,7 @@ const ScanDetails: React.FC<{
       }
     );
     setRescanLoading(false);
-    queryClient.invalidateQueries(["scans", projectId]);
+    queryClient.invalidateQueries(["scan_list", projectId]);
     onClose();
     history.push(`/projects/`);
   };
@@ -854,15 +854,6 @@ const ScanDetails: React.FC<{
                             scanData.scan_report.multi_file_scan_details
                           }
                           refetch={refetch}
-                        />
-                      ) : scanData.scan_report.scan_details &&
-                        scanData.scan_report.scan_summary ? (
-                        <Result
-                          details_enabled={scanData.scan_report.details_enabled}
-                          profileData={profile}
-                          scanSummary={scanData.scan_report.scan_summary}
-                          scanDetails={scanData.scan_report.scan_details}
-                          type="project"
                         />
                       ) : (
                         <Flex
