@@ -80,6 +80,7 @@ import { API_PATH } from "helpers/routeManager";
 import { getPublicReport } from "hooks/usePublicReport";
 import { useReactToPrint } from "react-to-print";
 import { PrintContainer } from "pages/Report/PrintContainer";
+import { getAssetsURL } from "helpers/helperFunction";
 
 const BlockPage: React.FC = () => {
   const { scanId } = useParams<{ scanId: string }>();
@@ -115,6 +116,7 @@ const BlockPage: React.FC = () => {
 
   const [tabIndex, setTabIndex] = React.useState(0);
   const [isDesktopView] = useMediaQuery("(min-width: 1024px)");
+  const assetsURL = getAssetsURL();
 
   useEffect(() => {
     if (scanData) {
@@ -335,7 +337,7 @@ const BlockPage: React.FC = () => {
                         <VStack alignItems={"flex-start"}>
                           <HStack justifyContent="flex-start">
                             <Image
-                              src={`/blockscan/${scanData.scan_report.contract_platform}.svg`}
+                              src={`${assetsURL}blockscan/${scanData.scan_report.contract_platform}.svg`}
                               alt="Product screenshot"
                               h={"20px"}
                               w={"20px"}
@@ -407,7 +409,7 @@ const BlockPage: React.FC = () => {
                         >
                           <HStack justifyContent="flex-start">
                             <Image
-                              src={`/blockscan/${scanData.scan_report.contract_platform}.svg`}
+                              src={`${assetsURL}blockscan/${scanData.scan_report.contract_platform}.svg`}
                               alt="Product screenshot"
                               h={"20px"}
                               w={"20px"}
@@ -824,7 +826,7 @@ const BlockPage: React.FC = () => {
         >
           <ModalHeader
             background="rgba(82, 255, 0, 0.04)"
-            backgroundImage="url('/background/pattern.png')"
+            backgroundImage={`url('${assetsURL}background/pattern.png')`}
             textAlign={["center", "center", "center", "left"]}
             py={[6, 6, 6, 10]}
           >
@@ -1307,7 +1309,7 @@ const BlockPage: React.FC = () => {
               )}
               <Image
                 ml={"-10%"}
-                src="/common/publishreport.png"
+                src={`${assetsURL}common/publishreport.png`}
                 alt="Product screenshot"
                 w={"40%"}
                 h={"auto"}

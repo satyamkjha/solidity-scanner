@@ -16,6 +16,7 @@ import React, { Dispatch, SetStateAction, useEffect, useState } from "react";
 import { FiCheck, FiFilter } from "react-icons/fi";
 import { RxDoubleArrowDown, RxDoubleArrowUp } from "react-icons/rx";
 import { VulnerabilityDistributionFilter } from "./vulnDistribution";
+import { getAssetsURL } from "helpers/helperFunction";
 
 export const DetailFilter: React.FC<{
   critical: number;
@@ -41,7 +42,12 @@ export const DetailFilter: React.FC<{
   setBugStatusFilter,
 }) => {
   const [filterCount, setFilterCount] = useState(0);
-  const [bugStatusParam, setBugStatusParam] = useState([false, false, false, false]);
+  const [bugStatusParam, setBugStatusParam] = useState([
+    false,
+    false,
+    false,
+    false,
+  ]);
   const [confidenceParam, setConfidenceParam] = useState([false, false, false]);
   const [vulnerabilityParams, setVulnerabilityParams] = useState([
     false,
@@ -51,6 +57,7 @@ export const DetailFilter: React.FC<{
     false,
     false,
   ]);
+  const assetsURL = getAssetsURL();
 
   const setConfidenceFilter = (conf: boolean[]) => {
     setConfidence([...conf]);
@@ -288,7 +295,7 @@ export const DetailFilter: React.FC<{
                       ])
                     }
                   >
-                    <Image src={`/icons/pending_fix_color.svg`} />
+                    <Image src={`${assetsURL}icons/pending_fix_color.svg`} />
                     &nbsp;Pending Fixes
                   </Button>
                   <Button
@@ -310,7 +317,7 @@ export const DetailFilter: React.FC<{
                       ])
                     }
                   >
-                    <Image src={`/icons/wont_fix.svg`} w="20px" />
+                    <Image src={`${assetsURL}icons/wont_fix.svg`} w="20px" />
                     &nbsp;Won't Fix
                   </Button>
                   <Button
@@ -332,7 +339,7 @@ export const DetailFilter: React.FC<{
                       ])
                     }
                   >
-                    <Image src={`/icons/false_positive_color.svg`} />
+                    <Image src={`${assetsURL}icons/false_positive_color.svg`} />
                     &nbsp;False Positive
                   </Button>
                 </Flex>

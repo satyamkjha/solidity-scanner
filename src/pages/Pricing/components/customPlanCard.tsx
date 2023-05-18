@@ -33,7 +33,7 @@ const CustomPlanCard = () => {
       px={10}
       py={[10, 10, 10, 5]}
       borderRadius="25px"
-      background={"url('/background/custom_plan_bg.png')"}
+      background={`url('${assetsURL}background/custom_plan_bg.png')`}
       backgroundSize="cover"
       backgroundPosition={"center"}
       backgroundRepeat="no-repeat"
@@ -77,7 +77,11 @@ const CustomPlanCard = () => {
           justifyContent="flex-start"
           spacing={5}
         >
-          <Image width="50px" height="50px" src="/pricing/coin.svg" />
+          <Image
+            width="50px"
+            height="50px"
+            src={`${assetsURL}pricing/coin.svg`}
+          />
           <Heading fontSize="2xl" color="#FFFFFF" fontWeight={400}>
             Unlimited Scans
           </Heading>
@@ -88,7 +92,11 @@ const CustomPlanCard = () => {
           justifyContent="flex-start"
           spacing={5}
         >
-          <Image width="50px" height="50px" src="/icons/detectorIcon.svg" />
+          <Image
+            width="50px"
+            height="50px"
+            src={`${assetsURL}icons/detectorIcon.svg`}
+          />
           <Heading fontSize="2xl" color="#FFFFFF" fontWeight={400}>
             All Detectors
           </Heading>

@@ -5,10 +5,13 @@ import { useMediaQuery } from "@chakra-ui/media-query";
 import React from "react";
 import { CredshieldsIcon } from "./icons";
 import ManualAuditForm from "./manualAuditForm";
+import { getAssetsURL } from "helpers/helperFunction";
 
 export default function ManualAuditCard() {
   const { isOpen, onClose, onOpen } = useDisclosure();
   const [isDesktopView] = useMediaQuery("(min-width: 1024px)");
+  const assetsURL = getAssetsURL();
+
   return (
     <>
       <Flex
@@ -19,7 +22,7 @@ export default function ManualAuditCard() {
       >
         <Box
           w={"100%"}
-          bgImage={"url('/background/manualAuditbg.svg')"}
+          bgImage={`url("${assetsURL}background/manualAuditbg.svg")`}
           bgSize="contain"
           bgPosition={"right"}
           bgRepeat={"no-repeat"}
