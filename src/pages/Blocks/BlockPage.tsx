@@ -45,7 +45,7 @@ import {
   MenuItem,
 } from "@chakra-ui/react";
 import Overview from "components/overview";
-import { MultifileResult } from "components/detailedResult/multifileResult";
+import MultifileResult from "components/detailedResult/MultifileResult";
 import {
   AddIcon,
   CheckCircleIcon,

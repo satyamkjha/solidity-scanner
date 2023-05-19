@@ -473,7 +473,6 @@ export type DetectorItemProp = {
 };
 
 export type FileState = {
-  issue_id: string;
   file_path: string;
   line_nos_start: number[];
   line_nos_end: number[];

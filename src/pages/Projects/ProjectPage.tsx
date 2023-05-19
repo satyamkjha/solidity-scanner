@@ -58,7 +58,7 @@ import {
 } from "@chakra-ui/react";
 import { AiOutlineProject } from "react-icons/ai";
 import Overview from "components/overview";
-import { MultifileResult } from "components/detailedResult/multifileResult";
+import MultifileResult from "components/detailedResult/MultifileResult";
 import { RescanIcon, LogoIcon, ScanErrorIcon } from "components/icons";
 import { InfoIcon } from "@chakra-ui/icons";
 import API from "helpers/api";

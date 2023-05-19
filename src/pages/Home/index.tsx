@@ -60,6 +60,8 @@ import {
   restructureRepoTree,
   updateCheckedValue,
 } from "helpers/fileStructure";
+import FormatOptionLabelWithImage from "components/FormatOptionLabelWithImage";
+import { customStylesForReactSelect } from "common/stylesForCustomSelect";
 
 const Home: React.FC = () => {
   const { data } = useOverview();
@@ -793,44 +795,6 @@ const ContractForm: React.FC = () => {
     },
   ];
 
-  const customStyles = {
-    option: (provided: any, state: any) => ({
-      ...provided,
-      borderBottom: "1px solid #f3f3f3",
-      opacity: state.isDisabled ? 0.5 : 1,
-      backgroundColor: state.isDisabled
-        ? "#ECECEC"
-        : state.isSelected
-        ? "#FFFFFF"
-        : state.isFocused
-        ? "#E6E6E6"
-        : "#FFFFFF",
-      color: "#000000",
-    }),
-    menu: (provided: any, state: any) => ({
-      ...provided,
-      color: state.selectProps.menuColor,
-      borderRadius: 10,
-      border: "0px solid #ffffff",
-      overflowY: "hidden",
-    }),
-    control: (state: any) => ({
-      // none of react-select's styles are passed to <Control />
-      display: "flex",
-      flexDirection: "row",
-      backgroundColor: "#FFFFFF",
-      padding: 5,
-      borderRadius: 15,
-      border: state.isFocused ? "2px solid #52FF00" : "2px solid #EDF2F7",
-    }),
-    singleValue: (provided: any, state: any) => {
-      const opacity = state.isDisabled ? 0.3 : 1;
-      const transition = "opacity 300ms";
-
-      return { ...provided, opacity, transition };
-    },
-  };
-
   const [contractAddress, setContractAddress] = useState("");
   const [nodeId, setNodeId] = useState("");
   const [isLoading, setIsLoading] = useState(false);
@@ -971,7 +935,7 @@ const ContractForm: React.FC = () => {
           <FormControl id="contract_platform">
             <FormLabel fontSize="sm">Contract platform</FormLabel>
             <Select
-              formatOptionLabel={formatOptionLabel}
+              formatOptionLabel={FormatOptionLabelWithImage}
               options={options.map((item) => {
                 for (const chain in supportedChains) {
                   if (
@@ -991,7 +955,7 @@ const ContractForm: React.FC = () => {
               placeholder="Select Contract Platform"
               isSearchable={true}
               value={options.find((item) => platform === item.value)}
-              styles={customStyles}
+              styles={customStylesForReactSelect}
               onChange={(newValue) => {
                 if (newValue) {
                   setPlatform(newValue.value);
@@ -1029,13 +993,13 @@ const ContractForm: React.FC = () => {
             <FormControl id="contract_chain">
               <FormLabel fontSize="sm">Contract Chain</FormLabel>
               <Select
-                formatOptionLabel={formatOptionLabel}
+                formatOptionLabel={FormatOptionLabelWithImage}
                 isSearchable={false}
                 isDisabled={platform === ""}
                 options={chainList}
                 value={chain}
                 placeholder="Select Contract Chain"
-                styles={customStyles}
+                styles={customStylesForReactSelect}
                 onChange={(newValue) => {
                   if (newValue) {
                     setChain(newValue);
