@@ -53,15 +53,17 @@ const CodeExplorer: React.FC<{
         justifyContent: "flex-start",
         alignItems: "flex-start",
         flexDir: "column",
-        h: ["600px", "600px", "600px", "515px"],
-        overflow: "scroll",
+        h: ["600px", "600px", "600px", "505px"],
+        overflow: "hidden",
         pl: "15px",
-        
+      }}
+      _hover={{
+        overflow: "scroll",
       }}
     >
       <Flex
         sx={{
-          w: "100%",
+          w: "fit-content",
           justifyContent: "flex-start",
           alignItems: "flex-start",
           flexDir: "column",

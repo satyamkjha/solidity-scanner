@@ -69,6 +69,7 @@ const MultipleFileExplorer: React.FC<MultipleFileExplorerProps> = ({
           borderRadius: 15,
           bg: "rgba(243, 243, 243, 0.75)",
           position: "relative",
+          w: "100%",
           h: ["650px", "650px", "650px", "565px"],
           mb: [3, 3, 3, 0],
         }}
@@ -90,43 +91,42 @@ const MultipleFileExplorer: React.FC<MultipleFileExplorerProps> = ({
           </Flex>
         ) : (
           <>
-            <Tabs
-              defaultIndex={0}
-              width={"calc(100%)"}
-              variant="soft-rounded"
-              colorScheme="messenger"
+            <Flex
+              width={"100%"}
+              overflowX="hidden"
+              mb={"7px"}
+              _hover={{
+                overflowX: "scroll",
+                mb: 0,
+              }}
+              flexDir={"row"}
+              justifyContent="flex-start"
+              align={"center"}
+              background={"#FAFBFC"}
+              borderRadius={10}
+              p={0}
             >
               <Flex
-                width={"100%"}
-                overflowX="auto"
-                flexDir={"row"}
-                justifyContent="flex-start"
-                align={"center"}
-                background={"#FAFBFC"}
-                borderRadius={10}
-                p={0}
+                px={0}
+                my={0}
+                w="fit-content"
+                h="fit-content"
+                borderColor={"#C4C4C4"}
+                borderBottomWidth={"1px"}
               >
-                <Flex
-                  px={0}
-                  my={0}
-                  w="fit-content"
-                  h="fit-content"
-                  borderColor={"#C4C4C4"}
-                  borderBottomWidth={"1px"}
-                >
-                  {files.findings.map((file) => (
-                    <FileNameTab
-                      file={file}
-                      currentFile={currentFile}
-                      setCurrentFile={setCurrentFile}
-                    />
-                  ))}
-                </Flex>
+                {files.findings.map((file) => (
+                  <FileNameTab
+                    file={file}
+                    currentFile={currentFile}
+                    setCurrentFile={setCurrentFile}
+                  />
+                ))}
               </Flex>
-              <Flex width={"100%"} height={"100%"} px={2} pb={0} pt={2}>
-                <FileDataContainer type={type} file={currentFile} />
-              </Flex>
-              {/* <TabPanels>
+            </Flex>
+            <Flex width={"100%"} height={"100%"} px={2} pt={2}>
+              <FileDataContainer type={type} file={currentFile} />
+            </Flex>
+            {/* <TabPanels>
                 {files.findings.map((file, index) => (
                   <TabPanel key={index}>
                     <FileDataContainer
@@ -141,7 +141,7 @@ const MultipleFileExplorer: React.FC<MultipleFileExplorerProps> = ({
                   </TabPanel>
                 ))}
               </TabPanels> */}
-            </Tabs>
+
             {openIssueBox && (
               <Box
                 sx={{
@@ -150,7 +150,7 @@ const MultipleFileExplorer: React.FC<MultipleFileExplorerProps> = ({
                   px: 3,
                   w: "calc(100% - 20px)",
                   position: "absolute",
-                  bottom: "10px",
+                  bottom: "15px",
                   left: "10px",
                   display: "flex",
                   justifyContent: "flex-start",

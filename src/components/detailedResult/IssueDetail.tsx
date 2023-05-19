@@ -189,7 +189,10 @@ const IssueDetail: React.FC<{
       {data && (
         <TabPanels w="100%">
           <TabPanel
-            sx={{ w: "100%", overflowY: "scroll", py: [3, 3, 3, 1], px: 2 }}
+            sx={{ w: "100%", overflowY: "hidden", py: [3, 3, 3, 1], px: 2 }}
+            _hover={{
+              overflowY: "scroll",
+            }}
             h={height}
           >
             <DescriptionWrapper>

@@ -19,9 +19,9 @@ const FileNameTab: React.FC<{
       key={file.file_path}
       onClick={() => setCurrentFile(file)}
       background={selected ? "white" : "gray.100"}
-      borderRadius="0px"
+      borderWidth={selected ? "1px" : "0px"}
       borderRightWidth={"1px"}
-      borderColor={"#C4C4C4"}
+      borderColor={selected ? "gray.100" : "#C4C4C4"}
       px="10px"
       w="200px"
       h="40px"
