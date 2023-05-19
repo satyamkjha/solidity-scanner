@@ -41,7 +41,7 @@ const MultifileIssues: React.FC<MultifileIssuesProps> = ({
   details_enabled,
   updateBugStatus,
 }) => {
-  const [isDesktopView] = useMediaQuery("(min-width: 1024px)");
+  const [isDesktopView] = useMediaQuery("(min-width: 1350px)");
   let issue_count: number;
 
   const getVulnerabilityNumber = (issue_severity: string) => {

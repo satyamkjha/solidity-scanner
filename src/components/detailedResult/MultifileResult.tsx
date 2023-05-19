@@ -219,7 +219,16 @@ const MultifileResult: React.FC<{
               />
             </HStack>
           )}
-          <Box w="100%" h={["100%", "100%", "100%", "auto"]} overflowY="scroll">
+          <Box
+            w="100%"
+            h={["100%", "100%", "100%", "auto"]}
+            overflowY="hidden"
+            pr={"7px"}
+            _hover={{
+              overflowY: "scroll",
+              pr: "0px",
+            }}
+          >
             <MultifileIssues
               type={type}
               profileData={profileData}

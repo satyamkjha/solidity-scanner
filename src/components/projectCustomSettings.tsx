@@ -177,7 +177,7 @@ const ProjectCustomSettings: React.FC<{
             >
               <VStack
                 justifyContent="flex-start"
-                spacing={3}
+                spacing={1}
                 alignItems="flex-start"
                 w={["calc(100% - 60px)", "calc(100% - 60px)", "80%", "70%"]}
               >
@@ -200,8 +200,8 @@ const ProjectCustomSettings: React.FC<{
             flexDir="column"
             backgroundColor="#FCFCFC"
             px={[3, 3, 5]}
-            py={3}
-            mt={5}
+            py={2}
+            mt={3}
             borderRadius={20}
             border="1px solid #ECECEC"
             w="100%"
