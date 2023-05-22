@@ -118,13 +118,15 @@ export default function LandingPage() {
             flexDirection="column"
             alignItems={"flex-end"}
           >
-            <Image
-              marginTop={["0px", "0px", "0px", "-60px"]}
-              src={`${assetsURL}landing/landing_hero.png`}
-              transform="translateX(20px)"
-              zIndex={"10"}
-              alt={"Run scans for your smart contracts"}
-            />
+            {assetsURL && (
+              <Image
+                marginTop={["0px", "0px", "0px", "-60px"]}
+                src={`${assetsURL}landing/landing_hero.png`}
+                transform="translateX(20px)"
+                zIndex={"10"}
+                alt={"Run scans for your smart contracts"}
+              />
+            )}
           </Box>
         </Flex>
 
