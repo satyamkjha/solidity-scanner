@@ -20,7 +20,6 @@ import {
 import { issueActions } from "common/values";
 import API from "helpers/api";
 import { API_PATH } from "helpers/routeManager";
-import CommentForm from "./CommentForm";
 import DetailFilter from "./DetailFilter";
 import MultifileIssues from "./MultifileIssues";
 import FileExplorerSection from "./FileExplorerSection";
@@ -29,6 +28,7 @@ import {
   customStylesForReactSelect,
   customStylesForTakeAction,
 } from "common/stylesForCustomSelect";
+import ConfirmActionForm from "../confirmActionForm"
 
 const MultifileResult: React.FC<{
   type: "block" | "project";
@@ -121,6 +121,10 @@ const MultifileResult: React.FC<{
       setSelectedBugs([]);
     }
     refetch();
+  };
+
+  const onActionConfirm = (comment: string) => {
+    bugStatus && updateBugStatus(bugStatus, comment);
   };
 
   useEffect(() => {
@@ -259,12 +263,28 @@ const MultifileResult: React.FC<{
         )}
       </Flex>
       {bugStatus && (
-        <CommentForm
+        <ConfirmActionForm
           isOpen={isOpen}
           onClose={onClose}
-          updateBugStatus={updateBugStatus}
-          status={bugStatus}
-          selectedBugs={selectedBugs}
+          onActionConfirm={onActionConfirm}
+          addComment={true}
+          modalHeader={"Confirm Action"}
+          modelText={
+            <Text my={4} color="subtle" w={["100%"]}>
+              You are about to confirm the{" "}
+              <Text as={"span"} color="black" fontWeight={"bold"}>
+                Won’t Fix
+              </Text>{" "}
+              action on{" "}
+              <Text as={"span"} color="black" fontWeight={"bold"}>
+                {selectedBugs.length}
+              </Text>{" "}
+              bug(s).{" "}
+              <Text color="subtle" w={["100%"]}>
+                Please add your comment below and click on confirm to continue.
+              </Text>
+            </Text>
+          }
         />
       )}
     </>

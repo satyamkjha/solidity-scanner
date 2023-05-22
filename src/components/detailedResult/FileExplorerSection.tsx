@@ -12,19 +12,19 @@ import {
   Tooltip,
   useDisclosure,
 } from "@chakra-ui/react";
-import { FilesState } from "common/types";
-import { issueActions } from "common/values";
+import { FilesState } from "../../common/types";
+import { issueActions } from "../../common/values";
 import MultipleFileExplorer from "./MultipleFileExplorer";
-import { sentenceCapitalize, getAssetsURL } from "helpers/helperFunction";
+import { sentenceCapitalize, getAssetsURL } from "../../helpers/helperFunction";
 import React, { Dispatch, SetStateAction, useEffect, useState } from "react";
 import { BiBulb, BiCodeCurly, BiComment } from "react-icons/bi";
 import TrialWall from "./TrialWall";
 
 import Select from "react-select";
 import { HiOutlineDocumentText } from "react-icons/hi";
-import CommentForm from "./CommentForm";
-import FormatOptionLabelWithImage from "components/FormatOptionLabelWithImage";
-import { customStylesForTakeAction } from "common/stylesForCustomSelect";
+import ConfirmActionForm from "../confirmActionForm";
+import FormatOptionLabelWithImage from "../../components/FormatOptionLabelWithImage";
+import { customStylesForTakeAction } from "../../common/stylesForCustomSelect";
 
 export const FileExplorerSection: React.FC<{
   type: "block" | "project";
@@ -63,6 +63,10 @@ export const FileExplorerSection: React.FC<{
   const handleTabsChange = (index: number) => {
     setOpenIssueBox(true);
     setTabIndex(index);
+  };
+
+  const onActionConfirm = (comment: string) => {
+    bugStatus && updateBugStatus(bugStatus, comment);
   };
 
   return (
@@ -200,12 +204,28 @@ export const FileExplorerSection: React.FC<{
         )}
       </Box>
       {bugStatus && (
-        <CommentForm
+        <ConfirmActionForm
           isOpen={isOpen}
           onClose={onClose}
-          updateBugStatus={updateBugStatus}
-          status={bugStatus}
-          selectedBugs={selectedBugs}
+          onActionConfirm={onActionConfirm}
+          addComment={true}
+          modalHeader={"Confirm Action"}
+          modelText={
+            <Text my={4} color="subtle" w={["100%"]}>
+              You are about to confirm the{" "}
+              <Text as={"span"} color="black" fontWeight={"bold"}>
+                Won’t Fix
+              </Text>{" "}
+              action on{" "}
+              <Text as={"span"} color="black" fontWeight={"bold"}>
+                {selectedBugs.length}
+              </Text>{" "}
+              bug(s).{" "}
+              <Text color="subtle" w={["100%"]}>
+                Please add your comment below and click on confirm to continue.
+              </Text>
+            </Text>
+          }
         />
       )}
     </VStack>

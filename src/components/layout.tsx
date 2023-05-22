@@ -171,11 +171,7 @@ const Layout: React.FC = ({ children }) => {
               "100%",
               "100%",
               "100%",
-              `calc(100% - ${
-                isSidebarCollapsed
-                  ? SIDEBAR_WIDTH_COLLAPSED
-                  : SIDEBAR_WIDTH_EXPANDED
-              })`,
+              `calc(100% - ${SIDEBAR_WIDTH_COLLAPSED})`,
             ],
             height: "calc(100vh)",
             overflowY: "scroll",

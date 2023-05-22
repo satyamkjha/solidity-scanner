@@ -13,8 +13,8 @@ import { Link } from "react-router-dom";
 import { CodeBlock, atomOneLight } from "react-code-blocks";
 import { AiOutlineCaretRight } from "react-icons/ai";
 import { dummyCode, dummyIssues } from "common/values";
-import { TrialWallIcon } from "components/icons";
 import { WarningTwoIcon } from "@chakra-ui/icons";
+import UpgradePackage from "../upgradePackage";
 export const TrialWall: React.FC = () => {
   return (
     <Flex w="100%" sx={{ flexDir: "column" }} h="100vh">
@@ -43,49 +43,8 @@ export const TrialWallCode: React.FC = () => {
           <DummyCode />
         </Box>
       </VStack>
-      <Flex
-        w="100%"
-        h="60vh"
-        mt={6}
-        position="absolute"
-        sx={{
-          backdropFilter: "blur(6px)",
-        }}
-        bg="rgba(255,255,255,0.3)"
-        alignItems="center"
-        justifyContent="flex-start"
-        flexDir="column"
-        pt={"100px"}
-      >
-        <TrialWallIcon />
-        <Text
-          textAlign={"center"}
-          w={"80%"}
-          fontWeight={700}
-          fontSize="md"
-          color="black"
-          mb={4}
-        >
-          Upgrade to use this feature
-        </Text>
 
-        <Text
-          textAlign={"center"}
-          w={"80%"}
-          fontWeight={300}
-          fontSize="sm"
-          color="black"
-          mb={8}
-        >
-          Upgrade from the trial plan to use this feature and much more.
-        </Text>
-
-        <Link to="/billing">
-          <Button mt={4} variant="brand" width="250px">
-            Upgrade
-          </Button>
-        </Link>
-      </Flex>
+      <UpgradePackage />
     </Flex>
   );
 };
