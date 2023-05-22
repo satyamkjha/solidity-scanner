@@ -1,11 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import { Link as RouterLink, useLocation, useParams } from "react-router-dom";
 import styled from "@emotion/styled";
-import {
-  getAssetsURL,
-  getReCaptchaHeaders,
-  getIssuesData,
-} from "helpers/helperFunction";
+import { getAssetsURL, getReCaptchaHeaders } from "helpers/helperFunction";
 import {
   Flex,
   Box,
@@ -644,6 +640,10 @@ const QuickScan: React.FC = () => {
 
   const config: any = useConfig();
   const assetsURL = getAssetsURL(config);
+  const no_of_vuln_detectors =
+    config && config.REACT_APP_ISSUES_DATA
+      ? config.REACT_APP_ISSUES_DATA.no_of_vuln_detectors
+      : {};
 
   return (
     <>
@@ -1179,11 +1179,10 @@ const QuickScan: React.FC = () => {
                       >
                         <Text textAlign={"left"} fontSize="sm">
                           This contract has been analyzed by more than{" "}
-                          {getIssuesData().no_of_vuln_detectors}&nbsp;
-                          proprietary vulnerability patterns of SolidityScan.
-                          Vulnerability details and mechanisms to remediate the
-                          risks tailored specific to the contract are now
-                          available in the link below.
+                          {no_of_vuln_detectors}&nbsp; proprietary vulnerability
+                          patterns of SolidityScan. Vulnerability details and
+                          mechanisms to remediate the risks tailored specific to
+                          the contract are now available in the link below.
                         </Text>
                         <RouterLink to="/signup">
                           <Button variant="accent-ghost">
