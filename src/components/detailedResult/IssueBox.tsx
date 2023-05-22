@@ -19,6 +19,7 @@ import DetailedResult from "./FileExplorerSection";
 import { MultifileIcon } from "../icons";
 import InputCheckbox from "../styled-components/inputCheckbox";
 import { getAssetsURL } from "helpers/helperFunction";
+import { useConfig } from "hooks/useConfig";
 
 const IssueBox: React.FC<{
   type: "block" | "project";
@@ -47,7 +48,8 @@ const IssueBox: React.FC<{
   setFiles,
   updateBugStatus,
 }) => {
-  const assetsURL = getAssetsURL();
+  const config: any = useConfig();
+  const assetsURL = getAssetsURL(config);
   const [isDesktopView] = useMediaQuery("(min-width: 1024px)");
 
   const [isHovered, setIsHovered] = useState(false);

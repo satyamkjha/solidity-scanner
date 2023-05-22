@@ -2,11 +2,13 @@ import { Flex, Text, useMediaQuery, Image } from "@chakra-ui/react";
 import React from "react";
 import { ScheduleScan, PublishReport, VulnCheck, Integration } from "./icons";
 import { getAssetsURL } from "helpers/helperFunction";
+import { useConfig } from "hooks/useConfig";
 
 export const Infographics: React.FC = () => {
   const [isDesktopView] = useMediaQuery("(min-width: 1024px)");
 
-  const assetsURL = getAssetsURL();
+  const config: any = useConfig();
+  const assetsURL = getAssetsURL(config);
 
   return (
     <Flex

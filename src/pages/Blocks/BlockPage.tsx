@@ -81,6 +81,7 @@ import { getPublicReport } from "hooks/usePublicReport";
 import { useReactToPrint } from "react-to-print";
 import { PrintContainer } from "pages/Report/PrintContainer";
 import { getAssetsURL } from "helpers/helperFunction";
+import { useConfig } from "hooks/useConfig";
 
 const BlockPage: React.FC = () => {
   const { scanId } = useParams<{ scanId: string }>();
@@ -116,7 +117,8 @@ const BlockPage: React.FC = () => {
 
   const [tabIndex, setTabIndex] = React.useState(0);
   const [isDesktopView] = useMediaQuery("(min-width: 1024px)");
-  const assetsURL = getAssetsURL();
+  const config: any = useConfig();
+  const assetsURL = getAssetsURL(config);
 
   useEffect(() => {
     if (scanData) {

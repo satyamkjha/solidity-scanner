@@ -5,9 +5,11 @@ import { EffectCoverflow, Navigation, Pagination } from "swiper";
 import "./testimonial.css";
 import { userTestimonials } from "common/values";
 import { getAssetsURL } from "helpers/helperFunction";
+import { useConfig } from "hooks/useConfig";
 
 const UserTestimonial: React.FC = () => {
-  const assetsURL = getAssetsURL();
+  const config: any = useConfig();
+  const assetsURL = getAssetsURL(config);
   return (
     <Box
       w="100%"

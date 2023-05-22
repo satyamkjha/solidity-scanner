@@ -9,9 +9,11 @@ import {
 } from "@chakra-ui/react";
 import { getAssetsURL } from "helpers/helperFunction";
 import ManualAuditForm from "components/manualAuditForm";
+import { useConfig } from "hooks/useConfig";
 
 export default function ManualAudit() {
-  const assetsURL = getAssetsURL();
+  const config: any = useConfig();
+  const assetsURL = getAssetsURL(config);
   const { isOpen, onClose, onOpen } = useDisclosure();
 
   return (

@@ -1,11 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import { Link as RouterLink, useLocation, useParams } from "react-router-dom";
 import styled from "@emotion/styled";
-import {
-  getAssetsURL,
-  getReCaptchaHeaders,
-  getIssuesData,
-} from "helpers/helperFunction";
+import { getAssetsURL, getReCaptchaHeaders } from "helpers/helperFunction";
 import {
   Flex,
   Box,
@@ -62,6 +58,7 @@ import { FaEllipsisH, FaEllipsisV } from "react-icons/fa";
 import { API_PATH } from "helpers/routeManager";
 import { ThreatScoreMeter } from "components/threatScoreMeter";
 import reCAPTCHA from "helpers/reCAPTCHA";
+import { useConfig } from "hooks/useConfig";
 
 const pieData = (
   critical: number,
@@ -460,15 +457,6 @@ const QuickScan: React.FC = () => {
 
   let d = new Date();
 
-  const recaptcha1 = new reCAPTCHA(
-    process.env.REACT_APP_RECAPTCHA_SITE_KEY!,
-    "quickScan_verify"
-  );
-  const recaptcha2 = new reCAPTCHA(
-    process.env.REACT_APP_RECAPTCHA_SITE_KEY!,
-    "quickScan"
-  );
-
   const elementRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -650,7 +638,12 @@ const QuickScan: React.FC = () => {
     }
   };
 
-  const assetsURL = getAssetsURL();
+  const config: any = useConfig();
+  const assetsURL = getAssetsURL(config);
+  const no_of_vuln_detectors =
+    config && config.REACT_APP_ISSUES_DATA
+      ? config.REACT_APP_ISSUES_DATA.no_of_vuln_detectors
+      : {};
 
   return (
     <>
@@ -1186,11 +1179,10 @@ const QuickScan: React.FC = () => {
                       >
                         <Text textAlign={"left"} fontSize="sm">
                           This contract has been analyzed by more than{" "}
-                          {getIssuesData().no_of_vuln_detectors}&nbsp;
-                          proprietary vulnerability patterns of SolidityScan.
-                          Vulnerability details and mechanisms to remediate the
-                          risks tailored specific to the contract are now
-                          available in the link below.
+                          {no_of_vuln_detectors}&nbsp; proprietary vulnerability
+                          patterns of SolidityScan. Vulnerability details and
+                          mechanisms to remediate the risks tailored specific to
+                          the contract are now available in the link below.
                         </Text>
                         <RouterLink to="/signup">
                           <Button variant="accent-ghost">

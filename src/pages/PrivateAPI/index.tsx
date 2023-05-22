@@ -21,6 +21,7 @@ import { CheckIcon } from "@chakra-ui/icons";
 import { getAssetsURL } from "helpers/helperFunction";
 import ConfirmActionForm from "components/confirmActionForm";
 import { useProfile } from "hooks/useProfile";
+import { useConfig } from "hooks/useConfig";
 import UpgradePackage from "components/upgradePackage";
 
 export default function PrivateApi() {
@@ -34,7 +35,8 @@ export default function PrivateApi() {
   const { onCopy, hasCopied } = useClipboard(accessKey);
   const [actionType, setActionType] = useState("regenerate");
   const { isOpen, onClose, onOpen } = useDisclosure();
-  const assetsUrl = getAssetsURL();
+  const config: any = useConfig();
+  const assetsUrl = getAssetsURL(config);
   const toast = useToast();
 
   useEffect(() => {

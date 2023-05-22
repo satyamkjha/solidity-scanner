@@ -6,11 +6,13 @@ import React from "react";
 import { CredshieldsIcon } from "./icons";
 import ManualAuditForm from "./manualAuditForm";
 import { getAssetsURL } from "helpers/helperFunction";
+import { useConfig } from "hooks/useConfig";
 
 export default function ManualAuditCard() {
   const { isOpen, onClose, onOpen } = useDisclosure();
   const [isDesktopView] = useMediaQuery("(min-width: 1024px)");
-  const assetsURL = getAssetsURL();
+  const config: any = useConfig();
+  const assetsURL = getAssetsURL(config);
 
   return (
     <>

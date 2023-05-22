@@ -3,6 +3,7 @@ import Carousel from "@brainhubeu/react-carousel";
 import "@brainhubeu/react-carousel/lib/style.css";
 import { Image, Box, Heading, Text } from "@chakra-ui/react";
 import { getAssetsURL } from "helpers/helperFunction";
+import { useConfig } from "hooks/useConfig";
 
 const ImageCarousel = () => {
   const imgSourceList = [
@@ -40,7 +41,8 @@ const ImageCarousel = () => {
     },
   ];
 
-  const assetsURL = getAssetsURL();
+  const config: any = useConfig();
+  const assetsURL = getAssetsURL(config);
 
   return (
     <Box

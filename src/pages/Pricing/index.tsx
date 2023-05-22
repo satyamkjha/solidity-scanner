@@ -40,6 +40,7 @@ import { PublishReportInfo } from "components/infoModal";
 import { usePricingPlans } from "hooks/usePricingPlans";
 import { SpinnerIcon } from "@chakra-ui/icons";
 import { getAssetsURL } from "helpers/helperFunction";
+import { useConfig } from "hooks/useConfig";
 
 export default function PricingPage() {
   const [tab, setTab] = useState<string>("weekly");
@@ -47,7 +48,8 @@ export default function PricingPage() {
   const [selectedPlan, setSelectedPlan] = useState("");
   const [openPublish, setOpenPublish] = useState(false);
   const location = useLocation();
-  const assetsURL = getAssetsURL();
+  const config: any = useConfig();
+  const assetsURL = getAssetsURL(config);
 
   useEffect(() => {
     const query = new URLSearchParams(location.search);

@@ -24,6 +24,7 @@ import { BsArrowsAngleExpand, BsArrowsAngleContract } from "react-icons/bs";
 import FileNameTab from "./FileNameTab";
 import FileDataContainer from "./FileDataContainer";
 import IssueDetail from "./IssueDetail";
+import { useConfig } from "hooks/useConfig";
 
 type MultipleFileExplorerProps = {
   files: FilesState;
@@ -44,7 +45,8 @@ const MultipleFileExplorer: React.FC<MultipleFileExplorerProps> = ({
   setFiles,
 }) => {
   const [currentFile, setCurrentFile] = useState<Finding>(files.findings[0]);
-  const assetsURL = getAssetsURL();
+  const config: any = useConfig();
+  const assetsURL = getAssetsURL(config);
 
   useEffect(() => {
     setCurrentFile(files.findings[0]);

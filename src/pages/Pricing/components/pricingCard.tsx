@@ -37,7 +37,8 @@ export const PricingCard: React.FC<{
   const [duration, setDuration] = useState<"monthly" | "yearly" | "on-demand">(
     globalDuration
   );
-  const assetsURL = getAssetsURL();
+  const config: any = useConfig();
+  const assetsURL = getAssetsURL(config);
   const mouse = selectedPlan === plan;
 
   React.useEffect(() => {

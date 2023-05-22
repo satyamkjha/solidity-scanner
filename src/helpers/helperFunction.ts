@@ -1,6 +1,15 @@
 import UAParser from "ua-parser-js";
 import reCAPTCHA from "helpers/reCAPTCHA";
-import { TreeItem, TreeItemUP } from "common/types";
+
+let configValue: any = null;
+
+export const setGlobalConfig = (config: any) => {
+  configValue = config;
+};
+
+export const getGlobalConfig = () => {
+  return configValue;
+};
 
 export const sentenceCapitalize = (string: string) => {
   return string.charAt(0).toUpperCase() + string.slice(1);
@@ -20,24 +29,14 @@ export const camelCaseToNormal = (string: string) => {
   return finalResult;
 };
 
-export const getFeatureGateConfig = () => {
-  let feature_gate_config: any;
-
-  if (process.env.REACT_APP_FEATURE_GATE_CONFIG) {
-    feature_gate_config = JSON.parse(process.env.REACT_APP_FEATURE_GATE_CONFIG);
+export const getFeatureGateConfig = (config?: any) => {
+  let feature_gate_config: any = {};
+  config = config || getGlobalConfig();
+  if (config && config.REACT_APP_FEATURE_GATE_CONFIG) {
+    feature_gate_config = config.REACT_APP_FEATURE_GATE_CONFIG;
   }
 
   return feature_gate_config;
-};
-
-export const getIssuesData = () => {
-  let issueData: any;
-
-  if (process.env.REACT_APP_ISSUES_DATA) {
-    issueData = JSON.parse(process.env.REACT_APP_ISSUES_DATA);
-  }
-
-  return issueData;
 };
 
 export const getBrowserName = (): string => {
@@ -56,15 +55,14 @@ export const getDeviceType = (): string => {
   else return "NA";
 };
 
-export const getAssetsURL = () => {
-  return process.env.REACT_APP_ASSETS_URL || "";
+export const getAssetsURL = (config?: any) => {
+  config = config || getGlobalConfig();
+  return config.REACT_APP_ASSETS_URL || "";
 };
 
 export const getReCaptchaHeaders = async (action: string) => {
-  const recaptcha = new reCAPTCHA(
-    process.env.REACT_APP_RECAPTCHA_SITE_KEY!,
-    action
-  );
+  const config = getGlobalConfig() || {};
+  const recaptcha = new reCAPTCHA(config.REACT_APP_RECAPTCHA_SITE_KEY!, action);
   const Recaptchatoken = await recaptcha.getToken();
 
   if (getFeatureGateConfig().reCAPTCHA_enabled) {

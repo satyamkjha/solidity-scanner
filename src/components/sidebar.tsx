@@ -34,6 +34,7 @@ import {
 import { useProfile } from "hooks/useProfile";
 import ManualAuditForm from "./manualAuditForm";
 import { ArrowBackIcon, ArrowForwardIcon } from "@chakra-ui/icons";
+import { useConfig } from "hooks/useConfig";
 import { getAssetsURL, getFeatureGateConfig } from "helpers/helperFunction";
 
 const Sidebar: React.FC<{
@@ -45,7 +46,8 @@ const Sidebar: React.FC<{
   const { isOpen, onClose, onOpen } = useDisclosure();
   const [transitionDone, setTransitionDone] = useState(true);
   const [isDesktopView] = useMediaQuery("(min-width: 1024px)");
-  const assetsURL = getAssetsURL();
+  const config: any = useConfig();
+  const assetsURL = getAssetsURL(config);
 
   return (
     <Flex

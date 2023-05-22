@@ -21,7 +21,8 @@ import { getAssetsURL } from "helpers/helperFunction";
 const CustomFlex = motion(Flex);
 
 const PageNotFound: React.FC = () => {
-  const assetsURL = getAssetsURL();
+  const config: any = useConfig();
+  const assetsURL = getAssetsURL(config);
 
   return (
     <>

@@ -60,6 +60,7 @@ import {
   restructureRepoTree,
   updateCheckedValue,
 } from "helpers/fileStructure";
+import { useConfig } from "hooks/useConfig";
 import FormatOptionLabelWithImage from "components/FormatOptionLabelWithImage";
 import { customStylesForReactSelect } from "common/stylesForCustomSelect";
 import ApplicationForm from "./ApplicationForm";

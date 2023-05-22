@@ -28,6 +28,7 @@ import {
 import API from "helpers/api";
 import Auth from "helpers/auth";
 import { API_PATH } from "helpers/routeManager";
+import { useConfig } from "hooks/useConfig";
 import useInvalidateQueries from "hooks/invalidateQueries";
 
 const MotionFlex = motion(Flex);
@@ -39,7 +40,8 @@ const Layout: React.FC = ({ children }) => {
   const history = useHistory();
   const { data: profileData } = useProfile();
 
-  const assetsURL = getAssetsURL();
+  const config: any = useConfig();
+  const assetsURL = getAssetsURL(config);
 
   const invalidateQueries = useInvalidateQueries();
 

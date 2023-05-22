@@ -22,6 +22,7 @@ import TrialWall from "./TrialWall";
 
 import Select from "react-select";
 import { HiOutlineDocumentText } from "react-icons/hi";
+import { useConfig } from "hooks/useConfig";
 import ConfirmActionForm from "../confirmActionForm";
 import FormatOptionLabelWithImage from "../../components/FormatOptionLabelWithImage";
 import { customStylesForTakeAction } from "../../common/stylesForCustomSelect";
@@ -43,7 +44,8 @@ export const FileExplorerSection: React.FC<{
   updateBugStatus,
   setFiles,
 }) => {
-  const assetsURL = getAssetsURL();
+  const config: any = useConfig();
+  const assetsURL = getAssetsURL(config);
   const [isDesktopView] = useMediaQuery("(min-width: 1024px)");
   const { isOpen, onClose, onOpen } = useDisclosure();
   const [bugStatus, setBugStatus] = useState<string | null>(null);

@@ -239,6 +239,7 @@ export const blockScans: { [key: string]: string } = {
   buildbear: "Buildbear",
   optimism: "Optimism",
   xdc: "XDC",
+  reefscan: "Reefscan",
 };
 
 export const blockExplorer: { [key: string]: string } = {
