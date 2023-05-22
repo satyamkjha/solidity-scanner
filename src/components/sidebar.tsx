@@ -34,7 +34,7 @@ import {
 import { useProfile } from "hooks/useProfile";
 import ManualAuditForm from "./manualAuditForm";
 import { ArrowBackIcon, ArrowForwardIcon } from "@chakra-ui/icons";
-import { getAssetsURL } from "helpers/helperFunction";
+import { getAssetsURL, getFeatureGateConfig } from "helpers/helperFunction";
 
 const Sidebar: React.FC<{
   isCollapsed: boolean;
@@ -190,13 +190,15 @@ const Sidebar: React.FC<{
             isCollapsed={isCollapsed}
             transitionDone={transitionDone}
           />
-          <SidebarItem
-            to="/private-api"
-            label="Private API"
-            icon={<PrivateApiMenuIcon size={24} />}
-            isCollapsed={isCollapsed}
-            transitionDone={transitionDone}
-          />
+          {getFeatureGateConfig().private_api_enabled && (
+            <SidebarItem
+              to="/private-api"
+              label="Private API"
+              icon={<PrivateApiMenuIcon size={24} />}
+              isCollapsed={isCollapsed}
+              transitionDone={transitionDone}
+            />
+          )}
           <SidebarItem
             to={`/billing`}
             label="Billing"

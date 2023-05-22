@@ -14,17 +14,20 @@ import {
   useDisclosure,
   useToast,
 } from "@chakra-ui/react";
-import { useAccessKey } from "hooks/useAccessKey";
 import API from "helpers/api";
 import { API_PATH } from "helpers/routeManager";
 import { HiDuplicate, HiOutlineCheck } from "react-icons/hi";
 import { CheckIcon } from "@chakra-ui/icons";
 import { getAssetsURL } from "helpers/helperFunction";
 import ConfirmActionForm from "components/confirmActionForm";
+import { useProfile } from "hooks/useProfile";
+import UpgradePackage from "components/upgradePackage";
 
 export default function PrivateApi() {
-  const { data, isLoading } = useAccessKey();
+  const { data: profileData, isLoading } = useProfile();
+  const [hasAccess, setHasAccess] = useState(false);
   const [accessKey, setAccessKey] = useState("");
+  const [createdDate, setCreatedDate] = useState("");
   const [isFirstTime, setIsFirstTime] = useState(false);
   const [isSpinning, setIsSpinning] = useState(false);
   const [isViewable, setViewable] = useState(false);
@@ -35,11 +38,28 @@ export default function PrivateApi() {
   const toast = useToast();
 
   useEffect(() => {
+    if (
+      profileData &&
+      ["pro", "custom"].includes(profileData.current_package)
+    ) {
+      setHasAccess(true);
+      setIsSpinning(true);
+      fetchAccessKey();
+    } else {
+      setHasAccess(false);
+    }
+  }, [profileData]);
+
+  const fetchAccessKey = async () => {
+    setIsSpinning(true);
+    const { data } = await API.get(API_PATH.API_GET_ACCESS_KEY);
     if (data && data.api_key) {
       setAccessKey(data.api_key);
+      setCreatedDate(data.created_at);
       setIsFirstTime(false);
     }
-  }, [data]);
+    setIsSpinning(false);
+  };
 
   const onKeyCopy = () => {
     onCopy();
@@ -186,6 +206,7 @@ export default function PrivateApi() {
               px={10}
               py={2}
               ml={[0, 0, 0, "auto"]}
+              isDisabled={!hasAccess}
             >
               {accessKey ? "Regenrate Key" : "Generate Key"}
             </Button>
@@ -197,13 +218,15 @@ export default function PrivateApi() {
             backgroundColor="#FCFCFC"
             border={"2px solid #EAEAEA"}
             borderRadius="15px"
+            h={accessKey ? "fit-content" : "100%"}
           >
             {isSpinning ? (
               <Flex
                 sx={{
                   w: "100%",
-                  my: "6",
+                  h: "100%",
                   justifyContent: "center",
+                  alignItems: "center",
                 }}
               >
                 <Spinner />
@@ -273,7 +296,7 @@ export default function PrivateApi() {
                         ml={[0, 0, 0, "auto"]}
                         mb={[4, 4, 4, 0]}
                       >
-                        {data.created_at || ""}
+                        {createdDate}
                       </Text>
                       {!isFirstTime && (
                         <>
@@ -316,19 +339,37 @@ export default function PrivateApi() {
                     </Flex>
                   </>
                 ) : (
-                  <VStack spacing={4} mb={[6, 6, 6, 0]}>
-                    <Image
-                      src={assetsUrl + "background/private_api_cover.svg"}
-                      my={2}
-                    />
-                    <Text fontWeight={400}>
-                      No access key has been created yet, Click generate key to
-                      create new key
-                    </Text>
-                    <Link onClick={getAccessKey} fontWeight={400} color="blue">
-                      Generate Key
-                    </Link>
-                  </VStack>
+                  <Flex position={"relative"} w="100%" h="100%">
+                    <VStack
+                      w="100%"
+                      spacing={4}
+                      mb={[6, 6, 6, 0]}
+                      position={"absolute"}
+                      top={0}
+                      left={0}
+                      opacity={hasAccess ? 1 : 0.5}
+                    >
+                      <Image
+                        src={assetsUrl + "background/private_api_cover.svg"}
+                        my={2}
+                      />
+                      <Text fontWeight={400}>
+                        No access key has been created yet, Click generate key
+                        to create new key
+                      </Text>
+                      <Link
+                        display={hasAccess ? "block" : "none"}
+                        onClick={getAccessKey}
+                        fontWeight={400}
+                        color="blue"
+                      >
+                        Generate Key
+                      </Link>
+                    </VStack>
+                    {!hasAccess && (
+                      <UpgradePackage text="Upgrade to our pro plan or a custom plan to use this feature and much more." />
+                    )}
+                  </Flex>
                 )}
               </>
             )}
