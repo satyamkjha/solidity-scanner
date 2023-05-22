@@ -29,6 +29,7 @@ import API from "helpers/api";
 import Auth from "helpers/auth";
 import { API_PATH } from "helpers/routeManager";
 import { useConfig } from "hooks/useConfig";
+import useInvalidateQueries from "hooks/invalidateQueries";
 
 const MotionFlex = motion(Flex);
 
@@ -41,6 +42,8 @@ const Layout: React.FC = ({ children }) => {
 
   const config: any = useConfig();
   const assetsURL = getAssetsURL(config);
+
+  const invalidateQueries = useInvalidateQueries();
 
   const handleClickOutside = (e: MouseEvent) => {
     if (ref.current && ref.current.contains(e.target as Node)) {
@@ -58,6 +61,7 @@ const Layout: React.FC = ({ children }) => {
     if (data.status === "success") {
       Auth.deauthenticateUser();
       history.push("/signin");
+      invalidateQueries();
     }
   };
 
@@ -169,11 +173,7 @@ const Layout: React.FC = ({ children }) => {
               "100%",
               "100%",
               "100%",
-              `calc(100% - ${
-                isSidebarCollapsed
-                  ? SIDEBAR_WIDTH_COLLAPSED
-                  : SIDEBAR_WIDTH_EXPANDED
-              })`,
+              `calc(100% - ${SIDEBAR_WIDTH_COLLAPSED})`,
             ],
             height: "calc(100vh)",
             overflowY: "scroll",

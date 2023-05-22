@@ -1,7 +1,11 @@
 import React, { useEffect, useRef, useState } from "react";
 import { Link as RouterLink, useLocation, useParams } from "react-router-dom";
 import styled from "@emotion/styled";
-import { getAssetsURL, getReCaptchaHeaders } from "helpers/helperFunction";
+import {
+  getAssetsURL,
+  getReCaptchaHeaders,
+  getIssuesData,
+} from "helpers/helperFunction";
 import {
   Flex,
   Box,
@@ -11,7 +15,6 @@ import {
   Button,
   Image,
   Link,
-  useDisclosure,
   HStack,
   VStack,
   Input,
@@ -1175,7 +1178,8 @@ const QuickScan: React.FC = () => {
                         w={["100%", "100%", "100%", "calc(100% - 200px)"]}
                       >
                         <Text textAlign={"left"} fontSize="sm">
-                          This contract has been analyzed by more than 110
+                          This contract has been analyzed by more than{" "}
+                          {getIssuesData().no_of_vuln_detectors}&nbsp;
                           proprietary vulnerability patterns of SolidityScan.
                           Vulnerability details and mechanisms to remediate the
                           risks tailored specific to the contract are now

@@ -37,8 +37,8 @@ import Infographics from "components/infographics";
 import { DetectorIcon } from "components/icons";
 import { DetectorItemProp } from "common/types";
 import { detectorData } from "common/values";
-import { getAssetsURL } from "helpers/helperFunction";
 import { useConfig } from "hooks/useConfig";
+import { getAssetsURL, getIssuesData } from "helpers/helperFunction";
 
 const DetectorItem: React.FC<{ item: DetectorItemProp }> = ({ item }) => {
   const config: any = useConfig();
@@ -139,12 +139,8 @@ const DetectorItem: React.FC<{ item: DetectorItemProp }> = ({ item }) => {
 };
 
 const Detectors: React.FC = () => {
-  const headingData = [
-    { title: "Total Vulnerability Detectors", data: "121" },
-    { title: "Attack Categories", data: "38" },
-    { title: "SWC Coverage", data: "36/36" },
-    { title: "Upcoming Vulnerability Detectors", data: "46" },
-  ];
+  const headingData: { title: string; data: string }[] =
+    getIssuesData().detectorPageData;
 
   const config: any = useConfig();
   const assetsURL = getAssetsURL(config);
