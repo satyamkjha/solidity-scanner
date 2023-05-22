@@ -77,6 +77,7 @@ const UploadForm: React.FC = () => {
   const [urlList, setUrlList] = useState<
     { url: string; name: string; file: File }[]
   >([]);
+  const [isLoading, setIsLoading] = useState(false);
 
   const {
     getRootProps,
@@ -246,13 +247,21 @@ const UploadForm: React.FC = () => {
 
   const startFileScan = async () => {
     let urlData = urlList.map((item) => item.url);
-    await API.post(API_PATH.API_PROJECT_SCAN, {
-      file_urls: urlData,
-      project_name: name,
-      project_visibility: "public",
-      project_type: "new",
-    });
-    history.push("/projects");
+    try {
+      setIsLoading(true);
+      await API.post(API_PATH.API_PROJECT_SCAN, {
+        file_urls: urlData,
+        project_name: name,
+        project_visibility: "public",
+        project_type: "new",
+      });
+
+      history.push("/projects");
+      setTimeout(() => setIsLoading(false), 1000);
+    } catch (e) {
+      setTimeout(() => setIsLoading(false), 1000);
+      console.log(e);
+    }
   };
 
   return (
@@ -448,7 +457,9 @@ const UploadForm: React.FC = () => {
               variant="brand"
               mt={4}
               w="100%"
+              isLoading={isLoading}
               disabled={
+                isLoading ||
                 step < 2 ||
                 name === "" ||
                 (profileData.actions_supported &&
