@@ -471,3 +471,9 @@ export type DetectorItemProp = {
   nod: number;
   description: string;
 };
+
+export type FileState = {
+  file_path: string;
+  line_nos_start: number[];
+  line_nos_end: number[];
+};

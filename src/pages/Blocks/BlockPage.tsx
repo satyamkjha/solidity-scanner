@@ -45,7 +45,7 @@ import {
   MenuItem,
 } from "@chakra-ui/react";
 import Overview from "components/overview";
-import Result, { MultifileResult } from "components/result";
+import MultifileResult from "components/detailedResult/MultifileResult";
 import {
   AddIcon,
   CheckCircleIcon,
@@ -752,15 +752,6 @@ const BlockPage: React.FC = () => {
                             scanData.scan_report.multi_file_scan_details
                           }
                           refetch={refetch}
-                        />
-                      ) : scanData.scan_report.scan_details &&
-                        scanData.scan_report.scan_summary ? (
-                        <Result
-                          details_enabled={scanData.scan_report.details_enabled}
-                          profileData={profile}
-                          scanSummary={scanData.scan_report.scan_summary}
-                          scanDetails={scanData.scan_report.scan_details}
-                          type="block"
                         />
                       ) : (
                         <Flex

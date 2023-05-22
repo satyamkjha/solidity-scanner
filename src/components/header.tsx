@@ -17,23 +17,26 @@ import {
   Box,
 } from "@chakra-ui/react";
 import { Logo } from "components/icons";
-
 import Auth from "helpers/auth";
 import ContactUs from "./contactus";
 import { CloseIcon, HamburgerIcon } from "@chakra-ui/icons";
 import API from "helpers/api";
 import { API_PATH } from "helpers/routeManager";
+import useInvalidateQueries from "hooks/invalidateQueries";
 
 export const Header: React.FC = () => {
   const { isOpen, onClose, onOpen } = useDisclosure();
   const [isDesktopView] = useMediaQuery("(min-width: 1350px)");
   const history = useHistory();
 
+  const invalidateQueries = useInvalidateQueries();
+
   const logout = async () => {
     await API.get(API_PATH.API_LOGOUT);
     Auth.deauthenticateUser();
     history.push("/signin");
-  };
+    invalidateQueries();
+  }; 
 
   return (
     <>

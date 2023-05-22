@@ -13,7 +13,6 @@ import {
   HStack,
 } from "@chakra-ui/react";
 import { Logo } from "components/icons";
-import Auth from "helpers/auth";
 
 export default function PaymentSucess() {
   const { status } = useParams<{ status: string }>();

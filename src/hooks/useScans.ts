@@ -19,5 +19,5 @@ const getScans = async (project_id: string) => {
 };
 
 export const useScans = (project_id: string) => {
-  return useQuery(["scans", project_id], () => getScans(project_id));
+  return useQuery(["scan_list", project_id], () => getScans(project_id));
 };

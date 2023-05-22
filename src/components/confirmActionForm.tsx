@@ -14,7 +14,7 @@ import {
   Divider,
 } from "@chakra-ui/react";
 
-export const ConfirmActionForm: React.FC<{
+const ConfirmActionForm: React.FC<{
   onClose(): any;
   isOpen: boolean;
   onActionConfirm: any;

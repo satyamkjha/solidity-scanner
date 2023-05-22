@@ -10,14 +10,11 @@ import {
   useMediaQuery,
 } from "@chakra-ui/react";
 import { Link } from "react-router-dom";
-
 import { CodeBlock, atomOneLight } from "react-code-blocks";
-
 import { AiOutlineCaretRight } from "react-icons/ai";
-
 import { dummyCode, dummyIssues } from "common/values";
 import { WarningTwoIcon } from "@chakra-ui/icons";
-import UpgradePackage from "./upgradePackage";
+import UpgradePackage from "../upgradePackage";
 export const TrialWall: React.FC = () => {
   return (
     <Flex w="100%" sx={{ flexDir: "column" }} h="100vh">

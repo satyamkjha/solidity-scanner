@@ -8,5 +8,5 @@ const getRecentQs = async (ref: string | null) => {
 };
 
 export const useRecentQuickScans = (ref: string | null) => {
-  return useQuery(["blocks", ref], () => getRecentQs(ref));
+  return useQuery(["recent_qs", ref], () => getRecentQs(ref));
 };

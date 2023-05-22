@@ -16,9 +16,7 @@ const getReport = async (project_id: string, report_id: string) => {
 };
 
 export const useReport = (project_id: string, report_id: string) => {
-  return useQuery(["report-detail", project_id, report_id], () =>
+  return useQuery(["report", project_id, report_id], () =>
     getReport(project_id, report_id)
   );
 };
-
-

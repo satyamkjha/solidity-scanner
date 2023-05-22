@@ -12,19 +12,21 @@ import {
   Tooltip,
   useDisclosure,
 } from "@chakra-ui/react";
-import { FilesState } from "common/types";
-import { issueActions } from "common/values";
-import { sentenceCapitalize, getAssetsURL } from "helpers/helperFunction";
+import { FilesState } from "../../common/types";
+import { issueActions } from "../../common/values";
+import MultipleFileExplorer from "./MultipleFileExplorer";
+import { sentenceCapitalize, getAssetsURL } from "../../helpers/helperFunction";
 import React, { Dispatch, SetStateAction, useEffect, useState } from "react";
 import { BiBulb, BiCodeCurly, BiComment } from "react-icons/bi";
-import { MultiFileExplorer } from "./result";
-import TrialWall from "./trialWall";
+import TrialWall from "./TrialWall";
 
 import Select from "react-select";
 import { HiOutlineDocumentText } from "react-icons/hi";
-import ConfirmActionForm from "./confirmActionForm";
+import ConfirmActionForm from "../confirmActionForm";
+import FormatOptionLabelWithImage from "../../components/FormatOptionLabelWithImage";
+import { customStylesForTakeAction } from "../../common/stylesForCustomSelect";
 
-export const DetailedResult: React.FC<{
+export const FileExplorerSection: React.FC<{
   type: "block" | "project";
   is_latest_scan: boolean;
   files: FilesState | null;
@@ -64,46 +66,7 @@ export const DetailedResult: React.FC<{
   };
 
   const onActionConfirm = (comment: string) => {
-    updateBugStatus(bugStatus, comment);
-  };
-
-  const customStyles = {
-    option: (provided: any, state: any) => ({
-      ...provided,
-      borderBottom: "1px solid #f3f3f3",
-      backgroundColor: state.isSelected
-        ? "#FFFFFF"
-        : state.isFocused
-        ? "#E6E6E6"
-        : "#FFFFFF",
-      color: "#000000",
-    }),
-    menu: (provided: any, state: any) => ({
-      ...provided,
-      color: state.selectProps.menuColor,
-      borderRadius: 10,
-      border: "0px solid #ffffff",
-      overflowY: "hidden",
-    }),
-    control: () => ({
-      // none of react-select's styles are passed to <Control />
-      width: isDesktopView ? 270 : "100%",
-      display: "flex",
-      flexDirection: "row",
-      backgroundColor: "#FAFBFC",
-      padding: 4,
-      borderRadius: 20,
-    }),
-    singleValue: (provided: any, state: any) => {
-      const opacity = state.isDisabled ? 0.3 : 1;
-      const transition = "opacity 300ms";
-
-      return { ...provided, opacity, transition };
-    },
-    container: (provided: any, state: any) => ({
-      ...provided,
-      width: isDesktopView ? "auto" : "80%",
-    }),
+    bugStatus && updateBugStatus(bugStatus, comment);
   };
 
   return (
@@ -123,18 +86,18 @@ export const DetailedResult: React.FC<{
           mt={[4, 4, 4, 1]}
           mb={[0, 0, 0, 1]}
         >
-          <HStack display={["none", "none", "none", "flex"]}>
+          <HStack display={["none", "none", "none", "flex"]} width={"100%"}>
             <Text fontWeight={600} mr={5}>
               Take Action
             </Text>
             <Select
-              formatOptionLabel={formatOptionLabel}
+              formatOptionLabel={FormatOptionLabelWithImage}
               options={issueActions}
               value={issueActions.find(
                 (item) => files?.bug_status === item.value
               )}
               placeholder="Select Action"
-              styles={customStyles}
+              styles={customStylesForTakeAction}
               isDisabled={isDisabled}
               onChange={(newValue) => {
                 if (newValue) {
@@ -212,7 +175,7 @@ export const DetailedResult: React.FC<{
         {!details_enabled ? (
           <TrialWall />
         ) : files ? (
-          <MultiFileExplorer
+          <MultipleFileExplorer
             handleTabsChange={handleTabsChange}
             tabIndex={tabIndex}
             openIssueBox={openIssueBox}
@@ -240,46 +203,33 @@ export const DetailedResult: React.FC<{
           </Flex>
         )}
       </Box>
-      <ConfirmActionForm
-        isOpen={isOpen}
-        onClose={onClose}
-        onActionConfirm={onActionConfirm}
-        addComment={true}
-        modalHeader={"Confirm Action"}
-        modelText={
-          <Text my={4} color="subtle" w={["100%"]}>
-            You are about to confirm the{" "}
-            <Text as={"span"} color="black" fontWeight={"bold"}>
-              Won’t Fix
-            </Text>{" "}
-            action on{" "}
-            <Text as={"span"} color="black" fontWeight={"bold"}>
-              {selectedBugs.length}
-            </Text>{" "}
-            bug(s).{" "}
-            <Text color="subtle" w={["100%"]}>
-              Please add your comment below and click on confirm to continue.
+      {bugStatus && (
+        <ConfirmActionForm
+          isOpen={isOpen}
+          onClose={onClose}
+          onActionConfirm={onActionConfirm}
+          addComment={true}
+          modalHeader={"Confirm Action"}
+          modelText={
+            <Text my={4} color="subtle" w={["100%"]}>
+              You are about to confirm the{" "}
+              <Text as={"span"} color="black" fontWeight={"bold"}>
+                Won’t Fix
+              </Text>{" "}
+              action on{" "}
+              <Text as={"span"} color="black" fontWeight={"bold"}>
+                {selectedBugs.length}
+              </Text>{" "}
+              bug(s).{" "}
+              <Text color="subtle" w={["100%"]}>
+                Please add your comment below and click on confirm to continue.
+              </Text>
             </Text>
-          </Text>
-        }
-      />
+          }
+        />
+      )}
     </VStack>
   );
 };
 
-const formatOptionLabel: React.FC<{
-  value: string;
-  label: string;
-  icon: string;
-}> = ({ label, icon }) => {
-  const assetsURL = getAssetsURL();
-
-  return (
-    <div style={{ display: "flex", flexDirection: "row" }}>
-      {icon !== "" && <Image mr={3} src={`${assetsURL}icons/${icon}.svg`} />}
-      <div>{label}</div>
-    </div>
-  );
-};
-
-export default DetailedResult;
+export default FileExplorerSection;
