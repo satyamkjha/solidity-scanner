@@ -31,6 +31,7 @@ import { sentenceCapitalize, getAssetsURL } from "helpers/helperFunction";
 import React, { useEffect, useRef } from "react";
 import styled from "@emotion/styled";
 import { VictoryPie } from "victory";
+import { useConfig } from "hooks/useConfig";
 
 export const PrintContainer: React.FC<{ summary_report: Report }> = ({
   summary_report,
@@ -44,7 +45,8 @@ export const PrintContainer: React.FC<{ summary_report: Report }> = ({
   }
 
   const [isDesktopView] = useMediaQuery(["(min-width: 1024px)"]);
-  const assetsURL = getAssetsURL();
+  const config: any = useConfig();
+  const assetsURL = getAssetsURL(config);
 
   let counter1 = 0;
   let counter2 = 0;

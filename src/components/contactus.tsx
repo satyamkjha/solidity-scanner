@@ -22,6 +22,7 @@ import { FaDiscord, FaEnvelope, FaTelegram } from "react-icons/fa";
 import { GiLetterBomb } from "react-icons/gi";
 import axios from "axios";
 import { getAssetsURL } from "helpers/helperFunction";
+import { useConfig } from "hooks/useConfig";
 
 export const ContactUs: React.FC<{ onClose(): any; isOpen: boolean }> = ({
   isOpen,
@@ -33,7 +34,8 @@ export const ContactUs: React.FC<{ onClose(): any; isOpen: boolean }> = ({
   const [telegram, setTelegram] = useState("");
   const [body, setBody] = useState("");
   const toast = useToast();
-  const assetsURL = getAssetsURL();
+  const config: any = useConfig();
+  const assetsURL = getAssetsURL(config);
 
   const onSubmit = () => {
     axios.defaults.headers.post["Content-Type"] = "application/json";

@@ -128,6 +128,7 @@ import ProjectCustomSettings from "components/projectCustomSettings";
 import FolderSettings from "components/projectFolderSettings";
 import { getRepoTree } from "hooks/getRepoTree";
 import { getAssetsURL } from "helpers/helperFunction";
+import { useConfig } from "hooks/useConfig";
 
 export const ProjectPage: React.FC = () => {
   const { projectId } = useParams<{ projectId: string }>();
@@ -198,7 +199,8 @@ const ScanDetails: React.FC<{
   project_branch,
   getRepoTreeReq,
 }) => {
-  const assetsURL = getAssetsURL();
+  const config: any = useConfig();
+  const assetsURL = getAssetsURL(config);
   const [isOpen, setIsOpen] = useState(false);
   const [isRescanLoading, setRescanLoading] = useState(false);
   const cancelRef = useRef<HTMLButtonElement | null>(null);

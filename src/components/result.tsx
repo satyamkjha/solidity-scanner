@@ -61,6 +61,7 @@ import { API_PATH } from "helpers/routeManager";
 import CommentForm from "./commentForm";
 import { getBugStatusNumber } from "common/functions";
 import { BsArrowsAngleExpand, BsArrowsAngleContract } from "react-icons/bs";
+import { useConfig } from "hooks/useConfig";
 type FileState = {
   issue_id: string;
   file_path: string;
@@ -1132,7 +1133,8 @@ export const MultiFileExplorer: React.FC<MultiFileExplorerProps> = ({
   setFiles,
 }) => {
   const [currentFileName, setCurrentFileName] = useState("");
-  const assetsURL = getAssetsURL();
+  const config: any = useConfig();
+  const assetsURL = getAssetsURL(config);
 
   useEffect(() => {
     setCurrentFileName(files.findings[0].file_path);

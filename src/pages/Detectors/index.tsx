@@ -38,9 +38,11 @@ import { DetectorIcon } from "components/icons";
 import { DetectorItemProp } from "common/types";
 import { detectorData } from "common/values";
 import { getAssetsURL } from "helpers/helperFunction";
+import { useConfig } from "hooks/useConfig";
 
 const DetectorItem: React.FC<{ item: DetectorItemProp }> = ({ item }) => {
-  const assetsURL = getAssetsURL();
+  const config: any = useConfig();
+  const assetsURL = getAssetsURL(config);
 
   return (
     <Flex
@@ -144,7 +146,8 @@ const Detectors: React.FC = () => {
     { title: "Upcoming Vulnerability Detectors", data: "46" },
   ];
 
-  const assetsURL = getAssetsURL();
+  const config: any = useConfig();
+  const assetsURL = getAssetsURL(config);
 
   return (
     <>

@@ -28,6 +28,7 @@ import VulnerabilityProgress from "components/VulnerabilityProgress";
 import { getAssetsURL, sentenceCapitalize } from "helpers/helperFunction";
 import React from "react";
 import styled from "@emotion/styled";
+import { useConfig } from "hooks/useConfig";
 
 export const ReportContainer: React.FC<{
   summary_report: Report;
@@ -43,7 +44,8 @@ export const ReportContainer: React.FC<{
 
   const [isDesktopView] = useMediaQuery("(min-width: 1024px)");
 
-  const assetsURL = getAssetsURL();
+  const config: any = useConfig();
+  const assetsURL = getAssetsURL(config);
 
   const pieData = (
     critical: number,

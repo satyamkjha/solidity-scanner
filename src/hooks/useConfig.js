@@ -1,8 +1,9 @@
 import { useEffect, useState, createContext, useContext } from 'react';
 import { db } from "../helpers/firebaseConfig";
 import { ref, onValue } from 'firebase/database';
+import {setGlobalConfig} from "../helpers/helperFunction"
 
-const ConfigContext = createContext(null);
+export const ConfigContext = createContext(null);
 
 export const useConfig = () => {
   return useContext(ConfigContext);
@@ -17,6 +18,7 @@ export const ConfigProvider = ({ children }) => {
       if (snapshot.exists()) {
         const data = snapshot.val();
         setConfig(data);
+        setGlobalConfig(data);
       }
     });
 

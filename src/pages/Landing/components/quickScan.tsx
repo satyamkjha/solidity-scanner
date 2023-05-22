@@ -2,9 +2,11 @@ import React from "react";
 import { Flex, Box, Text, Heading, Button, Image } from "@chakra-ui/react";
 import { getAssetsURL } from "helpers/helperFunction";
 import { Link } from "react-router-dom";
+import { useConfig } from "hooks/useConfig";
 
 export default function QuickScan() {
-  const assetsURL = getAssetsURL();
+  const config: any = useConfig();
+  const assetsURL = getAssetsURL(config);
 
   return (
     <Flex

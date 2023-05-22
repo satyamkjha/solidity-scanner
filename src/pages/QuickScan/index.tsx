@@ -59,6 +59,7 @@ import { FaEllipsisH, FaEllipsisV } from "react-icons/fa";
 import { API_PATH } from "helpers/routeManager";
 import { ThreatScoreMeter } from "components/threatScoreMeter";
 import reCAPTCHA from "helpers/reCAPTCHA";
+import { useConfig } from "hooks/useConfig";
 
 const pieData = (
   critical: number,
@@ -457,15 +458,6 @@ const QuickScan: React.FC = () => {
 
   let d = new Date();
 
-  const recaptcha1 = new reCAPTCHA(
-    process.env.REACT_APP_RECAPTCHA_SITE_KEY!,
-    "quickScan_verify"
-  );
-  const recaptcha2 = new reCAPTCHA(
-    process.env.REACT_APP_RECAPTCHA_SITE_KEY!,
-    "quickScan"
-  );
-
   const elementRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -647,7 +639,8 @@ const QuickScan: React.FC = () => {
     }
   };
 
-  const assetsURL = getAssetsURL();
+  const config: any = useConfig();
+  const assetsURL = getAssetsURL(config);
 
   return (
     <>

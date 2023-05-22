@@ -17,8 +17,10 @@ import { useReactToPrint } from "react-to-print";
 import { ReportContainer } from "./ReportContainer";
 import { DownloadIcon } from "@chakra-ui/icons";
 import { getFeatureGateConfig } from "helpers/helperFunction";
+import { useConfig } from "hooks/useConfig";
 
 export default function ReportPage() {
+  const config: any = useConfig();
   const { reportId, projectType } = useParams<{
     reportId: string;
     projectType: string;
@@ -41,7 +43,7 @@ export default function ReportPage() {
 
   return (
     <>
-      {getFeatureGateConfig().pdf_report_generation && (
+      {getFeatureGateConfig(config).pdf_report_generation && (
         <HStack
           mr={10}
           my={5}

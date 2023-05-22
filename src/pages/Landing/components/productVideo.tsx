@@ -1,9 +1,11 @@
 import React from "react";
 import { Flex, Box } from "@chakra-ui/react";
 import { getAssetsURL } from "helpers/helperFunction";
+import { useConfig } from "hooks/useConfig";
 
 export default function ProductVideo() {
-  const assetsURL = getAssetsURL();
+  const config: any = useConfig();
+  const assetsURL = getAssetsURL(config);
 
   return (
     <Flex

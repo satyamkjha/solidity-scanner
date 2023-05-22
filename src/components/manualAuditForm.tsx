@@ -31,6 +31,7 @@ import { GiLetterBomb } from "react-icons/gi";
 import axios from "axios";
 import { CredshieldsIcon, MailSent } from "./icons";
 import { getAssetsURL } from "helpers/helperFunction";
+import { useConfig } from "hooks/useConfig";
 
 export const ManualAuditForm: React.FC<{ onClose(): any; isOpen: boolean }> = ({
   isOpen,
@@ -38,7 +39,8 @@ export const ManualAuditForm: React.FC<{ onClose(): any; isOpen: boolean }> = ({
 }) => {
   const [mailSent, setMailSent] = useState(false);
   const [loading, setLoading] = useState(false);
-  const assetsURL = getAssetsURL();
+  const config: any = useConfig();
+  const assetsURL = getAssetsURL(config);
 
   const [email, setEmail] = useState("");
   const [subject, setSubject] = useState("");

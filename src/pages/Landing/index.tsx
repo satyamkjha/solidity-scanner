@@ -15,6 +15,7 @@ import Footer from "components/footer";
 import Infographics from "components/infographics";
 import { getAssetsURL } from "helpers/helperFunction";
 import LoadingSkeleton from "./components/loadingSkeleton";
+import { useConfig } from "hooks/useConfig";
 
 const QuickScan = lazy(() => import("./components/quickScan"));
 const ProductVideo = lazy(() => import("./components/productVideo"));
@@ -29,7 +30,8 @@ const SignupBox = lazy(() => import("components/signupBox"));
 export default function LandingPage() {
   const location = useLocation();
 
-  const assetsURL = getAssetsURL();
+  const config: any = useConfig();
+  const assetsURL = getAssetsURL(config);
 
   useEffect(() => {
     const query = new URLSearchParams(location.search);

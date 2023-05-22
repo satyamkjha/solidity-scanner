@@ -34,6 +34,7 @@ import { useProfile } from "hooks/useProfile";
 import ManualAuditForm from "./manualAuditForm";
 import { ArrowBackIcon, ArrowForwardIcon } from "@chakra-ui/icons";
 import { getAssetsURL } from "helpers/helperFunction";
+import { useConfig } from "hooks/useConfig";
 
 const Sidebar: React.FC<{
   isCollapsed: boolean;
@@ -43,7 +44,8 @@ const Sidebar: React.FC<{
   const { data: profileData } = useProfile();
   const { isOpen, onClose, onOpen } = useDisclosure();
   const [isDesktopView] = useMediaQuery("(min-width: 1024px)");
-  const assetsURL = getAssetsURL();
+  const config: any = useConfig();
+  const assetsURL = getAssetsURL(config);
 
   return (
     <Flex

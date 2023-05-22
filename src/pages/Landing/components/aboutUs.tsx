@@ -10,9 +10,11 @@ import {
 } from "@chakra-ui/react";
 import { teamsData } from "common/values";
 import { getAssetsURL } from "helpers/helperFunction";
+import { useConfig } from "hooks/useConfig";
 
 export default function AboutUs() {
-  const assetsURL = getAssetsURL();
+  const config: any = useConfig();
+  const assetsURL = getAssetsURL(config);
   return (
     <Box
       w="100%"

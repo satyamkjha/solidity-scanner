@@ -1,6 +1,7 @@
 import { Box, Text } from "@chakra-ui/layout";
 import React, { Component } from "react";
 import { getAssetsURL } from "helpers/helperFunction";
+import { useConfig } from "hooks/useConfig";
 
 export const ThreatScoreMeter = ({
   strokeWidth = 11,
@@ -10,7 +11,8 @@ export const ThreatScoreMeter = ({
   subtleFontSize = "xs",
   percentage,
 }) => {
-  const assetsURL = getAssetsURL();
+  const config: any = useConfig();
+  const assetsURL = getAssetsURL(config);
 
   const coordinateForCircle = diameter / 2;
   const radius = (diameter - 2 * strokeWidth) / 2;

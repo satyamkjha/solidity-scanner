@@ -23,6 +23,7 @@ import TrialWall from "./trialWall";
 import Select from "react-select";
 import { HiOutlineDocumentText } from "react-icons/hi";
 import CommentForm from "./commentForm";
+import { useConfig } from "hooks/useConfig";
 
 export const DetailedResult: React.FC<{
   type: "block" | "project";
@@ -41,7 +42,8 @@ export const DetailedResult: React.FC<{
   updateBugStatus,
   setFiles,
 }) => {
-  const assetsURL = getAssetsURL();
+  const config: any = useConfig();
+  const assetsURL = getAssetsURL(config);
   const [isDesktopView] = useMediaQuery("(min-width: 1024px)");
   const { isOpen, onClose, onOpen } = useDisclosure();
   const [bugStatus, setBugStatus] = useState<string | null>(null);

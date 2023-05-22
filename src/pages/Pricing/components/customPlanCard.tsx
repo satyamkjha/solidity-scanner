@@ -11,9 +11,11 @@ import {
 import React from "react";
 import { getAssetsURL } from "helpers/helperFunction";
 import ContactUs from "components/contactus";
+import { useConfig } from "hooks/useConfig";
 
 const CustomPlanCard = () => {
-  const assetsURL = getAssetsURL();
+  const config: any = useConfig();
+  const assetsURL = getAssetsURL(config);
   const { isOpen, onClose, onOpen } = useDisclosure();
 
   return (

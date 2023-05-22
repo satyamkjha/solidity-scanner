@@ -80,6 +80,7 @@ import { EffectCoverflow, FreeMode, Navigation, Pagination } from "swiper";
 import { profile } from "console";
 import { usePricingPlans } from "hooks/usePricingPlans";
 import { API_PATH } from "helpers/routeManager";
+import { useConfig } from "hooks/useConfig";
 
 const successColor = "#289F4C";
 const greyColor = "#BDBDBD";
@@ -1022,7 +1023,8 @@ const CurrentPlan: React.FC<{
   const successColor = "#289F4C";
   const greyColor = "#BDBDBD";
   const toast = useToast();
-  const assetsURL = getAssetsURL();
+  const config: any = useConfig();
+  const assetsURL = getAssetsURL(config);
 
   const cancelSubscription = async () => {
     const { data } = await API.delete(
@@ -1352,7 +1354,8 @@ const PricingDetails: React.FC<{ planData: Plan; selectedPlan: string }> = ({
 }) => {
   const successColor = "#289F4C";
   const greyColor = "#BDBDBD";
-  const assetsURL = getAssetsURL();
+  const config: any = useConfig();
+  const assetsURL = getAssetsURL(config);
 
   return (
     <>
@@ -1495,7 +1498,8 @@ const LatestInvoice: React.FC<{
 }> = ({ planData, selectedPlan, transactionData }) => {
   const successColor = "#289F4C";
   const greyColor = "#BDBDBD";
-  const assetsURL = getAssetsURL();
+  const config: any = useConfig();
+  const assetsURL = getAssetsURL(config);
 
   return (
     <>
@@ -1641,7 +1645,8 @@ const LatestInvoice: React.FC<{
 const CardDetails: React.FC<{
   profileData: Profile;
 }> = ({ profileData }) => {
-  const assetsURL = getAssetsURL();
+  const config: any = useConfig();
+  const assetsURL = getAssetsURL(config);
   let package_recharge_date = new Date(profileData.package_recharge_date);
   let package_end_date = new Date(profileData.package_end_date);
 

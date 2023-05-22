@@ -11,9 +11,11 @@ import {
 import { API_PATH } from "helpers/routeManager";
 import React from "react";
 import { useHistory } from "react-router-dom";
-const assetsURL = getAssetsURL();
+import { useConfig } from "hooks/useConfig";
 
 const MetaMaskLogin: React.FC = () => {
+  const config = useConfig();
+  const assetsURL = getAssetsURL(config);
   const history = useHistory();
   const MMSDK = new MetaMaskSDK({
     useDeeplink: true,
@@ -35,11 +37,13 @@ const MetaMaskLogin: React.FC = () => {
 
     //Check if Mobile
     if (getDeviceType() === "mobile")
-      return getFeatureGateConfig().metamask_integration.mobile_enabled;
+      return getFeatureGateConfig(config).metamask_integration.mobile_enabled;
 
     return (
       getBrowserName() &&
-      getFeatureGateConfig().metamask_integration.supported_browser.includes(
+      getFeatureGateConfig(
+        config
+      ).metamask_integration.supported_browser.includes(
         getBrowserName().toLowerCase()
       )
     );
@@ -71,7 +75,7 @@ const MetaMaskLogin: React.FC = () => {
   };
   return (
     <>
-      {getFeatureGateConfig().metamask_integration.enabled &&
+      {getFeatureGateConfig(config).metamask_integration.enabled &&
         checkBrowserAndDevice() && (
           <>
             <Button

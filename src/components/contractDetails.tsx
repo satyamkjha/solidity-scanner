@@ -7,7 +7,8 @@ import { blockExplorer } from "common/values";
 export const ContractDetails: React.FC<{
   scanData: any;
 }> = ({ scanData }) => {
-  const assetsURL = getAssetsURL();
+  const config: any = useConfig();
+  const assetsURL = getAssetsURL(config);
   return (
     <AccordionPanel backgroundColor={"#F4F5F6"} pb={4} mt={[4, 4, 4, 0]}>
       <Flex

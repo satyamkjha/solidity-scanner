@@ -17,6 +17,7 @@ import { FiCheck, FiFilter } from "react-icons/fi";
 import { RxDoubleArrowDown, RxDoubleArrowUp } from "react-icons/rx";
 import { VulnerabilityDistributionFilter } from "./vulnDistribution";
 import { getAssetsURL } from "helpers/helperFunction";
+import { useConfig } from "hooks/useConfig";
 
 export const DetailFilter: React.FC<{
   critical: number;
@@ -57,7 +58,8 @@ export const DetailFilter: React.FC<{
     false,
     false,
   ]);
-  const assetsURL = getAssetsURL();
+  const config: any = useConfig();
+  const assetsURL = getAssetsURL(config);
 
   const setConfidenceFilter = (conf: boolean[]) => {
     setConfidence([...conf]);

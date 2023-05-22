@@ -25,6 +25,7 @@ import InfiniteScroll from "react-infinite-scroll-component";
 import API from "helpers/api";
 import { API_PATH } from "helpers/routeManager";
 import { getAssetsURL } from "helpers/helperFunction";
+import { useConfig } from "hooks/useConfig";
 
 const Blocks: React.FC = () => {
   const [isDesktopView] = useMediaQuery("(min-width: 1920px)");
@@ -228,7 +229,8 @@ const BlockCard: React.FC<{ scan: Scan }> = ({ scan }) => {
     project_id,
   } = scan;
 
-  const assetsURL = getAssetsURL();
+  const config: any = useConfig();
+  const assetsURL = getAssetsURL(config);
   const history = useHistory();
 
   return (
