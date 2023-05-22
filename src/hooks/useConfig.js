@@ -1,7 +1,7 @@
 import { useEffect, useState, createContext, useContext } from 'react';
 import { db } from "../helpers/firebaseConfig";
 import { ref, onValue } from 'firebase/database';
-import {setGlobalConfig} from "../helpers/helperFunction"
+import { setGlobalConfig } from "../helpers/helperFunction";
 
 export const ConfigContext = createContext(null);
 
@@ -10,26 +10,36 @@ export const useConfig = () => {
 };
 
 export const ConfigProvider = ({ children }) => {
-  const [config, setConfig] = useState({});
+  const [config, setConfig] = useState(null);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    const query = ref(db, 'config');
-    const unsubscribe = onValue(query, (snapshot) => {
-      if (snapshot.exists()) {
-        const data = snapshot.val();
-        setConfig(data);
-        setGlobalConfig(data);
+    const fetchConfig = () => {
+      try {
+        const query = ref(db, 'config');
+        const snapshot = onValue(query, (snapshot) => {
+          if (snapshot.exists()) {
+            const data = snapshot.val();
+            setConfig(data);
+            setGlobalConfig(data);
+            setIsLoading(false);
+          }
+        });
+      } catch (error) {
+        console.error('Error fetching config:', error);
       }
-    });
-
-    return () => {
-      unsubscribe(); 
     };
+
+    fetchConfig();
   }, []);
+
+  if (isLoading) {
+    return <></>;
+  }
 
   return (
     <ConfigContext.Provider value={config}>
-      {config ? children : null}
+      {children}
     </ConfigContext.Provider>
   );
 };

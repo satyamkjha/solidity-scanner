@@ -11,7 +11,14 @@ const FormatOptionLabelWithImage: React.FC<{
 
   return (
     <div id={value} style={{ display: "flex", flexDirection: "row" }}>
-      {icon !== "" && <Image mr={3} src={`${assetsURL}icons/${icon}.svg`} />}
+      {icon !== "" && (
+        <Image
+          h={"20px"}
+          w={"20px"}
+          mr={3}
+          src={`${assetsURL}blockscan/${icon}.svg`}
+        />
+      )}
       <div>{label}</div>
     </div>
   );

@@ -1,40 +1,20 @@
 import React, { useEffect, useState, useMemo } from "react";
-import { useQueryClient } from "react-query";
 import { useHistory, Link as RouterLink } from "react-router-dom";
-import { getRepoTree } from "hooks/getRepoTree";
-import { useForm } from "react-hook-form";
 import {
-  Alert,
-  AlertIcon,
   Flex,
   Box,
   Text,
-  Stack,
   Button,
   InputGroup,
   InputLeftElement,
   Input,
   Icon,
   Spinner,
-  Tabs,
-  TabList,
-  TabPanels,
-  Tab,
-  TabPanel,
-  FormControl,
-  FormLabel,
-  Switch,
   HStack,
-  Link,
-  useToast,
   VStack,
   Progress,
   CloseButton,
-  FormErrorMessage,
-  Image,
-  Divider,
 } from "@chakra-ui/react";
-import { FaFileCode } from "react-icons/fa";
 import { AiOutlineProject } from "react-icons/ai";
 import {
   BlockCredit,
@@ -43,28 +23,11 @@ import {
   UploadIcon,
 } from "components/icons";
 import API from "helpers/api";
-import { useOverview } from "hooks/useOverview";
 import { useProfile } from "hooks/useProfile";
-import VulnerabilityProgress from "components/VulnerabilityProgress";
-import { useSupportedChains } from "hooks/useSupportedPlatforms";
-import { getFeatureGateConfig, getAssetsURL } from "helpers/helperFunction";
 import { useDropzone } from "react-dropzone";
-import Select from "react-select";
 import { API_PATH } from "helpers/routeManager";
-import ConfigSettings from "components/projectConfigSettings";
-import InfoSettings from "components/projectInfoSettings";
-import FolderSettings from "components/projectFolderSettings";
-import { TreeItem, TreeItemUP } from "common/types";
-import {
-  getSkipFilePaths,
-  restructureRepoTree,
-  updateCheckedValue,
-} from "helpers/fileStructure";
-import FormatOptionLabelWithImage from "components/FormatOptionLabelWithImage";
-import { customStylesForReactSelect } from "common/stylesForCustomSelect";
 
 const UploadForm: React.FC = () => {
-  const queryClient = useQueryClient();
   const history = useHistory();
   const { data: profileData } = useProfile();
 
