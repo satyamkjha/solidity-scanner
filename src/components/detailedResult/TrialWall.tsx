@@ -10,11 +10,8 @@ import {
   useMediaQuery,
 } from "@chakra-ui/react";
 import { Link } from "react-router-dom";
-
 import { CodeBlock, atomOneLight } from "react-code-blocks";
-
 import { AiOutlineCaretRight } from "react-icons/ai";
-
 import { dummyCode, dummyIssues } from "common/values";
 import { TrialWallIcon } from "components/icons";
 import { WarningTwoIcon } from "@chakra-ui/icons";

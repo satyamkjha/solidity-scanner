@@ -9,7 +9,7 @@ import {
   getAssetsURL,
 } from "helpers/helperFunction";
 import { API_PATH } from "helpers/routeManager";
-import React from "react";
+import React, { useState } from "react";
 import { useHistory } from "react-router-dom";
 const assetsURL = getAssetsURL();
 
@@ -20,10 +20,15 @@ const MetaMaskLogin: React.FC = () => {
     communicationLayerPreference: "socket",
   });
 
+  const [isLoading, setIsLoading] = useState(false);
+
   const ethereum = MMSDK.getProvider();
 
   const connect = async () => {
+    setIsLoading(true);
+    setTimeout(() => setIsLoading(false), 2000);
     await ethereum.request({ method: "eth_requestAccounts", params: [] });
+
     if (window.ethereum.selectedAddress) {
       getNonce(window.ethereum.selectedAddress);
     }
@@ -84,6 +89,7 @@ const MetaMaskLogin: React.FC = () => {
               alignSelf="center"
               px={6}
               color="#8B8B8B"
+              isLoading={isLoading}
             >
               <Image
                 mr={2}

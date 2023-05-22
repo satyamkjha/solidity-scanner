@@ -15,10 +15,10 @@ import {
 import React, { Dispatch, SetStateAction, useEffect, useState } from "react";
 import { FiCheck, FiFilter } from "react-icons/fi";
 import { RxDoubleArrowDown, RxDoubleArrowUp } from "react-icons/rx";
-import { VulnerabilityDistributionFilter } from "./vulnDistribution";
+import { VulnerabilityDistributionFilter } from "../vulnDistribution";
 import { getAssetsURL } from "helpers/helperFunction";
 
-export const DetailFilter: React.FC<{
+const DetailFilter: React.FC<{
   critical: number;
   high: number;
   medium: number;
@@ -365,3 +365,5 @@ export const DetailFilter: React.FC<{
     </Accordion>
   );
 };
+
+export default DetailFilter;
