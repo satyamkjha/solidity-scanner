@@ -60,6 +60,7 @@ import {
   restructureRepoTree,
   updateCheckedValue,
 } from "helpers/fileStructure";
+import { useConfig } from "hooks/useConfig";
 
 const Home: React.FC = () => {
   const { data } = useOverview();
@@ -844,12 +845,13 @@ const ContractForm: React.FC = () => {
     { label: string; value: string; icon: string }[]
   >(contractChain["etherscan"]);
   const queryClient = useQueryClient();
+  const config: any = useConfig();
 
   const history = useHistory();
   const { data: profileData } = useProfile();
   const { data: supportedChains } = useSupportedChains();
 
-  const platform_supported = getFeatureGateConfig().platform_supported;
+  const platform_supported = config ? config.REACT_APP_FEATURE_GATE_CONFIG.platform_supported: []
 
   const onSubmit = async () => {
     let req = {};
