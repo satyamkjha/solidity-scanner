@@ -66,6 +66,9 @@ const Profile: React.FC = () => {
       setEmailSend(data.verification_email_sent);
       if (data.verification_email_sent && !data.email_verified)
         setMetaMaskEmail(data.email);
+      setCompanyName(data.company_name);
+      setContactNumber(data.contact_number);
+      setFirstName(data.name);
     }
   }, [data]);
 
