@@ -35,8 +35,10 @@ export const Header: React.FC = () => {
     await API.get(API_PATH.API_LOGOUT);
     Auth.deauthenticateUser();
     history.push("/signin");
-    invalidateQueries();
-  }; 
+    setTimeout(() => {
+      invalidateQueries();
+    }, 1000);
+  };
 
   return (
     <>

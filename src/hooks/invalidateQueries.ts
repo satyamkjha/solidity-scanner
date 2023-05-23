@@ -12,7 +12,6 @@ const useInvalidateQueries = () => {
     queryClient.invalidateQueries("projects");
     queryClient.invalidateQueries("scan_detail");
     queryClient.invalidateQueries("scan_list");
-    queryClient.invalidateQueries("profile");
   };
   return invalidateQueries;
 };
