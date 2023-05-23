@@ -16,6 +16,7 @@ import { useState } from "react";
 import { getAssetsURL, sentenceCapitalize } from "helpers/helperFunction";
 import Auth from "helpers/auth";
 import { useHistory } from "react-router-dom";
+import { useConfig } from "hooks/useConfig";
 
 export const PricingCard: React.FC<{
   globalDuration: "monthly" | "yearly" | "on-demand";
