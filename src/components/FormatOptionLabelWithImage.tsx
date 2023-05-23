@@ -16,7 +16,7 @@ const FormatOptionLabelWithImage: React.FC<{
           h={"20px"}
           w={"20px"}
           mr={3}
-          src={`${assetsURL}blockscan/${icon}.svg`}
+          src={`${assetsURL}${icon}.svg`}
         />
       )}
       <div>{label}</div>
