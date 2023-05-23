@@ -34,9 +34,19 @@ const GlobalStyles = css`
 `;
 
 export const App: React.FC = () => {
-  const config = useConfig();
   return (
     <Suspense fallback="">
+      <ConfigProvider>
+        <AppContent />
+      </ConfigProvider>
+    </Suspense>
+  );
+};
+
+const AppContent: React.FC = () => {
+  const config = useConfig();
+  return (
+    <>
       <Helmet>
         <script
           type="text/javascript"
@@ -46,7 +56,7 @@ export const App: React.FC = () => {
           src="//js-eu1.hs-scripts.com/24889894.js"
         ></script>
       </Helmet>
-      {getFeatureGateConfig(config).load_clarity_script && (
+      {config && getFeatureGateConfig(config).load_clarity_script && (
         <Helmet>
           {process.env.REACT_APP_ENVIRONMENT === "prod" ? (
             <script type="text/javascript">
@@ -69,13 +79,11 @@ export const App: React.FC = () => {
       )}
       <QueryClientProvider client={queryClient}>
         <ChakraProvider theme={theme}>
-          <ConfigProvider>
-            <Global styles={GlobalStyles} />
-            <Routes />
-          </ConfigProvider>
+          <Global styles={GlobalStyles} />
+          <Routes />
         </ChakraProvider>
         <ReactQueryDevtools initialIsOpen={false} />
       </QueryClientProvider>
-    </Suspense>
+    </>
   );
 };
