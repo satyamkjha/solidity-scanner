@@ -61,7 +61,9 @@ const Layout: React.FC = ({ children }) => {
     if (data.status === "success") {
       Auth.deauthenticateUser();
       history.push("/signin");
-      invalidateQueries();
+      setTimeout(() => {
+        invalidateQueries();
+      }, 1000);
     }
   };
 
