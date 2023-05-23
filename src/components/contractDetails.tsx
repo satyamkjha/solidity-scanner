@@ -3,6 +3,7 @@ import { Flex, HStack, Text, Image, VStack } from "@chakra-ui/react";
 import { sentenceCapitalize, getAssetsURL } from "helpers/helperFunction";
 import React from "react";
 import { blockExplorer } from "common/values";
+import { useConfig } from "hooks/useConfig";
 
 export const ContractDetails: React.FC<{
   scanData: any;

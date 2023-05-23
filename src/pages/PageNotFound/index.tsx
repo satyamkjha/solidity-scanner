@@ -17,6 +17,7 @@ import { motion } from "framer-motion";
 import Auth from "helpers/auth";
 import { LogoIcon } from "components/icons";
 import { getAssetsURL } from "helpers/helperFunction";
+import { useConfig } from "hooks/useConfig";
 
 const CustomFlex = motion(Flex);
 
