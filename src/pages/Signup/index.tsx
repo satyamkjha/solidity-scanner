@@ -41,11 +41,13 @@ import { API_PATH } from "helpers/routeManager";
 import GoogleSignIn from "components/googleSignin";
 import { getFeatureGateConfig } from "helpers/helperFunction";
 import { getReCaptchaHeaders } from "helpers/helperFunction";
+import { useConfig } from "hooks/useConfig";
 
 const CustomFlex = motion(Flex);
 
 const SignUp: React.FC = () => {
-  const googleLoginEnabled = getFeatureGateConfig().enable_google_signin;
+  const config: any = useConfig();
+  const googleLoginEnabled = getFeatureGateConfig(config).enable_google_signin;
   const [registered, setRegistered] = useState(false);
   const [email, setEmail] = useState("");
   const passwordChecker = new RegExp("^(?=.*?[A-Za-z])(?=.*?[0-9]).{6,}$");

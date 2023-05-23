@@ -19,6 +19,8 @@ import PieChart, { ErrorResponsivePie } from "components/pieChart";
 import { Scan } from "common/types";
 import { LogoIcon, NoBugIcon, ScanErrorIcon } from "./icons";
 import ManualAuditCard from "./manualAuditCard";
+import { getAssetsURL } from "helpers/helperFunction";
+import { useConfig } from "hooks/useConfig";
 
 const pieData = (
   critical: number,
@@ -71,6 +73,8 @@ const Overview: React.FC<{
   scansRemaining?: number;
   onTabChange: any;
 }> = ({ scanData, scansRemaining, onTabChange }) => {
+  const config: any = useConfig();
+  const assetsURL = getAssetsURL(config);
   const vulnerabilityCount = Object.keys(
     scanData.multi_file_scan_summary?.issue_severity_distribution
   ).reduce(

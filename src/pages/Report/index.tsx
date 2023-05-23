@@ -29,7 +29,10 @@ export default function ReportPage() {
         </Text>
       </Flex>
       {data ? (
-        <ReportContainer summary_report={data.summary_report} />
+        <ReportContainer
+          summary_report={data.summary_report}
+          isPublicReport={false}
+        />
       ) : (
         <Container
           py={12}

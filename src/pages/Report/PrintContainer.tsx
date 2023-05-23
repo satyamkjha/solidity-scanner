@@ -27,10 +27,11 @@ import {
   ReportCoverDots,
 } from "components/icons";
 import VulnerabilityProgress from "components/VulnerabilityProgress";
-import { sentenceCapitalize } from "helpers/helperFunction";
+import { sentenceCapitalize, getAssetsURL } from "helpers/helperFunction";
 import React, { useEffect, useRef } from "react";
 import styled from "@emotion/styled";
 import { VictoryPie } from "victory";
+import { useConfig } from "hooks/useConfig";
 
 export const PrintContainer: React.FC<{ summary_report: Report }> = ({
   summary_report,
@@ -44,6 +45,8 @@ export const PrintContainer: React.FC<{ summary_report: Report }> = ({
   }
 
   const [isDesktopView] = useMediaQuery(["(min-width: 1024px)"]);
+  const config: any = useConfig();
+  const assetsURL = getAssetsURL(config);
 
   let counter1 = 0;
   let counter2 = 0;
@@ -135,7 +138,7 @@ export const PrintContainer: React.FC<{ summary_report: Report }> = ({
             null,
             null,
             null,
-            "url('/background/report_cover.png')",
+            `url('${assetsURL}background/report_cover.png')`,
           ]}
         >
           <Logo />
@@ -154,7 +157,7 @@ export const PrintContainer: React.FC<{ summary_report: Report }> = ({
             backgroundSize="cover"
             backgroundRepeat={"no-repeat"}
             backgroundImage={[
-              "url('/background/report_cover.svg')",
+              `url('${assetsURL}background/report_cover.svg')`,
               null,
               null,
               null,
@@ -1118,7 +1121,11 @@ export const PrintContainer: React.FC<{ summary_report: Report }> = ({
                   alignItems={["center"]}
                   border={["none", "none", "none", "1px solid #E6E6E6;"]}
                 >
-                  <Image height={7} width={7} src="/icons/fixed_color.svg" />
+                  <Image
+                    height={7}
+                    width={7}
+                    src={`${assetsURL}icons/fixed_color.svg`}
+                  />
                   <Text fontSize="2xl" fontWeight={"bold"} width={"100%"}>
                     {summary_report.scan_summary[0].fixed_count}
                   </Text>
@@ -1151,7 +1158,7 @@ export const PrintContainer: React.FC<{ summary_report: Report }> = ({
                   <Image
                     height={7}
                     width={7}
-                    src="/icons/false_positive_color.svg"
+                    src={`${assetsURL}icons/false_positive_color.svg`}
                   />
                   <Text fontSize="2xl" fontWeight={"bold"} width={"100%"}>
                     {summary_report.scan_summary[0].false_positive_count}
@@ -1183,7 +1190,11 @@ export const PrintContainer: React.FC<{ summary_report: Report }> = ({
                   alignItems={["center"]}
                   border={["none", "none", "none", "1px solid #E6E6E6;"]}
                 >
-                  <Image height={7} width={7} src="/icons/wont_fix_color.svg" />
+                  <Image
+                    height={7}
+                    width={7}
+                    src={`${assetsURL}icons/wont_fix_color.svg`}
+                  />
                   <Text
                     fontSize="2xl"
                     fontWeight={"bold"}
@@ -1219,7 +1230,7 @@ export const PrintContainer: React.FC<{ summary_report: Report }> = ({
                   <Image
                     height={7}
                     width={7}
-                    src="/icons/pending_fix_color.svg"
+                    src={`${assetsURL}icons/pending_fix_color.svg`}
                   />
                   <Text
                     fontSize="2xl"
@@ -1350,7 +1361,9 @@ export const PrintContainer: React.FC<{ summary_report: Report }> = ({
                     {issue.issue_name}
                   </Text>
                   <HStack width={"18%"}>
-                    <Image src={`/icons/${issue.bug_status}_color.svg`} />
+                    <Image
+                      src={`${assetsURL}icons/${issue.bug_status}_color.svg`}
+                    />
                     <Text
                       fontSize={["sm", "sm", "sm", "md"]}
                       fontWeight={"normal"}
@@ -1533,7 +1546,9 @@ export const PrintContainer: React.FC<{ summary_report: Report }> = ({
                         Action Taken
                       </Text>
                       <HStack>
-                        <Image src={`/icons/${issue.bug_status}_color.svg`} />
+                        <Image
+                          src={`${assetsURL}icons/${issue.bug_status}_color.svg`}
+                        />
                         <Text
                           fontSize="md"
                           fontWeight={"normal"}

@@ -1,15 +1,7 @@
 import React, { useEffect, useState, useRef } from "react";
 import { useQueryClient } from "react-query";
-import {
-  Switch,
-  Route,
-  Link as RouterLink,
-  useParams,
-  useHistory,
-} from "react-router-dom";
-import FileDownload from "js-file-download";
+import { Link as RouterLink, useParams, useHistory } from "react-router-dom";
 import { ArrowDownIcon } from "@chakra-ui/icons";
-
 import {
   Flex,
   keyframes,
@@ -64,15 +56,9 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@chakra-ui/react";
-import {
-  AiOutlineClockCircle,
-  AiOutlineDownload,
-  AiFillLock,
-  AiOutlineProject,
-  AiOutlineLock,
-} from "react-icons/ai";
+import { AiOutlineProject } from "react-icons/ai";
 import Overview from "components/overview";
-import Result, { MultifileResult } from "components/result";
+import MultifileResult from "components/detailedResult/MultifileResult";
 import { RescanIcon, LogoIcon, ScanErrorIcon } from "components/icons";
 import { InfoIcon } from "@chakra-ui/icons";
 import API from "helpers/api";
@@ -91,31 +77,20 @@ import {
 import { useProfile } from "hooks/useProfile";
 import {
   FaBuilding,
-  FaCalendar,
   FaCalendarAlt,
-  FaCalendarCheck,
-  FaCalendarDay,
-  FaCopy,
   FaEnvelope,
   FaFileCode,
   FaGithub,
   FaInternetExplorer,
-  FaMailBulk,
   FaRegCalendarCheck,
-  FaRegCopy,
 } from "react-icons/fa";
 import {
   CheckCircleIcon,
-  CheckIcon,
   LockIcon,
   TimeIcon,
-  ViewIcon,
   ChevronUpIcon,
   ChevronDownIcon,
 } from "@chakra-ui/icons";
-import { profile } from "console";
-import { motion } from "framer-motion";
-import { Profiler } from "inspector";
 import { monthNames } from "common/values";
 import PublishedReports from "components/publishedReports";
 import { useReports } from "hooks/useReports";
@@ -127,10 +102,12 @@ import { getPublicReport } from "hooks/usePublicReport";
 import ProjectCustomSettings from "components/projectCustomSettings";
 import FolderSettings from "components/projectFolderSettings";
 import { getRepoTree } from "hooks/getRepoTree";
+import { getAssetsURL } from "helpers/helperFunction";
+import { useConfig } from "hooks/useConfig";
 
 export const ProjectPage: React.FC = () => {
   const { projectId } = useParams<{ projectId: string }>();
-  const { data, isLoading, refetch } = useScans(projectId);
+  const { data, isLoading } = useScans(projectId);
   const [repoTree, setRepoTree] = useState<TreeItem | null>(null);
 
   const getRepoTreeReq = async () => {
@@ -197,6 +174,8 @@ const ScanDetails: React.FC<{
   project_branch,
   getRepoTreeReq,
 }) => {
+  const config: any = useConfig();
+  const assetsURL = getAssetsURL(config);
   const [isOpen, setIsOpen] = useState(false);
   const [isRescanLoading, setRescanLoading] = useState(false);
   const cancelRef = useRef<HTMLButtonElement | null>(null);
@@ -265,7 +244,7 @@ const ScanDetails: React.FC<{
       }
     );
     setRescanLoading(false);
-    queryClient.invalidateQueries(["scans", projectId]);
+    queryClient.invalidateQueries(["scan_list", projectId]);
     onClose();
     history.push(`/projects/`);
   };
@@ -499,6 +478,8 @@ const ScanDetails: React.FC<{
                   <VStack
                     mt={[2, 2, 2, 0]}
                     alignItems={["center", "center", "center", "flex-start"]}
+                    justifyContent={"flex-start"}
+                    spacing={0}
                   >
                     <Text sx={{ fontSize: "xl", fontWeight: 600 }}>
                       {project_name}
@@ -854,15 +835,6 @@ const ScanDetails: React.FC<{
                           }
                           refetch={refetch}
                         />
-                      ) : scanData.scan_report.scan_details &&
-                        scanData.scan_report.scan_summary ? (
-                        <Result
-                          details_enabled={scanData.scan_report.details_enabled}
-                          profileData={profile}
-                          scanSummary={scanData.scan_report.scan_summary}
-                          scanDetails={scanData.scan_report.scan_details}
-                          type="project"
-                        />
                       ) : (
                         <Flex
                           w="97%"
@@ -1000,7 +972,7 @@ const ScanDetails: React.FC<{
         >
           <ModalHeader
             background="rgba(82, 255, 0, 0.04)"
-            backgroundImage="url('/background/pattern.png')"
+            backgroundImage={`url('${assetsURL}background/pattern.png')`}
             textAlign={["center", "center", "center", "left"]}
             py={10}
           >
@@ -1423,7 +1395,7 @@ const ScanDetails: React.FC<{
               )}
               <Image
                 ml={"-10%"}
-                src="/common/publishreport.png"
+                src={`${assetsURL}common/publishreport.png`}
                 alt="Product screenshot"
                 w={"40%"}
                 h={"auto"}

@@ -1,6 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
-import { Link as RouterLink, useLocation, useParams } from "react-router-dom";
-import styled from "@emotion/styled";
+import React from "react";
 
 import {
   Flex,
@@ -8,25 +6,9 @@ import {
   Container,
   Text,
   Heading,
-  Button,
   Image,
-  Link,
-  useDisclosure,
   HStack,
   VStack,
-  Input,
-  CircularProgressLabel,
-  CircularProgress,
-  Divider,
-  useToast,
-  Spinner,
-  Stack,
-  useMediaQuery,
-  IconButton,
-  Menu,
-  MenuButton,
-  MenuItem,
-  MenuList,
 } from "@chakra-ui/react";
 
 import Header from "components/header";
@@ -34,13 +16,14 @@ import Footer from "components/footer";
 
 import SignupBox from "components/signupBox";
 import Infographics from "components/infographics";
-import { DetectorIcon } from "components/icons";
 import { DetectorItemProp } from "common/types";
 import { detectorData } from "common/values";
+import { useConfig } from "hooks/useConfig";
 import { getAssetsURL } from "helpers/helperFunction";
 
 const DetectorItem: React.FC<{ item: DetectorItemProp }> = ({ item }) => {
-  const assetsURL = getAssetsURL();
+  const config: any = useConfig();
+  const assetsURL = getAssetsURL(config);
 
   return (
     <Flex
@@ -137,14 +120,12 @@ const DetectorItem: React.FC<{ item: DetectorItemProp }> = ({ item }) => {
 };
 
 const Detectors: React.FC = () => {
-  const headingData = [
-    { title: "Total Vulnerability Detectors", data: "121" },
-    { title: "Attack Categories", data: "38" },
-    { title: "SWC Coverage", data: "36/36" },
-    { title: "Upcoming Vulnerability Detectors", data: "46" },
-  ];
-
-  const assetsURL = getAssetsURL();
+  const config: any = useConfig();
+  const headingData: { title: string; data: string }[] =
+    config && config.REACT_APP_ISSUES_DATA
+      ? config.REACT_APP_ISSUES_DATA.detectorPageData
+      : [];
+  const assetsURL = getAssetsURL(config);
 
   return (
     <>

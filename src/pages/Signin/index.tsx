@@ -66,8 +66,6 @@ const SignIn: React.FC = () => {
   }
   const location = useLocation();
 
-  // const env_var = JSON.parse(process.env.REACT_APP_FEATURE_GATE_CONFIG)
-
   useEffect(() => {
     const searchParams = new URLSearchParams(location.search);
     const campaign_type = searchParams.get("utm_source");

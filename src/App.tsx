@@ -15,6 +15,7 @@ import { theme } from "./theme";
 
 import { Global, css } from "@emotion/react";
 import { getFeatureGateConfig } from "helpers/helperFunction";
+import { ConfigProvider, useConfig } from "hooks/useConfig";
 
 const queryClient = new QueryClient();
 
@@ -35,6 +36,17 @@ const GlobalStyles = css`
 export const App: React.FC = () => {
   return (
     <Suspense fallback="">
+      <ConfigProvider>
+        <AppContent />
+      </ConfigProvider>
+    </Suspense>
+  );
+};
+
+const AppContent: React.FC = () => {
+  const config = useConfig();
+  return (
+    <>
       <Helmet>
         <script
           type="text/javascript"
@@ -44,8 +56,27 @@ export const App: React.FC = () => {
           src="//js-eu1.hs-scripts.com/24889894.js"
         ></script>
       </Helmet>
-      {getFeatureGateConfig().load_clarity_script && <Helmet></Helmet>}
-
+      {config && getFeatureGateConfig(config).load_clarity_script && (
+        <Helmet>
+          {process.env.REACT_APP_ENVIRONMENT === "prod" ? (
+            <script type="text/javascript">
+              {`(function(c,l,a,r,i,t,y){
+                        c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
+                        t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
+                        y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
+                    })(window, document, "clarity", "script", "gj5br0bppy");`}
+            </script>
+          ) : (
+            <script type="text/javascript">
+              {`(function(c,l,a,r,i,t,y){
+                        c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
+                        t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
+                        y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
+                    })(window, document, "clarity", "script", "gmq0xcmyv1");`}
+            </script>
+          )}
+        </Helmet>
+      )}
       <QueryClientProvider client={queryClient}>
         <ChakraProvider theme={theme}>
           <Global styles={GlobalStyles} />
@@ -53,23 +84,6 @@ export const App: React.FC = () => {
         </ChakraProvider>
         <ReactQueryDevtools initialIsOpen={false} />
       </QueryClientProvider>
-      {process.env.REACT_APP_ENVIRONMENT === "prod" ? (
-        <script type="text/javascript">
-          {`(function(c,l,a,r,i,t,y){
-                  c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
-                  t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
-                  y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
-              })(window, document, "clarity", "script", "gj5br0bppy");`}
-        </script>
-      ) : (
-        <script type="text/javascript">
-          {`(function(c,l,a,r,i,t,y){
-              c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
-              t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
-              y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
-          })(window, document, "clarity", "script", "gmq0xcmyv1");`}
-        </script>
-      )}
-    </Suspense>
+    </>
   );
 };

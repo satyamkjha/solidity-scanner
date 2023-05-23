@@ -10,12 +10,14 @@ import {
 import React from "react";
 import { useHistory } from "react-router-dom";
 import { getAssetsURL } from "helpers/helperFunction";
+import { useConfig } from "hooks/useConfig";
 
 export const SignupBox: React.FC = () => {
   const [isDesktopView] = useMediaQuery("(min-width: 1024px)");
 
   const history = useHistory();
-  const assetsURL = getAssetsURL();
+  const config: any = useConfig();
+  const assetsURL = getAssetsURL(config);
 
   return (
     <Box

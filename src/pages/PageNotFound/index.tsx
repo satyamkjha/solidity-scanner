@@ -15,17 +15,15 @@ import {
 import { motion } from "framer-motion";
 
 import Auth from "helpers/auth";
-
 import { LogoIcon } from "components/icons";
-
-import API from "helpers/api";
-import { AuthResponse } from "common/types";
-import { platform } from "os";
-import { Helmet } from "react-helmet";
+import { getAssetsURL } from "helpers/helperFunction";
 
 const CustomFlex = motion(Flex);
 
 const PageNotFound: React.FC = () => {
+  const config: any = useConfig();
+  const assetsURL = getAssetsURL(config);
+
   return (
     <>
       <CustomFlex
@@ -50,7 +48,7 @@ const PageNotFound: React.FC = () => {
         >
           <Image
             marginTop={[24, 24, 24, 10]}
-            src="/error/404.png"
+            src={`${assetsURL}common/404.png`}
             zIndex={"10"}
             alt={"404 Page Not Found"}
           />

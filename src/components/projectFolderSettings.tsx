@@ -374,8 +374,10 @@ const FolderSettings: React.FC<{
         flexDir="column"
         justifyContent="flex-start"
         alignItems="flex-start"
-        overflowX={"scroll"}
-        overflowY={"scroll"}
+        overflow="hidden"
+        _hover={{
+          overflow: "scroll",
+        }}
       >
         {isLoading ? (
           <Flex w="100%" h="100%" justifyContent="center" alignItems="center">

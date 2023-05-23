@@ -1,5 +1,7 @@
 import { Box, Text } from "@chakra-ui/layout";
 import React, { Component } from "react";
+import { getAssetsURL } from "helpers/helperFunction";
+import { useConfig } from "hooks/useConfig";
 
 export const ThreatScoreMeter = ({
   strokeWidth = 11,
@@ -9,6 +11,9 @@ export const ThreatScoreMeter = ({
   subtleFontSize = "xs",
   percentage,
 }) => {
+  const config: any = useConfig();
+  const assetsURL = getAssetsURL(config);
+
   const coordinateForCircle = diameter / 2;
   const radius = (diameter - 2 * strokeWidth) / 2;
   const circumference = Math.PI * radius;
@@ -34,7 +39,7 @@ export const ThreatScoreMeter = ({
         height={diameter / 2}
         style={{
           transform: "rotateY(180deg)",
-          backgroundImage: "url(/background/meterBg.svg)",
+          backgroundImage: `url(${assetsURL}background/meterBg.svg)`,
           backgroundPositionX: diameter * 0.1,
           backgroundPositionY: diameter * 0.1,
           backgroundSize: diameter * 0.8,

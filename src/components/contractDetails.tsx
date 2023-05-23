@@ -1,12 +1,14 @@
 import { AccordionPanel } from "@chakra-ui/accordion";
 import { Flex, HStack, Text, Image, VStack } from "@chakra-ui/react";
-import { sentenceCapitalize } from "helpers/helperFunction";
+import { sentenceCapitalize, getAssetsURL } from "helpers/helperFunction";
 import React from "react";
 import { blockExplorer } from "common/values";
 
 export const ContractDetails: React.FC<{
   scanData: any;
 }> = ({ scanData }) => {
+  const config: any = useConfig();
+  const assetsURL = getAssetsURL(config);
   return (
     <AccordionPanel backgroundColor={"#F4F5F6"} pb={4} mt={[4, 4, 4, 0]}>
       <Flex
@@ -37,7 +39,7 @@ export const ContractDetails: React.FC<{
             |
           </Text>
           <Image
-            src={`/blockscan/${scanData.scan_report.contract_platform}-scan.svg`}
+            src={`${assetsURL}blockscan/${scanData.scan_report.contract_platform}-scan.svg`}
             alt="Product screenshot"
             mx="auto"
             h={"20px"}

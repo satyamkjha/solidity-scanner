@@ -51,6 +51,12 @@ export const API_PATH = {
   API_AUTHENTICATE_INTEGRATIONS: "/api-authenticate-",
   API_DELETE_INTEGRATIONS: "/api-delete-",
 
+  //PRIVATE API
+  API_GET_ACCESS_KEY: "/private/api-get-access-key/",
+  API_CREATE_ACCESS_KEY: "/private/api-create-access-key/",
+  API_REGENERATE_ACCESS_KEY: "/private/api-regenerate-access-key/",
+  API_REVOKE_ACCESS_KEY: "/private/api-revoke-access-key/",
+
   //BILLING
   API_GET_PRICING: "/api-get-prices/",
   API_GET_ACCEPTED_COINS: "/api-get-accepted-coins/",

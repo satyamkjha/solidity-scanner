@@ -15,7 +15,7 @@ const getReports = async (project_type: string, project_id: string) => {
 
 export const useReports = (project_type: string, project_id: string) => {
   return useQuery(
-    ["reports", project_type, project_id],
+    ["report_list", project_type, project_id],
     () => getReports(project_type, project_id),
     {
       enabled: !!project_id,

@@ -16,13 +16,17 @@ export const issueActions = [
     label: "Select action",
     isDisabled: true,
   },
-  { value: "wont_fix", icon: "wont_fix", label: "Won't Fix" },
+  { value: "wont_fix", icon: "icons/wont_fix", label: "Won't Fix" },
   {
     value: "false_positive",
-    icon: "false_positive",
+    icon: "icons/false_positive",
     label: "False Positive",
   },
-  { value: "pending_fix", icon: "pending_fix", label: "Reset Bug Status" },
+  {
+    value: "pending_fix",
+    icon: "icons/pending_fix",
+    label: "Reset Bug Status",
+  },
 ];
 
 export const dummyIssues = [
@@ -239,6 +243,7 @@ export const blockScans: { [key: string]: string } = {
   buildbear: "Buildbear",
   optimism: "Optimism",
   xdc: "XDC",
+  reefscan: "Reefscan",
 };
 
 export const blockExplorer: { [key: string]: string } = {

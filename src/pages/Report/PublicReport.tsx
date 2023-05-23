@@ -17,8 +17,10 @@ import { useReactToPrint } from "react-to-print";
 import { ReportContainer } from "./ReportContainer";
 import { DownloadIcon } from "@chakra-ui/icons";
 import { getFeatureGateConfig } from "helpers/helperFunction";
+import { useConfig } from "hooks/useConfig";
 
 export default function ReportPage() {
+  const config: any = useConfig();
   const { reportId, projectType } = useParams<{
     reportId: string;
     projectType: string;
@@ -41,8 +43,14 @@ export default function ReportPage() {
 
   return (
     <>
-      {getFeatureGateConfig().pdf_report_generation && (
-        <HStack my={5} w="90%" height={"fit-content"} justifyContent="flex-end">
+      {getFeatureGateConfig(config).pdf_report_generation && (
+        <HStack
+          mr={10}
+          my={5}
+          w={["100%", "100%", "90%"]}
+          height={"fit-content"}
+          justifyContent={["center", "center", "flex-end"]}
+        >
           <Button
             variant={"accent-outline"}
             w={["250px"]}
@@ -66,7 +74,10 @@ export default function ReportPage() {
               <PrintContainer summary_report={data.summary_report} />
             </Box>
           </Box>
-          <ReportContainer summary_report={data.summary_report} />
+          <ReportContainer
+            summary_report={data.summary_report}
+            isPublicReport={true}
+          />
         </>
       ) : (
         <Container

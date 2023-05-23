@@ -37,7 +37,8 @@ export const PricingCard: React.FC<{
   const [duration, setDuration] = useState<"monthly" | "yearly" | "on-demand">(
     globalDuration
   );
-  const assetsURL = getAssetsURL();
+  const config: any = useConfig();
+  const assetsURL = getAssetsURL(config);
   const mouse = selectedPlan === plan;
 
   React.useEffect(() => {
@@ -237,7 +238,11 @@ export const PricingCard: React.FC<{
           spacing={2}
           px={7}
         >
-          <Image width="30px" height="30px" src="/pricing/coin.svg" />
+          <Image
+            width="30px"
+            height="30px"
+            src={`${assetsURL}pricing/coin.svg`}
+          />
           <Text fontSize="2xl" fontWeight={900}>
             {pricingDetails[duration][plan].scan_count}
           </Text>
@@ -263,7 +268,11 @@ export const PricingCard: React.FC<{
           spacing={2}
           px={7}
         >
-          <Image width="30px" height="30px" src="/icons/detectorIcon.svg" />
+          <Image
+            width="30px"
+            height="30px"
+            src={`${assetsURL}icons/detectorIcon.svg`}
+          />
           <Text fontSize="2xl" fontWeight={400}>
             All Detectors
           </Text>
