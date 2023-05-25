@@ -288,13 +288,15 @@ const BlockPage: React.FC = () => {
   }, [summaryReport]);
 
   const checkIfGeneratingReport = () =>
-    reportingStatus === "generating_report" ||
-    (profile &&
-      plans &&
+    profile &&
+    plans &&
+    (reportingStatus === "generating_report" ||
       (profile.actions_supported
         ? !profile.actions_supported.generate_report
-        : profile.current_package !== "expired" &&
-          !plans.pricing_data.monthly[profile.current_package].report));
+        : profile.current_package === "expired" ||
+          profile.current_package === "trial"
+        ? true
+        : !plans.pricing_data["monthly"][profile.current_package].report));
 
   return (
     <Box
@@ -473,7 +475,7 @@ const BlockPage: React.FC = () => {
                                     ? !profile.actions_supported
                                         .publishable_report
                                     : profile.current_package !== "expired" &&
-                                      !plans.pricing_data.monthly[
+                                      !plans.pricing_data["monthly"][
                                         profile.current_package
                                       ].publishable_report
                                 }
@@ -483,7 +485,7 @@ const BlockPage: React.FC = () => {
                                   ? !profile.actions_supported
                                       .publishable_report
                                   : profile.current_package !== "expired" &&
-                                    !plans.pricing_data.monthly[
+                                    !plans.pricing_data["monthly"][
                                       profile.current_package
                                     ].publishable_report) && (
                                   <LockIcon color={"accent"} size="xs" mr={3} />
@@ -623,15 +625,13 @@ const BlockPage: React.FC = () => {
                                 )}
                                 {profile.actions_supported
                                   ? !profile.actions_supported.generate_report
-                                  : profile.current_package !== "expired" &&
-                                    !plans.pricing_data.monthly[
+                                  : profile.current_package === "expired" ||
+                                    profile.current_package === "trial"
+                                  ? false
+                                  : !plans.pricing_data["monthly"][
                                       profile.current_package
                                     ].report && (
-                                      <LockIcon
-                                        color={"accent"}
-                                        size="xs"
-                                        mr={3}
-                                      />
+                                      <LockIcon color={"accent"} mr={3} />
                                     )}
                                 {reportingStatus === "generating_report"
                                   ? "Generating report..."
