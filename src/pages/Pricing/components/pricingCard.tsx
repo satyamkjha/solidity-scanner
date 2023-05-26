@@ -223,7 +223,7 @@ export const PricingCard: React.FC<{
 
         <Text
           fontSize="md"
-          mb={3}
+          mb={1}
           color="gray.400"
           fontWeight={300}
           width="100%"
@@ -235,19 +235,19 @@ export const PricingCard: React.FC<{
           width="100%"
           alignItems={"center"}
           justifyContent="flex-start"
-          mb={10}
+          mb={5}
           spacing={2}
           px={7}
         >
           <Image
-            width="30px"
-            height="30px"
+            width="25px"
+            height="25px"
             src={`${assetsURL}pricing/coin.svg`}
           />
-          <Text fontSize="2xl" fontWeight={900}>
+          <Text fontSize="xl" fontWeight={900}>
             {pricingDetails[duration][plan].scan_count}
           </Text>
-          <Text fontSize="2xl" fontWeight={400}>
+          <Text fontSize="xl" fontWeight={400}>
             Scans
           </Text>
         </HStack>

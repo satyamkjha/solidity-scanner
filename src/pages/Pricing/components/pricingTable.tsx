@@ -66,7 +66,7 @@ const PricingTable: React.FC<PricingData> = ({
         justifyContent="flex-start"
         flexDir="row"
         overflowX="scroll"
-        alignItem="flex-start"
+        alignItems="flex-start"
         width="100%"
       >
         <TableContainer width="100%" minW={"1200px"}>
@@ -80,14 +80,26 @@ const PricingTable: React.FC<PricingData> = ({
                   <Th w="12%" textAlign="center">
                     Trial
                   </Th>
-
+                  {Object.keys(pricing_data["on-demand"])
+                    .sort((a, b) => a[0].localeCompare(b[0]))
+                    .map((plan) => {
+                      if (plan !== "custom")
+                        return (
+                          <Th w="12%" textAlign="center">
+                            {pricing_data["on-demand"][plan].name}
+                          </Th>
+                        );
+                    })}
                   {Object.keys(pricing_data["monthly"])
                     .sort((a, b) => a[0].localeCompare(b[0]))
-                    .map((plan) => (
-                      <Th w="12%" textAlign="center">
-                        {pricing_data["monthly"][plan].name}
-                      </Th>
-                    ))}
+                    .map((plan) => {
+                      if (plan !== "custom")
+                        return (
+                          <Th w="12%" textAlign="center">
+                            {pricing_data["monthly"][plan].name}
+                          </Th>
+                        );
+                    })}
 
                   <Th w="12%" textAlign="center">
                     Enterprise
@@ -119,7 +131,7 @@ const PricingTable: React.FC<PricingData> = ({
                       {typeof row.ondemand !== "boolean" ? (
                         row.ondemand
                       ) : row.ondemand ? (
-                        <TickComp color="#54C0EB" />
+                        <TickComp color="#4DA560" />
                       ) : (
                         ""
                       )}
@@ -132,7 +144,7 @@ const PricingTable: React.FC<PricingData> = ({
                       {typeof row.beginner !== "boolean" ? (
                         row.beginner
                       ) : row.beginner ? (
-                        <TickComp color="#4DA560" />
+                        <TickComp color="#54C0EB" />
                       ) : (
                         ""
                       )}

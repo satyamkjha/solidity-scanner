@@ -39,7 +39,7 @@ import CustomPlanCard from "./components/customPlanCard";
 import PricingTable from "./components/pricingTable";
 import { CurlyArrowDown, CurlyArrowUp } from "components/icons";
 import { getAssetsURL } from "helpers/helperFunction";
-// import { pricing_table_data, pricing_data } from "common/values";
+import { pricing_table_data } from "common/values";
 
 const PricingPage: React.FC = () => {
   const [selectedPlan, setSelectedPlan] = useState("");
@@ -295,7 +295,7 @@ const PricingPage: React.FC = () => {
               <CustomPlanCard />
               <PricingTable
                 pricing_data={pricingDetails.pricing_data}
-                pricing_table_data={pricingDetails.pricing_table_data}
+                pricing_table_data={pricing_table_data}
               />
               <Box
                 display={"flex"}
