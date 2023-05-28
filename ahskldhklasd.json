@@ -1,0 +1,109 @@
+{
+    "summary_report": {
+        "git_commit_hash": null,
+        "issues": {
+            "SOLIDITY_FLOATING_PRAGMA": {
+                "common_comments_map": {},
+                "is_issue_description_dynamic": true,
+                "issue_details": [
+                    {
+                        "bug_hash": "34hvVkcehoLDH3fa6I-lYnrmzps=",
+                        "bug_id": "SSP_1960_2",
+                        "bug_status": "false_positive",
+                        "comment": "",
+                        "findings": [
+                            {
+                                "file_path": "/test.sol",
+                                "line_nos_end": [
+                                    2
+                                ],
+                                "line_nos_start": [
+                                    2
+                                ]
+                            }
+                        ],
+                        "issue_confidence": "0",
+                        "issue_description": "<p>Solidity source files indicate the versions of the compiler they can be compiled with using a pragma directive at the top of the solidity file. This can either be a floating pragma or a specific compiler version.<br>The contract was found to be using a floating pragma which is not considered safe as it can be compiled with all the versions described.<br>The following affected files were found to be using floating pragma: <br><code>['/test.sol'] -  ^0.8.0</code></p>",
+                        "issue_name": "USE OF FLOATING PRAGMA",
+                        "issue_remediation": "<p>It is recommended to use a fixed pragma version, as future compiler versions may handle certain language constructions in a way the developer did not foresee.<br>Using a floating pragma may introduce several vulnerabilities if compiled with an older version.<br>The developers should always use the exact Solidity compiler version when designing their contracts as it may break the changes in the future.<br>Instead of <code>^0.8.0</code> use <code>pragma solidity 0.8.18</code>, which is a stable and recommended version right now.</p>",
+                        "severity": "low"
+                    }
+                ],
+                "issue_id": "SOLIDITY_FLOATING_PRAGMA",
+                "issue_name": "USE OF FLOATING PRAGMA"
+            },
+            "SOLIDITY_OUTDATED_COMPILER_VERSION": {
+                "common_comments_map": {
+                    "test com": [
+                        "oCmRzqrFifrvX9oA7D4VvpnaWrg="
+                    ]
+                },
+                "is_issue_description_dynamic": true,
+                "issue_details": [
+                    {
+                        "bug_hash": "oCmRzqrFifrvX9oA7D4VvpnaWrg=",
+                        "bug_id": "SSP_1960_1",
+                        "bug_status": "wont_fix",
+                        "comment": "test com",
+                        "findings": [
+                            {
+                                "file_path": "/test.sol",
+                                "line_nos_end": [
+                                    2
+                                ],
+                                "line_nos_start": [
+                                    2
+                                ]
+                            }
+                        ],
+                        "issue_confidence": "2",
+                        "issue_description": "<p>Using an outdated compiler version can be problematic especially if there are publicly disclosed bugs and issues that affect the current compiler version.</p><p> The following outdated versions were detected:</p><p><code>['/test.sol']</code> - <code>^0.8.0</code></p>",
+                        "issue_name": "OUTDATED COMPILER VERSION",
+                        "issue_remediation": "<p>It is recommended to use a recent version of the Solidity compiler that should not be the most recent version, and it should not be an outdated version as well.\n Using very old versions of Solidity prevents the benefits of bug fixes and newer security checks.\n Consider using the solidity version <code>0.8.18</code>, which patches most solidity vulnerabilities. </p>",
+                        "severity": "low"
+                    }
+                ],
+                "issue_id": "SOLIDITY_OUTDATED_COMPILER_VERSION",
+                "issue_name": "OUTDATED COMPILER VERSION"
+            }
+        },
+        "project_summary_report": {
+            "git_commit_hash": null,
+            "last_project_report_update_time": "2023-05-25T10:53:21.274656",
+            "last_scan_triggered_time": "2023-05-23T06:45:12.997978",
+            "project_id": "ba6a393ba6fbe635baac69b657c5110b",
+            "project_name": "Incre",
+            "project_url": "File Scan"
+        },
+        "report_id": "5be7f71defe66404",
+        "scan_summary": [
+            {
+                "comments": {
+                    "oCmRzqrFifrvX9oA7D4VvpnaWrg=": "test com"
+                },
+                "count_files_analyzed": 1,
+                "false_positive_count": 1,
+                "fixed_count": 0,
+                "issue_severity_distribution": {
+                    "critical": 0,
+                    "gas": 0,
+                    "high": 0,
+                    "informational": 0,
+                    "low": 1,
+                    "medium": 0
+                },
+                "issues_count": 2,
+                "lines_analyzed_count": 14,
+                "pending_fix_count": 0,
+                "scan_time": "2023-05-23T06:45:12.997978",
+                "scan_time_taken": 1,
+                "scans_ran": [
+                    "static_template_based"
+                ],
+                "score": "4.29",
+                "score_v2": "71.43",
+                "wont_fix_count": 1
+            }
+        ]
+    }
+}

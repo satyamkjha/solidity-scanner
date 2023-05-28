@@ -12,6 +12,15 @@ import {
   Image,
   useMediaQuery,
   Stack,
+  Table,
+  TableCaption,
+  TableContainer,
+  Tbody,
+  Td,
+  Tfoot,
+  Th,
+  Thead,
+  Tr,
 } from "@chakra-ui/react";
 import { ResponsivePie } from "@nivo/pie";
 import { Report } from "common/types";
@@ -1358,6 +1367,181 @@ export const ReportContainer: React.FC<{
             {" "}
             &nbsp;Details{" "}
           </Text>
+        </Flex>
+
+        <Flex
+          p={5}
+          flexDir="column"
+          alignItems="flex-start"
+          justifyContent="flex-start"
+          border={"1px solid #D9D9D9;"}
+          my={5}
+          width={"100%"}
+        >
+          <Text
+            fontSize="md"
+            fontWeight={"normal"}
+            color={"gray.400"}
+            width={"100%"}
+            mb={1}
+          >
+            Issue Type
+          </Text>
+          <Text fontSize="xl" fontWeight={"bold"} mb={5} width={"100%"}>
+            INCORRECT ACCESS CONTROL
+          </Text>
+          <Flex width={"100%"} mb={3} flexWrap="wrap">
+            <VStack
+              width={["50%", "50%", "50%", "15%"]}
+              mb={[4, 4, 4, 0]}
+              alignItems="flex-start"
+            >
+              <Text
+                fontSize="md"
+                fontWeight={"normal"}
+                color={"gray.400"}
+                mb={1}
+              >
+                Severity
+              </Text>
+              <HStack>
+                <SeverityIcon size={12} variant={"critical"} />
+                <Text fontSize="lg" fontWeight={"bold"} ml={2} width={"100%"}>
+                  {sentenceCapitalize("critical")}
+                </Text>
+              </HStack>
+            </VStack>
+            <VStack
+              width={["50%", "50%", "50%", "15%"]}
+              mb={[4, 4, 4, 0]}
+              alignItems="flex-start"
+            >
+              <Text
+                fontSize="md"
+                fontWeight={"normal"}
+                color={"gray.400"}
+                mb={1}
+              >
+                Confidence
+              </Text>
+              <HStack>
+                <Text
+                  px={5}
+                  py={1}
+                  borderRadius={20}
+                  color={"#289F4C"}
+                  backgroundColor={"#CFFFB8"}
+                  fontSize="lg"
+                  fontWeight={"bold"}
+                >
+                  {"Certain"}
+                </Text>
+              </HStack>
+            </VStack>
+          </Flex>
+
+          <Divider mt={5} />
+          <HStack spacing={5} mt={5} mb={3}>
+            <Image
+              src={`${assetsURL}report/issue_description.svg`}
+              height={8}
+              width={8}
+            />
+            <Text fontSize="md" fontWeight={"bold"} width={"100%"}>
+              Issue Description
+            </Text>
+          </HStack>
+          <DescriptionWrapper>
+            <Box
+              dangerouslySetInnerHTML={{
+                __html:
+                  "<p>It is recommended to have an account existence check before making these low-level calls to confirm the presence of an external account with some valid code. Eg: using extcodesize.</p>",
+              }}
+            />
+          </DescriptionWrapper>
+          <HStack spacing={5} mt={5} mb={3}>
+            <Image
+              src={`${assetsURL}report/issue_remediation.svg`}
+              height={8}
+              width={8}
+            />
+            <Text fontSize="md" fontWeight={"bold"} width={"100%"}>
+              Issue Remediation
+            </Text>
+          </HStack>
+          <DescriptionWrapper>
+            <Box
+              dangerouslySetInnerHTML={{
+                __html:
+                  "<p>The low-level calls such as the delegatecall, call, or callcode, do not validate prior to the call if the destination account exists or not. They will always return true even if the account is non-existent, therefore, giving invalid output.</p>",
+              }}
+            />
+          </DescriptionWrapper>
+          <TableContainer
+            mt={5}
+            border="1px solid #D9D9D9"
+            borderRadius={20}
+            width="100%"
+          >
+            <Table variant="unstyled">
+              <Thead
+                backgroundColor={"#FAFAFA"}
+                color="#8A94A6"
+                fontWeight={100}
+              >
+                <Tr>
+                  <Th>Bug ID</Th>
+                  <Th>File Location</Th>
+                  <Th>Line No</Th>
+                  <Th>Action Taken</Th>
+                </Tr>
+              </Thead>
+              <Tbody>
+                <Tr fontWeight={300} borderBottom={"1px solid #D9D9D9"}>
+                  <Td w="10%">SS 95</Td>
+                  <Td w="60%">/contracts/OracleHttps/github/starkware...</Td>
+                  <Td w="15%">L106 - L122</Td>
+                  <Td w="15%">Won’t fix</Td>
+                </Tr>
+                <Tr fontWeight={300} borderBottom={"1px solid #D9D9D9"}>
+                  <Td w="10%">SS 95</Td>
+                  <Td w="60%">/contracts/OracleHttps/github/starkware...</Td>
+                  <Td w="15%">L106 - L122</Td>
+                  <Td w="15%">Won’t fix</Td>
+                </Tr>
+                <Tr fontWeight={300} borderBottom={"1px solid #D9D9D9"}>
+                  <Td w="10%">SS 95</Td>
+                  <Td w="60%">/contracts/OracleHttps/github/starkware...</Td>
+                  <Td w="15%">L106 - L122</Td>
+                  <Td w="15%">Won’t fix</Td>
+                </Tr>
+                <Tr fontWeight={300} borderBottom={"1px solid #D9D9D9"}>
+                  <Td w="10%">SS 95</Td>
+                  <Td w="60%">/contracts/OracleHttps/github/starkware...</Td>
+                  <Td w="15%">L106 - L122</Td>
+                  <Td w="15%">Won’t fix</Td>
+                </Tr>
+              </Tbody>
+            </Table>
+          </TableContainer>
+
+          {/* {issue.comment !== "" && issue.bug_status === "wont_fix" && (
+            <>
+              <HStack spacing={5} mt={10} mb={5}>
+                <Image
+                  src={`${assetsURL}report/comment.svg`}
+                  height={8}
+                  width={8}
+                />
+                <Text fontSize="md" fontWeight={"bold"} width={"100%"}>
+                  Comments
+                </Text>
+              </HStack>
+              <Text fontWeight={300} fontSize={"16px"} wordBreak="break-all">
+                {issue.comment}
+              </Text>
+            </>
+          )} */}
         </Flex>
 
         {Object.keys(summary_report.issues).map((key, index) =>
