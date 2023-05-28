@@ -8,6 +8,7 @@ import {
   Image,
   Flex,
   Box,
+  VStack,
 } from "@chakra-ui/react";
 import { Plan } from "common/types";
 import { CurlyArrowBlue } from "components/icons";
@@ -17,6 +18,7 @@ import { getAssetsURL, sentenceCapitalize } from "helpers/helperFunction";
 import Auth from "helpers/auth";
 import { useHistory } from "react-router-dom";
 import { useConfig } from "hooks/useConfig";
+import { pricing_card_description_data } from "common/values";
 
 export const PricingCard: React.FC<{
   globalDuration: "monthly" | "yearly" | "on-demand";
@@ -86,10 +88,10 @@ export const PricingCard: React.FC<{
           boxShadow: "0px 4px 24px rgba(0, 0, 0, 0.1)",
           bg: "#FFFFFF",
           w: "100%",
-          h: mouse ? "750px" : "700px",
-          transition: "height 0.25s",
+          h: mouse ? "800px" : "750px",
+          transition: "height 0.5s",
           border: mouse ? "3px solid  #3300FF" : "none",
-          py: 7,
+          py: 4,
           borderRadius: 20,
           backgroundColor: "#FFFFFF",
           background: `url('${assetsURL}pricing/card_bg_${
@@ -109,16 +111,16 @@ export const PricingCard: React.FC<{
           width="100%"
           alignItems={"center"}
           justifyContent="space-between"
-          mb={8}
+          mb={3}
           pl={7}
         >
           <HStack justifyContent="flex-start">
             <Image
-              width="50px"
-              height="50px"
+              width="35px"
+              height="35px"
               src={`${assetsURL}pricing/${plan}-heading.svg`}
             />
-            <Text fontSize="3xl" fontWeight={500}>
+            <Text fontSize="2xl" fontWeight={500}>
               {sentenceCapitalize(pricingDetails[duration][plan].name)}
             </Text>
           </HStack>
@@ -127,11 +129,10 @@ export const PricingCard: React.FC<{
           )}
         </HStack>
         <Text
-          height="140px"
-          mb={5}
+          height="150px"
           w="100%"
           textAlign={"left"}
-          fontSize="lg"
+          fontSize="sm"
           fontWeight={300}
           px={7}
         >
@@ -150,15 +151,15 @@ export const PricingCard: React.FC<{
             w="100%"
             justifyContent={"flex-start"}
             alignItems={"flex-end"}
-            mb={3}
+            mb={1}
           >
-            <Heading fontSize="4xl" lineHeight="title" fontWeight={900}>
+            <Heading fontSize="2xl" lineHeight="title" fontWeight={900}>
               {`$ ${pricingDetails[duration][plan].amount}`}
             </Heading>
-            <Text fontSize="4xl" fontWeight={300}>
+            <Text fontSize="2xl" fontWeight={300}>
               /
             </Text>
-            <Text mb={2} fontSize="lg" fontWeight={300}>
+            <Text mb={1} fontSize="md" fontWeight={300}>
               {duration}
             </Text>
           </Flex>
@@ -222,7 +223,7 @@ export const PricingCard: React.FC<{
         </Flex>
 
         <Text
-          fontSize="md"
+          fontSize="sm"
           mb={1}
           color="gray.400"
           fontWeight={300}
@@ -240,44 +241,65 @@ export const PricingCard: React.FC<{
           px={7}
         >
           <Image
-            width="25px"
-            height="25px"
+            width="20px"
+            height="20px"
             src={`${assetsURL}pricing/coin.svg`}
           />
-          <Text fontSize="xl" fontWeight={900}>
+          <Text fontSize="lg" fontWeight={900}>
             {pricingDetails[duration][plan].scan_count}
           </Text>
-          <Text fontSize="xl" fontWeight={400}>
+          <Text fontSize="lg" fontWeight={400}>
             Scans
           </Text>
         </HStack>
-        <Text
-          fontSize="md"
-          mb={3}
-          color="gray.400"
-          fontWeight={300}
-          width="100%"
-          px={7}
-        >
-          Vulnerability Detectors coverage
-        </Text>
-        <HStack
-          width="100%"
-          alignItems={"center"}
-          justifyContent="flex-start"
-          mb={10}
-          spacing={2}
-          px={7}
-        >
-          <Image
-            width="30px"
-            height="30px"
-            src={`${assetsURL}icons/detectorIcon.svg`}
-          />
-          <Text fontSize="2xl" fontWeight={400}>
-            All Detectors
-          </Text>
-        </HStack>
+        {pricing_card_description_data.map((item) => (
+          <VStack
+            width="100%"
+            pl={7}
+            alignItems={"flex-start"}
+            mb={4}
+            spacing={0}
+            opacity={
+              item.key === "detector"
+                ? 1
+                : item.key === "github" || item.key === "actions"
+                ? pricingDetails[duration][plan].github
+                  ? 1
+                  : 0.5
+                : item.key === "report" || item.key === "private"
+                ? pricingDetails[duration][plan].publishable_report
+                  ? 1
+                  : 0.5
+                : 0.5
+            }
+          >
+            <Text
+              fontSize="sm"
+              color="gray.400"
+              textAlign={"left"}
+              fontWeight={300}
+              width="100%"
+            >
+              {item.description}
+            </Text>
+            <HStack
+              width="100%"
+              alignItems={"center"}
+              justifyContent="flex-start"
+              spacing={2}
+            >
+              <Image
+                width="20px"
+                height="20px"
+                src={`${assetsURL}${item.icon}`}
+              />
+              <Text fontSize="lg" fontWeight={400}>
+                {item.title}
+              </Text>
+            </HStack>
+          </VStack>
+        ))}
+
         <Button
           width="200px"
           mx="auto"
@@ -292,7 +314,7 @@ export const PricingCard: React.FC<{
             }
           }}
         >
-          {mouse ? "Select" : "Choose"} Plan
+          {mouse ? "Buy Now" : "Choose Plan"}
         </Button>
       </Flex>
     </GridItem>

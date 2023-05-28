@@ -867,6 +867,39 @@ export const pricing_table_data = [
   },
 ];
 
+export const pricing_card_description_data = [
+  {
+    key: "detector",
+    title: "All Detectors",
+    description: "Vulnerability Detectors coverage",
+    icon: "detectors/detectorIcon.svg",
+  },
+  {
+    key: "github",
+    title: "Private Github",
+    description: "Private Github",
+    icon: "pricing/pricing_card_icons/github.svg",
+  },
+  {
+    key: "actions",
+    title: "Github Actions",
+    description: "Github Actions",
+    icon: "pricing/pricing_card_icons/actions.svg",
+  },
+  {
+    key: "report",
+    title: "Publish Reports",
+    description: "Generate and Publish report",
+    icon: "pricing/pricing_card_icons/report.svg",
+  },
+  {
+    key: "private",
+    title: "API Access",
+    description: "Private API Access",
+    icon: "pricing/pricing_card_icons/private.svg",
+  },
+];
+
 export const pricing_data = {
   "on-demand": {
     "on-demand": {
