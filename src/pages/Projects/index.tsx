@@ -74,7 +74,7 @@ const Projects: React.FC = () => {
         )
       ) {
         intervalId = setInterval(async () => {
-          setPagination({ pageNo: 1, perPageCount: projectList.length });
+          setPagination({ pageNo: 1, perPageCount: pagination.perPageCount });
           if (
             projectList &&
             projectList.every(
