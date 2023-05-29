@@ -1,5 +1,5 @@
 import React from "react";
-import { Box, Button, Stack } from "@chakra-ui/react";
+import { Box, Button, Stack, useMediaQuery } from "@chakra-ui/react";
 import {
   ChevronLeftIcon,
   ChevronRightIcon,
@@ -12,6 +12,9 @@ const PaginationNav: React.FC<{
   totalPages: number;
   onPageChange: any;
 }> = ({ currentPage, totalPages, onPageChange }) => {
+  const [isDesktopView] = useMediaQuery("(min-width: 1024px)");
+  const no_pages_to_display = isDesktopView ? 3 : 2;
+
   const handlePageChange = (page: number) => {
     if (page >= 1 && page <= totalPages) {
       onPageChange(page);
@@ -20,9 +23,9 @@ const PaginationNav: React.FC<{
 
   const onEllipsisClick = (action: string) => {
     if (action === "next") {
-      handlePageChange(Math.min(currentPage + 3, totalPages));
+      handlePageChange(Math.min(currentPage + no_pages_to_display, totalPages));
     } else if (action === "previous") {
-      handlePageChange(Math.max(currentPage - 3, 1));
+      handlePageChange(Math.max(currentPage - no_pages_to_display, 1));
     }
   };
 
@@ -38,7 +41,9 @@ const PaginationNav: React.FC<{
             color={i === currentPage ? "black" : "subtle"}
             bgColor={"white"}
             borderRadius={"8px"}
-            padding={4}
+            padding={[0, 0, 4]}
+            minW={[8, 8, 8, 10]}
+            h={[8, 8, 8, 10]}
             onClick={() => handlePageChange(i)}
           >
             {i}
@@ -46,8 +51,8 @@ const PaginationNav: React.FC<{
         );
       }
     } else {
-      if (currentPage <= 2) {
-        for (let i = 1; i <= 3; i++) {
+      if (currentPage <= no_pages_to_display - 1) {
+        for (let i = 1; i <= no_pages_to_display; i++) {
           buttons.push(
             <Button
               key={i}
@@ -55,7 +60,9 @@ const PaginationNav: React.FC<{
               color={i === currentPage ? "black" : "subtle"}
               bgColor={"white"}
               borderRadius={"8px"}
-              padding={4}
+              padding={[0, 0, 4]}
+              minW={[8, 8, 8, 10]}
+              h={[8, 8, 8, 10]}
               onClick={() => handlePageChange(i)}
             >
               {i}
@@ -69,7 +76,9 @@ const PaginationNav: React.FC<{
             color={"subtle"}
             bgColor={"white"}
             borderRadius={"8px"}
-            padding={4}
+            padding={[0, 0, 4]}
+            minW={[8, 8, 8, 10]}
+            h={[8, 8, 8, 10]}
             onClick={() => onEllipsisClick("next")}
           >
             ...
@@ -82,7 +91,9 @@ const PaginationNav: React.FC<{
             color={totalPages === currentPage ? "black" : "subtle"}
             bgColor={"white"}
             borderRadius={"8px"}
-            padding={4}
+            padding={[0, 0, 4]}
+            minW={[8, 8, 8, 10]}
+            h={[8, 8, 8, 10]}
             onClick={() => handlePageChange(totalPages)}
           >
             {totalPages}
@@ -96,13 +107,19 @@ const PaginationNav: React.FC<{
             color={"subtle"}
             bgColor={"white"}
             borderRadius={"8px"}
-            padding={4}
+            padding={[0, 0, 4]}
+            minW={[8, 8, 8, 10]}
+            h={[8, 8, 8, 10]}
             onClick={() => onEllipsisClick("previous")}
           >
             ...
           </Button>
         );
-        for (let i = totalPages - 2; i <= totalPages; i++) {
+        for (
+          let i = totalPages - no_pages_to_display - 1;
+          i <= totalPages;
+          i++
+        ) {
           buttons.push(
             <Button
               key={i}
@@ -110,7 +127,9 @@ const PaginationNav: React.FC<{
               color={i === currentPage ? "black" : "subtle"}
               bgColor={"white"}
               borderRadius={"8px"}
-              padding={4}
+              padding={[0, 0, 4]}
+              minW={[8, 8, 8, 10]}
+              h={[8, 8, 8, 10]}
               onClick={() => handlePageChange(i)}
             >
               {i}
@@ -125,7 +144,9 @@ const PaginationNav: React.FC<{
             color={"subtle"}
             bgColor={"white"}
             borderRadius={"8px"}
-            padding={4}
+            padding={[0, 0, 4]}
+            minW={[8, 8, 8, 10]}
+            h={[8, 8, 8, 10]}
             onClick={() => onEllipsisClick("previous")}
           >
             ...
@@ -139,7 +160,9 @@ const PaginationNav: React.FC<{
               color={i === currentPage ? "black" : "subtle"}
               bgColor={"white"}
               borderRadius={"8px"}
-              padding={4}
+              padding={[0, 0, 4]}
+              minW={[8, 8, 8, 10]}
+              h={[8, 8, 8, 10]}
               onClick={() => handlePageChange(i)}
             >
               {i}
@@ -153,7 +176,9 @@ const PaginationNav: React.FC<{
             color={"subtle"}
             bgColor={"white"}
             borderRadius={"8px"}
-            padding={4}
+            padding={[0, 0, 4]}
+            minW={[8, 8, 8, 10]}
+            h={[8, 8, 8, 10]}
             onClick={() => onEllipsisClick("next")}
           >
             ...
@@ -166,7 +191,9 @@ const PaginationNav: React.FC<{
             color={totalPages === currentPage ? "black" : "subtle"}
             bgColor={"white"}
             borderRadius={"8px"}
-            padding={4}
+            padding={[0, 0, 4]}
+            minW={[8, 8, 8, 10]}
+            h={[8, 8, 8, 10]}
             onClick={() => handlePageChange(totalPages)}
           >
             {totalPages}
@@ -180,21 +207,27 @@ const PaginationNav: React.FC<{
 
   return (
     <Stack direction="row" align="center" spacing={3}>
+      {isDesktopView && (
+        <Button
+          variant={"outline"}
+          bgColor={"white"}
+          borderRadius={"8px"}
+          padding={0}
+          minW={[8, 8, 8, 10]}
+          h={[8, 8, 8, 10]}
+          disabled={currentPage === 1}
+          onClick={() => handlePageChange(1)}
+        >
+          <ArrowLeftIcon color={"black"} fontSize={"10px"} />
+        </Button>
+      )}
       <Button
         variant={"outline"}
         bgColor={"white"}
         borderRadius={"8px"}
         padding={0}
-        disabled={currentPage === 1}
-        onClick={() => handlePageChange(1)}
-      >
-        <ArrowLeftIcon color={"black"} fontSize={"10px"} />
-      </Button>
-      <Button
-        variant={"outline"}
-        bgColor={"white"}
-        borderRadius={"8px"}
-        padding={0}
+        minW={[8, 8, 8, 10]}
+        h={[8, 8, 8, 10]}
         disabled={currentPage === 1}
         onClick={() => handlePageChange(currentPage - 1)}
       >
@@ -208,21 +241,27 @@ const PaginationNav: React.FC<{
         bgColor={"white"}
         borderRadius={"8px"}
         padding={0}
+        minW={[8, 8, 8, 10]}
+        h={[8, 8, 8, 10]}
         disabled={currentPage === totalPages}
         onClick={() => handlePageChange(currentPage + 1)}
       >
         <ChevronRightIcon color={"black"} fontSize={"20px"} />
       </Button>
-      <Button
-        variant={"outline"}
-        bgColor={"white"}
-        borderRadius={"8px"}
-        padding={0}
-        disabled={currentPage === totalPages}
-        onClick={() => handlePageChange(totalPages)}
-      >
-        <ArrowRightIcon color={"black"} fontSize={"10px"} />
-      </Button>
+      {isDesktopView && (
+        <Button
+          variant={"outline"}
+          bgColor={"white"}
+          borderRadius={"8px"}
+          padding={0}
+          minW={[8, 8, 8, 10]}
+          h={[8, 8, 8, 10]}
+          disabled={currentPage === totalPages}
+          onClick={() => handlePageChange(totalPages)}
+        >
+          <ArrowRightIcon color={"black"} fontSize={"10px"} />
+        </Button>
+      )}
     </Stack>
   );
 };
