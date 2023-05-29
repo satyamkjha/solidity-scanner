@@ -47,6 +47,8 @@ export const PrintContainer: React.FC<{ summary_report: Report }> = ({
   const [isDesktopView] = useMediaQuery(["(min-width: 1024px)"]);
   const config: any = useConfig();
   const assetsURL = getAssetsURL(config);
+  const no_of_vuln_detectors =
+    config && config.REACT_APP_ISSUES_DATA.no_of_vuln_detectors;
 
   let counter1 = 0;
   let counter2 = 0;
@@ -282,8 +284,8 @@ export const PrintContainer: React.FC<{ summary_report: Report }> = ({
             finds vulnerabilities ranging from minor gas optimizations to major
             vulnerabilities leading to the loss of funds. The coverage scope
             pays attention to all the informational and critical vulnerabilities
-            with over (100+) modules. The scanning and auditing process covers
-            the following areas:{" "}
+            with over ({no_of_vuln_detectors}+) modules. The scanning and
+            auditing process covers the following areas:{" "}
           </Text>
 
           <Text fontSize="lg" fontWeight={"300"} mt={4} mb={4}>
