@@ -46,6 +46,8 @@ export const ReportContainer: React.FC<{
 
   const config: any = useConfig();
   const assetsURL = getAssetsURL(config);
+  const no_of_vuln_detectors =
+    config && config.REACT_APP_ISSUES_DATA.no_of_vuln_detectors;
 
   const pieData = (
     critical: number,
@@ -277,8 +279,8 @@ export const ReportContainer: React.FC<{
           vulnerabilities ranging from minor gas optimizations to major
           vulnerabilities leading to the loss of funds. The coverage scope pays
           attention to all the informational and critical vulnerabilities with
-          over (100+) modules. The scanning and auditing process covers the
-          following areas:{" "}
+          over ({no_of_vuln_detectors}+) modules. The scanning and auditing
+          process covers the following areas:{" "}
         </Text>
 
         <Text fontSize="lg" fontWeight={"300"} mt={4} mb={4}>
