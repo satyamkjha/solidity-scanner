@@ -66,7 +66,9 @@ export const ThreatScoreMeter = ({
           r={radius}
           fill="none"
           stroke={
-            percentage > 80
+            !percentage
+              ? ""
+              : percentage > 80
               ? "#68C78E"
               : percentage > 50
               ? "#FFC661"
