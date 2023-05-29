@@ -45,7 +45,7 @@ import Footer from "components/footer";
 import ContactUs from "components/contactus";
 import Select from "react-select";
 import API from "helpers/api";
-import { QuickScanResult, RecentQSItem } from "common/types";
+import { QuickScanResult, RecentQSItem, Pagination, Page } from "common/types";
 import { sentenceCapitalize } from "helpers/helperFunction";
 import PieChart from "components/pieChart";
 import { ArrowForwardIcon, ExternalLinkIcon } from "@chakra-ui/icons";
@@ -59,6 +59,7 @@ import { API_PATH } from "helpers/routeManager";
 import { ThreatScoreMeter } from "components/threatScoreMeter";
 import reCAPTCHA from "helpers/reCAPTCHA";
 import { useConfig } from "hooks/useConfig";
+import PaginationNav from "components/common/PaginationNav";
 
 const pieData = (
   critical: number,
@@ -451,6 +452,10 @@ const QuickScan: React.FC = () => {
   const location = useLocation();
   const query = new URLSearchParams(location.search);
   const ref = query.get("ref");
+  const [pagination, setPagination] = useState<Pagination>({
+    pageNo: 1,
+    perPageCount: 10,
+  });
   const [recentScans, setRecentScans] = useState<RecentQSItem[]>([]);
   const [isRecentScansLoading, setIsRecentScansLoading] =
     useState<boolean>(false);
@@ -507,15 +512,23 @@ const QuickScan: React.FC = () => {
     }
   }, []);
 
-  const runRecentQuickScan = async (ref: string | null) => {
+  const runRecentQuickScan = async (
+    ref: string | null,
+    page: number = 1,
+    perPageCount: number = pagination.perPageCount
+  ) => {
     setIsRecentScansLoading(true);
-    let api_url = API_PATH.API_GET_LATEST_QS;
+    let api_url = `${API_PATH.API_GET_LATEST_QS}?page=${page}&per_page=${perPageCount}`;
     if (ref) {
       api_url = api_url + `?ref=${ref}`;
     }
-    const { data } = await API.get<{ scans: RecentQSItem[] }>(api_url);
+    const { data } = await API.get<{ data: RecentQSItem[]; page: Page }>(
+      api_url
+    );
     if (data) {
-      setRecentScans(data.scans);
+      setRecentScans(data.data);
+      if (!pagination.totalPages)
+        setPagination({ ...pagination, totalPages: data.page.total_pages });
     }
     setIsRecentScansLoading(false);
   };
@@ -636,6 +649,11 @@ const QuickScan: React.FC = () => {
         inline: "start",
       });
     }
+  };
+
+  const handlePageChange = (page: number) => {
+    setPagination({ ...pagination, pageNo: page });
+    runRecentQuickScan(ref, page);
   };
 
   const config: any = useConfig();
@@ -1593,7 +1611,7 @@ const QuickScan: React.FC = () => {
                     alignItems={"flex-start"}
                     spacing={4}
                   >
-                    {isRecentScansLoading ? (
+                    {isRecentScansLoading && !recentScans.length ? (
                       <Flex
                         w={"100%"}
                         alignItems={"center"}
@@ -1602,49 +1620,17 @@ const QuickScan: React.FC = () => {
                         <Spinner />
                       </Flex>
                     ) : (
-                      recentScans.map((item: any) => (
-                        <>
-                          <HStack
-                            justifyContent="flex-start"
-                            alignItems="center"
-                            w="100%"
-                            spacing={[5, 5, 4, 4]}
-                          >
-                            <Image
-                              display={["block", "block", "none"]}
-                              height={"20px"}
-                              width={"20px"}
-                              src={`${assetsURL}blockscan/${item.contract_platform}.svg`}
-                            />
-                            <Text
-                              color={"#8A94A6"}
-                              textAlign={"left"}
-                              w={["50%", "50%", "25%"]}
-                              fontSize="sm"
-                              isTruncated
-                            >
-                              {item.contract_address}
-                            </Text>
-                            <Text
-                              color={"#3300FF"}
-                              textAlign={"left"}
-                              w={["20%", "20%", "10%"]}
-                              fontSize="md"
-                              fontWeight={700}
-                            >
-                              {item.score}
-                              <Box as={"span"} color="gray.500" fontSize={"xs"}>
-                                /5
-                              </Box>
-                            </Text>
+                      <Box w="100%" position={"relative"}>
+                        {recentScans.map((item: any) => (
+                          <>
                             <HStack
-                              display={["none", "none", "flex"]}
-                              w={"20%"}
                               justifyContent="flex-start"
-                              alignItems={"center"}
-                              spacing={3}
+                              alignItems="center"
+                              w="100%"
+                              spacing={[5, 5, 4, 4]}
                             >
                               <Image
+                                display={["block", "block", "none"]}
                                 height={"20px"}
                                 width={"20px"}
                                 src={`${assetsURL}blockscan/${item.contract_platform}.svg`}
@@ -1652,103 +1638,172 @@ const QuickScan: React.FC = () => {
                               <Text
                                 color={"#8A94A6"}
                                 textAlign={"left"}
+                                w={["50%", "50%", "25%"]}
                                 fontSize="sm"
+                                isTruncated
                               >
-                                {blockScans[item.contract_platform]}
+                                {item.contract_address}
                               </Text>
-                            </HStack>
-                            <Flex w={"10%"}>
-                              {isDesktopView ? (
-                                <ThreatScoreMeter
-                                  percentage={Math.round(item.threat_score)}
-                                  diameter={85}
-                                  strokeWidth={4}
-                                  fontSize="md"
-                                  subtleFontSize="xx-small"
-                                  textMarginTop={-5}
+                              <Text
+                                color={"#3300FF"}
+                                textAlign={"left"}
+                                w={["20%", "20%", "10%"]}
+                                fontSize="md"
+                                fontWeight={700}
+                              >
+                                {item.score}
+                                <Box
+                                  as={"span"}
+                                  color="gray.500"
+                                  fontSize={"xs"}
+                                >
+                                  /5
+                                </Box>
+                              </Text>
+                              <HStack
+                                display={["none", "none", "flex"]}
+                                w={"20%"}
+                                justifyContent="flex-start"
+                                alignItems={"center"}
+                                spacing={3}
+                              >
+                                <Image
+                                  height={"20px"}
+                                  width={"20px"}
+                                  src={`${assetsURL}blockscan/${item.contract_platform}.svg`}
                                 />
-                              ) : (
                                 <Text
+                                  color={"#8A94A6"}
                                   textAlign={"left"}
-                                  fontSize="md"
-                                  fontWeight={700}
-                                  pr={2}
+                                  fontSize="sm"
                                 >
-                                  {Math.round(item.threat_score)}
-                                  <Box
-                                    as={"span"}
-                                    color="gray.500"
-                                    fontSize={"xs"}
-                                  >
-                                    /100
-                                  </Box>
+                                  {blockScans[item.contract_platform]}
                                 </Text>
-                              )}
-                            </Flex>
-                            <HStack
-                              display={["none", "none", "flex"]}
-                              w={"25%"}
-                              justifyContent="flex-start"
-                              alignItems={"center"}
-                              spacing={3}
-                              ml={4}
-                            >
-                              <Link
-                                variant="subtle-without-underline"
-                                href={item.scanner_reference_url}
-                                isExternal
-                              >
-                                <Button
-                                  fontWeight={100}
-                                  fontSize={13}
-                                  height={9}
-                                  borderColor="#000000"
-                                  variant={"outline"}
-                                  color="#000000"
-                                >
-                                  View Scan
-                                </Button>
-                              </Link>
-                              <Link href={item.contract_url} isExternal>
-                                <HStack>
+                              </HStack>
+                              <Flex w={"10%"} pt={3} pb={4}>
+                                {isDesktopView ? (
+                                  <ThreatScoreMeter
+                                    percentage={Math.round(item.threat_score)}
+                                    diameter={85}
+                                    strokeWidth={4}
+                                    fontSize="md"
+                                    subtleFontSize="xx-small"
+                                    textMarginTop={-5}
+                                  />
+                                ) : (
                                   <Text
-                                    color={"#323B4B"}
                                     textAlign={"left"}
-                                    fontSize="sm"
+                                    fontSize="md"
+                                    fontWeight={700}
+                                    pr={2}
                                   >
-                                    View Contract
+                                    {Math.round(item.threat_score)}
+                                    <Box
+                                      as={"span"}
+                                      color="gray.500"
+                                      fontSize={"xs"}
+                                    >
+                                      /100
+                                    </Box>
                                   </Text>
-                                  <ExternalLinkIcon color={"#323B4B"} />
-                                </HStack>
-                              </Link>
-                            </HStack>
-                            <Menu isLazy>
-                              <MenuButton
-                                display={["block", "block", "none"]}
-                                aria-label="Options"
+                                )}
+                              </Flex>
+                              <HStack
+                                display={["none", "none", "flex"]}
+                                w={"25%"}
+                                justifyContent="flex-start"
+                                alignItems={"center"}
+                                spacing={3}
+                                ml={4}
                               >
-                                <FaEllipsisV color={"#8A94A6"} />
-                              </MenuButton>
-                              <MenuList p={2}>
                                 <Link
+                                  variant="subtle-without-underline"
                                   href={item.scanner_reference_url}
                                   isExternal
                                 >
-                                  <MenuItem>View Scan</MenuItem>
+                                  <Button
+                                    fontWeight={100}
+                                    fontSize={13}
+                                    height={9}
+                                    borderColor="#000000"
+                                    variant={"outline"}
+                                    color="#000000"
+                                  >
+                                    View Scan
+                                  </Button>
                                 </Link>
-                                <Divider my={1} />
                                 <Link href={item.contract_url} isExternal>
-                                  <MenuItem>View Contract</MenuItem>
+                                  <HStack>
+                                    <Text
+                                      color={"#323B4B"}
+                                      textAlign={"left"}
+                                      fontSize="sm"
+                                    >
+                                      View Contract
+                                    </Text>
+                                    <ExternalLinkIcon color={"#323B4B"} />
+                                  </HStack>
                                 </Link>
-                              </MenuList>
-                            </Menu>
-                          </HStack>
-                          <Divider />
-                        </>
-                      ))
+                              </HStack>
+                              <Menu isLazy>
+                                <MenuButton
+                                  display={["block", "block", "none"]}
+                                  aria-label="Options"
+                                >
+                                  <FaEllipsisV color={"#8A94A6"} />
+                                </MenuButton>
+                                <MenuList p={2}>
+                                  <Link
+                                    href={item.scanner_reference_url}
+                                    isExternal
+                                  >
+                                    <MenuItem>View Scan</MenuItem>
+                                  </Link>
+                                  <Divider my={1} />
+                                  <Link href={item.contract_url} isExternal>
+                                    <MenuItem>View Contract</MenuItem>
+                                  </Link>
+                                </MenuList>
+                              </Menu>
+                            </HStack>
+                            <Divider />
+                          </>
+                        ))}
+                        {isRecentScansLoading && (
+                          <Flex
+                            w={"100%"}
+                            h={"100%"}
+                            position={"absolute"}
+                            top={0}
+                            left={0}
+                            alignItems={"center"}
+                            justifyContent="center"
+                            sx={{
+                              backdropFilter: "blur(2px)",
+                            }}
+                          >
+                            <Spinner />
+                          </Flex>
+                        )}
+                      </Box>
                     )}
                   </VStack>
                 </Box>
+                <Flex
+                  w={"100%"}
+                  alignItems={"center"}
+                  justifyContent="center"
+                  mt={10}
+                  mb={6}
+                >
+                  {pagination.totalPages && (
+                    <PaginationNav
+                      currentPage={pagination.pageNo}
+                      totalPages={pagination.totalPages}
+                      onPageChange={handlePageChange}
+                    />
+                  )}
+                </Flex>
               </Box>
             </Box>
           )}
