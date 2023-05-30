@@ -26,6 +26,7 @@ import {
   MenuButton,
   MenuItem,
   MenuList,
+  Tooltip,
 } from "@chakra-ui/react";
 
 import {
@@ -1033,9 +1034,9 @@ const QuickScan: React.FC = () => {
                     justifyContent="flex-start"
                     alignItems="flex-start"
                     w="100%"
-                    p={5}
+                    px={[0, 0, 0, 6]}
                     py={0}
-                    ml={4}
+                    ml={[0, 0, 20, 2]}
                     spacing={4}
                     display={["none", "none", "flex"]}
                   >
@@ -1058,7 +1059,7 @@ const QuickScan: React.FC = () => {
                     <Text
                       fontWeight={600}
                       textAlign={"left"}
-                      w={"15%"}
+                      w={"20%"}
                       fontSize="sm"
                     >
                       Blockscan
@@ -1111,8 +1112,8 @@ const QuickScan: React.FC = () => {
                           <Spinner />
                         </Flex>
                       ) : (
-                        <Box w="100%" position={"relative"}>
-                          {recentScans.map((item: any) => (
+                        <Box w="100%" px={[0, 0, 0, 4]}>
+                          {recentScans.map((item: any, index: number) => (
                             <>
                               <HStack
                                 justifyContent="flex-start"
@@ -1120,21 +1121,25 @@ const QuickScan: React.FC = () => {
                                 w="100%"
                                 spacing={[5, 5, 5, 6]}
                               >
-                                <Image
-                                  display={["block", "block", "none"]}
-                                  height={"20px"}
-                                  width={"20px"}
-                                  src={`${assetsURL}blockscan/${item.contract_platform}.svg`}
-                                />
-                                <Text
-                                  color={"#8A94A6"}
-                                  textAlign={"left"}
-                                  w={["50%", "50%", "30%"]}
-                                  fontSize="sm"
-                                  isTruncated
-                                >
-                                  {item.contract_address}
-                                </Text>
+                                {!isDesktopView && (
+                                  <Image
+                                    display={["block", "block", "none"]}
+                                    height={"20px"}
+                                    width={"20px"}
+                                    src={`${assetsURL}blockscan/${item.contract_platform}.svg`}
+                                  />
+                                )}
+                                <Tooltip label={item.contract_address}>
+                                  <Text
+                                    color={"#8A94A6"}
+                                    textAlign={"left"}
+                                    w={["50%", "50%", "30%"]}
+                                    fontSize="sm"
+                                    isTruncated
+                                  >
+                                    {item.contract_address}
+                                  </Text>
+                                </Tooltip>
                                 <Text
                                   color={"#3300FF"}
                                   textAlign={"left"}
@@ -1153,7 +1158,7 @@ const QuickScan: React.FC = () => {
                                 </Text>
                                 <HStack
                                   display={["none", "none", "flex"]}
-                                  w={"15%"}
+                                  w={"20%"}
                                   justifyContent="flex-start"
                                   alignItems={"center"}
                                   spacing={3}
@@ -1163,13 +1168,18 @@ const QuickScan: React.FC = () => {
                                     width={"20px"}
                                     src={`${assetsURL}blockscan/${item.contract_platform}.svg`}
                                   />
-                                  <Text
-                                    color={"#8A94A6"}
-                                    textAlign={"left"}
-                                    fontSize="sm"
+                                  <Tooltip
+                                    label={blockScans[item.contract_platform]}
                                   >
-                                    {blockScans[item.contract_platform]}
-                                  </Text>
+                                    <Text
+                                      color={"#8A94A6"}
+                                      textAlign={"left"}
+                                      fontSize="sm"
+                                      isTruncated
+                                    >
+                                      {blockScans[item.contract_platform]}
+                                    </Text>
+                                  </Tooltip>
                                 </HStack>
                                 <Flex w={"15%"} pt={3} pb={4}>
                                   {isDesktopView ? (
@@ -1199,12 +1209,11 @@ const QuickScan: React.FC = () => {
                                     </Text>
                                   )}
                                 </Flex>
-                                <HStack
-                                  display={["none", "none", "flex"]}
+                                <Flex
+                                  display={["none", "none", "none", "flex"]}
                                   w={"25%"}
                                   justifyContent="flex-start"
                                   alignItems={"center"}
-                                  spacing={3}
                                   ml={4}
                                 >
                                   <Link
@@ -1223,7 +1232,11 @@ const QuickScan: React.FC = () => {
                                       View Scan
                                     </Button>
                                   </Link>
-                                  <Link href={item.contract_url} isExternal>
+                                  <Link
+                                    href={item.contract_url}
+                                    isExternal
+                                    ml="8"
+                                  >
                                     <HStack>
                                       <Text
                                         color={"#323B4B"}
@@ -1235,10 +1248,15 @@ const QuickScan: React.FC = () => {
                                       <ExternalLinkIcon color={"#323B4B"} />
                                     </HStack>
                                   </Link>
-                                </HStack>
+                                </Flex>
                                 <Menu isLazy>
                                   <MenuButton
-                                    display={["block", "block", "none"]}
+                                    display={[
+                                      "block",
+                                      "block",
+                                      "block",
+                                      "none",
+                                    ]}
                                     aria-label="Options"
                                   >
                                     <FaEllipsisV color={"#8A94A6"} />
@@ -1257,7 +1275,7 @@ const QuickScan: React.FC = () => {
                                   </MenuList>
                                 </Menu>
                               </HStack>
-                              <Divider />
+                              {index !== recentScans.length - 1 && <Divider />}
                             </>
                           ))}
                           {isRecentScansLoading && (
@@ -1353,7 +1371,6 @@ const QuickScan: React.FC = () => {
                           }
                         </Text>
                       </HStack>
-                      <Divider />
                     </Box>
                   </Box>
                   {scanReport.is_approved ? (
@@ -1547,7 +1564,7 @@ const QuickScan: React.FC = () => {
                       </Text>
                     </Stack>
                     <Divider />
-                    {scanReport.quick_file_scan_details.map((item) =>
+                    {scanReport.quick_file_scan_details.map((item, index) =>
                       isDesktopView ? (
                         <>
                           <HStack my={5} width={"100%"}>
@@ -1568,7 +1585,10 @@ const QuickScan: React.FC = () => {
                               </DescriptionWrapper>
                             </VStack>
                           </HStack>
-                          <Divider />
+                          {index !==
+                            scanReport.quick_file_scan_details.length - 1 && (
+                            <Divider />
+                          )}
                         </>
                       ) : (
                         <>

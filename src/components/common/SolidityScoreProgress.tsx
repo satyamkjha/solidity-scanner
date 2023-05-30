@@ -13,7 +13,7 @@ const SolidityScoreProgress: React.FC<{
 }> = ({ score, size, thickness }) => {
   return (
     <CircularProgress
-      value={(parseInt(score, 10) * 100) / 5}
+      value={(parseFloat(score) * 100) / 5}
       color="accent"
       thickness={thickness}
       size={size}
