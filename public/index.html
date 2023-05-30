@@ -189,7 +189,7 @@
       for (const keys in options) {
         fString = fString.replaceAll(
           "${" + keys + "}",
-          "<code>" + options[keys] + "</code>"
+          options[keys]
         );
       }
       return fString;

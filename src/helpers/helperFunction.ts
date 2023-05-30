@@ -61,8 +61,10 @@ export const getAssetsURL = (config?: any) => {
 };
 
 export const getReCaptchaHeaders = async (action: string) => {
-  const config = getGlobalConfig() || {};
-  const recaptcha = new reCAPTCHA(config.REACT_APP_RECAPTCHA_SITE_KEY!, action);
+  const recaptcha = new reCAPTCHA(
+    process.env.REACT_APP_RECAPTCHA_SITE_KEY!,
+    action
+  );
   const Recaptchatoken = await recaptcha.getToken();
 
   if (getFeatureGateConfig().reCAPTCHA_enabled) {
