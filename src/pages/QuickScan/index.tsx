@@ -522,7 +522,7 @@ const QuickScan: React.FC = () => {
     setIsRecentScansLoading(true);
     let api_url = `${API_PATH.API_GET_LATEST_QS}?page=${page}&per_page=${perPageCount}`;
     if (ref) {
-      api_url = api_url + `?ref=${ref}`;
+      api_url = api_url + `&ref=${ref}`;
     }
     const { data } = await API.get<{ data: RecentQSItem[]; page: Page }>(
       api_url
