@@ -9,6 +9,8 @@ export const Infographics: React.FC = () => {
 
   const config: any = useConfig();
   const assetsURL = getAssetsURL(config);
+  const no_of_vuln_detectors =
+    config && config.REACT_APP_ISSUES_DATA.no_of_vuln_detectors;
 
   return (
     <Flex
@@ -66,7 +68,7 @@ export const Infographics: React.FC = () => {
           width={"140px"}
         />
         <Text fontSize="sm" ml="2" mt={4} fontWeight={600}>
-          100+ Vulnerability Checks
+          {no_of_vuln_detectors}+ Vulnerability Checks
         </Text>
       </Flex>
       <Flex

@@ -22,22 +22,18 @@ import ContactUs from "./contactus";
 import { CloseIcon, HamburgerIcon } from "@chakra-ui/icons";
 import API from "helpers/api";
 import { API_PATH } from "helpers/routeManager";
-import useInvalidateQueries from "hooks/invalidateQueries";
+import { useQueryClient } from "react-query";
+import { onLogout } from "common/functions";
 
 export const Header: React.FC = () => {
   const { isOpen, onClose, onOpen } = useDisclosure();
   const [isDesktopView] = useMediaQuery("(min-width: 1350px)");
   const history = useHistory();
-
-  const invalidateQueries = useInvalidateQueries();
+  const queryClient = useQueryClient();
 
   const logout = async () => {
     await API.get(API_PATH.API_LOGOUT);
-    Auth.deauthenticateUser();
-    history.push("/signin");
-    setTimeout(() => {
-      invalidateQueries();
-    }, 1000);
+    onLogout(history, queryClient);
   };
 
   return (

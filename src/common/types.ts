@@ -386,6 +386,7 @@ export type Page = {
 export type Pagination = {
   pageNo: number;
   perPageCount: number;
+  totalPages?: number;
 };
 
 export type Transaction = {

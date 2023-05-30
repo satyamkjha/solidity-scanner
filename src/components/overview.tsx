@@ -21,6 +21,7 @@ import { LogoIcon, NoBugIcon, ScanErrorIcon } from "./icons";
 import ManualAuditCard from "./manualAuditCard";
 import { getAssetsURL } from "helpers/helperFunction";
 import { useConfig } from "hooks/useConfig";
+import SolidityScoreProgress from "./common/SolidityScoreProgress";
 
 const pieData = (
   critical: number,
@@ -178,31 +179,11 @@ const Overview: React.FC<{
                 alignItems={["center", "center", "center", "flex-start"]}
                 direction={["column", "column", "row"]}
               >
-                <CircularProgress
-                  value={
-                    (parseInt(scanData.multi_file_scan_summary.score, 10) *
-                      100) /
-                    5
-                  }
-                  color="accent"
-                  thickness="7px"
-                  size="85px"
-                  p={2}
-                  capIsRound
-                  background="white"
-                  borderRadius={"50%"}
-                  border={"1px solid #EEEEEE"}
-                >
-                  <CircularProgressLabel
-                    sx={{ display: "flex", justifyContent: "center" }}
-                  >
-                    <Box>
-                      <Text fontSize="22px" fontWeight={600} color="accent">
-                        {scanData.multi_file_scan_summary.score}
-                      </Text>
-                    </Box>
-                  </CircularProgressLabel>
-                </CircularProgress>
+                <SolidityScoreProgress
+                  score={scanData.multi_file_scan_summary.score}
+                  size={"85px"}
+                  thickness={"7px"}
+                />
                 <VStack alignItems="flex-start" px={4}>
                   <Text fontSize="18px" fontWeight={600} textAlign="center">
                     Your Solidity Score is
