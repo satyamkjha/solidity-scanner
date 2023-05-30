@@ -1,3 +1,6 @@
+import Auth from "helpers/auth";
+import { QueryClient } from "react-query";
+
 export const capitalize = (text: string): string => {
   return text.charAt(0).toUpperCase() + text.toLowerCase().slice(1);
 };
@@ -67,4 +70,10 @@ export const getBugStatusNumber = (bug_status: string) => {
     default:
       return 0;
   }
+};
+
+export const onLogout = (history: any, queryClient: QueryClient) => {
+  Auth.deauthenticateUser();
+  history.push("/signin");
+  queryClient.clear();
 };
