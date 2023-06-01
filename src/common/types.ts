@@ -311,7 +311,7 @@ export interface Report {
       common_comments_map: {
         [key: string] : string[]
       }
-      is_issue_description_dynamic: boolean;
+      is_issue_description_dynamic?: boolean;
       issue_id: string;
       issue_name: string;
     };

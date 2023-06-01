@@ -1369,6 +1369,7 @@ export const ReportContainer: React.FC<{
           </Text>
         </Flex>
 
+        {/* UI for new vulnerabillity Details */}
         <Flex
           p={5}
           flexDir="column"
@@ -1482,6 +1483,8 @@ export const ReportContainer: React.FC<{
             border="1px solid #D9D9D9"
             borderRadius={20}
             width="100%"
+            borderBottomWidth={0}
+            borderBottomRadius={0}
           >
             <Table variant="unstyled">
               <Thead
@@ -1543,6 +1546,7 @@ export const ReportContainer: React.FC<{
             </>
           )} */}
         </Flex>
+        {/* UI for new vulnerabillity Details */}
 
         {Object.keys(summary_report.issues).map((key, index) =>
           summary_report.issues[key].issue_details.map((issue) => (

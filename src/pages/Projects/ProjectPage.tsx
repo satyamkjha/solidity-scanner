@@ -613,11 +613,7 @@ const ScanDetails: React.FC<{
                           |
                         </Text>
                         <Menu>
-                          <MenuButton
-                            as={Button}
-                            aria-label="Options"
-                            variant="unstyled"
-                          >
+                          <MenuButton aria-label="Options">
                             {printLoading ? (
                               <Spinner size="sm" color="#3E15F4" />
                             ) : (
@@ -663,9 +659,7 @@ const ScanDetails: React.FC<{
                           ? !profile.actions_supported.generate_report
                           : profile.current_package !== "expired" &&
                             !plans.pricing_data.monthly[profile.current_package]
-                              .report && (
-                              <LockIcon color={"accent"} size="xs" mr={3} />
-                            )}
+                              .report && <LockIcon color={"accent"} mr={3} />}
                         {reportingStatus === "generating_report"
                           ? "Generating report..."
                           : reportingStatus === "not_generated"
@@ -1783,4 +1777,5 @@ const IncompleteScan: React.FC<{ message: string; scansRemaining: number }> = ({
     </>
   );
 };
+
 export default ProjectPage;
