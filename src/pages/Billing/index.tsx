@@ -872,7 +872,7 @@ const CurrentPlan: React.FC<{
   const [isOpen, setIsOpen] = useState(false);
   const onClose = () => setIsOpen(false);
 
-  const getNextPayment = (startDate: Date, nextDate: Date) => {
+  const getNextPaymentValue = (startDate: Date, nextDate: Date) => {
     const timeDifference = nextDate.getTime() - startDate.getTime();
     const totalDays = Math.ceil(timeDifference / (1000 * 3600 * 24));
     const daysTillNow = Math.ceil(
@@ -880,6 +880,13 @@ const CurrentPlan: React.FC<{
     );
 
     return (daysTillNow * 100) / totalDays;
+  };
+
+  const getNextPaymentDaysLeft = (nextDate: Date) => {
+    const timeDifference = nextDate.getTime() - new Date().getTime();
+    const daysLeft = Math.ceil(timeDifference / (1000 * 3600 * 24));
+
+    return daysLeft;
   };
 
   return (
@@ -1035,7 +1042,7 @@ const CurrentPlan: React.FC<{
                   <CircularProgress
                     value={
                       subscription &&
-                      getNextPayment(
+                      getNextPaymentValue(
                         new Date(packageRechargeDate),
                         new Date(subscription.renewal_date)
                       )
@@ -1048,7 +1055,11 @@ const CurrentPlan: React.FC<{
                   ></CircularProgress>
                   <VStack alignItems="flex-start" spacing={0} ml={3}>
                     <Text fontSize="lg" fontWeight="700">
-                      15 days
+                      {subscription &&
+                        getNextPaymentDaysLeft(
+                          new Date(subscription.renewal_date)
+                        )}
+                      &nbsp; days
                     </Text>
                     <Text fontSize="sm" fontWeight="400">
                       remaining for the {sentenceCapitalize(name)} Plan
