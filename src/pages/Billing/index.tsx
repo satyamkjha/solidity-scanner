@@ -201,26 +201,34 @@ const Billing: React.FC = () => {
             <TabPanels width={"100%"}>
               <TabPanel width={"100%"} p={0}>
                 <Flex w="100%" pt={4} px={[0, 0, 8]} mb={8}>
-                  <CurrentPlan
-                    subscription={data.subscription}
-                    isCancellable={data.is_cancellable}
-                    name={
-                      plans.pricing_data["monthly"][data.current_package].name
-                    }
-                    packageName={data.current_package}
-                    packageRechargeDate={data.package_recharge_date}
-                    packageValidity={data.package_validity}
-                    plan={plans.pricing_data["monthly"][data.current_package]}
-                  />
+                  {data.current_package !== "trial" && (
+                    <CurrentPlan
+                      subscription={data.subscription}
+                      isCancellable={data.is_cancellable}
+                      name={
+                        plans.pricing_data["monthly"][data.current_package].name
+                      }
+                      packageName={data.current_package}
+                      packageRechargeDate={data.package_recharge_date}
+                      packageValidity={data.package_validity}
+                      plan={plans.pricing_data["monthly"][data.current_package]}
+                    />
+                  )}
                 </Flex>
                 <PricingDetails pricingDetails={plans} page="billing" />
               </TabPanel>
               <TabPanel px={[0, 0, 4]} mx={[0, 0, 4]}>
-                <ScanCredits
-                  planData={plans.pricing_data["monthly"][data.current_package]}
-                  profile={data}
-                  topUpData={plans.pricing_data["topup"]["topup"]}
-                />
+                {data.current_package !== "trial" && (
+                  <ScanCredits
+                    planData={
+                      plans.pricing_data["monthly"][data.current_package]
+                    }
+                    profile={data}
+                    topUpData={
+                      plans.pricing_data["topup-beginner"]["topup-beginner"]
+                    }
+                  />
+                )}
               </TabPanel>
               <TabPanel px={[0, 0, 4]} mx={[0, 0, 4]}>
                 <TransactionListCard
