@@ -39,6 +39,12 @@ export const theme = extendTheme({
     gas: "#F795B4",
     "high-subtle": "#FFECE8",
     success: "#289F4C",
+    pro: "#FAF9FF",
+    beginner: "#EFFAFF",
+    intermediate: "#FFE0D9",
+    "pro-dark": "#806CCF",
+    "beginner-dark": "#54C0EB",
+    "intermediate-dark": "#FF5630",
     bg: {
       subtle: "#FAFBFC",
     },

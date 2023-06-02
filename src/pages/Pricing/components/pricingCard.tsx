@@ -21,6 +21,7 @@ import { useConfig } from "hooks/useConfig";
 import { pricing_card_description_data } from "common/values";
 
 export const PricingCard: React.FC<{
+  page: string;
   globalDuration: "monthly" | "yearly" | "on-demand";
   plan: string;
   pricingDetails: {
@@ -31,6 +32,7 @@ export const PricingCard: React.FC<{
   selectedPlan: string;
   setSelectedPlan: React.Dispatch<React.SetStateAction<string>>;
 }> = ({
+  page,
   globalDuration,
   plan,
   pricingDetails,
@@ -57,8 +59,6 @@ export const PricingCard: React.FC<{
         h: "fit-content",
       }}
       alignSelf={"end"}
-      display="flex"
-      flexDir="column"
       alignItems={"flex-end"}
       justifyContent="flex-end"
       onClick={() => setSelectedPlan(plan)}
@@ -88,7 +88,7 @@ export const PricingCard: React.FC<{
           boxShadow: "0px 4px 24px rgba(0, 0, 0, 0.1)",
           bg: "#FFFFFF",
           w: "100%",
-          h: mouse ? "800px" : "750px",
+          h: mouse ? "750px" : "700px",
           transition: "height 0.5s",
           border: mouse ? "3px solid  #3300FF" : "none",
           py: 4,
@@ -151,7 +151,7 @@ export const PricingCard: React.FC<{
             w="100%"
             justifyContent={"flex-start"}
             alignItems={"flex-end"}
-            mb={1}
+            my={1}
           >
             <Heading fontSize="2xl" lineHeight="title" fontWeight={900}>
               {`$ ${pricingDetails[duration][plan].amount}`}
@@ -165,22 +165,22 @@ export const PricingCard: React.FC<{
           </Flex>
           {duration !== "on-demand" && (
             <Flex
+              mt={2}
               flexDir={"row"}
               position={"relative"}
               alignItems={"flex-start"}
               justifyContent="flex-start"
-              width="250px"
             >
               <Text
-                color={duration === "monthly" ? "#000000" : "gray.400"}
+                color={duration === "monthly" ? "#000000" : "#7F7F7F"}
                 fontSize="sm"
                 fontWeight={300}
               >
-                Pay Monthly
+                Monthly
               </Text>
               <Switch
-                mx={5}
-                size="lg"
+                mx={4}
+                size="md"
                 variant={duration === "yearly" ? "accent" : "brand"}
                 isChecked={duration === "yearly"}
                 onChange={() => {
@@ -192,11 +192,11 @@ export const PricingCard: React.FC<{
                 }}
               />
               <Text
-                color={duration === "yearly" ? "#000000" : "gray.400"}
+                color={duration === "yearly" ? "#000000" : "#7F7F7F"}
                 fontSize="sm"
                 fontWeight={300}
               >
-                Pay Yearly
+                Yearly
               </Text>
               {duration === "yearly" && (
                 <Flex
@@ -204,18 +204,18 @@ export const PricingCard: React.FC<{
                   justifyContent={"flex-start"}
                   alignItems={"flex-start"}
                   position={"absolute"}
-                  top={"20px"}
-                  right={"-10px"}
+                  top={6}
+                  right={"-60px"}
                 >
-                  <Box>
-                    <CurlyArrowBlue size={50} />
-                  </Box>
-                  <Text fontSize={"md"} color="#3300FF" fontWeight={900}>
-                    You save
-                  </Text>
-                  <Heading fontSize={"xl"} color="#3300FF">
-                    $999
-                  </Heading>
+                  <CurlyArrowBlue size={50} />
+                  <Flex align="center">
+                    <Text fontSize={"sm"} color="#3300FF" fontWeight={900}>
+                      You Save&nbsp;
+                    </Text>
+                    <Heading fontSize={"xl"} color="#3300FF">
+                      $999
+                    </Heading>
+                  </Flex>
                 </Flex>
               )}
             </Flex>
@@ -223,9 +223,9 @@ export const PricingCard: React.FC<{
         </Flex>
 
         <Text
-          fontSize="sm"
+          fontSize="xs"
           mb={1}
-          color="gray.400"
+          color="#7F7F7F"
           fontWeight={300}
           width="100%"
           px={7}
@@ -245,12 +245,10 @@ export const PricingCard: React.FC<{
             height="20px"
             src={`${assetsURL}pricing/coin.svg`}
           />
-          <Text fontSize="lg" fontWeight={900}>
+          <Text fontWeight={700}>
             {pricingDetails[duration][plan].scan_count}
           </Text>
-          <Text fontSize="lg" fontWeight={400}>
-            Scans
-          </Text>
+          <Text fontWeight={500}>Scans</Text>
         </HStack>
         {pricing_card_description_data.map((item) => (
           <VStack
@@ -274,8 +272,8 @@ export const PricingCard: React.FC<{
             }
           >
             <Text
-              fontSize="sm"
-              color="gray.400"
+              fontSize="xs"
+              color="#7F7F7F"
               textAlign={"left"}
               fontWeight={300}
               width="100%"
@@ -293,7 +291,7 @@ export const PricingCard: React.FC<{
                 height="20px"
                 src={`${assetsURL}${item.icon}`}
               />
-              <Text fontSize="lg" fontWeight={400}>
+              <Text fontSize="sm" fontWeight={400}>
                 {item.title}
               </Text>
             </HStack>
@@ -314,7 +312,7 @@ export const PricingCard: React.FC<{
             }
           }}
         >
-          {mouse ? "Buy Now" : "Choose Plan"}
+          {mouse ? "Select Plan" : "Choose Plan"}
         </Button>
       </Flex>
     </GridItem>

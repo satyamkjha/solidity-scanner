@@ -1,13 +1,4 @@
 import React, { useEffect, useRef, useState } from "react";
-import { useQueryClient } from "react-query";
-import CryptoIcon from "react-crypto-icons";
-
-import { PayPalScriptProvider, PayPalButtons } from "@paypal/react-paypal-js";
-import {
-  OnApproveData,
-  OnApproveActions,
-} from "@paypal/paypal-js/types/components/buttons";
-
 import {
   Flex,
   Box,
@@ -48,6 +39,8 @@ import {
   Input,
   ModalHeader,
   useMediaQuery,
+  CircularProgress,
+  CircularProgressLabel,
 } from "@chakra-ui/react";
 import "./billing.css";
 
@@ -79,6 +72,8 @@ import { Swiper, SwiperSlide, useSwiper } from "swiper/react";
 import { usePricingPlans } from "hooks/usePricingPlans";
 import { API_PATH } from "helpers/routeManager";
 import { useConfig } from "hooks/useConfig";
+import ScanCredits from "components/billing/ScanCredits";
+import PricingDetails from "pages/Pricing/components/PricingDetails";
 
 const successColor = "#289F4C";
 const greyColor = "#BDBDBD";
@@ -126,11 +121,11 @@ const Billing: React.FC = () => {
         w: ["100%", "100%", "calc(100% - 2rem)"],
         bg: "bg.subtle",
         borderRadius: "20px",
-        py: 4,
-        px: [0, 0, 4],
+        p: 0,
+        pt: 4,
         mx: [0, 0, 4],
         my: 4,
-        minH: "78vh",
+        minH: "85vh",
       }}
     >
       <Flex
@@ -142,8 +137,13 @@ const Billing: React.FC = () => {
           my: 4,
         }}
       >
-        <Text sx={{ color: "text", fontWeight: 600, ml: [3, 3, 5] }}>
-          BILLING
+        <Text
+          fontSize={"2xl"}
+          px={[0, 0, 4]}
+          mx={[0, 0, 4]}
+          sx={{ color: "text", fontWeight: 600, ml: [3, 3, 5] }}
+        >
+          Billing & Transaction history
         </Text>
         {!data || !plans || !transactionList || !page ? (
           <Flex w="100%" h="70vh" alignItems="center" justifyContent="center">
@@ -165,6 +165,7 @@ const Billing: React.FC = () => {
               justifyContent="flex-start"
               align={"center"}
               ml={[3, 3, 5]}
+              px={[0, 0, 4]}
             >
               <TabList my={3} width={"fit-content"} zIndex={0}>
                 <Tab
@@ -177,9 +178,9 @@ const Billing: React.FC = () => {
                 <Tab
                   minW={["150px", "150px", "200px"]}
                   bgColor={"#F5F5F5"}
-                  mx={[2, 3, 5]}
+                  mr={5}
                 >
-                  Promo Code
+                  Scan Credits
                 </Tab>
                 <Tab
                   minW={["150px", "150px", "200px"]}
@@ -188,245 +189,40 @@ const Billing: React.FC = () => {
                 >
                   Transactions
                 </Tab>
+                <Tab
+                  minW={["150px", "150px", "200px"]}
+                  bgColor={"#F5F5F5"}
+                  mx={[2, 3, 5]}
+                >
+                  Promo Code
+                </Tab>
               </TabList>
             </Flex>
             <TabPanels width={"100%"}>
-              <TabPanel width={"100%"}>
-                <>
-                  {data.current_package === "trial" ||
-                  data.current_package === "expired" ||
-                  data.current_package === "ondemand" ? (
-                    <Flex
-                      justifyContent={"flex-start"}
-                      alignItems={["center", "center", "center", "flex-start"]}
-                      width={"100%"}
-                      flexDir="column"
-                    >
-                      {transactionList.length > 0 &&
-                        transactionList[0].payment_status === "open" && (
-                          <LatestInvoice
-                            transactionData={transactionList[0]}
-                            selectedPlan={transactionList[0].package}
-                            planData={
-                              plans.pricing_data["monthly"][
-                                transactionList[0].package
-                              ]
-                            }
-                          />
-                        )}
-                      <Text
-                        display={["block", "block", "block", "none"]}
-                        fontSize="xl"
-                        mt={7}
-                        width={"100%"}
-                        textAlign="center"
-                        sx={{ color: "text", fontWeight: 600 }}
-                      >
-                        {plans.pricing_data["monthly"][selectedPlan].name}
-                      </Text>
-                      <Text
-                        display={["block", "block", "block", "none"]}
-                        width={["90%", "90%", "70%", "60%"]}
-                        textAlign="center"
-                        mt={3}
-                        height="70px"
-                        fontWeight={300}
-                        fontSize="smaller"
-                      >
-                        {
-                          plans.pricing_data["monthly"][selectedPlan]
-                            .description
-                        }
-                      </Text>
-                      <Box
-                        display={["flex", "flex", "flex", "none"]}
-                        justifyContent={"flex-start"}
-                        alignItems={"flex-start"}
-                        width={"100%"}
-                        height={"fit-content"}
-                      >
-                        <Swiper
-                          initialSlide={2}
-                          onSlideChange={(swiper) => {
-                            setSelectedPlan(
-                              Object.keys(plans.pricing_data["monthly"])[
-                                swiper.activeIndex
-                              ]
-                            );
-                          }}
-                          breakpoints={{
-                            250: {
-                              slidesPerView: 1,
-                            },
-
-                            340: {
-                              slidesPerView: 2,
-                              spaceBetween: 90,
-                            },
-                            450: {
-                              slidesPerView: 2,
-                              spaceBetween: 10,
-                            },
-                            540: {
-                              height: 200,
-                              slidesPerView: 3,
-                              spaceBetween: 120,
-                            },
-                            600: {
-                              height: 200,
-                              slidesPerView: 3,
-                              spaceBetween: 70,
-                            },
-                            650: {
-                              height: 200,
-                              slidesPerView: 3,
-                              spaceBetween: 10,
-                            },
-                            740: {
-                              slidesPerView: 4,
-                              spaceBetween: 120,
-                            },
-                            830: {
-                              slidesPerView: 4,
-                              spaceBetween: 60,
-                            },
-                            920: {
-                              slidesPerView: 4,
-                              spaceBetween: 10,
-                            },
-                          }}
-                          centeredSlides={true}
-                          style={{
-                            paddingTop: "50px",
-                            paddingLeft: "20px",
-                            width: "100%",
-                          }}
-                        >
-                          {Object.keys(plans.pricing_data["monthly"]).map(
-                            (plan, index) => {
-                              return (
-                                <SwiperSlide key={index}>
-                                  <PlanCard
-                                    fetchAgain={fetchAgain}
-                                    selectedPlan={selectedPlan}
-                                    setSelectedPlan={setSelectedPlan}
-                                    plan={plan}
-                                    planData={
-                                      plans.pricing_data["monthly"][plan]
-                                    }
-                                    profile={data}
-                                  />
-                                </SwiperSlide>
-                              );
-                            }
-                          )}
-                        </Swiper>
-                      </Box>
-                      <Flex
-                        display={["none", "none", "none", "flex"]}
-                        justifyContent={"flex-start"}
-                        alignItems={"flex-start"}
-                        width={"100%"}
-                        height={"fit-content"}
-                        overflowX={["scroll", "scroll", "scroll", "visible"]}
-                      >
-                        <Flex
-                          justifyContent={[
-                            "center",
-                            "center",
-                            "center",
-                            "flex-start",
-                            "flex-start",
-                          ]}
-                          alignItems={"flex-start"}
-                          width={"fit-content"}
-                          height={"fit-content"}
-                          wrap={["nowrap", "nowrap", "nowrap", "wrap"]}
-                          padding={2}
-                          mt={5}
-                        >
-                          {Object.keys(plans.pricing_data["monthly"]).map(
-                            (plan) => {
-                              if (plan !== "trial")
-                                return (
-                                  <PlanCard
-                                    fetchAgain={fetchAgain}
-                                    selectedPlan={selectedPlan}
-                                    setSelectedPlan={setSelectedPlan}
-                                    plan={plan}
-                                    planData={
-                                      plans.pricing_data["monthly"][plan]
-                                    }
-                                    profile={data}
-                                  />
-                                );
-                            }
-                          )}
-                        </Flex>
-                      </Flex>
-                      <Text
-                        display={["none", "none", "none", "flex"]}
-                        sx={{ color: "text", fontWeight: 600 }}
-                        ml={[0, 0, 3, 3, 5]}
-                      >
-                        {plans.pricing_data["monthly"][selectedPlan].name}
-                      </Text>
-                      <Text
-                        display={["none", "none", "none", "flex"]}
-                        as="div"
-                        ml={[0, 0, 3, 3, 5]}
-                        mt={1}
-                        height="40px"
-                        width="70%"
-                        fontWeight={300}
-                        fontSize="smaller"
-                      >
-                        {
-                          plans.pricing_data["monthly"][selectedPlan]
-                            .description
-                        }
-                      </Text>
-                      <PricingDetails
-                        planData={plans.pricing_data["monthly"][selectedPlan]}
-                        selectedPlan={selectedPlan}
-                      />
-                    </Flex>
-                  ) : (
-                    <>
-                      <CurrentPlan
-                        subscription={data.subscription}
-                        isCancellable={data.is_cancellable}
-                        name={
-                          plans.pricing_data["monthly"][data.current_package]
-                            .name
-                        }
-                        packageName={data.current_package}
-                        packageRechargeDate={data.package_recharge_date}
-                        packageValidity={data.package_validity}
-                        plan={
-                          plans.pricing_data["monthly"][data.current_package]
-                        }
-                      />
-
-                      {/* <HStack
-                          spacing={5}
-                          align={"flex-start"}
-                          width={"100%"}
-                          pt={5}
-                        >
-                          {data.is_cancellable && (
-                            <CardDetails profileData={data} />
-                          )}
-                          {data.is_cancellable && <InvoiceList />}
-                        </HStack> */}
-                    </>
-                  )}
-                </>
+              <TabPanel width={"100%"} p={0}>
+                <Flex w="100%" pt={4} px={[0, 0, 8]} mb={8}>
+                  <CurrentPlan
+                    subscription={data.subscription}
+                    isCancellable={data.is_cancellable}
+                    name={
+                      plans.pricing_data["monthly"][data.current_package].name
+                    }
+                    packageName={data.current_package}
+                    packageRechargeDate={data.package_recharge_date}
+                    packageValidity={data.package_validity}
+                    plan={plans.pricing_data["monthly"][data.current_package]}
+                  />
+                </Flex>
+                <PricingDetails pricingDetails={plans} page="billing" />
               </TabPanel>
-              <TabPanel>
-                <PromoCodeCard profileData={data} />
+              <TabPanel px={[0, 0, 4]} mx={[0, 0, 4]}>
+                <ScanCredits
+                  planData={plans.pricing_data["monthly"][data.current_package]}
+                  profile={data}
+                  topUpData={plans.pricing_data["topup"]["topup"]}
+                />
               </TabPanel>
-              <TabPanel>
+              <TabPanel px={[0, 0, 4]} mx={[0, 0, 4]}>
                 <TransactionListCard
                   transactionList={transactionList}
                   page={page}
@@ -434,6 +230,9 @@ const Billing: React.FC = () => {
                   pageNo={pageNo}
                   fetchMore={fetchMore}
                 />
+              </TabPanel>
+              <TabPanel px={[0, 0, 4]} mx={[0, 0, 4]}>
+                <PromoCodeCard profileData={data} />
               </TabPanel>
             </TabPanels>
           </Tabs>
@@ -479,11 +278,11 @@ const PlanCard: React.FC<{
         onClick={() => setSelectedPlan(plan)}
         overflow={"hidden"}
         zIndex={selected ? 100 : 0}
-        filter={
-          selected
+        _hover={{
+          filter: selected
             ? "drop-shadow(0px 2px 13px rgba(0, 0, 0, 0.2));"
-            : "drop-shadow(0px 2px 13px rgba(0, 0, 0, 0.04));"
-        }
+            : "drop-shadow(0px 2px 13px rgba(0, 0, 0, 0.04));",
+        }}
       >
         <Text
           w={"100%"}
@@ -1042,14 +841,13 @@ const CurrentPlan: React.FC<{
   };
 }> = ({
   name,
+  packageName,
   packageRechargeDate,
   packageValidity,
   plan,
   isCancellable,
   subscription,
 }) => {
-  const successColor = "#289F4C";
-  const greyColor = "#BDBDBD";
   const toast = useToast();
   const config: any = useConfig();
   const assetsURL = getAssetsURL(config);
@@ -1074,17 +872,27 @@ const CurrentPlan: React.FC<{
   const [isOpen, setIsOpen] = useState(false);
   const onClose = () => setIsOpen(false);
 
+  const getNextPayment = (startDate: Date, nextDate: Date) => {
+    const timeDifference = nextDate.getTime() - startDate.getTime();
+    const totalDays = Math.ceil(timeDifference / (1000 * 3600 * 24));
+    const daysTillNow = Math.ceil(
+      (new Date().getTime() - startDate.getTime()) / (1000 * 3600 * 24)
+    );
+
+    return (daysTillNow * 100) / totalDays;
+  };
+
   return (
     <Box
       sx={{
         w: "100%",
         p: [5, 5, 10],
-        // mt: [3, 3, 5],
-        // ml: [3, 3, 5],
         background: "white",
         borderRadius: 15,
       }}
-      filter={"drop-shadow(0px 4px 23px rgba(0, 0, 0, 0.15));"}
+      _hover={{
+        filter: "drop-shadow(0px 4px 23px rgba(0, 0, 0, 0.15));",
+      }}
     >
       <Flex
         w={"100%"}
@@ -1098,67 +906,45 @@ const CurrentPlan: React.FC<{
           justifyContent={"flex-start"}
           alignItems="flex-start"
         >
-          <Flex alignItems="center">
-            <Icon
-              as={AiFillCheckCircle}
-              color="#38CB89"
-              fontSize="2xl"
-              mr={2}
-            />
-            <Text fontSize={"xl"} fontWeight={900}>
-              Current Plan
+          <Flex alignItems="center" justifyContent="center">
+            {packageName !== "trail" && (
+              <Image
+                width="35px"
+                height="35px"
+                src={`${assetsURL}pricing/${packageName}-heading.svg`}
+              />
+            )}
+            <Text fontSize={"2xl"} fontWeight={700}>
+              {sentenceCapitalize(name)}
             </Text>
           </Flex>
-          <Text mt={5} fontSize={"lg"}>
-            {plan.name}
-          </Text>
           <Text
-            as="span"
             mt={2}
             mb={3}
-            fontWeight={300}
-            fontSize="smaller"
+            fontWeight={400}
+            color="detail"
             width={["100%", "100%", "100%", "80%", "60%"]}
           >
             {plan.description}
           </Text>
-          <Divider mt={3} w={"60%"} />
-
-          <HStack>
-            <Heading
-              verticalAlign={"center"}
-              fontSize={"x-large"}
-              mt={3}
-              mb={4}
-            >
-              {plan.amount === "Free" ? "Free" : `$ ${plan.amount}/mo`}
+          <Flex textAlign="center" my={4}>
+            <Heading fontSize={"x-large"}>
+              {plan.amount === "Free" ? "Free" : `$ ${plan.amount}`}&nbsp;
             </Heading>
-            {plan.discount && (
-              <Text
-                color={"accent"}
-                backgroundColor={"white"}
-                textAlign="left"
-                fontWeight={600}
-                fontSize={"sm"}
-                mb={10}
-                ml={10}
-              >
-                (Save upto {plan.discount})
-              </Text>
-            )}
-          </HStack>
+            <Text fontSize="xs" color="detail" mt={2}>
+              {`/ month`}
+            </Text>
+          </Flex>
           <Flex
             mt={5}
-            justifyContent={"space-between"}
             flexWrap="wrap"
-            maxW="600px"
             alignItems="center"
             w={"100%"}
             flexDir={"row"}
           >
             {subscription && (
               <>
-                <Box mt={5} w="170px">
+                <Box mt={5}>
                   <Text fontWeight={400} fontSize="sm" mb={1} color="#4E5D78">
                     Subscribed on
                   </Text>
@@ -1166,20 +952,14 @@ const CurrentPlan: React.FC<{
                     {dateToDDMMMMYYYY(new Date(packageRechargeDate))}
                   </Text>
                 </Box>
-                <Box mt={5} w="170px">
-                  <Text fontWeight={400} fontSize="sm" mb={1} color="#4E5D78">
-                    Next Billed on
-                  </Text>
-                  <Text fontWeight={500} fontSize="md">
-                    {dateToDDMMMMYYYY(new Date(subscription.renewal_date))}
-                  </Text>
-                </Box>
-                <Box mt={5} w="170px">
+                <Box mt={5} ml={10}>
                   <Text fontWeight={400} fontSize="sm" mb={1} color="#4E5D78">
                     Recurring Payment
                   </Text>
                   <Text fontWeight={500} fontSize="md">
-                    Stripe Payment
+                    {packageName === "trail" || packageName === "ondemand"
+                      ? "--"
+                      : "Stripe Payment"}
                   </Text>
                 </Box>
               </>
@@ -1187,140 +967,128 @@ const CurrentPlan: React.FC<{
           </Flex>
         </Flex>
         <Flex
-          w={["100%", "100%", "25%"]}
+          w={["100%", "100%", "40%"]}
           mt={[10, 10, 0]}
+          p={2}
           flexDir="column"
           justifyContent={"flex-start"}
           alignItems="flex-start"
         >
-          <Flex alignItems="center">
-            <Icon
-              as={AiOutlineCalendar}
-              color="gray.500"
-              fontSize="2xl"
-              mr={2}
-            />
-            <Text>
-              <Text as="span" fontSize="2xl" fontWeight={700}>
-                {daysRemaining(new Date(packageRechargeDate), packageValidity)}
-              </Text>{" "}
-              days remaining
-            </Text>
-          </Flex>
-          <Divider mt={3} />
           <Flex
-            mt={3}
-            justifyContent="flex-start"
-            alignItems="flex-start"
-            flexDirection="column"
+            w="100%"
+            maxW="400px"
+            h="185px"
+            px={8}
+            py={6}
+            background={
+              packageName === "trail" || packageName === "ondemand"
+                ? "linear-gradient(101.8deg, #000000 4.3%, #3E1EA8 108.23%)"
+                : packageName
+            }
+            backgroundImage={
+              packageName === "trail" || packageName === "ondemand"
+                ? `url('${assetsURL}pricing/pro_upgrade.svg')`
+                : "none"
+            }
+            backgroundSize="contain"
+            backgroundRepeat="no-repeat"
+            borderRadius="15px"
+            flexDir="column"
           >
-            <HStack mt={3} justify={"flex-start"}>
-              <HiCheckCircle size={20} color={successColor} />
-
-              <Text fontSize={"sm"} ml={5}>
-                {plan.name === "Enterprise" ? "-" : plan.scan_count}
-                Scan Credit
-              </Text>
-            </HStack>
-            <HStack mt={2} justify={"flex-start"}>
-              <HiCheckCircle size={20} color={successColor} />
-
-              <Text fontSize={"sm"} ml={5}>
-                Security Score
-              </Text>
-            </HStack>
-            <HStack mt={2} justify={"flex-start"}>
-              {plan.name === "trial" ? (
-                <HiXCircle size={20} color={greyColor} />
-              ) : (
-                <HiCheckCircle size={20} color={successColor} />
-              )}
-
-              <Text fontSize={"sm"} ml={5}>
-                Detailed Result
-              </Text>
-            </HStack>
-            <HStack mt={2} justify={"flex-start"}>
-              {plan.github ? (
-                <HiCheckCircle size={20} color={successColor} />
-              ) : (
-                <HiXCircle size={20} color={greyColor} />
-              )}
-
-              <Text fontSize={"sm"} ml={5}>
-                Private Github
-              </Text>
-            </HStack>
-            <HStack mt={2} justify={"flex-start"}>
-              {plan.report ? (
-                <HiCheckCircle size={20} color={successColor} />
-              ) : (
-                <HiXCircle size={20} color={greyColor} />
-              )}
-
-              <Text fontSize={"sm"} ml={5}>
-                Generate Report
-              </Text>
-            </HStack>
-            <HStack mt={2} justify={"flex-start"}>
-              {plan.publishable_report ? (
-                <HiCheckCircle size={20} color={successColor} />
-              ) : (
-                <HiXCircle size={20} color={greyColor} />
-              )}
-
-              <Text fontSize={"sm"} ml={5}>
-                Publishable Report
-              </Text>
-            </HStack>
-            <HStack mt={2} justify={"flex-start"}>
-              {plan.name === "Enterprise" ? (
-                <HiCheckCircle size={20} color={successColor} />
-              ) : (
-                <HiXCircle size={20} color={greyColor} />
-              )}
-
-              <Text fontSize={"sm"} ml={5}>
-                White Glove Services
-              </Text>
-            </HStack>
+            {packageName === "trail" || packageName === "ondemand" ? (
+              <>
+                <Text fontSize="xl" color="white" mt={4}>
+                  Upgrade to <strong>Pro</strong>
+                </Text>
+                <Text
+                  color="white"
+                  fontWeight="400"
+                  fontSize="sm"
+                  w="75%"
+                  mt="2"
+                >
+                  You've subscribed to a free trial version, Upgrade to unlock
+                  features and starts scanning your contracts.
+                </Text>
+              </>
+            ) : (
+              <>
+                <Flex>
+                  <VStack alignItems="flex-start" spacing={1}>
+                    <Text fontSize="xs" fontWeight="400">
+                      Next Billed on
+                    </Text>
+                    <Text fontSize="sm" fontWeight="600">
+                      {subscription &&
+                        dateToDDMMMMYYYY(new Date(subscription.renewal_date))}
+                    </Text>
+                  </VStack>
+                  {packageName === "pro" && (
+                    <Image
+                      src={`${assetsURL}pricing/pro_badge.svg`}
+                      ml="auto"
+                      mt={-8}
+                    />
+                  )}
+                </Flex>
+                <Flex mt={4} align="center">
+                  <CircularProgress
+                    value={
+                      subscription &&
+                      getNextPayment(
+                        new Date(packageRechargeDate),
+                        new Date(subscription.renewal_date)
+                      )
+                    }
+                    color={packageName + "-dark"}
+                    trackColor="white"
+                    thickness="8px"
+                    size="60px"
+                    capIsRound
+                  ></CircularProgress>
+                  <VStack alignItems="flex-start" spacing={0} ml={3}>
+                    <Text fontSize="lg" fontWeight="700">
+                      15 days
+                    </Text>
+                    <Text fontSize="sm" fontWeight="400">
+                      remaining for the {sentenceCapitalize(name)} Plan
+                    </Text>
+                  </VStack>
+                </Flex>
+              </>
+            )}
           </Flex>
-          {isCancellable && (
+          <Flex mt={10} ml={4}>
             <Button
-              onClick={() => setIsOpen(!isOpen)}
               variant="accent-outline"
-              mr={10}
-              mt={10}
+              borderRadius={"8px"}
+              background="white"
+              color={"blue"}
+              fontSize="sm"
+              fontWeight="400"
+              px={8}
             >
-              Cancel Subscription
+              Plan Details
             </Button>
-          )}
+            {isCancellable && (
+              <Button
+                onClick={() => setIsOpen(!isOpen)}
+                variant="accent-outline"
+                borderRadius={"8px"}
+                color={"blue"}
+                fontSize="sm"
+                fontWeight="400"
+                ml={10}
+                isDisabled={
+                  packageName === "trail" || packageName === "ondemand"
+                }
+              >
+                Cancel Subscription
+              </Button>
+            )}
+          </Flex>
         </Flex>
       </Flex>
-      {subscription && (
-        <Flex
-          mt={10}
-          mx={0}
-          p={5}
-          backgroundColor="#FFF8ED"
-          justifyContent={"flex-start"}
-          borderRadius="xl"
-          border={"1px solid #FFC661"}
-          alignItems="flex-start"
-        >
-          <Image src={`${assetsURL}icons/info.svg`} mr={5} />
-          <VStack alignItems={"flex-start"}>
-            <Text fontSize={"lg"} fontWeight={600} color="gray.600">
-              Recurring Payment
-            </Text>
-            <Text fontSize={"md"} fontWeight={400} color="gray.500">
-              Your card will be billed automatically on{" "}
-              {dateToDDMMMMYYYY(new Date(subscription.renewal_date))}. We do not
-              store your card information anywhere in our application.
-            </Text>
-          </VStack>
-        </Flex>
-      )}
 
       <AlertDialog
         isOpen={isOpen}
@@ -1376,149 +1144,6 @@ const CurrentPlan: React.FC<{
   );
 };
 
-const PricingDetails: React.FC<{ planData: Plan; selectedPlan: string }> = ({
-  planData,
-  selectedPlan,
-}) => {
-  const successColor = "#289F4C";
-  const greyColor = "#BDBDBD";
-  const config: any = useConfig();
-  const assetsURL = getAssetsURL(config);
-
-  return (
-    <>
-      <Flex
-        justifyContent={["center", "center", "center", "flex-start"]}
-        alignItems={"flex-start"}
-        flexWrap="wrap"
-        width={"100%"}
-        height={"fit-content"}
-        mt={5}
-      >
-        <HStack
-          ml={5}
-          justify={"flex-start"}
-          minW="270px"
-          width={["70%", "45%", "30%"]}
-        >
-          <HiCheckCircle size={30} color={successColor} />
-
-          <Image src={`${assetsURL}pricing/coin.svg`} p={4} />
-          <Text fontSize={"md"} ml={5}>
-            {planData.scan_count} Scan Credit
-          </Text>
-        </HStack>
-
-        <HStack
-          ml={5}
-          justifyContent={"flex-start"}
-          minW="270px"
-          width={["70%", "45%", "30%"]}
-        >
-          <HiCheckCircle size={30} color={successColor} />
-
-          <Image src={`${assetsURL}pricing/score-icon.svg`} p={4} />
-          <Text fontSize={"md"} ml={5}>
-            Security Score
-          </Text>
-        </HStack>
-
-        <HStack
-          ml={5}
-          justifyContent={"flex-start"}
-          minW="270px"
-          width={["70%", "45%", "30%"]}
-        >
-          {selectedPlan === "trial" ? (
-            <HiXCircle size={30} color={greyColor} />
-          ) : (
-            <HiCheckCircle size={30} color={successColor} />
-          )}
-          <Image
-            h={"70px"}
-            w={"70px"}
-            src={`${assetsURL}pricing/result-icon.svg`}
-            alt="Product screenshot"
-            p={4}
-          />
-          <Text fontSize={"md"} ml={5}>
-            Detailed Result
-          </Text>
-        </HStack>
-        <HStack
-          ml={5}
-          justifyContent={"flex-start"}
-          minW="270px"
-          width={["70%", "45%", "30%"]}
-        >
-          {planData.github ? (
-            <HiCheckCircle size={30} color={successColor} />
-          ) : (
-            <HiXCircle size={30} color={greyColor} />
-          )}
-          <Image src={`${assetsURL}pricing/github.svg`} p={4} />
-          <Text fontSize={"md"} ml={5}>
-            Private Github
-          </Text>
-        </HStack>
-
-        <HStack
-          ml={5}
-          justifyContent={"flex-start"}
-          minW="270px"
-          width={["70%", "45%", "30%"]}
-        >
-          {planData.report ? (
-            <HiCheckCircle size={30} color={successColor} />
-          ) : (
-            <HiXCircle size={30} color={greyColor} />
-          )}
-          <Image src={`${assetsURL}pricing/report.svg`} p={4} />
-          <Text fontSize={"md"} ml={5}>
-            Generate Reports
-          </Text>
-        </HStack>
-        <HStack
-          ml={5}
-          justifyContent={"flex-start"}
-          minW="270px"
-          width={["70%", "45%", "30%"]}
-        >
-          {planData.publishable_report ? (
-            <HiCheckCircle size={30} color={successColor} />
-          ) : (
-            <HiXCircle size={30} color={greyColor} />
-          )}
-          <Image src={`${assetsURL}pricing/publish.svg`} p={4} />
-          <Text fontSize={"md"} ml={5}>
-            Publishable Reports
-          </Text>
-        </HStack>
-        <HStack
-          ml={5}
-          justifyContent={"flex-start"}
-          minW="270px"
-          width={["70%", "45%", "30%"]}
-        >
-          {selectedPlan === "custom" ? (
-            <HiCheckCircle size={30} color={successColor} />
-          ) : (
-            <HiXCircle size={30} color={greyColor} />
-          )}
-          <Image
-            src={`${assetsURL}pricing/support-icon.svg`}
-            alt="Product screenshot"
-            p={4}
-          />
-          <Text fontSize={"md"} ml={5}>
-            White Glove Services
-          </Text>
-        </HStack>
-      </Flex>
-    </>
-  );
-};
-
 const LatestInvoice: React.FC<{
   planData: Plan;
   selectedPlan: string;
@@ -1542,7 +1167,9 @@ const LatestInvoice: React.FC<{
         maxW="1000px"
         mb={5}
         overflow={"hidden"}
-        filter={"drop-shadow(0px 4px 23px rgba(0, 0, 0, 0.15));"}
+        _hover={{
+          filter: "drop-shadow(0px 4px 23px rgba(0, 0, 0, 0.15));",
+        }}
       >
         <HStack
           width={"100%"}
@@ -1686,7 +1313,9 @@ const CardDetails: React.FC<{
         borderRadius: 15,
         p: 8,
       }}
-      filter={"drop-shadow(0px 4px 23px rgba(0, 0, 0, 0.15));"}
+      _hover={{
+        filter: "drop-shadow(0px 4px 23px rgba(0, 0, 0, 0.15));",
+      }}
     >
       <Text fontSize={"lg"} fontWeight={900} color={"gray.500"}>
         Payment Details
@@ -1777,7 +1406,9 @@ const InvoiceList: React.FC = () => {
         borderRadius: 15,
         p: 8,
       }}
-      filter={"drop-shadow(0px 4px 23px rgba(0, 0, 0, 0.15));"}
+      _hover={{
+        filter: "drop-shadow(0px 4px 23px rgba(0, 0, 0, 0.15));",
+      }}
     >
       <Text fontSize={"lg"} mb={7} fontWeight={900} color={"gray.500"}>
         Invoices
@@ -1858,7 +1489,9 @@ const TransactionListCard: React.FC<{
 
             overflowY: "scroll",
           }}
-          filter={"drop-shadow(0px 4px 23px rgba(0, 0, 0, 0.15));"}
+          _hover={{
+            filter: "drop-shadow(0px 4px 23px rgba(0, 0, 0, 0.15));",
+          }}
         >
           <HStack
             p={4}
@@ -2240,7 +1873,9 @@ const PromoCodeCard: React.FC<{ profileData: Profile }> = ({ profileData }) => {
         h: "50vh",
         // ml: [5, 5, 10],
       }}
-      filter={"drop-shadow(0px 4px 23px rgba(0, 0, 0, 0.15));"}
+      _hover={{
+        filter: "drop-shadow(0px 4px 23px rgba(0, 0, 0, 0.15));",
+      }}
     >
       <Text fontSize={"lg"} my={5} fontWeight={900} color={"gray.500"}>
         Activate Promo Code
