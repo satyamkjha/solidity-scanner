@@ -974,3 +974,10 @@ export const pricing_data = {
     },
   },
 };
+
+export const actionTaken = {
+  false_positive: "False Positive",
+  wont_fix: "Won't Fix",
+  pending_fix: "Pending Fix",
+  fixed: "Fixed",
+};

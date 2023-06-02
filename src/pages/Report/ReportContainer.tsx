@@ -38,6 +38,8 @@ import { getAssetsURL, sentenceCapitalize } from "helpers/helperFunction";
 import React from "react";
 import styled from "@emotion/styled";
 import { useConfig } from "hooks/useConfig";
+import { actionTaken } from "common/values";
+import NonDynamicContainer from "./NonDynamicContainer";
 
 export const ReportContainer: React.FC<{
   summary_report: Report;
@@ -1370,185 +1372,279 @@ export const ReportContainer: React.FC<{
         </Flex>
 
         {/* UI for new vulnerabillity Details */}
-        <Flex
-          p={5}
-          flexDir="column"
-          alignItems="flex-start"
-          justifyContent="flex-start"
-          border={"1px solid #D9D9D9;"}
-          my={5}
-          width={"100%"}
-        >
-          <Text
-            fontSize="md"
-            fontWeight={"normal"}
-            color={"gray.400"}
+        {Object.keys(summary_report.issues).map((key) => (
+          <Flex
+            p={5}
+            flexDir="column"
+            alignItems="flex-start"
+            justifyContent="flex-start"
+            border={"1px solid #D9D9D9;"}
+            my={5}
             width={"100%"}
-            mb={1}
           >
-            Issue Type
-          </Text>
-          <Text fontSize="xl" fontWeight={"bold"} mb={5} width={"100%"}>
-            INCORRECT ACCESS CONTROL
-          </Text>
-          <Flex width={"100%"} mb={3} flexWrap="wrap">
-            <VStack
-              width={["50%", "50%", "50%", "15%"]}
-              mb={[4, 4, 4, 0]}
-              alignItems="flex-start"
+            <Text
+              fontSize="md"
+              fontWeight={"normal"}
+              color={"gray.400"}
+              width={"100%"}
+              mb={1}
             >
-              <Text
-                fontSize="md"
-                fontWeight={"normal"}
-                color={"gray.400"}
-                mb={1}
+              Issue Type
+            </Text>
+            <Text fontSize="xl" fontWeight={"bold"} mb={5} width={"100%"}>
+              {summary_report.issues[key].issue_name}
+            </Text>
+            <Flex width={"100%"} mb={3} flexWrap="wrap">
+              <VStack
+                width={["50%", "50%", "50%", "15%"]}
+                mb={[4, 4, 4, 0]}
+                alignItems="flex-start"
               >
-                Severity
-              </Text>
-              <HStack>
-                <SeverityIcon size={12} variant={"critical"} />
-                <Text fontSize="lg" fontWeight={"bold"} ml={2} width={"100%"}>
-                  {sentenceCapitalize("critical")}
-                </Text>
-              </HStack>
-            </VStack>
-            <VStack
-              width={["50%", "50%", "50%", "15%"]}
-              mb={[4, 4, 4, 0]}
-              alignItems="flex-start"
-            >
-              <Text
-                fontSize="md"
-                fontWeight={"normal"}
-                color={"gray.400"}
-                mb={1}
-              >
-                Confidence
-              </Text>
-              <HStack>
                 <Text
-                  px={5}
-                  py={1}
-                  borderRadius={20}
-                  color={"#289F4C"}
-                  backgroundColor={"#CFFFB8"}
-                  fontSize="lg"
-                  fontWeight={"bold"}
+                  fontSize="md"
+                  fontWeight={"normal"}
+                  color={"gray.400"}
+                  mb={1}
                 >
-                  {"Certain"}
+                  Severity
                 </Text>
-              </HStack>
-            </VStack>
-          </Flex>
-
-          <Divider mt={5} />
-          <HStack spacing={5} mt={5} mb={3}>
-            <Image
-              src={`${assetsURL}report/issue_description.svg`}
-              height={8}
-              width={8}
-            />
-            <Text fontSize="md" fontWeight={"bold"} width={"100%"}>
-              Issue Description
-            </Text>
-          </HStack>
-          <DescriptionWrapper>
-            <Box
-              dangerouslySetInnerHTML={{
-                __html:
-                  "<p>It is recommended to have an account existence check before making these low-level calls to confirm the presence of an external account with some valid code. Eg: using extcodesize.</p>",
-              }}
-            />
-          </DescriptionWrapper>
-          <HStack spacing={5} mt={5} mb={3}>
-            <Image
-              src={`${assetsURL}report/issue_remediation.svg`}
-              height={8}
-              width={8}
-            />
-            <Text fontSize="md" fontWeight={"bold"} width={"100%"}>
-              Issue Remediation
-            </Text>
-          </HStack>
-          <DescriptionWrapper>
-            <Box
-              dangerouslySetInnerHTML={{
-                __html:
-                  "<p>The low-level calls such as the delegatecall, call, or callcode, do not validate prior to the call if the destination account exists or not. They will always return true even if the account is non-existent, therefore, giving invalid output.</p>",
-              }}
-            />
-          </DescriptionWrapper>
-          <TableContainer
-            mt={5}
-            border="1px solid #D9D9D9"
-            borderRadius={20}
-            width="100%"
-            borderBottomWidth={0}
-            borderBottomRadius={0}
-          >
-            <Table variant="unstyled">
-              <Thead
-                backgroundColor={"#FAFAFA"}
-                color="#8A94A6"
-                fontWeight={100}
+                <HStack>
+                  <SeverityIcon
+                    size={12}
+                    variant={
+                      summary_report.issues[key].issue_details[0].severity
+                    }
+                  />
+                  <Text fontSize="lg" fontWeight={"bold"} ml={2} width={"100%"}>
+                    {sentenceCapitalize(
+                      summary_report.issues[key].issue_details[0].severity
+                    )}
+                  </Text>
+                </HStack>
+              </VStack>
+              <VStack
+                width={["50%", "50%", "50%", "15%"]}
+                mb={[4, 4, 4, 0]}
+                alignItems="flex-start"
               >
-                <Tr>
-                  <Th>Bug ID</Th>
-                  <Th>File Location</Th>
-                  <Th>Line No</Th>
-                  <Th>Action Taken</Th>
-                </Tr>
-              </Thead>
-              <Tbody>
-                <Tr fontWeight={300} borderBottom={"1px solid #D9D9D9"}>
-                  <Td w="10%">SS 95</Td>
-                  <Td w="60%">/contracts/OracleHttps/github/starkware...</Td>
-                  <Td w="15%">L106 - L122</Td>
-                  <Td w="15%">Won’t fix</Td>
-                </Tr>
-                <Tr fontWeight={300} borderBottom={"1px solid #D9D9D9"}>
-                  <Td w="10%">SS 95</Td>
-                  <Td w="60%">/contracts/OracleHttps/github/starkware...</Td>
-                  <Td w="15%">L106 - L122</Td>
-                  <Td w="15%">Won’t fix</Td>
-                </Tr>
-                <Tr fontWeight={300} borderBottom={"1px solid #D9D9D9"}>
-                  <Td w="10%">SS 95</Td>
-                  <Td w="60%">/contracts/OracleHttps/github/starkware...</Td>
-                  <Td w="15%">L106 - L122</Td>
-                  <Td w="15%">Won’t fix</Td>
-                </Tr>
-                <Tr fontWeight={300} borderBottom={"1px solid #D9D9D9"}>
-                  <Td w="10%">SS 95</Td>
-                  <Td w="60%">/contracts/OracleHttps/github/starkware...</Td>
-                  <Td w="15%">L106 - L122</Td>
-                  <Td w="15%">Won’t fix</Td>
-                </Tr>
-              </Tbody>
-            </Table>
-          </TableContainer>
-
-          {/* {issue.comment !== "" && issue.bug_status === "wont_fix" && (
-            <>
-              <HStack spacing={5} mt={10} mb={5}>
-                <Image
-                  src={`${assetsURL}report/comment.svg`}
-                  height={8}
-                  width={8}
-                />
-                <Text fontSize="md" fontWeight={"bold"} width={"100%"}>
-                  Comments
+                <Text
+                  fontSize="md"
+                  fontWeight={"normal"}
+                  color={"gray.400"}
+                  mb={1}
+                >
+                  Confidence
                 </Text>
-              </HStack>
-              <Text fontWeight={300} fontSize={"16px"} wordBreak="break-all">
-                {issue.comment}
-              </Text>
-            </>
-          )} */}
-        </Flex>
+                <HStack>
+                  <Text
+                    px={5}
+                    py={1}
+                    borderRadius={20}
+                    color={
+                      summary_report.issues[key].issue_details[0]
+                        .issue_confidence === "2"
+                        ? "#289F4C"
+                        : summary_report.issues[key].issue_details[0]
+                            .issue_confidence === "1"
+                        ? "#ED9801"
+                        : "#FF5630"
+                    }
+                    backgroundColor={
+                      summary_report.issues[key].issue_details[0]
+                        .issue_confidence === "2"
+                        ? "#CFFFB8"
+                        : summary_report.issues[key].issue_details[0]
+                            .issue_confidence === "1"
+                        ? "#FFF8EB"
+                        : "#FFF5F3"
+                    }
+                    fontSize="lg"
+                    fontWeight={"bold"}
+                  >
+                    {summary_report.issues[key].issue_details[0]
+                      .issue_confidence === "2"
+                      ? "Certain"
+                      : summary_report.issues[key].issue_details[0]
+                          .issue_confidence === "1"
+                      ? "Firm"
+                      : "Tentative"}
+                  </Text>
+                </HStack>
+              </VStack>
+            </Flex>
+
+            <Divider mt={5} />
+
+            {summary_report.issues[key].is_issue_description_dynamic ? (
+              summary_report.issues[key].issue_details.map((issue) => (
+                <>
+                  <TableContainer
+                    mt={5}
+                    border="1px solid #D9D9D9"
+                    borderRadius={20}
+                    width="100%"
+                    borderBottomWidth={0}
+                    borderBottomRadius={0}
+                  >
+                    <Table variant="unstyled">
+                      <Thead
+                        backgroundColor={"#FAFAFA"}
+                        color="#8A94A6"
+                        fontWeight={100}
+                      >
+                        <Tr>
+                          <Th w="15%">Bug ID</Th>
+                          <Th w="70%">
+                            <HStack w="100%">
+                              <Text w="80%">File Location</Text>
+                              <Text w="20%"> Line No</Text>
+                            </HStack>
+                          </Th>
+                          <Th w="15%">Action Taken</Th>
+                        </Tr>
+                      </Thead>
+                      <Tbody>
+                        <Tr fontWeight={300} borderBottom={"1px solid #D9D9D9"}>
+                          <Td w="15%">{issue.bug_id}</Td>
+                          <Td w="70%">
+                            {issue.findings.map((finding) => (
+                              <HStack w="100%">
+                                <Text w="80%">{finding.file_path}</Text>
+                                <Text w="20%">
+                                  {finding.line_nos_start}-
+                                  {finding.line_nos_end}
+                                </Text>
+                              </HStack>
+                            ))}
+                          </Td>
+                          <Td w="15%">{actionTaken[issue.bug_status]}</Td>
+                        </Tr>
+                      </Tbody>
+                    </Table>
+                  </TableContainer>
+                  <Flex
+                    flexDirection={"column"}
+                    alignItems={"flex-start"}
+                    justifyContent={"flex-start"}
+                    border="1px solid #D9D9D9"
+                    borderRadius={20}
+                    py={10}
+                    px={5}
+                    width="100%"
+                    borderTopWidth={0}
+                    borderTopRadius={0}
+                  >
+                    <HStack spacing={5} mb={3}>
+                      <Image
+                        src={`${assetsURL}report/issue_description.svg`}
+                        height={8}
+                        width={8}
+                      />
+                      <Text fontSize="md" fontWeight={"bold"} width={"100%"}>
+                        Issue Description
+                      </Text>
+                    </HStack>
+                    <DescriptionWrapper>
+                      <Box
+                        dangerouslySetInnerHTML={{
+                          __html: issue.issue_description,
+                        }}
+                      />
+                    </DescriptionWrapper>
+                    <HStack spacing={5} mt={5} mb={3}>
+                      <Image
+                        src={`${assetsURL}report/issue_remediation.svg`}
+                        height={8}
+                        width={8}
+                      />
+                      <Text fontSize="md" fontWeight={"bold"} width={"100%"}>
+                        Issue Remediation
+                      </Text>
+                    </HStack>
+                    <DescriptionWrapper>
+                      <Box
+                        dangerouslySetInnerHTML={{
+                          __html: issue.issue_remediation,
+                        }}
+                      />
+                    </DescriptionWrapper>
+                    {issue.comment !== "" &&
+                      issue.bug_status === "wont_fix" && (
+                        <>
+                          <HStack spacing={5} mt={10} mb={5}>
+                            <Image
+                              src={`${assetsURL}report/comment.svg`}
+                              height={8}
+                              width={8}
+                            />
+                            <Text
+                              fontSize="md"
+                              fontWeight={"bold"}
+                              width={"100%"}
+                            >
+                              Comments
+                            </Text>
+                          </HStack>
+                          <Text
+                            fontWeight={300}
+                            fontSize={"16px"}
+                            wordBreak="break-all"
+                          >
+                            {issue.comment}
+                          </Text>
+                        </>
+                      )}
+                  </Flex>
+                </>
+              ))
+            ) : (
+              <>
+                <HStack spacing={5} mb={3}>
+                  <Image
+                    src={`${assetsURL}report/issue_description.svg`}
+                    height={8}
+                    width={8}
+                  />
+                  <Text fontSize="md" fontWeight={"bold"} width={"100%"}>
+                    Issue Description
+                  </Text>
+                </HStack>
+                <DescriptionWrapper>
+                  <Box
+                    dangerouslySetInnerHTML={{
+                      __html:
+                        summary_report.issues[key].issue_details[0]
+                          .issue_description,
+                    }}
+                  />
+                </DescriptionWrapper>
+                <HStack spacing={5} mt={5} mb={3}>
+                  <Image
+                    src={`${assetsURL}report/issue_remediation.svg`}
+                    height={8}
+                    width={8}
+                  />
+                  <Text fontSize="md" fontWeight={"bold"} width={"100%"}>
+                    Issue Remediation
+                  </Text>
+                </HStack>
+                <DescriptionWrapper>
+                  <Box
+                    dangerouslySetInnerHTML={{
+                      __html:
+                        summary_report.issues[key].issue_details[0]
+                          .issue_description,
+                    }}
+                  />
+                </DescriptionWrapper>
+                <NonDynamicContainer issue={summary_report.issues[key]} />
+              </>
+            )}
+          </Flex>
+        ))}
         {/* UI for new vulnerabillity Details */}
 
-        {Object.keys(summary_report.issues).map((key, index) =>
+        {Object.keys(summary_report.issues).map((key) =>
           summary_report.issues[key].issue_details.map((issue) => (
             <Flex
               p={5}
