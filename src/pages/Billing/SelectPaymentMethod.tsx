@@ -12,6 +12,7 @@ import {
   Tabs,
   TabPanel,
   TabPanels,
+  useMediaQuery,
 } from "@chakra-ui/react";
 import "./billing.css";
 
@@ -52,6 +53,7 @@ const SelectPaymentMethod: React.FC<{
   profile: Profile;
   fetchAgain: () => Promise<void>;
 }> = ({ selectedPlan, onClose, profile, fetchAgain }) => {
+  
   const createStripePayment = async () => {
     let duration = "";
     if (selectedPlan === "ondemand") {
@@ -116,145 +118,7 @@ const SelectPaymentMethod: React.FC<{
     "(min-width : 400px)",
   ]);
 
-  return (
-    <Box m={[0, 0, 2]} width={["100%", "100%", "65%"]}>
-      {!profile.public_address && (
-        <>
-          <Flex
-            cursor="pointer"
-            width="100%"
-            bg="#F7F9FC"
-            pb={6}
-            borderRadius="15px"
-            h="fit-content"
-            boxShadow="0px 0px 5px rgba(0, 0, 0, 0.2)"
-          >
-            <Box
-              flexDir={"column"}
-              justifyContent={"center"}
-              alignItems={"center"}
-              w="100%"
-            >
-              <Box
-                flexDir={"row"}
-                justifyContent={"flex-start"}
-                alignItems={"center"}
-                w="100%"
-                height={"fit-content"}
-              >
-                {isLargerThan500 ? (
-                  <StripePaymentsLogo size={400} />
-                ) : isLargerThan400 ? (
-                  <StripePaymentsLogo size={300} />
-                ) : (
-                  <StripePaymentsLogo size={250} />
-                )}
-              </Box>
-              <Flex
-                flexDir={"row"}
-                justifyContent="center"
-                alignItems="center"
-                w="100%"
-                height={"fit-content"}
-                px={4}
-              >
-                <Button
-                  onClick={createStripePayment}
-                  style={{
-                    padding: "1.3rem",
-                    backgroundColor: "#5a1cff",
-                    color: "#FFFFFF",
-                    borderRadius: "30px",
-                  }}
-                  w={"300px"}
-                >
-                  Pay with
-                  <StripeLogo size={120} />
-                </Button>
-              </Flex>
-            </Box>
-          </Flex>
-          <Flex
-            align="center"
-            justify="center"
-            color="subtle"
-            px={5}
-            mt={6}
-            sx={{
-              height: 0.5,
-              borderColor: "#EDF2F7",
-              borderStyle: "solid",
-              borderLeftWidth: ["130px", "180px", "240px"],
-              borderRightWidth: ["130px", "180px", "240px"],
-            }}
-          >
-            <Text fontWeight={600} color="subtle">
-              OR
-            </Text>
-          </Flex>
-        </>
-      )}
-      <Flex
-        cursor="pointer"
-        width="100%"
-        bg="#F7F9FC"
-        mt={profile.public_address ? 0 : 6}
-        py={[4, 6]}
-        px={[4, 8]}
-        borderRadius="15px"
-        h={profile.public_address ? "100%" : "fit-content"}
-        minH="350px"
-        boxShadow="0px 0px 5px rgba(0, 0, 0, 0.2)"
-      >
-        <VStack width="100%" spacing={6} mt={4} alignItems="inherit">
-          <Flex alignItems="flex-end" justifyContent="space-between">
-            <CoinPaymentsIcon size={200} />
-            {/* {data && coin !== "" && (
-            <Flex alignItems="center">
-              <CryptoIcon size={32} name={coin.toLowerCase()} />
-              <Text ml={2} color="brand-dark" fontWeight={700} fontSize="3xl">
-                {packageName === "ondemand"
-                  ? parseFloat(data[coin].ondemand[packageName]).toPrecision(2)
-                  : parseFloat(data[coin].monthly[packageName]).toPrecision(2)}
-                <Text as="span" fontSize="md" fontWeight={700} ml={2}>
-                  {coin}
-                </Text>
-              </Text>
-            </Flex>
-          )} */}
-          </Flex>
-          <FormControl id="contract_platform">
-            <FormLabel fontSize="sm">Select coin</FormLabel>
-            <Select
-              placeholder="Select coin"
-              value={coin}
-              isRequired
-              isDisabled={isLoading}
-              onChange={(e) => setCoin(e.target.value)}
-            >
-              {data &&
-                Object.keys(data).map((key) => (
-                  <option key={key} value={key}>
-                    {data[key].name}
-                  </option>
-                ))}
-            </Select>
-          </FormControl>
-          <Flex justifyContent="flex-end">
-            <Button
-              variant="brand"
-              isDisabled={coin === "" || isLoading}
-              isLoading={loading}
-              onClick={handleSubmit}
-              width={["100%", "200px"]}
-            >
-              Make Payment
-            </Button>
-          </Flex>
-        </VStack>
-      </Flex>
-    </Box>
-  );
+  return <></>;
 };
 
 export default SelectPaymentMethod;

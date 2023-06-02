@@ -9,6 +9,7 @@ import {
   Flex,
   Box,
   VStack,
+  useDisclosure,
 } from "@chakra-ui/react";
 import { Plan } from "common/types";
 import { CurlyArrowBlue } from "components/icons";
@@ -19,6 +20,7 @@ import Auth from "helpers/auth";
 import { useHistory } from "react-router-dom";
 import { useConfig } from "hooks/useConfig";
 import { pricing_card_description_data } from "common/values";
+import PaymentModal from "pages/Billing/PaymentModal";
 
 export const PricingCard: React.FC<{
   page: "billing" | "pricing";
@@ -45,6 +47,8 @@ export const PricingCard: React.FC<{
   const config: any = useConfig();
   const assetsURL = getAssetsURL(config);
   const mouse = selectedPlan === plan;
+
+  const { isOpen, onClose, onOpen } = useDisclosure();
 
   React.useEffect(() => {
     setDuration(globalDuration);
@@ -306,7 +310,7 @@ export const PricingCard: React.FC<{
           variant={mouse ? "brand" : "gray-outline"}
           onClick={() => {
             if ((page = "billing")) {
-              
+              onOpen();
             } else {
               if (Auth.isUserAuthenticated()) {
                 history.push("/billing");
@@ -319,6 +323,7 @@ export const PricingCard: React.FC<{
           {mouse ? "Select Plan" : "Choose Plan"}
         </Button>
       </Flex>
+      <PaymentModal isOpen={isOpen} onClose={onClose} />
     </GridItem>
   );
 };
