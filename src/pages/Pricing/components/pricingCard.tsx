@@ -21,7 +21,7 @@ import { useConfig } from "hooks/useConfig";
 import { pricing_card_description_data } from "common/values";
 
 export const PricingCard: React.FC<{
-  page: string;
+  page: "billing" | "pricing";
   globalDuration: "monthly" | "yearly" | "on-demand";
   plan: string;
   pricingDetails: {
@@ -305,10 +305,14 @@ export const PricingCard: React.FC<{
           alignContent={"center"}
           variant={mouse ? "brand" : "gray-outline"}
           onClick={() => {
-            if (Auth.isUserAuthenticated()) {
-              history.push("/billing");
+            if ((page = "billing")) {
+              
             } else {
-              history.push("/signin");
+              if (Auth.isUserAuthenticated()) {
+                history.push("/billing");
+              } else {
+                history.push("/signin");
+              }
             }
           }}
         >

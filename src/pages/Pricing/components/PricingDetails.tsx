@@ -19,7 +19,7 @@ import { PricingCard } from "./pricingCard";
 
 const PricingDetails: React.FC<{
   pricingDetails: PricingData;
-  page: string;
+  page: "billing" | "pricing";
 }> = ({ pricingDetails, page }) => {
   const assetsURL = getAssetsURL();
   const history = useHistory();
