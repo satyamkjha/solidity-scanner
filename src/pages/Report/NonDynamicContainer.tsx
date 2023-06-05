@@ -14,40 +14,57 @@ import {
 import { IssueDetailObject, IssueItem } from "common/types";
 import { actionTaken } from "common/values";
 import { getAssetsURL } from "helpers/helperFunction";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 
 const NonDynamicContainer: React.FC<{ issue: IssueDetailObject }> = ({
   issue,
 }) => {
   let issueDetails = issue.issue_details;
 
+  const [commentsMap, setCommentsMao] = useState<
+    {
+      comment: string;
+      issueList: IssueItem[];
+    }[]
+  >([]);
+
   let comments_map: {
-    [key: string]: IssueItem[];
-  } = {};
+    comment: string;
+    issueList: IssueItem[];
+  }[] = [];
 
   const assetsURL = getAssetsURL();
 
   useEffect(() => {
     Object.keys(issue.common_comments_map).forEach((key) => {
+      console.log(key);
       let tempArray: IssueItem[] = [];
       issue.common_comments_map[key].forEach((bugId) => {
         issueDetails = issueDetails.filter((item) => {
-          if (item.bug_id === bugId) {
+          if (item.bug_hash === bugId) {
             tempArray.push(item);
             return false;
           }
           return true;
         });
       });
-      comments_map[key] = tempArray;
+      comments_map.push({
+        comment: key,
+        issueList: tempArray,
+      });
     });
 
-    comments_map["no_comment"] = issueDetails;
+    comments_map.push({
+      comment: "no_comment",
+      issueList: issueDetails,
+    });
+
+    setCommentsMao(comments_map);
   }, []);
 
   return (
     <>
-      {Object.keys(comments_map).map((comment) => (
+      {commentsMap.map((comment) => (
         <>
           <TableContainer
             mt={5}
@@ -75,7 +92,7 @@ const NonDynamicContainer: React.FC<{ issue: IssueDetailObject }> = ({
                 </Tr>
               </Thead>
               <Tbody>
-                {comments_map[comment].map((item) => (
+                {comment.issueList.map((item) => (
                   <Tr fontWeight={300} borderBottom={"1px solid #D9D9D9"}>
                     <Td w="15%">{item.bug_id}</Td>
                     <Td w="70%">
@@ -100,13 +117,13 @@ const NonDynamicContainer: React.FC<{ issue: IssueDetailObject }> = ({
             justifyContent={"flex-start"}
             border="1px solid #D9D9D9"
             borderRadius={20}
-            py={10}
+            py={5}
             px={5}
             width="100%"
             borderTopWidth={0}
             borderTopRadius={0}
           >
-            <HStack spacing={5} mt={10} mb={5}>
+            <HStack spacing={5} mb={5}>
               <Image
                 src={`${assetsURL}report/comment.svg`}
                 height={8}
@@ -117,7 +134,7 @@ const NonDynamicContainer: React.FC<{ issue: IssueDetailObject }> = ({
               </Text>
             </HStack>
             <Text fontWeight={300} fontSize={"16px"} wordBreak="break-all">
-              {comment}
+              {comment.comment}
             </Text>
           </Flex>
         </>
