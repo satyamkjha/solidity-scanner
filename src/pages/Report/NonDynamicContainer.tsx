@@ -10,11 +10,18 @@ import {
   Td,
   Flex,
   Image,
+  Box,
 } from "@chakra-ui/react";
+import styled from "@emotion/styled";
 import { IssueDetailObject, IssueItem } from "common/types";
 import { actionTaken } from "common/values";
 import { getAssetsURL } from "helpers/helperFunction";
+import { useConfig } from "hooks/useConfig";
 import React, { useEffect, useState } from "react";
+import IssueRow from "./IssueRow";
+import IssueHead from "./IssueHead";
+import DescriptionRemediationContainer from "./DescriptionRemediationContainer";
+import CommentContainer from "./CommentContainer";
 
 const NonDynamicContainer: React.FC<{ issue: IssueDetailObject }> = ({
   issue,
@@ -33,8 +40,8 @@ const NonDynamicContainer: React.FC<{ issue: IssueDetailObject }> = ({
     issueList: IssueItem[];
   }[] = [];
 
-  const assetsURL = getAssetsURL();
-
+  const config: any = useConfig();
+  const assetsURL = getAssetsURL(config);
   useEffect(() => {
     Object.keys(issue.common_comments_map).forEach((key) => {
       console.log(key);
@@ -62,8 +69,15 @@ const NonDynamicContainer: React.FC<{ issue: IssueDetailObject }> = ({
     setCommentsMao(comments_map);
   }, []);
 
+  // issue.issue_details[0].issue_description
+  // issue.issue_details[0].issue_description
+
   return (
     <>
+      <DescriptionRemediationContainer
+        issue_description={issue.issue_details[0].issue_description}
+        issue_remediation={issue.issue_details[0].issue_remediation}
+      />
       {commentsMap.map((comment) => (
         <>
           <TableContainer
@@ -75,38 +89,10 @@ const NonDynamicContainer: React.FC<{ issue: IssueDetailObject }> = ({
             borderBottomRadius={comment.comment === "no_comment" ? 20 : 0}
           >
             <Table variant="unstyled">
-              <Thead
-                backgroundColor={"#FAFAFA"}
-                color="#8A94A6"
-                fontWeight={100}
-              >
-                <Tr>
-                  <Th w="15%">Bug ID</Th>
-                  <Th w="70%">
-                    <HStack w="100%">
-                      <Text w="80%">File Location</Text>
-                      <Text w="20%"> Line No</Text>
-                    </HStack>
-                  </Th>
-                  <Th w="15%">Action Taken</Th>
-                </Tr>
-              </Thead>
+              <IssueHead />
               <Tbody>
                 {comment.issueList.map((item) => (
-                  <Tr fontWeight={300} borderBottom={"1px solid #D9D9D9"}>
-                    <Td w="15%">{item.bug_id}</Td>
-                    <Td w="70%">
-                      {item.findings.map((finding) => (
-                        <HStack w="100%">
-                          <Text w="80%">{finding.file_path}</Text>
-                          <Text w="20%">
-                            {finding.line_nos_start}-{finding.line_nos_end}
-                          </Text>
-                        </HStack>
-                      ))}
-                    </Td>
-                    <Td w="15%">{actionTaken[item.bug_status]}</Td>
-                  </Tr>
+                  <IssueRow issue={item} />
                 ))}
               </Tbody>
             </Table>
@@ -118,25 +104,13 @@ const NonDynamicContainer: React.FC<{ issue: IssueDetailObject }> = ({
               justifyContent={"flex-start"}
               border="1px solid #D9D9D9"
               borderRadius={20}
-              py={5}
+              pb={5}
               px={5}
               width="100%"
               borderTopWidth={0}
               borderTopRadius={0}
             >
-              <HStack spacing={5} mb={5}>
-                <Image
-                  src={`${assetsURL}report/comment.svg`}
-                  height={8}
-                  width={8}
-                />
-                <Text fontSize="md" fontWeight={"bold"} width={"100%"}>
-                  Comments
-                </Text>
-              </HStack>
-              <Text fontWeight={300} fontSize={"16px"} wordBreak="break-all">
-                {comment.comment}
-              </Text>
+              <CommentContainer comment={comment.comment} />
             </Flex>
           )}
         </>
@@ -146,3 +120,36 @@ const NonDynamicContainer: React.FC<{ issue: IssueDetailObject }> = ({
 };
 
 export default NonDynamicContainer;
+
+const DescriptionWrapper = styled.div`
+  p {
+    font-weight: 300;
+    word-break: break-all;
+  }
+
+  ul,
+  ol {
+    margin-left: 20px;
+  }
+
+  li {
+    font-weight: 400;
+    font-size: 16px;
+  }
+
+  code {
+    background: #cbd5e0;
+    padding: 2px 4px;
+    border-radius: 5px;
+    word-break: break-all;
+  }
+  a {
+    color: #4299e1;
+    text-decoration: underline;
+    word-break: break-all;
+    transition: 0.2s color;
+    &:hover {
+      color: #2b6cb0;
+    }
+  }
+`;
