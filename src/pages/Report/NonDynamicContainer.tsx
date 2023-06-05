@@ -72,7 +72,7 @@ const NonDynamicContainer: React.FC<{ issue: IssueDetailObject }> = ({
             borderRadius={20}
             width="100%"
             borderBottomWidth={0}
-            borderBottomRadius={0}
+            borderBottomRadius={comment.comment === "no_comment" ? 20 : 0}
           >
             <Table variant="unstyled">
               <Thead
@@ -111,32 +111,34 @@ const NonDynamicContainer: React.FC<{ issue: IssueDetailObject }> = ({
               </Tbody>
             </Table>
           </TableContainer>
-          <Flex
-            flexDirection={"column"}
-            alignItems={"flex-start"}
-            justifyContent={"flex-start"}
-            border="1px solid #D9D9D9"
-            borderRadius={20}
-            py={5}
-            px={5}
-            width="100%"
-            borderTopWidth={0}
-            borderTopRadius={0}
-          >
-            <HStack spacing={5} mb={5}>
-              <Image
-                src={`${assetsURL}report/comment.svg`}
-                height={8}
-                width={8}
-              />
-              <Text fontSize="md" fontWeight={"bold"} width={"100%"}>
-                Comments
+          {comment.comment !== "no_comment" && (
+            <Flex
+              flexDirection={"column"}
+              alignItems={"flex-start"}
+              justifyContent={"flex-start"}
+              border="1px solid #D9D9D9"
+              borderRadius={20}
+              py={5}
+              px={5}
+              width="100%"
+              borderTopWidth={0}
+              borderTopRadius={0}
+            >
+              <HStack spacing={5} mb={5}>
+                <Image
+                  src={`${assetsURL}report/comment.svg`}
+                  height={8}
+                  width={8}
+                />
+                <Text fontSize="md" fontWeight={"bold"} width={"100%"}>
+                  Comments
+                </Text>
+              </HStack>
+              <Text fontWeight={300} fontSize={"16px"} wordBreak="break-all">
+                {comment.comment}
               </Text>
-            </HStack>
-            <Text fontWeight={300} fontSize={"16px"} wordBreak="break-all">
-              {comment.comment}
-            </Text>
-          </Flex>
+            </Flex>
+          )}
         </>
       ))}
     </>
