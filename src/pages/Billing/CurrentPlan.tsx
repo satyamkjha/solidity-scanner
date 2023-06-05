@@ -14,6 +14,7 @@ import {
   Divider,
   AlertDialogFooter,
   Image,
+  Box,
 } from "@chakra-ui/react";
 import { dateToDDMMMMYYYY } from "common/functions";
 import { Plan } from "common/types";
@@ -22,7 +23,6 @@ import { getAssetsURL, sentenceCapitalize } from "helpers/helperFunction";
 import { API_PATH } from "helpers/routeManager";
 import { useConfig } from "hooks/useConfig";
 import React, { useRef, useState } from "react";
-import { Box } from "victory";
 
 const CurrentPlan: React.FC<{
   isCancellable: boolean;

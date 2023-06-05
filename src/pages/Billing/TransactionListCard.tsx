@@ -74,6 +74,7 @@ import { API_PATH } from "helpers/routeManager";
 import { useConfig } from "hooks/useConfig";
 import ScanCredits from "components/billing/ScanCredits";
 import PricingDetails from "pages/Pricing/components/PricingDetails";
+import { monthNames } from "common/values";
 
 const TransactionListCard: React.FC<{
   transactionList: Transaction[];

@@ -13,6 +13,8 @@ import {
   TabPanel,
   TabPanels,
   useMediaQuery,
+  Image,
+  Button,
 } from "@chakra-ui/react";
 import "./billing.css";
 
@@ -20,7 +22,6 @@ import CurrentPlan from "./CurrentPlan";
 import PromoCodeCard from "./PromoCodeCard";
 import { useProfile } from "hooks/useProfile";
 import { useAcceptedCoins } from "hooks/usePricing";
-
 import API from "helpers/api";
 import { daysRemaining, dateToDDMMMMYYYY } from "common/functions";
 import { Page, Plan, Profile, Transaction } from "common/types";
@@ -48,77 +49,132 @@ import PricingDetails from "pages/Pricing/components/PricingDetails";
 import TransactionListCard from "./TransactionListCard";
 
 const SelectPaymentMethod: React.FC<{
-  selectedPlan: string;
-  onClose: () => void;
-  profile: Profile;
-  fetchAgain: () => Promise<void>;
-}> = ({ selectedPlan, onClose, profile, fetchAgain }) => {
-  
-  const createStripePayment = async () => {
-    let duration = "";
-    if (selectedPlan === "ondemand") {
-      duration = "ondemand";
-    } else {
-      duration = "monthly";
-    }
-
-    const { data, status } = await API.post<{
-      status: string;
-      checkout_url: string;
-    }>(API_PATH.API_CREATE_STRIPE_SUBSCRIPTION_BETA, {
-      package: selectedPlan,
-      duration: duration,
-    });
-
-    if (status === 200) {
-      window.open(`${data.checkout_url}`, "_blank");
-      fetchAgain();
-      onClose();
-    }
-  };
-
-  const { data, isLoading } = useAcceptedCoins();
-  const [coin, setCoin] = useState("");
-  const [loading, setLoading] = useState(false);
-  const handleSubmit = async () => {
-    const width = 600;
-    const height = 800;
-    const left = window.innerWidth / 2 - width / 2;
-    const top = window.innerHeight / 2 - height / 2;
-    let duration = "";
-    if (selectedPlan === "ondemand") {
-      duration = "ondemand";
-    } else {
-      duration = "monthly";
-    }
-    try {
-      setLoading(true);
-      const { data } = await API.post<{
-        checkout_url: string;
-        status: string;
-        status_url: string;
-      }>(API_PATH.API_CREATE_ORDER_CP, {
-        package: selectedPlan,
-        currency: coin,
-        duration: duration,
-      });
-      setLoading(false);
-      const popup = window.open(
-        data.checkout_url,
-        "",
-        `toolbar=no, location=no, directories=no, status=no, menubar=no, scrollbars=no, resizable=no, copyhistory=no, width=${width}, height=${height}, top=${top}, left=${left}`
-      );
-      onClose();
-    } catch (e) {
-      setLoading(false);
-    }
-  };
+  paymentMethod: "cp" | "stripe";
+  setPaymentMethod: React.Dispatch<React.SetStateAction<"cp" | "stripe">>;
+}> = ({ paymentMethod, setPaymentMethod }) => {
+  const config: any = useConfig();
+  const assetsURL = getAssetsURL(config);
 
   const [isLargerThan400, isLargerThan50f0] = useMediaQuery([
     "(min-width : 400px)",
   ]);
 
-  return <></>;
+  return (
+    <Flex w="340px" flexDir="column" h="fit-content">
+      <HStack w="100%" spacing={"20px"} mx="10px">
+        <Flex
+          w="150px"
+          h="100px"
+          borderRadius="10px"
+          backgroundColor={paymentMethod === "cp" ? "#FFFFFF" : "#F7F9FC"}
+          flexDir={"column"}
+          justifyContent="flex-start"
+          alignItems="center"
+          p="10px"
+          boxShadow={
+            paymentMethod === "cp"
+              ? " 0px 4px 23px rgba(47, 248, 107, 0.2)"
+              : ""
+          }
+          border={paymentMethod === "cp" ? "1px solid #52FF00" : ""}
+          onClick={() => {
+            setPaymentMethod("cp");
+          }}
+        >
+          <HStack w="100%" justifyContent="flex-end">
+            <Flex
+              w="18px"
+              h="18px"
+              backgroundColor="#EFEFEF"
+              borderRadius="50%"
+              justifyContent={"center"}
+              alignItems={"center"}
+            >
+              <Box
+                w="10px"
+                h="10px"
+                background={
+                  paymentMethod === "cp"
+                    ? "linear-gradient(129.18deg, #52FF00 8.52%, #00EEFD 93.94%)"
+                    : "#B0B7C3"
+                }
+                borderRadius="50%"
+              ></Box>
+            </Flex>
+          </HStack>
+          <Image
+            height="30px"
+            width="100px"
+            src={`${assetsURL}billing/cp_logo.svg`}
+          />
+        </Flex>
+        <Flex
+          w="150px"
+          h="100px"
+          borderRadius="10px"
+          backgroundColor={paymentMethod === "stripe" ? "#FFFFFF" : "#F7F9FC"}
+          flexDir={"column"}
+          justifyContent="flex-start"
+          alignItems="center"
+          p="10px"
+          boxShadow={
+            paymentMethod === "stripe"
+              ? " 0px 4px 23px rgba(47, 248, 107, 0.2)"
+              : ""
+          }
+          border={paymentMethod === "stripe" ? "1px solid #52FF00" : ""}
+          onClick={() => {
+            setPaymentMethod("stripe");
+          }}
+        >
+          <HStack w="100%" justifyContent="flex-end">
+            <Flex
+              w="18px"
+              h="18px"
+              backgroundColor="#EFEFEF"
+              borderRadius="50%"
+              justifyContent={"center"}
+              alignItems={"center"}
+            >
+              <Box
+                w="10px"
+                h="10px"
+                background={
+                  paymentMethod === "stripe"
+                    ? "linear-gradient(129.18deg, #52FF00 8.52%, #00EEFD 93.94%)"
+                    : "#B0B7C3"
+                }
+                borderRadius="50%"
+              ></Box>
+            </Flex>
+          </HStack>
+          <Image
+            height="30px"
+            width="120px"
+            src={`${assetsURL}billing/stripe_logo.svg`}
+          />
+          <HStack
+            w="fit-content"
+            bgColor="#0A2540"
+            py="5px"
+            px="10px"
+            borderRadius="15px"
+            alignItems={"center"}
+            justifyContent={"center"}
+          >
+            <Text fontSize="10px" color="#FFFFFF" w="fit-content">
+              Pay With
+            </Text>
+            <Image
+              height="15px"
+              width="45px"
+              src={`${assetsURL}billing/stripe_white_logo.svg`}
+            />
+          </HStack>
+        </Flex>
+      </HStack>
+    </Flex>
+  );
 };
 
 export default SelectPaymentMethod;
