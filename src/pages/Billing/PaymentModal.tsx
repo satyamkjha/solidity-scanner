@@ -1,14 +1,4 @@
-import {
-  Modal,
-  ModalOverlay,
-  ModalContent,
-  ModalHeader,
-  ModalCloseButton,
-  ModalBody,
-  HStack,
-  Flex,
-  Divider,
-} from "@chakra-ui/react";
+import { Modal, ModalOverlay, Flex, Divider } from "@chakra-ui/react";
 import React, { useState } from "react";
 import { getAssetsURL } from "helpers/helperFunction";
 import { API_PATH } from "helpers/routeManager";
@@ -47,8 +37,8 @@ const PaymentModal: React.FC<{
     }
   };
 
-  const [coin, setCoin] = useState("");
-  const [loading, setLoading] = useState(false);
+  // const [coin, setCoin] = useState("");
+  // const [loading, setLoading] = useState(false);
   const handleSubmit = async () => {
     const width = 600;
     const height = 800;
