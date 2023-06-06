@@ -1,10 +1,13 @@
 import React, { useState } from "react";
 import {
+  Button,
   Flex,
+  HStack,
   Input,
   InputGroup,
   InputRightElement,
   Text,
+  useMediaQuery,
   useToast,
 } from "@chakra-ui/react";
 import "./billing.css";
@@ -28,7 +31,7 @@ const CouponCodeSection: React.FC<{
   const config: any = useConfig();
   const assetsURL = getAssetsURL(config);
   const [couponCode, setCouponCode] = useState<string>("");
-
+  const [isLargerThan450] = useMediaQuery(["(min-width: 450px)"]);
   const toast = useToast();
   const verifyCouponCode = () => {
     try {
@@ -73,36 +76,75 @@ const CouponCodeSection: React.FC<{
           variant={"brand"}
           size="lg"
           color={activeCoupon ? "#289F4C" : "#000000"}
-          value={activeCoupon ? `${activeCoupon} Code Applied` : couponCode}
+          value={
+            activeCoupon && isLargerThan450
+              ? `${activeCoupon} Code Applied`
+              : couponCode
+          }
           onChange={(e) => {
-            // if (activeCoupon === null)
             setCouponCode(e.target.value.toUpperCase());
           }}
         />
-        <InputRightElement
-          w="fit-content"
-          children={
+        {isLargerThan450 && (
+          <InputRightElement
+            w="fit-content"
+            children={
+              <Text
+                cursor={"pointer"}
+                fontSize={"sm"}
+                mt={2}
+                mr={4}
+                onClick={() => {
+                  if (activeCoupon) {
+                    setActiveCoupon(null);
+                  } else {
+                    verifyCouponCode();
+                  }
+                }}
+                color={
+                  couponCode.length > 3 || activeCoupon ? "#3E15F4" : "#CCCCCC"
+                }
+              >
+                {activeCoupon ? "Remove" : "Apply"}
+              </Text>
+            }
+          />
+        )}
+      </InputGroup>
+      {!isLargerThan450 && (
+        <HStack
+          mt={3}
+          justifyContent={"space-between"}
+          width={"100%"}
+          alignItems={"100%"}
+        >
+          <Text color="#289F4C">{activeCoupon ? "Code Applied!" : ""}</Text>
+
+          {activeCoupon ? (
             <Text
               cursor={"pointer"}
               fontSize={"sm"}
-              mt={2}
-              mr={4}
               onClick={() => {
                 if (activeCoupon) {
                   setActiveCoupon(null);
-                } else {
-                  verifyCouponCode();
                 }
               }}
-              color={
-                couponCode.length > 3 || activeCoupon ? "#3E15F4" : "#CCCCCC"
-              }
+              color={"#3E15F4"}
             >
-              {activeCoupon ? "Remove" : "Apply"}
+              Remove
             </Text>
-          }
-        />
-      </InputGroup>
+          ) : (
+            <Button
+              variant="outline"
+              borderWidth={2}
+              colorScheme={couponCode.length > 3 ? "purple" : "blackAlpha"}
+              onClick={verifyCouponCode}
+            >
+              Apply
+            </Button>
+          )}
+        </HStack>
+      )}
     </Flex>
   );
 };

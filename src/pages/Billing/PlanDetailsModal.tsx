@@ -154,8 +154,12 @@ const PlanDetailsModal: React.FC<{
                   <Tbody border="1px solid #D6D6D6">
                     {table.data.map((row) => (
                       <Tr>
-                        <Td border="1px solid #D6D6D6">{row.title}</Td>
+                        <Td minW="350px" w="70%" border="1px solid #D6D6D6">
+                          {row.title}
+                        </Td>
                         <Td
+                          w="30%"
+                          minW="150px"
                           bgColor={row[currentPackage] ? "#FFFFFF" : "#FCFCFF"}
                           textAlign="center"
                           border="1px solid #D6D6D6"
