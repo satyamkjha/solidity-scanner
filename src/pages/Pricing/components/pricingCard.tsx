@@ -21,6 +21,7 @@ import { useHistory } from "react-router-dom";
 import { useConfig } from "hooks/useConfig";
 import { pricing_card_description_data } from "common/values";
 import PaymentModal from "pages/Billing/PaymentModal";
+import PricingDetailsList from "./PricingDetailsList";
 
 export const PricingCard: React.FC<{
   page: "billing" | "pricing";
@@ -225,82 +226,17 @@ export const PricingCard: React.FC<{
             </Flex>
           )}
         </Flex>
-
-        <Text
-          fontSize="xs"
-          mb={1}
-          color="#7F7F7F"
-          fontWeight={300}
-          width="100%"
-          px={7}
+        <Flex
+          w="100%"
+          flexDir={"column"}
+          alignItems={"flex-start"}
+          justifyContent={"flex-start"}
         >
-          No of Scans
-        </Text>
-        <HStack
-          width="100%"
-          alignItems={"center"}
-          justifyContent="flex-start"
-          mb={5}
-          spacing={2}
-          px={7}
-        >
-          <Image
-            width="20px"
-            height="20px"
-            src={`${assetsURL}pricing/coin.svg`}
+          <PricingDetailsList
+            selectedPackage={plan}
+            plan={pricingDetails[duration][plan]}
           />
-          <Text fontWeight={700}>
-            {pricingDetails[duration][plan].scan_count}
-          </Text>
-          <Text fontWeight={500}>Scans</Text>
-        </HStack>
-        {pricing_card_description_data.map((item) => (
-          <VStack
-            width="100%"
-            pl={7}
-            alignItems={"flex-start"}
-            mb={4}
-            spacing={0}
-            opacity={
-              item.key === "detector"
-                ? 1
-                : item.key === "github" || item.key === "actions"
-                ? pricingDetails[duration][plan].github
-                  ? 1
-                  : 0.5
-                : item.key === "report" || item.key === "private"
-                ? pricingDetails[duration][plan].publishable_report
-                  ? 1
-                  : 0.5
-                : 0.5
-            }
-          >
-            <Text
-              fontSize="xs"
-              color="#7F7F7F"
-              textAlign={"left"}
-              fontWeight={300}
-              width="100%"
-            >
-              {item.description}
-            </Text>
-            <HStack
-              width="100%"
-              alignItems={"center"}
-              justifyContent="flex-start"
-              spacing={2}
-            >
-              <Image
-                width="20px"
-                height="20px"
-                src={`${assetsURL}${item.icon}`}
-              />
-              <Text fontSize="sm" fontWeight={400}>
-                {item.title}
-              </Text>
-            </HStack>
-          </VStack>
-        ))}
+        </Flex>
 
         <Button
           width="200px"
@@ -323,7 +259,13 @@ export const PricingCard: React.FC<{
           {mouse ? "Select Plan" : "Choose Plan"}
         </Button>
       </Flex>
-      <PaymentModal isOpen={isOpen} onClose={onClose} />
+      <PaymentModal
+        globalDuration={duration}
+        selectedPlan={plan}
+        pricingDetails={pricingDetails}
+        isOpen={isOpen}
+        onClose={onClose}
+      />
     </GridItem>
   );
 };

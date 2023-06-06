@@ -285,7 +285,7 @@ const TransactionListCard: React.FC<{
           next={() => fetchMoreTransactions()}
           hasMore={hasMore}
           loader={
-            <Box w={"100%"} align="center">
+            <Box w={"100%"} alignItems="center">
               <Spinner />
             </Box>
           }

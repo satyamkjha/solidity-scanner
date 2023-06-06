@@ -15,6 +15,7 @@ import {
   AlertDialogFooter,
   Image,
   Box,
+  useDisclosure,
 } from "@chakra-ui/react";
 import { dateToDDMMMMYYYY } from "common/functions";
 import { Plan } from "common/types";
@@ -23,6 +24,9 @@ import { getAssetsURL, sentenceCapitalize } from "helpers/helperFunction";
 import { API_PATH } from "helpers/routeManager";
 import { useConfig } from "hooks/useConfig";
 import React, { useRef, useState } from "react";
+import SubscriptionDataContainer from "./SubscriptionDataContainer";
+import CurrentPlanDescriptionContainer from "./CurrentPlanDescriptionContainer";
+import PlanDetailsModal from "./PlanDetailsModal";
 
 const CurrentPlan: React.FC<{
   isCancellable: boolean;
@@ -49,6 +53,8 @@ const CurrentPlan: React.FC<{
   const config: any = useConfig();
   const assetsURL = getAssetsURL(config);
 
+  const { isOpen, onClose, onOpen } = useDisclosure();
+
   const cancelSubscription = async () => {
     const { data } = await API.delete(
       API_PATH.API_CANCEL_STRIPE_SUBSCRIPTION_BETA
@@ -66,8 +72,8 @@ const CurrentPlan: React.FC<{
   };
 
   const cancelRef = useRef<HTMLButtonElement | null>(null);
-  const [isOpen, setIsOpen] = useState(false);
-  const onClose = () => setIsOpen(false);
+  const [open, setOpen] = useState(false);
+  const onModalClose = () => setOpen(false);
 
   const getNextPaymentValue = (startDate: Date, nextDate: Date) => {
     const timeDifference = nextDate.getTime() - startDate.getTime();
@@ -110,35 +116,10 @@ const CurrentPlan: React.FC<{
           justifyContent={"flex-start"}
           alignItems="flex-start"
         >
-          <Flex alignItems="center" justifyContent="center">
-            {packageName !== "trail" && (
-              <Image
-                width="35px"
-                height="35px"
-                src={`${assetsURL}pricing/${packageName}-heading.svg`}
-              />
-            )}
-            <Text fontSize={"2xl"} fontWeight={700}>
-              {sentenceCapitalize(name)}
-            </Text>
-          </Flex>
-          <Text
-            mt={2}
-            mb={3}
-            fontWeight={400}
-            color="detail"
-            width={["100%", "100%", "100%", "80%", "60%"]}
-          >
-            {plan.description}
-          </Text>
-          <Flex textAlign="center" my={4}>
-            <Heading fontSize={"x-large"}>
-              {plan.amount === "Free" ? "Free" : `$ ${plan.amount}`}&nbsp;
-            </Heading>
-            <Text fontSize="xs" color="detail" mt={2}>
-              {`/ month`}
-            </Text>
-          </Flex>
+          <CurrentPlanDescriptionContainer
+            packageName={packageName}
+            plan={plan}
+          />
           <Flex
             mt={5}
             flexWrap="wrap"
@@ -147,26 +128,10 @@ const CurrentPlan: React.FC<{
             flexDir={"row"}
           >
             {subscription && (
-              <>
-                <Box mt={5}>
-                  <Text fontWeight={400} fontSize="sm" mb={1} color="#4E5D78">
-                    Subscribed on
-                  </Text>
-                  <Text fontWeight={500} fontSize="md">
-                    {dateToDDMMMMYYYY(new Date(packageRechargeDate))}
-                  </Text>
-                </Box>
-                <Box mt={5} ml={10}>
-                  <Text fontWeight={400} fontSize="sm" mb={1} color="#4E5D78">
-                    Recurring Payment
-                  </Text>
-                  <Text fontWeight={500} fontSize="md">
-                    {packageName === "trail" || packageName === "ondemand"
-                      ? "--"
-                      : "Stripe Payment"}
-                  </Text>
-                </Box>
-              </>
+              <SubscriptionDataContainer
+                packageName={packageName}
+                packageRechargeDate={packageRechargeDate}
+              />
             )}
           </Flex>
         </Flex>
@@ -275,12 +240,15 @@ const CurrentPlan: React.FC<{
               fontSize="sm"
               fontWeight="400"
               px={8}
+              onClick={() => {
+                setOpen(!open);
+              }}
             >
               Plan Details
             </Button>
             {isCancellable && (
               <Button
-                onClick={() => setIsOpen(!isOpen)}
+                onClick={() => setOpen(!isOpen)}
                 variant="accent-outline"
                 borderRadius={"8px"}
                 color={"blue"}
@@ -297,7 +265,14 @@ const CurrentPlan: React.FC<{
           </Flex>
         </Flex>
       </Flex>
-
+      <PlanDetailsModal
+        subscription={subscription ? true : false}
+        currentPackage={packageName}
+        packageRechargeDate={packageRechargeDate}
+        plan={plan}
+        open={open}
+        onModalClose={onModalClose}
+      />
       <AlertDialog
         isOpen={isOpen}
         leastDestructiveRef={cancelRef}

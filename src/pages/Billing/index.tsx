@@ -195,9 +195,7 @@ const Billing: React.FC = () => {
                       plans.pricing_data["monthly"][data.current_package]
                     }
                     profile={data}
-                    topUpData={
-                      plans.pricing_data["topup-beginner"]["topup-beginner"]
-                    }
+                    topUpData={plans.pricing_data["topup"]["beginner"]}
                   />
                 )}
               </TabPanel>
