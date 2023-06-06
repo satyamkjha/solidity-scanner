@@ -12,9 +12,12 @@ import {
   Tabs,
   TabPanel,
   TabPanels,
+  Image,
+  VStack,
+  Button,
 } from "@chakra-ui/react";
 import "./billing.css";
-
+import LatestInvoice from "./LatestInvoice";
 import CurrentPlan from "./CurrentPlan";
 import PromoCodeCard from "./PromoCodeCard";
 import { useProfile } from "hooks/useProfile";
@@ -24,26 +27,22 @@ import API from "helpers/api";
 import { daysRemaining, dateToDDMMMMYYYY } from "common/functions";
 import { Page, Plan, Profile, Transaction } from "common/types";
 import { HiCheckCircle, HiXCircle } from "react-icons/hi";
-import { useParams } from "react-router-dom";
-import { placements } from "@popperjs/core";
 import ContactUs from "components/contactus";
 import { useTransactions } from "hooks/useTransactions";
 import { sentenceCapitalize, getAssetsURL } from "helpers/helperFunction";
 import { useInvoices } from "hooks/useInvoices";
-import ReactPaginate from "react-paginate";
-import { server } from "typescript";
 import {
   CoinPaymentsIcon,
   StripeLogo,
   StripePaymentsLogo,
 } from "components/icons";
 import InfiniteScroll from "react-infinite-scroll-component";
-import { Swiper, SwiperSlide, useSwiper } from "swiper/react";
 import { usePricingPlans } from "hooks/usePricingPlans";
 import { API_PATH } from "helpers/routeManager";
 import { useConfig } from "hooks/useConfig";
 import ScanCredits from "components/billing/ScanCredits";
 import PricingDetails from "pages/Pricing/components/PricingDetails";
+import { CloseIcon } from "@chakra-ui/icons";
 import TransactionListCard from "./TransactionListCard";
 
 const successColor = "#289F4C";
@@ -52,6 +51,7 @@ const greyColor = "#BDBDBD";
 const Billing: React.FC = () => {
   const { data } = useProfile();
   const [selectedPlan, setSelectedPlan] = useState("custom");
+  const pricingRef = useRef<HTMLDivElement>(null);
 
   const [pageNo, setPageNo] = useState(1);
   const { data: transactions, refetch } = useTransactions(pageNo, 10);
@@ -83,6 +83,16 @@ const Billing: React.FC = () => {
   const fetchMore = async () => {
     setPageNo(pageNo + 1);
     await refetch();
+  };
+
+  const onUpgradePlan = () => {
+    if (pricingRef.current) {
+      pricingRef.current.scrollIntoView({
+        behavior: "smooth",
+        block: "start",
+        inline: "start",
+      });
+    }
   };
 
   return (
@@ -171,33 +181,58 @@ const Billing: React.FC = () => {
             </Flex>
             <TabPanels width={"100%"}>
               <TabPanel width={"100%"} p={0}>
-                <Flex w="100%" pt={4} px={[0, 0, 8]} mb={8}>
-                  {data.current_package !== "trial" && (
-                    <CurrentPlan
-                      subscription={data.subscription}
-                      isCancellable={data.is_cancellable}
-                      name={
-                        plans.pricing_data["monthly"][data.current_package].name
-                      }
-                      packageName={data.current_package}
-                      packageRechargeDate={data.package_recharge_date}
-                      packageValidity={data.package_validity}
-                      plan={plans.pricing_data["monthly"][data.current_package]}
-                    />
-                  )}
+                <Flex w="100%" pt={4} px={[0, 0, 8]} mb={8} position="relative">
+                  <CurrentPlan
+                    subscription={data.subscription}
+                    isCancellable={data.is_cancellable}
+                    name={
+                      plans.pricing_data[data.billing_cycle][
+                        data.current_package
+                      ].name
+                    }
+                    packageName={data.current_package}
+                    packageRechargeDate={data.package_recharge_date}
+                    packageValidity={data.package_validity}
+                    plan={
+                      plans.pricing_data[data.billing_cycle][
+                        data.current_package
+                      ]
+                    }
+                    upgradePlan={onUpgradePlan}
+                  />
+                  <Flex
+                    h="100%"
+                    position="absolute"
+                    left="55%"
+                    top={0}
+                    right={4}
+                  >
+                    {transactionList.length > 0 &&
+                      transactionList[0].payment_status === "open" && (
+                        <LatestInvoice
+                          transactionData={transactionList[0]}
+                          selectedPlan={transactionList[0].package}
+                          planData={
+                            plans.pricing_data[data.billing_cycle][
+                              transactionList[0].package
+                            ]
+                          }
+                        />
+                      )}
+                  </Flex>
                 </Flex>
-                <PricingDetails pricingDetails={plans} page="billing" />
+                <Flex w="100%" ref={pricingRef}>
+                  <PricingDetails pricingDetails={plans} page="billing" />
+                </Flex>
               </TabPanel>
               <TabPanel px={[0, 0, 4]} mx={[0, 0, 4]}>
-                {data.current_package !== "trial" && (
-                  <ScanCredits
-                    planData={
-                      plans.pricing_data["monthly"][data.current_package]
-                    }
-                    profile={data}
-                    topUpData={plans.pricing_data["topup"]["beginner"]}
-                  />
-                )}
+                <ScanCredits
+                  planData={
+                    plans.pricing_data[data.billing_cycle][data.current_package]
+                  }
+                  profile={data}
+                  topUpData={plans.pricing_data["topup"][data.current_package]}
+                />
               </TabPanel>
               <TabPanel px={[0, 0, 4]} mx={[0, 0, 4]}>
                 <TransactionListCard

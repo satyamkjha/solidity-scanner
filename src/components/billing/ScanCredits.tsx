@@ -43,9 +43,9 @@ const ScanCredits: React.FC<{
   };
 
   return (
-    <Flex w="100%" h={"60vh"}>
+    <Flex w="100%" h={"60vh"} flexDir={["column", "column", "column", "row"]}>
       <Flex
-        w={"55%"}
+        w={["100%", "100%", "100%", "55%"]}
         h="100%"
         bgColor="white"
         borderRadius="15px"
@@ -68,7 +68,7 @@ const ScanCredits: React.FC<{
           dictumst viverra.
         </Text>
         <Flex
-          mt={"auto"}
+          mt={[8, 8, 8, "auto"]}
           border={"1px solid #FFC661"}
           bgColor="#FFF8ED"
           p={6}
@@ -81,13 +81,13 @@ const ScanCredits: React.FC<{
         </Flex>
       </Flex>
       <Flex
-        w={"45%"}
+        w={["100%", "100%", "100%", "45%"]}
         bgColor="white"
         borderRadius="15px"
         flexDir={"column"}
         py={8}
         px={10}
-        ml={10}
+        ml={[0, 0, 0, 10]}
       >
         <Text fontSize="lg">How many credits you need to buy?</Text>
         <Flex
@@ -158,7 +158,7 @@ const ScanCredits: React.FC<{
           <Flex
             flexDir="column"
             ml="auto"
-            w="10%"
+            w={["15%", "15%", "10%", "10%"]}
             h="100%"
             alignItems="center"
             justifyContent="center"

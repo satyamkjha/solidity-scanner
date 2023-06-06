@@ -30,6 +30,7 @@ const PricingDetails: React.FC<{
 
   return (
     <Flex
+      id={"pricing-details"}
       w="100%"
       flexDir={"column"}
       alignItems={"center"}
