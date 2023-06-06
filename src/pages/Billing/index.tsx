@@ -54,26 +54,22 @@ import API from "helpers/api";
 import { daysRemaining, dateToDDMMMMYYYY } from "common/functions";
 import { Page, Plan, Profile, Transaction } from "common/types";
 import { HiCheckCircle, HiXCircle } from "react-icons/hi";
-import { useParams } from "react-router-dom";
-import { placements } from "@popperjs/core";
 import ContactUs from "components/contactus";
 import { useTransactions } from "hooks/useTransactions";
 import { sentenceCapitalize, getAssetsURL } from "helpers/helperFunction";
 import { useInvoices } from "hooks/useInvoices";
-import ReactPaginate from "react-paginate";
-import { server } from "typescript";
 import {
   CoinPaymentsIcon,
   StripeLogo,
   StripePaymentsLogo,
 } from "components/icons";
 import InfiniteScroll from "react-infinite-scroll-component";
-import { Swiper, SwiperSlide, useSwiper } from "swiper/react";
 import { usePricingPlans } from "hooks/usePricingPlans";
 import { API_PATH } from "helpers/routeManager";
 import { useConfig } from "hooks/useConfig";
 import ScanCredits from "components/billing/ScanCredits";
 import PricingDetails from "pages/Pricing/components/PricingDetails";
+import { CloseIcon } from "@chakra-ui/icons";
 
 const successColor = "#289F4C";
 const greyColor = "#BDBDBD";
@@ -81,6 +77,7 @@ const greyColor = "#BDBDBD";
 const Billing: React.FC = () => {
   const { data } = useProfile();
   const [selectedPlan, setSelectedPlan] = useState("custom");
+  const pricingRef = useRef<HTMLDivElement>(null);
 
   const [pageNo, setPageNo] = useState(1);
   const { data: transactions, refetch } = useTransactions(pageNo, 10);
@@ -112,6 +109,16 @@ const Billing: React.FC = () => {
   const fetchMore = async () => {
     setPageNo(pageNo + 1);
     await refetch();
+  };
+
+  const onUpgradePlan = () => {
+    if (pricingRef.current) {
+      pricingRef.current.scrollIntoView({
+        behavior: "smooth",
+        block: "start",
+        inline: "start",
+      });
+    }
   };
 
   return (
@@ -200,26 +207,57 @@ const Billing: React.FC = () => {
             </Flex>
             <TabPanels width={"100%"}>
               <TabPanel width={"100%"} p={0}>
-                <Flex w="100%" pt={4} px={[0, 0, 8]} mb={8}>
+                <Flex w="100%" pt={4} px={[0, 0, 8]} mb={8} position="relative">
                   <CurrentPlan
                     subscription={data.subscription}
                     isCancellable={data.is_cancellable}
                     name={
-                      plans.pricing_data["monthly"][data.current_package].name
+                      plans.pricing_data[data.billing_cycle][
+                        data.current_package
+                      ].name
                     }
                     packageName={data.current_package}
                     packageRechargeDate={data.package_recharge_date}
                     packageValidity={data.package_validity}
-                    plan={plans.pricing_data["monthly"][data.current_package]}
+                    plan={
+                      plans.pricing_data[data.billing_cycle][
+                        data.current_package
+                      ]
+                    }
+                    upgradePlan={onUpgradePlan}
                   />
+                  <Flex
+                    h="100%"
+                    position="absolute"
+                    left="55%"
+                    top={0}
+                    right={4}
+                  >
+                    {transactionList.length > 0 &&
+                      transactionList[0].payment_status === "open" && (
+                        <LatestInvoice
+                          transactionData={transactionList[0]}
+                          selectedPlan={transactionList[0].package}
+                          planData={
+                            plans.pricing_data[data.billing_cycle][
+                              transactionList[0].package
+                            ]
+                          }
+                        />
+                      )}
+                  </Flex>
                 </Flex>
-                <PricingDetails pricingDetails={plans} page="billing" />
+                <Flex w="100%" ref={pricingRef}>
+                  <PricingDetails pricingDetails={plans} page="billing" />
+                </Flex>
               </TabPanel>
               <TabPanel px={[0, 0, 4]} mx={[0, 0, 4]}>
                 <ScanCredits
-                  planData={plans.pricing_data["monthly"][data.current_package]}
+                  planData={
+                    plans.pricing_data[data.billing_cycle][data.current_package]
+                  }
                   profile={data}
-                  topUpData={plans.pricing_data["topup"]["topup"]}
+                  topUpData={plans.pricing_data["topup"][data.current_package]}
                 />
               </TabPanel>
               <TabPanel px={[0, 0, 4]} mx={[0, 0, 4]}>
@@ -839,6 +877,7 @@ const CurrentPlan: React.FC<{
     start_date: string;
     renewal_date: string;
   };
+  upgradePlan: any;
 }> = ({
   name,
   packageName,
@@ -847,6 +886,7 @@ const CurrentPlan: React.FC<{
   plan,
   isCancellable,
   subscription,
+  upgradePlan,
 }) => {
   const toast = useToast();
   const config: any = useConfig();
@@ -872,21 +912,34 @@ const CurrentPlan: React.FC<{
   const [isOpen, setIsOpen] = useState(false);
   const onClose = () => setIsOpen(false);
 
-  const getNextPaymentValue = (startDate: Date, nextDate: Date) => {
-    const timeDifference = nextDate.getTime() - startDate.getTime();
-    const totalDays = Math.ceil(timeDifference / (1000 * 3600 * 24));
+  const getNextPaymentValue = (startDate: Date, nextDate?: Date) => {
     const daysTillNow = Math.ceil(
       (new Date().getTime() - startDate.getTime()) / (1000 * 3600 * 24)
     );
-
-    return (daysTillNow * 100) / totalDays;
+    if (nextDate) {
+      const timeDifference = nextDate.getTime() - startDate.getTime();
+      const totalDays = Math.ceil(timeDifference / (1000 * 3600 * 24));
+      return (daysTillNow * 100) / totalDays;
+    } else {
+      return (daysTillNow * 100) / packageValidity;
+    }
   };
 
-  const getNextPaymentDaysLeft = (nextDate: Date) => {
-    const timeDifference = nextDate.getTime() - new Date().getTime();
-    const daysLeft = Math.ceil(timeDifference / (1000 * 3600 * 24));
+  const getNextPaymentDaysLeft = (nextDate?: Date) => {
+    if (nextDate) {
+      const timeDifference = nextDate.getTime() - new Date().getTime();
+      return Math.ceil(timeDifference / (1000 * 3600 * 24));
+    } else {
+      const startDate = new Date(packageRechargeDate);
+      const currentDate = new Date();
+      const millisecondsPerDay = 24 * 60 * 60 * 1000;
 
-    return daysLeft;
+      const elapsedTime = currentDate.getTime() - startDate.getTime();
+      const elapsedDays = Math.floor(elapsedTime / millisecondsPerDay);
+
+      const remainingDays = packageValidity - elapsedDays;
+      return remainingDays;
+    }
   };
 
   return (
@@ -934,7 +987,7 @@ const CurrentPlan: React.FC<{
           >
             {plan.description}
           </Text>
-          <Flex textAlign="center" my={4}>
+          <Flex textAlign="center" my={2}>
             <Heading fontSize={"x-large"}>
               {plan.amount === "Free" ? "Free" : `$ ${plan.amount}`}&nbsp;
             </Heading>
@@ -942,6 +995,18 @@ const CurrentPlan: React.FC<{
               {`/ month`}
             </Text>
           </Flex>
+          {packageName !== "pro" && (
+            <Button
+              variant="brand"
+              px={8}
+              mt={3}
+              fontWeight={400}
+              borderRadius="8px"
+              onClick={upgradePlan}
+            >
+              Upgrade Plan
+            </Button>
+          )}
           <Flex
             mt={5}
             flexWrap="wrap"
@@ -949,7 +1014,7 @@ const CurrentPlan: React.FC<{
             w={"100%"}
             flexDir={"row"}
           >
-            {subscription && (
+            {packageName !== "trail" && (
               <>
                 <Box mt={5}>
                   <Text fontWeight={400} fontSize="sm" mb={1} color="#4E5D78">
@@ -1021,15 +1086,16 @@ const CurrentPlan: React.FC<{
             ) : (
               <>
                 <Flex>
-                  <VStack alignItems="flex-start" spacing={1}>
-                    <Text fontSize="xs" fontWeight="400">
-                      Next Billed on
-                    </Text>
-                    <Text fontSize="sm" fontWeight="600">
-                      {subscription &&
-                        dateToDDMMMMYYYY(new Date(subscription.renewal_date))}
-                    </Text>
-                  </VStack>
+                  {subscription && (
+                    <VStack alignItems="flex-start" spacing={1}>
+                      <Text fontSize="xs" fontWeight="400">
+                        Next Billed on
+                      </Text>
+                      <Text fontSize="sm" fontWeight="600">
+                        {dateToDDMMMMYYYY(new Date(subscription.renewal_date))}
+                      </Text>
+                    </VStack>
+                  )}
                   {packageName === "pro" && (
                     <Image
                       src={`${assetsURL}pricing/pro_badge.svg`}
@@ -1041,11 +1107,12 @@ const CurrentPlan: React.FC<{
                 <Flex mt={4} align="center">
                   <CircularProgress
                     value={
-                      subscription &&
-                      getNextPaymentValue(
-                        new Date(packageRechargeDate),
-                        new Date(subscription.renewal_date)
-                      )
+                      subscription
+                        ? getNextPaymentValue(
+                            new Date(packageRechargeDate),
+                            new Date(subscription.renewal_date)
+                          )
+                        : getNextPaymentValue(new Date(packageRechargeDate))
                     }
                     color={packageName + "-dark"}
                     trackColor="white"
@@ -1055,10 +1122,11 @@ const CurrentPlan: React.FC<{
                   ></CircularProgress>
                   <VStack alignItems="flex-start" spacing={0} ml={3}>
                     <Text fontSize="lg" fontWeight="700">
-                      {subscription &&
-                        getNextPaymentDaysLeft(
-                          new Date(subscription.renewal_date)
-                        )}
+                      {subscription
+                        ? getNextPaymentDaysLeft(
+                            new Date(subscription.renewal_date)
+                          )
+                        : getNextPaymentDaysLeft()}
                       &nbsp; days
                     </Text>
                     <Text fontSize="sm" fontWeight="400">
@@ -1166,145 +1234,49 @@ const LatestInvoice: React.FC<{
   const assetsURL = getAssetsURL(config);
 
   return (
-    <>
-      <Flex
-        alignItems={"flex-start"}
-        justifyContent={"flex-start"}
-        flexDir={["column"]}
-        w={"100%"}
-        backgroundColor={"white"}
-        borderRadius="xl"
-        border={"1px solid #3E15F4"}
-        maxW="1000px"
-        mb={5}
-        overflow={"hidden"}
-        _hover={{
-          filter: "drop-shadow(0px 4px 23px rgba(0, 0, 0, 0.15));",
+    <Flex
+      w={"100%"}
+      backgroundColor={"white"}
+      borderRadius="15px"
+      mt={4}
+      px={[5, 5, 10]}
+      py={[5, 5, 8]}
+      boxShadow={"0px 2px 10px rgba(0, 0, 0, 0.15)"}
+      flexDir="column"
+    >
+      <Flex w="100%" align="center">
+        <Text fontWeight="600">Complete your purchase</Text>
+        <CloseIcon ml="auto" color="#B0B7C3" cursor="pointer" />
+      </Flex>
+      <VStack w={["100%"]} align="flex-start" mt={6}>
+        <Flex alignItems="center" justifyContent="center">
+          <Image
+            width="35px"
+            height="35px"
+            src={`${assetsURL}pricing/${selectedPlan}-heading.svg`}
+          />
+          <Text fontSize={"2xl"} fontWeight={700}>
+            {sentenceCapitalize(planData.name)}
+          </Text>
+        </Flex>
+        <Text as="span" mt={10} fontWeight={300} fontSize="smaller">
+          {planData.description}
+        </Text>
+        <Heading mt={3} fontSize={"x-large"}>
+          {planData.amount === "Free" ? "Free" : `$ ${planData.amount}`}
+        </Heading>
+      </VStack>
+      <Button
+        variant="brand"
+        mt={"auto"}
+        mx={[2, 2, 2, 14]}
+        onClick={() => {
+          window.open(`${transactionData.invoice_url}`, "_blank");
         }}
       >
-        <HStack
-          width={"100%"}
-          px={[5, 5, 10]}
-          py={4}
-          mr={5}
-          backgroundColor={"#F5F2FF"}
-          borderBottom={"1px solid #3E15F4"}
-        >
-          <Image src={`${assetsURL}icons/info.svg`} />
-          <Text fontSize={"md"} fontWeight={600}>
-            Complete your open {transactionData.payment_platform} Payment
-          </Text>
-        </HStack>
-        <Flex
-          p={[5, 5, 10]}
-          flexDir={["column", "column", "row"]}
-          w={"100%"}
-          justify={["flex-start", "flex-start", "space-between"]}
-          align={"flex-start"}
-        >
-          <VStack w={["100%", "100%", "40%"]} align="flex-start">
-            <Text fontSize={"lg"} sx={{ color: "text", fontWeight: 900 }}>
-              {planData.name}
-            </Text>
-            <Text as="span" mt={10} fontWeight={300} fontSize="smaller">
-              {planData.description}
-            </Text>
-            <Heading mt={3} fontSize={"x-large"}>
-              {planData.amount === "Free" ? "Free" : `$ ${planData.amount}`}
-            </Heading>
-          </VStack>
-          <Flex
-            mt={[5, 5, 3]}
-            justifyContent="flex-start"
-            alignItems="flex-start"
-            flexDirection="column"
-          >
-            <HStack mt={2} justify={"flex-start"}>
-              <HiCheckCircle size={20} color={successColor} />
-
-              <Text fontSize={"sm"} ml={5}>
-                {planData.scan_count} Scan Credit
-              </Text>
-            </HStack>
-            <HStack mt={2} justify={"flex-start"}>
-              <HiCheckCircle size={20} color={successColor} />
-
-              <Text fontSize={"sm"} ml={5}>
-                Security Score
-              </Text>
-            </HStack>
-            <HStack mt={2} justify={"flex-start"}>
-              {planData.name === "trial" ? (
-                <HiXCircle size={20} color={greyColor} />
-              ) : (
-                <HiCheckCircle size={20} color={successColor} />
-              )}
-
-              <Text fontSize={"sm"} ml={5}>
-                Detailed Result
-              </Text>
-            </HStack>
-            <HStack mt={2} justify={"flex-start"}>
-              {planData.github ? (
-                <HiCheckCircle size={20} color={successColor} />
-              ) : (
-                <HiXCircle size={20} color={greyColor} />
-              )}
-
-              <Text fontSize={"sm"} ml={5}>
-                Private Github
-              </Text>
-            </HStack>
-            <HStack mt={2} justify={"flex-start"}>
-              {planData.report ? (
-                <HiCheckCircle size={20} color={successColor} />
-              ) : (
-                <HiXCircle size={20} color={greyColor} />
-              )}
-
-              <Text fontSize={"sm"} ml={5}>
-                Generate Report
-              </Text>
-            </HStack>
-            <HStack mt={2} justify={"flex-start"}>
-              {planData.publishable_report ? (
-                <HiCheckCircle size={20} color={successColor} />
-              ) : (
-                <HiXCircle size={20} color={greyColor} />
-              )}
-
-              <Text fontSize={"sm"} ml={5}>
-                Publishable Report
-              </Text>
-            </HStack>
-            <HStack mt={2} justify={"flex-start"}>
-              {selectedPlan === "Enterprise" ? (
-                <HiCheckCircle size={20} color={successColor} />
-              ) : (
-                <HiXCircle size={20} color={greyColor} />
-              )}
-
-              <Text fontSize={"sm"} ml={5}>
-                White Glove Services
-              </Text>
-            </HStack>
-          </Flex>
-        </Flex>
-        <Button
-          variant="brand"
-          ml={[5, 5, 10]}
-          mt={[5, 5, -20]}
-          mb={10}
-          onClick={() => {
-            window.open(`${transactionData.invoice_url}`, "_blank");
-          }}
-        >
-          Complete Payment
-        </Button>
-
-        {/* <PricingDetails planData={planData} selectedPlan={selectedPlan} /> */}
-      </Flex>
-    </>
+        Make Payment
+      </Button>
+    </Flex>
   );
 };
 
