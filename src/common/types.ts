@@ -393,6 +393,7 @@ export type Pagination = {
 export type Transaction = {
   date: string;
   package: string;
+  billing_cycle: string;
   currency: string;
   amount: string;
   order_id: string;

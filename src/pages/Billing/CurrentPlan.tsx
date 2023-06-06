@@ -72,9 +72,11 @@ const CurrentPlan: React.FC<{
   };
 
   const cancelRef = useRef<HTMLButtonElement | null>(null);
-  const { isOpen, onClose, onOpen } = useDisclosure();
   const [open, setOpen] = useState(false);
   const onModalClose = () => setOpen(false);
+
+  const [isCancelSub, setIsCancelSub] = useState(false);
+  const onClose = () => setIsCancelSub(false);
 
   const getNextPaymentValue = (startDate: Date, nextDate?: Date) => {
     const daysTillNow = Math.ceil(
@@ -278,7 +280,7 @@ const CurrentPlan: React.FC<{
             </Button>
             {isCancellable && (
               <Button
-                onClick={() => setOpen(!isOpen)}
+                onClick={() => setIsCancelSub(!isCancelSub)}
                 variant="accent-outline"
                 borderRadius={"8px"}
                 color={"blue"}
@@ -305,7 +307,7 @@ const CurrentPlan: React.FC<{
       />
 
       <AlertDialog
-        isOpen={isOpen}
+        isOpen={isCancelSub}
         leastDestructiveRef={cancelRef}
         onClose={onClose}
       >

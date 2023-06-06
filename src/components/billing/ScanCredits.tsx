@@ -20,11 +20,14 @@ import { API_PATH } from "helpers/routeManager";
 const ScanCredits: React.FC<{
   planData: Plan;
   profile: Profile;
-  topUpData: Plan;
+  topUpData: {
+    [plan: string]: Plan;
+  };
 }> = ({ planData, profile, topUpData }) => {
   const assetsURL = getAssetsURL();
   const [optionsSelected, setOptionsSelected] = useState(false);
   const [selectedIndex, setSelectedIndex] = useState(0);
+  const currentTopUpPlan = topUpData[profile.current_package];
   const creditOptions = ["00", "02", "05", "10", "20", "40", "60", "80"];
 
   const makePament = async () => {
@@ -53,7 +56,7 @@ const ScanCredits: React.FC<{
         p={8}
       >
         <Text color="text">Current Selected Plan</Text>
-        <Flex my={6} alignItems="center">
+        <Flex mt={6} mb={2} alignItems="center">
           <Image
             width="35px"
             height="35px"
@@ -64,9 +67,28 @@ const ScanCredits: React.FC<{
           </Text>
         </Flex>
         <Text color="detail" fontWeight={400}>
-          Lorem ipsum dolor sit amet consectetur. Purus diam a consectetur arcu
-          dictumst viverra.
+          {planData.description}
         </Text>
+        <Flex
+          p={4}
+          my={4}
+          borderRadius="15px"
+          background=" #FCFCFC"
+          flexDir="column"
+        >
+          {Object.keys(topUpData).map((key, index) => (
+            <>
+              <Flex key={index} w="100%" fontSize="sm" fontWeight="600">
+                <Text>{sentenceCapitalize(topUpData[key].name)}</Text>
+                <Text ml="auto">{`$ ${topUpData[key].amount}`}</Text>
+                <Text fontWeight={400}>&nbsp;/ Credit</Text>
+              </Flex>
+              {index !== Object.keys(topUpData).length - 1 && (
+                <Divider borderColor="#F3F3F3" my={1} />
+              )}
+            </>
+          ))}
+        </Flex>
         <Flex
           mt={[8, 8, 8, "auto"]}
           border={"1px solid #FFC661"}
@@ -75,8 +97,9 @@ const ScanCredits: React.FC<{
           borderRadius={"15px"}
         >
           <Text color="detail" fontWeight={400}>
-            Lorem $15.00 Per Credit amet consectetur. Eu On Demand blandit arcu
-            et massa sit. Purus aliquam sagittis convallis vitae aliquam magna.
+            Increase your scan credits with our top-up option. For your current
+            <strong> {sentenceCapitalize(planData.name)} </strong> plan it will
+            cost <strong>${currentTopUpPlan.amount} </strong> per credit.
           </Text>
         </Flex>
       </Flex>
@@ -204,9 +227,9 @@ const ScanCredits: React.FC<{
           mt={2}
         >{`${creditOptions[selectedIndex]} credits`}</Text>
         <Flex w="100%" textColor="subtle" my={2}>
-          <Text fontSize="lg">{`$${topUpData.amount} Per Credit  X  ${creditOptions[selectedIndex]}`}</Text>
+          <Text fontSize="lg">{`$${currentTopUpPlan.amount} Per Credit  X  ${creditOptions[selectedIndex]}`}</Text>
           <Text ml="auto">{`$${
-            parseFloat(topUpData.amount) *
+            parseFloat(currentTopUpPlan.amount) *
             parseInt(creditOptions[selectedIndex])
           }`}</Text>
         </Flex>
@@ -215,7 +238,7 @@ const ScanCredits: React.FC<{
           <Text fontSize="lg">Total</Text>
           <Text fontSize="2xl" fontWeight={800} ml="auto">
             {`$${Number(
-              parseFloat(topUpData.amount) *
+              parseFloat(currentTopUpPlan.amount) *
                 parseInt(creditOptions[selectedIndex])
             ).toFixed(2)}`}
           </Text>

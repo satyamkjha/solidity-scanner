@@ -21,32 +21,13 @@ import LatestInvoice from "./LatestInvoice";
 import CurrentPlan from "./CurrentPlan";
 import PromoCodeCard from "./PromoCodeCard";
 import { useProfile } from "hooks/useProfile";
-import { useAcceptedCoins } from "hooks/usePricing";
 
-import API from "helpers/api";
-import { daysRemaining, dateToDDMMMMYYYY } from "common/functions";
 import { Page, Plan, Profile, Transaction } from "common/types";
-import { HiCheckCircle, HiXCircle } from "react-icons/hi";
-import ContactUs from "components/contactus";
 import { useTransactions } from "hooks/useTransactions";
-import { sentenceCapitalize, getAssetsURL } from "helpers/helperFunction";
-import { useInvoices } from "hooks/useInvoices";
-import {
-  CoinPaymentsIcon,
-  StripeLogo,
-  StripePaymentsLogo,
-} from "components/icons";
-import InfiniteScroll from "react-infinite-scroll-component";
 import { usePricingPlans } from "hooks/usePricingPlans";
-import { API_PATH } from "helpers/routeManager";
-import { useConfig } from "hooks/useConfig";
 import ScanCredits from "components/billing/ScanCredits";
 import PricingDetails from "pages/Pricing/components/PricingDetails";
-import { CloseIcon } from "@chakra-ui/icons";
 import TransactionListCard from "./TransactionListCard";
-
-const successColor = "#289F4C";
-const greyColor = "#BDBDBD";
 
 const Billing: React.FC = () => {
   const { data } = useProfile();
@@ -192,7 +173,14 @@ const Billing: React.FC = () => {
             </Flex>
             <TabPanels width={"100%"}>
               <TabPanel width={"100%"} p={0}>
-                <Flex w="100%" pt={4} px={[0, 0, 8]} mb={8} position="relative">
+                <Flex
+                  w="100%"
+                  pt={4}
+                  px={[0, 0, 8]}
+                  mb={8}
+                  position="relative"
+                  flexDir={["column", "column", "column", "row"]}
+                >
                   <CurrentPlan
                     subscription={data.subscription}
                     isCancellable={data.is_cancellable}
@@ -212,8 +200,13 @@ const Billing: React.FC = () => {
                     transactionList[0].payment_status === "open" && (
                       <Flex
                         h="100%"
-                        position="absolute"
-                        left="55%"
+                        position={[
+                          "relative",
+                          "relative",
+                          "relative",
+                          "absolute",
+                        ]}
+                        left={[0, 0, 0, "55%"]}
                         top={0}
                         right={4}
                       >
@@ -221,10 +214,11 @@ const Billing: React.FC = () => {
                           transactionData={transactionList[0]}
                           selectedPlan={transactionList[0].package}
                           planData={
-                            plans.pricing_data[planBillingCycle][
-                              transactionList[0].package
-                            ]
+                            plans.pricing_data[
+                              transactionList[0].billing_cycle
+                            ][transactionList[0].package]
                           }
+                          onPaymentCancel={fetchAgain}
                         />
                       </Flex>
                     )}
@@ -240,9 +234,7 @@ const Billing: React.FC = () => {
                       plans.pricing_data[planBillingCycle][data.current_package]
                     }
                     profile={data}
-                    topUpData={
-                      plans.pricing_data["topup"][data.current_package]
-                    }
+                    topUpData={plans.pricing_data["topup"]}
                   />
                 </TabPanel>
               )}
@@ -250,7 +242,7 @@ const Billing: React.FC = () => {
                 <TransactionListCard
                   transactionList={transactionList}
                   page={page}
-                  fetchAgain={fetchAgain}
+                  onPaymentCancel={fetchAgain}
                   pageNo={pageNo}
                   fetchMore={fetchMore}
                 />
