@@ -828,10 +828,12 @@ const QuickScan: React.FC = () => {
                 py={5}
                 background={
                   scanReport
-                    ? parseFloat(scanReport.multi_file_scan_summary.score) < 2.5
+                    ? parseFloat(scanReport.multi_file_scan_summary.score_v2) <
+                      50
                       ? "linear-gradient(96.27deg, #FFF3F0 0.75%, #FFE0D9 96.71%)"
-                      : parseFloat(scanReport.multi_file_scan_summary.score) >=
-                        4.5
+                      : parseFloat(
+                          scanReport.multi_file_scan_summary.score_v2
+                        ) >= 85
                       ? "linear-gradient(96.27deg, #EFFFED 0.75%, #E6FFE2 96.71%)"
                       : "linear-gradient(96.27deg, #FFFAF2 0.75%, #FFF4E1 96.71%)"
                     : "linear-gradient(96.27deg, #FFFAF2 0.75%, #FFF4E1 96.71%)"
@@ -842,7 +844,9 @@ const QuickScan: React.FC = () => {
                 </Text>
                 <SolidityScoreProgress
                   score={
-                    scanReport ? scanReport.multi_file_scan_summary.score : "0"
+                    scanReport
+                      ? scanReport.multi_file_scan_summary.score_v2
+                      : "0"
                   }
                   size={"100px"}
                   thickness={"8px"}
@@ -850,10 +854,12 @@ const QuickScan: React.FC = () => {
                 <Text fontWeight={300} fontSize="sm" mt={5}>
                   Your Solidity Score is{" "}
                   {scanReport
-                    ? parseFloat(scanReport.multi_file_scan_summary.score) < 2.5
+                    ? parseFloat(scanReport.multi_file_scan_summary.score_v2) <
+                      50
                       ? " LOW"
-                      : parseFloat(scanReport.multi_file_scan_summary.score) >=
-                        4.5
+                      : parseFloat(
+                          scanReport.multi_file_scan_summary.score_v2
+                        ) >= 85
                       ? " GREAT"
                       : " AVERAGE"
                     : "Low"}
@@ -1350,7 +1356,7 @@ const QuickScan: React.FC = () => {
                       <HStack my={4} width={"100%"} justify={"space-between"}>
                         <Text fontSize="sm">Score</Text>
                         <Text fontSize="sm">
-                          {scanReport.multi_file_scan_summary.score + "/5"}
+                          {scanReport.multi_file_scan_summary.score_v2 + "/100"}
                         </Text>
                       </HStack>
                       <Divider />

@@ -280,7 +280,7 @@ const BlockCard: React.FC<{ scan: Scan }> = ({ scan }) => {
             height="fit-content"
             mb={7}
           >
-            <Score score={multi_file_scan_summary?.score || "0"} />
+            <Score score={multi_file_scan_summary?.score_v2 || "0"} />
             {/* <HStack
                 h="fit-content"
                 py={1}

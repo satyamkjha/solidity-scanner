@@ -166,9 +166,9 @@ const Overview: React.FC<{
               py={6}
               borderRadius={"15px"}
               background={
-                parseFloat(scanData.multi_file_scan_summary.score) < 2.5
+                parseFloat(scanData.multi_file_scan_summary.score_v2) < 50
                   ? "linear-gradient(96.27deg, #FFF3F0 0.75%, #FFE0D9 96.71%)"
-                  : parseFloat(scanData.multi_file_scan_summary.score) >= 4.5
+                  : parseFloat(scanData.multi_file_scan_summary.score_v2) >= 85
                   ? "linear-gradient(96.27deg, #EFFFED 0.75%, #E6FFE2 96.71%)"
                   : "linear-gradient(96.27deg, #FFFAF2 0.75%, #FFF4E1 96.71%)"
               }
@@ -180,17 +180,17 @@ const Overview: React.FC<{
                 direction={["column", "column", "row"]}
               >
                 <SolidityScoreProgress
-                  score={scanData.multi_file_scan_summary.score}
+                  score={scanData.multi_file_scan_summary.score_v2}
                   size={"85px"}
                   thickness={"7px"}
                 />
                 <VStack alignItems="flex-start" px={4}>
                   <Text fontSize="18px" fontWeight={600} textAlign="center">
                     Your Solidity Score is
-                    {parseFloat(scanData.multi_file_scan_summary.score) < 2.5
+                    {parseFloat(scanData.multi_file_scan_summary.score_v2) < 50
                       ? " LOW"
-                      : parseFloat(scanData.multi_file_scan_summary.score) >=
-                        4.5
+                      : parseFloat(scanData.multi_file_scan_summary.score_v2) >=
+                        85
                       ? " GREAT"
                       : " AVERAGE"}
                   </Text>
@@ -239,7 +239,7 @@ const Overview: React.FC<{
                 <HStack w="100%" justifyContent="space-between">
                   <Text color="detail">Score</Text>
                   <Text color="detail">
-                    {scanData.multi_file_scan_summary.score + "/5"}
+                    {scanData.multi_file_scan_summary.score_v2 + "/100"}
                   </Text>
                 </HStack>
                 <Divider />

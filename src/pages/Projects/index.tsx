@@ -328,7 +328,7 @@ const ProjectCard: React.FC<{
                 )}
               </Flex>
               <Flex w="100%" alignItems="center" justifyContent="flex-start">
-                <Score score={multi_file_scan_summary?.score || "0"} />
+                <Score score={multi_file_scan_summary?.score_v2 || "0"} />
               </Flex>
               <VulnerabilityDistribution
                 critical={
