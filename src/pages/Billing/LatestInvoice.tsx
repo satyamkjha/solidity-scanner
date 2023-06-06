@@ -3,6 +3,7 @@ import { Flex, VStack, Heading, Button, Text, Image } from "@chakra-ui/react";
 import { Plan, Transaction } from "common/types";
 import { getAssetsURL, sentenceCapitalize } from "helpers/helperFunction";
 import { useConfig } from "hooks/useConfig";
+import React from "react";
 
 const LatestInvoice: React.FC<{
   planData: Plan;

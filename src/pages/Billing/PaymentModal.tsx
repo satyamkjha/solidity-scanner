@@ -287,7 +287,8 @@ const PaymentModal: React.FC<{
                   Coupon Code
                 </Text>
                 <Heading color={"#8A94A6"} fontSize={"md"}>
-                  {`- $ 00.00`}{" "}
+                  {/* {`- $ 00.00`}{" "} */}
+                  {updatedPrice}
                 </Heading>
               </HStack>
               <Divider mt={4} />
