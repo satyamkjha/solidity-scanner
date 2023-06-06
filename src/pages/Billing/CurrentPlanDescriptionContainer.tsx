@@ -46,15 +46,18 @@ const CurrentPlanDescriptionContainer: React.FC<{
         color="detail"
         width={["100%", "100%", "100%", "80%", "60%"]}
       >
-        {plan.description}
+        {plan.description ||
+          "Simplest way to get started with the product. Scan your contract using free credits and get your security score and issue count"}
       </Text>
       <Flex textAlign="center" my={4}>
         <Heading fontSize={"x-large"}>
           {plan.amount === "Free" ? "Free" : `$ ${plan.amount}`}&nbsp;
         </Heading>
-        <Text fontSize="xs" color="detail" mt={2}>
-          {`/ month`}
-        </Text>
+        {packageName !== "trial" && packageName !== "ondemand" && (
+          <Text fontSize="xs" color="detail" mt={2}>
+            {`/ month `}
+          </Text>
+        )}
       </Flex>
     </Flex>
   );
