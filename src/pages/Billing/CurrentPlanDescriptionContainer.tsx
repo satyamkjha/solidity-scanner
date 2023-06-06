@@ -17,7 +17,8 @@ import { Plan } from "common/types";
 const CurrentPlanDescriptionContainer: React.FC<{
   packageName: string;
   plan: Plan;
-}> = ({ packageName, plan }) => {
+  showDescription?: boolean;
+}> = ({ packageName, plan, showDescription = true }) => {
   const config: any = useConfig();
   const assetsURL = getAssetsURL(config);
   return (
@@ -39,22 +40,27 @@ const CurrentPlanDescriptionContainer: React.FC<{
           {sentenceCapitalize(plan.name)}
         </Text>
       </Flex>
-      <Text
-        mt={2}
-        mb={3}
-        fontWeight={400}
-        color="detail"
-        width={["100%", "100%", "100%", "80%", "60%"]}
-      >
-        {plan.description}
-      </Text>
+      {showDescription && (
+        <Text
+          mt={2}
+          mb={3}
+          fontWeight={400}
+          color="detail"
+          width={["100%", "100%", "100%", "80%", "60%"]}
+        >
+          {plan.description ||
+            "Simplest way to get started with the product. Scan your contract using free credits and get your security score and issue count"}
+        </Text>
+      )}
       <Flex textAlign="center" my={4}>
         <Heading fontSize={"x-large"}>
           {plan.amount === "Free" ? "Free" : `$ ${plan.amount}`}&nbsp;
         </Heading>
-        <Text fontSize="xs" color="detail" mt={2}>
-          {`/ month`}
-        </Text>
+        {packageName !== "trial" && packageName !== "ondemand" && (
+          <Text fontSize="xs" color="detail" mt={2}>
+            {`/ month `}
+          </Text>
+        )}
       </Flex>
     </Flex>
   );

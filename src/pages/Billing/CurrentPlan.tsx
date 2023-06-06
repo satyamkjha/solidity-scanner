@@ -40,6 +40,7 @@ const CurrentPlan: React.FC<{
     start_date: string;
     renewal_date: string;
   };
+  upgradePlan: any;
 }> = ({
   name,
   packageName,
@@ -48,12 +49,11 @@ const CurrentPlan: React.FC<{
   plan,
   isCancellable,
   subscription,
+  upgradePlan,
 }) => {
   const toast = useToast();
   const config: any = useConfig();
   const assetsURL = getAssetsURL(config);
-
-  const { isOpen, onClose, onOpen } = useDisclosure();
 
   const cancelSubscription = async () => {
     const { data } = await API.delete(
@@ -75,21 +75,37 @@ const CurrentPlan: React.FC<{
   const [open, setOpen] = useState(false);
   const onModalClose = () => setOpen(false);
 
-  const getNextPaymentValue = (startDate: Date, nextDate: Date) => {
-    const timeDifference = nextDate.getTime() - startDate.getTime();
-    const totalDays = Math.ceil(timeDifference / (1000 * 3600 * 24));
+  const [isCancelSub, setIsCancelSub] = useState(false);
+  const onClose = () => setIsCancelSub(false);
+
+  const getNextPaymentValue = (startDate: Date, nextDate?: Date) => {
     const daysTillNow = Math.ceil(
       (new Date().getTime() - startDate.getTime()) / (1000 * 3600 * 24)
     );
-
-    return (daysTillNow * 100) / totalDays;
+    if (nextDate) {
+      const timeDifference = nextDate.getTime() - startDate.getTime();
+      const totalDays = Math.ceil(timeDifference / (1000 * 3600 * 24));
+      return (daysTillNow * 100) / totalDays;
+    } else {
+      return (daysTillNow * 100) / packageValidity;
+    }
   };
 
-  const getNextPaymentDaysLeft = (nextDate: Date) => {
-    const timeDifference = nextDate.getTime() - new Date().getTime();
-    const daysLeft = Math.ceil(timeDifference / (1000 * 3600 * 24));
+  const getNextPaymentDaysLeft = (nextDate?: Date) => {
+    if (nextDate) {
+      const timeDifference = nextDate.getTime() - new Date().getTime();
+      return Math.ceil(timeDifference / (1000 * 3600 * 24));
+    } else {
+      const startDate = new Date(packageRechargeDate);
+      const currentDate = new Date();
+      const millisecondsPerDay = 24 * 60 * 60 * 1000;
 
-    return daysLeft;
+      const elapsedTime = currentDate.getTime() - startDate.getTime();
+      const elapsedDays = Math.floor(elapsedTime / millisecondsPerDay);
+
+      const remainingDays = packageValidity - elapsedDays;
+      return remainingDays;
+    }
   };
 
   return (
@@ -120,6 +136,19 @@ const CurrentPlan: React.FC<{
             packageName={packageName}
             plan={plan}
           />
+
+          {packageName !== "pro" && (
+            <Button
+              variant="brand"
+              px={8}
+              mt={3}
+              fontWeight={400}
+              borderRadius="8px"
+              onClick={upgradePlan}
+            >
+              Upgrade Plan
+            </Button>
+          )}
           <Flex
             mt={5}
             flexWrap="wrap"
@@ -127,7 +156,7 @@ const CurrentPlan: React.FC<{
             w={"100%"}
             flexDir={"row"}
           >
-            {subscription && (
+            {packageName !== "trial" && (
               <SubscriptionDataContainer
                 packageName={packageName}
                 packageRechargeDate={packageRechargeDate}
@@ -150,12 +179,12 @@ const CurrentPlan: React.FC<{
             px={8}
             py={6}
             background={
-              packageName === "trail" || packageName === "ondemand"
+              packageName === "trial" || packageName === "ondemand"
                 ? "linear-gradient(101.8deg, #000000 4.3%, #3E1EA8 108.23%)"
                 : packageName
             }
             backgroundImage={
-              packageName === "trail" || packageName === "ondemand"
+              packageName === "trial" || packageName === "ondemand"
                 ? `url('${assetsURL}pricing/pro_upgrade.svg')`
                 : "none"
             }
@@ -164,7 +193,7 @@ const CurrentPlan: React.FC<{
             borderRadius="15px"
             flexDir="column"
           >
-            {packageName === "trail" || packageName === "ondemand" ? (
+            {packageName === "trial" || packageName === "ondemand" ? (
               <>
                 <Text fontSize="xl" color="white" mt={4}>
                   Upgrade to <strong>Pro</strong>
@@ -183,15 +212,16 @@ const CurrentPlan: React.FC<{
             ) : (
               <>
                 <Flex>
-                  <VStack alignItems="flex-start" spacing={1}>
-                    <Text fontSize="xs" fontWeight="400">
-                      Next Billed on
-                    </Text>
-                    <Text fontSize="sm" fontWeight="600">
-                      {subscription &&
-                        dateToDDMMMMYYYY(new Date(subscription.renewal_date))}
-                    </Text>
-                  </VStack>
+                  {subscription && (
+                    <VStack alignItems="flex-start" spacing={1}>
+                      <Text fontSize="xs" fontWeight="400">
+                        Next Billed on
+                      </Text>
+                      <Text fontSize="sm" fontWeight="600">
+                        {dateToDDMMMMYYYY(new Date(subscription.renewal_date))}
+                      </Text>
+                    </VStack>
+                  )}
                   {packageName === "pro" && (
                     <Image
                       src={`${assetsURL}pricing/pro_badge.svg`}
@@ -203,11 +233,12 @@ const CurrentPlan: React.FC<{
                 <Flex mt={4} align="center">
                   <CircularProgress
                     value={
-                      subscription &&
-                      getNextPaymentValue(
-                        new Date(packageRechargeDate),
-                        new Date(subscription.renewal_date)
-                      )
+                      subscription
+                        ? getNextPaymentValue(
+                            new Date(packageRechargeDate),
+                            new Date(subscription.renewal_date)
+                          )
+                        : getNextPaymentValue(new Date(packageRechargeDate))
                     }
                     color={packageName + "-dark"}
                     trackColor="white"
@@ -217,10 +248,11 @@ const CurrentPlan: React.FC<{
                   ></CircularProgress>
                   <VStack alignItems="flex-start" spacing={0} ml={3}>
                     <Text fontSize="lg" fontWeight="700">
-                      {subscription &&
-                        getNextPaymentDaysLeft(
-                          new Date(subscription.renewal_date)
-                        )}
+                      {subscription
+                        ? getNextPaymentDaysLeft(
+                            new Date(subscription.renewal_date)
+                          )
+                        : getNextPaymentDaysLeft()}
                       &nbsp; days
                     </Text>
                     <Text fontSize="sm" fontWeight="400">
@@ -248,7 +280,7 @@ const CurrentPlan: React.FC<{
             </Button>
             {isCancellable && (
               <Button
-                onClick={() => setOpen(!isOpen)}
+                onClick={() => setIsCancelSub(!isCancelSub)}
                 variant="accent-outline"
                 borderRadius={"8px"}
                 color={"blue"}
@@ -256,7 +288,7 @@ const CurrentPlan: React.FC<{
                 fontWeight="400"
                 ml={10}
                 isDisabled={
-                  packageName === "trail" || packageName === "ondemand"
+                  packageName === "trial" || packageName === "ondemand"
                 }
               >
                 Cancel Subscription
@@ -273,8 +305,9 @@ const CurrentPlan: React.FC<{
         open={open}
         onModalClose={onModalClose}
       />
+
       <AlertDialog
-        isOpen={isOpen}
+        isOpen={isCancelSub}
         leastDestructiveRef={cancelRef}
         onClose={onClose}
       >

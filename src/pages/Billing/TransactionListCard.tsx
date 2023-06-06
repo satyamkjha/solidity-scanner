@@ -3,93 +3,34 @@ import {
   Flex,
   Box,
   Text,
-  Icon,
   Button,
-  Divider,
-  Link,
-  useDisclosure,
-  FormControl,
-  FormLabel,
-  Select,
-  Modal,
-  ModalOverlay,
-  ModalContent,
-  ModalBody,
-  ModalCloseButton,
   Spinner,
-  useToast,
   VStack,
-  Image,
-  Heading,
   HStack,
   Badge,
-  Tab,
-  TabList,
-  Tabs,
-  TabPanel,
-  TabPanels,
-  AlertDialog,
-  AlertDialogBody,
-  AlertDialogContent,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogOverlay,
-  toast,
-  CloseButton,
-  Input,
-  ModalHeader,
   useMediaQuery,
-  CircularProgress,
-  CircularProgressLabel,
+  useDisclosure,
 } from "@chakra-ui/react";
 import "./billing.css";
-
-import { AiOutlineCheckCircle } from "react-icons/ai";
-import { AiOutlineCalendar, AiFillCheckCircle } from "react-icons/ai";
-import CurrentPlan from "./CurrentPlan";
-import { useProfile } from "hooks/useProfile";
-import { useAcceptedCoins } from "hooks/usePricing";
-
-import API from "helpers/api";
-import { daysRemaining, dateToDDMMMMYYYY } from "common/functions";
-import { Page, Plan, Profile, Transaction } from "common/types";
-import { HiCheckCircle, HiXCircle } from "react-icons/hi";
-import { useParams } from "react-router-dom";
-import { placements } from "@popperjs/core";
-import ContactUs from "components/contactus";
-import { useTransactions } from "hooks/useTransactions";
+import { Page, Transaction } from "common/types";
 import { sentenceCapitalize, getAssetsURL } from "helpers/helperFunction";
-import { useInvoices } from "hooks/useInvoices";
-import ReactPaginate from "react-paginate";
-import { server } from "typescript";
-import {
-  CoinPaymentsIcon,
-  StripeLogo,
-  StripePaymentsLogo,
-} from "components/icons";
 import InfiniteScroll from "react-infinite-scroll-component";
-import { Swiper, SwiperSlide, useSwiper } from "swiper/react";
-import { usePricingPlans } from "hooks/usePricingPlans";
-import { API_PATH } from "helpers/routeManager";
-import { useConfig } from "hooks/useConfig";
-import ScanCredits from "components/billing/ScanCredits";
-import PricingDetails from "pages/Pricing/components/PricingDetails";
 import { monthNames } from "common/values";
+import CancelPaymentDialog from "components/common/CancelPaymentDialog";
 
 const TransactionListCard: React.FC<{
   transactionList: Transaction[];
   page: Page;
   pageNo: number;
   fetchMore: () => Promise<void>;
-  fetchAgain: () => Promise<void>;
-}> = ({ transactionList, page, pageNo, fetchMore, fetchAgain }) => {
-  const cancelRef = useRef<HTMLButtonElement | null>(null);
-  const [isOpen, setIsOpen] = useState(false);
-  const onClose = () => setIsOpen(false);
-  const toast = useToast();
+  onPaymentCancel: () => Promise<void>;
+}> = ({ transactionList, page, pageNo, fetchMore, onPaymentCancel }) => {
+  const [isLargerThan800] = useMediaQuery("(min-width: 800px)");
+  const { isOpen, onOpen, onClose } = useDisclosure();
   const [orderId, setOrderId] = useState("");
   const [paymentPlatform, setPaymentPlatform] = useState("");
   const [hasMore, setHasMore] = useState(true);
+
   const fetchMoreTransactions = () => {
     if (pageNo >= page.total_pages) {
       setHasMore(false);
@@ -97,27 +38,7 @@ const TransactionListCard: React.FC<{
     }
     fetchMore();
   };
-  const [isLargerThan800] = useMediaQuery("(min-width: 800px)");
 
-  const cancelPayment = async () => {
-    const { data } = await API.delete(API_PATH.API_INVALIDATE_ORDER_BETA, {
-      data: {
-        payment_platform: paymentPlatform,
-        order_id: orderId,
-      },
-    });
-    if (data.status === "success") {
-      toast({
-        title: data.message,
-        status: "success",
-        duration: 2000,
-        isClosable: true,
-        position: "bottom",
-      });
-      fetchAgain();
-      onClose();
-    }
-  };
   return (
     <>
       {isLargerThan800 ? (
@@ -232,7 +153,7 @@ const TransactionListCard: React.FC<{
                               py={0}
                               fontSize={"sm"}
                               onClick={() => {
-                                setIsOpen(!isOpen);
+                                onOpen();
                                 setOrderId(transaction.order_id);
                                 setPaymentPlatform(
                                   transaction.payment_platform
@@ -395,7 +316,7 @@ const TransactionListCard: React.FC<{
                           py={0}
                           fontSize={"sm"}
                           onClick={() => {
-                            setIsOpen(!isOpen);
+                            onOpen();
                             setOrderId(transaction.order_id);
                             setPaymentPlatform(transaction.payment_platform);
                           }}
@@ -446,38 +367,13 @@ const TransactionListCard: React.FC<{
           })}
         </InfiniteScroll>
       )}
-      <AlertDialog
+      <CancelPaymentDialog
         isOpen={isOpen}
-        leastDestructiveRef={cancelRef}
         onClose={onClose}
-      >
-        <AlertDialogOverlay>
-          <AlertDialogContent w="80%">
-            <AlertDialogHeader fontSize="lg" fontWeight="bold">
-              Cancel Payment
-            </AlertDialogHeader>
-
-            <AlertDialogBody>
-              Are you sure you want to cancel the payment invoice?
-            </AlertDialogBody>
-
-            <AlertDialogFooter>
-              <Button ref={cancelRef} onClick={onClose} py={6}>
-                No, my bad
-              </Button>
-              <Button
-                variant="brand"
-                onClick={() => {
-                  cancelPayment();
-                }}
-                ml={3}
-              >
-                Yes
-              </Button>
-            </AlertDialogFooter>
-          </AlertDialogContent>
-        </AlertDialogOverlay>
-      </AlertDialog>
+        orderId={orderId}
+        paymentPlatform={paymentPlatform}
+        onPaymentCancel={onPaymentCancel}
+      />
     </>
   );
 };

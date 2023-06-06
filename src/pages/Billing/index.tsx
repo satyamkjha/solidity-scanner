@@ -21,36 +21,18 @@ import LatestInvoice from "./LatestInvoice";
 import CurrentPlan from "./CurrentPlan";
 import PromoCodeCard from "./PromoCodeCard";
 import { useProfile } from "hooks/useProfile";
-import { useAcceptedCoins } from "hooks/usePricing";
 
-import API from "helpers/api";
-import { daysRemaining, dateToDDMMMMYYYY } from "common/functions";
 import { Page, Plan, Profile, Transaction } from "common/types";
-import { HiCheckCircle, HiXCircle } from "react-icons/hi";
-import ContactUs from "components/contactus";
 import { useTransactions } from "hooks/useTransactions";
-import { sentenceCapitalize, getAssetsURL } from "helpers/helperFunction";
-import { useInvoices } from "hooks/useInvoices";
-import {
-  CoinPaymentsIcon,
-  StripeLogo,
-  StripePaymentsLogo,
-} from "components/icons";
-import InfiniteScroll from "react-infinite-scroll-component";
 import { usePricingPlans } from "hooks/usePricingPlans";
-import { API_PATH } from "helpers/routeManager";
-import { useConfig } from "hooks/useConfig";
 import ScanCredits from "components/billing/ScanCredits";
 import PricingDetails from "pages/Pricing/components/PricingDetails";
-import { CloseIcon } from "@chakra-ui/icons";
 import TransactionListCard from "./TransactionListCard";
-
-const successColor = "#289F4C";
-const greyColor = "#BDBDBD";
 
 const Billing: React.FC = () => {
   const { data } = useProfile();
   const [selectedPlan, setSelectedPlan] = useState("custom");
+  const [planBillingCycle, setPlanBillingCycle] = useState("");
   const pricingRef = useRef<HTMLDivElement>(null);
 
   const [pageNo, setPageNo] = useState(1);
@@ -61,6 +43,14 @@ const Billing: React.FC = () => {
   const [page, setPage] = useState<Page | undefined>();
 
   const { data: plans } = usePricingPlans();
+
+  useEffect(() => {
+    if (data) {
+      const billing_cycle =
+        data.billing_cycle === "N/A" ? "trial" : data.billing_cycle;
+      setPlanBillingCycle(billing_cycle);
+    }
+  }, [data]);
 
   useEffect(() => {
     if (transactions) {
@@ -156,13 +146,15 @@ const Billing: React.FC = () => {
                 >
                   Plans
                 </Tab>
-                <Tab
-                  minW={["150px", "150px", "200px"]}
-                  bgColor={"#F5F5F5"}
-                  mr={5}
-                >
-                  Scan Credits
-                </Tab>
+                {data.current_package !== "trial" && (
+                  <Tab
+                    minW={["150px", "150px", "200px"]}
+                    bgColor={"#F5F5F5"}
+                    mr={5}
+                  >
+                    Scan Credits
+                  </Tab>
+                )}
                 <Tab
                   minW={["150px", "150px", "200px"]}
                   bgColor={"#F5F5F5"}
@@ -181,64 +173,76 @@ const Billing: React.FC = () => {
             </Flex>
             <TabPanels width={"100%"}>
               <TabPanel width={"100%"} p={0}>
-                <Flex w="100%" pt={4} px={[0, 0, 8]} mb={8} position="relative">
+                <Flex
+                  w="100%"
+                  pt={4}
+                  px={[0, 0, 8]}
+                  mb={8}
+                  position="relative"
+                  flexDir={["column", "column", "column", "row"]}
+                >
                   <CurrentPlan
                     subscription={data.subscription}
                     isCancellable={data.is_cancellable}
                     name={
-                      plans.pricing_data[data.billing_cycle][
-                        data.current_package
-                      ].name
+                      plans.pricing_data[planBillingCycle][data.current_package]
+                        .name
                     }
                     packageName={data.current_package}
                     packageRechargeDate={data.package_recharge_date}
                     packageValidity={data.package_validity}
                     plan={
-                      plans.pricing_data[data.billing_cycle][
-                        data.current_package
-                      ]
+                      plans.pricing_data[planBillingCycle][data.current_package]
                     }
                     upgradePlan={onUpgradePlan}
                   />
-                  <Flex
-                    h="100%"
-                    position="absolute"
-                    left="55%"
-                    top={0}
-                    right={4}
-                  >
-                    {transactionList.length > 0 &&
-                      transactionList[0].payment_status === "open" && (
+                  {transactionList.length > 0 &&
+                    transactionList[0].payment_status === "open" && (
+                      <Flex
+                        h="100%"
+                        position={[
+                          "relative",
+                          "relative",
+                          "relative",
+                          "absolute",
+                        ]}
+                        left={[0, 0, 0, "55%"]}
+                        top={0}
+                        right={4}
+                      >
                         <LatestInvoice
                           transactionData={transactionList[0]}
                           selectedPlan={transactionList[0].package}
                           planData={
-                            plans.pricing_data[data.billing_cycle][
-                              transactionList[0].package
-                            ]
+                            plans.pricing_data[
+                              transactionList[0].billing_cycle
+                            ][transactionList[0].package]
                           }
+                          onPaymentCancel={fetchAgain}
                         />
-                      )}
-                  </Flex>
+                      </Flex>
+                    )}
                 </Flex>
                 <Flex w="100%" ref={pricingRef}>
                   <PricingDetails pricingDetails={plans} page="billing" />
                 </Flex>
               </TabPanel>
-              <TabPanel px={[0, 0, 4]} mx={[0, 0, 4]}>
-                <ScanCredits
-                  planData={
-                    plans.pricing_data[data.billing_cycle][data.current_package]
-                  }
-                  profile={data}
-                  topUpData={plans.pricing_data["topup"][data.current_package]}
-                />
-              </TabPanel>
+              {data.current_package !== "trial" && (
+                <TabPanel px={[0, 0, 4]} mx={[0, 0, 4]}>
+                  <ScanCredits
+                    planData={
+                      plans.pricing_data[planBillingCycle][data.current_package]
+                    }
+                    profile={data}
+                    topUpData={plans.pricing_data["topup"]}
+                  />
+                </TabPanel>
+              )}
               <TabPanel px={[0, 0, 4]} mx={[0, 0, 4]}>
                 <TransactionListCard
                   transactionList={transactionList}
                   page={page}
-                  fetchAgain={fetchAgain}
+                  onPaymentCancel={fetchAgain}
                   pageNo={pageNo}
                   fetchMore={fetchMore}
                 />
