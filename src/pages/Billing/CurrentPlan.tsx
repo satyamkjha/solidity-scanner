@@ -72,8 +72,9 @@ const CurrentPlan: React.FC<{
   };
 
   const cancelRef = useRef<HTMLButtonElement | null>(null);
-  const [isOpen, setIsOpen] = useState(false);
-  const onClose = () => setIsOpen(false);
+  const { isOpen, onClose, onOpen } = useDisclosure();
+  const [open, setOpen] = useState(false);
+  const onModalClose = () => setOpen(false);
 
   const getNextPaymentValue = (startDate: Date, nextDate?: Date) => {
     const daysTillNow = Math.ceil(
@@ -153,7 +154,7 @@ const CurrentPlan: React.FC<{
             w={"100%"}
             flexDir={"row"}
           >
-            {packageName !== "trail" && (
+            {packageName !== "trial" && (
               <SubscriptionDataContainer
                 packageName={packageName}
                 packageRechargeDate={packageRechargeDate}
@@ -176,12 +177,12 @@ const CurrentPlan: React.FC<{
             px={8}
             py={6}
             background={
-              packageName === "trail" || packageName === "ondemand"
+              packageName === "trial" || packageName === "ondemand"
                 ? "linear-gradient(101.8deg, #000000 4.3%, #3E1EA8 108.23%)"
                 : packageName
             }
             backgroundImage={
-              packageName === "trail" || packageName === "ondemand"
+              packageName === "trial" || packageName === "ondemand"
                 ? `url('${assetsURL}pricing/pro_upgrade.svg')`
                 : "none"
             }
@@ -190,7 +191,7 @@ const CurrentPlan: React.FC<{
             borderRadius="15px"
             flexDir="column"
           >
-            {packageName === "trail" || packageName === "ondemand" ? (
+            {packageName === "trial" || packageName === "ondemand" ? (
               <>
                 <Text fontSize="xl" color="white" mt={4}>
                   Upgrade to <strong>Pro</strong>
@@ -269,12 +270,15 @@ const CurrentPlan: React.FC<{
               fontSize="sm"
               fontWeight="400"
               px={8}
+              onClick={() => {
+                setOpen(!open);
+              }}
             >
               Plan Details
             </Button>
             {isCancellable && (
               <Button
-                onClick={() => setIsOpen(!isOpen)}
+                onClick={() => setOpen(!isOpen)}
                 variant="accent-outline"
                 borderRadius={"8px"}
                 color={"blue"}
@@ -282,7 +286,7 @@ const CurrentPlan: React.FC<{
                 fontWeight="400"
                 ml={10}
                 isDisabled={
-                  packageName === "trail" || packageName === "ondemand"
+                  packageName === "trial" || packageName === "ondemand"
                 }
               >
                 Cancel Subscription
@@ -291,6 +295,14 @@ const CurrentPlan: React.FC<{
           </Flex>
         </Flex>
       </Flex>
+      <PlanDetailsModal
+        subscription={subscription ? true : false}
+        currentPackage={packageName}
+        packageRechargeDate={packageRechargeDate}
+        plan={plan}
+        open={open}
+        onModalClose={onModalClose}
+      />
 
       <AlertDialog
         isOpen={isOpen}
