@@ -901,36 +901,146 @@ export const pricing_card_description_data = [
 ];
 
 export const pricing_data = {
-  "on-demand": {
-    "on-demand": {
-      name: "On Demand",
-      description:
-        "Try out the basic features of the product. Get a detailed report with prompts describing detected issues and remediation solutions",
+  trial: {
+    trial: {
+      name: "Trial",
+      amount: "Free",
+      description: null,
       discount: null,
       scan_count: 2,
-      amount: "29.99",
       github: false,
       report: false,
       publishable_report: false,
     },
   },
-  monthly: {
-    beginner: {
-      name: "Beginner",
-      description:
-        "Junior Developer or Associate Security Researcher or NFT Enthusiast",
+  topup: {
+    pro: {
+      name: "pro",
+      description: "Topup Pro",
       discount: null,
-      scan_count: 20,
-      amount: "149.99",
-      github: true,
+      scan_count: 1,
+      amount: "3.75",
+      github: false,
       report: false,
       publishable_report: false,
     },
     intermediate: {
-      name: "Intermediate",
+      name: "intermediate",
+      description: "Topup Intermediate",
+      discount: null,
+      scan_count: 1,
+      amount: "6.5",
+      github: false,
+      report: false,
+      publishable_report: false,
+    },
+    beginner: {
+      name: "beginner",
+      description: "Topup Beginner",
+      discount: null,
+      scan_count: 1,
+      amount: "7.5",
+      github: false,
+      report: false,
+      publishable_report: false,
+    },
+    ondemand: {
+      name: "on-demand",
+      description: "Topup On Demand",
+      discount: null,
+      scan_count: 1,
+      amount: "15.0",
+      github: false,
+      report: false,
+      publishable_report: false,
+    },
+  },
+  yearly: {
+    custom: {
+      name: "custom",
+      description: "Yearly Custom",
+      discount: null,
+      scan_count: 9990,
+      amount: "99999.99",
+      github: true,
+      report: true,
+      publishable_report: true,
+    },
+    intermediate: {
+      name: "intermediate",
+      description: "Yearly Intermediate",
+      discount: {
+        banner: "Save Upto 17%",
+        amount: 498,
+      },
+      scan_count: 400,
+      amount: "2499.99",
+      github: true,
+      report: true,
+      publishable_report: false,
+    },
+    beginner: {
+      name: "beginner",
+      description: "Yearly Beginner",
+      discount: {
+        banner: "Good Starter Plan",
+        amount: 298,
+      },
+      scan_count: 200,
+      amount: "1499.99",
+      github: false,
+      report: false,
+      publishable_report: false,
+    },
+    pro: {
+      name: "pro",
+      description:
+        "Yearly Pro Development SME or Security Research SME or NFT SME or Medium Size Teams",
+      discount: {
+        banner: "Save Upto 50%",
+        amount: 598,
+      },
+      scan_count: 960,
+      amount: "2990.0",
+      github: true,
+      report: true,
+      publishable_report: true,
+    },
+  },
+  monthly: {
+    custom: {
+      name: "custom",
+      description:
+        "Enterprise Dealing in Crypto Development or Security with Large Team Size. Get your scan results and reports vetted by our security professionals",
+      discount: null,
+      scan_count: 999,
+      amount: "9999.0",
+      github: true,
+      report: true,
+      publishable_report: true,
+    },
+    beginner: {
+      name: "beginner",
+      description:
+        "Junior Developer or Associate Security Researcher or NFT Enthusiast",
+      discount: {
+        banner: "Good Starter Plan",
+        amount: 0,
+      },
+      scan_count: 20,
+      amount: "149.99",
+      github: false,
+      report: false,
+      publishable_report: false,
+    },
+    intermediate: {
+      name: "intermediate",
       description:
         "Senior Developer or Senior Security Research or Experienced NFT Buyer/ Trader or Small Teams",
-      discount: "17%",
+      discount: {
+        banner: "Save Upto 17%",
+        amount: 0,
+      },
       scan_count: 40,
       amount: "249.99",
       github: true,
@@ -938,69 +1048,43 @@ export const pricing_data = {
       publishable_report: false,
     },
     pro: {
-      name: "Pro",
+      name: "pro",
       description:
         "Development SME or Security Research SME or NFT SME or Medium Size Teams",
-      discount: "50%",
+      discount: {
+        banner: "Save Upto 50%",
+        amount: 0,
+      },
       scan_count: 80,
-      amount: "299.99",
-      github: true,
-      report: true,
-      publishable_report: true,
-    },
-    custom: {
-      name: "Custom",
-      description:
-        "Enterprise Dealing in Crypto Development or Security with Large Team Size. Get your scan results and reports vetted by our security professionals",
-      discount: "60%",
-      scan_count: 200,
-      amount: "599.99",
+      amount: "299.0",
       github: true,
       report: true,
       publishable_report: true,
     },
   },
-  yearly: {
-    beginner: {
-      name: "Beginner",
+  "on-demand": {
+    "on-demand": {
+      name: "on-demand",
       description:
-        "Junior Developer or Associate Security Researcher or NFT Enthusiast",
-      discount: null,
-      scan_count: 200,
-      amount: "1499.99",
-      github: true,
+        "Try out the basic features of the product. Get a detailed report with prompts describing detected issues and remediation solutions",
+      discount: {
+        banner: "Pay as you Go",
+        amount: 0,
+      },
+      scan_count: 2,
+      amount: "29.99",
+      github: false,
       report: false,
       publishable_report: false,
     },
-    intermediate: {
-      name: "Intermediate",
-      description:
-        "Senior Developer or Senior Security Research or Experienced NFT Buyer/ Trader or Small Teams",
-      discount: "17%",
-      scan_count: 400,
-      amount: "2499.99",
-      github: true,
-      report: true,
-      publishable_report: false,
-    },
+  },
+  "half-yearly": {
     pro: {
-      name: "Pro",
-      description:
-        "Development SME or Security Research SME or NFT SME or Medium Size Teams",
-      discount: "50%",
-      scan_count: 800,
-      amount: "2999.99",
-      github: true,
-      report: true,
-      publishable_report: true,
-    },
-    custom: {
-      name: "Custom",
-      description:
-        "Enterprise Dealing in Crypto Development or Security with Large Team Size. Get your scan results and reports vetted by our security professionals",
-      discount: "60%",
-      scan_count: 2000,
-      amount: "5990.99",
+      name: "pro",
+      description: "Half Yearly Pro",
+      discount: {},
+      scan_count: 80,
+      amount: "1499.0",
       github: true,
       report: true,
       publishable_report: true,

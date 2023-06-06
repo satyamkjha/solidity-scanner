@@ -10,10 +10,8 @@ import {
   Switch,
 } from "@chakra-ui/react";
 import { Plan, Transaction } from "common/types";
-import { getAssetsURL, sentenceCapitalize } from "helpers/helperFunction";
-import { useConfig } from "hooks/useConfig";
-import React, { useState } from "react";
-import CancelPaymentDialog from "components/common/CancelPaymentDialog";
+import React from "react";
+import CancelPaymentDialog from "components/billing/CancelPaymentDialog";
 import CurrentPlanDescriptionContainer from "./CurrentPlanDescriptionContainer";
 
 const LatestInvoice: React.FC<{
@@ -22,8 +20,6 @@ const LatestInvoice: React.FC<{
   transactionData: Transaction;
   onPaymentCancel: any;
 }> = ({ planData, selectedPlan, transactionData, onPaymentCancel }) => {
-  const config: any = useConfig();
-  const assetsURL = getAssetsURL(config);
   const { isOpen, onOpen, onClose } = useDisclosure();
 
   return (
@@ -50,7 +46,7 @@ const LatestInvoice: React.FC<{
         <CurrentPlanDescriptionContainer
           packageName={selectedPlan}
           plan={planData}
-          showDescription={false}
+          duration={transactionData.billing_cycle}
         />
         <Flex
           flexDir={"row"}
@@ -90,7 +86,7 @@ const LatestInvoice: React.FC<{
         </Flex>
         <Button
           variant="brand"
-          mt={"auto"}
+          mt={[4, 4, 8, 10]}
           mx={[2, 2, 2, 14]}
           onClick={() => {
             window.open(`${transactionData.invoice_url}`, "_blank");

@@ -60,10 +60,11 @@ const CancelPaymentDialog: React.FC<{
           </AlertDialogBody>
 
           <AlertDialogFooter>
-            <Button ref={cancelRef} onClick={onClose} py={6}>
+            <Button w="150px" ref={cancelRef} onClick={onClose} py={6}>
               No, my bad
             </Button>
             <Button
+              w="150px"
               variant="brand"
               onClick={() => {
                 cancelPayment();

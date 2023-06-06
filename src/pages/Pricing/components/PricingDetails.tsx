@@ -16,6 +16,7 @@ import { getAssetsURL } from "helpers/helperFunction";
 import { useHistory } from "react-router-dom";
 import { CurlyArrowUp, CurlyArrowDown } from "components/icons";
 import { PricingCard } from "./pricingCard";
+import { pricing_data } from "common/values";
 
 const PricingDetails: React.FC<{
   pricingDetails: PricingData;
@@ -216,7 +217,7 @@ const PricingDetails: React.FC<{
           ]}
           gap={page === "pricing" ? 6 : 4}
         >
-          {Object.keys(pricingDetails.pricing_data["on-demand"]).map((plan) => {
+          {Object.keys(pricing_data["on-demand"]).map((plan) => {
             if (plan !== "custom" && plan !== "trial")
               return (
                 <PricingCard
@@ -225,11 +226,11 @@ const PricingDetails: React.FC<{
                   plan={plan}
                   selectedPlan={selectedPlan}
                   setSelectedPlan={setSelectedPlan}
-                  pricingDetails={pricingDetails.pricing_data}
+                  pricingDetails={pricing_data}
                 />
               );
           })}
-          {Object.keys(pricingDetails.pricing_data[duration])
+          {Object.keys(pricing_data[duration])
             .sort((a, b) => a[0].localeCompare(b[0]))
             .map((plan) => {
               if (plan !== "custom" && plan !== "trial")
@@ -240,7 +241,7 @@ const PricingDetails: React.FC<{
                     plan={plan}
                     selectedPlan={selectedPlan}
                     setSelectedPlan={setSelectedPlan}
-                    pricingDetails={pricingDetails.pricing_data}
+                    pricingDetails={pricing_data}
                   />
                 );
             })}

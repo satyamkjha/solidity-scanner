@@ -31,21 +31,25 @@ const CouponCodeSection: React.FC<{
 
   const toast = useToast();
   const verifyCouponCode = () => {
-    API.get(
-      `api-validate-coupon/?coupon=${couponCode}&package=${selectedPlan}&duration=${duration}`
-    ).then((res) => {
-      if (res.data.status === "success") {
-        toast({
-          title: `${couponCode} successfully applied`,
-          status: res.data.status,
-          duration: 2000,
-          isClosable: true,
-          position: "bottom",
-        });
-        setActiveCoupon(couponCode);
-        setUpdatedPrice(res.data.updated_price);
-      }
-    });
+    try {
+      API.get(
+        `api-validate-coupon/?coupon=${couponCode}&package=${selectedPlan}&duration=${duration}`
+      ).then((res) => {
+        if (res.data.status === "success") {
+          toast({
+            title: `${couponCode} successfully applied`,
+            status: res.data.status,
+            duration: 2000,
+            isClosable: true,
+            position: "bottom",
+          });
+          setActiveCoupon(couponCode);
+          setUpdatedPrice(res.data.updated_price);
+        }
+      });
+    } catch (e) {
+      console.log(e);
+    }
   };
 
   return (

@@ -82,11 +82,7 @@ export const PricingCard: React.FC<{
         w="60%"
         borderRadius={20}
       >
-        {plan === "on-demand"
-          ? "Pay as you Go"
-          : plan === "beginner"
-          ? "Good Starter Plan"
-          : `Save upto ${pricingDetails[duration][plan].discount}`}
+        {pricingDetails[duration][plan].discount?.banner}
       </Flex>
       <Flex
         sx={{
@@ -143,6 +139,7 @@ export const PricingCard: React.FC<{
         >
           {pricingDetails[duration][plan].description}
         </Text>
+
         <Flex
           flexDir="column"
           w="100%"
@@ -218,7 +215,7 @@ export const PricingCard: React.FC<{
                       You Save&nbsp;
                     </Text>
                     <Heading fontSize={"xl"} color="#3300FF">
-                      $999
+                      $ {pricingDetails[duration][plan].discount?.amount}.00
                     </Heading>
                   </Flex>
                 </Flex>

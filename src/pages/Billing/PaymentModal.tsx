@@ -13,6 +13,8 @@ import {
   Heading,
   Switch,
   Button,
+  useMediaQuery,
+  VStack,
 } from "@chakra-ui/react";
 import React, { useEffect, useState } from "react";
 import { getAssetsURL, sentenceCapitalize } from "helpers/helperFunction";
@@ -24,6 +26,10 @@ import CoinPaymentSelect from "./CoinPaymentsSelect";
 import CouponCodeSection from "./CouponCodeSection";
 import { Plan, PricingData } from "common/types";
 import PricingDetails from "pages/Pricing/components/PricingDetails";
+import CurrentPlanDescriptionContainer from "./CurrentPlanDescriptionContainer";
+import ConfirmationMessageBox from "./ConfirmationMessageBox";
+import DetailedBill from "./DetailedBill";
+import SwitchDuration from "./SwitchDuration";
 
 const PaymentModal: React.FC<{
   isOpen: boolean;
@@ -40,31 +46,41 @@ const PaymentModal: React.FC<{
   const assetsURL = getAssetsURL(config);
 
   const [paymentMethod, setPaymentMethod] = useState<"cp" | "stripe">("cp");
+
   const createStripePayment = async () => {
-    let duration = "";
-    if (selectedPlan === "ondemand") {
-      duration = "ondemand";
+    console.log(activeCoupon);
+    let req = {};
+    if (activeCoupon) {
+      req = {
+        package: selectedPlan,
+        duration: duration,
+        coupon: activeCoupon,
+      };
     } else {
-      duration = "monthly";
+      req = {
+        package: selectedPlan,
+        duration: duration,
+      };
     }
 
-    const { data, status } = await API.post<{
-      status: string;
-      checkout_url: string;
-    }>(API_PATH.API_CREATE_STRIPE_SUBSCRIPTION_BETA, {
-      package: selectedPlan,
-      duration: duration,
-    });
+    try {
+      const { data, status } = await API.post<{
+        status: string;
+        checkout_url: string;
+      }>(API_PATH.API_CREATE_STRIPE_SUBSCRIPTION_BETA, req);
 
-    if (status === 200) {
-      window.open(`${data.checkout_url}`, "_blank");
-      // fetchAgain();
-      onClose();
+      if (status === 200) {
+        window.open(`${data.checkout_url}`, "_blank");
+        // fetchAgain();
+        onClose();
+      }
+    } catch (e) {
+      console.log(e);
     }
   };
 
   const [coin, setCoin] = useState("");
-
+  const [step, setStep] = useState(0);
   const [activeCoupon, setActiveCoupon] = useState<string | null>(null);
   const [updatedPrice, setUpdatedPrice] = useState<string>("");
 
@@ -78,23 +94,29 @@ const PaymentModal: React.FC<{
     const height = 800;
     const left = window.innerWidth / 2 - width / 2;
     const top = window.innerHeight / 2 - height / 2;
-    let duration = "";
-    if (selectedPlan === "ondemand") {
-      duration = "ondemand";
-    } else {
-      duration = "monthly";
-    }
+
     try {
       setLoading(true);
+      let req = {};
+      if (activeCoupon) {
+        req = {
+          package: selectedPlan,
+          currency: coin,
+          duration: duration,
+          coupon: activeCoupon,
+        };
+      } else {
+        req = {
+          package: selectedPlan,
+          currency: coin,
+          duration: duration,
+        };
+      }
       const { data } = await API.post<{
         checkout_url: string;
         status: string;
         status_url: string;
-      }>(API_PATH.API_CREATE_ORDER_CP, {
-        package: selectedPlan,
-        currency: coin,
-        duration: duration,
-      });
+      }>(API_PATH.API_CREATE_ORDER_CP, req);
       setLoading(false);
       const popup = window.open(
         data.checkout_url,
@@ -106,6 +128,11 @@ const PaymentModal: React.FC<{
       setLoading(false);
     }
   };
+
+  const [isLargerThan450, isLargerThan900] = useMediaQuery([
+    "(min-width: 450px)",
+    "(min-width: 900px)",
+  ]);
 
   useEffect(() => {
     setActiveCoupon("");
@@ -122,201 +149,282 @@ const PaymentModal: React.FC<{
         bg="white"
         minH={"fit-content"}
       >
+        <ModalCloseButton />
         <ModalHeader background="#FFFFFF" textAlign={"center"}>
-          Select Payment Method
+          {isLargerThan900
+            ? "Select Payment Method"
+            : isLargerThan450
+            ? step > 0
+              ? "Confirm Payment Details"
+              : "Select Payment Method"
+            : step === 0
+            ? "Confirm Plan"
+            : step === 1
+            ? "Select Payment Method"
+            : step === 2
+            ? "Enter Coupon Code"
+            : "Confirm Payment Details"}
         </ModalHeader>
 
-        <ModalCloseButton />
-
-        <ModalBody h={"fit-content"} w={"100%"} px={[6, 6, 6, 12]}>
+        <ModalBody h={"fit-content"} w={"100%"} px={[6, 6, 6, 12]} py={10}>
           <Divider />
-          <HStack mt={5} w="fit-content" spacing={"20px"} h={"fit-content"}>
+          {isLargerThan900 ? (
+            <HStack
+              mt={5}
+              w="fit-content"
+              spacing={"20px"}
+              h={"fit-content"}
+              alignItems={"flex-start"}
+              justifyContent={"flex-start"}
+            >
+              <Flex
+                w="400px"
+                flexDir="column"
+                h="fit-content"
+                justifyContent={"flex-start"}
+              >
+                <HStack w="100%" spacing={"20px"}>
+                  <PaymentMethodCard
+                    paymentType={"cp"}
+                    paymentMethod={paymentMethod}
+                    setPaymentMethod={setPaymentMethod}
+                  />
+                  <PaymentMethodCard
+                    paymentType={"stripe"}
+                    paymentMethod={paymentMethod}
+                    setPaymentMethod={setPaymentMethod}
+                  />
+                </HStack>
+                {paymentMethod === "cp" && (
+                  <CoinPaymentSelect setCoin={setCoin} coin={coin} />
+                )}
+                <CouponCodeSection
+                  duration={duration}
+                  selectedPlan={selectedPlan}
+                  activeCoupon={activeCoupon}
+                  setActiveCoupon={setActiveCoupon}
+                  setUpdatedPrice={setUpdatedPrice}
+                />
+                <ConfirmationMessageBox
+                  name={pricingDetails[duration][selectedPlan].name}
+                  duration={duration}
+                />
+              </Flex>
+              <Flex
+                w="400px"
+                h="fit-content"
+                flexDir="column"
+                justifyContent={"flex-start"}
+                alignItems={"flex-start"}
+              >
+                <CurrentPlanDescriptionContainer
+                  packageName={selectedPlan}
+                  plan={pricingDetails[duration][selectedPlan]}
+                  duration={duration}
+                />
+                {duration !== "on-demand" && (
+                  <SwitchDuration
+                    setDuration={setDuration}
+                    setActiveCoupon={setActiveCoupon}
+                    setUpdatedPrice={setUpdatedPrice}
+                    duration={duration}
+                  />
+                )}
+                <DetailedBill
+                  duration={duration}
+                  pricingDetails={pricingDetails}
+                  selectedPlan={selectedPlan}
+                  activeCoupon={activeCoupon}
+                  updatedPrice={updatedPrice}
+                />
+                <Button
+                  mt={4}
+                  w="100%"
+                  variant="brand"
+                  onClick={() => {
+                    if (paymentMethod === "cp") {
+                      createCPLink();
+                    } else {
+                      createStripePayment();
+                    }
+                  }}
+                >
+                  Make Payment
+                </Button>
+              </Flex>
+            </HStack>
+          ) : isLargerThan450 ? (
             <Flex
-              w="400px"
+              w="450px"
               flexDir="column"
               h="fit-content"
               justifyContent={"flex-start"}
             >
-              <HStack w="100%" spacing={"20px"}>
-                <PaymentMethodCard
-                  paymentType={"cp"}
-                  paymentMethod={paymentMethod}
-                  setPaymentMethod={setPaymentMethod}
-                />
-                <PaymentMethodCard
-                  paymentType={"stripe"}
-                  paymentMethod={paymentMethod}
-                  setPaymentMethod={setPaymentMethod}
-                />
-              </HStack>
-              <CoinPaymentSelect setCoin={setCoin} coin={coin} />
-              <CouponCodeSection
-                duration={duration}
-                selectedPlan={selectedPlan}
-                activeCoupon={activeCoupon}
-                setActiveCoupon={setActiveCoupon}
-                setUpdatedPrice={setUpdatedPrice}
-              />
-              <Flex
-                bgColor="#FFF8ED"
-                justifyContent={"center"}
-                alignItems={"center"}
-                border="2px solid #FFC661"
-                p={3}
-                borderRadius={10}
-                mt={5}
-              >
-                <Text color="#4E5D78" fontWeight={300} fontSize={"sm"}>
-                  You have currently selected the{" "}
-                  <span
-                    style={{
-                      fontWeight: 900,
-                    }}
-                  >
-                    <b>
-                      {sentenceCapitalize(
-                        pricingDetails[duration][selectedPlan].name
-                      )}{" "}
-                      {sentenceCapitalize(duration)}{" "}
-                    </b>
-                  </span>
-                  plan sum of the charges will apply on your conformation
-                </Text>
-              </Flex>
-            </Flex>
-            <Flex w="400px" h="fit-content" flexDir="column">
-              <Flex
-                w="100%"
-                alignItems="flex-start"
-                justifyContent="flex-start"
-              >
-                <Image
-                  width="30px"
-                  height="30px"
-                  mr={2}
-                  src={`${assetsURL}pricing/${selectedPlan}-heading.svg`}
-                />
-                <Text fontSize={"xl"} fontWeight={700}>
-                  {sentenceCapitalize(
-                    pricingDetails[duration][selectedPlan].name
+              {step === 0 ? (
+                <>
+                  <HStack w="100%" spacing={"20px"}>
+                    <PaymentMethodCard
+                      paymentType={"cp"}
+                      paymentMethod={paymentMethod}
+                      setPaymentMethod={setPaymentMethod}
+                    />
+                    <PaymentMethodCard
+                      paymentType={"stripe"}
+                      paymentMethod={paymentMethod}
+                      setPaymentMethod={setPaymentMethod}
+                    />
+                  </HStack>
+                  {paymentMethod === "cp" && (
+                    <CoinPaymentSelect setCoin={setCoin} coin={coin} />
                   )}
-                </Text>
-              </Flex>
-              <Flex
-                flexDir="row"
-                w="100%"
-                justifyContent={"flex-start"}
-                alignItems={"flex-end"}
-                my={1}
-              >
-                <Heading fontSize="2xl" lineHeight="title" fontWeight={900}>
-                  {`$ ${pricingDetails[duration][selectedPlan].amount}`}
-                </Heading>
-                <Text fontSize="2xl" fontWeight={300}>
-                  /
-                </Text>
-                <Text mb={1} fontSize="md" fontWeight={300}>
-                  {duration}
-                </Text>
-              </Flex>
-              {duration !== "on-demand" && (
-                <Flex
-                  my={2}
-                  flexDir={"row"}
-                  position={"relative"}
-                  alignItems={"flex-start"}
-                  justifyContent="flex-start"
-                >
-                  <Text
-                    color={duration === "monthly" ? "#000000" : "#7F7F7F"}
-                    fontSize="sm"
-                    fontWeight={300}
-                  >
-                    Monthly
-                  </Text>
-                  <Switch
-                    mx={4}
-                    size="md"
-                    variant={duration === "yearly" ? "accent" : "brand"}
-                    isChecked={duration === "yearly"}
-                    onChange={() => {
-                      if (duration === "monthly") {
-                        setDuration("yearly");
-                      } else {
-                        setDuration("monthly");
-                      }
-                    }}
+                  <CouponCodeSection
+                    duration={duration}
+                    selectedPlan={selectedPlan}
+                    activeCoupon={activeCoupon}
+                    setActiveCoupon={setActiveCoupon}
+                    setUpdatedPrice={setUpdatedPrice}
                   />
-                  <Text
-                    color={duration === "yearly" ? "#000000" : "#7F7F7F"}
-                    fontSize="sm"
-                    fontWeight={300}
-                  >
-                    Yearly
-                  </Text>
-                </Flex>
+                  <ConfirmationMessageBox
+                    name={pricingDetails[duration][selectedPlan].name}
+                    duration={duration}
+                  />
+                </>
+              ) : (
+                <>
+                  <CurrentPlanDescriptionContainer
+                    packageName={selectedPlan}
+                    plan={pricingDetails[duration][selectedPlan]}
+                    duration={duration}
+                  />
+                  {duration !== "on-demand" && (
+                    <SwitchDuration
+                      setDuration={setDuration}
+                      setActiveCoupon={setActiveCoupon}
+                      setUpdatedPrice={setUpdatedPrice}
+                      duration={duration}
+                    />
+                  )}
+                  <DetailedBill
+                    duration={duration}
+                    pricingDetails={pricingDetails}
+                    selectedPlan={selectedPlan}
+                    activeCoupon={activeCoupon}
+                    updatedPrice={updatedPrice}
+                  />
+                </>
               )}
-              <Text
-                mt={2}
-                mb={3}
-                fontWeight={400}
-                fontSize={"sm"}
-                color="detail"
-              >
-                {pricingDetails[duration][selectedPlan].description}
-              </Text>
-              <Divider />
-              <HStack mt={4} w="100%" justifyContent={"space-between"}>
-                <Text fontSize={"sm"} fontWeight={300}>
-                  Selected Plan Total
-                </Text>
-                <Heading fontSize={"md"}>
-                  {`$ ${pricingDetails[duration][selectedPlan].amount}0`}
-                </Heading>
-              </HStack>
-              {duration === "yearly" && (
-                <HStack mt={4} w="100%" justifyContent={"space-between"}>
-                  <Text fontSize={"sm"} fontWeight={300}>
-                    Yearly Discount
-                  </Text>
-                  <Heading fontSize={"md"}>{`- $ 999.00`} </Heading>
-                </HStack>
-              )}
-              <HStack mt={4} w="100%" justifyContent={"space-between"}>
-                <Text color={"#8A94A6"} fontSize={"sm"} fontWeight={300}>
-                  Coupon Code
-                </Text>
-                <Heading color={"#8A94A6"} fontSize={"md"}>
-                  {/* {`- $ 00.00`}{" "} */}
-                  {updatedPrice}
-                </Heading>
-              </HStack>
-              <Divider mt={4} />
-              <HStack mt={4} w="100%" justifyContent={"space-between"}>
-                <Text fontSize={"sm"} fontWeight={300}>
-                  Grand Total
-                </Text>
-                <Heading fontSize={"lg"}>
-                  {`$ ${pricingDetails[duration][selectedPlan].amount}0`}
-                </Heading>
-              </HStack>
-              <Divider mt={4} />
               <Button
                 mt={4}
                 w="100%"
                 variant="brand"
                 onClick={() => {
-                  if (paymentMethod === "cp") {
-                    createCPLink();
+                  if (step > 0) {
+                    if (paymentMethod === "cp") {
+                      createCPLink();
+                    } else {
+                      createStripePayment();
+                    }
                   } else {
-                    createStripePayment();
+                    setStep(1);
                   }
                 }}
               >
-                Make Payment
+                {step > 0 ? "Make Payment" : "Proceed to Payment"}
               </Button>
             </Flex>
-          </HStack>
+          ) : (
+            <>
+              <Flex
+                w="75vw"
+                maxW={"300px"}
+                flexDir="column"
+                h="fit-content"
+                justifyContent={"flex-start"}
+                pt={5}
+              >
+                {step === 0 ? (
+                  <>
+                    <CurrentPlanDescriptionContainer
+                      packageName={selectedPlan}
+                      plan={pricingDetails[duration][selectedPlan]}
+                      duration={duration}
+                    />
+                    {duration !== "on-demand" && (
+                      <SwitchDuration
+                        setDuration={setDuration}
+                        setActiveCoupon={setActiveCoupon}
+                        setUpdatedPrice={setUpdatedPrice}
+                        duration={duration}
+                      />
+                    )}
+                  </>
+                ) : step === 1 ? (
+                  <VStack
+                    w="100%"
+                    justifyContent={"flex-start"}
+                    alignItems={"center"}
+                    spacing={5}
+                  >
+                    <PaymentMethodCard
+                      paymentType={"cp"}
+                      paymentMethod={paymentMethod}
+                      setPaymentMethod={setPaymentMethod}
+                    />
+                    <PaymentMethodCard
+                      paymentType={"stripe"}
+                      paymentMethod={paymentMethod}
+                      setPaymentMethod={setPaymentMethod}
+                    />
+                  </VStack>
+                ) : step === 2 ? (
+                  <>
+                    {paymentMethod === "cp" && (
+                      <CoinPaymentSelect setCoin={setCoin} coin={coin} />
+                    )}
+                    <CouponCodeSection
+                      duration={duration}
+                      selectedPlan={selectedPlan}
+                      activeCoupon={activeCoupon}
+                      setActiveCoupon={setActiveCoupon}
+                      setUpdatedPrice={setUpdatedPrice}
+                    />
+                  </>
+                ) : (
+                  <>
+                    <ConfirmationMessageBox
+                      name={pricingDetails[duration][selectedPlan].name}
+                      duration={duration}
+                    />
+                    <DetailedBill
+                      duration={duration}
+                      pricingDetails={pricingDetails}
+                      selectedPlan={selectedPlan}
+                      activeCoupon={activeCoupon}
+                      updatedPrice={updatedPrice}
+                    />
+                  </>
+                )}
+                <Button
+                  mt={4}
+                  w="100%"
+                  variant="brand"
+                  onClick={() => {
+                    if (step > 2) {
+                      if (paymentMethod === "cp") {
+                        createCPLink();
+                      } else {
+                        createStripePayment();
+                      }
+                    } else {
+                      setStep(step + 1);
+                    }
+                  }}
+                >
+                  {step === 0 ? "Confirm Plan" : "Proceed to Payment"}
+                </Button>
+              </Flex>
+            </>
+          )}
         </ModalBody>
       </ModalContent>
     </Modal>
