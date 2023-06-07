@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import React from "react";
 import {
   Flex,
   Box,
@@ -17,7 +17,8 @@ const CurrentPlanDescriptionContainer: React.FC<{
   packageName: string;
   plan: Plan;
   duration: "monthly" | "yearly" | "on-demand";
-}> = ({ packageName, plan, duration }) => {
+  showCheckIcon?: boolean;
+}> = ({ packageName, plan, duration, showCheckIcon = true }) => {
   const config: any = useConfig();
   const assetsURL = getAssetsURL(config);
   return (
@@ -38,6 +39,14 @@ const CurrentPlanDescriptionContainer: React.FC<{
         <Text fontSize={"2xl"} fontWeight={700}>
           {sentenceCapitalize(plan.name)}
         </Text>
+        {showCheckIcon && (
+          <Image
+            src={`${assetsURL}icons/check_badge.svg`}
+            w="28px"
+            h="28px"
+            ml={2}
+          />
+        )}
       </Flex>
       <Text
         mt={2}

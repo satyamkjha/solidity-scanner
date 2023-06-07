@@ -107,9 +107,6 @@ const PromoCodeCard: React.FC<{ profileData: Profile }> = ({ profileData }) => {
         h: "50vh",
         // ml: [5, 5, 10],
       }}
-      _hover={{
-        filter: "drop-shadow(0px 4px 23px rgba(0, 0, 0, 0.15));",
-      }}
     >
       <Text fontSize={"lg"} my={5} fontWeight={900} color={"gray.500"}>
         Activate Promo Code

@@ -116,12 +116,10 @@ const CurrentPlan: React.FC<{
         background: "white",
         borderRadius: 15,
       }}
-      _hover={{
-        filter: "drop-shadow(0px 4px 23px rgba(0, 0, 0, 0.15));",
-      }}
     >
       <Flex
         w={"100%"}
+        h={"100%"}
         flexDir={["column", "column", "row"]}
         justifyContent={["flex-start", "flex-start", "space-between"]}
         alignItems="flex-start"
@@ -157,16 +155,15 @@ const CurrentPlan: React.FC<{
             w={"100%"}
             flexDir={"row"}
           >
-            {packageName !== "trial" && (
-              <SubscriptionDataContainer
-                packageName={packageName}
-                packageRechargeDate={packageRechargeDate}
-              />
-            )}
+            <SubscriptionDataContainer
+              packageName={packageName}
+              packageRechargeDate={packageRechargeDate}
+            />
           </Flex>
         </Flex>
         <Flex
           w={["100%", "100%", "40%"]}
+          h="100%"
           mt={[10, 10, 0]}
           p={2}
           flexDir="column"
@@ -176,7 +173,7 @@ const CurrentPlan: React.FC<{
           <Flex
             w="100%"
             maxW="400px"
-            h="185px"
+            maxH="185px"
             px={8}
             py={6}
             background={
@@ -231,7 +228,7 @@ const CurrentPlan: React.FC<{
                     />
                   )}
                 </Flex>
-                <Flex mt={4} align="center">
+                <Flex my={isCancellable ? 4 : 2} align="center">
                   <CircularProgress
                     value={
                       subscription
@@ -264,7 +261,7 @@ const CurrentPlan: React.FC<{
               </>
             )}
           </Flex>
-          <Flex mt={10} ml={4}>
+          <Flex mt={"auto"} ml={4}>
             <Button
               variant="accent-outline"
               borderRadius={"8px"}
@@ -279,22 +276,17 @@ const CurrentPlan: React.FC<{
             >
               Plan Details
             </Button>
-            {isCancellable && (
-              <Button
-                onClick={() => setIsCancelSub(!isCancelSub)}
-                variant="accent-outline"
-                borderRadius={"8px"}
-                color={"blue"}
-                fontSize="sm"
-                fontWeight="400"
-                ml={10}
-                isDisabled={
-                  packageName === "trial" || packageName === "ondemand"
-                }
-              >
-                Cancel Subscription
-              </Button>
-            )}
+            <Button
+              onClick={() => setIsCancelSub(!isCancelSub)}
+              variant={isCancellable ? "accent-outline" : "gray-outline"}
+              borderRadius={"8px"}
+              fontSize="sm"
+              fontWeight="400"
+              ml={10}
+              isDisabled={!isCancellable}
+            >
+              Cancel Subscription
+            </Button>
           </Flex>
         </Flex>
       </Flex>
