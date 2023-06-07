@@ -116,9 +116,6 @@ const CurrentPlan: React.FC<{
         background: "white",
         borderRadius: 15,
       }}
-      _hover={{
-        filter: "drop-shadow(0px 4px 23px rgba(0, 0, 0, 0.15));",
-      }}
     >
       <Flex
         w={"100%"}

@@ -51,9 +51,6 @@ const TransactionListCard: React.FC<{
 
             overflowY: "scroll",
           }}
-          _hover={{
-            filter: "drop-shadow(0px 4px 23px rgba(0, 0, 0, 0.15));",
-          }}
         >
           <HStack
             p={4}
@@ -64,7 +61,7 @@ const TransactionListCard: React.FC<{
             width={"100%"}
             align="center"
           >
-            <Text w={"10%"} fontWeight={500} color={"gray.500"}>
+            <Text w={"6%"} fontWeight={500} color={"gray.500"}>
               Status
             </Text>
             <Text w={"12%"} fontWeight={500} color={"gray.500"}>
@@ -73,13 +70,16 @@ const TransactionListCard: React.FC<{
             <Text w={"12%"} fontWeight={500} color={"gray.500"}>
               Date
             </Text>
-            <Text w={"130px"} fontWeight={500} color={"gray.500"}>
+            <Text w={"12%"} fontWeight={500} color={"gray.500"}>
               Payment Mode
             </Text>
-            <Text w={"130px"} fontWeight={500} color={"gray.500"}>
+            <Text w={"10%"} fontWeight={500} color={"gray.500"}>
               Package
             </Text>
-            <Box w={"calc(55% - 260px)"} />
+            <Text w={"10%"} fontWeight={500} color={"gray.500"}>
+              Billing Cycle
+            </Text>
+            <Box w={"20%"} />
           </HStack>
 
           <InfiniteScroll
@@ -112,7 +112,7 @@ const TransactionListCard: React.FC<{
                       width={"100%"}
                       align="center"
                     >
-                      <Text w={"10%"} fontWeight={500} color={"gray.500"}>
+                      <Text w={"6%"} fontWeight={500} color={"gray.500"}>
                         <Badge
                           colorScheme={
                             transaction.payment_status === "success"
@@ -132,23 +132,21 @@ const TransactionListCard: React.FC<{
                       <Text w={"12%"} fontWeight={500} color={"gray.500"}>
                         {date[2]} {monthNames[parseInt(date[1])]} {date[0]}
                       </Text>
-                      <Text w="130px" fontWeight={500} color={"gray.500"}>
+                      <Text w="12%" fontWeight={500} color={"gray.500"}>
                         {sentenceCapitalize(transaction.payment_platform)}
                       </Text>
-                      <Text w="130px" fontWeight={500} color={"gray.500"}>
+                      <Text w="10%" fontWeight={500} color={"gray.500"}>
                         {sentenceCapitalize(transaction.package)}
                       </Text>
-                      <HStack
-                        w={"calc(55% - 260px)"}
-                        flexWrap="wrap"
-                        justify="flex-end"
-                      >
+                      <Text w="10%" fontWeight={500} color={"gray.500"}>
+                        {sentenceCapitalize(transaction.billing_cycle)}
+                      </Text>
+                      <Flex w={"20%"} flexWrap="wrap" justify="flex-end">
                         {transaction.payment_platform === "stripe" &&
                           transaction.payment_status === "open" && (
                             <Button
                               variant="accent-ghost"
                               color={"red"}
-                              w={"fit-content"}
                               my={0}
                               py={0}
                               fontSize={"sm"}
@@ -168,7 +166,6 @@ const TransactionListCard: React.FC<{
                             <Button
                               variant="accent-ghost"
                               color={"accent"}
-                              w={"fit-content"}
                               my={0}
                               py={0}
                               fontSize={"sm"}
@@ -180,7 +177,7 @@ const TransactionListCard: React.FC<{
                               Complete Payment
                             </Button>
                           )}
-                      </HStack>
+                      </Flex>
                     </HStack>
                   </>
                 );

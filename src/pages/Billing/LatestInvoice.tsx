@@ -47,6 +47,7 @@ const LatestInvoice: React.FC<{
           packageName={selectedPlan}
           plan={planData}
           duration={transactionData.billing_cycle}
+          showCheckIcon={false}
         />
         <Flex
           flexDir={"row"}
