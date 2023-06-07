@@ -31,7 +31,10 @@ const DetailedBill: React.FC<{
             ? `$ ${pricingDetails[duration][selectedPlan].amount}0`
             : `$ ${
                 parseInt(pricingDetails[duration][selectedPlan].amount) +
-                pricingDetails[duration][selectedPlan].discount?.amount
+                parseInt(
+                  JSON.parse(pricingDetails[duration][selectedPlan].discount)
+                    .amount
+                )
               }.00`}
         </Heading>
       </HStack>
@@ -41,7 +44,9 @@ const DetailedBill: React.FC<{
             Yearly Discount
           </Text>
           <Heading fontSize={"md"}>
-            {`- $ ${pricingDetails[duration][selectedPlan].discount?.amount}.00`}{" "}
+            {`- $ ${parseInt(
+              JSON.parse(pricingDetails[duration][selectedPlan].discount).amount
+            )}.00`}{" "}
           </Heading>
         </HStack>
       )}

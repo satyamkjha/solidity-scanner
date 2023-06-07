@@ -82,7 +82,7 @@ export const PricingCard: React.FC<{
         w="60%"
         borderRadius={20}
       >
-        {pricingDetails[duration][plan].discount?.banner}
+        {JSON.parse(pricingDetails[duration][plan].discount).banner}
       </Flex>
       <Flex
         sx={{
@@ -207,15 +207,20 @@ export const PricingCard: React.FC<{
                   alignItems={"flex-start"}
                   position={"absolute"}
                   top={6}
-                  right={"-60px"}
+                  right={"-110px"}
                 >
                   <CurlyArrowBlue size={50} />
-                  <Flex align="center">
+                  <Flex ml={"-30px"} align="center">
                     <Text fontSize={"sm"} color="#3300FF" fontWeight={900}>
                       You Save&nbsp;
                     </Text>
                     <Heading fontSize={"xl"} color="#3300FF">
-                      $ {pricingDetails[duration][plan].discount?.amount}.00
+                      ${" "}
+                      {parseInt(
+                        JSON.parse(pricingDetails[duration][plan].discount)
+                          .amount
+                      )}
+                      .00
                     </Heading>
                   </Flex>
                 </Flex>
