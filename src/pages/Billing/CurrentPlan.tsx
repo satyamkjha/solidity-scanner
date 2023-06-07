@@ -128,12 +128,13 @@ const CurrentPlan: React.FC<{
         alignItems="flex-start"
       >
         <Flex
-          w={["100%", "100%", "60%"]}
+          w={["100%", "100%", "50%"]}
           flexDir="column"
           justifyContent={"flex-start"}
           alignItems="flex-start"
         >
           <CurrentPlanDescriptionContainer
+            duration={"monthly"}
             packageName={packageName}
             plan={plan}
           />

@@ -16,7 +16,7 @@ import { Page, Transaction } from "common/types";
 import { sentenceCapitalize, getAssetsURL } from "helpers/helperFunction";
 import InfiniteScroll from "react-infinite-scroll-component";
 import { monthNames } from "common/values";
-import CancelPaymentDialog from "components/common/CancelPaymentDialog";
+import CancelPaymentDialog from "components/billing/CancelPaymentDialog";
 
 const TransactionListCard: React.FC<{
   transactionList: Transaction[];

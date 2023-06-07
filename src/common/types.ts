@@ -370,7 +370,10 @@ export type ScanItem = {
 export type Plan = {
   name: string;
   description: string;
-  discount: string | null;
+  discount: {
+    banner: string;
+    amount: number;
+  } | null;
   scan_count: number;
   amount: string;
   github: boolean;
