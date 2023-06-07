@@ -80,7 +80,9 @@ const ScanCredits: React.FC<{
             <>
               <Flex key={index} w="100%" fontSize="sm" fontWeight="600">
                 <Text>{sentenceCapitalize(topUpData[key].name)}</Text>
-                <Text ml="auto">{`$ ${topUpData[key].amount}`}</Text>
+                <Text ml="auto">{`$ ${parseFloat(topUpData[key].amount).toFixed(
+                  2
+                )}`}</Text>
                 <Text fontWeight={400}>&nbsp;/ Credit</Text>
               </Flex>
               {index !== Object.keys(topUpData).length - 1 && (

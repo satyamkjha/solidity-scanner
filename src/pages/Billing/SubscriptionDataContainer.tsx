@@ -29,7 +29,7 @@ const SubscriptionDataContainer: React.FC<{
           Recurring Payment
         </Text>
         <Text fontWeight={500} fontSize="md">
-          {packageName === "trail" || packageName === "ondemand"
+          {packageName === "trial" || packageName === "ondemand"
             ? "--"
             : "Stripe Payment"}
         </Text>
