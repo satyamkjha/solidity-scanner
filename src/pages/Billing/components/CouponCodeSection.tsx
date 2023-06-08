@@ -10,7 +10,6 @@ import {
   useMediaQuery,
   useToast,
 } from "@chakra-ui/react";
-import "./billing.css";
 import { getAssetsURL } from "helpers/helperFunction";
 import { useConfig } from "hooks/useConfig";
 import API from "helpers/api";

@@ -20,8 +20,8 @@ import Auth from "helpers/auth";
 import { useHistory } from "react-router-dom";
 import { useConfig } from "hooks/useConfig";
 import { pricing_card_description_data } from "common/values";
-import PaymentModal from "pages/Billing/PaymentModal";
 import PricingDetailsList from "./PricingDetailsList";
+import PaymentModal from "pages/Billing/components/PaymentModal";
 
 export const PricingCard: React.FC<{
   page: "billing" | "pricing";

@@ -42,7 +42,6 @@ import {
   CircularProgress,
   CircularProgressLabel,
 } from "@chakra-ui/react";
-import "./billing.css";
 
 import { AiOutlineCheckCircle } from "react-icons/ai";
 import { AiOutlineCalendar, AiFillCheckCircle } from "react-icons/ai";
@@ -72,7 +71,7 @@ import { Swiper, SwiperSlide, useSwiper } from "swiper/react";
 import { usePricingPlans } from "hooks/usePricingPlans";
 import { API_PATH } from "helpers/routeManager";
 import { useConfig } from "hooks/useConfig";
-import ScanCredits from "components/billing/ScanCredits";
+import ScanCredits from "pages/Billing/components/ScanCredits";
 import PricingDetails from "pages/Pricing/components/PricingDetails";
 
 const PromoCodeCard: React.FC<{ profileData: Profile }> = ({ profileData }) => {

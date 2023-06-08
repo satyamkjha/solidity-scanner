@@ -11,7 +11,7 @@ import {
 } from "@chakra-ui/react";
 import { Plan, Transaction } from "common/types";
 import React from "react";
-import CancelPaymentDialog from "components/billing/CancelPaymentDialog";
+import CancelPaymentDialog from "./CancelPaymentDialog";
 import CurrentPlanDescriptionContainer from "./CurrentPlanDescriptionContainer";
 
 const LatestInvoice: React.FC<{

@@ -7,7 +7,6 @@ import {
   useMediaQuery,
   Image,
 } from "@chakra-ui/react";
-import "./billing.css";
 import { dateToDDMMMMYYYY } from "common/functions";
 
 const SubscriptionDataContainer: React.FC<{

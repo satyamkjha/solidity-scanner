@@ -1,6 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
 import { Flex, FormControl, Text } from "@chakra-ui/react";
-import "./billing.css";
 import { getAssetsURL } from "helpers/helperFunction";
 import { useConfig } from "hooks/useConfig";
 import { useAcceptedCoins } from "hooks/usePricing";

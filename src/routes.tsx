@@ -14,7 +14,6 @@ import Layout from "components/layout";
 
 import Auth from "helpers/auth";
 import API from "helpers/api";
-import PaymentSucess from "pages/Billing/payment";
 import PublicReportPage from "pages/Report/PublicReport";
 import PageNotFound, { CustomPageNotFound } from "pages/PageNotFound";
 import { Helmet } from "react-helmet";
@@ -130,9 +129,6 @@ const Routes: React.FC = () => {
           </Route>
           <Route exact path="/report/:projectType/:projectId/:reportId">
             <Report />
-          </Route>
-          <Route exact path="/payment/:status">
-            <PaymentSucess />
           </Route>
           <Route exact path="/pricing">
             <Pricing />

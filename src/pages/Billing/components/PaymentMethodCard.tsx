@@ -7,7 +7,6 @@ import {
   useMediaQuery,
   Image,
 } from "@chakra-ui/react";
-import "./billing.css";
 import { getAssetsURL } from "helpers/helperFunction";
 import { useConfig } from "hooks/useConfig";
 

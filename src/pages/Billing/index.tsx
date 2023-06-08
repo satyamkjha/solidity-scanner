@@ -17,17 +17,18 @@ import {
   Button,
 } from "@chakra-ui/react";
 import "./billing.css";
-import LatestInvoice from "./LatestInvoice";
-import CurrentPlan from "./CurrentPlan";
-import PromoCodeCard from "./PromoCodeCard";
+
 import { useProfile } from "hooks/useProfile";
 
 import { Page, Plan, Profile, Transaction } from "common/types";
 import { useTransactions } from "hooks/useTransactions";
 import { usePricingPlans } from "hooks/usePricingPlans";
-import ScanCredits from "components/billing/ScanCredits";
+import ScanCredits from "pages/Billing/components/ScanCredits";
 import PricingDetails from "pages/Pricing/components/PricingDetails";
-import TransactionListCard from "./TransactionListCard";
+import CurrentPlan from "./components/CurrentPlan";
+import LatestInvoice from "./components/LatestInvoice";
+import PromoCodeCard from "./components/PromoCodeCard";
+import TransactionListCard from "./components/TransactionListCard";
 
 const Billing: React.FC = () => {
   const { data } = useProfile();
