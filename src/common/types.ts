@@ -228,6 +228,7 @@ export type ScanSummary = {
   count_files_analyzed: number; //
   issue_severity_distribution: IssueSeverityDistribution; //
   score: string; //
+  score_v2: string;
   issues_count: number; //
   lines_analyzed_count: number; //
   latest_bug_count: number; //
@@ -242,6 +243,7 @@ export type ScanSummaryItem = {
   count_files_analyzed: number; //
   issue_severity_distribution: IssueSeverityDistribution; //
   score: string; //
+  score_v2: string;
   issues_count: number; //
   lines_analyzed_count: number; //
   scan_time_taken: number; //

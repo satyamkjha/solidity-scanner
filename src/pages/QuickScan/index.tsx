@@ -1153,13 +1153,13 @@ const QuickScan: React.FC = () => {
                                   fontSize="md"
                                   fontWeight={700}
                                 >
-                                  {item.score}
+                                  {item.score_v2}
                                   <Box
                                     as={"span"}
                                     color="gray.500"
                                     fontSize={"xs"}
                                   >
-                                    /5
+                                    /100
                                   </Box>
                                 </Text>
                                 <HStack
