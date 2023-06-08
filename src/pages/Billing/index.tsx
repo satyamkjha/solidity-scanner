@@ -230,7 +230,11 @@ const Billing: React.FC = () => {
                       )}
                   </Flex>
                 )}
-                <Flex w="100%" ref={pricingRef}>
+                <Flex
+                  w="100%"
+                  ref={pricingRef}
+                  mt={data.current_package === "custom" ? 4 : 0}
+                >
                   <PricingDetails pricingDetails={plans} page="billing" />
                 </Flex>
               </TabPanel>
