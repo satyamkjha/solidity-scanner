@@ -11,12 +11,12 @@ import {
   useMediaQuery,
   useDisclosure,
 } from "@chakra-ui/react";
-import "./billing.css";
+import "../billing.css";
 import { Page, Transaction } from "common/types";
 import { sentenceCapitalize, getAssetsURL } from "helpers/helperFunction";
 import InfiniteScroll from "react-infinite-scroll-component";
 import { monthNames } from "common/values";
-import CancelPaymentDialog from "components/billing/CancelPaymentDialog";
+import CancelPaymentDialog from "./CancelPaymentDialog";
 
 const TransactionListCard: React.FC<{
   transactionList: Transaction[];

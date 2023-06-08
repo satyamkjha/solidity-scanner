@@ -17,17 +17,18 @@ import {
   Button,
 } from "@chakra-ui/react";
 import "./billing.css";
-import LatestInvoice from "./LatestInvoice";
-import CurrentPlan from "./CurrentPlan";
-import PromoCodeCard from "./PromoCodeCard";
+
 import { useProfile } from "hooks/useProfile";
 
 import { Page, Plan, Profile, Transaction } from "common/types";
 import { useTransactions } from "hooks/useTransactions";
 import { usePricingPlans } from "hooks/usePricingPlans";
-import ScanCredits from "components/billing/ScanCredits";
+import ScanCredits from "pages/Billing/components/ScanCredits";
 import PricingDetails from "pages/Pricing/components/PricingDetails";
-import TransactionListCard from "./TransactionListCard";
+import CurrentPlan from "./components/CurrentPlan";
+import LatestInvoice from "./components/LatestInvoice";
+import PromoCodeCard from "./components/PromoCodeCard";
+import TransactionListCard from "./components/TransactionListCard";
 
 const Billing: React.FC = () => {
   const { data } = useProfile();
@@ -146,15 +147,16 @@ const Billing: React.FC = () => {
                 >
                   Plans
                 </Tab>
-                {data.current_package !== "trial" && (
-                  <Tab
-                    minW={["150px", "150px", "200px"]}
-                    bgColor={"#F5F5F5"}
-                    mr={5}
-                  >
-                    Scan Credits
-                  </Tab>
-                )}
+                {data.current_package !== "trial" &&
+                  data.current_package !== "custom" && (
+                    <Tab
+                      minW={["150px", "150px", "200px"]}
+                      bgColor={"#F5F5F5"}
+                      mr={5}
+                    >
+                      Scan Credits
+                    </Tab>
+                  )}
                 <Tab
                   minW={["150px", "150px", "200px"]}
                   bgColor={"#F5F5F5"}
@@ -173,71 +175,79 @@ const Billing: React.FC = () => {
             </Flex>
             <TabPanels width={"100%"}>
               <TabPanel width={"100%"} p={0}>
-                <Flex
-                  w="100%"
-                  pt={4}
-                  px={[0, 0, 8]}
-                  mb={8}
-                  position="relative"
-                  flexDir={["column", "column", "column", "row"]}
-                >
-                  <CurrentPlan
-                    subscription={data.subscription}
-                    isCancellable={data.is_cancellable}
-                    name={
-                      plans.pricing_data[planBillingCycle][data.current_package]
-                        .name
-                    }
-                    packageName={data.current_package}
-                    packageRechargeDate={data.package_recharge_date}
-                    packageValidity={data.package_validity}
-                    plan={
-                      plans.pricing_data[planBillingCycle][data.current_package]
-                    }
-                    upgradePlan={onUpgradePlan}
-                  />
-                  {transactionList.length > 0 &&
-                    transactionList[0].payment_status === "open" && (
-                      <Flex
-                        h="100%"
-                        position={[
-                          "relative",
-                          "relative",
-                          "relative",
-                          "absolute",
-                        ]}
-                        left={[0, 0, 0, "55%"]}
-                        top={0}
-                        right={4}
-                      >
-                        <LatestInvoice
-                          transactionData={transactionList[0]}
-                          selectedPlan={transactionList[0].package}
-                          planData={
-                            plans.pricing_data[
-                              transactionList[0].billing_cycle
-                            ][transactionList[0].package]
-                          }
-                          onPaymentCancel={fetchAgain}
-                        />
-                      </Flex>
-                    )}
-                </Flex>
+                {data.current_package !== "custom" && (
+                  <Flex
+                    w="100%"
+                    pt={4}
+                    px={[0, 0, 8]}
+                    mb={8}
+                    position="relative"
+                    flexDir={["column", "column", "column", "row"]}
+                  >
+                    <CurrentPlan
+                      subscription={data.subscription}
+                      isCancellable={data.is_cancellable}
+                      name={
+                        plans.pricing_data[planBillingCycle][
+                          data.current_package
+                        ].name
+                      }
+                      packageName={data.current_package}
+                      packageRechargeDate={data.package_recharge_date}
+                      packageValidity={data.package_validity}
+                      plan={
+                        plans.pricing_data[planBillingCycle][
+                          data.current_package
+                        ]
+                      }
+                      upgradePlan={onUpgradePlan}
+                    />
+                    {transactionList.length > 0 &&
+                      transactionList[0].payment_status === "open" && (
+                        <Flex
+                          h="100%"
+                          position={[
+                            "relative",
+                            "relative",
+                            "relative",
+                            "absolute",
+                          ]}
+                          left={[0, 0, 0, "55%"]}
+                          top={0}
+                          right={4}
+                        >
+                          <LatestInvoice
+                            transactionData={transactionList[0]}
+                            selectedPlan={transactionList[0].package}
+                            planData={
+                              plans.pricing_data[
+                                transactionList[0].billing_cycle
+                              ][transactionList[0].package]
+                            }
+                            onPaymentCancel={fetchAgain}
+                          />
+                        </Flex>
+                      )}
+                  </Flex>
+                )}
                 <Flex w="100%" ref={pricingRef}>
                   <PricingDetails pricingDetails={plans} page="billing" />
                 </Flex>
               </TabPanel>
-              {data.current_package !== "trial" && (
-                <TabPanel px={[0, 0, 4]} mx={[0, 0, 4]}>
-                  <ScanCredits
-                    planData={
-                      plans.pricing_data[planBillingCycle][data.current_package]
-                    }
-                    profile={data}
-                    topUpData={plans.pricing_data["topup"]}
-                  />
-                </TabPanel>
-              )}
+              {data.current_package !== "trial" &&
+                data.current_package !== "custom" && (
+                  <TabPanel px={[0, 0, 4]} mx={[0, 0, 4]}>
+                    <ScanCredits
+                      planData={
+                        plans.pricing_data[planBillingCycle][
+                          data.current_package
+                        ]
+                      }
+                      profile={data}
+                      topUpData={plans.pricing_data["topup"]}
+                    />
+                  </TabPanel>
+                )}
               <TabPanel px={[0, 0, 4]} mx={[0, 0, 4]}>
                 <TransactionListCard
                   transactionList={transactionList}

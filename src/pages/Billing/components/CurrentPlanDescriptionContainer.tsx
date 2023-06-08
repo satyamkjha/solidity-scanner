@@ -8,7 +8,6 @@ import {
   Heading,
   Image,
 } from "@chakra-ui/react";
-import "./billing.css";
 import { getAssetsURL, sentenceCapitalize } from "helpers/helperFunction";
 import { useConfig } from "hooks/useConfig";
 import { Plan } from "common/types";
