@@ -833,7 +833,7 @@ const QuickScan: React.FC = () => {
                       ? "linear-gradient(96.27deg, #FFF3F0 0.75%, #FFE0D9 96.71%)"
                       : parseFloat(
                           scanReport.multi_file_scan_summary.score_v2
-                        ) >= 85
+                        ) >= 90
                       ? "linear-gradient(96.27deg, #EFFFED 0.75%, #E6FFE2 96.71%)"
                       : "linear-gradient(96.27deg, #FFFAF2 0.75%, #FFF4E1 96.71%)"
                     : "linear-gradient(96.27deg, #FFFAF2 0.75%, #FFF4E1 96.71%)"
@@ -859,7 +859,7 @@ const QuickScan: React.FC = () => {
                       ? " LOW"
                       : parseFloat(
                           scanReport.multi_file_scan_summary.score_v2
-                        ) >= 85
+                        ) >= 90
                       ? " GREAT"
                       : " AVERAGE"
                     : "Low"}

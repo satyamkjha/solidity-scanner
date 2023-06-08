@@ -171,7 +171,7 @@ const Overview: React.FC<{
               background={
                 parseFloat(solidity_score) < 50
                   ? "linear-gradient(96.27deg, #FFF3F0 0.75%, #FFE0D9 96.71%)"
-                  : parseFloat(solidity_score) >= 85
+                  : parseFloat(solidity_score) >= 90
                   ? "linear-gradient(96.27deg, #EFFFED 0.75%, #E6FFE2 96.71%)"
                   : "linear-gradient(96.27deg, #FFFAF2 0.75%, #FFF4E1 96.71%)"
               }
@@ -192,7 +192,7 @@ const Overview: React.FC<{
                     Your Solidity Score is
                     {parseFloat(solidity_score) < 50
                       ? " LOW"
-                      : parseFloat(solidity_score) >= 85
+                      : parseFloat(solidity_score) >= 90
                       ? " GREAT"
                       : " AVERAGE"}
                   </Text>
