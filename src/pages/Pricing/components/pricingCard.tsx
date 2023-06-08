@@ -25,7 +25,7 @@ import PaymentModal from "pages/Billing/components/PaymentModal";
 
 export const PricingCard: React.FC<{
   page: "billing" | "pricing";
-  globalDuration: "monthly" | "yearly" | "on-demand";
+  globalDuration: "monthly" | "yearly" | "ondemand";
   plan: string;
   pricingDetails: {
     [key: string]: {
@@ -42,7 +42,7 @@ export const PricingCard: React.FC<{
   selectedPlan,
   setSelectedPlan,
 }) => {
-  const [duration, setDuration] = useState<"monthly" | "yearly" | "on-demand">(
+  const [duration, setDuration] = useState<"monthly" | "yearly" | "ondemand">(
     globalDuration
   );
   const config: any = useConfig();
@@ -165,7 +165,7 @@ export const PricingCard: React.FC<{
               {duration}
             </Text>
           </Flex>
-          {duration !== "on-demand" && (
+          {duration !== "ondemand" && (
             <Flex
               mt={2}
               flexDir={"row"}

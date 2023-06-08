@@ -25,7 +25,7 @@ const PricingDetails: React.FC<{
   const assetsURL = getAssetsURL();
   const history = useHistory();
   const [selectedPlan, setSelectedPlan] = useState("");
-  const [duration, setDuration] = useState<"monthly" | "yearly" | "on-demand">(
+  const [duration, setDuration] = useState<"monthly" | "yearly" | "ondemand">(
     "monthly"
   );
 
@@ -217,12 +217,12 @@ const PricingDetails: React.FC<{
           ]}
           gap={page === "pricing" ? 6 : 4}
         >
-          {Object.keys(pricingDetails.pricing_data["on-demand"]).map((plan) => {
+          {Object.keys(pricingDetails.pricing_data["ondemand"]).map((plan) => {
             if (plan !== "custom" && plan !== "trial")
               return (
                 <PricingCard
                   page={page}
-                  globalDuration={"on-demand"}
+                  globalDuration={"ondemand"}
                   plan={plan}
                   selectedPlan={selectedPlan}
                   setSelectedPlan={setSelectedPlan}

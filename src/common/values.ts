@@ -945,7 +945,7 @@ export const pricing_data = {
       publishable_report: false,
     },
     ondemand: {
-      name: "on-demand",
+      name: "ondemand",
       description: "Topup On Demand",
       discount: null,
       scan_count: 1,
@@ -1062,9 +1062,9 @@ export const pricing_data = {
       publishable_report: true,
     },
   },
-  "on-demand": {
-    "on-demand": {
-      name: "on-demand",
+  ondemand: {
+    ondemand: {
+      name: "ondemand",
       description:
         "Try out the basic features of the product. Get a detailed report with prompts describing detected issues and remediation solutions",
       discount: {

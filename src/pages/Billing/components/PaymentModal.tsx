@@ -35,7 +35,7 @@ const PaymentModal: React.FC<{
   isOpen: boolean;
   onClose: any;
   selectedPlan: string;
-  globalDuration: "monthly" | "yearly" | "on-demand";
+  globalDuration: "monthly" | "yearly" | "ondemand";
   pricingDetails: {
     [key: string]: {
       [plan: string]: Plan;
@@ -84,7 +84,7 @@ const PaymentModal: React.FC<{
   const [activeCoupon, setActiveCoupon] = useState<string | null>(null);
   const [updatedPrice, setUpdatedPrice] = useState<string>("");
 
-  const [duration, setDuration] = useState<"monthly" | "yearly" | "on-demand">(
+  const [duration, setDuration] = useState<"monthly" | "yearly" | "ondemand">(
     globalDuration
   );
 
@@ -222,7 +222,7 @@ const PaymentModal: React.FC<{
                   plan={pricingDetails[duration][selectedPlan]}
                   duration={duration}
                 />
-                {duration !== "on-demand" && (
+                {duration !== "ondemand" && (
                   <SwitchDuration
                     setDuration={setDuration}
                     setActiveCoupon={setActiveCoupon}
@@ -296,7 +296,7 @@ const PaymentModal: React.FC<{
                     plan={pricingDetails[duration][selectedPlan]}
                     duration={duration}
                   />
-                  {duration !== "on-demand" && (
+                  {duration !== "ondemand" && (
                     <SwitchDuration
                       setDuration={setDuration}
                       setActiveCoupon={setActiveCoupon}
@@ -349,7 +349,7 @@ const PaymentModal: React.FC<{
                       plan={pricingDetails[duration][selectedPlan]}
                       duration={duration}
                     />
-                    {duration !== "on-demand" && (
+                    {duration !== "ondemand" && (
                       <SwitchDuration
                         setDuration={setDuration}
                         setActiveCoupon={setActiveCoupon}

@@ -15,7 +15,7 @@ import { Plan } from "common/types";
 const CurrentPlanDescriptionContainer: React.FC<{
   packageName: string;
   plan: Plan;
-  duration: "monthly" | "yearly" | "on-demand";
+  duration: "monthly" | "yearly" | "ondemand";
   showCheckIcon?: boolean;
 }> = ({ packageName, plan, duration, showCheckIcon = true }) => {
   const config: any = useConfig();

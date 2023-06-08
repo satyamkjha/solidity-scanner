@@ -3,7 +3,7 @@ import { Plan } from "common/types";
 import React from "react";
 
 const DetailedBill: React.FC<{
-  duration: "monthly" | "yearly" | "on-demand";
+  duration: "monthly" | "yearly" | "ondemand";
   pricingDetails: {
     [key: string]: {
       [plan: string]: Plan;
