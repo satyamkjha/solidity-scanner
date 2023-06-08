@@ -22,7 +22,7 @@ import { useConfig } from "hooks/useConfig";
 export default function ReportPage() {
   const config: any = useConfig();
   const { reportId, projectType } = useParams<{
-    reportId: string;
+    reportId: stri
     projectType: string;
   }>();
   const { data } = usePublicReport(projectType, reportId);
