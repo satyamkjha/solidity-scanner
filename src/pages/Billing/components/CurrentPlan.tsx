@@ -79,19 +79,17 @@ const CurrentPlan: React.FC<{
   const onClose = () => setIsCancelSub(false);
 
   const getNextPaymentValue = (startDate: Date, nextDate?: Date) => {
-    const daysTillNow = Math.ceil(
-      (new Date().getTime() - startDate.getTime()) / (1000 * 3600 * 24)
-    );
+    const remainingDays = getPaymentDaysLeft(nextDate);
     if (nextDate) {
       const timeDifference = nextDate.getTime() - startDate.getTime();
       const totalDays = Math.ceil(timeDifference / (1000 * 3600 * 24));
-      return (daysTillNow * 100) / totalDays;
+      return (remainingDays * 100) / totalDays;
     } else {
-      return (daysTillNow * 100) / packageValidity;
+      return (remainingDays * 100) / packageValidity;
     }
   };
 
-  const getNextPaymentDaysLeft = (nextDate?: Date) => {
+  const getPaymentDaysLeft = (nextDate?: Date) => {
     if (nextDate) {
       const timeDifference = nextDate.getTime() - new Date().getTime();
       return Math.ceil(timeDifference / (1000 * 3600 * 24));
@@ -149,7 +147,7 @@ const CurrentPlan: React.FC<{
             </Button>
           )}
           <Flex
-            mt={5}
+            mt={16}
             flexWrap="wrap"
             alignItems="center"
             w={"100%"}
@@ -225,10 +223,11 @@ const CurrentPlan: React.FC<{
                       src={`${assetsURL}pricing/pro_badge.svg`}
                       ml="auto"
                       mt={-8}
+                      h={"80px"}
                     />
                   )}
                 </Flex>
-                <Flex my={isCancellable ? 4 : 2} align="center">
+                <Flex mt={isCancellable ? 6 : 2} align="center">
                   <CircularProgress
                     value={
                       subscription
@@ -247,10 +246,10 @@ const CurrentPlan: React.FC<{
                   <VStack alignItems="flex-start" spacing={0} ml={3}>
                     <Text fontSize="lg" fontWeight="700">
                       {subscription
-                        ? getNextPaymentDaysLeft(
+                        ? getPaymentDaysLeft(
                             new Date(subscription.renewal_date)
                           )
-                        : getNextPaymentDaysLeft()}
+                        : getPaymentDaysLeft()}
                       &nbsp; days
                     </Text>
                     <Text fontSize="sm" fontWeight="400">

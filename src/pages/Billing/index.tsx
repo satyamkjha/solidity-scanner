@@ -184,24 +184,29 @@ const Billing: React.FC = () => {
                     position="relative"
                     flexDir={["column", "column", "column", "row"]}
                   >
-                    <CurrentPlan
-                      subscription={data.subscription}
-                      isCancellable={data.is_cancellable}
-                      name={
-                        plans.pricing_data[planBillingCycle][
-                          data.current_package
-                        ].name
-                      }
-                      packageName={data.current_package}
-                      packageRechargeDate={data.package_recharge_date}
-                      packageValidity={data.package_validity}
-                      plan={
-                        plans.pricing_data[planBillingCycle][
-                          data.current_package
-                        ]
-                      }
-                      upgradePlan={onUpgradePlan}
-                    />
+                    {plans.pricing_data[planBillingCycle] &&
+                      plans.pricing_data[planBillingCycle][
+                        data.current_package
+                      ] && (
+                        <CurrentPlan
+                          subscription={data.subscription}
+                          isCancellable={data.is_cancellable}
+                          name={
+                            plans.pricing_data[planBillingCycle][
+                              data.current_package
+                            ].name
+                          }
+                          packageName={data.current_package}
+                          packageRechargeDate={data.package_recharge_date}
+                          packageValidity={data.package_validity}
+                          plan={
+                            plans.pricing_data[planBillingCycle][
+                              data.current_package
+                            ]
+                          }
+                          upgradePlan={onUpgradePlan}
+                        />
+                      )}
                     {transactionList.length > 0 &&
                       transactionList[0].payment_status === "open" && (
                         <Flex
@@ -241,15 +246,20 @@ const Billing: React.FC = () => {
               {data.current_package !== "trial" &&
                 data.current_package !== "custom" && (
                   <TabPanel px={[0, 0, 4]} mx={[0, 0, 4]}>
-                    <ScanCredits
-                      planData={
-                        plans.pricing_data[planBillingCycle][
-                          data.current_package
-                        ]
-                      }
-                      profile={data}
-                      topUpData={plans.pricing_data["topup"]}
-                    />
+                    {plans.pricing_data[planBillingCycle] &&
+                      plans.pricing_data[planBillingCycle][
+                        data.current_package
+                      ] && (
+                        <ScanCredits
+                          planData={
+                            plans.pricing_data[planBillingCycle][
+                              data.current_package
+                            ]
+                          }
+                          profile={data}
+                          topUpData={plans.pricing_data["topup"]}
+                        />
+                      )}
                   </TabPanel>
                 )}
               <TabPanel px={[0, 0, 4]} mx={[0, 0, 4]}>
