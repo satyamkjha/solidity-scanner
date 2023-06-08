@@ -191,11 +191,7 @@ const Billing: React.FC = () => {
                         <CurrentPlan
                           subscription={data.subscription}
                           isCancellable={data.is_cancellable}
-                          name={
-                            plans.pricing_data[planBillingCycle][
-                              data.current_package
-                            ].name
-                          }
+                          billingCycle={planBillingCycle}
                           packageName={data.current_package}
                           packageRechargeDate={data.package_recharge_date}
                           packageValidity={data.package_validity}

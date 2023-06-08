@@ -166,56 +166,62 @@ export const PricingCard: React.FC<{
             </Text>
           </Flex>
           {duration !== "ondemand" && (
-            <Flex
-              mt={2}
-              flexDir={"row"}
-              position={"relative"}
-              alignItems={"flex-start"}
-              justifyContent="flex-start"
-            >
-              <Text
-                color={duration === "monthly" ? "#000000" : "#7F7F7F"}
-                fontSize="sm"
-                fontWeight={300}
+            <>
+              <Flex
+                mt={2}
+                flexDir={"row"}
+                position={"relative"}
+                alignItems={"flex-start"}
+                justifyContent="flex-start"
               >
-                Monthly
-              </Text>
-              <Switch
-                mx={4}
-                size="md"
-                variant={duration === "yearly" ? "accent" : "brand"}
-                isChecked={duration === "yearly"}
-                onChange={() => {
-                  if (duration === "monthly") {
-                    setDuration("yearly");
-                  } else {
-                    setDuration("monthly");
-                  }
-                }}
-              />
-              <Text
-                color={duration === "yearly" ? "#000000" : "#7F7F7F"}
-                fontSize="sm"
-                fontWeight={300}
-              >
-                Yearly
-              </Text>
+                <Text
+                  color={duration === "monthly" ? "#000000" : "#7F7F7F"}
+                  fontSize="sm"
+                  fontWeight={300}
+                >
+                  Monthly
+                </Text>
+                <Switch
+                  mx={4}
+                  size="md"
+                  variant={duration === "yearly" ? "accent" : "brand"}
+                  isChecked={duration === "yearly"}
+                  onChange={() => {
+                    if (duration === "monthly") {
+                      setDuration("yearly");
+                    } else {
+                      setDuration("monthly");
+                    }
+                  }}
+                />
+                <Text
+                  color={duration === "yearly" ? "#000000" : "#7F7F7F"}
+                  fontSize="sm"
+                  fontWeight={300}
+                >
+                  Yearly
+                </Text>
+              </Flex>
               {duration === "yearly" && (
                 <Flex
                   flexDir={"column"}
-                  justifyContent={"flex-start"}
-                  alignItems={"flex-start"}
-                  position={"absolute"}
-                  top={6}
-                  right={"-110px"}
+                  justifyContent={"center"}
+                  alignItems={"center"}
+                  ml={6}
+                  w="100%"
                 >
                   <CurlyArrowBlue size={50} />
-                  <Flex ml={"-30px"} align="center">
+                  <Flex
+                    w="100%"
+                    align="center"
+                    justifyContent="flex-end"
+                    mr={4}
+                  >
                     <Text fontSize={"sm"} color="#3300FF" fontWeight={900}>
                       You Save&nbsp;
                     </Text>
                     <Heading fontSize={"xl"} color="#3300FF">
-                      ${" "}
+                      $
                       {parseInt(
                         JSON.parse(pricingDetails[duration][plan].discount)
                           .amount
@@ -225,7 +231,7 @@ export const PricingCard: React.FC<{
                   </Flex>
                 </Flex>
               )}
-            </Flex>
+            </>
           )}
         </Flex>
         <Flex

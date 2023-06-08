@@ -15,9 +15,16 @@ import { Plan } from "common/types";
 const CurrentPlanDescriptionContainer: React.FC<{
   packageName: string;
   plan: Plan;
-  duration: "monthly" | "yearly" | "ondemand";
+  duration: string;
   showCheckIcon?: boolean;
-}> = ({ packageName, plan, duration, showCheckIcon = true }) => {
+  showDescription?: boolean;
+}> = ({
+  packageName,
+  plan,
+  duration,
+  showCheckIcon = true,
+  showDescription = true,
+}) => {
   const config: any = useConfig();
   const assetsURL = getAssetsURL(config);
   return (
@@ -47,17 +54,19 @@ const CurrentPlanDescriptionContainer: React.FC<{
           />
         )}
       </Flex>
-      <Text
-        mt={2}
-        fontWeight={400}
-        color="detail"
-        fontSize={"sm"}
-        width={"100%"}
-      >
-        {plan.description ||
-          "Simplest way to get started with the product. Scan your contract using free credits and get your security score and issue count"}
-      </Text>
-      <Flex textAlign="center" my={4}>
+      {showDescription && (
+        <Text
+          my={2}
+          fontWeight={400}
+          color="detail"
+          fontSize={"sm"}
+          width={"100%"}
+        >
+          {plan.description ||
+            "Simplest way to get started with the product. Scan your contract using free credits and get your security score and issue count"}
+        </Text>
+      )}
+      <Flex textAlign="center" my={2}>
         <Heading fontSize={"x-large"}>
           {plan.amount === "Free" ? "Free" : `$ ${plan.amount}0`}&nbsp;
         </Heading>

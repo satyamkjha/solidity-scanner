@@ -42,7 +42,7 @@ export const theme = extendTheme({
     success: "#289F4C",
     pro: "#FAF9FF",
     beginner: "#EFFAFF",
-    intermediate: "#FFE0D9",
+    intermediate: "#FFEDE9",
     "pro-dark": "#806CCF",
     "beginner-dark": "#54C0EB",
     "intermediate-dark": "#FF5630",

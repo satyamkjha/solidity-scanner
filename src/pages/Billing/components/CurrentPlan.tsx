@@ -30,7 +30,7 @@ import PlanDetailsModal from "./PlanDetailsModal";
 
 const CurrentPlan: React.FC<{
   isCancellable: boolean;
-  name: string;
+  billingCycle: string;
   packageName: string;
   packageRechargeDate: string;
   packageValidity: number;
@@ -42,7 +42,7 @@ const CurrentPlan: React.FC<{
   };
   upgradePlan: any;
 }> = ({
-  name,
+  billingCycle,
   packageName,
   packageRechargeDate,
   packageValidity,
@@ -129,7 +129,7 @@ const CurrentPlan: React.FC<{
           alignItems="flex-start"
         >
           <CurrentPlanDescriptionContainer
-            duration={"monthly"}
+            duration={billingCycle}
             packageName={packageName}
             plan={plan}
           />
@@ -147,7 +147,7 @@ const CurrentPlan: React.FC<{
             </Button>
           )}
           <Flex
-            mt={16}
+            mt={packageName == "pro" ? 24 : 16}
             flexWrap="wrap"
             alignItems="center"
             w={"100%"}
@@ -253,7 +253,7 @@ const CurrentPlan: React.FC<{
                       &nbsp; days
                     </Text>
                     <Text fontSize="sm" fontWeight="400">
-                      remaining for the {sentenceCapitalize(name)} Plan
+                      remaining for the {sentenceCapitalize(plan.name)} Plan
                     </Text>
                   </VStack>
                 </Flex>
@@ -328,16 +328,15 @@ const CurrentPlan: React.FC<{
                 Are you sure you want to cancel the subscription?
               </Text>
 
-              <Text fontSize={"lg"} mt={10}>
-                {plan.name}
-              </Text>
-              <Heading fontSize={"x-large"} mb={10}>
-                {plan.name === "Trial"
-                  ? "Free"
-                  : plan.name === "Enterprise"
-                  ? "$--"
-                  : `$ ${plan.amount}`}
-              </Heading>
+              <Flex align="center" my={6}>
+                <CurrentPlanDescriptionContainer
+                  duration={billingCycle}
+                  packageName={packageName}
+                  plan={plan}
+                  showDescription={false}
+                  showCheckIcon={false}
+                />
+              </Flex>
 
               <AlertDialogFooter>
                 <Button variant="brand" onClick={cancelSubscription} ml={3}>
