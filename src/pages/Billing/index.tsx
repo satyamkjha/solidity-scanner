@@ -117,7 +117,7 @@ const Billing: React.FC = () => {
         >
           Billing & Transaction history
         </Text>
-        {!data || !plans || !transactionList || !page ? (
+        {!data || !plans || !transactionList || !page || !planBillingCycle ? (
           <Flex w="100%" h="70vh" alignItems="center" justifyContent="center">
             <Spinner />
           </Flex>
