@@ -100,8 +100,8 @@ const PricingDetails: React.FC<{
           color="#B0B7C3"
           fontWeight={300}
         >
-          Enterprise Dealing in Crypto Development or Security with Large Team
-          Size. Get your scan results and reports vetted by our security
+          Enterprise dealing in Crypto Development or Security with large team
+          size. Get your scan results and reports vetted by our security
           professionals
         </Text>
 

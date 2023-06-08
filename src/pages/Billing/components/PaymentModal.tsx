@@ -15,6 +15,7 @@ import {
   Button,
   useMediaQuery,
   VStack,
+  useToast,
 } from "@chakra-ui/react";
 import React, { useEffect, useState } from "react";
 import { getAssetsURL, sentenceCapitalize } from "helpers/helperFunction";
@@ -44,6 +45,7 @@ const PaymentModal: React.FC<{
 }> = ({ isOpen, onClose, selectedPlan, pricingDetails, globalDuration }) => {
   const config: any = useConfig();
   const assetsURL = getAssetsURL(config);
+  const toast = useToast();
 
   const [paymentMethod, setPaymentMethod] = useState<"cp" | "stripe">("cp");
 
@@ -69,10 +71,17 @@ const PaymentModal: React.FC<{
         checkout_url: string;
       }>(API_PATH.API_CREATE_STRIPE_SUBSCRIPTION_BETA, req);
 
-      if (status === 200) {
+      if (status === 200 && data.checkout_url) {
         window.open(`${data.checkout_url}`, "_blank");
         // fetchAgain();
         onClose();
+      } else {
+        toast({
+          title: data.message,
+          status: "error",
+          isClosable: true,
+          position: "bottom",
+        });
       }
     } catch (e) {
       console.log(e);
