@@ -15,6 +15,7 @@ import {
   Button,
   useMediaQuery,
   VStack,
+  useToast,
 } from "@chakra-ui/react";
 import React, { useEffect, useState } from "react";
 import { getAssetsURL, sentenceCapitalize } from "helpers/helperFunction";
@@ -35,7 +36,7 @@ const PaymentModal: React.FC<{
   isOpen: boolean;
   onClose: any;
   selectedPlan: string;
-  globalDuration: "monthly" | "yearly" | "on-demand";
+  globalDuration: "monthly" | "yearly" | "ondemand";
   pricingDetails: {
     [key: string]: {
       [plan: string]: Plan;
@@ -44,6 +45,7 @@ const PaymentModal: React.FC<{
 }> = ({ isOpen, onClose, selectedPlan, pricingDetails, globalDuration }) => {
   const config: any = useConfig();
   const assetsURL = getAssetsURL(config);
+  const toast = useToast();
 
   const [paymentMethod, setPaymentMethod] = useState<"cp" | "stripe">("cp");
 
@@ -69,10 +71,17 @@ const PaymentModal: React.FC<{
         checkout_url: string;
       }>(API_PATH.API_CREATE_STRIPE_SUBSCRIPTION_BETA, req);
 
-      if (status === 200) {
+      if (status === 200 && data.checkout_url) {
         window.open(`${data.checkout_url}`, "_blank");
         // fetchAgain();
         onClose();
+      } else {
+        toast({
+          title: data.message,
+          status: "error",
+          isClosable: true,
+          position: "bottom",
+        });
       }
     } catch (e) {
       console.log(e);
@@ -84,7 +93,7 @@ const PaymentModal: React.FC<{
   const [activeCoupon, setActiveCoupon] = useState<string | null>(null);
   const [updatedPrice, setUpdatedPrice] = useState<string>("");
 
-  const [duration, setDuration] = useState<"monthly" | "yearly" | "on-demand">(
+  const [duration, setDuration] = useState<"monthly" | "yearly" | "ondemand">(
     globalDuration
   );
 
@@ -222,7 +231,7 @@ const PaymentModal: React.FC<{
                   plan={pricingDetails[duration][selectedPlan]}
                   duration={duration}
                 />
-                {duration !== "on-demand" && (
+                {duration !== "ondemand" && (
                   <SwitchDuration
                     setDuration={setDuration}
                     setActiveCoupon={setActiveCoupon}
@@ -296,7 +305,7 @@ const PaymentModal: React.FC<{
                     plan={pricingDetails[duration][selectedPlan]}
                     duration={duration}
                   />
-                  {duration !== "on-demand" && (
+                  {duration !== "ondemand" && (
                     <SwitchDuration
                       setDuration={setDuration}
                       setActiveCoupon={setActiveCoupon}
@@ -349,7 +358,7 @@ const PaymentModal: React.FC<{
                       plan={pricingDetails[duration][selectedPlan]}
                       duration={duration}
                     />
-                    {duration !== "on-demand" && (
+                    {duration !== "ondemand" && (
                       <SwitchDuration
                         setDuration={setDuration}
                         setActiveCoupon={setActiveCoupon}

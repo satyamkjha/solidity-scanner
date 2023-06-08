@@ -25,7 +25,7 @@ const PricingDetails: React.FC<{
   const assetsURL = getAssetsURL();
   const history = useHistory();
   const [selectedPlan, setSelectedPlan] = useState("");
-  const [duration, setDuration] = useState<"monthly" | "yearly" | "on-demand">(
+  const [duration, setDuration] = useState<"monthly" | "yearly" | "ondemand">(
     "monthly"
   );
 
@@ -100,8 +100,8 @@ const PricingDetails: React.FC<{
           color="#B0B7C3"
           fontWeight={300}
         >
-          Enterprise Dealing in Crypto Development or Security with Large Team
-          Size. Get your scan results and reports vetted by our security
+          Enterprise dealing in Crypto Development or Security with large team
+          size. Get your scan results and reports vetted by our security
           professionals
         </Text>
 
@@ -217,12 +217,12 @@ const PricingDetails: React.FC<{
           ]}
           gap={page === "pricing" ? 6 : 4}
         >
-          {Object.keys(pricing_data["on-demand"]).map((plan) => {
+          {Object.keys(pricing_data["ondemand"]).map((plan) => {
             if (plan !== "custom" && plan !== "trial")
               return (
                 <PricingCard
                   page={page}
-                  globalDuration={"on-demand"}
+                  globalDuration={"ondemand"}
                   plan={plan}
                   selectedPlan={selectedPlan}
                   setSelectedPlan={setSelectedPlan}

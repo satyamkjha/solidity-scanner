@@ -16,7 +16,7 @@ import { useConfig } from "hooks/useConfig";
 import API from "helpers/api";
 
 const CouponCodeSection: React.FC<{
-  duration: "monthly" | "yearly" | "on-demand";
+  duration: "monthly" | "yearly" | "ondemand";
   activeCoupon: string | null;
   setActiveCoupon: React.Dispatch<React.SetStateAction<string | null>>;
   selectedPlan: string;

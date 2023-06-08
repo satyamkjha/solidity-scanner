@@ -80,13 +80,13 @@ const PricingTable: React.FC<PricingData> = ({
                   <Th w="12%" textAlign="center">
                     Trial
                   </Th>
-                  {Object.keys(pricing_data["on-demand"])
+                  {Object.keys(pricing_data["ondemand"])
                     .sort((a, b) => a[0].localeCompare(b[0]))
                     .map((plan) => {
                       if (plan !== "custom")
                         return (
                           <Th w="12%" textAlign="center">
-                            {pricing_data["on-demand"][plan].name}
+                            {pricing_data["ondemand"][plan].name}
                           </Th>
                         );
                     })}
