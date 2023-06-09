@@ -48,7 +48,7 @@ import AuditSummaryContainer from "components/report/AuditSummaryContainer";
 import FindingSummaryContainer from "components/report/FindingSummaryContainer";
 import VulnerabililtyDetailsContainer from "components/report/VulnerabililtyDetailsContainer";
 import ScanHistoryContainer from "components/report/ScanHistoryContainer";
-import DisclaimerContainer from "components/report/DisclaimerContrainer";
+import DisclaimerContainer from "components/report/DisclaimerContainer";
 
 export const ReportContainer: React.FC<{
   summary_report: Report;

@@ -3,7 +3,6 @@ import { useQueryClient } from "react-query";
 const useInvalidateQueries = () => {
   const queryClient = useQueryClient();
   const invalidateQueries = () => {
-    console.log("runs");
     queryClient.invalidateQueries("profile");
     queryClient.invalidateQueries("blocks");
     queryClient.invalidateQueries("invoices");

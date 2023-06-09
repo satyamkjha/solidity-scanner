@@ -18,10 +18,10 @@ import { actionTaken } from "common/values";
 import { getAssetsURL } from "helpers/helperFunction";
 import { useConfig } from "hooks/useConfig";
 import React, { useEffect, useState } from "react";
-import IssueRow from "./IssueRow";
-import IssueHead from "./IssueHead";
-import DescriptionRemediationContainer from "./DescriptionRemediationContainer";
-import CommentContainer from "./CommentContainer";
+import IssueRow from "../report/IssueRow";
+import IssueHead from "../report/IssueHead";
+import DescriptionRemediationContainer from "../report/DescriptionRemediationContainer";
+import CommentContainer from "../report/CommentContainer";
 
 const NonDynamicContainer: React.FC<{ issue: IssueDetailObject }> = ({
   issue,
@@ -40,8 +40,6 @@ const NonDynamicContainer: React.FC<{ issue: IssueDetailObject }> = ({
     issueList: IssueItem[];
   }[] = [];
 
-  const config: any = useConfig();
-  const assetsURL = getAssetsURL(config);
   useEffect(() => {
     Object.keys(issue.common_comments_map).forEach((key) => {
       let tempArray: IssueItem[] = [];
@@ -60,10 +58,12 @@ const NonDynamicContainer: React.FC<{ issue: IssueDetailObject }> = ({
       });
     });
 
-    comments_map.push({
-      comment: "no_comment",
-      issueList: issueDetails,
-    });
+    if (issueDetails.length > 0) {
+      comments_map.push({
+        comment: "no_comment",
+        issueList: issueDetails,
+      });
+    }
 
     setCommentsMao(comments_map);
   }, []);
@@ -78,7 +78,16 @@ const NonDynamicContainer: React.FC<{ issue: IssueDetailObject }> = ({
         issue_remediation={issue.issue_details[0].issue_remediation}
       />
       {commentsMap.map((comment) => (
-        <>
+        <Flex
+          width={"100%"}
+          height={"fit-content"}
+          flexDirection="column"
+          justifyContent="flex-start"
+          alignItems="flex-start"
+          sx={{
+            pageBreakAfter: "always",
+          }}
+        >
           <TableContainer
             mt={5}
             border="1px solid #D9D9D9"
@@ -112,7 +121,7 @@ const NonDynamicContainer: React.FC<{ issue: IssueDetailObject }> = ({
               <CommentContainer comment={comment.comment} />
             </Flex>
           )}
-        </>
+        </Flex>
       ))}
     </>
   );

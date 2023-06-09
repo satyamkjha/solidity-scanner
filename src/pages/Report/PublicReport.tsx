@@ -22,7 +22,7 @@ import { useConfig } from "hooks/useConfig";
 export default function ReportPage() {
   const config: any = useConfig();
   const { reportId, projectType } = useParams<{
-    reportId: stri
+    reportId: stri;
     projectType: string;
   }>();
   const { data } = usePublicReport(projectType, reportId);
@@ -74,10 +74,7 @@ export default function ReportPage() {
               <PrintContainer summary_report={data.summary_report} />
             </Box>
           </Box>
-          <ReportContainer
-            summary_report={data.summary_report}
-            isPublicReport={true}
-          />
+          <PrintContainer summary_report={data.summary_report} />
         </>
       ) : (
         <Container

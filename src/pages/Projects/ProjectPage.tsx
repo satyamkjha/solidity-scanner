@@ -592,7 +592,7 @@ const ScanDetails: React.FC<{
                         backgroundColor={"#F5F2FF"}
                         pl={7}
                         pr={3}
-                        py={1}
+                        py={2}
                         ml={5}
                       >
                         <Text
