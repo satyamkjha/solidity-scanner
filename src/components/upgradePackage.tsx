@@ -7,9 +7,11 @@ import { Link } from "react-router-dom";
 export const UpgradePackage: React.FC<{
   heading?: string;
   text?: string;
+  iconSize?: number;
 }> = ({
   heading = "Upgrade to use this feature",
   text = "Upgrade from the trial plan to use this feature and much more.",
+  iconSize = 120,
 }) => {
   return (
     <Flex
@@ -24,15 +26,17 @@ export const UpgradePackage: React.FC<{
       justifyContent="center"
       flexDir="column"
     >
-      <TrialWallIcon />
+      <Flex>
+        <TrialWallIcon size={iconSize} />
+      </Flex>
       <Text
         textAlign={"center"}
         w={"80%"}
         fontWeight={700}
         fontSize="md"
         color="black"
-        mb={4}
-        mt={10}
+        mb={2}
+        mt={8}
       >
         {heading}
       </Text>
@@ -49,7 +53,7 @@ export const UpgradePackage: React.FC<{
       </Text>
 
       <Link to="/billing">
-        <Button mt={4} variant="brand" width="250px">
+        <Button mt={2} variant="brand" width="250px">
           Upgrade
         </Button>
       </Link>
