@@ -203,7 +203,7 @@ const Projects: React.FC = () => {
             next={() => fetchMoreProjects()}
             hasMore={hasMore}
             loader={
-              <Box w={"100%"} align="center">
+              <Box w={"100%"}>
                 <Spinner />
               </Box>
             }

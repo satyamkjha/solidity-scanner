@@ -200,8 +200,8 @@ const PricingDetails: React.FC<{
         alignItems={"center"}
         justifyContent="flex-end"
         backgroundColor="#FFFFFF00"
-        mt={page === "pricing" ? "-300px" : "-600px"}
-        px={page === "pricing" ? [20] : [4]}
+        mt={page === "pricing" ? "-320px" : "-600px"}
+        px={page === "pricing" ? [16] : [4]}
       >
         <Grid
           backgroundColor="#FFFFFF00"
@@ -247,7 +247,9 @@ const PricingDetails: React.FC<{
             })}
         </Grid>
       </Flex>
-      <CustomPlanCard />
+      <Flex px={page === "pricing" ? [16] : [4]}>
+        <CustomPlanCard />
+      </Flex>
       <PricingTable
         pricing_data={pricingDetails.pricing_data}
         pricing_table_data={pricing_table_data}

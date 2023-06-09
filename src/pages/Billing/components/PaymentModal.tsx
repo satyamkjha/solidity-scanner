@@ -48,9 +48,17 @@ const PaymentModal: React.FC<{
   const toast = useToast();
 
   const [paymentMethod, setPaymentMethod] = useState<"cp" | "stripe">("cp");
+  const [coin, setCoin] = useState("");
+  const [step, setStep] = useState(0);
+  const [activeCoupon, setActiveCoupon] = useState<string | null>(null);
+  const [updatedPrice, setUpdatedPrice] = useState<string>("");
+
+  const [duration, setDuration] = useState<"monthly" | "yearly" | "ondemand">(
+    globalDuration
+  );
+  const [loading, setLoading] = useState(false);
 
   const createStripePayment = async () => {
-    console.log(activeCoupon);
     let req = {};
     if (activeCoupon) {
       req = {
@@ -88,16 +96,6 @@ const PaymentModal: React.FC<{
     }
   };
 
-  const [coin, setCoin] = useState("");
-  const [step, setStep] = useState(0);
-  const [activeCoupon, setActiveCoupon] = useState<string | null>(null);
-  const [updatedPrice, setUpdatedPrice] = useState<string>("");
-
-  const [duration, setDuration] = useState<"monthly" | "yearly" | "ondemand">(
-    globalDuration
-  );
-
-  const [loading, setLoading] = useState(false);
   const createCPLink = async () => {
     const width = 600;
     const height = 800;

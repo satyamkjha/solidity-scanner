@@ -801,8 +801,8 @@ export const PrivateApiMenuIcon: React.FC<{
   const iconColor = active ? "#04B79C" : "#3300FF";
   return (
     <svg
-    width={size}
-    height={(size * 22) / 28}
+      width={size}
+      height={(size * 22) / 28}
       viewBox="0 0 22 22"
       fill="none"
       xmlns="http://www.w3.org/2000/svg"

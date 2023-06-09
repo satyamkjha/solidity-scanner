@@ -19,7 +19,6 @@ import { getAssetsURL, sentenceCapitalize } from "helpers/helperFunction";
 import Auth from "helpers/auth";
 import { useHistory } from "react-router-dom";
 import { useConfig } from "hooks/useConfig";
-import { pricing_card_description_data } from "common/values";
 import PricingDetailsList from "./PricingDetailsList";
 import PaymentModal from "pages/Billing/components/PaymentModal";
 
@@ -89,9 +88,8 @@ export const PricingCard: React.FC<{
           boxShadow: "0px 4px 24px rgba(0, 0, 0, 0.1)",
           bg: "#FFFFFF",
           w: "100%",
-          h: mouse ? "750px" : "700px",
           transition: "height 0.5s",
-          border: mouse ? "3px solid  #3300FF" : "none",
+          border: mouse ? "3px solid  #3300FF" : "3px solid  #FFFFFF",
           py: 4,
           borderRadius: 20,
           backgroundColor: "#FFFFFF",
@@ -106,6 +104,9 @@ export const PricingCard: React.FC<{
           justifyContent: "flex-start",
           alignItems: "center",
           mt: -10,
+          _hover: {
+            boxShadow: "0px 4px 24px rgba(0, 0, 0, 0.4)",
+          },
         }}
       >
         <HStack
@@ -113,7 +114,7 @@ export const PricingCard: React.FC<{
           alignItems={"center"}
           justifyContent="space-between"
           mb={3}
-          pl={7}
+          pl={page == "pricing" ? 7 : 4}
         >
           <HStack justifyContent="flex-start">
             <Image
@@ -130,23 +131,24 @@ export const PricingCard: React.FC<{
           )}
         </HStack>
         <Text
-          height="150px"
+          height="100px"
           w="100%"
           textAlign={"left"}
           fontSize="sm"
           fontWeight={300}
-          px={7}
+          px={page == "pricing" ? 7 : 4}
         >
           {pricingDetails[duration][plan].description}
         </Text>
 
         <Flex
           flexDir="column"
-          w="100%"
           justifyContent={"flex-start"}
           alignItems={"flex-start"}
-          h="200px"
-          px={7}
+          position={"relative"}
+          h="120px"
+          w="100%"
+          px={page == "pricing" ? 7 : 4}
         >
           <Flex
             flexDir="row"
@@ -205,28 +207,23 @@ export const PricingCard: React.FC<{
               {duration === "yearly" && (
                 <Flex
                   flexDir={"column"}
-                  justifyContent={"center"}
-                  alignItems={"center"}
-                  ml={6}
-                  w="100%"
+                  position={"absolute"}
+                  top={"70px"}
+                  left={32}
                 >
-                  <CurlyArrowBlue size={50} />
-                  <Flex
-                    w="100%"
-                    align="center"
-                    justifyContent="flex-end"
-                    mr={4}
-                  >
-                    <Text fontSize={"sm"} color="#3300FF" fontWeight={900}>
+                  <Flex ml={4}>
+                    <CurlyArrowBlue size={50} />
+                  </Flex>
+                  <Flex alignItems="flex-end" mt={-1} ml={-2}>
+                    <Text fontSize={"xs"} color="#3300FF" fontWeight={900}>
                       You Save&nbsp;
                     </Text>
-                    <Heading fontSize={"xl"} color="#3300FF">
+                    <Heading fontSize={"lg"} color="#3300FF">
                       $
-                      {parseInt(
+                      {parseFloat(
                         JSON.parse(pricingDetails[duration][plan].discount)
                           .amount
-                      )}
-                      .00
+                      ).toFixed(2)}
                     </Heading>
                   </Flex>
                 </Flex>
@@ -241,8 +238,8 @@ export const PricingCard: React.FC<{
           justifyContent={"flex-start"}
         >
           <PricingDetailsList
-            selectedPackage={plan}
             plan={pricingDetails[duration][plan]}
+            page={page}
           />
         </Flex>
 
@@ -253,7 +250,7 @@ export const PricingCard: React.FC<{
           alignContent={"center"}
           variant={mouse ? "brand" : "gray-outline"}
           onClick={() => {
-            if ((page = "billing")) {
+            if (page === "billing") {
               onOpen();
             } else {
               if (Auth.isUserAuthenticated()) {
@@ -267,13 +264,15 @@ export const PricingCard: React.FC<{
           {mouse ? "Select Plan" : "Choose Plan"}
         </Button>
       </Flex>
-      <PaymentModal
-        globalDuration={duration}
-        selectedPlan={plan}
-        pricingDetails={pricingDetails}
-        isOpen={isOpen}
-        onClose={onClose}
-      />
+      {isOpen && (
+        <PaymentModal
+          globalDuration={duration}
+          selectedPlan={plan}
+          pricingDetails={pricingDetails}
+          isOpen={isOpen}
+          onClose={onClose}
+        />
+      )}
     </GridItem>
   );
 };

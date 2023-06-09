@@ -408,7 +408,8 @@ const ScanDetails: React.FC<{
         : profile.current_package === "expired" ||
           profile.current_package === "trial"
         ? true
-        : !plans.pricing_data["monthly"][profile.current_package].report));
+        : !plans.pricing_data[profile.billing_cycle][profile.current_package]
+            .report));
 
   return (
     <>
@@ -527,7 +528,7 @@ const ScanDetails: React.FC<{
                           profile.actions_supported
                             ? !profile.actions_supported.publishable_report
                             : profile.current_package !== "expired" &&
-                              !plans.pricing_data["monthly"][
+                              !plans.pricing_data[profile.billing_cycle][
                                 profile.current_package
                               ].publishable_report
                         }
@@ -544,7 +545,7 @@ const ScanDetails: React.FC<{
                         {profile.actions_supported
                           ? !profile.actions_supported.publishable_report
                           : profile.current_package !== "expired" &&
-                            !plans.pricing_data["monthly"][
+                            !plans.pricing_data[profile.billing_cycle][
                               profile.current_package
                             ].publishable_report && (
                               <LockIcon color={"accent"} size="xs" mr={3} />
@@ -667,7 +668,7 @@ const ScanDetails: React.FC<{
                           : profile.current_package === "expired" ||
                             profile.current_package === "trial"
                           ? false
-                          : !plans.pricing_data["monthly"][
+                          : !plans.pricing_data[profile.billing_cycle][
                               profile.current_package
                             ].report && <LockIcon color={"accent"} mr={3} />}
                         {reportingStatus === "generating_report"

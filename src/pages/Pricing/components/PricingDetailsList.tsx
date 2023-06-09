@@ -7,13 +7,19 @@ import { Plan } from "common/types";
 
 const PricingDetailsList: React.FC<{
   plan: Plan;
-  selectedPackage: string;
-}> = ({ plan }) => {
+  page: "billing" | "pricing";
+}> = ({ plan, page }) => {
   const config: any = useConfig();
   const assetsURL = getAssetsURL(config);
   return (
     <>
-      <VStack pl={7} width="250px" alignItems={"flex-start"} mb={4} spacing={0}>
+      <VStack
+        pl={page == "pricing" ? 7 : 4}
+        width="250px"
+        alignItems={"flex-start"}
+        mb={5}
+        spacing={0}
+      >
         <Text
           fontSize="xs"
           mb={1}
@@ -42,10 +48,10 @@ const PricingDetailsList: React.FC<{
       {pricing_card_description_data.map((item) => (
         <VStack
           width="250px"
-          pl={7}
+          pl={page == "pricing" ? 7 : 4}
           alignItems={"flex-start"}
-          mb={4}
-          spacing={0}
+          mb={5}
+          spacing={1}
           opacity={
             item.key === "detector"
               ? 1

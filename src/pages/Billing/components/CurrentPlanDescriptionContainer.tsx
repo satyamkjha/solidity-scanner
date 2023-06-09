@@ -68,7 +68,10 @@ const CurrentPlanDescriptionContainer: React.FC<{
       )}
       <Flex textAlign="center" my={2}>
         <Heading fontSize={"x-large"}>
-          {plan.amount === "Free" ? "Free" : `$ ${plan.amount}0`}&nbsp;
+          {plan.amount === "Free"
+            ? "Free"
+            : `$ ${parseFloat(plan.amount).toFixed(2)}`}
+          &nbsp;
         </Heading>
         {packageName !== "trial" && packageName !== "ondemand" && (
           <Text fontSize="xs" color="detail" mt={2}>

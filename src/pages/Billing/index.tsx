@@ -147,16 +147,17 @@ const Billing: React.FC = () => {
                 >
                   Plans
                 </Tab>
-                {data.current_package !== "trial" &&
-                  data.current_package !== "custom" && (
-                    <Tab
-                      minW={["150px", "150px", "200px"]}
-                      bgColor={"#F5F5F5"}
-                      mr={5}
-                    >
-                      Scan Credits
-                    </Tab>
-                  )}
+                {!["trial", "custom", "expired"].includes(
+                  data.current_package
+                ) && (
+                  <Tab
+                    minW={["150px", "150px", "200px"]}
+                    bgColor={"#F5F5F5"}
+                    mr={5}
+                  >
+                    Scan Credits
+                  </Tab>
+                )}
                 <Tab
                   minW={["150px", "150px", "200px"]}
                   bgColor={"#F5F5F5"}
@@ -239,25 +240,26 @@ const Billing: React.FC = () => {
                   <PricingDetails pricingDetails={plans} page="billing" />
                 </Flex>
               </TabPanel>
-              {data.current_package !== "trial" &&
-                data.current_package !== "custom" && (
-                  <TabPanel px={[0, 0, 4]} mx={[0, 0, 4]}>
-                    {plans.pricing_data[planBillingCycle] &&
-                      plans.pricing_data[planBillingCycle][
-                        data.current_package
-                      ] && (
-                        <ScanCredits
-                          planData={
-                            plans.pricing_data[planBillingCycle][
-                              data.current_package
-                            ]
-                          }
-                          profile={data}
-                          topUpData={plans.pricing_data["topup"]}
-                        />
-                      )}
-                  </TabPanel>
-                )}
+              {!["trial", "custom", "expired"].includes(
+                data.current_package
+              ) && (
+                <TabPanel px={[0, 0, 4]} mx={[0, 0, 4]}>
+                  {plans.pricing_data[planBillingCycle] &&
+                    plans.pricing_data[planBillingCycle][
+                      data.current_package
+                    ] && (
+                      <ScanCredits
+                        planData={
+                          plans.pricing_data[planBillingCycle][
+                            data.current_package
+                          ]
+                        }
+                        profile={data}
+                        topUpData={plans.pricing_data["topup"]}
+                      />
+                    )}
+                </TabPanel>
+              )}
               <TabPanel px={[0, 0, 4]} mx={[0, 0, 4]}>
                 <TransactionListCard
                   transactionList={transactionList}
