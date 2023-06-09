@@ -37,7 +37,7 @@ const CancelPaymentDialog: React.FC<{
         isClosable: true,
         position: "bottom",
       });
-      onPaymentCancel();
+      onPaymentCancel("stripe");
       onClose();
     }
   };

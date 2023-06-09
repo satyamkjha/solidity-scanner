@@ -292,6 +292,7 @@ const CurrentPlan: React.FC<{
       <PlanDetailsModal
         subscription={subscription ? true : false}
         currentPackage={packageName}
+        duration={billingCycle}
         packageRechargeDate={packageRechargeDate}
         plan={plan}
         open={open}

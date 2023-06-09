@@ -246,6 +246,7 @@ export const PricingCard: React.FC<{
         <Button
           width="200px"
           mx="auto"
+          mt={6}
           py={6}
           alignContent={"center"}
           variant={mouse ? "brand" : "gray-outline"}

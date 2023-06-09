@@ -87,6 +87,7 @@ const CouponCodeSection: React.FC<{
         {isLargerThan450 && (
           <InputRightElement
             w="fit-content"
+            zIndex={0}
             children={
               <Text
                 cursor={"pointer"}

@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react";
-import { set, useForm } from "react-hook-form";
 import { Link as RouterLink, useHistory, useLocation } from "react-router-dom";
 import {
   Flex,
@@ -74,9 +73,11 @@ export default PageNotFound;
 
 export const CustomPageNotFound: React.FC = () => {
   const history = useHistory();
+  const location = useLocation();
 
   useEffect(() => {
-    history.push("/page-not-found");
+    if (location.pathname != "/payment/success/")
+      history.push("/page-not-found");
   }, []);
 
   return (

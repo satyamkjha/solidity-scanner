@@ -22,20 +22,12 @@ import {
   Tr,
   Box,
 } from "@chakra-ui/react";
-import React, { useEffect, useState } from "react";
-import { getAssetsURL, sentenceCapitalize } from "helpers/helperFunction";
-import { API_PATH } from "helpers/routeManager";
-import { useConfig } from "hooks/useConfig";
-import API from "helpers/api";
-import PaymentMethodCard from "./PaymentMethodCard";
-import CoinPaymentSelect from "./CoinPaymentsSelect";
-import CouponCodeSection from "./CouponCodeSection";
-import { Plan, PricingData } from "common/types";
-import PricingDetails from "pages/Pricing/components/PricingDetails";
+import React from "react";
+import { Plan } from "common/types";
 import CurrentPlanDescriptionContainer from "./CurrentPlanDescriptionContainer";
 import SubscriptionDataContainer from "./SubscriptionDataContainer";
 import PricingDetailsList from "pages/Pricing/components/PricingDetailsList";
-import { pricing_table_data, pricing_data } from "common/values";
+import { pricing_table_data } from "common/values";
 import { TickMark } from "components/icons";
 
 const TickComp: React.FC<{ color: string }> = ({ color }) => (
@@ -48,6 +40,7 @@ const PlanDetailsModal: React.FC<{
   open: boolean;
   onModalClose: any;
   currentPackage: string;
+  duration: string;
   packageRechargeDate: string;
   subscription: boolean;
   plan: Plan;
@@ -55,13 +48,11 @@ const PlanDetailsModal: React.FC<{
   open: isOpen,
   onModalClose,
   currentPackage,
+  duration,
   plan,
   packageRechargeDate,
   subscription,
 }) => {
-  const config: any = useConfig();
-  const assetsURL = getAssetsURL(config);
-
   return (
     <Modal isOpen={isOpen} onClose={onModalClose}>
       <ModalOverlay />
@@ -107,6 +98,7 @@ const PlanDetailsModal: React.FC<{
                 <CurrentPlanDescriptionContainer
                   packageName={currentPackage}
                   plan={plan}
+                  duration={duration}
                 />
               </Flex>
               <Flex

@@ -42,6 +42,8 @@ const Billing: React.FC = () => {
     Transaction[] | undefined
   >();
   const [page, setPage] = useState<Page | undefined>();
+  const [completePaymentOpen, setCompletePaymentOpen] =
+    useState<boolean>(false);
 
   const { data: plans } = usePricingPlans();
 
@@ -66,6 +68,18 @@ const Billing: React.FC = () => {
     }
   }, [transactions]);
 
+  useEffect(() => {
+    if (
+      transactionList &&
+      transactionList.length > 0 &&
+      transactionList[0].payment_status === "open"
+    ) {
+      setCompletePaymentOpen(true);
+    } else {
+      setCompletePaymentOpen(false);
+    }
+  }, [transactionList]);
+
   const fetchAgain = async () => {
     setPageNo(1);
     await refetch();
@@ -74,6 +88,14 @@ const Billing: React.FC = () => {
   const fetchMore = async () => {
     setPageNo(pageNo + 1);
     await refetch();
+  };
+
+  const onPaymentCancel = (payment_type: string) => {
+    if (payment_type === "coinpayments") {
+      setCompletePaymentOpen(false);
+    } else {
+      fetchAgain();
+    }
   };
 
   const onUpgradePlan = () => {
@@ -109,12 +131,7 @@ const Billing: React.FC = () => {
           my: 4,
         }}
       >
-        <Text
-          fontSize={"2xl"}
-          px={[0, 0, 4]}
-          mx={[0, 0, 4]}
-          sx={{ color: "text", fontWeight: 600, ml: [3, 3, 5] }}
-        >
+        <Text mx={[2, 2, 2, 8]} sx={{ color: "subtle", fontWeight: 600 }}>
           Billing & Transaction history
         </Text>
         {!data || !plans || !transactionList || !page || !planBillingCycle ? (
@@ -153,7 +170,7 @@ const Billing: React.FC = () => {
                   <Tab
                     minW={["150px", "150px", "200px"]}
                     bgColor={"#F5F5F5"}
-                    mr={5}
+                    mx={[2, 3, 5]}
                   >
                     Scan Credits
                   </Tab>
@@ -204,32 +221,31 @@ const Billing: React.FC = () => {
                           upgradePlan={onUpgradePlan}
                         />
                       )}
-                    {transactionList.length > 0 &&
-                      transactionList[0].payment_status === "open" && (
-                        <Flex
-                          h="100%"
-                          position={[
-                            "relative",
-                            "relative",
-                            "relative",
-                            "absolute",
-                          ]}
-                          left={[0, 0, 0, "55%"]}
-                          top={0}
-                          right={4}
-                        >
-                          <LatestInvoice
-                            transactionData={transactionList[0]}
-                            selectedPlan={transactionList[0].package}
-                            planData={
-                              plans.pricing_data[
-                                transactionList[0].billing_cycle
-                              ][transactionList[0].package]
-                            }
-                            onPaymentCancel={fetchAgain}
-                          />
-                        </Flex>
-                      )}
+                    {completePaymentOpen && (
+                      <Flex
+                        h="100%"
+                        position={[
+                          "relative",
+                          "relative",
+                          "relative",
+                          "absolute",
+                        ]}
+                        left={[0, 0, 0, "55%"]}
+                        top={0}
+                        right={4}
+                      >
+                        <LatestInvoice
+                          transactionData={transactionList[0]}
+                          selectedPlan={transactionList[0].package}
+                          planData={
+                            plans.pricing_data[
+                              transactionList[0].billing_cycle
+                            ][transactionList[0].package]
+                          }
+                          onPaymentCancel={onPaymentCancel}
+                        />
+                      </Flex>
+                    )}
                   </Flex>
                 )}
                 <Flex

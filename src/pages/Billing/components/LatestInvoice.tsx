@@ -22,6 +22,14 @@ const LatestInvoice: React.FC<{
 }> = ({ planData, selectedPlan, transactionData, onPaymentCancel }) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
 
+  const onCancel = () => {
+    if (transactionData.payment_platform == "coinpayments") {
+      onPaymentCancel("coinpayments");
+    } else {
+      onOpen();
+    }
+  };
+
   return (
     <>
       <Flex
@@ -40,7 +48,7 @@ const LatestInvoice: React.FC<{
             ml="auto"
             color="#B0B7C3"
             cursor="pointer"
-            onClick={onOpen}
+            onClick={onCancel}
           />
         </Flex>
         <CurrentPlanDescriptionContainer

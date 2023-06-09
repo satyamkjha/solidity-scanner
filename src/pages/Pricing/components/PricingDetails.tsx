@@ -125,73 +125,74 @@ const PricingDetails: React.FC<{
             >
               Start Free Trial
             </Button>
-            <Flex
-              flexDir={"row"}
-              position={"relative"}
-              py={10}
-              alignItems={["flex-start", "flex-start", "flex-end"]}
-              justifyContent="center"
-              height={["100px", "100px", "140px"]}
-              width="300px"
-            >
-              <Text
-                color={duration === "monthly" ? "#FFFFFF" : "gray.400"}
-                fontSize="md"
-                fontWeight={300}
-              >
-                Pay Monthly
-              </Text>
-              <Switch
-                mx={5}
-                size="lg"
-                variant="brand"
-                isChecked={duration === "yearly"}
-                onChange={() => {
-                  if (duration === "monthly") {
-                    setDuration("yearly");
-                  } else {
-                    setDuration("monthly");
-                  }
-                }}
-              />
-              <Text
-                color={duration === "yearly" ? "#FFFFFF" : "gray.400"}
-                fontSize="md"
-                fontWeight={300}
-              >
-                Pay Yearly
-              </Text>
-              {duration === "yearly" && (
-                <Flex
-                  flexDir={"column"}
-                  justifyContent={"flex-start"}
-                  alignItems={"flex-start"}
-                  position={"absolute"}
-                  top={["70px", "70px", "-30px"]}
-                  right={["150px", "70px", "-100px"]}
-                >
-                  <Box display={["block", "block", "none"]}>
-                    <CurlyArrowUp size={50} />
-                  </Box>
-                  <Text
-                    fontSize={"md"}
-                    ml={[-10, -10, 10]}
-                    color="gray.200"
-                    fontWeight={900}
-                  >
-                    Just pay for
-                  </Text>
-                  <Heading ml={[-10, -10, 10]} fontSize={"md"} color="#FFFFFF">
-                    10 MONTHS
-                  </Heading>
-                  <Box display={["none", "none", "block"]}>
-                    <CurlyArrowDown size={70} />
-                  </Box>
-                </Flex>
-              )}
-            </Flex>
           </>
         )}
+        <Flex
+          flexDir={"row"}
+          position={"relative"}
+          py={10}
+          mt={page === "pricing" ? 0 : 10}
+          alignItems={["flex-start", "flex-start", "flex-end"]}
+          justifyContent="center"
+          height={["100px", "100px", "140px"]}
+          width="300px"
+        >
+          <Text
+            color={duration === "monthly" ? "#FFFFFF" : "gray.400"}
+            fontSize="md"
+            fontWeight={300}
+          >
+            Pay Monthly
+          </Text>
+          <Switch
+            mx={5}
+            size="lg"
+            variant="brand"
+            isChecked={duration === "yearly"}
+            onChange={() => {
+              if (duration === "monthly") {
+                setDuration("yearly");
+              } else {
+                setDuration("monthly");
+              }
+            }}
+          />
+          <Text
+            color={duration === "yearly" ? "#FFFFFF" : "gray.400"}
+            fontSize="md"
+            fontWeight={300}
+          >
+            Pay Yearly
+          </Text>
+          {duration === "yearly" && (
+            <Flex
+              flexDir={"column"}
+              justifyContent={"flex-start"}
+              alignItems={"flex-start"}
+              position={"absolute"}
+              top={["70px", "70px", "-30px"]}
+              right={["150px", "70px", "-100px"]}
+            >
+              <Box display={["block", "block", "none"]}>
+                <CurlyArrowUp size={50} />
+              </Box>
+              <Text
+                fontSize={"md"}
+                ml={[-10, -10, 10]}
+                color="gray.200"
+                fontWeight={900}
+              >
+                Just pay for
+              </Text>
+              <Heading ml={[-10, -10, 10]} fontSize={"md"} color="#FFFFFF">
+                10 MONTHS
+              </Heading>
+              <Box display={["none", "none", "block"]}>
+                <CurlyArrowDown size={70} />
+              </Box>
+            </Flex>
+          )}
+        </Flex>
       </Flex>
       <Flex
         w={["95%", "95%", "95%", "100%"]}
@@ -200,7 +201,7 @@ const PricingDetails: React.FC<{
         alignItems={"center"}
         justifyContent="flex-end"
         backgroundColor="#FFFFFF00"
-        mt={page === "pricing" ? "-320px" : "-600px"}
+        mt={page === "pricing" ? "-310px" : "-450px"}
         px={page === "pricing" ? [16] : [4]}
       >
         <Grid

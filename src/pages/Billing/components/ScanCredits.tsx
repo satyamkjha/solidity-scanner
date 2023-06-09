@@ -225,11 +225,11 @@ const ScanCredits: React.FC<{
           </Flex>
         </Flex>
         <Text
-          fontSize="2xl"
+          fontSize="xl"
           mt={2}
         >{`${creditOptions[selectedIndex]} credits`}</Text>
         <Flex w="100%" textColor="subtle" my={2}>
-          <Text fontSize="lg">{`$${currentTopUpPlan.amount} Per Credit  X  ${creditOptions[selectedIndex]}`}</Text>
+          <Text>{`$${currentTopUpPlan.amount} Per Credit  X  ${creditOptions[selectedIndex]}`}</Text>
           <Text ml="auto">{`$${
             parseFloat(currentTopUpPlan.amount) *
             parseInt(creditOptions[selectedIndex])
@@ -250,7 +250,7 @@ const ScanCredits: React.FC<{
           variant="brand"
           p={6}
           mt={"auto"}
-          w="220px"
+          w="100%"
           alignSelf="center"
           isDisabled={selectedIndex === 0}
           onClick={makePament}

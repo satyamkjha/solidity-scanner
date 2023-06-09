@@ -154,6 +154,7 @@ const PaymentModal: React.FC<{
         overflowY={"scroll"}
         overflowX={"scroll"}
         bg="white"
+        h="85%"
         minH={"fit-content"}
       >
         <ModalCloseButton />
@@ -173,21 +174,21 @@ const PaymentModal: React.FC<{
             : "Confirm Payment Details"}
         </ModalHeader>
 
-        <ModalBody h={"fit-content"} w={"100%"} px={[6, 6, 6, 12]} py={10}>
+        <ModalBody h="100%" w={"100%"} px={[6, 6, 6, 12]} pb={10} pt={4}>
           <Divider />
           {isLargerThan900 ? (
             <HStack
               mt={5}
               w="fit-content"
               spacing={"20px"}
-              h={"fit-content"}
+              h="100%"
               alignItems={"flex-start"}
               justifyContent={"flex-start"}
             >
               <Flex
                 w="400px"
                 flexDir="column"
-                h="fit-content"
+                h="100%"
                 justifyContent={"flex-start"}
               >
                 <HStack w="100%" spacing={"20px"}>
@@ -219,7 +220,7 @@ const PaymentModal: React.FC<{
               </Flex>
               <Flex
                 w="400px"
-                h="fit-content"
+                h="100%"
                 flexDir="column"
                 justifyContent={"flex-start"}
                 alignItems={"flex-start"}
@@ -245,7 +246,7 @@ const PaymentModal: React.FC<{
                   updatedPrice={updatedPrice}
                 />
                 <Button
-                  mt={4}
+                  mt={"auto"}
                   w="100%"
                   variant="brand"
                   onClick={() => {
@@ -255,6 +256,7 @@ const PaymentModal: React.FC<{
                       createStripePayment();
                     }
                   }}
+                  isDisabled={paymentMethod === "cp" ? !coin : false}
                 >
                   Make Payment
                 </Button>
@@ -264,7 +266,7 @@ const PaymentModal: React.FC<{
             <Flex
               w="450px"
               flexDir="column"
-              h="fit-content"
+              h="100%"
               justifyContent={"flex-start"}
             >
               {step === 0 ? (
@@ -321,7 +323,7 @@ const PaymentModal: React.FC<{
                 </>
               )}
               <Button
-                mt={4}
+                mt={"auto"}
                 w="100%"
                 variant="brand"
                 onClick={() => {
@@ -345,7 +347,7 @@ const PaymentModal: React.FC<{
                 w="75vw"
                 maxW={"300px"}
                 flexDir="column"
-                h="fit-content"
+                h="100%"
                 justifyContent={"flex-start"}
                 pt={5}
               >
@@ -412,7 +414,7 @@ const PaymentModal: React.FC<{
                   </>
                 )}
                 <Button
-                  mt={4}
+                  mt={"auto"}
                   w="100%"
                   variant="brand"
                   onClick={() => {

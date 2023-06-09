@@ -14,9 +14,9 @@ const ConfirmationMessageBox: React.FC<{
       border="2px solid #FFC661"
       p={3}
       borderRadius={10}
-      mt={5}
+      mt={"auto"}
     >
-      <Text color="#4E5D78" fontWeight={300} fontSize={"sm"}>
+      <Text color="detail" fontWeight={300} fontSize={"sm"}>
         You have currently selected the{" "}
         <span
           style={{
@@ -24,7 +24,8 @@ const ConfirmationMessageBox: React.FC<{
           }}
         >
           <b>
-            {sentenceCapitalize(name)} {sentenceCapitalize(duration)}{" "}
+            {sentenceCapitalize(name)}{" "}
+            {duration !== "ondemand" && sentenceCapitalize(duration)}{" "}
           </b>
         </span>
         plan sum of the charges will apply on your conformation
