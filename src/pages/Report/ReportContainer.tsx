@@ -885,7 +885,13 @@ export const ReportContainer: React.FC<{
 
               <CircularProgress
                 value={
-                  (parseInt(summary_report.scan_summary[0].score, 10) * 100) / 5
+                  summary_report.scan_summary[0].score_v2
+                    ? parseFloat(summary_report.scan_summary[0].score_v2)
+                    : parseFloat(
+                        (
+                          parseFloat(summary_report.scan_summary[0].score) * 20
+                        ).toFixed(2)
+                      )
                 }
                 color="accent"
                 thickness="8px"
@@ -897,7 +903,10 @@ export const ReportContainer: React.FC<{
                 >
                   <Box>
                     <Text fontSize="lg" fontWeight={900} color="accent">
-                      {summary_report.scan_summary[0].score}
+                      {summary_report.scan_summary[0].score_v2 ||
+                        (
+                          parseFloat(summary_report.scan_summary[0].score) * 20
+                        ).toFixed(2)}
                     </Text>
                     <Text fontSize="sm" color="subtle" mt="-4px">
                       Score
@@ -1775,7 +1784,7 @@ export const ReportContainer: React.FC<{
               color={"#3300FF"}
               width={["20%", "20%", "20%", "17%"]}
             >
-              {scan.score}
+              {scan.score_v2 || (parseFloat(scan.score) * 20).toFixed(2)}
             </Text>
 
             {isDesktopView && (

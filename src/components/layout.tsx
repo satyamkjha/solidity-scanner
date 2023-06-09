@@ -29,7 +29,8 @@ import API from "helpers/api";
 import Auth from "helpers/auth";
 import { API_PATH } from "helpers/routeManager";
 import { useConfig } from "hooks/useConfig";
-import useInvalidateQueries from "hooks/invalidateQueries";
+import { useQueryClient } from "react-query";
+import { onLogout } from "common/functions";
 
 const MotionFlex = motion(Flex);
 
@@ -38,12 +39,11 @@ const Layout: React.FC = ({ children }) => {
   const [isSidebarCollapsed, setSidebarCollapsed] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
   const history = useHistory();
+  const queryClient = useQueryClient();
   const { data: profileData } = useProfile();
 
   const config: any = useConfig();
   const assetsURL = getAssetsURL(config);
-
-  const invalidateQueries = useInvalidateQueries();
 
   const handleClickOutside = (e: MouseEvent) => {
     if (ref.current && ref.current.contains(e.target as Node)) {
@@ -59,11 +59,7 @@ const Layout: React.FC = ({ children }) => {
       API_PATH.API_LOGOUT
     );
     if (data.status === "success") {
-      Auth.deauthenticateUser();
-      history.push("/signin");
-      setTimeout(() => {
-        invalidateQueries();
-      }, 1000);
+      onLogout(history, queryClient);
     }
   };
 

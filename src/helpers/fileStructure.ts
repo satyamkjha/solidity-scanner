@@ -58,27 +58,31 @@ export const updateCheckedValue = (
   let depth = 0;
 
   const updateParent = (treeItem: TreeItemUP): TreeItemUP => {
-    let count = 0;
+    let checkedCount = 0;
+    let childCheckedCount = 0;
     treeItem.tree.forEach((item) => {
       if (item.checked) {
-        count++;
+        checkedCount++;
+      }
+      if (item.isChildCheck) {
+        childCheckedCount++;
       }
     });
 
     treeItem.blobs.forEach((item) => {
       if (item.checked) {
-        count++;
+        checkedCount++;
       }
     });
 
-    if (count === 0) {
+    if (checkedCount === 0 && childCheckedCount > 0) {
       return {
         ...treeItem,
         checked: false,
-        isChildCheck: false,
+        isChildCheck: true,
       };
     }
-    if (count === treeItem.tree.length + treeItem.blobs.length) {
+    if (checkedCount === treeItem.tree.length + treeItem.blobs.length) {
       return {
         ...treeItem,
         checked: true,

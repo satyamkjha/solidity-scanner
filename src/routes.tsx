@@ -16,10 +16,10 @@ import Auth from "helpers/auth";
 import API from "helpers/api";
 import PublicReportPage from "pages/Report/PublicReport";
 import PageNotFound, { CustomPageNotFound } from "pages/PageNotFound";
-import { Helmet } from "react-helmet";
 import Cookies from "js-cookie";
 import PrivateApi from "pages/PrivateAPI";
-import useInvalidateQueries from "hooks/invalidateQueries";
+import { onLogout } from "common/functions";
+import { useQueryClient } from "react-query";
 
 const Landing = lazy(
   () => import("pages/Landing" /* webpackChunkName: "Landing" */)
@@ -212,14 +212,11 @@ const Routes: React.FC = () => {
 const ErrorHandler: React.FC = ({ children }) => {
   const toast = useToast();
   const history = useHistory();
-
-  const invalidateQueries = useInvalidateQueries();
+  const queryClient = useQueryClient();
 
   const logout = async () => {
     // await API.get("api-logout");
-    Auth.deauthenticateUser();
-    invalidateQueries();
-    history.push("/signin");
+    onLogout(history, queryClient);
   };
 
   useEffect(() => {
