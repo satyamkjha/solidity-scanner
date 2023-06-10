@@ -73,11 +73,9 @@ export default PageNotFound;
 
 export const CustomPageNotFound: React.FC = () => {
   const history = useHistory();
-  const location = useLocation();
 
   useEffect(() => {
-    if (location.pathname != "/payment/success/")
-      history.push("/page-not-found");
+    history.push("/page-not-found");
   }, []);
 
   return (

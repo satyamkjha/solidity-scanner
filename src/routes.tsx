@@ -20,6 +20,7 @@ import Cookies from "js-cookie";
 import PrivateApi from "pages/PrivateAPI";
 import { onLogout } from "common/functions";
 import { useQueryClient } from "react-query";
+import PaymentSucess from "pages/Billing/components/PaymentStatus";
 
 const Landing = lazy(
   () => import("pages/Landing" /* webpackChunkName: "Landing" */)
@@ -129,6 +130,9 @@ const Routes: React.FC = () => {
           </Route>
           <Route exact path="/report/:projectType/:projectId/:reportId">
             <Report />
+          </Route>
+          <Route exact path="/payment/:status">
+            <PaymentSucess />
           </Route>
           <Route exact path="/pricing">
             <Pricing />

@@ -89,7 +89,7 @@ export const PricingCard: React.FC<{
           bg: "#FFFFFF",
           w: "100%",
           transition: "height 0.5s",
-          border: mouse ? "3px solid  #3300FF" : "3px solid  #FFFFFF",
+          border: "3px solid  #FFFFFF",
           py: 4,
           borderRadius: 20,
           backgroundColor: "#FFFFFF",
@@ -106,6 +106,7 @@ export const PricingCard: React.FC<{
           mt: -10,
           _hover: {
             boxShadow: "0px 4px 24px rgba(0, 0, 0, 0.4)",
+            border: "3px solid  #3300FF",
           },
         }}
       >
