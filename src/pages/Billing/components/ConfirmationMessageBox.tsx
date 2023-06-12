@@ -28,7 +28,7 @@ const ConfirmationMessageBox: React.FC<{
             {duration !== "ondemand" && sentenceCapitalize(duration)}{" "}
           </b>
         </span>
-        plan sum of the charges will apply on your conformation
+        plan sum of the charges will apply on your confirmation
       </Text>
     </Flex>
   );
