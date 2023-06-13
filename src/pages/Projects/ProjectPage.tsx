@@ -102,7 +102,11 @@ import { getPublicReport } from "hooks/usePublicReport";
 import ProjectCustomSettings from "components/projectCustomSettings";
 import FolderSettings from "components/projectFolderSettings";
 import { getRepoTree } from "hooks/getRepoTree";
-import { getAssetsURL } from "helpers/helperFunction";
+import {
+  getAssetsURL,
+  checkGenerateReportAccess,
+  checkPublishReportAccess,
+} from "helpers/helperFunction";
 import { useConfig } from "hooks/useConfig";
 
 export const ProjectPage: React.FC = () => {
@@ -399,17 +403,14 @@ const ScanDetails: React.FC<{
     }
   }, [summaryReport]);
 
-  const checkIfGeneratingReport = () =>
-    profile &&
-    plans &&
-    (reportingStatus === "generating_report" ||
-      (profile.actions_supported
-        ? !profile.actions_supported.generate_report
-        : profile.current_package === "expired" ||
-          profile.current_package === "trial"
-        ? true
-        : !plans.pricing_data[profile.billing_cycle][profile.current_package]
-            .report));
+  const checkIfGeneratingReport = () => {
+    if (profile && plans) {
+      if (reportingStatus === "generating_report") return true;
+
+      return !checkGenerateReportAccess(profile, plans);
+    }
+    return true;
+  };
 
   return (
     <>
@@ -524,14 +525,7 @@ const ScanDetails: React.FC<{
                         bg={"white"}
                         w={["80%", "80%", "50%", "auto"]}
                         mx={["auto", "auto", "auto", 4]}
-                        isDisabled={
-                          profile.actions_supported
-                            ? !profile.actions_supported.publishable_report
-                            : profile.current_package !== "expired" &&
-                              !plans.pricing_data[profile.billing_cycle][
-                                profile.current_package
-                              ].publishable_report
-                        }
+                        isDisabled={!checkPublishReportAccess(profile, plans)}
                         onClick={() => {
                           if (commitHash == "") {
                             getReportData(
@@ -542,14 +536,9 @@ const ScanDetails: React.FC<{
                           setOpen(!open);
                         }}
                       >
-                        {profile.actions_supported
-                          ? !profile.actions_supported.publishable_report
-                          : profile.current_package !== "expired" &&
-                            !plans.pricing_data[profile.billing_cycle][
-                              profile.current_package
-                            ].publishable_report && (
-                              <LockIcon color={"accent"} size="xs" mr={3} />
-                            )}
+                        {!checkPublishReportAccess(profile, plans) && (
+                          <LockIcon color={"accent"} size="xs" mr={3} />
+                        )}
                         Publish Report
                       </Button>
                     ) : (
@@ -663,14 +652,9 @@ const ScanDetails: React.FC<{
                         {reportingStatus === "generating_report" && (
                           <Spinner color="#806CCF" size="xs" mr={3} />
                         )}
-                        {profile.actions_supported
-                          ? !profile.actions_supported.generate_report
-                          : profile.current_package === "expired" ||
-                            profile.current_package === "trial"
-                          ? false
-                          : !plans.pricing_data[profile.billing_cycle][
-                              profile.current_package
-                            ].report && <LockIcon color={"accent"} mr={3} />}
+                        {!checkGenerateReportAccess(profile, plans) && (
+                          <LockIcon color={"accent"} mr={3} />
+                        )}
                         {reportingStatus === "generating_report"
                           ? "Generating report..."
                           : reportingStatus === "not_generated"

@@ -1,7 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
 import { Flex, FormControl, Text } from "@chakra-ui/react";
-import { getAssetsURL } from "helpers/helperFunction";
-import { useConfig } from "hooks/useConfig";
 import { useAcceptedCoins } from "hooks/usePricing";
 import Select from "react-select";
 import { customStylesForReactSelect } from "common/stylesForCustomSelect";
@@ -11,8 +9,6 @@ const CoinPaymentSelect: React.FC<{
   setCoin: React.Dispatch<React.SetStateAction<string>>;
   coin: string;
 }> = ({ coin, setCoin }) => {
-  const config: any = useConfig();
-  const assetsURL = getAssetsURL(config);
   const { data, isLoading } = useAcceptedCoins();
   const [coinList, setCoinList] = React.useState<
     { label: string; value: string }[]

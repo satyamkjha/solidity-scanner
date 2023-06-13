@@ -16,17 +16,15 @@ import {
   useMediaQuery,
   VStack,
   useToast,
+  Tooltip,
 } from "@chakra-ui/react";
 import React, { useEffect, useState } from "react";
-import { getAssetsURL, sentenceCapitalize } from "helpers/helperFunction";
 import { API_PATH } from "helpers/routeManager";
-import { useConfig } from "hooks/useConfig";
 import API from "helpers/api";
 import PaymentMethodCard from "./PaymentMethodCard";
 import CoinPaymentSelect from "./CoinPaymentsSelect";
 import CouponCodeSection from "./CouponCodeSection";
 import { Plan, PricingData } from "common/types";
-import PricingDetails from "pages/Pricing/components/PricingDetails";
 import CurrentPlanDescriptionContainer from "./CurrentPlanDescriptionContainer";
 import ConfirmationMessageBox from "./ConfirmationMessageBox";
 import DetailedBill from "./DetailedBill";
@@ -43,8 +41,6 @@ const PaymentModal: React.FC<{
     };
   };
 }> = ({ isOpen, onClose, selectedPlan, pricingDetails, globalDuration }) => {
-  const config: any = useConfig();
-  const assetsURL = getAssetsURL(config);
   const toast = useToast();
 
   const [paymentMethod, setPaymentMethod] = useState<"cp" | "stripe">("cp");
@@ -52,6 +48,8 @@ const PaymentModal: React.FC<{
   const [step, setStep] = useState(0);
   const [activeCoupon, setActiveCoupon] = useState<string | null>(null);
   const [updatedPrice, setUpdatedPrice] = useState<string>("");
+  const [disableMessage, setDisableMessage] = useState<string>("");
+  const [disablePayment, setDisablePayment] = useState<boolean>(true);
 
   const [duration, setDuration] = useState<"monthly" | "yearly" | "ondemand">(
     globalDuration
@@ -141,9 +139,27 @@ const PaymentModal: React.FC<{
     "(min-width: 900px)",
   ]);
 
+  const isCoinPaymentDisabled = () => {
+    if (!coin) return true;
+    if (activeCoupon && parseFloat(updatedPrice).toFixed(2) == "0.00") {
+      setDisableMessage("Coin payment is not available with this coupon");
+      return true;
+    }
+    setDisableMessage("");
+    return false;
+  };
+
   useEffect(() => {
     setActiveCoupon("");
   }, []);
+
+  useEffect(() => {
+    if (paymentMethod == "cp") {
+      setDisablePayment(isCoinPaymentDisabled());
+    } else {
+      setDisablePayment(false);
+    }
+  }, [coin, paymentMethod, updatedPrice]);
 
   return (
     <Modal isOpen={isOpen} onClose={onClose}>
@@ -245,21 +261,27 @@ const PaymentModal: React.FC<{
                   activeCoupon={activeCoupon}
                   updatedPrice={updatedPrice}
                 />
-                <Button
-                  mt={"auto"}
-                  w="100%"
-                  variant="brand"
-                  onClick={() => {
-                    if (paymentMethod === "cp") {
-                      createCPLink();
-                    } else {
-                      createStripePayment();
-                    }
-                  }}
-                  isDisabled={paymentMethod === "cp" ? !coin : false}
+                <Tooltip
+                  isDisabled={paymentMethod !== "cp" || disableMessage === ""}
+                  label={disableMessage}
                 >
-                  Make Payment
-                </Button>
+                  <Flex mt={"auto"} w="100%">
+                    <Button
+                      w="100%"
+                      variant="brand"
+                      onClick={() => {
+                        if (paymentMethod === "cp") {
+                          createCPLink();
+                        } else {
+                          createStripePayment();
+                        }
+                      }}
+                      isDisabled={disablePayment}
+                    >
+                      Make Payment
+                    </Button>
+                  </Flex>
+                </Tooltip>
               </Flex>
             </HStack>
           ) : isLargerThan450 ? (
