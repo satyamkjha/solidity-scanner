@@ -159,7 +159,7 @@ const PaymentModal: React.FC<{
     } else {
       setDisablePayment(false);
     }
-  }, [coin, paymentMethod, updatedPrice]);
+  }, [coin, paymentMethod, updatedPrice, activeCoupon]);
 
   return (
     <Modal isOpen={isOpen} onClose={onClose}>
@@ -262,7 +262,11 @@ const PaymentModal: React.FC<{
                   updatedPrice={updatedPrice}
                 />
                 <Tooltip
-                  isDisabled={paymentMethod !== "cp" || disableMessage === ""}
+                  isDisabled={
+                    paymentMethod !== "cp" ||
+                    disableMessage === "" ||
+                    !activeCoupon
+                  }
                   label={disableMessage}
                 >
                   <Flex mt={"auto"} w="100%">
