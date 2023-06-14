@@ -11,6 +11,7 @@ export type Profile = {
   public_address?: string;
   company_name: string;
   current_package: string;
+  billing_cycle: string;
   email_verified: boolean;
   verification_email_sent: boolean;
   projects_remaining: number;
@@ -153,6 +154,7 @@ export type MultiFileScanSummary = {
   scan_time_taken: number;
   scans_ran: string[];
   score: string;
+  score_v2: string;
   threat_score: string;
 };
 
@@ -227,6 +229,7 @@ export type ScanSummary = {
   count_files_analyzed: number; //
   issue_severity_distribution: IssueSeverityDistribution; //
   score: string; //
+  score_v2: string;
   issues_count: number; //
   lines_analyzed_count: number; //
   latest_bug_count: number; //
@@ -241,6 +244,7 @@ export type ScanSummaryItem = {
   count_files_analyzed: number; //
   issue_severity_distribution: IssueSeverityDistribution; //
   score: string; //
+  score_v2: string;
   issues_count: number; //
   lines_analyzed_count: number; //
   scan_time_taken: number; //
@@ -392,6 +396,7 @@ export type Pagination = {
 export type Transaction = {
   date: string;
   package: string;
+  billing_cycle: string;
   currency: string;
   amount: string;
   order_id: string;

@@ -197,7 +197,7 @@ export const ContactUs: React.FC<{ onClose(): any; isOpen: boolean }> = ({
           </ModalBody>
           <ModalFooter>
             <Button
-              w={["100%", "100%", "100%", "100px"]}
+              w={["100%", "100%", "100%", "200px"]}
               variant="brand"
               mr={[0, 0, 0, "50px"]}
               mb={5}

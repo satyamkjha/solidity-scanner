@@ -83,19 +83,16 @@ const Profile: React.FC = () => {
   };
 
   const checkFormValidation = () => {
-    if (
-      companyName !== "" &&
-      (companyName.length < 5 || companyName.length > 40)
-    ) {
+    if (companyName && (companyName.length < 5 || companyName.length > 40)) {
       return false;
     }
     if (
-      contactNumber !== "" &&
+      contactNumber &&
       (contactNumber.length < 8 || contactNumber.length > 15)
     ) {
       return false;
     }
-    if (firstName !== "" && (firstName.length < 5 || firstName.length > 40)) {
+    if (firstName && (firstName.length < 5 || firstName.length > 40)) {
       return false;
     }
     return true;

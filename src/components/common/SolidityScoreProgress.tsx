@@ -13,7 +13,7 @@ const SolidityScoreProgress: React.FC<{
 }> = ({ score, size, thickness }) => {
   return (
     <CircularProgress
-      value={(parseFloat(score) * 100) / 5}
+      value={parseFloat(score)}
       color="accent"
       thickness={thickness}
       size={size}
@@ -31,7 +31,7 @@ const SolidityScoreProgress: React.FC<{
     >
       <CircularProgressLabel sx={{ display: "flex", justifyContent: "center" }}>
         <Box>
-          <Text fontSize="22px" fontWeight={600} color="accent">
+          <Text fontSize="xl" fontWeight={600} color="accent">
             {score}
           </Text>
         </Box>
