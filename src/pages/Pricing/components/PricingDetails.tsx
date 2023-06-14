@@ -21,7 +21,8 @@ import { pricing_data } from "common/values";
 const PricingDetails: React.FC<{
   pricingDetails: PricingData;
   page: "billing" | "pricing";
-}> = ({ pricingDetails, page }) => {
+  currentPackage?: string;
+}> = ({ pricingDetails, page, currentPackage }) => {
   const assetsURL = getAssetsURL();
   const history = useHistory();
   const [selectedPlan, setSelectedPlan] = useState("");
@@ -201,7 +202,7 @@ const PricingDetails: React.FC<{
         alignItems={"center"}
         justifyContent="flex-end"
         backgroundColor="#FFFFFF00"
-        mt={page === "pricing" ? "-310px" : "-450px"}
+        mt={page === "pricing" ? "-300px" : "-430px"}
         px={page === "pricing" ? [16] : [4]}
       >
         <Grid
@@ -225,6 +226,7 @@ const PricingDetails: React.FC<{
                   page={page}
                   globalDuration={"ondemand"}
                   plan={plan}
+                  currentPackage={currentPackage}
                   selectedPlan={selectedPlan}
                   setSelectedPlan={setSelectedPlan}
                   pricingDetails={pricingDetails.pricing_data}
@@ -240,6 +242,7 @@ const PricingDetails: React.FC<{
                     page={page}
                     globalDuration={duration}
                     plan={plan}
+                    currentPackage={currentPackage}
                     selectedPlan={selectedPlan}
                     setSelectedPlan={setSelectedPlan}
                     pricingDetails={pricingDetails.pricing_data}
@@ -248,7 +251,7 @@ const PricingDetails: React.FC<{
             })}
         </Grid>
       </Flex>
-      <Flex px={page === "pricing" ? [16] : [4]}>
+      <Flex px={page === "pricing" ? [8, 8, 8, 16] : [4]}>
         <CustomPlanCard />
       </Flex>
       <PricingTable

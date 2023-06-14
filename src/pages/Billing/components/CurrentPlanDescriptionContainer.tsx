@@ -11,6 +11,7 @@ import {
 import { getAssetsURL, sentenceCapitalize } from "helpers/helperFunction";
 import { useConfig } from "hooks/useConfig";
 import { Plan } from "common/types";
+import { CheckBadge } from "components/icons";
 
 const CurrentPlanDescriptionContainer: React.FC<{
   packageName: string;
@@ -46,12 +47,9 @@ const CurrentPlanDescriptionContainer: React.FC<{
           {sentenceCapitalize(plan.name)}
         </Text>
         {showCheckIcon && (
-          <Image
-            src={`${assetsURL}icons/check_badge.svg`}
-            w="28px"
-            h="28px"
-            ml={2}
-          />
+          <Flex ml={2}>
+            <CheckBadge fillColor={"#38CB89"} strokColor={"white"} />
+          </Flex>
         )}
       </Flex>
       {showDescription && (

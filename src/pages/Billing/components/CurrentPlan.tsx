@@ -170,7 +170,11 @@ const CurrentPlan: React.FC<{
         >
           <Flex
             w="100%"
-            maxW="400px"
+            maxW={
+              packageName === "trial" || packageName === "ondemand"
+                ? "375px"
+                : "400px"
+            }
             maxH="185px"
             px={8}
             py={6}

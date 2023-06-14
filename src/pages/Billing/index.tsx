@@ -253,7 +253,11 @@ const Billing: React.FC = () => {
                   ref={pricingRef}
                   mt={data.current_package === "custom" ? 4 : 0}
                 >
-                  <PricingDetails pricingDetails={plans} page="billing" />
+                  <PricingDetails
+                    currentPackage={data.current_package}
+                    pricingDetails={plans}
+                    page="billing"
+                  />
                 </Flex>
               </TabPanel>
               {!["trial", "custom", "expired"].includes(

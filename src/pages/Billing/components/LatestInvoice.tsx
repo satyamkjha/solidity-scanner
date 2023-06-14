@@ -57,45 +57,49 @@ const LatestInvoice: React.FC<{
           duration={transactionData.billing_cycle}
           showCheckIcon={false}
         />
-        <Flex
-          flexDir={"row"}
-          position={"relative"}
-          alignItems={"flex-start"}
-          justifyContent="flex-start"
-        >
-          <Text
-            color={
-              transactionData.billing_cycle === "monthly"
-                ? "#000000"
-                : "#7F7F7F"
-            }
-            fontSize="sm"
-            fontWeight={300}
+        {transactionData.package !== "ondemand" && (
+          <Flex
+            flexDir={"row"}
+            position={"relative"}
+            alignItems={"flex-start"}
+            justifyContent="flex-start"
           >
-            Monthly
-          </Text>
-          <Switch
-            mx={4}
-            size="md"
-            variant={
-              transactionData.billing_cycle === "yearly" ? "accent" : "brand"
-            }
-            isChecked={transactionData.billing_cycle === "yearly"}
-            isDisabled={true}
-          />
-          <Text
-            color={
-              transactionData.billing_cycle === "yearly" ? "#000000" : "#7F7F7F"
-            }
-            fontSize="sm"
-            fontWeight={300}
-          >
-            Yearly
-          </Text>
-        </Flex>
+            <Text
+              color={
+                transactionData.billing_cycle === "monthly"
+                  ? "#000000"
+                  : "#7F7F7F"
+              }
+              fontSize="sm"
+              fontWeight={300}
+            >
+              Monthly
+            </Text>
+            <Switch
+              mx={4}
+              size="md"
+              variant={
+                transactionData.billing_cycle === "yearly" ? "accent" : "brand"
+              }
+              isChecked={transactionData.billing_cycle === "yearly"}
+              isDisabled={true}
+            />
+            <Text
+              color={
+                transactionData.billing_cycle === "yearly"
+                  ? "#000000"
+                  : "#7F7F7F"
+              }
+              fontSize="sm"
+              fontWeight={300}
+            >
+              Yearly
+            </Text>
+          </Flex>
+        )}
         <Button
           variant="brand"
-          mt={[4, 4, 8, 10]}
+          mt={["auto"]}
           mx={[2, 2, 2, 14]}
           onClick={() => {
             window.open(`${transactionData.invoice_url}`, "_blank");

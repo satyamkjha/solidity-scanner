@@ -54,13 +54,16 @@ const PricingTable: React.FC<PricingData> = ({
       </Heading>
       <Text
         color="subtle"
-        width={["95%", "90%", "70%"]}
+        width={["95%", "90%", "75%"]}
         fontSize={["lg", "lg", "xl"]}
+        fontWeight={400}
         mb={20}
       >
-        Lorem ipsum dolor sit amet consectetur. Lectus laoreet facilisis enim id
-        risus nec urna enim. Elementum euismod tincidunt in nibh in lorem eget
-        quisque. Eget euismod etiam tincidunt felis blandit nec.
+        SolidityScan's analysis features go beyond basic vulnerability
+        detection. It provides detailed reports, highlighting specific issues
+        found within the scanned contracts. These reports include comprehensive
+        explanations of the vulnerabilities, along with suggested remediation
+        steps.
       </Text>
       <Flex
         justifyContent="flex-start"
@@ -69,7 +72,7 @@ const PricingTable: React.FC<PricingData> = ({
         alignItems="flex-start"
         width="100%"
       >
-        <TableContainer width="100%" minW={"1200px"}>
+        <TableContainer width="100%" minW={"1200px"} overflowX="hidden">
           {pricing_table_data.map((table) => (
             <Table mb={20} border="none" variant="unstyled" width="100%">
               <Thead width="100%">

@@ -99,9 +99,10 @@ const ScanCredits: React.FC<{
           borderRadius={"15px"}
         >
           <Text color="detail" fontWeight={400}>
-            Increase your scan credits with our top-up option. For your current
-            <strong> {sentenceCapitalize(planData.name)} </strong> plan it will
-            cost <strong>${currentTopUpPlan.amount} </strong> per credit.
+            Increase your scan credits with our top-up option. It will cost{" "}
+            <strong>${currentTopUpPlan.amount} </strong> per credit for your
+            current
+            <strong> {sentenceCapitalize(planData.name)} </strong> plan.
           </Text>
         </Flex>
       </Flex>

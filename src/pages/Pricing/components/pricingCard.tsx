@@ -12,7 +12,7 @@ import {
   useDisclosure,
 } from "@chakra-ui/react";
 import { Plan } from "common/types";
-import { CurlyArrowBlue } from "components/icons";
+import { CurlyArrowBlue, CheckBadge } from "components/icons";
 import * as React from "react";
 import { useState } from "react";
 import { getAssetsURL, sentenceCapitalize } from "helpers/helperFunction";
@@ -31,6 +31,7 @@ export const PricingCard: React.FC<{
       [plan: string]: Plan;
     };
   };
+  currentPackage?: string;
   selectedPlan: string;
   setSelectedPlan: React.Dispatch<React.SetStateAction<string>>;
 }> = ({
@@ -38,6 +39,7 @@ export const PricingCard: React.FC<{
   globalDuration,
   plan,
   pricingDetails,
+  currentPackage,
   selectedPlan,
   setSelectedPlan,
 }) => {
@@ -69,33 +71,56 @@ export const PricingCard: React.FC<{
       onMouseOver={() => setSelectedPlan(plan)}
       onMouseLeave={() => setSelectedPlan("")}
     >
-      <Flex
-        h="80px"
-        flexDir="row"
-        alignItems={"flex-start"}
-        justifyContent="center"
-        backgroundColor="#3300FF"
-        color="#FFFFFF"
-        py={2}
-        opacity={mouse ? 1 : 0}
-        w="60%"
-        borderRadius={20}
-      >
-        {JSON.parse(pricingDetails[duration][plan].discount).banner}
-      </Flex>
+      {currentPackage === plan ? (
+        <Flex
+          h="80px"
+          flexDir="row"
+          fontWeight={600}
+          alignItems={"flex-start"}
+          justifyContent="flex-start"
+          backgroundColor="brand-dark"
+          py={2}
+          px={4}
+          ml={"auto"}
+          w="100%"
+          borderRadius={20}
+        >
+          <CheckBadge />
+          <Text ml={2}>Currently Subscribed</Text>
+        </Flex>
+      ) : (
+        <Flex
+          h="80px"
+          flexDir="row"
+          alignItems={"flex-start"}
+          justifyContent="center"
+          backgroundColor="#3300FF"
+          color="#FFFFFF"
+          py={2}
+          opacity={mouse ? 1 : 0}
+          ml={"auto"}
+          w="60%"
+          borderRadius={20}
+        >
+          {JSON.parse(pricingDetails[duration][plan].discount).banner}
+        </Flex>
+      )}
       <Flex
         sx={{
           boxShadow: "0px 4px 24px rgba(0, 0, 0, 0.1)",
           bg: "#FFFFFF",
           w: "100%",
-          transition: "height 0.5s",
-          border: "3px solid  #FFFFFF",
+          border:
+            currentPackage === plan
+              ? "3px solid  #38CB89"
+              : "3px solid  #FFFFFF",
           py: 4,
           borderRadius: 20,
           backgroundColor: "#FFFFFF",
-          background: `url('${assetsURL}pricing/card_bg_${
+          backgroundImage: `url('${assetsURL}pricing/card_bg_${
             mouse ? "blue" : "grey"
           }.png')`,
+          transition: "background-image 0.5s ease-in-out",
           backgroundSize: "cover",
           backgroundPosition: "center",
           backgroundRepeat: "no-repeat",
@@ -106,14 +131,16 @@ export const PricingCard: React.FC<{
           mt: -10,
           _hover: {
             boxShadow: "0px 4px 24px rgba(0, 0, 0, 0.4)",
-            border: "3px solid  #3300FF",
+            border:
+              currentPackage === plan
+                ? "3px solid  #38CB89"
+                : "3px solid  #3300FF",
           },
         }}
       >
-        <HStack
+        <Flex
           width="100%"
           alignItems={"center"}
-          justifyContent="space-between"
           mb={3}
           pl={page == "pricing" ? 7 : 4}
         >
@@ -128,9 +155,14 @@ export const PricingCard: React.FC<{
             </Text>
           </HStack>
           {plan === "pro" && (
-            <Image src={`${assetsURL}pricing/popular-badge.svg`} />
+            <Image
+              w="50%"
+              ml={"auto"}
+              mr={"-3px"}
+              src={`${assetsURL}pricing/popular-badge.svg`}
+            />
           )}
-        </HStack>
+        </Flex>
         <Text
           height="100px"
           w="100%"
@@ -244,27 +276,30 @@ export const PricingCard: React.FC<{
           />
         </Flex>
 
-        <Button
-          width="200px"
-          mx="auto"
-          mt={6}
-          py={6}
-          alignContent={"center"}
-          variant={mouse ? "brand" : "gray-outline"}
-          onClick={() => {
-            if (page === "billing") {
-              onOpen();
-            } else {
-              if (Auth.isUserAuthenticated()) {
-                history.push("/billing");
+        {currentPackage === plan ? (
+          <Box h={"50px"} mt={6}></Box>
+        ) : (
+          <Button
+            w="200px"
+            h={"50px"}
+            mt={6}
+            alignContent={"center"}
+            variant={mouse ? "brand" : "gray-outline"}
+            onClick={() => {
+              if (page === "billing") {
+                onOpen();
               } else {
-                history.push("/signin");
+                if (Auth.isUserAuthenticated()) {
+                  history.push("/billing");
+                } else {
+                  history.push("/signin");
+                }
               }
-            }
-          }}
-        >
-          {mouse ? "Select Plan" : "Choose Plan"}
-        </Button>
+            }}
+          >
+            {mouse ? "Select Plan" : "Choose Plan"}
+          </Button>
+        )}
       </Flex>
       {isOpen && (
         <PaymentModal
