@@ -42,7 +42,7 @@ const PricingTable: React.FC<PricingData> = ({
       borderRadius={20}
       background={"#FFFFFF"}
     >
-      <Heading as="h1" fontSize="3xl" mb={8}>
+      <Heading as="h1" fontSize="3xl" mb={16}>
         Exploring SolidityScan's{" "}
         <Box as="span" color="#3300FF">
           Capabilities{" "}
@@ -52,19 +52,6 @@ const PricingTable: React.FC<PricingData> = ({
           Analysis Features{" "}
         </Box>
       </Heading>
-      <Text
-        color="subtle"
-        width={["95%", "90%", "75%"]}
-        fontSize={["lg", "lg", "xl"]}
-        fontWeight={400}
-        mb={20}
-      >
-        SolidityScan's analysis features go beyond basic vulnerability
-        detection. It provides detailed reports, highlighting specific issues
-        found within the scanned contracts. These reports include comprehensive
-        explanations of the vulnerabilities, along with suggested remediation
-        steps.
-      </Text>
       <Flex
         justifyContent="flex-start"
         flexDir="row"
