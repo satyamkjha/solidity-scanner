@@ -91,11 +91,8 @@ const Billing: React.FC = () => {
   };
 
   const onPaymentCancel = (payment_type: string) => {
-    if (payment_type === "coinpayments") {
-      setCompletePaymentOpen(false);
-    } else {
-      fetchAgain();
-    }
+    setCompletePaymentOpen(false);
+    fetchAgain();
   };
 
   const onUpgradePlan = () => {
