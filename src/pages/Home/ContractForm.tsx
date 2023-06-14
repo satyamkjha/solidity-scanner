@@ -13,6 +13,7 @@ import {
   FormControl,
   FormLabel,
   VStack,
+  Divider,
 } from "@chakra-ui/react";
 import { AiOutlineProject } from "react-icons/ai";
 import API from "helpers/api";
@@ -330,10 +331,10 @@ const ContractForm: React.FC = () => {
       <Text
         w="100%"
         sx={{
-          fontSize: "xl",
+          fontSize: ["xl", "xl", "2xl"],
           fontWeight: 600,
           textAlign: "left",
-          mb: 2,
+          mb: 4,
         }}
       >
         Load contract
@@ -345,6 +346,7 @@ const ContractForm: React.FC = () => {
         Provide the address of your smart contract deployed on the supported EVM
         chains. Your results will appear in the "Verified Contracts" tab.
       </Text>
+      <Divider color="gray.700" borderWidth="1px" mb={3} />
       <Text
         w="100%"
         sx={{ fontSize: "sm", color: "subtle", textAlign: "left", mb: 2 }}

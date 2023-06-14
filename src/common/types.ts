@@ -11,6 +11,7 @@ export type Profile = {
   public_address?: string;
   company_name: string;
   current_package: string;
+  billing_cycle: string;
   email_verified: boolean;
   verification_email_sent: boolean;
   projects_remaining: number;
@@ -395,6 +396,7 @@ export type Pagination = {
 export type Transaction = {
   date: string;
   package: string;
+  billing_cycle: string;
   currency: string;
   amount: string;
   order_id: string;

@@ -14,6 +14,7 @@ import {
   VStack,
   Progress,
   CloseButton,
+  Divider,
 } from "@chakra-ui/react";
 import { AiOutlineProject } from "react-icons/ai";
 import {
@@ -243,10 +244,10 @@ const UploadForm: React.FC = () => {
           <Text
             w="100%"
             sx={{
-              fontSize: "xl",
+              fontSize: ["xl", "xl", "2xl"],
               fontWeight: 600,
               textAlign: "left",
-              mb: 2,
+              mb: 4,
             }}
           >
             Upload contract
@@ -260,6 +261,7 @@ const UploadForm: React.FC = () => {
             the “Project Name” field to refer to your scan results in the
             “Projects” section.
           </Text>
+          <Divider color="gray.700" borderWidth="1px" mb={3} />
           <Text
             w="100%"
             sx={{ fontSize: "sm", color: "subtle", textAlign: "left", mb: 2 }}

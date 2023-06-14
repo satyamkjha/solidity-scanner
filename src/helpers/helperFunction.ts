@@ -1,5 +1,6 @@
 import UAParser from "ua-parser-js";
 import reCAPTCHA from "helpers/reCAPTCHA";
+import { Profile, PricingData } from "common/types";
 
 let configValue: any = null;
 
@@ -77,4 +78,48 @@ export const getReCaptchaHeaders = async (action: string) => {
       "Content-Type": "application/json",
     };
   }
+};
+
+export const checkGenerateReportAccess = (
+  profile: Profile,
+  plans: PricingData
+) => {
+  if (profile && plans) {
+    if (profile.actions_supported)
+      return profile.actions_supported.generate_report;
+
+    if (
+      profile.current_package === "expired" ||
+      profile.current_package === "trial"
+    )
+      return false;
+
+    if (profile.current_package === "custom") return true;
+
+    return plans.pricing_data[profile.billing_cycle][profile.current_package]
+      .report;
+  }
+  return false;
+};
+
+export const checkPublishReportAccess = (
+  profile: Profile,
+  plans: PricingData
+) => {
+  if (profile && plans) {
+    if (profile.actions_supported)
+      return profile.actions_supported.publishable_report;
+
+    if (
+      profile.current_package === "expired" ||
+      profile.current_package === "trial"
+    )
+      return false;
+
+    if (profile.current_package === "custom") return true;
+
+    return plans.pricing_data[profile.billing_cycle][profile.current_package]
+      .publishable_report;
+  }
+  return false;
 };

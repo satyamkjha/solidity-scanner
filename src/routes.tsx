@@ -14,13 +14,13 @@ import Layout from "components/layout";
 
 import Auth from "helpers/auth";
 import API from "helpers/api";
-import PaymentSucess from "pages/Billing/payment";
 import PublicReportPage from "pages/Report/PublicReport";
 import PageNotFound, { CustomPageNotFound } from "pages/PageNotFound";
 import Cookies from "js-cookie";
 import PrivateApi from "pages/PrivateAPI";
 import { onLogout } from "common/functions";
 import { useQueryClient } from "react-query";
+import PaymentSucess from "pages/Billing/components/PaymentStatus";
 
 const Landing = lazy(
   () => import("pages/Landing" /* webpackChunkName: "Landing" */)
