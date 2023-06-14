@@ -16,7 +16,6 @@ import { getAssetsURL } from "helpers/helperFunction";
 import { useHistory } from "react-router-dom";
 import { CurlyArrowUp, CurlyArrowDown } from "components/icons";
 import { PricingCard } from "./pricingCard";
-import { pricing_data } from "common/values";
 
 const PricingDetails: React.FC<{
   pricingDetails: PricingData;
