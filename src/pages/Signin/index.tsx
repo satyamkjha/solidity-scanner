@@ -160,80 +160,92 @@ const LoginForm: React.FC = () => {
   };
 
   return (
-    <Stack spacing={6} mt={8} width={["90%", "80%", "600px"]}>
-      <InputGroup alignItems="center">
-        <InputLeftElement
-          height="48px"
-          children={<Icon as={FiAtSign} color="gray.300" />}
-        />
-        <Input
-          isRequired
-          type="email"
-          placeholder="Your email"
-          variant="brand"
-          value={email}
-          size="lg"
-          onChange={(e) => setEmail(e.target.value)}
-        />
-      </InputGroup>
+    <form
+      style={{
+        width: "100%",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+      }}
+      // onSubmit={handleSubmit(onSubmit)}
+    >
+      <Stack spacing={6} mt={8} width={["90%", "80%", "600px"]}>
+        <InputGroup alignItems="center">
+          <InputLeftElement
+            height="48px"
+            children={<Icon as={FiAtSign} color="gray.300" />}
+          />
+          <Input
+            isRequired
+            type="email"
+            placeholder="Your email"
+            autoComplete="username"
+            variant="brand"
+            value={email}
+            size="lg"
+            onChange={(e) => setEmail(e.target.value)}
+          />
+        </InputGroup>
 
-      <InputGroup>
-        <InputLeftElement
-          height="48px"
-          color="gray.300"
-          children={<Icon as={FaLock} color="gray.300" />}
-        />
-        <Input
-          isRequired
-          type={show ? "text" : "password"}
-          placeholder="Password"
+        <InputGroup>
+          <InputLeftElement
+            height="48px"
+            color="gray.300"
+            children={<Icon as={FaLock} color="gray.300" />}
+          />
+          <Input
+            isRequired
+            type={show ? "text" : "password"}
+            placeholder="Password"
+            autoComplete="current-password"
+            variant="brand"
+            size="lg"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+          />
+          <InputRightElement
+            height="48px"
+            color="gray.300"
+            children={
+              show ? (
+                <ViewOffIcon
+                  color={"gray.500"}
+                  mr={5}
+                  boxSize={5}
+                  onClick={() => setShow(false)}
+                />
+              ) : (
+                <ViewIcon
+                  color={"gray.500"}
+                  mr={5}
+                  boxSize={5}
+                  onClick={() => setShow(true)}
+                />
+              )
+            }
+          />
+        </InputGroup>
+        <Flex width="100%" justify="flex-end">
+          <Link
+            as={RouterLink}
+            variant="subtle"
+            fontSize="sm"
+            mr={1}
+            to="/forgot"
+          >
+            Forgot Password?
+          </Link>
+        </Flex>
+        <Button
+          // type="submit"
           variant="brand"
-          size="lg"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-        />
-        <InputRightElement
-          height="48px"
-          color="gray.300"
-          children={
-            show ? (
-              <ViewOffIcon
-                color={"gray.500"}
-                mr={5}
-                boxSize={5}
-                onClick={() => setShow(false)}
-              />
-            ) : (
-              <ViewIcon
-                color={"gray.500"}
-                mr={5}
-                boxSize={5}
-                onClick={() => setShow(true)}
-              />
-            )
-          }
-        />
-      </InputGroup>
-      <Flex width="100%" justify="flex-end">
-        <Link
-          as={RouterLink}
-          variant="subtle"
-          fontSize="sm"
-          mr={1}
-          to="/forgot"
+          onClick={onSubmit}
+          isLoading={isLoading}
         >
-          Forgot Password?
-        </Link>
-      </Flex>
-      <Button
-        type="submit"
-        variant="brand"
-        onClick={onSubmit}
-        isLoading={isLoading}
-      >
-        Sign In
-      </Button>
-    </Stack>
+          Sign In
+        </Button>
+      </Stack>
+    </form>
   );
 };
 export default SignIn;
