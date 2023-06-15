@@ -263,7 +263,9 @@ const BlockCard: React.FC<{ scan: Scan }> = ({ scan }) => {
       }}
     >
       <Box p={5}>
-        <Text sx={{ w: "100%", color: "subtle" }}>{contractname}</Text>
+        <Text sx={{ w: "100%", color: "subtle" }} isTruncated>
+          {contractname}
+        </Text>
         <Text sx={{ w: "100%" }} isTruncated>
           {project_name || contract_address}
         </Text>
