@@ -27,6 +27,7 @@ import API from "helpers/api";
 import { useProfile } from "hooks/useProfile";
 import { useDropzone } from "react-dropzone";
 import { API_PATH } from "helpers/routeManager";
+import Loader from "components/styled-components/Loader";
 
 const UploadForm: React.FC = () => {
   const history = useHistory();
@@ -360,7 +361,7 @@ const UploadForm: React.FC = () => {
                 <Progress variant={"blue"} size="xs" isIndeterminate />
                 <HStack mt={4} justify={"space-between"}>
                   <Text color={"gray.500"}>Uploading...</Text>
-                  <Spinner color={"gray.500"} />
+                  <Loader size={30} />
                 </HStack>
               </Box>
             ) : (

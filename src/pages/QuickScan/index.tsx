@@ -62,6 +62,7 @@ import reCAPTCHA from "helpers/reCAPTCHA";
 import { useConfig } from "hooks/useConfig";
 import PaginationNav from "components/common/PaginationNav";
 import SolidityScoreProgress from "components/common/SolidityScoreProgress";
+import Loader from "components/styled-components/Loader";
 
 const pieData = (
   critical: number,
@@ -1115,7 +1116,7 @@ const QuickScan: React.FC = () => {
                           alignItems={"center"}
                           justifyContent="center"
                         >
-                          <Spinner />
+                          <Loader />
                         </Flex>
                       ) : (
                         <Box w="100%" px={[0, 0, 0, 4]}>
@@ -1297,7 +1298,7 @@ const QuickScan: React.FC = () => {
                                 backdropFilter: "blur(2px)",
                               }}
                             >
-                              <Spinner />
+                              <Loader />
                             </Flex>
                           )}
                         </Box>

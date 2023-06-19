@@ -29,6 +29,7 @@ import CurrentPlan from "./components/CurrentPlan";
 import LatestInvoice from "./components/LatestInvoice";
 import PromoCodeCard from "./components/PromoCodeCard";
 import TransactionListCard from "./components/TransactionListCard";
+import Loader from "components/styled-components/Loader";
 
 const Billing: React.FC = () => {
   const { data } = useProfile();
@@ -133,7 +134,7 @@ const Billing: React.FC = () => {
         </Text>
         {!data || !plans || !transactionList || !page || !planBillingCycle ? (
           <Flex w="100%" h="70vh" alignItems="center" justifyContent="center">
-            <Spinner />
+            <Loader />
           </Flex>
         ) : (
           <Tabs

@@ -38,6 +38,7 @@ import { API_PATH } from "helpers/routeManager";
 import { AuthResponse } from "common/types";
 import { InfoIcon } from "@chakra-ui/icons";
 import reCAPTCHA from "helpers/reCAPTCHA";
+import Loader from "components/styled-components/Loader";
 
 type ProfileFormData = {
   first_name?: string;
@@ -204,11 +205,11 @@ const Profile: React.FC = () => {
           sx={{
             w: "100%",
             mx: [0, 0, 4],
-            my: 4,
+            my: 24,
             justifyContent: "center",
           }}
         >
-          <Spinner mt={20} />
+          <Loader />
         </Flex>
       )}
 
@@ -374,7 +375,7 @@ const Profile: React.FC = () => {
                       minW={"150px"}
                     >
                       {isLoading ? (
-                        <Spinner />
+                        <Loader />
                       ) : emailSend ? (
                         "Resend Email"
                       ) : (

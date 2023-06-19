@@ -37,6 +37,7 @@ import {
   updateChildTree,
   updateCheckedValue,
 } from "helpers/fileStructure";
+import Loader from "./styled-components/Loader";
 
 const formatOptionLabel: React.FC<{
   value: string;
@@ -381,7 +382,7 @@ const FolderSettings: React.FC<{
       >
         {isLoading ? (
           <Flex w="100%" h="100%" justifyContent="center" alignItems="center">
-            <Spinner color="gray.500" />
+            <Loader size={35} />
           </Flex>
         ) : (
           <Flex

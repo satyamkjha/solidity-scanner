@@ -108,6 +108,7 @@ import {
   checkPublishReportAccess,
 } from "helpers/helperFunction";
 import { useConfig } from "hooks/useConfig";
+import Loader from "components/styled-components/Loader";
 
 export const ProjectPage: React.FC = () => {
   const { projectId } = useParams<{ projectId: string }>();
@@ -142,7 +143,7 @@ export const ProjectPage: React.FC = () => {
     >
       {isLoading ? (
         <Flex w="100%" h="70vh" alignItems="center" justifyContent="center">
-          <Spinner />
+          <Loader />
         </Flex>
       ) : (
         data && (
@@ -424,7 +425,7 @@ const ScanDetails: React.FC<{
       >
         {isLoading || isProfileLoading ? (
           <Flex w="100%" h="70vh" alignItems="center" justifyContent="center">
-            <Spinner />
+            <Loader />
           </Flex>
         ) : (
           scanData &&
@@ -574,7 +575,9 @@ const ScanDetails: React.FC<{
                         isDisabled={checkIfGeneratingReport()}
                       >
                         {reportingStatus === "generating_report" && (
-                          <Spinner color="#806CCF" size="xs" mr={3} />
+                          <Flex mr={3}>
+                            <Loader color="#806CCF" size={25} />
+                          </Flex>
                         )}
                         Re-Generate Report
                       </Button>
@@ -612,7 +615,7 @@ const ScanDetails: React.FC<{
                             variant="unstyled"
                           >
                             {printLoading ? (
-                              <Spinner size="sm" color="#3E15F4" />
+                              <Loader size={30} color="#3E15F4" />
                             ) : (
                               <ArrowDownIcon color="#3E15F4" />
                             )}
@@ -650,7 +653,9 @@ const ScanDetails: React.FC<{
                         }}
                       >
                         {reportingStatus === "generating_report" && (
-                          <Spinner color="#806CCF" size="xs" mr={3} />
+                          <Flex mr={3}>
+                            <Loader color="#806CCF" size={25} />
+                          </Flex>
                         )}
                         {!checkGenerateReportAccess(profile, plans) && (
                           <LockIcon color={"accent"} mr={3} />
@@ -1635,7 +1640,9 @@ const ScanBlock: React.FC<{
                 }}
               >
                 {scan.reporting_status === "generating_report" && (
-                  <Spinner color="#806CCF" size="sm" mr={2} />
+                  <Flex mr={3}>
+                    <Loader color="#806CCF" size={25} />
+                  </Flex>
                 )}
                 {scan.reporting_status === "report_generated"
                   ? "View Report"

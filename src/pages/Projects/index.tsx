@@ -36,6 +36,7 @@ import { useProjects } from "hooks/useProjects";
 import { useProfile } from "hooks/useProfile";
 import InfiniteScroll from "react-infinite-scroll-component";
 import { API_PATH } from "helpers/routeManager";
+import Loader from "components/styled-components/Loader";
 
 const Projects: React.FC = () => {
   const [isDesktopView] = useMediaQuery("(min-width: 1920px)");
@@ -161,7 +162,7 @@ const Projects: React.FC = () => {
 
       {!projectList ? (
         <Flex w="100%" h="70vh" alignItems="center" justifyContent="center">
-          <Spinner />
+          <Loader />
         </Flex>
       ) : projectList.length === 0 ? (
         <Flex
@@ -204,7 +205,7 @@ const Projects: React.FC = () => {
             hasMore={hasMore}
             loader={
               <Box w={"100%"}>
-                <Spinner />
+                <Loader />
               </Box>
             }
             scrollableTarget="pageScroll"
