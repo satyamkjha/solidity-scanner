@@ -288,7 +288,6 @@ const FindingSummaryContainer: React.FC<{
           </Box>
         </Flex>
       </Box>
-      <h6></h6>
       <Flex
         as="div"
         w="100%"
@@ -457,6 +456,8 @@ const FindingSummaryContainer: React.FC<{
           </HStack>
         </Stack>
       </Flex>
+
+      <h6></h6>
       <Flex
         as="div"
         w={"100%"}
@@ -512,9 +513,6 @@ const FindingSummaryContainer: React.FC<{
           counter1++;
           return (
             <>
-              {((counter1 - 1) / 6) % 2 === 1 && (
-                <h6 style={{ pageBreakAfter: "avoid" }}></h6>
-              )}
               <Flex
                 as="section"
                 w={"100%"}
@@ -527,7 +525,8 @@ const FindingSummaryContainer: React.FC<{
                 // mt={counter1 % 13 === 0 ? 5 : 0}
                 border={"1px solid #D9D9D9;"}
                 sx={{
-                  pageBreakAfter: counter1 % 12 === 0 ? "always" : "avoid",
+                  pageBreakAfter:
+                    counter1 && counter1 % 10 === 0 ? "always" : "avoid",
                 }}
                 // borderBottomWidth={1}
                 // borderBottomColor={"#E4E4E4"}
@@ -591,19 +590,21 @@ const FindingSummaryContainer: React.FC<{
                   </Text>
                 </HStack>
               </Flex>
+              {counter1 && counter1 % 10 === 0 && (
+                <h6 style={{ marginBottom: "20px" }}></h6>
+              )}
             </>
           );
         })
       )}
-      {(counter1 - 1) % 6 !== 0 && (
-        <Box
-          height={"1px"}
-          width={"1px"}
-          sx={{
-            pageBreakAfter: "always",
-          }}
-        ></Box>
-      )}
+      <Box
+        height={"1px"}
+        width={"1px"}
+        sx={{
+          pageBreakAfter: "always",
+        }}
+      ></Box>
+      <h6 style={{ marginBottom: "10px" }}></h6>
     </>
   );
 };

@@ -9,7 +9,6 @@ const ScanHistoryContainer: React.FC<{
   const [isDesktopView] = useMediaQuery("(min-width: 1024px)");
   return (
     <>
-      <h6></h6>
       <Flex
         sx={{
           color: "#000000",

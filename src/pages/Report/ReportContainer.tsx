@@ -1,54 +1,32 @@
-import {
-  Container,
-  Flex,
-  Heading,
-  Box,
-  HStack,
-  Divider,
-  VStack,
-  CircularProgress,
-  CircularProgressLabel,
-  Text,
-  Image,
-  useMediaQuery,
-  Stack,
-  Table,
-  TableCaption,
-  TableContainer,
-  Tbody,
-  Td,
-  Tfoot,
-  Th,
-  Thead,
-  Tr,
-} from "@chakra-ui/react";
-import { ResponsivePie } from "@nivo/pie";
+import { Container, Flex, Spinner } from "@chakra-ui/react";
 import { Report } from "common/types";
-import {
-  Logo,
-  SeverityIcon,
-  GithubIcon,
-  ProjectIcon,
-  IssueDescriptionIcons,
-  IssueRemediationIcons,
-  ReportCoverDots,
-} from "components/icons";
-import VulnerabilityProgress from "components/VulnerabilityProgress";
-import { getAssetsURL, sentenceCapitalize } from "helpers/helperFunction";
-import React from "react";
-import styled from "@emotion/styled";
-import { useConfig } from "hooks/useConfig";
-import { actionTaken } from "common/values";
-import DynamicContainer from "components/report/DynamicContainer";
-import NonDynamicContainer from "components/report/NonDynamicContainer";
+import React, { lazy, Suspense } from "react";
 import CoverPageContainer from "components/report/CoverPageContainer";
 import TableContentContainer from "components/report/TableContentContainer";
-import ProjectSummaryContainer from "components/report/ProjectSummaryContainer";
-import AuditSummaryContainer from "components/report/AuditSummaryContainer";
-import FindingSummaryContainer from "components/report/FindingSummaryContainer";
-import VulnerabililtyDetailsContainer from "components/report/VulnerabililtyDetailsContainer";
-import ScanHistoryContainer from "components/report/ScanHistoryContainer";
-import DisclaimerContainer from "components/report/DisclaimerContainer";
+
+const ProjectSummaryContainer = lazy(
+  () => import("components/report/ProjectSummaryContainer")
+);
+
+const AuditSummaryContainer = lazy(
+  () => import("components/report/AuditSummaryContainer")
+);
+
+const FindingSummaryContainer = lazy(
+  () => import("components/report/FindingSummaryContainer")
+);
+
+const VulnerabililtyDetailsContainer = lazy(
+  () => import("components/report/VulnerabililtyDetailsContainer")
+);
+
+const ScanHistoryContainer = lazy(
+  () => import("components/report/ScanHistoryContainer")
+);
+
+const DisclaimerContainer = lazy(
+  () => import("components/report/DisclaimerContainer")
+);
 
 export const ReportContainer: React.FC<{
   summary_report: Report;
@@ -62,24 +40,6 @@ export const ReportContainer: React.FC<{
     );
   }
 
-  const config: any = useConfig();
-  const assetsURL = getAssetsURL(config);
-
-  const monthNames = [
-    "Jan",
-    "Feb",
-    "March",
-    "April",
-    "May",
-    "June",
-    "July",
-    "Aug",
-    "Sept",
-    "Oct",
-    "Nov",
-    "Dec",
-  ];
-
   return (
     <Container
       maxW={["100vw", "100vw", "90vw", "80vw", "80vw"]}
@@ -92,12 +52,22 @@ export const ReportContainer: React.FC<{
         isPublicReport={isPublicReport}
       />
       <TableContentContainer summary_report={summary_report} />
-      <ProjectSummaryContainer summary_report={summary_report} />
-      <AuditSummaryContainer summary_report={summary_report} />
-      <FindingSummaryContainer summary_report={summary_report} />
-      <VulnerabililtyDetailsContainer summary_report={summary_report} />
-      <ScanHistoryContainer summary_report={summary_report} />
-      <DisclaimerContainer />
+      <Suspense fallback={<SpinnerContainer />}>
+        <ProjectSummaryContainer summary_report={summary_report} />
+        <AuditSummaryContainer summary_report={summary_report} />
+        <FindingSummaryContainer summary_report={summary_report} />
+        <VulnerabililtyDetailsContainer summary_report={summary_report} />
+        <ScanHistoryContainer summary_report={summary_report} />
+        <DisclaimerContainer />
+      </Suspense>
     </Container>
   );
 };
+
+export function SpinnerContainer() {
+  return (
+    <Flex w="100%" h="100%" alignItems="center" justifyContent="center">
+      <Spinner />
+    </Flex>
+  );
+}

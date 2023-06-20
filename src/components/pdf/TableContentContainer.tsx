@@ -13,9 +13,9 @@ const TableContentContainer: React.FC<{
       <Flex
         sx={{
           color: "#000000",
-          mx: 1,
+          mt: 4,
         }}
-        pb={10}
+        pb={6}
         alignItems="center"
       >
         <Heading color={"#52FF00"} fontSize="4xl">
@@ -51,21 +51,34 @@ const TableContentContainer: React.FC<{
           Vulnerability Details
         </Text>
         {Object.keys(summary_report.issues).map((key, index) => (
-          <Flex
-            alignItems="flex-start"
-            justifyContent="flex-start"
-            flexDir={"column"}
-          >
-            <HStack ml={5} my={1} spacing={5}>
-              <SeverityIcon variant={"black"} />
-              <Text fontSize={["md"]} fontWeight={"300"} lineHeight="1.5">
-                {summary_report.issues[key].issue_name}
-              </Text>
-            </HStack>
-            {index !== Object.keys(summary_report.issues).length - 1 && (
-              <Divider />
-            )}
-          </Flex>
+          <>
+            <Flex
+              alignItems="flex-start"
+              justifyContent="flex-start"
+              flexDir={"column"}
+              sx={{
+                pageBreakAfter:
+                  index !== 0 &&
+                  (index == 15 || (index > 15 && (index - 15) % 20 == 0))
+                    ? "always"
+                    : "none",
+              }}
+            >
+              <HStack ml={5} my={1} spacing={5}>
+                <SeverityIcon variant={"black"} />
+                <Text fontSize={["md"]} fontWeight={"300"} lineHeight="1.5">
+                  {summary_report.issues[key].issue_name}
+                </Text>
+              </HStack>
+              {index !== Object.keys(summary_report.issues).length - 1 && (
+                <Divider />
+              )}
+            </Flex>
+            {index !== 0 &&
+              (index == 15 || (index > 15 && (index - 15) % 20 == 0)) && (
+                <h6 style={{ marginBottom: "40px" }}></h6>
+              )}
+          </>
         ))}
         <Text fontSize="xl" fontWeight={"bold"} mt={4} mb={4}>
           Scan History

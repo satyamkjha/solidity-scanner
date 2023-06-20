@@ -16,9 +16,6 @@ const VulnerabililtyDetailsContainer: React.FC<{
       alignItems="flex-start"
       justifyContent="flex-start"
       flexDir={"column"}
-      sx={{
-        pageBreakAfter: "always",
-      }}
     >
       <Flex
         sx={{
@@ -43,7 +40,7 @@ const VulnerabililtyDetailsContainer: React.FC<{
           flexDir="column"
           alignItems="flex-start"
           justifyContent="flex-start"
-          //   border={"1px solid #D9D9D9;"}
+          mt={6}
           width={"100%"}
         >
           <Flex width={"100%"} mb={3} flexWrap="wrap">
@@ -152,7 +149,6 @@ const VulnerabililtyDetailsContainer: React.FC<{
           )}
         </Flex>
       ))}
-      {/* UI for new vulnerabillity Details */}
     </Flex>
   );
 };

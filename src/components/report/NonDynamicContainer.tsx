@@ -43,22 +43,24 @@ const NonDynamicContainer: React.FC<{ issue: IssueDetailObject }> = ({
   const config: any = useConfig();
   const assetsURL = getAssetsURL(config);
   useEffect(() => {
-    Object.keys(issue.common_comments_map).forEach((key) => {
-      let tempArray: IssueItem[] = [];
-      issue.common_comments_map[key].forEach((bugId) => {
-        issueDetails = issueDetails.filter((item) => {
-          if (item.bug_hash === bugId) {
-            tempArray.push(item);
-            return false;
-          }
-          return true;
+    if (issue.common_comments_map) {
+      Object.keys(issue.common_comments_map).forEach((key) => {
+        let tempArray: IssueItem[] = [];
+        issue.common_comments_map[key].forEach((bugId) => {
+          issueDetails = issueDetails.filter((item) => {
+            if (item.bug_hash === bugId) {
+              tempArray.push(item);
+              return false;
+            }
+            return true;
+          });
+        });
+        comments_map.push({
+          comment: key,
+          issueList: tempArray,
         });
       });
-      comments_map.push({
-        comment: key,
-        issueList: tempArray,
-      });
-    });
+    }
 
     comments_map.push({
       comment: "no_comment",
