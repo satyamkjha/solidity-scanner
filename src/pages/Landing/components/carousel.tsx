@@ -1,7 +1,15 @@
 import React from "react";
 import Carousel from "@brainhubeu/react-carousel";
 import "@brainhubeu/react-carousel/lib/style.css";
-import { Image, Box, Heading, Text } from "@chakra-ui/react";
+import {
+  Image,
+  Box,
+  Heading,
+  Text,
+  Flex,
+  SkeletonText,
+  Skeleton,
+} from "@chakra-ui/react";
 import { getAssetsURL } from "helpers/helperFunction";
 import { useConfig } from "hooks/useConfig";
 
@@ -79,3 +87,41 @@ const ImageCarousel = () => {
 };
 
 export default ImageCarousel;
+
+export function CarouselSkeleton() {
+  return (
+    <Flex
+      alignItems={"center"}
+      justifyContent={"center"}
+      py={24}
+      px={[0, 0, 0, 24]}
+      w="100%"
+      flexDir={"column"}
+    >
+      <SkeletonText
+        startColor="lightgray"
+        endColor="#eeeeee"
+        noOfLines={2}
+        spacing="4"
+        skeletonHeight="5"
+        w={["100%", "100%", "60%"]}
+      />
+      <Flex
+        flexDir={["column", "column", "column", "row"]}
+        alignItems={"center"}
+        justifyContent={"center"}
+        w={"100%"}
+        h={["20vh", "20vh", "20vh", "70vh"]}
+        mt={20}
+      >
+        <Skeleton
+          w={"80%"}
+          h={"100%"}
+          startColor="lightgray"
+          endColor="#eeeeee"
+          borderRadius={"5px"}
+        ></Skeleton>
+      </Flex>
+    </Flex>
+  );
+}

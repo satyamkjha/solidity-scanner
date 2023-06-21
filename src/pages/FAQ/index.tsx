@@ -1,8 +1,6 @@
 import React from "react";
 import { Container, Text, Flex } from "@chakra-ui/react";
 
-import Header from "components/header";
-import Footer from "components/footer";
 import Collapse from "components/collapse";
 
 const content = [
@@ -70,7 +68,6 @@ const content = [
 export default function FAQPage() {
   return (
     <>
-      <Header />
       <Container maxW={["100vw", "100vw", "80vw"]} color="black">
         <Flex flexDirection="column" alignItems="center" pt={5} px={4}>
           <Text
@@ -107,7 +104,6 @@ export default function FAQPage() {
           ))}
         </Flex>
       </Container>
-      <Footer />
     </>
   );
 }

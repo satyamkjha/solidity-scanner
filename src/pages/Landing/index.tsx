@@ -10,12 +10,16 @@ import {
   Image,
 } from "@chakra-ui/react";
 
-import Header from "components/header";
-import Footer from "components/footer";
 import Infographics from "components/infographics";
 import { getAssetsURL } from "helpers/helperFunction";
-import LoadingSkeleton from "./components/loadingSkeleton";
 import { useConfig } from "hooks/useConfig";
+import { QSSkeleton } from "./components/quickScan";
+import { VideoSkeleton } from "./components/productVideo";
+import { OverviewSkeleton } from "./components/productOverview";
+import { TestimonialSkeleton } from "./components/testimonial";
+import { AboutUsSkeleton } from "./components/aboutUs";
+import { CarouselSkeleton } from "./components/carousel";
+import { ManualAuditSkeleton } from "./components/manualAudit";
 
 const QuickScan = lazy(() => import("./components/quickScan"));
 const ProductVideo = lazy(() => import("./components/productVideo"));
@@ -25,7 +29,6 @@ const AboutUs = lazy(() => import("./components/aboutUs"));
 const ImageCarousel = lazy(() => import("./components/carousel"));
 const ManualAudit = lazy(() => import("./components/manualAudit"));
 const ProductNumbers = lazy(() => import("./components/productNumbers"));
-const SignupBox = lazy(() => import("components/signupBox"));
 
 export default function LandingPage() {
   const location = useLocation();
@@ -43,7 +46,6 @@ export default function LandingPage() {
 
   return (
     <>
-      <Header />
       <Container maxW={["95vw", "95vw", "95vw", "100vw"]} color="black">
         {/* Section 1 */}
         <Flex
@@ -67,7 +69,7 @@ export default function LandingPage() {
             w={["100%", "100%", "100%", "50%"]}
             px={[0, 0, 10]}
             py={5}
-            textAlign={"center"}
+            textAlign={"left"}
             justifyContent="center"
             display={"flex"}
             flexDir="column"
@@ -136,47 +138,65 @@ export default function LandingPage() {
           my={[4, 8]}
           px={[0, 0, 0, 24]}
         >
-          <Heading as="h1" fontSize="3xl" mb={4}>
-            Scan.{" "}
-            <Box
-              as="span"
-              sx={{
-                background:
-                  "linear-gradient(129.18deg, #52FF00 8.52%, #00EEFD 93.94%)",
-                backgroundClip: "text",
-                WebkitTextFillColor: "transparent",
-                mx: 4,
-              }}
-            >
-              Fix.
-            </Box>{" "}
-            Publish.
-          </Heading>
-          <Text color="subtle" fontSize={["lg", "lg", "xl"]} mb={4}>
-            Simple, fast, effortless.
-          </Text>
-          <Infographics />
+          <Infographics
+            header={
+              <Heading as="h1" fontSize="3xl" mb={4}>
+                Scan.{" "}
+                <Box
+                  as="span"
+                  sx={{
+                    background:
+                      "linear-gradient(129.18deg, #52FF00 8.52%, #00EEFD 93.94%)",
+                    backgroundClip: "text",
+                    WebkitTextFillColor: "transparent",
+                    mx: 4,
+                  }}
+                >
+                  Fix.
+                </Box>{" "}
+                Publish.
+              </Heading>
+            }
+            subHeader={
+              <Text color="subtle" fontSize={["lg", "lg", "xl"]} mb={4}>
+                Simple, fast, effortless.
+              </Text>
+            }
+          />
         </Box>
 
-        <Suspense
-          fallback={
-            <Box px={[0, 0, 0, 24]} w={"100%"}>
-              <LoadingSkeleton />
-            </Box>
-          }
-        >
+        <Suspense fallback={<QSSkeleton />}>
           <QuickScan />
+        </Suspense>
+
+        <Suspense fallback={<VideoSkeleton />}>
           <ProductVideo />
+        </Suspense>
+
+        <Suspense fallback={<OverviewSkeleton />}>
           <ProductOverview />
+        </Suspense>
+
+        <Suspense fallback={<TestimonialSkeleton />}>
           <UserTestimonial />
+        </Suspense>
+
+        <Suspense fallback={<AboutUsSkeleton />}>
           <AboutUs />
+        </Suspense>
+
+        <Suspense fallback={<CarouselSkeleton />}>
           <ImageCarousel />
+        </Suspense>
+
+        <Suspense fallback={<ManualAuditSkeleton />}>
           <ManualAudit />
+        </Suspense>
+
+        <Suspense fallback={<ProductNumbers />}>
           <ProductNumbers />
-          <SignupBox />
         </Suspense>
       </Container>
-      <Footer />
     </>
   );
 }

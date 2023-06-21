@@ -1,13 +1,7 @@
 import React, { useEffect } from "react";
-import { Link as RouterLink, useHistory, useLocation } from "react-router-dom";
-import { Box, Text, Flex, Heading, Spinner } from "@chakra-ui/react";
-import SignupBox from "components/signupBox";
-import Infographics from "components/infographics";
-
-import Header from "components/header";
-import Footer from "components/footer";
+import { useLocation } from "react-router-dom";
+import { Box, Flex, Spinner } from "@chakra-ui/react";
 import { usePricingPlans } from "hooks/usePricingPlans";
-import { getAssetsURL } from "helpers/helperFunction";
 import PricingDetails from "./components/PricingDetails";
 
 const PricingPage: React.FC = () => {
@@ -22,22 +16,19 @@ const PricingPage: React.FC = () => {
 
   const { data: pricingDetails, isLoading } = usePricingPlans();
 
-  const assetsURL = getAssetsURL();
-
   return (
     <>
-      <Header />
       {isLoading ? (
         <Box
           w={"100%"}
-          h="60vh"
+          h="100vh"
           as="section"
           display={[null, null, "flex"]}
           flexDirection="row"
           justifyContent={"center"}
           alignItems={"center"}
         >
-          <Spinner />{" "}
+          <Spinner />
         </Box>
       ) : (
         pricingDetails && (
@@ -50,38 +41,10 @@ const PricingPage: React.FC = () => {
               p={0}
             >
               <PricingDetails pricingDetails={pricingDetails} page="pricing" />
-              <Box
-                display={"flex"}
-                flexDir="column"
-                alignItems="center"
-                justifyContent={"flex-start"}
-                textAlign="center"
-                w={"90%"}
-                maxW="1920px"
-                px={[0, 0, 10]}
-                my={20}
-                py={10}
-                borderRadius={20}
-                background={"#FFFFFF"}
-              >
-                <Heading as="h1" fontSize="3xl" mb={4}>
-                  Why{" "}
-                  <Box textDecoration="underline" as="span" color="#3300FF">
-                    SolidityScan ?
-                  </Box>{" "}
-                </Heading>
-                <Text color="subtle" fontSize={["lg", "lg", "xl"]} mb={4}>
-                  Smart-contract scanning tool built to discover vulnerabilities
-                  & mitigate risks in your code.
-                </Text>
-                <Infographics />
-                <SignupBox />
-              </Box>
             </Flex>
           </>
         )
       )}
-      <Footer />
     </>
   );
 };

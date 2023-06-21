@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useRef, useState } from "react";
 import { useParams } from "react-router-dom";
 import {
   Flex,
@@ -7,12 +7,9 @@ import {
   Button,
   HStack,
   Box,
-  useMediaQuery,
 } from "@chakra-ui/react";
-import { useReport } from "hooks/useReport";
 import { PrintContainer } from "./PrintContainer";
 import { usePublicReport } from "hooks/usePublicReport";
-import { Text } from "@chakra-ui/react";
 import { useReactToPrint } from "react-to-print";
 import { ReportContainer } from "./ReportContainer";
 import { DownloadIcon } from "@chakra-ui/icons";
