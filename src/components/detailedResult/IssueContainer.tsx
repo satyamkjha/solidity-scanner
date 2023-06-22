@@ -166,7 +166,7 @@ const IssueContainer: React.FC<{
                 <Text
                   sx={{
                     ml: 3,
-                    maxW: [230, 230, 400, 250],
+                    maxW: [230, 230, 400, 275],
                     fontWeight: 600,
                     color: "#4E5D78",
                     fontSize: "sm",

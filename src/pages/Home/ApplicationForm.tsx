@@ -11,6 +11,7 @@ import {
   useToast,
   Image,
   Divider,
+  Spinner,
 } from "@chakra-ui/react";
 import API from "helpers/api";
 import { useProfile } from "hooks/useProfile";
@@ -69,6 +70,7 @@ const ApplicationForm: React.FC = () => {
   const runScan = async () => {
     if (!runValidation() || !repoTreeUP) return;
     try {
+      setIsLoading(true);
       const skipFilePaths = getSkipFilePaths(repoTreeUP);
       const { data } = await API.post(API_PATH.API_PROJECT_SCAN, {
         project_url: githubLink,
@@ -80,6 +82,7 @@ const ApplicationForm: React.FC = () => {
         skip_file_paths: skipFilePaths,
       });
 
+      setIsLoading(false);
       if (data.status === "success") {
         queryClient.invalidateQueries("scan_list");
         queryClient.invalidateQueries("profile");
@@ -95,6 +98,7 @@ const ApplicationForm: React.FC = () => {
       }
     } catch (e) {
       console.log(e);
+      setIsLoading(false);
     }
   };
 
@@ -323,7 +327,7 @@ const ApplicationForm: React.FC = () => {
           }}
           isDisabled={profileData?.credits === 0}
         >
-          {step > 2 ? "Start Scan" : "Next"}
+          {step > 2 ? isLoading ? <Spinner /> : "Start Scan" : "Next"}
         </Button>
       </Flex>
     </Flex>

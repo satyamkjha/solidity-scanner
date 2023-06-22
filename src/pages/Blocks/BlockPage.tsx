@@ -80,7 +80,11 @@ import { API_PATH } from "helpers/routeManager";
 import { getPublicReport } from "hooks/usePublicReport";
 import { useReactToPrint } from "react-to-print";
 import { PrintContainer } from "pages/Report/PrintContainer";
-import { getAssetsURL } from "helpers/helperFunction";
+import {
+  getAssetsURL,
+  checkPublishReportAccess,
+  checkGenerateReportAccess,
+} from "helpers/helperFunction";
 import { useConfig } from "hooks/useConfig";
 
 const BlockPage: React.FC = () => {
@@ -287,14 +291,14 @@ const BlockPage: React.FC = () => {
     }
   }, [summaryReport]);
 
-  const checkIfGeneratingReport = () =>
-    reportingStatus === "generating_report" ||
-    (profile &&
-      plans &&
-      (profile.actions_supported
-        ? !profile.actions_supported.generate_report
-        : profile.current_package !== "expired" &&
-          !plans.pricing_data.monthly[profile.current_package].report));
+  const checkIfGeneratingReport = () => {
+    if (profile && plans) {
+      if (reportingStatus === "generating_report") return true;
+
+      return !checkGenerateReportAccess(profile, plans);
+    }
+    return true;
+  };
 
   return (
     <Box
@@ -469,23 +473,11 @@ const BlockPage: React.FC = () => {
                                 mx={["auto", "auto", "auto", "0"]}
                                 mr={["auto", "auto", "auto", 5]}
                                 isDisabled={
-                                  profile.actions_supported
-                                    ? !profile.actions_supported
-                                        .publishable_report
-                                    : profile.current_package !== "expired" &&
-                                      !plans.pricing_data.monthly[
-                                        profile.current_package
-                                      ].publishable_report
+                                  !checkPublishReportAccess(profile, plans)
                                 }
                                 onClick={() => setOpen(!open)}
                               >
-                                {(profile.actions_supported
-                                  ? !profile.actions_supported
-                                      .publishable_report
-                                  : profile.current_package !== "expired" &&
-                                    !plans.pricing_data.monthly[
-                                      profile.current_package
-                                    ].publishable_report) && (
+                                {!checkPublishReportAccess(profile, plans) && (
                                   <LockIcon color={"accent"} size="xs" mr={3} />
                                 )}
                                 Publish Report
@@ -627,18 +619,9 @@ const BlockPage: React.FC = () => {
                                 {reportingStatus === "generating_report" && (
                                   <Spinner color="#806CCF" size="xs" mr={3} />
                                 )}
-                                {profile.actions_supported
-                                  ? !profile.actions_supported.generate_report
-                                  : profile.current_package !== "expired" &&
-                                    !plans.pricing_data.monthly[
-                                      profile.current_package
-                                    ].report && (
-                                      <LockIcon
-                                        color={"accent"}
-                                        size="xs"
-                                        mr={3}
-                                      />
-                                    )}
+                                {!checkGenerateReportAccess(profile, plans) && (
+                                  <LockIcon color={"accent"} mr={3} />
+                                )}
                                 {reportingStatus === "generating_report"
                                   ? "Generating report..."
                                   : reportingStatus === "not_generated"

@@ -21,6 +21,7 @@ import { LogoIcon, NoBugIcon, ScanErrorIcon } from "./icons";
 import ManualAuditCard from "./manualAuditCard";
 import { getAssetsURL } from "helpers/helperFunction";
 import { useConfig } from "hooks/useConfig";
+import SolidityScoreProgress from "./common/SolidityScoreProgress";
 
 const pieData = (
   critical: number,
@@ -75,6 +76,9 @@ const Overview: React.FC<{
 }> = ({ scanData, scansRemaining, onTabChange }) => {
   const config: any = useConfig();
   const assetsURL = getAssetsURL(config);
+  const solidity_score = scanData.multi_file_scan_summary?.score_v2
+    ? scanData.multi_file_scan_summary?.score_v2
+    : (parseFloat(scanData.multi_file_scan_summary?.score) * 20).toFixed(2);
   const vulnerabilityCount = Object.keys(
     scanData.multi_file_scan_summary?.issue_severity_distribution
   ).reduce(
@@ -165,9 +169,9 @@ const Overview: React.FC<{
               py={6}
               borderRadius={"15px"}
               background={
-                parseFloat(scanData.multi_file_scan_summary.score) < 2.5
+                parseFloat(solidity_score) < 50
                   ? "linear-gradient(96.27deg, #FFF3F0 0.75%, #FFE0D9 96.71%)"
-                  : parseFloat(scanData.multi_file_scan_summary.score) >= 4.5
+                  : parseFloat(solidity_score) >= 90
                   ? "linear-gradient(96.27deg, #EFFFED 0.75%, #E6FFE2 96.71%)"
                   : "linear-gradient(96.27deg, #FFFAF2 0.75%, #FFF4E1 96.71%)"
               }
@@ -178,38 +182,17 @@ const Overview: React.FC<{
                 alignItems={["center", "center", "center", "flex-start"]}
                 direction={["column", "column", "row"]}
               >
-                <CircularProgress
-                  value={
-                    (parseInt(scanData.multi_file_scan_summary.score, 10) *
-                      100) /
-                    5
-                  }
-                  color="accent"
-                  thickness="7px"
-                  size="85px"
-                  p={2}
-                  capIsRound
-                  background="white"
-                  borderRadius={"50%"}
-                  border={"1px solid #EEEEEE"}
-                >
-                  <CircularProgressLabel
-                    sx={{ display: "flex", justifyContent: "center" }}
-                  >
-                    <Box>
-                      <Text fontSize="22px" fontWeight={600} color="accent">
-                        {scanData.multi_file_scan_summary.score}
-                      </Text>
-                    </Box>
-                  </CircularProgressLabel>
-                </CircularProgress>
+                <SolidityScoreProgress
+                  score={solidity_score}
+                  size={"85px"}
+                  thickness={"7px"}
+                />
                 <VStack alignItems="flex-start" px={4}>
                   <Text fontSize="18px" fontWeight={600} textAlign="center">
                     Your Solidity Score is
-                    {parseFloat(scanData.multi_file_scan_summary.score) < 2.5
+                    {parseFloat(solidity_score) < 50
                       ? " LOW"
-                      : parseFloat(scanData.multi_file_scan_summary.score) >=
-                        4.5
+                      : parseFloat(solidity_score) >= 90
                       ? " GREAT"
                       : " AVERAGE"}
                   </Text>
@@ -257,9 +240,7 @@ const Overview: React.FC<{
               >
                 <HStack w="100%" justifyContent="space-between">
                   <Text color="detail">Score</Text>
-                  <Text color="detail">
-                    {scanData.multi_file_scan_summary.score + "/5"}
-                  </Text>
+                  <Text color="detail">{solidity_score + "/100"}</Text>
                 </HStack>
                 <Divider />
                 <HStack w="100%" justifyContent="space-between">

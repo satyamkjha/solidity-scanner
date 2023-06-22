@@ -11,7 +11,6 @@ const VulnerabililtyDetailsContainer: React.FC<{
 }> = ({ summary_report }) => {
   return (
     <>
-      <h6></h6>
       <Flex
         as="div"
         w="100%"
