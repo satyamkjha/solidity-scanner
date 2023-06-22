@@ -1,5 +1,14 @@
 import React from "react";
-import { Box, Text, Flex, Image, Heading } from "@chakra-ui/react";
+import {
+  Box,
+  Text,
+  Flex,
+  Image,
+  Heading,
+  SkeletonText,
+  Skeleton,
+  HStack,
+} from "@chakra-ui/react";
 import { Swiper, SwiperSlide, useSwiperSlide } from "swiper/react";
 import { EffectCoverflow, Navigation, Pagination } from "swiper";
 import "./testimonial.css";
@@ -127,3 +136,125 @@ const UserTestimonial: React.FC = () => {
 };
 
 export default UserTestimonial;
+
+export function TestimonialSkeleton() {
+  return (
+    <Flex
+      alignItems={"center"}
+      justifyContent={"center"}
+      py={28}
+      px={[0, 0, 0, 24]}
+      w="100%"
+      flexDir={["column"]}
+    >
+      <SkeletonText
+        startColor="lightgray"
+        endColor="#eeeeee"
+        noOfLines={1}
+        spacing="4"
+        skeletonHeight="8"
+        w={"50%"}
+        mb={[10]}
+      />
+      <HStack
+        my={10}
+        w={"100%"}
+        alignItems={"center"}
+        justifyContent={"center"}
+        spacing={10}
+      >
+        <Flex
+          flexDir={"column"}
+          w="20%"
+          align="center"
+          display={["none", "none", "none", "flex"]}
+        >
+          <Skeleton
+            w={"80px"}
+            h={"80px"}
+            startColor="lightgray"
+            endColor="#eeeeee"
+            borderRadius={"50%"}
+          ></Skeleton>
+          <SkeletonText
+            startColor="lightgray"
+            endColor="#eeeeee"
+            noOfLines={2}
+            spacing="4"
+            skeletonHeight="4"
+            w={["50%"]}
+            mt={6}
+          />
+          <SkeletonText
+            startColor="lightgray"
+            endColor="#eeeeee"
+            noOfLines={10}
+            spacing="3"
+            skeletonHeight="2"
+            w={["100%"]}
+            mt={10}
+          />
+        </Flex>
+        <Flex flexDir={"column"} w="40%" align="center">
+          <Skeleton
+            w={"120px"}
+            h={"120px"}
+            startColor="lightgray"
+            endColor="#eeeeee"
+            borderRadius={"50%"}
+          ></Skeleton>
+          <SkeletonText
+            startColor="lightgray"
+            endColor="#eeeeee"
+            noOfLines={2}
+            spacing="4"
+            skeletonHeight="4"
+            w={["50%"]}
+            mt={6}
+          />
+          <SkeletonText
+            startColor="lightgray"
+            endColor="#eeeeee"
+            noOfLines={14}
+            spacing="3"
+            skeletonHeight="2"
+            w={["100%"]}
+            mt={10}
+          />
+        </Flex>
+        <Flex
+          flexDir={"column"}
+          w="20%"
+          align="center"
+          display={["none", "none", "none", "flex"]}
+        >
+          <Skeleton
+            w={"80px"}
+            h={"80px"}
+            startColor="lightgray"
+            endColor="#eeeeee"
+            borderRadius={"50%"}
+          ></Skeleton>
+          <SkeletonText
+            startColor="lightgray"
+            endColor="#eeeeee"
+            noOfLines={2}
+            spacing="4"
+            skeletonHeight="4"
+            w={["50%"]}
+            mt={6}
+          />
+          <SkeletonText
+            startColor="lightgray"
+            endColor="#eeeeee"
+            noOfLines={10}
+            spacing="3"
+            skeletonHeight="2"
+            w={["100%"]}
+            mt={10}
+          />
+        </Flex>
+      </HStack>
+    </Flex>
+  );
+}

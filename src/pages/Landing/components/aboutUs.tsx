@@ -7,6 +7,9 @@ import {
   Image,
   HStack,
   VStack,
+  SkeletonText,
+  Skeleton,
+  Stack,
 } from "@chakra-ui/react";
 import { teamsData } from "common/values";
 import { getAssetsURL } from "helpers/helperFunction";
@@ -263,5 +266,83 @@ export default function AboutUs() {
             ))}
           </Flex> */}
     </Box>
+  );
+}
+
+export function AboutUsSkeleton() {
+  return (
+    <Flex
+      alignItems={"center"}
+      justifyContent={"center"}
+      py={24}
+      px={[0, 0, 0, 24]}
+      w="100%"
+      flexDir={"column"}
+    >
+      <SkeletonText
+        startColor="lightgray"
+        endColor="#eeeeee"
+        noOfLines={2}
+        spacing="4"
+        skeletonHeight="5"
+        w={["100%", "100%", "60%"]}
+      />
+      <Flex
+        flexDir={["column", "column", "column", "row"]}
+        alignItems={"center"}
+        justifyContent={"center"}
+        w={"40%"}
+        mt={20}
+      >
+        <Flex
+          flexDir="column"
+          align={"center"}
+          w={"100%"}
+          mx={10}
+          my={[5, 5, 5, 0]}
+        >
+          <Skeleton
+            w={"200px"}
+            h={"200px"}
+            startColor="lightgray"
+            endColor="#eeeeee"
+            borderRadius={"50%"}
+          ></Skeleton>
+          <SkeletonText
+            startColor="lightgray"
+            endColor="#eeeeee"
+            noOfLines={3}
+            spacing="4"
+            skeletonHeight="2"
+            w={"100%"}
+            mt={6}
+          />
+        </Flex>
+        <Flex
+          flexDir="column"
+          align={"center"}
+          w={"100%"}
+          mx={10}
+          my={[5, 5, 5, 0]}
+        >
+          <Skeleton
+            w={"200px"}
+            h={"200px"}
+            startColor="lightgray"
+            endColor="#eeeeee"
+            borderRadius={"50%"}
+          ></Skeleton>
+          <SkeletonText
+            startColor="lightgray"
+            endColor="#eeeeee"
+            noOfLines={3}
+            spacing="4"
+            skeletonHeight="2"
+            w={"100%"}
+            mt={6}
+          />
+        </Flex>
+      </Flex>
+    </Flex>
   );
 }

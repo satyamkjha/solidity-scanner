@@ -1,13 +1,9 @@
 import React from "react";
 import { Container, Box, Link } from "@chakra-ui/react";
 
-import Header from "components/header";
-import Footer from "components/footer";
-
 export default function PrivacyPage() {
   return (
     <>
-      <Header />
       <Container maxW="80vw" color="black">
         <Box
           py={20}
@@ -521,7 +517,6 @@ export default function PrivacyPage() {
           </ul>
         </Box>
       </Container>
-      <Footer />
     </>
   );
 }

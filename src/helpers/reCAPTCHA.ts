@@ -1,4 +1,4 @@
-
+import { getFeatureGateConfig } from "./helperFunction";
 
 declare global {
   interface Window {
@@ -27,24 +27,26 @@ export default class ReCaptcha {
   }
 
   async getToken(): Promise<string> {
-    // Load the reCAPTCHA script if it hasn't been loaded yet
-    await this.loadScript();
+    if (getFeatureGateConfig().reCAPTCHA_enabled) {
+      // Load the reCAPTCHA script if it hasn't been loaded yet
+      await this.loadScript();
 
-    // Execute the reCAPTCHA and return the token
-    const token = await new Promise<string>((resolve, reject) => {
-      window.grecaptcha.ready(() => {
-        window.grecaptcha
-          .execute(this.siteKey, { action: this.action })
-          .then((token: string) => {
-            resolve(token);
-          })
-          .catch((error: any) => {
-            reject(error);
-          });
+      // Execute the reCAPTCHA and return the token
+      const token = await new Promise<string>((resolve, reject) => {
+        window.grecaptcha.ready(() => {
+          window.grecaptcha
+            .execute(this.siteKey, { action: this.action })
+            .then((token: string) => {
+              resolve(token);
+            })
+            .catch((error: any) => {
+              reject(error);
+            });
+        });
       });
-    });
 
-    return token;
+      return token;
+    }
+    return "";
   }
 }
-

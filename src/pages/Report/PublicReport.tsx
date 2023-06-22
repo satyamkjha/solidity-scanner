@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useRef, useState } from "react";
 import { useParams } from "react-router-dom";
 import {
   Flex,
@@ -7,7 +7,6 @@ import {
   Button,
   HStack,
   Box,
-  useMediaQuery,
 } from "@chakra-ui/react";
 import { PrintContainer } from "./PrintContainer";
 import { usePublicReport } from "hooks/usePublicReport";
@@ -57,7 +56,9 @@ export default function ReportPage() {
             disabled={printLoading}
           >
             {printLoading ? (
-              <Loader size={25} color="#3E15F4" />
+              <Flex mr={5}>
+                <Loader size={25} color="#3E15F4" />
+              </Flex>
             ) : (
               <DownloadIcon mr={5} />
             )}

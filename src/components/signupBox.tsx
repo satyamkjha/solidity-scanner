@@ -1,20 +1,10 @@
-import {
-  Box,
-  Button,
-  Flex,
-  Text,
-  Heading,
-  Link,
-  useMediaQuery,
-} from "@chakra-ui/react";
+import { Box, Button, Flex, Text, Heading, Divider } from "@chakra-ui/react";
 import React from "react";
 import { useHistory } from "react-router-dom";
 import { getAssetsURL } from "helpers/helperFunction";
 import { useConfig } from "hooks/useConfig";
 
 export const SignupBox: React.FC = () => {
-  const [isDesktopView] = useMediaQuery("(min-width: 1024px)");
-
   const history = useHistory();
   const config: any = useConfig();
   const assetsURL = getAssetsURL(config);
@@ -23,7 +13,7 @@ export const SignupBox: React.FC = () => {
     <Box
       mx={[0, 0, 0, 24]}
       sx={{
-        w: ["100%", "100%", "100%", "85%"],
+        w: ["100%", "100%", "100%", "80%"],
         backgroundImage: `url(${assetsURL}background/pattern.png)`,
         borderRadius: 20,
         overflow: "hidden",
@@ -51,14 +41,24 @@ export const SignupBox: React.FC = () => {
             mb={4}
             textAlign={["center", "center", "left"]}
           >
-            Start securing your
-            <br />
+            Start securing your{" "}
             <Box as="span" sx={{ color: "accent" }}>
               contracts
             </Box>{" "}
             today
           </Heading>
-          <Text color="accent" textAlign={["center", "center", "left"]}>
+          <Divider
+            mt={10}
+            mb={5}
+            w="120px"
+            border={"1px solid"}
+            borderColor={"accent"}
+          />
+          <Text
+            color="accent"
+            textAlign={["center", "center", "left"]}
+            fontSize="lg"
+          >
             Have more questions? Talk to our team and get a demo now.
           </Text>
         </Box>

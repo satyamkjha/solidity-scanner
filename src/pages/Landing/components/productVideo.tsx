@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Flex, Box } from "@chakra-ui/react";
+import { Flex, Box, Skeleton } from "@chakra-ui/react";
 import { getAssetsURL } from "helpers/helperFunction";
 import { useConfig } from "hooks/useConfig";
 
@@ -56,6 +56,26 @@ export default function ProductVideo() {
           ></iframe>
         )}
       </Box>
+    </Flex>
+  );
+}
+
+export function VideoSkeleton() {
+  return (
+    <Flex
+      alignItems={"center"}
+      justifyContent={"center"}
+      py={[5, 5, 10, 20]}
+      w="100%"
+    >
+      <Skeleton
+        startColor="lightgray"
+        endColor="#eeeeee"
+        height={["180px", "260px", "340px", "450px", "580px", "650px"]}
+        borderRadius={"5px"}
+        w={"100%"}
+        ml={[0, 0, 0, 10]}
+      />
     </Flex>
   );
 }

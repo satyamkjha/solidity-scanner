@@ -611,7 +611,7 @@ const ScanDetails: React.FC<{
                         <Menu>
                           <MenuButton aria-label="Options">
                             {printLoading ? (
-                              <Loader size={30} color="#3E15F4" />
+                              <Loader size={20} color="#3E15F4" />
                             ) : (
                               <ArrowDownIcon color="#3E15F4" />
                             )}

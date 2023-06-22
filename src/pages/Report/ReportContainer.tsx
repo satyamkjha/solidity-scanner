@@ -1,8 +1,9 @@
-import { Container, Flex, Spinner } from "@chakra-ui/react";
+import { Container, Flex } from "@chakra-ui/react";
 import { Report } from "common/types";
 import React, { lazy, Suspense } from "react";
 import CoverPageContainer from "components/report/CoverPageContainer";
 import TableContentContainer from "components/report/TableContentContainer";
+import Loader from "components/styled-components/Loader";
 
 const ProjectSummaryContainer = lazy(
   () => import("components/report/ProjectSummaryContainer")
@@ -67,7 +68,7 @@ export const ReportContainer: React.FC<{
 export function SpinnerContainer() {
   return (
     <Flex w="100%" h="100%" alignItems="center" justifyContent="center">
-      <Spinner />
+      <Loader />
     </Flex>
   );
 }
