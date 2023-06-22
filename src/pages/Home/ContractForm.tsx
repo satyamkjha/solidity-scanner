@@ -25,6 +25,7 @@ import { API_PATH } from "helpers/routeManager";
 
 import FormatOptionLabelWithImage from "components/FormatOptionLabelWithImage";
 import { customStylesForReactSelect } from "common/stylesForCustomSelect";
+import Loader from "components/styled-components/Loader";
 
 const ContractForm: React.FC = () => {
   const contractChain: {
@@ -471,6 +472,7 @@ const ContractForm: React.FC = () => {
             variant="brand"
             onClick={onSubmit}
             isLoading={isLoading}
+            spinner={<Loader color={"#3300FF"} size={25} />}
             isDisabled={profileData?.credits === 0}
           >
             Start Scan

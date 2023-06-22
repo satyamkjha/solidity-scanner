@@ -899,3 +899,10 @@ export const pricing_card_description_data = [
     icon: "pricing/pricing_card_icons/private.svg",
   },
 ];
+
+export const actionTaken = {
+  false_positive: "False Positive",
+  wont_fix: "Won't Fix",
+  pending_fix: "Pending Fix",
+  fixed: "Fixed",
+};

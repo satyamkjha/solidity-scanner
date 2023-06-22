@@ -1,7 +1,8 @@
 import React, { useEffect } from "react";
 import { useLocation } from "react-router-dom";
-import { Box, Flex, Spinner } from "@chakra-ui/react";
+import { Box, Flex } from "@chakra-ui/react";
 import { usePricingPlans } from "hooks/usePricingPlans";
+import Loader from "components/styled-components/Loader";
 import PricingDetails from "./components/PricingDetails";
 
 const PricingPage: React.FC = () => {
@@ -28,7 +29,7 @@ const PricingPage: React.FC = () => {
           justifyContent={"center"}
           alignItems={"center"}
         >
-          <Spinner />
+          <Loader />
         </Box>
       ) : (
         pricingDetails && (

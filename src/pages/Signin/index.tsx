@@ -44,6 +44,7 @@ import {
   getFeatureGateConfig,
   getReCaptchaHeaders,
 } from "helpers/helperFunction";
+import Loader from "components/styled-components/Loader";
 
 function useQuery() {
   return new URLSearchParams(useLocation().search);
@@ -241,6 +242,7 @@ const LoginForm: React.FC = () => {
           variant="brand"
           onClick={onSubmit}
           isLoading={isLoading}
+          spinner={<Loader color={"#3300FF"} size={25} />}
         >
           Sign In
         </Button>

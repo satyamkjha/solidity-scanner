@@ -378,6 +378,7 @@ const QuickScan: React.FC = () => {
   const ref = query.get("ref");
 
   const elementRef = useRef<HTMLDivElement>(null);
+  let d = new Date();
 
   useEffect(() => {
     if (ref) {

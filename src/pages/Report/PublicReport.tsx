@@ -11,15 +11,16 @@ import {
 import { PrintContainer } from "./PrintContainer";
 import { usePublicReport } from "hooks/usePublicReport";
 import { useReactToPrint } from "react-to-print";
-import { ReportContainer } from "./ReportContainer";
 import { DownloadIcon } from "@chakra-ui/icons";
 import { getFeatureGateConfig } from "helpers/helperFunction";
 import { useConfig } from "hooks/useConfig";
+import Loader from "components/styled-components/Loader";
+import { ReportContainer } from "./ReportContainer";
 
 export default function ReportPage() {
   const config: any = useConfig();
   const { reportId, projectType } = useParams<{
-    reportId: string;
+    reportId: ScrollSetting;
     projectType: string;
   }>();
   const { data } = usePublicReport(projectType, reportId);
@@ -35,7 +36,7 @@ export default function ReportPage() {
 
   const printReport = () => {
     setPrintLoading(true);
-    handlePrint();
+    setTimeout(() => handlePrint());
   };
 
   return (
@@ -55,7 +56,9 @@ export default function ReportPage() {
             disabled={printLoading}
           >
             {printLoading ? (
-              <Spinner size="sm" mr={5} color="#3E15F4" />
+              <Flex mr={5}>
+                <Loader size={25} color="#3E15F4" />
+              </Flex>
             ) : (
               <DownloadIcon mr={5} />
             )}
@@ -65,17 +68,19 @@ export default function ReportPage() {
       )}
 
       {data ? (
-        <>
-          <Box display={"none"}>
-            <Box w="100vw" ref={componentRef}>
-              <PrintContainer summary_report={data.summary_report} />
+        <Flex flexDir={"column"} overflow={"hidden"}>
+          {printLoading && (
+            <Box w={0} h={0} visibility={"hidden"}>
+              <Box w="100vw" ref={componentRef}>
+                <PrintContainer summary_report={data.summary_report} />
+              </Box>
             </Box>
-          </Box>
+          )}
           <ReportContainer
             summary_report={data.summary_report}
             isPublicReport={true}
           />
-        </>
+        </Flex>
       ) : (
         <Container
           py={12}
@@ -93,7 +98,7 @@ export default function ReportPage() {
             textAlign={["left", "left"]}
             mb={10}
           >
-            <Spinner />
+            <Loader />
           </Flex>
         </Container>
       )}

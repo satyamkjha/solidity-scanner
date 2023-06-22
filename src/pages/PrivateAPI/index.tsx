@@ -23,6 +23,7 @@ import ConfirmActionForm from "components/confirmActionForm";
 import { useProfile } from "hooks/useProfile";
 import { useConfig } from "hooks/useConfig";
 import UpgradePackage from "components/upgradePackage";
+import Loader from "components/styled-components/Loader";
 
 export default function PrivateApi() {
   const { data: profileData, isLoading } = useProfile();
@@ -137,11 +138,11 @@ export default function PrivateApi() {
           sx={{
             w: "100%",
             mx: [0, 0, 0, 4],
-            my: 4,
+            my: 24,
             justifyContent: "center",
           }}
         >
-          <Spinner mt={20} />
+          <Loader />
         </Flex>
       ) : (
         <Flex
@@ -237,7 +238,7 @@ export default function PrivateApi() {
                   alignItems: "center",
                 }}
               >
-                <Spinner />
+                <Loader />
               </Flex>
             ) : (
               <>

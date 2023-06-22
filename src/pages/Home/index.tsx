@@ -16,6 +16,7 @@ import VulnerabilityProgress from "components/VulnerabilityProgress";
 import ApplicationForm from "./ApplicationForm";
 import ContractForm from "./ContractForm";
 import UploadForm from "./UploadForm";
+import Loader from "components/styled-components/Loader";
 
 const Home: React.FC = () => {
   const { data } = useOverview();
@@ -63,11 +64,11 @@ const Home: React.FC = () => {
             sx={{
               w: ["100%", "100%", "40%"],
               mx: [0, 0, 4],
-              my: 2,
+              my: 24,
               justifyContent: "center",
             }}
           >
-            <Spinner mt={20} />
+            <Loader />
           </Flex>
         )}
         {data && (

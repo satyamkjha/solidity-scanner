@@ -29,6 +29,7 @@ import API from "helpers/api";
 import { useConfig } from "hooks/useConfig";
 import { getAssetsURL } from "helpers/helperFunction";
 import { blockScans } from "common/values";
+import Loader from "components/styled-components/Loader";
 
 export default function RecentScans() {
   const [isDesktopView] = useMediaQuery("(min-width: 1350px)");
@@ -145,10 +146,10 @@ export default function RecentScans() {
           >
             {isRecentScansLoading && !recentScans.length ? (
               <Flex w={"100%"} alignItems={"center"} justifyContent="center">
-                <Spinner />
+                <Loader />
               </Flex>
             ) : (
-              <Box w="100%" px={[0, 0, 0, 4]}>
+              <Box w="100%" px={[0, 0, 0, 4]} position={"relative"}>
                 {recentScans.map((item: any, index: number) => (
                   <>
                     <HStack
@@ -305,7 +306,7 @@ export default function RecentScans() {
                       backdropFilter: "blur(2px)",
                     }}
                   >
-                    <Spinner />
+                    <Loader />
                   </Flex>
                 )}
               </Box>
