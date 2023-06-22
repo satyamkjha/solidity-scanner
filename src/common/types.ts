@@ -225,35 +225,33 @@ export type ScanMeta = {
 export type ScanSummary = {
   bug_id_hash_vs_bug_id: {
     [key: string]: string[];
-  }; //
-  count_files_analyzed: number; //
-  issue_severity_distribution: IssueSeverityDistribution; //
-  score: string; //
-  score_v2: string;
-  issues_count: number; //
-  lines_analyzed_count: number; //
-  latest_bug_count: number; //
-  scan_time_taken: number; //
-  false_positive: []; //
-  fixed: []; //
-  wont_fix: []; //
-  scans_ran: string[]; //
+  };
+  count_files_analyzed: number;
+  issue_severity_distribution: IssueSeverityDistribution;
+  score: string;
+  issues_count: number;
+  lines_analyzed_count: number;
+  latest_bug_count: number;
+  scan_time_taken: number;
+  false_positive: [];
+  fixed: [];
+  wont_fix: [];
+  scans_ran: string[];
 };
 
 export type ScanSummaryItem = {
-  count_files_analyzed: number; //
-  issue_severity_distribution: IssueSeverityDistribution; //
-  score: string; //
-  score_v2: string;
-  issues_count: number; //
-  lines_analyzed_count: number; //
-  scan_time_taken: number; //
-  false_positive_count: number; //
-  fixed_count: number; //
-  wont_fix_count: number; //
-  scans_ran: string[]; //
-  scan_time: string; //
-  pending_fix_count: number; //
+  count_files_analyzed: number;
+  issue_severity_distribution: IssueSeverityDistribution;
+  score: string;
+  issues_count: number;
+  lines_analyzed_count: number;
+  scan_time_taken: number;
+  false_positive_count: number;
+  fixed_count: number;
+  wont_fix_count: number;
+  scans_ran: string[];
+  scan_time: string;
+  pending_fix_count: number;
 };
 
 export type IssueSeverityDistribution = {
@@ -308,13 +306,19 @@ export type Overview = {
   upcoming_scan: string;
 };
 
+export type IssueDetailObject = {
+  issue_details: IssueItem[];
+  common_comments_map: {
+    [key: string]: string[];
+  };
+  is_issue_description_dynamic?: boolean;
+  issue_id: string;
+  issue_name: string;
+};
+
 export interface Report {
   issues: {
-    [key: string]: {
-      issue_details: IssueItem[];
-      issue_id: string;
-      issue_name: string;
-    };
+    [key: string]: IssueDetailObject;
   };
   git_commit_hash: string;
   project_summary_report: {

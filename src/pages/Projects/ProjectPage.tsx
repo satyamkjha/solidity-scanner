@@ -585,7 +585,7 @@ const ScanDetails: React.FC<{
                         backgroundColor={"#F5F2FF"}
                         pl={7}
                         pr={3}
-                        py={1}
+                        py={2}
                         ml={5}
                       >
                         <Text
@@ -606,11 +606,7 @@ const ScanDetails: React.FC<{
                           |
                         </Text>
                         <Menu>
-                          <MenuButton
-                            as={Button}
-                            aria-label="Options"
-                            variant="unstyled"
-                          >
+                          <MenuButton aria-label="Options">
                             {printLoading ? (
                               <Spinner size="sm" color="#3E15F4" />
                             ) : (
@@ -623,8 +619,13 @@ const ScanDetails: React.FC<{
                             </MenuItem>
                           </MenuList>
                         </Menu>
-                        {summaryReport && (
-                          <Box display={"none"}>
+                        {summaryReport && printLoading && (
+                          <Box
+                            w={0}
+                            h={0}
+                            visibility={"hidden"}
+                            position="absolute"
+                          >
                             <Box w="100vw" ref={componentRef}>
                               <PrintContainer summary_report={summaryReport} />
                             </Box>
@@ -1772,4 +1773,5 @@ const IncompleteScan: React.FC<{ message: string; scansRemaining: number }> = ({
     </>
   );
 };
+
 export default ProjectPage;
