@@ -474,6 +474,7 @@ const ChangePasswordForm: React.FC = () => {
           type="submit"
           onClick={onSubmit}
           isLoading={isLoading}
+          spinner={<Loader color={"#3300FF"} size={25} />}
         >
           Change Password
         </Button>

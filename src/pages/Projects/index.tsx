@@ -500,6 +500,7 @@ const ProjectCard: React.FC<{
                 onClick={rescan}
                 ml={3}
                 isLoading={isRescanLoading}
+                spinner={<Loader color={"#3300FF"} size={25} />}
               >
                 Rescan
               </Button>

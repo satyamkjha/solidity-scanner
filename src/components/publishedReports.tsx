@@ -215,8 +215,8 @@ const ReportBlock: React.FC<{
               }}
             />
           )}
-          {summaryReport && (
-            <Box display={"none"}>
+          {summaryReport && printLoading && (
+            <Box w={0} h={0} visibility={"hidden"} position="absolute">
               <Box w="100vw" ref={componentRef}>
                 <PrintContainer summary_report={summaryReport} />
               </Box>

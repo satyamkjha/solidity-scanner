@@ -588,7 +588,7 @@ const ScanDetails: React.FC<{
                         backgroundColor={"#F5F2FF"}
                         pl={7}
                         pr={3}
-                        py={1}
+                        py={2}
                         ml={5}
                       >
                         <Text
@@ -609,11 +609,7 @@ const ScanDetails: React.FC<{
                           |
                         </Text>
                         <Menu>
-                          <MenuButton
-                            as={Button}
-                            aria-label="Options"
-                            variant="unstyled"
-                          >
+                          <MenuButton aria-label="Options">
                             {printLoading ? (
                               <Loader size={30} color="#3E15F4" />
                             ) : (
@@ -626,8 +622,13 @@ const ScanDetails: React.FC<{
                             </MenuItem>
                           </MenuList>
                         </Menu>
-                        {summaryReport && (
-                          <Box display={"none"}>
+                        {summaryReport && printLoading && (
+                          <Box
+                            w={0}
+                            h={0}
+                            visibility={"hidden"}
+                            position="absolute"
+                          >
                             <Box w="100vw" ref={componentRef}>
                               <PrintContainer summary_report={summaryReport} />
                             </Box>
@@ -941,6 +942,7 @@ const ScanDetails: React.FC<{
                 onClick={rescan}
                 ml={3}
                 isLoading={isRescanLoading}
+                spinner={<Loader color={"#3300FF"} size={25} />}
               >
                 Rescan
               </Button>
@@ -1656,6 +1658,7 @@ const ScanBlock: React.FC<{
                     variant="accent-outline"
                     minW="200px"
                     isLoading={isLoading}
+                    spinner={<Loader color={"#3300FF"} size={25} />}
                     onClick={async () => {
                       if (show) {
                         setShow(false);
@@ -1779,4 +1782,5 @@ const IncompleteScan: React.FC<{ message: string; scansRemaining: number }> = ({
     </>
   );
 };
+
 export default ProjectPage;

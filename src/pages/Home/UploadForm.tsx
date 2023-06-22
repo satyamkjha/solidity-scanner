@@ -424,6 +424,7 @@ const UploadForm: React.FC = () => {
               mt={4}
               w="100%"
               isLoading={isLoading}
+              spinner={<Loader color={"#3300FF"} size={25} />}
               disabled={
                 isLoading ||
                 step < 2 ||

@@ -336,6 +336,7 @@ const FolderSettings: React.FC<{
               variant="accent-outline"
               isLoading={isLoading}
               color="#3E15F4"
+              spinner={<Loader color={"#3300FF"} size={25} />}
               onClick={updateSkipPathRequests}
             >
               <RepeatClockIcon mr={3} />
