@@ -32,6 +32,7 @@ import axios from "axios";
 import { CredshieldsIcon, MailSent } from "./icons";
 import { getAssetsURL } from "helpers/helperFunction";
 import { useConfig } from "hooks/useConfig";
+import Loader from "./styled-components/Loader";
 
 export const ManualAuditForm: React.FC<{ onClose(): any; isOpen: boolean }> = ({
   isOpen,
@@ -224,7 +225,11 @@ export const ManualAuditForm: React.FC<{ onClose(): any; isOpen: boolean }> = ({
                       onSubmit();
                     }}
                   >
-                    {!loading ? "Submit" : <Spinner />}
+                    {!loading ? (
+                      "Submit"
+                    ) : (
+                      <Loader size={30} thickness={2} color="white" />
+                    )}
                   </Button>
                 </Flex>
                 <VStack

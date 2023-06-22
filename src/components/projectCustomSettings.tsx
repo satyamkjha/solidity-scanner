@@ -27,6 +27,7 @@ import {
   restructureRepoTree,
   updateCheckedValue,
 } from "helpers/fileStructure";
+import Loader from "./styled-components/Loader";
 
 const ProjectCustomSettings: React.FC<{
   isGithubIntegrated: boolean;
@@ -222,8 +223,9 @@ const ProjectCustomSettings: React.FC<{
                 h="100%"
                 justifyContent="center"
                 alignItems="center"
+                py={4}
               >
-                <Spinner color="gray.500" />
+                <Loader />
               </Flex>
             )}
           </AccordionPanel>

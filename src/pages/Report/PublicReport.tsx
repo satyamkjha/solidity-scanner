@@ -15,6 +15,7 @@ import { useReactToPrint } from "react-to-print";
 import { DownloadIcon } from "@chakra-ui/icons";
 import { getFeatureGateConfig } from "helpers/helperFunction";
 import { useConfig } from "hooks/useConfig";
+import Loader from "components/styled-components/Loader";
 import { ReportContainer } from "./ReportContainer";
 
 export default function ReportPage() {
@@ -56,7 +57,7 @@ export default function ReportPage() {
             disabled={printLoading}
           >
             {printLoading ? (
-              <Spinner size="sm" mr={5} color="#3E15F4" />
+              <Loader size={25} color="#3E15F4" />
             ) : (
               <DownloadIcon mr={5} />
             )}
@@ -96,7 +97,7 @@ export default function ReportPage() {
             textAlign={["left", "left"]}
             mb={10}
           >
-            <Spinner />
+            <Loader />
           </Flex>
         </Container>
       )}

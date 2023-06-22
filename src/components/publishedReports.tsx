@@ -22,6 +22,7 @@ import { ArrowDownIcon } from "@chakra-ui/icons";
 import { useReactToPrint } from "react-to-print";
 import { getPublicReport } from "hooks/usePublicReport";
 import { PrintContainer } from "pages/Report/PrintContainer";
+import Loader from "./styled-components/Loader";
 
 const ReportBlock: React.FC<{
   report: ReportsListItem;
@@ -204,7 +205,7 @@ const ReportBlock: React.FC<{
               backgroundColor={"#F5F2FF"}
               icon={
                 printLoading ? (
-                  <Spinner fontSize={40} color="#3E15F4" />
+                  <Loader color="#3E15F4" />
                 ) : (
                   <ArrowDownIcon color="#3E15F4" />
                 )

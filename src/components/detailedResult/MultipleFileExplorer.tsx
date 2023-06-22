@@ -4,20 +4,15 @@ import {
   VStack,
   Box,
   Text,
-  Tabs,
-  TabList,
-  TabPanels,
-  Tab,
-  TabPanel,
   Image,
   HStack,
   Tooltip,
   Divider,
   IconButton,
+  Icon,
 } from "@chakra-ui/react";
 import { SeverityIcon } from "components/icons";
 import { FilesState, Finding } from "common/types";
-import { CloseIcon } from "@chakra-ui/icons";
 import React from "react";
 import { sentenceCapitalize, getAssetsURL } from "helpers/helperFunction";
 import { BsArrowsAngleExpand, BsArrowsAngleContract } from "react-icons/bs";
@@ -25,6 +20,7 @@ import FileNameTab from "./FileNameTab";
 import FileDataContainer from "./FileDataContainer";
 import IssueDetail from "./IssueDetail";
 import { useConfig } from "hooks/useConfig";
+import { RxCross2 } from "react-icons/rx";
 
 type MultipleFileExplorerProps = {
   files: FilesState;
@@ -269,14 +265,18 @@ const MultipleFileExplorer: React.FC<MultipleFileExplorerProps> = ({
                         aria-label="Handle Size"
                         icon={
                           fullScreen ? (
-                            <BsArrowsAngleContract
-                              strokeWidth={1}
+                            <Icon
+                              as={BsArrowsAngleContract}
+                              strokeWidth={0.8}
                               color="#8A94A6"
+                              fontSize={"15px"}
                             />
                           ) : (
-                            <BsArrowsAngleExpand
-                              strokeWidth={1}
+                            <Icon
+                              as={BsArrowsAngleExpand}
+                              strokeWidth={0.8}
                               color="#8A94A6"
+                              fontSize={"15px"}
                             />
                           )
                         }
@@ -289,7 +289,13 @@ const MultipleFileExplorer: React.FC<MultipleFileExplorerProps> = ({
                         onClick={() => setOpenIssueBox(false)}
                         bgColor="white"
                         aria-label="Close Box"
-                        icon={<CloseIcon color="#8A94A6" />}
+                        icon={
+                          <Icon
+                            as={RxCross2}
+                            color="#8A94A6"
+                            fontSize={"2xl"}
+                          />
+                        }
                       />
                     </Tooltip>
                   </HStack>

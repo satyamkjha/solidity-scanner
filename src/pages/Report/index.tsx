@@ -4,6 +4,7 @@ import { Flex, Container, Spinner } from "@chakra-ui/react";
 import { useReport } from "hooks/useReport";
 import { Text } from "@chakra-ui/react";
 import { ReportContainer } from "./ReportContainer";
+import Loader from "components/styled-components/Loader";
 
 export default function ReportPage() {
   const { reportId, projectId } = useParams<{
@@ -49,7 +50,7 @@ export default function ReportPage() {
             textAlign={["left", "left"]}
             mb={10}
           >
-            <Spinner />
+            <Loader />
           </Flex>
         </Container>
       )}

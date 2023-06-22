@@ -27,6 +27,7 @@ import {
 
 import API from "helpers/api";
 import { API_PATH } from "helpers/routeManager";
+import Loader from "components/styled-components/Loader";
 const REDIRECT_URI =
   process.env.NODE_ENV === "production"
     ? "https://solidityscan.com/integrations/"
@@ -76,7 +77,7 @@ const Integrations: React.FC = () => {
             justifyContent: "center",
           }}
         >
-          <Spinner mt={20} />
+          <Loader />
         </Flex>
       )}
 

@@ -9,6 +9,7 @@ import Footer from "components/footer";
 import { usePricingPlans } from "hooks/usePricingPlans";
 import { getAssetsURL } from "helpers/helperFunction";
 import PricingDetails from "./components/PricingDetails";
+import Loader from "components/styled-components/Loader";
 
 const PricingPage: React.FC = () => {
   const location = useLocation();
@@ -37,7 +38,7 @@ const PricingPage: React.FC = () => {
           justifyContent={"center"}
           alignItems={"center"}
         >
-          <Spinner />{" "}
+          <Loader />
         </Box>
       ) : (
         pricingDetails && (
