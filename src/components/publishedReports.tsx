@@ -6,18 +6,12 @@ import {
   HStack,
   IconButton,
   Text,
-  Spinner,
   useMediaQuery,
 } from "@chakra-ui/react";
 import { ReportsListItem, Profile, Scan, Report } from "common/types";
-import { useReports } from "hooks/useReports";
 import React, { useState, useRef, useEffect } from "react";
-import Icon from "react-crypto-icons";
 import { AiFillCopy, AiOutlineLock } from "react-icons/ai";
-import { BsPeople, BsPeopleFill } from "react-icons/bs";
-import { FaCopy } from "react-icons/fa";
-import { MdPeopleOutline, MdSettings } from "react-icons/md";
-import { useHistory, useParams } from "react-router-dom";
+import { BsPeople } from "react-icons/bs";
 import { ArrowDownIcon } from "@chakra-ui/icons";
 import { useReactToPrint } from "react-to-print";
 import { getPublicReport } from "hooks/usePublicReport";
@@ -205,7 +199,7 @@ const ReportBlock: React.FC<{
               backgroundColor={"#F5F2FF"}
               icon={
                 printLoading ? (
-                  <Loader color="#3E15F4" />
+                  <Loader size={25} color="#3E15F4" />
                 ) : (
                   <ArrowDownIcon color="#3E15F4" />
                 )

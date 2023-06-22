@@ -23,6 +23,7 @@ import { QuickScanResult } from "common/types";
 import { API_PATH } from "helpers/routeManager";
 import { useConfig } from "hooks/useConfig";
 import SolidityScoreProgress from "components/common/SolidityScoreProgress";
+import Loader from "components/styled-components/Loader";
 
 const RecentScans = lazy(() => import("components/quickscan/RecentScans"));
 const QuickScanDetails = lazy(
@@ -667,6 +668,7 @@ const QuickScan: React.FC = () => {
             <Button
               isLoading={isLoading}
               loadingText="Scanning"
+              spinner={<Loader color={"#3300FF"} size={20} />}
               mt={20}
               w={"300px"}
               type="submit"
