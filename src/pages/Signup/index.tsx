@@ -17,6 +17,7 @@ import {
   HStack,
   Divider,
 } from "@chakra-ui/react";
+import { motion } from "framer-motion";
 import {
   FaDiscord,
   FaLinkedin,
@@ -45,6 +46,7 @@ import { useConfig } from "hooks/useConfig";
 const SignUp: React.FC = () => {
   const config: any = useConfig();
   const googleLoginEnabled = getFeatureGateConfig(config).enable_google_signin;
+  const [registered, setRegistered] = useState(false);
   const [email, setEmail] = useState("");
   const passwordChecker = new RegExp("^(?=.*?[A-Za-z])(?=.*?[0-9]).{6,}$");
   const location = useLocation();
@@ -141,7 +143,7 @@ const RegisterForm: React.FC<{
   setEmail: React.Dispatch<React.SetStateAction<string>>;
   email: string;
 }> = ({ setRegistered, setEmail, email }) => {
-  const { handleSubmit, register, formState } = useForm<FormData>();
+  const { handleSubmit, formState } = useForm<FormData>();
 
   const [show, setShow] = useState(false);
   const history = useHistory();
@@ -222,7 +224,7 @@ const RegisterForm: React.FC<{
         }
       }
 
-      if (flag == 0) {
+      if (flag === 0) {
         uniqueArr.push(arr1[i]);
       }
     }
