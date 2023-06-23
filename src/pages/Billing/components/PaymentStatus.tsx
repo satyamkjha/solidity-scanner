@@ -1,17 +1,7 @@
 import React, { useEffect } from "react";
-import { Link, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 
-import {
-  Flex,
-  Box,
-  Container,
-  Text,
-  Heading,
-  Button,
-  Image,
-  Link as ChakraLink,
-  HStack,
-} from "@chakra-ui/react";
+import { Flex, Box, Container, Text, Heading } from "@chakra-ui/react";
 import { Logo } from "components/icons";
 
 export default function PaymentSucess() {

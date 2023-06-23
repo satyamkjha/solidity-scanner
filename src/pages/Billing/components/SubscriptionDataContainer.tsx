@@ -1,12 +1,5 @@
-import React, { useEffect, useRef, useState } from "react";
-import {
-  Flex,
-  Box,
-  Text,
-  HStack,
-  useMediaQuery,
-  Image,
-} from "@chakra-ui/react";
+import React from "react";
+import { Box, Text } from "@chakra-ui/react";
 import { dateToDDMMMMYYYY } from "common/functions";
 
 const SubscriptionDataContainer: React.FC<{

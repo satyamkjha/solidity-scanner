@@ -1,19 +1,5 @@
-import {
-  TableContainer,
-  Table,
-  Thead,
-  Tr,
-  Th,
-  HStack,
-  Text,
-  Tbody,
-  Td,
-  Flex,
-  Image,
-  Box,
-} from "@chakra-ui/react";
-import styled from "@emotion/styled";
-import { IssueDetailObject, IssueItem } from "common/types";
+import { TableContainer, Table, Tbody, Flex } from "@chakra-ui/react";
+import { IssueItem } from "common/types";
 import React, { useRef, useEffect } from "react";
 import IssueRow from "../report/IssueRow";
 import IssueHead from "../report/IssueHead";
@@ -101,38 +87,5 @@ const DynamicContainer: React.FC<{ issue: IssueItem }> = ({ issue }) => {
     </>
   );
 };
-
-const DescriptionWrapper = styled.div`
-  p {
-    font-weight: 300;
-    word-break: break-all;
-  }
-
-  ul,
-  ol {
-    margin-left: 20px;
-  }
-
-  li {
-    font-weight: 400;
-    font-size: 16px;
-  }
-
-  code {
-    background: #cbd5e0;
-    padding: 2px 4px;
-    border-radius: 5px;
-    word-break: break-all;
-  }
-  a {
-    color: #4299e1;
-    text-decoration: underline;
-    word-break: break-all;
-    transition: 0.2s color;
-    &:hover {
-      color: #2b6cb0;
-    }
-  }
-`;
 
 export default DynamicContainer;

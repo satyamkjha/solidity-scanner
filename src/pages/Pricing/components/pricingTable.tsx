@@ -1,16 +1,13 @@
 import {
   Heading,
   Box,
-  Text,
   TableContainer,
   Table,
-  TableCaption,
   Thead,
   Tr,
   Th,
   Td,
   Tbody,
-  Tfoot,
   Flex,
 } from "@chakra-ui/react";
 import React from "react";

@@ -1,23 +1,7 @@
-import { IssueItem } from "common/types";
-import {
-  TableContainer,
-  Table,
-  Thead,
-  Tr,
-  Th,
-  HStack,
-  Text,
-  Tbody,
-  Td,
-  Flex,
-  Image,
-  Box,
-} from "@chakra-ui/react";
-import styled from "@emotion/styled";
-import { actionTaken } from "common/values";
+import { HStack, Text, Image } from "@chakra-ui/react";
 import { getAssetsURL } from "helpers/helperFunction";
 import { useConfig } from "hooks/useConfig";
-import React, { useEffect, useState } from "react";
+import React from "react";
 
 const CommentContainer: React.FC<{
   comment: string;

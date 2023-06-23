@@ -1,6 +1,5 @@
 import React, { ReactElement, useState } from "react";
 import { Link, useRouteMatch } from "react-router-dom";
-import { BsArrowsCollapse, BsArrowsExpand } from "react-icons/bs";
 import {
   Flex,
   Box,
@@ -9,7 +8,6 @@ import {
   Icon,
   HStack,
   Heading,
-  Collapse,
   useDisclosure,
   VStack,
   useMediaQuery,

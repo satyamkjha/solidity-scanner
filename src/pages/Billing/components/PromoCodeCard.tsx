@@ -1,78 +1,17 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useState } from "react";
 import {
   Flex,
   Box,
   Text,
-  Icon,
   Button,
-  Divider,
-  Link,
-  useDisclosure,
-  FormControl,
-  FormLabel,
-  Select,
-  Modal,
-  ModalOverlay,
-  ModalContent,
-  ModalBody,
-  ModalCloseButton,
-  Spinner,
   useToast,
   VStack,
-  Image,
-  Heading,
-  HStack,
-  Badge,
-  Tab,
-  TabList,
-  Tabs,
-  TabPanel,
-  TabPanels,
-  AlertDialog,
-  AlertDialogBody,
-  AlertDialogContent,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogOverlay,
-  toast,
-  CloseButton,
   Input,
-  ModalHeader,
-  useMediaQuery,
-  CircularProgress,
-  CircularProgressLabel,
 } from "@chakra-ui/react";
 
-import { AiOutlineCheckCircle } from "react-icons/ai";
-import { AiOutlineCalendar, AiFillCheckCircle } from "react-icons/ai";
-import CurrentPlan from "./CurrentPlan";
-import { useProfile } from "hooks/useProfile";
-import { useAcceptedCoins } from "hooks/usePricing";
-
 import API from "helpers/api";
-import { daysRemaining, dateToDDMMMMYYYY } from "common/functions";
-import { Page, Plan, Profile, Transaction } from "common/types";
-import { HiCheckCircle, HiXCircle } from "react-icons/hi";
-import { useParams } from "react-router-dom";
-import { placements } from "@popperjs/core";
-import ContactUs from "components/contactus";
-import { useTransactions } from "hooks/useTransactions";
-import { sentenceCapitalize, getAssetsURL } from "helpers/helperFunction";
-import { useInvoices } from "hooks/useInvoices";
-import ReactPaginate from "react-paginate";
-import { server } from "typescript";
-import {
-  CoinPaymentsIcon,
-  StripeLogo,
-  StripePaymentsLogo,
-} from "components/icons";
-import InfiniteScroll from "react-infinite-scroll-component";
-import { Swiper, SwiperSlide, useSwiper } from "swiper/react";
-import { usePricingPlans } from "hooks/usePricingPlans";
-import { API_PATH } from "helpers/routeManager";
-import { useConfig } from "hooks/useConfig";
-import ScanCredits from "pages/Billing/components/ScanCredits";
-import PricingDetails from "pages/Pricing/components/PricingDetails";
+import { Profile } from "common/types";
+import { HiCheckCircle } from "react-icons/hi";
 
 const PromoCodeCard: React.FC<{ profileData: Profile }> = ({ profileData }) => {
   const [promoCode, setPromoCode] = useState("");

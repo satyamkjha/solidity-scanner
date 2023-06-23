@@ -1,10 +1,9 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useState } from "react";
 import {
   Flex,
   Box,
   Text,
   Button,
-  Spinner,
   VStack,
   HStack,
   Badge,
@@ -13,7 +12,7 @@ import {
 } from "@chakra-ui/react";
 import "../billing.css";
 import { Page, Transaction } from "common/types";
-import { sentenceCapitalize, getAssetsURL } from "helpers/helperFunction";
+import { sentenceCapitalize } from "helpers/helperFunction";
 import InfiniteScroll from "react-infinite-scroll-component";
 import { monthNames } from "common/values";
 import CancelPaymentDialog from "./CancelPaymentDialog";

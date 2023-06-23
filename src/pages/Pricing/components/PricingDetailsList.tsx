@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import React from "react";
 import { Text, HStack, Image, VStack } from "@chakra-ui/react";
 import { pricing_card_description_data } from "common/values";
 import { getAssetsURL } from "helpers/helperFunction";

@@ -1,16 +1,12 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import {
   Flex,
   HStack,
   Text,
-  Stack,
   FormControl,
   Divider,
-  VStack,
   Checkbox,
-  Collapse,
   Button,
-  Spinner,
   Popover,
   PopoverArrow,
   PopoverBody,
@@ -30,13 +26,8 @@ import {
   CheckIcon,
   MinusIcon,
 } from "@chakra-ui/icons";
-import { TreeItem, TreeItemUP } from "common/types";
-import {
-  restructureRepoTree,
-  generatePathArray,
-  updateChildTree,
-  updateCheckedValue,
-} from "helpers/fileStructure";
+import { TreeItemUP } from "common/types";
+import { updateChildTree, updateCheckedValue } from "helpers/fileStructure";
 import Loader from "./styled-components/Loader";
 
 const formatOptionLabel: React.FC<{

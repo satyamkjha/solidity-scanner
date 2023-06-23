@@ -1,4 +1,4 @@
-import { Button, HStack, Divider, Text, Image } from "@chakra-ui/react";
+import { Button, Image } from "@chakra-ui/react";
 import MetaMaskSDK from "@metamask/sdk";
 import API from "helpers/api";
 import Auth from "helpers/auth";

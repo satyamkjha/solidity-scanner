@@ -6,7 +6,6 @@ import {
   HStack,
   Button,
   Link,
-  Text,
   useDisclosure,
   useMediaQuery,
   Menu,
@@ -182,7 +181,7 @@ export const Header: React.FC = () => {
                         Docs
                       </Link>
                     </MenuItem>
-                    <MenuItem al>
+                    <MenuItem>
                       <Link
                         onClick={() => {
                           window.open(

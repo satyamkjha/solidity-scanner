@@ -1,5 +1,5 @@
 import { Box, Text } from "@chakra-ui/layout";
-import React, { Component } from "react";
+import React from "react";
 import { getAssetsURL } from "helpers/helperFunction";
 import { useConfig } from "hooks/useConfig";
 

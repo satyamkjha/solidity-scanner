@@ -1,6 +1,6 @@
 import React from "react";
-import { Link as RouterLink, useHistory } from "react-router-dom";
-import { Flex, Container, Link, Image } from "@chakra-ui/react";
+import { Link as RouterLink } from "react-router-dom";
+import { Flex, Container, Link } from "@chakra-ui/react";
 
 import {
   DiscordIcon,

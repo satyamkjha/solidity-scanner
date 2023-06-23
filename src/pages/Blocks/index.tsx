@@ -6,8 +6,6 @@ import {
   Text,
   Button,
   Progress,
-  Spinner,
-  HStack,
   Image,
   useMediaQuery,
 } from "@chakra-ui/react";
@@ -38,7 +36,7 @@ const Blocks: React.FC = () => {
   });
   const [hasMore, setHasMore] = useState(true);
 
-  const { data: scans, isLoading, refetch } = useBlocks(pagination);
+  const { data: scans, refetch } = useBlocks(pagination);
   const { data: profileData } = useProfile();
   const [scanList, setScanList] = useState<Scan[]>();
 
@@ -219,14 +217,12 @@ const BlockCard: React.FC<{ scan: Scan }> = ({ scan }) => {
     scan_status,
     project_name,
     scan_id,
-    scan_summary,
     _updated,
     contract_address,
     contractname,
     contract_platform,
     multi_file_scan_status,
     multi_file_scan_summary,
-    multi_file_scan_details,
     project_id,
   } = scan;
 

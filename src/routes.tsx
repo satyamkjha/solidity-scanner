@@ -129,12 +129,18 @@ const Routes: React.FC = () => {
     <Router>
       <ErrorHandler>
         <Switch>
-          <RedirectRoute exact path="/signin" component={SignIn} />
+          <RedirectRoute exact path="/signin">
+            <SignIn />
+          </RedirectRoute>
           <Route exact path="/reset" component={Reset} />
-          <RedirectRoute exact path="/signup" component={SignUp} />
+          <RedirectRoute exact path="/signup">
+            <SignUp />
+          </RedirectRoute>
           <Route exact path="/check-email" component={CheckEmail} />
           <Route exact path="/verify" component={Verify} />
-          <RedirectRoute exact path="/forgot" component={ForgotPassword} />
+          <RedirectRoute exact path="/forgot">
+            <ForgotPassword />
+          </RedirectRoute>
           <Route exact path="/page-not-found" component={PageNotFound} />
           <Route
             exact

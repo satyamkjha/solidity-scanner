@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { set, useForm } from "react-hook-form";
+import { useForm } from "react-hook-form";
 import { Link as RouterLink, useHistory, useLocation } from "react-router-dom";
 import {
   Flex,
@@ -17,7 +17,6 @@ import {
   HStack,
   Divider,
 } from "@chakra-ui/react";
-import { motion } from "framer-motion";
 import {
   FaDiscord,
   FaLinkedin,
@@ -43,12 +42,9 @@ import { getFeatureGateConfig } from "helpers/helperFunction";
 import { getReCaptchaHeaders } from "helpers/helperFunction";
 import { useConfig } from "hooks/useConfig";
 
-const CustomFlex = motion(Flex);
-
 const SignUp: React.FC = () => {
   const config: any = useConfig();
   const googleLoginEnabled = getFeatureGateConfig(config).enable_google_signin;
-  const [registered, setRegistered] = useState(false);
   const [email, setEmail] = useState("");
   const passwordChecker = new RegExp("^(?=.*?[A-Za-z])(?=.*?[0-9]).{6,}$");
   const location = useLocation();

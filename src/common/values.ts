@@ -1,4 +1,4 @@
-import { DetectorItemProp, Plan } from "./types";
+import { DetectorItemProp } from "./types";
 
 export const severityPriority: { [key: string]: number } = {
   "0": 10,

@@ -1,4 +1,4 @@
-import { VStack, Text, Switch, HStack, Spinner } from "@chakra-ui/react";
+import { VStack, Text, Switch, HStack } from "@chakra-ui/react";
 import React from "react";
 import GithubConnectAlert from "./githubConnectAlert";
 import Loader from "./styled-components/Loader";

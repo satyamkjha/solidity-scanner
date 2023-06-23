@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-import { useForm } from "react-hook-form";
 import { useHistory } from "react-router-dom";
 import { useQueryClient } from "react-query";
 import { FiCheck } from "react-icons/fi";
@@ -15,8 +14,6 @@ import {
   InputRightElement,
   VStack,
   Input,
-  Spinner,
-  InputProps,
   useToast,
   Stack,
   Tooltip,
@@ -28,7 +25,6 @@ import {
   AiOutlineSave,
   AiOutlineEye,
   AiOutlineEyeInvisible,
-  AiFillInfoCircle,
 } from "react-icons/ai";
 import { useProfile } from "hooks/useProfile";
 
@@ -37,14 +33,8 @@ import Auth from "helpers/auth";
 import { API_PATH } from "helpers/routeManager";
 import { AuthResponse } from "common/types";
 import { InfoIcon } from "@chakra-ui/icons";
-import reCAPTCHA from "helpers/reCAPTCHA";
 import Loader from "components/styled-components/Loader";
 
-type ProfileFormData = {
-  first_name?: string;
-  company_name?: string;
-  contact_number?: string;
-};
 const Profile: React.FC = () => {
   const toast = useToast();
 
@@ -401,12 +391,6 @@ const Profile: React.FC = () => {
       )}
     </Box>
   );
-};
-
-type PasswordChangeFormData = {
-  password: string;
-  new_password: string;
-  confirm_password: string;
 };
 
 const ChangePasswordForm: React.FC = () => {
