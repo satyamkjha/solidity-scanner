@@ -19,6 +19,7 @@ import Cookies from "js-cookie";
 import { onLogout } from "common/functions";
 import { useQueryClient } from "react-query";
 import PublicLayout from "components/PublicLayout";
+import Loader from "components/styled-components/Loader";
 
 const Landing = lazy(
   () => import("pages/Landing" /* webpackChunkName: "Landing" */)
@@ -168,24 +169,30 @@ const Routes: React.FC = () => {
             ]}
           >
             <PublicLayout>
-              <Switch>
-                <Route exact path="/" component={Landing} />
-                <Route
-                  exact
-                  path="/quickscan/:blockAddress/:blockPlatform/:blockChain"
-                  component={QuickScan}
-                />
-                <Route exact path="/quickscan/" component={QuickScan} />
-                <Route exact path="/pricing" component={Pricing} />
-                <Route exact path="/detectors" component={Detectors} />
-                <Route exact path="/faq" component={FAQ} />
-                <Route
-                  exact
-                  path="/terms-of-service"
-                  component={TermsOfService}
-                />
-                <Route exact path="/privacy-policy" component={PrivacyPolicy} />
-              </Switch>
+              <Suspense fallback={<Loader width={"100vw"} height={"100vh"} />}>
+                <Switch>
+                  <Route exact path="/" component={Landing} />
+                  <Route
+                    exact
+                    path="/quickscan/:blockAddress/:blockPlatform/:blockChain"
+                    component={QuickScan}
+                  />
+                  <Route exact path="/quickscan/" component={QuickScan} />
+                  <Route exact path="/pricing" component={Pricing} />
+                  <Route exact path="/detectors" component={Detectors} />
+                  <Route exact path="/faq" component={FAQ} />
+                  <Route
+                    exact
+                    path="/terms-of-service"
+                    component={TermsOfService}
+                  />
+                  <Route
+                    exact
+                    path="/privacy-policy"
+                    component={PrivacyPolicy}
+                  />
+                </Switch>
+              </Suspense>
             </PublicLayout>
           </Route>
 
