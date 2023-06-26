@@ -74,6 +74,14 @@ export const Header: React.FC = () => {
               </Link>
               <Link
                 as={RouterLink}
+                to="/pricing"
+                variant="brand"
+                fontWeight="600"
+              >
+                Quickscan
+              </Link>
+              <Link
+                as={RouterLink}
                 to="/detectors"
                 variant="brand"
                 fontWeight="600"
