@@ -10,6 +10,7 @@ import {
   HStack,
   Image,
   useMediaQuery,
+  Tooltip,
 } from "@chakra-ui/react";
 
 import { LogoIcon, BlockCredit, ScanErrorIcon } from "components/icons";
@@ -264,9 +265,11 @@ const BlockCard: React.FC<{ scan: Scan }> = ({ scan }) => {
       }}
     >
       <Box p={5}>
-        <Text sx={{ w: "100%", color: "subtle" }} isTruncated>
-          {contractname}
-        </Text>
+        <Tooltip label={contractname} fontSize="md" placement="top-start">
+          <Text sx={{ w: "100%", color: "subtle" }} isTruncated>
+            {contractname}
+          </Text>
+        </Tooltip>
         <Text sx={{ w: "100%" }} isTruncated>
           {project_name || contract_address}
         </Text>
