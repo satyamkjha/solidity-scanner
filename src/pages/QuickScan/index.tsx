@@ -551,7 +551,7 @@ const QuickScan: React.FC = () => {
         >
           <Box
             w={"100%"}
-            bg={"linear-gradient(180deg, #04080D 0%, #2900DE 100%)"}
+            bg={"linear-gradient(180deg, #04080D -50.31%, #2900DE 282.02%)"}
           >
             <Box
               flexDir={"column"}

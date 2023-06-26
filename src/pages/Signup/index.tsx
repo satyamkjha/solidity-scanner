@@ -17,7 +17,6 @@ import {
   HStack,
   Divider,
 } from "@chakra-ui/react";
-import { motion } from "framer-motion";
 import {
   FaDiscord,
   FaLinkedin,
