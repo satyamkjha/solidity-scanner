@@ -1,18 +1,12 @@
-import React, { useState } from "react";
-import { Link as RouterLink } from "react-router-dom";
+import React from "react";
 
 import {
   Flex,
-  HStack,
-  Button,
-  Link,
   Text,
   Modal,
   ModalBody,
   ModalCloseButton,
   ModalContent,
-  ModalFooter,
-  ModalHeader,
   ModalOverlay,
   Image,
 } from "@chakra-ui/react";

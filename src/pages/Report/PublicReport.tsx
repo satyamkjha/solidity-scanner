@@ -1,13 +1,6 @@
 import React, { useRef, useState } from "react";
 import { useParams } from "react-router-dom";
-import {
-  Flex,
-  Container,
-  Spinner,
-  Button,
-  HStack,
-  Box,
-} from "@chakra-ui/react";
+import { Flex, Container, Button, HStack, Box } from "@chakra-ui/react";
 import { PrintContainer } from "./PrintContainer";
 import { usePublicReport } from "hooks/usePublicReport";
 import { useReactToPrint } from "react-to-print";

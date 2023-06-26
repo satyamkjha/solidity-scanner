@@ -1,5 +1,4 @@
 import { Flex, Heading, Text } from "@chakra-ui/react";
-import { Report } from "common/types";
 
 import React from "react";
 

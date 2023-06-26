@@ -3,24 +3,17 @@ import {
   Flex,
   Box,
   Text,
-  Divider,
-  Spinner,
-  Heading,
-  HStack,
   Tab,
   TabList,
   Tabs,
   TabPanel,
   TabPanels,
-  Image,
-  VStack,
-  Button,
 } from "@chakra-ui/react";
 import "./billing.css";
 
 import { useProfile } from "hooks/useProfile";
 
-import { Page, Plan, Profile, Transaction } from "common/types";
+import { Page, Transaction } from "common/types";
 import { useTransactions } from "hooks/useTransactions";
 import { usePricingPlans } from "hooks/usePricingPlans";
 import ScanCredits from "pages/Billing/components/ScanCredits";
@@ -33,7 +26,7 @@ import Loader from "components/styled-components/Loader";
 
 const Billing: React.FC = () => {
   const { data } = useProfile();
-  const [selectedPlan, setSelectedPlan] = useState("custom");
+  const [] = useState("custom");
   const [planBillingCycle, setPlanBillingCycle] = useState("");
   const pricingRef = useRef<HTMLDivElement>(null);
 

@@ -1,11 +1,9 @@
 import React from "react";
 import { HStack, Heading, Box, Text } from "@chakra-ui/react";
-import { constants } from "os";
 
 export const TickMark: React.FC<{ size: number; color: string }> = ({
   size,
   color,
-  ...props
 }) => {
   return (
     <svg
@@ -25,10 +23,7 @@ export const TickMark: React.FC<{ size: number; color: string }> = ({
   );
 };
 
-export const CurlyArrowBlue: React.FC<{ size: number }> = ({
-  size,
-  ...props
-}) => {
+export const CurlyArrowBlue: React.FC<{ size: number }> = ({ size }) => {
   return (
     <svg
       width={size}
@@ -59,10 +54,7 @@ export const CurlyArrowBlue: React.FC<{ size: number }> = ({
   );
 };
 
-export const CurlyArrowUp: React.FC<{ size: number }> = ({
-  size,
-  ...props
-}) => {
+export const CurlyArrowUp: React.FC<{ size: number }> = ({ size }) => {
   return (
     <svg
       width={size}
@@ -93,10 +85,7 @@ export const CurlyArrowUp: React.FC<{ size: number }> = ({
   );
 };
 
-export const CurlyArrowDown: React.FC<{ size: number }> = ({
-  size,
-  ...props
-}) => {
+export const CurlyArrowDown: React.FC<{ size: number }> = ({ size }) => {
   return (
     <svg
       width={size}
@@ -200,7 +189,6 @@ export const DetectorIcon: React.FC<{ size: number }> = ({ size }) => {
 };
 
 export const StripeLogo: React.FC<{ size: number }> = ({ size, ...props }) => {
-  const gradientId = "_" + Math.random().toString(36).substr(2, 9);
   return (
     <svg
       width={size}
@@ -223,7 +211,6 @@ export const StripePaymentsLogo: React.FC<{ size: number }> = ({
   size,
   ...props
 }) => {
-  const gradientId = "_" + Math.random().toString(36).substr(2, 9);
   return (
     <svg
       width={size}
@@ -315,7 +302,6 @@ export const MultifileIcon: React.FC<{ size: number }> = ({
   size,
   ...props
 }) => {
-  const gradientId = "_" + Math.random().toString(36).substr(2, 9);
   return (
     <svg
       width={size}
@@ -395,7 +381,7 @@ export const MultifileIcon: React.FC<{ size: number }> = ({
 export const CredshieldsIcon: React.FC<{
   size: number;
   hidePoweredBy?: boolean;
-}> = ({ size, hidePoweredBy, ...props }) => {
+}> = ({ size, hidePoweredBy }) => {
   return (
     <svg
       width={size}
@@ -661,7 +647,6 @@ export const ProjectsMenuIcon: React.FC<{ size: number; active?: boolean }> = ({
 export const FolderIcon: React.FC<{ size: number; active: boolean }> = ({
   size,
   active,
-  ...props
 }) => {
   const iconColor = active ? "#79B8FF" : "#D9D9D9";
   return (
@@ -680,10 +665,7 @@ export const FolderIcon: React.FC<{ size: number; active: boolean }> = ({
   );
 };
 
-export const SimpleFileIcon: React.FC<{ size: number }> = ({
-  size,
-  ...props
-}) => {
+export const SimpleFileIcon: React.FC<{ size: number }> = ({ size }) => {
   return (
     <svg
       width={size}
@@ -705,7 +687,6 @@ export const SimpleFileIcon: React.FC<{ size: number }> = ({
 export const SolidityFileIcon: React.FC<{ size: number; active?: boolean }> = ({
   size,
   active,
-  ...props
 }) => {
   return (
     <svg
@@ -828,7 +809,6 @@ export const PrivateApiMenuIcon: React.FC<{
 export const BillingMenuIcon: React.FC<{ size: number; active?: boolean }> = ({
   size,
   active,
-  ...props
 }) => {
   const iconColor = active ? "#04B79C" : "#3300FF";
   return (
@@ -1396,7 +1376,7 @@ export const MediumIcon: React.FC<{ size: number }> = ({ size }) => {
   );
 };
 
-export const ProjectIcon: React.FC<{ size: number }> = ({ size }) => {
+export const ProjectIcon: React.FC<{ size: number }> = () => {
   return (
     <svg width={37} height={27} fill="none" xmlns="http://www.w3.org/2000/svg">
       <path
@@ -3067,10 +3047,7 @@ export const Work: React.FC<{ size: number }> = ({ size, ...props }) => {
   );
 };
 
-export const IssueRemediationIcons: React.FC<{ size: number }> = ({
-  size,
-  ...props
-}) => {
+export const IssueRemediationIcons: React.FC<{ size: number }> = ({ size }) => {
   return (
     <svg
       width="24"
@@ -3137,10 +3114,7 @@ export const IssueRemediationIcons: React.FC<{ size: number }> = ({
   );
 };
 
-export const IssueDescriptionIcons: React.FC<{ size: number }> = ({
-  size,
-  ...props
-}) => {
+export const IssueDescriptionIcons: React.FC<{ size: number }> = ({ size }) => {
   return (
     <svg
       width={size}
@@ -3242,10 +3216,7 @@ export const Smile: React.FC<{ size: number }> = ({ size, ...props }) => {
   );
 };
 
-export const ScanErrorIcon: React.FC<{ size: number }> = ({
-  size,
-  ...props
-}) => {
+export const ScanErrorIcon: React.FC<{ size: number }> = ({ size }) => {
   return (
     <svg
       width={size}

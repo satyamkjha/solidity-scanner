@@ -1,11 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useForm } from "react-hook-form";
-import {
-  Link as RouterLink,
-  Redirect,
-  useHistory,
-  useLocation,
-} from "react-router-dom";
+import { Link as RouterLink, useHistory, useLocation } from "react-router-dom";
 import {
   Flex,
   Heading,
@@ -22,12 +16,9 @@ import {
   InputRightElement,
   HStack,
   Divider,
-  Image,
 } from "@chakra-ui/react";
-import { FcGoogle } from "react-icons/fc";
 import { FiAtSign } from "react-icons/fi";
 import { FaLock } from "react-icons/fa";
-import MetaMaskSDK from "@metamask/sdk";
 
 import { Logo } from "components/icons";
 
@@ -35,11 +26,9 @@ import API from "helpers/api";
 import Auth from "helpers/auth";
 import { AuthResponse } from "common/types";
 import { ViewIcon, ViewOffIcon } from "@chakra-ui/icons";
-import { EBADF } from "constants";
 import MetaMaskLogin from "components/metamaskSignin";
 import { API_PATH } from "helpers/routeManager";
 import GoogleSignIn from "components/googleSignin";
-import Cookies from "js-cookie";
 import {
   getFeatureGateConfig,
   getReCaptchaHeaders,
@@ -154,7 +143,7 @@ const LoginForm: React.FC = () => {
         }
         setIsLoading(false);
       },
-      (err) => {
+      () => {
         setIsLoading(false);
       }
     );

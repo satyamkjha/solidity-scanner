@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useQueryClient } from "react-query";
-import { useHistory, Link as RouterLink } from "react-router-dom";
+import { useHistory } from "react-router-dom";
 import {
   Flex,
   Text,

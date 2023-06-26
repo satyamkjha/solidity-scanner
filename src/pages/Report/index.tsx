@@ -1,6 +1,6 @@
 import React from "react";
 import { useParams } from "react-router-dom";
-import { Flex, Container, Spinner } from "@chakra-ui/react";
+import { Flex, Container } from "@chakra-ui/react";
 import { useReport } from "hooks/useReport";
 import { Text } from "@chakra-ui/react";
 import { ReportContainer } from "./ReportContainer";

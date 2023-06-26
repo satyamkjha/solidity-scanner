@@ -14,15 +14,8 @@ import {
 } from "@chakra-ui/react";
 import { ResponsivePie } from "@nivo/pie";
 import { Report } from "common/types";
-import { monthNames } from "common/values";
 import VulnerabilityProgress from "components/VulnerabilityProgress";
-import {
-  GithubIcon,
-  Logo,
-  ProjectIcon,
-  ReportCoverDots,
-  SeverityIcon,
-} from "components/icons";
+import { GithubIcon, ProjectIcon, SeverityIcon } from "components/icons";
 import { getAssetsURL, sentenceCapitalize } from "helpers/helperFunction";
 import { useConfig } from "hooks/useConfig";
 import React from "react";

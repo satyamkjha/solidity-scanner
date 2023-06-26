@@ -1,4 +1,4 @@
-import { TableContainer, Table, Tbody, Flex, Text } from "@chakra-ui/react";
+import { TableContainer, Table, Tbody, Flex } from "@chakra-ui/react";
 import { IssueDetailObject, IssueItem } from "common/types";
 import React, { useEffect, useState, useRef } from "react";
 import IssueRow from "../report/IssueRow";

@@ -1,10 +1,8 @@
 import React from "react";
 import { Link as RouterLink } from "react-router-dom";
 
-import { Flex, HStack, Button, Link, Text } from "@chakra-ui/react";
+import { Flex, HStack, Button, Text } from "@chakra-ui/react";
 import { Logo } from "components/icons";
-
-import Auth from "helpers/auth";
 
 export const ReportHeader: React.FC = () => {
   return (

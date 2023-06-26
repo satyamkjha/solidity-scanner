@@ -8,7 +8,6 @@ import {
   Image,
   Flex,
   Box,
-  VStack,
   useDisclosure,
 } from "@chakra-ui/react";
 import { Plan } from "common/types";

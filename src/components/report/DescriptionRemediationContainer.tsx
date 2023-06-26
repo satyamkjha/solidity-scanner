@@ -1,23 +1,8 @@
-import { IssueItem } from "common/types";
-import {
-  TableContainer,
-  Table,
-  Thead,
-  Tr,
-  Th,
-  HStack,
-  Text,
-  Tbody,
-  Td,
-  Flex,
-  Image,
-  Box,
-} from "@chakra-ui/react";
+import { HStack, Text, Image, Box } from "@chakra-ui/react";
 import styled from "@emotion/styled";
-import { actionTaken } from "common/values";
 import { getAssetsURL } from "helpers/helperFunction";
 import { useConfig } from "hooks/useConfig";
-import React, { useEffect, useState } from "react";
+import React from "react";
 
 const DescriptionRemediationContainer: React.FC<{
   issue_description: string;

@@ -51,7 +51,7 @@ const ReportBlock: React.FC<{
         setPrintLoading(false);
       }, 100);
     }
-  }, [summaryReport]);
+  }, [handlePrint, summaryReport]);
 
   return (
     <Flex

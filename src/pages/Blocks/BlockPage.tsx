@@ -1,22 +1,18 @@
 import React, { useEffect, useRef, useState } from "react";
-import { Link as RouterLink, useHistory, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 
 import {
   Flex,
   Box,
   Text,
-  Link,
   Tabs,
   TabList,
   TabPanels,
   Tab,
   TabPanel,
-  Spinner,
   Accordion,
   AccordionButton,
-  AccordionIcon,
   AccordionItem,
-  AccordionPanel,
   VStack,
   Image,
   HStack,
@@ -34,42 +30,24 @@ import {
   ModalOverlay,
   Switch as SwitchComp,
   useToast,
-  Badge,
-  border,
   Stack,
   useMediaQuery,
   MenuButton,
   Menu,
-  IconButton,
   MenuList,
   MenuItem,
 } from "@chakra-ui/react";
 import Overview from "components/overview";
 import MultifileResult from "components/detailedResult/MultifileResult";
-import {
-  AddIcon,
-  CheckCircleIcon,
-  LockIcon,
-  MinusIcon,
-  TimeIcon,
-} from "@chakra-ui/icons";
+import { CheckCircleIcon, LockIcon, TimeIcon } from "@chakra-ui/icons";
 import { useScan } from "hooks/useScan";
 import { ArrowDownIcon } from "@chakra-ui/icons";
 import { useProfile } from "hooks/useProfile";
 import { BiChevronDownCircle, BiChevronUpCircle } from "react-icons/bi";
 import { AiOutlineProject } from "react-icons/ai";
-import {
-  FaFileCode,
-  FaGithub,
-  FaCalendarAlt,
-  FaRegCalendarCheck,
-  FaEnvelope,
-  FaInternetExplorer,
-  FaBuilding,
-  FaRegCopy,
-} from "react-icons/fa";
+import { FaEnvelope, FaInternetExplorer, FaBuilding } from "react-icons/fa";
 import API from "helpers/api";
-import { Report, ReportsListItem, Scan } from "common/types";
+import { Report, ReportsListItem } from "common/types";
 import { useReports } from "hooks/useReports";
 import { ScanErrorIcon } from "components/icons";
 import { monthNames } from "common/values";

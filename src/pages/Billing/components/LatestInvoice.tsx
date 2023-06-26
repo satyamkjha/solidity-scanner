@@ -1,14 +1,5 @@
 import { CloseIcon } from "@chakra-ui/icons";
-import {
-  Flex,
-  VStack,
-  Heading,
-  Button,
-  Text,
-  Image,
-  useDisclosure,
-  Switch,
-} from "@chakra-ui/react";
+import { Flex, Button, Text, useDisclosure, Switch } from "@chakra-ui/react";
 import { Plan, Transaction } from "common/types";
 import React from "react";
 import CancelPaymentDialog from "./CancelPaymentDialog";

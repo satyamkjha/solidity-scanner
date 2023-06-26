@@ -1,10 +1,9 @@
 import React, { useEffect, useState, useRef } from "react";
 import { useQueryClient } from "react-query";
-import { Link as RouterLink, useParams, useHistory } from "react-router-dom";
+import { useParams, useHistory } from "react-router-dom";
 import { ArrowDownIcon } from "@chakra-ui/icons";
 import {
   Flex,
-  keyframes,
   Box,
   Text,
   Link,
@@ -14,7 +13,6 @@ import {
   TabPanels,
   Tab,
   TabPanel,
-  Spinner,
   Button,
   HStack,
   Tooltip,
@@ -37,13 +35,10 @@ import {
   Input,
   ModalFooter,
   Switch as SwitchComp,
-  toast,
   useToast,
-  Badge,
   Image,
   useMediaQuery,
   Stack,
-  IconButton,
   Menu,
   MenuButton,
   MenuList,
@@ -253,11 +248,6 @@ const ScanDetails: React.FC<{
     onClose();
     history.push(`/projects/`);
   };
-
-  const scan_name =
-    scanData &&
-    scans.find((scan) => scan.scan_id === scanData.scan_report.scan_id)
-      ?.scan_name;
 
   const [projectName, setProjectName] = useState("");
   const [repoUrl, setRepoUrl] = useState("");
@@ -1436,10 +1426,6 @@ const ScanDetails: React.FC<{
   );
 };
 
-interface Props {
-  setTabIndex: React.Dispatch<React.SetStateAction<number>>;
-}
-
 const ScanHistory: React.FC<{
   setTabIndex: React.Dispatch<React.SetStateAction<number>>;
   profile: Profile;
@@ -1747,38 +1733,6 @@ const ScanBlock: React.FC<{
           )}
         </Collapse>
       </Flex>
-    </>
-  );
-};
-
-const IncompleteScan: React.FC<{ message: string; scansRemaining: number }> = ({
-  message,
-  scansRemaining,
-}) => {
-  return (
-    <>
-      <Flex
-        w="100%"
-        alignItems="center"
-        justifyContent="center"
-        border="1px solid"
-        borderColor="border"
-        borderRightWidth="0px"
-        borderLeftWidth="0px"
-      >
-        <Flex w="97%" m={4} borderRadius="20px" bgColor="high-subtle" p={4}>
-          <ScanErrorIcon size={28} />
-          <Text color="high" ml={4}>
-            {message}
-          </Text>
-        </Flex>
-      </Flex>
-      <Flex
-        w="100%"
-        alignItems="center"
-        justifyContent="center"
-        flexDirection="column"
-      ></Flex>
     </>
   );
 };

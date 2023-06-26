@@ -19,14 +19,13 @@ import { GiHamburgerMenu } from "react-icons/gi";
 import { BiUser, BiPowerOff } from "react-icons/bi";
 import { getAssetsURL } from "helpers/helperFunction";
 import Sidebar from "components/sidebar";
-import { ProfileIconOne, ProjectIcon } from "components/icons";
+import { ProfileIconOne } from "components/icons";
 import { useProfile } from "hooks/useProfile";
 import {
   SIDEBAR_WIDTH_EXPANDED,
   SIDEBAR_WIDTH_COLLAPSED,
 } from "common/constants";
 import API from "helpers/api";
-import Auth from "helpers/auth";
 import { API_PATH } from "helpers/routeManager";
 import { useConfig } from "hooks/useConfig";
 import { useQueryClient } from "react-query";

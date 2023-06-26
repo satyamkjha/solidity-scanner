@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useQueryClient } from "react-query";
-import { useHistory, Link as RouterLink } from "react-router-dom";
+import { useHistory } from "react-router-dom";
 import { getRepoTree } from "hooks/getRepoTree";
 import {
   Flex,
@@ -11,7 +11,6 @@ import {
   useToast,
   Image,
   Divider,
-  Spinner,
 } from "@chakra-ui/react";
 import API from "helpers/api";
 import { useProfile } from "hooks/useProfile";

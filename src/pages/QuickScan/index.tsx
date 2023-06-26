@@ -1,5 +1,5 @@
-import React, { lazy, useEffect, useRef, useState, Suspense } from "react";
-import { Link as RouterLink, useLocation, useParams } from "react-router-dom";
+import React, { lazy, useEffect, useRef, Suspense } from "react";
+import { useLocation, useParams } from "react-router-dom";
 import { getAssetsURL, getReCaptchaHeaders } from "helpers/helperFunction";
 import {
   Flex,
@@ -379,7 +379,6 @@ const QuickScan: React.FC = () => {
   const ref = query.get("ref");
 
   const elementRef = useRef<HTMLDivElement>(null);
-  let d = new Date();
 
   useEffect(() => {
     if (ref) {
@@ -428,8 +427,8 @@ const QuickScan: React.FC = () => {
     chain: string,
     ref: string | null
   ) => {
-    let reqHeaders1 = await getReCaptchaHeaders("quickScan_verify");
-    let reqHeaders2 = await getReCaptchaHeaders("quickScan");
+    const reqHeaders1 = await getReCaptchaHeaders("quickScan_verify");
+    const reqHeaders2 = await getReCaptchaHeaders("quickScan");
 
     const req = {
       contract_address: address,
@@ -461,10 +460,9 @@ const QuickScan: React.FC = () => {
               (res) => {
                 if (res.status === 200) {
                   setScanReport(res.data.scan_report);
-                  d = new Date(res.data.scan_report.published_date);
                 }
               },
-              (err) => {
+              () => {
                 return;
               }
             )
@@ -473,7 +471,7 @@ const QuickScan: React.FC = () => {
             });
         }
       },
-      (err) => {
+      () => {
         setIsLoading(false);
       }
     );
@@ -552,131 +550,136 @@ const QuickScan: React.FC = () => {
           flexDir="column"
         >
           <Box
-            flexDir={"column"}
-            display={"flex"}
-            alignItems={"center"}
             w={"100%"}
-            px={[0, 0, 10]}
-            py={20}
-            pb={"200px"}
-            background={`url('${assetsURL}quickscan/quickscan_bg_lg.svg')`}
-            backgroundSize="cover"
-            backgroundPosition={"center"}
-            backgroundRepeat="no-repeat"
+            bg={"linear-gradient(180deg, #04080D -50.31%, #2900DE 282.02%)"}
           >
-            <Heading
-              w={["90%", "90%", "80%", "60%"]}
-              color={"white"}
-              fontSize={["3xl", "4xl"]}
-              mb={8}
+            <Box
+              flexDir={"column"}
+              display={"flex"}
+              alignItems={"center"}
+              w={"100%"}
+              px={[0, 0, 10]}
+              py={20}
+              pb={"200px"}
+              backgroundImage={`url('${assetsURL}quickscan/quickscan_bg_lg.svg')`}
+              backgroundSize="cover"
+              backgroundPosition={"center"}
+              backgroundRepeat="no-repeat"
             >
-              SolidityScan{" "}
-              <Box
-                as="span"
-                sx={{
-                  background:
-                    "linear-gradient(129.18deg, #52FF00 8.52%, #00EEFD 93.94%)",
-                  backgroundClip: "text",
-                  WebkitTextFillColor: "transparent",
-                }}
+              <Heading
+                w={["90%", "90%", "80%", "60%"]}
+                color={"white"}
+                fontSize={["3xl", "4xl"]}
+                mb={8}
               >
-                QuickScan
-              </Box>
-            </Heading>
-            <Text
-              w={["90%", "90%", "80%", "60%"]}
-              fontSize="xl"
-              color="subtle"
-              mb={8}
-            >
-              An open to all quick scanning extension designed to view results
-              in simple terms. Initiate a smart contract scan by selecting from
-              a wide range of supported protocols and get a quick analysis
-              report within seconds.
-            </Text>
-            <Stack
-              mt={20}
-              ml={[4, 4, 4, 0]}
-              justify="center"
-              w={["80%", "80%", "70%"]}
-              direction={["column", "column", "column", "row"]}
-              spacing={isDesktopView ? 0 : 2}
-            >
-              <Select
-                formatOptionLabel={formatOptionLabel}
-                options={options}
-                isSearchable={true}
-                value={options.find((item) => platform === item.value)}
-                placeholder="Select Contract Platform"
-                styles={customStylesPlatform}
-                onChange={(newValue) => {
-                  if (newValue) {
-                    // setAction(newValue.value)
-                    setPlatform(newValue.value);
-                    setChainList(contractChain[newValue.value]);
-                    setChain(null);
-                  }
-                }}
-              />
-
-              {platform === "buildbear" ? (
-                <Input
-                  isRequired
-                  placeholder="Node ID"
-                  variant="brand"
-                  size="lg"
-                  height={50}
-                  borderRadius={[15, 15, 15, 0]}
-                  width={["95%", "95%", "95%", "300px"]}
-                  value={node_id}
-                  onChange={(e) => {
-                    setNodeId(e.target.value);
+                SolidityScan{" "}
+                <Box
+                  as="span"
+                  sx={{
+                    background:
+                      "linear-gradient(129.18deg, #52FF00 8.52%, #00EEFD 93.94%)",
+                    backgroundClip: "text",
+                    WebkitTextFillColor: "transparent",
                   }}
-                />
-              ) : (
+                >
+                  QuickScan
+                </Box>
+              </Heading>
+              <Text
+                w={["90%", "90%", "80%", "60%"]}
+                fontSize="xl"
+                color="subtle"
+                mb={8}
+              >
+                An open to all quick scanning extension designed to view results
+                in simple terms. Initiate a smart contract scan by selecting
+                from a wide range of supported protocols and get a quick
+                analysis report within seconds.
+              </Text>
+              <Stack
+                mt={20}
+                ml={[4, 4, 4, 0]}
+                justify="center"
+                w={["80%", "80%", "70%"]}
+                direction={["column", "column", "column", "row"]}
+                spacing={isDesktopView ? 0 : 2}
+              >
                 <Select
                   formatOptionLabel={formatOptionLabel}
-                  isDisabled={platform === ""}
-                  isSearchable={false}
-                  value={chain}
-                  options={chainList}
-                  placeholder="Select Contract Chain"
-                  styles={customStylesChain}
+                  options={options}
+                  isSearchable={true}
+                  value={options.find((item) => platform === item.value)}
+                  placeholder="Select Contract Platform"
+                  styles={customStylesPlatform}
                   onChange={(newValue) => {
                     if (newValue) {
-                      setChain(newValue);
+                      // setAction(newValue.value)
+                      setPlatform(newValue.value);
+                      setChainList(contractChain[newValue.value]);
+                      setChain(null);
                     }
                   }}
                 />
-              )}
-              <Input
-                isRequired
-                placeholder="Contract Address"
-                variant="brand"
-                size="lg"
-                height={50}
-                borderTopLeftRadius={[15, 15, 15, 0]}
-                borderBottomLeftRadius={[15, 15, 15, 0]}
-                width={["95%", "95%", "95%", "500px"]}
-                value={address}
-                onChange={(e) => {
-                  setAddress(e.target.value);
-                }}
-              />
-            </Stack>
 
-            <Button
-              isLoading={isLoading}
-              loadingText="Scanning"
-              spinner={<Loader color={"#3300FF"} size={20} />}
-              mt={20}
-              w={"300px"}
-              type="submit"
-              variant="brand"
-              onClick={generateQuickScan}
-            >
-              Start Scan
-            </Button>
+                {platform === "buildbear" ? (
+                  <Input
+                    isRequired
+                    placeholder="Node ID"
+                    variant="brand"
+                    size="lg"
+                    height={50}
+                    borderRadius={[15, 15, 15, 0]}
+                    width={["95%", "95%", "95%", "300px"]}
+                    value={node_id}
+                    onChange={(e) => {
+                      setNodeId(e.target.value);
+                    }}
+                  />
+                ) : (
+                  <Select
+                    formatOptionLabel={formatOptionLabel}
+                    isDisabled={platform === ""}
+                    isSearchable={false}
+                    value={chain}
+                    options={chainList}
+                    placeholder="Select Contract Chain"
+                    styles={customStylesChain}
+                    onChange={(newValue) => {
+                      if (newValue) {
+                        setChain(newValue);
+                      }
+                    }}
+                  />
+                )}
+                <Input
+                  isRequired
+                  placeholder="Contract Address"
+                  variant="brand"
+                  size="lg"
+                  height={50}
+                  borderTopLeftRadius={[15, 15, 15, 0]}
+                  borderBottomLeftRadius={[15, 15, 15, 0]}
+                  width={["95%", "95%", "95%", "500px"]}
+                  value={address}
+                  onChange={(e) => {
+                    setAddress(e.target.value);
+                  }}
+                />
+              </Stack>
+
+              <Button
+                isLoading={isLoading}
+                loadingText="Scanning"
+                spinner={<Loader color={"#3300FF"} size={20} />}
+                mt={20}
+                w={"300px"}
+                type="submit"
+                variant="brand"
+                onClick={generateQuickScan}
+              >
+                Start Scan
+              </Button>
+            </Box>
           </Box>
 
           <Box

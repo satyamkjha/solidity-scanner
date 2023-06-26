@@ -4,7 +4,6 @@ import {
   Flex,
   Box,
   Text,
-  Spinner,
   Tabs,
   TabList,
   TabPanels,
