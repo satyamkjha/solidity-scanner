@@ -22,6 +22,7 @@ import InfoSettings from "components/projectInfoSettings";
 import FolderSettings from "components/projectFolderSettings";
 import { TreeItem, TreeItemUP } from "common/types";
 import { getSkipFilePaths, restructureRepoTree } from "helpers/fileStructure";
+import Loader from "components/styled-components/Loader";
 
 const ApplicationForm: React.FC = () => {
   const assetsURL = getAssetsURL();
@@ -313,6 +314,7 @@ const ApplicationForm: React.FC = () => {
           type="submit"
           variant="brand"
           isLoading={isLoading}
+          spinner={<Loader color={"#3300FF"} size={25} />}
           width={["100%", "100%", "100%", "200px"]}
           onClick={() => {
             if (step === 1) {
@@ -327,7 +329,15 @@ const ApplicationForm: React.FC = () => {
           }}
           isDisabled={profileData?.credits === 0}
         >
-          {step > 2 ? isLoading ? <Spinner /> : "Start Scan" : "Next"}
+          {step > 2 ? (
+            isLoading ? (
+              <Loader color={"#3300FF"} />
+            ) : (
+              "Start Scan"
+            )
+          ) : (
+            "Next"
+          )}
         </Button>
       </Flex>
     </Flex>

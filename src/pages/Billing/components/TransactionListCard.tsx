@@ -17,6 +17,7 @@ import { sentenceCapitalize, getAssetsURL } from "helpers/helperFunction";
 import InfiniteScroll from "react-infinite-scroll-component";
 import { monthNames } from "common/values";
 import CancelPaymentDialog from "./CancelPaymentDialog";
+import Loader from "components/styled-components/Loader";
 
 const TransactionListCard: React.FC<{
   transactionList: Transaction[];
@@ -94,7 +95,7 @@ const TransactionListCard: React.FC<{
                 justifyContent="center"
                 alignItems={"center"}
               >
-                <Spinner />
+                <Loader />
               </Box>
             }
             scrollableTarget="pageScroll"
@@ -204,7 +205,7 @@ const TransactionListCard: React.FC<{
           hasMore={hasMore}
           loader={
             <Box w={"100%"} alignItems="center">
-              <Spinner />
+              <Loader />
             </Box>
           }
           scrollableTarget="pageScroll"

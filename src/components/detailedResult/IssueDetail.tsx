@@ -25,6 +25,7 @@ import API from "helpers/api";
 import { ArrowUpIcon, EditIcon } from "@chakra-ui/icons";
 import React from "react";
 import { API_PATH } from "helpers/routeManager";
+import Loader from "components/styled-components/Loader";
 
 const IssueDetail: React.FC<{
   type: "project" | "block";
@@ -183,7 +184,7 @@ const IssueDetail: React.FC<{
             h: height,
           }}
         >
-          <Spinner />
+          <Loader />
         </Flex>
       )}
       {data && (

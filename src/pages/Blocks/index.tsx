@@ -26,6 +26,7 @@ import API from "helpers/api";
 import { API_PATH } from "helpers/routeManager";
 import { getAssetsURL } from "helpers/helperFunction";
 import { useConfig } from "hooks/useConfig";
+import Loader from "components/styled-components/Loader";
 
 const Blocks: React.FC = () => {
   const [isDesktopView] = useMediaQuery("(min-width: 1920px)");
@@ -151,7 +152,7 @@ const Blocks: React.FC = () => {
 
       {!scanList ? (
         <Flex w="100%" h="70vh" alignItems="center" justifyContent="center">
-          <Spinner />
+          <Loader />
         </Flex>
       ) : scanList.length === 0 ? (
         <Flex
@@ -194,7 +195,7 @@ const Blocks: React.FC = () => {
             hasMore={hasMore}
             loader={
               <Box w={"100%"} align="center">
-                <Spinner />
+                <Loader />
               </Box>
             }
             scrollableTarget="pageScroll"
