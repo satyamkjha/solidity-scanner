@@ -55,7 +55,7 @@ export const Header: React.FC = () => {
         justifyContent="space-between"
         maxW={["95vw", "95vw", "90vw"]}
         mx="auto"
-        py={1}
+        pt={5}
       >
         <Flex alignItems="center" width={["100%", "100%", "100%", "auto"]}>
           <RouterLink to="/">
@@ -70,6 +70,14 @@ export const Header: React.FC = () => {
                 fontWeight="600"
               >
                 Pricing
+              </Link>
+              <Link
+                as={RouterLink}
+                to="/quickscan"
+                variant="brand"
+                fontWeight="600"
+              >
+                Quickscan
               </Link>
               <Link
                 as={RouterLink}
@@ -149,6 +157,19 @@ export const Header: React.FC = () => {
                         ml={3}
                       >
                         Pricing
+                      </Link>
+                    </MenuItem>
+                    <MenuItem>
+                      <Link
+                        as={RouterLink}
+                        to="/quickscan"
+                        variant="ghost"
+                        fontWeight="400"
+                        w={"100%"}
+                        p={1}
+                        ml={3}
+                      >
+                        Quickscan
                       </Link>
                     </MenuItem>
                     <MenuItem>
