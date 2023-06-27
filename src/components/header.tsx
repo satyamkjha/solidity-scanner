@@ -55,7 +55,7 @@ export const Header: React.FC = () => {
         justifyContent="space-between"
         maxW={["95vw", "95vw", "90vw"]}
         mx="auto"
-        pt={5}
+        py={3}
       >
         <Flex alignItems="center" width={["100%", "100%", "100%", "auto"]}>
           <RouterLink to="/">

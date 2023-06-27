@@ -48,6 +48,9 @@ const Blocks: React.FC = () => {
           : scans.data;
       setScanList(sList);
       setPage(scans.page);
+      if (scans.data && !scans.data.length) {
+        setIsLoadingIcons(false);
+      }
     }
   }, [scans, refetch]);
 
