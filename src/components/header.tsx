@@ -6,7 +6,6 @@ import {
   HStack,
   Button,
   Link,
-  Text,
   useDisclosure,
   useMediaQuery,
   Menu,
@@ -22,22 +21,18 @@ import ContactUs from "./contactus";
 import { CloseIcon, HamburgerIcon } from "@chakra-ui/icons";
 import API from "helpers/api";
 import { API_PATH } from "helpers/routeManager";
-import useInvalidateQueries from "hooks/invalidateQueries";
+import { useQueryClient } from "react-query";
+import { onLogout } from "common/functions";
 
 export const Header: React.FC = () => {
   const { isOpen, onClose, onOpen } = useDisclosure();
   const [isDesktopView] = useMediaQuery("(min-width: 1350px)");
   const history = useHistory();
-
-  const invalidateQueries = useInvalidateQueries();
+  const queryClient = useQueryClient();
 
   const logout = async () => {
     await API.get(API_PATH.API_LOGOUT);
-    Auth.deauthenticateUser();
-    history.push("/signin");
-    setTimeout(() => {
-      invalidateQueries();
-    }, 1000);
+    onLogout(history, queryClient);
   };
 
   return (
@@ -60,7 +55,7 @@ export const Header: React.FC = () => {
         justifyContent="space-between"
         maxW={["95vw", "95vw", "90vw"]}
         mx="auto"
-        py={1}
+        pt={5}
       >
         <Flex alignItems="center" width={["100%", "100%", "100%", "auto"]}>
           <RouterLink to="/">
@@ -75,6 +70,14 @@ export const Header: React.FC = () => {
                 fontWeight="600"
               >
                 Pricing
+              </Link>
+              <Link
+                as={RouterLink}
+                to="/quickscan"
+                variant="brand"
+                fontWeight="600"
+              >
+                Quickscan
               </Link>
               <Link
                 as={RouterLink}
@@ -159,6 +162,19 @@ export const Header: React.FC = () => {
                     <MenuItem>
                       <Link
                         as={RouterLink}
+                        to="/quickscan"
+                        variant="ghost"
+                        fontWeight="400"
+                        w={"100%"}
+                        p={1}
+                        ml={3}
+                      >
+                        Quickscan
+                      </Link>
+                    </MenuItem>
+                    <MenuItem>
+                      <Link
+                        as={RouterLink}
                         to="/detectors"
                         variant="ghost"
                         fontWeight="400"
@@ -186,7 +202,7 @@ export const Header: React.FC = () => {
                         Docs
                       </Link>
                     </MenuItem>
-                    <MenuItem al>
+                    <MenuItem>
                       <Link
                         onClick={() => {
                           window.open(
@@ -246,7 +262,6 @@ export const Header: React.FC = () => {
         <HStack spacing={4} sx={{ display: ["none", "none", "none", "flex"] }}>
           {!Auth.isUserAuthenticated() ? (
             <>
-              {" "}
               <RouterLink to="/signin">
                 <Button variant="ghost" sx={{ p: 6 }}>
                   Sign In
