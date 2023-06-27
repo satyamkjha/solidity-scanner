@@ -27,7 +27,7 @@ import { useProfile } from "hooks/useProfile";
 import { useDropzone } from "react-dropzone";
 import { API_PATH } from "helpers/routeManager";
 
-type UrlItemProps = { url: string; name: string; file: File };
+type UrlItemProps = { url: string; name: string; file: File; status: string };
 
 const UrlItem: React.FC<{ item: UrlItemProps }> = ({ item }) => {
   return (
@@ -44,7 +44,13 @@ const UrlItem: React.FC<{ item: UrlItemProps }> = ({ item }) => {
           <CloseButton onClick={() => {}} />
         </HStack>
       </HStack>
-      <Progress width="100%" variant={"blue"} size="xs" isIndeterminate />
+
+      <Progress
+        width="100%"
+        variant={item.status "blue"}
+        size="xs"
+        isIndeterminate={item.status === "uploading" ? true : false}
+      />
     </VStack>
   );
 };
@@ -154,15 +160,30 @@ const UploadForm: React.FC = () => {
         new Promise((resolve, reject) => {
           postDataToS3(item.file, item.url).then(
             (res) => {
-              resolve(res);
+              resolve({
+                url: item.url,
+                name: item.name,
+                file: item.file,
+                status: "uploaded",
+              });
             },
             () => {
               postDataToS3(item.file, item.url).then(
                 (res) => {
-                  resolve(res);
+                  resolve({
+                    url: item.url,
+                    name: item.name,
+                    file: item.file,
+                    status: "uploaded",
+                  });
                 },
                 () => {
-                  reject(false);
+                  reject({
+                    url: item.url,
+                    name: item.name,
+                    file: item.file,
+                    status: "failed",
+                  });
                 }
               );
             }
@@ -176,8 +197,9 @@ const UploadForm: React.FC = () => {
         // res here is an array of boolean. Using this check if all the files are uploaded or not. Also give an option to remove a file if needed.
 
         res.forEach((item) => {
-          if (item) count++;
+          if (item.status === "uploaded") count++;
         });
+        setUrlList([...res]);
         // Add a flag to allow to go to step 2. Do not use count. Here in this step you also need to give an option to delete or remmove a file.
         if (count === acceptedFiles.length) {
           setStep(2);
@@ -213,6 +235,7 @@ const UploadForm: React.FC = () => {
       url: data.result.url,
       name: fileName,
       file: file,
+      status: "uploading",
     };
   };
 
