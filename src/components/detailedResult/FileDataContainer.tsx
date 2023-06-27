@@ -1,9 +1,10 @@
-import { Flex, Spinner } from "@chakra-ui/react";
-import { FileState, Finding } from "common/types";
+import { Flex } from "@chakra-ui/react";
+import { Finding } from "common/types";
 import React, { useEffect, useState } from "react";
 import CodeExplorer from "./CodeExplorer";
 import { useFileContent } from "hooks/useFileContent";
 import { useParams } from "react-router-dom";
+import Loader from "components/styled-components/Loader";
 
 type FileDataContProps = { file: Finding; type: "project" | "block" };
 const FileDataContainer: React.FC<FileDataContProps> = ({ file, type }) => {
@@ -30,7 +31,7 @@ const FileDataContainer: React.FC<FileDataContProps> = ({ file, type }) => {
             h: "300px",
           }}
         >
-          <Spinner />
+          <Loader />
         </Flex>
       ) : (
         fileContent && (

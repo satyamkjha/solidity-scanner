@@ -1,16 +1,12 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import {
   Flex,
   HStack,
   Text,
-  Stack,
   FormControl,
   Divider,
-  VStack,
   Checkbox,
-  Collapse,
   Button,
-  Spinner,
   Popover,
   PopoverArrow,
   PopoverBody,
@@ -30,13 +26,9 @@ import {
   CheckIcon,
   MinusIcon,
 } from "@chakra-ui/icons";
-import { TreeItem, TreeItemUP } from "common/types";
-import {
-  restructureRepoTree,
-  generatePathArray,
-  updateChildTree,
-  updateCheckedValue,
-} from "helpers/fileStructure";
+import { TreeItemUP } from "common/types";
+import { updateChildTree, updateCheckedValue } from "helpers/fileStructure";
+import Loader from "./styled-components/Loader";
 
 const formatOptionLabel: React.FC<{
   value: string;
@@ -335,6 +327,7 @@ const FolderSettings: React.FC<{
               variant="accent-outline"
               isLoading={isLoading}
               color="#3E15F4"
+              spinner={<Loader color={"#3300FF"} size={25} />}
               onClick={updateSkipPathRequests}
             >
               <RepeatClockIcon mr={3} />
@@ -381,7 +374,7 @@ const FolderSettings: React.FC<{
       >
         {isLoading ? (
           <Flex w="100%" h="100%" justifyContent="center" alignItems="center">
-            <Spinner color="gray.500" />
+            <Loader size={35} />
           </Flex>
         ) : (
           <Flex

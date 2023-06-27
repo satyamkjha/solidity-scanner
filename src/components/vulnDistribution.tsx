@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import { Flex, Box, Text, Button, HStack } from "@chakra-ui/react";
 
 import { IssueSeverityDistribution } from "common/types";

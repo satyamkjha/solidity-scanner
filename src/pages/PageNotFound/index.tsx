@@ -1,12 +1,11 @@
-import React, { useState, useEffect } from "react";
-import { Link as RouterLink, useHistory, useLocation } from "react-router-dom";
+import React, { useEffect } from "react";
+import { Link as RouterLink, useHistory } from "react-router-dom";
 import {
   Flex,
   Heading,
   Text,
   Button,
   Box,
-  Spinner,
   HStack,
   Image,
   VStack,
@@ -17,6 +16,7 @@ import Auth from "helpers/auth";
 import { LogoIcon } from "components/icons";
 import { getAssetsURL } from "helpers/helperFunction";
 import { useConfig } from "hooks/useConfig";
+import Loader from "components/styled-components/Loader";
 
 const CustomFlex = motion(Flex);
 
@@ -87,7 +87,7 @@ export const CustomPageNotFound: React.FC = () => {
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
       >
-        <Spinner />
+        <Loader />
       </CustomFlex>
     </>
   );

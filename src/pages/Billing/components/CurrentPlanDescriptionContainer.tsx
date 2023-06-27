@@ -1,13 +1,5 @@
 import React from "react";
-import {
-  Flex,
-  Box,
-  Text,
-  HStack,
-  useMediaQuery,
-  Heading,
-  Image,
-} from "@chakra-ui/react";
+import { Flex, Text, Heading, Image } from "@chakra-ui/react";
 import { getAssetsURL, sentenceCapitalize } from "helpers/helperFunction";
 import { useConfig } from "hooks/useConfig";
 import { Plan } from "common/types";

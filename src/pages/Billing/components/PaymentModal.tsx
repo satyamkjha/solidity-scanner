@@ -8,10 +8,6 @@ import {
   ModalCloseButton,
   ModalContent,
   ModalHeader,
-  Image,
-  Text,
-  Heading,
-  Switch,
   Button,
   useMediaQuery,
   VStack,
@@ -24,7 +20,7 @@ import API from "helpers/api";
 import PaymentMethodCard from "./PaymentMethodCard";
 import CoinPaymentSelect from "./CoinPaymentsSelect";
 import CouponCodeSection from "./CouponCodeSection";
-import { Plan, PricingData } from "common/types";
+import { Plan } from "common/types";
 import CurrentPlanDescriptionContainer from "./CurrentPlanDescriptionContainer";
 import ConfirmationMessageBox from "./ConfirmationMessageBox";
 import DetailedBill from "./DetailedBill";
@@ -54,7 +50,7 @@ const PaymentModal: React.FC<{
   const [duration, setDuration] = useState<"monthly" | "yearly" | "ondemand">(
     globalDuration
   );
-  const [loading, setLoading] = useState(false);
+  const [, setLoading] = useState(false);
 
   const createStripePayment = async () => {
     let req = {};
@@ -123,7 +119,7 @@ const PaymentModal: React.FC<{
         status_url: string;
       }>(API_PATH.API_CREATE_ORDER_CP, req);
       setLoading(false);
-      const popup = window.open(
+      window.open(
         data.checkout_url,
         "",
         `toolbar=no, location=no, directories=no, status=no, menubar=no, scrollbars=no, resizable=no, copyhistory=no, width=${width}, height=${height}, top=${top}, left=${left}`

@@ -1,6 +1,7 @@
-import { VStack, Text, Switch, HStack, Spinner } from "@chakra-ui/react";
+import { VStack, Text, Switch, HStack } from "@chakra-ui/react";
 import React from "react";
 import GithubConnectAlert from "./githubConnectAlert";
+import Loader from "./styled-components/Loader";
 
 const ConfigSettings: React.FC<{
   githubSync: boolean;
@@ -64,7 +65,7 @@ const ConfigSettings: React.FC<{
             }
           }}
         />
-        {isLoading && <Spinner color="gray.400" />}
+        {isLoading && <Loader size={25} />}
       </HStack>
       {!isGithubIntegrated && connectAlert && (
         <GithubConnectAlert msg="You need to connect your GitHub to enable webhooks" />

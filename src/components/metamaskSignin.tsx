@@ -1,4 +1,4 @@
-import { Button, HStack, Divider, Text, Image } from "@chakra-ui/react";
+import { Button, Image } from "@chakra-ui/react";
 import MetaMaskSDK from "@metamask/sdk";
 import API from "helpers/api";
 import Auth from "helpers/auth";
@@ -12,6 +12,7 @@ import { API_PATH } from "helpers/routeManager";
 import React, { useState } from "react";
 import { useHistory } from "react-router-dom";
 import { useConfig } from "hooks/useConfig";
+import Loader from "./styled-components/Loader";
 
 const MetaMaskLogin: React.FC = () => {
   const config = useConfig();
@@ -94,6 +95,7 @@ const MetaMaskLogin: React.FC = () => {
               px={6}
               color="#8B8B8B"
               isLoading={isLoading}
+              spinner={<Loader color={"#3300FF"} size={25} />}
             >
               <Image
                 mr={2}

@@ -24,11 +24,8 @@ import DetailFilter from "./DetailFilter";
 import MultifileIssues from "./MultifileIssues";
 import FileExplorerSection from "./FileExplorerSection";
 import FormatOptionLabelWithImage from "components/FormatOptionLabelWithImage";
-import {
-  customStylesForReactSelect,
-  customStylesForTakeAction,
-} from "common/stylesForCustomSelect";
-import ConfirmActionForm from "../confirmActionForm"
+import { customStylesForTakeAction } from "common/stylesForCustomSelect";
+import ConfirmActionForm from "../confirmActionForm";
 
 const MultifileResult: React.FC<{
   type: "block" | "project";

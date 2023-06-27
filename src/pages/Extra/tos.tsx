@@ -1,13 +1,9 @@
 import React from "react";
 import { Box, Container, Link } from "@chakra-ui/react";
 
-import Header from "components/header";
-import Footer from "components/footer";
-
 export default function TOSPage() {
   return (
     <>
-      <Header />
       <Container maxW="80vw" color="black">
         <Box
           py={20}
@@ -336,7 +332,6 @@ export default function TOSPage() {
           </ul>
         </Box>
       </Container>
-      <Footer />
     </>
   );
 }

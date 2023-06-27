@@ -1,10 +1,9 @@
 import React, { useEffect, useState, useRef } from "react";
 import { useQueryClient } from "react-query";
-import { Link as RouterLink, useParams, useHistory } from "react-router-dom";
+import { useParams, useHistory } from "react-router-dom";
 import { ArrowDownIcon } from "@chakra-ui/icons";
 import {
   Flex,
-  keyframes,
   Box,
   Text,
   Link,
@@ -14,7 +13,6 @@ import {
   TabPanels,
   Tab,
   TabPanel,
-  Spinner,
   Button,
   HStack,
   Tooltip,
@@ -37,13 +35,10 @@ import {
   Input,
   ModalFooter,
   Switch as SwitchComp,
-  toast,
   useToast,
-  Badge,
   Image,
   useMediaQuery,
   Stack,
-  IconButton,
   Menu,
   MenuButton,
   MenuList,
@@ -108,6 +103,7 @@ import {
   checkPublishReportAccess,
 } from "helpers/helperFunction";
 import { useConfig } from "hooks/useConfig";
+import Loader from "components/styled-components/Loader";
 
 export const ProjectPage: React.FC = () => {
   const { projectId } = useParams<{ projectId: string }>();
@@ -142,7 +138,7 @@ export const ProjectPage: React.FC = () => {
     >
       {isLoading ? (
         <Flex w="100%" h="70vh" alignItems="center" justifyContent="center">
-          <Spinner />
+          <Loader />
         </Flex>
       ) : (
         data && (
@@ -252,11 +248,6 @@ const ScanDetails: React.FC<{
     onClose();
     history.push(`/projects/`);
   };
-
-  const scan_name =
-    scanData &&
-    scans.find((scan) => scan.scan_id === scanData.scan_report.scan_id)
-      ?.scan_name;
 
   const [projectName, setProjectName] = useState("");
   const [repoUrl, setRepoUrl] = useState("");
@@ -424,7 +415,7 @@ const ScanDetails: React.FC<{
       >
         {isLoading || isProfileLoading ? (
           <Flex w="100%" h="70vh" alignItems="center" justifyContent="center">
-            <Spinner />
+            <Loader />
           </Flex>
         ) : (
           scanData &&
@@ -574,7 +565,9 @@ const ScanDetails: React.FC<{
                         isDisabled={checkIfGeneratingReport()}
                       >
                         {reportingStatus === "generating_report" && (
-                          <Spinner color="#806CCF" size="xs" mr={3} />
+                          <Flex mr={3}>
+                            <Loader color="#806CCF" size={25} />
+                          </Flex>
                         )}
                         Re-Generate Report
                       </Button>
@@ -585,7 +578,7 @@ const ScanDetails: React.FC<{
                         backgroundColor={"#F5F2FF"}
                         pl={7}
                         pr={3}
-                        py={1}
+                        py={2}
                         ml={5}
                       >
                         <Text
@@ -606,13 +599,9 @@ const ScanDetails: React.FC<{
                           |
                         </Text>
                         <Menu>
-                          <MenuButton
-                            as={Button}
-                            aria-label="Options"
-                            variant="unstyled"
-                          >
+                          <MenuButton aria-label="Options">
                             {printLoading ? (
-                              <Spinner size="sm" color="#3E15F4" />
+                              <Loader size={20} color="#3E15F4" />
                             ) : (
                               <ArrowDownIcon color="#3E15F4" />
                             )}
@@ -623,8 +612,13 @@ const ScanDetails: React.FC<{
                             </MenuItem>
                           </MenuList>
                         </Menu>
-                        {summaryReport && (
-                          <Box display={"none"}>
+                        {summaryReport && printLoading && (
+                          <Box
+                            w={0}
+                            h={0}
+                            visibility={"hidden"}
+                            position="absolute"
+                          >
                             <Box w="100vw" ref={componentRef}>
                               <PrintContainer summary_report={summaryReport} />
                             </Box>
@@ -650,7 +644,9 @@ const ScanDetails: React.FC<{
                         }}
                       >
                         {reportingStatus === "generating_report" && (
-                          <Spinner color="#806CCF" size="xs" mr={3} />
+                          <Flex mr={3}>
+                            <Loader color="#806CCF" size={25} />
+                          </Flex>
                         )}
                         {!checkGenerateReportAccess(profile, plans) && (
                           <LockIcon color={"accent"} mr={3} />
@@ -936,6 +932,7 @@ const ScanDetails: React.FC<{
                 onClick={rescan}
                 ml={3}
                 isLoading={isRescanLoading}
+                spinner={<Loader color={"#3300FF"} size={25} />}
               >
                 Rescan
               </Button>
@@ -1429,10 +1426,6 @@ const ScanDetails: React.FC<{
   );
 };
 
-interface Props {
-  setTabIndex: React.Dispatch<React.SetStateAction<number>>;
-}
-
 const ScanHistory: React.FC<{
   setTabIndex: React.Dispatch<React.SetStateAction<number>>;
   profile: Profile;
@@ -1635,7 +1628,9 @@ const ScanBlock: React.FC<{
                 }}
               >
                 {scan.reporting_status === "generating_report" && (
-                  <Spinner color="#806CCF" size="sm" mr={2} />
+                  <Flex mr={3}>
+                    <Loader color="#806CCF" size={25} />
+                  </Flex>
                 )}
                 {scan.reporting_status === "report_generated"
                   ? "View Report"
@@ -1649,6 +1644,7 @@ const ScanBlock: React.FC<{
                     variant="accent-outline"
                     minW="200px"
                     isLoading={isLoading}
+                    spinner={<Loader color={"#3300FF"} size={25} />}
                     onClick={async () => {
                       if (show) {
                         setShow(false);
@@ -1741,35 +1737,4 @@ const ScanBlock: React.FC<{
   );
 };
 
-const IncompleteScan: React.FC<{ message: string; scansRemaining: number }> = ({
-  message,
-  scansRemaining,
-}) => {
-  return (
-    <>
-      <Flex
-        w="100%"
-        alignItems="center"
-        justifyContent="center"
-        border="1px solid"
-        borderColor="border"
-        borderRightWidth="0px"
-        borderLeftWidth="0px"
-      >
-        <Flex w="97%" m={4} borderRadius="20px" bgColor="high-subtle" p={4}>
-          <ScanErrorIcon size={28} />
-          <Text color="high" ml={4}>
-            {message}
-          </Text>
-        </Flex>
-      </Flex>
-      <Flex
-        w="100%"
-        alignItems="center"
-        justifyContent="center"
-        flexDirection="column"
-      ></Flex>
-    </>
-  );
-};
 export default ProjectPage;

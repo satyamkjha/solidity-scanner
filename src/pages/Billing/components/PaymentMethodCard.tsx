@@ -1,12 +1,5 @@
-import React, { useEffect, useRef, useState } from "react";
-import {
-  Flex,
-  Box,
-  Text,
-  HStack,
-  useMediaQuery,
-  Image,
-} from "@chakra-ui/react";
+import React from "react";
+import { Flex, Box, Text, HStack, Image } from "@chakra-ui/react";
 import { getAssetsURL } from "helpers/helperFunction";
 import { useConfig } from "hooks/useConfig";
 

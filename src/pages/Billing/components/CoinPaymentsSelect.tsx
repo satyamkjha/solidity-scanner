@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect } from "react";
 import { Flex, FormControl, Text } from "@chakra-ui/react";
 import { useAcceptedCoins } from "hooks/usePricing";
 import Select from "react-select";
@@ -8,7 +8,7 @@ import FormatOptionLabel from "components/detailedResult/FormatOptionLabel";
 const CoinPaymentSelect: React.FC<{
   setCoin: React.Dispatch<React.SetStateAction<string>>;
   coin: string;
-}> = ({ coin, setCoin }) => {
+}> = ({ setCoin }) => {
   const { data, isLoading } = useAcceptedCoins();
   const [coinList, setCoinList] = React.useState<
     { label: string; value: string }[]

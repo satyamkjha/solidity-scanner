@@ -1,22 +1,18 @@
 import React, { useEffect, useRef, useState } from "react";
-import { Link as RouterLink, useHistory, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 
 import {
   Flex,
   Box,
   Text,
-  Link,
   Tabs,
   TabList,
   TabPanels,
   Tab,
   TabPanel,
-  Spinner,
   Accordion,
   AccordionButton,
-  AccordionIcon,
   AccordionItem,
-  AccordionPanel,
   VStack,
   Image,
   HStack,
@@ -34,42 +30,24 @@ import {
   ModalOverlay,
   Switch as SwitchComp,
   useToast,
-  Badge,
-  border,
   Stack,
   useMediaQuery,
   MenuButton,
   Menu,
-  IconButton,
   MenuList,
   MenuItem,
 } from "@chakra-ui/react";
 import Overview from "components/overview";
 import MultifileResult from "components/detailedResult/MultifileResult";
-import {
-  AddIcon,
-  CheckCircleIcon,
-  LockIcon,
-  MinusIcon,
-  TimeIcon,
-} from "@chakra-ui/icons";
+import { CheckCircleIcon, LockIcon, TimeIcon } from "@chakra-ui/icons";
 import { useScan } from "hooks/useScan";
 import { ArrowDownIcon } from "@chakra-ui/icons";
 import { useProfile } from "hooks/useProfile";
 import { BiChevronDownCircle, BiChevronUpCircle } from "react-icons/bi";
 import { AiOutlineProject } from "react-icons/ai";
-import {
-  FaFileCode,
-  FaGithub,
-  FaCalendarAlt,
-  FaRegCalendarCheck,
-  FaEnvelope,
-  FaInternetExplorer,
-  FaBuilding,
-  FaRegCopy,
-} from "react-icons/fa";
+import { FaEnvelope, FaInternetExplorer, FaBuilding } from "react-icons/fa";
 import API from "helpers/api";
-import { Report, ReportsListItem, Scan } from "common/types";
+import { Report, ReportsListItem } from "common/types";
 import { useReports } from "hooks/useReports";
 import { ScanErrorIcon } from "components/icons";
 import { monthNames } from "common/values";
@@ -86,6 +64,7 @@ import {
   checkGenerateReportAccess,
 } from "helpers/helperFunction";
 import { useConfig } from "hooks/useConfig";
+import Loader from "components/styled-components/Loader";
 
 const BlockPage: React.FC = () => {
   const { scanId } = useParams<{ scanId: string }>();
@@ -314,7 +293,7 @@ const BlockPage: React.FC = () => {
     >
       {isLoading || isProfileLoading || !plans ? (
         <Flex w="100%" h="70vh" alignItems="center" justifyContent="center">
-          <Spinner />
+          <Loader />
         </Flex>
       ) : (
         scanData &&
@@ -524,7 +503,9 @@ const BlockPage: React.FC = () => {
                                 isDisabled={checkIfGeneratingReport()}
                               >
                                 {reportingStatus === "generating_report" && (
-                                  <Spinner color="#806CCF" size="xs" mr={3} />
+                                  <Flex mr={3}>
+                                    <Loader color="#806CCF" size={25} />
+                                  </Flex>
                                 )}
                                 Re-Generate Report
                               </Button>
@@ -562,7 +543,7 @@ const BlockPage: React.FC = () => {
                                     variant="unstyled"
                                   >
                                     {printLoading ? (
-                                      <Spinner size="sm" color="#3E15F4" />
+                                      <Loader size={20} color="#3E15F4" />
                                     ) : (
                                       <ArrowDownIcon color="#3E15F4" />
                                     )}
@@ -573,8 +554,14 @@ const BlockPage: React.FC = () => {
                                     </MenuItem>
                                   </MenuList>
                                 </Menu>
-                                {summaryReport && (
-                                  <Box display={"none"}>
+                                {summaryReport && printLoading && (
+                                  <Box
+                                    w={0}
+                                    h={0}
+                                    visibility={"hidden"}
+                                    position="absolute"
+                                  >
+                                    {" "}
                                     <Box w="100vw" ref={componentRef}>
                                       <PrintContainer
                                         summary_report={summaryReport}
@@ -611,7 +598,9 @@ const BlockPage: React.FC = () => {
                                 }}
                               >
                                 {reportingStatus === "generating_report" && (
-                                  <Spinner color="#806CCF" size="xs" mr={3} />
+                                  <Flex mr={3}>
+                                    <Loader color="#806CCF" size={25} />
+                                  </Flex>
                                 )}
                                 {!checkGenerateReportAccess(profile, plans) && (
                                   <LockIcon color={"accent"} mr={3} />

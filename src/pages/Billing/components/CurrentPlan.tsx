@@ -2,7 +2,6 @@ import {
   useToast,
   Text,
   Flex,
-  Heading,
   VStack,
   CircularProgress,
   Button,
@@ -15,7 +14,6 @@ import {
   AlertDialogFooter,
   Image,
   Box,
-  useDisclosure,
 } from "@chakra-ui/react";
 import { dateToDDMMMMYYYY } from "common/functions";
 import { Plan } from "common/types";
@@ -147,7 +145,7 @@ const CurrentPlan: React.FC<{
             </Button>
           )}
           <Flex
-            mt={packageName == "pro" ? 24 : 16}
+            mt={packageName === "pro" ? 24 : 16}
             flexWrap="wrap"
             alignItems="center"
             w={"100%"}

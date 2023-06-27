@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useMemo } from "react";
-import { useHistory, Link as RouterLink } from "react-router-dom";
+import { useHistory } from "react-router-dom";
 import {
   Flex,
   Box,
@@ -9,7 +9,6 @@ import {
   InputLeftElement,
   Input,
   Icon,
-  Spinner,
   HStack,
   VStack,
   Progress,
@@ -17,22 +16,16 @@ import {
   Divider,
 } from "@chakra-ui/react";
 import { AiOutlineProject } from "react-icons/ai";
-import {
-  BlockCredit,
-  ProjectIcon,
-  SolidityFileIcon,
-  UploadIcon,
-} from "components/icons";
+import { ProjectIcon, SolidityFileIcon, UploadIcon } from "components/icons";
 import API from "helpers/api";
 import { useProfile } from "hooks/useProfile";
 import { useDropzone } from "react-dropzone";
 import { API_PATH } from "helpers/routeManager";
+import Loader from "components/styled-components/Loader";
 
 const UploadForm: React.FC = () => {
   const history = useHistory();
   const { data: profileData } = useProfile();
-
-  let count: number = 0;
 
   const [step, setStep] = useState(0);
   const [error, setError] = useState(false);
@@ -360,7 +353,7 @@ const UploadForm: React.FC = () => {
                 <Progress variant={"blue"} size="xs" isIndeterminate />
                 <HStack mt={4} justify={"space-between"}>
                   <Text color={"gray.500"}>Uploading...</Text>
-                  <Spinner color={"gray.500"} />
+                  <Loader size={30} />
                 </HStack>
               </Box>
             ) : (
@@ -423,6 +416,7 @@ const UploadForm: React.FC = () => {
               mt={4}
               w="100%"
               isLoading={isLoading}
+              spinner={<Loader color={"#3300FF"} size={25} />}
               disabled={
                 isLoading ||
                 step < 2 ||

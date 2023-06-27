@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState, Suspense, lazy } from "react";
 import {
   Box,
   Button,
@@ -9,13 +9,14 @@ import {
   Switch,
 } from "@chakra-ui/react";
 import { PricingData } from "common/types";
-import CustomPlanCard from "./customPlanCard";
-import PricingTable from "./pricingTable";
 import { pricing_table_data } from "common/values";
 import { getAssetsURL } from "helpers/helperFunction";
 import { useHistory } from "react-router-dom";
 import { CurlyArrowUp, CurlyArrowDown } from "components/icons";
 import { PricingCard } from "./pricingCard";
+
+const CustomPlanCard = lazy(() => import("./customPlanCard"));
+const PricingTable = lazy(() => import("./pricingTable"));
 
 const PricingDetails: React.FC<{
   pricingDetails: PricingData;
@@ -250,13 +251,15 @@ const PricingDetails: React.FC<{
             })}
         </Grid>
       </Flex>
-      <Flex px={page === "pricing" ? [8, 8, 8, 16] : [4]}>
-        <CustomPlanCard />
-      </Flex>
-      <PricingTable
-        pricing_data={pricingDetails.pricing_data}
-        pricing_table_data={pricing_table_data}
-      />
+      <Suspense fallback={""}>
+        <Flex px={page === "pricing" ? [8, 8, 8, 16] : [4]}>
+          <CustomPlanCard />
+        </Flex>
+        <PricingTable
+          pricing_data={pricingDetails.pricing_data}
+          pricing_table_data={pricing_table_data}
+        />
+      </Suspense>
     </Flex>
   );
 };
