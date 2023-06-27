@@ -1582,7 +1582,7 @@ const ScanBlock: React.FC<{
                     lineHeight: 1,
                   }}
                 >
-                  {scan.scan_score}
+                  {parseFloat(scan.scan_score_v2).toFixed(2) || scan.scan_score}
                 </Text>
               </VStack>
             )}
