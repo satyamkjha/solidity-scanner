@@ -1,16 +1,13 @@
 import {
   Heading,
   Box,
-  Text,
   TableContainer,
   Table,
-  TableCaption,
   Thead,
   Tr,
   Th,
   Td,
   Tbody,
-  Tfoot,
   Flex,
 } from "@chakra-ui/react";
 import React from "react";
@@ -42,7 +39,7 @@ const PricingTable: React.FC<PricingData> = ({
       borderRadius={20}
       background={"#FFFFFF"}
     >
-      <Heading as="h1" fontSize="3xl" mb={8}>
+      <Heading as="h1" fontSize="3xl" mb={16}>
         Exploring SolidityScan's{" "}
         <Box as="span" color="#3300FF">
           Capabilities{" "}
@@ -52,24 +49,14 @@ const PricingTable: React.FC<PricingData> = ({
           Analysis Features{" "}
         </Box>
       </Heading>
-      <Text
-        color="subtle"
-        width={["95%", "90%", "70%"]}
-        fontSize={["lg", "lg", "xl"]}
-        mb={20}
-      >
-        Lorem ipsum dolor sit amet consectetur. Lectus laoreet facilisis enim id
-        risus nec urna enim. Elementum euismod tincidunt in nibh in lorem eget
-        quisque. Eget euismod etiam tincidunt felis blandit nec.
-      </Text>
       <Flex
         justifyContent="flex-start"
         flexDir="row"
         overflowX="scroll"
-        alignItem="flex-start"
+        alignItems="flex-start"
         width="100%"
       >
-        <TableContainer width="100%" minW={"1200px"}>
+        <TableContainer width="100%" minW={"1200px"} overflowX="hidden">
           {pricing_table_data.map((table) => (
             <Table mb={20} border="none" variant="unstyled" width="100%">
               <Thead width="100%">
@@ -80,14 +67,26 @@ const PricingTable: React.FC<PricingData> = ({
                   <Th w="12%" textAlign="center">
                     Trial
                   </Th>
-
+                  {Object.keys(pricing_data["ondemand"])
+                    .sort((a, b) => a[0].localeCompare(b[0]))
+                    .map((plan) => {
+                      if (plan !== "custom")
+                        return (
+                          <Th w="12%" textAlign="center">
+                            {pricing_data["ondemand"][plan].name}
+                          </Th>
+                        );
+                    })}
                   {Object.keys(pricing_data["monthly"])
                     .sort((a, b) => a[0].localeCompare(b[0]))
-                    .map((plan) => (
-                      <Th w="12%" textAlign="center">
-                        {pricing_data["monthly"][plan].name}
-                      </Th>
-                    ))}
+                    .map((plan) => {
+                      if (plan !== "custom")
+                        return (
+                          <Th w="12%" textAlign="center">
+                            {pricing_data["monthly"][plan].name}
+                          </Th>
+                        );
+                    })}
 
                   <Th w="12%" textAlign="center">
                     Enterprise
@@ -119,7 +118,7 @@ const PricingTable: React.FC<PricingData> = ({
                       {typeof row.ondemand !== "boolean" ? (
                         row.ondemand
                       ) : row.ondemand ? (
-                        <TickComp color="#54C0EB" />
+                        <TickComp color="#4DA560" />
                       ) : (
                         ""
                       )}
@@ -132,7 +131,7 @@ const PricingTable: React.FC<PricingData> = ({
                       {typeof row.beginner !== "boolean" ? (
                         row.beginner
                       ) : row.beginner ? (
-                        <TickComp color="#4DA560" />
+                        <TickComp color="#54C0EB" />
                       ) : (
                         ""
                       )}

@@ -3,6 +3,7 @@ import {
   theme as defaultTheme,
   ColorMode,
 } from "@chakra-ui/react";
+import { StyleFunctionProps } from "@chakra-ui/theme-tools";
 
 const config: { initialColorMode: ColorMode; useSystemColorMode: boolean } = {
   initialColorMode: "light",
@@ -39,6 +40,12 @@ export const theme = extendTheme({
     gas: "#F795B4",
     "high-subtle": "#FFECE8",
     success: "#289F4C",
+    pro: "#FAF9FF",
+    beginner: "#EFFAFF",
+    intermediate: "#FFEDE9",
+    "pro-dark": "#806CCF",
+    "beginner-dark": "#54C0EB",
+    "intermediate-dark": "#FF5630",
     bg: {
       subtle: "#FAFBFC",
     },
@@ -62,7 +69,7 @@ export const theme = extendTheme({
         boxShadow: "none",
       },
       variants: {
-        brand: (props) => ({
+        brand: (props: StyleFunctionProps) => ({
           ...defaultTheme.components.Button.variants.outline(props),
           background:
             "linear-gradient(129.18deg, #52FF00 8.52%, #00EEFD 93.94%)",
@@ -84,7 +91,7 @@ export const theme = extendTheme({
               "linear-gradient(129.18deg, #52FF00 8.52%, #00EEFD 93.94%)",
           },
         }),
-        dark: (props) => ({
+        dark: (props: StyleFunctionProps) => ({
           ...defaultTheme.components.Button.variants.outline(props),
           background: "black",
           color: "white",
@@ -101,7 +108,7 @@ export const theme = extendTheme({
             background: "black",
           },
         }),
-        "accent-ghost": (props) => ({
+        "accent-ghost": (props: StyleFunctionProps) => ({
           ...defaultTheme.components.Button.variants.ghost(props),
           background: "#FFFFFF00",
           color: "#3300FF",
@@ -114,10 +121,10 @@ export const theme = extendTheme({
             background: "#efebff",
           },
         }),
-        "accent-outline": (props) => ({
+        "accent-outline": (props: StyleFunctionProps) => ({
           ...defaultTheme.components.Button.variants.outline(props),
           background: "#F5F2FF",
-          color: "#000000",
+          color: "blue",
           fontSize: "14px",
           borderColor: "#C1B1FF",
           py: 4,
@@ -128,13 +135,13 @@ export const theme = extendTheme({
             background: "#efebff",
           },
         }),
-        "gray-outline": (props) => ({
+        "gray-outline": (props: StyleFunctionProps) => ({
           ...defaultTheme.components.Button.variants.outline(props),
           background: "#FFFFFF",
           color: "#828282",
           fontSize: "16px",
           borderColor: "#828282",
-          py: 8,
+          py: 4,
           _hover: {
             background: "#f0f0f0",
           },
@@ -142,7 +149,7 @@ export const theme = extendTheme({
             background: "#f0f0f0",
           },
         }),
-        "cta-outline": (props) => ({
+        "cta-outline": (props: StyleFunctionProps) => ({
           ...defaultTheme.components.Button.variants.outline(props),
           background: "#FFFFFF",
           color: "#3300FF",
@@ -168,7 +175,7 @@ export const theme = extendTheme({
         },
       },
       variants: {
-        brand: (props) => {
+        brand: (props: StyleFunctionProps) => {
           return {
             field: {
               ...defaultTheme.components.Input.variants.outline(props).field,
@@ -188,7 +195,7 @@ export const theme = extendTheme({
             },
           };
         },
-        error: (props) => {
+        error: (props: StyleFunctionProps) => {
           return {
             field: {
               ...defaultTheme.components.Input.variants.outline(props).field,
@@ -220,7 +227,7 @@ export const theme = extendTheme({
         },
       },
       variants: {
-        brand: (props) => {
+        brand: (props: StyleFunctionProps) => {
           return {
             field: {
               ...defaultTheme.components.Input.variants.outline(props).field,
@@ -277,7 +284,7 @@ export const theme = extendTheme({
     },
     Progress: {
       parts: ["track", "filledTrack", "label"],
-      baseStyle: (props) => ({
+      baseStyle: (props: { isIndeterminate: any }) => ({
         track: {
           borderRadius: "10px",
         },

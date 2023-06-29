@@ -46,6 +46,8 @@ export const ReportContainer: React.FC<{
 
   const config: any = useConfig();
   const assetsURL = getAssetsURL(config);
+  const no_of_vuln_detectors =
+    config && config.REACT_APP_ISSUES_DATA.no_of_vuln_detectors;
 
   const pieData = (
     critical: number,
@@ -277,8 +279,8 @@ export const ReportContainer: React.FC<{
           vulnerabilities ranging from minor gas optimizations to major
           vulnerabilities leading to the loss of funds. The coverage scope pays
           attention to all the informational and critical vulnerabilities with
-          over (100+) modules. The scanning and auditing process covers the
-          following areas:{" "}
+          over ({no_of_vuln_detectors}+) modules. The scanning and auditing
+          process covers the following areas:{" "}
         </Text>
 
         <Text fontSize="lg" fontWeight={"300"} mt={4} mb={4}>
@@ -883,7 +885,13 @@ export const ReportContainer: React.FC<{
 
               <CircularProgress
                 value={
-                  (parseInt(summary_report.scan_summary[0].score, 10) * 100) / 5
+                  summary_report.scan_summary[0].score_v2
+                    ? parseFloat(summary_report.scan_summary[0].score_v2)
+                    : parseFloat(
+                        (
+                          parseFloat(summary_report.scan_summary[0].score) * 20
+                        ).toFixed(2)
+                      )
                 }
                 color="accent"
                 thickness="8px"
@@ -895,7 +903,10 @@ export const ReportContainer: React.FC<{
                 >
                   <Box>
                     <Text fontSize="lg" fontWeight={900} color="accent">
-                      {summary_report.scan_summary[0].score}
+                      {summary_report.scan_summary[0].score_v2 ||
+                        (
+                          parseFloat(summary_report.scan_summary[0].score) * 20
+                        ).toFixed(2)}
                     </Text>
                     <Text fontSize="sm" color="subtle" mt="-4px">
                       Score
@@ -1773,7 +1784,7 @@ export const ReportContainer: React.FC<{
               color={"#3300FF"}
               width={["20%", "20%", "20%", "17%"]}
             >
-              {scan.score}
+              {scan.score_v2 || (parseFloat(scan.score) * 20).toFixed(2)}
             </Text>
 
             {isDesktopView && (

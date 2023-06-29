@@ -6,16 +6,11 @@ import {
   Switch,
   Input,
   HStack,
-  Alert,
-  AlertIcon,
   Text,
-  Link,
 } from "@chakra-ui/react";
 import React, { useState } from "react";
-import Icon from "react-crypto-icons";
 import { AiOutlineProject } from "react-icons/ai";
 import { FaFileCode } from "react-icons/fa";
-import { Link as RouterLink } from "react-router-dom";
 import GithubConnectAlert from "./githubConnectAlert";
 
 const InfoSettings: React.FC<{

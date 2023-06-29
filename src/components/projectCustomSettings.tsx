@@ -1,20 +1,14 @@
 import {
   VStack,
   Text,
-  Switch,
   HStack,
-  Alert,
-  AlertIcon,
-  Link,
   Flex,
   Accordion,
   AccordionItem,
   AccordionIcon,
   AccordionButton,
   AccordionPanel,
-  Button,
   useToast,
-  Spinner,
 } from "@chakra-ui/react";
 import React, { useState, useEffect } from "react";
 import FolderSettings from "./projectFolderSettings";
@@ -27,6 +21,7 @@ import {
   restructureRepoTree,
   updateCheckedValue,
 } from "helpers/fileStructure";
+import Loader from "./styled-components/Loader";
 
 const ProjectCustomSettings: React.FC<{
   isGithubIntegrated: boolean;
@@ -55,7 +50,7 @@ const ProjectCustomSettings: React.FC<{
   const onToggleSwitch = async () => {
     setIsLoading(true);
     try {
-      const { data, status } = await API.post(
+      const { data } = await API.post(
         API_PATH.API_TOGGLE_PROJECT_SYNCHRONIZATION,
         {
           project_url: project_url,
@@ -222,8 +217,9 @@ const ProjectCustomSettings: React.FC<{
                 h="100%"
                 justifyContent="center"
                 alignItems="center"
+                py={4}
               >
-                <Spinner color="gray.500" />
+                <Loader />
               </Flex>
             )}
           </AccordionPanel>

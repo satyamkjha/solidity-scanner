@@ -1,5 +1,5 @@
 import { Box, Text } from "@chakra-ui/layout";
-import React, { Component } from "react";
+import React from "react";
 import { getAssetsURL } from "helpers/helperFunction";
 import { useConfig } from "hooks/useConfig";
 
@@ -66,7 +66,9 @@ export const ThreatScoreMeter = ({
           r={radius}
           fill="none"
           stroke={
-            percentage > 80
+            !percentage
+              ? ""
+              : percentage > 80
               ? "#68C78E"
               : percentage > 50
               ? "#FFC661"

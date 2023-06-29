@@ -101,10 +101,9 @@ export const ContactUs: React.FC<{ onClose(): any; isOpen: boolean }> = ({
               >
                 <Stack zIndex={"10"} w={"100%"} spacing={6} mt={8}>
                   <InputGroup mt={0} alignItems="center">
-                    <InputLeftElement
-                      height="48px"
-                      children={<Icon as={FaEnvelope} color="gray.300" />}
-                    />
+                    <InputLeftElement height="48px">
+                      <Icon as={FaEnvelope} color="gray.300" />
+                    </InputLeftElement>
                     <Input
                       isRequired
                       placeholder="Email"
@@ -117,10 +116,9 @@ export const ContactUs: React.FC<{ onClose(): any; isOpen: boolean }> = ({
                     />
                   </InputGroup>
                   <InputGroup mt={0} alignItems="center">
-                    <InputLeftElement
-                      height="48px"
-                      children={<Icon as={GiLetterBomb} color="gray.300" />}
-                    />
+                    <InputLeftElement height="48px">
+                      <Icon as={GiLetterBomb} color="gray.300" />
+                    </InputLeftElement>
                     <Input
                       isRequired
                       placeholder="Subject of your Query"
@@ -133,10 +131,9 @@ export const ContactUs: React.FC<{ onClose(): any; isOpen: boolean }> = ({
                     />
                   </InputGroup>
                   <InputGroup mt={0} alignItems="center">
-                    <InputLeftElement
-                      height="48px"
-                      children={<Icon as={FaDiscord} color="gray.300" />}
-                    />
+                    <InputLeftElement height="48px">
+                      <Icon as={FaDiscord} color="gray.300" />
+                    </InputLeftElement>
                     <Input
                       isRequired
                       placeholder="Discord (optional)"
@@ -149,10 +146,9 @@ export const ContactUs: React.FC<{ onClose(): any; isOpen: boolean }> = ({
                     />
                   </InputGroup>
                   <InputGroup mt={0} alignItems="center">
-                    <InputLeftElement
-                      height="48px"
-                      children={<Icon as={FaTelegram} color="gray.300" />}
-                    />
+                    <InputLeftElement height="48px">
+                      <Icon as={FaTelegram} color="gray.300" />
+                    </InputLeftElement>
                     <Input
                       isRequired
                       placeholder="Telegram (optional)"
@@ -197,7 +193,7 @@ export const ContactUs: React.FC<{ onClose(): any; isOpen: boolean }> = ({
           </ModalBody>
           <ModalFooter>
             <Button
-              w={["100%", "100%", "100%", "100px"]}
+              w={["100%", "100%", "100%", "200px"]}
               variant="brand"
               mr={[0, 0, 0, "50px"]}
               mb={5}

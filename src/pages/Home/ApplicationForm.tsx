@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useQueryClient } from "react-query";
-import { useHistory, Link as RouterLink } from "react-router-dom";
+import { useHistory } from "react-router-dom";
 import { getRepoTree } from "hooks/getRepoTree";
 import {
   Flex,
@@ -21,6 +21,7 @@ import InfoSettings from "components/projectInfoSettings";
 import FolderSettings from "components/projectFolderSettings";
 import { TreeItem, TreeItemUP } from "common/types";
 import { getSkipFilePaths, restructureRepoTree } from "helpers/fileStructure";
+import Loader from "components/styled-components/Loader";
 
 const ApplicationForm: React.FC = () => {
   const assetsURL = getAssetsURL();
@@ -69,6 +70,7 @@ const ApplicationForm: React.FC = () => {
   const runScan = async () => {
     if (!runValidation() || !repoTreeUP) return;
     try {
+      setIsLoading(true);
       const skipFilePaths = getSkipFilePaths(repoTreeUP);
       const { data } = await API.post(API_PATH.API_PROJECT_SCAN, {
         project_url: githubLink,
@@ -80,6 +82,7 @@ const ApplicationForm: React.FC = () => {
         skip_file_paths: skipFilePaths,
       });
 
+      setIsLoading(false);
       if (data.status === "success") {
         queryClient.invalidateQueries("scan_list");
         queryClient.invalidateQueries("profile");
@@ -95,6 +98,7 @@ const ApplicationForm: React.FC = () => {
       }
     } catch (e) {
       console.log(e);
+      setIsLoading(false);
     }
   };
 
@@ -309,6 +313,7 @@ const ApplicationForm: React.FC = () => {
           type="submit"
           variant="brand"
           isLoading={isLoading}
+          spinner={<Loader color={"#3300FF"} size={25} />}
           width={["100%", "100%", "100%", "200px"]}
           onClick={() => {
             if (step === 1) {
@@ -323,7 +328,15 @@ const ApplicationForm: React.FC = () => {
           }}
           isDisabled={profileData?.credits === 0}
         >
-          {step > 2 ? "Start Scan" : "Next"}
+          {step > 2 ? (
+            isLoading ? (
+              <Loader color={"#3300FF"} />
+            ) : (
+              "Start Scan"
+            )
+          ) : (
+            "Next"
+          )}
         </Button>
       </Flex>
     </Flex>

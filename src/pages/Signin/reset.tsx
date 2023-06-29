@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import { useForm } from "react-hook-form";
 import { useLocation, useHistory } from "react-router-dom";
 import {
   Flex,
@@ -24,6 +23,7 @@ import { AuthResponse } from "common/types";
 import { ViewIcon, ViewOffIcon } from "@chakra-ui/icons";
 import { API_PATH } from "helpers/routeManager";
 import { getReCaptchaHeaders } from "helpers/helperFunction";
+import Loader from "components/styled-components/Loader";
 
 function useQuery() {
   return new URLSearchParams(useLocation().search);
@@ -133,6 +133,7 @@ const Reset: React.FC = () => {
             type="submit"
             variant="brand"
             isLoading={isLoading}
+            spinner={<Loader color={"#3300FF"} size={25} />}
             onClick={onSubmit}
           >
             Update Password

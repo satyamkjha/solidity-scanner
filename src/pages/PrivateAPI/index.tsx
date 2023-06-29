@@ -6,7 +6,6 @@ import {
   Button,
   Icon,
   VStack,
-  Spinner,
   useClipboard,
   Divider,
   Image,
@@ -23,6 +22,7 @@ import ConfirmActionForm from "components/confirmActionForm";
 import { useProfile } from "hooks/useProfile";
 import { useConfig } from "hooks/useConfig";
 import UpgradePackage from "components/upgradePackage";
+import Loader from "components/styled-components/Loader";
 
 export default function PrivateApi() {
   const { data: profileData, isLoading } = useProfile();
@@ -114,12 +114,14 @@ export default function PrivateApi() {
     <Box
       sx={{
         w: ["100%", "100%", "calc(100% - 2rem)"],
+        h: "100%",
         bg: "bg.subtle",
         borderRadius: "20px",
-        py: 4,
+        pt: 4,
+        pb: 1,
         px: [2, 2, 2, 8],
         mx: [0, 0, 4],
-        my: 4,
+        my: 2,
         minH: "78vh",
       }}
     >
@@ -135,17 +137,18 @@ export default function PrivateApi() {
           sx={{
             w: "100%",
             mx: [0, 0, 0, 4],
-            my: 4,
+            my: 24,
             justifyContent: "center",
           }}
         >
-          <Spinner mt={20} />
+          <Loader />
         </Flex>
       ) : (
         <Flex
           bgColor={["bg.subtle", "bg.subtle", "bg.subtle", "white"]}
           w="100%"
-          h={"65vh"}
+          h={"100%"}
+          minH={"70vh"}
           borderRadius={"5px"}
           my={6}
           pb={6}
@@ -210,16 +213,19 @@ export default function PrivateApi() {
               ml={[0, 0, 0, "auto"]}
               isDisabled={!hasAccess}
             >
-              {accessKey ? "Regenrate Key" : "Generate Key"}
+              {accessKey ? "Regenerate Key" : "Generate Key"}
             </Button>
           </Flex>
-          <Box
+          <Flex
             mx={[4, 4, 4, 6]}
+            mb={6}
             px={[4, 4, 4, 6]}
-            py={8}
+            pt={8}
+            pb={6}
             backgroundColor="#FCFCFC"
             border={"2px solid #EAEAEA"}
             borderRadius="15px"
+            flexDir={"column"}
             h={accessKey ? "fit-content" : "100%"}
           >
             {isSpinning ? (
@@ -231,7 +237,7 @@ export default function PrivateApi() {
                   alignItems: "center",
                 }}
               >
-                <Spinner />
+                <Loader />
               </Flex>
             ) : (
               <>
@@ -341,19 +347,19 @@ export default function PrivateApi() {
                     </Flex>
                   </>
                 ) : (
-                  <Flex position={"relative"} w="100%" h="100%">
+                  <Flex position={"relative"} w="100%" h="33vh">
                     <VStack
                       w="100%"
                       spacing={4}
                       mb={[6, 6, 6, 0]}
-                      position={"absolute"}
                       top={0}
                       left={0}
                       opacity={hasAccess ? 1 : 0.5}
                     >
                       <Image
                         src={assetsUrl + "background/private_api_cover.svg"}
-                        my={2}
+                        h={"150px"}
+                        mb={2}
                       />
                       <Text fontWeight={400}>
                         No access key has been created yet, Click generate key
@@ -369,19 +375,23 @@ export default function PrivateApi() {
                       </Link>
                     </VStack>
                     {!hasAccess && (
-                      <UpgradePackage text="Upgrade to our pro plan or a custom plan to use this feature and much more." />
+                      <UpgradePackage
+                        text="Upgrade to our pro plan or a custom plan to use this feature and much more."
+                        iconSize={85}
+                      />
                     )}
                   </Flex>
                 )}
               </>
             )}
-          </Box>
+          </Flex>
           {isFirstTime && (
             <Flex
               border={"1px solid #FFC661"}
               bgColor="#FFF8ED"
               p={6}
-              m={6}
+              mx={6}
+              mb={8}
               borderRadius={"15px"}
             >
               <Text color="detail" fontWeight={400}>
@@ -390,6 +400,36 @@ export default function PrivateApi() {
               </Text>
             </Flex>
           )}
+          <Flex
+            background="#FAFBFC"
+            boxShadow={"0px 2px 2px rgba(0, 0, 0, 0.06)"}
+            borderRadius={"15px"}
+            align="center"
+            justifyContent="center"
+            flexDir={["column", "column", "column", "row"]}
+            p={[2, 2, 2, 5]}
+            mx={[2, 2, 2, 6]}
+            mt={"auto"}
+          >
+            <Image src={assetsUrl + "icons/enlighten.svg"} />
+            <Flex flexDir={"column"} ml={6} textColor="text" my={[3, 3, 3, 0]}>
+              <Text fontWeight={600}>
+                Know more about the Private API access
+              </Text>
+              <Text fontWeight={400}>
+                Click to know how to use this private API access feature and
+                supported documentation
+              </Text>
+            </Flex>
+            <Link
+              href="https://apidoc.solidityscan.com/solidityscan-security-api/"
+              ml={[0, 0, 0, "auto"]}
+              color={"accent"}
+              target={"_blank"}
+            >
+              Learn More
+            </Link>
+          </Flex>
         </Flex>
       )}
       <ConfirmActionForm

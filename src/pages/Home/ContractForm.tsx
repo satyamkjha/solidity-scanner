@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useQueryClient } from "react-query";
-import { useHistory, Link as RouterLink } from "react-router-dom";
+import { useHistory } from "react-router-dom";
 import {
   Flex,
   Text,
@@ -13,6 +13,7 @@ import {
   FormControl,
   FormLabel,
   VStack,
+  Divider,
 } from "@chakra-ui/react";
 import { AiOutlineProject } from "react-icons/ai";
 import API from "helpers/api";
@@ -24,6 +25,7 @@ import { API_PATH } from "helpers/routeManager";
 
 import FormatOptionLabelWithImage from "components/FormatOptionLabelWithImage";
 import { customStylesForReactSelect } from "common/stylesForCustomSelect";
+import Loader from "components/styled-components/Loader";
 
 const ContractForm: React.FC = () => {
   const contractChain: {
@@ -330,10 +332,10 @@ const ContractForm: React.FC = () => {
       <Text
         w="100%"
         sx={{
-          fontSize: "xl",
+          fontSize: ["xl", "xl", "2xl"],
           fontWeight: 600,
           textAlign: "left",
-          mb: 2,
+          mb: 4,
         }}
       >
         Load contract
@@ -345,6 +347,7 @@ const ContractForm: React.FC = () => {
         Provide the address of your smart contract deployed on the supported EVM
         chains. Your results will appear in the "Verified Contracts" tab.
       </Text>
+      <Divider color="gray.700" borderWidth="1px" mb={3} />
       <Text
         w="100%"
         sx={{ fontSize: "sm", color: "subtle", textAlign: "left", mb: 2 }}
@@ -469,6 +472,7 @@ const ContractForm: React.FC = () => {
             variant="brand"
             onClick={onSubmit}
             isLoading={isLoading}
+            spinner={<Loader color={"#3300FF"} size={25} />}
             isDisabled={profileData?.credits === 0}
           >
             Start Scan

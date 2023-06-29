@@ -1,4 +1,4 @@
-import { DetectorItemProp, Plan } from "./types";
+import { DetectorItemProp } from "./types";
 
 export const severityPriority: { [key: string]: number } = {
   "0": 10,
@@ -590,7 +590,7 @@ export const pricing_table_data = [
         custom: true,
       },
       {
-        title: "Vulnerability Flagging",
+        title: "Vulnerability Actions",
         trial: false,
         ondemand: true,
         beginner: true,
@@ -641,7 +641,7 @@ export const pricing_table_data = [
         custom: true,
       },
       {
-        title: "Threat Scan API Access",
+        title: "Private APIs",
         trial: false,
         ondemand: false,
         beginner: false,
@@ -650,16 +650,7 @@ export const pricing_table_data = [
         custom: true,
       },
       {
-        title: "Github Project Deep Scan",
-        trial: true,
-        ondemand: true,
-        beginner: true,
-        intermediate: true,
-        pro: true,
-        custom: true,
-      },
-      {
-        title: "Github Project Deep Rescan",
+        title: "Public Github integration",
         trial: true,
         ondemand: true,
         beginner: true,
@@ -669,15 +660,24 @@ export const pricing_table_data = [
       },
       {
         title: "Private Github Integration",
-        trial: true,
-        ondemand: true,
-        beginner: true,
+        trial: false,
+        ondemand: false,
+        beginner: false,
         intermediate: true,
         pro: true,
         custom: true,
       },
       {
-        title: "Verified Contract Deep Scan",
+        title: "Github Actions",
+        trial: false,
+        ondemand: false,
+        beginner: false,
+        intermediate: true,
+        pro: true,
+        custom: true,
+      },
+      {
+        title: "Verified Contract Scan",
         trial: false,
         ondemand: false,
         beginner: true,
@@ -704,7 +704,7 @@ export const pricing_table_data = [
         custom: true,
       },
       {
-        title: "Smart Contract Analyses",
+        title: "No. of scan credits",
         trial: 2,
         ondemand: 2,
         beginner: 20,
@@ -867,110 +867,42 @@ export const pricing_table_data = [
   },
 ];
 
-export const pricing_data = {
-  "on-demand": {
-    "on-demand": {
-      name: "On Demand",
-      description:
-        "Try out the basic features of the product. Get a detailed report with prompts describing detected issues and remediation solutions",
-      discount: null,
-      scan_count: 2,
-      amount: "29.99",
-      github: false,
-      report: false,
-      publishable_report: false,
-    },
+export const pricing_card_description_data = [
+  {
+    key: "detector",
+    title: "All Detectors",
+    description: "Vulnerability Detectors coverage",
+    icon: "detectors/detectorIcon.svg",
   },
-  monthly: {
-    beginner: {
-      name: "Beginner",
-      description:
-        "Junior Developer or Associate Security Researcher or NFT Enthusiast",
-      discount: null,
-      scan_count: 20,
-      amount: "149.99",
-      github: true,
-      report: false,
-      publishable_report: false,
-    },
-    intermediate: {
-      name: "Intermediate",
-      description:
-        "Senior Developer or Senior Security Research or Experienced NFT Buyer/ Trader or Small Teams",
-      discount: "17%",
-      scan_count: 40,
-      amount: "249.99",
-      github: true,
-      report: true,
-      publishable_report: false,
-    },
-    pro: {
-      name: "Pro",
-      description:
-        "Development SME or Security Research SME or NFT SME or Medium Size Teams",
-      discount: "50%",
-      scan_count: 80,
-      amount: "299.99",
-      github: true,
-      report: true,
-      publishable_report: true,
-    },
-    custom: {
-      name: "Custom",
-      description:
-        "Enterprise Dealing in Crypto Development or Security with Large Team Size. Get your scan results and reports vetted by our security professionals",
-      discount: "60%",
-      scan_count: 200,
-      amount: "599.99",
-      github: true,
-      report: true,
-      publishable_report: true,
-    },
+  {
+    key: "github",
+    title: "Private Github",
+    description: "Private Github",
+    icon: "pricing/pricing_card_icons/github.svg",
   },
-  yearly: {
-    beginner: {
-      name: "Beginner",
-      description:
-        "Junior Developer or Associate Security Researcher or NFT Enthusiast",
-      discount: null,
-      scan_count: 200,
-      amount: "1499.99",
-      github: true,
-      report: false,
-      publishable_report: false,
-    },
-    intermediate: {
-      name: "Intermediate",
-      description:
-        "Senior Developer or Senior Security Research or Experienced NFT Buyer/ Trader or Small Teams",
-      discount: "17%",
-      scan_count: 400,
-      amount: "2499.99",
-      github: true,
-      report: true,
-      publishable_report: false,
-    },
-    pro: {
-      name: "Pro",
-      description:
-        "Development SME or Security Research SME or NFT SME or Medium Size Teams",
-      discount: "50%",
-      scan_count: 800,
-      amount: "2999.99",
-      github: true,
-      report: true,
-      publishable_report: true,
-    },
-    custom: {
-      name: "Custom",
-      description:
-        "Enterprise Dealing in Crypto Development or Security with Large Team Size. Get your scan results and reports vetted by our security professionals",
-      discount: "60%",
-      scan_count: 2000,
-      amount: "5990.99",
-      github: true,
-      report: true,
-      publishable_report: true,
-    },
+  {
+    key: "actions",
+    title: "Github Actions",
+    description: "Github Actions",
+    icon: "pricing/pricing_card_icons/actions.svg",
   },
+  {
+    key: "report",
+    title: "Publish Reports",
+    description: "Generate and Publish report",
+    icon: "pricing/pricing_card_icons/report.svg",
+  },
+  {
+    key: "private",
+    title: "API Access",
+    description: "Private API Access",
+    icon: "pricing/pricing_card_icons/private.svg",
+  },
+];
+
+export const actionTaken = {
+  false_positive: "False Positive",
+  wont_fix: "Won't Fix",
+  pending_fix: "Pending Fix",
+  fixed: "Fixed",
 };

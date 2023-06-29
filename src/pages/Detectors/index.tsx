@@ -10,12 +10,6 @@ import {
   HStack,
   VStack,
 } from "@chakra-ui/react";
-
-import Header from "components/header";
-import Footer from "components/footer";
-
-import SignupBox from "components/signupBox";
-import Infographics from "components/infographics";
 import { DetectorItemProp } from "common/types";
 import { detectorData } from "common/values";
 import { useConfig } from "hooks/useConfig";
@@ -129,7 +123,6 @@ const Detectors: React.FC = () => {
 
   return (
     <>
-      <Header />
       <Container maxW="100vw" p={0} color="black">
         <Flex
           w="100%"
@@ -251,32 +244,7 @@ const Detectors: React.FC = () => {
               <DetectorItem item={item} />
             ))}
           </Box>
-          <Box
-            display={"flex"}
-            flexDir="column"
-            alignItems="center"
-            justifyContent={"flex-start"}
-            w={"90%"}
-            px={[0, 0, 10]}
-            py={10}
-            borderRadius={20}
-            background={"#FFFFFF"}
-          >
-            <Heading as="h1" fontSize="3xl" mb={4}>
-              Why{" "}
-              <Box as="span" color="#3300FF">
-                SolidityScan ?
-              </Box>{" "}
-            </Heading>
-            <Text color="subtle" fontSize={["lg", "lg", "xl"]} mb={4}>
-              Smart-contract scanning tool built to discover vulnerabilities &
-              mitigate risks in your code.
-            </Text>
-            <Infographics />
-            <SignupBox />
-          </Box>
         </Flex>
-        <Footer />
       </Container>
     </>
   );

@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useMemo } from "react";
-import { useHistory, Link as RouterLink } from "react-router-dom";
+import { useHistory } from "react-router-dom";
 import {
   Flex,
   Box,
@@ -9,24 +9,20 @@ import {
   InputLeftElement,
   Input,
   Icon,
-  Spinner,
   HStack,
   VStack,
   Progress,
   CloseButton,
+  Divider,
 } from "@chakra-ui/react";
 import { CheckIcon, RepeatIcon, CloseIcon } from "@chakra-ui/icons";
 import { AiOutlineProject } from "react-icons/ai";
-import {
-  BlockCredit,
-  ProjectIcon,
-  SolidityFileIcon,
-  UploadIcon,
-} from "components/icons";
+import { ProjectIcon, SolidityFileIcon, UploadIcon } from "components/icons";
 import API from "helpers/api";
 import { useProfile } from "hooks/useProfile";
 import { useDropzone } from "react-dropzone";
 import { API_PATH } from "helpers/routeManager";
+import Loader from "components/styled-components/Loader";
 
 type UrlItemProps = { url: string; name: string; file: File; status: string };
 
@@ -81,8 +77,6 @@ const UrlItem: React.FC<{ item: UrlItemProps }> = ({ item }) => {
 const UploadForm: React.FC = () => {
   const history = useHistory();
   const { data: profileData } = useProfile();
-
-  let count: number = 0;
 
   const [step, setStep] = useState(0);
   const [error, setError] = useState(false);
@@ -309,10 +303,10 @@ const UploadForm: React.FC = () => {
           <Text
             w="100%"
             sx={{
-              fontSize: "xl",
+              fontSize: ["xl", "xl", "2xl"],
               fontWeight: 600,
               textAlign: "left",
-              mb: 2,
+              mb: 4,
             }}
           >
             Upload contract
@@ -326,6 +320,7 @@ const UploadForm: React.FC = () => {
             the “Project Name” field to refer to your scan results in the
             “Projects” section.
           </Text>
+          <Divider color="gray.700" borderWidth="1px" mb={3} />
           <Text
             w="100%"
             sx={{ fontSize: "sm", color: "subtle", textAlign: "left", mb: 2 }}
@@ -417,6 +412,7 @@ const UploadForm: React.FC = () => {
               mt={4}
               w="100%"
               isLoading={isLoading}
+              spinner={<Loader color={"#3300FF"} size={25} />}
               disabled={
                 isLoading ||
                 step < 2 ||

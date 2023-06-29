@@ -7,7 +7,6 @@ import {
   Text,
   Button,
   Progress,
-  Spinner,
   Tooltip,
   AlertDialog,
   AlertDialogBody,
@@ -36,6 +35,7 @@ import { useProjects } from "hooks/useProjects";
 import { useProfile } from "hooks/useProfile";
 import InfiniteScroll from "react-infinite-scroll-component";
 import { API_PATH } from "helpers/routeManager";
+import Loader from "components/styled-components/Loader";
 
 const Projects: React.FC = () => {
   const [isDesktopView] = useMediaQuery("(min-width: 1920px)");
@@ -74,7 +74,7 @@ const Projects: React.FC = () => {
         )
       ) {
         intervalId = setInterval(async () => {
-          setPagination({ pageNo: 1, perPageCount: projectList.length });
+          setPagination({ pageNo: 1, perPageCount: pagination.perPageCount });
           if (
             projectList &&
             projectList.every(
@@ -161,7 +161,7 @@ const Projects: React.FC = () => {
 
       {!projectList ? (
         <Flex w="100%" h="70vh" alignItems="center" justifyContent="center">
-          <Spinner />
+          <Loader />
         </Flex>
       ) : projectList.length === 0 ? (
         <Flex
@@ -203,8 +203,8 @@ const Projects: React.FC = () => {
             next={() => fetchMoreProjects()}
             hasMore={hasMore}
             loader={
-              <Box w={"100%"} align="center">
-                <Spinner />
+              <Box w={"100%"}>
+                <Loader />
               </Box>
             }
             scrollableTarget="pageScroll"
@@ -328,7 +328,15 @@ const ProjectCard: React.FC<{
                 )}
               </Flex>
               <Flex w="100%" alignItems="center" justifyContent="flex-start">
-                <Score score={multi_file_scan_summary?.score || "0"} />
+                <Score
+                  score={
+                    multi_file_scan_summary?.score_v2 ||
+                    (parseFloat(multi_file_scan_summary?.score) * 20)
+                      .toFixed(2)
+                      .toString() ||
+                    "0"
+                  }
+                />
               </Flex>
               <VulnerabilityDistribution
                 critical={
@@ -491,6 +499,7 @@ const ProjectCard: React.FC<{
                 onClick={rescan}
                 ml={3}
                 isLoading={isRescanLoading}
+                spinner={<Loader color={"#3300FF"} size={25} />}
               >
                 Rescan
               </Button>
