@@ -1,8 +1,17 @@
 import React from "react";
 import Carousel from "@brainhubeu/react-carousel";
 import "@brainhubeu/react-carousel/lib/style.css";
-import { Image } from "@chakra-ui/react";
+import {
+  Image,
+  Box,
+  Heading,
+  Text,
+  Flex,
+  SkeletonText,
+  Skeleton,
+} from "@chakra-ui/react";
 import { getAssetsURL } from "helpers/helperFunction";
+import { useConfig } from "hooks/useConfig";
 
 const ImageCarousel = () => {
   const imgSourceList = [
@@ -40,22 +49,79 @@ const ImageCarousel = () => {
     },
   ];
 
-  const assetsURL = getAssetsURL();
+  const config: any = useConfig();
+  const assetsURL = getAssetsURL(config);
 
   return (
-    <Carousel plugins={["arrows"]}>
-      {imgSourceList.map((src) => (
-        <Image
-          // boxShadow="5px 5px 15px 15px #88888840"
-          // borderRadius="25px"
-          src={`${assetsURL}${src.src}`}
-          alt={src.alt}
-          // margin="30px"
-          width="90%"
-        />
-      ))}
-    </Carousel>
+    <Box
+      w="100%"
+      as="section"
+      sx={{ textAlign: "center" }}
+      mb={10}
+      mt={[10, 10, 20]}
+      px={[0, 0, 0, 24]}
+    >
+      <Heading as="h2" fontSize="3xl" my={5}>
+        Fully automated smart contract audit system <br /> to help{" "}
+        <Box as="span" sx={{ color: "accent" }}>
+          secure your products faster
+        </Box>
+      </Heading>
+      <Text color="subtle" fontSize={["lg", "lg", "xl"]} mb={4}>
+        Focus on what matters most, our robots handle the rest ☕️
+      </Text>
+      <Carousel plugins={["arrows"]}>
+        {imgSourceList.map((src) => (
+          <Image
+            // boxShadow="5px 5px 15px 15px #88888840"
+            // borderRadius="25px"
+            src={`${assetsURL}${src.src}`}
+            alt={src.alt}
+            // margin="30px"
+            width="90%"
+          />
+        ))}
+      </Carousel>
+    </Box>
   );
 };
 
 export default ImageCarousel;
+
+export function CarouselSkeleton() {
+  return (
+    <Flex
+      alignItems={"center"}
+      justifyContent={"center"}
+      py={24}
+      px={[0, 0, 0, 24]}
+      w="100%"
+      flexDir={"column"}
+    >
+      <SkeletonText
+        startColor="lightgray"
+        endColor="#eeeeee"
+        noOfLines={2}
+        spacing="4"
+        skeletonHeight="5"
+        w={["100%", "100%", "60%"]}
+      />
+      <Flex
+        flexDir={["column", "column", "column", "row"]}
+        alignItems={"center"}
+        justifyContent={"center"}
+        w={"100%"}
+        h={["20vh", "20vh", "20vh", "70vh"]}
+        mt={20}
+      >
+        <Skeleton
+          w={"80%"}
+          h={"100%"}
+          startColor="lightgray"
+          endColor="#eeeeee"
+          borderRadius={"5px"}
+        ></Skeleton>
+      </Flex>
+    </Flex>
+  );
+}

@@ -1,4 +1,4 @@
-import { Button, HStack, Divider, Text, Image } from "@chakra-ui/react";
+import { Button, Image } from "@chakra-ui/react";
 import MetaMaskSDK from "@metamask/sdk";
 import API from "helpers/api";
 import Auth from "helpers/auth";
@@ -6,22 +6,32 @@ import {
   getBrowserName,
   getDeviceType,
   getFeatureGateConfig,
+  getAssetsURL,
 } from "helpers/helperFunction";
 import { API_PATH } from "helpers/routeManager";
-import React from "react";
+import React, { useState } from "react";
 import { useHistory } from "react-router-dom";
+import { useConfig } from "hooks/useConfig";
+import Loader from "./styled-components/Loader";
 
 const MetaMaskLogin: React.FC = () => {
+  const config = useConfig();
+  const assetsURL = getAssetsURL(config);
   const history = useHistory();
   const MMSDK = new MetaMaskSDK({
     useDeeplink: true,
     communicationLayerPreference: "socket",
   });
 
+  const [isLoading, setIsLoading] = useState(false);
+
   const ethereum = MMSDK.getProvider();
 
   const connect = async () => {
+    setIsLoading(true);
+    setTimeout(() => setIsLoading(false), 2000);
     await ethereum.request({ method: "eth_requestAccounts", params: [] });
+
     if (window.ethereum.selectedAddress) {
       getNonce(window.ethereum.selectedAddress);
     }
@@ -33,11 +43,13 @@ const MetaMaskLogin: React.FC = () => {
 
     //Check if Mobile
     if (getDeviceType() === "mobile")
-      return getFeatureGateConfig().metamask_integration.mobile_enabled;
+      return getFeatureGateConfig(config).metamask_integration.mobile_enabled;
 
     return (
       getBrowserName() &&
-      getFeatureGateConfig().metamask_integration.supported_browser.includes(
+      getFeatureGateConfig(
+        config
+      ).metamask_integration.supported_browser.includes(
         getBrowserName().toLowerCase()
       )
     );
@@ -69,7 +81,7 @@ const MetaMaskLogin: React.FC = () => {
   };
   return (
     <>
-      {getFeatureGateConfig().metamask_integration.enabled &&
+      {getFeatureGateConfig(config).metamask_integration.enabled &&
         checkBrowserAndDevice() && (
           <>
             <Button
@@ -82,10 +94,12 @@ const MetaMaskLogin: React.FC = () => {
               alignSelf="center"
               px={6}
               color="#8B8B8B"
+              isLoading={isLoading}
+              spinner={<Loader color={"#3300FF"} size={25} />}
             >
               <Image
                 mr={2}
-                src="/common/MetaMask_Fox.svg"
+                src={`${assetsURL}common/MetaMask_Fox.svg`}
                 height="35px"
                 width="35px"
               />

@@ -1,10 +1,10 @@
 import React from "react";
 import { useParams } from "react-router-dom";
-import { Flex, Container, Spinner } from "@chakra-ui/react";
+import { Flex, Container } from "@chakra-ui/react";
 import { useReport } from "hooks/useReport";
-import { PrintContainer } from "./PrintContainer";
 import { Text } from "@chakra-ui/react";
 import { ReportContainer } from "./ReportContainer";
+import Loader from "components/styled-components/Loader";
 
 export default function ReportPage() {
   const { reportId, projectId } = useParams<{
@@ -29,7 +29,10 @@ export default function ReportPage() {
         </Text>
       </Flex>
       {data ? (
-        <ReportContainer summary_report={data.summary_report} />
+        <ReportContainer
+          summary_report={data.summary_report}
+          isPublicReport={false}
+        />
       ) : (
         <Container
           py={12}
@@ -47,7 +50,7 @@ export default function ReportPage() {
             textAlign={["left", "left"]}
             mb={10}
           >
-            <Spinner />
+            <Loader />
           </Flex>
         </Container>
       )}

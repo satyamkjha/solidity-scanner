@@ -1,13 +1,11 @@
-import React, { useState, useEffect } from "react";
-import { set, useForm } from "react-hook-form";
-import { Link as RouterLink, useHistory, useLocation } from "react-router-dom";
+import React, { useEffect } from "react";
+import { Link as RouterLink, useHistory } from "react-router-dom";
 import {
   Flex,
   Heading,
   Text,
   Button,
   Box,
-  Spinner,
   HStack,
   Image,
   VStack,
@@ -15,17 +13,17 @@ import {
 import { motion } from "framer-motion";
 
 import Auth from "helpers/auth";
-
 import { LogoIcon } from "components/icons";
-
-import API from "helpers/api";
-import { AuthResponse } from "common/types";
-import { platform } from "os";
-import { Helmet } from "react-helmet";
+import { getAssetsURL } from "helpers/helperFunction";
+import { useConfig } from "hooks/useConfig";
+import Loader from "components/styled-components/Loader";
 
 const CustomFlex = motion(Flex);
 
 const PageNotFound: React.FC = () => {
+  const config: any = useConfig();
+  const assetsURL = getAssetsURL(config);
+
   return (
     <>
       <CustomFlex
@@ -50,7 +48,7 @@ const PageNotFound: React.FC = () => {
         >
           <Image
             marginTop={[24, 24, 24, 10]}
-            src="/error/404.png"
+            src={`${assetsURL}common/404.png`}
             zIndex={"10"}
             alt={"404 Page Not Found"}
           />
@@ -89,7 +87,7 @@ export const CustomPageNotFound: React.FC = () => {
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
       >
-        <Spinner />
+        <Loader />
       </CustomFlex>
     </>
   );

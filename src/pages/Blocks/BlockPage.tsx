@@ -1,22 +1,18 @@
 import React, { useEffect, useRef, useState } from "react";
-import { Link as RouterLink, useHistory, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 
 import {
   Flex,
   Box,
   Text,
-  Link,
   Tabs,
   TabList,
   TabPanels,
   Tab,
   TabPanel,
-  Spinner,
   Accordion,
   AccordionButton,
-  AccordionIcon,
   AccordionItem,
-  AccordionPanel,
   VStack,
   Image,
   HStack,
@@ -34,42 +30,24 @@ import {
   ModalOverlay,
   Switch as SwitchComp,
   useToast,
-  Badge,
-  border,
   Stack,
   useMediaQuery,
   MenuButton,
   Menu,
-  IconButton,
   MenuList,
   MenuItem,
 } from "@chakra-ui/react";
 import Overview from "components/overview";
-import Result, { MultifileResult } from "components/result";
-import {
-  AddIcon,
-  CheckCircleIcon,
-  LockIcon,
-  MinusIcon,
-  TimeIcon,
-} from "@chakra-ui/icons";
+import MultifileResult from "components/detailedResult/MultifileResult";
+import { CheckCircleIcon, LockIcon, TimeIcon } from "@chakra-ui/icons";
 import { useScan } from "hooks/useScan";
 import { ArrowDownIcon } from "@chakra-ui/icons";
 import { useProfile } from "hooks/useProfile";
 import { BiChevronDownCircle, BiChevronUpCircle } from "react-icons/bi";
 import { AiOutlineProject } from "react-icons/ai";
-import {
-  FaFileCode,
-  FaGithub,
-  FaCalendarAlt,
-  FaRegCalendarCheck,
-  FaEnvelope,
-  FaInternetExplorer,
-  FaBuilding,
-  FaRegCopy,
-} from "react-icons/fa";
+import { FaEnvelope, FaInternetExplorer, FaBuilding } from "react-icons/fa";
 import API from "helpers/api";
-import { Report, ReportsListItem, Scan } from "common/types";
+import { Report, ReportsListItem } from "common/types";
 import { useReports } from "hooks/useReports";
 import { ScanErrorIcon } from "components/icons";
 import { monthNames } from "common/values";
@@ -80,6 +58,13 @@ import { API_PATH } from "helpers/routeManager";
 import { getPublicReport } from "hooks/usePublicReport";
 import { useReactToPrint } from "react-to-print";
 import { PrintContainer } from "pages/Report/PrintContainer";
+import {
+  getAssetsURL,
+  checkPublishReportAccess,
+  checkGenerateReportAccess,
+} from "helpers/helperFunction";
+import { useConfig } from "hooks/useConfig";
+import Loader from "components/styled-components/Loader";
 
 const BlockPage: React.FC = () => {
   const { scanId } = useParams<{ scanId: string }>();
@@ -115,6 +100,8 @@ const BlockPage: React.FC = () => {
 
   const [tabIndex, setTabIndex] = React.useState(0);
   const [isDesktopView] = useMediaQuery("(min-width: 1024px)");
+  const config: any = useConfig();
+  const assetsURL = getAssetsURL(config);
 
   useEffect(() => {
     if (scanData) {
@@ -283,12 +270,14 @@ const BlockPage: React.FC = () => {
     }
   }, [summaryReport]);
 
-  const checkIfGeneratingReport = () =>
-    reportingStatus === "generating_report" ||
-    (profile.actions_supported
-      ? !profile.actions_supported.generate_report
-      : profile.current_package !== "expired" &&
-        !plans.monthly[profile.current_package].report);
+  const checkIfGeneratingReport = () => {
+    if (profile && plans) {
+      if (reportingStatus === "generating_report") return true;
+
+      return !checkGenerateReportAccess(profile, plans);
+    }
+    return true;
+  };
 
   return (
     <Box
@@ -304,7 +293,7 @@ const BlockPage: React.FC = () => {
     >
       {isLoading || isProfileLoading || !plans ? (
         <Flex w="100%" h="70vh" alignItems="center" justifyContent="center">
-          <Spinner />
+          <Loader />
         </Flex>
       ) : (
         scanData &&
@@ -333,7 +322,7 @@ const BlockPage: React.FC = () => {
                         <VStack alignItems={"flex-start"}>
                           <HStack justifyContent="flex-start">
                             <Image
-                              src={`/blockscan/${scanData.scan_report.contract_platform}.svg`}
+                              src={`${assetsURL}blockscan/${scanData.scan_report.contract_platform}.svg`}
                               alt="Product screenshot"
                               h={"20px"}
                               w={"20px"}
@@ -405,7 +394,7 @@ const BlockPage: React.FC = () => {
                         >
                           <HStack justifyContent="flex-start">
                             <Image
-                              src={`/blockscan/${scanData.scan_report.contract_platform}.svg`}
+                              src={`${assetsURL}blockscan/${scanData.scan_report.contract_platform}.svg`}
                               alt="Product screenshot"
                               h={"20px"}
                               w={"20px"}
@@ -463,21 +452,11 @@ const BlockPage: React.FC = () => {
                                 mx={["auto", "auto", "auto", "0"]}
                                 mr={["auto", "auto", "auto", 5]}
                                 isDisabled={
-                                  profile.actions_supported
-                                    ? !profile.actions_supported
-                                        .publishable_report
-                                    : profile.current_package !== "expired" &&
-                                      !plans.monthly[profile.current_package]
-                                        .publishable_report
+                                  !checkPublishReportAccess(profile, plans)
                                 }
                                 onClick={() => setOpen(!open)}
                               >
-                                {(profile.actions_supported
-                                  ? !profile.actions_supported
-                                      .publishable_report
-                                  : profile.current_package !== "expired" &&
-                                    !plans.monthly[profile.current_package]
-                                      .publishable_report) && (
+                                {!checkPublishReportAccess(profile, plans) && (
                                   <LockIcon color={"accent"} size="xs" mr={3} />
                                 )}
                                 Publish Report
@@ -524,7 +503,9 @@ const BlockPage: React.FC = () => {
                                 isDisabled={checkIfGeneratingReport()}
                               >
                                 {reportingStatus === "generating_report" && (
-                                  <Spinner color="#806CCF" size="xs" mr={3} />
+                                  <Flex mr={3}>
+                                    <Loader color="#806CCF" size={25} />
+                                  </Flex>
                                 )}
                                 Re-Generate Report
                               </Button>
@@ -562,7 +543,7 @@ const BlockPage: React.FC = () => {
                                     variant="unstyled"
                                   >
                                     {printLoading ? (
-                                      <Spinner fontSize={40} color="#3E15F4" />
+                                      <Loader size={20} color="#3E15F4" />
                                     ) : (
                                       <ArrowDownIcon color="#3E15F4" />
                                     )}
@@ -573,8 +554,14 @@ const BlockPage: React.FC = () => {
                                     </MenuItem>
                                   </MenuList>
                                 </Menu>
-                                {summaryReport && (
-                                  <Box display={"none"}>
+                                {summaryReport && printLoading && (
+                                  <Box
+                                    w={0}
+                                    h={0}
+                                    visibility={"hidden"}
+                                    position="absolute"
+                                  >
+                                    {" "}
                                     <Box w="100vw" ref={componentRef}>
                                       <PrintContainer
                                         summary_report={summaryReport}
@@ -611,19 +598,13 @@ const BlockPage: React.FC = () => {
                                 }}
                               >
                                 {reportingStatus === "generating_report" && (
-                                  <Spinner color="#806CCF" size="xs" mr={3} />
+                                  <Flex mr={3}>
+                                    <Loader color="#806CCF" size={25} />
+                                  </Flex>
                                 )}
-                                {profile.actions_supported
-                                  ? !profile.actions_supported.generate_report
-                                  : profile.current_package !== "expired" &&
-                                    !plans.monthly[profile.current_package]
-                                      .report && (
-                                      <LockIcon
-                                        color={"accent"}
-                                        size="xs"
-                                        mr={3}
-                                      />
-                                    )}
+                                {!checkGenerateReportAccess(profile, plans) && (
+                                  <LockIcon color={"accent"} mr={3} />
+                                )}
                                 {reportingStatus === "generating_report"
                                   ? "Generating report..."
                                   : reportingStatus === "not_generated"
@@ -746,15 +727,6 @@ const BlockPage: React.FC = () => {
                           }
                           refetch={refetch}
                         />
-                      ) : scanData.scan_report.scan_details &&
-                        scanData.scan_report.scan_summary ? (
-                        <Result
-                          details_enabled={scanData.scan_report.details_enabled}
-                          profileData={profile}
-                          scanSummary={scanData.scan_report.scan_summary}
-                          scanDetails={scanData.scan_report.scan_details}
-                          type="block"
-                        />
                       ) : (
                         <Flex
                           w="97%"
@@ -819,7 +791,7 @@ const BlockPage: React.FC = () => {
         >
           <ModalHeader
             background="rgba(82, 255, 0, 0.04)"
-            backgroundImage="url('/background/pattern.png')"
+            backgroundImage={`url('${assetsURL}background/pattern.png')`}
             textAlign={["center", "center", "center", "left"]}
             py={[6, 6, 6, 10]}
           >
@@ -1302,7 +1274,7 @@ const BlockPage: React.FC = () => {
               )}
               <Image
                 ml={"-10%"}
-                src="/common/publishreport.png"
+                src={`${assetsURL}common/publishreport.png`}
                 alt="Product screenshot"
                 w={"40%"}
                 h={"auto"}

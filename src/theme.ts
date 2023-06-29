@@ -3,6 +3,7 @@ import {
   theme as defaultTheme,
   ColorMode,
 } from "@chakra-ui/react";
+import { StyleFunctionProps } from "@chakra-ui/theme-tools";
 
 const config: { initialColorMode: ColorMode; useSystemColorMode: boolean } = {
   initialColorMode: "light",
@@ -10,7 +11,6 @@ const config: { initialColorMode: ColorMode; useSystemColorMode: boolean } = {
 };
 
 export const theme = extendTheme({
-  config,
   breakpoints: {
     sm: "330px",
     md: "768px",
@@ -18,6 +18,7 @@ export const theme = extendTheme({
     xl: "1600px",
     "2xl": "1920px",
   },
+  config,
   fonts: {
     heading: "Poppins",
     body: "Inter",
@@ -39,6 +40,12 @@ export const theme = extendTheme({
     gas: "#F795B4",
     "high-subtle": "#FFECE8",
     success: "#289F4C",
+    pro: "#FAF9FF",
+    beginner: "#EFFAFF",
+    intermediate: "#FFEDE9",
+    "pro-dark": "#806CCF",
+    "beginner-dark": "#54C0EB",
+    "intermediate-dark": "#FF5630",
     bg: {
       subtle: "#FAFBFC",
     },
@@ -62,12 +69,14 @@ export const theme = extendTheme({
         boxShadow: "none",
       },
       variants: {
-        brand: (props) => ({
+        brand: (props: StyleFunctionProps) => ({
           ...defaultTheme.components.Button.variants.outline(props),
           background:
             "linear-gradient(129.18deg, #52FF00 8.52%, #00EEFD 93.94%)",
+          boxShadow: "0px 4px 23px rgba(47, 248, 107, 0.45)",
           color: "black",
           fontSize: "15px",
+          border: "none",
           py: 6,
           _hover: {
             background:
@@ -82,7 +91,7 @@ export const theme = extendTheme({
               "linear-gradient(129.18deg, #52FF00 8.52%, #00EEFD 93.94%)",
           },
         }),
-        dark: (props) => ({
+        dark: (props: StyleFunctionProps) => ({
           ...defaultTheme.components.Button.variants.outline(props),
           background: "black",
           color: "white",
@@ -99,7 +108,7 @@ export const theme = extendTheme({
             background: "black",
           },
         }),
-        "accent-ghost": (props) => ({
+        "accent-ghost": (props: StyleFunctionProps) => ({
           ...defaultTheme.components.Button.variants.ghost(props),
           background: "#FFFFFF00",
           color: "#3300FF",
@@ -112,10 +121,10 @@ export const theme = extendTheme({
             background: "#efebff",
           },
         }),
-        "accent-outline": (props) => ({
+        "accent-outline": (props: StyleFunctionProps) => ({
           ...defaultTheme.components.Button.variants.outline(props),
           background: "#F5F2FF",
-          color: "#000000",
+          color: "blue",
           fontSize: "14px",
           borderColor: "#C1B1FF",
           py: 4,
@@ -126,7 +135,21 @@ export const theme = extendTheme({
             background: "#efebff",
           },
         }),
-        "cta-outline": (props) => ({
+        "gray-outline": (props: StyleFunctionProps) => ({
+          ...defaultTheme.components.Button.variants.outline(props),
+          background: "#FFFFFF",
+          color: "#828282",
+          fontSize: "16px",
+          borderColor: "#828282",
+          py: 4,
+          _hover: {
+            background: "#f0f0f0",
+          },
+          _active: {
+            background: "#f0f0f0",
+          },
+        }),
+        "cta-outline": (props: StyleFunctionProps) => ({
           ...defaultTheme.components.Button.variants.outline(props),
           background: "#FFFFFF",
           color: "#3300FF",
@@ -142,7 +165,6 @@ export const theme = extendTheme({
         }),
       },
     },
-
     Input: {
       parts: ["field", "addon"],
       sizes: {
@@ -153,7 +175,7 @@ export const theme = extendTheme({
         },
       },
       variants: {
-        brand: (props) => {
+        brand: (props: StyleFunctionProps) => {
           return {
             field: {
               ...defaultTheme.components.Input.variants.outline(props).field,
@@ -173,7 +195,7 @@ export const theme = extendTheme({
             },
           };
         },
-        error: (props) => {
+        error: (props: StyleFunctionProps) => {
           return {
             field: {
               ...defaultTheme.components.Input.variants.outline(props).field,
@@ -195,7 +217,6 @@ export const theme = extendTheme({
         },
       },
     },
-
     Select: {
       parts: ["field", "addon"],
       sizes: {
@@ -206,7 +227,7 @@ export const theme = extendTheme({
         },
       },
       variants: {
-        brand: (props) => {
+        brand: (props: StyleFunctionProps) => {
           return {
             field: {
               ...defaultTheme.components.Input.variants.outline(props).field,
@@ -263,7 +284,7 @@ export const theme = extendTheme({
     },
     Progress: {
       parts: ["track", "filledTrack", "label"],
-      baseStyle: (props) => ({
+      baseStyle: (props: { isIndeterminate: any }) => ({
         track: {
           borderRadius: "10px",
         },
@@ -326,6 +347,17 @@ export const theme = extendTheme({
           },
           thumb: {
             bg: "linear-gradient(129.18deg, #52FF00 8.52%, #00EEFD 93.94%)",
+          },
+        },
+        accent: {
+          track: {
+            bg: "gray.100",
+            _checked: {
+              bg: "gray.100",
+            },
+          },
+          thumb: {
+            bg: "#3300FF",
           },
         },
       },

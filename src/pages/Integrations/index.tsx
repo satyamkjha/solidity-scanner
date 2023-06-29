@@ -1,15 +1,6 @@
 import React, { ReactElement, useState, memo } from "react";
-import { useHistory } from "react-router-dom";
 import { useQueryClient } from "react-query";
-import {
-  Flex,
-  Box,
-  Text,
-  Button,
-  Icon,
-  VStack,
-  Spinner,
-} from "@chakra-ui/react";
+import { Flex, Box, Text, Button, Icon, VStack } from "@chakra-ui/react";
 import { AiOutlineWarning } from "react-icons/ai";
 import { BiLockAlt } from "react-icons/bi";
 
@@ -27,6 +18,7 @@ import {
 
 import API from "helpers/api";
 import { API_PATH } from "helpers/routeManager";
+import Loader from "components/styled-components/Loader";
 const REDIRECT_URI =
   process.env.NODE_ENV === "production"
     ? "https://solidityscan.com/integrations/"
@@ -76,7 +68,7 @@ const Integrations: React.FC = () => {
             justifyContent: "center",
           }}
         >
-          <Spinner mt={20} />
+          <Loader />
         </Flex>
       )}
 
@@ -91,7 +83,6 @@ const Integrations: React.FC = () => {
             url={GITHUB_URL}
             providerUrlChecker="github.com"
           />
-
           <IntegrationChannel
             title="JIRA"
             description="Connect JIRA to export vulnerabilities"
@@ -139,13 +130,15 @@ const IntegrationChannel: React.FC<IntegrationChannelProps> = ({
 }) => {
   const [loading, setLoading] = useState(false);
   const queryClient = useQueryClient();
-  const history = useHistory();
   const onSuccess = async (code: string) => {
     try {
       setLoading(true);
-      await API.post(`${API_PATH.API_AUTHENTICATE_INTEGRATIONS}${title.toLowerCase()}/`, {
-        code,
-      });
+      await API.post(
+        `${API_PATH.API_AUTHENTICATE_INTEGRATIONS}${title.toLowerCase()}/`,
+        {
+          code,
+        }
+      );
       setLoading(false);
       queryClient.invalidateQueries("profile");
     } catch (e) {
@@ -156,7 +149,10 @@ const IntegrationChannel: React.FC<IntegrationChannelProps> = ({
   const onDisconnect = async () => {
     try {
       setLoading(true);
-      await API.post(`${API_PATH.API_DELETE_INTEGRATIONS}${title.toLowerCase()}/`, {});
+      await API.post(
+        `${API_PATH.API_DELETE_INTEGRATIONS}${title.toLowerCase()}/`,
+        {}
+      );
       await queryClient.refetchQueries("profile");
       setLoading(false);
     } catch (e) {

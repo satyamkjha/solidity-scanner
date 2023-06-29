@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-import { useForm } from "react-hook-form";
 import { useHistory } from "react-router-dom";
 import { useQueryClient } from "react-query";
 import { FiCheck } from "react-icons/fi";
@@ -15,8 +14,6 @@ import {
   InputRightElement,
   VStack,
   Input,
-  Spinner,
-  InputProps,
   useToast,
   Stack,
   Tooltip,
@@ -28,7 +25,6 @@ import {
   AiOutlineSave,
   AiOutlineEye,
   AiOutlineEyeInvisible,
-  AiFillInfoCircle,
 } from "react-icons/ai";
 import { useProfile } from "hooks/useProfile";
 
@@ -37,13 +33,8 @@ import Auth from "helpers/auth";
 import { API_PATH } from "helpers/routeManager";
 import { AuthResponse } from "common/types";
 import { InfoIcon } from "@chakra-ui/icons";
-import reCAPTCHA from "helpers/reCAPTCHA";
+import Loader from "components/styled-components/Loader";
 
-type ProfileFormData = {
-  first_name?: string;
-  company_name?: string;
-  contact_number?: string;
-};
 const Profile: React.FC = () => {
   const toast = useToast();
 
@@ -53,15 +44,22 @@ const Profile: React.FC = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
 
+  const [companyName, setCompanyName] = useState("");
+  const [contactNumber, setContactNumber] = useState("");
+  const [firstName, setFirstName] = useState("");
+  const [updateLoading, setUpdateLoading] = useState(false);
+
   const { data } = useProfile();
   const queryClient = useQueryClient();
-  const { handleSubmit, register, formState } = useForm<ProfileFormData>();
 
   useEffect(() => {
     if (data) {
       setEmailSend(data.verification_email_sent);
       if (data.verification_email_sent && !data.email_verified)
         setMetaMaskEmail(data.email);
+      setCompanyName(data.company_name);
+      setContactNumber(data.contact_number);
+      setFirstName(data.name);
     }
   }, [data]);
 
@@ -75,28 +73,56 @@ const Profile: React.FC = () => {
     return true;
   };
 
-  const onSave = async ({
-    company_name,
-    contact_number,
-    first_name,
-  }: ProfileFormData) => {
-    const { data } = await API.post(API_PATH.API_UPDATE_PROFILE, {
-      company_name,
-      contact_number,
-      first_name,
-    });
+  const checkFormValidation = () => {
+    if (companyName && (companyName.length < 5 || companyName.length > 40)) {
+      return false;
+    }
+    if (
+      contactNumber &&
+      (contactNumber.length < 8 || contactNumber.length > 15)
+    ) {
+      return false;
+    }
+    if (firstName && (firstName.length < 5 || firstName.length > 40)) {
+      return false;
+    }
+    return true;
+  };
 
-    queryClient.invalidateQueries("profile");
-    if (data.status === "success") {
+  const onSave = async () => {
+    if (!checkFormValidation()) {
       toast({
-        title: "Profile Updated successfully",
-        status: "success",
+        title: "Form Data is not correct",
+        status: "error",
         duration: 2000,
         isClosable: true,
         position: "bottom",
       });
-      setEditable(false);
+      return;
     }
+    try {
+      setUpdateLoading(true);
+      const { data } = await API.post(API_PATH.API_UPDATE_PROFILE, {
+        company_name: companyName,
+        contact_number: contactNumber,
+        first_name: firstName,
+      });
+      queryClient.invalidateQueries("profile");
+      if (data.status === "success") {
+        toast({
+          title: "Profile Updated successfully",
+          status: "success",
+          duration: 2000,
+          isClosable: true,
+          position: "bottom",
+        });
+        setEditable(false);
+      }
+    } catch (e) {
+      console.log(e);
+      setUpdateLoading(false);
+    }
+    setUpdateLoading(false);
   };
 
   const updateEmail = async () => {
@@ -169,11 +195,11 @@ const Profile: React.FC = () => {
           sx={{
             w: "100%",
             mx: [0, 0, 4],
-            my: 4,
+            my: 24,
             justifyContent: "center",
           }}
         >
-          <Spinner mt={20} />
+          <Loader />
         </Flex>
       )}
 
@@ -181,190 +207,190 @@ const Profile: React.FC = () => {
         <>
           {" "}
           <Box w="100%" bgColor="white" borderRadius="20px" p={4} px={6}>
-            <form style={{ width: "100%" }} onSubmit={handleSubmit(onSave)}>
-              <Flex w="100%" alignItems="center" justifyContent="space-between">
-                <Text fontSize="xl">Profile Details</Text>
+            <Flex w="100%" alignItems="center" justifyContent="space-between">
+              <Text fontSize="xl">Profile Details</Text>
+              {isEditable ? (
+                <Button
+                  variant="accent-ghost"
+                  type="submit"
+                  isLoading={updateLoading}
+                  onClick={(e) => {
+                    e.preventDefault();
+                    onSave();
+                  }}
+                >
+                  <Icon as={AiOutlineSave} color="accent" mr={2} /> Save
+                </Button>
+              ) : (
+                <Button
+                  variant="accent-ghost"
+                  //   type="button"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    setEditable(true);
+                  }}
+                >
+                  <Icon as={AiOutlineEdit} color="accent" mr={2} /> Edit
+                </Button>
+              )}
+            </Flex>
+            <VStack spacing={isEditable ? 4 : 8} my={4}>
+              <FormControl id="name">
+                <FormLabel color="subtle">Name</FormLabel>
                 {isEditable ? (
-                  <Button
-                    variant="accent-ghost"
-                    type="submit"
-                    isLoading={formState.isSubmitting}
-                  >
-                    <Icon as={AiOutlineSave} color="accent" mr={2} /> Save
-                  </Button>
+                  <Input
+                    borderRadius="15px"
+                    size="lg"
+                    isRequired
+                    isDisabled={updateLoading}
+                    type="text"
+                    w="100%"
+                    maxW="400px"
+                    defaultValue={data.name}
+                    onChange={(e) => setFirstName(e.target.value)}
+                  />
                 ) : (
-                  <Button
-                    variant="accent-ghost"
-                    //   type="button"
-                    onClick={(e) => {
-                      e.preventDefault();
-                      setEditable(true);
+                  <Text fontSize="lg">{data.name}</Text>
+                )}
+              </FormControl>
+              <FormControl id="companyName">
+                <FormLabel color="subtle">Company Name</FormLabel>
+                {isEditable ? (
+                  <Input
+                    borderRadius="15px"
+                    size="lg"
+                    isDisabled={updateLoading}
+                    type="text"
+                    w="100%"
+                    maxW="400px"
+                    defaultValue={data.company_name}
+                    onChange={(e) => {
+                      setCompanyName(e.target.value);
                     }}
-                  >
-                    <Icon as={AiOutlineEdit} color="accent" mr={2} /> Edit
-                  </Button>
+                  />
+                ) : (
+                  <Text fontSize="lg">{data.company_name}</Text>
                 )}
-              </Flex>
-              <VStack spacing={isEditable ? 4 : 8} my={4}>
-                <FormControl id="name">
-                  <FormLabel color="subtle">Name</FormLabel>
+              </FormControl>
+              <FormControl id="mobileNumber">
+                <FormLabel color="subtle">Mobile Number</FormLabel>
+                {isEditable ? (
+                  <Input
+                    borderRadius="15px"
+                    size="lg"
+                    isDisabled={updateLoading}
+                    type="number"
+                    w="100%"
+                    maxW="400px"
+                    defaultValue={data.contact_number}
+                    onChange={(e) => {
+                      setContactNumber(e.target.value);
+                    }}
+                  />
+                ) : (
+                  <Text fontSize="lg">{data.contact_number}</Text>
+                )}
+              </FormControl>
+
+              {data.public_address && (
+                <FormControl id="public_address">
+                  <FormLabel color="subtle">Public Address</FormLabel>
                   {isEditable ? (
                     <Input
                       borderRadius="15px"
                       size="lg"
-                      isRequired
-                      isDisabled={formState.isSubmitting}
-                      type="text"
+                      isDisabled
+                      type="email"
                       w="100%"
                       maxW="400px"
-                      defaultValue={data.name}
-                      {...register("first_name", { required: true })}
+                      value={data.public_address}
                     />
                   ) : (
-                    <Text fontSize="lg">{data.name}</Text>
+                    <Text fontSize="lg">{data.public_address}</Text>
                   )}
                 </FormControl>
-                <FormControl id="companyName">
-                  <FormLabel color="subtle">Company Name</FormLabel>
+              )}
+
+              {data.email_verified && (
+                <FormControl id="email">
+                  <FormLabel color="subtle">Email ID</FormLabel>
                   {isEditable ? (
                     <Input
                       borderRadius="15px"
                       size="lg"
-                      isDisabled={formState.isSubmitting}
-                      type="text"
+                      isDisabled
+                      type="email"
                       w="100%"
                       maxW="400px"
-                      defaultValue={data.company_name}
-                      {...register("company_name", { required: false })}
+                      value={data.email}
                     />
                   ) : (
-                    <Text fontSize="lg">{data.company_name}</Text>
+                    <Text fontSize="lg">{data.email}</Text>
                   )}
                 </FormControl>
-                <FormControl id="mobileNumber">
-                  <FormLabel color="subtle">Mobile Number</FormLabel>
-                  {isEditable ? (
-                    <Input
-                      borderRadius="15px"
-                      size="lg"
-                      isDisabled={formState.isSubmitting}
-                      type="text"
-                      w="100%"
-                      maxW="400px"
-                      defaultValue={data.contact_number}
-                      {...register("contact_number", { required: false })}
-                    />
-                  ) : (
-                    <Text fontSize="lg">{data.contact_number}</Text>
-                  )}
-                </FormControl>
+              )}
 
-                {data.public_address && (
-                  <FormControl id="public_address">
-                    <FormLabel color="subtle">Public Address</FormLabel>
-                    {isEditable ? (
-                      <Input
-                        borderRadius="15px"
-                        size="lg"
-                        isDisabled
-                        type="email"
-                        w="100%"
-                        maxW="400px"
-                        value={data.public_address}
-                      />
-                    ) : (
-                      <Text fontSize="lg">{data.public_address}</Text>
-                    )}
-                  </FormControl>
-                )}
-
-                {data.email_verified && (
-                  <FormControl id="email">
-                    <FormLabel color="subtle">Email ID</FormLabel>
-                    {isEditable ? (
-                      <Input
-                        borderRadius="15px"
-                        size="lg"
-                        isDisabled
-                        type="email"
-                        w="100%"
-                        maxW="400px"
-                        value={data.email}
-                      />
-                    ) : (
-                      <Text fontSize="lg">{data.email}</Text>
-                    )}
-                  </FormControl>
-                )}
-
-                {!data.email_verified && data.public_address && (
-                  <FormControl id="email">
-                    <FormLabel color="subtle">
-                      <Flex w={"100%"}>
-                        Email
-                        <Tooltip
-                          label="Email verification is pending"
-                          placement="top"
-                        >
-                          <InfoIcon color={"accent"} ml={1} fontSize="sm" />
-                        </Tooltip>
-                      </Flex>
-                    </FormLabel>
-                    <Stack
-                      spacing={6}
-                      direction={["column", "column", "column", "row"]}
-                    >
-                      <Input
-                        borderRadius="15px"
-                        size="lg"
-                        isDisabled={data.verification_email_sent}
-                        type="email"
-                        w="100%"
-                        maxW="400px"
-                        defaultValue={metaMaskEmail}
-                        onChange={(e) => setMetaMaskEmail(e.target.value)}
-                      />
-                      <Button
-                        variant={"brand"}
-                        onClick={!emailSend ? updateEmail : onResendEmail}
-                        disabled={!metaMaskEmail}
-                        px={10}
-                        minW={"150px"}
+              {!data.email_verified && data.public_address && (
+                <FormControl id="email">
+                  <FormLabel color="subtle">
+                    <Flex w={"100%"}>
+                      Email
+                      <Tooltip
+                        label="Email verification is pending"
+                        placement="top"
                       >
-                        {isLoading ? (
-                          <Spinner />
-                        ) : emailSend ? (
-                          "Resend Email"
-                        ) : (
-                          "Verify Email"
-                        )}
-                      </Button>
-                    </Stack>
-                    {emailSend && (
-                      <Text color="success" my={2}>
-                        <Icon as={FiCheck} /> email sent successfully. Check
-                        your inbox for verification link.
-                      </Text>
-                    )}
-                    <Text my={2} color="#FF2400" fontSize="sm">
-                      {error}
+                        <InfoIcon color={"accent"} ml={1} fontSize="sm" />
+                      </Tooltip>
+                    </Flex>
+                  </FormLabel>
+                  <Stack
+                    spacing={6}
+                    direction={["column", "column", "column", "row"]}
+                  >
+                    <Input
+                      borderRadius="15px"
+                      size="lg"
+                      isDisabled={data.verification_email_sent}
+                      type="email"
+                      w="100%"
+                      maxW="400px"
+                      defaultValue={metaMaskEmail}
+                      onChange={(e) => setMetaMaskEmail(e.target.value)}
+                    />
+                    <Button
+                      variant={"brand"}
+                      onClick={!emailSend ? updateEmail : onResendEmail}
+                      disabled={!metaMaskEmail}
+                      px={10}
+                      minW={"150px"}
+                    >
+                      {isLoading ? (
+                        <Loader />
+                      ) : emailSend ? (
+                        "Resend Email"
+                      ) : (
+                        "Verify Email"
+                      )}
+                    </Button>
+                  </Stack>
+                  {emailSend && (
+                    <Text color="success" my={2}>
+                      <Icon as={FiCheck} /> email sent successfully. Check your
+                      inbox for verification link.
                     </Text>
-                  </FormControl>
-                )}
-              </VStack>
-            </form>
+                  )}
+                  <Text my={2} color="#FF2400" fontSize="sm">
+                    {error}
+                  </Text>
+                </FormControl>
+              )}
+            </VStack>
           </Box>
           {!data.public_address && <ChangePasswordForm />}
         </>
       )}
     </Box>
   );
-};
-
-type PasswordChangeFormData = {
-  password: string;
-  new_password: string;
-  confirm_password: string;
 };
 
 const ChangePasswordForm: React.FC = () => {
@@ -432,6 +458,7 @@ const ChangePasswordForm: React.FC = () => {
           type="submit"
           onClick={onSubmit}
           isLoading={isLoading}
+          spinner={<Loader color={"#3300FF"} size={25} />}
         >
           Change Password
         </Button>

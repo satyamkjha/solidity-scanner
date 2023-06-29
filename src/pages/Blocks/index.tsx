@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, Dispatch, SetStateAction } from "react";
 import { Link } from "react-router-dom";
 import {
   Flex,
@@ -6,16 +6,13 @@ import {
   Text,
   Button,
   Progress,
-  Spinner,
-  HStack,
   Image,
   useMediaQuery,
+  Tooltip,
 } from "@chakra-ui/react";
-
 import { LogoIcon, BlockCredit, ScanErrorIcon } from "components/icons";
 import Score from "components/score";
 import VulnerabilityDistribution from "components/vulnDistribution";
-
 import { Page, Pagination, Scan } from "common/types";
 import { timeSince } from "common/functions";
 import { useBlocks } from "hooks/useBlocks";
@@ -24,6 +21,8 @@ import { useHistory } from "react-router-dom";
 import InfiniteScroll from "react-infinite-scroll-component";
 import API from "helpers/api";
 import { API_PATH } from "helpers/routeManager";
+import { getAssetsURL } from "helpers/helperFunction";
+import Loader from "components/styled-components/Loader";
 
 const Blocks: React.FC = () => {
   const [isDesktopView] = useMediaQuery("(min-width: 1920px)");
@@ -35,9 +34,11 @@ const Blocks: React.FC = () => {
   });
   const [hasMore, setHasMore] = useState(true);
 
-  const { data: scans, isLoading, refetch } = useBlocks(pagination);
+  const { data: scans, refetch } = useBlocks(pagination);
   const { data: profileData } = useProfile();
   const [scanList, setScanList] = useState<Scan[]>();
+  const [isLoadingIcons, setIsLoadingIcons] = useState(true);
+  const [iconCounter, setIconCounter] = useState<number>(0);
 
   useEffect(() => {
     if (scans) {
@@ -47,6 +48,9 @@ const Blocks: React.FC = () => {
           : scans.data;
       setScanList(sList);
       setPage(scans.page);
+      if (scans.data && !scans.data.length) {
+        setIsLoadingIcons(false);
+      }
     }
   }, [scans, refetch]);
 
@@ -79,6 +83,16 @@ const Blocks: React.FC = () => {
     refetch();
   }, [pagination]);
 
+  useEffect(() => {
+    if (scanList) {
+      const scanDoneCount = scanList.filter(
+        (scan) => scan.multi_file_scan_status === "scan_done"
+      ).length;
+
+      if (scanDoneCount === iconCounter) setIsLoadingIcons(false);
+    }
+  }, [iconCounter]);
+
   const fetchScan = async () => {
     scanList?.forEach(async (scan, index) => {
       if (
@@ -96,6 +110,7 @@ const Blocks: React.FC = () => {
       }
     });
   };
+
   const fetchMoreBlocks = async () => {
     if (page && pagination.pageNo >= page.total_pages) {
       setHasMore(false);
@@ -130,7 +145,7 @@ const Blocks: React.FC = () => {
         w="100%"
       >
         <Flex alignItems="center">
-          <Text sx={{ color: "subtle", fontWeight: 600, ml: 4 }}> BLOCKS</Text>
+          <Text sx={{ color: "subtle", fontWeight: 600, ml: 4 }}>BLOCKS</Text>
           <Flex alignItems="center" ml={2} display={["none", "none", "flex"]}>
             <BlockCredit />
             <Text fontSize="xl" fontWeight="700" ml={2}>
@@ -146,12 +161,12 @@ const Blocks: React.FC = () => {
           </Flex>
         </Flex>
       </Flex>
-
-      {!scanList ? (
+      {!scanList || isLoadingIcons ? (
         <Flex w="100%" h="70vh" alignItems="center" justifyContent="center">
-          <Spinner />
+          <Loader />
         </Flex>
-      ) : scanList.length === 0 ? (
+      ) : null}
+      {scanList && scanList.length === 0 ? (
         <Flex
           w="100%"
           h="70vh"
@@ -170,7 +185,8 @@ const Blocks: React.FC = () => {
             </Button>
           </Link>
         </Flex>
-      ) : (
+      ) : null}
+      {scanList && scanList.length ? (
         <Flex
           sx={{
             flexWrap: "wrap",
@@ -178,6 +194,7 @@ const Blocks: React.FC = () => {
           }}
           w="100%"
           boxSizing={"border-box"}
+          visibility={isLoadingIcons ? "hidden" : "visible"}
         >
           <InfiniteScroll
             style={{
@@ -192,41 +209,43 @@ const Blocks: React.FC = () => {
             hasMore={hasMore}
             loader={
               <Box w={"100%"} align="center">
-                <Spinner />
+                <Loader />
               </Box>
             }
             scrollableTarget="pageScroll"
           >
-            {[...(scanList || [])]
-              // .sort((scan1, scan2) =>
-              //   new Date(scan1._updated) < new Date(scan2._updated) ? 1 : -1
-              // )
-              .map((scan) => (
-                <BlockCard key={scan.scan_id} scan={scan} />
-              ))}
+            {[...(scanList || [])].map((scan) => (
+              <BlockCard
+                key={scan.scan_id}
+                scan={scan}
+                setIconCounter={setIconCounter}
+              />
+            ))}
           </InfiniteScroll>
         </Flex>
-      )}
+      ) : null}
     </Box>
   );
 };
 
-const BlockCard: React.FC<{ scan: Scan }> = ({ scan }) => {
+const BlockCard: React.FC<{
+  scan: Scan;
+  setIconCounter: Dispatch<SetStateAction<number>>;
+}> = ({ scan, setIconCounter }) => {
   const {
     scan_status,
     project_name,
     scan_id,
-    scan_summary,
     _updated,
     contract_address,
     contractname,
     contract_platform,
     multi_file_scan_status,
     multi_file_scan_summary,
-    multi_file_scan_details,
     project_id,
   } = scan;
 
+  const assetsURL = getAssetsURL();
   const history = useHistory();
 
   return (
@@ -259,7 +278,11 @@ const BlockCard: React.FC<{ scan: Scan }> = ({ scan }) => {
       }}
     >
       <Box p={5}>
-        <Text sx={{ w: "100%", color: "subtle" }}>{contractname}</Text>
+        <Tooltip label={contractname} fontSize="md" placement="top-start">
+          <Text sx={{ w: "100%", color: "subtle" }} isTruncated>
+            {contractname}
+          </Text>
+        </Tooltip>
         <Text sx={{ w: "100%" }} isTruncated>
           {project_name || contract_address}
         </Text>
@@ -276,27 +299,23 @@ const BlockCard: React.FC<{ scan: Scan }> = ({ scan }) => {
             height="fit-content"
             mb={7}
           >
-            <Score score={multi_file_scan_summary?.score || "0"} />
-            {/* <HStack
-                h="fit-content"
-                py={1}
-                px={4}
-                borderRadius={36}
-                backgroundColor="#FAFBFC"
-                cursor="pointer"
-                boxShadow="0px 1px 1px rgba(0, 0, 0, 0.09)"
-              > */}
+            <Score
+              score={
+                multi_file_scan_summary?.score_v2 ||
+                (parseFloat(multi_file_scan_summary?.score) * 20)
+                  .toFixed(2)
+                  .toString() ||
+                "0"
+              }
+            />
             <Image
               mx={3}
-              src={`/blockscan/${contract_platform}.svg`}
-              alt="Product screenshot"
+              src={`${assetsURL}blockscan/${contract_platform}.svg`}
+              alt={contract_platform}
               h={"40px"}
               w={"40px"}
+              onLoad={() => setIconCounter((currentCount) => currentCount + 1)}
             />
-            {/* <Text fontWeight={"700"} width={"100%"} as="p" fontSize="14px">
-                  {contract_platform}
-                </Text> */}
-            {/* </HStack> */}
           </Flex>
           <VulnerabilityDistribution
             critical={

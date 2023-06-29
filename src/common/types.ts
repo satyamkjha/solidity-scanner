@@ -11,6 +11,7 @@ export type Profile = {
   public_address?: string;
   company_name: string;
   current_package: string;
+  billing_cycle: string;
   email_verified: boolean;
   verification_email_sent: boolean;
   projects_remaining: number;
@@ -153,6 +154,7 @@ export type MultiFileScanSummary = {
   scan_time_taken: number;
   scans_ran: string[];
   score: string;
+  score_v2: string;
   threat_score: string;
 };
 
@@ -168,11 +170,44 @@ export type MetricWiseAggregatedFinding = {
   issue_remediation?: string;
 };
 
+export type PricingData = {
+  pricing_data: {
+    [key: string]: {
+      [plan: string]: Plan;
+    };
+  };
+  pricing_table_data: {
+    title: string;
+    data: {
+      beginner: boolean | string | number;
+      custom: boolean | string | number;
+      intermediate: boolean | string | number;
+      ondemand: boolean | string | number;
+      pro: boolean | string | number;
+      title: string;
+      trial: boolean | string | number;
+    }[];
+  }[];
+};
+
 export type TreeItem = {
   name: string;
   path: string;
   tree: TreeItem[];
   blobs: string[];
+};
+
+export type TreeItemUP = {
+  name: string;
+  path: string;
+  tree: TreeItemUP[];
+  isChildCheck: boolean;
+  checked: boolean;
+  blobs: {
+    path: string;
+    checked: boolean;
+    name: string;
+  }[];
 };
 
 export type ScanMeta = {
@@ -183,6 +218,7 @@ export type ScanMeta = {
   reporting_status: string;
   project_id: string;
   scan_score: string;
+  scan_score_v2: string;
   scan_name: string;
   latest_report_id: string;
 };
@@ -190,36 +226,35 @@ export type ScanMeta = {
 export type ScanSummary = {
   bug_id_hash_vs_bug_id: {
     [key: string]: string[];
-  }; //
-  count_files_analyzed: number; //
-  issue_severity_distribution: IssueSeverityDistribution; //
-  score: string; //
-  issues_count: number; //
-  lines_analyzed_count: number; //
-  latest_bug_count: number; //
-  scan_time_taken: number; //
-  false_positive: []; //
-  fixed: []; //
-  wont_fix: []; //
-  scans_ran: string[]; //
+  };
+  count_files_analyzed: number;
+  issue_severity_distribution: IssueSeverityDistribution;
+  score: string;
+  score_v2: string;
+  issues_count: number;
+  lines_analyzed_count: number;
+  latest_bug_count: number;
+  scan_time_taken: number;
+  false_positive: [];
+  fixed: [];
+  wont_fix: [];
+  scans_ran: string[];
 };
 
 export type ScanSummaryItem = {
-  count_files_analyzed: number; //
-  issue_severity_distribution: IssueSeverityDistribution; //
-  score: string; //
-
-  issues_count: number; //
-  lines_analyzed_count: number; //
-
-  scan_time_taken: number; //
-  false_positive_count: number; //
-  fixed_count: number; //
-
-  wont_fix_count: number; //
-  scans_ran: string[]; //
-  scan_time: string; //
-  pending_fix_count: number; //
+  count_files_analyzed: number;
+  issue_severity_distribution: IssueSeverityDistribution;
+  score: string;
+  score_v2: string;
+  issues_count: number;
+  lines_analyzed_count: number;
+  scan_time_taken: number;
+  false_positive_count: number;
+  fixed_count: number;
+  wont_fix_count: number;
+  scans_ran: string[];
+  scan_time: string;
+  pending_fix_count: number;
 };
 
 export type IssueSeverityDistribution = {
@@ -274,13 +309,19 @@ export type Overview = {
   upcoming_scan: string;
 };
 
+export type IssueDetailObject = {
+  issue_details: IssueItem[];
+  common_comments_map: {
+    [key: string]: string[];
+  };
+  is_issue_description_dynamic?: boolean;
+  issue_id: string;
+  issue_name: string;
+};
+
 export interface Report {
   issues: {
-    [key: string]: {
-      issue_details: IssueItem[];
-      issue_id: string;
-      issue_name: string;
-    };
+    [key: string]: IssueDetailObject;
   };
   git_commit_hash: string;
   project_summary_report: {
@@ -356,11 +397,13 @@ export type Page = {
 export type Pagination = {
   pageNo: number;
   perPageCount: number;
+  totalPages?: number;
 };
 
 export type Transaction = {
   date: string;
   package: string;
+  billing_cycle: string;
   currency: string;
   amount: string;
   order_id: string;
@@ -440,4 +483,10 @@ export type DetectorItemProp = {
   swc: string[];
   nod: number;
   description: string;
+};
+
+export type FileState = {
+  file_path: string;
+  line_nos_start: number[];
+  line_nos_end: number[];
 };

@@ -6,21 +6,17 @@ import {
   HStack,
   IconButton,
   Text,
-  Spinner,
+  useMediaQuery,
 } from "@chakra-ui/react";
 import { ReportsListItem, Profile, Scan, Report } from "common/types";
-import { useReports } from "hooks/useReports";
 import React, { useState, useRef, useEffect } from "react";
-import Icon from "react-crypto-icons";
 import { AiFillCopy, AiOutlineLock } from "react-icons/ai";
-import { BsPeople, BsPeopleFill } from "react-icons/bs";
-import { FaCopy } from "react-icons/fa";
-import { MdPeopleOutline, MdSettings } from "react-icons/md";
-import { useHistory, useParams } from "react-router-dom";
+import { BsPeople } from "react-icons/bs";
 import { ArrowDownIcon } from "@chakra-ui/icons";
 import { useReactToPrint } from "react-to-print";
 import { getPublicReport } from "hooks/usePublicReport";
 import { PrintContainer } from "pages/Report/PrintContainer";
+import Loader from "./styled-components/Loader";
 
 const ReportBlock: React.FC<{
   report: ReportsListItem;
@@ -46,6 +42,8 @@ const ReportBlock: React.FC<{
     content: () => componentRef.current,
   });
 
+  const [isMobileView] = useMediaQuery("(max-width: 500px)");
+
   useEffect(() => {
     if (summaryReport) {
       setTimeout(() => {
@@ -53,7 +51,7 @@ const ReportBlock: React.FC<{
         setPrintLoading(false);
       }, 100);
     }
-  }, [summaryReport]);
+  }, [handlePrint, summaryReport]);
 
   return (
     <Flex
@@ -76,7 +74,7 @@ const ReportBlock: React.FC<{
       height="fit-content"
     >
       <Box
-        display={["none", "block"]}
+        display={isMobileView ? "none" : "block"}
         sx={{
           width: "60px",
           height: "60px",
@@ -98,7 +96,7 @@ const ReportBlock: React.FC<{
       </Box>
       <Flex
         justifyContent={"flex-start"}
-        width={["calc(100% - 60px)", "calc(100% - 200px)"]}
+        width={["calc(100% - 60px)", "calc(100% - 60px)", "calc(100% - 120px)"]}
         alignItems="center"
         flexWrap={"wrap"}
         height="fit-content"
@@ -165,11 +163,11 @@ const ReportBlock: React.FC<{
         flexDir={["column"]}
         justifyContent={"flex-start"}
         alignItems={"center"}
-        width={["60px"]}
+        width={["60px", "60px", "120px"]}
         height={"100%"}
       >
         <Box
-          display={["block", "none"]}
+          display={isMobileView ? "block" : "none"}
           sx={{
             width: "60px",
             height: "60px",
@@ -187,16 +185,21 @@ const ReportBlock: React.FC<{
             {report.date_published.slice(3, 6)}
           </Text>
         </Box>
-        <HStack spacing={3} mr={[0, 5, 10]}>
+        <Flex
+          flexDir={["column", "column", "row"]}
+          width="100%"
+          alignItems="center"
+          justifyContent={["flex-start", "flex-start", "flex-end"]}
+        >
           {report.is_approved && (
             <IconButton
-              my={5}
-              mr={[0, 5, 5]}
+              my={[2, 2, 5]}
+              mr={[0, 0, 5]}
               aria-label="View Report"
               backgroundColor={"#F5F2FF"}
               icon={
                 printLoading ? (
-                  <Spinner fontSize={40} color="#3E15F4" />
+                  <Loader size={25} color="#3E15F4" />
                 ) : (
                   <ArrowDownIcon color="#3E15F4" />
                 )
@@ -206,15 +209,15 @@ const ReportBlock: React.FC<{
               }}
             />
           )}
-          {summaryReport && (
-            <Box display={"none"}>
+          {summaryReport && printLoading && (
+            <Box w={0} h={0} visibility={"hidden"} position="absolute">
               <Box w="100vw" ref={componentRef}>
                 <PrintContainer summary_report={summaryReport} />
               </Box>
             </Box>
           )}
           <IconButton
-            my={5}
+            my={[2, 2, 5]}
             aria-label="View Report"
             backgroundColor={"#F5F2FF"}
             icon={<ViewIcon color={"#806CCF"} />}
@@ -233,7 +236,7 @@ const ReportBlock: React.FC<{
               }
             }}
           />
-        </HStack>
+        </Flex>
       </Flex>
     </Flex>
   );

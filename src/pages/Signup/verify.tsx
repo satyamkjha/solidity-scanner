@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Link, useLocation } from "react-router-dom";
-import { Flex, Spinner, Text, Button } from "@chakra-ui/react";
+import { Flex, Text, Button } from "@chakra-ui/react";
 import { motion } from "framer-motion";
 
 import { Logo, MailSent, MailLock } from "components/icons";
@@ -10,6 +10,7 @@ import Auth from "helpers/auth";
 
 import { AuthResponse } from "common/types";
 import { API_PATH } from "helpers/routeManager";
+import Loader from "components/styled-components/Loader";
 
 const CustomFlex = motion(Flex);
 
@@ -32,10 +33,13 @@ const Verify: React.FC = () => {
     const verifyEmail = async () => {
       setLoading(true);
       try {
-        const { data } = await API.post<AuthResponse>(API_PATH.API_VERIFY_EMAIL, {
-          email,
-          token,
-        });
+        const { data } = await API.post<AuthResponse>(
+          API_PATH.API_VERIFY_EMAIL,
+          {
+            email,
+            token,
+          }
+        );
         if (data.status === "success") {
           setVerification("success");
           setLoading(false);
@@ -64,7 +68,7 @@ const Verify: React.FC = () => {
       </Flex>
       {loading && (
         <Flex align="center" direction="column" my={36}>
-          <Spinner />
+          <Loader />
         </Flex>
       )}
 

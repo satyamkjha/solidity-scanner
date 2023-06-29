@@ -14,11 +14,12 @@ import Layout from "components/layout";
 
 import Auth from "helpers/auth";
 import API from "helpers/api";
-import PaymentSucess from "pages/Billing/payment";
-import PublicReportPage from "pages/Report/PublicReport";
 import PageNotFound, { CustomPageNotFound } from "pages/PageNotFound";
-import { Helmet } from "react-helmet";
 import Cookies from "js-cookie";
+import { onLogout } from "common/functions";
+import { useQueryClient } from "react-query";
+import PublicLayout from "components/PublicLayout";
+import Loader from "components/styled-components/Loader";
 
 const Landing = lazy(
   () => import("pages/Landing" /* webpackChunkName: "Landing" */)
@@ -102,6 +103,24 @@ const Billing = lazy(
   () => import("pages/Billing" /* webpackChunkName: "Billing" */)
 );
 
+const PaymentSucess = lazy(
+  () =>
+    import(
+      "pages/Billing/components/PaymentStatus" /* webpackChunkName: "PaymentSucess" */
+    )
+);
+
+const PrivateApi = lazy(
+  () => import("pages/PrivateAPI" /* webpackChunkName: "PrivateApi" */)
+);
+
+const PublicReportPage = lazy(
+  () =>
+    import(
+      "pages/Report/PublicReport" /* webpackChunkName: "PublicReportPage" */
+    )
+);
+
 const Detectors = lazy(
   () => import("pages/Detectors" /* webpackChunkName: "Detectors" */)
 );
@@ -115,66 +134,73 @@ const Routes: React.FC = () => {
     <Router>
       <ErrorHandler>
         <Switch>
-          <Route exact path="/published-report/:projectType/:reportId">
-            <PublicReportPage />
-          </Route>
-          <Route exact path="/">
-            <Landing />
-          </Route>
-          <Route
-            exact
-            path="/quickscan/:blockAddress/:blockPlatform/:blockChain"
-          >
-            <QuickScan />
-          </Route>
-          <Route exact path="/quickscan/">
-            <QuickScan />
-          </Route>
-          <Route exact path="/report/:projectType/:projectId/:reportId">
-            <Report />
-          </Route>
-          <Route exact path="/payment/:status">
-            <PaymentSucess />
-          </Route>
-          <Route exact path="/pricing">
-            <Pricing />
-          </Route>
-          <Route exact path="/detectors">
-            <Detectors />
-          </Route>
           <Route exact path="/leaderboard">
             <LeaderBoard />
-          </Route>
-          <Route exact path="/faq">
-            <FAQ />
-          </Route>
-          <Route exact path="/terms-of-service">
-            <TermsOfService />
-          </Route>
-          <Route exact path="/privacy-policy">
-            <PrivacyPolicy />
           </Route>
           <RedirectRoute exact path="/signin">
             <SignIn />
           </RedirectRoute>
-          <Route exact path="/reset">
-            <Reset />
-          </Route>
-
+          <Route exact path="/reset" component={Reset} />
           <RedirectRoute exact path="/signup">
             <SignUp />
           </RedirectRoute>
-          <Route exact path="/check-email">
-            <CheckEmail />
-          </Route>
-          <Route exact path="/verify">
-            <Verify />
-          </Route>
+          <Route exact path="/check-email" component={CheckEmail} />
+          <Route exact path="/verify" component={Verify} />
           <RedirectRoute exact path="/forgot">
             <ForgotPassword />
           </RedirectRoute>
-          <Route exact path="/page-not-found">
-            <PageNotFound />
+          <Route exact path="/page-not-found" component={PageNotFound} />
+          <Route
+            exact
+            path="/published-report/:projectType/:reportId"
+            component={PublicReportPage}
+          />
+          <Route
+            exact
+            path="/report/:projectType/:projectId/:reportId"
+            component={Report}
+          />
+          <Route exact path="/payment/:status" component={PaymentSucess} />
+
+          <Route
+            exact
+            path={[
+              "/",
+              "/quickscan/:blockAddress/:blockPlatform/:blockChain",
+              "/quickscan/",
+              "/pricing",
+              "/detectors",
+              "/faq",
+              "/terms-of-service",
+              "/privacy-policy",
+            ]}
+          >
+            <PublicLayout>
+              <Suspense fallback={<Loader width={"100vw"} height={"100vh"} />}>
+                <Switch>
+                  <Route exact path="/" component={Landing} />
+                  <Route
+                    exact
+                    path="/quickscan/:blockAddress/:blockPlatform/:blockChain"
+                    component={QuickScan}
+                  />
+                  <Route exact path="/quickscan/" component={QuickScan} />
+                  <Route exact path="/pricing" component={Pricing} />
+                  <Route exact path="/detectors" component={Detectors} />
+                  <Route exact path="/faq" component={FAQ} />
+                  <Route
+                    exact
+                    path="/terms-of-service"
+                    component={TermsOfService}
+                  />
+                  <Route
+                    exact
+                    path="/privacy-policy"
+                    component={PrivacyPolicy}
+                  />
+                </Switch>
+              </Suspense>
+            </PublicLayout>
           </Route>
 
           <Layout>
@@ -201,6 +227,9 @@ const Routes: React.FC = () => {
                 <PrivateRoute exact path="/integrations">
                   <Integrations />
                 </PrivateRoute>
+                <PrivateRoute exact path="/private-api">
+                  <PrivateApi />
+                </PrivateRoute>
 
                 <PrivateRoute exact path="/billing">
                   <Billing />
@@ -218,11 +247,11 @@ const Routes: React.FC = () => {
 const ErrorHandler: React.FC = ({ children }) => {
   const toast = useToast();
   const history = useHistory();
+  const queryClient = useQueryClient();
 
   const logout = async () => {
     // await API.get("api-logout");
-    Auth.deauthenticateUser();
-    history.push("/signin");
+    onLogout(history, queryClient);
   };
 
   useEffect(() => {

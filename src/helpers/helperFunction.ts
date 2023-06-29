@@ -1,8 +1,27 @@
 import UAParser from "ua-parser-js";
 import reCAPTCHA from "helpers/reCAPTCHA";
+import { Profile, PricingData } from "common/types";
+
+let configValue: any = null;
+
+export const setGlobalConfig = (config: any) => {
+  configValue = config;
+};
+
+export const getGlobalConfig = () => {
+  return configValue;
+};
 
 export const sentenceCapitalize = (string: string) => {
   return string.charAt(0).toUpperCase() + string.slice(1);
+};
+
+export const snakeToNormal = (snakeCase: string): string => {
+  const words = snakeCase.split("_");
+  const normalWords = words.map(
+    (word) => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()
+  );
+  return normalWords.join(" ");
 };
 
 export const camelCaseToNormal = (string: string) => {
@@ -11,22 +30,14 @@ export const camelCaseToNormal = (string: string) => {
   return finalResult;
 };
 
-export const getFeatureGateConfig = () => {
-  let feature_gate_config: any;
-
-  if (process.env.REACT_APP_FEATURE_GATE_CONFIG) {
-    feature_gate_config = JSON.parse(process.env.REACT_APP_FEATURE_GATE_CONFIG);
+export const getFeatureGateConfig = (config?: any) => {
+  let feature_gate_config: any = {};
+  config = config || getGlobalConfig();
+  if (config && config.REACT_APP_FEATURE_GATE_CONFIG) {
+    feature_gate_config = config.REACT_APP_FEATURE_GATE_CONFIG;
   }
 
   return feature_gate_config;
-};
-
-export const getAssetsURL = () => {
-  if (process.env.REACT_APP_ASSETS_URL) {
-    return process.env.REACT_APP_ASSETS_URL;
-  } else {
-    return "";
-  }
 };
 
 export const getBrowserName = (): string => {
@@ -43,6 +54,11 @@ export const getDeviceType = (): string => {
 
   if (deviceType) return deviceType;
   else return "NA";
+};
+
+export const getAssetsURL = (config?: any) => {
+  config = config || getGlobalConfig();
+  return config.REACT_APP_ASSETS_URL || "";
 };
 
 export const getReCaptchaHeaders = async (action: string) => {
@@ -62,4 +78,48 @@ export const getReCaptchaHeaders = async (action: string) => {
       "Content-Type": "application/json",
     };
   }
+};
+
+export const checkGenerateReportAccess = (
+  profile: Profile,
+  plans: PricingData
+) => {
+  if (profile && plans) {
+    if (profile.actions_supported)
+      return profile.actions_supported.generate_report;
+
+    if (
+      profile.current_package === "expired" ||
+      profile.current_package === "trial"
+    )
+      return false;
+
+    if (profile.current_package === "custom") return true;
+
+    return plans.pricing_data[profile.billing_cycle][profile.current_package]
+      .report;
+  }
+  return false;
+};
+
+export const checkPublishReportAccess = (
+  profile: Profile,
+  plans: PricingData
+) => {
+  if (profile && plans) {
+    if (profile.actions_supported)
+      return profile.actions_supported.publishable_report;
+
+    if (
+      profile.current_package === "expired" ||
+      profile.current_package === "trial"
+    )
+      return false;
+
+    if (profile.current_package === "custom") return true;
+
+    return plans.pricing_data[profile.billing_cycle][profile.current_package]
+      .publishable_report;
+  }
+  return false;
 };

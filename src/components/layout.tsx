@@ -17,19 +17,19 @@ import {
 } from "@chakra-ui/react";
 import { GiHamburgerMenu } from "react-icons/gi";
 import { BiUser, BiPowerOff } from "react-icons/bi";
-
+import { getAssetsURL } from "helpers/helperFunction";
 import Sidebar from "components/sidebar";
-import { ProfileIconOne, ProjectIcon } from "components/icons";
-
+import { ProfileIconOne } from "components/icons";
 import { useProfile } from "hooks/useProfile";
-
 import {
   SIDEBAR_WIDTH_EXPANDED,
   SIDEBAR_WIDTH_COLLAPSED,
 } from "common/constants";
 import API from "helpers/api";
-import Auth from "helpers/auth";
 import { API_PATH } from "helpers/routeManager";
+import { useConfig } from "hooks/useConfig";
+import { useQueryClient } from "react-query";
+import { onLogout } from "common/functions";
 
 const MotionFlex = motion(Flex);
 
@@ -38,7 +38,11 @@ const Layout: React.FC = ({ children }) => {
   const [isSidebarCollapsed, setSidebarCollapsed] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
   const history = useHistory();
+  const queryClient = useQueryClient();
   const { data: profileData } = useProfile();
+
+  const config: any = useConfig();
+  const assetsURL = getAssetsURL(config);
 
   const handleClickOutside = (e: MouseEvent) => {
     if (ref.current && ref.current.contains(e.target as Node)) {
@@ -54,8 +58,7 @@ const Layout: React.FC = ({ children }) => {
       API_PATH.API_LOGOUT
     );
     if (data.status === "success") {
-      Auth.deauthenticateUser();
-      history.push("/signin");
+      onLogout(history, queryClient);
     }
   };
 
@@ -72,11 +75,7 @@ const Layout: React.FC = ({ children }) => {
   }, [showSidebar]);
 
   return (
-    <Box
-      as="div"
-     
-      height="100vh"
-    >
+    <Box as="div" height="100vh">
       {profileData && (
         <>
           {profileData.current_package === "expired" ? (
@@ -154,12 +153,14 @@ const Layout: React.FC = ({ children }) => {
           <Sidebar
             isCollapsed={isSidebarCollapsed}
             setCollapsed={setSidebarCollapsed}
+            setShowSidebar={setShowSidebar}
           />
         </Box>
         <Box sx={{ display: ["none", "none", "none", "block"] }}>
           <Sidebar
             isCollapsed={isSidebarCollapsed}
             setCollapsed={setSidebarCollapsed}
+            setShowSidebar={setShowSidebar}
           />
         </Box>
         <Box
@@ -169,11 +170,7 @@ const Layout: React.FC = ({ children }) => {
               "100%",
               "100%",
               "100%",
-              `calc(100% - ${
-                isSidebarCollapsed
-                  ? SIDEBAR_WIDTH_COLLAPSED
-                  : SIDEBAR_WIDTH_EXPANDED
-              })`,
+              `calc(100% - ${SIDEBAR_WIDTH_COLLAPSED})`,
             ],
             height: "calc(100vh)",
             overflowY: "scroll",
@@ -237,7 +234,7 @@ const Layout: React.FC = ({ children }) => {
 
               {profileData && (
                 <Flex ml={20} sx={{ display: ["none", "none", "flex"] }}>
-                  <Image src="/pricing/coin.svg" mx="auto" />
+                  <Image src={`${assetsURL}pricing/coin.svg`} mx="auto" />
                   <Text fontWeight={600} fontSize="2xl" ml={4}>
                     {profileData.credits.toLocaleString("en-US", {
                       minimumIntegerDigits: 2,

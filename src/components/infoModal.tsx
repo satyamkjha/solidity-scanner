@@ -1,25 +1,15 @@
-import React, { useState } from "react";
-import { Link as RouterLink } from "react-router-dom";
+import React from "react";
 
 import {
   Flex,
-  HStack,
-  Button,
-  Link,
   Text,
   Modal,
   ModalBody,
   ModalCloseButton,
   ModalContent,
-  ModalFooter,
-  ModalHeader,
   ModalOverlay,
   Image,
 } from "@chakra-ui/react";
-import { AiOutlineProject } from "react-icons/ai";
-import { FaDiscord, FaEnvelope, FaTelegram } from "react-icons/fa";
-import { GiLetterBomb } from "react-icons/gi";
-import axios from "axios";
 
 export const PublishReportInfo: React.FC<{
   onClose(): any;

@@ -1,11 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useForm } from "react-hook-form";
-import {
-  Link as RouterLink,
-  Redirect,
-  useHistory,
-  useLocation,
-} from "react-router-dom";
+import { Link as RouterLink, useHistory, useLocation } from "react-router-dom";
 import {
   Flex,
   Heading,
@@ -22,12 +16,9 @@ import {
   InputRightElement,
   HStack,
   Divider,
-  Image,
 } from "@chakra-ui/react";
-import { FcGoogle } from "react-icons/fc";
 import { FiAtSign } from "react-icons/fi";
 import { FaLock } from "react-icons/fa";
-import MetaMaskSDK from "@metamask/sdk";
 
 import { Logo } from "components/icons";
 
@@ -35,15 +26,14 @@ import API from "helpers/api";
 import Auth from "helpers/auth";
 import { AuthResponse } from "common/types";
 import { ViewIcon, ViewOffIcon } from "@chakra-ui/icons";
-import { EBADF } from "constants";
 import MetaMaskLogin from "components/metamaskSignin";
 import { API_PATH } from "helpers/routeManager";
 import GoogleSignIn from "components/googleSignin";
-import Cookies from "js-cookie";
 import {
   getFeatureGateConfig,
   getReCaptchaHeaders,
 } from "helpers/helperFunction";
+import Loader from "components/styled-components/Loader";
 
 function useQuery() {
   return new URLSearchParams(useLocation().search);
@@ -65,8 +55,6 @@ const SignIn: React.FC = () => {
     });
   }
   const location = useLocation();
-
-  // const env_var = JSON.parse(process.env.REACT_APP_FEATURE_GATE_CONFIG)
 
   useEffect(() => {
     const searchParams = new URLSearchParams(location.search);
@@ -99,8 +87,8 @@ const SignIn: React.FC = () => {
           {googleLoginEnabled && <GoogleSignIn />}
         </Stack>
 
-        <HStack spacing={5} width={["300px", "400px", "600px"]}>
-          <Divider background={"#000000"} width={"43%"} />
+        <HStack spacing={5} width={["90%", "80%", "600px"]}>
+          <Divider background={"#FAFBFC"} width={"43%"} />
           <Text color="subtle" my={3}>
             OR
           </Text>
@@ -155,87 +143,100 @@ const LoginForm: React.FC = () => {
         }
         setIsLoading(false);
       },
-      (err) => {
+      () => {
         setIsLoading(false);
       }
     );
   };
 
   return (
-    <Stack spacing={6} mt={8} width={["300px", "400px", "600px"]}>
-      <InputGroup alignItems="center">
-        <InputLeftElement
-          height="48px"
-          children={<Icon as={FiAtSign} color="gray.300" />}
-        />
-        <Input
-          isRequired
-          type="email"
-          placeholder="Your email"
-          variant="brand"
-          value={email}
-          size="lg"
-          onChange={(e) => setEmail(e.target.value)}
-        />
-      </InputGroup>
+    <form
+      style={{
+        width: "100%",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+      }}
+      // onSubmit={handleSubmit(onSubmit)}
+    >
+      <Stack spacing={6} mt={8} width={["90%", "80%", "600px"]}>
+        <InputGroup alignItems="center">
+          <InputLeftElement
+            height="48px"
+            children={<Icon as={FiAtSign} color="gray.300" />}
+          />
+          <Input
+            isRequired
+            type="email"
+            placeholder="Your email"
+            autoComplete="username"
+            variant="brand"
+            value={email}
+            size="lg"
+            onChange={(e) => setEmail(e.target.value)}
+          />
+        </InputGroup>
 
-      <InputGroup>
-        <InputLeftElement
-          height="48px"
-          color="gray.300"
-          children={<Icon as={FaLock} color="gray.300" />}
-        />
-        <Input
-          isRequired
-          type={show ? "text" : "password"}
-          placeholder="Password"
+        <InputGroup>
+          <InputLeftElement
+            height="48px"
+            color="gray.300"
+            children={<Icon as={FaLock} color="gray.300" />}
+          />
+          <Input
+            isRequired
+            type={show ? "text" : "password"}
+            placeholder="Password"
+            autoComplete="current-password"
+            variant="brand"
+            size="lg"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+          />
+          <InputRightElement
+            height="48px"
+            color="gray.300"
+            children={
+              show ? (
+                <ViewOffIcon
+                  color={"gray.500"}
+                  mr={5}
+                  boxSize={5}
+                  onClick={() => setShow(false)}
+                />
+              ) : (
+                <ViewIcon
+                  color={"gray.500"}
+                  mr={5}
+                  boxSize={5}
+                  onClick={() => setShow(true)}
+                />
+              )
+            }
+          />
+        </InputGroup>
+        <Flex width="100%" justify="flex-end">
+          <Link
+            as={RouterLink}
+            variant="subtle"
+            fontSize="sm"
+            mr={1}
+            to="/forgot"
+          >
+            Forgot Password?
+          </Link>
+        </Flex>
+        <Button
+          // type="submit"
           variant="brand"
-          size="lg"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-        />
-        <InputRightElement
-          height="48px"
-          color="gray.300"
-          children={
-            show ? (
-              <ViewOffIcon
-                color={"gray.500"}
-                mr={5}
-                boxSize={5}
-                onClick={() => setShow(false)}
-              />
-            ) : (
-              <ViewIcon
-                color={"gray.500"}
-                mr={5}
-                boxSize={5}
-                onClick={() => setShow(true)}
-              />
-            )
-          }
-        />
-      </InputGroup>
-      <Flex width="100%" justify="flex-end">
-        <Link
-          as={RouterLink}
-          variant="subtle"
-          fontSize="sm"
-          mr={1}
-          to="/forgot"
+          onClick={onSubmit}
+          isLoading={isLoading}
+          spinner={<Loader color={"#3300FF"} size={25} />}
         >
-          Forgot Password?
-        </Link>
-      </Flex>
-      <Button
-        type="submit"
-        variant="brand"
-        onClick={onSubmit}
-        isLoading={isLoading}
-      >
-        Sign In
-      </Button>
-    </Stack>
+          Sign In
+        </Button>
+      </Stack>
+    </form>
   );
 };
 export default SignIn;

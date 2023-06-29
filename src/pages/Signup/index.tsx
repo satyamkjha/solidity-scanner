@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { set, useForm } from "react-hook-form";
+import { useForm } from "react-hook-form";
 import { Link as RouterLink, useHistory, useLocation } from "react-router-dom";
 import {
   Flex,
@@ -17,7 +17,6 @@ import {
   HStack,
   Divider,
 } from "@chakra-ui/react";
-import { motion } from "framer-motion";
 import {
   FaDiscord,
   FaLinkedin,
@@ -41,11 +40,11 @@ import { API_PATH } from "helpers/routeManager";
 import GoogleSignIn from "components/googleSignin";
 import { getFeatureGateConfig } from "helpers/helperFunction";
 import { getReCaptchaHeaders } from "helpers/helperFunction";
-
-const CustomFlex = motion(Flex);
+import { useConfig } from "hooks/useConfig";
 
 const SignUp: React.FC = () => {
-  const googleLoginEnabled = getFeatureGateConfig().enable_google_signin;
+  const config: any = useConfig();
+  const googleLoginEnabled = getFeatureGateConfig(config).enable_google_signin;
   const [registered, setRegistered] = useState(false);
   const [email, setEmail] = useState("");
   const passwordChecker = new RegExp("^(?=.*?[A-Za-z])(?=.*?[0-9]).{6,}$");
@@ -81,7 +80,7 @@ const SignUp: React.FC = () => {
           {googleLoginEnabled && <GoogleSignIn />}
         </Stack>
         <HStack spacing={5} width={["300px", "400px", "600px"]}>
-          <Divider background={"#000000"} width={"43%"} />
+          <Divider background={"#FAFBFC"} width={"43%"} />
           <Text color="subtle" my={3}>
             OR
           </Text>
@@ -143,7 +142,7 @@ const RegisterForm: React.FC<{
   setEmail: React.Dispatch<React.SetStateAction<string>>;
   email: string;
 }> = ({ setRegistered, setEmail, email }) => {
-  const { handleSubmit, register, formState } = useForm<FormData>();
+  const { handleSubmit, formState } = useForm<FormData>();
 
   const [show, setShow] = useState(false);
   const history = useHistory();
@@ -224,7 +223,7 @@ const RegisterForm: React.FC<{
         }
       }
 
-      if (flag == 0) {
+      if (flag === 0) {
         uniqueArr.push(arr1[i]);
       }
     }
@@ -235,8 +234,16 @@ const RegisterForm: React.FC<{
   }
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)}>
-      <Stack spacing={6} mt={8} width={["300px", "400px", "600px"]}>
+    <form
+      style={{
+        width: "100%",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+      }}
+      onSubmit={handleSubmit(onSubmit)}
+    >
+      <Stack spacing={6} mt={8} width={["90%", "80%", "600px"]}>
         {step === 0 && (
           <>
             <InputGroup alignItems="center">

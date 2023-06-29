@@ -1,6 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
-import { Link as RouterLink, useLocation, useParams } from "react-router-dom";
-import styled from "@emotion/styled";
+import React from "react";
 
 import {
   Flex,
@@ -8,39 +6,18 @@ import {
   Container,
   Text,
   Heading,
-  Button,
   Image,
-  Link,
-  useDisclosure,
   HStack,
   VStack,
-  Input,
-  CircularProgressLabel,
-  CircularProgress,
-  Divider,
-  useToast,
-  Spinner,
-  Stack,
-  useMediaQuery,
-  IconButton,
-  Menu,
-  MenuButton,
-  MenuItem,
-  MenuList,
 } from "@chakra-ui/react";
-
-import Header from "components/header";
-import Footer from "components/footer";
-
-import SignupBox from "components/signupBox";
-import Infographics from "components/infographics";
-import { DetectorIcon } from "components/icons";
 import { DetectorItemProp } from "common/types";
 import { detectorData } from "common/values";
+import { useConfig } from "hooks/useConfig";
 import { getAssetsURL } from "helpers/helperFunction";
 
 const DetectorItem: React.FC<{ item: DetectorItemProp }> = ({ item }) => {
-  const assetsURL = getAssetsURL();
+  const config: any = useConfig();
+  const assetsURL = getAssetsURL(config);
 
   return (
     <Flex
@@ -103,7 +80,7 @@ const DetectorItem: React.FC<{ item: DetectorItemProp }> = ({ item }) => {
               No. of Detectors
             </Text>
             <HStack spacing={5} width="100%" justifyContent={"center"}>
-              <DetectorIcon size={35} />
+              <Image src={`${assetsURL}detectors/detectorIcon.svg`} />
               <Text fontSize={["2xl"]} fontWeight={900}>
                 {item.nod}
               </Text>
@@ -137,18 +114,15 @@ const DetectorItem: React.FC<{ item: DetectorItemProp }> = ({ item }) => {
 };
 
 const Detectors: React.FC = () => {
-  const headingData = [
-    { title: "Total Vulnerability Detectors", data: "121" },
-    { title: "Attack Categories", data: "38" },
-    { title: "SWC Coverage", data: "36/36" },
-    { title: "Upcoming Vulnerability Detectors", data: "46" },
-  ];
-
-  const assetsURL = getAssetsURL();
+  const config: any = useConfig();
+  const headingData: { title: string; data: string }[] =
+    config && config.REACT_APP_ISSUES_DATA
+      ? config.REACT_APP_ISSUES_DATA.detectorPageData
+      : [];
+  const assetsURL = getAssetsURL(config);
 
   return (
     <>
-      <Header />
       <Container maxW="100vw" p={0} color="black">
         <Flex
           w="100%"
@@ -270,32 +244,7 @@ const Detectors: React.FC = () => {
               <DetectorItem item={item} />
             ))}
           </Box>
-          <Box
-            display={"flex"}
-            flexDir="column"
-            alignItems="center"
-            justifyContent={"flex-start"}
-            w={"90%"}
-            px={[0, 0, 10]}
-            py={10}
-            borderRadius={20}
-            background={"#FFFFFF"}
-          >
-            <Heading as="h1" fontSize="3xl" mb={4}>
-              Why{" "}
-              <Box as="span" color="#3300FF">
-                SolidityScan ?
-              </Box>{" "}
-            </Heading>
-            <Text color="subtle" fontSize={["lg", "lg", "xl"]} mb={4}>
-              Smart-contract scanning tool built to discover vulnerabilities &
-              mitigate risks in your code.
-            </Text>
-            <Infographics />
-            <SignupBox />
-          </Box>
         </Flex>
-        <Footer />
       </Container>
     </>
   );

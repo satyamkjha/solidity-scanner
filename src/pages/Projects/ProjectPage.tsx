@@ -1,18 +1,9 @@
 import React, { useEffect, useState, useRef } from "react";
 import { useQueryClient } from "react-query";
-import {
-  Switch,
-  Route,
-  Link as RouterLink,
-  useParams,
-  useHistory,
-} from "react-router-dom";
-import FileDownload from "js-file-download";
+import { useParams, useHistory } from "react-router-dom";
 import { ArrowDownIcon } from "@chakra-ui/icons";
-
 import {
   Flex,
-  keyframes,
   Box,
   Text,
   Link,
@@ -22,7 +13,6 @@ import {
   TabPanels,
   Tab,
   TabPanel,
-  Spinner,
   Button,
   HStack,
   Tooltip,
@@ -45,13 +35,10 @@ import {
   Input,
   ModalFooter,
   Switch as SwitchComp,
-  toast,
   useToast,
-  Badge,
   Image,
   useMediaQuery,
   Stack,
-  IconButton,
   Menu,
   MenuButton,
   MenuList,
@@ -64,19 +51,13 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@chakra-ui/react";
-import {
-  AiOutlineClockCircle,
-  AiOutlineDownload,
-  AiFillLock,
-  AiOutlineProject,
-  AiOutlineLock,
-} from "react-icons/ai";
+import { AiOutlineProject } from "react-icons/ai";
 import Overview from "components/overview";
-import Result, { MultifileResult } from "components/result";
+import MultifileResult from "components/detailedResult/MultifileResult";
 import { RescanIcon, LogoIcon, ScanErrorIcon } from "components/icons";
 import { InfoIcon } from "@chakra-ui/icons";
 import API from "helpers/api";
-
+import { restructureRepoTree, updateCheckedValue } from "helpers/fileStructure";
 import { useScans } from "hooks/useScans";
 import { useScan, getScan } from "hooks/useScan";
 
@@ -86,35 +67,25 @@ import {
   ReportsListItem,
   ScanMeta,
   TreeItem,
+  TreeItemUP,
 } from "common/types";
 import { useProfile } from "hooks/useProfile";
 import {
   FaBuilding,
-  FaCalendar,
   FaCalendarAlt,
-  FaCalendarCheck,
-  FaCalendarDay,
-  FaCopy,
   FaEnvelope,
   FaFileCode,
   FaGithub,
   FaInternetExplorer,
-  FaMailBulk,
   FaRegCalendarCheck,
-  FaRegCopy,
 } from "react-icons/fa";
 import {
   CheckCircleIcon,
-  CheckIcon,
   LockIcon,
   TimeIcon,
-  ViewIcon,
   ChevronUpIcon,
   ChevronDownIcon,
 } from "@chakra-ui/icons";
-import { profile } from "console";
-import { motion } from "framer-motion";
-import { Profiler } from "inspector";
 import { monthNames } from "common/values";
 import PublishedReports from "components/publishedReports";
 import { useReports } from "hooks/useReports";
@@ -126,10 +97,17 @@ import { getPublicReport } from "hooks/usePublicReport";
 import ProjectCustomSettings from "components/projectCustomSettings";
 import FolderSettings from "components/projectFolderSettings";
 import { getRepoTree } from "hooks/getRepoTree";
+import {
+  getAssetsURL,
+  checkGenerateReportAccess,
+  checkPublishReportAccess,
+} from "helpers/helperFunction";
+import { useConfig } from "hooks/useConfig";
+import Loader from "components/styled-components/Loader";
 
 export const ProjectPage: React.FC = () => {
   const { projectId } = useParams<{ projectId: string }>();
-  const { data, isLoading, refetch } = useScans(projectId);
+  const { data, isLoading } = useScans(projectId);
   const [repoTree, setRepoTree] = useState<TreeItem | null>(null);
 
   const getRepoTreeReq = async () => {
@@ -160,7 +138,7 @@ export const ProjectPage: React.FC = () => {
     >
       {isLoading ? (
         <Flex w="100%" h="70vh" alignItems="center" justifyContent="center">
-          <Spinner />
+          <Loader />
         </Flex>
       ) : (
         data && (
@@ -196,9 +174,10 @@ const ScanDetails: React.FC<{
   project_branch,
   getRepoTreeReq,
 }) => {
+  const config: any = useConfig();
+  const assetsURL = getAssetsURL(config);
   const [isOpen, setIsOpen] = useState(false);
   const [isRescanLoading, setRescanLoading] = useState(false);
-
   const cancelRef = useRef<HTMLButtonElement | null>(null);
   const queryClient = useQueryClient();
   const [reportingStatus, setReportingStatus] = useState<string>("");
@@ -265,15 +244,10 @@ const ScanDetails: React.FC<{
       }
     );
     setRescanLoading(false);
-    queryClient.invalidateQueries(["scans", projectId]);
+    queryClient.invalidateQueries(["scan_list", projectId]);
     onClose();
     history.push(`/projects/`);
   };
-
-  const scan_name =
-    scanData &&
-    scans.find((scan) => scan.scan_id === scanData.scan_report.scan_id)
-      ?.scan_name;
 
   const [projectName, setProjectName] = useState("");
   const [repoUrl, setRepoUrl] = useState("");
@@ -420,12 +394,14 @@ const ScanDetails: React.FC<{
     }
   }, [summaryReport]);
 
-  const checkIfGeneratingReport = () =>
-    reportingStatus === "generating_report" ||
-    (profile.actions_supported
-      ? !profile.actions_supported.generate_report
-      : profile.current_package !== "expired" &&
-        !plans.monthly[profile.current_package].report);
+  const checkIfGeneratingReport = () => {
+    if (profile && plans) {
+      if (reportingStatus === "generating_report") return true;
+
+      return !checkGenerateReportAccess(profile, plans);
+    }
+    return true;
+  };
 
   return (
     <>
@@ -439,7 +415,7 @@ const ScanDetails: React.FC<{
       >
         {isLoading || isProfileLoading ? (
           <Flex w="100%" h="70vh" alignItems="center" justifyContent="center">
-            <Spinner />
+            <Loader />
           </Flex>
         ) : (
           scanData &&
@@ -451,9 +427,10 @@ const ScanDetails: React.FC<{
                 sx={{
                   justifyContent: ["flex-start", "flex-start", "space-between"],
                   alignItems: ["center"],
-                  pb: 1,
+                  pb: 3,
                   px: 6,
                   w: "100%",
+                  h: "fit-content",
                   borderBottom: "1px solid",
                   borderColor: "border",
                   flexDir: ["column", "column", "column", "row"],
@@ -496,6 +473,8 @@ const ScanDetails: React.FC<{
                   <VStack
                     mt={[2, 2, 2, 0]}
                     alignItems={["center", "center", "center", "flex-start"]}
+                    justifyContent={"flex-start"}
+                    spacing={0}
                   >
                     <Text sx={{ fontSize: "xl", fontWeight: 600 }}>
                       {project_name}
@@ -537,13 +516,7 @@ const ScanDetails: React.FC<{
                         bg={"white"}
                         w={["80%", "80%", "50%", "auto"]}
                         mx={["auto", "auto", "auto", 4]}
-                        isDisabled={
-                          profile.actions_supported
-                            ? !profile.actions_supported.publishable_report
-                            : profile.current_package !== "expired" &&
-                              !plans.monthly[profile.current_package]
-                                .publishable_report
-                        }
+                        isDisabled={!checkPublishReportAccess(profile, plans)}
                         onClick={() => {
                           if (commitHash == "") {
                             getReportData(
@@ -554,13 +527,9 @@ const ScanDetails: React.FC<{
                           setOpen(!open);
                         }}
                       >
-                        {profile.actions_supported
-                          ? !profile.actions_supported.publishable_report
-                          : profile.current_package !== "expired" &&
-                            !plans.monthly[profile.current_package]
-                              .publishable_report && (
-                              <LockIcon color={"accent"} size="xs" mr={3} />
-                            )}
+                        {!checkPublishReportAccess(profile, plans) && (
+                          <LockIcon color={"accent"} size="xs" mr={3} />
+                        )}
                         Publish Report
                       </Button>
                     ) : (
@@ -596,7 +565,9 @@ const ScanDetails: React.FC<{
                         isDisabled={checkIfGeneratingReport()}
                       >
                         {reportingStatus === "generating_report" && (
-                          <Spinner color="#806CCF" size="xs" mr={3} />
+                          <Flex mr={3}>
+                            <Loader color="#806CCF" size={25} />
+                          </Flex>
                         )}
                         Re-Generate Report
                       </Button>
@@ -607,7 +578,7 @@ const ScanDetails: React.FC<{
                         backgroundColor={"#F5F2FF"}
                         pl={7}
                         pr={3}
-                        py={1}
+                        py={2}
                         ml={5}
                       >
                         <Text
@@ -628,13 +599,9 @@ const ScanDetails: React.FC<{
                           |
                         </Text>
                         <Menu>
-                          <MenuButton
-                            as={Button}
-                            aria-label="Options"
-                            variant="unstyled"
-                          >
+                          <MenuButton aria-label="Options">
                             {printLoading ? (
-                              <Spinner fontSize={40} color="#3E15F4" />
+                              <Loader size={20} color="#3E15F4" />
                             ) : (
                               <ArrowDownIcon color="#3E15F4" />
                             )}
@@ -645,8 +612,13 @@ const ScanDetails: React.FC<{
                             </MenuItem>
                           </MenuList>
                         </Menu>
-                        {summaryReport && (
-                          <Box display={"none"}>
+                        {summaryReport && printLoading && (
+                          <Box
+                            w={0}
+                            h={0}
+                            visibility={"hidden"}
+                            position="absolute"
+                          >
                             <Box w="100vw" ref={componentRef}>
                               <PrintContainer summary_report={summaryReport} />
                             </Box>
@@ -672,14 +644,13 @@ const ScanDetails: React.FC<{
                         }}
                       >
                         {reportingStatus === "generating_report" && (
-                          <Spinner color="#806CCF" size="xs" mr={3} />
+                          <Flex mr={3}>
+                            <Loader color="#806CCF" size={25} />
+                          </Flex>
                         )}
-                        {profile.actions_supported
-                          ? !profile.actions_supported.generate_report
-                          : profile.current_package !== "expired" &&
-                            !plans.monthly[profile.current_package].report && (
-                              <LockIcon color={"accent"} size="xs" mr={3} />
-                            )}
+                        {!checkGenerateReportAccess(profile, plans) && (
+                          <LockIcon color={"accent"} mr={3} />
+                        )}
                         {reportingStatus === "generating_report"
                           ? "Generating report..."
                           : reportingStatus === "not_generated"
@@ -849,15 +820,6 @@ const ScanDetails: React.FC<{
                           }
                           refetch={refetch}
                         />
-                      ) : scanData.scan_report.scan_details &&
-                        scanData.scan_report.scan_summary ? (
-                        <Result
-                          details_enabled={scanData.scan_report.details_enabled}
-                          profileData={profile}
-                          scanSummary={scanData.scan_report.scan_summary}
-                          scanDetails={scanData.scan_report.scan_details}
-                          type="project"
-                        />
                       ) : (
                         <Flex
                           w="97%"
@@ -970,6 +932,7 @@ const ScanDetails: React.FC<{
                 onClick={rescan}
                 ml={3}
                 isLoading={isRescanLoading}
+                spinner={<Loader color={"#3300FF"} size={25} />}
               >
                 Rescan
               </Button>
@@ -995,7 +958,7 @@ const ScanDetails: React.FC<{
         >
           <ModalHeader
             background="rgba(82, 255, 0, 0.04)"
-            backgroundImage="url('/background/pattern.png')"
+            backgroundImage={`url('${assetsURL}background/pattern.png')`}
             textAlign={["center", "center", "center", "left"]}
             py={10}
           >
@@ -1418,7 +1381,7 @@ const ScanDetails: React.FC<{
               )}
               <Image
                 ml={"-10%"}
-                src="/common/publishreport.png"
+                src={`${assetsURL}common/publishreport.png`}
                 alt="Product screenshot"
                 w={"40%"}
                 h={"auto"}
@@ -1462,10 +1425,6 @@ const ScanDetails: React.FC<{
     </>
   );
 };
-
-interface Props {
-  setTabIndex: React.Dispatch<React.SetStateAction<number>>;
-}
 
 const ScanHistory: React.FC<{
   setTabIndex: React.Dispatch<React.SetStateAction<number>>;
@@ -1526,11 +1485,12 @@ const ScanBlock: React.FC<{
   const history = useHistory();
   const [show, setShow] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-  const [skipFilePaths, setSkipFilePaths] = useState<string[] | null>(null);
+  const [repoTreeUP, setRepoTreeUP] = useState<TreeItemUP | null>(null);
+  const [skipFilePaths, setSkipFilePaths] = useState<string[]>();
 
   const getScanRequest = async () => {
     setIsLoading(true);
-    if (skipFilePaths === null) {
+    if (repoTreeUP === null) {
       try {
         const responseData = await getScan(scan.scan_id);
         if (responseData && responseData.scan_report.skip_file_paths) {
@@ -1542,6 +1502,16 @@ const ScanBlock: React.FC<{
     }
     setIsLoading(false);
   };
+
+  useEffect(() => {
+    if (repoTree && skipFilePaths) {
+      let newRepoTreeUP = restructureRepoTree(repoTree, true);
+      skipFilePaths.forEach((path) => {
+        newRepoTreeUP = updateCheckedValue(path, false, newRepoTreeUP);
+      });
+      setRepoTreeUP(newRepoTreeUP);
+    }
+  }, [skipFilePaths, repoTree]);
 
   return (
     <>
@@ -1612,7 +1582,7 @@ const ScanBlock: React.FC<{
                     lineHeight: 1,
                   }}
                 >
-                  {scan.scan_score}
+                  {parseFloat(scan.scan_score_v2).toFixed(2) || scan.scan_score}
                 </Text>
               </VStack>
             )}
@@ -1658,7 +1628,9 @@ const ScanBlock: React.FC<{
                 }}
               >
                 {scan.reporting_status === "generating_report" && (
-                  <Spinner color="#806CCF" size="sm" mr={2} />
+                  <Flex mr={3}>
+                    <Loader color="#806CCF" size={25} />
+                  </Flex>
                 )}
                 {scan.reporting_status === "report_generated"
                   ? "View Report"
@@ -1672,12 +1644,13 @@ const ScanBlock: React.FC<{
                     variant="accent-outline"
                     minW="200px"
                     isLoading={isLoading}
+                    spinner={<Loader color={"#3300FF"} size={25} />}
                     onClick={async () => {
                       if (show) {
                         setShow(false);
                       } else {
-                        getRepoTreeReq();
-                        getScanRequest();
+                        await getRepoTreeReq();
+                        await getScanRequest();
                         setShow(true);
                       }
                     }}
@@ -1750,11 +1723,12 @@ const ScanBlock: React.FC<{
           in={show}
           animateOpacity
         >
-          {skipFilePaths && repoTree && (
+          {repoTreeUP && (
             <FolderSettings
+              branch=""
               view="scan_history"
-              fileData={repoTree}
-              skipFilePaths={skipFilePaths}
+              repoTreeUP={repoTreeUP}
+              setRepoTreeUP={setRepoTreeUP}
             />
           )}
         </Collapse>
@@ -1763,35 +1737,4 @@ const ScanBlock: React.FC<{
   );
 };
 
-const IncompleteScan: React.FC<{ message: string; scansRemaining: number }> = ({
-  message,
-  scansRemaining,
-}) => {
-  return (
-    <>
-      <Flex
-        w="100%"
-        alignItems="center"
-        justifyContent="center"
-        border="1px solid"
-        borderColor="border"
-        borderRightWidth="0px"
-        borderLeftWidth="0px"
-      >
-        <Flex w="97%" m={4} borderRadius="20px" bgColor="high-subtle" p={4}>
-          <ScanErrorIcon size={28} />
-          <Text color="high" ml={4}>
-            {message}
-          </Text>
-        </Flex>
-      </Flex>
-      <Flex
-        w="100%"
-        alignItems="center"
-        justifyContent="center"
-        flexDirection="column"
-      ></Flex>
-    </>
-  );
-};
 export default ProjectPage;
