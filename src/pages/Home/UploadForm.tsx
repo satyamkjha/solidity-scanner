@@ -15,6 +15,7 @@ import {
   Progress,
   CloseButton,
 } from "@chakra-ui/react";
+import { CheckIcon, RepeatIcon, CloseIcon } from "@chakra-ui/icons";
 import { AiOutlineProject } from "react-icons/ai";
 import {
   BlockCredit,
@@ -35,19 +36,41 @@ const UrlItem: React.FC<{ item: UrlItemProps }> = ({ item }) => {
       <HStack justify={"space-between"} width="100%">
         <HStack align={"flex-end"}>
           <SolidityFileIcon size={25} />
-          <Text fontSize={"14px"}>{item.name}</Text>
+          <Text
+            fontSize={"14px"}
+            color={item.status === "failed" ? "#FF5630" : "#000000"}
+          >
+            {item.name}
+          </Text>
         </HStack>
         <HStack align={"flex-end"}>
-          <Text color={"gray.500"}>Uploading...</Text>
-          <Spinner color={"gray.500"} />
+          {item.status === "failed" && <RepeatIcon color="accent" />}
+          <Text
+            color={
+              item.status === "uploading"
+                ? "gray.500"
+                : item.status === "uploaded"
+                ? "low"
+                : item.status === "failed"
+                ? "accent"
+                : "gray.500"
+            }
+          >
+            {item.status === "uploading" && "Uploading..."}
+            {item.status === "uploaded" && "Successful"}
+            {item.status === "failed" && "Reload"}
+          </Text>
+          {item.status === "uploading" && <Spinner color={"gray.500"} />}
+          {item.status === "uploaded" && <CheckIcon color="low" />}
+          {item.status === "failed" && <CloseIcon color={"gray.500"} />}
           <Text fontSize={"15px"}>|</Text>
-          <CloseButton onClick={() => {}} />
+          {/* <CloseButton onClick={() => {}} /> */}
         </HStack>
       </HStack>
 
       <Progress
         width="100%"
-        variant={item.status "blue"}
+        variant={item.status === "failed" ? "informational" : "low"}
         size="xs"
         isIndeterminate={item.status === "uploading" ? true : false}
       />

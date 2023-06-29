@@ -68,3 +68,9 @@ export const getBugStatusNumber = (bug_status: string) => {
       return 0;
   }
 };
+
+export const onLogout = (history: any, queryClient: QueryClient) => {
+  Auth.deauthenticateUser();
+  history.push("/signin");
+  queryClient.clear();
+};
