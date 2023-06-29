@@ -1486,32 +1486,16 @@ const ScanBlock: React.FC<{
   const [show, setShow] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [repoTreeUP, setRepoTreeUP] = useState<TreeItemUP | null>(null);
-  const [skipFilePaths, setSkipFilePaths] = useState<string[]>();
-
-  const getScanRequest = async () => {
-    setIsLoading(true);
-    if (repoTreeUP === null) {
-      try {
-        const responseData = await getScan(scan.scan_id);
-        if (responseData && responseData.scan_report.skip_file_paths) {
-          setSkipFilePaths(responseData.scan_report.skip_file_paths);
-        }
-      } catch (e) {
-        console.log(e);
-      }
-    }
-    setIsLoading(false);
-  };
 
   useEffect(() => {
-    if (repoTree && skipFilePaths) {
+    if (repoTree && scan.skip_file_paths) {
       let newRepoTreeUP = restructureRepoTree(repoTree, true);
-      skipFilePaths.forEach((path) => {
+      scan.skip_file_paths.forEach((path) => {
         newRepoTreeUP = updateCheckedValue(path, false, newRepoTreeUP);
       });
       setRepoTreeUP(newRepoTreeUP);
     }
-  }, [skipFilePaths, repoTree]);
+  }, [repoTree, scan.skip_file_paths]);
 
   return (
     <>
@@ -1638,7 +1622,7 @@ const ScanBlock: React.FC<{
                   ? "Generating Report"
                   : "Report Not Generated"}
               </Button>
-              {project_url !== "File Scan" && (
+              {project_url !== "File Scan" && scan.skip_file_paths && (
                 <HStack spacing={3} mr={10} my={2}>
                   <Button
                     variant="accent-outline"
@@ -1649,9 +1633,10 @@ const ScanBlock: React.FC<{
                       if (show) {
                         setShow(false);
                       } else {
-                        await getRepoTreeReq();
-                        await getScanRequest();
+                        setIsLoading(true);
                         setShow(true);
+                        await getRepoTreeReq();
+                        setIsLoading(false);
                       }
                     }}
                   >
