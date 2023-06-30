@@ -14,6 +14,7 @@ import {
   Progress,
   CloseButton,
   Divider,
+  Spinner,
 } from "@chakra-ui/react";
 import { CheckIcon, RepeatIcon, CloseIcon } from "@chakra-ui/icons";
 import { AiOutlineProject } from "react-icons/ai";
@@ -26,7 +27,11 @@ import Loader from "components/styled-components/Loader";
 
 type UrlItemProps = { url: string; name: string; file: File; status: string };
 
-const UrlItem: React.FC<{ item: UrlItemProps }> = ({ item }) => {
+const UrlItem: React.FC<{
+  item: UrlItemProps;
+  removeFiles: (item: UrlItemProps) => void;
+  uploadSingleFile: (item: UrlItemProps) => Promise<void>;
+}> = ({ item, removeFiles, uploadSingleFile }) => {
   return (
     <VStack width="100%" my={4}>
       <HStack justify={"space-between"} width="100%">
@@ -40,33 +45,52 @@ const UrlItem: React.FC<{ item: UrlItemProps }> = ({ item }) => {
           </Text>
         </HStack>
         <HStack align={"flex-end"}>
-          {item.status === "failed" && <RepeatIcon color="accent" />}
-          <Text
-            color={
-              item.status === "uploading"
-                ? "gray.500"
-                : item.status === "uploaded"
-                ? "low"
-                : item.status === "failed"
-                ? "accent"
-                : "gray.500"
-            }
+          <HStack
+            onClick={() => {
+              if (item.status === "failed") {
+                uploadSingleFile(item);
+              }
+            }}
+            cursor="pointer"
+            align={"flex-end"}
           >
-            {item.status === "uploading" && "Uploading..."}
-            {item.status === "uploaded" && "Successful"}
-            {item.status === "failed" && "Reload"}
-          </Text>
-          {item.status === "uploading" && <Spinner color={"gray.500"} />}
-          {item.status === "uploaded" && <CheckIcon color="low" />}
-          {item.status === "failed" && <CloseIcon color={"gray.500"} />}
+            <Text
+              color={
+                item.status === "uploading"
+                  ? "gray.500"
+                  : item.status === "success"
+                  ? "low"
+                  : item.status === "failed"
+                  ? "accent"
+                  : "gray.500"
+              }
+            >
+              {item.status === "uploading" && "Uploading..."}
+              {item.status === "success" && "Successful"}
+              {item.status === "failed" && "Reload"}
+            </Text>
+            {item.status === "uploading" && <Spinner color={"gray.500"} />}
+            {item.status === "success" && <CheckIcon color="low" />}
+            {item.status === "failed" && (
+              <RepeatIcon color="accent" onClick={() => {}} />
+            )}
+          </HStack>
           <Text fontSize={"15px"}>|</Text>
-          {/* <CloseButton onClick={() => {}} /> */}
+          <CloseButton onClick={() => removeFiles(item)} />
         </HStack>
       </HStack>
-
       <Progress
         width="100%"
-        variant={item.status === "failed" ? "informational" : "low"}
+        variant={
+          item.status === "failed"
+            ? "informational"
+            : item.status === "success"
+            ? "low"
+            : item.status === "uploading"
+            ? "blue"
+            : "blue"
+        }
+        value={100}
         size="xs"
         isIndeterminate={item.status === "uploading" ? true : false}
       />
@@ -165,44 +189,68 @@ const UploadForm: React.FC = () => {
     let results = await acceptedFiles.map(async (file) => {
       return getPreassignedURL(file.name, file);
     });
+
     Promise.all(results).then((res) => {
       if (res.length === acceptedFiles.length) setUrlList([...res]);
     });
+    setStep(2);
+  };
+
+  const uploadSingleFile = async (item: UrlItemProps) => {
+    postDataToS3(item.file, item.url, item.name).then(
+      (res) => {
+        if (res) {
+          setUrlList(
+            urlList.map((urlItem) => {
+              if (urlItem.name === item.name) {
+                return {
+                  url: item.url,
+                  name: item.name,
+                  file: item.file,
+                  status: "success",
+                };
+              }
+              return urlItem;
+            })
+          );
+        }
+      },
+      () => {}
+    );
   };
 
   const uploadFiles = async () => {
     let results: any[] = [];
+    console.log(urlList);
     urlList.forEach((item) => {
       results.push(
         new Promise((resolve, reject) => {
-          postDataToS3(item.file, item.url).then(
+          postDataToS3(item.file, item.url, item.name).then(
             (res) => {
+              console.log(res);
+              if (res) {
+                resolve({
+                  url: item.url,
+                  name: item.name,
+                  file: item.file,
+                  status: "success",
+                });
+              } else {
+                resolve({
+                  url: item.url,
+                  name: item.name,
+                  file: item.file,
+                  status: "failed",
+                });
+              }
+            },
+            () => {
               resolve({
                 url: item.url,
                 name: item.name,
                 file: item.file,
-                status: "uploaded",
+                status: "failed",
               });
-            },
-            () => {
-              postDataToS3(item.file, item.url).then(
-                (res) => {
-                  resolve({
-                    url: item.url,
-                    name: item.name,
-                    file: item.file,
-                    status: "uploaded",
-                  });
-                },
-                () => {
-                  reject({
-                    url: item.url,
-                    name: item.name,
-                    file: item.file,
-                    status: "failed",
-                  });
-                }
-              );
             }
           );
         })
@@ -210,19 +258,20 @@ const UploadForm: React.FC = () => {
     });
     Promise.all(results).then(
       (res) => {
-        let count = 0;
-        // res here is an array of boolean. Using this check if all the files are uploaded or not. Also give an option to remove a file if needed.
+        // res here is an array of boolean. Using this check if all the files are success or not. Also give an option to remove a file if needed.
 
-        res.forEach((item) => {
-          if (item.status === "uploaded") count++;
-        });
+        // res.forEach((item) => {
+        //   if (item.status === "success") count++;
+        // });
+        console.log(res);
         setUrlList([...res]);
+
         // Add a flag to allow to go to step 2. Do not use count. Here in this step you also need to give an option to delete or remmove a file.
-        if (count === acceptedFiles.length) {
-          setStep(2);
-        } else {
-          setStep(0);
-        }
+        // if (count === acceptedFiles.length) {
+        setStep(3);
+        // } else {
+        //   setStep(0);
+        // }
       },
       () => {
         setStep(0);
@@ -231,10 +280,18 @@ const UploadForm: React.FC = () => {
   };
 
   useEffect(() => {
-    if (urlList.length === acceptedFiles.length && urlList.length > 0) {
+    // if (urlList.length === acceptedFiles.length && urlList.length > 0) {
+    //   uploadFiles();
+    // }
+    console.log(step);
+    if (
+      step === 2 &&
+      urlList.length === acceptedFiles.length &&
+      urlList.length > 0
+    ) {
       uploadFiles();
     }
-  }, [urlList]);
+  }, [step, urlList]);
 
   const checkFileExt = (fileName: string) => {
     let fileExt = fileName.split(".");
@@ -256,13 +313,18 @@ const UploadForm: React.FC = () => {
     };
   };
 
-  const postDataToS3 = async (fileData: File, urlString: string) => {
+  const postDataToS3 = async (
+    fileData: File,
+    urlString: string,
+    fileName: string
+  ) => {
     const { status } = await API.put(urlString, fileData, {
       headers: {
         "Content-Type": "application/octet-stream",
       },
     });
-    if (status === 200) {
+    console.log(fileName);
+    if (status === 200 && fileName !== "test_2.sol") {
       return true;
     }
     return false;
@@ -285,6 +347,14 @@ const UploadForm: React.FC = () => {
       setTimeout(() => setIsLoading(false), 1000);
       console.log(e);
     }
+  };
+
+  const removeFiles = (item: UrlItemProps) => {
+    const newUrlList = urlList.filter((urlItem) => {
+      if (urlItem.name === item.name) return false;
+      return true;
+    });
+    setUrlList(newUrlList);
   };
 
   return (
@@ -331,7 +401,7 @@ const UploadForm: React.FC = () => {
             w="100%"
             sx={{ color: "subtle", textAlign: "left", mb: 2, fontSize: "xs" }}
           >
-            1. Files to be uploaded should be Solidity(.sol) files, preferably
+            1. Files to be success should be Solidity(.sol) files, preferably
             compiled successfully. Incorrect syntax might render incorrect
             results.
           </Text>
@@ -339,7 +409,7 @@ const UploadForm: React.FC = () => {
             w="100%"
             sx={{ color: "subtle", textAlign: "left", mb: 3, fontSize: "xs" }}
           >
-            2. A Maximum number of files that can be uploaded is 5 and file size
+            2. A Maximum number of files that can be success is 5 and file size
             cannot exceed 5MB.
           </Text>
 
@@ -401,7 +471,11 @@ const UploadForm: React.FC = () => {
                 border={"1.5px dashed #D6D6D6"}
               >
                 {urlList.map((item) => (
-                  <UrlItem item={item} />
+                  <UrlItem
+                    removeFiles={removeFiles}
+                    uploadSingleFile={uploadSingleFile}
+                    item={item}
+                  />
                 ))}
               </Box>
             )}
@@ -415,7 +489,7 @@ const UploadForm: React.FC = () => {
               spinner={<Loader color={"#3300FF"} size={25} />}
               disabled={
                 isLoading ||
-                step < 2 ||
+                step < 3 ||
                 name === "" ||
                 (profileData.actions_supported &&
                   !profileData.actions_supported.file_scan)
