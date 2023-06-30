@@ -214,26 +214,30 @@ const TransactionListCard: React.FC<{
                             Complete Payment
                           </Button>
                         )}
-                      {transaction.payment_status === "success" && (
-                        <Tooltip label="Download Invoice">
-                          <Button
-                            bgColor={"#3E15F410"}
-                            color={"accent"}
-                            w={"fit-content"}
-                            ml={"auto"}
-                            my={0}
-                            py={0}
-                            px={2}
-                            fontSize={"sm"}
-                            width={"fit-content"}
-                            isLoading={isInvoiceDownloading[index]}
-                            spinner={<Loader color={"#3300FF"} size={25} />}
-                            onClick={() => downloadInvoice(transaction, index)}
-                          >
-                            <DownloadIcon />
-                          </Button>
-                        </Tooltip>
-                      )}
+                      {transaction.payment_status === "success" &&
+                        transaction.download_invoice_status &&
+                        transaction.download_invoice_status === "success" && (
+                          <Tooltip label="Download Invoice">
+                            <Button
+                              bgColor={"#3E15F410"}
+                              color={"accent"}
+                              w={"fit-content"}
+                              ml={"auto"}
+                              my={0}
+                              py={0}
+                              px={2}
+                              fontSize={"sm"}
+                              width={"fit-content"}
+                              isLoading={isInvoiceDownloading[index]}
+                              spinner={<Loader color={"#3300FF"} size={25} />}
+                              onClick={() =>
+                                downloadInvoice(transaction, index)
+                              }
+                            >
+                              <DownloadIcon />
+                            </Button>
+                          </Tooltip>
+                        )}
                     </Flex>
                   </HStack>
                 );
@@ -421,23 +425,25 @@ const TransactionListCard: React.FC<{
                       {monthNames[parseInt(date[1])]}
                     </Text>
                   </Box>
-                  {transaction.payment_status === "success" && (
-                    <Button
-                      bgColor={"#3E15F410"}
-                      color={"accent"}
-                      w={"fit-content"}
-                      my={4}
-                      py={0}
-                      px={2}
-                      fontSize={"sm"}
-                      width={"fit-content"}
-                      isLoading={isInvoiceDownloading[index] || false}
-                      spinner={<Loader color={"#3300FF"} size={25} />}
-                      onClick={() => downloadInvoice(transaction, index)}
-                    >
-                      <DownloadIcon />
-                    </Button>
-                  )}
+                  {transaction.payment_status === "success" &&
+                    transaction.download_invoice_status &&
+                    transaction.download_invoice_status === "success" && (
+                      <Button
+                        bgColor={"#3E15F410"}
+                        color={"accent"}
+                        w={"fit-content"}
+                        my={4}
+                        py={0}
+                        px={2}
+                        fontSize={"sm"}
+                        width={"fit-content"}
+                        isLoading={isInvoiceDownloading[index] || false}
+                        spinner={<Loader color={"#3300FF"} size={25} />}
+                        onClick={() => downloadInvoice(transaction, index)}
+                      >
+                        <DownloadIcon />
+                      </Button>
+                    )}
                 </Flex>
               </Flex>
             );
