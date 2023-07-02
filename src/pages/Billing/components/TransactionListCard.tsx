@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   Flex,
   Box,
@@ -9,6 +9,7 @@ import {
   Badge,
   useMediaQuery,
   useDisclosure,
+  Tooltip,
 } from "@chakra-ui/react";
 import "../billing.css";
 import { Page, Transaction } from "common/types";
@@ -17,6 +18,9 @@ import InfiniteScroll from "react-infinite-scroll-component";
 import { monthNames } from "common/values";
 import CancelPaymentDialog from "./CancelPaymentDialog";
 import Loader from "components/styled-components/Loader";
+import { DownloadIcon } from "@chakra-ui/icons";
+import API from "helpers/api";
+import { API_PATH } from "helpers/routeManager";
 
 const TransactionListCard: React.FC<{
   transactionList: Transaction[];
@@ -30,6 +34,18 @@ const TransactionListCard: React.FC<{
   const [orderId, setOrderId] = useState("");
   const [paymentPlatform, setPaymentPlatform] = useState("");
   const [hasMore, setHasMore] = useState(true);
+  const [isInvoiceDownloading, setIsInvoiceDownloading] = useState<boolean[]>(
+    []
+  );
+
+  useEffect(() => {
+    if (transactionList && transactionList.length) {
+      const boolList = transactionList.map((item, index) => {
+        return false;
+      });
+      setIsInvoiceDownloading(boolList);
+    }
+  }, [transactionList]);
 
   const fetchMoreTransactions = () => {
     if (pageNo >= page.total_pages) {
@@ -37,6 +53,37 @@ const TransactionListCard: React.FC<{
       return null;
     }
     fetchMore();
+  };
+
+  const downloadInvoice = async (transaction: Transaction, index: number) => {
+    setIsInvoiceDownloading((currentList) => {
+      const newList = [...currentList];
+      newList[index] = true;
+      return newList;
+    });
+    try {
+      const { data } = await API.get(
+        `${API_PATH.API_GET_DOWNLOAD_INVOICE_URL}?order_id=${transaction.order_id}&payment_platform=${transaction.payment_platform}`
+      );
+
+      if (data.status === "success" && data.download_url) {
+        const link = document.createElement("a");
+        link.href = data.download_url;
+        link.click();
+      }
+    } catch (e) {
+      setIsInvoiceDownloading((currentList) => {
+        const newList = [...currentList];
+        newList[index] = false;
+        return newList;
+      });
+    }
+
+    setIsInvoiceDownloading((currentList) => {
+      const newList = [...currentList];
+      newList[index] = false;
+      return newList;
+    });
   };
 
   return (
@@ -104,82 +151,102 @@ const TransactionListCard: React.FC<{
               transactionList.map((transaction, index) => {
                 let date = transaction.date.split("-");
                 return (
-                  <>
-                    <HStack
-                      key={index}
-                      p={4}
-                      justify="space-between"
-                      width={"100%"}
-                      align="center"
-                    >
-                      <Text w={"6%"} fontWeight={500} color={"gray.500"}>
-                        <Badge
-                          colorScheme={
-                            transaction.payment_status === "success"
-                              ? "green"
-                              : transaction.payment_status === "failed"
-                              ? "red"
-                              : "orange"
-                          }
-                        >
-                          {transaction.payment_status}
-                        </Badge>
-                      </Text>
-                      <Text w={"12%"} fontWeight={500} color={"gray.500"}>
-                        {parseFloat(transaction.amount).toFixed(2)}{" "}
-                        {transaction.currency.toUpperCase()}
-                      </Text>
-                      <Text w={"12%"} fontWeight={500} color={"gray.500"}>
-                        {date[2]} {monthNames[parseInt(date[1])]} {date[0]}
-                      </Text>
-                      <Text w="12%" fontWeight={500} color={"gray.500"}>
-                        {sentenceCapitalize(transaction.payment_platform)}
-                      </Text>
-                      <Text w="10%" fontWeight={500} color={"gray.500"}>
-                        {sentenceCapitalize(transaction.package)}
-                      </Text>
-                      <Text w="10%" fontWeight={500} color={"gray.500"}>
-                        {sentenceCapitalize(transaction.billing_cycle)}
-                      </Text>
-                      <Flex w={"20%"} flexWrap="wrap" justify="flex-end">
-                        {transaction.payment_platform === "stripe" &&
-                          transaction.payment_status === "open" && (
+                  <HStack
+                    key={index}
+                    p={4}
+                    justify="space-between"
+                    width={"100%"}
+                    align="center"
+                  >
+                    <Text w={"6%"} fontWeight={500} color={"gray.500"}>
+                      <Badge
+                        colorScheme={
+                          transaction.payment_status === "success"
+                            ? "green"
+                            : transaction.payment_status === "failed"
+                            ? "red"
+                            : "orange"
+                        }
+                      >
+                        {transaction.payment_status}
+                      </Badge>
+                    </Text>
+                    <Text w={"12%"} fontWeight={500} color={"gray.500"}>
+                      {parseFloat(transaction.amount).toFixed(2)}{" "}
+                      {transaction.currency.toUpperCase()}
+                    </Text>
+                    <Text w={"12%"} fontWeight={500} color={"gray.500"}>
+                      {date[2]} {monthNames[parseInt(date[1])]} {date[0]}
+                    </Text>
+                    <Text w="12%" fontWeight={500} color={"gray.500"}>
+                      {sentenceCapitalize(transaction.payment_platform)}
+                    </Text>
+                    <Text w="10%" fontWeight={500} color={"gray.500"}>
+                      {sentenceCapitalize(transaction.package)}
+                    </Text>
+                    <Text w="10%" fontWeight={500} color={"gray.500"}>
+                      {sentenceCapitalize(transaction.billing_cycle)}
+                    </Text>
+                    <Flex w={"20%"} flexWrap="wrap" justify="flex-end">
+                      {transaction.payment_platform === "stripe" &&
+                        transaction.payment_status === "open" && (
+                          <Button
+                            variant="accent-ghost"
+                            color={"red"}
+                            my={0}
+                            py={0}
+                            fontSize={"sm"}
+                            onClick={() => {
+                              onOpen();
+                              setOrderId(transaction.order_id);
+                              setPaymentPlatform(transaction.payment_platform);
+                            }}
+                          >
+                            Cancel Payment
+                          </Button>
+                        )}
+                      {transaction.payment_status === "open" &&
+                        transaction.invoice_url && (
+                          <Button
+                            variant="accent-ghost"
+                            color={"accent"}
+                            my={0}
+                            py={0}
+                            fontSize={"sm"}
+                            width={"fit-content"}
+                            onClick={() => {
+                              window.open(transaction.invoice_url, "_blank");
+                            }}
+                          >
+                            Complete Payment
+                          </Button>
+                        )}
+                      {transaction.payment_status === "success" &&
+                        transaction.download_invoice_status &&
+                        transaction.download_invoice_status === "success" && (
+                          <Tooltip label="Download Invoice">
                             <Button
-                              variant="accent-ghost"
-                              color={"red"}
-                              my={0}
-                              py={0}
-                              fontSize={"sm"}
-                              onClick={() => {
-                                onOpen();
-                                setOrderId(transaction.order_id);
-                                setPaymentPlatform(
-                                  transaction.payment_platform
-                                );
-                              }}
-                            >
-                              Cancel Payment
-                            </Button>
-                          )}
-                        {transaction.payment_status === "open" &&
-                          transaction.invoice_url && (
-                            <Button
-                              variant="accent-ghost"
+                              bgColor={"#3E15F410"}
                               color={"accent"}
+                              w={"fit-content"}
+                              ml={"auto"}
                               my={0}
                               py={0}
+                              px={2}
                               fontSize={"sm"}
                               width={"fit-content"}
-                              onClick={() => {
-                                window.open(transaction.invoice_url, "_blank");
-                              }}
+                              isLoading={isInvoiceDownloading[index]}
+                              spinner={<Loader color={"#3300FF"} size={25} />}
+                              onClick={() =>
+                                downloadInvoice(transaction, index)
+                              }
                             >
-                              Complete Payment
+                              <DownloadIcon />
                             </Button>
-                          )}
-                      </Flex>
-                    </HStack>
-                  </>
+                          </Tooltip>
+                        )}
+                    </Flex>
+                  </HStack>
                 );
               })
             ) : (
@@ -340,25 +407,51 @@ const TransactionListCard: React.FC<{
                       )}
                   </VStack>
                 </Flex>
-                <Box
-                  mt={5}
-                  sx={{
-                    width: "60px",
-                    height: "60px",
-                    p: 2,
-                    bg: "#F7F7F7",
-                    color: "#4E5D78",
-                    borderRadius: "50%",
-                    textAlign: "center",
-                  }}
+                <Flex
+                  ml={"auto"}
+                  flexDir="column"
+                  alignItems="center"
+                  justifyContent="center"
                 >
-                  <Text fontSize="xl" fontWeight="600">
-                    {date[2]}
-                  </Text>
-                  <Text fontSize="12px" mt="-4px">
-                    {monthNames[parseInt(date[1])]}
-                  </Text>
-                </Box>
+                  <Box
+                    mt={5}
+                    sx={{
+                      width: "60px",
+                      height: "60px",
+                      p: 2,
+                      bg: "#F7F7F7",
+                      color: "#4E5D78",
+                      borderRadius: "50%",
+                      textAlign: "center",
+                    }}
+                  >
+                    <Text fontSize="xl" fontWeight="600">
+                      {date[2]}
+                    </Text>
+                    <Text fontSize="12px" mt="-4px">
+                      {monthNames[parseInt(date[1])]}
+                    </Text>
+                  </Box>
+                  {transaction.payment_status === "success" &&
+                    transaction.download_invoice_status &&
+                    transaction.download_invoice_status === "success" && (
+                      <Button
+                        bgColor={"#3E15F410"}
+                        color={"accent"}
+                        w={"fit-content"}
+                        my={4}
+                        py={0}
+                        px={2}
+                        fontSize={"sm"}
+                        width={"fit-content"}
+                        isLoading={isInvoiceDownloading[index] || false}
+                        spinner={<Loader color={"#3300FF"} size={25} />}
+                        onClick={() => downloadInvoice(transaction, index)}
+                      >
+                        <DownloadIcon />
+                      </Button>
+                    )}
+                </Flex>
               </Flex>
             );
           })}
