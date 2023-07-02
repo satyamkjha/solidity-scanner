@@ -34,7 +34,6 @@ const TransactionListCard: React.FC<{
   const [orderId, setOrderId] = useState("");
   const [paymentPlatform, setPaymentPlatform] = useState("");
   const [hasMore, setHasMore] = useState(true);
-  // const [downloadLink, setDownloadLink] = useState('https://via.placeholder.com/150')
   const [isInvoiceDownloading, setIsInvoiceDownloading] = useState<boolean[]>(
     []
   );
@@ -62,14 +61,22 @@ const TransactionListCard: React.FC<{
       newList[index] = true;
       return newList;
     });
-    const { data } = await API.get(
-      `${API_PATH.API_GET_DOWNLOAD_INVOICE_URL}?order_id=${transaction.order_id}&payment_platform=${transaction.payment_platform}`
-    );
+    try {
+      const { data } = await API.get(
+        `${API_PATH.API_GET_DOWNLOAD_INVOICE_URL}?order_id=${transaction.order_id}&payment_platform=${transaction.payment_platform}`
+      );
 
-    if (data.status === "success" && data.download_url) {
-      const link = document.createElement("a");
-      link.href = data.download_url;
-      link.click();
+      if (data.status === "success" && data.download_url) {
+        const link = document.createElement("a");
+        link.href = data.download_url;
+        link.click();
+      }
+    } catch (e) {
+      setIsInvoiceDownloading((currentList) => {
+        const newList = [...currentList];
+        newList[index] = false;
+        return newList;
+      });
     }
 
     setIsInvoiceDownloading((currentList) => {
