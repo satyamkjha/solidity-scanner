@@ -883,37 +883,46 @@ export const ReportContainer: React.FC<{
                 </Text>
               </VStack>
 
-              <CircularProgress
-                value={
-                  summary_report.scan_summary[0].score_v2
-                    ? parseFloat(summary_report.scan_summary[0].score_v2)
-                    : parseFloat(
-                        (
-                          parseFloat(summary_report.scan_summary[0].score) * 20
-                        ).toFixed(2)
-                      )
-                }
-                color="accent"
-                thickness="8px"
-                size="100px"
-                capIsRound
-              >
-                <CircularProgressLabel
-                  sx={{ display: "flex", justifyContent: "center" }}
+              <VStack align={"center"}>
+                <CircularProgress
+                  value={
+                    summary_report.scan_summary[0].score_v2
+                      ? parseFloat(summary_report.scan_summary[0].score_v2)
+                      : parseFloat(
+                          (
+                            parseFloat(summary_report.scan_summary[0].score) *
+                            20
+                          ).toFixed(2)
+                        )
+                  }
+                  color="accent"
+                  thickness="8px"
+                  size="90px"
+                  capIsRound
                 >
-                  <Box>
-                    <Text fontSize="lg" fontWeight={900} color="accent">
-                      {summary_report.scan_summary[0].score_v2 ||
-                        (
-                          parseFloat(summary_report.scan_summary[0].score) * 20
-                        ).toFixed(2)}
-                    </Text>
-                    <Text fontSize="sm" color="subtle" mt="-4px">
-                      Score
-                    </Text>
-                  </Box>
-                </CircularProgressLabel>
-              </CircularProgress>
+                  <CircularProgressLabel
+                    sx={{ display: "flex", justifyContent: "center" }}
+                  >
+                    <Flex flexDir="column" alignItems="center" w="100%">
+                      <Text fontSize="lg" fontWeight={900} color="accent">
+                        {summary_report.scan_summary[0].score_v2 ||
+                          (
+                            parseFloat(summary_report.scan_summary[0].score) *
+                            20
+                          ).toFixed(2)}
+                      </Text>
+                    </Flex>
+                  </CircularProgressLabel>
+                </CircularProgress>
+                <Text
+                  fontSize="md"
+                  fontWeight={"600"}
+                  color={"accent"}
+                  width={"100%"}
+                >
+                  Security Score
+                </Text>
+              </VStack>
             </Stack>
           </Flex>
           <Flex
@@ -1042,7 +1051,6 @@ export const ReportContainer: React.FC<{
               backgroundColor: "#d0d1cf",
             }}
             mb={20}
-            mx={[0, 0, 0, 6]}
           />
           <Flex
             as="div"
@@ -1734,7 +1742,7 @@ export const ReportContainer: React.FC<{
             color={"gray.600"}
             width={"17%"}
           >
-            Score
+            Security Score
           </Text>
           {isDesktopView && (
             <Text

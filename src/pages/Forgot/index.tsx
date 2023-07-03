@@ -22,6 +22,7 @@ import { getReCaptchaHeaders } from "helpers/helperFunction";
 import { AuthResponse } from "common/types";
 import API from "helpers/api";
 import { API_PATH } from "helpers/routeManager";
+import Loader from "components/styled-components/Loader";
 
 const CustomFlex = motion(Flex);
 
@@ -132,6 +133,7 @@ const ForgotPasswordForm: React.FC<{
           type="submit"
           variant="brand"
           isLoading={formState.isSubmitting}
+          spinner={<Loader color={"#3300FF"} size={25} />}
         >
           Send Now
         </Button>

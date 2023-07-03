@@ -69,4 +69,5 @@ export const API_PATH = {
   API_CREATE_ORDER_CP: "api-create-order-cp/",
   API_GET_TRANSACTION: "/api-get-transactions-beta/",
   API_GET_INVOICES: "/api-get-invoices-beta/",
+  API_GET_DOWNLOAD_INVOICE_URL: "/api-get-download-invoice-url/",
 };

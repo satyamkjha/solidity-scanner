@@ -379,7 +379,13 @@ const BlockCard: React.FC<{
         </Menu>
       </HStack>
       {multi_file_scan_status === "scan_done" ? (
-        <Flex width={"100%"} flexDir="column" height="fit-content" p={5}>
+        <Flex
+          width={"100%"}
+          flexDir="column"
+          height="fit-content"
+          px={3}
+          py={5}
+        >
           <Flex
             width={"100%"}
             flexDir="row"

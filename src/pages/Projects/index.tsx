@@ -337,7 +337,8 @@ const ProjectCard: React.FC<{
           boxSizing={"border-box"}
           my={4}
           mx={4}
-          p={5}
+          py={5}
+          px={4}
           maxWidth="400px"
           w={["90%", "95%", "45%", "320px"]}
         >
@@ -345,12 +346,13 @@ const ProjectCard: React.FC<{
             <>
               <Flex
                 w="100%"
+                px={2}
                 alignItems="flex-start"
                 justifyContent="space-between"
               >
-                <Box w="50%">
+                <Box w="70%">
                   <Text isTruncated>{project_name}</Text>
-                  <Text sx={{ fontSize: "sm", color: "subtle" }}>
+                  <Text sx={{ fontSize: "xs", color: "subtle" }}>
                     Last scanned {timeSince(new Date(date_updated))}
                   </Text>
                 </Box>
