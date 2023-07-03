@@ -274,6 +274,7 @@ const BlockCard: React.FC<{
   const toast = useToast();
   const assetsURL = getAssetsURL();
   const history = useHistory();
+  const [hover, setHover] = useState(false);
 
   const deleteProject = async () => {
     const { data } = await API.delete(API_PATH.API_DELETE_BLOCK, {
@@ -321,6 +322,8 @@ const BlockCard: React.FC<{
         },
       }}
       maxWidth="500px"
+      onMouseOver={() => setHover(true)}
+      onMouseLeave={() => setHover(false)}
       my={4}
       mx={4}
       boxSizing={"border-box"}
@@ -352,31 +355,39 @@ const BlockCard: React.FC<{
             Last scanned {timeSince(new Date(_updated))}
           </Text>
         </Box>
-        <Menu placement={"bottom-end"}>
-          <MenuButton
-            zIndex={10}
-            as={IconButton}
-            backgroundColor="#FFFFFF"
-            _hover={{ backgroundColor: "#ECECEC" }}
-            _selected={{ backgroundColor: "#ECECEC" }}
-            icon={<BsThreeDotsVertical />}
-            aria-label="Options"
-            onClick={(e) => {
-              e.stopPropagation();
-            }}
-          />
-          <MenuList>
-            <MenuItem
-              icon={<DeleteIcon />}
+        {hover && (
+          <Menu placement={"bottom-end"}>
+            <MenuButton
+              zIndex={10}
+              as={IconButton}
+              backgroundColor="#FFFFFF"
+              _hover={{ backgroundColor: "#FFFFFF" }}
+              _active={{ backgroundColor: "#FFFFFF" }}
+              icon={<BsThreeDotsVertical />}
+              aria-label="Options"
               onClick={(e) => {
                 e.stopPropagation();
-                onOpen();
+              }}
+            />
+            <MenuList
+              sx={{
+                boxShadow: "0px 4px 24px rgba(0, 0, 0, 0.2)",
               }}
             >
-              Delete Project
-            </MenuItem>
-          </MenuList>
-        </Menu>
+              <MenuItem
+                _focus={{ backgroundColor: "#FFFFFF" }}
+                _hover={{ backgroundColor: "#FFFFFF" }}
+                icon={<DeleteIcon />}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  onOpen();
+                }}
+              >
+                Delete Project
+              </MenuItem>
+            </MenuList>
+          </Menu>
+        )}
       </HStack>
       {multi_file_scan_status === "scan_done" ? (
         <Flex

@@ -252,6 +252,9 @@ const ProjectCard: React.FC<{
   const toast = useToast();
   const [isRescanLoading, setRescanLoading] = useState(false);
   const cancelRef = useRef<HTMLButtonElement | null>(null);
+
+  const [hover, setHover] = useState(false);
+
   const history = useHistory();
   const queryClient = useQueryClient();
   const {
@@ -318,6 +321,8 @@ const ProjectCard: React.FC<{
               history.push(`/projects/${project_id}/${_latest_scan.scan_id}`);
             }
           }}
+          onMouseOver={() => setHover(true)}
+          onMouseLeave={() => setHover(false)}
           sx={{
             cursor:
               multi_file_scan_status === "scan_done"
@@ -338,7 +343,6 @@ const ProjectCard: React.FC<{
           my={4}
           mx={4}
           py={5}
-          px={4}
           maxWidth="400px"
           w={["90%", "95%", "45%", "320px"]}
         >
@@ -350,13 +354,13 @@ const ProjectCard: React.FC<{
                 alignItems="flex-start"
                 justifyContent="space-between"
               >
-                <Box w="70%">
+                <Box px={4} w="70%">
                   <Text isTruncated>{project_name}</Text>
                   <Text sx={{ fontSize: "xs", color: "subtle" }}>
                     Last scanned {timeSince(new Date(date_updated))}
                   </Text>
                 </Box>
-                <HStack>
+                <HStack mr={hover ? 0 : 7}>
                   {project.project_url !== "File Scan" && (
                     <Tooltip label="Rescan" aria-label="A tooltip" mt={2}>
                       <Button
@@ -378,34 +382,49 @@ const ProjectCard: React.FC<{
                       </Button>
                     </Tooltip>
                   )}
-                  <Menu placement={"bottom-end"}>
-                    <MenuButton
-                      zIndex={10}
-                      as={IconButton}
-                      backgroundColor="#FFFFFF"
-                      _hover={{ backgroundColor: "#FFFFFF" }}
-                      _selected={{ backgroundColor: "#FFFFFF" }}
-                      icon={<BsThreeDotsVertical />}
-                      aria-label="Options"
-                      onClick={(e) => {
-                        e.stopPropagation();
-                      }}
-                    />
-                    <MenuList>
-                      <MenuItem
-                        icon={<DeleteIcon />}
+                  {hover && (
+                    <Menu placement={"bottom-end"}>
+                      <MenuButton
+                        zIndex={10}
+                        as={IconButton}
+                        backgroundColor="#FFFFFF"
+                        _hover={{ backgroundColor: "#FFFFFF" }}
+                        _active={{ backgroundColor: "#FFFFFF" }}
+                        icon={<BsThreeDotsVertical />}
+                        w={5}
+                        minW={5}
+                        aria-label="Options"
                         onClick={(e) => {
                           e.stopPropagation();
-                          setOpen(true);
+                        }}
+                      />
+                      <MenuList
+                        sx={{
+                          boxShadow: "0px 4px 24px rgba(0, 0, 0, 0.2)",
                         }}
                       >
-                        Delete Project
-                      </MenuItem>
-                    </MenuList>
-                  </Menu>
+                        <MenuItem
+                          _focus={{ backgroundColor: "#FFFFFF" }}
+                          _hover={{ backgroundColor: "#FFFFFF" }}
+                          icon={<DeleteIcon />}
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            setOpen(true);
+                          }}
+                        >
+                          Delete Project
+                        </MenuItem>
+                      </MenuList>
+                    </Menu>
+                  )}
                 </HStack>
               </Flex>
-              <Flex w="100%" alignItems="center" justifyContent="flex-start">
+              <Flex
+                px={4}
+                w="100%"
+                alignItems="center"
+                justifyContent="flex-start"
+              >
                 <Score
                   score={
                     multi_file_scan_summary?.score_v2 ||
@@ -416,28 +435,33 @@ const ProjectCard: React.FC<{
                   }
                 />
               </Flex>
-              <VulnerabilityDistribution
-                critical={
-                  multi_file_scan_summary?.issue_severity_distribution
-                    ?.critical || 0
-                }
-                high={
-                  multi_file_scan_summary?.issue_severity_distribution?.high ||
-                  0
-                }
-                medium={
-                  multi_file_scan_summary?.issue_severity_distribution
-                    ?.medium || 0
-                }
-                low={
-                  multi_file_scan_summary?.issue_severity_distribution?.low || 0
-                }
-                informational={
-                  multi_file_scan_summary?.issue_severity_distribution
-                    ?.informational || 0
-                }
-                gas={multi_file_scan_summary?.issue_severity_distribution?.gas}
-              />
+              <Box px={4}>
+                <VulnerabilityDistribution
+                  critical={
+                    multi_file_scan_summary?.issue_severity_distribution
+                      ?.critical || 0
+                  }
+                  high={
+                    multi_file_scan_summary?.issue_severity_distribution
+                      ?.high || 0
+                  }
+                  medium={
+                    multi_file_scan_summary?.issue_severity_distribution
+                      ?.medium || 0
+                  }
+                  low={
+                    multi_file_scan_summary?.issue_severity_distribution?.low ||
+                    0
+                  }
+                  informational={
+                    multi_file_scan_summary?.issue_severity_distribution
+                      ?.informational || 0
+                  }
+                  gas={
+                    multi_file_scan_summary?.issue_severity_distribution?.gas
+                  }
+                />
+              </Box>
             </>
           ) : (
             <Box w="100%">
@@ -484,6 +508,8 @@ const ProjectCard: React.FC<{
             },
             overflow: "hidden",
           }}
+          onMouseOver={() => setHover(true)}
+          onMouseLeave={() => setHover(false)}
           maxW="400px"
           w={["90%", "95%", "45%", "320px"]}
         >
@@ -493,7 +519,7 @@ const ProjectCard: React.FC<{
               justifyContent: "space-between",
               h: "144px",
               pt: 5,
-              px: 5,
+              w: "100%",
             }}
           >
             <Flex
@@ -501,13 +527,13 @@ const ProjectCard: React.FC<{
               alignItems="flex-start"
               justifyContent="space-between"
             >
-              <Box>
+              <Box px={4}>
                 <Text isTruncated>{project_name}</Text>
                 <Text sx={{ fontSize: "sm", color: "subtle" }}>
                   Last scanned {timeSince(new Date(date_updated))}
                 </Text>
               </Box>
-              <HStack>
+              <HStack mr={hover ? 2 : 9}>
                 {project.project_url !== "File Scan" && (
                   <Tooltip label="Rescan" aria-label="A tooltip" mt={2}>
                     <Button
@@ -529,31 +555,41 @@ const ProjectCard: React.FC<{
                     </Button>
                   </Tooltip>
                 )}
-                <Menu placement={"bottom-end"}>
-                  <MenuButton
-                    zIndex={10}
-                    as={IconButton}
-                    backgroundColor="#FFFFFF"
-                    _hover={{ backgroundColor: "#FFFFFF" }}
-                    _selected={{ backgroundColor: "#FFFFFF" }}
-                    icon={<BsThreeDotsVertical />}
-                    aria-label="Options"
-                    onClick={(e) => {
-                      e.stopPropagation();
-                    }}
-                  />
-                  <MenuList>
-                    <MenuItem
-                      icon={<DeleteIcon />}
+                {hover && (
+                  <Menu placement={"bottom-end"}>
+                    <MenuButton
+                      zIndex={10}
+                      as={IconButton}
+                      backgroundColor="#FFFFFF"
+                      _hover={{ backgroundColor: "#FFFFFF" }}
+                      _active={{ backgroundColor: "#FFFFFF" }}
+                      icon={<BsThreeDotsVertical />}
+                      w={5}
+                      minW={5}
+                      aria-label="Options"
                       onClick={(e) => {
                         e.stopPropagation();
-                        setOpen(true);
+                      }}
+                    />
+                    <MenuList
+                      sx={{
+                        boxShadow: "0px 4px 24px rgba(0, 0, 0, 0.2)",
                       }}
                     >
-                      Delete Project
-                    </MenuItem>
-                  </MenuList>
-                </Menu>
+                      <MenuItem
+                        _focus={{ backgroundColor: "#FFFFFF" }}
+                        _hover={{ backgroundColor: "#FFFFFF" }}
+                        icon={<DeleteIcon />}
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          setOpen(true);
+                        }}
+                      >
+                        Delete Project
+                      </MenuItem>
+                    </MenuList>
+                  </Menu>
+                )}
               </HStack>
             </Flex>
           </Flex>
