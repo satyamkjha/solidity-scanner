@@ -14,6 +14,7 @@ export const API_PATH = {
   API_UPDATE_PROFILE: "/api-update-profile/",
   API_UPDATE_EMAIL: "/api-update-email/",
   API_GET_USER_OVERVIEW: "/api-get-user-overview/",
+  API_DELETE_ACCOUNT: "/api-delete-account/",
 
   //START_SCAN
   API_GET_PROJECTS_BETA: "/api-get-projects-beta/",
@@ -35,6 +36,8 @@ export const API_PATH = {
   API_REPO_TREE: "/api-repo-tree/",
   API_GET_BRANCHES: "/api-get-branches/",
   API_UPDATE_SKIP_FILE_PATHS: "/api-update-skip-file-paths/",
+  API_DELETE_PROJECT: "/api-delete-project/",
+  API_DELETE_BLOCK: "/api-delete-block/",
 
   //QUICKSCAN
   API_GET_LATEST_QS: "/api-latest-qs/",
