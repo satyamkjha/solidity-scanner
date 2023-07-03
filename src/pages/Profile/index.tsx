@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import { useHistory } from "react-router-dom";
-import { useQueryClient } from "react-query";
 import { FiCheck } from "react-icons/fi";
 import {
   Flex,
@@ -17,9 +16,10 @@ import {
   useToast,
   Stack,
   Tooltip,
+  useDisclosure,
 } from "@chakra-ui/react";
 import { getReCaptchaHeaders } from "helpers/helperFunction";
-
+import { useQueryClient } from "react-query";
 import {
   AiOutlineEdit,
   AiOutlineSave,
@@ -27,7 +27,7 @@ import {
   AiOutlineEyeInvisible,
 } from "react-icons/ai";
 import { useProfile } from "hooks/useProfile";
-
+import DeleteAccountForm from "./DeleteAccountForm";
 import API from "helpers/api";
 import Auth from "helpers/auth";
 import { API_PATH } from "helpers/routeManager";
@@ -208,7 +208,9 @@ const Profile: React.FC = () => {
           {" "}
           <Box w="100%" bgColor="white" borderRadius="20px" p={4} px={6}>
             <Flex w="100%" alignItems="center" justifyContent="space-between">
-              <Text fontSize="xl">Profile Details</Text>
+              <Text fontWeight={300} fontSize="xl">
+                Profile Details
+              </Text>
               {isEditable ? (
                 <Button
                   variant="accent-ghost"
@@ -387,6 +389,7 @@ const Profile: React.FC = () => {
             </VStack>
           </Box>
           {!data.public_address && <ChangePasswordForm />}
+          <DeleteAccountBox />
         </>
       )}
     </Box>
@@ -432,7 +435,9 @@ const ChangePasswordForm: React.FC = () => {
 
   return (
     <Box w="100%" bgColor="white" borderRadius="20px" p={4} px={6} mt={8}>
-      <Text fontSize="xl">Security</Text>
+      <Text fontWeight={300} fontSize="xl">
+        Security
+      </Text>
       <Box py={6}>
         <ViewableInputGroup
           key="password"
@@ -463,6 +468,39 @@ const ChangePasswordForm: React.FC = () => {
           Change Password
         </Button>
       </Box>
+    </Box>
+  );
+};
+
+const DeleteAccountBox: React.FC = () => {
+  const { isOpen, onClose, onOpen } = useDisclosure();
+
+  return (
+    <Box w="100%" bgColor="white" borderRadius="20px" p={4} px={6} mt={8}>
+      <Text fontWeight={300} fontSize="xl">
+        Delete Account
+      </Text>
+      <Text mt={5} fontWeight={700} fontSize="md">
+        Delete or deactivate your account
+      </Text>
+      <Text mt={5} fontWeight={300} color="gray.500" fontSize="md">
+        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Molestie
+        ultricies id posuere mauris proin duis placerat lorem. Sed pellentesque
+        tortor, Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+        Molestie ultricies id posuere mauris
+      </Text>
+      <Button
+        variant={"outline"}
+        mt={5}
+        bg={"white"}
+        w={["200px"]}
+        borderColor="#FF5630"
+        color="#FF5630"
+        onClick={onOpen}
+      >
+        Delete Account
+      </Button>
+      <DeleteAccountForm onClose={onClose} isOpen={isOpen} />
     </Box>
   );
 };

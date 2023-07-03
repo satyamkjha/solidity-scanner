@@ -15,6 +15,13 @@ import {
   AlertDialogContent,
   AlertDialogOverlay,
   useMediaQuery,
+  HStack,
+  Menu,
+  MenuButton,
+  MenuItem,
+  MenuList,
+  IconButton,
+  useToast,
 } from "@chakra-ui/react";
 
 import {
@@ -30,7 +37,8 @@ import API from "helpers/api";
 
 import { Page, Pagination, Project } from "common/types";
 import { timeSince } from "common/functions";
-
+import { DeleteIcon } from "@chakra-ui/icons";
+import { BsThreeDotsVertical } from "react-icons/bs";
 import { useProjects } from "hooks/useProjects";
 import { useProfile } from "hooks/useProfile";
 import InfiniteScroll from "react-infinite-scroll-component";
@@ -118,6 +126,15 @@ const Projects: React.FC = () => {
       pageNo: pagination.pageNo + 1,
       perPageCount: pagination.perPageCount,
     });
+  };
+
+  const updateProjectList = (project_id: string) => {
+    let newProjectList = projectList || [];
+    newProjectList = newProjectList.filter((projectItem) => {
+      if (projectItem.project_id === project_id) return false;
+      return true;
+    });
+    setProjectList(newProjectList);
   };
 
   return (
@@ -214,7 +231,8 @@ const Projects: React.FC = () => {
                 key={project.project_id}
                 project={project}
                 refetchProfile={refetchProfile}
-                refetch={refetchProjects}
+                refetch={refetch}
+                updateProjectList={updateProjectList}
               />
             ))}
           </InfiniteScroll>
@@ -228,8 +246,10 @@ const ProjectCard: React.FC<{
   project: Project;
   refetch: any;
   refetchProfile: any;
-}> = ({ project, refetch, refetchProfile }) => {
+  updateProjectList: (project_id: string) => void;
+}> = ({ project, refetch, refetchProfile, updateProjectList }) => {
   const [isOpen, setIsOpen] = useState(false);
+  const toast = useToast();
   const [isRescanLoading, setRescanLoading] = useState(false);
   const cancelRef = useRef<HTMLButtonElement | null>(null);
   const history = useHistory();
@@ -257,6 +277,35 @@ const ProjectCard: React.FC<{
     setRescanLoading(false);
     refetchProfile();
     onClose();
+  };
+
+  const [open, setOpen] = useState(false);
+  const deleteProject = async () => {
+    const { data } = await API.delete(API_PATH.API_DELETE_PROJECT, {
+      data: {
+        project_ids: [project_id],
+      },
+    });
+    if (data.status === "success") {
+      toast({
+        title: data.message,
+        status: "success",
+        duration: 9000,
+        isClosable: true,
+        position: "bottom",
+      });
+    } else {
+      toast({
+        title: data.message,
+        status: "error",
+        duration: 9000,
+        isClosable: true,
+        position: "bottom",
+      });
+    }
+    onClose();
+    refetch();
+    updateProjectList(project_id);
   };
 
   return (
@@ -305,27 +354,54 @@ const ProjectCard: React.FC<{
                     Last scanned {timeSince(new Date(date_updated))}
                   </Text>
                 </Box>
-                {project.project_url !== "File Scan" && (
-                  <Tooltip label="Rescan" aria-label="A tooltip" mt={2}>
-                    <Button
-                      size="sm"
-                      colorScheme="white"
-                      height="58px"
-                      width="58px"
+                <HStack>
+                  {project.project_url !== "File Scan" && (
+                    <Tooltip label="Rescan" aria-label="A tooltip" mt={2}>
+                      <Button
+                        size="sm"
+                        colorScheme="white"
+                        height="58px"
+                        width="58px"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          setIsOpen(true);
+                        }}
+                        transition="0.3s opacity"
+                        _hover={{ opacity: scans_remaining === 0 ? 0.4 : 0.9 }}
+                        isDisabled={scans_remaining === 0}
+                      >
+                        <Flex sx={{ flexDir: "column", alignItems: "center" }}>
+                          <RescanIcon size={60} />
+                        </Flex>
+                      </Button>
+                    </Tooltip>
+                  )}
+                  <Menu placement={"bottom-end"}>
+                    <MenuButton
+                      zIndex={10}
+                      as={IconButton}
+                      backgroundColor="#FFFFFF"
+                      _hover={{ backgroundColor: "#FFFFFF" }}
+                      _selected={{ backgroundColor: "#FFFFFF" }}
+                      icon={<BsThreeDotsVertical />}
+                      aria-label="Options"
                       onClick={(e) => {
                         e.stopPropagation();
-                        setIsOpen(true);
                       }}
-                      transition="0.3s opacity"
-                      _hover={{ opacity: scans_remaining === 0 ? 0.4 : 0.9 }}
-                      isDisabled={scans_remaining === 0}
-                    >
-                      <Flex sx={{ flexDir: "column", alignItems: "center" }}>
-                        <RescanIcon size={60} />
-                      </Flex>
-                    </Button>
-                  </Tooltip>
-                )}
+                    />
+                    <MenuList>
+                      <MenuItem
+                        icon={<DeleteIcon />}
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          setOpen(true);
+                        }}
+                      >
+                        Delete Project
+                      </MenuItem>
+                    </MenuList>
+                  </Menu>
+                </HStack>
               </Flex>
               <Flex w="100%" alignItems="center" justifyContent="flex-start">
                 <Score
@@ -424,34 +500,59 @@ const ProjectCard: React.FC<{
               justifyContent="space-between"
             >
               <Box>
-                <Text sx={{ w: "220px" }} isTruncated>
-                  {project_name}
-                </Text>
+                <Text isTruncated>{project_name}</Text>
                 <Text sx={{ fontSize: "sm", color: "subtle" }}>
                   Last scanned {timeSince(new Date(date_updated))}
                 </Text>
               </Box>
-              {project.project_url !== "File Scan" && (
-                <Tooltip label="Rescan" aria-label="A tooltip" mt={2}>
-                  <Button
-                    size="sm"
-                    colorScheme="white"
-                    height="58px"
-                    width="58px"
+              <HStack>
+                {project.project_url !== "File Scan" && (
+                  <Tooltip label="Rescan" aria-label="A tooltip" mt={2}>
+                    <Button
+                      size="sm"
+                      colorScheme="white"
+                      height="58px"
+                      width="58px"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        setIsOpen(true);
+                      }}
+                      transition="0.3s opacity"
+                      _hover={{ opacity: scans_remaining === 0 ? 0.4 : 0.9 }}
+                      isDisabled={scans_remaining === 0}
+                    >
+                      <Flex sx={{ flexDir: "column", alignItems: "center" }}>
+                        <RescanIcon size={60} />
+                      </Flex>
+                    </Button>
+                  </Tooltip>
+                )}
+                <Menu placement={"bottom-end"}>
+                  <MenuButton
+                    zIndex={10}
+                    as={IconButton}
+                    backgroundColor="#FFFFFF"
+                    _hover={{ backgroundColor: "#FFFFFF" }}
+                    _selected={{ backgroundColor: "#FFFFFF" }}
+                    icon={<BsThreeDotsVertical />}
+                    aria-label="Options"
                     onClick={(e) => {
                       e.stopPropagation();
-                      setIsOpen(true);
                     }}
-                    transition="0.3s opacity"
-                    _hover={{ opacity: scans_remaining === 0 ? 0.4 : 0.9 }}
-                    isDisabled={scans_remaining === 0}
-                  >
-                    <Flex sx={{ flexDir: "column", alignItems: "center" }}>
-                      <RescanIcon size={60} />
-                    </Flex>
-                  </Button>
-                </Tooltip>
-              )}
+                  />
+                  <MenuList>
+                    <MenuItem
+                      icon={<DeleteIcon />}
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        setOpen(true);
+                      }}
+                    >
+                      Delete Project
+                    </MenuItem>
+                  </MenuList>
+                </Menu>
+              </HStack>
             </Flex>
           </Flex>
           <Box
@@ -471,6 +572,32 @@ const ProjectCard: React.FC<{
           </Box>
         </Box>
       )}
+      <AlertDialog isOpen={open} onClose={() => setOpen(false)}>
+        <AlertDialogOverlay>
+          <AlertDialogContent>
+            <AlertDialogHeader fontSize="lg" fontWeight="bold">
+              Confirm Delete Project
+            </AlertDialogHeader>
+
+            <AlertDialogBody>
+              Are you sure you want to delete{" "}
+              <Box as="span" sx={{ fontWeight: 600 }}>
+                {project_name}
+              </Box>{" "}
+              project ?
+            </AlertDialogBody>
+
+            <AlertDialogFooter>
+              <Button onClick={() => setOpen(false)} py={6}>
+                No, My bad
+              </Button>
+              <Button variant="brand" onClick={deleteProject} ml={3}>
+                Delete
+              </Button>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialogOverlay>
+      </AlertDialog>
       <AlertDialog
         isOpen={isOpen}
         leastDestructiveRef={cancelRef}

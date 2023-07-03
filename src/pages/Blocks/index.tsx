@@ -9,6 +9,20 @@ import {
   Image,
   useMediaQuery,
   Tooltip,
+  HStack,
+  Menu,
+  MenuButton,
+  MenuItem,
+  MenuList,
+  IconButton,
+  useDisclosure,
+  AlertDialog,
+  AlertDialogBody,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogContent,
+  AlertDialogOverlay,
+  useToast,
 } from "@chakra-ui/react";
 import { LogoIcon, BlockCredit, ScanErrorIcon } from "components/icons";
 import Score from "components/score";
@@ -23,6 +37,8 @@ import API from "helpers/api";
 import { API_PATH } from "helpers/routeManager";
 import { getAssetsURL } from "helpers/helperFunction";
 import Loader from "components/styled-components/Loader";
+import { DeleteIcon } from "@chakra-ui/icons";
+import { BsThreeDotsVertical } from "react-icons/bs";
 
 const Blocks: React.FC = () => {
   const [isDesktopView] = useMediaQuery("(min-width: 1920px)");
@@ -53,6 +69,15 @@ const Blocks: React.FC = () => {
       }
     }
   }, [scans, refetch]);
+
+  const updateScanList = (project_id: string) => {
+    let newScanList = scanList || [];
+    newScanList = newScanList.filter((projectItem) => {
+      if (projectItem.project_id === project_id) return false;
+      return true;
+    });
+    setScanList(newScanList);
+  };
 
   useEffect(() => {
     let intervalId: NodeJS.Timeout;
@@ -219,6 +244,7 @@ const Blocks: React.FC = () => {
                 key={scan.scan_id}
                 scan={scan}
                 setIconCounter={setIconCounter}
+                updateScanList={updateScanList}
               />
             ))}
           </InfiniteScroll>
@@ -231,7 +257,8 @@ const Blocks: React.FC = () => {
 const BlockCard: React.FC<{
   scan: Scan;
   setIconCounter: Dispatch<SetStateAction<number>>;
-}> = ({ scan, setIconCounter }) => {
+  updateScanList: (project_id: string) => void;
+}> = ({ scan, setIconCounter, updateScanList }) => {
   const {
     scan_status,
     project_name,
@@ -244,9 +271,38 @@ const BlockCard: React.FC<{
     multi_file_scan_summary,
     project_id,
   } = scan;
-
+  const toast = useToast();
   const assetsURL = getAssetsURL();
   const history = useHistory();
+
+  const deleteProject = async () => {
+    const { data } = await API.delete(API_PATH.API_DELETE_BLOCK, {
+      data: {
+        project_ids: [project_id],
+      },
+    });
+    if (data.status === "success") {
+      toast({
+        title: data.message,
+        status: "success",
+        duration: 2000,
+        isClosable: true,
+        position: "bottom",
+      });
+    } else {
+      toast({
+        title: data.message,
+        status: "error",
+        duration: 2000,
+        isClosable: true,
+        position: "bottom",
+      });
+    }
+    onClose();
+    updateScanList(project_id);
+  };
+
+  const { isOpen, onClose, onOpen } = useDisclosure();
 
   return (
     <Flex
@@ -277,19 +333,51 @@ const BlockCard: React.FC<{
         }
       }}
     >
-      <Box p={5}>
-        <Tooltip label={contractname} fontSize="md" placement="top-start">
-          <Text sx={{ w: "100%", color: "subtle" }} isTruncated>
-            {contractname}
+      <HStack
+        width={"100%"}
+        justifyContent={"space-between"}
+        alignItems={"flex-start"}
+        py={5}
+      >
+        <Box w="80%" px={5}>
+          <Tooltip label={contractname} fontSize="md" placement="top-start">
+            <Text sx={{ w: "100%", color: "subtle" }} isTruncated>
+              {contractname}
+            </Text>
+          </Tooltip>
+          <Text sx={{ w: "100%" }} isTruncated>
+            {project_name || contract_address}
           </Text>
-        </Tooltip>
-        <Text sx={{ w: "100%" }} isTruncated>
-          {project_name || contract_address}
-        </Text>
-        <Text sx={{ fontSize: "xs", color: "subtle" }}>
-          Last scanned {timeSince(new Date(_updated))}
-        </Text>
-      </Box>
+          <Text sx={{ fontSize: "xs", color: "subtle" }}>
+            Last scanned {timeSince(new Date(_updated))}
+          </Text>
+        </Box>
+        <Menu placement={"bottom-end"}>
+          <MenuButton
+            zIndex={10}
+            as={IconButton}
+            backgroundColor="#FFFFFF"
+            _hover={{ backgroundColor: "#ECECEC" }}
+            _selected={{ backgroundColor: "#ECECEC" }}
+            icon={<BsThreeDotsVertical />}
+            aria-label="Options"
+            onClick={(e) => {
+              e.stopPropagation();
+            }}
+          />
+          <MenuList>
+            <MenuItem
+              icon={<DeleteIcon />}
+              onClick={(e) => {
+                e.stopPropagation();
+                onOpen();
+              }}
+            >
+              Delete Project
+            </MenuItem>
+          </MenuList>
+        </Menu>
+      </HStack>
       {multi_file_scan_status === "scan_done" ? (
         <Flex width={"100%"} flexDir="column" height="fit-content" p={5}>
           <Flex
@@ -376,6 +464,32 @@ const BlockCard: React.FC<{
           </Text>
         </Box>
       )}
+      <AlertDialog isOpen={isOpen} onClose={onClose}>
+        <AlertDialogOverlay>
+          <AlertDialogContent>
+            <AlertDialogHeader fontSize="lg" fontWeight="bold">
+              Confirm Delete Project
+            </AlertDialogHeader>
+
+            <AlertDialogBody>
+              Are you sure you want to delete{" "}
+              <Box as="span" sx={{ fontWeight: 600 }}>
+                {project_name || contractname}
+              </Box>{" "}
+              project ?
+            </AlertDialogBody>
+
+            <AlertDialogFooter>
+              <Button onClick={onClose} py={6}>
+                No, My bad
+              </Button>
+              <Button variant="brand" onClick={deleteProject} ml={3}>
+                Delete
+              </Button>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialogOverlay>
+      </AlertDialog>
     </Flex>
   );
 };

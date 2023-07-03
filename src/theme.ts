@@ -362,5 +362,25 @@ export const theme = extendTheme({
         },
       },
     },
+    Radio: {
+      parts: ["container", "control", "label"],
+      variants: {
+        brand: {
+          control: {
+            borderRadius: "15px", // change the border radius
+            borderWidth: "4px",
+            borderColor: "#EFEFEF", // change the border color
+            background: "#B0B7C3",
+            _checked: {
+              color: "#FFFFFF00",
+              background: "linear-gradient(135deg, #52FF00 0%, #00EEFD 100%)",
+            },
+          },
+          label: {
+            textAlign: "left",
+          },
+        },
+      },
+    },
   },
 });
