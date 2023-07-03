@@ -360,7 +360,7 @@ const ProjectCard: React.FC<{
                     Last scanned {timeSince(new Date(date_updated))}
                   </Text>
                 </Box>
-                <HStack mr={hover ? 0 : 7}>
+                <HStack mr={hover ? 0 : 7} alignItems="flex-start">
                   {project.project_url !== "File Scan" && (
                     <Tooltip label="Rescan" aria-label="A tooltip" mt={2}>
                       <Button
@@ -533,7 +533,7 @@ const ProjectCard: React.FC<{
                   Last scanned {timeSince(new Date(date_updated))}
                 </Text>
               </Box>
-              <HStack mr={hover ? 2 : 9}>
+              <HStack mr={hover ? 2 : 9} alignItems="flex-start">
                 {project.project_url !== "File Scan" && (
                   <Tooltip label="Rescan" aria-label="A tooltip" mt={2}>
                     <Button
