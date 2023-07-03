@@ -1,6 +1,7 @@
 /* eslint-disable no-shadow */
 import React, { memo } from "react";
 import { Button, Text } from "@chakra-ui/react";
+import Loader from "./styled-components/Loader";
 
 type OauthHelperProps = {
   url: string;
@@ -74,6 +75,7 @@ const OauthHelper: React.FC<OauthHelperProps> = ({
       variant="brand"
       onClick={handleClick}
       isLoading={loading}
+      spinner={<Loader color={"#3300FF"} size={25} />}
       width="250px"
     >
       Connect
