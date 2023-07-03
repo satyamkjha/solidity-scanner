@@ -720,7 +720,7 @@ const QuickScan: React.FC = () => {
                 }
               >
                 <Text fontSize="md" fontWeight={600} mb={5}>
-                  Solidity Score
+                  Security Score
                 </Text>
                 <SolidityScoreProgress
                   score={
@@ -732,7 +732,7 @@ const QuickScan: React.FC = () => {
                   thickness={"8px"}
                 />
                 <Text fontWeight={300} fontSize="sm" mt={5}>
-                  Your Solidity Score is{" "}
+                  Your Security Score is{" "}
                   {scanReport
                     ? parseFloat(scanReport.multi_file_scan_summary.score_v2) <
                       50

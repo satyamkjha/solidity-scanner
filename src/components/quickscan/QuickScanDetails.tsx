@@ -110,7 +110,7 @@ const QuickScanDetails: React.FC<{ scanReport: QuickScanResult }> = ({
             justifyContent={"center"}
           >
             <HStack my={4} width={"100%"} justify={"space-between"}>
-              <Text fontSize="sm">Score</Text>
+              <Text fontSize="sm">Security Score</Text>
               <Text fontSize="sm">
                 {scanReport.multi_file_scan_summary.score_v2 + "/100"}
               </Text>
