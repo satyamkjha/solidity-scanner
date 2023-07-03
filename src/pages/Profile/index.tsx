@@ -214,6 +214,7 @@ const Profile: React.FC = () => {
                   variant="accent-ghost"
                   type="submit"
                   isLoading={updateLoading}
+                  spinner={<Loader color={"#3300FF"} size={25} />}
                   onClick={(e) => {
                     e.preventDefault();
                     onSave();
