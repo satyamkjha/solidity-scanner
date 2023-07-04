@@ -482,13 +482,10 @@ const DeleteAccountBox: React.FC = () => {
         Delete Account
       </Text>
       <Text mt={5} fontWeight={700} fontSize="md">
-        Delete or deactivate your account
+        Delete your account
       </Text>
       <Text mt={5} fontWeight={300} color="gray.500" fontSize="md">
-        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Molestie
-        ultricies id posuere mauris proin duis placerat lorem. Sed pellentesque
-        tortor, Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-        Molestie ultricies id posuere mauris
+        This action is permanent and cannot be undone.
       </Text>
       <Button
         variant={"outline"}
