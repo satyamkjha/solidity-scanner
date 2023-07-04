@@ -62,7 +62,11 @@ const Blocks: React.FC = () => {
         scanList && pagination.pageNo > 1
           ? scanList.concat(scans.data)
           : scans.data;
-      setScanList(sList);
+      const uniqueScanList = sList.filter(
+        (scan, index, self) =>
+          index === self.findIndex((s) => s.project_id === scan.project_id)
+      );
+      setScanList(uniqueScanList);
       setPage(scans.page);
       if (scans.data && !scans.data.length) {
         setIsLoadingIcons(false);
