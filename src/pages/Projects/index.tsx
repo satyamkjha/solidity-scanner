@@ -464,7 +464,7 @@ const ProjectCard: React.FC<{
               </Box>
             </>
           ) : (
-            <Box w="100%">
+            <Box w="100%" px={6}>
               <Text sx={{ w: "80%", mb: 8 }} isTruncated>
                 {project_name}
               </Text>
