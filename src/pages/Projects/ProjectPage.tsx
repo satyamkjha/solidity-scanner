@@ -104,6 +104,7 @@ import {
 } from "helpers/helperFunction";
 import { useConfig } from "hooks/useConfig";
 import Loader from "components/styled-components/Loader";
+import { formattedDate } from "common/functions";
 
 export const ProjectPage: React.FC = () => {
   const { projectId } = useParams<{ projectId: string }>();
@@ -280,9 +281,7 @@ const ScanDetails: React.FC<{
     const d = new Date(
       reportResponse.data.summary_report.project_summary_report.last_project_report_update_time
     );
-    setLastTimeUpdate(
-      `${d.getDate()}-${monthNames[d.getMonth()]}-${d.getFullYear()}`
-    );
+    setLastTimeUpdate(formattedDate(d, "long"));
   };
 
   const checkReportPublished = async (
@@ -315,9 +314,7 @@ const ScanDetails: React.FC<{
         setRepoUrl(scanData.scan_report.project_url);
         checkReportPublished(projectId, scanData.scan_report.latest_report_id);
         const d = new Date();
-        setDatePublished(
-          `${d.getDate()}-${monthNames[d.getMonth()]}-${d.getFullYear()}`
-        );
+        setDatePublished(formattedDate(d, "long"));
       } else {
         setPublishStatus("Not-Generated");
       }
