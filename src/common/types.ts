@@ -221,6 +221,7 @@ export type ScanMeta = {
   scan_score_v2: string;
   scan_name: string;
   latest_report_id: string;
+  skip_file_paths?: string[];
 };
 
 export type ScanSummary = {
@@ -411,6 +412,7 @@ export type Transaction = {
   payment_platform: string;
   payment_type: string;
   invoice_url?: string;
+  download_invoice_status?: string;
 };
 
 export type TransactionList = {
