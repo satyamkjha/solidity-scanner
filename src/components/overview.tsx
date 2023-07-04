@@ -184,12 +184,12 @@ const Overview: React.FC<{
               >
                 <SolidityScoreProgress
                   score={solidity_score}
-                  size={"85px"}
+                  size={"100px"}
                   thickness={"7px"}
                 />
                 <VStack alignItems="flex-start" px={4}>
                   <Text fontSize="18px" fontWeight={600} textAlign="center">
-                    Your Solidity Score is
+                    Your Security Score is
                     {parseFloat(solidity_score) < 50
                       ? " LOW"
                       : parseFloat(solidity_score) >= 90
@@ -239,7 +239,7 @@ const Overview: React.FC<{
                 fontSize="sm"
               >
                 <HStack w="100%" justifyContent="space-between">
-                  <Text color="detail">Score</Text>
+                  <Text color="detail">Security Score</Text>
                   <Text color="detail">{solidity_score + "/100"}</Text>
                 </HStack>
                 <Divider />
@@ -357,7 +357,7 @@ const Overview: React.FC<{
                 </CircularProgress>
                 <VStack alignItems="flex-start" px={4}>
                   <Text fontSize="18px" fontWeight={600}>
-                    Your Solidity Score is
+                    Your Security Score is
                     {parseFloat(scanData.scan_summary.score) < 2.5
                       ? " LOW"
                       : parseFloat(scanData.scan_summary.score) >= 4.5
@@ -404,7 +404,7 @@ const Overview: React.FC<{
                 </Text>
               </HStack>
               <HStack w="100%" justifyContent="space-between">
-                <Text>Score</Text>
+                <Text>Security Score</Text>
                 <Text color="subtle">{scanData.scan_summary.score}</Text>
               </HStack>
               <HStack w="100%" justifyContent="space-between">
@@ -497,7 +497,7 @@ const Overview: React.FC<{
                 </Text>
               </HStack>
               <HStack w="100%" justifyContent="space-between">
-                <Text>Score</Text>
+                <Text>Security Score</Text>
                 <Text color="subtle">--</Text>
               </HStack>
               <HStack w="100%" justifyContent="space-between">

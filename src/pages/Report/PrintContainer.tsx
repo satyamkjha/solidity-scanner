@@ -915,7 +915,7 @@ export const PrintContainer: React.FC<{ summary_report: Report }> = ({
                       ).toFixed(2)}
                   </Text>
                   <Text fontSize="sm" color="subtle" mt="-4px">
-                    Score
+                    Security Score
                   </Text>
                 </Box>
               </CircularProgressLabel>
@@ -1791,7 +1791,7 @@ export const PrintContainer: React.FC<{ summary_report: Report }> = ({
               color={"gray.600"}
               width={"17%"}
             >
-              Score
+              Security Score
             </Text>
             {isDesktopView && (
               <Text

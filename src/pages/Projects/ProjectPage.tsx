@@ -1555,7 +1555,7 @@ const ScanBlock: React.FC<{
                 width="120px"
               >
                 <Text fontSize={"sm"} color="gray.400">
-                  Score
+                  Security Score
                 </Text>
                 <Text
                   sx={{
