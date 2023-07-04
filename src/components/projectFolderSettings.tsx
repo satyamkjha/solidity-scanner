@@ -144,8 +144,18 @@ const FolderItem: React.FC<{
             }}
           ></Checkbox>
         )}
-        <FolderIcon active={folderItem.checked} size={20} />
-        <Text ml={3} color={folderItem.checked ? "#4E5D78" : "#4E5D7880"}>
+        <FolderIcon
+          active={folderItem.checked || folderItem.isChildCheck}
+          size={20}
+        />
+        <Text
+          ml={3}
+          color={
+            folderItem.checked || folderItem.isChildCheck
+              ? "#4E5D78"
+              : "#4E5D7880"
+          }
+        >
           {folderItem.name}
         </Text>
       </Flex>

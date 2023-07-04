@@ -20,6 +20,7 @@ import { useConfig } from "hooks/useConfig";
 import { monthNames } from "common/values";
 import { ArrowForwardIcon } from "@chakra-ui/icons";
 import { ThreatScoreMeter } from "components/threatScoreMeter";
+import { formattedDate } from "common/functions";
 
 const QuickScanDetails: React.FC<{ scanReport: QuickScanResult }> = ({
   scanReport,
@@ -110,7 +111,7 @@ const QuickScanDetails: React.FC<{ scanReport: QuickScanResult }> = ({
             justifyContent={"center"}
           >
             <HStack my={4} width={"100%"} justify={"space-between"}>
-              <Text fontSize="sm">Score</Text>
+              <Text fontSize="sm">Security Score</Text>
               <Text fontSize="sm">
                 {scanReport.multi_file_scan_summary.score_v2 + "/100"}
               </Text>
@@ -160,11 +161,7 @@ const QuickScanDetails: React.FC<{ scanReport: QuickScanResult }> = ({
               <Text textAlign={"left"} color={"white"} fontSize="md">
                 This contract has been manually verified by SolidityScan's
                 internal security team as per the highest smart contract
-                security standards as of{" "}
-                {`${d.getDate()} ${
-                  monthNames[d.getMonth()]
-                } ${d.getFullYear()}`}
-                .{" "}
+                security standards as of {formattedDate(d)}.{" "}
               </Text>
 
               <Button
