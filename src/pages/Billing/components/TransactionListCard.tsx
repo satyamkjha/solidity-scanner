@@ -109,22 +109,22 @@ const TransactionListCard: React.FC<{
             width={"100%"}
             align="center"
           >
-            <Text w={"6%"} fontWeight={500} color={"gray.500"}>
+            <Text w={"6%"} fontWeight={500} color={"gray.600"}>
               Status
             </Text>
-            <Text w={"12%"} fontWeight={500} color={"gray.500"}>
+            <Text w={"12%"} fontWeight={500} color={"gray.600"}>
               Amount
             </Text>
-            <Text w={"12%"} fontWeight={500} color={"gray.500"}>
+            <Text w={"12%"} fontWeight={500} color={"gray.600"}>
               Date
             </Text>
-            <Text w={"12%"} fontWeight={500} color={"gray.500"}>
+            <Text w={"12%"} fontWeight={500} color={"gray.600"}>
               Payment Mode
             </Text>
-            <Text w={"10%"} fontWeight={500} color={"gray.500"}>
+            <Text w={"10%"} fontWeight={500} color={"gray.600"}>
               Package
             </Text>
-            <Text w={"10%"} fontWeight={500} color={"gray.500"}>
+            <Text w={"10%"} fontWeight={500} color={"gray.600"}>
               Billing Cycle
             </Text>
             <Text
@@ -135,7 +135,6 @@ const TransactionListCard: React.FC<{
             >
               Actions
             </Text>
-            <Box w={"20%"} />
           </HStack>
 
           <InfiniteScroll
@@ -167,7 +166,7 @@ const TransactionListCard: React.FC<{
                     width={"100%"}
                     align="center"
                   >
-                    <Text w={"6%"} fontWeight={500} color={"gray.500"}>
+                    <Text w={"6%"} fontWeight={500} color={"gray.400"}>
                       <Badge
                         colorScheme={
                           transaction.payment_status === "success"
@@ -180,20 +179,20 @@ const TransactionListCard: React.FC<{
                         {transaction.payment_status}
                       </Badge>
                     </Text>
-                    <Text w={"12%"} fontWeight={500} color={"gray.500"}>
+                    <Text w={"12%"} fontWeight={500} color={"gray.400"}>
                       {parseFloat(transaction.amount).toFixed(2)}{" "}
                       {transaction.currency.toUpperCase()}
                     </Text>
-                    <Text w={"12%"} fontWeight={500} color={"gray.500"}>
+                    <Text w={"12%"} fontWeight={500} color={"gray.400"}>
                       {formattedDate(date)}
                     </Text>
-                    <Text w="12%" fontWeight={500} color={"gray.500"}>
+                    <Text w="12%" fontWeight={500} color={"gray.400"}>
                       {sentenceCapitalize(transaction.payment_platform)}
                     </Text>
-                    <Text w="10%" fontWeight={500} color={"gray.500"}>
+                    <Text w="10%" fontWeight={500} color={"gray.400"}>
                       {sentenceCapitalize(transaction.package)}
                     </Text>
-                    <Text w="10%" fontWeight={500} color={"gray.500"}>
+                    <Text w="10%" fontWeight={500} color={"gray.400"}>
                       {sentenceCapitalize(transaction.billing_cycle)}
                     </Text>
                     <Flex w={"20%"} flexWrap="wrap" justify="flex-end">
