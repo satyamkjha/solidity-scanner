@@ -21,6 +21,7 @@ import Loader from "components/styled-components/Loader";
 import { DownloadIcon } from "@chakra-ui/icons";
 import API from "helpers/api";
 import { API_PATH } from "helpers/routeManager";
+import { formattedDate } from "common/functions";
 
 const TransactionListCard: React.FC<{
   transactionList: Transaction[];
@@ -126,6 +127,14 @@ const TransactionListCard: React.FC<{
             <Text w={"10%"} fontWeight={500} color={"gray.500"}>
               Billing Cycle
             </Text>
+            <Text
+              fontWeight={500}
+              color={"gray.600"}
+              textAlign="right"
+              w={"20%"}
+            >
+              Actions
+            </Text>
             <Box w={"20%"} />
           </HStack>
 
@@ -149,7 +158,7 @@ const TransactionListCard: React.FC<{
             {" "}
             {transactionList.length > 0 ? (
               transactionList.map((transaction, index) => {
-                let date = transaction.date.split("-");
+                const date = new Date(transaction.date);
                 return (
                   <HStack
                     key={index}
@@ -176,7 +185,7 @@ const TransactionListCard: React.FC<{
                       {transaction.currency.toUpperCase()}
                     </Text>
                     <Text w={"12%"} fontWeight={500} color={"gray.500"}>
-                      {date[2]} {monthNames[parseInt(date[1])]} {date[0]}
+                      {formattedDate(date)}
                     </Text>
                     <Text w="12%" fontWeight={500} color={"gray.500"}>
                       {sentenceCapitalize(transaction.payment_platform)}
@@ -429,7 +438,7 @@ const TransactionListCard: React.FC<{
                       {date[2]}
                     </Text>
                     <Text fontSize="12px" mt="-4px">
-                      {monthNames[parseInt(date[1])]}
+                      {monthNames[parseInt(date[1]) - 1]}
                     </Text>
                   </Box>
                   {transaction.payment_status === "success" &&

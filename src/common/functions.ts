@@ -39,23 +39,16 @@ export function daysToMiliseconds(days: number): number {
   return days * 86400000;
 }
 
-export function dateToDDMMMMYYYY(date: Date): string {
-  const months = [
-    "January",
-    "February",
-    "March",
-    "April",
-    "May",
-    "June",
-    "July",
-    "August",
-    "September",
-    "October",
-    "November",
-    "December",
-  ];
-  return `${date.getDate()} ${months[date.getMonth()]} ${date.getFullYear()}`;
-}
+export const formattedDate = (
+  date: Date,
+  month?: "short" | "long" | "2-digit"
+) => {
+  return date.toLocaleDateString("en-GB", {
+    day: "numeric",
+    month: month || "short",
+    year: "numeric",
+  });
+};
 
 export const getBugStatusNumber = (bug_status: string) => {
   switch (bug_status) {
