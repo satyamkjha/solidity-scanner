@@ -66,7 +66,11 @@ const Projects: React.FC = () => {
         projectList && pagination.pageNo > 1
           ? projectList.concat(projects.data)
           : projects.data;
-      setProjectList(pList);
+      const uniqueProjectList = pList.filter(
+        (project, index, self) =>
+          index === self.findIndex((p) => p.project_id === project.project_id)
+      );
+      setProjectList(uniqueProjectList);
       setPage(projects.page);
     }
   }, [projects, refetch]);
@@ -256,7 +260,6 @@ const ProjectCard: React.FC<{
   const [hover, setHover] = useState(false);
 
   const history = useHistory();
-  const queryClient = useQueryClient();
   const {
     project_id,
     project_name,
