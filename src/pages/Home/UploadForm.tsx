@@ -470,6 +470,21 @@ const UploadForm: React.FC = () => {
                 background={"#FFFFFF"}
                 border={"1.5px dashed #D6D6D6"}
               >
+                <div {...getRootProps({ style })}>
+                  <input {...getInputProps()} />
+                  <HStack
+                    width={"100%"}
+                    justifyContent={"center"}
+                    alignItems={"center"}
+                  >
+                    <UploadIcon size={40} />
+                    <p style={{ marginTop: "20px" }}>
+                      Drag and drop or{" "}
+                      <span style={{ color: "#3300FF" }}> Browse</span> to
+                      upload
+                    </p>
+                  </HStack>
+                </div>
                 {urlList.map((item) => (
                   <UrlItem
                     removeFiles={removeFiles}

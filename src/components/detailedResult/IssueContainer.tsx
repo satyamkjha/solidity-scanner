@@ -35,6 +35,10 @@ const IssueContainer: React.FC<{
   is_latest_scan: boolean;
   bugStatusFilter: boolean[];
   updateBugStatus: any;
+  project_url?: string;
+  contract_url?: string;
+  contract_platform?: string;
+  branchName?: string;
 }> = ({
   type,
   issue_id,
@@ -49,6 +53,10 @@ const IssueContainer: React.FC<{
   details_enabled,
   bugStatusFilter,
   updateBugStatus,
+  project_url,
+  contract_url,
+  contract_platform,
+  branchName,
 }) => {
   let pendingFixes;
   let bugHashList: string[];
@@ -229,6 +237,10 @@ const IssueContainer: React.FC<{
                             setFiles={setFiles}
                             updateBugHashList={updateBugHashList}
                             updateBugStatus={updateBugStatus}
+                            project_url={project_url}
+                            contract_url={contract_url}
+                            contract_platform={contract_platform}
+                            branchName={branchName}
                           />
                         )
                     )}

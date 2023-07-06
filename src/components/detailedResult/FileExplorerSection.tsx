@@ -35,6 +35,10 @@ export const FileExplorerSection: React.FC<{
   selectedBugs: string[];
   updateBugStatus: any;
   setFiles: Dispatch<SetStateAction<FilesState | null>>;
+  project_url?: string;
+  contract_url?: string;
+  contract_platform?: string;
+  branchName?: string;
 }> = ({
   type,
   is_latest_scan,
@@ -43,6 +47,10 @@ export const FileExplorerSection: React.FC<{
   selectedBugs,
   updateBugStatus,
   setFiles,
+  project_url,
+  contract_url,
+  contract_platform,
+  branchName,
 }) => {
   const config: any = useConfig();
   const assetsURL = getAssetsURL(config);
@@ -185,6 +193,10 @@ export const FileExplorerSection: React.FC<{
             files={files}
             type={type}
             setFiles={setFiles}
+            project_url={project_url}
+            contract_url={contract_url}
+            contract_platform={contract_platform}
+            branchName={branchName}
           />
         ) : (
           <Flex

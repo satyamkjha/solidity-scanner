@@ -8,7 +8,21 @@ const FileNameTab: React.FC<{
   file: Finding;
   setCurrentFile: Dispatch<SetStateAction<Finding>>;
   currentFile: Finding;
-}> = ({ setCurrentFile, file, currentFile }) => {
+  type: "project" | "block";
+  branchName?: string;
+  project_url?: string;
+  contract_url?: string;
+  contract_platform?: string;
+}> = ({
+  setCurrentFile,
+  file,
+  currentFile,
+  type,
+  branchName,
+  project_url,
+  contract_url,
+  contract_platform,
+}) => {
   const [isHovered, setIsHovered] = useState(false);
   const [showCheck, setShowCheck] = useState(false);
 
@@ -45,13 +59,19 @@ const FileNameTab: React.FC<{
           <AiOutlineCopy
             onClick={(e) => {
               e.stopPropagation();
-              navigator.clipboard.writeText(file.file_path).then(
-                () => {
-                  setShowCheck(true);
-                  setTimeout(() => setShowCheck(false), 2000);
-                },
-                () => console.log("Could not copy to clipboard")
-              );
+              navigator.clipboard
+                .writeText(
+                  type === "project"
+                    ? `${project_url}/blob/${branchName}${file.file_path}`
+                    : `${contract_url}#code`
+                )
+                .then(
+                  () => {
+                    setShowCheck(true);
+                    setTimeout(() => setShowCheck(false), 2000);
+                  },
+                  () => console.log("Could not copy to clipboard")
+                );
             }}
           />
         )}

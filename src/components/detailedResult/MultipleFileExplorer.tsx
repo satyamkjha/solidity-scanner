@@ -30,6 +30,10 @@ type MultipleFileExplorerProps = {
   openIssueBox: boolean;
   setFiles: Dispatch<SetStateAction<FilesState | null>>;
   setOpenIssueBox: React.Dispatch<React.SetStateAction<boolean>>;
+  project_url?: string;
+  contract_url?: string;
+  contract_platform?: string;
+  branchName?: string;
 };
 const MultipleFileExplorer: React.FC<MultipleFileExplorerProps> = ({
   files,
@@ -39,6 +43,10 @@ const MultipleFileExplorer: React.FC<MultipleFileExplorerProps> = ({
   openIssueBox,
   setOpenIssueBox,
   setFiles,
+  project_url,
+  contract_url,
+  contract_platform,
+  branchName,
 }) => {
   const [currentFile, setCurrentFile] = useState<Finding>(files.findings[0]);
   const config: any = useConfig();
@@ -115,8 +123,13 @@ const MultipleFileExplorer: React.FC<MultipleFileExplorerProps> = ({
                 {files.findings.map((file) => (
                   <FileNameTab
                     file={file}
+                    type={type}
                     currentFile={currentFile}
                     setCurrentFile={setCurrentFile}
+                    project_url={project_url}
+                    contract_url={contract_url}
+                    contract_platform={contract_platform}
+                    branchName={branchName}
                   />
                 ))}
               </Flex>

@@ -726,6 +726,12 @@ const BlockPage: React.FC = () => {
                             scanData.scan_report.multi_file_scan_details
                           }
                           refetch={refetch}
+                          project_url={""}
+                          contract_url={scanData?.scan_report.contract_url}
+                          contract_platform={
+                            scanData?.scan_report.contract_platform
+                          }
+                          branchName={""}
                         />
                       ) : (
                         <Flex

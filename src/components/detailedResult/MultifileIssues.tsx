@@ -25,6 +25,10 @@ type MultifileIssuesProps = {
   details_enabled: boolean;
   is_latest_scan: boolean;
   updateBugStatus: any;
+  project_url?: string;
+  contract_url?: string;
+  contract_platform?: string;
+  branchName?: string;
 };
 
 const MultifileIssues: React.FC<MultifileIssuesProps> = ({
@@ -40,6 +44,10 @@ const MultifileIssues: React.FC<MultifileIssuesProps> = ({
   bugStatusFilter,
   details_enabled,
   updateBugStatus,
+  project_url,
+  contract_url,
+  contract_platform,
+  branchName,
 }) => {
   const [isDesktopView] = useMediaQuery("(min-width: 1350px)");
   let issue_count: number;
@@ -122,6 +130,10 @@ const MultifileIssues: React.FC<MultifileIssuesProps> = ({
                     setSelectedBugs={setSelectedBugs}
                     bugStatusFilter={bugStatusFilter}
                     updateBugStatus={updateBugStatus}
+                    project_url={project_url}
+                    contract_url={contract_url}
+                    contract_platform={contract_platform}
+                    branchName={branchName}
                   />
                 ) : (
                   <></>

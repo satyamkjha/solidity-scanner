@@ -818,6 +818,10 @@ const ScanDetails: React.FC<{
                           scanDetails={
                             scanData.scan_report.multi_file_scan_details
                           }
+                          project_url={project_url}
+                          contract_url={""}
+                          contract_platform={""}
+                          branchName={project_branch}
                           refetch={refetch}
                         />
                       ) : (
