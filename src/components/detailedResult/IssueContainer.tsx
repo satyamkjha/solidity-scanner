@@ -39,6 +39,7 @@ const IssueContainer: React.FC<{
   contract_url?: string;
   contract_platform?: string;
   branchName?: string;
+  contract_address?: string;
 }> = ({
   type,
   issue_id,
@@ -57,6 +58,7 @@ const IssueContainer: React.FC<{
   contract_url,
   contract_platform,
   branchName,
+  contract_address,
 }) => {
   let pendingFixes;
   let bugHashList: string[];
@@ -241,6 +243,7 @@ const IssueContainer: React.FC<{
                             contract_url={contract_url}
                             contract_platform={contract_platform}
                             branchName={branchName}
+                            contract_address={contract_address}
                           />
                         )
                     )}

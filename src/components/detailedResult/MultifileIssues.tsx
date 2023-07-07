@@ -29,6 +29,7 @@ type MultifileIssuesProps = {
   contract_url?: string;
   contract_platform?: string;
   branchName?: string;
+  contract_address?: string;
 };
 
 const MultifileIssues: React.FC<MultifileIssuesProps> = ({
@@ -48,6 +49,7 @@ const MultifileIssues: React.FC<MultifileIssuesProps> = ({
   contract_url,
   contract_platform,
   branchName,
+  contract_address,
 }) => {
   const [isDesktopView] = useMediaQuery("(min-width: 1350px)");
   let issue_count: number;
@@ -134,6 +136,7 @@ const MultifileIssues: React.FC<MultifileIssuesProps> = ({
                     contract_url={contract_url}
                     contract_platform={contract_platform}
                     branchName={branchName}
+                    contract_address={contract_address}
                   />
                 ) : (
                   <></>

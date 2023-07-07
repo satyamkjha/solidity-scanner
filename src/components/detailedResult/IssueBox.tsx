@@ -38,6 +38,7 @@ const IssueBox: React.FC<{
   contract_url?: string;
   contract_platform?: string;
   branchName?: string;
+  contract_address?: string;
 }> = ({
   type,
   bug_id,
@@ -55,6 +56,7 @@ const IssueBox: React.FC<{
   contract_url,
   contract_platform,
   branchName,
+  contract_address,
 }) => {
   const config: any = useConfig();
   const assetsURL = getAssetsURL(config);
@@ -240,6 +242,7 @@ const IssueBox: React.FC<{
                     contract_url={contract_url}
                     contract_platform={contract_platform}
                     branchName={branchName}
+                    contract_address={contract_address}
                   />
                 )}
               </AccordionPanel>

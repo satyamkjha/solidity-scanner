@@ -34,6 +34,7 @@ const MultifileResult: React.FC<{
   scanDetails: MultiFileScanDetail[];
   profileData: Profile;
   details_enabled: boolean;
+  contract_address?: string;
   project_url?: string;
   contract_url?: string;
   contract_platform?: string;
@@ -51,6 +52,7 @@ const MultifileResult: React.FC<{
   contract_url,
   contract_platform,
   branchName,
+  contract_address,
 }) => {
   const [files, setFiles] = useState<FilesState | null>(null);
 
@@ -256,6 +258,7 @@ const MultifileResult: React.FC<{
               contract_url={contract_url}
               contract_platform={contract_platform}
               branchName={branchName}
+              contract_address={contract_address}
             />
           </Box>
         </VStack>
@@ -272,6 +275,8 @@ const MultifileResult: React.FC<{
             contract_url={contract_url}
             contract_platform={contract_platform}
             branchName={branchName}
+            contract_address={contract_address}
+
           />
         )}
       </Flex>

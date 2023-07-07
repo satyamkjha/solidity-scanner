@@ -3,6 +3,7 @@ import React, { Dispatch, SetStateAction, useState } from "react";
 import { AiOutlineCopy } from "react-icons/ai";
 import { CheckIcon } from "@chakra-ui/icons";
 import { Finding } from "common/types";
+import { codePlatform } from "common/values";
 
 const FileNameTab: React.FC<{
   file: Finding;
@@ -13,6 +14,7 @@ const FileNameTab: React.FC<{
   project_url?: string;
   contract_url?: string;
   contract_platform?: string;
+  contract_address?: string;
 }> = ({
   setCurrentFile,
   file,
@@ -22,6 +24,7 @@ const FileNameTab: React.FC<{
   project_url,
   contract_url,
   contract_platform,
+  contract_address,
 }) => {
   const [isHovered, setIsHovered] = useState(false);
   const [showCheck, setShowCheck] = useState(false);
@@ -62,8 +65,17 @@ const FileNameTab: React.FC<{
               navigator.clipboard
                 .writeText(
                   type === "project"
-                    ? `${project_url}/blob/${branchName}${file.file_path}#L${file.line_nos_start}-L${file.line_nos_end}`
-                    : `${contract_url}#code`
+                    ? `${project_url?.replace(
+                        "com",
+                        "dev"
+                      )}/blob/${branchName}${file.file_path}#L${
+                        file.line_nos_start
+                      }-L${file.line_nos_end}`
+                    : codePlatform[contract_platform].platform === "vscode"
+                    ? `https://vscode.blockscan.com/${codePlatform[contract_platform].dynamicString}/${contract_address}`
+                    : codePlatform[contract_platform].platform === "own"
+                    ? `${contract_url}${codePlatform[contract_platform].dynamicString}`
+                    : file.file_path
                 )
                 .then(
                   () => {

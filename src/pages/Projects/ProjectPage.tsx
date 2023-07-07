@@ -598,20 +598,7 @@ const ScanDetails: React.FC<{
                         <Text color="#3E15F4" fontSize="sm">
                           |
                         </Text>
-                        <Menu>
-                          <MenuButton aria-label="Options">
-                            {printLoading ? (
-                              <Loader size={20} color="#3E15F4" />
-                            ) : (
-                              <ArrowDownIcon color="#3E15F4" />
-                            )}
-                          </MenuButton>
-                          <MenuList>
-                            <MenuItem onClick={() => generatePDF()}>
-                              Download PDF
-                            </MenuItem>
-                          </MenuList>
-                        </Menu>
+
                         {summaryReport && printLoading && (
                           <Box
                             w={0}
@@ -823,6 +810,7 @@ const ScanDetails: React.FC<{
                           contract_platform={""}
                           branchName={project_branch}
                           refetch={refetch}
+                          contract_address=""
                         />
                       ) : (
                         <Flex

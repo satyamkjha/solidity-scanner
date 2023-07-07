@@ -34,6 +34,7 @@ type MultipleFileExplorerProps = {
   contract_url?: string;
   contract_platform?: string;
   branchName?: string;
+  contract_address?: string;
 };
 const MultipleFileExplorer: React.FC<MultipleFileExplorerProps> = ({
   files,
@@ -47,6 +48,7 @@ const MultipleFileExplorer: React.FC<MultipleFileExplorerProps> = ({
   contract_url,
   contract_platform,
   branchName,
+  contract_address,
 }) => {
   const [currentFile, setCurrentFile] = useState<Finding>(files.findings[0]);
   const config: any = useConfig();
@@ -130,6 +132,7 @@ const MultipleFileExplorer: React.FC<MultipleFileExplorerProps> = ({
                     contract_url={contract_url}
                     contract_platform={contract_platform}
                     branchName={branchName}
+                    contract_address={contract_address}
                   />
                 ))}
               </Flex>
