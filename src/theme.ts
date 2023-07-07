@@ -280,6 +280,14 @@ export const theme = extendTheme({
             color: "rgba(51, 0, 255,1)",
           },
         },
+        navigation: {
+          fontWeight: 500,
+          color: "#000000",
+          _hover: {
+            color: "rgba(51, 0, 255,1)",
+          },
+          textDecoration: "none",
+        },
       },
     },
     Progress: {

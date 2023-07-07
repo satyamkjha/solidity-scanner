@@ -136,6 +136,13 @@ const UploadForm: React.FC = () => {
     transition: "border .24s ease-in-out",
   };
 
+  let addMoreFilesStyle = {
+    ...baseStyle,
+    borderWidth: 0,
+    flexDirection: "row",
+    justifyContent: "center",
+  };
+
   const focusedStyle = {
     borderColor: "#2196f3",
   };
@@ -470,7 +477,7 @@ const UploadForm: React.FC = () => {
                 background={"#FFFFFF"}
                 border={"1.5px dashed #D6D6D6"}
               >
-                <div {...getRootProps({ style })}>
+                <div {...getRootProps({ addMoreFilesStyle })}>
                   <input {...getInputProps()} />
                   <HStack
                     width={"100%"}
@@ -478,7 +485,7 @@ const UploadForm: React.FC = () => {
                     alignItems={"center"}
                   >
                     <UploadIcon size={40} />
-                    <p style={{ marginTop: "20px" }}>
+                    <p>
                       Drag and drop or{" "}
                       <span style={{ color: "#3300FF" }}> Browse</span> to
                       upload
