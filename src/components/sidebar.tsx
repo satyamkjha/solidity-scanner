@@ -22,6 +22,7 @@ import {
   CredshieldsIcon,
   UserGuideIcon,
   PrivateApiMenuIcon,
+  OrganisationIcon,
 } from "components/icons";
 
 import {
@@ -203,6 +204,13 @@ const Sidebar: React.FC<{
             to={`/billing`}
             label="Billing"
             icon={<BillingMenuIcon size={24} />}
+            isCollapsed={isCollapsed}
+            transitionDone={transitionDone}
+          />
+          <SidebarItem
+            to={`/organisation`}
+            label="Organisation"
+            icon={<OrganisationIcon />}
             isCollapsed={isCollapsed}
             transitionDone={transitionDone}
           />

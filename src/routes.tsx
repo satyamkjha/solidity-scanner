@@ -114,6 +114,10 @@ const PrivateApi = lazy(
   () => import("pages/PrivateAPI" /* webpackChunkName: "PrivateApi" */)
 );
 
+const Organisation = lazy(
+  () => import("pages/Organisation" /* webpackChunkName: "PrivateApi" */)
+);
+
 const PublicReportPage = lazy(
   () =>
     import(
@@ -222,6 +226,9 @@ const Routes: React.FC = () => {
                 </PrivateRoute>
                 <PrivateRoute exact path="/private-api">
                   <PrivateApi />
+                </PrivateRoute>
+                <PrivateRoute exact path="/organisation">
+                  <Organisation />
                 </PrivateRoute>
 
                 <PrivateRoute exact path="/billing">
