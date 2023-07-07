@@ -62,7 +62,7 @@ const FileNameTab: React.FC<{
               navigator.clipboard
                 .writeText(
                   type === "project"
-                    ? `${project_url}/blob/${branchName}${file.file_path}`
+                    ? `${project_url}/blob/${branchName}${file.file_path}#L${file.line_nos_start}-L${file.line_nos_end}`
                     : `${contract_url}#code`
                 )
                 .then(

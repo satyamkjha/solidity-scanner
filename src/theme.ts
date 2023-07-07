@@ -285,8 +285,8 @@ export const theme = extendTheme({
           color: "#000000",
           _hover: {
             color: "rgba(51, 0, 255,1)",
+            textDecoration: "none",
           },
-          textDecoration: "none",
         },
       },
     },
