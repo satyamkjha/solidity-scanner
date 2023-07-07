@@ -31,6 +31,28 @@ const FileNameTab: React.FC<{
 
   const selected = currentFile.file_path === file.file_path;
 
+  const copyFileLink = () => {
+    navigator.clipboard
+      .writeText(
+        type === "project"
+          ? `${project_url?.replace("com", "dev")}/blob/${branchName}${
+              file.file_path
+            }#L${file.line_nos_start}-L${file.line_nos_end}`
+          : codePlatform[contract_platform].platform === "vscode"
+          ? `https://vscode.blockscan.com/${codePlatform[contract_platform].dynamicString}/${contract_address}`
+          : codePlatform[contract_platform].platform === "own"
+          ? `${contract_url}${codePlatform[contract_platform].dynamicString}`
+          : file.file_path
+      )
+      .then(
+        () => {
+          setShowCheck(true);
+          setTimeout(() => setShowCheck(false), 2000);
+        },
+        () => console.log("Could not copy to clipboard")
+      );
+  };
+
   return (
     <Box
       key={file.file_path}
@@ -62,28 +84,7 @@ const FileNameTab: React.FC<{
           <AiOutlineCopy
             onClick={(e) => {
               e.stopPropagation();
-              navigator.clipboard
-                .writeText(
-                  type === "project"
-                    ? `${project_url?.replace(
-                        "com",
-                        "dev"
-                      )}/blob/${branchName}${file.file_path}#L${
-                        file.line_nos_start
-                      }-L${file.line_nos_end}`
-                    : codePlatform[contract_platform].platform === "vscode"
-                    ? `https://vscode.blockscan.com/${codePlatform[contract_platform].dynamicString}/${contract_address}`
-                    : codePlatform[contract_platform].platform === "own"
-                    ? `${contract_url}${codePlatform[contract_platform].dynamicString}`
-                    : file.file_path
-                )
-                .then(
-                  () => {
-                    setShowCheck(true);
-                    setTimeout(() => setShowCheck(false), 2000);
-                  },
-                  () => console.log("Could not copy to clipboard")
-                );
+              copyFileLink();
             }}
           />
         )}
