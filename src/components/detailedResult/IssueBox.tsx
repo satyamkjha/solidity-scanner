@@ -15,7 +15,7 @@ import {
   MultiFileTemplateDetail,
 } from "common/types";
 import React, { Dispatch, SetStateAction, useEffect, useState } from "react";
-import DetailedResult from "./FileExplorerSection";
+import DetailedResult, { FileExplorerSection } from "./FileExplorerSection";
 import { MultifileIcon } from "../icons";
 import InputCheckbox from "../styled-components/inputCheckbox";
 import { getAssetsURL } from "helpers/helperFunction";
@@ -34,6 +34,11 @@ const IssueBox: React.FC<{
   updateBugHashList: any;
   setFiles: Dispatch<SetStateAction<FilesState | null>>;
   updateBugStatus: any;
+  project_url?: string;
+  contract_url?: string;
+  contract_platform?: string;
+  branchName?: string;
+  contract_address?: string;
 }> = ({
   type,
   bug_id,
@@ -47,6 +52,11 @@ const IssueBox: React.FC<{
   updateBugHashList,
   setFiles,
   updateBugStatus,
+  project_url,
+  contract_url,
+  contract_platform,
+  branchName,
+  contract_address,
 }) => {
   const config: any = useConfig();
   const assetsURL = getAssetsURL(config);
@@ -220,7 +230,7 @@ const IssueBox: React.FC<{
               </AccordionButton>
               <AccordionPanel p={0}>
                 {isExpanded && (
-                  <DetailedResult
+                  <FileExplorerSection
                     type={type}
                     is_latest_scan={is_latest_scan}
                     files={files}
@@ -228,6 +238,11 @@ const IssueBox: React.FC<{
                     details_enabled={true}
                     selectedBugs={selectedBugs}
                     updateBugStatus={updateBugStatus}
+                    project_url={project_url}
+                    contract_url={contract_url}
+                    contract_platform={contract_platform}
+                    branchName={branchName}
+                    contract_address={contract_address}
                   />
                 )}
               </AccordionPanel>
