@@ -13,16 +13,12 @@ import {
   ModalBody,
   ModalCloseButton,
   ModalContent,
-  ModalFooter,
   ModalHeader,
   ModalOverlay,
   Stack,
   Textarea,
   useToast,
-  Box,
-  HStack,
   Text,
-  Spinner,
   VStack,
 } from "@chakra-ui/react";
 import { FaDiscord, FaEnvelope, FaTelegram } from "react-icons/fa";
@@ -81,7 +77,7 @@ export const ManualAuditForm: React.FC<{ onClose(): any; isOpen: boolean }> = ({
           setTelegram("");
         }
       })
-      .catch((error) => {
+      .catch(() => {
         setMailSent(false);
       })
       .finally(() => setLoading(false));
@@ -225,11 +221,7 @@ export const ManualAuditForm: React.FC<{ onClose(): any; isOpen: boolean }> = ({
                       onSubmit();
                     }}
                   >
-                    {!loading ? (
-                      "Submit"
-                    ) : (
-                      <Loader size={30} thickness={2} color="white" />
-                    )}
+                    {!loading ? "Submit" : <Loader size={30} color="white" />}
                   </Button>
                 </Flex>
                 <VStack

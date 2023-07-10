@@ -9,7 +9,7 @@ import {
   Skeleton,
   HStack,
 } from "@chakra-ui/react";
-import { Swiper, SwiperSlide, useSwiperSlide } from "swiper/react";
+import { Swiper, SwiperSlide } from "swiper/react";
 import { EffectCoverflow, Navigation, Pagination } from "swiper";
 import "./testimonial.css";
 import { userTestimonials } from "common/values";

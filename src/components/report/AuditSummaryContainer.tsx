@@ -1,13 +1,5 @@
-import {
-  Divider,
-  Flex,
-  Heading,
-  HStack,
-  Text,
-  useMediaQuery,
-} from "@chakra-ui/react";
+import { Divider, Flex, Heading, Text, useMediaQuery } from "@chakra-ui/react";
 import { Report } from "common/types";
-import { SeverityIcon } from "components/icons";
 
 import React from "react";
 

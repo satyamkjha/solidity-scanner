@@ -20,7 +20,7 @@ const Score: React.FC<ScoreProps> = ({ score }) => {
           <LogoIcon size={20} />
         </CircularProgressLabel>
       </CircularProgress> */}
-      <Box mx={2} sx={{ textAlign: "center" }}>
+      <Box mx={2} sx={{ textAlign: "left" }}>
         <Text
           sx={{
             color: "accent",
@@ -33,7 +33,7 @@ const Score: React.FC<ScoreProps> = ({ score }) => {
           {score}
         </Text>
         <Text sx={{ color: "subtle", fontSize: "sm", fontWeight: 600 }}>
-          Score
+          Security Score
         </Text>
       </Box>
     </Flex>

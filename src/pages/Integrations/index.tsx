@@ -1,15 +1,6 @@
 import React, { ReactElement, useState, memo } from "react";
-import { useHistory } from "react-router-dom";
 import { useQueryClient } from "react-query";
-import {
-  Flex,
-  Box,
-  Text,
-  Button,
-  Icon,
-  VStack,
-  Spinner,
-} from "@chakra-ui/react";
+import { Flex, Box, Text, Button, Icon, VStack } from "@chakra-ui/react";
 import { AiOutlineWarning } from "react-icons/ai";
 import { BiLockAlt } from "react-icons/bi";
 
@@ -68,18 +59,7 @@ const Integrations: React.FC = () => {
         <Text sx={{ color: "subtle", fontWeight: 600 }}>INTEGRATIONS</Text>
       </Flex>
 
-      {!data && (
-        <Flex
-          sx={{
-            w: ["100%", "100%", "40%"],
-            mx: [0, 0, 4],
-            my: 4,
-            justifyContent: "center",
-          }}
-        >
-          <Loader />
-        </Flex>
-      )}
+      {!data && <Loader width={"100%"} height={"70vh"} />}
 
       {data && (
         <VStack spacing={8} my={16}>
@@ -139,7 +119,6 @@ const IntegrationChannel: React.FC<IntegrationChannelProps> = ({
 }) => {
   const [loading, setLoading] = useState(false);
   const queryClient = useQueryClient();
-  const history = useHistory();
   const onSuccess = async (code: string) => {
     try {
       setLoading(true);
@@ -236,6 +215,7 @@ const IntegrationChannel: React.FC<IntegrationChannelProps> = ({
                 py={6}
                 onClick={onDisconnect}
                 isLoading={loading}
+                spinner={<Loader color={"#3300FF"} size={25} />}
               >
                 Disconnect
               </Button>

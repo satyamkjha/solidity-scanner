@@ -1,13 +1,6 @@
-import React, { useEffect, useRef, useState } from "react";
-import {
-  Flex,
-  Box,
-  Text,
-  HStack,
-  useMediaQuery,
-  Image,
-} from "@chakra-ui/react";
-import { dateToDDMMMMYYYY } from "common/functions";
+import React from "react";
+import { Box, Text } from "@chakra-ui/react";
+import { formattedDate } from "common/functions";
 
 const SubscriptionDataContainer: React.FC<{
   packageName: string;
@@ -20,7 +13,7 @@ const SubscriptionDataContainer: React.FC<{
           Subscribed on
         </Text>
         <Text fontWeight={500} fontSize="md">
-          {dateToDDMMMMYYYY(new Date(packageRechargeDate))}
+          {formattedDate(new Date(packageRechargeDate), "long")}
         </Text>
       </Box>
       <Box mt={5} ml={10}>

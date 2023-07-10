@@ -9,7 +9,6 @@ import {
   VStack,
   SkeletonText,
   Skeleton,
-  Stack,
 } from "@chakra-ui/react";
 import { teamsData } from "common/values";
 import { getAssetsURL } from "helpers/helperFunction";

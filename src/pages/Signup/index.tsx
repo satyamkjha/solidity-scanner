@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { set, useForm } from "react-hook-form";
+import { useForm } from "react-hook-form";
 import { Link as RouterLink, useHistory, useLocation } from "react-router-dom";
 import {
   Flex,
@@ -17,7 +17,6 @@ import {
   HStack,
   Divider,
 } from "@chakra-ui/react";
-import { motion } from "framer-motion";
 import {
   FaDiscord,
   FaLinkedin,
@@ -42,8 +41,7 @@ import GoogleSignIn from "components/googleSignin";
 import { getFeatureGateConfig } from "helpers/helperFunction";
 import { getReCaptchaHeaders } from "helpers/helperFunction";
 import { useConfig } from "hooks/useConfig";
-
-const CustomFlex = motion(Flex);
+import Loader from "components/styled-components/Loader";
 
 const SignUp: React.FC = () => {
   const config: any = useConfig();
@@ -145,7 +143,7 @@ const RegisterForm: React.FC<{
   setEmail: React.Dispatch<React.SetStateAction<string>>;
   email: string;
 }> = ({ setRegistered, setEmail, email }) => {
-  const { handleSubmit, register, formState } = useForm<FormData>();
+  const { handleSubmit, formState } = useForm<FormData>();
 
   const [show, setShow] = useState(false);
   const history = useHistory();
@@ -226,7 +224,7 @@ const RegisterForm: React.FC<{
         }
       }
 
-      if (flag == 0) {
+      if (flag === 0) {
         uniqueArr.push(arr1[i]);
       }
     }
@@ -438,6 +436,7 @@ const RegisterForm: React.FC<{
           type="submit"
           variant="brand"
           isLoading={formState.isSubmitting}
+          spinner={<Loader color={"#3300FF"} size={25} />}
         >
           {step === 0 ? "Next" : "Submit"}
         </Button>

@@ -1,22 +1,18 @@
 import React, { useEffect, useRef, useState } from "react";
-import { Link as RouterLink, useHistory, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 
 import {
   Flex,
   Box,
   Text,
-  Link,
   Tabs,
   TabList,
   TabPanels,
   Tab,
   TabPanel,
-  Spinner,
   Accordion,
   AccordionButton,
-  AccordionIcon,
   AccordionItem,
-  AccordionPanel,
   VStack,
   Image,
   HStack,
@@ -34,45 +30,26 @@ import {
   ModalOverlay,
   Switch as SwitchComp,
   useToast,
-  Badge,
-  border,
   Stack,
   useMediaQuery,
   MenuButton,
   Menu,
-  IconButton,
   MenuList,
   MenuItem,
 } from "@chakra-ui/react";
 import Overview from "components/overview";
 import MultifileResult from "components/detailedResult/MultifileResult";
-import {
-  AddIcon,
-  CheckCircleIcon,
-  LockIcon,
-  MinusIcon,
-  TimeIcon,
-} from "@chakra-ui/icons";
+import { CheckCircleIcon, LockIcon, TimeIcon } from "@chakra-ui/icons";
 import { useScan } from "hooks/useScan";
 import { ArrowDownIcon } from "@chakra-ui/icons";
 import { useProfile } from "hooks/useProfile";
 import { BiChevronDownCircle, BiChevronUpCircle } from "react-icons/bi";
 import { AiOutlineProject } from "react-icons/ai";
-import {
-  FaFileCode,
-  FaGithub,
-  FaCalendarAlt,
-  FaRegCalendarCheck,
-  FaEnvelope,
-  FaInternetExplorer,
-  FaBuilding,
-  FaRegCopy,
-} from "react-icons/fa";
+import { FaEnvelope, FaInternetExplorer, FaBuilding } from "react-icons/fa";
 import API from "helpers/api";
-import { Report, ReportsListItem, Scan } from "common/types";
+import { Report, ReportsListItem } from "common/types";
 import { useReports } from "hooks/useReports";
 import { ScanErrorIcon } from "components/icons";
-import { monthNames } from "common/values";
 import ContractDetails from "components/contractDetails";
 import PublishedReports from "components/publishedReports";
 import { usePricingPlans } from "hooks/usePricingPlans";
@@ -87,6 +64,7 @@ import {
 } from "helpers/helperFunction";
 import { useConfig } from "hooks/useConfig";
 import Loader from "components/styled-components/Loader";
+import { formattedDate } from "common/functions";
 
 const BlockPage: React.FC = () => {
   const { scanId } = useParams<{ scanId: string }>();
@@ -214,9 +192,7 @@ const BlockPage: React.FC = () => {
     const d = new Date(
       reportResponse.data.summary_report.project_summary_report.last_project_report_update_time
     );
-    setLastTimeUpdate(
-      `${d.getDate()}-${monthNames[d.getMonth()]}-${d.getFullYear()}`
-    );
+    setLastTimeUpdate(formattedDate(d, "long"));
   };
 
   const checkReportPublished = async (
@@ -254,9 +230,7 @@ const BlockPage: React.FC = () => {
           scanData.scan_report.latest_report_id
         );
         const d = new Date();
-        setDatePublished(
-          `${d.getDate()}-${monthNames[d.getMonth()]}-${d.getFullYear()}`
-        );
+        setDatePublished(formattedDate(d, "long"));
       } else {
         setPublishStatus("Not-Generated");
       }
@@ -748,6 +722,15 @@ const BlockPage: React.FC = () => {
                             scanData.scan_report.multi_file_scan_details
                           }
                           refetch={refetch}
+                          project_url={""}
+                          contract_url={scanData?.scan_report.contract_url}
+                          contract_platform={
+                            scanData?.scan_report.contract_platform
+                          }
+                          contract_address={
+                            scanData?.scan_report.contract_address
+                          }
+                          branchName={""}
                         />
                       ) : (
                         <Flex

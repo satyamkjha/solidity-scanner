@@ -1,22 +1,5 @@
-import {
-  TableContainer,
-  Table,
-  Thead,
-  Tr,
-  Th,
-  HStack,
-  Text,
-  Tbody,
-  Td,
-  Flex,
-  Image,
-  Box,
-} from "@chakra-ui/react";
-import styled from "@emotion/styled";
+import { TableContainer, Table, Tbody, Flex } from "@chakra-ui/react";
 import { IssueDetailObject, IssueItem } from "common/types";
-import { actionTaken } from "common/values";
-import { getAssetsURL } from "helpers/helperFunction";
-import { useConfig } from "hooks/useConfig";
 import React, { useEffect, useState } from "react";
 import IssueRow from "./IssueRow";
 import IssueHead from "./IssueHead";
@@ -40,8 +23,6 @@ const NonDynamicContainer: React.FC<{ issue: IssueDetailObject }> = ({
     issueList: IssueItem[];
   }[] = [];
 
-  const config: any = useConfig();
-  const assetsURL = getAssetsURL(config);
   useEffect(() => {
     if (issue.common_comments_map) {
       Object.keys(issue.common_comments_map).forEach((key) => {
@@ -121,36 +102,3 @@ const NonDynamicContainer: React.FC<{ issue: IssueDetailObject }> = ({
 };
 
 export default NonDynamicContainer;
-
-const DescriptionWrapper = styled.div`
-  p {
-    font-weight: 300;
-    word-break: break-all;
-  }
-
-  ul,
-  ol {
-    margin-left: 20px;
-  }
-
-  li {
-    font-weight: 400;
-    font-size: 16px;
-  }
-
-  code {
-    background: #cbd5e0;
-    padding: 2px 4px;
-    border-radius: 5px;
-    word-break: break-all;
-  }
-  a {
-    color: #4299e1;
-    text-decoration: underline;
-    word-break: break-all;
-    transition: 0.2s color;
-    &:hover {
-      color: #2b6cb0;
-    }
-  }
-`;

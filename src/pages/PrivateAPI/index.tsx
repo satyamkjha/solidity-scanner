@@ -6,7 +6,6 @@ import {
   Button,
   Icon,
   VStack,
-  Spinner,
   useClipboard,
   Divider,
   Image,

@@ -1,4 +1,4 @@
-import { DetectorItemProp, Plan } from "./types";
+import { DetectorItemProp } from "./types";
 
 export const severityPriority: { [key: string]: number } = {
   "0": 10,
@@ -234,16 +234,37 @@ export const blockScans: { [key: string]: string } = {
   etherscan: "Ethereum",
   bscscan: "Binance",
   polygonscan: "Polygon",
-  fantom: "Fantom",
+  fantom: "fantom",
   cronos: "Cronos",
   avalanche: "Avalanche C-Chain",
-  celo: "Celo",
+  celo: "celo",
   aurora: "Aurora",
   arbiscan: "Arbiscan",
   buildbear: "Buildbear",
   optimism: "Optimism",
   xdc: "XDC",
   reefscan: "Reefscan",
+};
+
+export const codePlatform: {
+  [key: string]: {
+    platform: string;
+    dynamicString: string;
+  };
+} = {
+  etherscan: { platform: "vscode", dynamicString: "ethereum" },
+  bscscan: { platform: "vscode", dynamicString: "bsc" },
+  polygonscan: { platform: "vscode", dynamicString: "polygon" },
+  fantom: { platform: "vscode", dynamicString: "Fantom" },
+  cronos: { platform: "vscode", dynamicString: "cronos" },
+  avalanche: { platform: "vscode", dynamicString: "avalanche" },
+  celo: { platform: "vscode", dynamicString: "celo" },
+  aurora: { platform: "own", dynamicString: "/contracts#address-tabs" },
+  arbiscan: { platform: "vscode", dynamicString: "arbitrum-one" },
+  buildbear: { platform: "none", dynamicString: "" },
+  optimism: { platform: "vscode", dynamicString: "optimism" },
+  xdc: { platform: "own", dynamicString: "#readContract" },
+  reefscan: { platform: "own", dynamicString: "" },
 };
 
 export const blockExplorer: { [key: string]: string } = {

@@ -1,7 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useForm } from "react-hook-form";
 import { useHistory } from "react-router-dom";
-import { useQueryClient } from "react-query";
 import { FiCheck } from "react-icons/fi";
 import {
   Flex,
@@ -15,36 +13,28 @@ import {
   InputRightElement,
   VStack,
   Input,
-  Spinner,
-  InputProps,
   useToast,
   Stack,
   Tooltip,
+  useDisclosure,
 } from "@chakra-ui/react";
 import { getReCaptchaHeaders } from "helpers/helperFunction";
-
+import { useQueryClient } from "react-query";
 import {
   AiOutlineEdit,
   AiOutlineSave,
   AiOutlineEye,
   AiOutlineEyeInvisible,
-  AiFillInfoCircle,
 } from "react-icons/ai";
 import { useProfile } from "hooks/useProfile";
-
+import DeleteAccountForm from "./DeleteAccountForm";
 import API from "helpers/api";
 import Auth from "helpers/auth";
 import { API_PATH } from "helpers/routeManager";
 import { AuthResponse } from "common/types";
 import { InfoIcon } from "@chakra-ui/icons";
-import reCAPTCHA from "helpers/reCAPTCHA";
 import Loader from "components/styled-components/Loader";
 
-type ProfileFormData = {
-  first_name?: string;
-  company_name?: string;
-  contact_number?: string;
-};
 const Profile: React.FC = () => {
   const toast = useToast();
 
@@ -218,12 +208,15 @@ const Profile: React.FC = () => {
           {" "}
           <Box w="100%" bgColor="white" borderRadius="20px" p={4} px={6}>
             <Flex w="100%" alignItems="center" justifyContent="space-between">
-              <Text fontSize="xl">Profile Details</Text>
+              <Text fontWeight={300} fontSize="xl">
+                Profile Details
+              </Text>
               {isEditable ? (
                 <Button
                   variant="accent-ghost"
                   type="submit"
                   isLoading={updateLoading}
+                  spinner={<Loader color={"#3300FF"} size={25} />}
                   onClick={(e) => {
                     e.preventDefault();
                     onSave();
@@ -397,16 +390,11 @@ const Profile: React.FC = () => {
             </VStack>
           </Box>
           {!data.public_address && <ChangePasswordForm />}
+          <DeleteAccountBox />
         </>
       )}
     </Box>
   );
-};
-
-type PasswordChangeFormData = {
-  password: string;
-  new_password: string;
-  confirm_password: string;
 };
 
 const ChangePasswordForm: React.FC = () => {
@@ -448,7 +436,9 @@ const ChangePasswordForm: React.FC = () => {
 
   return (
     <Box w="100%" bgColor="white" borderRadius="20px" p={4} px={6} mt={8}>
-      <Text fontSize="xl">Security</Text>
+      <Text fontWeight={300} fontSize="xl">
+        Security
+      </Text>
       <Box py={6}>
         <ViewableInputGroup
           key="password"
@@ -479,6 +469,36 @@ const ChangePasswordForm: React.FC = () => {
           Change Password
         </Button>
       </Box>
+    </Box>
+  );
+};
+
+const DeleteAccountBox: React.FC = () => {
+  const { isOpen, onClose, onOpen } = useDisclosure();
+
+  return (
+    <Box w="100%" bgColor="white" borderRadius="20px" p={4} px={6} mt={8}>
+      <Text fontWeight={300} fontSize="xl">
+        Delete Account
+      </Text>
+      <Text mt={5} fontWeight={700} fontSize="md">
+        Delete your account
+      </Text>
+      <Text mt={5} fontWeight={300} color="gray.500" fontSize="md">
+        This action is permanent and cannot be undone.
+      </Text>
+      <Button
+        variant={"outline"}
+        mt={5}
+        bg={"white"}
+        w={["200px"]}
+        borderColor="#FF5630"
+        color="#FF5630"
+        onClick={onOpen}
+      >
+        Delete Account
+      </Button>
+      <DeleteAccountForm onClose={onClose} isOpen={isOpen} />
     </Box>
   );
 };

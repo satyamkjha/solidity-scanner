@@ -10,7 +10,6 @@ import {
   ModalHeader,
   ModalOverlay,
   Textarea,
-  Text,
   Divider,
 } from "@chakra-ui/react";
 

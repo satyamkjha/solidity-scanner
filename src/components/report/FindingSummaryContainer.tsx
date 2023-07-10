@@ -14,15 +14,8 @@ import {
 } from "@chakra-ui/react";
 import { ResponsivePie } from "@nivo/pie";
 import { Report } from "common/types";
-import { monthNames } from "common/values";
 import VulnerabilityProgress from "components/VulnerabilityProgress";
-import {
-  GithubIcon,
-  Logo,
-  ProjectIcon,
-  ReportCoverDots,
-  SeverityIcon,
-} from "components/icons";
+import { GithubIcon, ProjectIcon, SeverityIcon } from "components/icons";
 import { getAssetsURL, sentenceCapitalize } from "helpers/helperFunction";
 import { useConfig } from "hooks/useConfig";
 import React from "react";
@@ -164,28 +157,44 @@ const FindingSummaryContainer: React.FC<{
               </Text>
             </VStack>
 
-            <CircularProgress
-              value={
-                (parseInt(summary_report.scan_summary[0].score, 10) * 100) / 5
-              }
-              color="accent"
-              thickness="8px"
-              size="100px"
-              capIsRound
-            >
-              <CircularProgressLabel
-                sx={{ display: "flex", justifyContent: "center" }}
+            <VStack align={"center"}>
+              <CircularProgress
+                value={
+                  summary_report.scan_summary[0].score_v2
+                    ? parseFloat(summary_report.scan_summary[0].score_v2)
+                    : parseFloat(
+                        (
+                          parseFloat(summary_report.scan_summary[0].score) * 20
+                        ).toFixed(2)
+                      )
+                }
+                color="accent"
+                thickness="8px"
+                size="90px"
+                capIsRound
               >
-                <Box>
-                  <Text fontSize="lg" fontWeight={900} color="accent">
-                    {summary_report.scan_summary[0].score}
-                  </Text>
-                  <Text fontSize="sm" color="subtle" mt="-4px">
-                    Score
-                  </Text>
-                </Box>
-              </CircularProgressLabel>
-            </CircularProgress>
+                <CircularProgressLabel
+                  sx={{ display: "flex", justifyContent: "center" }}
+                >
+                  <Flex flexDir="column" alignItems="center" w="100%">
+                    <Text fontSize="lg" fontWeight={900} color="accent">
+                      {summary_report.scan_summary[0].score_v2 ||
+                        (
+                          parseFloat(summary_report.scan_summary[0].score) * 20
+                        ).toFixed(2)}
+                    </Text>
+                  </Flex>
+                </CircularProgressLabel>
+              </CircularProgress>
+              <Text
+                fontSize="md"
+                fontWeight={"600"}
+                color={"accent"}
+                width={"100%"}
+              >
+                Security Score
+              </Text>
+            </VStack>
           </Stack>
         </Flex>
         <Flex

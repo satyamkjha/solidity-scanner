@@ -6,7 +6,7 @@ import "@fontsource/inter/600.css";
 
 import "./styles/global.css";
 
-import React, { Suspense, useEffect } from "react";
+import React, { Suspense } from "react";
 import { Helmet } from "react-helmet";
 import { QueryClient, QueryClientProvider } from "react-query";
 import { ReactQueryDevtools } from "react-query/devtools";

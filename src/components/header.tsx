@@ -6,7 +6,6 @@ import {
   HStack,
   Button,
   Link,
-  Text,
   useDisclosure,
   useMediaQuery,
   Menu,
@@ -56,7 +55,7 @@ export const Header: React.FC = () => {
         justifyContent="space-between"
         maxW={["95vw", "95vw", "90vw"]}
         mx="auto"
-        pt={5}
+        py={3}
       >
         <Flex alignItems="center" width={["100%", "100%", "100%", "auto"]}>
           <RouterLink to="/">
@@ -67,7 +66,7 @@ export const Header: React.FC = () => {
               <Link
                 as={RouterLink}
                 to="/pricing"
-                variant="brand"
+                variant="navigation"
                 fontWeight="600"
               >
                 Pricing
@@ -75,7 +74,7 @@ export const Header: React.FC = () => {
               <Link
                 as={RouterLink}
                 to="/quickscan"
-                variant="brand"
+                variant="navigation"
                 fontWeight="600"
               >
                 Quickscan
@@ -83,25 +82,25 @@ export const Header: React.FC = () => {
               <Link
                 as={RouterLink}
                 to="/detectors"
-                variant="brand"
+                variant="navigation"
                 fontWeight="600"
               >
-                What we Detect
+                Detectors
               </Link>
               <Link
                 onClick={() => {
-                  window.open("https://docs.solidityscan.com/", "_blank");
+                  window.open("https://solidityscan.com/discover/", "_blank");
                 }}
-                variant="brand"
+                variant="navigation"
                 fontWeight="600"
               >
-                Docs
+                Discover
               </Link>
               <Link
                 onClick={() => {
                   window.open("https://blog.solidityscan.com/", "_blank");
                 }}
-                variant="brand"
+                variant="navigation"
                 fontWeight="600"
               >
                 Blog
@@ -203,7 +202,7 @@ export const Header: React.FC = () => {
                         Docs
                       </Link>
                     </MenuItem>
-                    <MenuItem al>
+                    <MenuItem>
                       <Link
                         onClick={() => {
                           window.open(
@@ -263,7 +262,6 @@ export const Header: React.FC = () => {
         <HStack spacing={4} sx={{ display: ["none", "none", "none", "flex"] }}>
           {!Auth.isUserAuthenticated() ? (
             <>
-              {" "}
               <RouterLink to="/signin">
                 <Button variant="ghost" sx={{ p: 6 }}>
                   Sign In

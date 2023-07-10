@@ -24,11 +24,8 @@ import DetailFilter from "./DetailFilter";
 import MultifileIssues from "./MultifileIssues";
 import FileExplorerSection from "./FileExplorerSection";
 import FormatOptionLabelWithImage from "components/FormatOptionLabelWithImage";
-import {
-  customStylesForReactSelect,
-  customStylesForTakeAction,
-} from "common/stylesForCustomSelect";
-import ConfirmActionForm from "../confirmActionForm"
+import { customStylesForTakeAction } from "common/stylesForCustomSelect";
+import ConfirmActionForm from "../confirmActionForm";
 
 const MultifileResult: React.FC<{
   type: "block" | "project";
@@ -37,6 +34,11 @@ const MultifileResult: React.FC<{
   scanDetails: MultiFileScanDetail[];
   profileData: Profile;
   details_enabled: boolean;
+  contract_address?: string;
+  project_url?: string;
+  contract_url?: string;
+  contract_platform?: string;
+  branchName?: string;
   refetch(): any;
 }> = ({
   scanSummary,
@@ -46,6 +48,11 @@ const MultifileResult: React.FC<{
   profileData,
   details_enabled,
   refetch,
+  project_url,
+  contract_url,
+  contract_platform,
+  branchName,
+  contract_address,
 }) => {
   const [files, setFiles] = useState<FilesState | null>(null);
 
@@ -247,6 +254,11 @@ const MultifileResult: React.FC<{
               vulnerability={vulnerability}
               updateBugStatus={updateBugStatus}
               bugStatusFilter={bugStatusFilter}
+              project_url={project_url}
+              contract_url={contract_url}
+              contract_platform={contract_platform}
+              branchName={branchName}
+              contract_address={contract_address}
             />
           </Box>
         </VStack>
@@ -259,6 +271,12 @@ const MultifileResult: React.FC<{
             details_enabled={details_enabled}
             selectedBugs={selectedBugs}
             updateBugStatus={updateBugStatus}
+            project_url={project_url}
+            contract_url={contract_url}
+            contract_platform={contract_platform}
+            branchName={branchName}
+            contract_address={contract_address}
+
           />
         )}
       </Flex>

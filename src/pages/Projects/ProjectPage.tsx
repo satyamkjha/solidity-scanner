@@ -1,10 +1,9 @@
 import React, { useEffect, useState, useRef } from "react";
 import { useQueryClient } from "react-query";
-import { Link as RouterLink, useParams, useHistory } from "react-router-dom";
+import { useParams, useHistory } from "react-router-dom";
 import { ArrowDownIcon } from "@chakra-ui/icons";
 import {
   Flex,
-  keyframes,
   Box,
   Text,
   Link,
@@ -14,7 +13,6 @@ import {
   TabPanels,
   Tab,
   TabPanel,
-  Spinner,
   Button,
   HStack,
   Tooltip,
@@ -37,13 +35,10 @@ import {
   Input,
   ModalFooter,
   Switch as SwitchComp,
-  toast,
   useToast,
-  Badge,
   Image,
   useMediaQuery,
   Stack,
-  IconButton,
   Menu,
   MenuButton,
   MenuList,
@@ -109,6 +104,7 @@ import {
 } from "helpers/helperFunction";
 import { useConfig } from "hooks/useConfig";
 import Loader from "components/styled-components/Loader";
+import { formattedDate } from "common/functions";
 
 export const ProjectPage: React.FC = () => {
   const { projectId } = useParams<{ projectId: string }>();
@@ -254,11 +250,6 @@ const ScanDetails: React.FC<{
     history.push(`/projects/`);
   };
 
-  const scan_name =
-    scanData &&
-    scans.find((scan) => scan.scan_id === scanData.scan_report.scan_id)
-      ?.scan_name;
-
   const [projectName, setProjectName] = useState("");
   const [repoUrl, setRepoUrl] = useState("");
   const [commitHash, setCommitHash] = useState("");
@@ -290,9 +281,7 @@ const ScanDetails: React.FC<{
     const d = new Date(
       reportResponse.data.summary_report.project_summary_report.last_project_report_update_time
     );
-    setLastTimeUpdate(
-      `${d.getDate()}-${monthNames[d.getMonth()]}-${d.getFullYear()}`
-    );
+    setLastTimeUpdate(formattedDate(d, "long"));
   };
 
   const checkReportPublished = async (
@@ -325,9 +314,7 @@ const ScanDetails: React.FC<{
         setRepoUrl(scanData.scan_report.project_url);
         checkReportPublished(projectId, scanData.scan_report.latest_report_id);
         const d = new Date();
-        setDatePublished(
-          `${d.getDate()}-${monthNames[d.getMonth()]}-${d.getFullYear()}`
-        );
+        setDatePublished(formattedDate(d, "long"));
       } else {
         setPublishStatus("Not-Generated");
       }
@@ -608,20 +595,7 @@ const ScanDetails: React.FC<{
                         <Text color="#3E15F4" fontSize="sm">
                           |
                         </Text>
-                        <Menu>
-                          <MenuButton aria-label="Options">
-                            {printLoading ? (
-                              <Loader size={20} color="#3E15F4" />
-                            ) : (
-                              <ArrowDownIcon color="#3E15F4" />
-                            )}
-                          </MenuButton>
-                          <MenuList>
-                            <MenuItem onClick={() => generatePDF()}>
-                              Download PDF
-                            </MenuItem>
-                          </MenuList>
-                        </Menu>
+
                         {summaryReport && printLoading && (
                           <Box
                             w={0}
@@ -828,7 +802,12 @@ const ScanDetails: React.FC<{
                           scanDetails={
                             scanData.scan_report.multi_file_scan_details
                           }
+                          project_url={project_url}
+                          contract_url={""}
+                          contract_platform={""}
+                          branchName={project_branch}
                           refetch={refetch}
+                          contract_address=""
                         />
                       ) : (
                         <Flex
@@ -1436,10 +1415,6 @@ const ScanDetails: React.FC<{
   );
 };
 
-interface Props {
-  setTabIndex: React.Dispatch<React.SetStateAction<number>>;
-}
-
 const ScanHistory: React.FC<{
   setTabIndex: React.Dispatch<React.SetStateAction<number>>;
   profile: Profile;
@@ -1500,32 +1475,16 @@ const ScanBlock: React.FC<{
   const [show, setShow] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [repoTreeUP, setRepoTreeUP] = useState<TreeItemUP | null>(null);
-  const [skipFilePaths, setSkipFilePaths] = useState<string[]>();
-
-  const getScanRequest = async () => {
-    setIsLoading(true);
-    if (repoTreeUP === null) {
-      try {
-        const responseData = await getScan(scan.scan_id);
-        if (responseData && responseData.scan_report.skip_file_paths) {
-          setSkipFilePaths(responseData.scan_report.skip_file_paths);
-        }
-      } catch (e) {
-        console.log(e);
-      }
-    }
-    setIsLoading(false);
-  };
 
   useEffect(() => {
-    if (repoTree && skipFilePaths) {
+    if (repoTree && scan.skip_file_paths) {
       let newRepoTreeUP = restructureRepoTree(repoTree, true);
-      skipFilePaths.forEach((path) => {
+      scan.skip_file_paths.forEach((path) => {
         newRepoTreeUP = updateCheckedValue(path, false, newRepoTreeUP);
       });
       setRepoTreeUP(newRepoTreeUP);
     }
-  }, [skipFilePaths, repoTree]);
+  }, [repoTree, scan.skip_file_paths]);
 
   return (
     <>
@@ -1585,7 +1544,7 @@ const ScanBlock: React.FC<{
                 width="120px"
               >
                 <Text fontSize={"sm"} color="gray.400">
-                  Score
+                  Security Score
                 </Text>
                 <Text
                   sx={{
@@ -1596,7 +1555,7 @@ const ScanBlock: React.FC<{
                     lineHeight: 1,
                   }}
                 >
-                  {scan.scan_score}
+                  {parseFloat(scan.scan_score_v2).toFixed(2) || scan.scan_score}
                 </Text>
               </VStack>
             )}
@@ -1652,63 +1611,66 @@ const ScanBlock: React.FC<{
                   ? "Generating Report"
                   : "Report Not Generated"}
               </Button>
-              {project_url !== "File Scan" && (
-                <HStack spacing={3} mr={10} my={2}>
-                  <Button
-                    variant="accent-outline"
-                    minW="200px"
-                    isLoading={isLoading}
-                    spinner={<Loader color={"#3300FF"} size={25} />}
-                    onClick={async () => {
-                      if (show) {
-                        setShow(false);
-                      } else {
-                        await getRepoTreeReq();
-                        await getScanRequest();
-                        setShow(true);
-                      }
-                    }}
-                  >
-                    {show ? "Hide Scanned Files" : "View Scanned Files"}{" "}
-                    {show ? (
-                      <ChevronUpIcon ml={2} />
-                    ) : (
-                      <ChevronDownIcon ml={2} />
-                    )}
-                  </Button>
-                  <Popover placement="bottom-end">
-                    <PopoverTrigger>
-                      <InfoIcon color="#d7cdfa" />
-                    </PopoverTrigger>
-                    <PopoverContent p={1}>
-                      <PopoverArrow />
-                      <PopoverCloseButton />
-                      <PopoverBody>
-                        <Text
-                          fontSize="sm"
-                          textAlign="left"
-                          lineHeight="title"
-                          fontWeight={"300"}
-                          mb={0}
-                        >
-                          The scanned files have been highlighted while the
-                          remaining ones were skipped. To modify settings for
-                          future scans, please refer to the{" "}
-                          <Box
-                            textDecoration="underline"
-                            as="span"
-                            color="#3E15F4"
-                            mr={1}
+              {project_url !== "File Scan" &&
+                scan.skip_file_paths &&
+                scan.scan_status === "scan_done" && (
+                  <HStack spacing={3} mr={10} my={2}>
+                    <Button
+                      variant="accent-outline"
+                      minW="200px"
+                      isLoading={isLoading}
+                      spinner={<Loader color={"#3300FF"} size={25} />}
+                      onClick={async () => {
+                        if (show) {
+                          setShow(false);
+                        } else {
+                          setIsLoading(true);
+                          setShow(true);
+                          await getRepoTreeReq();
+                          setIsLoading(false);
+                        }
+                      }}
+                    >
+                      {show ? "Hide Scanned Files" : "View Scanned Files"}{" "}
+                      {show ? (
+                        <ChevronUpIcon ml={2} />
+                      ) : (
+                        <ChevronDownIcon ml={2} />
+                      )}
+                    </Button>
+                    <Popover placement="bottom-end">
+                      <PopoverTrigger>
+                        <InfoIcon color="#d7cdfa" />
+                      </PopoverTrigger>
+                      <PopoverContent p={1}>
+                        <PopoverArrow />
+                        <PopoverCloseButton />
+                        <PopoverBody>
+                          <Text
+                            fontSize="sm"
+                            textAlign="left"
+                            lineHeight="title"
+                            fontWeight={"300"}
+                            mb={0}
                           >
-                            Custom Settings
-                          </Box>
-                          option.
-                        </Text>
-                      </PopoverBody>
-                    </PopoverContent>
-                  </Popover>
-                </HStack>
-              )}
+                            The scanned files have been highlighted while the
+                            remaining ones were skipped. To modify settings for
+                            future scans, please refer to the{" "}
+                            <Box
+                              textDecoration="underline"
+                              as="span"
+                              color="#3E15F4"
+                              mr={1}
+                            >
+                              Custom Settings
+                            </Box>
+                            option.
+                          </Text>
+                        </PopoverBody>
+                      </PopoverContent>
+                    </Popover>
+                  </HStack>
+                )}
             </Flex>
           </Flex>
           <Box
@@ -1747,38 +1709,6 @@ const ScanBlock: React.FC<{
           )}
         </Collapse>
       </Flex>
-    </>
-  );
-};
-
-const IncompleteScan: React.FC<{ message: string; scansRemaining: number }> = ({
-  message,
-  scansRemaining,
-}) => {
-  return (
-    <>
-      <Flex
-        w="100%"
-        alignItems="center"
-        justifyContent="center"
-        border="1px solid"
-        borderColor="border"
-        borderRightWidth="0px"
-        borderLeftWidth="0px"
-      >
-        <Flex w="97%" m={4} borderRadius="20px" bgColor="high-subtle" p={4}>
-          <ScanErrorIcon size={28} />
-          <Text color="high" ml={4}>
-            {message}
-          </Text>
-        </Flex>
-      </Flex>
-      <Flex
-        w="100%"
-        alignItems="center"
-        justifyContent="center"
-        flexDirection="column"
-      ></Flex>
     </>
   );
 };

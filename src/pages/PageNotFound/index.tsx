@@ -1,12 +1,11 @@
-import React, { useState, useEffect } from "react";
-import { Link as RouterLink, useHistory, useLocation } from "react-router-dom";
+import React, { useEffect } from "react";
+import { Link as RouterLink, useHistory } from "react-router-dom";
 import {
   Flex,
   Heading,
   Text,
   Button,
   Box,
-  Spinner,
   HStack,
   Image,
   VStack,

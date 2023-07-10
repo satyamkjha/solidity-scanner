@@ -1,16 +1,12 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import {
   Flex,
   HStack,
   Text,
-  Stack,
   FormControl,
   Divider,
-  VStack,
   Checkbox,
-  Collapse,
   Button,
-  Spinner,
   Popover,
   PopoverArrow,
   PopoverBody,
@@ -30,13 +26,8 @@ import {
   CheckIcon,
   MinusIcon,
 } from "@chakra-ui/icons";
-import { TreeItem, TreeItemUP } from "common/types";
-import {
-  restructureRepoTree,
-  generatePathArray,
-  updateChildTree,
-  updateCheckedValue,
-} from "helpers/fileStructure";
+import { TreeItemUP } from "common/types";
+import { updateChildTree, updateCheckedValue } from "helpers/fileStructure";
 import Loader from "./styled-components/Loader";
 
 const formatOptionLabel: React.FC<{
@@ -153,8 +144,18 @@ const FolderItem: React.FC<{
             }}
           ></Checkbox>
         )}
-        <FolderIcon active={folderItem.checked} size={20} />
-        <Text ml={3} color={folderItem.checked ? "#4E5D78" : "#4E5D7880"}>
+        <FolderIcon
+          active={folderItem.checked || folderItem.isChildCheck}
+          size={20}
+        />
+        <Text
+          ml={3}
+          color={
+            folderItem.checked || folderItem.isChildCheck
+              ? "#4E5D78"
+              : "#4E5D7880"
+          }
+        >
           {folderItem.name}
         </Text>
       </Flex>

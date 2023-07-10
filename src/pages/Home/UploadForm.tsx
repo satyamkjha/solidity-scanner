@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useMemo } from "react";
-import { useHistory, Link as RouterLink } from "react-router-dom";
+import { useHistory } from "react-router-dom";
 import {
   Flex,
   Box,
@@ -9,7 +9,6 @@ import {
   InputLeftElement,
   Input,
   Icon,
-  Spinner,
   HStack,
   VStack,
   Progress,
@@ -17,12 +16,7 @@ import {
   Divider,
 } from "@chakra-ui/react";
 import { AiOutlineProject } from "react-icons/ai";
-import {
-  BlockCredit,
-  ProjectIcon,
-  SolidityFileIcon,
-  UploadIcon,
-} from "components/icons";
+import { ProjectIcon, SolidityFileIcon, UploadIcon } from "components/icons";
 import API from "helpers/api";
 import { useProfile } from "hooks/useProfile";
 import { useDropzone } from "react-dropzone";
@@ -32,8 +26,6 @@ import Loader from "components/styled-components/Loader";
 const UploadForm: React.FC = () => {
   const history = useHistory();
   const { data: profileData } = useProfile();
-
-  let count: number = 0;
 
   const [step, setStep] = useState(0);
   const [error, setError] = useState(false);

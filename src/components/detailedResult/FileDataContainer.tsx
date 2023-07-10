@@ -1,5 +1,5 @@
-import { Flex, Spinner } from "@chakra-ui/react";
-import { FileState, Finding } from "common/types";
+import { Flex } from "@chakra-ui/react";
+import { Finding } from "common/types";
 import React, { useEffect, useState } from "react";
 import CodeExplorer from "./CodeExplorer";
 import { useFileContent } from "hooks/useFileContent";

@@ -1,4 +1,4 @@
-import { Flex, Heading, HStack, Box, Text, Image } from "@chakra-ui/react";
+import { Flex, Heading, Box, Text } from "@chakra-ui/react";
 import { Report } from "common/types";
 import { monthNames } from "common/values";
 import { Logo, ReportCoverDots } from "components/icons";
@@ -10,7 +10,7 @@ const CoverPageContainer: React.FC<{
   d: Date;
   summary_report: Report;
   isPublicReport: boolean;
-}> = ({ d, summary_report, isPublicReport }) => {
+}> = ({ d, summary_report }) => {
   const config: any = useConfig();
   const assetsURL = getAssetsURL(config);
   return (

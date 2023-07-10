@@ -3,16 +3,11 @@ import {
   ModalOverlay,
   Flex,
   Divider,
-  HStack,
   ModalBody,
   ModalCloseButton,
   ModalContent,
   ModalHeader,
-  Image,
-  Text,
   Heading,
-  Switch,
-  Button,
   Table,
   TableContainer,
   Tbody,
@@ -29,12 +24,6 @@ import SubscriptionDataContainer from "./SubscriptionDataContainer";
 import PricingDetailsList from "pages/Pricing/components/PricingDetailsList";
 import { pricing_table_data } from "common/values";
 import { TickMark } from "components/icons";
-
-const TickComp: React.FC<{ color: string }> = ({ color }) => (
-  <Box w="fit-content" display="block" ml="auto" mr="auto">
-    <TickMark size={20} color={color} />
-  </Box>
-);
 
 const PlanDetailsModal: React.FC<{
   open: boolean;
