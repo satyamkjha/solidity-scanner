@@ -177,6 +177,20 @@ const DeleteAccountForm: React.FC<{
                   account
                 </Text>
               </HStack>
+              <Text
+                width="100%"
+                p={5}
+                borderWidth={1}
+                borderColor="#FFC661"
+                background="#FFF8ED"
+                color="#4E5D78"
+                my={7}
+                fontSize={"sm"}
+                fontWeight={300}
+                borderRadius={10}
+              >
+                Deleting account can’t be undone and the data can’t be restored
+              </Text>
               <Button
                 h={"50px"}
                 mt={"auto"}

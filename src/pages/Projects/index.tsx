@@ -57,8 +57,15 @@ const Projects: React.FC = () => {
 
   const { data: projects, isLoading, refetch } = useProjects(pagination);
   const [projectList, setProjectList] = useState<Project[]>();
+  const [projectsMonitored, setProjectsMonitored] = useState(0);
 
   const { data: profileData, refetch: refetchProfile } = useProfile();
+
+  useEffect(() => {
+    if (profileData) {
+      setProjectsMonitored(profileData.projects_remaining);
+    }
+  }, [profileData, refetchProfile]);
 
   useEffect(() => {
     if (projects) {
@@ -138,6 +145,7 @@ const Projects: React.FC = () => {
       if (projectItem.project_id === project_id) return false;
       return true;
     });
+    setProjectsMonitored(projectsMonitored - 1);
     setProjectList(newProjectList);
   };
 
@@ -168,7 +176,7 @@ const Projects: React.FC = () => {
           <Flex ml={20} sx={{ display: ["none", "none", "flex"] }}>
             <ProjectIcon size={37} />
             <Text fontWeight={600} fontSize="2xl" ml={4} mr={10}>
-              {profileData.projects_remaining.toLocaleString("en-US", {
+              {projectsMonitored.toLocaleString("en-US", {
                 minimumIntegerDigits: 2,
                 useGrouping: false,
               })}
@@ -310,7 +318,6 @@ const ProjectCard: React.FC<{
       });
     }
     onClose();
-    refetch();
     updateProjectList(project_id);
   };
 
