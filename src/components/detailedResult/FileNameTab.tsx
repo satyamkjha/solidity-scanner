@@ -35,7 +35,7 @@ const FileNameTab: React.FC<{
     navigator.clipboard
       .writeText(
         type === "project"
-          ? `${project_url?.replace("com", "dev")}/blob/${branchName}${
+          ? `${project_url}/blob/${branchName}${
               file.file_path
             }#L${file.line_nos_start}-L${file.line_nos_end}`
           : codePlatform[contract_platform].platform === "vscode"
