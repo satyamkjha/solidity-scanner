@@ -858,7 +858,7 @@ export const PrintContainer: React.FC<{ summary_report: Report }> = ({
                   <GithubIcon size={30} />
                 ) : summary_report.project_summary_report.contract_platform ? (
                   <Image
-                    src={`/blockscan/${summary_report.project_summary_report.contract_platform}.svg`}
+                    src={`${assetsURL}blockscan/${summary_report.project_summary_report.contract_platform}.svg`}
                     h={"30px"}
                     w={"30px"}
                   />
@@ -889,37 +889,44 @@ export const PrintContainer: React.FC<{ summary_report: Report }> = ({
               </HStack>
             </VStack>
 
-            <CircularProgress
-              value={
-                summary_report.scan_summary[0].score_v2
-                  ? parseFloat(summary_report.scan_summary[0].score_v2)
-                  : parseFloat(
-                      (
-                        parseFloat(summary_report.scan_summary[0].score) * 20
-                      ).toFixed(2)
-                    )
-              }
-              color="accent"
-              thickness="8px"
-              size="100px"
-              capIsRound
-            >
-              <CircularProgressLabel
-                sx={{ display: "flex", justifyContent: "center" }}
+            <VStack align={"center"}>
+              <CircularProgress
+                value={
+                  summary_report.scan_summary[0].score_v2
+                    ? parseFloat(summary_report.scan_summary[0].score_v2)
+                    : parseFloat(
+                        (
+                          parseFloat(summary_report.scan_summary[0].score) * 20
+                        ).toFixed(2)
+                      )
+                }
+                color="accent"
+                thickness="8px"
+                size="90px"
+                capIsRound
               >
-                <Box>
-                  <Text fontSize="lg" fontWeight={900} color="accent">
-                    {summary_report.scan_summary[0].score_v2 ||
-                      (
-                        parseFloat(summary_report.scan_summary[0].score) * 20
-                      ).toFixed(2)}
-                  </Text>
-                  <Text fontSize="sm" color="subtle" mt="-4px">
-                    Security Score
-                  </Text>
-                </Box>
-              </CircularProgressLabel>
-            </CircularProgress>
+                <CircularProgressLabel
+                  sx={{ display: "flex", justifyContent: "center" }}
+                >
+                  <Flex flexDir="column" alignItems="center" w="100%">
+                    <Text fontSize="lg" fontWeight={900} color="accent">
+                      {summary_report.scan_summary[0].score_v2 ||
+                        (
+                          parseFloat(summary_report.scan_summary[0].score) * 20
+                        ).toFixed(2)}
+                    </Text>
+                  </Flex>
+                </CircularProgressLabel>
+              </CircularProgress>
+              <Text
+                fontSize="md"
+                fontWeight={"600"}
+                color={"accent"}
+                width={"100%"}
+              >
+                Security Score
+              </Text>
+            </VStack>
           </Flex>
           <Flex
             as="div"

@@ -198,6 +198,12 @@ const QuickScan: React.FC = () => {
         icon: "",
         isDisabled: false,
       },
+      {
+        value: "testnet",
+        label: "XDC Apothem Network",
+        icon: "",
+        isDisabled: false,
+      },
     ],
   };
 
@@ -441,40 +447,44 @@ const QuickScan: React.FC = () => {
       status: string;
     }>(API_PATH.API_GET_CONTRACT_STATUS, req, {
       headers: reqHeaders1,
-    }).then(
-      (res) => {
-        if (res.data.contract_verified) {
-          let api_url = `${
-            API_PATH.API_QUICK_SCAN_SSE
-          }?contract_address=${address}&contract_platform=${platform}&${
-            platform === "buildbear" ? "node_id" : "contract_chain"
-          }=${chain}`;
+    })
+      .then(
+        (res) => {
+          if (res.data.contract_verified) {
+            let api_url = `${
+              API_PATH.API_QUICK_SCAN_SSE
+            }?contract_address=${address}&contract_platform=${platform}&${
+              platform === "buildbear" ? "node_id" : "contract_chain"
+            }=${chain}`;
 
-          if (ref) {
-            api_url = api_url + `&ref=${ref}`;
-          }
-          API.get(api_url, {
-            headers: reqHeaders2,
-          })
-            .then(
-              (res) => {
-                if (res.status === 200) {
-                  setScanReport(res.data.scan_report);
+            if (ref) {
+              api_url = api_url + `&ref=${ref}`;
+            }
+            API.get(api_url, {
+              headers: reqHeaders2,
+            })
+              .then(
+                (res) => {
+                  if (res.status === 200) {
+                    setScanReport(res.data.scan_report);
+                  }
+                },
+                () => {
+                  return;
                 }
-              },
-              () => {
-                return;
-              }
-            )
-            .finally(() => {
-              setIsLoading(false);
-            });
+              )
+              .finally(() => {
+                setIsLoading(false);
+              });
+          }
+        },
+        () => {
+          setIsLoading(false);
         }
-      },
-      () => {
+      )
+      .catch(() => {
         setIsLoading(false);
-      }
-    );
+      });
   };
 
   const generateQuickScan = () => {

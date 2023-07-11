@@ -17,7 +17,6 @@ import {
 import { QuickScanResult } from "common/types";
 import PieChart from "components/pieChart";
 import { useConfig } from "hooks/useConfig";
-import { monthNames } from "common/values";
 import { ArrowForwardIcon } from "@chakra-ui/icons";
 import { ThreatScoreMeter } from "components/threatScoreMeter";
 import { formattedDate } from "common/functions";

@@ -104,6 +104,7 @@ import {
 } from "helpers/helperFunction";
 import { useConfig } from "hooks/useConfig";
 import Loader from "components/styled-components/Loader";
+import { formattedDate } from "common/functions";
 
 export const ProjectPage: React.FC = () => {
   const { projectId } = useParams<{ projectId: string }>();
@@ -280,9 +281,7 @@ const ScanDetails: React.FC<{
     const d = new Date(
       reportResponse.data.summary_report.project_summary_report.last_project_report_update_time
     );
-    setLastTimeUpdate(
-      `${d.getDate()}-${monthNames[d.getMonth()]}-${d.getFullYear()}`
-    );
+    setLastTimeUpdate(formattedDate(d, "long"));
   };
 
   const checkReportPublished = async (
@@ -315,9 +314,7 @@ const ScanDetails: React.FC<{
         setRepoUrl(scanData.scan_report.project_url);
         checkReportPublished(projectId, scanData.scan_report.latest_report_id);
         const d = new Date();
-        setDatePublished(
-          `${d.getDate()}-${monthNames[d.getMonth()]}-${d.getFullYear()}`
-        );
+        setDatePublished(formattedDate(d, "long"));
       } else {
         setPublishStatus("Not-Generated");
       }
@@ -598,20 +595,7 @@ const ScanDetails: React.FC<{
                         <Text color="#3E15F4" fontSize="sm">
                           |
                         </Text>
-                        <Menu>
-                          <MenuButton aria-label="Options">
-                            {printLoading ? (
-                              <Loader size={20} color="#3E15F4" />
-                            ) : (
-                              <ArrowDownIcon color="#3E15F4" />
-                            )}
-                          </MenuButton>
-                          <MenuList>
-                            <MenuItem onClick={() => generatePDF()}>
-                              Download PDF
-                            </MenuItem>
-                          </MenuList>
-                        </Menu>
+
                         {summaryReport && printLoading && (
                           <Box
                             w={0}
@@ -818,7 +802,12 @@ const ScanDetails: React.FC<{
                           scanDetails={
                             scanData.scan_report.multi_file_scan_details
                           }
+                          project_url={project_url}
+                          contract_url={""}
+                          contract_platform={""}
+                          branchName={project_branch}
                           refetch={refetch}
+                          contract_address=""
                         />
                       ) : (
                         <Flex

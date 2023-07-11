@@ -280,6 +280,14 @@ export const theme = extendTheme({
             color: "rgba(51, 0, 255,1)",
           },
         },
+        navigation: {
+          fontWeight: 500,
+          color: "#000000",
+          _hover: {
+            color: "rgba(51, 0, 255,1)",
+            textDecoration: "none",
+          },
+        },
       },
     },
     Progress: {
@@ -358,6 +366,26 @@ export const theme = extendTheme({
           },
           thumb: {
             bg: "#3300FF",
+          },
+        },
+      },
+    },
+    Radio: {
+      parts: ["container", "control", "label"],
+      variants: {
+        brand: {
+          control: {
+            borderRadius: "15px", // change the border radius
+            borderWidth: "4px",
+            borderColor: "#EFEFEF", // change the border color
+            background: "#B0B7C3",
+            _checked: {
+              color: "#FFFFFF00",
+              background: "linear-gradient(135deg, #52FF00 0%, #00EEFD 100%)",
+            },
+          },
+          label: {
+            textAlign: "left",
           },
         },
       },
