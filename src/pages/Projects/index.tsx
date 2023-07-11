@@ -1,6 +1,5 @@
 import React, { useEffect, useState, useRef } from "react";
 import { Link, useHistory } from "react-router-dom";
-import { useQueryClient } from "react-query";
 import {
   Flex,
   Box,
@@ -93,10 +92,19 @@ const Projects: React.FC = () => {
         )
       ) {
         intervalId = setInterval(async () => {
-          setPagination({ pageNo: 1, perPageCount: pagination.perPageCount });
+          const { data } = await API.get(
+            `${API_PATH.API_GET_PROJECTS_BETA}?page=${1}&per_page=${
+              pagination.perPageCount
+            }`
+          );
+          const pList = [
+            ...data.data,
+            ...projectList.slice(pagination.perPageCount, projectList.length),
+          ];
+          setProjectList(pList);
           if (
-            projectList &&
-            projectList.every(
+            pList &&
+            pList.every(
               ({ _latest_scan }) =>
                 _latest_scan.multi_file_scan_status === "scan_done"
             )
