@@ -168,6 +168,12 @@ const ContractForm: React.FC = () => {
         icon: "",
         isDisabled: false,
       },
+      {
+        value: "testnet",
+        label: "XDC Apothem Network",
+        icon: "",
+        isDisabled: false,
+      },
     ],
   };
 

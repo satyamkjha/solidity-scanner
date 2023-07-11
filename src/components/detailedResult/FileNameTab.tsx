@@ -35,11 +35,9 @@ const FileNameTab: React.FC<{
     navigator.clipboard
       .writeText(
         type === "project"
-          ? `${project_url}/blob/${branchName}${
+          ? `${project_url?.replace(".git", "")}/blob/${branchName}${
               file.file_path
             }#L${file.line_nos_start}-L${file.line_nos_end}`
-          : codePlatform[contract_platform].platform === "vscode"
-          ? `https://vscode.blockscan.com/${codePlatform[contract_platform].dynamicString}/${contract_address}`
           : codePlatform[contract_platform].platform === "own"
           ? `${contract_url}${codePlatform[contract_platform].dynamicString}`
           : file.file_path
