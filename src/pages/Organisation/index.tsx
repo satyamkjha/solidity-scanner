@@ -12,23 +12,24 @@ import {
   Link,
   useDisclosure,
   useToast,
+  Tabs,
+  Tab,
+  TabList,
+  TabPanels,
+  TabPanel,
 } from "@chakra-ui/react";
-import API from "helpers/api";
-import { API_PATH } from "helpers/routeManager";
-import { HiDuplicate, HiOutlineCheck } from "react-icons/hi";
-import { CheckIcon } from "@chakra-ui/icons";
+
 import { getAssetsURL } from "helpers/helperFunction";
-import ConfirmActionForm from "components/confirmActionForm";
 import { useProfile } from "hooks/useProfile";
 import { useConfig } from "hooks/useConfig";
-import UpgradePackage from "components/upgradePackage";
 import Loader from "components/styled-components/Loader";
+import CreateOrganisationForm from "./CreateOrganisationForm";
+import UserManagementContainer from "./UserManagementContainer";
 
 const Organisation: React.FC = () => {
   const { data: profileData, isLoading } = useProfile();
   const [hasAccess, setHasAccess] = useState(false);
   const [isSpinning, setIsSpinning] = useState(false);
-  const { isOpen, onClose, onOpen } = useDisclosure();
   const config: any = useConfig();
   const assetsUrl = getAssetsURL(config);
   const toast = useToast();
@@ -65,179 +66,58 @@ const Organisation: React.FC = () => {
           ADMIN CONTROLS
         </Text>
       </VStack>
-
-      {isLoading ? (
+      <Tabs
+        mt={[3, 3, 5]}
+        mx={0}
+        px={0}
+        w={"100%"}
+        variant="soft-rounded"
+        colorScheme="green"
+      >
         <Flex
-          sx={{
-            w: "100%",
-            mx: [0, 0, 0, 4],
-            my: 24,
-            justifyContent: "center",
-          }}
+          width={"90%"}
+          overflowX={["scroll", "scroll", "scroll", "visible"]}
+          flexDir={"row"}
+          justifyContent="flex-start"
+          align={"center"}
+          ml={0}
+          px={4}
         >
-          <Loader />
+          <TabList my={3} width={"fit-content"} zIndex={0}>
+            <Tab minW={["150px", "150px", "250px"]} bgColor={"#F5F5F5"} mr={5}>
+              User Management
+            </Tab>
+            <Tab
+              minW={["150px", "150px", "250px"]}
+              bgColor={"#F5F5F5"}
+              mx={[2, 3, 5]}
+            >
+              Organisation Settings
+            </Tab>
+          </TabList>
         </Flex>
-      ) : (
-        <Flex
-          bgColor={["bg.subtle", "bg.subtle", "bg.subtle", "white"]}
-          w="100%"
-          h={"100%"}
-          minH={"70vh"}
-          borderRadius={"5px"}
-          my={6}
-          pb={6}
-          flexDir="column"
-        >
+        {isLoading ? (
           <Flex
-            m={6}
-            mb={[2, 2, 2, 6]}
-            align="center"
-            flexDir={[
-              "column-reverse",
-              "column-reverse",
-              "column-reverse",
-              "row",
-            ]}
+            sx={{
+              w: "100%",
+              mx: [0, 0, 0, 4],
+              my: 24,
+              justifyContent: "center",
+            }}
           >
-            <Flex
-              bgColor={"white"}
-              borderRadius={"5px"}
-              align={"center"}
-              justifyContent={"center"}
-              mt={[6, 6, 6, 0]}
-              p={[5, 5, 5, 0]}
-              w={["100%", "100%", "100%", "fit-content"]}
-            >
-              {/* {accessKey ? ( */}
-              {/* <Flex
-                align={"center"}
-                fontWeight={100}
-                borderColor="#289F4C"
-                borderRadius="21px"
-                border={"1px solid"}
-                px={4}
-                py={1.5}
-                color="#289F4C"
-              >
-                <Icon as={HiOutlineCheck} fontSize={"2xl"} />
-                <Text ml={2}>Activated</Text>
-              </Flex> */}
-              {/* ) : ( */}
-              <Text
-                fontWeight={100}
-                borderColor="detail"
-                borderRadius="21px"
-                border={"1px solid"}
-                px={4}
-                py={1.5}
-                color="detail"
-              >
-                No Organisation created
-              </Text>
-              {/* )} */}
-            </Flex>
-
-            <Button
-              onClick={() => {}}
-              variant={"cta-outline"}
-              borderWidth={"1px"}
-              fontWeight={500}
-              px={10}
-              py={2}
-              ml={[0, 0, 0, "auto"]}
-              isDisabled={!hasAccess}
-            >
-              {"Create Organisation"}
-            </Button>
+            <Loader />
           </Flex>
-          <Flex
-            mx={[4, 4, 4, 6]}
-            mb={6}
-            px={[4, 4, 4, 6]}
-            pt={8}
-            pb={6}
-            backgroundColor="#FCFCFC" 
-            border={"2px solid #EAEAEA"}
-            borderRadius="15px"
-            flexDir={"column"}
-            h={"65vh"}
-          >
-            <Flex position={"relative"} w="100%" h="33vh">
-              <VStack
-                w="100%"
-                spacing={4}
-                mb={[6, 6, 6, 0]}
-                top={0}
-                left={0}
-                opacity={hasAccess ? 1 : 0.5}
-              >
-                <Image
-                  src={assetsUrl + "background/private_api_cover.svg"}
-                  h={"150px"}
-                  mb={2}
-                />
-                <Text fontWeight={400}>
-                  No Organization has been created yet, Click Create
-                  Organization to set-up an Organization and start inviting
-                  members to your team
-                </Text>
-                <Link
-                  display={hasAccess ? "block" : "none"}
-                  onClick={() => {}}
-                  fontWeight={400}
-                  color="blue"
-                >
-                  Create Organisation
-                </Link>
-              </VStack>
-              {!hasAccess && (
-                <UpgradePackage
-                  text="Upgrade to our pro plan or a custom plan to use this feature and much more."
-                  iconSize={85}
-                />
-              )}
-            </Flex>
-          </Flex>
-          {/* {isFirstTime && (
-            <Flex
-              border={"1px solid #FFC661"}
-              bgColor="#FFF8ED"
-              p={6}
-              mx={6}
-              mb={8}
-              borderRadius={"15px"}
-            >
-              <Text color="detail" fontWeight={400}>
-                Make sure to copy your personal access token in a secure place
-                now, next time you visit the access token will be hidden
-              </Text>
-            </Flex>
-          )} */}
-        </Flex>
-      )}
-      {/* <ConfirmActionForm
-        isOpen={isOpen}
-        onClose={onClose}
-        onActionConfirm={onActionConfirm}
-        confirmBtnText={actionType === "regenerate" ? "Regenerate" : "Delete"}
-        modalHeader={
-          actionType === "regenerate" ? "Regenerate Key" : "Delete Key"
-        }
-        modelText={
-          <VStack>
-            <Text my={4} w={["100%"]} fontSize={"lg"} fontWeight={600}>
-              {actionType === "regenerate"
-                ? "are you sure you want to regenerate the  key?"
-                : "are you sure you want to delete the current key?"}
-            </Text>
-            <Text color="detail" fontWeight={400}>
-              {actionType === "regenerate"
-                ? "Regenerating the key will generate a new API key and invalidate the current key. After regenerating, please remember to update any applications or services that use the current key with the new key to avoid any service disruptions."
-                : "This action will revoke access to all APIs integrated with this key. Please ensure that you have updated any applications or services that use this key before proceeding."}
-            </Text>
-          </VStack>
-        }
-      /> */}
+        ) : (
+          <TabPanels width={"100%"}>
+            <TabPanel width={"100%"} p={0}>
+              <UserManagementContainer hasAccess={hasAccess} />
+            </TabPanel>
+            <TabPanel width={"100%"} p={0}>
+              <></>
+            </TabPanel>
+          </TabPanels>
+        )}
+      </Tabs>
     </Box>
   );
 };
