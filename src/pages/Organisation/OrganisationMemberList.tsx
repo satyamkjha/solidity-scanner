@@ -29,6 +29,8 @@ import { useConfig } from "hooks/useConfig";
 import UpgradePackage from "components/upgradePackage";
 import Loader from "components/styled-components/Loader";
 import CreateOrganisationForm from "./CreateOrganisationForm";
+import TeamMemberItem from "./TeamMemberItem";
+import InviteMemberForm from "./InviteMemberForm";
 
 const OrganisationMemberList: React.FC<{
   hasAccess: boolean;
@@ -38,6 +40,63 @@ const OrganisationMemberList: React.FC<{
   const assetsUrl = getAssetsURL(config);
 
   const [orgData, setOrgData] = useState(true);
+
+  const removeOrganisationUserRequest = () => {
+    try {
+      const { data } = await API.post(API_PATH.API_REMOVE_ORGANISATION_USERS, {
+        users: userList,
+      });
+      if (data.status === "success") {
+        toast({
+          title: data.message,
+          description: data.message,
+          status: "success",
+          duration: 3000,
+          isClosable: true,
+        });
+      } else {
+        toast({
+          title: data.message,
+          description: data.message,
+          status: "success",
+          duration: 3000,
+          isClosable: true,
+        });
+      }
+    } catch (e) {
+      console.log(e);
+    }
+  };
+
+  const updateOrganisationUserRolesRequest = () => {
+    try {
+      const { data } = await API.post(
+        API_PATH.API_UPDATE_ORGANISATION_USERS_ROLE,
+        {
+          users: userList,
+        }
+      );
+      if (data.status === "success") {
+        toast({
+          title: data.message,
+          description: data.message,
+          status: "success",
+          duration: 3000,
+          isClosable: true,
+        });
+      } else {
+        toast({
+          title: data.message,
+          description: data.message,
+          status: "success",
+          duration: 3000,
+          isClosable: true,
+        });
+      }
+    } catch (e) {
+      console.log(e);
+    }
+  };
 
   return (
     <Flex
@@ -100,7 +159,14 @@ const OrganisationMemberList: React.FC<{
         flexDir="column"
         justifyContent={"flex-start"}
         alignItems={"center"}
-      ></Flex>
+      >
+        <TeamMemberItem />
+        <TeamMemberItem />
+        <TeamMemberItem />
+        <TeamMemberItem />
+        <TeamMemberItem />
+      </Flex>
+      <InviteMemberForm isOpen={isOpen} onClose={onClose} />
     </Flex>
   );
 };

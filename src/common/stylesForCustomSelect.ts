@@ -53,3 +53,36 @@ export const customStylesForTakeAction = {
     width: "300px",
   }),
 };
+
+export const customStylesForOrgRole = {
+  ...customStylesForReactSelect,
+  control: () => ({
+    // none of react-select's styles are passed to <Control />
+    width: "250px",
+    display: "flex",
+    flexDirection: "row",
+    backgroundColor: "#FAFBFC",
+    padding: 4,
+    borderRadius: 10,
+    borderWidth: 1,
+    color: "#000000",
+  }),
+
+  container: (provided: any, state: any) => ({
+    ...provided,
+    width: "300px",
+  }),
+  option: (provided: any, state: any) => ({
+    ...provided,
+    borderBottom: "1px solid #f3f3f3",
+    opacity: state.isDisabled ? 0.5 : 1,
+    backgroundColor: state.isDisabled
+      ? "#ECECEC"
+      : state.isSelected
+      ? "#FFFFFF"
+      : state.isFocused
+      ? "#FAFBFC"
+      : "#FAFBFC",
+    color: "#000000",
+  }),
+};

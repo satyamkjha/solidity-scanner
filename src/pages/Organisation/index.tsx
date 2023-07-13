@@ -25,6 +25,7 @@ import { useConfig } from "hooks/useConfig";
 import Loader from "components/styled-components/Loader";
 import CreateOrganisationForm from "./CreateOrganisationForm";
 import UserManagementContainer from "./UserManagementContainer";
+import OrganisationSettingsContainer from "./OrganisationSettingsContainer";
 
 const Organisation: React.FC = () => {
   const { data: profileData, isLoading } = useProfile();
@@ -113,7 +114,7 @@ const Organisation: React.FC = () => {
               <UserManagementContainer hasAccess={hasAccess} />
             </TabPanel>
             <TabPanel width={"100%"} p={0}>
-              <></>
+              <OrganisationSettingsContainer />
             </TabPanel>
           </TabPanels>
         )}

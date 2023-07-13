@@ -492,3 +492,8 @@ export type FileState = {
   line_nos_start: number[];
   line_nos_end: number[];
 };
+
+export type MessageResponse = {
+  status: string;
+  message: string;
+};

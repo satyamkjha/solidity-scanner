@@ -28,8 +28,10 @@ import { useQueryClient } from "react-query";
 import { API_PATH } from "helpers/routeManager";
 import API from "helpers/api";
 import { useHistory } from "react-router-dom";
+import { FiLink2 } from "react-icons/fi";
+import InvitedMemberItem from "./InvitedMemberItem";
 
-const CreateOrganisationForm: React.FC<{
+const InviteMemberForm: React.FC<{
   onClose(): any;
   isOpen: boolean;
 }> = ({ isOpen, onClose }) => {
@@ -38,42 +40,11 @@ const CreateOrganisationForm: React.FC<{
   const queryClient = useQueryClient();
   const toast = useToast();
 
-  const createOrganisationRequest = () => {
+  const addOrganisationUserRequest = () => {
     try {
-      const { data } = await API.post(API_PATH.API_CREATE_ORGANISATION, {
-        org_name: orgName,
-        password: password,
+      const { data } = await API.post(API_PATH.API_ADD_ORGANISATION_USERS, {
+        users: userList,
       });
-      if (data.status === "success") {
-        toast({
-          title: data.message,
-          description: data.message,
-          status: "success",
-          duration: 3000,
-          isClosable: true,
-        });
-      } else {
-        toast({
-          title: data.message,
-          description: data.message,
-          status: "success",
-          duration: 3000,
-          isClosable: true,
-        });
-      }
-    } catch (e) {
-      console.log(e);
-    }
-  };
-
-  const checkOrganisationNameRequest = () => {
-    try {
-      const { data } = await API.post(
-        API_PATH.API_CHECK_ORGANISATION_NAME_AVAILABILITY,
-        {
-          org_name: orgName,
-        }
-      );
       if (data.status === "success") {
         toast({
           title: data.message,
@@ -110,7 +81,7 @@ const CreateOrganisationForm: React.FC<{
           p={5}
         >
           <ModalHeader textAlign={"center"} fontSize={["lg", "lg", "xl"]}>
-            Create Organization
+            Invite Members
           </ModalHeader>
           <ModalCloseButton
             m={[6, 6, 6, 7]}
@@ -133,45 +104,68 @@ const CreateOrganisationForm: React.FC<{
               alignItems={"center"}
             >
               <Flex
-                w={"80%"}
+                w={"100%"}
                 direction="column"
                 alignItems={"center"}
                 textAlign="center"
                 justifyContent={"flex-start"}
               >
-                <Text fontSize="md" fontWeight={500}>
-                  Setup your Organization Name
-                </Text>
-                <Text fontSize="sm" color="#4E5D78" fontWeight={300}>
-                  Lorem ipsum dolor sit amet consectetur. Iaculis libero eget.
-                </Text>
-                <InputGroup mt={10} alignItems="center" mb={4}>
+                <InputGroup alignItems="center" mb={4}>
                   <Input
                     isRequired
                     type="text"
-                    placeholder="Search your Organization name here"
+                    placeholder="Type email ID to send invite"
                     variant={"brand"}
                     bgColor="#f7f9fa"
                     size="lg"
                     onChange={(e) => {}}
                   />
-                  <InputRightElement children={<></>} />
+                  <InputRightElement w="300px" children={<></>} />
                 </InputGroup>
+                <Flex
+                  w="100%"
+                  h="100%"
+                  flexDir="column"
+                  justifyContent={"flex-start"}
+                  alignItems={"center"}
+                >
+                  <InvitedMemberItem />
+                  <InvitedMemberItem />
+                  <InvitedMemberItem />
+                </Flex>
               </Flex>
-              <Button
-                h={"50px"}
-                mt={"auto"}
-                mb={10}
-                w="200px"
-                variant="brand"
-                px={12}
-                borderRadius={10}
-                fontSize={"md"}
-                fontWeight={500}
-                disabled={false}
+              <HStack
+                w="100%"
+                justifyContent={"space-between"}
+                alignItems={"flex-start"}
               >
-                Create Organization
-              </Button>
+                <Button
+                  h={"50px"}
+                  color={"#3300FF"}
+                  w="fit-content"
+                  variant="ghost"
+                  px={12}
+                  borderRadius={10}
+                  fontSize={"md"}
+                  fontWeight={500}
+                  disabled={false}
+                  rightIcon={<FiLink2 />}
+                >
+                  Click here to copy Invitation link
+                </Button>
+                <Button
+                  h={"50px"}
+                  w="200px"
+                  variant="brand"
+                  px={12}
+                  borderRadius={10}
+                  fontSize={"md"}
+                  fontWeight={500}
+                  disabled={false}
+                >
+                  Create Organization
+                </Button>
+              </HStack>
             </Flex>
           </ModalBody>
         </ModalContent>
@@ -180,4 +174,4 @@ const CreateOrganisationForm: React.FC<{
   );
 };
 
-export default CreateOrganisationForm;
+export default InviteMemberForm;

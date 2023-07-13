@@ -70,4 +70,15 @@ export const API_PATH = {
   API_GET_TRANSACTION: "/api-get-transactions-beta/",
   API_GET_INVOICES: "/api-get-invoices-beta/",
   API_GET_DOWNLOAD_INVOICE_URL: "/api-get-download-invoice-url/",
+
+  //ORGANISATION
+  API_CREATE_ORGANISATION: "api-create-organization",
+  API_ADD_ORGANISATION_USERS: "api-add-organization-users"
+  API_REMOVE_ORGANISATION_USERS: "api-remove-organization-users"
+  API_LIST_ORGANISATION_USERS: "api-list-organization-users"
+  API_UPDATE_ORGANISATION_USERS_ROLE: "api-update-organization-users-role"
+  API_CHECK_ORGANISATION_NAME_AVAILABILITY: "api-check-organization-name-availability"
+  API_ACCEPT_ORGANISATION_REQUEST: "api-accept-organization-request"
+  API_REJECT_ORGANISATION_REQUEST: "api-reject-organization-request"
+  API_UPDATE_USER_ORGANISATION_PROFILE: "api-update-user-organization-profile"
 };
