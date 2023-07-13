@@ -145,7 +145,7 @@ const ScanHistoryContainer: React.FC<{
             color={"gray.600"}
             width={"17%"}
           >
-            Score
+            Security Score
           </Text>
           {isDesktopView && (
             <Text

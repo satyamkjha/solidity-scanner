@@ -41,6 +41,7 @@ import GoogleSignIn from "components/googleSignin";
 import { getFeatureGateConfig } from "helpers/helperFunction";
 import { getReCaptchaHeaders } from "helpers/helperFunction";
 import { useConfig } from "hooks/useConfig";
+import Loader from "components/styled-components/Loader";
 
 const SignUp: React.FC = () => {
   const config: any = useConfig();
@@ -435,6 +436,7 @@ const RegisterForm: React.FC<{
           type="submit"
           variant="brand"
           isLoading={formState.isSubmitting}
+          spinner={<Loader color={"#3300FF"} size={25} />}
         >
           {step === 0 ? "Next" : "Submit"}
         </Button>

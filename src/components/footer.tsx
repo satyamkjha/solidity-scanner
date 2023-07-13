@@ -44,7 +44,7 @@ export const Footer: React.FC = () => {
             <Link
               as={RouterLink}
               to="/pricing"
-              variant="brand"
+              variant="navigation"
               w={["auto", "auto", "50%"]}
               mb={4}
               fontWeight="600"
@@ -54,17 +54,38 @@ export const Footer: React.FC = () => {
             <Link
               as={RouterLink}
               to="/detectors"
-              variant="brand"
+              variant="navigation"
               w={["auto", "auto", "50%"]}
               mb={4}
               fontWeight="600"
             >
-              What we Detect
+              Detectors
+            </Link>
+            <Link
+              as={RouterLink}
+              to="/quickscan"
+              variant="navigation"
+              fontWeight="600"
+              w={["auto", "auto", "50%"]}
+              mb={4}
+            >
+              Quickscan
+            </Link>
+            <Link
+              onClick={() => {
+                window.open("https://solidityscan.com/discover/", "_blank");
+              }}
+              variant="navigation"
+              fontWeight="600"
+              w={["auto", "auto", "50%"]}
+              mb={4}
+            >
+              Discover
             </Link>
             <Link
               as={RouterLink}
               to="/terms-of-service"
-              variant="brand"
+              variant="navigation"
               w={["auto", "auto", "50%"]}
               mb={4}
               fontWeight="600"
@@ -74,7 +95,7 @@ export const Footer: React.FC = () => {
             {/* <Link
               as={RouterLink}
               to="/faq"
-              variant="brand"
+              variant="navigation"
               w="50%"
               mb={4}
               fontWeight="600"
@@ -84,7 +105,7 @@ export const Footer: React.FC = () => {
             <Link
               as={RouterLink}
               to="/privacy-policy"
-              variant="brand"
+              variant="navigation"
               w={["auto", "auto", "50%"]}
               mb={4}
               fontWeight="600"

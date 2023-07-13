@@ -50,7 +50,6 @@ import API from "helpers/api";
 import { Report, ReportsListItem } from "common/types";
 import { useReports } from "hooks/useReports";
 import { ScanErrorIcon } from "components/icons";
-import { monthNames } from "common/values";
 import ContractDetails from "components/contractDetails";
 import PublishedReports from "components/publishedReports";
 import { usePricingPlans } from "hooks/usePricingPlans";
@@ -65,6 +64,7 @@ import {
 } from "helpers/helperFunction";
 import { useConfig } from "hooks/useConfig";
 import Loader from "components/styled-components/Loader";
+import { formattedDate } from "common/functions";
 
 const BlockPage: React.FC = () => {
   const { scanId } = useParams<{ scanId: string }>();
@@ -192,9 +192,7 @@ const BlockPage: React.FC = () => {
     const d = new Date(
       reportResponse.data.summary_report.project_summary_report.last_project_report_update_time
     );
-    setLastTimeUpdate(
-      `${d.getDate()}-${monthNames[d.getMonth()]}-${d.getFullYear()}`
-    );
+    setLastTimeUpdate(formattedDate(d, "long"));
   };
 
   const checkReportPublished = async (
@@ -232,9 +230,7 @@ const BlockPage: React.FC = () => {
           scanData.scan_report.latest_report_id
         );
         const d = new Date();
-        setDatePublished(
-          `${d.getDate()}-${monthNames[d.getMonth()]}-${d.getFullYear()}`
-        );
+        setDatePublished(formattedDate(d, "long"));
       } else {
         setPublishStatus("Not-Generated");
       }
@@ -543,7 +539,11 @@ const BlockPage: React.FC = () => {
                                     variant="unstyled"
                                   >
                                     {printLoading ? (
-                                      <Loader size={20} color="#3E15F4" />
+                                      <Loader
+                                        size={20}
+                                        color="#3E15F4"
+                                        py={2}
+                                      />
                                     ) : (
                                       <ArrowDownIcon color="#3E15F4" />
                                     )}
@@ -726,6 +726,15 @@ const BlockPage: React.FC = () => {
                             scanData.scan_report.multi_file_scan_details
                           }
                           refetch={refetch}
+                          project_url={""}
+                          contract_url={scanData?.scan_report.contract_url}
+                          contract_platform={
+                            scanData?.scan_report.contract_platform
+                          }
+                          contract_address={
+                            scanData?.scan_report.contract_address
+                          }
+                          branchName={""}
                         />
                       ) : (
                         <Flex

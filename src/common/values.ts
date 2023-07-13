@@ -234,16 +234,37 @@ export const blockScans: { [key: string]: string } = {
   etherscan: "Ethereum",
   bscscan: "Binance",
   polygonscan: "Polygon",
-  fantom: "Fantom",
+  fantom: "fantom",
   cronos: "Cronos",
   avalanche: "Avalanche C-Chain",
-  celo: "Celo",
+  celo: "celo",
   aurora: "Aurora",
   arbiscan: "Arbiscan",
   buildbear: "Buildbear",
   optimism: "Optimism",
   xdc: "XDC",
   reefscan: "Reefscan",
+};
+
+export const codePlatform: {
+  [key: string]: {
+    platform: string;
+    dynamicString: string;
+  };
+} = {
+  etherscan: { platform: "own", dynamicString: "#code" },
+  bscscan: { platform: "own", dynamicString: "#code" },
+  polygonscan: { platform: "own", dynamicString: "#code" },
+  fantom: { platform: "own", dynamicString: "#code" },
+  cronos: { platform: "own", dynamicString: "#code" },
+  avalanche: { platform: "own", dynamicString: "#code" },
+  celo: { platform: "own", dynamicString: "#code" },
+  aurora: { platform: "own", dynamicString: "/contracts#address-tabs" },
+  arbiscan: { platform: "own", dynamicString: "#code" },
+  buildbear: { platform: "none", dynamicString: "" },
+  optimism: { platform: "own", dynamicString: "#code" },
+  xdc: { platform: "own", dynamicString: "#readContract" },
+  reefscan: { platform: "own", dynamicString: "" },
 };
 
 export const blockExplorer: { [key: string]: string } = {

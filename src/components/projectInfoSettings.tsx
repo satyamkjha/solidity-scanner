@@ -143,6 +143,24 @@ const InfoSettings: React.FC<{
           msg={"You need to connect your GitHub to start a private scan."}
         />
       )}
+
+      {isGithubIntegrated && (
+        <Text
+          width="100%"
+          p={5}
+          borderWidth={1}
+          borderColor="#FFC661"
+          background="#FFF8ED"
+          color="#4E5D78"
+          fontSize={"sm"}
+          fontWeight={300}
+          borderRadius={10}
+        >
+          In order to conduct a scan, users must have ownership of the private
+          GitHub repositories. Our product currently does not support scanning
+          private repositories not owned by the user.
+        </Text>
+      )}
     </Stack>
   );
 };

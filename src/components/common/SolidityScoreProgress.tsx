@@ -31,8 +31,12 @@ const SolidityScoreProgress: React.FC<{
     >
       <CircularProgressLabel sx={{ display: "flex", justifyContent: "center" }}>
         <Box>
-          <Text fontSize="xl" fontWeight={600} color="accent">
-            {score}
+          <Text
+            fontSize={score === "100.00" ? "26px" : "xl"}
+            fontWeight={600}
+            color="accent"
+          >
+            {score === "100.00" ? 100 : score}
           </Text>
         </Box>
       </CircularProgressLabel>

@@ -59,18 +59,7 @@ const Integrations: React.FC = () => {
         <Text sx={{ color: "subtle", fontWeight: 600 }}>INTEGRATIONS</Text>
       </Flex>
 
-      {!data && (
-        <Flex
-          sx={{
-            w: ["100%", "100%", "40%"],
-            mx: [0, 0, 4],
-            my: 4,
-            justifyContent: "center",
-          }}
-        >
-          <Loader />
-        </Flex>
-      )}
+      {!data && <Loader width={"100%"} height={"70vh"} />}
 
       {data && (
         <VStack spacing={8} my={16}>
@@ -226,6 +215,7 @@ const IntegrationChannel: React.FC<IntegrationChannelProps> = ({
                 py={6}
                 onClick={onDisconnect}
                 isLoading={loading}
+                spinner={<Loader color={"#3300FF"} size={25} />}
               >
                 Disconnect
               </Button>

@@ -4,9 +4,10 @@ import { Box, Flex } from "@chakra-ui/react";
 const Loader: React.FC<{
   width?: string;
   height?: string;
+  py?: number;
   size?: number;
   color?: string;
-}> = ({ size = 40, color = "#52ff00", width, height }) => {
+}> = ({ size = 40, color = "#52ff00", width, height, py = 4 }) => {
   const thickness = size <= 30 ? 2 : 3;
   return (
     <Flex
@@ -14,7 +15,7 @@ const Loader: React.FC<{
       h={height ? height : "auto"}
       justifyContent="center"
       alignItems="center"
-      py={4}
+      py={py}
     >
       <Box
         as={"span"}

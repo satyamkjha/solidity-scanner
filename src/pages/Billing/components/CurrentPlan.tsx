@@ -15,7 +15,7 @@ import {
   Image,
   Box,
 } from "@chakra-ui/react";
-import { dateToDDMMMMYYYY } from "common/functions";
+import { formattedDate } from "common/functions";
 import { Plan } from "common/types";
 import API from "helpers/api";
 import { getAssetsURL, sentenceCapitalize } from "helpers/helperFunction";
@@ -216,7 +216,10 @@ const CurrentPlan: React.FC<{
                         Next Billed on
                       </Text>
                       <Text fontSize="sm" fontWeight="600">
-                        {dateToDDMMMMYYYY(new Date(subscription.renewal_date))}
+                        {formattedDate(
+                          new Date(subscription.renewal_date),
+                          "long"
+                        )}
                       </Text>
                     </VStack>
                   )}
