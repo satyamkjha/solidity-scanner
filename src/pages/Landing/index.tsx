@@ -75,7 +75,7 @@ export default function LandingPage() {
             flexDir="column"
             alignItems={["center", "center", "center", "flex-start"]}
           >
-            <Heading as="h1" fontSize={["3xl", "4xl"]} mb={8}>
+            <Heading as="h1" fontSize={["3xl", "4xl"]} fontWeight={900} mb={8}>
               Get your smart contracts audited by a smarter tool
             </Heading>
             <Text fontSize={["lg", "lg", "xl"]} color="subtle" mb={8}>

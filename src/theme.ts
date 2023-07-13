@@ -5,6 +5,8 @@ import {
 } from "@chakra-ui/react";
 import { StyleFunctionProps } from "@chakra-ui/theme-tools";
 
+import { Fonts } from "./Fonts";
+
 const config: { initialColorMode: ColorMode; useSystemColorMode: boolean } = {
   initialColorMode: "light",
   useSystemColorMode: false,
@@ -20,7 +22,7 @@ export const theme = extendTheme({
   },
   config,
   fonts: {
-    heading: "Poppins",
+    heading: "NeueHaas",
     body: "Inter",
   },
   colors: {
