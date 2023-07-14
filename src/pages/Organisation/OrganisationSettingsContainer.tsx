@@ -30,7 +30,7 @@ import UpgradePackage from "components/upgradePackage";
 import Loader from "components/styled-components/Loader";
 import CreateOrganisationForm from "./CreateOrganisationForm";
 import NoOrgView from "./NoOrgView";
-import OrganisationMemberList from "./OrganisationMemberList";
+import OrganisationListItem from "./OrganisationListItem";
 
 const OrganisationSettingsContainer: React.FC<{}> = () => {
   const { isOpen, onClose, onOpen } = useDisclosure();

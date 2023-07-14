@@ -40,7 +40,9 @@ const InviteMemberForm: React.FC<{
   const queryClient = useQueryClient();
   const toast = useToast();
 
-  const addOrganisationUserRequest = () => {
+  const userList = [];
+
+  const addOrganisationUserRequest = async () => {
     try {
       const { data } = await API.post(API_PATH.API_ADD_ORGANISATION_USERS, {
         users: userList,

@@ -34,15 +34,14 @@ const CreateOrganisationForm: React.FC<{
   isOpen: boolean;
 }> = ({ isOpen, onClose }) => {
   const history = useHistory();
-
   const queryClient = useQueryClient();
   const toast = useToast();
+  const [orgName, setOrgName] = useState("");
 
-  const createOrganisationRequest = () => {
+  const createOrganisationRequest = async () => {
     try {
       const { data } = await API.post(API_PATH.API_CREATE_ORGANISATION, {
         org_name: orgName,
-        password: password,
       });
       if (data.status === "success") {
         toast({
@@ -66,7 +65,7 @@ const CreateOrganisationForm: React.FC<{
     }
   };
 
-  const checkOrganisationNameRequest = () => {
+  const checkOrganisationNameRequest = async () => {
     try {
       const { data } = await API.post(
         API_PATH.API_CHECK_ORGANISATION_NAME_AVAILABILITY,
@@ -153,7 +152,9 @@ const CreateOrganisationForm: React.FC<{
                     variant={"brand"}
                     bgColor="#f7f9fa"
                     size="lg"
-                    onChange={(e) => {}}
+                    onChange={(e) => {
+                      setOrgName(e.target.value);
+                    }}
                   />
                   <InputRightElement children={<></>} />
                 </InputGroup>

@@ -38,10 +38,12 @@ const OrganisationMemberList: React.FC<{
   const { isOpen, onClose, onOpen } = useDisclosure();
   const config: any = useConfig();
   const assetsUrl = getAssetsURL(config);
-
+  const toast = useToast();
   const [orgData, setOrgData] = useState(true);
 
-  const removeOrganisationUserRequest = () => {
+  const userList = [];
+
+  const removeOrganisationUserRequest = async () => {
     try {
       const { data } = await API.post(API_PATH.API_REMOVE_ORGANISATION_USERS, {
         users: userList,
@@ -68,7 +70,7 @@ const OrganisationMemberList: React.FC<{
     }
   };
 
-  const updateOrganisationUserRolesRequest = () => {
+  const updateOrganisationUserRolesRequest = async () => {
     try {
       const { data } = await API.post(
         API_PATH.API_UPDATE_ORGANISATION_USERS_ROLE,
