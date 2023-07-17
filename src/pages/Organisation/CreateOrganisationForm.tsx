@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 
 import {
   Button,
@@ -28,6 +28,7 @@ import { useQueryClient } from "react-query";
 import { API_PATH } from "helpers/routeManager";
 import API from "helpers/api";
 import { useHistory } from "react-router-dom";
+import { debounce } from "lodash";
 
 const CreateOrganisationForm: React.FC<{
   onClose(): any;
@@ -37,10 +38,14 @@ const CreateOrganisationForm: React.FC<{
   const queryClient = useQueryClient();
   const toast = useToast();
   const [orgName, setOrgName] = useState("");
+  const [availabililtyStatus, setAvailabilityStatus] = useState("");
 
   const createOrganisationRequest = async () => {
     try {
-      const { data } = await API.post(API_PATH.API_CREATE_ORGANISATION, {
+      const { data } = await API.post<{
+        status: string;
+        message: string;
+      }>(API_PATH.API_CREATE_ORGANISATION, {
         org_name: orgName,
       });
       if (data.status === "success") {
@@ -66,34 +71,34 @@ const CreateOrganisationForm: React.FC<{
   };
 
   const checkOrganisationNameRequest = async () => {
-    try {
-      const { data } = await API.post(
-        API_PATH.API_CHECK_ORGANISATION_NAME_AVAILABILITY,
-        {
-          org_name: orgName,
-        }
-      );
+    if (orgName.length > 5) {
+      const { data } = await API.post<{
+        status: string;
+        org_name_available: boolean;
+      }>(API_PATH.API_CHECK_ORGANISATION_NAME_AVAILABILITY, {
+        org_name: orgName,
+      });
       if (data.status === "success") {
-        toast({
-          title: data.message,
-          description: data.message,
-          status: "success",
-          duration: 3000,
-          isClosable: true,
-        });
+        if (data.org_name_available) {
+          setAvailabilityStatus("Available");
+        } else {
+          setAvailabilityStatus("Not-Available");
+        }
       } else {
-        toast({
-          title: data.message,
-          description: data.message,
-          status: "success",
-          duration: 3000,
-          isClosable: true,
-        });
+        setAvailabilityStatus("");
       }
-    } catch (e) {
-      console.log(e);
     }
   };
+
+  const debouncedSearch = debounce(checkOrganisationNameRequest, 500);
+
+  useEffect(() => {
+    debouncedSearch();
+    // Cleanup function to cancel any pending debounced search when the component unmounts or when searchTerm changes
+    return () => {
+      debouncedSearch.cancel();
+    };
+  }, [orgName]);
 
   return (
     <>
@@ -156,7 +161,21 @@ const CreateOrganisationForm: React.FC<{
                       setOrgName(e.target.value);
                     }}
                   />
-                  <InputRightElement children={<></>} />
+                  <InputRightElement>
+                    <HStack mr={20} mt={2}>
+                      <Text
+                        color={
+                          availabililtyStatus === "Available"
+                            ? "low"
+                            : availabililtyStatus === "Not-Available"
+                            ? "high"
+                            : "#000000"
+                        }
+                      >
+                        {availabililtyStatus}
+                      </Text>
+                    </HStack>
+                  </InputRightElement>
                 </InputGroup>
               </Flex>
               <Button
@@ -169,7 +188,10 @@ const CreateOrganisationForm: React.FC<{
                 borderRadius={10}
                 fontSize={"md"}
                 fontWeight={500}
-                disabled={false}
+                onClick={createOrganisationRequest}
+                disabled={
+                  orgName.length < 5 || availabililtyStatus === "Not-Available"
+                }
               >
                 Create Organization
               </Button>

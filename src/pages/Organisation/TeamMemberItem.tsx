@@ -32,7 +32,7 @@ import CreateOrganisationForm from "./CreateOrganisationForm";
 import Select from "react-select";
 import { customStylesForOrgRole } from "../../common/stylesForCustomSelect";
 import FormatOptionLabelWithImage from "../../components/FormatOptionLabelWithImage";
-import { issueActions } from "../../common/values";
+import { userRolesList } from "../../common/values";
 
 const TeamMemberItem: React.FC<{}> = () => {
   const config: any = useConfig();
@@ -85,7 +85,8 @@ const TeamMemberItem: React.FC<{}> = () => {
       </Text>
       <Select
         formatOptionLabel={FormatOptionLabelWithImage}
-        options={issueActions}
+        options={userRolesList}
+        isSearchable={false}
         placeholder="Select Action"
         styles={customStylesForOrgRole}
         onChange={(newValue) => {}}

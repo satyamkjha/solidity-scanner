@@ -31,6 +31,7 @@ import Loader from "components/styled-components/Loader";
 import CreateOrganisationForm from "./CreateOrganisationForm";
 import NoOrgView from "./NoOrgView";
 import OrganisationMemberList from "./OrganisationMemberList";
+import { useOrgList } from "hooks/useOrgList";
 
 const UserManagementContainer: React.FC<{
   hasAccess: boolean;
@@ -41,7 +42,7 @@ const UserManagementContainer: React.FC<{
 
   const [orgData, setOrgData] = useState(true);
 
-  console.log(hasAccess);
+  const { data } = useOrgList();
 
   return (
     <Flex

@@ -37,7 +37,7 @@ const NoOrgView: React.FC<{
   const config: any = useConfig();
   const assetsUrl = getAssetsURL(config);
 
-  const [orgData, setOrgData] = useState(true);
+  const [orgData, setOrgData] = useState(false);
 
   return (
     <>
@@ -132,5 +132,5 @@ const NoOrgView: React.FC<{
     </>
   );
 };
-  
+
 export default NoOrgView;

@@ -129,6 +129,13 @@ const Detectors = lazy(
   () => import("pages/Detectors" /* webpackChunkName: "Detectors" */)
 );
 
+const AcceptOrgInvitation = lazy(
+  () =>
+    import(
+      "pages/Organisation/AcceptOrgInvitation" /* webpackChunkName: "Detectors" */
+    )
+);
+
 const Routes: React.FC = () => {
   return (
     <Router>

@@ -58,7 +58,7 @@ export const customStylesForOrgRole = {
   ...customStylesForReactSelect,
   control: () => ({
     // none of react-select's styles are passed to <Control />
-    width: "250px",
+    width: "170px",
     display: "flex",
     flexDirection: "row",
     backgroundColor: "#FAFBFC",
@@ -70,7 +70,41 @@ export const customStylesForOrgRole = {
 
   container: (provided: any, state: any) => ({
     ...provided,
-    width: "300px",
+    width: "170px",
+  }),
+  option: (provided: any, state: any) => ({
+    ...provided,
+    borderBottom: "1px solid #f3f3f3",
+    opacity: state.isDisabled ? 0.5 : 1,
+    backgroundColor: state.isDisabled
+      ? "#ECECEC"
+      : state.isSelected
+      ? "#ebeced"
+      : state.isFocused
+      ? "#ebeced"
+      : "#FAFBFC",
+    color: "#000000",
+  }),
+};
+
+export const customStylesForInviteMember = {
+  ...customStylesForReactSelect,
+  control: () => ({
+    // none of react-select's styles are passed to <Control />
+    width: "150px",
+    display: "flex",
+    flexDirection: "row",
+    backgroundColor: "#FAFBFC00",
+    padding: 4,
+    borderRadius: 10,
+    borderWidth: 0,
+    color: "#000000",
+    marginTop: 3,
+  }),
+
+  container: (provided: any, state: any) => ({
+    ...provided,
+    width: "150px",
   }),
   option: (provided: any, state: any) => ({
     ...provided,

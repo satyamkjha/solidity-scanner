@@ -11,15 +11,35 @@ export const severityPriority: { [key: string]: number } = {
 
 export const issueActions = [
   {
+    value: "pending_fix",
+    icon: "",
+    label: "Select action",
+    isDisabled: true,
+  },
+  { value: "wont_fix", icon: "icons/wont_fix", label: "Won't Fix" },
+  {
+    value: "false_positive",
+    icon: "icons/false_positive",
+    label: "False Positive",
+  },
+  {
+    value: "pending_fix",
+    icon: "icons/pending_fix",
+    label: "Reset Bug Status",
+  },
+];
+
+export const userRolesList = [
+  {
     value: "admin",
     icon: "icons/admin",
     label: "Admin",
   },
   { value: "editor", icon: "icons/editor", label: "Editor" },
   {
-    value: "reader",
+    value: "viewer",
     icon: "icons/reader",
-    label: "Reader",
+    label: "Viewer",
   },
 ];
 

@@ -17,6 +17,8 @@ import {
   TabList,
   TabPanels,
   TabPanel,
+  HStack,
+  CloseButton,
 } from "@chakra-ui/react";
 import API from "helpers/api";
 import { API_PATH } from "helpers/routeManager";
@@ -32,16 +34,24 @@ import CreateOrganisationForm from "./CreateOrganisationForm";
 import Select from "react-select";
 import { customStylesForOrgRole } from "../../common/stylesForCustomSelect";
 import FormatOptionLabelWithImage from "../../components/FormatOptionLabelWithImage";
-import { issueActions } from "../../common/values";
+import { userRolesList } from "../../common/values";
 
-const InvitedMemberItem: React.FC<{}> = () => {
+const InvitedMemberItem: React.FC<{
+  user: string;
+  role: "admin" | "reader" | "editor";
+  removeUser: (userEmail: string) => Promise<void>;
+  updateRole: (
+    userEmail: string,
+    userRole: "admin" | "reader" | "editor"
+  ) => Promise<void>;
+}> = ({ user, role, removeUser, updateRole }) => {
   const config: any = useConfig();
   const assetsUrl = getAssetsURL(config);
 
   return (
     <Flex
       w="100%"
-      h="90px"
+      h="60px"
       flexDir="row"
       justifyContent={"space-between"}
       alignItems={"center"}
@@ -54,7 +64,7 @@ const InvitedMemberItem: React.FC<{}> = () => {
         justifyContent={"flex-start"}
         alignItems={"center"}
       >
-        <Flex
+        {/* <Flex
           w="50px"
           h="50px"
           borderRadius={"40px"}
@@ -65,16 +75,16 @@ const InvitedMemberItem: React.FC<{}> = () => {
           mr={3}
         >
           S
-        </Flex>
+        </Flex> */}
         <VStack
           w="fit-content"
           justifyContent={"flex-start"}
           spacing={0}
           alignItems={"flex-start"}
         >
-          <Text fontWeight={900}>Lydia Curtis</Text>
+          {/* <Text fontWeight={900}>Lydia Curtis</Text> */}
           <Text fontWeight={300} color="#8A94A6">
-            lydiacurtis@gmail.com
+            {user}
           </Text>
         </VStack>
       </Flex>
@@ -90,12 +100,25 @@ const InvitedMemberItem: React.FC<{}> = () => {
       >
         Added
       </Text>
-      <Select
-        formatOptionLabel={FormatOptionLabelWithImage}
-        options={issueActions}
-        styles={customStylesForOrgRole}
-        onChange={(newValue) => {}}
-      />
+      <HStack>
+        <Select
+          isSearchable={false}
+          formatOptionLabel={FormatOptionLabelWithImage}
+          value={userRolesList.find((item) => role === item.value)}
+          options={userRolesList}
+          styles={customStylesForOrgRole}
+          onChange={(newValue) => {
+            if (newValue) {
+              updateRole(user, newValue.value);
+            }
+          }}
+        />
+        <CloseButton
+          onClick={() => {
+            removeUser(user);
+          }}
+        />
+      </HStack>
     </Flex>
   );
 };

@@ -30,6 +30,10 @@ import API from "helpers/api";
 import { useHistory } from "react-router-dom";
 import { FiLink2 } from "react-icons/fi";
 import InvitedMemberItem from "./InvitedMemberItem";
+import Select from "react-select";
+import { customStylesForInviteMember } from "../../common/stylesForCustomSelect";
+import FormatOptionLabelWithImage from "../../components/FormatOptionLabelWithImage";
+import { userRolesList } from "../../common/values";
 
 const InviteMemberForm: React.FC<{
   onClose(): any;
@@ -40,7 +44,56 @@ const InviteMemberForm: React.FC<{
   const queryClient = useQueryClient();
   const toast = useToast();
 
-  const userList = [];
+  const [userEmail, setUserEmail] = useState("");
+
+  const [userList, setUserList] = useState<
+    {
+      user: string;
+      role: "admin" | "reader" | "editor";
+    }[]
+  >([]);
+
+  const [userRole, setUserRole] = useState<"admin" | "reader" | "editor">(
+    "admin"
+  );
+
+  const addUsers = async () => {
+    setUserList([
+      ...userList,
+      {
+        user: userEmail,
+        role: userRole,
+      },
+    ]);
+  };
+
+  const removeUser = async (userEmail: string) => {
+    let newUserList = userList;
+    newUserList = newUserList.filter((item) => {
+      if (item.user === userEmail) {
+        return false;
+      }
+      return true;
+    });
+    setUserList(newUserList);
+  };
+
+  const updateRole = async (
+    userEmail: string,
+    userRole: "admin" | "reader" | "editor"
+  ) => {
+    let newUserList = userList;
+    newUserList = newUserList.map((item) => {
+      if (item.user === userEmail) {
+        return {
+          user: userEmail,
+          role: userRole,
+        };
+      }
+      return item;
+    });
+    setUserList(newUserList);
+  };
 
   const addOrganisationUserRequest = async () => {
     try {
@@ -77,6 +130,7 @@ const InviteMemberForm: React.FC<{
           maxW={["90vw", "90vw", "65vw"]}
           minW={"300px"}
           minH={"600px"}
+          h="80vh"
           alignItems={"center"}
           borderRadius="15px"
           mb={10}
@@ -101,7 +155,7 @@ const InviteMemberForm: React.FC<{
             <Flex
               justifyContent={"space-between"}
               w={"100%"}
-              h={"50vh"}
+              h="100%"
               direction="column"
               alignItems={"center"}
             >
@@ -115,14 +169,50 @@ const InviteMemberForm: React.FC<{
                 <InputGroup alignItems="center" mb={4}>
                   <Input
                     isRequired
-                    type="text"
+                    type="email"
                     placeholder="Type email ID to send invite"
                     variant={"brand"}
                     bgColor="#f7f9fa"
+                    h="55px"
+                    value={userEmail}
                     size="lg"
-                    onChange={(e) => {}}
+                    onChange={(e) => {
+                      setUserEmail(e.target.value);
+                    }}
                   />
-                  <InputRightElement w="300px" children={<></>} />
+                  <InputRightElement
+                    w="260px"
+                    children={
+                      <HStack mt={4}>
+                        <Text>|</Text>
+                        <Select
+                          formatOptionLabel={FormatOptionLabelWithImage}
+                          options={userRolesList}
+                          value={userRolesList.find(
+                            (item) => userRole === item.value
+                          )}
+                          isSearchable={false}
+                          styles={customStylesForInviteMember}
+                          onChange={(newValue) => {
+                            if (newValue) {
+                              setUserRole(newValue.value);
+                            }
+                          }}
+                        />
+                        <Button
+                          onClick={addUsers}
+                          variant={"cta-outline"}
+                          borderWidth={"1px"}
+                          fontWeight={500}
+                          px={5}
+                          py={1}
+                          ml={[0, 0, 0, "auto"]}
+                        >
+                          {"Add"}
+                        </Button>
+                      </HStack>
+                    }
+                  />
                 </InputGroup>
                 <Flex
                   w="100%"
@@ -131,17 +221,24 @@ const InviteMemberForm: React.FC<{
                   justifyContent={"flex-start"}
                   alignItems={"center"}
                 >
-                  <InvitedMemberItem />
-                  <InvitedMemberItem />
-                  <InvitedMemberItem />
+                  {userList.map((userItem) => (
+                    <InvitedMemberItem
+                      role={userItem.role}
+                      user={userItem.user}
+                      removeUser={removeUser}
+                      updateRole={updateRole}
+                    />
+                  ))}
                 </Flex>
               </Flex>
               <HStack
                 w="100%"
-                justifyContent={"space-between"}
+                borderTopWidth={1}
+                pt={4}
+                justifyContent={"flex-end"}
                 alignItems={"flex-start"}
               >
-                <Button
+                {/* <Button
                   h={"50px"}
                   color={"#3300FF"}
                   w="fit-content"
@@ -154,7 +251,7 @@ const InviteMemberForm: React.FC<{
                   rightIcon={<FiLink2 />}
                 >
                   Click here to copy Invitation link
-                </Button>
+                </Button> */}
                 <Button
                   h={"50px"}
                   w="200px"
@@ -164,8 +261,9 @@ const InviteMemberForm: React.FC<{
                   fontSize={"md"}
                   fontWeight={500}
                   disabled={false}
+                  onClick={addOrganisationUserRequest}
                 >
-                  Create Organization
+                  Add Users
                 </Button>
               </HStack>
             </Flex>

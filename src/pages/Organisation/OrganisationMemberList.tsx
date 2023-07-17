@@ -31,6 +31,7 @@ import Loader from "components/styled-components/Loader";
 import CreateOrganisationForm from "./CreateOrganisationForm";
 import TeamMemberItem from "./TeamMemberItem";
 import InviteMemberForm from "./InviteMemberForm";
+import { useOrgUsersList } from "hooks/useOrgUsersList";
 
 const OrganisationMemberList: React.FC<{
   hasAccess: boolean;
@@ -40,6 +41,7 @@ const OrganisationMemberList: React.FC<{
   const assetsUrl = getAssetsURL(config);
   const toast = useToast();
   const [orgData, setOrgData] = useState(true);
+  const { data } = useOrgUsersList();
 
   const userList = [];
 

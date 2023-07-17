@@ -8,6 +8,7 @@ export const API_PATH = {
   API_VERIFY_EMAIL: "/api-verify-email/",
   API_CHANGE_PASSWORD: "/api-change-password/",
   API_SEND_EMAIL: "/api-send-email/",
+  API_ORG_LOGIN: "organization/api-login/",
 
   //PROFILE
   API_PROFILE: "/api-profile/",
