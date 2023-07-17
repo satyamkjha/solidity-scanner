@@ -19,8 +19,6 @@ import { Global, css } from "@emotion/react";
 import { getFeatureGateConfig } from "helpers/helperFunction";
 import { ConfigProvider, useConfig } from "hooks/useConfig";
 
-import { Fonts } from "./Fonts";
-
 const queryClient = new QueryClient();
 
 ///
@@ -84,7 +82,6 @@ const AppContent: React.FC = () => {
       <QueryClientProvider client={queryClient}>
         <ChakraProvider theme={theme}>
           <Global styles={GlobalStyles} />
-          <Fonts />
           <Routes />
         </ChakraProvider>
         <ReactQueryDevtools initialIsOpen={false} />

@@ -22,7 +22,7 @@ export const theme = extendTheme({
   },
   config,
   fonts: {
-    heading: "NeueHaas",
+    heading: "Inter",
     body: "Inter",
   },
   colors: {
