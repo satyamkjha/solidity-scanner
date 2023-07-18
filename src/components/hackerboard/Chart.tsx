@@ -230,7 +230,7 @@ const Chart: React.FC<{
             labelComponent={
               <VictoryTooltip flyoutComponent={<CustomTooltip />} />
             }
-            labels={() => " "}
+            labels={() => ""}
           />
         </VictoryChart>
       ) : (

@@ -127,7 +127,7 @@ const HacksOverview: React.FC<{ overviewData: any }> = ({ overviewData }) => {
         <Loader width="100%" height="90vh" />
       ) : (
         <>
-          <Text color="#B0B7C3" fontSize={"2xl"}>
+          <Text color="#B0B7C3" fontSize={"xl"}>
             Web3 Hack Statistics, Hackerboard
           </Text>
           <Flex
@@ -147,7 +147,7 @@ const HacksOverview: React.FC<{ overviewData: any }> = ({ overviewData }) => {
               h="fit-content"
             >
               <Heading
-                fontSize={["5xl", "6xl"]}
+                fontSize={"5xl"}
                 mb={3}
                 sx={{
                   background:
@@ -156,7 +156,7 @@ const HacksOverview: React.FC<{ overviewData: any }> = ({ overviewData }) => {
                   WebkitTextFillColor: "transparent",
                 }}
               >
-                ${shortenNumber(overviewData.total_amount, 2, true)}
+                ${shortenNumber(overviewData.total_amount, 0, true)}
               </Heading>
               <Text mb={4} color="#8A94A6" fontSize={"lg"}>
                 The total amount hacked
