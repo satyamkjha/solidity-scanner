@@ -150,6 +150,7 @@ const Routes: React.FC = () => {
           </RedirectRoute>
           <Route exact path="/check-email" component={CheckEmail} />
           <Route exact path="/verify" component={Verify} />
+          <Route exact path="/accept" component={AcceptOrgInvitation} />
           <RedirectRoute exact path="/forgot">
             <ForgotPassword />
           </RedirectRoute>

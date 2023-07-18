@@ -29,7 +29,6 @@ import { useConfig } from "hooks/useConfig";
 import UpgradePackage from "components/upgradePackage";
 import Loader from "components/styled-components/Loader";
 import CreateOrganisationForm from "./CreateOrganisationForm";
-import TeamMemberItem from "./TeamMemberItem";
 import InviteMemberForm from "./InviteMemberForm";
 import { useOrgUsersList } from "hooks/useOrgUsersList";
 
@@ -42,6 +41,8 @@ const OrganisationMemberList: React.FC<{
   const toast = useToast();
   const [orgData, setOrgData] = useState(true);
   const { data } = useOrgUsersList();
+
+  console.log(data);
 
   const userList = [];
 
@@ -163,13 +164,7 @@ const OrganisationMemberList: React.FC<{
         flexDir="column"
         justifyContent={"flex-start"}
         alignItems={"center"}
-      >
-        <TeamMemberItem />
-        <TeamMemberItem />
-        <TeamMemberItem />
-        <TeamMemberItem />
-        <TeamMemberItem />
-      </Flex>
+      ></Flex>
       <InviteMemberForm isOpen={isOpen} onClose={onClose} />
     </Flex>
   );
