@@ -134,9 +134,6 @@ const Routes: React.FC = () => {
     <Router>
       <ErrorHandler>
         <Switch>
-          <Route exact path="/leaderboard">
-            <LeaderBoard />
-          </Route>
           <RedirectRoute exact path="/signin">
             <SignIn />
           </RedirectRoute>
@@ -173,6 +170,7 @@ const Routes: React.FC = () => {
               "/faq",
               "/terms-of-service",
               "/privacy-policy",
+              "/hackerboard",
             ]}
           >
             <PublicLayout>
@@ -187,6 +185,7 @@ const Routes: React.FC = () => {
                   <Route exact path="/quickscan/" component={QuickScan} />
                   <Route exact path="/pricing" component={Pricing} />
                   <Route exact path="/detectors" component={Detectors} />
+                  <Route exact path="/hackerboard" component={LeaderBoard} />
                   <Route exact path="/faq" component={FAQ} />
                   <Route
                     exact

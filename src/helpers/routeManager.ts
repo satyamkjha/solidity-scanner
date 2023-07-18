@@ -70,4 +70,9 @@ export const API_PATH = {
   API_GET_TRANSACTION: "/api-get-transactions-beta/",
   API_GET_INVOICES: "/api-get-invoices-beta/",
   API_GET_DOWNLOAD_INVOICE_URL: "/api-get-download-invoice-url/",
+
+  //HACKERBOARD
+  API_GET_ATTACKS_OVERVIEW: "/api-get-attacks-overview/",
+  API_GET_ATTACKS_AGGREGATED: "/api-get-attacks-aggregated/",
+  API_GET_ATTACKS: "/api-get-attacks/",
 };
