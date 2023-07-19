@@ -265,7 +265,7 @@ const CurrentPlan: React.FC<{
               </>
             )}
           </Flex>
-          <Flex mt={"auto"} ml={4}>
+          <Flex mt={[6, 6, 6, "auto"]} ml={[0, 0, 0, 4]}>
             <Button
               variant="accent-outline"
               borderRadius={"8px"}

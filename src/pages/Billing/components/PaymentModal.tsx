@@ -407,7 +407,7 @@ const PaymentModal: React.FC<{
                       plan={pricingDetails[duration][selectedPlan]}
                       duration={duration}
                     />
-                    {duration !== "ondemand" && (
+                    {duration !== "ondemand" && duration !== "topup" && (
                       <SwitchDuration
                         setDuration={setDuration}
                         setActiveCoupon={setActiveCoupon}
@@ -439,15 +439,13 @@ const PaymentModal: React.FC<{
                     {paymentMethod === "cp" && (
                       <CoinPaymentSelect setCoin={setCoin} coin={coin} />
                     )}
-                    {duration !== "topup" && (
-                      <CouponCodeSection
-                        duration={duration}
-                        selectedPlan={selectedPlan}
-                        activeCoupon={activeCoupon}
-                        setActiveCoupon={setActiveCoupon}
-                        setUpdatedPrice={setUpdatedPrice}
-                      />
-                    )}
+                    <CouponCodeSection
+                      duration={duration}
+                      selectedPlan={selectedPlan}
+                      activeCoupon={activeCoupon}
+                      setActiveCoupon={setActiveCoupon}
+                      setUpdatedPrice={setUpdatedPrice}
+                    />
                   </>
                 ) : (
                   <>
