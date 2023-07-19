@@ -10,12 +10,14 @@ import {
   MenuItem,
   MenuButton,
   Divider,
+  useDisclosure,
 } from "@chakra-ui/react";
 import { Profile, Plan } from "common/types";
 import { sentenceCapitalize, getAssetsURL } from "helpers/helperFunction";
 import { ChevronUpIcon, ChevronDownIcon } from "@chakra-ui/icons";
 import API from "helpers/api";
 import { API_PATH } from "helpers/routeManager";
+import PaymentModal from "./PaymentModal";
 
 const ScanCredits: React.FC<{
   planData: Plan;
@@ -23,7 +25,13 @@ const ScanCredits: React.FC<{
   topUpData: {
     [plan: string]: Plan;
   };
-}> = ({ planData, profile, topUpData }) => {
+  pricingDetails: {
+    [key: string]: {
+      [plan: string]: Plan;
+    };
+  };
+}> = ({ planData, profile, topUpData, pricingDetails }) => {
+  const { isOpen, onClose, onOpen } = useDisclosure();
   const assetsURL = getAssetsURL();
   const [optionsSelected, setOptionsSelected] = useState(false);
   const [selectedIndex, setSelectedIndex] = useState(0);
@@ -254,11 +262,21 @@ const ScanCredits: React.FC<{
           w="100%"
           alignSelf="center"
           isDisabled={selectedIndex === 0}
-          onClick={makePament}
+          onClick={onOpen}
         >
           Make Payment
         </Button>
       </Flex>
+      {isOpen && (
+        <PaymentModal
+          globalDuration={"topup"}
+          selectedPlan={planData.name}
+          quantity={parseInt(creditOptions[selectedIndex])}
+          pricingDetails={pricingDetails}
+          isOpen={isOpen}
+          onClose={onClose}
+        />
+      )}
     </Flex>
   );
 };

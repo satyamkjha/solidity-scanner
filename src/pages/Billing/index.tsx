@@ -267,6 +267,7 @@ const Billing: React.FC = () => {
                         }
                         profile={data}
                         topUpData={plans.pricing_data["topup"]}
+                        pricingDetails={plans.pricing_data}
                       />
                     )}
                 </TabPanel>
