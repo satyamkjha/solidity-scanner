@@ -31,13 +31,21 @@ const PaymentModal: React.FC<{
   isOpen: boolean;
   onClose: any;
   selectedPlan: string;
-  globalDuration: "monthly" | "yearly" | "ondemand";
+  quantity?: number;
+  globalDuration: "monthly" | "yearly" | "ondemand" | "topup";
   pricingDetails: {
     [key: string]: {
       [plan: string]: Plan;
     };
   };
-}> = ({ isOpen, onClose, selectedPlan, pricingDetails, globalDuration }) => {
+}> = ({
+  isOpen,
+  onClose,
+  selectedPlan,
+  pricingDetails,
+  globalDuration,
+  quantity,
+}) => {
   const toast = useToast();
 
   const [paymentMethod, setPaymentMethod] = useState<"cp" | "stripe">("cp");
@@ -48,13 +56,13 @@ const PaymentModal: React.FC<{
   const [disableMessage, setDisableMessage] = useState<string>("");
   const [disablePayment, setDisablePayment] = useState<boolean>(true);
 
-  const [duration, setDuration] = useState<"monthly" | "yearly" | "ondemand">(
-    globalDuration
-  );
+  const [duration, setDuration] = useState<
+    "monthly" | "yearly" | "ondemand" | "topup"
+  >(globalDuration);
   const [loading, setLoading] = useState(false);
 
   const createStripePayment = async () => {
-    let req = {};
+    let req: any = {};
     if (activeCoupon) {
       req = {
         package: selectedPlan,
@@ -66,6 +74,10 @@ const PaymentModal: React.FC<{
         package: selectedPlan,
         duration: duration,
       };
+    }
+
+    if (quantity) {
+      req.quantity = quantity;
     }
 
     try {
@@ -102,7 +114,7 @@ const PaymentModal: React.FC<{
 
     try {
       setLoading(true);
-      let req = {};
+      let req: any = {};
       if (activeCoupon) {
         req = {
           package: selectedPlan,
@@ -116,6 +128,9 @@ const PaymentModal: React.FC<{
           currency: coin,
           duration: duration,
         };
+      }
+      if (quantity) {
+        req.quantity = quantity;
       }
       const { data } = await API.post<{
         checkout_url: string;
@@ -170,7 +185,7 @@ const PaymentModal: React.FC<{
         overflowY={"scroll"}
         overflowX={"scroll"}
         bg="white"
-        h="85%"
+        h={duration === "topup" ? "75%" : "85%"}
         minH={"fit-content"}
       >
         <ModalCloseButton />
@@ -222,13 +237,15 @@ const PaymentModal: React.FC<{
                 {paymentMethod === "cp" && (
                   <CoinPaymentSelect setCoin={setCoin} coin={coin} />
                 )}
-                <CouponCodeSection
-                  duration={duration}
-                  selectedPlan={selectedPlan}
-                  activeCoupon={activeCoupon}
-                  setActiveCoupon={setActiveCoupon}
-                  setUpdatedPrice={setUpdatedPrice}
-                />
+                {duration !== "topup" && (
+                  <CouponCodeSection
+                    duration={duration}
+                    selectedPlan={selectedPlan}
+                    activeCoupon={activeCoupon}
+                    setActiveCoupon={setActiveCoupon}
+                    setUpdatedPrice={setUpdatedPrice}
+                  />
+                )}
                 <ConfirmationMessageBox
                   name={pricingDetails[duration][selectedPlan].name}
                   duration={duration}
@@ -246,7 +263,7 @@ const PaymentModal: React.FC<{
                   plan={pricingDetails[duration][selectedPlan]}
                   duration={duration}
                 />
-                {duration !== "ondemand" && (
+                {duration !== "ondemand" && duration !== "topup" && (
                   <SwitchDuration
                     setDuration={setDuration}
                     setActiveCoupon={setActiveCoupon}
@@ -260,6 +277,7 @@ const PaymentModal: React.FC<{
                   selectedPlan={selectedPlan}
                   activeCoupon={activeCoupon}
                   updatedPrice={updatedPrice}
+                  quantity={quantity}
                 />
                 <Tooltip
                   isDisabled={
@@ -314,13 +332,15 @@ const PaymentModal: React.FC<{
                   {paymentMethod === "cp" && (
                     <CoinPaymentSelect setCoin={setCoin} coin={coin} />
                   )}
-                  <CouponCodeSection
-                    duration={duration}
-                    selectedPlan={selectedPlan}
-                    activeCoupon={activeCoupon}
-                    setActiveCoupon={setActiveCoupon}
-                    setUpdatedPrice={setUpdatedPrice}
-                  />
+                  {duration !== "topup" && (
+                    <CouponCodeSection
+                      duration={duration}
+                      selectedPlan={selectedPlan}
+                      activeCoupon={activeCoupon}
+                      setActiveCoupon={setActiveCoupon}
+                      setUpdatedPrice={setUpdatedPrice}
+                    />
+                  )}
                   <ConfirmationMessageBox
                     name={pricingDetails[duration][selectedPlan].name}
                     duration={duration}
@@ -347,6 +367,7 @@ const PaymentModal: React.FC<{
                     selectedPlan={selectedPlan}
                     activeCoupon={activeCoupon}
                     updatedPrice={updatedPrice}
+                    quantity={quantity}
                   />
                 </>
               )}
@@ -386,7 +407,7 @@ const PaymentModal: React.FC<{
                       plan={pricingDetails[duration][selectedPlan]}
                       duration={duration}
                     />
-                    {duration !== "ondemand" && (
+                    {duration !== "ondemand" && duration !== "topup" && (
                       <SwitchDuration
                         setDuration={setDuration}
                         setActiveCoupon={setActiveCoupon}
@@ -438,6 +459,7 @@ const PaymentModal: React.FC<{
                       selectedPlan={selectedPlan}
                       activeCoupon={activeCoupon}
                       updatedPrice={updatedPrice}
+                      quantity={quantity}
                     />
                   </>
                 )}

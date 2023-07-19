@@ -20,7 +20,7 @@ export const theme = extendTheme({
   },
   config,
   fonts: {
-    heading: "Poppins",
+    heading: "Inter",
     body: "Inter",
   },
   colors: {

@@ -3,11 +3,11 @@ import React from "react";
 
 const SwitchDuration: React.FC<{
   setDuration: React.Dispatch<
-    React.SetStateAction<"monthly" | "yearly" | "ondemand">
+    React.SetStateAction<"monthly" | "yearly" | "ondemand" | "topup">
   >;
   setActiveCoupon: React.Dispatch<React.SetStateAction<string | null>>;
   setUpdatedPrice: React.Dispatch<React.SetStateAction<string>>;
-  duration: "monthly" | "yearly" | "ondemand";
+  duration: "monthly" | "yearly" | "ondemand" | "topup";
 }> = ({ setDuration, setActiveCoupon, setUpdatedPrice, duration }) => {
   return (
     <Flex
