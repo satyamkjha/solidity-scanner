@@ -204,7 +204,7 @@ const HacksOverview: React.FC<{ overviewData: any }> = ({ overviewData }) => {
               </HStack>
               {filteredData && (
                 <>
-                  <Flex width="100%" my={4}>
+                  <Flex width="98%" my={4} ml={3}>
                     {filteredData.attack_trends?.map((item, index) => (
                       <Flex
                         key={index}
@@ -212,9 +212,10 @@ const HacksOverview: React.FC<{ overviewData: any }> = ({ overviewData }) => {
                         bg={attackTrendsColors[index]}
                         width={`${
                           (item.count / filteredData.no_of_attacks) *
-                          (100 + (filteredData.no_of_attacks * 4) / item.count)
+                          (100 + (filteredData.no_of_attacks * 5) / item.count)
                         }%`}
-                        mr={-3}
+                        ml={-3}
+                        zIndex={11 - index}
                         borderRadius="15px"
                         transition="width 0.6s ease-in"
                       />
