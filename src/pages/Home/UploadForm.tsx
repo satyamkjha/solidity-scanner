@@ -23,10 +23,10 @@ import { useDropzone } from "react-dropzone";
 import { API_PATH } from "helpers/routeManager";
 import Loader from "components/styled-components/Loader";
 
-const UploadForm: React.FC = () => {
+const UploadForm: React.FC<{
+  profileData: Profile;
+}> = ({ profileData }) => {
   const history = useHistory();
-  const { data: profileData } = useProfile();
-
   const [step, setStep] = useState(0);
   const [error, setError] = useState(false);
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
@@ -220,6 +220,11 @@ const UploadForm: React.FC = () => {
       console.log(e);
     }
   };
+
+  let isViewer =
+    profileData.organizations.length > 0
+      ? profileData.organizations[0].role === "viewer"
+      : false;
 
   return (
     <>
@@ -422,7 +427,8 @@ const UploadForm: React.FC = () => {
                 step < 2 ||
                 name === "" ||
                 (profileData.actions_supported &&
-                  !profileData.actions_supported.file_scan)
+                  !profileData.actions_supported.file_scan) ||
+                isViewer
               }
               onClick={startFileScan}
             >

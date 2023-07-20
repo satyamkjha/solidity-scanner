@@ -22,11 +22,13 @@ import FolderSettings from "components/projectFolderSettings";
 import { TreeItem, TreeItemUP } from "common/types";
 import { getSkipFilePaths, restructureRepoTree } from "helpers/fileStructure";
 import Loader from "components/styled-components/Loader";
+import { Profile } from "common/types";
 
-const ApplicationForm: React.FC = () => {
+const ApplicationForm: React.FC<{
+  profileData: Profile;
+}> = ({ profileData }) => {
   const assetsURL = getAssetsURL();
   const queryClient = useQueryClient();
-  const { data: profileData } = useProfile();
   const history = useHistory();
   const [projectName, setProjectName] = useState("");
   const [githubLink, setGithubLink] = useState("");
@@ -149,6 +151,11 @@ const ApplicationForm: React.FC = () => {
       }
     }
   }, [branch]);
+
+  let isViewer =
+    profileData.organizations.length > 0
+      ? profileData.organizations[0].role === "viewer"
+      : false;
 
   return (
     <Flex
@@ -326,7 +333,7 @@ const ApplicationForm: React.FC = () => {
               runScan();
             }
           }}
-          isDisabled={profileData?.credits === 0}
+          isDisabled={profileData?.credits === 0 || isViewer}
         >
           {step > 2 ? (
             isLoading ? (

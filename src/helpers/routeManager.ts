@@ -8,7 +8,7 @@ export const API_PATH = {
   API_VERIFY_EMAIL: "/api-verify-email/",
   API_CHANGE_PASSWORD: "/api-change-password/",
   API_SEND_EMAIL: "/api-send-email/",
-  API_ORG_LOGIN: "organization/api-login/",
+  API_ORG_LOGIN: "/organization/api-login/",
 
   //PROFILE
   API_PROFILE: "/api-profile/",
@@ -77,7 +77,7 @@ export const API_PATH = {
   API_ADD_ORGANISATION_USERS: "/api-add-organization-users/",
   API_REMOVE_ORGANISATION_USERS: "/api-remove-organization-users/",
   API_LIST_ORGANISATION_USERS: "/api-list-organization-users/",
-  API_UPDATE_ORGANISATION_USERS_ROLE: "/api-update-organization-users-role/",
+  API_UPDATE_ORGANISATION_USERS_ROLE: "/api-update-organization-user-roles/",
   API_CHECK_ORGANISATION_NAME_AVAILABILITY:
     "/api-check-organization-name-availability/",
   API_ACCEPT_ORGANISATION_REQUEST: "/api-accept-organization-request/",
@@ -86,4 +86,5 @@ export const API_PATH = {
     "/organization/api-update-user-organization-profile/",
   API_GET_USER_ORGANISATIONS: "/organization/api-get-user-organizations/",
   API_GET_ORGANISATION_PROFILE: "/api-get-organization-profile/",
+  API_GET_USER_ORGANISATION_PROFILE: "/api-get-user-organization-profile/",
 };

@@ -93,7 +93,7 @@ const SignIn: React.FC = () => {
         {!orgLogin && (
           <>
             <Stack
-              spacing={4}
+              spacing={[0, 0, 0, 4]}
               direction={["column", "column", "column", "row"]}
             >
               <MetaMaskLogin />

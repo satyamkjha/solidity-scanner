@@ -40,7 +40,7 @@ import Loader from "components/styled-components/Loader";
 const OrgLoginForm: React.FC = () => {
   const [show, setShow] = useState(false);
   const history = useHistory();
-
+  const toast = useToast();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [isLoading, setIsLoading] = useState(false);
@@ -70,6 +70,45 @@ const OrgLoginForm: React.FC = () => {
         setIsLoading(false);
       }
     );
+  };
+
+  const checkOrganisationNameRequest = async () => {
+    if (orgName.length > 5) {
+      try {
+        setIsLoading(true);
+        const { data } = await API.post<{
+          status: string;
+          org_name_available: boolean;
+        }>(API_PATH.API_CHECK_ORGANISATION_NAME_AVAILABILITY, {
+          org_name: orgName,
+        });
+        if (data.status === "success") {
+          if (data.org_name_available) {
+            toast({
+              title: "Organisation does not exist",
+              description:
+                "The organisation name you entered is not valid. Please check if the name is correct.",
+              status: "error",
+              duration: 3000,
+              isClosable: true,
+            });
+          } else {
+            setStep(true);
+          }
+        } else {
+          toast({
+            title: "",
+            description: "",
+            status: "success",
+            duration: 3000,
+            isClosable: true,
+          });
+        }
+        setIsLoading(false);
+      } catch (e) {
+        setIsLoading(false);
+      }
+    }
   };
 
   return (
@@ -191,7 +230,8 @@ const OrgLoginForm: React.FC = () => {
             if (step) {
               onSubmit();
             } else {
-              setStep(true);
+              // setStep(true);
+              checkOrganisationNameRequest();
             }
           }}
           isLoading={isLoading}

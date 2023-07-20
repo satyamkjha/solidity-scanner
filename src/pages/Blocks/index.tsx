@@ -190,7 +190,7 @@ const Blocks: React.FC = () => {
           </Flex>
         </Flex>
       </Flex>
-      {!scanList || isLoadingIcons ? (
+      {!scanList || isLoadingIcons || !profileData ? (
         <Flex w="100%" h="70vh" alignItems="center" justifyContent="center">
           <Loader />
         </Flex>
@@ -249,6 +249,11 @@ const Blocks: React.FC = () => {
                 scan={scan}
                 setIconCounter={setIconCounter}
                 updateScanList={updateScanList}
+                isViewer={
+                  profileData.organizations.length > 0
+                    ? profileData.organizations[0].role === "viewer"
+                    : false
+                }
               />
             ))}
           </InfiniteScroll>
@@ -262,7 +267,8 @@ const BlockCard: React.FC<{
   scan: Scan;
   setIconCounter: Dispatch<SetStateAction<number>>;
   updateScanList: (project_id: string) => void;
-}> = ({ scan, setIconCounter, updateScanList }) => {
+  isViewer: boolean;
+}> = ({ scan, setIconCounter, updateScanList, isViewer }) => {
   const {
     scan_status,
     project_name,
@@ -359,7 +365,7 @@ const BlockCard: React.FC<{
             Last scanned {timeSince(new Date(_updated))}
           </Text>
         </Box>
-        {hover && (
+        {hover && !isViewer && (
           <Menu placement={"bottom-end"}>
             <MenuButton
               zIndex={10}

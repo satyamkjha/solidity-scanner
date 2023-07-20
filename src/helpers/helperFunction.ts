@@ -85,6 +85,9 @@ export const checkGenerateReportAccess = (
   plans: PricingData
 ) => {
   if (profile && plans) {
+    if (profile.organizations.length > 0) {
+      if (profile.organizations[0].role === "viewer") return false;
+    }
     if (profile.actions_supported)
       return profile.actions_supported.generate_report;
 
@@ -96,8 +99,7 @@ export const checkGenerateReportAccess = (
 
     if (profile.current_package === "custom") return true;
 
-    return plans.pricing_data[profile.billing_cycle][profile.current_package]
-      .report;
+    return plans.pricing_data["monthly"][profile.current_package].report;
   }
   return false;
 };
@@ -107,6 +109,10 @@ export const checkPublishReportAccess = (
   plans: PricingData
 ) => {
   if (profile && plans) {
+    if (profile.organizations.length > 0) {
+      if (profile.organizations[0].role === "viewer") return false;
+    }
+
     if (profile.actions_supported)
       return profile.actions_supported.publishable_report;
 
@@ -118,7 +124,7 @@ export const checkPublishReportAccess = (
 
     if (profile.current_package === "custom") return true;
 
-    return plans.pricing_data[profile.billing_cycle][profile.current_package]
+    return plans.pricing_data["monthly"][profile.current_package]
       .publishable_report;
   }
   return false;

@@ -67,7 +67,24 @@ const Organisation: React.FC = () => {
           ADMIN CONTROLS
         </Text>
       </VStack>
-      <Tabs
+      {isLoading && !profileData ? (
+        <Flex
+          sx={{
+            w: "100%",
+            mx: [0, 0, 0, 4],
+            my: 24,
+            justifyContent: "center",
+          }}
+        >
+          <Loader />
+        </Flex>
+      ) : (
+        <UserManagementContainer
+          hasAccess={hasAccess}
+          organizations={profileData.organizations}
+        />
+      )}
+      {/* <Tabs
         mt={[3, 3, 5]}
         mx={0}
         px={0}
@@ -110,15 +127,13 @@ const Organisation: React.FC = () => {
           </Flex>
         ) : (
           <TabPanels width={"100%"}>
-            <TabPanel width={"100%"} p={0}>
-              <UserManagementContainer hasAccess={hasAccess} />
-            </TabPanel>
+            <TabPanel width={"100%"} p={0}></TabPanel>
             <TabPanel width={"100%"} p={0}>
               <OrganisationSettingsContainer />
             </TabPanel>
           </TabPanels>
         )}
-      </Tabs>
+      </Tabs> */}
     </Box>
   );
 };

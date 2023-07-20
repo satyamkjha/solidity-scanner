@@ -22,12 +22,14 @@ import { useSupportedChains } from "hooks/useSupportedPlatforms";
 import { getFeatureGateConfig } from "helpers/helperFunction";
 import Select from "react-select";
 import { API_PATH } from "helpers/routeManager";
-
+import { Profile } from "common/types";
 import FormatOptionLabelWithImage from "components/FormatOptionLabelWithImage";
 import { customStylesForReactSelect } from "common/stylesForCustomSelect";
 import Loader from "components/styled-components/Loader";
 
-const ContractForm: React.FC = () => {
+const ContractForm: React.FC<{
+  profileData: Profile;
+}> = ({ profileData }) => {
   const contractChain: {
     [key: string]: {
       label: string;
@@ -267,7 +269,6 @@ const ContractForm: React.FC = () => {
   const queryClient = useQueryClient();
 
   const history = useHistory();
-  const { data: profileData } = useProfile();
   const { data: supportedChains } = useSupportedChains();
 
   const platform_supported = getFeatureGateConfig().platform_supported;
@@ -318,6 +319,12 @@ const ContractForm: React.FC = () => {
       }
     );
   };
+
+  let isViewer =
+    profileData.organizations.length > 0
+      ? profileData.organizations[0].role === "viewer"
+      : false;
+
   return (
     <Flex
       flexDir="column"
@@ -473,7 +480,7 @@ const ContractForm: React.FC = () => {
             onClick={onSubmit}
             isLoading={isLoading}
             spinner={<Loader color={"#3300FF"} size={25} />}
-            isDisabled={profileData?.credits === 0}
+            isDisabled={profileData?.credits === 0 || isViewer}
           >
             Start Scan
           </Button>

@@ -16,6 +16,7 @@ import {
   Tab,
   TabList,
   TabPanels,
+  useMediaQuery,
   TabPanel,
 } from "@chakra-ui/react";
 import API from "helpers/api";
@@ -31,30 +32,29 @@ import Loader from "components/styled-components/Loader";
 import CreateOrganisationForm from "./CreateOrganisationForm";
 import NoOrgView from "./NoOrgView";
 import OrganisationMemberList from "./OrganisationMemberList";
-import { useOrgList } from "hooks/useOrgList";
+import { useUserOrgProfile } from "hooks/useUserOrgProfile";
+import { useOrgUsersList } from "hooks/useOrgUsersList";
 
 const UserManagementContainer: React.FC<{
   hasAccess: boolean;
-}> = ({ hasAccess }) => {
-  const { isOpen, onClose, onOpen } = useDisclosure();
+  organizations: any[];
+}> = ({ hasAccess, organizations }) => {
   const config: any = useConfig();
   const assetsUrl = getAssetsURL(config);
 
-  const [orgData, setOrgData] = useState(true);
-
-  const { data } = useOrgList();
+  const [isDesktopView] = useMediaQuery("(min-width: 950px)");
 
   return (
     <Flex
-      bgColor={["bg.subtle", "bg.subtle", "bg.subtle", "white"]}
+      bgColor={isDesktopView ? "white" : "bg.subtle"}
       w="100%"
-      h={"70vh"}
-      borderRadius={"5px"}
+      h={"80vh"}
+      borderRadius={10}
       my={6}
       pb={6}
       flexDir="column"
     >
-      {orgData ? (
+      {organizations.length > 0 ? (
         <OrganisationMemberList hasAccess={hasAccess} />
       ) : (
         <NoOrgView hasAccess={hasAccess} />

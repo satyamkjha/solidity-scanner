@@ -452,13 +452,17 @@ const ScanDetails: React.FC<{
                         _hover={{
                           opacity:
                             scansRemaining === 0 ||
+                            profile.organizations[0].role === "viewer" ||
                             scanData.scan_report.scan_status === "scanning"
                               ? 0.4
                               : 0.9,
                         }}
                         isDisabled={
                           scansRemaining === 0 ||
-                          scanData.scan_report.scan_status === "scanning"
+                          scanData.scan_report.scan_status === "scanning" ||
+                          (profile.organizations.length > 0
+                            ? profile.organizations[0].role === "viewer"
+                            : false)
                         }
                       >
                         <Flex sx={{ flexDir: "column", alignItems: "center" }}>
@@ -615,7 +619,10 @@ const ScanDetails: React.FC<{
                         w={["80%", "80%", "50%", "auto"]}
                         mx={["auto", "auto", "auto", 4]}
                         mb={[4, 4, 4, 0]}
-                        isDisabled={checkIfGeneratingReport()}
+                        isDisabled={
+                          checkIfGeneratingReport() &&
+                          reportingStatus !== "report_generated"
+                        }
                         onClick={() => {
                           if (reportingStatus === "not_generated") {
                             generateReport();
@@ -632,9 +639,10 @@ const ScanDetails: React.FC<{
                             <Loader color="#806CCF" size={25} />
                           </Flex>
                         )}
-                        {!checkGenerateReportAccess(profile, plans) && (
-                          <LockIcon color={"accent"} mr={3} />
-                        )}
+                        {!checkGenerateReportAccess(profile, plans) &&
+                          reportingStatus !== "report_generated" && (
+                            <LockIcon color={"accent"} mr={3} />
+                          )}
                         {reportingStatus === "generating_report"
                           ? "Generating report..."
                           : reportingStatus === "not_generated"
@@ -724,7 +732,9 @@ const ScanDetails: React.FC<{
                       </Tab>
                       {scanData.scan_report.project_skip_files &&
                         scanData.scan_report.project_url &&
-                        scanData.scan_report.project_url !== "File Scan" && (
+                        scanData.scan_report.project_url !== "File Scan" &&
+                        profile.organizations.length > 0 &&
+                        profile.organizations[0].role !== "viewer" && (
                           <Tab
                             fontSize={"sm"}
                             h="35px"
@@ -828,7 +838,9 @@ const ScanDetails: React.FC<{
                     </TabPanel>
                     {scanData.scan_report.project_skip_files &&
                       scanData.scan_report.project_url &&
-                      scanData.scan_report.project_url !== "File Scan" && (
+                      scanData.scan_report.project_url !== "File Scan" &&
+                      profile.organizations.length > 0 &&
+                      profile.organizations[0].role !== "viewer" && (
                         <TabPanel p={[0, 0, 0, 2]}>
                           <ProjectCustomSettings
                             project_skip_files={

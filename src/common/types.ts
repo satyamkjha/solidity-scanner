@@ -30,6 +30,7 @@ export type Profile = {
     start_date: string;
     renewal_date: string;
   };
+  organizations: any[];
   payment_type: string;
   payment_via: string;
   payment_details?: {
@@ -496,4 +497,12 @@ export type FileState = {
 export type MessageResponse = {
   status: string;
   message: string;
+};
+
+export type UserOrgItem = {
+  email: string;
+  joined_at: string;
+  name: string;
+  role: "admin" | "reader" | "editor" | null | "owner";
+  status: "joined" | "requested";
 };

@@ -17,6 +17,8 @@ import {
   TabList,
   TabPanels,
   TabPanel,
+  useMediaQuery,
+  HStack,
 } from "@chakra-ui/react";
 import API from "helpers/api";
 import { API_PATH } from "helpers/routeManager";
@@ -31,6 +33,10 @@ import Loader from "components/styled-components/Loader";
 import CreateOrganisationForm from "./CreateOrganisationForm";
 import InviteMemberForm from "./InviteMemberForm";
 import { useOrgUsersList } from "hooks/useOrgUsersList";
+import TeamMemberItem from "./TeamMemberItem";
+import { UserOrgItem } from "common/types";
+import { useUserOrgProfile } from "hooks/useUserOrgProfile";
+import { monthNames } from "common/values";
 
 const OrganisationMemberList: React.FC<{
   hasAccess: boolean;
@@ -40,29 +46,59 @@ const OrganisationMemberList: React.FC<{
   const assetsUrl = getAssetsURL(config);
   const toast = useToast();
   const [orgData, setOrgData] = useState(true);
-  const { data } = useOrgUsersList();
+  const { data: orgUserList, refetch: refetchOrgUserList } = useOrgUsersList();
+  const { data: orgProfile } = useUserOrgProfile();
+  const [count, setCount] = useState(0);
 
-  console.log(data);
+  let d = new Date();
 
-  const userList = [];
+  useEffect(() => {
+    if (orgProfile) {
+      d = new Date(orgProfile.user_organization.joined_at);
+    }
+  }, [orgProfile]);
 
-  const removeOrganisationUserRequest = async () => {
+  useEffect(() => {
+    if (orgUserList) {
+      setUserList(orgUserList.users);
+      setCount(orgUserList.count);
+    }
+  }, [orgUserList]);
+
+  const [userList, setUserList] = useState<UserOrgItem[]>([]);
+
+  const removeOrganisationUserRequest = async (email: string) => {
+    const removeUserList = [
+      {
+        user: email,
+      },
+    ];
     try {
-      const { data } = await API.post(API_PATH.API_REMOVE_ORGANISATION_USERS, {
-        users: userList,
-      });
+      const { data } = await API.delete(
+        API_PATH.API_REMOVE_ORGANISATION_USERS,
+        {
+          data: {
+            users: removeUserList,
+          },
+        }
+      );
       if (data.status === "success") {
         toast({
           title: data.message,
-          description: data.message,
           status: "success",
           duration: 3000,
           isClosable: true,
         });
+        setUserList(
+          userList.filter((userItem) => {
+            if (userItem.email === email) return false;
+            else return true;
+          })
+        );
+        setCount(count - 1);
       } else {
         toast({
           title: data.message,
-          description: data.message,
           status: "success",
           duration: 3000,
           isClosable: true,
@@ -73,12 +109,20 @@ const OrganisationMemberList: React.FC<{
     }
   };
 
-  const updateOrganisationUserRolesRequest = async () => {
+  const updateOrganisationUserRolesRequest = async (
+    email: string,
+    role: "admin" | "editor" | "viewer"
+  ) => {
     try {
-      const { data } = await API.post(
+      const { data } = await API.put(
         API_PATH.API_UPDATE_ORGANISATION_USERS_ROLE,
         {
-          users: userList,
+          users: [
+            {
+              user: email,
+              role: role,
+            },
+          ],
         }
       );
       if (data.status === "success") {
@@ -89,6 +133,12 @@ const OrganisationMemberList: React.FC<{
           duration: 3000,
           isClosable: true,
         });
+        setUserList(
+          userList.map((userItem) => {
+            if (userItem.email === email) return { ...userItem, role: role };
+            else return userItem;
+          })
+        );
       } else {
         toast({
           title: data.message,
@@ -102,6 +152,7 @@ const OrganisationMemberList: React.FC<{
       console.log(e);
     }
   };
+  const [isDesktopView] = useMediaQuery("(min-width: 950px)");
 
   return (
     <Flex
@@ -115,33 +166,39 @@ const OrganisationMemberList: React.FC<{
         p={6}
         w="100%"
         align="center"
-        flexDir={"row"}
-        justifyContent={"space-between"}
+        flexDir={isDesktopView ? "row" : "column"}
+        justifyContent={isDesktopView ? "space-between" : "flex-start"}
       >
         <Flex
-          bgColor={"white"}
           flexDir={"column"}
           justifyContent={"flex-start"}
-          alignItems={"flex-start"}
+          alignItems={isDesktopView ? "flex-start" : "center"}
           w={["100%", "100%", "100%", "fit-content"]}
+          mb={isDesktopView ? 0 : 5}
         >
           <Text fontWeight={500} fontSize={"lg"}>
-            Polygon Compound Team
+            {orgProfile?.user_organization.org_name}
           </Text>
           <Flex
             justifyContent={"flex-start"}
-            alignItems={"flex-start"}
-            flexDir={"row"}
+            alignItems={isDesktopView ? "flex-start" : "center"}
+            flexDir={isDesktopView ? "row" : "column"}
             mt={2}
+            textAlign={isDesktopView ? "left" : "center"}
           >
-            <Text fontWeight={700} fontSize={"sm"} mr={2}>
-              Total
-            </Text>
-            <Text fontWeight={700} fontSize={"sm"} mr={2} color="#3300FF">
-              07 Members
-            </Text>
-            <Text fontWeight={700} fontSize={"sm"} mr={2} color="#B0B7C3">
-              | Created on 23 May 2023
+            <HStack mr={2}>
+              <Text fontWeight={700} fontSize={"sm"}>
+                Total
+              </Text>
+              <Text fontWeight={700} fontSize={"sm"} color="#3300FF">
+                {count} Members
+              </Text>
+            </HStack>
+            <Text fontWeight={700} fontSize={"sm"} color="#B0B7C3">
+              {isDesktopView ? "|" : ""}{" "}
+              {`Created at ${d.getDate()} ${
+                monthNames[d.getMonth()]
+              } ${d.getFullYear()}`}
             </Text>
           </Flex>
         </Flex>
@@ -160,12 +217,38 @@ const OrganisationMemberList: React.FC<{
       </Flex>
       <Flex
         w="100%"
-        h="100%"
+        h="70vh"
         flexDir="column"
         justifyContent={"flex-start"}
         alignItems={"center"}
-      ></Flex>
-      <InviteMemberForm isOpen={isOpen} onClose={onClose} />
+        overflowY="scroll"
+      >
+        <Flex
+          w="100%"
+          h="fit-content"
+          flexDir="column"
+          justifyContent={"flex-start"}
+          alignItems={"center"}
+        >
+          {userList.map((userItem) => {
+            if (userItem.role !== "owner")
+              return (
+                <TeamMemberItem
+                  removeOrganisationUserRequest={removeOrganisationUserRequest}
+                  updateOrganisationUserRolesRequest={
+                    updateOrganisationUserRolesRequest
+                  }
+                  userItem={userItem}
+                />
+              );
+          })}
+        </Flex>
+      </Flex>
+      <InviteMemberForm
+        isOpen={isOpen}
+        onClose={onClose}
+        refetchOrgUserList={refetchOrgUserList}
+      />
     </Flex>
   );
 };

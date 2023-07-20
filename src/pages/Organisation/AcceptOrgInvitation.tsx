@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useHistory } from "react-router-dom";
 import {
   Flex,
   Text,
@@ -15,15 +15,12 @@ import {
   InputRightElement,
   useToast,
 } from "@chakra-ui/react";
-import { FaLock } from "react-icons/fa";
-
+import { passwordStrength } from "check-password-strength";
+import { FaLock, FaUserAlt } from "react-icons/fa";
 import { Logo, MailSent, MailLock } from "components/icons";
 import { ViewIcon, ViewOffIcon } from "@chakra-ui/icons";
 import { useOrgProfile } from "hooks/useOrgProfile";
 import API from "helpers/api";
-import Auth from "helpers/auth";
-
-import { AuthResponse } from "common/types";
 import { API_PATH } from "helpers/routeManager";
 import Loader from "components/styled-components/Loader";
 
@@ -32,123 +29,118 @@ function useQuery() {
 }
 
 const AcceptOrgInvitation: React.FC = () => {
-  //   const [loading, setLoading] = useState(false);
-  //   const [verification, setVerification] = useState<"success" | "failed" | null>(
-  //     null
-  //   );
-  //   const [errorMessage, setErrorMessage] = useState("");
-
   const query = useQuery();
-  const email = query.get("email")?.toString();
+  const email = query.get("email")?.toString().replace(" ", "+");
+  console.log(email);
+
   const token = query.get("token")?.toString();
   const orgName = query.get("org_name")?.toString();
   const toast = useToast();
   const [loading, setLoading] = useState(false);
-
+  const history = useHistory();
   const { data, isLoading } = useOrgProfile(orgName);
-
+  const [name, setName] = useState("");
   const [password, setPassword] = useState("");
   const [next, setNext] = useState(false);
   const [show, setShow] = useState(false);
+  const [passwordError, setPasswordError] = useState<{
+    contains: string[];
+    id: number;
+    value: string;
+    length: number;
+  } | null>(null);
 
   const rejectOrgRequest = async () => {
-    if (orgName.length > 5) {
-      try {
-        setLoading(true);
-        const { data } = await API.post<{
-          status: string;
-          message: boolean;
-        }>(API_PATH.API_REJECT_ORGANISATION_REQUEST, {
-          org_name: orgName,
-          token: token,
-          email: "satyam+testorg23@credshields.com",
+    try {
+      setLoading(true);
+      const { data } = await API.post<{
+        status: string;
+        message: boolean;
+      }>(API_PATH.API_REJECT_ORGANISATION_REQUEST, {
+        org_name: orgName,
+        token: token,
+        email: email,
+      });
+      if (data.status === "success") {
+        toast({
+          title: data.message,
+          status: data.status,
+          duration: 3000,
+          isClosable: true,
         });
-        if (data.status === "success") {
-          toast({
-            title: data.message,
-            status: data.status,
-            duration: 3000,
-            isClosable: true,
-          });
-        } else {
-          toast({
-            title: data.message,
-            status: data.status,
-            duration: 3000,
-            isClosable: true,
-          });
-        }
-        setLoading(false);
-      } catch (e) {
-        setLoading(false);
+        history.push("/");
+      } else {
+        toast({
+          title: data.message,
+          status: data.status,
+          duration: 3000,
+          isClosable: true,
+        });
       }
+      setLoading(false);
+    } catch (e) {
+      setLoading(false);
     }
   };
 
-  const checkOrganisationNameRequest = async () => {
-    if (orgName.length > 5) {
-      try {
-        setLoading(true);
-        const { data } = await API.post<{
-          status: string;
-          org_name_available: boolean;
-        }>(API_PATH.API_CHECK_ORGANISATION_NAME_AVAILABILITY, {
-          org_name: orgName,
+  const acceptOrgRequest = async () => {
+    try {
+      setLoading(true);
+      const { data } = await API.post<{
+        status: string;
+        message: boolean;
+      }>(API_PATH.API_ACCEPT_ORGANISATION_REQUEST, {
+        org_name: orgName,
+        token: token,
+        password,
+        first_name: name,
+        email: email,
+      });
+      if (data.status === "success") {
+        toast({
+          title: data.message,
+          status: data.status,
+          duration: 3000,
+          isClosable: true,
         });
-        if (data.status === "success") {
-          if (data.org_name_available) {
-            toast({
-              title: "Organisation does not exist",
-              description:
-                "The organisation name you entered is not valid. Please check if the name is correct.",
-              status: "error",
-              duration: 3000,
-              isClosable: true,
-            });
-          } else {
-            setNext(true);
-          }
-        } else {
-          toast({
-            title: "",
-            description: "",
-            status: "success",
-            duration: 3000,
-            isClosable: true,
-          });
-        }
-        setLoading(false);
-      } catch (e) {
-        setLoading(false);
+        history.push("/home");
+      } else {
+        toast({
+          title: data.message,
+          status: data.status,
+          duration: 3000,
+          isClosable: true,
+        });
       }
+      setLoading(false);
+    } catch (e) {
+      setLoading(false);
     }
   };
 
-  useEffect(() => {
-    // const verifyEmail = async () => {
-    //   setLoading(true);
-    //   try {
-    //     const { data } = await API.post<AuthResponse>(
-    //       API_PATH.API_VERIFY_EMAIL,
-    //       {
-    //         email,
-    //         token,
-    //       }
-    //     );
-    //     if (data.status === "success") {
-    //       setVerification("success");
-    //       setLoading(false);
-    //       Auth.authenticateUser();
-    //     }
-    //   } catch (error) {
-    //     setLoading(false);
-    //     setVerification("failed");
-    //     setErrorMessage(error.response.data.message);
-    //   }
-    // };
-    // verifyEmail();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  useEffect(() => {}, []);
+
+  function unique(arr1: string[], arr2: string[]) {
+    let uniqueArr: string[] = [];
+    for (var i = 0; i < arr1.length; i++) {
+      let flag = 0;
+      for (var j = 0; j < arr2.length; j++) {
+        if (arr1[i] === arr2[j]) {
+          arr2.splice(j, 1);
+          j--;
+          flag = 1;
+        }
+      }
+
+      if (flag === 0) {
+        uniqueArr.push(arr1[i]);
+      }
+    }
+    arr2.forEach((item) => {
+      uniqueArr.push(item);
+    });
+    return uniqueArr;
+  }
 
   return (
     <>
@@ -209,53 +201,94 @@ const AcceptOrgInvitation: React.FC = () => {
                 </Text>
               </HStack>
               {next ? (
-                <InputGroup mt={10}>
-                  <InputLeftElement
-                    height="48px"
-                    color="gray.300"
-                    children={<Icon as={FaLock} color="gray.300" />}
-                  />
-                  <Input
-                    isRequired
-                    type={show ? "text" : "password"}
-                    placeholder="Password"
-                    autoComplete="current-password"
-                    variant="brand"
-                    size="lg"
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                  />
-                  <InputRightElement
-                    height="48px"
-                    color="gray.300"
-                    children={
-                      show ? (
-                        <ViewOffIcon
-                          color={"gray.500"}
-                          mr={5}
-                          boxSize={5}
-                          onClick={() => setShow(false)}
-                        />
-                      ) : (
-                        <ViewIcon
-                          color={"gray.500"}
-                          mr={5}
-                          boxSize={5}
-                          onClick={() => setShow(true)}
-                        />
-                      )
-                    }
-                  />
-                </InputGroup>
+                <>
+                  <InputGroup alignItems="center" mt={10}>
+                    <InputLeftElement
+                      height="48px"
+                      children={<Icon as={FaUserAlt} color="gray.300" />}
+                    />
+                    <Input
+                      isRequired
+                      name="name"
+                      value={name}
+                      type="text"
+                      placeholder="Your name"
+                      variant="brand"
+                      size="lg"
+                      onChange={(event) => setName(event.target.value)}
+                    />
+                  </InputGroup>
+                  <InputGroup mt={3}>
+                    <InputLeftElement
+                      height="48px"
+                      color="gray.300"
+                      children={<Icon as={FaLock} color="gray.300" />}
+                    />
+                    <Input
+                      isRequired
+                      type={show ? "text" : "password"}
+                      placeholder="Password"
+                      autoComplete="current-password"
+                      variant="brand"
+                      size="lg"
+                      value={password}
+                      onChange={(e) => {
+                        setPassword(e.target.value);
+                        setPasswordError(passwordStrength(e.target.value));
+                      }}
+                    />
+                    <InputRightElement
+                      height="48px"
+                      color="gray.300"
+                      children={
+                        show ? (
+                          <ViewOffIcon
+                            color={"gray.500"}
+                            mr={5}
+                            boxSize={5}
+                            onClick={() => setShow(false)}
+                          />
+                        ) : (
+                          <ViewIcon
+                            color={"gray.500"}
+                            mr={5}
+                            boxSize={5}
+                            onClick={() => setShow(true)}
+                          />
+                        )
+                      }
+                    />
+                  </InputGroup>
+                  {passwordError &&
+                    passwordError.length < 8 &&
+                    passwordError.contains.length < 4 && (
+                      <Text color={"subtle"} size={"xs"}>
+                        Your password should contain a
+                        {unique(passwordError.contains, charTypes).map(
+                          (item) => ` ${item}, `
+                        )}
+                        {passwordError.length < 8 &&
+                          ` and should have ${
+                            8 - passwordError.length
+                          } more characters`}
+                      </Text>
+                    )}
+                </>
               ) : (
                 <Text fontSize="sm" mt={10}>
-                  Polygon Compound Team has invited you join their organization
+                  {orgName} has invited you join their organization
                 </Text>
               )}
             </Flex>
             {next ? (
-              <VStack spacing={5}>
-                <Button variant="brand" w="500px">
+              <VStack spacing={5} w="100%">
+                <Button
+                  variant="brand"
+                  maxW="500px"
+                  w="90%"
+                  isLoading={loading}
+                  onClick={acceptOrgRequest}
+                >
                   Join Organisation
                 </Button>
                 <Button
@@ -267,7 +300,10 @@ const AcceptOrgInvitation: React.FC = () => {
                 </Button>
               </VStack>
             ) : (
-              <Stack direction="row" spacing={10}>
+              <Stack
+                direction={["column", "column", "row"]}
+                spacing={[3, 3, 10]}
+              >
                 <Button
                   py={6}
                   variant="outline"
@@ -278,11 +314,10 @@ const AcceptOrgInvitation: React.FC = () => {
                   Reject
                 </Button>
                 <Button
-                  disabled={next ? true : orgName.length < 5}
                   variant="brand"
                   w="200px"
                   isLoading={loading}
-                  onClick={checkOrganisationNameRequest}
+                  onClick={() => setNext(true)}
                 >
                   Accept
                 </Button>
@@ -291,45 +326,6 @@ const AcceptOrgInvitation: React.FC = () => {
           </>
         )}
       </Flex>
-      {/* {loading && (
-        <Flex align="center" direction="column" >
-          <Loader />
-        </Flex>
-      )} */}
-
-      {/* {verification === "success" && (
-        <CustomFlex
-          align="center"
-          direction="column"
-          my={36}
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-        >
-          <MailSent size={130} />
-          <Text fontSize="2xl" fontWeight={600} mb={4} mt={8}>
-            Email has been verified
-          </Text>
-          <Link to="/home">
-            <Button variant="brand" width="350px" my={2}>
-              Go to dashboard
-            </Button>
-          </Link>
-        </CustomFlex>
-      )} */}
-      {/* {verification === "failed" && (
-        <CustomFlex
-          align="center"
-          direction="column"
-          my={36}
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-        >
-          <MailLock size={130} />
-          <Text fontSize="2xl" fontWeight={600} mb={4} mt={8} color="red">
-            {errorMessage}
-          </Text>
-        </CustomFlex>
-      )} */}
     </>
   );
 };

@@ -30,6 +30,7 @@ type MultifileIssuesProps = {
   contract_platform?: string;
   branchName?: string;
   contract_address?: string;
+  isViewer: boolean;
 };
 
 const MultifileIssues: React.FC<MultifileIssuesProps> = ({
@@ -40,6 +41,7 @@ const MultifileIssues: React.FC<MultifileIssuesProps> = ({
   setFiles,
   selectedBugs,
   setSelectedBugs,
+  isViewer,
   confidence,
   vulnerability,
   bugStatusFilter,
@@ -137,6 +139,7 @@ const MultifileIssues: React.FC<MultifileIssuesProps> = ({
                     contract_platform={contract_platform}
                     branchName={branchName}
                     contract_address={contract_address}
+                    isViewer={isViewer}
                   />
                 ) : (
                   <></>

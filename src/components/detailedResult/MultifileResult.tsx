@@ -96,6 +96,11 @@ const MultifileResult: React.FC<{
   const [isDisabled, setIsDisabled] = useState<boolean>(true);
   const [filterExpanded, setFilterExpanded] = useState<boolean>(false);
 
+  const isViewer =
+    profileData.organizations.length > 0
+      ? profileData.organizations[0].role === "viewer"
+      : false;
+
   // const [action, setAction] = useState("");
   const toast = useToast();
 
@@ -164,7 +169,11 @@ const MultifileResult: React.FC<{
 
   useEffect(() => {
     if (!selectedBugs) setIssues(issues);
-    if (selectedBugs && selectedBugs.length) {
+    const isViewer =
+      profileData.organizations.length > 0
+        ? profileData.organizations[0].role === "viewer"
+        : false;
+    if (selectedBugs && selectedBugs.length && !isViewer) {
       setIsDisabled(false);
     } else {
       setIsDisabled(true);
@@ -216,7 +225,7 @@ const MultifileResult: React.FC<{
                 )}
                 placeholder="Select Action"
                 styles={customStylesForTakeAction}
-                isDisabled={isDisabled}
+                isDisabled={isDisabled || isViewer}
                 onChange={(newValue) => {
                   if (newValue) {
                     if (newValue.value === "wont_fix") {
@@ -258,6 +267,7 @@ const MultifileResult: React.FC<{
               contract_url={contract_url}
               contract_platform={contract_platform}
               branchName={branchName}
+              isViewer={isViewer}
               contract_address={contract_address}
             />
           </Box>
@@ -276,7 +286,8 @@ const MultifileResult: React.FC<{
             contract_platform={contract_platform}
             branchName={branchName}
             contract_address={contract_address}
-
+            profileData={profileData}
+            isViewer={isViewer}
           />
         )}
       </Flex>

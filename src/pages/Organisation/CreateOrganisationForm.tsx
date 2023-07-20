@@ -51,15 +51,14 @@ const CreateOrganisationForm: React.FC<{
       if (data.status === "success") {
         toast({
           title: data.message,
-          description: data.message,
           status: "success",
           duration: 3000,
           isClosable: true,
         });
+        onClose();
       } else {
         toast({
           title: data.message,
-          description: data.message,
           status: "success",
           duration: 3000,
           isClosable: true,
@@ -111,7 +110,8 @@ const CreateOrganisationForm: React.FC<{
           alignItems={"center"}
           borderRadius="15px"
           mb={10}
-          p={5}
+          py={5}
+          px={[2, 2, 5, 5]}
         >
           <ModalHeader textAlign={"center"} fontSize={["lg", "lg", "xl"]}>
             Create Organization
@@ -128,7 +128,7 @@ const CreateOrganisationForm: React.FC<{
             color="#ECECEC"
             borderBottomWidth={"2px"}
           />
-          <ModalBody h={"100%"} w={"100%"} px={[6, 6, 6, 12]}>
+          <ModalBody h={"100%"} w={"100%"} px={[2, 2, 6, 12]}>
             <Flex
               justifyContent={"space-between"}
               w={"100%"}
@@ -137,7 +137,7 @@ const CreateOrganisationForm: React.FC<{
               alignItems={"center"}
             >
               <Flex
-                w={"80%"}
+                w={["100%", "100%", "80%"]}
                 direction="column"
                 alignItems={"center"}
                 textAlign="center"
@@ -153,7 +153,7 @@ const CreateOrganisationForm: React.FC<{
                   <Input
                     isRequired
                     type="text"
-                    placeholder="Search your Organization name here"
+                    placeholder="Enter Organization name here"
                     variant={"brand"}
                     bgColor="#f7f9fa"
                     size="lg"

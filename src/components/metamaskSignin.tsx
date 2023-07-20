@@ -87,7 +87,7 @@ const MetaMaskLogin: React.FC = () => {
             <Button
               onClick={connect}
               py={6}
-              my={5}
+              mt={[5, 5, 5, 0]}
               background="#F2F2F2"
               fontWeight={500}
               width={"fit-content"}

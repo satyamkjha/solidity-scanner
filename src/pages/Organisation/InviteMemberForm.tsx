@@ -22,6 +22,7 @@ import {
   InputGroup,
   Input,
   InputRightElement,
+  useMediaQuery,
 } from "@chakra-ui/react";
 import { onLogout } from "common/functions";
 import { useQueryClient } from "react-query";
@@ -38,11 +39,13 @@ import { userRolesList } from "../../common/values";
 const InviteMemberForm: React.FC<{
   onClose(): any;
   isOpen: boolean;
-}> = ({ isOpen, onClose }) => {
+  refetchOrgUserList(): any;
+}> = ({ isOpen, onClose, refetchOrgUserList }) => {
   const history = useHistory();
 
   const queryClient = useQueryClient();
   const toast = useToast();
+  const [isDesktopView] = useMediaQuery("(min-width: 950px)");
 
   const [userEmail, setUserEmail] = useState("");
 
@@ -56,6 +59,12 @@ const InviteMemberForm: React.FC<{
   const [userRole, setUserRole] = useState<"admin" | "reader" | "editor">(
     "admin"
   );
+
+  const clearState = () => {
+    setUserEmail("");
+    setUserRole("admin");
+    setUserList([]);
+  };
 
   const addUsers = async () => {
     setUserList([
@@ -103,16 +112,17 @@ const InviteMemberForm: React.FC<{
       if (data.status === "success") {
         toast({
           title: data.message,
-          description: data.message,
           status: "success",
           duration: 3000,
           isClosable: true,
         });
+        onClose();
+        clearState();
+        refetchOrgUserList();
       } else {
         toast({
           title: data.message,
-          description: data.message,
-          status: "success",
+          status: "error",
           duration: 3000,
           isClosable: true,
         });
@@ -127,14 +137,16 @@ const InviteMemberForm: React.FC<{
       <Modal isOpen={isOpen} onClose={onClose}>
         <ModalOverlay />
         <ModalContent
-          maxW={["90vw", "90vw", "65vw"]}
-          minW={"300px"}
+          w={"95vw"}
+          maxW={"1100px"}
+          minW={isDesktopView ? "950px" : "95vw"}
           minH={"600px"}
-          h="80vh"
+          h="90vh"
           alignItems={"center"}
           borderRadius="15px"
           mb={10}
-          p={5}
+          py={5}
+          px={[2, 2, 5, 5]}
         >
           <ModalHeader textAlign={"center"} fontSize={["lg", "lg", "xl"]}>
             Invite Members
@@ -151,7 +163,7 @@ const InviteMemberForm: React.FC<{
             color="#ECECEC"
             borderBottomWidth={"2px"}
           />
-          <ModalBody h={"100%"} w={"100%"} px={[6, 6, 6, 12]}>
+          <ModalBody h={"100%"} w={"100%"} px={[2, 4, 6, 12]}>
             <Flex
               justifyContent={"space-between"}
               w={"100%"}
@@ -166,7 +178,7 @@ const InviteMemberForm: React.FC<{
                 textAlign="center"
                 justifyContent={"flex-start"}
               >
-                <InputGroup alignItems="center" mb={4}>
+                <InputGroup alignItems="center" mb={1}>
                   <Input
                     isRequired
                     type="email"
@@ -180,55 +192,99 @@ const InviteMemberForm: React.FC<{
                       setUserEmail(e.target.value);
                     }}
                   />
-                  <InputRightElement
-                    w="260px"
-                    children={
-                      <HStack mt={4}>
-                        <Text>|</Text>
-                        <Select
-                          formatOptionLabel={FormatOptionLabelWithImage}
-                          options={userRolesList}
-                          value={userRolesList.find(
-                            (item) => userRole === item.value
-                          )}
-                          isSearchable={false}
-                          styles={customStylesForInviteMember}
-                          onChange={(newValue) => {
-                            if (newValue) {
-                              setUserRole(newValue.value);
-                            }
-                          }}
-                        />
-                        <Button
-                          onClick={addUsers}
-                          variant={"cta-outline"}
-                          borderWidth={"1px"}
-                          fontWeight={500}
-                          px={5}
-                          py={1}
-                          ml={[0, 0, 0, "auto"]}
-                        >
-                          {"Add"}
-                        </Button>
-                      </HStack>
-                    }
-                  />
+                  {isDesktopView && (
+                    <InputRightElement
+                      w="260px"
+                      children={
+                        <HStack mt={4}>
+                          <Text>|</Text>
+                          <Select
+                            formatOptionLabel={FormatOptionLabelWithImage}
+                            options={userRolesList}
+                            value={userRolesList.find(
+                              (item) => userRole === item.value
+                            )}
+                            isSearchable={false}
+                            styles={customStylesForInviteMember}
+                            onChange={(newValue) => {
+                              if (newValue) {
+                                setUserRole(newValue.value);
+                              }
+                            }}
+                          />
+                          <Button
+                            onClick={addUsers}
+                            variant={"cta-outline"}
+                            borderWidth={"1px"}
+                            fontWeight={500}
+                            px={5}
+                            py={1}
+                            ml={[0, 0, 0, "auto"]}
+                          >
+                            {"Add"}
+                          </Button>
+                        </HStack>
+                      }
+                    />
+                  )}
                 </InputGroup>
+                {!isDesktopView && (
+                  <HStack w="100%" my={4} justifyContent="space-between">
+                    <Select
+                      formatOptionLabel={FormatOptionLabelWithImage}
+                      options={userRolesList}
+                      value={userRolesList.find(
+                        (item) => userRole === item.value
+                      )}
+                      isSearchable={false}
+                      styles={customStylesForInviteMember}
+                      onChange={(newValue) => {
+                        if (newValue) {
+                          setUserRole(newValue.value);
+                        }
+                      }}
+                    />
+                    <Button
+                      onClick={addUsers}
+                      variant={"cta-outline"}
+                      borderWidth={"1px"}
+                      fontWeight={500}
+                      px={5}
+                      py={1}
+                      ml={[0, 0, 0, "auto"]}
+                    >
+                      {"Add"}
+                    </Button>
+                  </HStack>
+                )}
+
                 <Flex
+                  bgColor={isDesktopView ? "white" : "bg.subtle"}
                   w="100%"
-                  h="100%"
+                  h="45vh"
                   flexDir="column"
                   justifyContent={"flex-start"}
                   alignItems={"center"}
+                  overflowY="scroll"
+                  borderRadius={10}
+                  mt={isDesktopView ? 0 : 3}
                 >
-                  {userList.map((userItem) => (
-                    <InvitedMemberItem
-                      role={userItem.role}
-                      user={userItem.user}
-                      removeUser={removeUser}
-                      updateRole={updateRole}
-                    />
-                  ))}
+                  <Flex
+                    w="100%"
+                    h="fit-content"
+                    flexDir="column"
+                    justifyContent={"flex-start"}
+                    alignItems={"center"}
+                  >
+                    {userList.map((userItem) => (
+                      <InvitedMemberItem
+                        role={userItem.role}
+                        user={userItem.user}
+                        removeUser={removeUser}
+                        updateRole={updateRole}
+                      />
+                    ))}
+                  </Flex>
                 </Flex>
               </Flex>
               <HStack

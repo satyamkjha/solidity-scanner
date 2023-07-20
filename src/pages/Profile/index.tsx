@@ -52,6 +52,8 @@ const Profile: React.FC = () => {
   const { data } = useProfile();
   const queryClient = useQueryClient();
 
+  const [isOwner, setIsOwner] = useState(true);
+
   useEffect(() => {
     if (data) {
       setEmailSend(data.verification_email_sent);
@@ -60,6 +62,11 @@ const Profile: React.FC = () => {
       setCompanyName(data.company_name);
       setContactNumber(data.contact_number);
       setFirstName(data.name);
+      setIsOwner(
+        data.organizations.length > 0
+          ? data.organizations[0].role === "owner"
+          : false
+      );
     }
   }, [data]);
 
@@ -389,15 +396,22 @@ const Profile: React.FC = () => {
               )}
             </VStack>
           </Box>
-          {!data.public_address && <ChangePasswordForm />}
-          <DeleteAccountBox />
+          {!data.public_address && <ChangePasswordForm isOwner={isOwner} />}
+          <DeleteAccountBox
+            isOwner={isOwner}
+            org_name={
+              data.organizations.length > 0
+                ? data.organizations[0].org_name
+                : ""
+            }
+          />
         </>
       )}
     </Box>
   );
 };
 
-const ChangePasswordForm: React.FC = () => {
+const ChangePasswordForm: React.FC<{ isOwner: boolean }> = ({ isOwner }) => {
   const history = useHistory();
   const toast = useToast();
 
@@ -420,10 +434,15 @@ const ChangePasswordForm: React.FC = () => {
     }
     setIsLoading(true);
     try {
-      const { data } = await API.post(API_PATH.API_CHANGE_PASSWORD, {
-        password: password,
-        new_password: newPassword,
-      });
+      const { data } = await API.post(
+        isOwner
+          ? API_PATH.API_CHANGE_PASSWORD
+          : API_PATH.API_UPDATE_USER_ORGANISATION_PROFILE,
+        {
+          password: password,
+          new_password: newPassword,
+        }
+      );
       if (data.status === "success") {
         Auth.deauthenticateUser();
         history.push("/signin?isPasswordReset=true");
@@ -473,16 +492,19 @@ const ChangePasswordForm: React.FC = () => {
   );
 };
 
-const DeleteAccountBox: React.FC = () => {
+const DeleteAccountBox: React.FC<{ isOwner: boolean; org_name: string }> = ({
+  isOwner,
+  org_name,
+}) => {
   const { isOpen, onClose, onOpen } = useDisclosure();
 
   return (
     <Box w="100%" bgColor="white" borderRadius="20px" p={4} px={6} mt={8}>
       <Text fontWeight={300} fontSize="xl">
-        Delete Account
+        {isOwner ? "Delete Account" : "Leave Organisation"}
       </Text>
       <Text mt={5} fontWeight={700} fontSize="md">
-        Delete your account
+        {isOwner ? "Delete your account" : "Leave this Organisation"}
       </Text>
       <Text mt={5} fontWeight={300} color="gray.500" fontSize="md">
         This action is permanent and cannot be undone.
@@ -496,9 +518,14 @@ const DeleteAccountBox: React.FC = () => {
         color="#FF5630"
         onClick={onOpen}
       >
-        Delete Account
+        {isOwner ? "Delete Account" : "Leave Organisation"}
       </Button>
-      <DeleteAccountForm onClose={onClose} isOpen={isOpen} />
+      <DeleteAccountForm
+        org_name={org_name}
+        isOwner={isOwner}
+        onClose={onClose}
+        isOpen={isOpen}
+      />
     </Box>
   );
 };

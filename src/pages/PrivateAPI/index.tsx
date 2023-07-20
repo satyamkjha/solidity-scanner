@@ -39,6 +39,8 @@ export default function PrivateApi() {
   const assetsUrl = getAssetsURL(config);
   const toast = useToast();
 
+  const [isOwner, setIsOwner] = useState(false);
+
   useEffect(() => {
     if (
       profileData &&
@@ -49,6 +51,13 @@ export default function PrivateApi() {
       fetchAccessKey();
     } else {
       setHasAccess(false);
+    }
+    if (profileData && profileData.organizations.length > 0) {
+      if (profileData.organizations[0].role === "owner") {
+        setIsOwner(true);
+      } else {
+        setIsOwner(false);
+      }
     }
   }, [profileData]);
 
@@ -211,7 +220,7 @@ export default function PrivateApi() {
               px={10}
               py={2}
               ml={[0, 0, 0, "auto"]}
-              isDisabled={!hasAccess}
+              isDisabled={!hasAccess || !isOwner}
             >
               {accessKey ? "Regenerate Key" : "Generate Key"}
             </Button>
@@ -336,6 +345,7 @@ export default function PrivateApi() {
                         borderRadius={"8px"}
                         color={"#FF5630"}
                         fontWeight={500}
+                        isDisabled={!isOwner}
                         px={8}
                         ml={4}
                         _hover={{
@@ -366,7 +376,7 @@ export default function PrivateApi() {
                         to create new key
                       </Text>
                       <Link
-                        display={hasAccess ? "block" : "none"}
+                        display={hasAccess && isOwner ? "block" : "none"}
                         onClick={getAccessKey}
                         fontWeight={400}
                         color="blue"

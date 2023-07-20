@@ -48,6 +48,11 @@ const Sidebar: React.FC<{
   const config: any = useConfig();
   const assetsURL = getAssetsURL(config);
 
+  const isOwner =
+    profileData?.organizations.length > 0
+      ? profileData?.organizations[0].role === "owner"
+      : false;
+
   return (
     <Flex
       sx={{
@@ -184,13 +189,15 @@ const Sidebar: React.FC<{
             isCollapsed={isCollapsed}
             transitionDone={transitionDone}
           />
-          <SidebarItem
-            to="/integrations"
-            label="Integrations"
-            icon={<IntegrationMenuIcon size={24} />}
-            isCollapsed={isCollapsed}
-            transitionDone={transitionDone}
-          />
+          {isOwner && (
+            <SidebarItem
+              to="/integrations"
+              label="Integrations"
+              icon={<IntegrationMenuIcon size={24} />}
+              isCollapsed={isCollapsed}
+              transitionDone={transitionDone}
+            />
+          )}
           {getFeatureGateConfig().private_api_enabled && (
             <SidebarItem
               to="/private-api"
@@ -200,20 +207,24 @@ const Sidebar: React.FC<{
               transitionDone={transitionDone}
             />
           )}
-          <SidebarItem
-            to={`/billing`}
-            label="Billing"
-            icon={<BillingMenuIcon size={24} />}
-            isCollapsed={isCollapsed}
-            transitionDone={transitionDone}
-          />
-          <SidebarItem
-            to={`/organisation`}
-            label="Organisation"
-            icon={<OrganisationIcon />}
-            isCollapsed={isCollapsed}
-            transitionDone={transitionDone}
-          />
+          {isOwner && (
+            <SidebarItem
+              to={`/billing`}
+              label="Billing"
+              icon={<BillingMenuIcon size={24} />}
+              isCollapsed={isCollapsed}
+              transitionDone={transitionDone}
+            />
+          )}
+          {isOwner && (
+            <SidebarItem
+              to={`/organisation`}
+              label="Organisation"
+              icon={<OrganisationIcon />}
+              isCollapsed={isCollapsed}
+              transitionDone={transitionDone}
+            />
+          )}
           <Flex
             sx={{
               width: "100%",
