@@ -10,8 +10,6 @@ import {
   useMediaQuery,
   useToast,
 } from "@chakra-ui/react";
-import { getAssetsURL } from "helpers/helperFunction";
-import { useConfig } from "hooks/useConfig";
 import API from "helpers/api";
 
 const CouponCodeSection: React.FC<{
@@ -27,15 +25,13 @@ const CouponCodeSection: React.FC<{
   setUpdatedPrice,
   duration,
 }) => {
-  const config: any = useConfig();
-  const assetsURL = getAssetsURL(config);
   const [couponCode, setCouponCode] = useState<string>("");
   const [isLargerThan450] = useMediaQuery(["(min-width: 450px)"]);
   const toast = useToast();
   const verifyCouponCode = () => {
     try {
       API.get(
-        `api-validate-coupon/?coupon=${couponCode}&package=${selectedPlan}&duration=${duration}`
+        `api-validate-coupon/?coupon=${couponCode.trim()}&package=${selectedPlan}&duration=${duration}`
       ).then((res) => {
         if (res.data.status === "success") {
           toast({
@@ -45,7 +41,7 @@ const CouponCodeSection: React.FC<{
             isClosable: true,
             position: "bottom",
           });
-          setActiveCoupon(couponCode);
+          setActiveCoupon(couponCode.trim());
           setUpdatedPrice(res.data.updated_price);
         }
       });

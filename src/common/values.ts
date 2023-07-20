@@ -266,17 +266,17 @@ export const codePlatform: {
     dynamicString: string;
   };
 } = {
-  etherscan: { platform: "vscode", dynamicString: "ethereum" },
-  bscscan: { platform: "vscode", dynamicString: "bsc" },
-  polygonscan: { platform: "vscode", dynamicString: "polygon" },
-  fantom: { platform: "vscode", dynamicString: "Fantom" },
-  cronos: { platform: "vscode", dynamicString: "cronos" },
-  avalanche: { platform: "vscode", dynamicString: "avalanche" },
-  celo: { platform: "vscode", dynamicString: "celo" },
+  etherscan: { platform: "own", dynamicString: "#code" },
+  bscscan: { platform: "own", dynamicString: "#code" },
+  polygonscan: { platform: "own", dynamicString: "#code" },
+  fantom: { platform: "own", dynamicString: "#code" },
+  cronos: { platform: "own", dynamicString: "#code" },
+  avalanche: { platform: "own", dynamicString: "#code" },
+  celo: { platform: "own", dynamicString: "#code" },
   aurora: { platform: "own", dynamicString: "/contracts#address-tabs" },
-  arbiscan: { platform: "vscode", dynamicString: "arbitrum-one" },
+  arbiscan: { platform: "own", dynamicString: "#code" },
   buildbear: { platform: "none", dynamicString: "" },
-  optimism: { platform: "vscode", dynamicString: "optimism" },
+  optimism: { platform: "own", dynamicString: "#code" },
   xdc: { platform: "own", dynamicString: "#readContract" },
   reefscan: { platform: "own", dynamicString: "" },
 };

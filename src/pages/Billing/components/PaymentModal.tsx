@@ -25,6 +25,7 @@ import CurrentPlanDescriptionContainer from "./CurrentPlanDescriptionContainer";
 import ConfirmationMessageBox from "./ConfirmationMessageBox";
 import DetailedBill from "./DetailedBill";
 import SwitchDuration from "./SwitchDuration";
+import Loader from "components/styled-components/Loader";
 
 const PaymentModal: React.FC<{
   isOpen: boolean;
@@ -50,7 +51,7 @@ const PaymentModal: React.FC<{
   const [duration, setDuration] = useState<"monthly" | "yearly" | "ondemand">(
     globalDuration
   );
-  const [, setLoading] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   const createStripePayment = async () => {
     let req = {};
@@ -68,12 +69,14 @@ const PaymentModal: React.FC<{
     }
 
     try {
+      setLoading(true);
       const { data, status } = await API.post<{
         status: string;
         checkout_url: string;
       }>(API_PATH.API_CREATE_STRIPE_SUBSCRIPTION_BETA, req);
 
       if (status === 200 && data.checkout_url) {
+        setLoading(false);
         window.open(`${data.checkout_url}`, "_blank");
         // fetchAgain();
         onClose();
@@ -86,6 +89,7 @@ const PaymentModal: React.FC<{
         });
       }
     } catch (e) {
+      setLoading(false);
       console.log(e);
     }
   };
@@ -269,6 +273,8 @@ const PaymentModal: React.FC<{
                     <Button
                       w="100%"
                       variant="brand"
+                      isLoading={loading}
+                      spinner={<Loader color={"#3300FF"} size={25} />}
                       onClick={() => {
                         if (paymentMethod === "cp") {
                           createCPLink();
