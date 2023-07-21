@@ -103,8 +103,8 @@ const NoOrgView: React.FC<{
             opacity={hasAccess ? 1 : 0.5}
           >
             <Image
-              src={assetsUrl + "background/private_api_cover.svg"}
-              h={"150px"}
+              src={assetsUrl + "background/organisation_cover.svg"}
+              h={"250px"}
               mb={2}
             />
             <Text fontWeight={400}>

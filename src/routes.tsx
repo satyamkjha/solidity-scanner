@@ -157,6 +157,9 @@ const Routes: React.FC = () => {
           <RedirectRoute exact path="/forgot">
             <ForgotPassword />
           </RedirectRoute>
+          <RedirectRoute exact path="/forgot/:orgName">
+            <ForgotPassword />
+          </RedirectRoute>
           <Route exact path="/page-not-found" component={PageNotFound} />
           <Route
             exact

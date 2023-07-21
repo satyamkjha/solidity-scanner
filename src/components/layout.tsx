@@ -14,6 +14,9 @@ import {
   Link,
   Image,
   HStack,
+  Divider,
+  VStack,
+  Heading,
 } from "@chakra-ui/react";
 import { GiHamburgerMenu } from "react-icons/gi";
 import { BiUser, BiPowerOff } from "react-icons/bi";
@@ -30,6 +33,7 @@ import { API_PATH } from "helpers/routeManager";
 import { useConfig } from "hooks/useConfig";
 import { useQueryClient } from "react-query";
 import { onLogout } from "common/functions";
+import { sentenceCapitalize } from "helpers/helperFunction";
 
 const MotionFlex = motion(Flex);
 
@@ -273,10 +277,27 @@ const Layout: React.FC = ({ children }) => {
               </MenuButton>
               <MenuList
                 p={4}
+                width="250px"
                 borderWidth="0px"
-                boxShadow="0px 4px 20px rgba(0, 0, 0, 0.15)"
+                boxShadow="0px 4px 20px rgba(0, 0, 0, 0.35)"
                 borderRadius="15px"
               >
+                {profileData?.organizations.length > 0 && (
+                  <VStack
+                    justifyContent="flex-start"
+                    alignItems="flex-start"
+                    mb={7}
+                  >
+                    <Heading fontSize="md">
+                      {profileData?.organizations[0].org_name}
+                    </Heading>
+                    <Heading fontSize="sm" fontWeight={300}>
+                      {sentenceCapitalize(profileData?.organizations[0].role)}
+                    </Heading>
+                    <Divider />
+                  </VStack>
+                )}
+
                 <MenuItem
                   borderBottom="1px solid"
                   borderColor="border"

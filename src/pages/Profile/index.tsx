@@ -17,6 +17,13 @@ import {
   Stack,
   Tooltip,
   useDisclosure,
+  HStack,
+  AlertDialog,
+  AlertDialogBody,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogContent,
+  AlertDialogOverlay,
 } from "@chakra-ui/react";
 import { getReCaptchaHeaders } from "helpers/helperFunction";
 import { useQueryClient } from "react-query";
@@ -26,6 +33,7 @@ import {
   AiOutlineEye,
   AiOutlineEyeInvisible,
 } from "react-icons/ai";
+import { sentenceCapitalize } from "helpers/helperFunction";
 import { useProfile } from "hooks/useProfile";
 import DeleteAccountForm from "./DeleteAccountForm";
 import API from "helpers/api";
@@ -34,6 +42,7 @@ import { API_PATH } from "helpers/routeManager";
 import { AuthResponse } from "common/types";
 import { InfoIcon } from "@chakra-ui/icons";
 import Loader from "components/styled-components/Loader";
+import { onLogout } from "common/functions";
 
 const Profile: React.FC = () => {
   const toast = useToast();
@@ -49,7 +58,7 @@ const Profile: React.FC = () => {
   const [firstName, setFirstName] = useState("");
   const [updateLoading, setUpdateLoading] = useState(false);
 
-  const { data } = useProfile();
+  const { data, refetch } = useProfile();
   const queryClient = useQueryClient();
 
   const [isOwner, setIsOwner] = useState(true);
@@ -399,7 +408,14 @@ const Profile: React.FC = () => {
             </VStack>
           </Box>
           {!data.public_address && <ChangePasswordForm isOwner={isOwner} />}
-          <DeleteAccountBox />
+          {isOwner && <DeleteAccountBox />}
+          {data?.organizations.length > 0 && (
+            <OrganisationBox
+              isOwner={isOwner}
+              organizations={data?.organizations[0]}
+              refetch={refetch}
+            />
+          )}
         </>
       )}
     </Box>
@@ -483,6 +499,137 @@ const ChangePasswordForm: React.FC<{ isOwner: boolean }> = ({ isOwner }) => {
           Change Password
         </Button>
       </Box>
+    </Box>
+  );
+};
+
+const OrganisationBox: React.FC<{
+  isOwner: boolean;
+  organizations: {
+    org_name: string;
+    role: "admin" | "owner" | "editor" | "viewer";
+    status: string;
+    joined_at: string;
+  };
+  refetch(): any;
+}> = ({ isOwner, organizations, refetch }) => {
+  const { isOpen, onClose, onOpen } = useDisclosure();
+  const history = useHistory();
+  const queryClient = useQueryClient();
+  const toast = useToast();
+
+  const leaveOrg = async () => {
+    const { data } = await API.get(API_PATH.API_LEAVE_ORGANISATION);
+    if (data.status === "success") {
+      toast({
+        title: data.message,
+        status: "success",
+        duration: 3000,
+        isClosable: true,
+        position: "bottom",
+      });
+    } else {
+      toast({
+        title: data.message,
+        status: "error",
+        duration: 3000,
+        isClosable: true,
+        position: "bottom",
+      });
+    }
+    onClose();
+    onLogout(history, queryClient);
+  };
+
+  const deleteOrg = async () => {
+    const { data } = await API.delete(API_PATH.API_DELETE_ORGANISATION);
+    if (data.status === "success") {
+      toast({
+        title: data.message,
+        status: "success",
+        duration: 3000,
+        isClosable: true,
+        position: "bottom",
+      });
+    } else {
+      toast({
+        title: data.message,
+        status: "error",
+        duration: 3000,
+        isClosable: true,
+        position: "bottom",
+      });
+    }
+    refetch();
+    onClose();
+  };
+
+  return (
+    <Box w="100%" bgColor="white" borderRadius="20px" p={4} px={6} mt={8}>
+      <Text fontWeight={300} fontSize="xl">
+        {isOwner ? "Close" : "Leave"} Organization
+      </Text>
+      <Text mt={5} fontWeight={700} fontSize="md">
+        {organizations.org_name}
+      </Text>
+      <HStack mt={2}>
+        <Text fontWeight={700} fontSize="sm">
+          {sentenceCapitalize(organizations.role)}
+        </Text>
+        <Text fontWeight={700} fontSize="sm" color="#B0B7C3">
+          | Joinned 23 June 2023
+        </Text>
+      </HStack>
+      <Text mt={10} fontWeight={300} color="gray.500" fontSize="md">
+        This action is permanent and cannot be undone.
+      </Text>
+      <Button
+        variant={"outline"}
+        mt={5}
+        bg={"white"}
+        w={["200px"]}
+        borderColor="#FF5630"
+        color="#FF5630"
+        onClick={onOpen}
+      >
+        {isOwner ? "Close" : "Leave"} Organization
+      </Button>
+      <AlertDialog isOpen={isOpen} onClose={onClose}>
+        <AlertDialogOverlay>
+          <AlertDialogContent>
+            <AlertDialogHeader fontSize="lg" fontWeight="bold">
+              Confirm Leave Organisation
+            </AlertDialogHeader>
+
+            <AlertDialogBody>
+              Are you sure you want to leave{" "}
+              <Box as="span" sx={{ fontWeight: 600 }}>
+                {organizations.org_name}
+              </Box>{" "}
+              Organisation ?
+            </AlertDialogBody>
+
+            <AlertDialogFooter>
+              <Button onClick={onClose} py={6}>
+                No, My bad
+              </Button>
+              <Button
+                variant="brand"
+                onClick={() => {
+                  if (isOwner) {
+                    deleteOrg();
+                  } else {
+                    leaveOrg();
+                  }
+                }}
+                ml={3}
+              >
+                {isOwner ? "Close" : "Leave"}
+              </Button>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialogOverlay>
+      </AlertDialog>
     </Box>
   );
 };

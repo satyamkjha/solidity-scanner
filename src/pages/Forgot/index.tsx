@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useForm } from "react-hook-form";
-import { Link as RouterLink } from "react-router-dom";
+import { Link as RouterLink, useParams } from "react-router-dom";
 import {
   Flex,
   Box,
@@ -29,6 +29,7 @@ const CustomFlex = motion(Flex);
 const ForgotPassword: React.FC = () => {
   const [mailSent, setMailSent] = useState(false);
   const [email, setEmail] = useState("");
+
   return (
     <>
       <Flex
@@ -93,11 +94,18 @@ const ForgotPasswordForm: React.FC<{
 }> = ({ setMailSent, setEmail }) => {
   const { handleSubmit, register, formState } = useForm<FormData>();
 
+  const { orgName } = useParams<{
+    orgName: string | null;
+  }>();
+
+  console.log(orgName);
+
   const onSubmit = async ({ email }: FormData) => {
     let reqHeaders = await getReCaptchaHeaders("send_email");
     const { data } = await API.post<AuthResponse>(
       API_PATH.API_SEND_EMAIL,
       {
+        org_name: orgName,
         email,
       },
       {

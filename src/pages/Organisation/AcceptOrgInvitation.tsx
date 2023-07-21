@@ -23,6 +23,7 @@ import { useValidateInviteLink } from "hooks/useValidateInviteLink";
 import API from "helpers/api";
 import { API_PATH } from "helpers/routeManager";
 import Loader from "components/styled-components/Loader";
+import { NoBugIcon } from "components/icons";
 
 function useQuery() {
   return new URLSearchParams(useLocation().search);
@@ -116,8 +117,6 @@ const AcceptOrgInvitation: React.FC = () => {
     }
   };
 
-  useEffect(() => {}, []);
-
   function unique(arr1: string[], arr2: string[]) {
     let uniqueArr: string[] = [];
     for (var i = 0; i < arr1.length; i++) {
@@ -154,7 +153,7 @@ const AcceptOrgInvitation: React.FC = () => {
       <Flex
         align="center"
         direction="column"
-        justifyContent="space-between"
+        justifyContent="flex-start"
         my={8}
         h="60vh"
         w="100vw"
@@ -171,6 +170,7 @@ const AcceptOrgInvitation: React.FC = () => {
               justifyContent="flex-start"
               spacing={3}
               w="90vw"
+              mb={20}
             >
               <Heading fontSize="2xl">
                 {next ? "Add password?" : "Organization Invitation"}
@@ -179,151 +179,171 @@ const AcceptOrgInvitation: React.FC = () => {
                 {next ? "Create a password to join the Orgnization" : ""}
               </Text>
             </VStack>
-            <Flex
-              w="90%"
-              align="center"
-              direction="column"
-              justifyContent="flex-start"
-              maxW="750px"
-              h="fit-content"
-              bgColor="#FCFCFC"
-              border="1px solid #EAEAEA"
-              p={10}
-              borderRadius={10}
-            >
-              <Heading fontSize="lg">
-                {data?.organization.profile.org_name}
-              </Heading>
-              <HStack mt={7}>
-                <Text fontSize="sm">Total</Text>
-                <Text fontSize="sm" color="#3E15F4">
-                  {data?.organization.profile.user_count} Members
-                </Text>
-              </HStack>
-              {next ? (
-                <>
-                  <InputGroup alignItems="center" mt={10}>
-                    <InputLeftElement
-                      height="48px"
-                      children={<Icon as={FaUserAlt} color="gray.300" />}
-                    />
-                    <Input
-                      isRequired
-                      name="name"
-                      value={name}
-                      type="text"
-                      autoComplete="off"
-                      placeholder="Your name"
-                      variant="brand"
-                      size="lg"
-                      onChange={(event) => setName(event.target.value)}
-                    />
-                  </InputGroup>
-                  <InputGroup mt={3}>
-                    <InputLeftElement
-                      height="48px"
-                      color="gray.300"
-                      children={<Icon as={FaLock} color="gray.300" />}
-                    />
-                    <Input
-                      isRequired
-                      type={show ? "text" : "password"}
-                      placeholder="Password"
-                      autoComplete="current-password"
-                      variant="brand"
-                      size="lg"
-                      value={password}
-                      onChange={(e) => {
-                        setPassword(e.target.value);
-                        setPasswordError(passwordStrength(e.target.value));
-                      }}
-                    />
-                    <InputRightElement
-                      height="48px"
-                      color="gray.300"
-                      children={
-                        show ? (
-                          <ViewOffIcon
-                            color={"gray.500"}
-                            mr={5}
-                            boxSize={5}
-                            onClick={() => setShow(false)}
-                          />
-                        ) : (
-                          <ViewIcon
-                            color={"gray.500"}
-                            mr={5}
-                            boxSize={5}
-                            onClick={() => setShow(true)}
-                          />
-                        )
-                      }
-                    />
-                  </InputGroup>
-                  {passwordError &&
-                    passwordError.length < 8 &&
-                    passwordError.contains.length < 4 && (
-                      <Text color={"subtle"} size={"xs"}>
-                        Your password should contain a
-                        {unique(passwordError.contains, charTypes).map(
-                          (item) => ` ${item}, `
-                        )}
-                        {passwordError.length < 8 &&
-                          ` and should have ${
-                            8 - passwordError.length
-                          } more characters`}
-                      </Text>
-                    )}
-                </>
-              ) : (
-                <Text fontSize="sm" mt={10}>
-                  {orgName} has invited you join their organization as{" "}
-                  {data?.organization.role}
-                </Text>
-              )}
-            </Flex>
-            {next ? (
-              <VStack spacing={5} w="100%">
-                <Button
-                  variant="brand"
-                  maxW="500px"
+            {data?.organization.is_token_valid ? (
+              <>
+                <Flex
                   w="90%"
-                  isLoading={loading}
-                  onClick={acceptOrgRequest}
+                  align="center"
+                  direction="column"
+                  justifyContent="flex-start"
+                  maxW="750px"
+                  h="fit-content"
+                  bgColor="#FCFCFC"
+                  border="1px solid #EAEAEA"
+                  p={10}
+                  borderRadius={10}
                 >
-                  Join Organisation
-                </Button>
-                <Button
-                  variant="accent-ghost"
-                  w="200px"
-                  onClick={() => setNext(false)}
-                >
-                  {"< Go Back"}
-                </Button>
-              </VStack>
+                  <Heading fontSize="lg">
+                    {data?.organization.profile?.org_name}
+                  </Heading>
+                  <HStack mt={7}>
+                    <Text fontSize="sm">Total</Text>
+                    <Text fontSize="sm" color="#3E15F4">
+                      {data?.organization.profile?.user_count} Members
+                    </Text>
+                  </HStack>
+                  {next ? (
+                    <>
+                      <InputGroup alignItems="center" mt={10}>
+                        <InputLeftElement
+                          height="48px"
+                          children={<Icon as={FaUserAlt} color="gray.300" />}
+                        />
+                        <Input
+                          isRequired
+                          name="name"
+                          value={name}
+                          type="text"
+                          autoComplete="off"
+                          placeholder="Your name"
+                          variant="brand"
+                          size="lg"
+                          onChange={(event) => setName(event.target.value)}
+                        />
+                      </InputGroup>
+                      <InputGroup mt={3}>
+                        <InputLeftElement
+                          height="48px"
+                          color="gray.300"
+                          children={<Icon as={FaLock} color="gray.300" />}
+                        />
+                        <Input
+                          isRequired
+                          type={show ? "text" : "password"}
+                          placeholder="Password"
+                          autoComplete="current-password"
+                          variant="brand"
+                          size="lg"
+                          value={password}
+                          onChange={(e) => {
+                            setPassword(e.target.value);
+                            setPasswordError(passwordStrength(e.target.value));
+                          }}
+                        />
+                        <InputRightElement
+                          height="48px"
+                          color="gray.300"
+                          children={
+                            show ? (
+                              <ViewOffIcon
+                                color={"gray.500"}
+                                mr={5}
+                                boxSize={5}
+                                onClick={() => setShow(false)}
+                              />
+                            ) : (
+                              <ViewIcon
+                                color={"gray.500"}
+                                mr={5}
+                                boxSize={5}
+                                onClick={() => setShow(true)}
+                              />
+                            )
+                          }
+                        />
+                      </InputGroup>
+                      {passwordError &&
+                        passwordError.length < 8 &&
+                        passwordError.contains.length < 4 && (
+                          <Text color={"subtle"} size={"xs"}>
+                            Your password should contain a
+                            {unique(passwordError.contains, charTypes).map(
+                              (item) => ` ${item}, `
+                            )}
+                            {passwordError.length < 8 &&
+                              ` and should have ${
+                                8 - passwordError.length
+                              } more characters`}
+                          </Text>
+                        )}
+                    </>
+                  ) : (
+                    <Text fontSize="sm" mt={10}>
+                      {orgName} has invited you join their organization as{" "}
+                      {data?.organization.role}
+                    </Text>
+                  )}
+                </Flex>
+                {next ? (
+                  <VStack spacing={5} w="100%" mt={10}>
+                    <Button
+                      variant="brand"
+                      maxW="500px"
+                      w="90%"
+                      isLoading={loading}
+                      onClick={acceptOrgRequest}
+                    >
+                      Join Organisation
+                    </Button>
+                    <Button
+                      variant="accent-ghost"
+                      w="200px"
+                      onClick={() => setNext(false)}
+                    >
+                      {"< Go Back"}
+                    </Button>
+                  </VStack>
+                ) : (
+                  <Stack
+                    direction={["column", "column", "row"]}
+                    spacing={[3, 3, 10]}
+                    mt={10}
+                  >
+                    <Button
+                      py={6}
+                      variant="outline"
+                      w="200px"
+                      isLoading={loading}
+                      onClick={rejectOrgRequest}
+                    >
+                      Reject
+                    </Button>
+                    <Button
+                      variant="brand"
+                      w="200px"
+                      isLoading={loading}
+                      onClick={() => setNext(true)}
+                    >
+                      Accept
+                    </Button>
+                  </Stack>
+                )}
+              </>
             ) : (
-              <Stack
-                direction={["column", "column", "row"]}
-                spacing={[3, 3, 10]}
+              <VStack
+                justifyContent="flex-start"
+                alignItems="center"
+                spacing={10}
               >
-                <Button
-                  py={6}
-                  variant="outline"
-                  w="200px"
-                  isLoading={loading}
-                  onClick={rejectOrgRequest}
-                >
-                  Reject
-                </Button>
-                <Button
-                  variant="brand"
-                  w="200px"
-                  isLoading={loading}
-                  onClick={() => setNext(true)}
-                >
-                  Accept
-                </Button>
-              </Stack>
+                <NoBugIcon size={200} />
+                <Heading fontSize="lg">Invitation Link not found</Heading>
+                <Text w={["200px", "250px", "500px"]}>
+                  User Roles dolor sit amet consectetur. Lorem pharetra sed
+                  consequat velit arcu. Dictum volutpat arcu pellentesque risus
+                  mi non. Ornare phasellus lorem egestas fringilla enim. Posuere
+                  in ac Learn More
+                </Text>
+              </VStack>
             )}
           </>
         )}

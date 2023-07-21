@@ -30,7 +30,12 @@ export type Profile = {
     start_date: string;
     renewal_date: string;
   };
-  organizations: any[];
+  organizations: {
+    org_name: string;
+    role: "admin" | "owner" | "editor" | "viewer";
+    status: string;
+    joined_at: string;
+  }[];
   payment_type: string;
   payment_via: string;
   payment_details?: {

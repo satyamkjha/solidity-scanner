@@ -10,8 +10,8 @@ type ResponseStructure = {
       org_name: string;
       user_count: number;
       created_at: string;
-    };
-    role: string;
+    } | null;
+    role: string | null;
   };
 };
 

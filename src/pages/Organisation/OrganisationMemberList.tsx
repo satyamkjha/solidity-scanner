@@ -19,7 +19,15 @@ import {
   TabPanel,
   useMediaQuery,
   HStack,
+  Popover,
+  PopoverArrow,
+  PopoverBody,
+  PopoverCloseButton,
+  PopoverContent,
+  PopoverTrigger,
 } from "@chakra-ui/react";
+import { Link as RouterLink } from "react-router-dom";
+import { InfoIcon } from "@chakra-ui/icons";
 import API from "helpers/api";
 import { API_PATH } from "helpers/routeManager";
 import { HiDuplicate, HiOutlineCheck } from "react-icons/hi";
@@ -200,18 +208,48 @@ const OrganisationMemberList: React.FC<{
             </Text>
           </Flex>
         </Flex>
-        <Button
-          onClick={onOpen}
-          variant={"cta-outline"}
-          borderWidth={"1px"}
-          fontWeight={500}
-          px={10}
-          py={2}
-          ml={[0, 0, 0, "auto"]}
-          isDisabled={!hasAccess}
-        >
-          {"+  Invite Member"}
-        </Button>
+        <HStack>
+          <Popover placement="bottom-end">
+            <PopoverTrigger>
+              <InfoIcon color="#d7cdfa" />
+            </PopoverTrigger>
+            <PopoverContent p={3}>
+              <PopoverArrow />
+              <PopoverCloseButton />
+
+              <PopoverBody>
+                <Text
+                  fontSize="sm"
+                  textAlign="left"
+                  lineHeight="title"
+                  fontWeight={"300"}
+                  mb={0}
+                >
+                  User Roles dolor sit amet consectetur. Lorem pharetra sed
+                  consequat velit arcu. Dictum volutpat arcu pellentesque risus
+                  mi non. Ornare phasellus lorem egestas fringilla enim.
+                  <span>
+                    <Link ml={2} color="#3300FF" href="" isExternal>
+                      Learn More
+                    </Link>
+                  </span>
+                </Text>
+              </PopoverBody>
+            </PopoverContent>
+          </Popover>
+          <Button
+            onClick={onOpen}
+            variant={"cta-outline"}
+            borderWidth={"1px"}
+            fontWeight={500}
+            px={10}
+            py={2}
+            ml={[0, 0, 0, "auto"]}
+            isDisabled={!hasAccess}
+          >
+            {"+  Invite Member"}
+          </Button>
+        </HStack>
       </Flex>
       <Flex
         w="100%"
