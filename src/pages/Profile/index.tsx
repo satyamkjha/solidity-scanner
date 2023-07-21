@@ -63,9 +63,11 @@ const Profile: React.FC = () => {
       setContactNumber(data.contact_number);
       setFirstName(data.name);
       setIsOwner(
-        data.organizations.length > 0
-          ? data.organizations[0].role === "owner"
-          : false
+        data?.organizations.length > 0
+          ? data?.organizations[0].role === "owner"
+            ? true
+            : false
+          : true
       );
     }
   }, [data]);

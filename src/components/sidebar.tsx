@@ -51,7 +51,9 @@ const Sidebar: React.FC<{
   const isOwner =
     profileData?.organizations.length > 0
       ? profileData?.organizations[0].role === "owner"
-      : false;
+        ? true
+        : false
+      : true;
 
   const isAdmin =
     profileData?.organizations.length > 0

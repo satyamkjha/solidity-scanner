@@ -39,7 +39,7 @@ export default function PrivateApi() {
   const assetsUrl = getAssetsURL(config);
   const toast = useToast();
 
-  const [isOwner, setIsOwner] = useState(false);
+  const [isOwner, setIsOwner] = useState(true);
 
   useEffect(() => {
     if (
