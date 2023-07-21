@@ -8,7 +8,9 @@ import { formattedDate, shortenNumber } from "common/functions";
 import Loader from "components/styled-components/Loader";
 import { useHacksGraph } from "hooks/useHacksGraph";
 import { monthNames } from "common/values";
+import { getAssetsURL } from "helpers/helperFunction";
 const HacksOverview: React.FC<{ overviewData: any }> = ({ overviewData }) => {
+  const assetsURL = getAssetsURL();
   const currentDate = new Date();
   const [startDate, setStartDate] = useState(
     new Date(
@@ -118,7 +120,7 @@ const HacksOverview: React.FC<{ overviewData: any }> = ({ overviewData }) => {
       h={"fit-content"}
       minH={["fit-content", "fit-content", "fit-content", "800px"]}
       backgroundColor="#04080D"
-      background={"url('/background/leaderboard_bg.png')"}
+      background={`url('${assetsURL}background/hackerboard_bg.png')`}
       backgroundSize="cover"
       backgroundPosition={"center"}
       backgroundRepeat="no-repeat"

@@ -79,7 +79,7 @@ const LeaderBoard: React.FC = () => {
           flexDir="column"
           alignItems="center"
           justifyContent={"flex-start"}
-          w={["90%"]}
+          w={["90%", "90%", "90%", "70%"]}
           px={[4, 4, 7, 10]}
           mt={"-60px"}
           mb={4}
@@ -94,8 +94,9 @@ const LeaderBoard: React.FC = () => {
             </Box>
           </Heading>
           <Text color="subtle" fontSize={["lg", "lg", "xl"]} mb={4}>
-            Lorem ipsum dolor sit amet consectetur. Vitae egestas integer est ut
-            iaculis. Volutpat nascetur tortor et ante.
+            Delve into a comprehensive database of blockchain breaches,
+            providing insights into the evolution of cybersecurity challenges
+            and the lessons learned from each incident since 2011.
           </Text>
         </Box>
 
