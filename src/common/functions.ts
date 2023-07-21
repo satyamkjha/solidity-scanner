@@ -41,9 +41,10 @@ export function daysToMiliseconds(days: number): number {
 
 export const formattedDate = (
   date: Date,
-  month?: "short" | "long" | "2-digit"
+  month?: "short" | "long" | "2-digit",
+  locale: string = "en-GB"
 ) => {
-  return date.toLocaleDateString("en-GB", {
+  return date.toLocaleDateString(locale, {
     day: "numeric",
     month: month || "short",
     year: "numeric",
@@ -69,4 +70,35 @@ export const onLogout = (history: any, queryClient: QueryClient) => {
   Auth.deauthenticateUser();
   history.push("/signin");
   queryClient.clear();
+};
+
+export const shortenNumber = (
+  number: number,
+  toFixed: number = 2,
+  fullAbbreviation: boolean = false
+) => {
+  const abbreviations = ["", "K", "M", "B", "T", "Q"];
+  const full_abbreviations = [
+    "",
+    "Thousand",
+    "Million",
+    "Billion",
+    "Trillion",
+    "Quadrillion",
+  ];
+  const suffixIndex = Math.floor(Math.log10(Math.abs(number)) / 3);
+  let abbreviatedNumber = (number / Math.pow(1000, suffixIndex)).toFixed(
+    toFixed
+  );
+
+  if (
+    abbreviatedNumber.includes(".") &&
+    Number(abbreviatedNumber) === Number(abbreviatedNumber.split(".")[0])
+  ) {
+    abbreviatedNumber = Number(abbreviatedNumber).toFixed(0);
+  }
+
+  return fullAbbreviation
+    ? abbreviatedNumber + " " + full_abbreviations[suffixIndex]
+    : abbreviatedNumber + abbreviations[suffixIndex];
 };
