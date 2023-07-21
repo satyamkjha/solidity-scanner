@@ -225,7 +225,7 @@ const TeamMemberItem: React.FC<{
                   removeOrganisationUserRequest(userItem.email);
                 }}
               >
-                Delete Project
+                Delete User
               </MenuItem>
             </MenuList>
           </Menu>

@@ -29,9 +29,7 @@ import { useHistory } from "react-router-dom";
 const DeleteAccountForm: React.FC<{
   onClose(): any;
   isOpen: boolean;
-  isOwner: boolean;
-  org_name: string;
-}> = ({ isOpen, onClose, isOwner, org_name }) => {
+}> = ({ isOpen, onClose }) => {
   const history = useHistory();
 
   const queryClient = useQueryClient();
@@ -84,15 +82,14 @@ const DeleteAccountForm: React.FC<{
         <ModalContent
           maxW={["90vw", "90vw", "45vw"]}
           minW={"300px"}
-          minH={"fit-content"}
-          h="fit-content"
+          minH={"600px"}
           alignItems={"center"}
           borderRadius="15px"
           mb={10}
           p={5}
         >
           <ModalHeader textAlign={"center"} fontSize={["lg", "lg", "xl"]}>
-            {isOwner ? "Delete Account" : "Leave Organisation"}
+            Delete Account
           </ModalHeader>
           <ModalCloseButton
             m={[6, 6, 6, 7]}
@@ -106,39 +103,32 @@ const DeleteAccountForm: React.FC<{
             color="#ECECEC"
             borderBottomWidth={"2px"}
           />
-          <ModalBody h={"100%"} w={"100%"} px={[6, 6, 6, 12]} h="fit-content">
+          <ModalBody h={"100%"} w={"100%"} px={[6, 6, 6, 12]}>
             <Flex
               justifyContent={"center"}
               w={"100%"}
-              h={"fit-content"}
+              h={"50vh"}
               direction="column"
               alignItems={"center"}
               textAlign="center"
             >
-              {!isOwner && (
-                <Text mt={5} fontWeight={300} color="gray.500" fontSize="md">
-                  Do you wish to leave {org_name} organisation ?
-                </Text>
-              )}
-              {isOwner && (
-                <>
-                  <RadioGroup w="100%">
-                    <VStack
-                      w="100%"
-                      alignItems={"flex-start"}
-                      justifyContent={"flex-start"}
+              <RadioGroup w="100%">
+                <VStack
+                  w="100%"
+                  alignItems={"flex-start"}
+                  justifyContent={"flex-start"}
+                >
+                  {optionList.map((item, index) => (
+                    <Radio
+                      onChange={(e) => setRadioOption(index)}
+                      variant="brand"
+                      value={index.toString()}
                     >
-                      {optionList.map((item, index) => (
-                        <Radio
-                          onChange={(e) => setRadioOption(index)}
-                          variant="brand"
-                          value={index.toString()}
-                        >
-                          {item}
-                        </Radio>
-                      ))}
+                      {item}
+                    </Radio>
+                  ))}
 
-                      {/* <Radio variant="brand" value="2">
+                  {/* <Radio variant="brand" value="2">
                     Customer support could not clarity my questions or resolve
                     my issue
                   </Radio>
@@ -148,47 +138,45 @@ const DeleteAccountForm: React.FC<{
                   <Radio variant="brand" value="4">
                     Do not wish to specify/Others
                   </Radio> */}
-                    </VStack>
-                  </RadioGroup>
-                  <Textarea
-                    variant={"brand"}
-                    placeholder="Add Comment (Optional)"
-                    borderRadius={"16px"}
-                    fontSize={"15px"}
-                    backgroundColor={"#F6F6F6"}
-                    noOfLines={4}
-                    mt={10}
-                    p={5}
-                    value={comment}
-                    onChange={(e) => {
-                      setComment(e.target.value);
-                    }}
-                    height={"120px"}
-                    size="sm"
-                    _focus={{
-                      boxShadow: "0px 12px 23px rgba(107, 255, 55, 0.1)",
-                    }}
-                  />
-                  <HStack
-                    width={"100%"}
-                    mt={3}
-                    alignItems={"center"}
-                    justifyContent={"flex-start"}
-                  >
-                    <Checkbox
-                      isChecked={check}
-                      colorScheme={"purple"}
-                      onChange={() => {
-                        setCheck(!check);
-                      }}
-                    />
-                    <Text fontSize={"sm"}>
-                      You can contact me if you’d like to learn more why I
-                      delete my account
-                    </Text>
-                  </HStack>
-                </>
-              )}
+                </VStack>
+              </RadioGroup>
+              <Textarea
+                variant={"brand"}
+                placeholder="Add Comment (Optional)"
+                borderRadius={"16px"}
+                fontSize={"15px"}
+                backgroundColor={"#F6F6F6"}
+                noOfLines={4}
+                mt={10}
+                p={5}
+                value={comment}
+                onChange={(e) => {
+                  setComment(e.target.value);
+                }}
+                height={"120px"}
+                size="sm"
+                _focus={{
+                  boxShadow: "0px 12px 23px rgba(107, 255, 55, 0.1)",
+                }}
+              />
+              <HStack
+                width={"100%"}
+                mt={3}
+                alignItems={"center"}
+                justifyContent={"flex-start"}
+              >
+                <Checkbox
+                  isChecked={check}
+                  colorScheme={"purple"}
+                  onChange={() => {
+                    setCheck(!check);
+                  }}
+                />
+                <Text fontSize={"sm"}>
+                  You can contact me if you’d like to learn more why I delete my
+                  account
+                </Text>
+              </HStack>
               <Text
                 width="100%"
                 p={5}
@@ -201,8 +189,7 @@ const DeleteAccountForm: React.FC<{
                 fontWeight={300}
                 borderRadius={10}
               >
-                {isOwner ? "Deleting Account" : "Leaving Organisation"} can’t be
-                undone and the data can’t be restored
+                Deleting account can’t be undone and the data can’t be restored
               </Text>
               <Button
                 h={"50px"}
@@ -217,7 +204,7 @@ const DeleteAccountForm: React.FC<{
                 disabled={false}
                 onClick={deleteAccount}
               >
-                {isOwner ? "Delete Account" : "Leave Organisation"}
+                Delete Account
               </Button>
             </Flex>
           </ModalBody>

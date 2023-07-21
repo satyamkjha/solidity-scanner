@@ -397,14 +397,7 @@ const Profile: React.FC = () => {
             </VStack>
           </Box>
           {!data.public_address && <ChangePasswordForm isOwner={isOwner} />}
-          <DeleteAccountBox
-            isOwner={isOwner}
-            org_name={
-              data.organizations.length > 0
-                ? data.organizations[0].org_name
-                : ""
-            }
-          />
+          <DeleteAccountBox />
         </>
       )}
     </Box>
@@ -492,19 +485,16 @@ const ChangePasswordForm: React.FC<{ isOwner: boolean }> = ({ isOwner }) => {
   );
 };
 
-const DeleteAccountBox: React.FC<{ isOwner: boolean; org_name: string }> = ({
-  isOwner,
-  org_name,
-}) => {
+const DeleteAccountBox: React.FC = () => {
   const { isOpen, onClose, onOpen } = useDisclosure();
 
   return (
     <Box w="100%" bgColor="white" borderRadius="20px" p={4} px={6} mt={8}>
       <Text fontWeight={300} fontSize="xl">
-        {isOwner ? "Delete Account" : "Leave Organisation"}
+        Delete Account
       </Text>
       <Text mt={5} fontWeight={700} fontSize="md">
-        {isOwner ? "Delete your account" : "Leave this Organisation"}
+        Delete your account
       </Text>
       <Text mt={5} fontWeight={300} color="gray.500" fontSize="md">
         This action is permanent and cannot be undone.
@@ -518,14 +508,9 @@ const DeleteAccountBox: React.FC<{ isOwner: boolean; org_name: string }> = ({
         color="#FF5630"
         onClick={onOpen}
       >
-        {isOwner ? "Delete Account" : "Leave Organisation"}
+        Delete Account
       </Button>
-      <DeleteAccountForm
-        org_name={org_name}
-        isOwner={isOwner}
-        onClose={onClose}
-        isOpen={isOpen}
-      />
+      <DeleteAccountForm onClose={onClose} isOpen={isOpen} />
     </Box>
   );
 };
