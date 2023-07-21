@@ -88,4 +88,8 @@ export const API_PATH = {
   API_GET_ORGANISATION_PROFILE: "/api-get-organization-profile/",
   API_GET_USER_ORGANISATION_PROFILE: "/api-get-user-organization-profile/",
   API_VALIDATE_INVITE_LINK: "/api-validate-invite-link/",
+  //HACKERBOARD
+  API_GET_ATTACKS_OVERVIEW: "/api-get-attacks-overview/",
+  API_GET_ATTACKS_AGGREGATED: "/api-get-attacks-aggregated/",
+  API_GET_ATTACKS: "/api-get-attacks/",
 };

@@ -11,8 +11,8 @@ const Loader: React.FC<{
   const thickness = size <= 30 ? 2 : 3;
   return (
     <Flex
-      w={width ? width : "auto"}
-      h={height ? height : "auto"}
+      w={width ? width : "100%"}
+      h={height ? height : "100%"}
       justifyContent="center"
       alignItems="center"
       py={py}

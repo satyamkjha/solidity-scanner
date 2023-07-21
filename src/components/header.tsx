@@ -88,6 +88,14 @@ export const Header: React.FC = () => {
                 Detectors
               </Link>
               <Link
+                as={RouterLink}
+                to="/hackerboard"
+                variant="navigation"
+                fontWeight="600"
+              >
+                Hackerboard
+              </Link>
+              <Link
                 onClick={() => {
                   window.open("https://solidityscan.com/discover/", "_blank");
                 }}
