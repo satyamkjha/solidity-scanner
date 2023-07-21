@@ -100,8 +100,9 @@ const TeamMemberItem: React.FC<{
             color={"#FFFFFF"}
             bgColor="#FFC887"
             mr={3}
+            fontSize={"25px"}
           >
-            {userItem.name[0]}
+            {userItem.name[0].toUpperCase()}
           </Flex>
         ) : (
           <Flex

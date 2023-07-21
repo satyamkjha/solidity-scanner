@@ -163,6 +163,7 @@ const ApplicationForm: React.FC<{
       w="100%"
       justifyContent={"flex-start"}
       alignItems="flex-start"
+      opacity={isViewer ? 0.5 : 1}
     >
       {profileData && (
         <Flex
@@ -266,6 +267,7 @@ const ApplicationForm: React.FC<{
               setProjectName={setProjectName}
               setGithubLink={setGithubLink}
               setVisibility={setVisibility}
+              isViewer={isViewer}
             />
           ) : step === 2 ? (
             repoTreeUP && (

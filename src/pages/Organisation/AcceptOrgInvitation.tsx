@@ -19,7 +19,7 @@ import { passwordStrength } from "check-password-strength";
 import { FaLock, FaUserAlt } from "react-icons/fa";
 import { Logo, MailSent, MailLock } from "components/icons";
 import { ViewIcon, ViewOffIcon } from "@chakra-ui/icons";
-import { useOrgProfile } from "hooks/useOrgProfile";
+import { useValidateInviteLink } from "hooks/useValidateInviteLink";
 import API from "helpers/api";
 import { API_PATH } from "helpers/routeManager";
 import Loader from "components/styled-components/Loader";
@@ -31,14 +31,12 @@ function useQuery() {
 const AcceptOrgInvitation: React.FC = () => {
   const query = useQuery();
   const email = query.get("email")?.toString().replace(" ", "+");
-  console.log(email);
-
   const token = query.get("token")?.toString();
   const orgName = query.get("org_name")?.toString();
   const toast = useToast();
   const [loading, setLoading] = useState(false);
   const history = useHistory();
-  const { data, isLoading } = useOrgProfile(orgName);
+  const { data, isLoading } = useValidateInviteLink(token, email, orgName);
   const [name, setName] = useState("");
   const [password, setPassword] = useState("");
   const [next, setNext] = useState(false);
@@ -193,11 +191,13 @@ const AcceptOrgInvitation: React.FC = () => {
               p={10}
               borderRadius={10}
             >
-              <Heading fontSize="lg">{data?.org_name}</Heading>
+              <Heading fontSize="lg">
+                {data?.organization.profile.org_name}
+              </Heading>
               <HStack mt={7}>
                 <Text fontSize="sm">Total</Text>
                 <Text fontSize="sm" color="#3E15F4">
-                  {data?.user_count} Members
+                  {data?.organization.profile.user_count} Members
                 </Text>
               </HStack>
               {next ? (
@@ -212,6 +212,7 @@ const AcceptOrgInvitation: React.FC = () => {
                       name="name"
                       value={name}
                       type="text"
+                      autoComplete="off"
                       placeholder="Your name"
                       variant="brand"
                       size="lg"
@@ -276,7 +277,8 @@ const AcceptOrgInvitation: React.FC = () => {
                 </>
               ) : (
                 <Text fontSize="sm" mt={10}>
-                  {orgName} has invited you join their organization
+                  {orgName} has invited you join their organization as{" "}
+                  {data?.organization.role}
                 </Text>
               )}
             </Flex>

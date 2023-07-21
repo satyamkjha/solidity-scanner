@@ -53,6 +53,11 @@ const Sidebar: React.FC<{
       ? profileData?.organizations[0].role === "owner"
       : false;
 
+  const isAdmin =
+    profileData?.organizations.length > 0
+      ? profileData?.organizations[0].role === "admin"
+      : false;
+
   return (
     <Flex
       sx={{
@@ -149,13 +154,14 @@ const Sidebar: React.FC<{
           )}
         </Box>
       </Flex>
-      <Flex
-        sx={{ width: "100%", justifyContent: "flex-end" }}
-        pt={["28", "28", "28", "24", "28"]}
-        pb={["3", "3", "3", "3", "4"]}
-      >
-        <Box sx={{ width: "85%" }}>
-          {/* <Text
+      {profileData && (
+        <Flex
+          sx={{ width: "100%", justifyContent: "flex-end" }}
+          pt={["28", "28", "28", "24", "28"]}
+          pb={["3", "3", "3", "3", "4"]}
+        >
+          <Box sx={{ width: "85%" }}>
+            {/* <Text
             sx={{
               color: "subtle",
               ml: 3,
@@ -168,86 +174,87 @@ const Sidebar: React.FC<{
             PAGES
           </Text> */}
 
-          <SidebarItem
-            to="/home"
-            label="Home"
-            icon={<HomeMenuIcon size={16} />}
-            isCollapsed={isCollapsed}
-            transitionDone={transitionDone}
-          />
-          <SidebarItem
-            to="/projects"
-            label="Projects"
-            icon={<ProjectsMenuIcon size={16} />}
-            isCollapsed={isCollapsed}
-            transitionDone={transitionDone}
-          />
-          <SidebarItem
-            to="/blocks"
-            label="Verified Contracts"
-            icon={<BlockMenuIcon size={16} />}
-            isCollapsed={isCollapsed}
-            transitionDone={transitionDone}
-          />
-          {isOwner && (
             <SidebarItem
-              to="/integrations"
-              label="Integrations"
-              icon={<IntegrationMenuIcon size={24} />}
+              to="/home"
+              label="Home"
+              icon={<HomeMenuIcon size={16} />}
               isCollapsed={isCollapsed}
               transitionDone={transitionDone}
             />
-          )}
-          {getFeatureGateConfig().private_api_enabled && (
             <SidebarItem
-              to="/private-api"
-              label="Private API"
-              icon={<PrivateApiMenuIcon size={24} />}
+              to="/projects"
+              label="Projects"
+              icon={<ProjectsMenuIcon size={16} />}
               isCollapsed={isCollapsed}
               transitionDone={transitionDone}
             />
-          )}
-          {isOwner && (
             <SidebarItem
-              to={`/billing`}
-              label="Billing"
-              icon={<BillingMenuIcon size={24} />}
+              to="/blocks"
+              label="Verified Contracts"
+              icon={<BlockMenuIcon size={16} />}
               isCollapsed={isCollapsed}
               transitionDone={transitionDone}
             />
-          )}
-          {isOwner && (
-            <SidebarItem
-              to={`/organisation`}
-              label="Organisation"
-              icon={<OrganisationIcon />}
-              isCollapsed={isCollapsed}
-              transitionDone={transitionDone}
-            />
-          )}
-          <Flex
-            sx={{
-              width: "100%",
-              alignItems: "center",
-              borderLeftRadius: "15px",
-              transition: "0.3s background-color",
-              cursor: "pointer",
-            }}
-            p={[2.5, 2.5, 2.5, 2.5, 3]}
-            my={[2, 2, 2, 2, 3]}
-            onClick={() => {
-              window.open("https://docs.solidityscan.com/", "_blank");
-            }}
-          >
-            {React.cloneElement(<UserGuideIcon size={24} />)}
-            {!isCollapsed && transitionDone && (
-              <Text ml={2} fontSize="sm">
-                {"User Guide"}
-              </Text>
+            {isOwner && (
+              <SidebarItem
+                to="/integrations"
+                label="Integrations"
+                icon={<IntegrationMenuIcon size={24} />}
+                isCollapsed={isCollapsed}
+                transitionDone={transitionDone}
+              />
             )}
-          </Flex>
-        </Box>
-      </Flex>
+            {getFeatureGateConfig().private_api_enabled && (
+              <SidebarItem
+                to="/private-api"
+                label="Private API"
+                icon={<PrivateApiMenuIcon size={24} />}
+                isCollapsed={isCollapsed}
+                transitionDone={transitionDone}
+              />
+            )}
+            {isOwner && (
+              <SidebarItem
+                to={`/billing`}
+                label="Billing"
+                icon={<BillingMenuIcon size={24} />}
+                isCollapsed={isCollapsed}
+                transitionDone={transitionDone}
+              />
+            )}
+            {(isOwner || isAdmin) && (
+              <SidebarItem
+                to={`/organisation`}
+                label="Organisation"
+                icon={<OrganisationIcon />}
+                isCollapsed={isCollapsed}
+                transitionDone={transitionDone}
+              />
+            )}
+            <Flex
+              sx={{
+                width: "100%",
+                alignItems: "center",
+                borderLeftRadius: "15px",
+                transition: "0.3s background-color",
+                cursor: "pointer",
+              }}
+              p={[2.5, 2.5, 2.5, 2.5, 3]}
+              my={[2, 2, 2, 2, 3]}
+              onClick={() => {
+                window.open("https://docs.solidityscan.com/", "_blank");
+              }}
+            >
+              {React.cloneElement(<UserGuideIcon size={24} />)}
+              {!isCollapsed && transitionDone && (
+                <Text ml={2} fontSize="sm">
+                  {"User Guide"}
+                </Text>
+              )}
+            </Flex>
+          </Box>
+        </Flex>
+      )}
       <Flex
         width="100%"
         height={["185px", "185px", "185px", "205px"]}

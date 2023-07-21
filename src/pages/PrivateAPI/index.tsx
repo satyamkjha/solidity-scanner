@@ -216,6 +216,7 @@ export default function PrivateApi() {
               onClick={getAccessKey}
               variant={"cta-outline"}
               borderWidth={"1px"}
+              _hover={{ color: "#3300FF" }}
               fontWeight={500}
               px={10}
               py={2}

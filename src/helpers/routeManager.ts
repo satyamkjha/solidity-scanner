@@ -87,4 +87,5 @@ export const API_PATH = {
   API_GET_USER_ORGANISATIONS: "/organization/api-get-user-organizations/",
   API_GET_ORGANISATION_PROFILE: "/api-get-organization-profile/",
   API_GET_USER_ORGANISATION_PROFILE: "/api-get-user-organization-profile/",
+  API_VALIDATE_INVITE_LINK: "/api-validate-invite-link/",
 };

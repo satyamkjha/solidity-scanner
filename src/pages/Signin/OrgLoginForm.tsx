@@ -188,9 +188,10 @@ const OrgLoginForm: React.FC = () => {
             />
             <Input
               isRequired
+              name="org_name"
               type="text"
               placeholder="Organisation Name"
-              autoComplete="username"
+              autoComplete="off"
               variant="brand"
               value={orgName}
               size="lg"

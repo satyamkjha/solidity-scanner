@@ -36,6 +36,11 @@ const UploadForm: React.FC<{
   >([]);
   const [isLoading, setIsLoading] = useState(false);
 
+  let isViewer =
+    profileData.organizations.length > 0
+      ? profileData.organizations[0].role === "viewer"
+      : false;
+
   const {
     getRootProps,
     getInputProps,
@@ -43,7 +48,7 @@ const UploadForm: React.FC<{
     isDragAccept,
     isDragReject,
     acceptedFiles,
-  } = useDropzone({ maxFiles: 5 });
+  } = useDropzone({ maxFiles: 5, disabled: isViewer });
 
   let baseStyle = {
     flex: 1,
@@ -221,11 +226,6 @@ const UploadForm: React.FC<{
     }
   };
 
-  let isViewer =
-    profileData.organizations.length > 0
-      ? profileData.organizations[0].role === "viewer"
-      : false;
-
   return (
     <>
       {profileData && (
@@ -238,6 +238,7 @@ const UploadForm: React.FC<{
           alignItems="center"
           borderRadius={20}
           border="1px solid #ECECEC"
+          opacity={isViewer ? 0.5 : 1}
         >
           <Text
             w="100%"
@@ -302,6 +303,7 @@ const UploadForm: React.FC<{
                   isRequired
                   placeholder="Enter Project Name"
                   variant="brand"
+                  disabled={isViewer}
                   size="lg"
                   value={name}
                   onChange={(e) => setName(e.target.value)}

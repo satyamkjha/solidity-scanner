@@ -341,6 +341,7 @@ const ContractForm: React.FC<{
       alignItems="center"
       borderRadius={20}
       border="1px solid #ECECEC"
+      opacity={isViewer ? 0.5 : 1}
     >
       <Text
         w="100%"
@@ -398,6 +399,7 @@ const ContractForm: React.FC<{
                 placeholder="0x808ed7A75n133f64069318Sa0q173c71rre44414"
                 variant="brand"
                 size="lg"
+                disabled={isViewer}
                 value={contractAddress}
                 onChange={(e) => setContractAddress(e.target.value)}
               />
@@ -425,6 +427,7 @@ const ContractForm: React.FC<{
               })}
               placeholder="Select Contract Platform"
               isSearchable={true}
+              isDisabled={isViewer}
               value={options.find((item) => platform === item.value)}
               styles={customStylesForReactSelect}
               onChange={(newValue) => {
@@ -454,6 +457,7 @@ const ContractForm: React.FC<{
                   isRequired
                   placeholder="Node ID"
                   variant="brand"
+                  disabled={isViewer}
                   size="lg"
                   value={nodeId}
                   onChange={(e) => setNodeId(e.target.value)}
@@ -466,7 +470,7 @@ const ContractForm: React.FC<{
               <Select
                 formatOptionLabel={FormatOptionLabelWithImage}
                 isSearchable={false}
-                isDisabled={platform === ""}
+                isDisabled={platform === "" || isViewer}
                 options={chainList}
                 value={chain}
                 placeholder="Select Contract Chain"

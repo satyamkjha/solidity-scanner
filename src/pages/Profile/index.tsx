@@ -434,15 +434,15 @@ const ChangePasswordForm: React.FC<{ isOwner: boolean }> = ({ isOwner }) => {
     }
     setIsLoading(true);
     try {
-      const { data } = await API.post(
-        isOwner
-          ? API_PATH.API_CHANGE_PASSWORD
-          : API_PATH.API_UPDATE_USER_ORGANISATION_PROFILE,
-        {
-          password: password,
-          new_password: newPassword,
-        }
-      );
+      const { data } = isOwner
+        ? await API.post(API_PATH.API_CHANGE_PASSWORD, {
+            password: password,
+            new_password: newPassword,
+          })
+        : await API.put(API_PATH.API_UPDATE_USER_ORGANISATION_PROFILE, {
+            password: password,
+            new_password: newPassword,
+          });
       if (data.status === "success") {
         Auth.deauthenticateUser();
         history.push("/signin?isPasswordReset=true");

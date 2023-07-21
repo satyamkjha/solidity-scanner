@@ -128,7 +128,6 @@ const OrganisationMemberList: React.FC<{
       if (data.status === "success") {
         toast({
           title: data.message,
-          description: data.message,
           status: "success",
           duration: 3000,
           isClosable: true,
@@ -142,7 +141,6 @@ const OrganisationMemberList: React.FC<{
       } else {
         toast({
           title: data.message,
-          description: data.message,
           status: "success",
           duration: 3000,
           isClosable: true,
