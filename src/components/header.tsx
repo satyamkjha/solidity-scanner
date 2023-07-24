@@ -89,11 +89,11 @@ export const Header: React.FC = () => {
               </Link>
               <Link
                 as={RouterLink}
-                to="/hackerboard"
+                to="/hackboard"
                 variant="navigation"
                 fontWeight="600"
               >
-                Hackerboard
+                Web3 HackBoard
               </Link>
               <Link
                 onClick={() => {
@@ -191,6 +191,19 @@ export const Header: React.FC = () => {
                         ml={3}
                       >
                         What we Detect
+                      </Link>
+                    </MenuItem>
+                    <MenuItem>
+                      <Link
+                        as={RouterLink}
+                        to="/hackboard"
+                        variant="ghost"
+                        fontWeight="400"
+                        w={"100%"}
+                        p={1}
+                        ml={3}
+                      >
+                        Web3 HackBoard
                       </Link>
                     </MenuItem>
                     <MenuItem>

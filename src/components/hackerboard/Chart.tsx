@@ -9,6 +9,7 @@ import {
   VictoryTheme,
 } from "victory";
 import { formattedDate, shortenNumber } from "common/functions";
+import { monthNames } from "common/values";
 
 interface IProps {
   datum: any;
@@ -37,7 +38,7 @@ const CustomTooltip = (props: IProps) => {
           p={2}
           textAlign="left"
         >
-          <Text fontSize="11px" fontWeight={800}>
+          <Text fontSize="11px" fontWeight={800} whiteSpace={"nowrap"}>
             {"$ "}
             {datum.y?.toLocaleString()}
           </Text>
@@ -52,7 +53,7 @@ const CustomTooltip = (props: IProps) => {
 
 const Chart: React.FC<{
   hacksList: any;
-  selectedTimeFilter: "D" | "W" | "M" | "Y";
+  selectedTimeFilter: "all" | "W" | "M" | "Y";
   selectedMonth: string;
 }> = ({ hacksList, selectedTimeFilter, selectedMonth }) => {
   const currentDate = new Date();
@@ -62,6 +63,7 @@ const Chart: React.FC<{
   let chartData = [];
   let formattedDates = [];
   if (hacksList) {
+    console.log(new Date(selectedMonth).getMonth());
     if (selectedTimeFilter === "Y") {
       const monthlyData: Record<string, number> = {};
       const data = hacksList.map((item) => {
@@ -84,6 +86,25 @@ const Chart: React.FC<{
       });
 
       chartData = Object.entries(monthlyData).map(([month, amount]) => ({
+        x: month,
+        y: amount,
+      }));
+    } else if (selectedTimeFilter === "all") {
+      const yearlyData: Record<string, number> = {};
+      const data = hacksList.map((item) => {
+        const xLabel = new Date(item.date).getFullYear();
+        if (!yearlyData[xLabel]) {
+          yearlyData[xLabel] = 0;
+        }
+        yearlyData[xLabel] += item.amount_in_usd;
+
+        return {
+          x: xLabel,
+          y: item.amount_in_usd,
+        };
+      });
+
+      chartData = Object.entries(yearlyData).map(([month, amount]) => ({
         x: month,
         y: amount,
       }));
@@ -130,7 +151,7 @@ const Chart: React.FC<{
     } else if (is1250Pixel) {
       height = 350;
     } else {
-      height = 250;
+      height = 280;
     }
     return height;
   };
@@ -161,7 +182,11 @@ const Chart: React.FC<{
           justifyContent={"flex-end"}
         >
           <Text color="#424242">
-            {selectedMonth + " " + new Date().getFullYear()}
+            {monthNames.findIndex(
+              (m) => m.toLowerCase() === selectedMonth.toLowerCase()
+            ) <= new Date().getMonth()
+              ? selectedMonth + " " + new Date().getFullYear()
+              : selectedMonth + " " + (new Date().getFullYear() - 1)}
           </Text>
         </HStack>
       )}
@@ -185,7 +210,7 @@ const Chart: React.FC<{
             },
           }}
         >
-          {selectedTimeFilter === "Y" ? (
+          {selectedTimeFilter === "Y" || selectedTimeFilter === "all" ? (
             <VictoryAxis
               style={{
                 tickLabels: { fontSize: 8 },

@@ -1,4 +1,4 @@
-FROM node:16-alpine3.16 AS builder
+FROM 132830644905.dkr.ecr.us-east-2.amazonaws.com/baseimage:node_16-alpine3.16 AS builder
 WORKDIR /app
 COPY ./package.json .
 COPY ./yarn.lock .

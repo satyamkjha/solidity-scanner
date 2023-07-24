@@ -69,7 +69,7 @@ export const customTranslucentDropdown = {
     borderRadius: 10,
     backdropFilter: "blur(6px)",
     border: "0px solid #ffffff",
-    backgroundColor: "#FFFFFF40",
+    backgroundColor: "#ffffff60",
     maxHeight: "400px",
     cursor: "pointer",
   }),
