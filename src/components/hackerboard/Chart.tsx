@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { useMediaQuery, Flex, HStack, Text, Box } from "@chakra-ui/react";
 import {
   VictoryArea,
@@ -7,6 +7,7 @@ import {
   VictoryAxis,
   VictoryVoronoiContainer,
   VictoryTheme,
+  VictoryScatter,
 } from "victory";
 import { formattedDate, shortenNumber } from "common/functions";
 import { monthNames } from "common/values";
@@ -22,6 +23,10 @@ const CustomTooltip = (props: IProps) => {
   const { datum, x, y } = props;
   const tooltipWidth = 120;
   const tooltipHeight = 50;
+
+  if (!datum || !x || !y) {
+    return null;
+  }
 
   return (
     <g style={{ pointerEvents: "none" }}>
@@ -43,7 +48,7 @@ const CustomTooltip = (props: IProps) => {
             {datum.y?.toLocaleString()}
           </Text>
           <Text fontSize="8px" fontWeight={400} color="gray.500">
-            {datum.tooltip || datum.x}
+            {datum.tooltip || formattedDate(datum.x)}
           </Text>
         </Box>
       </foreignObject>
@@ -86,8 +91,9 @@ const Chart: React.FC<{
       });
 
       chartData = Object.entries(monthlyData).map(([month, amount]) => ({
-        x: month,
+        x: new Date(month),
         y: amount,
+        tooltip: month,
       }));
     } else if (selectedTimeFilter === "all") {
       const yearlyData: Record<string, number> = {};
@@ -104,14 +110,15 @@ const Chart: React.FC<{
         };
       });
 
-      chartData = Object.entries(yearlyData).map(([month, amount]) => ({
-        x: month,
+      chartData = Object.entries(yearlyData).map(([year, amount]) => ({
+        x: new Date(year),
         y: amount,
+        tooltip: year,
       }));
     } else {
       chartData = hacksList.map((item) => {
         return {
-          x: item.date,
+          x: new Date(item.date),
           y: item.amount_in_usd,
           tooltip: formattedDate(new Date(item.date)),
         };
@@ -157,11 +164,12 @@ const Chart: React.FC<{
   };
   const getYAxisDomain = () => {
     const dataValues = chartData.map((data) => data.y);
-    const minY = Math.min(...dataValues);
+    const minY = Math.min(0, ...dataValues);
     const maxY = Math.max(...dataValues);
     const padding = (maxY - minY) * 0.1;
     return [minY, maxY + padding];
   };
+
   return (
     <Flex
       justifyContent={"center"}
@@ -201,46 +209,60 @@ const Chart: React.FC<{
             axis: {
               ...VictoryTheme.material.axis,
               style: {
-                ...VictoryTheme.material.axis.style,
+                ...VictoryTheme.material.axis?.style,
+                axis: { stroke: "none" },
                 grid: {
-                  ...VictoryTheme.material.axis.style.grid,
                   stroke: "#2D2D2D",
                 },
               },
             },
           }}
+          style={{ parent: { overflow: "visible" } }}
         >
-          {selectedTimeFilter === "Y" || selectedTimeFilter === "all" ? (
+          {chartData.length === 1 ? (
             <VictoryAxis
               style={{
-                tickLabels: { fontSize: 8 },
-                axisLabel: { fontSize: 8 },
-                grid: { stroke: "black" },
+                tickLabels: { fill: "#4E5D78", fontSize: 9 },
+                axisLabel: { fontSize: 9 },
+                grid: { stroke: "none" },
+                ticks: {
+                  stroke: "#2D2D2D",
+                },
               }}
               theme={VictoryTheme.material}
+              tickFormat={(x) => formattedDate(x)}
+              tickCount={1}
             />
           ) : (
             <VictoryAxis
               style={{
-                tickLabels: { fontSize: 8 },
-                axisLabel: { fontSize: 8 },
-                grid: { stroke: "black" },
+                tickLabels: { fill: "#4E5D78", fontSize: 9 },
+                axisLabel: { fontSize: 9 },
+                grid: { stroke: "none" },
+                ticks: {
+                  stroke: "#2D2D2D",
+                },
               }}
-              tickFormat={(x) => formattedDate(new Date(x))}
-              tickValues={formattedDates}
-              tickCount={6}
               theme={VictoryTheme.material}
             />
           )}
+
           <VictoryAxis
             style={{
-              tickLabels: { fontSize: 10 },
+              tickLabels: { fill: "#4E5D78", fontSize: 10 },
               axisLabel: { fontSize: 10 },
+              axis: { stroke: "none" },
+              grid: {
+                stroke: "#2D2D2D",
+              },
+              ticks: {
+                stroke: "#2D2D2D",
+              },
             }}
             dependentAxis
             tickFormat={(tick) => shortenNumber(tick, 1)}
             theme={VictoryTheme.material}
-            domain={getYAxisDomain()} // Adjust the y-axis domain
+            domain={getYAxisDomain()}
           />
           <VictoryArea
             data={chartData}
@@ -248,7 +270,8 @@ const Chart: React.FC<{
               data: {
                 stroke: "#4489E9",
                 strokeWidth: 2,
-                fill: `url(#gradient-x-axis)`,
+                fill: "#4489E9",
+                fillOpacity: 0.05,
               },
             }}
             interpolation="cardinal"
@@ -257,6 +280,17 @@ const Chart: React.FC<{
             }
             labels={() => ""}
           />
+          {chartData.length === 1 && (
+            <VictoryScatter
+              data={chartData}
+              size={3}
+              style={{ data: { fill: "#4489E9" } }}
+              labelComponent={
+                <VictoryTooltip flyoutComponent={<CustomTooltip />} />
+              }
+              labels={() => ""}
+            />
+          )}
         </VictoryChart>
       ) : (
         <Flex
@@ -266,7 +300,6 @@ const Chart: React.FC<{
           h={getHeight() + 150}
         >
           <Text fontSize={"xl"} color={"detail"}>
-            {" "}
             No data found
           </Text>
         </Flex>
