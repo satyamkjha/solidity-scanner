@@ -598,11 +598,11 @@ const OrganisationBox: React.FC<{
         <AlertDialogOverlay>
           <AlertDialogContent>
             <AlertDialogHeader fontSize="lg" fontWeight="bold">
-              Confirm Leave Organisation
+              Confirm {isOwner ? "Close" : "Leave"} Organisation
             </AlertDialogHeader>
 
             <AlertDialogBody>
-              Are you sure you want to leave{" "}
+              Are you sure you want to {isOwner ? "Close" : "Leave"}{" "}
               <Box as="span" sx={{ fontWeight: 600 }}>
                 {organizations.org_name}
               </Box>{" "}

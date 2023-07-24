@@ -25,6 +25,8 @@ import { API_PATH } from "helpers/routeManager";
 import Loader from "components/styled-components/Loader";
 import { NoBugIcon } from "components/icons";
 
+const charTypes = ["lowercase", "uppercase", "symbol", "number"];
+
 function useQuery() {
   return new URLSearchParams(useLocation().search);
 }
