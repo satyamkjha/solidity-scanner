@@ -126,7 +126,7 @@ const Detectors = lazy(
 );
 
 const LeaderBoard = lazy(
-  () => import("pages/LeaderBoard" /* webpackChunkName: "LeaderBoard" */)
+  () => import("pages/HackBoard" /* webpackChunkName: "HackerBoard" */)
 );
 
 const Routes: React.FC = () => {
@@ -170,7 +170,7 @@ const Routes: React.FC = () => {
               "/faq",
               "/terms-of-service",
               "/privacy-policy",
-              "/hackerboard",
+              "/hackboard",
             ]}
           >
             <PublicLayout>
@@ -185,7 +185,7 @@ const Routes: React.FC = () => {
                   <Route exact path="/quickscan/" component={QuickScan} />
                   <Route exact path="/pricing" component={Pricing} />
                   <Route exact path="/detectors" component={Detectors} />
-                  <Route exact path="/hackerboard" component={LeaderBoard} />
+                  <Route exact path="/hackboard" component={LeaderBoard} />
                   <Route exact path="/faq" component={FAQ} />
                   <Route
                     exact
