@@ -62,7 +62,7 @@ export const Header: React.FC = () => {
             <Logo />
           </RouterLink>
           {isDesktopView ? (
-            <HStack ml={20} spacing={8}>
+            <HStack ml={16} spacing={8}>
               <Link
                 as={RouterLink}
                 to="/pricing"
