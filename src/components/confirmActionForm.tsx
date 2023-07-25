@@ -30,7 +30,7 @@ const ConfirmActionForm: React.FC<{
   addComment,
   confirmBtnText,
 }) => {
-  const [comment, setComment] = useState<string>();
+  const [comment, setComment] = useState<string>("");
   return (
     <>
       <Modal isOpen={isOpen} onClose={onClose}>
@@ -79,7 +79,18 @@ const ConfirmActionForm: React.FC<{
                   borderWidth={"2px"}
                   noOfLines={4}
                   mt={10}
-                  value={comment}
+                  onKeyDown={(e) => {
+                    if (e.keyCode === 13 && !e.shiftKey) {
+                      if (addComment) {
+                        onActionConfirm(comment);
+                        setComment("");
+                        onClose();
+                      } else {
+                        onActionConfirm();
+                        onClose();
+                      }
+                    }
+                  }}
                   onChange={(e) => {
                     setComment(e.target.value);
                   }}

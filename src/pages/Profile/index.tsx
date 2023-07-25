@@ -18,6 +18,7 @@ import {
   Tooltip,
   useDisclosure,
 } from "@chakra-ui/react";
+import { useForm } from "react-hook-form";
 import { getReCaptchaHeaders } from "helpers/helperFunction";
 import { useQueryClient } from "react-query";
 import {
@@ -206,7 +207,18 @@ const Profile: React.FC = () => {
       {data && (
         <>
           {" "}
-          <Box w="100%" bgColor="white" borderRadius="20px" p={4} px={6}>
+          <form
+            style={{
+              display: "flex",
+              justifyContent: "flex-start",
+              flexDirection: "column",
+              alignItems: "flex-start",
+              width: "100%",
+              backgroundColor: "white",
+              borderRadius: "20px",
+              padding: "20px",
+            }}
+          >
             <Flex w="100%" alignItems="center" justifyContent="space-between">
               <Text fontWeight={300} fontSize="xl">
                 Profile Details
@@ -237,7 +249,7 @@ const Profile: React.FC = () => {
                 </Button>
               )}
             </Flex>
-            <VStack spacing={isEditable ? 4 : 8} my={4}>
+            <VStack w="100%" spacing={isEditable ? 4 : 8} my={4}>
               <FormControl id="name">
                 <FormLabel color="subtle">Name</FormLabel>
                 {isEditable ? (
@@ -248,7 +260,7 @@ const Profile: React.FC = () => {
                     isDisabled={updateLoading}
                     type="text"
                     w="100%"
-                    maxW="400px"
+                    maxW="600px"
                     defaultValue={data.name}
                     onChange={(e) => setFirstName(e.target.value)}
                   />
@@ -265,7 +277,7 @@ const Profile: React.FC = () => {
                     isDisabled={updateLoading}
                     type="text"
                     w="100%"
-                    maxW="400px"
+                    maxW="600px"
                     defaultValue={data.company_name}
                     onChange={(e) => {
                       setCompanyName(e.target.value);
@@ -284,7 +296,7 @@ const Profile: React.FC = () => {
                     isDisabled={updateLoading}
                     type="number"
                     w="100%"
-                    maxW="400px"
+                    maxW="600px"
                     defaultValue={data.contact_number}
                     onChange={(e) => {
                       setContactNumber(e.target.value);
@@ -305,7 +317,7 @@ const Profile: React.FC = () => {
                       isDisabled
                       type="email"
                       w="100%"
-                      maxW="400px"
+                      maxW="600px"
                       value={data.public_address}
                     />
                   ) : (
@@ -324,7 +336,7 @@ const Profile: React.FC = () => {
                       isDisabled
                       type="email"
                       w="100%"
-                      maxW="400px"
+                      maxW="600px"
                       value={data.email}
                     />
                   ) : (
@@ -356,7 +368,7 @@ const Profile: React.FC = () => {
                       isDisabled={data.verification_email_sent}
                       type="email"
                       w="100%"
-                      maxW="400px"
+                      maxW="600px"
                       defaultValue={metaMaskEmail}
                       onChange={(e) => setMetaMaskEmail(e.target.value)}
                     />
@@ -388,7 +400,7 @@ const Profile: React.FC = () => {
                 </FormControl>
               )}
             </VStack>
-          </Box>
+          </form>
           {!data.public_address && <ChangePasswordForm />}
           <DeleteAccountBox />
         </>
@@ -404,6 +416,7 @@ const ChangePasswordForm: React.FC = () => {
   const [password, setPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
+  const { handleSubmit } = useForm<FormData>();
 
   const [isLoading, setIsLoading] = useState(false);
 
@@ -439,7 +452,12 @@ const ChangePasswordForm: React.FC = () => {
       <Text fontWeight={300} fontSize="xl">
         Security
       </Text>
-      <Box py={6}>
+      <form
+        style={{
+          padding: "20px 0px",
+        }}
+        onSubmit={handleSubmit(onSubmit)}
+      >
         <ViewableInputGroup
           key="password"
           label="Old Password"
@@ -468,7 +486,7 @@ const ChangePasswordForm: React.FC = () => {
         >
           Change Password
         </Button>
-      </Box>
+      </form>
     </Box>
   );
 };
@@ -511,9 +529,9 @@ const ViewableInputGroup: React.FC<{
 }> = ({ label, key, value, setValue }) => {
   const [isViewable, setViewable] = useState(false);
   return (
-    <FormControl id={key} mb={4}>
-      <FormLabel color="subtle">{label}</FormLabel>
-      <InputGroup size="lg" w="100%" maxW="400px">
+    <>
+      <Text color="subtle">{label}</Text>
+      <InputGroup size="lg" w="100%" maxW="400px" mb={4}>
         <Input
           borderRadius="15px"
           type={isViewable ? "text" : "password"}
@@ -529,7 +547,7 @@ const ViewableInputGroup: React.FC<{
           />
         </InputRightElement>
       </InputGroup>
-    </FormControl>
+    </>
   );
 };
 

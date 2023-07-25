@@ -19,6 +19,7 @@ import {
 } from "@chakra-ui/react";
 import { FiAtSign } from "react-icons/fi";
 import { FaLock } from "react-icons/fa";
+import { useForm } from "react-hook-form";
 
 import { Logo } from "components/icons";
 
@@ -121,7 +122,26 @@ const LoginForm: React.FC = () => {
   const [password, setPassword] = useState("");
   const [isLoading, setIsLoading] = useState(false);
 
+  const { handleSubmit } = useForm<FormData>();
+
+  // useEffect(() => {
+  //   const listener = (event) => {
+  //     if (event.code === "Enter" || event.code === "NumpadEnter") {
+  //       console.log("Enter key was pressed. Run your function.");
+  //       event.preventDefault();
+  //       console.log(email);
+  //       console.log(password);
+  //       onSubmit();
+  //     }
+  //   };
+  //   document.addEventListener("keydown", listener);
+  //   return () => {
+  //     document.removeEventListener("keydown", listener);
+  //   };
+  // }, []);
+
   const onSubmit = async () => {
+    console.log(email);
     let reqHeaders = await getReCaptchaHeaders("signin");
     setIsLoading(true);
     API.post<AuthResponse>(
@@ -157,7 +177,7 @@ const LoginForm: React.FC = () => {
         alignItems: "center",
         justifyContent: "center",
       }}
-      // onSubmit={handleSubmit(onSubmit)}
+      onSubmit={handleSubmit(onSubmit)}
     >
       <Stack spacing={6} mt={8} width={["90%", "80%", "600px"]}>
         <InputGroup alignItems="center">
@@ -227,9 +247,9 @@ const LoginForm: React.FC = () => {
           </Link>
         </Flex>
         <Button
-          // type="submit"
+          type="submit"
           variant="brand"
-          onClick={onSubmit}
+          // onClick={onSubmit}
           isLoading={isLoading}
           spinner={<Loader color={"#3300FF"} size={25} />}
         >

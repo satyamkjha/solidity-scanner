@@ -35,33 +35,42 @@ const DeleteAccountForm: React.FC<{
   const queryClient = useQueryClient();
   const toast = useToast();
 
+  const [isLoading, setIsLoading] = useState(false);
+
   const deleteAccount = async () => {
-    const { data } = await API.delete(API_PATH.API_DELETE_ACCOUNT, {
-      data: {
-        reason: optionList[radioOption],
-        comment: comment,
-        can_contact_user: check,
-      },
-    });
-    if (data.status === "success") {
-      toast({
-        title: data.message,
-        status: "success",
-        duration: 3000,
-        isClosable: true,
-        position: "bottom",
+    try {
+      setIsLoading(true);
+      const { data } = await API.delete(API_PATH.API_DELETE_ACCOUNT, {
+        data: {
+          reason: optionList[radioOption],
+          comment: comment,
+          can_contact_user: check,
+        },
       });
-    } else {
-      toast({
-        title: data.message,
-        status: "error",
-        duration: 3000,
-        isClosable: true,
-        position: "bottom",
-      });
+      if (data.status === "success") {
+        toast({
+          title: data.message,
+          status: "success",
+          duration: 3000,
+          isClosable: true,
+          position: "bottom",
+        });
+        onClose();
+        onLogout(history, queryClient);
+      } else {
+        toast({
+          title: data.message,
+          status: "error",
+          duration: 3000,
+          isClosable: true,
+          position: "bottom",
+        });
+      }
+      setIsLoading(false);
+    } catch (e) {
+      console.log(e);
+      setIsLoading(false);
     }
-    onClose();
-    onLogout(history, queryClient);
   };
 
   const optionList = [
@@ -198,6 +207,7 @@ const DeleteAccountForm: React.FC<{
                 w="80%"
                 variant="brand"
                 px={12}
+                isLoading={isLoading}
                 borderRadius={10}
                 fontSize={"md"}
                 fontWeight={500}

@@ -78,132 +78,141 @@ export const ContactUs: React.FC<{ onClose(): any; isOpen: boolean }> = ({
           bg="bg.subtle"
           minH={"fit-content"}
         >
-          <ModalHeader
-            background="rgba(82, 255, 0, 0.04)"
-            backgroundImage={`url('${assetsURL}background/pattern.png')`}
-            textAlign={["center", "center", "center", "left"]}
+          <form
+            style={{
+              width: "100%",
+              display: "flex",
+              flexDirection: "column",
+            }}
           >
-            Contact Us
-          </ModalHeader>
-          <ModalCloseButton />
-          <ModalBody h={"fit-content"} w={"100%"} px={[6, 6, 6, 12]}>
-            <Flex
-              justifyContent={"flex-start"}
-              alignItems={"center"}
-              w={"100%"}
-              flexDir="row"
+            <ModalHeader
+              background="rgba(82, 255, 0, 0.04)"
+              backgroundImage={`url('${assetsURL}background/pattern.png')`}
+              textAlign={["center", "center", "center", "left"]}
             >
+              Contact Us
+            </ModalHeader>
+            <ModalCloseButton />
+            <ModalBody h={"fit-content"} w={"100%"} px={[6, 6, 6, 12]}>
               <Flex
-                zIndex={"10"}
+                justifyContent={"flex-start"}
+                alignItems={"center"}
                 w={"100%"}
-                alignItems={["center", "center", "flex-start"]}
-                flexDir="column"
+                flexDir="row"
               >
-                <Stack zIndex={"10"} w={"100%"} spacing={6} mt={8}>
-                  <InputGroup mt={0} alignItems="center">
-                    <InputLeftElement height="48px">
-                      <Icon as={FaEnvelope} color="gray.300" />
-                    </InputLeftElement>
-                    <Input
-                      isRequired
-                      placeholder="Email"
-                      variant="brand"
-                      size="lg"
-                      value={email}
+                <Flex
+                  zIndex={"10"}
+                  w={"100%"}
+                  alignItems={["center", "center", "flex-start"]}
+                  flexDir="column"
+                >
+                  <Stack zIndex={"10"} w={"100%"} spacing={6} mt={8}>
+                    <InputGroup mt={0} alignItems="center">
+                      <InputLeftElement height="48px">
+                        <Icon as={FaEnvelope} color="gray.300" />
+                      </InputLeftElement>
+                      <Input
+                        isRequired
+                        placeholder="Email"
+                        variant="brand"
+                        size="lg"
+                        value={email}
+                        onChange={(e) => {
+                          setEmail(e.target.value);
+                        }}
+                      />
+                    </InputGroup>
+                    <InputGroup mt={0} alignItems="center">
+                      <InputLeftElement height="48px">
+                        <Icon as={GiLetterBomb} color="gray.300" />
+                      </InputLeftElement>
+                      <Input
+                        isRequired
+                        placeholder="Subject of your Query"
+                        variant="brand"
+                        size="lg"
+                        value={subject}
+                        onChange={(e) => {
+                          setSubject(e.target.value);
+                        }}
+                      />
+                    </InputGroup>
+                    <InputGroup mt={0} alignItems="center">
+                      <InputLeftElement height="48px">
+                        <Icon as={FaDiscord} color="gray.300" />
+                      </InputLeftElement>
+                      <Input
+                        isRequired
+                        placeholder="Discord (optional)"
+                        variant="brand"
+                        size="lg"
+                        value={discord}
+                        onChange={(e) => {
+                          setDiscord(e.target.value);
+                        }}
+                      />
+                    </InputGroup>
+                    <InputGroup mt={0} alignItems="center">
+                      <InputLeftElement height="48px">
+                        <Icon as={FaTelegram} color="gray.300" />
+                      </InputLeftElement>
+                      <Input
+                        isRequired
+                        placeholder="Telegram (optional)"
+                        variant="brand"
+                        size="lg"
+                        value={telegram}
+                        onChange={(e) => {
+                          setTelegram(e.target.value);
+                        }}
+                      />
+                    </InputGroup>
+                    <Textarea
+                      variant={"brand"}
+                      placeholder="Enter your Query here"
+                      borderRadius={"16px"}
+                      fontSize={"15px"}
+                      borderColor={"gray.100"}
+                      borderWidth={"2px"}
+                      noOfLines={4}
+                      value={body}
                       onChange={(e) => {
-                        setEmail(e.target.value);
+                        setBody(e.target.value);
+                      }}
+                      height={"120px"}
+                      _hover={{ borderColor: "gray.200" }}
+                      size="sm"
+                      _focus={{
+                        borderColor: "#52FF00",
+                        boxShadow: "0px 12px 23px rgba(107, 255, 55, 0.1)",
                       }}
                     />
-                  </InputGroup>
-                  <InputGroup mt={0} alignItems="center">
-                    <InputLeftElement height="48px">
-                      <Icon as={GiLetterBomb} color="gray.300" />
-                    </InputLeftElement>
-                    <Input
-                      isRequired
-                      placeholder="Subject of your Query"
-                      variant="brand"
-                      size="lg"
-                      value={subject}
-                      onChange={(e) => {
-                        setSubject(e.target.value);
-                      }}
-                    />
-                  </InputGroup>
-                  <InputGroup mt={0} alignItems="center">
-                    <InputLeftElement height="48px">
-                      <Icon as={FaDiscord} color="gray.300" />
-                    </InputLeftElement>
-                    <Input
-                      isRequired
-                      placeholder="Discord (optional)"
-                      variant="brand"
-                      size="lg"
-                      value={discord}
-                      onChange={(e) => {
-                        setDiscord(e.target.value);
-                      }}
-                    />
-                  </InputGroup>
-                  <InputGroup mt={0} alignItems="center">
-                    <InputLeftElement height="48px">
-                      <Icon as={FaTelegram} color="gray.300" />
-                    </InputLeftElement>
-                    <Input
-                      isRequired
-                      placeholder="Telegram (optional)"
-                      variant="brand"
-                      size="lg"
-                      value={telegram}
-                      onChange={(e) => {
-                        setTelegram(e.target.value);
-                      }}
-                    />
-                  </InputGroup>
-                  <Textarea
-                    variant={"brand"}
-                    placeholder="Enter your Query here"
-                    borderRadius={"16px"}
-                    fontSize={"15px"}
-                    borderColor={"gray.100"}
-                    borderWidth={"2px"}
-                    noOfLines={4}
-                    value={body}
-                    onChange={(e) => {
-                      setBody(e.target.value);
-                    }}
-                    height={"120px"}
-                    _hover={{ borderColor: "gray.200" }}
-                    size="sm"
-                    _focus={{
-                      borderColor: "#52FF00",
-                      boxShadow: "0px 12px 23px rgba(107, 255, 55, 0.1)",
-                    }}
-                  />
-                </Stack>
+                  </Stack>
+                </Flex>
+                <Image
+                  ml={"-100px"}
+                  src={`${assetsURL}common/contactus.png`}
+                  alt="Product screenshot"
+                  w={"50%"}
+                  display={["none", "none", "block"]}
+                />
               </Flex>
-              <Image
-                ml={"-100px"}
-                src={`${assetsURL}common/contactus.png`}
-                alt="Product screenshot"
-                w={"50%"}
-                display={["none", "none", "block"]}
-              />
-            </Flex>
-          </ModalBody>
-          <ModalFooter>
-            <Button
-              w={["100%", "100%", "100%", "200px"]}
-              variant="brand"
-              mr={[0, 0, 0, "50px"]}
-              mb={5}
-              onClick={() => {
-                onSubmit();
-              }}
-            >
-              Submit
-            </Button>
-          </ModalFooter>
+            </ModalBody>
+            <ModalFooter>
+              <Button
+                w={["100%", "100%", "100%", "200px"]}
+                variant="brand"
+                mr={[0, 0, 0, "50px"]}
+                mb={5}
+                type="submit0"
+                // onClick={() => {
+                //   onSubmit();
+                // }}
+              >
+                Submit
+              </Button>
+            </ModalFooter>
+          </form>
         </ModalContent>
       </Modal>
     </>
