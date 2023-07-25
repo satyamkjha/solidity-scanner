@@ -22,7 +22,7 @@ const HacksOverview: React.FC<{ overviewData: any }> = ({ overviewData }) => {
   const [endDate, setEndDate] = useState(currentDate);
   const [selectedChain, setSelectedChain] = useState("all");
   const [selectedTimeFilter, setSelectedTimeFilter] = useState<
-    "D" | "W" | "M" | "Y"
+    "all" | "W" | "M" | "Y"
   >("Y");
   const [monthValue, setMonthValue] = useState("");
   const [filteredData, setFilterData] = useState<any>();
@@ -64,7 +64,7 @@ const HacksOverview: React.FC<{ overviewData: any }> = ({ overviewData }) => {
   }, [startDate, endDate, selectedChain]);
 
   const onFilterSelect = async (
-    timeFilter: "D" | "W" | "M" | "Y",
+    timeFilter: "all" | "W" | "M" | "Y",
     month: string,
     selectedChain: string = "all"
   ) => {
@@ -93,7 +93,6 @@ const HacksOverview: React.FC<{ overviewData: any }> = ({ overviewData }) => {
             currentDate.getDate()
           );
         }
-        setMonthValue(month);
         break;
       case "Y":
         sd = new Date(
@@ -102,9 +101,12 @@ const HacksOverview: React.FC<{ overviewData: any }> = ({ overviewData }) => {
           currentDate.getDate()
         );
         break;
+      case "all":
+        sd = new Date(2011, 1, 1);
     }
     setStartDate(sd);
     setEndDate(ed);
+    setMonthValue(month);
   };
 
   return (
@@ -130,7 +132,7 @@ const HacksOverview: React.FC<{ overviewData: any }> = ({ overviewData }) => {
       ) : (
         <>
           <Text color="#B0B7C3" fontSize={"xl"}>
-            Web3 Hack Statistics, Hackerboard
+            Web3 Hack Statistics, HackBoard
           </Text>
           <Flex
             flexDir={["column", "column", "column", "row"]}
@@ -145,23 +147,24 @@ const HacksOverview: React.FC<{ overviewData: any }> = ({ overviewData }) => {
               display={"flex"}
               alignItems={["center", "center", "center", "flex-start"]}
               justifyContent={"flex-start"}
-              w={["100%", "100%", "100%", "25%"]}
+              w={["100%", "100%", "100%", "30%"]}
               h="fit-content"
             >
               <Heading
-                fontSize={"5xl"}
-                mb={3}
+                fontSize={"6xl"}
+                mb={1}
                 sx={{
                   background:
                     "linear-gradient(129.18deg, #52FF00 8.52%, #00EEFD 93.94%)",
                   backgroundClip: "text",
                   WebkitTextFillColor: "transparent",
+                  textShadow: "0px 4px 24px 0px #29F67E69",
                 }}
               >
                 ${shortenNumber(overviewData.total_amount, 0, true)}
               </Heading>
               <Text mb={4} color="#8A94A6" fontSize={"lg"}>
-                The total amount hacked
+                Total amount hacked worldwide
               </Text>
               <Flex
                 w="100%"
@@ -194,12 +197,12 @@ const HacksOverview: React.FC<{ overviewData: any }> = ({ overviewData }) => {
                   </>
                 )}
               </Flex>
-              <HStack mt={7} mb={2} w="100%" justifyContent={"space-between"}>
-                <Heading color={"white"} fontSize={"2xl"}>
+              <HStack mt={5} mb={2} w="100%" justifyContent={"space-between"}>
+                <Heading color={"white"} fontSize={"2xl"} fontWeight={500}>
                   Attack Trends
                 </Heading>
                 {filteredData && (
-                  <Heading color={"white"} fontSize={"2xl"}>
+                  <Heading color={"white"} fontSize={"2xl"} fontWeight={900}>
                     {filteredData.no_of_attacks}
                   </Heading>
                 )}
@@ -233,11 +236,11 @@ const HacksOverview: React.FC<{ overviewData: any }> = ({ overviewData }) => {
                       >
                         <HStack>
                           <SeverityIcon variant={attackTrendsColors[index]} />
-                          <Text color="#FFFFFF" fontSize={"md"}>
+                          <Text color="#FFFFFF" fontSize={"sm"}>
                             {item.attacked_method}
                           </Text>
                         </HStack>
-                        <Text color="#FFFFFF" fontSize={"md"}>
+                        <Text color="#FFFFFF" fontSize={"sm"}>
                           {item.count}
                         </Text>
                       </HStack>
@@ -251,7 +254,7 @@ const HacksOverview: React.FC<{ overviewData: any }> = ({ overviewData }) => {
               display={["none", "none", "none", "flex"]}
               alignItems={"flex-start"}
               justifyContent={"flex-start"}
-              w={"70%"}
+              w={"64%"}
               h="fit-content"
             >
               <ChartFilter

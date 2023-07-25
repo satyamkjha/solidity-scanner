@@ -7,6 +7,7 @@ import {
   Text,
   Button,
   Link,
+  Tooltip,
 } from "@chakra-ui/react";
 import { SeverityIcon } from "components/icons";
 import React from "react";
@@ -43,11 +44,13 @@ const HackCard: React.FC<{ hackData: any }> = ({ hackData }) => {
           <Heading mb={3} fontSize="lg">
             {hackData.target}
           </Heading>
-          <HStack>
+          <HStack maxW={"40%"}>
             <SeverityIcon
               variant={attackMethodColor[hackData.attacked_method] || "low"}
             />
-            <Text fontSize="sm">{hackData.attacked_method}</Text>
+            <Text fontSize="sm" textAlign="right">
+              {hackData.attacked_method}
+            </Text>
           </HStack>
         </HStack>
         <Text fontSize="xs" color="#78909C">
@@ -55,13 +58,19 @@ const HackCard: React.FC<{ hackData: any }> = ({ hackData }) => {
         </Text>
         <HStack mt={5} w={["100%", "100%", "80%"]} flexWrap="wrap">
           <HStack mr={3}>
-            <Image
-              mr={0}
-              src={`${assetsURL}blockscan/${hackData.chain.toLowerCase()}.svg`}
-              alt="Product screenshot"
-              h={"25px"}
-              w={"25px"}
-            />
+            <Tooltip label={hackData.chain}>
+              <Image
+                mr={0}
+                src={`${assetsURL}blockscan/${hackData.chain.toLowerCase()}.svg`}
+                alt={"Unknown"}
+                h={"26px"}
+                w={"26px"}
+                onError={({ currentTarget }) => {
+                  currentTarget.onerror = null;
+                  currentTarget.src = `${assetsURL}blockscan/other.svg`;
+                }}
+              />
+            </Tooltip>
             <Heading mb={3} fontSize="lg">
               {nonIntegerPattern.test(hackData.amount)
                 ? hackData.amount
