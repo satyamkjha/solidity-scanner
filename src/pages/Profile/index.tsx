@@ -43,6 +43,7 @@ import { AuthResponse } from "common/types";
 import { InfoIcon } from "@chakra-ui/icons";
 import Loader from "components/styled-components/Loader";
 import { onLogout } from "common/functions";
+import { monthNames } from "common/values";
 
 const Profile: React.FC = () => {
   const toast = useToast();
@@ -518,6 +519,8 @@ const OrganisationBox: React.FC<{
   const queryClient = useQueryClient();
   const toast = useToast();
 
+  let d = new Date(organizations.joined_at);
+
   const leaveOrg = async () => {
     const { data } = await API.get(API_PATH.API_LEAVE_ORGANISATION);
     if (data.status === "success") {
@@ -577,7 +580,10 @@ const OrganisationBox: React.FC<{
           {sentenceCapitalize(organizations.role)}
         </Text>
         <Text fontWeight={700} fontSize="sm" color="#B0B7C3">
-          | Joinned 23 June 2023
+          |{" "}
+          {`${isOwner ? "Created" : "Joined"} at ${d.getDate()} ${
+            monthNames[d.getMonth()]
+          } ${d.getFullYear()}`}
         </Text>
       </HStack>
       <Text mt={10} fontWeight={300} color="gray.500" fontSize="md">
