@@ -16,9 +16,9 @@ import {
 import FormatOptionLabel from "components/common/FormatOptionLabel";
 
 const FilterButton: React.FC<{
-  timeFilter: "D" | "W" | "M" | "Y";
-  filterValue: "D" | "W" | "M" | "Y";
-  setTimeFilter: React.Dispatch<React.SetStateAction<"D" | "W" | "M" | "Y">>;
+  timeFilter: "all" | "W" | "M" | "Y";
+  filterValue: "all" | "W" | "M" | "Y";
+  setTimeFilter: React.Dispatch<React.SetStateAction<"all" | "W" | "M" | "Y">>;
   onFilterSelect: any;
 }> = ({ timeFilter, filterValue, setTimeFilter, onFilterSelect }) => {
   return (
@@ -43,7 +43,7 @@ const FilterButton: React.FC<{
         onFilterSelect(filterValue, "");
       }}
     >
-      1{filterValue}
+      {filterValue === "all" ? "All" : 1 + filterValue}
     </Button>
   );
 };
@@ -52,7 +52,7 @@ const TimeFilter: React.FC<{
   onFilterSelect: any;
 }> = ({ onFilterSelect }) => {
   const [isLargerThan1280] = useMediaQuery("(min-width: 1280px)");
-  const [timeFilter, setTimeFilter] = useState<"D" | "W" | "M" | "Y">("Y");
+  const [timeFilter, setTimeFilter] = useState<"all" | "W" | "M" | "Y">("Y");
 
   return (
     <Flex
@@ -76,12 +76,6 @@ const TimeFilter: React.FC<{
       >
         <HStack spacing={5} mr={8}>
           <FilterButton
-            filterValue={"D"}
-            timeFilter={timeFilter}
-            setTimeFilter={setTimeFilter}
-            onFilterSelect={onFilterSelect}
-          />
-          <FilterButton
             filterValue={"W"}
             timeFilter={timeFilter}
             setTimeFilter={setTimeFilter}
@@ -95,6 +89,12 @@ const TimeFilter: React.FC<{
           />
           <FilterButton
             filterValue={"Y"}
+            timeFilter={timeFilter}
+            setTimeFilter={setTimeFilter}
+            onFilterSelect={onFilterSelect}
+          />
+          <FilterButton
+            filterValue={"all"}
             timeFilter={timeFilter}
             setTimeFilter={setTimeFilter}
             onFilterSelect={onFilterSelect}

@@ -167,6 +167,7 @@ export const customTranslucentDropdown = {
     backgroundColor: "#FFFFFF00",
     color: "#FFFFFF",
     fontSize: "18px",
+    cursor: "pointer",
   }),
   menu: (provided: any, state: any) => ({
     ...provided,
@@ -174,9 +175,8 @@ export const customTranslucentDropdown = {
     borderRadius: 10,
     backdropFilter: "blur(6px)",
     border: "0px solid #ffffff",
-    backgroundColor: "#FFFFFF40",
+    backgroundColor: "#ffffff60",
     maxHeight: "400px",
-    cursor: "pointer",
   }),
   control: (provided: any, state: any) => ({
     display: "flex",
@@ -189,6 +189,7 @@ export const customTranslucentDropdown = {
     border: state.isFocused ? "2px solid #52FF0020" : "2px solid #EDF2F720",
     textAlign: "left",
     fontSize: "18px",
+    cursor: "pointer",
   }),
   singleValue: (provided: any, state: any) => {
     const opacity = state.isDisabled ? 0.3 : 1;
