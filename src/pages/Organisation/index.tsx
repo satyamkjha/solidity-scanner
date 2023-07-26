@@ -19,21 +19,14 @@ import {
   TabPanel,
 } from "@chakra-ui/react";
 
-import { getAssetsURL } from "helpers/helperFunction";
-import { useProfile } from "hooks/useProfile";
-import { useConfig } from "hooks/useConfig";
 import Loader from "components/styled-components/Loader";
-import CreateOrganisationForm from "./CreateOrganisationForm";
 import UserManagementContainer from "./UserManagementContainer";
 import OrganisationSettingsContainer from "./OrganisationSettingsContainer";
+import { Profile } from "common/types";
 
-const Organisation: React.FC = () => {
-  const { data: profileData, isLoading } = useProfile();
+const Organisation: React.FC<{ profileData: Profile }> = ({ profileData }) => {
   const [hasAccess, setHasAccess] = useState(false);
   const [isSpinning, setIsSpinning] = useState(false);
-  const config: any = useConfig();
-  const assetsUrl = getAssetsURL(config);
-  const toast = useToast();
 
   useEffect(() => {
     if (
@@ -67,7 +60,7 @@ const Organisation: React.FC = () => {
           ADMIN CONTROLS
         </Text>
       </VStack>
-      {isLoading && !profileData ? (
+      {!profileData ? (
         <Flex
           sx={{
             w: "100%",

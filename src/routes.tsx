@@ -16,10 +16,11 @@ import Auth from "helpers/auth";
 import API from "helpers/api";
 import PageNotFound, { CustomPageNotFound } from "pages/PageNotFound";
 import Cookies from "js-cookie";
-import { onLogout } from "common/functions";
+import { onLogout, hasUserRole } from "common/functions";
 import { useQueryClient } from "react-query";
 import PublicLayout from "components/PublicLayout";
 import Loader from "components/styled-components/Loader";
+import { useProfile } from "hooks/useProfile";
 
 const Landing = lazy(
   () => import("pages/Landing" /* webpackChunkName: "Landing" */)
@@ -138,6 +139,8 @@ const AcceptOrgInvitation = lazy(
 const LeaderBoard = lazy(
   () => import("pages/HackBoard" /* webpackChunkName: "HackerBoard" */)
 );
+
+const orgRestrictedRoutes = ["/billing", "/integrations", "/organisation"];
 
 const Routes: React.FC = () => {
   return (
@@ -305,12 +308,19 @@ const ErrorHandler: React.FC = ({ children }) => {
 };
 
 const PrivateRoute: React.FC<RouteProps> = ({ children, ...rest }) => {
+  const { path } = rest;
   return (
     <Route
       {...rest}
       render={({ location }) =>
         Auth.isUserAuthenticated() ? (
-          children
+          <>
+            {orgRestrictedRoutes.includes(path) ? (
+              <CheckOrgRole>{children}</CheckOrgRole>
+            ) : (
+              children
+            )}
+          </>
         ) : (
           <Redirect
             to={{
@@ -321,6 +331,32 @@ const PrivateRoute: React.FC<RouteProps> = ({ children, ...rest }) => {
         )
       }
     />
+  );
+};
+
+const CheckOrgRole: React.FC = ({ children }) => {
+  const { data } = useProfile();
+  const history = useHistory();
+
+  useEffect(() => {
+    if (data) {
+      if (
+        data.organizations.length &&
+        !hasUserRole(data.organizations, "owner")
+      ) {
+        history.push("/page-not-found");
+      }
+    }
+  }, [data]);
+
+  return (
+    <>
+      {data ? (
+        React.cloneElement(children, { profileData: data })
+      ) : (
+        <Loader width={"100%"} height={"90vh"} />
+      )}
+    </>
   );
 };
 
