@@ -14,6 +14,7 @@ import { ChakraProvider } from "@chakra-ui/react";
 
 import Routes from "./routes";
 import { theme } from "./theme";
+import { MetaMaskProvider } from "metamask-react";
 
 import { Global, css } from "@emotion/react";
 import { getFeatureGateConfig } from "helpers/helperFunction";
@@ -81,8 +82,10 @@ const AppContent: React.FC = () => {
       )}
       <QueryClientProvider client={queryClient}>
         <ChakraProvider theme={theme}>
-          <Global styles={GlobalStyles} />
-          <Routes />
+          <MetaMaskProvider>
+            <Global styles={GlobalStyles} />
+            <Routes />
+          </MetaMaskProvider>
         </ChakraProvider>
         <ReactQueryDevtools initialIsOpen={false} />
       </QueryClientProvider>

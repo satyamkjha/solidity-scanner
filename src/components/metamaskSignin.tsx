@@ -13,6 +13,7 @@ import React, { useState } from "react";
 import { useHistory } from "react-router-dom";
 import { useConfig } from "hooks/useConfig";
 import Loader from "./styled-components/Loader";
+import { useMetaMask } from "metamask-react";
 
 const MetaMaskLogin: React.FC = () => {
   const config = useConfig();
@@ -24,13 +25,19 @@ const MetaMaskLogin: React.FC = () => {
   });
 
   const [isLoading, setIsLoading] = useState(false);
+  // const { status, connect, account, chainId, ethereum } = useMetaMask();
 
   const ethereum = MMSDK.getProvider();
 
-  const connect = async () => {
+  const connectToMetamask = async () => {
     setIsLoading(true);
     setTimeout(() => setIsLoading(false), 2000);
-    await ethereum.request({ method: "eth_requestAccounts", params: [] });
+
+    // connect();
+
+    await ethereum.request({ method: "eth_requestAccounts" });
+
+    console.log(window.ethereum.selectedAddress);
 
     if (window.ethereum.selectedAddress) {
       getNonce(window.ethereum.selectedAddress);
@@ -39,7 +46,7 @@ const MetaMaskLogin: React.FC = () => {
 
   const checkBrowserAndDevice = (): boolean => {
     // Detect Brave
-    if (navigator.brave) return false;
+    if (navigator.brave) return true;
 
     //Check if Mobile
     if (getDeviceType() === "mobile")
@@ -85,7 +92,7 @@ const MetaMaskLogin: React.FC = () => {
         checkBrowserAndDevice() && (
           <>
             <Button
-              onClick={connect}
+              onClick={connectToMetamask}
               py={6}
               my={5}
               background="#F2F2F2"

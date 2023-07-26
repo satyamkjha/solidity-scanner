@@ -34,6 +34,7 @@
     "i": "^0.3.7",
     "js-cookie": "^3.0.1",
     "js-file-download": "^0.4.12",
+    "metamask-react": "^2.3.0",
     "npm": "^8.5.5",
     "react": "^17.0.2",
     "react-code-blocks": "^0.0.8",
