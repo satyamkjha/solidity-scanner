@@ -60,7 +60,9 @@ const OrganisationMemberList: React.FC<{
   const config: any = useConfig();
   const assetsUrl = getAssetsURL(config);
   const toast = useToast();
-  const { data: orgUserList, refetch: refetchOrgUserList } = useOrgUsersList();
+  const { data: orgUserList, refetch: refetchOrgUserList } = useOrgUsersList(
+    user_organization.status === "joined"
+  );
   const [count, setCount] = useState(0);
 
   let d = new Date();

@@ -12,6 +12,8 @@ export const getOrgUsersList = async () => {
   return data;
 };
 
-export const useOrgUsersList = () => {
-  return useQuery(["org_users_list"], () => getOrgUsersList());
+export const useOrgUsersList = (startQuery: boolean) => {
+  return useQuery(["org_users_list"], () => getOrgUsersList(), {
+    enabled: startQuery,
+  });
 };

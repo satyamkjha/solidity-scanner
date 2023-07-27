@@ -37,14 +37,9 @@ import { useOrgUsersList } from "hooks/useOrgUsersList";
 
 const UserManagementContainer: React.FC<{
   hasAccess: boolean;
-  organizations: any[];
-}> = ({ hasAccess, organizations }) => {
-  const config: any = useConfig();
-  const assetsUrl = getAssetsURL(config);
-
+}> = ({ hasAccess }) => {
   const [isDesktopView] = useMediaQuery("(min-width: 950px)");
-
-  const { data: orgProfile, refetch } = useUserOrgProfile();
+  const { data: orgProfile, refetch } = useUserOrgProfile(true);
 
   return (
     <Flex

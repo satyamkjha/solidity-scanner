@@ -44,22 +44,23 @@ import { InfoIcon } from "@chakra-ui/icons";
 import Loader from "components/styled-components/Loader";
 import { onLogout } from "common/functions";
 import { monthNames } from "common/values";
+import { useUserOrgProfile } from "hooks/useUserOrgProfile";
 
 const Profile: React.FC = () => {
   const toast = useToast();
-
   const [isEditable, setEditable] = useState(false);
   const [emailSend, setEmailSend] = useState(false);
   const [metaMaskEmail, setMetaMaskEmail] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
-
+  const { data: orgProfile, refetch: refetchOrgProfile } =
+    useUserOrgProfile(true);
   const [companyName, setCompanyName] = useState("");
   const [contactNumber, setContactNumber] = useState("");
   const [firstName, setFirstName] = useState("");
   const [updateLoading, setUpdateLoading] = useState(false);
 
-  const { data, refetch } = useProfile();
+  const { data } = useProfile();
   const queryClient = useQueryClient();
 
   const [isOwner, setIsOwner] = useState(true);
@@ -72,13 +73,7 @@ const Profile: React.FC = () => {
       setCompanyName(data.company_name);
       setContactNumber(data.contact_number);
       setFirstName(data.name);
-      setIsOwner(
-        data?.organizations.length > 0
-          ? data?.organizations[0].role === "owner"
-            ? true
-            : false
-          : true
-      );
+      setIsOwner(data.logged_in_via === "normal_login");
     }
   }, [data]);
 
@@ -121,11 +116,17 @@ const Profile: React.FC = () => {
     }
     try {
       setUpdateLoading(true);
-      const { data } = await API.post(API_PATH.API_UPDATE_PROFILE, {
-        company_name: companyName,
-        contact_number: contactNumber,
-        first_name: firstName,
-      });
+      const { data } = isOwner
+        ? await API.post(API_PATH.API_UPDATE_PROFILE, {
+            company_name: companyName,
+            contact_number: contactNumber,
+            first_name: firstName,
+          })
+        : await API.put(API_PATH.API_UPDATE_USER_ORGANISATION_PROFILE, {
+            contact_number: contactNumber,
+            first_name: firstName,
+          });
+
       queryClient.invalidateQueries("profile");
       if (data.status === "success") {
         toast({
@@ -281,7 +282,7 @@ const Profile: React.FC = () => {
                   <Input
                     borderRadius="15px"
                     size="lg"
-                    isDisabled={updateLoading}
+                    isDisabled={updateLoading || !isOwner}
                     type="text"
                     w="100%"
                     maxW="400px"
@@ -410,13 +411,15 @@ const Profile: React.FC = () => {
           </Box>
           {!data.public_address && <ChangePasswordForm isOwner={isOwner} />}
           {isOwner && <DeleteAccountBox />}
-          {data?.organizations.length > 0 && (
-            <OrganisationBox
-              isOwner={isOwner}
-              organizations={data?.organizations[0]}
-              refetch={refetch}
-            />
-          )}
+          {orgProfile &&
+            orgProfile.user_organization &&
+            orgProfile.user_organization.status === "joined" && (
+              <OrganisationBox
+                isOwner={isOwner}
+                organizations={orgProfile.user_organization}
+                refetchOrgProfile={refetchOrgProfile}
+              />
+            )}
         </>
       )}
     </Box>
@@ -512,8 +515,8 @@ const OrganisationBox: React.FC<{
     status: string;
     joined_at: string;
   };
-  refetch(): any;
-}> = ({ isOwner, organizations, refetch }) => {
+  refetchOrgProfile(): any;
+}> = ({ isOwner, organizations, refetchOrgProfile }) => {
   const { isOpen, onClose, onOpen } = useDisclosure();
   const history = useHistory();
   const queryClient = useQueryClient();
@@ -563,7 +566,7 @@ const OrganisationBox: React.FC<{
         position: "bottom",
       });
     }
-    refetch();
+    refetchOrgProfile();
     onClose();
   };
 

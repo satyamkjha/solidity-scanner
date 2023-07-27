@@ -72,10 +72,7 @@ const Organisation: React.FC<{ profileData: Profile }> = ({ profileData }) => {
           <Loader />
         </Flex>
       ) : (
-        <UserManagementContainer
-          hasAccess={hasAccess}
-          organizations={profileData.organizations}
-        />
+        <UserManagementContainer hasAccess={hasAccess} />
       )}
       {/* <Tabs
         mt={[3, 3, 5]}
