@@ -48,23 +48,28 @@ import { monthNames } from "common/values";
 
 const OrganisationMemberList: React.FC<{
   hasAccess: boolean;
-}> = ({ hasAccess }) => {
+  user_organization: {
+    joined_at: string;
+    name: string;
+    org_name: string;
+    role: string;
+    status: string;
+  };
+}> = ({ hasAccess, user_organization }) => {
   const { isOpen, onClose, onOpen } = useDisclosure();
   const config: any = useConfig();
   const assetsUrl = getAssetsURL(config);
   const toast = useToast();
-  const [orgData, setOrgData] = useState(true);
   const { data: orgUserList, refetch: refetchOrgUserList } = useOrgUsersList();
-  const { data: orgProfile } = useUserOrgProfile();
   const [count, setCount] = useState(0);
 
   let d = new Date();
 
   useEffect(() => {
-    if (orgProfile) {
-      d = new Date(orgProfile.user_organization.joined_at);
+    if (user_organization) {
+      d = new Date(user_organization.joined_at);
     }
-  }, [orgProfile]);
+  }, [user_organization]);
 
   useEffect(() => {
     if (orgUserList) {
@@ -183,7 +188,7 @@ const OrganisationMemberList: React.FC<{
           mb={isDesktopView ? 0 : 5}
         >
           <Text fontWeight={500} fontSize={"lg"}>
-            {orgProfile?.user_organization.org_name}
+            {user_organization.org_name}
           </Text>
           <Flex
             justifyContent={"flex-start"}
@@ -242,44 +247,72 @@ const OrganisationMemberList: React.FC<{
             variant={"cta-outline"}
             borderWidth={"1px"}
             fontWeight={500}
+            _hover={{
+              color: "#3300FF",
+            }}
             px={10}
             py={2}
             ml={[0, 0, 0, "auto"]}
-            isDisabled={!hasAccess}
+            isDisabled={!hasAccess || user_organization.role !== "requested"}
           >
             {"+  Invite Member"}
           </Button>
         </HStack>
       </Flex>
-      <Flex
-        w="100%"
-        h="70vh"
-        flexDir="column"
-        justifyContent={"flex-start"}
-        alignItems={"center"}
-        overflowY="scroll"
-      >
+      {user_organization.role === "requested" ? (
         <Flex
           w="100%"
-          h="fit-content"
+          h="70vh"
           flexDir="column"
           justifyContent={"flex-start"}
           alignItems={"center"}
+          overflowY="scroll"
         >
-          {userList.map((userItem) => {
-            if (userItem.role !== "owner")
-              return (
-                <TeamMemberItem
-                  removeOrganisationUserRequest={removeOrganisationUserRequest}
-                  updateOrganisationUserRolesRequest={
-                    updateOrganisationUserRolesRequest
-                  }
-                  userItem={userItem}
-                />
-              );
-          })}
+          <Flex
+            w="100%"
+            h="fit-content"
+            flexDir="column"
+            justifyContent={"flex-start"}
+            alignItems={"center"}
+          >
+            {userList.map((userItem) => {
+              if (userItem.role !== "owner")
+                return (
+                  <TeamMemberItem
+                    removeOrganisationUserRequest={
+                      removeOrganisationUserRequest
+                    }
+                    updateOrganisationUserRolesRequest={
+                      updateOrganisationUserRolesRequest
+                    }
+                    userItem={userItem}
+                  />
+                );
+            })}
+          </Flex>
         </Flex>
-      </Flex>
+      ) : (
+        <VStack
+          w="100%"
+          spacing={4}
+          mb={[6, 6, 6, 0]}
+          top={0}
+          left={0}
+          opacity={hasAccess ? 1 : 0.5}
+        >
+          <Image
+            src={assetsUrl + "background/organisation_requested.svg"}
+            h={"250px"}
+            mb={2}
+          />
+          <Text fontWeight={400}>
+            Please wait till your request gets confirmed by our Team, Once
+            confirmed you’ll be able to add users to your organizationa and
+            start assigning roles
+          </Text>
+        </VStack>
+      )}
+
       <InviteMemberForm
         isOpen={isOpen}
         onClose={onClose}

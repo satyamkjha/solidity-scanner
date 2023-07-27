@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { useLocation, useHistory } from "react-router-dom";
+import { useLocation, useHistory, useParams } from "react-router-dom";
 import {
   Flex,
   Heading,
@@ -33,8 +33,8 @@ const Reset: React.FC = () => {
   const query = useQuery();
   const history = useHistory();
   const token = query.get("token")?.toString();
+  const org_name = query.get("org_name")?.toString();
   const [show, setShow] = useState(false);
-
   const [password, setPassword] = useState("");
   const [email, setEmail] = useState("");
   const [isLoading, setIsLoading] = useState(false);
@@ -47,6 +47,7 @@ const Reset: React.FC = () => {
         email,
         token,
         password,
+        org_name,
       },
       {
         headers: reqHeaders,

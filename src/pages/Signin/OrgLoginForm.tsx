@@ -202,27 +202,29 @@ const OrgLoginForm: React.FC = () => {
 
         <Flex width="100%" justify={step ? "space-between" : "flex-end"}>
           {step && (
-            <Button
-              variant="link"
-              fontSize="sm"
-              mr={1}
-              my={1}
-              onClick={() => setStep(false)}
-            >
-              Back
-            </Button>
-          )}
+            <>
+              <Button
+                variant="link"
+                fontSize="sm"
+                mr={1}
+                my={1}
+                onClick={() => setStep(false)}
+              >
+                Back
+              </Button>
 
-          <Link
-            as={RouterLink}
-            variant="subtle"
-            fontSize="sm"
-            mr={1}
-            my={1}
-            to="/forgot"
-          >
-            Forgot Password?
-          </Link>
+              <Link
+                as={RouterLink}
+                variant="subtle"
+                fontSize="sm"
+                mr={1}
+                my={1}
+                to={`/forgot/${orgName}`}
+              >
+                Forgot Password?
+              </Link>
+            </>
+          )}
         </Flex>
         <Button
           // type="submit"

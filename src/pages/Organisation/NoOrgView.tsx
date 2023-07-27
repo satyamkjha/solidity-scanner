@@ -29,15 +29,15 @@ import { useConfig } from "hooks/useConfig";
 import UpgradePackage from "components/upgradePackage";
 import Loader from "components/styled-components/Loader";
 import CreateOrganisationForm from "./CreateOrganisationForm";
+import { useUserOrgProfile } from "hooks/useUserOrgProfile";
 
 const NoOrgView: React.FC<{
   hasAccess: boolean;
-}> = ({ hasAccess }) => {
+  refetch(): any;
+}> = ({ hasAccess, refetch }) => {
   const { isOpen, onClose, onOpen } = useDisclosure();
   const config: any = useConfig();
   const assetsUrl = getAssetsURL(config);
-
-  const [orgData, setOrgData] = useState(false);
 
   return (
     <>
@@ -128,7 +128,11 @@ const NoOrgView: React.FC<{
           )}
         </Flex>
       </Flex>
-      <CreateOrganisationForm isOpen={isOpen} onClose={onClose} />
+      <CreateOrganisationForm
+        refetch={refetch}
+        isOpen={isOpen}
+        onClose={onClose}
+      />
     </>
   );
 };

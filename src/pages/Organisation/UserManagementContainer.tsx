@@ -44,6 +44,8 @@ const UserManagementContainer: React.FC<{
 
   const [isDesktopView] = useMediaQuery("(min-width: 950px)");
 
+  const { data: orgProfile, refetch } = useUserOrgProfile();
+
   return (
     <Flex
       bgColor={isDesktopView ? "white" : "bg.subtle"}
@@ -54,10 +56,17 @@ const UserManagementContainer: React.FC<{
       pb={6}
       flexDir="column"
     >
-      {organizations.length > 0 ? (
-        <OrganisationMemberList hasAccess={hasAccess} />
-      ) : (
-        <NoOrgView hasAccess={hasAccess} />
+      {orgProfile && (
+        <>
+          {orgProfile.user_organization ? (
+            <OrganisationMemberList
+              hasAccess={hasAccess}
+              user_organization={orgProfile.user_organization}
+            />
+          ) : (
+            <NoOrgView hasAccess={hasAccess} refetch={refetch} />
+          )}
+        </>
       )}
     </Flex>
   );

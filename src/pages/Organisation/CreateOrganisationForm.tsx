@@ -33,7 +33,8 @@ import { debounce } from "lodash";
 const CreateOrganisationForm: React.FC<{
   onClose(): any;
   isOpen: boolean;
-}> = ({ isOpen, onClose }) => {
+  refetch(): any;
+}> = ({ isOpen, onClose, refetch }) => {
   const history = useHistory();
   const queryClient = useQueryClient();
   const toast = useToast();
@@ -56,6 +57,7 @@ const CreateOrganisationForm: React.FC<{
           isClosable: true,
         });
         onClose();
+        refetch();
       } else {
         toast({
           title: data.message,
@@ -70,7 +72,7 @@ const CreateOrganisationForm: React.FC<{
   };
 
   const checkOrganisationNameRequest = async () => {
-    if (orgName.length > 5) {
+    if (orgName.length > 0 && orgName.length < 50) {
       const { data } = await API.post<{
         status: string;
         org_name_available: boolean;
@@ -190,7 +192,9 @@ const CreateOrganisationForm: React.FC<{
                 fontWeight={500}
                 onClick={createOrganisationRequest}
                 disabled={
-                  orgName.length < 5 || availabililtyStatus === "Not-Available"
+                  orgName.length < 1 ||
+                  orgName.length > 50 ||
+                  availabililtyStatus === "Not-Available"
                 }
               >
                 Create Organization
