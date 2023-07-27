@@ -22,11 +22,14 @@ import { useProfile } from "hooks/useProfile";
 import { useDropzone } from "react-dropzone";
 import { API_PATH } from "helpers/routeManager";
 import Loader from "components/styled-components/Loader";
+import { useUserRole } from "hooks/useUserRole";
+import { Profile } from "common/types";
 
 const UploadForm: React.FC<{
   profileData: Profile;
 }> = ({ profileData }) => {
   const history = useHistory();
+  const role: string = useUserRole();
   const [step, setStep] = useState(0);
   const [error, setError] = useState(false);
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
@@ -36,10 +39,7 @@ const UploadForm: React.FC<{
   >([]);
   const [isLoading, setIsLoading] = useState(false);
 
-  let isViewer =
-    profileData.organizations.length > 0
-      ? profileData.organizations[0].role === "viewer"
-      : false;
+  let isViewer = role === "viewer";
 
   const {
     getRootProps,

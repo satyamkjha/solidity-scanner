@@ -18,6 +18,7 @@ import { theme } from "./theme";
 import { Global, css } from "@emotion/react";
 import { getFeatureGateConfig } from "helpers/helperFunction";
 import { ConfigProvider, useConfig } from "hooks/useConfig";
+import { UserRoleProvider, useUserRole } from "hooks/useUserRole";
 
 const queryClient = new QueryClient();
 
@@ -80,10 +81,12 @@ const AppContent: React.FC = () => {
         </Helmet>
       )}
       <QueryClientProvider client={queryClient}>
-        <ChakraProvider theme={theme}>
-          <Global styles={GlobalStyles} />
-          <Routes />
-        </ChakraProvider>
+        <UserRoleProvider>
+          <ChakraProvider theme={theme}>
+            <Global styles={GlobalStyles} />
+            <Routes />
+          </ChakraProvider>
+        </UserRoleProvider>
         <ReactQueryDevtools initialIsOpen={false} />
       </QueryClientProvider>
     </>

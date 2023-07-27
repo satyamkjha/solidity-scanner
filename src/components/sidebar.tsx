@@ -1,4 +1,4 @@
-import React, { ReactElement, useState } from "react";
+import React, { ReactElement, useState, useEffect } from "react";
 import { Link, useRouteMatch } from "react-router-dom";
 import {
   Flex,
@@ -29,12 +29,12 @@ import {
   SIDEBAR_WIDTH_EXPANDED,
   SIDEBAR_WIDTH_COLLAPSED,
 } from "common/constants";
-
 import { useProfile } from "hooks/useProfile";
 import ManualAuditForm from "./manualAuditForm";
 import { ArrowBackIcon, ArrowForwardIcon } from "@chakra-ui/icons";
 import { useConfig } from "hooks/useConfig";
 import { getAssetsURL, getFeatureGateConfig } from "helpers/helperFunction";
+import { useUserRole } from "hooks/useUserRole";
 
 const Sidebar: React.FC<{
   isCollapsed: boolean;
@@ -47,18 +47,7 @@ const Sidebar: React.FC<{
   const [isDesktopView] = useMediaQuery("(min-width: 1024px)");
   const config: any = useConfig();
   const assetsURL = getAssetsURL(config);
-
-  const isOwner =
-    profileData?.organizations.length > 0
-      ? profileData?.organizations[0].role === "owner"
-        ? true
-        : false
-      : true;
-
-  const isAdmin =
-    profileData?.organizations.length > 0
-      ? profileData?.organizations[0].role === "admin"
-      : false;
+  const role: string = useUserRole();
 
   return (
     <Flex
@@ -197,7 +186,7 @@ const Sidebar: React.FC<{
               isCollapsed={isCollapsed}
               transitionDone={transitionDone}
             />
-            {isOwner && (
+            {role === "owner" && (
               <SidebarItem
                 to="/integrations"
                 label="Integrations"
@@ -215,7 +204,7 @@ const Sidebar: React.FC<{
                 transitionDone={transitionDone}
               />
             )}
-            {isOwner && (
+            {role === "owner" && (
               <SidebarItem
                 to={`/billing`}
                 label="Billing"
@@ -224,7 +213,7 @@ const Sidebar: React.FC<{
                 transitionDone={transitionDone}
               />
             )}
-            {(isOwner || isAdmin) && (
+            {(role === "owner" || role === "admin") && (
               <SidebarItem
                 to={`/organisation`}
                 label="Organisation"

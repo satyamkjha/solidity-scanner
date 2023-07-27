@@ -52,12 +52,10 @@ export default function PrivateApi() {
     } else {
       setHasAccess(false);
     }
-    if (profileData && profileData.organizations.length > 0) {
-      if (profileData.organizations[0].role === "owner") {
-        setIsOwner(true);
-      } else {
-        setIsOwner(false);
-      }
+    if (profileData && profileData.logged_in_via === "normal_login") {
+      setIsOwner(true);
+    } else {
+      setIsOwner(false);
     }
   }, [profileData]);
 

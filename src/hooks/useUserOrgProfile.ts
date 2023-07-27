@@ -17,6 +17,8 @@ const getUserOrgProfile = async () => {
   return data;
 };
 
-export const useUserOrgProfile = () => {
-  return useQuery(["org_list"], () => getUserOrgProfile());
+export const useUserOrgProfile = (startQuery: boolean) => {
+  return useQuery(["org_list"], () => getUserOrgProfile(), {
+    enabled: startQuery,
+  });
 };

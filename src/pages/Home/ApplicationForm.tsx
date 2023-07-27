@@ -23,10 +23,12 @@ import { TreeItem, TreeItemUP } from "common/types";
 import { getSkipFilePaths, restructureRepoTree } from "helpers/fileStructure";
 import Loader from "components/styled-components/Loader";
 import { Profile } from "common/types";
+import { useUserRole } from "hooks/useUserRole";
 
 const ApplicationForm: React.FC<{
   profileData: Profile;
 }> = ({ profileData }) => {
+  const role: string = useUserRole();
   const assetsURL = getAssetsURL();
   const queryClient = useQueryClient();
   const history = useHistory();
@@ -152,10 +154,7 @@ const ApplicationForm: React.FC<{
     }
   }, [branch]);
 
-  let isViewer =
-    profileData.organizations.length > 0
-      ? profileData.organizations[0].role === "viewer"
-      : false;
+  let isViewer = role === "viewer";
 
   return (
     <Flex

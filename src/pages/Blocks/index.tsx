@@ -39,9 +39,11 @@ import { getAssetsURL } from "helpers/helperFunction";
 import Loader from "components/styled-components/Loader";
 import { DeleteIcon } from "@chakra-ui/icons";
 import { BsThreeDotsVertical } from "react-icons/bs";
+import { useUserRole } from "hooks/useUserRole";
 
 const Blocks: React.FC = () => {
   const [isDesktopView] = useMediaQuery("(min-width: 1920px)");
+  const role: string = useUserRole();
 
   const [page, setPage] = useState<Page>();
   const [pagination, setPagination] = useState<Pagination>({
@@ -249,11 +251,7 @@ const Blocks: React.FC = () => {
                 scan={scan}
                 setIconCounter={setIconCounter}
                 updateScanList={updateScanList}
-                isViewer={
-                  profileData.organizations.length > 0
-                    ? profileData.organizations[0].role === "viewer"
-                    : false
-                }
+                isViewer={role === "viewer"}
               />
             ))}
           </InfiniteScroll>

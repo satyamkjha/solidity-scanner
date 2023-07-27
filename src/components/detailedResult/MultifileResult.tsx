@@ -26,6 +26,7 @@ import FileExplorerSection from "./FileExplorerSection";
 import FormatOptionLabelWithImage from "components/FormatOptionLabelWithImage";
 import { customStylesForTakeAction } from "common/stylesForCustomSelect";
 import ConfirmActionForm from "../confirmActionForm";
+import { useUserRole } from "hooks/useUserRole";
 
 const MultifileResult: React.FC<{
   type: "block" | "project";
@@ -55,6 +56,7 @@ const MultifileResult: React.FC<{
   contract_address,
 }) => {
   const [files, setFiles] = useState<FilesState | null>(null);
+  const role: string = useUserRole();
 
   const [issues, setIssues] = useState<MultiFileScanDetail[]>(scanDetails);
 
@@ -96,10 +98,7 @@ const MultifileResult: React.FC<{
   const [isDisabled, setIsDisabled] = useState<boolean>(true);
   const [filterExpanded, setFilterExpanded] = useState<boolean>(false);
 
-  const isViewer =
-    profileData.organizations.length > 0
-      ? profileData.organizations[0].role === "viewer"
-      : false;
+  const isViewer = role === "viewer";
 
   // const [action, setAction] = useState("");
   const toast = useToast();
@@ -169,10 +168,7 @@ const MultifileResult: React.FC<{
 
   useEffect(() => {
     if (!selectedBugs) setIssues(issues);
-    const isViewer =
-      profileData.organizations.length > 0
-        ? profileData.organizations[0].role === "viewer"
-        : false;
+    const isViewer = role === "viewer";
     if (selectedBugs && selectedBugs.length && !isViewer) {
       setIsDisabled(false);
     } else {

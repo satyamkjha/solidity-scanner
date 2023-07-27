@@ -34,6 +34,7 @@ import { useConfig } from "hooks/useConfig";
 import { useQueryClient } from "react-query";
 import { onLogout } from "common/functions";
 import { sentenceCapitalize } from "helpers/helperFunction";
+import { useUserOrgProfile } from "hooks/useUserOrgProfile";
 
 const MotionFlex = motion(Flex);
 
@@ -44,6 +45,9 @@ const Layout: React.FC = ({ children }) => {
   const history = useHistory();
   const queryClient = useQueryClient();
   const { data: profileData } = useProfile();
+  const { data: orgProfile } = useUserOrgProfile(
+    profileData?.logged_in_via === "org_login"
+  );
 
   const config: any = useConfig();
   const assetsURL = getAssetsURL(config);
@@ -263,61 +267,67 @@ const Layout: React.FC = ({ children }) => {
             <Icon as={FiLogOut} mr={2} />
             Logout
           </Button> */}
-            <Menu>
-              <MenuButton
-                as={Button}
-                variant="unstyled"
-                borderRadius="100%"
-                border="2px solid"
-                borderColor="brand-dark"
-                overflow="hidden"
-                mr={4}
-              >
-                <ProfileIconOne size={40} />
-              </MenuButton>
-              <MenuList
-                p={4}
-                width="250px"
-                borderWidth="0px"
-                boxShadow="0px 4px 20px rgba(0, 0, 0, 0.35)"
-                borderRadius="15px"
-              >
-                {profileData?.organizations.length > 0 && (
-                  <VStack
-                    justifyContent="flex-start"
-                    alignItems="flex-start"
-                    mb={7}
-                  >
-                    <Heading fontSize="md">
-                      {profileData?.organizations[0].org_name}
-                    </Heading>
-                    <Heading fontSize="sm" fontWeight={300}>
-                      {sentenceCapitalize(profileData?.organizations[0].role)}
-                    </Heading>
-                    <Divider />
-                  </VStack>
-                )}
+            {profileData && (
+              <Menu>
+                <MenuButton
+                  as={Button}
+                  variant="unstyled"
+                  borderRadius="100%"
+                  border="2px solid"
+                  borderColor="brand-dark"
+                  overflow="hidden"
+                  mr={4}
+                >
+                  <ProfileIconOne size={40} />
+                </MenuButton>
+                <MenuList
+                  p={4}
+                  width="250px"
+                  borderWidth="0px"
+                  boxShadow="0px 4px 20px rgba(0, 0, 0, 0.35)"
+                  borderRadius="15px"
+                >
+                  {profileData.logged_in_via === "org_login" &&
+                    orgProfile &&
+                    orgProfile.user_organization && (
+                      <VStack
+                        justifyContent="flex-start"
+                        alignItems="flex-start"
+                        mb={7}
+                      >
+                        <Heading fontSize="md">
+                          {orgProfile.user_organization?.org_name}
+                        </Heading>
+                        <Heading fontSize="sm" fontWeight={300}>
+                          {sentenceCapitalize(
+                            orgProfile.user_organization.role
+                          )}
+                        </Heading>
+                        <Divider />
+                      </VStack>
+                    )}
 
-                <MenuItem
-                  borderBottom="1px solid"
-                  borderColor="border"
-                  py={2}
-                  onClick={() => history.push("/profile")}
-                  borderTopRadius="10px"
-                >
-                  <Icon as={BiUser} mr={3} color="gray.500" />
-                  Profile
-                </MenuItem>
-                <MenuItem
-                  py={2}
-                  borderBottomRadius="10px"
-                  onClick={() => logout()}
-                >
-                  <Icon as={BiPowerOff} mr={3} color="gray.500" />
-                  Logout
-                </MenuItem>
-              </MenuList>
-            </Menu>
+                  <MenuItem
+                    borderBottom="1px solid"
+                    borderColor="border"
+                    py={2}
+                    onClick={() => history.push("/profile")}
+                    borderTopRadius="10px"
+                  >
+                    <Icon as={BiUser} mr={3} color="gray.500" />
+                    Profile
+                  </MenuItem>
+                  <MenuItem
+                    py={2}
+                    borderBottomRadius="10px"
+                    onClick={() => logout()}
+                  >
+                    <Icon as={BiPowerOff} mr={3} color="gray.500" />
+                    Logout
+                  </MenuItem>
+                </MenuList>
+              </Menu>
+            )}
           </Flex>
           <Box width={"100%"}>{children}</Box>
         </Box>

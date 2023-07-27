@@ -22,6 +22,7 @@ import PublicLayout from "components/PublicLayout";
 import Loader from "components/styled-components/Loader";
 import { useProfile } from "hooks/useProfile";
 import { Organization, OrgUserRole } from "common/types";
+import { useUserOrgProfile } from "hooks/useUserOrgProfile";
 
 const Landing = lazy(
   () => import("pages/Landing" /* webpackChunkName: "Landing" */)
@@ -354,25 +355,32 @@ const CheckOrgRole: React.FC<{ roles: OrgUserRole[] }> = ({
   children,
   roles,
 }) => {
-  const { data } = useProfile();
+  const { data: profile } = useProfile();
+
+  const { data: orgProfile } = useUserOrgProfile(
+    profile?.logged_in_via === "org_login"
+  );
+
   const history = useHistory();
 
   useEffect(() => {
-    if (data) {
-      const hasMatchingRole = data.organizations.some((org: Organization) =>
-        roles.includes(org.role)
-      );
+    if (profile && orgProfile) {
+      let hasMatchingRole: boolean = false;
 
-      if (data.organizations.length && hasMatchingRole) {
+      if (profile.logged_in_via === "org_login") {
+        hasMatchingRole = roles.includes(orgProfile.user_organization?.role);
+      }
+
+      if (hasMatchingRole) {
         history.push("/page-not-found");
       }
     }
-  }, [data]);
+  }, [profile, orgProfile]);
 
   return (
     <>
-      {data ? (
-        React.cloneElement(children, { profileData: data })
+      {profile ? (
+        React.cloneElement(children, { profileData: profile })
       ) : (
         <Loader width={"100%"} height={"90vh"} />
       )}

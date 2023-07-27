@@ -39,7 +39,7 @@ export type Profile = {
     exp_year: number;
     exp_month: number;
   };
-
+  logged_in_via: string;
   actions_supported?: {
     file_scan: boolean;
     view_report: boolean;

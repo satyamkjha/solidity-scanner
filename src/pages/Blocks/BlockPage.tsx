@@ -65,10 +65,11 @@ import {
 import { useConfig } from "hooks/useConfig";
 import Loader from "components/styled-components/Loader";
 import { formattedDate } from "common/functions";
+import { useUserRole } from "hooks/useUserRole";
 
 const BlockPage: React.FC = () => {
   const { scanId } = useParams<{ scanId: string }>();
-
+  const role: string = useUserRole();
   const { data: scanData, isLoading, refetch } = useScan(scanId);
 
   const [reportingStatus, setReportingStatus] = useState<string>("");
@@ -270,7 +271,7 @@ const BlockPage: React.FC = () => {
     if (profile && plans) {
       if (reportingStatus === "generating_report") return true;
 
-      return !checkGenerateReportAccess(profile, plans);
+      return !checkGenerateReportAccess(profile, plans, role);
     }
     return true;
   };
@@ -448,11 +449,19 @@ const BlockPage: React.FC = () => {
                                 mx={["auto", "auto", "auto", "0"]}
                                 mr={["auto", "auto", "auto", 5]}
                                 isDisabled={
-                                  !checkPublishReportAccess(profile, plans)
+                                  !checkPublishReportAccess(
+                                    profile,
+                                    plans,
+                                    role
+                                  )
                                 }
                                 onClick={() => setOpen(!open)}
                               >
-                                {!checkPublishReportAccess(profile, plans) && (
+                                {!checkPublishReportAccess(
+                                  profile,
+                                  plans,
+                                  role
+                                ) && (
                                   <LockIcon color={"accent"} size="xs" mr={3} />
                                 )}
                                 Publish Report
@@ -602,9 +611,11 @@ const BlockPage: React.FC = () => {
                                     <Loader color="#806CCF" size={25} />
                                   </Flex>
                                 )}
-                                {!checkGenerateReportAccess(profile, plans) && (
-                                  <LockIcon color={"accent"} mr={3} />
-                                )}
+                                {!checkGenerateReportAccess(
+                                  profile,
+                                  plans,
+                                  role
+                                ) && <LockIcon color={"accent"} mr={3} />}
                                 {reportingStatus === "generating_report"
                                   ? "Generating report..."
                                   : reportingStatus === "not_generated"

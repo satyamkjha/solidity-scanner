@@ -81,11 +81,12 @@ export const getReCaptchaHeaders = async (action: string) => {
 
 export const checkGenerateReportAccess = (
   profile: Profile,
-  plans: PricingData
+  plans: PricingData,
+  role: string
 ) => {
   if (profile && plans) {
-    if (profile.organizations.length > 0) {
-      if (profile.organizations[0].role === "viewer") return false;
+    if (profile.logged_in_via === "org_login") {
+      if (role === "viewer") return false;
     }
     if (profile.actions_supported)
       return profile.actions_supported.generate_report;
@@ -98,18 +99,20 @@ export const checkGenerateReportAccess = (
 
     if (profile.current_package === "custom") return true;
 
-    return plans.pricing_data["monthly"][profile.current_package].report;
+    return plans.pricing_data[profile.billing_cycle][profile.current_package]
+      .report;
   }
   return false;
 };
 
 export const checkPublishReportAccess = (
   profile: Profile,
-  plans: PricingData
+  plans: PricingData,
+  role: string
 ) => {
   if (profile && plans) {
-    if (profile.organizations.length > 0) {
-      if (profile.organizations[0].role === "viewer") return false;
+    if (profile.logged_in_via === "org_login") {
+      if (role === "viewer") return false;
     }
 
     if (profile.actions_supported)
@@ -123,7 +126,7 @@ export const checkPublishReportAccess = (
 
     if (profile.current_package === "custom") return true;
 
-    return plans.pricing_data["monthly"][profile.current_package]
+    return plans.pricing_data[profile.billing_cycle][profile.current_package]
       .publishable_report;
   }
   return false;

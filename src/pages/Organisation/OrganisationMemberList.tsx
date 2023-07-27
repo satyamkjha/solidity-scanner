@@ -253,13 +253,13 @@ const OrganisationMemberList: React.FC<{
             px={10}
             py={2}
             ml={[0, 0, 0, "auto"]}
-            isDisabled={!hasAccess || user_organization.role !== "requested"}
+            isDisabled={!hasAccess || user_organization.status === "requested"}
           >
             {"+  Invite Member"}
           </Button>
         </HStack>
       </Flex>
-      {user_organization.role === "requested" ? (
+      {user_organization.status === "joined" ? (
         <Flex
           w="100%"
           h="70vh"

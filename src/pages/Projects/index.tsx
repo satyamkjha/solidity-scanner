@@ -43,9 +43,11 @@ import { useProfile } from "hooks/useProfile";
 import InfiniteScroll from "react-infinite-scroll-component";
 import { API_PATH } from "helpers/routeManager";
 import Loader from "components/styled-components/Loader";
+import { useUserRole } from "hooks/useUserRole";
 
 const Projects: React.FC = () => {
   const [isDesktopView] = useMediaQuery("(min-width: 1920px)");
+  const role: string = useUserRole();
 
   const [page, setPage] = useState<Page>();
   const [pagination, setPagination] = useState<Pagination>({
@@ -253,11 +255,7 @@ const Projects: React.FC = () => {
                 refetchProfile={refetchProfile}
                 refetch={refetch}
                 updateProjectList={updateProjectList}
-                isViewer={
-                  profileData.organizations.length > 0
-                    ? profileData.organizations[0].role === "viewer"
-                    : false
-                }
+                isViewer={role === "viewer"}
               />
             ))}
           </InfiniteScroll>

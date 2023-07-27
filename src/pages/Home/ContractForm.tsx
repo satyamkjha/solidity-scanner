@@ -26,6 +26,7 @@ import { Profile } from "common/types";
 import FormatOptionLabelWithImage from "components/FormatOptionLabelWithImage";
 import { customStylesForReactSelect } from "common/stylesForCustomSelect";
 import Loader from "components/styled-components/Loader";
+import { useUserRole } from "hooks/useUserRole";
 
 const ContractForm: React.FC<{
   profileData: Profile;
@@ -326,10 +327,8 @@ const ContractForm: React.FC<{
     );
   };
 
-  let isViewer =
-    profileData.organizations.length > 0
-      ? profileData.organizations[0].role === "viewer"
-      : false;
+  const role: string = useUserRole();
+  let isViewer = role === "viewer";
 
   return (
     <Flex
