@@ -20,6 +20,8 @@ import { onLogout } from "common/functions";
 import { useQueryClient } from "react-query";
 import PublicLayout from "components/PublicLayout";
 import Loader from "components/styled-components/Loader";
+import { useProfile } from "hooks/useProfile";
+import { Organization, OrgUserRole } from "common/types";
 
 const Landing = lazy(
   () => import("pages/Landing" /* webpackChunkName: "Landing" */)
@@ -138,6 +140,12 @@ const AcceptOrgInvitation = lazy(
 const LeaderBoard = lazy(
   () => import("pages/HackBoard" /* webpackChunkName: "HackerBoard" */)
 );
+
+const orgRestrictedRoutes = [
+  { path: "/billing", roles: ["viewer", "editor", "admin"] },
+  { path: "/integrations", roles: ["viewer", "editor", "admin"] },
+  { path: "/organisation", roles: ["viewer", "editor"] },
+];
 
 const Routes: React.FC = () => {
   return (
@@ -305,12 +313,30 @@ const ErrorHandler: React.FC = ({ children }) => {
 };
 
 const PrivateRoute: React.FC<RouteProps> = ({ children, ...rest }) => {
+  const { path } = rest;
+  const isRestrictedRoute = (path) => {
+    return orgRestrictedRoutes.some((route) => route.path === path);
+  };
+  const getRestrictedRoles = (path) => {
+    const matchedRoute = orgRestrictedRoutes.find(
+      (route) => route.path === path
+    );
+    return matchedRoute ? matchedRoute.roles : [];
+  };
   return (
     <Route
       {...rest}
       render={({ location }) =>
         Auth.isUserAuthenticated() ? (
-          children
+          <>
+            {isRestrictedRoute(path) ? (
+              <CheckOrgRole roles={getRestrictedRoles(path)}>
+                {children}
+              </CheckOrgRole>
+            ) : (
+              children
+            )}
+          </>
         ) : (
           <Redirect
             to={{
@@ -321,6 +347,36 @@ const PrivateRoute: React.FC<RouteProps> = ({ children, ...rest }) => {
         )
       }
     />
+  );
+};
+
+const CheckOrgRole: React.FC<{ roles: OrgUserRole[] }> = ({
+  children,
+  roles,
+}) => {
+  const { data } = useProfile();
+  const history = useHistory();
+
+  useEffect(() => {
+    if (data) {
+      const hasMatchingRole = data.organizations.some((org: Organization) =>
+        roles.includes(org.role)
+      );
+
+      if (data.organizations.length && hasMatchingRole) {
+        history.push("/page-not-found");
+      }
+    }
+  }, [data]);
+
+  return (
+    <>
+      {data ? (
+        React.cloneElement(children, { profileData: data })
+      ) : (
+        <Loader width={"100%"} height={"90vh"} />
+      )}
+    </>
   );
 };
 

@@ -19,6 +19,7 @@ import {
 import API from "helpers/api";
 import { API_PATH } from "helpers/routeManager";
 import Loader from "components/styled-components/Loader";
+import { Profile } from "common/types";
 const REDIRECT_URI =
   process.env.NODE_ENV === "production"
     ? "https://solidityscan.com/integrations/"
@@ -33,8 +34,7 @@ const SLACK_URL = `https://slack.com/oauth/v2/authorize?client_id=${SLACK_CLIENT
   "csrftoken"
 )}`;
 
-const Integrations: React.FC = () => {
-  const { data } = useProfile();
+const Integrations: React.FC<{ profileData: Profile }> = ({ profileData }) => {
   return (
     <Box
       sx={{
@@ -59,16 +59,16 @@ const Integrations: React.FC = () => {
         <Text sx={{ color: "subtle", fontWeight: 600 }}>INTEGRATIONS</Text>
       </Flex>
 
-      {!data && <Loader width={"100%"} height={"70vh"} />}
+      {!profileData && <Loader width={"100%"} height={"70vh"} />}
 
-      {data && (
+      {profileData && (
         <VStack spacing={8} my={16}>
           <IntegrationChannel
             title="GitHub"
             description="Connect you GitHub to directly create issues for vulnerabilities in your repo"
             icon={<GithubIcon size={63} />}
-            allowed={data._integrations.github.allowed}
-            status={data._integrations.github.status}
+            allowed={profileData._integrations.github.allowed}
+            status={profileData._integrations.github.status}
             url={GITHUB_URL}
             providerUrlChecker="github.com"
           />
@@ -76,8 +76,8 @@ const Integrations: React.FC = () => {
             title="JIRA"
             description="Connect JIRA to export vulnerabilities"
             icon={<JiraIcon size={73} />}
-            allowed={data._integrations.jira.allowed}
-            status={data._integrations.jira.status}
+            allowed={profileData._integrations.jira.allowed}
+            status={profileData._integrations.jira.status}
             url={JIRA_URL}
             providerUrlChecker="atlassian.com"
           />
@@ -85,8 +85,8 @@ const Integrations: React.FC = () => {
             title="Slack"
             description="Connect slack to receive updates about vulnerabilities directly to slack"
             icon={<SlackIcon size={73} />}
-            allowed={data._integrations.slack.allowed}
-            status={data._integrations.slack.status}
+            allowed={profileData._integrations.slack.allowed}
+            status={profileData._integrations.slack.status}
             url={SLACK_URL}
             providerUrlChecker="slack.com"
           />

@@ -11,9 +11,7 @@ import {
 } from "@chakra-ui/react";
 import "./billing.css";
 
-import { useProfile } from "hooks/useProfile";
-
-import { Page, Transaction } from "common/types";
+import { Page, Transaction, Profile } from "common/types";
 import { useTransactions } from "hooks/useTransactions";
 import { usePricingPlans } from "hooks/usePricingPlans";
 import ScanCredits from "pages/Billing/components/ScanCredits";
@@ -24,9 +22,7 @@ import PromoCodeCard from "./components/PromoCodeCard";
 import TransactionListCard from "./components/TransactionListCard";
 import Loader from "components/styled-components/Loader";
 
-const Billing: React.FC = () => {
-  const { data } = useProfile();
-  const [] = useState("custom");
+const Billing: React.FC<{ profileData: Profile }> = ({ profileData }) => {
   const [planBillingCycle, setPlanBillingCycle] = useState("");
   const pricingRef = useRef<HTMLDivElement>(null);
 
@@ -42,12 +38,14 @@ const Billing: React.FC = () => {
   const { data: plans } = usePricingPlans();
 
   useEffect(() => {
-    if (data) {
+    if (profileData) {
       const billing_cycle =
-        data.billing_cycle === "N/A" ? "trial" : data.billing_cycle;
+        profileData.billing_cycle === "N/A"
+          ? "trial"
+          : profileData.billing_cycle;
       setPlanBillingCycle(billing_cycle);
     }
-  }, [data]);
+  }, [profileData]);
 
   useEffect(() => {
     if (transactions) {
@@ -125,7 +123,11 @@ const Billing: React.FC = () => {
         <Text mx={[2, 2, 2, 8]} sx={{ color: "subtle", fontWeight: 600 }}>
           Billing & Transaction history
         </Text>
-        {!data || !plans || !transactionList || !page || !planBillingCycle ? (
+        {!profileData ||
+        !plans ||
+        !transactionList ||
+        !page ||
+        !planBillingCycle ? (
           <Flex w="100%" h="70vh" alignItems="center" justifyContent="center">
             <Loader />
           </Flex>
@@ -156,7 +158,7 @@ const Billing: React.FC = () => {
                   Plans
                 </Tab>
                 {!["trial", "custom", "expired"].includes(
-                  data.current_package
+                  profileData.current_package
                 ) && (
                   <Tab
                     minW={["150px", "150px", "200px"]}
@@ -184,7 +186,7 @@ const Billing: React.FC = () => {
             </Flex>
             <TabPanels width={"100%"}>
               <TabPanel width={"100%"} p={0}>
-                {data.current_package !== "custom" && (
+                {profileData.current_package !== "custom" && (
                   <Flex
                     w="100%"
                     pt={4}
@@ -195,18 +197,20 @@ const Billing: React.FC = () => {
                   >
                     {plans.pricing_data[planBillingCycle] &&
                       plans.pricing_data[planBillingCycle][
-                        data.current_package
+                        profileData.current_package
                       ] && (
                         <CurrentPlan
-                          subscription={data.subscription}
-                          isCancellable={data.is_cancellable}
+                          subscription={profileData.subscription}
+                          isCancellable={profileData.is_cancellable}
                           billingCycle={planBillingCycle}
-                          packageName={data.current_package}
-                          packageRechargeDate={data.package_recharge_date}
-                          packageValidity={data.package_validity}
+                          packageName={profileData.current_package}
+                          packageRechargeDate={
+                            profileData.package_recharge_date
+                          }
+                          packageValidity={profileData.package_validity}
                           plan={
                             plans.pricing_data[planBillingCycle][
-                              data.current_package
+                              profileData.current_package
                             ]
                           }
                           upgradePlan={onUpgradePlan}
@@ -242,30 +246,30 @@ const Billing: React.FC = () => {
                 <Flex
                   w="100%"
                   ref={pricingRef}
-                  mt={data.current_package === "custom" ? 4 : 0}
+                  mt={profileData.current_package === "custom" ? 4 : 0}
                 >
                   <PricingDetails
-                    currentPackage={data.current_package}
+                    currentPackage={profileData.current_package}
                     pricingDetails={plans}
                     page="billing"
                   />
                 </Flex>
               </TabPanel>
               {!["trial", "custom", "expired"].includes(
-                data.current_package
+                profileData.current_package
               ) && (
                 <TabPanel px={[0, 0, 4]} mx={[0, 0, 4]}>
                   {plans.pricing_data[planBillingCycle] &&
                     plans.pricing_data[planBillingCycle][
-                      data.current_package
+                      profileData.current_package
                     ] && (
                       <ScanCredits
                         planData={
                           plans.pricing_data[planBillingCycle][
-                            data.current_package
+                            profileData.current_package
                           ]
                         }
-                        profile={data}
+                        profile={profileData}
                         topUpData={plans.pricing_data["topup"]}
                         pricingDetails={plans.pricing_data}
                       />
@@ -282,7 +286,7 @@ const Billing: React.FC = () => {
                 />
               </TabPanel>
               <TabPanel px={[0, 0, 4]} mx={[0, 0, 4]}>
-                <PromoCodeCard profileData={data} />
+                <PromoCodeCard profileData={profileData} />
               </TabPanel>
             </TabPanels>
           </Tabs>
