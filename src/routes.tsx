@@ -16,11 +16,12 @@ import Auth from "helpers/auth";
 import API from "helpers/api";
 import PageNotFound, { CustomPageNotFound } from "pages/PageNotFound";
 import Cookies from "js-cookie";
-import { onLogout, hasUserRole } from "common/functions";
+import { onLogout } from "common/functions";
 import { useQueryClient } from "react-query";
 import PublicLayout from "components/PublicLayout";
 import Loader from "components/styled-components/Loader";
 import { useProfile } from "hooks/useProfile";
+import { Organization, OrgUserRole } from "common/types";
 
 const Landing = lazy(
   () => import("pages/Landing" /* webpackChunkName: "Landing" */)
@@ -140,7 +141,11 @@ const LeaderBoard = lazy(
   () => import("pages/HackBoard" /* webpackChunkName: "HackerBoard" */)
 );
 
-const orgRestrictedRoutes = ["/billing", "/integrations", "/organisation"];
+const orgRestrictedRoutes = [
+  { path: "/billing", roles: ["viewer", "editor", "admin"] },
+  { path: "/integrations", roles: ["viewer", "editor", "admin"] },
+  { path: "/organisation", roles: ["viewer", "editor"] },
+];
 
 const Routes: React.FC = () => {
   return (
@@ -309,14 +314,25 @@ const ErrorHandler: React.FC = ({ children }) => {
 
 const PrivateRoute: React.FC<RouteProps> = ({ children, ...rest }) => {
   const { path } = rest;
+  const isRestrictedRoute = (path) => {
+    return orgRestrictedRoutes.some((route) => route.path === path);
+  };
+  const getRestrictedRoles = (path) => {
+    const matchedRoute = orgRestrictedRoutes.find(
+      (route) => route.path === path
+    );
+    return matchedRoute ? matchedRoute.roles : [];
+  };
   return (
     <Route
       {...rest}
       render={({ location }) =>
         Auth.isUserAuthenticated() ? (
           <>
-            {orgRestrictedRoutes.includes(path) ? (
-              <CheckOrgRole>{children}</CheckOrgRole>
+            {isRestrictedRoute(path) ? (
+              <CheckOrgRole roles={getRestrictedRoles(path)}>
+                {children}
+              </CheckOrgRole>
             ) : (
               children
             )}
@@ -334,16 +350,20 @@ const PrivateRoute: React.FC<RouteProps> = ({ children, ...rest }) => {
   );
 };
 
-const CheckOrgRole: React.FC = ({ children }) => {
+const CheckOrgRole: React.FC<{ roles: OrgUserRole[] }> = ({
+  children,
+  roles,
+}) => {
   const { data } = useProfile();
   const history = useHistory();
 
   useEffect(() => {
     if (data) {
-      if (
-        data.organizations.length &&
-        !hasUserRole(data.organizations, "owner")
-      ) {
+      const hasMatchingRole = data.organizations.some((org: Organization) =>
+        roles.includes(org.role)
+      );
+
+      if (data.organizations.length && hasMatchingRole) {
         history.push("/page-not-found");
       }
     }
