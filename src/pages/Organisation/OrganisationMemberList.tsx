@@ -294,20 +294,13 @@ const OrganisationMemberList: React.FC<{
           </Flex>
         </Flex>
       ) : (
-        <VStack
-          w="100%"
-          spacing={4}
-          mb={[6, 6, 6, 0]}
-          top={0}
-          left={0}
-          opacity={hasAccess ? 1 : 0.5}
-        >
+        <VStack w="100%" spacing={4} my={6} opacity={hasAccess ? 1 : 0.5}>
           <Image
             src={assetsUrl + "background/organisation_requested.svg"}
             h={"250px"}
             mb={2}
           />
-          <Text fontWeight={400}>
+          <Text fontWeight={400} maxW="600px" textAlign="center">
             Please wait till your request gets confirmed by our Team, Once
             confirmed you’ll be able to add users to your organizationa and
             start assigning roles

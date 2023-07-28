@@ -23,6 +23,7 @@ import Loader from "components/styled-components/Loader";
 import { useProfile } from "hooks/useProfile";
 import { Organization, OrgUserRole } from "common/types";
 import { useUserOrgProfile } from "hooks/useUserOrgProfile";
+import { UserRoleProvider, useUserRole } from "hooks/useUserRole";
 
 const Landing = lazy(
   () => import("pages/Landing" /* webpackChunkName: "Landing" */)
@@ -224,45 +225,46 @@ const Routes: React.FC = () => {
               </Suspense>
             </PublicLayout>
           </Route>
+          <UserRoleProvider>
+            <Layout>
+              <Suspense fallback="">
+                <Switch>
+                  <PrivateRoute exact path="/home">
+                    <Home />
+                  </PrivateRoute>
+                  <PrivateRoute exact path="/profile">
+                    <Profile />
+                  </PrivateRoute>
+                  <PrivateRoute exact path="/projects">
+                    <Projects />
+                  </PrivateRoute>
+                  <PrivateRoute path="/projects/:projectId/:scanId">
+                    <ProjectPage />
+                  </PrivateRoute>
+                  <PrivateRoute exact path="/blocks">
+                    <Blocks />
+                  </PrivateRoute>
+                  <PrivateRoute exact path="/blocks/:scanId/:projectId">
+                    <BlockPage />
+                  </PrivateRoute>
+                  <PrivateRoute exact path="/integrations">
+                    <Integrations />
+                  </PrivateRoute>
+                  <PrivateRoute exact path="/private-api">
+                    <PrivateApi />
+                  </PrivateRoute>
+                  <PrivateRoute exact path="/organisation">
+                    <Organisation />
+                  </PrivateRoute>
 
-          <Layout>
-            <Suspense fallback="">
-              <Switch>
-                <PrivateRoute exact path="/home">
-                  <Home />
-                </PrivateRoute>
-                <PrivateRoute exact path="/profile">
-                  <Profile />
-                </PrivateRoute>
-                <PrivateRoute exact path="/projects">
-                  <Projects />
-                </PrivateRoute>
-                <PrivateRoute path="/projects/:projectId/:scanId">
-                  <ProjectPage />
-                </PrivateRoute>
-                <PrivateRoute exact path="/blocks">
-                  <Blocks />
-                </PrivateRoute>
-                <PrivateRoute exact path="/blocks/:scanId/:projectId">
-                  <BlockPage />
-                </PrivateRoute>
-                <PrivateRoute exact path="/integrations">
-                  <Integrations />
-                </PrivateRoute>
-                <PrivateRoute exact path="/private-api">
-                  <PrivateApi />
-                </PrivateRoute>
-                <PrivateRoute exact path="/organisation">
-                  <Organisation />
-                </PrivateRoute>
-
-                <PrivateRoute exact path="/billing">
-                  <Billing />
-                </PrivateRoute>
-                <Route path="*" component={CustomPageNotFound} />
-              </Switch>
-            </Suspense>
-          </Layout>
+                  <PrivateRoute exact path="/billing">
+                    <Billing />
+                  </PrivateRoute>
+                  <Route path="*" component={CustomPageNotFound} />
+                </Switch>
+              </Suspense>
+            </Layout>
+          </UserRoleProvider>
         </Switch>
       </ErrorHandler>
     </Router>

@@ -188,6 +188,11 @@ const InviteMemberForm: React.FC<{
                     h="55px"
                     value={userEmail}
                     size="lg"
+                    onKeyDown={(e) => {
+                      if (e.keyCode === 13) {
+                        addUsers();
+                      }
+                    }}
                     onChange={(e) => {
                       setUserEmail(e.target.value);
                     }}

@@ -65,6 +65,16 @@ const InvitedMemberItem: React.FC<{
       mt={5}
       py={isDesktopView ? 0 : 5}
     >
+      {!isDesktopView && (
+        <HStack w="100%" justifyContent="flex-end">
+          <CloseButton
+            ml={isDesktopView ? 4 : 0}
+            onClick={() => {
+              removeUser(user);
+            }}
+          />
+        </HStack>
+      )}
       <Flex
         w="fit-content"
         h="fit-content"

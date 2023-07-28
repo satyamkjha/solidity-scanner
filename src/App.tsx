@@ -81,12 +81,10 @@ const AppContent: React.FC = () => {
         </Helmet>
       )}
       <QueryClientProvider client={queryClient}>
-        <UserRoleProvider>
-          <ChakraProvider theme={theme}>
-            <Global styles={GlobalStyles} />
-            <Routes />
-          </ChakraProvider>
-        </UserRoleProvider>
+        <ChakraProvider theme={theme}>
+          <Global styles={GlobalStyles} />
+          <Routes />
+        </ChakraProvider>
         <ReactQueryDevtools initialIsOpen={false} />
       </QueryClientProvider>
     </>

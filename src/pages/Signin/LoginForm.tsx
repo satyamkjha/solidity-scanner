@@ -35,6 +35,7 @@ import {
   getReCaptchaHeaders,
 } from "helpers/helperFunction";
 import Loader from "components/styled-components/Loader";
+import { useForm } from "react-hook-form";
 
 const LoginForm: React.FC = () => {
   const [show, setShow] = useState(false);
@@ -43,6 +44,8 @@ const LoginForm: React.FC = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+
+  const { handleSubmit } = useForm();
 
   const onSubmit = async () => {
     let reqHeaders = await getReCaptchaHeaders("signin");
@@ -80,7 +83,7 @@ const LoginForm: React.FC = () => {
         alignItems: "center",
         justifyContent: "center",
       }}
-      // onSubmit={handleSubmit(onSubmit)}
+      onSubmit={handleSubmit(onSubmit)}
     >
       <Stack spacing={6} mt={8} width={["90%", "80%", "600px"]}>
         <InputGroup alignItems="center">
@@ -151,9 +154,8 @@ const LoginForm: React.FC = () => {
           </Link>
         </Flex>
         <Button
-          // type="submit"
+          type="submit"
           variant="brand"
-          onClick={onSubmit}
           isLoading={isLoading}
           spinner={<Loader color={"#3300FF"} size={25} />}
         >

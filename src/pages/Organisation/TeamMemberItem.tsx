@@ -84,36 +84,114 @@ const TeamMemberItem: React.FC<{
       onMouseLeave={() => setHover(false)}
     >
       <Flex
-        w="fit-content"
+        w={isDesktopView ? "fit-content" : "100%"}
         h="fit-content"
         flexDir={isDesktopView ? "row" : "column"}
         justifyContent={"flex-start"}
         alignItems={"center"}
       >
-        {userItem.name.length > 0 ? (
-          <Flex
-            w="50px"
-            h="50px"
-            borderRadius={"40px"}
-            justifyContent={"center"}
-            alignItems={"center"}
-            color={"#FFFFFF"}
-            bgColor="#FFC887"
-            mr={3}
-            fontSize={"25px"}
-          >
-            {userItem.name[0].toUpperCase()}
-          </Flex>
-        ) : (
-          <Flex
-            w="50px"
-            h="50px"
-            justifyContent={"center"}
-            alignItems={"center"}
-            mr={3}
-          >
-            <User size={50} />
-          </Flex>
+        {isDesktopView && (
+          <>
+            {userItem.name.length > 0 ? (
+              <Flex
+                w="50px"
+                h="50px"
+                borderRadius={"40px"}
+                justifyContent={"center"}
+                alignItems={"center"}
+                color={"#FFFFFF"}
+                bgColor="#FFC887"
+                mr={3}
+                fontSize={"25px"}
+              >
+                {userItem.name[0].toUpperCase()}
+              </Flex>
+            ) : (
+              <Flex
+                w="50px"
+                h="50px"
+                justifyContent={"center"}
+                alignItems={"center"}
+                mr={3}
+              >
+                <User size={50} />
+              </Flex>
+            )}
+          </>
+        )}
+
+        {!isDesktopView && (
+          <HStack w="100%" justifyContent="space-between">
+            <Flex
+              w="5px"
+              h="5px"
+              borderRadius={"40px"}
+              justifyContent={"center"}
+              alignItems={"center"}
+              mr={3}
+              fontSize={"25px"}
+            >
+              {" "}
+            </Flex>
+            {userItem.name.length > 0 ? (
+              <Flex
+                w="50px"
+                h="50px"
+                borderRadius={"40px"}
+                justifyContent={"center"}
+                alignItems={"center"}
+                color={"#FFFFFF"}
+                bgColor="#FFC887"
+                mr={3}
+                fontSize={"25px"}
+              >
+                {userItem.name[0].toUpperCase()}
+              </Flex>
+            ) : (
+              <Flex
+                w="50px"
+                h="50px"
+                justifyContent={"center"}
+                alignItems={"center"}
+                mr={3}
+              >
+                <User size={50} />
+              </Flex>
+            )}
+            <Menu placement={"bottom-end"}>
+              <MenuButton
+                zIndex={10}
+                ml={"10px"}
+                as={IconButton}
+                backgroundColor="#FFFFFF"
+                _hover={{ backgroundColor: "#FFFFFF" }}
+                _active={{ backgroundColor: "#FFFFFF" }}
+                icon={<BsThreeDotsVertical />}
+                w={5}
+                minW={5}
+                aria-label="Options"
+                onClick={(e) => {
+                  e.stopPropagation();
+                }}
+              />
+              <MenuList
+                sx={{
+                  boxShadow: "0px 4px 24px rgba(0, 0, 0, 0.2)",
+                }}
+              >
+                <MenuItem
+                  _focus={{ backgroundColor: "#FFFFFF" }}
+                  _hover={{ backgroundColor: "#FFFFFF" }}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    removeOrganisationUserRequest(userItem.email);
+                  }}
+                >
+                  Delete User
+                </MenuItem>
+              </MenuList>
+            </Menu>
+          </HStack>
         )}
 
         <VStack

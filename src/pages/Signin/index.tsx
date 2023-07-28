@@ -21,6 +21,7 @@ import {
 import { FiAtSign } from "react-icons/fi";
 import { FaLock } from "react-icons/fa";
 import { useConfig } from "hooks/useConfig";
+
 import { Logo } from "components/icons";
 import { getAssetsURL } from "helpers/helperFunction";
 import API from "helpers/api";

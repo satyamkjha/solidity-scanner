@@ -22,6 +22,7 @@ import {
   InputGroup,
   Input,
   InputRightElement,
+  useMediaQuery,
 } from "@chakra-ui/react";
 import { onLogout } from "common/functions";
 import { useQueryClient } from "react-query";
@@ -35,11 +36,10 @@ const CreateOrganisationForm: React.FC<{
   isOpen: boolean;
   refetch(): any;
 }> = ({ isOpen, onClose, refetch }) => {
-  const history = useHistory();
-  const queryClient = useQueryClient();
   const toast = useToast();
   const [orgName, setOrgName] = useState("");
   const [availabililtyStatus, setAvailabilityStatus] = useState("");
+  const [isDesktopView] = useMediaQuery("(min-width: 950px)");
 
   const createOrganisationRequest = async () => {
     try {
@@ -159,26 +159,48 @@ const CreateOrganisationForm: React.FC<{
                     variant={"brand"}
                     bgColor="#f7f9fa"
                     size="lg"
+                    onKeyDown={(e) => {
+                      if (e.keyCode === 13) {
+                        createOrganisationRequest();
+                      }
+                    }}
                     onChange={(e) => {
                       setOrgName(e.target.value);
                     }}
                   />
-                  <InputRightElement>
-                    <HStack mr={20} mt={2}>
-                      <Text
-                        color={
-                          availabililtyStatus === "Available"
-                            ? "low"
-                            : availabililtyStatus === "Not-Available"
-                            ? "high"
-                            : "#000000"
-                        }
-                      >
-                        {availabililtyStatus}
-                      </Text>
-                    </HStack>
-                  </InputRightElement>
+                  {isDesktopView && (
+                    <InputRightElement w="150px">
+                      <HStack mt={2}>
+                        <Text
+                          color={
+                            availabililtyStatus === "Available"
+                              ? "low"
+                              : availabililtyStatus === "Not-Available"
+                              ? "high"
+                              : "#000000"
+                          }
+                        >
+                          {availabililtyStatus}
+                        </Text>
+                      </HStack>
+                    </InputRightElement>
+                  )}
                 </InputGroup>
+                {!isDesktopView && (
+                  <HStack w="100%" justifyContent="flex-end">
+                    <Text
+                      color={
+                        availabililtyStatus === "Available"
+                          ? "low"
+                          : availabililtyStatus === "Not-Available"
+                          ? "high"
+                          : "#000000"
+                      }
+                    >
+                      {availabililtyStatus}
+                    </Text>
+                  </HStack>
+                )}
               </Flex>
               <Button
                 h={"50px"}

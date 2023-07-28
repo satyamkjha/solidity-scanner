@@ -31,6 +31,7 @@ import { ViewIcon, ViewOffIcon } from "@chakra-ui/icons";
 import MetaMaskLogin from "components/metamaskSignin";
 import { API_PATH } from "helpers/routeManager";
 import GoogleSignIn from "components/googleSignin";
+import { useForm } from "react-hook-form";
 import {
   getFeatureGateConfig,
   getReCaptchaHeaders,
@@ -46,8 +47,18 @@ const OrgLoginForm: React.FC = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [step, setStep] = useState(false);
   const [orgName, setOrgName] = useState("");
+  const { handleSubmit } = useForm();
 
   const onSubmit = async () => {
+    if (step) {
+      signIn();
+    } else {
+      // setStep(true);
+      checkOrganisationNameRequest();
+    }
+  };
+
+  const signIn = async () => {
     let reqHeaders = await getReCaptchaHeaders("signin");
     setIsLoading(true);
     API.post<AuthResponse>(
@@ -120,7 +131,7 @@ const OrgLoginForm: React.FC = () => {
         alignItems: "center",
         justifyContent: "flex-start",
       }}
-      // onSubmit={handleSubmit(onSubmit)}
+      onSubmit={handleSubmit(onSubmit)}
     >
       <Stack spacing={6} mt={8} width={["90%", "80%", "600px"]}>
         {step ? (
@@ -227,16 +238,8 @@ const OrgLoginForm: React.FC = () => {
           )}
         </Flex>
         <Button
-          // type="submit"
+          type="submit"
           variant="brand"
-          onClick={() => {
-            if (step) {
-              onSubmit();
-            } else {
-              // setStep(true);
-              checkOrganisationNameRequest();
-            }
-          }}
           isLoading={isLoading}
           spinner={<Loader color={"#3300FF"} size={25} />}
         >
