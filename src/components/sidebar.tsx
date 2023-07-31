@@ -89,7 +89,7 @@ const Sidebar: React.FC<{
     {
       link: "/private-api",
       label: "Private API",
-      icon: <PrivateApiMenuIcon size={16} />,
+      icon: <PrivateApiMenuIcon size={24} />,
       isCollapsed: isCollapsed,
       transitionDone: transitionDone,
       isExternal: false,
