@@ -25,6 +25,7 @@ import { useQueryClient } from "react-query";
 import { API_PATH } from "helpers/routeManager";
 import API from "helpers/api";
 import { useHistory } from "react-router-dom";
+import StyledButton from "components/styled-components/StyledButton";
 
 const DeleteAccountForm: React.FC<{
   onClose(): any;
@@ -200,7 +201,7 @@ const DeleteAccountForm: React.FC<{
               >
                 Deleting account can’t be undone and the data can’t be restored
               </Text>
-              <Button
+              <StyledButton
                 h={"50px"}
                 mt={"auto"}
                 mb={2}
@@ -215,7 +216,7 @@ const DeleteAccountForm: React.FC<{
                 onClick={deleteAccount}
               >
                 Delete Account
-              </Button>
+              </StyledButton>
             </Flex>
           </ModalBody>
         </ModalContent>

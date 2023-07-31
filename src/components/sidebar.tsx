@@ -80,7 +80,7 @@ const Sidebar: React.FC<{
     {
       link: "/integrations",
       label: "Integrations",
-      icon: <IntegrationMenuIcon size={16} />,
+      icon: <IntegrationMenuIcon size={24} />,
       isCollapsed: isCollapsed,
       transitionDone: transitionDone,
       isExternal: false,
