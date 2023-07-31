@@ -54,11 +54,13 @@ const HacksExplorer: React.FC<{ overviewData: any }> = ({ overviewData }) => {
     },
   ];
   const chainsOptions = overviewData?.all_chains
-    ? overviewData.all_chains.map((item) => ({
-        value: item,
-        icon: item.toLowerCase(),
-        label: item,
-      }))
+    ? overviewData.all_chains
+        .sort((a, b) => a.localeCompare(b))
+        .map((item) => ({
+          value: item,
+          icon: item.toLowerCase(),
+          label: item,
+        }))
     : [];
   const categoriesOptions = overviewData?.all_categories
     ? overviewData.all_categories.map((item) => ({
@@ -393,6 +395,9 @@ const HacksExplorer: React.FC<{ overviewData: any }> = ({ overviewData }) => {
                   if (sort) {
                     setSortBy(sort.value);
                     setFilters({ ...filters, sort_by: sort.value });
+                  } else {
+                    setSortBy("");
+                    setFilters({ ...filters, sort_by: "" });
                   }
                 }}
               />

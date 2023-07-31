@@ -25,11 +25,13 @@ const ChartFilter: React.FC<{
   setSelectedChain: React.Dispatch<React.SetStateAction<string>>;
 }> = ({ onFilterSelect, allChains, filterValue, setSelectedChain }) => {
   const chainsOptions = allChains
-    ? allChains.map((item) => ({
-        value: item,
-        icon: item.toLowerCase(),
-        label: item,
-      }))
+    ? allChains
+        .sort((a, b) => a.localeCompare(b))
+        .map((item) => ({
+          value: item,
+          icon: item.toLowerCase(),
+          label: item,
+        }))
     : [];
   return (
     <HStack
@@ -55,12 +57,14 @@ const ChartFilter: React.FC<{
         <Select
           formatOptionLabel={FormatOptionLabel}
           isSearchable={true}
+          isClearable={true}
           options={chainsOptions}
           placeholder="Select BlockChain"
           styles={customTranslucentDropdown}
           maxMenuHeight={400}
           onChange={(newVal) => {
             if (newVal) setSelectedChain(newVal.value);
+            else setSelectedChain("all");
           }}
         />
       </FormControl>

@@ -62,56 +62,38 @@ const Chart: React.FC<{
   selectedFilterValue: string;
 }> = ({ hacksList, selectedTimeFilter, selectedFilterValue }) => {
   const currentDate = new Date();
-  const currentYear = currentDate.getFullYear();
-  const currentMonth = currentDate.getMonth();
 
   let chartData = [];
+
   if (hacksList) {
     if (selectedTimeFilter === "Y") {
       const monthlyData: Record<string, number> = {};
-      const data = hacksList.map((item) => {
-        const month = new Date(item.date).toLocaleString("default", {
-          month: "short",
-        });
-        const xLabel =
-          new Date(item.date).getMonth() >= currentMonth
-            ? `${month} ${currentYear - 1}`
-            : `${month} ${currentYear}`;
-        if (!monthlyData[xLabel]) {
-          monthlyData[xLabel] = 0;
-        }
-        monthlyData[xLabel] += item.amount_in_usd;
 
-        return {
-          x: xLabel,
-          y: item.amount_in_usd,
-        };
+      hacksList.forEach((item) => {
+        const xLabel = new Date(item.date).toLocaleString("default", {
+          month: "short",
+          year: "numeric",
+        });
+        monthlyData[xLabel] = (monthlyData[xLabel] || 0) + item.amount_in_usd;
       });
 
-      const parseXLabelToDate = (xLabel: string): Date => {
-        const [, month, year] = xLabel.match(/(\w+)\s+(\d+)/);
-        const monthIndex = new Date(`${month} 1, ${year}`).getMonth();
-        return new Date(parseInt(year, 10), monthIndex);
-      };
-
-      chartData = Object.entries(monthlyData).map(([month, amount]) => ({
-        x: parseXLabelToDate(month),
-        y: amount,
-        tooltip: month,
-      }));
+      chartData = Object.entries(monthlyData).map(([date, amount]) => {
+        const [month, year] = date.split(" ");
+        const xAxis = `01-${month}-${year}`;
+        return {
+          x: new Date(xAxis),
+          y: amount,
+          tooltip: date,
+        };
+      });
     } else if (selectedTimeFilter === "all") {
       const yearlyData: Record<string, number> = {};
-      const data = hacksList.map((item) => {
+      hacksList.forEach((item) => {
         const xLabel = new Date(item.date).getFullYear();
         if (!yearlyData[xLabel]) {
           yearlyData[xLabel] = 0;
         }
         yearlyData[xLabel] += item.amount_in_usd;
-
-        return {
-          x: xLabel,
-          y: item.amount_in_usd,
-        };
       });
 
       chartData = Object.entries(yearlyData).map(([year, amount]) => ({
@@ -170,7 +152,7 @@ const Chart: React.FC<{
     const minY = Math.min(0, ...dataValues);
     const maxY = Math.max(...dataValues);
     const padding = (maxY - minY) * 0.1;
-    return [minY, maxY + padding];
+    return [minY - padding, maxY + padding];
   };
 
   return (
@@ -281,7 +263,7 @@ const Chart: React.FC<{
                 fillOpacity: 0.05,
               },
             }}
-            interpolation="cardinal"
+            interpolation="catmullRom"
             labelComponent={
               <VictoryTooltip flyoutComponent={<CustomTooltip />} />
             }
