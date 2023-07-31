@@ -1,5 +1,5 @@
-import React, { ReactElement, useState, useEffect } from "react";
-import { Link, useRouteMatch } from "react-router-dom";
+import React, { ReactElement, useState } from "react";
+import { Link, useRouteMatch, useHistory } from "react-router-dom";
 import {
   Flex,
   Box,
@@ -48,6 +48,81 @@ const Sidebar: React.FC<{
   const config: any = useConfig();
   const assetsURL = getAssetsURL(config);
   const role: string = useUserRole();
+
+  const sidebarData: SidebarItemProps[] = [
+    {
+      link: "/home",
+      label: "Home",
+      icon: <HomeMenuIcon size={16} />,
+      isCollapsed: isCollapsed,
+      transitionDone: transitionDone,
+      isExternal: false,
+      accessRevoked: [],
+    },
+    {
+      link: "/projects",
+      label: "Projects",
+      icon: <ProjectsMenuIcon size={16} />,
+      isCollapsed: isCollapsed,
+      transitionDone: transitionDone,
+      isExternal: false,
+      accessRevoked: [],
+    },
+    {
+      link: "/blocks",
+      label: "Verified Contracts",
+      icon: <BlockMenuIcon size={16} />,
+      isCollapsed: isCollapsed,
+      transitionDone: transitionDone,
+      isExternal: false,
+      accessRevoked: [],
+    },
+    {
+      link: "/integrations",
+      label: "Integrations",
+      icon: <IntegrationMenuIcon size={16} />,
+      isCollapsed: isCollapsed,
+      transitionDone: transitionDone,
+      isExternal: false,
+      accessRevoked: ["viewer", "editor", "admin"],
+    },
+    {
+      link: "/private-api",
+      label: "Private API",
+      icon: <PrivateApiMenuIcon size={16} />,
+      isCollapsed: isCollapsed,
+      transitionDone: transitionDone,
+      isExternal: false,
+      accessRevoked: [],
+    },
+    {
+      link: "/billing",
+      label: "Billing",
+      icon: <BillingMenuIcon size={16} />,
+      isCollapsed: isCollapsed,
+      transitionDone: transitionDone,
+      isExternal: false,
+      accessRevoked: ["viewer", "editor", "admin"],
+    },
+    {
+      link: "/organisation",
+      label: "Organisation",
+      icon: <OrganisationIcon />,
+      isCollapsed: isCollapsed,
+      transitionDone: transitionDone,
+      isExternal: false,
+      accessRevoked: ["viewer", "editor"],
+    },
+    {
+      link: "https://docs.solidityscan.com/",
+      label: "User Guide",
+      icon: <UserGuideIcon size={24} />,
+      isCollapsed: isCollapsed,
+      transitionDone: transitionDone,
+      isExternal: true,
+      accessRevoked: [],
+    },
+  ];
 
   return (
     <Flex
@@ -165,84 +240,10 @@ const Sidebar: React.FC<{
             PAGES
           </Text> */}
 
-            <SidebarItem
-              to="/home"
-              label="Home"
-              icon={<HomeMenuIcon size={16} />}
-              isCollapsed={isCollapsed}
-              transitionDone={transitionDone}
-            />
-            <SidebarItem
-              to="/projects"
-              label="Projects"
-              icon={<ProjectsMenuIcon size={16} />}
-              isCollapsed={isCollapsed}
-              transitionDone={transitionDone}
-            />
-            <SidebarItem
-              to="/blocks"
-              label="Verified Contracts"
-              icon={<BlockMenuIcon size={16} />}
-              isCollapsed={isCollapsed}
-              transitionDone={transitionDone}
-            />
-            {role === "owner" && (
-              <SidebarItem
-                to="/integrations"
-                label="Integrations"
-                icon={<IntegrationMenuIcon size={24} />}
-                isCollapsed={isCollapsed}
-                transitionDone={transitionDone}
-              />
-            )}
-            {getFeatureGateConfig().private_api_enabled && (
-              <SidebarItem
-                to="/private-api"
-                label="Private API"
-                icon={<PrivateApiMenuIcon size={24} />}
-                isCollapsed={isCollapsed}
-                transitionDone={transitionDone}
-              />
-            )}
-            {role === "owner" && (
-              <SidebarItem
-                to={`/billing`}
-                label="Billing"
-                icon={<BillingMenuIcon size={24} />}
-                isCollapsed={isCollapsed}
-                transitionDone={transitionDone}
-              />
-            )}
-            {(role === "owner" || role === "admin") && (
-              <SidebarItem
-                to={`/organisation`}
-                label="Organisation"
-                icon={<OrganisationIcon />}
-                isCollapsed={isCollapsed}
-                transitionDone={transitionDone}
-              />
-            )}
-            <Flex
-              sx={{
-                width: "100%",
-                alignItems: "center",
-                borderLeftRadius: "15px",
-                transition: "0.3s background-color",
-                cursor: "pointer",
-              }}
-              p={[2.5, 2.5, 2.5, 2.5, 3]}
-              my={[2, 2, 2, 2, 3]}
-              onClick={() => {
-                window.open("https://docs.solidityscan.com/", "_blank");
-              }}
-            >
-              {React.cloneElement(<UserGuideIcon size={24} />)}
-              {!isCollapsed && transitionDone && (
-                <Text ml={2} fontSize="sm">
-                  {"User Guide"}
-                </Text>
-              )}
-            </Flex>
+            {sidebarData.map((sidebarItem) => {
+              if (!sidebarItem.accessRevoked.includes(role))
+                return <SidebarItem {...sidebarItem} />;
+            })}
           </Box>
         </Flex>
       )}
@@ -275,33 +276,46 @@ const Sidebar: React.FC<{
 };
 
 type SidebarItemProps = {
-  to: string;
+  link: string;
   label: string;
   icon: ReactElement;
   isCollapsed: boolean;
   transitionDone: boolean;
+  isExternal: boolean;
+  accessRevoked: string[];
 };
 
 export const SidebarItem: React.FC<SidebarItemProps> = ({
-  to,
+  link,
   label,
   icon,
   isCollapsed,
   transitionDone,
+  isExternal,
 }) => {
   const match = useRouteMatch({
-    path: to,
+    path: link,
   });
   const active = !!match;
+  const history = useHistory();
+
   return (
-    <Link to={to}>
+    <>
       <Flex
+        onClick={() => {
+          if (isExternal) {
+            window.open(link, "_blank");
+          } else {
+            history.push(link);
+          }
+        }}
         sx={{
           width: "100%",
           alignItems: "center",
           borderLeftRadius: "15px",
           transition: "0.3s background-color",
           background: active ? "rgba(47, 248, 107, 0.1)" : "transparent",
+          cursor: "pointer",
         }}
         p={[2.5, 2.5, 2.5, 2.5, 3]}
         my={2}
@@ -314,7 +328,7 @@ export const SidebarItem: React.FC<SidebarItemProps> = ({
           </Text>
         )}
       </Flex>
-    </Link>
+    </>
   );
 };
 

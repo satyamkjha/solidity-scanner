@@ -210,6 +210,23 @@ export const Header: React.FC = () => {
                       <Link
                         onClick={() => {
                           window.open(
+                            "https://solidityscan.com/discover/",
+                            "_blank"
+                          );
+                        }}
+                        variant="ghost"
+                        fontWeight="400"
+                        w={"100%"}
+                        p={1}
+                        ml={3}
+                      >
+                        Discover
+                      </Link>
+                    </MenuItem>
+                    <MenuItem>
+                      <Link
+                        onClick={() => {
+                          window.open(
                             "https://docs.solidityscan.com/",
                             "_blank"
                           );

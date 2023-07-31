@@ -35,20 +35,16 @@ import Select from "react-select";
 import { customStylesForInviteMember } from "../../common/stylesForCustomSelect";
 import FormatOptionLabelWithImage from "../../components/FormatOptionLabelWithImage";
 import { userRolesList } from "../../common/values";
+import { isEmail } from "helpers/helperFunction";
 
 const InviteMemberForm: React.FC<{
   onClose(): any;
   isOpen: boolean;
   refetchOrgUserList(): any;
 }> = ({ isOpen, onClose, refetchOrgUserList }) => {
-  const history = useHistory();
-
-  const queryClient = useQueryClient();
   const toast = useToast();
   const [isDesktopView] = useMediaQuery("(min-width: 950px)");
-
   const [userEmail, setUserEmail] = useState("");
-
   const [userList, setUserList] = useState<
     {
       user: string;
@@ -59,14 +55,36 @@ const InviteMemberForm: React.FC<{
   const [userRole, setUserRole] = useState<"admin" | "reader" | "editor">(
     "admin"
   );
-
   const clearState = () => {
     setUserEmail("");
     setUserRole("admin");
     setUserList([]);
   };
-
   const addUsers = async () => {
+    if (userEmail.length < 1 || userEmail.length > 50 || !isEmail(userEmail)) {
+      toast({
+        title: "Please enter a correct Email Address",
+        status: "error",
+        duration: 3000,
+        isClosable: true,
+      });
+      return;
+    }
+    let emailDuplicate = false;
+    userList.forEach((userItem) => {
+      if (userItem.user === userEmail) {
+        emailDuplicate = true;
+      }
+    });
+    if (emailDuplicate) {
+      toast({
+        title: "You have already invited a user with this email",
+        status: "error",
+        duration: 3000,
+        isClosable: true,
+      });
+      return;
+    }
     setUserList([
       ...userList,
       {
@@ -75,7 +93,6 @@ const InviteMemberForm: React.FC<{
       },
     ]);
   };
-
   const removeUser = async (userEmail: string) => {
     let newUserList = userList;
     newUserList = newUserList.filter((item) => {
@@ -86,7 +103,6 @@ const InviteMemberForm: React.FC<{
     });
     setUserList(newUserList);
   };
-
   const updateRole = async (
     userEmail: string,
     userRole: "admin" | "reader" | "editor"

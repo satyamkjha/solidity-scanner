@@ -119,7 +119,7 @@ const PrivateApi = lazy(
 );
 
 const Organisation = lazy(
-  () => import("pages/Organisation" /* webpackChunkName: "PrivateApi" */)
+  () => import("pages/Organisation" /* webpackChunkName: "Organisation" */)
 );
 
 const PublicReportPage = lazy(
@@ -136,7 +136,7 @@ const Detectors = lazy(
 const AcceptOrgInvitation = lazy(
   () =>
     import(
-      "pages/Organisation/AcceptOrgInvitation" /* webpackChunkName: "Detectors" */
+      "pages/Organisation/AcceptOrgInvitation" /* webpackChunkName: "AcceptOrganisationInvite" */
     )
 );
 const LeaderBoard = lazy(
