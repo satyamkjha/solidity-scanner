@@ -37,6 +37,7 @@ import {
   getReCaptchaHeaders,
 } from "helpers/helperFunction";
 import Loader from "components/styled-components/Loader";
+import { isEmail } from "helpers/helperFunction";
 
 const OrgLoginForm: React.FC = () => {
   const [show, setShow] = useState(false);
@@ -84,41 +85,50 @@ const OrgLoginForm: React.FC = () => {
   };
 
   const checkOrganisationNameRequest = async () => {
-    if (orgName.length > 5) {
-      try {
-        setIsLoading(true);
-        const { data } = await API.post<{
-          status: string;
-          org_name_available: boolean;
-        }>(API_PATH.API_CHECK_ORGANISATION_NAME_AVAILABILITY, {
-          org_name: orgName,
-        });
-        if (data.status === "success") {
-          if (data.org_name_available) {
-            toast({
-              title: "Organisation does not exist",
-              description:
-                "The organisation name you entered is not valid. Please check if the name is correct.",
-              status: "error",
-              duration: 3000,
-              isClosable: true,
-            });
-          } else {
-            setStep(true);
-          }
-        } else {
+    if (orgName.length > 50 && orgName.length < 1) {
+      toast({
+        title: "Organisation Name not Valid",
+        description:
+          "The number of characters allowed for an Organisation Name should be less than 50",
+        status: "error",
+        duration: 3000,
+        isClosable: true,
+      });
+      return;
+    }
+    try {
+      setIsLoading(true);
+      const { data } = await API.post<{
+        status: string;
+        org_name_available: boolean;
+      }>(API_PATH.API_CHECK_ORGANISATION_NAME_AVAILABILITY, {
+        org_name: orgName,
+      });
+      if (data.status === "success") {
+        if (data.org_name_available) {
           toast({
-            title: "",
-            description: "",
-            status: "success",
+            title: "Organisation does not exist",
+            description:
+              "The organisation name you entered is not valid. Please check if the name is correct.",
+            status: "error",
             duration: 3000,
             isClosable: true,
           });
+        } else {
+          setStep(true);
         }
-        setIsLoading(false);
-      } catch (e) {
-        setIsLoading(false);
+      } else {
+        toast({
+          title: "",
+          description: "",
+          status: "success",
+          duration: 3000,
+          isClosable: true,
+        });
       }
+      setIsLoading(false);
+    } catch (e) {
+      setIsLoading(false);
     }
   };
 
@@ -241,6 +251,15 @@ const OrgLoginForm: React.FC = () => {
           type="submit"
           variant="brand"
           isLoading={isLoading}
+          disabled={
+            step
+              ? email.length < 1 ||
+                password.length < 1 ||
+                email.length > 50 ||
+                password.length > 50 ||
+                !isEmail(email)
+              : orgName.length < 1 || orgName.length > 50
+          }
           spinner={<Loader color={"#3300FF"} size={25} />}
         >
           {step ? "Sign in" : "Proceed to Sign in"}

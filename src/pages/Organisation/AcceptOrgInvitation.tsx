@@ -24,6 +24,7 @@ import API from "helpers/api";
 import { API_PATH } from "helpers/routeManager";
 import Loader from "components/styled-components/Loader";
 import { NoBugIcon } from "components/icons";
+import { useForm } from "react-hook-form";
 
 const charTypes = ["lowercase", "uppercase", "symbol", "number"];
 
@@ -50,6 +51,7 @@ const AcceptOrgInvitation: React.FC = () => {
     value: string;
     length: number;
   } | null>(null);
+  const { handleSubmit } = useForm();
 
   const rejectOrgRequest = async () => {
     try {
@@ -108,7 +110,7 @@ const AcceptOrgInvitation: React.FC = () => {
       } else {
         toast({
           title: data.message,
-          status: data.status,
+          status: "error",
           duration: 3000,
           isClosable: true,
         });
@@ -119,26 +121,15 @@ const AcceptOrgInvitation: React.FC = () => {
     }
   };
 
-  function unique(arr1: string[], arr2: string[]) {
-    let uniqueArr: string[] = [];
-    for (var i = 0; i < arr1.length; i++) {
-      let flag = 0;
-      for (var j = 0; j < arr2.length; j++) {
-        if (arr1[i] === arr2[j]) {
-          arr2.splice(j, 1);
-          j--;
-          flag = 1;
-        }
-      }
+  function unique(arr1: string[], arr2: string[]): string[] {
+    const uniqueSet = new Set(arr1);
 
-      if (flag === 0) {
-        uniqueArr.push(arr1[i]);
+    for (const item of arr2) {
+      if (!uniqueSet.has(item)) {
+        uniqueSet.add(item);
       }
     }
-    arr2.forEach((item) => {
-      uniqueArr.push(item);
-    });
-    return uniqueArr;
+    return [...uniqueSet];
   }
 
   return (
@@ -182,7 +173,16 @@ const AcceptOrgInvitation: React.FC = () => {
               </Text>
             </VStack>
             {data?.organization.is_token_valid ? (
-              <>
+              <form
+                style={{
+                  width: "100%",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  flexDirection: "column",
+                }}
+                onSubmit={handleSubmit(acceptOrgRequest)}
+              >
                 <Flex
                   w="90%"
                   align="center"
@@ -293,7 +293,12 @@ const AcceptOrgInvitation: React.FC = () => {
                       maxW="500px"
                       w="90%"
                       isLoading={loading}
-                      onClick={acceptOrgRequest}
+                      type="submit"
+                      disabled={
+                        name.length > 50 ||
+                        name.length < 5 ||
+                        (passwordError && passwordError.value !== "Strong")
+                      }
                     >
                       Join Organisation
                     </Button>
@@ -330,7 +335,7 @@ const AcceptOrgInvitation: React.FC = () => {
                     </Button>
                   </Stack>
                 )}
-              </>
+              </form>
             ) : (
               <VStack
                 justifyContent="flex-start"
@@ -338,12 +343,15 @@ const AcceptOrgInvitation: React.FC = () => {
                 spacing={10}
               >
                 <NoBugIcon size={200} />
-                <Heading fontSize="lg">Invitation Link not found</Heading>
+                <Heading fontSize="lg">
+                  Invitation Link not found or expired
+                </Heading>
                 <Text w={["200px", "250px", "500px"]}>
-                  User Roles dolor sit amet consectetur. Lorem pharetra sed
-                  consequat velit arcu. Dictum volutpat arcu pellentesque risus
-                  mi non. Ornare phasellus lorem egestas fringilla enim. Posuere
-                  in ac Learn More
+                  Oops! It seems that the invitation link you attempted to
+                  access has expired, or your account may have been removed from
+                  the organization. To resolve this issue, kindly get in touch
+                  with the organization administrator or reach out to our
+                  support team for assistance.
                 </Text>
               </VStack>
             )}

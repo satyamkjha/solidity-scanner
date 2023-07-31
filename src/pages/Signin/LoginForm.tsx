@@ -36,6 +36,7 @@ import {
 } from "helpers/helperFunction";
 import Loader from "components/styled-components/Loader";
 import { useForm } from "react-hook-form";
+import { isEmail } from "helpers/helperFunction";
 
 const LoginForm: React.FC = () => {
   const [show, setShow] = useState(false);
@@ -158,6 +159,13 @@ const LoginForm: React.FC = () => {
           variant="brand"
           isLoading={isLoading}
           spinner={<Loader color={"#3300FF"} size={25} />}
+          disabled={
+            email.length < 1 ||
+            password.length < 1 ||
+            email.length > 50 ||
+            password.length > 50 ||
+            !isEmail(email)
+          }
         >
           Sign In
         </Button>
