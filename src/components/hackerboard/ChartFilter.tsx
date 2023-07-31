@@ -21,8 +21,9 @@ import FormatOptionLabel from "components/common/FormatOptionLabel";
 const ChartFilter: React.FC<{
   onFilterSelect: any;
   allChains: string[];
+  filterValue: string;
   setSelectedChain: React.Dispatch<React.SetStateAction<string>>;
-}> = ({ onFilterSelect, allChains, setSelectedChain }) => {
+}> = ({ onFilterSelect, allChains, filterValue, setSelectedChain }) => {
   const chainsOptions = allChains
     ? allChains.map((item) => ({
         value: item,
@@ -74,13 +75,16 @@ const ChartFilter: React.FC<{
             <PopoverArrow />
             <PopoverCloseButton />
             <PopoverBody w="fit-content">
-              <TimeFilter onFilterSelect={onFilterSelect} />
+              <TimeFilter
+                onFilterSelect={onFilterSelect}
+                filterValue={filterValue}
+              />
             </PopoverBody>
           </PopoverContent>
         </Portal>
       </Popover>
       <Box display={["none", "none", "none", "flex"]}>
-        <TimeFilter onFilterSelect={onFilterSelect} />
+        <TimeFilter onFilterSelect={onFilterSelect} filterValue={filterValue} />
       </Box>
     </HStack>
   );

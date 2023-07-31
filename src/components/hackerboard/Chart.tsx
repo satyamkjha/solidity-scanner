@@ -59,16 +59,14 @@ const CustomTooltip = (props: IProps) => {
 const Chart: React.FC<{
   hacksList: any;
   selectedTimeFilter: "all" | "W" | "M" | "Y";
-  selectedMonth: string;
-}> = ({ hacksList, selectedTimeFilter, selectedMonth }) => {
+  selectedFilterValue: string;
+}> = ({ hacksList, selectedTimeFilter, selectedFilterValue }) => {
   const currentDate = new Date();
   const currentYear = currentDate.getFullYear();
   const currentMonth = currentDate.getMonth();
 
   let chartData = [];
-  let formattedDates = [];
   if (hacksList) {
-    console.log(new Date(selectedMonth).getMonth());
     if (selectedTimeFilter === "Y") {
       const monthlyData: Record<string, number> = {};
       const data = hacksList.map((item) => {
@@ -90,8 +88,14 @@ const Chart: React.FC<{
         };
       });
 
+      const parseXLabelToDate = (xLabel: string): Date => {
+        const [, month, year] = xLabel.match(/(\w+)\s+(\d+)/);
+        const monthIndex = new Date(`${month} 1, ${year}`).getMonth();
+        return new Date(parseInt(year, 10), monthIndex);
+      };
+
       chartData = Object.entries(monthlyData).map(([month, amount]) => ({
-        x: new Date(month),
+        x: parseXLabelToDate(month),
         y: amount,
         tooltip: month,
       }));
@@ -123,7 +127,6 @@ const Chart: React.FC<{
           tooltip: formattedDate(new Date(item.date)),
         };
       });
-      formattedDates = hacksList.map((item) => new Date(item.date));
     }
   }
 
@@ -181,7 +184,7 @@ const Chart: React.FC<{
       backgroundColor={"#060316"}
       borderRadius={["15px", "15px", "30px", "40px"]}
     >
-      {selectedMonth && (
+      {selectedFilterValue && (
         <HStack
           w="100%"
           px={20}
@@ -190,17 +193,21 @@ const Chart: React.FC<{
           justifyContent={"flex-end"}
         >
           <Text color="#424242">
-            {monthNames.findIndex(
-              (m) => m.toLowerCase() === selectedMonth.toLowerCase()
-            ) <= new Date().getMonth()
-              ? selectedMonth + " " + new Date().getFullYear()
-              : selectedMonth + " " + (new Date().getFullYear() - 1)}
+            {selectedTimeFilter === "Y"
+              ? selectedFilterValue
+              : selectedTimeFilter === "M"
+              ? monthNames.findIndex(
+                  (m) => m.toLowerCase() === selectedFilterValue.toLowerCase()
+                ) <= new Date().getMonth()
+                ? selectedFilterValue + " " + new Date().getFullYear()
+                : selectedFilterValue + " " + (new Date().getFullYear() - 1)
+              : ""}
           </Text>
         </HStack>
       )}
-      {chartData.length ? (
+      {chartData && chartData.length ? (
         <VictoryChart
-          scale={{ x: "time" }}
+          scale={{ x: "time", y: "linear" }}
           containerComponent={<VictoryVoronoiContainer />}
           width={600}
           height={getHeight()}
@@ -212,7 +219,7 @@ const Chart: React.FC<{
                 ...VictoryTheme.material.axis?.style,
                 axis: { stroke: "none" },
                 grid: {
-                  stroke: "#2D2D2D",
+                  stroke: "#121212",
                 },
               },
             },
@@ -226,7 +233,7 @@ const Chart: React.FC<{
                 axisLabel: { fontSize: 9 },
                 grid: { stroke: "none" },
                 ticks: {
-                  stroke: "#2D2D2D",
+                  stroke: "#121212",
                 },
               }}
               theme={VictoryTheme.material}
@@ -240,7 +247,7 @@ const Chart: React.FC<{
                 axisLabel: { fontSize: 9 },
                 grid: { stroke: "none" },
                 ticks: {
-                  stroke: "#2D2D2D",
+                  stroke: "#121212",
                 },
               }}
               theme={VictoryTheme.material}
@@ -253,10 +260,10 @@ const Chart: React.FC<{
               axisLabel: { fontSize: 10 },
               axis: { stroke: "none" },
               grid: {
-                stroke: "#2D2D2D",
+                stroke: "#121212",
               },
               ticks: {
-                stroke: "#2D2D2D",
+                stroke: "#121212",
               },
             }}
             dependentAxis

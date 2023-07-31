@@ -27,7 +27,6 @@ import {
 import Select from "react-select";
 import { monthNames } from "common/values";
 import { SearchIcon, Search2Icon } from "@chakra-ui/icons";
-import { customDropdown } from "common/stylesForCustomSelect";
 import FormatOptionLabel from "components/common/FormatOptionLabel";
 import HackCard from "./HackCard";
 import { Pagination } from "common/types";
@@ -35,6 +34,7 @@ import { useHacksList } from "hooks/useHacksList";
 import PaginationNav from "components/common/PaginationNav";
 import Loader from "components/styled-components/Loader";
 import { formattedDate } from "common/functions";
+import { NoBugIcon } from "components/icons";
 
 const HacksExplorer: React.FC<{ overviewData: any }> = ({ overviewData }) => {
   const [isDesktopView] = useMediaQuery("(min-width: 1024px)");
@@ -77,7 +77,7 @@ const HacksExplorer: React.FC<{ overviewData: any }> = ({ overviewData }) => {
   );
 
   const [isLoading, setIsLoading] = useState(true);
-  const [hacksList, setHacksList] = useState([]);
+  const [hacksList, setHacksList] = useState(null);
   const [searchBar, setSearchBar] = useState(false);
   const [pageNo, setPageNo] = useState(1);
   const [pagination, setPagination] = useState<Pagination>({
@@ -203,7 +203,7 @@ const HacksExplorer: React.FC<{ overviewData: any }> = ({ overviewData }) => {
       setIsLoading(true);
       setPageNo(1);
       setPagination({ ...pagination, pageNo: 1 });
-      refetch();
+      refetch().finally(() => updateHacks());
     }
   }, [selectedChain, selectedCategory, selectedMonth, selectedYear, sortBy]);
 
@@ -240,25 +240,26 @@ const HacksExplorer: React.FC<{ overviewData: any }> = ({ overviewData }) => {
     refetch();
   };
 
-  const setMonthFilter = (month: string) => {
+  const setMonthFilter = (month: string, selectedYear: string) => {
     const monthIndex = monthNames.findIndex(
       (m) => m.toLowerCase() === month.toLowerCase()
     );
     const year = Number(selectedYear) || currentYear;
-    const sd = formattedDate(new Date(year, monthIndex, 1), "2-digit", "es-CL");
-    const ed = formattedDate(
-      new Date(year, monthIndex + 1, 0),
-      "2-digit",
-      "es-CL"
-    );
+    let sd = "";
+    let ed = "";
+    if (monthIndex !== -1) {
+      sd = formattedDate(new Date(year, monthIndex, 1), "2-digit", "es-CL");
+      ed = formattedDate(new Date(year, monthIndex + 1, 0), "2-digit", "es-CL");
+    }
     setFilters({ ...filters, start_date: sd, end_date: ed });
     setSelectedMonth(month);
   };
 
   const setYearFilter = (year: string) => {
+    year = year || currentYear.toString();
     setSelectedYear(year);
     if (selectedMonth) {
-      setMonthFilter(selectedMonth);
+      setMonthFilter(selectedMonth, year);
     } else {
       setFilters({
         ...filters,
@@ -309,13 +310,17 @@ const HacksExplorer: React.FC<{ overviewData: any }> = ({ overviewData }) => {
               <Select
                 formatOptionLabel={FormatOptionLabel}
                 options={chainsOptions}
-                isSearchable={false}
+                isSearchable={true}
+                isClearable={true}
                 placeholder="Select Blockchain"
                 styles={customStylesStart}
                 onChange={(chain) => {
                   if (chain) {
                     setSelectedChain(chain.value);
                     setFilters({ ...filters, chain: chain.value });
+                  } else {
+                    setSelectedChain("");
+                    setFilters({ ...filters, chain: "" });
                   }
                 }}
               />
@@ -323,7 +328,8 @@ const HacksExplorer: React.FC<{ overviewData: any }> = ({ overviewData }) => {
             <FormControl w="21%">
               <Select
                 formatOptionLabel={FormatOptionLabel}
-                isSearchable={false}
+                isSearchable={true}
+                isClearable={true}
                 options={categoriesOptions}
                 placeholder="Select Category"
                 styles={customStylesMiddle}
@@ -331,6 +337,9 @@ const HacksExplorer: React.FC<{ overviewData: any }> = ({ overviewData }) => {
                   if (category) {
                     setSelectedCategory(category.value);
                     setFilters({ ...filters, category: category.value });
+                  } else {
+                    setSelectedCategory("");
+                    setFilters({ ...filters, category: "" });
                   }
                 }}
               />
@@ -338,7 +347,8 @@ const HacksExplorer: React.FC<{ overviewData: any }> = ({ overviewData }) => {
             <FormControl w="19%">
               <Select
                 formatOptionLabel={FormatOptionLabel}
-                isSearchable={false}
+                isSearchable={true}
+                isClearable={true}
                 options={monthNames.map((item) => ({
                   value: item,
                   label: item,
@@ -347,7 +357,9 @@ const HacksExplorer: React.FC<{ overviewData: any }> = ({ overviewData }) => {
                 styles={customStylesMiddle}
                 onChange={(month) => {
                   if (month) {
-                    setMonthFilter(month.value);
+                    setMonthFilter(month.value, selectedYear);
+                  } else {
+                    setMonthFilter("", selectedYear);
                   }
                 }}
               />
@@ -355,13 +367,16 @@ const HacksExplorer: React.FC<{ overviewData: any }> = ({ overviewData }) => {
             <FormControl w="19%">
               <Select
                 formatOptionLabel={FormatOptionLabel}
-                isSearchable={false}
+                isSearchable={true}
+                isClearable={true}
                 options={yearsList}
                 placeholder="Select Year"
                 styles={customStylesMiddle}
                 onChange={(year) => {
                   if (year) {
                     setYearFilter(year.value);
+                  } else {
+                    setYearFilter("");
                   }
                 }}
               />
@@ -369,7 +384,8 @@ const HacksExplorer: React.FC<{ overviewData: any }> = ({ overviewData }) => {
             <FormControl w="14%">
               <Select
                 formatOptionLabel={FormatOptionLabel}
-                isSearchable={false}
+                isSearchable={true}
+                isClearable={true}
                 options={sortOptions}
                 placeholder="Sort By"
                 styles={customStylesMiddle}
@@ -549,7 +565,7 @@ const HacksExplorer: React.FC<{ overviewData: any }> = ({ overviewData }) => {
         />
       </InputGroup>
 
-      {hacksList && !hacksList.length ? (
+      {!hacksList ? (
         <Loader width={"100%"} height={"100vh"} />
       ) : (
         <Flex
@@ -562,9 +578,25 @@ const HacksExplorer: React.FC<{ overviewData: any }> = ({ overviewData }) => {
           flexWrap={["nowrap", "wrap", "wrap"]}
           position={"relative"}
         >
-          {hacksList.map((item, index) => (
-            <HackCard key={index} hackData={item} />
-          ))}
+          {hacksList && hacksList.length ? (
+            hacksList.map((item, index) => (
+              <HackCard key={index} hackData={item} />
+            ))
+          ) : (
+            <VStack
+              justifyContent="center"
+              alignItems="center"
+              spacing={10}
+              w="100%"
+              h={"50vh"}
+            >
+              <NoBugIcon size={200} />
+              <Heading fontSize={"md"}>
+                Oops! Seems the web3 hacks are camouflaged! 🦎🎭 Try different
+                filters to uncover their secrets!
+              </Heading>
+            </VStack>
+          )}
           {isLoading && (
             <Flex
               w={"100%"}
