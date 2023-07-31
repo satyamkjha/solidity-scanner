@@ -25,6 +25,7 @@ import { API_PATH } from "helpers/routeManager";
 import Loader from "components/styled-components/Loader";
 import { NoBugIcon } from "components/icons";
 import { useForm } from "react-hook-form";
+import PasswordError from "components/passwordError";
 
 const charTypes = ["lowercase", "uppercase", "symbol", "number"];
 
@@ -264,20 +265,7 @@ const AcceptOrgInvitation: React.FC = () => {
                           }
                         />
                       </InputGroup>
-                      {passwordError &&
-                        passwordError.length < 8 &&
-                        passwordError.contains.length < 4 && (
-                          <Text color={"subtle"} size={"xs"}>
-                            Your password should contain a
-                            {unique(passwordError.contains, charTypes).map(
-                              (item) => ` ${item}, `
-                            )}
-                            {passwordError.length < 8 &&
-                              ` and should have ${
-                                8 - passwordError.length
-                              } more characters`}
-                          </Text>
-                        )}
+                      <PasswordError passwordError={passwordError} />
                     </>
                   ) : (
                     <Text fontSize="sm" mt={10}>
@@ -294,7 +282,7 @@ const AcceptOrgInvitation: React.FC = () => {
                       w="90%"
                       isLoading={loading}
                       type="submit"
-                      disabled={
+                      isDisabled={
                         name.length > 50 ||
                         name.length < 5 ||
                         (passwordError && passwordError.value !== "Strong")

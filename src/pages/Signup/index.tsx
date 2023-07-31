@@ -40,13 +40,13 @@ import { getReCaptchaHeaders } from "helpers/helperFunction";
 import { useConfig } from "hooks/useConfig";
 import Loader from "components/styled-components/Loader";
 import { isEmail } from "helpers/helperFunction";
+import PasswordError from "components/passwordError";
 
 const SignUp: React.FC = () => {
   const config: any = useConfig();
   const googleLoginEnabled = getFeatureGateConfig(config).enable_google_signin;
   const [registered, setRegistered] = useState(false);
   const [email, setEmail] = useState("");
-  const passwordChecker = new RegExp("^(?=.*?[A-Za-z])(?=.*?[0-9]).{6,}$");
   const location = useLocation();
   useEffect(() => {
     const query = new URLSearchParams(location.search);
@@ -209,28 +209,6 @@ const RegisterForm: React.FC<{
   };
 
   const charTypes = ["lowercase", "uppercase", "symbol", "number"];
-
-  function unique(arr1: string[], arr2: string[]) {
-    let uniqueArr: string[] = [];
-    for (var i = 0; i < arr1.length; i++) {
-      let flag = 0;
-      for (var j = 0; j < arr2.length; j++) {
-        if (arr1[i] === arr2[j]) {
-          arr2.splice(j, 1);
-          j--;
-          flag = 1;
-        }
-      }
-
-      if (flag === 0) {
-        uniqueArr.push(arr1[i]);
-      }
-    }
-    arr2.forEach((item) => {
-      uniqueArr.push(item);
-    });
-    return uniqueArr;
-  }
 
   return (
     <form
@@ -411,21 +389,7 @@ const RegisterForm: React.FC<{
                 onChange={(event) => setContactNumber(event.target.value)}
               />
             </InputGroup>
-
-            {passwordError &&
-              passwordError.length < 8 &&
-              passwordError.contains.length < 4 && (
-                <Text color={"subtle"} size={"xs"}>
-                  Your password should contain a
-                  {unique(passwordError.contains, charTypes).map(
-                    (item) => ` ${item}, `
-                  )}
-                  {passwordError.length < 8 &&
-                    ` and should have ${
-                      8 - passwordError.length
-                    } more characters`}
-                </Text>
-              )}
+            <PasswordError passwordError={passwordError} />
           </>
         )}
         <Button
@@ -435,7 +399,7 @@ const RegisterForm: React.FC<{
           spinner={<Loader color={"#3300FF"} size={25} />}
           isDisabled={
             step
-              ? true
+              ? false
               : email.length < 1 ||
                 email.length > 50 ||
                 !isEmail(email) ||

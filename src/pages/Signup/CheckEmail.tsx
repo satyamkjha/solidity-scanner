@@ -51,7 +51,7 @@ const CheckEmail: React.FC = () => {
           Verify your email
         </Text>
         <Text textAlign="center" color="subtle">
-          We've sent a link to your registered email address.
+          We've sent a link to your {email} email address.
         </Text>
         <Text textAlign="center" mt={3} color="subtle">
           Haven't received your email ? Have you checked your{" "}

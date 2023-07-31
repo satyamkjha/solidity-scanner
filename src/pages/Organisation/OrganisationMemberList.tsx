@@ -301,9 +301,9 @@ const OrganisationMemberList: React.FC<{
             mb={2}
           />
           <Text fontWeight={400} maxW="600px" textAlign="center">
-            Please wait till your request gets confirmed by our Team, Once
-            confirmed you’ll be able to add users to your organizationa and
-            start assigning roles
+            Please wait till your request gets confirmed by our Team. Once
+            confirmed you’ll be able to add users to your organisations and
+            start assigning roles.
           </Text>
         </VStack>
       )}

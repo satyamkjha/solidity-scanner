@@ -431,7 +431,7 @@ export default function PrivateApi() {
               </Text>
             </Flex>
             <Link
-              href="https://apidoc.solidityscan.com/solidityscan-security-api/"
+              href="https://apidoc.solidityscan.com/solidityscan-security-api/solidityscan-private-api"
               ml={[0, 0, 0, "auto"]}
               color={"accent"}
               target={"_blank"}

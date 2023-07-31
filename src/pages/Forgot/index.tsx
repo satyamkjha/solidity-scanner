@@ -98,24 +98,27 @@ const ForgotPasswordForm: React.FC<{
     orgName: string | null;
   }>();
 
-  console.log(orgName);
-
   const onSubmit = async ({ email }: FormData) => {
-    let reqHeaders = await getReCaptchaHeaders("send_email");
-    const { data } = await API.post<AuthResponse>(
-      API_PATH.API_SEND_EMAIL,
-      {
-        org_name: orgName,
-        email,
-      },
-      {
-        headers: reqHeaders,
-      }
-    );
+    try {
+      console.log(email);
+      let reqHeaders = await getReCaptchaHeaders("send_email");
+      const { data } = await API.post<AuthResponse>(
+        API_PATH.API_SEND_EMAIL,
+        {
+          org_name: orgName,
+          email,
+        },
+        {
+          headers: reqHeaders,
+        }
+      );
 
-    if (data.status === "success") {
-      setMailSent(true);
-      setEmail(email);
+      if (data.status === "success") {
+        setMailSent(true);
+        setEmail(email);
+      }
+    } catch (e) {
+      console.log(e);
     }
   };
 
@@ -133,7 +136,9 @@ const ForgotPasswordForm: React.FC<{
             placeholder="Your email"
             variant="brand"
             size="lg"
-            {...register("email", { required: true })}
+            {...register("email", {
+              required: true,
+            })}
           />
         </InputGroup>
 

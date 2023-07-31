@@ -22,6 +22,9 @@ import { ViewIcon, ViewOffIcon } from "@chakra-ui/icons";
 import { API_PATH } from "helpers/routeManager";
 import { getReCaptchaHeaders } from "helpers/helperFunction";
 import Loader from "components/styled-components/Loader";
+import { passwordStrength } from "check-password-strength";
+import { isEmail } from "helpers/helperFunction";
+import PasswordError from "components/passwordError";
 
 function useQuery() {
   return new URLSearchParams(useLocation().search);
@@ -34,28 +37,38 @@ const Reset: React.FC = () => {
   const org_name = query.get("org_name")?.toString();
   const [show, setShow] = useState(false);
   const { handleSubmit } = useForm<FormData>();
-
-  const [password, setPassword] = useState("");
+  const passwordChecker = new RegExp("^(?=.*?[A-Za-z])(?=.*?[0-9]).{6,}$");
   const [email, setEmail] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const [password, setPassword] = useState("");
+  const [passwordError, setPasswordError] = useState<{
+    contains: string[];
+    id: number;
+    value: string;
+    length: number;
+  } | null>(null);
   const onSubmit = async () => {
-    let reqHeaders = await getReCaptchaHeaders("forgot_password_set");
-    setIsLoading(true);
-    const { data } = await API.post<AuthResponse>(
-      API_PATH.API_FORGOT_PASSWORD,
-      {
-        email,
-        token,
-        password,
-        org_name,
-      },
-      {
-        headers: reqHeaders,
+    try {
+      let reqHeaders = await getReCaptchaHeaders("forgot_password_set");
+      setIsLoading(true);
+      const { data } = await API.post<AuthResponse>(
+        API_PATH.API_FORGOT_PASSWORD,
+        {
+          email,
+          token,
+          password,
+          org_name,
+        },
+        {
+          headers: reqHeaders,
+        }
+      );
+      setIsLoading(false);
+      if (data.status === "success") {
+        history.push("/signin?isPasswordReset=true");
       }
-    );
-    setIsLoading(false);
-    if (data.status === "success") {
-      history.push("/signin?isPasswordReset=true");
+    } catch (e) {
+      setIsLoading(false);
     }
   };
   return (
@@ -115,7 +128,10 @@ const Reset: React.FC = () => {
                 variant="brand"
                 size="lg"
                 value={password}
-                onChange={(e) => setPassword(e.target.value)}
+                onChange={(e) => {
+                  setPassword(e.target.value);
+                  setPasswordError(passwordStrength(e.target.value));
+                }}
               />
               <InputRightElement
                 height="48px"
@@ -139,14 +155,19 @@ const Reset: React.FC = () => {
                 }
               />
             </InputGroup>
-
+            <PasswordError passwordError={passwordError} />
             <Button
               type="submit"
               variant="brand"
               isLoading={isLoading}
               spinner={<Loader color={"#3300FF"} size={25} />}
               w="100%"
-              // onClick={onSubmit}
+              isDisabled={
+                email.length < 1 ||
+                email.length > 50 ||
+                !isEmail(email) ||
+                (passwordError && passwordError.value !== "Strong")
+              }
             >
               Update Password
             </Button>
