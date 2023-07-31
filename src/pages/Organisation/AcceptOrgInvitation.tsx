@@ -24,6 +24,7 @@ import API from "helpers/api";
 import { API_PATH } from "helpers/routeManager";
 import Loader from "components/styled-components/Loader";
 import { NoBugIcon } from "components/icons";
+import StyledButton from "components/styled-components/StyledButton";
 
 const charTypes = ["lowercase", "uppercase", "symbol", "number"];
 
@@ -288,7 +289,7 @@ const AcceptOrgInvitation: React.FC = () => {
                 </Flex>
                 {next ? (
                   <VStack spacing={5} w="100%" mt={10}>
-                    <Button
+                    <StyledButton
                       variant="brand"
                       maxW="500px"
                       w="90%"
@@ -296,7 +297,7 @@ const AcceptOrgInvitation: React.FC = () => {
                       onClick={acceptOrgRequest}
                     >
                       Join Organisation
-                    </Button>
+                    </StyledButton>
                     <Button
                       variant="accent-ghost"
                       w="200px"
@@ -311,7 +312,7 @@ const AcceptOrgInvitation: React.FC = () => {
                     spacing={[3, 3, 10]}
                     mt={10}
                   >
-                    <Button
+                    <StyledButton
                       py={6}
                       variant="outline"
                       w="200px"
@@ -319,15 +320,15 @@ const AcceptOrgInvitation: React.FC = () => {
                       onClick={rejectOrgRequest}
                     >
                       Reject
-                    </Button>
-                    <Button
+                    </StyledButton>
+                    <StyledButton
                       variant="brand"
                       w="200px"
                       isLoading={loading}
                       onClick={() => setNext(true)}
                     >
                       Accept
-                    </Button>
+                    </StyledButton>
                   </Stack>
                 )}
               </>

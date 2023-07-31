@@ -36,7 +36,7 @@ import {
   getFeatureGateConfig,
   getReCaptchaHeaders,
 } from "helpers/helperFunction";
-import Loader from "components/styled-components/Loader";
+import StyledButton from "components/styled-components/StyledButton";
 
 const OrgLoginForm: React.FC = () => {
   const [show, setShow] = useState(false);
@@ -237,14 +237,9 @@ const OrgLoginForm: React.FC = () => {
             </>
           )}
         </Flex>
-        <Button
-          type="submit"
-          variant="brand"
-          isLoading={isLoading}
-          spinner={<Loader color={"#3300FF"} size={25} />}
-        >
+        <StyledButton type="submit" variant="brand" isLoading={isLoading}>
           {step ? "Sign in" : "Proceed to Sign in"}
-        </Button>
+        </StyledButton>
       </Stack>
     </form>
   );
