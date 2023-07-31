@@ -19,21 +19,21 @@ const MetaMaskLogin: React.FC = () => {
   const config = useConfig();
   const assetsURL = getAssetsURL(config);
   const history = useHistory();
-  const MMSDK = new MetaMaskSDK({
-    useDeeplink: true,
-    communicationLayerPreference: "socket",
-  });
+  // const MMSDK = new MetaMaskSDK({
+  //   useDeeplink: true,
+  //   communicationLayerPreference: "socket",
+  // });
 
   const [isLoading, setIsLoading] = useState(false);
-  // const { status, connect, account, chainId, ethereum } = useMetaMask();
+  const { status, connect, account, chainId, ethereum } = useMetaMask();
 
-  const ethereum = MMSDK.getProvider();
+  // const ethereum = MMSDK.getProvider();
 
   const connectToMetamask = async () => {
     setIsLoading(true);
     setTimeout(() => setIsLoading(false), 2000);
 
-    // connect();
+    connect();
 
     await ethereum.request({ method: "eth_requestAccounts" });
 
