@@ -43,7 +43,7 @@ const InfoSettings: React.FC<{
       minHeight="400px"
       spacing={3}
       mt={0}
-      height={["fit-content", "fit-content", "fit-content", "50vh"]}
+      height={"fit-content"}
       width={"100%"}
     >
       <Text

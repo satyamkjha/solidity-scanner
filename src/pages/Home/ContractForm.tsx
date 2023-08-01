@@ -489,7 +489,11 @@ const ContractForm: React.FC<{
             onClick={onSubmit}
             isLoading={isLoading}
             spinner={<Loader color={"#3300FF"} size={25} />}
-            isDisabled={profileData?.credits === 0 || isViewer}
+            isDisabled={
+              profileData?.credits === 0 ||
+              isViewer ||
+              contractAddress.length < 1
+            }
           >
             Start Scan
           </Button>
