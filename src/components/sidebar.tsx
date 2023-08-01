@@ -93,7 +93,7 @@ const Sidebar: React.FC<{
       isCollapsed: isCollapsed,
       transitionDone: transitionDone,
       isExternal: false,
-      accessRevoked: [],
+      accessRevoked: ["viewer"],
     },
     {
       link: "/billing",
