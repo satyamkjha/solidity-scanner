@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useMediaQuery, Flex, HStack, Text, Box } from "@chakra-ui/react";
 import {
   VictoryArea,
@@ -61,7 +61,7 @@ const Chart: React.FC<{
   selectedTimeFilter: "all" | "W" | "M" | "Y";
   selectedFilterValue: string;
 }> = ({ hacksList, selectedTimeFilter, selectedFilterValue }) => {
-  const currentDate = new Date();
+  const [chartLabel, setChartLabel] = useState("");
 
   let chartData = [];
 
@@ -128,6 +128,25 @@ const Chart: React.FC<{
     "(max-width: 1250px)",
   ]);
 
+  const getChartCurrentLabel = () => {
+    if (selectedTimeFilter === "Y") return selectedFilterValue;
+    if (selectedTimeFilter === "M") {
+      return monthNames.findIndex(
+        (m) => m.toLowerCase() === selectedFilterValue.toLowerCase()
+      ) <= new Date().getMonth()
+        ? selectedFilterValue + " " + new Date().getFullYear()
+        : selectedFilterValue + " " + (new Date().getFullYear() - 1);
+    }
+
+    return "";
+  };
+
+  useEffect(() => {
+    if (selectedFilterValue) {
+      setChartLabel(getChartCurrentLabel());
+    }
+  }, [selectedFilterValue]);
+
   const getHeight = () => {
     let height: number = 0;
     if (is300Pixel) {
@@ -174,17 +193,7 @@ const Chart: React.FC<{
           mb={"-60px"}
           justifyContent={"flex-end"}
         >
-          <Text color="#424242">
-            {selectedTimeFilter === "Y"
-              ? selectedFilterValue
-              : selectedTimeFilter === "M"
-              ? monthNames.findIndex(
-                  (m) => m.toLowerCase() === selectedFilterValue.toLowerCase()
-                ) <= new Date().getMonth()
-                ? selectedFilterValue + " " + new Date().getFullYear()
-                : selectedFilterValue + " " + (new Date().getFullYear() - 1)
-              : ""}
-          </Text>
+          <Text color="#424242">{chartLabel}</Text>
         </HStack>
       )}
       {chartData && chartData.length ? (
