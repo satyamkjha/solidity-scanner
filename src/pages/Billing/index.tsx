@@ -21,10 +21,13 @@ import LatestInvoice from "./components/LatestInvoice";
 import PromoCodeCard from "./components/PromoCodeCard";
 import TransactionListCard from "./components/TransactionListCard";
 import Loader from "components/styled-components/Loader";
+import { getFeatureGateConfig } from "helpers/helperFunction";
 
 const Billing: React.FC<{ profileData: Profile }> = ({ profileData }) => {
   const [planBillingCycle, setPlanBillingCycle] = useState("");
   const pricingRef = useRef<HTMLDivElement>(null);
+
+  const promoCodeEnabled = getFeatureGateConfig().promocode;
 
   const [pageNo, setPageNo] = useState(1);
   const { data: transactions, refetch } = useTransactions(pageNo, 10);
@@ -175,13 +178,15 @@ const Billing: React.FC<{ profileData: Profile }> = ({ profileData }) => {
                 >
                   Transactions
                 </Tab>
-                <Tab
-                  minW={["150px", "150px", "200px"]}
-                  bgColor={"#F5F5F5"}
-                  mx={[2, 3, 5]}
-                >
-                  Promo Code
-                </Tab>
+                {promoCodeEnabled && (
+                  <Tab
+                    minW={["150px", "150px", "200px"]}
+                    bgColor={"#F5F5F5"}
+                    mx={[2, 3, 5]}
+                  >
+                    Promo Code
+                  </Tab>
+                )}
               </TabList>
             </Flex>
             <TabPanels width={"100%"}>
@@ -285,9 +290,11 @@ const Billing: React.FC<{ profileData: Profile }> = ({ profileData }) => {
                   fetchMore={fetchMore}
                 />
               </TabPanel>
-              <TabPanel px={[0, 0, 4]} mx={[0, 0, 4]}>
-                <PromoCodeCard profileData={profileData} />
-              </TabPanel>
+              {promoCodeEnabled && (
+                <TabPanel px={[0, 0, 4]} mx={[0, 0, 4]}>
+                  <PromoCodeCard profileData={profileData} />
+                </TabPanel>
+              )}
             </TabPanels>
           </Tabs>
         )}

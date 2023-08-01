@@ -208,7 +208,17 @@ const RegisterForm: React.FC<{
     }
   };
 
-  const charTypes = ["lowercase", "uppercase", "symbol", "number"];
+  const checkFormValidation = step
+    ? false
+    : email.length < 1 ||
+      email.length > 50 ||
+      !isEmail(email) ||
+      (passwordError && passwordError.value !== "Strong") ||
+      password.length > 50 ||
+      name.length > 20 ||
+      name.length < 3 ||
+      hasSpecialCharacters(name) ||
+      hasSpecialCharacters(companyName);
 
   return (
     <form
@@ -397,19 +407,7 @@ const RegisterForm: React.FC<{
           variant="brand"
           isLoading={formState.isSubmitting}
           spinner={<Loader color={"#3300FF"} size={25} />}
-          isDisabled={
-            step
-              ? false
-              : email.length < 1 ||
-                email.length > 50 ||
-                !isEmail(email) ||
-                (passwordError && passwordError.value !== "Strong") ||
-                password.length > 50 ||
-                name.length > 20 ||
-                name.length < 3 ||
-                hasSpecialCharacters(name) ||
-                hasSpecialCharacters(companyName)
-          }
+          isDisabled={checkFormValidation}
         >
           {!step ? "Next" : "Submit"}
         </Button>
