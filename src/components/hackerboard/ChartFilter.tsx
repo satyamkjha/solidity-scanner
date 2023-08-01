@@ -21,14 +21,17 @@ import FormatOptionLabel from "components/common/FormatOptionLabel";
 const ChartFilter: React.FC<{
   onFilterSelect: any;
   allChains: string[];
+  filterValue: string;
   setSelectedChain: React.Dispatch<React.SetStateAction<string>>;
-}> = ({ onFilterSelect, allChains, setSelectedChain }) => {
+}> = ({ onFilterSelect, allChains, filterValue, setSelectedChain }) => {
   const chainsOptions = allChains
-    ? allChains.map((item) => ({
-        value: item,
-        icon: item.toLowerCase(),
-        label: item,
-      }))
+    ? allChains
+        .sort((a, b) => a.localeCompare(b))
+        .map((item) => ({
+          value: item,
+          icon: item.toLowerCase(),
+          label: item,
+        }))
     : [];
   return (
     <HStack
@@ -54,12 +57,14 @@ const ChartFilter: React.FC<{
         <Select
           formatOptionLabel={FormatOptionLabel}
           isSearchable={true}
+          isClearable={true}
           options={chainsOptions}
           placeholder="Select BlockChain"
           styles={customTranslucentDropdown}
           maxMenuHeight={400}
           onChange={(newVal) => {
             if (newVal) setSelectedChain(newVal.value);
+            else setSelectedChain("all");
           }}
         />
       </FormControl>
@@ -74,13 +79,16 @@ const ChartFilter: React.FC<{
             <PopoverArrow />
             <PopoverCloseButton />
             <PopoverBody w="fit-content">
-              <TimeFilter onFilterSelect={onFilterSelect} />
+              <TimeFilter
+                onFilterSelect={onFilterSelect}
+                filterValue={filterValue}
+              />
             </PopoverBody>
           </PopoverContent>
         </Portal>
       </Popover>
       <Box display={["none", "none", "none", "flex"]}>
-        <TimeFilter onFilterSelect={onFilterSelect} />
+        <TimeFilter onFilterSelect={onFilterSelect} filterValue={filterValue} />
       </Box>
     </HStack>
   );
