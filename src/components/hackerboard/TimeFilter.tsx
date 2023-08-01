@@ -27,7 +27,11 @@ const FilterButton: React.FC<{
       px={5}
       py={1}
       h={8}
-      color={timeFilter === filterValue ? "black" : "white"}
+      color={
+        timeFilter === filterValue
+          ? "black"
+          : ["black", "black", "black", "white"]
+      }
       borderRadius={"4px"}
       background={
         timeFilter === filterValue

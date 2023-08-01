@@ -3,16 +3,12 @@ import { FiFilter } from "react-icons/fi";
 import {
   Flex,
   Box,
-  Container,
   Text,
   Heading,
   Button,
-  Image,
   HStack,
   VStack,
   Input,
-  useMediaQuery,
-  FormControl,
   Popover,
   PopoverTrigger,
   Portal,
@@ -24,60 +20,18 @@ import {
   InputGroup,
   InputRightElement,
 } from "@chakra-ui/react";
-import Select from "react-select";
-import { monthNames } from "common/values";
 import { SearchIcon, Search2Icon } from "@chakra-ui/icons";
-import FormatOptionLabel from "components/common/FormatOptionLabel";
 import HackCard from "./HackCard";
 import { Pagination } from "common/types";
 import { useHacksList } from "hooks/useHacksList";
 import PaginationNav from "components/common/PaginationNav";
 import Loader from "components/styled-components/Loader";
-import { formattedDate } from "common/functions";
 import { NoBugIcon } from "components/icons";
+import HackFilters from "./HackFilters";
 
 const HacksExplorer: React.FC<{ overviewData: any }> = ({ overviewData }) => {
-  const [isDesktopView] = useMediaQuery("(min-width: 1024px)");
-
-  const sortOptions = [
-    {
-      value: "date",
-      label: "Date",
-    },
-    {
-      value: "chain",
-      label: "BlockChain",
-    },
-    {
-      value: "attacked_method",
-      label: "Attack Method",
-    },
-  ];
-  const chainsOptions = overviewData?.all_chains
-    ? overviewData.all_chains
-        .sort((a, b) => a.localeCompare(b))
-        .map((item) => ({
-          value: item,
-          icon: item.toLowerCase(),
-          label: item,
-        }))
-    : [];
-  const categoriesOptions = overviewData?.all_categories
-    ? overviewData.all_categories.map((item) => ({
-        value: item,
-        label: item,
-      }))
-    : [];
-  const currentYear = new Date().getFullYear();
-  const startYear = 2011;
-  const yearsList = Array.from(
-    { length: currentYear - startYear + 1 },
-    (_, index) => {
-      const year = startYear + index;
-      return { value: String(year), label: String(year) };
-    }
-  );
-
+  const [filters, setFilters] = useState<any>({});
+  const [sortBy, setSortBy] = useState("");
   const [isLoading, setIsLoading] = useState(true);
   const [hacksList, setHacksList] = useState(null);
   const [searchBar, setSearchBar] = useState(false);
@@ -86,12 +40,6 @@ const HacksExplorer: React.FC<{ overviewData: any }> = ({ overviewData }) => {
     pageNo: pageNo,
     perPageCount: 9,
   });
-  const [filters, setFilters] = useState<any>({});
-  const [selectedChain, setSelectedChain] = useState("");
-  const [selectedCategory, setSelectedCategory] = useState("");
-  const [selectedMonth, setSelectedMonth] = useState("");
-  const [selectedYear, setSelectedYear] = useState("");
-  const [sortBy, setSortBy] = useState("");
   const [searchTerm, setSearchTerm] = useState("");
   const { data, refetch } = useHacksList(
     pagination,
@@ -99,88 +47,6 @@ const HacksExplorer: React.FC<{ overviewData: any }> = ({ overviewData }) => {
     sortBy,
     searchTerm
   );
-
-  const customStylesStart = {
-    option: (provided: any, state: any) => ({
-      ...provided,
-      borderBottom: "1px solid #f3f3f3",
-      backgroundColor: state.isSelected
-        ? "#FFFFFF"
-        : state.isFocused
-        ? "#E6E6E6"
-        : "#FFFFFF",
-      color: "#000000",
-    }),
-    menu: (provided: any, state: any) => ({
-      ...provided,
-      color: state.selectProps.menuColor,
-      borderRadius: 10,
-      border: "0px solid #ffffff",
-      overflowY: "hidden",
-      width: "300px",
-      textAlign: "left",
-    }),
-    control: (state: any) => ({
-      // none of react-select's styles are passed to <Control />
-      display: "flex",
-      flexDirection: "row",
-      backgroundColor: "#FFFFFF",
-      padding: 5,
-      margin: 0,
-      borderTopLeftRadius: 15,
-      borderBottomLeftRadius: 15,
-      borderTopRightRadius: isDesktopView ? 0 : 15,
-      borderBottomRightRadius: isDesktopView ? 0 : 15,
-      border: state.isFocused ? "2px solid #52FF00" : "2px solid #EDF2F7",
-    }),
-    singleValue: (provided: any, state: any) => {
-      const opacity = state.isDisabled ? 0.3 : 1;
-      const transition = "opacity 300ms";
-
-      return { ...provided, opacity, transition };
-    },
-  };
-
-  const customStylesMiddle = {
-    option: (provided: any, state: any) => ({
-      ...provided,
-      borderBottom: "1px solid #f3f3f3",
-      backgroundColor: state.isSelected
-        ? "#FFFFFF"
-        : state.isFocused
-        ? "#E6E6E6"
-        : "#FFFFFF",
-      color: "#000000",
-    }),
-    menu: (provided: any, state: any) => ({
-      ...provided,
-      color: state.selectProps.menuColor,
-      borderRadius: 10,
-      border: "0px solid #ffffff",
-      overflowY: "hidden",
-      width: "250px",
-    }),
-    control: (state: any) => ({
-      // none of react-select's styles are passed to <Control />
-      display: "flex",
-      flexDirection: "row",
-      backgroundColor: "#FFFFFF",
-      padding: 5,
-      borderTopLeftRadius: 0,
-      borderBottomLeftRadius: 0,
-      borderRadius: isDesktopView ? 0 : 15,
-      marginLeft: isDesktopView ? -2 : 0,
-      marginRight: isDesktopView ? -2 : 0,
-      marginBottom: isDesktopView ? 0 : 10,
-      border: state.isFocused ? "2px solid #52FF00" : "2px solid #EDF2F7",
-    }),
-    singleValue: (provided: any, state: any) => {
-      const opacity = state.isDisabled ? 0.3 : 1;
-      const transition = "opacity 300ms";
-
-      return { ...provided, opacity, transition };
-    },
-  };
 
   const updateHacks = () => {
     if (data && data.page) {
@@ -193,21 +59,6 @@ const HacksExplorer: React.FC<{ overviewData: any }> = ({ overviewData }) => {
   useEffect(() => {
     updateHacks();
   }, [data]);
-
-  useEffect(() => {
-    if (
-      selectedChain ||
-      selectedCategory ||
-      selectedMonth ||
-      selectedYear ||
-      sortBy
-    ) {
-      setIsLoading(true);
-      setPageNo(1);
-      setPagination({ ...pagination, pageNo: 1 });
-      refetch().finally(() => updateHacks());
-    }
-  }, [selectedChain, selectedCategory, selectedMonth, selectedYear, sortBy]);
 
   useEffect(() => {
     let debounceTimer: NodeJS.Timeout;
@@ -242,33 +93,11 @@ const HacksExplorer: React.FC<{ overviewData: any }> = ({ overviewData }) => {
     refetch();
   };
 
-  const setMonthFilter = (month: string, selectedYear: string) => {
-    const monthIndex = monthNames.findIndex(
-      (m) => m.toLowerCase() === month.toLowerCase()
-    );
-    const year = Number(selectedYear) || currentYear;
-    let sd = "";
-    let ed = "";
-    if (monthIndex !== -1) {
-      sd = formattedDate(new Date(year, monthIndex, 1), "2-digit", "es-CL");
-      ed = formattedDate(new Date(year, monthIndex + 1, 0), "2-digit", "es-CL");
-    }
-    setFilters({ ...filters, start_date: sd, end_date: ed });
-    setSelectedMonth(month);
-  };
-
-  const setYearFilter = (year: string) => {
-    year = year || currentYear.toString();
-    setSelectedYear(year);
-    if (selectedMonth) {
-      setMonthFilter(selectedMonth, year);
-    } else {
-      setFilters({
-        ...filters,
-        start_date: `01-01-${year}`,
-        end_date: `31-12-${year}`,
-      });
-    }
+  const refetchHacks = () => {
+    setIsLoading(true);
+    setPageNo(1);
+    setPagination({ ...pagination, pageNo: 1 });
+    refetch().finally(() => updateHacks());
   };
 
   return (
@@ -307,102 +136,14 @@ const HacksExplorer: React.FC<{ overviewData: any }> = ({ overviewData }) => {
             }}
           />
         ) : (
-          <>
-            <FormControl w="21%">
-              <Select
-                formatOptionLabel={FormatOptionLabel}
-                options={chainsOptions}
-                isSearchable={true}
-                isClearable={true}
-                placeholder="Select Blockchain"
-                styles={customStylesStart}
-                onChange={(chain) => {
-                  if (chain) {
-                    setSelectedChain(chain.value);
-                    setFilters({ ...filters, chain: chain.value });
-                  } else {
-                    setSelectedChain("");
-                    setFilters({ ...filters, chain: "" });
-                  }
-                }}
-              />
-            </FormControl>
-            <FormControl w="21%">
-              <Select
-                formatOptionLabel={FormatOptionLabel}
-                isSearchable={true}
-                isClearable={true}
-                options={categoriesOptions}
-                placeholder="Select Category"
-                styles={customStylesMiddle}
-                onChange={(category) => {
-                  if (category) {
-                    setSelectedCategory(category.value);
-                    setFilters({ ...filters, category: category.value });
-                  } else {
-                    setSelectedCategory("");
-                    setFilters({ ...filters, category: "" });
-                  }
-                }}
-              />
-            </FormControl>
-            <FormControl w="19%">
-              <Select
-                formatOptionLabel={FormatOptionLabel}
-                isSearchable={true}
-                isClearable={true}
-                options={monthNames.map((item) => ({
-                  value: item,
-                  label: item,
-                }))}
-                placeholder="Select Month"
-                styles={customStylesMiddle}
-                onChange={(month) => {
-                  if (month) {
-                    setMonthFilter(month.value, selectedYear);
-                  } else {
-                    setMonthFilter("", selectedYear);
-                  }
-                }}
-              />
-            </FormControl>
-            <FormControl w="19%">
-              <Select
-                formatOptionLabel={FormatOptionLabel}
-                isSearchable={true}
-                isClearable={true}
-                options={yearsList}
-                placeholder="Select Year"
-                styles={customStylesMiddle}
-                onChange={(year) => {
-                  if (year) {
-                    setYearFilter(year.value);
-                  } else {
-                    setYearFilter("");
-                  }
-                }}
-              />
-            </FormControl>
-            <FormControl w="14%">
-              <Select
-                formatOptionLabel={FormatOptionLabel}
-                isSearchable={true}
-                isClearable={true}
-                options={sortOptions}
-                placeholder="Sort By"
-                styles={customStylesMiddle}
-                onChange={(sort) => {
-                  if (sort) {
-                    setSortBy(sort.value);
-                    setFilters({ ...filters, sort_by: sort.value });
-                  } else {
-                    setSortBy("");
-                    setFilters({ ...filters, sort_by: "" });
-                  }
-                }}
-              />
-            </FormControl>
-          </>
+          <HackFilters
+            overviewData={overviewData}
+            filters={filters}
+            setFilters={setFilters}
+            sortBy={sortBy}
+            setSortBy={setSortBy}
+            refetchHacks={refetchHacks}
+          />
         )}
 
         <Flex
@@ -472,85 +213,14 @@ const HacksExplorer: React.FC<{ overviewData: any }> = ({ overviewData }) => {
                         backgroundColor={"#EDF2F7"}
                         pb={5}
                       >
-                        <FormControl mt={5} mx={3} w="280px">
-                          <Select
-                            formatOptionLabel={FormatOptionLabel}
-                            options={chainsOptions}
-                            isSearchable={false}
-                            placeholder="Select Blockchain"
-                            styles={customStylesStart}
-                            onChange={(chain) => {
-                              if (chain) {
-                                setSelectedChain(chain.value);
-                                setFilters({ ...filters, chain: chain.value });
-                              }
-                            }}
-                          />
-                        </FormControl>
-                        <FormControl mt={5} mx={3} w="280px">
-                          <Select
-                            formatOptionLabel={FormatOptionLabel}
-                            isSearchable={false}
-                            options={categoriesOptions}
-                            placeholder="Select Category"
-                            styles={customStylesMiddle}
-                            onChange={(category) => {
-                              if (category) {
-                                setSelectedCategory(category.value);
-                                setFilters({
-                                  ...filters,
-                                  category: category.value,
-                                });
-                              }
-                            }}
-                          />
-                        </FormControl>
-                        <FormControl mt={5} mx={3} w="280px">
-                          <Select
-                            formatOptionLabel={FormatOptionLabel}
-                            isSearchable={false}
-                            options={monthNames.map((item) => ({
-                              value: item,
-                              label: item,
-                            }))}
-                            placeholder="Select Month"
-                            styles={customStylesMiddle}
-                            onChange={(month) => {
-                              if (month) {
-                                setMonthFilter(month.value);
-                              }
-                            }}
-                          />
-                        </FormControl>
-                        <FormControl mt={5} mx={3} w="280px">
-                          <Select
-                            formatOptionLabel={FormatOptionLabel}
-                            isSearchable={false}
-                            options={yearsList}
-                            placeholder="Select Year"
-                            styles={customStylesMiddle}
-                            onChange={(year) => {
-                              if (year) {
-                                setYearFilter(year.value);
-                              }
-                            }}
-                          />
-                        </FormControl>
-                        <FormControl mt={5} mx={3} w="280px">
-                          <Select
-                            formatOptionLabel={FormatOptionLabel}
-                            isSearchable={false}
-                            options={sortOptions}
-                            placeholder="Sort By"
-                            styles={customStylesMiddle}
-                            onChange={(sort) => {
-                              if (sort) {
-                                setSortBy(sort.value);
-                                setFilters({ ...filters, sort_by: sort.value });
-                              }
-                            }}
-                          />
-                        </FormControl>
+                        <HackFilters
+                          overviewData={overviewData}
+                          filters={filters}
+                          setFilters={setFilters}
+                          sortBy={sortBy}
+                          setSortBy={setSortBy}
+                          refetchHacks={refetchHacks}
+                        />
                       </Flex>
                       <Button
                         color="#3300FF"
