@@ -40,14 +40,15 @@ const HackCard: React.FC<{ hackData: any }> = ({ hackData }) => {
           alignItems="center"
           w="100%"
           height="fit-content"
+          mb={3}
         >
-          <Heading mb={3} fontSize="lg">
-            {hackData.target}
-          </Heading>
-          <HStack maxW={"40%"}>
-            <SeverityIcon
-              variant={attackMethodColor[hackData.attacked_method] || "low"}
-            />
+          <Heading fontSize="lg">{hackData.target}</Heading>
+          <HStack maxW={"40%"} alignItems={"flex-start"}>
+            <Flex alignItems={"center"} justifyContent="center" h={5}>
+              <SeverityIcon
+                variant={attackMethodColor[hackData.attacked_method] || "low"}
+              />
+            </Flex>
             <Text fontSize="sm" textAlign="right">
               {hackData.attacked_method}
             </Text>

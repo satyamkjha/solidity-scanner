@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useMediaQuery, Flex, HStack, Text, Box } from "@chakra-ui/react";
 import {
   VictoryArea,
@@ -59,55 +59,41 @@ const CustomTooltip = (props: IProps) => {
 const Chart: React.FC<{
   hacksList: any;
   selectedTimeFilter: "all" | "W" | "M" | "Y";
-  selectedMonth: string;
-}> = ({ hacksList, selectedTimeFilter, selectedMonth }) => {
-  const currentDate = new Date();
-  const currentYear = currentDate.getFullYear();
-  const currentMonth = currentDate.getMonth();
+  selectedFilterValue: string;
+}> = ({ hacksList, selectedTimeFilter, selectedFilterValue }) => {
+  const [chartLabel, setChartLabel] = useState("");
 
   let chartData = [];
-  let formattedDates = [];
+
   if (hacksList) {
-    console.log(new Date(selectedMonth).getMonth());
     if (selectedTimeFilter === "Y") {
       const monthlyData: Record<string, number> = {};
-      const data = hacksList.map((item) => {
-        const month = new Date(item.date).toLocaleString("default", {
-          month: "short",
-        });
-        const xLabel =
-          new Date(item.date).getMonth() >= currentMonth
-            ? `${month} ${currentYear - 1}`
-            : `${month} ${currentYear}`;
-        if (!monthlyData[xLabel]) {
-          monthlyData[xLabel] = 0;
-        }
-        monthlyData[xLabel] += item.amount_in_usd;
 
-        return {
-          x: xLabel,
-          y: item.amount_in_usd,
-        };
+      hacksList.forEach((item) => {
+        const xLabel = new Date(item.date).toLocaleString("default", {
+          month: "short",
+          year: "numeric",
+        });
+        monthlyData[xLabel] = (monthlyData[xLabel] || 0) + item.amount_in_usd;
       });
 
-      chartData = Object.entries(monthlyData).map(([month, amount]) => ({
-        x: new Date(month),
-        y: amount,
-        tooltip: month,
-      }));
+      chartData = Object.entries(monthlyData).map(([date, amount]) => {
+        const [month, year] = date.split(" ");
+        const xAxis = `01-${month}-${year}`;
+        return {
+          x: new Date(xAxis),
+          y: amount,
+          tooltip: date,
+        };
+      });
     } else if (selectedTimeFilter === "all") {
       const yearlyData: Record<string, number> = {};
-      const data = hacksList.map((item) => {
+      hacksList.forEach((item) => {
         const xLabel = new Date(item.date).getFullYear();
         if (!yearlyData[xLabel]) {
           yearlyData[xLabel] = 0;
         }
         yearlyData[xLabel] += item.amount_in_usd;
-
-        return {
-          x: xLabel,
-          y: item.amount_in_usd,
-        };
       });
 
       chartData = Object.entries(yearlyData).map(([year, amount]) => ({
@@ -123,7 +109,6 @@ const Chart: React.FC<{
           tooltip: formattedDate(new Date(item.date)),
         };
       });
-      formattedDates = hacksList.map((item) => new Date(item.date));
     }
   }
 
@@ -142,6 +127,25 @@ const Chart: React.FC<{
     "(max-width: 1000px)",
     "(max-width: 1250px)",
   ]);
+
+  const getChartCurrentLabel = () => {
+    if (selectedTimeFilter === "Y") return selectedFilterValue;
+    if (selectedTimeFilter === "M") {
+      return monthNames.findIndex(
+        (m) => m.toLowerCase() === selectedFilterValue.toLowerCase()
+      ) <= new Date().getMonth()
+        ? selectedFilterValue + " " + new Date().getFullYear()
+        : selectedFilterValue + " " + (new Date().getFullYear() - 1);
+    }
+
+    return "";
+  };
+
+  useEffect(() => {
+    if (selectedFilterValue) {
+      setChartLabel(getChartCurrentLabel());
+    }
+  }, [selectedFilterValue]);
 
   const getHeight = () => {
     let height: number = 0;
@@ -167,7 +171,7 @@ const Chart: React.FC<{
     const minY = Math.min(0, ...dataValues);
     const maxY = Math.max(...dataValues);
     const padding = (maxY - minY) * 0.1;
-    return [minY, maxY + padding];
+    return [minY - padding, maxY + padding];
   };
 
   return (
@@ -181,7 +185,7 @@ const Chart: React.FC<{
       backgroundColor={"#060316"}
       borderRadius={["15px", "15px", "30px", "40px"]}
     >
-      {selectedMonth && (
+      {selectedFilterValue && (
         <HStack
           w="100%"
           px={20}
@@ -189,18 +193,12 @@ const Chart: React.FC<{
           mb={"-60px"}
           justifyContent={"flex-end"}
         >
-          <Text color="#424242">
-            {monthNames.findIndex(
-              (m) => m.toLowerCase() === selectedMonth.toLowerCase()
-            ) <= new Date().getMonth()
-              ? selectedMonth + " " + new Date().getFullYear()
-              : selectedMonth + " " + (new Date().getFullYear() - 1)}
-          </Text>
+          <Text color="#424242">{chartLabel}</Text>
         </HStack>
       )}
-      {chartData.length ? (
+      {chartData && chartData.length ? (
         <VictoryChart
-          scale={{ x: "time" }}
+          scale={{ x: "time", y: "linear" }}
           containerComponent={<VictoryVoronoiContainer />}
           width={600}
           height={getHeight()}
@@ -212,7 +210,7 @@ const Chart: React.FC<{
                 ...VictoryTheme.material.axis?.style,
                 axis: { stroke: "none" },
                 grid: {
-                  stroke: "#2D2D2D",
+                  stroke: "#121212",
                 },
               },
             },
@@ -226,7 +224,7 @@ const Chart: React.FC<{
                 axisLabel: { fontSize: 9 },
                 grid: { stroke: "none" },
                 ticks: {
-                  stroke: "#2D2D2D",
+                  stroke: "#121212",
                 },
               }}
               theme={VictoryTheme.material}
@@ -240,7 +238,7 @@ const Chart: React.FC<{
                 axisLabel: { fontSize: 9 },
                 grid: { stroke: "none" },
                 ticks: {
-                  stroke: "#2D2D2D",
+                  stroke: "#121212",
                 },
               }}
               theme={VictoryTheme.material}
@@ -253,10 +251,10 @@ const Chart: React.FC<{
               axisLabel: { fontSize: 10 },
               axis: { stroke: "none" },
               grid: {
-                stroke: "#2D2D2D",
+                stroke: "#121212",
               },
               ticks: {
-                stroke: "#2D2D2D",
+                stroke: "#121212",
               },
             }}
             dependentAxis
@@ -274,7 +272,7 @@ const Chart: React.FC<{
                 fillOpacity: 0.05,
               },
             }}
-            interpolation="cardinal"
+            interpolation="catmullRom"
             labelComponent={
               <VictoryTooltip flyoutComponent={<CustomTooltip />} />
             }
