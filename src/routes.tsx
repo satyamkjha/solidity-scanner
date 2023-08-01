@@ -1,4 +1,4 @@
-import React, { lazy, Suspense, useEffect } from "react";
+import React, { lazy, Suspense, useEffect, useState } from "react";
 import {
   BrowserRouter as Router,
   Switch,
@@ -359,30 +359,34 @@ const CheckOrgRole: React.FC<{ roles: OrgUserRole[] }> = ({
   roles,
 }) => {
   const { data: profile } = useProfile();
-
   const { data: orgProfile } = useUserOrgProfile(
     profile?.logged_in_via === "org_login"
   );
-
   const history = useHistory();
+  const [userHasAccess, setUserHasAccess] = useState(false);
 
   useEffect(() => {
-    if (profile && orgProfile) {
-      let hasMatchingRole: boolean = false;
+    if (profile) {
+      if (orgProfile) {
+        let hasMatchingRole: boolean = false;
 
-      if (profile.logged_in_via === "org_login") {
-        hasMatchingRole = roles.includes(orgProfile.user_organization?.role);
-      }
+        if (profile.logged_in_via === "org_login") {
+          hasMatchingRole = roles.includes(orgProfile.user_organization?.role);
+        }
 
-      if (hasMatchingRole) {
-        history.push("/page-not-found");
+        if (hasMatchingRole) {
+          history.push("/page-not-found");
+        }
+        setUserHasAccess(hasMatchingRole);
+      } else {
+        setUserHasAccess(true);
       }
     }
   }, [profile, orgProfile]);
 
   return (
     <>
-      {profile ? (
+      {userHasAccess ? (
         React.cloneElement(children, { profileData: profile })
       ) : (
         <Loader width={"100%"} height={"90vh"} />
