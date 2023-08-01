@@ -80,21 +80,27 @@ const CreateOrganisationForm: React.FC<{
 
   const checkOrganisationNameRequest = async () => {
     if (orgName.length > 0 && orgName.length < 50) {
-      const { data } = await API.post<{
-        status: string;
-        org_name_available: boolean;
-      }>(API_PATH.API_CHECK_ORGANISATION_NAME_AVAILABILITY, {
-        org_name: orgName,
-      });
-      if (data.status === "success") {
-        if (data.org_name_available) {
-          setAvailabilityStatus("Available");
+      try {
+        const { data } = await API.post<{
+          status: string;
+          org_name_available: boolean;
+        }>(API_PATH.API_CHECK_ORGANISATION_NAME_AVAILABILITY, {
+          org_name: orgName,
+        });
+        if (data.status === "success") {
+          if (data.org_name_available) {
+            setAvailabilityStatus("Available");
+          } else {
+            setAvailabilityStatus("Not-Available");
+          }
         } else {
-          setAvailabilityStatus("Not-Available");
+          setAvailabilityStatus("");
         }
-      } else {
+      } catch (e) {
         setAvailabilityStatus("");
       }
+    } else {
+      setAvailabilityStatus("");
     }
   };
 

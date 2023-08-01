@@ -139,4 +139,4 @@ export const hasSpecialCharacters = (email: string) =>
   /[`!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?~]/i.test(email);
 
 export const checkOrgName = (email: string) =>
-  /[`!@#$%^&*()+\-=\[\]{};':"\\|,.<>\/?~]/i.test(email);
+  /[`!@#$\s%^&*()+\-=\[\]{};':"\\|,.<>\/?~]/i.test(email);

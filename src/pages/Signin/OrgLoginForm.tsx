@@ -75,11 +75,7 @@ const OrgLoginForm: React.FC = () => {
   };
 
   const checkOrganisationNameRequest = async () => {
-    if (
-      orgName.length > 50 ||
-      orgName.length < 1 ||
-      hasSpecialCharacters(orgName)
-    ) {
+    if (orgName.length > 50 || orgName.length < 1 || checkOrgName(orgName)) {
       toast({
         title: "Organisation Name not Valid",
         description:
