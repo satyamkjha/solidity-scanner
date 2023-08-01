@@ -27,6 +27,7 @@ import { NoBugIcon } from "components/icons";
 import StyledButton from "components/styled-components/StyledButton";
 import { useForm } from "react-hook-form";
 import PasswordError from "components/passwordError";
+import { hasSpecialCharacters } from "helpers/helperFunction";
 
 const charTypes = ["lowercase", "uppercase", "symbol", "number"];
 
@@ -286,6 +287,7 @@ const AcceptOrgInvitation: React.FC = () => {
                       isDisabled={
                         name.length > 50 ||
                         name.length < 5 ||
+                        hasSpecialCharacters(name) ||
                         (passwordError && passwordError.value !== "Strong")
                       }
                     >

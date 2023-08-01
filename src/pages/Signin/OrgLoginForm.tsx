@@ -37,7 +37,7 @@ import {
   getReCaptchaHeaders,
 } from "helpers/helperFunction";
 import StyledButton from "components/styled-components/StyledButton";
-import { isEmail } from "helpers/helperFunction";
+import { isEmail, hasSpecialCharacters } from "helpers/helperFunction";
 
 const OrgLoginForm: React.FC = () => {
   const [show, setShow] = useState(false);
@@ -85,7 +85,11 @@ const OrgLoginForm: React.FC = () => {
   };
 
   const checkOrganisationNameRequest = async () => {
-    if (orgName.length > 50 && orgName.length < 1) {
+    if (
+      orgName.length > 50 ||
+      orgName.length < 1 ||
+      hasSpecialCharacters(orgName)
+    ) {
       toast({
         title: "Organisation Name not Valid",
         description:
@@ -258,7 +262,9 @@ const OrgLoginForm: React.FC = () => {
                 email.length > 50 ||
                 password.length > 50 ||
                 !isEmail(email)
-              : orgName.length < 1 || orgName.length > 50
+              : orgName.length < 1 ||
+                orgName.length > 50 ||
+                hasSpecialCharacters(orgName)
           }
         >
           {step ? "Sign in" : "Proceed to Sign in"}

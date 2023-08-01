@@ -134,3 +134,6 @@ export const checkPublishReportAccess = (
 
 export const isEmail = (email: string) =>
   /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(email);
+
+export const hasSpecialCharacters = (email: string) =>
+  /[`!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?~]/i.test(email);
