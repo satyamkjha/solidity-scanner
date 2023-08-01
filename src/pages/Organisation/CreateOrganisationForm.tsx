@@ -155,9 +155,9 @@ const CreateOrganisationForm: React.FC<{
                 <Text fontSize="md" fontWeight={500}>
                   Setup your Organization Name
                 </Text>
-                <Text fontSize="sm" color="#4E5D78" fontWeight={300}>
+                {/* <Text fontSize="sm" color="#4E5D78" fontWeight={300}>
                   Lorem ipsum dolor sit amet consectetur. Iaculis libero eget.
-                </Text>
+                </Text> */}
                 <InputGroup mt={10} alignItems="center" mb={4}>
                   <Input
                     isRequired

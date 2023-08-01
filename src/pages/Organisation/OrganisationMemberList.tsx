@@ -232,11 +232,19 @@ const OrganisationMemberList: React.FC<{
                   fontWeight={"300"}
                   mb={0}
                 >
-                  User Roles dolor sit amet consectetur. Lorem pharetra sed
-                  consequat velit arcu. Dictum volutpat arcu pellentesque risus
-                  mi non. Ornare phasellus lorem egestas fringilla enim.
+                  You can assign specific roles to users based on their
+                  responsibilities and authorization needs. Each role is
+                  associated with a set of permissions, defining what actions
+                  users with that role can perform. To get a detailed
+                  information about the permissions that come with each role,
+                  Click on
                   <span>
-                    <Link ml={2} color="#3300FF" href="" isExternal>
+                    <Link
+                      ml={2}
+                      color="#3300FF"
+                      href="https://docs.solidityscan.com/"
+                      isExternal
+                    >
                       Learn More
                     </Link>
                   </span>
