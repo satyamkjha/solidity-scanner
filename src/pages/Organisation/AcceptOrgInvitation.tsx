@@ -285,10 +285,11 @@ const AcceptOrgInvitation: React.FC = () => {
                       isLoading={loading}
                       type="submit"
                       isDisabled={
-                        name.length > 50 ||
-                        name.length < 5 ||
+                        name.length > 20 ||
+                        name.length < 3 ||
                         hasSpecialCharacters(name) ||
-                        (passwordError && passwordError.value !== "Strong")
+                        (passwordError && passwordError.value !== "Strong") ||
+                        password.length > 50
                       }
                     >
                       Join Organisation

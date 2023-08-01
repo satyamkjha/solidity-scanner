@@ -46,6 +46,9 @@ import Loader from "components/styled-components/Loader";
 import { onLogout } from "common/functions";
 import { monthNames } from "common/values";
 import { useUserOrgProfile } from "hooks/useUserOrgProfile";
+import { isEmail, hasSpecialCharacters } from "helpers/helperFunction";
+import PasswordError from "components/passwordError";
+import { passwordStrength } from "check-password-strength";
 
 const Profile: React.FC = () => {
   const toast = useToast();
@@ -87,18 +90,40 @@ const Profile: React.FC = () => {
     setError("");
     return true;
   };
+  const validationError = (msg: string) => {
+    toast({
+      title: msg,
+      status: "error",
+      duration: 2000,
+      isClosable: true,
+      position: "bottom",
+    });
+  };
 
   const checkFormValidation = () => {
-    if (companyName && (companyName.length < 5 || companyName.length > 40)) {
+    if (
+      companyName &&
+      (companyName.length < 5 ||
+        companyName.length > 40 ||
+        hasSpecialCharacters(companyName))
+    ) {
+      validationError("Company Name is Invalid");
       return false;
     }
     if (
       contactNumber &&
       (contactNumber.length < 8 || contactNumber.length > 15)
     ) {
+      validationError("Contact Number is Invalid");
       return false;
     }
-    if (firstName && (firstName.length < 5 || firstName.length > 40)) {
+    if (
+      firstName &&
+      (firstName.length < 3 ||
+        firstName.length > 30 ||
+        hasSpecialCharacters(firstName))
+    ) {
+      validationError("Name is Invalid");
       return false;
     }
     return true;
@@ -106,13 +131,6 @@ const Profile: React.FC = () => {
 
   const onSave = async () => {
     if (!checkFormValidation()) {
-      toast({
-        title: "Form Data is not correct",
-        status: "error",
-        duration: 2000,
-        isClosable: true,
-        position: "bottom",
-      });
       return;
     }
     try {
@@ -445,6 +463,12 @@ const ChangePasswordForm: React.FC<{ isOwner: boolean }> = ({ isOwner }) => {
   const [password, setPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
+  const [passwordError, setPasswordError] = useState<{
+    contains: string[];
+    id: number;
+    value: string;
+    length: number;
+  } | null>(null);
   const { handleSubmit } = useForm<FormData>();
 
   const [isLoading, setIsLoading] = useState(false);
@@ -481,6 +505,10 @@ const ChangePasswordForm: React.FC<{ isOwner: boolean }> = ({ isOwner }) => {
     setIsLoading(false);
   };
 
+  useEffect(() => {
+    setPasswordError(passwordStrength(newPassword));
+  }, [newPassword]);
+
   return (
     <Box w="100%" bgColor="white" borderRadius="20px" p={4} px={6} mt={8}>
       <Text fontWeight={300} fontSize="xl">
@@ -504,6 +532,7 @@ const ChangePasswordForm: React.FC<{ isOwner: boolean }> = ({ isOwner }) => {
           value={newPassword}
           setValue={setNewPassword}
         />
+        <PasswordError passwordError={passwordError} />
         <ViewableInputGroup
           key="confirm_password"
           label="Confirm Password"
@@ -517,6 +546,14 @@ const ChangePasswordForm: React.FC<{ isOwner: boolean }> = ({ isOwner }) => {
           onClick={onSubmit}
           isLoading={isLoading}
           spinner={<Loader color={"#3300FF"} size={25} />}
+          isDisabled={
+            (passwordError && passwordError.value !== "Strong") ||
+            newPassword.length > 50 ||
+            password.length < 1 ||
+            password.length > 50 ||
+            confirmPassword.length < 1 ||
+            confirmPassword.length > 50
+          }
         >
           Change Password
         </Button>

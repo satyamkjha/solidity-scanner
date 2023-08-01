@@ -39,7 +39,7 @@ import { getFeatureGateConfig } from "helpers/helperFunction";
 import { getReCaptchaHeaders } from "helpers/helperFunction";
 import { useConfig } from "hooks/useConfig";
 import Loader from "components/styled-components/Loader";
-import { isEmail } from "helpers/helperFunction";
+import { isEmail, hasSpecialCharacters } from "helpers/helperFunction";
 import PasswordError from "components/passwordError";
 
 const SignUp: React.FC = () => {
@@ -404,8 +404,11 @@ const RegisterForm: React.FC<{
                 email.length > 50 ||
                 !isEmail(email) ||
                 (passwordError && passwordError.value !== "Strong") ||
-                name.length > 50 ||
-                name.length < 5
+                password.length > 50 ||
+                name.length > 20 ||
+                name.length < 3 ||
+                hasSpecialCharacters(name) ||
+                hasSpecialCharacters(companyName)
           }
         >
           {!step ? "Next" : "Submit"}

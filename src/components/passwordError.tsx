@@ -10,24 +10,33 @@ const PasswordError: React.FC<{
   } | null;
 }> = ({ passwordError }) => {
   const charTypes = ["lowercase", "uppercase", "symbol", "number"];
+  function unique(arr1: string[], arr2: string[]) {
+    let uniqueArr: string[] = [];
+    for (var i = 0; i < arr1.length; i++) {
+      let flag = 0;
+      for (var j = 0; j < arr2.length; j++) {
+        if (arr1[i] === arr2[j]) {
+          arr2.splice(j, 1);
+          j--;
+          flag = 1;
+        }
+      }
 
-  function unique(arr1: string[], arr2: string[]): string[] {
-    const uniqueSet = new Set(arr1);
-
-    for (const item of arr2) {
-      if (!uniqueSet.has(item)) {
-        uniqueSet.add(item);
+      if (flag === 0) {
+        uniqueArr.push(arr1[i]);
       }
     }
-    return [...uniqueSet];
+    arr2.forEach((item) => {
+      uniqueArr.push(item);
+    });
+    return uniqueArr;
   }
 
   return (
     <>
       {passwordError &&
-        passwordError.length < 8 &&
-        passwordError.contains.length < 4 && (
-          <Text color={"subtle"} size={"xs"}>
+        (passwordError.length < 8 || passwordError.contains.length < 4) && (
+          <Text color={"subtle"} fontSize={"sm"} mt={2} textAlign="left">
             Your password should contain a
             {unique(passwordError.contains, charTypes).map(
               (item) => ` ${item}, `

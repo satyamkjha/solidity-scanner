@@ -2,40 +2,26 @@ import React, { useEffect, useState } from "react";
 import { Link as RouterLink, useHistory, useLocation } from "react-router-dom";
 import {
   Flex,
-  Heading,
   Stack,
-  Text,
   Button,
   Icon,
   InputGroup,
   InputLeftElement,
   Input,
   Link,
-  Box,
   useToast,
   InputRightElement,
-  HStack,
-  Divider,
-  Image,
 } from "@chakra-ui/react";
 import { MdPeopleAlt } from "react-icons/md";
 import { FaLock } from "react-icons/fa";
 import { FiAtSign } from "react-icons/fi";
-import { useConfig } from "hooks/useConfig";
-import { Logo } from "components/icons";
-import { getAssetsURL } from "helpers/helperFunction";
 import API from "helpers/api";
 import Auth from "helpers/auth";
 import { AuthResponse } from "common/types";
 import { ViewIcon, ViewOffIcon } from "@chakra-ui/icons";
-import MetaMaskLogin from "components/metamaskSignin";
 import { API_PATH } from "helpers/routeManager";
-import GoogleSignIn from "components/googleSignin";
 import { useForm } from "react-hook-form";
-import {
-  getFeatureGateConfig,
-  getReCaptchaHeaders,
-} from "helpers/helperFunction";
+import { getReCaptchaHeaders } from "helpers/helperFunction";
 import StyledButton from "components/styled-components/StyledButton";
 import { isEmail, hasSpecialCharacters } from "helpers/helperFunction";
 
