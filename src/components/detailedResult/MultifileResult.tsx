@@ -58,7 +58,39 @@ const MultifileResult: React.FC<{
   const [files, setFiles] = useState<FilesState | null>(null);
   const role: string = useUserRole();
 
-  const [issues, setIssues] = useState<MultiFileScanDetail[]>(scanDetails);
+  const sortIssuesBasedonPriority = (issueArray: MultiFileScanDetail[]) => {
+    const issuePriority = {
+      critical: 6,
+      high: 5,
+      medium: 4,
+      low: 3,
+      informational: 2,
+      gas: 1,
+    };
+
+    issueArray.sort((a, b) => {
+      // First, sort by priority in descending order
+      if (
+        issuePriority[a.template_details.issue_severity] >
+        issuePriority[b.template_details.issue_severity]
+      )
+        return -1;
+      if (
+        issuePriority[a.template_details.issue_severity] <
+        issuePriority[b.template_details.issue_severity]
+      )
+        return 1;
+
+      // If priorities are equal, sort by the object's original order in the array
+      return 0;
+    });
+
+    return issueArray;
+  };
+
+  const [issues, setIssues] = useState<MultiFileScanDetail[]>(
+    sortIssuesBasedonPriority(scanDetails)
+  );
 
   const { projectId, scanId } = useParams<{
     projectId: string;

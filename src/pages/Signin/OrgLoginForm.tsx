@@ -23,7 +23,11 @@ import { API_PATH } from "helpers/routeManager";
 import { useForm } from "react-hook-form";
 import { getReCaptchaHeaders } from "helpers/helperFunction";
 import StyledButton from "components/styled-components/StyledButton";
-import { isEmail, hasSpecialCharacters } from "helpers/helperFunction";
+import {
+  isEmail,
+  hasSpecialCharacters,
+  checkOrgName,
+} from "helpers/helperFunction";
 
 const OrgLoginForm: React.FC = () => {
   const [show, setShow] = useState(false);
@@ -250,7 +254,7 @@ const OrgLoginForm: React.FC = () => {
                 !isEmail(email)
               : orgName.length < 1 ||
                 orgName.length > 50 ||
-                hasSpecialCharacters(orgName)
+                checkOrgName(orgName)
           }
         >
           {step ? "Sign in" : "Proceed to Sign in"}

@@ -27,7 +27,7 @@ import {
 import { API_PATH } from "helpers/routeManager";
 import API from "helpers/api";
 import { debounce } from "lodash";
-import { hasSpecialCharacters } from "helpers/helperFunction";
+import { checkOrgName } from "helpers/helperFunction";
 
 const CreateOrganisationForm: React.FC<{
   onClose(): any;
@@ -40,7 +40,7 @@ const CreateOrganisationForm: React.FC<{
   const [isDesktopView] = useMediaQuery("(min-width: 950px)");
 
   const createOrganisationRequest = async () => {
-    if (hasSpecialCharacters(orgName)) {
+    if (checkOrgName(orgName)) {
       toast({
         title: "Organisation name cannot have special characters in it.",
         status: "error",
