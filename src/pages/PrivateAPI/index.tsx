@@ -23,6 +23,7 @@ import { useProfile } from "hooks/useProfile";
 import { useConfig } from "hooks/useConfig";
 import UpgradePackage from "components/upgradePackage";
 import Loader from "components/styled-components/Loader";
+import { formattedDate } from "common/functions";
 
 export default function PrivateApi() {
   const { data: profileData, isLoading } = useProfile();
@@ -312,7 +313,7 @@ export default function PrivateApi() {
                         ml={[0, 0, 0, "auto"]}
                         mb={[4, 4, 4, 0]}
                       >
-                        {createdDate}
+                        {formattedDate(new Date(createdDate))}
                       </Text>
                       {!isFirstTime && (
                         <>

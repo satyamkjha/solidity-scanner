@@ -147,6 +147,7 @@ const orgRestrictedRoutes = [
   { path: "/billing", roles: ["viewer", "editor", "admin"] },
   { path: "/integrations", roles: ["viewer", "editor", "admin"] },
   { path: "/organisation", roles: ["viewer", "editor"] },
+  { path: "/private-api", roles: ["viewer"] },
 ];
 
 const Routes: React.FC = () => {
