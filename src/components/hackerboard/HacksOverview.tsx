@@ -24,7 +24,7 @@ const HacksOverview: React.FC<{ overviewData: any }> = ({ overviewData }) => {
   const [selectedTimeFilter, setSelectedTimeFilter] = useState<
     "all" | "W" | "M" | "Y"
   >("Y");
-  const [monthValue, setMonthValue] = useState("");
+  const [filterValue, setFilterValue] = useState("");
   const [filteredData, setFilterData] = useState<any>();
   const [isChartLoading, setIsChartLoading] = useState(true);
   const { data, isLoading, refetch } = useHacksGraph(
@@ -65,7 +65,7 @@ const HacksOverview: React.FC<{ overviewData: any }> = ({ overviewData }) => {
 
   const onFilterSelect = async (
     timeFilter: "all" | "W" | "M" | "Y",
-    month: string,
+    selectFilterValue: string,
     selectedChain: string = "all"
   ) => {
     let sd = currentDate;
@@ -76,9 +76,9 @@ const HacksOverview: React.FC<{ overviewData: any }> = ({ overviewData }) => {
         sd = new Date(currentDate.getTime() - 7 * 24 * 60 * 60 * 1000);
         break;
       case "M":
-        if (month) {
+        if (selectFilterValue) {
           const monthIndex = monthNames.findIndex(
-            (m) => m.toLowerCase() === month.toLowerCase()
+            (m) => m.toLowerCase() === selectFilterValue.toLowerCase()
           );
           const year =
             monthIndex <= currentDate.getMonth()
@@ -95,18 +95,23 @@ const HacksOverview: React.FC<{ overviewData: any }> = ({ overviewData }) => {
         }
         break;
       case "Y":
-        sd = new Date(
-          currentDate.getFullYear() - 1,
-          currentDate.getMonth(),
-          currentDate.getDate()
-        );
+        if (selectFilterValue) {
+          sd = new Date(Number(selectFilterValue), 0, 1);
+          ed = new Date(Number(selectFilterValue), 11, 31);
+        } else {
+          sd = new Date(
+            currentDate.getFullYear() - 1,
+            currentDate.getMonth(),
+            currentDate.getDate()
+          );
+        }
         break;
       case "all":
         sd = new Date(2011, 1, 1);
     }
     setStartDate(sd);
     setEndDate(ed);
-    setMonthValue(month);
+    setFilterValue(selectFilterValue);
   };
 
   return (
@@ -176,6 +181,7 @@ const HacksOverview: React.FC<{ overviewData: any }> = ({ overviewData }) => {
                 <ChartFilter
                   onFilterSelect={onFilterSelect}
                   allChains={overviewData.all_chains}
+                  filterValue={filterValue}
                   setSelectedChain={setSelectedChain}
                 />
                 {isChartLoading ? (
@@ -191,7 +197,7 @@ const HacksOverview: React.FC<{ overviewData: any }> = ({ overviewData }) => {
                     <Chart
                       hacksList={filteredData.attack_list}
                       selectedTimeFilter={selectedTimeFilter}
-                      selectedMonth={monthValue}
+                      selectedFilterValue={filterValue}
                     />
                     <HackCummulativeData filteredData={filteredData} />
                   </>
@@ -260,6 +266,7 @@ const HacksOverview: React.FC<{ overviewData: any }> = ({ overviewData }) => {
               <ChartFilter
                 onFilterSelect={onFilterSelect}
                 allChains={overviewData.all_chains}
+                filterValue={filterValue}
                 setSelectedChain={setSelectedChain}
               />
               {isChartLoading ? (
@@ -275,7 +282,7 @@ const HacksOverview: React.FC<{ overviewData: any }> = ({ overviewData }) => {
                   <Chart
                     hacksList={filteredData.attack_list}
                     selectedTimeFilter={selectedTimeFilter}
-                    selectedMonth={monthValue}
+                    selectedFilterValue={filterValue}
                   />
                   <HackCummulativeData filteredData={filteredData} />
                 </>
