@@ -29,6 +29,20 @@ export const issueActions = [
   },
 ];
 
+export const userRolesList = [
+  {
+    value: "admin",
+    icon: "icons/admin",
+    label: "Admin",
+  },
+  { value: "editor", icon: "icons/editor", label: "Editor" },
+  {
+    value: "viewer",
+    icon: "icons/reader",
+    label: "Viewer",
+  },
+];
+
 export const dummyIssues = [
   {
     severity: "high",
@@ -926,4 +940,17 @@ export const actionTaken = {
   wont_fix: "Won't Fix",
   pending_fix: "Pending Fix",
   fixed: "Fixed",
+};
+
+export const attackMethodColor = {
+  "Rug Pull": "#9C003D",
+  "Flash Loan Attack": "#F46D43",
+  Miscellaneous: "#FEE08B",
+  Scam: "#E6F598",
+  "Business Logic Issue": "#66C2A5",
+  Phishing: "#5E4FA2",
+  "Access Control": "#3288BD",
+  "Private key leak": "#7D7D7D",
+  "Price Manipulation": "#A7A7A7",
+  "Oracle Issue": "#EBEBEB",
 };

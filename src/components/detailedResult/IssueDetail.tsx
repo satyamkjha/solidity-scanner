@@ -272,6 +272,13 @@ const IssueDetail: React.FC<{
                   _selected={{
                     borderWidth: "0px",
                   }}
+                  onKeyDown={(e) => {
+                    if (e.keyCode === 13 && !e.shiftKey) {
+                      if (comment !== "" && comment) {
+                        updateComment();
+                      }
+                    }
+                  }}
                   onChange={(e) => {
                     setComment(e.target.value);
                   }}

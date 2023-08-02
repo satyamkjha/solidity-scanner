@@ -14,11 +14,12 @@ import {
   MenuItem,
   IconButton,
   Box,
+  MenuDivider,
 } from "@chakra-ui/react";
 import { Logo } from "components/icons";
 import Auth from "helpers/auth";
 import ContactUs from "./contactus";
-import { CloseIcon, HamburgerIcon } from "@chakra-ui/icons";
+import { CloseIcon, HamburgerIcon, ChevronDownIcon } from "@chakra-ui/icons";
 import API from "helpers/api";
 import { API_PATH } from "helpers/routeManager";
 import { useQueryClient } from "react-query";
@@ -62,7 +63,7 @@ export const Header: React.FC = () => {
             <Logo />
           </RouterLink>
           {isDesktopView ? (
-            <HStack ml={20} spacing={8}>
+            <HStack ml={16} spacing={8}>
               <Link
                 as={RouterLink}
                 to="/pricing"
@@ -88,23 +89,62 @@ export const Header: React.FC = () => {
                 Detectors
               </Link>
               <Link
-                onClick={() => {
-                  window.open("https://solidityscan.com/discover/", "_blank");
-                }}
+                as={RouterLink}
+                to="/hackboard"
                 variant="navigation"
                 fontWeight="600"
               >
-                Discover
+                Web3 HackBoard
               </Link>
-              <Link
-                onClick={() => {
-                  window.open("https://blog.solidityscan.com/", "_blank");
-                }}
-                variant="navigation"
-                fontWeight="600"
-              >
-                Blog
-              </Link>
+              <Menu>
+                <MenuButton
+                  px={4}
+                  py={2}
+                  border={"none"}
+                  borderRadius="md"
+                  borderWidth="1px"
+                  fontWeight="600"
+                  _hover={{ color: "#3300FF" }}
+                  _active={{ color: "#3300FF" }}
+                  _focus={{ boxShadow: "outline" }}
+                >
+                  Blogs <ChevronDownIcon fontSize="xl" ml={1} />
+                </MenuButton>
+                <MenuList zIndex={100}>
+                  <MenuItem>
+                    <Link
+                      onClick={() => {
+                        window.open("https://blog.solidityscan.com/", "_blank");
+                      }}
+                      variant="navigation"
+                      fontWeight="600"
+                      w="100%"
+                      h="100%"
+                      p={0}
+                    >
+                      Blogs
+                    </Link>
+                  </MenuItem>
+                  <MenuDivider />
+                  <MenuItem>
+                    <Link
+                      onClick={() => {
+                        window.open(
+                          "https://solidityscan.com/discover/",
+                          "_blank"
+                        );
+                      }}
+                      variant="navigation"
+                      fontWeight="600"
+                      w="100%"
+                      h="100%"
+                      p={0}
+                    >
+                      Discover
+                    </Link>
+                  </MenuItem>
+                </MenuList>
+              </Menu>
             </HStack>
           ) : (
             <>
@@ -187,6 +227,36 @@ export const Header: React.FC = () => {
                     </MenuItem>
                     <MenuItem>
                       <Link
+                        as={RouterLink}
+                        to="/hackboard"
+                        variant="ghost"
+                        fontWeight="400"
+                        w={"100%"}
+                        p={1}
+                        ml={3}
+                      >
+                        Web3 HackBoard
+                      </Link>
+                    </MenuItem>
+                    <MenuItem>
+                      <Link
+                        onClick={() => {
+                          window.open(
+                            "https://solidityscan.com/discover/",
+                            "_blank"
+                          );
+                        }}
+                        variant="ghost"
+                        fontWeight="400"
+                        w={"100%"}
+                        p={1}
+                        ml={3}
+                      >
+                        Discover
+                      </Link>
+                    </MenuItem>
+                    <MenuItem>
+                      <Link
                         onClick={() => {
                           window.open(
                             "https://docs.solidityscan.com/",
@@ -206,6 +276,22 @@ export const Header: React.FC = () => {
                       <Link
                         onClick={() => {
                           window.open(
+                            "https://solidityscan.com/discover/",
+                            "_blank"
+                          );
+                        }}
+                        variant="ghost"
+                        fontWeight="400"
+                        p={1}
+                        ml={3}
+                      >
+                        Discover
+                      </Link>
+                    </MenuItem>
+                    <MenuItem>
+                      <Link
+                        onClick={() => {
+                          window.open(
                             "https://blog.solidityscan.com/",
                             "_blank"
                           );
@@ -216,7 +302,7 @@ export const Header: React.FC = () => {
                         p={1}
                         ml={3}
                       >
-                        Blog
+                        Blogs
                       </Link>
                     </MenuItem>
                     <MenuItem>

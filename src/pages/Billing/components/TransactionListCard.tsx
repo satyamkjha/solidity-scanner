@@ -180,7 +180,9 @@ const TransactionListCard: React.FC<{
                       </Badge>
                     </Text>
                     <Text w={"12%"} fontWeight={500} color={"gray.400"}>
-                      {parseFloat(transaction.amount).toFixed(2)}{" "}
+                      {transaction.payment_platform === "coinpayments"
+                        ? transaction.amount
+                        : parseFloat(transaction.amount).toFixed(2)}
                       {transaction.currency.toUpperCase()}
                     </Text>
                     <Text w={"12%"} fontWeight={500} color={"gray.400"}>

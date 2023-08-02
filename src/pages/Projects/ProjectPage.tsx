@@ -105,6 +105,7 @@ import {
 import { useConfig } from "hooks/useConfig";
 import Loader from "components/styled-components/Loader";
 import { formattedDate } from "common/functions";
+import { useUserRole } from "hooks/useUserRole";
 
 export const ProjectPage: React.FC = () => {
   const { projectId } = useParams<{ projectId: string }>();
@@ -175,6 +176,8 @@ const ScanDetails: React.FC<{
   project_branch,
   getRepoTreeReq,
 }) => {
+  const role: string = useUserRole();
+
   const config: any = useConfig();
   const assetsURL = getAssetsURL(config);
   const [isOpen, setIsOpen] = useState(false);
@@ -395,7 +398,7 @@ const ScanDetails: React.FC<{
     if (profile && plans) {
       if (reportingStatus === "generating_report") return true;
 
-      return !checkGenerateReportAccess(profile, plans);
+      return !checkGenerateReportAccess(profile, plans, role);
     }
     return true;
   };
@@ -452,13 +455,15 @@ const ScanDetails: React.FC<{
                         _hover={{
                           opacity:
                             scansRemaining === 0 ||
+                            role === "viewer" ||
                             scanData.scan_report.scan_status === "scanning"
                               ? 0.4
                               : 0.9,
                         }}
                         isDisabled={
                           scansRemaining === 0 ||
-                          scanData.scan_report.scan_status === "scanning"
+                          scanData.scan_report.scan_status === "scanning" ||
+                          role === "viewer"
                         }
                       >
                         <Flex sx={{ flexDir: "column", alignItems: "center" }}>
@@ -513,7 +518,9 @@ const ScanDetails: React.FC<{
                         bg={"white"}
                         w={["80%", "80%", "50%", "auto"]}
                         mx={["auto", "auto", "auto", 4]}
-                        isDisabled={!checkPublishReportAccess(profile, plans)}
+                        isDisabled={
+                          !checkPublishReportAccess(profile, plans, role)
+                        }
                         onClick={() => {
                           if (commitHash == "") {
                             getReportData(
@@ -524,7 +531,7 @@ const ScanDetails: React.FC<{
                           setOpen(!open);
                         }}
                       >
-                        {!checkPublishReportAccess(profile, plans) && (
+                        {!checkPublishReportAccess(profile, plans, role) && (
                           <LockIcon color={"accent"} size="xs" mr={3} />
                         )}
                         Publish Report
@@ -629,7 +636,10 @@ const ScanDetails: React.FC<{
                         w={["80%", "80%", "50%", "auto"]}
                         mx={["auto", "auto", "auto", 4]}
                         mb={[4, 4, 4, 0]}
-                        isDisabled={checkIfGeneratingReport()}
+                        isDisabled={
+                          checkIfGeneratingReport() &&
+                          reportingStatus !== "report_generated"
+                        }
                         onClick={() => {
                           if (reportingStatus === "not_generated") {
                             generateReport();
@@ -646,9 +656,10 @@ const ScanDetails: React.FC<{
                             <Loader color="#806CCF" size={25} />
                           </Flex>
                         )}
-                        {!checkGenerateReportAccess(profile, plans) && (
-                          <LockIcon color={"accent"} mr={3} />
-                        )}
+                        {!checkGenerateReportAccess(profile, plans, role) &&
+                          reportingStatus !== "report_generated" && (
+                            <LockIcon color={"accent"} mr={3} />
+                          )}
                         {reportingStatus === "generating_report"
                           ? "Generating report..."
                           : reportingStatus === "not_generated"
@@ -738,7 +749,8 @@ const ScanDetails: React.FC<{
                       </Tab>
                       {scanData.scan_report.project_skip_files &&
                         scanData.scan_report.project_url &&
-                        scanData.scan_report.project_url !== "File Scan" && (
+                        scanData.scan_report.project_url !== "File Scan" &&
+                        role !== "viewer" && (
                           <Tab
                             fontSize={"sm"}
                             h="35px"
@@ -842,7 +854,8 @@ const ScanDetails: React.FC<{
                     </TabPanel>
                     {scanData.scan_report.project_skip_files &&
                       scanData.scan_report.project_url &&
-                      scanData.scan_report.project_url !== "File Scan" && (
+                      scanData.scan_report.project_url !== "File Scan" &&
+                      role !== "viewer" && (
                         <TabPanel p={[0, 0, 0, 2]}>
                           <ProjectCustomSettings
                             project_skip_files={

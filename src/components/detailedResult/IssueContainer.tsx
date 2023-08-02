@@ -40,6 +40,7 @@ const IssueContainer: React.FC<{
   contract_platform?: string;
   branchName?: string;
   contract_address?: string;
+  isViewer: boolean;
 }> = ({
   type,
   issue_id,
@@ -59,6 +60,7 @@ const IssueContainer: React.FC<{
   contract_platform,
   branchName,
   contract_address,
+  isViewer,
 }) => {
   let pendingFixes;
   let bugHashList: string[];
@@ -152,7 +154,8 @@ const IssueContainer: React.FC<{
                 (isHovered ||
                   isChecked ||
                   isExpanded ||
-                  checkedChildren.length > 0) ? (
+                  checkedChildren.length > 0) &&
+                !isViewer ? (
                   <Checkbox
                     name={issue_id}
                     colorScheme={"purple"}
@@ -244,6 +247,7 @@ const IssueContainer: React.FC<{
                             contract_platform={contract_platform}
                             branchName={branchName}
                             contract_address={contract_address}
+                            isViewer={isViewer}
                           />
                         )
                     )}

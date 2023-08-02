@@ -8,6 +8,7 @@ export const API_PATH = {
   API_VERIFY_EMAIL: "/api-verify-email/",
   API_CHANGE_PASSWORD: "/api-change-password/",
   API_SEND_EMAIL: "/api-send-email/",
+  API_ORG_LOGIN: "/organization/api-login/",
 
   //PROFILE
   API_PROFILE: "/api-profile/",
@@ -70,4 +71,27 @@ export const API_PATH = {
   API_GET_TRANSACTION: "/api-get-transactions-beta/",
   API_GET_INVOICES: "/api-get-invoices-beta/",
   API_GET_DOWNLOAD_INVOICE_URL: "/api-get-download-invoice-url/",
+
+  //ORGANISATION
+  API_CREATE_ORGANISATION: "/api-create-organization/",
+  API_ADD_ORGANISATION_USERS: "/api-add-organization-users/",
+  API_REMOVE_ORGANISATION_USERS: "/api-remove-organization-users/",
+  API_LIST_ORGANISATION_USERS: "/api-list-organization-users/",
+  API_UPDATE_ORGANISATION_USERS_ROLE: "/api-update-organization-user-roles/",
+  API_CHECK_ORGANISATION_NAME_AVAILABILITY:
+    "/api-check-organization-name-availability/",
+  API_ACCEPT_ORGANISATION_REQUEST: "/api-accept-organization-request/",
+  API_REJECT_ORGANISATION_REQUEST: "/api-reject-organization-request/",
+  API_UPDATE_USER_ORGANISATION_PROFILE:
+    "/organization/api-update-user-organization-profile/",
+  API_GET_USER_ORGANISATIONS: "/organization/api-get-user-organizations/",
+  API_GET_ORGANISATION_PROFILE: " /api-get-organization-profile/",
+  API_GET_USER_ORGANISATION_PROFILE: "/api-get-user-organization-profile/",
+  API_VALIDATE_INVITE_LINK: "/api-validate-invite-link/",
+  //HACKERBOARD
+  API_GET_ATTACKS_OVERVIEW: "/api-get-attacks-overview/",
+  API_GET_ATTACKS_AGGREGATED: "/api-get-attacks-aggregated/",
+  API_GET_ATTACKS: "/api-get-attacks/",
+  API_DELETE_ORGANISATION: "/api-delete-organization/",
+  API_LEAVE_ORGANISATION: "/organization/api-leave-organization/",
 };

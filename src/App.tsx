@@ -18,6 +18,7 @@ import { theme } from "./theme";
 import { Global, css } from "@emotion/react";
 import { getFeatureGateConfig } from "helpers/helperFunction";
 import { ConfigProvider, useConfig } from "hooks/useConfig";
+import { UserRoleProvider, useUserRole } from "hooks/useUserRole";
 
 const queryClient = new QueryClient();
 

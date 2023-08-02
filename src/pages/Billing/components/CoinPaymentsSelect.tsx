@@ -3,7 +3,7 @@ import { Flex, FormControl, Text } from "@chakra-ui/react";
 import { useAcceptedCoins } from "hooks/usePricing";
 import Select from "react-select";
 import { customStylesForReactSelect } from "common/stylesForCustomSelect";
-import FormatOptionLabel from "components/detailedResult/FormatOptionLabel";
+import FormatOptionLabel from "components/common/FormatOptionLabel";
 
 const CoinPaymentSelect: React.FC<{
   setCoin: React.Dispatch<React.SetStateAction<string>>;

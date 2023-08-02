@@ -81,9 +81,13 @@ export const getReCaptchaHeaders = async (action: string) => {
 
 export const checkGenerateReportAccess = (
   profile: Profile,
-  plans: PricingData
+  plans: PricingData,
+  role: string
 ) => {
   if (profile && plans) {
+    if (profile.logged_in_via === "org_login") {
+      if (role === "viewer") return false;
+    }
     if (profile.actions_supported)
       return profile.actions_supported.generate_report;
 
@@ -103,9 +107,14 @@ export const checkGenerateReportAccess = (
 
 export const checkPublishReportAccess = (
   profile: Profile,
-  plans: PricingData
+  plans: PricingData,
+  role: string
 ) => {
   if (profile && plans) {
+    if (profile.logged_in_via === "org_login") {
+      if (role === "viewer") return false;
+    }
+
     if (profile.actions_supported)
       return profile.actions_supported.publishable_report;
 
@@ -122,3 +131,12 @@ export const checkPublishReportAccess = (
   }
   return false;
 };
+
+export const isEmail = (email: string) =>
+  /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(email);
+
+export const hasSpecialCharacters = (email: string) =>
+  /[`!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?~]/i.test(email);
+
+export const checkOrgName = (email: string) =>
+  /[`!@#$\s%^&*()+\-=\[\]{};':"\\|,.<>\/?~]/i.test(email);

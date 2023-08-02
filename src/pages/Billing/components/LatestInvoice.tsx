@@ -48,46 +48,57 @@ const LatestInvoice: React.FC<{
           duration={transactionData.billing_cycle}
           showCheckIcon={false}
         />
-        {transactionData.package !== "ondemand" && (
-          <Flex
-            flexDir={"row"}
-            position={"relative"}
-            alignItems={"flex-start"}
-            justifyContent="flex-start"
-          >
-            <Text
-              color={
-                transactionData.billing_cycle === "monthly"
-                  ? "#000000"
-                  : "#7F7F7F"
-              }
-              fontSize="sm"
-              fontWeight={300}
+        {transactionData.package !== "ondemand" &&
+          transactionData.billing_cycle !== "topup" && (
+            <Flex
+              flexDir={"row"}
+              position={"relative"}
+              alignItems={"flex-start"}
+              justifyContent="flex-start"
             >
-              Monthly
-            </Text>
-            <Switch
-              mx={4}
-              size="md"
-              variant={
-                transactionData.billing_cycle === "yearly" ? "accent" : "brand"
-              }
-              isChecked={transactionData.billing_cycle === "yearly"}
-              isDisabled={true}
-            />
-            <Text
-              color={
-                transactionData.billing_cycle === "yearly"
-                  ? "#000000"
-                  : "#7F7F7F"
-              }
-              fontSize="sm"
-              fontWeight={300}
-            >
-              Yearly
+              <Text
+                color={
+                  transactionData.billing_cycle === "monthly"
+                    ? "#000000"
+                    : "#7F7F7F"
+                }
+                fontSize="sm"
+                fontWeight={300}
+              >
+                Monthly
+              </Text>
+              <Switch
+                mx={4}
+                size="md"
+                variant={
+                  transactionData.billing_cycle === "yearly"
+                    ? "accent"
+                    : "brand"
+                }
+                isChecked={transactionData.billing_cycle === "yearly"}
+                isDisabled={true}
+              />
+              <Text
+                color={
+                  transactionData.billing_cycle === "yearly"
+                    ? "#000000"
+                    : "#7F7F7F"
+                }
+                fontSize="sm"
+                fontWeight={300}
+              >
+                Yearly
+              </Text>
+            </Flex>
+          )}
+        {transactionData.billing_cycle === "topup" ? (
+          <Flex>
+            <Text color={"detail"}>Total &nbsp; </Text>
+            <Text fontWeight="600">
+              {transactionData.amount + transactionData.currency}
             </Text>
           </Flex>
-        )}
+        ) : null}
         <Button
           variant="brand"
           mt={["auto"]}

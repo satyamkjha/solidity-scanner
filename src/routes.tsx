@@ -1,4 +1,4 @@
-import React, { lazy, Suspense, useEffect } from "react";
+import React, { lazy, Suspense, useEffect, useState } from "react";
 import {
   BrowserRouter as Router,
   Switch,
@@ -20,6 +20,10 @@ import { onLogout } from "common/functions";
 import { useQueryClient } from "react-query";
 import PublicLayout from "components/PublicLayout";
 import Loader from "components/styled-components/Loader";
+import { useProfile } from "hooks/useProfile";
+import { Organization, OrgUserRole } from "common/types";
+import { useUserOrgProfile } from "hooks/useUserOrgProfile";
+import { UserRoleProvider, useUserRole } from "hooks/useUserRole";
 
 const Landing = lazy(
   () => import("pages/Landing" /* webpackChunkName: "Landing" */)
@@ -114,6 +118,10 @@ const PrivateApi = lazy(
   () => import("pages/PrivateAPI" /* webpackChunkName: "PrivateApi" */)
 );
 
+const Organisation = lazy(
+  () => import("pages/Organisation" /* webpackChunkName: "Organisation" */)
+);
+
 const PublicReportPage = lazy(
   () =>
     import(
@@ -124,6 +132,23 @@ const PublicReportPage = lazy(
 const Detectors = lazy(
   () => import("pages/Detectors" /* webpackChunkName: "Detectors" */)
 );
+
+const AcceptOrgInvitation = lazy(
+  () =>
+    import(
+      "pages/Organisation/AcceptOrgInvitation" /* webpackChunkName: "AcceptOrganisationInvite" */
+    )
+);
+const LeaderBoard = lazy(
+  () => import("pages/HackBoard" /* webpackChunkName: "HackerBoard" */)
+);
+
+const orgRestrictedRoutes = [
+  { path: "/billing", roles: ["viewer", "editor", "admin"] },
+  { path: "/integrations", roles: ["viewer", "editor", "admin"] },
+  { path: "/organisation", roles: ["viewer", "editor"] },
+  { path: "/private-api", roles: ["viewer"] },
+];
 
 const Routes: React.FC = () => {
   return (
@@ -139,7 +164,11 @@ const Routes: React.FC = () => {
           </RedirectRoute>
           <Route exact path="/check-email" component={CheckEmail} />
           <Route exact path="/verify" component={Verify} />
+          <Route exact path="/accept" component={AcceptOrgInvitation} />
           <RedirectRoute exact path="/forgot">
+            <ForgotPassword />
+          </RedirectRoute>
+          <RedirectRoute exact path="/forgot/:orgName">
             <ForgotPassword />
           </RedirectRoute>
           <Route exact path="/page-not-found" component={PageNotFound} />
@@ -166,6 +195,7 @@ const Routes: React.FC = () => {
               "/faq",
               "/terms-of-service",
               "/privacy-policy",
+              "/hackboard",
             ]}
           >
             <PublicLayout>
@@ -180,6 +210,7 @@ const Routes: React.FC = () => {
                   <Route exact path="/quickscan/" component={QuickScan} />
                   <Route exact path="/pricing" component={Pricing} />
                   <Route exact path="/detectors" component={Detectors} />
+                  <Route exact path="/hackboard" component={LeaderBoard} />
                   <Route exact path="/faq" component={FAQ} />
                   <Route
                     exact
@@ -195,42 +226,46 @@ const Routes: React.FC = () => {
               </Suspense>
             </PublicLayout>
           </Route>
+          <UserRoleProvider>
+            <Layout>
+              <Suspense fallback="">
+                <Switch>
+                  <PrivateRoute exact path="/home">
+                    <Home />
+                  </PrivateRoute>
+                  <PrivateRoute exact path="/profile">
+                    <Profile />
+                  </PrivateRoute>
+                  <PrivateRoute exact path="/projects">
+                    <Projects />
+                  </PrivateRoute>
+                  <PrivateRoute path="/projects/:projectId/:scanId">
+                    <ProjectPage />
+                  </PrivateRoute>
+                  <PrivateRoute exact path="/blocks">
+                    <Blocks />
+                  </PrivateRoute>
+                  <PrivateRoute exact path="/blocks/:scanId/:projectId">
+                    <BlockPage />
+                  </PrivateRoute>
+                  <PrivateRoute exact path="/integrations">
+                    <Integrations />
+                  </PrivateRoute>
+                  <PrivateRoute exact path="/private-api">
+                    <PrivateApi />
+                  </PrivateRoute>
+                  <PrivateRoute exact path="/organisation">
+                    <Organisation />
+                  </PrivateRoute>
 
-          <Layout>
-            <Suspense fallback="">
-              <Switch>
-                <PrivateRoute exact path="/home">
-                  <Home />
-                </PrivateRoute>
-                <PrivateRoute exact path="/profile">
-                  <Profile />
-                </PrivateRoute>
-                <PrivateRoute exact path="/projects">
-                  <Projects />
-                </PrivateRoute>
-                <PrivateRoute path="/projects/:projectId/:scanId">
-                  <ProjectPage />
-                </PrivateRoute>
-                <PrivateRoute exact path="/blocks">
-                  <Blocks />
-                </PrivateRoute>
-                <PrivateRoute exact path="/blocks/:scanId/:projectId">
-                  <BlockPage />
-                </PrivateRoute>
-                <PrivateRoute exact path="/integrations">
-                  <Integrations />
-                </PrivateRoute>
-                <PrivateRoute exact path="/private-api">
-                  <PrivateApi />
-                </PrivateRoute>
-
-                <PrivateRoute exact path="/billing">
-                  <Billing />
-                </PrivateRoute>
-                <Route path="*" component={CustomPageNotFound} />
-              </Switch>
-            </Suspense>
-          </Layout>
+                  <PrivateRoute exact path="/billing">
+                    <Billing />
+                  </PrivateRoute>
+                  <Route path="*" component={CustomPageNotFound} />
+                </Switch>
+              </Suspense>
+            </Layout>
+          </UserRoleProvider>
         </Switch>
       </ErrorHandler>
     </Router>
@@ -282,12 +317,30 @@ const ErrorHandler: React.FC = ({ children }) => {
 };
 
 const PrivateRoute: React.FC<RouteProps> = ({ children, ...rest }) => {
+  const { path } = rest;
+  const isRestrictedRoute = (path) => {
+    return orgRestrictedRoutes.some((route) => route.path === path);
+  };
+  const getRestrictedRoles = (path) => {
+    const matchedRoute = orgRestrictedRoutes.find(
+      (route) => route.path === path
+    );
+    return matchedRoute ? matchedRoute.roles : [];
+  };
   return (
     <Route
       {...rest}
       render={({ location }) =>
         Auth.isUserAuthenticated() ? (
-          children
+          <>
+            {isRestrictedRoute(path) ? (
+              <CheckOrgRole roles={getRestrictedRoles(path)}>
+                {children}
+              </CheckOrgRole>
+            ) : (
+              children
+            )}
+          </>
         ) : (
           <Redirect
             to={{
@@ -298,6 +351,48 @@ const PrivateRoute: React.FC<RouteProps> = ({ children, ...rest }) => {
         )
       }
     />
+  );
+};
+
+const CheckOrgRole: React.FC<{ roles: OrgUserRole[] }> = ({
+  children,
+  roles,
+}) => {
+  const { data: profile } = useProfile();
+  const { data: orgProfile } = useUserOrgProfile(
+    profile?.logged_in_via === "org_login"
+  );
+  const history = useHistory();
+  const [userHasAccess, setUserHasAccess] = useState(false);
+
+  useEffect(() => {
+    if (profile) {
+      if (orgProfile) {
+        let hasMatchingRole: boolean = false;
+
+        if (profile.logged_in_via === "org_login") {
+          hasMatchingRole = roles.includes(orgProfile.user_organization?.role);
+        }
+
+        if (hasMatchingRole) {
+          history.push("/page-not-found");
+        } else {
+          setUserHasAccess(!hasMatchingRole);
+        }
+      } else if (profile.logged_in_via !== "org_login") {
+        setUserHasAccess(true);
+      }
+    }
+  }, [profile, orgProfile]);
+
+  return (
+    <>
+      {userHasAccess ? (
+        React.cloneElement(children, { profileData: profile })
+      ) : (
+        <Loader width={"100%"} height={"90vh"} />
+      )}
+    </>
   );
 };
 

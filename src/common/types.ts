@@ -30,6 +30,7 @@ export type Profile = {
     start_date: string;
     renewal_date: string;
   };
+  organizations: Organization[];
   payment_type: string;
   payment_via: string;
   payment_details?: {
@@ -38,7 +39,7 @@ export type Profile = {
     exp_year: number;
     exp_month: number;
   };
-
+  logged_in_via: string;
   actions_supported?: {
     file_scan: boolean;
     view_report: boolean;
@@ -48,6 +49,15 @@ export type Profile = {
     publishable_report: boolean;
   };
 };
+
+export type Organization = {
+  org_name: string;
+  role: OrgUserRole;
+  status: string;
+  joined_at: string;
+};
+
+export type OrgUserRole = "admin" | "owner" | "editor" | "viewer";
 
 export type IntegrationData = {
   allowed: boolean;
@@ -491,4 +501,17 @@ export type FileState = {
   file_path: string;
   line_nos_start: number[];
   line_nos_end: number[];
+};
+
+export type MessageResponse = {
+  status: string;
+  message: string;
+};
+
+export type UserOrgItem = {
+  email: string;
+  joined_at: string;
+  name: string;
+  role: "admin" | "reader" | "editor" | null | "owner";
+  status: "joined" | "requested";
 };

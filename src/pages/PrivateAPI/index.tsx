@@ -23,6 +23,7 @@ import { useProfile } from "hooks/useProfile";
 import { useConfig } from "hooks/useConfig";
 import UpgradePackage from "components/upgradePackage";
 import Loader from "components/styled-components/Loader";
+import { formattedDate } from "common/functions";
 
 export default function PrivateApi() {
   const { data: profileData, isLoading } = useProfile();
@@ -39,6 +40,8 @@ export default function PrivateApi() {
   const assetsUrl = getAssetsURL(config);
   const toast = useToast();
 
+  const [isOwner, setIsOwner] = useState(true);
+
   useEffect(() => {
     if (
       profileData &&
@@ -49,6 +52,11 @@ export default function PrivateApi() {
       fetchAccessKey();
     } else {
       setHasAccess(false);
+    }
+    if (profileData && profileData.logged_in_via === "normal_login") {
+      setIsOwner(true);
+    } else {
+      setIsOwner(false);
     }
   }, [profileData]);
 
@@ -207,11 +215,12 @@ export default function PrivateApi() {
               onClick={getAccessKey}
               variant={"cta-outline"}
               borderWidth={"1px"}
+              _hover={{ color: "#3300FF" }}
               fontWeight={500}
               px={10}
               py={2}
               ml={[0, 0, 0, "auto"]}
-              isDisabled={!hasAccess}
+              isDisabled={!hasAccess || !isOwner}
             >
               {accessKey ? "Regenerate Key" : "Generate Key"}
             </Button>
@@ -304,7 +313,7 @@ export default function PrivateApi() {
                         ml={[0, 0, 0, "auto"]}
                         mb={[4, 4, 4, 0]}
                       >
-                        {createdDate}
+                        {formattedDate(new Date(createdDate))}
                       </Text>
                       {!isFirstTime && (
                         <>
@@ -336,6 +345,7 @@ export default function PrivateApi() {
                         borderRadius={"8px"}
                         color={"#FF5630"}
                         fontWeight={500}
+                        isDisabled={!isOwner}
                         px={8}
                         ml={4}
                         _hover={{
@@ -366,7 +376,7 @@ export default function PrivateApi() {
                         to create new key
                       </Text>
                       <Link
-                        display={hasAccess ? "block" : "none"}
+                        display={hasAccess && isOwner ? "block" : "none"}
                         onClick={getAccessKey}
                         fontWeight={400}
                         color="blue"
@@ -422,7 +432,7 @@ export default function PrivateApi() {
               </Text>
             </Flex>
             <Link
-              href="https://apidoc.solidityscan.com/solidityscan-security-api/"
+              href="https://apidoc.solidityscan.com/solidityscan-security-api/solidityscan-private-api"
               ml={[0, 0, 0, "auto"]}
               color={"accent"}
               target={"_blank"}

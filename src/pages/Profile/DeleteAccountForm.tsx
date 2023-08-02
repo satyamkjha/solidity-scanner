@@ -25,6 +25,7 @@ import { useQueryClient } from "react-query";
 import { API_PATH } from "helpers/routeManager";
 import API from "helpers/api";
 import { useHistory } from "react-router-dom";
+import StyledButton from "components/styled-components/StyledButton";
 
 const DeleteAccountForm: React.FC<{
   onClose(): any;
@@ -35,33 +36,42 @@ const DeleteAccountForm: React.FC<{
   const queryClient = useQueryClient();
   const toast = useToast();
 
+  const [isLoading, setIsLoading] = useState(false);
+
   const deleteAccount = async () => {
-    const { data } = await API.delete(API_PATH.API_DELETE_ACCOUNT, {
-      data: {
-        reason: optionList[radioOption],
-        comment: comment,
-        can_contact_user: check,
-      },
-    });
-    if (data.status === "success") {
-      toast({
-        title: data.message,
-        status: "success",
-        duration: 3000,
-        isClosable: true,
-        position: "bottom",
+    try {
+      setIsLoading(true);
+      const { data } = await API.delete(API_PATH.API_DELETE_ACCOUNT, {
+        data: {
+          reason: optionList[radioOption],
+          comment: comment,
+          can_contact_user: check,
+        },
       });
-    } else {
-      toast({
-        title: data.message,
-        status: "error",
-        duration: 3000,
-        isClosable: true,
-        position: "bottom",
-      });
+      if (data.status === "success") {
+        toast({
+          title: data.message,
+          status: "success",
+          duration: 3000,
+          isClosable: true,
+          position: "bottom",
+        });
+        onClose();
+        onLogout(history, queryClient);
+      } else {
+        toast({
+          title: data.message,
+          status: "error",
+          duration: 3000,
+          isClosable: true,
+          position: "bottom",
+        });
+      }
+      setIsLoading(false);
+    } catch (e) {
+      console.log(e);
+      setIsLoading(false);
     }
-    onClose();
-    onLogout(history, queryClient);
   };
 
   const optionList = [
@@ -191,13 +201,14 @@ const DeleteAccountForm: React.FC<{
               >
                 Deleting account can’t be undone and the data can’t be restored
               </Text>
-              <Button
+              <StyledButton
                 h={"50px"}
                 mt={"auto"}
                 mb={2}
                 w="80%"
                 variant="brand"
                 px={12}
+                isLoading={isLoading}
                 borderRadius={10}
                 fontSize={"md"}
                 fontWeight={500}
@@ -205,7 +216,7 @@ const DeleteAccountForm: React.FC<{
                 onClick={deleteAccount}
               >
                 Delete Account
-              </Button>
+              </StyledButton>
             </Flex>
           </ModalBody>
         </ModalContent>
