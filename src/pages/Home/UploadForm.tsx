@@ -22,11 +22,14 @@ import { useProfile } from "hooks/useProfile";
 import { useDropzone } from "react-dropzone";
 import { API_PATH } from "helpers/routeManager";
 import Loader from "components/styled-components/Loader";
+import { useUserRole } from "hooks/useUserRole";
+import { Profile } from "common/types";
 
-const UploadForm: React.FC = () => {
+const UploadForm: React.FC<{
+  profileData: Profile;
+}> = ({ profileData }) => {
   const history = useHistory();
-  const { data: profileData } = useProfile();
-
+  const role: string = useUserRole();
   const [step, setStep] = useState(0);
   const [error, setError] = useState(false);
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
@@ -36,6 +39,8 @@ const UploadForm: React.FC = () => {
   >([]);
   const [isLoading, setIsLoading] = useState(false);
 
+  let isViewer = role === "viewer";
+
   const {
     getRootProps,
     getInputProps,
@@ -43,7 +48,7 @@ const UploadForm: React.FC = () => {
     isDragAccept,
     isDragReject,
     acceptedFiles,
-  } = useDropzone({ maxFiles: 5 });
+  } = useDropzone({ maxFiles: 5, disabled: isViewer });
 
   let baseStyle = {
     flex: 1,
@@ -233,6 +238,7 @@ const UploadForm: React.FC = () => {
           alignItems="center"
           borderRadius={20}
           border="1px solid #ECECEC"
+          opacity={isViewer ? 0.5 : 1}
         >
           <Text
             w="100%"
@@ -297,6 +303,7 @@ const UploadForm: React.FC = () => {
                   isRequired
                   placeholder="Enter Project Name"
                   variant="brand"
+                  disabled={isViewer}
                   size="lg"
                   value={name}
                   onChange={(e) => setName(e.target.value)}
@@ -422,7 +429,8 @@ const UploadForm: React.FC = () => {
                 step < 2 ||
                 name === "" ||
                 (profileData.actions_supported &&
-                  !profileData.actions_supported.file_scan)
+                  !profileData.actions_supported.file_scan) ||
+                isViewer
               }
               onClick={startFileScan}
             >

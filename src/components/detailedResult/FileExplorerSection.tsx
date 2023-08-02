@@ -40,6 +40,7 @@ export const FileExplorerSection: React.FC<{
   contract_platform?: string;
   branchName?: string;
   contract_address?: string;
+  isViewer: boolean;
 }> = ({
   type,
   is_latest_scan,
@@ -53,10 +54,10 @@ export const FileExplorerSection: React.FC<{
   contract_platform,
   branchName,
   contract_address,
+  isViewer,
 }) => {
   const config: any = useConfig();
   const assetsURL = getAssetsURL(config);
-  const [isDesktopView] = useMediaQuery("(min-width: 1024px)");
   const { isOpen, onClose, onOpen } = useDisclosure();
   const [bugStatus, setBugStatus] = useState<string | null>(null);
   const [isDisabled, setIsDisabled] = useState<boolean>(true);
@@ -110,7 +111,7 @@ export const FileExplorerSection: React.FC<{
               )}
               placeholder="Select Action"
               styles={customStylesForTakeAction}
-              isDisabled={isDisabled}
+              isDisabled={isDisabled || isViewer}
               onChange={(newValue) => {
                 if (newValue) {
                   if (newValue.value === "wont_fix") {

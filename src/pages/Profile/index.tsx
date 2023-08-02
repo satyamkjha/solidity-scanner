@@ -17,7 +17,15 @@ import {
   Stack,
   Tooltip,
   useDisclosure,
+  HStack,
+  AlertDialog,
+  AlertDialogBody,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogContent,
+  AlertDialogOverlay,
 } from "@chakra-ui/react";
+import { useForm } from "react-hook-form";
 import { getReCaptchaHeaders } from "helpers/helperFunction";
 import { useQueryClient } from "react-query";
 import {
@@ -26,6 +34,7 @@ import {
   AiOutlineEye,
   AiOutlineEyeInvisible,
 } from "react-icons/ai";
+import { sentenceCapitalize } from "helpers/helperFunction";
 import { useProfile } from "hooks/useProfile";
 import DeleteAccountForm from "./DeleteAccountForm";
 import API from "helpers/api";
@@ -34,16 +43,22 @@ import { API_PATH } from "helpers/routeManager";
 import { AuthResponse } from "common/types";
 import { InfoIcon } from "@chakra-ui/icons";
 import Loader from "components/styled-components/Loader";
+import { onLogout } from "common/functions";
+import { monthNames } from "common/values";
+import { useUserOrgProfile } from "hooks/useUserOrgProfile";
+import { isEmail, hasSpecialCharacters } from "helpers/helperFunction";
+import PasswordError from "components/passwordError";
+import { passwordStrength } from "check-password-strength";
 
 const Profile: React.FC = () => {
   const toast = useToast();
-
   const [isEditable, setEditable] = useState(false);
   const [emailSend, setEmailSend] = useState(false);
   const [metaMaskEmail, setMetaMaskEmail] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
-
+  const { data: orgProfile, refetch: refetchOrgProfile } =
+    useUserOrgProfile(true);
   const [companyName, setCompanyName] = useState("");
   const [contactNumber, setContactNumber] = useState("");
   const [firstName, setFirstName] = useState("");
@@ -51,6 +66,8 @@ const Profile: React.FC = () => {
 
   const { data } = useProfile();
   const queryClient = useQueryClient();
+
+  const [isOwner, setIsOwner] = useState(true);
 
   useEffect(() => {
     if (data) {
@@ -60,6 +77,7 @@ const Profile: React.FC = () => {
       setCompanyName(data.company_name);
       setContactNumber(data.contact_number);
       setFirstName(data.name);
+      setIsOwner(data.logged_in_via === "normal_login");
     }
   }, [data]);
 
@@ -72,18 +90,40 @@ const Profile: React.FC = () => {
     setError("");
     return true;
   };
+  const validationError = (msg: string) => {
+    toast({
+      title: msg,
+      status: "error",
+      duration: 2000,
+      isClosable: true,
+      position: "bottom",
+    });
+  };
 
   const checkFormValidation = () => {
-    if (companyName && (companyName.length < 5 || companyName.length > 40)) {
+    if (
+      companyName &&
+      (companyName.length < 5 ||
+        companyName.length > 40 ||
+        hasSpecialCharacters(companyName))
+    ) {
+      validationError("Company Name is Invalid");
       return false;
     }
     if (
       contactNumber &&
       (contactNumber.length < 8 || contactNumber.length > 15)
     ) {
+      validationError("Contact Number is Invalid");
       return false;
     }
-    if (firstName && (firstName.length < 5 || firstName.length > 40)) {
+    if (
+      firstName &&
+      (firstName.length < 3 ||
+        firstName.length > 30 ||
+        hasSpecialCharacters(firstName))
+    ) {
+      validationError("Name is Invalid");
       return false;
     }
     return true;
@@ -91,22 +131,21 @@ const Profile: React.FC = () => {
 
   const onSave = async () => {
     if (!checkFormValidation()) {
-      toast({
-        title: "Form Data is not correct",
-        status: "error",
-        duration: 2000,
-        isClosable: true,
-        position: "bottom",
-      });
       return;
     }
     try {
       setUpdateLoading(true);
-      const { data } = await API.post(API_PATH.API_UPDATE_PROFILE, {
-        company_name: companyName,
-        contact_number: contactNumber,
-        first_name: firstName,
-      });
+      const { data } = isOwner
+        ? await API.post(API_PATH.API_UPDATE_PROFILE, {
+            company_name: companyName,
+            contact_number: contactNumber,
+            first_name: firstName,
+          })
+        : await API.put(API_PATH.API_UPDATE_USER_ORGANISATION_PROFILE, {
+            contact_number: contactNumber,
+            first_name: firstName,
+          });
+
       queryClient.invalidateQueries("profile");
       if (data.status === "success") {
         toast({
@@ -206,7 +245,18 @@ const Profile: React.FC = () => {
       {data && (
         <>
           {" "}
-          <Box w="100%" bgColor="white" borderRadius="20px" p={4} px={6}>
+          <form
+            style={{
+              display: "flex",
+              justifyContent: "flex-start",
+              flexDirection: "column",
+              alignItems: "flex-start",
+              width: "100%",
+              backgroundColor: "white",
+              borderRadius: "20px",
+              padding: "20px",
+            }}
+          >
             <Flex w="100%" alignItems="center" justifyContent="space-between">
               <Text fontWeight={300} fontSize="xl">
                 Profile Details
@@ -237,7 +287,7 @@ const Profile: React.FC = () => {
                 </Button>
               )}
             </Flex>
-            <VStack spacing={isEditable ? 4 : 8} my={4}>
+            <VStack w="100%" spacing={isEditable ? 4 : 8} my={4}>
               <FormControl id="name">
                 <FormLabel color="subtle">Name</FormLabel>
                 {isEditable ? (
@@ -248,7 +298,7 @@ const Profile: React.FC = () => {
                     isDisabled={updateLoading}
                     type="text"
                     w="100%"
-                    maxW="400px"
+                    maxW="600px"
                     defaultValue={data.name}
                     onChange={(e) => setFirstName(e.target.value)}
                   />
@@ -262,10 +312,10 @@ const Profile: React.FC = () => {
                   <Input
                     borderRadius="15px"
                     size="lg"
-                    isDisabled={updateLoading}
+                    isDisabled={updateLoading || !isOwner}
                     type="text"
                     w="100%"
-                    maxW="400px"
+                    maxW="600px"
                     defaultValue={data.company_name}
                     onChange={(e) => {
                       setCompanyName(e.target.value);
@@ -284,7 +334,7 @@ const Profile: React.FC = () => {
                     isDisabled={updateLoading}
                     type="number"
                     w="100%"
-                    maxW="400px"
+                    maxW="600px"
                     defaultValue={data.contact_number}
                     onChange={(e) => {
                       setContactNumber(e.target.value);
@@ -305,7 +355,7 @@ const Profile: React.FC = () => {
                       isDisabled
                       type="email"
                       w="100%"
-                      maxW="400px"
+                      maxW="600px"
                       value={data.public_address}
                     />
                   ) : (
@@ -324,7 +374,7 @@ const Profile: React.FC = () => {
                       isDisabled
                       type="email"
                       w="100%"
-                      maxW="400px"
+                      maxW="600px"
                       value={data.email}
                     />
                   ) : (
@@ -356,7 +406,7 @@ const Profile: React.FC = () => {
                       isDisabled={data.verification_email_sent}
                       type="email"
                       w="100%"
-                      maxW="400px"
+                      maxW="600px"
                       defaultValue={metaMaskEmail}
                       onChange={(e) => setMetaMaskEmail(e.target.value)}
                     />
@@ -388,22 +438,38 @@ const Profile: React.FC = () => {
                 </FormControl>
               )}
             </VStack>
-          </Box>
-          {!data.public_address && <ChangePasswordForm />}
-          <DeleteAccountBox />
+          </form>
+          {!data.public_address && <ChangePasswordForm isOwner={isOwner} />}
+          {isOwner && <DeleteAccountBox />}
+          {orgProfile &&
+            orgProfile.user_organization &&
+            orgProfile.user_organization.status === "joined" && (
+              <OrganisationBox
+                isOwner={isOwner}
+                organizations={orgProfile.user_organization}
+                refetchOrgProfile={refetchOrgProfile}
+              />
+            )}
         </>
       )}
     </Box>
   );
 };
 
-const ChangePasswordForm: React.FC = () => {
+const ChangePasswordForm: React.FC<{ isOwner: boolean }> = ({ isOwner }) => {
   const history = useHistory();
   const toast = useToast();
 
   const [password, setPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
+  const [passwordError, setPasswordError] = useState<{
+    contains: string[];
+    id: number;
+    value: string;
+    length: number;
+  } | null>(null);
+  const { handleSubmit } = useForm<FormData>();
 
   const [isLoading, setIsLoading] = useState(false);
 
@@ -420,10 +486,15 @@ const ChangePasswordForm: React.FC = () => {
     }
     setIsLoading(true);
     try {
-      const { data } = await API.post(API_PATH.API_CHANGE_PASSWORD, {
-        password: password,
-        new_password: newPassword,
-      });
+      const { data } = isOwner
+        ? await API.post(API_PATH.API_CHANGE_PASSWORD, {
+            password: password,
+            new_password: newPassword,
+          })
+        : await API.put(API_PATH.API_UPDATE_USER_ORGANISATION_PROFILE, {
+            password: password,
+            new_password: newPassword,
+          });
       if (data.status === "success") {
         Auth.deauthenticateUser();
         history.push("/signin?isPasswordReset=true");
@@ -434,12 +505,21 @@ const ChangePasswordForm: React.FC = () => {
     setIsLoading(false);
   };
 
+  useEffect(() => {
+    setPasswordError(passwordStrength(newPassword));
+  }, [newPassword]);
+
   return (
     <Box w="100%" bgColor="white" borderRadius="20px" p={4} px={6} mt={8}>
       <Text fontWeight={300} fontSize="xl">
         Security
       </Text>
-      <Box py={6}>
+      <form
+        style={{
+          padding: "20px 0px",
+        }}
+        onSubmit={handleSubmit(onSubmit)}
+      >
         <ViewableInputGroup
           key="password"
           label="Old Password"
@@ -452,6 +532,7 @@ const ChangePasswordForm: React.FC = () => {
           value={newPassword}
           setValue={setNewPassword}
         />
+        <PasswordError passwordError={passwordError} />
         <ViewableInputGroup
           key="confirm_password"
           label="Confirm Password"
@@ -465,10 +546,154 @@ const ChangePasswordForm: React.FC = () => {
           onClick={onSubmit}
           isLoading={isLoading}
           spinner={<Loader color={"#3300FF"} size={25} />}
+          isDisabled={
+            (passwordError && passwordError.value !== "Strong") ||
+            newPassword.length > 50 ||
+            password.length < 1 ||
+            password.length > 50 ||
+            confirmPassword.length < 1 ||
+            confirmPassword.length > 50
+          }
         >
           Change Password
         </Button>
-      </Box>
+      </form>
+    </Box>
+  );
+};
+
+const OrganisationBox: React.FC<{
+  isOwner: boolean;
+  organizations: {
+    org_name: string;
+    role: "admin" | "owner" | "editor" | "viewer";
+    status: string;
+    joined_at: string;
+  };
+  refetchOrgProfile(): any;
+}> = ({ isOwner, organizations, refetchOrgProfile }) => {
+  const { isOpen, onClose, onOpen } = useDisclosure();
+  const history = useHistory();
+  const queryClient = useQueryClient();
+  const toast = useToast();
+
+  let d = new Date(organizations.joined_at);
+
+  const leaveOrg = async () => {
+    const { data } = await API.get(API_PATH.API_LEAVE_ORGANISATION);
+    if (data.status === "success") {
+      toast({
+        title: data.message,
+        status: "success",
+        duration: 3000,
+        isClosable: true,
+        position: "bottom",
+      });
+    } else {
+      toast({
+        title: data.message,
+        status: "error",
+        duration: 3000,
+        isClosable: true,
+        position: "bottom",
+      });
+    }
+    onClose();
+    onLogout(history, queryClient);
+  };
+
+  const deleteOrg = async () => {
+    const { data } = await API.delete(API_PATH.API_DELETE_ORGANISATION);
+    if (data.status === "success") {
+      toast({
+        title: data.message,
+        status: "success",
+        duration: 3000,
+        isClosable: true,
+        position: "bottom",
+      });
+    } else {
+      toast({
+        title: data.message,
+        status: "error",
+        duration: 3000,
+        isClosable: true,
+        position: "bottom",
+      });
+    }
+    refetchOrgProfile();
+    onClose();
+  };
+
+  return (
+    <Box w="100%" bgColor="white" borderRadius="20px" p={4} px={6} mt={8}>
+      <Text fontWeight={300} fontSize="xl">
+        {isOwner ? "Close" : "Leave"} Organization
+      </Text>
+      <Text mt={5} fontWeight={700} fontSize="md">
+        {organizations.org_name}
+      </Text>
+      <HStack mt={2}>
+        <Text fontWeight={700} fontSize="sm">
+          {sentenceCapitalize(organizations.role)}
+        </Text>
+        <Text fontWeight={700} fontSize="sm" color="#B0B7C3">
+          |{" "}
+          {`${isOwner ? "Created" : "Joined"} at ${d.getDate()} ${
+            monthNames[d.getMonth()]
+          } ${d.getFullYear()}`}
+        </Text>
+      </HStack>
+      <Text mt={10} fontWeight={300} color="gray.500" fontSize="md">
+        This action is permanent and cannot be undone.
+      </Text>
+      <Button
+        variant={"outline"}
+        mt={5}
+        bg={"white"}
+        w={["200px"]}
+        borderColor="#FF5630"
+        color="#FF5630"
+        onClick={onOpen}
+      >
+        {isOwner ? "Close" : "Leave"} Organization
+      </Button>
+      <AlertDialog isOpen={isOpen} onClose={onClose}>
+        <AlertDialogOverlay>
+          <AlertDialogContent>
+            <AlertDialogHeader fontSize="lg" fontWeight="bold">
+              Confirm {isOwner ? "Close" : "Leave"} Organisation
+            </AlertDialogHeader>
+
+            <AlertDialogBody>
+              Are you sure you want to {isOwner ? "Close" : "Leave"}{" "}
+              <Box as="span" sx={{ fontWeight: 600 }}>
+                {organizations.org_name}
+              </Box>{" "}
+              Organisation ?
+            </AlertDialogBody>
+
+            <AlertDialogFooter>
+              <Button onClick={onClose} py={6}>
+                No, My bad
+              </Button>
+              <Button
+                variant="brand"
+                onClick={() => {
+                  if (isOwner) {
+                    deleteOrg();
+                  } else {
+                    leaveOrg();
+                  }
+                }}
+                ml={3}
+              >
+                {isOwner ? "Close" : "Leave"}
+              </Button>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialogOverlay>
+      </AlertDialog>
     </Box>
   );
 };
@@ -511,9 +736,9 @@ const ViewableInputGroup: React.FC<{
 }> = ({ label, key, value, setValue }) => {
   const [isViewable, setViewable] = useState(false);
   return (
-    <FormControl id={key} mb={4}>
-      <FormLabel color="subtle">{label}</FormLabel>
-      <InputGroup size="lg" w="100%" maxW="400px">
+    <>
+      <Text color="subtle">{label}</Text>
+      <InputGroup size="lg" w="100%" maxW="400px" mb={4}>
         <Input
           borderRadius="15px"
           type={isViewable ? "text" : "password"}
@@ -529,7 +754,7 @@ const ViewableInputGroup: React.FC<{
           />
         </InputRightElement>
       </InputGroup>
-    </FormControl>
+    </>
   );
 };
 

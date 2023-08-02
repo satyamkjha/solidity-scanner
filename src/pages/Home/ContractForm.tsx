@@ -22,12 +22,15 @@ import { useSupportedChains } from "hooks/useSupportedPlatforms";
 import { getFeatureGateConfig } from "helpers/helperFunction";
 import Select from "react-select";
 import { API_PATH } from "helpers/routeManager";
-
+import { Profile } from "common/types";
 import FormatOptionLabelWithImage from "components/FormatOptionLabelWithImage";
 import { customStylesForReactSelect } from "common/stylesForCustomSelect";
 import Loader from "components/styled-components/Loader";
+import { useUserRole } from "hooks/useUserRole";
 
-const ContractForm: React.FC = () => {
+const ContractForm: React.FC<{
+  profileData: Profile;
+}> = ({ profileData }) => {
   const contractChain: {
     [key: string]: {
       label: string;
@@ -273,7 +276,6 @@ const ContractForm: React.FC = () => {
   const queryClient = useQueryClient();
 
   const history = useHistory();
-  const { data: profileData } = useProfile();
   const { data: supportedChains } = useSupportedChains();
 
   const platform_supported = getFeatureGateConfig().platform_supported;
@@ -324,6 +326,10 @@ const ContractForm: React.FC = () => {
       }
     );
   };
+
+  const role: string = useUserRole();
+  let isViewer = role === "viewer";
+
   return (
     <Flex
       flexDir="column"
@@ -334,6 +340,7 @@ const ContractForm: React.FC = () => {
       alignItems="center"
       borderRadius={20}
       border="1px solid #ECECEC"
+      opacity={isViewer ? 0.5 : 1}
     >
       <Text
         w="100%"
@@ -391,6 +398,7 @@ const ContractForm: React.FC = () => {
                 placeholder="0x808ed7A75n133f64069318Sa0q173c71rre44414"
                 variant="brand"
                 size="lg"
+                disabled={isViewer}
                 value={contractAddress}
                 onChange={(e) => setContractAddress(e.target.value)}
               />
@@ -418,6 +426,7 @@ const ContractForm: React.FC = () => {
               })}
               placeholder="Select Contract Platform"
               isSearchable={true}
+              isDisabled={isViewer}
               value={options.find((item) => platform === item.value)}
               styles={customStylesForReactSelect}
               onChange={(newValue) => {
@@ -447,6 +456,7 @@ const ContractForm: React.FC = () => {
                   isRequired
                   placeholder="Node ID"
                   variant="brand"
+                  disabled={isViewer}
                   size="lg"
                   value={nodeId}
                   onChange={(e) => setNodeId(e.target.value)}
@@ -459,7 +469,7 @@ const ContractForm: React.FC = () => {
               <Select
                 formatOptionLabel={FormatOptionLabelWithImage}
                 isSearchable={false}
-                isDisabled={platform === ""}
+                isDisabled={platform === "" || isViewer}
                 options={chainList}
                 value={chain}
                 placeholder="Select Contract Chain"
@@ -479,7 +489,11 @@ const ContractForm: React.FC = () => {
             onClick={onSubmit}
             isLoading={isLoading}
             spinner={<Loader color={"#3300FF"} size={25} />}
-            isDisabled={profileData?.credits === 0}
+            isDisabled={
+              profileData?.credits === 0 ||
+              isViewer ||
+              contractAddress.length < 1
+            }
           >
             Start Scan
           </Button>
