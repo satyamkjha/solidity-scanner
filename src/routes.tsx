@@ -377,7 +377,7 @@ const CheckOrgRole: React.FC<{ roles: OrgUserRole[] }> = ({
         if (hasMatchingRole) {
           history.push("/page-not-found");
         }
-        setUserHasAccess(hasMatchingRole);
+        setUserHasAccess(!hasMatchingRole);
       } else {
         setUserHasAccess(true);
       }
