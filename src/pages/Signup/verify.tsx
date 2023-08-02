@@ -26,8 +26,10 @@ const Verify: React.FC = () => {
   const [errorMessage, setErrorMessage] = useState("");
 
   const query = useQuery();
-  const email = query.get("email")?.toString();
+  let email = query.get("email")?.toString();
   const token = query.get("token")?.toString();
+
+  
 
   useEffect(() => {
     const verifyEmail = async () => {

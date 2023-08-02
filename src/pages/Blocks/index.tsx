@@ -39,9 +39,11 @@ import { getAssetsURL } from "helpers/helperFunction";
 import Loader from "components/styled-components/Loader";
 import { DeleteIcon } from "@chakra-ui/icons";
 import { BsThreeDotsVertical } from "react-icons/bs";
+import { useUserRole } from "hooks/useUserRole";
 
 const Blocks: React.FC = () => {
   const [isDesktopView] = useMediaQuery("(min-width: 1920px)");
+  const role: string = useUserRole();
 
   const [page, setPage] = useState<Page>();
   const [pagination, setPagination] = useState<Pagination>({
@@ -190,7 +192,7 @@ const Blocks: React.FC = () => {
           </Flex>
         </Flex>
       </Flex>
-      {!scanList || isLoadingIcons ? (
+      {!scanList || isLoadingIcons || !profileData ? (
         <Flex w="100%" h="70vh" alignItems="center" justifyContent="center">
           <Loader />
         </Flex>
@@ -249,6 +251,7 @@ const Blocks: React.FC = () => {
                 scan={scan}
                 setIconCounter={setIconCounter}
                 updateScanList={updateScanList}
+                isViewer={role === "viewer"}
               />
             ))}
           </InfiniteScroll>
@@ -262,7 +265,8 @@ const BlockCard: React.FC<{
   scan: Scan;
   setIconCounter: Dispatch<SetStateAction<number>>;
   updateScanList: (project_id: string) => void;
-}> = ({ scan, setIconCounter, updateScanList }) => {
+  isViewer: boolean;
+}> = ({ scan, setIconCounter, updateScanList, isViewer }) => {
   const {
     scan_status,
     project_name,
@@ -359,7 +363,7 @@ const BlockCard: React.FC<{
             Last scanned {timeSince(new Date(_updated))}
           </Text>
         </Box>
-        {hover && (
+        {hover && !isViewer && (
           <Menu placement={"bottom-end"}>
             <MenuButton
               zIndex={10}

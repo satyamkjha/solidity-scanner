@@ -1,4 +1,4 @@
-import { Button, Image } from "@chakra-ui/react";
+import { Button, Image, useDisclosure } from "@chakra-ui/react";
 import MetaMaskSDK from "@metamask/sdk";
 import API from "helpers/api";
 import Auth from "helpers/auth";
@@ -9,36 +9,30 @@ import {
   getAssetsURL,
 } from "helpers/helperFunction";
 import { API_PATH } from "helpers/routeManager";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useHistory } from "react-router-dom";
 import { useConfig } from "hooks/useConfig";
-import Loader from "./styled-components/Loader";
+import Loader from "../../components/styled-components/Loader";
 import { useMetaMask } from "metamask-react";
+import StyledButton from "components/styled-components/StyledButton";
+import MetamaskInstallModal from "./MetamaskInstallModal";
 
 const MetaMaskLogin: React.FC = () => {
   const config = useConfig();
   const assetsURL = getAssetsURL(config);
   const history = useHistory();
-  // const MMSDK = new MetaMaskSDK({
-  //   useDeeplink: true,
-  //   communicationLayerPreference: "socket",
-  // });
-
+  const { isOpen, onClose, onOpen } = useDisclosure();
   const [isLoading, setIsLoading] = useState(false);
-  const { status, connect, account, chainId, ethereum } = useMetaMask();
-
-  // const ethereum = MMSDK.getProvider();
-
+  const [connected, setConnected] = useState(false);
+  const { status, connect, ethereum } = useMetaMask();
   const connectToMetamask = async () => {
     setIsLoading(true);
     setTimeout(() => setIsLoading(false), 2000);
-
-    connect();
-
-    await ethereum.request({ method: "eth_requestAccounts" });
-
-    console.log(window.ethereum.selectedAddress);
-
+    if (status === "unavailable") {
+      onOpen();
+      return;
+    }
+    await connect();
     if (window.ethereum.selectedAddress) {
       getNonce(window.ethereum.selectedAddress);
     }
@@ -86,15 +80,16 @@ const MetaMaskLogin: React.FC = () => {
       history.push("/home");
     }
   };
+
   return (
     <>
       {getFeatureGateConfig(config).metamask_integration.enabled &&
         checkBrowserAndDevice() && (
           <>
-            <Button
+            <StyledButton
               onClick={connectToMetamask}
               py={6}
-              my={5}
+              mt={[5, 5, 5, 0]}
               background="#F2F2F2"
               fontWeight={500}
               width={"fit-content"}
@@ -102,7 +97,6 @@ const MetaMaskLogin: React.FC = () => {
               px={6}
               color="#8B8B8B"
               isLoading={isLoading}
-              spinner={<Loader color={"#3300FF"} size={25} />}
             >
               <Image
                 mr={2}
@@ -111,7 +105,8 @@ const MetaMaskLogin: React.FC = () => {
                 width="35px"
               />
               Continue with MetaMask
-            </Button>
+            </StyledButton>
+            <MetamaskInstallModal onClose={onClose} isOpen={isOpen} />
           </>
         )}
     </>

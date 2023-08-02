@@ -36,7 +36,7 @@ const PageNotFound: React.FC = () => {
         <HStack spacing={4}>
           <LogoIcon size={45} />
           <Heading fontSize="4xl" fontWeight={700}>
-            Solidity Scan
+            SolidityScan
           </Heading>
         </HStack>
         <Box

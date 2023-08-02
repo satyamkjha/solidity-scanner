@@ -29,6 +29,20 @@ export const issueActions = [
   },
 ];
 
+export const userRolesList = [
+  {
+    value: "admin",
+    icon: "icons/admin",
+    label: "Admin",
+  },
+  { value: "editor", icon: "icons/editor", label: "Editor" },
+  {
+    value: "viewer",
+    icon: "icons/reader",
+    label: "Viewer",
+  },
+];
+
 export const dummyIssues = [
   {
     severity: "high",

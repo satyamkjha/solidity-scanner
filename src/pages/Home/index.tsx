@@ -16,9 +16,11 @@ import ApplicationForm from "./ApplicationForm";
 import ContractForm from "./ContractForm";
 import UploadForm from "./UploadForm";
 import Loader from "components/styled-components/Loader";
+import { useProfile } from "hooks/useProfile";
 
 const Home: React.FC = () => {
   const { data } = useOverview();
+  const { data: profileData } = useProfile();
 
   return (
     <Box
@@ -39,24 +41,26 @@ const Home: React.FC = () => {
             my: 2,
           }}
         >
-          <Tabs variant="soft-rounded" colorScheme="green" w="100%">
-            <TabList mb="1em">
-              <Tab width="50%">GitHub Application</Tab>
-              <Tab width="50%">Verified Contracts</Tab>
-              <Tab width="50%">Upload Contract</Tab>
-            </TabList>
-            <TabPanels w="100%">
-              <TabPanel w="100%" p={0}>
-                <ApplicationForm />
-              </TabPanel>
-              <TabPanel p={0}>
-                <ContractForm />
-              </TabPanel>
-              <TabPanel p={0}>
-                <UploadForm />
-              </TabPanel>
-            </TabPanels>
-          </Tabs>
+          {profileData && (
+            <Tabs variant="soft-rounded" colorScheme="green" w="100%">
+              <TabList mb="1em">
+                <Tab width="50%">GitHub Application</Tab>
+                <Tab width="50%">Verified Contracts</Tab>
+                <Tab width="50%">Upload Contract</Tab>
+              </TabList>
+              <TabPanels w="100%">
+                <TabPanel w="100%" p={0}>
+                  <ApplicationForm profileData={profileData} />
+                </TabPanel>
+                <TabPanel p={0}>
+                  <ContractForm profileData={profileData} />
+                </TabPanel>
+                <TabPanel p={0}>
+                  <UploadForm profileData={profileData} />
+                </TabPanel>
+              </TabPanels>
+            </Tabs>
+          )}
         </Flex>
         {!data && (
           <Flex

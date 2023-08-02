@@ -39,6 +39,7 @@ const IssueBox: React.FC<{
   contract_platform?: string;
   branchName?: string;
   contract_address?: string;
+  isViewer: boolean;
 }> = ({
   type,
   bug_id,
@@ -57,6 +58,7 @@ const IssueBox: React.FC<{
   contract_platform,
   branchName,
   contract_address,
+  isViewer,
 }) => {
   const config: any = useConfig();
   const assetsURL = getAssetsURL(config);
@@ -119,6 +121,7 @@ const IssueBox: React.FC<{
           <HStack justify={"space-between"} ml={2}>
             <HStack w="50%">
               {(isHovered || isChecked) &&
+                !isViewer &&
                 metric_wise_aggregated_finding.bug_status !== "fixed" && (
                   <InputCheckbox
                     checked={isChecked}

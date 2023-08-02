@@ -26,6 +26,7 @@ import FileExplorerSection from "./FileExplorerSection";
 import FormatOptionLabelWithImage from "components/FormatOptionLabelWithImage";
 import { customStylesForTakeAction } from "common/stylesForCustomSelect";
 import ConfirmActionForm from "../confirmActionForm";
+import { useUserRole } from "hooks/useUserRole";
 
 const MultifileResult: React.FC<{
   type: "block" | "project";
@@ -55,8 +56,41 @@ const MultifileResult: React.FC<{
   contract_address,
 }) => {
   const [files, setFiles] = useState<FilesState | null>(null);
+  const role: string = useUserRole();
 
-  const [issues, setIssues] = useState<MultiFileScanDetail[]>(scanDetails);
+  const sortIssuesBasedonPriority = (issueArray: MultiFileScanDetail[]) => {
+    const issuePriority = {
+      critical: 6,
+      high: 5,
+      medium: 4,
+      low: 3,
+      informational: 2,
+      gas: 1,
+    };
+
+    issueArray.sort((a, b) => {
+      // First, sort by priority in descending order
+      if (
+        issuePriority[a.template_details.issue_severity] >
+        issuePriority[b.template_details.issue_severity]
+      )
+        return -1;
+      if (
+        issuePriority[a.template_details.issue_severity] <
+        issuePriority[b.template_details.issue_severity]
+      )
+        return 1;
+
+      // If priorities are equal, sort by the object's original order in the array
+      return 0;
+    });
+
+    return issueArray;
+  };
+
+  const [issues, setIssues] = useState<MultiFileScanDetail[]>(
+    sortIssuesBasedonPriority(scanDetails)
+  );
 
   const { projectId, scanId } = useParams<{
     projectId: string;
@@ -95,6 +129,8 @@ const MultifileResult: React.FC<{
   const [bugStatus, setBugStatus] = useState<string | null>(null);
   const [isDisabled, setIsDisabled] = useState<boolean>(true);
   const [filterExpanded, setFilterExpanded] = useState<boolean>(false);
+
+  const isViewer = role === "viewer";
 
   // const [action, setAction] = useState("");
   const toast = useToast();
@@ -164,7 +200,8 @@ const MultifileResult: React.FC<{
 
   useEffect(() => {
     if (!selectedBugs) setIssues(issues);
-    if (selectedBugs && selectedBugs.length) {
+    const isViewer = role === "viewer";
+    if (selectedBugs && selectedBugs.length && !isViewer) {
       setIsDisabled(false);
     } else {
       setIsDisabled(true);
@@ -216,7 +253,7 @@ const MultifileResult: React.FC<{
                 )}
                 placeholder="Select Action"
                 styles={customStylesForTakeAction}
-                isDisabled={isDisabled}
+                isDisabled={isDisabled || isViewer}
                 onChange={(newValue) => {
                   if (newValue) {
                     if (newValue.value === "wont_fix") {
@@ -258,6 +295,7 @@ const MultifileResult: React.FC<{
               contract_url={contract_url}
               contract_platform={contract_platform}
               branchName={branchName}
+              isViewer={isViewer}
               contract_address={contract_address}
             />
           </Box>
@@ -276,7 +314,8 @@ const MultifileResult: React.FC<{
             contract_platform={contract_platform}
             branchName={branchName}
             contract_address={contract_address}
-
+            profileData={profileData}
+            isViewer={isViewer}
           />
         )}
       </Flex>

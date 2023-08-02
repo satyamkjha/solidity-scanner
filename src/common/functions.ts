@@ -1,5 +1,6 @@
 import Auth from "helpers/auth";
 import { QueryClient } from "react-query";
+import { Organization, OrgUserRole } from "./types";
 
 export const capitalize = (text: string): string => {
   return text.charAt(0).toUpperCase() + text.toLowerCase().slice(1);
@@ -101,4 +102,11 @@ export const shortenNumber = (
   return fullAbbreviation
     ? abbreviatedNumber + " " + full_abbreviations[suffixIndex]
     : abbreviatedNumber + abbreviations[suffixIndex];
+};
+
+export const hasUserRole = (
+  organizations: Organization[],
+  roleToCheck: OrgUserRole
+) => {
+  return organizations.some((org) => org.role === roleToCheck);
 };

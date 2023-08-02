@@ -19,6 +19,7 @@ const InfoSettings: React.FC<{
   visibility: boolean;
   projectName: string;
   githubLink: string;
+  isViewer: boolean;
   isGithubIntegrated: boolean;
   setProjectName: React.Dispatch<React.SetStateAction<string>>;
   setGithubLink: React.Dispatch<React.SetStateAction<string>>;
@@ -33,6 +34,7 @@ const InfoSettings: React.FC<{
   setProjectName,
   setGithubLink,
   setVisibility,
+  isViewer,
 }) => {
   const [connectAlert, setConnectAlert] = useState(false);
 
@@ -41,7 +43,7 @@ const InfoSettings: React.FC<{
       minHeight="400px"
       spacing={3}
       mt={0}
-      height={["fit-content", "fit-content", "fit-content", "50vh"]}
+      height={"fit-content"}
       width={"100%"}
     >
       <Text
@@ -89,6 +91,7 @@ const InfoSettings: React.FC<{
             placeholder="Project name"
             variant={nameError ? "error" : "brand"}
             size="lg"
+            disabled={isViewer}
             value={projectName}
             onChange={(e) => setProjectName(e.target.value)}
           />
@@ -109,6 +112,7 @@ const InfoSettings: React.FC<{
           <Input
             isRequired
             type="url"
+            disabled={isViewer}
             placeholder="https://github.com/yourproject/project.git"
             variant={linkError ? "error" : "brand"}
             size="lg"
@@ -126,6 +130,7 @@ const InfoSettings: React.FC<{
         <Switch
           size="lg"
           variant="brand"
+          disabled={isViewer}
           isChecked={visibility}
           onChange={() => {
             if (isGithubIntegrated) {

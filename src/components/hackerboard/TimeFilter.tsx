@@ -27,7 +27,11 @@ const FilterButton: React.FC<{
       px={5}
       py={1}
       h={8}
-      color={timeFilter === filterValue ? "black" : "white"}
+      color={
+        timeFilter === filterValue
+          ? "black"
+          : ["black", "black", "black", "white"]
+      }
       borderRadius={"4px"}
       background={
         timeFilter === filterValue
@@ -50,9 +54,20 @@ const FilterButton: React.FC<{
 
 const TimeFilter: React.FC<{
   onFilterSelect: any;
-}> = ({ onFilterSelect }) => {
+  filterValue: string;
+}> = ({ onFilterSelect, filterValue }) => {
   const [isLargerThan1280] = useMediaQuery("(min-width: 1280px)");
   const [timeFilter, setTimeFilter] = useState<"all" | "W" | "M" | "Y">("Y");
+
+  const currentYear = new Date().getFullYear();
+  const startYear = 2011;
+  const yearsList = Array.from(
+    { length: currentYear - startYear + 1 },
+    (_, index) => {
+      const year = startYear + index;
+      return { value: String(year), label: String(year) };
+    }
+  );
 
   return (
     <Flex
@@ -104,17 +119,30 @@ const TimeFilter: React.FC<{
           <Select
             formatOptionLabel={FormatOptionLabel}
             isSearchable={true}
-            options={monthNames.map((item) => ({
-              value: item,
-              label: item,
-            }))}
+            options={
+              timeFilter === "Y"
+                ? yearsList
+                : monthNames.map((item) => ({
+                    value: item,
+                    label: item,
+                  }))
+            }
+            value={
+              filterValue ? { value: filterValue, label: filterValue } : null
+            }
             onChange={(newValue) => {
               if (newValue) {
-                setTimeFilter("M");
-                onFilterSelect("M", newValue.value);
+                onFilterSelect(timeFilter, newValue.value);
               }
             }}
-            placeholder="Month"
+            placeholder={
+              timeFilter === "Y"
+                ? "Year"
+                : timeFilter === "M"
+                ? "Month"
+                : "Select"
+            }
+            isDisabled={["all", "W"].includes(timeFilter)}
             styles={
               isLargerThan1280 ? customTranslucentDropdown : customDropdown
             }

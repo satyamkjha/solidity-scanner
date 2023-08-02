@@ -31,7 +31,7 @@ import {
 } from "components/icons";
 import Score from "components/score";
 import VulnerabilityDistribution from "components/vulnDistribution";
-
+import { Profile } from "common/types";
 import API from "helpers/api";
 
 import { Page, Pagination, Project } from "common/types";
@@ -43,9 +43,11 @@ import { useProfile } from "hooks/useProfile";
 import InfiniteScroll from "react-infinite-scroll-component";
 import { API_PATH } from "helpers/routeManager";
 import Loader from "components/styled-components/Loader";
+import { useUserRole } from "hooks/useUserRole";
 
 const Projects: React.FC = () => {
   const [isDesktopView] = useMediaQuery("(min-width: 1920px)");
+  const role: string = useUserRole();
 
   const [page, setPage] = useState<Page>();
   const [pagination, setPagination] = useState<Pagination>({
@@ -196,7 +198,7 @@ const Projects: React.FC = () => {
         )}
       </Flex>
 
-      {!projectList ? (
+      {!projectList || !profileData ? (
         <Flex w="100%" h="70vh" alignItems="center" justifyContent="center">
           <Loader />
         </Flex>
@@ -253,6 +255,7 @@ const Projects: React.FC = () => {
                 refetchProfile={refetchProfile}
                 refetch={refetch}
                 updateProjectList={updateProjectList}
+                isViewer={role === "viewer"}
               />
             ))}
           </InfiniteScroll>
@@ -267,7 +270,8 @@ const ProjectCard: React.FC<{
   refetch: any;
   refetchProfile: any;
   updateProjectList: (project_id: string) => void;
-}> = ({ project, refetch, refetchProfile, updateProjectList }) => {
+  isViewer: boolean;
+}> = ({ project, refetch, refetchProfile, updateProjectList, isViewer }) => {
   const [isOpen, setIsOpen] = useState(false);
   const toast = useToast();
   const [isRescanLoading, setRescanLoading] = useState(false);
@@ -378,7 +382,7 @@ const ProjectCard: React.FC<{
                     Last scanned {timeSince(new Date(date_updated))}
                   </Text>
                 </Box>
-                <HStack mr={hover ? 0 : 7} alignItems="flex-start">
+                <HStack mr={hover && !isViewer ? 0 : 7} alignItems="flex-start">
                   {project.project_url !== "File Scan" && (
                     <Tooltip label="Rescan" aria-label="A tooltip" mt={2}>
                       <Button
@@ -391,8 +395,11 @@ const ProjectCard: React.FC<{
                           setIsOpen(true);
                         }}
                         transition="0.3s opacity"
-                        _hover={{ opacity: scans_remaining === 0 ? 0.4 : 0.9 }}
-                        isDisabled={scans_remaining === 0}
+                        _hover={{
+                          opacity:
+                            scans_remaining === 0 || isViewer ? 0.4 : 0.9,
+                        }}
+                        isDisabled={scans_remaining === 0 || isViewer}
                       >
                         <Flex sx={{ flexDir: "column", alignItems: "center" }}>
                           <RescanIcon size={60} />
@@ -400,7 +407,7 @@ const ProjectCard: React.FC<{
                       </Button>
                     </Tooltip>
                   )}
-                  {hover && (
+                  {hover && !isViewer && (
                     <Menu placement={"bottom-end"}>
                       <MenuButton
                         zIndex={10}
@@ -565,7 +572,7 @@ const ProjectCard: React.FC<{
                       }}
                       transition="0.3s opacity"
                       _hover={{ opacity: scans_remaining === 0 ? 0.4 : 0.9 }}
-                      isDisabled={scans_remaining === 0}
+                      isDisabled={scans_remaining === 0 || isViewer}
                     >
                       <Flex sx={{ flexDir: "column", alignItems: "center" }}>
                         <RescanIcon size={60} />
@@ -573,7 +580,7 @@ const ProjectCard: React.FC<{
                     </Button>
                   </Tooltip>
                 )}
-                {hover && (
+                {hover && !isViewer && (
                   <Menu placement={"bottom-end"}>
                     <MenuButton
                       zIndex={10}

@@ -27,28 +27,26 @@ import {
 import { FiAtSign } from "react-icons/fi";
 import { MdWork } from "react-icons/md";
 import { passwordStrength } from "check-password-strength";
-
 import { FaLock, FaUserAlt } from "react-icons/fa";
-
 import { Logo } from "components/icons";
-
 import API from "helpers/api";
 import { AuthResponse } from "common/types";
 import { ViewOffIcon, ViewIcon } from "@chakra-ui/icons";
-import MetaMaskLogin from "components/metamaskSignin";
+import MetaMaskLogin from "pages/Signin/MetamaskSignin";
 import { API_PATH } from "helpers/routeManager";
-import GoogleSignIn from "components/googleSignin";
+import GoogleSignIn from "pages/Signin/GoogleSignin";
 import { getFeatureGateConfig } from "helpers/helperFunction";
 import { getReCaptchaHeaders } from "helpers/helperFunction";
 import { useConfig } from "hooks/useConfig";
 import Loader from "components/styled-components/Loader";
+import { isEmail, hasSpecialCharacters } from "helpers/helperFunction";
+import PasswordError from "components/passwordError";
 
 const SignUp: React.FC = () => {
   const config: any = useConfig();
   const googleLoginEnabled = getFeatureGateConfig(config).enable_google_signin;
   const [registered, setRegistered] = useState(false);
   const [email, setEmail] = useState("");
-  const passwordChecker = new RegExp("^(?=.*?[A-Za-z])(?=.*?[0-9]).{6,}$");
   const location = useLocation();
   useEffect(() => {
     const query = new URLSearchParams(location.search);
@@ -163,12 +161,12 @@ const RegisterForm: React.FC<{
   const [linkedin, setLinkedin] = useState("");
   const [twitter, setTwitter] = useState("");
 
-  const [step, setStep] = useState(0);
+  const [step, setStep] = useState(false);
 
   const onSubmit = async () => {
     let reqHeaders = await getReCaptchaHeaders("register");
-    if (step === 0) {
-      setStep(1);
+    if (!step) {
+      setStep(true);
     } else {
       const campaign_type = localStorage.getItem("campaign_type");
       const campaign_id = localStorage.getItem("campaign_id");
@@ -210,29 +208,17 @@ const RegisterForm: React.FC<{
     }
   };
 
-  const charTypes = ["lowercase", "uppercase", "symbol", "number"];
-
-  function unique(arr1: string[], arr2: string[]) {
-    let uniqueArr: string[] = [];
-    for (var i = 0; i < arr1.length; i++) {
-      let flag = 0;
-      for (var j = 0; j < arr2.length; j++) {
-        if (arr1[i] === arr2[j]) {
-          arr2.splice(j, 1);
-          j--;
-          flag = 1;
-        }
-      }
-
-      if (flag === 0) {
-        uniqueArr.push(arr1[i]);
-      }
-    }
-    arr2.forEach((item) => {
-      uniqueArr.push(item);
-    });
-    return uniqueArr;
-  }
+  const checkFormValidation = step
+    ? false
+    : email.length < 1 ||
+      email.length > 50 ||
+      !isEmail(email) ||
+      (passwordError && passwordError.value !== "Strong") ||
+      password.length > 50 ||
+      name.length > 20 ||
+      name.length < 3 ||
+      hasSpecialCharacters(name) ||
+      hasSpecialCharacters(companyName);
 
   return (
     <form
@@ -245,7 +231,70 @@ const RegisterForm: React.FC<{
       onSubmit={handleSubmit(onSubmit)}
     >
       <Stack spacing={6} mt={8} width={["90%", "80%", "600px"]}>
-        {step === 0 && (
+        {step ? (
+          <>
+            <InputGroup mt={0} alignItems="center">
+              <InputLeftElement
+                height="48px"
+                children={<Icon as={FaDiscord} color="gray.300" />}
+              />
+              <Input
+                placeholder="Discord (optional)"
+                variant="brand"
+                size="lg"
+                value={discord}
+                onChange={(e) => {
+                  setDiscord(e.target.value);
+                }}
+              />
+            </InputGroup>
+            <InputGroup mt={0} alignItems="center">
+              <InputLeftElement
+                height="48px"
+                children={<Icon as={FaTelegram} color="gray.300" />}
+              />
+              <Input
+                placeholder="Telegram (optional)"
+                variant="brand"
+                size="lg"
+                value={telegram}
+                onChange={(e) => {
+                  setTelegram(e.target.value);
+                }}
+              />
+            </InputGroup>
+            <InputGroup mt={0} alignItems="center">
+              <InputLeftElement
+                height="48px"
+                children={<Icon as={FaLinkedin} color="gray.300" />}
+              />
+              <Input
+                placeholder="Linkedin (optional)"
+                variant="brand"
+                size="lg"
+                value={linkedin}
+                onChange={(e) => {
+                  setLinkedin(e.target.value);
+                }}
+              />
+            </InputGroup>
+            <InputGroup mt={0} alignItems="center">
+              <InputLeftElement
+                height="48px"
+                children={<Icon as={FaTwitter} color="gray.300" />}
+              />
+              <Input
+                placeholder="Twitter (optional)"
+                variant="brand"
+                size="lg"
+                value={twitter}
+                onChange={(e) => {
+                  setTwitter(e.target.value);
+                }}
+              />
+            </InputGroup>
+          </>
+        ) : (
           <>
             <InputGroup alignItems="center">
               <InputLeftElement
@@ -350,95 +399,17 @@ const RegisterForm: React.FC<{
                 onChange={(event) => setContactNumber(event.target.value)}
               />
             </InputGroup>
-
-            {passwordError &&
-              passwordError.length < 8 &&
-              passwordError.contains.length < 4 && (
-                <Text color={"subtle"} size={"xs"}>
-                  Your password should contain a
-                  {unique(passwordError.contains, charTypes).map(
-                    (item) => ` ${item}, `
-                  )}
-                  {passwordError.length < 8 &&
-                    ` and should have ${
-                      8 - passwordError.length
-                    } more characters`}
-                </Text>
-              )}
+            <PasswordError passwordError={passwordError} />
           </>
         )}
-        {step === 1 && (
-          <>
-            <InputGroup mt={0} alignItems="center">
-              <InputLeftElement
-                height="48px"
-                children={<Icon as={FaDiscord} color="gray.300" />}
-              />
-              <Input
-                placeholder="Discord (optional)"
-                variant="brand"
-                size="lg"
-                value={discord}
-                onChange={(e) => {
-                  setDiscord(e.target.value);
-                }}
-              />
-            </InputGroup>
-            <InputGroup mt={0} alignItems="center">
-              <InputLeftElement
-                height="48px"
-                children={<Icon as={FaTelegram} color="gray.300" />}
-              />
-              <Input
-                placeholder="Telegram (optional)"
-                variant="brand"
-                size="lg"
-                value={telegram}
-                onChange={(e) => {
-                  setTelegram(e.target.value);
-                }}
-              />
-            </InputGroup>
-            <InputGroup mt={0} alignItems="center">
-              <InputLeftElement
-                height="48px"
-                children={<Icon as={FaLinkedin} color="gray.300" />}
-              />
-              <Input
-                placeholder="Linkedin (optional)"
-                variant="brand"
-                size="lg"
-                value={linkedin}
-                onChange={(e) => {
-                  setLinkedin(e.target.value);
-                }}
-              />
-            </InputGroup>
-            <InputGroup mt={0} alignItems="center">
-              <InputLeftElement
-                height="48px"
-                children={<Icon as={FaTwitter} color="gray.300" />}
-              />
-              <Input
-                placeholder="Twitter (optional)"
-                variant="brand"
-                size="lg"
-                value={twitter}
-                onChange={(e) => {
-                  setTwitter(e.target.value);
-                }}
-              />
-            </InputGroup>
-          </>
-        )}
-
         <Button
           type="submit"
           variant="brand"
           isLoading={formState.isSubmitting}
           spinner={<Loader color={"#3300FF"} size={25} />}
+          isDisabled={checkFormValidation}
         >
-          {step === 0 ? "Next" : "Submit"}
+          {!step ? "Next" : "Submit"}
         </Button>
       </Stack>
     </form>

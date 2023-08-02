@@ -17,7 +17,7 @@ export default function GoogleSignIn() {
     >
       <Button
         py={6}
-        my={5}
+        my={2}
         background="#F2F2F2"
         fontWeight={500}
         width={"fit-content"}

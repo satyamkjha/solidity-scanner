@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useForm } from "react-hook-form";
-import { Link as RouterLink } from "react-router-dom";
+import { Link as RouterLink, useParams } from "react-router-dom";
 import {
   Flex,
   Box,
@@ -29,6 +29,7 @@ const CustomFlex = motion(Flex);
 const ForgotPassword: React.FC = () => {
   const [mailSent, setMailSent] = useState(false);
   const [email, setEmail] = useState("");
+
   return (
     <>
       <Flex
@@ -93,21 +94,31 @@ const ForgotPasswordForm: React.FC<{
 }> = ({ setMailSent, setEmail }) => {
   const { handleSubmit, register, formState } = useForm<FormData>();
 
-  const onSubmit = async ({ email }: FormData) => {
-    let reqHeaders = await getReCaptchaHeaders("send_email");
-    const { data } = await API.post<AuthResponse>(
-      API_PATH.API_SEND_EMAIL,
-      {
-        email,
-      },
-      {
-        headers: reqHeaders,
-      }
-    );
+  const { orgName } = useParams<{
+    orgName: string | null;
+  }>();
 
-    if (data.status === "success") {
-      setMailSent(true);
-      setEmail(email);
+  const onSubmit = async ({ email }: FormData) => {
+    try {
+      console.log(email);
+      let reqHeaders = await getReCaptchaHeaders("send_email");
+      const { data } = await API.post<AuthResponse>(
+        API_PATH.API_SEND_EMAIL,
+        {
+          org_name: orgName,
+          email,
+        },
+        {
+          headers: reqHeaders,
+        }
+      );
+
+      if (data.status === "success") {
+        setMailSent(true);
+        setEmail(email);
+      }
+    } catch (e) {
+      console.log(e);
     }
   };
 
@@ -125,7 +136,9 @@ const ForgotPasswordForm: React.FC<{
             placeholder="Your email"
             variant="brand"
             size="lg"
-            {...register("email", { required: true })}
+            {...register("email", {
+              required: true,
+            })}
           />
         </InputGroup>
 
