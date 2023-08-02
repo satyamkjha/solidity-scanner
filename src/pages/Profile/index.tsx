@@ -101,12 +101,7 @@ const Profile: React.FC = () => {
   };
 
   const checkFormValidation = () => {
-    if (
-      companyName &&
-      (companyName.length < 5 ||
-        companyName.length > 40 ||
-        hasSpecialCharacters(companyName))
-    ) {
+    if (companyName && (companyName.length < 5 || companyName.length > 40)) {
       validationError("Company Name is Invalid");
       return false;
     }
