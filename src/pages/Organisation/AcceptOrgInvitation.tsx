@@ -124,17 +124,6 @@ const AcceptOrgInvitation: React.FC = () => {
     }
   };
 
-  function unique(arr1: string[], arr2: string[]): string[] {
-    const uniqueSet = new Set(arr1);
-
-    for (const item of arr2) {
-      if (!uniqueSet.has(item)) {
-        uniqueSet.add(item);
-      }
-    }
-    return [...uniqueSet];
-  }
-
   return (
     <>
       <Flex
