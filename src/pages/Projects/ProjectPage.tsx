@@ -221,6 +221,7 @@ const ScanDetails: React.FC<{
     const { data } = await API.post(API_PATH.API_GENERATE_REPORT, {
       project_id: projectId,
       scan_id: scanId,
+      scan_type: "project",
     });
     let intervalId: NodeJS.Timeout;
     const refetchTillReportGenerates = () => {
