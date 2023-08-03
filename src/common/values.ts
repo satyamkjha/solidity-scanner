@@ -681,7 +681,7 @@ export const pricing_table_data = [
         ondemand: false,
         beginner: false,
         intermediate: false,
-        pro: false,
+        pro: true,
         custom: true,
       },
       {
