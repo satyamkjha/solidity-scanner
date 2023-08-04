@@ -212,12 +212,12 @@ const QuickScan: React.FC = () => {
         icon: "",
         isDisabled: false,
       },
-      {
-        value: "testnet",
-        label: "Nordek Testnet",
-        icon: "",
-        isDisabled: false,
-      },
+      // {
+      //   value: "testnet",
+      //   label: "Nordek Testnet",
+      //   icon: "",
+      //   isDisabled: false,
+      // },
     ],
   };
 
