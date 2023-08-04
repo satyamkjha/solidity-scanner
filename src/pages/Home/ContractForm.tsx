@@ -178,6 +178,20 @@ const ContractForm: React.FC<{
         isDisabled: false,
       },
     ],
+    nordekscan: [
+      {
+        value: "mainnet",
+        label: "Nordek Mainnet",
+        icon: "",
+        isDisabled: false,
+      },
+      {
+        value: "testnet",
+        label: "Nordek Testnet",
+        icon: "",
+        isDisabled: false,
+      },
+    ],
   };
 
   const options = [
@@ -257,6 +271,12 @@ const ContractForm: React.FC<{
       value: "xdc",
       icon: "blockscan/xdc",
       label: "XDC - (xdc.blocksscan.io)",
+      isDisabled: true,
+    },
+    {
+      value: "nordekscan",
+      icon: "blockscan/nordekscan",
+      label: "Nordek - (nordek.io)",
       isDisabled: true,
     },
   ];
