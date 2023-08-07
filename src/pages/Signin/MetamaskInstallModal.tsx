@@ -87,7 +87,7 @@ const MetamaskInstallModal: React.FC<{
               <Heading w="70%" fontSize="2xl">
                 MetaMask is not Installed
               </Heading>
-              <Heading w="70%" mt={3} color="#8A94A6" fontSize="lg">
+              <Heading w="70%" mt={3} color="#8A94A6" fontSize="md">
                 MetaMask extension is not installed in your browser
               </Heading>
               <StyledButton
@@ -101,6 +101,7 @@ const MetamaskInstallModal: React.FC<{
                 color="#8B8B8B"
                 onClick={() => {
                   window.open("https://metamask.io/download/", "_blank");
+                  onClose();
                 }}
               >
                 INSTALL

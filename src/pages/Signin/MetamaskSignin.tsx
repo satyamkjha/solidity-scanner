@@ -1,5 +1,4 @@
 import { Button, Image, useDisclosure } from "@chakra-ui/react";
-import MetaMaskSDK from "@metamask/sdk";
 import API from "helpers/api";
 import Auth from "helpers/auth";
 import {
