@@ -313,7 +313,7 @@ export default function PrivateApi() {
                         ml={[0, 0, 0, "auto"]}
                         mb={[4, 4, 4, 0]}
                       >
-                        {formattedDate(new Date(createdDate))}
+                        {createdDate && formattedDate(new Date(createdDate))}
                       </Text>
                       {!isFirstTime && (
                         <>
