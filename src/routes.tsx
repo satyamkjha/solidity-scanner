@@ -376,9 +376,10 @@ const CheckOrgRole: React.FC<{ roles: OrgUserRole[] }> = ({
 
         if (hasMatchingRole) {
           history.push("/page-not-found");
+        } else {
+          setUserHasAccess(!hasMatchingRole);
         }
-        setUserHasAccess(hasMatchingRole);
-      } else {
+      } else if (profile.logged_in_via !== "org_login") {
         setUserHasAccess(true);
       }
     }

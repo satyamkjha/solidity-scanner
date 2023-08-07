@@ -258,12 +258,13 @@ export const blockScans: { [key: string]: string } = {
   optimism: "Optimism",
   xdc: "XDC",
   reefscan: "Reefscan",
+  nordekscan: "Nordek",
 };
 
 export const codePlatform: {
   [key: string]: {
     platform: string;
-    dynamicString: string;
+  dynamicString: string;
   };
 } = {
   etherscan: { platform: "own", dynamicString: "#code" },
@@ -279,6 +280,7 @@ export const codePlatform: {
   optimism: { platform: "own", dynamicString: "#code" },
   xdc: { platform: "own", dynamicString: "#readContract" },
   reefscan: { platform: "own", dynamicString: "" },
+  nordekscan: { platform: "own", dynamicString: "/contracts#address-tabs" },
 };
 
 export const blockExplorer: { [key: string]: string } = {
@@ -681,7 +683,7 @@ export const pricing_table_data = [
         ondemand: false,
         beginner: false,
         intermediate: false,
-        pro: false,
+        pro: true,
         custom: true,
       },
       {
@@ -766,25 +768,7 @@ export const pricing_table_data = [
         title: "Generate Audit Report",
         trial: false,
         ondemand: false,
-        beginner: true,
-        intermediate: true,
-        pro: true,
-        custom: true,
-      },
-      {
-        title: "Customize Audit Report",
-        trial: false,
-        ondemand: false,
-        beginner: true,
-        intermediate: true,
-        pro: true,
-        custom: true,
-      },
-      {
-        title: "Download Audit Report",
-        trial: false,
-        ondemand: false,
-        beginner: true,
+        beginner: false,
         intermediate: true,
         pro: true,
         custom: true,
@@ -793,8 +777,17 @@ export const pricing_table_data = [
         title: "Audit Report History",
         trial: false,
         ondemand: false,
-        beginner: true,
+        beginner: false,
         intermediate: true,
+        pro: true,
+        custom: true,
+      },
+      {
+        title: "Download Audit Report",
+        trial: false,
+        ondemand: false,
+        beginner: false,
+        intermediate: false,
         pro: true,
         custom: true,
       },
@@ -808,12 +801,21 @@ export const pricing_table_data = [
         custom: true,
       },
       {
-        title: "Assisted Report Customisation",
+        title: "Customize Audit Report",
         trial: false,
         ondemand: false,
         beginner: false,
         intermediate: false,
         pro: true,
+        custom: true,
+      },
+      {
+        title: "Assisted Report Customisation",
+        trial: false,
+        ondemand: false,
+        beginner: false,
+        intermediate: false,
+        pro: false,
         custom: true,
       },
     ],

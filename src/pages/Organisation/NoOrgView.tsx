@@ -73,6 +73,9 @@ const NoOrgView: React.FC<{
           variant={"cta-outline"}
           borderWidth={"1px"}
           fontWeight={500}
+          _hover={{
+            color: "#3300FF",
+          }}
           px={10}
           py={2}
           ml={[0, 0, 0, "auto"]}
