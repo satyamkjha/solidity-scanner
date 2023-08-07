@@ -1,7 +1,8 @@
-import { useEffect, useState, createContext, useContext } from 'react';
-import { db } from "../helpers/firebaseConfig";
-import { ref, onValue } from 'firebase/database';
+import { useEffect, useState, createContext, useContext } from "react";
 import { setGlobalConfig } from "../helpers/helperFunction";
+import API from "helpers/api";
+import { API_PATH } from "helpers/routeManager";
+import Loader from "components/styled-components/Loader";
 
 export const ConfigContext = createContext(null);
 
@@ -14,19 +15,16 @@ export const ConfigProvider = ({ children }) => {
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    const fetchConfig = () => {
+    const fetchConfig = async () => {
       try {
-        const query = ref(db, 'config');
-        const snapshot = onValue(query, (snapshot) => {
-          if (snapshot.exists()) {
-            const data = snapshot.val();
-            setConfig(data);
-            setGlobalConfig(data);
-            setIsLoading(false);
-          }
-        });
+        const { data } = await API.get(API_PATH.API_GET_CONFIGS);
+        if (data.status === "success" && data.configs) {
+          setConfig(data.configs);
+          setGlobalConfig(data.configs);
+          setIsLoading(false);
+        }
       } catch (error) {
-        console.error('Error fetching config:', error);
+        console.error("Error fetching config:", error);
       }
     };
 
@@ -34,12 +32,10 @@ export const ConfigProvider = ({ children }) => {
   }, []);
 
   if (isLoading) {
-    return <></>;
+    return <Loader width={"100vw"} height={"100vh"} />;
   }
 
   return (
-    <ConfigContext.Provider value={config}>
-      {children}
-    </ConfigContext.Provider>
+    <ConfigContext.Provider value={config}>{children}</ConfigContext.Provider>
   );
 };

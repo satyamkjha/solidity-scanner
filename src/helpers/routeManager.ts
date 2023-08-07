@@ -1,4 +1,7 @@
 export const API_PATH = {
+  //CONFIGS
+  API_GET_CONFIGS: "/api-client-configs/",
+
   //AUTH
   API_LOGOUT: "/api-logout/",
   API_LOGIN: "/api-login/",

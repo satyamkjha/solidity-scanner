@@ -104,6 +104,9 @@ export const shortenNumber = (
     : abbreviatedNumber + abbreviations[suffixIndex];
 };
 
-export const hasUserRole = (organizations: Organization[], roleToCheck: OrgUserRole) => {
+export const hasUserRole = (
+  organizations: Organization[],
+  roleToCheck: OrgUserRole
+) => {
   return organizations.some((org) => org.role === roleToCheck);
-}
+};

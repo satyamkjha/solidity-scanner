@@ -1,5 +1,4 @@
-import { Button, Image } from "@chakra-ui/react";
-import MetaMaskSDK from "@metamask/sdk";
+import { Button, Image, useDisclosure } from "@chakra-ui/react";
 import API from "helpers/api";
 import Auth from "helpers/auth";
 import {
@@ -9,29 +8,30 @@ import {
   getAssetsURL,
 } from "helpers/helperFunction";
 import { API_PATH } from "helpers/routeManager";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useHistory } from "react-router-dom";
 import { useConfig } from "hooks/useConfig";
-import StyledButton from "./styled-components/StyledButton";
+import Loader from "../../components/styled-components/Loader";
+import { useMetaMask } from "metamask-react";
+import StyledButton from "components/styled-components/StyledButton";
+import MetamaskInstallModal from "./MetamaskInstallModal";
 
 const MetaMaskLogin: React.FC = () => {
   const config = useConfig();
   const assetsURL = getAssetsURL(config);
   const history = useHistory();
-  const MMSDK = new MetaMaskSDK({
-    useDeeplink: true,
-    communicationLayerPreference: "socket",
-  });
-
+  const { isOpen, onClose, onOpen } = useDisclosure();
   const [isLoading, setIsLoading] = useState(false);
-
-  const ethereum = MMSDK.getProvider();
-
-  const connect = async () => {
+  const [connected, setConnected] = useState(false);
+  const { status, connect, ethereum } = useMetaMask();
+  const connectToMetamask = async () => {
     setIsLoading(true);
     setTimeout(() => setIsLoading(false), 2000);
-    await ethereum.request({ method: "eth_requestAccounts", params: [] });
-
+    if (status === "unavailable") {
+      onOpen();
+      return;
+    }
+    await connect();
     if (window.ethereum.selectedAddress) {
       getNonce(window.ethereum.selectedAddress);
     }
@@ -39,7 +39,7 @@ const MetaMaskLogin: React.FC = () => {
 
   const checkBrowserAndDevice = (): boolean => {
     // Detect Brave
-    if (navigator.brave) return false;
+    if (navigator.brave) return true;
 
     //Check if Mobile
     if (getDeviceType() === "mobile")
@@ -79,13 +79,14 @@ const MetaMaskLogin: React.FC = () => {
       history.push("/home");
     }
   };
+
   return (
     <>
       {getFeatureGateConfig(config).metamask_integration.enabled &&
         checkBrowserAndDevice() && (
           <>
             <StyledButton
-              onClick={connect}
+              onClick={connectToMetamask}
               py={6}
               mt={[5, 5, 5, 0]}
               background="#F2F2F2"
@@ -104,6 +105,7 @@ const MetaMaskLogin: React.FC = () => {
               />
               Continue with MetaMask
             </StyledButton>
+            <MetamaskInstallModal onClose={onClose} isOpen={isOpen} />
           </>
         )}
     </>

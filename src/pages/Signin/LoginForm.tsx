@@ -27,9 +27,9 @@ import API from "helpers/api";
 import Auth from "helpers/auth";
 import { AuthResponse } from "common/types";
 import { ViewIcon, ViewOffIcon } from "@chakra-ui/icons";
-import MetaMaskLogin from "components/metamaskSignin";
+import MetaMaskLogin from "pages/Signin/MetamaskSignin";
 import { API_PATH } from "helpers/routeManager";
-import GoogleSignIn from "components/googleSignin";
+import GoogleSignIn from "pages/Signin/GoogleSignin";
 import {
   getFeatureGateConfig,
   getReCaptchaHeaders,
