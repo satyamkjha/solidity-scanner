@@ -258,12 +258,13 @@ export const blockScans: { [key: string]: string } = {
   optimism: "Optimism",
   xdc: "XDC",
   reefscan: "Reefscan",
+  nordekscan: "Nordek",
 };
 
 export const codePlatform: {
   [key: string]: {
     platform: string;
-    dynamicString: string;
+  dynamicString: string;
   };
 } = {
   etherscan: { platform: "own", dynamicString: "#code" },
@@ -279,6 +280,7 @@ export const codePlatform: {
   optimism: { platform: "own", dynamicString: "#code" },
   xdc: { platform: "own", dynamicString: "#readContract" },
   reefscan: { platform: "own", dynamicString: "" },
+  nordekscan: { platform: "own", dynamicString: "/contracts#address-tabs" },
 };
 
 export const blockExplorer: { [key: string]: string } = {

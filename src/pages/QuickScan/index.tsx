@@ -205,6 +205,20 @@ const QuickScan: React.FC = () => {
         isDisabled: false,
       },
     ],
+    nordekscan: [
+      {
+        value: "mainnet",
+        label: "Nordek Mainnet",
+        icon: "",
+        isDisabled: false,
+      },
+      // {
+      //   value: "testnet",
+      //   label: "Nordek Testnet",
+      //   icon: "",
+      //   isDisabled: false,
+      // },
+    ],
   };
 
   const options = [
@@ -268,6 +282,11 @@ const QuickScan: React.FC = () => {
       value: "xdc",
       icon: "xdc",
       label: "XDC - (xdc.blocksscan.io)",
+    },
+    {
+      value: "nordekscan",
+      icon: "nordekscan",
+      label: "Nordek - (nordek.io)",
     },
   ];
 
