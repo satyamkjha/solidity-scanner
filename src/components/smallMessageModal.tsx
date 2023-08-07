@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 
 import {
-  Button,
   Flex,
   Modal,
   ModalBody,
@@ -9,7 +8,6 @@ import {
   ModalContent,
   ModalHeader,
   ModalOverlay,
-  Textarea,
   Divider,
 } from "@chakra-ui/react";
 
@@ -57,29 +55,6 @@ const SmallMessageModal: React.FC<{
               textAlign="center"
             >
               {modalBody}
-              <Button
-                h={"50px"}
-                mt={"auto"}
-                mb={2}
-                variant="brand"
-                px={12}
-                borderRadius={10}
-                fontSize={"md"}
-                fontWeight={500}
-                disabled={addComment ? !comment : false}
-                onClick={() => {
-                  if (addComment) {
-                    onActionConfirm(comment);
-                    setComment("");
-                    onClose();
-                  } else {
-                    onClose();
-                    onActionConfirm();
-                  }
-                }}
-              >
-                {confirmBtnText || "Confirm"}
-              </Button>
             </Flex>
           </ModalBody>
         </ModalContent>
