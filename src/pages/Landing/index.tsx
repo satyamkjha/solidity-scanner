@@ -110,7 +110,11 @@ export default function LandingPage() {
               <img
                 src="https://api.producthunt.com/widgets/embed-image/v1/top-post-topic-badge.svg?post_id=381735&theme=light&period=monthly&topic_id=267"
                 alt="SolidityScan - The&#0032;ultimate&#0032;EVM&#0032;compatible&#0032;smart&#0032;contract&#0032;analysis&#0032;tool | Product Hunt"
-                style={{ width: "250px", height: "54px", marginTop: "30px" }}
+                style={{
+                  width: "250px",
+                  height: "54px",
+                  marginTop: "30px",
+                }}
               />
             </a>
           </Box>
@@ -124,7 +128,6 @@ export default function LandingPage() {
               marginTop={["0px", "0px", "0px", "-60px"]}
               src={`${assetsURL}landing/landing_hero.png`}
               transform="translateX(20px)"
-              zIndex={"10"}
               alt={"Run scans for your smart contracts"}
             />
           </Box>

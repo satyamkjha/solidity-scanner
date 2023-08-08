@@ -21,13 +21,12 @@ import LatestInvoice from "./components/LatestInvoice";
 import PromoCodeCard from "./components/PromoCodeCard";
 import TransactionListCard from "./components/TransactionListCard";
 import Loader from "components/styled-components/Loader";
-import { getFeatureGateConfig } from "helpers/helperFunction";
 
 const Billing: React.FC<{ profileData: Profile }> = ({ profileData }) => {
   const [planBillingCycle, setPlanBillingCycle] = useState("");
   const pricingRef = useRef<HTMLDivElement>(null);
 
-  const promoCodeEnabled = getFeatureGateConfig().promocode;
+  const promoCodeEnabled = false;
 
   const [pageNo, setPageNo] = useState(1);
   const { data: transactions, refetch } = useTransactions(pageNo, 10);

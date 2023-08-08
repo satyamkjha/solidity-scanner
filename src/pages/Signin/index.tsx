@@ -46,7 +46,7 @@ const SignIn: React.FC = () => {
   const query = useQuery();
   const isPasswordReset = Boolean(query.get("isPasswordReset")?.toString());
   const toast = useToast();
-  const googleLoginEnabled = getFeatureGateConfig().enable_google_signin;
+  const googleLoginEnabled = true;
 
   const config = useConfig();
   const assetsURL = getAssetsURL(config);
