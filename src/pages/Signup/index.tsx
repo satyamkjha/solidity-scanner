@@ -35,16 +35,13 @@ import { ViewOffIcon, ViewIcon } from "@chakra-ui/icons";
 import MetaMaskLogin from "pages/Signin/MetamaskSignin";
 import { API_PATH } from "helpers/routeManager";
 import GoogleSignIn from "pages/Signin/GoogleSignin";
-import { getFeatureGateConfig } from "helpers/helperFunction";
 import { getReCaptchaHeaders } from "helpers/helperFunction";
-import { useConfig } from "hooks/useConfig";
 import Loader from "components/styled-components/Loader";
 import { isEmail, hasSpecialCharacters } from "helpers/helperFunction";
 import PasswordError from "components/passwordError";
 
 const SignUp: React.FC = () => {
-  const config: any = useConfig();
-  const googleLoginEnabled = getFeatureGateConfig(config).enable_google_signin;
+  const googleLoginEnabled = true;
   const [registered, setRegistered] = useState(false);
   const [email, setEmail] = useState("");
   const location = useLocation();

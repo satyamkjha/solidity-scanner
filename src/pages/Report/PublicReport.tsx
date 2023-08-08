@@ -34,31 +34,29 @@ export default function ReportPage() {
 
   return (
     <>
-      {getFeatureGateConfig(config).pdf_report_generation && (
-        <HStack
-          mr={10}
-          my={5}
-          w={["100%", "100%", "90%"]}
-          height={"fit-content"}
-          justifyContent={["center", "center", "flex-end"]}
+      <HStack
+        mr={10}
+        my={5}
+        w={["100%", "100%", "90%"]}
+        height={"fit-content"}
+        justifyContent={["center", "center", "flex-end"]}
+      >
+        <Button
+          variant={"accent-outline"}
+          w={["250px"]}
+          onClick={printReport}
+          disabled={printLoading}
         >
-          <Button
-            variant={"accent-outline"}
-            w={["250px"]}
-            onClick={printReport}
-            disabled={printLoading}
-          >
-            {printLoading ? (
-              <Flex mr={5}>
-                <Loader size={25} color="#3E15F4" />
-              </Flex>
-            ) : (
-              <DownloadIcon mr={5} />
-            )}
-            Download Report
-          </Button>
-        </HStack>
-      )}
+          {printLoading ? (
+            <Flex mr={5}>
+              <Loader size={25} color="#3E15F4" />
+            </Flex>
+          ) : (
+            <DownloadIcon mr={5} />
+          )}
+          Download Report
+        </Button>
+      </HStack>
 
       {data ? (
         <Flex flexDir={"column"} overflow={"hidden"}>
