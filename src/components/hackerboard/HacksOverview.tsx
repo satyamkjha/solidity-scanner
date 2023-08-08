@@ -116,67 +116,157 @@ const HacksOverview: React.FC<{ overviewData: any }> = ({ overviewData }) => {
 
   return (
     <Box
-      flexDir={"column"}
-      display={"flex"}
-      alignItems={"flex-start"}
-      justifyContent={"flex-start"}
       w={"100%"}
-      px={[4, 4, 20]}
-      pt={10}
-      pb={20}
-      h={"fit-content"}
-      minH={["fit-content", "fit-content", "fit-content", "800px"]}
-      backgroundColor="#04080D"
-      background={`url('${assetsURL}background/hackerboard_bg.png')`}
-      backgroundSize="cover"
-      backgroundPosition={"center"}
-      backgroundRepeat="no-repeat"
+      bg={"linear-gradient(119.36deg, #04080D -2.67%, #13025E 162.98%)"}
     >
-      {!overviewData ? (
-        <Loader width="100%" height="90vh" />
-      ) : (
-        <>
-          <Text color="#B0B7C3" fontSize={"xl"}>
-            Web3 Hack Statistics, HackBoard
-          </Text>
-          <Flex
-            flexDir={["column", "column", "column", "row"]}
-            display={"flex"}
-            alignItems={"flex-start"}
-            justifyContent={"space-between"}
-            w={"100%"}
-            mt={5}
-          >
+      <Box
+        flexDir={"column"}
+        display={"flex"}
+        alignItems={"flex-start"}
+        justifyContent={"flex-start"}
+        w={"100%"}
+        px={[4, 4, 20]}
+        pt={10}
+        pb={20}
+        h={"fit-content"}
+        minH={["fit-content", "fit-content", "fit-content", "800px"]}
+        backgroundColor="#04080D"
+        background={`url('${assetsURL}background/hackerboard_bg.png')`}
+        backgroundSize="cover"
+        backgroundPosition={"center"}
+        backgroundRepeat="no-repeat"
+      >
+        {!overviewData ? (
+          <Loader width="100%" height="90vh" />
+        ) : (
+          <>
+            <Text color="#B0B7C3" fontSize={"xl"}>
+              Web3 Hack Statistics, HackBoard
+            </Text>
             <Flex
-              flexDir={"column"}
+              flexDir={["column", "column", "column", "row"]}
               display={"flex"}
-              alignItems={["center", "center", "center", "flex-start"]}
-              justifyContent={"flex-start"}
-              w={["100%", "100%", "100%", "30%"]}
-              h="fit-content"
+              alignItems={"flex-start"}
+              justifyContent={"space-between"}
+              w={"100%"}
+              mt={5}
             >
-              <Heading
-                fontSize={"6xl"}
-                mb={1}
-                sx={{
-                  background:
-                    "linear-gradient(129.18deg, #52FF00 8.52%, #00EEFD 93.94%)",
-                  backgroundClip: "text",
-                  WebkitTextFillColor: "transparent",
-                  textShadow: "0px 4px 24px 0px #29F67E69",
-                }}
-              >
-                ${shortenNumber(overviewData.total_amount, 0, true)}
-              </Heading>
-              <Text mb={4} color="#8A94A6" fontSize={"lg"}>
-                Total amount hacked worldwide
-              </Text>
               <Flex
-                w="100%"
-                flexDir="column"
-                display={["flex", "flex", "flex", "none"]}
+                flexDir={"column"}
+                display={"flex"}
+                alignItems={["center", "center", "center", "flex-start"]}
                 justifyContent={"flex-start"}
-                alignItems={"center"}
+                w={["100%", "100%", "100%", "30%"]}
+                h="fit-content"
+              >
+                <Heading
+                  fontSize={"6xl"}
+                  mb={1}
+                  sx={{
+                    background:
+                      "linear-gradient(129.18deg, #52FF00 8.52%, #00EEFD 93.94%)",
+                    backgroundClip: "text",
+                    WebkitTextFillColor: "transparent",
+                    textShadow: "0px 4px 24px 0px #29F67E69",
+                  }}
+                >
+                  ${shortenNumber(overviewData.total_amount, 0, true)}
+                </Heading>
+                <Text mb={4} color="#8A94A6" fontSize={"lg"}>
+                  Total amount hacked worldwide
+                </Text>
+                <Flex
+                  w="100%"
+                  flexDir="column"
+                  display={["flex", "flex", "flex", "none"]}
+                  justifyContent={"flex-start"}
+                  alignItems={"center"}
+                >
+                  <ChartFilter
+                    onFilterSelect={onFilterSelect}
+                    allChains={overviewData.all_chains}
+                    filterValue={filterValue}
+                    setSelectedChain={setSelectedChain}
+                  />
+                  {isChartLoading ? (
+                    <Skeleton
+                      w={"100%"}
+                      h={[900, 700, 500, 400]}
+                      startColor="#060316"
+                      endColor="#160d45"
+                      borderRadius={["15px", "15px", "30px", "40px"]}
+                    ></Skeleton>
+                  ) : (
+                    <>
+                      <Chart
+                        hacksList={filteredData.attack_list}
+                        selectedTimeFilter={selectedTimeFilter}
+                        selectedFilterValue={filterValue}
+                      />
+                      <HackCummulativeData filteredData={filteredData} />
+                    </>
+                  )}
+                </Flex>
+                <HStack mt={5} mb={2} w="100%" justifyContent={"space-between"}>
+                  <Heading color={"white"} fontSize={"2xl"} fontWeight={500}>
+                    Attack Trends
+                  </Heading>
+                  {filteredData && (
+                    <Heading color={"white"} fontSize={"2xl"} fontWeight={900}>
+                      {filteredData.no_of_attacks}
+                    </Heading>
+                  )}
+                </HStack>
+                {filteredData && (
+                  <>
+                    <Flex width="98%" my={4} ml={3}>
+                      {filteredData.attack_trends?.map((item, index) => (
+                        <Flex
+                          key={index}
+                          height="15px"
+                          bg={attackTrendsColors[index]}
+                          width={`${
+                            (item.count / filteredData.no_of_attacks) *
+                            (100 +
+                              (filteredData.no_of_attacks * 5) / item.count)
+                          }%`}
+                          ml={-3}
+                          zIndex={11 - index}
+                          borderRadius="15px"
+                          transition="width 0.6s ease-in"
+                        />
+                      ))}
+                    </Flex>
+                    {filteredData.attack_trends?.map(
+                      (item: any, index: number) => (
+                        <HStack
+                          key={index}
+                          mt={3}
+                          w="100%"
+                          justifyContent={"space-between"}
+                        >
+                          <HStack>
+                            <SeverityIcon variant={attackTrendsColors[index]} />
+                            <Text color="#FFFFFF" fontSize={"sm"}>
+                              {item.attacked_method}
+                            </Text>
+                          </HStack>
+                          <Text color="#FFFFFF" fontSize={"sm"}>
+                            {item.count}
+                          </Text>
+                        </HStack>
+                      )
+                    )}
+                  </>
+                )}
+              </Flex>
+              <Flex
+                flexDir={"column"}
+                display={["none", "none", "none", "flex"]}
+                alignItems={"flex-start"}
+                justifyContent={"flex-start"}
+                w={"64%"}
+                h="fit-content"
               >
                 <ChartFilter
                   onFilterSelect={onFilterSelect}
@@ -203,94 +293,10 @@ const HacksOverview: React.FC<{ overviewData: any }> = ({ overviewData }) => {
                   </>
                 )}
               </Flex>
-              <HStack mt={5} mb={2} w="100%" justifyContent={"space-between"}>
-                <Heading color={"white"} fontSize={"2xl"} fontWeight={500}>
-                  Attack Trends
-                </Heading>
-                {filteredData && (
-                  <Heading color={"white"} fontSize={"2xl"} fontWeight={900}>
-                    {filteredData.no_of_attacks}
-                  </Heading>
-                )}
-              </HStack>
-              {filteredData && (
-                <>
-                  <Flex width="98%" my={4} ml={3}>
-                    {filteredData.attack_trends?.map((item, index) => (
-                      <Flex
-                        key={index}
-                        height="15px"
-                        bg={attackTrendsColors[index]}
-                        width={`${
-                          (item.count / filteredData.no_of_attacks) *
-                          (100 + (filteredData.no_of_attacks * 5) / item.count)
-                        }%`}
-                        ml={-3}
-                        zIndex={11 - index}
-                        borderRadius="15px"
-                        transition="width 0.6s ease-in"
-                      />
-                    ))}
-                  </Flex>
-                  {filteredData.attack_trends?.map(
-                    (item: any, index: number) => (
-                      <HStack
-                        key={index}
-                        mt={3}
-                        w="100%"
-                        justifyContent={"space-between"}
-                      >
-                        <HStack>
-                          <SeverityIcon variant={attackTrendsColors[index]} />
-                          <Text color="#FFFFFF" fontSize={"sm"}>
-                            {item.attacked_method}
-                          </Text>
-                        </HStack>
-                        <Text color="#FFFFFF" fontSize={"sm"}>
-                          {item.count}
-                        </Text>
-                      </HStack>
-                    )
-                  )}
-                </>
-              )}
             </Flex>
-            <Flex
-              flexDir={"column"}
-              display={["none", "none", "none", "flex"]}
-              alignItems={"flex-start"}
-              justifyContent={"flex-start"}
-              w={"64%"}
-              h="fit-content"
-            >
-              <ChartFilter
-                onFilterSelect={onFilterSelect}
-                allChains={overviewData.all_chains}
-                filterValue={filterValue}
-                setSelectedChain={setSelectedChain}
-              />
-              {isChartLoading ? (
-                <Skeleton
-                  w={"100%"}
-                  h={[900, 700, 500, 400]}
-                  startColor="#060316"
-                  endColor="#160d45"
-                  borderRadius={["15px", "15px", "30px", "40px"]}
-                ></Skeleton>
-              ) : (
-                <>
-                  <Chart
-                    hacksList={filteredData.attack_list}
-                    selectedTimeFilter={selectedTimeFilter}
-                    selectedFilterValue={filterValue}
-                  />
-                  <HackCummulativeData filteredData={filteredData} />
-                </>
-              )}
-            </Flex>
-          </Flex>
-        </>
-      )}
+          </>
+        )}
+      </Box>
     </Box>
   );
 };
