@@ -14,7 +14,7 @@ const PricingDetailsList: React.FC<{
   return (
     <>
       <VStack
-        pl={page == "pricing" ? 7 : 4}
+        pl={page === "pricing" ? 7 : 4}
         width="250px"
         alignItems={"flex-start"}
         mb={5}
@@ -48,7 +48,7 @@ const PricingDetailsList: React.FC<{
       {pricing_card_description_data.map((item) => (
         <VStack
           width="250px"
-          pl={page == "pricing" ? 7 : 4}
+          pl={page === "pricing" ? 7 : 4}
           alignItems={"flex-start"}
           mb={5}
           spacing={1}

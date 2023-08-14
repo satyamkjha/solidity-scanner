@@ -112,6 +112,8 @@ const ProjectCustomSettings: React.FC<{
 
   useEffect(() => {
     setGithubSync(webhook_enabled);
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {
@@ -122,6 +124,8 @@ const ProjectCustomSettings: React.FC<{
       });
       setRepoTreeUP(newRepoTreeUP);
     }
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [repoTree]);
 
   return (

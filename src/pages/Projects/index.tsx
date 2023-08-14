@@ -22,7 +22,6 @@ import {
   IconButton,
   useToast,
 } from "@chakra-ui/react";
-
 import {
   LogoIcon,
   ProjectIcon,
@@ -31,9 +30,7 @@ import {
 } from "components/icons";
 import Score from "components/score";
 import VulnerabilityDistribution from "components/vulnDistribution";
-import { Profile } from "common/types";
 import API from "helpers/api";
-
 import { Page, Pagination, Project } from "common/types";
 import { timeSince } from "common/functions";
 import { DeleteIcon } from "@chakra-ui/icons";
@@ -56,7 +53,7 @@ const Projects: React.FC = () => {
   });
   const [hasMore, setHasMore] = useState(true);
 
-  const { data: projects, isLoading, refetch } = useProjects(pagination);
+  const { data: projects, refetch } = useProjects(pagination);
   const [projectList, setProjectList] = useState<Project[]>();
   const [projectsMonitored, setProjectsMonitored] = useState(0);
 
@@ -66,6 +63,8 @@ const Projects: React.FC = () => {
     if (profileData) {
       setProjectsMonitored(profileData.projects_remaining);
     }
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [profileData, refetchProfile]);
 
   useEffect(() => {
@@ -81,6 +80,8 @@ const Projects: React.FC = () => {
       setProjectList(uniqueProjectList);
       setPage(projects.page);
     }
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [projects, refetch]);
 
   useEffect(() => {
@@ -123,20 +124,15 @@ const Projects: React.FC = () => {
     return () => {
       clearInterval(intervalId);
     };
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [projectList]);
 
   useEffect(() => {
     refetch();
-  }, [pagination]);
 
-  const refetchProjects = async () => {
-    if (projectList) {
-      setPagination({ pageNo: 1, perPageCount: projectList.length });
-      setTimeout(async () => {
-        await refetch();
-      }, 10);
-    }
-  };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [pagination]);
 
   const fetchMoreProjects = async () => {
     if (page && pagination.pageNo >= page.total_pages) {

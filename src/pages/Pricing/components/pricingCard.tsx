@@ -48,9 +48,7 @@ export const PricingCard: React.FC<{
   const config: any = useConfig();
   const assetsURL = getAssetsURL(config);
   const mouse = selectedPlan === plan;
-
   const { isOpen, onClose, onOpen } = useDisclosure();
-
   React.useEffect(() => {
     setDuration(globalDuration);
   }, [globalDuration]);
@@ -141,7 +139,7 @@ export const PricingCard: React.FC<{
           width="100%"
           alignItems={"center"}
           mb={3}
-          pl={page == "pricing" ? 7 : 4}
+          pl={page === "pricing" ? 7 : 4}
         >
           <HStack justifyContent="flex-start">
             <Image
@@ -168,7 +166,7 @@ export const PricingCard: React.FC<{
           textAlign={"left"}
           fontSize="sm"
           fontWeight={300}
-          px={page == "pricing" ? 7 : 4}
+          px={page === "pricing" ? 7 : 4}
         >
           {pricingDetails[duration][plan].description}
         </Text>
@@ -180,7 +178,7 @@ export const PricingCard: React.FC<{
           position={"relative"}
           h="120px"
           w="100%"
-          px={page == "pricing" ? 7 : 4}
+          px={page === "pricing" ? 7 : 4}
         >
           <Flex
             flexDir="row"

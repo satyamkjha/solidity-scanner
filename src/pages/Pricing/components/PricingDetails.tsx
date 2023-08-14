@@ -220,7 +220,7 @@ const PricingDetails: React.FC<{
           gap={page === "pricing" ? 6 : 4}
         >
           {Object.keys(pricingDetails.pricing_data["ondemand"]).map((plan) => {
-            if (plan !== "custom" && plan !== "trial")
+            if (plan !== "custom" && plan !== "trial") {
               return (
                 <PricingCard
                   page={page}
@@ -232,11 +232,13 @@ const PricingDetails: React.FC<{
                   pricingDetails={pricingDetails.pricing_data}
                 />
               );
+            }
+            return <></>;
           })}
           {Object.keys(pricingDetails.pricing_data[duration])
             .sort((a, b) => a[0].localeCompare(b[0]))
             .map((plan) => {
-              if (plan !== "custom" && plan !== "trial")
+              if (plan !== "custom" && plan !== "trial") {
                 return (
                   <PricingCard
                     page={page}
@@ -248,6 +250,8 @@ const PricingDetails: React.FC<{
                     pricingDetails={pricingDetails.pricing_data}
                   />
                 );
+              }
+              return <></>;
             })}
         </Grid>
       </Flex>

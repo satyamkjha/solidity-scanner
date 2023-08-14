@@ -18,11 +18,9 @@ import {
 import { AiOutlineProject } from "react-icons/ai";
 import { ProjectIcon, SolidityFileIcon, UploadIcon } from "components/icons";
 import API from "helpers/api";
-import { useProfile } from "hooks/useProfile";
 import { useDropzone } from "react-dropzone";
 import { API_PATH } from "helpers/routeManager";
 import Loader from "components/styled-components/Loader";
-import { useUserRole } from "hooks/useUserRole";
 import { Profile } from "common/types";
 
 const UploadForm: React.FC<{
@@ -88,6 +86,8 @@ const UploadForm: React.FC<{
       ...(isDragReject ? rejectStyle : {}),
       ...(error ? rejectStyle : {}),
     }),
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     [isFocused, isDragAccept, isDragReject, error]
   );
 
@@ -95,6 +95,8 @@ const UploadForm: React.FC<{
     if (acceptedFiles.length !== 0) {
       firstCheck();
     }
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [acceptedFiles]);
 
   const firstCheck = () => {
@@ -174,6 +176,8 @@ const UploadForm: React.FC<{
     if (urlList.length === acceptedFiles.length && urlList.length > 0) {
       uploadFiles();
     }
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [urlList]);
 
   const checkFileExt = (fileName: string) => {

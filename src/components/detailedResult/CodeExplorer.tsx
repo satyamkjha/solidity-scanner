@@ -44,6 +44,8 @@ const CodeExplorer: React.FC<{
 
   useEffect(() => {
     scrollToBottom();
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [line_nos_start, line_nos_end, file_content]);
 
   return (

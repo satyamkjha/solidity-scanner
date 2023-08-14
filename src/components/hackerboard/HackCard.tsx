@@ -5,7 +5,6 @@ import {
   HStack,
   Heading,
   Text,
-  Button,
   Link,
   Tooltip,
 } from "@chakra-ui/react";

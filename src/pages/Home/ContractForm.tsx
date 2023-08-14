@@ -17,7 +17,6 @@ import {
 } from "@chakra-ui/react";
 import { AiOutlineProject } from "react-icons/ai";
 import API from "helpers/api";
-import { useProfile } from "hooks/useProfile";
 import { useSupportedChains } from "hooks/useSupportedPlatforms";
 import { getFeatureGateConfig } from "helpers/helperFunction";
 import Select from "react-select";

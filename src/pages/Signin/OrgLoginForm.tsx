@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from "react";
-import { Link as RouterLink, useHistory, useLocation } from "react-router-dom";
+import React, { useState } from "react";
+import { Link as RouterLink, useHistory } from "react-router-dom";
 import {
   Flex,
   Stack,
@@ -23,11 +23,7 @@ import { API_PATH } from "helpers/routeManager";
 import { useForm } from "react-hook-form";
 import { getReCaptchaHeaders } from "helpers/helperFunction";
 import StyledButton from "components/styled-components/StyledButton";
-import {
-  isEmail,
-  hasSpecialCharacters,
-  checkOrgName,
-} from "helpers/helperFunction";
+import { isEmail, checkOrgName } from "helpers/helperFunction";
 
 const OrgLoginForm: React.FC = () => {
   const [show, setShow] = useState(false);

@@ -6,8 +6,6 @@ import { BiLockAlt } from "react-icons/bi";
 
 import { SlackIcon, JiraIcon, GithubIcon } from "components/icons";
 import OauthHelper from "components/oauthHelper";
-
-import { useProfile } from "hooks/useProfile";
 import { getCookie } from "common/functions";
 import {
   JIRA_CLIENT_ID,
@@ -15,7 +13,6 @@ import {
   SLACK_CLIENT_ID,
   SLACK_SCOPE,
 } from "common/constants";
-
 import API from "helpers/api";
 import { API_PATH } from "helpers/routeManager";
 import Loader from "components/styled-components/Loader";

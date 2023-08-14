@@ -157,6 +157,8 @@ const HackFilters: React.FC<{
     ) {
       refetchHacks();
     }
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedChain, selectedCategory, selectedMonth, selectedYear, sortBy]);
 
   const setMonthFilter = (month: string, selectedYear: string) => {

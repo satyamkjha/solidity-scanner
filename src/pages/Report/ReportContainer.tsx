@@ -20,8 +20,6 @@ import {
   SeverityIcon,
   GithubIcon,
   ProjectIcon,
-  IssueDescriptionIcons,
-  IssueRemediationIcons,
   ReportCoverDots,
 } from "components/icons";
 import VulnerabilityProgress from "components/VulnerabilityProgress";

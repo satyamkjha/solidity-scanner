@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from "react";
-import { Link, useLocation, useHistory } from "react-router-dom";
+import React, { useState } from "react";
+import { useLocation, useHistory } from "react-router-dom";
 import {
   Flex,
   Text,
@@ -17,7 +17,7 @@ import {
 } from "@chakra-ui/react";
 import { passwordStrength } from "check-password-strength";
 import { FaLock, FaUserAlt } from "react-icons/fa";
-import { Logo, MailSent, MailLock } from "components/icons";
+import { Logo } from "components/icons";
 import { ViewIcon, ViewOffIcon } from "@chakra-ui/icons";
 import { useValidateInviteLink } from "hooks/useValidateInviteLink";
 import API from "helpers/api";
@@ -28,8 +28,6 @@ import StyledButton from "components/styled-components/StyledButton";
 import { useForm } from "react-hook-form";
 import PasswordError from "components/passwordError";
 import { hasSpecialCharacters } from "helpers/helperFunction";
-
-const charTypes = ["lowercase", "uppercase", "symbol", "number"];
 
 function useQuery() {
   return new URLSearchParams(useLocation().search);

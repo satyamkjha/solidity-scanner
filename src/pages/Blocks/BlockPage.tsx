@@ -266,6 +266,8 @@ const BlockPage: React.FC = () => {
         setPrintLoading(false);
       }, 100);
     }
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [summaryReport]);
 
   const checkIfGeneratingReport = () => {

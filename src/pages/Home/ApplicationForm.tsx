@@ -13,7 +13,6 @@ import {
   Divider,
 } from "@chakra-ui/react";
 import API from "helpers/api";
-import { useProfile } from "hooks/useProfile";
 import { getAssetsURL } from "helpers/helperFunction";
 import { API_PATH } from "helpers/routeManager";
 import ConfigSettings from "components/projectConfigSettings";
@@ -152,6 +151,8 @@ const ApplicationForm: React.FC<{
         setStep(2);
       }
     }
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [branch]);
 
   let isViewer = role === "viewer";
