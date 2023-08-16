@@ -210,7 +210,9 @@ const RegisterForm: React.FC<{
     : email.length < 1 ||
       email.length > 50 ||
       !isEmail(email) ||
-      (passwordError && passwordError.value !== "Strong") ||
+      (passwordError &&
+        (passwordError.value === "Too Weak" ||
+          passwordError.value === "Weak")) ||
       password.length > 50 ||
       name.length > 20 ||
       name.length < 3 ||

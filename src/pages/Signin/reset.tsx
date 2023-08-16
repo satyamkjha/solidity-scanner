@@ -166,7 +166,9 @@ const Reset: React.FC = () => {
                 email.length < 1 ||
                 email.length > 50 ||
                 !isEmail(email) ||
-                (passwordError && passwordError.value !== "Strong")
+                (passwordError &&
+                  (passwordError.value === "Too Weak" ||
+                    passwordError.value === "Weak"))
               }
             >
               Update Password

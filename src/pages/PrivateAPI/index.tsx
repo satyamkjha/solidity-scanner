@@ -454,8 +454,8 @@ export default function PrivateApi() {
           <VStack>
             <Text my={4} w={["100%"]} fontSize={"lg"} fontWeight={600}>
               {actionType === "regenerate"
-                ? "are you sure you want to regenerate the  key?"
-                : "are you sure you want to delete the current key?"}
+                ? "Are you sure you want to regenerate the  key?"
+                : "Are you sure you want to delete the current key?"}
             </Text>
             <Text color="detail" fontWeight={400}>
               {actionType === "regenerate"
@@ -468,3 +468,4 @@ export default function PrivateApi() {
     </Box>
   );
 }
+ 
