@@ -22,9 +22,7 @@ const PasswordError: React.FC<{
     return different;
   }
 
-  useEffect(() => {
-    console.log(passwordError?.value);
-  }, [passwordError]);
+ 
 
   return (
     <>
