@@ -35,6 +35,8 @@ import { useQueryClient } from "react-query";
 import { onLogout } from "common/functions";
 import { sentenceCapitalize } from "helpers/helperFunction";
 import { useUserOrgProfile } from "hooks/useUserOrgProfile";
+import { signInWithCustomToken, User, onAuthStateChanged } from "firebase/auth";
+import { auth } from "helpers/firebase";
 
 const MotionFlex = motion(Flex);
 
@@ -44,6 +46,10 @@ const Layout: React.FC = ({ children }) => {
   const ref = useRef<HTMLDivElement>(null);
   const history = useHistory();
   const queryClient = useQueryClient();
+  const [firebaseToken, setFirebaseToken] = useState(
+    "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdWQiOiJodHRwczovL2lkZW50aXR5dG9vbGtpdC5nb29nbGVhcGlzLmNvbS9nb29nbGUuaWRlbnRpdHkuaWRlbnRpdHl0b29sa2l0LnYxLklkZW50aXR5VG9vbGtpdCIsImlhdCI6MTY5MjcwMzAyMywiZXhwIjoxNjkyNzA2NjIzLCJpc3MiOiJmaXJlYmFzZS1hZG1pbnNkay1hMnpuMkBzb2xpZGl0eS1zY2FuLmlhbS5nc2VydmljZWFjY291bnQuY29tIiwic3ViIjoiZmlyZWJhc2UtYWRtaW5zZGstYTJ6bjJAc29saWRpdHktc2Nhbi5pYW0uZ3NlcnZpY2VhY2NvdW50LmNvbSIsInVpZCI6ImFiY0BnbWFpbC5jb20ifQ.OJlm9tmVse-iwJnoUKJEi12tpXvtf6MjF_Z9ORMwgLBL2tXCrbRF2v1UO51hAFHpmL0OIrOHtMs90gBvDY7ZetyS_piKFX3aorbCICMtapk7ZCTpDiJhasp8MzHJogFuvzW6fegJ3ppEFbIFFK8dvIj4lVTdEcp4DWnHcSdc4yVdg9AP92_UrgRZxJ9EOIvYfkH_4Zqca9ihq-BSeU3OQJdbl3oSADmAmAUaTYD8qFZha35aW_rDW_WVa_C4srUUX9E7IEBQcxF6efojz-J-AoyNGJC7pL2A52TS50Ss3JM0ImMZ4LBZMGOp-CMbDcjeoozPpAs6ODezTYrum8m97A"
+  );
+  const [firebaseUser, setFirebaseUser] = useState<User>();
   const { data: profileData } = useProfile();
   const { data: orgProfile } = useUserOrgProfile(
     profileData?.logged_in_via === "org_login"
@@ -69,6 +75,39 @@ const Layout: React.FC = ({ children }) => {
       onLogout(history, queryClient);
     }
   };
+
+  const getFirebaseToken = async () => {
+    const { data } = await API.get<{ token: string }>(
+      API_PATH.API_CREATE_FIREBASE_TOKEN
+    );
+    if (data && data.token) setFirebaseToken(data.token);
+  };
+
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, async (user) => {
+      if (user) {
+        const idTokenResult = await user.getIdTokenResult();
+        setFirebaseToken(idTokenResult.token);
+      } else {
+        getFirebaseToken();
+      }
+    });
+    return () => {
+      unsubscribe();
+    };
+  }, []);
+
+  useEffect(() => {
+    if (firebaseToken && !auth.currentUser) {
+      signInWithCustomToken(auth, firebaseToken)
+        .then((userCredential) => {
+          setFirebaseUser(userCredential.user);
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    }
+  }, [firebaseToken]);
 
   useEffect(() => {
     if (showSidebar) {
