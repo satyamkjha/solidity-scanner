@@ -253,7 +253,7 @@ const Billing: React.FC<{ profileData: Profile }> = ({ profileData }) => {
                   mt={profileData.current_package === "custom" ? 4 : 0}
                 >
                   <PricingDetails
-                    currentPackage={profileData.current_package}
+                    profileData={profileData}
                     pricingDetails={plans}
                     page="billing"
                   />

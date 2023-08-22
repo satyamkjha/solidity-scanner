@@ -10,7 +10,7 @@ import {
   Box,
   useDisclosure,
 } from "@chakra-ui/react";
-import { Plan } from "common/types";
+import { Plan, Profile } from "common/types";
 import { CurlyArrowBlue, CheckBadge } from "components/icons";
 import * as React from "react";
 import { useState } from "react";
@@ -30,7 +30,7 @@ export const PricingCard: React.FC<{
       [plan: string]: Plan;
     };
   };
-  currentPackage?: string;
+  profileData?: Profile;
   selectedPlan: string;
   setSelectedPlan: React.Dispatch<React.SetStateAction<string>>;
 }> = ({
@@ -38,7 +38,7 @@ export const PricingCard: React.FC<{
   globalDuration,
   plan,
   pricingDetails,
-  currentPackage,
+  profileData,
   selectedPlan,
   setSelectedPlan,
 }) => {
@@ -47,6 +47,7 @@ export const PricingCard: React.FC<{
   );
   const config: any = useConfig();
   const assetsURL = getAssetsURL(config);
+  const currentPackage = profileData?.current_package
   const mouse = selectedPlan === plan;
 
   const { isOpen, onClose, onOpen } = useDisclosure();
@@ -304,6 +305,7 @@ export const PricingCard: React.FC<{
         <PaymentModal
           globalDuration={duration}
           selectedPlan={plan}
+          profileData={profileData}
           pricingDetails={pricingDetails}
           isOpen={isOpen}
           onClose={onClose}
