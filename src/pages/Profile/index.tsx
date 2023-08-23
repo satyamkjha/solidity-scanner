@@ -542,7 +542,9 @@ const ChangePasswordForm: React.FC<{ isOwner: boolean }> = ({ isOwner }) => {
           isLoading={isLoading}
           spinner={<Loader color={"#3300FF"} size={25} />}
           isDisabled={
-            (passwordError && passwordError.value !== "Strong") ||
+            (passwordError &&
+              (passwordError.value === "Too Weak" ||
+                passwordError.value === "Weak")) ||
             newPassword.length > 50 ||
             password.length < 1 ||
             password.length > 50 ||

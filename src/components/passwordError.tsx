@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Text } from "@chakra-ui/react";
 
 const PasswordError: React.FC<{
@@ -21,6 +21,8 @@ const PasswordError: React.FC<{
 
     return different;
   }
+
+ 
 
   return (
     <>

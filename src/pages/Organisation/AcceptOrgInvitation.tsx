@@ -275,7 +275,9 @@ const AcceptOrgInvitation: React.FC = () => {
                         name.length > 20 ||
                         name.length < 3 ||
                         hasSpecialCharacters(name) ||
-                        (passwordError && passwordError.value !== "Strong") ||
+                        (passwordError &&
+                          (passwordError.value === "Too Weak" ||
+                            passwordError.value === "Weak")) ||
                         password.length > 50
                       }
                     >
