@@ -102,7 +102,7 @@ const Blocks: React.FC = () => {
                 scan.multi_file_scan_status === "scanning" ||
                 scan.multi_file_scan_status === "initialised"
             )
-            .map((scan) => scan.scan_id);
+            .map((scan) => scan.project_id);
           setScanInProgress(scanningScanIds);
         } else {
           intervalId = setInterval(async () => {
