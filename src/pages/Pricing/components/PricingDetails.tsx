@@ -8,7 +8,7 @@ import {
   Grid,
   Switch,
 } from "@chakra-ui/react";
-import { PricingData } from "common/types";
+import { PricingData, Profile } from "common/types";
 import { pricing_table_data } from "common/values";
 import { getAssetsURL } from "helpers/helperFunction";
 import { useHistory } from "react-router-dom";
@@ -21,8 +21,8 @@ const PricingTable = lazy(() => import("./pricingTable"));
 const PricingDetails: React.FC<{
   pricingDetails: PricingData;
   page: "billing" | "pricing";
-  currentPackage?: string;
-}> = ({ pricingDetails, page, currentPackage }) => {
+  profileData?: Profile;
+}> = ({ pricingDetails, page, profileData }) => {
   const assetsURL = getAssetsURL();
   const history = useHistory();
   const [selectedPlan, setSelectedPlan] = useState("");
@@ -226,7 +226,7 @@ const PricingDetails: React.FC<{
                   page={page}
                   globalDuration={"ondemand"}
                   plan={plan}
-                  currentPackage={currentPackage}
+                  profileData={profileData}
                   selectedPlan={selectedPlan}
                   setSelectedPlan={setSelectedPlan}
                   pricingDetails={pricingDetails.pricing_data}
@@ -242,7 +242,7 @@ const PricingDetails: React.FC<{
                     page={page}
                     globalDuration={duration}
                     plan={plan}
-                    currentPackage={currentPackage}
+                    profileData={profileData}
                     selectedPlan={selectedPlan}
                     setSelectedPlan={setSelectedPlan}
                     pricingDetails={pricingDetails.pricing_data}
