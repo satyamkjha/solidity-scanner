@@ -45,11 +45,12 @@ const OrganisationMemberList: React.FC<{
     user_organization.status === "joined"
   );
   const [count, setCount] = useState(0);
-  let d = new Date();
+  const [joinedAtDate, setJoinedAtDate] = useState<Date>();
 
   useEffect(() => {
     if (user_organization) {
-      d = new Date(user_organization.joined_at);
+      const d = new Date(user_organization.joined_at);
+      setJoinedAtDate(d);
     }
   }, [user_organization]);
 
@@ -189,9 +190,9 @@ const OrganisationMemberList: React.FC<{
             </HStack>
             <Text fontWeight={700} fontSize={"sm"} color="#B0B7C3">
               {isDesktopView ? "|" : ""}{" "}
-              {`Created at ${d.getDate()} ${
-                monthNames[d.getMonth()]
-              } ${d.getFullYear()}`}
+              {`Created at ${joinedAtDate.getDate()} ${
+                monthNames[joinedAtDate.getMonth()]
+              } ${joinedAtDate.getFullYear()}`}
             </Text>
           </Flex>
         </Flex>

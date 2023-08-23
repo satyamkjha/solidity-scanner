@@ -47,7 +47,7 @@ const ApplicationForm: React.FC<{
   const toast = useToast();
 
   const githubUrlRegex =
-    /(http(s)?)(:(\/\/))((github.com)(\/)[\w@\:\-~]+(\/)[\w@\:\-~]+)(\.git)?/;
+    /(http(s)?)(:(\/\/))((github.com)(\/)[\w@:\-~]+(\/)[\w@:\-~]+)(\.git)?/;
 
   const runValidation = () => {
     if (projectName.length === 0) {
