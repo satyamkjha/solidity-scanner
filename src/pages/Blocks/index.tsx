@@ -132,23 +132,43 @@ const Blocks: React.FC = () => {
 
     if (scanInProgress && scanInProgress.length) {
       scanInProgress.forEach((docId) => {
-        listeners[docId] = onSnapshot(doc(db, "scan_events", docId), (doc) => {
-          if (doc.exists()) {
-            const eventData = doc.data();
-            if (eventData.scan_status === "scan_done") {
-              // Unsubscribe and remove the listener
-              listeners[docId]();
-              delete listeners[docId];
+        const retryAttempts = 3;
+        let retryCount = 0;
 
-              // Update the state to remove the successful scan
-              const updatedScanningScanIds = scanInProgress.filter(
-                (scanId) => scanId !== docId
-              );
-              setScanInProgress(updatedScanningScanIds);
-              fetchScan();
+        const fetchSnapshot = () => {
+          listeners[docId] = onSnapshot(
+            doc(db, "scan_events", docId),
+            (doc) => {
+              if (doc.exists()) {
+                const eventData = doc.data();
+                if (
+                  ["scan_done", "download_failed", "scan_failed"].includes(
+                    eventData.scan_status
+                  )
+                ) {
+                  // Unsubscribe and remove the listener
+                  listeners[docId]();
+                  delete listeners[docId];
+
+                  // Update the state to remove the successful scan
+                  const updatedScanningScanIds = scanInProgress.filter(
+                    (scanId) => scanId !== docId
+                  );
+                  setScanInProgress(updatedScanningScanIds);
+                  fetchScan();
+                }
+              }
+            },
+            (error) => {
+              if (retryCount < retryAttempts) {
+                retryCount++;
+                fetchSnapshot();
+              }
             }
-          }
-        });
+          );
+        };
+
+        fetchSnapshot();
       });
     }
 
