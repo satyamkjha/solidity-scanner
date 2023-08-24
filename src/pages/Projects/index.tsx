@@ -147,7 +147,7 @@ const Projects: React.FC = () => {
         listeners[docId] = onSnapshot(doc(db, "scan_events", docId), (doc) => {
           if (doc.exists()) {
             const eventData = doc.data();
-            if (eventData.status === "success") {
+            if (eventData.scan_status === "scan_done") {
               // Unsubscribe and remove the listener
               listeners[docId]();
               delete listeners[docId];

@@ -42,10 +42,12 @@ import { BsThreeDotsVertical } from "react-icons/bs";
 import { useUserRole } from "hooks/useUserRole";
 import { Unsubscribe, onSnapshot, doc } from "firebase/firestore";
 import { db } from "helpers/firebase";
+import { useQueryClient } from "react-query";
 
 const Blocks: React.FC = () => {
   const [isDesktopView] = useMediaQuery("(min-width: 1920px)");
   const role: string = useUserRole();
+  const queryClient = useQueryClient();
 
   const [page, setPage] = useState<Page>();
   const [pagination, setPagination] = useState<Pagination>({
@@ -86,6 +88,7 @@ const Blocks: React.FC = () => {
       return true;
     });
     setScanList(newScanList);
+    queryClient.invalidateQueries(["blocks", pagination]);
   };
 
   useEffect(() => {
@@ -132,7 +135,7 @@ const Blocks: React.FC = () => {
         listeners[docId] = onSnapshot(doc(db, "scan_events", docId), (doc) => {
           if (doc.exists()) {
             const eventData = doc.data();
-            if (eventData.status === "success") {
+            if (eventData.scan_status === "scan_done") {
               // Unsubscribe and remove the listener
               listeners[docId]();
               delete listeners[docId];
@@ -165,7 +168,10 @@ const Blocks: React.FC = () => {
         (scan) => scan.multi_file_scan_status === "scan_done"
       ).length;
 
-      if (scanDoneCount === iconCounter) setIsLoadingIcons(false);
+      const loadingIcons = scanDoneCount
+        ? !(scanDoneCount === iconCounter)
+        : false;
+      setIsLoadingIcons(loadingIcons);
     }
   }, [iconCounter]);
 
