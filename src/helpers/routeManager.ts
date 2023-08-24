@@ -100,5 +100,5 @@ export const API_PATH = {
   API_LEAVE_ORGANISATION: "/organization/api-leave-organization/",
 
   //FIREBASE
-  API_CREATE_FIREBASE_TOKEN: "api-create-firebase-custom-token/",
+  API_CREATE_FIREBASE_TOKEN: "/api-create-firebase-custom-token/",
 };
