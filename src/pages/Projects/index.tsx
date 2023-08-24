@@ -144,43 +144,29 @@ const Projects: React.FC = () => {
 
     if (projectsInScanning && projectsInScanning.length) {
       projectsInScanning.forEach((docId) => {
-        const retryAttempts = 3;
-        let retryCount = 0;
+        listeners[docId] = onSnapshot(
+          doc(db, "scan_events", docId),
+          (doc) => {
+            if (doc.exists()) {
+              const eventData = doc.data();
+              if (eventData.scan_status === "scan_done") {
+                // Unsubscribe and remove the listener
+                listeners[docId]();
+                delete listeners[docId];
 
-        const fetchSnapshot = () => {
-          listeners[docId] = onSnapshot(
-            doc(db, "scan_events", docId),
-            (doc) => {
-              if (doc.exists()) {
-                const eventData = doc.data();
-                if (
-                  ["scan_done", "download_failed", "scan_failed"].includes(
-                    eventData.scan_status
-                  )
-                ) {
-                  // Unsubscribe and remove the listener
-                  listeners[docId]();
-                  delete listeners[docId];
-
-                  // Update the state to remove the successful project scan
-                  const updatedScanningScanIds = projectsInScanning.filter(
-                    (scanId) => scanId !== docId
-                  );
-                  setProjectsInScanning(updatedScanningScanIds);
-                  fetchProjectList();
-                }
-              }
-            },
-            (error) => {
-              if (retryCount < retryAttempts) {
-                retryCount++;
-                fetchSnapshot();
+                // Update the state to remove the successful project scan
+                const updatedScanningScanIds = projectsInScanning.filter(
+                  (scanId) => scanId !== docId
+                );
+                setProjectsInScanning(updatedScanningScanIds);
+                fetchProjectList();
               }
             }
-          );
-        };
-
-        fetchSnapshot();
+          },
+          (error) => {
+            console.log(error);
+          }
+        );
       });
     }
 

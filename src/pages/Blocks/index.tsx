@@ -132,43 +132,33 @@ const Blocks: React.FC = () => {
 
     if (scanInProgress && scanInProgress.length) {
       scanInProgress.forEach((docId) => {
-        const retryAttempts = 3;
-        let retryCount = 0;
+        listeners[docId] = onSnapshot(
+          doc(db, "scan_events", docId),
+          (doc) => {
+            if (doc.exists()) {
+              const eventData = doc.data();
+              if (
+                ["scan_done", "download_failed", "scan_failed"].includes(
+                  eventData.scan_status
+                )
+              ) {
+                // Unsubscribe and remove the listener
+                listeners[docId]();
+                delete listeners[docId];
 
-        const fetchSnapshot = () => {
-          listeners[docId] = onSnapshot(
-            doc(db, "scan_events", docId),
-            (doc) => {
-              if (doc.exists()) {
-                const eventData = doc.data();
-                if (
-                  ["scan_done", "download_failed", "scan_failed"].includes(
-                    eventData.scan_status
-                  )
-                ) {
-                  // Unsubscribe and remove the listener
-                  listeners[docId]();
-                  delete listeners[docId];
-
-                  // Update the state to remove the successful scan
-                  const updatedScanningScanIds = scanInProgress.filter(
-                    (scanId) => scanId !== docId
-                  );
-                  setScanInProgress(updatedScanningScanIds);
-                  fetchScan();
-                }
-              }
-            },
-            (error) => {
-              if (retryCount < retryAttempts) {
-                retryCount++;
-                fetchSnapshot();
+                // Update the state to remove the successful scan
+                const updatedScanningScanIds = scanInProgress.filter(
+                  (scanId) => scanId !== docId
+                );
+                setScanInProgress(updatedScanningScanIds);
+                fetchScan();
               }
             }
-          );
-        };
-
-        fetchSnapshot();
+          },
+          (error) => {
+            console.log(error);
+          }
+        );
       });
     }
 
@@ -188,10 +178,8 @@ const Blocks: React.FC = () => {
         (scan) => scan.multi_file_scan_status === "scan_done"
       ).length;
 
-      const loadingIcons = scanDoneCount
-        ? !(scanDoneCount === iconCounter)
-        : false;
-      setIsLoadingIcons(loadingIcons);
+      if (!scanDoneCount) setIsLoadingIcons(false);
+      else if (scanDoneCount === iconCounter) setIsLoadingIcons(false);
     }
   }, [iconCounter]);
 
