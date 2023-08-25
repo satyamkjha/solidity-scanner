@@ -255,6 +255,7 @@ const ScanCredits: React.FC<{
           globalDuration={"topup"}
           selectedPlan={planData.name}
           quantity={parseInt(creditOptions[selectedIndex])}
+          profileData={profile}
           pricingDetails={pricingDetails}
           isOpen={isOpen}
           onClose={onClose}

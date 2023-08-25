@@ -91,10 +91,14 @@ export const API_PATH = {
   API_GET_ORGANISATION_PROFILE: " /api-get-organization-profile/",
   API_GET_USER_ORGANISATION_PROFILE: "/api-get-user-organization-profile/",
   API_VALIDATE_INVITE_LINK: "/api-validate-invite-link/",
+
   //HACKERBOARD
   API_GET_ATTACKS_OVERVIEW: "/api-get-attacks-overview/",
   API_GET_ATTACKS_AGGREGATED: "/api-get-attacks-aggregated/",
   API_GET_ATTACKS: "/api-get-attacks/",
   API_DELETE_ORGANISATION: "/api-delete-organization/",
   API_LEAVE_ORGANISATION: "/organization/api-leave-organization/",
+
+  //FIREBASE
+  API_CREATE_FIREBASE_TOKEN: "/api-create-firebase-custom-token/",
 };

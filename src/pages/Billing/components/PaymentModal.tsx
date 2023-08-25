@@ -20,7 +20,7 @@ import API from "helpers/api";
 import PaymentMethodCard from "./PaymentMethodCard";
 import CoinPaymentSelect from "./CoinPaymentsSelect";
 import CouponCodeSection from "./CouponCodeSection";
-import { Plan } from "common/types";
+import { Plan, Profile } from "common/types";
 import CurrentPlanDescriptionContainer from "./CurrentPlanDescriptionContainer";
 import ConfirmationMessageBox from "./ConfirmationMessageBox";
 import DetailedBill from "./DetailedBill";
@@ -33,6 +33,7 @@ const PaymentModal: React.FC<{
   selectedPlan: string;
   quantity?: number;
   globalDuration: "monthly" | "yearly" | "ondemand" | "topup";
+  profileData?: Profile;
   pricingDetails: {
     [key: string]: {
       [plan: string]: Plan;
@@ -44,6 +45,7 @@ const PaymentModal: React.FC<{
   selectedPlan,
   pricingDetails,
   globalDuration,
+  profileData,
   quantity,
 }) => {
   const toast = useToast();
@@ -230,11 +232,21 @@ const PaymentModal: React.FC<{
                     paymentMethod={paymentMethod}
                     setPaymentMethod={setPaymentMethod}
                   />
-                  <PaymentMethodCard
-                    paymentType={"stripe"}
-                    paymentMethod={paymentMethod}
-                    setPaymentMethod={setPaymentMethod}
-                  />
+                  {profileData ? (
+                    !profileData.public_address && (
+                      <PaymentMethodCard
+                        paymentType={"stripe"}
+                        paymentMethod={paymentMethod}
+                        setPaymentMethod={setPaymentMethod}
+                      />
+                    )
+                  ) : (
+                    <PaymentMethodCard
+                      paymentType={"stripe"}
+                      paymentMethod={paymentMethod}
+                      setPaymentMethod={setPaymentMethod}
+                    />
+                  )}
                 </HStack>
                 {paymentMethod === "cp" && (
                   <CoinPaymentSelect setCoin={setCoin} coin={coin} />
@@ -325,11 +337,21 @@ const PaymentModal: React.FC<{
                       paymentMethod={paymentMethod}
                       setPaymentMethod={setPaymentMethod}
                     />
-                    <PaymentMethodCard
-                      paymentType={"stripe"}
-                      paymentMethod={paymentMethod}
-                      setPaymentMethod={setPaymentMethod}
-                    />
+                    {profileData ? (
+                      !profileData.public_address && (
+                        <PaymentMethodCard
+                          paymentType={"stripe"}
+                          paymentMethod={paymentMethod}
+                          setPaymentMethod={setPaymentMethod}
+                        />
+                      )
+                    ) : (
+                      <PaymentMethodCard
+                        paymentType={"stripe"}
+                        paymentMethod={paymentMethod}
+                        setPaymentMethod={setPaymentMethod}
+                      />
+                    )}
                   </HStack>
                   {paymentMethod === "cp" && (
                     <CoinPaymentSelect setCoin={setCoin} coin={coin} />
@@ -430,11 +452,21 @@ const PaymentModal: React.FC<{
                       paymentMethod={paymentMethod}
                       setPaymentMethod={setPaymentMethod}
                     />
-                    <PaymentMethodCard
-                      paymentType={"stripe"}
-                      paymentMethod={paymentMethod}
-                      setPaymentMethod={setPaymentMethod}
-                    />
+                    {profileData ? (
+                      !profileData.public_address && (
+                        <PaymentMethodCard
+                          paymentType={"stripe"}
+                          paymentMethod={paymentMethod}
+                          setPaymentMethod={setPaymentMethod}
+                        />
+                      )
+                    ) : (
+                      <PaymentMethodCard
+                        paymentType={"stripe"}
+                        paymentMethod={paymentMethod}
+                        setPaymentMethod={setPaymentMethod}
+                      />
+                    )}
                   </VStack>
                 ) : step === 2 ? (
                   <>

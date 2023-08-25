@@ -41,6 +41,9 @@ import InfiniteScroll from "react-infinite-scroll-component";
 import { API_PATH } from "helpers/routeManager";
 import Loader from "components/styled-components/Loader";
 import { useUserRole } from "hooks/useUserRole";
+import { onSnapshot, doc, Unsubscribe } from "firebase/firestore";
+import { db } from "helpers/firebase";
+import { getFeatureGateConfig } from "helpers/helperFunction";
 
 const Projects: React.FC = () => {
   const [isDesktopView] = useMediaQuery("(min-width: 1920px)");
@@ -56,6 +59,7 @@ const Projects: React.FC = () => {
   const { data: projects, refetch } = useProjects(pagination);
   const [projectList, setProjectList] = useState<Project[]>();
   const [projectsMonitored, setProjectsMonitored] = useState(0);
+  const [projectsInScanning, setProjectsInScanning] = useState<string[]>([]);
 
   const { data: profileData, refetch: refetchProfile } = useProfile();
 
@@ -94,27 +98,37 @@ const Projects: React.FC = () => {
             _latest_scan.multi_file_scan_status === "scanning"
         )
       ) {
-        intervalId = setInterval(async () => {
-          const { data } = await API.get(
-            `${API_PATH.API_GET_PROJECTS_BETA}?page=${1}&per_page=${
-              pagination.perPageCount
-            }`
-          );
-          const pList = [
-            ...data.data,
-            ...projectList.slice(pagination.perPageCount, projectList.length),
-          ];
-          setProjectList(pList);
-          if (
-            pList &&
-            pList.every(
-              ({ _latest_scan }) =>
-                _latest_scan.multi_file_scan_status === "scan_done"
+        if (getFeatureGateConfig().event_consumption_enabled) {
+          const scanningScanIds: string[] = projectList
+            .filter(
+              (project) =>
+                project._latest_scan.multi_file_scan_status === "scanning"
             )
-          ) {
-            clearInterval(intervalId);
-          }
-        }, 5000);
+            .map((project) => project._latest_scan.scan_id);
+          setProjectsInScanning(scanningScanIds);
+        } else {
+          intervalId = setInterval(async () => {
+            const { data } = await API.get(
+              `${API_PATH.API_GET_PROJECTS_BETA}?page=${1}&per_page=${
+                pagination.perPageCount
+              }`
+            );
+            const pList = [
+              ...data.data,
+              ...projectList.slice(pagination.perPageCount, projectList.length),
+            ];
+            setProjectList(pList);
+            if (
+              pList &&
+              pList.every(
+                ({ _latest_scan }) =>
+                  _latest_scan.multi_file_scan_status === "scan_done"
+              )
+            ) {
+              clearInterval(intervalId);
+            }
+          }, 5000);
+        }
       }
     };
 
@@ -127,6 +141,43 @@ const Projects: React.FC = () => {
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [projectList]);
+
+  useEffect(() => {
+    let listeners: { [docId: string]: Unsubscribe } = {};
+
+    if (projectsInScanning && projectsInScanning.length) {
+      projectsInScanning.forEach((docId) => {
+        listeners[docId] = onSnapshot(
+          doc(db, "scan_events", docId),
+          (doc) => {
+            if (doc.exists()) {
+              const eventData = doc.data();
+              if (eventData.scan_status === "scan_done") {
+                // Unsubscribe and remove the listener
+                listeners[docId]();
+                delete listeners[docId];
+
+                // Update the state to remove the successful project scan
+                const updatedScanningScanIds = projectsInScanning.filter(
+                  (scanId) => scanId !== docId
+                );
+                setProjectsInScanning(updatedScanningScanIds);
+                fetchProjectList();
+              }
+            }
+          },
+          (error) => {
+            console.log(error);
+          }
+        );
+      });
+    }
+
+    return () => {
+      if (listeners)
+        Object.values(listeners).forEach((unsubscribe) => unsubscribe());
+    };
+  }, [projectsInScanning]);
 
   useEffect(() => {
     refetch();

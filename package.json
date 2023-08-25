@@ -27,6 +27,7 @@
     "axios": "^0.21.1",
     "check-password-strength": "^2.0.5",
     "dotenv": "^16.0.3",
+    "firebase": "^10.3.0",
     "focus-visible": "^5.2.0",
     "framer-motion": "^4.0.0",
     "i": "^0.3.7",

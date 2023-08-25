@@ -35,15 +35,19 @@ import { useHistory } from "react-router-dom";
 import InfiniteScroll from "react-infinite-scroll-component";
 import API from "helpers/api";
 import { API_PATH } from "helpers/routeManager";
-import { getAssetsURL } from "helpers/helperFunction";
+import { getAssetsURL, getFeatureGateConfig } from "helpers/helperFunction";
 import Loader from "components/styled-components/Loader";
 import { DeleteIcon } from "@chakra-ui/icons";
 import { BsThreeDotsVertical } from "react-icons/bs";
 import { useUserRole } from "hooks/useUserRole";
+import { Unsubscribe, onSnapshot, doc } from "firebase/firestore";
+import { db } from "helpers/firebase";
+import { useQueryClient } from "react-query";
 
 const Blocks: React.FC = () => {
   const [isDesktopView] = useMediaQuery("(min-width: 1920px)");
   const role: string = useUserRole();
+  const queryClient = useQueryClient();
 
   const [page, setPage] = useState<Page>();
   const [pagination, setPagination] = useState<Pagination>({
@@ -57,6 +61,7 @@ const Blocks: React.FC = () => {
   const [scanList, setScanList] = useState<Scan[]>();
   const [isLoadingIcons, setIsLoadingIcons] = useState(true);
   const [iconCounter, setIconCounter] = useState<number>(0);
+  const [scanInProgress, setScanInProgress] = useState<string[]>([]);
 
   useEffect(() => {
     if (scans) {
@@ -85,6 +90,7 @@ const Blocks: React.FC = () => {
       return true;
     });
     setScanList(newScanList);
+    queryClient.invalidateQueries(["blocks", pagination]);
   };
 
   useEffect(() => {
@@ -94,15 +100,26 @@ const Blocks: React.FC = () => {
         scanList &&
         scanList.some(({ scan_status }) => scan_status !== "scan_done")
       ) {
-        intervalId = setInterval(async () => {
-          await fetchScan();
-          if (
-            scanList &&
-            scanList.every(({ scan_status }) => scan_status === "scan_done")
-          ) {
-            clearInterval(intervalId);
-          }
-        }, 3000);
+        if (getFeatureGateConfig().event_consumption_enabled) {
+          const scanningScanIds: string[] = scanList
+            .filter(
+              (scan) =>
+                scan.multi_file_scan_status === "scanning" ||
+                scan.multi_file_scan_status === "initialised"
+            )
+            .map((scan) => scan.project_id);
+          setScanInProgress(scanningScanIds);
+        } else {
+          intervalId = setInterval(async () => {
+            await fetchScan();
+            if (
+              scanList &&
+              scanList.every(({ scan_status }) => scan_status === "scan_done")
+            ) {
+              clearInterval(intervalId);
+            }
+          }, 3000);
+        }
       }
     };
 
@@ -113,6 +130,47 @@ const Blocks: React.FC = () => {
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [scanList]);
+
+  useEffect(() => {
+    let listeners: { [docId: string]: Unsubscribe } = {};
+
+    if (scanInProgress && scanInProgress.length) {
+      scanInProgress.forEach((docId) => {
+        listeners[docId] = onSnapshot(
+          doc(db, "scan_events", docId),
+          (doc) => {
+            if (doc.exists()) {
+              const eventData = doc.data();
+              if (
+                ["scan_done", "download_failed", "scan_failed"].includes(
+                  eventData.scan_status
+                )
+              ) {
+                // Unsubscribe and remove the listener
+                listeners[docId]();
+                delete listeners[docId];
+
+                // Update the state to remove the successful scan
+                const updatedScanningScanIds = scanInProgress.filter(
+                  (scanId) => scanId !== docId
+                );
+                setScanInProgress(updatedScanningScanIds);
+                fetchScan();
+              }
+            }
+          },
+          (error) => {
+            console.log(error);
+          }
+        );
+      });
+    }
+
+    return () => {
+      if (listeners)
+        Object.values(listeners).forEach((unsubscribe) => unsubscribe());
+    };
+  }, [scanInProgress]);
 
   useEffect(() => {
     refetch();
@@ -126,7 +184,8 @@ const Blocks: React.FC = () => {
         (scan) => scan.multi_file_scan_status === "scan_done"
       ).length;
 
-      if (scanDoneCount === iconCounter) setIsLoadingIcons(false);
+      if (!scanDoneCount) setIsLoadingIcons(false);
+      else if (scanDoneCount === iconCounter) setIsLoadingIcons(false);
     }
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
