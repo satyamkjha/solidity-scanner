@@ -149,7 +149,11 @@ const Projects: React.FC = () => {
           (doc) => {
             if (doc.exists()) {
               const eventData = doc.data();
-              if (eventData.scan_status === "scan_done") {
+              if (
+                ["scan_done", "download_failed", "scan_failed"].includes(
+                  eventData.scan_status
+                )
+              ) {
                 // Unsubscribe and remove the listener
                 listeners[docId]();
                 delete listeners[docId];
