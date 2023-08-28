@@ -20,7 +20,7 @@ import {
 } from "@chakra-ui/react";
 import { GiHamburgerMenu } from "react-icons/gi";
 import { BiUser, BiPowerOff } from "react-icons/bi";
-import { getAssetsURL } from "helpers/helperFunction";
+import { getAssetsURL, getFeatureGateConfig } from "helpers/helperFunction";
 import Sidebar from "components/sidebar";
 import { ProfileIconOne } from "components/icons";
 import { useProfile } from "hooks/useProfile";
@@ -82,17 +82,19 @@ const Layout: React.FC = ({ children }) => {
   };
 
   useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, async (user) => {
-      if (user) {
-        const idTokenResult = await user.getIdTokenResult();
-        setFirebaseToken(idTokenResult.token);
-      } else {
-        getFirebaseToken();
-      }
-    });
-    return () => {
-      unsubscribe();
-    };
+    if (getFeatureGateConfig().event_consumption_enabled) {
+      const unsubscribe = onAuthStateChanged(auth, async (user) => {
+        if (user) {
+          const idTokenResult = await user.getIdTokenResult();
+          setFirebaseToken(idTokenResult.token);
+        } else {
+          getFirebaseToken();
+        }
+      });
+      return () => {
+        unsubscribe();
+      };
+    }
   }, []);
 
   useEffect(() => {
