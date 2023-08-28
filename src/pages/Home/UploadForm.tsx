@@ -22,6 +22,7 @@ import { useDropzone } from "react-dropzone";
 import { API_PATH } from "helpers/routeManager";
 import Loader from "components/styled-components/Loader";
 import { Profile } from "common/types";
+import { useUserRole } from "hooks/useUserRole";
 
 const UploadForm: React.FC<{
   profileData: Profile;
