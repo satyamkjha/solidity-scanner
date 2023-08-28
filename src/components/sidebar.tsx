@@ -194,7 +194,9 @@ const Sidebar: React.FC<{
                       </Text>
                     ) : (
                       <Text fontSize="13px">
-                        {profileData.current_package.toUpperCase()}
+                        {profileData.current_package === "custom"
+                          ? "ENTERPRISE"
+                          : profileData.current_package.toUpperCase()}
                       </Text>
                     ))}
                 </Box>

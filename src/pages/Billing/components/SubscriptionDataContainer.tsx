@@ -16,16 +16,18 @@ const SubscriptionDataContainer: React.FC<{
           {formattedDate(new Date(packageRechargeDate), "long")}
         </Text>
       </Box>
-      <Box mt={5} ml={10}>
-        <Text fontWeight={400} fontSize="sm" mb={1} color="#4E5D78">
-          Recurring Payment
-        </Text>
-        <Text fontWeight={500} fontSize="md">
-          {packageName === "trial" || packageName === "ondemand"
-            ? "--"
-            : "Stripe Payment"}
-        </Text>
-      </Box>
+      {packageName !== "custom" && (
+        <Box mt={5} ml={10}>
+          <Text fontWeight={400} fontSize="sm" mb={1} color="#4E5D78">
+            Recurring Payment
+          </Text>
+          <Text fontWeight={500} fontSize="md">
+            {packageName === "trial" || packageName === "ondemand"
+              ? "--"
+              : "Stripe Payment"}
+          </Text>
+        </Box>
+      )}
     </>
   );
 };
