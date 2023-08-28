@@ -158,7 +158,7 @@ const PaymentModal: React.FC<{
 
   const isCoinPaymentDisabled = () => {
     if (!coin) return true;
-    if (activeCoupon && parseFloat(updatedPrice).toFixed(2) == "0.00") {
+    if (activeCoupon && parseFloat(updatedPrice).toFixed(2) === "0.00") {
       setDisableMessage("Coin payment is not available with this coupon");
       return true;
     }
@@ -171,11 +171,13 @@ const PaymentModal: React.FC<{
   }, []);
 
   useEffect(() => {
-    if (paymentMethod == "cp") {
+    if (paymentMethod === "cp") {
       setDisablePayment(isCoinPaymentDisabled());
     } else {
       setDisablePayment(false);
     }
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [coin, paymentMethod, updatedPrice, activeCoupon]);
 
   return (

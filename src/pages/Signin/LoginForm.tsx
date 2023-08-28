@@ -26,7 +26,6 @@ import { isEmail } from "helpers/helperFunction";
 const LoginForm: React.FC = () => {
   const [show, setShow] = useState(false);
   const history = useHistory();
-
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [isLoading, setIsLoading] = useState(false);
@@ -51,7 +50,7 @@ const LoginForm: React.FC = () => {
           if (res.data.status === "success") {
             Auth.authenticateUser();
             history.push("/home");
-          }
+        }
         }
         setIsLoading(false);
       },

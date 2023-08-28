@@ -12,11 +12,8 @@ import {
   Image,
   useMediaQuery,
   Stack,
-  Button,
 } from "@chakra-ui/react";
-import { ResponsivePie } from "@nivo/pie";
 import { Report } from "common/types";
-import { useReactToPrint } from "react-to-print";
 import {
   Logo,
   SeverityIcon,
@@ -28,7 +25,7 @@ import {
 } from "components/icons";
 import VulnerabilityProgress from "components/VulnerabilityProgress";
 import { sentenceCapitalize, getAssetsURL } from "helpers/helperFunction";
-import React, { useEffect, useRef } from "react";
+import React from "react";
 import styled from "@emotion/styled";
 import { VictoryPie } from "victory";
 import { useConfig } from "hooks/useConfig";
@@ -119,7 +116,7 @@ export const PrintContainer: React.FC<{ summary_report: Report }> = ({
         overflow={"hidden"}
       >
         {/* Cover Section */}
-        <h6></h6>
+        <h6>.</h6>
         <Flex
           as="div"
           w="100%"
@@ -180,7 +177,7 @@ export const PrintContainer: React.FC<{ summary_report: Report }> = ({
         </Flex>
 
         {/* Table of Contents */}
-        <h6></h6>
+        <h6>.</h6>
         <Flex
           sx={{
             color: "#000000",
@@ -244,7 +241,7 @@ export const PrintContainer: React.FC<{ summary_report: Report }> = ({
         </Flex>
 
         {/* Project Summary */}
-        <h6></h6>
+        <h6>.</h6>
         <Flex
           sx={{
             color: "#000000",
@@ -306,7 +303,7 @@ export const PrintContainer: React.FC<{ summary_report: Report }> = ({
         </Flex>
 
         {/* Audit Summary */}
-        <h6></h6>
+        <h6>.</h6>
         <Flex
           sx={{
             color: "#000000",
@@ -813,7 +810,7 @@ export const PrintContainer: React.FC<{ summary_report: Report }> = ({
         </Flex>
 
         {/* Findings Summary */}
-        <h6></h6>
+        <h6>.</h6>
         <Flex
           sx={{
             color: "#000000",
@@ -1088,7 +1085,7 @@ export const PrintContainer: React.FC<{ summary_report: Report }> = ({
             </Box>
           </Flex>
         </Box>
-        <h6></h6>
+        <h6>.</h6>
         <Flex
           as="div"
           w="100%"
@@ -1320,7 +1317,7 @@ export const PrintContainer: React.FC<{ summary_report: Report }> = ({
             return (
               <>
                 {((counter1 - 1) / 6) % 2 === 1 && (
-                  <h6 style={{ pageBreakAfter: "avoid" }}></h6>
+                  <h6 style={{ pageBreakAfter: "avoid" }}>.</h6>
                 )}
                 <Flex
                   as="section"
@@ -1414,7 +1411,7 @@ export const PrintContainer: React.FC<{ summary_report: Report }> = ({
         )}
 
         {/* Vulnerability Details */}
-        <h6></h6>
+        <h6>.</h6>
 
         <Flex
           sx={{
@@ -1438,7 +1435,7 @@ export const PrintContainer: React.FC<{ summary_report: Report }> = ({
             counter2++;
             return (
               <>
-                {counter2 !== 1 && <h6></h6>}
+                {counter2 !== 1 && <h6>.</h6>}
                 <Flex
                   p={5}
                   flexDir="column"
@@ -1661,7 +1658,7 @@ export const PrintContainer: React.FC<{ summary_report: Report }> = ({
         )}
 
         {/* Scan History */}
-        <h6></h6>
+        <h6>.</h6>
         <Flex
           sx={{
             color: "#000000",
@@ -1931,7 +1928,7 @@ export const PrintContainer: React.FC<{ summary_report: Report }> = ({
         </Flex>
 
         {/* Disclaimer */}
-        <h6></h6>
+        <h6>.</h6>
         <Heading my={10} color={"#52FF00"} fontSize="4xl">
           Disclaimer
         </Heading>
@@ -2012,7 +2009,7 @@ export const PrintContainer: React.FC<{ summary_report: Report }> = ({
             guarantee as to the project's absolute security.
           </Text>
         </Flex>
-        <h6></h6>
+        <h6>.</h6>
         <Flex
           as="div"
           w="100%"

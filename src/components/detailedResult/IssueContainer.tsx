@@ -65,9 +65,10 @@ const IssueContainer: React.FC<{
   let pendingFixes;
   let bugHashList: string[];
   if (details_enabled) {
-    pendingFixes = metric_wise_aggregated_findings.filter((item) => {
-      if (item.bug_status !== "fixed") return item;
-    });
+    pendingFixes = metric_wise_aggregated_findings.filter((item) => 
+      (item.bug_status !== "fixed") 
+        
+    );
     bugHashList = pendingFixes && pendingFixes.map((item) => item.bug_hash);
   }
 
@@ -88,6 +89,8 @@ const IssueContainer: React.FC<{
       );
       setSelectedBugs(filterdList);
     }
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isChecked]);
 
   useEffect(() => {
@@ -100,12 +103,16 @@ const IssueContainer: React.FC<{
           setCheckedChildren([...checkedChildren, bug]);
       });
     }
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedBugs]);
 
   useEffect(() => {
     if (checkedChildren?.length === metric_wise_aggregated_findings?.length) {
       setIsChecked(true);
     }
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [checkedChildren]);
 
   const onIssueCheck = () => {
@@ -125,6 +132,7 @@ const IssueContainer: React.FC<{
       setIsChecked(false);
     }
   };
+
   return (
     <AccordionItem id={issue_id} key={issue_id} w={"98%"}>
       {({ isExpanded }) => (

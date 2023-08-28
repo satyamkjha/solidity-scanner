@@ -9,9 +9,7 @@ import {
   useLocation,
 } from "react-router-dom";
 import { useToast } from "@chakra-ui/react";
-
 import Layout from "components/layout";
-
 import Auth from "helpers/auth";
 import API from "helpers/api";
 import PageNotFound, { CustomPageNotFound } from "pages/PageNotFound";
@@ -21,9 +19,9 @@ import { useQueryClient } from "react-query";
 import PublicLayout from "components/PublicLayout";
 import Loader from "components/styled-components/Loader";
 import { useProfile } from "hooks/useProfile";
-import { Organization, OrgUserRole } from "common/types";
+import { OrgUserRole } from "common/types";
 import { useUserOrgProfile } from "hooks/useUserOrgProfile";
-import { UserRoleProvider, useUserRole } from "hooks/useUserRole";
+import { UserRoleProvider } from "hooks/useUserRole";
 
 const Landing = lazy(
   () => import("pages/Landing" /* webpackChunkName: "Landing" */)
@@ -312,7 +310,9 @@ const ErrorHandler: React.FC = ({ children }) => {
     return () => {
       API.interceptors.response.eject(interceptor);
     };
-  });
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
   return <>{children}</>;
 };
 
@@ -383,6 +383,8 @@ const CheckOrgRole: React.FC<{ roles: OrgUserRole[] }> = ({
         setUserHasAccess(true);
       }
     }
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [profile, orgProfile]);
 
   return (

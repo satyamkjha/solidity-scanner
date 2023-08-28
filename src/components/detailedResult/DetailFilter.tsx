@@ -104,6 +104,8 @@ const DetailFilter: React.FC<{
       setConfidence([true, true, true]);
       setVulnerability([true, true, true, true, true, true]);
     }
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [filterCount]);
 
   return (

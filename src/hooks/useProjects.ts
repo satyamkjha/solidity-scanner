@@ -1,7 +1,7 @@
 import { useQuery } from "react-query";
 import API from "helpers/api";
 
-import { Pagination, Project, ProjectList } from "common/types";
+import { Pagination, ProjectList } from "common/types";
 import { API_PATH } from "helpers/routeManager";
 
 const getProjects = async (pageNo: number, perPageCount: number) => {

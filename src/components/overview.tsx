@@ -19,8 +19,6 @@ import PieChart, { ErrorResponsivePie } from "components/pieChart";
 import { Scan } from "common/types";
 import { LogoIcon, NoBugIcon, ScanErrorIcon } from "./icons";
 import ManualAuditCard from "./manualAuditCard";
-import { getAssetsURL } from "helpers/helperFunction";
-import { useConfig } from "hooks/useConfig";
 import SolidityScoreProgress from "./common/SolidityScoreProgress";
 
 const pieData = (
@@ -74,8 +72,6 @@ const Overview: React.FC<{
   scansRemaining?: number;
   onTabChange: any;
 }> = ({ scanData, scansRemaining, onTabChange }) => {
-  const config: any = useConfig();
-  const assetsURL = getAssetsURL(config);
   const solidity_score = scanData.multi_file_scan_summary?.score_v2
     ? scanData.multi_file_scan_summary?.score_v2
     : (parseFloat(scanData.multi_file_scan_summary?.score) * 20).toFixed(2);

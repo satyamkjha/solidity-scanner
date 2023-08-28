@@ -60,6 +60,8 @@ const Billing: React.FC<{ profileData: Profile }> = ({ profileData }) => {
       setTransactionList(tList);
       setPage(transactions.page);
     }
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [transactions]);
 
   useEffect(() => {

@@ -39,7 +39,6 @@ export default function PrivateApi() {
   const config: any = useConfig();
   const assetsUrl = getAssetsURL(config);
   const toast = useToast();
-
   const [isOwner, setIsOwner] = useState(true);
 
   useEffect(() => {
@@ -110,7 +109,7 @@ export default function PrivateApi() {
       setAccessKey(data.api_key);
       setIsFirstTime(false);
     } else if (actionType === "delete") {
-      const { data } = await API.post(API_PATH.API_REVOKE_ACCESS_KEY);
+      await API.post(API_PATH.API_REVOKE_ACCESS_KEY);
       setAccessKey("");
       setViewable(true);
       setIsFirstTime(false);

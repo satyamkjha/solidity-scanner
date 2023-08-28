@@ -206,6 +206,8 @@ const MultifileResult: React.FC<{
     } else {
       setIsDisabled(true);
     }
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedBugs]);
 
   return (

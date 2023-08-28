@@ -14,7 +14,7 @@ const LatestInvoice: React.FC<{
   const { isOpen, onOpen, onClose } = useDisclosure();
 
   const onCancel = () => {
-    if (transactionData.payment_platform == "coinpayments") {
+    if (transactionData.payment_platform === "coinpayments") {
       onPaymentCancel("coinpayments");
     } else {
       onOpen();

@@ -13,7 +13,6 @@ import {
   Divider,
 } from "@chakra-ui/react";
 import API from "helpers/api";
-import { useProfile } from "hooks/useProfile";
 import { getAssetsURL } from "helpers/helperFunction";
 import { API_PATH } from "helpers/routeManager";
 import ConfigSettings from "components/projectConfigSettings";
@@ -48,7 +47,7 @@ const ApplicationForm: React.FC<{
   const toast = useToast();
 
   const githubUrlRegex =
-    /(http(s)?)(:(\/\/))((github.com)(\/)[\w@\:\-~]+(\/)[\w@\:\-~]+)(\.git)?/;
+    /(http(s)?)(:(\/\/))((github.com)(\/)[\w@:\-~]+(\/)[\w@:\-~]+)(\.git)?/;
 
   const runValidation = () => {
     if (projectName.length === 0) {
@@ -152,6 +151,8 @@ const ApplicationForm: React.FC<{
         setStep(2);
       }
     }
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [branch]);
 
   let isViewer = role === "viewer";

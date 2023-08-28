@@ -1,6 +1,6 @@
 import { useQuery } from "react-query";
 import API from "helpers/api";
-import { Transaction, TransactionList } from "common/types";
+import { TransactionList } from "common/types";
 import { API_PATH } from "helpers/routeManager";
 
 const getTransactions = async (page: number, page_no: number) => {

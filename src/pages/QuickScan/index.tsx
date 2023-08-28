@@ -444,6 +444,8 @@ const QuickScan: React.FC = () => {
       setIsLoading(true);
       runQuickScan(blockAddress, blockPlatform, blockChain, ref);
     }
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const runQuickScan = async (

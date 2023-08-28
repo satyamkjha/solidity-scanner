@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react";
-
 import {
   Button,
   Flex,
@@ -9,14 +8,8 @@ import {
   ModalContent,
   ModalHeader,
   ModalOverlay,
-  Textarea,
   Divider,
-  Radio,
-  Stack,
-  RadioGroup,
-  VStack,
   HStack,
-  Checkbox,
   Text,
   useToast,
   InputGroup,
@@ -112,6 +105,8 @@ const CreateOrganisationForm: React.FC<{
     return () => {
       debouncedSearch.cancel();
     };
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [orgName]);
 
   return (

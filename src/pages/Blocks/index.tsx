@@ -79,6 +79,8 @@ const Blocks: React.FC = () => {
         setIsLoadingIcons(false);
       }
     }
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [scans, refetch]);
 
   const updateScanList = (project_id: string) => {
@@ -125,6 +127,8 @@ const Blocks: React.FC = () => {
     return () => {
       clearInterval(intervalId);
     };
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [scanList]);
 
   useEffect(() => {
@@ -170,6 +174,8 @@ const Blocks: React.FC = () => {
 
   useEffect(() => {
     refetch();
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [pagination]);
 
   useEffect(() => {
@@ -181,6 +187,8 @@ const Blocks: React.FC = () => {
       if (!scanDoneCount) setIsLoadingIcons(false);
       else if (scanDoneCount === iconCounter) setIsLoadingIcons(false);
     }
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [iconCounter]);
 
   const fetchScan = async () => {

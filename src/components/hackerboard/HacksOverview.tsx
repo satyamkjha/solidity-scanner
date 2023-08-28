@@ -27,7 +27,7 @@ const HacksOverview: React.FC<{ overviewData: any }> = ({ overviewData }) => {
   const [filterValue, setFilterValue] = useState("");
   const [filteredData, setFilterData] = useState<any>();
   const [isChartLoading, setIsChartLoading] = useState(true);
-  const { data, isLoading, refetch } = useHacksGraph(
+  const { data, refetch } = useHacksGraph(
     formattedDate(startDate, "2-digit", "es-CL"),
     formattedDate(endDate, "2-digit", "es-CL"),
     selectedChain
@@ -61,6 +61,8 @@ const HacksOverview: React.FC<{ overviewData: any }> = ({ overviewData }) => {
         setIsChartLoading(false);
       }
     });
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [startDate, endDate, selectedChain]);
 
   const onFilterSelect = async (

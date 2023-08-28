@@ -1,5 +1,5 @@
 import React, { ReactElement, useState } from "react";
-import { Link, useRouteMatch, useHistory } from "react-router-dom";
+import { useRouteMatch, useHistory } from "react-router-dom";
 import {
   Flex,
   Box,
@@ -33,7 +33,7 @@ import { useProfile } from "hooks/useProfile";
 import ManualAuditForm from "./manualAuditForm";
 import { ArrowBackIcon, ArrowForwardIcon } from "@chakra-ui/icons";
 import { useConfig } from "hooks/useConfig";
-import { getAssetsURL, getFeatureGateConfig } from "helpers/helperFunction";
+import { getAssetsURL } from "helpers/helperFunction";
 import { useUserRole } from "hooks/useUserRole";
 
 const Sidebar: React.FC<{
@@ -243,8 +243,10 @@ const Sidebar: React.FC<{
           </Text> */}
 
             {sidebarData.map((sidebarItem) => {
-              if (!sidebarItem.accessRevoked.includes(role))
+              if (!sidebarItem.accessRevoked.includes(role)) {
                 return <SidebarItem {...sidebarItem} />;
+              }
+              return <></>;
             })}
           </Box>
         </Flex>

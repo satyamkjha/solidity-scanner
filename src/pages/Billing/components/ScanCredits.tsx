@@ -15,8 +15,6 @@ import {
 import { Profile, Plan } from "common/types";
 import { sentenceCapitalize, getAssetsURL } from "helpers/helperFunction";
 import { ChevronUpIcon, ChevronDownIcon } from "@chakra-ui/icons";
-import API from "helpers/api";
-import { API_PATH } from "helpers/routeManager";
 import PaymentModal from "./PaymentModal";
 
 const ScanCredits: React.FC<{
@@ -37,21 +35,6 @@ const ScanCredits: React.FC<{
   const [selectedIndex, setSelectedIndex] = useState(0);
   const currentTopUpPlan = topUpData[profile.current_package];
   const creditOptions = ["00", "02", "05", "10", "20", "40", "60", "80"];
-
-  const makePament = async () => {
-    const { data, status } = await API.post<{
-      status: string;
-      checkout_url: string;
-    }>(API_PATH.API_CREATE_STRIPE_SUBSCRIPTION_BETA, {
-      package: profile.current_package,
-      duration: "topup",
-      quantity: parseInt(creditOptions[selectedIndex]),
-    });
-
-    if (status === 200) {
-      window.open(`${data.checkout_url}`, "_blank");
-    }
-  };
 
   return (
     <Flex w="100%" h={"60vh"} flexDir={["column", "column", "column", "row"]}>
