@@ -142,6 +142,21 @@ const Projects: React.FC = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [projectList]);
 
+  const fetchProjectList = async () => {
+    const { data } = await API.get(
+      `${API_PATH.API_GET_PROJECTS_BETA}?page=${1}&per_page=${
+        pagination.perPageCount
+      }`
+    );
+    if (data.data && projectList) {
+      const pList = [
+        ...data.data,
+        ...projectList.slice(pagination.perPageCount, projectList.length),
+      ];
+      setProjectList(pList);
+    }
+  };
+
   useEffect(() => {
     let listeners: { [docId: string]: Unsubscribe } = {};
 
@@ -152,6 +167,7 @@ const Projects: React.FC = () => {
           (doc) => {
             if (doc.exists()) {
               const eventData = doc.data();
+
               if (
                 ["scan_done", "download_failed", "scan_failed"].includes(
                   eventData.scan_status
@@ -235,7 +251,6 @@ const Projects: React.FC = () => {
         <Text sx={{ color: "subtle", fontWeight: 600, ml: 4 }}>PROJECTS</Text>
         {profileData && (
           <Flex ml={20} sx={{ display: ["none", "none", "flex"] }}>
-            <ProjectIcon size={37} />
             <Text fontWeight={600} fontSize="2xl" ml={4} mr={10}>
               {projectsMonitored.toLocaleString("en-US", {
                 minimumIntegerDigits: 2,
