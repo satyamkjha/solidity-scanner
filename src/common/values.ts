@@ -259,12 +259,13 @@ export const blockScans: { [key: string]: string } = {
   xdc: "XDC",
   reefscan: "Reefscan",
   nordekscan: "Nordek",
+  fuse: "Fuse",
 };
 
 export const codePlatform: {
   [key: string]: {
     platform: string;
-  dynamicString: string;
+    dynamicString: string;
   };
 } = {
   etherscan: { platform: "own", dynamicString: "#code" },
@@ -297,6 +298,7 @@ export const blockExplorer: { [key: string]: string } = {
   optimism: "Optimism",
   xdc: "(xdc.blocksscan.io)",
   reefscan: "Reefscan",
+  fuse: "Fuse",
 };
 
 export const detectorData: DetectorItemProp[] = [

@@ -191,6 +191,20 @@ const ContractForm: React.FC<{
       //   isDisabled: false,
       // },
     ],
+    fuse: [
+      {
+        value: "mainnet",
+        label: "Fuse Mainnet",
+        icon: "",
+        isDisabled: false,
+      },
+      {
+        value: "testnet",
+        label: "Fuse Testnet",
+        icon: "",
+        isDisabled: false,
+      },
+    ],
   };
 
   const options = [
@@ -276,6 +290,12 @@ const ContractForm: React.FC<{
       value: "nordekscan",
       icon: "blockscan/nordekscan",
       label: "Nordek - (nordek.io)",
+      isDisabled: true,
+    },
+    {
+      value: "fuse",
+      icon: "blockscan/fuse",
+      label: "Fuse - (explorer.fuse.io)",
       isDisabled: true,
     },
   ];
