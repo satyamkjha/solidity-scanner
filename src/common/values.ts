@@ -298,6 +298,7 @@ export const blockExplorer: { [key: string]: string } = {
   optimism: "Optimism",
   xdc: "(xdc.blocksscan.io)",
   reefscan: "Reefscan",
+  fuse: "Fuse",
 };
 
 export const detectorData: DetectorItemProp[] = [
