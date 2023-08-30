@@ -304,7 +304,7 @@ const QuickScan: React.FC = () => {
     },
     {
       value: "fuse",
-      icon: "blockscan/fuse",
+      icon: "fuse",
       label: "Fuse - (explorer.fuse.io)",
     },
   ];
