@@ -6,6 +6,7 @@ on:
 jobs:
   build:
     env:
+      ENV: ${{ vars.ENV }}
       DOCKER_COMPOSE_PATH: /home/runner/work/solidity-scanner-frontend/solidity-scanner-frontend/docker-compose.yml
       PROJECT_DIRECTORY: /home/runner/work/solidity-scanner-frontend/solidity-scanner-frontend/
 
