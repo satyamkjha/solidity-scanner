@@ -2,11 +2,20 @@ name: SolidityScan Frontend Image Build Workflow
 
 on:
   workflow_dispatch:
+    inputs:
+      ENV:
+        description: 'Build environment'
+        required: true
+        default: 'stage'
+        type: choice
+        options:
+          - stage
+          - prod
 
 jobs:
   build:
     env:
-      ENV: ${{ vars.ENV }}
+      ENV: ${{ inputs.ENV }}
       DOCKER_COMPOSE_PATH: /home/runner/work/solidity-scanner-frontend/solidity-scanner-frontend/docker-compose.yml
       PROJECT_DIRECTORY: /home/runner/work/solidity-scanner-frontend/solidity-scanner-frontend/
 
