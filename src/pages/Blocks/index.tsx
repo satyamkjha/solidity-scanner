@@ -23,6 +23,7 @@ import {
   AlertDialogContent,
   AlertDialogOverlay,
   useToast,
+  Heading,
 } from "@chakra-ui/react";
 import { LogoIcon, BlockCredit, ScanErrorIcon } from "components/icons";
 import Score from "components/score";
@@ -35,14 +36,20 @@ import { useHistory } from "react-router-dom";
 import InfiniteScroll from "react-infinite-scroll-component";
 import API from "helpers/api";
 import { API_PATH } from "helpers/routeManager";
-import { getAssetsURL, getFeatureGateConfig } from "helpers/helperFunction";
+import {
+  getAssetsURL,
+  getFeatureGateConfig,
+  snakeToNormal,
+} from "helpers/helperFunction";
 import Loader from "components/styled-components/Loader";
-import { DeleteIcon } from "@chakra-ui/icons";
+import { DeleteIcon, WarningIcon } from "@chakra-ui/icons";
 import { BsThreeDotsVertical } from "react-icons/bs";
 import { useUserRole } from "hooks/useUserRole";
 import { Unsubscribe, onSnapshot, doc } from "firebase/firestore";
 import { db } from "helpers/firebase";
 import { useQueryClient } from "react-query";
+import { scanStatesLabel } from "common/values";
+import Lottie from "lottie-react";
 
 const Blocks: React.FC = () => {
   const [isDesktopView] = useMediaQuery("(min-width: 1920px)");
@@ -61,7 +68,12 @@ const Blocks: React.FC = () => {
   const [scanList, setScanList] = useState<Scan[]>();
   const [isLoadingIcons, setIsLoadingIcons] = useState(true);
   const [iconCounter, setIconCounter] = useState<number>(0);
-  const [scanInProgress, setScanInProgress] = useState<string[]>([]);
+  const [scanInProgress, setScanInProgress] = useState<
+    {
+      scanId: string;
+      scanStatus: string;
+    }[]
+  >([]);
 
   useEffect(() => {
     if (scans) {
@@ -79,7 +91,6 @@ const Blocks: React.FC = () => {
         setIsLoadingIcons(false);
       }
     }
-
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [scans, refetch]);
 
@@ -101,13 +112,19 @@ const Blocks: React.FC = () => {
         scanList.some(({ scan_status }) => scan_status !== "scan_done")
       ) {
         if (getFeatureGateConfig().event_consumption_enabled) {
-          const scanningScanIds: string[] = scanList
-            .filter(
-              (scan) =>
-                scan.multi_file_scan_status === "scanning" ||
-                scan.multi_file_scan_status === "initialised"
+          const scanningScanIds: {
+            scanId: string;
+            scanStatus: string;
+          }[] = scanList
+            .filter((scan) =>
+              ["initialised", "downloaded", "scanning"].includes(
+                scan.multi_file_scan_status
+              )
             )
-            .map((scan) => scan.project_id);
+            .map((scan) => ({
+              scanId: scan.scan_id,
+              scanStatus: scan.multi_file_scan_status,
+            }));
           setScanInProgress(scanningScanIds);
         } else {
           intervalId = setInterval(async () => {
@@ -135,9 +152,9 @@ const Blocks: React.FC = () => {
     let listeners: { [docId: string]: Unsubscribe } = {};
 
     if (scanInProgress && scanInProgress.length) {
-      scanInProgress.forEach((docId) => {
-        listeners[docId] = onSnapshot(
-          doc(db, "scan_events", docId),
+      scanInProgress.forEach((scanItem) => {
+        listeners[scanItem.scanId] = onSnapshot(
+          doc(db, "scan_events", scanItem.scanId),
           (doc) => {
             if (doc.exists()) {
               const eventData = doc.data();
@@ -147,12 +164,12 @@ const Blocks: React.FC = () => {
                 )
               ) {
                 // Unsubscribe and remove the listener
-                listeners[docId]();
-                delete listeners[docId];
+                listeners[scanItem.scanId]();
+                delete listeners[scanItem.scanId];
 
                 // Update the state to remove the successful scan
                 const updatedScanningScanIds = scanInProgress.filter(
-                  (scanId) => scanId !== docId
+                  (item) => scanItem.scanId !== item.scanId
                 );
                 setScanInProgress(updatedScanningScanIds);
                 fetchScan();
@@ -319,6 +336,7 @@ const Blocks: React.FC = () => {
                 setIconCounter={setIconCounter}
                 updateScanList={updateScanList}
                 isViewer={role === "viewer"}
+                scanInProgress={scanInProgress}
               />
             ))}
           </InfiniteScroll>
@@ -333,7 +351,11 @@ const BlockCard: React.FC<{
   setIconCounter: Dispatch<SetStateAction<number>>;
   updateScanList: (project_id: string) => void;
   isViewer: boolean;
-}> = ({ scan, setIconCounter, updateScanList, isViewer }) => {
+  scanInProgress: {
+    scanId: string;
+    scanStatus: string;
+  }[];
+}> = ({ scan, setIconCounter, updateScanList, isViewer, scanInProgress }) => {
   const {
     scan_status,
     project_name,
@@ -377,6 +399,28 @@ const BlockCard: React.FC<{
     onClose();
     updateScanList(project_id);
   };
+
+  const [scanStatus, setScanStatus] = useState("");
+
+  const [ssIconAnimation, setSsIconAniamtion] = useState<any>(null);
+
+  useEffect(() => {
+    getSsIconAnimationFromUrl();
+  }, []);
+
+  const getSsIconAnimationFromUrl = async () => {
+    const response = await fetch(`${assetsURL}icons/ss_icon_animation.json`);
+    const jsonData = await response.json();
+    setSsIconAniamtion(jsonData);
+  };
+
+  useEffect(() => {
+    scanInProgress.forEach((scanItem) => {
+      if (scanItem.scanId === scan.scan_id) {
+        setScanStatus(scanItem.scanStatus);
+      }
+    });
+  }, [scanInProgress]);
 
   const { isOpen, onClose, onOpen } = useDisclosure();
 
@@ -529,9 +573,17 @@ const BlockCard: React.FC<{
               borderRadius: 15,
             }}
           >
-            <LogoIcon size={15} />
+            {ssIconAnimation && (
+              <Lottie
+                style={{
+                  height: "30px",
+                  width: "30px",
+                }}
+                animationData={ssIconAnimation}
+              />
+            )}
             <Text mx={2} fontSize="sm">
-              Scan in progress
+              {scanStatesLabel[scanStatus]}
             </Text>
           </Flex>
           <Progress value={20} isIndeterminate size="xs" />
@@ -539,20 +591,23 @@ const BlockCard: React.FC<{
       ) : (
         <Box
           sx={{
-            p: 5,
-            pl: 10,
-            backgroundColor: "high-subtle",
-            position: "relative",
-            borderBottomRadius: 15,
+            p: 3,
+            m: 3,
+            h: "fit-content",
+            borderRadius: 5,
+            backgroundColor: "#FCFCFF",
           }}
         >
-          <Box position="absolute" transform="translate3d(-30px, -34px,0)">
-            <ScanErrorIcon size={28} />
-          </Box>
-          <Text sx={{ fontSize: "xs", color: "#FF5630", h: "46px" }}>
-            {scan_status === "download_failed"
-              ? "This scan has failed, lost credit will be reimbursed in a few minutes. Please contact support"
-              : scan_status}
+          <HStack mb={2}>
+            <WarningIcon color="#FF5630" />
+            <Heading sx={{ fontSize: "sm", color: "#FF5630" }}>
+              {snakeToNormal(multi_file_scan_status)}
+            </Heading>
+          </HStack>
+          <Text sx={{ fontSize: "xs", color: "#4E5D78" }}>
+            {scan.scan_message
+              ? scan.scan_message
+              : "This scan has failed, lost credit will be reimbursed in a few minutes. Please contact support"}
           </Text>
         </Box>
       )}

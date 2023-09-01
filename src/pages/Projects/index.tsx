@@ -21,7 +21,9 @@ import {
   MenuList,
   IconButton,
   useToast,
+  Heading,
 } from "@chakra-ui/react";
+import Lottie from "lottie-react";
 import {
   LogoIcon,
   ProjectIcon,
@@ -33,7 +35,7 @@ import VulnerabilityDistribution from "components/vulnDistribution";
 import API from "helpers/api";
 import { Page, Pagination, Project } from "common/types";
 import { timeSince } from "common/functions";
-import { DeleteIcon } from "@chakra-ui/icons";
+import { DeleteIcon, WarningIcon } from "@chakra-ui/icons";
 import { BsThreeDotsVertical } from "react-icons/bs";
 import { useProjects } from "hooks/useProjects";
 import { useProfile } from "hooks/useProfile";
@@ -43,7 +45,12 @@ import Loader from "components/styled-components/Loader";
 import { useUserRole } from "hooks/useUserRole";
 import { onSnapshot, doc, Unsubscribe } from "firebase/firestore";
 import { db } from "helpers/firebase";
-import { getFeatureGateConfig } from "helpers/helperFunction";
+import {
+  getFeatureGateConfig,
+  snakeToNormal,
+  getAssetsURL,
+} from "helpers/helperFunction";
+import { scanStatesLabel } from "common/values";
 
 const Projects: React.FC = () => {
   const [isDesktopView] = useMediaQuery("(min-width: 1920px)");
@@ -59,7 +66,12 @@ const Projects: React.FC = () => {
   const { data: projects, refetch } = useProjects(pagination);
   const [projectList, setProjectList] = useState<Project[]>();
   const [projectsMonitored, setProjectsMonitored] = useState(0);
-  const [projectsInScanning, setProjectsInScanning] = useState<string[]>([]);
+  const [projectsInScanning, setProjectsInScanning] = useState<
+    {
+      scanId: string;
+      scanStatus: string;
+    }[]
+  >([]);
 
   const { data: profileData, refetch: refetchProfile } = useProfile();
 
@@ -99,12 +111,19 @@ const Projects: React.FC = () => {
         )
       ) {
         if (getFeatureGateConfig().event_consumption_enabled) {
-          const scanningScanIds: string[] = projectList
-            .filter(
-              (project) =>
-                project._latest_scan.multi_file_scan_status === "scanning"
+          const scanningScanIds: {
+            scanId: string;
+            scanStatus: string;
+          }[] = projectList
+            .filter((project) =>
+              ["initialised", "downloaded", "scanning"].includes(
+                project._latest_scan.multi_file_scan_status
+              )
             )
-            .map((project) => project._latest_scan.scan_id);
+            .map((project) => ({
+              scanId: project._latest_scan.scan_id,
+              scanStatus: project._latest_scan.multi_file_scan_status,
+            }));
           setProjectsInScanning(scanningScanIds);
         } else {
           intervalId = setInterval(async () => {
@@ -142,28 +161,43 @@ const Projects: React.FC = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [projectList]);
 
+  const fetchProjectList = async () => {
+    const { data } = await API.get(
+      `${API_PATH.API_GET_PROJECTS_BETA}?page=${1}&per_page=${
+        pagination.perPageCount
+      }`
+    );
+    if (data.data && projectList) {
+      const pList = [
+        ...data.data,
+        ...projectList.slice(pagination.perPageCount, projectList.length),
+      ];
+      setProjectList(pList);
+    }
+  };
+
   useEffect(() => {
     let listeners: { [docId: string]: Unsubscribe } = {};
-
     if (projectsInScanning && projectsInScanning.length) {
-      projectsInScanning.forEach((docId) => {
-        listeners[docId] = onSnapshot(
-          doc(db, "scan_events", docId),
+      projectsInScanning.forEach((projectItem) => {
+        listeners[projectItem.scanId] = onSnapshot(
+          doc(db, "scan_events", projectItem.scanId),
           (doc) => {
             if (doc.exists()) {
               const eventData = doc.data();
+
               if (
                 ["scan_done", "download_failed", "scan_failed"].includes(
                   eventData.scan_status
                 )
               ) {
                 // Unsubscribe and remove the listener
-                listeners[docId]();
-                delete listeners[docId];
+                listeners[projectItem.scanId]();
+                delete listeners[projectItem.scanId];
 
                 // Update the state to remove the successful project scan
                 const updatedScanningScanIds = projectsInScanning.filter(
-                  (scanId) => scanId !== docId
+                  (scanItem) => scanItem.scanId !== projectItem.scanId
                 );
                 setProjectsInScanning(updatedScanningScanIds);
                 fetchProjectList();
@@ -307,6 +341,7 @@ const Projects: React.FC = () => {
                 refetch={refetch}
                 updateProjectList={updateProjectList}
                 isViewer={role === "viewer"}
+                projectsInScanning={projectsInScanning}
               />
             ))}
           </InfiniteScroll>
@@ -322,7 +357,18 @@ const ProjectCard: React.FC<{
   refetchProfile: any;
   updateProjectList: (project_id: string) => void;
   isViewer: boolean;
-}> = ({ project, refetch, refetchProfile, updateProjectList, isViewer }) => {
+  projectsInScanning: {
+    scanId: string;
+    scanStatus: string;
+  }[];
+}> = ({
+  project,
+  refetch,
+  refetchProfile,
+  updateProjectList,
+  isViewer,
+  projectsInScanning,
+}) => {
   const [isOpen, setIsOpen] = useState(false);
   const toast = useToast();
   const [isRescanLoading, setRescanLoading] = useState(false);
@@ -343,6 +389,7 @@ const ProjectCard: React.FC<{
     _latest_scan;
 
   const onClose = () => setIsOpen(false);
+  const assetsURL = getAssetsURL();
 
   const rescan = async () => {
     setRescanLoading(true);
@@ -355,6 +402,28 @@ const ProjectCard: React.FC<{
     refetchProfile();
     onClose();
   };
+
+  const [ssIconAnimation, setSsIconAniamtion] = useState<any>(null);
+
+  useEffect(() => {
+    getSsIconAnimationFromUrl();
+  }, []);
+
+  const getSsIconAnimationFromUrl = async () => {
+    const response = await fetch(`${assetsURL}icons/ss_icon_animation.json`);
+    const jsonData = await response.json();
+    setSsIconAniamtion(jsonData);
+  };
+
+  const [scanStatus, setScanStatus] = useState("");
+
+  useEffect(() => {
+    projectsInScanning.forEach((projectItem) => {
+      if (projectItem.scanId === project._latest_scan.scan_id) {
+        setScanStatus(projectItem.scanStatus);
+      }
+    });
+  }, [projectsInScanning]);
 
   const [open, setOpen] = useState(false);
   const deleteProject = async () => {
@@ -548,16 +617,23 @@ const ProjectCard: React.FC<{
               <Flex
                 sx={{
                   display: "inline-flex",
-                  bg: "bg.subtle",
                   alignItems: "center",
                   p: 2,
                   mb: 2,
                   borderRadius: 15,
                 }}
               >
-                <LogoIcon size={15} />
+                {ssIconAnimation && (
+                  <Lottie
+                    style={{
+                      height: "30px",
+                      width: "30px",
+                    }}
+                    animationData={ssIconAnimation}
+                  />
+                )}
                 <Text mx={2} fontSize="sm">
-                  Scan in progress
+                  {scanStatesLabel[scanStatus]}
                 </Text>
               </Flex>
               <Progress value={20} isIndeterminate size="xs" />
@@ -565,7 +641,7 @@ const ProjectCard: React.FC<{
           )}
         </Flex>
       ) : (
-        <Box
+        <Flex
           onClick={() => {
             history.push(`/projects/${project_id}/${_latest_scan.scan_id}`);
           }}
@@ -574,7 +650,6 @@ const ProjectCard: React.FC<{
             my: 4,
             mx: 4,
             borderRadius: 15,
-
             h: "230px",
             bg: "white",
             transition: "0.3s box-shadow",
@@ -583,6 +658,8 @@ const ProjectCard: React.FC<{
               boxShadow: "0px 4px 24px rgba(0, 0, 0, 0.2)",
             },
             overflow: "hidden",
+            flexDir: "column",
+            justifyContent: "space-between",
           }}
           onMouseOver={() => setHover(true)}
           onMouseLeave={() => setHover(false)}
@@ -591,100 +668,99 @@ const ProjectCard: React.FC<{
         >
           <Flex
             sx={{
-              flexDir: "column",
-              justifyContent: "space-between",
-              h: "144px",
+              h: "fit-content",
               pt: 5,
               w: "100%",
             }}
+            w="100%"
+            alignItems="flex-start"
+            justifyContent="space-between"
           >
-            <Flex
-              w="100%"
-              alignItems="flex-start"
-              justifyContent="space-between"
-            >
-              <Box px={4}>
-                <Text isTruncated>{project_name}</Text>
-                <Text sx={{ fontSize: "sm", color: "subtle" }}>
-                  Last scanned {timeSince(new Date(date_updated))}
-                </Text>
-              </Box>
-              <HStack mr={hover ? 2 : 9} alignItems="flex-start">
-                {project.project_url !== "File Scan" && (
-                  <Tooltip label="Rescan" aria-label="A tooltip" mt={2}>
-                    <Button
-                      size="sm"
-                      colorScheme="white"
-                      height="58px"
-                      width="58px"
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        setIsOpen(true);
-                      }}
-                      transition="0.3s opacity"
-                      _hover={{ opacity: scans_remaining === 0 ? 0.4 : 0.9 }}
-                      isDisabled={scans_remaining === 0 || isViewer}
-                    >
-                      <Flex sx={{ flexDir: "column", alignItems: "center" }}>
-                        <RescanIcon size={60} />
-                      </Flex>
-                    </Button>
-                  </Tooltip>
-                )}
-                {hover && !isViewer && (
-                  <Menu placement={"bottom-end"}>
-                    <MenuButton
-                      zIndex={10}
-                      as={IconButton}
-                      backgroundColor="#FFFFFF"
+            <Box px={4}>
+              <Text isTruncated>{project_name}</Text>
+              <Text sx={{ fontSize: "sm", color: "subtle" }}>
+                Last scanned {timeSince(new Date(date_updated))}
+              </Text>
+            </Box>
+            <HStack mr={hover ? 2 : 9} alignItems="flex-start">
+              {project.project_url !== "File Scan" && (
+                <Tooltip label="Rescan" aria-label="A tooltip" mt={2}>
+                  <Button
+                    size="sm"
+                    colorScheme="white"
+                    height="58px"
+                    width="58px"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      setIsOpen(true);
+                    }}
+                    transition="0.3s opacity"
+                    _hover={{ opacity: scans_remaining === 0 ? 0.4 : 0.9 }}
+                    isDisabled={scans_remaining === 0 || isViewer}
+                  >
+                    <Flex sx={{ flexDir: "column", alignItems: "center" }}>
+                      <RescanIcon size={60} />
+                    </Flex>
+                  </Button>
+                </Tooltip>
+              )}
+              {hover && !isViewer && (
+                <Menu placement={"bottom-end"}>
+                  <MenuButton
+                    zIndex={10}
+                    as={IconButton}
+                    backgroundColor="#FFFFFF"
+                    _hover={{ backgroundColor: "#FFFFFF" }}
+                    _active={{ backgroundColor: "#FFFFFF" }}
+                    icon={<BsThreeDotsVertical />}
+                    w={5}
+                    minW={5}
+                    aria-label="Options"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                    }}
+                  />
+                  <MenuList
+                    sx={{
+                      boxShadow: "0px 4px 24px rgba(0, 0, 0, 0.2)",
+                    }}
+                  >
+                    <MenuItem
+                      _focus={{ backgroundColor: "#FFFFFF" }}
                       _hover={{ backgroundColor: "#FFFFFF" }}
-                      _active={{ backgroundColor: "#FFFFFF" }}
-                      icon={<BsThreeDotsVertical />}
-                      w={5}
-                      minW={5}
-                      aria-label="Options"
+                      icon={<DeleteIcon />}
                       onClick={(e) => {
                         e.stopPropagation();
-                      }}
-                    />
-                    <MenuList
-                      sx={{
-                        boxShadow: "0px 4px 24px rgba(0, 0, 0, 0.2)",
+                        setOpen(true);
                       }}
                     >
-                      <MenuItem
-                        _focus={{ backgroundColor: "#FFFFFF" }}
-                        _hover={{ backgroundColor: "#FFFFFF" }}
-                        icon={<DeleteIcon />}
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          setOpen(true);
-                        }}
-                      >
-                        Delete Project
-                      </MenuItem>
-                    </MenuList>
-                  </Menu>
-                )}
-              </HStack>
-            </Flex>
+                      Delete Project
+                    </MenuItem>
+                  </MenuList>
+                </Menu>
+              )}
+            </HStack>
           </Flex>
           <Box
             sx={{
-              p: 5,
-              pl: 10,
-              backgroundColor: "high-subtle",
-              position: "relative",
+              p: 3,
+              m: 3,
+              h: "fit-content",
+              borderRadius: 5,
+              backgroundColor: "#FCFCFF",
             }}
           >
-            <Box position="absolute" transform="translate3d(-30px, -34px,0)">
-              <ScanErrorIcon size={28} />
-            </Box>
-            <Text sx={{ fontSize: "xs", color: "#FF5630", h: "46px" }}>
+            <HStack mb={2}>
+              <WarningIcon color="#FF5630" />
+              <Heading sx={{ fontSize: "sm", color: "#FF5630" }}>
+                {snakeToNormal(multi_file_scan_status)}
+              </Heading>
+            </HStack>
+            <Text sx={{ fontSize: "xs", color: "#4E5D78" }}>
               {scan_message}
             </Text>
           </Box>
-        </Box>
+        </Flex>
       )}
       <AlertDialog isOpen={open} onClose={() => setOpen(false)}>
         <AlertDialogOverlay>
