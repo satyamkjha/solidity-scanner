@@ -2,12 +2,22 @@ name: SolidityScan Frontend Image Build Workflow
 
 on:
   workflow_dispatch:
+    inputs:
+      ENV:
+        description: "Build environment"
+        required: true
+        default: "stage"
+        type: choice
+        options:
+          - stage
+          - prod
 
 jobs:
   build:
     env:
-      DOCKER_COMPOSE_PATH: /home/runner/work/solidity-scanner-frontend/docker-compose.yml
-      PROJECT_DIRECTORY: /home/runner/work/solidity-scanner-frontend/
+      ENV: ${{ inputs.ENV }}
+      DOCKER_COMPOSE_PATH: /home/runner/work/solidity-scanner-frontend/solidity-scanner-frontend/docker-compose.yml
+      PROJECT_DIRECTORY: /home/runner/work/solidity-scanner-frontend/solidity-scanner-frontend/
 
     runs-on: ubuntu-latest
 
@@ -25,13 +35,11 @@ jobs:
       - name: Cloning files from S3
         run: |
           aws s3 cp s3://credshields-dev/env_file/frontend.env ${PROJECT_DIRECTORY}/.env
-
       - name: Logging in on aws ecr
         run: aws ecr get-login-password --region us-east-2 | docker login --username AWS --password-stdin 132830644905.dkr.ecr.us-east-2.amazonaws.com
 
       - name: Build the Docker image
         run: |
           docker-compose -f ${DOCKER_COMPOSE_PATH} build
-
       - name: Pusing created images to ECR
         run: docker-compose -f ${DOCKER_COMPOSE_PATH} push
