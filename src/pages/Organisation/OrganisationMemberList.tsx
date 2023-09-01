@@ -26,6 +26,7 @@ import InviteMemberForm from "./InviteMemberForm";
 import TeamMemberItem from "./TeamMemberItem";
 import { UserOrgItem } from "common/types";
 import { useOrgUsersList } from "hooks/useOrgUsersList";
+import { monthNames } from "common/values";
 
 const OrganisationMemberList: React.FC<{
   hasAccess: boolean;
@@ -190,9 +191,10 @@ const OrganisationMemberList: React.FC<{
             </HStack>
             <Text fontWeight={700} fontSize={"sm"} color="#B0B7C3">
               {isDesktopView ? "|" : ""}{" "}
-              {`Created at ${joinedAtDate.getDate()} ${
-                monthNames[joinedAtDate.getMonth()]
-              } ${joinedAtDate.getFullYear()}`}
+              {joinedAtDate &&
+                `Created at ${joinedAtDate.getDate()} ${
+                  monthNames[joinedAtDate.getMonth()]
+                } ${joinedAtDate.getFullYear()}`}
             </Text>
           </Flex>
         </Flex>

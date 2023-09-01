@@ -269,7 +269,6 @@ const Projects: React.FC = () => {
         <Text sx={{ color: "subtle", fontWeight: 600, ml: 4 }}>PROJECTS</Text>
         {profileData && (
           <Flex ml={20} sx={{ display: ["none", "none", "flex"] }}>
-            <ProjectIcon size={37} />
             <Text fontWeight={600} fontSize="2xl" ml={4} mr={10}>
               {projectsMonitored.toLocaleString("en-US", {
                 minimumIntegerDigits: 2,
