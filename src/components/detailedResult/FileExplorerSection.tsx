@@ -7,7 +7,6 @@ import {
   Icon,
   Image,
   Stack,
-  useMediaQuery,
   IconButton,
   Tooltip,
   useDisclosure,

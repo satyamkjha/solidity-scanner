@@ -72,7 +72,11 @@ export default function ProductOverview() {
           alignItems="center"
           py={[5, 5, 10]}
           px={[0, 0, 0, 24]}
-          flexDir={["column", "column", index % 2 == 0 ? "row" : "row-reverse"]}
+          flexDir={[
+            "column",
+            "column",
+            index % 2 === 0 ? "row" : "row-reverse",
+          ]}
           textAlign={["center", "center", "left"]}
         >
           <Box width={["100%", "100%", "50%"]} p={[5, 5, 5, 10]}>
@@ -122,7 +126,7 @@ export function OverviewSkeleton() {
             px={[0, 0, 0, 24]}
             w="100%"
             flexDir={
-              index % 2 == 0
+              index % 2 === 0
                 ? ["column", "column", "column", "row"]
                 : ["column", "column", "column", "row-reverse"]
             }

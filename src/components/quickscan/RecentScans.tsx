@@ -52,6 +52,8 @@ export default function RecentScans() {
       const refSession = sessionStorage.getItem("ref");
       runRecentQuickScan(refSession);
     }
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const runRecentQuickScan = async (

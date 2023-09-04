@@ -1,7 +1,7 @@
 import { useQuery } from "react-query";
 
 import API from "helpers/api";
-import { Report, Pagination } from "common/types";
+import { Pagination } from "common/types";
 import { API_PATH } from "helpers/routeManager";
 
 const getHacks = async (

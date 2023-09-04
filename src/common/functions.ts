@@ -1,6 +1,8 @@
 import Auth from "helpers/auth";
 import { QueryClient } from "react-query";
 import { Organization, OrgUserRole } from "./types";
+import { auth } from "helpers/firebase";
+import { signOut } from "firebase/auth";
 
 export const capitalize = (text: string): string => {
   return text.charAt(0).toUpperCase() + text.toLowerCase().slice(1);
@@ -68,6 +70,7 @@ export const getBugStatusNumber = (bug_status: string) => {
 };
 
 export const onLogout = (history: any, queryClient: QueryClient) => {
+  signOut(auth);
   Auth.deauthenticateUser();
   history.push("/signin");
   queryClient.clear();

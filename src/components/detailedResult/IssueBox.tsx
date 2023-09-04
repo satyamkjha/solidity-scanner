@@ -15,7 +15,7 @@ import {
   MultiFileTemplateDetail,
 } from "common/types";
 import React, { Dispatch, SetStateAction, useEffect, useState } from "react";
-import DetailedResult, { FileExplorerSection } from "./FileExplorerSection";
+import { FileExplorerSection } from "./FileExplorerSection";
 import { MultifileIcon } from "../icons";
 import InputCheckbox from "../styled-components/inputCheckbox";
 import { getAssetsURL } from "helpers/helperFunction";
@@ -69,6 +69,8 @@ const IssueBox: React.FC<{
 
   useEffect(() => {
     updateBugHashList(metric_wise_aggregated_finding.bug_hash, isChecked);
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isChecked]);
 
   useEffect(() => {
@@ -136,7 +138,7 @@ const IssueBox: React.FC<{
               {metric_wise_aggregated_finding.findings.length > 1 && (
                 <HStack
                   mr={
-                    metric_wise_aggregated_finding.bug_status == "pending_fix"
+                    metric_wise_aggregated_finding.bug_status === "pending_fix"
                       ? 8
                       : 0
                   }
@@ -208,7 +210,7 @@ const IssueBox: React.FC<{
                     {metric_wise_aggregated_finding.findings.length > 1 && (
                       <HStack
                         mr={
-                          metric_wise_aggregated_finding.bug_status ==
+                          metric_wise_aggregated_finding.bug_status ===
                           "pending_fix"
                             ? 8
                             : 0

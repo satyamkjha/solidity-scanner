@@ -8,7 +8,7 @@ import {
   Grid,
   Switch,
 } from "@chakra-ui/react";
-import { PricingData } from "common/types";
+import { PricingData, Profile } from "common/types";
 import { pricing_table_data } from "common/values";
 import { getAssetsURL } from "helpers/helperFunction";
 import { useHistory } from "react-router-dom";
@@ -21,8 +21,8 @@ const PricingTable = lazy(() => import("./pricingTable"));
 const PricingDetails: React.FC<{
   pricingDetails: PricingData;
   page: "billing" | "pricing";
-  currentPackage?: string;
-}> = ({ pricingDetails, page, currentPackage }) => {
+  profileData?: Profile;
+}> = ({ pricingDetails, page, profileData }) => {
   const assetsURL = getAssetsURL();
   const history = useHistory();
   const [selectedPlan, setSelectedPlan] = useState("");
@@ -220,34 +220,38 @@ const PricingDetails: React.FC<{
           gap={page === "pricing" ? 6 : 4}
         >
           {Object.keys(pricingDetails.pricing_data["ondemand"]).map((plan) => {
-            if (plan !== "custom" && plan !== "trial")
+            if (plan !== "custom" && plan !== "trial") {
               return (
                 <PricingCard
                   page={page}
                   globalDuration={"ondemand"}
                   plan={plan}
-                  currentPackage={currentPackage}
+                  profileData={profileData}
                   selectedPlan={selectedPlan}
                   setSelectedPlan={setSelectedPlan}
                   pricingDetails={pricingDetails.pricing_data}
                 />
               );
+            }
+            return <></>;
           })}
           {Object.keys(pricingDetails.pricing_data[duration])
             .sort((a, b) => a[0].localeCompare(b[0]))
             .map((plan) => {
-              if (plan !== "custom" && plan !== "trial")
+              if (plan !== "custom" && plan !== "trial") {
                 return (
                   <PricingCard
                     page={page}
                     globalDuration={duration}
                     plan={plan}
-                    currentPackage={currentPackage}
+                    profileData={profileData}
                     selectedPlan={selectedPlan}
                     setSelectedPlan={setSelectedPlan}
                     pricingDetails={pricingDetails.pricing_data}
                   />
                 );
+              }
+              return <></>;
             })}
         </Grid>
       </Flex>

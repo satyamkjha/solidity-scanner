@@ -225,6 +225,9 @@ export const ManualAuditForm: React.FC<{ onClose(): any; isOpen: boolean }> = ({
                       fontSize={"md"}
                       fontWeight={500}
                       type="submit"
+                      onClick={() => {
+                        onSubmit();
+                      }}
                     >
                       {!loading ? "Submit" : <Loader size={30} color="white" />}
                     </Button>

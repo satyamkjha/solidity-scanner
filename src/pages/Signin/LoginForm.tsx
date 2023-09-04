@@ -1,39 +1,24 @@
-import React, { useEffect, useState } from "react";
-import { Link as RouterLink, useHistory, useLocation } from "react-router-dom";
+import React, { useState } from "react";
+import { Link as RouterLink, useHistory } from "react-router-dom";
 import {
   Flex,
-  Heading,
   Stack,
-  Text,
   Button,
   Icon,
   InputGroup,
   InputLeftElement,
   Input,
   Link,
-  Box,
-  useToast,
   InputRightElement,
-  HStack,
-  Divider,
-  Image,
 } from "@chakra-ui/react";
 import { FiAtSign } from "react-icons/fi";
 import { FaLock } from "react-icons/fa";
-import { useConfig } from "hooks/useConfig";
-import { Logo } from "components/icons";
-import { getAssetsURL } from "helpers/helperFunction";
 import API from "helpers/api";
 import Auth from "helpers/auth";
 import { AuthResponse } from "common/types";
 import { ViewIcon, ViewOffIcon } from "@chakra-ui/icons";
-import MetaMaskLogin from "pages/Signin/MetamaskSignin";
 import { API_PATH } from "helpers/routeManager";
-import GoogleSignIn from "pages/Signin/GoogleSignin";
-import {
-  getFeatureGateConfig,
-  getReCaptchaHeaders,
-} from "helpers/helperFunction";
+import { getReCaptchaHeaders } from "helpers/helperFunction";
 import Loader from "components/styled-components/Loader";
 import { useForm } from "react-hook-form";
 import { isEmail } from "helpers/helperFunction";
@@ -41,7 +26,6 @@ import { isEmail } from "helpers/helperFunction";
 const LoginForm: React.FC = () => {
   const [show, setShow] = useState(false);
   const history = useHistory();
-
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [isLoading, setIsLoading] = useState(false);
@@ -66,7 +50,7 @@ const LoginForm: React.FC = () => {
           if (res.data.status === "success") {
             Auth.authenticateUser();
             history.push("/home");
-          }
+        }
         }
         setIsLoading(false);
       },

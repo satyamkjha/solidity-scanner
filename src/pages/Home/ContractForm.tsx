@@ -17,7 +17,6 @@ import {
 } from "@chakra-ui/react";
 import { AiOutlineProject } from "react-icons/ai";
 import API from "helpers/api";
-import { useProfile } from "hooks/useProfile";
 import { useSupportedChains } from "hooks/useSupportedPlatforms";
 import { getFeatureGateConfig } from "helpers/helperFunction";
 import Select from "react-select";
@@ -192,6 +191,20 @@ const ContractForm: React.FC<{
       //   isDisabled: false,
       // },
     ],
+    fuse: [
+      {
+        value: "mainnet",
+        label: "Fuse Mainnet",
+        icon: "",
+        isDisabled: false,
+      },
+      {
+        value: "testnet",
+        label: "Fuse Testnet",
+        icon: "",
+        isDisabled: false,
+      },
+    ],
   };
 
   const options = [
@@ -277,6 +290,12 @@ const ContractForm: React.FC<{
       value: "nordekscan",
       icon: "blockscan/nordekscan",
       label: "Nordek - (nordek.io)",
+      isDisabled: true,
+    },
+    {
+      value: "fuse",
+      icon: "blockscan/fuse",
+      label: "Fuse - (explorer.fuse.io)",
       isDisabled: true,
     },
   ];

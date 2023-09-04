@@ -20,7 +20,7 @@ import {
 } from "@chakra-ui/react";
 import { GiHamburgerMenu } from "react-icons/gi";
 import { BiUser, BiPowerOff } from "react-icons/bi";
-import { getAssetsURL } from "helpers/helperFunction";
+import { getAssetsURL, getFeatureGateConfig } from "helpers/helperFunction";
 import Sidebar from "components/sidebar";
 import { ProfileIconOne } from "components/icons";
 import { useProfile } from "hooks/useProfile";
@@ -35,6 +35,8 @@ import { useQueryClient } from "react-query";
 import { onLogout } from "common/functions";
 import { sentenceCapitalize } from "helpers/helperFunction";
 import { useUserOrgProfile } from "hooks/useUserOrgProfile";
+import { signInWithCustomToken, User, onAuthStateChanged } from "firebase/auth";
+import { auth } from "helpers/firebase";
 
 const MotionFlex = motion(Flex);
 
@@ -44,6 +46,8 @@ const Layout: React.FC = ({ children }) => {
   const ref = useRef<HTMLDivElement>(null);
   const history = useHistory();
   const queryClient = useQueryClient();
+  const [firebaseToken, setFirebaseToken] = useState<string>();
+  const [firebaseUser, setFirebaseUser] = useState<User>();
   const { data: profileData } = useProfile();
   const { data: orgProfile } = useUserOrgProfile(
     profileData?.logged_in_via === "org_login"
@@ -69,6 +73,41 @@ const Layout: React.FC = ({ children }) => {
       onLogout(history, queryClient);
     }
   };
+
+  const getFirebaseToken = async () => {
+    const { data } = await API.get<{ token: string }>(
+      API_PATH.API_CREATE_FIREBASE_TOKEN
+    );
+    if (data && data.token) setFirebaseToken(data.token);
+  };
+
+  useEffect(() => {
+    if (getFeatureGateConfig().event_consumption_enabled) {
+      const unsubscribe = onAuthStateChanged(auth, async (user) => {
+        if (user) {
+          const idTokenResult = await user.getIdTokenResult();
+          setFirebaseToken(idTokenResult.token);
+        } else {
+          getFirebaseToken();
+        }
+      });
+      return () => {
+        unsubscribe();
+      };
+    }
+  }, []);
+
+  useEffect(() => {
+    if (firebaseToken && !auth.currentUser) {
+      signInWithCustomToken(auth, firebaseToken)
+        .then((userCredential) => {
+          setFirebaseUser(userCredential.user);
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    }
+  }, [firebaseToken]);
 
   useEffect(() => {
     if (showSidebar) {

@@ -1,4 +1,4 @@
-import { Button, Image, useDisclosure } from "@chakra-ui/react";
+import { Image, useDisclosure } from "@chakra-ui/react";
 import API from "helpers/api";
 import Auth from "helpers/auth";
 import {
@@ -8,10 +8,9 @@ import {
   getAssetsURL,
 } from "helpers/helperFunction";
 import { API_PATH } from "helpers/routeManager";
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { useHistory } from "react-router-dom";
 import { useConfig } from "hooks/useConfig";
-import Loader from "../../components/styled-components/Loader";
 import { useMetaMask } from "metamask-react";
 import StyledButton from "components/styled-components/StyledButton";
 import MetamaskInstallModal from "./MetamaskInstallModal";
@@ -22,8 +21,8 @@ const MetaMaskLogin: React.FC = () => {
   const history = useHistory();
   const { isOpen, onClose, onOpen } = useDisclosure();
   const [isLoading, setIsLoading] = useState(false);
-  const [connected, setConnected] = useState(false);
   const { status, connect, ethereum } = useMetaMask();
+
   const connectToMetamask = async () => {
     setIsLoading(true);
     setTimeout(() => setIsLoading(false), 2000);

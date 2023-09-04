@@ -58,6 +58,8 @@ const HacksExplorer: React.FC<{ overviewData: any }> = ({ overviewData }) => {
 
   useEffect(() => {
     updateHacks();
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [data]);
 
   useEffect(() => {
@@ -84,6 +86,8 @@ const HacksExplorer: React.FC<{ overviewData: any }> = ({ overviewData }) => {
     debounceSearch();
 
     return () => clearTimeout(debounceTimer);
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [searchTerm]);
 
   const handlePageChange = (page: number) => {

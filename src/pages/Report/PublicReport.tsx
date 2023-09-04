@@ -5,13 +5,10 @@ import { PrintContainer } from "./PrintContainer";
 import { usePublicReport } from "hooks/usePublicReport";
 import { useReactToPrint } from "react-to-print";
 import { DownloadIcon } from "@chakra-ui/icons";
-import { getFeatureGateConfig } from "helpers/helperFunction";
-import { useConfig } from "hooks/useConfig";
 import Loader from "components/styled-components/Loader";
 import { ReportContainer } from "./ReportContainer";
 
 export default function ReportPage() {
-  const config: any = useConfig();
   const { reportId, projectType } = useParams<{
     reportId: ScrollSetting;
     projectType: string;

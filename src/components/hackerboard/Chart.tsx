@@ -145,6 +145,8 @@ const Chart: React.FC<{
     if (selectedFilterValue) {
       setChartLabel(getChartCurrentLabel());
     }
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedFilterValue]);
 
   const getHeight = () => {

@@ -1,5 +1,5 @@
 import React from "react";
-import { HStack, Heading, Box, Text } from "@chakra-ui/react";
+import { HStack, Box, Text } from "@chakra-ui/react";
 
 export const TickMark: React.FC<{ size: number; color: string }> = ({
   size,

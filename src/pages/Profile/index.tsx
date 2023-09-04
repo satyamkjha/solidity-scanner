@@ -46,7 +46,7 @@ import Loader from "components/styled-components/Loader";
 import { onLogout } from "common/functions";
 import { monthNames } from "common/values";
 import { useUserOrgProfile } from "hooks/useUserOrgProfile";
-import { isEmail, hasSpecialCharacters } from "helpers/helperFunction";
+import { hasSpecialCharacters } from "helpers/helperFunction";
 import PasswordError from "components/passwordError";
 import { passwordStrength } from "check-password-strength";
 

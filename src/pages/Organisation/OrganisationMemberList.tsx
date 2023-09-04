@@ -1,22 +1,13 @@
 import React, { useState, useEffect } from "react";
 import {
   Flex,
-  Box,
   Text,
   Button,
-  Icon,
   VStack,
-  useClipboard,
-  Divider,
   Image,
   Link,
   useDisclosure,
   useToast,
-  Tabs,
-  Tab,
-  TabList,
-  TabPanels,
-  TabPanel,
   useMediaQuery,
   HStack,
   Popover,
@@ -26,24 +17,15 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@chakra-ui/react";
-import { Link as RouterLink } from "react-router-dom";
 import { InfoIcon } from "@chakra-ui/icons";
 import API from "helpers/api";
 import { API_PATH } from "helpers/routeManager";
-import { HiDuplicate, HiOutlineCheck } from "react-icons/hi";
-import { CheckIcon } from "@chakra-ui/icons";
 import { getAssetsURL } from "helpers/helperFunction";
-import ConfirmActionForm from "components/confirmActionForm";
-import { useProfile } from "hooks/useProfile";
 import { useConfig } from "hooks/useConfig";
-import UpgradePackage from "components/upgradePackage";
-import Loader from "components/styled-components/Loader";
-import CreateOrganisationForm from "./CreateOrganisationForm";
 import InviteMemberForm from "./InviteMemberForm";
-import { useOrgUsersList } from "hooks/useOrgUsersList";
 import TeamMemberItem from "./TeamMemberItem";
 import { UserOrgItem } from "common/types";
-import { useUserOrgProfile } from "hooks/useUserOrgProfile";
+import { useOrgUsersList } from "hooks/useOrgUsersList";
 import { monthNames } from "common/values";
 
 const OrganisationMemberList: React.FC<{
@@ -64,12 +46,12 @@ const OrganisationMemberList: React.FC<{
     user_organization.status === "joined"
   );
   const [count, setCount] = useState(0);
-
-  let d = new Date();
+  const [joinedAtDate, setJoinedAtDate] = useState<Date>();
 
   useEffect(() => {
     if (user_organization) {
-      d = new Date(user_organization.joined_at);
+      const d = new Date(user_organization.joined_at);
+      setJoinedAtDate(d);
     }
   }, [user_organization]);
 
@@ -209,9 +191,10 @@ const OrganisationMemberList: React.FC<{
             </HStack>
             <Text fontWeight={700} fontSize={"sm"} color="#B0B7C3">
               {isDesktopView ? "|" : ""}{" "}
-              {`Created at ${d.getDate()} ${
-                monthNames[d.getMonth()]
-              } ${d.getFullYear()}`}
+              {joinedAtDate &&
+                `Created at ${joinedAtDate.getDate()} ${
+                  monthNames[joinedAtDate.getMonth()]
+                } ${joinedAtDate.getFullYear()}`}
             </Text>
           </Flex>
         </Flex>
@@ -286,7 +269,7 @@ const OrganisationMemberList: React.FC<{
             alignItems={"center"}
           >
             {userList.map((userItem) => {
-              if (userItem.role !== "owner")
+              if (userItem.role !== "owner") {
                 return (
                   <TeamMemberItem
                     removeOrganisationUserRequest={
@@ -298,6 +281,8 @@ const OrganisationMemberList: React.FC<{
                     userItem={userItem}
                   />
                 );
+              }
+              return <></>;
             })}
           </Flex>
         </Flex>

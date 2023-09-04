@@ -23,6 +23,7 @@ import {
   AlertDialogContent,
   AlertDialogOverlay,
   useToast,
+  Heading,
 } from "@chakra-ui/react";
 import { LogoIcon, BlockCredit, ScanErrorIcon } from "components/icons";
 import Score from "components/score";
@@ -35,16 +36,26 @@ import { useHistory } from "react-router-dom";
 import InfiniteScroll from "react-infinite-scroll-component";
 import API from "helpers/api";
 import { API_PATH } from "helpers/routeManager";
-import { getAssetsURL } from "helpers/helperFunction";
+import {
+  getAssetsURL,
+  getFeatureGateConfig,
+  snakeToNormal,
+  // getAssetsFromS3,
+} from "helpers/helperFunction";
 import Loader from "components/styled-components/Loader";
-import { DeleteIcon } from "@chakra-ui/icons";
+import { DeleteIcon, WarningIcon } from "@chakra-ui/icons";
 import { BsThreeDotsVertical } from "react-icons/bs";
 import { useUserRole } from "hooks/useUserRole";
+import { Unsubscribe, onSnapshot, doc } from "firebase/firestore";
+import { db } from "helpers/firebase";
+import { useQueryClient } from "react-query";
+import { scanStatesLabel } from "common/values";
+// import Lottie from "lottie-react";
 
 const Blocks: React.FC = () => {
   const [isDesktopView] = useMediaQuery("(min-width: 1920px)");
   const role: string = useUserRole();
-
+  const queryClient = useQueryClient();
   const [page, setPage] = useState<Page>();
   const [pagination, setPagination] = useState<Pagination>({
     pageNo: 1,
@@ -57,6 +68,25 @@ const Blocks: React.FC = () => {
   const [scanList, setScanList] = useState<Scan[]>();
   const [isLoadingIcons, setIsLoadingIcons] = useState(true);
   const [iconCounter, setIconCounter] = useState<number>(0);
+  const [scanIdsInScanning, setScanIdsInScanning] = useState<string[]>([]);
+  const [scanInProgress, setScanInProgress] = useState<
+    {
+      scanId: string;
+      scanStatus: string;
+    }[]
+  >([]);
+
+  // const [ssIconAnimation, setSsIconAniamtion] = useState<any>(null);
+
+  // useEffect(() => {
+  //   getSsIconAnimationFromUrl();
+  //   // eslint-disable-next-line react-hooks/exhaustive-deps
+  // }, []);
+
+  // const getSsIconAnimationFromUrl = async () => {
+  //   const jsonData = await getAssetsFromS3("icons/ss_icon_animation.json");
+  //   setSsIconAniamtion(jsonData);
+  // };
 
   useEffect(() => {
     if (scans) {
@@ -74,6 +104,7 @@ const Blocks: React.FC = () => {
         setIsLoadingIcons(false);
       }
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [scans, refetch]);
 
   const updateScanList = (project_id: string) => {
@@ -83,6 +114,7 @@ const Blocks: React.FC = () => {
       return true;
     });
     setScanList(newScanList);
+    queryClient.invalidateQueries(["blocks", pagination]);
   };
 
   useEffect(() => {
@@ -92,15 +124,26 @@ const Blocks: React.FC = () => {
         scanList &&
         scanList.some(({ scan_status }) => scan_status !== "scan_done")
       ) {
-        intervalId = setInterval(async () => {
-          await fetchScan();
-          if (
-            scanList &&
-            scanList.every(({ scan_status }) => scan_status === "scan_done")
-          ) {
-            clearInterval(intervalId);
-          }
-        }, 3000);
+        if (getFeatureGateConfig().event_consumption_enabled) {
+          const scanningScanIds: string[] = scanList
+            .filter((scan) =>
+              ["initialised", "downloaded", "scanning"].includes(
+                scan.multi_file_scan_status
+              )
+            )
+            .map((scan) => scan.project_id);
+          setScanIdsInScanning(scanningScanIds);
+        } else {
+          intervalId = setInterval(async () => {
+            await fetchScan();
+            if (
+              scanList &&
+              scanList.every(({ scan_status }) => scan_status === "scan_done")
+            ) {
+              clearInterval(intervalId);
+            }
+          }, 3000);
+        }
       }
     };
 
@@ -108,10 +151,66 @@ const Blocks: React.FC = () => {
     return () => {
       clearInterval(intervalId);
     };
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [scanList]);
 
   useEffect(() => {
+    let listeners: { [docId: string]: Unsubscribe } = {};
+
+    if (scanIdsInScanning && scanIdsInScanning.length) {
+      scanIdsInScanning.forEach((scanId) => {
+        listeners[scanId] = onSnapshot(
+          doc(db, "scan_events", scanId),
+          (doc) => {
+            if (doc.exists()) {
+              const eventData = doc.data();
+              if (
+                ["scan_done", "download_failed", "scan_failed"].includes(
+                  eventData.scan_status
+                )
+              ) {
+                // Unsubscribe and remove the listener
+                listeners[scanId]();
+                delete listeners[scanId];
+
+                fetchScan();
+              }
+              let newProjectsInScanning = scanInProgress.filter(
+                (item) => scanId !== item.scanId
+              );
+              setScanInProgress([
+                ...newProjectsInScanning,
+                {
+                  scanId: scanId,
+                  scanStatus: eventData.scan_status,
+                },
+              ]);
+            }
+          },
+          (error) => {
+            console.log(error);
+          }
+        );
+      });
+    }
+
+    const filteredScans = scanInProgress.filter((project) =>
+      scanIdsInScanning.includes(project.scanId)
+    );
+    setScanInProgress(filteredScans);
+
+    return () => {
+      if (listeners)
+        Object.values(listeners).forEach((unsubscribe) => unsubscribe());
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [scanIdsInScanning]);
+
+  useEffect(() => {
     refetch();
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [pagination]);
 
   useEffect(() => {
@@ -120,8 +219,11 @@ const Blocks: React.FC = () => {
         (scan) => scan.multi_file_scan_status === "scan_done"
       ).length;
 
-      if (scanDoneCount === iconCounter) setIsLoadingIcons(false);
+      if (!scanDoneCount) setIsLoadingIcons(false);
+      else if (scanDoneCount === iconCounter) setIsLoadingIcons(false);
     }
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [iconCounter]);
 
   const fetchScan = async () => {
@@ -252,6 +354,9 @@ const Blocks: React.FC = () => {
                 setIconCounter={setIconCounter}
                 updateScanList={updateScanList}
                 isViewer={role === "viewer"}
+                scanIdsInScanning={scanIdsInScanning}
+                scanInProgress={scanInProgress}
+                // ssIconAnimation={ssIconAnimation}
               />
             ))}
           </InfiniteScroll>
@@ -266,7 +371,21 @@ const BlockCard: React.FC<{
   setIconCounter: Dispatch<SetStateAction<number>>;
   updateScanList: (project_id: string) => void;
   isViewer: boolean;
-}> = ({ scan, setIconCounter, updateScanList, isViewer }) => {
+  scanIdsInScanning: string[];
+  scanInProgress: {
+    scanId: string;
+    scanStatus: string;
+  }[];
+  // ssIconAnimation: any;
+}> = ({
+  scan,
+  setIconCounter,
+  updateScanList,
+  isViewer,
+  scanIdsInScanning,
+  scanInProgress,
+  ssIconAnimation,
+}) => {
   const {
     scan_status,
     project_name,
@@ -310,6 +429,23 @@ const BlockCard: React.FC<{
     onClose();
     updateScanList(project_id);
   };
+
+  const [scanStatus, setScanStatus] = useState("");
+
+  useEffect(() => {
+    if (
+      scanInProgress &&
+      scanIdsInScanning &&
+      scanIdsInScanning.includes(scan.scan_id)
+    ) {
+      const scanObj = scanInProgress.find(
+        (item) => item.scanId === scan.scan_id
+      );
+      if (scanObj) setScanStatus(scanObj.scanStatus);
+      else setScanStatus("initialised");
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [scanIdsInScanning, scanInProgress]);
 
   const { isOpen, onClose, onOpen } = useDisclosure();
 
@@ -462,9 +598,18 @@ const BlockCard: React.FC<{
               borderRadius: 15,
             }}
           >
+            {/* {ssIconAnimation && (
+              <Lottie
+                style={{
+                  height: "30px",
+                  width: "30px",
+                }}
+                animationData={ssIconAnimation}
+              />
+            )} */}
             <LogoIcon size={15} />
             <Text mx={2} fontSize="sm">
-              Scan in progress
+              {scanStatesLabel[scanStatus] || scanStatesLabel["scanning"]}
             </Text>
           </Flex>
           <Progress value={20} isIndeterminate size="xs" />
@@ -472,20 +617,23 @@ const BlockCard: React.FC<{
       ) : (
         <Box
           sx={{
-            p: 5,
-            pl: 10,
-            backgroundColor: "high-subtle",
-            position: "relative",
-            borderBottomRadius: 15,
+            p: 3,
+            m: 3,
+            h: "fit-content",
+            borderRadius: 5,
+            backgroundColor: "#FCFCFF",
           }}
         >
-          <Box position="absolute" transform="translate3d(-30px, -34px,0)">
-            <ScanErrorIcon size={28} />
-          </Box>
-          <Text sx={{ fontSize: "xs", color: "#FF5630", h: "46px" }}>
-            {scan_status === "download_failed"
-              ? "This scan has failed, lost credit will be reimbursed in a few minutes. Please contact support"
-              : scan_status}
+          <HStack mb={2}>
+            <WarningIcon color="#FF5630" />
+            <Heading sx={{ fontSize: "sm", color: "#FF5630" }}>
+              {snakeToNormal(multi_file_scan_status)}
+            </Heading>
+          </HStack>
+          <Text sx={{ fontSize: "xs", color: "#4E5D78" }}>
+            {scan.scan_message
+              ? scan.scan_message
+              : "This scan has failed, lost credit will be reimbursed in a few minutes. Please contact support"}
           </Text>
         </Box>
       )}

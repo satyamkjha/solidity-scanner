@@ -1,6 +1,7 @@
 import UAParser from "ua-parser-js";
 import reCAPTCHA from "helpers/reCAPTCHA";
 import { Profile, PricingData } from "common/types";
+import axios from "axios";
 
 let configValue: any = null;
 
@@ -136,7 +137,14 @@ export const isEmail = (email: string) =>
   /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(email);
 
 export const hasSpecialCharacters = (email: string) =>
-  /[`!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?~]/i.test(email);
+  /[`!@#$%^&*()_+\-=[\]{};':"\\|,.<>/?~]/i.test(email);
 
 export const checkOrgName = (email: string) =>
-  /[`!@#$\s%^&*()+\-=\[\]{};':"\\|,.<>\/?~]/i.test(email);
+  /[`!@#$\s%^&*()+\-=[\]{};':"\\|,.<>/?~]/i.test(email);
+
+// export const getAssetsFromS3 = async (directory: string) => {
+//   const assetsURL = getAssetsURL();
+//   const response = await axios.get(`${assetsURL}${directory}`);
+//   const jsonData = response.data;
+//   return jsonData;
+// };

@@ -259,12 +259,13 @@ export const blockScans: { [key: string]: string } = {
   xdc: "XDC",
   reefscan: "Reefscan",
   nordekscan: "Nordek",
+  fuse: "Fuse",
 };
 
 export const codePlatform: {
   [key: string]: {
     platform: string;
-  dynamicString: string;
+    dynamicString: string;
   };
 } = {
   etherscan: { platform: "own", dynamicString: "#code" },
@@ -281,6 +282,7 @@ export const codePlatform: {
   xdc: { platform: "own", dynamicString: "#readContract" },
   reefscan: { platform: "own", dynamicString: "" },
   nordekscan: { platform: "own", dynamicString: "/contracts#address-tabs" },
+  fuse: { platform: "own", dynamicString: "/contracts#address-tabs" },
 };
 
 export const blockExplorer: { [key: string]: string } = {
@@ -297,6 +299,8 @@ export const blockExplorer: { [key: string]: string } = {
   optimism: "Optimism",
   xdc: "(xdc.blocksscan.io)",
   reefscan: "Reefscan",
+  nordekscan: "Nordek",
+  fuse: "Fuse",
 };
 
 export const detectorData: DetectorItemProp[] = [
@@ -955,4 +959,13 @@ export const attackMethodColor = {
   "Private key leak": "#7D7D7D",
   "Price Manipulation": "#A7A7A7",
   "Oracle Issue": "#EBEBEB",
+};
+
+export const scanStatesLabel = {
+  scan_done: "",
+  initialised: "Scan is Initialised...",
+  downloaded: "Code Downloaded..",
+  download_failed: "Download failed",
+  scan_failed: "",
+  scanning: "Scan in Progress...",
 };

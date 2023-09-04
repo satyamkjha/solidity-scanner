@@ -6,34 +6,18 @@ import {
   Stack,
   Text,
   Button,
-  Icon,
-  InputGroup,
-  InputLeftElement,
-  Input,
   Link,
   Box,
   useToast,
-  InputRightElement,
   HStack,
   Divider,
   Image,
 } from "@chakra-ui/react";
-import { FiAtSign } from "react-icons/fi";
-import { FaLock } from "react-icons/fa";
 import { useConfig } from "hooks/useConfig";
-
 import { Logo } from "components/icons";
 import { getAssetsURL } from "helpers/helperFunction";
-import API from "helpers/api";
-import Auth from "helpers/auth";
-import { AuthResponse } from "common/types";
-import { ViewIcon, ViewOffIcon } from "@chakra-ui/icons";
 import MetaMaskLogin from "pages/Signin/MetamaskSignin";
 import GoogleSignIn from "pages/Signin/GoogleSignin";
-import {
-  getFeatureGateConfig,
-  getReCaptchaHeaders,
-} from "helpers/helperFunction";
 import Loader from "components/styled-components/Loader";
 import LoginForm from "./LoginForm";
 import OrgLoginForm from "./OrgLoginForm";
@@ -69,6 +53,8 @@ const SignIn: React.FC = () => {
     const campaign_id = searchParams.get("utm_campaign");
     if (campaign_type) localStorage.setItem("campaign_type", campaign_type);
     if (campaign_id) localStorage.setItem("campaign_id", campaign_id);
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (

@@ -39,7 +39,6 @@ export default function PrivateApi() {
   const config: any = useConfig();
   const assetsUrl = getAssetsURL(config);
   const toast = useToast();
-
   const [isOwner, setIsOwner] = useState(true);
 
   useEffect(() => {
@@ -110,7 +109,7 @@ export default function PrivateApi() {
       setAccessKey(data.api_key);
       setIsFirstTime(false);
     } else if (actionType === "delete") {
-      const { data } = await API.post(API_PATH.API_REVOKE_ACCESS_KEY);
+      await API.post(API_PATH.API_REVOKE_ACCESS_KEY);
       setAccessKey("");
       setViewable(true);
       setIsFirstTime(false);
@@ -210,7 +209,6 @@ export default function PrivateApi() {
                 </Text>
               )}
             </Flex>
-
             <Button
               onClick={getAccessKey}
               variant={"cta-outline"}
@@ -412,7 +410,7 @@ export default function PrivateApi() {
           )}
           <Flex
             background="#FAFBFC"
-            boxShadow={"0px 2px 2px rgba(0, 0, 0, 0.06)"}
+            boxShadow={"0px 2p 2px rgba(0, 0, 0, 0.06)"}
             borderRadius={"15px"}
             align="center"
             justifyContent="center"

@@ -59,8 +59,7 @@ import { InfoIcon } from "@chakra-ui/icons";
 import API from "helpers/api";
 import { restructureRepoTree, updateCheckedValue } from "helpers/fileStructure";
 import { useScans } from "hooks/useScans";
-import { useScan, getScan } from "hooks/useScan";
-
+import { useScan } from "hooks/useScan";
 import {
   Profile,
   Report,
@@ -241,13 +240,10 @@ const ScanDetails: React.FC<{
 
   const rescan = async () => {
     setRescanLoading(true);
-    const { data } = await API.post<{ scan_id: string }>(
-      API_PATH.API_PROJECT_SCAN,
-      {
-        project_id: projectId,
-        project_type: "existing",
-      }
-    );
+    await API.post<{ scan_id: string }>(API_PATH.API_PROJECT_SCAN, {
+      project_id: projectId,
+      project_type: "existing",
+    });
     setRescanLoading(false);
     queryClient.invalidateQueries(["scan_list", projectId]);
     onClose();
@@ -323,6 +319,8 @@ const ScanDetails: React.FC<{
         setPublishStatus("Not-Generated");
       }
     }
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [scanData]);
 
   const reportId = scanData?.scan_report.latest_report_id;
@@ -393,6 +391,8 @@ const ScanDetails: React.FC<{
         setPrintLoading(false);
       }, 100);
     }
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [summaryReport]);
 
   const checkIfGeneratingReport = () => {
@@ -523,7 +523,7 @@ const ScanDetails: React.FC<{
                           !checkPublishReportAccess(profile, plans, role)
                         }
                         onClick={() => {
-                          if (commitHash == "") {
+                          if (commitHash === "") {
                             getReportData(
                               projectId,
                               scanData.scan_report.latest_report_id

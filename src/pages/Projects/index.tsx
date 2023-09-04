@@ -21,8 +21,9 @@ import {
   MenuList,
   IconButton,
   useToast,
+  Heading,
 } from "@chakra-ui/react";
-
+// import Lottie from "lottie-react";
 import {
   LogoIcon,
   ProjectIcon,
@@ -31,12 +32,10 @@ import {
 } from "components/icons";
 import Score from "components/score";
 import VulnerabilityDistribution from "components/vulnDistribution";
-import { Profile } from "common/types";
 import API from "helpers/api";
-
 import { Page, Pagination, Project } from "common/types";
 import { timeSince } from "common/functions";
-import { DeleteIcon } from "@chakra-ui/icons";
+import { DeleteIcon, WarningIcon } from "@chakra-ui/icons";
 import { BsThreeDotsVertical } from "react-icons/bs";
 import { useProjects } from "hooks/useProjects";
 import { useProfile } from "hooks/useProfile";
@@ -44,11 +43,20 @@ import InfiniteScroll from "react-infinite-scroll-component";
 import { API_PATH } from "helpers/routeManager";
 import Loader from "components/styled-components/Loader";
 import { useUserRole } from "hooks/useUserRole";
+import { onSnapshot, doc, Unsubscribe } from "firebase/firestore";
+import { db } from "helpers/firebase";
+import {
+  getFeatureGateConfig,
+  snakeToNormal,
+  getAssetsURL,
+  // getAssetsFromS3,
+} from "helpers/helperFunction";
+import { scanStatesLabel } from "common/values";
 
 const Projects: React.FC = () => {
   const [isDesktopView] = useMediaQuery("(min-width: 1920px)");
   const role: string = useUserRole();
-
+  const assetsURL = getAssetsURL();
   const [page, setPage] = useState<Page>();
   const [pagination, setPagination] = useState<Pagination>({
     pageNo: 1,
@@ -56,9 +64,30 @@ const Projects: React.FC = () => {
   });
   const [hasMore, setHasMore] = useState(true);
 
-  const { data: projects, isLoading, refetch } = useProjects(pagination);
+  const { data: projects, refetch } = useProjects(pagination);
   const [projectList, setProjectList] = useState<Project[]>();
   const [projectsMonitored, setProjectsMonitored] = useState(0);
+  const [projectsInScanning, setProjectsInScanning] = useState<
+    {
+      scanId: string;
+      scanStatus: string;
+    }[]
+  >([]);
+  const [projectsIdsInScanning, setProjectsIdsInScanning] = useState<string[]>(
+    []
+  );
+
+  // const [ssIconAnimation, setSsIconAniamtion] = useState<any>(null);
+
+  // useEffect(() => {
+  //   getSsIconAnimationFromUrl();
+  //   // eslint-disable-next-line react-hooks/exhaustive-deps
+  // }, []);
+
+  // const getSsIconAnimationFromUrl = async () => {
+  //   const jsonData = await getAssetsFromS3("icons/ss_icon_animation.json");
+  //   setSsIconAniamtion(jsonData);
+  // };
 
   const { data: profileData, refetch: refetchProfile } = useProfile();
 
@@ -66,6 +95,8 @@ const Projects: React.FC = () => {
     if (profileData) {
       setProjectsMonitored(profileData.projects_remaining);
     }
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [profileData, refetchProfile]);
 
   useEffect(() => {
@@ -81,10 +112,13 @@ const Projects: React.FC = () => {
       setProjectList(uniqueProjectList);
       setPage(projects.page);
     }
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [projects, refetch]);
 
   useEffect(() => {
     let intervalId: NodeJS.Timeout;
+
     const refetchTillScanComplete = () => {
       if (
         projectList &&
@@ -93,27 +127,38 @@ const Projects: React.FC = () => {
             _latest_scan.multi_file_scan_status === "scanning"
         )
       ) {
-        intervalId = setInterval(async () => {
-          const { data } = await API.get(
-            `${API_PATH.API_GET_PROJECTS_BETA}?page=${1}&per_page=${
-              pagination.perPageCount
-            }`
-          );
-          const pList = [
-            ...data.data,
-            ...projectList.slice(pagination.perPageCount, projectList.length),
-          ];
-          setProjectList(pList);
-          if (
-            pList &&
-            pList.every(
-              ({ _latest_scan }) =>
-                _latest_scan.multi_file_scan_status === "scan_done"
+        if (getFeatureGateConfig().event_consumption_enabled) {
+          const scanningScanIds: string[] = projectList
+            .filter((project) =>
+              ["initialised", "downloaded", "scanning"].includes(
+                project._latest_scan.multi_file_scan_status
+              )
             )
-          ) {
-            clearInterval(intervalId);
-          }
-        }, 5000);
+            .map((project) => project._latest_scan.scan_id);
+          setProjectsIdsInScanning(scanningScanIds);
+        } else {
+          intervalId = setInterval(async () => {
+            const { data } = await API.get(
+              `${API_PATH.API_GET_PROJECTS_BETA}?page=${1}&per_page=${
+                pagination.perPageCount
+              }`
+            );
+            const pList = [
+              ...data.data,
+              ...projectList.slice(pagination.perPageCount, projectList.length),
+            ];
+            setProjectList(pList);
+            if (
+              pList &&
+              pList.every(
+                ({ _latest_scan }) =>
+                  _latest_scan.multi_file_scan_status === "scan_done"
+              )
+            ) {
+              clearInterval(intervalId);
+            }
+          }, 5000);
+        }
       }
     };
 
@@ -123,20 +168,78 @@ const Projects: React.FC = () => {
     return () => {
       clearInterval(intervalId);
     };
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [projectList]);
+
+  const fetchProjectList = async () => {
+    const { data } = await API.get(
+      `${API_PATH.API_GET_PROJECTS_BETA}?page=${1}&per_page=${
+        pagination.perPageCount
+      }`
+    );
+    if (data.data && projectList) {
+      const pList = [
+        ...data.data,
+        ...projectList.slice(pagination.perPageCount, projectList.length),
+      ];
+      setProjectList(pList);
+    }
+  };
+
+  useEffect(() => {
+    let listeners: { [docId: string]: Unsubscribe } = {};
+    if (projectsIdsInScanning && projectsIdsInScanning.length) {
+      projectsIdsInScanning.forEach((scan_id) => {
+        listeners[scan_id] = onSnapshot(
+          doc(db, "scan_events", scan_id),
+          (doc) => {
+            if (doc.exists()) {
+              const eventData = doc.data();
+              if (
+                ["scan_done", "download_failed", "scan_failed"].includes(
+                  eventData.scan_status
+                )
+              ) {
+                // Unsubscribe and remove the listener
+                listeners[scan_id]();
+                delete listeners[scan_id];
+
+                fetchProjectList();
+              }
+              let newProjectsInScanning = projectsInScanning.filter(
+                (item) => scan_id !== item.scanId
+              );
+              setProjectsInScanning([
+                ...newProjectsInScanning,
+                { scanId: scan_id, scanStatus: eventData.scan_status },
+              ]);
+            }
+          },
+          (error) => {
+            console.log(error);
+          }
+        );
+      });
+    }
+
+    const filteredProjects = projectsInScanning.filter((project) =>
+      projectsIdsInScanning.includes(project.scanId)
+    );
+    setProjectsInScanning(filteredProjects);
+
+    return () => {
+      if (listeners)
+        Object.values(listeners).forEach((unsubscribe) => unsubscribe());
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [projectsIdsInScanning]);
 
   useEffect(() => {
     refetch();
-  }, [pagination]);
 
-  const refetchProjects = async () => {
-    if (projectList) {
-      setPagination({ pageNo: 1, perPageCount: projectList.length });
-      setTimeout(async () => {
-        await refetch();
-      }, 10);
-    }
-  };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [pagination]);
 
   const fetchMoreProjects = async () => {
     if (page && pagination.pageNo >= page.total_pages) {
@@ -184,7 +287,6 @@ const Projects: React.FC = () => {
         <Text sx={{ color: "subtle", fontWeight: 600, ml: 4 }}>PROJECTS</Text>
         {profileData && (
           <Flex ml={20} sx={{ display: ["none", "none", "flex"] }}>
-            <ProjectIcon size={37} />
             <Text fontWeight={600} fontSize="2xl" ml={4} mr={10}>
               {projectsMonitored.toLocaleString("en-US", {
                 minimumIntegerDigits: 2,
@@ -256,6 +358,9 @@ const Projects: React.FC = () => {
                 refetch={refetch}
                 updateProjectList={updateProjectList}
                 isViewer={role === "viewer"}
+                projectsIdsInScanning={projectsIdsInScanning}
+                projectsInScanning={projectsInScanning}
+                // ssIconAnimation={ssIconAnimation}
               />
             ))}
           </InfiniteScroll>
@@ -271,7 +376,22 @@ const ProjectCard: React.FC<{
   refetchProfile: any;
   updateProjectList: (project_id: string) => void;
   isViewer: boolean;
-}> = ({ project, refetch, refetchProfile, updateProjectList, isViewer }) => {
+  projectsIdsInScanning: string[];
+  projectsInScanning: {
+    scanId: string;
+    scanStatus: string;
+  }[];
+  // ssIconAnimation: any;
+}> = ({
+  project,
+  refetch,
+  refetchProfile,
+  updateProjectList,
+  isViewer,
+  projectsIdsInScanning,
+  projectsInScanning,
+  // ssIconAnimation,
+}) => {
   const [isOpen, setIsOpen] = useState(false);
   const toast = useToast();
   const [isRescanLoading, setRescanLoading] = useState(false);
@@ -304,6 +424,23 @@ const ProjectCard: React.FC<{
     refetchProfile();
     onClose();
   };
+
+  const [scanStatus, setScanStatus] = useState("");
+
+  useEffect(() => {
+    if (
+      projectsInScanning &&
+      projectsIdsInScanning &&
+      projectsIdsInScanning.includes(project._latest_scan.scan_id)
+    ) {
+      const proj = projectsInScanning.find(
+        (item) => item.scanId === project._latest_scan.scan_id
+      );
+      if (proj) setScanStatus(proj.scanStatus);
+      else setScanStatus("initialised");
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [projectsIdsInScanning, projectsInScanning]);
 
   const [open, setOpen] = useState(false);
   const deleteProject = async () => {
@@ -497,7 +634,6 @@ const ProjectCard: React.FC<{
               <Flex
                 sx={{
                   display: "inline-flex",
-                  bg: "bg.subtle",
                   alignItems: "center",
                   p: 2,
                   mb: 2,
@@ -505,8 +641,17 @@ const ProjectCard: React.FC<{
                 }}
               >
                 <LogoIcon size={15} />
+                {/* {ssIconAnimation && (
+                  <Lottie
+                    style={{
+                      height: "30px",
+                      width: "30px",
+                    }}
+                    animationData={ssIconAnimation}
+                  />
+                )} */}
                 <Text mx={2} fontSize="sm">
-                  Scan in progress
+                  {scanStatesLabel[scanStatus] || scanStatesLabel["scanning"]}
                 </Text>
               </Flex>
               <Progress value={20} isIndeterminate size="xs" />
@@ -514,7 +659,7 @@ const ProjectCard: React.FC<{
           )}
         </Flex>
       ) : (
-        <Box
+        <Flex
           onClick={() => {
             history.push(`/projects/${project_id}/${_latest_scan.scan_id}`);
           }}
@@ -523,7 +668,6 @@ const ProjectCard: React.FC<{
             my: 4,
             mx: 4,
             borderRadius: 15,
-
             h: "230px",
             bg: "white",
             transition: "0.3s box-shadow",
@@ -532,6 +676,8 @@ const ProjectCard: React.FC<{
               boxShadow: "0px 4px 24px rgba(0, 0, 0, 0.2)",
             },
             overflow: "hidden",
+            flexDir: "column",
+            justifyContent: "space-between",
           }}
           onMouseOver={() => setHover(true)}
           onMouseLeave={() => setHover(false)}
@@ -540,100 +686,99 @@ const ProjectCard: React.FC<{
         >
           <Flex
             sx={{
-              flexDir: "column",
-              justifyContent: "space-between",
-              h: "144px",
+              h: "fit-content",
               pt: 5,
               w: "100%",
             }}
+            w="100%"
+            alignItems="flex-start"
+            justifyContent="space-between"
           >
-            <Flex
-              w="100%"
-              alignItems="flex-start"
-              justifyContent="space-between"
-            >
-              <Box px={4}>
-                <Text isTruncated>{project_name}</Text>
-                <Text sx={{ fontSize: "sm", color: "subtle" }}>
-                  Last scanned {timeSince(new Date(date_updated))}
-                </Text>
-              </Box>
-              <HStack mr={hover ? 2 : 9} alignItems="flex-start">
-                {project.project_url !== "File Scan" && (
-                  <Tooltip label="Rescan" aria-label="A tooltip" mt={2}>
-                    <Button
-                      size="sm"
-                      colorScheme="white"
-                      height="58px"
-                      width="58px"
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        setIsOpen(true);
-                      }}
-                      transition="0.3s opacity"
-                      _hover={{ opacity: scans_remaining === 0 ? 0.4 : 0.9 }}
-                      isDisabled={scans_remaining === 0 || isViewer}
-                    >
-                      <Flex sx={{ flexDir: "column", alignItems: "center" }}>
-                        <RescanIcon size={60} />
-                      </Flex>
-                    </Button>
-                  </Tooltip>
-                )}
-                {hover && !isViewer && (
-                  <Menu placement={"bottom-end"}>
-                    <MenuButton
-                      zIndex={10}
-                      as={IconButton}
-                      backgroundColor="#FFFFFF"
+            <Box px={4}>
+              <Text isTruncated>{project_name}</Text>
+              <Text sx={{ fontSize: "sm", color: "subtle" }}>
+                Last scanned {timeSince(new Date(date_updated))}
+              </Text>
+            </Box>
+            <HStack mr={hover ? 2 : 9} alignItems="flex-start">
+              {project.project_url !== "File Scan" && (
+                <Tooltip label="Rescan" aria-label="A tooltip" mt={2}>
+                  <Button
+                    size="sm"
+                    colorScheme="white"
+                    height="58px"
+                    width="58px"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      setIsOpen(true);
+                    }}
+                    transition="0.3s opacity"
+                    _hover={{ opacity: scans_remaining === 0 ? 0.4 : 0.9 }}
+                    isDisabled={scans_remaining === 0 || isViewer}
+                  >
+                    <Flex sx={{ flexDir: "column", alignItems: "center" }}>
+                      <RescanIcon size={60} />
+                    </Flex>
+                  </Button>
+                </Tooltip>
+              )}
+              {hover && !isViewer && (
+                <Menu placement={"bottom-end"}>
+                  <MenuButton
+                    zIndex={10}
+                    as={IconButton}
+                    backgroundColor="#FFFFFF"
+                    _hover={{ backgroundColor: "#FFFFFF" }}
+                    _active={{ backgroundColor: "#FFFFFF" }}
+                    icon={<BsThreeDotsVertical />}
+                    w={5}
+                    minW={5}
+                    aria-label="Options"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                    }}
+                  />
+                  <MenuList
+                    sx={{
+                      boxShadow: "0px 4px 24px rgba(0, 0, 0, 0.2)",
+                    }}
+                  >
+                    <MenuItem
+                      _focus={{ backgroundColor: "#FFFFFF" }}
                       _hover={{ backgroundColor: "#FFFFFF" }}
-                      _active={{ backgroundColor: "#FFFFFF" }}
-                      icon={<BsThreeDotsVertical />}
-                      w={5}
-                      minW={5}
-                      aria-label="Options"
+                      icon={<DeleteIcon />}
                       onClick={(e) => {
                         e.stopPropagation();
-                      }}
-                    />
-                    <MenuList
-                      sx={{
-                        boxShadow: "0px 4px 24px rgba(0, 0, 0, 0.2)",
+                        setOpen(true);
                       }}
                     >
-                      <MenuItem
-                        _focus={{ backgroundColor: "#FFFFFF" }}
-                        _hover={{ backgroundColor: "#FFFFFF" }}
-                        icon={<DeleteIcon />}
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          setOpen(true);
-                        }}
-                      >
-                        Delete Project
-                      </MenuItem>
-                    </MenuList>
-                  </Menu>
-                )}
-              </HStack>
-            </Flex>
+                      Delete Project
+                    </MenuItem>
+                  </MenuList>
+                </Menu>
+              )}
+            </HStack>
           </Flex>
           <Box
             sx={{
-              p: 5,
-              pl: 10,
-              backgroundColor: "high-subtle",
-              position: "relative",
+              p: 3,
+              m: 3,
+              h: "fit-content",
+              borderRadius: 5,
+              backgroundColor: "#FCFCFF",
             }}
           >
-            <Box position="absolute" transform="translate3d(-30px, -34px,0)">
-              <ScanErrorIcon size={28} />
-            </Box>
-            <Text sx={{ fontSize: "xs", color: "#FF5630", h: "46px" }}>
+            <HStack mb={2}>
+              <WarningIcon color="#FF5630" />
+              <Heading sx={{ fontSize: "sm", color: "#FF5630" }}>
+                {snakeToNormal(multi_file_scan_status)}
+              </Heading>
+            </HStack>
+            <Text sx={{ fontSize: "xs", color: "#4E5D78" }}>
               {scan_message}
             </Text>
           </Box>
-        </Box>
+        </Flex>
       )}
       <AlertDialog isOpen={open} onClose={() => setOpen(false)}>
         <AlertDialogOverlay>

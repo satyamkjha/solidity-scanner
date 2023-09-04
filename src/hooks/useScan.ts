@@ -2,7 +2,7 @@ import { useQuery } from "react-query";
 
 import API from "helpers/api";
 
-import { Scan, ScanDetail } from "common/types";
+import { Scan } from "common/types";
 import { API_PATH } from "helpers/routeManager";
 
 export const getScan = async (scan_id: string) => {

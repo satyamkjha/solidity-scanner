@@ -32,7 +32,6 @@ const ProductNumbers = lazy(() => import("./components/productNumbers"));
 
 export default function LandingPage() {
   const location = useLocation();
-
   const config: any = useConfig();
   const assetsURL = getAssetsURL(config);
 
@@ -42,6 +41,8 @@ export default function LandingPage() {
     const campaign_id = query.get("utm_campaign");
     if (campaign_type) localStorage.setItem("campaign_type", campaign_type);
     if (campaign_id) localStorage.setItem("campaign_id", campaign_id);
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (
@@ -106,6 +107,7 @@ export default function LandingPage() {
             <a
               href="https://www.producthunt.com/posts/solidityscan?utm_source=badge-top-post-topic-badge&utm_medium=badge&utm_souce=badge-solidityscan"
               target="_blank"
+              rel="noreferrer"
             >
               <img
                 src="https://api.producthunt.com/widgets/embed-image/v1/top-post-topic-badge.svg?post_id=381735&theme=light&period=monthly&topic_id=267"

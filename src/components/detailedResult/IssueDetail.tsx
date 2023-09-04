@@ -82,6 +82,8 @@ const IssueDetail: React.FC<{
         inline: "center",
       });
     }
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [tabIndex]);
 
   const updateComment = async () => {

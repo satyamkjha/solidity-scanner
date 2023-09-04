@@ -76,6 +76,8 @@ export const CustomPageNotFound: React.FC = () => {
 
   useEffect(() => {
     history.push("/page-not-found");
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (

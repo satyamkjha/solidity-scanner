@@ -1,18 +1,7 @@
-import React, { useState, useEffect } from "react";
-import {
-  Flex,
-  Box,
-  Container,
-  Text,
-  Heading,
-  Button,
-  Image,
-  VStack,
-} from "@chakra-ui/react";
+import React from "react";
+import { Flex, Box, Container, Text, Heading } from "@chakra-ui/react";
 import HacksOverview from "components/hackerboard/HacksOverview";
 import HacksExplorer from "components/hackerboard/HacksExplorer";
-import API from "helpers/api";
-import { API_PATH } from "helpers/routeManager";
 import { useHacksOverview } from "hooks/useHacksOverview";
 
 // const ArticleComp: React.FC = () => {
@@ -60,7 +49,7 @@ import { useHacksOverview } from "hooks/useHacksOverview";
 // };
 
 const LeaderBoard: React.FC = () => {
-  const { data, isLoading } = useHacksOverview();
+  const { data } = useHacksOverview();
 
   return (
     <Container maxW="100vw" p={0} color="black">
@@ -73,7 +62,6 @@ const LeaderBoard: React.FC = () => {
         flexDir="column"
       >
         <HacksOverview overviewData={data?.data} />
-
         <Box
           display={"flex"}
           flexDir="column"

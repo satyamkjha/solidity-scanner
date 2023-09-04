@@ -60,6 +60,8 @@ const Billing: React.FC<{ profileData: Profile }> = ({ profileData }) => {
       setTransactionList(tList);
       setPage(transactions.page);
     }
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [transactions]);
 
   useEffect(() => {
@@ -190,70 +192,89 @@ const Billing: React.FC<{ profileData: Profile }> = ({ profileData }) => {
             </Flex>
             <TabPanels width={"100%"}>
               <TabPanel width={"100%"} p={0}>
-                {profileData.current_package !== "custom" && (
-                  <Flex
-                    w="100%"
-                    pt={4}
-                    px={[0, 0, 8]}
-                    mb={8}
-                    position="relative"
-                    flexDir={["column", "column", "column", "row"]}
-                  >
-                    {plans.pricing_data[planBillingCycle] &&
-                      plans.pricing_data[planBillingCycle][
-                        profileData.current_package
-                      ] && (
-                        <CurrentPlan
-                          subscription={profileData.subscription}
-                          isCancellable={profileData.is_cancellable}
-                          billingCycle={planBillingCycle}
-                          packageName={profileData.current_package}
-                          packageRechargeDate={
-                            profileData.package_recharge_date
-                          }
-                          packageValidity={profileData.package_validity}
-                          plan={
-                            plans.pricing_data[planBillingCycle][
-                              profileData.current_package
-                            ]
-                          }
-                          upgradePlan={onUpgradePlan}
-                        />
-                      )}
-                    {completePaymentOpen && (
-                      <Flex
-                        h="100%"
-                        position={[
-                          "relative",
-                          "relative",
-                          "relative",
-                          "absolute",
-                        ]}
-                        left={[0, 0, 0, "55%"]}
-                        top={0}
-                        right={4}
-                      >
-                        <LatestInvoice
-                          transactionData={transactionList[0]}
-                          selectedPlan={transactionList[0].package}
-                          planData={
-                            plans.pricing_data[
-                              transactionList[0].billing_cycle
-                            ][transactionList[0].package]
-                          }
-                          onPaymentCancel={onPaymentCancel}
-                        />
-                      </Flex>
-                    )}
-                  </Flex>
-                )}
+                <Flex
+                  w="100%"
+                  pt={4}
+                  px={[0, 0, 8]}
+                  mb={8}
+                  position="relative"
+                  flexDir={["column", "column", "column", "row"]}
+                >
+                  {profileData.current_package === "custom" ? (
+                    <CurrentPlan
+                      subscription={profileData.subscription}
+                      isCancellable={profileData.is_cancellable}
+                      billingCycle={planBillingCycle}
+                      packageName={profileData.current_package}
+                      packageRechargeDate={profileData.package_recharge_date}
+                      packageValidity={profileData.package_validity}
+                      plan={{
+                        name: "Enterprise",
+                        description:
+                          "Enterprise dealing in Crypto Development or Security with large team size. Get your scan results and reports vetted by our security professionals",
+                        discount: null,
+                        scan_count: 0,
+                        amount: "NA",
+                        github: true,
+                        report: true,
+                        publishable_report: true,
+                      }}
+                      upgradePlan={onUpgradePlan}
+                    />
+                  ) : (
+                    plans.pricing_data[planBillingCycle] &&
+                    plans.pricing_data[planBillingCycle][
+                      profileData.current_package
+                    ] && (
+                      <CurrentPlan
+                        subscription={profileData.subscription}
+                        isCancellable={profileData.is_cancellable}
+                        billingCycle={planBillingCycle}
+                        packageName={profileData.current_package}
+                        packageRechargeDate={profileData.package_recharge_date}
+                        packageValidity={profileData.package_validity}
+                        plan={
+                          plans.pricing_data[planBillingCycle][
+                            profileData.current_package
+                          ]
+                        }
+                        upgradePlan={onUpgradePlan}
+                      />
+                    )
+                  )}
+                  {completePaymentOpen && (
+                    <Flex
+                      h="100%"
+                      position={[
+                        "relative",
+                        "relative",
+                        "relative",
+                        "absolute",
+                      ]}
+                      left={[0, 0, 0, "55%"]}
+                      top={0}
+                      right={4}
+                    >
+                      <LatestInvoice
+                        transactionData={transactionList[0]}
+                        selectedPlan={transactionList[0].package}
+                        planData={
+                          plans.pricing_data[transactionList[0].billing_cycle][
+                            transactionList[0].package
+                          ]
+                        }
+                        onPaymentCancel={onPaymentCancel}
+                      />
+                    </Flex>
+                  )}
+                </Flex>
                 <Flex
                   w="100%"
                   ref={pricingRef}
                   mt={profileData.current_package === "custom" ? 4 : 0}
                 >
                   <PricingDetails
-                    currentPackage={profileData.current_package}
+                    profileData={profileData}
                     pricingDetails={plans}
                     page="billing"
                   />

@@ -1,32 +1,12 @@
 import React, { useState, useEffect } from "react";
-import {
-  Flex,
-  Box,
-  Text,
-  Button,
-  Icon,
-  VStack,
-  useClipboard,
-  Divider,
-  Image,
-  Link,
-  useDisclosure,
-  useToast,
-  Tabs,
-  Tab,
-  TabList,
-  TabPanels,
-  TabPanel,
-} from "@chakra-ui/react";
+import { Flex, Box, Text, VStack } from "@chakra-ui/react";
 
 import Loader from "components/styled-components/Loader";
 import UserManagementContainer from "./UserManagementContainer";
-import OrganisationSettingsContainer from "./OrganisationSettingsContainer";
 import { Profile } from "common/types";
 
 const Organisation: React.FC<{ profileData: Profile }> = ({ profileData }) => {
   const [hasAccess, setHasAccess] = useState(false);
-  const [isSpinning, setIsSpinning] = useState(false);
 
   useEffect(() => {
     if (
@@ -34,7 +14,6 @@ const Organisation: React.FC<{ profileData: Profile }> = ({ profileData }) => {
       ["pro", "custom"].includes(profileData.current_package)
     ) {
       setHasAccess(true);
-      setIsSpinning(true);
     } else {
       setHasAccess(false);
     }

@@ -42,7 +42,7 @@ import PasswordError from "components/passwordError";
 
 const SignUp: React.FC = () => {
   const googleLoginEnabled = true;
-  const [registered, setRegistered] = useState(false);
+  const [, setRegistered] = useState(false);
   const [email, setEmail] = useState("");
   const location = useLocation();
   useEffect(() => {
@@ -51,6 +51,8 @@ const SignUp: React.FC = () => {
     const campaign_id = query.get("utm_campaign");
     if (campaign_type) localStorage.setItem("campaign_type", campaign_type);
     if (campaign_id) localStorage.setItem("campaign_id", campaign_id);
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (

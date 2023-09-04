@@ -219,6 +219,20 @@ const QuickScan: React.FC = () => {
       //   isDisabled: false,
       // },
     ],
+    fuse: [
+      {
+        value: "mainnet",
+        label: "Fuse Mainnet",
+        icon: "",
+        isDisabled: false,
+      },
+      {
+        value: "testnet",
+        label: "Fuse Testnet",
+        icon: "",
+        isDisabled: false,
+      },
+    ],
   };
 
   const options = [
@@ -287,6 +301,11 @@ const QuickScan: React.FC = () => {
       value: "nordekscan",
       icon: "nordekscan",
       label: "Nordek - (nordek.io)",
+    },
+    {
+      value: "fuse",
+      icon: "fuse",
+      label: "Fuse - (explorer.fuse.io)",
     },
   ];
 
@@ -444,6 +463,8 @@ const QuickScan: React.FC = () => {
       setIsLoading(true);
       runQuickScan(blockAddress, blockPlatform, blockChain, ref);
     }
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const runQuickScan = async (

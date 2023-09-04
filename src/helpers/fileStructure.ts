@@ -161,7 +161,7 @@ export const getSkipFilePaths = (repoTreeUP: TreeItemUP): string[] => {
   let skipFilePaths: string[] = [];
 
   const traverseTree = (treeList: TreeItemUP[]) => {
-    treeList.map((tree) => {
+    treeList.forEach((tree) => {
       if (!tree.checked && !tree.isChildCheck) {
         skipFilePaths.push(tree.path);
       } else if (!tree.checked && tree.isChildCheck) {

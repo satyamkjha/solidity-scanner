@@ -60,7 +60,7 @@ const VulnerabilityDistribution: React.FC<IssueSeverityDistribution> = ({
   );
 };
 
-export const ErrorVulnerabilityDistribution: React.FC = ({}) => {
+export const ErrorVulnerabilityDistribution: React.FC = () => {
   return (
     <Flex
       sx={{

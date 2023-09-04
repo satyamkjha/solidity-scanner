@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { useLocation, useHistory, useParams } from "react-router-dom";
+import { useLocation, useHistory } from "react-router-dom";
 import {
   Flex,
   Heading,
@@ -37,7 +37,6 @@ const Reset: React.FC = () => {
   const org_name = query.get("org_name")?.toString();
   const [show, setShow] = useState(false);
   const { handleSubmit } = useForm<FormData>();
-  const passwordChecker = new RegExp("^(?=.*?[A-Za-z])(?=.*?[0-9]).{6,}$");
   const [email, setEmail] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [password, setPassword] = useState("");

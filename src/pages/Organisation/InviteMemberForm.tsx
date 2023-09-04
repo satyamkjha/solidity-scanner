@@ -9,14 +9,8 @@ import {
   ModalContent,
   ModalHeader,
   ModalOverlay,
-  Textarea,
   Divider,
-  Radio,
-  Stack,
-  RadioGroup,
-  VStack,
   HStack,
-  Checkbox,
   Text,
   useToast,
   InputGroup,
@@ -24,12 +18,8 @@ import {
   InputRightElement,
   useMediaQuery,
 } from "@chakra-ui/react";
-import { onLogout } from "common/functions";
-import { useQueryClient } from "react-query";
 import { API_PATH } from "helpers/routeManager";
 import API from "helpers/api";
-import { useHistory } from "react-router-dom";
-import { FiLink2 } from "react-icons/fi";
 import InvitedMemberItem from "./InvitedMemberItem";
 import Select from "react-select";
 import { customStylesForInviteMember } from "../../common/stylesForCustomSelect";

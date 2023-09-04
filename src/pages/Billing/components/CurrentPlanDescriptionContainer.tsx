@@ -56,19 +56,21 @@ const CurrentPlanDescriptionContainer: React.FC<{
             "Simplest way to get started with the product. Scan your contract using free credits and get your security score and issue count"}
         </Text>
       )}
-      <Flex textAlign="center" my={2}>
-        <Heading fontSize={"x-large"}>
-          {plan.amount === "Free"
-            ? "Free"
-            : `$ ${parseFloat(plan.amount).toFixed(2)}`}
-          &nbsp;
-        </Heading>
-        {packageName !== "trial" && packageName !== "ondemand" && (
-          <Text fontSize="xs" color="detail" mt={2}>
-            {`/ ${duration === "topup" ? "credit" : duration} `}
-          </Text>
-        )}
-      </Flex>
+      {packageName !== "custom" && (
+        <Flex textAlign="center" my={2}>
+          <Heading fontSize={"x-large"}>
+            {plan.amount === "Free"
+              ? "Free"
+              : `$ ${parseFloat(plan.amount).toFixed(2)}`}
+            &nbsp;
+          </Heading>
+          {packageName !== "trial" && packageName !== "ondemand" && (
+            <Text fontSize="xs" color="detail" mt={2}>
+              {`/ ${duration === "topup" ? "credit" : duration} `}
+            </Text>
+          )}
+        </Flex>
+      )}
     </Flex>
   );
 };

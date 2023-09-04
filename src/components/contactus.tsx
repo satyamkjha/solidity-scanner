@@ -18,6 +18,7 @@ import {
   useToast,
   Image,
 } from "@chakra-ui/react";
+import { useForm } from "react-hook-form";
 import { FaDiscord, FaEnvelope, FaTelegram } from "react-icons/fa";
 import { GiLetterBomb } from "react-icons/gi";
 import axios from "axios";
@@ -36,7 +37,7 @@ export const ContactUs: React.FC<{ onClose(): any; isOpen: boolean }> = ({
   const toast = useToast();
   const config: any = useConfig();
   const assetsURL = getAssetsURL(config);
-
+  const { handleSubmit } = useForm<FormData>();
   const onSubmit = () => {
     axios.defaults.headers.post["Content-Type"] = "application/json";
     axios
@@ -84,6 +85,7 @@ export const ContactUs: React.FC<{ onClose(): any; isOpen: boolean }> = ({
               display: "flex",
               flexDirection: "column",
             }}
+            onSubmit={handleSubmit(onSubmit)}
           >
             <ModalHeader
               background="rgba(82, 255, 0, 0.04)"
@@ -204,7 +206,7 @@ export const ContactUs: React.FC<{ onClose(): any; isOpen: boolean }> = ({
                 variant="brand"
                 mr={[0, 0, 0, "50px"]}
                 mb={5}
-                type="submit0"
+                type="submit"
                 // onClick={() => {
                 //   onSubmit();
                 // }}
