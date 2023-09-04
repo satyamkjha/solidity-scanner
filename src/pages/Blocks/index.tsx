@@ -119,7 +119,7 @@ const Blocks: React.FC = () => {
                 scan.multi_file_scan_status
               )
             )
-            .map((scan) => scan.scan_id);
+            .map((scan) => scan.project_id);
           setScanIdsInScanning(scanningScanIds);
         } else {
           intervalId = setInterval(async () => {
@@ -153,7 +153,6 @@ const Blocks: React.FC = () => {
           (doc) => {
             if (doc.exists()) {
               const eventData = doc.data();
-              console.log(eventData);
               if (
                 ["scan_done", "download_failed", "scan_failed"].includes(
                   eventData.scan_status
@@ -163,11 +162,6 @@ const Blocks: React.FC = () => {
                 listeners[scanId]();
                 delete listeners[scanId];
 
-                // Update the state to remove the successful scan
-                const updatedScanningScanIds = scanInProgress.filter(
-                  (item) => scanId !== item.scanId
-                );
-                setScanInProgress(updatedScanningScanIds);
                 fetchScan();
               }
               let newProjectsInScanning = scanInProgress.filter(
@@ -188,6 +182,11 @@ const Blocks: React.FC = () => {
         );
       });
     }
+
+    const filteredScans = scanInProgress.filter((project) =>
+      scanIdsInScanning.includes(project.scanId)
+    );
+    setScanInProgress(filteredScans);
 
     return () => {
       if (listeners)
