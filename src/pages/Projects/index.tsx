@@ -23,7 +23,7 @@ import {
   useToast,
   Heading,
 } from "@chakra-ui/react";
-import Lottie from "lottie-react";
+// import Lottie from "lottie-react";
 import {
   LogoIcon,
   ProjectIcon,
@@ -49,7 +49,7 @@ import {
   getFeatureGateConfig,
   snakeToNormal,
   getAssetsURL,
-  getAssetsFromS3,
+  // getAssetsFromS3,
 } from "helpers/helperFunction";
 import { scanStatesLabel } from "common/values";
 
@@ -77,17 +77,17 @@ const Projects: React.FC = () => {
     []
   );
 
-  const [ssIconAnimation, setSsIconAniamtion] = useState<any>(null);
+  // const [ssIconAnimation, setSsIconAniamtion] = useState<any>(null);
 
-  useEffect(() => {
-    getSsIconAnimationFromUrl();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  // useEffect(() => {
+  //   getSsIconAnimationFromUrl();
+  //   // eslint-disable-next-line react-hooks/exhaustive-deps
+  // }, []);
 
-  const getSsIconAnimationFromUrl = async () => {
-    const jsonData = await getAssetsFromS3("icons/ss_icon_animation.json");
-    setSsIconAniamtion(jsonData);
-  };
+  // const getSsIconAnimationFromUrl = async () => {
+  //   const jsonData = await getAssetsFromS3("icons/ss_icon_animation.json");
+  //   setSsIconAniamtion(jsonData);
+  // };
 
   const { data: profileData, refetch: refetchProfile } = useProfile();
 
@@ -360,7 +360,7 @@ const Projects: React.FC = () => {
                 isViewer={role === "viewer"}
                 projectsIdsInScanning={projectsIdsInScanning}
                 projectsInScanning={projectsInScanning}
-                ssIconAnimation={ssIconAnimation}
+                // ssIconAnimation={ssIconAnimation}
               />
             ))}
           </InfiniteScroll>
@@ -381,7 +381,7 @@ const ProjectCard: React.FC<{
     scanId: string;
     scanStatus: string;
   }[];
-  ssIconAnimation: any;
+  // ssIconAnimation: any;
 }> = ({
   project,
   refetch,
@@ -390,7 +390,7 @@ const ProjectCard: React.FC<{
   isViewer,
   projectsIdsInScanning,
   projectsInScanning,
-  ssIconAnimation,
+  // ssIconAnimation,
 }) => {
   const [isOpen, setIsOpen] = useState(false);
   const toast = useToast();
@@ -640,7 +640,8 @@ const ProjectCard: React.FC<{
                   borderRadius: 15,
                 }}
               >
-                {ssIconAnimation && (
+                <LogoIcon size={15} />
+                {/* {ssIconAnimation && (
                   <Lottie
                     style={{
                       height: "30px",
@@ -648,7 +649,7 @@ const ProjectCard: React.FC<{
                     }}
                     animationData={ssIconAnimation}
                   />
-                )}
+                )} */}
                 <Text mx={2} fontSize="sm">
                   {scanStatesLabel[scanStatus] || scanStatesLabel["scanning"]}
                 </Text>

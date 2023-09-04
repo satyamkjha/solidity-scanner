@@ -142,9 +142,9 @@ export const hasSpecialCharacters = (email: string) =>
 export const checkOrgName = (email: string) =>
   /[`!@#$\s%^&*()+\-=[\]{};':"\\|,.<>/?~]/i.test(email);
 
-export const getAssetsFromS3 = async (directory: string) => {
-  const assetsURL = getAssetsURL();
-  const response = await axios.get(`${assetsURL}${directory}`);
-  const jsonData = response.data;
-  return jsonData;
-};
+// export const getAssetsFromS3 = async (directory: string) => {
+//   const assetsURL = getAssetsURL();
+//   const response = await axios.get(`${assetsURL}${directory}`);
+//   const jsonData = response.data;
+//   return jsonData;
+// };

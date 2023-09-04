@@ -40,7 +40,7 @@ import {
   getAssetsURL,
   getFeatureGateConfig,
   snakeToNormal,
-  getAssetsFromS3,
+  // getAssetsFromS3,
 } from "helpers/helperFunction";
 import Loader from "components/styled-components/Loader";
 import { DeleteIcon, WarningIcon } from "@chakra-ui/icons";
@@ -50,13 +50,12 @@ import { Unsubscribe, onSnapshot, doc } from "firebase/firestore";
 import { db } from "helpers/firebase";
 import { useQueryClient } from "react-query";
 import { scanStatesLabel } from "common/values";
-import Lottie from "lottie-react";
+// import Lottie from "lottie-react";
 
 const Blocks: React.FC = () => {
   const [isDesktopView] = useMediaQuery("(min-width: 1920px)");
   const role: string = useUserRole();
   const queryClient = useQueryClient();
-  const assetsURL = getAssetsURL();
   const [page, setPage] = useState<Page>();
   const [pagination, setPagination] = useState<Pagination>({
     pageNo: 1,
@@ -77,17 +76,17 @@ const Blocks: React.FC = () => {
     }[]
   >([]);
 
-  const [ssIconAnimation, setSsIconAniamtion] = useState<any>(null);
+  // const [ssIconAnimation, setSsIconAniamtion] = useState<any>(null);
 
-  useEffect(() => {
-    getSsIconAnimationFromUrl();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  // useEffect(() => {
+  //   getSsIconAnimationFromUrl();
+  //   // eslint-disable-next-line react-hooks/exhaustive-deps
+  // }, []);
 
-  const getSsIconAnimationFromUrl = async () => {
-    const jsonData = await getAssetsFromS3("icons/ss_icon_animation.json");
-    setSsIconAniamtion(jsonData);
-  };
+  // const getSsIconAnimationFromUrl = async () => {
+  //   const jsonData = await getAssetsFromS3("icons/ss_icon_animation.json");
+  //   setSsIconAniamtion(jsonData);
+  // };
 
   useEffect(() => {
     if (scans) {
@@ -357,7 +356,7 @@ const Blocks: React.FC = () => {
                 isViewer={role === "viewer"}
                 scanIdsInScanning={scanIdsInScanning}
                 scanInProgress={scanInProgress}
-                ssIconAnimation={ssIconAnimation}
+                // ssIconAnimation={ssIconAnimation}
               />
             ))}
           </InfiniteScroll>
@@ -377,7 +376,7 @@ const BlockCard: React.FC<{
     scanId: string;
     scanStatus: string;
   }[];
-  ssIconAnimation: any;
+  // ssIconAnimation: any;
 }> = ({
   scan,
   setIconCounter,
@@ -599,7 +598,7 @@ const BlockCard: React.FC<{
               borderRadius: 15,
             }}
           >
-            {ssIconAnimation && (
+            {/* {ssIconAnimation && (
               <Lottie
                 style={{
                   height: "30px",
@@ -607,7 +606,8 @@ const BlockCard: React.FC<{
                 }}
                 animationData={ssIconAnimation}
               />
-            )}
+            )} */}
+            <LogoIcon size={15} />
             <Text mx={2} fontSize="sm">
               {scanStatesLabel[scanStatus] || scanStatesLabel["scanning"]}
             </Text>
