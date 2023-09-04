@@ -49,13 +49,14 @@ import {
   getFeatureGateConfig,
   snakeToNormal,
   getAssetsURL,
+  getAssetsFromS3,
 } from "helpers/helperFunction";
 import { scanStatesLabel } from "common/values";
 
 const Projects: React.FC = () => {
   const [isDesktopView] = useMediaQuery("(min-width: 1920px)");
   const role: string = useUserRole();
-
+  const assetsURL = getAssetsURL();
   const [page, setPage] = useState<Page>();
   const [pagination, setPagination] = useState<Pagination>({
     pageNo: 1,
@@ -75,6 +76,18 @@ const Projects: React.FC = () => {
   const [projectsIdsInScanning, setProjectsIdsInScanning] = useState<string[]>(
     []
   );
+
+  const [ssIconAnimation, setSsIconAniamtion] = useState<any>(null);
+
+  useEffect(() => {
+    getSsIconAnimationFromUrl();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  const getSsIconAnimationFromUrl = async () => {
+    const jsonData = await getAssetsFromS3("icons/ss_icon_animation.json");
+    setSsIconAniamtion(jsonData);
+  };
 
   const { data: profileData, refetch: refetchProfile } = useProfile();
 
@@ -183,7 +196,6 @@ const Projects: React.FC = () => {
           (doc) => {
             if (doc.exists()) {
               const eventData = doc.data();
-              console.log(eventData);
               if (
                 ["scan_done", "download_failed", "scan_failed"].includes(
                   eventData.scan_status
@@ -348,6 +360,7 @@ const Projects: React.FC = () => {
                 isViewer={role === "viewer"}
                 projectsIdsInScanning={projectsIdsInScanning}
                 projectsInScanning={projectsInScanning}
+                ssIconAnimation={ssIconAnimation}
               />
             ))}
           </InfiniteScroll>
@@ -368,6 +381,7 @@ const ProjectCard: React.FC<{
     scanId: string;
     scanStatus: string;
   }[];
+  ssIconAnimation: any;
 }> = ({
   project,
   refetch,
@@ -376,6 +390,7 @@ const ProjectCard: React.FC<{
   isViewer,
   projectsIdsInScanning,
   projectsInScanning,
+  ssIconAnimation,
 }) => {
   const [isOpen, setIsOpen] = useState(false);
   const toast = useToast();
@@ -397,7 +412,6 @@ const ProjectCard: React.FC<{
     _latest_scan;
 
   const onClose = () => setIsOpen(false);
-  const assetsURL = getAssetsURL();
 
   const rescan = async () => {
     setRescanLoading(true);
@@ -410,13 +424,6 @@ const ProjectCard: React.FC<{
     refetchProfile();
     onClose();
   };
-
-  const [ssIconAnimation, setSsIconAniamtion] = useState<any>(null);
-
-  useEffect(() => {
-    getSsIconAnimationFromUrl();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
 
   const [scanStatus, setScanStatus] = useState("");
 
@@ -434,12 +441,6 @@ const ProjectCard: React.FC<{
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [projectsIdsInScanning, projectsInScanning]);
-
-  const getSsIconAnimationFromUrl = async () => {
-    const response = await fetch(`${assetsURL}icons/ss_icon_animation.json`);
-    const jsonData = await response.json();
-    setSsIconAniamtion(jsonData);
-  };
 
   const [open, setOpen] = useState(false);
   const deleteProject = async () => {
