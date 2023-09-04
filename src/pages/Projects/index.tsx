@@ -72,7 +72,6 @@ const Projects: React.FC = () => {
       scanStatus: string;
     }[]
   >([]);
-
   const [projectsIdsInScanning, setProjectsIdsInScanning] = useState<string[]>(
     []
   );
@@ -194,42 +193,15 @@ const Projects: React.FC = () => {
                 listeners[scan_id]();
                 delete listeners[scan_id];
 
-                // Update the state to remove the successful project scan
-                const updatedScanningScans = projectsInScanning.filter(
-                  (scanItem) => scanItem.scanId !== scan_id
-                );
-                setProjectsInScanning(updatedScanningScans);
-                const updatedScanningScanIds = projectsIdsInScanning.filter(
-                  (scanId) => scanId !== scan_id
-                );
-                setProjectsIdsInScanning(updatedScanningScanIds);
                 fetchProjectList();
-              } else {
-                let newProjectsInScanning = projectsInScanning.filter(
-                  (item) => scan_id === item.scanId
-                );
-                setProjectsInScanning([
-                  ...newProjectsInScanning,
-                  { scanId: scan_id, scanStatus: eventData.scan_status },
-                ]);
-
-                // let flag = true;
-                // let newProjectsInScanning = projectsInScanning.map((item) => {
-                //   if (scan_id === item.scanId) {
-                //     flag = false;
-                //     return {
-                //       scanId: item.scanId,
-                //       scanStatus: eventData.scan_status,
-                //     };
-                //   }
-                //   return item;
-                // });
-                // if (flag) {
-                //
-                // } else {
-                //   setProjectsInScanning(newProjectsInScanning);
-                // }
               }
+              let newProjectsInScanning = projectsInScanning.filter(
+                (item) => scan_id !== item.scanId
+              );
+              setProjectsInScanning([
+                ...newProjectsInScanning,
+                { scanId: scan_id, scanStatus: eventData.scan_status },
+              ]);
             }
           },
           (error) => {
@@ -239,10 +211,16 @@ const Projects: React.FC = () => {
       });
     }
 
+    const filteredProjects = projectsInScanning.filter((project) =>
+      projectsIdsInScanning.includes(project.scanId)
+    );
+    setProjectsInScanning(filteredProjects);
+
     return () => {
       if (listeners)
         Object.values(listeners).forEach((unsubscribe) => unsubscribe());
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [projectsIdsInScanning]);
 
   useEffect(() => {
@@ -368,11 +346,8 @@ const Projects: React.FC = () => {
                 refetch={refetch}
                 updateProjectList={updateProjectList}
                 isViewer={role === "viewer"}
-                scanStatus={projectsInScanning.map((item) => {
-                  if (item.scanId === project._latest_scan.scan_id) {
-                    return item.scanStatus;
-                  }
-                })}
+                projectsIdsInScanning={projectsIdsInScanning}
+                projectsInScanning={projectsInScanning}
               />
             ))}
           </InfiniteScroll>
@@ -388,14 +363,19 @@ const ProjectCard: React.FC<{
   refetchProfile: any;
   updateProjectList: (project_id: string) => void;
   isViewer: boolean;
-  scanStatus: string | undefined;
+  projectsIdsInScanning: string[];
+  projectsInScanning: {
+    scanId: string;
+    scanStatus: string;
+  }[];
 }> = ({
   project,
   refetch,
   refetchProfile,
   updateProjectList,
   isViewer,
-  scanStatus,
+  projectsIdsInScanning,
+  projectsInScanning,
 }) => {
   const [isOpen, setIsOpen] = useState(false);
   const toast = useToast();
@@ -435,24 +415,31 @@ const ProjectCard: React.FC<{
 
   useEffect(() => {
     getSsIconAnimationFromUrl();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  const [scanStatus, setScanStatus] = useState("");
+
+  useEffect(() => {
+    if (
+      projectsInScanning &&
+      projectsIdsInScanning &&
+      projectsIdsInScanning.includes(project._latest_scan.scan_id)
+    ) {
+      const proj = projectsInScanning.find(
+        (item) => item.scanId === project._latest_scan.scan_id
+      );
+      if (proj) setScanStatus(proj.scanStatus);
+      else setScanStatus("initialised");
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [projectsIdsInScanning, projectsInScanning]);
 
   const getSsIconAnimationFromUrl = async () => {
     const response = await fetch(`${assetsURL}icons/ss_icon_animation.json`);
     const jsonData = await response.json();
     setSsIconAniamtion(jsonData);
   };
-
-  // useEffect(() => {
-  //   console.log(projectsInScanning);
-  //   projectsInScanning.forEach((projectItem) => {
-  //     if (projectItem.scanId === project._latest_scan.scan_id) {
-  //       setScanStatus(projectItem.scanStatus);
-  //     } else {
-  //       setScanStatus("scan_done");
-  //     }
-  //   });
-  // }, [projectsInScanning]);
 
   const [open, setOpen] = useState(false);
   const deleteProject = async () => {
@@ -662,7 +649,7 @@ const ProjectCard: React.FC<{
                   />
                 )}
                 <Text mx={2} fontSize="sm">
-                  {scanStatesLabel[scanStatus] || "..."}
+                  {scanStatesLabel[scanStatus] || scanStatesLabel["scanning"]}
                 </Text>
               </Flex>
               <Progress value={20} isIndeterminate size="xs" />

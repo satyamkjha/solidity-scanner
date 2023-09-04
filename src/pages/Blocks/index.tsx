@@ -68,6 +68,7 @@ const Blocks: React.FC = () => {
   const [scanList, setScanList] = useState<Scan[]>();
   const [isLoadingIcons, setIsLoadingIcons] = useState(true);
   const [iconCounter, setIconCounter] = useState<number>(0);
+  const [scanIdsInScanning, setScanIdsInScanning] = useState<string[]>([]);
   const [scanInProgress, setScanInProgress] = useState<
     {
       scanId: string;
@@ -112,20 +113,14 @@ const Blocks: React.FC = () => {
         scanList.some(({ scan_status }) => scan_status !== "scan_done")
       ) {
         if (getFeatureGateConfig().event_consumption_enabled) {
-          const scanningScanIds: {
-            scanId: string;
-            scanStatus: string;
-          }[] = scanList
+          const scanningScanIds: string[] = scanList
             .filter((scan) =>
               ["initialised", "downloaded", "scanning"].includes(
                 scan.multi_file_scan_status
               )
             )
-            .map((scan) => ({
-              scanId: scan.scan_id,
-              scanStatus: "initialised",
-            }));
-          setScanInProgress(scanningScanIds);
+            .map((scan) => scan.scan_id);
+          setScanIdsInScanning(scanningScanIds);
         } else {
           intervalId = setInterval(async () => {
             await fetchScan();
@@ -151,40 +146,40 @@ const Blocks: React.FC = () => {
   useEffect(() => {
     let listeners: { [docId: string]: Unsubscribe } = {};
 
-    if (scanInProgress && scanInProgress.length) {
-      scanInProgress.forEach((scanItem) => {
-        listeners[scanItem.scanId] = onSnapshot(
-          doc(db, "scan_events", scanItem.scanId),
+    if (scanIdsInScanning && scanIdsInScanning.length) {
+      scanIdsInScanning.forEach((scanId) => {
+        listeners[scanId] = onSnapshot(
+          doc(db, "scan_events", scanId),
           (doc) => {
             if (doc.exists()) {
               const eventData = doc.data();
+              console.log(eventData);
               if (
                 ["scan_done", "download_failed", "scan_failed"].includes(
                   eventData.scan_status
                 )
               ) {
                 // Unsubscribe and remove the listener
-                listeners[scanItem.scanId]();
-                delete listeners[scanItem.scanId];
+                listeners[scanId]();
+                delete listeners[scanId];
 
                 // Update the state to remove the successful scan
                 const updatedScanningScanIds = scanInProgress.filter(
-                  (item) => scanItem.scanId !== item.scanId
+                  (item) => scanId !== item.scanId
                 );
                 setScanInProgress(updatedScanningScanIds);
                 fetchScan();
-              } else {
-                let newScanInProgress = scanInProgress.map((item) => {
-                  if (scanItem.scanId === item.scanId) {
-                    return {
-                      scanId: item.scanId,
-                      scanStatus: eventData.scan_status,
-                    };
-                  }
-                  return item;
-                });
-                setScanInProgress(newScanInProgress);
               }
+              let newProjectsInScanning = scanInProgress.filter(
+                (item) => scanId !== item.scanId
+              );
+              setScanInProgress([
+                ...newProjectsInScanning,
+                {
+                  scanId: scanId,
+                  scanStatus: eventData.scan_status,
+                },
+              ]);
             }
           },
           (error) => {
@@ -198,7 +193,8 @@ const Blocks: React.FC = () => {
       if (listeners)
         Object.values(listeners).forEach((unsubscribe) => unsubscribe());
     };
-  }, [scanInProgress]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [scanIdsInScanning]);
 
   useEffect(() => {
     refetch();
@@ -347,6 +343,7 @@ const Blocks: React.FC = () => {
                 setIconCounter={setIconCounter}
                 updateScanList={updateScanList}
                 isViewer={role === "viewer"}
+                scanIdsInScanning={scanIdsInScanning}
                 scanInProgress={scanInProgress}
               />
             ))}
@@ -362,11 +359,19 @@ const BlockCard: React.FC<{
   setIconCounter: Dispatch<SetStateAction<number>>;
   updateScanList: (project_id: string) => void;
   isViewer: boolean;
+  scanIdsInScanning: string[];
   scanInProgress: {
     scanId: string;
     scanStatus: string;
   }[];
-}> = ({ scan, setIconCounter, updateScanList, isViewer, scanInProgress }) => {
+}> = ({
+  scan,
+  setIconCounter,
+  updateScanList,
+  isViewer,
+  scanIdsInScanning,
+  scanInProgress,
+}) => {
   const {
     scan_status,
     project_name,
@@ -426,12 +431,19 @@ const BlockCard: React.FC<{
   };
 
   useEffect(() => {
-    scanInProgress.forEach((scanItem) => {
-      if (scanItem.scanId === scan.scan_id) {
-        setScanStatus(scanItem.scanStatus);
-      }
-    });
-  }, [scanInProgress]);
+    if (
+      scanInProgress &&
+      scanIdsInScanning &&
+      scanIdsInScanning.includes(scan.scan_id)
+    ) {
+      const scanObj = scanInProgress.find(
+        (item) => item.scanId === scan.scan_id
+      );
+      if (scanObj) setScanStatus(scanObj.scanStatus);
+      else setScanStatus("initialised");
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [scanIdsInScanning, scanInProgress]);
 
   const { isOpen, onClose, onOpen } = useDisclosure();
 
@@ -594,7 +606,7 @@ const BlockCard: React.FC<{
               />
             )}
             <Text mx={2} fontSize="sm">
-              {scanStatesLabel[scanStatus]}
+              {scanStatesLabel[scanStatus] || scanStatesLabel["scanning"]}
             </Text>
           </Flex>
           <Progress value={20} isIndeterminate size="xs" />
