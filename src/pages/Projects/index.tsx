@@ -49,6 +49,7 @@ import {
   getFeatureGateConfig,
   snakeToNormal,
   getAssetsURL,
+  getAssetsFromS3,
 } from "helpers/helperFunction";
 import { scanStatesLabel } from "common/values";
 
@@ -84,8 +85,7 @@ const Projects: React.FC = () => {
   }, []);
 
   const getSsIconAnimationFromUrl = async () => {
-    const response = await fetch(`${assetsURL}icons/ss_icon_animation.json`);
-    const jsonData = await response.json();
+    const jsonData = await getAssetsFromS3("icons/ss_icon_animation.json");
     setSsIconAniamtion(jsonData);
   };
 
@@ -360,6 +360,7 @@ const Projects: React.FC = () => {
                 isViewer={role === "viewer"}
                 projectsIdsInScanning={projectsIdsInScanning}
                 projectsInScanning={projectsInScanning}
+                ssIconAnimation={ssIconAnimation}
               />
             ))}
           </InfiniteScroll>

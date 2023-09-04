@@ -40,6 +40,7 @@ import {
   getAssetsURL,
   getFeatureGateConfig,
   snakeToNormal,
+  getAssetsFromS3,
 } from "helpers/helperFunction";
 import Loader from "components/styled-components/Loader";
 import { DeleteIcon, WarningIcon } from "@chakra-ui/icons";
@@ -80,11 +81,11 @@ const Blocks: React.FC = () => {
 
   useEffect(() => {
     getSsIconAnimationFromUrl();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const getSsIconAnimationFromUrl = async () => {
-    const response = await fetch(`${assetsURL}icons/ss_icon_animation.json`);
-    const jsonData = await response.json();
+    const jsonData = await getAssetsFromS3("icons/ss_icon_animation.json");
     setSsIconAniamtion(jsonData);
   };
 
@@ -356,6 +357,7 @@ const Blocks: React.FC = () => {
                 isViewer={role === "viewer"}
                 scanIdsInScanning={scanIdsInScanning}
                 scanInProgress={scanInProgress}
+                ssIconAnimation={ssIconAnimation}
               />
             ))}
           </InfiniteScroll>
