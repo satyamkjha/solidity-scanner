@@ -963,8 +963,8 @@ export const attackMethodColor = {
 
 export const scanStatesLabel = {
   scan_done: "",
-  initialised: "Scan is Initialised...",
-  downloaded: "Code Downloaded..",
+  initialised: "Downloading Code...",
+  downloaded: "Code Downloaded...",
   download_failed: "Download failed",
   scan_failed: "",
   scanning: "Scan in Progress...",
