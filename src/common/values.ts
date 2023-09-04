@@ -960,3 +960,12 @@ export const attackMethodColor = {
   "Price Manipulation": "#A7A7A7",
   "Oracle Issue": "#EBEBEB",
 };
+
+export const scanStatesLabel = {
+  scan_done: "",
+  initialised: "Scan is Initialised...",
+  downloaded: "Code Downloaded..",
+  download_failed: "Download failed",
+  scan_failed: "",
+  scanning: "Scan in Progress...",
+};
