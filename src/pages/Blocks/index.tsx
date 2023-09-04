@@ -123,7 +123,7 @@ const Blocks: React.FC = () => {
             )
             .map((scan) => ({
               scanId: scan.scan_id,
-              scanStatus: scan.multi_file_scan_status,
+              scanStatus: "initialised",
             }));
           setScanInProgress(scanningScanIds);
         } else {
@@ -174,16 +174,16 @@ const Blocks: React.FC = () => {
                 setScanInProgress(updatedScanningScanIds);
                 fetchScan();
               } else {
-                let newScanInScanning = scanInProgress;
-                newScanInScanning.map((item) => {
+                let newScanInProgress = scanInProgress.map((item) => {
                   if (scanItem.scanId === item.scanId) {
                     return {
                       scanId: item.scanId,
-                      scanStatus: item.scanStatus,
+                      scanStatus: eventData.scan_status,
                     };
                   }
                   return item;
                 });
+                setScanInProgress(newScanInProgress);
               }
             }
           },
