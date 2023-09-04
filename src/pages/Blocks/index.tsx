@@ -55,7 +55,7 @@ const Blocks: React.FC = () => {
   const [isDesktopView] = useMediaQuery("(min-width: 1920px)");
   const role: string = useUserRole();
   const queryClient = useQueryClient();
-
+  const assetsURL = getAssetsURL();
   const [page, setPage] = useState<Page>();
   const [pagination, setPagination] = useState<Pagination>({
     pageNo: 1,
@@ -75,6 +75,18 @@ const Blocks: React.FC = () => {
       scanStatus: string;
     }[]
   >([]);
+
+  const [ssIconAnimation, setSsIconAniamtion] = useState<any>(null);
+
+  useEffect(() => {
+    getSsIconAnimationFromUrl();
+  }, []);
+
+  const getSsIconAnimationFromUrl = async () => {
+    const response = await fetch(`${assetsURL}icons/ss_icon_animation.json`);
+    const jsonData = await response.json();
+    setSsIconAniamtion(jsonData);
+  };
 
   useEffect(() => {
     if (scans) {
@@ -363,6 +375,7 @@ const BlockCard: React.FC<{
     scanId: string;
     scanStatus: string;
   }[];
+  ssIconAnimation: any;
 }> = ({
   scan,
   setIconCounter,
@@ -370,6 +383,7 @@ const BlockCard: React.FC<{
   isViewer,
   scanIdsInScanning,
   scanInProgress,
+  ssIconAnimation,
 }) => {
   const {
     scan_status,
@@ -416,18 +430,6 @@ const BlockCard: React.FC<{
   };
 
   const [scanStatus, setScanStatus] = useState("");
-
-  const [ssIconAnimation, setSsIconAniamtion] = useState<any>(null);
-
-  useEffect(() => {
-    getSsIconAnimationFromUrl();
-  }, []);
-
-  const getSsIconAnimationFromUrl = async () => {
-    const response = await fetch(`${assetsURL}icons/ss_icon_animation.json`);
-    const jsonData = await response.json();
-    setSsIconAniamtion(jsonData);
-  };
 
   useEffect(() => {
     if (
