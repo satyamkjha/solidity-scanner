@@ -173,6 +173,17 @@ const Blocks: React.FC = () => {
                 );
                 setScanInProgress(updatedScanningScanIds);
                 fetchScan();
+              } else {
+                let newScanInScanning = scanInProgress;
+                newScanInScanning.map((item) => {
+                  if (scanItem.scanId === item.scanId) {
+                    return {
+                      scanId: item.scanId,
+                      scanStatus: item.scanStatus,
+                    };
+                  }
+                  return item;
+                });
               }
             }
           },

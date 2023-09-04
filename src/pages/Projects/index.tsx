@@ -201,6 +201,17 @@ const Projects: React.FC = () => {
                 );
                 setProjectsInScanning(updatedScanningScanIds);
                 fetchProjectList();
+              } else {
+                let newProjectsInScanning = projectsInScanning;
+                newProjectsInScanning.map((item) => {
+                  if (projectItem.scanId === item.scanId) {
+                    return {
+                      scanId: item.scanId,
+                      scanStatus: item.scanStatus,
+                    };
+                  }
+                  return item;
+                });
               }
             }
           },
