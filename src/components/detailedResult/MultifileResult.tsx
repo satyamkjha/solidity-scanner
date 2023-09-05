@@ -16,6 +16,7 @@ import {
   MultiFileScanDetail,
   MultiFileScanSummary,
   Profile,
+  Issues,
 } from "common/types";
 import { issueActions } from "common/values";
 import API from "helpers/api";
@@ -123,6 +124,7 @@ const MultifileResult: React.FC<{
     true,
   ]);
 
+  const [selectedIssues, setSelectedIssues] = useState<Issues[]>([]);
   const [selectedBugs, setSelectedBugs] = useState<string[]>([]);
 
   const { isOpen, onClose, onOpen } = useDisclosure();
@@ -139,31 +141,39 @@ const MultifileResult: React.FC<{
 
   const updateBugStatus = async (action: string, comment?: string) => {
     if (files) {
-      const { data } = await API.post(API_PATH.API_UPDATE_BUG_STATUS, {
-        bug_ids: selectedBugs,
-        scan_id: scanId,
-        project_id: projectId,
-        bug_status: action,
-        comment: comment,
-        scan_type: type,
-      });
-      if (data.status === "success") {
-        toast({
-          title: "Bug Status Updated",
-          description: data.message,
-          status: "success",
-          duration: 3000,
-          isClosable: true,
+      if (action === "create_github_issue") {
+        createGithubIssue();
+      } else {
+        const { data } = await API.post(API_PATH.API_UPDATE_BUG_STATUS, {
+          bug_ids: selectedBugs,
+          scan_id: scanId,
+          project_id: projectId,
+          bug_status: action,
+          comment: comment,
+          scan_type: type,
+        });
+        if (data.status === "success") {
+          toast({
+            title: "Bug Status Updated",
+            description: data.message,
+            status: "success",
+            duration: 3000,
+            isClosable: true,
+          });
+        }
+        setFiles({
+          ...files,
+          bug_status: action,
+          comment: comment,
         });
       }
-      setFiles({
-        ...files,
-        bug_status: action,
-        comment: comment,
-      });
       setSelectedBugs([]);
     }
     refetch();
+  };
+
+  const createGithubIssue = () => {
+    console.log(selectedIssues);
   };
 
   const onActionConfirm = (comment: string) => {
@@ -173,6 +183,13 @@ const MultifileResult: React.FC<{
   useEffect(() => {
     setIssues(scanDetails);
   }, [scanDetails]);
+
+  useEffect(() => {
+    const bugHashList: string[] = selectedIssues
+      .flatMap((issue) => issue.bugs || [])
+      .map((finding) => finding.bug_hash);
+    setSelectedBugs(bugHashList);
+  }, [selectedIssues]);
 
   useEffect(() => {
     if (files) {
@@ -195,6 +212,16 @@ const MultifileResult: React.FC<{
         });
         return newState;
       });
+      const issue = selectedIssues.find((item) => item.issue_id === files.issue_id);
+      if (issue) {
+        setSelectedIssues((currentList) => {
+          let newList = currentList.filter((item) => item.issue_id !== files.issue_id);
+          issue.bugs.
+            newList.push(issue);
+          return newList;
+        });
+      }
+
     }
   }, [files]);
 
@@ -288,7 +315,7 @@ const MultifileResult: React.FC<{
               files={files}
               setFiles={setFiles}
               selectedBugs={selectedBugs}
-              setSelectedBugs={setSelectedBugs}
+              setSelectedIssues={setSelectedIssues}
               confidence={confidence}
               vulnerability={vulnerability}
               updateBugStatus={updateBugStatus}

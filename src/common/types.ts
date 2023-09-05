@@ -180,6 +180,11 @@ export type MetricWiseAggregatedFinding = {
   issue_remediation?: string;
 };
 
+export type Issues = {
+  issue_id: string;
+  bugs?: MetricWiseAggregatedFinding[];
+}
+
 export type PricingData = {
   pricing_data: {
     [key: string]: {

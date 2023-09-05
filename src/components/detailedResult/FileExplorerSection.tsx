@@ -10,6 +10,7 @@ import {
   IconButton,
   Tooltip,
   useDisclosure,
+  Button,
 } from "@chakra-ui/react";
 import { FilesState } from "../../common/types";
 import { issueActions } from "../../common/values";
@@ -25,6 +26,7 @@ import { useConfig } from "hooks/useConfig";
 import ConfirmActionForm from "../confirmActionForm";
 import FormatOptionLabelWithImage from "../../components/FormatOptionLabelWithImage";
 import { customStylesForTakeAction } from "../../common/stylesForCustomSelect";
+import { AiFillGithub } from "react-icons/ai";
 
 export const FileExplorerSection: React.FC<{
   type: "block" | "project";
@@ -77,8 +79,13 @@ export const FileExplorerSection: React.FC<{
     setTabIndex(index);
   };
 
-  const onActionConfirm = (comment: string) => {
+  const onActionConfirm = (comment?: string) => {
     bugStatus && updateBugStatus(bugStatus, comment);
+  };
+
+  const createGithubIssue = () => {
+    onOpen();
+    setBugStatus("create_github_issue");
   };
 
   return (
@@ -122,6 +129,22 @@ export const FileExplorerSection: React.FC<{
                 }
               }}
             />
+            {project_url && project_url !== "File Scan" && (
+              <Tooltip
+                label="Create Issue on Github"
+                fontSize="md"
+                isDisabled={false}
+              >
+                <IconButton
+                  aria-label="Create Github Issue"
+                  background="#FAFBFC"
+                  fontSize={"lg"}
+                  icon={<AiFillGithub />}
+                  isDisabled={isDisabled || isViewer}
+                  onClick={createGithubIssue}
+                />
+              </Tooltip>
+            )}
           </HStack>
           <HStack>
             <Tooltip label="View Issue Description" fontSize="md">
@@ -220,7 +243,7 @@ export const FileExplorerSection: React.FC<{
           </Flex>
         )}
       </Box>
-      {bugStatus && (
+      {bugStatus && bugStatus === "wont_fix" ? (
         <ConfirmActionForm
           isOpen={isOpen}
           onClose={onClose}
@@ -244,6 +267,33 @@ export const FileExplorerSection: React.FC<{
             </Text>
           }
         />
+      ) : (
+        bugStatus === "create_github_issue" && (
+          <ConfirmActionForm
+            isOpen={isOpen}
+            onClose={onClose}
+            onActionConfirm={onActionConfirm}
+            addComment={false}
+            modalHeader={"Create Issue on Github"}
+            confirmBtnText={"Create Issue"}
+            modelText={
+              <Text my={4} color="subtle" w={["100%"]}>
+                You are about to create a{" "}
+                <Text as={"span"} color="black" fontWeight={"bold"}>
+                  Github Issue
+                </Text>{" "}
+                for selected{" "}
+                <Text as={"span"} color="black" fontWeight={"bold"}>
+                  {selectedBugs.length}
+                </Text>{" "}
+                bug(s).{" "}
+                <Text color="subtle" w={["100%"]}>
+                  Please click on create issue to confirm.
+                </Text>
+              </Text>
+            }
+          />
+        )
       )}
     </VStack>
   );

@@ -50,7 +50,7 @@ export const customStylesForTakeAction = {
 
   container: (provided: any, state: any) => ({
     ...provided,
-    width: "300px",
+    width: "250px",
   }),
 };
 

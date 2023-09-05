@@ -5,6 +5,7 @@ import {
   MetricWiseAggregatedFinding,
   MultiFileScanDetail,
   Profile,
+  Issues,
 } from "common/types";
 import { severityPriority } from "common/values";
 import React from "react";
@@ -17,7 +18,7 @@ type MultifileIssuesProps = {
   files: FilesState | null;
   setFiles: Dispatch<SetStateAction<FilesState | null>>;
   selectedBugs: string[];
-  setSelectedBugs: Dispatch<SetStateAction<string[]>>;
+  setSelectedIssues: Dispatch<SetStateAction<Issues[]>>;
   confidence: boolean[];
   vulnerability: boolean[];
   bugStatusFilter: boolean[];
@@ -40,7 +41,7 @@ const MultifileIssues: React.FC<MultifileIssuesProps> = ({
   is_latest_scan,
   setFiles,
   selectedBugs,
-  setSelectedBugs,
+  setSelectedIssues,
   isViewer,
   confidence,
   vulnerability,
@@ -131,7 +132,7 @@ const MultifileIssues: React.FC<MultifileIssuesProps> = ({
                     details_enabled={details_enabled}
                     setFiles={setFiles}
                     selectedBugs={selectedBugs}
-                    setSelectedBugs={setSelectedBugs}
+                    setSelectedIssues={setSelectedIssues}
                     bugStatusFilter={bugStatusFilter}
                     updateBugStatus={updateBugStatus}
                     project_url={project_url}

@@ -14,6 +14,7 @@ import {
   FilesState,
   MetricWiseAggregatedFinding,
   MultiFileTemplateDetail,
+  Issues,
 } from "common/types";
 import React, { Dispatch, SetStateAction, useEffect, useState } from "react";
 import { AiOutlineCaretRight } from "react-icons/ai";
@@ -30,7 +31,7 @@ const IssueContainer: React.FC<{
   files: FilesState | null;
   setFiles: Dispatch<SetStateAction<FilesState | null>>;
   selectedBugs: string[];
-  setSelectedBugs: Dispatch<SetStateAction<string[]>>;
+  setSelectedIssues: Dispatch<SetStateAction<Issues[]>>;
   details_enabled: boolean;
   is_latest_scan: boolean;
   bugStatusFilter: boolean[];
@@ -51,7 +52,7 @@ const IssueContainer: React.FC<{
   is_latest_scan,
   setFiles,
   selectedBugs,
-  setSelectedBugs,
+  setSelectedIssues,
   details_enabled,
   bugStatusFilter,
   updateBugStatus,
@@ -65,9 +66,8 @@ const IssueContainer: React.FC<{
   let pendingFixes;
   let bugHashList: string[];
   if (details_enabled) {
-    pendingFixes = metric_wise_aggregated_findings.filter((item) => 
-      (item.bug_status !== "fixed") 
-        
+    pendingFixes = metric_wise_aggregated_findings.filter(
+      (item) => item.bug_status !== "fixed"
     );
     bugHashList = pendingFixes && pendingFixes.map((item) => item.bug_hash);
   }
@@ -82,12 +82,12 @@ const IssueContainer: React.FC<{
     if (isChecked) {
       const updatedSet = new Set([...selectedBugs, ...bugHashList]);
       setCheckedChildren([...bugHashList]);
-      setSelectedBugs(Array.from(updatedSet));
+      setSelectedIssueList(Array.from(updatedSet));
     } else if (checkedChildren.length === 0) {
       const filterdList = selectedBugs.filter(
         (item) => !bugHashList.includes(item)
       );
-      setSelectedBugs(filterdList);
+      setSelectedIssueList(filterdList);
     }
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -125,12 +125,28 @@ const IssueContainer: React.FC<{
       if (!checkedChildren.includes(hash))
         setCheckedChildren([...checkedChildren, hash]);
       if (!selectedBugs.includes(hash))
-        setSelectedBugs([...selectedBugs, hash]);
+        setSelectedIssueList([...selectedBugs, hash]);
     } else {
       setCheckedChildren(checkedChildren.filter((item) => item !== hash));
-      setSelectedBugs(selectedBugs.filter((item) => item !== hash));
+      setSelectedIssueList(selectedBugs.filter((item) => item !== hash));
       setIsChecked(false);
     }
+  };
+
+  const setSelectedIssueList = (bugList: string[]) => {
+    setSelectedIssues((currentList) => {
+      let newList = currentList.filter((item) => item.issue_id !== issue_id);
+      if (bugList.length) {
+        const issue = {
+          issue_id,
+          bugs: metric_wise_aggregated_findings.filter((item) =>
+            bugList.includes(item.bug_hash)
+          ),
+        };
+        newList.push(issue);
+      }
+      return newList;
+    });
   };
 
   return (
