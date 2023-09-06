@@ -21,16 +21,14 @@ import { useHistory } from "react-router-dom";
 const REDIRECT_URI =
   process.env.NODE_ENV === "production"
     ? "https://solidityscan.com/integrations/"
-    : "http://127.0.0.1:3001/integrations/";
+    : "http://develop.solidityscan.com/integrations/";
 const JIRA_URL = `https://auth.atlassian.com/authorize?audience=api.atlassian.com&client_id=${JIRA_CLIENT_ID}&scope=${JIRA_SCOPE}&redirect_uri=${REDIRECT_URI}&state=${getCookie(
   "csrftoken"
 )}&response_type=code&prompt=consent`;
 const GITHUB_URL = `https://github.com/apps/${
   process.env.REACT_APP_GITHUB_APP_NAME
 }/installations/new?state=${getCookie("csrftoken")}`;
-const SLACK_URL = `https://slack.com/oauth/v2/authorize?client_id=${SLACK_CLIENT_ID}&scope=${SLACK_SCOPE}&user_scope=&redirect_uri=${REDIRECT_URI}&state=${getCookie(
-  "csrftoken"
-)}`;
+const SLACK_URL = `https://slack.com/oauth/v2/authorize?scope=incoming-webhook&client_id=5811213392708.5802184801814`;
 
 const Integrations: React.FC<{ profileData: Profile }> = ({ profileData }) => {
   return (
