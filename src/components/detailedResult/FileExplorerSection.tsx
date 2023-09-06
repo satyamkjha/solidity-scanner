@@ -184,7 +184,8 @@ export const FileExplorerSection: React.FC<{
           top: 5,
         }}
       >
-        {!details_enabled ? (
+        {!details_enabled &&
+        files?.template_details.issue_severity !== "gas" ? (
           <TrialWall />
         ) : files ? (
           <MultipleFileExplorer

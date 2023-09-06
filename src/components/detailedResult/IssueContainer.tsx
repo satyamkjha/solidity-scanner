@@ -63,13 +63,13 @@ const IssueContainer: React.FC<{
   isViewer,
 }) => {
   let pendingFixes;
-  let bugHashList: string[];
-  if (details_enabled) {
-    pendingFixes = metric_wise_aggregated_findings.filter((item) => 
-      (item.bug_status !== "fixed") 
-        
+  let bugHashList: string[] = [];
+  if (details_enabled || template_details.issue_severity === "gas") {
+    pendingFixes = metric_wise_aggregated_findings.filter(
+      (item) => item.bug_status !== "fixed"
     );
     bugHashList = pendingFixes && pendingFixes.map((item) => item.bug_hash);
+    console.log(bugHashList, "gas");
   }
 
   const [isHovered, setIsHovered] = useState(false);
@@ -157,7 +157,8 @@ const IssueContainer: React.FC<{
               }}
             >
               <HStack w="90%">
-                {details_enabled &&
+                {(details_enabled ||
+                  template_details.issue_severity === "gas") &&
                 pendingFixes.length > 0 &&
                 (isHovered ||
                   isChecked ||
@@ -219,7 +220,7 @@ const IssueContainer: React.FC<{
             />
           </AccordionButton>
           <AccordionPanel p={0} pb={4}>
-            {!details_enabled ? (
+            {!details_enabled && template_details.issue_severity !== "gas" ? (
               <TrialWallIssue
                 severity={template_details.issue_severity}
                 no_of_issue={no_of_findings}
