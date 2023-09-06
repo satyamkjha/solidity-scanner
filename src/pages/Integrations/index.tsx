@@ -17,6 +17,7 @@ import API from "helpers/api";
 import { API_PATH } from "helpers/routeManager";
 import Loader from "components/styled-components/Loader";
 import { Profile } from "common/types";
+import { useHistory } from "react-router-dom";
 const REDIRECT_URI =
   process.env.NODE_ENV === "production"
     ? "https://solidityscan.com/integrations/"
@@ -70,15 +71,6 @@ const Integrations: React.FC<{ profileData: Profile }> = ({ profileData }) => {
             providerUrlChecker="github.com"
           />
           <IntegrationChannel
-            title="JIRA"
-            description="Connect JIRA to export vulnerabilities"
-            icon={<JiraIcon size={73} />}
-            allowed={profileData._integrations.jira.allowed}
-            status={profileData._integrations.jira.status}
-            url={JIRA_URL}
-            providerUrlChecker="atlassian.com"
-          />
-          <IntegrationChannel
             title="Slack"
             description="Connect slack to receive updates about vulnerabilities directly to slack"
             icon={<SlackIcon size={73} />}
@@ -86,6 +78,15 @@ const Integrations: React.FC<{ profileData: Profile }> = ({ profileData }) => {
             status={profileData._integrations.slack.status}
             url={SLACK_URL}
             providerUrlChecker="slack.com"
+          />
+          <IntegrationChannel
+            title="JIRA"
+            description="Connect JIRA to export vulnerabilities"
+            icon={<JiraIcon size={73} />}
+            allowed={profileData._integrations.jira.allowed}
+            status={profileData._integrations.jira.status}
+            url={JIRA_URL}
+            providerUrlChecker="atlassian.com"
           />
         </VStack>
       )}
@@ -116,6 +117,7 @@ const IntegrationChannel: React.FC<IntegrationChannelProps> = ({
 }) => {
   const [loading, setLoading] = useState(false);
   const queryClient = useQueryClient();
+  const history = useHistory();
   const onSuccess = async (code: string) => {
     try {
       setLoading(true);
@@ -224,14 +226,14 @@ const IntegrationChannel: React.FC<IntegrationChannelProps> = ({
             color="black"
             fontSize="15px"
             py={6}
-            disabled={title === "GitHub" ? true : false}
+            onClick={() => {
+              if (title !== "JIRA") history.push("/billing");
+            }}
             border="2px solid #2FF86B"
             width="250px"
           >
-            {title === "GitHub" && (
-              <Icon as={BiLockAlt} mr={2} fontSize="18px" />
-            )}
-            {title === "GitHub" ? "Upgrade" : "Coming Soon"}
+            {title !== "JIRA" && <Icon as={BiLockAlt} mr={2} fontSize="18px" />}
+            {title === "JIRA" ? "Coming Soon" : "Upgrade"}
           </Button>
         )}
       </Flex>
