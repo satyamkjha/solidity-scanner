@@ -39,8 +39,6 @@ const OauthHelper: React.FC<OauthHelperProps> = ({
         return onFailure("Popup has been closed by user");
       }
 
-      console.log(popup);
-
       const closeDialog = () => {
         clearInterval(polling);
         popup.close();
