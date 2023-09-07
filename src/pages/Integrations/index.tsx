@@ -28,7 +28,7 @@ const JIRA_URL = `https://auth.atlassian.com/authorize?audience=api.atlassian.co
 const GITHUB_URL = `https://github.com/apps/${
   process.env.REACT_APP_GITHUB_APP_NAME
 }/installations/new?state=${getCookie("csrftoken")}`;
-const SLACK_URL = `https://slack.com/oauth/v2/authorize?client_id=${SLACK_CLIENT_ID}&scope=${SLACK_SCOPE}&user_scope=&redirect_uri=${REDIRECT_URI}&state=${getCookie(
+const SLACK_URL = `https://slack.com/oauth/v2/authorize?client_id=${SLACK_CLIENT_ID}&scope=${SLACK_SCOPE}&state=${getCookie(
   "csrftoken"
 )}`;
 const Integrations: React.FC<{ profileData: Profile }> = ({ profileData }) => {
