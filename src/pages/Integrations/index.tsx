@@ -136,7 +136,7 @@ const IntegrationChannel: React.FC<IntegrationChannelProps> = ({
   const onDisconnect = async () => {
     try {
       setLoading(true);
-      await API.post(
+      await API.delete(
         `${API_PATH.API_DELETE_INTEGRATIONS}${title.toLowerCase()}/`,
         {}
       );
