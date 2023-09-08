@@ -209,7 +209,6 @@ export default function PrivateApi() {
                 </Text>
               )}
             </Flex>
-
             <Button
               onClick={getAccessKey}
               variant={"cta-outline"}
@@ -411,7 +410,7 @@ export default function PrivateApi() {
           )}
           <Flex
             background="#FAFBFC"
-            boxShadow={"0px 2px 2px rgba(0, 0, 0, 0.06)"}
+            boxShadow={"0px 2p 2px rgba(0, 0, 0, 0.06)"}
             borderRadius={"15px"}
             align="center"
             justifyContent="center"

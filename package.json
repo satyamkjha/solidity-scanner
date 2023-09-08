@@ -33,6 +33,7 @@
     "i": "^0.3.7",
     "js-cookie": "^3.0.1",
     "js-file-download": "^0.4.12",
+    "lottie-react": "^2.4.0",
     "metamask-react": "^2.3.0",
     "npm": "^8.5.5",
     "react": "^17.0.2",

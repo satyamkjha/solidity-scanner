@@ -1,6 +1,11 @@
 import UAParser from "ua-parser-js";
 import reCAPTCHA from "helpers/reCAPTCHA";
+<<<<<<< HEAD
 import { Profile, PricingData, Finding } from "common/types";
+=======
+import { Profile, PricingData } from "common/types";
+import axios from "axios";
+>>>>>>> development
 
 let configValue: any = null;
 
@@ -150,3 +155,10 @@ export const getProjectFileUrl = (
     file.file_path
   }#L${file.line_nos_start}-L${file.line_nos_end}`;
 };
+
+// export const getAssetsFromS3 = async (directory: string) => {
+//   const assetsURL = getAssetsURL();
+//   const response = await axios.get(`${assetsURL}${directory}`);
+//   const jsonData = response.data;
+//   return jsonData;
+// };
