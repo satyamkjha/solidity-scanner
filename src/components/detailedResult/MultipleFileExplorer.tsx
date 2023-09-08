@@ -138,7 +138,11 @@ const MultipleFileExplorer: React.FC<MultipleFileExplorerProps> = ({
               </Flex>
             </Flex>
             <Flex width={"100%"} height={"100%"} px={2} pt={2}>
-              <FileDataContainer type={type} file={currentFile} />
+              <FileDataContainer
+                type={type}
+                file={currentFile}
+                wait_to_scroll={files.wait_to_scroll}
+              />
             </Flex>
             {/* <TabPanels>
                 {files.findings.map((file, index) => (

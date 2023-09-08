@@ -6,8 +6,16 @@ import { useFileContent } from "hooks/useFileContent";
 import { useParams } from "react-router-dom";
 import Loader from "components/styled-components/Loader";
 
-type FileDataContProps = { file: Finding; type: "project" | "block" };
-const FileDataContainer: React.FC<FileDataContProps> = ({ file, type }) => {
+type FileDataContProps = {
+  file: Finding;
+  type: "project" | "block";
+  wait_to_scroll: number;
+};
+const FileDataContainer: React.FC<FileDataContProps> = ({
+  file,
+  type,
+  wait_to_scroll = 0,
+}) => {
   const { scanId: scan_id } = useParams<{ scanId: string }>();
   const { file_path, line_nos_end, line_nos_start } = file;
   const { data, isLoading } = useFileContent(scan_id, file_path, type);
@@ -39,6 +47,7 @@ const FileDataContainer: React.FC<FileDataContProps> = ({ file, type }) => {
             file_content={fileContent}
             line_nos_start={line_nos_start}
             line_nos_end={line_nos_end}
+            wait_to_scroll={wait_to_scroll}
           />
         )
       )}

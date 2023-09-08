@@ -5,19 +5,22 @@ const CodeExplorer: React.FC<{
   file_content: string[];
   line_nos_start: number[];
   line_nos_end: number[];
-}> = ({ file_content, line_nos_start, line_nos_end }) => {
+  wait_to_scroll: number;
+}> = ({ file_content, line_nos_start, line_nos_end, wait_to_scroll }) => {
   const elementRef = useRef<HTMLDivElement>(null);
   const [isDesktopView] = useMediaQuery("(min-width: 1024px)");
 
   const scrollToBottom = () => {
     if (isDesktopView) {
-      if (elementRef.current) {
-        elementRef.current.scrollIntoView({
-          behavior: "smooth",
-          block: "start",
-          inline: "start",
-        });
-      }
+      setTimeout(() => {
+        if (elementRef.current) {
+          elementRef.current.scrollIntoView({
+            behavior: "smooth",
+            block: "start",
+            inline: "start",
+          });
+        }
+      }, wait_to_scroll);
     } else {
       setTimeout(() => {
         if (elementRef.current) {

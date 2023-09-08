@@ -16,7 +16,13 @@ import {
   MultiFileTemplateDetail,
   Issues,
 } from "common/types";
-import React, { Dispatch, SetStateAction, useEffect, useState } from "react";
+import React, {
+  Dispatch,
+  SetStateAction,
+  useEffect,
+  useState,
+  useRef,
+} from "react";
 import { AiOutlineCaretRight } from "react-icons/ai";
 import { SeverityIcon } from "../icons";
 import { TrialWallIssue } from "./TrialWall";
@@ -44,6 +50,7 @@ const IssueContainer: React.FC<{
   branchName?: string;
   contract_address?: string;
   isViewer: boolean;
+  scrollIntoView: boolean;
 }> = ({
   type,
   issue_id,
@@ -65,21 +72,41 @@ const IssueContainer: React.FC<{
   branchName,
   contract_address,
   isViewer,
+  scrollIntoView,
 }) => {
   let pendingFixes;
-  let bugHashList: string[];
-  if (details_enabled) {
+  let bugHashList: string[] = [];
+  if (details_enabled || template_details.issue_severity === "gas") {
     pendingFixes = metric_wise_aggregated_findings.filter(
       (item) => item.bug_status !== "fixed"
     );
     bugHashList = pendingFixes && pendingFixes.map((item) => item.bug_hash);
   }
 
+  const scrollToElementRef = useRef<HTMLDivElement>(null);
+
   const [isHovered, setIsHovered] = useState(false);
   const [isChecked, setIsChecked] = useState(false);
   const [checkedChildren, setCheckedChildren] = useState<
     (string | undefined)[]
   >([]);
+
+  useEffect(() => {
+    if (
+      files &&
+      scrollIntoView &&
+      scrollToElementRef &&
+      scrollToElementRef.current
+    ) {
+      console.log(issue_id);
+      scrollToElementRef.current.scrollIntoView({
+        behavior: "smooth",
+        block: "start",
+        inline: "start",
+      });
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [files]);
 
   useEffect(() => {
     if (isChecked) {
@@ -139,9 +166,11 @@ const IssueContainer: React.FC<{
   const setSelectedIssueList = (bugList: string[]) => {
     setSelectedIssues((currentList) => {
       let newList = currentList.filter((item) => item.issue_id !== issue_id);
-      const bugs = metric_wise_aggregated_findings.filter((item) =>
-        bugList.includes(item.bug_hash)
-      );
+      const bugs =
+        metric_wise_aggregated_findings &&
+        metric_wise_aggregated_findings.filter((item) =>
+          bugList.includes(item.bug_hash)
+        );
       if (bugList.length && bugs.length) {
         const issue = {
           issue_id,
@@ -155,7 +184,12 @@ const IssueContainer: React.FC<{
   };
 
   return (
-    <AccordionItem id={issue_id} key={issue_id} w={"98%"}>
+    <AccordionItem
+      id={issue_id}
+      key={issue_id}
+      w={"98%"}
+      ref={scrollToElementRef}
+    >
       {({ isExpanded }) => (
         <>
           <AccordionButton
@@ -178,7 +212,8 @@ const IssueContainer: React.FC<{
               }}
             >
               <HStack w="90%">
-                {details_enabled &&
+                {(details_enabled ||
+                  template_details.issue_severity === "gas") &&
                 pendingFixes.length > 0 &&
                 (isHovered ||
                   isChecked ||
@@ -237,7 +272,7 @@ const IssueContainer: React.FC<{
             />
           </AccordionButton>
           <AccordionPanel p={0} pb={4}>
-            {!details_enabled ? (
+            {!details_enabled && template_details.issue_severity !== "gas" ? (
               <TrialWallIssue
                 severity={template_details.issue_severity}
                 no_of_issue={no_of_findings}

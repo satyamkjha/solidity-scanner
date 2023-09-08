@@ -17,20 +17,20 @@ import API from "helpers/api";
 import { API_PATH } from "helpers/routeManager";
 import Loader from "components/styled-components/Loader";
 import { Profile } from "common/types";
+import { useHistory } from "react-router-dom";
 const REDIRECT_URI =
-  process.env.NODE_ENV === "production"
+  process.env.REACT_APP_ENVIRONMENT === "prod"
     ? "https://solidityscan.com/integrations/"
-    : "http://127.0.0.1:3001/integrations/";
+    : "https://develop.solidityscan.com/integrations/";
 const JIRA_URL = `https://auth.atlassian.com/authorize?audience=api.atlassian.com&client_id=${JIRA_CLIENT_ID}&scope=${JIRA_SCOPE}&redirect_uri=${REDIRECT_URI}&state=${getCookie(
   "csrftoken"
 )}&response_type=code&prompt=consent`;
 const GITHUB_URL = `https://github.com/apps/${
   process.env.REACT_APP_GITHUB_APP_NAME
 }/installations/new?state=${getCookie("csrftoken")}`;
-const SLACK_URL = `https://slack.com/oauth/v2/authorize?client_id=${SLACK_CLIENT_ID}&scope=${SLACK_SCOPE}&user_scope=&redirect_uri=${REDIRECT_URI}&state=${getCookie(
+const SLACK_URL = `https://slack.com/oauth/v2/authorize?client_id=${SLACK_CLIENT_ID}&scope=${SLACK_SCOPE}&state=${getCookie(
   "csrftoken"
 )}`;
-
 const Integrations: React.FC<{ profileData: Profile }> = ({ profileData }) => {
   return (
     <Box
@@ -70,15 +70,6 @@ const Integrations: React.FC<{ profileData: Profile }> = ({ profileData }) => {
             providerUrlChecker="github.com"
           />
           <IntegrationChannel
-            title="JIRA"
-            description="Connect JIRA to export vulnerabilities"
-            icon={<JiraIcon size={73} />}
-            allowed={profileData._integrations.jira.allowed}
-            status={profileData._integrations.jira.status}
-            url={JIRA_URL}
-            providerUrlChecker="atlassian.com"
-          />
-          <IntegrationChannel
             title="Slack"
             description="Connect slack to receive updates about vulnerabilities directly to slack"
             icon={<SlackIcon size={73} />}
@@ -86,6 +77,15 @@ const Integrations: React.FC<{ profileData: Profile }> = ({ profileData }) => {
             status={profileData._integrations.slack.status}
             url={SLACK_URL}
             providerUrlChecker="slack.com"
+          />
+          <IntegrationChannel
+            title="JIRA"
+            description="Connect JIRA to export vulnerabilities"
+            icon={<JiraIcon size={73} />}
+            allowed={profileData._integrations.jira.allowed}
+            status={profileData._integrations.jira.status}
+            url={JIRA_URL}
+            providerUrlChecker="atlassian.com"
           />
         </VStack>
       )}
@@ -116,6 +116,7 @@ const IntegrationChannel: React.FC<IntegrationChannelProps> = ({
 }) => {
   const [loading, setLoading] = useState(false);
   const queryClient = useQueryClient();
+  const history = useHistory();
   const onSuccess = async (code: string) => {
     try {
       setLoading(true);
@@ -135,7 +136,7 @@ const IntegrationChannel: React.FC<IntegrationChannelProps> = ({
   const onDisconnect = async () => {
     try {
       setLoading(true);
-      await API.post(
+      await API.delete(
         `${API_PATH.API_DELETE_INTEGRATIONS}${title.toLowerCase()}/`,
         {}
       );
@@ -224,14 +225,14 @@ const IntegrationChannel: React.FC<IntegrationChannelProps> = ({
             color="black"
             fontSize="15px"
             py={6}
-            disabled={title === "GitHub" ? true : false}
+            onClick={() => {
+              if (title !== "JIRA") history.push("/billing");
+            }}
             border="2px solid #2FF86B"
             width="250px"
           >
-            {title === "GitHub" && (
-              <Icon as={BiLockAlt} mr={2} fontSize="18px" />
-            )}
-            {title === "GitHub" ? "Upgrade" : "Coming Soon"}
+            {title !== "JIRA" && <Icon as={BiLockAlt} mr={2} fontSize="18px" />}
+            {title === "JIRA" ? "Coming Soon" : "Upgrade"}
           </Button>
         )}
       </Flex>

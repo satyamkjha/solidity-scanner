@@ -134,8 +134,15 @@ export const TrialWallIssue: React.FC<{
           fontSize="md"
           color="black"
           mb={4}
+          display={"flex"}
+          alignItems={"center"}
+          justifyContent={"center"}
         >
-          {no_of_issue} Vulnerabilities found !
+          {no_of_issue}
+          <Text textTransform="capitalize" mx={1}>
+            {severity}{" "}
+          </Text>
+          Vulnerabilities found !
         </Text>
         <Text
           textAlign={"center"}

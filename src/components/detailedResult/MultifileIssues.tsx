@@ -1,5 +1,5 @@
-import { Dispatch, SetStateAction } from "react";
-import { Accordion, useMediaQuery } from "@chakra-ui/react";
+import { Dispatch, SetStateAction, useEffect, useRef } from "react";
+import { Accordion, useMediaQuery, Box } from "@chakra-ui/react";
 import {
   FilesState,
   MetricWiseAggregatedFinding,
@@ -58,6 +58,9 @@ const MultifileIssues: React.FC<MultifileIssuesProps> = ({
 }) => {
   const [isDesktopView] = useMediaQuery("(min-width: 1350px)");
   let issue_count: number;
+  const gasIssueIndex = issues.findIndex(
+    (issue) => issue.template_details.issue_severity === "gas"
+  );
 
   const getVulnerabilityNumber = (issue_severity: string) => {
     switch (issue_severity) {
@@ -95,7 +98,11 @@ const MultifileIssues: React.FC<MultifileIssuesProps> = ({
   };
 
   return (
-    <Accordion allowMultiple={isDesktopView} allowToggle>
+    <Accordion
+      allowMultiple={isDesktopView}
+      allowToggle
+      defaultIndex={!details_enabled ? gasIssueIndex : [0]}
+    >
       {Array.from(issues)
         .sort((issue1, issue2) =>
           severityPriority[issue1.template_details.issue_severity] >
@@ -144,6 +151,10 @@ const MultifileIssues: React.FC<MultifileIssuesProps> = ({
                     branchName={branchName}
                     contract_address={contract_address}
                     isViewer={isViewer}
+                    scrollIntoView={
+                      issue_id === issues[gasIssueIndex].issue_id &&
+                      files?.issue_id === issues[gasIssueIndex].issue_id
+                    }
                   />
                 ) : (
                   <></>

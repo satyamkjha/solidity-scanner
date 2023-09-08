@@ -61,7 +61,6 @@ const OauthHelper: React.FC<OauthHelperProps> = ({
           }
         }
       } catch (error) {
-        console.error(error);
         // Ignore DOMException: Blocked a frame with origin from accessing a cross-origin frame.
         // A hack to get around same-origin security policy errors in IE.
       }
