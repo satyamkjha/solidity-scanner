@@ -9,6 +9,7 @@ import {
   HStack,
   useMediaQuery,
   useDisclosure,
+  Button,
 } from "@chakra-ui/react";
 import Select from "react-select";
 import {
@@ -28,6 +29,8 @@ import FormatOptionLabelWithImage from "components/FormatOptionLabelWithImage";
 import { customStylesForTakeAction } from "common/stylesForCustomSelect";
 import ConfirmActionForm from "../confirmActionForm";
 import { useUserRole } from "hooks/useUserRole";
+import { getProjectFileUrl } from "helpers/helperFunction";
+import { FileIssue } from "components/icons";
 
 const MultifileResult: React.FC<{
   type: "block" | "project";
@@ -172,8 +175,51 @@ const MultifileResult: React.FC<{
     refetch();
   };
 
-  const createGithubIssue = () => {
-    console.log(selectedIssues);
+  const createGithubIssue = async () => {
+    if (selectedIssues && selectedIssues.length === 1) {
+      const payload = {
+        issue_id: selectedIssues[0].issue_id,
+        issue_title: selectedIssues[0].template_details.issue_name,
+        repo_url: project_url,
+        bugs: selectedIssues[0].bugs?.map((bug) => {
+          return {
+            id: bug.bug_id,
+            description: selectedIssues[0].template_details.issue_description
+              ? selectedIssues[0].template_details.issue_description.format({
+                  ...bug.description_details,
+                })
+              : "",
+            remediation: selectedIssues[0].template_details.issue_remediation
+              ? selectedIssues[0].template_details.issue_remediation.format({
+                  ...bug.description_details,
+                })
+              : "",
+            code_snapshot:
+              project_url && branchName
+                ? bug.findings
+                    .map((file) =>
+                      getProjectFileUrl(project_url, branchName, file)
+                    )
+                    .join(", ")
+                : "",
+          };
+        }),
+      };
+      const { data } = await API.post(
+        API_PATH.API_CREATE_GITHUB_BUGS_ISSUE,
+        payload
+      );
+
+      if (data && data.issue_url) {
+        toast({
+          title: "GitHub issue successfully created",
+          status: "success",
+          duration: 5000,
+          isClosable: true,
+          position: "bottom",
+        });
+      }
+    }
   };
 
   const onActionConfirm = (comment: string) => {
@@ -212,16 +258,6 @@ const MultifileResult: React.FC<{
         });
         return newState;
       });
-      const issue = selectedIssues.find((item) => item.issue_id === files.issue_id);
-      if (issue) {
-        setSelectedIssues((currentList) => {
-          let newList = currentList.filter((item) => item.issue_id !== files.issue_id);
-          issue.bugs.
-            newList.push(issue);
-          return newList;
-        });
-      }
-
     }
   }, [files]);
 
@@ -236,6 +272,11 @@ const MultifileResult: React.FC<{
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedBugs]);
+
+  const isFileIssueDisabled = () => {
+    if (isViewer) return true;
+    return isDisabled || (selectedIssues && selectedIssues.length > 1);
+  };
 
   return (
     <>
@@ -270,17 +311,15 @@ const MultifileResult: React.FC<{
               zIndex={1}
               w={"100%"}
               py={2}
+              pr={2}
             >
-              <Text fontWeight={600} ml={2} mr={5} whiteSpace="nowrap">
-                Take Action
-              </Text>
               <Select
                 formatOptionLabel={FormatOptionLabelWithImage}
                 options={issueActions}
                 value={issueActions.find(
                   (item) => files?.bug_status === item.value
                 )}
-                placeholder="Select Action"
+                placeholder="Take Action"
                 styles={customStylesForTakeAction}
                 isDisabled={isDisabled || isViewer}
                 onChange={(newValue) => {
@@ -294,6 +333,27 @@ const MultifileResult: React.FC<{
                   }
                 }}
               />
+              {project_url && project_url !== "File Scan" && (
+                <Button
+                  background={isFileIssueDisabled() ? "#FAFBFC" : "white"}
+                  color={isFileIssueDisabled() ? "#8A94A6" : "#806CCF"}
+                  border={isFileIssueDisabled() ? "none" : "1px solid #C1B1FF"}
+                  isDisabled={isFileIssueDisabled()}
+                  p={2}
+                  _hover={{
+                    background: "#f7f5ff",
+                  }}
+                  onClick={() => {
+                    onOpen();
+                    setBugStatus("create_github_issue");
+                  }}
+                >
+                  <FileIssue active={!isFileIssueDisabled()} />
+                  <Text fontSize={"sm"} ml={2}>
+                    File Issue
+                  </Text>
+                </Button>
+              )}
             </HStack>
           )}
           <Box
@@ -315,6 +375,7 @@ const MultifileResult: React.FC<{
               files={files}
               setFiles={setFiles}
               selectedBugs={selectedBugs}
+              selectedIssues={selectedIssues}
               setSelectedIssues={setSelectedIssues}
               confidence={confidence}
               vulnerability={vulnerability}
@@ -336,6 +397,7 @@ const MultifileResult: React.FC<{
             files={files}
             setFiles={setFiles}
             details_enabled={details_enabled}
+            selectedIssues={selectedIssues}
             selectedBugs={selectedBugs}
             updateBugStatus={updateBugStatus}
             project_url={project_url}
@@ -348,7 +410,7 @@ const MultifileResult: React.FC<{
           />
         )}
       </Flex>
-      {bugStatus && (
+      {bugStatus && bugStatus === "wont_fix" ? (
         <ConfirmActionForm
           isOpen={isOpen}
           onClose={onClose}
@@ -372,6 +434,34 @@ const MultifileResult: React.FC<{
             </Text>
           }
         />
+      ) : (
+        bugStatus === "create_github_issue" && (
+          <ConfirmActionForm
+            isOpen={isOpen}
+            onClose={onClose}
+            onActionConfirm={onActionConfirm}
+            addComment={false}
+            modalHeader={"Confirm Action"}
+            modelText={
+              <VStack>
+                <Text my={4} w={["100%"]} fontSize={"lg"} fontWeight={600}>
+                  Are you sure you want to update the Issue to Github?
+                </Text>
+                <Text my={4} color="detail" fontWeight={400} w={["100%"]}>
+                  You are about to create a{" "}
+                  <Text as={"span"} color="black" fontWeight={"bold"}>
+                    Github Issue
+                  </Text>{" "}
+                  for selected{" "}
+                  <Text as={"span"} color="black" fontWeight={"bold"}>
+                    {selectedBugs.length}
+                  </Text>{" "}
+                  bug(s). Please click on confirm to create an issue.
+                </Text>
+              </VStack>
+            }
+          />
+        )
       )}
     </>
   );

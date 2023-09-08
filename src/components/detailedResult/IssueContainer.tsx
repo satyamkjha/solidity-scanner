@@ -21,6 +21,7 @@ import { AiOutlineCaretRight } from "react-icons/ai";
 import { SeverityIcon } from "../icons";
 import { TrialWallIssue } from "./TrialWall";
 import IssueBox from "./IssueBox";
+import InputCheckbox from "components/styled-components/inputCheckbox";
 
 const IssueContainer: React.FC<{
   type: "block" | "project";
@@ -30,6 +31,7 @@ const IssueContainer: React.FC<{
   metric_wise_aggregated_findings: MetricWiseAggregatedFinding[];
   files: FilesState | null;
   setFiles: Dispatch<SetStateAction<FilesState | null>>;
+  selectedIssues: Issues[];
   selectedBugs: string[];
   setSelectedIssues: Dispatch<SetStateAction<Issues[]>>;
   details_enabled: boolean;
@@ -51,6 +53,7 @@ const IssueContainer: React.FC<{
   files,
   is_latest_scan,
   setFiles,
+  selectedIssues,
   selectedBugs,
   setSelectedIssues,
   details_enabled,
@@ -136,12 +139,14 @@ const IssueContainer: React.FC<{
   const setSelectedIssueList = (bugList: string[]) => {
     setSelectedIssues((currentList) => {
       let newList = currentList.filter((item) => item.issue_id !== issue_id);
-      if (bugList.length) {
+      const bugs = metric_wise_aggregated_findings.filter((item) =>
+        bugList.includes(item.bug_hash)
+      );
+      if (bugList.length && bugs.length) {
         const issue = {
           issue_id,
-          bugs: metric_wise_aggregated_findings.filter((item) =>
-            bugList.includes(item.bug_hash)
-          ),
+          template_details,
+          bugs,
         };
         newList.push(issue);
       }
@@ -180,22 +185,19 @@ const IssueContainer: React.FC<{
                   isExpanded ||
                   checkedChildren.length > 0) &&
                 !isViewer ? (
-                  <Checkbox
+                  <InputCheckbox
                     name={issue_id}
-                    colorScheme={"purple"}
-                    borderColor={"gray.500"}
-                    icon={
-                      isChecked ? (
-                        <CheckIcon w={3} h={3} />
-                      ) : checkedChildren.length > 0 ? (
-                        <MinusIcon />
-                      ) : (
-                        <></>
-                      )
+                    checked={checkedChildren.length > 0 ? true : isChecked}
+                    checkedColor={"#8A94A6"}
+                    checkedIcon={
+                      isChecked
+                        ? CheckIcon
+                        : checkedChildren.length > 0
+                        ? MinusIcon
+                        : null
                     }
-                    isChecked={checkedChildren.length > 0 ? true : isChecked}
                     onChange={() => onIssueCheck()}
-                  ></Checkbox>
+                  />
                 ) : (
                   <></>
                 )}
@@ -262,6 +264,7 @@ const IssueContainer: React.FC<{
                               isChecked ||
                               checkedChildren.includes(item.bug_hash)
                             }
+                            selectedIssues={selectedIssues}
                             selectedBugs={selectedBugs}
                             setFiles={setFiles}
                             updateBugHashList={updateBugHashList}

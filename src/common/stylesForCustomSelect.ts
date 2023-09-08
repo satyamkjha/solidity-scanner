@@ -45,6 +45,7 @@ export const customStylesForTakeAction = {
     flexDirection: "row",
     backgroundColor: "#FAFBFC",
     padding: 4,
+    paddingLeft: 8,
     borderRadius: 20,
   }),
 

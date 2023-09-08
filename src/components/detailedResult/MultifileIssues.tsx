@@ -18,6 +18,7 @@ type MultifileIssuesProps = {
   files: FilesState | null;
   setFiles: Dispatch<SetStateAction<FilesState | null>>;
   selectedBugs: string[];
+  selectedIssues: Issues[];
   setSelectedIssues: Dispatch<SetStateAction<Issues[]>>;
   confidence: boolean[];
   vulnerability: boolean[];
@@ -41,6 +42,7 @@ const MultifileIssues: React.FC<MultifileIssuesProps> = ({
   is_latest_scan,
   setFiles,
   selectedBugs,
+  selectedIssues,
   setSelectedIssues,
   isViewer,
   confidence,
@@ -131,6 +133,7 @@ const MultifileIssues: React.FC<MultifileIssuesProps> = ({
                     is_latest_scan={is_latest_scan}
                     details_enabled={details_enabled}
                     setFiles={setFiles}
+                    selectedIssues={selectedIssues}
                     selectedBugs={selectedBugs}
                     setSelectedIssues={setSelectedIssues}
                     bugStatusFilter={bugStatusFilter}
