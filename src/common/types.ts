@@ -478,6 +478,7 @@ export type FilesState = {
   template_details: MultiFileTemplateDetail;
   issue_description: string | undefined;
   issue_remediation: string | undefined;
+  wait_to_scroll?: number;
 };
 
 export type RecentQSItem = {

@@ -172,6 +172,52 @@ const MultifileResult: React.FC<{
 
   useEffect(() => {
     setIssues(scanDetails);
+    if (profileData.current_package === "trial") {
+      const gasIssues = scanDetails.filter(
+        (issue) => issue.template_details.issue_severity === "gas"
+      );
+      if (gasIssues && gasIssues.length) {
+        setFiles({
+          bug_id: gasIssues[0].metric_wise_aggregated_findings[0].bug_id,
+          issue_id: gasIssues[0].issue_id,
+          bug_hash: gasIssues[0].metric_wise_aggregated_findings[0].bug_hash,
+          bug_status:
+            gasIssues[0].metric_wise_aggregated_findings[0].bug_status,
+          findings: gasIssues[0].metric_wise_aggregated_findings[0].findings,
+          description_details:
+            gasIssues[0].metric_wise_aggregated_findings[0].description_details,
+          template_details: gasIssues[0].template_details,
+          comment: gasIssues[0].metric_wise_aggregated_findings[0].comment,
+          issue_description:
+            gasIssues[0].metric_wise_aggregated_findings[0].issue_description,
+          issue_remediation:
+            gasIssues[0].metric_wise_aggregated_findings[0].issue_remediation,
+
+          wait_to_scroll: 1000,
+        });
+      }
+    } else if (
+      scanDetails &&
+      scanDetails.length &&
+      scanDetails[0].metric_wise_aggregated_findings
+    ) {
+      setFiles({
+        bug_id: scanDetails[0].metric_wise_aggregated_findings[0].bug_id,
+        issue_id: scanDetails[0].issue_id,
+        bug_hash: scanDetails[0].metric_wise_aggregated_findings[0].bug_hash,
+        bug_status:
+          scanDetails[0].metric_wise_aggregated_findings[0].bug_status,
+        findings: scanDetails[0].metric_wise_aggregated_findings[0].findings,
+        description_details:
+          scanDetails[0].metric_wise_aggregated_findings[0].description_details,
+        template_details: scanDetails[0].template_details,
+        comment: scanDetails[0].metric_wise_aggregated_findings[0].comment,
+        issue_description:
+          scanDetails[0].metric_wise_aggregated_findings[0].issue_description,
+        issue_remediation:
+          scanDetails[0].metric_wise_aggregated_findings[0].issue_remediation,
+      });
+    }
   }, [scanDetails]);
 
   useEffect(() => {
