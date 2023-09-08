@@ -20,6 +20,7 @@ import { MultifileIcon } from "../icons";
 import InputCheckbox from "../styled-components/inputCheckbox";
 import { getAssetsURL } from "helpers/helperFunction";
 import { useConfig } from "hooks/useConfig";
+import { useUserRole } from "hooks/useUserRole";
 
 const IssueBox: React.FC<{
   type: "block" | "project";
@@ -63,7 +64,7 @@ const IssueBox: React.FC<{
   const config: any = useConfig();
   const assetsURL = getAssetsURL(config);
   const [isDesktopView] = useMediaQuery("(min-width: 1024px)");
-
+  const role = useUserRole();
   const [isHovered, setIsHovered] = useState(false);
   const [isChecked, setIsChecked] = useState(isSelected);
 
@@ -236,6 +237,7 @@ const IssueBox: React.FC<{
               <AccordionPanel p={0}>
                 {isExpanded && (
                   <FileExplorerSection
+                    isViewer={role === "viewer"}
                     type={type}
                     is_latest_scan={is_latest_scan}
                     files={files}
