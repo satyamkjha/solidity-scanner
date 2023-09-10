@@ -13,6 +13,7 @@ import {
   FilesState,
   MetricWiseAggregatedFinding,
   MultiFileTemplateDetail,
+  Issues,
 } from "common/types";
 import React, { Dispatch, SetStateAction, useEffect, useState } from "react";
 import { FileExplorerSection } from "./FileExplorerSection";
@@ -31,6 +32,7 @@ const IssueBox: React.FC<{
   metric_wise_aggregated_finding: MetricWiseAggregatedFinding;
   template_details: MultiFileTemplateDetail;
   isSelected: boolean;
+  selectedIssues: Issues[];
   selectedBugs: string[];
   updateBugHashList: any;
   setFiles: Dispatch<SetStateAction<FilesState | null>>;
@@ -50,6 +52,7 @@ const IssueBox: React.FC<{
   metric_wise_aggregated_finding,
   template_details,
   isSelected,
+  selectedIssues,
   selectedBugs,
   updateBugHashList,
   setFiles,
@@ -128,6 +131,7 @@ const IssueBox: React.FC<{
                 metric_wise_aggregated_finding.bug_status !== "fixed" && (
                   <InputCheckbox
                     checked={isChecked}
+                    checkedColor={"#8A94A6"}
                     onChange={() => setIsChecked(!isChecked)}
                   />
                 )}
@@ -197,7 +201,7 @@ const IssueBox: React.FC<{
                       metric_wise_aggregated_finding.bug_status !== "fixed" && (
                         <Checkbox
                           name={bug_id}
-                          colorScheme={"purple"}
+                          colorScheme={"gray"}
                           borderColor={"gray.500"}
                           isChecked={isChecked}
                           onChange={() => setIsChecked(!isChecked)}
@@ -243,6 +247,7 @@ const IssueBox: React.FC<{
                     files={files}
                     setFiles={setFiles}
                     details_enabled={true}
+                    selectedIssues={selectedIssues}
                     selectedBugs={selectedBugs}
                     updateBugStatus={updateBugStatus}
                     project_url={project_url}

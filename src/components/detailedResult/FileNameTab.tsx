@@ -4,6 +4,7 @@ import { AiOutlineCopy } from "react-icons/ai";
 import { CheckIcon } from "@chakra-ui/icons";
 import { Finding } from "common/types";
 import { codePlatform } from "common/values";
+import { getProjectFileUrl } from "helpers/helperFunction";
 
 const FileNameTab: React.FC<{
   file: Finding;
@@ -34,10 +35,8 @@ const FileNameTab: React.FC<{
   const copyFileLink = () => {
     navigator.clipboard
       .writeText(
-        type === "project"
-          ? `${project_url?.replace(".git", "")}/blob/${branchName}${
-              file.file_path
-            }#L${file.line_nos_start}-L${file.line_nos_end}`
+        type === "project" && project_url && branchName
+          ? getProjectFileUrl(project_url, branchName, file)
           : codePlatform[contract_platform].platform === "own"
           ? `${contract_url}${codePlatform[contract_platform].dynamicString}`
           : file.file_path

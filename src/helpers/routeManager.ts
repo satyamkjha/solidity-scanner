@@ -42,6 +42,7 @@ export const API_PATH = {
   API_UPDATE_SKIP_FILE_PATHS: "/api-update-skip-file-paths/",
   API_DELETE_PROJECT: "/api-delete-project/",
   API_DELETE_BLOCK: "/api-delete-block/",
+  API_CREATE_GITHUB_BUGS_ISSUE: "/api-create-github-bugs-issue/",
 
   //QUICKSCAN
   API_GET_LATEST_QS: "/api-latest-qs/",

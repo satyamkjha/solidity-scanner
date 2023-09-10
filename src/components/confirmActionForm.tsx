@@ -20,8 +20,7 @@ const ConfirmActionForm: React.FC<{
   confirmBtnText,
 }) => {
   const [comment, setComment] = useState<string>("");
-  return (
-    <>
+  return ( 
       <SmallMessageModal
         isOpen={isOpen}
         onClose={onClose}
@@ -88,8 +87,7 @@ const ConfirmActionForm: React.FC<{
             </Button>
           </>
         }
-      />
-    </>
+      /> 
   );
 };
 
