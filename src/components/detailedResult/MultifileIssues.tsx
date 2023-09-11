@@ -1,4 +1,4 @@
-import { Dispatch, SetStateAction, useEffect, useRef } from "react";
+import { Dispatch, SetStateAction, useEffect, useRef, useContext } from "react";
 import { Accordion, useMediaQuery, Box } from "@chakra-ui/react";
 import {
   FilesState,
@@ -11,6 +11,7 @@ import { severityPriority } from "common/values";
 import React from "react";
 import IssueContainer from "./IssueContainer";
 import { getBugStatusNumber } from "common/functions";
+import { DetailResultContext } from "common/contexts";
 
 type MultifileIssuesProps = {
   type: "block" | "project";
@@ -62,6 +63,8 @@ const MultifileIssues: React.FC<MultifileIssuesProps> = ({
     (issue) => issue.template_details.issue_severity === "gas"
   );
 
+  const { openIssueIndex, setOpenIssueIndex } = useContext(DetailResultContext);
+
   const getVulnerabilityNumber = (issue_severity: string) => {
     switch (issue_severity) {
       case "critical":
@@ -102,6 +105,8 @@ const MultifileIssues: React.FC<MultifileIssuesProps> = ({
       allowMultiple={isDesktopView}
       allowToggle
       defaultIndex={!details_enabled ? gasIssueIndex : [0]}
+      index={openIssueIndex}
+      onChange={setOpenIssueIndex}
     >
       {Array.from(issues)
         .sort((issue1, issue2) =>
@@ -129,6 +134,7 @@ const MultifileIssues: React.FC<MultifileIssuesProps> = ({
                 checkBugStatusFilter(metric_wise_aggregated_findings) ? (
                   <IssueContainer
                     key={issue_id + index}
+                    index={index}
                     type={type}
                     files={files}
                     issue_id={issue_id}

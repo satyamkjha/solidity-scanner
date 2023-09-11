@@ -22,15 +22,18 @@ import React, {
   useEffect,
   useState,
   useRef,
+  useContext,
 } from "react";
 import { AiOutlineCaretRight } from "react-icons/ai";
 import { SeverityIcon } from "../icons";
 import { TrialWallIssue } from "./TrialWall";
 import IssueBox from "./IssueBox";
 import InputCheckbox from "components/styled-components/inputCheckbox";
+import { DetailResultContext } from "common/contexts";
 
 const IssueContainer: React.FC<{
   type: "block" | "project";
+  index: number;
   issue_id: string;
   template_details: MultiFileTemplateDetail;
   no_of_findings: number;
@@ -53,6 +56,7 @@ const IssueContainer: React.FC<{
   scrollIntoView: boolean;
 }> = ({
   type,
+  index,
   issue_id,
   metric_wise_aggregated_findings,
   template_details,
@@ -85,6 +89,7 @@ const IssueContainer: React.FC<{
 
   const scrollToElementRef = useRef<HTMLDivElement>(null);
 
+  const { openIssueIndex, setOpenIssueIndex } = useContext(DetailResultContext);
   const [isHovered, setIsHovered] = useState(false);
   const [isChecked, setIsChecked] = useState(false);
   const [checkedChildren, setCheckedChildren] = useState<
@@ -101,7 +106,7 @@ const IssueContainer: React.FC<{
       console.log(issue_id);
       scrollToElementRef.current.scrollIntoView({
         behavior: "smooth",
-        block: "start",
+        block: "end",
         inline: "start",
       });
     }
@@ -183,12 +188,21 @@ const IssueContainer: React.FC<{
     });
   };
 
+  const onIssueClick = () => {
+    if (!details_enabled && template_details.issue_severity !== "gas") {
+      setFiles(null);
+    }
+  };
+
   return (
     <AccordionItem
       id={issue_id}
       key={issue_id}
       w={"98%"}
       ref={scrollToElementRef}
+      sx={{
+        scrollMarginTop: openIssueIndex === undefined ? "-40vh" : 0,
+      }}
     >
       {({ isExpanded }) => (
         <>
@@ -203,6 +217,7 @@ const IssueContainer: React.FC<{
             }}
             onMouseEnter={() => setIsHovered(true)}
             onMouseLeave={() => setIsHovered(false)}
+            onClick={onIssueClick}
           >
             <HStack
               sx={{
