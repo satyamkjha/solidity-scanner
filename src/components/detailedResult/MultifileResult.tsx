@@ -229,7 +229,6 @@ const MultifileResult: React.FC<{
   };
 
   useEffect(() => {
-    setIssues(scanDetails);
     if (profileData.current_package === "trial") {
       const gasIssues = scanDetails.filter(
         (issue) => issue.template_details.issue_severity === "gas"
@@ -276,6 +275,11 @@ const MultifileResult: React.FC<{
           scanDetails[0].metric_wise_aggregated_findings[0].issue_remediation,
       });
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  useEffect(() => {
+    setIssues(scanDetails);
   }, [scanDetails]);
 
   useEffect(() => {
