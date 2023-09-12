@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, createContext } from "react";
 import { useParams } from "react-router-dom";
 import {
   Flex,
@@ -31,6 +31,7 @@ import ConfirmActionForm from "../confirmActionForm";
 import { useUserRole } from "hooks/useUserRole";
 import { getProjectFileUrl } from "helpers/helperFunction";
 import { FileIssue } from "components/icons";
+import { DetailResultContext } from "common/contexts";
 
 const MultifileResult: React.FC<{
   type: "block" | "project";
@@ -127,6 +128,7 @@ const MultifileResult: React.FC<{
     true,
   ]);
 
+  const [openIssueIndex, setOpenIssueIndex] = useState<number[] | undefined>();
   const [selectedIssues, setSelectedIssues] = useState<Issues[]>([]);
   const [selectedBugs, setSelectedBugs] = useState<string[]>([]);
 
@@ -325,7 +327,15 @@ const MultifileResult: React.FC<{
   };
 
   return (
-    <>
+    <DetailResultContext.Provider
+      value={{
+        issues,
+        scanSummary,
+        setFiles,
+        openIssueIndex,
+        setOpenIssueIndex,
+      }}
+    >
       <Flex w="100%" sx={{ flexDir: ["column", "column", "column", "row"] }}>
         <VStack
           w={["100%", "100%", "100%", "40%"]}
@@ -509,7 +519,7 @@ const MultifileResult: React.FC<{
           />
         )
       )}
-    </>
+    </DetailResultContext.Provider>
   );
 };
 

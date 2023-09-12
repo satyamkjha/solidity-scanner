@@ -78,7 +78,7 @@ const NoOrgView: React.FC<{
         flexDir={"column"}
         h={"65vh"}
       >
-        <Flex position={"relative"} w="100%" h="33vh">
+        <Flex position={"relative"} w="100%" h="100%" justifyContent={"center"}>
           <VStack
             w="100%"
             spacing={4}
@@ -92,7 +92,7 @@ const NoOrgView: React.FC<{
               h={"250px"}
               mb={2}
             />
-            <Text fontWeight={400}>
+            <Text fontWeight={400} w={"90%"} textAlign={"center"}>
               No Organization has been created yet, Click Create Organization to
               set-up an Organization and start inviting members to your team
             </Text>
