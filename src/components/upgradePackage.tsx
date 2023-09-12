@@ -1,6 +1,6 @@
 import React from "react";
 
-import { Button, Flex, Text } from "@chakra-ui/react";
+import { Button, Flex, Text, Box } from "@chakra-ui/react";
 import { TrialWallIcon } from "./icons";
 import { Link } from "react-router-dom";
 
@@ -8,10 +8,12 @@ export const UpgradePackage: React.FC<{
   heading?: string;
   text?: string;
   iconSize?: number;
+  footer?: React.RefAttributes<HTMLElement>;
 }> = ({
   heading = "Upgrade to use this feature",
   text = "Upgrade from the trial plan to use this feature and much more.",
   iconSize = 120,
+  footer,
 }) => {
   return (
     <Flex
@@ -26,7 +28,7 @@ export const UpgradePackage: React.FC<{
       justifyContent="center"
       flexDir="column"
     >
-      <Flex>
+      <Flex mt={footer ? 16 : 4}>
         <TrialWallIcon size={iconSize} />
       </Flex>
       <Text
@@ -53,10 +55,15 @@ export const UpgradePackage: React.FC<{
       </Text>
 
       <Link to="/billing">
-        <Button mt={2} variant="brand" width="250px">
+        <Button mt={2} mb={4} variant="brand" width="250px">
           Upgrade
         </Button>
       </Link>
+      {footer ? (
+        <Box mt={"auto"} mb={8} w={"95%"}>
+          {footer}
+        </Box>
+      ) : null}
     </Flex>
   );
 };

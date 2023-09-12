@@ -13,6 +13,7 @@ import {
   FilesState,
   MetricWiseAggregatedFinding,
   MultiFileTemplateDetail,
+  Issues,
 } from "common/types";
 import React, { Dispatch, SetStateAction, useEffect, useState } from "react";
 import { FileExplorerSection } from "./FileExplorerSection";
@@ -20,6 +21,7 @@ import { MultifileIcon } from "../icons";
 import InputCheckbox from "../styled-components/inputCheckbox";
 import { getAssetsURL } from "helpers/helperFunction";
 import { useConfig } from "hooks/useConfig";
+import { useUserRole } from "hooks/useUserRole";
 
 const IssueBox: React.FC<{
   type: "block" | "project";
@@ -30,6 +32,7 @@ const IssueBox: React.FC<{
   metric_wise_aggregated_finding: MetricWiseAggregatedFinding;
   template_details: MultiFileTemplateDetail;
   isSelected: boolean;
+  selectedIssues: Issues[];
   selectedBugs: string[];
   updateBugHashList: any;
   setFiles: Dispatch<SetStateAction<FilesState | null>>;
@@ -49,6 +52,7 @@ const IssueBox: React.FC<{
   metric_wise_aggregated_finding,
   template_details,
   isSelected,
+  selectedIssues,
   selectedBugs,
   updateBugHashList,
   setFiles,
@@ -63,7 +67,7 @@ const IssueBox: React.FC<{
   const config: any = useConfig();
   const assetsURL = getAssetsURL(config);
   const [isDesktopView] = useMediaQuery("(min-width: 1024px)");
-
+  const role = useUserRole();
   const [isHovered, setIsHovered] = useState(false);
   const [isChecked, setIsChecked] = useState(isSelected);
 
@@ -127,6 +131,7 @@ const IssueBox: React.FC<{
                 metric_wise_aggregated_finding.bug_status !== "fixed" && (
                   <InputCheckbox
                     checked={isChecked}
+                    checkedColor={"#8A94A6"}
                     onChange={() => setIsChecked(!isChecked)}
                   />
                 )}
@@ -196,7 +201,7 @@ const IssueBox: React.FC<{
                       metric_wise_aggregated_finding.bug_status !== "fixed" && (
                         <Checkbox
                           name={bug_id}
-                          colorScheme={"purple"}
+                          colorScheme={"gray"}
                           borderColor={"gray.500"}
                           isChecked={isChecked}
                           onChange={() => setIsChecked(!isChecked)}
@@ -236,11 +241,13 @@ const IssueBox: React.FC<{
               <AccordionPanel p={0}>
                 {isExpanded && (
                   <FileExplorerSection
+                    isViewer={role === "viewer"}
                     type={type}
                     is_latest_scan={is_latest_scan}
                     files={files}
                     setFiles={setFiles}
                     details_enabled={true}
+                    selectedIssues={selectedIssues}
                     selectedBugs={selectedBugs}
                     updateBugStatus={updateBugStatus}
                     project_url={project_url}

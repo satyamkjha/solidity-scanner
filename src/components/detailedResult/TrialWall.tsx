@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useContext, useEffect, useState } from "react";
 import {
   Flex,
   VStack,
@@ -8,6 +8,8 @@ import {
   Button,
   HStack,
   useMediaQuery,
+  Image,
+  Link as ChakraLink,
 } from "@chakra-ui/react";
 import { Link } from "react-router-dom";
 import { CodeBlock, atomOneLight } from "react-code-blocks";
@@ -15,16 +17,64 @@ import { AiOutlineCaretRight } from "react-icons/ai";
 import { dummyCode, dummyIssues } from "common/values";
 import { WarningTwoIcon } from "@chakra-ui/icons";
 import UpgradePackage from "../upgradePackage";
+import { getAssetsURL } from "helpers/helperFunction";
+import { DetailResultContext } from "common/contexts";
 export const TrialWall: React.FC = () => {
   return (
-    <Flex w="100%" sx={{ flexDir: "column" }} h="100vh">
+    <Flex w="100%" sx={{ flexDir: "column" }}>
       <TrialWallCode />
-      <TrialWallIssueDescription />
+      {/* <TrialWallIssueDescription /> */}
     </Flex>
   );
 };
 
 export const TrialWallCode: React.FC = () => {
+  const assetsURL = getAssetsURL();
+  const [gasIssueCount, setGasIssueCount] = useState<number>(0);
+  const { issues, scanSummary, setFiles, setOpenIssueIndex } =
+    useContext(DetailResultContext);
+
+  useEffect(() => {
+    if (scanSummary && scanSummary.issue_severity_distribution.gas) {
+      setGasIssueCount(scanSummary.issue_severity_distribution.gas);
+    }
+  }, []);
+
+  const viewGasIssue = () => {
+    const gasIssuesIndex =
+      issues &&
+      issues.findIndex(
+        (issue) => issue.template_details.issue_severity === "gas"
+      );
+    if (gasIssuesIndex !== -1) {
+      setOpenIssueIndex([gasIssuesIndex]);
+      setFiles({
+        bug_id:
+          issues[gasIssuesIndex].metric_wise_aggregated_findings[0].bug_id,
+        issue_id: issues[gasIssuesIndex].issue_id,
+        bug_hash:
+          issues[gasIssuesIndex].metric_wise_aggregated_findings[0].bug_hash,
+        bug_status:
+          issues[gasIssuesIndex].metric_wise_aggregated_findings[0].bug_status,
+        findings:
+          issues[gasIssuesIndex].metric_wise_aggregated_findings[0].findings,
+        description_details:
+          issues[gasIssuesIndex].metric_wise_aggregated_findings[0]
+            .description_details,
+        template_details: issues[gasIssuesIndex].template_details,
+        comment:
+          issues[gasIssuesIndex].metric_wise_aggregated_findings[0].comment,
+        issue_description:
+          issues[gasIssuesIndex].metric_wise_aggregated_findings[0]
+            .issue_description,
+        issue_remediation:
+          issues[gasIssuesIndex].metric_wise_aggregated_findings[0]
+            .issue_remediation,
+
+        wait_to_scroll: 1000,
+      });
+    }
+  };
   return (
     <Flex
       w="100%"
@@ -44,7 +94,37 @@ export const TrialWallCode: React.FC = () => {
         </Box>
       </VStack>
 
-      <UpgradePackage />
+      <UpgradePackage
+        footer={
+          <Flex
+            px={6}
+            py={4}
+            bg={"white"}
+            border={"1px solid #F795B4"}
+            boxShadow={"0px 0px 20px 0px #F795B429"}
+            borderRadius={"11px"}
+            alignItems={"center"}
+            justifyContent={"center"}
+          >
+            <Image src={`${assetsURL}icons/gas-icon.svg`} />
+            <VStack ml={6} mr={8} alignItems={"flex-start"} spacing={1}>
+              <Text fontWeight={600}>{gasIssueCount} Gas Issues found</Text>
+              <Text color="text" fontWeight={400} fontSize={"xs"}>
+                Trail users can only view gas bug details. Please upgrade to
+                access details for other issues.
+              </Text>
+            </VStack>
+            <ChakraLink
+              color={"blue"}
+              ml={"auto"}
+              whiteSpace={"nowrap"}
+              onClick={viewGasIssue}
+            >
+              View Now
+            </ChakraLink>
+          </Flex>
+        }
+      />
     </Flex>
   );
 };
@@ -134,8 +214,15 @@ export const TrialWallIssue: React.FC<{
           fontSize="md"
           color="black"
           mb={4}
+          display={"flex"}
+          alignItems={"center"}
+          justifyContent={"center"}
         >
-          {no_of_issue} Vulnerabilities found !
+          {no_of_issue}
+          <Text textTransform="capitalize" mx={1}>
+            {severity}{" "}
+          </Text>
+          Vulnerabilities found !
         </Text>
         <Text
           textAlign={"center"}

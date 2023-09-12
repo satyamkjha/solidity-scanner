@@ -11,6 +11,8 @@ on:
         options:
           - stage
           - prod
+          - backoffice-stage
+          - backoffice-prod
 
 jobs:
   build:

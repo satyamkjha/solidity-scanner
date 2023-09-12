@@ -28,7 +28,7 @@ const HackFilters: React.FC<{
 
   const sortOptions = [
     {
-      value: "date",
+      value: "-date",
       label: "Date",
     },
     {

@@ -151,6 +151,8 @@ export type MultiFileTemplateDetail = {
   issue_id: string;
   issue_name: string;
   issue_severity: string;
+  issue_description?: string;
+  issue_remediation?: string;
   multi_file_supported: string;
   type: string;
   version: string;
@@ -178,6 +180,12 @@ export type MetricWiseAggregatedFinding = {
   scan_id: string;
   issue_description?: string;
   issue_remediation?: string;
+};
+
+export type Issues = {
+  issue_id: string;
+  template_details: MultiFileTemplateDetail;
+  bugs?: MetricWiseAggregatedFinding[];
 };
 
 export type PricingData = {
@@ -478,6 +486,7 @@ export type FilesState = {
   template_details: MultiFileTemplateDetail;
   issue_description: string | undefined;
   issue_remediation: string | undefined;
+  wait_to_scroll?: number;
 };
 
 export type RecentQSItem = {

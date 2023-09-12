@@ -45,12 +45,13 @@ export const customStylesForTakeAction = {
     flexDirection: "row",
     backgroundColor: "#FAFBFC",
     padding: 4,
+    paddingLeft: 8,
     borderRadius: 20,
   }),
 
   container: (provided: any, state: any) => ({
     ...provided,
-    width: "300px",
+    width: "250px",
   }),
 };
 

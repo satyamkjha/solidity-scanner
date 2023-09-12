@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, createContext } from "react";
 import { useParams } from "react-router-dom";
 import {
   Flex,
@@ -9,6 +9,7 @@ import {
   HStack,
   useMediaQuery,
   useDisclosure,
+  Button,
 } from "@chakra-ui/react";
 import Select from "react-select";
 import {
@@ -16,6 +17,7 @@ import {
   MultiFileScanDetail,
   MultiFileScanSummary,
   Profile,
+  Issues,
 } from "common/types";
 import { issueActions } from "common/values";
 import API from "helpers/api";
@@ -27,6 +29,9 @@ import FormatOptionLabelWithImage from "components/FormatOptionLabelWithImage";
 import { customStylesForTakeAction } from "common/stylesForCustomSelect";
 import ConfirmActionForm from "../confirmActionForm";
 import { useUserRole } from "hooks/useUserRole";
+import { getProjectFileUrl } from "helpers/helperFunction";
+import { FileIssue } from "components/icons";
+import { DetailResultContext } from "common/contexts";
 
 const MultifileResult: React.FC<{
   type: "block" | "project";
@@ -123,6 +128,8 @@ const MultifileResult: React.FC<{
     true,
   ]);
 
+  const [openIssueIndex, setOpenIssueIndex] = useState<number[] | undefined>();
+  const [selectedIssues, setSelectedIssues] = useState<Issues[]>([]);
   const [selectedBugs, setSelectedBugs] = useState<string[]>([]);
 
   const { isOpen, onClose, onOpen } = useDisclosure();
@@ -139,31 +146,82 @@ const MultifileResult: React.FC<{
 
   const updateBugStatus = async (action: string, comment?: string) => {
     if (files) {
-      const { data } = await API.post(API_PATH.API_UPDATE_BUG_STATUS, {
-        bug_ids: selectedBugs,
-        scan_id: scanId,
-        project_id: projectId,
-        bug_status: action,
-        comment: comment,
-        scan_type: type,
-      });
-      if (data.status === "success") {
-        toast({
-          title: "Bug Status Updated",
-          description: data.message,
-          status: "success",
-          duration: 3000,
-          isClosable: true,
+      if (action === "create_github_issue") {
+        createGithubIssue();
+      } else {
+        const { data } = await API.post(API_PATH.API_UPDATE_BUG_STATUS, {
+          bug_ids: selectedBugs,
+          scan_id: scanId,
+          project_id: projectId,
+          bug_status: action,
+          comment: comment,
+          scan_type: type,
+        });
+        if (data.status === "success") {
+          toast({
+            title: "Bug Status Updated",
+            description: data.message,
+            status: "success",
+            duration: 3000,
+            isClosable: true,
+          });
+        }
+        setFiles({
+          ...files,
+          bug_status: action,
+          comment: comment,
         });
       }
-      setFiles({
-        ...files,
-        bug_status: action,
-        comment: comment,
-      });
       setSelectedBugs([]);
     }
     refetch();
+  };
+
+  const createGithubIssue = async () => {
+    if (selectedIssues && selectedIssues.length === 1) {
+      const payload = {
+        issue_id: selectedIssues[0].issue_id,
+        issue_title: selectedIssues[0].template_details.issue_name,
+        repo_url: project_url,
+        bugs: selectedIssues[0].bugs?.map((bug) => {
+          return {
+            id: bug.bug_id,
+            description: selectedIssues[0].template_details.issue_description
+              ? selectedIssues[0].template_details.issue_description.format({
+                  ...bug.description_details,
+                })
+              : "",
+            remediation: selectedIssues[0].template_details.issue_remediation
+              ? selectedIssues[0].template_details.issue_remediation.format({
+                  ...bug.description_details,
+                })
+              : "",
+            code_snapshot:
+              project_url && branchName
+                ? bug.findings
+                    .map((file) =>
+                      getProjectFileUrl(project_url, branchName, file)
+                    )
+                    .join(", ")
+                : "",
+          };
+        }),
+      };
+      const { data } = await API.post(
+        API_PATH.API_CREATE_GITHUB_BUGS_ISSUE,
+        payload
+      );
+
+      if (data && data.issue_url) {
+        toast({
+          title: "GitHub issue successfully created",
+          status: "success",
+          duration: 5000,
+          isClosable: true,
+          position: "bottom",
+        });
+      }
+    }
   };
 
   const onActionConfirm = (comment: string) => {
@@ -171,8 +229,65 @@ const MultifileResult: React.FC<{
   };
 
   useEffect(() => {
+    if (profileData.current_package === "trial") {
+      const gasIssues = scanDetails.filter(
+        (issue) => issue.template_details.issue_severity === "gas"
+      );
+      if (gasIssues && gasIssues.length) {
+        setFiles({
+          bug_id: gasIssues[0].metric_wise_aggregated_findings[0].bug_id,
+          issue_id: gasIssues[0].issue_id,
+          bug_hash: gasIssues[0].metric_wise_aggregated_findings[0].bug_hash,
+          bug_status:
+            gasIssues[0].metric_wise_aggregated_findings[0].bug_status,
+          findings: gasIssues[0].metric_wise_aggregated_findings[0].findings,
+          description_details:
+            gasIssues[0].metric_wise_aggregated_findings[0].description_details,
+          template_details: gasIssues[0].template_details,
+          comment: gasIssues[0].metric_wise_aggregated_findings[0].comment,
+          issue_description:
+            gasIssues[0].metric_wise_aggregated_findings[0].issue_description,
+          issue_remediation:
+            gasIssues[0].metric_wise_aggregated_findings[0].issue_remediation,
+
+          wait_to_scroll: 1000,
+        });
+      }
+    } else if (
+      scanDetails &&
+      scanDetails.length &&
+      scanDetails[0].metric_wise_aggregated_findings
+    ) {
+      setFiles({
+        bug_id: scanDetails[0].metric_wise_aggregated_findings[0].bug_id,
+        issue_id: scanDetails[0].issue_id,
+        bug_hash: scanDetails[0].metric_wise_aggregated_findings[0].bug_hash,
+        bug_status:
+          scanDetails[0].metric_wise_aggregated_findings[0].bug_status,
+        findings: scanDetails[0].metric_wise_aggregated_findings[0].findings,
+        description_details:
+          scanDetails[0].metric_wise_aggregated_findings[0].description_details,
+        template_details: scanDetails[0].template_details,
+        comment: scanDetails[0].metric_wise_aggregated_findings[0].comment,
+        issue_description:
+          scanDetails[0].metric_wise_aggregated_findings[0].issue_description,
+        issue_remediation:
+          scanDetails[0].metric_wise_aggregated_findings[0].issue_remediation,
+      });
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  useEffect(() => {
     setIssues(scanDetails);
   }, [scanDetails]);
+
+  useEffect(() => {
+    const bugHashList: string[] = selectedIssues
+      .flatMap((issue) => issue.bugs || [])
+      .map((finding) => finding.bug_hash);
+    setSelectedBugs(bugHashList);
+  }, [selectedIssues]);
 
   useEffect(() => {
     if (files) {
@@ -210,8 +325,21 @@ const MultifileResult: React.FC<{
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedBugs]);
 
+  const isFileIssueDisabled = () => {
+    if (isViewer) return true;
+    return isDisabled || (selectedIssues && selectedIssues.length > 1);
+  };
+
   return (
-    <>
+    <DetailResultContext.Provider
+      value={{
+        issues,
+        scanSummary,
+        setFiles,
+        openIssueIndex,
+        setOpenIssueIndex,
+      }}
+    >
       <Flex w="100%" sx={{ flexDir: ["column", "column", "column", "row"] }}>
         <VStack
           w={["100%", "100%", "100%", "40%"]}
@@ -243,17 +371,15 @@ const MultifileResult: React.FC<{
               zIndex={1}
               w={"100%"}
               py={2}
+              pr={2}
             >
-              <Text fontWeight={600} ml={2} mr={5} whiteSpace="nowrap">
-                Take Action
-              </Text>
               <Select
                 formatOptionLabel={FormatOptionLabelWithImage}
                 options={issueActions}
                 value={issueActions.find(
                   (item) => files?.bug_status === item.value
                 )}
-                placeholder="Select Action"
+                placeholder="Take Action"
                 styles={customStylesForTakeAction}
                 isDisabled={isDisabled || isViewer}
                 onChange={(newValue) => {
@@ -267,6 +393,27 @@ const MultifileResult: React.FC<{
                   }
                 }}
               />
+              {project_url && project_url !== "File Scan" && (
+                <Button
+                  background={isFileIssueDisabled() ? "#FAFBFC" : "white"}
+                  color={isFileIssueDisabled() ? "#8A94A6" : "#806CCF"}
+                  border={isFileIssueDisabled() ? "none" : "1px solid #C1B1FF"}
+                  isDisabled={isFileIssueDisabled()}
+                  p={2}
+                  _hover={{
+                    background: "#f7f5ff",
+                  }}
+                  onClick={() => {
+                    onOpen();
+                    setBugStatus("create_github_issue");
+                  }}
+                >
+                  <FileIssue active={!isFileIssueDisabled()} />
+                  <Text fontSize={"sm"} ml={2}>
+                    File Issue
+                  </Text>
+                </Button>
+              )}
             </HStack>
           )}
           <Box
@@ -288,7 +435,8 @@ const MultifileResult: React.FC<{
               files={files}
               setFiles={setFiles}
               selectedBugs={selectedBugs}
-              setSelectedBugs={setSelectedBugs}
+              selectedIssues={selectedIssues}
+              setSelectedIssues={setSelectedIssues}
               confidence={confidence}
               vulnerability={vulnerability}
               updateBugStatus={updateBugStatus}
@@ -309,6 +457,7 @@ const MultifileResult: React.FC<{
             files={files}
             setFiles={setFiles}
             details_enabled={details_enabled}
+            selectedIssues={selectedIssues}
             selectedBugs={selectedBugs}
             updateBugStatus={updateBugStatus}
             project_url={project_url}
@@ -321,7 +470,7 @@ const MultifileResult: React.FC<{
           />
         )}
       </Flex>
-      {bugStatus && (
+      {bugStatus && bugStatus === "wont_fix" ? (
         <ConfirmActionForm
           isOpen={isOpen}
           onClose={onClose}
@@ -345,8 +494,36 @@ const MultifileResult: React.FC<{
             </Text>
           }
         />
+      ) : (
+        bugStatus === "create_github_issue" && (
+          <ConfirmActionForm
+            isOpen={isOpen}
+            onClose={onClose}
+            onActionConfirm={onActionConfirm}
+            addComment={false}
+            modalHeader={"Confirm Action"}
+            modelText={
+              <VStack>
+                <Text my={4} w={["100%"]} fontSize={"lg"} fontWeight={600}>
+                  Are you sure you want to update the Issue to Github?
+                </Text>
+                <Text my={4} color="detail" fontWeight={400} w={["100%"]}>
+                  You are about to create a{" "}
+                  <Text as={"span"} color="black" fontWeight={"bold"}>
+                    Github Issue
+                  </Text>{" "}
+                  for selected{" "}
+                  <Text as={"span"} color="black" fontWeight={"bold"}>
+                    {selectedBugs.length}
+                  </Text>{" "}
+                  bug(s). Please click on confirm to create an issue.
+                </Text>
+              </VStack>
+            }
+          />
+        )
       )}
-    </>
+    </DetailResultContext.Provider>
   );
 };
 

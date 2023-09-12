@@ -1,5 +1,5 @@
 import React from "react";
-import { Flex, Box } from "@chakra-ui/react";
+import { Flex, Box, ComponentWithAs, IconProps, Icon } from "@chakra-ui/react";
 import { CheckIcon } from "@chakra-ui/icons";
 
 interface InputCheckboxProps {
@@ -8,6 +8,8 @@ interface InputCheckboxProps {
   checkedColor?: string;
   unCheckedColor?: string;
   checked: boolean;
+  checkedIcon?: ComponentWithAs<"svg", IconProps> | null;
+  name?: string;
   onChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
 }
 
@@ -17,12 +19,15 @@ const InputCheckbox: React.FC<InputCheckboxProps> = ({
   checkedColor = "#805AD5",
   unCheckedColor = "gray.200",
   checked,
+  checkedIcon = CheckIcon,
+  name,
   onChange,
 }) => {
   return (
     <Flex alignItems="center" justifyContent={"center"}>
       <input
         id={"sol-checkbox"}
+        name={name}
         type={"checkbox"}
         checked={checked}
         onChange={onChange}
@@ -47,7 +52,8 @@ const InputCheckbox: React.FC<InputCheckboxProps> = ({
             pointerEvents: "none",
           }}
         >
-          <CheckIcon
+          <Icon
+            as={checkedIcon}
             position="absolute"
             top={`${height / 2}px`}
             left={`${width / 2}px`}

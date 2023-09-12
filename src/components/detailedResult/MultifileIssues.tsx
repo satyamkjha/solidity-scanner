@@ -1,15 +1,17 @@
-import { Dispatch, SetStateAction } from "react";
-import { Accordion, useMediaQuery } from "@chakra-ui/react";
+import { Dispatch, SetStateAction, useEffect, useRef, useContext } from "react";
+import { Accordion, useMediaQuery, Box } from "@chakra-ui/react";
 import {
   FilesState,
   MetricWiseAggregatedFinding,
   MultiFileScanDetail,
   Profile,
+  Issues,
 } from "common/types";
 import { severityPriority } from "common/values";
 import React from "react";
 import IssueContainer from "./IssueContainer";
 import { getBugStatusNumber } from "common/functions";
+import { DetailResultContext } from "common/contexts";
 
 type MultifileIssuesProps = {
   type: "block" | "project";
@@ -17,7 +19,8 @@ type MultifileIssuesProps = {
   files: FilesState | null;
   setFiles: Dispatch<SetStateAction<FilesState | null>>;
   selectedBugs: string[];
-  setSelectedBugs: Dispatch<SetStateAction<string[]>>;
+  selectedIssues: Issues[];
+  setSelectedIssues: Dispatch<SetStateAction<Issues[]>>;
   confidence: boolean[];
   vulnerability: boolean[];
   bugStatusFilter: boolean[];
@@ -40,7 +43,8 @@ const MultifileIssues: React.FC<MultifileIssuesProps> = ({
   is_latest_scan,
   setFiles,
   selectedBugs,
-  setSelectedBugs,
+  selectedIssues,
+  setSelectedIssues,
   isViewer,
   confidence,
   vulnerability,
@@ -55,6 +59,11 @@ const MultifileIssues: React.FC<MultifileIssuesProps> = ({
 }) => {
   const [isDesktopView] = useMediaQuery("(min-width: 1350px)");
   let issue_count: number;
+  const gasIssueIndex = issues.findIndex(
+    (issue) => issue.template_details.issue_severity === "gas"
+  );
+
+  const { openIssueIndex, setOpenIssueIndex } = useContext(DetailResultContext);
 
   const getVulnerabilityNumber = (issue_severity: string) => {
     switch (issue_severity) {
@@ -92,7 +101,13 @@ const MultifileIssues: React.FC<MultifileIssuesProps> = ({
   };
 
   return (
-    <Accordion allowMultiple={isDesktopView} allowToggle>
+    <Accordion
+      allowMultiple={isDesktopView}
+      allowToggle
+      defaultIndex={!details_enabled ? gasIssueIndex : [0]}
+      index={openIssueIndex}
+      onChange={setOpenIssueIndex}
+    >
       {Array.from(issues)
         .sort((issue1, issue2) =>
           severityPriority[issue1.template_details.issue_severity] >
@@ -119,6 +134,7 @@ const MultifileIssues: React.FC<MultifileIssuesProps> = ({
                 checkBugStatusFilter(metric_wise_aggregated_findings) ? (
                   <IssueContainer
                     key={issue_id + index}
+                    index={index}
                     type={type}
                     files={files}
                     issue_id={issue_id}
@@ -130,8 +146,9 @@ const MultifileIssues: React.FC<MultifileIssuesProps> = ({
                     is_latest_scan={is_latest_scan}
                     details_enabled={details_enabled}
                     setFiles={setFiles}
+                    selectedIssues={selectedIssues}
                     selectedBugs={selectedBugs}
-                    setSelectedBugs={setSelectedBugs}
+                    setSelectedIssues={setSelectedIssues}
                     bugStatusFilter={bugStatusFilter}
                     updateBugStatus={updateBugStatus}
                     project_url={project_url}
@@ -140,6 +157,10 @@ const MultifileIssues: React.FC<MultifileIssuesProps> = ({
                     branchName={branchName}
                     contract_address={contract_address}
                     isViewer={isViewer}
+                    scrollIntoView={
+                      issue_id === issues[gasIssueIndex].issue_id &&
+                      files?.issue_id === issues[gasIssueIndex].issue_id
+                    }
                   />
                 ) : (
                   <></>

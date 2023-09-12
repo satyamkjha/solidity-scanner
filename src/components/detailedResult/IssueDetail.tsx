@@ -49,7 +49,11 @@ const IssueDetail: React.FC<{
   handleTabsChange,
   tabIndex,
 }) => {
-  const { data, isLoading } = useIssueDetail(issue_id, context);
+  const { data, isLoading } = useIssueDetail(
+    issue_id,
+    context,
+    files.template_details.issue_severity
+  );
 
   let variableData = description_details;
 

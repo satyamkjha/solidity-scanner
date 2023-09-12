@@ -10,8 +10,9 @@ import {
   IconButton,
   Tooltip,
   useDisclosure,
+  Button,
 } from "@chakra-ui/react";
-import { FilesState } from "../../common/types";
+import { FilesState, Issues } from "../../common/types";
 import { issueActions } from "../../common/values";
 import MultipleFileExplorer from "./MultipleFileExplorer";
 import { sentenceCapitalize, getAssetsURL } from "../../helpers/helperFunction";
@@ -25,12 +26,14 @@ import { useConfig } from "hooks/useConfig";
 import ConfirmActionForm from "../confirmActionForm";
 import FormatOptionLabelWithImage from "../../components/FormatOptionLabelWithImage";
 import { customStylesForTakeAction } from "../../common/stylesForCustomSelect";
+import { FileIssue } from "components/icons";
 
 export const FileExplorerSection: React.FC<{
   type: "block" | "project";
   is_latest_scan: boolean;
   files: FilesState | null;
   details_enabled: boolean;
+  selectedIssues: Issues[];
   selectedBugs: string[];
   updateBugStatus: any;
   setFiles: Dispatch<SetStateAction<FilesState | null>>;
@@ -45,6 +48,7 @@ export const FileExplorerSection: React.FC<{
   is_latest_scan,
   files,
   details_enabled,
+  selectedIssues,
   selectedBugs,
   updateBugStatus,
   setFiles,
@@ -77,8 +81,18 @@ export const FileExplorerSection: React.FC<{
     setTabIndex(index);
   };
 
-  const onActionConfirm = (comment: string) => {
+  const onActionConfirm = (comment?: string) => {
     bugStatus && updateBugStatus(bugStatus, comment);
+  };
+
+  const createGithubIssue = () => {
+    onOpen();
+    setBugStatus("create_github_issue");
+  };
+
+  const isFileIssueDisabled = () => {
+    if (isViewer) return true;
+    return isDisabled || (selectedIssues && selectedIssues.length > 1);
   };
 
   return (
@@ -98,17 +112,18 @@ export const FileExplorerSection: React.FC<{
           mt={[4, 4, 4, 1]}
           mb={[0, 0, 0, 1]}
         >
-          <HStack display={["none", "none", "none", "flex"]} width={"100%"}>
-            <Text fontWeight={600} mr={5}>
-              Take Action
-            </Text>
+          <HStack
+            display={["none", "none", "none", "flex"]}
+            width={"100%"}
+            spacing={3}
+          >
             <Select
               formatOptionLabel={FormatOptionLabelWithImage}
               options={issueActions}
               value={issueActions.find(
                 (item) => files?.bug_status === item.value
               )}
-              placeholder="Select Action"
+              placeholder="Take Action"
               styles={customStylesForTakeAction}
               isDisabled={isDisabled || isViewer}
               onChange={(newValue) => {
@@ -122,6 +137,29 @@ export const FileExplorerSection: React.FC<{
                 }
               }}
             />
+            {project_url && project_url !== "File Scan" && (
+              <Tooltip
+                label={"Please select only one issue"}
+                isDisabled={selectedIssues.length < 2}
+                shouldWrapChildren
+              >
+                <Button
+                  background={isFileIssueDisabled() ? "#FAFBFC" : "white"}
+                  color={isFileIssueDisabled() ? "#8A94A6" : "#806CCF"}
+                  border={isFileIssueDisabled() ? "none" : "1px solid #C1B1FF"}
+                  isDisabled={isFileIssueDisabled()}
+                  _hover={{
+                    background: "#f7f5ff",
+                  }}
+                  onClick={createGithubIssue}
+                >
+                  <FileIssue active={!isFileIssueDisabled()} />
+                  <Text fontSize={"sm"} ml={2}>
+                    File Issue
+                  </Text>
+                </Button>
+              </Tooltip>
+            )}
           </HStack>
           <HStack>
             <Tooltip label="View Issue Description" fontSize="md">
@@ -184,7 +222,8 @@ export const FileExplorerSection: React.FC<{
           top: 5,
         }}
       >
-        {!details_enabled ? (
+        {!details_enabled &&
+        files?.template_details.issue_severity !== "gas" ? (
           <TrialWall />
         ) : files ? (
           <MultipleFileExplorer
@@ -220,7 +259,7 @@ export const FileExplorerSection: React.FC<{
           </Flex>
         )}
       </Box>
-      {bugStatus && (
+      {bugStatus && bugStatus === "wont_fix" ? (
         <ConfirmActionForm
           isOpen={isOpen}
           onClose={onClose}
@@ -244,6 +283,34 @@ export const FileExplorerSection: React.FC<{
             </Text>
           }
         />
+      ) : (
+        bugStatus === "create_github_issue" && (
+          <ConfirmActionForm
+            isOpen={isOpen}
+            onClose={onClose}
+            onActionConfirm={onActionConfirm}
+            addComment={false}
+            modalHeader={"Confirm Action"}
+            modelText={
+              <VStack>
+                <Text my={4} w={["100%"]} fontSize={"lg"} fontWeight={600}>
+                  Are you sure you want to update the Issue to Github?
+                </Text>
+                <Text my={4} color="detail" fontWeight={400} w={["100%"]}>
+                  You are about to create a{" "}
+                  <Text as={"span"} color="black" fontWeight={"bold"}>
+                    Github Issue
+                  </Text>{" "}
+                  for selected{" "}
+                  <Text as={"span"} color="black" fontWeight={"bold"}>
+                    {selectedBugs.length}
+                  </Text>{" "}
+                  bug(s). Please click on confirm to create an issue.
+                </Text>
+              </VStack>
+            }
+          />
+        )
       )}
     </VStack>
   );

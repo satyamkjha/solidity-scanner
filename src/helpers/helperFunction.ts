@@ -1,6 +1,6 @@
 import UAParser from "ua-parser-js";
 import reCAPTCHA from "helpers/reCAPTCHA";
-import { Profile, PricingData } from "common/types";
+import { Profile, PricingData, Finding } from "common/types";
 import axios from "axios";
 
 let configValue: any = null;
@@ -141,6 +141,16 @@ export const hasSpecialCharacters = (email: string) =>
 
 export const checkOrgName = (email: string) =>
   /[`!@#$\s%^&*()+\-=[\]{};':"\\|,.<>/?~]/i.test(email);
+
+export const getProjectFileUrl = (
+  project_url: string,
+  branchName: string,
+  file: Finding
+) => {
+  return `${project_url?.replace(".git", "")}/blob/${branchName}${
+    file.file_path
+  }#L${file.line_nos_start}-L${file.line_nos_end}`;
+};
 
 // export const getAssetsFromS3 = async (directory: string) => {
 //   const assetsURL = getAssetsURL();
