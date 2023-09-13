@@ -17,15 +17,22 @@ on:
 jobs:
   build:
     env:
+      SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+      SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
       ENV: ${{ inputs.ENV }}
       DOCKER_COMPOSE_PATH: /home/runner/work/solidity-scanner-frontend/solidity-scanner-frontend/docker-compose.yml
       PROJECT_DIRECTORY: /home/runner/work/solidity-scanner-frontend/solidity-scanner-frontend/
 
     runs-on: ubuntu-latest
+    permissions: read-all
 
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+
+      - uses: sonarsource/sonarqube-scan-action@master
 
       - name: Setting aws credentials
         uses: aws-actions/configure-aws-credentials@v3
