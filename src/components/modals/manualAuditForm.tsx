@@ -25,10 +25,10 @@ import { FaDiscord, FaEnvelope, FaTelegram } from "react-icons/fa";
 import { GiLetterBomb } from "react-icons/gi";
 
 import axios from "axios";
-import { CredshieldsIcon, MailSent } from "./icons";
+import { CredshieldsIcon, MailSent } from "../icons";
 import { getAssetsURL } from "helpers/helperFunction";
 import { useConfig } from "hooks/useConfig";
-import Loader from "./styled-components/Loader";
+import Loader from "../styled-components/Loader";
 
 export const ManualAuditForm: React.FC<{ onClose(): any; isOpen: boolean }> = ({
   isOpen,

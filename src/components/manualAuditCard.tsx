@@ -4,7 +4,7 @@ import { Box, Flex, HStack, Text } from "@chakra-ui/layout";
 import { useMediaQuery } from "@chakra-ui/media-query";
 import React from "react";
 import { CredshieldsIcon } from "./icons";
-import ManualAuditForm from "./manualAuditForm";
+import ManualAuditForm from "./modals/manualAuditForm";
 import { getAssetsURL } from "helpers/helperFunction";
 import { useConfig } from "hooks/useConfig";
 
