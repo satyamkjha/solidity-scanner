@@ -152,6 +152,13 @@ export const getProjectFileUrl = (
   }#L${file.line_nos_start}-L${file.line_nos_end}`;
 };
 
+export const getTrimmedScanMessage = (scan_status: string) => {
+  if (scan_status.includes("Download Failed")) return "Download Failed";
+  else if (scan_status.includes("Scan Failed")) return "Scan Failed";
+
+  return "Scan Failed";
+};
+
 // export const getAssetsFromS3 = async (directory: string) => {
 //   const assetsURL = getAssetsURL();
 //   const response = await axios.get(`${assetsURL}${directory}`);

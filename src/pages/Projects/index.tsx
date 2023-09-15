@@ -49,6 +49,7 @@ import {
   getFeatureGateConfig,
   snakeToNormal,
   getAssetsURL,
+  getTrimmedScanMessage,
   // getAssetsFromS3,
 } from "helpers/helperFunction";
 import { scanStatesLabel } from "common/values";
@@ -771,11 +772,15 @@ const ProjectCard: React.FC<{
             <HStack mb={2}>
               <WarningIcon color="#FF5630" />
               <Heading sx={{ fontSize: "sm", color: "#FF5630" }}>
-                {snakeToNormal(multi_file_scan_status)}
+                {multi_file_scan_status.length > 25
+                  ? getTrimmedScanMessage(multi_file_scan_status)
+                  : snakeToNormal(multi_file_scan_status)}
               </Heading>
             </HStack>
             <Text sx={{ fontSize: "xs", color: "#4E5D78" }}>
-              {scan_message}
+              {multi_file_scan_status.length > 25
+                ? multi_file_scan_status
+                : scan_message}
             </Text>
           </Box>
         </Flex>
