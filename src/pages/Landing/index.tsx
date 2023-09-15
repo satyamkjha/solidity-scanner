@@ -20,6 +20,7 @@ import { TestimonialSkeleton } from "./components/testimonial";
 import { AboutUsSkeleton } from "./components/aboutUs";
 import { CarouselSkeleton } from "./components/carousel";
 import { ManualAuditSkeleton } from "./components/manualAudit";
+import ProductSlides from "./components/productSildes";
 
 const QuickScan = lazy(() => import("./components/quickScan"));
 const ProductVideo = lazy(() => import("./components/productVideo"));
@@ -181,6 +182,8 @@ export default function LandingPage() {
         <Suspense fallback={<OverviewSkeleton />}>
           <ProductOverview />
         </Suspense>
+
+        <ProductSlides />
 
         <Suspense fallback={<TestimonialSkeleton />}>
           <UserTestimonial />

@@ -98,7 +98,8 @@ export default function ProductOverview() {
                 onClick={() =>
                   window.open(
                     "https://solidityscan.com/published-report/project/d393242670c81938",
-                    "_blank"
+                    "_blank",
+                    "noopener"
                   )
                 }
                 variant={"cta-outline"}
