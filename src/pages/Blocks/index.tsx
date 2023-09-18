@@ -40,6 +40,7 @@ import {
   getAssetsURL,
   getFeatureGateConfig,
   snakeToNormal,
+  getTrimmedScanMessage,
   // getAssetsFromS3,
 } from "helpers/helperFunction";
 import Loader from "components/styled-components/Loader";
@@ -627,13 +628,16 @@ const BlockCard: React.FC<{
           <HStack mb={2}>
             <WarningIcon color="#FF5630" />
             <Heading sx={{ fontSize: "sm", color: "#FF5630" }}>
-              {snakeToNormal(multi_file_scan_status)}
+              {multi_file_scan_status.length > 25
+                ? getTrimmedScanMessage(multi_file_scan_status)
+                : snakeToNormal(multi_file_scan_status)}
             </Heading>
           </HStack>
           <Text sx={{ fontSize: "xs", color: "#4E5D78" }}>
-            {scan.scan_message
-              ? scan.scan_message
-              : "This scan has failed, lost credit will be reimbursed in a few minutes. Please contact support"}
+            {multi_file_scan_status.length > 25
+              ? multi_file_scan_status
+              : scan.scan_message ||
+                "This scan has failed, lost credit will be reimbursed in a few minutes. Please contact support"}
           </Text>
         </Box>
       )}
