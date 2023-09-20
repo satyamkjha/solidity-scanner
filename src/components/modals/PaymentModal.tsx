@@ -283,7 +283,12 @@ const PaymentModal: React.FC<{
                   plan={pricingDetails[duration][selectedPlan]}
                   duration={duration}
                 />
-                {duration !== "ondemand" && duration !== "topup" && (
+                {![
+                  "ondemand",
+                  "topup",
+                  "publish_report",
+                  "verified_publish_report",
+                ].includes(duration) && (
                   <SwitchDuration
                     setDuration={setDuration}
                     setActiveCoupon={setActiveCoupon}
@@ -383,7 +388,12 @@ const PaymentModal: React.FC<{
                     plan={pricingDetails[duration][selectedPlan]}
                     duration={duration}
                   />
-                  {duration !== "ondemand" && (
+                  {![
+                    "ondemand",
+                    "topup",
+                    "publish_report",
+                    "verified_publish_report",
+                  ].includes(duration) && (
                     <SwitchDuration
                       setDuration={setDuration}
                       setActiveCoupon={setActiveCoupon}
@@ -437,7 +447,12 @@ const PaymentModal: React.FC<{
                       plan={pricingDetails[duration][selectedPlan]}
                       duration={duration}
                     />
-                    {duration !== "ondemand" && duration !== "topup" && (
+                    {![
+                      "ondemand",
+                      "topup",
+                      "publish_report",
+                      "verified_publish_report",
+                    ].includes(duration) && (
                       <SwitchDuration
                         setDuration={setDuration}
                         setActiveCoupon={setActiveCoupon}

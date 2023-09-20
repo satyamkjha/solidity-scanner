@@ -28,16 +28,37 @@ const CurrentPlanDescriptionContainer: React.FC<{
       alignItems="flex-start"
     >
       <Flex alignItems="center" justifyContent="center">
-        {packageName !== "trial" && (
+        {!["topup", "publish_report", "verified_publish_report"].includes(
+          packageName
+        ) && (
           <Image
             width="35px"
             height="35px"
             src={`${assetsURL}pricing/${packageName}-heading.svg`}
           />
         )}
+        {"publish_report" === packageName && (
+          <Image
+            width="50px"
+            height="50px"
+            src={`${assetsURL}report/user.svg`}
+          />
+        )}
+        {"verified_publish_report" === packageName && (
+          <Image
+            width="50px"
+            height="50px"
+            src={`${assetsURL}report/ss-shield.svg`}
+          />
+        )}
         <Text fontSize={"2xl"} fontWeight={700}>
-          {sentenceCapitalize(plan.name)}
+          {"publish_report" === packageName
+            ? "Self-Published Report"
+            : "verified_publish_report" === packageName
+            ? "Verified Report"
+            : sentenceCapitalize(plan.name)}
         </Text>
+
         {showCheckIcon && (
           <Flex ml={2}>
             <CheckBadge fillColor={"#38CB89"} strokColor={"white"} />
@@ -66,7 +87,17 @@ const CurrentPlanDescriptionContainer: React.FC<{
           </Heading>
           {packageName !== "trial" && packageName !== "ondemand" && (
             <Text fontSize="xs" color="detail" mt={2}>
-              {`/ ${duration === "topup" ? "credit" : duration} `}
+              {`/ ${
+                duration === "topup"
+                  ? "credit"
+                  : [
+                      "topup",
+                      "publish_report",
+                      "verified_publish_report",
+                    ].includes(packageName)
+                  ? "report"
+                  : duration
+              } `}
             </Text>
           )}
         </Flex>
