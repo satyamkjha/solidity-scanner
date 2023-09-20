@@ -32,15 +32,16 @@ export default function ReportPage() {
   return (
     <>
       <HStack
-        mr={10}
-        my={5}
-        w={["100%", "100%", "90%"]}
+        w={["100%"]}
         height={"fit-content"}
         justifyContent={["center", "center", "flex-end"]}
+        bg={"black"}
       >
         <Button
           variant={"accent-outline"}
           w={["250px"]}
+          mr={28}
+          my={5}
           onClick={printReport}
           disabled={printLoading}
         >

@@ -17,14 +17,14 @@ import {
 import React, { useEffect, useState } from "react";
 import { API_PATH } from "helpers/routeManager";
 import API from "helpers/api";
-import PaymentMethodCard from "./PaymentMethodCard";
-import CoinPaymentSelect from "./CoinPaymentsSelect";
-import CouponCodeSection from "./CouponCodeSection";
+import PaymentMethodCard from "../../pages/Billing/components/PaymentMethodCard";
+import CoinPaymentSelect from "../../pages/Billing/components/CoinPaymentsSelect";
+import CouponCodeSection from "../../pages/Billing/components/CouponCodeSection";
 import { Plan, Profile } from "common/types";
-import CurrentPlanDescriptionContainer from "./CurrentPlanDescriptionContainer";
-import ConfirmationMessageBox from "./ConfirmationMessageBox";
-import DetailedBill from "./DetailedBill";
-import SwitchDuration from "./SwitchDuration";
+import CurrentPlanDescriptionContainer from "../../pages/Billing/components/CurrentPlanDescriptionContainer";
+import ConfirmationMessageBox from "../../pages/Billing/components/ConfirmationMessageBox";
+import DetailedBill from "../../pages/Billing/components/DetailedBill";
+import SwitchDuration from "../../pages/Billing/components/SwitchDuration";
 import Loader from "components/styled-components/Loader";
 
 const PaymentModal: React.FC<{
@@ -32,13 +32,14 @@ const PaymentModal: React.FC<{
   onClose: any;
   selectedPlan: string;
   quantity?: number;
-  globalDuration: "monthly" | "yearly" | "ondemand" | "topup";
+  globalDuration: string;
   profileData?: Profile;
   pricingDetails: {
     [key: string]: {
       [plan: string]: Plan;
     };
   };
+  paymentMetadata?: any;
 }> = ({
   isOpen,
   onClose,
@@ -47,6 +48,7 @@ const PaymentModal: React.FC<{
   globalDuration,
   profileData,
   quantity,
+  paymentMetadata,
 }) => {
   const toast = useToast();
 
@@ -80,6 +82,10 @@ const PaymentModal: React.FC<{
 
     if (quantity) {
       req.quantity = quantity;
+    }
+
+    if (paymentMetadata) {
+      req.paymnet_metadata = paymentMetadata;
     }
 
     try {

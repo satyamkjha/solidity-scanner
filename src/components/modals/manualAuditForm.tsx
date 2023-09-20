@@ -30,9 +30,16 @@ import { getAssetsURL } from "helpers/helperFunction";
 import { useConfig } from "hooks/useConfig";
 import Loader from "../styled-components/Loader";
 
-export const ManualAuditForm: React.FC<{ onClose(): any; isOpen: boolean }> = ({
+export const ManualAuditForm: React.FC<{
+  onClose(): any;
+  isOpen: boolean;
+  type?: string;
+  header?: string;
+}> = ({
   isOpen,
   onClose,
+  type = "Manual_Audit",
+  header = "Request Manual Audit",
 }) => {
   const [mailSent, setMailSent] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -62,7 +69,7 @@ export const ManualAuditForm: React.FC<{ onClose(): any; isOpen: boolean }> = ({
     axios
       .post("https://formsubmit.co/ajax/info@credshields.com", {
         email: email,
-        subject: "[Manual_Audit] " + subject,
+        subject: `[${type}] ` + subject,
         discord: discord,
         telegram: telegram,
         message: body,
@@ -99,7 +106,7 @@ export const ManualAuditForm: React.FC<{ onClose(): any; isOpen: boolean }> = ({
             textAlign={["center", "center", "center", "left"]}
             fontSize={["lg", "lg", "2xl"]}
           >
-            {!mailSent ? "Request Manual Audit" : "Request Sent"}
+            {!mailSent ? header : "Request Sent"}
           </ModalHeader>
           <ModalCloseButton
             m={[2, 2, 6]}

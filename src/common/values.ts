@@ -9,6 +9,12 @@ export const severityPriority: { [key: string]: number } = {
   informational: 6,
 };
 
+export const publishReportType: { [key: string]: string } = {
+  self_published: "Self-Published",
+  verified: "Verified Report",
+  assisted: "Assisted-Audit",
+};
+
 export const issueActions = [
   {
     value: "pending_fix",
