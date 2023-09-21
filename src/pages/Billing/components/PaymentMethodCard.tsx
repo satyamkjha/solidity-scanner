@@ -14,7 +14,8 @@ const PaymentMethodCard: React.FC<{
 
   return (
     <Flex
-      w="190px"
+      w="50%"
+      minW={"190px"}
       h="100px"
       cursor={"pointer"}
       borderRadius="10px"

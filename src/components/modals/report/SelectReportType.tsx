@@ -124,14 +124,22 @@ const ReportTypeCard: React.FC<{
         </VStack>
       </Flex>
 
-      <Flex textAlign="center" mt={10} mb={6}>
-        <Heading fontSize={"x-large"}>
-          {reportPlan ? `$${reportPlan.amount}` : "Free"}&nbsp;
-        </Heading>
-        <Text fontSize="xs" color="detail" mt={2}>
-          / report
-        </Text>
-      </Flex>
+      {type === "assisted" ? (
+        <Flex textAlign="center" mt={10} mb={6}>
+          <Heading fontSize={"x-large"} fontWeight={"extrabold"}>
+            Contact Team
+          </Heading>
+        </Flex>
+      ) : (
+        <Flex textAlign="center" mt={10} mb={6}>
+          <Heading fontSize={"x-large"} fontWeight={"extrabold"}>
+            {reportPlan ? `$${reportPlan.amount}` : "Free"}&nbsp;
+          </Heading>
+          <Text fontSize="xs" color="detail" mt={2}>
+            / report
+          </Text>
+        </Flex>
+      )}
       <Button
         w="220px"
         h={"50px"}

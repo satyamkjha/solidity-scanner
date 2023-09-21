@@ -26,7 +26,7 @@ export const PublishReport: React.FC<{
   profile: Profile;
   plans: PricingData;
   lastTimeUpdate: string;
-  onClose(): any;
+  onClose: any;
   isOpen: boolean;
 }> = ({
   type,
@@ -40,7 +40,7 @@ export const PublishReport: React.FC<{
 }) => {
   const [modalHeader, setModalHeader] = useState("Publish Report");
   const [modalState, setModalState] = useState("");
-  const [openPayment, setOpenPaymnet] = useState(false);
+  const [openPayment, setOpenPayment] = useState(false);
 
   const [reportType, setReportType] = useState<
     "self_published" | "verified" | "assisted"
@@ -72,7 +72,7 @@ export const PublishReport: React.FC<{
   const onPublishReport = (status: string) => {
     if (status === "success") {
       setModalState("make_payment");
-      setOpenPaymnet(true);
+      setOpenPayment(true);
     }
   };
 
@@ -99,8 +99,8 @@ export const PublishReport: React.FC<{
           bg="white"
           h={"100%"}
           minH={"fit-content"}
-          maxH={"90vh"}
-          maxW={["90vw", "90vw", "80vw"]}
+          maxH={"85vh"}
+          maxW={["90vw", "90vw", "75vw"]}
           minW={"300px"}
           borderRadius="15px"
         >
@@ -144,7 +144,7 @@ export const PublishReport: React.FC<{
                   pricingDetails={plans.pricing_data}
                   isOpen={openPayment}
                   onClose={() => {
-                    setOpenPaymnet(false);
+                    setOpenPayment(false);
                     onClose();
                   }}
                   paymentMetadata={{

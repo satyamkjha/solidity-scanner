@@ -15,7 +15,7 @@ import {
   Link,
 } from "@chakra-ui/react";
 import { ResponsivePie } from "@nivo/pie";
-import { Report } from "common/types";
+import { Report, Profile } from "common/types";
 import {
   Logo,
   SeverityIcon,
@@ -28,11 +28,15 @@ import { getAssetsURL, sentenceCapitalize } from "helpers/helperFunction";
 import React from "react";
 import styled from "@emotion/styled";
 import { useConfig } from "hooks/useConfig";
+import UpgradePackage from "components/upgradePackage";
+import { profile } from "console";
+import UpgradePackageV2 from "components/UpgradePackageV2";
 
 export const ReportContainer: React.FC<{
   summary_report: Report;
   isPublicReport: boolean;
-}> = ({ summary_report, isPublicReport }) => {
+  profile?: Profile;
+}> = ({ summary_report, isPublicReport, profile }) => {
   let d = new Date();
 
   if (summary_report) {
@@ -1182,6 +1186,7 @@ export const ReportContainer: React.FC<{
                       py={[0, 0, 0, 2]}
                       alignItems={["center"]}
                       border={["none", "none", "none", "1px solid #E6E6E6;"]}
+                      borderRadius={"13px"}
                     >
                       <Image
                         height={7}
@@ -1215,6 +1220,7 @@ export const ReportContainer: React.FC<{
                       py={[0, 0, 0, 2]}
                       alignItems={["center"]}
                       border={["none", "none", "none", "1px solid #E6E6E6;"]}
+                      borderRadius={"13px"}
                     >
                       <Image
                         height={7}
@@ -1250,6 +1256,7 @@ export const ReportContainer: React.FC<{
                       py={[0, 0, 0, 2]}
                       alignItems={["center"]}
                       border={["none", "none", "none", "1px solid #E6E6E6;"]}
+                      borderRadius={"13px"}
                     >
                       <Image
                         height={7}
@@ -1287,6 +1294,7 @@ export const ReportContainer: React.FC<{
                       py={[0, 0, 0, 2]}
                       alignItems={["center"]}
                       border={["none", "none", "none", "1px solid #E6E6E6;"]}
+                      borderRadius={"13px"}
                     >
                       <Image
                         height={7}
@@ -1377,8 +1385,8 @@ export const ReportContainer: React.FC<{
                   {isDesktopView && (
                     <Text
                       fontSize="md"
-                      fontWeight={"normal"}
-                      color={"gray.600"}
+                      fontWeight={"500"}
+                      color={"subtle"}
                       width={"15%"}
                     >
                       {issue.bug_id}
@@ -1396,8 +1404,8 @@ export const ReportContainer: React.FC<{
                     <SeverityIcon variant={issue.severity} />
                     <Text
                       fontSize={["sm", "sm", "sm", "md"]}
-                      fontWeight={"normal"}
-                      color={"gray.600"}
+                      fontWeight={"500"}
+                      color={"subtle"}
                       ml={2}
                       width={"100%"}
                     >
@@ -1406,8 +1414,8 @@ export const ReportContainer: React.FC<{
                   </Flex>
                   <Text
                     fontSize={["sm", "sm", "sm", "md"]}
-                    fontWeight={"normal"}
-                    color={"gray.600"}
+                    fontWeight={"500"}
+                    color={"subtle"}
                     width={["120%", "120%", "120%", "50%"]}
                   >
                     {issue.issue_name}
@@ -1418,8 +1426,9 @@ export const ReportContainer: React.FC<{
                     />
                     <Text
                       fontSize={["sm", "sm", "sm", "md"]}
-                      fontWeight={"normal"}
-                      color={"gray.600"}
+                      fontWeight={"500"}
+                      color={"black"}
+                      fontStyle={"italic"}
                     >
                       {/* {sentenceCapitalize(
                             issue.status.toLowerCase().replace("_", " ")
@@ -1435,6 +1444,81 @@ export const ReportContainer: React.FC<{
                 </Flex>
               ))
             )}
+          </Flex>
+          <Flex w={["100%"]} flexDir={"column"} position={"relative"}>
+            {Array.from({ length: 10 }, (v, i) => (
+              <Flex
+                key={i}
+                as="section"
+                w={["100%"]}
+                alignItems="flex-start"
+                justifyContent="flex-start"
+                flexDir={"row"}
+                textAlign={["left", "left"]}
+                py={5}
+                px={[1, 10]}
+                borderBottomWidth={1}
+                borderBottomColor={"#E4E4E4"}
+                position={"relative"}
+              >
+                {isDesktopView && (
+                  <Text
+                    fontSize="md"
+                    fontWeight={"500"}
+                    color={"subtle"}
+                    width={"15%"}
+                  >
+                    SSB_101_101
+                  </Text>
+                )}
+                <Flex
+                  as="div"
+                  w={["50%", "50%", "50%", "20%"]}
+                  height={"30px"}
+                  alignItems="center"
+                  justifyContent="flex-start"
+                  flexDir={"row"}
+                  pl={[2, 2, 2, 0]}
+                >
+                  <SeverityIcon variant={"critical"} />
+                  <Text
+                    fontSize={["sm", "sm", "sm", "md"]}
+                    fontWeight={"500"}
+                    color={"subtle"}
+                    ml={2}
+                    width={"100%"}
+                  >
+                    {sentenceCapitalize("critical")}
+                  </Text>
+                </Flex>
+                <Text
+                  fontSize={["sm", "sm", "sm", "md"]}
+                  fontWeight={"500"}
+                  color={"subtle"}
+                  width={["120%", "120%", "120%", "50%"]}
+                >
+                  Lorem Ipsum Dolor Sit Amet
+                </Text>
+                <HStack width={["50%", "50%", "50%", "15%"]}>
+                  <Image src={`${assetsURL}report/pending_fix_color.svg`} />
+                  <Text
+                    fontSize={["sm", "sm", "sm", "md"]}
+                    fontWeight={"500"}
+                    color={"black"}
+                    fontStyle={"italic"}
+                  >
+                    Pending Fix
+                  </Text>
+                </HStack>
+              </Flex>
+            ))}
+            {profile?.current_package &&
+              !["pro", "custom"].includes(profile?.current_package) && (
+                <UpgradePackageV2
+                  text="Upgrade to our pro plan or a custom plan to use this feature and much more."
+                  iconSize={85}
+                />
+              )}
           </Flex>
         </Flex>
 
@@ -1592,8 +1676,9 @@ export const ReportContainer: React.FC<{
                       />
                       <Text
                         fontSize="md"
-                        fontWeight={"normal"}
-                        color={"gray.600"}
+                        fontWeight={"500"}
+                        fontStyle={"italic"}
+                        color={"black"}
                       >
                         {/* {sentenceCapitalize(
                           issue.status.toLowerCase().replace("_", " ")

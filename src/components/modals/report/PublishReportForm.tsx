@@ -14,13 +14,13 @@ import {
   useMediaQuery,
   Stack,
 } from "@chakra-ui/react";
-import { getAssetsURL } from "helpers/helperFunction";
 import { AiOutlineProject } from "react-icons/ai";
 import { FaInternetExplorer, FaBuilding, FaEnvelope } from "react-icons/fa";
 import { Scan } from "common/types";
 import { formattedDate } from "common/functions";
 import API from "helpers/api";
 import { API_PATH } from "helpers/routeManager";
+import StyledButton from "components/styled-components/StyledButton";
 
 const PublishReportForm: React.FC<{
   type: "project" | "block";
@@ -42,8 +42,8 @@ const PublishReportForm: React.FC<{
   onPublishReport,
 }) => {
   const [isDesktopView] = useMediaQuery("(min-width: 1024px)");
-  const assetsURL = getAssetsURL();
 
+  const [isLoading, setIsLoading] = useState(false);
   const [projectName, setProjectName] = useState("");
   const [repoUrl, setRepoUrl] = useState("");
   const [commitHash, setCommitHash] = useState("");
@@ -78,6 +78,7 @@ const PublishReportForm: React.FC<{
   }, [scanData]);
 
   const publishReport = async () => {
+    setIsLoading(true);
     const { data } = await API.post(API_PATH.API_PUBLISH_REPORT, {
       project_type: type,
       project_id: projectId,
@@ -102,7 +103,7 @@ const PublishReportForm: React.FC<{
         },
       },
     });
-
+    setIsLoading(false);
     if (data.status === "success") {
       onPublishReport(data.status);
     }
@@ -329,14 +330,15 @@ const PublishReportForm: React.FC<{
           </HStack>
         </VStack>
 
-        <Button
+        <StyledButton
           w={"220px"}
           mt={"auto"}
           variant={"brand"}
+          isLoading={isLoading}
           onClick={publishReport}
         >
           Proceed to Pay
-        </Button>
+        </StyledButton>
       </Flex>
 
       <Flex

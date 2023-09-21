@@ -214,7 +214,9 @@ const BlockPage: React.FC = () => {
       setPublishStatus("Not-Published");
       return;
     }
-    if (reportResponse.data.reports[0].is_approved)
+    if (reportResponse.data.reports[0].report_type === "self_published") {
+      setPublishStatus("Self-Published");
+    } else if (reportResponse.data.reports[0].is_approved)
       setPublishStatus("Approved");
     else setPublishStatus("Waiting For Approval");
     return;
@@ -474,6 +476,12 @@ const BlockPage: React.FC = () => {
                               <HStack my={[4, 4, 4, 0]}>
                                 {publishStatus === "Approved" ? (
                                   <CheckCircleIcon color={"#03C04A"} />
+                                ) : publishStatus === "Self-Published" ? (
+                                  <Image
+                                    width="25px"
+                                    height="25px"
+                                    src={`${assetsURL}report/user.svg`}
+                                  />
                                 ) : (
                                   <TimeIcon color={"#FF5C00"} />
                                 )}
@@ -481,6 +489,8 @@ const BlockPage: React.FC = () => {
                                   color={
                                     publishStatus === "Approved"
                                       ? "#03C04A"
+                                      : publishStatus === "Self-Published"
+                                      ? "black"
                                       : "#FF5C00"
                                   }
                                   sx={{
@@ -518,7 +528,8 @@ const BlockPage: React.FC = () => {
                                 )}
                                 Re-Generate Report
                               </Button>
-                            ) : publishStatus === "Approved" ? (
+                            ) : publishStatus === "Approved" ||
+                              publishStatus === "Self-Published" ? (
                               <HStack
                                 borderRadius={"15px"}
                                 backgroundColor={"#F5F2FF"}

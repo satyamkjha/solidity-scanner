@@ -1,7 +1,6 @@
 import React from "react";
-import { Flex, Text, Heading, Image } from "@chakra-ui/react";
+import { Flex, Text, Heading, Image, HStack } from "@chakra-ui/react";
 import { getAssetsURL, sentenceCapitalize } from "helpers/helperFunction";
-import { useConfig } from "hooks/useConfig";
 import { Plan } from "common/types";
 import { CheckBadge } from "components/icons";
 
@@ -18,8 +17,7 @@ const CurrentPlanDescriptionContainer: React.FC<{
   showCheckIcon = true,
   showDescription = true,
 }) => {
-  const config: any = useConfig();
-  const assetsURL = getAssetsURL(config);
+  const assetsURL = getAssetsURL();
   return (
     <Flex
       w={"100%"}
@@ -28,36 +26,51 @@ const CurrentPlanDescriptionContainer: React.FC<{
       alignItems="flex-start"
     >
       <Flex alignItems="center" justifyContent="center">
-        {!["topup", "publish_report", "verified_publish_report"].includes(
-          packageName
-        ) && (
+        {!["trial", "non-pro", "pro/custom"].includes(packageName) ? (
           <Image
             width="35px"
             height="35px"
             src={`${assetsURL}pricing/${packageName}-heading.svg`}
           />
+        ) : (
+          <HStack mb={4}>
+            <Image
+              width="75px"
+              height="75px"
+              src={
+                "publish_report" === duration
+                  ? `${assetsURL}report/user.svg`
+                  : `${assetsURL}report/ss-shield.svg`
+              }
+              mr={2}
+            />
+            <Flex flexDir={"column"}>
+              <Text fontSize={"2xl"} fontWeight={700}>
+                {"publish_report" === duration
+                  ? "Self-Published Report"
+                  : "verified_publish_report" === duration
+                  ? "Verified Report"
+                  : sentenceCapitalize(plan.name)}
+              </Text>
+              <Flex textAlign="center" my={1}>
+                <Heading fontSize={"lg"}>
+                  {plan.amount === "Free"
+                    ? "Free"
+                    : `$ ${parseFloat(plan.amount).toFixed(2)}`}
+                  &nbsp;
+                </Heading>
+                <Text fontSize="xs" color="detail" mt={1}>
+                  {`/ report `}
+                </Text>
+              </Flex>
+            </Flex>
+          </HStack>
         )}
-        {"publish_report" === packageName && (
-          <Image
-            width="50px"
-            height="50px"
-            src={`${assetsURL}report/user.svg`}
-          />
+        {!["non-pro", "pro/custom"].includes(packageName) && (
+          <Text fontSize={"2xl"} fontWeight={700}>
+            {sentenceCapitalize(plan.name)}
+          </Text>
         )}
-        {"verified_publish_report" === packageName && (
-          <Image
-            width="50px"
-            height="50px"
-            src={`${assetsURL}report/ss-shield.svg`}
-          />
-        )}
-        <Text fontSize={"2xl"} fontWeight={700}>
-          {"publish_report" === packageName
-            ? "Self-Published Report"
-            : "verified_publish_report" === packageName
-            ? "Verified Report"
-            : sentenceCapitalize(plan.name)}
-        </Text>
 
         {showCheckIcon && (
           <Flex ml={2}>
@@ -77,7 +90,7 @@ const CurrentPlanDescriptionContainer: React.FC<{
             "Simplest way to get started with the product. Scan your contract using free credits and get your security score and issue count"}
         </Text>
       )}
-      {packageName !== "custom" && (
+      {!["custom", "non-pro", "pro/custom"].includes(packageName) && (
         <Flex textAlign="center" my={2}>
           <Heading fontSize={"x-large"}>
             {plan.amount === "Free"
@@ -87,17 +100,7 @@ const CurrentPlanDescriptionContainer: React.FC<{
           </Heading>
           {packageName !== "trial" && packageName !== "ondemand" && (
             <Text fontSize="xs" color="detail" mt={2}>
-              {`/ ${
-                duration === "topup"
-                  ? "credit"
-                  : [
-                      "topup",
-                      "publish_report",
-                      "verified_publish_report",
-                    ].includes(packageName)
-                  ? "report"
-                  : duration
-              } `}
+              {`/ ${duration === "topup" ? "credit" : duration} `}
             </Text>
           )}
         </Flex>

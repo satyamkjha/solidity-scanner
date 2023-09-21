@@ -85,7 +85,7 @@ const PaymentModal: React.FC<{
     }
 
     if (paymentMetadata) {
-      req.paymnet_metadata = paymentMetadata;
+      req.payment_metadata = paymentMetadata;
     }
 
     try {
@@ -190,16 +190,16 @@ const PaymentModal: React.FC<{
     <Modal isOpen={isOpen} onClose={onClose}>
       <ModalOverlay />
       <ModalContent
-        minW="fit-content"
-        w="fit-content"
         overflowY={"scroll"}
         overflowX={"scroll"}
         bg="white"
+        borderRadius="15px"
         h={duration === "topup" ? "75%" : "85%"}
         minH={"fit-content"}
+        maxW={"75vw"}
       >
-        <ModalCloseButton />
-        <ModalHeader background="#FFFFFF" textAlign={"center"}>
+        <ModalCloseButton mt={7} mr={2} />
+        <ModalHeader background="#FFFFFF" textAlign={"center"} py={10} pb={2}>
           {isLargerThan900
             ? "Select Payment Method"
             : isLargerThan450
@@ -219,15 +219,15 @@ const PaymentModal: React.FC<{
           <Divider />
           {isLargerThan900 ? (
             <HStack
-              mt={5}
+              pt={10}
               w="fit-content"
-              spacing={"20px"}
+              spacing={10}
               h="100%"
               alignItems={"flex-start"}
               justifyContent={"flex-start"}
             >
               <Flex
-                w="400px"
+                w="50%"
                 flexDir="column"
                 h="100%"
                 justifyContent={"flex-start"}
@@ -272,7 +272,7 @@ const PaymentModal: React.FC<{
                 />
               </Flex>
               <Flex
-                w="400px"
+                w="50%"
                 h="100%"
                 flexDir="column"
                 justifyContent={"flex-start"}
@@ -282,6 +282,9 @@ const PaymentModal: React.FC<{
                   packageName={selectedPlan}
                   plan={pricingDetails[duration][selectedPlan]}
                   duration={duration}
+                  showCheckIcon={
+                    !["non-pro", "pro/custom"].includes(selectedPlan)
+                  }
                 />
                 {![
                   "ondemand",

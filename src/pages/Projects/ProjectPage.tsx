@@ -99,6 +99,7 @@ import { getRepoTree } from "hooks/getRepoTree";
 import {
   checkGenerateReportAccess,
   checkPublishReportAccess,
+  getAssetsURL,
 } from "helpers/helperFunction";
 import Loader from "components/styled-components/Loader";
 import { formattedDate } from "common/functions";
@@ -176,6 +177,7 @@ const ScanDetails: React.FC<{
 }) => {
   const role: string = useUserRole();
 
+  const assetsURL = getAssetsURL();
   const [isOpen, setIsOpen] = useState(false);
   const [isRescanLoading, setRescanLoading] = useState(false);
   const cancelRef = useRef<HTMLButtonElement | null>(null);
@@ -195,7 +197,6 @@ const ScanDetails: React.FC<{
   const { data: profile, isLoading: isProfileLoading } = useProfile();
 
   const [tabIndex, setTabIndex] = React.useState(0);
-  const toast = useToast();
   const [open, setOpen] = useState(false);
 
   const [publishStatus, setPublishStatus] = useState("");
@@ -281,7 +282,9 @@ const ScanDetails: React.FC<{
       setPublishStatus("Not-Published");
       return;
     }
-    if (reportResponse.data.reports[0].is_approved)
+    if (reportResponse.data.reports[0].report_type === "self_published") {
+      setPublishStatus("Self-Published");
+    } else if (reportResponse.data.reports[0].is_approved)
       setPublishStatus("Approved");
     else setPublishStatus("Waiting For Approval");
     return;
@@ -299,8 +302,6 @@ const ScanDetails: React.FC<{
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [scanData]);
-
-  const reportId = scanData?.scan_report.latest_report_id;
 
   const [summaryReport, setSummaryReport] = useState<Report | null>(null);
   const [printLoading, setPrintLoading] = useState<boolean>(false);
@@ -480,12 +481,22 @@ const ScanDetails: React.FC<{
                       <HStack mb={[5, 5, 5, 0]}>
                         {publishStatus === "Approved" ? (
                           <CheckCircleIcon color={"#03C04A"} />
+                        ) : publishStatus === "Self-Published" ? (
+                          <Image
+                            width="25px"
+                            height="25px"
+                            src={`${assetsURL}report/user.svg`}
+                          />
                         ) : (
                           <TimeIcon color={"#FF5C00"} />
                         )}
                         <Text
                           color={
-                            publishStatus === "Approved" ? "#03C04A" : "#FF5C00"
+                            publishStatus === "Approved"
+                              ? "#03C04A"
+                              : publishStatus === "Self-Published"
+                              ? "black"
+                              : "#FF5C00"
                           }
                           sx={{ fontSize: "md", fontWeight: 600, ml: 2 }}
                         >
@@ -515,7 +526,8 @@ const ScanDetails: React.FC<{
                         )}
                         Re-Generate Report
                       </Button>
-                    ) : publishStatus === "Approved" ? (
+                    ) : publishStatus === "Approved" ||
+                      publishStatus === "Self-Published" ? (
                       <HStack
                         borderRadius={"15px"}
                         border="1px solid #806CCF"

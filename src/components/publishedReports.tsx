@@ -7,6 +7,7 @@ import {
   IconButton,
   Text,
   useMediaQuery,
+  Image,
 } from "@chakra-ui/react";
 import { ReportsListItem, Profile, Scan, Report } from "common/types";
 import React, { useState, useRef, useEffect } from "react";
@@ -17,6 +18,7 @@ import { useReactToPrint } from "react-to-print";
 import { getPublicReport } from "hooks/usePublicReport";
 import { PrintContainer } from "pages/Report/PrintContainer";
 import Loader from "./styled-components/Loader";
+import { getAssetsURL } from "helpers/helperFunction";
 
 const ReportBlock: React.FC<{
   report: ReportsListItem;
@@ -24,6 +26,7 @@ const ReportBlock: React.FC<{
   type: string;
 }> = ({ report, profile, type }) => {
   const toast = useToast();
+  const assetsURL = getAssetsURL();
 
   const [summaryReport, setSummaryReport] = useState<Report | null>(null);
   const [printLoading, setPrintLoading] = useState<boolean>(false);
@@ -104,14 +107,30 @@ const ReportBlock: React.FC<{
         <HStack width={["210px"]} my={3}>
           {report.is_approved ? (
             <CheckCircleIcon color={"#03C04A"} />
+          ) : report.report_type === "self_published" ? (
+            <Image
+              width="25px"
+              height="25px"
+              src={`${assetsURL}report/user.svg`}
+            />
           ) : (
             <TimeIcon color={"#FF5C00"} />
           )}
           <Text
-            color={report.is_approved ? "#03C04A" : "#FF5C00"}
+            color={
+              report.is_approved
+                ? "#03C04A"
+                : report.report_type === "self_published"
+                ? "black"
+                : "#FF5C00"
+            }
             sx={{ fontSize: "md", fontWeight: 600, ml: 2 }}
           >
-            {report.is_approved ? "Approved" : "Waiting for Approval"}
+            {report.is_approved
+              ? "Approved"
+              : report.report_type === "self_published"
+              ? "Self-Published"
+              : "Waiting for Approval"}
           </Text>
         </HStack>
 
