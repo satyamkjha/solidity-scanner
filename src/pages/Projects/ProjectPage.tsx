@@ -903,7 +903,7 @@ const ScanDetails: React.FC<{
         </AlertDialogOverlay>
       </AlertDialog>
 
-      {scanData && profile && plans ? (
+      {scanData && profile && plans && open ? (
         <PublishReport
           type={"project"}
           scanData={scanData}

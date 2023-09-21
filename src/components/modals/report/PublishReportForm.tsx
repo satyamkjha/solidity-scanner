@@ -114,7 +114,7 @@ const PublishReportForm: React.FC<{
       h={"100%"}
       spacing={10}
       alignItems={"flex-start"}
-      flexDir={["column", "column", "column", "row"]}
+      direction={["column", "column", "column", "row"]}
     >
       <Flex w={["100%", "100%", "100%", "50%"]} h={"100%"} flexDir={"column"}>
         <VStack zIndex={"10"} w={["100%"]} spacing={6}>
@@ -351,50 +351,68 @@ const PublishReportForm: React.FC<{
         {type === "block" ? (
           <>
             <Box>
-              <Text color={"#B0B7C3"}>Contract Name</Text>
+              <Text color={"#B0B7C3"} lineHeight={2}>
+                Contract Name
+              </Text>
               <Text fontWeight={600}>{scanData?.scan_report.contractname}</Text>
             </Box>
-            <Box mt={4}>
-              <Text color={"#B0B7C3"}>Contract Address</Text>
+            <Box mt={5}>
+              <Text color={"#B0B7C3"} lineHeight={2}>
+                Contract Address
+              </Text>
               <Text fontWeight={600}>
                 {scanData?.scan_report.contract_address}
               </Text>
             </Box>
-            <Box mt={4}>
-              <Text color={"#B0B7C3"}>Contract Platform</Text>
+            <Box mt={5}>
+              <Text color={"#B0B7C3"} lineHeight={2}>
+                Contract Platform
+              </Text>
               <Text fontWeight={600}>
                 {scanData?.scan_report.contract_platform}
               </Text>
             </Box>
-            <Box mt={4}>
-              <Text color={"#B0B7C3"}>Contract Chain</Text>
+            <Box mt={5}>
+              <Text color={"#B0B7C3"} lineHeight={2}>
+                Contract Chain
+              </Text>
               <Text fontWeight={600}>
                 {scanData?.scan_report.contract_chain}
               </Text>
             </Box>
-            <Box mt={4}>
-              <Text color={"#B0B7C3"}>Contract URL</Text>
+            <Box mt={5}>
+              <Text color={"#B0B7C3"} lineHeight={2}>
+                Contract URL
+              </Text>
               <Text fontWeight={600}>{scanData?.scan_report.contract_url}</Text>
             </Box>
           </>
         ) : (
           <>
             <Box>
-              <Text color={"#B0B7C3"}>Project Name</Text>
+              <Text color={"#B0B7C3"} lineHeight={2}>
+                Project Name
+              </Text>
               <Text fontWeight={600}>{projectName}</Text>
             </Box>
-            <Box mt={4}>
-              <Text color={"#B0B7C3"}>Link to the repository</Text>
+            <Box mt={5}>
+              <Text color={"#B0B7C3"} lineHeight={2}>
+                Link to the repository
+              </Text>
               <Text fontWeight={600}>{repoUrl}</Text>
             </Box>
           </>
         )}
-        <Box mt={4}>
-          <Text color={"#B0B7C3"}>Latest Report Update</Text>
+        <Box mt={5}>
+          <Text color={"#B0B7C3"} lineHeight={2}>
+            Latest Report Update
+          </Text>
           <Text fontWeight={600}>{lastTimeUpdate}</Text>
         </Box>
-        <Box mt={4}>
-          <Text color={"#B0B7C3"}>Date Published</Text>
+        <Box mt={5}>
+          <Text color={"#B0B7C3"} lineHeight={2}>
+            Date Published
+          </Text>
           <Text fontWeight={600}>{datePublished}</Text>
         </Box>
       </Flex>

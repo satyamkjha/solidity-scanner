@@ -798,7 +798,7 @@ const BlockPage: React.FC = () => {
         )
       )}
 
-      {scanData && profile && plans ? (
+      {scanData && profile && plans && open ? (
         <PublishReport
           type={"block"}
           scanData={scanData}

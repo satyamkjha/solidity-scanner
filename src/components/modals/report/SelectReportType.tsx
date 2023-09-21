@@ -8,6 +8,7 @@ import {
   Heading,
   Box,
   Button,
+  Link,
 } from "@chakra-ui/react";
 import { getAssetsURL } from "helpers/helperFunction";
 import { Profile, PricingData, Plan } from "common/types";
@@ -29,7 +30,7 @@ const SelectReportType: React.FC<{
       : "non-pro";
 
   return (
-    <HStack spacing={20}>
+    <HStack spacing={20} h={"100%"} mt={6}>
       <ReportTypeCard
         type={"self_published"}
         reportType={reportType}
@@ -92,7 +93,15 @@ const ReportTypeCard: React.FC<{
   let reportPlan = pricing[reportTypeCycle][publishPackage];
 
   return (
-    <Flex flexDir={"column"} alignItems={"center"} justifyContent={"center"}>
+    <Flex
+      flexDir={"column"}
+      alignItems={"center"}
+      justifyContent={"flex-start"}
+      h={"100%"}
+      cursor={"pointer"}
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => setIsHovered(false)}
+    >
       <Flex
         borderRadius={"15px"}
         p={4}
@@ -100,8 +109,8 @@ const ReportTypeCard: React.FC<{
         border={type === reportType ? "1px solid #52FF01" : "none"}
         boxShadow={type === reportType ? "0px 4px 23px 0px #2FF86B33" : ""}
         flexDir={"column"}
-        w={["150px", "150px", "150px", "220px"]}
-        h={["150px", "150px", "150px", "220px"]}
+        w={["150px", "150px", "150px", "230px"]}
+        h={["150px", "150px", "150px", "230px"]}
         onClick={() => setReportType(type)}
       >
         <Flex ml={"auto"}>
@@ -128,15 +137,22 @@ const ReportTypeCard: React.FC<{
         h={"50px"}
         mt={6}
         alignContent={"center"}
-        variant={isHovered ? "brand" : "gray-outline"}
-        onMouseEnter={() => setIsHovered(true)}
-        onMouseLeave={() => setIsHovered(false)}
+        variant={isHovered || type === reportType ? "brand" : "gray-outline"}
         onClick={() => {
           onReportTypeSelect(type, reportTypeCycle, publishPackage);
         }}
       >
-        {isHovered ? "Proceed" : "Select"}
+        {isHovered || type === reportType ? "Proceed" : "Select"}
       </Button>
+      <Link
+        href="https://docs.solidityscan.com/"
+        isExternal
+        color={"accent"}
+        mt={16}
+        visibility={isHovered || type === reportType ? "visible" : "hidden"}
+      >
+        Know more
+      </Link>
     </Flex>
   );
 };

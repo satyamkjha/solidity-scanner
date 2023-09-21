@@ -7,6 +7,7 @@ import {
   ModalHeader,
   ModalCloseButton,
   ModalBody,
+  Divider,
 } from "@chakra-ui/react";
 import { Scan, Profile, PricingData } from "common/types";
 import SelectReportType from "./SelectReportType";
@@ -37,7 +38,6 @@ export const PublishReport: React.FC<{
   lastTimeUpdate,
   onClose,
 }) => {
-
   const [modalHeader, setModalHeader] = useState("Publish Report");
   const [modalState, setModalState] = useState("");
   const [openPayment, setOpenPaymnet] = useState(false);
@@ -76,31 +76,48 @@ export const PublishReport: React.FC<{
     }
   };
 
+  const resetStates = () => {
+    setReportType(undefined);
+    setReportTypeCycle("");
+    setPublishPackage("");
+    setAssistedFormOpen(false);
+    setModalState("");
+    setModalHeader("");
+  };
+
   return (
     <>
-      <Modal isOpen={isOpen} onClose={onClose}>
+      <Modal
+        isOpen={isOpen}
+        onClose={() => {
+          resetStates();
+          onClose();
+        }}
+      >
         <ModalOverlay />
         <ModalContent
           bg="white"
-          h={["auto", "auto", "auto", "650px"]}
+          h={"100%"}
           minH={"fit-content"}
-          maxW={["90vw", "90vw", "70vw"]}
+          maxH={"90vh"}
+          maxW={["90vw", "90vw", "80vw"]}
           minW={"300px"}
           borderRadius="15px"
         >
-          <ModalHeader textAlign={["center"]} py={10}>
+          <ModalHeader textAlign={["center"]} py={10} pb={2}>
             {modalHeader}
           </ModalHeader>
-          <ModalCloseButton />
-          <ModalBody>
+          <ModalCloseButton mt={8} mr={2} />
+          <ModalBody h="100%" w={"100%"} px={[6, 6, 6, 12]} pb={10} pt={4}>
+            <Divider />
             <Flex
-              justifyContent={"flex-start"}
+              justifyContent={"center"}
               alignItems={"flex-start"}
               w={"100%"}
               h={"100%"}
               flexDir="row"
-              p={4}
-              pb={6}
+              pt={10}
+              pb={10}
             >
               {modalState === "report_type" ? (
                 <SelectReportType
