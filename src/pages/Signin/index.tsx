@@ -21,7 +21,6 @@ import GoogleSignIn from "pages/Signin/GoogleSignin";
 import Loader from "components/styled-components/Loader";
 import LoginForm from "./LoginForm";
 import OrgLoginForm from "./OrgLoginForm";
-import PublishReportForm from "components/modals/report/PublishReportForm";
 
 function useQuery() {
   return new URLSearchParams(useLocation().search);
@@ -130,7 +129,6 @@ const SignIn: React.FC = () => {
             Sign up
           </Box>
         </Link>
-        <PublishReportForm />
       </Flex>
     </>
   );

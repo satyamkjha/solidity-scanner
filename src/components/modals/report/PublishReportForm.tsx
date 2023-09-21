@@ -12,6 +12,7 @@ import {
   Input,
   Switch as SwitchComp,
   useMediaQuery,
+  Stack,
 } from "@chakra-ui/react";
 import { getAssetsURL } from "helpers/helperFunction";
 import { AiOutlineProject } from "react-icons/ai";
@@ -108,8 +109,14 @@ const PublishReportForm: React.FC<{
   };
 
   return (
-    <HStack w={"100%"} spacing={10} alignItems={"flex-start"}>
-      <Flex w={"50%"} flexDir={"column"}>
+    <Stack
+      w={"100%"}
+      h={"100%"}
+      spacing={10}
+      alignItems={"flex-start"}
+      flexDir={["column", "column", "column", "row"]}
+    >
+      <Flex w={["100%", "100%", "100%", "50%"]} h={"100%"} flexDir={"column"}>
         <VStack zIndex={"10"} w={["100%"]} spacing={6}>
           {!isDesktopView && (
             <HStack my={6}>
@@ -322,12 +329,25 @@ const PublishReportForm: React.FC<{
           </HStack>
         </VStack>
 
-        <Button w={"220px"} variant={"brand"} onClick={publishReport}>
+        <Button
+          w={"220px"}
+          mt={"auto"}
+          variant={"brand"}
+          onClick={publishReport}
+        >
           Proceed to Pay
         </Button>
       </Flex>
 
-      <Flex w={"50%"} flexDir={"column"} bg={"#FAFAFA"} px={6} py={8}>
+      <Flex
+        w={["100%", "100%", "100%", "50%"]}
+        h={"100%"}
+        flexDir={"column"}
+        bg={"#FAFAFA"}
+        borderRadius={"15px"}
+        px={6}
+        py={8}
+      >
         {type === "block" ? (
           <>
             <Box>
@@ -378,7 +398,7 @@ const PublishReportForm: React.FC<{
           <Text fontWeight={600}>{datePublished}</Text>
         </Box>
       </Flex>
-    </HStack>
+    </Stack>
   );
 };
 

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, Dispatch, SetStateAction } from "react";
 import {
   HStack,
   Image,
@@ -9,17 +9,20 @@ import {
   Box,
   Button,
 } from "@chakra-ui/react";
-import RadioButton from "components/styled-components/RadioButton";
 import { getAssetsURL } from "helpers/helperFunction";
 import { Profile, PricingData, Plan } from "common/types";
 import { publishReportType } from "common/values";
+import RadioButton from "components/styled-components/RadioButton";
 
 const SelectReportType: React.FC<{
   profile: Profile;
   plans: PricingData;
-  reportType: "self_published" | "verified" | "assisted";
+  reportType: "self_published" | "verified" | "assisted" | undefined;
+  setReportType: Dispatch<
+    SetStateAction<"self_published" | "verified" | "assisted" | undefined>
+  >;
   onReportTypeSelect: any;
-}> = ({ profile, plans, reportType, onReportTypeSelect }) => {
+}> = ({ profile, plans, reportType, setReportType, onReportTypeSelect }) => {
   let publishPackage =
     profile?.current_package === "pro" || profile?.current_package === "custom"
       ? "pro/custom"
@@ -30,6 +33,7 @@ const SelectReportType: React.FC<{
       <ReportTypeCard
         type={"self_published"}
         reportType={reportType}
+        setReportType={setReportType}
         pricing={plans?.pricing_data}
         publishPackage={publishPackage}
         icon={"user"}
@@ -38,6 +42,7 @@ const SelectReportType: React.FC<{
       <ReportTypeCard
         type={"verified"}
         reportType={reportType}
+        setReportType={setReportType}
         pricing={plans?.pricing_data}
         publishPackage={publishPackage}
         icon={"ss-shield"}
@@ -46,6 +51,7 @@ const SelectReportType: React.FC<{
       <ReportTypeCard
         type={"assisted"}
         reportType={reportType}
+        setReportType={setReportType}
         pricing={plans?.pricing_data}
         publishPackage={publishPackage}
         icon={"assisted"}
@@ -57,8 +63,11 @@ const SelectReportType: React.FC<{
 
 const ReportTypeCard: React.FC<{
   type: "self_published" | "verified" | "assisted";
-  reportType?: "self_published" | "verified" | "assisted";
-  onReportTypeSelect?: any;
+  reportType: "self_published" | "verified" | "assisted" | undefined;
+  setReportType: Dispatch<
+    SetStateAction<"self_published" | "verified" | "assisted" | undefined>
+  >;
+  onReportTypeSelect: any;
   publishPackage: string;
   pricing: {
     [key: string]: {
@@ -69,6 +78,7 @@ const ReportTypeCard: React.FC<{
 }> = ({
   type,
   reportType,
+  setReportType,
   onReportTypeSelect,
   publishPackage,
   pricing,
@@ -86,14 +96,13 @@ const ReportTypeCard: React.FC<{
       <Flex
         borderRadius={"15px"}
         p={4}
-        bg={"white"}
-        border={"1px solid #52FF01"}
-        sx={{
-          boxShadow: "0px 4px 23px 0px #2FF86B33",
-        }}
+        bg={type === reportType ? "white" : "#F7F9FC"}
+        border={type === reportType ? "1px solid #52FF01" : "none"}
+        boxShadow={type === reportType ? "0px 4px 23px 0px #2FF86B33" : ""}
         flexDir={"column"}
         w={["150px", "150px", "150px", "220px"]}
         h={["150px", "150px", "150px", "220px"]}
+        onClick={() => setReportType(type)}
       >
         <Flex ml={"auto"}>
           <RadioButton isActive={type === reportType} />

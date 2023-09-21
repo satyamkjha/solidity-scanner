@@ -1,22 +1,18 @@
 import React, { useState, useEffect } from "react";
 import {
   Flex,
-  Button,
   Modal,
   ModalOverlay,
   ModalContent,
   ModalHeader,
   ModalCloseButton,
   ModalBody,
-  ModalFooter,
-  Image,
 } from "@chakra-ui/react";
-import { getAssetsURL } from "helpers/helperFunction";
 import { Scan, Profile, PricingData } from "common/types";
 import SelectReportType from "./SelectReportType";
 import PublishReportForm from "./PublishReportForm";
-import PaymentModal from "components/modals/PaymentModal";
 import ManualAuditForm from "../manualAuditForm";
+import PaymentModal from "../PaymentModal";
 
 export const PublishReport: React.FC<{
   type: "project" | "block";
@@ -41,7 +37,6 @@ export const PublishReport: React.FC<{
   lastTimeUpdate,
   onClose,
 }) => {
-  const assetsURL = getAssetsURL();
 
   const [modalHeader, setModalHeader] = useState("Publish Report");
   const [modalState, setModalState] = useState("");
@@ -86,19 +81,14 @@ export const PublishReport: React.FC<{
       <Modal isOpen={isOpen} onClose={onClose}>
         <ModalOverlay />
         <ModalContent
-          bg="bg.subtle"
+          bg="white"
           h={["auto", "auto", "auto", "650px"]}
           minH={"fit-content"}
           maxW={["90vw", "90vw", "70vw"]}
           minW={"300px"}
           borderRadius="15px"
         >
-          <ModalHeader
-            background="rgba(82, 255, 0, 0.04)"
-            backgroundImage={`url('${assetsURL}background/pattern.png')`}
-            textAlign={["center", "center", "center", "left"]}
-            py={10}
-          >
+          <ModalHeader textAlign={["center"]} py={10}>
             {modalHeader}
           </ModalHeader>
           <ModalCloseButton />
@@ -107,13 +97,17 @@ export const PublishReport: React.FC<{
               justifyContent={"flex-start"}
               alignItems={"flex-start"}
               w={"100%"}
+              h={"100%"}
               flexDir="row"
+              p={4}
+              pb={6}
             >
               {modalState === "report_type" ? (
                 <SelectReportType
                   profile={profile}
                   plans={plans}
                   reportType={reportType}
+                  setReportType={setReportType}
                   onReportTypeSelect={onReportTypeSelect}
                 />
               ) : modalState === "publish_details" ? (
@@ -144,15 +138,6 @@ export const PublishReport: React.FC<{
                   }}
                 />
               ) : null}
-
-              <Image
-                ml={"-10%"}
-                src={`${assetsURL}common/publishreport.png`}
-                alt="Product screenshot"
-                w={"40%"}
-                h={"auto"}
-                display={["none", "none", "none", "block"]}
-              />
             </Flex>
           </ModalBody>
         </ModalContent>

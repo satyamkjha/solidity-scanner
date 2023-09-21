@@ -912,7 +912,7 @@ const ScanDetails: React.FC<{
           plans={plans}
           lastTimeUpdate={lastTimeUpdate}
           isOpen={open}
-          onClose={onClose}
+          onClose={() => setOpen(false)}
         />
       ) : null}
     </>

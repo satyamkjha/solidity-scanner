@@ -98,10 +98,7 @@ export const checkGenerateReportAccess = (
     )
       return false;
 
-    if (profile.current_package === "custom") return true;
-
-    return plans.pricing_data[profile.billing_cycle][profile.current_package]
-      .report;
+    return true;
   }
   return false;
 };
@@ -125,10 +122,7 @@ export const checkPublishReportAccess = (
     )
       return false;
 
-    if (profile.current_package === "custom") return true;
-
-    return plans.pricing_data[profile.billing_cycle][profile.current_package]
-      .publishable_report;
+    return true;
   }
   return false;
 };
