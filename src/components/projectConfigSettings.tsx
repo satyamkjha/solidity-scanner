@@ -70,7 +70,7 @@ const ConfigSettings: React.FC<{
       {!isGithubIntegrated && connectAlert && (
         <GithubConnectAlert msg="You need to connect your GitHub to enable webhooks" />
       )}
-      <Text
+      {/* <Text
         sx={{
           fontSize: "lg",
           fontWeight: 500,
@@ -91,7 +91,7 @@ const ConfigSettings: React.FC<{
       <HStack spacing={5}>
         <Switch isDisabled={true} size="lg" variant="brand" />
         <Text color="gray.500">Coming Soon</Text>
-      </HStack>
+      </HStack> */}
     </VStack>
   );
 };
