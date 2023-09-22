@@ -17,21 +17,6 @@ import {
   Image,
   HStack,
   Button,
-  Icon,
-  Input,
-  InputGroup,
-  InputLeftElement,
-  Modal,
-  ModalBody,
-  ModalCloseButton,
-  ModalContent,
-  ModalFooter,
-  ModalHeader,
-  ModalOverlay,
-  Switch as SwitchComp,
-  useToast,
-  Stack,
-  useMediaQuery,
   MenuButton,
   Menu,
   MenuList,
@@ -44,8 +29,6 @@ import { useScan } from "hooks/useScan";
 import { ArrowDownIcon } from "@chakra-ui/icons";
 import { useProfile } from "hooks/useProfile";
 import { BiChevronDownCircle, BiChevronUpCircle } from "react-icons/bi";
-import { AiOutlineProject } from "react-icons/ai";
-import { FaEnvelope, FaInternetExplorer, FaBuilding } from "react-icons/fa";
 import API from "helpers/api";
 import { Report, ReportsListItem } from "common/types";
 import { useReports } from "hooks/useReports";
@@ -81,27 +64,12 @@ const BlockPage: React.FC = () => {
     "block",
     scanData?.scan_report.project_id
   );
-  const toast = useToast();
-
   const { data: plans } = usePricingPlans();
-  const [next, setNext] = useState(false);
   const [open, setOpen] = useState(false);
 
-  const [pubName, setPubName] = useState("");
-  const [nameSwitch, setNameSwitch] = useState(true);
-  const [pubOrg, setPubOrg] = useState("");
-  const [orgSwitch, setOrgSwitch] = useState(true);
-  const [pubWeb, setPubWeb] = useState("");
-  const [webSwitch, setWebSwitch] = useState(true);
-  const [pubEmail, setPubEmail] = useState("");
-  const [emailSwitch, setEmailSwitch] = useState(true);
   const [lastTimeUpdate, setLastTimeUpdate] = useState("");
-  const [datePublished, setDatePublished] = useState("");
-
-  const [publishInfoSwitch, setPublishInfoSwitch] = useState(true);
 
   const [tabIndex, setTabIndex] = React.useState(0);
-  const [isDesktopView] = useMediaQuery("(min-width: 1024px)");
   const config: any = useConfig();
   const assetsURL = getAssetsURL(config);
 
@@ -110,6 +78,12 @@ const BlockPage: React.FC = () => {
       setReportingStatus(scanData.scan_report.reporting_status);
     }
   }, [scanData]);
+
+  useEffect(() => {
+    if (reportList && reportList.reports) {
+      setPublishedReportStatus(reportList.reports);
+    }
+  }, [reportList]);
 
   const handleTabsChange = (index: number) => {
     setTabIndex(index);
@@ -139,51 +113,6 @@ const BlockPage: React.FC = () => {
     }
   };
 
-  const publishReport = async () => {
-    const { data } = await API.post(API_PATH.API_PUBLISH_REPORT, {
-      project_type: "block",
-      project_id: scanData?.scan_report.project_id,
-      report_id: scanData?.scan_report.latest_report_id,
-      additional_details: {
-        report_owner: {
-          value: pubName,
-          is_public: isDesktopView ? nameSwitch : publishInfoSwitch,
-        },
-        website: {
-          value: pubWeb,
-          is_public: isDesktopView ? webSwitch : publishInfoSwitch,
-        },
-        organization: {
-          value: pubOrg,
-          is_public: isDesktopView ? orgSwitch : publishInfoSwitch,
-        },
-        contact_email: {
-          value: pubEmail,
-          is_public: isDesktopView ? emailSwitch : publishInfoSwitch,
-        },
-      },
-    });
-
-    if (data.status === "success") {
-      toast({
-        title: "Publish Request Success.",
-        description:
-          "Report has been sent for approval. It will be published once approved",
-        status: "success",
-        duration: 3000,
-        isClosable: true,
-      });
-      setOpen(false);
-    }
-    if (scanData) {
-      checkReportPublished(
-        scanData.scan_report.project_id,
-        scanData.scan_report.latest_report_id
-      );
-    }
-    refetchReportList();
-  };
-
   const getReportData = async (project_id: string, report_id: string) => {
     const reportResponse = await API.post<{ summary_report: Report }>(
       API_PATH.API_GET_REPORT,
@@ -210,16 +139,21 @@ const BlockPage: React.FC = () => {
         report_id,
       }
     );
-    if (reportResponse.data.reports.length === 0) {
+    if (reportResponse.data && reportResponse.data.reports)
+      setPublishedReportStatus(reportResponse.data.reports);
+
+    return;
+  };
+
+  const setPublishedReportStatus = (reports: ReportsListItem[]) => {
+    if (reports.length === 0) {
       setPublishStatus("Not-Published");
       return;
     }
-    if (reportResponse.data.reports[0].report_type === "self_published") {
+    if (reports[0].report_type === "self_published") {
       setPublishStatus("Self-Published");
-    } else if (reportResponse.data.reports[0].is_approved)
-      setPublishStatus("Approved");
+    } else if (reports[0].is_approved) setPublishStatus("Approved");
     else setPublishStatus("Waiting For Approval");
-    return;
   };
 
   useEffect(() => {
@@ -234,8 +168,6 @@ const BlockPage: React.FC = () => {
           scanData.scan_report.project_id,
           scanData.scan_report.latest_report_id
         );
-        const d = new Date();
-        setDatePublished(formattedDate(d, "long"));
       } else {
         setPublishStatus("Not-Generated");
       }
@@ -451,7 +383,7 @@ const BlockPage: React.FC = () => {
                               <Button
                                 variant={"accent-outline"}
                                 bg={"white"}
-                                w={["80%", "80%", "50%", "auto"]}
+                                w={["80%", "80%", "50%", "200px"]}
                                 mx={["auto", "auto", "auto", "0"]}
                                 mr={["auto", "auto", "auto", 5]}
                                 isDisabled={
@@ -510,7 +442,7 @@ const BlockPage: React.FC = () => {
                               .report_regeneration_enabled ? (
                               <Button
                                 variant={"accent-outline"}
-                                w={["80%", "80%", "50%", "auto"]}
+                                w={["80%", "80%", "50%", "200px"]}
                                 mx={["auto", "auto", "auto", 4]}
                                 mb={[4, 4, 4, 0]}
                                 onClick={() => {
@@ -585,7 +517,6 @@ const BlockPage: React.FC = () => {
                                     visibility={"hidden"}
                                     position="absolute"
                                   >
-                                    {" "}
                                     <Box w="100vw" ref={componentRef}>
                                       <PrintContainer
                                         summary_report={summaryReport}
@@ -596,8 +527,14 @@ const BlockPage: React.FC = () => {
                               </HStack>
                             ) : (
                               <Button
-                                variant={"accent-outline"}
+                                variant={
+                                  reportingStatus === "report_generated"
+                                    ? "accent-outline"
+                                    : "black-outline"
+                                }
                                 w={["80%", "80%", "50%", "auto"]}
+                                minW={"200px"}
+                                maxW={"220px"}
                                 mx={["auto", "auto", "auto", 5]}
                                 mb={[4, 4, 4, 0]}
                                 isDisabled={checkIfGeneratingReport()}
@@ -819,6 +756,7 @@ const BlockPage: React.FC = () => {
           lastTimeUpdate={lastTimeUpdate}
           isOpen={open}
           onClose={() => {
+            refetchReportList();
             setOpen(false);
           }}
         />

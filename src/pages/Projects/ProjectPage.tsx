@@ -7,7 +7,6 @@ import {
   Box,
   Text,
   Link,
-  Icon,
   Tabs,
   TabList,
   TabPanels,
@@ -24,21 +23,7 @@ import {
   AlertDialogHeader,
   AlertDialogContent,
   AlertDialogOverlay,
-  Modal,
-  ModalOverlay,
-  ModalContent,
-  ModalHeader,
-  ModalCloseButton,
-  ModalBody,
-  InputGroup,
-  InputLeftElement,
-  Input,
-  ModalFooter,
-  Switch as SwitchComp,
-  useToast,
   Image,
-  useMediaQuery,
-  Stack,
   Menu,
   MenuButton,
   MenuList,
@@ -51,7 +36,6 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@chakra-ui/react";
-import { AiOutlineProject } from "react-icons/ai";
 import Overview from "components/overview";
 import MultifileResult from "components/detailedResult/MultifileResult";
 import { RescanIcon, LogoIcon, ScanErrorIcon } from "components/icons";
@@ -69,15 +53,6 @@ import {
   TreeItemUP,
 } from "common/types";
 import { useProfile } from "hooks/useProfile";
-import {
-  FaBuilding,
-  FaCalendarAlt,
-  FaEnvelope,
-  FaFileCode,
-  FaGithub,
-  FaInternetExplorer,
-  FaRegCalendarCheck,
-} from "react-icons/fa";
 import {
   CheckCircleIcon,
   LockIcon,
@@ -213,6 +188,12 @@ const ScanDetails: React.FC<{
     }
   }, [scanData]);
 
+  useEffect(() => {
+    if (reportList && reportList.reports) {
+      setPublishedReportStatus(reportList.reports);
+    }
+  }, [reportList]);
+
   const onClose = () => setIsOpen(false);
 
   const generateReport = async () => {
@@ -278,16 +259,21 @@ const ScanDetails: React.FC<{
         report_id,
       }
     );
-    if (reportResponse.data.reports.length === 0) {
+    if (reportResponse.data && reportResponse.data.reports)
+      setPublishedReportStatus(reportResponse.data.reports);
+
+    return;
+  };
+
+  const setPublishedReportStatus = (reports: ReportsListItem[]) => {
+    if (reports.length === 0) {
       setPublishStatus("Not-Published");
       return;
     }
-    if (reportResponse.data.reports[0].report_type === "self_published") {
+    if (reports[0].report_type === "self_published") {
       setPublishStatus("Self-Published");
-    } else if (reportResponse.data.reports[0].is_approved)
-      setPublishStatus("Approved");
+    } else if (reports[0].is_approved) setPublishStatus("Approved");
     else setPublishStatus("Waiting For Approval");
-    return;
   };
 
   useEffect(() => {
@@ -924,7 +910,10 @@ const ScanDetails: React.FC<{
           plans={plans}
           lastTimeUpdate={lastTimeUpdate}
           isOpen={open}
-          onClose={() => setOpen(false)}
+          onClose={() => {
+            refetchReprtList();
+            setOpen(false);
+          }}
         />
       ) : null}
     </>

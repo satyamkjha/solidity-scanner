@@ -6,7 +6,6 @@ import {
   VStack,
   Text,
   Heading,
-  Box,
   Button,
   Link,
 } from "@chakra-ui/react";
@@ -153,7 +152,7 @@ const ReportTypeCard: React.FC<{
         {isHovered || type === reportType ? "Proceed" : "Select"}
       </Button>
       <Link
-        href="https://docs.solidityscan.com/"
+        href="https://docs.solidityscan.com/report/"
         isExternal
         color={"accent"}
         mt={16}

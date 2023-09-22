@@ -94,7 +94,7 @@ export const ManualAuditForm: React.FC<{
       <Modal isOpen={isOpen} onClose={onClose}>
         <ModalOverlay />
         <ModalContent
-          maxW={["90vw", "90vw", "70vw"]}
+          maxW={["90vw", "90vw", "75vw"]}
           minW={"300px"}
           minH={"fit-content"}
           borderRadius="15px"
@@ -116,7 +116,7 @@ export const ManualAuditForm: React.FC<{
             }}
           />
           {!mailSent ? (
-            <ModalBody h={"fit-content"} w={"100%"} px={[6, 6, 6, 12]}>
+            <ModalBody h={"fit-content"} w={"100%"} px={[6, 6, 6, 12]} pb={3}>
               <Flex
                 justifyContent="flex-start"
                 w={"100%"}
@@ -226,7 +226,7 @@ export const ManualAuditForm: React.FC<{
                     <Button
                       w={["100%", "100%", "100%", "40%"]}
                       h={"50px"}
-                      mt={[10, 10, 10, 16]}
+                      mt={[10, 10, 10, 20]}
                       variant="dark"
                       borderRadius={10}
                       fontSize={"md"}

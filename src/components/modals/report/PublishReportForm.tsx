@@ -4,7 +4,6 @@ import {
   Box,
   Text,
   Icon,
-  Button,
   HStack,
   VStack,
   InputGroup,
@@ -16,7 +15,7 @@ import {
 } from "@chakra-ui/react";
 import { AiOutlineProject } from "react-icons/ai";
 import { FaInternetExplorer, FaBuilding, FaEnvelope } from "react-icons/fa";
-import { Scan } from "common/types";
+import { Scan, Profile } from "common/types";
 import { formattedDate } from "common/functions";
 import API from "helpers/api";
 import { API_PATH } from "helpers/routeManager";
@@ -26,6 +25,7 @@ const PublishReportForm: React.FC<{
   type: "project" | "block";
   reportType: "self_published" | "verified" | "assisted" | undefined;
   projectId: string;
+  profile: Profile;
   lastTimeUpdate: string;
   scanData: {
     scan_report: Scan;
@@ -37,6 +37,7 @@ const PublishReportForm: React.FC<{
   type,
   reportType,
   projectId,
+  profile,
   lastTimeUpdate,
   scanData,
   onPublishReport,
@@ -46,7 +47,6 @@ const PublishReportForm: React.FC<{
   const [isLoading, setIsLoading] = useState(false);
   const [projectName, setProjectName] = useState("");
   const [repoUrl, setRepoUrl] = useState("");
-  const [commitHash, setCommitHash] = useState("");
 
   const [datePublished, setDatePublished] = useState("");
 
@@ -337,7 +337,10 @@ const PublishReportForm: React.FC<{
           isLoading={isLoading}
           onClick={publishReport}
         >
-          Proceed to Pay
+          {reportType === "self_published" &&
+          ["pro", "custom"].includes(profile.current_package)
+            ? "Publish Report"
+            : "Proceed to Pay"}
         </StyledButton>
       </Flex>
 

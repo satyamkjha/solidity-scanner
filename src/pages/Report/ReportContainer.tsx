@@ -28,8 +28,6 @@ import { getAssetsURL, sentenceCapitalize } from "helpers/helperFunction";
 import React from "react";
 import styled from "@emotion/styled";
 import { useConfig } from "hooks/useConfig";
-import UpgradePackage from "components/upgradePackage";
-import { profile } from "console";
 import UpgradePackageV2 from "components/UpgradePackageV2";
 
 export const ReportContainer: React.FC<{
@@ -218,36 +216,43 @@ export const ReportContainer: React.FC<{
                 </Text>
                 <ReportCoverDots />
               </Box>
-              <Flex mt={"auto"} alignItems={"center"}>
-                <Image
-                  src={
-                    summary_report.project_summary_report.report_type ===
-                    "self_published"
-                      ? `${assetsURL}report/user-fill.svg`
-                      : `${assetsURL}report/verified-fill.svg`
-                  }
-                />
-                <VStack alignItems={"flex-start"} w={"60%"} spacing={1} ml={4}>
-                  <Text fontSize={"lg"}>
-                    {summary_report.project_summary_report.report_type ===
-                    "self_published"
-                      ? "Self-published"
-                      : "Verified Report"}
-                  </Text>
-                  <Text fontSize={"sm"} fontWeight={400}>
-                    This audit report is Verified Report by SolidityScan, Lorem
-                    ipsum dolor sit amet consectetur.{" "}
-                    <Link
-                      href="https://docs.solidityscan.com/"
-                      isExternal
-                      color={"accent"}
-                    >
-                      click here
-                    </Link>
-                    .
-                  </Text>
-                </VStack>
-              </Flex>
+              {isPublicReport && (
+                <Flex mt={"auto"} alignItems={"center"}>
+                  <Image
+                    src={
+                      summary_report.project_summary_report.report_type ===
+                      "self_published"
+                        ? `${assetsURL}report/user-fill.svg`
+                        : `${assetsURL}report/verified-fill.svg`
+                    }
+                  />
+                  <VStack
+                    alignItems={"flex-start"}
+                    w={"60%"}
+                    spacing={1}
+                    ml={4}
+                  >
+                    <Text fontSize={"lg"}>
+                      {summary_report.project_summary_report.report_type ===
+                      "self_published"
+                        ? "Self-published"
+                        : "Verified Report"}
+                    </Text>
+                    <Text fontSize={"sm"} fontWeight={400}>
+                      This audit report is Verified Report by SolidityScan,
+                      Lorem ipsum dolor sit amet consectetur.{" "}
+                      <Link
+                        href="https://docs.solidityscan.com/report/"
+                        isExternal
+                        color={"accent"}
+                      >
+                        click here
+                      </Link>
+                      .
+                    </Text>
+                  </VStack>
+                </Flex>
+              )}
             </Flex>
             {isPublicReport && (
               <Image

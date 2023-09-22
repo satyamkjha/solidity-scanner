@@ -71,8 +71,15 @@ export const PublishReport: React.FC<{
 
   const onPublishReport = (status: string) => {
     if (status === "success") {
-      setModalState("make_payment");
-      setOpenPayment(true);
+      if (
+        reportType === "self_published" &&
+        ["pro", "custom"].includes(profile.current_package)
+      ) {
+        onClose();
+      } else {
+        setModalState("make_payment");
+        setOpenPayment(true);
+      }
     }
   };
 
@@ -132,6 +139,7 @@ export const PublishReport: React.FC<{
                   type={type}
                   reportType={reportType}
                   projectId={projectId}
+                  profile={profile}
                   lastTimeUpdate={lastTimeUpdate}
                   scanData={scanData}
                   onPublishReport={onPublishReport}

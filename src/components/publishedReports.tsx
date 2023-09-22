@@ -137,10 +137,12 @@ const ReportBlock: React.FC<{
         <HStack width={["130px"]} my={3}>
           {report.is_approved ? <BsPeople /> : <AiOutlineLock />}
           <Text sx={{ fontSize: "md", fontWeight: 600, ml: 2 }}>
-            {report.is_approved ? "Public" : "Private"}
+            {report.is_approved || report.report_type === "self_published"
+              ? "Public"
+              : "Private"}
           </Text>
         </HStack>
-        {report.is_approved && (
+        {(report.is_approved || report.report_type === "self_published") && (
           <HStack my={3} width={["260px"]} mr={5}>
             <AiFillCopy color="#3E15F4" />
             <Text
@@ -210,7 +212,7 @@ const ReportBlock: React.FC<{
           alignItems="center"
           justifyContent={["flex-start", "flex-start", "flex-end"]}
         >
-          {report.is_approved && (
+          {(report.is_approved || report.report_type === "self_published") && (
             <IconButton
               my={[2, 2, 5]}
               mr={[0, 0, 5]}
