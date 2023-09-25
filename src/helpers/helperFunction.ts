@@ -1,7 +1,6 @@
 import UAParser from "ua-parser-js";
 import reCAPTCHA from "helpers/reCAPTCHA";
 import { Profile, PricingData, Finding } from "common/types";
-import axios from "axios";
 
 let configValue: any = null;
 
@@ -98,10 +97,7 @@ export const checkGenerateReportAccess = (
     )
       return false;
 
-    if (profile.current_package === "custom") return true;
-
-    return plans.pricing_data[profile.billing_cycle][profile.current_package]
-      .report;
+    return true;
   }
   return false;
 };
@@ -125,10 +121,7 @@ export const checkPublishReportAccess = (
     )
       return false;
 
-    if (profile.current_package === "custom") return true;
-
-    return plans.pricing_data[profile.billing_cycle][profile.current_package]
-      .publishable_report;
+    return true;
   }
   return false;
 };
@@ -150,6 +143,13 @@ export const getProjectFileUrl = (
   return `${project_url?.replace(".git", "")}/blob/${branchName}${
     file.file_path
   }#L${file.line_nos_start}-L${file.line_nos_end}`;
+};
+
+export const getTrimmedScanMessage = (scan_status: string) => {
+  if (scan_status.includes("Download Failed")) return "Download Failed";
+  else if (scan_status.includes("Scan Failed")) return "Scan Failed";
+
+  return "Scan Failed";
 };
 
 // export const getAssetsFromS3 = async (directory: string) => {

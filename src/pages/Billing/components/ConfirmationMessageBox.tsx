@@ -24,8 +24,14 @@ const ConfirmationMessageBox: React.FC<{
           }}
         >
           <b>
-            {sentenceCapitalize(name)}{" "}
-            {duration !== "ondemand" && sentenceCapitalize(duration)}{" "}
+            {!["publish_report", "verified_publish_report"].includes(
+              duration
+            ) && sentenceCapitalize(name)}{" "}
+            {"publish_report" === duration
+              ? "Self-Published Report"
+              : "verified_publish_report" === duration
+              ? "Verified Report"
+              : duration !== "ondemand" && sentenceCapitalize(duration)}{" "}
           </b>
         </span>
         plan sum of the charges will apply on your confirmation

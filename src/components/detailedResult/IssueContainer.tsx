@@ -103,7 +103,6 @@ const IssueContainer: React.FC<{
       scrollToElementRef &&
       scrollToElementRef.current
     ) {
-      console.log(issue_id);
       scrollToElementRef.current.scrollIntoView({
         behavior: "smooth",
         block: "end",

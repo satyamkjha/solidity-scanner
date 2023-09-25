@@ -18,7 +18,7 @@ import { API_PATH } from "helpers/routeManager";
 import { HiDuplicate, HiOutlineCheck } from "react-icons/hi";
 import { CheckIcon } from "@chakra-ui/icons";
 import { getAssetsURL } from "helpers/helperFunction";
-import ConfirmActionForm from "components/confirmActionForm";
+import ConfirmActionForm from "components/modals/confirmActionForm";
 import { useProfile } from "hooks/useProfile";
 import { useConfig } from "hooks/useConfig";
 import UpgradePackage from "components/upgradePackage";
@@ -384,7 +384,13 @@ export default function PrivateApi() {
                     </VStack>
                     {!hasAccess && (
                       <UpgradePackage
-                        text="Upgrade to our pro plan or a custom plan to use this feature and much more."
+                        text={
+                          <>
+                            Upgrade to our<strong> Pro </strong>plan or a
+                            <strong> Custom </strong>
+                            plan to use this feature and much more
+                          </>
+                        }
                         iconSize={85}
                       />
                     )}
@@ -466,4 +472,3 @@ export default function PrivateApi() {
     </Box>
   );
 }
- 

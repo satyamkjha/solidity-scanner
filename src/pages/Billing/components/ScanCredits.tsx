@@ -15,7 +15,7 @@ import {
 import { Profile, Plan } from "common/types";
 import { sentenceCapitalize, getAssetsURL } from "helpers/helperFunction";
 import { ChevronUpIcon, ChevronDownIcon } from "@chakra-ui/icons";
-import PaymentModal from "./PaymentModal";
+import PaymentModal from "../../../components/modals/PaymentModal";
 
 const ScanCredits: React.FC<{
   planData: Plan;

@@ -1,5 +1,5 @@
 import React from "react";
-import SmallMessageModal from "components/smallMessageModal";
+import SmallMessageModal from "components/modals/smallMessageModal";
 import { HStack, Text, Heading, Image } from "@chakra-ui/react";
 import { useConfig } from "hooks/useConfig";
 import StyledButton from "components/styled-components/StyledButton";

@@ -27,7 +27,7 @@ import MultifileIssues from "./MultifileIssues";
 import FileExplorerSection from "./FileExplorerSection";
 import FormatOptionLabelWithImage from "components/FormatOptionLabelWithImage";
 import { customStylesForTakeAction } from "common/stylesForCustomSelect";
-import ConfirmActionForm from "../confirmActionForm";
+import ConfirmActionForm from "../modals/confirmActionForm";
 import { useUserRole } from "hooks/useUserRole";
 import { getProjectFileUrl } from "helpers/helperFunction";
 import { FileIssue } from "components/icons";
