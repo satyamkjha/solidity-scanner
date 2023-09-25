@@ -4,7 +4,7 @@ import { Link as RouterLink } from "react-router-dom";
 
 const GithubConnectAlert: React.FC<{ msg: string }> = ({ msg }) => {
   return (
-    <Alert status="warning" fontSize="14px">
+    <Alert borderRadius={20} status="warning" fontSize="14px">
       <AlertIcon />
       {msg}
       <Link

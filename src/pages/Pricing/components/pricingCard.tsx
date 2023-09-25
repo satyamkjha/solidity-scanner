@@ -47,7 +47,7 @@ export const PricingCard: React.FC<{
   );
   const config: any = useConfig();
   const assetsURL = getAssetsURL(config);
-  const currentPackage = profileData?.current_package
+  const currentPackage = profileData?.current_package;
   const mouse = selectedPlan === plan;
   const { isOpen, onClose, onOpen } = useDisclosure();
   React.useEffect(() => {
