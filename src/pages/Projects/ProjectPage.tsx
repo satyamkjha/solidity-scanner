@@ -193,6 +193,8 @@ const ScanDetails: React.FC<{
       scanData &&
       reportList &&
       reportList.reports &&
+      reportList.reports.length &&
+      scanData.scan_report.latest_report_id &&
       reportList.reports[0].report_id === scanData.scan_report.latest_report_id
     ) {
       setPublishedReportStatus(reportList.reports);

@@ -54,6 +54,7 @@ const CouponCodeSection: React.FC<{
     <Flex
       mt={5}
       p={5}
+      mb={2}
       w="100%"
       h="fit-content"
       borderRadius="10px"

@@ -196,7 +196,7 @@ const PaymentModal: React.FC<{
         borderRadius="15px"
         h={duration === "topup" ? "75%" : "85%"}
         minH={"fit-content"}
-        maxW={"75vw"}
+        maxW={["90vw", "90vw", "85vw", "75vw"]}
       >
         <ModalCloseButton mt={7} mr={2} />
         <ModalHeader background="#FFFFFF" textAlign={"center"} py={10} pb={2}>
@@ -239,7 +239,7 @@ const PaymentModal: React.FC<{
                     setPaymentMethod={setPaymentMethod}
                   />
                   {profileData ? (
-                    !profileData.public_address && (
+                    profileData.email_verified && (
                       <PaymentMethodCard
                         paymentType={"stripe"}
                         paymentMethod={paymentMethod}
@@ -338,9 +338,12 @@ const PaymentModal: React.FC<{
             </HStack>
           ) : isLargerThan450 ? (
             <Flex
+              pt={4}
               w="450px"
               flexDir="column"
               h="100%"
+              ml={"auto"}
+              mr={"auto"}
               justifyContent={"flex-start"}
             >
               {step === 0 ? (
@@ -352,7 +355,7 @@ const PaymentModal: React.FC<{
                       setPaymentMethod={setPaymentMethod}
                     />
                     {profileData ? (
-                      !profileData.public_address && (
+                      profileData.email_verified && (
                         <PaymentMethodCard
                           paymentType={"stripe"}
                           paymentMethod={paymentMethod}
@@ -415,7 +418,7 @@ const PaymentModal: React.FC<{
                 </>
               )}
               <Button
-                mt={"auto"}
+                mt={4}
                 w="100%"
                 variant="brand"
                 onClick={() => {
@@ -477,7 +480,7 @@ const PaymentModal: React.FC<{
                       setPaymentMethod={setPaymentMethod}
                     />
                     {profileData ? (
-                      !profileData.public_address && (
+                      profileData.email_verified && (
                         <PaymentMethodCard
                           paymentType={"stripe"}
                           paymentMethod={paymentMethod}
