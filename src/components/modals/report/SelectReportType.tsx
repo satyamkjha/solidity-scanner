@@ -8,6 +8,7 @@ import {
   Heading,
   Button,
   Link,
+  Stack,
 } from "@chakra-ui/react";
 import { getAssetsURL } from "helpers/helperFunction";
 import { Profile, PricingData, Plan } from "common/types";
@@ -27,9 +28,21 @@ const SelectReportType: React.FC<{
     profile?.current_package === "pro" || profile?.current_package === "custom"
       ? "pro/custom"
       : "non-pro";
+  let reportTypeCycle =
+    reportType === "self_published"
+      ? "publish_report"
+      : "verified_publish_report";
 
   return (
-    <HStack spacing={20} h={"100%"} mt={6}>
+    <Stack
+      direction={["column", "column", "column", "row"]}
+      spacing={[8, 8, 8, 20]}
+      w={"100%"}
+      h={"100%"}
+      mt={[2, 2, 2, 6]}
+      alignItems={"center"}
+      justifyContent={"center"}
+    >
       <ReportTypeCard
         type={"self_published"}
         reportType={reportType}
@@ -57,7 +70,30 @@ const SelectReportType: React.FC<{
         icon={"assisted"}
         onReportTypeSelect={onReportTypeSelect}
       />
-    </HStack>
+      <Button
+        w="250px"
+        h={"50px"}
+        mt={6}
+        display={["flex", "flex", "flex", "none"]}
+        alignContent={"center"}
+        variant={"brand"}
+        isDisabled={!reportType}
+        onClick={() => {
+          onReportTypeSelect(reportType, reportTypeCycle, publishPackage);
+        }}
+      >
+        {"Proceed"}
+      </Button>
+      <Link
+        href="https://docs.solidityscan.com/report/"
+        isExternal
+        color={"accent"}
+        mt={16}
+        display={["flex", "flex", "flex", "none"]}
+      >
+        Know more
+      </Link>
+    </Stack>
   );
 };
 
@@ -93,10 +129,11 @@ const ReportTypeCard: React.FC<{
 
   return (
     <Flex
-      flexDir={"column"}
+      flexDir={["row", "row", "row", "column"]}
       alignItems={"center"}
       justifyContent={"flex-start"}
-      h={"100%"}
+      w={["100%", "100%", "100%", "auto"]}
+      h={["auto", "auto", "auto", "100%"]}
       cursor={"pointer"}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
@@ -108,29 +145,79 @@ const ReportTypeCard: React.FC<{
         border={type === reportType ? "1px solid #52FF01" : "none"}
         boxShadow={type === reportType ? "0px 4px 23px 0px #2FF86B33" : ""}
         flexDir={"column"}
-        w={["150px", "150px", "150px", "230px"]}
-        h={["150px", "150px", "150px", "230px"]}
+        w={["100%", "100%", "100%", "230px"]}
+        h={["100%", "100%", "100%", "230px"]}
         onClick={() => setReportType(type)}
       >
         <Flex ml={"auto"}>
           <RadioButton isActive={type === reportType} />
         </Flex>
-        <VStack spacing={[4, 4, 4, 6]} mt={[2, 2, 2, 8]}>
-          <Image src={`${assetsURL}report/${icon}.svg`} />
-          <Text fontSize={["sm", "sm", "sm", "lg"]} fontWeight={600}>
-            {publishReportType[type]}
-          </Text>
-        </VStack>
+        <Stack
+          direction={["row", "row", "row", "column"]}
+          spacing={[4, 4, 4, 6]}
+          mt={[0, 0, 0, 8]}
+          alignItems={"center"}
+        >
+          <Image
+            src={`${assetsURL}report/${icon}.svg`}
+            w={["57px"]}
+            h={"57px"}
+          />
+          <Stack>
+            <Text
+              fontSize={["sm", "sm", "sm", "lg"]}
+              fontWeight={[400, 400, 400, 600]}
+            >
+              {publishReportType[type]}
+            </Text>
+            {type === "assisted" ? (
+              <Flex
+                textAlign="center"
+                mt={10}
+                mb={6}
+                display={["flex", "flex", "flex", "none"]}
+              >
+                <Heading fontSize={"large"} fontWeight={"extrabold"}>
+                  Contact Team
+                </Heading>
+              </Flex>
+            ) : (
+              <Flex
+                textAlign="center"
+                mt={10}
+                mb={0}
+                display={["flex", "flex", "flex", "none"]}
+              >
+                <Heading fontSize={"large"} fontWeight={"extrabold"}>
+                  {reportPlan ? `$${reportPlan.amount}` : "Free"}&nbsp;
+                </Heading>
+                <Text fontSize="xs" color="detail" mt={1}>
+                  / report
+                </Text>
+              </Flex>
+            )}
+          </Stack>
+        </Stack>
       </Flex>
 
       {type === "assisted" ? (
-        <Flex textAlign="center" mt={10} mb={6}>
+        <Flex
+          textAlign="center"
+          mt={10}
+          mb={6}
+          display={["none", "none", "none", "flex"]}
+        >
           <Heading fontSize={"x-large"} fontWeight={"extrabold"}>
             Contact Team
           </Heading>
         </Flex>
       ) : (
-        <Flex textAlign="center" mt={10} mb={6}>
+        <Flex
+          textAlign="center"
+          mt={10}
+          mb={6}
+          display={["none", "none", "none", "flex"]}
+        >
           <Heading fontSize={"x-large"} fontWeight={"extrabold"}>
             {reportPlan ? `$${reportPlan.amount}` : "Free"}&nbsp;
           </Heading>
@@ -143,6 +230,7 @@ const ReportTypeCard: React.FC<{
         w="220px"
         h={"50px"}
         mt={6}
+        display={["none", "none", "none", "flex"]}
         alignContent={"center"}
         variant={isHovered || type === reportType ? "brand" : "gray-outline"}
         onClick={() => {
@@ -156,6 +244,7 @@ const ReportTypeCard: React.FC<{
         isExternal
         color={"accent"}
         mt={16}
+        display={["none", "none", "none", "flex"]}
         visibility={isHovered || type === reportType ? "visible" : "hidden"}
       >
         Know more

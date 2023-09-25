@@ -22,10 +22,10 @@ export const issueActions = [
     label: "Take action",
     isDisabled: true,
   },
-  { value: "wont_fix", icon: "icons/wont_fix", label: "Won't Fix" },
+  { value: "wont_fix", icon: "report/wont_fix_color", label: "Won't Fix" },
   {
     value: "false_positive",
-    icon: "icons/false_positive",
+    icon: "report/false_positive_color",
     label: "False Positive",
   },
   {

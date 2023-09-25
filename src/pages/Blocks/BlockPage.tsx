@@ -384,6 +384,7 @@ const BlockPage: React.FC = () => {
                                 variant={"accent-outline"}
                                 bg={"white"}
                                 w={["80%", "80%", "50%", "200px"]}
+                                maxW={["80%", "80%", "50%", "220px"]}
                                 mx={["auto", "auto", "auto", "0"]}
                                 mr={["auto", "auto", "auto", 5]}
                                 isDisabled={
@@ -534,7 +535,7 @@ const BlockPage: React.FC = () => {
                                 }
                                 w={["80%", "80%", "50%", "auto"]}
                                 minW={"200px"}
-                                maxW={"220px"}
+                                maxW={["80%", "80%", "50%", "220px"]}
                                 mx={["auto", "auto", "auto", 5]}
                                 mb={[4, 4, 4, 0]}
                                 isDisabled={checkIfGeneratingReport()}

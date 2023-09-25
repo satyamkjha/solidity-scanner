@@ -107,7 +107,13 @@ const NoOrgView: React.FC<{
           </VStack>
           {!hasAccess && (
             <UpgradePackage
-              text="Upgrade to our pro plan or a custom plan to use this feature and much more."
+              text={
+                <>
+                  Upgrade to our<strong> Pro </strong>plan or a
+                  <strong> Custom </strong>
+                  plan to use this feature and much more
+                </>
+              }
               iconSize={85}
             />
           )}

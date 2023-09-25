@@ -1,12 +1,12 @@
 import React from "react";
 
-import { Button, Flex, Text, Box, VStack } from "@chakra-ui/react";
+import { Button, Flex, Text, VStack } from "@chakra-ui/react";
 import { TrialWallIcon } from "./icons";
 import { Link } from "react-router-dom";
 
 export const UpgradePackageV2: React.FC<{
   heading?: string;
-  text?: string;
+  text?: React.RefAttributes<HTMLElement>;
   iconSize?: number;
   footer?: React.RefAttributes<HTMLElement>;
 }> = ({

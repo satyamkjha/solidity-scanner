@@ -37,12 +37,7 @@ export default function ReportPage() {
           isPublicReport={false}
         />
       ) : (
-        <Container
-          py={12}
-          h="90vh"
-          maxW={["100vw", "100vw", "90vw", "80vw", "80vw"]}
-          color="black"
-        >
+        <Container py={12} h="100vh" maxW={"100vw"} bg="black">
           <Flex
             as="div"
             w="100%"

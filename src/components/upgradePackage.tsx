@@ -6,7 +6,7 @@ import { Link } from "react-router-dom";
 
 export const UpgradePackage: React.FC<{
   heading?: string;
-  text?: string;
+  text?: React.RefAttributes<HTMLElement>;
   iconSize?: number;
   footer?: React.RefAttributes<HTMLElement>;
 }> = ({

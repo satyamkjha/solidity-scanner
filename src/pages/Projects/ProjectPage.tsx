@@ -189,9 +189,15 @@ const ScanDetails: React.FC<{
   }, [scanData]);
 
   useEffect(() => {
-    if (reportList && reportList.reports) {
+    if (
+      scanData &&
+      reportList &&
+      reportList.reports &&
+      reportList.reports[0].report_id === scanData.scan_report.latest_report_id
+    ) {
       setPublishedReportStatus(reportList.reports);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [reportList]);
 
   const onClose = () => setIsOpen(false);
@@ -444,6 +450,7 @@ const ScanDetails: React.FC<{
                         variant={"accent-outline"}
                         bg={"white"}
                         w={["80%", "80%", "50%", "200px"]}
+                        maxW={["80%", "80%", "50%", "220px"]}
                         mx={["auto", "auto", "auto", 4]}
                         isDisabled={
                           !checkPublishReportAccess(profile, plans, role)
@@ -494,7 +501,8 @@ const ScanDetails: React.FC<{
                   {scanData.scan_report.scan_status === "scan_done" &&
                     reportingStatus !== "" &&
                     publishStatus !== "" &&
-                    (scanData.scan_report.report_regeneration_enabled ? (
+                    (scanData.scan_report.report_regeneration_enabled &&
+                    publishStatus !== "Not-Generated" ? (
                       <Button
                         variant={"accent-outline"}
                         w={["80%", "80%", "50%", "200px"]}
@@ -576,7 +584,7 @@ const ScanDetails: React.FC<{
                             : "black-outline"
                         }
                         w={["80%", "80%", "50%", "auto"]}
-                        maxW={"220px"}
+                        maxW={["80%", "80%", "50%", "220px"]}
                         px={[0, 0, 0, 14]}
                         mx={["auto", "auto", "auto", 4]}
                         mb={[4, 4, 4, 0]}

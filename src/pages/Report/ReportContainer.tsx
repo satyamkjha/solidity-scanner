@@ -116,7 +116,7 @@ export const ReportContainer: React.FC<{
       <Container
         maxW={["100vw", "100vw"]}
         p={0}
-        color="black"
+        bg="black"
         overflow={"hidden"}
         position={"relative"}
       >
@@ -189,16 +189,16 @@ export const ReportContainer: React.FC<{
               <Text
                 fontSize="2xl"
                 fontWeight={400}
-                color={"gray.400"}
+                color={"subtle"}
                 mt={[10, 10, 10, 20]}
-                mb={5}
+                mb={3}
               >
                 Security Assessment
               </Text>
-              <Heading fontSize={["3xl", "4xl"]} mb={3}>
+              <Heading fontSize={["3xl", "4xl"]} fontWeight={700} mb={3}>
                 {summary_report.project_summary_report.project_name}
               </Heading>
-              <Text fontSize="xl" mb={20}>
+              <Text fontSize="2xl" mb={20} fontWeight={500}>
                 {`${d.getDate()} ${
                   monthNames[d.getMonth()]
                 } ${d.getFullYear()}`}
@@ -208,7 +208,7 @@ export const ReportContainer: React.FC<{
                   fontSize="lg"
                   fontWeight={400}
                   width={["100%", "100%", "80%", "60%"]}
-                  color={"gray.300"}
+                  color={"subtle"}
                   mb={10}
                 >
                   This security assessment report was prepared by
@@ -239,8 +239,11 @@ export const ReportContainer: React.FC<{
                         : "Verified Report"}
                     </Text>
                     <Text fontSize={"sm"} fontWeight={400}>
-                      This audit report is Verified Report by SolidityScan,
-                      Lorem ipsum dolor sit amet consectetur.{" "}
+                      {summary_report.project_summary_report.report_type ===
+                      "self_published"
+                        ? "This audit report was Self-published by the user."
+                        : "This audit report has been verified by the SolidityScan team."}{" "}
+                      To learn more about our published reports{" "}
                       <Link
                         href="https://docs.solidityscan.com/report/"
                         isExternal
@@ -1520,7 +1523,13 @@ export const ReportContainer: React.FC<{
             {profile?.current_package &&
               !["pro", "custom"].includes(profile?.current_package) && (
                 <UpgradePackageV2
-                  text="Upgrade to our pro plan or a custom plan to use this feature and much more."
+                  text={
+                    <>
+                      Upgrade to our<strong> Pro </strong>plan or a
+                      <strong> Custom </strong>
+                      plan to use this feature and much more
+                    </>
+                  }
                   iconSize={85}
                 />
               )}

@@ -12,6 +12,7 @@ import {
   Switch as SwitchComp,
   useMediaQuery,
   Stack,
+  Link,
 } from "@chakra-ui/react";
 import { AiOutlineProject } from "react-icons/ai";
 import { FaInternetExplorer, FaBuilding, FaEnvelope } from "react-icons/fa";
@@ -48,6 +49,7 @@ const PublishReportForm: React.FC<{
   const [projectName, setProjectName] = useState("");
   const [repoUrl, setRepoUrl] = useState("");
 
+  const [next, setNext] = useState(false);
   const [datePublished, setDatePublished] = useState("");
 
   const [pubName, setPubName] = useState("");
@@ -117,7 +119,13 @@ const PublishReportForm: React.FC<{
       alignItems={"flex-start"}
       direction={["column", "column", "column", "row"]}
     >
-      <Flex w={["100%", "100%", "100%", "50%"]} h={"100%"} flexDir={"column"}>
+      <Flex
+        w={["100%", "100%", "100%", "50%"]}
+        h={"100%"}
+        flexDir={"column"}
+        alignItems={["center", "center", "center", "flex-start"]}
+        display={[`${!next ? "none" : "flex"}`, null, null, "flex"]}
+      >
         <VStack zIndex={"10"} w={["100%"]} spacing={6}>
           {!isDesktopView && (
             <HStack my={6}>
@@ -332,7 +340,7 @@ const PublishReportForm: React.FC<{
 
         <StyledButton
           w={"220px"}
-          mt={"auto"}
+          mt={[10, 10, 10, "auto"]}
           variant={"brand"}
           isLoading={isLoading}
           onClick={publishReport}
@@ -342,6 +350,14 @@ const PublishReportForm: React.FC<{
             ? "Publish Report"
             : "Proceed to Pay"}
         </StyledButton>
+        <Link
+          color={"accent"}
+          mt={10}
+          display={["flex", "flex", "flex", "none"]}
+          onClick={() => setNext(false)}
+        >
+          Go Back
+        </Link>
       </Flex>
 
       <Flex
@@ -352,6 +368,7 @@ const PublishReportForm: React.FC<{
         borderRadius={"15px"}
         px={6}
         py={8}
+        display={[`${next ? "none" : "flex"}`, null, null, "flex"]}
       >
         {type === "block" ? (
           <>
@@ -420,6 +437,15 @@ const PublishReportForm: React.FC<{
           </Text>
           <Text fontWeight={600}>{datePublished}</Text>
         </Box>
+        <StyledButton
+          w={"220px"}
+          mt={"auto"}
+          variant={"brand"}
+          display={["flex", "flex", "flex", "none"]}
+          onClick={() => setNext(true)}
+        >
+          Proceed
+        </StyledButton>
       </Flex>
     </Stack>
   );

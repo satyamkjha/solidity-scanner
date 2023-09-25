@@ -1,7 +1,6 @@
 import UAParser from "ua-parser-js";
 import reCAPTCHA from "helpers/reCAPTCHA";
 import { Profile, PricingData, Finding } from "common/types";
-import axios from "axios";
 
 let configValue: any = null;
 

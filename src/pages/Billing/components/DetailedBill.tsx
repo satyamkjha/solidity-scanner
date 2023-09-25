@@ -21,9 +21,6 @@ const DetailedBill: React.FC<{
   updatedPrice,
   quantity,
 }) => {
-  console.log(selectedPlan, duration);
-  console.log(pricingDetails[duration][selectedPlan]);
-
   return (
     <>
       <Divider mt={5} />

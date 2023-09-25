@@ -26,13 +26,14 @@ const CurrentPlanDescriptionContainer: React.FC<{
       alignItems="flex-start"
     >
       <Flex alignItems="center" justifyContent="center">
-        {!["trial", "non-pro", "pro/custom"].includes(packageName) ? (
+        {!["trial", "non-pro", "pro/custom"].includes(packageName) && (
           <Image
             width="35px"
             height="35px"
             src={`${assetsURL}pricing/${packageName}-heading.svg`}
           />
-        ) : (
+        )}
+        {["non-pro", "pro/custom"].includes(packageName) && (
           <HStack mb={4}>
             <Image
               width="75px"
@@ -71,7 +72,6 @@ const CurrentPlanDescriptionContainer: React.FC<{
             {sentenceCapitalize(plan.name)}
           </Text>
         )}
-
         {showCheckIcon && (
           <Flex ml={2}>
             <CheckBadge fillColor={"#38CB89"} strokColor={"white"} />
