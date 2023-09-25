@@ -39,15 +39,15 @@ const PaymentMethodCard: React.FC<{
       </HStack>
       {paymentType === "cp" ? (
         <Image
-          height="40px"
-          width="140px"
+          height="45px"
+          width="150px"
           src={`${assetsURL}billing/cp_logo.svg`}
         />
       ) : (
         <>
           <Image
-            height="30px"
-            width="150px"
+            height="35px"
+            width="175px"
             src={`${assetsURL}billing/stripe_logo.svg`}
           />
           <HStack
