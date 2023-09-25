@@ -49,8 +49,6 @@ export const Setup2FA: React.FC<{
     setIsLoading(true);
     const { data } = await API.post(API_PATH.API_2FA_VERIFY, {
       otp,
-      email: "satyam+githubactions@credshields.com",
-      password: "TestPass@2233",
     });
 
     if (data.status === "success" && data.message === "OTP Valid") {
