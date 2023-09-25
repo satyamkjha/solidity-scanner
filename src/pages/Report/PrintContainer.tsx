@@ -12,6 +12,7 @@ import {
   Image,
   useMediaQuery,
   Stack,
+  Link,
 } from "@chakra-ui/react";
 import { Report } from "common/types";
 import {
@@ -114,68 +115,150 @@ export const PrintContainer: React.FC<{ summary_report: Report }> = ({
         maxW={"900px"}
         color="black"
         overflow={"hidden"}
+        position={"relative"}
       >
         {/* Cover Section */}
         <h6>.</h6>
-        <Flex
-          as="div"
-          w="100%"
-          alignItems="flex-start"
-          justifyContent="flex-start"
-          flexDir={"column"}
+        <Box
           sx={{
             pageBreakAfter: "always",
           }}
-          border={"1px solid #D9D9D9;"}
-          py={[4, 4, 4, 20]}
-          px={[6, 6, 6, 10]}
-          marginTop={[6, 6, 6, "100px"]}
-          marginBottom={[2, 2, 2, "400px"]}
-          backgroundSize="cover"
-          backgroundRepeat={"no-repeat"}
-          backgroundImage={[
-            null,
-            null,
-            null,
-            `url('${assetsURL}background/report_cover.png')`,
-          ]}
         >
-          <Logo />
-          <Text fontSize="2xl" color={"gray.400"} mt={[10, 10, 10, 20]} mb={5}>
-            Security Assessment
-          </Text>
-          <Heading fontSize={["3xl", "4xl"]} mb={3}>
-            {summary_report.project_summary_report.project_name}
-          </Heading>
-          <Text fontSize="xl" mb={20}>
-            {`${d.getDate()} ${monthNames[d.getMonth()]} ${d.getFullYear()}`}
-          </Text>
+          <Box
+            position={"absolute"}
+            w="100%"
+            h={"100vh"}
+            bg={
+              "linear-gradient(90deg, #000000 -13.81%, rgba(0, 0, 0, 0.73) 35.37%, rgba(0, 0, 0, 0) 93.5%)"
+            }
+            zIndex={1}
+          ></Box>
           <Box
             w="100%"
-            h={["50vh", "50vh", "50vh", "auto"]}
-            backgroundSize="cover"
-            backgroundRepeat={"no-repeat"}
-            backgroundImage={[
-              `url('${assetsURL}background/report_cover.svg')`,
-              null,
-              null,
-              null,
-              "",
-            ]}
+            h={"100vh"}
+            bg={"black"}
+            color={"white"}
+            position={"relative"}
           >
-            <Text
-              fontSize="lg"
-              width={["100%", "100%", "100%", "60%"]}
-              color={"gray.300"}
-              mb={10}
+            <Flex
+              as="div"
+              w="100%"
+              h={"95%"}
+              alignItems="flex-start"
+              justifyContent={[
+                "flex-start",
+                "flex-start",
+                "flex-start",
+                "space-between",
+              ]}
+              flexDir={"row"}
+              px={[6, 6, 6, 32]}
+              py={[4, 4, 4, 20]}
+              marginBottom={[2, 2, 2, "400px"]}
+              backgroundSize="cover"
+              backgroundRepeat={"no-repeat"}
+              backgroundImage={[
+                null,
+                null,
+                null,
+                `url('${assetsURL}report/report_cover.svg')`,
+              ]}
+              position={"relative"}
             >
-              This security assessment report was prepared by SolidityScan.com,
-              a cloud-based Smart Contract Scanner.
-            </Text>
-            <ReportCoverDots />
-          </Box>
-        </Flex>
+              <Flex
+                alignItems="flex-start"
+                justifyContent="flex-start"
+                flexDir={"column"}
+                width={["100%", "100%", "100%", "80%", "70%"]}
+                h={"100%"}
+                zIndex={2}
+              >
+                <HStack justifyContent={"flex-start"} spacing={4}>
+                  <Logo fill={"white"} />
+                </HStack>
+                <Text
+                  fontSize="2xl"
+                  fontWeight={400}
+                  color={"subtle"}
+                  mt={[10, 10, 10, 20]}
+                  mb={3}
+                >
+                  Security Assessment
+                </Text>
+                <Heading fontSize={["3xl", "4xl"]} fontWeight={700} mb={3}>
+                  {summary_report.project_summary_report.project_name}
+                </Heading>
+                <Text fontSize="2xl" mb={20} fontWeight={500}>
+                  {`${d.getDate()} ${
+                    monthNames[d.getMonth()]
+                  } ${d.getFullYear()}`}
+                </Text>
+                <Box w="100%" h={["50vh", "50vh", "50vh", "auto"]}>
+                  <Text
+                    fontSize="lg"
+                    fontWeight={400}
+                    width={["100%", "100%", "80%", "60%"]}
+                    color={"subtle"}
+                    mb={10}
+                  >
+                    This security assessment report was prepared by
+                    SolidityScan.com, a cloud-based Smart Contract Scanner.
+                  </Text>
+                  <ReportCoverDots />
+                </Box>
+                <Flex mt={"auto"} alignItems={"center"}>
+                  <Image
+                    src={
+                      summary_report.project_summary_report.report_type ===
+                      "self_published"
+                        ? `${assetsURL}report/user-fill.svg`
+                        : `${assetsURL}report/verified-fill.svg`
+                    }
+                  />
+                  <VStack
+                    alignItems={"flex-start"}
+                    w={"60%"}
+                    spacing={1}
+                    ml={4}
+                  >
+                    <Text fontSize={"lg"}>
+                      {summary_report.project_summary_report.report_type ===
+                      "self_published"
+                        ? "Self-published"
+                        : "Verified Report"}
+                    </Text>
+                    <Text fontSize={"sm"} fontWeight={400}>
+                      {summary_report.project_summary_report.report_type ===
+                      "self_published"
+                        ? "This audit report was Self-published by the user."
+                        : "This audit report has been verified by the SolidityScan team."}{" "}
+                      To learn more about our published reports{" "}
+                      <Link
+                        href="https://docs.solidityscan.com/report/"
+                        isExternal
+                        color={"accent"}
+                      >
+                        click here
+                      </Link>
+                      .
+                    </Text>
+                  </VStack>
+                </Flex>
+              </Flex>
 
+              <Image
+                height={[150, 150, 150, 250]}
+                width={[150, 150, 150, 250]}
+                src={
+                  summary_report.project_summary_report.report_type ===
+                  "self_published"
+                    ? `${assetsURL}report/self_published_badge.svg`
+                    : `${assetsURL}report/verified_report_badge.svg`
+                }
+              />
+            </Flex>
+          </Box>
+        </Box>
         {/* Table of Contents */}
         <h6>.</h6>
         <Flex
