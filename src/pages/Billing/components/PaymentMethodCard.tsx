@@ -2,6 +2,7 @@ import React from "react";
 import { Flex, Box, Text, HStack, Image } from "@chakra-ui/react";
 import { getAssetsURL } from "helpers/helperFunction";
 import { useConfig } from "hooks/useConfig";
+import RadioButton from "components/styled-components/RadioButton";
 
 const PaymentMethodCard: React.FC<{
   setPaymentMethod: React.Dispatch<React.SetStateAction<"cp" | "stripe">>;
@@ -13,7 +14,8 @@ const PaymentMethodCard: React.FC<{
 
   return (
     <Flex
-      w="190px"
+      w="50%"
+      minW={"190px"}
       h="100px"
       cursor={"pointer"}
       borderRadius="10px"
@@ -33,25 +35,7 @@ const PaymentMethodCard: React.FC<{
       }}
     >
       <HStack w="100%" justifyContent="flex-end">
-        <Flex
-          w="18px"
-          h="18px"
-          backgroundColor="#EFEFEF"
-          borderRadius="50%"
-          justifyContent={"center"}
-          alignItems={"center"}
-        >
-          <Box
-            w="10px"
-            h="10px"
-            background={
-              paymentMethod === paymentType
-                ? "linear-gradient(129.18deg, #52FF00 8.52%, #00EEFD 93.94%)"
-                : "#B0B7C3"
-            }
-            borderRadius="50%"
-          ></Box>
-        </Flex>
+        <RadioButton isActive={paymentMethod === paymentType} />
       </HStack>
       {paymentType === "cp" ? (
         <Image

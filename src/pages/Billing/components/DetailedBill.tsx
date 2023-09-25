@@ -32,14 +32,16 @@ const DetailedBill: React.FC<{
           {duration === "topup"
             ? `$ ${pricingDetails[duration][selectedPlan].amount} X ${quantity}`
             : duration === "monthly"
-            ? `$ ${pricingDetails[duration][selectedPlan].amount}0`
-            : `$ ${
+            ? `$ ${pricingDetails[duration][selectedPlan].amount}`
+            : pricingDetails[duration][selectedPlan].discount
+            ? `$ ${
                 parseInt(pricingDetails[duration][selectedPlan].amount) +
                 parseInt(
                   JSON.parse(pricingDetails[duration][selectedPlan].discount)
                     ?.amount
                 )
-              }.00`}
+              }.00`
+            : `$ ${pricingDetails[duration][selectedPlan].amount}`}
         </Heading>
       </HStack>
       {duration === "yearly" && (

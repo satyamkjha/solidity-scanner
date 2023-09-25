@@ -23,7 +23,7 @@ import TrialWall from "./TrialWall";
 import Select from "react-select";
 import { HiOutlineDocumentText } from "react-icons/hi";
 import { useConfig } from "hooks/useConfig";
-import ConfirmActionForm from "../confirmActionForm";
+import ConfirmActionForm from "../modals/confirmActionForm";
 import FormatOptionLabelWithImage from "../../components/FormatOptionLabelWithImage";
 import { customStylesForTakeAction } from "../../common/stylesForCustomSelect";
 import { FileIssue } from "components/icons";

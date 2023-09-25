@@ -18,7 +18,7 @@ import {
 } from "@chakra-ui/react";
 import { Logo } from "components/icons";
 import Auth from "helpers/auth";
-import ContactUs from "./contactus";
+import ContactUs from "./modals/contactus";
 import { CloseIcon, HamburgerIcon, ChevronDownIcon } from "@chakra-ui/icons";
 import API from "helpers/api";
 import { API_PATH } from "helpers/routeManager";

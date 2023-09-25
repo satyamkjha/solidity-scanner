@@ -17,14 +17,14 @@ import {
 import React, { useEffect, useState } from "react";
 import { API_PATH } from "helpers/routeManager";
 import API from "helpers/api";
-import PaymentMethodCard from "./PaymentMethodCard";
-import CoinPaymentSelect from "./CoinPaymentsSelect";
-import CouponCodeSection from "./CouponCodeSection";
+import PaymentMethodCard from "../../pages/Billing/components/PaymentMethodCard";
+import CoinPaymentSelect from "../../pages/Billing/components/CoinPaymentsSelect";
+import CouponCodeSection from "../../pages/Billing/components/CouponCodeSection";
 import { Plan, Profile } from "common/types";
-import CurrentPlanDescriptionContainer from "./CurrentPlanDescriptionContainer";
-import ConfirmationMessageBox from "./ConfirmationMessageBox";
-import DetailedBill from "./DetailedBill";
-import SwitchDuration from "./SwitchDuration";
+import CurrentPlanDescriptionContainer from "../../pages/Billing/components/CurrentPlanDescriptionContainer";
+import ConfirmationMessageBox from "../../pages/Billing/components/ConfirmationMessageBox";
+import DetailedBill from "../../pages/Billing/components/DetailedBill";
+import SwitchDuration from "../../pages/Billing/components/SwitchDuration";
 import Loader from "components/styled-components/Loader";
 
 const PaymentModal: React.FC<{
@@ -32,13 +32,14 @@ const PaymentModal: React.FC<{
   onClose: any;
   selectedPlan: string;
   quantity?: number;
-  globalDuration: "monthly" | "yearly" | "ondemand" | "topup";
+  globalDuration: string;
   profileData?: Profile;
   pricingDetails: {
     [key: string]: {
       [plan: string]: Plan;
     };
   };
+  paymentMetadata?: any;
 }> = ({
   isOpen,
   onClose,
@@ -47,6 +48,7 @@ const PaymentModal: React.FC<{
   globalDuration,
   profileData,
   quantity,
+  paymentMetadata,
 }) => {
   const toast = useToast();
 
@@ -80,6 +82,10 @@ const PaymentModal: React.FC<{
 
     if (quantity) {
       req.quantity = quantity;
+    }
+
+    if (paymentMetadata) {
+      req.payment_metadata = paymentMetadata;
     }
 
     try {
@@ -184,16 +190,16 @@ const PaymentModal: React.FC<{
     <Modal isOpen={isOpen} onClose={onClose}>
       <ModalOverlay />
       <ModalContent
-        minW="fit-content"
-        w="fit-content"
         overflowY={"scroll"}
         overflowX={"scroll"}
         bg="white"
+        borderRadius="15px"
         h={duration === "topup" ? "75%" : "85%"}
         minH={"fit-content"}
+        maxW={"75vw"}
       >
-        <ModalCloseButton />
-        <ModalHeader background="#FFFFFF" textAlign={"center"}>
+        <ModalCloseButton mt={7} mr={2} />
+        <ModalHeader background="#FFFFFF" textAlign={"center"} py={10} pb={2}>
           {isLargerThan900
             ? "Select Payment Method"
             : isLargerThan450
@@ -213,15 +219,15 @@ const PaymentModal: React.FC<{
           <Divider />
           {isLargerThan900 ? (
             <HStack
-              mt={5}
+              pt={10}
               w="fit-content"
-              spacing={"20px"}
+              spacing={10}
               h="100%"
               alignItems={"flex-start"}
               justifyContent={"flex-start"}
             >
               <Flex
-                w="400px"
+                w="50%"
                 flexDir="column"
                 h="100%"
                 justifyContent={"flex-start"}
@@ -266,7 +272,7 @@ const PaymentModal: React.FC<{
                 />
               </Flex>
               <Flex
-                w="400px"
+                w="50%"
                 h="100%"
                 flexDir="column"
                 justifyContent={"flex-start"}
@@ -276,8 +282,16 @@ const PaymentModal: React.FC<{
                   packageName={selectedPlan}
                   plan={pricingDetails[duration][selectedPlan]}
                   duration={duration}
+                  showCheckIcon={
+                    !["non-pro", "pro/custom"].includes(selectedPlan)
+                  }
                 />
-                {duration !== "ondemand" && duration !== "topup" && (
+                {![
+                  "ondemand",
+                  "topup",
+                  "publish_report",
+                  "verified_publish_report",
+                ].includes(duration) && (
                   <SwitchDuration
                     setDuration={setDuration}
                     setActiveCoupon={setActiveCoupon}
@@ -377,7 +391,12 @@ const PaymentModal: React.FC<{
                     plan={pricingDetails[duration][selectedPlan]}
                     duration={duration}
                   />
-                  {duration !== "ondemand" && (
+                  {![
+                    "ondemand",
+                    "topup",
+                    "publish_report",
+                    "verified_publish_report",
+                  ].includes(duration) && (
                     <SwitchDuration
                       setDuration={setDuration}
                       setActiveCoupon={setActiveCoupon}
@@ -431,7 +450,12 @@ const PaymentModal: React.FC<{
                       plan={pricingDetails[duration][selectedPlan]}
                       duration={duration}
                     />
-                    {duration !== "ondemand" && duration !== "topup" && (
+                    {![
+                      "ondemand",
+                      "topup",
+                      "publish_report",
+                      "verified_publish_report",
+                    ].includes(duration) && (
                       <SwitchDuration
                         setDuration={setDuration}
                         setActiveCoupon={setActiveCoupon}

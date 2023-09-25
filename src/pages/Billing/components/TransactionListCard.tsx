@@ -118,10 +118,10 @@ const TransactionListCard: React.FC<{
             <Text w={"12%"} fontWeight={500} color={"gray.600"}>
               Date
             </Text>
-            <Text w={"12%"} fontWeight={500} color={"gray.600"}>
+            <Text w={"10%"} fontWeight={500} color={"gray.600"}>
               Payment Mode
             </Text>
-            <Text w={"10%"} fontWeight={500} color={"gray.600"}>
+            <Text w={"15%"} fontWeight={500} color={"gray.600"}>
               Package
             </Text>
             <Text w={"10%"} fontWeight={500} color={"gray.600"}>
@@ -188,14 +188,22 @@ const TransactionListCard: React.FC<{
                     <Text w={"12%"} fontWeight={500} color={"gray.400"}>
                       {formattedDate(date)}
                     </Text>
-                    <Text w="12%" fontWeight={500} color={"gray.400"}>
+                    <Text w="10%" fontWeight={500} color={"gray.400"}>
                       {sentenceCapitalize(transaction.payment_platform)}
                     </Text>
-                    <Text w="10%" fontWeight={500} color={"gray.400"}>
-                      {sentenceCapitalize(transaction.package)}
+                    <Text w="15%" fontWeight={500} color={"gray.400"}>
+                      {transaction.billing_cycle === "verified_publish_report"
+                        ? "Verified Report"
+                        : transaction.billing_cycle === "publish_report"
+                        ? "Self-Published Report"
+                        : sentenceCapitalize(transaction.package)}
                     </Text>
                     <Text w="10%" fontWeight={500} color={"gray.400"}>
-                      {sentenceCapitalize(transaction.billing_cycle)}
+                      {transaction.billing_cycle === "verified_publish_report"
+                        ? "One-Time"
+                        : transaction.billing_cycle === "publish_report"
+                        ? "One-Time"
+                        : sentenceCapitalize(transaction.billing_cycle)}
                     </Text>
                     <Flex w={"20%"} flexWrap="wrap" justify="flex-end">
                       {transaction.payment_platform === "stripe" &&
