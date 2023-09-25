@@ -1222,7 +1222,7 @@ export const PrintContainer: React.FC<{ summary_report: Report }> = ({
                   <Image
                     height={7}
                     width={7}
-                    src={`${assetsURL}icons/fixed_color.svg`}
+                    src={`${assetsURL}report/fixed_color.svg`}
                   />
                   <Text fontSize="2xl" fontWeight={"bold"} width={"100%"}>
                     {summary_report.scan_summary[0].fixed_count}
@@ -1460,12 +1460,13 @@ export const PrintContainer: React.FC<{ summary_report: Report }> = ({
                   </Text>
                   <HStack width={"18%"}>
                     <Image
-                      src={`${assetsURL}icons/${issue.bug_status}_color.svg`}
+                      src={`${assetsURL}report/${issue.bug_status}_color.svg`}
                     />
                     <Text
                       fontSize={["sm", "sm", "sm", "md"]}
-                      fontWeight={"normal"}
-                      color={"gray.600"}
+                      fontWeight={400}
+                      color={"black"}
+                      fontStyle={"italic"}
                     >
                       {/* {sentenceCapitalize(
                             issue.status.toLowerCase().replace("_", " ")
@@ -1645,12 +1646,13 @@ export const PrintContainer: React.FC<{ summary_report: Report }> = ({
                       </Text>
                       <HStack>
                         <Image
-                          src={`${assetsURL}icons/${issue.bug_status}_color.svg`}
+                          src={`${assetsURL}report/${issue.bug_status}_color.svg`}
                         />
                         <Text
                           fontSize="md"
-                          fontWeight={"normal"}
-                          color={"gray.600"}
+                          fontWeight={400}
+                          color={"black"}
+                          fontStyle={"italic"}
                         >
                           {/* {sentenceCapitalize(
                           issue.status.toLowerCase().replace("_", " ")
