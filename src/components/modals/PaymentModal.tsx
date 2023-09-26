@@ -220,7 +220,7 @@ const PaymentModal: React.FC<{
           {isLargerThan900 ? (
             <HStack
               pt={10}
-              w="fit-content"
+              w="100%"
               spacing={10}
               h="100%"
               alignItems={"flex-start"}
