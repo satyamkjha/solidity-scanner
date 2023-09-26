@@ -13,6 +13,11 @@ export const API_PATH = {
   API_SEND_EMAIL: "/api-send-email/",
   API_ORG_LOGIN: "/organization/api-login/",
 
+  //2FA
+  API_2FA_SETUP: "/api-2fa-setup/",
+  API_2FA_VERIFY: "/api-2fa-verify/",
+  API_2FA_DISABLE: "/api-2fa-disable/",
+
   //PROFILE
   API_PROFILE: "/api-profile/",
   API_UPDATE_PROFILE: "/api-update-profile/",
