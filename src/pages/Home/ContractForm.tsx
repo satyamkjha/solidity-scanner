@@ -14,11 +14,15 @@ import {
   FormLabel,
   VStack,
   Divider,
+  useToast,
 } from "@chakra-ui/react";
 import { AiOutlineProject } from "react-icons/ai";
 import API from "helpers/api";
 import { useSupportedChains } from "hooks/useSupportedPlatforms";
-import { getFeatureGateConfig } from "helpers/helperFunction";
+import {
+  getFeatureGateConfig,
+  checkContractAddress,
+} from "helpers/helperFunction";
 import Select from "react-select";
 import { API_PATH } from "helpers/routeManager";
 import { Profile } from "common/types";
@@ -313,13 +317,23 @@ const ContractForm: React.FC<{
     { label: string; value: string; icon: string }[]
   >(contractChain["etherscan"]);
   const queryClient = useQueryClient();
-
+  const toast = useToast();
   const history = useHistory();
   const { data: supportedChains } = useSupportedChains();
 
   const platform_supported = getFeatureGateConfig().platform_supported;
 
   const onSubmit = async () => {
+    if (platform !== "buildbear" && !checkContractAddress(contractAddress)) {
+      toast({
+        title: "Contract Adddress not Valid",
+        status: "error",
+        duration: 3000,
+        isClosable: true,
+        position: "bottom",
+      });
+      return;
+    }
     let req = {};
     if (platform === "buildbear") {
       req = {

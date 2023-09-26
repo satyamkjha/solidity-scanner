@@ -1,6 +1,10 @@
 import React, { lazy, useEffect, useRef, Suspense } from "react";
 import { useLocation, useParams } from "react-router-dom";
-import { getAssetsURL, getReCaptchaHeaders } from "helpers/helperFunction";
+import {
+  getAssetsURL,
+  getReCaptchaHeaders,
+  checkContractAddress,
+} from "helpers/helperFunction";
 import {
   Flex,
   Box,
@@ -476,11 +480,22 @@ const QuickScan: React.FC = () => {
     const reqHeaders1 = await getReCaptchaHeaders("quickScan_verify");
     const reqHeaders2 = await getReCaptchaHeaders("quickScan");
 
+    if (platform !== "buildbear" && !checkContractAddress(address)) {
+      toast({
+        title: "Contract Adddress not Valid",
+        status: "error",
+        duration: 3000,
+        isClosable: true,
+        position: "bottom",
+      });
+      return;
+    }
     const req = {
       contract_address: address,
       contract_platform: platform,
       [platform === "buildbear" ? "node_id" : "contract_chain"]: chain,
     };
+    setIsLoading(true);
     API.post<{
       contract_verified: boolean;
       message: string;
@@ -558,7 +573,7 @@ const QuickScan: React.FC = () => {
       });
       return;
     }
-    setIsLoading(true);
+
     setScanReport(null);
     if (platform === "buildbear") {
       runQuickScan(address, platform, node_id, ref);
