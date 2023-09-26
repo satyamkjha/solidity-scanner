@@ -32,6 +32,7 @@ import QRCode from "react-qr-code";
 import API from "helpers/api";
 import { TreeItem } from "common/types";
 import { API_PATH } from "helpers/routeManager";
+import StyledButton from "components/styled-components/StyledButton";
 
 export const Setup2FA: React.FC<{
   onClose(): any;
@@ -53,23 +54,30 @@ export const Setup2FA: React.FC<{
   const [isLoading, setIsLoading] = useState(false);
 
   const verify2FA = async () => {
-    setIsLoading(true);
-    const { data } = await API.post(API_PATH.API_2FA_VERIFY, {
-      otp,
-    });
+    try {
+      setIsLoading(true);
 
-    if (data.status === "success" && data.message === "OTP Valid") {
-      toast({
-        title: data.message,
-        status: "success",
-        duration: 2000,
-        isClosable: true,
-        position: "bottom",
+      const { data } = await API.post(API_PATH.API_2FA_VERIFY, {
+        otp,
       });
-      onClose();
-      refetchProfile();
+
+      if (data.status === "success" && data.message === "OTP Valid") {
+        toast({
+          title: data.message,
+          status: "success",
+          duration: 2000,
+          isClosable: true,
+          position: "bottom",
+        });
+        onClose();
+        refetchProfile();
+        setOtp("");
+      }
+      setIsLoading(false);
+    } catch (e) {
+      console.log(e);
+      setIsLoading(false);
     }
-    setIsLoading(false);
   };
 
   return (
@@ -171,10 +179,15 @@ export const Setup2FA: React.FC<{
                   borderRadius="15px"
                   type={"text"}
                   value={otp}
+                  onKeyDown={(e) => {
+                    if (e.keyCode === 13) {
+                      verify2FA();
+                    }
+                  }}
                   onChange={(e) => setOtp(e.target.value)}
                 />
                 <InputRightElement w="fit-content">
-                  <Button
+                  <StyledButton
                     py={3}
                     mr={1}
                     w="80px"
@@ -183,7 +196,7 @@ export const Setup2FA: React.FC<{
                     onClick={verify2FA}
                   >
                     Verify
-                  </Button>
+                  </StyledButton>
                 </InputRightElement>
               </InputGroup>
             </Flex>
