@@ -52,6 +52,7 @@ import PasswordError from "components/passwordError";
 import { passwordStrength } from "check-password-strength";
 import Setup2FA from "./Setup2FA";
 import { setup2FARequest, disable2FARequest } from "api/functions/twoFA";
+import StyledButton from "components/styled-components/StyledButton";
 
 const Profile: React.FC = () => {
   const toast = useToast();
@@ -628,12 +629,12 @@ const ChangePasswordForm: React.FC<{
             <CheckIcon color="low" />
             <Text color="low">Your Account is 2FA Enabled</Text>{" "}
           </HStack>
-          <Button py={6} isLoading={loading2FA} onClick={disable2FA}>
+          <StyledButton py={6} isLoading={loading2FA} onClick={disable2FA}>
             Disable Two Factor Authentication
-          </Button>
+          </StyledButton>
         </VStack>
       ) : (
-        <Button
+        <StyledButton
           my={5}
           py={6}
           isLoading={loading2FA}
@@ -646,13 +647,14 @@ const ChangePasswordForm: React.FC<{
           }}
         >
           Setup 2FA Authentication
-        </Button>
+        </StyledButton>
       )}
 
       {twoFAsetupData !== null && (
         <Setup2FA
           isOpen={isOpen}
           onClose={onClose}
+          refetchProfile={refetchProfile}
           two_factor_hash={twoFAsetupData.two_factor_hash}
           provisioning_uri={twoFAsetupData.provisioning_uri}
         />

@@ -23,6 +23,7 @@ import Loader from "components/styled-components/Loader";
 import { useForm } from "react-hook-form";
 import { isEmail } from "helpers/helperFunction";
 import { FaMobileAlt } from "react-icons/fa";
+import StyledButton from "components/styled-components/StyledButton";
 
 const LoginForm: React.FC = () => {
   const [show, setShow] = useState(false);
@@ -118,7 +119,7 @@ const LoginForm: React.FC = () => {
               }}
             />
           </InputGroup>
-          <Button
+          <StyledButton
             type="submit"
             variant="brand"
             isLoading={isLoading}
@@ -126,7 +127,7 @@ const LoginForm: React.FC = () => {
             disabled={otp.length !== 6}
           >
             Sign In
-          </Button>
+          </StyledButton>
         </Stack>
       ) : (
         <Stack spacing={6} mt={8} width={["90%", "80%", "600px"]}>

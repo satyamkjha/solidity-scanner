@@ -175,7 +175,7 @@ const OrgLoginForm: React.FC = () => {
               }}
             />
           </InputGroup>
-          <Button
+          <StyledButton
             type="submit"
             variant="brand"
             isLoading={isLoading}
@@ -183,7 +183,7 @@ const OrgLoginForm: React.FC = () => {
             disabled={otp.length !== 6}
           >
             Sign In
-          </Button>
+          </StyledButton>
         </Stack>
       ) : (
         <Stack spacing={6} mt={8} width={["90%", "80%", "600px"]}>

@@ -38,7 +38,14 @@ export const Setup2FA: React.FC<{
   isOpen: boolean;
   provisioning_uri: string;
   two_factor_hash: string;
-}> = ({ isOpen, onClose, provisioning_uri, two_factor_hash }) => {
+  refetchProfile: any;
+}> = ({
+  isOpen,
+  onClose,
+  provisioning_uri,
+  two_factor_hash,
+  refetchProfile,
+}) => {
   const toast = useToast();
   const config: any = useConfig();
   const assetsURL = getAssetsURL(config);
@@ -60,6 +67,7 @@ export const Setup2FA: React.FC<{
         position: "bottom",
       });
       onClose();
+      refetchProfile();
     }
     setIsLoading(false);
   };
