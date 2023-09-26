@@ -137,7 +137,7 @@ const CurrentPlan: React.FC<{
             plan={plan}
           />
 
-          {packageName !== "pro" && (
+          {packageName !== "pro" && packageName !== "custom" && (
             <Button
               variant="brand"
               px={8}
