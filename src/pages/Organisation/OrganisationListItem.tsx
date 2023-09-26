@@ -23,7 +23,7 @@ import { API_PATH } from "helpers/routeManager";
 import { HiDuplicate, HiOutlineCheck } from "react-icons/hi";
 import { CheckIcon } from "@chakra-ui/icons";
 import { getAssetsURL } from "helpers/helperFunction";
-import ConfirmActionForm from "components/confirmActionForm";
+import ConfirmActionForm from "components/modals/confirmActionForm";
 import { useProfile } from "hooks/useProfile";
 import { useConfig } from "hooks/useConfig";
 import UpgradePackage from "components/upgradePackage";

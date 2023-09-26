@@ -32,15 +32,16 @@ export default function ReportPage() {
   return (
     <>
       <HStack
-        mr={10}
-        my={5}
-        w={["100%", "100%", "90%"]}
+        w={["100%"]}
         height={"fit-content"}
         justifyContent={["center", "center", "flex-end"]}
+        bg={"black"}
       >
         <Button
           variant={"accent-outline"}
           w={["250px"]}
+          mr={28}
+          my={5}
           onClick={printReport}
           disabled={printLoading}
         >
@@ -70,12 +71,7 @@ export default function ReportPage() {
           />
         </Flex>
       ) : (
-        <Container
-          py={12}
-          h="90vh"
-          maxW={["100vw", "100vw", "90vw", "80vw", "80vw"]}
-          color="black"
-        >
+        <Container py={12} h="100vh" maxW={"100vw"} bg="black">
           <Flex
             as="div"
             w="100%"

@@ -251,7 +251,7 @@ const MultipleFileExplorer: React.FC<MultipleFileExplorerProps> = ({
                       my={[2, 2, 2, 0]}
                     >
                       <Image
-                        src={`${assetsURL}icons/${files.bug_status}_color.svg`}
+                        src={`${assetsURL}report/${files.bug_status}_color.svg`}
                       />
                       <Text
                         fontSize="sm"

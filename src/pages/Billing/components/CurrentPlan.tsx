@@ -116,12 +116,17 @@ const CurrentPlan: React.FC<{
       <Flex
         w={"100%"}
         h={"100%"}
-        flexDir={["column", "column", "row"]}
-        justifyContent={["flex-start", "flex-start", "space-between"]}
+        flexDir={["column", "column", "column", "row"]}
+        justifyContent={[
+          "flex-start",
+          "flex-start",
+          "flex-start",
+          "space-between",
+        ]}
         alignItems="flex-start"
       >
         <Flex
-          w={["100%", "100%", "50%"]}
+          w={["100%", "100%", "100%", "50%"]}
           flexDir="column"
           justifyContent={"flex-start"}
           alignItems="flex-start"
@@ -158,9 +163,9 @@ const CurrentPlan: React.FC<{
           </Flex>
         </Flex>
         <Flex
-          w={["100%", "100%", "40%"]}
+          w={["100%", "100%", "100%", "40%"]}
           h="100%"
-          mt={[10, 10, 0]}
+          mt={[10, 10, 10, 0]}
           p={2}
           flexDir="column"
           justifyContent={"flex-start"}

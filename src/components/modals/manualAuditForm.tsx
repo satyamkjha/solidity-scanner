@@ -25,14 +25,21 @@ import { FaDiscord, FaEnvelope, FaTelegram } from "react-icons/fa";
 import { GiLetterBomb } from "react-icons/gi";
 
 import axios from "axios";
-import { CredshieldsIcon, MailSent } from "./icons";
+import { CredshieldsIcon, MailSent } from "../icons";
 import { getAssetsURL } from "helpers/helperFunction";
 import { useConfig } from "hooks/useConfig";
-import Loader from "./styled-components/Loader";
+import Loader from "../styled-components/Loader";
 
-export const ManualAuditForm: React.FC<{ onClose(): any; isOpen: boolean }> = ({
+export const ManualAuditForm: React.FC<{
+  onClose(): any;
+  isOpen: boolean;
+  type?: string;
+  header?: string;
+}> = ({
   isOpen,
   onClose,
+  type = "Manual_Audit",
+  header = "Request Manual Audit",
 }) => {
   const [mailSent, setMailSent] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -62,7 +69,7 @@ export const ManualAuditForm: React.FC<{ onClose(): any; isOpen: boolean }> = ({
     axios
       .post("https://formsubmit.co/ajax/info@credshields.com", {
         email: email,
-        subject: "[Manual_Audit] " + subject,
+        subject: `[${type}] ` + subject,
         discord: discord,
         telegram: telegram,
         message: body,
@@ -87,7 +94,7 @@ export const ManualAuditForm: React.FC<{ onClose(): any; isOpen: boolean }> = ({
       <Modal isOpen={isOpen} onClose={onClose}>
         <ModalOverlay />
         <ModalContent
-          maxW={["90vw", "90vw", "70vw"]}
+          maxW={["90vw", "90vw", "75vw"]}
           minW={"300px"}
           minH={"fit-content"}
           borderRadius="15px"
@@ -99,7 +106,7 @@ export const ManualAuditForm: React.FC<{ onClose(): any; isOpen: boolean }> = ({
             textAlign={["center", "center", "center", "left"]}
             fontSize={["lg", "lg", "2xl"]}
           >
-            {!mailSent ? "Request Manual Audit" : "Request Sent"}
+            {!mailSent ? header : "Request Sent"}
           </ModalHeader>
           <ModalCloseButton
             m={[2, 2, 6]}
@@ -109,7 +116,7 @@ export const ManualAuditForm: React.FC<{ onClose(): any; isOpen: boolean }> = ({
             }}
           />
           {!mailSent ? (
-            <ModalBody h={"fit-content"} w={"100%"} px={[6, 6, 6, 12]}>
+            <ModalBody h={"fit-content"} w={"100%"} px={[6, 6, 6, 12]} pb={3}>
               <Flex
                 justifyContent="flex-start"
                 w={"100%"}
@@ -219,7 +226,7 @@ export const ManualAuditForm: React.FC<{ onClose(): any; isOpen: boolean }> = ({
                     <Button
                       w={["100%", "100%", "100%", "40%"]}
                       h={"50px"}
-                      mt={[10, 10, 10, 16]}
+                      mt={[10, 10, 10, 20]}
                       variant="dark"
                       borderRadius={10}
                       fontSize={"md"}

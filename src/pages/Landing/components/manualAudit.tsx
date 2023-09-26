@@ -10,7 +10,7 @@ import {
   Skeleton,
 } from "@chakra-ui/react";
 import { getAssetsURL } from "helpers/helperFunction";
-import ManualAuditForm from "components/manualAuditForm";
+import ManualAuditForm from "components/modals/manualAuditForm";
 import { useConfig } from "hooks/useConfig";
 
 export default function ManualAudit() {

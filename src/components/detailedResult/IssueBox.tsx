@@ -157,9 +157,21 @@ const IssueBox: React.FC<{
               )}
 
               {metric_wise_aggregated_finding.bug_status !== "pending_fix" && (
-                <Image
-                  src={`${assetsURL}icons/${metric_wise_aggregated_finding.bug_status}.svg`}
-                />
+                <>
+                  <Image
+                    src={`${assetsURL}report/${metric_wise_aggregated_finding.bug_status}_color.svg`}
+                  />
+                  {metric_wise_aggregated_finding.findings.length === 1 && (
+                    <Text fontSize={"xs"} fontWeight={"400"} color={"black"}>
+                      {metric_wise_aggregated_finding.bug_status ===
+                        "false_positive" && "False Positive"}
+                      {metric_wise_aggregated_finding.bug_status ===
+                        "wont_fix" && "Won't Fix"}
+                      {metric_wise_aggregated_finding.bug_status === "fixed" &&
+                        "Fixed"}
+                    </Text>
+                  )}
+                </>
               )}
             </HStack>
           </HStack>
@@ -231,9 +243,22 @@ const IssueBox: React.FC<{
 
                     {metric_wise_aggregated_finding.bug_status !==
                       "pending_fix" && (
-                      <Image
-                        src={`${assetsURL}icons/${metric_wise_aggregated_finding.bug_status}.svg`}
-                      />
+                      <>
+                        <Image
+                          src={`${assetsURL}report/${metric_wise_aggregated_finding.bug_status}_color.svg`}
+                        />
+                        {metric_wise_aggregated_finding.findings.length ===
+                          1 && (
+                          <Text fontSize={"xs"} fontWeight={"200"}>
+                            {metric_wise_aggregated_finding.bug_status ===
+                              "false_positive" && "False Positive"}
+                            {metric_wise_aggregated_finding.bug_status ===
+                              "wont_fix" && "Won't Fix"}
+                            {metric_wise_aggregated_finding.bug_status ===
+                              "fixed" && "Fixed"}
+                          </Text>
+                        )}
+                      </>
                     )}
                   </HStack>
                 </HStack>
