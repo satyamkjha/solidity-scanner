@@ -156,7 +156,8 @@ export const theme = extendTheme({
           fontSize: "16px",
           borderColor: "#3300FF",
           border: "2px solid #3300FF",
-          py: 7,
+          pt: 7,
+          pb: 6,
           px: 10,
           _hover: {
             background: "#3300FF",
