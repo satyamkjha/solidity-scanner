@@ -1,9 +1,10 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, PropsWithChildren } from "react";
 import { useMediaQuery, FormControl } from "@chakra-ui/react";
-import Select from "react-select";
+import Select, { StylesConfig, GroupBase } from "react-select";
 import { monthNames } from "common/values";
 import FormatOptionLabel from "components/common/FormatOptionLabel";
 import { formattedDate } from "common/functions";
+import { OptionType } from "common/types";
 
 const HackFilters: React.FC<{
   overviewData: any;
@@ -42,15 +43,15 @@ const HackFilters: React.FC<{
   ];
   const chainsOptions = overviewData?.all_chains
     ? overviewData.all_chains
-        .sort((a, b) => a.localeCompare(b))
-        .map((item) => ({
+        .sort((a: any, b: any) => a.localeCompare(b))
+        .map((item: any) => ({
           value: item,
           icon: item.toLowerCase(),
           label: item,
         }))
     : [];
   const categoriesOptions = overviewData?.all_categories
-    ? overviewData.all_categories.map((item) => ({
+    ? overviewData.all_categories.map((item: any) => ({
         value: item,
         label: item,
       }))
@@ -65,8 +66,12 @@ const HackFilters: React.FC<{
     }
   );
 
-  const customStylesStart = {
-    option: (provided: any, state: any) => ({
+  const customStylesStart: StylesConfig<
+    PropsWithChildren<OptionType>,
+    boolean,
+    GroupBase<PropsWithChildren<OptionType>>
+  > = {
+    option: (provided, state) => ({
       ...provided,
       borderBottom: "1px solid #f3f3f3",
       backgroundColor: state.isSelected
@@ -76,16 +81,16 @@ const HackFilters: React.FC<{
         : "#FFFFFF",
       color: "#000000",
     }),
-    menu: (provided: any, state: any) => ({
+    menu: (provided, state) => ({
       ...provided,
-      color: state.selectProps.menuColor,
+      // color: state.selectProps.menuColor,
       borderRadius: 10,
       border: "0px solid #ffffff",
       overflowY: "hidden",
       width: "300px",
       textAlign: "left",
     }),
-    control: (state: any) => ({
+    control: (state) => ({
       // none of react-select's styles are passed to <Control />
       display: "flex",
       flexDirection: "row",
@@ -98,7 +103,7 @@ const HackFilters: React.FC<{
       borderBottomRightRadius: isDesktopView ? 0 : 15,
       border: state.isFocused ? "2px solid #52FF00" : "2px solid #EDF2F7",
     }),
-    singleValue: (provided: any, state: any) => {
+    singleValue: (provided, state) => {
       const opacity = state.isDisabled ? 0.3 : 1;
       const transition = "opacity 300ms";
 
@@ -106,7 +111,11 @@ const HackFilters: React.FC<{
     },
   };
 
-  const customStylesMiddle = {
+  const customStylesMiddle: StylesConfig<
+    PropsWithChildren<OptionType>,
+    boolean,
+    GroupBase<PropsWithChildren<OptionType>>
+  > = {
     option: (provided: any, state: any) => ({
       ...provided,
       borderBottom: "1px solid #f3f3f3",
@@ -213,7 +222,7 @@ const HackFilters: React.FC<{
           isClearable={true}
           placeholder="Select Blockchain"
           styles={customStylesStart}
-          onChange={(chain) => {
+          onChange={(chain: any) => {
             if (chain) {
               setSelectedChain(chain.value);
               setFilters({ ...filters, chain: chain.value });
@@ -236,7 +245,7 @@ const HackFilters: React.FC<{
           options={categoriesOptions}
           placeholder="Select Category"
           styles={customStylesMiddle}
-          onChange={(category) => {
+          onChange={(category: any) => {
             if (category) {
               setSelectedCategory(category.value);
               setFilters({ ...filters, category: category.value });
@@ -262,7 +271,7 @@ const HackFilters: React.FC<{
           }))}
           placeholder="Select Month"
           styles={customStylesMiddle}
-          onChange={(month) => {
+          onChange={(month: any) => {
             if (month) {
               setMonthFilter(month.value, selectedYear);
             } else {
@@ -283,7 +292,7 @@ const HackFilters: React.FC<{
           options={yearsList}
           placeholder="Select Year"
           styles={customStylesMiddle}
-          onChange={(year) => {
+          onChange={(year: any) => {
             if (year) {
               setYearFilter(year.value, selectedMonth);
             } else {
@@ -304,7 +313,7 @@ const HackFilters: React.FC<{
           options={sortOptions}
           placeholder="Sort By"
           styles={customStylesMiddle}
-          onChange={(sort) => {
+          onChange={(sort: any) => {
             if (sort) {
               setSortBy(sort.value);
               setFilters({ ...filters, sort_by: sort.value });

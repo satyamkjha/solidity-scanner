@@ -1,4 +1,10 @@
-import React, { useEffect, useState, Dispatch, SetStateAction } from "react";
+import React, {
+  useEffect,
+  useState,
+  Dispatch,
+  SetStateAction,
+  useRef,
+} from "react";
 import { Link } from "react-router-dom";
 import {
   Flex,
@@ -342,9 +348,9 @@ const Blocks: React.FC = () => {
             next={fetchMoreBlocks}
             hasMore={hasMore}
             loader={
-              <Box w={"100%"} align="center">
+              <Flex w={"100%"} align="center">
                 <Loader />
-              </Box>
+              </Flex>
             }
             scrollableTarget="pageScroll"
           >
@@ -385,7 +391,7 @@ const BlockCard: React.FC<{
   isViewer,
   scanIdsInScanning,
   scanInProgress,
-  ssIconAnimation,
+  // ssIconAnimation,
 }) => {
   const {
     scan_status,
@@ -399,6 +405,8 @@ const BlockCard: React.FC<{
     multi_file_scan_summary,
     project_id,
   } = scan;
+  const cancelRef = useRef<HTMLButtonElement | null>(null);
+
   const toast = useToast();
   const assetsURL = getAssetsURL();
   const history = useHistory();
@@ -641,7 +649,11 @@ const BlockCard: React.FC<{
           </Text>
         </Box>
       )}
-      <AlertDialog isOpen={isOpen} onClose={onClose}>
+      <AlertDialog
+        isOpen={isOpen}
+        onClose={onClose}
+        leastDestructiveRef={cancelRef}
+      >
         <AlertDialogOverlay>
           <AlertDialogContent>
             <AlertDialogHeader fontSize="lg" fontWeight="bold">
@@ -657,7 +669,7 @@ const BlockCard: React.FC<{
             </AlertDialogBody>
 
             <AlertDialogFooter>
-              <Button onClick={onClose} py={6}>
+              <Button onClick={onClose} ref={cancelRef} py={6}>
                 No, My bad
               </Button>
               <Button variant="brand" onClick={deleteProject} ml={3}>

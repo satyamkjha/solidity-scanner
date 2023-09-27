@@ -3,7 +3,10 @@ import API from "helpers/api";
 import { ReportsListItem } from "common/types";
 import { API_PATH } from "helpers/routeManager";
 
-const getReports = async (project_type: string, project_id: string) => {
+const getReports = async (
+  project_type: string,
+  project_id: string | undefined
+) => {
   const { data } = await API.post<{
     reports: ReportsListItem[];
   }>(API_PATH.API_GET_REPORTS, {
@@ -13,7 +16,10 @@ const getReports = async (project_type: string, project_id: string) => {
   return data;
 };
 
-export const useReports = (project_type: string, project_id: string) => {
+export const useReports = (
+  project_type: string,
+  project_id: string | undefined
+) => {
   return useQuery(
     ["report_list", project_type, project_id],
     () => getReports(project_type, project_id),

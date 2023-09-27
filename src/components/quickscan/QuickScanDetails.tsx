@@ -288,7 +288,9 @@ const QuickScanDetails: React.FC<{ scanReport: QuickScanResult }> = ({
           >
             <VStack>
               <ThreatScoreMeter
-                percentage={scanReport.multi_file_scan_summary.threat_score}
+                percentage={parseFloat(
+                  scanReport.multi_file_scan_summary.threat_score
+                )}
               />
               <Text color={"detail"} fontWeight="600">
                 Threat Score

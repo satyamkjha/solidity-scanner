@@ -947,14 +947,18 @@ export const pricing_card_description_data = [
   },
 ];
 
-export const actionTaken = {
+export const actionTaken: {
+  [key: string]: string;
+} = {
   false_positive: "False Positive",
   wont_fix: "Won't Fix",
   pending_fix: "Pending Fix",
   fixed: "Fixed",
 };
 
-export const attackMethodColor = {
+export const attackMethodColor: {
+  [key: string]: string;
+} = {
   "Rug Pull": "#9C003D",
   "Flash Loan Attack": "#F46D43",
   Miscellaneous: "#FEE08B",
@@ -967,7 +971,9 @@ export const attackMethodColor = {
   "Oracle Issue": "#EBEBEB",
 };
 
-export const scanStatesLabel = {
+export const scanStatesLabel: {
+  [key: string]: string;
+} = {
   scan_done: "",
   initialised: "Downloading Code...",
   downloaded: "Code Downloaded...",

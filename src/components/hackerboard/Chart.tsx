@@ -13,9 +13,9 @@ import { formattedDate, shortenNumber } from "common/functions";
 import { monthNames } from "common/values";
 
 interface IProps {
-  datum: any;
-  x: number;
-  y: number;
+  datum?: any;
+  x?: number;
+  y?: number;
   center?: any;
 }
 
@@ -63,13 +63,13 @@ const Chart: React.FC<{
 }> = ({ hacksList, selectedTimeFilter, selectedFilterValue }) => {
   const [chartLabel, setChartLabel] = useState("");
 
-  let chartData = [];
+  let chartData: any = [];
 
   if (hacksList) {
     if (selectedTimeFilter === "Y") {
       const monthlyData: Record<string, number> = {};
 
-      hacksList.forEach((item) => {
+      hacksList.forEach((item: any) => {
         const xLabel = new Date(item.date).toLocaleString("default", {
           month: "short",
           year: "numeric",
@@ -88,7 +88,7 @@ const Chart: React.FC<{
       });
     } else if (selectedTimeFilter === "all") {
       const yearlyData: Record<string, number> = {};
-      hacksList.forEach((item) => {
+      hacksList.forEach((item: any) => {
         const xLabel = new Date(item.date).getFullYear();
         if (!yearlyData[xLabel]) {
           yearlyData[xLabel] = 0;
@@ -102,7 +102,7 @@ const Chart: React.FC<{
         tooltip: year,
       }));
     } else {
-      chartData = hacksList.map((item) => {
+      chartData = hacksList.map((item: any) => {
         return {
           x: new Date(item.date),
           y: item.amount_in_usd,
@@ -168,8 +168,8 @@ const Chart: React.FC<{
     }
     return height;
   };
-  const getYAxisDomain = () => {
-    const dataValues = chartData.map((data) => data.y);
+  const getYAxisDomain = (): [number, number] => {
+    const dataValues = chartData.map((data: any) => data.y);
     const minY = Math.min(0, ...dataValues);
     const maxY = Math.max(...dataValues);
     const padding = (maxY - minY) * 0.1;

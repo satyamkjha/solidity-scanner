@@ -11,16 +11,17 @@ const CoinPaymentSelect: React.FC<{
 }> = ({ setCoin }) => {
   const { data, isLoading } = useAcceptedCoins();
   const [coinList, setCoinList] = React.useState<
-    { label: string; value: string }[]
+    { label: string; value: string; icon: string }[]
   >([]);
 
   useEffect(() => {
     if (data) {
-      let tempArray: { label: string; value: string }[] = [];
+      let tempArray: { label: string; value: string; icon: string }[] = [];
       Object.keys(data).forEach((key) => {
         tempArray.push({
           value: key,
           label: data[key].name,
+          icon: "",
         });
       });
       setCoinList(tempArray);
@@ -50,7 +51,7 @@ const CoinPaymentSelect: React.FC<{
           options={coinList}
           placeholder="Choose an Option"
           styles={customStylesForReactSelect}
-          onChange={(newValue) => {
+          onChange={(newValue: any) => {
             if (newValue) {
               setCoin(newValue.value);
             }

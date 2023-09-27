@@ -217,7 +217,7 @@ const InviteMemberForm: React.FC<{
                             )}
                             isSearchable={false}
                             styles={customStylesForInviteMember}
-                            onChange={(newValue) => {
+                            onChange={(newValue: any) => {
                               if (newValue) {
                                 setUserRole(newValue.value);
                               }
@@ -249,7 +249,7 @@ const InviteMemberForm: React.FC<{
                       )}
                       isSearchable={false}
                       styles={customStylesForInviteMember}
-                      onChange={(newValue) => {
+                      onChange={(newValue: any) => {
                         if (newValue) {
                           setUserRole(newValue.value);
                         }

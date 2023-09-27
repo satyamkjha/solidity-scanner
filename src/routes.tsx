@@ -141,7 +141,10 @@ const LeaderBoard = lazy(
   () => import("pages/HackBoard" /* webpackChunkName: "HackerBoard" */)
 );
 
-const orgRestrictedRoutes = [
+const orgRestrictedRoutes: {
+  path: string;
+  roles: OrgUserRole[];
+}[] = [
   { path: "/billing", roles: ["viewer", "editor", "admin"] },
   { path: "/integrations", roles: ["viewer", "editor", "admin"] },
   { path: "/organisation", roles: ["viewer", "editor"] },
@@ -318,10 +321,10 @@ const ErrorHandler: React.FC = ({ children }) => {
 
 const PrivateRoute: React.FC<RouteProps> = ({ children, ...rest }) => {
   const { path } = rest;
-  const isRestrictedRoute = (path) => {
+  const isRestrictedRoute = (path: string | readonly string[] | undefined) => {
     return orgRestrictedRoutes.some((route) => route.path === path);
   };
-  const getRestrictedRoles = (path) => {
+  const getRestrictedRoles = (path: string | readonly string[] | undefined) => {
     const matchedRoute = orgRestrictedRoutes.find(
       (route) => route.path === path
     );
@@ -370,8 +373,11 @@ const CheckOrgRole: React.FC<{ roles: OrgUserRole[] }> = ({
       if (orgProfile) {
         let hasMatchingRole: boolean = false;
 
-        if (profile.logged_in_via === "org_login") {
-          hasMatchingRole = roles.includes(orgProfile.user_organization?.role);
+        if (
+          profile.logged_in_via === "org_login" &&
+          orgProfile.user_organization?.role
+        ) {
+          hasMatchingRole = roles.includes(orgProfile.user_organization.role);
         }
 
         if (hasMatchingRole) {
@@ -389,7 +395,7 @@ const CheckOrgRole: React.FC<{ roles: OrgUserRole[] }> = ({
 
   return (
     <>
-      {userHasAccess ? (
+      {userHasAccess && React.isValidElement(children) ? (
         React.cloneElement(children, { profileData: profile })
       ) : (
         <Loader width={"100%"} height={"90vh"} />

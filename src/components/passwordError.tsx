@@ -2,12 +2,15 @@ import React from "react";
 import { Text } from "@chakra-ui/react";
 
 const PasswordError: React.FC<{
-  passwordError: {
-    contains: string[];
-    id: number;
-    value: string;
-    length: number;
-  } | null;
+  passwordError:
+    | {
+        contains: string[];
+        id: number;
+        value: string;
+        length: number;
+      }
+    | null
+    | undefined;
 }> = ({ passwordError }) => {
   const charTypes = ["lowercase", "uppercase", "symbol", "number"];
   function unique(arr1: string[], arr2: string[]) {

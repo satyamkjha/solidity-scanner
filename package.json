@@ -50,7 +50,7 @@
     "react-input-checkbox": "^1.1.0",
     "react-query": "^3.16.1",
     "react-router-dom": "^5.2.0",
-    "react-scripts": "4.0.3",
+    "react-scripts": "5.0.0",
     "react-select": "^5.4.0",
     "react-to-print": "^2.14.12",
     "swiper": "^8.4.4",
@@ -59,6 +59,8 @@
     "use-dynamic-refs": "^1.0.0",
     "victory": "^36.6.8",
     "web-vitals": "^0.2.2",
+    "webpack": "5",
+    "webpack-cli": "4",
     "yarn": "^1.22.19"
   },
   "scripts": {

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { useHistory } from "react-router-dom";
 import { FiCheck } from "react-icons/fi";
 import {
@@ -569,6 +569,8 @@ const OrganisationBox: React.FC<{
   };
   refetchOrgProfile(): any;
 }> = ({ isOwner, organizations, refetchOrgProfile }) => {
+  const cancelRef = useRef<HTMLButtonElement | null>(null);
+
   const { isOpen, onClose, onOpen } = useDisclosure();
   const history = useHistory();
   const queryClient = useQueryClient();
@@ -655,7 +657,11 @@ const OrganisationBox: React.FC<{
       >
         {isOwner ? "Close" : "Leave"} Organization
       </Button>
-      <AlertDialog isOpen={isOpen} onClose={onClose}>
+      <AlertDialog
+        isOpen={isOpen}
+        onClose={onClose}
+        leastDestructiveRef={cancelRef}
+      >
         <AlertDialogOverlay>
           <AlertDialogContent>
             <AlertDialogHeader fontSize="lg" fontWeight="bold">
@@ -671,7 +677,7 @@ const OrganisationBox: React.FC<{
             </AlertDialogBody>
 
             <AlertDialogFooter>
-              <Button onClick={onClose} py={6}>
+              <Button onClick={onClose} py={6} ref={cancelRef}>
                 No, My bad
               </Button>
               <Button

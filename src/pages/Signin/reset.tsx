@@ -40,12 +40,15 @@ const Reset: React.FC = () => {
   const [email, setEmail] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [password, setPassword] = useState("");
-  const [passwordError, setPasswordError] = useState<{
-    contains: string[];
-    id: number;
-    value: string;
-    length: number;
-  } | null>(null);
+  const [passwordError, setPasswordError] = useState<
+    | {
+        contains: string[];
+        id: number;
+        value: string;
+        length: number;
+      }
+    | undefined
+  >();
   const onSubmit = async () => {
     try {
       let reqHeaders = await getReCaptchaHeaders("forgot_password_set");

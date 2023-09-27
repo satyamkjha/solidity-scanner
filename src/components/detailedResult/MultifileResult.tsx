@@ -29,7 +29,7 @@ import FormatOptionLabelWithImage from "components/FormatOptionLabelWithImage";
 import { customStylesForTakeAction } from "common/stylesForCustomSelect";
 import ConfirmActionForm from "../modals/confirmActionForm";
 import { useUserRole } from "hooks/useUserRole";
-import { getProjectFileUrl } from "helpers/helperFunction";
+import { getProjectFileUrl, formatString } from "helpers/helperFunction";
 import { FileIssue } from "components/icons";
 import { DetailResultContext } from "common/contexts";
 
@@ -64,7 +64,9 @@ const MultifileResult: React.FC<{
   const role: string = useUserRole();
 
   const sortIssuesBasedonPriority = (issueArray: MultiFileScanDetail[]) => {
-    const issuePriority = {
+    const issuePriority: {
+      [key: string]: number;
+    } = {
       critical: 6,
       high: 5,
       medium: 4,
@@ -187,14 +189,20 @@ const MultifileResult: React.FC<{
           return {
             id: bug.bug_id,
             description: selectedIssues[0].template_details.issue_description
-              ? selectedIssues[0].template_details.issue_description.format({
-                  ...bug.description_details,
-                })
+              ? formatString(
+                  selectedIssues[0].template_details.issue_description,
+                  {
+                    ...bug.description_details,
+                  }
+                )
               : "",
             remediation: selectedIssues[0].template_details.issue_remediation
-              ? selectedIssues[0].template_details.issue_remediation.format({
-                  ...bug.description_details,
-                })
+              ? formatString(
+                  selectedIssues[0].template_details.issue_remediation,
+                  {
+                    ...bug.description_details,
+                  }
+                )
               : "",
             code_snapshot:
               project_url && branchName
@@ -382,7 +390,7 @@ const MultifileResult: React.FC<{
                 placeholder="Take Action"
                 styles={customStylesForTakeAction}
                 isDisabled={isDisabled || isViewer}
-                onChange={(newValue) => {
+                onChange={(newValue: any) => {
                   if (newValue) {
                     if (newValue.value === "wont_fix") {
                       onOpen();
@@ -465,7 +473,6 @@ const MultifileResult: React.FC<{
             contract_platform={contract_platform}
             branchName={branchName}
             contract_address={contract_address}
-            profileData={profileData}
             isViewer={isViewer}
           />
         )}

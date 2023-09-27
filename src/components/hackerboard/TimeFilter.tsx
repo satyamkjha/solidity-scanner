@@ -129,7 +129,7 @@ const TimeFilter: React.FC<{
             value={
               filterValue ? { value: filterValue, label: filterValue } : null
             }
-            onChange={(newValue) => {
+            onChange={(newValue: any) => {
               if (newValue) {
                 onFilterSelect(timeFilter, newValue.value);
               }

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, PropsWithChildren } from "react";
 import {
   Flex,
   HStack,
@@ -14,7 +14,7 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@chakra-ui/react";
-import Select from "react-select";
+import Select, { StylesConfig, GroupBase } from "react-select";
 import { FolderIcon } from "./icons";
 import { AiOutlineFile } from "react-icons/ai";
 import { FaCodeBranch } from "react-icons/fa";
@@ -26,7 +26,7 @@ import {
   CheckIcon,
   MinusIcon,
 } from "@chakra-ui/icons";
-import { TreeItemUP } from "common/types";
+import { TreeItemUP, OptionType } from "common/types";
 import { updateChildTree, updateCheckedValue } from "helpers/fileStructure";
 import Loader from "./styled-components/Loader";
 
@@ -39,7 +39,11 @@ const formatOptionLabel: React.FC<{
   </div>
 );
 
-const customStyles = {
+const customStyles: StylesConfig<
+  PropsWithChildren<OptionType>,
+  boolean,
+  GroupBase<PropsWithChildren<OptionType>>
+> = {
   option: (provided: any, state: any) => ({
     ...provided,
     borderBottom: "1px solid #f3f3f3",
@@ -307,7 +311,7 @@ const FolderSettings: React.FC<{
                   }
                   placeholder="Select Branch"
                   styles={customStyles}
-                  onChange={(newValue) => {
+                  onChange={(newValue: any) => {
                     if (newValue && setBranch) {
                       setBranch(newValue.value);
                       setSelectValue(newValue);

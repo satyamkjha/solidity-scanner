@@ -1,4 +1,12 @@
-export const customStylesForReactSelect = {
+import { StylesConfig, GroupBase } from "react-select";
+import { PropsWithChildren } from "react";
+import { OptionType, OptionTypeWithIcon } from "./types";
+
+export const customStylesForReactSelect: StylesConfig<
+  PropsWithChildren<OptionTypeWithIcon>,
+  boolean,
+  GroupBase<PropsWithChildren<OptionTypeWithIcon>>
+> = {
   option: (provided: any, state: any) => ({
     ...provided,
     borderBottom: "1px solid #f3f3f3",
@@ -36,7 +44,11 @@ export const customStylesForReactSelect = {
   },
 };
 
-export const customStylesForTakeAction = {
+export const customStylesForTakeAction: StylesConfig<
+  PropsWithChildren<OptionTypeWithIcon>,
+  boolean,
+  GroupBase<PropsWithChildren<OptionTypeWithIcon>>
+> = {
   ...customStylesForReactSelect,
   control: () => ({
     // none of react-select's styles are passed to <Control />
@@ -55,7 +67,11 @@ export const customStylesForTakeAction = {
   }),
 };
 
-export const customStylesForOrgRole = {
+export const customStylesForOrgRole: StylesConfig<
+  PropsWithChildren<OptionTypeWithIcon>,
+  boolean,
+  GroupBase<PropsWithChildren<OptionTypeWithIcon>>
+> = {
   ...customStylesForReactSelect,
   control: () => ({
     // none of react-select's styles are passed to <Control />
@@ -88,7 +104,11 @@ export const customStylesForOrgRole = {
   }),
 };
 
-export const customStylesForInviteMember = {
+export const customStylesForInviteMember: StylesConfig<
+  PropsWithChildren<OptionTypeWithIcon>,
+  boolean,
+  GroupBase<PropsWithChildren<OptionTypeWithIcon>>
+> = {
   ...customStylesForReactSelect,
   control: () => ({
     // none of react-select's styles are passed to <Control />
@@ -122,7 +142,11 @@ export const customStylesForInviteMember = {
   }),
 };
 
-export const customDropdown = {
+export const customDropdown: StylesConfig<
+  PropsWithChildren<OptionType>,
+  boolean,
+  GroupBase<PropsWithChildren<OptionType>>
+> = {
   option: (provided: any, state: any) => ({
     ...provided,
     borderBottom: "1px solid #f3f3f3",
@@ -160,7 +184,11 @@ export const customDropdown = {
   },
 };
 
-export const customTranslucentDropdown = {
+export const customTranslucentDropdown: StylesConfig<
+  PropsWithChildren<OptionType>,
+  boolean,
+  GroupBase<PropsWithChildren<OptionType>>
+> = {
   option: (provided: any, state: any) => ({
     ...provided,
     borderBottom: "1px solid #f3f3f340",
