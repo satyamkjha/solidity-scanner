@@ -15,6 +15,7 @@ export type OptionTypeWithIcon = {
 export type Severity = "high" | "medium" | "low";
 
 export type Profile = {
+  "2fa_enabled": boolean;
   name: string;
   email: string;
   promo_code?: string;

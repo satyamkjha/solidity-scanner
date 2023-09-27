@@ -24,6 +24,7 @@ import {
   AlertDialogHeader,
   AlertDialogContent,
   AlertDialogOverlay,
+  Divider,
 } from "@chakra-ui/react";
 import { useForm } from "react-hook-form";
 import { getReCaptchaHeaders } from "helpers/helperFunction";
@@ -41,7 +42,7 @@ import API from "helpers/api";
 import Auth from "helpers/auth";
 import { API_PATH } from "helpers/routeManager";
 import { AuthResponse } from "common/types";
-import { InfoIcon } from "@chakra-ui/icons";
+import { InfoIcon, CheckIcon } from "@chakra-ui/icons";
 import Loader from "components/styled-components/Loader";
 import { onLogout } from "common/functions";
 import { monthNames } from "common/values";
@@ -49,6 +50,9 @@ import { useUserOrgProfile } from "hooks/useUserOrgProfile";
 import { hasSpecialCharacters } from "helpers/helperFunction";
 import PasswordError from "components/passwordError";
 import { passwordStrength } from "check-password-strength";
+import Setup2FA from "./Setup2FA";
+import { setup2FARequest, disable2FARequest } from "api/functions/twoFA";
+import StyledButton from "components/styled-components/StyledButton";
 
 const Profile: React.FC = () => {
   const toast = useToast();
@@ -64,7 +68,7 @@ const Profile: React.FC = () => {
   const [firstName, setFirstName] = useState("");
   const [updateLoading, setUpdateLoading] = useState(false);
 
-  const { data } = useProfile();
+  const { data, refetch: refetchProfile } = useProfile();
   const queryClient = useQueryClient();
 
   const [isOwner, setIsOwner] = useState(true);
@@ -434,7 +438,13 @@ const Profile: React.FC = () => {
               )}
             </VStack>
           </form>
-          {!data.public_address && <ChangePasswordForm isOwner={isOwner} />}
+          {!data.public_address && (
+            <ChangePasswordForm
+              twoFAEnabled={data["2fa_enabled"]}
+              isOwner={isOwner}
+              refetchProfile={refetchProfile}
+            />
+          )}
           {isOwner && <DeleteAccountBox />}
           {orgProfile &&
             orgProfile.user_organization &&
@@ -451,7 +461,11 @@ const Profile: React.FC = () => {
   );
 };
 
-const ChangePasswordForm: React.FC<{ isOwner: boolean }> = ({ isOwner }) => {
+const ChangePasswordForm: React.FC<{
+  isOwner: boolean;
+  twoFAEnabled: boolean;
+  refetchProfile: any;
+}> = ({ isOwner, twoFAEnabled, refetchProfile }) => {
   const history = useHistory();
   const toast = useToast();
 
@@ -466,7 +480,49 @@ const ChangePasswordForm: React.FC<{ isOwner: boolean }> = ({ isOwner }) => {
   } | null>(null);
   const { handleSubmit } = useForm<FormData>();
 
+  const { isOpen, onClose, onOpen } = useDisclosure();
+
   const [isLoading, setIsLoading] = useState(false);
+
+  const [loading2FA, setLoading2FA] = useState(false);
+
+  const [twoFAsetupData, setTwoFASetupData] = useState<{
+    provisioning_uri: string;
+    two_factor_hash: string;
+  } | null>(null);
+
+  const disable2FA = async () => {
+    const data = await disable2FARequest();
+    console.log(data);
+    if (data.status === "success") {
+      toast({
+        title: data.message,
+        status: "success",
+        duration: 2000,
+        isClosable: true,
+        position: "bottom",
+      });
+      refetchProfile();
+    }
+  };
+
+  const get2FASetupData = async () => {
+    setLoading2FA(true);
+    const response = await setup2FARequest();
+    if (response) {
+      setTwoFASetupData({
+        provisioning_uri: response.provisioning_uri,
+        two_factor_hash: response.two_factor_hash,
+      });
+    }
+  };
+
+  useEffect(() => {
+    if (twoFAsetupData !== null) {
+      onOpen();
+      setLoading2FA(false);
+    }
+  }, [twoFAsetupData]);
 
   const onSubmit = async () => {
     if (newPassword !== confirmPassword) {
@@ -538,6 +594,7 @@ const ChangePasswordForm: React.FC<{ isOwner: boolean }> = ({ isOwner }) => {
         <Button
           variant="brand"
           type="submit"
+          mt={4}
           onClick={onSubmit}
           isLoading={isLoading}
           spinner={<Loader color={"#3300FF"} size={25} />}
@@ -555,6 +612,53 @@ const ChangePasswordForm: React.FC<{ isOwner: boolean }> = ({ isOwner }) => {
           Change Password
         </Button>
       </form>
+      <Divider my={10} />
+      <Text fontWeight={700} fontSize="md" mt={5}>
+        Setup Two-Factor Authentication
+      </Text>
+      <Text color="subtle" fontSize="sm" mt={1} maxWidth="1000px">
+        Set up and configure your account to enable Two-Factor Authentication
+        (2FA) using an Authenticator App, bolstering your security measures by
+        requiring an additional authentication step for added protection. This
+        process ensures that your account remains safeguarded against
+        unauthorized access and potential threats.
+      </Text>
+      {twoFAEnabled ? (
+        <VStack alignItems="flex-start" my={5} spacing={0}>
+          <HStack fontWeight={700} spacing={2} my={5}>
+            <CheckIcon color="low" />
+            <Text color="low">Your Account is 2FA Enabled</Text>{" "}
+          </HStack>
+          <StyledButton py={6} isLoading={loading2FA} onClick={disable2FA}>
+            Disable Two Factor Authentication
+          </StyledButton>
+        </VStack>
+      ) : (
+        <StyledButton
+          my={5}
+          py={6}
+          isLoading={loading2FA}
+          onClick={() => {
+            if (twoFAsetupData !== null) {
+              onOpen();
+            } else {
+              get2FASetupData();
+            }
+          }}
+        >
+          Setup 2FA Authentication
+        </StyledButton>
+      )}
+
+      {twoFAsetupData !== null && (
+        <Setup2FA
+          isOpen={isOpen}
+          onClose={onClose}
+          refetchProfile={refetchProfile}
+          two_factor_hash={twoFAsetupData.two_factor_hash}
+          provisioning_uri={twoFAsetupData.provisioning_uri}
+        />
+      )}
     </Box>
   );
 };
@@ -718,10 +822,15 @@ const DeleteAccountBox: React.FC = () => {
       <Button
         variant={"outline"}
         mt={5}
+        py={6}
         bg={"white"}
         w={["200px"]}
-        borderColor="#FF5630"
-        color="#FF5630"
+        borderColor="#cf222e"
+        borderWidth={2}
+        color="#cf222e"
+        _hover={{
+          backgroundColor: "#cf222e10",
+        }}
         onClick={onOpen}
       >
         Delete Account
@@ -740,8 +849,10 @@ const ViewableInputGroup: React.FC<{
   const [isViewable, setViewable] = useState(false);
   return (
     <>
-      <Text color="subtle">{label}</Text>
-      <InputGroup size="lg" w="100%" maxW="400px" mb={4}>
+      <Text color="subtle" mt={4}>
+        {label}
+      </Text>
+      <InputGroup size="lg" w="100%" maxW="400px">
         <Input
           borderRadius="15px"
           type={isViewable ? "text" : "password"}
