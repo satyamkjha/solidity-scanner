@@ -238,25 +238,38 @@ const MultifileResult: React.FC<{
 
   useEffect(() => {
     if (profileData.current_package === "trial") {
-      const gasIssues = scanDetails.filter(
+      const gasIssuesIndex = scanDetails.findIndex(
         (issue) => issue.template_details.issue_severity === "gas"
       );
-      if (gasIssues && gasIssues.length) {
+      if (scanDetails && scanDetails.length && gasIssuesIndex) {
+        setOpenIssueIndex([gasIssuesIndex]);
         setFiles({
-          bug_id: gasIssues[0].metric_wise_aggregated_findings[0].bug_id,
-          issue_id: gasIssues[0].issue_id,
-          bug_hash: gasIssues[0].metric_wise_aggregated_findings[0].bug_hash,
+          bug_id:
+            scanDetails[gasIssuesIndex].metric_wise_aggregated_findings[0]
+              .bug_id,
+          issue_id: scanDetails[gasIssuesIndex].issue_id,
+          bug_hash:
+            scanDetails[gasIssuesIndex].metric_wise_aggregated_findings[0]
+              .bug_hash,
           bug_status:
-            gasIssues[0].metric_wise_aggregated_findings[0].bug_status,
-          findings: gasIssues[0].metric_wise_aggregated_findings[0].findings,
+            scanDetails[gasIssuesIndex].metric_wise_aggregated_findings[0]
+              .bug_status,
+          findings:
+            scanDetails[gasIssuesIndex].metric_wise_aggregated_findings[0]
+              .findings,
           description_details:
-            gasIssues[0].metric_wise_aggregated_findings[0].description_details,
-          template_details: gasIssues[0].template_details,
-          comment: gasIssues[0].metric_wise_aggregated_findings[0].comment,
+            scanDetails[gasIssuesIndex].metric_wise_aggregated_findings[0]
+              .description_details,
+          template_details: scanDetails[gasIssuesIndex].template_details,
+          comment:
+            scanDetails[gasIssuesIndex].metric_wise_aggregated_findings[0]
+              .comment,
           issue_description:
-            gasIssues[0].metric_wise_aggregated_findings[0].issue_description,
+            scanDetails[gasIssuesIndex].metric_wise_aggregated_findings[0]
+              .issue_description,
           issue_remediation:
-            gasIssues[0].metric_wise_aggregated_findings[0].issue_remediation,
+            scanDetails[gasIssuesIndex].metric_wise_aggregated_findings[0]
+              .issue_remediation,
 
           wait_to_scroll: 1000,
         });
@@ -266,6 +279,7 @@ const MultifileResult: React.FC<{
       scanDetails.length &&
       scanDetails[0].metric_wise_aggregated_findings
     ) {
+      setOpenIssueIndex([0]);
       setFiles({
         bug_id: scanDetails[0].metric_wise_aggregated_findings[0].bug_id,
         issue_id: scanDetails[0].issue_id,

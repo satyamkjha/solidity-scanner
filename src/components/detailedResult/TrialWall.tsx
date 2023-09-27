@@ -36,6 +36,7 @@ export const TrialWallCode: React.FC = () => {
   const issues = detailResultContextValue?.issues ?? null;
   const setFiles = detailResultContextValue?.setFiles ?? null;
   const scanSummary = detailResultContextValue?.scanSummary;
+  const openIssueIndex = detailResultContextValue?.openIssueIndex;
   const setOpenIssueIndex =
     detailResultContextValue?.setOpenIssueIndex ?? (() => {});
 
@@ -52,7 +53,10 @@ export const TrialWallCode: React.FC = () => {
         (issue) => issue.template_details.issue_severity === "gas"
       );
     if (issues && setFiles && gasIssuesIndex && gasIssuesIndex !== -1) {
-      setOpenIssueIndex([gasIssuesIndex]);
+      const expandedIssues = openIssueIndex
+        ? [gasIssuesIndex, ...openIssueIndex]
+        : [gasIssueCount];
+      setOpenIssueIndex(expandedIssues);
       setFiles({
         bug_id:
           issues[gasIssuesIndex].metric_wise_aggregated_findings[0].bug_id,

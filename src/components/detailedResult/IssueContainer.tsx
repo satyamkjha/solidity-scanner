@@ -90,7 +90,7 @@ const IssueContainer: React.FC<{
   const scrollToElementRef = useRef<HTMLDivElement>(null);
 
   const detailResultContextValue = useContext(DetailResultContext);
-  const openIssueIndex = detailResultContextValue?.openIssueIndex ?? [];
+  const openIssueIndex = detailResultContextValue?.openIssueIndex;
   const setOpenIssueIndex =
     detailResultContextValue?.setOpenIssueIndex ?? (() => {});
 
@@ -109,7 +109,7 @@ const IssueContainer: React.FC<{
     ) {
       scrollToElementRef.current.scrollIntoView({
         behavior: "smooth",
-        block: "end",
+        block: "center",
         inline: "start",
       });
     }
@@ -203,9 +203,6 @@ const IssueContainer: React.FC<{
       key={issue_id}
       w={"98%"}
       ref={scrollToElementRef}
-      sx={{
-        scrollMarginTop: openIssueIndex === undefined ? "-40vh" : 0,
-      }}
     >
       {({ isExpanded }) => (
         <>

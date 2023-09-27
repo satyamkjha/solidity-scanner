@@ -63,7 +63,7 @@ const MultifileIssues: React.FC<MultifileIssuesProps> = ({
     (issue) => issue.template_details.issue_severity === "gas"
   );
   const detailResultContextValue = useContext(DetailResultContext);
-  const openIssueIndex = detailResultContextValue?.openIssueIndex ?? [];
+  const openIssueIndex = detailResultContextValue?.openIssueIndex || [];
   const setOpenIssueIndex =
     detailResultContextValue?.setOpenIssueIndex ?? (() => {});
 
