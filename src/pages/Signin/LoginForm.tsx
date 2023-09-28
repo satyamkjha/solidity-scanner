@@ -10,6 +10,9 @@ import {
   Input,
   Link,
   InputRightElement,
+  HStack,
+  PinInput,
+  PinInputField,
 } from "@chakra-ui/react";
 import { FiAtSign } from "react-icons/fi";
 import { FaLock } from "react-icons/fa";
@@ -22,7 +25,6 @@ import { getReCaptchaHeaders } from "helpers/helperFunction";
 import Loader from "components/styled-components/Loader";
 import { useForm } from "react-hook-form";
 import { isEmail } from "helpers/helperFunction";
-import { FaMobileAlt } from "react-icons/fa";
 import StyledButton from "components/styled-components/StyledButton";
 
 const LoginForm: React.FC = () => {
@@ -39,6 +41,7 @@ const LoginForm: React.FC = () => {
     if (twoFAScreen) {
       setIsLoading(true);
       API.post<AuthResponse>(API_PATH.API_2FA_VERIFY, {
+        login_type: "normal",
         otp,
         email,
         password,
@@ -101,24 +104,16 @@ const LoginForm: React.FC = () => {
     >
       {twoFAScreen ? (
         <Stack spacing={6} mt={8} width={["90%", "80%", "600px"]}>
-          <InputGroup alignItems="center">
-            <InputLeftElement
-              height="48px"
-              children={<Icon as={FaMobileAlt} color="gray.300" />}
-            />
-            <Input
-              isRequired
-              type="text"
-              placeholder="OTP from Authenticator App"
-              autoComplete="off"
-              variant="brand"
-              value={otp}
-              size="lg"
-              onChange={(e) => {
-                if (otp.length < 7) setOtp(e.target.value);
-              }}
-            />
-          </InputGroup>
+          <HStack width="100%" justifyContent="center">
+            <PinInput value={otp} onChange={(e) => setOtp(e)} type="number">
+              <PinInputField />
+              <PinInputField />
+              <PinInputField />
+              <PinInputField />
+              <PinInputField />
+              <PinInputField />
+            </PinInput>
+          </HStack>
           <StyledButton
             type="submit"
             variant="brand"
