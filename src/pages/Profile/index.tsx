@@ -493,7 +493,6 @@ const ChangePasswordForm: React.FC<{
 
   const disable2FA = async () => {
     const data = await disable2FARequest();
-    console.log(data);
     if (data.status === "success") {
       toast({
         title: data.message,
@@ -751,10 +750,15 @@ const OrganisationBox: React.FC<{
       <Button
         variant={"outline"}
         mt={5}
+        py={6}
         bg={"white"}
         w={["200px"]}
-        borderColor="#FF5630"
-        color="#FF5630"
+        borderColor="#cf222e"
+        borderWidth={2}
+        color="#cf222e"
+        _hover={{
+          backgroundColor: "#cf222e10",
+        }}
         onClick={onOpen}
       >
         {isOwner ? "Close" : "Leave"} Organization
