@@ -9,7 +9,6 @@ import {
   ModalOverlay,
   useToast,
   Text,
-  HStack,
   VStack,
   Box,
   Popover,
@@ -20,17 +19,15 @@ import {
   PopoverHeader,
   Heading,
   PopoverBody,
-  InputGroup,
-  Input,
-  InputRightElement,
-  Button,
+  HStack,
+  PinInput,
+  PinInputField,
 } from "@chakra-ui/react";
 import { FaMobileAlt } from "react-icons/fa";
 import { getAssetsURL } from "helpers/helperFunction";
 import { useConfig } from "hooks/useConfig";
 import QRCode from "react-qr-code";
 import API from "helpers/api";
-import { TreeItem } from "common/types";
 import { API_PATH } from "helpers/routeManager";
 import StyledButton from "components/styled-components/StyledButton";
 
@@ -99,14 +96,13 @@ export const Setup2FA: React.FC<{
             textAlign={["center", "center", "center", "left"]}
           >
             <HStack spacing={5}>
-              <FaMobileAlt size={30} />{" "}
               <Heading fontSize={"xl"} fontWeight={600}>
                 Setup Two factor Authentication
               </Heading>
             </HStack>
           </ModalHeader>
           <ModalCloseButton />
-          <ModalBody h={"fit-content"} w={"100%"} px={[6, 6, 6, 12]} py={10}>
+          <ModalBody h={"fit-content"} w={"100%"} px={[6, 6, 6, 12]} py={5}>
             <Flex
               justifyContent={"flex-start"}
               alignItems={"flex-start"}
@@ -174,31 +170,24 @@ export const Setup2FA: React.FC<{
                 Verify the code from the app
               </Text>
 
-              <InputGroup size="lg" w="270px" mt={5}>
-                <Input
-                  borderRadius="15px"
-                  type={"text"}
-                  value={otp}
-                  onKeyDown={(e) => {
-                    if (e.keyCode === 13) {
-                      verify2FA();
-                    }
-                  }}
-                  onChange={(e) => setOtp(e.target.value)}
-                />
-                <InputRightElement w="fit-content">
-                  <StyledButton
-                    py={3}
-                    mr={1}
-                    w="80px"
-                    variant="brand"
-                    isLoading={isLoading}
-                    onClick={verify2FA}
-                  >
-                    Verify
-                  </StyledButton>
-                </InputRightElement>
-              </InputGroup>
+              <HStack my={5} width="100%" justifyContent="flex-start">
+                <PinInput value={otp} onChange={(e) => setOtp(e)} type="number">
+                  <PinInputField />
+                  <PinInputField />
+                  <PinInputField />
+                  <PinInputField />
+                  <PinInputField />
+                  <PinInputField />
+                </PinInput>
+              </HStack>
+              <StyledButton
+                w="200px"
+                variant="brand"
+                isLoading={isLoading}
+                onClick={verify2FA}
+              >
+                Verify
+              </StyledButton>
             </Flex>
           </ModalBody>
         </ModalContent>

@@ -11,6 +11,9 @@ import {
   Link,
   useToast,
   InputRightElement,
+  HStack,
+  PinInput,
+  PinInputField,
 } from "@chakra-ui/react";
 import { MdPeopleAlt } from "react-icons/md";
 import { FaLock, FaMobileAlt } from "react-icons/fa";
@@ -52,9 +55,11 @@ const OrgLoginForm: React.FC = () => {
     if (twoFAScreen) {
       setIsLoading(true);
       API.post<AuthResponse>(API_PATH.API_2FA_VERIFY, {
+        login_type: "organization",
         otp,
         email,
         password,
+        org_name: orgName,
       }).then(
         (res) => {
           if (res.status === 200) {
@@ -82,8 +87,12 @@ const OrgLoginForm: React.FC = () => {
         (res) => {
           if (res.status === 200) {
             if (res.data.status === "success") {
-              Auth.authenticateUser();
-              history.push("/home");
+              if (res.data.message === "2fa required") {
+                setTwoFAScreen(true);
+              } else {
+                Auth.authenticateUser();
+                history.push("/home");
+              }
             }
           }
           setIsLoading(false);
@@ -157,24 +166,16 @@ const OrgLoginForm: React.FC = () => {
       {" "}
       {twoFAScreen ? (
         <Stack spacing={6} mt={8} width={["90%", "80%", "600px"]}>
-          <InputGroup alignItems="center">
-            <InputLeftElement
-              height="48px"
-              children={<Icon as={FaMobileAlt} color="gray.300" />}
-            />
-            <Input
-              isRequired
-              type="text"
-              placeholder="OTP from Authenticator App"
-              autoComplete="off"
-              variant="brand"
-              value={otp}
-              size="lg"
-              onChange={(e) => {
-                if (otp.length < 7) setOtp(e.target.value);
-              }}
-            />
-          </InputGroup>
+          <HStack width="100%" justifyContent="center">
+            <PinInput value={otp} onChange={(e) => setOtp(e)} type="number">
+              <PinInputField />
+              <PinInputField />
+              <PinInputField />
+              <PinInputField />
+              <PinInputField />
+              <PinInputField />
+            </PinInput>
+          </HStack>
           <StyledButton
             type="submit"
             variant="brand"
