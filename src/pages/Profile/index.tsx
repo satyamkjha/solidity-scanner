@@ -493,8 +493,7 @@ const ChangePasswordForm: React.FC<{
 
   const disable2FA = async () => {
     const data = await disable2FARequest();
-    console.log(data);
-    if (data.status === "success") {
+    if (data && data.status === "success") {
       toast({
         title: data.message,
         status: "success",
