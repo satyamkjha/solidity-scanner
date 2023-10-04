@@ -74,7 +74,7 @@ export const Setup2FA: React.FC<{
       <Modal isOpen={isOpen} onClose={onClose}>
         <ModalOverlay />
         <ModalContent
-          maxW={["90vw", "90vw", "700px"]}
+          maxW={["90vw", "90vw", "1000px"]}
           minW={"300px"}
           overflowY={"scroll"}
           overflowX={"scroll"}
@@ -94,7 +94,7 @@ export const Setup2FA: React.FC<{
             </HStack>
           </ModalHeader>
           <ModalCloseButton />
-          <ModalBody h={"fit-content"} w={"100%"} px={[6, 6, 6, 12]} py={0}>
+          <ModalBody h={"fit-content"} w={"100%"} px={[6, 6, 6, 12]} pb={5}>
             <Flex
               justifyContent={"flex-start"}
               alignItems={"center"}
