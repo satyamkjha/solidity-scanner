@@ -14,7 +14,7 @@ import Auth from "helpers/auth";
 import API from "helpers/api";
 import PageNotFound, { CustomPageNotFound } from "pages/PageNotFound";
 import Cookies from "js-cookie";
-import { onLogout } from "common/functions";
+import { signOut } from "firebase/auth";
 import { useQueryClient } from "react-query";
 import PublicLayout from "components/PublicLayout";
 import Loader from "components/styled-components/Loader";
@@ -22,6 +22,7 @@ import { useProfile } from "hooks/useProfile";
 import { OrgUserRole } from "common/types";
 import { useUserOrgProfile } from "hooks/useUserOrgProfile";
 import { UserRoleProvider } from "hooks/useUserRole";
+import { onLogout } from "common/functions";
 
 const Landing = lazy(
   () => import("pages/Landing" /* webpackChunkName: "Landing" */)
@@ -275,11 +276,6 @@ const ErrorHandler: React.FC = ({ children }) => {
   const history = useHistory();
   const queryClient = useQueryClient();
 
-  const logout = async () => {
-    // await API.get("api-logout");
-    onLogout(history, queryClient);
-  };
-
   useEffect(() => {
     const interceptor = API.interceptors.response.use(
       (response) => {
@@ -287,7 +283,7 @@ const ErrorHandler: React.FC = ({ children }) => {
       },
       (error) => {
         if (error.response.status === 401) {
-          logout();
+          onLogout(history, queryClient);
         } else if (!error.response) {
           toast({
             title: `Unexpected Error`,
