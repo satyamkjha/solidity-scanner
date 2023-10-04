@@ -20,21 +20,14 @@ import { Logo } from "components/icons";
 import Auth from "helpers/auth";
 import ContactUs from "./modals/contactus";
 import { CloseIcon, HamburgerIcon, ChevronDownIcon } from "@chakra-ui/icons";
-import API from "helpers/api";
-import { API_PATH } from "helpers/routeManager";
 import { useQueryClient } from "react-query";
-import { onLogout } from "common/functions";
+import { logout } from "common/functions";
 
 export const Header: React.FC = () => {
   const { isOpen, onClose, onOpen } = useDisclosure();
   const [isDesktopView] = useMediaQuery("(min-width: 1350px)");
   const history = useHistory();
   const queryClient = useQueryClient();
-
-  const logout = async () => {
-    await API.get(API_PATH.API_LOGOUT);
-    onLogout(history, queryClient);
-  };
 
   return (
     <>
@@ -311,7 +304,7 @@ export const Header: React.FC = () => {
                     ) : (
                       <MenuItem mt={20}>
                         <Link
-                          onClick={logout}
+                          onClick={() => logout(history, queryClient)}
                           variant="ghost"
                           fontWeight="400"
                           w={"100%"}

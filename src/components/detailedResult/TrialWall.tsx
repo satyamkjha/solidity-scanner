@@ -325,7 +325,7 @@ const DummyCode: React.FC = () => {
           }}
         >
           <Text
-            text="subtle"
+            variant="subtle"
             fontSize="sm"
             color="subtle"
             mb={2}

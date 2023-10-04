@@ -135,6 +135,9 @@ export const hasSpecialCharacters = (email: string) =>
 export const checkOrgName = (email: string) =>
   /[`!@#$\s%^&*()+\-=[\]{};':"\\|,.<>/?~]/i.test(email);
 
+export const checkContractAddress = (contractAddress: string) =>
+  /^xdc[a-fA-F0-9]{40}$|^0x[a-fA-F0-9]{40}$/i.test(contractAddress);
+
 export const getProjectFileUrl = (
   project_url: string,
   branchName: string,
@@ -151,6 +154,8 @@ export const getTrimmedScanMessage = (scan_status: string) => {
 
   return "Scan Failed";
 };
+
+// ^xdc[a-fA-F0-9]{40}$|^0x[a-fA-F0-9]{40}$
 
 // export const getAssetsFromS3 = async (directory: string) => {
 //   const assetsURL = getAssetsURL();

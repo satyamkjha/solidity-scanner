@@ -32,7 +32,7 @@ import API from "helpers/api";
 import { API_PATH } from "helpers/routeManager";
 import { useConfig } from "hooks/useConfig";
 import { useQueryClient } from "react-query";
-import { onLogout } from "common/functions";
+import { logout } from "common/functions";
 import { sentenceCapitalize } from "helpers/helperFunction";
 import { useUserOrgProfile } from "hooks/useUserOrgProfile";
 import { signInWithCustomToken, User, onAuthStateChanged } from "firebase/auth";
@@ -63,15 +63,6 @@ const Layout: React.FC = ({ children }) => {
     }
     // outside click
     setShowSidebar(false);
-  };
-
-  const logout = async () => {
-    const { data } = await API.get<{ message: string; status: string }>(
-      API_PATH.API_LOGOUT
-    );
-    if (data.status === "success") {
-      onLogout(history, queryClient);
-    }
   };
 
   const getFirebaseToken = async () => {
@@ -295,17 +286,6 @@ const Layout: React.FC = ({ children }) => {
               )}
             </Flex>
 
-            {/* <Button
-            variant="outline"
-            size="sm"
-            color="gray.600"
-            px={4}
-            borderRadius={10}
-            onClick={() => logout()}
-          >
-            <Icon as={FiLogOut} mr={2} />
-            Logout
-          </Button> */}
             {profileData && (
               <Menu>
                 <MenuButton
@@ -359,7 +339,7 @@ const Layout: React.FC = ({ children }) => {
                   <MenuItem
                     py={2}
                     borderBottomRadius="10px"
-                    onClick={() => logout()}
+                    onClick={() => logout(history, queryClient)}
                   >
                     <Icon as={BiPowerOff} mr={3} color="gray.500" />
                     Logout
