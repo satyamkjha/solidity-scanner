@@ -26,7 +26,7 @@ const PasswordError: React.FC<{
     <>
       {passwordError &&
         (passwordError.length < 8 || passwordError.contains.length < 4) && (
-          <Text color={"subtle"} fontSize={"sm"} mt={2} textAlign="left">
+          <Text color={"subtle"} fontSize={"sm"} mb={2} textAlign="left">
             Your password should contain a
             {unique(passwordError.contains, charTypes).map(
               (item, index, array) =>

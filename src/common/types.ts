@@ -3,6 +3,7 @@ import { type } from "os";
 export type Severity = "high" | "medium" | "low";
 
 export type Profile = {
+  "2fa_enabled": boolean;
   name: string;
   email: string;
   promo_code?: string;
@@ -344,6 +345,7 @@ export interface Report {
   };
   git_commit_hash: string;
   project_summary_report: {
+    report_type?: string;
     git_commit_hash?: string;
     project_id: string;
     project_name?: string;
@@ -380,6 +382,7 @@ export type IssueItem = {
 export type ReportsListItem = {
   project_id: string;
   report_id: string;
+  report_type: string;
   date_published: string;
   is_public: boolean;
   is_approved: boolean;

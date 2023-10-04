@@ -156,11 +156,26 @@ export const theme = extendTheme({
           fontSize: "16px",
           borderColor: "#3300FF",
           border: "2px solid #3300FF",
-          py: 7,
+          pt: 7,
+          pb: 6,
           px: 10,
           _hover: {
             background: "#3300FF",
             color: "#FFFFFF",
+          },
+        }),
+        "black-outline": (props: StyleFunctionProps) => ({
+          ...defaultTheme.components.Button.variants.outline(props),
+          background: "#FFFFFF",
+          color: "black",
+          fontSize: "16px",
+          borderColor: "#000000",
+          py: 4,
+          _hover: {
+            background: "#f0f0f0",
+          },
+          _active: {
+            background: "#f0f0f0",
           },
         }),
       },
@@ -355,6 +370,17 @@ export const theme = extendTheme({
           },
           thumb: {
             bg: "linear-gradient(129.18deg, #52FF00 8.52%, #00EEFD 93.94%)",
+          },
+        },
+        disabled: {
+          track: {
+            bg: "gray.100",
+            _checked: {
+              bg: "gray.100",
+            },
+          },
+          thumb: {
+            bg: "#8A94A6",
           },
         },
         accent: {

@@ -11,7 +11,7 @@ import {
 } from "@chakra-ui/react";
 import React from "react";
 import { getAssetsURL } from "helpers/helperFunction";
-import ContactUs from "components/contactus";
+import ContactUs from "components/modals/contactus";
 import { useConfig } from "hooks/useConfig";
 
 const CustomPlanCard = () => {

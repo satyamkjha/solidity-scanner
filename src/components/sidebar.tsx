@@ -30,7 +30,7 @@ import {
   SIDEBAR_WIDTH_COLLAPSED,
 } from "common/constants";
 import { useProfile } from "hooks/useProfile";
-import ManualAuditForm from "./manualAuditForm";
+import ManualAuditForm from "./modals/manualAuditForm";
 import { ArrowBackIcon, ArrowForwardIcon } from "@chakra-ui/icons";
 import { useConfig } from "hooks/useConfig";
 import { getAssetsURL } from "helpers/helperFunction";

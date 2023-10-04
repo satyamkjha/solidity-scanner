@@ -1,7 +1,6 @@
 import UAParser from "ua-parser-js";
 import reCAPTCHA from "helpers/reCAPTCHA";
 import { Profile, PricingData, Finding } from "common/types";
-import axios from "axios";
 
 let configValue: any = null;
 
@@ -98,10 +97,7 @@ export const checkGenerateReportAccess = (
     )
       return false;
 
-    if (profile.current_package === "custom") return true;
-
-    return plans.pricing_data[profile.billing_cycle][profile.current_package]
-      .report;
+    return true;
   }
   return false;
 };
@@ -125,10 +121,7 @@ export const checkPublishReportAccess = (
     )
       return false;
 
-    if (profile.current_package === "custom") return true;
-
-    return plans.pricing_data[profile.billing_cycle][profile.current_package]
-      .publishable_report;
+    return true;
   }
   return false;
 };
@@ -142,6 +135,9 @@ export const hasSpecialCharacters = (email: string) =>
 export const checkOrgName = (email: string) =>
   /[`!@#$\s%^&*()+\-=[\]{};':"\\|,.<>/?~]/i.test(email);
 
+export const checkContractAddress = (contractAddress: string) =>
+  /^xdc[a-fA-F0-9]{40}$|^0x[a-fA-F0-9]{40}$/i.test(contractAddress);
+
 export const getProjectFileUrl = (
   project_url: string,
   branchName: string,
@@ -151,6 +147,15 @@ export const getProjectFileUrl = (
     file.file_path
   }#L${file.line_nos_start}-L${file.line_nos_end}`;
 };
+
+export const getTrimmedScanMessage = (scan_status: string) => {
+  if (scan_status.includes("Download Failed")) return "Download Failed";
+  else if (scan_status.includes("Scan Failed")) return "Scan Failed";
+
+  return "Scan Failed";
+};
+
+// ^xdc[a-fA-F0-9]{40}$|^0x[a-fA-F0-9]{40}$
 
 // export const getAssetsFromS3 = async (directory: string) => {
 //   const assetsURL = getAssetsURL();

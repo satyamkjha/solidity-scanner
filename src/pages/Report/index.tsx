@@ -5,6 +5,7 @@ import { useReport } from "hooks/useReport";
 import { Text } from "@chakra-ui/react";
 import { ReportContainer } from "./ReportContainer";
 import Loader from "components/styled-components/Loader";
+import { useProfile } from "hooks/useProfile";
 
 export default function ReportPage() {
   const { reportId, projectId } = useParams<{
@@ -12,6 +13,7 @@ export default function ReportPage() {
     projectId: string;
   }>();
   const { data } = useReport(projectId, reportId);
+  const { data: profile } = useProfile();
 
   return (
     <>
@@ -28,18 +30,14 @@ export default function ReportPage() {
           authenticated account. This is not a public report.
         </Text>
       </Flex>
-      {data ? (
+      {data && profile ? (
         <ReportContainer
           summary_report={data.summary_report}
+          profile={profile}
           isPublicReport={false}
         />
       ) : (
-        <Container
-          py={12}
-          h="90vh"
-          maxW={["100vw", "100vw", "90vw", "80vw", "80vw"]}
-          color="black"
-        >
+        <Container py={12} h="100vh" maxW={"100vw"} bg="black">
           <Flex
             as="div"
             w="100%"

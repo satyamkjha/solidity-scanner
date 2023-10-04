@@ -110,8 +110,9 @@ export const TrialWallCode: React.FC = () => {
             <VStack ml={6} mr={8} alignItems={"flex-start"} spacing={1}>
               <Text fontWeight={600}>{gasIssueCount} Gas Issues found</Text>
               <Text color="text" fontWeight={400} fontSize={"xs"}>
-                Trail users can only view gas bug details. Please upgrade to
-                access details for other issues.
+                Trial users have access to view the Gas Optimization bug
+                exclusively. To access information about other severity issues,
+                kindly upgrade your plan.
               </Text>
             </VStack>
             <ChakraLink
@@ -324,7 +325,7 @@ const DummyCode: React.FC = () => {
           }}
         >
           <Text
-            text="subtle"
+            variant="subtle"
             fontSize="sm"
             color="subtle"
             mb={2}

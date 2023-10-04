@@ -386,7 +386,7 @@ const FindingSummaryContainer: React.FC<{
                 <Image
                   height={7}
                   width={7}
-                  src={`${assetsURL}icons/false_positive_color.svg`}
+                  src={`${assetsURL}report/false_positive_color.svg`}
                 />
                 <Text fontSize="2xl" fontWeight={"bold"} width={"100%"}>
                   {summary_report.scan_summary[0].false_positive_count}
@@ -421,7 +421,7 @@ const FindingSummaryContainer: React.FC<{
                 <Image
                   height={7}
                   width={7}
-                  src={`${assetsURL}icons/wont_fix_color.svg`}
+                  src={`${assetsURL}report/wont_fix_color.svg`}
                 />
                 <Text fontSize="2xl" fontWeight={"bold"} mb={10} width={"100%"}>
                   {summary_report.scan_summary[0].wont_fix_count}
@@ -453,7 +453,7 @@ const FindingSummaryContainer: React.FC<{
                 <Image
                   height={7}
                   width={7}
-                  src={`${assetsURL}icons/pending_fix_color.svg`}
+                  src={`${assetsURL}report/pending_fix_color.svg`}
                 />
                 <Text fontSize="2xl" fontWeight={"bold"} mb={10} width={"100%"}>
                   {summary_report.scan_summary[0].pending_fix_count}

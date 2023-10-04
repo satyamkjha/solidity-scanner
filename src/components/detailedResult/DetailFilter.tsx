@@ -299,7 +299,7 @@ const DetailFilter: React.FC<{
                       ])
                     }
                   >
-                    <Image src={`${assetsURL}icons/pending_fix_color.svg`} />
+                    <Image src={`${assetsURL}report/pending_fix_color.svg`} />
                     &nbsp;Pending Fixes
                   </Button>
                   <Button
@@ -321,7 +321,10 @@ const DetailFilter: React.FC<{
                       ])
                     }
                   >
-                    <Image src={`${assetsURL}icons/wont_fix.svg`} w="20px" />
+                    <Image
+                      src={`${assetsURL}report/wont_fix_color.svg`}
+                      w="20px"
+                    />
                     &nbsp;Won't Fix
                   </Button>
                   <Button
@@ -343,7 +346,9 @@ const DetailFilter: React.FC<{
                       ])
                     }
                   >
-                    <Image src={`${assetsURL}icons/false_positive_color.svg`} />
+                    <Image
+                      src={`${assetsURL}report/false_positive_color.svg`}
+                    />
                     &nbsp;False Positive
                   </Button>
                 </Flex>

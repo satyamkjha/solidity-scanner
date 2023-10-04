@@ -50,6 +50,7 @@
     "react-icons": "^4.7.1",
     "react-infinite-scroll-component": "^6.1.0",
     "react-input-checkbox": "^1.1.0",
+    "react-qr-code": "^2.0.12",
     "react-query": "^3.16.1",
     "react-router-dom": "^5.2.0",
     "react-scripts": "4.0.3",
