@@ -48,6 +48,7 @@ jobs:
           elif [[ "${{ inputs.ENV }}" == "prod" ]]; then
             aws s3 cp s3://credshields-prod/env_file/frontend.env ${PROJECT_DIRECTORY}/.env
           fi
+
       - name: Logging in on aws ecr
         run: aws ecr get-login-password --region us-east-2 | docker login --username AWS --password-stdin 132830644905.dkr.ecr.us-east-2.amazonaws.com
 
