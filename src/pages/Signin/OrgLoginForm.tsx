@@ -11,9 +11,6 @@ import {
   Link,
   useToast,
   InputRightElement,
-  HStack,
-  PinInput,
-  PinInputField,
 } from "@chakra-ui/react";
 import { MdPeopleAlt } from "react-icons/md";
 import { FaLock, FaMobileAlt } from "react-icons/fa";
@@ -27,9 +24,11 @@ import { useForm } from "react-hook-form";
 import { getReCaptchaHeaders } from "helpers/helperFunction";
 import StyledButton from "components/styled-components/StyledButton";
 import { isEmail, checkOrgName } from "helpers/helperFunction";
-import Loader from "components/styled-components/Loader";
+import { TwoFAField } from "components/common/TwoFAField";
 
-const OrgLoginForm: React.FC = () => {
+const OrgLoginForm: React.FC<{
+  setOrganisation: React.Dispatch<React.SetStateAction<string>>;
+}> = ({ setOrganisation }) => {
   const [show, setShow] = useState(false);
   const history = useHistory();
   const toast = useToast();
@@ -40,7 +39,6 @@ const OrgLoginForm: React.FC = () => {
   const [orgName, setOrgName] = useState("");
   const { handleSubmit } = useForm();
   const [twoFAScreen, setTwoFAScreen] = useState(false);
-  const [otp, setOtp] = useState("");
 
   const onSubmit = async () => {
     if (step) {
@@ -51,57 +49,53 @@ const OrgLoginForm: React.FC = () => {
     }
   };
 
+  const verify2FA = async (otp: string) => {
+    setIsLoading(true);
+    API.post<AuthResponse>(API_PATH.API_2FA_VERIFY, {
+      login_type: "organization",
+      otp,
+      email,
+      password,
+      org_name: orgName,
+    }).then(
+      (res) => {
+        if (res.status === 200) {
+          if (res.data.status === "success") {
+            Auth.authenticateUser();
+            history.push("/home");
+          }
+        }
+        setIsLoading(false);
+      },
+      () => setIsLoading(false)
+    );
+  };
+
   const signIn = async () => {
-    if (twoFAScreen) {
-      setIsLoading(true);
-      API.post<AuthResponse>(API_PATH.API_2FA_VERIFY, {
-        login_type: "organization",
-        otp,
-        email,
-        password,
-        org_name: orgName,
-      }).then(
-        (res) => {
-          if (res.status === 200) {
-            if (res.data.status === "success") {
+    let reqHeaders = await getReCaptchaHeaders("signin");
+    setIsLoading(true);
+    API.post<AuthResponse>(
+      API_PATH.API_ORG_LOGIN,
+      { org_name: orgName, email, password },
+      {
+        headers: reqHeaders,
+      }
+    ).then(
+      (res) => {
+        if (res.status === 200) {
+          if (res.data.status === "success") {
+            if (res.data.message === "2fa required") {
+              setTwoFAScreen(true);
+            } else {
               Auth.authenticateUser();
               history.push("/home");
             }
           }
-          setIsLoading(false);
-        },
-        () => {
-          setIsLoading(false);
         }
-      );
-    } else {
-      let reqHeaders = await getReCaptchaHeaders("signin");
-      setIsLoading(true);
-      API.post<AuthResponse>(
-        API_PATH.API_ORG_LOGIN,
-        { org_name: orgName, email, password },
-        {
-          headers: reqHeaders,
-        }
-      ).then(
-        (res) => {
-          if (res.status === 200) {
-            if (res.data.status === "success") {
-              if (res.data.message === "2fa required") {
-                setTwoFAScreen(true);
-              } else {
-                Auth.authenticateUser();
-                history.push("/home");
-              }
-            }
-          }
-          setIsLoading(false);
-        },
-        () => {
-          setIsLoading(false);
-        }
-      );
-    }
+        setIsLoading(false);
+      },
+      () => setIsLoading(false)
+    );
   };
 
   const checkOrganisationNameRequest = async () => {
@@ -135,6 +129,7 @@ const OrgLoginForm: React.FC = () => {
             isClosable: true,
           });
         } else {
+          setOrganisation(orgName);
           setStep(true);
         }
       } else {
@@ -163,154 +158,141 @@ const OrgLoginForm: React.FC = () => {
       }}
       onSubmit={handleSubmit(onSubmit)}
     >
-      {" "}
-      {twoFAScreen ? (
-        <Stack spacing={6} mt={8} width={["90%", "80%", "600px"]}>
-          <HStack width="100%" justifyContent="center">
-            <PinInput value={otp} onChange={(e) => setOtp(e)} type="number">
-              <PinInputField />
-              <PinInputField />
-              <PinInputField />
-              <PinInputField />
-              <PinInputField />
-              <PinInputField />
-            </PinInput>
-          </HStack>
-          <StyledButton
-            type="submit"
-            variant="brand"
+      <Stack spacing={6} mt={8} width={["90%", "80%", "600px"]}>
+        {twoFAScreen ? (
+          <TwoFAField
             isLoading={isLoading}
-            spinner={<Loader color={"#3300FF"} size={25} />}
-            disabled={otp.length !== 6}
-          >
-            Sign In
-          </StyledButton>
-        </Stack>
-      ) : (
-        <Stack spacing={6} mt={8} width={["90%", "80%", "600px"]}>
-          {step ? (
-            <>
+            buttonText={"Sign In"}
+            verify2FA={verify2FA}
+          />
+        ) : (
+          <>
+            {step ? (
+              <>
+                <InputGroup alignItems="center">
+                  <InputLeftElement
+                    height="48px"
+                    children={<Icon as={FiAtSign} color="gray.300" />}
+                  />
+                  <Input
+                    isRequired
+                    type="email"
+                    placeholder="Your email"
+                    autoComplete="username"
+                    variant="brand"
+                    value={email}
+                    size="lg"
+                    onChange={(e) => setEmail(e.target.value)}
+                  />
+                </InputGroup>
+                <InputGroup>
+                  <InputLeftElement
+                    height="48px"
+                    color="gray.300"
+                    children={<Icon as={FaLock} color="gray.300" />}
+                  />
+                  <Input
+                    isRequired
+                    type={show ? "text" : "password"}
+                    placeholder="Password"
+                    autoComplete="current-password"
+                    variant="brand"
+                    size="lg"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                  />
+                  <InputRightElement
+                    height="48px"
+                    color="gray.300"
+                    children={
+                      show ? (
+                        <ViewOffIcon
+                          color={"gray.500"}
+                          mr={5}
+                          boxSize={5}
+                          onClick={() => setShow(false)}
+                        />
+                      ) : (
+                        <ViewIcon
+                          color={"gray.500"}
+                          mr={5}
+                          boxSize={5}
+                          onClick={() => setShow(true)}
+                        />
+                      )
+                    }
+                  />
+                </InputGroup>
+              </>
+            ) : (
               <InputGroup alignItems="center">
                 <InputLeftElement
                   height="48px"
-                  children={<Icon as={FiAtSign} color="gray.300" />}
-                />
-                <Input
-                  isRequired
-                  type="email"
-                  placeholder="Your email"
-                  autoComplete="username"
-                  variant="brand"
-                  value={email}
-                  size="lg"
-                  onChange={(e) => setEmail(e.target.value)}
-                />
-              </InputGroup>
-              <InputGroup>
-                <InputLeftElement
-                  height="48px"
-                  color="gray.300"
-                  children={<Icon as={FaLock} color="gray.300" />}
-                />
-                <Input
-                  isRequired
-                  type={show ? "text" : "password"}
-                  placeholder="Password"
-                  autoComplete="current-password"
-                  variant="brand"
-                  size="lg"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                />
-                <InputRightElement
-                  height="48px"
-                  color="gray.300"
                   children={
-                    show ? (
-                      <ViewOffIcon
-                        color={"gray.500"}
-                        mr={5}
-                        boxSize={5}
-                        onClick={() => setShow(false)}
-                      />
-                    ) : (
-                      <ViewIcon
-                        color={"gray.500"}
-                        mr={5}
-                        boxSize={5}
-                        onClick={() => setShow(true)}
-                      />
-                    )
+                    <Icon size={30} as={MdPeopleAlt} color="gray.300" />
                   }
                 />
+                <Input
+                  isRequired
+                  name="org_name"
+                  type="text"
+                  placeholder="Organisation Name"
+                  autoComplete="off"
+                  variant="brand"
+                  value={orgName}
+                  size="lg"
+                  onChange={(e) => setOrgName(e.target.value)}
+                />
               </InputGroup>
-            </>
-          ) : (
-            <InputGroup alignItems="center">
-              <InputLeftElement
-                height="48px"
-                children={<Icon size={30} as={MdPeopleAlt} color="gray.300" />}
-              />
-              <Input
-                isRequired
-                name="org_name"
-                type="text"
-                placeholder="Organisation Name"
-                autoComplete="off"
-                variant="brand"
-                value={orgName}
-                size="lg"
-                onChange={(e) => setOrgName(e.target.value)}
-              />
-            </InputGroup>
-          )}
-
-          <Flex width="100%" justify={step ? "space-between" : "flex-end"}>
-            {step && (
-              <>
-                <Button
-                  variant="link"
-                  fontSize="sm"
-                  mr={1}
-                  my={1}
-                  onClick={() => setStep(false)}
-                >
-                  Back
-                </Button>
-
-                <Link
-                  as={RouterLink}
-                  variant="subtle"
-                  fontSize="sm"
-                  mr={1}
-                  my={1}
-                  to={`/forgot/${orgName}`}
-                >
-                  Forgot Password?
-                </Link>
-              </>
             )}
-          </Flex>
-          <StyledButton
-            type="submit"
-            variant="brand"
-            isLoading={isLoading}
-            disabled={
-              step
-                ? email.length < 1 ||
-                  password.length < 1 ||
-                  email.length > 50 ||
-                  password.length > 50 ||
-                  !isEmail(email)
-                : orgName.length < 1 ||
-                  orgName.length > 50 ||
-                  checkOrgName(orgName)
-            }
-          >
-            {step ? "Sign in" : "Proceed to Sign in"}
-          </StyledButton>
-        </Stack>
-      )}
+
+            <Flex width="100%" justify={step ? "space-between" : "flex-end"}>
+              {step && (
+                <>
+                  <Button
+                    variant="link"
+                    fontSize="sm"
+                    mr={1}
+                    my={1}
+                    onClick={() => setStep(false)}
+                  >
+                    Back
+                  </Button>
+
+                  <Link
+                    as={RouterLink}
+                    variant="subtle"
+                    fontSize="sm"
+                    mr={1}
+                    my={1}
+                    to={`/forgot/${orgName}`}
+                  >
+                    Forgot Password?
+                  </Link>
+                </>
+              )}
+            </Flex>
+            <StyledButton
+              type="submit"
+              variant="brand"
+              isLoading={isLoading}
+              disabled={
+                step
+                  ? email.length < 1 ||
+                    password.length < 1 ||
+                    email.length > 50 ||
+                    password.length > 50 ||
+                    !isEmail(email)
+                  : orgName.length < 1 ||
+                    orgName.length > 50 ||
+                    checkOrgName(orgName)
+              }
+            >
+              {step ? "Sign in" : "Proceed to Sign in"}
+            </StyledButton>
+          </>
+        )}
+      </Stack>
     </form>
   );
 };

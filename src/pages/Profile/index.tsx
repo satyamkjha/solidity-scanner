@@ -481,9 +481,8 @@ const ChangePasswordForm: React.FC<{
   const { handleSubmit } = useForm<FormData>();
 
   const { isOpen, onClose, onOpen } = useDisclosure();
-
+  const [open, setOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-
   const [loading2FA, setLoading2FA] = useState(false);
 
   const [twoFAsetupData, setTwoFASetupData] = useState<{
@@ -492,16 +491,31 @@ const ChangePasswordForm: React.FC<{
   } | null>(null);
 
   const disable2FA = async () => {
-    const data = await disable2FARequest();
-    if (data.status === "success") {
-      toast({
-        title: data.message,
-        status: "success",
-        duration: 2000,
-        isClosable: true,
-        position: "bottom",
-      });
-      refetchProfile();
+    setLoading2FA(true);
+    try {
+      const data = await disable2FARequest();
+      if (data.status === "success") {
+        toast({
+          title: data.message,
+          status: "success",
+          duration: 2000,
+          isClosable: true,
+          position: "bottom",
+        });
+        refetchProfile();
+      } else {
+        toast({
+          title: data.message,
+          status: "error",
+          duration: 2000,
+          isClosable: true,
+          position: "bottom",
+        });
+      }
+      setOpen(false);
+      setLoading2FA(false);
+    } catch (e) {
+      setLoading2FA(false);
     }
   };
 
@@ -628,7 +642,11 @@ const ChangePasswordForm: React.FC<{
             <CheckIcon color="low" />
             <Text color="low">Your Account is 2FA Enabled</Text>{" "}
           </HStack>
-          <StyledButton py={6} isLoading={loading2FA} onClick={disable2FA}>
+          <StyledButton
+            py={6}
+            isLoading={loading2FA}
+            onClick={() => setOpen(true)}
+          >
             Disable Two Factor Authentication
           </StyledButton>
         </VStack>
@@ -637,13 +655,7 @@ const ChangePasswordForm: React.FC<{
           my={5}
           py={6}
           isLoading={loading2FA}
-          onClick={() => {
-            if (twoFAsetupData !== null) {
-              onOpen();
-            } else {
-              get2FASetupData();
-            }
-          }}
+          onClick={() => get2FASetupData()}
         >
           Setup 2FA Authentication
         </StyledButton>
@@ -658,6 +670,34 @@ const ChangePasswordForm: React.FC<{
           provisioning_uri={twoFAsetupData.provisioning_uri}
         />
       )}
+
+      <AlertDialog isOpen={open} onClose={() => setOpen(false)}>
+        <AlertDialogOverlay>
+          <AlertDialogContent>
+            <AlertDialogHeader fontSize="lg" fontWeight="bold">
+              Confirm Disable 2FA
+            </AlertDialogHeader>
+
+            <AlertDialogBody>
+              Are you sure you want to Disable Two Factor Authentication ?
+            </AlertDialogBody>
+
+            <AlertDialogFooter>
+              <Button onClick={() => setOpen(false)} py={6}>
+                No, My bad
+              </Button>
+              <Button
+                variant="brand"
+                isLoading={loading2FA}
+                onClick={disable2FA}
+                ml={3}
+              >
+                Disable 2FA
+              </Button>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialogOverlay>
+      </AlertDialog>
     </Box>
   );
 };
