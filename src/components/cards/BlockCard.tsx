@@ -68,7 +68,6 @@ const BlockCard: React.FC<{
   // ssIconAnimation,
 }) => {
   const {
-    scan_status,
     project_name,
     scan_id,
     _updated,
@@ -110,7 +109,7 @@ const BlockCard: React.FC<{
       });
     }
     onClose();
-    updateScanList(project_id);
+    updateScanList(scan_id);
   };
 
   const [scanStatus, setScanStatus] = useState("");

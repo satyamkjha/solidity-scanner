@@ -129,7 +129,7 @@ const ProjectCard: React.FC<{
       });
     }
     onClose();
-    updateProjectList(scan_details.project_id);
+    updateProjectList(scan_id);
   };
 
   return (
@@ -252,6 +252,7 @@ const ProjectCard: React.FC<{
                 w="100%"
                 alignItems="center"
                 justifyContent="flex-start"
+                mt={4}
               >
                 <Score
                   score={
