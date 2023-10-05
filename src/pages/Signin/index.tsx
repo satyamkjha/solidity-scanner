@@ -31,7 +31,7 @@ const SignIn: React.FC = () => {
   const isPasswordReset = Boolean(query.get("isPasswordReset")?.toString());
   const toast = useToast();
   const googleLoginEnabled = true;
-
+  const [organisation, setOrganisation] = useState<string>("");
   const config = useConfig();
   const assetsURL = getAssetsURL(config);
   const [orgLogin, setOrgLogin] = useState(false);
@@ -72,11 +72,23 @@ const SignIn: React.FC = () => {
       </Flex>
       <Flex align="center" direction="column" my={8}>
         <Heading fontSize="2xl">Sign In {orgLogin && "Organisation"}</Heading>
-        <Text color="subtle" my={3}>
-          {orgLogin
-            ? "Type details to Sign In to an Organization"
-            : "Welcome back, you’ve been missed!"}
-        </Text>
+        {orgLogin ? (
+          <HStack my={3} spacing={2}>
+            <Text color="subtle">Type details to Sign In to</Text>
+            <Text
+              fontWeight={700}
+              color={organisation === "" ? "subtle" : "#000"}
+            >
+              {organisation === "" ? "an" : organisation}
+            </Text>
+            <Text color="subtle">Organisation</Text>
+          </HStack>
+        ) : (
+          <Text color="subtle" my={3}>
+            Welcome back, you’ve been missed!
+          </Text>
+        )}
+
         {!orgLogin && (
           <>
             <Stack
@@ -115,7 +127,11 @@ const SignIn: React.FC = () => {
             </HStack>
           </>
         )}
-        {orgLogin ? <OrgLoginForm /> : <LoginForm />}
+        {orgLogin ? (
+          <OrgLoginForm setOrganisation={setOrganisation} />
+        ) : (
+          <LoginForm />
+        )}
         <Link
           as={RouterLink}
           variant="subtle"

@@ -333,7 +333,14 @@ const DummyCode: React.FC = () => {
             alignItems: "center",
           }}
         >
-          <Text fontSize="sm" color="subtle" mb={2} maxW="70%" isTruncated>
+          <Text
+            variant="subtle"
+            fontSize="sm"
+            color="subtle"
+            mb={2}
+            maxW="70%"
+            isTruncated
+          >
             src/test/resources/rules/SOLIDITY_TRANSFER_IN_LOOP
           </Text>
         </Flex>

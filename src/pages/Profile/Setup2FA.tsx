@@ -9,7 +9,6 @@ import {
   ModalOverlay,
   useToast,
   Text,
-  HStack,
   VStack,
   Box,
   Popover,
@@ -20,19 +19,17 @@ import {
   PopoverHeader,
   Heading,
   PopoverBody,
-  InputGroup,
-  Input,
-  InputRightElement,
-  Button,
+  HStack,
 } from "@chakra-ui/react";
-import { FaMobileAlt } from "react-icons/fa";
 import { getAssetsURL } from "helpers/helperFunction";
 import { useConfig } from "hooks/useConfig";
 import QRCode from "react-qr-code";
 import API from "helpers/api";
-import { TreeItem } from "common/types";
 import { API_PATH } from "helpers/routeManager";
-import StyledButton from "components/styled-components/StyledButton";
+import { TwoFAField } from "components/common/TwoFAField";
+import { onLogout } from "common/functions";
+import { useQueryClient } from "react-query";
+import { useHistory } from "react-router-dom";
 
 export const Setup2FA: React.FC<{
   onClose(): any;
@@ -40,38 +37,30 @@ export const Setup2FA: React.FC<{
   provisioning_uri: string;
   two_factor_hash: string;
   refetchProfile: any;
-}> = ({
-  isOpen,
-  onClose,
-  provisioning_uri,
-  two_factor_hash,
-  refetchProfile,
-}) => {
+}> = ({ isOpen, onClose, provisioning_uri, two_factor_hash }) => {
   const toast = useToast();
   const config: any = useConfig();
   const assetsURL = getAssetsURL(config);
-  const [otp, setOtp] = useState("");
   const [isLoading, setIsLoading] = useState(false);
 
-  const verify2FA = async () => {
+  const history = useHistory();
+  const queryClient = useQueryClient();
+
+  const verify2FA = async (otp: string) => {
     try {
       setIsLoading(true);
-
-      const { data } = await API.post(API_PATH.API_2FA_VERIFY, {
+      const { status } = await API.post(API_PATH.API_2FA_VERIFY, {
         otp,
       });
-
-      if (data.status === "success" && data.message === "OTP Valid") {
+      if (status === 200) {
+        onLogout(history, queryClient);
         toast({
-          title: data.message,
+          title: "2FA setup is complete. Please login again.",
           status: "success",
-          duration: 2000,
+          duration: 3000,
           isClosable: true,
           position: "bottom",
         });
-        onClose();
-        refetchProfile();
-        setOtp("");
       }
       setIsLoading(false);
     } catch (e) {
@@ -85,7 +74,7 @@ export const Setup2FA: React.FC<{
       <Modal isOpen={isOpen} onClose={onClose}>
         <ModalOverlay />
         <ModalContent
-          maxW={["90vw", "90vw", "70vw"]}
+          maxW={["90vw", "90vw", "1000px"]}
           minW={"300px"}
           overflowY={"scroll"}
           overflowX={"scroll"}
@@ -99,26 +88,25 @@ export const Setup2FA: React.FC<{
             textAlign={["center", "center", "center", "left"]}
           >
             <HStack spacing={5}>
-              <FaMobileAlt size={30} />{" "}
               <Heading fontSize={"xl"} fontWeight={600}>
                 Setup Two factor Authentication
               </Heading>
             </HStack>
           </ModalHeader>
           <ModalCloseButton />
-          <ModalBody h={"fit-content"} w={"100%"} px={[6, 6, 6, 12]} py={10}>
+          <ModalBody h={"fit-content"} w={"100%"} px={[6, 6, 6, 12]} pb={5}>
             <Flex
               justifyContent={"flex-start"}
-              alignItems={"flex-start"}
+              alignItems={"center"}
               w={"100%"}
               flexDir="column"
               py={5}
             >
-              <VStack alignItems="flex-start">
-                <Text fontSize={"lg"} fontWeight={600}>
+              <VStack alignItems="center">
+                <Text textAlign="center" fontSize={"lg"} fontWeight={600}>
                   Setup Two Factor Authentication with Authenticator App
                 </Text>
-                <Text fontSize="sm">
+                <Text fontSize="sm" textAlign="center">
                   Authenticator apps and browser extensions such as 1Password,
                   Authy, Microsoft Authenticator, and others create single-use
                   passwords utilized as a secondary verification method for
@@ -127,11 +115,11 @@ export const Setup2FA: React.FC<{
                 </Text>
               </VStack>
 
-              <Text mt={10} fontSize={"md"} fontWeight={600}>
+              <Text textAlign="center" mt={10} fontSize={"md"} fontWeight={600}>
                 Scan the QR Code
               </Text>
 
-              <Text mt={2} fontSize={"sm"}>
+              <Text textAlign="center" mt={2} fontSize={"sm"}>
                 Use an authenticator app or browser extension to scan the below
                 QR code.
               </Text>
@@ -152,7 +140,7 @@ export const Setup2FA: React.FC<{
                 />
               )}
 
-              <Text mt={10} fontSize={"sm"}>
+              <Text textAlign="center" my={10} fontSize={"sm"}>
                 Unable to scan? You can use{" "}
                 <Popover>
                   <PopoverTrigger>
@@ -169,36 +157,11 @@ export const Setup2FA: React.FC<{
                 </Popover>{" "}
                 the to manually configure your authenticator app.
               </Text>
-
-              <Text mt={10} fontSize={"md"} fontWeight={600}>
-                Verify the code from the app
-              </Text>
-
-              <InputGroup size="lg" w="270px" mt={5}>
-                <Input
-                  borderRadius="15px"
-                  type={"text"}
-                  value={otp}
-                  onKeyDown={(e) => {
-                    if (e.keyCode === 13) {
-                      verify2FA();
-                    }
-                  }}
-                  onChange={(e) => setOtp(e.target.value)}
-                />
-                <InputRightElement w="fit-content">
-                  <StyledButton
-                    py={3}
-                    mr={1}
-                    w="80px"
-                    variant="brand"
-                    isLoading={isLoading}
-                    onClick={verify2FA}
-                  >
-                    Verify
-                  </StyledButton>
-                </InputRightElement>
-              </InputGroup>
+              <TwoFAField
+                isLoading={isLoading}
+                buttonText={"Verify"}
+                verify2FA={verify2FA}
+              />
             </Flex>
           </ModalBody>
         </ModalContent>
