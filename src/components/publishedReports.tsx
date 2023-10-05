@@ -30,7 +30,7 @@ const ReportBlock: React.FC<{
 
   const [summaryReport, setSummaryReport] = useState<Report | null>(null);
   const [printLoading, setPrintLoading] = useState<boolean>(false);
-  const componentRef = useRef();
+  const componentRef = useRef<HTMLDivElement | null>(null);
 
   const generatePDF = async () => {
     setPrintLoading(true);

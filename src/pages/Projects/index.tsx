@@ -785,7 +785,11 @@ const ProjectCard: React.FC<{
           </Box>
         </Flex>
       )}
-      <AlertDialog isOpen={open} onClose={() => setOpen(false)}>
+      <AlertDialog
+        isOpen={open}
+        onClose={() => setOpen(false)}
+        leastDestructiveRef={cancelRef}
+      >
         <AlertDialogOverlay>
           <AlertDialogContent>
             <AlertDialogHeader fontSize="lg" fontWeight="bold">
@@ -801,7 +805,7 @@ const ProjectCard: React.FC<{
             </AlertDialogBody>
 
             <AlertDialogFooter>
-              <Button onClick={() => setOpen(false)} py={6}>
+              <Button ref={cancelRef} onClick={() => setOpen(false)} py={6}>
                 No, My bad
               </Button>
               <Button variant="brand" onClick={deleteProject} ml={3}>

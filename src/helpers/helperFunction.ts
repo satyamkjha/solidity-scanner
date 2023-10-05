@@ -155,6 +155,13 @@ export const getTrimmedScanMessage = (scan_status: string) => {
   return "Scan Failed";
 };
 
+export const formatString = (template: string, ...args: any[]) => {
+  return template.replace(/{(\d+)}/g, (match, index) => {
+    const arg = args[index];
+    return typeof arg !== "undefined" ? arg : match;
+  });
+};
+
 // ^xdc[a-fA-F0-9]{40}$|^0x[a-fA-F0-9]{40}$
 
 // export const getAssetsFromS3 = async (directory: string) => {

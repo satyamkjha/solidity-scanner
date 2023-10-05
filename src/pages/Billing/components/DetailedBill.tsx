@@ -3,7 +3,7 @@ import { Plan } from "common/types";
 import React from "react";
 
 const DetailedBill: React.FC<{
-  duration: "monthly" | "yearly" | "ondemand" | "topup";
+  duration: string;
   pricingDetails: {
     [key: string]: {
       [plan: string]: Plan;
@@ -37,8 +37,9 @@ const DetailedBill: React.FC<{
             ? `$ ${
                 parseInt(pricingDetails[duration][selectedPlan].amount) +
                 parseInt(
-                  JSON.parse(pricingDetails[duration][selectedPlan].discount)
-                    ?.amount
+                  JSON.parse(
+                    pricingDetails[duration][selectedPlan].discount || ""
+                  )?.amount
                 )
               }.00`
             : `$ ${pricingDetails[duration][selectedPlan].amount}`}
@@ -51,7 +52,7 @@ const DetailedBill: React.FC<{
           </Text>
           <Heading fontSize={"md"}>
             {`- $ ${parseInt(
-              JSON.parse(pricingDetails[duration][selectedPlan].discount)
+              JSON.parse(pricingDetails[duration][selectedPlan].discount || "")
                 ?.amount
             )}.00`}{" "}
           </Heading>
@@ -63,11 +64,11 @@ const DetailedBill: React.FC<{
             Coupon Code
           </Text>
           <Heading color={"#8A94A6"} fontSize={"md"}>
-            {`- $ ${parseFloat(
-              parseFloat(
+            {`- $ ${
+              +parseFloat(
                 pricingDetails[duration][selectedPlan]?.amount
-              ).toFixed(1) - parseFloat(updatedPrice).toFixed(1)
-            ).toFixed(1)}0`}{" "}
+              ).toFixed(1) - +parseFloat(updatedPrice).toFixed(1)
+            }0`}{" "}
           </Heading>
         </HStack>
       )}
@@ -80,7 +81,10 @@ const DetailedBill: React.FC<{
           {activeCoupon
             ? `$ ${parseFloat(updatedPrice).toFixed(2)}`
             : `$ ${parseFloat(
-                pricingDetails[duration][selectedPlan]?.amount * (quantity || 1)
+                (
+                  +pricingDetails[duration][selectedPlan]?.amount *
+                  (quantity || 1)
+                ).toString()
               ).toFixed(2)}`}
         </Heading>
       </HStack>

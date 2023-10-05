@@ -31,7 +31,7 @@ const GITHUB_URL = `https://github.com/apps/${
 const SLACK_URL = `https://slack.com/oauth/v2/authorize?client_id=${SLACK_CLIENT_ID}&scope=${SLACK_SCOPE}&state=${getCookie(
   "csrftoken"
 )}`;
-const Integrations: React.FC<{ profileData: Profile }> = ({ profileData }) => {
+const Integrations: React.FC<{ profileData?: Profile }> = ({ profileData }) => {
   return (
     <Box
       sx={{

@@ -66,8 +66,10 @@ const PublishReportForm: React.FC<{
     if (scanData) {
       if (scanData.scan_report.reporting_status === "report_generated") {
         if (type === "project") {
-          setProjectName(scanData.scan_report.project_name);
-          setRepoUrl(scanData.scan_report.project_url);
+          scanData.scan_report.project_name &&
+            setProjectName(scanData.scan_report.project_name);
+          scanData.scan_report.project_url &&
+            setRepoUrl(scanData.scan_report.project_url);
         } else {
         }
 

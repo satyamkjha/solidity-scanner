@@ -86,7 +86,7 @@ const InvitedMemberItem: React.FC<{
           value={userRolesList.find((item) => role === item.value)}
           options={userRolesList}
           styles={customStylesForOrgRole}
-          onChange={(newValue) => {
+          onChange={(newValue: any) => {
             if (newValue) {
               updateRole(user, newValue.value);
             }

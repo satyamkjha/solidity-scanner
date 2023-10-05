@@ -1,5 +1,17 @@
 import { type } from "os";
 
+export type OptionType = {
+  value: string;
+  label: string;
+  icon?: string | undefined;
+};
+
+export type OptionTypeWithIcon = {
+  value: string;
+  label: string;
+  icon: string;
+};
+
 export type Severity = "high" | "medium" | "low";
 
 export type Profile = {
@@ -284,6 +296,7 @@ export type IssueSeverityDistribution = {
   low: number;
   informational: number;
   gas: number;
+  [key: string]: number;
 };
 
 export type ScanDetail = {
@@ -524,6 +537,6 @@ export type UserOrgItem = {
   email: string;
   joined_at: string;
   name: string;
-  role: "admin" | "reader" | "editor" | null | "owner";
+  role: "admin" | "viewer" | "editor" | null | "owner";
   status: "joined" | "requested";
 };

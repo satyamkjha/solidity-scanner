@@ -126,7 +126,7 @@ export const FileExplorerSection: React.FC<{
               placeholder="Take Action"
               styles={customStylesForTakeAction}
               isDisabled={isDisabled || isViewer}
-              onChange={(newValue) => {
+              onChange={(newValue: any) => {
                 if (newValue) {
                   if (newValue.value === "wont_fix") {
                     onOpen();

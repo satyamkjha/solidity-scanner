@@ -18,7 +18,7 @@ const API = axios.create({
 
 export const getPublicReport = async (
   project_type: string,
-  report_id: string
+  report_id: string | undefined
 ) => {
   const { data } = await API.post<{ summary_report: Report }>(
     API_PATH.API_GET_PUBLISHED_REPORT,

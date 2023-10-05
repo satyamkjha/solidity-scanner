@@ -62,7 +62,7 @@ const ChartFilter: React.FC<{
           placeholder="Select BlockChain"
           styles={customTranslucentDropdown}
           maxMenuHeight={400}
-          onChange={(newVal) => {
+          onChange={(newVal: any) => {
             if (newVal) setSelectedChain(newVal.value);
             else setSelectedChain("all");
           }}

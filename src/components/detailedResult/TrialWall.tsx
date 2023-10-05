@@ -31,8 +31,14 @@ export const TrialWall: React.FC = () => {
 export const TrialWallCode: React.FC = () => {
   const assetsURL = getAssetsURL();
   const [gasIssueCount, setGasIssueCount] = useState<number>(0);
-  const { issues, scanSummary, setFiles, setOpenIssueIndex } =
-    useContext(DetailResultContext);
+
+  const detailResultContextValue = useContext(DetailResultContext);
+  const issues = detailResultContextValue?.issues ?? null;
+  const setFiles = detailResultContextValue?.setFiles ?? null;
+  const scanSummary = detailResultContextValue?.scanSummary;
+  const openIssueIndex = detailResultContextValue?.openIssueIndex;
+  const setOpenIssueIndex =
+    detailResultContextValue?.setOpenIssueIndex ?? (() => {});
 
   useEffect(() => {
     if (scanSummary && scanSummary.issue_severity_distribution.gas) {
@@ -46,8 +52,11 @@ export const TrialWallCode: React.FC = () => {
       issues.findIndex(
         (issue) => issue.template_details.issue_severity === "gas"
       );
-    if (gasIssuesIndex !== -1) {
-      setOpenIssueIndex([gasIssuesIndex]);
+    if (issues && setFiles && gasIssuesIndex && gasIssuesIndex !== -1) {
+      const expandedIssues = openIssueIndex
+        ? [gasIssuesIndex, ...openIssueIndex]
+        : [gasIssueCount];
+      setOpenIssueIndex(expandedIssues);
       setFiles({
         bug_id:
           issues[gasIssuesIndex].metric_wise_aggregated_findings[0].bug_id,

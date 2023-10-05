@@ -299,7 +299,7 @@ const ScanDetails: React.FC<{
 
   const [summaryReport, setSummaryReport] = useState<Report | null>(null);
   const [printLoading, setPrintLoading] = useState<boolean>(false);
-  const componentRef = useRef();
+  const componentRef = useRef<HTMLDivElement | null>(null);
 
   const generatePDF = async () => {
     if (scanData) {
@@ -468,7 +468,7 @@ const ScanDetails: React.FC<{
                         }}
                       >
                         {!checkPublishReportAccess(profile, plans, role) && (
-                          <LockIcon color={"accent"} size="xs" mr={3} />
+                          <LockIcon color={"accent"} mr={3} />
                         )}
                         Publish Report
                       </Button>

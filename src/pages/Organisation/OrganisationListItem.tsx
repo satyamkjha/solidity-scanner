@@ -1,43 +1,11 @@
-import React, { useState, useEffect } from "react";
-import {
-  Flex,
-  Box,
-  Text,
-  Button,
-  Icon,
-  VStack,
-  useClipboard,
-  Divider,
-  Image,
-  Link,
-  useDisclosure,
-  useToast,
-  Tabs,
-  Tab,
-  TabList,
-  TabPanels,
-  TabPanel,
-} from "@chakra-ui/react";
-import API from "helpers/api";
-import { API_PATH } from "helpers/routeManager";
-import { HiDuplicate, HiOutlineCheck } from "react-icons/hi";
-import { CheckIcon } from "@chakra-ui/icons";
-import { getAssetsURL } from "helpers/helperFunction";
-import ConfirmActionForm from "components/modals/confirmActionForm";
-import { useProfile } from "hooks/useProfile";
-import { useConfig } from "hooks/useConfig";
-import UpgradePackage from "components/upgradePackage";
-import Loader from "components/styled-components/Loader";
-import CreateOrganisationForm from "./CreateOrganisationForm";
+import React from "react";
+import { Flex, Text, VStack } from "@chakra-ui/react";
 import Select from "react-select";
 import { customStylesForOrgRole } from "../../common/stylesForCustomSelect";
 import FormatOptionLabelWithImage from "../../components/FormatOptionLabelWithImage";
 import { issueActions } from "../../common/values";
 
 const OrganisationListItem: React.FC<{}> = () => {
-  const config: any = useConfig();
-  const assetsUrl = getAssetsURL(config);
-
   return (
     <Flex
       w="100%"

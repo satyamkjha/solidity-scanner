@@ -482,7 +482,7 @@ const ContractForm: React.FC<{
               isDisabled={isViewer}
               value={options.find((item) => platform === item.value)}
               styles={customStylesForReactSelect}
-              onChange={(newValue) => {
+              onChange={(newValue: any) => {
                 if (newValue) {
                   setPlatform(newValue.value);
                   if (supportedChains) {
@@ -527,7 +527,7 @@ const ContractForm: React.FC<{
                 value={chain}
                 placeholder="Select Contract Chain"
                 styles={customStylesForReactSelect}
-                onChange={(newValue) => {
+                onChange={(newValue: any) => {
                   if (newValue) {
                     setChain(newValue);
                   }

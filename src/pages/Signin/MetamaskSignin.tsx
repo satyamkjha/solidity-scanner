@@ -38,7 +38,7 @@ const MetaMaskLogin: React.FC = () => {
 
   const checkBrowserAndDevice = (): boolean => {
     // Detect Brave
-    if (navigator.brave) return true;
+    if (navigator.userAgent.includes("Brave")) return true;
 
     //Check if Mobile
     if (getDeviceType() === "mobile")
