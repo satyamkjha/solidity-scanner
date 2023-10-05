@@ -89,7 +89,7 @@ const ApplicationForm: React.FC<{
       if (data.status === "success") {
         queryClient.invalidateQueries("scan_list");
         queryClient.invalidateQueries("profile");
-        history.push("/projects");
+        history.push("/scans");
       } else {
         toast({
           title: data.message,

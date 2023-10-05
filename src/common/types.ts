@@ -93,6 +93,17 @@ export type Project = {
   };
 };
 
+export type ScanObj = {
+  scan_id: string;
+  scan_type: string;
+  scan_details: Scan
+};
+
+export type AllScanList = {
+  data: ScanObj[];
+  page: Page;
+};
+
 export type ProjectList = {
   data: Project[];
   page: Page;

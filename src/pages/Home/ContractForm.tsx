@@ -366,7 +366,7 @@ const ContractForm: React.FC<{
               if (responseData.data.status === "success") {
                 queryClient.invalidateQueries("scan_list");
                 queryClient.invalidateQueries("profile");
-                history.push("/blocks");
+                history.push("/scans");
               }
             }
           }

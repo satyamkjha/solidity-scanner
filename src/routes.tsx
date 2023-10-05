@@ -82,6 +82,8 @@ const Profile = lazy(
   () => import("pages/Profile" /* webpackChunkName: "Profile" */)
 );
 
+const Scans = lazy(() => import("pages/Scans" /* webpackChunkName: "Scans" */));
+
 const Projects = lazy(
   () => import("pages/Projects" /* webpackChunkName: "Projects" */)
 );
@@ -238,15 +240,18 @@ const Routes: React.FC = () => {
                   <PrivateRoute exact path="/profile">
                     <Profile />
                   </PrivateRoute>
-                  <PrivateRoute exact path="/projects">
-                    <Projects />
+                  <PrivateRoute exact path="/scans">
+                    <Scans />
                   </PrivateRoute>
+                  {/* <PrivateRoute exact path="/projects">
+                    <Projects />
+                  </PrivateRoute> */}
                   <PrivateRoute path="/projects/:projectId/:scanId">
                     <ProjectPage />
                   </PrivateRoute>
-                  <PrivateRoute exact path="/blocks">
+                  {/* <PrivateRoute exact path="/blocks">
                     <Blocks />
-                  </PrivateRoute>
+                  </PrivateRoute> */}
                   <PrivateRoute exact path="/blocks/:scanId/:projectId">
                     <BlockPage />
                   </PrivateRoute>
