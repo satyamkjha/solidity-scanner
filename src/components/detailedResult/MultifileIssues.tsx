@@ -160,8 +160,10 @@ const MultifileIssues: React.FC<MultifileIssuesProps> = ({
                     contract_address={contract_address}
                     isViewer={isViewer}
                     scrollIntoView={
-                      issue_id === issues[gasIssueIndex].issue_id &&
-                      files?.issue_id === issues[gasIssueIndex].issue_id
+                      gasIssueIndex !== -1
+                        ? issue_id === issues[gasIssueIndex].issue_id &&
+                          files?.issue_id === issues[gasIssueIndex].issue_id
+                        : false
                     }
                   />
                 ) : (
