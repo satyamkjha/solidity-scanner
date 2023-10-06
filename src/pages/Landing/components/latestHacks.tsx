@@ -129,8 +129,8 @@ export const LatestHacks: React.FC = () => {
             height="fit-content"
             width="fit-content"
           >
-            {data.map((item) => (
-              <ArticleComp {...item} />
+            {data.map((item, index) => (
+              <ArticleComp key={index} {...item} />
             ))}
           </Flex>
         </Flex>

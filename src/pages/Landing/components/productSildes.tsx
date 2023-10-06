@@ -185,6 +185,7 @@ export default function ProductSlides() {
         >
           {data.map((item, index) => (
             <SlideDescription
+              key={index}
               number={index}
               header={item.heading}
               description={item.text}
@@ -216,10 +217,8 @@ const SlideDescription: React.FC<{
       bounding.bottom <=
         (window.innerHeight || document.documentElement.clientHeight)
     ) {
-      console.log("In the viewport! :)");
       return true;
     } else {
-      console.log("Not in the viewport. :(");
       return false;
     }
   }
@@ -228,27 +227,32 @@ const SlideDescription: React.FC<{
     AOS.init({
       duration: 1000,
     });
-    window.addEventListener(
-      "scroll",
-      function (event) {
+    const element = document.getElementById("public_layout");
+    if (element)
+      element.addEventListener("scroll", function (event) {
         if (isInViewport(ref.current)) {
           setNumber(number);
         }
-      },
-      false
-    );
+      });
+
+    return () => {
+      element?.removeEventListener("scroll", () =>
+        console.log("removed listner")
+      );
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const [isLargerThan1000] = useMediaQuery("(min-width: 1000px)");
 
   return (
     <VStack
+      ref={ref}
       w="100%"
       maxW="300px"
       h="fit-content"
       minH="700px"
       justifyContent="center"
-      ref={ref}
       alignItems={isLargerThan1000 ? "flex-start" : "center"}
       data-aos={"fade-up"}
       data-aos-offset="500"
@@ -274,6 +278,7 @@ export function OverviewSkeleton() {
       {Array.from({ length: count - 1 }, (_, index) => index + 1).map(
         (item, index) => (
           <Flex
+            key={index}
             alignItems={"center"}
             justifyContent={"center"}
             py={[5, 5, 10]}

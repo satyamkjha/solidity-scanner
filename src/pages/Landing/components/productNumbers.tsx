@@ -71,8 +71,9 @@ export default function ProductNumbers() {
         templateColumns={["repeat(1, 1fr)", "repeat(1, 1fr)", "repeat(2, 1fr)"]}
         gap={[5, 10, 0]}
       >
-        {data.map((item) => (
+        {data.map((item, index) => (
           <GridItem
+            key={index}
             borderRadius={20}
             w="100%"
             h={"300px"}

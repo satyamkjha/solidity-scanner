@@ -14,7 +14,6 @@ import Auth from "helpers/auth";
 import API from "helpers/api";
 import PageNotFound, { CustomPageNotFound } from "pages/PageNotFound";
 import Cookies from "js-cookie";
-import { signOut } from "firebase/auth";
 import { useQueryClient } from "react-query";
 import PublicLayout from "components/PublicLayout";
 import Loader from "components/styled-components/Loader";
