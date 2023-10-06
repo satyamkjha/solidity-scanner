@@ -24,10 +24,11 @@ const UserTestimonial: React.FC = () => {
       w="100%"
       as="section"
       sx={{ textAlign: "center" }}
-      my={28}
-      px={[0, 0, 0, 24]}
+      my={24}
+      py={10}
+      px={[5, 10, 10, 24]}
     >
-      <Heading fontSize="3xl" mb={10}>
+      <Heading fontSize="3xl" mb={20}>
         What People are Saying about us
       </Heading>
       {/* <Text color="subtle" fontSize="xl" mb={4}>

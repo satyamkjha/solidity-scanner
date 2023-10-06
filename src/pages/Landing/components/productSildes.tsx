@@ -8,6 +8,8 @@ import {
   SkeletonText,
   Skeleton,
   HStack,
+  Box,
+  useMediaQuery,
 } from "@chakra-ui/react";
 import { getAssetsURL } from "helpers/helperFunction";
 import { useConfig } from "hooks/useConfig";
@@ -17,6 +19,8 @@ import "aos/dist/aos.css";
 export default function ProductSlides() {
   const config: any = useConfig();
   const assetsURL = getAssetsURL(config);
+
+  const [isLargerThan1000] = useMediaQuery("(min-width: 1000px)");
 
   const [number, setNumber] = useState(0);
 
@@ -29,6 +33,7 @@ export default function ProductSlides() {
         when developers make updates, and see trends on how your code
         quality has improved`,
       imgUrl: "landing/carousel/Screenshot_2.png",
+      mobileImgUrl: "mobileScreen.png",
     },
     {
       heading: "Supported Protocols",
@@ -42,6 +47,7 @@ export default function ProductSlides() {
         fastest, most accurate, and secure smart contract vulnerability
         analysis and auditing platform at the most affordable price.`,
       imgUrl: "landing/carousel/Screenshot_3.png",
+      mobileImgUrl: "mobileScreen.png",
     },
     {
       heading: "Built by us, for your contracts",
@@ -50,6 +56,7 @@ export default function ProductSlides() {
       trigger alerts for. Request for assistance with issue remediation or
       get a manual audit from a team of security experts.`,
       imgUrl: "landing/carousel/Screenshot_4.png",
+      mobileImgUrl: "mobileScreen.png",
     },
     {
       heading: "Publish reports and share your security score",
@@ -60,6 +67,7 @@ export default function ProductSlides() {
       technical minded, you can add the full bug reports available in the
       report too.`,
       imgUrl: "landing/carousel/Screenshot_5.png",
+      mobileImgUrl: "mobileScreen.png",
     },
     {
       heading: "Integrate with the services you already love",
@@ -68,89 +76,123 @@ export default function ProductSlides() {
       most of the popular tools to automatically send out alerts or raise
       issue tickets, so your team sees everything in one place.`,
       imgUrl: "landing/carousel/Screenshot_6.png",
+      mobileImgUrl: "mobileScreen.png",
     },
   ];
 
   return (
     <Flex
-      justifyContent="flex-start"
-      flexDir="row"
-      alignItems="flex-start"
       w="100%"
+      as="section"
+      sx={{ textAlign: "center" }}
+      my={24}
+      justifyContent="flex-start"
+      alignItems="center"
+      flexDir="column"
       h="fit-content"
-      px={10}
-      py={20}
+      py={10}
     >
-      <HStack
-        w="70%"
-        h="fit-content"
-        justifyContent="center"
-        alignItems="center"
-        position="sticky"
-        top={"150px"}
+      <Heading
+        width="90%"
+        maxW="700px"
+        as="h2"
+        fontSize="3xl"
+        fontWeight={800}
+        my={5}
       >
-        <Flex
-          justifyContent="center"
-          flexDir="row"
-          alignItems="center"
-          w="90%"
-          p={0}
-          borderRadius={10}
-          background="linear-gradient(180deg, #EDFCFE 0%, rgba(237, 252, 254, 0.00) 100%)"
-        >
-          <Image
-            // boxShadow="5px 5px 15px 15px #88888840"
-            src={`${assetsURL}${data[number].imgUrl}`}
-            alt={""}
-            width="100%"
-          />
-        </Flex>
-        <VStack justifyContent="center" alignItems="center" w="10%">
-          <Image
-            // boxShadow="5px 5px 15px 15px #88888840"
-            src={`${"lineUp.svg"}`}
-            height="156px"
-            alt={""}
-          />
-          <Flex
-            width="50px"
-            height="50px"
-            background="rgba(32, 218, 241, 0.17)"
-            borderRadius="25px"
+        Lorem ipsum dolor sit amet consectetur. Ipsum quis quisque{" "}
+        <Box as="span" sx={{ color: "accent" }}>
+          luctus senectus sagittis
+        </Box>
+      </Heading>
+      <Text color="subtle" fontSize={["lg", "lg", "xl"]} mb={5}>
+        Lorem ipsum dolor sit amet consectetur. At velit duis mattis
+      </Text>
+      <Flex
+        justifyContent="flex-start"
+        flexDir="row"
+        alignItems="flex-start"
+        w="100%"
+        px={10}
+        py={20}
+      >
+        {isLargerThan1000 && (
+          <HStack
+            w="70%"
+            h="fit-content"
             justifyContent="center"
             alignItems="center"
+            position="sticky"
+            top={"150px"}
           >
             <Flex
-              width="40px"
-              height="40px"
-              background="linear-gradient(151deg, #20DAF1 7.73%, #83F1FF 85.99%), #FFF"
-              borderRadius="23px"
               justifyContent="center"
+              flexDir="row"
               alignItems="center"
+              w="90%"
+              p={0}
+              borderRadius={10}
+              background="linear-gradient(180deg, #EDFCFE 0%, rgba(237, 252, 254, 0.00) 100%)"
             >
-              <Heading color="#FFFFFF" fontSize="2xl">
-                {number + 1}
-              </Heading>
+              <Image
+                // boxShadow="5px 5px 15px 15px #88888840"
+                src={`${assetsURL}${data[number].imgUrl}`}
+                alt={""}
+                width="100%"
+              />
             </Flex>
-          </Flex>
-          <Image
-            // boxShadow="5px 5px 15px 15px #88888840"
-            src={`${"lineDown.svg"}`}
-            height="156px"
-            alt={""}
-          />
+            <VStack justifyContent="center" alignItems="center" w="10%">
+              <Image
+                // boxShadow="5px 5px 15px 15px #88888840"
+                src={`${"lineUp.svg"}`}
+                height="156px"
+                alt={""}
+              />
+              <Flex
+                width="50px"
+                height="50px"
+                background="rgba(32, 218, 241, 0.17)"
+                borderRadius="25px"
+                justifyContent="center"
+                alignItems="center"
+              >
+                <Flex
+                  width="40px"
+                  height="40px"
+                  background="linear-gradient(151deg, #20DAF1 7.73%, #83F1FF 85.99%), #FFF"
+                  borderRadius="23px"
+                  justifyContent="center"
+                  alignItems="center"
+                >
+                  <Heading color="#FFFFFF" fontSize="2xl">
+                    {number + 1}
+                  </Heading>
+                </Flex>
+              </Flex>
+              <Image
+                // boxShadow="5px 5px 15px 15px #88888840"
+                src={`${"lineDown.svg"}`}
+                height="156px"
+                alt={""}
+              />
+            </VStack>
+          </HStack>
+        )}
+        <VStack
+          justifyContent="flex-start"
+          alignItems={isLargerThan1000 ? "flex-start" : "center"}
+          w={isLargerThan1000 ? "30%" : "100%"}
+        >
+          {data.map((item, index) => (
+            <SlideDescription
+              number={index}
+              header={item.heading}
+              description={item.text}
+              setNumber={setNumber}
+            />
+          ))}
         </VStack>
-      </HStack>
-      <VStack justifyContent="flex-start" alignItems="flex-start" w="30%">
-        {data.map((item, index) => (
-          <SlideDescription
-            number={index}
-            header={item.heading}
-            description={item.text}
-            setNumber={setNumber}
-          />
-        ))}
-      </VStack>
+      </Flex>
     </Flex>
   );
 }
@@ -164,11 +206,8 @@ const SlideDescription: React.FC<{
   const ref = useRef();
 
   function isInViewport(element: any) {
-    // Get the bounding client rectangle position in the viewport
     var bounding = element.getBoundingClientRect();
 
-    // Checking part. Here the code checks if it's *fully* visible
-    // Edit this part if you just want a partial visibility
     if (
       bounding.top >= 0 &&
       bounding.left >= 0 &&
@@ -200,20 +239,28 @@ const SlideDescription: React.FC<{
     );
   }, []);
 
+  const [isLargerThan1000] = useMediaQuery("(min-width: 1000px)");
+
   return (
     <VStack
       w="100%"
-      h="75vh"
+      maxW="300px"
+      h="fit-content"
+      minH="700px"
       justifyContent="center"
       ref={ref}
-      alignItems="flex-start"
+      alignItems={isLargerThan1000 ? "flex-start" : "center"}
       data-aos={"fade-up"}
       data-aos-offset="500"
     >
-      <Heading as="h2" fontSize="3xl" mb={8}>
+      {!isLargerThan1000 && (
+        <Image src="mobileScreen.png" height="500px" width="280px" />
+      )}
+
+      <Heading as="h2" fontSize={["xl", "xl", "xl", "3xl"]} mb={8}>
         {header}
       </Heading>
-      <Text fontSize={["lg", "lg", "xl"]} color="subtle" mb={8}>
+      <Text fontSize={["sm", "sm", "sm", "lg"]} color="subtle" mb={8}>
         {description}
       </Text>
     </VStack>

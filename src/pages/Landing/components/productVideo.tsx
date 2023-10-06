@@ -19,7 +19,8 @@ export default function ProductVideo() {
       my={0}
       textAlign={["center", "left"]}
       py={[5, 5, 10, 20]}
-      px={[0, 0, 0, 40]}
+      px={[5, 7, 20, 40]}
+      h="fit-content"
       display={["flex"]}
       flexDirection={"column"}
       alignItems={"center"}

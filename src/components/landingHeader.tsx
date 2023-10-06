@@ -31,24 +31,12 @@ export const Header: React.FC = () => {
 
   return (
     <>
-      {/* <Flex
-        sx={{
-          w: "100%",
-          justifyContent: "center",
-          py: 1,
-          bg: "brand-dark",
-        }}
-      >
-        <Text fontSize="12px" color="white" fontWeight={700}>
-          This product is in beta.
-        </Text>
-      </Flex> */}
       <Flex
         as="header"
         alignItems="center"
         justifyContent="space-between"
-        maxW={["95vw", "95vw", "90vw"]}
-        mx="auto"
+        maxW={["95vw", "95vw", "100vw"]}
+        mx={0}
         py={3}
       >
         <Flex alignItems="center" width={["100%", "100%", "100%", "auto"]}>
@@ -91,7 +79,7 @@ export const Header: React.FC = () => {
               </Link>
               <Menu>
                 <MenuButton
-                  px={4}
+                  px={2}
                   py={2}
                   border={"none"}
                   borderRadius="md"

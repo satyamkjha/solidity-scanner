@@ -35,17 +35,15 @@ const PricingPage: React.FC = () => {
         </Box>
       ) : (
         pricingDetails && (
-          <>
-            <Flex
-              w="100%"
-              flexDir={"column"}
-              alignItems={"center"}
-              justifyContent="flex-start"
-              p={0}
-            >
-              <PricingDetails pricingDetails={pricingDetails} page="pricing" />
-            </Flex>
-          </>
+          <Flex
+            w="100%"
+            flexDir={"column"}
+            alignItems={"center"}
+            justifyContent="flex-start"
+            p={0}
+          >
+            <PricingDetails pricingDetails={pricingDetails} page="pricing" />
+          </Flex>
         )
       )}
     </>

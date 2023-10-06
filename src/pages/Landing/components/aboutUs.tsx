@@ -18,17 +18,39 @@ export default function AboutUs() {
   const config: any = useConfig();
   const assetsURL = getAssetsURL(config);
   return (
-    <Box
+    <Flex
       w="100%"
       as="section"
+      flexDir="column"
+      justifyContent="flex-start"
+      alignItems="center"
       sx={{ textAlign: "center" }}
       my={24}
+      py={10}
+      h="fit-content"
       px={[0, 0, 0, 24]}
     >
-      <Heading fontSize="3xl" mb={5}>
-        Meet the Founders
-      </Heading>
-      <Text color="subtle" fontSize={["lg", "lg", "xl"]} mb={5}>
+      <Box mb={20} position="relative" width="fit-content" height="fit-content">
+        <Heading fontSize="3xl" mb={3}>
+          Meet the Team
+        </Heading>
+        <Box
+          bottom={0}
+          right={0}
+          position="absolute"
+          width="120px"
+          height="5px"
+          bgColor="#30F"
+        />
+      </Box>
+
+      <Text
+        px={[5, 10]}
+        color="subtle"
+        fontSize={["lg", "lg", "xl"]}
+        mb={5}
+        maxW="600px"
+      >
         Meet the experts behind the scenes. We are always excited to talk about
         anything in crypto.
       </Text>
@@ -47,7 +69,7 @@ export default function AboutUs() {
             alignItems="center"
             flexDir={["row", "row", "row"]}
             justifyContent={"flex-start"}
-            mx={10}
+            mx={20}
             my={[5, 5, 5, 0]}
           >
             <VStack spacing={0}>
@@ -110,161 +132,7 @@ export default function AboutUs() {
           </Flex>
         ))}
       </Flex>
-      {/* <Flex
-            as="div"
-            w="100%"
-            alignItems="center"
-            py={10}
-            my={10}
-            flexDir={["column", "column", "row"]}
-            justifyContent={"center"}
-          >
-            {teamsData.line2.map((data) => (
-              <Flex
-                as="div"
-                alignItems="center"
-                flexDir={["row", "row", "row"]}
-                justifyContent={"flex-start"}
-                mx={10}
-              >
-                <VStack spacing={0}>
-                  <Box
-                    height={"200px"}
-                    mb={"-195px"}
-                    zIndex={10}
-                    width="200px"
-                    borderRadius={"50%"}
-                    backgroundImage={`url(${data.imgUrl})`}
-                    backgroundSize="contain"
-                    backgroundPosition={"center"}
-                  />
-                  <Box
-                    height={"200px"}
-                    width="200px"
-                    borderRadius={"50%"}
-                    background={
-                      "linear-gradient(129.18deg, #52FF00 8.52%, #00EEFD 93.94%)"
-                    }
-                  />
-
-                  <Text
-                    marginTop={"15px !important"}
-                    textAlign={"left"}
-                    fontSize="xl"
-                  >
-                    {data.name}
-                  </Text>
-                  <Text
-                    textAlign={"left"}
-                    color={"gray.400"}
-                    fontSize="xl"
-                    fontWeight={500}
-                  >
-                    {data.designation}
-                  </Text>
-                  <HStack marginTop={"15px !important"} spacing={5}>
-                    <Image
-                      onClick={() => {
-                        window.open(data.linkedinUrl, "_blank");
-                      }}
-                      src="/socials/linkedin.svg"
-                      height={"30px"}
-                      width={"30px"}
-                      alt={"Linkedin"}
-                    />
-                    <Image
-                      onClick={() => {
-                        window.open(data.twitterUrl, "_blank");
-                      }}
-                      src="/socials/twitter.svg"
-                      height={"30px"}
-                      width={"30px"}
-                      borderRadius={"5px"}
-                      alt={"Twitter"}
-                    />
-                  </HStack>
-                </VStack>
-              </Flex>
-            ))}
-          </Flex>
-          <Flex
-            as="div"
-            w="100%"
-            alignItems="center"
-            py={10}
-            my={10}
-            flexDir={["column", "column", "row"]}
-            justifyContent={"center"}
-          >
-            {teamsData.line3.map((data) => (
-              <Flex
-                as="div"
-                alignItems="center"
-                flexDir={["row", "row", "row"]}
-                justifyContent={"flex-start"}
-                mx={10}
-              >
-                <VStack spacing={0}>
-                  <Box
-                    height={"200px"}
-                    mb={"-195px"}
-                    zIndex={10}
-                    width="200px"
-                    borderRadius={"50%"}
-                    backgroundImage={`url(${data.imgUrl})`}
-                    backgroundSize="contain"
-                    backgroundPosition={"center"}
-                  />
-                  <Box
-                    height={"200px"}
-                    width="200px"
-                    borderRadius={"50%"}
-                    background={
-                      "linear-gradient(129.18deg, #52FF00 8.52%, #00EEFD 93.94%)"
-                    }
-                  />
-
-                  <Text
-                    marginTop={"15px !important"}
-                    textAlign={"left"}
-                    fontSize="xl"
-                  >
-                    {data.name}
-                  </Text>
-                  <Text
-                    textAlign={"left"}
-                    color={"gray.400"}
-                    fontSize="xl"
-                    fontWeight={500}
-                  >
-                    {data.designation}
-                  </Text>
-                  <HStack marginTop={"15px !important"} spacing={5}>
-                    <Image
-                      onClick={() => {
-                        window.open(data.linkedinUrl, "_blank");
-                      }}
-                      src="/socials/linkedin.svg"
-                      height={"30px"}
-                      width={"30px"}
-                      alt={"Linkedin"}
-                    />
-                    <Image
-                      onClick={() => {
-                        window.open(data.twitterUrl, "_blank");
-                      }}
-                      src="/socials/twitter.svg"
-                      height={"30px"}
-                      width={"30px"}
-                      borderRadius={"5px"}
-                      alt={"Twitter"}
-                    />
-                  </HStack>
-                </VStack>
-              </Flex>
-            ))}
-          </Flex> */}
-    </Box>
+    </Flex>
   );
 }
 
