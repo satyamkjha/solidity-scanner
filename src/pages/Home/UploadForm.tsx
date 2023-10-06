@@ -223,7 +223,7 @@ const UploadForm: React.FC<{
         project_type: "new",
       });
 
-      history.push("/projects");
+      history.push("/scans");
       setTimeout(() => setIsLoading(false), 1000);
     } catch (e) {
       setTimeout(() => setIsLoading(false), 1000);
@@ -317,7 +317,7 @@ const UploadForm: React.FC<{
             </VStack>
 
             {step === 0 ? (
-              <div {...getRootProps({ style })}>
+              <div {...getRootProps({ style: style as React.CSSProperties })}>
                 <input {...getInputProps()} />
                 <UploadIcon size={80} />
                 <p style={{ marginTop: "20px" }}>

@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useRef } from "react";
-import { Link, useHistory } from "react-router-dom";
+import { useHistory } from "react-router-dom";
 import {
   Flex,
   Box,
@@ -13,7 +13,6 @@ import {
   AlertDialogHeader,
   AlertDialogContent,
   AlertDialogOverlay,
-  useMediaQuery,
   HStack,
   Menu,
   MenuButton,
@@ -24,359 +23,26 @@ import {
   Heading,
 } from "@chakra-ui/react";
 // import Lottie from "lottie-react";
-import {
-  LogoIcon,
-  ProjectIcon,
-  RescanIcon,
-  ScanErrorIcon,
-} from "components/icons";
+import { LogoIcon, RescanIcon } from "components/icons";
 import Score from "components/score";
 import VulnerabilityDistribution from "components/vulnDistribution";
 import API from "helpers/api";
-import { Page, Pagination, Project } from "common/types";
+import { ScanObj } from "common/types";
 import { timeSince } from "common/functions";
 import { DeleteIcon, WarningIcon } from "@chakra-ui/icons";
 import { BsThreeDotsVertical } from "react-icons/bs";
-import { useProjects } from "hooks/useProjects";
-import { useProfile } from "hooks/useProfile";
-import InfiniteScroll from "react-infinite-scroll-component";
 import { API_PATH } from "helpers/routeManager";
 import Loader from "components/styled-components/Loader";
-import { useUserRole } from "hooks/useUserRole";
-import { onSnapshot, doc, Unsubscribe } from "firebase/firestore";
-import { db } from "helpers/firebase";
-import {
-  getFeatureGateConfig,
-  snakeToNormal,
-  getAssetsURL,
-  getTrimmedScanMessage,
-  // getAssetsFromS3,
-} from "helpers/helperFunction";
+import { snakeToNormal, getTrimmedScanMessage } from "helpers/helperFunction";
 import { scanStatesLabel } from "common/values";
 
-const Projects: React.FC = () => {
-  const [isDesktopView] = useMediaQuery("(min-width: 1920px)");
-  const role: string = useUserRole();
-  const assetsURL = getAssetsURL();
-  const [page, setPage] = useState<Page>();
-  const [pagination, setPagination] = useState<Pagination>({
-    pageNo: 1,
-    perPageCount: isDesktopView ? 20 : 12,
-  });
-  const [hasMore, setHasMore] = useState(true);
-
-  const { data: projects, refetch } = useProjects(pagination);
-  const [projectList, setProjectList] = useState<Project[]>();
-  const [projectsMonitored, setProjectsMonitored] = useState(0);
-  const [projectsInScanning, setProjectsInScanning] = useState<
-    {
-      scanId: string;
-      scanStatus: string;
-    }[]
-  >([]);
-  const [projectsIdsInScanning, setProjectsIdsInScanning] = useState<string[]>(
-    []
-  );
-
-  // const [ssIconAnimation, setSsIconAniamtion] = useState<any>(null);
-
-  // useEffect(() => {
-  //   getSsIconAnimationFromUrl();
-  //   // eslint-disable-next-line react-hooks/exhaustive-deps
-  // }, []);
-
-  // const getSsIconAnimationFromUrl = async () => {
-  //   const jsonData = await getAssetsFromS3("icons/ss_icon_animation.json");
-  //   setSsIconAniamtion(jsonData);
-  // };
-
-  const { data: profileData, refetch: refetchProfile } = useProfile();
-
-  useEffect(() => {
-    if (profileData) {
-      setProjectsMonitored(profileData.projects_remaining);
-    }
-
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [profileData, refetchProfile]);
-
-  useEffect(() => {
-    if (projects) {
-      let pList =
-        projectList && pagination.pageNo > 1
-          ? projectList.concat(projects.data)
-          : projects.data;
-      const uniqueProjectList = pList.filter(
-        (project, index, self) =>
-          index === self.findIndex((p) => p.project_id === project.project_id)
-      );
-      setProjectList(uniqueProjectList);
-      setPage(projects.page);
-    }
-
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [projects, refetch]);
-
-  useEffect(() => {
-    let intervalId: NodeJS.Timeout;
-
-    const refetchTillScanComplete = () => {
-      if (
-        projectList &&
-        projectList.some(
-          ({ _latest_scan }) =>
-            _latest_scan.multi_file_scan_status === "scanning"
-        )
-      ) {
-        if (getFeatureGateConfig().event_consumption_enabled) {
-          const scanningScanIds: string[] = projectList
-            .filter((project) =>
-              ["initialised", "downloaded", "scanning"].includes(
-                project._latest_scan.multi_file_scan_status
-              )
-            )
-            .map((project) => project._latest_scan.scan_id);
-          setProjectsIdsInScanning(scanningScanIds);
-        } else {
-          intervalId = setInterval(async () => {
-            const { data } = await API.get(
-              `${API_PATH.API_GET_PROJECTS_BETA}?page=${1}&per_page=${
-                pagination.perPageCount
-              }`
-            );
-            const pList = [
-              ...data.data,
-              ...projectList.slice(pagination.perPageCount, projectList.length),
-            ];
-            setProjectList(pList);
-            if (
-              pList &&
-              pList.every(
-                ({ _latest_scan }) =>
-                  _latest_scan.multi_file_scan_status === "scan_done"
-              )
-            ) {
-              clearInterval(intervalId);
-            }
-          }, 5000);
-        }
-      }
-    };
-
-    if (projectList) {
-      refetchTillScanComplete();
-    }
-    return () => {
-      clearInterval(intervalId);
-    };
-
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [projectList]);
-
-  const fetchProjectList = async () => {
-    const { data } = await API.get(
-      `${API_PATH.API_GET_PROJECTS_BETA}?page=${1}&per_page=${
-        pagination.perPageCount
-      }`
-    );
-    if (data.data && projectList) {
-      const pList = [
-        ...data.data,
-        ...projectList.slice(pagination.perPageCount, projectList.length),
-      ];
-      setProjectList(pList);
-    }
-  };
-
-  useEffect(() => {
-    let listeners: { [docId: string]: Unsubscribe } = {};
-    if (projectsIdsInScanning && projectsIdsInScanning.length) {
-      projectsIdsInScanning.forEach((scan_id) => {
-        listeners[scan_id] = onSnapshot(
-          doc(db, "scan_events", scan_id),
-          (doc) => {
-            if (doc.exists()) {
-              const eventData = doc.data();
-              if (
-                ["scan_done", "download_failed", "scan_failed"].includes(
-                  eventData.scan_status
-                )
-              ) {
-                // Unsubscribe and remove the listener
-                listeners[scan_id]();
-                delete listeners[scan_id];
-
-                fetchProjectList();
-              }
-              let newProjectsInScanning = projectsInScanning.filter(
-                (item) => scan_id !== item.scanId
-              );
-              setProjectsInScanning([
-                ...newProjectsInScanning,
-                { scanId: scan_id, scanStatus: eventData.scan_status },
-              ]);
-            }
-          },
-          (error) => {
-            console.log(error);
-          }
-        );
-      });
-    }
-
-    const filteredProjects = projectsInScanning.filter((project) =>
-      projectsIdsInScanning.includes(project.scanId)
-    );
-    setProjectsInScanning(filteredProjects);
-
-    return () => {
-      if (listeners)
-        Object.values(listeners).forEach((unsubscribe) => unsubscribe());
-    };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [projectsIdsInScanning]);
-
-  useEffect(() => {
-    refetch();
-
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [pagination]);
-
-  const fetchMoreProjects = async () => {
-    if (page && pagination.pageNo >= page.total_pages) {
-      setHasMore(false);
-      return;
-    }
-    setPagination({
-      pageNo: pagination.pageNo + 1,
-      perPageCount: pagination.perPageCount,
-    });
-  };
-
-  const updateProjectList = (project_id: string) => {
-    let newProjectList = projectList || [];
-    newProjectList = newProjectList.filter((projectItem) => {
-      if (projectItem.project_id === project_id) return false;
-      return true;
-    });
-    setProjectsMonitored(projectsMonitored - 1);
-    setProjectList(newProjectList);
-  };
-
-  return (
-    <Box
-      sx={{
-        w: ["100%", "100%", "calc(100% - 2rem)"],
-        bg: "bg.subtle",
-        borderRadius: "20px",
-        py: 4,
-        px: [0, 0, 4],
-        mx: [0, 0, 4],
-        my: 4,
-        minH: "78vh",
-      }}
-      boxSizing={"border-box"}
-    >
-      <Flex
-        sx={{
-          alignItems: "center",
-          justifyContent: "space-between",
-          my: 4,
-        }}
-        w="100%"
-      >
-        <Text sx={{ color: "subtle", fontWeight: 600, ml: 4 }}>PROJECTS</Text>
-        {profileData && (
-          <Flex ml={20} sx={{ display: ["none", "none", "flex"] }}>
-            <Text fontWeight={600} fontSize="2xl" ml={4} mr={10}>
-              {projectsMonitored.toLocaleString("en-US", {
-                minimumIntegerDigits: 2,
-                useGrouping: false,
-              })}
-              <Box as="span" ml={2} color="subtle" fontSize="sm">
-                Projects Monitored
-              </Box>
-            </Text>
-          </Flex>
-        )}
-      </Flex>
-
-      {!projectList || !profileData ? (
-        <Flex w="100%" h="70vh" alignItems="center" justifyContent="center">
-          <Loader />
-        </Flex>
-      ) : projectList.length === 0 ? (
-        <Flex
-          w="100%"
-          h="70vh"
-          direction="column"
-          justifyItems="center"
-          alignItems="center"
-          justifyContent="center"
-        >
-          <Box mb={2} opacity={0.5}>
-            <LogoIcon size={50} />
-          </Box>
-          <Text fontSize="sm">No projects started yet.</Text>
-          <Link to="/home">
-            <Button variant="brand" width="200px" my={8}>
-              Add a New Project
-            </Button>
-          </Link>
-        </Flex>
-      ) : (
-        <Flex
-          alignItems={"row"}
-          flexWrap="wrap"
-          flexDir={"row"}
-          justifyItems={["center", "center", "space-around"]}
-          w="100%"
-          boxSizing={"border-box"}
-        >
-          <InfiniteScroll
-            style={{
-              width: "100%",
-              display: "flex",
-              flexWrap: "wrap",
-              overflow: "hidden",
-              boxSizing: "border-box",
-            }}
-            dataLength={projectList.length}
-            next={() => fetchMoreProjects()}
-            hasMore={hasMore}
-            loader={
-              <Box w={"100%"}>
-                <Loader />
-              </Box>
-            }
-            scrollableTarget="pageScroll"
-          >
-            {[...(projectList || [])].map((project) => (
-              <ProjectCard
-                key={project.project_id}
-                project={project}
-                refetchProfile={refetchProfile}
-                refetch={refetch}
-                updateProjectList={updateProjectList}
-                isViewer={role === "viewer"}
-                projectsIdsInScanning={projectsIdsInScanning}
-                projectsInScanning={projectsInScanning}
-                // ssIconAnimation={ssIconAnimation}
-              />
-            ))}
-          </InfiniteScroll>
-        </Flex>
-      )}
-    </Box>
-  );
-};
-
 const ProjectCard: React.FC<{
-  project: Project;
+  project: ScanObj;
   refetch: any;
   refetchProfile: any;
   updateProjectList: (project_id: string) => void;
   isViewer: boolean;
+  scans_remaining: number;
   projectsIdsInScanning: string[];
   projectsInScanning: {
     scanId: string;
@@ -389,6 +55,7 @@ const ProjectCard: React.FC<{
   refetchProfile,
   updateProjectList,
   isViewer,
+  scans_remaining,
   projectsIdsInScanning,
   projectsInScanning,
   // ssIconAnimation,
@@ -401,23 +68,17 @@ const ProjectCard: React.FC<{
   const [hover, setHover] = useState(false);
 
   const history = useHistory();
-  const {
-    project_id,
-    project_name,
-    date_updated,
-    scans_remaining,
-    _latest_scan,
-  } = project;
+  const { scan_id, scan_details } = project;
 
   const { multi_file_scan_summary, multi_file_scan_status, scan_message } =
-    _latest_scan;
+    scan_details;
 
   const onClose = () => setIsOpen(false);
 
   const rescan = async () => {
     setRescanLoading(true);
     await API.post(API_PATH.API_PROJECT_SCAN, {
-      project_id,
+      project_id: scan_details.project_id,
       project_type: "existing",
     });
     refetch();
@@ -432,10 +93,10 @@ const ProjectCard: React.FC<{
     if (
       projectsInScanning &&
       projectsIdsInScanning &&
-      projectsIdsInScanning.includes(project._latest_scan.scan_id)
+      projectsIdsInScanning.includes(project.scan_details.scan_id)
     ) {
       const proj = projectsInScanning.find(
-        (item) => item.scanId === project._latest_scan.scan_id
+        (item) => item.scanId === project.scan_details.scan_id
       );
       if (proj) setScanStatus(proj.scanStatus);
       else setScanStatus("initialised");
@@ -447,7 +108,7 @@ const ProjectCard: React.FC<{
   const deleteProject = async () => {
     const { data } = await API.delete(API_PATH.API_DELETE_PROJECT, {
       data: {
-        project_ids: [project_id],
+        project_ids: [scan_details.project_id],
       },
     });
     if (data.status === "success") {
@@ -468,17 +129,20 @@ const ProjectCard: React.FC<{
       });
     }
     onClose();
-    updateProjectList(project_id);
+    updateProjectList(scan_id);
   };
 
   return (
     <>
-      {multi_file_scan_status === "scan_done" ||
-      multi_file_scan_status === "scanning" ? (
+      {["scan_done", "scanning", "initialised"].includes(
+        multi_file_scan_status
+      ) ? (
         <Flex
           onClick={() => {
             if (multi_file_scan_status === "scan_done") {
-              history.push(`/projects/${project_id}/${_latest_scan.scan_id}`);
+              history.push(
+                `/projects/${scan_details.project_id}/${scan_details.scan_id}`
+              );
             }
           }}
           onMouseOver={() => setHover(true)}
@@ -504,6 +168,7 @@ const ProjectCard: React.FC<{
           mx={4}
           py={5}
           maxWidth="400px"
+          minH={"260px"}
           w={["90%", "95%", "45%", "320px"]}
         >
           {multi_file_scan_status === "scan_done" ? (
@@ -515,13 +180,13 @@ const ProjectCard: React.FC<{
                 justifyContent="space-between"
               >
                 <Box px={4} w="70%">
-                  <Text isTruncated>{project_name}</Text>
+                  <Text isTruncated>{scan_details.project_name}</Text>
                   <Text sx={{ fontSize: "xs", color: "subtle" }}>
-                    Last scanned {timeSince(new Date(date_updated))}
+                    Last scanned {timeSince(new Date(scan_details._updated))}
                   </Text>
                 </Box>
                 <HStack mr={hover && !isViewer ? 0 : 7} alignItems="flex-start">
-                  {project.project_url !== "File Scan" && (
+                  {scan_details.project_url !== "File Scan" && (
                     <Tooltip label="Rescan" aria-label="A tooltip" mt={2}>
                       <Button
                         size="sm"
@@ -587,6 +252,7 @@ const ProjectCard: React.FC<{
                 w="100%"
                 alignItems="center"
                 justifyContent="flex-start"
+                mt={4}
               >
                 <Score
                   score={
@@ -629,7 +295,7 @@ const ProjectCard: React.FC<{
           ) : (
             <Box w="100%" px={6}>
               <Text sx={{ w: "80%", mb: 8 }} isTruncated>
-                {project_name}
+                {scan_details.project_name}
               </Text>
 
               <Flex
@@ -643,14 +309,14 @@ const ProjectCard: React.FC<{
               >
                 <LogoIcon size={15} />
                 {/* {ssIconAnimation && (
-                  <Lottie
-                    style={{
-                      height: "30px",
-                      width: "30px",
-                    }}
-                    animationData={ssIconAnimation}
-                  />
-                )} */}
+                    <Lottie
+                      style={{
+                        height: "30px",
+                        width: "30px",
+                      }}
+                      animationData={ssIconAnimation}
+                    />
+                  )} */}
                 <Text mx={2} fontSize="sm">
                   {scanStatesLabel[scanStatus] || scanStatesLabel["scanning"]}
                 </Text>
@@ -662,7 +328,9 @@ const ProjectCard: React.FC<{
       ) : (
         <Flex
           onClick={() => {
-            history.push(`/projects/${project_id}/${_latest_scan.scan_id}`);
+            history.push(
+              `/projects/${scan_details.project_id}/${scan_details.scan_id}`
+            );
           }}
           sx={{
             cursor: "pointer",
@@ -682,6 +350,7 @@ const ProjectCard: React.FC<{
           }}
           onMouseOver={() => setHover(true)}
           onMouseLeave={() => setHover(false)}
+          minH={"260px"}
           maxW="400px"
           w={["90%", "95%", "45%", "320px"]}
         >
@@ -696,13 +365,13 @@ const ProjectCard: React.FC<{
             justifyContent="space-between"
           >
             <Box px={4}>
-              <Text isTruncated>{project_name}</Text>
+              <Text isTruncated>{scan_details.project_name}</Text>
               <Text sx={{ fontSize: "sm", color: "subtle" }}>
-                Last scanned {timeSince(new Date(date_updated))}
+                Last scanned {timeSince(new Date(scan_details._updated))}
               </Text>
             </Box>
             <HStack mr={hover ? 2 : 9} alignItems="flex-start">
-              {project.project_url !== "File Scan" && (
+              {scan_details.project_url !== "File Scan" && (
                 <Tooltip label="Rescan" aria-label="A tooltip" mt={2}>
                   <Button
                     size="sm"
@@ -799,7 +468,7 @@ const ProjectCard: React.FC<{
             <AlertDialogBody>
               Are you sure you want to delete{" "}
               <Box as="span" sx={{ fontWeight: 600 }}>
-                {project_name}
+                {scan_details.project_name}
               </Box>{" "}
               project ?
             </AlertDialogBody>
@@ -855,4 +524,4 @@ const ProjectCard: React.FC<{
   );
 };
 
-export default Projects;
+export default ProjectCard;

@@ -1,4 +1,10 @@
-import React, { lazy, useEffect, useRef, Suspense } from "react";
+import React, {
+  lazy,
+  useEffect,
+  useRef,
+  Suspense,
+  PropsWithChildren,
+} from "react";
 import { useLocation, useParams } from "react-router-dom";
 import {
   getAssetsURL,
@@ -21,9 +27,9 @@ import {
 } from "@chakra-ui/react";
 
 import { SeverityIcon } from "components/icons";
-import Select from "react-select";
+import Select, { StylesConfig, GroupBase } from "react-select";
 import API from "helpers/api";
-import { QuickScanResult } from "common/types";
+import { QuickScanResult, OptionTypeWithIcon } from "common/types";
 import { API_PATH } from "helpers/routeManager";
 import { useConfig } from "hooks/useConfig";
 import SolidityScoreProgress from "components/common/SolidityScoreProgress";
@@ -313,7 +319,11 @@ const QuickScan: React.FC = () => {
     },
   ];
 
-  const customStylesPlatform = {
+  const customStylesPlatform: StylesConfig<
+    PropsWithChildren<OptionTypeWithIcon>,
+    boolean,
+    GroupBase<PropsWithChildren<OptionTypeWithIcon>>
+  > = {
     option: (provided: any, state: any) => ({
       ...provided,
       borderBottom: "1px solid #f3f3f3",
@@ -355,7 +365,11 @@ const QuickScan: React.FC = () => {
     },
   };
 
-  const customStylesChain = {
+  const customStylesChain: StylesConfig<
+    PropsWithChildren<OptionTypeWithIcon>,
+    boolean,
+    GroupBase<PropsWithChildren<OptionTypeWithIcon>>
+  > = {
     option: (provided: any, state: any) => ({
       ...provided,
       borderBottom: "1px solid #f3f3f3",
@@ -676,7 +690,7 @@ const QuickScan: React.FC = () => {
                   value={options.find((item) => platform === item.value)}
                   placeholder="Select Contract Platform"
                   styles={customStylesPlatform}
-                  onChange={(newValue) => {
+                  onChange={(newValue: any) => {
                     if (newValue) {
                       // setAction(newValue.value)
                       setPlatform(newValue.value);
@@ -709,7 +723,7 @@ const QuickScan: React.FC = () => {
                     options={chainList}
                     placeholder="Select Contract Chain"
                     styles={customStylesChain}
-                    onChange={(newValue) => {
+                    onChange={(newValue: any) => {
                       if (newValue) {
                         setChain(newValue);
                       }

@@ -1,5 +1,17 @@
 import { type } from "os";
 
+export type OptionType = {
+  value: string;
+  label: string;
+  icon?: string | undefined;
+};
+
+export type OptionTypeWithIcon = {
+  value: string;
+  label: string;
+  icon: string;
+};
+
 export type Severity = "high" | "medium" | "low";
 
 export type Profile = {
@@ -79,6 +91,17 @@ export type Project = {
     scan_message: string;
     multi_file_scan_summary: MultiFileScanSummary;
   };
+};
+
+export type ScanObj = {
+  scan_id: string;
+  scan_type: string;
+  scan_details: Scan
+};
+
+export type AllScanList = {
+  data: ScanObj[];
+  page: Page;
 };
 
 export type ProjectList = {
@@ -284,6 +307,7 @@ export type IssueSeverityDistribution = {
   low: number;
   informational: number;
   gas: number;
+  [key: string]: number;
 };
 
 export type ScanDetail = {
@@ -524,6 +548,6 @@ export type UserOrgItem = {
   email: string;
   joined_at: string;
   name: string;
-  role: "admin" | "reader" | "editor" | null | "owner";
+  role: "admin" | "viewer" | "editor" | null | "owner";
   status: "joined" | "requested";
 };

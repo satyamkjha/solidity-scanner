@@ -13,7 +13,7 @@ import {
 import API from "helpers/api";
 
 const CouponCodeSection: React.FC<{
-  duration: "monthly" | "yearly" | "ondemand" | "topup";
+  duration: string;
   activeCoupon: string | null;
   setActiveCoupon: React.Dispatch<React.SetStateAction<string | null>>;
   selectedPlan: string;

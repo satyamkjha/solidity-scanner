@@ -222,22 +222,24 @@ const HacksOverview: React.FC<{ overviewData: any }> = ({ overviewData }) => {
                 {filteredData && (
                   <>
                     <Flex width="98%" my={4} ml={3}>
-                      {filteredData.attack_trends?.map((item, index) => (
-                        <Flex
-                          key={index}
-                          height="15px"
-                          bg={attackTrendsColors[index]}
-                          width={`${
-                            (item.count / filteredData.no_of_attacks) *
-                            (100 +
-                              (filteredData.no_of_attacks * 5) / item.count)
-                          }%`}
-                          ml={-3}
-                          zIndex={11 - index}
-                          borderRadius="15px"
-                          transition="width 0.6s ease-in"
-                        />
-                      ))}
+                      {filteredData.attack_trends?.map(
+                        (item: any, index: number) => (
+                          <Flex
+                            key={index}
+                            height="15px"
+                            bg={attackTrendsColors[index]}
+                            width={`${
+                              (item.count / filteredData.no_of_attacks) *
+                              (100 +
+                                (filteredData.no_of_attacks * 5) / item.count)
+                            }%`}
+                            ml={-3}
+                            zIndex={11 - index}
+                            borderRadius="15px"
+                            transition="width 0.6s ease-in"
+                          />
+                        )
+                      )}
                     </Flex>
                     {filteredData.attack_trends?.map(
                       (item: any, index: number) => (

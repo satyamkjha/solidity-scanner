@@ -5,7 +5,7 @@ import Loader from "components/styled-components/Loader";
 import UserManagementContainer from "./UserManagementContainer";
 import { Profile } from "common/types";
 
-const Organisation: React.FC<{ profileData: Profile }> = ({ profileData }) => {
+const Organisation: React.FC<{ profileData?: Profile }> = ({ profileData }) => {
   const [hasAccess, setHasAccess] = useState(false);
 
   useEffect(() => {

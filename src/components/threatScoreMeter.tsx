@@ -9,7 +9,7 @@ export const ThreatScoreMeter = ({
   fontSize = "2xl",
   textMarginTop = -10,
   subtleFontSize = "xs",
-  percentage,
+  percentage = 0,
 }) => {
   const config: any = useConfig();
   const assetsURL = getAssetsURL(config);

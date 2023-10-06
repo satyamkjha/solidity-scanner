@@ -22,7 +22,7 @@ import PromoCodeCard from "./components/PromoCodeCard";
 import TransactionListCard from "./components/TransactionListCard";
 import Loader from "components/styled-components/Loader";
 
-const Billing: React.FC<{ profileData: Profile }> = ({ profileData }) => {
+const Billing: React.FC<{ profileData?: Profile }> = ({ profileData }) => {
   const [planBillingCycle, setPlanBillingCycle] = useState("");
   const pricingRef = useRef<HTMLDivElement>(null);
 

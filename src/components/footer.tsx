@@ -5,18 +5,10 @@ import {
   Grid,
   Link,
   GridItem,
-  Box,
   useMediaQuery,
   Image,
 } from "@chakra-ui/react";
-import {
-  DiscordIcon,
-  InstagramIcon,
-  Logo,
-  MediumIcon,
-  TelegramIcon,
-  TwiterIcon,
-} from "components/icons";
+import { Logo } from "components/icons";
 import { getAssetsURL } from "helpers/helperFunction";
 
 export const Footer: React.FC = () => {

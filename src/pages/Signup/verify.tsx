@@ -29,8 +29,6 @@ const Verify: React.FC = () => {
   let email = query.get("email")?.toString();
   const token = query.get("token")?.toString();
 
-  
-
   useEffect(() => {
     const verifyEmail = async () => {
       setLoading(true);

@@ -141,7 +141,7 @@ const MultipleFileExplorer: React.FC<MultipleFileExplorerProps> = ({
               <FileDataContainer
                 type={type}
                 file={currentFile}
-                wait_to_scroll={files.wait_to_scroll}
+                wait_to_scroll={files.wait_to_scroll || 0}
               />
             </Flex>
             {/* <TabPanels>

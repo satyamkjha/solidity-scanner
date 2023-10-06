@@ -115,10 +115,7 @@ const PlanDetailsModal: React.FC<{
               alignItems={"flex-start"}
               justifyContent={"flex-start"}
             >
-              <PricingDetailsList
-                selectedPackage={currentPackage}
-                plan={plan}
-              />
+              <PricingDetailsList page={"billing"} plan={plan} />
             </Flex>
             <Divider mb={10} />
             <TableContainer width="100%">
@@ -133,7 +130,7 @@ const PlanDetailsModal: React.FC<{
                     </Tr>
                   </Thead>
                   <Tbody border="1px solid #D6D6D6">
-                    {table.data.map((row) => (
+                    {table.data.map((row: any) => (
                       <Tr>
                         <Td minW="350px" w="70%" border="1px solid #D6D6D6">
                           {row.title}

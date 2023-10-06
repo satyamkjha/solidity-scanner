@@ -25,7 +25,7 @@ const TeamMemberItem: React.FC<{
   removeOrganisationUserRequest: (email: string) => Promise<void>;
   updateOrganisationUserRolesRequest: (
     email: string,
-    role: string
+    role: "admin" | "editor" | "viewer"
   ) => Promise<void>;
 }> = ({
   userItem,
@@ -226,7 +226,7 @@ const TeamMemberItem: React.FC<{
             isSearchable={false}
             placeholder="Select Action"
             styles={customStylesForOrgRole}
-            onChange={(newValue) => {
+            onChange={(newValue: any) => {
               if (newValue) {
                 updateOrganisationUserRolesRequest(
                   userItem.email,

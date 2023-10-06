@@ -89,7 +89,11 @@ const IssueContainer: React.FC<{
 
   const scrollToElementRef = useRef<HTMLDivElement>(null);
 
-  const { openIssueIndex, setOpenIssueIndex } = useContext(DetailResultContext);
+  const detailResultContextValue = useContext(DetailResultContext);
+  const openIssueIndex = detailResultContextValue?.openIssueIndex;
+  const setOpenIssueIndex =
+    detailResultContextValue?.setOpenIssueIndex ?? (() => {});
+
   const [isHovered, setIsHovered] = useState(false);
   const [isChecked, setIsChecked] = useState(false);
   const [checkedChildren, setCheckedChildren] = useState<
@@ -105,7 +109,7 @@ const IssueContainer: React.FC<{
     ) {
       scrollToElementRef.current.scrollIntoView({
         behavior: "smooth",
-        block: "end",
+        block: "center",
         inline: "start",
       });
     }
@@ -199,9 +203,6 @@ const IssueContainer: React.FC<{
       key={issue_id}
       w={"98%"}
       ref={scrollToElementRef}
-      sx={{
-        scrollMarginTop: openIssueIndex === undefined ? "-40vh" : 0,
-      }}
     >
       {({ isExpanded }) => (
         <>
@@ -243,7 +244,7 @@ const IssueContainer: React.FC<{
                         ? CheckIcon
                         : checkedChildren.length > 0
                         ? MinusIcon
-                        : null
+                        : undefined
                     }
                     onChange={() => onIssueCheck()}
                   />

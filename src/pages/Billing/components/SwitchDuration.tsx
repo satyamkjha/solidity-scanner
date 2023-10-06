@@ -2,12 +2,10 @@ import { Flex, Switch, Text } from "@chakra-ui/react";
 import React from "react";
 
 const SwitchDuration: React.FC<{
-  setDuration: React.Dispatch<
-    React.SetStateAction<"monthly" | "yearly" | "ondemand" | "topup">
-  >;
+  setDuration: React.Dispatch<React.SetStateAction<string>>;
   setActiveCoupon: React.Dispatch<React.SetStateAction<string | null>>;
   setUpdatedPrice: React.Dispatch<React.SetStateAction<string>>;
-  duration: "monthly" | "yearly" | "ondemand" | "topup";
+  duration: string;
 }> = ({ setDuration, setActiveCoupon, setUpdatedPrice, duration }) => {
   return (
     <Flex

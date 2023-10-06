@@ -131,8 +131,13 @@ const OrganisationMemberList: React.FC<{
         });
         setUserList(
           userList.map((userItem) => {
-            if (userItem.email === email) return { ...userItem, role: role };
-            else return userItem;
+            if (userItem.email === email) {
+              const item: UserOrgItem = {
+                ...userItem,
+                role: role,
+              };
+              return item;
+            } else return userItem;
           })
         );
       } else {

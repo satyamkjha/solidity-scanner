@@ -25,6 +25,7 @@ import { ArrowUpIcon, EditIcon } from "@chakra-ui/icons";
 import React from "react";
 import { API_PATH } from "helpers/routeManager";
 import Loader from "components/styled-components/Loader";
+import { formatString } from "helpers/helperFunction";
 
 const IssueDetail: React.FC<{
   type: "project" | "block";
@@ -70,7 +71,7 @@ const IssueDetail: React.FC<{
 
   const [editComment, setEditComment] = React.useState(false);
 
-  const [comment, setComment] = React.useState<string | null>(null);
+  const [comment, setComment] = React.useState<string>("");
   const tabRefs = useRef<(HTMLButtonElement | null)[]>([]);
   const toast = useToast();
 
@@ -208,11 +209,11 @@ const IssueDetail: React.FC<{
               <Box
                 dangerouslySetInnerHTML={{
                   __html: files.issue_description
-                    ? files.issue_description.format({
+                    ? formatString(files.issue_description, {
                         ...variableData,
                         current_file_name,
                       })
-                    : data.issue_details.issue_description.format({
+                    : formatString(data.issue_details.issue_description, {
                         ...variableData,
                         current_file_name,
                       }),
@@ -233,11 +234,11 @@ const IssueDetail: React.FC<{
               <Box
                 dangerouslySetInnerHTML={{
                   __html: files.issue_remediation
-                    ? files.issue_remediation.format({
+                    ? formatString(files.issue_remediation, {
                         ...variableData,
                         current_file_name,
                       })
-                    : data.issue_details.issue_remediation.format({
+                    : formatString(data.issue_details.issue_remediation, {
                         ...variableData,
                         current_file_name,
                       }),

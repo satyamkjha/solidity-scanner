@@ -60,9 +60,7 @@ const PaymentModal: React.FC<{
   const [disableMessage, setDisableMessage] = useState<string>("");
   const [disablePayment, setDisablePayment] = useState<boolean>(true);
 
-  const [duration, setDuration] = useState<
-    "monthly" | "yearly" | "ondemand" | "topup"
-  >(globalDuration);
+  const [duration, setDuration] = useState<string>(globalDuration);
   const [loading, setLoading] = useState(false);
 
   const createStripePayment = async () => {
@@ -93,6 +91,7 @@ const PaymentModal: React.FC<{
       const { data, status } = await API.post<{
         status: string;
         checkout_url: string;
+        message?: string;
       }>(API_PATH.API_CREATE_STRIPE_SUBSCRIPTION_BETA, req);
 
       if (status === 200 && data.checkout_url) {

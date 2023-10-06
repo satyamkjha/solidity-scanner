@@ -100,7 +100,7 @@ export const PricingCard: React.FC<{
           w="60%"
           borderRadius={20}
         >
-          {JSON.parse(pricingDetails[duration][plan].discount).banner}
+          {JSON.parse(pricingDetails[duration][plan].discount || "").banner}
         </Flex>
       )}
       <Flex
@@ -252,8 +252,9 @@ export const PricingCard: React.FC<{
                     <Heading fontSize={"lg"} color="#3300FF">
                       $
                       {parseFloat(
-                        JSON.parse(pricingDetails[duration][plan].discount)
-                          .amount
+                        JSON.parse(
+                          pricingDetails[duration][plan].discount || ""
+                        ).amount
                       ).toFixed(2)}
                     </Heading>
                   </Flex>
