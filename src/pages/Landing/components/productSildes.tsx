@@ -203,7 +203,7 @@ const SlideDescription: React.FC<{
   number: number;
   setNumber: React.Dispatch<React.SetStateAction<number>>;
 }> = ({ header, description, number, setNumber }) => {
-  const ref = useRef();
+  const ref = useRef<HTMLDivElement | null>(null);
 
   function isInViewport(element: any) {
     var bounding = element.getBoundingClientRect();
