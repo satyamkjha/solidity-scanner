@@ -39,7 +39,7 @@ export const LandingHeader: React.FC = () => {
       justifyContent="space-between"
       maxW={"95vw"}
       width="90%"
-      py={10}
+      py={5}
     >
       <Image
         sx={{

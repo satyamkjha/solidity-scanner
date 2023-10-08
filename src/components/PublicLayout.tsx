@@ -25,7 +25,7 @@ const PublicLayout: React.FC = ({ children }) => {
       h="100vh"
     >
       {location.pathname !== "/" && <Header />}
-      <main>{children}</main>
+      {children}
       <Box
         display={"flex"}
         flexDir="column"

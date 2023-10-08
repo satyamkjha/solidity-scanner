@@ -133,9 +133,9 @@ export default function LandingPage() {
 
       {/* Section 2 */}
 
-      {/* <Suspense fallback={<QSSkeleton />}>
-          <QuickScan />
-        </Suspense> */}
+      <Suspense fallback={<QSSkeleton />}>
+        <QuickScan />
+      </Suspense>
 
       <ProductSlides />
 

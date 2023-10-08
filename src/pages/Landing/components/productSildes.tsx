@@ -230,12 +230,12 @@ const SlideDescription: React.FC<{
     });
     window.addEventListener(
       "scroll",
-      function (event) {
-        if (isInViewport(ref.current)) {
-          setNumber(number);
-        }
-      },
-      false
+      () => console.log("askdhaklsd")
+      // function (event) {
+      //   if (isInViewport(ref.current)) {
+      //     setNumber(number);
+      //   }
+      // },
     );
   }, []);
 

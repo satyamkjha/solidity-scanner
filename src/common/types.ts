@@ -10,6 +10,7 @@ export type OptionTypeWithIcon = {
   value: string;
   label: string;
   icon: string;
+  
 };
 
 export type Severity = "high" | "medium" | "low";

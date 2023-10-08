@@ -30,8 +30,10 @@ export const LandingHero: React.FC = () => {
       <Box
         w={isDesktopView ? "65%" : "90%"}
         px={[0, 0, 10]}
+        mt={0}
         textAlign={isDesktopView ? "left" : "center"}
         justifyContent="center"
+        h="100%"
         display={"flex"}
         maxW="700px"
         flexDir="column"
