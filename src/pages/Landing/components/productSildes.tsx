@@ -255,10 +255,6 @@ const SlideDescription: React.FC<{
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  // useEffect(() => {
-  //   Aos.refresh();
-  // }, [ref]);
-
   const [isLargerThan1000] = useMediaQuery("(min-width: 1000px)");
 
   return (
