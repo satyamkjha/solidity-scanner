@@ -130,11 +130,11 @@ export function isInViewport(element: any) {
     var bounding = element.getBoundingClientRect();
 
     if (
-      bounding.top >= 0 &&
+      bounding.bottom >= bounding.height / 4 &&
       bounding.left >= 0 &&
       bounding.right <=
         (window.innerWidth || document.documentElement.clientWidth) &&
-      bounding.bottom <=
+      bounding.top + bounding.height / 2 <=
         (window.innerHeight || document.documentElement.clientHeight)
     ) {
       return true;

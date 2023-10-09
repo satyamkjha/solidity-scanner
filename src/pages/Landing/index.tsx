@@ -7,7 +7,6 @@ import { VideoSkeleton } from "./components/productVideo";
 import { TestimonialSkeleton } from "./components/testimonial";
 import { AboutUsSkeleton } from "./components/aboutUs";
 import { ManualAuditSkeleton } from "./components/manualAudit";
-import ProductSlides from "./components/productSildes";
 import Partners from "./components/partners";
 import { LatestHacks } from "./components/latestHacks";
 import { HeroInfographics } from "./components/heroInfographics";
@@ -20,6 +19,7 @@ const UserTestimonial = lazy(() => import("./components/testimonial"));
 const AboutUs = lazy(() => import("./components/aboutUs"));
 const ManualAudit = lazy(() => import("./components/manualAudit"));
 const ProductNumbers = lazy(() => import("./components/productNumbers"));
+const ProductSlides = lazy(() => import("./components/productSildes"));
 
 export default function Landing() {
   const location = useLocation();
@@ -101,7 +101,9 @@ export default function Landing() {
         <QuickScan />
       </Suspense>
 
-      <ProductSlides />
+      <Suspense fallback={null}>
+        <ProductSlides />
+      </Suspense>
 
       <Suspense fallback={<VideoSkeleton />}>
         <ProductVideo />
