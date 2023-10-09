@@ -196,7 +196,7 @@ const QuickScanForm: React.FC<{
 
   const Lottie = useLottie(
     {
-      loop: true,
+      loop: false,
       animationData: ssIconAnimation,
     },
     {

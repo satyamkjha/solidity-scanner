@@ -85,6 +85,8 @@ export const LandingHero: React.FC = () => {
           alignItems="flex-start"
           display={["none", "none", "flex"]}
           flexDir={["column", "column", "row"]}
+          flexWrap={"wrap"}
+          rowGap={10}
         >
           <Link to="/signup">
             <Button variant="brand" fontSize={"16px"} py={7} w="250px">
@@ -101,6 +103,69 @@ export const LandingHero: React.FC = () => {
               Run A QuickScan
             </Button>
           </Link>
+          <a
+            href="https://www.producthunt.com/posts/solidityscan?utm_source=badge-top-post-topic-badge&utm_medium=badge&utm_souce=badge-solidityscan"
+            target="_blank"
+            rel="noreferrer"
+          >
+            {/* <svg width="250" height="54" viewBox="0 0 250 54" version="1.1">
+              <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+                <g transform="translate(-130.000000, -73.000000)">
+                  <g transform="translate(130.000000, 73.000000)">
+                    <rect
+                      stroke="#FF6154"
+                      stroke-width="1"
+                      fill="#FFFFFF00"
+                      x="0.5"
+                      y="0.5"
+                      width="249"
+                      height="53"
+                      rx="10"
+                    />
+                    <text
+                      font-family="Helvetica-Bold, Helvetica"
+                      font-size="9"
+                      font-weight="bold"
+                      fill="#FF6154"
+                    >
+                      <tspan x="53" y="20">
+                        #1 PRODUCT OF THE MONTH
+                      </tspan>
+                    </text>
+                    <text
+                      font-family="Helvetica-Bold, Helvetica"
+                      font-size="16"
+                      font-weight="bold"
+                      fill="#FF6154"
+                    >
+                      <tspan x="52" y="40">
+                        Developer Tools
+                      </tspan>
+                    </text>
+                    false
+                    <g transform="translate(11.000000, 12.000000)">
+                      <path
+                        d="M31,15.5 C31,24.0603917 24.0603917,31 15.5,31 C6.93960833,31 0,24.0603917 0,15.5 C0,6.93960833 6.93960833,0 15.5,0 C24.0603917,0 31,6.93960833 31,15.5"
+                        fill="#FF6154"
+                      />
+                      <path
+                        d="M17.4329412,15.9558824 L17.4329412,15.9560115 L13.0929412,15.9560115 L13.0929412,11.3060115 L17.4329412,11.3060115 L17.4329412,11.3058824 C18.7018806,11.3058824 19.7305882,12.3468365 19.7305882,13.6308824 C19.7305882,14.9149282 18.7018806,15.9558824 17.4329412,15.9558824 M17.4329412,8.20588235 L17.4329412,8.20601152 L10.0294118,8.20588235 L10.0294118,23.7058824 L13.0929412,23.7058824 L13.0929412,19.0560115 L17.4329412,19.0560115 L17.4329412,19.0558824 C20.3938424,19.0558824 22.7941176,16.6270324 22.7941176,13.6308824 C22.7941176,10.6347324 20.3938424,8.20588235 17.4329412,8.20588235"
+                        fill="#FFFFFF"
+                      />
+                    </g>
+                  </g>
+                </g>
+              </g>
+            </svg> */}
+            <img
+              src="https://api.producthunt.com/widgets/embed-image/v1/top-post-topic-badge.svg?post_id=381735&theme=light&period=monthly&topic_id=267"
+              alt="SolidityScan - The&#0032;ultimate&#0032;EVM&#0032;compatible&#0032;smart&#0032;contract&#0032;analysis&#0032;tool | Product Hunt"
+              style={{
+                width: "250px",
+                height: "54px",
+              }}
+            />
+          </a>
         </Flex>
       </Box>
       <Box
@@ -125,6 +190,7 @@ export const LandingHero: React.FC = () => {
         flexDir={"column"}
         mt={20}
         w="90%"
+        rowGap={5}
       >
         <Link to="/signup">
           <Button
@@ -132,22 +198,80 @@ export const LandingHero: React.FC = () => {
             fontSize={"16px"}
             py={7}
             minW="200px"
-            w="70vw"
+            w="250px"
           >
             Signup For Free Trial
           </Button>
         </Link>
         <Link to="/quickscan">
-          <Button
-            ml={[0, 0, 5]}
-            mt={[5, 5, 0]}
-            variant="cta-outline"
-            minW="200px"
-            w="70vw"
-          >
+          <Button ml={[0, 0, 5]} variant="cta-outline" minW="200px" w="250px">
             Run A QuickScan
           </Button>
         </Link>
+        <a
+          href="https://www.producthunt.com/posts/solidityscan?utm_source=badge-top-post-topic-badge&utm_medium=badge&utm_souce=badge-solidityscan"
+          target="_blank"
+          rel="noreferrer"
+        >
+          {/* <svg width="250" height="54" viewBox="0 0 250 54" version="1.1">
+            <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+              <g transform="translate(-130.000000, -73.000000)">
+                <g transform="translate(130.000000, 73.000000)">
+                  <rect
+                    stroke="#FF6154"
+                    stroke-width="1"
+                    fill="#FFFFFF00"
+                    x="0.5"
+                    y="0.5"
+                    width="249"
+                    height="53"
+                    rx="10"
+                  />
+                  <text
+                    font-family="Helvetica-Bold, Helvetica"
+                    font-size="9"
+                    font-weight="bold"
+                    fill="#FF6154"
+                  >
+                    <tspan x="53" y="20">
+                      #1 PRODUCT OF THE MONTH
+                    </tspan>
+                  </text>
+                  <text
+                    font-family="Helvetica-Bold, Helvetica"
+                    font-size="16"
+                    font-weight="bold"
+                    fill="#FF6154"
+                  >
+                    <tspan x="52" y="40">
+                      Developer Tools
+                    </tspan>
+                  </text>
+                  false
+                  <g transform="translate(11.000000, 12.000000)">
+                    <path
+                      d="M31,15.5 C31,24.0603917 24.0603917,31 15.5,31 C6.93960833,31 0,24.0603917 0,15.5 C0,6.93960833 6.93960833,0 15.5,0 C24.0603917,0 31,6.93960833 31,15.5"
+                      fill="#FF6154"
+                    />
+                    <path
+                      d="M17.4329412,15.9558824 L17.4329412,15.9560115 L13.0929412,15.9560115 L13.0929412,11.3060115 L17.4329412,11.3060115 L17.4329412,11.3058824 C18.7018806,11.3058824 19.7305882,12.3468365 19.7305882,13.6308824 C19.7305882,14.9149282 18.7018806,15.9558824 17.4329412,15.9558824 M17.4329412,8.20588235 L17.4329412,8.20601152 L10.0294118,8.20588235 L10.0294118,23.7058824 L13.0929412,23.7058824 L13.0929412,19.0560115 L17.4329412,19.0560115 L17.4329412,19.0558824 C20.3938424,19.0558824 22.7941176,16.6270324 22.7941176,13.6308824 C22.7941176,10.6347324 20.3938424,8.20588235 17.4329412,8.20588235"
+                      fill="#FFFFFF"
+                    />
+                  </g>
+                </g>
+              </g>
+            </g>
+          </svg> */}
+          <img
+            src="https://api.producthunt.com/widgets/embed-image/v1/top-post-topic-badge.svg?post_id=381735&theme=light&period=monthly&topic_id=267"
+            alt="SolidityScan - The&#0032;ultimate&#0032;EVM&#0032;compatible&#0032;smart&#0032;contract&#0032;analysis&#0032;tool | Product Hunt"
+            style={{
+              width: "250px",
+              height: "54px",
+              marginTop: "30px",
+            }}
+          />
+        </a>
       </Flex>
     </Flex>
   );
