@@ -71,8 +71,8 @@ export const Footer: React.FC = () => {
           mt={10}
           flexDirection={["row"]}
         >
-          {footerIcons.map((item) => (
-            <Link m={2} href={item.link} isExternal>
+          {footerIcons.map((item, index) => (
+            <Link key={index} m={2} href={item.link} isExternal>
               <Image
                 src={`${assetsURL}icons/${item.imgUrl}.svg`}
                 height="50px"
@@ -150,8 +150,8 @@ export const FooterLinks: React.FC = () => {
       textAlign={["center", "center", "left"]}
       rowGap={3}
     >
-      {footerLinks.map((item) => (
-        <GridItem w="100%" maxW="350px">
+      {footerLinks.map((item, index) => (
+        <GridItem key={index} w="100%" maxW="350px">
           <Link
             as={item.isExternal ? undefined : RouterLink}
             to={item.isExternal ? "" : item.linkUrl}

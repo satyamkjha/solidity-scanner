@@ -1,4 +1,4 @@
-import React, { PropsWithChildren, useEffect } from "react";
+import React, { PropsWithChildren, useEffect, useRef, useState } from "react";
 import {
   Box,
   Heading,
@@ -16,8 +16,9 @@ import FormatOptionLabelWithImage from "components/FormatOptionLabelWithImage";
 import { contractChain, platforms } from "common/values";
 import Select from "react-select";
 import { useLocation, useParams } from "react-router-dom";
-import Lottie, { useLottie } from "lottie-react";
+import { useLottie, LottiePlayer } from "lottie-react";
 import ssIconAnimation from "./quickscan_bg.json";
+import { isInViewport } from "common/functions";
 
 const QuickScanForm: React.FC<{
   view: "landing" | "quickscan";
@@ -50,6 +51,7 @@ const QuickScanForm: React.FC<{
   const [chainList, setChainList] = React.useState<
     { label: string; value: string; icon: string }[]
   >(contractChain["etherscan"]);
+  const quickscanRef = useRef<HTMLDivElement>(null);
 
   const customStylesPlatform: StylesConfig<
     PropsWithChildren<OptionTypeWithIcon>,
@@ -193,6 +195,22 @@ const QuickScanForm: React.FC<{
     }
   };
 
+  const Lottie = useLottie(
+    {
+      loop: true,
+      animationData: ssIconAnimation,
+    },
+    {
+      height: isDesktopView ? "100%" : "auto",
+      width: "100%",
+      maxWidth: isDesktopView ? "100%" : "500px",
+      position: isDesktopView ? "absolute" : "relative",
+      top: 0,
+      left: 0,
+      zIndex: 0,
+    }
+  );
+
   useEffect(() => {
     if (ref) {
       localStorage.setItem("campaign_type", ref);
@@ -232,29 +250,40 @@ const QuickScanForm: React.FC<{
       runQuickScan(blockAddress, blockPlatform, blockChain, ref);
     }
 
-    setTimeout(() => play(), 4000);
-
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const { View, play } = useLottie(
-    {
-      loop: true,
-      animationData: ssIconAnimation,
-    },
-    {
-      height: isDesktopView ? "100%" : "auto",
-      width: "100%",
-      position: isDesktopView ? "absolute" : "relative",
-      top: 0,
-      left: 0,
-      zIndex: 0,
-    }
-  );
+  // useEffect(() => {
+  //   const element = document.getElementById("public_layout");
+  //   if (element)
+  //     element.addEventListener("scroll", function (event) {
+  //       if (isInViewport(quickscanRef.current)) {
+  //         setTimeout(() => {
+  //           Lottie.play();
+  //           console.log("start playing");
+  //         }, 5000);
+  //         element?.removeEventListener("scroll", () =>
+  //           console.log("removed listner")
+  //         );
+  //       }
+  //     });
+
+  //   return () => {
+  //     element?.removeEventListener("scroll", () =>
+  //       console.log("removed listner")
+  //     );
+  //   };
+  // }, []);
 
   return (
-    <Box w="100%" h="fit-content" position="relative" zIndex={10}>
-      {isDesktopView && View}
+    <Box
+      w="100%"
+      h="fit-content"
+      position="relative"
+      zIndex={10}
+      ref={quickscanRef}
+    >
+      {isDesktopView && Lottie.View}
       <Box
         position="relative"
         flexDir={"column"}
@@ -263,11 +292,11 @@ const QuickScanForm: React.FC<{
         w={"100%"}
         zIndex={10}
         px={[0, 0, 10]}
-        py={20}
-        pb={"200px"}
+        py={isDesktopView ? 20 : 10}
+        pb={isDesktopView ? "200px" : "50px"}
         textAlign="center"
       >
-        {!isDesktopView && View}
+        {!isDesktopView && Lottie.View}
         <Heading
           w={["90%", "90%", "80%", "60%"]}
           color={view === "landing" ? "black" : "white"}

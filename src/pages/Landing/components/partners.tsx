@@ -1,24 +1,17 @@
-import React from "react";
+import React, { useEffect } from "react";
 import {
   Flex,
   Box,
   Text,
   Heading,
   Image,
-  HStack,
-  VStack,
-  SkeletonText,
-  Skeleton,
   Grid,
   GridItem,
 } from "@chakra-ui/react";
-import { teamsData } from "common/values";
 import { getAssetsURL } from "helpers/helperFunction";
-import { useConfig } from "hooks/useConfig";
 
 export default function Partners() {
-  const config: any = useConfig();
-  const assetsURL = getAssetsURL(config);
+  const assetsURL = getAssetsURL();
 
   const data: {
     url: string;
@@ -36,6 +29,8 @@ export default function Partners() {
     },
     { url: "landing/partners/reef.svg" },
   ];
+
+
 
   return (
     <Flex
@@ -117,8 +112,9 @@ export default function Partners() {
           ]}
           gap={10}
         >
-          {data.map((item) => (
+          {data.map((item, index) => (
             <GridItem
+              key={index}
               borderRadius={20}
               w="100%"
               h="220px"

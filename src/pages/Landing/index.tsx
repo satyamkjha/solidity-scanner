@@ -1,66 +1,30 @@
-import React, { useEffect, lazy, Suspense, useState, useRef } from "react";
-import { Link as RouterLink, useLocation, useHistory } from "react-router-dom";
-import {
-  Flex,
-  Box,
-  Container,
-  Text,
-  Heading,
-  Button,
-  Image,
-  Menu,
-  MenuButton,
-  MenuList,
-  MenuItem,
-  IconButton,
-  MenuDivider,
-  HStack,
-  Link,
-  useDisclosure,
-  useMediaQuery,
-  Divider,
-  VStack,
-  Grid,
-  GridItem,
-} from "@chakra-ui/react";
-import Infographics from "components/infographics";
+import React, { useEffect, lazy, Suspense } from "react";
+import { useLocation } from "react-router-dom";
+import { Flex, Box, Divider } from "@chakra-ui/react";
 import { getAssetsURL } from "helpers/helperFunction";
 import { useConfig } from "hooks/useConfig";
-import { QSSkeleton } from "./components/quickScan";
 import { VideoSkeleton } from "./components/productVideo";
-import { OverviewSkeleton } from "./components/productOverview";
 import { TestimonialSkeleton } from "./components/testimonial";
 import { AboutUsSkeleton } from "./components/aboutUs";
-import { CarouselSkeleton } from "./components/carousel";
 import { ManualAuditSkeleton } from "./components/manualAudit";
 import ProductSlides from "./components/productSildes";
-import { CloseIcon, HamburgerIcon, ChevronDownIcon } from "@chakra-ui/icons";
-import ContactUs from "components/modals/contactus";
-import Auth from "helpers/auth";
-import Lottie from "lottie-react";
-import { TypeAnimation } from "react-type-animation";
 import Partners from "./components/partners";
-import { logout } from "common/functions";
 import { LatestHacks } from "./components/latestHacks";
 import { HeroInfographics } from "./components/heroInfographics";
 import { LandingHeader } from "./components/header";
 import { LandingHero } from "./components/hero";
+import QuickScan, { QSSkeleton } from "./components/quickScan";
 
-const QuickScan = lazy(() => import("./components/quickScan"));
 const ProductVideo = lazy(() => import("./components/productVideo"));
-const ProductOverview = lazy(() => import("./components/productOverview"));
 const UserTestimonial = lazy(() => import("./components/testimonial"));
 const AboutUs = lazy(() => import("./components/aboutUs"));
-const ImageCarousel = lazy(() => import("./components/carousel"));
 const ManualAudit = lazy(() => import("./components/manualAudit"));
 const ProductNumbers = lazy(() => import("./components/productNumbers"));
 
-export default function LandingPage() {
+export default function Landing() {
   const location = useLocation();
   const config: any = useConfig();
   const assetsURL = getAssetsURL(config);
-
-  const history = useHistory();
 
   useEffect(() => {
     const query = new URLSearchParams(location.search);

@@ -11,6 +11,12 @@ import {
 } from "@chakra-ui/react";
 import { getAssetsURL } from "helpers/helperFunction";
 import { useConfig } from "hooks/useConfig";
+import { Swiper, SwiperSlide } from "swiper/react";
+import { EffectCoverflow, Navigation, Pagination } from "swiper";
+
+import "swiper/css";
+import "swiper/css/pagination";
+import "swiper/css/navigation";
 
 export const LatestHacks: React.FC = () => {
   const data: {
@@ -70,17 +76,17 @@ export const LatestHacks: React.FC = () => {
     >
       <Box
         display={"flex"}
-        flexDir="column"
+        // flexDir="column"
         alignItems="center"
         justifyContent={"flex-start"}
         w={"90%"}
-        px={[0, 0, 10]}
+        px={[0, 0, 0]}
         py={10}
         my={10}
         borderRadius={20}
         background={"#FFFFFF"}
       >
-        <Box
+        {/* <Box
           mb={5}
           position="relative"
           width="fit-content"
@@ -113,8 +119,8 @@ export const LatestHacks: React.FC = () => {
         <Text color="subtle" fontSize={["lg", "lg", "xl"]} mt={4} mb={6}>
           Lorem ipsum dolor sit amet consectetur. Vitae egestas integer est ut
           iaculis. Volutpat nascetur tortor et ante.
-        </Text>
-        <Flex
+        </Text> */}
+        {/* <Flex
           justifyContent="flex-start"
           alignItems={"flex-start"}
           height="fit-content"
@@ -129,11 +135,35 @@ export const LatestHacks: React.FC = () => {
             height="fit-content"
             width="fit-content"
           >
-            {data.map((item) => (
-              <ArticleComp {...item} />
+            {data.map((item, index) => (
+              <ArticleComp key={index} {...item} />
             ))}
           </Flex>
-        </Flex>
+        </Flex> */}
+        <Swiper
+          slidesPerView={"auto"}
+          spaceBetween={30}
+          pagination={{
+            clickable: true,
+          }}
+          modules={[Pagination, Navigation]}
+          style={{
+            width: "100%",
+            height: "fit-content",
+          }}
+        >
+          {data.map((item, index) => (
+            <SwiperSlide
+              style={{
+                width: "fit-content",
+                height: "fit-content",
+                opacity: 1,
+              }}
+            >
+              <ArticleComp key={index} {...item} />
+            </SwiperSlide>
+          ))}
+        </Swiper>
       </Box>
     </Flex>
   );

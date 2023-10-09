@@ -10,11 +10,13 @@ import {
   HStack,
   Box,
   useMediaQuery,
+  Divider,
+  AbsoluteCenter,
 } from "@chakra-ui/react";
 import { getAssetsURL } from "helpers/helperFunction";
 import { useConfig } from "hooks/useConfig";
-import AOS from "aos";
-import "aos/dist/aos.css";
+
+import { isInViewport } from "common/functions";
 
 export default function ProductSlides() {
   const config: any = useConfig();
@@ -34,6 +36,9 @@ export default function ProductSlides() {
         quality has improved`,
       imgUrl: "landing/carousel/Screenshot_2.png",
       mobileImgUrl: "mobileScreen.png",
+      numberColorLinearGradient:
+        "linear-gradient(151deg, #20DAF1 7.73%, #83F1FF 85.99%), #FFF",
+      lightColor: "rgba(32, 218, 241, 0.17)",
     },
     {
       heading: "Supported Protocols",
@@ -48,18 +53,22 @@ export default function ProductSlides() {
         analysis and auditing platform at the most affordable price.`,
       imgUrl: "landing/carousel/Screenshot_3.png",
       mobileImgUrl: "mobileScreen.png",
+      numberColorLinearGradient:
+        "linear-gradient(150deg, #98FF67 15.68%, rgba(82, 255, 0, 0.56) 119.33%), #FFF",
+      lightColor: "#A4FF7960",
     },
     {
-      heading: "Built by us, for your contracts",
+      heading: "Awesome Features for Pro Users",
       imgAlt: "Customize and silence issues and set your own rules",
-      text: `Customize issues, silence specific issues or add your own rules to
-      trigger alerts for. Request for assistance with issue remediation or
-      get a manual audit from a team of security experts.`,
+      text: `Seamlessly upload your specific contract code or share code repositories link, and our AI-powered solution will handle the rest. Set intelligent triggers to automatically initiate scans whenever developers make updates while observing the trends that highlight the progressive enhancement of your code quality. Embrace the power of AI to revolutionize your security practices and unlock unprecedented insights into your codebase.`,
       imgUrl: "landing/carousel/Screenshot_4.png",
       mobileImgUrl: "mobileScreen.png",
+      numberColorLinearGradient:
+        "linear-gradient(151deg, #F90 7.73%, #FFBB54 85.99%), #FFF",
+      lightColor: "#FFB34250",
     },
     {
-      heading: "Publish reports and share your security score",
+      heading: "Publish reports & share your security report",
       imgAlt: "Publish reports and share your security score",
       text: `Share and validate your progress with the community with easily
       publishable reports. Your community and investors can use the report
@@ -68,15 +77,19 @@ export default function ProductSlides() {
       report too.`,
       imgUrl: "landing/carousel/Screenshot_5.png",
       mobileImgUrl: "mobileScreen.png",
+      numberColorLinearGradient:
+        "linear-gradient(151deg, #ED6CA5 7.73%, #FF9EC9 85.99%), #FFF",
+      lightColor: "#F788B940",
     },
     {
-      heading: "Integrate with the services you already love",
-      imgAlt: "Integrate with Microsoft Teams, Slack and Jira",
-      text: `Using Slack/ Microsoft teams or JIRA? Built-in integrations with
-      most of the popular tools to automatically send out alerts or raise
-      issue tickets, so your team sees everything in one place.`,
+      heading: "Seamlessly Connected Workflows",
+      imgAlt: "Seamlessly Connected Workflows",
+      text: `Seamlessly upload your specific contract code or share code repositories link, and our AI-powered solution will handle the rest. Set intelligent triggers to automatically initiate scans whenever developers make updates while observing the trends that highlight the progressive enhancement of your code quality. Embrace the power of AI to revolutionize your security practices and unlock unprecedented insights into your codebase.`,
       imgUrl: "landing/carousel/Screenshot_6.png",
       mobileImgUrl: "mobileScreen.png",
+      numberColorLinearGradient:
+        "linear-gradient(150deg, #98FF67 15.68%, rgba(82, 255, 0, 0.56) 119.33%), #FFF",
+      lightColor: "#A4FF7960",
     },
   ];
 
@@ -116,79 +129,78 @@ export default function ProductSlides() {
         px={10}
         py={20}
       >
-        {isLargerThan1000 && (
-          <HStack
-            w="70%"
-            h="fit-content"
+        <HStack
+          w="70%"
+          h="fit-content"
+          justifyContent="center"
+          alignItems="center"
+          position="sticky"
+          top={"150px"}
+          display={["none", "none", "none", "flex"]}
+        >
+          <Flex
             justifyContent="center"
+            flexDir="row"
             alignItems="center"
-            position="sticky"
-            top={"150px"}
+            w="90%"
+            p={0}
+            borderRadius={10}
+            background={`linear-gradient(180deg, ${data[number].lightColor} 0%, rgba(237, 252, 254, 0.00) 100%)`}
           >
+            <Image
+              src={`${assetsURL}${data[number].imgUrl}`}
+              alt={""}
+              borderRadius={5}
+              width="100%"
+            />
+          </Flex>
+          <VStack justifyContent="center" alignItems="center" w="10%">
+            <Image src={`${"lineUp.svg"}`} height="156px" alt={""} />
             <Flex
+              width="50px"
+              height="50px"
+              background={data[number].lightColor}
+              borderRadius="25px"
               justifyContent="center"
-              flexDir="row"
               alignItems="center"
-              w="90%"
-              p={0}
-              borderRadius={10}
-              background="linear-gradient(180deg, #EDFCFE 0%, rgba(237, 252, 254, 0.00) 100%)"
             >
-              <Image
-                // boxShadow="5px 5px 15px 15px #88888840"
-                src={`${assetsURL}${data[number].imgUrl}`}
-                alt={""}
-                width="100%"
-              />
-            </Flex>
-            <VStack justifyContent="center" alignItems="center" w="10%">
-              <Image
-                // boxShadow="5px 5px 15px 15px #88888840"
-                src={`${"lineUp.svg"}`}
-                height="156px"
-                alt={""}
-              />
               <Flex
-                width="50px"
-                height="50px"
-                background="rgba(32, 218, 241, 0.17)"
-                borderRadius="25px"
+                width="40px"
+                height="40px"
+                background={data[number].numberColorLinearGradient}
+                borderRadius="23px"
                 justifyContent="center"
                 alignItems="center"
               >
-                <Flex
-                  width="40px"
-                  height="40px"
-                  background="linear-gradient(151deg, #20DAF1 7.73%, #83F1FF 85.99%), #FFF"
-                  borderRadius="23px"
-                  justifyContent="center"
-                  alignItems="center"
-                >
-                  <Heading color="#FFFFFF" fontSize="2xl">
-                    {number + 1}
-                  </Heading>
-                </Flex>
+                <Heading color="#FFFFFF" fontSize="2xl">
+                  {number + 1}
+                </Heading>
               </Flex>
-              <Image
-                // boxShadow="5px 5px 15px 15px #88888840"
-                src={`${"lineDown.svg"}`}
-                height="156px"
-                alt={""}
-              />
-            </VStack>
-          </HStack>
-        )}
+            </Flex>
+            <Image
+              // boxShadow="5px 5px 15px 15px #88888840"
+              src={`${"lineDown.svg"}`}
+              height="156px"
+              alt={""}
+            />
+          </VStack>
+        </HStack>
         <VStack
           justifyContent="flex-start"
           alignItems={isLargerThan1000 ? "flex-start" : "center"}
-          w={isLargerThan1000 ? "30%" : "100%"}
+          w={["100%", "100%", "100%", "30%"]}
         >
           {data.map((item, index) => (
             <SlideDescription
+              key={index}
               number={index}
               header={item.heading}
               description={item.text}
+              lightColor={item.lightColor}
+              imgUrl={item.imgUrl}
+              mobileImgUrl={item.mobileImgUrl}
               setNumber={setNumber}
+              numberColorLinearGradient={item.numberColorLinearGradient}
             />
           ))}
         </VStack>
@@ -200,67 +212,110 @@ export default function ProductSlides() {
 const SlideDescription: React.FC<{
   header: string;
   description: string;
+  lightColor: string;
+  imgUrl: string;
+  mobileImgUrl: string;
   number: number;
+  numberColorLinearGradient: string;
   setNumber: React.Dispatch<React.SetStateAction<number>>;
-}> = ({ header, description, number, setNumber }) => {
+}> = ({
+  header,
+  description,
+  number,
+  setNumber,
+  lightColor,
+  imgUrl,
+  mobileImgUrl,
+  numberColorLinearGradient,
+}) => {
   const ref = useRef<HTMLDivElement | null>(null);
 
-  function isInViewport(element: any) {
-    var bounding = element.getBoundingClientRect();
-
-    if (
-      bounding.top >= 0 &&
-      bounding.left >= 0 &&
-      bounding.right <=
-        (window.innerWidth || document.documentElement.clientWidth) &&
-      bounding.bottom <=
-        (window.innerHeight || document.documentElement.clientHeight)
-    ) {
-      console.log("In the viewport! :)");
-      return true;
-    } else {
-      console.log("Not in the viewport. :(");
-      return false;
-    }
-  }
+  const assetsURL = getAssetsURL();
 
   useEffect(() => {
-    AOS.init({
-      duration: 1000,
-    });
-    window.addEventListener(
-      "scroll",
-      () => console.log("askdhaklsd")
-      // function (event) {
-      //   if (isInViewport(ref.current)) {
-      //     setNumber(number);
-      //   }
-      // },
-    );
+    const element = document.getElementById("public_layout");
+    if (element)
+      element.addEventListener("scroll", function (event) {
+        if (isInViewport(ref.current)) {
+          setNumber(number);
+        }
+      });
+
+    return () => {
+      element?.removeEventListener("scroll", () =>
+        console.log("removed listner")
+      );
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const [isLargerThan1000] = useMediaQuery("(min-width: 1000px)");
 
   return (
     <VStack
+      ref={ref}
       w="100%"
-      maxW="300px"
       h="fit-content"
       minH="700px"
       justifyContent="center"
-      ref={ref}
       alignItems={isLargerThan1000 ? "flex-start" : "center"}
-      data-aos={"fade-up"}
-      data-aos-offset="500"
     >
-      {!isLargerThan1000 && (
-        <Image src="mobileScreen.png" height="500px" width="280px" />
-      )}
+      <Image
+        display={["block", "block", "none"]}
+        // src={`${assetsURL}${mobileImgUrl}`}
+        src="mobileScreen.png"
+        height="500px"
+        width="280px"
+      />
 
-      <Heading as="h2" fontSize={["xl", "xl", "xl", "3xl"]} mb={8}>
+      <Flex
+        justifyContent="center"
+        flexDir="row"
+        alignItems="center"
+        w="90%"
+        p={0}
+        borderRadius={10}
+        background={`linear-gradient(180deg, ${lightColor} 0%, rgba(237, 252, 254, 0.00) 100%)`}
+      >
+        <Image
+          display={["none", "none", "block", "none"]}
+          src={`${assetsURL}${imgUrl}`}
+          height="auto"
+          width="90%"
+        />
+      </Flex>
+
+      <Box w="100%" position="relative" padding="10">
+        <Divider />
+        <AbsoluteCenter bg="white" px="4">
+          <Flex
+            width="50px"
+            height="50px"
+            background={lightColor}
+            borderRadius="25px"
+            justifyContent="center"
+            alignItems="center"
+          >
+            <Flex
+              width="40px"
+              height="40px"
+              background={numberColorLinearGradient}
+              borderRadius="23px"
+              justifyContent="center"
+              alignItems="center"
+            >
+              <Heading color="#FFFFFF" fontSize="2xl">
+                {number + 1}
+              </Heading>
+            </Flex>
+          </Flex>
+        </AbsoluteCenter>
+      </Box>
+
+      <Heading w="80%" as="h2" fontSize={["xl", "xl", "xl", "3xl"]} mb={8}>
         {header}
       </Heading>
-      <Text fontSize={["sm", "sm", "sm", "lg"]} color="subtle" mb={8}>
+      <Text fontSize={["sm", "sm", "sm", "lg"]} w="80%" color="subtle" mb={8}>
         {description}
       </Text>
     </VStack>
@@ -274,6 +329,7 @@ export function OverviewSkeleton() {
       {Array.from({ length: count - 1 }, (_, index) => index + 1).map(
         (item, index) => (
           <Flex
+            key={index}
             alignItems={"center"}
             justifyContent={"center"}
             py={[5, 5, 10]}

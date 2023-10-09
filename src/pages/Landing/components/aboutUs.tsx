@@ -63,9 +63,10 @@ export default function AboutUs() {
         flexDir={["column", "column", "row"]}
         justifyContent={"center"}
       >
-        {teamsData.line1.map((data) => (
+        {teamsData.line1.map((data, index) => (
           <Flex
             as="div"
+            key={index}
             alignItems="center"
             flexDir={["row", "row", "row"]}
             justifyContent={"flex-start"}

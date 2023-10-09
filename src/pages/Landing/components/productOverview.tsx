@@ -67,6 +67,7 @@ export default function ProductOverview() {
     <>
       {data.map((item, index) => (
         <Flex
+          key={index}
           as="section"
           w="100%"
           alignItems="center"

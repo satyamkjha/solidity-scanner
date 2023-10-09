@@ -16,6 +16,7 @@ import {
 import { teamsData } from "common/values";
 import { getAssetsURL } from "helpers/helperFunction";
 import { useConfig } from "hooks/useConfig";
+import AnimatedNumbers from "react-animated-numbers";
 
 export default function ProductNumbers() {
   const config: any = useConfig();
@@ -27,25 +28,30 @@ export default function ProductNumbers() {
     color: string;
     heading: string;
     subHeading: string;
+    headingNumber: number;
   }[] = [
     {
       color: "#EDFCFE",
-      heading: "28.50 M",
+      heading: "0 M",
+      headingNumber: 28.5,
       subHeading: "Hacks & exploits losses",
     },
     {
       color: "#F4EFFF",
-      heading: "140 +",
+      heading: " +",
+      headingNumber: 140,
       subHeading: "Code patterns detected",
     },
     {
       color: "#F4EFFF",
-      heading: "2.4M $",
+      heading: "M $",
+      headingNumber: 2.4,
       subHeading: "Worth of contracts secured",
     },
     {
       color: "#EDFCFE",
-      heading: "1.60+ M",
+      heading: "0+ M",
+      headingNumber: 1.6,
       subHeading: "Line of code scanned",
     },
   ];
@@ -71,8 +77,9 @@ export default function ProductNumbers() {
         templateColumns={["repeat(1, 1fr)", "repeat(1, 1fr)", "repeat(2, 1fr)"]}
         gap={[5, 10, 0]}
       >
-        {data.map((item) => (
+        {data.map((item, index) => (
           <GridItem
+            key={index}
             borderRadius={20}
             w="100%"
             h={"300px"}
@@ -82,9 +89,26 @@ export default function ProductNumbers() {
             justifyContent="center"
             bgColor={item.color}
           >
-            <Heading color="#323B4B" fontSize="5xl" fontWeight={900}>
-              {item.heading}
-            </Heading>
+            <HStack spacing={0}>
+              <Heading color="#323B4B" fontSize="5xl" fontWeight={900}>
+                <AnimatedNumbers
+                  includeComma
+                  animateToNumber={item.headingNumber}
+                  locale="en-US"
+                  configs={[
+                    { mass: 1, tension: 220, friction: 100 },
+                    { mass: 1, tension: 180, friction: 130 },
+                    { mass: 1, tension: 280, friction: 90 },
+                    { mass: 1, tension: 180, friction: 135 },
+                    { mass: 1, tension: 260, friction: 100 },
+                    { mass: 1, tension: 210, friction: 180 },
+                  ]}
+                />
+              </Heading>
+              <Heading color="#323B4B" fontSize="5xl" fontWeight={900}>
+                {item.heading}
+              </Heading>
+            </HStack>
             <Text color="#323B4B">{item.subHeading}</Text>
           </GridItem>
         ))}

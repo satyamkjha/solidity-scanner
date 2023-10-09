@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Grid, GridItem, Image, Text, useMediaQuery } from "@chakra-ui/react";
 import { getAssetsURL } from "helpers/helperFunction";
 import { useConfig } from "hooks/useConfig";
@@ -46,8 +46,9 @@ export const HeroInfographics: React.FC = () => {
           : "repeat(4, 1fr)"
       }
     >
-      {data.map((item) => (
+      {data.map((item, index) => (
         <GridItem
+          key={index}
           borderRadius={20}
           w="100%"
           h={"300px"}

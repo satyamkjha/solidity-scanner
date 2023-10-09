@@ -17,6 +17,7 @@ const PublicLayout: React.FC = ({ children }) => {
 
   return (
     <Container
+      id={"public_layout"}
       maxW={"100vw"}
       overflowX="hidden"
       overflowY="scroll"
