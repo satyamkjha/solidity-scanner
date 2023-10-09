@@ -103,7 +103,8 @@ export default function ProductSlides() {
       alignItems="center"
       flexDir="column"
       h="fit-content"
-      py={10}
+      pl={16}
+      pr={10}
     >
       <Heading
         width="90%"
@@ -130,7 +131,7 @@ export default function ProductSlides() {
         py={20}
       >
         <HStack
-          w="70%"
+          w="65%"
           h="fit-content"
           justifyContent="center"
           alignItems="center"
@@ -188,7 +189,7 @@ export default function ProductSlides() {
         <VStack
           justifyContent="flex-start"
           alignItems={isLargerThan1000 ? "flex-start" : "center"}
-          w={["100%", "100%", "100%", "30%"]}
+          w={["100%", "100%", "100%", "35%"]}
         >
           {data.map((item, index) => (
             <SlideDescription
@@ -231,15 +232,20 @@ const SlideDescription: React.FC<{
   const ref = useRef<HTMLDivElement | null>(null);
 
   const assetsURL = getAssetsURL();
+  const [isVisible, setIsVisible] = useState(false);
 
   useEffect(() => {
     const element = document.getElementById("public_layout");
-    if (element)
+    if (element) {
       element.addEventListener("scroll", function (event) {
         if (isInViewport(ref.current)) {
           setNumber(number);
+          setIsVisible(true);
+        } else {
+          setIsVisible(false);
         }
       });
+    }
 
     return () => {
       element?.removeEventListener("scroll", () =>
@@ -248,6 +254,10 @@ const SlideDescription: React.FC<{
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  // useEffect(() => {
+  //   Aos.refresh();
+  // }, [ref]);
 
   const [isLargerThan1000] = useMediaQuery("(min-width: 1000px)");
 
@@ -259,6 +269,9 @@ const SlideDescription: React.FC<{
       minH="700px"
       justifyContent="center"
       alignItems={isLargerThan1000 ? "flex-start" : "center"}
+      opacity={isVisible ? 1 : 0}
+      transform={`translateY(${isVisible ? 0 : 20}px)`}
+      transition="opacity 0.5s ease-in, transform 0.5s ease-in"
     >
       <Image
         display={["block", "block", "none"]}
@@ -285,7 +298,12 @@ const SlideDescription: React.FC<{
         />
       </Flex>
 
-      <Box w="100%" position="relative" padding="10">
+      <Box
+        w="100%"
+        position="relative"
+        padding="10"
+        display={["none", "none", "block", "none"]}
+      >
         <Divider />
         <AbsoluteCenter bg="white" px="4">
           <Flex
@@ -315,7 +333,13 @@ const SlideDescription: React.FC<{
       <Heading w="80%" as="h2" fontSize={["xl", "xl", "xl", "3xl"]} mb={8}>
         {header}
       </Heading>
-      <Text fontSize={["sm", "sm", "sm", "lg"]} w="80%" color="subtle" mb={8}>
+      <Text
+        fontSize={["sm", "sm", "sm", "lg"]}
+        w="80%"
+        color="subtle"
+        mb={8}
+        textAlign={"left"}
+      >
         {description}
       </Text>
     </VStack>
