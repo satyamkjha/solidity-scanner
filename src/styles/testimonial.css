@@ -17,20 +17,23 @@
 }
 
 .swiper-button-next {
-  right: -5px !important;
+  right: 5px !important;
   left: auto !important;
 }
 
 .swiper-button-prev {
-  left: -5px !important;
+  left: 5px !important;
   right: auto !important;
 }
 
 .swiper-button-prev,
 .swiper-button-next {
-  width: 24px !important;
-  height: 12px !important;
+  width: 50px !important;
+  height: 50px !important;
   color: #4e5d78 !important;
+  background-color: #fff;
+  border-radius: 25px;
+  box-shadow: 0px 16px 32px rgba(0, 0, 0, 0.13);
 }
 
 .swiper-button-prev:after,

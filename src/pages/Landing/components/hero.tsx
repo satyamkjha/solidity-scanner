@@ -86,7 +86,7 @@ export const LandingHero: React.FC = () => {
           display={["none", "none", "flex"]}
           flexDir={["column", "column", "row"]}
           flexWrap={"wrap"}
-          rowGap={10}
+          rowGap={20}
         >
           <Link to="/signup">
             <Button variant="brand" fontSize={"16px"} py={7} w="250px">
@@ -268,7 +268,6 @@ export const LandingHero: React.FC = () => {
             style={{
               width: "250px",
               height: "54px",
-              marginTop: "30px",
             }}
           />
         </a>
