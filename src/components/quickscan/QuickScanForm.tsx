@@ -18,6 +18,7 @@ import Select from "react-select";
 import { useLocation, useParams } from "react-router-dom";
 import { useLottie, LottiePlayer } from "lottie-react";
 import ssIconAnimation from "./quickscan_bg.json";
+import { isInViewport } from "common/functions";
 
 const QuickScanForm: React.FC<{
   view: "landing" | "quickscan";
@@ -274,6 +275,28 @@ const QuickScanForm: React.FC<{
   //   };
   // }, []);
 
+  const [isVisible, setIsVisible] = useState(false);
+
+  useEffect(() => {
+    const element = document.getElementById("public_layout");
+    if (element) {
+      element.addEventListener("scroll", function (event) {
+        if (isInViewport(quickscanRef.current)) {
+          setIsVisible(true);
+        } else {
+          setIsVisible(false);
+        }
+      });
+    }
+
+    return () => {
+      element?.removeEventListener("scroll", () =>
+        console.log("removed listner")
+      );
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   return (
     <Box
       w="100%"
@@ -302,6 +325,9 @@ const QuickScanForm: React.FC<{
           fontSize={["3xl", "4xl"]}
           mb={8}
           mt={isDesktopView ? 0 : 8}
+          opacity={isVisible ? 1 : 0}
+          transform={`translateY(${isVisible ? 0 : 100}px)`}
+          transition="opacity 1.5s ease-in, transform 1.5s ease-in"
         >
           SolidityScan{" "}
           <Box
@@ -321,6 +347,9 @@ const QuickScanForm: React.FC<{
           fontSize="xl"
           color="subtle"
           mb={8}
+          opacity={isVisible ? 1 : 0}
+          transform={`translateY(${isVisible ? 0 : 100}px)`}
+          transition="opacity 1.5s ease-in, transform 1.5s ease-in"
         >
           An open to all quick scanning extension designed to view results in
           simple terms. Initiate a smart contract scan by selecting from a wide
@@ -335,6 +364,9 @@ const QuickScanForm: React.FC<{
           maxW={isDesktopView ? "1500px" : "900px"}
           direction={isDesktopView ? "row" : "column"}
           spacing={isDesktopView ? 0 : 3}
+          opacity={isVisible ? 1 : 0}
+          transform={`translateY(${isVisible ? 0 : 100}px)`}
+          transition="opacity 1.5s ease-in, transform 1.5s ease-in"
         >
           <Select
             formatOptionLabel={FormatOptionLabelWithImage}

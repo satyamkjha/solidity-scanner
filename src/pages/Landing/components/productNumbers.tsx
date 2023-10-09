@@ -1,29 +1,9 @@
-import React from "react";
-import {
-  Flex,
-  Box,
-  Text,
-  Heading,
-  Image,
-  HStack,
-  VStack,
-  SkeletonText,
-  Skeleton,
-  Grid,
-  GridItem,
-  useMediaQuery,
-} from "@chakra-ui/react";
-import { teamsData } from "common/values";
-import { getAssetsURL } from "helpers/helperFunction";
-import { useConfig } from "hooks/useConfig";
+import React, { useState, useRef, useEffect } from "react";
+import { Flex, Text, Heading, HStack, Grid, GridItem } from "@chakra-ui/react";
 import AnimatedNumbers from "react-animated-numbers";
+import { isInViewport } from "common/functions";
 
 export default function ProductNumbers() {
-  const config: any = useConfig();
-  const assetsURL = getAssetsURL(config);
-
-  const [isDesktopView] = useMediaQuery("(max-width: 1350px)");
-
   const data: {
     color: string;
     heading: string;
@@ -56,6 +36,29 @@ export default function ProductNumbers() {
     },
   ];
 
+  const [isVisible, setIsVisible] = useState(false);
+  const ref = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const element = document.getElementById("public_layout");
+    if (element) {
+      element.addEventListener("scroll", function (event) {
+        if (isInViewport(ref.current)) {
+          setIsVisible(true);
+        } else {
+          setIsVisible(false);
+        }
+      });
+    }
+
+    return () => {
+      element?.removeEventListener("scroll", () =>
+        console.log("removed listner")
+      );
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   return (
     <Flex
       w="100%"
@@ -67,6 +70,7 @@ export default function ProductNumbers() {
       flexDir="column"
       h="fit-content"
       px={[0, 0, 0, 10]}
+      ref={ref}
     >
       <Grid
         backgroundColor="#FFFFFF00"
@@ -88,6 +92,9 @@ export default function ProductNumbers() {
             alignItems="center"
             justifyContent="center"
             bgColor={item.color}
+            opacity={isVisible ? 1 : 0}
+            transform={`translateY(${isVisible ? 0 : 50}px)`}
+            transition="opacity 1s ease-in, transform 1s ease-in"
           >
             <HStack spacing={0}>
               <Heading color="#323B4B" fontSize="5xl" fontWeight={900}>
@@ -96,12 +103,10 @@ export default function ProductNumbers() {
                   animateToNumber={item.headingNumber}
                   locale="en-US"
                   configs={[
-                    { mass: 1, tension: 220, friction: 100 },
-                    { mass: 1, tension: 180, friction: 130 },
-                    { mass: 1, tension: 280, friction: 90 },
-                    { mass: 1, tension: 180, friction: 135 },
-                    { mass: 1, tension: 260, friction: 100 },
-                    { mass: 1, tension: 210, friction: 180 },
+                    { mass: 1, tension: 140, friction: 126 },
+                    { mass: 1, tension: 130, friction: 114 },
+                    { mass: 1, tension: 150, friction: 112 },
+                    { mass: 1, tension: 130, friction: 120 },
                   ]}
                 />
               </Heading>

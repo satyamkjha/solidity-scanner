@@ -1,7 +1,8 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { Grid, GridItem, Image, Text, useMediaQuery } from "@chakra-ui/react";
 import { getAssetsURL } from "helpers/helperFunction";
 import { useConfig } from "hooks/useConfig";
+import { isInViewport } from "common/functions";
 
 export const HeroInfographics: React.FC = () => {
   const config: any = useConfig();

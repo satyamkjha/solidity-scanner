@@ -263,11 +263,12 @@ const SlideDescription: React.FC<{
       w="100%"
       h="fit-content"
       minH="700px"
+      spacing={7}
       justifyContent="center"
       alignItems={isLargerThan1000 ? "flex-start" : "center"}
       opacity={isVisible ? 1 : 0}
-      transform={`translateY(${isVisible ? 0 : 20}px)`}
-      transition="opacity 0.5s ease-in, transform 0.5s ease-in"
+      transform={`translateY(${isVisible ? 0 : 100}px)`}
+      transition="opacity 1.5s ease-in, transform 1.5s ease-in"
     >
       <Image
         display={["block", "block", "none"]}
@@ -326,7 +327,12 @@ const SlideDescription: React.FC<{
         </AbsoluteCenter>
       </Box>
 
-      <Heading w="80%" as="h2" fontSize={["xl", "xl", "xl", "3xl"]} mb={8}>
+      <Heading
+        textAlign={["center", "center", "center", "left"]}
+        w="80%"
+        as="h2"
+        fontSize={["xl", "xl", "xl", "3xl"]}
+      >
         {header}
       </Heading>
       <Text
@@ -334,7 +340,7 @@ const SlideDescription: React.FC<{
         w="80%"
         color="subtle"
         mb={8}
-        textAlign={"left"}
+        textAlign={["center", "center", "center", "left"]}
       >
         {description}
       </Text>

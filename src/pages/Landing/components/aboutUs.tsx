@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useRef, useEffect } from "react";
 import {
   Flex,
   Box,
@@ -13,10 +13,35 @@ import {
 import { teamsData } from "common/values";
 import { getAssetsURL } from "helpers/helperFunction";
 import { useConfig } from "hooks/useConfig";
+import { isInViewport } from "common/functions";
 
 export default function AboutUs() {
   const config: any = useConfig();
   const assetsURL = getAssetsURL(config);
+
+  const [isVisible, setIsVisible] = useState(false);
+  const ref = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const element = document.getElementById("public_layout");
+    if (element) {
+      element.addEventListener("scroll", function (event) {
+        if (isInViewport(ref.current)) {
+          setIsVisible(true);
+        } else {
+          setIsVisible(false);
+        }
+      });
+    }
+
+    return () => {
+      element?.removeEventListener("scroll", () =>
+        console.log("removed listner")
+      );
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   return (
     <Flex
       w="100%"
@@ -28,6 +53,7 @@ export default function AboutUs() {
       my={24}
       py={10}
       h="fit-content"
+      ref={ref}
       px={[0, 0, 0, 24]}
     >
       <Box mb={20} position="relative" width="fit-content" height="fit-content">
@@ -72,6 +98,9 @@ export default function AboutUs() {
             justifyContent={"flex-start"}
             mx={20}
             my={[5, 5, 5, 0]}
+            opacity={isVisible ? 1 : 0}
+            transform={`translateY(${isVisible ? 0 : 100}px)`}
+            transition="opacity 1.5s ease-in, transform 1.5s ease-in"
           >
             <VStack spacing={0}>
               <Box

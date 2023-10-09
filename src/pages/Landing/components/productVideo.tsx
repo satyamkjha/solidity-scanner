@@ -1,7 +1,8 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { Flex, Box, Skeleton } from "@chakra-ui/react";
 import { getAssetsURL } from "helpers/helperFunction";
 import { useConfig } from "hooks/useConfig";
+import { isInViewport } from "common/functions";
 
 export default function ProductVideo() {
   const config: any = useConfig();
@@ -10,6 +11,29 @@ export default function ProductVideo() {
 
   useEffect(() => {
     setPlayVideo(false);
+  }, []);
+
+  const [isVisible, setIsVisible] = useState(false);
+  const ref = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const element = document.getElementById("public_layout");
+    if (element) {
+      element.addEventListener("scroll", function (event) {
+        if (isInViewport(ref.current)) {
+          setIsVisible(true);
+        } else {
+          setIsVisible(false);
+        }
+      });
+    }
+
+    return () => {
+      element?.removeEventListener("scroll", () =>
+        console.log("removed listner")
+      );
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (
@@ -25,6 +49,7 @@ export default function ProductVideo() {
       flexDirection={"column"}
       alignItems={"center"}
       justifyContent={"center"}
+      ref={ref}
     >
       <Box
         position="relative"
@@ -38,6 +63,9 @@ export default function ProductVideo() {
         backgroundSize={"contain"}
         cursor={"pointer"}
         overflow={"hidden"}
+        opacity={isVisible ? 1 : 0}
+        transform={`translateY(${isVisible ? 0 : 100}px)`}
+        transition="opacity 1.5s ease-in, transform 1.5s ease-in"
         onClick={() => setPlayVideo(true)}
       >
         {playVideo && (

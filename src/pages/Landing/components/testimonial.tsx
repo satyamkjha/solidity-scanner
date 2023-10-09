@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useRef, useEffect } from "react";
 import {
   Box,
   Text,
@@ -15,10 +15,35 @@ import "../../../styles/testimonial.css";
 import { userTestimonials } from "common/values";
 import { getAssetsURL } from "helpers/helperFunction";
 import { useConfig } from "hooks/useConfig";
+import { isInViewport } from "common/functions";
 
 const UserTestimonial: React.FC = () => {
   const config: any = useConfig();
   const assetsURL = getAssetsURL(config);
+
+  const [isVisible, setIsVisible] = useState(false);
+  const ref = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const element = document.getElementById("public_layout");
+    if (element) {
+      element.addEventListener("scroll", function (event) {
+        if (isInViewport(ref.current)) {
+          setIsVisible(true);
+        } else {
+          setIsVisible(false);
+        }
+      });
+    }
+
+    return () => {
+      element?.removeEventListener("scroll", () =>
+        console.log("removed listner")
+      );
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   return (
     <Box
       w="100%"
@@ -27,6 +52,7 @@ const UserTestimonial: React.FC = () => {
       my={24}
       py={10}
       px={[5, 10, 10, 24]}
+      ref={ref}
     >
       <Heading fontSize="3xl" mb={20}>
         What People are Saying about us
@@ -73,7 +99,13 @@ const UserTestimonial: React.FC = () => {
         pagination={{
           clickable: true,
         }}
-        style={{ marginTop: "50px", paddingTop: "50px" }}
+        style={{
+          marginTop: "50px",
+          paddingTop: "50px",
+          opacity: isVisible ? 1 : 0,
+          transform: `translateY(${isVisible ? 0 : 100}px)`,
+          transition: "opacity 1.5s ease-in, transform 1.5s ease-in",
+        }}
         modules={[EffectCoverflow, Navigation, Pagination]}
       >
         {userTestimonials.map((data, index) => (
