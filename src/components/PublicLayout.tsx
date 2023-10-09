@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import Footer from "./footer";
 import Header from "./landingHeader";
 import { Box, Container } from "@chakra-ui/react";
@@ -7,13 +7,17 @@ import SignupBox from "./signupBox";
 import { useLocation } from "react-router-dom";
 
 const PublicLayout: React.FC = ({ children }) => {
-  window.scrollTo({
-    top: 0,
-    left: 0,
-    behavior: "auto",
-  });
-
   const location = useLocation();
+
+  useEffect(() => {
+    const element = document.getElementById("public_layout");
+    element?.scrollTo({
+      top: 0,
+      left: 0,
+      behavior: "auto",
+    });
+    console.log(location);
+  }, [location.pathname]);
 
   return (
     <Container

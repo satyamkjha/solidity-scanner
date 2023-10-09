@@ -126,18 +126,21 @@ export const hasUserRole = (
 };
 
 export function isInViewport(element: any) {
-  var bounding = element.getBoundingClientRect();
+  if (element !== null) {
+    var bounding = element.getBoundingClientRect();
 
-  if (
-    bounding.top >= 0 &&
-    bounding.left >= 0 &&
-    bounding.right <=
-      (window.innerWidth || document.documentElement.clientWidth) &&
-    bounding.bottom <=
-      (window.innerHeight || document.documentElement.clientHeight)
-  ) {
-    return true;
-  } else {
-    return false;
+    if (
+      bounding.top >= 0 &&
+      bounding.left >= 0 &&
+      bounding.right <=
+        (window.innerWidth || document.documentElement.clientWidth) &&
+      bounding.bottom <=
+        (window.innerHeight || document.documentElement.clientHeight)
+    ) {
+      return true;
+    } else {
+      return false;
+    }
   }
+  return false;
 }

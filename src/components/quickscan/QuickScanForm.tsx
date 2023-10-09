@@ -18,7 +18,6 @@ import Select from "react-select";
 import { useLocation, useParams } from "react-router-dom";
 import { useLottie, LottiePlayer } from "lottie-react";
 import ssIconAnimation from "./quickscan_bg.json";
-import { isInViewport } from "common/functions";
 
 const QuickScanForm: React.FC<{
   view: "landing" | "quickscan";

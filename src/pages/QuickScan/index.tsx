@@ -135,7 +135,7 @@ const QuickScan: React.FC = () => {
       elementRef.current.scrollIntoView({
         behavior: "smooth",
         block: "start",
-        inline: "start",
+        inline: "center",
       });
     }
   };
@@ -143,7 +143,8 @@ const QuickScan: React.FC = () => {
   return (
     <Flex
       as="section"
-      w="100%"
+      w="100vw"
+      justifyContent="flex-start"
       alignItems="center"
       p={0}
       textAlign={"center"}

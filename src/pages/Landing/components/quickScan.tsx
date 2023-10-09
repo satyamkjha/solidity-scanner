@@ -14,8 +14,6 @@ import { Link, useHistory } from "react-router-dom";
 import QuickScanForm from "components/quickscan/QuickScanForm";
 
 export default function QuickScan() {
-  const assetsURL = getAssetsURL();
-
   const history = useHistory();
 
   const runQuickScan = async (
@@ -24,6 +22,10 @@ export default function QuickScan() {
     chain: string,
     ref: string | null
   ) => {
+    const element = document.getElementById("public_layout");
+    element?.removeEventListener("scroll", () =>
+      console.log("removed listner")
+    );
     history.push(`/quickscan/${address}/${platform}/${chain}`);
   };
 
