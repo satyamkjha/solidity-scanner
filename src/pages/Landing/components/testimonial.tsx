@@ -11,7 +11,7 @@ import {
 } from "@chakra-ui/react";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { EffectCoverflow, Navigation, Pagination } from "swiper";
-import "./testimonial.css";
+import "../../../styles/testimonial.css";
 import { userTestimonials } from "common/values";
 import { getAssetsURL } from "helpers/helperFunction";
 import { useConfig } from "hooks/useConfig";
