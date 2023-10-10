@@ -171,7 +171,7 @@ export const theme = extendTheme({
           py: 5,
           border: "none",
           _hover: {
-            background: "#2e2e2e",
+            background: "#2e2e2e80",
           },
           _active: {
             background: "#2e2e2e",

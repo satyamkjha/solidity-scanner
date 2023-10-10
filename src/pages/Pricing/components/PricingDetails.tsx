@@ -14,6 +14,7 @@ import { getAssetsURL } from "helpers/helperFunction";
 import { useHistory } from "react-router-dom";
 import { CurlyArrowUp, CurlyArrowDown } from "components/icons";
 import { PricingCard } from "./pricingCard";
+import { Header } from "components/header";
 
 const CustomPlanCard = lazy(() => import("./customPlanCard"));
 const PricingTable = lazy(() => import("./pricingTable"));
@@ -44,8 +45,8 @@ const PricingDetails: React.FC<{
         justifyContent="flex-start"
         alignItems={"center"}
         w={"100%"}
-        px={[5, 10, 10]}
-        py={"60px"}
+        px={0}
+        py={page === "pricing" ? "5px" : "60px"}
         h={["1100px", "1000px", "800px", "720px", "720px"]}
         backgroundColor="#FFFFFF"
         style={{
@@ -61,6 +62,7 @@ const PricingDetails: React.FC<{
           `url('${assetsURL}pricing/pricing_bg_xl.jpg')`,
         ]}
       >
+        {page === "pricing" && <Header theme={"dark"} />}
         <Heading
           color={"white"}
           fontSize={
@@ -202,8 +204,8 @@ const PricingDetails: React.FC<{
         alignItems={"center"}
         justifyContent="flex-end"
         backgroundColor="#FFFFFF00"
-        mt={page === "pricing" ? "-300px" : "-430px"}
-        px={page === "pricing" ? [16] : [4]}
+        mt={page === "pricing" ? ["-300px", "-300px", "-250px"] : "-430px"}
+        px={page === "pricing" ? [4, 4, 4, 10] : [4]}
       >
         <Grid
           backgroundColor="#FFFFFF00"

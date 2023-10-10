@@ -10,7 +10,7 @@ import { ManualAuditSkeleton } from "./components/manualAudit";
 import Partners from "./components/partners";
 import { LatestHacks } from "./components/latestHacks";
 import { HeroInfographics } from "./components/heroInfographics";
-import { LandingHeader } from "./components/header";
+import { Header } from "../../components/header";
 import { LandingHero } from "./components/hero";
 import QuickScan, { QSSkeleton } from "./components/quickScan";
 
@@ -74,8 +74,8 @@ export default function Landing() {
           position="relative"
           zIndex={10}
         >
-          <LandingHeader />
-          <Divider borderWidth={"1px"} borderColor="#262626" width="90%" />
+          <Header theme={"dark"} />
+
           <LandingHero />
           <HeroInfographics />
         </Flex>

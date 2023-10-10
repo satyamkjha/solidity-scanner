@@ -279,14 +279,18 @@ const QuickScanForm: React.FC<{
 
   useEffect(() => {
     const element = document.getElementById("public_layout");
-    if (element) {
-      element.addEventListener("scroll", function (event) {
-        if (isInViewport(quickscanRef.current)) {
-          setIsVisible(true);
-        } else {
-          setIsVisible(false);
-        }
-      });
+    if (view === "quickscan") {
+      setTimeout(() => setIsVisible(true), 2000);
+    } else {
+      if (element) {
+        element.addEventListener("scroll", function (event) {
+          if (isInViewport(quickscanRef.current)) {
+            setIsVisible(true);
+          } else {
+            setIsVisible(false);
+          }
+        });
+      }
     }
 
     return () => {
@@ -327,7 +331,7 @@ const QuickScanForm: React.FC<{
           mt={isDesktopView ? 0 : 8}
           opacity={isVisible ? 1 : 0}
           transform={`translateY(${isVisible ? 0 : 100}px)`}
-          transition="opacity 1.5s ease-in, transform 1.5s ease-in"
+          transition="opacity 1s ease-in, transform 1s ease-in"
         >
           SolidityScan{" "}
           <Box
@@ -349,7 +353,7 @@ const QuickScanForm: React.FC<{
           mb={8}
           opacity={isVisible ? 1 : 0}
           transform={`translateY(${isVisible ? 0 : 100}px)`}
-          transition="opacity 1.5s ease-in, transform 1.5s ease-in"
+          transition="opacity 1s ease-in, transform 1s ease-in"
         >
           An open to all quick scanning extension designed to view results in
           simple terms. Initiate a smart contract scan by selecting from a wide
@@ -366,7 +370,7 @@ const QuickScanForm: React.FC<{
           spacing={isDesktopView ? 0 : 3}
           opacity={isVisible ? 1 : 0}
           transform={`translateY(${isVisible ? 0 : 100}px)`}
-          transition="opacity 1.5s ease-in, transform 1.5s ease-in"
+          transition="opacity 1s ease-in, transform 1s ease-in"
         >
           <Select
             formatOptionLabel={FormatOptionLabelWithImage}
@@ -444,6 +448,9 @@ const QuickScanForm: React.FC<{
           type="submit"
           variant="brand"
           onClick={generateQuickScan}
+          opacity={isVisible ? 1 : 0}
+          transform={`translateY(${isVisible ? 0 : 100}px)`}
+          transition="opacity 1s ease-in, transform 1s ease-in"
         >
           Start Scan
         </Button>

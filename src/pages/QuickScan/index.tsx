@@ -34,6 +34,7 @@ import { API_PATH } from "helpers/routeManager";
 import SolidityScoreProgress from "components/common/SolidityScoreProgress";
 import Loader from "components/styled-components/Loader";
 import QuickScanForm from "components/quickscan/QuickScanForm";
+import { Header } from "components/header";
 
 const RecentScans = lazy(() => import("components/quickscan/RecentScans"));
 const QuickScanDetails = lazy(
@@ -143,7 +144,7 @@ const QuickScan: React.FC = () => {
   return (
     <Flex
       as="section"
-      w="100vw"
+      w="100%"
       justifyContent="flex-start"
       alignItems="center"
       p={0}
@@ -154,6 +155,7 @@ const QuickScan: React.FC = () => {
         w={"100%"}
         bg={"linear-gradient(180deg, #04080D -50.31%, #2900DE 282.02%)"}
       >
+        <Header theme={"dark"} />
         <QuickScanForm
           view="quickscan"
           runQuickScan={runQuickScan}
