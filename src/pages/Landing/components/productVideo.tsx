@@ -22,8 +22,6 @@ export default function ProductVideo() {
       element.addEventListener("scroll", function (event) {
         if (isInViewport(ref.current)) {
           setIsVisible(true);
-        } else {
-          setIsVisible(false);
         }
       });
     }

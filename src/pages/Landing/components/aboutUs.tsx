@@ -28,8 +28,6 @@ export default function AboutUs() {
       element.addEventListener("scroll", function (event) {
         if (isInViewport(ref.current)) {
           setIsVisible(true);
-        } else {
-          setIsVisible(false);
         }
       });
     }

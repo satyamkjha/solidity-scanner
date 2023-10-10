@@ -286,8 +286,6 @@ const QuickScanForm: React.FC<{
         element.addEventListener("scroll", function (event) {
           if (isInViewport(quickscanRef.current)) {
             setIsVisible(true);
-          } else {
-            setIsVisible(false);
           }
         });
       }
