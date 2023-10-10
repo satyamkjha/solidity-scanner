@@ -146,10 +146,10 @@ export default function Partners() {
               justifyContent="center"
               bgColor="white"
               opacity={isVisible ? 1 : 0}
-              transform={`translateY(${isVisible ? 0 : 80 + index * 10}px)`}
+              transform={`translateY(${isVisible ? 0 : 80 + index * 20}px)`}
               transition={`opacity ${
-                (3 + index * 1) / 10
-              }s ease-in, transform ${(5 + index * 1) / 10}s ease-in`}
+                (3 + index * 1.5) / 10
+              }s ease-in, transform ${(5 + index * 1.5) / 10}s ease-in`}
             >
               <Image
                 onClick={() => window.open("", "_blank")}

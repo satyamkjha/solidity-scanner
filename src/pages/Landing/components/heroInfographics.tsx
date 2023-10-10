@@ -31,6 +31,29 @@ export const HeroInfographics: React.FC = () => {
     { url: "landing/infographics/audit_report.svg", text: "Audit Report" },
   ];
 
+  const [isVisible, setIsVisible] = useState(false);
+  const ref = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const element = document.getElementById("public_layout");
+    if (element) {
+      element.addEventListener("scroll", function (event) {
+        if (isInViewport(ref.current)) {
+          setIsVisible(true);
+        } else {
+          setIsVisible(false);
+        }
+      });
+    }
+
+    return () => {
+      element?.removeEventListener("scroll", () =>
+        console.log("removed listner")
+      );
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   return (
     <Grid
       backgroundColor="#FFFFFF00"
@@ -39,6 +62,7 @@ export const HeroInfographics: React.FC = () => {
       px={[5, 5, 10]}
       py={20}
       mb={20}
+      ref={ref}
       templateColumns={
         singleRow
           ? "repeat(1, 1fr)"
@@ -57,6 +81,11 @@ export const HeroInfographics: React.FC = () => {
           flexDir="column"
           alignItems="center"
           justifyContent="center"
+          opacity={isVisible ? 1 : 0}
+          transform={`translateY(${isVisible ? 0 : 80 + index * 20}px)`}
+          transition={`opacity ${(3 + index * 1.5) / 10}s ease-in, transform ${
+            (5 + index * 1.5) / 10
+          }s ease-in`}
         >
           <Image
             src={`${assetsURL}${item.url}`}

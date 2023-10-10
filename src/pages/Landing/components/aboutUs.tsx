@@ -99,8 +99,10 @@ export default function AboutUs() {
             mx={20}
             my={[5, 5, 5, 0]}
             opacity={isVisible ? 1 : 0}
-            transform={`translateY(${isVisible ? 0 : 100}px)`}
-            transition="opacity 0.25s ease-in, transform 0.5s ease-in"
+            transform={`translateY(${isVisible ? 0 : 80 + index * 20}px)`}
+            transition={`opacity ${
+              (3 + index * 1.5) / 10
+            }s ease-in, transform ${(5 + index * 1.5) / 10}s ease-in`}
           >
             <VStack spacing={0}>
               <Box
