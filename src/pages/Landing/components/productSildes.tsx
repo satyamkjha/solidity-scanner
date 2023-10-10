@@ -190,6 +190,10 @@ export default function ProductSlides() {
           justifyContent="flex-start"
           alignItems={isLargerThan1000 ? "flex-start" : "center"}
           w={["100%", "100%", "100%", "30%", "25%"]}
+          mt={[0, 0, 0, 0, 20]}
+          mb={[0, 0, 0, 0, 36]}
+          py={[0, 0, 0, 16, 32]}
+          spacing={16}
         >
           {data.map((item, index) => (
             <SlideDescription
@@ -234,9 +238,23 @@ const SlideDescription: React.FC<{
 
   const assetsURL = getAssetsURL();
   const [isVisible, setIsVisible] = useState(false);
+  const [animationOffset, setAnimationOffset] = useState(70);
+
+  const setOffset = () => {
+    const slide = document.getElementById(`slide-${number}`);
+    if (slide) {
+      const elementRect = slide.getBoundingClientRect();
+      if (elementRect.bottom < 0) {
+        setAnimationOffset(-70);
+      } else {
+        setAnimationOffset(70);
+      }
+    }
+  };
 
   const checkInview = () => {
-    if (ref.current && isInStartViewport(ref.current)) {
+    setOffset();
+    if (ref.current && isInStartViewport(ref.current, number)) {
       setNumber(number);
       setIsVisible(true);
     } else {
@@ -250,7 +268,7 @@ const SlideDescription: React.FC<{
     }
 
     return () => {
-      element?.removeEventListener("scroll", checkInview);
+      element?.removeEventListener("scroll", () => {});
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -260,15 +278,16 @@ const SlideDescription: React.FC<{
   return (
     <VStack
       ref={ref}
+      id={`slide-${number}`}
       w="100%"
       h="fit-content"
-      minH="600px"
+      minH="500px"
       spacing={7}
       justifyContent="center"
       alignItems={isLargerThan1000 ? "flex-start" : "center"}
       opacity={isVisible ? 1 : 0}
-      // transform={`translateY(${isVisible ? 0 : 0}px)`}
-      transition="opacity 0.5s ease, transform 0.5s ease"
+      transform={`translateY(${isVisible ? 0 : animationOffset}px)`}
+      transition="opacity 0.5s ease, transform 0.5s ease-out"
     >
       <Image
         display={["block", "block", "none"]}

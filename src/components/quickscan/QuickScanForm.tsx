@@ -16,7 +16,7 @@ import FormatOptionLabelWithImage from "components/FormatOptionLabelWithImage";
 import { contractChain, platforms } from "common/values";
 import Select from "react-select";
 import { useLocation, useParams } from "react-router-dom";
-import { useLottie, LottiePlayer } from "lottie-react";
+import Lottie from "lottie-react";
 import ssIconAnimation from "./quickscan_bg.json";
 import { isInViewport } from "common/functions";
 
@@ -52,6 +52,7 @@ const QuickScanForm: React.FC<{
     { label: string; value: string; icon: string }[]
   >(contractChain["etherscan"]);
   const quickscanRef = useRef<HTMLDivElement>(null);
+  const [animationOffset, setAnimationOffset] = useState(60);
 
   const customStylesPlatform: StylesConfig<
     PropsWithChildren<OptionTypeWithIcon>,
@@ -195,21 +196,15 @@ const QuickScanForm: React.FC<{
     }
   };
 
-  const Lottie = useLottie(
-    {
-      loop: false,
-      animationData: ssIconAnimation,
-    },
-    {
-      height: isDesktopView ? "100%" : "auto",
-      width: "100%",
-      maxWidth: isDesktopView ? "100%" : "500px",
-      position: isDesktopView ? "absolute" : "relative",
-      top: 0,
-      left: 0,
-      zIndex: 0,
-    }
-  );
+  const styleObj = {
+    height: isDesktopView ? "100%" : "auto",
+    width: "100%",
+    maxWidth: isDesktopView ? "100%" : "500px",
+    position: isDesktopView ? "absolute" : ("relative" as any),
+    top: 0,
+    left: 0,
+    zIndex: 0,
+  };
 
   useEffect(() => {
     if (ref) {
@@ -276,25 +271,28 @@ const QuickScanForm: React.FC<{
   // }, []);
 
   const [isVisible, setIsVisible] = useState(false);
+  const [playAnimation, setPlayAnimation] = useState(false);
 
   useEffect(() => {
     const element = document.getElementById("public_layout");
     if (view === "quickscan") {
-      setTimeout(() => setIsVisible(true), 2000);
+      setPlayAnimation(true);
+      setTimeout(() => setIsVisible(true), 1500);
     } else {
       if (element) {
         element.addEventListener("scroll", function (event) {
-          if (isInViewport(quickscanRef.current)) {
+          if (isInViewport(quickscanRef.current, setAnimationOffset)) {
             setIsVisible(true);
+            setPlayAnimation(true);
+          } else {
+            setIsVisible(false);
           }
         });
       }
     }
 
     return () => {
-      element?.removeEventListener("scroll", () =>
-        console.log("removed listner")
-      );
+      element?.removeEventListener("scroll", () => {});
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -307,7 +305,9 @@ const QuickScanForm: React.FC<{
       zIndex={10}
       ref={quickscanRef}
     >
-      {isDesktopView && Lottie.View}
+      {isDesktopView && playAnimation ? (
+        <Lottie animationData={ssIconAnimation} style={styleObj} loop={false} />
+      ) : null}
       <Box
         position="relative"
         flexDir={"column"}
@@ -322,7 +322,13 @@ const QuickScanForm: React.FC<{
         pb={isDesktopView ? "200px" : "50px"}
         textAlign="center"
       >
-        {!isDesktopView && Lottie.View}
+        {playAnimation && !isDesktopView && (
+          <Lottie
+            animationData={ssIconAnimation}
+            style={styleObj}
+            loop={false}
+          />
+        )}
         <Heading
           w={["90%", "90%", "80%", "60%"]}
           color={view === "landing" ? "black" : "white"}
@@ -330,7 +336,7 @@ const QuickScanForm: React.FC<{
           mb={8}
           mt={isDesktopView ? 0 : 8}
           opacity={isVisible ? 1 : 0}
-          transform={`translateY(${isVisible ? 0 : 60}px)`}
+          transform={`translateY(${isVisible ? 0 : animationOffset}px)`}
           transition="opacity 0.25s ease-in, transform 0.5s ease-in"
         >
           SolidityScan{" "}
@@ -352,7 +358,7 @@ const QuickScanForm: React.FC<{
           color="subtle"
           mb={8}
           opacity={isVisible ? 1 : 0}
-          transform={`translateY(${isVisible ? 0 : 60}px)`}
+          transform={`translateY(${isVisible ? 0 : animationOffset}px)`}
           transition="opacity 0.25s ease-in, transform 0.5s ease-in"
         >
           An open to all quick scanning extension designed to view results in
@@ -369,7 +375,7 @@ const QuickScanForm: React.FC<{
           direction={isDesktopView ? "row" : "column"}
           spacing={isDesktopView ? 0 : 3}
           opacity={isVisible ? 1 : 0}
-          transform={`translateY(${isVisible ? 0 : 60}px)`}
+          transform={`translateY(${isVisible ? 0 : animationOffset}px)`}
           transition="opacity 0.25s ease-in, transform 0.5s ease-in"
         >
           <Select
@@ -449,7 +455,7 @@ const QuickScanForm: React.FC<{
           variant="brand"
           onClick={generateQuickScan}
           opacity={isVisible ? 1 : 0}
-          transform={`translateY(${isVisible ? 0 : 60}px)`}
+          transform={`translateY(${isVisible ? 0 : animationOffset}px)`}
           transition="opacity 0.25s ease-in, transform 0.5s ease-in"
         >
           Start Scan

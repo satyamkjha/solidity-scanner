@@ -14,22 +14,23 @@ import { EffectCoverflow, Navigation, Pagination } from "swiper";
 import "../../../styles/testimonial.css";
 import { userTestimonials } from "common/values";
 import { getAssetsURL } from "helpers/helperFunction";
-import { useConfig } from "hooks/useConfig";
 import { isInViewport } from "common/functions";
 
 const UserTestimonial: React.FC = () => {
-  const config: any = useConfig();
-  const assetsURL = getAssetsURL(config);
+  const assetsURL = getAssetsURL();
 
   const [isVisible, setIsVisible] = useState(false);
+  const [animationOffset, setAnimationOffset] = useState(70);
   const ref = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const element = document.getElementById("public_layout");
     if (element) {
       element.addEventListener("scroll", function (event) {
-        if (isInViewport(ref.current)) {
+        if (isInViewport(ref.current, setAnimationOffset)) {
           setIsVisible(true);
+        } else {
+          setIsVisible(false);
         }
       });
     }
@@ -101,7 +102,7 @@ const UserTestimonial: React.FC = () => {
           marginTop: "50px",
           paddingTop: "50px",
           opacity: isVisible ? 1 : 0,
-          transform: `translateY(${isVisible ? 0 : 100}px)`,
+          transform: `translateY(${isVisible ? 0 : animationOffset}px)`,
           transition: "opacity 0.25s ease-in, transform 0.5s ease-in",
         }}
         modules={[EffectCoverflow, Navigation, Pagination]}

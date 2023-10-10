@@ -1,12 +1,10 @@
 import React, { useState, useEffect, useRef } from "react";
 import { Flex, Box, Skeleton } from "@chakra-ui/react";
 import { getAssetsURL } from "helpers/helperFunction";
-import { useConfig } from "hooks/useConfig";
 import { isInViewport } from "common/functions";
 
 export default function ProductVideo() {
-  const config: any = useConfig();
-  const assetsURL = getAssetsURL(config);
+  const assetsURL = getAssetsURL();
   const [playVideo, setPlayVideo] = useState(false);
 
   useEffect(() => {
@@ -14,13 +12,14 @@ export default function ProductVideo() {
   }, []);
 
   const [isVisible, setIsVisible] = useState(false);
+  const [animationOffset, setAnimationOffset] = useState(70);
   const ref = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const element = document.getElementById("public_layout");
     if (element) {
       element.addEventListener("scroll", function (event) {
-        if (isInViewport(ref.current)) {
+        if (isInViewport(ref.current, setAnimationOffset)) {
           setIsVisible(true);
         }
       });

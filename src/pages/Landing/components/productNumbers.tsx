@@ -37,14 +37,17 @@ export default function ProductNumbers() {
   ];
 
   const [isVisible, setIsVisible] = useState(false);
+  const [animationOffset, setAnimationOffset] = useState(70);
   const ref = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const element = document.getElementById("public_layout");
     if (element) {
       element.addEventListener("scroll", function (event) {
-        if (isInViewport(ref.current)) {
+        if (isInViewport(ref.current, setAnimationOffset)) {
           setIsVisible(true);
+        } else {
+          setIsVisible(false);
         }
       });
     }
@@ -91,7 +94,7 @@ export default function ProductNumbers() {
             justifyContent="center"
             bgColor={item.color}
             opacity={isVisible ? 1 : 0}
-            transform={`translateY(${isVisible ? 0 : 50}px)`}
+            transform={`translateY(${isVisible ? 0 : animationOffset}px)`}
             transition="opacity 0.25s ease-in, transform 0.5s ease-in"
           >
             <HStack spacing={0}>

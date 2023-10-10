@@ -32,14 +32,17 @@ export const HeroInfographics: React.FC = () => {
   ];
 
   const [isVisible, setIsVisible] = useState(false);
+  const [animationOffset, setAnimationOffset] = useState(70);
   const ref = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const element = document.getElementById("public_layout");
     if (element) {
       element.addEventListener("scroll", function (event) {
-        if (isInViewport(ref.current)) {
+        if (isInViewport(ref.current, setAnimationOffset)) {
           setIsVisible(true);
+        } else {
+          setIsVisible(false);
         }
       });
     }
@@ -80,7 +83,9 @@ export const HeroInfographics: React.FC = () => {
           alignItems="center"
           justifyContent="center"
           opacity={isVisible ? 1 : 0}
-          transform={`translateY(${isVisible ? 0 : 80 + index * 20}px)`}
+          transform={`translateY(${
+            isVisible ? 0 : animationOffset + index * 20
+          }px)`}
           transition={`opacity ${(3 + index * 1.5) / 10}s ease-in, transform ${
             (5 + index * 1.5) / 10
           }s ease-in`}

@@ -125,9 +125,14 @@ export const hasUserRole = (
   return organizations.some((org) => org.role === roleToCheck);
 };
 
-export function isInViewport(element: any) {
+export function isInViewport(element: any, setAnimationOffset: any) {
   if (element !== null) {
     var bounding = element.getBoundingClientRect();
+    if (bounding.bottom < 0) {
+      setAnimationOffset(-60);
+    } else {
+      setAnimationOffset(60);
+    }
 
     if (
       bounding.bottom >= bounding.height / 4 &&
@@ -145,17 +150,14 @@ export function isInViewport(element: any) {
   return false;
 }
 
-export function isInStartViewport(element: any) {
+export function isInStartViewport(element: any, index: number) {
   if (element !== null) {
     var bounding = element.getBoundingClientRect();
 
     if (
-      bounding.bottom >= 400 &&
+      (bounding.bottom >= window.innerHeight / 3 || index === 5) &&
       bounding.left >= 0 &&
-      bounding.right <=
-        (window.innerWidth || document.documentElement.clientWidth) &&
-      bounding.bottom - bounding.height / 4 <=
-        (window.innerHeight || document.documentElement.clientHeight)
+      (bounding.top <= window.innerHeight / 2 || index === 0)
     ) {
       return true;
     } else {
