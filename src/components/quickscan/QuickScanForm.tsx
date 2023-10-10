@@ -315,7 +315,9 @@ const QuickScanForm: React.FC<{
         flexDir={"column"}
         display={"flex"}
         alignItems={"center"}
+        justifyContent="center"
         w={"100%"}
+        h={["fit-content", "fit-content", "fit-content", "100vh"]}
         zIndex={10}
         px={[0, 0, 10]}
         py={isDesktopView ? 20 : 10}
@@ -330,8 +332,8 @@ const QuickScanForm: React.FC<{
           mb={8}
           mt={isDesktopView ? 0 : 8}
           opacity={isVisible ? 1 : 0}
-          transform={`translateY(${isVisible ? 0 : 100}px)`}
-          transition="opacity 1s ease-in, transform 1s ease-in"
+          transform={`translateY(${isVisible ? 0 : 60}px)`}
+          transition="opacity 0.25s ease-in, transform 0.5s ease-in"
         >
           SolidityScan{" "}
           <Box
@@ -352,8 +354,8 @@ const QuickScanForm: React.FC<{
           color="subtle"
           mb={8}
           opacity={isVisible ? 1 : 0}
-          transform={`translateY(${isVisible ? 0 : 100}px)`}
-          transition="opacity 1s ease-in, transform 1s ease-in"
+          transform={`translateY(${isVisible ? 0 : 60}px)`}
+          transition="opacity 0.25s ease-in, transform 0.5s ease-in"
         >
           An open to all quick scanning extension designed to view results in
           simple terms. Initiate a smart contract scan by selecting from a wide
@@ -369,8 +371,8 @@ const QuickScanForm: React.FC<{
           direction={isDesktopView ? "row" : "column"}
           spacing={isDesktopView ? 0 : 3}
           opacity={isVisible ? 1 : 0}
-          transform={`translateY(${isVisible ? 0 : 100}px)`}
-          transition="opacity 1s ease-in, transform 1s ease-in"
+          transform={`translateY(${isVisible ? 0 : 60}px)`}
+          transition="opacity 0.25s ease-in, transform 0.5s ease-in"
         >
           <Select
             formatOptionLabel={FormatOptionLabelWithImage}
@@ -449,8 +451,8 @@ const QuickScanForm: React.FC<{
           variant="brand"
           onClick={generateQuickScan}
           opacity={isVisible ? 1 : 0}
-          transform={`translateY(${isVisible ? 0 : 100}px)`}
-          transition="opacity 1s ease-in, transform 1s ease-in"
+          transform={`translateY(${isVisible ? 0 : 60}px)`}
+          transition="opacity 0.25s ease-in, transform 0.5s ease-in"
         >
           Start Scan
         </Button>

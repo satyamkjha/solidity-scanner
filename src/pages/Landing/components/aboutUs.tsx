@@ -100,7 +100,7 @@ export default function AboutUs() {
             my={[5, 5, 5, 0]}
             opacity={isVisible ? 1 : 0}
             transform={`translateY(${isVisible ? 0 : 100}px)`}
-            transition="opacity 1.5s ease-in, transform 1.5s ease-in"
+            transition="opacity 0.25s ease-in, transform 0.5s ease-in"
           >
             <VStack spacing={0}>
               <Box

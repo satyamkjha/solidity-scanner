@@ -144,3 +144,23 @@ export function isInViewport(element: any) {
   }
   return false;
 }
+
+export function startViewport(element: any) {
+  if (element !== null) {
+    var bounding = element.getBoundingClientRect();
+
+    if (
+      bounding.bottom >= bounding.height / 4 &&
+      bounding.left >= 0 &&
+      bounding.right <=
+        (window.innerWidth || document.documentElement.clientWidth) &&
+      bounding.top + bounding.height / 2 <=
+        (window.innerHeight || document.documentElement.clientHeight)
+    ) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+  return false;
+}

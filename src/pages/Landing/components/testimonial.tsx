@@ -104,7 +104,7 @@ const UserTestimonial: React.FC = () => {
           paddingTop: "50px",
           opacity: isVisible ? 1 : 0,
           transform: `translateY(${isVisible ? 0 : 100}px)`,
-          transition: "opacity 1.5s ease-in, transform 1.5s ease-in",
+          transition: "opacity 0.25s ease-in, transform 0.5s ease-in",
         }}
         modules={[EffectCoverflow, Navigation, Pagination]}
       >

@@ -94,7 +94,7 @@ export default function ProductNumbers() {
             bgColor={item.color}
             opacity={isVisible ? 1 : 0}
             transform={`translateY(${isVisible ? 0 : 50}px)`}
-            transition="opacity 1s ease-in, transform 1s ease-in"
+            transition="opacity 0.25s ease-in, transform 0.5s ease-in"
           >
             <HStack spacing={0}>
               <Heading color="#323B4B" fontSize="5xl" fontWeight={900}>
@@ -102,12 +102,6 @@ export default function ProductNumbers() {
                   includeComma
                   animateToNumber={item.headingNumber}
                   locale="en-US"
-                  configs={[
-                    { mass: 1, tension: 140, friction: 126 },
-                    { mass: 1, tension: 130, friction: 114 },
-                    { mass: 1, tension: 150, friction: 112 },
-                    { mass: 1, tension: 130, friction: 120 },
-                  ]}
                 />
               </Heading>
               <Heading color="#323B4B" fontSize="5xl" fontWeight={900}>

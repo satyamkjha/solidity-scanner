@@ -16,7 +16,7 @@ import {
 import { getAssetsURL } from "helpers/helperFunction";
 import { useConfig } from "hooks/useConfig";
 
-import { isInViewport } from "common/functions";
+import { isInViewport, startViewport } from "common/functions";
 
 export default function ProductSlides() {
   const config: any = useConfig();
@@ -98,13 +98,13 @@ export default function ProductSlides() {
       w="100%"
       as="section"
       sx={{ textAlign: "center" }}
-      my={24}
+      mb={10}
       justifyContent="flex-start"
       alignItems="center"
       flexDir="column"
       h="fit-content"
-      pl={16}
-      pr={10}
+      pl={[0, 0, 10]}
+      pr={[0, 0, 10]}
     >
       <Heading
         width="90%"
@@ -127,11 +127,11 @@ export default function ProductSlides() {
         flexDir="row"
         alignItems="flex-start"
         w="100%"
-        px={10}
+        px={[5, 5, 10]}
         py={20}
       >
         <HStack
-          w="65%"
+          w={["70%", "75%"]}
           h="fit-content"
           justifyContent="center"
           alignItems="center"
@@ -189,7 +189,7 @@ export default function ProductSlides() {
         <VStack
           justifyContent="flex-start"
           alignItems={isLargerThan1000 ? "flex-start" : "center"}
-          w={["100%", "100%", "100%", "35%"]}
+          w={["100%", "100%", "100%", "30%", "25%"]}
         >
           {data.map((item, index) => (
             <SlideDescription
@@ -238,9 +238,18 @@ const SlideDescription: React.FC<{
     const element = document.getElementById("public_layout");
     if (element) {
       element.addEventListener("scroll", function (event) {
-        if (isInViewport(ref.current)) {
+        if (ref.current && startViewport(ref.current)) {
           setNumber(number);
           setIsVisible(true);
+          if (ref.current) {
+            element?.removeEventListener("scroll", () =>
+              console.log("removed listner")
+            );
+            ref.current.scrollTo({
+              behavior: "smooth",
+              top: 1700,
+            });
+          }
         } else {
           setIsVisible(false);
         }
@@ -267,15 +276,15 @@ const SlideDescription: React.FC<{
       justifyContent="center"
       alignItems={isLargerThan1000 ? "flex-start" : "center"}
       opacity={isVisible ? 1 : 0}
-      transform={`translateY(${isVisible ? 0 : 100}px)`}
-      transition="opacity 1.5s ease-in, transform 1.5s ease-in"
+      // transform={`translateY(${isVisible ? 0 : 100}px)`}
+      transition="opacity 0.5s ease-in, transform 0.5s ease-in"
     >
       <Image
         display={["block", "block", "none"]}
         // src={`${assetsURL}${mobileImgUrl}`}
         src="mobileScreen.png"
-        height="500px"
-        width="280px"
+        height="auto"
+        width="100%"
       />
 
       <Flex
@@ -329,15 +338,15 @@ const SlideDescription: React.FC<{
 
       <Heading
         textAlign={["center", "center", "center", "left"]}
-        w="80%"
+        w="100%"
         as="h2"
         fontSize={["xl", "xl", "xl", "3xl"]}
       >
         {header}
       </Heading>
       <Text
-        fontSize={["sm", "sm", "sm", "lg"]}
-        w="80%"
+        fontSize={["sm", "sm", "sm", "md"]}
+        w="100%"
         color="subtle"
         mb={8}
         textAlign={["center", "center", "center", "left"]}
