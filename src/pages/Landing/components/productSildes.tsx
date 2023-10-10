@@ -16,7 +16,7 @@ import {
 import { getAssetsURL } from "helpers/helperFunction";
 import { useConfig } from "hooks/useConfig";
 
-import { isInViewport } from "common/functions";
+import { isInStartViewport } from "common/functions";
 
 export default function ProductSlides() {
   const config: any = useConfig();
@@ -230,27 +230,27 @@ const SlideDescription: React.FC<{
   numberColorLinearGradient,
 }) => {
   const ref = useRef<HTMLDivElement | null>(null);
+  const element = document.getElementById("public_layout");
 
   const assetsURL = getAssetsURL();
   const [isVisible, setIsVisible] = useState(false);
 
+  const checkInview = () => {
+    if (ref.current && isInStartViewport(ref.current)) {
+      setNumber(number);
+      setIsVisible(true);
+    } else {
+      setIsVisible(false);
+    }
+  };
+
   useEffect(() => {
-    const element = document.getElementById("public_layout");
     if (element) {
-      element.addEventListener("scroll", function (event) {
-        if (isInViewport(ref.current)) {
-          setNumber(number);
-          setIsVisible(true);
-        } else {
-          setIsVisible(false);
-        }
-      });
+      element.addEventListener("scroll", checkInview);
     }
 
     return () => {
-      element?.removeEventListener("scroll", () =>
-        console.log("removed listner")
-      );
+      element?.removeEventListener("scroll", checkInview);
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -262,13 +262,13 @@ const SlideDescription: React.FC<{
       ref={ref}
       w="100%"
       h="fit-content"
-      minH="700px"
+      minH="600px"
       spacing={7}
       justifyContent="center"
       alignItems={isLargerThan1000 ? "flex-start" : "center"}
       opacity={isVisible ? 1 : 0}
-      transform={`translateY(${isVisible ? 0 : 100}px)`}
-      transition="opacity 1.5s ease-in, transform 1.5s ease-in"
+      // transform={`translateY(${isVisible ? 0 : 0}px)`}
+      transition="opacity 0.5s ease, transform 0.5s ease"
     >
       <Image
         display={["block", "block", "none"]}
@@ -336,7 +336,7 @@ const SlideDescription: React.FC<{
         {header}
       </Heading>
       <Text
-        fontSize={["sm", "sm", "sm", "lg"]}
+        fontSize={["sm", "sm", "sm", "md"]}
         w="80%"
         color="subtle"
         mb={8}
