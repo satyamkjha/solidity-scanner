@@ -50,7 +50,7 @@ const UserTestimonial: React.FC = () => {
       sx={{ textAlign: "center" }}
       my={24}
       py={10}
-      px={[5, 10, 10, 24]}
+      px={[5, 10, 10, 20]}
       ref={ref}
     >
       <Heading fontSize="3xl" mb={20}>
@@ -101,6 +101,8 @@ const UserTestimonial: React.FC = () => {
         style={{
           marginTop: "50px",
           paddingTop: "50px",
+          paddingLeft: "20px",
+          paddingRight: "20px",
           opacity: isVisible ? 1 : 0,
           transform: `translateY(${isVisible ? 0 : animationOffset}px)`,
           transition: "opacity 0.25s ease-in, transform 0.5s ease-in",
