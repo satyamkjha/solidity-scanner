@@ -157,8 +157,6 @@ const BlockCard: React.FC<{
       onClick={() => {
         if (multi_file_scan_status === "scan_done") {
           history.push(`/blocks/${scan_id}/${project_id}`);
-        } else {
-          history.push("/blocks");
         }
       }}
     >
