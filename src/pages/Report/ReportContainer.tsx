@@ -1453,87 +1453,87 @@ export const ReportContainer: React.FC<{
               ))
             )}
           </Flex>
-          <Flex w={["100%"]} flexDir={"column"} position={"relative"}>
-            {Array.from({ length: 10 }, (v, i) => (
-              <Flex
-                key={i}
-                as="section"
-                w={["100%"]}
-                alignItems="flex-start"
-                justifyContent="flex-start"
-                flexDir={"row"}
-                textAlign={["left", "left"]}
-                py={5}
-                px={[1, 10]}
-                borderBottomWidth={1}
-                borderBottomColor={"#E4E4E4"}
-                position={"relative"}
-              >
-                {isDesktopView && (
-                  <Text
-                    fontSize="md"
-                    fontWeight={"500"}
-                    color={"subtle"}
-                    width={"15%"}
-                  >
-                    SSB_101_101
-                  </Text>
-                )}
+          {profile?.current_package &&
+          !["pro", "custom"].includes(profile?.current_package) ? (
+            <Flex w={["100%"]} flexDir={"column"} position={"relative"}>
+              {Array.from({ length: 10 }, (v, i) => (
                 <Flex
-                  as="div"
-                  w={["50%", "50%", "50%", "20%"]}
-                  height={"30px"}
-                  alignItems="center"
+                  key={i}
+                  as="section"
+                  w={["100%"]}
+                  alignItems="flex-start"
                   justifyContent="flex-start"
                   flexDir={"row"}
-                  pl={[2, 2, 2, 0]}
+                  textAlign={["left", "left"]}
+                  py={5}
+                  px={[1, 10]}
+                  borderBottomWidth={1}
+                  borderBottomColor={"#E4E4E4"}
+                  position={"relative"}
                 >
-                  <SeverityIcon variant={"critical"} />
+                  {isDesktopView && (
+                    <Text
+                      fontSize="md"
+                      fontWeight={"500"}
+                      color={"subtle"}
+                      width={"15%"}
+                    >
+                      SSB_101_101
+                    </Text>
+                  )}
+                  <Flex
+                    as="div"
+                    w={["50%", "50%", "50%", "20%"]}
+                    height={"30px"}
+                    alignItems="center"
+                    justifyContent="flex-start"
+                    flexDir={"row"}
+                    pl={[2, 2, 2, 0]}
+                  >
+                    <SeverityIcon variant={"critical"} />
+                    <Text
+                      fontSize={["sm", "sm", "sm", "md"]}
+                      fontWeight={"500"}
+                      color={"subtle"}
+                      ml={2}
+                      width={"100%"}
+                    >
+                      {sentenceCapitalize("critical")}
+                    </Text>
+                  </Flex>
                   <Text
                     fontSize={["sm", "sm", "sm", "md"]}
                     fontWeight={"500"}
                     color={"subtle"}
-                    ml={2}
-                    width={"100%"}
+                    width={["120%", "120%", "120%", "50%"]}
                   >
-                    {sentenceCapitalize("critical")}
+                    Lorem Ipsum Dolor Sit Amet
                   </Text>
+                  <HStack width={["50%", "50%", "50%", "15%"]}>
+                    <Image src={`${assetsURL}report/pending_fix_color.svg`} />
+                    <Text
+                      fontSize={["sm", "sm", "sm", "md"]}
+                      fontWeight={"500"}
+                      color={"black"}
+                      fontStyle={"italic"}
+                    >
+                      Pending Fix
+                    </Text>
+                  </HStack>
                 </Flex>
-                <Text
-                  fontSize={["sm", "sm", "sm", "md"]}
-                  fontWeight={"500"}
-                  color={"subtle"}
-                  width={["120%", "120%", "120%", "50%"]}
-                >
-                  Lorem Ipsum Dolor Sit Amet
-                </Text>
-                <HStack width={["50%", "50%", "50%", "15%"]}>
-                  <Image src={`${assetsURL}report/pending_fix_color.svg`} />
-                  <Text
-                    fontSize={["sm", "sm", "sm", "md"]}
-                    fontWeight={"500"}
-                    color={"black"}
-                    fontStyle={"italic"}
-                  >
-                    Pending Fix
-                  </Text>
-                </HStack>
-              </Flex>
-            ))}
-            {profile?.current_package &&
-              !["pro", "custom"].includes(profile?.current_package) && (
-                <UpgradePackageV2
-                  text={
-                    <>
-                      Upgrade to our<strong> Pro </strong>plan or a
-                      <strong> Custom </strong>
-                      plan to use this feature and much more
-                    </>
-                  }
-                  iconSize={85}
-                />
-              )}
-          </Flex>
+              ))}
+              <UpgradePackageV2
+                text={
+                  <>
+                    Upgrade to our<strong> Pro </strong>plan or a
+                    <strong> Custom </strong>
+                    plan to use this feature and much more
+                  </>
+                }
+                iconSize={85}
+              />
+            </Flex>
+          ) : null}
         </Flex>
 
         <Flex
