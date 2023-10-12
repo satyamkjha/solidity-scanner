@@ -48,7 +48,7 @@ export const API_PATH = {
   API_UPDATE_SKIP_FILE_PATHS: "/api-update-skip-file-paths/",
   API_DELETE_PROJECT: "/api-delete-project/",
   API_DELETE_BLOCK: "/api-delete-block/",
-  API_CREATE_GITHUB_BUGS_ISSUE: "/api-create-github-bugs-issue/",
+  API_CREATE_BUGS_ISSUE: "/api-create-oauth-bugs-issue/",
 
   //QUICKSCAN
   API_GET_LATEST_QS: "/api-latest-qs/",
@@ -62,8 +62,8 @@ export const API_PATH = {
   API_PUBLISH_REPORT: "/api-publish-report/",
 
   //INTEGRATIONS
-  API_AUTHENTICATE_INTEGRATIONS: "/api-authenticate-",
-  API_DELETE_INTEGRATIONS: "/api-delete-",
+  API_AUTHENTICATE_INTEGRATIONS: "/api-authenticate-oauth-provider/",
+  API_DELETE_INTEGRATIONS: "/api-delete-oauth-provider/",
 
   //PRIVATE API
   API_GET_ACCESS_KEY: "/private/api-get-access-key/",
