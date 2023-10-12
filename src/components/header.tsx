@@ -7,7 +7,7 @@ import {
   MenuList,
   MenuItem,
   MenuDivider,
-  Box, 
+  Box,
   IconButton,
   Button,
   Image,
@@ -34,6 +34,10 @@ export const Header: React.FC<{ theme: "light" | "dark" }> = ({ theme }) => {
   const { isOpen, onClose, onOpen } = useDisclosure();
   const queryClient = useQueryClient();
 
+  const menuItemBgColor = theme === "dark" ? "#00000040" : "#FFFFFF";
+  const borderColor = theme === "dark" ? "#262626" : "#26262620";
+  const linkVariant = theme === "dark" ? "subtle" : "navigation";
+
   return (
     <Flex
       as="header"
@@ -41,33 +45,31 @@ export const Header: React.FC<{ theme: "light" | "dark" }> = ({ theme }) => {
       alignItems="center"
       justifyContent="justify-content"
       width="100%"
-      px={10}
+      px={5}
     >
       <Flex
         as="header"
         alignItems="center"
         justifyContent="space-between"
-        width="100%"
+        width={["100%", "95%"]}
         py={5}
       >
-        {theme === "dark" ? (
-          <Image
-            sx={{
-              width: "250px",
-              height: "50px",
-            }}
-            src={`${assetsURL}logo/solidityscan_white.svg`}
-          />
-        ) : (
-          <Logo />
-        )}
-
+        <Image
+          sx={{
+            width: "250px",
+            height: "50px",
+          }}
+          onClick={() => history.push("/")}
+          src={`${assetsURL}logo/solidityscan_${
+            theme === "dark" ? "white" : "black"
+          }.svg`}
+        />
         {isDesktopView ? (
           <HStack ml={16} spacing={7}>
             <Link
               as={RouterLink}
               to="/pricing"
-              variant="subtle"
+              variant={linkVariant}
               fontWeight="600"
             >
               Pricing
@@ -75,7 +77,7 @@ export const Header: React.FC<{ theme: "light" | "dark" }> = ({ theme }) => {
             <Link
               as={RouterLink}
               to="/quickscan"
-              variant="subtle"
+              variant={linkVariant}
               fontWeight="600"
             >
               Quickscan
@@ -83,7 +85,7 @@ export const Header: React.FC<{ theme: "light" | "dark" }> = ({ theme }) => {
             <Link
               as={RouterLink}
               to="/detectors"
-              variant="subtle"
+              variant={linkVariant}
               fontWeight="600"
             >
               Detectors
@@ -91,7 +93,7 @@ export const Header: React.FC<{ theme: "light" | "dark" }> = ({ theme }) => {
             <Link
               as={RouterLink}
               to="/hackboard"
-              variant="subtle"
+              variant={linkVariant}
               fontWeight="600"
             >
               HackBoard
@@ -105,20 +107,33 @@ export const Header: React.FC<{ theme: "light" | "dark" }> = ({ theme }) => {
                 width="110px"
                 borderWidth="1px"
                 fontWeight="600"
-                color="gray.400"
-                _hover={{ color: "gray.400" }}
-                _active={{ color: "gray.400" }}
+                color={theme === "dark" ? "gray.400" : "#000"}
+                _hover={{ color: theme === "dark" ? "gray.400" : "#000" }}
+                _active={{ color: theme === "dark" ? "gray.400" : "#000" }}
                 _focus={{ boxShadow: "outline" }}
               >
                 Blogs <ChevronDownIcon fontSize="xl" ml={1} />
               </MenuButton>
-              <MenuList zIndex={100}>
-                <MenuItem>
+              <MenuList
+                bgColor={theme === "dark" ? "#00000060" : "#FFFFFF"}
+                borderRadius={10}
+                borderColor={borderColor}
+                zIndex={100}
+              >
+                <MenuItem
+                  _hover={{
+                    bgColor: menuItemBgColor,
+                  }}
+                  _focus={{
+                    bgColor: menuItemBgColor,
+                  }}
+                  px={5}
+                >
                   <Link
                     onClick={() => {
                       window.open("https://blog.solidityscan.com/", "_blank");
                     }}
-                    variant="navigation"
+                    variant={linkVariant}
                     fontWeight="600"
                     w="100%"
                     h="100%"
@@ -127,8 +142,16 @@ export const Header: React.FC<{ theme: "light" | "dark" }> = ({ theme }) => {
                     Blogs
                   </Link>
                 </MenuItem>
-                <MenuDivider />
-                <MenuItem>
+                <MenuDivider borderColor={borderColor} />
+                <MenuItem
+                  _hover={{
+                    bgColor: menuItemBgColor,
+                  }}
+                  _focus={{
+                    bgColor: menuItemBgColor,
+                  }}
+                  px={5}
+                >
                   <Link
                     onClick={() => {
                       window.open(
@@ -136,7 +159,7 @@ export const Header: React.FC<{ theme: "light" | "dark" }> = ({ theme }) => {
                         "_blank"
                       );
                     }}
-                    variant="navigation"
+                    variant={linkVariant}
                     fontWeight="600"
                     w="100%"
                     h="100%"
@@ -349,8 +372,8 @@ export const Header: React.FC<{ theme: "light" | "dark" }> = ({ theme }) => {
       <Divider
         borderWidth={"1px"}
         mb={5}
-        borderColor={theme === "dark" ? "#262626" : "#26262630"}
-        width="95%"
+        borderColor={borderColor}
+        width={["100%", "95%"]}
       />
     </Flex>
   );

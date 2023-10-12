@@ -83,7 +83,8 @@ const QuickScanForm: React.FC<{
       display: "flex",
       flexDirection: "row",
       backgroundColor: "#FFFFFF",
-      width: isDesktopView ? "300px" : "95%",
+      width: isDesktopView ? "300px" : "100%",
+      maxWidth: "500px",
       padding: 5,
       margin: 0,
       borderTopLeftRadius: 15,
@@ -98,6 +99,11 @@ const QuickScanForm: React.FC<{
 
       return { ...provided, opacity, transition };
     },
+    container: (provided: any, state: any) => ({
+      ...provided,
+      width: isDesktopView ? "300px" : "95%",
+      maxWidth: "500px",
+    }),
   };
 
   const customStylesChain: StylesConfig<
@@ -138,8 +144,9 @@ const QuickScanForm: React.FC<{
       display: "flex",
       flexDirection: "row",
       backgroundColor: "#FFFFFF",
-      width: isDesktopView ? "300px" : "95%",
+      width: isDesktopView ? "300px" : "100%",
       padding: 5,
+      maxWidth: "500px",
       borderTopLeftRadius: 0,
       borderBottomLeftRadius: 0,
       borderRadius: isDesktopView ? 0 : 15,
@@ -147,6 +154,11 @@ const QuickScanForm: React.FC<{
       marginRight: isDesktopView ? -2 : 0,
       marginBottom: isDesktopView ? 0 : 0,
       border: state.isFocused ? "2px solid #52FF00" : "2px solid #EDF2F7",
+    }),
+    container: (provided: any, state: any) => ({
+      ...provided,
+      width: isDesktopView ? "300px" : "95%",
+      maxWidth: "500px",
     }),
     singleValue: (provided: any, state: any) => {
       const opacity = state.isDisabled ? 0.3 : 1;
@@ -315,7 +327,12 @@ const QuickScanForm: React.FC<{
         alignItems={"center"}
         justifyContent="center"
         w={"100%"}
-        h={["fit-content", "fit-content", "fit-content", "100vh"]}
+        h={[
+          "fit-content",
+          "fit-content",
+          "fit-content",
+          view === "landing" ? "100vh" : "750px",
+        ]}
         zIndex={10}
         px={[0, 0, 10]}
         py={isDesktopView ? 20 : 10}
@@ -367,9 +384,10 @@ const QuickScanForm: React.FC<{
           seconds.
         </Text>
         <Stack
-          mt={20}
+          mt={isDesktopView ? 20 : 10}
           ml={[4, 4, 4, 0]}
           justify="center"
+          alignItems="center"
           w={"100%"}
           maxW={isDesktopView ? "1500px" : "900px"}
           direction={isDesktopView ? "row" : "column"}
@@ -383,7 +401,7 @@ const QuickScanForm: React.FC<{
             options={platforms.map((item) => ({
               ...item,
               isDisabled: false,
-            }))}
+             }))}
             isSearchable={true}
             value={platforms.find((item) => platform === item.value)}
             placeholder="Select Contract Platform"
@@ -407,6 +425,7 @@ const QuickScanForm: React.FC<{
               height={50}
               borderRadius={isDesktopView ? 0 : 15}
               width={isDesktopView ? "300px" : "95%"}
+              maxWidth="500px"
               value={node_id}
               onChange={(e) => {
                 setNodeId(e.target.value);
@@ -438,6 +457,7 @@ const QuickScanForm: React.FC<{
             borderTopLeftRadius={isDesktopView ? 0 : 15}
             borderBottomLeftRadius={isDesktopView ? 0 : 15}
             width={isDesktopView ? "500px" : "95%"}
+            maxWidth="500px"
             value={address}
             onChange={(e) => {
               setAddress(e.target.value);
@@ -449,7 +469,8 @@ const QuickScanForm: React.FC<{
           isLoading={isLoading}
           loadingText="Scanning"
           spinner={<Loader color={"#3300FF"} size={20} />}
-          mt={20}
+          mt={isDesktopView ? 20 : 10}
+          mb={isDesktopView ? "0px" : "120px"}
           w={"300px"}
           type="submit"
           variant="brand"

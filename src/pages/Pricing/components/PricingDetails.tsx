@@ -46,8 +46,8 @@ const PricingDetails: React.FC<{
         alignItems={"center"}
         w={"100%"}
         px={0}
-        py={page === "pricing" ? "5px" : "60px"}
-        h={["1100px", "1000px", "800px", "720px", "720px"]}
+        py={page === "pricing" ? "0px" : "60px"}
+        h={["1100px", "1000px", "800px"]}
         backgroundColor="#FFFFFF"
         style={{
           backgroundSize: "cover",
@@ -68,6 +68,7 @@ const PricingDetails: React.FC<{
           fontSize={
             page === "pricing" ? ["3xl", "3xl", "4xl", "4xl", "5xl"] : "3xl"
           }
+          mt={20}
           mb={7}
           textAlign="center"
         >
@@ -107,7 +108,6 @@ const PricingDetails: React.FC<{
           size. Get your scan results and reports vetted by our security
           professionals
         </Text>
-
         {page === "pricing" && (
           <>
             <Text
@@ -204,7 +204,7 @@ const PricingDetails: React.FC<{
         alignItems={"center"}
         justifyContent="flex-end"
         backgroundColor="#FFFFFF00"
-        mt={page === "pricing" ? ["-300px", "-300px", "-250px"] : "-430px"}
+        mt={page === "pricing" ? ["-300px", "-300px", "-220px"] : "-410px"}
         px={page === "pricing" ? [4, 4, 4, 10] : [4]}
       >
         <Grid

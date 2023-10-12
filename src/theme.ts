@@ -298,7 +298,8 @@ export const theme = extendTheme({
           fontWeight: 500,
           color: "gray.400",
           _hover: {
-            color: "gray.500",
+            color: "gray.600",
+            textDecoration: "none",
           },
         },
         white: {
