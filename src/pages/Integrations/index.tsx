@@ -88,8 +88,8 @@ const Integrations: React.FC<{ profileData?: Profile }> = ({ profileData }) => {
             title="Bitbucket"
             description="Connect you Bitbucket to directly create issues for vulnerabilities in your repo"
             icon={<BitbucketIcon size={57} />}
-            allowed={profileData._integrations.github.allowed}
-            status={profileData._integrations.github.status}
+            allowed={profileData._integrations.bitbucket.allowed}
+            status={profileData._integrations.bitbucket.status}
             url={BITBUCKET_URL}
             providerUrlChecker="bitbucket.org"
           />
@@ -97,8 +97,8 @@ const Integrations: React.FC<{ profileData?: Profile }> = ({ profileData }) => {
             title="GitLab"
             description="Connect you GitLab to directly create issues for vulnerabilities in your repo"
             icon={<GitlabIcon size={60} />}
-            allowed={profileData._integrations.github.allowed}
-            status={profileData._integrations.github.status}
+            allowed={profileData._integrations.gitlab.allowed}
+            status={profileData._integrations.gitlab.status}
             url={GITLAB_URL}
             providerUrlChecker="gitlab.com"
           />
