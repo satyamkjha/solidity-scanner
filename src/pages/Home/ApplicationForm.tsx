@@ -13,7 +13,7 @@ import {
   Divider,
 } from "@chakra-ui/react";
 import API from "helpers/api";
-import { getAssetsURL } from "helpers/helperFunction";
+import { getAssetsURL, checkProjectUrl } from "helpers/helperFunction";
 import { API_PATH } from "helpers/routeManager";
 import ConfigSettings from "components/projectConfigSettings";
 import InfoSettings from "components/projectInfoSettings";
@@ -46,9 +46,6 @@ const ApplicationForm: React.FC<{
     profileData?._integrations?.github?.status === "successful";
   const toast = useToast();
 
-  const githubUrlRegex =
-    /(http(s)?)(:(\/\/))((github.com)(\/)[\w@:\-~]+(\/)[\w@:\-~]+)(\.git)?/;
-
   const runValidation = () => {
     if (projectName.length === 0) {
       setNameError("Please enter a Project Name of less than 50 characters.");
@@ -58,13 +55,11 @@ const ApplicationForm: React.FC<{
       setNameError("Project Name cannot exceed to more than 50 characters.");
       return false;
     }
-    let filteredUrlInput = githubUrlRegex.exec(githubLink);
-    if (!filteredUrlInput) {
-      setLinkError("Please enter a valid Github repository link");
+    if (!checkProjectUrl(githubLink)) {
+      setLinkError("Please enter a valid repository link");
       return false;
     }
-    const filteredUrl = filteredUrlInput[0];
-    setGithubLink(filteredUrl);
+    setGithubLink(githubLink);
     setNameError(null);
     setLinkError(null);
     return true;
