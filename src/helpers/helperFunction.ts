@@ -173,7 +173,6 @@ export const getProjectFileUrl = (
   branchName: string,
   file: Finding
 ) => {
-  project_url = "https://gitlab.com/testsol1/Universe-Marketplace";
   if (project_url.endsWith(".git")) {
     project_url = project_url.slice(0, -4);
   }
