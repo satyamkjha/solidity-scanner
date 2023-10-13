@@ -60,8 +60,8 @@ const Sidebar: React.FC<{
       accessRevoked: [],
     },
     {
-      link: "/scans",
-      label: "Scans",
+      link: "/projects",
+      label: "Projects",
       icon: <ProjectsMenuIcon size={16} />,
       isCollapsed: isCollapsed,
       transitionDone: transitionDone,
