@@ -96,7 +96,7 @@ export type Project = {
 export type ScanObj = {
   scan_id: string;
   scan_type: string;
-  scan_details: Scan
+  scan_details: Scan;
 };
 
 export type AllScanList = {
@@ -300,15 +300,14 @@ export type ScanSummaryItem = {
   pending_fix_count: number;
 };
 
-export type IssueSeverityDistribution = {
+export interface IssueSeverityDistribution {
   critical: number;
   high: number;
   medium: number;
   low: number;
   informational: number;
   gas: number;
-  [key: string]: number;
-};
+}
 
 export type ScanDetail = {
   issue_id: string;

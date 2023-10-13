@@ -348,7 +348,9 @@ const Layout: React.FC = ({ children }) => {
               </Menu>
             )}
           </Flex>
-          <Box width={"100%"}>{children}</Box>
+          <Box width={"100%"} height="calc(100% - 90px)">
+            {children}
+          </Box>
         </Box>
       </Flex>
     </Box>

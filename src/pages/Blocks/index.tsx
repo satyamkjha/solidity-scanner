@@ -592,6 +592,7 @@ const BlockCard: React.FC<{
                 ?.informational || 0
             }
             gas={multi_file_scan_summary?.issue_severity_distribution.gas || 0}
+            view="scans"
           />
         </Flex>
       ) : multi_file_scan_status === "scanning" ||

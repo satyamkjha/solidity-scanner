@@ -289,6 +289,7 @@ const ProjectCard: React.FC<{
                   gas={
                     multi_file_scan_summary?.issue_severity_distribution?.gas
                   }
+                  view="scans"
                 />
               </Box>
             </>
