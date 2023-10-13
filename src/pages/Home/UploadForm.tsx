@@ -223,7 +223,7 @@ const UploadForm: React.FC<{
         project_type: "new",
       });
 
-      history.push("/scans");
+      history.push("/projects");
       setTimeout(() => setIsLoading(false), 1000);
     } catch (e) {
       setTimeout(() => setIsLoading(false), 1000);
