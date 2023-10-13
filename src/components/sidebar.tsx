@@ -61,7 +61,7 @@ const Sidebar: React.FC<{
     },
     {
       link: "/projects",
-      label: "Project",
+      label: "Projects",
       icon: <ProjectsMenuIcon size={16} />,
       isCollapsed: isCollapsed,
       transitionDone: transitionDone,
