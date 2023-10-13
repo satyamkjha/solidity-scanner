@@ -240,7 +240,7 @@ const Routes: React.FC = () => {
                   <PrivateRoute exact path="/profile">
                     <Profile />
                   </PrivateRoute>
-                  <PrivateRoute exact path="/scans">
+                  <PrivateRoute exact path="/projects">
                     <Scans />
                   </PrivateRoute>
                   {/* <PrivateRoute exact path="/projects">
