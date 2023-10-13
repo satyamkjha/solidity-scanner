@@ -15,7 +15,11 @@ import {
 import { FilesState, Issues } from "../../common/types";
 import { issueActions } from "../../common/values";
 import MultipleFileExplorer from "./MultipleFileExplorer";
-import { sentenceCapitalize, getAssetsURL } from "../../helpers/helperFunction";
+import {
+  sentenceCapitalize,
+  getAssetsURL,
+  getProjectType,
+} from "../../helpers/helperFunction";
 import React, { Dispatch, SetStateAction, useEffect, useState } from "react";
 import { BiBulb, BiCodeCurly, BiComment } from "react-icons/bi";
 import TrialWall from "./TrialWall";
@@ -294,12 +298,16 @@ export const FileExplorerSection: React.FC<{
             modelText={
               <VStack>
                 <Text my={4} w={["100%"]} fontSize={"lg"} fontWeight={600}>
-                  Are you sure you want to update the Issue to Github?
+                  {`Are you sure you want to update the Issue to ${
+                    project_url ? getProjectType(project_url) : "Github"
+                  }?`}
                 </Text>
                 <Text my={4} color="detail" fontWeight={400} w={["100%"]}>
                   You are about to create a{" "}
                   <Text as={"span"} color="black" fontWeight={"bold"}>
-                    Github Issue
+                    {`${
+                      project_url ? getProjectType(project_url) : "Github"
+                    } Issue`}
                   </Text>{" "}
                   for selected{" "}
                   <Text as={"span"} color="black" fontWeight={"bold"}>

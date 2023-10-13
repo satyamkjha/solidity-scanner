@@ -35,6 +35,8 @@ export type Profile = {
     github: IntegrationData;
     slack: IntegrationData;
     jira: IntegrationData;
+    bitbucket: IntegrationData;
+    gitlab: IntegrationData;
   };
   is_cancellable: boolean;
   payment_method: string;
@@ -96,7 +98,7 @@ export type Project = {
 export type ScanObj = {
   scan_id: string;
   scan_type: string;
-  scan_details: Scan
+  scan_details: Scan;
 };
 
 export type AllScanList = {
