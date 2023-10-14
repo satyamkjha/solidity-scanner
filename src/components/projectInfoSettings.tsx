@@ -102,7 +102,7 @@ const InfoSettings: React.FC<{
       </VStack>
       <VStack mb={5} alignItems={"flex-start"}>
         <Text mb={0} fontSize="sm">
-          Link to the Github repository
+          Link to your repository
         </Text>
         <InputGroup alignItems="center" mb={4}>
           <InputLeftElement
