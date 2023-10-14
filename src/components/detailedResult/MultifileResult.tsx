@@ -221,9 +221,9 @@ const MultifileResult: React.FC<{
       };
       const { data } = await API.post(API_PATH.API_CREATE_BUGS_ISSUE, payload);
 
-      if (data && data.issue_url) {
+      if (data && data.issue_id && project_url) {
         toast({
-          title: "GitHub issue successfully created",
+          title: `Issue created successfully on ${getProjectType(project_url)}`,
           status: "success",
           duration: 5000,
           isClosable: true,

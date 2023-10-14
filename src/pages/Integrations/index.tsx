@@ -20,6 +20,7 @@ import {
   SLACK_SCOPE,
   BITBUCKET_CLIENT_ID,
   GITLAB_CLIENT_ID,
+  GITLAB_SCOPES,
 } from "common/constants";
 import API from "helpers/api";
 import { API_PATH } from "helpers/routeManager";
@@ -45,7 +46,7 @@ const BITBUCKET_URL = `https://bitbucket.org/site/oauth2/authorize?client_id=${B
 )}`;
 const GITLAB_URL = `https://gitlab.com/oauth/authorize?client_id=${GITLAB_CLIENT_ID}&redirect_uri=${REDIRECT_URI}&response_type=code&state=${getCookie(
   "csrftoken"
-)}`;
+)}&scope=${GITLAB_SCOPES}`;
 const Integrations: React.FC<{ profileData?: Profile }> = ({ profileData }) => {
   return (
     <Box
