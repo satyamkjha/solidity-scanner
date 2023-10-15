@@ -43,14 +43,7 @@ export default function ProductSlides() {
     {
       heading: "Supported Protocols",
       imgAlt: "Supported Protocols",
-      text: `With tremendous growth across the Blockchain spectrum, there is a
-        wide variety of Protocol options for builders to choose from. In our
-        endeavor to retain the pinnacle in the Smart Contract Security Audit
-        Scan space, SolidityScan boasts of providing seamless support for
-        Ethereum, Polygon, Avalanche, Binance, Fantom, Cronos, Celo, and
-        many more. Inviting all buidlers to subscribe to the world's
-        fastest, most accurate, and secure smart contract vulnerability
-        analysis and auditing platform at the most affordable price.`,
+      text: `As the blockchain landscape continues to expand, builders have an array of protocol options to choose from. In our pursuit of excellence in the field of Smart Contract Security Audits, SolidityScan proudly offers seamless support for Ethereum, Polygon, Avalanche, Binance, Fantom, Cronos, Celo, and more. We invite all builders to subscribe to the world's fastest, most accurate, and secure smart contract vulnerability analysis and auditing platform at an affordable price.`,
       imgUrl: "landing/carousel/Screenshot_3.png",
       mobileImgUrl: "mobileScreen.png",
       numberColorLinearGradient:
@@ -108,19 +101,24 @@ export default function ProductSlides() {
     >
       <Heading
         width="90%"
-        maxW="700px"
+        maxW="1300px"
         as="h2"
-        fontSize="3xl"
-        fontWeight={800}
+        fontSize="2xl"
+        fontWeight={700}
         my={5}
       >
-        Lorem ipsum dolor sit amet consectetur. Ipsum quis quisque{" "}
+        Our AI powered tool is packed with a diverse set of robust features
+        designed to cater the unique requirements of{" "}
         <Box as="span" sx={{ color: "accent" }}>
-          luctus senectus sagittis
+          Smart Contract Vulnerability Detection
+        </Box>{" "}
+        across organizations of all sizes in the{" "}
+        <Box as="span" sx={{ color: "accent" }}>
+          web3 ecosystem.
         </Box>
       </Heading>
       <Text color="subtle" fontSize={["lg", "lg", "xl"]} mb={5}>
-        Lorem ipsum dolor sit amet consectetur. At velit duis mattis
+        Empowering Smart Contract Security with Cutting-Edge Features
       </Text>
       <Flex
         justifyContent="flex-start"

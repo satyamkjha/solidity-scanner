@@ -57,11 +57,10 @@ export default function ManualAudit() {
           my={10}
           textAlign={["center", "center", "center", "left"]}
         >
-          Tak to our team of security experts for help on securing your products
-          Tak to our team of security experts for help on securing your
-          productsconsectetur. Sem nibh et mi sit in fusce. Bibendum quis orci
-          nec scelerisque turpis. Scelerisque laoreet vitae nascetur sed
-          nascetur eros tortor sem dapibus.
+          Application ecosystems are evolving everyday, and so are the security
+          practises around them. From web-applications to smart contract code
+          review to a security audit of your cloud infra. Our services ensure
+          your security is in safe-hands.
         </Text>
         <Flex
           flexDir={[

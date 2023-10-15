@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import {
   Flex,
   Box,
@@ -13,6 +13,7 @@ import { getAssetsURL } from "helpers/helperFunction";
 import { useConfig } from "hooks/useConfig";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { EffectCoverflow, Navigation, Pagination } from "swiper";
+import Parser from "rss-parser";
 
 import "swiper/css";
 import "swiper/css/pagination";
@@ -20,50 +21,71 @@ import "swiper/css/navigation";
 
 export const LatestHacks: React.FC = () => {
   const data: {
-    imgUrl: string;
     articleLink: string;
     articleHeading: string;
     articleDate: string;
   }[] = [
     {
-      imgUrl: "landing/latest_hacks/LatestHacksImg.png",
-      articleLink: "",
-      articleHeading: "Smart Contract Security",
-      articleDate: "Mar 13",
+      articleLink:
+        "https://blog.solidityscan.com/starsarena-hack-analysis-e71d78704e85?source=rss----3e911405e793---4",
+      articleHeading: "StarsArena Hack Analysis",
+      articleDate: "Fri, 13 Oct 2023",
     },
     {
-      imgUrl: "landing/latest_hacks/LatestHacksImg.png",
-      articleLink: "",
-      articleHeading: "Smart Contract Security",
-      articleDate: "Mar 13",
+      articleLink:
+        "https://blog.solidityscan.com/exactly-protocol-hack-analysis-6ebc99d3e7b1?source=rss----3e911405e793---4",
+      articleHeading: "Exactly Protocol Hack Analysis",
+      articleDate: "Mon, 09 Oct 2023",
     },
     {
-      imgUrl: "landing/latest_hacks/LatestHacksImg.png",
-      articleLink: "",
-      articleHeading: "Smart Contract Security",
-      articleDate: "Mar 13",
+      articleLink:
+        "https://blog.solidityscan.com/banana-token-hack-analysis-3f6f84c08b8f?source=rss----3e911405e793---4",
+      articleHeading: "Banana Token Hack Analysis",
+      articleDate: "Tue, 12 Sep 2023",
     },
     {
-      imgUrl: "landing/latest_hacks/LatestHacksImg.png",
-      articleLink: "",
-      articleHeading: "Smart Contract Security",
-      articleDate: "Mar 13",
+      articleLink:
+        "https://blog.solidityscan.com/dappsocial-hack-analysis-3b8bf243a850?source=rss----3e911405e793---4",
+      articleHeading: "DAppSocial Hack Analysis",
+      articleDate: "Fri, 08 Sep 2023",
     },
     {
-      imgUrl: "landing/latest_hacks/LatestHacksImg.png",
-      articleLink: "",
-      articleHeading: "Smart Contract Security",
-      articleDate: "Mar 13",
+      articleLink:
+        "https://blog.solidityscan.com/zunami-protocol-hack-analysis-e95981976e11?source=rss----3e911405e793---4",
+      articleHeading: "Zunami Protocol Hack Analysis",
+      articleDate: "Tue, 05 Sep 2023",
     },
     {
-      imgUrl: "landing/latest_hacks/LatestHacksImg.png",
-      articleLink: "",
-      articleHeading: "Smart Contract Security",
-      articleDate: "Mar 13",
+      articleLink:
+        "https://blog.solidityscan.com/earningfarm-hack-analysis-f5eba2a1e080?source=rss----3e911405e793---4",
+      articleHeading: "EarningFarm Hack Analysis",
+      articleDate: "Thu, 24 Aug 2023",
+    },
+    {
+      articleLink:
+        "https://blog.solidityscan.com/uwerx-hack-analysis-f03b061bb07b?source=rss----3e911405e793---4",
+      articleHeading: "Uwerx Hack Analysis",
+      articleDate: "Tue, 08 Aug 2023",
+    },
+    {
+      articleLink:
+        "https://blog.solidityscan.com/jpegd-hack-analysis-a5a3dc89fa4?source=rss----3e911405e793---4",
+      articleHeading: "JPEG’d Hack Analysis",
+      articleDate: "Mon, 07 Aug 2023",
+    },
+    {
+      articleLink:
+        "https://blog.solidityscan.com/platypus-hack-analysis-a7d2f6d1f96e?source=rss----3e911405e793---4",
+      articleHeading: "Platypus Hack Analysis",
+      articleDate: "Thu, 03 Aug 2023",
+    },
+    {
+      articleLink:
+        "https://blog.solidityscan.com/ffist-hack-analysis-9cb695c0fad9?source=rss----3e911405e793---4",
+      articleHeading: "$FFIST Hack Analysis",
+      articleDate: "Fri, 28 Jul 2023 ",
     },
   ];
-
-  const [showUnderline] = useMediaQuery("(min-width: 325px)");
 
   return (
     <Flex
@@ -86,60 +108,6 @@ export const LatestHacks: React.FC = () => {
         borderRadius={20}
         background={"#FFFFFF"}
       >
-        {/* <Box
-          mb={5}
-          position="relative"
-          width="fit-content"
-          height="fit-content"
-        >
-          <Heading
-            w={"100%"}
-            maxW={["300px", "300px", "800px"]}
-            as="h1"
-            fontSize="3xl"
-            mb={2}
-            fontWeight={800}
-          >
-            Most recent hacks that{" "}
-            <Box as="span" color="#3300FF">
-              made the news
-            </Box>
-          </Heading>
-          <Box
-            bottom={0}
-            right={0}
-            display={showUnderline ? "block" : "none"}
-            position="absolute"
-            width={["70%", "225px"]}
-            height="5px"
-            bgColor="#30F"
-          />
-        </Box>
-
-        <Text color="subtle" fontSize={["lg", "lg", "xl"]} mt={4} mb={6}>
-          Lorem ipsum dolor sit amet consectetur. Vitae egestas integer est ut
-          iaculis. Volutpat nascetur tortor et ante.
-        </Text> */}
-        {/* <Flex
-          justifyContent="flex-start"
-          alignItems={"flex-start"}
-          height="fit-content"
-          width="100%"
-          overflowX="scroll"
-          my={20}
-          pb={5}
-        >
-          <Flex
-            justifyContent="flex-start"
-            alignItems={"flex-start"}
-            height="fit-content"
-            width="fit-content"
-          >
-            {data.map((item, index) => (
-              <ArticleComp key={index} {...item} />
-            ))}
-          </Flex>
-        </Flex> */}
         <Swiper
           slidesPerView={"auto"}
           spaceBetween={30}
@@ -171,11 +139,10 @@ export const LatestHacks: React.FC = () => {
 };
 
 const ArticleComp: React.FC<{
-  imgUrl: string;
   articleLink: string;
   articleHeading: string;
   articleDate: string;
-}> = ({ imgUrl, articleLink, articleHeading, articleDate }) => {
+}> = ({ articleLink, articleHeading, articleDate }) => {
   const config: any = useConfig();
   const assetsURL = getAssetsURL(config);
 
@@ -191,13 +158,33 @@ const ArticleComp: React.FC<{
       mr={5}
       background={"#FAFBFC"}
     >
-      <Image
-        src={`${assetsURL}${imgUrl}`}
+      <Flex
+        backgroundImage={`${assetsURL}background/latest_hack_post_bg.svg`}
         width="100%"
         height={["auto", "270px"]}
         borderRadius="25px"
-        alt={"Article Image"}
-      />
+        flexDir="column"
+        pt={"60px"}
+        justifyContent="flex-start"
+        alignItems="center"
+        backgroundPosition="center"
+        backgroundRepeat="no-repeat"
+        backgroundSize="contain"
+      >
+        <Heading
+          color={"white"}
+          w="80%"
+          fontSize={"3xl"}
+          sx={{
+            background:
+              "linear-gradient(129.18deg, #52FF00 8.52%, #00EEFD 93.94%)",
+            backgroundClip: "text",
+            WebkitTextFillColor: "transparent",
+          }}
+        >
+          {articleHeading}
+        </Heading>
+      </Flex>
       <Flex
         justifyContent={["flex-start", "space-between"]}
         alignItems="center"

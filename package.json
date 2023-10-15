@@ -25,7 +25,6 @@
     "@types/react-router-dom": "^5.1.7",
     "@types/ua-parser-js": "^0.7.36",
     "add": "^2.0.6",
-    "aos": "^2.3.4",
     "axios": "^0.21.1",
     "check-password-strength": "^2.0.5",
     "dotenv": "^16.0.3",
@@ -59,6 +58,7 @@
     "react-select": "^5.4.0",
     "react-to-print": "^2.14.12",
     "react-type-animation": "^3.1.0",
+    "rss-parser": "^3.13.0",
     "swiper": "^8.4.4",
     "typescript": "^3.9.5",
     "ua-parser-js": "^1.0.33",
@@ -94,8 +94,18 @@
   "devDependencies": {
     "@types/brainhubeu__react-carousel": "^2.0.3",
     "@types/js-cookie": "^3.0.2",
+    "assert": "^2.1.0",
+    "buffer": "^6.0.3",
+    "crypto-browserify": "^3.12.0",
+    "https-browserify": "^1.0.0",
+    "os-browserify": "^0.3.0",
     "prettier": "^2.5.1",
-    "types": "^0.1.1"
+    "process": "^0.11.10",
+    "react-app-rewired": "^2.2.1",
+    "stream-browserify": "^3.0.0",
+    "stream-http": "^3.2.0",
+    "types": "^0.1.1",
+    "url": "^0.11.3"
   },
   "resolutions": {
     "@types/react": "17.0.2",

@@ -1,5 +1,4 @@
 import React from "react";
-
 import {
   Flex,
   Box,
@@ -70,7 +69,7 @@ const Home: React.FC = () => {
               my: 24,
               justifyContent: "center",
             }}
-          >
+          > 
             <Loader />
           </Flex>
         )}

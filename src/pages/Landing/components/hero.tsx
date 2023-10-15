@@ -21,21 +21,21 @@ export const LandingHero: React.FC = () => {
       w="100%"
       textAlign={["center", "left"]}
       py={20}
-      px={[0, 0, 0, 24]}
+      px={[0, 0, 0, 20]}
       display={["flex"]}
       flexDirection={isDesktopView ? "row" : "column"}
       alignItems={"center"}
       justifyContent={isDesktopView ? "space-between" : "flex-start"}
     >
       <Box
-        w={isDesktopView ? "65%" : "90%"}
+        w={isDesktopView ? "70%" : "90%"}
         px={[0, 0, 10]}
         mt={0}
         textAlign={isDesktopView ? "left" : "center"}
         justifyContent="center"
         h="100%"
         display={"flex"}
-        maxW="700px"
+        maxW="800px"
         flexDir="column"
         alignItems={isDesktopView ? "flex-start" : "center"}
       >
@@ -46,9 +46,10 @@ export const LandingHero: React.FC = () => {
           fontSize={["3xl", "5xl"]}
           mb={8}
         >
-          Get your smart contracts audited by a{" "}
+          Get your smart contracts secured by an AI powered tool{" "}
           <Box
             as="span"
+            fontSize={["5xl", "7xl"]}
             sx={{
               background:
                 "linear-gradient(129.18deg, #52FF00 8.52%, #00EEFD 93.94%)",
@@ -59,13 +60,11 @@ export const LandingHero: React.FC = () => {
             <TypeAnimation
               sequence={[
                 // Same substring at the start will only be typed out once, initially
-                "Lorem ipsum Test",
+                "Scan...",
                 2000, // wait 1s before replacing "Mice" with "Hamsters"
-                "Lorem ipsum Success One",
+                "Fix...",
                 2000,
-                "Lorem ipsum Test Again",
-                2000,
-                "Lorem ipsum Success Again",
+                "Publish...",
                 2000,
               ]}
               wrapper="span"
@@ -170,15 +169,15 @@ export const LandingHero: React.FC = () => {
       </Box>
       <Box
         mt={isDesktopView ? 0 : 20}
-        w={isDesktopView ? "35%" : "100%"}
+        w={isDesktopView ? "30%" : "100%"}
         display={["flex"]}
         flexDirection="column"
-        alignItems={isDesktopView ? "flex-end" : "center"}
+        alignItems={isDesktopView ? "flex-start" : "center"}
       >
         <Lottie
           style={{
             height: "500px",
-            width: "400px",
+            width: "380px",
           }}
           animationData={ssIconAnimation}
         />
@@ -213,55 +212,6 @@ export const LandingHero: React.FC = () => {
           target="_blank"
           rel="noreferrer"
         >
-          {/* <svg width="250" height="54" viewBox="0 0 250 54" version="1.1">
-            <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
-              <g transform="translate(-130.000000, -73.000000)">
-                <g transform="translate(130.000000, 73.000000)">
-                  <rect
-                    stroke="#FF6154"
-                    stroke-width="1"
-                    fill="#FFFFFF00"
-                    x="0.5"
-                    y="0.5"
-                    width="249"
-                    height="53"
-                    rx="10"
-                  />
-                  <text
-                    font-family="Helvetica-Bold, Helvetica"
-                    font-size="9"
-                    font-weight="bold"
-                    fill="#FF6154"
-                  >
-                    <tspan x="53" y="20">
-                      #1 PRODUCT OF THE MONTH
-                    </tspan>
-                  </text>
-                  <text
-                    font-family="Helvetica-Bold, Helvetica"
-                    font-size="16"
-                    font-weight="bold"
-                    fill="#FF6154"
-                  >
-                    <tspan x="52" y="40">
-                      Developer Tools
-                    </tspan>
-                  </text>
-                  false
-                  <g transform="translate(11.000000, 12.000000)">
-                    <path
-                      d="M31,15.5 C31,24.0603917 24.0603917,31 15.5,31 C6.93960833,31 0,24.0603917 0,15.5 C0,6.93960833 6.93960833,0 15.5,0 C24.0603917,0 31,6.93960833 31,15.5"
-                      fill="#FF6154"
-                    />
-                    <path
-                      d="M17.4329412,15.9558824 L17.4329412,15.9560115 L13.0929412,15.9560115 L13.0929412,11.3060115 L17.4329412,11.3060115 L17.4329412,11.3058824 C18.7018806,11.3058824 19.7305882,12.3468365 19.7305882,13.6308824 C19.7305882,14.9149282 18.7018806,15.9558824 17.4329412,15.9558824 M17.4329412,8.20588235 L17.4329412,8.20601152 L10.0294118,8.20588235 L10.0294118,23.7058824 L13.0929412,23.7058824 L13.0929412,19.0560115 L17.4329412,19.0560115 L17.4329412,19.0558824 C20.3938424,19.0558824 22.7941176,16.6270324 22.7941176,13.6308824 C22.7941176,10.6347324 20.3938424,8.20588235 17.4329412,8.20588235"
-                      fill="#FFFFFF"
-                    />
-                  </g>
-                </g>
-              </g>
-            </g>
-          </svg> */}
           <img
             src="https://api.producthunt.com/widgets/embed-image/v1/top-post-topic-badge.svg?post_id=381735&theme=light&period=monthly&topic_id=267"
             alt="SolidityScan - The&#0032;ultimate&#0032;EVM&#0032;compatible&#0032;smart&#0032;contract&#0032;analysis&#0032;tool | Product Hunt"
