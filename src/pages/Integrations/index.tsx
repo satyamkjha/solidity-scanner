@@ -4,7 +4,13 @@ import { Flex, Box, Text, Button, Icon, VStack } from "@chakra-ui/react";
 import { AiOutlineWarning } from "react-icons/ai";
 import { BiLockAlt } from "react-icons/bi";
 
-import { SlackIcon, JiraIcon, GithubIcon } from "components/icons";
+import {
+  SlackIcon,
+  JiraIcon,
+  GithubIcon,
+  BitbucketIcon,
+  GitlabIcon,
+} from "components/icons";
 import OauthHelper from "components/oauthHelper";
 import { getCookie } from "common/functions";
 import {
@@ -12,12 +18,16 @@ import {
   JIRA_SCOPE,
   SLACK_CLIENT_ID,
   SLACK_SCOPE,
+  BITBUCKET_CLIENT_ID,
+  GITLAB_CLIENT_ID,
+  GITLAB_SCOPES,
 } from "common/constants";
 import API from "helpers/api";
 import { API_PATH } from "helpers/routeManager";
 import Loader from "components/styled-components/Loader";
 import { Profile } from "common/types";
 import { useHistory } from "react-router-dom";
+
 const REDIRECT_URI =
   process.env.REACT_APP_ENVIRONMENT === "prod"
     ? "https://solidityscan.com/integrations/"
@@ -31,6 +41,12 @@ const GITHUB_URL = `https://github.com/apps/${
 const SLACK_URL = `https://slack.com/oauth/v2/authorize?client_id=${SLACK_CLIENT_ID}&scope=${SLACK_SCOPE}&state=${getCookie(
   "csrftoken"
 )}`;
+const BITBUCKET_URL = `https://bitbucket.org/site/oauth2/authorize?client_id=${BITBUCKET_CLIENT_ID}&response_type=code&state=${getCookie(
+  "csrftoken"
+)}`;
+const GITLAB_URL = `https://gitlab.com/oauth/authorize?client_id=${GITLAB_CLIENT_ID}&redirect_uri=${REDIRECT_URI}&response_type=code&state=${getCookie(
+  "csrftoken"
+)}&scope=${GITLAB_SCOPES}`;
 const Integrations: React.FC<{ profileData?: Profile }> = ({ profileData }) => {
   return (
     <Box
@@ -68,6 +84,24 @@ const Integrations: React.FC<{ profileData?: Profile }> = ({ profileData }) => {
             status={profileData._integrations.github.status}
             url={GITHUB_URL}
             providerUrlChecker="github.com"
+          />
+          <IntegrationChannel
+            title="Bitbucket"
+            description="Connect you Bitbucket to directly create issues for vulnerabilities in your repo"
+            icon={<BitbucketIcon size={57} />}
+            allowed={profileData._integrations.bitbucket.allowed}
+            status={profileData._integrations.bitbucket.status}
+            url={BITBUCKET_URL}
+            providerUrlChecker="bitbucket.org"
+          />
+          <IntegrationChannel
+            title="GitLab"
+            description="Connect you GitLab to directly create issues for vulnerabilities in your repo"
+            icon={<GitlabIcon size={60} />}
+            allowed={profileData._integrations.gitlab.allowed}
+            status={profileData._integrations.gitlab.status}
+            url={GITLAB_URL}
+            providerUrlChecker="gitlab.com"
           />
           <IntegrationChannel
             title="Slack"
@@ -120,12 +154,10 @@ const IntegrationChannel: React.FC<IntegrationChannelProps> = ({
   const onSuccess = async (code: string) => {
     try {
       setLoading(true);
-      await API.post(
-        `${API_PATH.API_AUTHENTICATE_INTEGRATIONS}${title.toLowerCase()}/`,
-        {
-          code,
-        }
-      );
+      await API.post(`${API_PATH.API_AUTHENTICATE_INTEGRATIONS}`, {
+        code,
+        provider: title.toLowerCase(),
+      });
       setLoading(false);
       queryClient.invalidateQueries("profile");
     } catch (e) {
@@ -136,10 +168,9 @@ const IntegrationChannel: React.FC<IntegrationChannelProps> = ({
   const onDisconnect = async () => {
     try {
       setLoading(true);
-      await API.delete(
-        `${API_PATH.API_DELETE_INTEGRATIONS}${title.toLowerCase()}/`,
-        {}
-      );
+      await API.delete(`${API_PATH.API_DELETE_INTEGRATIONS}`, {
+        data: { provider: title.toLowerCase() },
+      });
       await queryClient.refetchQueries("profile");
       setLoading(false);
     } catch (e) {
@@ -174,25 +205,26 @@ const IntegrationChannel: React.FC<IntegrationChannelProps> = ({
             <Text fontSize="13px" fontWeight="400" opacity={0.8} maxW="500px">
               {description}
             </Text>
-            {title === "GitHub" && status === "failed" && (
-              <Flex alignItems="center" mt={1}>
-                <Icon
-                  mr={1}
-                  fontSize="12px"
-                  as={AiOutlineWarning}
-                  color="yellow.400"
-                />
-                <Text
-                  fontSize="12px"
-                  fontWeight="400"
-                  opacity={0.8}
-                  color="subtle"
-                  maxW="500px"
-                >
-                  Please uninstall the app from github before reconnecting
-                </Text>
-              </Flex>
-            )}
+            {["GitHub", "Bitbucket", "Gitlab"].includes(title) &&
+              status === "failed" && (
+                <Flex alignItems="center" mt={1}>
+                  <Icon
+                    mr={1}
+                    fontSize="12px"
+                    as={AiOutlineWarning}
+                    color="yellow.400"
+                  />
+                  <Text
+                    fontSize="12px"
+                    fontWeight="400"
+                    opacity={0.8}
+                    color="subtle"
+                    maxW="500px"
+                  >
+                    Please uninstall the app from github before reconnecting
+                  </Text>
+                </Flex>
+              )}
           </Box>
         </Flex>
         {allowed ? (

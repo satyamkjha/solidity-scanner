@@ -138,14 +138,74 @@ export const checkOrgName = (email: string) =>
 export const checkContractAddress = (contractAddress: string) =>
   /^xdc[a-fA-F0-9]{40}$|^0x[a-fA-F0-9]{40}$/i.test(contractAddress);
 
+export const checkProjectUrl = (url: string) => {
+  const githubRegex = /^https:\/\/github\.com\/[^/]+\/[^/]+(\.git)?(\/|$)/i;
+  const bitbucketRegex =
+    /^https:\/\/bitbucket\.org\/[^/]+\/[^/]+(\.git)?(\/|$)/i;
+  const gitlabRegex = /^https:\/\/gitlab\.com\/[^/]+\/[^/]+(\.git)?(\/|$)/i;
+
+  if (githubRegex.test(url)) {
+    return true;
+  } else if (bitbucketRegex.test(url)) {
+    return true;
+  } else if (gitlabRegex.test(url)) {
+    return true;
+  }
+};
+
+export const getProjectType = (project_url: string) => {
+  const url = new URL(project_url);
+  const hostname = url.hostname.toLowerCase();
+
+  if (hostname.includes("github.com")) {
+    return "GitHub";
+  } else if (hostname.includes("bitbucket.org")) {
+    return "Bitbucket";
+  } else if (hostname.includes("gitlab.com")) {
+    return "GitLab";
+  } else {
+    return null;
+  }
+};
+
 export const getProjectFileUrl = (
   project_url: string,
   branchName: string,
   file: Finding
 ) => {
-  return `${project_url?.replace(".git", "")}/blob/${branchName}${
-    file.file_path
-  }#L${file.line_nos_start}-L${file.line_nos_end}`;
+  if (project_url.endsWith(".git")) {
+    project_url = project_url.slice(0, -4);
+  }
+  const baseUrl = new URL(project_url);
+
+  switch (getProjectType(project_url)) {
+    case "GitHub":
+      return `${baseUrl.origin}/${baseUrl.pathname.replace(
+        /\/+$/,
+        ""
+      )}/blob/${branchName}${file.file_path}#L${file.line_nos_start}-L${
+        file.line_nos_end
+      }`;
+
+    case "Bitbucket":
+      return `${baseUrl.origin}${baseUrl.pathname.replace(
+        /\/+$/,
+        ""
+      )}/src/${branchName}${file.file_path}#lines-${file.line_nos_start}:${
+        file.line_nos_end
+      }`;
+
+    case "GitLab":
+      return `${baseUrl.origin}/${baseUrl.pathname.replace(
+        /\/+$/,
+        ""
+      )}/-/blob/${branchName}${file.file_path}#L${file.line_nos_start}-${
+        file.line_nos_end
+      }`;
+
+    default:
+      return "";
+  }
 };
 
 export const getTrimmedScanMessage = (scan_status: string) => {
