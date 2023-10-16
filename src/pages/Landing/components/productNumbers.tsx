@@ -12,8 +12,8 @@ export default function ProductNumbers() {
   }[] = [
     {
       color: "#EDFCFE",
-      heading: "0 M",
-      headingNumber: 28.5,
+      heading: "0 M +",
+      headingNumber: 200,
       subHeading: "Hacks & exploits losses",
     },
     {
@@ -24,8 +24,8 @@ export default function ProductNumbers() {
     },
     {
       color: "#F4EFFF",
-      heading: "M $",
-      headingNumber: 2.4,
+      heading: "M $ +",
+      headingNumber: 3.5,
       subHeading: "Worth of contracts secured",
     },
     {

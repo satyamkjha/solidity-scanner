@@ -71,25 +71,22 @@ export default function Partners() {
     >
       <Heading
         width="90%"
-        maxW="1300px"
+        maxW="1000px"
         as="h2"
-        fontSize="2xl"
+        fontSize="3xl"
         fontWeight={700}
         my={5}
       >
-        Discover the power of partnership as we proudly showcase our trusted
-        collaborators below.These{" "}
+        Collaborating with the Best for{" "}
         <Box as="span" sx={{ color: "accent" }}>
-          valued relationships
-        </Box>{" "}
-        help us bring you{" "}
-        <Box as="span" sx={{ color: "accent" }}>
-          exceptional solutions and services
+          Your Success
         </Box>
-        , backed by a network of expertise and innovation.
       </Heading>
-      <Text color="subtle" fontSize={["lg", "lg", "xl"]} mb={5}>
-        Collaborating with the Best for Your Success
+      <Text maxW="1000px" color="subtle" fontSize={["lg", "lg", "xl"]} mb={5}>
+        Discover the power of partnership as we proudly showcase our trusted
+        collaborators below.These valued relationships help us bring you
+        exceptional solutions and services, backed by a network of expertise and
+        innovation.
       </Text>
       <Flex
         justifyContent="flex-start"

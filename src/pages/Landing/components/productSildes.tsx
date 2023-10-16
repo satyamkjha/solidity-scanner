@@ -103,22 +103,21 @@ export default function ProductSlides() {
         width="90%"
         maxW="1300px"
         as="h2"
-        fontSize="2xl"
+        fontSize="3xl"
         fontWeight={700}
         my={5}
       >
-        Our AI powered tool is packed with a diverse set of robust features
-        designed to cater the unique requirements of{" "}
+        Empowering{" "}
         <Box as="span" sx={{ color: "accent" }}>
-          Smart Contract Vulnerability Detection
+          Smart Contract Security
         </Box>{" "}
-        across organizations of all sizes in the{" "}
-        <Box as="span" sx={{ color: "accent" }}>
-          web3 ecosystem.
-        </Box>
+        with Cutting-Edge Features
       </Heading>
-      <Text color="subtle" fontSize={["lg", "lg", "xl"]} mb={5}>
-        Empowering Smart Contract Security with Cutting-Edge Features
+      <Text maxW="1000px" color="subtle" fontSize={["lg", "lg", "xl"]} mb={5}>
+        Our AI powered tool is packed with a diverse set of robust features
+        designed to cater the unique requirements of Smart Contract
+        Vulnerability Detection across organizations of all sizes in the web3
+        ecosystem.
       </Text>
       <Flex
         justifyContent="flex-start"
