@@ -85,6 +85,12 @@ const QuickScan: React.FC = () => {
         isDisabled: false,
       },
       { value: "goerli", label: "Goerli Testnet", icon: "", isDisabled: false },
+      {
+        value: "holesky",
+        label: "Holesky Testnet",
+        icon: "",
+        isDisabled: false,
+      },
     ],
     bscscan: [
       { value: "mainnet", label: "Bsc Mainnet", icon: "", isDisabled: false },
