@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React from "react";
 import {
   Flex,
   Box,
@@ -35,7 +35,7 @@ export const LandingHero: React.FC = () => {
         justifyContent="center"
         h="100%"
         display={"flex"}
-        maxW="800px"
+        maxW="900px"
         flexDir="column"
         alignItems={isDesktopView ? "flex-start" : "center"}
       >
@@ -49,7 +49,6 @@ export const LandingHero: React.FC = () => {
           Get your smart contracts secured by an AI powered tool{" "}
           <Box
             as="span"
-            fontSize={["5xl", "7xl"]}
             sx={{
               background:
                 "linear-gradient(129.18deg, #52FF00 8.52%, #00EEFD 93.94%)",
