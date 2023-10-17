@@ -1004,6 +1004,7 @@ export const contractChain: {
       isDisabled: false,
     },
     { value: "goerli", label: "Goerli Testnet", icon: "", isDisabled: false },
+    { value: "holesky", label: "Holesky Testnet", icon: "", isDisabled: false },
   ],
   optimism: [
     {
