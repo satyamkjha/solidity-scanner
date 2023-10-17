@@ -29,7 +29,11 @@ import FormatOptionLabelWithImage from "components/FormatOptionLabelWithImage";
 import { customStylesForTakeAction } from "common/stylesForCustomSelect";
 import ConfirmActionForm from "../modals/confirmActionForm";
 import { useUserRole } from "hooks/useUserRole";
-import { getProjectFileUrl } from "helpers/helperFunction";
+import {
+  getProjectFileUrl,
+  formatString,
+  getProjectType,
+} from "helpers/helperFunction";
 import { FileIssue } from "components/icons";
 import { DetailResultContext } from "common/contexts";
 
@@ -64,7 +68,9 @@ const MultifileResult: React.FC<{
   const role: string = useUserRole();
 
   const sortIssuesBasedonPriority = (issueArray: MultiFileScanDetail[]) => {
-    const issuePriority = {
+    const issuePriority: {
+      [key: string]: number;
+    } = {
       critical: 6,
       high: 5,
       medium: 4,
@@ -187,14 +193,20 @@ const MultifileResult: React.FC<{
           return {
             id: bug.bug_id,
             description: selectedIssues[0].template_details.issue_description
-              ? selectedIssues[0].template_details.issue_description.format({
-                  ...bug.description_details,
-                })
+              ? formatString(
+                  selectedIssues[0].template_details.issue_description,
+                  {
+                    ...bug.description_details,
+                  }
+                )
               : "",
             remediation: selectedIssues[0].template_details.issue_remediation
-              ? selectedIssues[0].template_details.issue_remediation.format({
-                  ...bug.description_details,
-                })
+              ? formatString(
+                  selectedIssues[0].template_details.issue_remediation,
+                  {
+                    ...bug.description_details,
+                  }
+                )
               : "",
             code_snapshot:
               project_url && branchName
@@ -207,14 +219,11 @@ const MultifileResult: React.FC<{
           };
         }),
       };
-      const { data } = await API.post(
-        API_PATH.API_CREATE_GITHUB_BUGS_ISSUE,
-        payload
-      );
+      const { data } = await API.post(API_PATH.API_CREATE_BUGS_ISSUE, payload);
 
-      if (data && data.issue_url) {
+      if (data && data.issue_id && project_url) {
         toast({
-          title: "GitHub issue successfully created",
+          title: `Issue created successfully on ${getProjectType(project_url)}`,
           status: "success",
           duration: 5000,
           isClosable: true,
@@ -230,25 +239,38 @@ const MultifileResult: React.FC<{
 
   useEffect(() => {
     if (profileData.current_package === "trial") {
-      const gasIssues = scanDetails.filter(
+      const gasIssuesIndex = scanDetails.findIndex(
         (issue) => issue.template_details.issue_severity === "gas"
       );
-      if (gasIssues && gasIssues.length) {
+      if (scanDetails && scanDetails.length && gasIssuesIndex) {
+        setOpenIssueIndex([gasIssuesIndex]);
         setFiles({
-          bug_id: gasIssues[0].metric_wise_aggregated_findings[0].bug_id,
-          issue_id: gasIssues[0].issue_id,
-          bug_hash: gasIssues[0].metric_wise_aggregated_findings[0].bug_hash,
+          bug_id:
+            scanDetails[gasIssuesIndex].metric_wise_aggregated_findings[0]
+              .bug_id,
+          issue_id: scanDetails[gasIssuesIndex].issue_id,
+          bug_hash:
+            scanDetails[gasIssuesIndex].metric_wise_aggregated_findings[0]
+              .bug_hash,
           bug_status:
-            gasIssues[0].metric_wise_aggregated_findings[0].bug_status,
-          findings: gasIssues[0].metric_wise_aggregated_findings[0].findings,
+            scanDetails[gasIssuesIndex].metric_wise_aggregated_findings[0]
+              .bug_status,
+          findings:
+            scanDetails[gasIssuesIndex].metric_wise_aggregated_findings[0]
+              .findings,
           description_details:
-            gasIssues[0].metric_wise_aggregated_findings[0].description_details,
-          template_details: gasIssues[0].template_details,
-          comment: gasIssues[0].metric_wise_aggregated_findings[0].comment,
+            scanDetails[gasIssuesIndex].metric_wise_aggregated_findings[0]
+              .description_details,
+          template_details: scanDetails[gasIssuesIndex].template_details,
+          comment:
+            scanDetails[gasIssuesIndex].metric_wise_aggregated_findings[0]
+              .comment,
           issue_description:
-            gasIssues[0].metric_wise_aggregated_findings[0].issue_description,
+            scanDetails[gasIssuesIndex].metric_wise_aggregated_findings[0]
+              .issue_description,
           issue_remediation:
-            gasIssues[0].metric_wise_aggregated_findings[0].issue_remediation,
+            scanDetails[gasIssuesIndex].metric_wise_aggregated_findings[0]
+              .issue_remediation,
 
           wait_to_scroll: 1000,
         });
@@ -258,6 +280,7 @@ const MultifileResult: React.FC<{
       scanDetails.length &&
       scanDetails[0].metric_wise_aggregated_findings
     ) {
+      setOpenIssueIndex([0]);
       setFiles({
         bug_id: scanDetails[0].metric_wise_aggregated_findings[0].bug_id,
         issue_id: scanDetails[0].issue_id,
@@ -382,7 +405,7 @@ const MultifileResult: React.FC<{
                 placeholder="Take Action"
                 styles={customStylesForTakeAction}
                 isDisabled={isDisabled || isViewer}
-                onChange={(newValue) => {
+                onChange={(newValue: any) => {
                   if (newValue) {
                     if (newValue.value === "wont_fix") {
                       onOpen();
@@ -465,7 +488,6 @@ const MultifileResult: React.FC<{
             contract_platform={contract_platform}
             branchName={branchName}
             contract_address={contract_address}
-            profileData={profileData}
             isViewer={isViewer}
           />
         )}
@@ -505,12 +527,16 @@ const MultifileResult: React.FC<{
             modelText={
               <VStack>
                 <Text my={4} w={["100%"]} fontSize={"lg"} fontWeight={600}>
-                  Are you sure you want to update the Issue to Github?
+                  {`Are you sure you want to update the Issue to ${
+                    project_url ? getProjectType(project_url) : "Github"
+                  }?`}
                 </Text>
                 <Text my={4} color="detail" fontWeight={400} w={["100%"]}>
                   You are about to create a{" "}
                   <Text as={"span"} color="black" fontWeight={"bold"}>
-                    Github Issue
+                    {`${
+                      project_url ? getProjectType(project_url) : "Github"
+                    } Issue`}
                   </Text>{" "}
                   for selected{" "}
                   <Text as={"span"} color="black" fontWeight={"bold"}>

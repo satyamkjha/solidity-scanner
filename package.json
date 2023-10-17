@@ -37,6 +37,7 @@
     "metamask-react": "^2.3.0",
     "npm": "^8.5.5",
     "react": "^17.0.2",
+    "react-animated-numbers": "^0.16.0",
     "react-code-blocks": "^0.0.8",
     "react-collapsed": "3.6.0",
     "react-cookie": "^4.0.3",
@@ -50,16 +51,20 @@
     "react-input-checkbox": "^1.1.0",
     "react-qr-code": "^2.0.12",
     "react-query": "^3.16.1",
+    "react-reveal": "^1.2.2",
     "react-router-dom": "^5.2.0",
-    "react-scripts": "4.0.3",
+    "react-scripts": "5.0.0",
     "react-select": "^5.4.0",
     "react-to-print": "^2.14.12",
+    "react-type-animation": "^3.1.0",
     "swiper": "^8.4.4",
     "typescript": "^3.9.5",
     "ua-parser-js": "^1.0.33",
     "use-dynamic-refs": "^1.0.0",
     "victory": "^36.6.8",
     "web-vitals": "^0.2.2",
+    "webpack": "5",
+    "webpack-cli": "4",
     "yarn": "^1.22.19"
   },
   "scripts": {
@@ -87,7 +92,21 @@
   "devDependencies": {
     "@types/brainhubeu__react-carousel": "^2.0.3",
     "@types/js-cookie": "^3.0.2",
+    "assert": "^2.1.0",
+    "buffer": "^6.0.3",
+    "crypto-browserify": "^3.12.0",
+    "https-browserify": "^1.0.0",
+    "os-browserify": "^0.3.0",
     "prettier": "^2.5.1",
-    "types": "^0.1.1"
+    "process": "^0.11.10",
+    "react-app-rewired": "^2.2.1",
+    "stream-browserify": "^3.0.0",
+    "stream-http": "^3.2.0",
+    "types": "^0.1.1",
+    "url": "^0.11.3"
+  },
+  "resolutions": {
+    "@types/react": "17.0.2",
+    "@types/react-dom": "17.0.2"
   }
 }

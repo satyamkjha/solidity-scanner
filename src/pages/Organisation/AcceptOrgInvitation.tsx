@@ -35,9 +35,9 @@ function useQuery() {
 
 const AcceptOrgInvitation: React.FC = () => {
   const query = useQuery();
-  const email = query.get("email")?.toString().replace(" ", "+");
-  const token = query.get("token")?.toString();
-  const orgName = query.get("org_name")?.toString();
+  const email = query.get("email")?.toString().replace(" ", "+") || "";
+  const token = query.get("token")?.toString() || "";
+  const orgName = query.get("org_name")?.toString() || "";
   const toast = useToast();
   const [loading, setLoading] = useState(false);
   const history = useHistory();
@@ -76,7 +76,7 @@ const AcceptOrgInvitation: React.FC = () => {
       } else {
         toast({
           title: data.message,
-          status: data.status,
+          status: "error",
           duration: 3000,
           isClosable: true,
         });

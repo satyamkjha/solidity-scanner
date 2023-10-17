@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { useHistory } from "react-router-dom";
 import { FiCheck } from "react-icons/fi";
 import {
@@ -466,6 +466,7 @@ const ChangePasswordForm: React.FC<{
   twoFAEnabled: boolean;
   refetchProfile: any;
 }> = ({ isOwner, twoFAEnabled, refetchProfile }) => {
+  const cancelRef = useRef<HTMLButtonElement | null>(null);
   const history = useHistory();
   const toast = useToast();
 
@@ -494,7 +495,7 @@ const ChangePasswordForm: React.FC<{
     setLoading2FA(true);
     try {
       const data = await disable2FARequest();
-      if (data.status === "success") {
+      if (data && data.status === "success") {
         toast({
           title: data.message,
           status: "success",
@@ -505,7 +506,7 @@ const ChangePasswordForm: React.FC<{
         refetchProfile();
       } else {
         toast({
-          title: data.message,
+          title: data && data.message,
           status: "error",
           duration: 2000,
           isClosable: true,
@@ -671,7 +672,11 @@ const ChangePasswordForm: React.FC<{
         />
       )}
 
-      <AlertDialog isOpen={open} onClose={() => setOpen(false)}>
+      <AlertDialog
+        isOpen={open}
+        leastDestructiveRef={cancelRef}
+        onClose={() => setOpen(false)}
+      >
         <AlertDialogOverlay>
           <AlertDialogContent>
             <AlertDialogHeader fontSize="lg" fontWeight="bold">
@@ -683,7 +688,7 @@ const ChangePasswordForm: React.FC<{
             </AlertDialogBody>
 
             <AlertDialogFooter>
-              <Button onClick={() => setOpen(false)} py={6}>
+              <Button ref={cancelRef} onClick={() => setOpen(false)} py={6}>
                 No, My bad
               </Button>
               <Button
@@ -712,6 +717,8 @@ const OrganisationBox: React.FC<{
   };
   refetchOrgProfile(): any;
 }> = ({ isOwner, organizations, refetchOrgProfile }) => {
+  const cancelRef = useRef<HTMLButtonElement | null>(null);
+
   const { isOpen, onClose, onOpen } = useDisclosure();
   const history = useHistory();
   const queryClient = useQueryClient();
@@ -803,7 +810,11 @@ const OrganisationBox: React.FC<{
       >
         {isOwner ? "Close" : "Leave"} Organization
       </Button>
-      <AlertDialog isOpen={isOpen} onClose={onClose}>
+      <AlertDialog
+        isOpen={isOpen}
+        onClose={onClose}
+        leastDestructiveRef={cancelRef}
+      >
         <AlertDialogOverlay>
           <AlertDialogContent>
             <AlertDialogHeader fontSize="lg" fontWeight="bold">
@@ -819,7 +830,7 @@ const OrganisationBox: React.FC<{
             </AlertDialogBody>
 
             <AlertDialogFooter>
-              <Button onClick={onClose} py={6}>
+              <Button onClick={onClose} py={6} ref={cancelRef}>
                 No, My bad
               </Button>
               <Button

@@ -30,280 +30,12 @@ import FormatOptionLabelWithImage from "components/FormatOptionLabelWithImage";
 import { customStylesForReactSelect } from "common/stylesForCustomSelect";
 import Loader from "components/styled-components/Loader";
 import { useUserRole } from "hooks/useUserRole";
+import { contractChain, platforms } from "common/values";
+import { useConfig } from "hooks/useConfig";
 
 const ContractForm: React.FC<{
   profileData: Profile;
 }> = ({ profileData }) => {
-  const contractChain: {
-    [key: string]: {
-      label: string;
-      value: string;
-      icon: string;
-      isDisabled: boolean;
-    }[];
-  } = {
-    etherscan: [
-      {
-        value: "mainnet",
-        label: "Ethereum Mainnet",
-        icon: "",
-        isDisabled: false,
-      },
-      {
-        value: "sepolia",
-        label: "Sepolia Testnet",
-        icon: "",
-        isDisabled: false,
-      },
-      { value: "goerli", label: "Goerli Testnet", icon: "", isDisabled: false },
-    ],
-    optimism: [
-      {
-        value: "mainnet",
-        label: "Optimism Mainnet",
-        icon: "",
-        isDisabled: false,
-      },
-      {
-        value: "goerli",
-        label: "Optimism Goerli Testnet",
-        icon: "",
-        isDisabled: false,
-      },
-    ],
-    bscscan: [
-      { value: "mainnet", label: "Bsc Mainnet", icon: "", isDisabled: false },
-      { value: "testnet", label: "Bsc Testnet", icon: "", isDisabled: false },
-    ],
-    polygonscan: [
-      {
-        value: "mainnet",
-        label: "Polygon Mainnet",
-        icon: "",
-        isDisabled: false,
-      },
-      {
-        value: "testnet",
-        label: "Polygon Testnet",
-        icon: "",
-        isDisabled: false,
-      },
-    ],
-    avalanche: [
-      {
-        value: "mainnet",
-        label: "Avalanche Mainnet",
-        icon: "",
-        isDisabled: false,
-      },
-      {
-        value: "testnet",
-        label: "Avalanche Fuji Testnet",
-        icon: "",
-        isDisabled: false,
-      },
-    ],
-    fantom: [
-      { value: "mainnet", label: "FTM Mainnet", icon: "", isDisabled: false },
-      { value: "testnet", label: "FTM Testnet", icon: "", isDisabled: false },
-    ],
-    cronos: [
-      {
-        value: "mainnet",
-        label: "Cronos Mainnet",
-        icon: "",
-        isDisabled: false,
-      },
-      {
-        value: "testnet",
-        label: "Cronos Testnet",
-        icon: "",
-        isDisabled: false,
-      },
-    ],
-    celo: [
-      { value: "mainnet", label: "Celo Mainnet", icon: "", isDisabled: false },
-      {
-        value: "testnet",
-        label: "Alfajores Testnet",
-        icon: "",
-        isDisabled: false,
-      },
-    ],
-    aurora: [
-      {
-        value: "mainnet",
-        label: "Aurora Mainnet",
-        icon: "",
-        isDisabled: false,
-      },
-      {
-        value: "testnet",
-        label: "Aurora Testnet",
-        icon: "",
-        isDisabled: false,
-      },
-    ],
-    arbiscan: [
-      {
-        value: "mainnet",
-        label: "Arbiscan Mainnet",
-        icon: "",
-        isDisabled: false,
-      },
-      {
-        value: "goerli",
-        label: "Arbiscan Goerli",
-        icon: "",
-        isDisabled: false,
-      },
-    ],
-    reefscan: [
-      {
-        value: "mainnet",
-        label: "ReefScan Mainnet",
-        icon: "",
-        isDisabled: false,
-      },
-      // { value: "testnet", label: "ReefScan Testnet", icon: "" },
-    ],
-    xdc: [
-      {
-        value: "mainnet",
-        label: "XDC Mainnet",
-        icon: "",
-        isDisabled: false,
-      },
-      {
-        value: "testnet",
-        label: "XDC Apothem Network",
-        icon: "",
-        isDisabled: false,
-      },
-    ],
-    nordekscan: [
-      {
-        value: "mainnet",
-        label: "Nordek Mainnet",
-        icon: "",
-        isDisabled: false,
-      },
-      // {
-      //   value: "testnet",
-      //   label: "Nordek Testnet",
-      //   icon: "",
-      //   isDisabled: false,
-      // },
-    ],
-    fuse: [
-      {
-        value: "mainnet",
-        label: "Fuse Mainnet",
-        icon: "",
-        isDisabled: false,
-      },
-      {
-        value: "testnet",
-        label: "Fuse Testnet",
-        icon: "",
-        isDisabled: false,
-      },
-    ],
-  };
-
-  const options = [
-    {
-      value: "etherscan",
-      icon: "blockscan/etherscan",
-      label: "Ethereum - (etherscan.io)",
-      isDisabled: true,
-    },
-    {
-      value: "bscscan",
-      icon: "blockscan/bscscan",
-      label: "Binance - (bscscan.com)",
-      isDisabled: true,
-    },
-    {
-      value: "avalanche",
-      icon: "blockscan/avalanche",
-      label: "Avalanche C-Chain - (snowtrace.io)",
-      isDisabled: true,
-    },
-    {
-      value: "polygonscan",
-      icon: "blockscan/polygonscan",
-      label: "Polygon - (polygonscan.com)",
-      isDisabled: true,
-    },
-    {
-      value: "fantom",
-      icon: "blockscan/fantom",
-      label: "Fantom - (ftmscan.com)",
-      isDisabled: true,
-    },
-    {
-      value: "cronos",
-      icon: "blockscan/cronos",
-      label: "Cronos - (cronoscan.com)",
-      isDisabled: true,
-    },
-    {
-      value: "arbiscan",
-      icon: "blockscan/arbiscan",
-      label: "Arbiscan - (arbiscan.io)",
-      isDisabled: true,
-    },
-    {
-      value: "celo",
-      icon: "blockscan/celo",
-      label: "Celo - (celoscan.io)",
-      isDisabled: true,
-    },
-    {
-      value: "aurora",
-      icon: "blockscan/aurora",
-      label: "Aurora - (aurorascan.dev)",
-      isDisabled: true,
-    },
-    {
-      value: "reefscan",
-      icon: "blockscan/reefscan",
-      label: "ReefScan - (reefscan.com)",
-      isDisabled: true,
-    },
-    {
-      value: "optimism",
-      icon: "blockscan/optimism",
-      label: "Optimism - (optimism.io)",
-      isDisabled: true,
-    },
-    {
-      value: "buildbear",
-      icon: "blockscan/buildbear",
-      label: "Buildbear - (buildbear.io)",
-      isDisabled: true,
-    },
-    {
-      value: "xdc",
-      icon: "blockscan/xdc",
-      label: "XDC - (xdc.blocksscan.io)",
-      isDisabled: true,
-    },
-    {
-      value: "nordekscan",
-      icon: "blockscan/nordekscan",
-      label: "Nordek - (nordek.io)",
-      isDisabled: true,
-    },
-    {
-      value: "fuse",
-      icon: "blockscan/fuse",
-      label: "Fuse - (explorer.fuse.io)",
-      isDisabled: true,
-    },
-  ];
-
   const [contractAddress, setContractAddress] = useState("");
   const [nodeId, setNodeId] = useState("");
   const [isLoading, setIsLoading] = useState(false);
@@ -366,7 +98,11 @@ const ContractForm: React.FC<{
               if (responseData.data.status === "success") {
                 queryClient.invalidateQueries("scan_list");
                 queryClient.invalidateQueries("profile");
-                history.push("/blocks");
+                history.push(
+                  getFeatureGateConfig().merge_scans_enabled
+                    ? "/projects"
+                    : "/blocks"
+                );
               }
             }
           }
@@ -461,7 +197,7 @@ const ContractForm: React.FC<{
             <FormLabel fontSize="sm">Contract platform</FormLabel>
             <Select
               formatOptionLabel={FormatOptionLabelWithImage}
-              options={options.map((item) => {
+              options={platforms.map((item) => {
                 for (const chain in supportedChains) {
                   if (
                     chain === item.value &&
@@ -480,9 +216,9 @@ const ContractForm: React.FC<{
               placeholder="Select Contract Platform"
               isSearchable={true}
               isDisabled={isViewer}
-              value={options.find((item) => platform === item.value)}
+              value={platforms.find((item) => platform === item.value)}
               styles={customStylesForReactSelect}
-              onChange={(newValue) => {
+              onChange={(newValue: any) => {
                 if (newValue) {
                   setPlatform(newValue.value);
                   if (supportedChains) {
@@ -527,7 +263,7 @@ const ContractForm: React.FC<{
                 value={chain}
                 placeholder="Select Contract Chain"
                 styles={customStylesForReactSelect}
-                onChange={(newValue) => {
+                onChange={(newValue: any) => {
                   if (newValue) {
                     setChain(newValue);
                   }

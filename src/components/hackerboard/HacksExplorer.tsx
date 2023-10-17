@@ -33,7 +33,7 @@ const HacksExplorer: React.FC<{ overviewData: any }> = ({ overviewData }) => {
   const [filters, setFilters] = useState<any>({});
   const [sortBy, setSortBy] = useState("");
   const [isLoading, setIsLoading] = useState(true);
-  const [hacksList, setHacksList] = useState(null);
+  const [hacksList, setHacksList] = useState<any>();
   const [searchBar, setSearchBar] = useState(false);
   const [pageNo, setPageNo] = useState(1);
   const [pagination, setPagination] = useState<Pagination>({
@@ -258,7 +258,7 @@ const HacksExplorer: React.FC<{ overviewData: any }> = ({ overviewData }) => {
           position={"relative"}
         >
           {hacksList && hacksList.length ? (
-            hacksList.map((item, index) => (
+            hacksList.map((item: any, index: number) => (
               <HackCard key={index} hackData={item} />
             ))
           ) : (

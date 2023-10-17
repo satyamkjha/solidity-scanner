@@ -37,7 +37,8 @@ const FileNameTab: React.FC<{
       .writeText(
         type === "project" && project_url && branchName
           ? getProjectFileUrl(project_url, branchName, file)
-          : codePlatform[contract_platform].platform === "own"
+          : contract_platform &&
+            codePlatform[contract_platform].platform === "own"
           ? `${contract_url}${codePlatform[contract_platform].dynamicString}`
           : file.file_path
       )

@@ -11,9 +11,10 @@ export const SignupBox: React.FC = () => {
 
   return (
     <Box
-      mx={[0, 0, 0, 24]}
+      mx={[5, 10, 10, 20]}
       sx={{
-        w: ["100%", "100%", "100%", "80%"],
+        w: "90%",
+        maxW: "1200px",
         backgroundImage: `url(${assetsURL}background/pattern.png)`,
         borderRadius: 20,
         overflow: "hidden",
@@ -53,6 +54,7 @@ export const SignupBox: React.FC = () => {
             w="120px"
             border={"1px solid"}
             borderColor={"accent"}
+            display={["none", "none", "block"]}
           />
           <Text
             color="accent"

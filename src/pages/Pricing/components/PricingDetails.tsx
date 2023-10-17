@@ -14,6 +14,7 @@ import { getAssetsURL } from "helpers/helperFunction";
 import { useHistory } from "react-router-dom";
 import { CurlyArrowUp, CurlyArrowDown } from "components/icons";
 import { PricingCard } from "./pricingCard";
+import { Header } from "components/header";
 
 const CustomPlanCard = lazy(() => import("./customPlanCard"));
 const PricingTable = lazy(() => import("./pricingTable"));
@@ -44,9 +45,9 @@ const PricingDetails: React.FC<{
         justifyContent="flex-start"
         alignItems={"center"}
         w={"100%"}
-        px={[5, 10, 10]}
-        py={"60px"}
-        h={["1100px", "1000px", "800px", "720px", "720px"]}
+        px={0}
+        py={page === "pricing" ? "0px" : "60px"}
+        h={["1100px", "1000px", "800px"]}
         backgroundColor="#FFFFFF"
         style={{
           backgroundSize: "cover",
@@ -61,11 +62,13 @@ const PricingDetails: React.FC<{
           `url('${assetsURL}pricing/pricing_bg_xl.jpg')`,
         ]}
       >
+        {page === "pricing" && <Header theme={"dark"} />}
         <Heading
           color={"white"}
           fontSize={
             page === "pricing" ? ["3xl", "3xl", "4xl", "4xl", "5xl"] : "3xl"
           }
+          mt={20}
           mb={7}
           textAlign="center"
         >
@@ -105,7 +108,6 @@ const PricingDetails: React.FC<{
           size. Get your scan results and reports vetted by our security
           professionals
         </Text>
-
         {page === "pricing" && (
           <>
             <Text
@@ -202,8 +204,8 @@ const PricingDetails: React.FC<{
         alignItems={"center"}
         justifyContent="flex-end"
         backgroundColor="#FFFFFF00"
-        mt={page === "pricing" ? "-300px" : "-430px"}
-        px={page === "pricing" ? [16] : [4]}
+        mt={page === "pricing" ? ["-300px", "-300px", "-220px"] : "-410px"}
+        px={page === "pricing" ? [4, 4, 4, 10] : [4]}
       >
         <Grid
           backgroundColor="#FFFFFF00"

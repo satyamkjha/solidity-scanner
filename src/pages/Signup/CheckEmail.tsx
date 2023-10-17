@@ -43,8 +43,6 @@ const CheckEmail: React.FC = () => {
         height="100%"
         my={36}
         px={5}
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
       >
         <MailSent size={130} />
         <Text fontSize="2xl" fontWeight={600} mb={4} mt={8}>

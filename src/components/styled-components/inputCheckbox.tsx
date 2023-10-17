@@ -8,7 +8,7 @@ interface InputCheckboxProps {
   checkedColor?: string;
   unCheckedColor?: string;
   checked: boolean;
-  checkedIcon?: ComponentWithAs<"svg", IconProps> | null;
+  checkedIcon?: ComponentWithAs<"svg", IconProps>;
   name?: string;
   onChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
 }

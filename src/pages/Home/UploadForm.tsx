@@ -317,7 +317,7 @@ const UploadForm: React.FC<{
             </VStack>
 
             {step === 0 ? (
-              <div {...getRootProps({ style })}>
+              <div {...getRootProps({ style: style as React.CSSProperties })}>
                 <input {...getInputProps()} />
                 <UploadIcon size={80} />
                 <p style={{ marginTop: "20px" }}>

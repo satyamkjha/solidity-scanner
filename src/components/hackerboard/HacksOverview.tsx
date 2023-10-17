@@ -9,6 +9,7 @@ import Loader from "components/styled-components/Loader";
 import { useHacksGraph } from "hooks/useHacksGraph";
 import { monthNames } from "common/values";
 import { getAssetsURL } from "helpers/helperFunction";
+import { Header } from "components/header";
 const HacksOverview: React.FC<{ overviewData: any }> = ({ overviewData }) => {
   const assetsURL = getAssetsURL();
   const currentDate = new Date();
@@ -121,6 +122,7 @@ const HacksOverview: React.FC<{ overviewData: any }> = ({ overviewData }) => {
       w={"100%"}
       bg={"linear-gradient(119.36deg, #04080D -2.67%, #13025E 162.98%)"}
     >
+      <Header theme={"dark"} />
       <Box
         flexDir={"column"}
         display={"flex"}
@@ -222,22 +224,24 @@ const HacksOverview: React.FC<{ overviewData: any }> = ({ overviewData }) => {
                 {filteredData && (
                   <>
                     <Flex width="98%" my={4} ml={3}>
-                      {filteredData.attack_trends?.map((item, index) => (
-                        <Flex
-                          key={index}
-                          height="15px"
-                          bg={attackTrendsColors[index]}
-                          width={`${
-                            (item.count / filteredData.no_of_attacks) *
-                            (100 +
-                              (filteredData.no_of_attacks * 5) / item.count)
-                          }%`}
-                          ml={-3}
-                          zIndex={11 - index}
-                          borderRadius="15px"
-                          transition="width 0.6s ease-in"
-                        />
-                      ))}
+                      {filteredData.attack_trends?.map(
+                        (item: any, index: number) => (
+                          <Flex
+                            key={index}
+                            height="15px"
+                            bg={attackTrendsColors[index]}
+                            width={`${
+                              (item.count / filteredData.no_of_attacks) *
+                              (100 +
+                                (filteredData.no_of_attacks * 5) / item.count)
+                            }%`}
+                            ml={-3}
+                            zIndex={11 - index}
+                            borderRadius="15px"
+                            transition="width 0.6s ease-in"
+                          />
+                        )
+                      )}
                     </Flex>
                     {filteredData.attack_trends?.map(
                       (item: any, index: number) => (

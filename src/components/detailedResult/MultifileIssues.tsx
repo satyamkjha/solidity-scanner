@@ -62,8 +62,10 @@ const MultifileIssues: React.FC<MultifileIssuesProps> = ({
   const gasIssueIndex = issues.findIndex(
     (issue) => issue.template_details.issue_severity === "gas"
   );
-
-  const { openIssueIndex, setOpenIssueIndex } = useContext(DetailResultContext);
+  const detailResultContextValue = useContext(DetailResultContext);
+  const openIssueIndex = detailResultContextValue?.openIssueIndex || [];
+  const setOpenIssueIndex =
+    detailResultContextValue?.setOpenIssueIndex ?? (() => {});
 
   const getVulnerabilityNumber = (issue_severity: string) => {
     switch (issue_severity) {
@@ -106,7 +108,7 @@ const MultifileIssues: React.FC<MultifileIssuesProps> = ({
       allowToggle
       defaultIndex={!details_enabled ? gasIssueIndex : [0]}
       index={openIssueIndex}
-      onChange={setOpenIssueIndex}
+      onChange={(index: number[]) => setOpenIssueIndex(index)}
     >
       {Array.from(issues)
         .sort((issue1, issue2) =>

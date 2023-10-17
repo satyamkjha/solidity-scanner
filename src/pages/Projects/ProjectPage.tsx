@@ -299,7 +299,7 @@ const ScanDetails: React.FC<{
 
   const [summaryReport, setSummaryReport] = useState<Report | null>(null);
   const [printLoading, setPrintLoading] = useState<boolean>(false);
-  const componentRef = useRef();
+  const componentRef = useRef<HTMLDivElement | null>(null);
 
   const generatePDF = async () => {
     if (scanData) {
@@ -468,7 +468,7 @@ const ScanDetails: React.FC<{
                         }}
                       >
                         {!checkPublishReportAccess(profile, plans, role) && (
-                          <LockIcon color={"accent"} size="xs" mr={3} />
+                          <LockIcon color={"accent"} mr={3} />
                         )}
                         Publish Report
                       </Button>
@@ -757,13 +757,30 @@ const ScanDetails: React.FC<{
                   </Flex>
                   <TabPanels>
                     <TabPanel p={[0, 0, 0, 2]}>
-                      {(scanData.scan_report.multi_file_scan_summary ||
-                        scanData.scan_report.scan_summary) && (
+                      {scanData.scan_report.multi_file_scan_status ===
+                        "scan_done" &&
+                      (scanData.scan_report.multi_file_scan_summary ||
+                        scanData.scan_report.scan_summary) ? (
                         <Overview
                           scansRemaining={scansRemaining}
                           scanData={scanData.scan_report}
                           onTabChange={handleTabsChange}
                         />
+                      ) : (
+                        <Flex
+                          w="97%"
+                          m={4}
+                          borderRadius="20px"
+                          bgColor="high-subtle"
+                          p={4}
+                        >
+                          <ScanErrorIcon size={28} />
+                          <Text fontSize={"xs"} color="high" ml={4}>
+                            {scanData.scan_report.multi_file_scan_status
+                              ? scanData.scan_report.multi_file_scan_status
+                              : "Please do Rescan to carry out a Multifile Scan "}
+                          </Text>
+                        </Flex>
                       )}
                     </TabPanel>
                     <TabPanel p={[0, 0, 0, 2]}>

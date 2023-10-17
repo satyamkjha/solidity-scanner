@@ -14,7 +14,6 @@ import Auth from "helpers/auth";
 import API from "helpers/api";
 import PageNotFound, { CustomPageNotFound } from "pages/PageNotFound";
 import Cookies from "js-cookie";
-import { signOut } from "firebase/auth";
 import { useQueryClient } from "react-query";
 import PublicLayout from "components/PublicLayout";
 import Loader from "components/styled-components/Loader";
@@ -23,6 +22,7 @@ import { OrgUserRole } from "common/types";
 import { useUserOrgProfile } from "hooks/useUserOrgProfile";
 import { UserRoleProvider } from "hooks/useUserRole";
 import { onLogout } from "common/functions";
+import { getFeatureGateConfig } from "helpers/helperFunction";
 
 const Landing = lazy(
   () => import("pages/Landing" /* webpackChunkName: "Landing" */)
@@ -81,6 +81,8 @@ const Home = lazy(() => import("pages/Home" /* webpackChunkName: "Home" */));
 const Profile = lazy(
   () => import("pages/Profile" /* webpackChunkName: "Profile" */)
 );
+
+const Scans = lazy(() => import("pages/Scans" /* webpackChunkName: "Scans" */));
 
 const Projects = lazy(
   () => import("pages/Projects" /* webpackChunkName: "Projects" */)
@@ -142,7 +144,10 @@ const LeaderBoard = lazy(
   () => import("pages/HackBoard" /* webpackChunkName: "HackerBoard" */)
 );
 
-const orgRestrictedRoutes = [
+const orgRestrictedRoutes: {
+  path: string;
+  roles: OrgUserRole[];
+}[] = [
   { path: "/billing", roles: ["viewer", "editor", "admin"] },
   { path: "/integrations", roles: ["viewer", "editor", "admin"] },
   { path: "/organisation", roles: ["viewer", "editor"] },
@@ -235,15 +240,24 @@ const Routes: React.FC = () => {
                   <PrivateRoute exact path="/profile">
                     <Profile />
                   </PrivateRoute>
-                  <PrivateRoute exact path="/projects">
-                    <Projects />
-                  </PrivateRoute>
+                  {getFeatureGateConfig().merge_scans_enabled && (
+                    <PrivateRoute exact path="/projects">
+                      <Scans />
+                    </PrivateRoute>
+                  )}
+                  {!getFeatureGateConfig().merge_scans_enabled && (
+                    <PrivateRoute exact path="/projects">
+                      <Projects />
+                    </PrivateRoute>
+                  )}
                   <PrivateRoute path="/projects/:projectId/:scanId">
                     <ProjectPage />
                   </PrivateRoute>
-                  <PrivateRoute exact path="/blocks">
-                    <Blocks />
-                  </PrivateRoute>
+                  {!getFeatureGateConfig().merge_scans_enabled && (
+                    <PrivateRoute exact path="/blocks">
+                      <Blocks />
+                    </PrivateRoute>
+                  )}
                   <PrivateRoute exact path="/blocks/:scanId/:projectId">
                     <BlockPage />
                   </PrivateRoute>
@@ -314,10 +328,10 @@ const ErrorHandler: React.FC = ({ children }) => {
 
 const PrivateRoute: React.FC<RouteProps> = ({ children, ...rest }) => {
   const { path } = rest;
-  const isRestrictedRoute = (path) => {
+  const isRestrictedRoute = (path: string | readonly string[] | undefined) => {
     return orgRestrictedRoutes.some((route) => route.path === path);
   };
-  const getRestrictedRoles = (path) => {
+  const getRestrictedRoles = (path: string | readonly string[] | undefined) => {
     const matchedRoute = orgRestrictedRoutes.find(
       (route) => route.path === path
     );
@@ -366,8 +380,11 @@ const CheckOrgRole: React.FC<{ roles: OrgUserRole[] }> = ({
       if (orgProfile) {
         let hasMatchingRole: boolean = false;
 
-        if (profile.logged_in_via === "org_login") {
-          hasMatchingRole = roles.includes(orgProfile.user_organization?.role);
+        if (
+          profile.logged_in_via === "org_login" &&
+          orgProfile.user_organization?.role
+        ) {
+          hasMatchingRole = roles.includes(orgProfile.user_organization.role);
         }
 
         if (hasMatchingRole) {
@@ -385,7 +402,7 @@ const CheckOrgRole: React.FC<{ roles: OrgUserRole[] }> = ({
 
   return (
     <>
-      {userHasAccess ? (
+      {userHasAccess && React.isValidElement(children) ? (
         React.cloneElement(children, { profileData: profile })
       ) : (
         <Loader width={"100%"} height={"90vh"} />
