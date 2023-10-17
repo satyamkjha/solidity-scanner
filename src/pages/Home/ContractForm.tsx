@@ -31,6 +31,7 @@ import { customStylesForReactSelect } from "common/stylesForCustomSelect";
 import Loader from "components/styled-components/Loader";
 import { useUserRole } from "hooks/useUserRole";
 import { contractChain, platforms } from "common/values";
+import { useConfig } from "hooks/useConfig";
 
 const ContractForm: React.FC<{
   profileData: Profile;
@@ -97,7 +98,11 @@ const ContractForm: React.FC<{
               if (responseData.data.status === "success") {
                 queryClient.invalidateQueries("scan_list");
                 queryClient.invalidateQueries("profile");
-                history.push("/projects");
+                history.push(
+                  getFeatureGateConfig().merge_scans_enabled
+                    ? "/projects"
+                    : "/blocks"
+                );
               }
             }
           }

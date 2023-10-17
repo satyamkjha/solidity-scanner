@@ -310,13 +310,7 @@ const QuickScanForm: React.FC<{
   }, []);
 
   return (
-    <Box
-      w="100%"
-      h="fit-content"
-      position="relative"
-      zIndex={10}
-      ref={quickscanRef}
-    >
+    <Box w="100%" h="fit-content" position="relative" ref={quickscanRef}>
       {isDesktopView && playAnimation ? (
         <Lottie animationData={ssIconAnimation} style={styleObj} loop={false} />
       ) : null}
@@ -333,7 +327,6 @@ const QuickScanForm: React.FC<{
           "fit-content",
           view === "landing" ? "100vh" : "750px",
         ]}
-        zIndex={10}
         px={[0, 0, 10]}
         py={isDesktopView ? 20 : 10}
         pb={isDesktopView ? "200px" : "50px"}
@@ -389,6 +382,7 @@ const QuickScanForm: React.FC<{
           justify="center"
           alignItems="center"
           w={"100%"}
+          zIndex={1000}
           maxW={isDesktopView ? "1500px" : "900px"}
           direction={isDesktopView ? "row" : "column"}
           spacing={isDesktopView ? 0 : 3}
