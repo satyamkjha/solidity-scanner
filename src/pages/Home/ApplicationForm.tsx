@@ -13,7 +13,11 @@ import {
   Divider,
 } from "@chakra-ui/react";
 import API from "helpers/api";
-import { getAssetsURL, checkProjectUrl } from "helpers/helperFunction";
+import {
+  getAssetsURL,
+  checkProjectUrl,
+  getProjectType,
+} from "helpers/helperFunction";
 import { API_PATH } from "helpers/routeManager";
 import ConfigSettings from "components/projectConfigSettings";
 import InfoSettings from "components/projectInfoSettings";
@@ -33,6 +37,7 @@ const ApplicationForm: React.FC<{
   const history = useHistory();
   const [projectName, setProjectName] = useState("");
   const [githubLink, setGithubLink] = useState("");
+  const [projectType, setProjectType] = useState<string | null>(null);
   const [visibility, setVisibility] = useState(false);
   const [githubSync, setGithubSync] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
@@ -42,8 +47,10 @@ const ApplicationForm: React.FC<{
   const [nameError, setNameError] = useState<null | string>(null);
   const [linkError, setLinkError] = useState<null | string>(null);
   const [step, setStep] = useState(1);
-  const isGithubIntegrated =
-    profileData?._integrations?.github?.status === "successful";
+  const isOauthIntegrated =
+    profileData?._integrations?.github?.status === "successful" ||
+    profileData?._integrations?.gitlab?.status === "successful" ||
+    profileData?._integrations?.bitbucket?.status === "successful";
   const toast = useToast();
 
   const runValidation = () => {
@@ -60,6 +67,7 @@ const ApplicationForm: React.FC<{
       return false;
     }
     setGithubLink(githubLink);
+    setProjectType(getProjectType(githubLink));
     setNameError(null);
     setLinkError(null);
     return true;
@@ -258,7 +266,7 @@ const ApplicationForm: React.FC<{
               visibility={visibility}
               projectName={projectName}
               githubLink={githubLink}
-              isGithubIntegrated={isGithubIntegrated}
+              isOauthIntegrated={isOauthIntegrated}
               setProjectName={setProjectName}
               setGithubLink={setGithubLink}
               setVisibility={setVisibility}
@@ -281,7 +289,7 @@ const ApplicationForm: React.FC<{
               view="github_app"
               githubSync={githubSync}
               onToggleFunction={async () => setGithubSync(!githubSync)}
-              isGithubIntegrated={isGithubIntegrated}
+              isGithubIntegrated={isOauthIntegrated}
             />
           ) : (
             <></>
@@ -324,7 +332,7 @@ const ApplicationForm: React.FC<{
               if (runValidation()) {
                 getBranches();
               }
-            } else if (step === 2) {
+            } else if (step === 2 && projectType === "GitHub") {
               setStep(3);
             } else {
               runScan();
@@ -332,7 +340,10 @@ const ApplicationForm: React.FC<{
           }}
           isDisabled={profileData?.credits === 0 || isViewer}
         >
-          {step > 2 ? (
+          {step > 2 ||
+          (step === 2 &&
+            projectType &&
+            ["GitLab", "Bitbucket"].includes(projectType)) ? (
             isLoading ? (
               <Loader color={"#3300FF"} />
             ) : (
