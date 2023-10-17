@@ -16,7 +16,6 @@ const PublicLayout: React.FC = ({ children }) => {
       left: 0,
       behavior: "auto",
     });
-    console.log(location);
   }, [location.pathname]);
 
   return (
