@@ -106,7 +106,6 @@ const Scans: React.FC = () => {
                 return project.scan_details.scan_id;
               else return project.scan_details.project_id;
             });
-          console.log(scanningScanIds);
           setProjectsIdsInScanning(scanningScanIds);
         } else {
           intervalId = setInterval(async () => {

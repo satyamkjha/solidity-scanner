@@ -22,6 +22,7 @@ import { OrgUserRole } from "common/types";
 import { useUserOrgProfile } from "hooks/useUserOrgProfile";
 import { UserRoleProvider } from "hooks/useUserRole";
 import { onLogout } from "common/functions";
+import { getFeatureGateConfig } from "helpers/helperFunction";
 
 const Landing = lazy(
   () => import("pages/Landing" /* webpackChunkName: "Landing" */)
@@ -239,18 +240,24 @@ const Routes: React.FC = () => {
                   <PrivateRoute exact path="/profile">
                     <Profile />
                   </PrivateRoute>
-                  <PrivateRoute exact path="/projects">
-                    <Scans />
-                  </PrivateRoute>
-                  {/* <PrivateRoute exact path="/projects">
-                    <Projects />
-                  </PrivateRoute> */}
+                  {getFeatureGateConfig().merge_scans_enabled && (
+                    <PrivateRoute exact path="/projects">
+                      <Scans />
+                    </PrivateRoute>
+                  )}
+                  {!getFeatureGateConfig().merge_scans_enabled && (
+                    <PrivateRoute exact path="/projects">
+                      <Projects />
+                    </PrivateRoute>
+                  )}
                   <PrivateRoute path="/projects/:projectId/:scanId">
                     <ProjectPage />
                   </PrivateRoute>
-                  {/* <PrivateRoute exact path="/blocks">
-                    <Blocks />
-                  </PrivateRoute> */}
+                  {!getFeatureGateConfig().merge_scans_enabled && (
+                    <PrivateRoute exact path="/blocks">
+                      <Blocks />
+                    </PrivateRoute>
+                  )}
                   <PrivateRoute exact path="/blocks/:scanId/:projectId">
                     <BlockPage />
                   </PrivateRoute>
