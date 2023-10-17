@@ -1,148 +1,168 @@
 import React from "react";
 import { Link as RouterLink } from "react-router-dom";
-import { Flex, Container, Link } from "@chakra-ui/react";
 import {
-  DiscordIcon,
-  InstagramIcon,
-  Logo,
-  MediumIcon,
-  TelegramIcon,
-  TwiterIcon,
-} from "components/icons";
+  Flex,
+  Grid,
+  Link,
+  GridItem,
+  useMediaQuery,
+  Image,
+} from "@chakra-ui/react";
+import { Logo } from "components/icons";
+import { getAssetsURL } from "helpers/helperFunction";
+
 export const Footer: React.FC = () => {
+  const assetsURL = getAssetsURL();
+  const [isLargerThan768] = useMediaQuery("(min-width: 768px)");
+
+  const footerIcons: {
+    imgUrl: string;
+    link: string;
+  }[] = [
+    {
+      imgUrl: "medium",
+      link: "https://blog.solidityscan.com/",
+    },
+    {
+      imgUrl: "telegram",
+      link: "https://t.me/solidityscan",
+    },
+    {
+      imgUrl: "discord",
+      link: "https://discord.com/invite/9HhV4hGENw",
+    },
+    {
+      imgUrl: "instagram",
+      link: "https://www.instagram.com/solidityscan/",
+    },
+    {
+      imgUrl: "twitter",
+      link: "https://twitter.com/solidityscan",
+    },
+  ];
+
   return (
-    <Container maxW={["100vw", "100vw", "90vw"]} my={20}>
+    <Flex
+      mt={20}
+      py={20}
+      mx={[5, 5, 10, 20]}
+      w="100%"
+      flexDirection={["column", "column", "row", "row"]}
+      justifyContent="space-between"
+      alignItems="center"
+      backgroundImage={`${assetsURL}background/footer_bg.svg`}
+      backgroundSize="contain"
+      backgroundRepeat="no-repeat"
+      backgroundPosition="left"
+    >
       <Flex
-        flexDirection={["column", "column", "column", "row"]}
-        justifyContent="space-between"
-        alignItems="center"
+        flexDirection="column"
+        justifyContent="flex-start"
+        alignItems={"center"}
+        width={["100%", "100%", "30%"]}
       >
+        <Logo />
+        {!isLargerThan768 && <FooterLinks />}
         <Flex
-          flexDirection="row"
-          justifyContent="center"
-          alignItems={"flex-start"}
-          width={["100%", "100%", "100%", "33%"]}
+          width={"100%"}
+          flexWrap={"wrap"}
+          justifyContent={["center"]}
+          alignItems="center"
+          mt={10}
+          flexDirection={["row"]}
         >
-          <Logo />
-        </Flex>
-        <Flex
-          width={["100%", "100%", "100%", "67%"]}
-          mt={["2"]}
-          flexDirection="row"
-          justifyContent="space-between"
-          alignItems={"center"}
-        >
-          <Flex
-            width={["50%", "50%", "70%", "60%"]}
-            flexWrap={["nowrap", "nowrap", "wrap"]}
-            flexDirection={["column", "column", "row"]}
-            mt={[4]}
-            p={2}
-            textAlign="left"
-          >
-            <Link
-              as={RouterLink}
-              to="/pricing"
-              variant="navigation"
-              w={["auto", "auto", "50%"]}
-              mb={4}
-              fontWeight="600"
-            >
-              Pricing
+          {footerIcons.map((item, index) => (
+            <Link key={index} m={2} href={item.link} isExternal>
+              <Image
+                src={`${assetsURL}icons/${item.imgUrl}.svg`}
+                height="50px"
+                width="50px"
+              />
             </Link>
-            <Link
-              as={RouterLink}
-              to="/detectors"
-              variant="navigation"
-              w={["auto", "auto", "50%"]}
-              mb={4}
-              fontWeight="600"
-            >
-              Detectors
-            </Link>
-            <Link
-              as={RouterLink}
-              to="/quickscan"
-              variant="navigation"
-              fontWeight="600"
-              w={["auto", "auto", "50%"]}
-              mb={4}
-            >
-              Quickscan
-            </Link>
-            <Link
-              onClick={() => {
-                window.open("https://solidityscan.com/discover/", "_blank");
-              }}
-              variant="navigation"
-              fontWeight="600"
-              w={["auto", "auto", "50%"]}
-              mb={4}
-            >
-              Discover
-            </Link>
-            <Link
-              as={RouterLink}
-              to="/terms-of-service"
-              variant="navigation"
-              w={["auto", "auto", "50%"]}
-              mb={4}
-              fontWeight="600"
-            >
-              Terms of Service
-            </Link>
-            {/* <Link
-              as={RouterLink}
-              to="/faq"
-              variant="navigation"
-              w="50%"
-              mb={4}
-              fontWeight="600"
-            >
-              FAQ
-            </Link> */}
-            <Link
-              as={RouterLink}
-              to="/privacy-policy"
-              variant="navigation"
-              w={["auto", "auto", "50%"]}
-              mb={4}
-              fontWeight="600"
-            >
-              Privacy Policy
-            </Link>
-          </Flex>
-          <Flex
-            width={["50%", "50%", "30%", "40%"]}
-            flexWrap={"wrap"}
-            justifyContent={["flex-start"]}
-            alignItems="center"
-            flexDirection={["row"]}
-          >
-            <Link m={2} href="https://blog.solidityscan.com/" isExternal>
-              <MediumIcon size={40} />
-            </Link>
-            <Link m={2} href="https://discord.com/invite/9HhV4hGENw" isExternal>
-              <DiscordIcon size={40} />
-            </Link>
-            <Link m={2} href="https://t.me/solidityscan" isExternal>
-              <TelegramIcon size={40} />
-            </Link>
-            <Link
-              m={2}
-              href="https://www.instagram.com/solidityscan/"
-              isExternal
-            >
-              <InstagramIcon size={40} />
-            </Link>
-            <Link m={2} href="https://twitter.com/solidityscan" isExternal>
-              <TwiterIcon size={45} />
-            </Link>
-          </Flex>
+          ))}
+
+          {/* <Link m={2} href="https://discord.com/invite/9HhV4hGENw" isExternal>
+            <DiscordIcon size={40} />
+          </Link>
+          <Link m={2} href="https://t.me/solidityscan" isExternal>
+            <TelegramIcon size={40} />
+          </Link>
+          <Link m={2} href="https://www.instagram.com/solidityscan/" isExternal>
+            <InstagramIcon size={40} />
+          </Link>
+          <Link m={2} href="https://twitter.com/solidityscan" isExternal>
+            <TwiterIcon size={45} />
+          </Link> */}
         </Flex>
       </Flex>
-    </Container>
+      {isLargerThan768 && <FooterLinks />}
+    </Flex>
   );
 };
 
 export default Footer;
+
+export const FooterLinks: React.FC = () => {
+  const footerLinks: {
+    linkText: string;
+    linkUrl: string;
+    isExternal: boolean;
+  }[] = [
+    {
+      linkText: "Pricing",
+      linkUrl: "/pricing",
+      isExternal: false,
+    },
+    {
+      linkText: "Detectors",
+      linkUrl: "/detectors",
+      isExternal: false,
+    },
+    {
+      linkText: "Quickscan",
+      linkUrl: "/quickscan",
+      isExternal: false,
+    },
+    {
+      linkText: "Discover",
+      linkUrl: "https://solidityscan.com/discover/",
+      isExternal: true,
+    },
+    {
+      linkText: "Terms of Service",
+      linkUrl: "/terms-of-service",
+      isExternal: false,
+    },
+    {
+      linkText: " Privacy Policy",
+      linkUrl: "/privacy-policy",
+      isExternal: false,
+    },
+  ];
+
+  return (
+    <Grid
+      templateColumns={["repeat(1, 1fr)", "repeat(1, 1fr)", "repeat(2, 1fr)"]}
+      width={["100%", "100%", "40%"]}
+      maxW={["350px", "350px", "700px"]}
+      mt={[4]}
+      p={2}
+      textAlign={["center", "center", "left"]}
+      rowGap={3}
+    >
+      {footerLinks.map((item, index) => (
+        <GridItem key={index} w="100%" maxW="350px">
+          <Link
+            as={item.isExternal ? undefined : RouterLink}
+            to={item.isExternal ? "" : item.linkUrl}
+            href={item.isExternal ? item.linkUrl : ""}
+            variant="navigation"
+            fontWeight="600"
+          >
+            {item.linkText}
+          </Link>
+        </GridItem>
+      ))}
+    </Grid>
+  );
+};

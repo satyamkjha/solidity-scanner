@@ -46,6 +46,7 @@ const ApplicationForm: React.FC<{
   const [branch, setBranch] = useState<string>("");
   const [nameError, setNameError] = useState<null | string>(null);
   const [linkError, setLinkError] = useState<null | string>(null);
+  const [connectAlert, setConnectAlert] = useState(false);
   const [step, setStep] = useState(1);
   const isOauthIntegrated =
     profileData?._integrations?.github?.status === "successful" ||
@@ -271,6 +272,8 @@ const ApplicationForm: React.FC<{
               setGithubLink={setGithubLink}
               setVisibility={setVisibility}
               isViewer={isViewer}
+              connectAlert={connectAlert}
+              setConnectAlert={setConnectAlert}
             />
           ) : step === 2 ? (
             repoTreeUP && (
@@ -338,7 +341,11 @@ const ApplicationForm: React.FC<{
               runScan();
             }
           }}
-          isDisabled={profileData?.credits === 0 || isViewer}
+          isDisabled={
+            profileData?.credits === 0 ||
+            isViewer ||
+            (connectAlert && !isOauthIntegrated)
+          }
         >
           {step > 2 ||
           (step === 2 &&

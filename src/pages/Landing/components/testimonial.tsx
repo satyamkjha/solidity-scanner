@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useRef, useEffect } from "react";
 import {
   Box,
   Text,
@@ -11,24 +11,50 @@ import {
 } from "@chakra-ui/react";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { EffectCoverflow, Navigation, Pagination } from "swiper";
-import "./testimonial.css";
+import "../../../styles/testimonial.css";
 import { userTestimonials } from "common/values";
 import { getAssetsURL } from "helpers/helperFunction";
-import { useConfig } from "hooks/useConfig";
+import { isInViewport } from "common/functions";
 
 const UserTestimonial: React.FC = () => {
-  const config: any = useConfig();
-  const assetsURL = getAssetsURL(config);
+  const assetsURL = getAssetsURL();
+
+  const [isVisible, setIsVisible] = useState(false);
+  const [animationOffset, setAnimationOffset] = useState(70);
+  const ref = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const element = document.getElementById("public_layout");
+    if (element) {
+      element.addEventListener("scroll", function (event) {
+        if (isInViewport(ref.current, setAnimationOffset)) {
+          setIsVisible(true);
+        } else {
+          setIsVisible(false);
+        }
+      });
+    }
+
+    return () => {
+      element?.removeEventListener("scroll", () =>
+        console.log("removed listner")
+      );
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   return (
     <Box
       w="100%"
       as="section"
       sx={{ textAlign: "center" }}
-      my={28}
-      px={[0, 0, 0, 24]}
+      my={24}
+      py={10}
+      px={[5, 10, 10, 20]}
+      ref={ref}
     >
-      <Heading fontSize="3xl" mb={10}>
-        What People are Saying about us
+      <Heading fontSize="3xl" mb={20}>
+        Celebrating our Success Stories.
       </Heading>
       {/* <Text color="subtle" fontSize="xl" mb={4}>
             Meet the experts behind the scenes. We are always excited to talk
@@ -72,7 +98,15 @@ const UserTestimonial: React.FC = () => {
         pagination={{
           clickable: true,
         }}
-        style={{ marginTop: "50px", paddingTop: "50px" }}
+        style={{
+          marginTop: "50px",
+          paddingTop: "50px",
+          paddingLeft: "20px",
+          paddingRight: "20px",
+          opacity: isVisible ? 1 : 0,
+          transform: `translateY(${isVisible ? 0 : animationOffset}px)`,
+          transition: "opacity 0.25s ease-in, transform 0.5s ease-in",
+        }}
         modules={[EffectCoverflow, Navigation, Pagination]}
       >
         {userTestimonials.map((data, index) => (

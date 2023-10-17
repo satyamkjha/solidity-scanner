@@ -4,6 +4,7 @@ import { Box, Flex } from "@chakra-ui/react";
 import { usePricingPlans } from "hooks/usePricingPlans";
 import Loader from "components/styled-components/Loader";
 import PricingDetails from "./components/PricingDetails";
+import { Header } from "components/header";
 
 const PricingPage: React.FC = () => {
   const location = useLocation();
@@ -35,17 +36,15 @@ const PricingPage: React.FC = () => {
         </Box>
       ) : (
         pricingDetails && (
-          <>
-            <Flex
-              w="100%"
-              flexDir={"column"}
-              alignItems={"center"}
-              justifyContent="flex-start"
-              p={0}
-            >
-              <PricingDetails pricingDetails={pricingDetails} page="pricing" />
-            </Flex>
-          </>
+          <Flex
+            w="100%"
+            flexDir={"column"}
+            alignItems={"center"}
+            justifyContent="flex-start"
+            p={0}
+          >
+            <PricingDetails pricingDetails={pricingDetails} page="pricing" />
+          </Flex>
         )
       )}
     </>

@@ -95,11 +95,21 @@ const FileList: React.FC<{
       alignItems="flex-start"
       pl={[2, 2, 7]}
     >
-      {fileList.tree.map((item) => (
-        <FolderItem view={view} folderItem={item} updateCheck={updateCheck} />
+      {fileList.tree.map((item, index) => (
+        <FolderItem
+          key={index}
+          view={view}
+          folderItem={item}
+          updateCheck={updateCheck}
+        />
       ))}
-      {fileList.blobs.map((item) => (
-        <FileItem view={view} fileItem={item} updateCheck={updateCheck} />
+      {fileList.blobs.map((item, index) => (
+        <FileItem
+          key={index}
+          view={view}
+          fileItem={item}
+          updateCheck={updateCheck}
+        />
       ))}
     </Flex>
   );

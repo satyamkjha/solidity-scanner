@@ -27,6 +27,10 @@
     content="A highly secure and trusted Blockchain smart contract scan platform for swift and accurate security audit results, along with detailed reports at unbeatable pricing options to choose from." />
   <meta property="og:image" content="https://solidityscan.com/logo.png" />
 
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@800;900&display=swap" rel="stylesheet">
+
   <!-- Twitter -->
   <meta property="twitter:card" content="summary_large_image" />
   <meta property="twitter:url" content="https://twitter.com/SolidityScan" />
@@ -71,6 +75,11 @@
       content: "Page " counter(myIndex);
     }
 
+    body {
+      margin: 0px;
+      padding: 0px;
+    }
+
     /* width */
     @media (min-width: 1024px) {
       ::-webkit-scrollbar {
@@ -80,7 +89,7 @@
 
       /* Track */
       ::-webkit-scrollbar-track {
-        background: #00000000;
+        background: transparent
       }
 
       /* Handle */
@@ -94,7 +103,20 @@
         background: #888888;
       }
     }
+
+    .type-cursor-animation::after {
+      color: #00EEFD;
+      -webkit-text-fill-color: #00EEFD;
+
+    }
   </style>
+  <script>
+    window.addEventListener(
+      "scroll",
+      () => console.log("asjdjasdjku"),
+      { passive: true }
+    );
+  </script>
 
   <script type="application/ld+json">
         "@context": "https://schema.org",
