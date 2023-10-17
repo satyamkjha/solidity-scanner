@@ -18,6 +18,7 @@ import Parser from "rss-parser";
 import "swiper/css";
 import "swiper/css/pagination";
 import "swiper/css/navigation";
+import axios from "axios";
 
 export const LatestHacks: React.FC = () => {
   const data: {

@@ -54,7 +54,7 @@ const UserTestimonial: React.FC = () => {
       ref={ref}
     >
       <Heading fontSize="3xl" mb={20}>
-        What People are Saying about us
+        Celebrating our Success Stories.
       </Heading>
       {/* <Text color="subtle" fontSize="xl" mb={4}>
             Meet the experts behind the scenes. We are always excited to talk

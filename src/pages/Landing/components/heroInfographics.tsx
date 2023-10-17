@@ -19,16 +19,19 @@ export const HeroInfographics: React.FC = () => {
     url: string;
     text: string;
   }[] = [
-    { url: "landing/infographics/ai_scan.svg", text: "AI Powered Scan" },
+    { url: "landing/infographics/ai_scan.svg", text: "AI Powered Scanning" },
     {
       url: "landing/infographics/seamless_integrations.svg",
       text: "Seamless Integrations",
     },
     {
       url: "landing/infographics/vulnerability_detectors.svg",
-      text: `${no_of_vuln_detectors}+ Vulnerability Detectors`,
+      text: `140+ Vulnerability Detectors`,
     },
-    { url: "landing/infographics/audit_report.svg", text: "Audit Report" },
+    {
+      url: "landing/infographics/audit_report.svg",
+      text: "Generate Audit Reports",
+    },
   ];
 
   const [isVisible, setIsVisible] = useState(false);
@@ -91,8 +94,8 @@ export const HeroInfographics: React.FC = () => {
         >
           <Image
             src={`${assetsURL}${item.url}`}
-            height={"200px"}
-            width={"200px"}
+            height={item.text === "Audit Report" ? "230px" : "200px"}
+            width={item.text === "Audit Report" ? "230px" : "200px"}
           />
           <Text fontSize="md" ml="2" mt={4} color="white" fontWeight={600}>
             {item.text}

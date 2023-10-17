@@ -28,58 +28,51 @@ export default function ProductSlides() {
 
   const data = [
     {
-      heading: "See your security posture evolve",
+      heading: "Enhance Your Security Posture",
       imgAlt: "Keep track of the bugs in your project",
-      text: `Upload specific contract code or provide code repositories link and
-        we’ll take care of the rest. Set triggers to automatically run scans
-        when developers make updates, and see trends on how your code
-        quality has improved`,
-      imgUrl: "landing/carousel/Screenshot_2.png",
-      mobileImgUrl: "mobileScreen.png",
+      text: `Upload your code or provide a repository link, set up automated scans for updates, and monitor the evolution of your code quality.`,
+      imgUrl: "landing/product_slides/slide_1_desktop.svg",
+      mobileImgUrl: "landing/product_slides/slide_1_mobile.svg",
       numberColorLinearGradient:
         "linear-gradient(151deg, #20DAF1 7.73%, #83F1FF 85.99%), #FFF",
       lightColor: "rgba(32, 218, 241, 0.17)",
     },
     {
-      heading: "Supported Protocols",
+      heading: "Wide Protocol Support",
       imgAlt: "Supported Protocols",
-      text: `As the blockchain landscape continues to expand, builders have an array of protocol options to choose from. In our pursuit of excellence in the field of Smart Contract Security Audits, SolidityScan proudly offers seamless support for Ethereum, Polygon, Avalanche, Binance, Fantom, Cronos, Celo, and more. We invite all builders to subscribe to the world's fastest, most accurate, and secure smart contract vulnerability analysis and auditing platform at an affordable price.`,
-      imgUrl: "landing/carousel/Screenshot_3.png",
-      mobileImgUrl: "mobileScreen.png",
+      text: `We specialize in Smart Contract Security Audits with seamless support for Ethereum, Polygon, Avalanche, Binance, and more. Access the world's fastest, most precise, and affordable smart contract vulnerability analysis platform.`,
+      imgUrl: "landing/product_slides/slide_2_desktop.svg",
+      mobileImgUrl: "landing/product_slides/slide_2_mobile.svg",
       numberColorLinearGradient:
         "linear-gradient(150deg, #98FF67 15.68%, rgba(82, 255, 0, 0.56) 119.33%), #FFF",
       lightColor: "#A4FF7960",
     },
     {
-      heading: "Awesome Features for Pro Users",
+      heading: "AI-Driven Pro Features",
       imgAlt: "Customize and silence issues and set your own rules",
-      text: `Seamlessly upload your specific contract code or share code repositories link, and our AI-powered solution will handle the rest. Set intelligent triggers to automatically initiate scans whenever developers make updates while observing the trends that highlight the progressive enhancement of your code quality. Embrace the power of AI to revolutionize your security practices and unlock unprecedented insights into your codebase.`,
-      imgUrl: "landing/carousel/Screenshot_4.png",
-      mobileImgUrl: "mobileScreen.png",
+      text: `Effortlessly upload your code, configure automated scans upon updates, and track code quality trends with AI insights.`,
+      imgUrl: "landing/product_slides/slide_3_desktop.svg",
+      mobileImgUrl: "landing/product_slides/slide_3_mobile.svg",
       numberColorLinearGradient:
         "linear-gradient(151deg, #F90 7.73%, #FFBB54 85.99%), #FFF",
       lightColor: "#FFB34250",
     },
     {
-      heading: "Publish reports & share your security report",
+      heading: "Publish & Share Security Reports",
       imgAlt: "Publish reports and share your security score",
-      text: `Share and validate your progress with the community with easily
-      publishable reports. Your community and investors can use the report
-      summary and be confident of your contracts' security. For the more
-      technical minded, you can add the full bug reports available in the
-      report too.`,
-      imgUrl: "landing/carousel/Screenshot_5.png",
-      mobileImgUrl: "mobileScreen.png",
+      text: `Easily share your progress with the community through easily publishable reports. Investors can rely on report summaries for confidence. Technical details are available in the full report.`,
+      imgUrl: "landing/product_slides/slide_4_desktop.svg",
+      mobileImgUrl: "landing/product_slides/slide_4_mobile.svg",
       numberColorLinearGradient:
         "linear-gradient(151deg, #ED6CA5 7.73%, #FF9EC9 85.99%), #FFF",
       lightColor: "#F788B940",
     },
     {
-      heading: "Seamlessly Connected Workflows",
-      imgAlt: "Seamlessly Connected Workflows",
-      text: `Seamlessly upload your specific contract code or share code repositories link, and our AI-powered solution will handle the rest. Set intelligent triggers to automatically initiate scans whenever developers make updates while observing the trends that highlight the progressive enhancement of your code quality. Embrace the power of AI to revolutionize your security practices and unlock unprecedented insights into your codebase.`,
-      imgUrl: "landing/carousel/Screenshot_6.png",
-      mobileImgUrl: "mobileScreen.png",
+      heading: "Seamless Workflow Integrations",
+      imgAlt: "Seamless Workflow Integrations",
+      text: `Seamlessly connect your GitHub repositories and Slack workspace for real-time alerts. Configure triggers for automated scans on updates and monitor code quality trends with AI insights. Revolutionize security practices and gain unparalleled codebase insights.`,
+      imgUrl: "landing/product_slides/slide_5_desktop.svg",
+      mobileImgUrl: "landing/product_slides/slide_5_mobile.svg",
       numberColorLinearGradient:
         "linear-gradient(150deg, #98FF67 15.68%, rgba(82, 255, 0, 0.56) 119.33%), #FFF",
       lightColor: "#A4FF7960",
@@ -281,7 +274,7 @@ const SlideDescription: React.FC<{
       minH="500px"
       spacing={7}
       justifyContent="center"
-      alignItems={isLargerThan1000 ? "flex-start" : "center"}
+      alignItems={["center", "center", "center", "flex-start"]}
       opacity={isVisible ? 1 : 0}
       transform={`translateY(${isVisible ? 0 : animationOffset}px)`}
       transition="opacity 0.5s ease, transform 0.5s ease-out"

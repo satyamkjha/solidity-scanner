@@ -76,8 +76,7 @@ export default function AboutUs() {
         mb={5}
         maxW="600px"
       >
-        Meet the experts behind the scenes. We are always excited to talk about
-        anything in crypto.
+        We're always eager to discuss anything related to security.
       </Text>
       <Flex
         as="div"

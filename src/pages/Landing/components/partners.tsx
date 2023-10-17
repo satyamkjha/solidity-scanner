@@ -77,16 +77,17 @@ export default function Partners() {
         fontWeight={700}
         my={5}
       >
-        Collaborating with the Best for{" "}
+        Partnering with{" "}
         <Box as="span" sx={{ color: "accent" }}>
-          Your Success
-        </Box>
+          Excellence
+        </Box>{" "}
+        for Your Success.
       </Heading>
       <Text maxW="1000px" color="subtle" fontSize={["lg", "lg", "xl"]} mb={5}>
-        Discover the power of partnership as we proudly showcase our trusted
-        collaborators below.These valued relationships help us bring you
-        exceptional solutions and services, backed by a network of expertise and
-        innovation.
+        Discover the potential of collaboration as we proudly introduce our
+        esteemed partners. These valuable partnerships enable us to deliver
+        outstanding solutions and services, supported by a network of expertise
+        and innovation.
       </Text>
       <Flex
         justifyContent="flex-start"

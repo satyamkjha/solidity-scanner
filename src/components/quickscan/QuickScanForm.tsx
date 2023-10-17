@@ -378,10 +378,10 @@ const QuickScanForm: React.FC<{
           transform={`translateY(${isVisible ? 0 : animationOffset}px)`}
           transition="opacity 0.25s ease-in, transform 0.5s ease-in"
         >
-          An open to all quick scanning extension designed to view results in
-          simple terms. Initiate a smart contract scan by selecting from a wide
-          range of supported protocols and get a quick analysis report within
-          seconds.
+          Experience an accessible, user-friendly threat scanner that presents
+          results in simple terms. Begin a smart contract scan by choosing from
+          a wide selection of supported protocols and receive a clear, concise
+          analysis report in a matter of seconds.
         </Text>
         <Stack
           mt={isDesktopView ? 20 : 10}
@@ -401,7 +401,7 @@ const QuickScanForm: React.FC<{
             options={platforms.map((item) => ({
               ...item,
               isDisabled: false,
-             }))}
+            }))}
             isSearchable={true}
             value={platforms.find((item) => platform === item.value)}
             placeholder="Select Contract Platform"

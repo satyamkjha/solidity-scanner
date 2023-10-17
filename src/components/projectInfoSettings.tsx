@@ -20,10 +20,12 @@ const InfoSettings: React.FC<{
   projectName: string;
   githubLink: string;
   isViewer: boolean;
+  connectAlert: boolean;
   isGithubIntegrated: boolean;
   setProjectName: React.Dispatch<React.SetStateAction<string>>;
   setGithubLink: React.Dispatch<React.SetStateAction<string>>;
   setVisibility: React.Dispatch<React.SetStateAction<boolean>>;
+  setConnectAlert: React.Dispatch<React.SetStateAction<boolean>>;
 }> = ({
   nameError,
   linkError,
@@ -35,9 +37,9 @@ const InfoSettings: React.FC<{
   setGithubLink,
   setVisibility,
   isViewer,
+  connectAlert,
+  setConnectAlert,
 }) => {
-  const [connectAlert, setConnectAlert] = useState(false);
-
   return (
     <Stack
       minHeight="400px"

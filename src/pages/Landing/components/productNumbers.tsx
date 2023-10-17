@@ -12,7 +12,7 @@ export default function ProductNumbers() {
   }[] = [
     {
       color: "#EDFCFE",
-      heading: "0 M +",
+      heading: "M $ +",
       headingNumber: 200,
       subHeading: "Hacks & exploits losses",
     },
@@ -25,13 +25,13 @@ export default function ProductNumbers() {
     {
       color: "#F4EFFF",
       heading: "M $ +",
-      headingNumber: 3.5,
+      headingNumber: 52.4,
       subHeading: "Worth of contracts secured",
     },
     {
       color: "#EDFCFE",
-      heading: "0+ M",
-      headingNumber: 1.6,
+      heading: "M +",
+      headingNumber: 6.4,
       subHeading: "Line of code scanned",
     },
   ];
@@ -105,7 +105,7 @@ export default function ProductNumbers() {
                   locale="en-US"
                 />
               </Heading>
-              <Heading color="#323B4B" fontSize="5xl" fontWeight={900}>
+              <Heading mt={1} color="#323B4B" fontSize="5xl" fontWeight={900}>
                 {item.heading}
               </Heading>
             </HStack>
