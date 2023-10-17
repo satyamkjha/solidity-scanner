@@ -9,6 +9,7 @@ import Loader from "components/styled-components/Loader";
 import { useHacksGraph } from "hooks/useHacksGraph";
 import { monthNames } from "common/values";
 import { getAssetsURL } from "helpers/helperFunction";
+import { Header } from "components/header";
 const HacksOverview: React.FC<{ overviewData: any }> = ({ overviewData }) => {
   const assetsURL = getAssetsURL();
   const currentDate = new Date();
@@ -121,6 +122,7 @@ const HacksOverview: React.FC<{ overviewData: any }> = ({ overviewData }) => {
       w={"100%"}
       bg={"linear-gradient(119.36deg, #04080D -2.67%, #13025E 162.98%)"}
     >
+      <Header theme={"dark"} />
       <Box
         flexDir={"column"}
         display={"flex"}

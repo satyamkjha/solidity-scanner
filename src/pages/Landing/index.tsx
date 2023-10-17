@@ -1,36 +1,27 @@
 import React, { useEffect, lazy, Suspense } from "react";
-import { Link, useLocation } from "react-router-dom";
-import {
-  Flex,
-  Box,
-  Container,
-  Text,
-  Heading,
-  Button,
-  Image,
-} from "@chakra-ui/react";
-
-import Infographics from "components/infographics";
+import { useLocation } from "react-router-dom";
+import { Flex, Box, Divider } from "@chakra-ui/react";
 import { getAssetsURL } from "helpers/helperFunction";
 import { useConfig } from "hooks/useConfig";
-import { QSSkeleton } from "./components/quickScan";
 import { VideoSkeleton } from "./components/productVideo";
-import { OverviewSkeleton } from "./components/productOverview";
 import { TestimonialSkeleton } from "./components/testimonial";
 import { AboutUsSkeleton } from "./components/aboutUs";
-import { CarouselSkeleton } from "./components/carousel";
 import { ManualAuditSkeleton } from "./components/manualAudit";
+import Partners from "./components/partners";
+import { LatestHacks } from "./components/latestHacks";
+import { HeroInfographics } from "./components/heroInfographics";
+import { Header } from "../../components/header";
+import { LandingHero } from "./components/hero";
+import QuickScan, { QSSkeleton } from "./components/quickScan";
 
-const QuickScan = lazy(() => import("./components/quickScan"));
 const ProductVideo = lazy(() => import("./components/productVideo"));
-const ProductOverview = lazy(() => import("./components/productOverview"));
 const UserTestimonial = lazy(() => import("./components/testimonial"));
 const AboutUs = lazy(() => import("./components/aboutUs"));
-const ImageCarousel = lazy(() => import("./components/carousel"));
 const ManualAudit = lazy(() => import("./components/manualAudit"));
 const ProductNumbers = lazy(() => import("./components/productNumbers"));
+const ProductSlides = lazy(() => import("./components/productSildes"));
 
-export default function LandingPage() {
+export default function Landing() {
   const location = useLocation();
   const config: any = useConfig();
   const assetsURL = getAssetsURL(config);
@@ -47,161 +38,104 @@ export default function LandingPage() {
 
   return (
     <>
-      <Container maxW={["95vw", "95vw", "95vw", "100vw"]} color="black">
-        {/* Section 1 */}
-        <Flex
-          as="section"
-          w="100%"
-          my={0}
-          textAlign={["center", "left"]}
-          py={24}
-          px={[0, 0, 0, 24]}
-          display={["flex"]}
-          flexDirection={["column", "column", "column", "row"]}
-          alignItems={"center"}
-          justifyContent={[
-            "flex-start",
-            "flex-start",
-            "flex-start",
-            "space-between",
-          ]}
-        >
-          <Box
-            w={["100%", "100%", "100%", "50%"]}
-            px={[0, 0, 10]}
-            py={5}
-            textAlign={"left"}
-            justifyContent="center"
-            display={"flex"}
-            flexDir="column"
-            alignItems={["center", "center", "center", "flex-start"]}
-          >
-            <Heading as="h1" fontSize={["3xl", "4xl"]} mb={8}>
-              Get your smart contracts audited by a smarter tool
-            </Heading>
-            <Text fontSize={["lg", "lg", "xl"]} color="subtle" mb={8}>
-              Smart-contract scanning tool built to discover vulnerabilities &
-              mitigate risks in your code.
-            </Text>
-            <Flex
-              justifyContent={"flex-start"}
-              alignItems="flex-start"
-              flexDir={["column", "column", "row"]}
-            >
-              <Link to="/signup">
-                <Button variant="brand" fontSize={"16px"} py={7} w="200px">
-                  Signup For Free Trial
-                </Button>
-              </Link>
-              <Link to="/quickscan">
-                <Button
-                  ml={[0, 0, 5]}
-                  mt={[5, 5, 0]}
-                  variant="cta-outline"
-                  w="200px"
-                >
-                  Run A QuickScan
-                </Button>
-              </Link>
-            </Flex>
-            <a
-              href="https://www.producthunt.com/posts/solidityscan?utm_source=badge-top-post-topic-badge&utm_medium=badge&utm_souce=badge-solidityscan"
-              target="_blank"
-              rel="noreferrer"
-            >
-              <img
-                src="https://api.producthunt.com/widgets/embed-image/v1/top-post-topic-badge.svg?post_id=381735&theme=light&period=monthly&topic_id=267"
-                alt="SolidityScan - The&#0032;ultimate&#0032;EVM&#0032;compatible&#0032;smart&#0032;contract&#0032;analysis&#0032;tool | Product Hunt"
-                style={{
-                  width: "250px",
-                  height: "54px",
-                  marginTop: "30px",
-                }}
-              />
-            </a>
-          </Box>
-          <Box
-            w={["100%", "100%", "100%", "55%"]}
-            display={["flex"]}
-            flexDirection="column"
-            alignItems={"flex-end"}
-          >
-            <Image
-              marginTop={["0px", "0px", "0px", "-60px"]}
-              src={`${assetsURL}landing/landing_hero.png`}
-              transform="translateX(20px)"
-              alt={"Run scans for your smart contracts"}
-            />
-          </Box>
-        </Flex>
+      {/* Section 1 */}
 
-        {/* Section 2 */}
+      <Flex
+        background="#02070E"
+        backgroundImage={`${assetsURL}background/hero_bg.svg`}
+        backgroundRepeat="no-repeat"
+        backgroundSize="cover"
+        alignItems="center"
+        justifyContent="flex-start"
+        flexDir="column"
+        h="fit-content"
+        position="relative"
+        width="100vw"
+      >
         <Box
-          w="100%"
-          as="section"
-          sx={{ textAlign: "center" }}
-          my={[4, 8]}
-          px={[0, 0, 0, 24]}
+          sx={{
+            borderRadius: "100px",
+            opacity: 0.4,
+            background: "rgba(82, 255, 0, 0.32)",
+            filter: "blur(250px)",
+            position: "absolute",
+            width: "633.226px",
+            height: "642px",
+            top: -10,
+            right: -30,
+            zIndex: 0,
+          }}
+        ></Box>
+        <Flex
+          width="100%"
+          alignItems="center"
+          justifyContent="flex-start"
+          flexDir="column"
+          position="relative"
+          zIndex={10}
         >
-          <Infographics
-            header={
-              <Heading as="h1" fontSize="3xl" mb={4}>
-                Scan.{" "}
-                <Box
-                  as="span"
-                  sx={{
-                    background:
-                      "linear-gradient(129.18deg, #52FF00 8.52%, #00EEFD 93.94%)",
-                    backgroundClip: "text",
-                    WebkitTextFillColor: "transparent",
-                    mx: 4,
-                  }}
-                >
-                  Fix.
-                </Box>{" "}
-                Publish.
-              </Heading>
-            }
-            subHeader={
-              <Text color="subtle" fontSize={["lg", "lg", "xl"]} mb={4}>
-                Simple, fast, effortless.
-              </Text>
-            }
-          />
-        </Box>
+          <Header theme={"dark"} />
 
-        <Suspense fallback={<QSSkeleton />}>
-          <QuickScan />
-        </Suspense>
+          <LandingHero />
+          <HeroInfographics />
+        </Flex>
+        <Box
+          sx={{
+            borderRadius: "100px",
+            opacity: 0.5,
+            background: "rgba(51, 0, 255, 0.25)",
+            filter: "blur(250px)",
+            position: "absolute",
+            width: "633.226px",
+            height: "642px",
+            bottom: -50,
+            left: -30,
+            zIndex: 0,
+          }}
+        ></Box>
+      </Flex>
 
-        <Suspense fallback={<VideoSkeleton />}>
-          <ProductVideo />
-        </Suspense>
+      {/* Section 2 */}
 
-        <Suspense fallback={<OverviewSkeleton />}>
+      <Suspense fallback={<QSSkeleton />}>
+        <QuickScan />
+      </Suspense>
+
+      <Suspense fallback={null}>
+        <ProductSlides />
+      </Suspense>
+
+      <Suspense fallback={<VideoSkeleton />}>
+        <ProductVideo />
+      </Suspense>
+
+      <Partners />
+
+      {/* <Suspense fallback={<OverviewSkeleton />}>
           <ProductOverview />
-        </Suspense>
+        </Suspense> */}
 
-        <Suspense fallback={<TestimonialSkeleton />}>
-          <UserTestimonial />
-        </Suspense>
+      <Suspense fallback={<TestimonialSkeleton />}>
+        <UserTestimonial />
+      </Suspense>
 
-        <Suspense fallback={<AboutUsSkeleton />}>
-          <AboutUs />
-        </Suspense>
+      <Suspense fallback={<AboutUsSkeleton />}>
+        <AboutUs />
+      </Suspense>
 
-        <Suspense fallback={<CarouselSkeleton />}>
+      <Suspense fallback={<ProductNumbers />}>
+        <ProductNumbers />
+      </Suspense>
+
+      {/* <Suspense fallback={<CarouselSkeleton />}>
           <ImageCarousel />
-        </Suspense>
+        </Suspense> */}
 
-        <Suspense fallback={<ManualAuditSkeleton />}>
-          <ManualAudit />
-        </Suspense>
+      <Suspense fallback={<ManualAuditSkeleton />}>
+        <ManualAudit />
+      </Suspense>
 
-        <Suspense fallback={<ProductNumbers />}>
-          <ProductNumbers />
-        </Suspense>
-      </Container>
+      <LatestHacks />
     </>
   );
 }

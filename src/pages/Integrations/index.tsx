@@ -205,26 +205,25 @@ const IntegrationChannel: React.FC<IntegrationChannelProps> = ({
             <Text fontSize="13px" fontWeight="400" opacity={0.8} maxW="500px">
               {description}
             </Text>
-            {["GitHub", "Bitbucket", "Gitlab"].includes(title) &&
-              status === "failed" && (
-                <Flex alignItems="center" mt={1}>
-                  <Icon
-                    mr={1}
-                    fontSize="12px"
-                    as={AiOutlineWarning}
-                    color="yellow.400"
-                  />
-                  <Text
-                    fontSize="12px"
-                    fontWeight="400"
-                    opacity={0.8}
-                    color="subtle"
-                    maxW="500px"
-                  >
-                    Please uninstall the app from github before reconnecting
-                  </Text>
-                </Flex>
-              )}
+            {["GitHub"].includes(title) && status === "failed" && (
+              <Flex alignItems="center" mt={1}>
+                <Icon
+                  mr={1}
+                  fontSize="12px"
+                  as={AiOutlineWarning}
+                  color="yellow.400"
+                />
+                <Text
+                  fontSize="12px"
+                  fontWeight="400"
+                  opacity={0.8}
+                  color="subtle"
+                  maxW="500px"
+                >
+                  Please uninstall the app from github before reconnecting
+                </Text>
+              </Flex>
+            )}
           </Box>
         </Flex>
         {allowed ? (

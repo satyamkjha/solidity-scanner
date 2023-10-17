@@ -2,15 +2,13 @@ import React, {
   useEffect,
   useState,
   useRef,
-  Dispatch,
-  SetStateAction,
 } from "react";
 import { useHistory } from "react-router-dom";
 import {
   Flex,
   Box,
   Text,
-  Button,
+  Button, 
   Progress,
   Tooltip,
   AlertDialog,
@@ -30,7 +28,6 @@ import {
   Heading,
   useDisclosure,
 } from "@chakra-ui/react";
-// import Lottie from "lottie-react";
 import { LogoIcon } from "components/icons";
 import Score from "components/score";
 import VulnerabilityDistribution from "components/vulnDistribution";

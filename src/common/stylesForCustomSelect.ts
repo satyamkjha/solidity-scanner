@@ -228,3 +228,4 @@ export const customTranslucentDropdown: StylesConfig<
     return { ...provided, opacity, transition, color };
   },
 };
+
