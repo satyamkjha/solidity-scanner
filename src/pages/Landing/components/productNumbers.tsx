@@ -97,7 +97,7 @@ export default function ProductNumbers() {
             transform={`translateY(${isVisible ? 0 : animationOffset}px)`}
             transition="opacity 0.25s ease-in, transform 0.5s ease-in"
           >
-            <HStack spacing={0}>
+            <Flex flexDir="row" alignItems="center" justifyContent="flex-start">
               <Heading color="#323B4B" fontSize="5xl" fontWeight={900}>
                 <AnimatedNumbers
                   includeComma
@@ -108,7 +108,7 @@ export default function ProductNumbers() {
               <Heading mt={1} color="#323B4B" fontSize="5xl" fontWeight={900}>
                 {item.heading}
               </Heading>
-            </HStack>
+            </Flex>
             <Text color="#323B4B">{item.subHeading}</Text>
           </GridItem>
         ))}

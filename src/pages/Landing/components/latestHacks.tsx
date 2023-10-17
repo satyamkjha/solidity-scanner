@@ -1,24 +1,13 @@
-import React, { useEffect, useState } from "react";
-import {
-  Flex,
-  Box,
-  Heading,
-  Text,
-  VStack,
-  Button,
-  Image,
-  useMediaQuery,
-} from "@chakra-ui/react";
+import React from "react";
+import { Flex, Box, Heading, Text, VStack, Button } from "@chakra-ui/react";
 import { getAssetsURL } from "helpers/helperFunction";
 import { useConfig } from "hooks/useConfig";
 import { Swiper, SwiperSlide } from "swiper/react";
-import { EffectCoverflow, Navigation, Pagination } from "swiper";
-import Parser from "rss-parser";
+import { Navigation, Pagination } from "swiper";
 
 import "swiper/css";
 import "swiper/css/pagination";
 import "swiper/css/navigation";
-import axios from "axios";
 
 export const LatestHacks: React.FC = () => {
   const data: {

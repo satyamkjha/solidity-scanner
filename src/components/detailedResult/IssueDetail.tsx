@@ -58,6 +58,8 @@ const IssueDetail: React.FC<{
 
   let variableData = description_details;
 
+  console.log(variableData);
+
   const { scanId, projectId } = useParams<{
     scanId: string;
     projectId: string;

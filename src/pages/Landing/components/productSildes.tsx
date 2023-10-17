@@ -146,7 +146,11 @@ export default function ProductSlides() {
             />
           </Flex>
           <VStack justifyContent="center" alignItems="center" w="10%">
-            <Image src={`${"lineUp.svg"}`} height="156px" alt={""} />
+            <Image
+              src={`${assetsURL}common/lineUp.svg`}
+              height="156px"
+              alt={""}
+            />
             <Flex
               width="50px"
               height="50px"
@@ -170,7 +174,7 @@ export default function ProductSlides() {
             </Flex>
             <Image
               // boxShadow="5px 5px 15px 15px #88888840"
-              src={`${"lineDown.svg"}`}
+              src={`${assetsURL}common/lineDown.svg`}
               height="156px"
               alt={""}
             />
