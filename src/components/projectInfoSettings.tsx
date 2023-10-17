@@ -21,7 +21,7 @@ const InfoSettings: React.FC<{
   githubLink: string;
   isViewer: boolean;
   connectAlert: boolean;
-  isGithubIntegrated: boolean;
+  isOauthIntegrated: boolean;
   setProjectName: React.Dispatch<React.SetStateAction<string>>;
   setGithubLink: React.Dispatch<React.SetStateAction<string>>;
   setVisibility: React.Dispatch<React.SetStateAction<boolean>>;
@@ -32,7 +32,7 @@ const InfoSettings: React.FC<{
   visibility,
   projectName,
   githubLink,
-  isGithubIntegrated,
+  isOauthIntegrated,
   setProjectName,
   setGithubLink,
   setVisibility,
@@ -135,7 +135,7 @@ const InfoSettings: React.FC<{
           disabled={isViewer}
           isChecked={visibility}
           onChange={() => {
-            if (isGithubIntegrated) {
+            if (isOauthIntegrated) {
               setVisibility(!visibility);
             } else {
               setConnectAlert(!connectAlert);
@@ -145,13 +145,15 @@ const InfoSettings: React.FC<{
         <Text>Private</Text>
       </HStack>
 
-      {!isGithubIntegrated && connectAlert && (
+      {!isOauthIntegrated && connectAlert && (
         <GithubConnectAlert
-          msg={"You need to connect your GitHub to start a private scan."}
+          msg={
+            "You need to connect any of your code hosting platform like GitHub, GitLab or Bitbucket to start a private scan."
+          }
         />
       )}
 
-      {isGithubIntegrated && (
+      {isOauthIntegrated && (
         <Text
           width="100%"
           p={5}
@@ -164,8 +166,8 @@ const InfoSettings: React.FC<{
           borderRadius={10}
         >
           In order to conduct a scan, users must have ownership of the private
-          GitHub repositories. Our product currently does not support scanning
-          private repositories not owned by the user.
+          repositories. Our product currently does not support scanning private
+          repositories not owned by the user.
         </Text>
       )}
     </Stack>
