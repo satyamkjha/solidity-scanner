@@ -178,23 +178,6 @@
         }
       }
   </script>
-  <script>
-    String.prototype.format = function (options) {
-      // store arguments in an array
-      var args = arguments;
-      // use replace to iterate over the string
-      // select the match and check if related argument is present
-      // if yes, replace the match with the argument
-      let fString = this;
-      for (const keys in options) {
-        fString = fString.replaceAll(
-          "${" + keys + "}",
-          options[keys]
-        );
-      }
-      return fString;
-    };
-  </script>
   <style>
     .infinite-scroll-component__outerdiv {
       width: 100% !important;
