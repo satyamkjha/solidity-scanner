@@ -108,6 +108,20 @@ export const theme = extendTheme({
             background: "black",
           },
         }),
+        white: (props: StyleFunctionProps) => ({
+          ...defaultTheme.components.Button.variants.outline(props),
+          background: "white",
+          color: "black",
+          fontSize: "16px",
+          borderRadius: "6px",
+          py: 6,
+          _hover: {
+            background: "#FFFFFF80",
+            _disabled: {
+              background: "#FFFFFF80",
+            },
+          },
+        }),
         "accent-ghost": (props: StyleFunctionProps) => ({
           ...defaultTheme.components.Button.variants.ghost(props),
           background: "#FFFFFF00",
@@ -135,23 +149,23 @@ export const theme = extendTheme({
             background: "#efebff",
           },
         }),
-        "gray-outline": (props: StyleFunctionProps) => ({
+        "white-ghost": (props: StyleFunctionProps) => ({
           ...defaultTheme.components.Button.variants.outline(props),
-          background: "#FFFFFF",
-          color: "#828282",
+          // background: "#FFFFFF00",
+          color: "#FFFFFF",
           fontSize: "16px",
-          borderColor: "#828282",
-          py: 4,
+          py: 5,
+          border: "none",
           _hover: {
-            background: "#f0f0f0",
+            background: "#2e2e2e80",
           },
           _active: {
-            background: "#f0f0f0",
+            background: "#2e2e2e",
           },
         }),
         "cta-outline": (props: StyleFunctionProps) => ({
           ...defaultTheme.components.Button.variants.outline(props),
-          background: "#FFFFFF",
+          background: "#FFFFFF00",
           color: "#3300FF",
           fontSize: "16px",
           borderColor: "#3300FF",
@@ -164,19 +178,14 @@ export const theme = extendTheme({
             color: "#FFFFFF",
           },
         }),
-        "black-outline": (props: StyleFunctionProps) => ({
-          ...defaultTheme.components.Button.variants.outline(props),
-          background: "#FFFFFF",
-          color: "black",
+        label: (props: StyleFunctionProps) => ({
+          ...defaultTheme.components.Button.variants.solid(props),
           fontSize: "16px",
-          borderColor: "#000000",
-          py: 4,
-          _hover: {
-            background: "#f0f0f0",
-          },
-          _active: {
-            background: "#f0f0f0",
-          },
+          borderWidth: 0,
+          borderRadius: 20,
+          pt: 4,
+          pb: 4,
+          px: 8,
         }),
       },
     },
@@ -270,7 +279,15 @@ export const theme = extendTheme({
           fontWeight: 500,
           color: "gray.400",
           _hover: {
-            color: "gray.500",
+            color: "gray.600",
+            textDecoration: "none",
+          },
+        },
+        white: {
+          fontWeight: 500,
+          color: "white",
+          _hover: {
+            color: "white",
           },
         },
         "subtle-without-underline": {

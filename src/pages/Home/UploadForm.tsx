@@ -26,10 +26,13 @@ import { useUserRole } from "hooks/useUserRole";
 
 const UploadForm: React.FC<{
   profileData: Profile;
+  page: number;
+  setPage: React.Dispatch<React.SetStateAction<number>>;
 }> = ({ profileData }) => {
   const history = useHistory();
   const role: string = useUserRole();
   const [step, setStep] = useState(0);
+  const [uploadType, setUploadType] = useState<"single" | "multiple">("single");
   const [error, setError] = useState(false);
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
   const [name, setName] = useState("");
@@ -223,7 +226,7 @@ const UploadForm: React.FC<{
         project_type: "new",
       });
 
-      history.push("/scans");
+      history.push("/projects");
       setTimeout(() => setIsLoading(false), 1000);
     } catch (e) {
       setTimeout(() => setIsLoading(false), 1000);
@@ -236,63 +239,65 @@ const UploadForm: React.FC<{
       {profileData && (
         <Flex
           flexDir="column"
-          backgroundColor="#FCFCFC"
           px={7}
           py={5}
+          h="75vh"
           justifyContent={"flex-start"}
           alignItems="center"
           borderRadius={20}
-          border="1px solid #ECECEC"
           opacity={isViewer ? 0.5 : 1}
         >
-          <Text
-            w="100%"
-            sx={{
-              fontSize: ["xl", "xl", "2xl"],
-              fontWeight: 600,
-              textAlign: "left",
-              mb: 4,
-            }}
-          >
-            Upload contract
-          </Text>
+          <VStack h="230px">
+            <Text
+              w="100%"
+              sx={{
+                fontSize: ["xl", "xl", "2xl"],
+                fontWeight: 600,
+                textAlign: "left",
+                mb: 4,
+              }}
+            >
+              Upload contract
+            </Text>
 
-          <Text
-            w="100%"
-            sx={{ fontSize: "sm", color: "subtle", textAlign: "left", mb: 2 }}
-          >
-            Upload your Solidity files (.sol extension) as a project. Utilize
-            the “Project Name” field to refer to your scan results in the
-            “Projects” section.
-          </Text>
-          <Divider color="gray.700" borderWidth="1px" mb={3} />
-          <Text
-            w="100%"
-            sx={{ fontSize: "sm", color: "subtle", textAlign: "left", mb: 2 }}
-          >
-            NOTE: Please follow the constraints below to avoid scan failure:
-          </Text>
-          <Text
-            w="100%"
-            sx={{ color: "subtle", textAlign: "left", mb: 2, fontSize: "xs" }}
-          >
-            1. Files to be uploaded should be Solidity(.sol) files, preferably
-            compiled successfully. Incorrect syntax might render incorrect
-            results.
-          </Text>
-          <Text
-            w="100%"
-            sx={{ color: "subtle", textAlign: "left", mb: 3, fontSize: "xs" }}
-          >
-            2. A Maximum number of files that can be uploaded is 5 and file size
-            cannot exceed 5MB.
-          </Text>
+            <Text
+              w="100%"
+              sx={{ fontSize: "sm", color: "subtle", textAlign: "left", mb: 2 }}
+            >
+              Upload your Solidity files (.sol extension) as a project. Utilize
+              the “Project Name” field to refer to your scan results in the
+              “Projects” section.
+            </Text>
+            <Divider color="gray.700" borderWidth="1px" mb={3} />
+            <Text
+              w="100%"
+              sx={{ fontSize: "sm", color: "subtle", textAlign: "left", mb: 2 }}
+            >
+              NOTE: Please follow the constraints below to avoid scan failure:
+            </Text>
+            <Text
+              w="100%"
+              sx={{ color: "subtle", textAlign: "left", mb: 2, fontSize: "xs" }}
+            >
+              1. Files to be uploaded should be Solidity(.sol) files, preferably
+              compiled successfully. Incorrect syntax might render incorrect
+              results.
+            </Text>
+            <Text
+              w="100%"
+              sx={{ color: "subtle", textAlign: "left", mb: 3, fontSize: "xs" }}
+            >
+              2. A Maximum number of files that can be uploaded is 5 and file
+              size cannot exceed 5MB.
+            </Text>
+          </VStack>
 
           <Flex
             flexDir={"column"}
-            justifyContent={"flex-start"}
+            justifyContent={"space-between"}
             alignItems="flex-start"
             width={"100%"}
+            h="calc(100% - 240px)"
           >
             <VStack alignItems={"flex-start"} width="100%">
               <Text mb={0} fontSize="sm">

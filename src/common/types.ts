@@ -35,6 +35,9 @@ export type Profile = {
     github: IntegrationData;
     slack: IntegrationData;
     jira: IntegrationData;
+    bitbucket: IntegrationData;
+    gitlab: IntegrationData;
+    [key: string]: IntegrationData;
   };
   is_cancellable: boolean;
   payment_method: string;

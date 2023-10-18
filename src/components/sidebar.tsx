@@ -33,7 +33,7 @@ import { useProfile } from "hooks/useProfile";
 import ManualAuditForm from "./modals/manualAuditForm";
 import { ArrowBackIcon, ArrowForwardIcon } from "@chakra-ui/icons";
 import { useConfig } from "hooks/useConfig";
-import { getAssetsURL } from "helpers/helperFunction";
+import { getAssetsURL, getFeatureGateConfig } from "helpers/helperFunction";
 import { useUserRole } from "hooks/useUserRole";
 
 const Sidebar: React.FC<{
@@ -49,7 +49,7 @@ const Sidebar: React.FC<{
   const assetsURL = getAssetsURL(config);
   const role: string = useUserRole();
 
-  const sidebarData: SidebarItemProps[] = [
+  let sidebarData: SidebarItemProps[] = [
     {
       link: "/home",
       label: "Home",
@@ -60,32 +60,23 @@ const Sidebar: React.FC<{
       accessRevoked: [],
     },
     {
-      link: "/scans",
-      label: "Scans",
+      link: "/projects",
+      label: "Projects",
       icon: <ProjectsMenuIcon size={16} />,
       isCollapsed: isCollapsed,
       transitionDone: transitionDone,
       isExternal: false,
       accessRevoked: [],
     },
-    // {
-    //   link: "/projects",
-    //   label: "Projects",
-    //   icon: <ProjectsMenuIcon size={16} />,
-    //   isCollapsed: isCollapsed,
-    //   transitionDone: transitionDone,
-    //   isExternal: false,
-    //   accessRevoked: [],
-    // },
-    // {
-    //   link: "/blocks",
-    //   label: "Verified Contracts",
-    //   icon: <BlockMenuIcon size={16} />,
-    //   isCollapsed: isCollapsed,
-    //   transitionDone: transitionDone,
-    //   isExternal: false,
-    //   accessRevoked: [],
-    // },
+    {
+      link: "/blocks",
+      label: "Verified Contracts",
+      icon: <BlockMenuIcon size={16} />,
+      isCollapsed: isCollapsed,
+      transitionDone: transitionDone,
+      isExternal: false,
+      accessRevoked: [],
+    },
     {
       link: "/integrations",
       label: "Integrations",
@@ -132,6 +123,13 @@ const Sidebar: React.FC<{
       accessRevoked: [],
     },
   ];
+
+  if (getFeatureGateConfig().merge_scans_enabled) {
+    const updatedSidebarData = sidebarData.filter(
+      (item) => item.link !== "/blocks"
+    );
+    sidebarData = updatedSidebarData;
+  }
 
   return (
     <Flex

@@ -29,7 +29,11 @@ import FormatOptionLabelWithImage from "components/FormatOptionLabelWithImage";
 import { customStylesForTakeAction } from "common/stylesForCustomSelect";
 import ConfirmActionForm from "../modals/confirmActionForm";
 import { useUserRole } from "hooks/useUserRole";
-import { getProjectFileUrl, formatString } from "helpers/helperFunction";
+import {
+  getProjectFileUrl,
+  formatString,
+  getProjectType,
+} from "helpers/helperFunction";
 import { FileIssue } from "components/icons";
 import { DetailResultContext } from "common/contexts";
 
@@ -215,14 +219,11 @@ const MultifileResult: React.FC<{
           };
         }),
       };
-      const { data } = await API.post(
-        API_PATH.API_CREATE_GITHUB_BUGS_ISSUE,
-        payload
-      );
+      const { data } = await API.post(API_PATH.API_CREATE_BUGS_ISSUE, payload);
 
-      if (data && data.issue_url) {
+      if (data && data.issue_id && project_url) {
         toast({
-          title: "GitHub issue successfully created",
+          title: `Issue created successfully on ${getProjectType(project_url)}`,
           status: "success",
           duration: 5000,
           isClosable: true,
@@ -526,12 +527,16 @@ const MultifileResult: React.FC<{
             modelText={
               <VStack>
                 <Text my={4} w={["100%"]} fontSize={"lg"} fontWeight={600}>
-                  Are you sure you want to update the Issue to Github?
+                  {`Are you sure you want to update the Issue to ${
+                    project_url ? getProjectType(project_url) : "Github"
+                  }?`}
                 </Text>
                 <Text my={4} color="detail" fontWeight={400} w={["100%"]}>
                   You are about to create a{" "}
                   <Text as={"span"} color="black" fontWeight={"bold"}>
-                    Github Issue
+                    {`${
+                      project_url ? getProjectType(project_url) : "Github"
+                    } Issue`}
                   </Text>{" "}
                   for selected{" "}
                   <Text as={"span"} color="black" fontWeight={"bold"}>

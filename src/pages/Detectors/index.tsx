@@ -14,6 +14,7 @@ import { DetectorItemProp } from "common/types";
 import { detectorData } from "common/values";
 import { useConfig } from "hooks/useConfig";
 import { getAssetsURL } from "helpers/helperFunction";
+import { Header } from "components/header";
 
 const DetectorItem: React.FC<{ item: DetectorItemProp }> = ({ item }) => {
   const config: any = useConfig();
@@ -122,131 +123,128 @@ const Detectors: React.FC = () => {
   const assetsURL = getAssetsURL(config);
 
   return (
-    <>
-      <Container maxW="100vw" p={0} color="black">
-        <Flex
-          w="100%"
-          flexDir={"column"}
-          alignItems={"center"}
-          justifyContent="flex-start"
+    <Flex
+      w="100%"
+      flexDir={"column"}
+      alignItems={"center"}
+      justifyContent="flex-start"
+    >
+      <Header theme="light" />
+      <Flex
+        as="section"
+        w="100%"
+        my={10}
+        textAlign={["center", "left"]}
+        py={10}
+        px={[0, 0, 0, 20]}
+        display={["flex"]}
+        flexDirection={["column", "column", "column", "row"]}
+        alignItems={"center"}
+        justifyContent={[
+          "flex-start",
+          "flex-start",
+          "flex-start",
+          "space-between",
+        ]}
+      >
+        <Box
+          w={["100%", "100%", "100%", "60%"]}
+          px={[0, 0, 10]}
+          py={5}
+          justifyContent="center"
+          display={"flex"}
+          flexDir="column"
+          alignItems={["center", "center", "center", "flex-start"]}
         >
-          <Flex
-            as="section"
-            w="100%"
-            my={10}
-            textAlign={["center", "left"]}
-            py={10}
-            px={[0, 0, 0, 20]}
-            display={["flex"]}
-            flexDirection={["column", "column", "column", "row"]}
-            alignItems={"center"}
-            justifyContent={[
-              "flex-start",
-              "flex-start",
-              "flex-start",
-              "space-between",
-            ]}
-          >
-            <Box
-              w={["100%", "100%", "100%", "60%"]}
-              px={[0, 0, 10]}
-              py={5}
-              justifyContent="center"
-              display={"flex"}
-              flexDir="column"
-              alignItems={["center", "center", "center", "flex-start"]}
-            >
-              <Heading as="h1" fontSize={["3xl", "4xl"]} mb={8}>
-                SolidityScan Smart Contract Vulnerability Coverage
-              </Heading>
-              <Text fontSize={["lg", "lg", "xl"]} color="subtle" mb={8}>
-                SolidityScan is capable of identifying all the SWCs listed in
-                the SWC Registry, as well as providing additional coverage that
-                has been developed by the researchers on the SolidityScan team.
-                This includes a comprehensive list of smart contract
-                vulnerabilities, misconfigurations, logical issues, and
-                weaknesses, technology-specific smart contract vulnerabilities,
-                and gas optimization techniques to reduce gas costs.
-              </Text>
-            </Box>
-            <Box
-              w={["100%", "100%", "100%", "40%"]}
-              display={["flex"]}
-              flexDirection="column"
-              alignItems={"flex-end"}
-            >
-              <Image
-                src={`${assetsURL}detectors/detector_icon_lg.png`}
-                transform="translateX(20px)"
-                zIndex={"10"}
-                alt={"Run scans for your smart contracts"}
-              />
-            </Box>
-          </Flex>
-          <Box
-            w="100%"
-            as="section"
-            sx={{ textAlign: "center" }}
-            my={[4, 8]}
-            px={[0, 0, 0, 24]}
-          >
+          <Heading as="h1" fontSize={["3xl", "4xl"]} mb={8}>
+            SolidityScan Smart Contract Vulnerability Coverage
+          </Heading>
+          <Text fontSize={["lg", "lg", "xl"]} color="subtle" mb={8}>
+            SolidityScan is capable of identifying all the SWCs listed in the
+            SWC Registry, as well as providing additional coverage that has been
+            developed by the researchers on the SolidityScan team. This includes
+            a comprehensive list of smart contract vulnerabilities,
+            misconfigurations, logical issues, and weaknesses,
+            technology-specific smart contract vulnerabilities, and gas
+            optimization techniques to reduce gas costs.
+          </Text>
+        </Box>
+        <Box
+          w={["100%", "100%", "100%", "40%"]}
+          display={["flex"]}
+          flexDirection="column"
+          alignItems={"flex-end"}
+        >
+          <Image
+            src={`${assetsURL}detectors/detector_icon_lg.png`}
+            transform="translateX(20px)"
+            zIndex={"10"}
+            alt={"Run scans for your smart contracts"}
+          />
+        </Box>
+      </Flex>
+      <Box
+        w="100%"
+        as="section"
+        sx={{ textAlign: "center" }}
+        my={[4, 8]}
+        px={[0, 0, 0, 24]}
+      >
+        <Flex
+          sx={{
+            w: "90%",
+            justifyContent: "space-between",
+            my: [10, 10, 10],
+            mx: "auto",
+            flexDir: ["column", "column", "row"],
+          }}
+        >
+          {headingData.map((item) => (
             <Flex
               sx={{
-                w: "90%",
-                justifyContent: "space-between",
-                my: [10, 10, 20],
-                mx: "auto",
-                flexDir: ["column", "column", "row"],
+                flexDir: "column",
+                alignItems: "flex-start",
+                mb: [8, 8, 0],
+                ml: [20, 20, 0],
               }}
             >
-              {headingData.map((item) => (
-                <Flex
-                  sx={{
-                    flexDir: "column",
-                    alignItems: "flex-start",
-                    mb: [8, 8, 0],
-                    ml: [20, 20, 0],
-                  }}
-                >
-                  <Text color={"#00006D"} fontSize="sm" fontWeight={400}>
-                    {item.title}
-                  </Text>
-                  <Heading as="h1" mt={2} fontSize={["3xl", "4xl"]} mb={8}>
-                    {item.data}
-                  </Heading>
-                </Flex>
-              ))}
+              <Text color={"#00006D"} fontSize="sm" fontWeight={400}>
+                {item.title}
+              </Text>
+              <Heading as="h1" mt={2} fontSize={["3xl", "4xl"]} mb={8}>
+                {item.data}
+              </Heading>
             </Flex>
-          </Box>
-          <Box
-            w={["95%", "95%", "90%"]}
-            borderRadius={15}
-            p={[2, 2, 10]}
-            mt={[0, 0, 10]}
-            background={"#FAFBFC"}
-            display="flex"
-            flexDir={"column"}
-            alignItems={["center", "center", "center", "flex-start"]}
-            justifyContent={"flex-start"}
-          >
-            <Heading
-              width={"100%"}
-              textAlign="left"
-              as="h1"
-              fontSize={["2xl", "3xl"]}
-              mb={8}
-              mt={[8, 8, 0]}
-              ml={[5, 5, 0]}
-            >
-              SolidityScan Detectors
-            </Heading>
-            {detectorData.map((item) => (
-              <DetectorItem item={item} />
-            ))}
-          </Box>
+          ))}
         </Flex>
-      </Container>
-    </>
+      </Box>
+      <Box
+        w={["95%", "95%", "90%"]}
+        borderRadius={15}
+        p={[2, 2, 10]}
+        mt={[0, 0, 10]}
+        background={"#FAFBFC"}
+        display="flex"
+        flexDir={"column"}
+        alignItems={["center", "center", "center", "flex-start"]}
+        justifyContent={"flex-start"}
+      >
+        <Heading
+          width={"100%"}
+          textAlign="left"
+          as="h1"
+          fontSize={["2xl", "3xl"]}
+          mb={8}
+          mt={[8, 8, 0]}
+          ml={[5, 5, 0]}
+        >
+          SolidityScan Detectors
+        </Heading>
+        {detectorData.map((item) => (
+          <DetectorItem item={item} />
+        ))}
+      </Box>
+    </Flex>
   );
 };
 

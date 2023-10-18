@@ -20,28 +20,30 @@ const InfoSettings: React.FC<{
   projectName: string;
   githubLink: string;
   isViewer: boolean;
-  isGithubIntegrated: boolean;
+  connectAlert: boolean;
+  isOauthIntegrated: boolean;
   setProjectName: React.Dispatch<React.SetStateAction<string>>;
   setGithubLink: React.Dispatch<React.SetStateAction<string>>;
   setVisibility: React.Dispatch<React.SetStateAction<boolean>>;
+  setConnectAlert: React.Dispatch<React.SetStateAction<boolean>>;
 }> = ({
   nameError,
   linkError,
   visibility,
   projectName,
   githubLink,
-  isGithubIntegrated,
+  isOauthIntegrated,
   setProjectName,
   setGithubLink,
   setVisibility,
   isViewer,
+  connectAlert,
+  setConnectAlert,
 }) => {
-  const [connectAlert, setConnectAlert] = useState(false);
-
   return (
     <Stack
       minHeight="400px"
-      spacing={3}
+      spacing={5}
       mt={0}
       height={"fit-content"}
       width={"100%"}
@@ -78,7 +80,7 @@ const InfoSettings: React.FC<{
         2. Verify if the repository is public, for private repositories, please
         integrate your GitHub from the Integrations tab.
       </Text>
-      <VStack alignItems={"flex-start"}>
+      <VStack alignItems={"flex-start"} mt={10}>
         <Text mb={0} fontSize="sm">
           Project name
         </Text>
@@ -102,7 +104,7 @@ const InfoSettings: React.FC<{
       </VStack>
       <VStack mb={5} alignItems={"flex-start"}>
         <Text mb={0} fontSize="sm">
-          Link to the Github repository
+          Link to your repository
         </Text>
         <InputGroup alignItems="center" mb={4}>
           <InputLeftElement
@@ -133,7 +135,7 @@ const InfoSettings: React.FC<{
           disabled={isViewer}
           isChecked={visibility}
           onChange={() => {
-            if (isGithubIntegrated) {
+            if (isOauthIntegrated) {
               setVisibility(!visibility);
             } else {
               setConnectAlert(!connectAlert);
@@ -143,13 +145,15 @@ const InfoSettings: React.FC<{
         <Text>Private</Text>
       </HStack>
 
-      {!isGithubIntegrated && connectAlert && (
+      {!isOauthIntegrated && connectAlert && (
         <GithubConnectAlert
-          msg={"You need to connect your GitHub to start a private scan."}
+          msg={
+            "You need to connect any of your code hosting platform like GitHub, GitLab or Bitbucket to start a private scan."
+          }
         />
       )}
 
-      {isGithubIntegrated && (
+      {isOauthIntegrated && (
         <Text
           width="100%"
           p={5}
@@ -162,8 +166,8 @@ const InfoSettings: React.FC<{
           borderRadius={10}
         >
           In order to conduct a scan, users must have ownership of the private
-          GitHub repositories. Our product currently does not support scanning
-          private repositories not owned by the user.
+          repositories. Our product currently does not support scanning private
+          repositories not owned by the user.
         </Text>
       )}
     </Stack>

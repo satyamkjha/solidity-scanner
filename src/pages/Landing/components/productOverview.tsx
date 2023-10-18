@@ -67,6 +67,7 @@ export default function ProductOverview() {
     <>
       {data.map((item, index) => (
         <Flex
+          key={index}
           as="section"
           w="100%"
           alignItems="center"
@@ -98,7 +99,8 @@ export default function ProductOverview() {
                 onClick={() =>
                   window.open(
                     "https://solidityscan.com/published-report/project/d393242670c81938",
-                    "_blank"
+                    "_blank",
+                    "noopener"
                   )
                 }
                 variant={"cta-outline"}
