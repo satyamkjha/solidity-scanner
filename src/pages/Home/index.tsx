@@ -32,13 +32,15 @@ import UploadForm from "./UploadForm";
 import Loader from "components/styled-components/Loader";
 import { useProfile } from "hooks/useProfile";
 import { AddIcon, ArrowForwardIcon } from "@chakra-ui/icons";
-import { getAssetsURL } from "helpers/helperFunction";
+import { getAssetsURL, getProjectType } from "helpers/helperFunction";
 import VulnerabilityDistribution from "components/vulnDistribution";
 import { useHistory } from "react-router-dom";
 import { capitalize, logout } from "common/functions";
 import { BiPlug, BiUser, BiPowerOff } from "react-icons/bi";
 import { ProfileIconOne } from "components/icons";
 import { Profile } from "common/types";
+import { useAllScans } from "hooks/useAllScans";
+import SolidityScoreProgress from "components/common/SolidityScoreProgress";
 
 const OverviewData: React.FC<{
   heading: number;
@@ -107,7 +109,7 @@ const AddProjectBox: React.FC<{ profileData: Profile }> = ({ profileData }) => {
     },
     {
       text: "Verified Contracts",
-      formType: "verified_contracts",
+      formType: "verified_contract",
       iconLink: "",
     },
     {
@@ -207,24 +209,27 @@ const AddProjectForm: React.FC<{
   profileData: Profile;
 }> = ({ isOpen, onClose, formType, profileData }) => {
   const [step, setStep] = useState(1);
+  const assetsURL = getAssetsURL();
 
   return (
     <Modal
       isOpen={isOpen}
       onClose={() => {
         onClose();
-        setStep(0);
+        setStep(1);
       }}
     >
       <ModalOverlay />
       <ModalContent
-        maxW={["90vw", "90vw", "80vw"]}
+        maxW={["90vw", "90vw", "80vw", "70vw"]}
+        maxWidth="1200px"
         minW={"300px"}
         overflowY={"scroll"}
         overflowX={"scroll"}
         bg="white"
         minH={"fit-content"}
-        p={10}
+        pt={12}
+        pb={7}
       >
         <ModalCloseButton />
         <ModalBody
@@ -235,15 +240,16 @@ const AddProjectForm: React.FC<{
           w="100%"
           h="fit-content"
         >
-          <Flex w="60%" justifyContent="center" alignItems="center">
+          <Flex w="55%" justifyContent="center" alignItems="center">
             {["github", "gitlab", "bitbucket"].includes(formType) && (
               <ApplicationForm
                 step={step}
+                formType={formType}
                 setStep={setStep}
                 profileData={profileData}
               />
             )}
-            {formType === "verified_contracts" && (
+            {formType === "verified_contract" && (
               <ContractForm profileData={profileData} />
             )}
             {formType === "filescan" && (
@@ -256,15 +262,133 @@ const AddProjectForm: React.FC<{
           </Flex>
           <Flex
             bg="bg.subtle"
-            w="37%"
+            w="42%"
             h="75vh"
-            justifyContent="center"
+            justifyContent="flex-start"
             alignItems="center"
+            flexDir="column"
+            p={10}
             borderRadius={20}
-          ></Flex>
+          >
+            <Image
+              src={`${assetsURL}homepage_infographics/${
+                formType === "verified_contract"
+                  ? "verified_contract"
+                  : formType === "filescan"
+                  ? `filescan_step_${step}`
+                  : step === 1
+                  ? `project_${formType}`
+                  : `project_step_${step}`
+              }.svg`}
+              height="320px"
+              width="400px"
+            />
+          </Flex>
         </ModalBody>
       </ModalContent>
     </Modal>
+  );
+};
+
+const RecentScansList: React.FC = () => {
+  const assetsURL = getAssetsURL();
+  const history = useHistory();
+
+  const { data: projects } = useAllScans({
+    pageNo: 1,
+    perPageCount: 4,
+  });
+
+  return (
+    <Flex
+      justifyContent="flex-start"
+      alignItems="center"
+      p={3}
+      flexDirection="column"
+      bgColor="bg.subtle"
+      w="100%"
+      borderRadius={10}
+      mt={5}
+    >
+      <HStack
+        px={3}
+        justifyContent="space-between"
+        alignItems="center"
+        w="100%"
+      >
+        <Text
+          sx={{
+            fontSize: "md",
+            fontWeight: 600,
+            textAlign: "center",
+            color: "gray.500",
+          }}
+        >
+          Recenly Scanned Projects
+        </Text>
+
+        <Button
+          variant="ghost"
+          color="accent"
+          rightIcon={<ArrowForwardIcon />}
+          onClick={() => history.push("/projects")}
+        >
+          View All
+        </Button>
+      </HStack>
+      {projects &&
+        projects.data.map((project) => (
+          <HStack
+            justifyContent="space-between"
+            alignItems="center"
+            w="100%"
+            py={2}
+            px={5}
+            borderRadius={10}
+            bg="white"
+            mt={4}
+          >
+            <HStack spacing={5} w="35%">
+              <Image
+                src={`${assetsURL}${
+                  project.scan_type === "project"
+                    ? "icons/integrations/" +
+                      getProjectType(project.scan_details.project_url || "")
+                    : "blockscan/" + project.scan_details.contract_platform
+                }.svg`}
+                height="40px"
+                width="40px"
+              />
+              <Text
+                sx={{
+                  fontSize: "md",
+                  fontWeight: 600,
+                }}
+              >
+                {capitalize(
+                  project.scan_details.project_name ||
+                    project.scan_details.contractname ||
+                    ""
+                )}
+              </Text>
+            </HStack>
+            <Box w="40%">
+              <VulnerabilityDistribution
+                {...project.scan_details.multi_file_scan_summary
+                  .issue_severity_distribution}
+                view="scans"
+              />
+            </Box>
+            <SolidityScoreProgress
+              score={project.scan_details.multi_file_scan_summary.score_v2}
+              size={"65px"}
+              thickness={"7px"}
+              fontSize={"12px"}
+              padding={1}
+            />
+          </HStack>
+        ))}
+    </Flex>
   );
 };
 
@@ -350,6 +474,7 @@ const Home: React.FC = () => {
             </VStack>
           </Flex>
         )}
+        <RecentScansList />
       </Flex>
       {/* {!data && (
         <Flex

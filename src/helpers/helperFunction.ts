@@ -158,11 +158,11 @@ export const getProjectType = (project_url: string) => {
   const hostname = url.hostname.toLowerCase();
 
   if (hostname.includes("github.com")) {
-    return "GitHub";
+    return "github";
   } else if (hostname.includes("bitbucket.org")) {
-    return "Bitbucket";
+    return "bitbucket";
   } else if (hostname.includes("gitlab.com")) {
-    return "GitLab";
+    return "gitlab";
   } else {
     return null;
   }
@@ -179,7 +179,7 @@ export const getProjectFileUrl = (
   const baseUrl = new URL(project_url);
 
   switch (getProjectType(project_url)) {
-    case "GitHub":
+    case "github":
       return `${baseUrl.origin}/${baseUrl.pathname.replace(
         /\/+$/,
         ""
@@ -187,7 +187,7 @@ export const getProjectFileUrl = (
         file.line_nos_end
       }`;
 
-    case "Bitbucket":
+    case "bitbucket":
       return `${baseUrl.origin}${baseUrl.pathname.replace(
         /\/+$/,
         ""
@@ -195,7 +195,7 @@ export const getProjectFileUrl = (
         file.line_nos_end
       }`;
 
-    case "GitLab":
+    case "gitlab":
       return `${baseUrl.origin}/${baseUrl.pathname.replace(
         /\/+$/,
         ""

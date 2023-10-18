@@ -32,14 +32,14 @@ const ApplicationForm: React.FC<{
   profileData: Profile;
   step: number;
   setStep: React.Dispatch<React.SetStateAction<number>>;
-}> = ({ profileData, step, setStep }) => {
+  formType: string;
+}> = ({ profileData, step, setStep, formType }) => {
   const role: string = useUserRole();
   const assetsURL = getAssetsURL();
   const queryClient = useQueryClient();
   const history = useHistory();
   const [projectName, setProjectName] = useState("");
   const [githubLink, setGithubLink] = useState("");
-  const [projectType, setProjectType] = useState<string | null>(null);
   const [visibility, setVisibility] = useState(false);
   const [githubSync, setGithubSync] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
@@ -64,12 +64,14 @@ const ApplicationForm: React.FC<{
       setNameError("Project Name cannot exceed to more than 50 characters.");
       return false;
     }
-    if (!checkProjectUrl(githubLink)) {
+    if (
+      !checkProjectUrl(githubLink) &&
+      getProjectType(githubLink) === formType
+    ) {
       setLinkError("Please enter a valid repository link");
       return false;
     }
     setGithubLink(githubLink);
-    setProjectType(getProjectType(githubLink));
     setNameError(null);
     setLinkError(null);
     return true;
@@ -198,28 +200,30 @@ const ApplicationForm: React.FC<{
                 ? "Project Settings"
                 : ""}
             </Text>
-            <HStack justifyContent={"flex-end"} spacing={3}>
-              <Image
-                height={["30px", "30px", "40px"]}
-                width={["30px", "30px", "40px"]}
-                src={`${assetsURL}common/step_${step}.svg`}
-              />
-              <Text
-                sx={{
-                  fontSize: ["md", "md", "lg"],
-                  fontWeight: 700,
-                  lineHeight: "20px",
-                  textAlign: "left",
-                  width: "fit-content",
-                }}
-              >
-                {"STEP"}{" "}
-                <Box ml={1} fontSize={["xl", "xl", "2xl"]} as="span">
-                  {step}/
-                </Box>
-                {3}
-              </Text>
-            </HStack>
+            {formType === "github" && (
+              <HStack justifyContent={"flex-end"} spacing={3}>
+                <Image
+                  height={["30px", "30px", "40px"]}
+                  width={["30px", "30px", "40px"]}
+                  src={`${assetsURL}common/step_${step}.svg`}
+                />
+                <Text
+                  sx={{
+                    fontSize: ["md", "md", "lg"],
+                    fontWeight: 700,
+                    lineHeight: "20px",
+                    textAlign: "left",
+                    width: "fit-content",
+                  }}
+                >
+                  {"STEP"}{" "}
+                  <Box ml={1} fontSize={["xl", "xl", "2xl"]} as="span">
+                    {step}/
+                  </Box>
+                  {3}
+                </Text>
+              </HStack>
+            )}
           </HStack>
           {step === 1 ? (
             <Text
@@ -335,7 +339,7 @@ const ApplicationForm: React.FC<{
               if (runValidation()) {
                 getBranches();
               }
-            } else if (step === 2 && projectType === "GitHub") {
+            } else if (step === 2 && formType === "github") {
               setStep(3);
             } else {
               runScan();
@@ -349,8 +353,8 @@ const ApplicationForm: React.FC<{
         >
           {step > 2 ||
           (step === 2 &&
-            projectType &&
-            ["GitLab", "Bitbucket"].includes(projectType)) ? (
+            formType &&
+            ["gitlab", "bitbucket"].includes(formType)) ? (
             isLoading ? (
               <Loader color={"#3300FF"} />
             ) : (

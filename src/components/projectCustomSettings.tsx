@@ -229,7 +229,7 @@ const ProjectCustomSettings: React.FC<{
             )}
           </AccordionPanel>
         </AccordionItem>
-        {getProjectType(project_url) === "GitHub" ? (
+        {getProjectType(project_url) === "github" ? (
           <AccordionItem
             alignItems="center"
             justifyContent="flex-start"

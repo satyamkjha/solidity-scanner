@@ -23,12 +23,13 @@ import { API_PATH } from "helpers/routeManager";
 import Loader from "components/styled-components/Loader";
 import { Profile } from "common/types";
 import { useUserRole } from "hooks/useUserRole";
+import UploadTypeCard from "./UploadTypeCard";
 
 const UploadForm: React.FC<{
   profileData: Profile;
   page: number;
   setPage: React.Dispatch<React.SetStateAction<number>>;
-}> = ({ profileData }) => {
+}> = ({ profileData, page, setPage }) => {
   const history = useHistory();
   const role: string = useUserRole();
   const [step, setStep] = useState(0);
@@ -215,6 +216,14 @@ const UploadForm: React.FC<{
     return false;
   };
 
+  const onSubmit = () => {
+    if (page === 1) {
+      setPage(2);
+    } else {
+      startFileScan();
+    }
+  };
+
   const startFileScan = async () => {
     let urlData = urlList.map((item) => item.url);
     try {
@@ -299,100 +308,87 @@ const UploadForm: React.FC<{
             width={"100%"}
             h="calc(100% - 240px)"
           >
-            <VStack alignItems={"flex-start"} width="100%">
-              <Text mb={0} fontSize="sm">
-                Project Name
-              </Text>
-
-              <InputGroup mt={0} alignItems="center">
-                <InputLeftElement
-                  height="48px"
-                  children={<Icon as={AiOutlineProject} color="gray.300" />}
+            {page === 1 ? (
+              <VStack alignItems={"flex-start"} width="100%" spacing={5}>
+                <UploadTypeCard
+                  uploadMethod="multiple"
+                  uploadType={uploadType}
+                  setUploadType={setUploadType}
                 />
-                <Input
-                  isRequired
-                  placeholder="Enter Project Name"
-                  variant="brand"
-                  disabled={isViewer}
-                  size="lg"
-                  value={name}
-                  onChange={(e) => setName(e.target.value)}
+                <UploadTypeCard
+                  uploadMethod="single"
+                  uploadType={uploadType}
+                  setUploadType={setUploadType}
                 />
-              </InputGroup>
-            </VStack>
-
-            {step === 0 ? (
-              <div {...getRootProps({ style: style as React.CSSProperties })}>
-                <input {...getInputProps()} />
-                <UploadIcon size={80} />
-                <p style={{ marginTop: "20px" }}>
-                  Drag and drop or{" "}
-                  <span style={{ color: "#3300FF" }}> Browse</span> to upload
-                </p>
-                <p
-                  style={{
-                    fontSize: "15px",
-                    marginBottom: "10px",
-                    color: "#D3D3D3",
-                  }}
-                >
-                  You can upload upto 5 files with extension ".sol" whose size
-                  must not exceed above 5 MB
-                </p>
-                <p style={{ fontSize: "15px", color: "#FF2400" }}>{errorMsg}</p>
-                {/* </>
-                  )} */}
-              </div>
-            ) : step === 1 ? (
-              <Box
-                sx={{ w: "100%", borderRadius: "20px", p: 10, my: 2 }}
-                justifyContent="flex-start"
-                alignItems={"flex-start"}
-                background={"#FFFFFF"}
-                border={"1.5px dashed #D6D6D6"}
-              >
-                <HStack justify={"space-between"}>
-                  <HStack align={"flex-end"} my={4}>
-                    <SolidityFileIcon size={25} />
-                    <Text fontSize={"14px"}>{acceptedFiles[0].name}</Text>
-                    <Text fontSize={"15px"}>|</Text>
-                    <Text fontSize={"10px"} color={"gray.500"}>
-                      0{acceptedFiles.length} files
-                    </Text>
-                  </HStack>
-                  <CloseButton
-                    onClick={() => {
-                      setStep(0);
-                      setUrlList([]);
-                    }}
-                  />
-                </HStack>
-                <Progress variant={"blue"} size="xs" isIndeterminate />
-                <HStack mt={4} justify={"space-between"}>
-                  <Text color={"gray.500"}>Uploading...</Text>
-                  <Loader size={30} />
-                </HStack>
-              </Box>
+              </VStack>
             ) : (
               <>
-                <Box
-                  sx={{
-                    w: "100%",
-                    borderRadius: "20px",
-                    px: 20,
-                    pt: 2,
-                    pb: 10,
-                    my: 2,
-                  }}
-                  justifyContent="flex-start"
-                  alignItems={"flex-start"}
-                  background={"#FFFFFF"}
-                  border={"1.5px dashed #D6D6D6"}
-                  maxH="300px"
-                  overflowY={"scroll"}
-                >
-                  <VStack h="fit-content" spacing={2} width="100%">
-                    <HStack width="100%" justify={"flex-end"}>
+                <VStack alignItems={"flex-start"} width="100%">
+                  <Text mb={0} fontSize="sm">
+                    Project Name
+                  </Text>
+
+                  <InputGroup mt={0} alignItems="center">
+                    <InputLeftElement
+                      height="48px"
+                      children={<Icon as={AiOutlineProject} color="gray.300" />}
+                    />
+                    <Input
+                      isRequired
+                      placeholder="Enter Project Name"
+                      variant="brand"
+                      disabled={isViewer}
+                      size="lg"
+                      value={name}
+                      onChange={(e) => setName(e.target.value)}
+                    />
+                  </InputGroup>
+                </VStack>
+
+                {step === 0 ? (
+                  <div
+                    {...getRootProps({ style: style as React.CSSProperties })}
+                  >
+                    <input {...getInputProps()} />
+                    <UploadIcon size={80} />
+                    <p style={{ marginTop: "20px" }}>
+                      Drag and drop or{" "}
+                      <span style={{ color: "#3300FF" }}> Browse</span> to
+                      upload
+                    </p>
+                    <p
+                      style={{
+                        fontSize: "15px",
+                        marginBottom: "10px",
+                        color: "#D3D3D3",
+                      }}
+                    >
+                      You can upload upto 5 files with extension ".sol" whose
+                      size must not exceed above 5 MB
+                    </p>
+                    <p style={{ fontSize: "15px", color: "#FF2400" }}>
+                      {errorMsg}
+                    </p>
+                    {/* </>
+                  )} */}
+                  </div>
+                ) : step === 1 ? (
+                  <Box
+                    sx={{ w: "100%", borderRadius: "20px", p: 10, my: 2 }}
+                    justifyContent="flex-start"
+                    alignItems={"flex-start"}
+                    background={"#FFFFFF"}
+                    border={"1.5px dashed #D6D6D6"}
+                  >
+                    <HStack justify={"space-between"}>
+                      <HStack align={"flex-end"} my={4}>
+                        <SolidityFileIcon size={25} />
+                        <Text fontSize={"14px"}>{acceptedFiles[0].name}</Text>
+                        <Text fontSize={"15px"}>|</Text>
+                        <Text fontSize={"10px"} color={"gray.500"}>
+                          0{acceptedFiles.length} files
+                        </Text>
+                      </HStack>
                       <CloseButton
                         onClick={() => {
                           setStep(0);
@@ -400,30 +396,65 @@ const UploadForm: React.FC<{
                         }}
                       />
                     </HStack>
-                    <HStack>
-                      <ProjectIcon size={30} />
-                      <Text>{name}</Text>
+                    <Progress variant={"blue"} size="xs" isIndeterminate />
+                    <HStack mt={4} justify={"space-between"}>
+                      <Text color={"gray.500"}>Uploading...</Text>
+                      <Loader size={30} />
                     </HStack>
-                    <Text fontSize={"10px"} color={"gray.500"}>
-                      0{acceptedFiles.length} files
-                    </Text>
-                    {acceptedFiles.map((file) => (
-                      <Box
-                        width={"100%"}
-                        justifyContent={"center"}
-                        alignItems="center"
-                        textAlign={"center"}
-                        fontSize="13px"
-                        borderRadius={4}
-                        color="gray.500"
-                        backgroundColor="#F8FAFC"
-                        py={3}
-                      >
-                        {file.name}
-                      </Box>
-                    ))}
-                  </VStack>
-                </Box>
+                  </Box>
+                ) : (
+                  <>
+                    <Box
+                      sx={{
+                        w: "100%",
+                        borderRadius: "20px",
+                        px: 20,
+                        pt: 2,
+                        pb: 10,
+                        my: 2,
+                      }}
+                      justifyContent="flex-start"
+                      alignItems={"flex-start"}
+                      background={"#FFFFFF"}
+                      border={"1.5px dashed #D6D6D6"}
+                      maxH="300px"
+                      overflowY={"scroll"}
+                    >
+                      <VStack h="fit-content" spacing={2} width="100%">
+                        <HStack width="100%" justify={"flex-end"}>
+                          <CloseButton
+                            onClick={() => {
+                              setStep(0);
+                              setUrlList([]);
+                            }}
+                          />
+                        </HStack>
+                        <HStack>
+                          <ProjectIcon size={30} />
+                          <Text>{name}</Text>
+                        </HStack>
+                        <Text fontSize={"10px"} color={"gray.500"}>
+                          0{acceptedFiles.length} files
+                        </Text>
+                        {acceptedFiles.map((file) => (
+                          <Box
+                            width={"100%"}
+                            justifyContent={"center"}
+                            alignItems="center"
+                            textAlign={"center"}
+                            fontSize="13px"
+                            borderRadius={4}
+                            color="gray.500"
+                            backgroundColor="#F8FAFC"
+                            py={3}
+                          >
+                            {file.name}
+                          </Box>
+                        ))}
+                      </VStack>
+                    </Box>
+                  </>
+                )}
               </>
             )}
 
@@ -435,16 +466,17 @@ const UploadForm: React.FC<{
               isLoading={isLoading}
               spinner={<Loader color={"#3300FF"} size={25} />}
               disabled={
-                isLoading ||
-                step < 2 ||
-                name === "" ||
-                (profileData.actions_supported &&
-                  !profileData.actions_supported.file_scan) ||
-                isViewer
+                page === 2 &&
+                (isLoading ||
+                  step < 2 ||
+                  name === "" ||
+                  (profileData.actions_supported &&
+                    !profileData.actions_supported.file_scan) ||
+                  isViewer)
               }
-              onClick={startFileScan}
+              onClick={onSubmit}
             >
-              Start Scan
+              {page === 1 ? "Proceed" : "Start Scan"}
             </Button>
           </Flex>
         </Flex>
