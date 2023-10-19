@@ -83,10 +83,13 @@ const RecentScansList: React.FC = () => {
               <HStack spacing={5} w="calc(55% - 110px)">
                 <Image
                   src={`${assetsURL}${
-                    project.scan_type === "project"
+                    project.scan_type === "project" &&
+                    project.scan_details.project_url !== "filescan"
                       ? "icons/integrations/" +
                         getProjectType(project.scan_details.project_url || "")
-                      : "blockscan/" + project.scan_details.contract_platform
+                      : project.scan_type === "block"
+                      ? "blockscan/" + project.scan_details.contract_platform
+                      : ""
                   }.svg`}
                   height="40px"
                   width="40px"
