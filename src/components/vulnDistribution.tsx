@@ -6,6 +6,7 @@ import { SeverityIcon } from "./icons";
 
 interface VulnerabilityDistributionView {
   view: "home" | "scans";
+  size?: "small" | "large";
 }
 
 type VulnerabilityDistributionProps = IssueSeverityDistribution &
@@ -19,6 +20,7 @@ const VulnerabilityDistribution: React.FC<VulnerabilityDistributionProps> = ({
   informational,
   gas,
   view,
+  size = "large",
 }) => {
   return (
     <Flex
@@ -26,12 +28,14 @@ const VulnerabilityDistribution: React.FC<VulnerabilityDistributionProps> = ({
         justifyContent: "space-between",
         alignItems: "center",
         mx: 2,
+        flexWrap: "wrap",
         w: "100%",
+        rowGap: 5,
       }}
     >
       <VStack
-        w="15%"
-        py={view === "home" ? 2 : 0}
+        w={size === "large" ? "15%" : "30%"}
+        py={view === "home" ? 4 : 0}
         borderRadius={10}
         align="center"
         bg={view === "home" ? "white" : "transparent"}
@@ -50,8 +54,8 @@ const VulnerabilityDistribution: React.FC<VulnerabilityDistributionProps> = ({
         />
       </VStack>
       <VStack
-        w="15%"
-        py={view === "home" ? 2 : 0}
+        w={size === "large" ? "15%" : "30%"}
+        py={view === "home" ? 4 : 0}
         borderRadius={10}
         align="center"
         bg={view === "home" ? "white" : "transparent"}
@@ -70,8 +74,8 @@ const VulnerabilityDistribution: React.FC<VulnerabilityDistributionProps> = ({
         />
       </VStack>
       <VStack
-        w="15%"
-        py={view === "home" ? 2 : 0}
+        w={size === "large" ? "15%" : "30%"}
+        py={view === "home" ? 4 : 0}
         borderRadius={10}
         align="center"
         bg={view === "home" ? "white" : "transparent"}
@@ -90,8 +94,8 @@ const VulnerabilityDistribution: React.FC<VulnerabilityDistributionProps> = ({
         />
       </VStack>
       <VStack
-        w="15%"
-        py={view === "home" ? 2 : 0}
+        w={size === "large" ? "15%" : "30%"}
+        py={view === "home" ? 4 : 0}
         borderRadius={10}
         align="center"
         bg={view === "home" ? "white" : "transparent"}
@@ -110,8 +114,8 @@ const VulnerabilityDistribution: React.FC<VulnerabilityDistributionProps> = ({
         />
       </VStack>
       <VStack
-        w="15%"
-        py={view === "home" ? 2 : 0}
+        w={size === "large" ? "15%" : "30%"}
+        py={view === "home" ? 4 : 0}
         borderRadius={10}
         align="center"
         bg={view === "home" ? "white" : "transparent"}
@@ -130,8 +134,8 @@ const VulnerabilityDistribution: React.FC<VulnerabilityDistributionProps> = ({
         />
       </VStack>
       <VStack
-        w="15%"
-        py={view === "home" ? 2 : 0}
+        w={size === "large" ? "15%" : "30%"}
+        py={view === "home" ? 4 : 0}
         borderRadius={10}
         align="center"
         bg={view === "home" ? "white" : "transparent"}

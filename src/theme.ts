@@ -12,7 +12,7 @@ const config: { initialColorMode: ColorMode; useSystemColorMode: boolean } = {
 
 export const theme = extendTheme({
   breakpoints: {
-    sm: "330px",
+    sm: "450px",
     md: "768px",
     lg: "1350px",
     xl: "1600px",

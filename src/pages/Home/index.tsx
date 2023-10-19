@@ -23,6 +23,7 @@ import {
   ModalContent,
   ModalCloseButton,
   ModalBody,
+  useMediaQuery,
 } from "@chakra-ui/react";
 import { useOverview } from "hooks/useOverview";
 import VulnerabilityProgress from "components/VulnerabilityProgress";
@@ -41,6 +42,8 @@ import { ProfileIconOne } from "components/icons";
 import { Profile } from "common/types";
 import { useAllScans } from "hooks/useAllScans";
 import SolidityScoreProgress from "components/common/SolidityScoreProgress";
+import AddProjectForm from "./AddProjectForm";
+import RecentScansList from "./RecentScansList";
 
 const OverviewData: React.FC<{
   heading: number;
@@ -82,7 +85,7 @@ const AddProjectBox: React.FC<{ profileData: Profile }> = ({ profileData }) => {
   const assetsURL = getAssetsURL();
 
   const { isOpen, onClose, onOpen } = useDisclosure();
-
+  const [changeView] = useMediaQuery("(min-width: 550px)");
   const [formType, setFormType] = useState("");
 
   useEffect(() => {
@@ -98,12 +101,12 @@ const AddProjectBox: React.FC<{ profileData: Profile }> = ({ profileData }) => {
       iconLink: "icons/integrations/github.svg",
     },
     {
-      text: "Gitlab",
+      text: "GitLab",
       formType: "gitlab",
       iconLink: "icons/integrations/gitlab.svg",
     },
     {
-      text: "BitBucket",
+      text: "Bitbucket",
       formType: "bitbucket",
       iconLink: "icons/integrations/bitbucket.svg",
     },
@@ -122,21 +125,26 @@ const AddProjectBox: React.FC<{ profileData: Profile }> = ({ profileData }) => {
   return (
     <Flex
       width="100%"
-      h="120px"
+      h={changeView ? "120px" : "fit-content"}
       borderRadius={10}
       border="1px solid #52FF00"
-      flexDir={["column", "column", "row"]}
+      flexDir={changeView ? "row" : "column"}
       justifyContent={["flex-start", "flex-start", "space-between"]}
       alignItems={"center"}
       p={5}
       bg="white"
     >
-      <VStack alignItems="flex-start" w={["100%", "100%", "60%"]}>
+      <VStack
+        textAlign={changeView ? "left" : "center"}
+        alignItems="flex-start"
+        mb={changeView ? 0 : 5}
+        w={changeView ? "60%" : "100%"}
+      >
         <Text
           sx={{
             fontSize: ["lg", "lg", "xl"],
             fontWeight: 600,
-            textAlign: "left",
+            w: "100%",
           }}
         >
           Add Project
@@ -144,7 +152,6 @@ const AddProjectBox: React.FC<{ profileData: Profile }> = ({ profileData }) => {
         <Text
           sx={{
             color: "subtle",
-            textAlign: "left",
             mb: 2,
             fontSize: "sm",
           }}
@@ -158,7 +165,7 @@ const AddProjectBox: React.FC<{ profileData: Profile }> = ({ profileData }) => {
           as={Button}
           variant="brand"
           leftIcon={<AddIcon />}
-          w={"170px"}
+          minW={"170px"}
         >
           Add Project
         </MenuButton>
@@ -202,219 +209,34 @@ const AddProjectBox: React.FC<{ profileData: Profile }> = ({ profileData }) => {
   );
 };
 
-const AddProjectForm: React.FC<{
-  onClose(): any;
-  isOpen: boolean;
-  formType: string;
-  profileData: Profile;
-}> = ({ isOpen, onClose, formType, profileData }) => {
-  const [step, setStep] = useState(1);
-  const assetsURL = getAssetsURL();
-
-  return (
-    <Modal
-      isOpen={isOpen}
-      onClose={() => {
-        onClose();
-        setStep(1);
-      }}
-    >
-      <ModalOverlay />
-      <ModalContent
-        maxW={["90vw", "90vw", "80vw", "70vw"]}
-        maxWidth="1200px"
-        minW={"300px"}
-        overflowY={"scroll"}
-        overflowX={"scroll"}
-        bg="white"
-        minH={"fit-content"}
-        pt={12}
-        pb={7}
-      >
-        <ModalCloseButton />
-        <ModalBody
-          display="flex"
-          justifyContent="space-between"
-          flexDir="row"
-          alignItems="flex-start"
-          w="100%"
-          h="fit-content"
-        >
-          <Flex w="55%" justifyContent="center" alignItems="center">
-            {["github", "gitlab", "bitbucket"].includes(formType) && (
-              <ApplicationForm
-                step={step}
-                formType={formType}
-                setStep={setStep}
-                profileData={profileData}
-              />
-            )}
-            {formType === "verified_contract" && (
-              <ContractForm profileData={profileData} />
-            )}
-            {formType === "filescan" && (
-              <UploadForm
-                page={step}
-                setPage={setStep}
-                profileData={profileData}
-              />
-            )}
-          </Flex>
-          <Flex
-            bg="bg.subtle"
-            w="42%"
-            h="75vh"
-            justifyContent="flex-start"
-            alignItems="center"
-            flexDir="column"
-            p={10}
-            borderRadius={20}
-          >
-            <Image
-              src={`${assetsURL}homepage_infographics/${
-                formType === "verified_contract"
-                  ? "verified_contract"
-                  : formType === "filescan"
-                  ? `filescan_step_${step}`
-                  : step === 1
-                  ? `project_${formType}`
-                  : `project_step_${step}`
-              }.svg`}
-              height="320px"
-              width="400px"
-            />
-          </Flex>
-        </ModalBody>
-      </ModalContent>
-    </Modal>
-  );
-};
-
-const RecentScansList: React.FC = () => {
-  const assetsURL = getAssetsURL();
-  const history = useHistory();
-
-  const { data: projects } = useAllScans({
-    pageNo: 1,
-    perPageCount: 4,
-  });
-
-  return (
-    <Flex
-      justifyContent="flex-start"
-      alignItems="center"
-      p={3}
-      flexDirection="column"
-      bgColor="bg.subtle"
-      w="100%"
-      borderRadius={10}
-      mt={5}
-    >
-      <HStack
-        px={3}
-        justifyContent="space-between"
-        alignItems="center"
-        w="100%"
-      >
-        <Text
-          sx={{
-            fontSize: "md",
-            fontWeight: 600,
-            textAlign: "center",
-            color: "gray.500",
-          }}
-        >
-          Recenly Scanned Projects
-        </Text>
-
-        <Button
-          variant="ghost"
-          color="accent"
-          rightIcon={<ArrowForwardIcon />}
-          onClick={() => history.push("/projects")}
-        >
-          View All
-        </Button>
-      </HStack>
-      {projects &&
-        projects.data.map((project) => (
-          <HStack
-            justifyContent="space-between"
-            alignItems="center"
-            w="100%"
-            py={2}
-            px={5}
-            borderRadius={10}
-            bg="white"
-            mt={4}
-          >
-            <HStack spacing={5} w="35%">
-              <Image
-                src={`${assetsURL}${
-                  project.scan_type === "project"
-                    ? "icons/integrations/" +
-                      getProjectType(project.scan_details.project_url || "")
-                    : "blockscan/" + project.scan_details.contract_platform
-                }.svg`}
-                height="40px"
-                width="40px"
-              />
-              <Text
-                sx={{
-                  fontSize: "md",
-                  fontWeight: 600,
-                }}
-              >
-                {capitalize(
-                  project.scan_details.project_name ||
-                    project.scan_details.contractname ||
-                    ""
-                )}
-              </Text>
-            </HStack>
-            <Box w="40%">
-              <VulnerabilityDistribution
-                {...project.scan_details.multi_file_scan_summary
-                  .issue_severity_distribution}
-                view="scans"
-              />
-            </Box>
-            <SolidityScoreProgress
-              score={project.scan_details.multi_file_scan_summary.score_v2}
-              size={"65px"}
-              thickness={"7px"}
-              fontSize={"12px"}
-              padding={1}
-            />
-          </HStack>
-        ))}
-    </Flex>
-  );
-};
-
 const Home: React.FC = () => {
   const { data } = useOverview();
   const { data: profileData } = useProfile();
   const assetsURL = getAssetsURL();
   const history = useHistory();
 
+  const [isDesktopView, changeVulnDistributionView] = useMediaQuery([
+    "(min-width: 1100px)",
+    "(min-width: 450px)",
+  ]);
+
   return (
     <Flex
       sx={{
         width: "100%",
         height: "100%",
-        flexDir: ["column", "column", "row"],
+        flexDir: isDesktopView ? "row" : "column",
       }}
     >
       <Flex
         sx={{
-          w: ["100%", "100%", "60%"],
+          w: ["100%", "100%", "100%", "70%"],
           h: "fit-content",
           flexDir: "column",
           alignItems: "center",
           borderRadius: "20px",
           p: 4,
-          mx: [0, 0, 4],
+          mx: [0, 0, 2],
           my: 2,
         }}
       >
@@ -422,13 +244,18 @@ const Home: React.FC = () => {
         {data && (
           <Flex
             width="100%"
-            h="150px"
+            h={["fit-content", "fit-content", "150px"]}
             my={4}
             flexDir={["column", "column", "row"]}
             justifyContent={["flex-start", "flex-start", "space-between"]}
             alignItems={"center"}
           >
-            <HStack h="100%" w="45%" justify="space-between" spacing={0}>
+            <HStack
+              h="100%"
+              w={["100%", "100%", "45%"]}
+              justify="space-between"
+              spacing={0}
+            >
               <OverviewData
                 heading={data.overview.total_lines_scanner}
                 subHeading={"Lines of code scanned"}
@@ -440,10 +267,11 @@ const Home: React.FC = () => {
             </HStack>
             <VStack
               h="100%"
-              w="53%"
+              w={["100%", "100%", "53%"]}
               bg="bg.subtle"
               justify="space-between"
               borderRadius={10}
+              mt={4}
               py={2}
               px={4}
             >
@@ -464,6 +292,7 @@ const Home: React.FC = () => {
               </HStack>
               <VulnerabilityDistribution
                 view="home"
+                size={changeVulnDistributionView ? "large" : "small"}
                 critical={data.overview.issue_count_critical}
                 high={data.overview.issue_count_high}
                 medium={data.overview.issue_count_medium}
@@ -491,12 +320,14 @@ const Home: React.FC = () => {
       {data && (
         <Flex
           sx={{
-            w: ["100%", "100%", "40%"],
+            w: ["100%", "100%", "100%", "30%"],
             flexDir: "column",
             alignItems: "flex-start",
           }}
           justifyContent="flex-start"
-          px={5}
+          mr={4}
+          mt={3}
+          px={isDesktopView ? 0 : 5}
         >
           <Image
             onClick={() => history.push("/billing")}
@@ -553,7 +384,11 @@ const Home: React.FC = () => {
                   mt={4}
                 >
                   <HStack spacing={5}>
-                    <Image src={`${assetsURL}icons/integrations/${item}.svg`} />
+                    <Image
+                      height="48px"
+                      width="48px"
+                      src={`${assetsURL}icons/integrations/${item}.svg`}
+                    />
                     <Text
                       sx={{
                         fontSize: "md",

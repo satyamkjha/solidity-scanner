@@ -27,6 +27,8 @@ import { getSkipFilePaths, restructureRepoTree } from "helpers/fileStructure";
 import Loader from "components/styled-components/Loader";
 import { Profile } from "common/types";
 import { useUserRole } from "hooks/useUserRole";
+import { AddProjectFormInfographics } from "./AddProjectForm";
+import { capitalize } from "common/functions";
 
 const ApplicationForm: React.FC<{
   profileData: Profile;
@@ -178,21 +180,23 @@ const ApplicationForm: React.FC<{
           flexDir="column"
           justifyContent={"flex-start"}
           alignItems="flex-start"
-          px={[4, 4, 7]}
-          py={5}
+          px={[0, 4, 0, 7]}
           w="100%"
           borderRadius={20}
         >
           <HStack w="100%" justifyContent="space-between" mb={4}>
             <Text
               sx={{
-                fontSize: ["xl", "xl", "2xl"],
+                fontSize: "2xl",
                 fontWeight: 600,
-                textAlign: "left",
-                w: "60%",
+                textAlign:
+                  formType === "github" && step !== 0 ? "left" : "center",
+                w: formType === "github" && step !== 0 ? "60%" : "100%",
               }}
             >
-              {step === 1
+              {step === 0
+                ? `${capitalize(formType)} Application`
+                : step === 1
                 ? "Load Application"
                 : step === 2
                 ? "Select Folders"
@@ -201,7 +205,11 @@ const ApplicationForm: React.FC<{
                 : ""}
             </Text>
             {formType === "github" && (
-              <HStack justifyContent={"flex-end"} spacing={3}>
+              <HStack
+                display={step === 0 ? "none" : "flex"}
+                justifyContent={"flex-end"}
+                spacing={3}
+              >
                 <Image
                   height={["30px", "30px", "40px"]}
                   width={["30px", "30px", "40px"]}
@@ -264,7 +272,11 @@ const ApplicationForm: React.FC<{
           )}
 
           <Divider color="gray.700" borderWidth="1px" mb={5} />
-          {step === 1 ? (
+          {step === 0 ? (
+            <AddProjectFormInfographics
+              imgUrl={`${assetsURL}homepage_infographics/project_${formType}.svg`}
+            />
+          ) : step === 1 ? (
             <InfoSettings
               nameError={nameError}
               linkError={linkError}
@@ -335,7 +347,9 @@ const ApplicationForm: React.FC<{
           spinner={<Loader color={"#3300FF"} size={25} />}
           width={["100%", "100%", "100%", "200px"]}
           onClick={() => {
-            if (step === 1) {
+            if (step === 0) {
+              setStep(1);
+            } else if (step === 1) {
               if (runValidation()) {
                 getBranches();
               }
