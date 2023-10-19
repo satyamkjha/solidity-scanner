@@ -11,7 +11,9 @@ import {
 } from "@chakra-ui/react";
 import { AddIcon, ArrowForwardIcon } from "@chakra-ui/icons";
 import { getAssetsURL, getProjectType } from "helpers/helperFunction";
-import VulnerabilityDistribution from "components/vulnDistribution";
+import VulnerabilityDistribution, {
+  ErrorVulnerabilityDistribution,
+} from "components/vulnDistribution";
 import { useHistory } from "react-router-dom";
 import { capitalize, logout } from "common/functions";
 import { BiPlug, BiUser, BiPowerOff } from "react-icons/bi";
@@ -131,19 +133,27 @@ const RecentScansList: React.FC = () => {
                 </VStack>
               </HStack>
               <Box w="40%">
-                <VulnerabilityDistribution
-                  {...project.scan_details.multi_file_scan_summary
-                    .issue_severity_distribution}
-                  view="scans"
-                />
+                {project.scan_details.multi_file_scan_status === "scan_done" ? (
+                  <VulnerabilityDistribution
+                    {...project.scan_details.multi_file_scan_summary
+                      .issue_severity_distribution}
+                    view="scans"
+                  />
+                ) : (
+                  <ErrorVulnerabilityDistribution view="scans" />
+                )}
               </Box>
-              <SolidityScoreProgress
-                score={project.scan_details.multi_file_scan_summary.score_v2}
-                size={"65px"}
-                thickness={"7px"}
-                fontSize={"12px"}
-                padding={1}
-              />
+              {project.scan_details.multi_file_scan_status === "scan_done" ? (
+                <SolidityScoreProgress
+                  score={project.scan_details.multi_file_scan_summary.score_v2}
+                  size={"65px"}
+                  thickness={"7px"}
+                  fontSize={"12px"}
+                  padding={1}
+                />
+              ) : (
+                <Box w="65px" h="65px" />
+              )}
             </HStack>
           ) : (
             <VStack
@@ -207,22 +217,29 @@ const RecentScansList: React.FC = () => {
                   width="40px"
                 />
               </HStack>
-              <Text
-                color={"#3300FF"}
-                textAlign={"left"}
-                fontSize="lg"
-                fontWeight={700}
-              >
-                {project.scan_details.multi_file_scan_summary.score_v2}
-                <Box as={"span"} color="gray.500" fontSize={"sm"}>
-                  /100
-                </Box>
-              </Text>
-              <VulnerabilityDistribution
-                {...project.scan_details.multi_file_scan_summary
-                  .issue_severity_distribution}
-                view="scans"
-              />
+              {project.scan_details.multi_file_scan_status === "scan_done" && (
+                <Text
+                  color={"#3300FF"}
+                  textAlign={"left"}
+                  fontSize="lg"
+                  fontWeight={700}
+                >
+                  {project.scan_details.multi_file_scan_summary.score_v2}
+                  <Box as={"span"} color="gray.500" fontSize={"sm"}>
+                    /100
+                  </Box>
+                </Text>
+              )}
+
+              {project.scan_details.multi_file_scan_status === "scan_done" ? (
+                <VulnerabilityDistribution
+                  {...project.scan_details.multi_file_scan_summary
+                    .issue_severity_distribution}
+                  view="scans"
+                />
+              ) : (
+                <ErrorVulnerabilityDistribution view="scans" />
+              )}
             </VStack>
           )
         )}
