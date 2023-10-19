@@ -248,8 +248,7 @@ const UploadForm: React.FC<{
       {profileData && (
         <Flex
           flexDir="column"
-          px={7}
-          py={5}
+          px={2}
           h="75vh"
           justifyContent={"flex-start"}
           alignItems="center"
@@ -262,7 +261,7 @@ const UploadForm: React.FC<{
               sx={{
                 fontSize: ["xl", "xl", "2xl"],
                 fontWeight: 600,
-                textAlign: "left",
+                textAlign: "center",
                 mb: 4,
               }}
             >
@@ -323,7 +322,7 @@ const UploadForm: React.FC<{
               </VStack>
             ) : (
               <>
-                <VStack alignItems={"flex-start"} width="100%">
+                <VStack mt={10} alignItems={"flex-start"} width="100%">
                   <Text mb={0} fontSize="sm">
                     Project Name
                   </Text>

@@ -325,7 +325,7 @@ const ApplicationForm: React.FC<{
         {step > 1 && (
           <Button
             type="submit"
-            width={["100%", "100%", "100%", "200px"]}
+            width={["100%", "100%", "100%", "250px"]}
             variant="accent-outline"
             mr={[0, 0, 0, 5]}
             mb={[3, 3, 3, 0]}
@@ -345,7 +345,7 @@ const ApplicationForm: React.FC<{
           variant="brand"
           isLoading={isLoading}
           spinner={<Loader color={"#3300FF"} size={25} />}
-          width={["100%", "100%", "100%", "200px"]}
+          width={["100%", "100%", "100%", "250px"]}
           onClick={() => {
             if (step === 0) {
               setStep(1);
@@ -365,10 +365,7 @@ const ApplicationForm: React.FC<{
             (connectAlert && !isOauthIntegrated)
           }
         >
-          {step > 2 ||
-          (step === 2 &&
-            formType &&
-            ["gitlab", "bitbucket"].includes(formType)) ? (
+          {step > 2 || step === 2 ? (
             isLoading ? (
               <Loader color={"#3300FF"} />
             ) : (

@@ -137,10 +137,11 @@ export const theme = extendTheme({
         }),
         "accent-outline": (props: StyleFunctionProps) => ({
           ...defaultTheme.components.Button.variants.outline(props),
-          background: "#F5F2FF",
+          background: "#FFFFFF",
           color: "blue",
           fontSize: "14px",
           borderColor: "#C1B1FF",
+          boxShadow: "0px 4px 23px 0px rgba(128, 108, 207, 0.19)",
           py: 4,
           _hover: {
             background: "#f7f5ff",
