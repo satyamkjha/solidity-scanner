@@ -84,7 +84,7 @@ const RecentScansList: React.FC = () => {
                 <Image
                   src={`${assetsURL}${
                     project.scan_type === "project" &&
-                    project.scan_details.project_url !== "filescan"
+                    project.scan_details.project_url !== "File Scan"
                       ? "icons/integrations/" +
                         getProjectType(project.scan_details.project_url || "")
                       : project.scan_type === "block"
@@ -196,7 +196,7 @@ const RecentScansList: React.FC = () => {
                 <Image
                   src={`${assetsURL}${
                     project.scan_type === "project" &&
-                    project.scan_details.project_url !== "filescan"
+                    project.scan_details.project_url !== "File Scan"
                       ? "icons/integrations/" +
                         getProjectType(project.scan_details.project_url || "")
                       : project.scan_type === "block"
