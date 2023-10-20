@@ -1248,53 +1248,47 @@ export const platforms = [
 
 export const infographicsData: { [key: string]: string[] } = {
   project_github: [
-    `Ensure the link is to a GitHub repository containing Solidity (.sol)
-          files. It is recommended to use the HTTPS GitHub (.git) cloning link
-          of the repository.`,
-    `Verify if the repository is public, for private repositories, please
-    integrate your GitHub from the Integrations tab.`,
+    "Ensure the link leads to a GitHub repository with Solidity (.sol) files. Use the HTTPS GitHub (.git) cloning link.",
+    "Verify if the repository is public; for private repositories, integrate GitHub from the Integrations tab.",
   ],
   project_gitlab: [
-    `Ensure the link is to a GitLab repository containing Solidity (.sol)
-          files. It is recommended to use the HTTPS GitLab (.git) cloning link
-          of the repository.`,
-    `Verify if the repository is public, for private repositories, please
-    integrate your GitLab from the Integrations tab.`,
+    "Ensure the link directs to a GitLab repository with Solidity (.sol) files. Use the HTTPS GitLab (.git) cloning link.",
+    "Check the repository's visibility; for private repositories, integrate GitLab from the Integrations tab.",
   ],
   project_bitbucket: [
-    `Ensure the link is to a Bitbucket repository containing Solidity (.sol)
-          files. It is recommended to use the HTTPS Bitbucket (.git) cloning link
-          of the repository.`,
-    `Verify if the repository is public, for private repositories, please
-    integrate your Bitbucket from the Integrations tab.`,
+    "Ensure the link points to a Bitbucket repository with Solidity (.sol) files. Use the HTTPS Bitbucket (.git) cloning link.",
+    "Confirm the repository's privacy; for private repositories, integrate Bitbucket from the Integrations tab.",
   ],
   project_step_2: [
-    "You can select and deselct the files that you want to be included in the scan.",
-    "The files that are not highlighted will be skipped during the scan.",
-    "Non Solidity files in your repository will be automatically skipped by our scanner",
+    "Select or deselect files for the scan.",
+    "Non-highlighted files will be skipped by our scanner, including non-Solidity files.",
   ],
   project_step_3: [
-    "You can "
+    "Enable Actions for your project to trigger scans when new code is pushed.",
+    "Integrate with your Git Provider to use this service.",
+    "You must own the repository to enable this action.",
   ],
+  project_step_0: [""],
   verified_contract: [
-    `Navigate to the explorer of the particular blockchain (Ethereum -
-    Etherscan.io).`,
-    `Use the search bar to get your smart contract and check if the
-    source code is verified in the "Contract" tab of the selected
-    explorer.`,
-    `Select the respective chain and platform and Start teh scan`,
+    "Navigate to the explorer of the blockchain (Ethereum - Etherscan.io).",
+    "Use the search bar to find your smart contract and check if the source code is verified in the 'Contract' tab of the selected explorer.",
+    "Select the appropriate chain and platform, then start the scan.",
   ],
   filescan_step_1: [
-    `Files to be uploaded should be Solidity(.sol) files, preferably
-    compiled successfully. Incorrect syntax might render incorrect
-    results.`,
-    `You can choose to upload a single file or multiple files depending on your peoject structure`,
+    "Upload Solidity (.sol) files, ideally compiled successfully. Incorrect syntax may lead to inaccurate results.",
+    "Choose to upload a single file or multiple files based on your project's structure.",
+    "Ensure the project compiles successfully.",
   ],
   filescan_step_2_single: [
-    `You can only upload a single file through this method`,
-    `File size should not extend 5 MB`
+    "You can only upload a single file using this method.",
+    "File size should not exceed 5 MB and must have a (.sol) extension.",
+    "Do not compress the file into a zip.",
   ],
-  filescan_step_2_multiple: [],
+  filescan_step_2_multiple: [
+    "Pack the file into a zip with the same folder structure as your project.",
+    "Accepted file format: zip",
+    "Include Solidity contracts, dependency configs, and framework configs.",
+  ],
 };
 
 export const OauthName: { [key: string]: string } = {

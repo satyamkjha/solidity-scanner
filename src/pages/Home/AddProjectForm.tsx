@@ -45,8 +45,10 @@ const AddProjectForm: React.FC<{
         overflowX={"scroll"}
         bg="white"
         minH={"fit-content"}
-        pt={[5, 5, 12]}
-        pb={[4, 4, 7]}
+        pt={[0, 5, 12]}
+        pb={[0, 4, 7]}
+        alignSelf="center"
+        m={0}
       >
         <ModalCloseButton />
         <ModalBody
@@ -88,31 +90,20 @@ const AddProjectForm: React.FC<{
               />
             )}
           </Flex>
-          <Flex
-            display={["none", "none", "flex"]}
-            bg="bg.subtle"
-            w={["100%", "100%", "42%"]}
-            h="75vh"
-            justifyContent="flex-start"
-            alignItems="center"
-            flexDir="column"
-            p={7}
-            borderRadius={20}
-          >
-            <AddProjectFormInfographics
-              imgUrl={`${assetsURL}homepage_infographics/${
-                formType === "verified_contract"
-                  ? "verified_contract"
-                  : formType === "filescan"
-                  ? step === 1
-                    ? `filescan_step_${step}`
-                    : `filescan_step_${step}_${uploadType}`
-                  : step === 1
-                  ? `project_${formType}`
-                  : `project_step_${step}`
-              }.svg`}
-              instructions={
-                infographicsData[
+          {changeView && (
+            <Flex
+              display={["none", "none", "flex"]}
+              bg="bg.subtle"
+              w={["100%", "100%", "42%"]}
+              h="75vh"
+              justifyContent="flex-start"
+              alignItems="center"
+              flexDir="column"
+              p={7}
+              borderRadius={20}
+            >
+              <AddProjectFormInfographics
+                imgUrl={`${assetsURL}homepage_infographics/${
                   formType === "verified_contract"
                     ? "verified_contract"
                     : formType === "filescan"
@@ -122,10 +113,23 @@ const AddProjectForm: React.FC<{
                     : step === 1
                     ? `project_${formType}`
                     : `project_step_${step}`
-                ]
-              }
-            />
-          </Flex>
+                }.svg`}
+                instructions={
+                  infographicsData[
+                    formType === "verified_contract"
+                      ? "verified_contract"
+                      : formType === "filescan"
+                      ? step === 1
+                        ? `filescan_step_${step}`
+                        : `filescan_step_${step}_${uploadType}`
+                      : step === 1
+                      ? `project_${formType}`
+                      : `project_step_${step}`
+                  ]
+                }
+              />
+            </Flex>
+          )}
         </ModalBody>
       </ModalContent>
     </Modal>

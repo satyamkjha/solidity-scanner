@@ -32,145 +32,15 @@ const FilescanForm: React.FC<{
   uploadType: "single" | "multiple";
   setUploadType: React.Dispatch<React.SetStateAction<"single" | "multiple">>;
 }> = ({ profileData, page, setPage, uploadType, setUploadType }) => {
-  const history = useHistory();
   const role: string = useUserRole();
-  const [step, setStep] = useState(0);
-  const [error, setError] = useState(false);
-  const [errorMsg, setErrorMsg] = useState<string | null>(null);
-  const [name, setName] = useState("");
-  const [urlList, setUrlList] = useState<
-    { url: string; name: string; file: File }[]
-  >([]);
-  const [isLoading, setIsLoading] = useState(false);
-
   let isViewer = role === "viewer";
-
-  const getPreassignedURLList = async (acceptedFiles: File[]) => {
-    let results = await acceptedFiles.map(async (file) => {
-      return getPreassignedURL(file.name, file);
-    });
-    Promise.all(results).then((res) => {
-      if (res.length === acceptedFiles.length) setUrlList([...res]);
-    });
-  };
-
-  const uploadFiles = async (acceptedFiles: File[]) => {
-    let results: any[] = [];
-    urlList.forEach((item) => {
-      results.push(
-        new Promise((resolve, reject) => {
-          postDataToS3(item.file, item.url).then(
-            (res) => {
-              resolve(res);
-            },
-            () => {
-              postDataToS3(item.file, item.url).then(
-                (res) => {
-                  resolve(res);
-                },
-                () => {
-                  reject(false);
-                }
-              );
-            }
-          );
-        })
-      );
-    });
-    Promise.all(results).then(
-      (res) => {
-        let count = 0;
-        // res here is an array of boolean. Using this check if all the files are uploaded or not. Also give an option to remove a file if needed.
-
-        res.forEach((item) => {
-          if (item) count++;
-        });
-        // Add a flag to allow to go to step 2. Do not use count. Here in this step you also need to give an option to delete or remmove a file.
-        if (count === acceptedFiles.length) {
-          setStep(2);
-        } else {
-          setStep(0);
-        }
-      },
-      () => {
-        setStep(0);
-      }
-    );
-  };
-
-  //   useEffect(() => {
-  //     if (urlList.length === acceptedFiles.length && urlList.length > 0) {
-  //       uploadFiles();
-  //     }
-
-  //     // eslint-disable-next-line react-hooks/exhaustive-deps
-  //   }, [urlList]);
-
-  const checkFileExt = (fileName: string) => {
-    let fileExt = fileName.split(".");
-    if (fileExt[fileExt.length - 1] === "sol") {
-      return true;
-    }
-    return false;
-  };
-
-  const getPreassignedURL = async (fileName: string, file: File) => {
-    const { data } = await API.get<{ status: string; result: { url: string } }>(
-      `${API_PATH.API_GET_PREASSIGNED_URL}?file_name=${fileName}`
-    );
-    return {
-      url: data.result.url,
-      name: fileName,
-      file: file,
-    };
-  };
-
-  const postDataToS3 = async (fileData: File, urlString: string) => {
-    const { status } = await API.put(urlString, fileData, {
-      headers: {
-        "Content-Type": "application/octet-stream",
-      },
-    });
-    if (status === 200) {
-      return true;
-    }
-    return false;
-  };
-
-  const onSubmit = () => {
-    if (page === 1) {
-      setPage(2);
-    } else {
-      startFileScan();
-    }
-  };
-
-  const startFileScan = async () => {
-    let urlData = urlList.map((item) => item.url);
-    try {
-      setIsLoading(true);
-      await API.post(API_PATH.API_PROJECT_SCAN, {
-        file_urls: urlData,
-        project_name: name,
-        project_visibility: "public",
-        project_type: "new",
-      });
-
-      history.push("/projects");
-      setTimeout(() => setIsLoading(false), 1000);
-    } catch (e) {
-      setTimeout(() => setIsLoading(false), 1000);
-      console.log(e);
-    }
-  };
-
   return (
     <>
       {profileData && (
         <Flex
           flexDir="column"
           px={2}
-          h="75vh"
+          h={["90vh", "90vh", "75vh"]}
           justifyContent={"flex-start"}
           alignItems="center"
           borderRadius={20}
@@ -244,26 +114,18 @@ const FilescanForm: React.FC<{
               <></>
             )}
 
-            <Button
-              type="submit"
-              variant="brand"
-              mt={4}
-              w="100%"
-              isLoading={isLoading}
-              spinner={<Loader color={"#3300FF"} size={25} />}
-              disabled={
-                page === 2 &&
-                (isLoading ||
-                  step < 2 ||
-                  name === "" ||
-                  (profileData.actions_supported &&
-                    !profileData.actions_supported.file_scan) ||
-                  isViewer)
-              }
-              onClick={onSubmit}
-            >
-              {page === 1 ? "Proceed" : "Start Scan"}
-            </Button>
+            {page !== 2 && (
+              <Button
+                type="submit"
+                variant="brand"
+                mt={4}
+                w="100%"
+                spinner={<Loader color={"#3300FF"} size={25} />}
+                onClick={() => setPage(2)}
+              >
+                Proceed
+              </Button>
+            )}
           </Flex>
         </Flex>
       )}

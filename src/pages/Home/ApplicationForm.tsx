@@ -173,7 +173,7 @@ const ApplicationForm: React.FC<{
     <Flex
       flexDir="column"
       w="100%"
-      h={["80vh", "80vh", "75vh"]}
+      h={["90vh", "90vh", "75vh"]}
       justifyContent={"space-between"}
       alignItems="flex-start"
       opacity={isViewer ? 0.5 : 1}
@@ -183,8 +183,10 @@ const ApplicationForm: React.FC<{
           flexDir="column"
           justifyContent={"flex-start"}
           alignItems="flex-start"
-          px={[0, 4, 0, 7]}
+          px={[2, 4, 2, 7]}
           w="100%"
+          h="calc(100% - 80px)"
+          mt={0}
           borderRadius={20}
         >
           <HStack w="100%" justifyContent="space-between" mb={4}>
@@ -207,34 +209,32 @@ const ApplicationForm: React.FC<{
                 ? "Project Settings"
                 : ""}
             </Text>
-            {formType === "github" && (
-              <HStack
-                display={step === 0 ? "none" : "flex"}
-                justifyContent={"flex-end"}
-                spacing={3}
+            <HStack
+              display={step === 0 ? "none" : "flex"}
+              justifyContent={"flex-end"}
+              spacing={3}
+            >
+              <Image
+                height={["30px", "30px", "40px"]}
+                width={["30px", "30px", "40px"]}
+                src={`${assetsURL}common/step_${step}.svg`}
+              />
+              <Text
+                sx={{
+                  fontSize: ["md", "md", "lg"],
+                  fontWeight: 700,
+                  lineHeight: "20px",
+                  textAlign: "left",
+                  width: "fit-content",
+                }}
               >
-                <Image
-                  height={["30px", "30px", "40px"]}
-                  width={["30px", "30px", "40px"]}
-                  src={`${assetsURL}common/step_${step}.svg`}
-                />
-                <Text
-                  sx={{
-                    fontSize: ["md", "md", "lg"],
-                    fontWeight: 700,
-                    lineHeight: "20px",
-                    textAlign: "left",
-                    width: "fit-content",
-                  }}
-                >
-                  {"STEP"}{" "}
-                  <Box ml={1} fontSize={["xl", "xl", "2xl"]} as="span">
-                    {step}/
-                  </Box>
-                  {3}
-                </Text>
-              </HStack>
-            )}
+                {"STEP"}{" "}
+                <Box ml={1} fontSize={["xl", "xl", "2xl"]} as="span">
+                  {step}/
+                </Box>
+                {3}
+              </Text>
+            </HStack>
           </HStack>
           {step === 1 ? (
             <Text
@@ -300,10 +300,12 @@ const ApplicationForm: React.FC<{
           )}
 
           {step === 0 ? (
-            <AddProjectFormInfographics
-              imgUrl={`${assetsURL}homepage_infographics/project_${formType}.svg`}
-              instructions={infographicsData["project_github"]}
-            />
+            <Box w="100%" h="calc(100% - 50px)">
+              <AddProjectFormInfographics
+                imgUrl={`${assetsURL}homepage_infographics/project_${formType}.svg`}
+                instructions={infographicsData["project_github"]}
+              />
+            </Box>
           ) : step === 1 ? (
             <InfoSettings
               nameError={nameError}

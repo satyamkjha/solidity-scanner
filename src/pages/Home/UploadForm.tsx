@@ -13,7 +13,6 @@ import {
   VStack,
   Progress,
   CloseButton,
-  Divider,
 } from "@chakra-ui/react";
 import { AiOutlineProject } from "react-icons/ai";
 import { ProjectIcon, SolidityFileIcon, UploadIcon } from "components/icons";
@@ -52,7 +51,7 @@ const UploadForm: React.FC<{
     isDragAccept,
     isDragReject,
     acceptedFiles,
-  } = useDropzone({ maxFiles: 5, disabled: isViewer });
+  } = useDropzone({ maxFiles: 1, disabled: isViewer });
 
   let baseStyle = {
     flex: 1,
@@ -98,7 +97,7 @@ const UploadForm: React.FC<{
   );
 
   useEffect(() => {
-    if (acceptedFiles.length !== 0) {
+    if (acceptedFiles.length === 1) {
       firstCheck();
     }
 
@@ -305,7 +304,7 @@ const UploadForm: React.FC<{
             justifyContent={"space-between"}
             alignItems="flex-start"
             width={"100%"}
-            h="calc(100% - 240px)"
+            h="calc(100% - 140px)"
           >
             {page === 1 ? (
               <VStack alignItems={"flex-start"} width="100%" spacing={5}>
@@ -465,17 +464,16 @@ const UploadForm: React.FC<{
               isLoading={isLoading}
               spinner={<Loader color={"#3300FF"} size={25} />}
               disabled={
-                page === 2 &&
-                (isLoading ||
-                  step < 2 ||
-                  name === "" ||
-                  (profileData.actions_supported &&
-                    !profileData.actions_supported.file_scan) ||
-                  isViewer)
+                isLoading ||
+                step < 2 ||
+                name === "" ||
+                (profileData.actions_supported &&
+                  !profileData.actions_supported.file_scan) ||
+                isViewer
               }
               onClick={onSubmit}
             >
-              {page === 1 ? "Proceed" : "Start Scan"}
+              Start Scan
             </Button>
           </Flex>
         </Flex>

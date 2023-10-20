@@ -2,6 +2,7 @@ import { VStack, Text, Switch, HStack } from "@chakra-ui/react";
 import React from "react";
 import GithubConnectAlert from "./githubConnectAlert";
 import Loader from "./styled-components/Loader";
+import { OauthName } from "common/values";
 
 const ConfigSettings: React.FC<{
   githubSync: boolean;
@@ -10,7 +11,14 @@ const ConfigSettings: React.FC<{
   isLoading?: boolean;
   view: "github_app" | "detailed_result" | "scan_history";
   formType: string;
-}> = ({ githubSync, onToggleFunction, isOauthIntegrated, view, isLoading }) => {
+}> = ({
+  githubSync,
+  onToggleFunction,
+  isOauthIntegrated,
+  view,
+  isLoading,
+  formType,
+}) => {
   const [connectAlert, setConnectAlert] = React.useState(false);
 
   return (
@@ -35,7 +43,7 @@ const ConfigSettings: React.FC<{
           textAlign: "left",
         }}
       >
-        Enable GitHub Actions
+        Enable {OauthName[formType]} Actions
       </Text>
       <Text
         sx={{
@@ -44,7 +52,7 @@ const ConfigSettings: React.FC<{
           textAlign: "left",
         }}
       >
-        Trigger automatic scans via Github actions
+        Trigger automatic scans via {OauthName[formType]} actions
       </Text>
       <HStack spacing={5}>
         <Switch
@@ -63,7 +71,9 @@ const ConfigSettings: React.FC<{
         {isLoading && <Loader size={25} />}
       </HStack>
       {!isOauthIntegrated && connectAlert && (
-        <GithubConnectAlert msg="You need to connect your GitHub to enable webhooks" />
+        <GithubConnectAlert
+          msg={`You need to connect your ${OauthName[formType]} to enable webhooks`}
+        />
       )}
       {/* <Text
         sx={{
