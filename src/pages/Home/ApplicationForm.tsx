@@ -27,8 +27,9 @@ import { getSkipFilePaths, restructureRepoTree } from "helpers/fileStructure";
 import Loader from "components/styled-components/Loader";
 import { Profile } from "common/types";
 import { useUserRole } from "hooks/useUserRole";
-import { AddProjectFormInfographics } from "./AddProjectForm";
+import { AddProjectFormInfographics } from "./AddProjectFormInfographics";
 import { capitalize } from "common/functions";
+import { infographicsData, OauthName } from "common/values";
 
 const ApplicationForm: React.FC<{
   profileData: Profile;
@@ -56,6 +57,8 @@ const ApplicationForm: React.FC<{
     profileData?._integrations?.gitlab?.status === "successful" ||
     profileData?._integrations?.bitbucket?.status === "successful";
   const toast = useToast();
+
+  console.log(formType);
 
   const runValidation = () => {
     if (projectName.length === 0) {
@@ -170,7 +173,7 @@ const ApplicationForm: React.FC<{
     <Flex
       flexDir="column"
       w="100%"
-      h="75vh"
+      h={["80vh", "80vh", "75vh"]}
       justifyContent={"space-between"}
       alignItems="flex-start"
       opacity={isViewer ? 0.5 : 1}
@@ -239,10 +242,10 @@ const ApplicationForm: React.FC<{
                 fontSize: "sm",
                 color: "subtle",
                 textAlign: "left",
-                mb: 4,
+                mb: 2,
               }}
             >
-              Provide a link to your Github repository.
+              Provide a link to your {OauthName[formType]} repository.
             </Text>
           ) : step === 2 ? (
             <Text
@@ -250,7 +253,7 @@ const ApplicationForm: React.FC<{
                 fontSize: "sm",
                 color: "subtle",
                 textAlign: "left",
-                mb: 4,
+                mb: 2,
               }}
             >
               Select the branch and its corresponding directories and files to
@@ -262,7 +265,7 @@ const ApplicationForm: React.FC<{
                 fontSize: "sm",
                 color: "subtle",
                 textAlign: "left",
-                mb: 4,
+                mb: 2,
               }}
             >
               Configure your project settings.
@@ -271,10 +274,35 @@ const ApplicationForm: React.FC<{
             <></>
           )}
 
-          <Divider color="gray.700" borderWidth="1px" mb={5} />
+          {step !== 0 && (
+            <Text
+              sx={{
+                fontSize: "sm",
+                color: "subtle",
+                textAlign: "left",
+                mb: 2,
+              }}
+            >
+              See link examples and additional restrictions in the User Guide
+              available on{" "}
+              <Box
+                as="span"
+                color="accent"
+                onClick={() =>
+                  window.open("https://docs.solidityscan.com/", "_blank")
+                }
+              >
+                {" "}
+                docs.solidityscan.com
+              </Box>
+              .
+            </Text>
+          )}
+
           {step === 0 ? (
             <AddProjectFormInfographics
               imgUrl={`${assetsURL}homepage_infographics/project_${formType}.svg`}
+              instructions={infographicsData["project_github"]}
             />
           ) : step === 1 ? (
             <InfoSettings
@@ -308,7 +336,8 @@ const ApplicationForm: React.FC<{
               view="github_app"
               githubSync={githubSync}
               onToggleFunction={async () => setGithubSync(!githubSync)}
-              isGithubIntegrated={isOauthIntegrated}
+              isOauthIntegrated={isOauthIntegrated}
+              formType={formType}
             />
           ) : (
             <></>

@@ -298,7 +298,8 @@ const ProjectCustomSettings: React.FC<{
                 githubSync={githubSync}
                 isLoading={isLoading}
                 onToggleFunction={onToggleSwitch}
-                isGithubIntegrated={isGithubIntegrated}
+                isOauthIntegrated={isGithubIntegrated}
+                formType={getProjectType(project_url)}
               />
             </AccordionPanel>
           </AccordionItem>

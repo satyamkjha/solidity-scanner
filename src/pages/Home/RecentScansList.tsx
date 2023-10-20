@@ -9,16 +9,14 @@ import {
   Image,
   useMediaQuery,
 } from "@chakra-ui/react";
-import { AddIcon, ArrowForwardIcon } from "@chakra-ui/icons";
+import { ArrowForwardIcon } from "@chakra-ui/icons";
 import { getAssetsURL, getProjectType } from "helpers/helperFunction";
 import VulnerabilityDistribution, {
   ErrorVulnerabilityDistribution,
 } from "components/vulnDistribution";
 import { useHistory } from "react-router-dom";
 import { capitalize, logout } from "common/functions";
-import { BiPlug, BiUser, BiPowerOff } from "react-icons/bi";
-import { ProfileIconOne } from "components/icons";
-import { Profile } from "common/types";
+
 import { useAllScans } from "hooks/useAllScans";
 import SolidityScoreProgress from "components/common/SolidityScoreProgress";
 
@@ -34,105 +32,209 @@ const RecentScansList: React.FC = () => {
   const [changeView] = useMediaQuery("(min-width: 650px)");
 
   return (
-    <Flex
-      justifyContent="flex-start"
-      alignItems="center"
-      p={3}
-      flexDirection="column"
-      bgColor="bg.subtle"
-      w="100%"
-      borderRadius={10}
-    >
-      <HStack
-        px={3}
-        justifyContent="space-between"
+    <>
+      {projects?.data.length}
+      <Flex
+        justifyContent="flex-start"
         alignItems="center"
+        p={3}
+        flexDirection="column"
+        bgColor="bg.subtle"
         w="100%"
+        borderRadius={10}
       >
-        <Text
-          sx={{
-            fontSize: "md",
-            fontWeight: 600,
-            textAlign: "center",
-            color: "gray.500",
-          }}
+        <HStack
+          px={3}
+          justifyContent="space-between"
+          alignItems="center"
+          w="100%"
         >
-          Recenly Scanned Projects
-        </Text>
+          <Text
+            sx={{
+              fontSize: "md",
+              fontWeight: 600,
+              textAlign: "center",
+              color: "gray.500",
+            }}
+          >
+            Recenly Scanned Projects
+          </Text>
 
-        <Button
-          variant="ghost"
-          color="accent"
-          rightIcon={<ArrowForwardIcon />}
-          onClick={() => history.push("/projects")}
-        >
-          View All
-        </Button>
-      </HStack>
-      {projects &&
-        projects.data.map((project) =>
-          changeView ? (
-            <HStack
-              justifyContent="space-between"
-              alignItems="center"
-              w="100%"
-              py={2}
-              px={5}
-              borderRadius={10}
-              bg="white"
-              mt={4}
-            >
-              <HStack spacing={5} w="calc(55% - 110px)">
-                <Image
-                  src={`${assetsURL}${
-                    project.scan_type === "project" &&
-                    project.scan_details.project_url !== "File Scan"
-                      ? "icons/integrations/" +
-                        getProjectType(project.scan_details.project_url || "")
-                      : project.scan_type === "block"
-                      ? "blockscan/" + project.scan_details.contract_platform
-                      : ""
-                  }.svg`}
-                  height="40px"
-                  width="40px"
-                />
-                <VStack
-                  justifyContent="center"
-                  alignItems="flex-start"
-                  textAlign="left"
-                  spacing={0}
-                  w="calc(100% - 50px)"
-                >
-                  <Text
-                    sx={{
-                      fontSize: "sm",
-                      fontWeight: 600,
-                    }}
-                    w="100%"
-                    isTruncated={true}
+          <Button
+            variant="ghost"
+            color="accent"
+            rightIcon={<ArrowForwardIcon />}
+            onClick={() => history.push("/projects")}
+          >
+            View All
+          </Button>
+        </HStack>
+        {projects &&
+          projects.data.map((project) =>
+            changeView ? (
+              <HStack
+                justifyContent="space-between"
+                alignItems="center"
+                w="100%"
+                py={2}
+                px={5}
+                borderRadius={10}
+                bg="white"
+                mt={4}
+              >
+                <HStack spacing={5} w="calc(55% - 110px)">
+                  <Image
+                    src={`${assetsURL}${
+                      project.scan_type === "project" &&
+                      project.scan_details.project_url !== "File Scan"
+                        ? "icons/integrations/" +
+                          getProjectType(project.scan_details.project_url || "")
+                        : project.scan_type === "block"
+                        ? "blockscan/" + project.scan_details.contract_platform
+                        : ""
+                    }.svg`}
+                    height="40px"
+                    width="40px"
+                  />
+                  <VStack
+                    justifyContent="center"
+                    alignItems="flex-start"
+                    textAlign="left"
+                    spacing={0}
+                    w="calc(100% - 50px)"
                   >
-                    {capitalize(
-                      project.scan_details.project_name ||
-                        project.scan_details.contractname ||
-                        ""
-                    )}
-                  </Text>
-                  <Text
-                    sx={{
-                      fontSize: "xs",
-                      fontWeight: 500,
-                    }}
-                    color="gray.400"
-                    w="100%"
-                    isTruncated={true}
-                  >
-                    {project.scan_details.project_url ||
-                      project.scan_details.contract_address ||
-                      ""}
-                  </Text>
-                </VStack>
+                    <Text
+                      sx={{
+                        fontSize: "sm",
+                        fontWeight: 600,
+                      }}
+                      w="100%"
+                      isTruncated={true}
+                    >
+                      {capitalize(
+                        project.scan_details.project_name ||
+                          project.scan_details.contractname ||
+                          ""
+                      )}
+                    </Text>
+                    <Text
+                      sx={{
+                        fontSize: "xs",
+                        fontWeight: 500,
+                      }}
+                      color="gray.400"
+                      w="100%"
+                      isTruncated={true}
+                    >
+                      {project.scan_details.project_url ||
+                        project.scan_details.contract_address ||
+                        ""}
+                    </Text>
+                  </VStack>
+                </HStack>
+                <Box w="40%">
+                  {project.scan_details.multi_file_scan_status ===
+                  "scan_done" ? (
+                    <VulnerabilityDistribution
+                      {...project.scan_details.multi_file_scan_summary
+                        .issue_severity_distribution}
+                      view="scans"
+                    />
+                  ) : (
+                    <ErrorVulnerabilityDistribution view="scans" />
+                  )}
+                </Box>
+                {project.scan_details.multi_file_scan_status === "scan_done" ? (
+                  <SolidityScoreProgress
+                    score={
+                      project.scan_details.multi_file_scan_summary.score_v2
+                    }
+                    size={"65px"}
+                    thickness={"7px"}
+                    fontSize={"12px"}
+                    padding={1}
+                  />
+                ) : (
+                  <Box w="65px" h="65px" />
+                )}
               </HStack>
-              <Box w="40%">
+            ) : (
+              <VStack
+                justifyContent="flex-start"
+                alignItems="flex-start"
+                p={[5, 7]}
+                bg="white"
+                mt={4}
+                w="100%"
+                spacing={7}
+                borderRadius={10}
+              >
+                <HStack justifyContent="space-between" w="100%">
+                  <VStack
+                    justifyContent="center"
+                    alignItems="flex-start"
+                    textAlign="left"
+                    spacing={0}
+                    w="calc(100% - 50px)"
+                  >
+                    <Text
+                      sx={{
+                        fontSize: "sm",
+                        fontWeight: 600,
+                      }}
+                      w="100%"
+                      isTruncated={true}
+                    >
+                      {capitalize(
+                        project.scan_details.project_name ||
+                          project.scan_details.contractname ||
+                          ""
+                      )}
+                    </Text>
+                    <Text
+                      sx={{
+                        fontSize: "xs",
+                        fontWeight: 500,
+                      }}
+                      color="gray.400"
+                      w="100%"
+                      isTruncated={true}
+                    >
+                      {project.scan_details.project_url ||
+                        project.scan_details.contract_address ||
+                        ""}
+                    </Text>
+                  </VStack>
+
+                  <Image
+                    src={`${assetsURL}${
+                      project.scan_type === "project" &&
+                      project.scan_details.project_url !== "File Scan"
+                        ? "icons/integrations/" +
+                          getProjectType(project.scan_details.project_url || "")
+                        : project.scan_type === "block"
+                        ? "blockscan/" + project.scan_details.contract_platform
+                        : ""
+                    }.svg`}
+                    height="40px"
+                    width="40px"
+                  />
+                </HStack>
+                {project.scan_details.multi_file_scan_status ===
+                  "scan_done" && (
+                  <Text
+                    color={"#3300FF"}
+                    textAlign={"left"}
+                    fontSize="lg"
+                    fontWeight={700}
+                  >
+                    {project.scan_details.multi_file_scan_summary.score_v2}
+                    <Box as={"span"} color="gray.500" fontSize={"sm"}>
+                      /100
+                    </Box>
+                  </Text>
+                )}
+
                 {project.scan_details.multi_file_scan_status === "scan_done" ? (
                   <VulnerabilityDistribution
                     {...project.scan_details.multi_file_scan_summary
@@ -142,108 +244,11 @@ const RecentScansList: React.FC = () => {
                 ) : (
                   <ErrorVulnerabilityDistribution view="scans" />
                 )}
-              </Box>
-              {project.scan_details.multi_file_scan_status === "scan_done" ? (
-                <SolidityScoreProgress
-                  score={project.scan_details.multi_file_scan_summary.score_v2}
-                  size={"65px"}
-                  thickness={"7px"}
-                  fontSize={"12px"}
-                  padding={1}
-                />
-              ) : (
-                <Box w="65px" h="65px" />
-              )}
-            </HStack>
-          ) : (
-            <VStack
-              justifyContent="flex-start"
-              alignItems="flex-start"
-              p={[5, 7]}
-              bg="white"
-              mt={4}
-              w="100%"
-              spacing={7}
-              borderRadius={10}
-            >
-              <HStack justifyContent="space-between" w="100%">
-                <VStack
-                  justifyContent="center"
-                  alignItems="flex-start"
-                  textAlign="left"
-                  spacing={0}
-                  w="calc(100% - 50px)"
-                >
-                  <Text
-                    sx={{
-                      fontSize: "sm",
-                      fontWeight: 600,
-                    }}
-                    w="100%"
-                    isTruncated={true}
-                  >
-                    {capitalize(
-                      project.scan_details.project_name ||
-                        project.scan_details.contractname ||
-                        ""
-                    )}
-                  </Text>
-                  <Text
-                    sx={{
-                      fontSize: "xs",
-                      fontWeight: 500,
-                    }}
-                    color="gray.400"
-                    w="100%"
-                    isTruncated={true}
-                  >
-                    {project.scan_details.project_url ||
-                      project.scan_details.contract_address ||
-                      ""}
-                  </Text>
-                </VStack>
-
-                <Image
-                  src={`${assetsURL}${
-                    project.scan_type === "project" &&
-                    project.scan_details.project_url !== "File Scan"
-                      ? "icons/integrations/" +
-                        getProjectType(project.scan_details.project_url || "")
-                      : project.scan_type === "block"
-                      ? "blockscan/" + project.scan_details.contract_platform
-                      : ""
-                  }.svg`}
-                  height="40px"
-                  width="40px"
-                />
-              </HStack>
-              {project.scan_details.multi_file_scan_status === "scan_done" && (
-                <Text
-                  color={"#3300FF"}
-                  textAlign={"left"}
-                  fontSize="lg"
-                  fontWeight={700}
-                >
-                  {project.scan_details.multi_file_scan_summary.score_v2}
-                  <Box as={"span"} color="gray.500" fontSize={"sm"}>
-                    /100
-                  </Box>
-                </Text>
-              )}
-
-              {project.scan_details.multi_file_scan_status === "scan_done" ? (
-                <VulnerabilityDistribution
-                  {...project.scan_details.multi_file_scan_summary
-                    .issue_severity_distribution}
-                  view="scans"
-                />
-              ) : (
-                <ErrorVulnerabilityDistribution view="scans" />
-              )}
-            </VStack>
-          )
-        )}
-    </Flex>
+              </VStack>
+            )
+          )}
+      </Flex>
+    </>
   );
 };
 

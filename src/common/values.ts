@@ -1245,3 +1245,60 @@ export const platforms = [
     isDisabled: true,
   },
 ];
+
+export const infographicsData: { [key: string]: string[] } = {
+  project_github: [
+    `Ensure the link is to a GitHub repository containing Solidity (.sol)
+          files. It is recommended to use the HTTPS GitHub (.git) cloning link
+          of the repository.`,
+    `Verify if the repository is public, for private repositories, please
+    integrate your GitHub from the Integrations tab.`,
+  ],
+  project_gitlab: [
+    `Ensure the link is to a GitLab repository containing Solidity (.sol)
+          files. It is recommended to use the HTTPS GitLab (.git) cloning link
+          of the repository.`,
+    `Verify if the repository is public, for private repositories, please
+    integrate your GitLab from the Integrations tab.`,
+  ],
+  project_bitbucket: [
+    `Ensure the link is to a Bitbucket repository containing Solidity (.sol)
+          files. It is recommended to use the HTTPS Bitbucket (.git) cloning link
+          of the repository.`,
+    `Verify if the repository is public, for private repositories, please
+    integrate your Bitbucket from the Integrations tab.`,
+  ],
+  project_step_2: [
+    "You can select and deselct the files that you want to be included in the scan.",
+    "The files that are not highlighted will be skipped during the scan.",
+    "Non Solidity files in your repository will be automatically skipped by our scanner",
+  ],
+  project_step_3: [
+    "You can "
+  ],
+  verified_contract: [
+    `Navigate to the explorer of the particular blockchain (Ethereum -
+    Etherscan.io).`,
+    `Use the search bar to get your smart contract and check if the
+    source code is verified in the "Contract" tab of the selected
+    explorer.`,
+    `Select the respective chain and platform and Start teh scan`,
+  ],
+  filescan_step_1: [
+    `Files to be uploaded should be Solidity(.sol) files, preferably
+    compiled successfully. Incorrect syntax might render incorrect
+    results.`,
+    `You can choose to upload a single file or multiple files depending on your peoject structure`,
+  ],
+  filescan_step_2_single: [
+    `You can only upload a single file through this method`,
+    `File size should not extend 5 MB`
+  ],
+  filescan_step_2_multiple: [],
+};
+
+export const OauthName: { [key: string]: string } = {
+  github: "GitHub",
+  gitlab: "GitLab",
+  bitbucket: "Bitbucket",
+};

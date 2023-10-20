@@ -6,16 +6,11 @@ import Loader from "./styled-components/Loader";
 const ConfigSettings: React.FC<{
   githubSync: boolean;
   onToggleFunction: () => Promise<void>;
-  isGithubIntegrated: boolean;
+  isOauthIntegrated: boolean;
   isLoading?: boolean;
   view: "github_app" | "detailed_result" | "scan_history";
-}> = ({
-  githubSync,
-  onToggleFunction,
-  isGithubIntegrated,
-  view,
-  isLoading,
-}) => {
+  formType: string;
+}> = ({ githubSync, onToggleFunction, isOauthIntegrated, view, isLoading }) => {
   const [connectAlert, setConnectAlert] = React.useState(false);
 
   return (
@@ -58,7 +53,7 @@ const ConfigSettings: React.FC<{
           isDisabled={isLoading}
           isChecked={githubSync}
           onChange={() => {
-            if (isGithubIntegrated) {
+            if (isOauthIntegrated) {
               onToggleFunction();
             } else {
               setConnectAlert(!connectAlert);
@@ -67,7 +62,7 @@ const ConfigSettings: React.FC<{
         />
         {isLoading && <Loader size={25} />}
       </HStack>
-      {!isGithubIntegrated && connectAlert && (
+      {!isOauthIntegrated && connectAlert && (
         <GithubConnectAlert msg="You need to connect your GitHub to enable webhooks" />
       )}
       {/* <Text

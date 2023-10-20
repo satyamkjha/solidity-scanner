@@ -29,11 +29,12 @@ const UploadForm: React.FC<{
   profileData: Profile;
   page: number;
   setPage: React.Dispatch<React.SetStateAction<number>>;
-}> = ({ profileData, page, setPage }) => {
+  uploadType: "single" | "multiple";
+  setUploadType: React.Dispatch<React.SetStateAction<"single" | "multiple">>;
+}> = ({ profileData, page, setPage, uploadType, setUploadType }) => {
   const history = useHistory();
   const role: string = useUserRole();
   const [step, setStep] = useState(0);
-  const [uploadType, setUploadType] = useState<"single" | "multiple">("single");
   const [error, setError] = useState(false);
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
   const [name, setName] = useState("");
@@ -272,31 +273,30 @@ const UploadForm: React.FC<{
               w="100%"
               sx={{ fontSize: "sm", color: "subtle", textAlign: "left", mb: 2 }}
             >
-              Upload your Solidity files (.sol extension) as a project. Utilize
-              the “Project Name” field to refer to your scan results in the
-              “Projects” section.
-            </Text>
-            <Divider color="gray.700" borderWidth="1px" mb={3} />
-            <Text
-              w="100%"
-              sx={{ fontSize: "sm", color: "subtle", textAlign: "left", mb: 2 }}
-            >
-              NOTE: Please follow the constraints below to avoid scan failure:
+              Upload your Solidity files (.sol extension) as a project and scan
+              to detect vulnerabilities in your project.
             </Text>
             <Text
-              w="100%"
-              sx={{ color: "subtle", textAlign: "left", mb: 2, fontSize: "xs" }}
+              sx={{
+                fontSize: "sm",
+                color: "subtle",
+                textAlign: "left",
+                mb: 2,
+              }}
             >
-              1. Files to be uploaded should be Solidity(.sol) files, preferably
-              compiled successfully. Incorrect syntax might render incorrect
-              results.
-            </Text>
-            <Text
-              w="100%"
-              sx={{ color: "subtle", textAlign: "left", mb: 3, fontSize: "xs" }}
-            >
-              2. A Maximum number of files that can be uploaded is 5 and file
-              size cannot exceed 5MB.
+              See tutorials and additional restrictions in the User Guide
+              available on{" "}
+              <Box
+                as="span"
+                color="accent"
+                onClick={() =>
+                  window.open("https://docs.solidityscan.com/", "_blank")
+                }
+              >
+                {" "}
+                docs.solidityscan.com
+              </Box>
+              .
             </Text>
           </VStack>
 

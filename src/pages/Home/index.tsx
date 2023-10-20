@@ -44,6 +44,7 @@ import { useAllScans } from "hooks/useAllScans";
 import SolidityScoreProgress from "components/common/SolidityScoreProgress";
 import AddProjectForm from "./AddProjectForm";
 import RecentScansList from "./RecentScansList";
+import PlanCycleInfo from "pages/Billing/components/PlanCycleInfo";
 
 const OverviewData: React.FC<{
   heading: number;
@@ -113,12 +114,12 @@ const AddProjectBox: React.FC<{ profileData: Profile }> = ({ profileData }) => {
     {
       text: "Verified Contracts",
       formType: "verified_contract",
-      iconLink: "",
+      iconLink: "icons/project_type_icons/verified_contract.svg",
     },
     {
       text: "Upload Contract",
       formType: "filescan",
-      iconLink: "",
+      iconLink: "icons/project_type_icons/filescan.svg",
     },
   ];
 
@@ -129,7 +130,7 @@ const AddProjectBox: React.FC<{ profileData: Profile }> = ({ profileData }) => {
       borderRadius={10}
       border="1px solid #52FF00"
       flexDir={changeView ? "row" : "column"}
-      justifyContent={["flex-start", "flex-start", "space-between"]}
+      justifyContent={changeView ? "space-between" : "flex-start"}
       alignItems={"center"}
       p={5}
       bg="white"
@@ -237,7 +238,6 @@ const Home: React.FC = () => {
           borderRadius: "20px",
           p: 4,
           mx: [0, 0, 2],
-          my: 2,
         }}
       >
         {profileData && <AddProjectBox profileData={profileData} />}
@@ -317,7 +317,7 @@ const Home: React.FC = () => {
           <Loader />
         </Flex>
       )} */}
-      {data && (
+      {data && profileData && (
         <Flex
           sx={{
             w: ["100%", "100%", "100%", "30%"],
@@ -329,13 +329,16 @@ const Home: React.FC = () => {
           mt={3}
           px={isDesktopView ? 0 : 5}
         >
-          <Image
-            onClick={() => history.push("/billing")}
-            cursor="pointer"
-            w="100%"
-            h="auto"
-            src={`${assetsURL}common/pro_upgrade.svg`}
-          />
+          {" "}
+          {profileData.current_package !== "custom" && (
+            <PlanCycleInfo
+              planName={profileData.current_package}
+              packageRechargeDate={profileData.package_recharge_date}
+              packageValidity={profileData.package_validity}
+              packageName={profileData.current_package}
+              subscription={profileData.subscription}
+            />
+          )}
           <Flex
             justifyContent="flex-start"
             alignItems="center"

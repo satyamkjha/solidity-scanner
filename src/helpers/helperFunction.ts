@@ -154,18 +154,21 @@ export const checkProjectUrl = (url: string) => {
 };
 
 export const getProjectType = (project_url: string) => {
+  if (project_url === "File Scan") return "filescan";
+
   const url = new URL(project_url);
   const hostname = url.hostname.toLowerCase();
 
   if (hostname.includes("github.com")) {
     return "github";
-  } else if (hostname.includes("bitbucket.org")) {
-    return "bitbucket";
-  } else if (hostname.includes("gitlab.com")) {
-    return "gitlab";
-  } else {
-    return null;
   }
+  if (hostname.includes("bitbucket.org")) {
+    return "bitbucket";
+  }
+  if (hostname.includes("gitlab.com")) {
+    return "gitlab";
+  }
+  return "";
 };
 
 export const getProjectFileUrl = (
