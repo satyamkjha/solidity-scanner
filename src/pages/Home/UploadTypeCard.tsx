@@ -3,6 +3,7 @@ import { Flex, Box, Text, HStack, Image } from "@chakra-ui/react";
 import { getAssetsURL } from "helpers/helperFunction";
 import { useConfig } from "hooks/useConfig";
 import RadioButton from "components/styled-components/RadioButton";
+import { SingleFileIcon, MultiFileIcon } from "components/icons";
 
 const UploadTypeCard: React.FC<{
   setUploadType: React.Dispatch<React.SetStateAction<"single" | "multiple">>;
@@ -35,7 +36,11 @@ const UploadTypeCard: React.FC<{
       }}
     >
       <HStack w="fit-content" justifyContent="flex-start">
-        <Box w="40px" h="40px" borderRadius="5px" bgColor="gray.300" />
+        {uploadMethod === "single" ? (
+          <SingleFileIcon active={uploadMethod === uploadType} />
+        ) : (
+          <MultiFileIcon active={uploadMethod === uploadType} />
+        )}
         <Text>
           {uploadMethod === "single" ? "Single Upload" : "Multi-File Upload"}
         </Text>

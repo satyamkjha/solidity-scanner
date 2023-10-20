@@ -17,6 +17,7 @@ import { getAssetsURL } from "helpers/helperFunction";
 import { Profile } from "common/types";
 import { AddProjectFormInfographics } from "./AddProjectFormInfographics";
 import { infographicsData } from "common/values";
+import FilescanForm from "./FilescanForm";
 
 const AddProjectForm: React.FC<{
   onClose(): any;
@@ -81,7 +82,7 @@ const AddProjectForm: React.FC<{
               />
             )}
             {formType === "filescan" && (
-              <UploadForm
+              <FilescanForm
                 page={step}
                 setPage={setStep}
                 profileData={profileData}

@@ -194,9 +194,8 @@ const ApplicationForm: React.FC<{
               sx={{
                 fontSize: "2xl",
                 fontWeight: 600,
-                textAlign:
-                  formType === "github" && step !== 0 ? "left" : "center",
-                w: formType === "github" && step !== 0 ? "60%" : "100%",
+                textAlign: "left",
+                w: "60%",
               }}
             >
               {step === 0
@@ -384,7 +383,7 @@ const ApplicationForm: React.FC<{
               if (runValidation()) {
                 getBranches();
               }
-            } else if (step === 2 && formType === "github") {
+            } else if (step === 2) {
               setStep(3);
             } else {
               runScan();

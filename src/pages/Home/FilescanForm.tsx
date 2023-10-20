@@ -24,6 +24,7 @@ import Loader from "components/styled-components/Loader";
 import { Profile } from "common/types";
 import { useUserRole } from "hooks/useUserRole";
 import UploadTypeCard from "./UploadTypeCard";
+import UploadForm from "./UploadForm";
 
 const FilescanForm: React.FC<{
   profileData: Profile;
@@ -46,7 +47,7 @@ const FilescanForm: React.FC<{
           borderRadius={20}
           opacity={isViewer ? 0.5 : 1}
         >
-          <VStack h="230px">
+          <VStack h="200px">
             <Text
               w="100%"
               sx={{
@@ -95,7 +96,7 @@ const FilescanForm: React.FC<{
             justifyContent={"space-between"}
             alignItems="flex-start"
             width={"100%"}
-            h="calc(100% - 240px)"
+            h="calc(100% - 200px)"
           >
             {page === 1 ? (
               <VStack alignItems={"flex-start"} width="100%" spacing={5}>
@@ -111,7 +112,7 @@ const FilescanForm: React.FC<{
                 />
               </VStack>
             ) : (
-              <></>
+              <UploadForm profileData={profileData} uploadType={uploadType} />
             )}
 
             {page !== 2 && (
