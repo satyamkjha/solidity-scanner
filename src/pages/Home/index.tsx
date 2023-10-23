@@ -229,204 +229,208 @@ const Home: React.FC = () => {
         flexDir: isDesktopView ? "row" : "column",
       }}
     >
-      <Flex
-        sx={{
-          w: ["100%", "100%", "100%", "70%"],
-          h: "fit-content",
-          flexDir: "column",
-          alignItems: "center",
-          borderRadius: "20px",
-          p: 4,
-          mx: [0, 0, 2],
-        }}
-      >
-        {profileData && <AddProjectBox profileData={profileData} />}
-        {data && (
+      {data && profileData ? (
+        <>
           <Flex
-            width="100%"
-            h={["fit-content", "fit-content", "150px"]}
-            my={4}
-            flexDir={["column", "column", "row"]}
-            justifyContent={["flex-start", "flex-start", "space-between"]}
-            alignItems={"center"}
+            sx={{
+              w: ["100%", "100%", "100%", "70%"],
+              h: "fit-content",
+              flexDir: "column",
+              alignItems: "center",
+              borderRadius: "20px",
+              p: 4,
+              mx: [0, 0, 2],
+            }}
           >
-            <HStack
-              h="100%"
-              w={["100%", "100%", "45%"]}
-              justify="space-between"
-              spacing={0}
+            <AddProjectBox profileData={profileData} />
+            <Flex
+              width="100%"
+              h={["fit-content", "fit-content", "150px"]}
+              my={4}
+              flexDir={["column", "column", "row"]}
+              justifyContent={["flex-start", "flex-start", "space-between"]}
+              alignItems={"center"}
             >
-              <OverviewData
-                heading={data.overview.total_lines_scanner}
-                subHeading={"Lines of code scanned"}
+              <HStack
+                h="100%"
+                w={["100%", "100%", "45%"]}
+                justify="space-between"
+                spacing={0}
+              >
+                <OverviewData
+                  heading={data.overview.total_lines_scanner}
+                  subHeading={"Lines of code scanned"}
+                />
+                <OverviewData
+                  heading={data.overview.total_projects_monitored}
+                  subHeading={"Projects monitored"}
+                />
+              </HStack>
+              <VStack
+                h="100%"
+                w={["100%", "100%", "53%"]}
+                bg="bg.subtle"
+                justify="space-between"
+                borderRadius={10}
+                mt={[4, 4, 0]}
+                py={2}
+                px={4}
+              >
+                <HStack justify="space-between" w="100%" h="fit-content">
+                  <Text
+                    sx={{
+                      fontSize: "sm",
+                      fontWeight: 600,
+                      textAlign: "center",
+                      color: "gray.500",
+                    }}
+                  >
+                    Total Vulnerabilities
+                  </Text>
+                  <Text sx={{ fontSize: "2xl", fontWeight: 700 }}>
+                    {data.overview.issue_count_total}
+                  </Text>
+                </HStack>
+                <VulnerabilityDistribution
+                  view="home"
+                  size={changeVulnDistributionView ? "large" : "small"}
+                  critical={data.overview.issue_count_critical}
+                  high={data.overview.issue_count_high}
+                  medium={data.overview.issue_count_medium}
+                  low={data.overview.issue_count_low}
+                  informational={data.overview.issue_count_informational}
+                  gas={data.overview.issue_count_gas}
+                />
+              </VStack>
+            </Flex>
+            <RecentScansList />
+          </Flex>
+          <Flex
+            sx={{
+              w: ["100%", "100%", "100%", "30%"],
+              flexDir: "column",
+              alignItems: "flex-start",
+            }}
+            justifyContent="flex-start"
+            mr={4}
+            mt={3}
+            px={isDesktopView ? 0 : 5}
+          >
+            {" "}
+            {profileData.current_package !== "custom" && (
+              <PlanCycleInfo
+                planName={profileData.current_package}
+                packageRechargeDate={profileData.package_recharge_date}
+                packageValidity={profileData.package_validity}
+                packageName={profileData.current_package}
+                subscription={profileData.subscription}
               />
-              <OverviewData
-                heading={data.overview.total_projects_monitored}
-                subHeading={"Projects monitored"}
-              />
-            </HStack>
-            <VStack
-              h="100%"
-              w={["100%", "100%", "53%"]}
-              bg="bg.subtle"
-              justify="space-between"
+            )}
+            <Flex
+              justifyContent="flex-start"
+              alignItems="center"
+              p={3}
+              flexDirection="column"
+              bgColor="bg.subtle"
+              w="100%"
               borderRadius={10}
-              mt={4}
-              py={2}
-              px={4}
+              mt={5}
             >
-              <HStack justify="space-between" w="100%" h="fit-content">
+              <HStack
+                px={3}
+                justifyContent="space-between"
+                alignItems="center"
+                w="100%"
+              >
                 <Text
                   sx={{
-                    fontSize: "sm",
+                    fontSize: "md",
                     fontWeight: 600,
                     textAlign: "center",
                     color: "gray.500",
                   }}
                 >
-                  Total Vulnerabilities
+                  Integrations
                 </Text>
-                <Text sx={{ fontSize: "2xl", fontWeight: 700 }}>
-                  {data.overview.issue_count_total}
-                </Text>
+
+                <Button
+                  variant="ghost"
+                  color="accent"
+                  rightIcon={<ArrowForwardIcon />}
+                  onClick={() => history.push("/integrations")}
+                >
+                  View All
+                </Button>
               </HStack>
-              <VulnerabilityDistribution
-                view="home"
-                size={changeVulnDistributionView ? "large" : "small"}
-                critical={data.overview.issue_count_critical}
-                high={data.overview.issue_count_high}
-                medium={data.overview.issue_count_medium}
-                low={data.overview.issue_count_low}
-                informational={data.overview.issue_count_informational}
-                gas={data.overview.issue_count_gas}
-              />
-            </VStack>
+              {profileData &&
+                Object.keys(profileData._integrations).map((item) => (
+                  <HStack
+                    justifyContent="space-between"
+                    alignItems="center"
+                    w="100%"
+                    p={5}
+                    borderRadius={10}
+                    bg="white"
+                    mt={4}
+                  >
+                    <HStack spacing={2}>
+                      <Image
+                        height="40px"
+                        width="40px"
+                        src={`${assetsURL}icons/integrations/${item}.svg`}
+                      />
+                      <Text
+                        sx={{
+                          fontSize: "md",
+                          fontWeight: 600,
+                        }}
+                      >
+                        {capitalize(item)}
+                      </Text>
+                    </HStack>
+                    {!profileData._integrations[item].allowed ? (
+                      <Button
+                        size="xs"
+                        variant="label"
+                        color="#1DAAE2"
+                        bgColor="#E7F8FF"
+                      >
+                        Coming Soon
+                      </Button>
+                    ) : profileData._integrations[item].status ===
+                      "not integrated" ? (
+                      <Button
+                        variant="label"
+                        color="#4E5D78"
+                        onClick={() => history.push("/integrations")}
+                      >
+                        Connect
+                      </Button>
+                    ) : (
+                      <Button
+                        leftIcon={<BiPlug />}
+                        variant="label"
+                        color="#2C991A"
+                        bgColor="#F0FFF5"
+                      >
+                        Connected
+                      </Button>
+                    )}
+                  </HStack>
+                ))}
+            </Flex>
           </Flex>
-        )}
-        <RecentScansList />
-      </Flex>
-      {/* {!data && (
+        </>
+      ) : (
         <Flex
           sx={{
-            w: ["100%", "100%", "40%"],
-            mx: [0, 0, 4],
-            my: 24,
+            w: "100%",
+            h: "100%",
             justifyContent: "center",
+            alignItems: "center",
           }}
         >
           <Loader />
-        </Flex>
-      )} */}
-      {data && profileData && (
-        <Flex
-          sx={{
-            w: ["100%", "100%", "100%", "30%"],
-            flexDir: "column",
-            alignItems: "flex-start",
-          }}
-          justifyContent="flex-start"
-          mr={4}
-          mt={3}
-          px={isDesktopView ? 0 : 5}
-        >
-          {" "}
-          {profileData.current_package !== "custom" && (
-            <PlanCycleInfo
-              planName={profileData.current_package}
-              packageRechargeDate={profileData.package_recharge_date}
-              packageValidity={profileData.package_validity}
-              packageName={profileData.current_package}
-              subscription={profileData.subscription}
-            />
-          )}
-          <Flex
-            justifyContent="flex-start"
-            alignItems="center"
-            p={3}
-            flexDirection="column"
-            bgColor="bg.subtle"
-            w="100%"
-            borderRadius={10}
-            mt={5}
-          >
-            <HStack
-              px={3}
-              justifyContent="space-between"
-              alignItems="center"
-              w="100%"
-            >
-              <Text
-                sx={{
-                  fontSize: "md",
-                  fontWeight: 600,
-                  textAlign: "center",
-                  color: "gray.500",
-                }}
-              >
-                Integrations
-              </Text>
-
-              <Button
-                variant="ghost"
-                color="accent"
-                rightIcon={<ArrowForwardIcon />}
-                onClick={() => history.push("/integrations")}
-              >
-                View All
-              </Button>
-            </HStack>
-            {profileData &&
-              Object.keys(profileData._integrations).map((item) => (
-                <HStack
-                  justifyContent="space-between"
-                  alignItems="center"
-                  w="100%"
-                  p={5}
-                  borderRadius={10}
-                  bg="white"
-                  mt={4}
-                >
-                  <HStack spacing={5}>
-                    <Image
-                      height="48px"
-                      width="48px"
-                      src={`${assetsURL}icons/integrations/${item}.svg`}
-                    />
-                    <Text
-                      sx={{
-                        fontSize: "md",
-                        fontWeight: 600,
-                      }}
-                    >
-                      {capitalize(item)}
-                    </Text>
-                  </HStack>
-                  {!profileData._integrations[item].allowed ? (
-                    <Button variant="label" color="#1DAAE2" bgColor="#E7F8FF">
-                      Coming Soon
-                    </Button>
-                  ) : profileData._integrations[item].status ===
-                    "not integrated" ? (
-                    <Button
-                      variant="label"
-                      color="#4E5D78"
-                      onClick={() => history.push("/integrations")}
-                    >
-                      Connect
-                    </Button>
-                  ) : (
-                    <Button
-                      leftIcon={<BiPlug />}
-                      variant="label"
-                      color="#2C991A"
-                      bgColor="#F0FFF5"
-                    >
-                      Connected
-                    </Button>
-                  )}
-                </HStack>
-              ))}
-          </Flex>
         </Flex>
       )}
     </Flex>

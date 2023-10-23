@@ -24,7 +24,7 @@ export const AddProjectFormInfographics: React.FC<{
     >
       <Image src={imgUrl} height="320px" width="400px" />
       <Text
-        mt={10}
+        mt={5}
         w="100%"
         sx={{
           fontSize: "sm",

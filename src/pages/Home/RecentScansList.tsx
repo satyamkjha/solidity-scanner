@@ -33,7 +33,6 @@ const RecentScansList: React.FC = () => {
 
   return (
     <>
-      {projects?.data.length}
       <Flex
         justifyContent="flex-start"
         alignItems="center"

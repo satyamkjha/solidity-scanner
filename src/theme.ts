@@ -186,7 +186,7 @@ export const theme = extendTheme({
           borderRadius: 20,
           pt: 4,
           pb: 4,
-          px: 8,
+          px: 4,
         }),
       },
     },

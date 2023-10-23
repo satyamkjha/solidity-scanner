@@ -88,6 +88,7 @@ const AddProjectForm: React.FC<{
                 profileData={profileData}
                 uploadType={uploadType}
                 setUploadType={setUploadType}
+                changeView={changeView}
               />
             )}
           </Flex>
