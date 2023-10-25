@@ -250,7 +250,7 @@ const Routes: React.FC = () => {
                       <Projects />
                     </PrivateRoute>
                   )}
-                  <PrivateRoute path="/projects/:projectId/:scanId">
+                  <PrivateRoute path="/projects/:scanId/:projectId">
                     <ProjectPage />
                   </PrivateRoute>
                   {!getFeatureGateConfig().merge_scans_enabled && (

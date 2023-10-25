@@ -150,7 +150,7 @@ const ScanCard: React.FC<{
       w={["90%", "95%", "45%", "320px"]}
       onClick={() => {
         if (multi_file_scan_status === "scan_done") {
-          history.push(`/${scan.scan_type}/${scan_id}/${project_id}`);
+          history.push(`/${scan.scan_type}s/${scan_id}/${project_id}`);
         }
       }}
     >
