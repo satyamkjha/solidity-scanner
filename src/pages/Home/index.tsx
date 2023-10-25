@@ -233,7 +233,7 @@ const Home: React.FC = () => {
         <>
           <Flex
             sx={{
-              w: ["100%", "100%", "100%", "70%"],
+              w: isDesktopView ? "70%" : "100%",
               h: "fit-content",
               flexDir: "column",
               alignItems: "center",
@@ -253,7 +253,7 @@ const Home: React.FC = () => {
             >
               <HStack
                 h="100%"
-                w={["100%", "100%", "45%"]}
+                w={["100%", "100%", "335px"]}
                 justify="space-between"
                 spacing={0}
               >
@@ -268,7 +268,7 @@ const Home: React.FC = () => {
               </HStack>
               <VStack
                 h="100%"
-                w={["100%", "100%", "53%"]}
+                w={["100%", "100%", "calc(100% - 350px)"]}
                 bg="bg.subtle"
                 justify="space-between"
                 borderRadius={10}
@@ -307,7 +307,7 @@ const Home: React.FC = () => {
           </Flex>
           <Flex
             sx={{
-              w: ["100%", "100%", "100%", "30%"],
+              w: isDesktopView ? "30%" : "100%",
               flexDir: "column",
               alignItems: "flex-start",
             }}
@@ -316,7 +316,6 @@ const Home: React.FC = () => {
             mt={3}
             px={isDesktopView ? 0 : 5}
           >
-            {" "}
             {profileData.current_package !== "custom" && (
               <PlanCycleInfo
                 planName={profileData.current_package}
@@ -400,6 +399,7 @@ const Home: React.FC = () => {
                     ) : profileData._integrations[item].status ===
                       "not integrated" ? (
                       <Button
+                        size="xs"
                         variant="label"
                         color="#4E5D78"
                         onClick={() => history.push("/integrations")}
@@ -408,8 +408,9 @@ const Home: React.FC = () => {
                       </Button>
                     ) : (
                       <Button
+                        size="xs"
                         leftIcon={<BiPlug />}
-                        variant="label"
+                        variant="l abel"
                         color="#2C991A"
                         bgColor="#F0FFF5"
                       >

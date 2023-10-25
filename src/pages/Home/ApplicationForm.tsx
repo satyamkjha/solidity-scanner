@@ -395,7 +395,7 @@ const ApplicationForm: React.FC<{
             (connectAlert && !isOauthIntegrated)
           }
         >
-          {step > 2 || step === 2 ? (
+          {step > 2 ? (
             isLoading ? (
               <Loader color={"#3300FF"} />
             ) : (

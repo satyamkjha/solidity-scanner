@@ -19,17 +19,41 @@ import { capitalize, logout } from "common/functions";
 
 import { useAllScans } from "hooks/useAllScans";
 import SolidityScoreProgress from "components/common/SolidityScoreProgress";
+import { ScanObj } from "common/types";
 
 const RecentScansList: React.FC = () => {
   const assetsURL = getAssetsURL();
   const history = useHistory();
 
-  const { data: projects } = useAllScans({
-    pageNo: 1,
-    perPageCount: 4,
-  });
+  const { data: projects } = useAllScans(
+    {
+      pageNo: 1,
+      perPageCount: 15,
+    },
+    "",
+    ""
+  );
 
   const [changeView] = useMediaQuery("(min-width: 650px)");
+
+  const [projectList, setprojectList] = useState<ScanObj[]>([]);
+
+  useEffect(() => {
+    if (projects && projects.data.length > 0) {
+      let count = 0;
+      let tempProjectList: ScanObj[] = [];
+      projects.data.forEach((project) => {
+        if (
+          project.scan_details.multi_file_scan_status === "scan_done" &&
+          count < 4
+        ) {
+          tempProjectList.push(project);
+          count++;
+        }
+      });
+      setprojectList(tempProjectList);
+    }
+  }, [projects]);
 
   return (
     <>
@@ -40,6 +64,7 @@ const RecentScansList: React.FC = () => {
         flexDirection="column"
         bgColor="bg.subtle"
         w="100%"
+        h={changeView ? "500px" : "fit-content"}
         borderRadius={10}
       >
         <HStack
@@ -68,8 +93,15 @@ const RecentScansList: React.FC = () => {
             View All
           </Button>
         </HStack>
-        {projects &&
-          projects.data.map((project) =>
+
+        {projectList.length === 0 ? (
+          <Flex w="100%" h="100%" justifyContent="center" alignItems="center">
+            <Text>
+              You have not made any scans yet. Please initiate a scan by{" "}
+            </Text>
+          </Flex>
+        ) : (
+          projectList.map((project) =>
             changeView ? (
               <HStack
                 justifyContent="space-between"
@@ -130,31 +162,21 @@ const RecentScansList: React.FC = () => {
                     </Text>
                   </VStack>
                 </HStack>
+
                 <Box w="40%">
-                  {project.scan_details.multi_file_scan_status ===
-                  "scan_done" ? (
-                    <VulnerabilityDistribution
-                      {...project.scan_details.multi_file_scan_summary
-                        .issue_severity_distribution}
-                      view="scans"
-                    />
-                  ) : (
-                    <ErrorVulnerabilityDistribution view="scans" />
-                  )}
-                </Box>
-                {project.scan_details.multi_file_scan_status === "scan_done" ? (
-                  <SolidityScoreProgress
-                    score={
-                      project.scan_details.multi_file_scan_summary.score_v2
-                    }
-                    size={"65px"}
-                    thickness={"7px"}
-                    fontSize={"12px"}
-                    padding={1}
+                  <VulnerabilityDistribution
+                    {...project.scan_details.multi_file_scan_summary
+                      .issue_severity_distribution}
+                    view="scans"
                   />
-                ) : (
-                  <Box w="65px" h="65px" />
-                )}
+                </Box>
+                <SolidityScoreProgress
+                  score={project.scan_details.multi_file_scan_summary.score_v2}
+                  size={"65px"}
+                  thickness={"7px"}
+                  fontSize={"12px"}
+                  padding={1}
+                />
               </HStack>
             ) : (
               <VStack
@@ -231,18 +253,15 @@ const RecentScansList: React.FC = () => {
                   </Text>
                 )}
 
-                {project.scan_details.multi_file_scan_status === "scan_done" ? (
-                  <VulnerabilityDistribution
-                    {...project.scan_details.multi_file_scan_summary
-                      .issue_severity_distribution}
-                    view="scans"
-                  />
-                ) : (
-                  <ErrorVulnerabilityDistribution view="scans" />
-                )}
+                <VulnerabilityDistribution
+                  {...project.scan_details.multi_file_scan_summary
+                    .issue_severity_distribution}
+                  view="scans"
+                />
               </VStack>
             )
-          )}
+          )
+        )}
       </Flex>
     </>
   );
