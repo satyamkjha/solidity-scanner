@@ -69,6 +69,7 @@ const ScanCard: React.FC<{
     contractname,
     contract_platform,
     multi_file_scan_status,
+    scan_status,
     multi_file_scan_summary,
     project_id,
   } = scan.scan_details;
@@ -260,8 +261,7 @@ const ScanCard: React.FC<{
             view={"scans"}
           />
         </Flex>
-      ) : multi_file_scan_status === "scanning" ||
-        multi_file_scan_status === "initialised" ? (
+      ) : scan_status === "scanning" || scan_status === "initialised" ? (
         <Box mb={10} p={5} w="100%">
           <Flex
             sx={{
@@ -302,14 +302,14 @@ const ScanCard: React.FC<{
           <HStack mb={2}>
             <WarningIcon color="#FF5630" />
             <Heading sx={{ fontSize: "sm", color: "#FF5630" }}>
-              {multi_file_scan_status.length > 25
-                ? getTrimmedScanMessage(multi_file_scan_status)
-                : snakeToNormal(multi_file_scan_status)}
+              {scan_status.length > 25
+                ? getTrimmedScanMessage(scan_status)
+                : snakeToNormal(scan_status)}
             </Heading>
           </HStack>
           <Text sx={{ fontSize: "xs", color: "#4E5D78" }}>
-            {multi_file_scan_status.length > 25
-              ? multi_file_scan_status
+            {scan_status.length > 25
+              ? scan_status
               : scan.scan_details.scan_message ||
                 "This scan has failed, lost credit will be reimbursed in a few minutes. Please contact support"}
           </Text>
