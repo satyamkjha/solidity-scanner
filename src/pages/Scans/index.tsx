@@ -175,7 +175,10 @@ const Scans: React.FC = () => {
 
   const onSearch = async () => {
     if (searchTerm !== "") {
-      refetch();
+      setPagination({
+        pageNo: 1,
+        perPageCount: isDesktopView ? 20 : 12,
+      });
     }
   };
 
@@ -183,8 +186,10 @@ const Scans: React.FC = () => {
 
   useEffect(() => {
     if (paramType !== "") {
-      refetch();
-      setTimeout(() => setParamType(""), 1000);
+      setPagination({
+        pageNo: 1,
+        perPageCount: isDesktopView ? 20 : 12,
+      });
     }
   }, [paramType]);
 
@@ -262,7 +267,6 @@ const Scans: React.FC = () => {
 
   useEffect(() => {
     refetch();
-
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [pagination]);
 
@@ -294,7 +298,7 @@ const Scans: React.FC = () => {
   }[] = [
     {
       param: "github",
-      label: "Github Application",
+      label: "Github",
     },
     {
       param: "gitlab",
