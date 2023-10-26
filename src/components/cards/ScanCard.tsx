@@ -81,7 +81,11 @@ const ScanCard: React.FC<{
   const [hover, setHover] = useState(false);
 
   const deleteProject = async () => {
-    const { data } = await API.delete(API_PATH.API_DELETE_BLOCK, {
+    const url =
+      scan.scan_type === "project"
+        ? API_PATH.API_DELETE_PROJECT
+        : API_PATH.API_DELETE_BLOCK;
+    const { data } = await API.delete(url, {
       data: {
         project_ids: [project_id],
       },
@@ -162,9 +166,7 @@ const ScanCard: React.FC<{
         justifyContent="space-between"
       >
         <Box ml={4} w="70%">
-          <Text isTruncated>
-            {project_name ||  contract_address}
-          </Text>
+          <Text isTruncated>{project_name || contract_address}</Text>
           <Text sx={{ fontSize: "xs", color: "subtle" }}>
             Last scanned {timeSince(new Date(scan.scan_details._updated))}
           </Text>
