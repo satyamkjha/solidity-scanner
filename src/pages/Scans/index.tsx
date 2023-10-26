@@ -56,13 +56,14 @@ const Scans: React.FC = () => {
   });
   const [hasMore, setHasMore] = useState(true);
 
-  const {
-    data: projects,
-    refetch,
-    isLoading: projectsLoading,
-  } = useAllScans(pagination, searchTerm, paramType);
+  const { data: projects, refetch } = useAllScans(
+    pagination,
+    searchTerm,
+    paramType
+  );
   const [projectList, setProjectList] = useState<ScanObj[]>();
   const [projectsMonitored, setProjectsMonitored] = useState(0);
+  const [isProjectsLoading, setIsProjectsLoading] = useState(false);
   const [projectsInScanning, setProjectsInScanning] = useState<
     {
       scanId: string;
@@ -105,6 +106,7 @@ const Scans: React.FC = () => {
         (project, index, self) =>
           index === self.findIndex((p) => p.scan_id === project.scan_id)
       );
+      setIsProjectsLoading(false);
       setProjectList(uniqueProjectList);
       setPage(projects.page);
     }
@@ -174,17 +176,17 @@ const Scans: React.FC = () => {
   }, [projectList]);
 
   const onSearch = async () => {
-    if (searchTerm !== "") {
-      setPagination({
-        pageNo: 1,
-        perPageCount: isDesktopView ? 20 : 12,
-      });
-    }
+    setIsProjectsLoading(true);
+    setPagination({
+      pageNo: 1,
+      perPageCount: isDesktopView ? 20 : 12,
+    });
   };
 
-  const debouncedSearch = debounce(onSearch, 500);
+  const debouncedSearch = debounce(onSearch, 1000);
 
   useEffect(() => {
+    setIsProjectsLoading(true);
     setPagination({
       pageNo: 1,
       perPageCount: isDesktopView ? 20 : 12,
@@ -345,13 +347,7 @@ const Scans: React.FC = () => {
               <InputLeftElement
                 height="48px"
                 width="45px"
-                children={
-                  projectsLoading ? (
-                    <Loader size={25} />
-                  ) : (
-                    <Search2Icon color={"#A0AEC0"} />
-                  )
-                }
+                children={<Search2Icon color={"#A0AEC0"} />}
               />
               <Input
                 placeholder="Search by Project name/Contract Name"
@@ -442,9 +438,21 @@ const Scans: React.FC = () => {
         )}
       </Flex>
 
-      {!projectList || !profileData ? (
+      {!projectList || !profileData || isProjectsLoading ? (
         <Flex w="100%" h="70vh" alignItems="center" justifyContent="center">
           <Loader />
+        </Flex>
+      ) : projectList.length === 0 &&
+        (searchTerm !== "" || paramType !== "") ? (
+        <Flex
+          w="100%"
+          h="70vh"
+          direction="column"
+          justifyItems="center"
+          alignItems="center"
+          justifyContent="center"
+        >
+          <Text fontSize="sm">No projects found matching your query.</Text>
         </Flex>
       ) : projectList.length === 0 ? (
         <Flex

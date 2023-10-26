@@ -125,11 +125,12 @@ const PlanCycleInfo: React.FC<{
                   src={`${assetsURL}pricing/pro_badge.svg`}
                   ml="auto"
                   mt={-8}
-                  h={"80px"}
+                  width={"50%"}
+                  h={"auto"}
                 />
               )}
             </Flex>
-            <Flex mt={2} align="center">
+            <Flex mt={8} align="center">
               <CircularProgress
                 value={
                   subscription

@@ -61,12 +61,12 @@ const OverviewData: React.FC<{
       w="48%"
       p={2}
       align="center"
-      spacing={0}
+      spacing={1}
     >
       <Text sx={{ fontSize: "2xl", fontWeight: 700 }}>{heading}</Text>
       <Image
-        height="56px"
-        width="52px"
+        height="46px"
+        width="46px"
         src={`${assetsURL}common/${imgName}.svg`}
       />
       <Text
@@ -158,8 +158,8 @@ const AddProjectBox: React.FC<{ profileData: Profile }> = ({ profileData }) => {
             fontSize: "sm",
           }}
         >
-          Lorem ipsum dolor sit amet consectetur. Consequat mauris risus in
-          rhoncus. Et sed condimentum faucibus lacus
+          Start your project's security journey effortlessly by linking to code
+          repositories, contract addresses, or uploading your Solidity files.
         </Text>
       </VStack>
       <Menu>
@@ -254,7 +254,7 @@ const Home: React.FC = () => {
             >
               <HStack
                 h="100%"
-                w={["100%", "100%", "335px"]}
+                w={["100%", "100%", "260px"]}
                 justify="space-between"
                 spacing={0}
               >
@@ -271,7 +271,7 @@ const Home: React.FC = () => {
               </HStack>
               <VStack
                 h="100%"
-                w={["100%", "100%", "calc(100% - 350px)"]}
+                w={["100%", "100%", "calc(100% - 270px)"]}
                 bg="bg.subtle"
                 justify="space-between"
                 borderRadius={10}

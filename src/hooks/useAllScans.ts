@@ -10,6 +10,7 @@ const getScans = async (
   query: string,
   type: string
 ) => {
+  console.log("ashdkjashdkjashgd");
   const { data } = await API.get(
     `${API_PATH.API_GET_ALL_SCANS}?page=${pageNo}&per_page=${perPageCount}&q=${query}&type=${type}`
   );
