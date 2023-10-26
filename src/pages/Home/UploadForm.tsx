@@ -15,7 +15,12 @@ import {
   CloseButton,
 } from "@chakra-ui/react";
 import { AiOutlineProject } from "react-icons/ai";
-import { ProjectIcon, SolidityFileIcon, UploadIcon } from "components/icons";
+import {
+  ProjectIcon,
+  SolidityFileIcon,
+  UploadIcon,
+  ZipFileIcon,
+} from "components/icons";
 import API from "helpers/api";
 import { useDropzone } from "react-dropzone";
 import { API_PATH } from "helpers/routeManager";
@@ -106,7 +111,7 @@ const UploadForm: React.FC<{
     acceptedFiles.forEach((files) => {
       if (!checkFileExt(files.name)) {
         setErrorMsg(
-          "You can only upload solidity files with .sol extension for scanning."
+          `You can only upload solidity files with .${extension} extension for scanning.`
         );
         setError(true);
         flag = false;
@@ -253,7 +258,12 @@ const UploadForm: React.FC<{
             >
               <HStack justify={"space-between"} w="100%">
                 <HStack align={"flex-end"} my={4}>
-                  <SolidityFileIcon size={25} />
+                  {uploadType === "single" ? (
+                    <SolidityFileIcon size={25} />
+                  ) : (
+                    <ZipFileIcon size={25} />
+                  )}
+
                   <Text fontSize={"14px"}>{acceptedFiles[0].name}</Text>
                 </HStack>
                 <CloseButton

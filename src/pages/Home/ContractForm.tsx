@@ -40,7 +40,8 @@ const ContractForm: React.FC<{
   profileData: Profile;
   step: number;
   setStep: React.Dispatch<React.SetStateAction<number>>;
-}> = ({ step, setStep, profileData }) => {
+  changeView: boolean;
+}> = ({ step, setStep, profileData, changeView }) => {
   const [contractAddress, setContractAddress] = useState("");
   const [nodeId, setNodeId] = useState("");
   const [isLoading, setIsLoading] = useState(false);
@@ -146,7 +147,7 @@ const ContractForm: React.FC<{
           sx={{
             fontSize: ["xl", "xl", "2xl"],
             fontWeight: 600,
-            textAlign: "center",
+            textAlign: changeView ? "left" : "center",
             mb: 4,
           }}
         >

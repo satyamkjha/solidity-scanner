@@ -70,7 +70,7 @@ const FilescanForm: React.FC<{
               sx={{
                 fontSize: ["xl", "xl", "2xl"],
                 fontWeight: 600,
-                textAlign: "center",
+                textAlign: changeView ? "left" : "center",
                 mb: 4,
               }}
             >

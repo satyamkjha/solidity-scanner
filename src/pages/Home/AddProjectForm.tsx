@@ -79,6 +79,7 @@ const AddProjectForm: React.FC<{
                 step={step}
                 setStep={setStep}
                 profileData={profileData}
+                changeView={changeView}
               />
             )}
             {formType === "filescan" && (
