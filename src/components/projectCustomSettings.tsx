@@ -229,81 +229,79 @@ const ProjectCustomSettings: React.FC<{
             )}
           </AccordionPanel>
         </AccordionItem>
-        {getProjectType(project_url) === "github" ? (
-          <AccordionItem
-            alignItems="center"
-            justifyContent="flex-start"
-            flexDir={"column"}
-            sx={{
-              cursor: "pointer",
-              w: "100%",
-              bg: "white",
-              my: 4,
-              py: 6,
-              h: "fit-content",
-              px: [5, 5, 7, 10],
-              borderRadius: "10px",
-              transition: "0.3s box-shadow",
-              boxShadow: "0px 4px 20px rgba(0, 0, 0, 0.05)",
-              _hover: {
-                boxShadow: "0px 4px 20px rgba(0, 0, 0, 0.2)",
-              },
-            }}
+        <AccordionItem
+          alignItems="center"
+          justifyContent="flex-start"
+          flexDir={"column"}
+          sx={{
+            cursor: "pointer",
+            w: "100%",
+            bg: "white",
+            my: 4,
+            py: 6,
+            h: "fit-content",
+            px: [5, 5, 7, 10],
+            borderRadius: "10px",
+            transition: "0.3s box-shadow",
+            boxShadow: "0px 4px 20px rgba(0, 0, 0, 0.05)",
+            _hover: {
+              boxShadow: "0px 4px 20px rgba(0, 0, 0, 0.2)",
+            },
+          }}
+        >
+          <AccordionButton
+            w="100%"
+            h="fit-content"
+            p={0}
+            _hover={{ backgroundColor: "white" }}
           >
-            <AccordionButton
-              w="100%"
-              h="fit-content"
-              p={0}
-              _hover={{ backgroundColor: "white" }}
+            <HStack
+              width="100%"
+              justifyContent="space-between"
+              alignItems="center"
             >
-              <HStack
-                width="100%"
-                justifyContent="space-between"
-                alignItems="center"
+              <VStack
+                justifyContent="flex-start"
+                spacing={3}
+                alignItems="flex-start"
+                w={["calc(100% - 60px)", "calc(100% - 60px)", "80%", "70%"]}
               >
-                <VStack
-                  justifyContent="flex-start"
-                  spacing={3}
-                  alignItems="flex-start"
-                  w={["calc(100% - 60px)", "calc(100% - 60px)", "80%", "70%"]}
+                <Text fontWeight={500} fontSize="xl">
+                  Project Settings
+                </Text>
+                <Text
+                  fontWeight={400}
+                  color="gray.400"
+                  textAlign="left"
+                  fontSize="md"
                 >
-                  <Text fontWeight={500} fontSize="xl">
-                    Project Settings
-                  </Text>
-                  <Text
-                    fontWeight={400}
-                    color="gray.400"
-                    textAlign="left"
-                    fontSize="md"
-                  >
-                    Configure your project settings.
-                  </Text>
-                </VStack>
-                <AccordionIcon />
-              </HStack>
-            </AccordionButton>
-            <AccordionPanel
-              flexDir="column"
-              backgroundColor="#FCFCFC"
-              px={[3, 3, 5]}
-              py={3}
-              mt={5}
-              borderRadius={20}
-              border="1px solid #ECECEC"
-              w="100%"
-              height="fit-content"
-            >
-              <ConfigSettings
-                view="detailed_result"
-                githubSync={githubSync}
-                isLoading={isLoading}
-                onToggleFunction={onToggleSwitch}
-                isOauthIntegrated={isGithubIntegrated}
-                formType={getProjectType(project_url)}
-              />
-            </AccordionPanel>
-          </AccordionItem>
-        ) : null}
+                  Configure your project settings.
+                </Text>
+              </VStack>
+              <AccordionIcon />
+            </HStack>
+          </AccordionButton>
+          <AccordionPanel
+            flexDir="column"
+            backgroundColor="#FCFCFC"
+            px={[3, 3, 5]}
+            py={3}
+            mt={5}
+            borderRadius={20}
+            border="1px solid #ECECEC"
+            w="100%"
+            height="fit-content"
+          >
+            <ConfigSettings
+              view="detailed_result"
+              githubSync={githubSync}
+              isLoading={isLoading}
+              onToggleFunction={onToggleSwitch}
+              isOauthIntegrated={isGithubIntegrated}
+              formType={getProjectType(project_url)}
+            />
+          </AccordionPanel>
+        </AccordionItem>
       </Accordion>
     </Flex>
   );

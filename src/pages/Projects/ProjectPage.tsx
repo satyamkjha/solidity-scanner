@@ -844,7 +844,11 @@ const ScanDetails: React.FC<{
                             project_id={scanData.scan_report.project_id}
                             isGithubIntegrated={
                               profile._integrations?.github?.status ===
-                              "successful"
+                                "successful" ||
+                              profile._integrations?.gitlab?.status ===
+                                "successful" ||
+                              profile._integrations?.bitbucket?.status ===
+                                "successful"
                             }
                           />
                         </TabPanel>
