@@ -171,21 +171,18 @@ const CurrentPlan: React.FC<{
           w={["100%", "100%", "100%", "40%"]}
           h="100%"
           mt={[10, 10, 10, 0]}
-          p={2}
           flexDir="column"
           justifyContent={"flex-start"}
           alignItems="flex-start"
         >
-          {packageName !== "custom" && (
-            <PlanCycleInfo
-              planName={plan.name}
-              packageRechargeDate={packageRechargeDate}
-              packageValidity={packageValidity}
-              packageName={packageName}
-              subscription={subscription}
-            />
-          )}
-          <Flex mt={[6, 6, 6, "auto"]} ml={[0, 0, 0, 4]}>
+          <PlanCycleInfo
+            planName={plan.name}
+            packageRechargeDate={packageRechargeDate}
+            packageValidity={packageValidity}
+            packageName={packageName}
+            subscription={subscription}
+          />
+          <Flex mt={[6, 6, 6, 4]} ml={[0, 0, 0, 4]}>
             <Button
               variant="accent-outline"
               borderRadius={"8px"}

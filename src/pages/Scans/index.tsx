@@ -37,7 +37,7 @@ import { useAllScans } from "hooks/useAllScans";
 import BlockCard from "components/cards/BlockCard";
 import ScanCard from "components/cards/ScanCard";
 import { AiOutlineProject } from "react-icons/ai";
-import { Search2Icon } from "@chakra-ui/icons";
+import { Search2Icon, CloseIcon } from "@chakra-ui/icons";
 import { FiFilter } from "react-icons/fi";
 import { RxDoubleArrowDown, RxDoubleArrowUp } from "react-icons/rx";
 import { debounce } from "lodash";
@@ -56,11 +56,11 @@ const Scans: React.FC = () => {
   });
   const [hasMore, setHasMore] = useState(true);
 
-  const { data: projects, refetch } = useAllScans(
-    pagination,
-    searchTerm,
-    paramType
-  );
+  const {
+    data: projects,
+    refetch,
+    isLoading: projectsLoading,
+  } = useAllScans(pagination, searchTerm, paramType);
   const [projectList, setProjectList] = useState<ScanObj[]>();
   const [projectsMonitored, setProjectsMonitored] = useState(0);
   const [projectsInScanning, setProjectsInScanning] = useState<
@@ -185,12 +185,10 @@ const Scans: React.FC = () => {
   const debouncedSearch = debounce(onSearch, 500);
 
   useEffect(() => {
-    if (paramType !== "") {
-      setPagination({
-        pageNo: 1,
-        perPageCount: isDesktopView ? 20 : 12,
-      });
-    }
+    setPagination({
+      pageNo: 1,
+      perPageCount: isDesktopView ? 20 : 12,
+    });
   }, [paramType]);
 
   useEffect(() => {
@@ -291,7 +289,6 @@ const Scans: React.FC = () => {
     setProjectList(newProjectList);
   };
 
-  const { isOpen, onOpen, onClose } = useDisclosure();
   const paramList: {
     param: "gitlab" | "github" | "bitbucket" | "block" | "File Scan" | "";
     label: string;
@@ -347,7 +344,14 @@ const Scans: React.FC = () => {
             <InputGroup alignItems="center">
               <InputLeftElement
                 height="48px"
-                children={<Search2Icon color={"#A0AEC0"} />}
+                width="45px"
+                children={
+                  projectsLoading ? (
+                    <Loader size={25} />
+                  ) : (
+                    <Search2Icon color={"#A0AEC0"} />
+                  )
+                }
               />
               <Input
                 placeholder="Search by Project name/Contract Name"
@@ -375,7 +379,10 @@ const Scans: React.FC = () => {
                         borderRadius={10}
                         bg="bg.subtle"
                       >
-                        <FiFilter color={"#8A94A6"} size={20} />
+                        <FiFilter
+                          color={paramType === "" ? "#8A94A6" : "#3300ff"}
+                          size={20}
+                        />
                         <RxDoubleArrowDown color="#C4C4C4" size={16} />
                         {/* {!isOpen ? (
                           
@@ -386,7 +393,11 @@ const Scans: React.FC = () => {
                     </MenuButton>
                     <MenuList
                       sx={{
-                        boxShadow: "0px 4px 24px rgba(0, 0, 0, 0.2)",
+                        boxShadow: "0px 4px 12px rgba(0, 0, 0, 0.2) !important",
+                        _hover: "0px 4px 24px rgba(0, 0, 0, 0.2) !important",
+                        px: 4,
+                        py: 2,
+                        w: "300px",
                       }}
                     >
                       {paramList.map((item) => (
@@ -397,10 +408,31 @@ const Scans: React.FC = () => {
                             e.stopPropagation();
                             setParamType(item.param);
                           }}
+                          sx={{
+                            py: 4,
+                            borderTop: "1px solid #ececec",
+                          }}
+                          _first={{
+                            borderWidth: 0,
+                          }}
                         >
                           {item.label}
                         </MenuItem>
                       ))}
+                      <HStack w="100%" justifyContent="center">
+                        <Button
+                          leftIcon={<CloseIcon fontSize="10px" />}
+                          fontSize="sm"
+                          size="sm"
+                          mt={1}
+                          mb={2}
+                          variant="ghost"
+                          color="accent"
+                          onClick={() => setParamType("")}
+                        >
+                          Clear Filter
+                        </Button>
+                      </HStack>
                     </MenuList>
                   </Menu>
                 }

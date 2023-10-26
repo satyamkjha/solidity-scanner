@@ -253,7 +253,7 @@ const IntegrationChannel: React.FC<IntegrationChannelProps> = ({
         ) : (
           <Button
             colorScheme="whiteAlpha"
-            color="black"
+            color={title === "JIRA" ? "#1DAAE2" : "black"}
             fontSize="15px"
             py={6}
             onClick={() => {

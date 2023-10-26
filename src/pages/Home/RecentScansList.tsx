@@ -20,15 +20,16 @@ import { capitalize, logout } from "common/functions";
 import { useAllScans } from "hooks/useAllScans";
 import SolidityScoreProgress from "components/common/SolidityScoreProgress";
 import { ScanObj } from "common/types";
+import Loader from "components/styled-components/Loader";
 
 const RecentScansList: React.FC = () => {
   const assetsURL = getAssetsURL();
   const history = useHistory();
 
-  const { data: projects } = useAllScans(
+  const { data: projects, isLoading } = useAllScans(
     {
       pageNo: 1,
-      perPageCount: 15,
+      perPageCount: 10,
     },
     "",
     ""
@@ -64,7 +65,7 @@ const RecentScansList: React.FC = () => {
         flexDirection="column"
         bgColor="bg.subtle"
         w="100%"
-        h={changeView ? "500px" : "fit-content"}
+        h={changeView ? "430px" : "fit-content"}
         borderRadius={10}
       >
         <HStack
@@ -94,7 +95,9 @@ const RecentScansList: React.FC = () => {
           </Button>
         </HStack>
 
-        {projectList.length === 0 ? (
+        {isLoading ? (
+          <Loader />
+        ) : projectList.length === 0 ? (
           <Flex w="100%" h="100%" justifyContent="center" alignItems="center">
             <Text>
               You have not made any scans yet. Please initiate a scan by{" "}
@@ -107,11 +110,17 @@ const RecentScansList: React.FC = () => {
                 justifyContent="space-between"
                 alignItems="center"
                 w="100%"
-                py={2}
+                py={1}
                 px={5}
                 borderRadius={10}
                 bg="white"
-                mt={4}
+                mt={2}
+                cursor={"pointer"}
+                onClick={() =>
+                  history.push(
+                    `/${project.scan_type}s/${project.scan_id}/${project.scan_details.project_id}`
+                  )
+                }
               >
                 <HStack spacing={5} w="calc(55% - 110px)">
                   <Image

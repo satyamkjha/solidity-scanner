@@ -49,7 +49,8 @@ import PlanCycleInfo from "pages/Billing/components/PlanCycleInfo";
 const OverviewData: React.FC<{
   heading: number;
   subHeading: string;
-}> = ({ heading, subHeading }) => {
+  imgName: string;
+}> = ({ heading, subHeading, imgName }) => {
   const assetsURL = getAssetsURL();
 
   return (
@@ -66,7 +67,7 @@ const OverviewData: React.FC<{
       <Image
         height="56px"
         width="52px"
-        src={`${assetsURL}common/search_icon.svg`}
+        src={`${assetsURL}common/${imgName}.svg`}
       />
       <Text
         sx={{
@@ -260,10 +261,12 @@ const Home: React.FC = () => {
                 <OverviewData
                   heading={data.overview.total_lines_scanner}
                   subHeading={"Lines of code scanned"}
+                  imgName={"lines_of_code"}
                 />
                 <OverviewData
                   heading={data.overview.total_projects_monitored}
                   subHeading={"Projects monitored"}
+                  imgName={"monitored_projects"}
                 />
               </HStack>
               <VStack
@@ -316,15 +319,13 @@ const Home: React.FC = () => {
             mt={3}
             px={isDesktopView ? 0 : 5}
           >
-            {profileData.current_package !== "custom" && (
-              <PlanCycleInfo
-                planName={profileData.current_package}
-                packageRechargeDate={profileData.package_recharge_date}
-                packageValidity={profileData.package_validity}
-                packageName={profileData.current_package}
-                subscription={profileData.subscription}
-              />
-            )}
+            <PlanCycleInfo
+              planName={profileData.current_package}
+              packageRechargeDate={profileData.package_recharge_date}
+              packageValidity={profileData.package_validity}
+              packageName={profileData.current_package}
+              subscription={profileData.subscription}
+            />
             <Flex
               justifyContent="flex-start"
               alignItems="center"
@@ -374,8 +375,8 @@ const Home: React.FC = () => {
                   >
                     <HStack spacing={2}>
                       <Image
-                        height="40px"
-                        width="40px"
+                        height="35px"
+                        width="35px"
                         src={`${assetsURL}icons/integrations/${item}.svg`}
                       />
                       <Text
@@ -389,7 +390,8 @@ const Home: React.FC = () => {
                     </HStack>
                     {!profileData._integrations[item].allowed ? (
                       <Button
-                        size="xs"
+                        size="sm"
+                        fontSize="sm"
                         variant="label"
                         color="#1DAAE2"
                         bgColor="#E7F8FF"
@@ -399,7 +401,8 @@ const Home: React.FC = () => {
                     ) : profileData._integrations[item].status ===
                       "not integrated" ? (
                       <Button
-                        size="xs"
+                        size="sm"
+                        fontSize="sm"
                         variant="label"
                         color="#4E5D78"
                         onClick={() => history.push("/integrations")}
@@ -408,7 +411,8 @@ const Home: React.FC = () => {
                       </Button>
                     ) : (
                       <Button
-                        size="xs"
+                        size="sm"
+                        fontSize="sm"
                         leftIcon={<BiPlug />}
                         variant="l abel"
                         color="#2C991A"
