@@ -212,7 +212,11 @@ export const getProjectFileUrl = (
 };
 
 export const getTrimmedScanMessage = (scan_status: string) => {
-  if (scan_status.includes("Download Failed")) return "Download Failed";
+  if (
+    scan_status.includes("Download Failed") ||
+    scan_status.includes("Download_failed")
+  )
+    return "Download Failed";
   else if (scan_status.includes("Scan Failed")) return "Scan Failed";
 
   return "Scan Failed";
