@@ -10,7 +10,6 @@ import {
   InputLeftElement,
   Input,
   InputRightElement,
-  useDisclosure,
   HStack,
   Menu,
   MenuButton,
@@ -32,23 +31,20 @@ import {
   getFeatureGateConfig,
   // getAssetsFromS3,
 } from "helpers/helperFunction";
-import ProjectCard from "components/cards/ProjectCard";
 import { useAllScans } from "hooks/useAllScans";
-import BlockCard from "components/cards/BlockCard";
 import ScanCard from "components/cards/ScanCard";
-import { AiOutlineProject } from "react-icons/ai";
 import { Search2Icon, CloseIcon } from "@chakra-ui/icons";
 import { FiFilter } from "react-icons/fi";
-import { RxDoubleArrowDown, RxDoubleArrowUp } from "react-icons/rx";
+import { RxDoubleArrowDown } from "react-icons/rx";
 import { debounce } from "lodash";
 
 const Scans: React.FC = () => {
   const [isDesktopView] = useMediaQuery("(min-width: 1920px)");
   const role: string = useUserRole();
-  const [searchTerm, setSearchTerm] = useState<string>("");
+  const [searchTerm, setSearchTerm] = useState<string>();
   const [paramType, setParamType] = useState<
     "gitlab" | "github" | "bitbucket" | "block" | "File Scan" | ""
-  >("");
+  >();
   const [page, setPage] = useState<Page>();
   const [pagination, setPagination] = useState<Pagination>({
     pageNo: 1,
@@ -176,30 +172,36 @@ const Scans: React.FC = () => {
   }, [projectList]);
 
   const onSearch = async () => {
-    setIsProjectsLoading(true);
-    setPagination({
-      pageNo: 1,
-      perPageCount: isDesktopView ? 20 : 12,
-    });
+    if (searchTerm !== undefined) {
+      setIsProjectsLoading(true);
+      setPagination({
+        pageNo: 1,
+        perPageCount: isDesktopView ? 20 : 12,
+      });
+    }
   };
 
   const debouncedSearch = debounce(onSearch, 1000);
 
   useEffect(() => {
-    setIsProjectsLoading(true);
-    setPagination({
-      pageNo: 1,
-      perPageCount: isDesktopView ? 20 : 12,
-    });
+    if (paramType !== undefined) {
+      setIsProjectsLoading(true);
+      setPagination({
+        pageNo: 1,
+        perPageCount: isDesktopView ? 20 : 12,
+      });
+    }
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [paramType]);
 
   useEffect(() => {
     debouncedSearch();
 
-    // Cleanup function to cancel any pending debounced search when the component unmounts or when searchTerm changes
     return () => {
       debouncedSearch.cancel();
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [searchTerm]);
 
   const fetchProjectList = async () => {
@@ -334,15 +336,20 @@ const Scans: React.FC = () => {
       <Flex
         sx={{
           alignItems: "center",
-          justifyContent: ["flex-start", "flex-start", "space-between"],
+          justifyContent: "flex-start",
           flexDirection: ["column", "column", "row"],
           my: 4,
         }}
-        w="100%"
+        w={"100%"}
       >
         <Text sx={{ color: "subtle", fontWeight: 600, ml: 4 }}>PROJECTS</Text>
-        {profileData && (
-          <Flex w={["95%", "95%", "500px"]} mt={[5, 5, 0]}>
+        {profileData ? (
+          <Flex
+            w={["95%", "95%", "500px"]}
+            mt={[5, 5, 0]}
+            mr={[0, 0, 4]}
+            ml={"auto"}
+          >
             <InputGroup alignItems="center">
               <InputLeftElement
                 height="48px"
@@ -350,8 +357,9 @@ const Scans: React.FC = () => {
                 children={<Search2Icon color={"#A0AEC0"} />}
               />
               <Input
-                placeholder="Search by Project name/Contract Name"
+                placeholder="Search by Project name/Contract address"
                 size="lg"
+                fontSize="sm"
                 bg="white"
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
@@ -360,7 +368,7 @@ const Scans: React.FC = () => {
                 height="48px"
                 w="80px"
                 children={
-                  <Menu placement={"bottom-end"}>
+                  <Menu placement={"bottom-end"} matchWidth>
                     <MenuButton
                       as={Box}
                       zIndex={10}
@@ -376,7 +384,7 @@ const Scans: React.FC = () => {
                         bg="bg.subtle"
                       >
                         <FiFilter
-                          color={paramType === "" ? "#8A94A6" : "#3300ff"}
+                          color={!paramType ? "#8A94A6" : "#3300ff"}
                           size={20}
                         />
                         <RxDoubleArrowDown color="#C4C4C4" size={16} />
@@ -435,7 +443,7 @@ const Scans: React.FC = () => {
               />
             </InputGroup>
           </Flex>
-        )}
+        ) : null}
       </Flex>
 
       {!projectList || !profileData || isProjectsLoading ? (
@@ -489,6 +497,10 @@ const Scans: React.FC = () => {
               flexWrap: "wrap",
               overflow: "hidden",
               boxSizing: "border-box",
+              justifyContent: "flex-start",
+              padding: "1rem",
+              paddingRight: 0,
+              gap: "2rem",
             }}
             dataLength={projectList.length}
             next={() => fetchMoreProjects()}

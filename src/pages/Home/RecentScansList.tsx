@@ -11,11 +11,9 @@ import {
 } from "@chakra-ui/react";
 import { ArrowForwardIcon } from "@chakra-ui/icons";
 import { getAssetsURL, getProjectType } from "helpers/helperFunction";
-import VulnerabilityDistribution, {
-  ErrorVulnerabilityDistribution,
-} from "components/vulnDistribution";
+import VulnerabilityDistribution from "components/vulnDistribution";
 import { useHistory } from "react-router-dom";
-import { capitalize, logout } from "common/functions";
+import { capitalize } from "common/functions";
 
 import { useAllScans } from "hooks/useAllScans";
 import SolidityScoreProgress from "components/common/SolidityScoreProgress";
@@ -29,10 +27,10 @@ const RecentScansList: React.FC = () => {
   const { data: projects, isLoading } = useAllScans(
     {
       pageNo: 1,
-      perPageCount: 10,
+      perPageCount: 4,
     },
     "",
-    ""
+    "recent_scans"
   );
 
   const [changeView] = useMediaQuery("(min-width: 650px)");
@@ -41,18 +39,7 @@ const RecentScansList: React.FC = () => {
 
   useEffect(() => {
     if (projects && projects.data.length > 0) {
-      let count = 0;
-      let tempProjectList: ScanObj[] = [];
-      projects.data.forEach((project) => {
-        if (
-          project.scan_details.multi_file_scan_status === "scan_done" &&
-          count < 4
-        ) {
-          tempProjectList.push(project);
-          count++;
-        }
-      });
-      setprojectList(tempProjectList);
+      setprojectList(projects.data);
     }
   }, [projects]);
 
