@@ -261,7 +261,7 @@ const ScanCard: React.FC<{
             view={"scans"}
           />
         </Flex>
-      ) : scan_status === "scanning" || scan_status === "initialised" ? (
+      ) : ["scanning", "initialised", "downloaded"].includes(scan_status) ? (
         <Box mb={10} p={5} w="100%">
           <Flex
             sx={{
