@@ -7,6 +7,7 @@ import { SeverityIcon } from "./icons";
 interface VulnerabilityDistributionView {
   view: "home" | "scans";
   size?: "small" | "large";
+  showLabel?: boolean;
 }
 
 type VulnerabilityDistributionProps = IssueSeverityDistribution &
@@ -21,6 +22,7 @@ const VulnerabilityDistribution: React.FC<VulnerabilityDistributionProps> = ({
   gas,
   view,
   size = "large",
+  showLabel = true,
 }) => {
   return (
     <Flex
@@ -41,11 +43,13 @@ const VulnerabilityDistribution: React.FC<VulnerabilityDistributionProps> = ({
         bg={view === "home" ? "white" : "transparent"}
       >
         <Text sx={{ lineHeight: 1.2, fontWeight: 600 }}>{critical}</Text>
-        <Text sx={{ color: "subtle", fontSize: "xs" }}>Crit</Text>
+        {showLabel && (
+          <Text sx={{ color: "subtle", fontSize: "xs" }}>Crit</Text>
+        )}
         <Box
           sx={{
             w: "50%",
-            minW: "24px",
+            maxW: "24px",
             h: "3px",
             bgColor: "critical",
             ml: "1px",
@@ -61,11 +65,13 @@ const VulnerabilityDistribution: React.FC<VulnerabilityDistributionProps> = ({
         bg={view === "home" ? "white" : "transparent"}
       >
         <Text sx={{ lineHeight: 1.2, fontWeight: 600 }}>{high}</Text>
-        <Text sx={{ color: "subtle", fontSize: "xs" }}>High</Text>
+        {showLabel && (
+          <Text sx={{ color: "subtle", fontSize: "xs" }}>High</Text>
+        )}
         <Box
           sx={{
             w: "50%",
-            minW: "24px",
+            maxW: "24px",
             h: "3px",
             bgColor: "high",
             ml: "1px",
@@ -81,11 +87,11 @@ const VulnerabilityDistribution: React.FC<VulnerabilityDistributionProps> = ({
         bg={view === "home" ? "white" : "transparent"}
       >
         <Text sx={{ lineHeight: 1.2, fontWeight: 600 }}>{medium}</Text>
-        <Text sx={{ color: "subtle", fontSize: "xs" }}>Med</Text>
+        {showLabel && <Text sx={{ color: "subtle", fontSize: "xs" }}>Med</Text>}
         <Box
           sx={{
             w: "50%",
-            minW: "24px",
+            maxW: "24px",
             h: "3px",
             bgColor: "medium",
             ml: "1px",
@@ -101,11 +107,11 @@ const VulnerabilityDistribution: React.FC<VulnerabilityDistributionProps> = ({
         bg={view === "home" ? "white" : "transparent"}
       >
         <Text sx={{ lineHeight: 1.2, fontWeight: 600 }}>{low}</Text>
-        <Text sx={{ color: "subtle", fontSize: "xs" }}>Low</Text>
+        {showLabel && <Text sx={{ color: "subtle", fontSize: "xs" }}>Low</Text>}
         <Box
           sx={{
             w: "50%",
-            minW: "24px",
+            maxW: "24px",
             h: "3px",
             bgColor: "low",
             ml: "1px",
@@ -121,11 +127,13 @@ const VulnerabilityDistribution: React.FC<VulnerabilityDistributionProps> = ({
         bg={view === "home" ? "white" : "transparent"}
       >
         <Text sx={{ lineHeight: 1.2, fontWeight: 600 }}>{informational}</Text>
-        <Text sx={{ color: "subtle", fontSize: "xs" }}>Infor</Text>
+        {showLabel && (
+          <Text sx={{ color: "subtle", fontSize: "xs" }}>Info</Text>
+        )}
         <Box
           sx={{
             w: "50%",
-            minW: "24px",
+            maxW: "24px",
             h: "3px",
             bgColor: "gray.400",
             ml: "1px",
@@ -141,11 +149,11 @@ const VulnerabilityDistribution: React.FC<VulnerabilityDistributionProps> = ({
         bg={view === "home" ? "white" : "transparent"}
       >
         <Text sx={{ lineHeight: 1.2, fontWeight: 600 }}>{gas ? gas : 0}</Text>
-        <Text sx={{ color: "subtle", fontSize: "xs" }}>Gas</Text>
+        {showLabel && <Text sx={{ color: "subtle", fontSize: "xs" }}>Gas</Text>}
         <Box
           sx={{
             w: "50%",
-            minW: "24px",
+            maxW: "24px",
             h: "3px",
             bgColor: "gas",
             ml: "1px",
@@ -159,7 +167,7 @@ const VulnerabilityDistribution: React.FC<VulnerabilityDistributionProps> = ({
 
 export const ErrorVulnerabilityDistribution: React.FC<
   VulnerabilityDistributionView
-> = ({ view }) => {
+> = ({ view, showLabel = true }) => {
   return (
     <Flex
       sx={{
@@ -176,11 +184,13 @@ export const ErrorVulnerabilityDistribution: React.FC<
         bg={view === "home" ? "white" : "transparent"}
       >
         <Text sx={{ lineHeight: 1.2, fontWeight: 600 }}>NA</Text>
-        <Text sx={{ color: "subtle", fontSize: "xs" }}>Crit</Text>
+        {showLabel && (
+          <Text sx={{ color: "subtle", fontSize: "xs" }}>Crit</Text>
+        )}
         <Box
           sx={{
             w: "50%",
-            minW: "24px",
+            maxW: "24px",
             h: "3px",
             bgColor: "high",
             ml: "1px",
@@ -196,11 +206,13 @@ export const ErrorVulnerabilityDistribution: React.FC<
         bg={view === "home" ? "white" : "transparent"}
       >
         <Text sx={{ lineHeight: 1.2, fontWeight: 600 }}>NA</Text>
-        <Text sx={{ color: "subtle", fontSize: "xs" }}>High</Text>
+        {showLabel && (
+          <Text sx={{ color: "subtle", fontSize: "xs" }}>High</Text>
+        )}
         <Box
           sx={{
             w: "50%",
-            minW: "24px",
+            maxW: "24px",
             h: "3px",
             bgColor: "high",
             ml: "1px",
@@ -216,11 +228,11 @@ export const ErrorVulnerabilityDistribution: React.FC<
         bg={view === "home" ? "white" : "transparent"}
       >
         <Text sx={{ lineHeight: 1.2, fontWeight: 600 }}>NA</Text>
-        <Text sx={{ color: "subtle", fontSize: "xs" }}>Med</Text>
+        {showLabel && <Text sx={{ color: "subtle", fontSize: "xs" }}>Med</Text>}
         <Box
           sx={{
             w: "50%",
-            minW: "24px",
+            maxW: "24px",
             h: "3px",
             bgColor: "medium",
             ml: "1px",
@@ -240,7 +252,7 @@ export const ErrorVulnerabilityDistribution: React.FC<
         <Box
           sx={{
             w: "50%",
-            minW: "24px",
+            maxW: "24px",
             h: "3px",
             bgColor: "low",
             ml: "1px",
@@ -260,7 +272,7 @@ export const ErrorVulnerabilityDistribution: React.FC<
         <Box
           sx={{
             w: "50%",
-            minW: "24px",
+            maxW: "24px",
             h: "3px",
             bgColor: "gray.400",
             ml: "1px",
@@ -280,7 +292,7 @@ export const ErrorVulnerabilityDistribution: React.FC<
         <Box
           sx={{
             w: "50%",
-            minW: "24px",
+            maxW: "24px",
             h: "3px",
             bgColor: "gas",
             ml: "1px",

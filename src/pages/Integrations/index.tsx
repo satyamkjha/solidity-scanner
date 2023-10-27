@@ -61,21 +61,12 @@ const Integrations: React.FC<{ profileData?: Profile }> = ({ profileData }) => {
         minH: "78vh",
       }}
     >
-      <Flex
-        sx={{
-          w: "100%",
-          alignItems: "center",
-          justifyContent: "space-between",
-          my: 4,
-        }}
-      >
-        <Text sx={{ color: "subtle", fontWeight: 600 }}>INTEGRATIONS</Text>
-      </Flex>
+      <Text sx={{ color: "subtle", fontWeight: 600 }}>INTEGRATIONS</Text>
 
       {!profileData && <Loader width={"100%"} height={"70vh"} />}
 
       {profileData && (
-        <VStack spacing={8} my={16}>
+        <VStack spacing={4} my={4}>
           <IntegrationChannel
             title="GitHub"
             description="Connect you GitHub to directly create issues for vulnerabilities in your repo"

@@ -270,14 +270,14 @@ const QuickScanForm: React.FC<{
   //           console.log("start playing");
   //         }, 5000);
   //         element?.removeEventListener("scroll", () =>
-  //           console.log("removed listner")
+  //          { }
   //         );
   //       }
   //     });
 
   //   return () => {
   //     element?.removeEventListener("scroll", () =>
-  //       console.log("removed listner")
+  //      { }
   //     );
   //   };
   // }, []);

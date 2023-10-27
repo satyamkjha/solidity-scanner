@@ -78,7 +78,7 @@ const RecentScansList: React.FC = () => {
             sx={{
               fontSize: "md",
               fontWeight: 600,
-              textAlign: "center",
+              textAlign: "left",
               color: "gray.500",
             }}
           >
@@ -177,6 +177,7 @@ const RecentScansList: React.FC = () => {
                     {...project.scan_details.multi_file_scan_summary
                       .issue_severity_distribution}
                     view="scans"
+                    showLabel={false}
                   />
                 </Box>
                 <SolidityScoreProgress

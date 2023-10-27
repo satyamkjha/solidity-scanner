@@ -58,8 +58,6 @@ const ApplicationForm: React.FC<{
     profileData?._integrations?.bitbucket?.status === "successful";
   const toast = useToast();
 
-  console.log(formType);
-
   const runValidation = () => {
     if (projectName.length === 0) {
       setNameError("Please enter a Project Name of less than 50 characters.");

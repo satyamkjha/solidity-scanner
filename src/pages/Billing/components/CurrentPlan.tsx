@@ -120,7 +120,7 @@ const CurrentPlan: React.FC<{
     >
       <Flex
         w={"100%"}
-        h={"100%"}
+        h={"fit-content"}
         flexDir={["column", "column", "column", "row"]}
         justifyContent={[
           "flex-start",
@@ -154,22 +154,9 @@ const CurrentPlan: React.FC<{
               Upgrade Plan
             </Button>
           )}
-          <Flex
-            mt={packageName === "pro" ? 24 : 16}
-            flexWrap="wrap"
-            alignItems="center"
-            w={"100%"}
-            flexDir={"row"}
-          >
-            <SubscriptionDataContainer
-              packageName={packageName}
-              packageRechargeDate={packageRechargeDate}
-            />
-          </Flex>
         </Flex>
         <Flex
-          w={["100%", "100%", "100%", "40%"]}
-          h="100%"
+          w={"fit-content"}
           mt={[10, 10, 10, 0]}
           flexDir="column"
           justifyContent={"flex-start"}
@@ -182,35 +169,63 @@ const CurrentPlan: React.FC<{
             packageName={packageName}
             subscription={subscription}
           />
-          <Flex mt={[6, 6, 6, 4]} ml={[0, 0, 0, 4]}>
-            <Button
-              variant="accent-outline"
-              borderRadius={"8px"}
-              background="white"
-              color={"blue"}
-              fontSize="sm"
-              fontWeight="400"
-              px={8}
-              onClick={() => {
-                setOpen(!open);
-              }}
-            >
-              Plan Details
-            </Button>
+        </Flex>
+      </Flex>
+      <Flex
+        mt={10}
+        w={"100%"}
+        h={"fit-content"}
+        flexDir={["column", "column", "column", "row"]}
+        justifyContent={[
+          "flex-start",
+          "flex-start",
+          "flex-start",
+          "space-between",
+        ]}
+        alignItems={["flex-start", "flex-start", "flex-start", "center"]}
+      >
+        <SubscriptionDataContainer
+          packageName={packageName}
+          packageRechargeDate={packageRechargeDate}
+        />
+        <Flex
+          w={["100%", "100$", "100%", "fit-content"]}
+          flexDir={["column", "row"]}
+          justifyContent={"flex-start"}
+          mt={[6, 6, 6, 4]}
+          ml={[0, 0, 0, 4]}
+        >
+          <Button
+            variant="accent-outline"
+            borderRadius={"8px"}
+            background="white"
+            color={"blue"}
+            fontSize="sm"
+            fontWeight="400"
+            px={8}
+            onClick={() => {
+              setOpen(!open);
+            }}
+          >
+            Plan Details
+          </Button>
+          {isCancellable && (
             <Button
               onClick={() => setIsCancelSub(!isCancelSub)}
-              variant={isCancellable ? "accent-outline" : "gray-outline"}
+              variant={"gray-outline"}
               borderRadius={"8px"}
               fontSize="sm"
               fontWeight="400"
-              ml={10}
+              ml={[0, 10]}
+              mt={[5, 0]}
               isDisabled={!isCancellable}
             >
               Cancel Subscription
             </Button>
-          </Flex>
+          )}
         </Flex>
       </Flex>
+
       <PlanDetailsModal
         subscription={subscription ? true : false}
         currentPackage={packageName}

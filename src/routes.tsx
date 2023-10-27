@@ -84,17 +84,9 @@ const Profile = lazy(
 
 const Scans = lazy(() => import("pages/Scans" /* webpackChunkName: "Scans" */));
 
-const Projects = lazy(
-  () => import("pages/Projects" /* webpackChunkName: "Projects" */)
-);
-
 const ProjectPage = lazy(
   () =>
     import("pages/Projects/ProjectPage" /* webpackChunkName: "ProjectPage" */)
-);
-
-const Blocks = lazy(
-  () => import("pages/Blocks" /* webpackChunkName: "Blocks" */)
 );
 
 const BlockPage = lazy(
@@ -240,24 +232,14 @@ const Routes: React.FC = () => {
                   <PrivateRoute exact path="/profile">
                     <Profile />
                   </PrivateRoute>
-                  {getFeatureGateConfig().merge_scans_enabled && (
-                    <PrivateRoute exact path="/projects">
-                      <Scans />
-                    </PrivateRoute>
-                  )}
-                  {!getFeatureGateConfig().merge_scans_enabled && (
-                    <PrivateRoute exact path="/projects">
-                      <Projects />
-                    </PrivateRoute>
-                  )}
+                  <PrivateRoute exact path="/projects">
+                    <Scans />
+                  </PrivateRoute>
+
                   <PrivateRoute path="/projects/:scanId/:projectId">
                     <ProjectPage />
                   </PrivateRoute>
-                  {!getFeatureGateConfig().merge_scans_enabled && (
-                    <PrivateRoute exact path="/blocks">
-                      <Blocks />
-                    </PrivateRoute>
-                  )}
+
                   <PrivateRoute exact path="/blocks/:scanId/:projectId">
                     <BlockPage />
                   </PrivateRoute>

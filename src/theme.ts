@@ -141,14 +141,28 @@ export const theme = extendTheme({
           background: "#FFFFFF",
           color: "blue",
           fontSize: "14px",
-          borderColor: "#C1B1FF",
-          boxShadow: "0px 4px 23px 0px rgba(128, 108, 207, 0.19)",
+          borderColor: "#3E15F4",
           py: 4,
           _hover: {
             background: "#f7f5ff",
           },
           _active: {
             background: "#efebff",
+          },
+        }),
+        "gray-outline": (props: StyleFunctionProps) => ({
+          ...defaultTheme.components.Button.variants.outline(props),
+          background: "#FFFFFF",
+          color: "rgba(0, 0, 0, 0.60)",
+          fontSize: "14px",
+          borderColor: "rgba(0, 0, 0, 0.60)",
+          boxShadow: "0px 4px 23px 0px rgba(128, 108, 207, 0.19)",
+          py: 4,
+          _hover: {
+            background: "rgba(0, 0, 0, 0.05)",
+          },
+          _active: {
+            background: "rgba(0, 0, 0, 0.05)",
           },
         }),
         "white-ghost": (props: StyleFunctionProps) => ({

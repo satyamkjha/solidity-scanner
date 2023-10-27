@@ -26,26 +26,26 @@ import InfiniteScroll from "react-infinite-scroll-component";
 import { API_PATH } from "helpers/routeManager";
 import Loader from "components/styled-components/Loader";
 import { useUserRole } from "hooks/useUserRole";
-import { onSnapshot, doc, Unsubscribe } from "firebase/firestore";
+import { onSnapshot, doc, Unsubscribe, query } from "firebase/firestore";
 import { db } from "helpers/firebase";
 import {
   getFeatureGateConfig,
   // getAssetsFromS3,
 } from "helpers/helperFunction";
-import ProjectCard from "components/cards/ProjectCard";
 import { useAllScans } from "hooks/useAllScans";
-import BlockCard from "components/cards/BlockCard";
 import ScanCard from "components/cards/ScanCard";
-import { AiOutlineProject } from "react-icons/ai";
 import { Search2Icon, CloseIcon } from "@chakra-ui/icons";
 import { FiFilter } from "react-icons/fi";
 import { RxDoubleArrowDown, RxDoubleArrowUp } from "react-icons/rx";
 import { debounce } from "lodash";
+import RadioButton from "components/styled-components/RadioButton";
 
 const Scans: React.FC = () => {
   const [isDesktopView] = useMediaQuery("(min-width: 1920px)");
   const role: string = useUserRole();
+  const [componentMount, setComponentMount] = useState(true);
   const [searchTerm, setSearchTerm] = useState<string>("");
+  const [noProjects, setNoProjects] = useState(false);
   const [paramType, setParamType] = useState<
     "gitlab" | "github" | "bitbucket" | "block" | "File Scan" | ""
   >("");
@@ -106,6 +106,9 @@ const Scans: React.FC = () => {
         (project, index, self) =>
           index === self.findIndex((p) => p.scan_id === project.scan_id)
       );
+      if (searchTerm === "" && paramType === "" && projects.data.length === 0) {
+        setNoProjects(true);
+      }
       setIsProjectsLoading(false);
       setProjectList(uniqueProjectList);
       setPage(projects.page);
@@ -183,10 +186,14 @@ const Scans: React.FC = () => {
     });
   };
 
-  const debouncedSearch = debounce(onSearch, 1000);
+  const debouncedSearch = debounce(onSearch, 500);
 
   useEffect(() => {
-    setIsProjectsLoading(true);
+    if (!componentMount) {
+      setIsProjectsLoading(true);
+    } else {
+      setComponentMount(false);
+    }
     setPagination({
       pageNo: 1,
       perPageCount: isDesktopView ? 20 : 12,
@@ -333,10 +340,10 @@ const Scans: React.FC = () => {
     >
       <Flex
         sx={{
-          alignItems: "center",
+          alignItems: ["center", "center", "flex-start"],
           justifyContent: ["flex-start", "flex-start", "space-between"],
           flexDirection: ["column", "column", "row"],
-          my: 4,
+          mb: 4,
         }}
         w="100%"
       >
@@ -363,7 +370,6 @@ const Scans: React.FC = () => {
                   <Menu placement={"bottom-end"}>
                     <MenuButton
                       as={Box}
-                      zIndex={10}
                       onClick={(e) => {
                         e.stopPropagation();
                       }}
@@ -380,20 +386,16 @@ const Scans: React.FC = () => {
                           size={20}
                         />
                         <RxDoubleArrowDown color="#C4C4C4" size={16} />
-                        {/* {!isOpen ? (
-                          
-                        ) : (
-                          <RxDoubleArrowUp color="#C4C4C4" size={20} />
-                        )} */}
                       </HStack>
                     </MenuButton>
                     <MenuList
                       sx={{
                         boxShadow: "0px 4px 12px rgba(0, 0, 0, 0.2) !important",
                         _hover: "0px 4px 24px rgba(0, 0, 0, 0.2) !important",
-                        px: 4,
-                        py: 2,
-                        w: "300px",
+                        px: 6,
+                        py: 4,
+                        w: ["100%", "320px"],
+                        borderRadius: 20,
                       }}
                     >
                       {paramList.map((item) => (
@@ -406,13 +408,12 @@ const Scans: React.FC = () => {
                           }}
                           sx={{
                             py: 4,
-                            borderTop: "1px solid #ececec",
+                            borderBottom: "1px solid #ececec",
                           }}
-                          _first={{
-                            borderWidth: 0,
-                          }}
+                          justifyContent="space-between"
                         >
-                          {item.label}
+                          {item.label}{" "}
+                          <RadioButton isActive={paramType === item.param} />
                         </MenuItem>
                       ))}
                       <HStack w="100%" justifyContent="center">
@@ -420,8 +421,7 @@ const Scans: React.FC = () => {
                           leftIcon={<CloseIcon fontSize="10px" />}
                           fontSize="sm"
                           size="sm"
-                          mt={1}
-                          mb={2}
+                          mt={4}
                           variant="ghost"
                           color="accent"
                           onClick={() => setParamType("")}
@@ -454,7 +454,7 @@ const Scans: React.FC = () => {
         >
           <Text fontSize="sm">No projects found matching your query.</Text>
         </Flex>
-      ) : projectList.length === 0 ? (
+      ) : noProjects ? (
         <Flex
           w="100%"
           h="70vh"

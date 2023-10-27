@@ -279,7 +279,15 @@ const Home: React.FC = () => {
                 py={2}
                 px={4}
               >
-                <HStack justify="space-between" w="100%" h="fit-content">
+                <Flex
+                  flexDirection={changeVulnDistributionView ? "row" : "column"}
+                  justify={
+                    changeVulnDistributionView ? "space-between" : "flex-start"
+                  }
+                  alignItems="center"
+                  w="100%"
+                  h="fit-content"
+                >
                   <Text
                     sx={{
                       fontSize: "sm",
@@ -290,10 +298,13 @@ const Home: React.FC = () => {
                   >
                     Total Vulnerabilities
                   </Text>
-                  <Text sx={{ fontSize: "2xl", fontWeight: 700 }}>
+                  <Text
+                    my={changeVulnDistributionView ? 0 : 2}
+                    sx={{ fontSize: "2xl", fontWeight: 700 }}
+                  >
                     {data.overview.issue_count_total}
                   </Text>
-                </HStack>
+                </Flex>
                 <VulnerabilityDistribution
                   view="home"
                   size={changeVulnDistributionView ? "large" : "small"}
