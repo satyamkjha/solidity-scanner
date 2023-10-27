@@ -150,7 +150,7 @@ const ScanDetails: React.FC<{
   project_branch,
   getRepoTreeReq,
 }) => {
-  const role: string = useUserRole();
+  const { role } = useUserRole();
 
   const assetsURL = getAssetsURL();
   const [isOpen, setIsOpen] = useState(false);

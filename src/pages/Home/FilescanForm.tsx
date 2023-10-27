@@ -44,7 +44,7 @@ const FilescanForm: React.FC<{
   setUploadType,
   changeView,
 }) => {
-  const role: string = useUserRole();
+  const { role } = useUserRole();
   let isViewer = role === "viewer";
   const assetsURL = getAssetsURL();
 

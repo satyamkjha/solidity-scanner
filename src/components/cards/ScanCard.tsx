@@ -6,7 +6,6 @@ import {
   Text,
   Button,
   Progress,
-  Tooltip,
   AlertDialog,
   AlertDialogBody,
   AlertDialogFooter,
@@ -64,7 +63,6 @@ const ScanCard: React.FC<{
   const {
     project_name,
     scan_id,
-    _updated,
     contract_address,
     contractname,
     contract_platform,

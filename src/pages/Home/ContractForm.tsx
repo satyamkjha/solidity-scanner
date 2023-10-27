@@ -122,7 +122,7 @@ const ContractForm: React.FC<{
     );
   };
 
-  const role: string = useUserRole();
+  const { role } = useUserRole();
   let isViewer = role === "viewer";
 
   return (

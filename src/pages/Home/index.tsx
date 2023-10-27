@@ -26,6 +26,7 @@ import { Profile } from "common/types";
 import AddProjectForm from "./AddProjectForm";
 import RecentScansList from "./RecentScansList";
 import PlanCycleInfo from "pages/Billing/components/PlanCycleInfo";
+import { useUserRole } from "hooks/useUserRole";
 
 const OverviewData: React.FC<{
   heading: number;
@@ -195,7 +196,7 @@ const AddProjectBox: React.FC<{ profileData: Profile }> = ({ profileData }) => {
 
 const Home: React.FC = () => {
   const { data } = useOverview();
-  const { data: profileData } = useProfile();
+  const { profileData } = useUserRole();
   const assetsURL = getAssetsURL();
   const history = useHistory();
 

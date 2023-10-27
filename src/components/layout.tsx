@@ -23,7 +23,6 @@ import { BiUser, BiPowerOff } from "react-icons/bi";
 import { getAssetsURL, getFeatureGateConfig } from "helpers/helperFunction";
 import Sidebar from "components/sidebar";
 import { ProfileIconOne } from "components/icons";
-import { useProfile } from "hooks/useProfile";
 import {
   SIDEBAR_WIDTH_EXPANDED,
   SIDEBAR_WIDTH_COLLAPSED,
@@ -37,6 +36,7 @@ import { sentenceCapitalize } from "helpers/helperFunction";
 import { useUserOrgProfile } from "hooks/useUserOrgProfile";
 import { signInWithCustomToken, User, onAuthStateChanged } from "firebase/auth";
 import { auth } from "helpers/firebase";
+import { useUserRole } from "hooks/useUserRole";
 
 const MotionFlex = motion(Flex);
 
@@ -48,7 +48,7 @@ const Layout: React.FC = ({ children }) => {
   const queryClient = useQueryClient();
   const [firebaseToken, setFirebaseToken] = useState<string>();
   const [firebaseUser, setFirebaseUser] = useState<User>();
-  const { data: profileData } = useProfile();
+  const { profileData } = useUserRole();
   const { data: orgProfile } = useUserOrgProfile(
     profileData?.logged_in_via === "org_login"
   );

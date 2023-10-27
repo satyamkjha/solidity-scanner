@@ -25,7 +25,7 @@ import InfiniteScroll from "react-infinite-scroll-component";
 import { API_PATH } from "helpers/routeManager";
 import Loader from "components/styled-components/Loader";
 import { useUserRole } from "hooks/useUserRole";
-import { onSnapshot, doc, Unsubscribe, query } from "firebase/firestore";
+import { onSnapshot, doc, Unsubscribe } from "firebase/firestore";
 import { db } from "helpers/firebase";
 import {
   getFeatureGateConfig,
@@ -41,7 +41,7 @@ import RadioButton from "components/styled-components/RadioButton";
 
 const Scans: React.FC = () => {
   const [isDesktopView] = useMediaQuery("(min-width: 1920px)");
-  const role: string = useUserRole();
+  const { role } = useUserRole();
   const [queryTerm, setQueryTerm] = useState<string>();
   const [searchTerm, setSearchTerm] = useState<string>();
   const [paramType, setParamType] = useState<
@@ -54,11 +54,11 @@ const Scans: React.FC = () => {
   });
   const [hasMore, setHasMore] = useState(true);
 
-  const {
-    data: projects,
-    isLoading: fetchProjectsLoading,
-    refetch,
-  } = useAllScans(pagination, queryTerm, paramType);
+  const { data: projects, refetch } = useAllScans(
+    pagination,
+    queryTerm,
+    paramType
+  );
   const [projectList, setProjectList] = useState<ScanObj[]>();
   const [projectsMonitored, setProjectsMonitored] = useState(0);
   const [isProjectsLoading, setIsProjectsLoading] = useState(false);

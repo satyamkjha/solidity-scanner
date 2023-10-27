@@ -37,7 +37,7 @@ const ApplicationForm: React.FC<{
   setStep: React.Dispatch<React.SetStateAction<number>>;
   formType: string;
 }> = ({ profileData, step, setStep, formType }) => {
-  const role: string = useUserRole();
+  const { role } = useUserRole();
   const assetsURL = getAssetsURL();
   const queryClient = useQueryClient();
   const history = useHistory();
