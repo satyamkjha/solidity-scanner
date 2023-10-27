@@ -212,6 +212,7 @@ const Layout: React.FC = ({ children }) => {
             ],
             height: "calc(100vh)",
             overflowY: "scroll",
+            overflowX: "hidden",
           }}
         >
           {/* <Flex

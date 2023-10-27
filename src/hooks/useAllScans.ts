@@ -7,8 +7,8 @@ import { API_PATH } from "helpers/routeManager";
 const getScans = async (
   pageNo: number,
   perPageCount: number,
-  query: string,
-  type: string
+  query: string | undefined,
+  type: string | undefined
 ) => {
   const { data } = await API.get(
     `${API_PATH.API_GET_ALL_SCANS}?page=${pageNo}&per_page=${perPageCount}&q=${query}&type=${type}`
@@ -18,8 +18,8 @@ const getScans = async (
 
 export const useAllScans = (
   pagination: Pagination,
-  query: string,
-  type: string
+  query: string | undefined,
+  type: string | undefined
 ) => {
   return useQuery<AllScanList>(["all_scans", pagination], () =>
     getScans(pagination.pageNo, pagination.perPageCount, query, type)

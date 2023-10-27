@@ -1,13 +1,7 @@
 import React, { useState, useEffect } from "react";
 import {
   Flex,
-  Box,
   Text,
-  Tabs,
-  TabList,
-  TabPanels,
-  Tab,
-  TabPanel,
   VStack,
   Button,
   useDisclosure,
@@ -17,31 +11,18 @@ import {
   MenuButton,
   MenuList,
   MenuItem,
-  Icon,
-  Modal,
-  ModalOverlay,
-  ModalContent,
-  ModalCloseButton,
-  ModalBody,
   useMediaQuery,
 } from "@chakra-ui/react";
 import { useOverview } from "hooks/useOverview";
-import VulnerabilityProgress from "components/VulnerabilityProgress";
-import ApplicationForm from "./ApplicationForm";
-import ContractForm from "./ContractForm";
-import UploadForm from "./UploadForm";
 import Loader from "components/styled-components/Loader";
 import { useProfile } from "hooks/useProfile";
 import { AddIcon, ArrowForwardIcon } from "@chakra-ui/icons";
-import { getAssetsURL, getProjectType } from "helpers/helperFunction";
+import { getAssetsURL } from "helpers/helperFunction";
 import VulnerabilityDistribution from "components/vulnDistribution";
 import { useHistory } from "react-router-dom";
-import { capitalize, logout } from "common/functions";
-import { BiPlug, BiUser, BiPowerOff } from "react-icons/bi";
-import { ProfileIconOne } from "components/icons";
+import { capitalize } from "common/functions";
+import { BiPlug } from "react-icons/bi";
 import { Profile } from "common/types";
-import { useAllScans } from "hooks/useAllScans";
-import SolidityScoreProgress from "components/common/SolidityScoreProgress";
 import AddProjectForm from "./AddProjectForm";
 import RecentScansList from "./RecentScansList";
 import PlanCycleInfo from "pages/Billing/components/PlanCycleInfo";
@@ -94,6 +75,7 @@ const AddProjectBox: React.FC<{ profileData: Profile }> = ({ profileData }) => {
     if (formType !== "") {
       onOpen();
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [setFormType, formType]);
 
   const menuList = [
