@@ -42,9 +42,8 @@ import RadioButton from "components/styled-components/RadioButton";
 const Scans: React.FC = () => {
   const [isDesktopView] = useMediaQuery("(min-width: 1920px)");
   const role: string = useUserRole();
-  const [componentMount, setComponentMount] = useState(true);
-  const [searchTerm, setSearchTerm] = useState<string>("");
-  const [noProjects, setNoProjects] = useState(false);
+  const [queryTerm, setQueryTerm] = useState<string>();
+  const [searchTerm, setSearchTerm] = useState<string>();
   const [paramType, setParamType] = useState<
     "gitlab" | "github" | "bitbucket" | "block" | "File Scan" | ""
   >();
@@ -55,11 +54,11 @@ const Scans: React.FC = () => {
   });
   const [hasMore, setHasMore] = useState(true);
 
-  const { data: projects, refetch } = useAllScans(
-    pagination,
-    searchTerm,
-    paramType
-  );
+  const {
+    data: projects,
+    isLoading: fetchProjectsLoading,
+    refetch,
+  } = useAllScans(pagination, queryTerm, paramType);
   const [projectList, setProjectList] = useState<ScanObj[]>();
   const [projectsMonitored, setProjectsMonitored] = useState(0);
   const [isProjectsLoading, setIsProjectsLoading] = useState(false);
@@ -105,9 +104,6 @@ const Scans: React.FC = () => {
         (project, index, self) =>
           index === self.findIndex((p) => p.scan_id === project.scan_id)
       );
-      if (searchTerm === "" && paramType === "" && projects.data.length === 0) {
-        setNoProjects(true);
-      }
       setIsProjectsLoading(false);
       setProjectList(uniqueProjectList);
       setPage(projects.page);
@@ -190,15 +186,15 @@ const Scans: React.FC = () => {
   const debouncedSearch = debounce(onSearch, 500);
 
   useEffect(() => {
-    if (!componentMount) {
+    if (paramType !== undefined) {
       setIsProjectsLoading(true);
-    } else {
-      setComponentMount(false);
+      setPagination({
+        pageNo: 1,
+        perPageCount: isDesktopView ? 20 : 12,
+      });
     }
-    setPagination({
-      pageNo: 1,
-      perPageCount: isDesktopView ? 20 : 12,
-    });
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [paramType]);
 
   useEffect(() => {
@@ -274,7 +270,9 @@ const Scans: React.FC = () => {
   }, [projectsIdsInScanning]);
 
   useEffect(() => {
-    refetch();
+    if (searchTerm !== queryTerm) {
+      setQueryTerm(searchTerm);
+    } else refetch();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [pagination]);
 
@@ -341,8 +339,8 @@ const Scans: React.FC = () => {
     >
       <Flex
         sx={{
-          alignItems: ["center", "center", "flex-start"],
-          justifyContent: ["flex-start", "flex-start", "space-between"],
+          alignItems: "center",
+          justifyContent: "flex-start",
           flexDirection: ["column", "column", "row"],
           mb: 4,
         }}
@@ -449,19 +447,7 @@ const Scans: React.FC = () => {
         <Flex w="100%" h="70vh" alignItems="center" justifyContent="center">
           <Loader />
         </Flex>
-      ) : projectList.length === 0 &&
-        (searchTerm !== "" || paramType !== "") ? (
-        <Flex
-          w="100%"
-          h="70vh"
-          direction="column"
-          justifyItems="center"
-          alignItems="center"
-          justifyContent="center"
-        >
-          <Text fontSize="sm">No projects found matching your query.</Text>
-        </Flex>
-      ) : noProjects ? (
+      ) : profileData.projects_remaining === 0 ? (
         <Flex
           w="100%"
           h="70vh"
@@ -479,6 +465,17 @@ const Scans: React.FC = () => {
               Add a New Project
             </Button>
           </Link>
+        </Flex>
+      ) : projectList.length === 0 ? (
+        <Flex
+          w="100%"
+          h="70vh"
+          direction="column"
+          justifyItems="center"
+          alignItems="center"
+          justifyContent="center"
+        >
+          <Text fontSize="sm">No projects found matching your query.</Text>
         </Flex>
       ) : (
         <Flex

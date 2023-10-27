@@ -87,7 +87,8 @@ const RecentScansList: React.FC = () => {
         ) : projectList.length === 0 ? (
           <Flex w="100%" h="100%" justifyContent="center" alignItems="center">
             <Text>
-              You have not made any scans yet. Please initiate a scan by{" "}
+              You have not made any scans yet. Please initiate a scan by
+              clicking on Add Project
             </Text>
           </Flex>
         ) : (

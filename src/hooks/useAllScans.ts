@@ -10,9 +10,11 @@ const getScans = async (
   query: string | undefined,
   type: string | undefined
 ) => {
-  const { data } = await API.get(
-    `${API_PATH.API_GET_ALL_SCANS}?page=${pageNo}&per_page=${perPageCount}&q=${query}&type=${type}`
-  );
+  let url = `${API_PATH.API_GET_ALL_SCANS}?page=${pageNo}&per_page=${perPageCount}`;
+  if (query) url += `&q=${query}`;
+  if (type) url += `&type=${type}`;
+
+  const { data } = await API.get(url);
   return data;
 };
 
@@ -21,7 +23,7 @@ export const useAllScans = (
   query: string | undefined,
   type: string | undefined
 ) => {
-  return useQuery<AllScanList>(["all_scans", pagination], () =>
+  return useQuery<AllScanList>(["all_scans", pagination, query, type], () =>
     getScans(pagination.pageNo, pagination.perPageCount, query, type)
   );
 };
