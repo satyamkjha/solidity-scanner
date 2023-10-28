@@ -1,25 +1,6 @@
-import React, { useEffect, useState, useMemo } from "react";
-import { useHistory } from "react-router-dom";
-import {
-  Flex,
-  Box,
-  Text,
-  Button,
-  InputGroup,
-  InputLeftElement,
-  Input,
-  Icon,
-  HStack,
-  VStack,
-  Progress,
-  CloseButton,
-  Divider,
-} from "@chakra-ui/react";
-import { AiOutlineProject } from "react-icons/ai";
-import { ProjectIcon, SolidityFileIcon, UploadIcon } from "components/icons";
-import API from "helpers/api";
-import { useDropzone } from "react-dropzone";
-import { API_PATH } from "helpers/routeManager";
+import React from "react";
+
+import { Flex, Box, Text, Button, VStack } from "@chakra-ui/react";
 import Loader from "components/styled-components/Loader";
 import { Profile } from "common/types";
 import { useUserRole } from "hooks/useUserRole";
