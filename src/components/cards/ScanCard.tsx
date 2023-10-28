@@ -6,7 +6,6 @@ import {
   Text,
   Button,
   Progress,
-  Tooltip,
   AlertDialog,
   AlertDialogBody,
   AlertDialogFooter,
@@ -64,7 +63,6 @@ const ScanCard: React.FC<{
   const {
     project_name,
     scan_id,
-    _updated,
     contract_address,
     contractname,
     contract_platform,
@@ -261,7 +259,7 @@ const ScanCard: React.FC<{
             view={"scans"}
           />
         </Flex>
-      ) : scan_status === "scanning" || scan_status === "initialised" ? (
+      ) : ["scanning", "initialised", "downloaded"].includes(scan_status) ? (
         <Box mb={10} p={5} w="100%">
           <Flex
             sx={{

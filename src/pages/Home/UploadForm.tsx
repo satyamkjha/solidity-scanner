@@ -35,7 +35,7 @@ const UploadForm: React.FC<{
   uploadType: "single" | "multiple";
 }> = ({ profileData, uploadType }) => {
   const history = useHistory();
-  const role: string = useUserRole();
+  const { role } = useUserRole();
   const [step, setStep] = useState(0);
   const [error, setError] = useState(false);
   const [errorMsg, setErrorMsg] = useState<string | null>(null);

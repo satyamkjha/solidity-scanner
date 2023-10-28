@@ -30,7 +30,6 @@ import {
   SIDEBAR_WIDTH_EXPANDED,
   SIDEBAR_WIDTH_COLLAPSED,
 } from "common/constants";
-import { useProfile } from "hooks/useProfile";
 import ManualAuditForm from "./modals/manualAuditForm";
 import { ArrowBackIcon, ArrowForwardIcon } from "@chakra-ui/icons";
 import { useConfig } from "hooks/useConfig";
@@ -42,13 +41,12 @@ const Sidebar: React.FC<{
   setCollapsed: React.Dispatch<React.SetStateAction<boolean>>;
   setShowSidebar: React.Dispatch<React.SetStateAction<boolean>>;
 }> = ({ isCollapsed, setCollapsed, setShowSidebar }) => {
-  const { data: profileData } = useProfile();
   const { isOpen, onClose, onOpen } = useDisclosure();
   const [transitionDone, setTransitionDone] = useState(true);
   const [isDesktopView] = useMediaQuery("(min-width: 1024px)");
   const config: any = useConfig();
   const assetsURL = getAssetsURL(config);
-  const role: string = useUserRole();
+  const { role, profileData } = useUserRole();
 
   let sidebarData: SidebarItemProps[] = [
     {

@@ -13,7 +13,6 @@ import {
   FormControl,
   FormLabel,
   VStack,
-  Divider,
   useToast,
   Box,
 } from "@chakra-ui/react";
@@ -33,7 +32,6 @@ import { customStylesForReactSelect } from "common/stylesForCustomSelect";
 import Loader from "components/styled-components/Loader";
 import { useUserRole } from "hooks/useUserRole";
 import { contractChain, platforms, infographicsData } from "common/values";
-import { useConfig } from "hooks/useConfig";
 import { AddProjectFormInfographics } from "./AddProjectFormInfographics";
 
 const ContractForm: React.FC<{
@@ -122,7 +120,7 @@ const ContractForm: React.FC<{
     );
   };
 
-  const role: string = useUserRole();
+  const { role } = useUserRole();
   let isViewer = role === "viewer";
 
   return (
