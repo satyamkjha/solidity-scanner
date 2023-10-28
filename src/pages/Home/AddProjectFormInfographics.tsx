@@ -38,20 +38,6 @@ export const AddProjectFormInfographics: React.FC<{
         {instructions.map((item) => (
           <ListItem>{item}</ListItem>
         ))}
-        <ListItem>
-          For further instrcutions on how to start a scan please watch our
-          tutorials available on{" "}
-          <Box
-            as="span"
-            color="accent"
-            onClick={() =>
-              window.open("https://docs.solidityscan.com/", "_blank")
-            }
-          >
-            {" "}
-            docs.solidityscan.com
-          </Box>
-        </ListItem>
       </UnorderedList>
     </Flex>
   );

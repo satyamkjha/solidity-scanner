@@ -381,7 +381,7 @@ const Home: React.FC = () => {
                         {capitalize(item)}
                       </Text>
                     </HStack>
-                    {!profileData._integrations[item].allowed ? (
+                    {item === "jira" ? (
                       <Button
                         size="sm"
                         fontSize="sm"
@@ -392,17 +392,7 @@ const Home: React.FC = () => {
                         Coming Soon
                       </Button>
                     ) : profileData._integrations[item].status ===
-                      "not integrated" ? (
-                      <Button
-                        size="sm"
-                        fontSize="sm"
-                        variant="label"
-                        color="#4E5D78"
-                        onClick={() => history.push("/integrations")}
-                      >
-                        Connect
-                      </Button>
-                    ) : (
+                      "successful" ? (
                       <Button
                         size="sm"
                         fontSize="sm"
@@ -412,6 +402,16 @@ const Home: React.FC = () => {
                         bgColor="#F0FFF5"
                       >
                         Connected
+                      </Button>
+                    ) : (
+                      <Button
+                        size="sm"
+                        fontSize="sm"
+                        variant="label"
+                        color="#4E5D78"
+                        onClick={() => history.push("/integrations")}
+                      >
+                        Connect
                       </Button>
                     )}
                   </HStack>

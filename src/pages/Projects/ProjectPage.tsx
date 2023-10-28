@@ -506,7 +506,7 @@ const ScanDetails: React.FC<{
                     (scanData.scan_report.report_regeneration_enabled &&
                     publishStatus !== "Not-Generated" ? (
                       <Button
-                        variant={"accent-outline"}
+                        variant={"black-outline"}
                         w={["80%", "80%", "50%", "200px"]}
                         mx={["auto", "auto", "auto", 4]}
                         mb={[4, 4, 4, 0]}

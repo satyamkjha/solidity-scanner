@@ -170,8 +170,8 @@ const ContractForm: React.FC<{
                 mb: 4,
               }}
             >
-              See link examples and additional restrictions in the User Guide
-              available on{" "}
+              For further instructions on how to start a scan please watch our
+              tutorials available on{" "}
               <Box
                 as="span"
                 color="accent"

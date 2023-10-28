@@ -9,7 +9,7 @@ import {
   Image,
   useMediaQuery,
 } from "@chakra-ui/react";
-import { ArrowForwardIcon } from "@chakra-ui/icons";
+import { ArrowForwardIcon, AddIcon } from "@chakra-ui/icons";
 import { getAssetsURL, getProjectType } from "helpers/helperFunction";
 import VulnerabilityDistribution from "components/vulnDistribution";
 import { useHistory } from "react-router-dom";
@@ -85,7 +85,19 @@ const RecentScansList: React.FC = () => {
         {isLoading ? (
           <Loader />
         ) : projectList.length === 0 ? (
-          <Flex w="100%" h="100%" justifyContent="center" alignItems="center">
+          <Flex
+            w="100%"
+            h="100%"
+            flexDir="column"
+            justifyContent="center"
+            alignItems="center"
+          >
+            <Image
+              src={`${assetsURL}common/add_project_icon.svg`}
+              height="80px"
+              width="95px"
+              mb={5}
+            />
             <Text>
               You have not made any scans yet. Please initiate a scan by
               clicking on Add Project

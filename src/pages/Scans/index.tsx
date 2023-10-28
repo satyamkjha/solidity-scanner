@@ -339,7 +339,7 @@ const Scans: React.FC = () => {
     >
       <Flex
         sx={{
-          alignItems: "center",
+          alignItems: ["center", "center", "flex-start"],
           justifyContent: "flex-start",
           flexDirection: ["column", "column", "row"],
           mb: 4,

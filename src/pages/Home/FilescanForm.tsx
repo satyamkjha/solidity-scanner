@@ -98,8 +98,8 @@ const FilescanForm: React.FC<{
                     mb: 2,
                   }}
                 >
-                  See tutorials and additional restrictions in the User Guide
-                  available on{" "}
+                  For further instructions on how to start a scan please watch
+                  our tutorials available on{" "}
                   <Box
                     as="span"
                     color="accent"

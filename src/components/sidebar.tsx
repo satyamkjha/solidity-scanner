@@ -11,6 +11,7 @@ import {
   useDisclosure,
   VStack,
   useMediaQuery,
+  Image,
 } from "@chakra-ui/react";
 import {
   LogoIcon,
@@ -131,6 +132,8 @@ const Sidebar: React.FC<{
     sidebarData = updatedSidebarData;
   }
 
+  const footerIconList = ["discord", "telegram", "twitter"];
+
   return (
     <Flex
       sx={{
@@ -236,19 +239,6 @@ const Sidebar: React.FC<{
           pb={["3", "3", "3", "3", "4"]}
         >
           <Box sx={{ width: "85%" }}>
-            {/* <Text
-            sx={{
-              color: "subtle",
-              ml: 3,
-              mb: 4,
-              fontSize: "xs",
-              opacity: isCollapsed ? 0 : 1,
-              transition: "opacity 0.3s ease",
-            }}
-          >
-            PAGES
-          </Text> */}
-
             {sidebarData.map((sidebarItem) => {
               if (!sidebarItem.accessRevoked.includes(role)) {
                 return <SidebarItem {...sidebarItem} />;
@@ -260,8 +250,10 @@ const Sidebar: React.FC<{
       )}
       <Flex
         width="100%"
-        height={["185px", "185px", "185px", "205px"]}
+        height={"fit-content"}
         justifyContent="center"
+        flexDir="column"
+        alignItems="center"
         p={5}
         visibility={isCollapsed ? "hidden" : "visible"}
       >
@@ -280,6 +272,11 @@ const Sidebar: React.FC<{
             <Text fontSize="xs"> Request manual audit</Text>
           </Button>
         </Box>
+        <HStack justifyContent="space-between" mt={3} w="70%" spacing={5}>
+          {footerIconList.map((item) => (
+            <FooterIcon iconUrl={item} />
+          ))}
+        </HStack>
       </Flex>
       <ManualAuditForm isOpen={isOpen} onClose={onClose} />
     </Flex>
@@ -340,6 +337,24 @@ export const SidebarItem: React.FC<SidebarItemProps> = ({
         )}
       </Flex>
     </>
+  );
+};
+
+const FooterIcon: React.FC<{
+  iconUrl: string;
+}> = ({ iconUrl }) => {
+  const [hover, setHover] = useState(false);
+  const assetsURL = getAssetsURL();
+  return (
+    <Image
+      onMouseOver={() => setHover(true)}
+      onMouseLeave={() => setHover(false)}
+      src={`${assetsURL}icons/footer_social/${iconUrl}${
+        hover ? "-blue" : ""
+      }.svg`}
+      height="40px"
+      width="40px"
+    ></Image>
   );
 };
 

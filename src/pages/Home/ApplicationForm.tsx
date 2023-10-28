@@ -280,8 +280,8 @@ const ApplicationForm: React.FC<{
                 mb: 2,
               }}
             >
-              See link examples and additional restrictions in the User Guide
-              available on{" "}
+              For further instructions on how to start a scan please watch our
+              tutorials available on{" "}
               <Box
                 as="span"
                 color="accent"
@@ -315,6 +315,7 @@ const ApplicationForm: React.FC<{
               setGithubLink={setGithubLink}
               setVisibility={setVisibility}
               isViewer={isViewer}
+              formType={formType}
               connectAlert={connectAlert}
               setConnectAlert={setConnectAlert}
             />

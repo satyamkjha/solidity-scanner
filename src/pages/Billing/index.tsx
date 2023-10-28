@@ -121,11 +121,11 @@ const Billing: React.FC<{ profileData?: Profile }> = ({ profileData }) => {
           flexDir: "column",
           alignItems: "flex-start",
           justifyContent: "flex-start",
-          my: 4,
+          mb: 4,
         }}
       >
         <Text mx={[2, 2, 2, 8]} sx={{ color: "subtle", fontWeight: 600 }}>
-          Billing & Transaction history
+          BILLING & TRANSACTION HISTORY
         </Text>
         {!profileData ||
         !plans ||

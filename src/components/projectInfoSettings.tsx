@@ -20,6 +20,7 @@ const InfoSettings: React.FC<{
   projectName: string;
   githubLink: string;
   isViewer: boolean;
+  formType: string;
   connectAlert: boolean;
   isOauthIntegrated: boolean;
   setProjectName: React.Dispatch<React.SetStateAction<string>>;
@@ -39,7 +40,14 @@ const InfoSettings: React.FC<{
   isViewer,
   connectAlert,
   setConnectAlert,
+  formType,
 }) => {
+  const placeholder: { [key: string]: string } = {
+    github: "github.com",
+    gitlab: "gitlab.com",
+    bitbucket: "bitbucket.org",
+  };
+
   return (
     <Stack
       minHeight="400px"
@@ -83,7 +91,7 @@ const InfoSettings: React.FC<{
             isRequired
             type="url"
             disabled={isViewer}
-            placeholder="https://github.com/yourproject/project.git"
+            placeholder={`https://${placeholder[formType]}/yourproject/project.git`}
             variant={linkError ? "error" : "brand"}
             size="lg"
             value={githubLink}

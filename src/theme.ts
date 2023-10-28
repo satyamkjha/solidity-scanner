@@ -165,6 +165,21 @@ export const theme = extendTheme({
             background: "rgba(0, 0, 0, 0.05)",
           },
         }),
+        "black-outline": (props: StyleFunctionProps) => ({
+          ...defaultTheme.components.Button.variants.outline(props),
+          background: "#FFFFFF",
+          color: "#000",
+          fontSize: "14px",
+          borderColor: "#000",
+          boxShadow: "0px 4px 23px 0px rgba(0, 0, 0, 0.19)",
+          py: 4,
+          _hover: {
+            background: "rgba(0, 0, 0, 0.05)",
+          },
+          _active: {
+            background: "rgba(0, 0, 0, 0.05)",
+          },
+        }),
         "white-ghost": (props: StyleFunctionProps) => ({
           ...defaultTheme.components.Button.variants.outline(props),
           // background: "#FFFFFF00",

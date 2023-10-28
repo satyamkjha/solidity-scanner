@@ -231,6 +231,7 @@ const UploadForm: React.FC<{
                   fontSize: "15px",
                   marginBottom: "10px",
                   color: "#D3D3D3",
+                  textAlign: "center",
                 }}
               >
                 You can upload only 1 file with extension ".{extension}" whose
