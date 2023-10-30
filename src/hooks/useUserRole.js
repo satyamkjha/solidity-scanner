@@ -1,8 +1,7 @@
-import { useEffect, useState, createContext, useContext } from "react";
+import { useEffect, useState, useContext } from "react";
 import { useProfile } from "./useProfile";
 import { useUserOrgProfile } from "./useUserOrgProfile";
-
-export const UserRoleContext = createContext("owner");
+import { UserRoleContext } from "common/contexts";
 
 export const useUserRole = () => {
   return useContext(UserRoleContext);
@@ -32,6 +31,8 @@ export const UserRoleProvider = ({ children }) => {
   }
 
   return (
-    <UserRoleContext.Provider value={role}>{children}</UserRoleContext.Provider>
+    <UserRoleContext.Provider value={{ role, profileData }}>
+      {children}
+    </UserRoleContext.Provider>
   );
 };

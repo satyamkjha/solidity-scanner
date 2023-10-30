@@ -1,5 +1,10 @@
 import { createContext, Dispatch, SetStateAction } from "react";
-import { MultiFileScanDetail, FilesState, MultiFileScanSummary } from "./types";
+import {
+  MultiFileScanDetail,
+  FilesState,
+  MultiFileScanSummary,
+  Profile,
+} from "./types";
 
 export const DetailResultContext = createContext<{
   issues: MultiFileScanDetail[] | null;
@@ -8,3 +13,11 @@ export const DetailResultContext = createContext<{
   openIssueIndex?: number[];
   setOpenIssueIndex?: Dispatch<SetStateAction<number[] | undefined>>;
 } | null>(null);
+
+export const UserRoleContext = createContext<{
+  role: string;
+  profileData: Profile | undefined;
+}>({
+  role: "owner",
+  profileData: undefined,
+});

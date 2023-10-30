@@ -10,7 +10,6 @@ export type OptionTypeWithIcon = {
   value: string;
   label: string;
   icon: string;
-  
 };
 
 export type Severity = "high" | "medium" | "low";
@@ -38,6 +37,7 @@ export type Profile = {
     jira: IntegrationData;
     bitbucket: IntegrationData;
     gitlab: IntegrationData;
+    [key: string]: IntegrationData;
   };
   is_cancellable: boolean;
   payment_method: string;
@@ -303,15 +303,14 @@ export type ScanSummaryItem = {
   pending_fix_count: number;
 };
 
-export type IssueSeverityDistribution = {
+export interface IssueSeverityDistribution {
   critical: number;
   high: number;
   medium: number;
   low: number;
   informational: number;
   gas: number;
-  [key: string]: number;
-};
+}
 
 export type ScanDetail = {
   issue_id: string;

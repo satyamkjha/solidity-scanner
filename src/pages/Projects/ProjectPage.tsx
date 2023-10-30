@@ -35,6 +35,7 @@ import {
   PopoverCloseButton,
   PopoverContent,
   PopoverTrigger,
+  useMediaQuery,
 } from "@chakra-ui/react";
 import Overview from "components/overview";
 import MultifileResult from "components/detailedResult/MultifileResult";
@@ -150,8 +151,9 @@ const ScanDetails: React.FC<{
   project_branch,
   getRepoTreeReq,
 }) => {
-  const role: string = useUserRole();
+  const [isDesktopView] = useMediaQuery("(min-width: 1920px)");
 
+  const { role } = useUserRole();
   const assetsURL = getAssetsURL();
   const [isOpen, setIsOpen] = useState(false);
   const [isRescanLoading, setRescanLoading] = useState(false);
@@ -234,6 +236,15 @@ const ScanDetails: React.FC<{
       project_type: "existing",
     });
     setRescanLoading(false);
+    queryClient.invalidateQueries([
+      "all_scans",
+      {
+        pageNo: 1,
+        perPageCount: isDesktopView ? 20 : 12,
+      },
+      undefined,
+      undefined,
+    ]);
     queryClient.invalidateQueries(["scan_list", projectId]);
     onClose();
     history.push(`/projects/`);
@@ -506,7 +517,7 @@ const ScanDetails: React.FC<{
                     (scanData.scan_report.report_regeneration_enabled &&
                     publishStatus !== "Not-Generated" ? (
                       <Button
-                        variant={"accent-outline"}
+                        variant={"black-outline"}
                         w={["80%", "80%", "50%", "200px"]}
                         mx={["auto", "auto", "auto", 4]}
                         mb={[4, 4, 4, 0]}
@@ -582,7 +593,7 @@ const ScanDetails: React.FC<{
                       <Button
                         variant={
                           reportingStatus === "report_generated"
-                            ? "accent-outline"
+                            ? "accent-fill"
                             : "black-outline"
                         }
                         w={["80%", "80%", "50%", "auto"]}
@@ -844,7 +855,11 @@ const ScanDetails: React.FC<{
                             project_id={scanData.scan_report.project_id}
                             isGithubIntegrated={
                               profile._integrations?.github?.status ===
-                              "successful"
+                                "successful" ||
+                              profile._integrations?.gitlab?.status ===
+                                "successful" ||
+                              profile._integrations?.bitbucket?.status ===
+                                "successful"
                             }
                           />
                         </TabPanel>

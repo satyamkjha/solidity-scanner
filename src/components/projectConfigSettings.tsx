@@ -2,19 +2,22 @@ import { VStack, Text, Switch, HStack } from "@chakra-ui/react";
 import React from "react";
 import GithubConnectAlert from "./githubConnectAlert";
 import Loader from "./styled-components/Loader";
+import { OauthName } from "common/values";
 
 const ConfigSettings: React.FC<{
   githubSync: boolean;
   onToggleFunction: () => Promise<void>;
-  isGithubIntegrated: boolean;
+  isOauthIntegrated: boolean;
   isLoading?: boolean;
   view: "github_app" | "detailed_result" | "scan_history";
+  formType: string;
 }> = ({
   githubSync,
   onToggleFunction,
-  isGithubIntegrated,
+  isOauthIntegrated,
   view,
   isLoading,
+  formType,
 }) => {
   const [connectAlert, setConnectAlert] = React.useState(false);
 
@@ -26,12 +29,7 @@ const ConfigSettings: React.FC<{
       justifyContent="flex-start"
       alignItems={"flex-start"}
       minHeight={view === "github_app" ? "400px" : "200px"}
-      height={[
-        "fit-content",
-        "fit-content",
-        "fit-content",
-        view === "github_app" ? "50vh" : "fit-content",
-      ]}
+      height={"fit-content"}
     >
       <Text
         sx={{
@@ -40,7 +38,7 @@ const ConfigSettings: React.FC<{
           textAlign: "left",
         }}
       >
-        Enable GitHub Actions
+        Enable {OauthName[formType]} Actions
       </Text>
       <Text
         sx={{
@@ -49,7 +47,7 @@ const ConfigSettings: React.FC<{
           textAlign: "left",
         }}
       >
-        Trigger automatic scans via Github actions
+        Trigger automatic scans via {OauthName[formType]} actions
       </Text>
       <HStack spacing={5}>
         <Switch
@@ -58,7 +56,7 @@ const ConfigSettings: React.FC<{
           isDisabled={isLoading}
           isChecked={githubSync}
           onChange={() => {
-            if (isGithubIntegrated) {
+            if (isOauthIntegrated) {
               onToggleFunction();
             } else {
               setConnectAlert(!connectAlert);
@@ -67,8 +65,10 @@ const ConfigSettings: React.FC<{
         />
         {isLoading && <Loader size={25} />}
       </HStack>
-      {!isGithubIntegrated && connectAlert && (
-        <GithubConnectAlert msg="You need to connect your GitHub to enable webhooks" />
+      {!isOauthIntegrated && connectAlert && (
+        <GithubConnectAlert
+          msg={`You need to connect your ${OauthName[formType]} to enable webhooks`}
+        />
       )}
       {/* <Text
         sx={{

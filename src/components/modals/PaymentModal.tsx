@@ -139,6 +139,9 @@ const PaymentModal: React.FC<{
       if (quantity) {
         req.quantity = quantity;
       }
+      if (paymentMetadata) {
+        req.payment_metadata = paymentMetadata;
+      }
       const { data } = await API.post<{
         checkout_url: string;
         status: string;

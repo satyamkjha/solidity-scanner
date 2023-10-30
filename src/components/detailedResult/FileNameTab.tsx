@@ -35,12 +35,14 @@ const FileNameTab: React.FC<{
   const copyFileLink = () => {
     navigator.clipboard
       .writeText(
-        type === "project" && project_url && branchName
+        type === "project" && project_url && project_url === "File Scan"
+          ? file.file_path
+          : type === "project" && project_url && branchName
           ? getProjectFileUrl(project_url, branchName, file)
           : contract_platform &&
             codePlatform[contract_platform].platform === "own"
           ? `${contract_url}${codePlatform[contract_platform].dynamicString}`
-          : file.file_path
+          : ""
       )
       .then(
         () => {

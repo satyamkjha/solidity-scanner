@@ -1,5 +1,5 @@
 import React from "react";
-import { Box, Text } from "@chakra-ui/react";
+import { Box, Text, HStack } from "@chakra-ui/react";
 import { formattedDate } from "common/functions";
 
 const SubscriptionDataContainer: React.FC<{
@@ -7,8 +7,8 @@ const SubscriptionDataContainer: React.FC<{
   packageRechargeDate: string;
 }> = ({ packageName, packageRechargeDate }) => {
   return (
-    <>
-      <Box mt={5}>
+    <HStack spacing={20}>
+      <Box>
         <Text fontWeight={400} fontSize="sm" mb={1} color="#4E5D78">
           Subscribed on
         </Text>
@@ -17,7 +17,7 @@ const SubscriptionDataContainer: React.FC<{
         </Text>
       </Box>
       {packageName !== "custom" && (
-        <Box mt={5} ml={10}>
+        <Box>
           <Text fontWeight={400} fontSize="sm" mb={1} color="#4E5D78">
             Recurring Payment
           </Text>
@@ -28,7 +28,7 @@ const SubscriptionDataContainer: React.FC<{
           </Text>
         </Box>
       )}
-    </>
+    </HStack>
   );
 };
 

@@ -10,7 +10,7 @@ import {
   HStack,
   useToast,
   Image,
-  Divider,
+  useMediaQuery,
 } from "@chakra-ui/react";
 import API from "helpers/api";
 import {
@@ -27,17 +27,24 @@ import { getSkipFilePaths, restructureRepoTree } from "helpers/fileStructure";
 import Loader from "components/styled-components/Loader";
 import { Profile } from "common/types";
 import { useUserRole } from "hooks/useUserRole";
+import { AddProjectFormInfographics } from "./AddProjectFormInfographics";
+import { capitalize } from "common/functions";
+import { infographicsData, OauthName } from "common/values";
 
 const ApplicationForm: React.FC<{
   profileData: Profile;
-}> = ({ profileData }) => {
-  const role: string = useUserRole();
+  step: number;
+  setStep: React.Dispatch<React.SetStateAction<number>>;
+  formType: string;
+}> = ({ profileData, step, setStep, formType }) => {
+  const [isDesktopView] = useMediaQuery("(min-width: 1920px)");
+
+  const { role } = useUserRole();
   const assetsURL = getAssetsURL();
   const queryClient = useQueryClient();
   const history = useHistory();
   const [projectName, setProjectName] = useState("");
   const [githubLink, setGithubLink] = useState("");
-  const [projectType, setProjectType] = useState<string | null>(null);
   const [visibility, setVisibility] = useState(false);
   const [githubSync, setGithubSync] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
@@ -47,7 +54,6 @@ const ApplicationForm: React.FC<{
   const [nameError, setNameError] = useState<null | string>(null);
   const [linkError, setLinkError] = useState<null | string>(null);
   const [connectAlert, setConnectAlert] = useState(false);
-  const [step, setStep] = useState(1);
   const isOauthIntegrated =
     profileData?._integrations?.github?.status === "successful" ||
     profileData?._integrations?.gitlab?.status === "successful" ||
@@ -63,12 +69,14 @@ const ApplicationForm: React.FC<{
       setNameError("Project Name cannot exceed to more than 50 characters.");
       return false;
     }
-    if (!checkProjectUrl(githubLink)) {
+    if (
+      !checkProjectUrl(githubLink) &&
+      getProjectType(githubLink) === formType
+    ) {
       setLinkError("Please enter a valid repository link");
       return false;
     }
     setGithubLink(githubLink);
-    setProjectType(getProjectType(githubLink));
     setNameError(null);
     setLinkError(null);
     return true;
@@ -91,6 +99,13 @@ const ApplicationForm: React.FC<{
 
       setIsLoading(false);
       if (data.status === "success") {
+        queryClient.invalidateQueries([
+          "all_scans",
+          {
+            pageNo: 1,
+            perPageCount: isDesktopView ? 20 : 12,
+          },
+        ]);
         queryClient.invalidateQueries("scan_list");
         queryClient.invalidateQueries("profile");
         history.push("/projects");
@@ -165,7 +180,8 @@ const ApplicationForm: React.FC<{
     <Flex
       flexDir="column"
       w="100%"
-      justifyContent={"flex-start"}
+      h={["90vh", "90vh", "75vh"]}
+      justifyContent={"space-between"}
       alignItems="flex-start"
       opacity={isViewer ? 0.5 : 1}
     >
@@ -174,31 +190,37 @@ const ApplicationForm: React.FC<{
           flexDir="column"
           justifyContent={"flex-start"}
           alignItems="flex-start"
-          backgroundColor="#FCFCFC"
-          px={[4, 4, 7]}
-          py={5}
+          px={[2, 4, 2, 2]}
           w="100%"
+          h="530px"
+          mt={0}
+          overflowY="scroll"
           borderRadius={20}
-          border="1px solid #ECECEC"
         >
           <HStack w="100%" justifyContent="space-between" mb={4}>
             <Text
               sx={{
-                fontSize: ["xl", "xl", "2xl"],
+                fontSize: "2xl",
                 fontWeight: 600,
                 textAlign: "left",
                 w: "60%",
               }}
             >
-              {step === 1
-                ? "Project Information"
+              {step === 0
+                ? `${capitalize(formType)} Application`
+                : step === 1
+                ? "Load Application"
                 : step === 2
-                ? "Project Folders"
+                ? "Select Folders"
                 : step === 3
                 ? "Project Settings"
                 : ""}
             </Text>
-            <HStack justifyContent={"flex-end"} spacing={3}>
+            <HStack
+              display={step === 0 ? "none" : "flex"}
+              justifyContent={"flex-end"}
+              spacing={3}
+            >
               <Image
                 height={["30px", "30px", "40px"]}
                 width={["30px", "30px", "40px"]}
@@ -227,10 +249,10 @@ const ApplicationForm: React.FC<{
                 fontSize: "sm",
                 color: "subtle",
                 textAlign: "left",
-                mb: 4,
+                mb: 2,
               }}
             >
-              Provide a link to your Github repository.
+              Provide a link to your {OauthName[formType]} repository.
             </Text>
           ) : step === 2 ? (
             <Text
@@ -238,7 +260,7 @@ const ApplicationForm: React.FC<{
                 fontSize: "sm",
                 color: "subtle",
                 textAlign: "left",
-                mb: 4,
+                mb: 2,
               }}
             >
               Select the branch and its corresponding directories and files to
@@ -250,7 +272,7 @@ const ApplicationForm: React.FC<{
                 fontSize: "sm",
                 color: "subtle",
                 textAlign: "left",
-                mb: 4,
+                mb: 2,
               }}
             >
               Configure your project settings.
@@ -259,8 +281,38 @@ const ApplicationForm: React.FC<{
             <></>
           )}
 
-          <Divider color="gray.700" borderWidth="1px" mb={3} />
-          {step === 1 ? (
+          {step !== 0 && (
+            <Text
+              sx={{
+                fontSize: "sm",
+                color: "subtle",
+                textAlign: "left",
+              }}
+            >
+              For further instructions on how to start a scan please watch our
+              tutorials available on{" "}
+              <Box
+                as="span"
+                color="accent"
+                onClick={() =>
+                  window.open("https://docs.solidityscan.com/", "_blank")
+                }
+              >
+                {" "}
+                docs.solidityscan.com
+              </Box>
+              .
+            </Text>
+          )}
+
+          {step === 0 ? (
+            <Box w="100%" h="calc(100% - 50px)">
+              <AddProjectFormInfographics
+                imgUrl={`${assetsURL}homepage_infographics/project_${formType}.svg`}
+                instructions={infographicsData["project_github"]}
+              />
+            </Box>
+          ) : step === 1 ? (
             <InfoSettings
               nameError={nameError}
               linkError={linkError}
@@ -272,6 +324,7 @@ const ApplicationForm: React.FC<{
               setGithubLink={setGithubLink}
               setVisibility={setVisibility}
               isViewer={isViewer}
+              formType={formType}
               connectAlert={connectAlert}
               setConnectAlert={setConnectAlert}
             />
@@ -292,7 +345,8 @@ const ApplicationForm: React.FC<{
               view="github_app"
               githubSync={githubSync}
               onToggleFunction={async () => setGithubSync(!githubSync)}
-              isGithubIntegrated={isOauthIntegrated}
+              isOauthIntegrated={isOauthIntegrated}
+              formType={formType}
             />
           ) : (
             <></>
@@ -301,18 +355,18 @@ const ApplicationForm: React.FC<{
       )}
       <Flex
         w="100%"
-        flexDir={["column", "column", "column", "row"]}
+        flexDir={["column", "column", "row", "row"]}
         alignItems="center"
-        justifyContent={["flex-start", "flex-start", "flex-start", "flex-end"]}
+        justifyContent={["flex-start", "flex-start", "flex-end", "flex-end"]}
         pt={3}
       >
         {step > 1 && (
           <Button
             type="submit"
-            width={["100%", "100%", "100%", "200px"]}
+            width={["100%", "100%", "100%", "250px"]}
             variant="accent-outline"
-            mr={[0, 0, 0, 5]}
-            mb={[3, 3, 3, 0]}
+            mr={[0, 0, 5, 5]}
+            mb={[3, 3, 0, 0]}
             py={6}
             onClick={() => {
               if (step > 1) {
@@ -329,13 +383,15 @@ const ApplicationForm: React.FC<{
           variant="brand"
           isLoading={isLoading}
           spinner={<Loader color={"#3300FF"} size={25} />}
-          width={["100%", "100%", "100%", "200px"]}
+          width={["100%", "100%", "100%", "250px"]}
           onClick={() => {
-            if (step === 1) {
+            if (step === 0) {
+              setStep(1);
+            } else if (step === 1) {
               if (runValidation()) {
                 getBranches();
               }
-            } else if (step === 2 && projectType === "GitHub") {
+            } else if (step === 2) {
               setStep(3);
             } else {
               runScan();
@@ -347,10 +403,7 @@ const ApplicationForm: React.FC<{
             (connectAlert && !isOauthIntegrated)
           }
         >
-          {step > 2 ||
-          (step === 2 &&
-            projectType &&
-            ["GitLab", "Bitbucket"].includes(projectType)) ? (
+          {step > 2 ? (
             isLoading ? (
               <Loader color={"#3300FF"} />
             ) : (

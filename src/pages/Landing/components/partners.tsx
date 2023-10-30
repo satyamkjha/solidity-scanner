@@ -48,9 +48,7 @@ export default function Partners() {
     }
 
     return () => {
-      element?.removeEventListener("scroll", () =>
-        console.log("removed listner")
-      );
+      element?.removeEventListener("scroll", () => {});
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);

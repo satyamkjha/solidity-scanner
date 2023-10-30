@@ -1,6 +1,21 @@
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { Flex, Box, Text, Button, useMediaQuery } from "@chakra-ui/react";
+import {
+  Flex,
+  Box,
+  Text,
+  Button,
+  useMediaQuery,
+  InputGroup,
+  InputLeftElement,
+  Input,
+  InputRightElement,
+  HStack,
+  Menu,
+  MenuButton,
+  MenuList,
+  MenuItem,
+} from "@chakra-ui/react";
 // import Lottie from "lottie-react";
 import { LogoIcon } from "components/icons";
 import API from "helpers/api";
@@ -16,13 +31,25 @@ import {
   getFeatureGateConfig,
   // getAssetsFromS3,
 } from "helpers/helperFunction";
-import ProjectCard from "components/cards/ProjectCard";
 import { useAllScans } from "hooks/useAllScans";
-import BlockCard from "components/cards/BlockCard";
+import ScanCard from "components/cards/ScanCard";
+import { Search2Icon, CloseIcon } from "@chakra-ui/icons";
+import { FiFilter } from "react-icons/fi";
+import { RxDoubleArrowDown } from "react-icons/rx";
+import { debounce } from "lodash";
+import RadioButton from "components/styled-components/RadioButton";
 
 const Scans: React.FC = () => {
   const [isDesktopView] = useMediaQuery("(min-width: 1920px)");
-  const role: string = useUserRole();
+  const { role } = useUserRole();
+  const [queryTerm, setQueryTerm] = useState<string>();
+  const [searchTerm, setSearchTerm] = useState<string>();
+  const [filterParam, setFilterParam] = useState<
+    "gitlab" | "github" | "bitbucket" | "block" | "File Scan" | ""
+  >();
+  const [paramType, setParamType] = useState<
+    "gitlab" | "github" | "bitbucket" | "block" | "File Scan" | ""
+  >();
   const [page, setPage] = useState<Page>();
   const [pagination, setPagination] = useState<Pagination>({
     pageNo: 1,
@@ -30,9 +57,14 @@ const Scans: React.FC = () => {
   });
   const [hasMore, setHasMore] = useState(true);
 
-  const { data: projects, refetch } = useAllScans(pagination);
+  const { data: projects, refetch } = useAllScans(
+    pagination,
+    queryTerm,
+    filterParam
+  );
   const [projectList, setProjectList] = useState<ScanObj[]>();
   const [projectsMonitored, setProjectsMonitored] = useState(0);
+  const [isProjectsLoading, setIsProjectsLoading] = useState(false);
   const [projectsInScanning, setProjectsInScanning] = useState<
     {
       scanId: string;
@@ -75,12 +107,14 @@ const Scans: React.FC = () => {
         (project, index, self) =>
           index === self.findIndex((p) => p.scan_id === project.scan_id)
       );
+      setIsProjectsLoading(false);
       setProjectList(uniqueProjectList);
       setPage(projects.page);
+      if (pagination.pageNo < projects.page.total_pages) setHasMore(true);
     }
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [projects, refetch]);
+  }, [projects]);
 
   useEffect(() => {
     let intervalId: NodeJS.Timeout;
@@ -102,9 +136,7 @@ const Scans: React.FC = () => {
               )
             )
             .map((project) => {
-              if (project.scan_type === "project")
-                return project.scan_details.scan_id;
-              else return project.scan_details.project_id;
+              return project.scan_details.scan_id;
             });
           setProjectsIdsInScanning(scanningScanIds);
         } else {
@@ -143,19 +175,48 @@ const Scans: React.FC = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [projectList]);
 
-  const fetchProjectList = async () => {
-    const { data } = await API.get(
-      `${API_PATH.API_GET_ALL_SCANS}?page=${1}&per_page=${
-        pagination.perPageCount
-      }`
-    );
-    if (data.data && projectList) {
-      const pList = [
-        ...data.data,
-        ...projectList.slice(pagination.perPageCount, projectList.length),
-      ];
-      setProjectList(pList);
+  const onSearch = async () => {
+    if (searchTerm !== undefined) {
+      setIsProjectsLoading(true);
+      setPagination({
+        pageNo: 1,
+        perPageCount: isDesktopView ? 20 : 12,
+      });
+      setQueryTerm(searchTerm);
     }
+  };
+
+  const debouncedSearch = debounce(onSearch, 500);
+
+  useEffect(() => {
+    if (paramType !== undefined) {
+      setIsProjectsLoading(true);
+      setPagination({
+        pageNo: 1,
+        perPageCount: isDesktopView ? 20 : 12,
+      });
+      setFilterParam(paramType);
+    }
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [paramType]);
+
+  useEffect(() => {
+    debouncedSearch();
+
+    return () => {
+      debouncedSearch.cancel();
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [searchTerm]);
+
+  const fetchProjectList = async () => {
+    if (pagination.pageNo !== 1)
+      setPagination({
+        pageNo: 1,
+        perPageCount: isDesktopView ? 20 : 12,
+      });
+    else refetch();
   };
 
   useEffect(() => {
@@ -206,12 +267,6 @@ const Scans: React.FC = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [projectsIdsInScanning]);
 
-  useEffect(() => {
-    refetch();
-
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [pagination]);
-
   const fetchMoreProjects = async () => {
     if (page && pagination.pageNo >= page.total_pages) {
       setHasMore(false);
@@ -233,6 +288,32 @@ const Scans: React.FC = () => {
     setProjectList(newProjectList);
   };
 
+  const paramList: {
+    param: "gitlab" | "github" | "bitbucket" | "block" | "File Scan" | "";
+    label: string;
+  }[] = [
+    {
+      param: "github",
+      label: "Github",
+    },
+    {
+      param: "gitlab",
+      label: "Gitlab",
+    },
+    {
+      param: "bitbucket",
+      label: "BitBucket",
+    },
+    {
+      param: "block",
+      label: "Verified Contracts",
+    },
+    {
+      param: "File Scan",
+      label: "Upload Contract",
+    },
+  ];
+
   return (
     <Box
       sx={{
@@ -249,33 +330,115 @@ const Scans: React.FC = () => {
     >
       <Flex
         sx={{
-          alignItems: "center",
-          justifyContent: "space-between",
-          my: 4,
+          alignItems: ["center", "center", "flex-start"],
+          justifyContent: "flex-start",
+          flexDirection: ["column", "column", "row"],
+          mb: 4,
         }}
-        w="100%"
+        w={"100%"}
       >
         <Text sx={{ color: "subtle", fontWeight: 600, ml: 4 }}>PROJECTS</Text>
-        {profileData && (
-          <Flex ml={20} sx={{ display: ["none", "none", "flex"] }}>
-            <Text fontWeight={600} fontSize="2xl" ml={4} mr={10}>
-              {projectsMonitored.toLocaleString("en-US", {
-                minimumIntegerDigits: 2,
-                useGrouping: false,
-              })}
-              <Box as="span" ml={2} color="subtle" fontSize="sm">
-                Projects Monitored
-              </Box>
-            </Text>
+        {profileData ? (
+          <Flex
+            w={["95%", "95%", "500px"]}
+            mt={[5, 5, 0]}
+            mr={[0, 0, 4]}
+            ml={"auto"}
+          >
+            <InputGroup alignItems="center">
+              <InputLeftElement
+                height="48px"
+                width="45px"
+                children={<Search2Icon color={"#A0AEC0"} />}
+              />
+              <Input
+                placeholder="Search by Project name/Contract address"
+                size="lg"
+                fontSize="sm"
+                bg="white"
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+              />
+              <InputRightElement
+                height="48px"
+                w="80px"
+                children={
+                  <Menu placement={"bottom-end"} matchWidth>
+                    <MenuButton
+                      as={Box}
+                      onClick={(e) => {
+                        e.stopPropagation();
+                      }}
+                    >
+                      <HStack
+                        spacing={2}
+                        p={2}
+                        w="70px"
+                        borderRadius={10}
+                        bg="bg.subtle"
+                      >
+                        <FiFilter
+                          color={!paramType ? "#8A94A6" : "#3300ff"}
+                          size={20}
+                        />
+                        <RxDoubleArrowDown color="#C4C4C4" size={16} />
+                      </HStack>
+                    </MenuButton>
+                    <MenuList
+                      sx={{
+                        boxShadow: "0px 4px 12px rgba(0, 0, 0, 0.2) !important",
+                        _hover: "0px 4px 24px rgba(0, 0, 0, 0.2) !important",
+                        px: 6,
+                        py: 4,
+                        w: ["100%", "320px"],
+                        borderRadius: 20,
+                      }}
+                    >
+                      {paramList.map((item) => (
+                        <MenuItem
+                          _focus={{ backgroundColor: "#FFFFFF" }}
+                          _hover={{ backgroundColor: "#FFFFFF" }}
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            setParamType(item.param);
+                          }}
+                          sx={{
+                            py: 4,
+                            borderBottom: "1px solid #ececec",
+                          }}
+                          justifyContent="space-between"
+                        >
+                          {item.label}{" "}
+                          <RadioButton isActive={paramType === item.param} />
+                        </MenuItem>
+                      ))}
+                      <HStack w="100%" justifyContent="center">
+                        <Button
+                          leftIcon={<CloseIcon fontSize="10px" />}
+                          fontSize="sm"
+                          size="sm"
+                          mt={4}
+                          variant="ghost"
+                          color="accent"
+                          onClick={() => setParamType("")}
+                        >
+                          Clear Filter
+                        </Button>
+                      </HStack>
+                    </MenuList>
+                  </Menu>
+                }
+              />
+            </InputGroup>
           </Flex>
-        )}
+        ) : null}
       </Flex>
 
-      {!projectList || !profileData ? (
+      {!projectList || !profileData || isProjectsLoading ? (
         <Flex w="100%" h="70vh" alignItems="center" justifyContent="center">
           <Loader />
         </Flex>
-      ) : projectList.length === 0 ? (
+      ) : profileData.projects_remaining === 0 ? (
         <Flex
           w="100%"
           h="70vh"
@@ -294,6 +457,17 @@ const Scans: React.FC = () => {
             </Button>
           </Link>
         </Flex>
+      ) : projectList.length === 0 ? (
+        <Flex
+          w="100%"
+          h="70vh"
+          direction="column"
+          justifyItems="center"
+          alignItems="center"
+          justifyContent="center"
+        >
+          <Text fontSize="sm">No projects found matching your query.</Text>
+        </Flex>
       ) : (
         <Flex
           alignItems={"row"}
@@ -310,6 +484,10 @@ const Scans: React.FC = () => {
               flexWrap: "wrap",
               overflow: "hidden",
               boxSizing: "border-box",
+              justifyContent: "flex-start",
+              padding: "1rem",
+              paddingRight: 0,
+              gap: "2rem",
             }}
             dataLength={projectList.length}
             next={() => fetchMoreProjects()}
@@ -322,31 +500,14 @@ const Scans: React.FC = () => {
             scrollableTarget="pageScroll"
           >
             {[...(projectList || [])].map((project) => (
-              <React.Fragment key={project.scan_id}>
-                {project.scan_type === "project" ? (
-                  <ProjectCard
-                    key={project.scan_id}
-                    project={project}
-                    refetchProfile={refetchProfile}
-                    refetch={refetch}
-                    updateProjectList={updateProjectList}
-                    isViewer={role === "viewer"}
-                    scans_remaining={profileData.credits}
-                    projectsIdsInScanning={projectsIdsInScanning}
-                    projectsInScanning={projectsInScanning}
-                  />
-                ) : (
-                  <BlockCard
-                    key={project.scan_id}
-                    scan={project}
-                    updateScanList={updateProjectList}
-                    isViewer={role === "viewer"}
-                    scanIdsInScanning={projectsIdsInScanning}
-                    scanInProgress={projectsInScanning}
-                    // ssIconAnimation={ssIconAnimation}
-                  />
-                )}
-              </React.Fragment>
+              <ScanCard
+                key={project.scan_id}
+                scan={project}
+                updateScanList={updateProjectList}
+                isViewer={role === "viewer"}
+                scanIdsInScanning={projectsIdsInScanning}
+                scanInProgress={projectsInScanning}
+              />
             ))}
           </InfiniteScroll>
         </Flex>

@@ -154,18 +154,21 @@ export const checkProjectUrl = (url: string) => {
 };
 
 export const getProjectType = (project_url: string) => {
+  if (project_url === "File Scan") return "filescan";
+
   const url = new URL(project_url);
   const hostname = url.hostname.toLowerCase();
 
   if (hostname.includes("github.com")) {
-    return "GitHub";
-  } else if (hostname.includes("bitbucket.org")) {
-    return "Bitbucket";
-  } else if (hostname.includes("gitlab.com")) {
-    return "GitLab";
-  } else {
-    return null;
+    return "github";
   }
+  if (hostname.includes("bitbucket.org")) {
+    return "bitbucket";
+  }
+  if (hostname.includes("gitlab.com")) {
+    return "gitlab";
+  }
+  return "";
 };
 
 export const getProjectFileUrl = (
@@ -179,7 +182,7 @@ export const getProjectFileUrl = (
   const baseUrl = new URL(project_url);
 
   switch (getProjectType(project_url)) {
-    case "GitHub":
+    case "github":
       return `${baseUrl.origin}/${baseUrl.pathname.replace(
         /\/+$/,
         ""
@@ -187,7 +190,7 @@ export const getProjectFileUrl = (
         file.line_nos_end
       }`;
 
-    case "Bitbucket":
+    case "bitbucket":
       return `${baseUrl.origin}${baseUrl.pathname.replace(
         /\/+$/,
         ""
@@ -195,7 +198,7 @@ export const getProjectFileUrl = (
         file.line_nos_end
       }`;
 
-    case "GitLab":
+    case "gitlab":
       return `${baseUrl.origin}/${baseUrl.pathname.replace(
         /\/+$/,
         ""
@@ -209,7 +212,11 @@ export const getProjectFileUrl = (
 };
 
 export const getTrimmedScanMessage = (scan_status: string) => {
-  if (scan_status.includes("Download Failed")) return "Download Failed";
+  if (
+    scan_status.includes("Download Failed") ||
+    scan_status.includes("Download_failed")
+  )
+    return "Download Failed";
   else if (scan_status.includes("Scan Failed")) return "Scan Failed";
 
   return "Scan Failed";

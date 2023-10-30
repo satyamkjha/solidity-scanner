@@ -61,24 +61,15 @@ const Integrations: React.FC<{ profileData?: Profile }> = ({ profileData }) => {
         minH: "78vh",
       }}
     >
-      <Flex
-        sx={{
-          w: "100%",
-          alignItems: "center",
-          justifyContent: "space-between",
-          my: 4,
-        }}
-      >
-        <Text sx={{ color: "subtle", fontWeight: 600 }}>INTEGRATIONS</Text>
-      </Flex>
+      <Text sx={{ color: "subtle", fontWeight: 600 }}>INTEGRATIONS</Text>
 
       {!profileData && <Loader width={"100%"} height={"70vh"} />}
 
       {profileData && (
-        <VStack spacing={8} my={16}>
+        <VStack spacing={4} my={4}>
           <IntegrationChannel
             title="GitHub"
-            description="Connect you GitHub to directly create issues for vulnerabilities in your repo"
+            description="Connect your GitHub account to automatically create issues and scan for vulnerabilities in your private repositories."
             icon={<GithubIcon size={63} />}
             allowed={profileData._integrations.github.allowed}
             status={profileData._integrations.github.status}
@@ -87,7 +78,7 @@ const Integrations: React.FC<{ profileData?: Profile }> = ({ profileData }) => {
           />
           <IntegrationChannel
             title="Bitbucket"
-            description="Connect you Bitbucket to directly create issues for vulnerabilities in your repo"
+            description="Connect your Bitbucket account to automatically create issues and scan for vulnerabilities in your private repositories."
             icon={<BitbucketIcon size={57} />}
             allowed={profileData._integrations.bitbucket.allowed}
             status={profileData._integrations.bitbucket.status}
@@ -96,7 +87,7 @@ const Integrations: React.FC<{ profileData?: Profile }> = ({ profileData }) => {
           />
           <IntegrationChannel
             title="GitLab"
-            description="Connect you GitLab to directly create issues for vulnerabilities in your repo"
+            description="Connect your GitLab account to automatically create issues and scan for vulnerabilities in your private repositories."
             icon={<GitlabIcon size={60} />}
             allowed={profileData._integrations.gitlab.allowed}
             status={profileData._integrations.gitlab.status}
@@ -105,7 +96,7 @@ const Integrations: React.FC<{ profileData?: Profile }> = ({ profileData }) => {
           />
           <IntegrationChannel
             title="Slack"
-            description="Connect slack to receive updates about vulnerabilities directly to slack"
+            description="Integrate Slack to receive real-time vulnerability updates directly within your Slack workspace."
             icon={<SlackIcon size={73} />}
             allowed={profileData._integrations.slack.allowed}
             status={profileData._integrations.slack.status}
@@ -114,7 +105,7 @@ const Integrations: React.FC<{ profileData?: Profile }> = ({ profileData }) => {
           />
           <IntegrationChannel
             title="JIRA"
-            description="Connect JIRA to export vulnerabilities"
+            description="Connect JIRA to export vulnerability data for further analysis and management."
             icon={<JiraIcon size={73} />}
             allowed={profileData._integrations.jira.allowed}
             status={profileData._integrations.jira.status}
@@ -202,7 +193,7 @@ const IntegrationChannel: React.FC<IntegrationChannelProps> = ({
             <Text fontWeight="600" fontSize="16px">
               {title}
             </Text>
-            <Text fontSize="13px" fontWeight="400" opacity={0.8} maxW="500px">
+            <Text fontSize="13px" fontWeight="400" opacity={0.8} maxW="800px">
               {description}
             </Text>
             {["GitHub"].includes(title) && status === "failed" && (
@@ -250,10 +241,20 @@ const IntegrationChannel: React.FC<IntegrationChannelProps> = ({
               </Button>
             )}
           </>
+        ) : title === "JIRA" ? (
+          <Button
+            color="#1DAAE2"
+            bgColor="#E7F8FF"
+            fontSize="15px"
+            py={6}
+            width="250px"
+          >
+            Coming Soon
+          </Button>
         ) : (
           <Button
             colorScheme="whiteAlpha"
-            color="black"
+            color={"black"}
             fontSize="15px"
             py={6}
             onClick={() => {
@@ -262,8 +263,8 @@ const IntegrationChannel: React.FC<IntegrationChannelProps> = ({
             border="2px solid #2FF86B"
             width="250px"
           >
-            {title !== "JIRA" && <Icon as={BiLockAlt} mr={2} fontSize="18px" />}
-            {title === "JIRA" ? "Coming Soon" : "Upgrade"}
+            <Icon as={BiLockAlt} mr={2} fontSize="18px" />
+            Upgrade
           </Button>
         )}
       </Flex>

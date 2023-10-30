@@ -132,12 +132,7 @@ export default function PrivateApi() {
         minH: "78vh",
       }}
     >
-      <VStack alignItems="flex-start" spacing={0} pl={4}>
-        <Text fontSize="lg">Personal Access API</Text>
-        <Text color="subtle" fontSize="sm">
-          Generate the code which can be used to access the SolidityScan API
-        </Text>
-      </VStack>
+      <Text sx={{ color: "subtle", fontWeight: 600 }}>PERSONAL API ACCESS</Text>
 
       {isLoading ? (
         <Flex
