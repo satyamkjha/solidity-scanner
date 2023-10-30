@@ -159,7 +159,7 @@ const AddProjectBox: React.FC<{ profileData: Profile }> = ({ profileData }) => {
           width="250px"
           borderWidth="0px"
           sx={{
-            boxShadow: "0px 4px 20px rgba(0, 0, 0, 0.35)",
+            boxShadow: "0px 4px 20px rgba(0, 0, 0, 0.35) !important",
           }}
           borderRadius="15px"
         >
