@@ -44,6 +44,9 @@ const Scans: React.FC = () => {
   const { role } = useUserRole();
   const [queryTerm, setQueryTerm] = useState<string>();
   const [searchTerm, setSearchTerm] = useState<string>();
+  const [filterParam, setFilterParam] = useState<
+    "gitlab" | "github" | "bitbucket" | "block" | "File Scan" | ""
+  >();
   const [paramType, setParamType] = useState<
     "gitlab" | "github" | "bitbucket" | "block" | "File Scan" | ""
   >();
@@ -57,7 +60,7 @@ const Scans: React.FC = () => {
   const { data: projects, refetch } = useAllScans(
     pagination,
     queryTerm,
-    paramType
+    filterParam
   );
   const [projectList, setProjectList] = useState<ScanObj[]>();
   const [projectsMonitored, setProjectsMonitored] = useState(0);
@@ -107,10 +110,11 @@ const Scans: React.FC = () => {
       setIsProjectsLoading(false);
       setProjectList(uniqueProjectList);
       setPage(projects.page);
+      if (pagination.pageNo < projects.page.total_pages) setHasMore(true);
     }
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [projects, refetch]);
+  }, [projects]);
 
   useEffect(() => {
     let intervalId: NodeJS.Timeout;
@@ -178,6 +182,7 @@ const Scans: React.FC = () => {
         pageNo: 1,
         perPageCount: isDesktopView ? 20 : 12,
       });
+      setQueryTerm(searchTerm);
     }
   };
 
@@ -190,6 +195,7 @@ const Scans: React.FC = () => {
         pageNo: 1,
         perPageCount: isDesktopView ? 20 : 12,
       });
+      setFilterParam(paramType);
     }
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -205,18 +211,12 @@ const Scans: React.FC = () => {
   }, [searchTerm]);
 
   const fetchProjectList = async () => {
-    const { data } = await API.get(
-      `${API_PATH.API_GET_ALL_SCANS}?page=${1}&per_page=${
-        pagination.perPageCount
-      }`
-    );
-    if (data.data && projectList) {
-      const pList = [
-        ...data.data,
-        ...projectList.slice(pagination.perPageCount, projectList.length),
-      ];
-      setProjectList(pList);
-    }
+    if (pagination.pageNo !== 1)
+      setPagination({
+        pageNo: 1,
+        perPageCount: isDesktopView ? 20 : 12,
+      });
+    else refetch();
   };
 
   useEffect(() => {
@@ -266,13 +266,6 @@ const Scans: React.FC = () => {
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [projectsIdsInScanning]);
-
-  useEffect(() => {
-    if (searchTerm !== queryTerm) {
-      setQueryTerm(searchTerm);
-    } else refetch();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [pagination]);
 
   const fetchMoreProjects = async () => {
     if (page && pagination.pageNo >= page.total_pages) {

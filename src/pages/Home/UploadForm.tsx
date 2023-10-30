@@ -13,27 +13,26 @@ import {
   VStack,
   Progress,
   CloseButton,
+  useMediaQuery,
 } from "@chakra-ui/react";
 import { AiOutlineProject } from "react-icons/ai";
-import {
-  ProjectIcon,
-  SolidityFileIcon,
-  UploadIcon,
-  ZipFileIcon,
-} from "components/icons";
+import { SolidityFileIcon, UploadIcon, ZipFileIcon } from "components/icons";
 import API from "helpers/api";
 import { useDropzone } from "react-dropzone";
 import { API_PATH } from "helpers/routeManager";
 import Loader from "components/styled-components/Loader";
 import { Profile } from "common/types";
 import { useUserRole } from "hooks/useUserRole";
-import UploadTypeCard from "./UploadTypeCard";
 import { CheckIcon } from "@chakra-ui/icons";
+import { useQueryClient } from "react-query";
 
 const UploadForm: React.FC<{
   profileData: Profile;
   uploadType: "single" | "multiple";
 }> = ({ profileData, uploadType }) => {
+  const [isDesktopView] = useMediaQuery("(min-width: 1920px)");
+
+  const queryClient = useQueryClient();
   const history = useHistory();
   const { role } = useUserRole();
   const [step, setStep] = useState(0);
@@ -177,6 +176,14 @@ const UploadForm: React.FC<{
         project_visibility: "public",
         project_type: "new",
       });
+
+      queryClient.invalidateQueries([
+        "all_scans",
+        {
+          pageNo: 1,
+          perPageCount: isDesktopView ? 20 : 12,
+        },
+      ]);
 
       history.push("/projects");
       setTimeout(() => setIsLoading(false), 1000);

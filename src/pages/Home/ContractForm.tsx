@@ -15,6 +15,7 @@ import {
   VStack,
   useToast,
   Box,
+  useMediaQuery,
 } from "@chakra-ui/react";
 import { AiOutlineProject } from "react-icons/ai";
 import API from "helpers/api";
@@ -52,6 +53,8 @@ const ContractForm: React.FC<{
   const [chainList, setChainList] = React.useState<
     { label: string; value: string; icon: string }[]
   >(contractChain["etherscan"]);
+  const [isDesktopView] = useMediaQuery("(min-width: 1920px)");
+
   const queryClient = useQueryClient();
   const toast = useToast();
   const history = useHistory();
@@ -100,13 +103,16 @@ const ContractForm: React.FC<{
             setIsLoading(false);
             if (responseData.status === 200) {
               if (responseData.data.status === "success") {
+                queryClient.invalidateQueries([
+                  "all_scans",
+                  {
+                    pageNo: 1,
+                    perPageCount: isDesktopView ? 20 : 12,
+                  },
+                ]);
                 queryClient.invalidateQueries("scan_list");
                 queryClient.invalidateQueries("profile");
-                history.push(
-                  getFeatureGateConfig().merge_scans_enabled
-                    ? "/projects"
-                    : "/blocks"
-                );
+                history.push("/projects");
               }
             }
           }

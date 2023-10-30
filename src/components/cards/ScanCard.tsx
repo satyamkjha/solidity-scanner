@@ -144,11 +144,11 @@ const ScanCard: React.FC<{
           boxShadow: "0px 4px 24px rgba(0, 0, 0, 0.2)",
         },
       }}
-      maxWidth="450px"
+      maxWidth={["auto", "auto", "400px"]}
       onMouseOver={() => setHover(true)}
       onMouseLeave={() => setHover(false)}
       boxSizing={"border-box"}
-      w={["90%", "95%", "45%", "31%"]}
+      w={["90%", "95%", "45%", "31%", "31%", "23%"]}
       onClick={() => {
         if (multi_file_scan_status === "scan_done") {
           history.push(`/${scan.scan_type}s/${scan_id}/${project_id}`);

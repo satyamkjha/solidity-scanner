@@ -10,7 +10,7 @@ import {
   HStack,
   useToast,
   Image,
-  Divider,
+  useMediaQuery,
 } from "@chakra-ui/react";
 import API from "helpers/api";
 import {
@@ -37,6 +37,8 @@ const ApplicationForm: React.FC<{
   setStep: React.Dispatch<React.SetStateAction<number>>;
   formType: string;
 }> = ({ profileData, step, setStep, formType }) => {
+  const [isDesktopView] = useMediaQuery("(min-width: 1920px)");
+
   const { role } = useUserRole();
   const assetsURL = getAssetsURL();
   const queryClient = useQueryClient();
@@ -97,6 +99,13 @@ const ApplicationForm: React.FC<{
 
       setIsLoading(false);
       if (data.status === "success") {
+        queryClient.invalidateQueries([
+          "all_scans",
+          {
+            pageNo: 1,
+            perPageCount: isDesktopView ? 20 : 12,
+          },
+        ]);
         queryClient.invalidateQueries("scan_list");
         queryClient.invalidateQueries("profile");
         history.push("/projects");
