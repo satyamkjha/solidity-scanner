@@ -283,8 +283,7 @@ const FolderSettings: React.FC<{
 
   return (
     <Flex
-      minHeight={view === "github_app" ? "400px" : "300px"}
-      height={[view === "github_app" ? "50vh" : "30vh"]}
+      height={"370px"}
       width={"100%"}
       flexDir="column"
       justifyContent="flex-start"

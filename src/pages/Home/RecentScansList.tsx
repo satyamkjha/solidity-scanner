@@ -43,6 +43,19 @@ const RecentScansList: React.FC = () => {
     }
   }, [projects]);
 
+  const getProjectTypeIconUrl = (
+    scanType: string,
+    projectUrl: string,
+    contractPlatform: string
+  ) =>
+    `${assetsURL}${
+      scanType === "project"
+        ? "icons/integrations/" + getProjectType(projectUrl)
+        : scanType === "block"
+        ? "blockscan/" + contractPlatform
+        : ""
+    }.svg`;
+
   return (
     <>
       <Flex
@@ -124,14 +137,11 @@ const RecentScansList: React.FC = () => {
               >
                 <HStack spacing={5} w="calc(55% - 110px)">
                   <Image
-                    src={`${assetsURL}${
-                      project.scan_type === "project"
-                        ? "icons/integrations/" +
-                          getProjectType(project.scan_details.project_url || "")
-                        : project.scan_type === "block"
-                        ? "blockscan/" + project.scan_details.contract_platform
-                        : ""
-                    }.svg`}
+                    src={getProjectTypeIconUrl(
+                      project.scan_type,
+                      project.scan_details.project_url || "",
+                      project.scan_details.contract_platform || ""
+                    )}
                     height="40px"
                     width="40px"
                   />
@@ -236,14 +246,11 @@ const RecentScansList: React.FC = () => {
                     </Text>
                   </VStack>
                   <Image
-                    src={`${assetsURL}${
-                      project.scan_type === "project"
-                        ? "icons/integrations/" +
-                          getProjectType(project.scan_details.project_url || "")
-                        : project.scan_type === "block"
-                        ? "blockscan/" + project.scan_details.contract_platform
-                        : ""
-                    }.svg`}
+                    src={getProjectTypeIconUrl(
+                      project.scan_type,
+                      project.scan_details.project_url || "",
+                      project.scan_details.contract_platform || ""
+                    )}
                     height="40px"
                     width="40px"
                   />

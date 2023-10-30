@@ -49,14 +49,8 @@ const InfoSettings: React.FC<{
   };
 
   return (
-    <Stack
-      minHeight="400px"
-      spacing={5}
-      mt={0}
-      height={"fit-content"}
-      width={"100%"}
-    >
-      <VStack alignItems={"flex-start"} mt={10}>
+    <Stack spacing={5} mt={0} height={"fit-content"} width={"100%"}>
+      <VStack alignItems={"flex-start"} mt={[3, 3, 3, 3, 10]}>
         <Text mb={0} fontSize="sm">
           Project name
         </Text>
@@ -132,12 +126,12 @@ const InfoSettings: React.FC<{
       {isOauthIntegrated && (
         <Text
           width="100%"
-          p={5}
+          p={3}
           borderWidth={1}
           borderColor="#FFC661"
           background="#FFF8ED"
           color="#4E5D78"
-          fontSize={"sm"}
+          fontSize={"xs"}
           fontWeight={300}
           borderRadius={10}
         >

@@ -158,7 +158,9 @@ const AddProjectBox: React.FC<{ profileData: Profile }> = ({ profileData }) => {
           p={4}
           width="250px"
           borderWidth="0px"
-          boxShadow="0px 4px 20px rgba(0, 0, 0, 0.35)"
+          sx={{
+            boxShadow: "0px 4px 20px rgba(0, 0, 0, 0.35)",
+          }}
           borderRadius="15px"
         >
           {menuList.map((item) => (

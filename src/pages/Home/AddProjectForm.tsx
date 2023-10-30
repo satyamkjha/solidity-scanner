@@ -30,6 +30,32 @@ const AddProjectForm: React.FC<{
   const [uploadType, setUploadType] = useState<"single" | "multiple">("single");
   const assetsURL = getAssetsURL();
 
+  const getInstructionsList = () =>
+    infographicsData[
+      formType === "verified_contract"
+        ? "verified_contract"
+        : formType === "filescan"
+        ? step === 1
+          ? `filescan_step_${step}`
+          : `filescan_step_${step}_${uploadType}`
+        : step === 1
+        ? `project_${formType}`
+        : `project_step_${step}`
+    ];
+
+  const getInfoGraphicImgUrl = () =>
+    `${assetsURL}homepage_infographics/${
+      formType === "verified_contract"
+        ? "verified_contract"
+        : formType === "filescan"
+        ? step === 1
+          ? `filescan_step_${step}`
+          : `filescan_step_${step}_${uploadType}`
+        : step === 1
+        ? `project_${formType}`
+        : `project_step_${step}`
+    }.svg`;
+
   return (
     <Modal
       isOpen={isOpen}
@@ -46,8 +72,8 @@ const AddProjectForm: React.FC<{
         overflowX={"scroll"}
         bg="white"
         minH={"fit-content"}
-        pt={[0, 5, 12]}
-        pb={[0, 4, 7]}
+        pt={[0, 2, 2]}
+        pb={[0, 2, 2]}
         alignSelf="center"
         m={0}
       >
@@ -106,30 +132,8 @@ const AddProjectForm: React.FC<{
               borderRadius={20}
             >
               <AddProjectFormInfographics
-                imgUrl={`${assetsURL}homepage_infographics/${
-                  formType === "verified_contract"
-                    ? "verified_contract"
-                    : formType === "filescan"
-                    ? step === 1
-                      ? `filescan_step_${step}`
-                      : `filescan_step_${step}_${uploadType}`
-                    : step === 1
-                    ? `project_${formType}`
-                    : `project_step_${step}`
-                }.svg`}
-                instructions={
-                  infographicsData[
-                    formType === "verified_contract"
-                      ? "verified_contract"
-                      : formType === "filescan"
-                      ? step === 1
-                        ? `filescan_step_${step}`
-                        : `filescan_step_${step}_${uploadType}`
-                      : step === 1
-                      ? `project_${formType}`
-                      : `project_step_${step}`
-                  ]
-                }
+                imgUrl={getInfoGraphicImgUrl()}
+                instructions={getInstructionsList()}
               />
             </Flex>
           )}

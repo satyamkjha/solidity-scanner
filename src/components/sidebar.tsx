@@ -130,7 +130,20 @@ const Sidebar: React.FC<{
     sidebarData = updatedSidebarData;
   }
 
-  const footerIconList = ["discord", "telegram", "twitter"];
+  const footerIconList = [
+    {
+      imgUrl: "telegram",
+      link: "https://t.me/solidityscan",
+    },
+    {
+      imgUrl: "discord",
+      link: "https://discord.com/invite/9HhV4hGENw",
+    },
+    {
+      imgUrl: "twitter",
+      link: "https://twitter.com/solidityscan",
+    },
+  ];
 
   return (
     <Flex
@@ -251,7 +264,7 @@ const Sidebar: React.FC<{
         height={"fit-content"}
         justifyContent="center"
         flexDir="column"
-        alignItems="center"
+        alignItems="flex-start"
         p={5}
         visibility={isCollapsed ? "hidden" : "visible"}
       >
@@ -270,9 +283,9 @@ const Sidebar: React.FC<{
             <Text fontSize="xs"> Request manual audit</Text>
           </Button>
         </Box>
-        <HStack justifyContent="space-between" mt={3} w="70%" spacing={5}>
+        <HStack justifyContent="flex-start" mt={3} spacing={5}>
           {footerIconList.map((item) => (
-            <FooterIcon iconUrl={item} />
+            <FooterIcon iconUrl={item.imgUrl} socialUrl={item.link} />
           ))}
         </HStack>
       </Flex>
@@ -340,18 +353,21 @@ export const SidebarItem: React.FC<SidebarItemProps> = ({
 
 const FooterIcon: React.FC<{
   iconUrl: string;
-}> = ({ iconUrl }) => {
+  socialUrl: string;
+}> = ({ iconUrl, socialUrl }) => {
   const [hover, setHover] = useState(false);
   const assetsURL = getAssetsURL();
   return (
     <Image
       onMouseOver={() => setHover(true)}
       onMouseLeave={() => setHover(false)}
+      cursor={"pointer"}
+      onClick={() => window.open(socialUrl, "_blank")}
       src={`${assetsURL}icons/footer_social/${iconUrl}${
         hover ? "-blue" : ""
       }.svg`}
-      height="40px"
-      width="40px"
+      height="35px"
+      width="35px"
     ></Image>
   );
 };

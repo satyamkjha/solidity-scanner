@@ -190,10 +190,11 @@ const ApplicationForm: React.FC<{
           flexDir="column"
           justifyContent={"flex-start"}
           alignItems="flex-start"
-          px={[2, 4, 2, 7]}
+          px={[2, 4, 2, 2]}
           w="100%"
-          h="calc(100% - 80px)"
+          h="530px"
           mt={0}
+          overflowY="scroll"
           borderRadius={20}
         >
           <HStack w="100%" justifyContent="space-between" mb={4}>
@@ -286,7 +287,6 @@ const ApplicationForm: React.FC<{
                 fontSize: "sm",
                 color: "subtle",
                 textAlign: "left",
-                mb: 2,
               }}
             >
               For further instructions on how to start a scan please watch our
@@ -355,9 +355,9 @@ const ApplicationForm: React.FC<{
       )}
       <Flex
         w="100%"
-        flexDir={["column", "column", "column", "row"]}
+        flexDir={["column", "column", "row", "row"]}
         alignItems="center"
-        justifyContent={["flex-start", "flex-start", "flex-start", "flex-end"]}
+        justifyContent={["flex-start", "flex-start", "flex-end", "flex-end"]}
         pt={3}
       >
         {step > 1 && (
@@ -365,8 +365,8 @@ const ApplicationForm: React.FC<{
             type="submit"
             width={["100%", "100%", "100%", "250px"]}
             variant="accent-outline"
-            mr={[0, 0, 0, 5]}
-            mb={[3, 3, 3, 0]}
+            mr={[0, 0, 5, 5]}
+            mb={[3, 3, 0, 0]}
             py={6}
             onClick={() => {
               if (step > 1) {

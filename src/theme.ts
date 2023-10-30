@@ -157,6 +157,7 @@ export const theme = extendTheme({
           fontSize: "14px",
           borderColor: "#3E15F4",
           py: 4,
+          boxShadow: "0px 4px 23px 0px rgba(128, 108, 207, 0.19)",
           _hover: {
             background: "#f7f5ff",
           },

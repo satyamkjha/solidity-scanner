@@ -54,6 +54,7 @@ const PlanCycleInfo: React.FC<{
         src={`${assetsURL}common/pro_upgrade.svg`}
         height="185px"
         width="400px"
+        cursor={"pointer"}
         onClick={() => history.push("/billing")}
       />
     );
@@ -65,6 +66,7 @@ const PlanCycleInfo: React.FC<{
         maxH="185px"
         px={8}
         py={6}
+        cursor={"pointer"}
         background={packageName !== "custom" ? packageName : "none"}
         height="185px"
         backgroundImage={
