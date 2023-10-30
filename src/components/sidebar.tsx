@@ -68,15 +68,6 @@ const Sidebar: React.FC<{
       accessRevoked: [],
     },
     {
-      link: "/blocks",
-      label: "Verified Contracts",
-      icon: <BlockMenuIcon size={16} />,
-      isCollapsed: isCollapsed,
-      transitionDone: transitionDone,
-      isExternal: false,
-      accessRevoked: [],
-    },
-    {
       link: "/integrations",
       label: "Integrations",
       icon: <IntegrationMenuIcon size={24} />,
@@ -122,13 +113,6 @@ const Sidebar: React.FC<{
       accessRevoked: [],
     },
   ];
-
-  if (getFeatureGateConfig().merge_scans_enabled) {
-    const updatedSidebarData = sidebarData.filter(
-      (item) => item.link !== "/blocks"
-    );
-    sidebarData = updatedSidebarData;
-  }
 
   const footerIconList = [
     {
