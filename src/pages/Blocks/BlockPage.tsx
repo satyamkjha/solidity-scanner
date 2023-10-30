@@ -535,7 +535,7 @@ const BlockPage: React.FC = () => {
                               <Button
                                 variant={
                                   reportingStatus === "report_generated"
-                                    ? "accent-outline"
+                                    ? "accent-fill"
                                     : "black-outline"
                                 }
                                 w={["80%", "80%", "50%", "auto"]}

@@ -136,6 +136,20 @@ export const theme = extendTheme({
             background: "#efebff",
           },
         }),
+        "accent-fill": (props: StyleFunctionProps) => ({
+          ...defaultTheme.components.Button.variants.outline(props),
+          background: "#F5F2FF",
+          color: "blue",
+          fontSize: "14px",
+          borderColor: "#3E15F4",
+          py: 4,
+          _hover: {
+            background: "#f7f5ff",
+          },
+          _active: {
+            background: "#efebff",
+          },
+        }),
         "accent-outline": (props: StyleFunctionProps) => ({
           ...defaultTheme.components.Button.variants.outline(props),
           background: "#FFFFFF",

@@ -1,38 +1,16 @@
-import React, {
-  lazy,
-  useEffect,
-  useRef,
-  Suspense,
-  PropsWithChildren,
-} from "react";
-import { useLocation, useParams } from "react-router-dom";
+import React, { lazy, useEffect, useRef, Suspense } from "react";
 import {
   getReCaptchaHeaders,
   checkContractAddress,
 } from "helpers/helperFunction";
-import {
-  Flex,
-  Box,
-  Container,
-  Text,
-  Heading,
-  Button,
-  Image,
-  HStack,
-  Input,
-  useToast,
-  Stack,
-  useMediaQuery,
-} from "@chakra-ui/react";
+import { Flex, Box, Text, HStack, useToast, Stack } from "@chakra-ui/react";
 
 import { SeverityIcon } from "components/icons";
-import Select, { StylesConfig, GroupBase } from "react-select";
 import API from "helpers/api";
-import { QuickScanResult, OptionTypeWithIcon } from "common/types";
+import { QuickScanResult } from "common/types";
 import { API_PATH } from "helpers/routeManager";
 
 import SolidityScoreProgress from "components/common/SolidityScoreProgress";
-import Loader from "components/styled-components/Loader";
 import QuickScanForm from "components/quickscan/QuickScanForm";
 import { Header } from "components/header";
 
