@@ -23,7 +23,6 @@ import { BiUser, BiPowerOff } from "react-icons/bi";
 import { getAssetsURL, getFeatureGateConfig } from "helpers/helperFunction";
 import Sidebar from "components/sidebar";
 import { ProfileIconOne } from "components/icons";
-import { useProfile } from "hooks/useProfile";
 import {
   SIDEBAR_WIDTH_EXPANDED,
   SIDEBAR_WIDTH_COLLAPSED,
@@ -37,6 +36,7 @@ import { sentenceCapitalize } from "helpers/helperFunction";
 import { useUserOrgProfile } from "hooks/useUserOrgProfile";
 import { signInWithCustomToken, User, onAuthStateChanged } from "firebase/auth";
 import { auth } from "helpers/firebase";
+import { useUserRole } from "hooks/useUserRole";
 
 const MotionFlex = motion(Flex);
 
@@ -48,7 +48,7 @@ const Layout: React.FC = ({ children }) => {
   const queryClient = useQueryClient();
   const [firebaseToken, setFirebaseToken] = useState<string>();
   const [firebaseUser, setFirebaseUser] = useState<User>();
-  const { data: profileData } = useProfile();
+  const { profileData } = useUserRole();
   const { data: orgProfile } = useUserOrgProfile(
     profileData?.logged_in_via === "org_login"
   );
@@ -212,6 +212,7 @@ const Layout: React.FC = ({ children }) => {
             ],
             height: "calc(100vh)",
             overflowY: "scroll",
+            overflowX: "hidden",
           }}
         >
           {/* <Flex
@@ -301,9 +302,12 @@ const Layout: React.FC = ({ children }) => {
                 </MenuButton>
                 <MenuList
                   p={4}
+                  zIndex={10}
                   width="250px"
                   borderWidth="0px"
-                  boxShadow="0px 4px 20px rgba(0, 0, 0, 0.35)"
+                  sx={{
+                    boxShadow: "0px 4px 20px rgba(0, 0, 0, 0.35) !important",
+                  }}
                   borderRadius="15px"
                 >
                   {profileData.logged_in_via === "org_login" &&
@@ -348,7 +352,9 @@ const Layout: React.FC = ({ children }) => {
               </Menu>
             )}
           </Flex>
-          <Box width={"100%"}>{children}</Box>
+          <Box width={"100%"} height="calc(100% - 90px)">
+            {children}
+          </Box>
         </Box>
       </Flex>
     </Box>

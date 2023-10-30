@@ -75,13 +75,14 @@ const Overview: React.FC<{
   const solidity_score = scanData.multi_file_scan_summary?.score_v2
     ? scanData.multi_file_scan_summary?.score_v2
     : (parseFloat(scanData.multi_file_scan_summary?.score) * 20).toFixed(2);
-  const vulnerabilityCount = Object.keys(
-    scanData.multi_file_scan_summary?.issue_severity_distribution
-  ).reduce(
-    (sum, item) =>
-      sum + scanData.multi_file_scan_summary.issue_severity_distribution[item],
-    0
-  );
+
+  const vulnerabilityCount =
+    scanData.multi_file_scan_summary.issue_severity_distribution.critical +
+    scanData.multi_file_scan_summary.issue_severity_distribution.gas +
+    scanData.multi_file_scan_summary.issue_severity_distribution.high +
+    scanData.multi_file_scan_summary.issue_severity_distribution.informational +
+    scanData.multi_file_scan_summary.issue_severity_distribution.low +
+    scanData.multi_file_scan_summary.issue_severity_distribution.medium;
 
   const handleTabsChange = (index: number) => {
     onTabChange(index);
@@ -147,6 +148,7 @@ const Overview: React.FC<{
                   scanData.multi_file_scan_summary.issue_severity_distribution
                     .gas
                 }
+                view="scans"
               />
             </Box>
           </VStack>
@@ -306,6 +308,7 @@ const Overview: React.FC<{
                     .informational
                 }
                 gas={scanData.scan_summary.issue_severity_distribution.gas}
+                view="scans"
               />
             </Box>
           </VStack>
@@ -430,7 +433,7 @@ const Overview: React.FC<{
               <ErrorResponsivePie />
             </Box>
             <Box w={["70%", "70%", "60%"]} sx={{ marginBottom: 10 }}>
-              <ErrorVulnerabilityDistribution />
+              <ErrorVulnerabilityDistribution view="scans" />
             </Box>
             <Flex
               w="100%"

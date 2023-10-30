@@ -20,6 +20,7 @@ const InfoSettings: React.FC<{
   projectName: string;
   githubLink: string;
   isViewer: boolean;
+  formType: string;
   connectAlert: boolean;
   isOauthIntegrated: boolean;
   setProjectName: React.Dispatch<React.SetStateAction<string>>;
@@ -39,48 +40,17 @@ const InfoSettings: React.FC<{
   isViewer,
   connectAlert,
   setConnectAlert,
+  formType,
 }) => {
+  const placeholder: { [key: string]: string } = {
+    github: "github.com",
+    gitlab: "gitlab.com",
+    bitbucket: "bitbucket.org",
+  };
+
   return (
-    <Stack
-      minHeight="400px"
-      spacing={3}
-      mt={0}
-      height={"fit-content"}
-      width={"100%"}
-    >
-      <Text
-        sx={{
-          fontSize: "sm",
-          color: "subtle",
-          textAlign: "left",
-        }}
-      >
-        NOTE: Please verify the following to avoid scan failure:
-      </Text>
-      <Text
-        sx={{
-          color: "subtle",
-          textAlign: "left",
-          mb: 2,
-          fontSize: "xs",
-        }}
-      >
-        1. Ensure the link is to a GitHub repository containing Solidity (.sol)
-        files. It is recommended to use the HTTPS GitHub (.git) cloning link of
-        the repository.
-      </Text>
-      <Text
-        sx={{
-          color: "subtle",
-          textAlign: "left",
-          mb: 6,
-          fontSize: "xs",
-        }}
-      >
-        2. Verify if the repository is public, for private repositories, please
-        integrate your GitHub from the Integrations tab.
-      </Text>
-      <VStack alignItems={"flex-start"}>
+    <Stack spacing={5} mt={0} height={"fit-content"} width={"100%"}>
+      <VStack alignItems={"flex-start"} mt={[3, 3, 3, 3, 10]}>
         <Text mb={0} fontSize="sm">
           Project name
         </Text>
@@ -115,7 +85,7 @@ const InfoSettings: React.FC<{
             isRequired
             type="url"
             disabled={isViewer}
-            placeholder="https://github.com/yourproject/project.git"
+            placeholder={`https://${placeholder[formType]}/yourproject/project.git`}
             variant={linkError ? "error" : "brand"}
             size="lg"
             value={githubLink}
@@ -156,12 +126,12 @@ const InfoSettings: React.FC<{
       {isOauthIntegrated && (
         <Text
           width="100%"
-          p={5}
+          p={3}
           borderWidth={1}
           borderColor="#FFC661"
           background="#FFF8ED"
           color="#4E5D78"
-          fontSize={"sm"}
+          fontSize={"xs"}
           fontWeight={300}
           borderRadius={10}
         >

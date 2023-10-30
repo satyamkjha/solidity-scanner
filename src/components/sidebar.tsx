@@ -11,6 +11,7 @@ import {
   useDisclosure,
   VStack,
   useMediaQuery,
+  Image,
 } from "@chakra-ui/react";
 import {
   LogoIcon,
@@ -29,7 +30,6 @@ import {
   SIDEBAR_WIDTH_EXPANDED,
   SIDEBAR_WIDTH_COLLAPSED,
 } from "common/constants";
-import { useProfile } from "hooks/useProfile";
 import ManualAuditForm from "./modals/manualAuditForm";
 import { ArrowBackIcon, ArrowForwardIcon } from "@chakra-ui/icons";
 import { useConfig } from "hooks/useConfig";
@@ -41,13 +41,12 @@ const Sidebar: React.FC<{
   setCollapsed: React.Dispatch<React.SetStateAction<boolean>>;
   setShowSidebar: React.Dispatch<React.SetStateAction<boolean>>;
 }> = ({ isCollapsed, setCollapsed, setShowSidebar }) => {
-  const { data: profileData } = useProfile();
   const { isOpen, onClose, onOpen } = useDisclosure();
   const [transitionDone, setTransitionDone] = useState(true);
   const [isDesktopView] = useMediaQuery("(min-width: 1024px)");
   const config: any = useConfig();
   const assetsURL = getAssetsURL(config);
-  const role: string = useUserRole();
+  const { role, profileData } = useUserRole();
 
   let sidebarData: SidebarItemProps[] = [
     {
@@ -63,15 +62,6 @@ const Sidebar: React.FC<{
       link: "/projects",
       label: "Projects",
       icon: <ProjectsMenuIcon size={16} />,
-      isCollapsed: isCollapsed,
-      transitionDone: transitionDone,
-      isExternal: false,
-      accessRevoked: [],
-    },
-    {
-      link: "/blocks",
-      label: "Verified Contracts",
-      icon: <BlockMenuIcon size={16} />,
       isCollapsed: isCollapsed,
       transitionDone: transitionDone,
       isExternal: false,
@@ -124,12 +114,20 @@ const Sidebar: React.FC<{
     },
   ];
 
-  if (getFeatureGateConfig().merge_scans_enabled) {
-    const updatedSidebarData = sidebarData.filter(
-      (item) => item.link !== "/blocks"
-    );
-    sidebarData = updatedSidebarData;
-  }
+  const footerIconList = [
+    {
+      imgUrl: "telegram",
+      link: "https://t.me/solidityscan",
+    },
+    {
+      imgUrl: "discord",
+      link: "https://discord.com/invite/9HhV4hGENw",
+    },
+    {
+      imgUrl: "twitter",
+      link: "https://twitter.com/solidityscan",
+    },
+  ];
 
   return (
     <Flex
@@ -236,19 +234,6 @@ const Sidebar: React.FC<{
           pb={["3", "3", "3", "3", "4"]}
         >
           <Box sx={{ width: "85%" }}>
-            {/* <Text
-            sx={{
-              color: "subtle",
-              ml: 3,
-              mb: 4,
-              fontSize: "xs",
-              opacity: isCollapsed ? 0 : 1,
-              transition: "opacity 0.3s ease",
-            }}
-          >
-            PAGES
-          </Text> */}
-
             {sidebarData.map((sidebarItem) => {
               if (!sidebarItem.accessRevoked.includes(role)) {
                 return <SidebarItem {...sidebarItem} />;
@@ -260,8 +245,10 @@ const Sidebar: React.FC<{
       )}
       <Flex
         width="100%"
-        height={["185px", "185px", "185px", "205px"]}
+        height={"fit-content"}
         justifyContent="center"
+        flexDir="column"
+        alignItems="flex-start"
         p={5}
         visibility={isCollapsed ? "hidden" : "visible"}
       >
@@ -280,6 +267,11 @@ const Sidebar: React.FC<{
             <Text fontSize="xs"> Request manual audit</Text>
           </Button>
         </Box>
+        <HStack justifyContent="flex-start" mt={3} spacing={5}>
+          {footerIconList.map((item) => (
+            <FooterIcon iconUrl={item.imgUrl} socialUrl={item.link} />
+          ))}
+        </HStack>
       </Flex>
       <ManualAuditForm isOpen={isOpen} onClose={onClose} />
     </Flex>
@@ -340,6 +332,27 @@ export const SidebarItem: React.FC<SidebarItemProps> = ({
         )}
       </Flex>
     </>
+  );
+};
+
+const FooterIcon: React.FC<{
+  iconUrl: string;
+  socialUrl: string;
+}> = ({ iconUrl, socialUrl }) => {
+  const [hover, setHover] = useState(false);
+  const assetsURL = getAssetsURL();
+  return (
+    <Image
+      onMouseOver={() => setHover(true)}
+      onMouseLeave={() => setHover(false)}
+      cursor={"pointer"}
+      onClick={() => window.open(socialUrl, "_blank")}
+      src={`${assetsURL}icons/footer_social/${iconUrl}${
+        hover ? "-blue" : ""
+      }.svg`}
+      height="35px"
+      width="35px"
+    ></Image>
   );
 };
 

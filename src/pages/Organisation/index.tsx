@@ -34,11 +34,7 @@ const Organisation: React.FC<{ profileData?: Profile }> = ({ profileData }) => {
         minH: "78vh",
       }}
     >
-      <VStack alignItems="flex-start" spacing={0} pl={4}>
-        <Text color="subtle" fontWeight="600" fontSize="sm">
-          ADMIN CONTROLS
-        </Text>
-      </VStack>
+      <Text sx={{ color: "subtle", fontWeight: 600 }}>ORGANISATION</Text>
       {!profileData ? (
         <Flex
           sx={{

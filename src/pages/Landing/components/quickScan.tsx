@@ -23,9 +23,7 @@ export default function QuickScan() {
     ref: string | null
   ) => {
     const element = document.getElementById("public_layout");
-    element?.removeEventListener("scroll", () =>
-      console.log("removed listner")
-    );
+    element?.removeEventListener("scroll", () => {});
     history.push(`/quickscan/${address}/${platform}/${chain}`);
   };
 

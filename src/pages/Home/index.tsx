@@ -1,199 +1,440 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import {
   Flex,
-  Box,
   Text,
-  Tabs,
-  TabList,
-  TabPanels,
-  Tab,
-  TabPanel,
+  VStack,
+  Button,
+  useDisclosure,
+  HStack,
+  Image,
+  Menu,
+  MenuButton,
+  MenuList,
+  MenuItem,
+  useMediaQuery,
 } from "@chakra-ui/react";
 import { useOverview } from "hooks/useOverview";
-import VulnerabilityProgress from "components/VulnerabilityProgress";
-import ApplicationForm from "./ApplicationForm";
-import ContractForm from "./ContractForm";
-import UploadForm from "./UploadForm";
 import Loader from "components/styled-components/Loader";
 import { useProfile } from "hooks/useProfile";
+import { AddIcon, ArrowForwardIcon } from "@chakra-ui/icons";
+import { getAssetsURL } from "helpers/helperFunction";
+import VulnerabilityDistribution from "components/vulnDistribution";
+import { useHistory } from "react-router-dom";
+import { capitalize } from "common/functions";
+import { BiPlug } from "react-icons/bi";
+import { Profile } from "common/types";
+import AddProjectForm from "./AddProjectForm";
+import RecentScansList from "./RecentScansList";
+import PlanCycleInfo from "pages/Billing/components/PlanCycleInfo";
+import { useUserRole } from "hooks/useUserRole";
+
+const OverviewData: React.FC<{
+  heading: number;
+  subHeading: string;
+  imgName: string;
+}> = ({ heading, subHeading, imgName }) => {
+  const assetsURL = getAssetsURL();
+
+  return (
+    <VStack
+      borderRadius={10}
+      bg="bg.subtle"
+      h="100%"
+      w="48%"
+      p={2}
+      align="center"
+      spacing={1}
+    >
+      <Text sx={{ fontSize: "2xl", fontWeight: 700 }}>{heading}</Text>
+      <Image
+        height="46px"
+        width="46px"
+        src={`${assetsURL}common/${imgName}.svg`}
+      />
+      <Text
+        sx={{
+          fontSize: "sm",
+          fontWeight: 600,
+          textAlign: "center",
+          color: "gray.500",
+        }}
+      >
+        {subHeading}
+      </Text>
+    </VStack>
+  );
+};
+
+const AddProjectBox: React.FC<{ profileData: Profile }> = ({ profileData }) => {
+  const assetsURL = getAssetsURL();
+
+  const { isOpen, onClose, onOpen } = useDisclosure();
+  const [changeView] = useMediaQuery("(min-width: 550px)");
+  const [formType, setFormType] = useState("");
+
+  useEffect(() => {
+    if (formType !== "") {
+      onOpen();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [setFormType, formType]);
+
+  const menuList = [
+    {
+      text: "Github Application",
+      formType: "github",
+      iconLink: "icons/integrations/github.svg",
+    },
+    {
+      text: "GitLab",
+      formType: "gitlab",
+      iconLink: "icons/integrations/gitlab.svg",
+    },
+    {
+      text: "Bitbucket",
+      formType: "bitbucket",
+      iconLink: "icons/integrations/bitbucket.svg",
+    },
+    {
+      text: "Verified Contracts",
+      formType: "verified_contract",
+      iconLink: "icons/project_type_icons/verified_contract.svg",
+    },
+    {
+      text: "Upload Contract",
+      formType: "filescan",
+      iconLink: "icons/project_type_icons/filescan.svg",
+    },
+  ];
+
+  return (
+    <Flex
+      width="100%"
+      h={changeView ? "120px" : "fit-content"}
+      borderRadius={10}
+      border="1px solid #52FF00"
+      flexDir={changeView ? "row" : "column"}
+      justifyContent={changeView ? "space-between" : "flex-start"}
+      alignItems={"center"}
+      p={5}
+      bg="white"
+    >
+      <VStack
+        textAlign={changeView ? "left" : "center"}
+        alignItems="flex-start"
+        mb={changeView ? 0 : 5}
+        w={changeView ? "60%" : "100%"}
+      >
+        <Text
+          sx={{
+            fontSize: ["lg", "lg", "xl"],
+            fontWeight: 600,
+            w: "100%",
+          }}
+        >
+          Add Project
+        </Text>
+        <Text
+          sx={{
+            color: "subtle",
+            mb: 2,
+            fontSize: "sm",
+          }}
+        >
+          Start your project's security journey effortlessly by linking to code
+          repositories, contract addresses, or uploading your Solidity files.
+        </Text>
+      </VStack>
+      <Menu>
+        <MenuButton
+          as={Button}
+          variant="brand"
+          leftIcon={<AddIcon />}
+          minW={"170px"}
+        >
+          Add Project
+        </MenuButton>
+        <MenuList
+          p={4}
+          width="250px"
+          borderWidth="0px"
+          sx={{
+            boxShadow: "0px 4px 20px rgba(0, 0, 0, 0.35) !important",
+          }}
+          borderRadius="15px"
+        >
+          {menuList.map((item) => (
+            <MenuItem
+              borderColor="border"
+              py={2}
+              borderRadius="10px"
+              mt={2}
+              onClick={() => setFormType(item.formType)}
+              fontWeight={600}
+            >
+              <Image
+                height="30px"
+                width="30px"
+                mr={2}
+                src={`${assetsURL}${item.iconLink}`}
+              />{" "}
+              {item.text}
+            </MenuItem>
+          ))}
+        </MenuList>
+        <AddProjectForm
+          profileData={profileData}
+          formType={formType}
+          isOpen={isOpen}
+          onClose={() => {
+            setFormType("");
+            onClose();
+          }}
+        />
+      </Menu>
+    </Flex>
+  );
+};
 
 const Home: React.FC = () => {
   const { data } = useOverview();
-  const { data: profileData } = useProfile();
+  const { profileData } = useUserRole();
+  const assetsURL = getAssetsURL();
+  const history = useHistory();
+
+  const [isDesktopView, changeVulnDistributionView] = useMediaQuery([
+    "(min-width: 1100px)",
+    "(min-width: 450px)",
+  ]);
 
   return (
-    <Box
+    <Flex
       sx={{
         width: "100%",
+        height: "100%",
+        flexDir: isDesktopView ? "row" : "column",
       }}
     >
-      <Flex sx={{ width: "100%", flexDir: ["column", "column", "row"] }}>
-        <Flex
-          sx={{
-            w: ["100%", "100%", "60%"],
-            flexDir: "column",
-            alignItems: "center",
-            bg: "bg.subtle",
-            borderRadius: "20px",
-            p: 4,
-            mx: [0, 0, 4],
-            my: 2,
-          }}
-        >
-          {profileData && (
-            <Tabs variant="soft-rounded" colorScheme="green" w="100%">
-              <TabList mb="1em">
-                <Tab width="50%">GitHub Application</Tab>
-                <Tab width="50%">Verified Contracts</Tab>
-                <Tab width="50%">Upload Contract</Tab>
-              </TabList>
-              <TabPanels w="100%">
-                <TabPanel w="100%" p={0}>
-                  <ApplicationForm profileData={profileData} />
-                </TabPanel>
-                <TabPanel p={0}>
-                  <ContractForm profileData={profileData} />
-                </TabPanel>
-                <TabPanel p={0}>
-                  <UploadForm profileData={profileData} />
-                </TabPanel>
-              </TabPanels>
-            </Tabs>
-          )}
-        </Flex>
-        {!data && (
+      {data && profileData ? (
+        <>
           <Flex
             sx={{
-              w: ["100%", "100%", "40%"],
-              mx: [0, 0, 4],
-              my: 24,
-              justifyContent: "center",
-            }}
-          > 
-            <Loader />
-          </Flex>
-        )}
-        {data && (
-          <Box
-            sx={{
-              w: ["100%", "100%", "40%"],
-              mx: [0, 0, 4],
-              my: 2,
+              w: isDesktopView ? "70%" : "100%",
+              h: "fit-content",
+              flexDir: "column",
+              alignItems: "center",
+              borderRadius: "20px",
+              p: 4,
+              mx: [0, 0, 2],
             }}
           >
-            <Text sx={{ color: "subtle", fontSize: "sm", px: 4 }}>
-              OVERVIEW
-            </Text>
-            <Box
-              sx={{
-                w: "100%",
-                borderRadius: "20px",
-                bg: "bg.subtle",
-                p: 4,
-                my: 2,
-              }}
+            <AddProjectBox profileData={profileData} />
+            <Flex
+              width="100%"
+              h={["fit-content", "fit-content", "150px"]}
+              my={4}
+              flexDir={["column", "column", "row"]}
+              justifyContent={["flex-start", "flex-start", "space-between"]}
+              alignItems={"center"}
             >
-              <Text sx={{ fontSize: "3xl", fontWeight: 600 }}>
-                {data.overview.total_lines_scanner}
-              </Text>
-              <Text sx={{ fontSize: "sm", fontWeight: 600, color: "gray.600" }}>
-                Lines of code scanned
-              </Text>
-            </Box>
-            <Box
-              sx={{
-                w: "100%",
-                borderRadius: "20px",
-                bg: "bg.subtle",
-                p: 4,
-                my: 2,
-              }}
-            >
-              <Text sx={{ fontSize: "3xl", fontWeight: 600 }}>
-                {data.overview.total_projects_monitored}
-              </Text>
-              <Text sx={{ fontSize: "sm", fontWeight: 600, color: "gray.600" }}>
-                Projects monitored
-              </Text>
-            </Box>
-            {/* <Box
-              sx={{
-                w: "100%",
-                borderRadius: "20px",
-                bg: "bg.subtle",
-                p: 4,
-                my: 2,
-              }}
-            >
-              <Text sx={{ fontSize: "3xl", fontWeight: 600 }}>
-                {data?.overview.total_issues_open}
-              </Text>
-              <Text sx={{ fontSize: "sm", fontWeight: 600, color: "gray.600" }}>
-                Open Issues
-              </Text>
-            </Box> */}
-            <Box
-              sx={{
-                w: "100%",
-                borderRadius: "20px",
-                p: 4,
-                my: 2,
-              }}
-            >
-              <VulnerabilityProgress
-                label="Critical"
-                variant="critical"
-                count={data.overview.issue_count_critical}
-                total={data.overview.issue_count_total}
-              />
-              <VulnerabilityProgress
-                label="High"
-                variant="high"
-                count={data.overview.issue_count_high}
-                total={data.overview.issue_count_total}
-              />
-              <VulnerabilityProgress
-                label="Medium"
-                variant="medium"
-                count={data.overview.issue_count_medium}
-                total={data.overview.issue_count_total}
-              />
-              <VulnerabilityProgress
-                label="Low"
-                variant="low"
-                count={data.overview.issue_count_low}
-                total={data.overview.issue_count_total}
-              />
-              <VulnerabilityProgress
-                label="Informational"
-                variant="informational"
-                count={data.overview.issue_count_informational}
-                total={data.overview.issue_count_total}
-              />
-              <VulnerabilityProgress
-                label="Gas"
-                variant="gas"
-                count={data.overview.issue_count_gas}
-                total={data.overview.issue_count_total}
-              />
-              <Flex
-                sx={{
-                  w: "100%",
-                  justifyContent: "space-between",
-                  fontSize: "md",
-                  fontWeight: 600,
-                  px: 4,
-                  mt: 8,
-                }}
+              <HStack
+                h="100%"
+                w={["100%", "100%", "260px"]}
+                justify="space-between"
+                spacing={0}
               >
-                <Text>Total Vulnerabilities Found</Text>
-                <Text>{data.overview.issue_count_total}</Text>
-              </Flex>
-            </Box>
-          </Box>
-        )}
-      </Flex>
-    </Box>
+                <OverviewData
+                  heading={data.overview.total_lines_scanner}
+                  subHeading={"Lines of code scanned"}
+                  imgName={"lines_of_code"}
+                />
+                <OverviewData
+                  heading={data.overview.total_projects_monitored}
+                  subHeading={"Projects monitored"}
+                  imgName={"monitored_projects"}
+                />
+              </HStack>
+              <VStack
+                h="100%"
+                w={["100%", "100%", "calc(100% - 270px)"]}
+                bg="bg.subtle"
+                justify="space-between"
+                borderRadius={10}
+                mt={[4, 4, 0]}
+                py={2}
+                px={4}
+              >
+                <Flex
+                  flexDirection={changeVulnDistributionView ? "row" : "column"}
+                  justify={
+                    changeVulnDistributionView ? "space-between" : "flex-start"
+                  }
+                  alignItems="center"
+                  w="100%"
+                  h="fit-content"
+                >
+                  <Text
+                    sx={{
+                      fontSize: "sm",
+                      fontWeight: 600,
+                      textAlign: "center",
+                      color: "gray.500",
+                    }}
+                  >
+                    Total Vulnerabilities
+                  </Text>
+                  <Text
+                    my={changeVulnDistributionView ? 0 : 2}
+                    sx={{ fontSize: "2xl", fontWeight: 700 }}
+                  >
+                    {data.overview.issue_count_total}
+                  </Text>
+                </Flex>
+                <VulnerabilityDistribution
+                  view="home"
+                  size={changeVulnDistributionView ? "large" : "small"}
+                  critical={data.overview.issue_count_critical}
+                  high={data.overview.issue_count_high}
+                  medium={data.overview.issue_count_medium}
+                  low={data.overview.issue_count_low}
+                  informational={data.overview.issue_count_informational}
+                  gas={data.overview.issue_count_gas}
+                />
+              </VStack>
+            </Flex>
+            <RecentScansList />
+          </Flex>
+          <Flex
+            sx={{
+              w: isDesktopView ? "30%" : "100%",
+              flexDir: "column",
+              alignItems: "flex-start",
+            }}
+            justifyContent="flex-start"
+            mr={4}
+            mt={3}
+            px={isDesktopView ? 0 : 5}
+          >
+            <PlanCycleInfo
+              planName={profileData.current_package}
+              packageRechargeDate={profileData.package_recharge_date}
+              packageValidity={profileData.package_validity}
+              packageName={profileData.current_package}
+              subscription={profileData.subscription}
+            />
+            <Flex
+              justifyContent="flex-start"
+              alignItems="center"
+              p={3}
+              flexDirection="column"
+              bgColor="bg.subtle"
+              w="100%"
+              borderRadius={10}
+              mt={5}
+            >
+              <HStack
+                px={3}
+                justifyContent="space-between"
+                alignItems="center"
+                w="100%"
+              >
+                <Text
+                  sx={{
+                    fontSize: "md",
+                    fontWeight: 600,
+                    textAlign: "center",
+                    color: "gray.500",
+                  }}
+                >
+                  Integrations
+                </Text>
+
+                <Button
+                  variant="ghost"
+                  color="accent"
+                  rightIcon={<ArrowForwardIcon />}
+                  onClick={() => history.push("/integrations")}
+                >
+                  View All
+                </Button>
+              </HStack>
+              {profileData &&
+                Object.keys(profileData._integrations).map((item) => (
+                  <HStack
+                    justifyContent="space-between"
+                    alignItems="center"
+                    w="100%"
+                    p={5}
+                    borderRadius={10}
+                    bg="white"
+                    mt={4}
+                  >
+                    <HStack spacing={2}>
+                      <Image
+                        height="35px"
+                        width="35px"
+                        src={`${assetsURL}icons/integrations/${item}.svg`}
+                      />
+                      <Text
+                        sx={{
+                          fontSize: "md",
+                          fontWeight: 600,
+                        }}
+                      >
+                        {capitalize(item)}
+                      </Text>
+                    </HStack>
+                    {item === "jira" ? (
+                      <Button
+                        size="sm"
+                        fontSize="sm"
+                        variant="label"
+                        color="#1DAAE2"
+                        bgColor="#E7F8FF"
+                      >
+                        Coming Soon
+                      </Button>
+                    ) : profileData._integrations[item].status ===
+                      "successful" ? (
+                      <Button
+                        size="sm"
+                        fontSize="sm"
+                        leftIcon={<BiPlug />}
+                        variant="l abel"
+                        color="#2C991A"
+                        bgColor="#F0FFF5"
+                      >
+                        Connected
+                      </Button>
+                    ) : (
+                      <Button
+                        size="sm"
+                        fontSize="sm"
+                        variant="label"
+                        color="#4E5D78"
+                        onClick={() => history.push("/integrations")}
+                      >
+                        Connect
+                      </Button>
+                    )}
+                  </HStack>
+                ))}
+            </Flex>
+          </Flex>
+        </>
+      ) : (
+        <Flex
+          sx={{
+            w: "100%",
+            h: "100%",
+            justifyContent: "center",
+            alignItems: "center",
+          }}
+        >
+          <Loader />
+        </Flex>
+      )}
+    </Flex>
   );
 };
 

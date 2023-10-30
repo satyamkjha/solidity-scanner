@@ -80,19 +80,6 @@ export const Footer: React.FC = () => {
               />
             </Link>
           ))}
-
-          {/* <Link m={2} href="https://discord.com/invite/9HhV4hGENw" isExternal>
-            <DiscordIcon size={40} />
-          </Link>
-          <Link m={2} href="https://t.me/solidityscan" isExternal>
-            <TelegramIcon size={40} />
-          </Link>
-          <Link m={2} href="https://www.instagram.com/solidityscan/" isExternal>
-            <InstagramIcon size={40} />
-          </Link>
-          <Link m={2} href="https://twitter.com/solidityscan" isExternal>
-            <TwiterIcon size={45} />
-          </Link> */}
         </Flex>
       </Flex>
       {isLargerThan768 && <FooterLinks />}

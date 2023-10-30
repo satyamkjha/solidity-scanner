@@ -166,3 +166,44 @@ export function isInStartViewport(element: any, index: number) {
   }
   return false;
 }
+
+export const getNextPaymentValue = (
+  packageRechargeDate: string,
+  packageValidity: number,
+  startDate: Date,
+  nextDate?: Date
+) => {
+  const remainingDays = getPaymentDaysLeft(
+    packageRechargeDate,
+    packageValidity,
+    nextDate
+  );
+  if (nextDate) {
+    const timeDifference = nextDate.getTime() - startDate.getTime();
+    const totalDays = Math.ceil(timeDifference / (1000 * 3600 * 24));
+    return (remainingDays * 100) / totalDays;
+  } else {
+    return (remainingDays * 100) / packageValidity;
+  }
+};
+
+export const getPaymentDaysLeft = (
+  packageRechargeDate: string,
+  packageValidity: number,
+  nextDate?: Date
+) => {
+  if (nextDate) {
+    const timeDifference = nextDate.getTime() - new Date().getTime();
+    return Math.ceil(timeDifference / (1000 * 3600 * 24));
+  } else {
+    const startDate = new Date(packageRechargeDate);
+    const currentDate = new Date();
+    const millisecondsPerDay = 24 * 60 * 60 * 1000;
+
+    const elapsedTime = currentDate.getTime() - startDate.getTime();
+    const elapsedDays = Math.floor(elapsedTime / millisecondsPerDay);
+
+    const remainingDays = packageValidity - elapsedDays;
+    return remainingDays;
+  }
+};

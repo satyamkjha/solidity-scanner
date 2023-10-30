@@ -536,6 +536,7 @@ const ChangePasswordForm: React.FC<{
       onOpen();
       setLoading2FA(false);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [twoFAsetupData]);
 
   const onSubmit = async () => {

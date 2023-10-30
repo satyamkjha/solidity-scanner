@@ -67,7 +67,7 @@ const IssueBox: React.FC<{
   const config: any = useConfig();
   const assetsURL = getAssetsURL(config);
   const [isDesktopView] = useMediaQuery("(min-width: 1024px)");
-  const role = useUserRole();
+  const { role } = useUserRole();
   const [isHovered, setIsHovered] = useState(false);
   const [isChecked, setIsChecked] = useState(isSelected);
 

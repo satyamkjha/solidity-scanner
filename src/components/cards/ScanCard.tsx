@@ -1,16 +1,11 @@
-import React, {
-  useEffect,
-  useState,
-  useRef,
-} from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { useHistory } from "react-router-dom";
 import {
   Flex,
   Box,
   Text,
-  Button, 
+  Button,
   Progress,
-  Tooltip,
   AlertDialog,
   AlertDialogBody,
   AlertDialogFooter,
@@ -41,10 +36,11 @@ import {
   snakeToNormal,
   getTrimmedScanMessage,
   getAssetsURL,
+  getProjectType,
 } from "helpers/helperFunction";
 import { scanStatesLabel } from "common/values";
 
-const BlockCard: React.FC<{
+const ScanCard: React.FC<{
   scan: ScanObj;
   // setIconCounter: Dispatch<SetStateAction<number>>;
   updateScanList: (project_id: string) => void;
@@ -67,11 +63,11 @@ const BlockCard: React.FC<{
   const {
     project_name,
     scan_id,
-    _updated,
     contract_address,
     contractname,
     contract_platform,
     multi_file_scan_status,
+    scan_status,
     multi_file_scan_summary,
     project_id,
   } = scan.scan_details;
@@ -83,7 +79,11 @@ const BlockCard: React.FC<{
   const [hover, setHover] = useState(false);
 
   const deleteProject = async () => {
-    const { data } = await API.delete(API_PATH.API_DELETE_BLOCK, {
+    const url =
+      scan.scan_type === "project"
+        ? API_PATH.API_DELETE_PROJECT
+        : API_PATH.API_DELETE_BLOCK;
+    const { data } = await API.delete(url, {
       data: {
         project_ids: [project_id],
       },
@@ -144,85 +144,89 @@ const BlockCard: React.FC<{
           boxShadow: "0px 4px 24px rgba(0, 0, 0, 0.2)",
         },
       }}
-      maxWidth="500px"
+      maxWidth={["auto", "auto", "400px"]}
       onMouseOver={() => setHover(true)}
       onMouseLeave={() => setHover(false)}
-      my={4}
-      mx={4}
       boxSizing={"border-box"}
-      w={["90%", "95%", "45%", "320px"]}
+      w={["90%", "95%", "45%", "31%", "31%", "23%"]}
       onClick={() => {
         if (multi_file_scan_status === "scan_done") {
-          history.push(`/blocks/${scan_id}/${project_id}`);
+          history.push(`/${scan.scan_type}s/${scan_id}/${project_id}`);
         }
       }}
     >
-      <HStack
-        width={"100%"}
-        justifyContent={"space-between"}
-        alignItems={"flex-start"}
-        py={5}
+      <Flex
+        mt={4}
+        w="100%"
+        alignItems="flex-start"
+        justifyContent="space-between"
       >
-        <Box w="80%" px={5}>
-          <Tooltip label={contractname} fontSize="md" placement="top-start">
-            <Text sx={{ w: "100%", color: "subtle" }} isTruncated>
-              {contractname}
-            </Text>
-          </Tooltip>
-          <Text sx={{ w: "100%" }} isTruncated>
-            {project_name || contract_address}
-          </Text>
+        <Box ml={4} w="70%">
+          <Text isTruncated>{project_name || contract_address}</Text>
           <Text sx={{ fontSize: "xs", color: "subtle" }}>
-            Last scanned {timeSince(new Date(_updated))}
+            Last scanned {timeSince(new Date(scan.scan_details._updated))}
           </Text>
         </Box>
-        {hover && !isViewer && (
-          <Menu placement={"bottom-end"}>
-            <MenuButton
-              zIndex={10}
-              as={IconButton}
-              backgroundColor="#FFFFFF"
-              _hover={{ backgroundColor: "#FFFFFF" }}
-              _active={{ backgroundColor: "#FFFFFF" }}
-              icon={<BsThreeDotsVertical />}
-              aria-label="Options"
-              onClick={(e) => {
-                e.stopPropagation();
-              }}
-            />
-            <MenuList
-              sx={{
-                boxShadow: "0px 4px 24px rgba(0, 0, 0, 0.2)",
-              }}
-            >
-              <MenuItem
-                _focus={{ backgroundColor: "#FFFFFF" }}
+        <HStack mr={hover ? 2 : 9} alignItems="flex-start">
+          <Image
+            mx={0}
+            src={`${assetsURL}${
+              scan.scan_type === "project"
+                ? `icons/integrations/${getProjectType(
+                    scan.scan_details.project_url || ""
+                  )}`
+                : `blockscan/${contract_platform}`
+            }.svg`}
+            alt={contract_platform}
+            h={"40px"}
+            w={"40px"}
+            // onLoad={() => setIconCounter((currentCount) => currentCount + 1)}
+          />
+          {hover && !isViewer && (
+            <Menu placement={"bottom-end"}>
+              <MenuButton
+                zIndex={10}
+                as={IconButton}
+                w={5}
+                minW={5}
+                backgroundColor="#FFFFFF"
                 _hover={{ backgroundColor: "#FFFFFF" }}
-                icon={<DeleteIcon />}
+                _active={{ backgroundColor: "#FFFFFF" }}
+                icon={<BsThreeDotsVertical />}
+                aria-label="Options"
                 onClick={(e) => {
                   e.stopPropagation();
-                  onOpen();
+                }}
+              />
+              <MenuList
+                sx={{
+                  boxShadow: "0px 4px 24px rgba(0, 0, 0, 0.2)",
                 }}
               >
-                Delete Project
-              </MenuItem>
-            </MenuList>
-          </Menu>
-        )}
-      </HStack>
+                <MenuItem
+                  _focus={{ backgroundColor: "#FFFFFF" }}
+                  _hover={{ backgroundColor: "#FFFFFF" }}
+                  icon={<DeleteIcon />}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    onOpen();
+                  }}
+                >
+                  Delete Project
+                </MenuItem>
+              </MenuList>
+            </Menu>
+          )}
+        </HStack>
+      </Flex>
       {multi_file_scan_status === "scan_done" ? (
-        <Flex
-          width={"100%"}
-          flexDir="column"
-          height="fit-content"
-          px={3}
-          py={5}
-        >
+        <Flex width={"95%"} flexDir="column" height="fit-content" py={5}>
           <Flex
             width={"100%"}
             flexDir="row"
-            justifyContent={"space-between"}
+            justifyContent={"flex-start"}
             height="fit-content"
+            ml={2}
             mb={7}
           >
             <Score
@@ -233,14 +237,6 @@ const BlockCard: React.FC<{
                   .toString() ||
                 "0"
               }
-            />
-            <Image
-              mx={3}
-              src={`${assetsURL}blockscan/${contract_platform}.svg`}
-              alt={contract_platform}
-              h={"40px"}
-              w={"40px"}
-              // onLoad={() => setIconCounter((currentCount) => currentCount + 1)}
             />
           </Flex>
           <VulnerabilityDistribution
@@ -260,30 +256,30 @@ const BlockCard: React.FC<{
                 ?.informational || 0
             }
             gas={multi_file_scan_summary?.issue_severity_distribution.gas || 0}
+            view={"scans"}
           />
         </Flex>
-      ) : multi_file_scan_status === "scanning" ||
-        multi_file_scan_status === "initialised" ? (
-        <Box p={5} w="100%">
+      ) : ["scanning", "initialised", "downloaded"].includes(scan_status) ? (
+        <Box mb={10} p={5} w="100%">
           <Flex
             sx={{
               display: "inline-flex",
-              bg: "bg.subtle",
+
               alignItems: "center",
-              p: 2,
+
               mb: 2,
               borderRadius: 15,
             }}
           >
             {/* {ssIconAnimation && (
-              <Lottie
-                style={{
-                  height: "30px",
-                  width: "30px",
-                }}
-                animationData={ssIconAnimation}
-              />
-            )} */}
+                <Lottie
+                  style={{
+                    height: "30px",
+                    width: "30px",
+                  }}
+                  animationData={ssIconAnimation}
+                />
+              )} */}
             <LogoIcon size={15} />
             <Text mx={2} fontSize="sm">
               {scanStatesLabel[scanStatus] || scanStatesLabel["scanning"]}
@@ -304,14 +300,14 @@ const BlockCard: React.FC<{
           <HStack mb={2}>
             <WarningIcon color="#FF5630" />
             <Heading sx={{ fontSize: "sm", color: "#FF5630" }}>
-              {multi_file_scan_status.length > 25
-                ? getTrimmedScanMessage(multi_file_scan_status)
-                : snakeToNormal(multi_file_scan_status)}
+              {scan_status.length > 25
+                ? getTrimmedScanMessage(scan_status)
+                : snakeToNormal(scan_status)}
             </Heading>
           </HStack>
           <Text sx={{ fontSize: "xs", color: "#4E5D78" }}>
-            {multi_file_scan_status.length > 25
-              ? multi_file_scan_status
+            {scan_status.length > 25
+              ? scan_status
               : scan.scan_details.scan_message ||
                 "This scan has failed, lost credit will be reimbursed in a few minutes. Please contact support"}
           </Text>
@@ -351,4 +347,4 @@ const BlockCard: React.FC<{
   );
 };
 
-export default BlockCard;
+export default ScanCard;

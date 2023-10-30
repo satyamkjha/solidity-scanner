@@ -53,7 +53,7 @@ import { PublishReport } from "components/modals/report/PublishReport";
 
 const BlockPage: React.FC = () => {
   const { scanId } = useParams<{ scanId: string }>();
-  const role: string = useUserRole();
+  const { role } = useUserRole();
   const { data: scanData, isLoading, refetch } = useScan(scanId);
 
   const [reportingStatus, setReportingStatus] = useState<string>("");
@@ -535,7 +535,7 @@ const BlockPage: React.FC = () => {
                               <Button
                                 variant={
                                   reportingStatus === "report_generated"
-                                    ? "accent-outline"
+                                    ? "accent-fill"
                                     : "black-outline"
                                 }
                                 w={["80%", "80%", "50%", "auto"]}

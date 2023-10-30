@@ -15,7 +15,11 @@ import {
   Image,
   Box,
 } from "@chakra-ui/react";
-import { formattedDate } from "common/functions";
+import {
+  formattedDate,
+  getPaymentDaysLeft,
+  getNextPaymentValue,
+} from "common/functions";
 import { Plan } from "common/types";
 import API from "helpers/api";
 import { getAssetsURL, sentenceCapitalize } from "helpers/helperFunction";
@@ -25,6 +29,7 @@ import React, { useRef, useState } from "react";
 import SubscriptionDataContainer from "./SubscriptionDataContainer";
 import CurrentPlanDescriptionContainer from "./CurrentPlanDescriptionContainer";
 import PlanDetailsModal from "./PlanDetailsModal";
+import PlanCycleInfo from "./PlanCycleInfo";
 
 const CurrentPlan: React.FC<{
   isCancellable: boolean;
@@ -76,33 +81,33 @@ const CurrentPlan: React.FC<{
   const [isCancelSub, setIsCancelSub] = useState(false);
   const onClose = () => setIsCancelSub(false);
 
-  const getNextPaymentValue = (startDate: Date, nextDate?: Date) => {
-    const remainingDays = getPaymentDaysLeft(nextDate);
-    if (nextDate) {
-      const timeDifference = nextDate.getTime() - startDate.getTime();
-      const totalDays = Math.ceil(timeDifference / (1000 * 3600 * 24));
-      return (remainingDays * 100) / totalDays;
-    } else {
-      return (remainingDays * 100) / packageValidity;
-    }
-  };
+  // const getNextPaymentValue = (startDate: Date, nextDate?: Date) => {
+  //   const remainingDays = getPaymentDaysLeft(nextDate);
+  //   if (nextDate) {
+  //     const timeDifference = nextDate.getTime() - startDate.getTime();
+  //     const totalDays = Math.ceil(timeDifference / (1000 * 3600 * 24));
+  //     return (remainingDays * 100) / totalDays;
+  //   } else {
+  //     return (remainingDays * 100) / packageValidity;
+  //   }
+  // };
 
-  const getPaymentDaysLeft = (nextDate?: Date) => {
-    if (nextDate) {
-      const timeDifference = nextDate.getTime() - new Date().getTime();
-      return Math.ceil(timeDifference / (1000 * 3600 * 24));
-    } else {
-      const startDate = new Date(packageRechargeDate);
-      const currentDate = new Date();
-      const millisecondsPerDay = 24 * 60 * 60 * 1000;
+  // const getPaymentDaysLeft = (nextDate?: Date) => {
+  //   if (nextDate) {
+  //     const timeDifference = nextDate.getTime() - new Date().getTime();
+  //     return Math.ceil(timeDifference / (1000 * 3600 * 24));
+  //   } else {
+  //     const startDate = new Date(packageRechargeDate);
+  //     const currentDate = new Date();
+  //     const millisecondsPerDay = 24 * 60 * 60 * 1000;
 
-      const elapsedTime = currentDate.getTime() - startDate.getTime();
-      const elapsedDays = Math.floor(elapsedTime / millisecondsPerDay);
+  //     const elapsedTime = currentDate.getTime() - startDate.getTime();
+  //     const elapsedDays = Math.floor(elapsedTime / millisecondsPerDay);
 
-      const remainingDays = packageValidity - elapsedDays;
-      return remainingDays;
-    }
-  };
+  //     const remainingDays = packageValidity - elapsedDays;
+  //     return remainingDays;
+  //   }
+  // };
 
   return (
     <Box
@@ -115,7 +120,7 @@ const CurrentPlan: React.FC<{
     >
       <Flex
         w={"100%"}
-        h={"100%"}
+        h={"fit-content"}
         flexDir={["column", "column", "column", "row"]}
         justifyContent={[
           "flex-start",
@@ -149,158 +154,78 @@ const CurrentPlan: React.FC<{
               Upgrade Plan
             </Button>
           )}
-          <Flex
-            mt={packageName === "pro" ? 24 : 16}
-            flexWrap="wrap"
-            alignItems="center"
-            w={"100%"}
-            flexDir={"row"}
-          >
-            <SubscriptionDataContainer
-              packageName={packageName}
-              packageRechargeDate={packageRechargeDate}
-            />
-          </Flex>
         </Flex>
         <Flex
-          w={["100%", "100%", "100%", "40%"]}
-          h="100%"
+          w={"fit-content"}
           mt={[10, 10, 10, 0]}
-          p={2}
           flexDir="column"
           justifyContent={"flex-start"}
           alignItems="flex-start"
         >
-          {packageName !== "custom" && (
-            <Flex
-              w="100%"
-              maxW={
-                packageName === "trial" || packageName === "ondemand"
-                  ? "375px"
-                  : "400px"
-              }
-              maxH="185px"
-              px={8}
-              py={6}
-              background={
-                packageName === "trial" || packageName === "ondemand"
-                  ? "linear-gradient(101.8deg, #000000 4.3%, #3E1EA8 108.23%)"
-                  : packageName
-              }
-              backgroundImage={
-                packageName === "trial" || packageName === "ondemand"
-                  ? `url('${assetsURL}pricing/pro_upgrade.svg')`
-                  : "none"
-              }
-              backgroundSize="contain"
-              backgroundRepeat="no-repeat"
-              borderRadius="15px"
-              flexDir="column"
-            >
-              {packageName === "trial" || packageName === "ondemand" ? (
-                <>
-                  <Text fontSize="xl" color="white" mt={4}>
-                    Upgrade to <strong>Pro</strong>
-                  </Text>
-                  <Text
-                    color="white"
-                    fontWeight="400"
-                    fontSize="sm"
-                    w="75%"
-                    mt="2"
-                  >
-                    You've subscribed to a free trial version, Upgrade to unlock
-                    features and starts scanning your contracts.
-                  </Text>
-                </>
-              ) : (
-                <>
-                  <Flex>
-                    {subscription && (
-                      <VStack alignItems="flex-start" spacing={1}>
-                        <Text fontSize="xs" fontWeight="400">
-                          Next Billed on
-                        </Text>
-                        <Text fontSize="sm" fontWeight="600">
-                          {formattedDate(
-                            new Date(subscription.renewal_date),
-                            "long"
-                          )}
-                        </Text>
-                      </VStack>
-                    )}
-                    {packageName === "pro" && (
-                      <Image
-                        src={`${assetsURL}pricing/pro_badge.svg`}
-                        ml="auto"
-                        mt={-8}
-                        h={"80px"}
-                      />
-                    )}
-                  </Flex>
-                  <Flex mt={isCancellable ? 6 : 2} align="center">
-                    <CircularProgress
-                      value={
-                        subscription
-                          ? getNextPaymentValue(
-                              new Date(packageRechargeDate),
-                              new Date(subscription.renewal_date)
-                            )
-                          : getNextPaymentValue(new Date(packageRechargeDate))
-                      }
-                      color={packageName + "-dark"}
-                      trackColor="white"
-                      thickness="8px"
-                      size="60px"
-                      capIsRound
-                    ></CircularProgress>
-                    <VStack alignItems="flex-start" spacing={0} ml={3}>
-                      <Text fontSize="lg" fontWeight="700">
-                        {subscription
-                          ? getPaymentDaysLeft(
-                              new Date(subscription.renewal_date)
-                            )
-                          : getPaymentDaysLeft()}
-                        &nbsp; days
-                      </Text>
-                      <Text fontSize="sm" fontWeight="400">
-                        remaining for the {sentenceCapitalize(plan.name)} Plan
-                      </Text>
-                    </VStack>
-                  </Flex>
-                </>
-              )}
-            </Flex>
-          )}
-          <Flex mt={[6, 6, 6, "auto"]} ml={[0, 0, 0, 4]}>
-            <Button
-              variant="accent-outline"
-              borderRadius={"8px"}
-              background="white"
-              color={"blue"}
-              fontSize="sm"
-              fontWeight="400"
-              px={8}
-              onClick={() => {
-                setOpen(!open);
-              }}
-            >
-              Plan Details
-            </Button>
+          <PlanCycleInfo
+            planName={plan.name}
+            packageRechargeDate={packageRechargeDate}
+            packageValidity={packageValidity}
+            packageName={packageName}
+            subscription={subscription}
+          />
+        </Flex>
+      </Flex>
+      <Flex
+        mt={10}
+        w={"100%"}
+        h={"fit-content"}
+        flexDir={["column", "column", "column", "row"]}
+        justifyContent={[
+          "flex-start",
+          "flex-start",
+          "flex-start",
+          "space-between",
+        ]}
+        alignItems={["flex-start", "flex-start", "flex-start", "center"]}
+      >
+        <SubscriptionDataContainer
+          packageName={packageName}
+          packageRechargeDate={packageRechargeDate}
+        />
+        <Flex
+          w={["100%", "100$", "100%", "fit-content"]}
+          flexDir={["column", "row"]}
+          justifyContent={"flex-start"}
+          mt={[6, 6, 6, 4]}
+          ml={[0, 0, 0, 4]}
+        >
+          <Button
+            variant="accent-outline"
+            borderRadius={"8px"}
+            background="white"
+            color={"blue"}
+            fontSize="sm"
+            fontWeight="400"
+            px={8}
+            onClick={() => {
+              setOpen(!open);
+            }}
+          >
+            Plan Details
+          </Button>
+          {isCancellable && (
             <Button
               onClick={() => setIsCancelSub(!isCancelSub)}
-              variant={isCancellable ? "accent-outline" : "gray-outline"}
+              variant={"gray-outline"}
               borderRadius={"8px"}
               fontSize="sm"
               fontWeight="400"
-              ml={10}
+              ml={[0, 10]}
+              mt={[5, 0]}
               isDisabled={!isCancellable}
             >
               Cancel Subscription
             </Button>
-          </Flex>
+          )}
         </Flex>
       </Flex>
+
       <PlanDetailsModal
         subscription={subscription ? true : false}
         currentPackage={packageName}

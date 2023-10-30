@@ -65,7 +65,7 @@ const MultifileResult: React.FC<{
   contract_address,
 }) => {
   const [files, setFiles] = useState<FilesState | null>(null);
-  const role: string = useUserRole();
+  const { role } = useUserRole();
 
   const sortIssuesBasedonPriority = (issueArray: MultiFileScanDetail[]) => {
     const issuePriority: {
