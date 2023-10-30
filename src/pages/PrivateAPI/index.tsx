@@ -34,7 +34,7 @@ export default function PrivateApi() {
   const [isSpinning, setIsSpinning] = useState(false);
   const [isViewable, setViewable] = useState(false);
   const { onCopy, hasCopied } = useClipboard(accessKey);
-  const [actionType, setActionType] = useState("regenerate");
+  const [actionType, setActionType] = useState("");
   const { isOpen, onClose, onOpen } = useDisclosure();
   const config: any = useConfig();
   const assetsUrl = getAssetsURL(config);
@@ -82,17 +82,12 @@ export default function PrivateApi() {
   };
 
   const getAccessKey = async () => {
-    if (accessKey) {
-      setActionType("regenerate");
-      onOpen();
-    } else {
-      setIsSpinning(true);
-      setViewable(true);
-      const { data } = await API.post(API_PATH.API_CREATE_ACCESS_KEY);
-      setAccessKey(data.api_key);
-      setIsSpinning(false);
-      setIsFirstTime(true);
-    }
+    setIsSpinning(true);
+    setViewable(true);
+    const { data } = await API.post(API_PATH.API_CREATE_ACCESS_KEY);
+    setAccessKey(data.api_key);
+    setIsSpinning(false);
+    setIsFirstTime(true);
   };
 
   const revokeAccessKey = async () => {
@@ -104,11 +99,7 @@ export default function PrivateApi() {
 
   const onActionConfirm = async () => {
     setIsSpinning(true);
-    if (actionType === "regenerate") {
-      const { data } = await API.post(API_PATH.API_REGENERATE_ACCESS_KEY);
-      setAccessKey(data.api_key);
-      setIsFirstTime(false);
-    } else if (actionType === "delete") {
+    if (actionType === "delete") {
       await API.post(API_PATH.API_REVOKE_ACCESS_KEY);
       setAccessKey("");
       setViewable(true);
@@ -204,19 +195,21 @@ export default function PrivateApi() {
                 </Text>
               )}
             </Flex>
-            <Button
-              onClick={getAccessKey}
-              variant={"cta-outline"}
-              borderWidth={"1px"}
-              _hover={{ color: "#3300FF" }}
-              fontWeight={500}
-              px={10}
-              py={2}
-              ml={[0, 0, 0, "auto"]}
-              isDisabled={!hasAccess || !isOwner}
-            >
-              {accessKey ? "Regenerate Key" : "Generate Key"}
-            </Button>
+            {!accessKey && (
+              <Button
+                onClick={getAccessKey}
+                variant={"cta-outline"}
+                borderWidth={"1px"}
+                _hover={{ color: "#3300FF" }}
+                fontWeight={500}
+                px={10}
+                py={2}
+                ml={[0, 0, 0, "auto"]}
+                isDisabled={!hasAccess || !isOwner}
+              >
+                Generate Key
+              </Button>
+            )}
           </Flex>
           <Flex
             mx={[4, 4, 4, 6]}
