@@ -180,6 +180,20 @@ export const theme = extendTheme({
             background: "rgba(0, 0, 0, 0.05)",
           },
         }),
+        "white-outline": (props: StyleFunctionProps) => ({
+          ...defaultTheme.components.Button.variants.outline(props),
+          background: "transparent",
+          color: "#FFF",
+          fontSize: "15px",
+          borderColor: "#FFF",
+          py: 6,
+          _hover: {
+            background: "#FFFFFF30",
+          },
+          _active: {
+            background: "#FFFFFF30",
+          },
+        }),
         "black-outline": (props: StyleFunctionProps) => ({
           ...defaultTheme.components.Button.variants.outline(props),
           background: "#FFFFFF",
