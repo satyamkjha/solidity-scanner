@@ -195,11 +195,11 @@ const AcceptOrgInvitation: React.FC = () => {
                     </Text>
                   </HStack>
                   {next ? (
-                    <>
-                      <InputGroup alignItems="center" mt={10}>
-                        <Text mb={0} fontSize="sm">
-                          Name
-                        </Text>
+                    <VStack alignItems="flex-start" w={["100%", "100%", "90%"]}>
+                      <Text mb={0} fontSize="sm">
+                        Name
+                      </Text>
+                      <InputGroup alignItems="center">
                         <InputLeftElement
                           height="48px"
                           children={<Icon as={FaUserAlt} color="gray.300" />}
@@ -215,23 +215,24 @@ const AcceptOrgInvitation: React.FC = () => {
                           size="lg"
                           onChange={(event) => setName(event.target.value)}
                         />
-                        {hasSpecialCharacters(name) && (
-                          <Text
-                            w="100%"
-                            color={"subtle"}
-                            fontSize={"sm"}
-                            mb={2}
-                            textAlign="left"
-                          >
-                            Name should not contain special character such as @,
-                            +, -, etc
-                          </Text>
-                        )}
                       </InputGroup>
-                      <InputGroup mt={3}>
-                        <Text mb={0} fontSize="sm">
-                          Password
+                      {hasSpecialCharacters(name) && (
+                        <Text
+                          w="100%"
+                          color={"subtle"}
+                          fontSize={"sm"}
+                          my={2}
+                          mb={4}
+                          textAlign="left"
+                        >
+                          Name should not contain special character such as @,
+                          +, -, etc
                         </Text>
+                      )}
+                      <Text mt={3} fontSize="sm">
+                        Password
+                      </Text>
+                      <InputGroup>
                         <InputLeftElement
                           height="48px"
                           color="gray.300"
@@ -273,7 +274,7 @@ const AcceptOrgInvitation: React.FC = () => {
                         />
                       </InputGroup>
                       <PasswordError passwordError={passwordError} />
-                    </>
+                    </VStack>
                   ) : (
                     <Text fontSize="sm" mt={10}>
                       {orgName} has invited you join their organization as{" "}
