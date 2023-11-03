@@ -83,27 +83,22 @@ const AddProjectBox: React.FC<{ profileData: Profile }> = ({ profileData }) => {
     {
       text: "Github Application",
       formType: "github",
-      iconLink: "icons/integrations/github.svg",
     },
     {
       text: "GitLab",
       formType: "gitlab",
-      iconLink: "icons/integrations/gitlab.svg",
     },
     {
       text: "Bitbucket",
       formType: "bitbucket",
-      iconLink: "icons/integrations/bitbucket.svg",
     },
     {
       text: "Verified Contracts",
-      formType: "verified_contract",
-      iconLink: "icons/project_type_icons/verified_contract.svg",
+      formType: "block",
     },
     {
       text: "Upload Contract",
       formType: "filescan",
-      iconLink: "icons/project_type_icons/filescan.svg",
     },
   ];
 
@@ -176,7 +171,7 @@ const AddProjectBox: React.FC<{ profileData: Profile }> = ({ profileData }) => {
                 height="30px"
                 width="30px"
                 mr={2}
-                src={`${assetsURL}${item.iconLink}`}
+                src={`${assetsURL}icons/integrations/${item.formType}.svg`}
               />{" "}
               {item.text}
             </MenuItem>

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import {
   Flex,
   VStack,
@@ -20,6 +20,7 @@ import { Scan } from "common/types";
 import { LogoIcon, NoBugIcon, ScanErrorIcon } from "./icons";
 import ManualAuditCard from "./manualAuditCard";
 import SolidityScoreProgress from "./common/SolidityScoreProgress";
+import { getAssetsURL } from "helpers/helperFunction";
 
 const pieData = (
   critical: number,
@@ -75,6 +76,7 @@ const Overview: React.FC<{
   const solidity_score = scanData.multi_file_scan_summary?.score_v2
     ? scanData.multi_file_scan_summary?.score_v2
     : (parseFloat(scanData.multi_file_scan_summary?.score) * 20).toFixed(2);
+  const assetsURL = getAssetsURL();
 
   const vulnerabilityCount =
     scanData.multi_file_scan_summary.issue_severity_distribution.critical +
@@ -83,6 +85,14 @@ const Overview: React.FC<{
     scanData.multi_file_scan_summary.issue_severity_distribution.informational +
     scanData.multi_file_scan_summary.issue_severity_distribution.low +
     scanData.multi_file_scan_summary.issue_severity_distribution.medium;
+
+  const [fillScore, setFillScore] = useState(false);
+
+  useEffect(() => {
+    setTimeout(() => {
+      setFillScore(true);
+    }, 100);
+  }, []);
 
   const handleTabsChange = (index: number) => {
     onTabChange(index);
@@ -102,7 +112,14 @@ const Overview: React.FC<{
             >
               {scanData.multi_file_scan_summary.issues_count === 0 ||
               vulnerabilityCount === 0 ? (
-                <NoBugIcon size={200} />
+                <Flex
+                  flexDir="column"
+                  justifyContent="center"
+                  alignItems="center"
+                >
+                  <Image src={`${assetsURL}common/fixedIssueIcon.svg`} />
+                  <Text> No Bugs Found </Text>
+                </Flex>
               ) : (
                 <PieChart
                   data={pieData(
@@ -181,7 +198,7 @@ const Overview: React.FC<{
                 direction={["column", "column", "row"]}
               >
                 <SolidityScoreProgress
-                  score={solidity_score}
+                  score={fillScore ? solidity_score : "0"}
                   size={"100px"}
                   thickness={"7px"}
                 />
@@ -278,7 +295,14 @@ const Overview: React.FC<{
               h="300px"
             >
               {scanData.scan_summary.issues_count === 0 ? (
-                <Image src="/nobug.svg" alt="No Bugs Found" />
+                <Flex
+                  flexDir="column"
+                  justifyContent="center"
+                  alignItems="center"
+                >
+                  <Image src={`${assetsURL}common/fixedIssueIcon.svg`} />
+                  <Text> No Bugs Found </Text>
+                </Flex>
               ) : (
                 <PieChart
                   data={pieData(

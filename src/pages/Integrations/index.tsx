@@ -52,12 +52,13 @@ const Integrations: React.FC<{ profileData?: Profile }> = ({ profileData }) => {
     <Box
       sx={{
         w: ["100%", "100%", "calc(100% - 2rem)"],
+        h: "100%",
         bg: "bg.subtle",
         borderRadius: "20px",
         py: 4,
         px: 8,
         mx: [0, 0, 4],
-        my: 4,
+        mb: 4,
         minH: "78vh",
       }}
     >

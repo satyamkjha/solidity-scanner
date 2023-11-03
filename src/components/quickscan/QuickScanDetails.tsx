@@ -13,6 +13,7 @@ import {
   Divider,
   Stack,
   useMediaQuery,
+  Flex,
 } from "@chakra-ui/react";
 import { QuickScanResult } from "common/types";
 import PieChart from "components/pieChart";
@@ -76,6 +77,15 @@ const QuickScanDetails: React.FC<{ scanReport: QuickScanResult }> = ({
       color: "#F795B4",
     },
   ];
+
+  const vulnerabilityCount =
+    scanReport.multi_file_scan_summary.issue_severity_distribution.critical +
+    scanReport.multi_file_scan_summary.issue_severity_distribution.gas +
+    scanReport.multi_file_scan_summary.issue_severity_distribution.high +
+    scanReport.multi_file_scan_summary.issue_severity_distribution
+      .informational +
+    scanReport.multi_file_scan_summary.issue_severity_distribution.low +
+    scanReport.multi_file_scan_summary.issue_severity_distribution.medium;
 
   return (
     <>
@@ -211,8 +221,16 @@ const QuickScanDetails: React.FC<{ scanReport: QuickScanResult }> = ({
                 alignItems={"center"}
                 h="180px"
               >
-                {scanReport.multi_file_scan_summary.issues_count === 0 ? (
-                  <Image src="/nobug.svg" alt="No Bugs Found" />
+                {scanReport.multi_file_scan_summary.issues_count === 0 ||
+                vulnerabilityCount === 0 ? (
+                  <Flex
+                    flexDir="column"
+                    justifyContent="center"
+                    alignItems="center"
+                  >
+                    <Image src={`${assetsURL}common/fixedIssueIcon.svg`} />
+                    <Text> No Bugs Found </Text>
+                  </Flex>
                 ) : (
                   <PieChart
                     data={pieData(

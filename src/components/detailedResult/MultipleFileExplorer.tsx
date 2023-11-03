@@ -257,6 +257,7 @@ const MultipleFileExplorer: React.FC<MultipleFileExplorerProps> = ({
                         fontSize="sm"
                         fontWeight={"normal"}
                         color={"gray.600"}
+                        fontStyle={"italic"}
                       >
                         {/* {sentenceCapitalize(
                             issue.status.toLowerCase().replace("_", " ")
