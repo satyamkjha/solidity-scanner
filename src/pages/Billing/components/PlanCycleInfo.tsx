@@ -101,7 +101,10 @@ const PlanCycleInfo: React.FC<{
                 Subscribed on
               </Text>
               <Text color="#8A94A6" fontSize="sm" fontWeight="600">
-                {formattedDate(new Date(subscription?.end_date || ""), "long")}
+                {formattedDate(
+                  new Date(subscription?.start_date || ""),
+                  "long"
+                )}
               </Text>
             </VStack>
             <Heading fontSize="xl" color="#FFFFFF" mt={"50px"}>
@@ -112,13 +115,22 @@ const PlanCycleInfo: React.FC<{
           <>
             {" "}
             <Flex>
-              {subscription && (
+              {subscription ? (
                 <VStack alignItems="flex-start" spacing={1}>
                   <Text fontSize="xs" fontWeight="400">
                     Next Billed on
                   </Text>
                   <Text fontSize="sm" fontWeight="600">
                     {formattedDate(new Date(subscription.renewal_date), "long")}
+                  </Text>
+                </VStack>
+              ) : (
+                <VStack alignItems="flex-start" spacing={1}>
+                  <Text fontSize="xs" fontWeight="400">
+                    Plan Ends on
+                  </Text>
+                  <Text fontSize="sm" fontWeight="600">
+                    {formattedDate(new Date(packageRechargeDate), "long")}
                   </Text>
                 </VStack>
               )}

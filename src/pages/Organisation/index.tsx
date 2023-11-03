@@ -30,7 +30,7 @@ const Organisation: React.FC<{ profileData?: Profile }> = ({ profileData }) => {
         pb: 1,
         px: [2, 2, 2, 8],
         mx: [0, 0, 4],
-        my: 2,
+        mb: 4,
         minH: "78vh",
       }}
     >

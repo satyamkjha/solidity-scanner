@@ -44,6 +44,7 @@ const CurrentPlan: React.FC<{
     renewal_date: string;
   };
   upgradePlan: any;
+  refetchProfile(): any;
 }> = ({
   billingCycle,
   packageName,
@@ -53,6 +54,7 @@ const CurrentPlan: React.FC<{
   isCancellable,
   subscription,
   upgradePlan,
+  refetchProfile,
 }) => {
   const toast = useToast();
   const config: any = useConfig();
@@ -70,6 +72,7 @@ const CurrentPlan: React.FC<{
         isClosable: true,
         position: "bottom",
       });
+      refetchProfile();
       onClose();
     }
   };

@@ -150,9 +150,7 @@ const QuickScanForm: React.FC<{
       borderTopLeftRadius: 0,
       borderBottomLeftRadius: 0,
       borderRadius: isDesktopView ? 0 : 15,
-      marginLeft: isDesktopView ? -2 : 0,
-      marginRight: isDesktopView ? -2 : 0,
-      marginBottom: isDesktopView ? 0 : 0,
+      margin: 0,
       border: state.isFocused ? "2px solid #52FF00" : "2px solid #EDF2F7",
     }),
     container: (provided: any, state: any) => ({

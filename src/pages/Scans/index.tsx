@@ -15,6 +15,7 @@ import {
   MenuButton,
   MenuList,
   MenuItem,
+  Image,
 } from "@chakra-ui/react";
 // import Lottie from "lottie-react";
 import { LogoIcon } from "components/icons";
@@ -29,6 +30,7 @@ import { onSnapshot, doc, Unsubscribe } from "firebase/firestore";
 import { db } from "helpers/firebase";
 import {
   getFeatureGateConfig,
+  getAssetsURL,
   // getAssetsFromS3,
 } from "helpers/helperFunction";
 import { useAllScans } from "hooks/useAllScans";
@@ -42,6 +44,7 @@ import RadioButton from "components/styled-components/RadioButton";
 const Scans: React.FC = () => {
   const [isDesktopView] = useMediaQuery("(min-width: 1920px)");
   const { role } = useUserRole();
+  const assetsURL = getAssetsURL();
   const [queryTerm, setQueryTerm] = useState<string>();
   const [searchTerm, setSearchTerm] = useState<string>();
   const [filterParam, setFilterParam] = useState<
@@ -318,12 +321,13 @@ const Scans: React.FC = () => {
     <Box
       sx={{
         w: ["100%", "100%", "calc(100% - 2rem)"],
+        h: "100%",
         bg: "bg.subtle",
         borderRadius: "20px",
         py: 4,
         px: [0, 0, 4],
         mx: [0, 0, 4],
-        my: 4,
+        mb: 4,
         minH: "78vh",
       }}
       boxSizing={"border-box"}
@@ -394,6 +398,9 @@ const Scans: React.FC = () => {
                         borderRadius: 20,
                       }}
                     >
+                      <Text w="100%" textAlign="center" mb={3}>
+                        Filter by Project Type
+                      </Text>
                       {paramList.map((item) => (
                         <MenuItem
                           _focus={{ backgroundColor: "#FFFFFF" }}
@@ -447,12 +454,15 @@ const Scans: React.FC = () => {
           alignItems="center"
           justifyContent="center"
         >
-          <Box mb={2} opacity={0.5}>
-            <LogoIcon size={50} />
-          </Box>
+          <Image
+            src={`${assetsURL}common/add_project_icon.svg`}
+            height="80px"
+            width="95px"
+            mb={5}
+          />
           <Text fontSize="sm">No projects started yet.</Text>
           <Link to="/home">
-            <Button variant="brand" width="200px" my={8}>
+            <Button variant="brand" width={["90%", "250px", "350px"]} my={8}>
               Add a New Project
             </Button>
           </Link>
