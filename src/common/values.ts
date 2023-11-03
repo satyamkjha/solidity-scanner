@@ -1269,7 +1269,7 @@ export const infographicsData: { [key: string]: string[] } = {
     "You must own the repository to enable this action.",
   ],
   project_step_0: [""],
-  verified_contract: [
+  block: [
     "Navigate to the explorer of the blockchain (Ethereum - Etherscan.io).",
     "Use the search bar to find your smart contract and check if the source code is verified in the 'Contract' tab of the selected explorer.",
     "Select the appropriate chain and platform, then start the scan.",

@@ -381,10 +381,21 @@ const Scans: React.FC = () => {
                         borderRadius={10}
                         bg="bg.subtle"
                       >
-                        <FiFilter
-                          color={!paramType ? "#8A94A6" : "#3300ff"}
-                          size={20}
-                        />
+                        {paramType === "" || paramType === undefined ? (
+                          <FiFilter
+                            color={!paramType ? "#8A94A6" : "#3300ff"}
+                            size={20}
+                          />
+                        ) : (
+                          <Image
+                            height="25px"
+                            width="25px"
+                            src={`${assetsURL}icons/integrations/${
+                              paramType === "File Scan" ? "filescan" : paramType
+                            }.svg`}
+                          />
+                        )}
+
                         <RxDoubleArrowDown color="#C4C4C4" size={16} />
                       </HStack>
                     </MenuButton>
