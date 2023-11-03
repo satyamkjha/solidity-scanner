@@ -141,7 +141,8 @@ export const checkContractAddress = (contractAddress: string) =>
 export const checkProjectUrl = (url: string) => {
   const githubRegex = /^https:\/\/github\.com\/[^/]+\/[^/]+(\.git)?(\/|$)/i;
   const bitbucketRegex =
-    /^https:\/\/bitbucket\.org\/[^/]+\/[^/]+(\.git)?(\/|$)/i;
+    /^(?:https:\/\/)?(?:[^@]+@)?bitbucket\.org\/([^/]+)\/([^/.]+)(\.git)?(\/|$)/i;
+
   const gitlabRegex = /^https:\/\/gitlab\.com\/[^/]+\/[^/]+(\.git)?(\/|$)/i;
 
   if (githubRegex.test(url)) {

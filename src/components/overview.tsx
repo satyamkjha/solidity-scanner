@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import {
   Flex,
   VStack,
@@ -85,6 +85,14 @@ const Overview: React.FC<{
     scanData.multi_file_scan_summary.issue_severity_distribution.informational +
     scanData.multi_file_scan_summary.issue_severity_distribution.low +
     scanData.multi_file_scan_summary.issue_severity_distribution.medium;
+
+  const [fillScore, setFillScore] = useState(false);
+
+  useEffect(() => {
+    setTimeout(() => {
+      setFillScore(true);
+    }, 100);
+  }, []);
 
   const handleTabsChange = (index: number) => {
     onTabChange(index);
@@ -190,7 +198,7 @@ const Overview: React.FC<{
                 direction={["column", "column", "row"]}
               >
                 <SolidityScoreProgress
-                  score={solidity_score}
+                  score={fillScore ? solidity_score : "0"}
                   size={"100px"}
                   thickness={"7px"}
                 />

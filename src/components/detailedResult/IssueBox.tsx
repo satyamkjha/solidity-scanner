@@ -162,7 +162,12 @@ const IssueBox: React.FC<{
                     src={`${assetsURL}report/${metric_wise_aggregated_finding.bug_status}_color.svg`}
                   />
                   {metric_wise_aggregated_finding.findings.length === 1 && (
-                    <Text fontSize={"xs"} fontWeight={"400"} color={"black"}>
+                    <Text
+                      fontSize={"xs"}
+                      fontWeight={"400"}
+                      color={"black"}
+                      fontStyle={"italic"}
+                    >
                       {metric_wise_aggregated_finding.bug_status ===
                         "false_positive" && "False Positive"}
                       {metric_wise_aggregated_finding.bug_status ===
@@ -249,7 +254,11 @@ const IssueBox: React.FC<{
                         />
                         {metric_wise_aggregated_finding.findings.length ===
                           1 && (
-                          <Text fontSize={"xs"} fontWeight={"200"}>
+                          <Text
+                            fontSize={"xs"}
+                            fontWeight={"200"}
+                            fontStyle={"italic"}
+                          >
                             {metric_wise_aggregated_finding.bug_status ===
                               "false_positive" && "False Positive"}
                             {metric_wise_aggregated_finding.bug_status ===
