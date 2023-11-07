@@ -67,8 +67,12 @@ export const QSApiBanner: React.FC = () => {
             fontSize="lg"
             fontWeight={100}
           >
-            Lorem ipsum dolor sit amet consectetur. Consequat mauris risus in
-            rhoncus. Et sed condimentum faucibus lacus
+            Quickscan API's are the gateway to real-time security assessments,
+            providing DEXes with token integrity verification, Blockchain
+            Explorers with automated contract scanning, NFT Marketplaces with
+            transaction reliability, and token platforms with secure listings.
+            Enhance your platform's trust and empower users to make informed
+            decisions with our versatile Quickscan API.
           </Text>
           <Flex
             mt={[5, 5, 10]}
@@ -84,7 +88,12 @@ export const QSApiBanner: React.FC = () => {
               Request for API
             </Button>
             <Button
-              onClick={() => {}}
+              onClick={() => {
+                window.open(
+                  "https://apidoc.solidityscan.com/solidityscan-security-api/",
+                  "_blank"
+                );
+              }}
               variant="white-outline"
               minWidth="250px"
               ml={[0, 0, 5]}
