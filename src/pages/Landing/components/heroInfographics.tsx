@@ -82,13 +82,19 @@ export const HeroInfographics: React.FC = () => {
           flexDir="column"
           alignItems="center"
           justifyContent="center"
-          opacity={isVisible ? 1 : 0}
-          transform={`translateY(${
-            isVisible ? 0 : animationOffset + index * 20
-          }px)`}
-          transition={`opacity ${(3 + index * 1.5) / 10}s ease-in, transform ${
-            (5 + index * 1.5) / 10
-          }s ease-in`}
+          opacity={isVisible || singleRow ? 1 : 0}
+          transform={
+            !singleRow
+              ? `translateY(${isVisible ? 0 : animationOffset + index * 20}px)`
+              : "none"
+          }
+          transition={
+            !singleRow
+              ? `opacity ${(3 + index * 1.5) / 10}s ease-in, transform ${
+                  (5 + index * 1.5) / 10
+                }s ease-in`
+              : "none"
+          }
         >
           <Image
             src={`${assetsURL}${item.url}`}

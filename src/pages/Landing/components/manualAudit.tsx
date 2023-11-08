@@ -1,9 +1,7 @@
-import React, { useState, useRef, useEffect } from "react";
+import React from "react";
 import {
   Flex,
-  Box,
   Text,
-  Heading,
   Button,
   useDisclosure,
   SkeletonText,
@@ -15,7 +13,6 @@ import { getAssetsURL } from "helpers/helperFunction";
 import ManualAuditForm from "components/modals/manualAuditForm";
 import { useConfig } from "hooks/useConfig";
 import { ExternalLinkIcon } from "@chakra-ui/icons";
-import { isInViewport } from "common/functions";
 
 export default function ManualAudit() {
   const config: any = useConfig();

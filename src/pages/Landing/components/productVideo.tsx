@@ -1,11 +1,12 @@
 import React, { useState, useEffect, useRef } from "react";
-import { Flex, Box, Skeleton } from "@chakra-ui/react";
+import { Flex, Box, Skeleton, useMediaQuery } from "@chakra-ui/react";
 import { getAssetsURL } from "helpers/helperFunction";
 import { isInViewport } from "common/functions";
 
 export default function ProductVideo() {
   const assetsURL = getAssetsURL();
   const [playVideo, setPlayVideo] = useState(false);
+
 
   useEffect(() => {
     setPlayVideo(false);

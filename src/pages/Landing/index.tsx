@@ -111,10 +111,6 @@ export default function Landing() {
 
       <Partners />
 
-      {/* <Suspense fallback={<OverviewSkeleton />}>
-          <ProductOverview />
-        </Suspense> */}
-
       <Suspense fallback={<TestimonialSkeleton />}>
         <UserTestimonial />
       </Suspense>
@@ -126,10 +122,6 @@ export default function Landing() {
       <Suspense fallback={<ProductNumbers />}>
         <ProductNumbers />
       </Suspense>
-
-      {/* <Suspense fallback={<CarouselSkeleton />}>
-          <ImageCarousel />
-        </Suspense> */}
 
       <Suspense fallback={<ManualAuditSkeleton />}>
         <ManualAudit />

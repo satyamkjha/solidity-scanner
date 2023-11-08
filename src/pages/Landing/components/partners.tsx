@@ -7,6 +7,7 @@ import {
   Image,
   Grid,
   GridItem,
+  useMediaQuery,
 } from "@chakra-ui/react";
 import { getAssetsURL } from "helpers/helperFunction";
 import { isInViewport } from "common/functions";
@@ -16,24 +17,35 @@ export default function Partners() {
 
   const data: {
     url: string;
+    link: string;
   }[] = [
-    { url: "landing/partners/hacken.svg" },
+    {
+      url: "landing/partners/polygon.svg",
+      link: "https://polygon.technology/",
+    },
+    {
+      url: "landing/partners/immunefi.svg",
+      link: "https://immunefi.com/",
+    },
+    {
+      url: "landing/partners/xdc.svg",
+      link: "https://xdc.org/",
+    },
     {
       url: "landing/partners/resonance.svg",
+      link: "https://www.resonance.security/",
     },
     {
-      url: "landing/partners/airchains.svg",
+      url: "landing/partners/nordek.svg",
+      link: "https://www.nordek.io/",
     },
-    { url: "landing/partners/tiacoin.svg" },
-    {
-      url: "landing/partners/blockhubble.svg",
-    },
-    { url: "landing/partners/reef.svg" },
+    { url: "landing/partners/hacken.svg", link: "https://www.nordek.io/" },
   ];
 
   const [isVisible, setIsVisible] = useState(false);
   const [animationOffset, setAnimationOffset] = useState(70);
   const ref = useRef<HTMLDivElement>(null);
+  const [stopAnimation] = useMediaQuery("(max-width: 600px)");
 
   useEffect(() => {
     const element = document.getElementById("public_layout");
@@ -148,13 +160,21 @@ export default function Partners() {
               alignItems="center"
               justifyContent="center"
               bgColor="white"
-              opacity={isVisible ? 1 : 0}
-              transform={`translateY(${
-                isVisible ? 0 : animationOffset + index * 20
-              }px)`}
-              transition={`opacity ${
-                (3 + index * 1.5) / 10
-              }s ease-in, transform ${(5 + index * 1.5) / 10}s ease-in`}
+              opacity={stopAnimation || isVisible ? 1 : 0}
+              transform={
+                stopAnimation
+                  ? "none"
+                  : `translateY(${
+                      isVisible ? 0 : animationOffset + index * 20
+                    }px)`
+              }
+              transition={
+                stopAnimation
+                  ? "none"
+                  : `opacity ${(3 + index * 1.5) / 10}s ease-in, transform ${
+                      (5 + index * 1.5) / 10
+                    }s ease-in`
+              }
             >
               <Image
                 onClick={() => window.open("", "_blank")}
