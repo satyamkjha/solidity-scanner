@@ -44,7 +44,7 @@ export const QSApiBanner: React.FC = () => {
       >
         <Flex
           sx={{
-            w: ["100%", "95%", "50%"],
+            w: ["100%", "95%", "55%"],
             alignItems: ["center", "center", "flex-start"],
             justifyContent: "flex-start",
             textAlign: ["center", "center", "left"],
@@ -62,9 +62,9 @@ export const QSApiBanner: React.FC = () => {
             Get QuickScan API
           </Heading>
           <Text
-            color="white"
+            color="#D6D6D6"
             textAlign={["center", "center", "left"]}
-            fontSize="lg"
+            fontSize="md"
             fontWeight={100}
           >
             Quickscan API's are the gateway to real-time security assessments,
