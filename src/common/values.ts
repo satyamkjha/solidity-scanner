@@ -1296,3 +1296,18 @@ export const OauthName: { [key: string]: string } = {
   gitlab: "GitLab",
   bitbucket: "Bitbucket",
 };
+
+export const socialIconsList = [
+  {
+    imgUrl: "telegram",
+    link: "https://t.me/solidityscan",
+  },
+  {
+    imgUrl: "discord",
+    link: "https://discord.com/invite/9HhV4hGENw",
+  },
+  {
+    imgUrl: "twitter",
+    link: "https://twitter.com/solidityscan",
+  },
+];
