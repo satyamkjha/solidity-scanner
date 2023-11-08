@@ -156,6 +156,7 @@ export default function Partners() {
               borderRadius={20}
               w="100%"
               h="220px"
+              p={4}
               display="flex"
               alignItems="center"
               justifyContent="center"
