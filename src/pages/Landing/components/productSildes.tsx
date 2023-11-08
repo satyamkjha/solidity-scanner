@@ -259,7 +259,7 @@ const SlideDescription: React.FC<{
   };
 
   useEffect(() => {
-    if (element) {
+    if (element && !stopAnimation) {
       element.addEventListener("scroll", checkInview);
     }
 

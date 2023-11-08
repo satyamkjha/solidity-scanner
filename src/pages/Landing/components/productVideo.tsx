@@ -7,7 +7,6 @@ export default function ProductVideo() {
   const assetsURL = getAssetsURL();
   const [playVideo, setPlayVideo] = useState(false);
 
-
   useEffect(() => {
     setPlayVideo(false);
   }, []);

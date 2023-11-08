@@ -40,7 +40,7 @@ export const HeroInfographics: React.FC = () => {
 
   useEffect(() => {
     const element = document.getElementById("public_layout");
-    if (element) {
+    if (element && !singleRow) {
       element.addEventListener("scroll", function (event) {
         if (isInViewport(ref.current, setAnimationOffset)) {
           setIsVisible(true);

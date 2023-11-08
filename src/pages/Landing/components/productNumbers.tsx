@@ -50,7 +50,7 @@ export default function ProductNumbers() {
 
   useEffect(() => {
     const element = document.getElementById("public_layout");
-    if (element) {
+    if (element && !stopAnimation) {
       element.addEventListener("scroll", function (event) {
         if (isInViewport(ref.current, setAnimationOffset)) {
           setIsVisible(true);
