@@ -27,10 +27,15 @@ const TeamMemberItem: React.FC<{
     email: string,
     role: "admin" | "editor" | "viewer"
   ) => Promise<void>;
+  resendInviteEmail: (
+    email: string,
+    role: "admin" | "editor" | "viewer" | "owner" | null
+  ) => Promise<void>;
 }> = ({
   userItem,
   removeOrganisationUserRequest,
   updateOrganisationUserRolesRequest,
+  resendInviteEmail,
 }) => {
   const [hover, setHover] = useState(false);
 
@@ -278,6 +283,18 @@ const TeamMemberItem: React.FC<{
               >
                 Delete User
               </MenuItem>
+              {userItem.status === "requested" ? (
+                <MenuItem
+                  _focus={{ backgroundColor: "#FFFFFF" }}
+                  _hover={{ backgroundColor: "#FFFFFF" }}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    resendInviteEmail(userItem.email, userItem.role);
+                  }}
+                >
+                  Resend Invite Link
+                </MenuItem>
+              ) : null}
             </MenuList>
           </Menu>
         )}
