@@ -15,6 +15,7 @@ import { teamsData } from "common/values";
 import { getAssetsURL } from "helpers/helperFunction";
 import { isInViewport } from "common/functions";
 
+ 
 export default function AboutUs() {
   const assetsURL = getAssetsURL();
 
