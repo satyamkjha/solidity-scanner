@@ -32,7 +32,10 @@ const QuickScanForm: React.FC<{
 }> = ({ runQuickScan, isLoading, view }) => {
   const toast = useToast();
   const location = useLocation();
-  const [isDesktopView] = useMediaQuery("(min-width: 1000px)");
+  const [stopAnimation, isDesktopView] = useMediaQuery([
+    "(max-width: 600px)",
+    "(min-width: 1000px)",
+  ]);
   const query = new URLSearchParams(location.search);
   const ref = query.get("ref");
   const { blockAddress, blockPlatform, blockChain } = useParams<{
@@ -343,9 +346,17 @@ const QuickScanForm: React.FC<{
           fontSize={["3xl", "4xl"]}
           mb={8}
           mt={isDesktopView ? 0 : 8}
-          opacity={isVisible ? 1 : 0}
-          transform={`translateY(${isVisible ? 0 : animationOffset}px)`}
-          transition="opacity 0.25s ease-in, transform 0.5s ease-in"
+          opacity={stopAnimation || isVisible ? 1 : 0}
+          transform={
+            stopAnimation
+              ? "none"
+              : `translateY(${isVisible ? 0 : animationOffset}px)`
+          }
+          transition={
+            stopAnimation
+              ? "none"
+              : "opacity 0.25s ease-in, transform 0.5s ease-in"
+          }
         >
           SolidityScan{" "}
           <Box
@@ -365,9 +376,17 @@ const QuickScanForm: React.FC<{
           fontSize="xl"
           color="subtle"
           mb={8}
-          opacity={isVisible ? 1 : 0}
-          transform={`translateY(${isVisible ? 0 : animationOffset}px)`}
-          transition="opacity 0.25s ease-in, transform 0.5s ease-in"
+          opacity={stopAnimation || isVisible ? 1 : 0}
+          transform={
+            stopAnimation
+              ? "none"
+              : `translateY(${isVisible ? 0 : animationOffset}px)`
+          }
+          transition={
+            stopAnimation
+              ? "none"
+              : "opacity 0.25s ease-in, transform 0.5s ease-in"
+          }
         >
           Experience an accessible, user-friendly threat scanner that presents
           results in simple terms. Begin a smart contract scan by choosing from
@@ -384,9 +403,17 @@ const QuickScanForm: React.FC<{
           maxW={isDesktopView ? "1500px" : "900px"}
           direction={isDesktopView ? "row" : "column"}
           spacing={isDesktopView ? 0 : 3}
-          opacity={isVisible ? 1 : 0}
-          transform={`translateY(${isVisible ? 0 : animationOffset}px)`}
-          transition="opacity 0.25s ease-in, transform 0.5s ease-in"
+          opacity={stopAnimation || isVisible ? 1 : 0}
+          transform={
+            stopAnimation
+              ? "none"
+              : `translateY(${isVisible ? 0 : animationOffset}px)`
+          }
+          transition={
+            stopAnimation
+              ? "none"
+              : "opacity 0.25s ease-in, transform 0.5s ease-in"
+          }
         >
           <Select
             formatOptionLabel={FormatOptionLabelWithImage}
@@ -467,9 +494,17 @@ const QuickScanForm: React.FC<{
           type="submit"
           variant="brand"
           onClick={generateQuickScan}
-          opacity={isVisible ? 1 : 0}
-          transform={`translateY(${isVisible ? 0 : animationOffset}px)`}
-          transition="opacity 0.25s ease-in, transform 0.5s ease-in"
+          opacity={stopAnimation || isVisible ? 1 : 0}
+          transform={
+            stopAnimation
+              ? "none"
+              : `translateY(${isVisible ? 0 : animationOffset}px)`
+          }
+          transition={
+            stopAnimation
+              ? "none"
+              : "opacity 0.25s ease-in, transform 0.5s ease-in"
+          }
         >
           Start Scan
         </Button>

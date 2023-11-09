@@ -9,21 +9,24 @@ import {
   VStack,
   SkeletonText,
   Skeleton,
+  useMediaQuery,
 } from "@chakra-ui/react";
 import { teamsData } from "common/values";
 import { getAssetsURL } from "helpers/helperFunction";
 import { isInViewport } from "common/functions";
 
+ 
 export default function AboutUs() {
   const assetsURL = getAssetsURL();
 
   const [isVisible, setIsVisible] = useState(false);
   const [animationOffset, setAnimationOffset] = useState(70);
   const ref = useRef<HTMLDivElement>(null);
+  const [stopAnimation] = useMediaQuery("(max-width: 600px)");
 
   useEffect(() => {
     const element = document.getElementById("public_layout");
-    if (element) {
+    if (element && !stopAnimation) {
       element.addEventListener("scroll", function (event) {
         if (isInViewport(ref.current, setAnimationOffset)) {
           setIsVisible(true);
@@ -94,13 +97,21 @@ export default function AboutUs() {
             justifyContent={"flex-start"}
             mx={20}
             my={[5, 5, 5, 0]}
-            opacity={isVisible ? 1 : 0}
-            transform={`translateY(${
-              isVisible ? 0 : animationOffset + index * 20
-            }px)`}
-            transition={`opacity ${
-              (3 + index * 1.5) / 10
-            }s ease-in, transform ${(5 + index * 1.5) / 10}s ease-in`}
+            opacity={stopAnimation || isVisible ? 1 : 0}
+            transform={
+              stopAnimation
+                ? "none"
+                : `translateY(${
+                    isVisible ? 0 : animationOffset + index * 20
+                  }px)`
+            }
+            transition={
+              stopAnimation
+                ? "none"
+                : `opacity ${(3 + index * 1.5) / 10}s ease-in, transform ${
+                    (5 + index * 1.5) / 10
+                  }s ease-in`
+            }
           >
             <VStack spacing={0}>
               <Box

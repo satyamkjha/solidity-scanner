@@ -177,7 +177,7 @@ const HacksOverview: React.FC<{ overviewData: any }> = ({ overviewData }) => {
                   ${shortenNumber(overviewData.total_amount, 0, true)}
                 </Heading>
                 <Text mb={4} color="#8A94A6" fontSize={"lg"}>
-                  Total amount hacked worldwide
+                  Total amount hacked worldwide since 2011
                 </Text>
                 <Flex
                   w="100%"

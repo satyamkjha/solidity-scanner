@@ -1,5 +1,12 @@
 import React, { useState, useRef, useEffect } from "react";
-import { Flex, Text, Heading, HStack, Grid, GridItem } from "@chakra-ui/react";
+import {
+  Flex,
+  Text,
+  Heading,
+  Grid,
+  GridItem,
+  useMediaQuery,
+} from "@chakra-ui/react";
 import AnimatedNumbers from "react-animated-numbers";
 import { isInViewport } from "common/functions";
 
@@ -39,10 +46,11 @@ export default function ProductNumbers() {
   const [isVisible, setIsVisible] = useState(false);
   const [animationOffset, setAnimationOffset] = useState(70);
   const ref = useRef<HTMLDivElement>(null);
+  const [stopAnimation] = useMediaQuery("(max-width: 600px)");
 
   useEffect(() => {
     const element = document.getElementById("public_layout");
-    if (element) {
+    if (element && !stopAnimation) {
       element.addEventListener("scroll", function (event) {
         if (isInViewport(ref.current, setAnimationOffset)) {
           setIsVisible(true);
@@ -91,9 +99,17 @@ export default function ProductNumbers() {
             alignItems="center"
             justifyContent="center"
             bgColor={item.color}
-            opacity={isVisible ? 1 : 0}
-            transform={`translateY(${isVisible ? 0 : animationOffset}px)`}
-            transition="opacity 0.25s ease-in, transform 0.5s ease-in"
+            opacity={stopAnimation || isVisible ? 1 : 0}
+            transform={
+              stopAnimation
+                ? "none"
+                : `translateY(${isVisible ? 0 : animationOffset}px)`
+            }
+            transition={
+              stopAnimation
+                ? "none"
+                : "opacity 0.25s ease-in, transform 0.5s ease-in"
+            }
           >
             <Flex flexDir="row" alignItems="center" justifyContent="flex-start">
               <Heading color="#323B4B" fontSize="5xl" fontWeight={900}>

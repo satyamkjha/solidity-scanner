@@ -8,6 +8,7 @@ import {
   SkeletonText,
   Skeleton,
   HStack,
+  useMediaQuery,
 } from "@chakra-ui/react";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { EffectCoverflow, Navigation, Pagination } from "swiper";
@@ -18,7 +19,7 @@ import { isInViewport } from "common/functions";
 
 const UserTestimonial: React.FC = () => {
   const assetsURL = getAssetsURL();
-
+  const [stopAnimation] = useMediaQuery("(max-width: 600px)");
   const [isVisible, setIsVisible] = useState(false);
   const [animationOffset, setAnimationOffset] = useState(70);
   const ref = useRef<HTMLDivElement>(null);
@@ -101,9 +102,13 @@ const UserTestimonial: React.FC = () => {
           paddingTop: "50px",
           paddingLeft: "20px",
           paddingRight: "20px",
-          opacity: isVisible ? 1 : 0,
-          transform: `translateY(${isVisible ? 0 : animationOffset}px)`,
-          transition: "opacity 0.25s ease-in, transform 0.5s ease-in",
+          opacity: stopAnimation || isVisible ? 1 : 0,
+          transform: stopAnimation
+            ? "none"
+            : `translateY(${isVisible ? 0 : animationOffset}px)`,
+          transition: stopAnimation
+            ? "none"
+            : "opacity 0.25s ease-in, transform 0.5s ease-in",
         }}
         modules={[EffectCoverflow, Navigation, Pagination]}
       >
