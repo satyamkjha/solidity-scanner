@@ -20,9 +20,11 @@ import {
   VStack,
   HStack,
   Text,
+  Heading,
 } from "@chakra-ui/react";
 import { useForm } from "react-hook-form";
-import { FaDiscord, FaEnvelope, FaTelegram } from "react-icons/fa";
+import { FaUserAlt, FaDiscord, FaEnvelope, FaTelegram } from "react-icons/fa";
+import { MdWork } from "react-icons/md";
 import { GiLetterBomb } from "react-icons/gi";
 import axios from "axios";
 import { getAssetsURL } from "helpers/helperFunction";
@@ -30,14 +32,13 @@ import { useConfig } from "hooks/useConfig";
 import { socialIconsList } from "common/values";
 import { capitalize } from "common/functions";
 
-export const ContactUs: React.FC<{ onClose(): any; isOpen: boolean }> = ({
+export const QSApiModal: React.FC<{ onClose(): any; isOpen: boolean }> = ({
   isOpen,
   onClose,
 }) => {
   const [email, setEmail] = useState("");
-  const [subject, setSubject] = useState("");
-  const [discord, setDiscord] = useState("");
-  const [telegram, setTelegram] = useState("");
+  const [organisation, setOrganisation] = useState("");
+  const [name, setName] = useState("");
   const [body, setBody] = useState("");
   const toast = useToast();
   const config: any = useConfig();
@@ -48,8 +49,8 @@ export const ContactUs: React.FC<{ onClose(): any; isOpen: boolean }> = ({
     axios
       .post("https://formsubmit.co/ajax/info@credshields.com", {
         email: email,
-        subject: subject,
-        discord: discord,
+        subject: organisation,
+        name: name,
         message: body,
       })
       .then((response) => {
@@ -64,9 +65,8 @@ export const ContactUs: React.FC<{ onClose(): any; isOpen: boolean }> = ({
           onClose();
           setEmail("");
           setBody("");
-          setSubject("");
-          setDiscord("");
-          setTelegram("");
+          setOrganisation("");
+          setName("");
         }
       })
       .catch((error) => console.log(error));
@@ -96,7 +96,9 @@ export const ContactUs: React.FC<{ onClose(): any; isOpen: boolean }> = ({
               px={[6, 6, 6, 12]}
               textAlign={["center", "center", "center", "left"]}
             >
-              Contact Us
+              <Heading mt={10} fontSize="2xl">
+                Request for API
+              </Heading>
             </ModalHeader>
             <ModalCloseButton />
             <ModalBody h={"fit-content"} w={"100%"} px={[6, 6, 6, 12]}>
@@ -117,6 +119,21 @@ export const ContactUs: React.FC<{ onClose(): any; isOpen: boolean }> = ({
                   <Stack zIndex={"10"} w={"100%"} spacing={6} mt={8}>
                     <InputGroup mt={0} alignItems="center">
                       <InputLeftElement height="48px">
+                        <Icon as={FaUserAlt} color="gray.300" />
+                      </InputLeftElement>
+                      <Input
+                        isRequired
+                        placeholder="Name"
+                        variant="brand"
+                        size="lg"
+                        value={email}
+                        onChange={(e) => {
+                          setName(e.target.value);
+                        }}
+                      />
+                    </InputGroup>
+                    <InputGroup mt={0} alignItems="center">
+                      <InputLeftElement height="48px">
                         <Icon as={FaEnvelope} color="gray.300" />
                       </InputLeftElement>
                       <Input
@@ -132,52 +149,22 @@ export const ContactUs: React.FC<{ onClose(): any; isOpen: boolean }> = ({
                     </InputGroup>
                     <InputGroup mt={0} alignItems="center">
                       <InputLeftElement height="48px">
-                        <Icon as={GiLetterBomb} color="gray.300" />
+                        <Icon as={MdWork} color="gray.300" />
                       </InputLeftElement>
                       <Input
                         isRequired
-                        placeholder="Subject of your Query"
+                        placeholder="Organisation"
                         variant="brand"
                         size="lg"
-                        value={subject}
+                        value={organisation}
                         onChange={(e) => {
-                          setSubject(e.target.value);
-                        }}
-                      />
-                    </InputGroup>
-                    <InputGroup mt={0} alignItems="center">
-                      <InputLeftElement height="48px">
-                        <Icon as={FaDiscord} color="gray.300" />
-                      </InputLeftElement>
-                      <Input
-                        isRequired
-                        placeholder="Discord (optional)"
-                        variant="brand"
-                        size="lg"
-                        value={discord}
-                        onChange={(e) => {
-                          setDiscord(e.target.value);
-                        }}
-                      />
-                    </InputGroup>
-                    <InputGroup mt={0} alignItems="center">
-                      <InputLeftElement height="48px">
-                        <Icon as={FaTelegram} color="gray.300" />
-                      </InputLeftElement>
-                      <Input
-                        isRequired
-                        placeholder="Telegram (optional)"
-                        variant="brand"
-                        size="lg"
-                        value={telegram}
-                        onChange={(e) => {
-                          setTelegram(e.target.value);
+                          setOrganisation(e.target.value);
                         }}
                       />
                     </InputGroup>
                     <Textarea
                       variant={"brand"}
-                      placeholder="Enter your Query here"
+                      placeholder="Additional Comments (optional)"
                       borderRadius={"16px"}
                       fontSize={"15px"}
                       borderColor={"gray.100"}
@@ -251,4 +238,4 @@ export const ContactUs: React.FC<{ onClose(): any; isOpen: boolean }> = ({
   );
 };
 
-export default ContactUs;
+export default QSApiModal;

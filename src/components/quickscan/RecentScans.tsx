@@ -29,6 +29,7 @@ import { useConfig } from "hooks/useConfig";
 import { getAssetsURL } from "helpers/helperFunction";
 import { blockScans } from "common/values";
 import Loader from "components/styled-components/Loader";
+import QSApiBanner from "./QSApiBanner";
 
 export default function RecentScans() {
   const [isDesktopView] = useMediaQuery("(min-width: 1350px)");
@@ -84,6 +85,8 @@ export default function RecentScans() {
 
   return (
     <>
+      <QSApiBanner />
+
       <Heading mt={20} as="h1" fontSize="3xl" mb={4}>
         Recent Scanned
         <Box ml={2} as="span" color="#3300FF">

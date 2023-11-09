@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
-import { Flex, Box, Skeleton } from "@chakra-ui/react";
+import { Flex, Box, Skeleton, useMediaQuery } from "@chakra-ui/react";
 import { getAssetsURL } from "helpers/helperFunction";
 import { isInViewport } from "common/functions";
 

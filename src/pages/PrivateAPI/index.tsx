@@ -119,7 +119,7 @@ export default function PrivateApi() {
         pb: 1,
         px: [2, 2, 2, 8],
         mx: [0, 0, 4],
-        my: 2,
+        mb: 4,
         minH: "78vh",
       }}
     >
@@ -140,8 +140,7 @@ export default function PrivateApi() {
         <Flex
           bgColor={["bg.subtle", "bg.subtle", "bg.subtle", "white"]}
           w="100%"
-          h={"100%"}
-          minH={"70vh"}
+          h={["fit-content", "fit-content", "500px", "650px"]}
           borderRadius={"5px"}
           my={6}
           pb={6}
@@ -221,7 +220,7 @@ export default function PrivateApi() {
             border={"2px solid #EAEAEA"}
             borderRadius="15px"
             flexDir={"column"}
-            h={accessKey ? "fit-content" : "100%"}
+            h={accessKey ? "fit-content" : "500px"}
           >
             {isSpinning ? (
               <Flex
@@ -343,7 +342,7 @@ export default function PrivateApi() {
                     </Flex>
                   </>
                 ) : (
-                  <Flex position={"relative"} w="100%" h="33vh">
+                  <Flex position={"relative"} w="100%" h="10vh">
                     <VStack
                       w="100%"
                       spacing={4}
@@ -411,7 +410,7 @@ export default function PrivateApi() {
             flexDir={["column", "column", "column", "row"]}
             p={[2, 2, 2, 5]}
             mx={[2, 2, 2, 6]}
-            mt={"auto"}
+            mt={["auto"]}
           >
             <Image src={assetsUrl + "icons/enlighten.svg"} />
             <Flex flexDir={"column"} ml={6} textColor="text" my={[3, 3, 3, 0]}>

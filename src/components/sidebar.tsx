@@ -35,6 +35,7 @@ import { ArrowBackIcon, ArrowForwardIcon } from "@chakra-ui/icons";
 import { useConfig } from "hooks/useConfig";
 import { getAssetsURL, getFeatureGateConfig } from "helpers/helperFunction";
 import { useUserRole } from "hooks/useUserRole";
+import { socialIconsList } from "common/values";
 
 const Sidebar: React.FC<{
   isCollapsed: boolean;
@@ -111,21 +112,6 @@ const Sidebar: React.FC<{
       transitionDone: transitionDone,
       isExternal: true,
       accessRevoked: [],
-    },
-  ];
-
-  const footerIconList = [
-    {
-      imgUrl: "telegram",
-      link: "https://t.me/solidityscan",
-    },
-    {
-      imgUrl: "discord",
-      link: "https://discord.com/invite/9HhV4hGENw",
-    },
-    {
-      imgUrl: "twitter",
-      link: "https://twitter.com/solidityscan",
     },
   ];
 
@@ -268,7 +254,7 @@ const Sidebar: React.FC<{
           </Button>
         </Box>
         <HStack justifyContent="flex-start" mt={3} spacing={5}>
-          {footerIconList.map((item) => (
+          {socialIconsList.map((item) => (
             <FooterIcon iconUrl={item.imgUrl} socialUrl={item.link} />
           ))}
         </HStack>

@@ -234,6 +234,8 @@ const SlideDescription: React.FC<{
   const [isVisible, setIsVisible] = useState(false);
   const [animationOffset, setAnimationOffset] = useState(70);
 
+  const [stopAnimation] = useMediaQuery("(max-width: 600px)");
+
   const setOffset = () => {
     const slide = document.getElementById(`slide-${number}`);
     if (slide) {
@@ -257,7 +259,7 @@ const SlideDescription: React.FC<{
   };
 
   useEffect(() => {
-    if (element) {
+    if (element && !stopAnimation) {
       element.addEventListener("scroll", checkInview);
     }
 
@@ -266,8 +268,6 @@ const SlideDescription: React.FC<{
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
-
-  const [isLargerThan1000] = useMediaQuery("(min-width: 1000px)");
 
   return (
     <VStack
@@ -279,14 +279,19 @@ const SlideDescription: React.FC<{
       spacing={7}
       justifyContent="center"
       alignItems={["center", "center", "center", "flex-start"]}
-      opacity={isVisible ? 1 : 0}
-      transform={`translateY(${isVisible ? 0 : animationOffset}px)`}
-      transition="opacity 0.5s ease, transform 0.5s ease-out"
+      opacity={stopAnimation || isVisible ? 1 : 0}
+      transform={
+        stopAnimation
+          ? "none"
+          : `translateY(${isVisible ? 0 : animationOffset}px)`
+      }
+      transition={
+        stopAnimation ? "none" : "opacity 0.5s ease, transform 0.5s ease-out"
+      }
     >
       <Image
         display={["block", "block", "none"]}
-        // src={`${assetsURL}${mobileImgUrl}`}
-        src="mobileScreen.png"
+        src={`${assetsURL}${mobileImgUrl}`}
         height="auto"
         width="100%"
       />

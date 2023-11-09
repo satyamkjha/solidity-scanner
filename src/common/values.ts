@@ -1269,7 +1269,7 @@ export const infographicsData: { [key: string]: string[] } = {
     "You must own the repository to enable this action.",
   ],
   project_step_0: [""],
-  verified_contract: [
+  block: [
     "Navigate to the explorer of the blockchain (Ethereum - Etherscan.io).",
     "Use the search bar to find your smart contract and check if the source code is verified in the 'Contract' tab of the selected explorer.",
     "Select the appropriate chain and platform, then start the scan.",
@@ -1296,3 +1296,18 @@ export const OauthName: { [key: string]: string } = {
   gitlab: "GitLab",
   bitbucket: "Bitbucket",
 };
+
+export const socialIconsList = [
+  {
+    imgUrl: "telegram",
+    link: "https://t.me/solidityscan",
+  },
+  {
+    imgUrl: "discord",
+    link: "https://discord.com/invite/9HhV4hGENw",
+  },
+  {
+    imgUrl: "twitter",
+    link: "https://twitter.com/solidityscan",
+  },
+];

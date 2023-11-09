@@ -21,11 +21,12 @@ import LatestInvoice from "./components/LatestInvoice";
 import PromoCodeCard from "./components/PromoCodeCard";
 import TransactionListCard from "./components/TransactionListCard";
 import Loader from "components/styled-components/Loader";
+import { useProfile } from "hooks/useProfile";
 
-const Billing: React.FC<{ profileData?: Profile }> = ({ profileData }) => {
+const Billing: React.FC = ({}) => {
   const [planBillingCycle, setPlanBillingCycle] = useState("");
   const pricingRef = useRef<HTMLDivElement>(null);
-
+  const { data: profileData, refetch: refetchProfile } = useProfile();
   const promoCodeEnabled = false;
 
   const [pageNo, setPageNo] = useState(1);
@@ -106,12 +107,13 @@ const Billing: React.FC<{ profileData?: Profile }> = ({ profileData }) => {
       boxSizing="border-box"
       sx={{
         w: ["100%", "100%", "calc(100% - 2rem)"],
+        h: "100%",
         bg: "bg.subtle",
         borderRadius: "20px",
         p: 0,
         pt: 4,
         mx: [0, 0, 4],
-        my: 4,
+        mb: 4,
         minH: "85vh",
       }}
     >
@@ -219,6 +221,7 @@ const Billing: React.FC<{ profileData?: Profile }> = ({ profileData }) => {
                         report: true,
                         publishable_report: true,
                       }}
+                      refetchProfile={refetchProfile}
                       upgradePlan={onUpgradePlan}
                     />
                   ) : (
@@ -238,6 +241,7 @@ const Billing: React.FC<{ profileData?: Profile }> = ({ profileData }) => {
                             profileData.current_package
                           ]
                         }
+                        refetchProfile={refetchProfile}
                         upgradePlan={onUpgradePlan}
                       />
                     )

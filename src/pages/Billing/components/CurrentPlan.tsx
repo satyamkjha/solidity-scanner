@@ -22,9 +22,7 @@ import {
 } from "common/functions";
 import { Plan } from "common/types";
 import API from "helpers/api";
-import { getAssetsURL, sentenceCapitalize } from "helpers/helperFunction";
 import { API_PATH } from "helpers/routeManager";
-import { useConfig } from "hooks/useConfig";
 import React, { useRef, useState } from "react";
 import SubscriptionDataContainer from "./SubscriptionDataContainer";
 import CurrentPlanDescriptionContainer from "./CurrentPlanDescriptionContainer";
@@ -44,6 +42,7 @@ const CurrentPlan: React.FC<{
     renewal_date: string;
   };
   upgradePlan: any;
+  refetchProfile(): any;
 }> = ({
   billingCycle,
   packageName,
@@ -53,11 +52,9 @@ const CurrentPlan: React.FC<{
   isCancellable,
   subscription,
   upgradePlan,
+  refetchProfile,
 }) => {
   const toast = useToast();
-  const config: any = useConfig();
-  const assetsURL = getAssetsURL(config);
-
   const cancelSubscription = async () => {
     const { data } = await API.delete(
       API_PATH.API_CANCEL_STRIPE_SUBSCRIPTION_BETA
@@ -70,6 +67,7 @@ const CurrentPlan: React.FC<{
         isClosable: true,
         position: "bottom",
       });
+      refetchProfile();
       onClose();
     }
   };

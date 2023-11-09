@@ -32,8 +32,8 @@ const AddProjectForm: React.FC<{
 
   const getInstructionsList = () =>
     infographicsData[
-      formType === "verified_contract"
-        ? "verified_contract"
+      formType === "block"
+        ? "block"
         : formType === "filescan"
         ? step === 1
           ? `filescan_step_${step}`
@@ -45,8 +45,8 @@ const AddProjectForm: React.FC<{
 
   const getInfoGraphicImgUrl = () =>
     `${assetsURL}homepage_infographics/${
-      formType === "verified_contract"
-        ? "verified_contract"
+      formType === "block"
+        ? "block"
         : formType === "filescan"
         ? step === 1
           ? `filescan_step_${step}`
@@ -100,7 +100,7 @@ const AddProjectForm: React.FC<{
                 profileData={profileData}
               />
             )}
-            {formType === "verified_contract" && (
+            {formType === "block" && (
               <ContractForm
                 step={step}
                 setStep={setStep}

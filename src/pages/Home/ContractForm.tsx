@@ -194,8 +194,8 @@ const ContractForm: React.FC<{
         {step === 0 ? (
           <Box w="100%" h="calc(100% - 50px)">
             <AddProjectFormInfographics
-              imgUrl={`${assetsURL}homepage_infographics/verified_contract.svg`}
-              instructions={infographicsData["verified_contract"]}
+              imgUrl={`${assetsURL}homepage_infographics/block.svg`}
+              instructions={infographicsData["block"]}
             />
           </Box>
         ) : step === 1 ? (

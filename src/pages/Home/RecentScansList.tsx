@@ -36,10 +36,14 @@ const RecentScansList: React.FC = () => {
   const [changeView] = useMediaQuery("(min-width: 650px)");
 
   const [projectList, setprojectList] = useState<ScanObj[]>([]);
+  const [fillScore, setFillScore] = useState(false);
 
   useEffect(() => {
     if (projects && projects.data.length > 0) {
       setprojectList(projects.data);
+      setTimeout(() => {
+        setFillScore(true);
+      }, 100);
     }
   }, [projects]);
 
@@ -160,11 +164,9 @@ const RecentScansList: React.FC = () => {
                       w="100%"
                       isTruncated={true}
                     >
-                      {capitalize(
-                        project.scan_details.project_name ||
-                          project.scan_details.contractname ||
-                          ""
-                      )}
+                      {project.scan_details.project_name ||
+                        project.scan_details.contractname ||
+                        ""}
                     </Text>
                     <Text
                       sx={{
@@ -191,7 +193,11 @@ const RecentScansList: React.FC = () => {
                   />
                 </Box>
                 <SolidityScoreProgress
-                  score={project.scan_details.multi_file_scan_summary.score_v2}
+                  score={
+                    fillScore
+                      ? project.scan_details.multi_file_scan_summary.score_v2
+                      : "0"
+                  }
                   size={"65px"}
                   thickness={"7px"}
                   fontSize={"12px"}

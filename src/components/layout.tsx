@@ -272,7 +272,11 @@ const Layout: React.FC = ({ children }) => {
               </HStack>
 
               {profileData && (
-                <Flex ml={20} sx={{ display: ["none", "none", "flex"] }}>
+                <Flex
+                  ml={20}
+                  sx={{ display: ["none", "none", "flex"] }}
+                  onClick={() => history.push("/billing")}
+                >
                   <Image src={`${assetsURL}pricing/coin.svg`} mx="auto" />
                   <Text fontWeight={600} fontSize="2xl" ml={4}>
                     {profileData.credits.toLocaleString("en-US", {
