@@ -152,6 +152,43 @@ const OrganisationMemberList: React.FC<{
       console.log(e);
     }
   };
+
+  const resendInviteEmail = async (
+    email: string,
+    role: "admin" | "editor" | "viewer" | "owner" | null
+  ) => {
+    try {
+      const { data } = await API.post(
+        API_PATH.API_RESEND_ORGANISATION_USERS_INVITE,
+        {
+          users: [
+            {
+              user: email,
+              role,
+            },
+          ],
+        }
+      );
+      if (data.status === "success") {
+        toast({
+          title: data.message,
+          status: "success",
+          duration: 3000,
+          isClosable: true,
+        });
+      } else {
+        toast({
+          title: data.message,
+          status: "success",
+          duration: 3000,
+          isClosable: true,
+        });
+      }
+    } catch (e) {
+      console.log(e);
+    }
+  };
+
   const [isDesktopView] = useMediaQuery("(min-width: 950px)");
 
   return (
@@ -280,6 +317,7 @@ const OrganisationMemberList: React.FC<{
                     removeOrganisationUserRequest={
                       removeOrganisationUserRequest
                     }
+                    resendInviteEmail={resendInviteEmail}
                     updateOrganisationUserRolesRequest={
                       updateOrganisationUserRolesRequest
                     }
