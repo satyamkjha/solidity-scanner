@@ -131,7 +131,7 @@ const QuickScan: React.FC = () => {
     >
       <Box
         w={"100%"}
-        bg={"linear-gradient(180deg, #04080D -50.31%, #2900DE 282.02%)"}
+        bg={"linear-gradient(180deg, #060606 -45.59%, #414141 255.55%)"}
       >
         <Header theme={"dark"} />
         <QuickScanForm

@@ -984,173 +984,802 @@ export const scanStatesLabel: {
 
 export const contractChain: {
   [key: string]: {
-    label: string;
-    value: string;
-    icon: string;
-    isDisabled: boolean;
-  }[];
+    blockchainName: string;
+    description: string;
+    website: string;
+    logoUrl: string;
+    
+    platforms: {
+      [key: string]: {
+        label: string;
+        iconUrl: string;
+        chains: {
+          value: string;
+          label: string;
+          icon: string;
+          isDisabled: boolean;
+          website: string;
+        }[];
+      };
+    };
+  };
 } = {
-  etherscan: [
-    {
-      value: "mainnet",
-      label: "Ethereum Mainnet",
-      icon: "",
-      isDisabled: false,
+  etherscan: {
+    blockchainName: "Ethereum",
+    description:
+      "Ethereum is the community-run technology powering the cryptocurrency ether (ETH) and thousands of decentralized applications.",
+    website: "https://ethereum.org/",
+    logoUrl: "blockscan/ethereum",
+    platforms: {
+      etherscan: {
+        label: "Etherscan",
+        iconUrl: "blockscan/etherscan",
+        chains: [
+          {
+            value: "mainnet",
+            label: "Ethereum Mainnet",
+            icon: "",
+            isDisabled: false,
+            website: "https://etherscan.io/",
+          },
+          {
+            value: "sepolia",
+            label: "Sepolia Testnet",
+            icon: "",
+            isDisabled: false,
+            website: "https://sepolia.etherscan.io/",
+          },
+          {
+            value: "goerli",
+            label: "Goerli Testnet",
+            icon: "",
+            isDisabled: false,
+            website: "https://goerli.etherscan.io/",
+          },
+          {
+            value: "holesky",
+            label: "Holesky Testnet",
+            icon: "",
+            isDisabled: false,
+            website: "https://holesky.etherscan.io/",
+          },
+        ],
+      },
+      blockscout: {
+        label: "Blockscout",
+        iconUrl: "blockscan/blockscout",
+        chains: [
+          {
+            value: "eth",
+            label: "Ethereum Mainnet",
+            icon: "",
+            isDisabled: false,
+            website: "https://eth.blockscout.com/",
+          },
+          {
+            value: "eth-sepolia",
+            label: "Sepolia Testnet",
+            icon: "",
+            isDisabled: false,
+            website: "https://eth-sepolia.blockscout.com/",
+          },
+          {
+            value: "eth-goerli",
+            label: "Goerli Testnet",
+            icon: "",
+            isDisabled: false,
+            website: "https://eth-goerli.blockscout.com/",
+          },
+          {
+            value: "eth-holesky",
+            label: "Holesky Testnet",
+            icon: "",
+            isDisabled: false,
+            website: "https://eth-holesky.blockscout.com/",
+          },
+        ],
+      },
     },
-    {
-      value: "sepolia",
-      label: "Sepolia Testnet",
-      icon: "",
-      isDisabled: false,
+  },
+  optimism: {
+    blockchainName: "Optimism",
+    description:
+      "Optimism is a fast, stable, and scalable L2 blockchain built by Ethereum developers, for Ethereum developers.",
+    website: "https://www.optimism.io/",
+    logoUrl: "blockscan/optimism",
+    platforms: {
+      optimism: {
+        label: "Optimism",
+        iconUrl: "blockscan/optimism",
+        chains: [
+          {
+            value: "mainnet",
+            label: "Optimism Mainnet",
+            icon: "",
+            isDisabled: false,
+            website: "https://optimistic.etherscan.io/",
+          },
+          {
+            value: "goerli",
+            label: "Optimism Goerli Testnet",
+            icon: "",
+            isDisabled: false,
+            website: "https://goerli-optimism.etherscan.io/",
+          },
+        ],
+      },
+      blockscout: {
+        label: "Blockscout",
+        iconUrl: "blockscan/blockscout",
+        chains: [
+          {
+            value: "optimism",
+            label: "Optimism Mainnet",
+            icon: "",
+            isDisabled: false,
+            website: "https://optimism.blockscout.com/",
+          },
+          {
+            value: "optimism-goerli",
+            label: "Optimism Goerli Testnet",
+            icon: "",
+            isDisabled: false,
+            website: "https://optimism-goerli.blockscout.com/",
+          },
+          {
+            value: "optimism-sepolia",
+            label: "Optimism Sepolia Testnet",
+            icon: "",
+            isDisabled: false,
+            website: "https://optimism-sepolia.blockscout.com/",
+          },
+        ],
+      },
     },
-    { value: "goerli", label: "Goerli Testnet", icon: "", isDisabled: false },
-    { value: "holesky", label: "Holesky Testnet", icon: "", isDisabled: false },
-  ],
-  optimism: [
-    {
-      value: "mainnet",
-      label: "Optimism Mainnet",
-      icon: "",
-      isDisabled: false,
+  },
+  bscscan: {
+    blockchainName: "Binance",
+    description:
+      "A community-driven blockchain ecosystemof Layer-1 and Layer-2 scaling solutions.",
+    website: "https://www.bnbchain.org/en",
+    logoUrl: "blockscan/binance",
+    platforms: {
+      bscscan: {
+        label: "BscScan",
+        iconUrl: "blockscan/bscscan",
+        chains: [
+          {
+            value: "mainnet",
+            label: "Bsc Mainnet",
+            icon: "",
+            isDisabled: false,
+            website: "https://bscscan.com/",
+          },
+          {
+            value: "testnet",
+            label: "Bsc Testnet",
+            icon: "",
+            isDisabled: false,
+            website: "https://testnet.bscscan.com/",
+          },
+        ],
+      },
     },
-    {
-      value: "goerli",
-      label: "Optimism Goerli Testnet",
-      icon: "",
-      isDisabled: false,
+  },
+  polygonscan: {
+    blockchainName: "Polygon",
+    description:
+      "The fundamental protocol that allows anyone to create and exchange value, powered by zero-knowledge technology.",
+    website: "https://polygon.technology/",
+    logoUrl: "blockscan/polygon",
+    platforms: {
+      polygonscan: {
+        label: "PolygonScan",
+        iconUrl: "blockscan/polygonscan",
+        chains: [
+          {
+            value: "mainnet",
+            label: "Polygon Mainnet",
+            icon: "",
+            isDisabled: false,
+            website: "https://polygonscan.com/",
+          },
+          {
+            value: "testnet",
+            label: "Mumbai Testnet",
+            icon: "",
+            isDisabled: false,
+            website: "https://mumbai.polygonscan.com/",
+          },
+        ],
+      },
+      blockscout: {
+        label: "Blockscout",
+        iconUrl: "blockscan/blockscout",
+        chains: [
+          {
+            value: "polygon",
+            label: "Polygon Mainnet",
+            icon: "",
+            isDisabled: false,
+            website: "https://polygon.blockscout.com/",
+          },
+        ],
+      },
     },
-  ],
-  bscscan: [
-    { value: "mainnet", label: "Bsc Mainnet", icon: "", isDisabled: false },
-    { value: "testnet", label: "Bsc Testnet", icon: "", isDisabled: false },
-  ],
-  polygonscan: [
-    {
-      value: "mainnet",
-      label: "Polygon Mainnet",
-      icon: "",
-      isDisabled: false,
+  },
+  avalanche: {
+    blockchainName: "Avalanche",
+    description:
+      "Avalanche is a decentralized blockchain platform known for its high-performance consensus protocol and custom subnets, enabling fast and scalable decentralized applications (DApps).",
+    website: "https://www.avax.network/",
+    logoUrl: "blockscan/avalanche",
+    platforms: {
+      avalanche: {
+        label: "Snowtrace",
+        iconUrl: "blockscan/snowtrace",
+        chains: [
+          {
+            value: "mainnet",
+            label: "Avalanche Mainnet",
+            icon: "",
+            isDisabled: false,
+            website: "https://snowtrace.io/",
+          },
+          {
+            value: "testnet",
+            label: "Avalanche Fuji Testnet",
+            icon: "",
+            isDisabled: false,
+            website: "https://testnet.snowtrace.io/",
+          },
+        ],
+      },
     },
-    {
-      value: "testnet",
-      label: "Polygon Testnet",
-      icon: "",
-      isDisabled: false,
+  },
+  fantom: {
+    blockchainName: "Fantom",
+    description:
+      "Fantom is a highly scalable blockchain platform for DeFi, crypto dApps, and enterprise applications.",
+    website: "https://fantom.foundation/",
+    logoUrl: "blockscan/fantom",
+    platforms: {
+      fantom: {
+        label: "FTMScan",
+        iconUrl: "blockscan/ftmscan",
+        chains: [
+          {
+            value: "mainnet",
+            label: "FTM Mainnet",
+            icon: "",
+            isDisabled: false,
+            website: "https://ftmscan.com/",
+          },
+          {
+            value: "testnet",
+            label: "FTM Testnet",
+            icon: "",
+            isDisabled: false,
+            website: "https://testnet.ftmscan.com/",
+          },
+        ],
+      },
     },
-  ],
-  avalanche: [
-    {
-      value: "mainnet",
-      label: "Avalanche Mainnet",
-      icon: "",
-      isDisabled: false,
+  },
+  cronos: {
+    blockchainName: "Ethereum",
+    description:
+      "Cronos is a blockchain network developed by Crypto.com, designed to provide Ethereum Virtual Machine (EVM) compatibility and cross-chain capabilities, fostering interoperability and scalability in decentralized applications.",
+    website: "https://cronos.org/",
+    logoUrl: "blockscan/cronos",
+    platforms: {
+      cronos: {
+        label: "Cronos Chain Explorer",
+        iconUrl: "blockscan/crono",
+        chains: [
+          {
+            value: "mainnet",
+            label: "Cronos Mainnet",
+            icon: "",
+            isDisabled: false,
+            website: "https://cronoscan.com/",
+          },
+          {
+            value: "testnet",
+            label: "Cronos Testnet",
+            icon: "",
+            isDisabled: false,
+            website: "https://explorer.cronos.org/testnet",
+          },
+        ],
+      },
     },
-    {
-      value: "testnet",
-      label: "Avalanche Fuji Testnet",
-      icon: "",
-      isDisabled: false,
+  },
+  celo: {
+    blockchainName: "Celo",
+    description:
+      "Celo is a mobile-first blockchain platform focused on financial inclusion, leveraging a stablecoin, cUSD, and a novel proof-of-stake consensus mechanism to enable accessible and affordable financial services for anyone with a mobile phone.",
+    website: "https://celo.org/",
+    logoUrl: "blockscan/celo",
+    platforms: {
+      celo: {
+        label: "Celo Chain Explorer",
+        iconUrl: "blockscan/celo",
+        chains: [
+          {
+            value: "mainnet",
+            label: "Celo Mainnet",
+            icon: "",
+            isDisabled: false,
+            website: "https://celoscan.io/",
+          },
+          {
+            value: "testnet",
+            label: "Alfajores Testnet",
+            icon: "",
+            isDisabled: false,
+            website: "https://alfajores.celoscan.io/",
+          },
+        ],
+      },
     },
-  ],
-  fantom: [
-    { value: "mainnet", label: "FTM Mainnet", icon: "", isDisabled: false },
-    { value: "testnet", label: "FTM Testnet", icon: "", isDisabled: false },
-  ],
-  cronos: [
-    {
-      value: "mainnet",
-      label: "Cronos Mainnet",
-      icon: "",
-      isDisabled: false,
+  },
+  aurora: {
+    blockchainName: "Aurora",
+    description:
+      "Aurora is a next-generation Ethereum compatible blockchain and ecosystem that runs on the NEAR Protocol, and powers the innovations behind Aurora Cloud—the fastest path for Web2 businesses to capture the value of Web3.",
+    website: "https://aurora.dev/",
+    logoUrl: "blockscan/aurora",
+    platforms: {
+      aurora: {
+        label: "Blockscout (Aurora)",
+        iconUrl: "blockscan/blockscout",
+        chains: [
+          {
+            value: "mainnet",
+            label: "Aurora Mainnet",
+            icon: "",
+            isDisabled: false,
+            website: "https://explorer.aurora.dev/",
+          },
+          {
+            value: "testnet",
+            label: "Aurora Testnet",
+            icon: "",
+            isDisabled: false,
+            website: "https://explorer.testnet.aurora.dev/",
+          },
+        ],
+      },
     },
-    {
-      value: "testnet",
-      label: "Cronos Testnet",
-      icon: "",
-      isDisabled: false,
+  },
+  arbiscan: {
+    blockchainName: "Arbitrum",
+    description:
+      "Arbitrum is an Ethereum Layer 2 scaling solution developed by Offchain Labs, utilizing optimistic rollups to enhance transaction throughput and reduce fees on the Ethereum network.",
+    website: "https://arbitrum.io/",
+    logoUrl: "blockscan/arbitrum",
+    platforms: {
+      arbiscan: {
+        label: "Arbiscan",
+        iconUrl: "blockscan/arbitrum",
+        chains: [
+          {
+            value: "mainnet",
+            label: "Arbiscan Mainnet",
+            icon: "",
+            isDisabled: false,
+            website: "https://arbiscan.io/",
+          },
+          {
+            value: "goerli",
+            label: "Arbiscan Goerli",
+            icon: "",
+            isDisabled: false,
+            website: "https://goerli.arbiscan.io/",
+          },
+        ],
+      },
     },
-  ],
-  celo: [
-    { value: "mainnet", label: "Celo Mainnet", icon: "", isDisabled: false },
-    {
-      value: "testnet",
-      label: "Alfajores Testnet",
-      icon: "",
-      isDisabled: false,
+  },
+  reefscan: {
+    blockchainName: "Reef",
+    description:
+      "Reef chain is an EVM compatible blockchain for DeFi. It is fast, scalable, has low transaction costs and does no wasteful mining. It is built with Substrate Framework and comes with on-chain governance.",
+    website: "https://reef.io/",
+    logoUrl: "blockscan/reefscan",
+    platforms: {
+      reefscan: {
+        label: "ReefScan",
+        iconUrl: "blockscan/reefscan",
+        chains: [
+          {
+            value: "mainnet",
+            label: "ReefScan Mainnet",
+            icon: "",
+            isDisabled: false,
+            website: "https://reefscan.com/",
+          },
+        ],
+      },
     },
-  ],
-  aurora: [
-    {
-      value: "mainnet",
-      label: "Aurora Mainnet",
-      icon: "",
-      isDisabled: false,
+  },
+  xdc: {
+    blockchainName: "XDC",
+    description:
+      "XDC Network is an enterprise-grade, open-source blockchain protocol. An EVM-compatible chain with enforceable smart contracts, it is uniquely suited to revolutionize, decentralize, and liquify the trade finance industry through the tokenization of real world assets and financial instruments.",
+    website: "https://xdc.org/",
+    logoUrl: "blockscan/xdc",
+    platforms: {
+      xdc: {
+        label: "BlocksScan",
+        iconUrl: "blockscan/blocksscan",
+        chains: [
+          {
+            value: "mainnet",
+            label: "XDC Mainnet",
+            icon: "",
+            isDisabled: false,
+            website: "https://explorer.xinfin.network/",
+          },
+          {
+            value: "testnet",
+            label: "XDC Apothem Network",
+            icon: "",
+            isDisabled: false,
+            website: "https://explorer.apothem.network/",
+          },
+        ],
+      },
     },
-    {
-      value: "testnet",
-      label: "Aurora Testnet",
-      icon: "",
-      isDisabled: false,
+  },
+  nordekscan: {
+    blockchainName: "Nordek",
+    description:
+      "NORDEK strives to be the most business and consumer-friendly blockchain ecosystem for mainstream adoption of web3 payments. NORDEK is powered by fast and low-cost EVM-compatible NRK Network blockchain.",
+    website: "https://www.nordek.io/",
+    logoUrl: "blockscan/nordekscan",
+    platforms: {
+      nordekscan: {
+        label: "Blockscout (nordekscan)",
+        iconUrl: "blockscan/blockscout",
+        chains: [
+          {
+            value: "mainnet",
+            label: "Nordek Mainnet",
+            icon: "",
+            isDisabled: false,
+            website: "https://nordekscan.com/",
+          },
+        ],
+      },
     },
-  ],
-  arbiscan: [
-    {
-      value: "mainnet",
-      label: "Arbiscan Mainnet",
-      icon: "",
-      isDisabled: false,
+  },
+  fuse: {
+    blockchainName: "Ethereum",
+    description:
+      "Fuse's public blockchain ecosystem provides low cost Web3 payments without the development headaches or vendor lock-in.",
+    website: "https://www.fuse.io/",
+    logoUrl: "blockscan/fuse",
+    platforms: {
+      fuse: {
+        label: "Blockscout (Fuse)",
+        iconUrl: "blockscan/blockscout",
+        chains: [
+          {
+            value: "mainnet",
+            label: "Fuse Mainnet",
+            icon: "",
+            isDisabled: false,
+            website: "https://explorer.fuse.io/",
+          },
+          {
+            value: "testnet",
+            label: "Fuse Testnet",
+            icon: "",
+            isDisabled: false,
+            website: "",
+          },
+        ],
+      },
     },
-    {
-      value: "goerli",
-      label: "Arbiscan Goerli",
-      icon: "",
-      isDisabled: false,
+  },
+  basescan: {
+    blockchainName: "Base",
+    description:
+      "Base is a secure, low-cost, builder-friendly Ethereum L2 built to bring the next billion users onchain.",
+    website: "https://base.org/",
+    logoUrl: "blockscan/base",
+    platforms: {
+      basescan: {
+        label: "BaseScan",
+        iconUrl: "blockscan/base",
+        chains: [
+          {
+            value: "mainnet",
+            label: "Fuse Mainnet",
+            icon: "",
+            isDisabled: false,
+            website: "",
+          },
+          {
+            value: "testnet",
+            label: "Fuse Testnet",
+            icon: "",
+            isDisabled: false,
+            website: "",
+          },
+        ],
+      },
+      blockscout: {
+        label: "Blockscout (Base)",
+        iconUrl: "blockscan/blockscout",
+        chains: [
+          {
+            value: "base",
+            label: "Base Mainnet",
+            icon: "",
+            isDisabled: false,
+            website: "https://base.blockscout.com/",
+          },
+          {
+            value: "base-goerli",
+            label: "Base Goerli",
+            icon: "",
+            isDisabled: false,
+            website: "https://base-goerli.blockscout.com/",
+          },
+          {
+            value: "base-sepolia",
+            label: "Base Sepolia",
+            icon: "",
+            isDisabled: false,
+            website: "https://base-sepolia.blockscout.com/",
+          },
+        ],
+      },
     },
-  ],
-  reefscan: [
-    {
-      value: "mainnet",
-      label: "ReefScan Mainnet",
-      icon: "",
-      isDisabled: false,
+  },
+  gnosis: {
+    blockchainName: "Gnosis",
+    description:
+      "Gnosis is a decentralized platform built on Ethereum that facilitates prediction market and decentralized exchange services, aiming to enable users to forecast and trade on the outcome of various events.",
+    website: "https://www.gnosis.io/",
+    logoUrl: "blockscan/gnosis",
+    platforms: {
+      blockscout: {
+        label: "Blockscout (Gnosis)",
+        iconUrl: "blockscan/blockscout",
+        chains: [
+          {
+            value: "gnosis",
+            label: "Gnosis Mainnet",
+            icon: "",
+            isDisabled: false,
+            website: "https://gnosis.blockscout.com/",
+          },
+          {
+            value: "testnet",
+            label: "Gnosis Chiado Testnet",
+            icon: "",
+            isDisabled: false,
+            website: "https://gnosis-chiado.blockscout.com/",
+          },
+        ],
+      },
     },
-  ],
-  xdc: [
-    {
-      value: "mainnet",
-      label: "XDC Mainnet",
-      icon: "",
-      isDisabled: false,
+  },
+  rootstock: {
+    blockchainName: "Rootstock",
+    description:
+      "Rootstock (RSK) is a smart contract platform that extends the capabilities of the Bitcoin blockchain by enabling the execution of smart contracts and decentralized applications (dApps).",
+    website: "https://rootstock.io/",
+    logoUrl: "blockscan/rootstock",
+    platforms: {
+      blockscout: {
+        label: "Blockscout (Rootstock)",
+        iconUrl: "blockscan/blockscout",
+        chains: [
+          {
+            value: "rootstock",
+            label: "Rootstock Mainnet",
+            icon: "",
+            isDisabled: false,
+            website: "https://rootstock.blockscout.com/",
+          },
+        ],
+      },
     },
-    {
-      value: "testnet",
-      label: "XDC Apothem Network",
-      icon: "",
-      isDisabled: false,
+  },
+  neon: {
+    blockchainName: "Neon",
+    description:
+      "Neon is an Ethereum Virtual Machine with the scalability and liquidity of Solana",
+    website: "https://neonevm.org/",
+    logoUrl: "blockscan/neon",
+    platforms: {
+      blockscout: {
+        label: "Blockscout (Neon)",
+        iconUrl: "blockscan/blockscout",
+        chains: [
+          {
+            value: "neon",
+            label: "Neon Mainnet",
+            icon: "",
+            isDisabled: false,
+            website: "https://neon.blockscout.com/",
+          },
+          {
+            value: "testnet",
+            label: "Neon Devnet",
+            icon: "",
+            isDisabled: false,
+            website: "https://neon-devnet.blockscout.com/",
+          },
+        ],
+      },
     },
-  ],
-  nordekscan: [
-    {
-      value: "mainnet",
-      label: "Nordek Mainnet",
-      icon: "",
-      isDisabled: false,
+  },
+  shimmer: {
+    blockchainName: "Shimmer",
+    description:
+      "Shimmer is a high-performance, feeless, and parallelized Directed Acyclic Graph (DAG) ledger offering a chain-agnostic solution for fully customizable smart contract chains to be build on top. Shimmer is a bridge to a new era of interoperability and composability. It enables seamless and feeless value transfers between smart contract chains, opening the door to an interoperable future.",
+    website: "https://shimmer.network/",
+    logoUrl: "blockscan/shimmer",
+    platforms: {
+      blockscout: {
+        label: "Blockscout (Shimmer)",
+        iconUrl: "blockscan/blockscout",
+        chains: [
+          {
+            value: "shimmer-mainnet",
+            label: "Gnosis Mainnet",
+            icon: "",
+            isDisabled: false,
+            website: "https://explorer.evm.shimmer.network/",
+          },
+          {
+            value: "shimmer-testnet",
+            label: "Neon Devnet",
+            icon: "",
+            isDisabled: false,
+            website: "https://explorer.evm.testnet.shimmer.network/",
+          },
+        ],
+      },
     },
-  ],
-  fuse: [
-    {
-      value: "mainnet",
-      label: "Fuse Mainnet",
-      icon: "",
-      isDisabled: false,
+  },
+  shibariumscan: {
+    blockchainName: "Shibarium",
+    description:
+      "Gnosis is a decentralized platform built on Ethereum that facilitates prediction market and decentralized exchange services, aiming to enable users to forecast and trade on the outcome of various events.",
+    website: "https://www.gnosis.io/",
+    logoUrl: "blockscan/",
+    platforms: {
+      blockscout: {
+        label: "Blockscout (Shibarium)",
+        iconUrl: "blockscan/blockscout",
+        chains: [
+          {
+            value: "shibariumscan-mainnet",
+            label: "Shibarium Mainnet",
+            icon: "",
+            isDisabled: false,
+            website: "https://www.shibariumscan.io/",
+          },
+          {
+            value: "shibariumscan-testnet",
+            label: "Shibarium Testnet",
+            icon: "",
+            isDisabled: false,
+            website: "https://www.shibariumscan.io/",
+          },
+        ],
+      },
     },
-    {
-      value: "testnet",
-      label: "Fuse Testnet",
-      icon: "",
-      isDisabled: false,
+  },
+  lightlink: {
+    blockchainName: "Lightlink",
+    description:
+      "Layer 2 blockchain secured by Ethereum, purposefully built for Metaverse, NFT and Gaming applications",
+    website: "https://www.lightlink.io/",
+    logoUrl: "blockscan/lightlink",
+    platforms: {
+      blockscout: {
+        label: "Blockscout (Lightlink)",
+        iconUrl: "blockscan/blockscout",
+        chains: [
+          {
+            value: "lightlink-mainnet",
+            label: " LightLink Phoenix Mainnet",
+            icon: "",
+            isDisabled: false,
+            website: "https://phoenix.lightlink.io/",
+          },
+          {
+            value: "lightlink-testnet",
+            label: " LightLink Pegasus  Testnet",
+            icon: "",
+            isDisabled: false,
+            website: "https://pegasus.lightlink.io/",
+          },
+        ],
+      },
     },
-  ],
+  },
+  etc: {
+    blockchainName: "Ethereum Classic",
+    description:
+      "Ethereum Classic (ETC) is a decentralized blockchain platform that emerged as a result of a fork in the Ethereum network, maintaining the original principles of immutability and preserving the blockchain's history prior to a controversial hard fork.",
+    website: "https://ethereumclassic.org/",
+    logoUrl: "blockscan/etc",
+    platforms: {
+      blockscout: {
+        label: "Blockscout (Ethereum Classic)",
+        iconUrl: "blockscan/blockscout",
+        chains: [
+          {
+            value: "etc",
+            label: "Ethereum Classic Mainnet",
+            icon: "",
+            isDisabled: false,
+            website: "https://etc.blockscout.com/",
+          },
+          {
+            value: "etc-mordor",
+            label: "ETC Mordor Testnet",
+            icon: "",
+            isDisabled: false,
+            website: "https://etc-mordor.blockscout.com/",
+          },
+        ],
+      },
+    },
+  },
+  zksync: {
+    blockchainName: "zkSync",
+    description:
+      "zkSync is a Layer-2 scaling solution for the Ethereum blockchain that employs zk-rollup technology to enhance scalability and efficiency.",
+    website: "https://zksync.io/",
+    logoUrl: "blockscan/zksync",
+    platforms: {
+      blockscout: {
+        label: "Blockscout (zkSync)",
+        iconUrl: "blockscan/blockscout",
+        chains: [
+          {
+            value: "zksync-era-mainnet",
+            label: "zkSync Era Mainnet",
+            icon: "",
+            isDisabled: false,
+            website: "https://zksync.blockscout.com/",
+          },
+        ],
+      },
+    },
+  },
+  immutable: {
+    blockchainName: "Immutable",
+    description:
+      "Build with unmatched speed, scale, and flexibility using Immutable’s simple, end-to-end Web3 solutions. Fuel your game's growth and captivate players like never before.",
+    website: "https://www.immutable.com/",
+    logoUrl: "blockscan/immutable",
+    platforms: {
+      blockscout: {
+        label: "Blockscout (Immutable)",
+        iconUrl: "blockscan/blockscout",
+        chains: [
+          {
+            value: "immutable-testnet",
+            label: "Immutable Testnet",
+            icon: "",
+            isDisabled: false,
+            website: "https://explorer.testnet.immutable.com/",
+          },
+        ],
+      },
+    },
+  },
 };
 
 export const platforms = [

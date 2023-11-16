@@ -8,6 +8,19 @@ import {
   useMediaQuery,
   useToast,
   Text,
+  Flex,
+  HStack,
+  Popover,
+  PopoverTrigger,
+  PopoverContent,
+  PopoverHeader,
+  PopoverArrow,
+  PopoverCloseButton,
+  PopoverBody,
+  PopoverFooter,
+  ButtonGroup,
+  VStack,
+  Image,
 } from "@chakra-ui/react";
 import Loader from "components/styled-components/Loader";
 import { StylesConfig, GroupBase } from "react-select";
@@ -19,6 +32,8 @@ import { useLocation, useParams } from "react-router-dom";
 import Lottie from "lottie-react";
 import ssIconAnimation from "./quickscan_bg.json";
 import { isInViewport } from "common/functions";
+import { ChevronDownIcon } from "@chakra-ui/icons";
+import { BlockchainSelector } from "components/common/BlockchainSelector";
 
 const QuickScanForm: React.FC<{
   view: "landing" | "quickscan";
@@ -50,10 +65,9 @@ const QuickScanForm: React.FC<{
     label: string;
     value: string;
     icon: string;
+    website: string;
   } | null>(null);
-  const [chainList, setChainList] = React.useState<
-    { label: string; value: string; icon: string }[]
-  >(contractChain["etherscan"]);
+
   const quickscanRef = useRef<HTMLDivElement>(null);
   const [animationOffset, setAnimationOffset] = useState(60);
 
@@ -107,65 +121,6 @@ const QuickScanForm: React.FC<{
       width: isDesktopView ? "300px" : "95%",
       maxWidth: "500px",
     }),
-  };
-
-  const customStylesChain: StylesConfig<
-    PropsWithChildren<{
-      value: string;
-      label: string;
-      icon: string;
-    }>,
-    boolean,
-    GroupBase<
-      PropsWithChildren<{
-        value: string;
-        label: string;
-        icon: string;
-      }>
-    >
-  > = {
-    option: (provided: any, state: any) => ({
-      ...provided,
-      borderBottom: "1px solid #f3f3f3",
-      backgroundColor: state.isSelected
-        ? "#FFFFFF"
-        : state.isFocused
-        ? "#E6E6E6"
-        : "#FFFFFF",
-      color: "#000000",
-    }),
-    menu: (provided: any, state: any) => ({
-      ...provided,
-      color: state.selectProps.menuColor,
-      borderRadius: 10,
-      border: "0px solid #ffffff",
-      overflowY: "hidden",
-      width: "250px",
-    }),
-    control: (state: any) => ({
-      // none of react-select's styles are passed to <Control />
-      display: "flex",
-      flexDirection: "row",
-      backgroundColor: "#FFFFFF",
-      width: isDesktopView ? "300px" : "100%",
-      padding: 5,
-      maxWidth: "500px",
-      borderTopLeftRadius: 0,
-      borderBottomLeftRadius: 0,
-      borderRadius: isDesktopView ? 0 : 15,
-      margin: 0,
-      border: state.isFocused ? "2px solid #52FF00" : "2px solid #EDF2F7",
-    }),
-    container: (provided: any, state: any) => ({
-      ...provided,
-      width: isDesktopView ? "300px" : "95%",
-      maxWidth: "500px",
-    }),
-    singleValue: (provided: any, state: any) => {
-      const opacity = state.isDisabled ? 0.3 : 1;
-      const transition = "opacity 300ms";
-      return { ...provided, opacity, transition };
-    },
   };
 
   const generateQuickScan = () => {
@@ -238,7 +193,7 @@ const QuickScanForm: React.FC<{
 
     if (blockPlatform) {
       setPlatform(blockPlatform);
-      setChainList(contractChain[blockPlatform]);
+      // setChainList(contractChain[blockPlatform]);
       setChain(null);
     }
 
@@ -246,11 +201,11 @@ const QuickScanForm: React.FC<{
       setNodeId(blockChain);
     } else {
       if (blockChain) {
-        contractChain[blockPlatform].forEach((item) => {
-          if (item.value === blockChain) {
-            setChain(item);
-          }
-        });
+        // contractChain[blockPlatform].forEach((item) => {
+        //   if (item.value === blockChain) {
+        //     setChain(item);
+        //   }
+        // });
       }
     }
 
@@ -394,15 +349,13 @@ const QuickScanForm: React.FC<{
           analysis report in a matter of seconds.
         </Text>
         <Stack
-          mt={isDesktopView ? 20 : 10}
-          ml={[4, 4, 4, 0]}
+          mt={5}
           justify="center"
           alignItems="center"
           w={"100%"}
           zIndex={1000}
-          maxW={isDesktopView ? "1500px" : "900px"}
-          direction={isDesktopView ? "row" : "column"}
-          spacing={isDesktopView ? 0 : 3}
+          direction={"column"}
+          spacing={10}
           opacity={stopAnimation || isVisible ? 1 : 0}
           transform={
             stopAnimation
@@ -415,68 +368,26 @@ const QuickScanForm: React.FC<{
               : "opacity 0.25s ease-in, transform 0.5s ease-in"
           }
         >
-          <Select
-            formatOptionLabel={FormatOptionLabelWithImage}
-            options={platforms.map((item) => ({
-              ...item,
-              isDisabled: false,
-            }))}
-            isSearchable={true}
-            value={platforms.find((item) => platform === item.value)}
-            placeholder="Select Contract Platform"
-            styles={customStylesPlatform}
-            onChange={(newValue: any) => {
-              if (newValue) {
-                // setAction(newValue.value)
-                setPlatform(newValue.value);
-                setChainList(contractChain[newValue.value]);
-                setChain(null);
-              }
-            }}
+          <BlockchainSelector
+            view="quickscan"
+            chain={chain}
+            setChain={setChain}
+            setPlatform={setPlatform}
+            platform={platform}
           />
-
-          {platform === "buildbear" ? (
-            <Input
-              isRequired
-              placeholder="Node ID"
-              variant="brand"
-              size="lg"
-              height={50}
-              borderRadius={isDesktopView ? 0 : 15}
-              width={isDesktopView ? "300px" : "95%"}
-              maxWidth="500px"
-              value={node_id}
-              onChange={(e) => {
-                setNodeId(e.target.value);
-              }}
-            />
-          ) : (
-            <Select
-              formatOptionLabel={FormatOptionLabelWithImage}
-              isDisabled={platform === ""}
-              isSearchable={false}
-              value={chain}
-              options={chainList}
-              placeholder="Select Contract Chain"
-              styles={customStylesChain}
-              onChange={(newValue: any) => {
-                if (newValue) {
-                  setChain(newValue);
-                }
-              }}
-            />
-          )}
           <Input
             isRequired
             placeholder="Contract Address"
             variant="brand"
             size="lg"
+            color="white"
             height={50}
             mt={0}
-            borderTopLeftRadius={isDesktopView ? 0 : 15}
-            borderBottomLeftRadius={isDesktopView ? 0 : 15}
-            width={isDesktopView ? "500px" : "95%"}
-            maxWidth="500px"
+            borderColor="white"
+            backgroundColor="transparent"
+            borderRadius={15}
+            width={isDesktopView ? "600px" : "95%"}
+            maxWidth="600px"
             value={address}
             onChange={(e) => {
               setAddress(e.target.value);
