@@ -12,6 +12,7 @@ import {
   Image,
   Divider,
   Box,
+  Input,
 } from "@chakra-ui/react";
 import StyledButton from "components/styled-components/StyledButton";
 import Loader from "components/styled-components/Loader";
@@ -27,6 +28,8 @@ import RadioButton from "components/styled-components/RadioButton";
 export const BlockchainSelector: React.FC<{
   view: "quickscan" | "homepage";
   platform: string;
+  node_id: string;
+  setNodeId: React.Dispatch<React.SetStateAction<string>>;
   setPlatform: React.Dispatch<React.SetStateAction<string>>;
   chain: {
     label: string;
@@ -42,22 +45,16 @@ export const BlockchainSelector: React.FC<{
       website: string;
     } | null>
   >;
-}> = ({ view, platform, setPlatform, chain, setChain }) => {
+}> = ({ view, platform, setPlatform, chain, setChain, node_id, setNodeId }) => {
   const [blockchain, setBlockchain] = useState("");
   const assetsUrl = getAssetsURL();
 
   useEffect(() => {
-    if (blockchain !== "") {
+    if (blockchain !== "" && blockchain !== "buildbear") {
       setPlatform(Object.keys(contractChain[blockchain].platforms)[0]);
     }
   }, [blockchain]);
 
-  const selectedBlockChainRef = useRef();
-
-  const [chainList, setChainList] =
-    React.useState<
-      { label: string; value: string; icon: string; website: string }[]
-    >();
   return (
     <Popover placement="bottom" closeOnBlur={false}>
       <PopoverTrigger>
@@ -71,16 +68,19 @@ export const BlockchainSelector: React.FC<{
           borderRadius={15}
           color={"gray.400"}
         >
-          {blockchain === "" || platform === "" || chain === null ? (
-            <>
-              <Text>Select Blockchain</Text>
-              <ChevronDownIcon />
-            </>
-          ) : (
+          {blockchain !== "" &&
+          platform !== "" &&
+          (chain !== null || node_id !== "") ? (
             <>
               <HStack justifyContent="flex-start">
                 <Image
-                  src={`${assetsUrl}${contractChain[blockchain].logoUrl}.svg`}
+                  src={`${assetsUrl}${
+                    blockchain === "buildbear"
+                      ? `blockscan/buildbear-${
+                          view === "quickscan" ? "white" : "black"
+                        }`
+                      : contractChain[blockchain].logoUrl
+                  }.svg`}
                   height="40px"
                   width="40px"
                 />
@@ -91,10 +91,12 @@ export const BlockchainSelector: React.FC<{
                     fontWeight={600}
                     fontSize="md"
                   >
-                    {contractChain[blockchain].blockchainName +
-                      " (" +
-                      chain?.label +
-                      ")"}
+                    {blockchain === "buildbear"
+                      ? "Buildbear"
+                      : contractChain[blockchain].blockchainName +
+                        " (" +
+                        chain?.label +
+                        ")"}
                   </Text>
                   <Text
                     cursor="pointer"
@@ -104,11 +106,18 @@ export const BlockchainSelector: React.FC<{
                     fontSize="sm"
                   >
                     Verified on{" "}
-                    {contractChain[blockchain].platforms[platform].label}
+                    {blockchain === "buildbear"
+                      ? "https://www.buildbear.io/"
+                      : contractChain[blockchain].platforms[platform].label}
                   </Text>
                 </VStack>
               </HStack>
               <FaPen />
+            </>
+          ) : (
+            <>
+              <Text>Select Blockchain</Text>
+              <ChevronDownIcon />
             </>
           )}
         </HStack>
@@ -137,14 +146,46 @@ export const BlockchainSelector: React.FC<{
         overflowY="scroll"
       >
         {blockchain === "" ? (
-          Object.keys(contractChain).map((item) => (
+          <>
+            {Object.keys(contractChain).map((item) => (
+              <VStack
+                w="120px"
+                justifyContent="center"
+                alignItems="flex-start"
+                spacing={3}
+                cursor="pointer"
+                onClick={() => setBlockchain(item)}
+              >
+                <Flex
+                  height="80px"
+                  width="80px"
+                  padding="10px"
+                  borderRadius="40px"
+                  backgroundColor={view === "quickscan" ? "#404040" : "#F3F3F3"}
+                  justifyContent="center"
+                  alignItems="center"
+                >
+                  <Image
+                    height="50px"
+                    width="50px"
+                    src={`${assetsUrl}${contractChain[item].logoUrl}.svg`}
+                  />
+                </Flex>
+                <Text color="#8A94A6" fontSize="xs">
+                  {contractChain[item].blockchainName}
+                </Text>
+              </VStack>
+            ))}
             <VStack
               w="120px"
               justifyContent="center"
               alignItems="flex-start"
               spacing={3}
               cursor="pointer"
-              onClick={() => setBlockchain(item)}
+              onClick={() => {
+                setBlockchain("buildbear");
+                setPlatform("buildbear");
+              }}
             >
               <Flex
                 height="80px"
@@ -158,14 +199,16 @@ export const BlockchainSelector: React.FC<{
                 <Image
                   height="50px"
                   width="50px"
-                  src={`${assetsUrl}${contractChain[item].logoUrl}.svg`}
+                  src={`${assetsUrl}blockscan/"buildbear-"${
+                    view === "quickscan" ? "white" : "black"
+                  }.svg`}
                 />
               </Flex>
               <Text color="#8A94A6" fontSize="xs">
-                {contractChain[item].blockchainName}
+                Buildbear
               </Text>
             </VStack>
-          ))
+          </>
         ) : (
           <Flex
             justifyContent="space-between"
@@ -175,26 +218,74 @@ export const BlockchainSelector: React.FC<{
             alignItems="flex-start"
           >
             <VStack w="120px" overflowY="scroll" h="100%" spacing={4}>
-              {Object.keys(contractChain).map((item) => (
+              <Flex
+                height={"90px"}
+                width={"90px"}
+                padding="10px"
+                borderRadius={"50px"}
+                backgroundColor={view === "quickscan" ? "#404040" : "#F3F3F3"}
+                justifyContent="center"
+                alignItems="center"
+                cursor="pointer"
+                border="3px solid #52FF00"
+              >
+                <Image
+                  height={"70px"}
+                  width={"70px"}
+                  src={`${assetsUrl}${
+                    blockchain === "buildbear"
+                      ? `blockscan/buildbear-${
+                          view === "quickscan" ? "white" : "black"
+                        }`
+                      : contractChain[blockchain].logoUrl
+                  }.svg`}
+                />
+              </Flex>
+              {Object.keys(contractChain).map((item) => {
+                if (item !== blockchain)
+                  return (
+                    <Flex
+                      height={"80px"}
+                      width={"70px"}
+                      padding="10px"
+                      borderRadius={"40px"}
+                      backgroundColor={"#F3F3F3"}
+                      justifyContent="center"
+                      alignItems="center"
+                      cursor="pointer"
+                      onClick={() => setBlockchain(item)}
+                      border={"none"}
+                    >
+                      <Image
+                        height={"50px"}
+                        width={"50px"}
+                        src={`${assetsUrl}${contractChain[item].logoUrl}.svg`}
+                      />
+                    </Flex>
+                  );
+              })}
+              {blockchain !== "buildbear" && (
                 <Flex
-                  height={item === blockchain ? "90px" : "80px"}
-                  width={item === blockchain ? "90px" : "70px"}
+                  height={"80px"}
+                  width={"70px"}
                   padding="10px"
-                  borderRadius={item === blockchain ? "50px" : "40px"}
-                  backgroundColor={view === "quickscan" ? "#404040" : "#F3F3F3"}
+                  borderRadius={"40px"}
+                  backgroundColor={"#F3F3F3"}
                   justifyContent="center"
                   alignItems="center"
                   cursor="pointer"
-                  onClick={() => setBlockchain(item)}
-                  border={item === blockchain ? "3px solid #52FF00" : "none"}
+                  onClick={() => setBlockchain("buildbear")}
+                  border={"none"}
                 >
                   <Image
-                    height={item === blockchain ? "70px" : "50px"}
-                    width={item === blockchain ? "70px" : "50px"}
-                    src={`${assetsUrl}${contractChain[item].logoUrl}.svg`}
+                    height={"50px"}
+                    width={"50px"}
+                    src={`${assetsUrl}blockscan/"buildbear-"${
+                      view === "quickscan" ? "white" : "black"
+                    }.svg`}
                   />
                 </Flex>
-              ))}
+              )}
             </VStack>
             <Divider
               borderColor={view === "quickscan" ? "#424242" : "#8A94A6"}
@@ -220,12 +311,19 @@ export const BlockchainSelector: React.FC<{
                     fontWeight={600}
                     fontSize="md"
                   >
-                    {contractChain[blockchain].blockchainName}
+                    {blockchain === "buildbear"
+                      ? "Buildbear"
+                      : contractChain[blockchain].blockchainName}
                   </Text>
                   <Text
                     cursor="pointer"
                     onClick={() =>
-                      window.open(contractChain[blockchain].website, "_blank")
+                      window.open(
+                        blockchain === "buildbear"
+                          ? "https://www.buildbear.io/"
+                          : contractChain[blockchain].website,
+                        "_blank"
+                      )
                     }
                     w="100%"
                     textDecoration="underline"
@@ -233,33 +331,72 @@ export const BlockchainSelector: React.FC<{
                     fontWeight={400}
                     fontSize="sm"
                   >
-                    {contractChain[blockchain].website}
+                    {blockchain === "buildbear"
+                      ? "https://www.buildbear.io/"
+                      : contractChain[blockchain].website}
                   </Text>
                   <Text w="100%" color="#8A94A6" fontWeight={400} fontSize="sm">
-                    {contractChain[blockchain].description}
+                    {blockchain === "buildbear"
+                      ? "BuildBear is a platform that allows you to test your DApps at scale and with your entire team and understanding what happens under the hood when you do your complicated blockchain transactions."
+                      : contractChain[blockchain].description}
                   </Text>
                 </VStack>
                 <ArrowBackIcon
                   fontSize={30}
                   mr={10}
                   cursor="pointer"
-                  color="white"
+                  color={view === "quickscan" ? "white" : "gray.600"}
                   onClick={() => setBlockchain("")}
                 />
               </HStack>
-              {Object.keys(contractChain[blockchain].platforms).map(
-                (platformValue) => (
-                  <ChainSelector
-                    view={view}
-                    platform={platform}
-                    platformValue={platformValue}
-                    chain={chain}
-                    setChain={setChain}
-                    setPlatform={setPlatform}
-                    platformData={
-                      contractChain[blockchain].platforms[platformValue]
-                    }
+              {blockchain === "buildbear" ? (
+                <>
+                  <Text
+                    textAlign="left"
+                    my={5}
+                    ml={5}
+                    w="100%"
+                    color={view === "quickscan" ? "white" : "gray.600"}
+                    fontWeight={400}
+                    fontSize="sm"
+                  >
+                    Please enter the Node ID for your block chain
+                  </Text>
+                  <Input
+                    ml={5}
+                    isRequired
+                    placeholder="Node ID"
+                    variant="brand"
+                    size="lg"
+                    color={view === "quickscan" ? "white" : "gray.600"}
+                    height={50}
+                    mt={0}
+                    borderColor={view === "quickscan" ? "white" : "gray.200"}
+                    backgroundColor="transparent"
+                    borderRadius={15}
+                    width={"90%"}
+                    maxWidth="600px"
+                    value={node_id}
+                    onChange={(e) => {
+                      setNodeId(e.target.value);
+                    }}
                   />
+                </>
+              ) : (
+                Object.keys(contractChain[blockchain].platforms).map(
+                  (platformValue) => (
+                    <ChainSelector
+                      view={view}
+                      platform={platform}
+                      platformValue={platformValue}
+                      chain={chain}
+                      setChain={setChain}
+                      setPlatform={setPlatform}
+                      platformData={
+                        contractChain[blockchain].platforms[platformValue]
+                      }
+                    />
+                  )
                 )
               )}
             </Flex>

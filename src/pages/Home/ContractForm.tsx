@@ -205,6 +205,8 @@ const ContractForm: React.FC<{
                 <BlockchainSelector
                   view="homepage"
                   chain={chain}
+                  node_id={nodeId}
+                  setNodeId={setNodeId}
                   setChain={setChain}
                   setPlatform={setPlatform}
                   platform={platform}

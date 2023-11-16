@@ -371,6 +371,8 @@ const QuickScanForm: React.FC<{
           <BlockchainSelector
             view="quickscan"
             chain={chain}
+            node_id={node_id}
+            setNodeId={setNodeId}
             setChain={setChain}
             setPlatform={setPlatform}
             platform={platform}
