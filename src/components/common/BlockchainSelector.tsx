@@ -199,7 +199,7 @@ export const BlockchainSelector: React.FC<{
                 <Image
                   height="50px"
                   width="50px"
-                  src={`${assetsUrl}blockscan/"buildbear-"${
+                  src={`${assetsUrl}blockscan/buildbear-${
                     view === "quickscan" ? "white" : "black"
                   }.svg`}
                 />
@@ -280,7 +280,7 @@ export const BlockchainSelector: React.FC<{
                   <Image
                     height={"50px"}
                     width={"50px"}
-                    src={`${assetsUrl}blockscan/"buildbear-"${
+                    src={`${assetsUrl}blockscan/buildbear-${
                       view === "quickscan" ? "white" : "black"
                     }.svg`}
                   />
