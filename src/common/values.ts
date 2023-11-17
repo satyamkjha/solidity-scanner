@@ -307,6 +307,7 @@ export const blockExplorer: { [key: string]: string } = {
   reefscan: "Reefscan",
   nordekscan: "Nordek",
   fuse: "Fuse",
+  blockscout: "Blockscout",
 };
 
 export const detectorData: DetectorItemProp[] = [
@@ -1633,14 +1634,14 @@ export const contractChain: {
         chains: [
           {
             value: "shimmer-mainnet",
-            label: "Gnosis Mainnet",
+            label: "Shimmer Mainnet",
             icon: "",
             isDisabled: false,
             website: "https://explorer.evm.shimmer.network/",
           },
           {
             value: "shimmer-testnet",
-            label: "Neon Devnet",
+            label: "Shimmer Testnet",
             icon: "",
             isDisabled: false,
             website: "https://explorer.evm.testnet.shimmer.network/",
@@ -1874,6 +1875,130 @@ export const platforms = [
     isDisabled: true,
   },
 ];
+
+export const platformVsChains: {
+  [key: string]: {
+    [key: string]: {
+      chain: string;
+      index: number;
+    };
+  };
+} = {
+  blockscout: {
+    eth: {
+      chain: "etherscan",
+      index: 0,
+    },
+    "eth-goerli": {
+      chain: "etherscan",
+      index: 2,
+    },
+    "eth-sepolia": {
+      chain: "etherscan",
+      index: 1,
+    },
+    "eth-holesky": {
+      chain: "etherscan",
+      index: 3,
+    },
+    gnosis: {
+      chain: "gnosis",
+      index: 0,
+    },
+    "gnosis-chiado": {
+      chain: "gnosis",
+      index: 1,
+    },
+    optimism: {
+      chain: "optimism",
+      index: 0,
+    },
+    "optimism-goerli": {
+      chain: "optimism",
+      index: 1,
+    },
+    "optimism-sepolia": {
+      chain: "optimism",
+      index: 2,
+    },
+    rootstock: {
+      chain: "rootstock",
+      index: 0,
+    },
+    "neon-devnet": {
+      chain: "neon",
+      index: 1,
+    },
+    neon: {
+      chain: "neon",
+      index: 0,
+    },
+    "base-goerli": {
+      chain: "basescan",
+      index: 1,
+    },
+    "base-sepolia": {
+      chain: "basescan",
+      index: 2,
+    },
+    base: {
+      chain: "basescan",
+      index: 0,
+    },
+    polygon: {
+      chain: "polygonscan",
+      index: 0,
+    },
+    "shimmer-mainnet": {
+      chain: "shimmer",
+      index: 0,
+    },
+    "shimmer-testnet": {
+      chain: "shimmer",
+      index: 1,
+    },
+    "shibariumscan-mainnet": {
+      chain: "shibariumscan",
+      index: 0,
+    },
+    "shibariumscan-testnet": {
+      chain: "shibariumscan",
+      index: 1,
+    },
+    "lightlink-testnet": {
+      chain: "lightlink",
+      index: 1,
+    },
+    "lightlink-mainnet": {
+      chain: "lightlink",
+      index: 0,
+    },
+    "fuse-mainnet": {
+      chain: "fuse",
+      index: 0,
+    },
+    "fuse-testnet": {
+      chain: "fuse",
+      index: 1,
+    },
+    etc: {
+      chain: "etc",
+      index: 0,
+    },
+    "etc-mordor": {
+      chain: "etc",
+      index: 1,
+    },
+    "zksync-era-mainnet": {
+      chain: "zksync",
+      index: 0,
+    },
+    "immutable-testnet": {
+      chain: "immutable",
+      index: 0,
+    },
+  },
+};
 
 export const infographicsData: { [key: string]: string[] } = {
   project_github: [
