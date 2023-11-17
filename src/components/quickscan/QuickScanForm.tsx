@@ -8,31 +8,15 @@ import {
   useMediaQuery,
   useToast,
   Text,
-  Flex,
-  HStack,
-  Popover,
-  PopoverTrigger,
-  PopoverContent,
-  PopoverHeader,
-  PopoverArrow,
-  PopoverCloseButton,
-  PopoverBody,
-  PopoverFooter,
-  ButtonGroup,
-  VStack,
-  Image,
 } from "@chakra-ui/react";
 import Loader from "components/styled-components/Loader";
 import { StylesConfig, GroupBase } from "react-select";
 import { OptionTypeWithIcon } from "common/types";
-import FormatOptionLabelWithImage from "components/FormatOptionLabelWithImage";
-import { contractChain, platforms } from "common/values";
-import Select from "react-select";
-import { useLocation, useParams } from "react-router-dom";
+
+import { useLocation } from "react-router-dom";
 import Lottie from "lottie-react";
 import ssIconAnimation from "./quickscan_bg.json";
 import { isInViewport } from "common/functions";
-import { ChevronDownIcon } from "@chakra-ui/icons";
 import { BlockchainSelector } from "components/common/BlockchainSelector";
 
 const QuickScanForm: React.FC<{
@@ -184,6 +168,7 @@ const QuickScanForm: React.FC<{
       localStorage.setItem("campaign_type", campaign_type);
       localStorage.setItem("campaign_id", campaign_id);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const [isVisible, setIsVisible] = useState(false);
@@ -229,11 +214,11 @@ const QuickScanForm: React.FC<{
           "fit-content",
           "fit-content",
           "fit-content",
-          view === "landing" ? "100vh" : "750px",
+          view === "landing" ? "100vh" : "92vh",
         ]}
         px={[0, 0, 10]}
-        py={isDesktopView ? 20 : 10}
-        pb={isDesktopView ? "200px" : "50px"}
+        pt={6}
+        pb={isDesktopView ? 20 : "50px"}
         textAlign="center"
       >
         {playAnimation && !isDesktopView && (
@@ -247,7 +232,7 @@ const QuickScanForm: React.FC<{
           w={["90%", "90%", "80%", "60%"]}
           color={view === "landing" ? "black" : "white"}
           fontSize={["3xl", "4xl"]}
-          mb={8}
+          mb={4}
           mt={isDesktopView ? 0 : 8}
           opacity={stopAnimation || isVisible ? 1 : 0}
           transform={
@@ -276,7 +261,7 @@ const QuickScanForm: React.FC<{
         </Heading>
         <Text
           w={["90%", "90%", "80%", "60%"]}
-          fontSize="xl"
+          fontWeight={500}
           color="subtle"
           mb={8}
           opacity={stopAnimation || isVisible ? 1 : 0}
@@ -297,13 +282,13 @@ const QuickScanForm: React.FC<{
           analysis report in a matter of seconds.
         </Text>
         <Stack
-          mt={5}
+          mt={1}
           justify="center"
           alignItems="center"
           w={"100%"}
           zIndex={1000}
           direction={"column"}
-          spacing={10}
+          spacing={12}
           opacity={stopAnimation || isVisible ? 1 : 0}
           transform={
             stopAnimation
@@ -327,7 +312,7 @@ const QuickScanForm: React.FC<{
           />
           <Input
             isRequired
-            placeholder="Contract Address"
+            placeholder="Type or paste your contract address here..."
             variant="brand"
             size="lg"
             color={view === "quickscan" ? "white" : "gray.600"}
@@ -336,8 +321,9 @@ const QuickScanForm: React.FC<{
             borderColor={view === "quickscan" ? "white" : "gray.200"}
             backgroundColor={view === "quickscan" ? "transparent" : "#FFFFFF80"}
             borderRadius={15}
-            width={isDesktopView ? "600px" : "90%"}
-            maxWidth="600px"
+            width={isDesktopView ? "50%" : "90%"}
+            maxWidth="800px"
+            textAlign={"center"}
             value={address}
             onChange={(e) => {
               setAddress(e.target.value);
@@ -349,8 +335,8 @@ const QuickScanForm: React.FC<{
           isLoading={isLoading}
           loadingText="Scanning"
           spinner={<Loader color={"#3300FF"} size={20} />}
-          mt={isDesktopView ? 20 : 10}
-          mb={isDesktopView ? "0px" : "120px"}
+          mt={isDesktopView ? "auto" : 10}
+          mb={isDesktopView ? 16 : "120px"}
           w={"300px"}
           type="submit"
           variant="brand"
