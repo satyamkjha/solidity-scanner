@@ -89,7 +89,7 @@ const QuickScanDetails: React.FC<{ scanReport: QuickScanResult }> = ({
 
   return (
     <>
-      <Stack
+      {/* <Stack
         w={"100%"}
         mt={10}
         spacing={"5%"}
@@ -271,12 +271,12 @@ const QuickScanDetails: React.FC<{ scanReport: QuickScanResult }> = ({
             </Box>
           </Box>
         )}
-      </Stack>
+      </Stack> */}
       <Box
         w={"100%"}
         borderRadius={15}
         p={5}
-        mt={10}
+        mt={"-120px"}
         background={" #FAFBFC "}
         display="flex"
         flexDir={"column"}

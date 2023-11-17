@@ -55,8 +55,10 @@ export const BlockchainSelector: React.FC<{
     }
   }, [blockchain]);
 
+  const currectBlockChainRef = useRef<HTMLDivElement>(null);
+
   return (
-    <Popover placement="bottom" closeOnBlur={false}>
+    <Popover placement={"bottom"}>
       <PopoverTrigger>
         <HStack
           h="80px"
@@ -64,7 +66,7 @@ export const BlockchainSelector: React.FC<{
           maxW="500px"
           justifyContent="space-between"
           p={5}
-          bgColor={view === "quickscan" ? "#272727" : "#F6F6F6"}
+          bgColor={view === "quickscan" ? "#272727C0" : "#F6F6F6"}
           borderRadius={15}
           color={"gray.400"}
         >
@@ -116,7 +118,7 @@ export const BlockchainSelector: React.FC<{
             </>
           ) : (
             <>
-              <Text>Select Blockchain</Text>
+              <Text color="gray.200">Select Blockchain</Text>
               <ChevronDownIcon />
             </>
           )}
@@ -127,34 +129,36 @@ export const BlockchainSelector: React.FC<{
         bg={view === "quickscan" ? "#323232" : "#FFF"}
         borderRadius={15}
         border="none"
-        width="95vw"
+        width="90vw"
         sx={{
           boxShadow: "0px 4px 24px rgba(0, 0, 0, 0.2) !important",
         }}
-        h="50vh"
-        maxH="400px"
+        h={["fit-content", "fit-content", "50vh"]}
+        maxH={["90vh", "90vh", "400px"]}
         maxW="910px"
         display="flex"
         py={5}
-        px={5}
+        px={[2, 3, 5]}
         flexWrap="wrap"
         flexDir="row"
         alignItems="flex-start"
         justifyContent="center"
         rowGap={5}
-        columnGap={5}
+        columnGap={[2, 3, 5]}
         overflowY="scroll"
       >
         {blockchain === "" ? (
           <>
             {Object.keys(contractChain).map((item) => (
               <VStack
-                w="120px"
+                w={["100px", "100px", "120px"]}
                 justifyContent="center"
-                alignItems="flex-start"
+                alignItems="center"
                 spacing={3}
                 cursor="pointer"
-                onClick={() => setBlockchain(item)}
+                onClick={() => {
+                  setBlockchain(item);
+                }}
               >
                 <Flex
                   height="80px"
@@ -177,9 +181,9 @@ export const BlockchainSelector: React.FC<{
               </VStack>
             ))}
             <VStack
-              w="120px"
+              w={["100px", "100px", "120px"]}
               justifyContent="center"
-              alignItems="flex-start"
+              alignItems="center"
               spacing={3}
               cursor="pointer"
               onClick={() => {
@@ -211,91 +215,133 @@ export const BlockchainSelector: React.FC<{
           </>
         ) : (
           <Flex
-            justifyContent="space-between"
+            justifyContent={["flex-start", "flex-start", "space-between"]}
             w="100%"
-            h="100%"
-            flexDir="row"
-            alignItems="flex-start"
+            h={["fit-content", "fit-content", "100%"]}
+            flexDir={["column", "column", "row"]}
+            alignItems={["center", "center", "flex-start"]}
           >
-            <VStack w="120px" overflowY="scroll" h="100%" spacing={4}>
+            <Flex
+              flexDir={["row", "row", "column"]}
+              w={["100%", "100%", "120px"]}
+              overflowY={["auto", "auto", "scroll"]}
+              overflowX={["scroll", "scroll", "auto"]}
+              h={["110px", "110px", "100%"]}
+            >
               <Flex
-                height={"90px"}
-                width={"90px"}
-                padding="10px"
-                borderRadius={"50px"}
-                backgroundColor={view === "quickscan" ? "#404040" : "#F3F3F3"}
-                justifyContent="center"
-                alignItems="center"
-                cursor="pointer"
-                border="3px solid #52FF00"
+                flexDir={["row", "row", "column"]}
+                w={"fit-content"}
+                h={"fit-content"}
               >
-                <Image
-                  height={"70px"}
-                  width={"70px"}
-                  src={`${assetsUrl}${
-                    blockchain === "buildbear"
-                      ? `blockscan/buildbear-${
-                          view === "quickscan" ? "white" : "black"
-                        }`
-                      : contractChain[blockchain].logoUrl
-                  }.svg`}
-                />
-              </Flex>
-              {Object.keys(contractChain).map((item) => {
-                if (item !== blockchain)
-                  return (
-                    <Flex
-                      height={"80px"}
-                      width={"70px"}
-                      padding="10px"
-                      borderRadius={"40px"}
-                      backgroundColor={"#F3F3F3"}
-                      justifyContent="center"
-                      alignItems="center"
-                      cursor="pointer"
-                      onClick={() => setBlockchain(item)}
-                      border={"none"}
-                    >
-                      <Image
-                        height={"50px"}
-                        width={"50px"}
-                        src={`${assetsUrl}${contractChain[item].logoUrl}.svg`}
-                      />
-                    </Flex>
-                  );
-              })}
-              {blockchain !== "buildbear" && (
                 <Flex
-                  height={"80px"}
-                  width={"70px"}
+                  my={[0, 0, 2]}
+                  mx={[2, 2, 0]}
+                  height={"90px"}
+                  width={"90px"}
                   padding="10px"
-                  borderRadius={"40px"}
-                  backgroundColor={"#F3F3F3"}
+                  borderRadius={"50px"}
+                  backgroundColor={view === "quickscan" ? "#404040" : "#F3F3F3"}
                   justifyContent="center"
                   alignItems="center"
                   cursor="pointer"
-                  onClick={() => setBlockchain("buildbear")}
-                  border={"none"}
+                  ref={currectBlockChainRef}
+                  border="3px solid #52FF00"
                 >
                   <Image
-                    height={"50px"}
-                    width={"50px"}
-                    src={`${assetsUrl}blockscan/buildbear-${
-                      view === "quickscan" ? "white" : "black"
+                    sx={{
+                      height: "70px",
+                      width: "70px",
+                    }}
+                    height={"70px"}
+                    width={"70px"}
+                    src={`${assetsUrl}${
+                      blockchain === "buildbear"
+                        ? `blockscan/buildbear-${
+                            view === "quickscan" ? "white" : "black"
+                          }`
+                        : contractChain[blockchain].logoUrl
                     }.svg`}
                   />
                 </Flex>
-              )}
-            </VStack>
+                {Object.keys(contractChain).map((item) => {
+                  if (item !== blockchain)
+                    return (
+                      <Flex
+                        my={[0, 0, 2]}
+                        mx={[2, 2, 2]}
+                        height={"80px"}
+                        width={"80px"}
+                        padding="10px"
+                        borderRadius={"40px"}
+                        backgroundColor={
+                          view === "quickscan" ? "#404040" : "#F3F3F3"
+                        }
+                        justifyContent="center"
+                        alignItems="center"
+                        cursor="pointer"
+                        onClick={() => {
+                          setBlockchain(item);
+                          // currectBlockChainRef.current?.scrollIntoView();
+                        }}
+                        border={"none"}
+                      >
+                        <Image
+                          height={"50px"}
+                          width={"50px"}
+                          src={`${assetsUrl}${contractChain[item].logoUrl}.svg`}
+                        />
+                      </Flex>
+                    );
+                })}
+                {blockchain !== "buildbear" && (
+                  <Flex
+                    my={[0, 0, 2]}
+                    mx={[2, 2, 2]}
+                    height={"80px"}
+                    width={"80px"}
+                    padding="10px"
+                    borderRadius={"40px"}
+                    backgroundColor={
+                      view === "quickscan" ? "#404040" : "#F3F3F3"
+                    }
+                    justifyContent="center"
+                    alignItems="center"
+                    cursor="pointer"
+                    onClick={() => {
+                      setBlockchain("buildbear");
+                      // currectBlockChainRef.current?.scrollIntoView(
+                      //   "smooth",
+                      //   "center"
+                      // );
+                    }}
+                    border={"none"}
+                  >
+                    <Image
+                      height={"50px"}
+                      width={"50px"}
+                      src={`${assetsUrl}blockscan/buildbear-${
+                        view === "quickscan" ? "white" : "black"
+                      }.svg`}
+                    />
+                  </Flex>
+                )}
+              </Flex>
+            </Flex>
             <Divider
+              display={["none", "none", "block"]}
               borderColor={view === "quickscan" ? "#424242" : "#8A94A6"}
               orientation="vertical"
             />
+            <Divider
+              display={["block", "block", "none"]}
+              borderColor={view === "quickscan" ? "#424242" : "#8A94A6"}
+            />
             <Flex
               justifyContent="flex-start"
-              w="calc(100% - 130px)"
-              h="100%"
+              w={["100%", "100%", "calc(100% - 130px)"]}
+              h={["fit-content", "fit-content", "100%"]}
               flexDir="column"
+              mt={[5, 5, 0]}
               alignItems="flex-start"
             >
               <HStack
@@ -304,7 +350,11 @@ export const BlockchainSelector: React.FC<{
                 alignItems="flex-start"
                 pl={5}
               >
-                <VStack textAlign="left" w="85%" spacing={1}>
+                <VStack
+                  textAlign="left"
+                  w={["100%", "100%", "85%"]}
+                  spacing={1}
+                >
                   <Text
                     w="100%"
                     color={view === "quickscan" ? "white" : "gray.600"}
@@ -344,6 +394,7 @@ export const BlockchainSelector: React.FC<{
                 <ArrowBackIcon
                   fontSize={30}
                   mr={10}
+                  display={["none", "none", "block"]}
                   cursor="pointer"
                   color={view === "quickscan" ? "white" : "gray.600"}
                   onClick={() => setBlockchain("")}
@@ -520,12 +571,14 @@ const ChainSelector: React.FC<{
   }>(platformData.chains[0]);
 
   return (
-    <HStack
+    <Flex
       w="100%"
       h="fit-content"
-      justifyContent="space-between"
-      alignItems="center"
+      justifyContent={["flex-start", "flex-start", "space-between"]}
+      alignItems={["flex-start", "flex-start", "center"]}
+      flexDir={["column", "column", "row"]}
       color="white"
+      borderRadius={[10, 10, 0]}
       background={
         platform === platformValue
           ? view === "quickscan"
@@ -534,7 +587,7 @@ const ChainSelector: React.FC<{
           : "transparent"
       }
       onClick={() => setPlatform(platformValue)}
-      px={7}
+      px={[3, 3, 7]}
       py={5}
     >
       <HStack>
@@ -565,13 +618,18 @@ const ChainSelector: React.FC<{
           </Text>
         </VStack>
       </HStack>
-      <HStack justifyContent="flex-end">
+      <HStack
+        w={["100%", "100%", "fit-content"]}
+        justifyContent={["space-between", "space-between", "flex-end"]}
+        mt={[5, 5, 0]}
+      >
         <Select
           formatOptionLabel={FormatOptionLabelWithImage}
           isSearchable={false}
           isDisabled={platform !== platformValue}
           options={platformData.chains}
           value={chain}
+          menuPlacement="auto"
           placeholder="Select Chain"
           styles={customStylesChain}
           onChange={(newValue: any) => {
@@ -583,6 +641,6 @@ const ChainSelector: React.FC<{
         />
         <RadioButton isActive={platform === platformValue} />
       </HStack>
-    </HStack>
+    </Flex>
   );
 };

@@ -988,7 +988,7 @@ export const contractChain: {
     description: string;
     website: string;
     logoUrl: string;
-    
+
     platforms: {
       [key: string]: {
         label: string;
@@ -1456,7 +1456,7 @@ export const contractChain: {
     },
   },
   fuse: {
-    blockchainName: "Ethereum",
+    blockchainName: "Fuse",
     description:
       "Fuse's public blockchain ecosystem provides low cost Web3 payments without the development headaches or vendor lock-in.",
     website: "https://www.fuse.io/",

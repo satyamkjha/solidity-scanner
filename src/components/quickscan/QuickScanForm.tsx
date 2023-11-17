@@ -53,11 +53,7 @@ const QuickScanForm: React.FC<{
   ]);
   const query = new URLSearchParams(location.search);
   const ref = query.get("ref");
-  const { blockAddress, blockPlatform, blockChain } = useParams<{
-    blockAddress: string;
-    blockPlatform: string;
-    blockChain: string;
-  }>();
+
   const [address, setAddress] = React.useState("");
   const [platform, setPlatform] = React.useState("");
   const [node_id, setNodeId] = React.useState("");
@@ -188,55 +184,7 @@ const QuickScanForm: React.FC<{
       localStorage.setItem("campaign_type", campaign_type);
       localStorage.setItem("campaign_id", campaign_id);
     }
-
-    if (blockAddress) setAddress(blockAddress);
-
-    if (blockPlatform) {
-      setPlatform(blockPlatform);
-      // setChainList(contractChain[blockPlatform]);
-      setChain(null);
-    }
-
-    if (blockPlatform === "buildbear") {
-      setNodeId(blockChain);
-    } else {
-      if (blockChain) {
-        // contractChain[blockPlatform].forEach((item) => {
-        //   if (item.value === blockChain) {
-        //     setChain(item);
-        //   }
-        // });
-      }
-    }
-
-    if (blockAddress && blockChain && blockPlatform) {
-      runQuickScan(blockAddress, blockPlatform, blockChain, ref);
-    }
-
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
-
-  // useEffect(() => {
-  //   const element = document.getElementById("public_layout");
-  //   if (element)
-  //     element.addEventListener("scroll", function (event) {
-  //       if (isInViewport(quickscanRef.current)) {
-  //         setTimeout(() => {
-  //           Lottie.play();
-  //           console.log("start playing");
-  //         }, 5000);
-  //         element?.removeEventListener("scroll", () =>
-  //          { }
-  //         );
-  //       }
-  //     });
-
-  //   return () => {
-  //     element?.removeEventListener("scroll", () =>
-  //      { }
-  //     );
-  //   };
-  // }, []);
 
   const [isVisible, setIsVisible] = useState(false);
   const [playAnimation, setPlayAnimation] = useState(false);
@@ -382,13 +330,13 @@ const QuickScanForm: React.FC<{
             placeholder="Contract Address"
             variant="brand"
             size="lg"
-            color="white"
+            color={view === "quickscan" ? "white" : "gray.600"}
             height={50}
             mt={0}
-            borderColor="white"
-            backgroundColor="transparent"
+            borderColor={view === "quickscan" ? "white" : "gray.200"}
+            backgroundColor={view === "quickscan" ? "transparent" : "#FFFFFF80"}
             borderRadius={15}
-            width={isDesktopView ? "600px" : "95%"}
+            width={isDesktopView ? "600px" : "90%"}
             maxWidth="600px"
             value={address}
             onChange={(e) => {
