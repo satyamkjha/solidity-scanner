@@ -1653,7 +1653,7 @@ export const contractChain: {
     blockchainName: "Shibarium",
     description:
       "Gnosis is a decentralized platform built on Ethereum that facilitates prediction market and decentralized exchange services, aiming to enable users to forecast and trade on the outcome of various events.",
-    website: "https://www.gnosis.io/",
+    website: "https://shibarium.shib.io/",
     logoUrl: "blockscan/",
     platforms: {
       blockscout: {
