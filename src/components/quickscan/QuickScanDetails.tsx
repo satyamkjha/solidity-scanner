@@ -32,7 +32,6 @@ const QuickScanDetails: React.FC<{ scanReport: QuickScanResult }> = ({
   const no_of_vuln_detectors =
     config && config.REACT_APP_ISSUES_DATA.no_of_vuln_detectors;
 
-
   const vulnerabilityCount =
     scanReport.multi_file_scan_summary.issue_severity_distribution.critical +
     scanReport.multi_file_scan_summary.issue_severity_distribution.gas +

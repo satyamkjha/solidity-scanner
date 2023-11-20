@@ -8,6 +8,7 @@ import {
   useMediaQuery,
   useToast,
   Text,
+  Flex,
 } from "@chakra-ui/react";
 import Loader from "components/styled-components/Loader";
 import { StylesConfig, GroupBase } from "react-select";
@@ -39,6 +40,8 @@ const QuickScanForm: React.FC<{
   const ref = query.get("ref");
 
   const [address, setAddress] = React.useState("");
+  const [adddressError, setAddressError] = useState("");
+  const [blockchainSelectorError, setBlockchainSelectorError] = useState("");
   const [platform, setPlatform] = React.useState("");
   const [node_id, setNodeId] = React.useState("");
   const [chain, setChain] = React.useState<{
@@ -51,87 +54,19 @@ const QuickScanForm: React.FC<{
   const quickscanRef = useRef<HTMLDivElement>(null);
   const [animationOffset, setAnimationOffset] = useState(60);
 
-  const customStylesPlatform: StylesConfig<
-    PropsWithChildren<OptionTypeWithIcon>,
-    boolean,
-    GroupBase<PropsWithChildren<OptionTypeWithIcon>>
-  > = {
-    option: (provided: any, state: any) => ({
-      ...provided,
-      borderBottom: "1px solid #f3f3f3",
-      backgroundColor: state.isSelected
-        ? "#FFFFFF"
-        : state.isFocused
-        ? "#E6E6E6"
-        : "#FFFFFF",
-      color: "#000000",
-    }),
-    menu: (provided: any, state: any) => ({
-      ...provided,
-      color: state.selectProps.menuColor,
-      borderRadius: 10,
-      border: "0px solid #ffffff",
-      overflowY: "hidden",
-      width: "300px",
-      textAlign: "left",
-    }),
-    control: (state: any) => ({
-      // none of react-select's styles are passed to <Control />
-      display: "flex",
-      flexDirection: "row",
-      backgroundColor: "#FFFFFF",
-      width: isDesktopView ? "300px" : "100%",
-      maxWidth: "500px",
-      padding: 5,
-      margin: 0,
-      borderTopLeftRadius: 15,
-      borderBottomLeftRadius: 15,
-      borderTopRightRadius: isDesktopView ? 0 : 15,
-      borderBottomRightRadius: isDesktopView ? 0 : 15,
-      border: state.isFocused ? "2px solid #52FF00" : "2px solid #EDF2F7",
-    }),
-    singleValue: (provided: any, state: any) => {
-      const opacity = state.isDisabled ? 0.3 : 1;
-      const transition = "opacity 300ms";
-
-      return { ...provided, opacity, transition };
-    },
-    container: (provided: any, state: any) => ({
-      ...provided,
-      width: isDesktopView ? "300px" : "95%",
-      maxWidth: "500px",
-    }),
-  };
-
   const generateQuickScan = () => {
     if (platform === "") {
-      toast({
-        title: "Platform not selected",
-        description: "Please select a Platform to perform the scan",
-        status: "warning",
-        duration: 3000,
-        isClosable: true,
-      });
+      setBlockchainSelectorError(
+        "Please select a Platform to perform the scan"
+      );
       return;
     }
-    if (chain && chain.value === "") {
-      toast({
-        title: "Chain not selected",
-        description: "Please select a Chain to perform the scan",
-        status: "warning",
-        duration: 3000,
-        isClosable: true,
-      });
+    if (chain === null) {
+      setBlockchainSelectorError("Please select a Chain to perform the scan");
       return;
     }
     if (address === "") {
-      toast({
-        title: "Address not selected",
-        description: "Please enter an address to perform the scan",
-        status: "warning",
-        duration: 3000,
-        isClosable: true,
-      });
+      setAddressError("Please enter an address to perform the scan");
       return;
     }
 
@@ -281,14 +216,13 @@ const QuickScanForm: React.FC<{
           a wide selection of supported protocols and receive a clear, concise
           analysis report in a matter of seconds.
         </Text>
-        <Stack
+        <Flex
           mt={1}
           justify="center"
           alignItems="center"
           w={"100%"}
           zIndex={1000}
-          direction={"column"}
-          spacing={12}
+          flexDirection={"column"}
           opacity={stopAnimation || isVisible ? 1 : 0}
           transform={
             stopAnimation
@@ -302,22 +236,36 @@ const QuickScanForm: React.FC<{
           }
         >
           <BlockchainSelector
-            view="quickscan"
+            view={view === "quickscan" ? "quickscan" : "homepage"}
             chain={chain}
             node_id={node_id}
             setNodeId={setNodeId}
             setChain={setChain}
             setPlatform={setPlatform}
             platform={platform}
+            menuPlacement="bottom"
+            blockchainSelectorError={blockchainSelectorError}
+            setBlockchainSelectorError={setBlockchainSelectorError}
           />
+          <Text
+            w="100%"
+            color={"critical"}
+            fontSize={"sm"}
+            mt={2}
+            textAlign="center"
+          >
+            {blockchainSelectorError || " "}
+          </Text>
           <Input
             isRequired
             placeholder="Type or paste your contract address here..."
-            variant="brand"
+            variant={"brand"}
             size="lg"
+            isInvalid={adddressError !== ""}
+            errorBorderColor={"#960D00"}
             color={view === "quickscan" ? "white" : "gray.600"}
             height={50}
-            mt={0}
+            mt={blockchainSelectorError === "" ? "70px" : "50px"}
             borderColor={view === "quickscan" ? "white" : "gray.200"}
             backgroundColor={view === "quickscan" ? "transparent" : "#FFFFFF80"}
             borderRadius={15}
@@ -329,7 +277,17 @@ const QuickScanForm: React.FC<{
               setAddress(e.target.value);
             }}
           />
-        </Stack>
+
+          <Text
+            w="100%"
+            color={"critical"}
+            fontSize={"sm"}
+            mt={2}
+            textAlign="center"
+          >
+            {adddressError}
+          </Text>
+        </Flex>
 
         <Button
           isLoading={isLoading}
