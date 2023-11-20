@@ -1,6 +1,6 @@
 import { AccordionPanel } from "@chakra-ui/accordion";
 import { Flex, HStack, Text, Image, VStack } from "@chakra-ui/react";
-import { getAssetsURL } from "helpers/helperFunction";
+import { getAssetsURL, getContractChainLabel } from "helpers/helperFunction";
 import React from "react";
 import { blockExplorer } from "common/values";
 import { useConfig } from "hooks/useConfig";
@@ -183,9 +183,10 @@ export const ContractDetails: React.FC<{
             Contract Chain
           </Text>
           <Text width={"100%"} as="p" fontSize="14px">
-            {scanData.scan_report.contract_chain
-              ? scanData.scan_report.contract_chain
-              : "NA"}
+            {getContractChainLabel(
+              scanData.scan_report.contract_platform,
+              scanData.scan_report.contract_chain
+            )}
           </Text>
         </VStack>
       </Flex>
