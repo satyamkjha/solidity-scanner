@@ -23,8 +23,11 @@ import RadioButton from "components/styled-components/RadioButton";
 
 export const BlockchainSelector: React.FC<{
   view: "quickscan" | "homepage";
+  menuPlacement: "bottom" | "bottom-start";
   platform: string;
   node_id: string;
+  blockchainSelectorError: string;
+  setBlockchainSelectorError: React.Dispatch<React.SetStateAction<string>>;
   setNodeId: React.Dispatch<React.SetStateAction<string>>;
   setPlatform: React.Dispatch<React.SetStateAction<string>>;
   chain: {
@@ -41,7 +44,18 @@ export const BlockchainSelector: React.FC<{
       website: string;
     } | null>
   >;
-}> = ({ view, platform, setPlatform, chain, setChain, node_id, setNodeId }) => {
+}> = ({
+  view,
+  platform,
+  setPlatform,
+  chain,
+  setChain,
+  node_id,
+  setNodeId,
+  blockchainSelectorError,
+  setBlockchainSelectorError,
+  menuPlacement,
+}) => {
   const [elementPosition, setElementPosition] = useState<any>({});
   const [blockchain, setBlockchain] = useState("");
   const [showTransition, setShowTransition] = useState(false);
@@ -97,23 +111,34 @@ export const BlockchainSelector: React.FC<{
   const popoverRef = useRef<HTMLElement>(null);
 
   return (
-    <HStack h="80px" w="90vw" maxW="600px" justifyContent="space-between">
+    <HStack
+      borderRadius={15}
+      h="80px"
+      w="90vw"
+      pr={"10px"}
+      maxW="600px"
+      bgColor={view === "quickscan" ? "transparent" : "#ECECEC"}
+      justifyContent="space-between"
+    >
       <Popover
         isOpen={isOpen}
         onOpen={onOpen}
         onClose={onClose}
-        placement={view === "quickscan" ? "bottom" : "bottom-start"}
+        placement={menuPlacement}
       >
         <PopoverTrigger>
           <HStack
             h="80px"
-            w="calc(100% - 120px)"
-            maxW="480px"
+            w="calc(100% - 80px)"
             justifyContent="space-between"
             p={5}
-            bgColor={view === "quickscan" ? "#272727C0" : "#F6F6F6"}
+            bgColor={view === "quickscan" ? "#272727C0" : "transparent"}
             borderRadius={15}
+            border={
+              blockchainSelectorError !== "" ? "1px solid #960D00" : "none"
+            }
             color={"gray.400"}
+            onClick={() => setBlockchainSelectorError("")}
           >
             {blockchain !== "" &&
             platform !== "" &&
@@ -164,7 +189,7 @@ export const BlockchainSelector: React.FC<{
             ) : (
               <>
                 <Text color="gray.400">Select Blockchain</Text>
-                <ChevronDownIcon />
+                {view === "quickscan" && <ChevronDownIcon />}
               </>
             )}
           </HStack>
@@ -594,11 +619,12 @@ export const BlockchainSelector: React.FC<{
         </PopoverContent>
       </Popover>
       <Flex
-        w="80px"
-        h="80px"
+        w="60px"
+        h="60px"
         p="10px"
         borderRadius="40px"
-        bgColor={view === "quickscan" ? "#272727C0" : "#F6F6F6"}
+        filter="drop-shadow(0px 2px 1px rgba(0, 0, 0, 0.25))"
+        bgColor={view === "quickscan" ? "#272727C0" : "#E1E1E1"}
         onClick={() => {
           onOpen();
           setBlockchain("");
@@ -609,8 +635,8 @@ export const BlockchainSelector: React.FC<{
       >
         <Image
           src={`${assetsUrl}common/reset-button-img.svg`}
-          height="60px"
-          width="60px"
+          height="40px"
+          width="40px"
         />
       </Flex>
     </HStack>
