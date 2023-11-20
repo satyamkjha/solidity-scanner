@@ -12,7 +12,11 @@ import {
   Input,
   useDisclosure,
 } from "@chakra-ui/react";
-import { ChevronDownIcon, ArrowBackIcon } from "@chakra-ui/icons";
+import {
+  ChevronDownIcon,
+  ArrowBackIcon,
+  ExternalLinkIcon,
+} from "@chakra-ui/icons";
 import { contractChain } from "common/values";
 import { getAssetsURL } from "helpers/helperFunction";
 import { StylesConfig, GroupBase } from "react-select";
@@ -22,7 +26,7 @@ import { FaPen } from "react-icons/fa";
 import RadioButton from "components/styled-components/RadioButton";
 
 export const BlockchainSelector: React.FC<{
-  view: "quickscan" | "homepage";
+  view: "dark" | "light";
   menuPlacement: "bottom" | "bottom-start";
   platform: string;
   node_id: string;
@@ -117,7 +121,7 @@ export const BlockchainSelector: React.FC<{
       w="90vw"
       pr={"10px"}
       maxW="600px"
-      bgColor={view === "quickscan" ? "transparent" : "#ECECEC"}
+      bgColor={view === "dark" ? "transparent" : "#ECECEC"}
       justifyContent="space-between"
     >
       <Popover
@@ -132,7 +136,7 @@ export const BlockchainSelector: React.FC<{
             w="calc(100% - 80px)"
             justifyContent="space-between"
             p={5}
-            bgColor={view === "quickscan" ? "#272727C0" : "transparent"}
+            bgColor={view === "dark" ? "#272727C0" : "transparent"}
             borderRadius={15}
             border={
               blockchainSelectorError !== "" ? "1px solid #960D00" : "none"
@@ -149,7 +153,7 @@ export const BlockchainSelector: React.FC<{
                     src={`${assetsUrl}${
                       blockchain === "buildbear"
                         ? `blockscan/buildbear-${
-                            view === "quickscan" ? "white" : "black"
+                            view === "dark" ? "white" : "black"
                           }`
                         : contractChain[blockchain].logoUrl
                     }.svg`}
@@ -159,7 +163,7 @@ export const BlockchainSelector: React.FC<{
                   <VStack textAlign="left" spacing={1}>
                     <Text
                       w="100%"
-                      color={view === "quickscan" ? "white" : "gray.600"}
+                      color={view === "dark" ? "white" : "gray.600"}
                       fontWeight={600}
                       fontSize="md"
                     >
@@ -177,10 +181,10 @@ export const BlockchainSelector: React.FC<{
                       fontWeight={400}
                       fontSize="sm"
                     >
-                      Verified on{" "}
                       {blockchain === "buildbear"
                         ? "https://www.buildbear.io/"
-                        : contractChain[blockchain].platforms[platform].label}
+                        : chain?.website}
+                      <ExternalLinkIcon ml={2} />
                     </Text>
                   </VStack>
                 </HStack>
@@ -189,7 +193,7 @@ export const BlockchainSelector: React.FC<{
             ) : (
               <>
                 <Text color="gray.400">Select Blockchain</Text>
-                {view === "quickscan" && <ChevronDownIcon />}
+                {view === "dark" && <ChevronDownIcon />}
               </>
             )}
           </HStack>
@@ -197,7 +201,7 @@ export const BlockchainSelector: React.FC<{
         <PopoverContent
           ref={popoverRef}
           color="white"
-          bg={view === "quickscan" ? "#323232" : "#FFF"}
+          bg={view === "dark" ? "#323232" : "#FFF"}
           borderRadius={15}
           border="none"
           sx={{
@@ -237,9 +241,7 @@ export const BlockchainSelector: React.FC<{
                     width="80px"
                     padding="10px"
                     borderRadius="40px"
-                    backgroundColor={
-                      view === "quickscan" ? "#404040" : "#F3F3F3"
-                    }
+                    backgroundColor={view === "dark" ? "#404040" : "#F3F3F3"}
                     justifyContent="center"
                     alignItems="center"
                     animation={`zoomInAnimation ${
@@ -272,7 +274,7 @@ export const BlockchainSelector: React.FC<{
                   width="80px"
                   padding="10px"
                   borderRadius="40px"
-                  backgroundColor={view === "quickscan" ? "#404040" : "#F3F3F3"}
+                  backgroundColor={view === "dark" ? "#404040" : "#F3F3F3"}
                   justifyContent="center"
                   alignItems="center"
                 >
@@ -280,7 +282,7 @@ export const BlockchainSelector: React.FC<{
                     height="50px"
                     width="50px"
                     src={`${assetsUrl}blockscan/buildbear-${
-                      view === "quickscan" ? "white" : "black"
+                      view === "dark" ? "white" : "black"
                     }.svg`}
                   />
                 </Flex>
@@ -297,7 +299,7 @@ export const BlockchainSelector: React.FC<{
               width={"90px"}
               padding="10px"
               borderRadius={"50px"}
-              backgroundColor={view === "quickscan" ? "#404040" : "#F3F3F3"}
+              backgroundColor={view === "dark" ? "#404040" : "#F3F3F3"}
               justifyContent="center"
               alignItems="center"
               cursor="pointer"
@@ -324,7 +326,7 @@ export const BlockchainSelector: React.FC<{
                 src={`${assetsUrl}${
                   blockchain === "buildbear"
                     ? `blockscan/buildbear-${
-                        view === "quickscan" ? "white" : "black"
+                        view === "dark" ? "white" : "black"
                       }`
                     : contractChain[blockchain].logoUrl
                 }.svg`}
@@ -362,9 +364,7 @@ export const BlockchainSelector: React.FC<{
                     borderRadius={
                       firstBlockChain === blockchain ? "50px" : "40px"
                     }
-                    backgroundColor={
-                      view === "quickscan" ? "#404040" : "#F3F3F3"
-                    }
+                    backgroundColor={view === "dark" ? "#404040" : "#F3F3F3"}
                     justifyContent="center"
                     alignItems="center"
                     transition={"all 0.2s ease-in"}
@@ -387,7 +387,7 @@ export const BlockchainSelector: React.FC<{
                       src={`${assetsUrl}${
                         firstBlockChain === "buildbear"
                           ? `blockscan/buildbear-${
-                              view === "quickscan" ? "white" : "black"
+                              view === "dark" ? "white" : "black"
                             }`
                           : contractChain[firstBlockChain].logoUrl
                       }.svg`}
@@ -405,7 +405,7 @@ export const BlockchainSelector: React.FC<{
                           borderRadius={item === blockchain ? "50px" : "40px"}
                           transition={"all 0.2s ease-in"}
                           backgroundColor={
-                            view === "quickscan" ? "#404040" : "#F3F3F3"
+                            view === "dark" ? "#404040" : "#F3F3F3"
                           }
                           justifyContent="center"
                           alignItems="center"
@@ -437,9 +437,7 @@ export const BlockchainSelector: React.FC<{
                       borderRadius={
                         "buildbear" === blockchain ? "50px" : "40px"
                       }
-                      backgroundColor={
-                        view === "quickscan" ? "#404040" : "#F3F3F3"
-                      }
+                      backgroundColor={view === "dark" ? "#404040" : "#F3F3F3"}
                       transition={"all 0.2s ease-in"}
                       justifyContent="center"
                       alignItems="center"
@@ -459,7 +457,7 @@ export const BlockchainSelector: React.FC<{
                         height={"buildbear" === blockchain ? "60px" : "50px"}
                         width={"buildbear" === blockchain ? "60px" : "50px"}
                         src={`${assetsUrl}blockscan/buildbear-${
-                          view === "quickscan" ? "white" : "black"
+                          view === "dark" ? "white" : "black"
                         }.svg`}
                       />
                     </Flex>
@@ -468,12 +466,12 @@ export const BlockchainSelector: React.FC<{
               </Flex>
               <Divider
                 display={["none", "none", "block"]}
-                borderColor={view === "quickscan" ? "#424242" : "#8A94A680"}
+                borderColor={view === "dark" ? "#424242" : "#8A94A680"}
                 orientation="vertical"
               />
               <Divider
                 display={["block", "block", "none"]}
-                borderColor={view === "quickscan" ? "#424242" : "#8A94A680"}
+                borderColor={view === "dark" ? "#424242" : "#8A94A680"}
               />
 
               <Flex
@@ -498,37 +496,46 @@ export const BlockchainSelector: React.FC<{
                     textAlign="left"
                     w={["100%", "100%", "auto"]}
                     spacing={1}
+                    alignItems="flex-start"
                   >
-                    <Text
-                      w="100%"
-                      color={view === "quickscan" ? "white" : "gray.600"}
-                      fontWeight={600}
-                      fontSize="md"
-                    >
-                      {blockchain === "buildbear"
-                        ? "Buildbear"
-                        : contractChain[blockchain].blockchainName}
-                    </Text>
-                    <Text
-                      cursor="pointer"
-                      onClick={() =>
-                        window.open(
-                          blockchain === "buildbear"
-                            ? "https://www.buildbear.io/"
-                            : contractChain[blockchain].website,
-                          "_blank"
-                        )
-                      }
-                      w="100%"
-                      textDecoration="underline"
-                      color="#8A94A6"
-                      fontWeight={400}
-                      fontSize="sm"
-                    >
-                      {blockchain === "buildbear"
-                        ? "https://www.buildbear.io/"
-                        : contractChain[blockchain].website}
-                    </Text>
+                    <HStack>
+                      <Text
+                        w="100%"
+                        color={view === "dark" ? "white" : "gray.600"}
+                        fontWeight={600}
+                        fontSize="md"
+                      >
+                        {blockchain === "buildbear"
+                          ? "Buildbear"
+                          : contractChain[blockchain].blockchainName}
+                      </Text>
+                      <Divider
+                        orientation="vertical"
+                        h={3}
+                        borderColor="#8A94A6"
+                      />{" "}
+                      <Text
+                        cursor="pointer"
+                        onClick={() =>
+                          window.open(
+                            blockchain === "buildbear"
+                              ? "https://www.buildbear.io/"
+                              : contractChain[blockchain].website,
+                            "_blank"
+                          )
+                        }
+                        w="100%"
+                        color="#8A94A6"
+                        fontWeight={400}
+                        fontSize="sm"
+                      >
+                        {blockchain === "buildbear"
+                          ? "https://www.buildbear.io/"
+                          : contractChain[blockchain].website}
+                      </Text>
+                      <ExternalLinkIcon color="#8A94A6" />
+                    </HStack>
+
                     <Text
                       w="100%"
                       color="#8A94A6"
@@ -545,7 +552,7 @@ export const BlockchainSelector: React.FC<{
                     ml={"auto"}
                     display={["none", "none", "block"]}
                     cursor="pointer"
-                    color={view === "quickscan" ? "white" : "gray.600"}
+                    color={view === "dark" ? "white" : "gray.600"}
                     onClick={() => {
                       setBlockchain("");
                       setFirstBlockchain("");
@@ -559,7 +566,7 @@ export const BlockchainSelector: React.FC<{
                       my={5}
                       ml={5}
                       w="100%"
-                      color={view === "quickscan" ? "white" : "gray.600"}
+                      color={view === "dark" ? "white" : "gray.600"}
                       fontWeight={400}
                       fontSize="sm"
                     >
@@ -571,10 +578,10 @@ export const BlockchainSelector: React.FC<{
                       placeholder="Node ID"
                       variant="brand"
                       size="lg"
-                      color={view === "quickscan" ? "white" : "gray.600"}
+                      color={view === "dark" ? "white" : "gray.600"}
                       height={50}
                       mt={0}
-                      borderColor={view === "quickscan" ? "white" : "gray.200"}
+                      borderColor={view === "dark" ? "white" : "gray.200"}
                       backgroundColor="transparent"
                       borderRadius={15}
                       width={"90%"}
@@ -614,7 +621,7 @@ export const BlockchainSelector: React.FC<{
         p="10px"
         borderRadius="40px"
         filter="drop-shadow(0px 2px 1px rgba(0, 0, 0, 0.25))"
-        bgColor={view === "quickscan" ? "#272727C0" : "#E1E1E1"}
+        bgColor={view === "dark" ? "#272727C0" : "#E1E1E1"}
         onClick={() => {
           onOpen();
           setBlockchain("");
@@ -634,7 +641,7 @@ export const BlockchainSelector: React.FC<{
 };
 
 const ChainSelector: React.FC<{
-  view: "quickscan" | "homepage";
+  view: "dark" | "light";
   platform: string;
   onClose: () => void;
   setPlatform: React.Dispatch<React.SetStateAction<string>>;
@@ -703,7 +710,7 @@ const ChainSelector: React.FC<{
     }),
     menu: (provided: any, state: any) => ({
       ...provided,
-      color: state.selectProps.menuColor,
+      color: "#FFFFFF",
       borderRadius: 10,
       border: "0px solid #ffffff",
       overflowY: "hidden",
@@ -718,13 +725,21 @@ const ChainSelector: React.FC<{
       backgroundColor: "transparent",
       width: "100%",
       padding: 3,
+      color: "#FFFFFF",
       maxWidth: "500px",
       borderTopLeftRadius: 0,
       borderBottomLeftRadius: 0,
       borderRadius: 15,
       margin: 0,
       fontSize: 15,
-      border: view === "quickscan" ? "1px solid #FFFFFF" : "1px solid #8A94A6",
+      border:
+        view === "dark"
+          ? state.isDisabled
+            ? "1px solid #686d75"
+            : "1px solid #FFFFFF"
+          : state.isDisabled
+          ? "1px solid #8A94A680"
+          : "1px solid #8A94A6",
     }),
     container: (provided: any, state: any) => ({
       ...provided,
@@ -732,11 +747,12 @@ const ChainSelector: React.FC<{
       maxWidth: "500px",
       marginRight: "30px",
     }),
-    singleValue: (provided: any, state: any) => {
-      const opacity = state.isDisabled ? 0.3 : 1;
-      const transition = "opacity 300ms";
-      return { ...provided, opacity, transition };
-    },
+    singleValue: (provided: any, state: any) => ({
+      ...provided,
+      opacity: state.isDisabled ? 0.3 : 1,
+      transition: "opacity 300ms",
+      color: view === "dark" ? "#FFFFFF" : "#000000",
+    }),
   };
 
   const [currentChain, setCurrentChain] = useState<{
@@ -762,7 +778,7 @@ const ChainSelector: React.FC<{
       borderRadius={[10, 10, 0]}
       background={
         platform === platformValue
-          ? view === "quickscan"
+          ? view === "dark"
             ? "#272727"
             : "#f6f6f6"
           : "transparent"
@@ -780,7 +796,7 @@ const ChainSelector: React.FC<{
         <VStack textAlign="left" w="85%" spacing={1}>
           <Text
             w="100%"
-            color={view === "quickscan" ? "white" : "gray.600"}
+            color={view === "dark" ? "white" : "gray.600"}
             fontWeight={600}
             fontSize="md"
           >
@@ -790,12 +806,11 @@ const ChainSelector: React.FC<{
             cursor="pointer"
             onClick={() => window.open(currentChain?.website, "_blank")}
             w="100%"
-            textDecoration="underline"
             color="#8A94A6"
             fontWeight={400}
             fontSize="sm"
           >
-            {currentChain?.website}
+            {currentChain?.website} <ExternalLinkIcon />
           </Text>
         </VStack>
       </HStack>

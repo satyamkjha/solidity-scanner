@@ -236,7 +236,7 @@ const QuickScanForm: React.FC<{
           }
         >
           <BlockchainSelector
-            view={view === "quickscan" ? "quickscan" : "homepage"}
+            view={view === "quickscan" ? "dark" : "light"}
             chain={chain}
             node_id={node_id}
             setNodeId={setNodeId}

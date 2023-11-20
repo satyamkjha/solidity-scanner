@@ -205,7 +205,7 @@ const ContractForm: React.FC<{
               <Stack spacing={6} mt={5} width={"100%"}>
                 <BlockchainSelector
                   menuPlacement="bottom-start"
-                  view="homepage"
+                  view="light"
                   chain={chain}
                   node_id={nodeId}
                   setNodeId={setNodeId}

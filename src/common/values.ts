@@ -1298,7 +1298,7 @@ export const contractChain: {
     },
   },
   cronos: {
-    blockchainName: "Ethereum",
+    blockchainName: "Cronos",
     description:
       "Cronos is a blockchain network developed by Crypto.com, designed to provide Ethereum Virtual Machine (EVM) compatibility and cross-chain capabilities, fostering interoperability and scalability in decentralized applications.",
     website: "https://cronos.org/",
