@@ -212,7 +212,7 @@ export const BlockchainSelector: React.FC<{
                       {blockchain === "buildbear"
                         ? "https://www.buildbear.io/"
                         : chain?.website}
-                      <ExternalLinkIcon ml={2} />
+                      <ExternalLinkIcon ml={1} />
                     </Text>
                   </VStack>
                 </HStack>
@@ -443,9 +443,8 @@ export const BlockchainSelector: React.FC<{
                     spacing={1}
                     alignItems="flex-start"
                   >
-                    <HStack>
+                    <HStack w="100%" justifyContent={"flex-start"}>
                       <Text
-                        w="100%"
                         color={view === "dark" ? "white" : "gray.600"}
                         fontWeight={600}
                         fontSize="md"
@@ -456,9 +455,9 @@ export const BlockchainSelector: React.FC<{
                       </Text>
                       <Divider
                         orientation="vertical"
-                        h={3}
+                        h={4}
                         borderColor="#8A94A6"
-                      />{" "}
+                      />
                       <Text
                         cursor="pointer"
                         onClick={() =>
@@ -469,16 +468,15 @@ export const BlockchainSelector: React.FC<{
                             "_blank"
                           )
                         }
-                        w="100%"
                         color="#8A94A6"
                         fontWeight={400}
                         fontSize="sm"
                       >
                         {blockchain === "buildbear"
                           ? "https://www.buildbear.io/"
-                          : contractChain[blockchain].website}
+                          : contractChain[blockchain].website}{" "}
+                        <ExternalLinkIcon color="#8A94A6" />
                       </Text>
-                      <ExternalLinkIcon color="#8A94A6" />
                     </HStack>
 
                     <Text
@@ -707,7 +705,11 @@ const ChainSelector: React.FC<{
     icon: string;
     isDisabled: boolean;
     website: string;
-  }>();
+  } | null>();
+
+  useEffect(() => {
+    setCurrentChain(null);
+  }, [platformData]);
 
   return (
     <Flex
@@ -755,16 +757,17 @@ const ChainSelector: React.FC<{
           >
             {platformData.label}
           </Text>
-          <Text
-            cursor="pointer"
-            onClick={() => window.open(currentChain?.website, "_blank")}
-            w="100%"
-            color="#8A94A6"
-            fontWeight={400}
-            fontSize="sm"
-          >
-            {currentChain?.website} <ExternalLinkIcon />
-          </Text>
+          {currentChain?.website ? (
+            <Text
+              cursor="pointer"
+              onClick={() => window.open(currentChain?.website, "_blank")}
+              color="#8A94A6"
+              fontWeight={400}
+              fontSize="sm"
+            >
+              {currentChain?.website} <ExternalLinkIcon />
+            </Text>
+          ) : null}
         </VStack>
       </HStack>
       <HStack
