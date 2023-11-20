@@ -9,7 +9,7 @@ import {
   VictoryTheme,
   VictoryScatter,
 } from "victory";
-import { formattedDate, shortenNumber } from "common/functions";
+import { formattedDateInUTC, shortenNumber } from "common/functions";
 import { monthNames } from "common/values";
 
 interface IProps {
@@ -48,7 +48,7 @@ const CustomTooltip = (props: IProps) => {
             {datum.y?.toLocaleString()}
           </Text>
           <Text fontSize="8px" fontWeight={400} color="gray.500">
-            {datum.tooltip || formattedDate(datum.x)}
+            {datum.tooltip || formattedDateInUTC(datum.x)}
           </Text>
         </Box>
       </foreignObject>
@@ -106,7 +106,7 @@ const Chart: React.FC<{
         return {
           x: new Date(item.date),
           y: item.amount_in_usd,
-          tooltip: formattedDate(new Date(item.date)),
+          tooltip: formattedDateInUTC(new Date(item.date)),
         };
       });
     }
@@ -230,7 +230,7 @@ const Chart: React.FC<{
                 },
               }}
               theme={VictoryTheme.material}
-              tickFormat={(x) => formattedDate(x)}
+              tickFormat={(x) => formattedDateInUTC(x)}
               tickCount={1}
             />
           ) : (

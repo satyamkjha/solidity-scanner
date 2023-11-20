@@ -31,7 +31,7 @@ import HackFilters from "./HackFilters";
 
 const HacksExplorer: React.FC<{ overviewData: any }> = ({ overviewData }) => {
   const [filters, setFilters] = useState<any>({});
-  const [sortBy, setSortBy] = useState("");
+  const [sortBy, setSortBy] = useState("-date");
   const [isLoading, setIsLoading] = useState(true);
   const [hacksList, setHacksList] = useState<any>();
   const [searchBar, setSearchBar] = useState(false);
