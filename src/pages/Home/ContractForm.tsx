@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import { useQueryClient } from "react-query";
 import { useHistory } from "react-router-dom";
 import {
@@ -10,8 +10,6 @@ import {
   InputLeftElement,
   Input,
   Icon,
-  FormControl,
-  FormLabel,
   VStack,
   useToast,
   Box,
@@ -25,14 +23,11 @@ import {
   checkContractAddress,
   getAssetsURL,
 } from "helpers/helperFunction";
-import Select from "react-select";
 import { API_PATH } from "helpers/routeManager";
 import { Profile } from "common/types";
-import FormatOptionLabelWithImage from "components/FormatOptionLabelWithImage";
-import { customStylesForReactSelect } from "common/stylesForCustomSelect";
 import Loader from "components/styled-components/Loader";
 import { useUserRole } from "hooks/useUserRole";
-import { contractChain, infographicsData } from "common/values";
+import { infographicsData } from "common/values";
 import { AddProjectFormInfographics } from "./AddProjectFormInfographics";
 import { BlockchainSelector } from "components/common/BlockchainSelector";
 
@@ -42,6 +37,7 @@ const ContractForm: React.FC<{
   setStep: React.Dispatch<React.SetStateAction<number>>;
   changeView: boolean;
 }> = ({ step, setStep, profileData, changeView }) => {
+  const contractAddressRef = useRef<HTMLInputElement>(null);
   const [contractAddress, setContractAddress] = useState("");
   const [nodeId, setNodeId] = useState("");
   const [isLoading, setIsLoading] = useState(false);
@@ -63,6 +59,7 @@ const ContractForm: React.FC<{
   const [blockchainSelectorError, setBlockchainSelectorError] = useState("");
   const platform_supported = getFeatureGateConfig().platform_supported;
   const assetsURL = getAssetsURL();
+
   const onSubmit = async () => {
     if (platform !== "buildbear" && !checkContractAddress(contractAddress)) {
       toast({
@@ -125,6 +122,12 @@ const ContractForm: React.FC<{
         setIsLoading(false);
       }
     );
+  };
+
+  const onSelectorClose = () => {
+    if (contractAddressRef && contractAddressRef.current) {
+      contractAddressRef.current.focus();
+    }
   };
 
   const { role } = useUserRole();
@@ -204,6 +207,7 @@ const ContractForm: React.FC<{
             {supportedChains && (
               <Stack spacing={6} mt={5} width={"100%"}>
                 <BlockchainSelector
+                  onSelectorClose={onSelectorClose}
                   menuPlacement="bottom-start"
                   view="homepage"
                   chain={chain}
@@ -226,6 +230,7 @@ const ContractForm: React.FC<{
                       children={<Icon as={AiOutlineProject} color="gray.300" />}
                     />
                     <Input
+                      ref={contractAddressRef}
                       isRequired
                       placeholder="0x808ed7A75n133f64069318Sa0q173c71rre44414"
                       variant="brand"
