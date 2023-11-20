@@ -1,18 +1,14 @@
-import React, { PropsWithChildren, useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import {
   Box,
   Heading,
-  Stack,
   Input,
   Button,
   useMediaQuery,
-  useToast,
   Text,
   Flex,
 } from "@chakra-ui/react";
 import Loader from "components/styled-components/Loader";
-import { StylesConfig, GroupBase } from "react-select";
-import { OptionTypeWithIcon } from "common/types";
 
 import { useLocation } from "react-router-dom";
 import Lottie from "lottie-react";
@@ -30,7 +26,6 @@ const QuickScanForm: React.FC<{
   ) => Promise<void>;
   isLoading: boolean;
 }> = ({ runQuickScan, isLoading, view }) => {
-  const toast = useToast();
   const location = useLocation();
   const [stopAnimation, isDesktopView] = useMediaQuery([
     "(max-width: 600px)",
@@ -52,6 +47,7 @@ const QuickScanForm: React.FC<{
   } | null>(null);
 
   const quickscanRef = useRef<HTMLDivElement>(null);
+  const contractAddressRef = useRef<HTMLInputElement>(null);
   const [animationOffset, setAnimationOffset] = useState(60);
 
   const generateQuickScan = () => {
@@ -132,6 +128,12 @@ const QuickScanForm: React.FC<{
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  const onSelectorClose = () => {
+    if (contractAddressRef && contractAddressRef.current) {
+      contractAddressRef.current.focus();
+    }
+  };
 
   return (
     <Box w="100%" h="fit-content" position="relative" ref={quickscanRef}>
@@ -246,6 +248,7 @@ const QuickScanForm: React.FC<{
             menuPlacement="bottom"
             blockchainSelectorError={blockchainSelectorError}
             setBlockchainSelectorError={setBlockchainSelectorError}
+            onSelectorClose={onSelectorClose}
           />
           <Text
             w="100%"
@@ -258,6 +261,8 @@ const QuickScanForm: React.FC<{
           </Text>
           <Input
             isRequired
+            ref={contractAddressRef}
+            type={"text"}
             placeholder="Type or paste your contract address here..."
             variant={"brand"}
             size="lg"
