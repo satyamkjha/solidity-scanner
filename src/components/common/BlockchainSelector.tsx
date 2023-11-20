@@ -439,7 +439,7 @@ export const BlockchainSelector: React.FC<{
                   {firstBlockChain !== "buildbear" && (
                     <Flex
                       my={[0, 0, 2]}
-                      mx={[2, 2, 2]}
+                      mx={[2, 2, 0]}
                       height={"buildbear" === blockchain ? "100px" : "80px"}
                       width={"buildbear" === blockchain ? "100px" : "80px"}
                       padding="10px"
@@ -449,7 +449,10 @@ export const BlockchainSelector: React.FC<{
                       backgroundColor={
                         view === "quickscan" ? "#404040" : "#F3F3F3"
                       }
-                      transition={"all 0.2s ease-in"}
+                      transition={"transform 0.3s ease"}
+                      transform={
+                        "buildbear" === blockchain ? "scale(1)" : "scale(0.9)"
+                      }
                       justifyContent="center"
                       alignItems="center"
                       cursor="pointer"
