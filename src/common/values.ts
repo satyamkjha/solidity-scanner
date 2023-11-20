@@ -1266,6 +1266,19 @@ export const contractChain: {
           },
         ],
       },
+      routescan: {
+        label: "Routescan (Avalanche)",
+        iconUrl: "blockscan/routescan",
+        chains: [
+          {
+            value: "c-chain",
+            label: "Avalanche C-Chain",
+            icon: "",
+            isDisabled: false,
+            website: "https://43114.routescan.io/",
+          },
+        ],
+      },
     },
   },
   fantom: {
@@ -1685,7 +1698,7 @@ export const contractChain: {
     description:
       "Gnosis is a decentralized platform built on Ethereum that facilitates prediction market and decentralized exchange services, aiming to enable users to forecast and trade on the outcome of various events.",
     website: "https://shibarium.shib.io/",
-    logoUrl: "blockscan/",
+    logoUrl: "blockscan/shibariumscan",
     platforms: {
       blockscout: {
         label: "Blockscout (Shibarium)",
@@ -1806,6 +1819,94 @@ export const contractChain: {
             icon: "",
             isDisabled: false,
             website: "https://explorer.testnet.immutable.com/",
+          },
+        ],
+      },
+    },
+  },
+  boba: {
+    blockchainName: "BOBA",
+    description:
+      "Boba Network is a multichain layer 2 optimistic rollup that aims to unlock the potential of rollup technology and enable interoperability between blockchains and the real world. The protocol is fully compatible with EVM-based tools and has already deployed multichain support for Ethereum, Avalanche, and BNB supporting lightning-fast transactions and lower fees.",
+    website: "https://boba.network/",
+    logoUrl: "blockscan/boba",
+    platforms: {
+      routescan: {
+        label: "Routescan (BOBA)",
+        iconUrl: "blockscan/routescan",
+        chains: [
+          {
+            value: "boba",
+            label: "Boba Mainnet",
+            icon: "",
+            isDisabled: false,
+            website: "https://bobascan.com/",
+          },
+        ],
+      },
+    },
+  },
+  flare: {
+    blockchainName: "Flare",
+    description:
+      "EVM-based layer1 blockchain with two native data acquisition protocols.",
+    website: "https://flare.network/",
+    logoUrl: "blockscan/flare",
+    platforms: {
+      routescan: {
+        label: "Routescan (Flare)",
+        iconUrl: "blockscan/routescan",
+        chains: [
+          {
+            value: "flare",
+            label: "Flare Mainnet",
+            icon: "",
+            isDisabled: false,
+            website: "https://mainnet.flarescan.com/",
+          },
+        ],
+      },
+    },
+  },
+  metis: {
+    blockchainName: "Metis",
+    description:
+      "Metis is a blockchain platform that aims to simplify decentralized application development through its user-friendly infrastructure and on-chain governance features.",
+    website: "https://www.metis.io/",
+    logoUrl: "blockscan/metis",
+    platforms: {
+      routescan: {
+        label: "Routescan (Metis)",
+        iconUrl: "blockscan/routescan",
+        chains: [
+          {
+            value: "metis",
+            label: "Metis Mainnet",
+            icon: "",
+            isDisabled: false,
+            website: "https://explorer.metis.io/",
+          },
+        ],
+      },
+    },
+  },
+  chiliz: {
+    blockchainName: "Chiliz",
+    description:
+      "Chiliz Blockchain is a blockchain infrastructure specializing in sports and entertainment applications, enabling the creation of fan engagement and tokenized experiences within the Chiliz ecosystem.",
+    website: "https://www.chiliz.com/",
+    logoUrl: "blockscan/chiliz",
+    platforms: {
+      routescan: {
+        label: "Routescan (BOBA)",
+        iconUrl: "blockscan/routescan",
+        chains: [
+          {
+            value: "chiliz",
+            label: "Chiliz Mainnet",
+            icon: "",
+            isDisabled: false,
+            website: "https://chiliscan.com/",
           },
         ],
       },
@@ -1932,6 +2033,28 @@ export const platformVsChains: {
     },
     "immutable-testnet": {
       chain: "immutable",
+      index: 0,
+    },
+  },
+  routescan: {
+    boba: {
+      chain: "boba",
+      index: 0,
+    },
+    chiliz: {
+      chain: "chiliz",
+      index: 0,
+    },
+    flare: {
+      chain: "flare",
+      index: 0,
+    },
+    metis: {
+      chain: "metis",
+      index: 0,
+    },
+    "c-chain": {
+      chain: "avalanche",
       index: 0,
     },
   },

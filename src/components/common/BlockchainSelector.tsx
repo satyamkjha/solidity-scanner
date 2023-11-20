@@ -150,13 +150,13 @@ export const BlockchainSelector: React.FC<{
               <>
                 <HStack justifyContent="flex-start">
                   <Image
-                    src={`${assetsUrl}${
+                    src={
                       blockchain === "buildbear"
-                        ? `blockscan/buildbear-${
+                        ? `${assetsUrl}blockscan/buildbear-${
                             view === "dark" ? "white" : "black"
-                          }`
-                        : contractChain[blockchain].logoUrl
-                    }.svg`}
+                          }.svg`
+                        : `${assetsUrl}${contractChain[blockchain].logoUrl}.svg`
+                    }
                     height="40px"
                     width="40px"
                   />
@@ -323,13 +323,13 @@ export const BlockchainSelector: React.FC<{
                 }}
                 height={"70px"}
                 width={"70px"}
-                src={`${assetsUrl}${
+                src={
                   blockchain === "buildbear"
-                    ? `blockscan/buildbear-${
+                    ? `${assetsUrl}blockscan/buildbear-${
                         view === "dark" ? "white" : "black"
-                      }`
-                    : contractChain[blockchain].logoUrl
-                }.svg`}
+                      }.svg`
+                    : `${assetsUrl}${contractChain[blockchain].logoUrl}.svg`
+                }
               />
             </Flex>
           ) : (
@@ -367,7 +367,10 @@ export const BlockchainSelector: React.FC<{
                     backgroundColor={view === "dark" ? "#404040" : "#F3F3F3"}
                     justifyContent="center"
                     alignItems="center"
-                    transition={"all 0.2s ease-in"}
+                    transition={"transform 0.3s ease"}
+                    transform={
+                      firstBlockChain === blockchain ? "scale(1)" : "scale(0.9)"
+                    }
                     onClick={() => {
                       setBlockchain(firstBlockChain);
                       setPlatform("");
@@ -384,26 +387,32 @@ export const BlockchainSelector: React.FC<{
                     <Image
                       height={firstBlockChain === blockchain ? "60px" : "50px"}
                       width={firstBlockChain === blockchain ? "60px" : "50px"}
-                      src={`${assetsUrl}${
+                      src={
                         firstBlockChain === "buildbear"
-                          ? `blockscan/buildbear-${
+                          ? `${assetsUrl}blockscan/buildbear-${
                               view === "dark" ? "white" : "black"
-                            }`
-                          : contractChain[firstBlockChain].logoUrl
-                      }.svg`}
+                            }.svg`
+                          : `${assetsUrl}${contractChain[firstBlockChain].logoUrl}.svg`
+                      }
                     />
                   </Flex>
-                  {Object.keys(contractChain).map((item) => {
+                  {Object.keys(contractChain).map((item, index) => {
                     if (item !== firstBlockChain)
                       return (
                         <Flex
                           my={[0, 0, 2]}
-                          mx={[2, 2, 2]}
+                          mx={[2, 2, 0]}
                           height={item === blockchain ? "100px" : "80px"}
                           width={item === blockchain ? "100px" : "80px"}
                           padding="10px"
                           borderRadius={item === blockchain ? "50px" : "40px"}
-                          transition={"all 0.2s ease-in"}
+                          transition={"transform 0.3s ease"}
+                          transform={
+                            item === blockchain ? "scale(1)" : "scale(0.9)"
+                          }
+                          animation={`zoomInAnimation ${
+                            0.1 + index / 20
+                          }s ease-in-out`}
                           backgroundColor={
                             view === "dark" ? "#404040" : "#F3F3F3"
                           }
@@ -430,7 +439,7 @@ export const BlockchainSelector: React.FC<{
                   {firstBlockChain !== "buildbear" && (
                     <Flex
                       my={[0, 0, 2]}
-                      mx={[2, 2, 2]}
+                      mx={[2, 2, 0]}
                       height={"buildbear" === blockchain ? "100px" : "80px"}
                       width={"buildbear" === blockchain ? "100px" : "80px"}
                       padding="10px"
@@ -438,7 +447,10 @@ export const BlockchainSelector: React.FC<{
                         "buildbear" === blockchain ? "50px" : "40px"
                       }
                       backgroundColor={view === "dark" ? "#404040" : "#F3F3F3"}
-                      transition={"all 0.2s ease-in"}
+                      transition={"transform 0.3s ease"}
+                      transform={
+                        "buildbear" === blockchain ? "scale(1)" : "scale(0.9)"
+                      }
                       justifyContent="center"
                       alignItems="center"
                       cursor="pointer"
@@ -594,8 +606,9 @@ export const BlockchainSelector: React.FC<{
                   </>
                 ) : (
                   Object.keys(contractChain[blockchain].platforms).map(
-                    (platformValue) => (
+                    (platformValue, index) => (
                       <ChainSelector
+                        key={`${platformValue}_${index}`}
                         view={view}
                         onClose={onClose}
                         platform={platform}
@@ -763,10 +776,6 @@ const ChainSelector: React.FC<{
     website: string;
   }>();
 
-  useEffect(() => {
-    setCurrentChain(platformData.chains[0]);
-  }, []);
-
   return (
     <Flex
       w="100%"
@@ -787,7 +796,7 @@ const ChainSelector: React.FC<{
       px={[3, 3, 7]}
       py={5}
     >
-      <HStack>
+      <HStack w="100%">
         <Image
           src={`${assetsUrl}${platformData.iconUrl}.svg`}
           height="40px"
