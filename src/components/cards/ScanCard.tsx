@@ -240,22 +240,23 @@ const ScanCard: React.FC<{
             />
           </Flex>
           <VulnerabilityDistribution
-            critical={
-              multi_file_scan_summary?.issue_severity_distribution?.critical ||
-              0
-            }
-            high={
-              multi_file_scan_summary?.issue_severity_distribution?.high || 0
-            }
-            medium={
-              multi_file_scan_summary?.issue_severity_distribution?.medium || 0
-            }
-            low={multi_file_scan_summary?.issue_severity_distribution?.low || 0}
-            informational={
-              multi_file_scan_summary?.issue_severity_distribution
-                ?.informational || 0
-            }
-            gas={multi_file_scan_summary?.issue_severity_distribution.gas || 0}
+            issueSeverityDistribution={{
+              critical:
+                multi_file_scan_summary?.issue_severity_distribution
+                  ?.critical || 0,
+              high:
+                multi_file_scan_summary?.issue_severity_distribution?.high || 0,
+              medium:
+                multi_file_scan_summary?.issue_severity_distribution?.medium ||
+                0,
+              low:
+                multi_file_scan_summary?.issue_severity_distribution?.low || 0,
+              informational:
+                multi_file_scan_summary?.issue_severity_distribution
+                  ?.informational || 0,
+              gas:
+                multi_file_scan_summary?.issue_severity_distribution.gas || 0,
+            }}
             view={"scans"}
           />
         </Flex>

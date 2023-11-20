@@ -32,51 +32,6 @@ const QuickScanDetails: React.FC<{ scanReport: QuickScanResult }> = ({
   const no_of_vuln_detectors =
     config && config.REACT_APP_ISSUES_DATA.no_of_vuln_detectors;
 
-  const pieData = (
-    critical: number,
-    high: number,
-    medium: number,
-    low: number,
-    informational: number,
-    gas: number
-  ) => [
-    {
-      id: "critical",
-      label: "Critical",
-      value: critical,
-      color: "#960D00",
-    },
-    {
-      id: "high",
-      label: "High",
-      value: high,
-      color: "#FF5C00",
-    },
-    {
-      id: "medium",
-      label: "Medium",
-      value: medium,
-      color: "#FFE600",
-    },
-    {
-      id: "low",
-      label: "Low",
-      value: low,
-      color: "#38CB89",
-    },
-    {
-      id: "informational",
-      label: "Informational",
-      value: informational,
-      color: "#A0AEC0",
-    },
-    {
-      id: "gas",
-      label: "Gas",
-      value: gas,
-      color: "#F795B4",
-    },
-  ];
 
   const vulnerabilityCount =
     scanReport.multi_file_scan_summary.issue_severity_distribution.critical +

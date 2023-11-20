@@ -9,6 +9,36 @@ export const severityPriority: { [key: string]: number } = {
   informational: 6,
 };
 
+export const severityArrayInOrder: {
+  value: string;
+  shortForm: string;
+}[] = [
+  {
+    value: "critical",
+    shortForm: "Crit",
+  },
+  {
+    value: "high",
+    shortForm: "High",
+  },
+  {
+    value: "medium",
+    shortForm: "Med",
+  },
+  {
+    value: "low",
+    shortForm: "Low",
+  },
+  {
+    value: "informational",
+    shortForm: "Info",
+  },
+  {
+    value: "gas",
+    shortForm: "Gas",
+  },
+];
+
 export const publishReportType: { [key: string]: string } = {
   self_published: "Self-Published",
   verified: "Verified Report",
@@ -1783,99 +1813,6 @@ export const contractChain: {
   },
 };
 
-export const platforms = [
-  {
-    value: "etherscan",
-    icon: "blockscan/etherscan",
-    label: "Ethereum - (etherscan.io)",
-    isDisabled: true,
-  },
-  {
-    value: "bscscan",
-    icon: "blockscan/bscscan",
-    label: "Binance - (bscscan.com)",
-    isDisabled: true,
-  },
-  {
-    value: "avalanche",
-    icon: "blockscan/avalanche",
-    label: "Avalanche C-Chain - (snowtrace.io)",
-    isDisabled: true,
-  },
-  {
-    value: "polygonscan",
-    icon: "blockscan/polygonscan",
-    label: "Polygon - (polygonscan.com)",
-    isDisabled: true,
-  },
-  {
-    value: "fantom",
-    icon: "blockscan/fantom",
-    label: "Fantom - (ftmscan.com)",
-    isDisabled: true,
-  },
-  {
-    value: "cronos",
-    icon: "blockscan/cronos",
-    label: "Cronos - (cronoscan.com)",
-    isDisabled: true,
-  },
-  {
-    value: "arbiscan",
-    icon: "blockscan/arbiscan",
-    label: "Arbiscan - (arbiscan.io)",
-    isDisabled: true,
-  },
-  {
-    value: "celo",
-    icon: "blockscan/celo",
-    label: "Celo - (celoscan.io)",
-    isDisabled: true,
-  },
-  {
-    value: "aurora",
-    icon: "blockscan/aurora",
-    label: "Aurora - (aurorascan.dev)",
-    isDisabled: true,
-  },
-  {
-    value: "reefscan",
-    icon: "blockscan/reefscan",
-    label: "ReefScan - (reefscan.com)",
-    isDisabled: true,
-  },
-  {
-    value: "optimism",
-    icon: "blockscan/optimism",
-    label: "Optimism - (optimism.io)",
-    isDisabled: true,
-  },
-  {
-    value: "buildbear",
-    icon: "blockscan/buildbear",
-    label: "Buildbear - (buildbear.io)",
-    isDisabled: true,
-  },
-  {
-    value: "xdc",
-    icon: "blockscan/xdc",
-    label: "XDC - (xdc.blocksscan.io)",
-    isDisabled: true,
-  },
-  {
-    value: "nordekscan",
-    icon: "blockscan/nordekscan",
-    label: "Nordek - (nordek.io)",
-    isDisabled: true,
-  },
-  {
-    value: "fuse",
-    icon: "blockscan/fuse",
-    label: "Fuse - (explorer.fuse.io)",
-    isDisabled: true,
-  },
-];
-
 export const platformVsChains: {
   [key: string]: {
     [key: string]: {
@@ -2063,5 +2000,51 @@ export const socialIconsList = [
   {
     imgUrl: "twitter",
     link: "https://twitter.com/solidityscan",
+  },
+];
+
+export const pieData = (
+  critical: number,
+  high: number,
+  medium: number,
+  low: number,
+  informational: number,
+  gas: number
+) => [
+  {
+    id: "critical",
+    label: "Critical",
+    value: critical,
+    color: "#960D00",
+  },
+  {
+    id: "high",
+    label: "High",
+    value: high,
+    color: "#FF5C00",
+  },
+  {
+    id: "medium",
+    label: "Medium",
+    value: medium,
+    color: "#FFE600",
+  },
+  {
+    id: "low",
+    label: "Low",
+    value: low,
+    color: "#38CB89",
+  },
+  {
+    id: "informational",
+    label: "Informational",
+    value: informational,
+    color: "#A0AEC0",
+  },
+  {
+    id: "gas",
+    label: "Gas",
+    value: gas,
+    color: "#F795B4",
   },
 ];

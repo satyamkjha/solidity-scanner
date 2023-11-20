@@ -234,6 +234,16 @@ export const getContractChainLabel = (platform: string, chain: string) => {
   return chain || "NA";
 };
 
+export const getContractBlockchainId = (platform: string, chain: string) => {
+  if (platformVsChains[platform] && chain) {
+    return platformVsChains[platform][chain].chain;
+  }
+
+  if (contractChain[platform]) return platform;
+
+  return "NA";
+};
+
 export const getTrimmedScanMessage = (scan_status: string) => {
   if (
     scan_status.includes("Download Failed") ||

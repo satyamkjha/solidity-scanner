@@ -3,23 +3,20 @@ import { Flex, Box, Text, Button, HStack, VStack } from "@chakra-ui/react";
 
 import { IssueSeverityDistribution } from "common/types";
 import { SeverityIcon } from "./icons";
+import { severityArrayInOrder } from "common/values";
 
-interface VulnerabilityDistributionView {
-  view: "home" | "scans";
-  size?: "small" | "large";
-  showLabel?: boolean;
-}
+interface VulnerabilityDistributionView {}
 
 type VulnerabilityDistributionProps = IssueSeverityDistribution &
   VulnerabilityDistributionView;
 
-const VulnerabilityDistribution: React.FC<VulnerabilityDistributionProps> = ({
-  critical,
-  high,
-  medium,
-  low,
-  informational,
-  gas,
+const VulnerabilityDistribution: React.FC<{
+  view: "home" | "scans";
+  size?: "small" | "large";
+  showLabel?: boolean;
+  issueSeverityDistribution: IssueSeverityDistribution;
+}> = ({
+  issueSeverityDistribution,
   view,
   size = "large",
   showLabel = true,
@@ -35,139 +32,43 @@ const VulnerabilityDistribution: React.FC<VulnerabilityDistributionProps> = ({
         rowGap: 5,
       }}
     >
-      <VStack
-        w={size === "large" ? "15%" : "30%"}
-        py={view === "home" ? 4 : 0}
-        borderRadius={10}
-        align="center"
-        bg={view === "home" ? "white" : "transparent"}
-      >
-        <Text sx={{ lineHeight: 1.2, fontWeight: 600 }}>{critical}</Text>
-        {showLabel && (
-          <Text sx={{ color: "subtle", fontSize: "xs" }}>Crit</Text>
-        )}
-        <Box
-          sx={{
-            w: "50%",
-            maxW: "24px",
-            h: "3px",
-            bgColor: "critical",
-            ml: "1px",
-            mt: 1,
-          }}
-        />
-      </VStack>
-      <VStack
-        w={size === "large" ? "15%" : "30%"}
-        py={view === "home" ? 4 : 0}
-        borderRadius={10}
-        align="center"
-        bg={view === "home" ? "white" : "transparent"}
-      >
-        <Text sx={{ lineHeight: 1.2, fontWeight: 600 }}>{high}</Text>
-        {showLabel && (
-          <Text sx={{ color: "subtle", fontSize: "xs" }}>High</Text>
-        )}
-        <Box
-          sx={{
-            w: "50%",
-            maxW: "24px",
-            h: "3px",
-            bgColor: "high",
-            ml: "1px",
-            mt: 1,
-          }}
-        />
-      </VStack>
-      <VStack
-        w={size === "large" ? "15%" : "30%"}
-        py={view === "home" ? 4 : 0}
-        borderRadius={10}
-        align="center"
-        bg={view === "home" ? "white" : "transparent"}
-      >
-        <Text sx={{ lineHeight: 1.2, fontWeight: 600 }}>{medium}</Text>
-        {showLabel && <Text sx={{ color: "subtle", fontSize: "xs" }}>Med</Text>}
-        <Box
-          sx={{
-            w: "50%",
-            maxW: "24px",
-            h: "3px",
-            bgColor: "medium",
-            ml: "1px",
-            mt: 1,
-          }}
-        />
-      </VStack>
-      <VStack
-        w={size === "large" ? "15%" : "30%"}
-        py={view === "home" ? 4 : 0}
-        borderRadius={10}
-        align="center"
-        bg={view === "home" ? "white" : "transparent"}
-      >
-        <Text sx={{ lineHeight: 1.2, fontWeight: 600 }}>{low}</Text>
-        {showLabel && <Text sx={{ color: "subtle", fontSize: "xs" }}>Low</Text>}
-        <Box
-          sx={{
-            w: "50%",
-            maxW: "24px",
-            h: "3px",
-            bgColor: "low",
-            ml: "1px",
-            mt: 1,
-          }}
-        />
-      </VStack>
-      <VStack
-        w={size === "large" ? "15%" : "30%"}
-        py={view === "home" ? 4 : 0}
-        borderRadius={10}
-        align="center"
-        bg={view === "home" ? "white" : "transparent"}
-      >
-        <Text sx={{ lineHeight: 1.2, fontWeight: 600 }}>{informational}</Text>
-        {showLabel && (
-          <Text sx={{ color: "subtle", fontSize: "xs" }}>Info</Text>
-        )}
-        <Box
-          sx={{
-            w: "50%",
-            maxW: "24px",
-            h: "3px",
-            bgColor: "gray.400",
-            ml: "1px",
-            mt: 1,
-          }}
-        />
-      </VStack>
-      <VStack
-        w={size === "large" ? "15%" : "30%"}
-        py={view === "home" ? 4 : 0}
-        borderRadius={10}
-        align="center"
-        bg={view === "home" ? "white" : "transparent"}
-      >
-        <Text sx={{ lineHeight: 1.2, fontWeight: 600 }}>{gas ? gas : 0}</Text>
-        {showLabel && <Text sx={{ color: "subtle", fontSize: "xs" }}>Gas</Text>}
-        <Box
-          sx={{
-            w: "50%",
-            maxW: "24px",
-            h: "3px",
-            bgColor: "gas",
-            ml: "1px",
-            mt: 1,
-          }}
-        />
-      </VStack>
+      {severityArrayInOrder.map((item) => (
+        <VStack
+          w={size === "large" ? "15%" : "30%"}
+          py={view === "home" ? 4 : 0}
+          borderRadius={10}
+          align="center"
+          bg={view === "home" ? "white" : "transparent"}
+        >
+          <Text sx={{ lineHeight: 1.2, fontWeight: 600 }}>
+            {issueSeverityDistribution[item.value]}
+          </Text>
+          {showLabel && (
+            <Text sx={{ color: "subtle", fontSize: "xs" }}>
+              {item.shortForm}
+            </Text>
+          )}
+          <Box
+            sx={{
+              w: "50%",
+              maxW: "24px",
+              h: "3px",
+              bgColor: item.value,
+              ml: "1px",
+              mt: 1,
+            }}
+          />
+        </VStack>
+      ))}
     </Flex>
   );
 };
 
-export const ErrorVulnerabilityDistribution: React.FC<
-  VulnerabilityDistributionView
-> = ({ view, showLabel = true }) => {
+export const ErrorVulnerabilityDistribution: React.FC<{
+  view: "home" | "scans";
+  size?: "small" | "large";
+  showLabel?: boolean;
+}> = ({ view, showLabel = true }) => {
   return (
     <Flex
       sx={{
@@ -176,130 +77,32 @@ export const ErrorVulnerabilityDistribution: React.FC<
         mx: 2,
       }}
     >
-      <VStack
-        w="15%"
-        py={view === "home" ? 2 : 0}
-        borderRadius={10}
-        align="center"
-        bg={view === "home" ? "white" : "transparent"}
-      >
-        <Text sx={{ lineHeight: 1.2, fontWeight: 600 }}>NA</Text>
-        {showLabel && (
-          <Text sx={{ color: "subtle", fontSize: "xs" }}>Crit</Text>
-        )}
-        <Box
-          sx={{
-            w: "50%",
-            maxW: "24px",
-            h: "3px",
-            bgColor: "high",
-            ml: "1px",
-            mt: 1,
-          }}
-        />
-      </VStack>
-      <VStack
-        w="15%"
-        py={view === "home" ? 2 : 0}
-        borderRadius={10}
-        align="center"
-        bg={view === "home" ? "white" : "transparent"}
-      >
-        <Text sx={{ lineHeight: 1.2, fontWeight: 600 }}>NA</Text>
-        {showLabel && (
-          <Text sx={{ color: "subtle", fontSize: "xs" }}>High</Text>
-        )}
-        <Box
-          sx={{
-            w: "50%",
-            maxW: "24px",
-            h: "3px",
-            bgColor: "high",
-            ml: "1px",
-            mt: 1,
-          }}
-        />
-      </VStack>
-      <VStack
-        w="15%"
-        py={view === "home" ? 2 : 0}
-        borderRadius={10}
-        align="center"
-        bg={view === "home" ? "white" : "transparent"}
-      >
-        <Text sx={{ lineHeight: 1.2, fontWeight: 600 }}>NA</Text>
-        {showLabel && <Text sx={{ color: "subtle", fontSize: "xs" }}>Med</Text>}
-        <Box
-          sx={{
-            w: "50%",
-            maxW: "24px",
-            h: "3px",
-            bgColor: "medium",
-            ml: "1px",
-            mt: 1,
-          }}
-        />
-      </VStack>
-      <VStack
-        w="15%"
-        py={view === "home" ? 2 : 0}
-        borderRadius={10}
-        align="center"
-        bg={view === "home" ? "white" : "transparent"}
-      >
-        <Text sx={{ lineHeight: 1.2, fontWeight: 600 }}>NA</Text>
-        <Text sx={{ color: "subtle", fontSize: "xs" }}>Low</Text>
-        <Box
-          sx={{
-            w: "50%",
-            maxW: "24px",
-            h: "3px",
-            bgColor: "low",
-            ml: "1px",
-            mt: 1,
-          }}
-        />
-      </VStack>
-      <VStack
-        w="15%"
-        py={view === "home" ? 2 : 0}
-        borderRadius={10}
-        align="center"
-        bg={view === "home" ? "white" : "transparent"}
-      >
-        <Text sx={{ lineHeight: 1.2, fontWeight: 600 }}>NA</Text>
-        <Text sx={{ color: "subtle", fontSize: "xs" }}>Infor</Text>
-        <Box
-          sx={{
-            w: "50%",
-            maxW: "24px",
-            h: "3px",
-            bgColor: "gray.400",
-            ml: "1px",
-            mt: 1,
-          }}
-        />
-      </VStack>
-      <VStack
-        w="15%"
-        py={view === "home" ? 2 : 0}
-        borderRadius={10}
-        align="center"
-        bg={view === "home" ? "white" : "transparent"}
-      >
-        <Text sx={{ lineHeight: 1.2, fontWeight: 600 }}>NA</Text>
-        <Text sx={{ color: "subtle", fontSize: "xs" }}>GAS</Text>
-        <Box
-          sx={{
-            w: "50%",
-            maxW: "24px",
-            h: "3px",
-            bgColor: "gas",
-            ml: "1px",
-            mt: 1,
-          }}
-        />
-      </VStack>
+      {severityArrayInOrder.map((item) => (
+        <VStack
+          w="15%"
+          py={view === "home" ? 2 : 0}
+          borderRadius={10}
+          align="center"
+          bg={view === "home" ? "white" : "transparent"}
+        >
+          <Text sx={{ lineHeight: 1.2, fontWeight: 600 }}>NA</Text>
+          {showLabel && (
+            <Text sx={{ color: "subtle", fontSize: "xs" }}>
+              {item.shortForm}
+            </Text>
+          )}
+          <Box
+            sx={{
+              w: "50%",
+              maxW: "24px",
+              h: "3px",
+              bgColor: item.value,
+              ml: "1px",
+              mt: 1,
+            }}
+          />
+        </VStack>
+      ))}
     </Flex>
   );
 };

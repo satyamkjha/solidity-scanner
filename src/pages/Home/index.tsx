@@ -288,12 +288,14 @@ const Home: React.FC = () => {
                 <VulnerabilityDistribution
                   view="home"
                   size={changeVulnDistributionView ? "large" : "small"}
-                  critical={data.overview.issue_count_critical}
-                  high={data.overview.issue_count_high}
-                  medium={data.overview.issue_count_medium}
-                  low={data.overview.issue_count_low}
-                  informational={data.overview.issue_count_informational}
-                  gas={data.overview.issue_count_gas}
+                  issueSeverityDistribution={{
+                    critical: data.overview.issue_count_critical,
+                    high: data.overview.issue_count_high,
+                    medium: data.overview.issue_count_medium,
+                    low: data.overview.issue_count_low,
+                    informational: data.overview.issue_count_informational,
+                    gas: data.overview.issue_count_gas,
+                  }}
                 />
               </VStack>
             </Flex>

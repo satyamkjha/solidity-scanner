@@ -32,7 +32,7 @@ import FormatOptionLabelWithImage from "components/FormatOptionLabelWithImage";
 import { customStylesForReactSelect } from "common/stylesForCustomSelect";
 import Loader from "components/styled-components/Loader";
 import { useUserRole } from "hooks/useUserRole";
-import { contractChain, platforms, infographicsData } from "common/values";
+import { contractChain, infographicsData } from "common/values";
 import { AddProjectFormInfographics } from "./AddProjectFormInfographics";
 import { BlockchainSelector } from "components/common/BlockchainSelector";
 

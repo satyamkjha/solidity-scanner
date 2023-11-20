@@ -310,6 +310,7 @@ export interface IssueSeverityDistribution {
   low: number;
   informational: number;
   gas: number;
+  [key: string]: number;
 }
 
 export type ScanDetail = {

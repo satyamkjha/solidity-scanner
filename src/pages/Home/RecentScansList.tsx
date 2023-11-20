@@ -186,8 +186,10 @@ const RecentScansList: React.FC = () => {
 
                 <Box w="40%">
                   <VulnerabilityDistribution
-                    {...project.scan_details.multi_file_scan_summary
-                      .issue_severity_distribution}
+                    issueSeverityDistribution={
+                      project.scan_details.multi_file_scan_summary
+                        .issue_severity_distribution
+                    }
                     view="scans"
                     showLabel={false}
                   />
@@ -277,8 +279,10 @@ const RecentScansList: React.FC = () => {
                 )}
 
                 <VulnerabilityDistribution
-                  {...project.scan_details.multi_file_scan_summary
-                    .issue_severity_distribution}
+                  issueSeverityDistribution={
+                    project.scan_details.multi_file_scan_summary
+                      .issue_severity_distribution
+                  }
                   view="scans"
                 />
               </VStack>

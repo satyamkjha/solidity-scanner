@@ -14,6 +14,8 @@ import {
   Box,
   Input,
   Link,
+  Heading,
+  Button,
 } from "@chakra-ui/react";
 import StyledButton from "components/styled-components/StyledButton";
 import Loader from "components/styled-components/Loader";
@@ -22,8 +24,14 @@ import {
   ArrowBackIcon,
   ExternalLinkIcon,
 } from "@chakra-ui/icons";
-import { contractChain, platforms } from "common/values";
-import { getAssetsURL, sentenceCapitalize } from "helpers/helperFunction";
+import { contractChain, pieData, severityArrayInOrder } from "common/values";
+import PieChart from "components/pieChart";
+import {
+  getAssetsURL,
+  sentenceCapitalize,
+  getContractChainLabel,
+  getContractBlockchainId,
+} from "helpers/helperFunction";
 import { StylesConfig, GroupBase } from "react-select";
 import Select from "react-select";
 import FormatOptionLabelWithImage from "components/FormatOptionLabelWithImage";
@@ -39,6 +47,15 @@ export const QuickScanResultContainer: React.FC<{
   const assetsUrl = getAssetsURL();
   const history = useHistory();
 
+  const vulnerabilityCount =
+    scanReport.multi_file_scan_summary.issue_severity_distribution.critical +
+    scanReport.multi_file_scan_summary.issue_severity_distribution.gas +
+    scanReport.multi_file_scan_summary.issue_severity_distribution.high +
+    scanReport.multi_file_scan_summary.issue_severity_distribution
+      .informational +
+    scanReport.multi_file_scan_summary.issue_severity_distribution.low +
+    scanReport.multi_file_scan_summary.issue_severity_distribution.medium;
+
   return (
     <Flex
       w="90%"
@@ -47,7 +64,8 @@ export const QuickScanResultContainer: React.FC<{
       flexDir={["column", "column", "row"]}
       justifyContent={["flex-start", "flex-start", "space-between"]}
       alignItems="center"
-      my={20}
+      mt={20}
+      mb={"150px"}
     >
       <VStack
         spacing={5}
@@ -56,7 +74,8 @@ export const QuickScanResultContainer: React.FC<{
         bgColor="#222222"
         justifyContent="flex-start"
         alignItems="center"
-        w="55%"
+        h={["fit-content", "fit-content", "520px"]}
+        w={["100%", "100%", "55%"]}
       >
         <Flex
           w="100%"
@@ -73,7 +92,14 @@ export const QuickScanResultContainer: React.FC<{
             flexDir={["column", "column", "row"]}
           >
             <Image
-              src={`${assetsUrl}blockscan/${scanReport.contract_platform}.svg`}
+              src={`${assetsUrl}${
+                contractChain[
+                  getContractBlockchainId(
+                    scanReport.contract_platform || "",
+                    scanReport.contract_chain || ""
+                  )
+                ].logoUrl
+              }.svg`}
               height="40px"
               width="40px"
             />
@@ -81,11 +107,17 @@ export const QuickScanResultContainer: React.FC<{
           <VStack
             ml={5}
             alignItems={["center", "center", "flex-start"]}
-            w="calc(100% - 60px)"
+            w={["100%", "100%", "calc(100% - 60px)"]}
             spacing={1}
             textAlign={["center", "center", "left"]}
           >
-            <Text color="white" fontWeight={600} fontSize="lg">
+            <Text
+              w="100%"
+              overflowWrap="break-word"
+              color="white"
+              fontWeight={600}
+              fontSize="lg"
+            >
               {scanReport.contract_address}
             </Text>
             <Flex
@@ -100,7 +132,16 @@ export const QuickScanResultContainer: React.FC<{
                 fontWeight={300}
                 fontSize="md"
               >
-                {scanReport.contract_platform?.toUpperCase()} {"asdkj"}
+                {contractChain[
+                  getContractBlockchainId(
+                    scanReport.contract_platform || "",
+                    scanReport.contract_chain || ""
+                  )
+                ].blockchainName.toUpperCase()}{" "}
+                {`(${getContractChainLabel(
+                  scanReport.contract_platform || "",
+                  scanReport.contract_chain || ""
+                )})`}
               </Text>
               <Divider
                 mx={5}
@@ -130,7 +171,12 @@ export const QuickScanResultContainer: React.FC<{
           alignItems="center"
           flexDir={["column", "column", "row"]}
         >
-          <HStack bgColor="#272727" w="32%" borderRadius={5} p={3}>
+          <HStack
+            bgColor="#272727"
+            w={["100%", "100%", "32%"]}
+            borderRadius={5}
+            p={3}
+          >
             <Flex
               padding={2}
               bgColor="#383838"
@@ -154,7 +200,13 @@ export const QuickScanResultContainer: React.FC<{
               </HStack>
             </VStack>
           </HStack>
-          <HStack bgColor="#272727" w="32%" borderRadius={5} p={3}>
+          <HStack
+            bgColor="#272727"
+            w={["100%", "100%", "32%"]}
+            mt={[5, 5, 0]}
+            borderRadius={5}
+            p={3}
+          >
             <Flex
               padding={2}
               bgColor="#383838"
@@ -173,7 +225,13 @@ export const QuickScanResultContainer: React.FC<{
               </Text>
             </VStack>
           </HStack>
-          <HStack bgColor="#272727" w="32%" borderRadius={5} p={3}>
+          <HStack
+            bgColor="#272727"
+            w={["100%", "100%", "32%"]}
+            mt={[5, 5, 0]}
+            borderRadius={5}
+            p={3}
+          >
             <Flex
               padding={2}
               bgColor="#383838"
@@ -235,7 +293,168 @@ export const QuickScanResultContainer: React.FC<{
             </VStack>
           </Flex>
         </Box>
+        <HStack
+          w="100%"
+          justifyContent="space-between"
+          alignItems="center"
+          bgColor="#272727"
+          border={`1px dashed ${
+            scanReport.is_approved ? "#52FF00" : "#8D8D8D"
+          }`}
+          p={5}
+          borderRadius={10}
+        >
+          <Image
+            src={`${assetsUrl}quickscan/ss_quickscan_report${
+              scanReport.is_approved ? "" : "_not"
+            }_approved.svg`}
+            height="56px"
+            width="56px"
+          />
+          <Text
+            textAlign="left"
+            color={scanReport.is_approved ? "#52FF00" : "#8D8D8D"}
+          >
+            This audit report has been verified by the SolidityScan team. To
+            learn more about our published reports.{" "}
+            <span style={{ color: "white", textDecoration: "underline" }}>
+              click here.
+            </span>
+          </Text>
+        </HStack>
       </VStack>
+      <Flex
+        w={["100%", "100%", "40%"]}
+        bgColor="#222222"
+        borderRadius={10}
+        padding={5}
+        flexDir={["column", "column", "row"]}
+        alignItems={"center"}
+        justifyContent={["flex-start", "flex-start", "space-between"]}
+        h={["fit-content", "fit-content", "520px"]}
+      >
+        <VStack
+          w={[
+            "100%",
+            "100%",
+            "calc(100% - 150px)",
+            "calc(100% - 180px)",
+            "calc(100% - 220px)",
+          ]}
+          alignItems="center"
+          justifyContent="center"
+          h={["fit-content", "fit-content", "100%"]}
+          spacing={10}
+        >
+          <Box
+            w={"330px"}
+            display="flex"
+            justifyContent="center"
+            alignItems={"center"}
+            h="330px"
+            position={"relative"}
+          >
+            {scanReport.multi_file_scan_summary.issues_count === 0 ||
+            vulnerabilityCount === 0 ? (
+              <Flex
+                flexDir="column"
+                justifyContent="center"
+                alignItems="center"
+              >
+                <Image src={`${assetsUrl}common/fixedIssueIcon.svg`} />
+                <Text> No Bugs Found </Text>
+              </Flex>
+            ) : (
+              <PieChart
+                data={pieData(
+                  scanReport.multi_file_scan_summary.issue_severity_distribution
+                    .critical,
+                  scanReport.multi_file_scan_summary.issue_severity_distribution
+                    .high,
+                  scanReport.multi_file_scan_summary.issue_severity_distribution
+                    .medium,
+                  scanReport.multi_file_scan_summary.issue_severity_distribution
+                    .low,
+                  scanReport.multi_file_scan_summary.issue_severity_distribution
+                    .informational,
+                  scanReport.multi_file_scan_summary.issue_severity_distribution
+                    .gas
+                )}
+                page={"quickscan"}
+              />
+            )}
+            <Flex position={"absolute"} flexDir={"column"}>
+              <Heading color="white" fontWeight={900}>
+                {scanReport.multi_file_scan_summary.issue_severity_distribution
+                  .critical +
+                  scanReport.multi_file_scan_summary.issue_severity_distribution
+                    .high +
+                  scanReport.multi_file_scan_summary.issue_severity_distribution
+                    .medium +
+                  scanReport.multi_file_scan_summary.issue_severity_distribution
+                    .low +
+                  scanReport.multi_file_scan_summary.issue_severity_distribution
+                    .informational +
+                  scanReport.multi_file_scan_summary.issue_severity_distribution
+                    .gas}
+              </Heading>
+              <Text color="white">
+                Total Vulnerabilities <br /> found
+              </Text>
+            </Flex>
+          </Box>
+          <Button
+            variant="brand"
+            w={"100%"}
+            maxW={"300px"}
+            onClick={() => history.push("/signin")}
+          >
+            View detailed Result
+          </Button>
+        </VStack>
+        <Flex
+          w={["100%", "100%", "120px", "150px", "180px"]}
+          justifyContent="flex-start"
+          alignItems="flex-start"
+          flexDirection="row"
+          flexWrap="wrap"
+          columnGap={5}
+          rowGap={3}
+          mt={[5, 10, 0]}
+        >
+          {severityArrayInOrder.map((item) => (
+            <VStack
+              w={["45%", "30%", "100%"]}
+              h="fit-content"
+              px={3}
+              py={2}
+              bgColor={"#3E3E3E"}
+              border="1px solid #3E3E3E"
+              spacing={0}
+              borderRadius={5}
+              alignItems="flex-start"
+            >
+              <HStack>
+                <Divider
+                  h={3}
+                  orientation="vertical"
+                  borderColor={item.value}
+                  borderWidth={2}
+                />{" "}
+                <Text color="#8A94A6" fontSize="sm">
+                  {item.shortForm}
+                </Text>
+              </HStack>
+              <Text color="white" fontSize="lg" fontWeight={700}>
+                {
+                  scanReport.multi_file_scan_summary
+                    .issue_severity_distribution[item.value]
+                }
+              </Text>
+            </VStack>
+          ))}
+        </Flex>
+      </Flex>
     </Flex>
   );
 };
