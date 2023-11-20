@@ -10,7 +10,7 @@ import {
 } from "@chakra-ui/react";
 import { SeverityIcon } from "components/icons";
 import React from "react";
-import { formattedDate } from "common/functions";
+import { formattedDateInUTC } from "common/functions";
 import { getAssetsURL } from "helpers/helperFunction";
 import { attackMethodColor } from "common/values";
 
@@ -86,7 +86,9 @@ const HackCard: React.FC<{ hackData: any }> = ({ hackData }) => {
         w="100%"
         height="fit-content"
       >
-        <Text color="#78909C">{formattedDate(new Date(hackData.date))}</Text>
+        <Text color="#78909C">
+          {formattedDateInUTC(new Date(hackData.date))}
+        </Text>
         {hackData.reference && hackData.reference !== "-" && (
           <Link
             variant="text"
