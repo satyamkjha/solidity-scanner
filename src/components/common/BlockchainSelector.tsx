@@ -697,14 +697,25 @@ const ChainSelector: React.FC<{
       alignItems={["flex-start", "flex-start", "center"]}
       flexDir={["column", "column", "row"]}
       color="white"
+      cursor={"pointer"}
       borderRadius={[10, 10, 0]}
       background={
         platform === platformValue
           ? view === "quickscan"
             ? "#272727"
-            : "#f6f6f6"
+            : "#eeeded"
           : "transparent"
       }
+      _hover={{
+        background:
+          view === "quickscan"
+            ? platform === platformValue
+              ? "#272727"
+              : "#2c2c2c"
+            : platform === platformValue
+            ? "#eeeded"
+            : "#f6f6f6",
+      }}
       onClick={() => setPlatform(platformValue)}
       px={[3, 3, 7]}
       py={5}
