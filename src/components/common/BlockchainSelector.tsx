@@ -644,7 +644,7 @@ export const BlockchainSelector: React.FC<{
         cursor="pointer"
       >
         <Image
-          src={`${assetsUrl}common/reset-button-img.svg`}
+          src={`${assetsUrl}common/reset-button-${view}.svg`}
           height="40px"
           width="40px"
         />
