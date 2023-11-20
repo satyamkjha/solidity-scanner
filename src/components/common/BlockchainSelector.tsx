@@ -97,7 +97,7 @@ export const BlockchainSelector: React.FC<{
   const popoverRef = useRef<HTMLElement>(null);
 
   return (
-    <Popover placement={"bottom"}>
+    <Popover placement={view === "quickscan" ? "bottom" : "bottom-start"}>
       <PopoverTrigger>
         <HStack
           h="80px"
@@ -157,7 +157,7 @@ export const BlockchainSelector: React.FC<{
             </>
           ) : (
             <>
-              <Text color="gray.200">Select Blockchain</Text>
+              <Text color="gray.400">Select Blockchain</Text>
               <ChevronDownIcon />
             </>
           )}
@@ -174,7 +174,7 @@ export const BlockchainSelector: React.FC<{
         }}
         w="90vw"
         h={["fit-content", "fit-content", "37vh", "48vh", "50vh"]}
-        maxH={["90vh", "90vh", "400px", "400px", "430px"]}
+        maxH={["90vh", "90vh", "400px", "400px", "480px"]}
         maxW="1055px"
         display="flex"
         py={5}
@@ -310,7 +310,7 @@ export const BlockchainSelector: React.FC<{
               flexDir={["row", "row", "column"]}
               w={["100%", "100%", "120px"]}
               overflowY={["auto", "auto", "scroll"]}
-              overflowX={["scroll", "scroll", "auto"]}
+              overflowX={["scroll", "scroll", "hidden"]}
               h={["110px", "110px", "100%"]}
             >
               <Flex
@@ -332,6 +332,7 @@ export const BlockchainSelector: React.FC<{
                   backgroundColor={view === "quickscan" ? "#404040" : "#F3F3F3"}
                   justifyContent="center"
                   alignItems="center"
+                  transition={"all 0.2s ease-in"}
                   onClick={() => {
                     setBlockchain(firstBlockChain);
                     setPlatform("");
@@ -346,8 +347,8 @@ export const BlockchainSelector: React.FC<{
                   }
                 >
                   <Image
-                    height={firstBlockChain === blockchain ? "70px" : "50px"}
-                    width={firstBlockChain === blockchain ? "70px" : "50px"}
+                    height={firstBlockChain === blockchain ? "60px" : "50px"}
+                    width={firstBlockChain === blockchain ? "60px" : "50px"}
                     src={`${assetsUrl}${
                       firstBlockChain === "buildbear"
                         ? `blockscan/buildbear-${
@@ -367,6 +368,7 @@ export const BlockchainSelector: React.FC<{
                         width={item === blockchain ? "100px" : "80px"}
                         padding="10px"
                         borderRadius={item === blockchain ? "50px" : "40px"}
+                        transition={"all 0.2s ease-in"}
                         backgroundColor={
                           view === "quickscan" ? "#404040" : "#F3F3F3"
                         }
@@ -383,8 +385,8 @@ export const BlockchainSelector: React.FC<{
                         }
                       >
                         <Image
-                          height={item === blockchain ? "70px" : "50px"}
-                          width={item === blockchain ? "70px" : "50px"}
+                          height={item === blockchain ? "60px" : "50px"}
+                          width={item === blockchain ? "60px" : "50px"}
                           src={`${assetsUrl}${contractChain[item].logoUrl}.svg`}
                         />
                       </Flex>
@@ -401,10 +403,10 @@ export const BlockchainSelector: React.FC<{
                     backgroundColor={
                       view === "quickscan" ? "#404040" : "#F3F3F3"
                     }
+                    transition={"all 0.2s ease-in"}
                     justifyContent="center"
                     alignItems="center"
                     cursor="pointer"
-                    transition={"0.5s height width"}
                     onClick={() => {
                       setBlockchain("buildbear");
                       setPlatform("");
@@ -415,8 +417,8 @@ export const BlockchainSelector: React.FC<{
                     }
                   >
                     <Image
-                      height={"50px"}
-                      width={"50px"}
+                      height={"buildbear" === blockchain ? "60px" : "50px"}
+                      width={"buildbear" === blockchain ? "60px" : "50px"}
                       src={`${assetsUrl}blockscan/buildbear-${
                         view === "quickscan" ? "white" : "black"
                       }.svg`}
@@ -427,12 +429,12 @@ export const BlockchainSelector: React.FC<{
             </Flex>
             <Divider
               display={["none", "none", "block"]}
-              borderColor={view === "quickscan" ? "#424242" : "#8A94A6"}
+              borderColor={view === "quickscan" ? "#424242" : "#8A94A680"}
               orientation="vertical"
             />
             <Divider
               display={["block", "block", "none"]}
-              borderColor={view === "quickscan" ? "#424242" : "#8A94A6"}
+              borderColor={view === "quickscan" ? "#424242" : "#8A94A680"}
             />
 
             <Flex
