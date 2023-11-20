@@ -1276,7 +1276,7 @@ export const contractChain: {
     platforms: {
       cronos: {
         label: "Cronos Chain Explorer",
-        iconUrl: "blockscan/crono",
+        iconUrl: "blockscan/cronos",
         chains: [
           {
             value: "mainnet",

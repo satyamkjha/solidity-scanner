@@ -50,12 +50,12 @@ export const BlockchainSelector: React.FC<{
 
   const assetsUrl = getAssetsURL();
 
-  useEffect(() => {
-    if (blockchain !== "" && blockchain !== "buildbear") {
-      setPlatform(Object.keys(contractChain[blockchain].platforms)[0]);
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [blockchain]);
+  // useEffect(() => {
+  //   if (blockchain !== "" && blockchain !== "buildbear") {
+  //     setPlatform(Object.keys(contractChain[blockchain].platforms)[0]);
+  //   }
+  //   // eslint-disable-next-line react-hooks/exhaustive-deps
+  // }, [blockchain]);
 
   useEffect(() => {
     if (showTransition) {
@@ -334,6 +334,8 @@ export const BlockchainSelector: React.FC<{
                   alignItems="center"
                   onClick={() => {
                     setBlockchain(firstBlockChain);
+                    setPlatform("");
+                    setChain(null);
                   }}
                   cursor="pointer"
                   ref={currectBlockChainRef}
@@ -347,7 +349,7 @@ export const BlockchainSelector: React.FC<{
                     height={firstBlockChain === blockchain ? "70px" : "50px"}
                     width={firstBlockChain === blockchain ? "70px" : "50px"}
                     src={`${assetsUrl}${
-                      blockchain === "buildbear"
+                      firstBlockChain === "buildbear"
                         ? `blockscan/buildbear-${
                             view === "quickscan" ? "white" : "black"
                           }`
@@ -373,6 +375,8 @@ export const BlockchainSelector: React.FC<{
                         cursor="pointer"
                         onClick={() => {
                           setBlockchain(item);
+                          setPlatform("");
+                          setChain(null);
                         }}
                         border={
                           item === blockchain ? "3px solid #52FF00" : "none"
@@ -386,7 +390,7 @@ export const BlockchainSelector: React.FC<{
                       </Flex>
                     );
                 })}
-                {blockchain !== "buildbear" && (
+                {firstBlockChain !== "buildbear" && (
                   <Flex
                     my={[0, 0, 2]}
                     mx={[2, 2, 2]}
@@ -403,6 +407,8 @@ export const BlockchainSelector: React.FC<{
                     transition={"0.5s height width"}
                     onClick={() => {
                       setBlockchain("buildbear");
+                      setPlatform("");
+                      setChain(null);
                     }}
                     border={
                       "buildbear" === blockchain ? "2px solid #52FF00" : "none"
@@ -668,7 +674,11 @@ const ChainSelector: React.FC<{
     icon: string;
     isDisabled: boolean;
     website: string;
-  }>(platformData.chains[0]);
+  }>();
+
+  useEffect(() => {
+    setCurrentChain(platformData.chains[0]);
+  }, []);
 
   return (
     <Flex
@@ -707,14 +717,14 @@ const ChainSelector: React.FC<{
           </Text>
           <Text
             cursor="pointer"
-            onClick={() => window.open(currentChain.website, "_blank")}
+            onClick={() => window.open(currentChain?.website, "_blank")}
             w="100%"
             textDecoration="underline"
             color="#8A94A6"
             fontWeight={400}
             fontSize="sm"
           >
-            {currentChain.website}
+            {currentChain?.website}
           </Text>
         </VStack>
       </HStack>
