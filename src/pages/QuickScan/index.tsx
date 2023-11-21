@@ -12,6 +12,7 @@ import {
   Stack,
   VStack,
   Image,
+  CloseButton,
 } from "@chakra-ui/react";
 
 import { SeverityIcon } from "components/icons";
@@ -53,6 +54,7 @@ const QuickScan: React.FC = () => {
 
   useEffect(() => {
     if (blockAddress && blockChain && blockPlatform) {
+      setIsLoading(true);
       runQuickScan(blockAddress, blockPlatform, blockChain, ref);
     }
 
@@ -76,6 +78,7 @@ const QuickScan: React.FC = () => {
         isClosable: true,
         position: "bottom",
       });
+      setIsLoading(false);
       return;
     }
     const req = {
@@ -130,25 +133,6 @@ const QuickScan: React.FC = () => {
       });
   };
 
-  // useEffect(() => {
-  //   if (scanReport !== null) {
-  //     setTimeout(() => {
-  //       setIsLoading(false);
-  //     }, 1000);
-  //     scrollToElement();
-  //   }
-  // }, [scanReport]);
-
-  // const scrollToElement = () => {
-  //   if (elementRef.current) {
-  //     elementRef.current.scrollIntoView({
-  //       behavior: "smooth",
-  //       block: "start",
-  //       inline: "center",
-  //     });
-  //   }
-  // };
-
   return (
     <Flex
       as="section"
@@ -182,7 +166,10 @@ const QuickScan: React.FC = () => {
             isLoading={isLoading}
           />
         ) : (
-          <QuickScanResultContainer scanReport={scanReport} />
+          <HStack justifyContent="center" alignItems="flex-start">
+            <QuickScanResultContainer scanReport={scanReport} />
+            <CloseButton onClick={() => setScanReport(null)} />
+          </HStack>
         )}
       </Flex>
 

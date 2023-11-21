@@ -244,6 +244,15 @@ export const getContractBlockchainId = (platform: string, chain: string) => {
   return "NA";
 };
 
+export const getContractBlockChainLogoUrl = (
+  platform: string,
+  chain: string
+) => {
+  if (platform === "buildbear") return "blockscan/buildbear";
+
+  return contractChain[getContractBlockchainId(platform, chain)].logoUrl;
+};
+
 export const getTrimmedScanMessage = (scan_status: string) => {
   if (
     scan_status.includes("Download Failed") ||

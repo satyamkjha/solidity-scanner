@@ -118,7 +118,7 @@ const AddProjectBox: React.FC<{ profileData: Profile }> = ({ profileData }) => {
         textAlign={changeView ? "left" : "center"}
         alignItems="flex-start"
         mb={changeView ? 0 : 5}
-        w={changeView ? "60%" : "100%"}
+        w={changeView ? "calc(100% - 220px)" : "100%"}
       >
         <Text
           sx={{
@@ -145,7 +145,7 @@ const AddProjectBox: React.FC<{ profileData: Profile }> = ({ profileData }) => {
           as={Button}
           variant="brand"
           leftIcon={<AddIcon />}
-          minW={"170px"}
+          w={"170px"}
         >
           Add Project
         </MenuButton>

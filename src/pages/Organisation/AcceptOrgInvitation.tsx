@@ -346,12 +346,16 @@ const AcceptOrgInvitation: React.FC = () => {
                 <Heading fontSize="lg">
                   Invitation Link not found or expired
                 </Heading>
-                <Text w={["200px", "250px", "500px"]}>
-                  Oops! It seems that the invitation link you attempted to
-                  access has expired, or your account may have been removed from
-                  the organization. To resolve this issue, kindly get in touch
-                  with the organization administrator or reach out to our
-                  support team for assistance.
+                <Text w={["200px", "250px", "500px"]} textAlign="center">
+                  Oops!
+                  <br />
+                  It seems that the invitation link you attempted to access has
+                  expired, or your account may have been removed from the
+                  organization.
+                  <br />
+                  To resolve this issue, kindly get in touch with the
+                  organization administrator or reach out to our support team
+                  for assistance.
                 </Text>
               </VStack>
             )}

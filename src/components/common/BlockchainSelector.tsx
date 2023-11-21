@@ -11,6 +11,7 @@ import {
   Divider,
   Input,
   useDisclosure,
+  useMediaQuery,
 } from "@chakra-ui/react";
 import {
   ChevronDownIcon,
@@ -25,9 +26,11 @@ import FormatOptionLabelWithImage from "components/FormatOptionLabelWithImage";
 import { FaPen } from "react-icons/fa";
 import RadioButton from "components/styled-components/RadioButton";
 import { BlockchainComp } from "./BlockchainComp";
+import { ChainSelector } from "./ChainSelector";
 
 export const BlockchainSelector: React.FC<{
-  view: "dark" | "light";
+  theme: "dark" | "light";
+  view: "quickscan" | "homepage";
   menuPlacement: "bottom" | "bottom-start";
   onSelectorClose: any;
   platform: string;
@@ -51,7 +54,7 @@ export const BlockchainSelector: React.FC<{
     } | null>
   >;
 }> = ({
-  view,
+  theme,
   onSelectorClose,
   platform,
   setPlatform,
@@ -62,6 +65,7 @@ export const BlockchainSelector: React.FC<{
   blockchainSelectorError,
   setBlockchainSelectorError,
   menuPlacement,
+  view,
 }) => {
   const [elementPosition, setElementPosition] = useState<any>({});
   const [blockchain, setBlockchain] = useState("");
@@ -142,6 +146,8 @@ export const BlockchainSelector: React.FC<{
   const currectBlockChainRef = useRef<HTMLDivElement>(null);
   const popoverRef = useRef<HTMLElement>(null);
 
+  const [isLargerThan1350] = useMediaQuery("(min-width: 1350px)");
+
   return (
     <HStack
       borderRadius={15}
@@ -149,14 +155,14 @@ export const BlockchainSelector: React.FC<{
       w="90vw"
       pr={"10px"}
       maxW="600px"
-      bgColor={view === "dark" ? "transparent" : "#ECECEC"}
+      bgColor={theme === "dark" ? "transparent" : "#ECECEC"}
       justifyContent="space-between"
     >
       <Popover
         isOpen={isOpen}
         onOpen={onOpen}
         onClose={onClose}
-        placement={menuPlacement}
+        placement={isLargerThan1350 ? menuPlacement : "bottom-start"}
       >
         <PopoverTrigger>
           <HStack
@@ -164,7 +170,7 @@ export const BlockchainSelector: React.FC<{
             w="calc(100% - 80px)"
             justifyContent="space-between"
             p={5}
-            bgColor={view === "dark" ? "#272727C0" : "transparent"}
+            bgColor={theme === "dark" ? "#272727" : "transparent"}
             borderRadius={15}
             border={
               blockchainSelectorError !== "" ? "1px solid #960D00" : "none"
@@ -181,7 +187,7 @@ export const BlockchainSelector: React.FC<{
                     src={
                       blockchain === "buildbear"
                         ? `${assetsUrl}blockscan/buildbear-${
-                            view === "dark" ? "white" : "black"
+                            theme === "dark" ? "white" : "black"
                           }.svg`
                         : `${assetsUrl}${contractChain[blockchain].logoUrl}.svg`
                     }
@@ -191,7 +197,7 @@ export const BlockchainSelector: React.FC<{
                   <VStack textAlign="left" spacing={1}>
                     <Text
                       w="100%"
-                      color={view === "dark" ? "white" : "gray.600"}
+                      color={theme === "dark" ? "white" : "gray.600"}
                       fontWeight={600}
                       fontSize="md"
                     >
@@ -208,6 +214,15 @@ export const BlockchainSelector: React.FC<{
                       color="#8A94A6"
                       fontWeight={400}
                       fontSize="sm"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        window.open(
+                          blockchain === "buildbear"
+                            ? "https://www.buildbear.io/"
+                            : chain?.website,
+                          "_blank"
+                        );
+                      }}
                     >
                       {blockchain === "buildbear"
                         ? "https://www.buildbear.io/"
@@ -216,12 +231,12 @@ export const BlockchainSelector: React.FC<{
                     </Text>
                   </VStack>
                 </HStack>
-                <FaPen />
+                <FaPen cursor="pointer" />
               </>
             ) : (
               <>
                 <Text color="gray.400">Select Blockchain</Text>
-                {view === "dark" && <ChevronDownIcon />}
+                {theme === "dark" && <ChevronDownIcon />}
               </>
             )}
           </HStack>
@@ -229,25 +244,28 @@ export const BlockchainSelector: React.FC<{
         <PopoverContent
           ref={popoverRef}
           color="white"
-          bg={view === "dark" ? "#323232" : "#FFF"}
+          bg={theme === "dark" ? "#323232" : "#FFF"}
           borderRadius={15}
           border="none"
           sx={{
             boxShadow: "0px 4px 24px rgba(0, 0, 0, 0.2) !important",
           }}
-          w="90vw"
+          w={
+            view === "quickscan"
+              ? ["350px", "480px", "500px", "770px", "1020px"]
+              : ["350px", "480px", "500px", "650px"]
+          }
           h={["fit-content", "fit-content", "37vh", "48vh", "50vh"]}
-          maxH={["90vh", "90vh", "400px", "400px", "480px"]}
-          maxW="1055px"
+          maxH={["60vh", "60vh", "400px", "400px", "480px"]}
           display="flex"
           py={5}
           px={[2, 3, 5]}
           flexWrap="wrap"
           flexDir="row"
           alignItems="flex-start"
-          justifyContent="center"
+          justifyContent="flex"
           rowGap={5}
-          columnGap={[2, 3, 5]}
+          columnGap={[2, 3]}
           overflowY="scroll"
         >
           {blockchain === "" ? (
@@ -255,7 +273,7 @@ export const BlockchainSelector: React.FC<{
               {Object.keys(contractChain).map((item, index) => (
                 <VStack
                   key={index}
-                  w={["100px", "100px", "120px"]}
+                  w={["100px", "100px", "100px", "110px"]}
                   justifyContent="center"
                   alignItems="center"
                   spacing={3}
@@ -269,7 +287,7 @@ export const BlockchainSelector: React.FC<{
                     width="80px"
                     padding="10px"
                     borderRadius="40px"
-                    backgroundColor={view === "dark" ? "#404040" : "#F3F3F3"}
+                    backgroundColor={theme === "dark" ? "#404040" : "#F3F3F3"}
                     justifyContent="center"
                     alignItems="center"
                     animation={`zoomInAnimation ${
@@ -288,7 +306,7 @@ export const BlockchainSelector: React.FC<{
                 </VStack>
               ))}
               <VStack
-                w={["100px", "100px", "120px"]}
+                w={["100px", "100px", "100px", "110px"]}
                 justifyContent="center"
                 alignItems="center"
                 spacing={3}
@@ -302,7 +320,7 @@ export const BlockchainSelector: React.FC<{
                   width="80px"
                   padding="10px"
                   borderRadius="40px"
-                  backgroundColor={view === "dark" ? "#404040" : "#F3F3F3"}
+                  backgroundColor={theme === "dark" ? "#404040" : "#F3F3F3"}
                   justifyContent="center"
                   alignItems="center"
                 >
@@ -310,7 +328,7 @@ export const BlockchainSelector: React.FC<{
                     height="50px"
                     width="50px"
                     src={`${assetsUrl}blockscan/buildbear-${
-                      view === "dark" ? "white" : "black"
+                      theme === "dark" ? "white" : "black"
                     }.svg`}
                   />
                 </Flex>
@@ -327,7 +345,7 @@ export const BlockchainSelector: React.FC<{
               width={showTransition ? "80px" : "100px"}
               padding="10px"
               borderRadius={"50px"}
-              backgroundColor={view === "dark" ? "#404040" : "#F3F3F3"}
+              backgroundColor={theme === "dark" ? "#404040" : "#F3F3F3"}
               justifyContent="center"
               alignItems="center"
               cursor="pointer"
@@ -350,7 +368,7 @@ export const BlockchainSelector: React.FC<{
                 src={
                   blockchain === "buildbear"
                     ? `${assetsUrl}blockscan/buildbear-${
-                        view === "dark" ? "white" : "black"
+                        theme === "dark" ? "white" : "black"
                       }.svg`
                     : `${assetsUrl}${contractChain[blockchain].logoUrl}.svg`
                 }
@@ -380,7 +398,7 @@ export const BlockchainSelector: React.FC<{
                   position={"relative"}
                 >
                   <BlockchainComp
-                    view={view}
+                    theme={theme}
                     blockchain={firstBlockChain}
                     selectedChain={blockchain}
                     onBlockchainSelect={onBlockchainSelect}
@@ -392,7 +410,7 @@ export const BlockchainSelector: React.FC<{
                         <BlockchainComp
                           key={index}
                           index={index}
-                          view={view}
+                          theme={theme}
                           blockchain={item}
                           selectedChain={blockchain}
                           onBlockchainSelect={onBlockchainSelect}
@@ -401,7 +419,7 @@ export const BlockchainSelector: React.FC<{
                   })}
                   {firstBlockChain !== "buildbear" && (
                     <BlockchainComp
-                      view={view}
+                      theme={theme}
                       blockchain={"buildbear"}
                       selectedChain={blockchain}
                       onBlockchainSelect={onBlockchainSelect}
@@ -411,12 +429,12 @@ export const BlockchainSelector: React.FC<{
               </Flex>
               <Divider
                 display={["none", "none", "block"]}
-                borderColor={view === "dark" ? "#424242" : "#8A94A680"}
+                borderColor={theme === "dark" ? "#424242" : "#8A94A680"}
                 orientation="vertical"
               />
               <Divider
                 display={["block", "block", "none"]}
-                borderColor={view === "dark" ? "#424242" : "#8A94A680"}
+                borderColor={theme === "dark" ? "#424242" : "#8A94A680"}
               />
 
               <Flex
@@ -445,7 +463,7 @@ export const BlockchainSelector: React.FC<{
                   >
                     <HStack w="100%" justifyContent={"flex-start"}>
                       <Text
-                        color={view === "dark" ? "white" : "gray.600"}
+                        color={theme === "dark" ? "white" : "gray.600"}
                         fontWeight={600}
                         fontSize="md"
                       >
@@ -495,7 +513,7 @@ export const BlockchainSelector: React.FC<{
                     ml={"auto"}
                     display={["none", "none", "block"]}
                     cursor="pointer"
-                    color={view === "dark" ? "white" : "gray.600"}
+                    color={theme === "dark" ? "white" : "gray.600"}
                     onClick={() => {
                       setBlockchain("");
                       setFirstBlockchain("");
@@ -509,7 +527,7 @@ export const BlockchainSelector: React.FC<{
                       my={5}
                       ml={5}
                       w="100%"
-                      color={view === "dark" ? "white" : "gray.600"}
+                      color={theme === "dark" ? "white" : "gray.600"}
                       fontWeight={400}
                       fontSize="sm"
                     >
@@ -521,10 +539,10 @@ export const BlockchainSelector: React.FC<{
                       placeholder="Node ID"
                       variant="brand"
                       size="lg"
-                      color={view === "dark" ? "white" : "gray.600"}
+                      color={theme === "dark" ? "white" : "gray.600"}
                       height={50}
                       mt={0}
-                      borderColor={view === "dark" ? "white" : "gray.200"}
+                      borderColor={theme === "dark" ? "white" : "gray.200"}
                       backgroundColor="transparent"
                       borderRadius={15}
                       width={"90%"}
@@ -540,7 +558,8 @@ export const BlockchainSelector: React.FC<{
                     (platformValue, index) => (
                       <ChainSelector
                         key={`${platformValue}_${index}`}
-                        view={view}
+                        index={index}
+                        theme={theme}
                         onClose={onBlockChainClose}
                         platform={platform}
                         platformValue={platformValue}
@@ -565,7 +584,7 @@ export const BlockchainSelector: React.FC<{
         p="10px"
         borderRadius="40px"
         filter="drop-shadow(0px 2px 1px rgba(0, 0, 0, 0.25))"
-        bgColor={view === "dark" ? "#272727C0" : "#E1E1E1"}
+        bgColor={theme === "dark" ? "#272727C0" : "#E1E1E1"}
         onClick={() => {
           onOpen();
           setBlockchain("");
@@ -575,225 +594,11 @@ export const BlockchainSelector: React.FC<{
         cursor="pointer"
       >
         <Image
-          src={`${assetsUrl}common/reset-button-${view}.svg`}
+          src={`${assetsUrl}common/reset-button-${theme}.svg`}
           height="40px"
           width="40px"
         />
       </Flex>
     </HStack>
-  );
-};
-
-const ChainSelector: React.FC<{
-  view: "dark" | "light";
-  platform: string;
-  onClose: () => void;
-  setPlatform: React.Dispatch<React.SetStateAction<string>>;
-  chain: {
-    label: string;
-    value: string;
-    icon: string;
-    website: string;
-  } | null;
-  setChain: React.Dispatch<
-    React.SetStateAction<{
-      label: string;
-      value: string;
-      icon: string;
-      website: string;
-    } | null>
-  >;
-  platformValue: string;
-  platformData: {
-    label: string;
-    iconUrl: string;
-    chains: {
-      value: string;
-      label: string;
-      icon: string;
-      isDisabled: boolean;
-      website: string;
-    }[];
-  };
-}> = ({
-  view,
-  platform,
-  setPlatform,
-  chain,
-  setChain,
-  platformData,
-  platformValue,
-  onClose,
-}) => {
-  const assetsUrl = getAssetsURL();
-
-  const customStylesChain: StylesConfig<
-    PropsWithChildren<{
-      value: string;
-      label: string;
-      icon: string;
-    }>,
-    boolean,
-    GroupBase<
-      PropsWithChildren<{
-        value: string;
-        label: string;
-        icon: string;
-      }>
-    >
-  > = {
-    option: (provided: any, state: any) => ({
-      ...provided,
-      borderBottom: "1px solid #f3f3f3",
-      backgroundColor: state.isSelected
-        ? "#FFFFFF"
-        : state.isFocused
-        ? "#E6E6E6"
-        : "#FFFFFF",
-      color: "#000000",
-    }),
-    menu: (provided: any, state: any) => ({
-      ...provided,
-      color: "#FFFFFF",
-      borderRadius: 10,
-      border: "0px solid #ffffff",
-      overflowY: "hidden",
-      width: "250px",
-      position: "absolute",
-      zIndex: 100,
-    }),
-    control: (state: any) => ({
-      // none of react-select's styles are passed to <Control />
-      display: "flex",
-      flexDirection: "row",
-      backgroundColor: "transparent",
-      width: "100%",
-      padding: 3,
-      color: "#FFFFFF",
-      maxWidth: "500px",
-      borderTopLeftRadius: 0,
-      borderBottomLeftRadius: 0,
-      borderRadius: 15,
-      margin: 0,
-      fontSize: 15,
-      border:
-        view === "dark"
-          ? state.isDisabled
-            ? "1px solid #686d75"
-            : "1px solid #FFFFFF"
-          : state.isDisabled
-          ? "1px solid #8A94A680"
-          : "1px solid #8A94A6",
-    }),
-    container: (provided: any, state: any) => ({
-      ...provided,
-      width: "200px",
-      maxWidth: "500px",
-      marginRight: "30px",
-    }),
-    singleValue: (provided: any, state: any) => ({
-      ...provided,
-      opacity: state.isDisabled ? 0.3 : 1,
-      transition: "opacity 300ms",
-      color: view === "dark" ? "#FFFFFF" : "#000000",
-    }),
-  };
-
-  const [currentChain, setCurrentChain] = useState<{
-    value: string;
-    label: string;
-    icon: string;
-    isDisabled: boolean;
-    website: string;
-  } | null>();
-
-  useEffect(() => {
-    setCurrentChain(null);
-  }, [platformData]);
-
-  return (
-    <Flex
-      w="100%"
-      h="fit-content"
-      justifyContent={["flex-start", "flex-start", "space-between"]}
-      alignItems={["flex-start", "flex-start", "center"]}
-      flexDir={["column", "column", "row"]}
-      color="white"
-      cursor={"pointer"}
-      borderRadius={[10, 10, 0]}
-      background={
-        platform === platformValue
-          ? view === "dark"
-            ? "#272727"
-            : "#eeeded"
-          : "transparent"
-      }
-      _hover={{
-        background:
-          view === "dark"
-            ? platform === platformValue
-              ? "#272727"
-              : "#2c2c2c"
-            : platform === platformValue
-            ? "#eeeded"
-            : "#f6f6f6",
-      }}
-      onClick={() => setPlatform(platformValue)}
-      px={[3, 3, 7]}
-      py={5}
-    >
-      <HStack w="100%">
-        <Image
-          src={`${assetsUrl}${platformData.iconUrl}.svg`}
-          height="40px"
-          width="40px"
-        />
-        <VStack textAlign="left" w="85%" spacing={1} alignItems={"flex-start"}>
-          <Text
-            w="100%"
-            color={view === "dark" ? "white" : "gray.600"}
-            fontWeight={600}
-            fontSize="md"
-          >
-            {platformData.label}
-          </Text>
-          {currentChain?.website ? (
-            <Text
-              cursor="pointer"
-              onClick={() => window.open(currentChain?.website, "_blank")}
-              color="#8A94A6"
-              fontWeight={400}
-              fontSize="sm"
-            >
-              {currentChain?.website} <ExternalLinkIcon />
-            </Text>
-          ) : null}
-        </VStack>
-      </HStack>
-      <HStack
-        w={["100%", "100%", "fit-content"]}
-        justifyContent={["space-between", "space-between", "flex-end"]}
-        mt={[5, 5, 0]}
-      >
-        <Select
-          formatOptionLabel={FormatOptionLabelWithImage}
-          isSearchable={false}
-          isDisabled={platform !== platformValue}
-          options={platformData.chains}
-          value={currentChain}
-          menuPlacement="auto"
-          placeholder="Select Chain"
-          styles={customStylesChain}
-          onChange={(newValue: any) => {
-            if (newValue) {
-              setChain(newValue);
-              setCurrentChain(newValue);
-              onClose();
-            }
-          }}
-        />
-        <RadioButton isActive={platform === platformValue} />
-      </HStack>
-    </Flex>
   );
 };

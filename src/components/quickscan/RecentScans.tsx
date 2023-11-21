@@ -26,8 +26,12 @@ import { RecentQSItem, Pagination, Page } from "common/types";
 import { API_PATH } from "helpers/routeManager";
 import API from "helpers/api";
 import { useConfig } from "hooks/useConfig";
-import { getAssetsURL } from "helpers/helperFunction";
-import { blockScans } from "common/values";
+import {
+  getAssetsURL,
+  getContractBlockchainId,
+  getContractBlockChainLogoUrl,
+} from "helpers/helperFunction";
+import { blockScans, contractChain } from "common/values";
 import Loader from "components/styled-components/Loader";
 import QSApiBanner from "./QSApiBanner";
 
@@ -122,7 +126,7 @@ export default function RecentScans() {
             Security Score
           </Text>
           <Text fontWeight={600} textAlign={"left"} w={"20%"} fontSize="sm">
-            Blockscan
+            Blockchain
           </Text>
           <Text fontWeight={600} textAlign={"left"} w={"15%"} fontSize="sm">
             ThreatScore
@@ -203,7 +207,10 @@ export default function RecentScans() {
                         <Image
                           height={"20px"}
                           width={"20px"}
-                          src={`${assetsURL}blockscan/${item.contract_platform}.svg`}
+                          src={`${assetsURL}${getContractBlockChainLogoUrl(
+                            item.contract_platform,
+                            item.contract_chain
+                          )}.svg`}
                         />
                         <Tooltip label={blockScans[item.contract_platform]}>
                           <Text
@@ -212,7 +219,14 @@ export default function RecentScans() {
                             fontSize="sm"
                             isTruncated
                           >
-                            {blockScans[item.contract_platform]}
+                            {item.contract_platform === "buildbear"
+                              ? "Buildbear"
+                              : contractChain[
+                                  getContractBlockchainId(
+                                    item.contract_platform,
+                                    item.contract_chain
+                                  )
+                                ].blockchainName}
                           </Text>
                         </Tooltip>
                       </HStack>

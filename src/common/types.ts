@@ -523,6 +523,7 @@ export type RecentQSItem = {
   contract_address: string;
   contract_platform: string;
   contract_url: string;
+  contract_chain: string;
   is_report_approved: boolean;
   scanner_reference_url: string;
   score: string;
