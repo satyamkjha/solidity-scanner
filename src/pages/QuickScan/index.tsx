@@ -166,10 +166,19 @@ const QuickScan: React.FC = () => {
             isLoading={isLoading}
           />
         ) : (
-          <HStack justifyContent="center" alignItems="flex-start">
+          <VStack
+            w="90%"
+            maxW="1800px"
+            alignItems="center"
+            justify="flex-start"
+            mb={"150px"}
+          >
+            <CloseButton
+              alignSelf="flex-end"
+              onClick={() => setScanReport(null)}
+            />
             <QuickScanResultContainer scanReport={scanReport} />
-            <CloseButton onClick={() => setScanReport(null)} />
-          </HStack>
+          </VStack>
         )}
       </Flex>
 

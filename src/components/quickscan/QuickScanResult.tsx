@@ -62,14 +62,12 @@ export const QuickScanResultContainer: React.FC<{
 
   return (
     <Flex
-      w="90%"
-      maxW="1800px"
+      w="100%"
       h="fit-content"
       flexDir={["column", "column", "row"]}
       justifyContent={["flex-start", "flex-start", "space-between"]}
       alignItems="center"
       mt={20}
-      mb={"150px"}
     >
       <VStack
         spacing={5}

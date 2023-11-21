@@ -157,20 +157,13 @@ const QuickScanForm: React.FC<{
           "fit-content",
           "fit-content",
           "fit-content",
-          view === "landing" ? "100vh" : "92vh",
+          view === "landing" ? "100vh" : "90vh",
         ]}
         px={[0, 0, 10]}
         pt={6}
         pb={isDesktopView ? 20 : "50px"}
         textAlign="center"
       >
-        {playAnimation && !isDesktopView && (
-          <Lottie
-            animationData={ssIconAnimation}
-            style={styleObj}
-            loop={false}
-          />
-        )}
         <Heading
           w={["90%", "90%", "80%", "60%"]}
           color={view === "landing" ? "black" : "white"}
@@ -280,7 +273,7 @@ const QuickScanForm: React.FC<{
               color: view === "quickscan" ? "gray.400" : "gray.500",
             }}
             height={50}
-            mt={blockchainSelectorError === "" ? "70px" : "50px"}
+            mt={blockchainSelectorError === "" ? 14 : 10}
             borderColor={view === "quickscan" ? "gray.600" : "gray.200"}
             backgroundColor={view === "quickscan" ? "#272727" : "#FFFFFF"}
             borderRadius={15}
@@ -308,8 +301,8 @@ const QuickScanForm: React.FC<{
           isLoading={isLoading}
           loadingText="Scanning"
           spinner={<Loader color={"#3300FF"} size={20} />}
-          mt={isDesktopView ? "200px" : 10}
-          mb={isDesktopView ? 16 : "120px"}
+          mt={isDesktopView ? "auto" : 10}
+          mb={isDesktopView ? 6 : "120px"}
           w={"300px"}
           type="submit"
           variant="brand"
