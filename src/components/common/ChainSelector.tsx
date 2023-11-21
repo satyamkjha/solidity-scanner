@@ -29,6 +29,7 @@ import { BlockchainComp } from "./BlockchainComp";
 export const ChainSelector: React.FC<{
   view: "dark" | "light";
   platform: string;
+  index: number;
   onClose: () => void;
   setPlatform: React.Dispatch<React.SetStateAction<string>>;
   chain: {
@@ -62,6 +63,7 @@ export const ChainSelector: React.FC<{
   platform,
   setPlatform,
   chain,
+  index,
   setChain,
   platformData,
   platformValue,
@@ -199,7 +201,6 @@ export const ChainSelector: React.FC<{
             <Text
               cursor="pointer"
               onClick={() => window.open(currentChain?.website, "_blank")}
-              w="100%"
               color="#8A94A6"
               fontWeight={400}
               fontSize="sm"
@@ -220,7 +221,7 @@ export const ChainSelector: React.FC<{
           isDisabled={platform !== platformValue}
           options={platformData.chains}
           value={currentChain}
-          menuPlacement="auto"
+          menuPlacement={index === 0 ? "bottom" : "top"}
           placeholder="Select Chain"
           styles={customStylesChain}
           onChange={(newValue: any) => {

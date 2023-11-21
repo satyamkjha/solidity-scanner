@@ -541,6 +541,7 @@ export const BlockchainSelector: React.FC<{
                     (platformValue, index) => (
                       <ChainSelector
                         key={`${platformValue}_${index}`}
+                        index={index}
                         view={view}
                         onClose={onBlockChainClose}
                         platform={platform}
