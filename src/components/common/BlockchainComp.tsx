@@ -14,8 +14,8 @@ export const BlockchainComp: React.FC<{
 
   return (
     <Flex
-      my={[0, 0, 1]}
-      mx={[2, 2, 0]}
+      my={[0, 0, 0, 1]}
+      mx={[2, 2, 2, 0]}
       height={selectedChain === blockchain ? "100px" : "80px"}
       width={selectedChain === blockchain ? "100px" : "80px"}
       padding="10px"
