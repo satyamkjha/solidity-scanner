@@ -4,12 +4,12 @@ import { getAssetsURL } from "helpers/helperFunction";
 import { contractChain } from "common/values";
 
 export const BlockchainComp: React.FC<{
-  view: "dark" | "light";
+  theme: "dark" | "light";
   index?: number;
   blockchain: string;
   selectedChain: string;
   onBlockchainSelect: any;
-}> = ({ view, index, blockchain, selectedChain, onBlockchainSelect }) => {
+}> = ({ theme, index, blockchain, selectedChain, onBlockchainSelect }) => {
   const assetsUrl = getAssetsURL();
 
   return (
@@ -25,7 +25,7 @@ export const BlockchainComp: React.FC<{
       animation={
         index ? `zoomInAnimation ${0.1 + index / 20}s ease-in-out` : "none"
       }
-      backgroundColor={view === "dark" ? "#404040" : "#F3F3F3"}
+      backgroundColor={theme === "dark" ? "#404040" : "#F3F3F3"}
       justifyContent="center"
       alignItems="center"
       cursor="pointer"
@@ -40,7 +40,7 @@ export const BlockchainComp: React.FC<{
         src={
           blockchain === "buildbear"
             ? `${assetsUrl}blockscan/buildbear-${
-                view === "dark" ? "white" : "black"
+                theme === "dark" ? "white" : "black"
               }.svg`
             : `${assetsUrl}${contractChain[blockchain].logoUrl}.svg`
         }

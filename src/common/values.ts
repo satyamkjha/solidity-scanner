@@ -1184,7 +1184,7 @@ export const contractChain: {
     blockchainName: "Binance",
     description:
       "A community-driven blockchain ecosystemof Layer-1 and Layer-2 scaling solutions.",
-    website: "https://www.bnbchain.org/en",
+    website: "https://www.bnbchain.org/",
     logoUrl: "blockscan/binance",
     platforms: {
       bscscan: {
@@ -1534,7 +1534,7 @@ export const contractChain: {
             label: "Fuse Testnet",
             icon: "",
             isDisabled: false,
-            website: "",
+            website: "https://explorer.fusespark.io/",
           },
         ],
       },
@@ -1553,17 +1553,17 @@ export const contractChain: {
         chains: [
           {
             value: "mainnet",
-            label: "Fuse Mainnet",
+            label: "Base Mainnet",
             icon: "",
             isDisabled: false,
-            website: "",
+            website: "https://basescan.org/",
           },
           {
             value: "testnet",
-            label: "Fuse Testnet",
+            label: "Base Testnet",
             icon: "",
             isDisabled: false,
-            website: "",
+            website: "https://goerli.basescan.org/",
           },
         ],
       },
@@ -1615,7 +1615,7 @@ export const contractChain: {
             website: "https://gnosis.blockscout.com/",
           },
           {
-            value: "testnet",
+            value: "gnosis-chiado",
             label: "Gnosis Chiado Testnet",
             icon: "",
             isDisabled: false,
@@ -1666,7 +1666,7 @@ export const contractChain: {
             website: "https://neon.blockscout.com/",
           },
           {
-            value: "testnet",
+            value: "neon-devnet",
             label: "Neon Devnet",
             icon: "",
             isDisabled: false,
@@ -1725,10 +1725,10 @@ export const contractChain: {
           },
           {
             value: "shibariumscan-testnet",
-            label: "Shibarium Testnet",
+            label: "Puppynet Testnet",
             icon: "",
             isDisabled: false,
-            website: "https://www.shibariumscan.io/",
+            website: "https://puppyscan.shib.io/",
           },
         ],
       },

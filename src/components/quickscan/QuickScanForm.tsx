@@ -238,7 +238,8 @@ const QuickScanForm: React.FC<{
           }
         >
           <BlockchainSelector
-            view={view === "quickscan" ? "dark" : "light"}
+            theme={view === "quickscan" ? "dark" : "light"}
+            view="quickscan"
             chain={chain}
             node_id={node_id}
             setNodeId={setNodeId}
@@ -268,11 +269,14 @@ const QuickScanForm: React.FC<{
             size="lg"
             isInvalid={adddressError !== ""}
             errorBorderColor={"#960D00"}
-            color={view === "quickscan" ? "white" : "gray.600"}
+            color={view === "quickscan" ? "white" : "gray.800"}
+            _placeholder={{
+              color: view === "quickscan" ? "gray.400" : "gray.500",
+            }}
             height={50}
             mt={blockchainSelectorError === "" ? "70px" : "50px"}
-            borderColor={view === "quickscan" ? "white" : "gray.200"}
-            backgroundColor={view === "quickscan" ? "transparent" : "#FFFFFF80"}
+            borderColor={view === "quickscan" ? "gray.600" : "gray.200"}
+            backgroundColor={view === "quickscan" ? "#272727" : "#FFFFFF"}
             borderRadius={15}
             width={isDesktopView ? "50%" : "90%"}
             maxWidth="800px"
@@ -298,7 +302,7 @@ const QuickScanForm: React.FC<{
           isLoading={isLoading}
           loadingText="Scanning"
           spinner={<Loader color={"#3300FF"} size={20} />}
-          mt={isDesktopView ? "auto" : 10}
+          mt={isDesktopView ? "200px" : 10}
           mb={isDesktopView ? 16 : "120px"}
           w={"300px"}
           type="submit"

@@ -34,49 +34,55 @@ const PublicLayout: React.FC = ({ children }) => {
       m={0}
       h="100vh"
     >
-      <MotionFlex
-        initial={{ height: 0 }}
-        animate={{ height: "25px" }}
-        sx={{
-          w: "100%",
-          justifyContent: "center",
-          py: 1,
-          bg: "brand-dark",
-        }}
-      >
-        <HStack justifyContent="center" w="calc(100% - 30px)">
-          <Text
+      {isBannerOpen && (
+        <MotionFlex
+          initial={{ height: 0 }}
+          animate={{ height: "25px" }}
+          sx={{
+            w: "100%",
+            justifyContent: "center",
+            py: 1,
+            bg: "brand-dark",
+          }}
+        >
+          <HStack justifyContent="center" w="calc(100% - 30px)">
+            <Text
+              cursor="pointer"
+              fontSize="12px"
+              color="white"
+              onClick={() =>
+                window.open(
+                  "https://proofofsecurity.solidityscan.com/",
+                  "_blank"
+                )
+              }
+              fontWeight={700}
+            >
+              Proof of Security Summit'23 - India
+            </Text>
+            <Text fontSize="12px" color="white" fontWeight={700}>
+              |
+            </Text>
+            <Text
+              cursor="pointer"
+              fontSize="12px"
+              color="white"
+              fontWeight={700}
+              onClick={() => window.open("https://lu.ma/x3063d6n", "_blank")}
+            >
+              Register here
+            </Text>
+          </HStack>
+          <CloseIcon
+            mr="10px"
             cursor="pointer"
-            fontSize="12px"
+            fontSize="13px"
             color="white"
-            onClick={() =>
-              window.open("https://proofofsecurity.solidityscan.com/", "_blank")
-            }
-            fontWeight={700}
-          >
-            Proof of Security Summit'23 - India
-          </Text>
-          <Text fontSize="12px" color="white" fontWeight={700}>
-            |
-          </Text>
-          <Text
-            cursor="pointer"
-            fontSize="12px"
-            color="white"
-            fontWeight={700}
-            onClick={() => window.open("https://lu.ma/x3063d6n", "_blank")}
-          >
-            Register here
-          </Text>
-        </HStack>
-        <CloseIcon
-          mr="10px"
-          cursor="pointer"
-          fontSize="13px"
-          color="white"
-          onClick={() => setIsBannerOpen(false)}
-        />
-      </MotionFlex>
+            onClick={() => setIsBannerOpen(false)}
+          />
+        </MotionFlex>
+      )}
+
       {children}
       <Box
         display={"flex"}

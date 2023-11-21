@@ -54,6 +54,7 @@ const QuickScan: React.FC = () => {
 
   useEffect(() => {
     if (blockAddress && blockChain && blockPlatform) {
+      setIsLoading(true);
       runQuickScan(blockAddress, blockPlatform, blockChain, ref);
     }
 
@@ -77,6 +78,7 @@ const QuickScan: React.FC = () => {
         isClosable: true,
         position: "bottom",
       });
+      setIsLoading(false);
       return;
     }
     const req = {
@@ -130,25 +132,6 @@ const QuickScan: React.FC = () => {
         setIsLoading(false);
       });
   };
-
-  // useEffect(() => {
-  //   if (scanReport !== null) {
-  //     setTimeout(() => {
-  //       setIsLoading(false);
-  //     }, 1000);
-  //     scrollToElement();
-  //   }
-  // }, [scanReport]);
-
-  // const scrollToElement = () => {
-  //   if (elementRef.current) {
-  //     elementRef.current.scrollIntoView({
-  //       behavior: "smooth",
-  //       block: "start",
-  //       inline: "center",
-  //     });
-  //   }
-  // };
 
   return (
     <Flex

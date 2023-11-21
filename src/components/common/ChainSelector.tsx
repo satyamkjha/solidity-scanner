@@ -27,7 +27,7 @@ import RadioButton from "components/styled-components/RadioButton";
 import { BlockchainComp } from "./BlockchainComp";
 
 export const ChainSelector: React.FC<{
-  view: "dark" | "light";
+  theme: "dark" | "light";
   platform: string;
   index: number;
   onClose: () => void;
@@ -59,7 +59,7 @@ export const ChainSelector: React.FC<{
     }[];
   };
 }> = ({
-  view,
+  theme,
   platform,
   setPlatform,
   chain,
@@ -121,13 +121,13 @@ export const ChainSelector: React.FC<{
       margin: 0,
       fontSize: 15,
       border:
-        view === "dark"
-          ? state.isDisabled
-            ? "1px solid #686d75"
-            : "1px solid #FFFFFF"
-          : state.isDisabled
-          ? "1px solid #8A94A680"
-          : "1px solid #8A94A6",
+        theme === "dark"
+          ? platform === platformValue
+            ? "1px solid #FFFFFF"
+            : "1px solid #686d75"
+          : platform === platformValue
+          ? "1px solid #8A94A6"
+          : "1px solid #8A94A680",
     }),
     container: (provided: any, state: any) => ({
       ...provided,
@@ -139,7 +139,7 @@ export const ChainSelector: React.FC<{
       ...provided,
       opacity: state.isDisabled ? 0.3 : 1,
       transition: "opacity 300ms",
-      color: view === "dark" ? "#FFFFFF" : "#000000",
+      color: theme === "dark" ? "#FFFFFF" : "#000000",
     }),
   };
 
@@ -163,14 +163,14 @@ export const ChainSelector: React.FC<{
       borderRadius={[10, 10, 0]}
       background={
         platform === platformValue
-          ? view === "dark"
+          ? theme === "dark"
             ? "#272727"
             : "#eeeded"
           : "transparent"
       }
       _hover={{
         background:
-          view === "dark"
+          theme === "dark"
             ? platform === platformValue
               ? "#272727"
               : "#2c2c2c"
@@ -191,7 +191,7 @@ export const ChainSelector: React.FC<{
         <VStack textAlign="left" w="85%" spacing={1} alignItems={"flex-start"}>
           <Text
             w="100%"
-            color={view === "dark" ? "white" : "gray.600"}
+            color={theme === "dark" ? "white" : "gray.600"}
             fontWeight={600}
             fontSize="md"
           >
@@ -232,7 +232,7 @@ export const ChainSelector: React.FC<{
             }
           }}
         />
-        <RadioButton theme={view} isActive={platform === platformValue} />
+        <RadioButton theme={theme} isActive={platform === platformValue} />
       </HStack>
     </Flex>
   );

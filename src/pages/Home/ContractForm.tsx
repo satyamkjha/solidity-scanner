@@ -209,7 +209,8 @@ const ContractForm: React.FC<{
                 <BlockchainSelector
                   onSelectorClose={onSelectorClose}
                   menuPlacement="bottom-start"
-                  view="light"
+                  view="homepage"
+                  theme="light"
                   chain={chain}
                   node_id={nodeId}
                   setNodeId={setNodeId}

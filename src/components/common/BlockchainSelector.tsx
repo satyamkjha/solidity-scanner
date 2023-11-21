@@ -11,6 +11,7 @@ import {
   Divider,
   Input,
   useDisclosure,
+  useMediaQuery,
 } from "@chakra-ui/react";
 import {
   ChevronDownIcon,
@@ -28,7 +29,8 @@ import { BlockchainComp } from "./BlockchainComp";
 import { ChainSelector } from "./ChainSelector";
 
 export const BlockchainSelector: React.FC<{
-  view: "dark" | "light";
+  theme: "dark" | "light";
+  view: "quickscan" | "homepage";
   menuPlacement: "bottom" | "bottom-start";
   onSelectorClose: any;
   platform: string;
@@ -52,7 +54,7 @@ export const BlockchainSelector: React.FC<{
     } | null>
   >;
 }> = ({
-  view,
+  theme,
   onSelectorClose,
   platform,
   setPlatform,
@@ -63,6 +65,7 @@ export const BlockchainSelector: React.FC<{
   blockchainSelectorError,
   setBlockchainSelectorError,
   menuPlacement,
+  view,
 }) => {
   const [elementPosition, setElementPosition] = useState<any>({});
   const [blockchain, setBlockchain] = useState("");
@@ -143,6 +146,8 @@ export const BlockchainSelector: React.FC<{
   const currectBlockChainRef = useRef<HTMLDivElement>(null);
   const popoverRef = useRef<HTMLElement>(null);
 
+  const [isLargerThan1350] = useMediaQuery("(min-width: 1350px)");
+
   return (
     <HStack
       borderRadius={15}
@@ -150,14 +155,14 @@ export const BlockchainSelector: React.FC<{
       w="90vw"
       pr={"10px"}
       maxW="600px"
-      bgColor={view === "dark" ? "transparent" : "#ECECEC"}
+      bgColor={theme === "dark" ? "transparent" : "#ECECEC"}
       justifyContent="space-between"
     >
       <Popover
         isOpen={isOpen}
         onOpen={onOpen}
         onClose={onClose}
-        placement={menuPlacement}
+        placement={isLargerThan1350 ? menuPlacement : "bottom-start"}
       >
         <PopoverTrigger>
           <HStack
@@ -165,7 +170,7 @@ export const BlockchainSelector: React.FC<{
             w="calc(100% - 80px)"
             justifyContent="space-between"
             p={5}
-            bgColor={view === "dark" ? "#272727C0" : "transparent"}
+            bgColor={theme === "dark" ? "#272727" : "transparent"}
             borderRadius={15}
             border={
               blockchainSelectorError !== "" ? "1px solid #960D00" : "none"
@@ -182,7 +187,7 @@ export const BlockchainSelector: React.FC<{
                     src={
                       blockchain === "buildbear"
                         ? `${assetsUrl}blockscan/buildbear-${
-                            view === "dark" ? "white" : "black"
+                            theme === "dark" ? "white" : "black"
                           }.svg`
                         : `${assetsUrl}${contractChain[blockchain].logoUrl}.svg`
                     }
@@ -192,7 +197,7 @@ export const BlockchainSelector: React.FC<{
                   <VStack textAlign="left" spacing={1}>
                     <Text
                       w="100%"
-                      color={view === "dark" ? "white" : "gray.600"}
+                      color={theme === "dark" ? "white" : "gray.600"}
                       fontWeight={600}
                       fontSize="md"
                     >
@@ -231,7 +236,7 @@ export const BlockchainSelector: React.FC<{
             ) : (
               <>
                 <Text color="gray.400">Select Blockchain</Text>
-                {view === "dark" && <ChevronDownIcon />}
+                {theme === "dark" && <ChevronDownIcon />}
               </>
             )}
           </HStack>
@@ -239,16 +244,19 @@ export const BlockchainSelector: React.FC<{
         <PopoverContent
           ref={popoverRef}
           color="white"
-          bg={view === "dark" ? "#323232" : "#FFF"}
+          bg={theme === "dark" ? "#323232" : "#FFF"}
           borderRadius={15}
           border="none"
           sx={{
             boxShadow: "0px 4px 24px rgba(0, 0, 0, 0.2) !important",
           }}
-          w={"90vw"}
+          w={
+            view === "quickscan"
+              ? ["350px", "480px", "500px", "770px", "1020px"]
+              : ["350px", "480px", "500px", "650px"]
+          }
           h={["fit-content", "fit-content", "37vh", "48vh", "50vh"]}
-          maxH={["90vh", "90vh", "400px", "400px", "480px"]}
-          maxW="1055px"
+          maxH={["60vh", "60vh", "400px", "400px", "480px"]}
           display="flex"
           py={5}
           px={[2, 3, 5]}
@@ -257,7 +265,7 @@ export const BlockchainSelector: React.FC<{
           alignItems="flex-start"
           justifyContent="flex"
           rowGap={5}
-          columnGap={[2, 3, 5]}
+          columnGap={[2, 3]}
           overflowY="scroll"
         >
           {blockchain === "" ? (
@@ -265,7 +273,7 @@ export const BlockchainSelector: React.FC<{
               {Object.keys(contractChain).map((item, index) => (
                 <VStack
                   key={index}
-                  w={["100px", "100px", "120px"]}
+                  w={["100px", "100px", "100px", "110px"]}
                   justifyContent="center"
                   alignItems="center"
                   spacing={3}
@@ -279,7 +287,7 @@ export const BlockchainSelector: React.FC<{
                     width="80px"
                     padding="10px"
                     borderRadius="40px"
-                    backgroundColor={view === "dark" ? "#404040" : "#F3F3F3"}
+                    backgroundColor={theme === "dark" ? "#404040" : "#F3F3F3"}
                     justifyContent="center"
                     alignItems="center"
                     animation={`zoomInAnimation ${
@@ -298,7 +306,7 @@ export const BlockchainSelector: React.FC<{
                 </VStack>
               ))}
               <VStack
-                w={["100px", "100px", "120px"]}
+                w={["100px", "100px", "100px", "110px"]}
                 justifyContent="center"
                 alignItems="center"
                 spacing={3}
@@ -312,7 +320,7 @@ export const BlockchainSelector: React.FC<{
                   width="80px"
                   padding="10px"
                   borderRadius="40px"
-                  backgroundColor={view === "dark" ? "#404040" : "#F3F3F3"}
+                  backgroundColor={theme === "dark" ? "#404040" : "#F3F3F3"}
                   justifyContent="center"
                   alignItems="center"
                 >
@@ -320,7 +328,7 @@ export const BlockchainSelector: React.FC<{
                     height="50px"
                     width="50px"
                     src={`${assetsUrl}blockscan/buildbear-${
-                      view === "dark" ? "white" : "black"
+                      theme === "dark" ? "white" : "black"
                     }.svg`}
                   />
                 </Flex>
@@ -337,7 +345,7 @@ export const BlockchainSelector: React.FC<{
               width={showTransition ? "80px" : "100px"}
               padding="10px"
               borderRadius={"50px"}
-              backgroundColor={view === "dark" ? "#404040" : "#F3F3F3"}
+              backgroundColor={theme === "dark" ? "#404040" : "#F3F3F3"}
               justifyContent="center"
               alignItems="center"
               cursor="pointer"
@@ -360,7 +368,7 @@ export const BlockchainSelector: React.FC<{
                 src={
                   blockchain === "buildbear"
                     ? `${assetsUrl}blockscan/buildbear-${
-                        view === "dark" ? "white" : "black"
+                        theme === "dark" ? "white" : "black"
                       }.svg`
                     : `${assetsUrl}${contractChain[blockchain].logoUrl}.svg`
                 }
@@ -390,7 +398,7 @@ export const BlockchainSelector: React.FC<{
                   position={"relative"}
                 >
                   <BlockchainComp
-                    view={view}
+                    theme={theme}
                     blockchain={firstBlockChain}
                     selectedChain={blockchain}
                     onBlockchainSelect={onBlockchainSelect}
@@ -402,7 +410,7 @@ export const BlockchainSelector: React.FC<{
                         <BlockchainComp
                           key={index}
                           index={index}
-                          view={view}
+                          theme={theme}
                           blockchain={item}
                           selectedChain={blockchain}
                           onBlockchainSelect={onBlockchainSelect}
@@ -411,7 +419,7 @@ export const BlockchainSelector: React.FC<{
                   })}
                   {firstBlockChain !== "buildbear" && (
                     <BlockchainComp
-                      view={view}
+                      theme={theme}
                       blockchain={"buildbear"}
                       selectedChain={blockchain}
                       onBlockchainSelect={onBlockchainSelect}
@@ -421,12 +429,12 @@ export const BlockchainSelector: React.FC<{
               </Flex>
               <Divider
                 display={["none", "none", "block"]}
-                borderColor={view === "dark" ? "#424242" : "#8A94A680"}
+                borderColor={theme === "dark" ? "#424242" : "#8A94A680"}
                 orientation="vertical"
               />
               <Divider
                 display={["block", "block", "none"]}
-                borderColor={view === "dark" ? "#424242" : "#8A94A680"}
+                borderColor={theme === "dark" ? "#424242" : "#8A94A680"}
               />
 
               <Flex
@@ -455,7 +463,7 @@ export const BlockchainSelector: React.FC<{
                   >
                     <HStack w="100%" justifyContent={"flex-start"}>
                       <Text
-                        color={view === "dark" ? "white" : "gray.600"}
+                        color={theme === "dark" ? "white" : "gray.600"}
                         fontWeight={600}
                         fontSize="md"
                       >
@@ -505,7 +513,7 @@ export const BlockchainSelector: React.FC<{
                     ml={"auto"}
                     display={["none", "none", "block"]}
                     cursor="pointer"
-                    color={view === "dark" ? "white" : "gray.600"}
+                    color={theme === "dark" ? "white" : "gray.600"}
                     onClick={() => {
                       setBlockchain("");
                       setFirstBlockchain("");
@@ -519,7 +527,7 @@ export const BlockchainSelector: React.FC<{
                       my={5}
                       ml={5}
                       w="100%"
-                      color={view === "dark" ? "white" : "gray.600"}
+                      color={theme === "dark" ? "white" : "gray.600"}
                       fontWeight={400}
                       fontSize="sm"
                     >
@@ -531,10 +539,10 @@ export const BlockchainSelector: React.FC<{
                       placeholder="Node ID"
                       variant="brand"
                       size="lg"
-                      color={view === "dark" ? "white" : "gray.600"}
+                      color={theme === "dark" ? "white" : "gray.600"}
                       height={50}
                       mt={0}
-                      borderColor={view === "dark" ? "white" : "gray.200"}
+                      borderColor={theme === "dark" ? "white" : "gray.200"}
                       backgroundColor="transparent"
                       borderRadius={15}
                       width={"90%"}
@@ -551,7 +559,7 @@ export const BlockchainSelector: React.FC<{
                       <ChainSelector
                         key={`${platformValue}_${index}`}
                         index={index}
-                        view={view}
+                        theme={theme}
                         onClose={onBlockChainClose}
                         platform={platform}
                         platformValue={platformValue}
@@ -576,7 +584,7 @@ export const BlockchainSelector: React.FC<{
         p="10px"
         borderRadius="40px"
         filter="drop-shadow(0px 2px 1px rgba(0, 0, 0, 0.25))"
-        bgColor={view === "dark" ? "#272727C0" : "#E1E1E1"}
+        bgColor={theme === "dark" ? "#272727C0" : "#E1E1E1"}
         onClick={() => {
           onOpen();
           setBlockchain("");
@@ -586,7 +594,7 @@ export const BlockchainSelector: React.FC<{
         cursor="pointer"
       >
         <Image
-          src={`${assetsUrl}common/reset-button-${view}.svg`}
+          src={`${assetsUrl}common/reset-button-${theme}.svg`}
           height="40px"
           width="40px"
         />
