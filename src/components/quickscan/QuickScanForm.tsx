@@ -57,10 +57,16 @@ const QuickScanForm: React.FC<{
       );
       return;
     }
-    if (chain === null) {
+    if (!chain && platform !== "buildbear") {
       setBlockchainSelectorError("Please select a Chain to perform the scan");
       return;
     }
+
+    if (!node_id && platform === "buildbear") {
+      setBlockchainSelectorError("Please enter a Node ID to perform the scan");
+      return;
+    }
+
     if (address === "") {
       setAddressError("Please enter an address to perform the scan");
       return;

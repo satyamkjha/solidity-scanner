@@ -110,6 +110,9 @@ export const BlockchainSelector: React.FC<{
       };
       setElementPosition(relativePosition);
       setBlockchain(item);
+      if (item === "buildbear") {
+        setPlatform(item);
+      }
       setFirstBlockchain(item);
       setShowTransition(true);
       setShowOtherSection(false);
