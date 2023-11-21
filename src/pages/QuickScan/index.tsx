@@ -183,7 +183,7 @@ const QuickScan: React.FC = () => {
             isLoading={isLoading}
           />
         ) : (
-          <HStack alignItems="flex-start">
+          <HStack justifyContent="center" alignItems="flex-start">
             <QuickScanResultContainer scanReport={scanReport} />
             <CloseButton onClick={() => setScanReport(null)} />
           </HStack>
