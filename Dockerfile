@@ -4,6 +4,7 @@ COPY ./package.json .
 COPY ./yarn.lock .
 RUN yarn install
 COPY . .
+COPY ./newrelic-browser.js /app/public/newrelic-browser.js
 RUN apk --no-cache add curl
 RUN yarn build
 

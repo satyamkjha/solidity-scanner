@@ -19,6 +19,7 @@ import { GithubIcon, ProjectIcon, SeverityIcon } from "components/icons";
 import { getAssetsURL, sentenceCapitalize } from "helpers/helperFunction";
 import { useConfig } from "hooks/useConfig";
 import React from "react";
+import { pieData } from "common/values";
 
 const FindingSummaryContainer: React.FC<{
   summary_report: Report;
@@ -27,51 +28,7 @@ const FindingSummaryContainer: React.FC<{
   const assetsURL = getAssetsURL(config);
   const [isDesktopView] = useMediaQuery("(min-width: 1024px)");
 
-  const pieData = (
-    critical: number,
-    high: number,
-    medium: number,
-    low: number,
-    informational: number,
-    gas: number
-  ) => [
-    {
-      id: "critical",
-      label: "Critical",
-      value: critical,
-      color: "#960D00",
-    },
-    {
-      id: "high",
-      label: "High",
-      value: high,
-      color: "#FF5C00",
-    },
-    {
-      id: "medium",
-      label: "Medium",
-      value: medium,
-      color: "#FFE600",
-    },
-    {
-      id: "low",
-      label: "Low",
-      value: low,
-      color: "#38CB89",
-    },
-    {
-      id: "informational",
-      label: "Informational",
-      value: informational,
-      color: "#A0AEC0",
-    },
-    {
-      id: "gas",
-      label: "Gas",
-      value: gas,
-      color: "#F795B4",
-    },
-  ];
+
 
   return (
     <Flex
