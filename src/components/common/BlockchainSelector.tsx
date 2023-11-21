@@ -272,13 +272,11 @@ export const BlockchainSelector: React.FC<{
         >
           {blockchain === "" ? (
             <>
-              {Object.keys(contractChain).map((item, index) => {
-                if (
-                  !getFeatureGateConfig(config).blockchain_disabled.includes(
+              {Object.keys(contractChain).map(
+                (item, index) =>
+                  !getFeatureGateConfig(config).blockchain_disabled?.includes(
                     item
-                  )
-                )
-                  return (
+                  ) && (
                     <VStack
                       key={index}
                       w={["100px", "100px", "100px", "110px"]}
@@ -314,8 +312,8 @@ export const BlockchainSelector: React.FC<{
                         {contractChain[item].blockchainName}
                       </Text>
                     </VStack>
-                  );
-              })}
+                  )
+              )}
               <VStack
                 w={["100px", "100px", "100px", "110px"]}
                 justifyContent="center"
@@ -415,9 +413,12 @@ export const BlockchainSelector: React.FC<{
                     onBlockchainSelect={onBlockchainSelect}
                   />
 
-                  {Object.keys(contractChain).map((item, index) => {
-                    if (item !== firstBlockChain)
-                      return (
+                  {Object.keys(contractChain).map(
+                    (item, index) =>
+                      item !== firstBlockChain &&
+                      !getFeatureGateConfig(
+                        config
+                      ).blockchain_disabled?.includes(item) && (
                         <BlockchainComp
                           key={index}
                           index={index}
@@ -426,8 +427,8 @@ export const BlockchainSelector: React.FC<{
                           selectedChain={blockchain}
                           onBlockchainSelect={onBlockchainSelect}
                         />
-                      );
-                  })}
+                      )
+                  )}
                   {firstBlockChain !== "buildbear" && (
                     <BlockchainComp
                       theme={theme}
@@ -566,29 +567,25 @@ export const BlockchainSelector: React.FC<{
                   </>
                 ) : (
                   Object.keys(contractChain[blockchain].platforms).map(
-                    (platformValue, index) => {
-                      if (
-                        !getFeatureGateConfig(
-                          config
-                        ).platform_disabled.includes(platformValue)
+                    (platformValue, index) =>
+                      !getFeatureGateConfig(config).platform_disabled?.includes(
+                        platformValue
+                      ) && (
+                        <ChainSelector
+                          key={`${platformValue}_${index}`}
+                          index={index}
+                          theme={theme}
+                          onClose={onBlockChainClose}
+                          platform={platform}
+                          platformValue={platformValue}
+                          chain={chain}
+                          setChain={setChain}
+                          setPlatform={setPlatform}
+                          platformData={
+                            contractChain[blockchain].platforms[platformValue]
+                          }
+                        />
                       )
-                        return (
-                          <ChainSelector
-                            key={`${platformValue}_${index}`}
-                            index={index}
-                            theme={theme}
-                            onClose={onBlockChainClose}
-                            platform={platform}
-                            platformValue={platformValue}
-                            chain={chain}
-                            setChain={setChain}
-                            setPlatform={setPlatform}
-                            platformData={
-                              contractChain[blockchain].platforms[platformValue]
-                            }
-                          />
-                        );
-                    }
                   )
                 )}
               </Flex>
