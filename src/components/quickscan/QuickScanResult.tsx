@@ -132,12 +132,14 @@ export const QuickScanResultContainer: React.FC<{
                 fontWeight={300}
                 fontSize="md"
               >
-                {contractChain[
-                  getContractBlockchainId(
-                    scanReport.contract_platform || "",
-                    scanReport.contract_chain || ""
-                  )
-                ].blockchainName.toUpperCase()}{" "}
+                {scanReport.contract_platform === "buildbear"
+                  ? "Buildbear"
+                  : contractChain[
+                      getContractBlockchainId(
+                        scanReport.contract_platform || "",
+                        scanReport.contract_chain || ""
+                      )
+                    ].blockchainName.toUpperCase()}{" "}
                 {`(${getContractChainLabel(
                   scanReport.contract_platform || "",
                   scanReport.contract_chain || ""

@@ -204,7 +204,7 @@ export const ContactUs: React.FC<{ onClose(): any; isOpen: boolean }> = ({
                   alignItems={["center", "center", "flex-start"]}
                 >
                   <Text fontSize="lg" fontWeight={600}>
-                    Contact Us
+                    Join the community
                   </Text>
                   {socialIconsList.map((item) => (
                     <HStack
