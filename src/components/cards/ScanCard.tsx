@@ -37,8 +37,10 @@ import {
   getTrimmedScanMessage,
   getAssetsURL,
   getProjectType,
+  getContractBlockchainId,
+  getContractBlockChainLogoUrl,
 } from "helpers/helperFunction";
-import { scanStatesLabel } from "common/values";
+import { scanStatesLabel, contractChain } from "common/values";
 
 const ScanCard: React.FC<{
   scan: ScanObj;
@@ -175,7 +177,10 @@ const ScanCard: React.FC<{
                 ? `icons/integrations/${getProjectType(
                     scan.scan_details.project_url || ""
                   )}`
-                : `blockscan/${contract_platform}`
+                : getContractBlockChainLogoUrl(
+                    scan.scan_details.contract_platform || "",
+                    scan.scan_details.contract_chain || ""
+                  )
             }.svg`}
             alt={contract_platform}
             h={"40px"}

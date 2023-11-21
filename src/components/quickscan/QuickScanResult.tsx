@@ -31,6 +31,7 @@ import {
   sentenceCapitalize,
   getContractChainLabel,
   getContractBlockchainId,
+  getContractBlockChainLogoUrl,
 } from "helpers/helperFunction";
 import { StylesConfig, GroupBase } from "react-select";
 import Select from "react-select";
@@ -92,14 +93,10 @@ export const QuickScanResultContainer: React.FC<{
             flexDir={["column", "column", "row"]}
           >
             <Image
-              src={`${assetsUrl}${
-                contractChain[
-                  getContractBlockchainId(
-                    scanReport.contract_platform || "",
-                    scanReport.contract_chain || ""
-                  )
-                ].logoUrl
-              }.svg`}
+              src={`${assetsUrl}${getContractBlockChainLogoUrl(
+                scanReport.contract_platform || "",
+                scanReport.contract_chain || ""
+              )}.svg`}
               height="40px"
               width="40px"
             />
@@ -178,14 +175,19 @@ export const QuickScanResultContainer: React.FC<{
             p={3}
           >
             <Flex
-              padding={2}
-              bgColor="#383838"
+              bgColor="#272727"
               justifyContent="center"
               alignItems="center"
               height="45px"
               width="45px"
               mr={2}
-            ></Flex>
+            >
+              <Image
+                src={`${assetsUrl}quickscan/qs_security_score.svg`}
+                height="40px"
+                width="40px"
+              />
+            </Flex>
             <VStack alignItems="flex-start" w="calc(100% - 40px)" spacing={0}>
               <Text color="gray.400" fontSize="sm" fontWeight={300}>
                 Security Score
@@ -209,13 +211,20 @@ export const QuickScanResultContainer: React.FC<{
           >
             <Flex
               padding={2}
-              bgColor="#383838"
+              bgColor="#272727"
               justifyContent="center"
               alignItems="center"
               height="45px"
               width="45px"
               mr={2}
-            ></Flex>
+            >
+              {" "}
+              <Image
+                src={`${assetsUrl}quickscan/qs_scan_duration.svg`}
+                height="40px"
+                width="40px"
+              />
+            </Flex>
             <VStack alignItems="flex-start" w="calc(100% - 40px)" spacing={0}>
               <Text color="gray.400" fontSize="sm" fontWeight={300}>
                 Scan duration
@@ -234,13 +243,19 @@ export const QuickScanResultContainer: React.FC<{
           >
             <Flex
               padding={2}
-              bgColor="#383838"
+              bgColor="#272727"
               justifyContent="center"
               alignItems="center"
               height="45px"
               width="45px"
               mr={2}
-            ></Flex>
+            >
+              <Image
+                src={`${assetsUrl}quickscan/qs_loc.svg`}
+                height="40px"
+                width="40px"
+              />
+            </Flex>
             <VStack alignItems="flex-start" w="calc(100% - 40px)" spacing={0}>
               <Text color="gray.400" fontSize="sm" fontWeight={300}>
                 Lines of code
@@ -324,7 +339,7 @@ export const QuickScanResultContainer: React.FC<{
         </HStack>
       </VStack>
       <Flex
-        w={["100%", "100%", "40%"]}
+        w={["100%", "100%", "calc(45% - 40px)"]}
         bgColor="#222222"
         borderRadius={10}
         padding={5}
@@ -348,6 +363,7 @@ export const QuickScanResultContainer: React.FC<{
         >
           <Box
             w={"330px"}
+            p={"20px"}
             display="flex"
             justifyContent="center"
             alignItems={"center"}

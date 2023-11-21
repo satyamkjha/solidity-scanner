@@ -44,6 +44,7 @@ import {
   getAssetsURL,
   checkPublishReportAccess,
   checkGenerateReportAccess,
+  getContractBlockChainLogoUrl,
 } from "helpers/helperFunction";
 import { useConfig } from "hooks/useConfig";
 import Loader from "components/styled-components/Loader";
@@ -264,7 +265,10 @@ const BlockPage: React.FC = () => {
                         <VStack alignItems={"flex-start"}>
                           <HStack justifyContent="flex-start">
                             <Image
-                              src={`${assetsURL}blockscan/${scanData.scan_report.contract_platform}.svg`}
+                              src={`${assetsURL}${getContractBlockChainLogoUrl(
+                                scanData.scan_report.contract_platform || "",
+                                scanData.scan_report.contract_chain || ""
+                              )}.svg`}
                               alt="Product screenshot"
                               h={"20px"}
                               w={"20px"}
@@ -336,7 +340,10 @@ const BlockPage: React.FC = () => {
                         >
                           <HStack justifyContent="flex-start">
                             <Image
-                              src={`${assetsURL}blockscan/${scanData.scan_report.contract_platform}.svg`}
+                              src={`${assetsURL}${getContractBlockChainLogoUrl(
+                                scanData.scan_report.contract_platform || "",
+                                scanData.scan_report.contract_chain || ""
+                              )}.svg`}
                               alt="Product screenshot"
                               h={"20px"}
                               w={"20px"}

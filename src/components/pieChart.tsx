@@ -15,7 +15,7 @@ const MyResponsivePie: React.FC<{ data: PieData[]; page?: string }> = ({
   <>
     <ResponsivePie
       data={data}
-      margin={{ top: 5, right: 5, bottom: 5, left: 5 }}
+      margin={{ top: 10, right: 10, bottom: 10, left: 10 }}
       colors={{ datum: "data.color" }}
       innerRadius={page === "quickscan" ? 0.75 : 0.5}
       padAngle={page === "quickscan" ? 0 : 0.7}

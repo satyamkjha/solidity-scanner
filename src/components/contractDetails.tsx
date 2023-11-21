@@ -1,8 +1,12 @@
 import { AccordionPanel } from "@chakra-ui/accordion";
 import { Flex, HStack, Text, Image, VStack } from "@chakra-ui/react";
-import { getAssetsURL, getContractChainLabel } from "helpers/helperFunction";
+import {
+  getAssetsURL,
+  getContractChainLabel,
+  getContractBlockchainId,
+} from "helpers/helperFunction";
 import React from "react";
-import { blockExplorer } from "common/values";
+import { blockExplorer, contractChain } from "common/values";
 import { useConfig } from "hooks/useConfig";
 
 export const ContractDetails: React.FC<{
@@ -40,7 +44,14 @@ export const ContractDetails: React.FC<{
             |
           </Text>
           <Image
-            src={`${assetsURL}blockscan/${scanData.scan_report.contract_platform}-scan.svg`}
+            src={`${assetsURL}${
+              contractChain[
+                getContractBlockchainId(
+                  scanData.scan_report.contract_platform || "",
+                  scanData.scan_report.contract_chain || ""
+                )
+              ].platforms[scanData.scan_report.contract_platform].iconUrl
+            }.svg`}
             alt="Product screenshot"
             mx="auto"
             h={"20px"}
