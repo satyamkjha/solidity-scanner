@@ -57,8 +57,8 @@ const AppContent: React.FC = () => {
           src="//js-eu1.hs-scripts.com/24889894.js"
         ></script>
       </Helmet>
-      <Helmet>
-        {process.env.REACT_APP_ENVIRONMENT === "prod" ? (
+      {process.env.REACT_APP_ENVIRONMENT === "prod" ? (
+        <Helmet>
           <script type="text/javascript">
             {`(function(c,l,a,r,i,t,y){
                         c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
@@ -66,7 +66,9 @@ const AppContent: React.FC = () => {
                         y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
                     })(window, document, "clarity", "script", "gj5br0bppy");`}
           </script>
-        ) : (
+        </Helmet>
+      ) : (
+        <Helmet>
           <script type="text/javascript">
             {`(function(c,l,a,r,i,t,y){
                         c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
@@ -74,8 +76,8 @@ const AppContent: React.FC = () => {
                         y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
                     })(window, document, "clarity", "script", "gmq0xcmyv1");`}
           </script>
-        )}
-      </Helmet>
+        </Helmet>
+      )}
       <QueryClientProvider client={queryClient}>
         <ChakraProvider theme={theme}>
           <MetaMaskProvider>

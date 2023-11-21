@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import { useQueryClient } from "react-query";
 import { useHistory } from "react-router-dom";
 import {
@@ -10,8 +10,6 @@ import {
   InputLeftElement,
   Input,
   Icon,
-  FormControl,
-  FormLabel,
   VStack,
   useToast,
   Box,
@@ -25,15 +23,13 @@ import {
   checkContractAddress,
   getAssetsURL,
 } from "helpers/helperFunction";
-import Select from "react-select";
 import { API_PATH } from "helpers/routeManager";
 import { Profile } from "common/types";
-import FormatOptionLabelWithImage from "components/FormatOptionLabelWithImage";
-import { customStylesForReactSelect } from "common/stylesForCustomSelect";
 import Loader from "components/styled-components/Loader";
 import { useUserRole } from "hooks/useUserRole";
-import { contractChain, platforms, infographicsData } from "common/values";
+import { infographicsData } from "common/values";
 import { AddProjectFormInfographics } from "./AddProjectFormInfographics";
+import { BlockchainSelector } from "components/common/BlockchainSelector";
 
 const ContractForm: React.FC<{
   profileData: Profile;
@@ -41,6 +37,7 @@ const ContractForm: React.FC<{
   setStep: React.Dispatch<React.SetStateAction<number>>;
   changeView: boolean;
 }> = ({ step, setStep, profileData, changeView }) => {
+  const contractAddressRef = useRef<HTMLInputElement>(null);
   const [contractAddress, setContractAddress] = useState("");
   const [nodeId, setNodeId] = useState("");
   const [isLoading, setIsLoading] = useState(false);
@@ -49,19 +46,20 @@ const ContractForm: React.FC<{
     label: string;
     value: string;
     icon: string;
+    website: string;
   } | null>(null);
-  const [chainList, setChainList] = React.useState<
-    { label: string; value: string; icon: string }[]
-  >(contractChain["etherscan"]);
+
   const [isDesktopView] = useMediaQuery("(min-width: 1920px)");
 
   const queryClient = useQueryClient();
   const toast = useToast();
   const history = useHistory();
   const { data: supportedChains } = useSupportedChains();
-
+  const [adddressError, setAddressError] = useState("");
+  const [blockchainSelectorError, setBlockchainSelectorError] = useState("");
   const platform_supported = getFeatureGateConfig().platform_supported;
   const assetsURL = getAssetsURL();
+
   const onSubmit = async () => {
     if (platform !== "buildbear" && !checkContractAddress(contractAddress)) {
       toast({
@@ -126,6 +124,12 @@ const ContractForm: React.FC<{
     );
   };
 
+  const onSelectorClose = () => {
+    if (contractAddressRef && contractAddressRef.current) {
+      contractAddressRef.current.focus();
+    }
+  };
+
   const { role } = useUserRole();
   let isViewer = role === "viewer";
 
@@ -133,7 +137,7 @@ const ContractForm: React.FC<{
     <Flex
       flexDir="column"
       px={2}
-      h={["90vh", "90vh", "75vh"]}
+      h={["90vh", "90vh", "78vh"]}
       justifyContent={"space-between"}
       alignItems="center"
       borderRadius={20}
@@ -202,6 +206,20 @@ const ContractForm: React.FC<{
           <>
             {supportedChains && (
               <Stack spacing={6} mt={5} width={"100%"}>
+                <BlockchainSelector
+                  onSelectorClose={onSelectorClose}
+                  menuPlacement="bottom-start"
+                  view="homepage"
+                  theme="light"
+                  chain={chain}
+                  node_id={nodeId}
+                  setNodeId={setNodeId}
+                  setChain={setChain}
+                  setPlatform={setPlatform}
+                  platform={platform}
+                  blockchainSelectorError={blockchainSelectorError}
+                  setBlockchainSelectorError={setBlockchainSelectorError}
+                />
                 <VStack alignItems={"flex-start"}>
                   <Text mb={0} fontSize="sm">
                     Contract address
@@ -213,6 +231,7 @@ const ContractForm: React.FC<{
                       children={<Icon as={AiOutlineProject} color="gray.300" />}
                     />
                     <Input
+                      ref={contractAddressRef}
                       isRequired
                       placeholder="0x808ed7A75n133f64069318Sa0q173c71rre44414"
                       variant="brand"
@@ -223,86 +242,6 @@ const ContractForm: React.FC<{
                     />
                   </InputGroup>
                 </VStack>
-                <FormControl id="contract_platform">
-                  <FormLabel fontSize="sm">Contract platform</FormLabel>
-                  <Select
-                    formatOptionLabel={FormatOptionLabelWithImage}
-                    options={platforms.map((item) => {
-                      for (const chain in supportedChains) {
-                        if (
-                          chain === item.value &&
-                          platform_supported.includes(chain)
-                        ) {
-                          return {
-                            value: item.value,
-                            icon: item.icon,
-                            label: item.label,
-                            isDisabled: !item.isDisabled,
-                          };
-                        }
-                      }
-                      return item;
-                    })}
-                    placeholder="Select Contract Platform"
-                    isSearchable={true}
-                    isDisabled={isViewer}
-                    value={platforms.find((item) => platform === item.value)}
-                    styles={customStylesForReactSelect}
-                    onChange={(newValue: any) => {
-                      if (newValue) {
-                        setPlatform(newValue.value);
-                        if (supportedChains) {
-                          setChainList(contractChain[newValue.value]);
-                          setChain(null);
-                        }
-                      }
-                    }}
-                  />
-                </FormControl>
-
-                {platform === "buildbear" ? (
-                  <VStack alignItems={"flex-start"}>
-                    <Text mb={0} fontSize="sm">
-                      Node ID
-                    </Text>
-
-                    <InputGroup mt={0} alignItems="center">
-                      <InputLeftElement
-                        height="48px"
-                        children={
-                          <Icon as={AiOutlineProject} color="gray.300" />
-                        }
-                      />
-                      <Input
-                        isRequired
-                        placeholder="Node ID"
-                        variant="brand"
-                        disabled={isViewer}
-                        size="lg"
-                        value={nodeId}
-                        onChange={(e) => setNodeId(e.target.value)}
-                      />
-                    </InputGroup>
-                  </VStack>
-                ) : (
-                  <FormControl id="contract_chain">
-                    <FormLabel fontSize="sm">Contract Chain</FormLabel>
-                    <Select
-                      formatOptionLabel={FormatOptionLabelWithImage}
-                      isSearchable={false}
-                      isDisabled={platform === "" || isViewer}
-                      options={chainList}
-                      value={chain}
-                      placeholder="Select Contract Chain"
-                      styles={customStylesForReactSelect}
-                      onChange={(newValue: any) => {
-                        if (newValue) {
-                          setChain(newValue);
-                        }
-                      }}
-                    />
-                  </FormControl>
-                )}
               </Stack>
             )}
           </>

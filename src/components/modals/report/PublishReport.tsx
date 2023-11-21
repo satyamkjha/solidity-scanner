@@ -123,7 +123,9 @@ export const PublishReport: React.FC<{
               w={"100%"}
               h={"100%"}
               flexDir="row"
-              pt={10}
+              pt={
+                modalState === "publish_details" ? [0, 0, 0, 10] : [4, 4, 4, 10]
+              }
               pb={10}
             >
               {modalState === "report_type" ? (

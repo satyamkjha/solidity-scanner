@@ -37,8 +37,10 @@ import {
   getTrimmedScanMessage,
   getAssetsURL,
   getProjectType,
+  getContractBlockchainId,
+  getContractBlockChainLogoUrl,
 } from "helpers/helperFunction";
-import { scanStatesLabel } from "common/values";
+import { scanStatesLabel, contractChain } from "common/values";
 
 const ScanCard: React.FC<{
   scan: ScanObj;
@@ -175,7 +177,10 @@ const ScanCard: React.FC<{
                 ? `icons/integrations/${getProjectType(
                     scan.scan_details.project_url || ""
                   )}`
-                : `blockscan/${contract_platform}`
+                : getContractBlockChainLogoUrl(
+                    scan.scan_details.contract_platform || "",
+                    scan.scan_details.contract_chain || ""
+                  )
             }.svg`}
             alt={contract_platform}
             h={"40px"}
@@ -240,22 +245,23 @@ const ScanCard: React.FC<{
             />
           </Flex>
           <VulnerabilityDistribution
-            critical={
-              multi_file_scan_summary?.issue_severity_distribution?.critical ||
-              0
-            }
-            high={
-              multi_file_scan_summary?.issue_severity_distribution?.high || 0
-            }
-            medium={
-              multi_file_scan_summary?.issue_severity_distribution?.medium || 0
-            }
-            low={multi_file_scan_summary?.issue_severity_distribution?.low || 0}
-            informational={
-              multi_file_scan_summary?.issue_severity_distribution
-                ?.informational || 0
-            }
-            gas={multi_file_scan_summary?.issue_severity_distribution.gas || 0}
+            issueSeverityDistribution={{
+              critical:
+                multi_file_scan_summary?.issue_severity_distribution
+                  ?.critical || 0,
+              high:
+                multi_file_scan_summary?.issue_severity_distribution?.high || 0,
+              medium:
+                multi_file_scan_summary?.issue_severity_distribution?.medium ||
+                0,
+              low:
+                multi_file_scan_summary?.issue_severity_distribution?.low || 0,
+              informational:
+                multi_file_scan_summary?.issue_severity_distribution
+                  ?.informational || 0,
+              gas:
+                multi_file_scan_summary?.issue_severity_distribution.gas || 0,
+            }}
             view={"scans"}
           />
         </Flex>

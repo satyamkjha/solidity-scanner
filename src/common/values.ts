@@ -9,6 +9,36 @@ export const severityPriority: { [key: string]: number } = {
   informational: 6,
 };
 
+export const severityArrayInOrder: {
+  value: string;
+  shortForm: string;
+}[] = [
+  {
+    value: "critical",
+    shortForm: "Crit",
+  },
+  {
+    value: "high",
+    shortForm: "High",
+  },
+  {
+    value: "medium",
+    shortForm: "Med",
+  },
+  {
+    value: "low",
+    shortForm: "Low",
+  },
+  {
+    value: "informational",
+    shortForm: "Info",
+  },
+  {
+    value: "gas",
+    shortForm: "Gas",
+  },
+];
+
 export const publishReportType: { [key: string]: string } = {
   self_published: "Self-Published",
   verified: "Verified Report",
@@ -249,65 +279,6 @@ export const monthNames = [
   "Nov",
   "Dec",
 ];
-
-export const blockScans: { [key: string]: string } = {
-  etherscan: "Ethereum",
-  bscscan: "Binance",
-  polygonscan: "Polygon",
-  fantom: "fantom",
-  cronos: "Cronos",
-  avalanche: "Avalanche C-Chain",
-  celo: "celo",
-  aurora: "Aurora",
-  arbiscan: "Arbiscan",
-  buildbear: "Buildbear",
-  optimism: "Optimism",
-  xdc: "XDC",
-  reefscan: "Reefscan",
-  nordekscan: "Nordek",
-  fuse: "Fuse",
-};
-
-export const codePlatform: {
-  [key: string]: {
-    platform: string;
-    dynamicString: string;
-  };
-} = {
-  etherscan: { platform: "own", dynamicString: "#code" },
-  bscscan: { platform: "own", dynamicString: "#code" },
-  polygonscan: { platform: "own", dynamicString: "#code" },
-  fantom: { platform: "own", dynamicString: "#code" },
-  cronos: { platform: "own", dynamicString: "#code" },
-  avalanche: { platform: "own", dynamicString: "#code" },
-  celo: { platform: "own", dynamicString: "#code" },
-  aurora: { platform: "own", dynamicString: "/contracts#address-tabs" },
-  arbiscan: { platform: "own", dynamicString: "#code" },
-  buildbear: { platform: "none", dynamicString: "" },
-  optimism: { platform: "own", dynamicString: "#code" },
-  xdc: { platform: "own", dynamicString: "#readContract" },
-  reefscan: { platform: "own", dynamicString: "" },
-  nordekscan: { platform: "own", dynamicString: "/contracts#address-tabs" },
-  fuse: { platform: "own", dynamicString: "/contracts#address-tabs" },
-};
-
-export const blockExplorer: { [key: string]: string } = {
-  etherscan: "Etherscan",
-  bscscan: "Bscscan",
-  polygonscan: "Polygonscan",
-  fantom: "FTMScan",
-  cronos: "Cronoscan",
-  avalanche: "Snowtrace",
-  celo: "Celo",
-  aurora: "Aurora",
-  arbiscan: "Arbiscan",
-  buildbear: "Buildbear",
-  optimism: "Optimism",
-  xdc: "(xdc.blocksscan.io)",
-  reefscan: "Reefscan",
-  nordekscan: "Nordek",
-  fuse: "Fuse",
-};
 
 export const detectorData: DetectorItemProp[] = [
   {
@@ -982,269 +953,1124 @@ export const scanStatesLabel: {
   scanning: "Scan in Progress...",
 };
 
-export const contractChain: {
-  [key: string]: {
-    label: string;
-    value: string;
-    icon: string;
-    isDisabled: boolean;
-  }[];
-} = {
-  etherscan: [
-    {
-      value: "mainnet",
-      label: "Ethereum Mainnet",
-      icon: "",
-      isDisabled: false,
-    },
-    {
-      value: "sepolia",
-      label: "Sepolia Testnet",
-      icon: "",
-      isDisabled: false,
-    },
-    { value: "goerli", label: "Goerli Testnet", icon: "", isDisabled: false },
-    { value: "holesky", label: "Holesky Testnet", icon: "", isDisabled: false },
-  ],
-  optimism: [
-    {
-      value: "mainnet",
-      label: "Optimism Mainnet",
-      icon: "",
-      isDisabled: false,
-    },
-    {
-      value: "goerli",
-      label: "Optimism Goerli Testnet",
-      icon: "",
-      isDisabled: false,
-    },
-  ],
-  bscscan: [
-    { value: "mainnet", label: "Bsc Mainnet", icon: "", isDisabled: false },
-    { value: "testnet", label: "Bsc Testnet", icon: "", isDisabled: false },
-  ],
-  polygonscan: [
-    {
-      value: "mainnet",
-      label: "Polygon Mainnet",
-      icon: "",
-      isDisabled: false,
-    },
-    {
-      value: "testnet",
-      label: "Polygon Testnet",
-      icon: "",
-      isDisabled: false,
-    },
-  ],
-  avalanche: [
-    {
-      value: "mainnet",
-      label: "Avalanche Mainnet",
-      icon: "",
-      isDisabled: false,
-    },
-    {
-      value: "testnet",
-      label: "Avalanche Fuji Testnet",
-      icon: "",
-      isDisabled: false,
-    },
-  ],
-  fantom: [
-    { value: "mainnet", label: "FTM Mainnet", icon: "", isDisabled: false },
-    { value: "testnet", label: "FTM Testnet", icon: "", isDisabled: false },
-  ],
-  cronos: [
-    {
-      value: "mainnet",
-      label: "Cronos Mainnet",
-      icon: "",
-      isDisabled: false,
-    },
-    {
-      value: "testnet",
-      label: "Cronos Testnet",
-      icon: "",
-      isDisabled: false,
-    },
-  ],
-  celo: [
-    { value: "mainnet", label: "Celo Mainnet", icon: "", isDisabled: false },
-    {
-      value: "testnet",
-      label: "Alfajores Testnet",
-      icon: "",
-      isDisabled: false,
-    },
-  ],
-  aurora: [
-    {
-      value: "mainnet",
-      label: "Aurora Mainnet",
-      icon: "",
-      isDisabled: false,
-    },
-    {
-      value: "testnet",
-      label: "Aurora Testnet",
-      icon: "",
-      isDisabled: false,
-    },
-  ],
-  arbiscan: [
-    {
-      value: "mainnet",
-      label: "Arbiscan Mainnet",
-      icon: "",
-      isDisabled: false,
-    },
-    {
-      value: "goerli",
-      label: "Arbiscan Goerli",
-      icon: "",
-      isDisabled: false,
-    },
-  ],
-  reefscan: [
-    {
-      value: "mainnet",
-      label: "ReefScan Mainnet",
-      icon: "",
-      isDisabled: false,
-    },
-  ],
-  xdc: [
-    {
-      value: "mainnet",
-      label: "XDC Mainnet",
-      icon: "",
-      isDisabled: false,
-    },
-    {
-      value: "testnet",
-      label: "XDC Apothem Network",
-      icon: "",
-      isDisabled: false,
-    },
-  ],
-  nordekscan: [
-    {
-      value: "mainnet",
-      label: "Nordek Mainnet",
-      icon: "",
-      isDisabled: false,
-    },
-  ],
-  fuse: [
-    {
-      value: "mainnet",
-      label: "Fuse Mainnet",
-      icon: "",
-      isDisabled: false,
-    },
-    {
-      value: "testnet",
-      label: "Fuse Testnet",
-      icon: "",
-      isDisabled: false,
-    },
-  ],
+export const blockScans: { [key: string]: string } = {
+  etherscan: "Ethereum",
+  bscscan: "Binance",
+  polygonscan: "Polygon",
+  fantom: "fantom",
+  cronos: "Cronos",
+  avalanche: "Avalanche C-Chain",
+  celo: "celo",
+  aurora: "Aurora",
+  arbiscan: "Arbiscan",
+  buildbear: "Buildbear",
+  optimism: "Optimism",
+  xdc: "XDC",
+  reefscan: "Reefscan",
+  nordekscan: "Nordek",
+  fuse: "Fuse",
 };
 
-export const platforms = [
-  {
-    value: "etherscan",
-    icon: "blockscan/etherscan",
-    label: "Ethereum - (etherscan.io)",
-    isDisabled: true,
+export const codePlatform: {
+  [key: string]: {
+    [key: string]: string;
+  };
+} = {
+  etherscan: { etherscan: "#code", blockscout: "?tab=contract" },
+  bscscan: { bscscan: "#code" },
+  polygonscan: { polygonscan: "#code", blockscout: "?tab=contract" },
+  fantom: { fantom: "#code" },
+  cronos: { cronos: "#code" },
+  avalanche: { avalanche: "#code", routescan: "#code-43114" },
+  celo: { celo: "#code" },
+  aurora: { aurora: "/contracts#address-tabs" },
+  arbiscan: { arbiscan: "#code" },
+  buildbear: { buildbear: "" },
+  optimism: { optimism: "#code", blockscout: "?tab=contract" },
+  xdc: { xdc: "#readContract" },
+  reefscan: { reefscan: "" },
+  nordekscan: { nordekscan: "/contracts#address-tabs" },
+  fuse: { fuse: "/contracts#address-tabs" },
+  basescan: { basescan: "#code", blockscout: "?tab=contract" },
+  gnosis: { blockscout: "?tab=contract" },
+  rootstock: { blockscout: "?tab=contract" },
+  neon: { blockscout: "?tab=contract" },
+  shimmer: { blockscout: "?tab=contract" },
+  shibariumscan: { blockscout: "?tab=contract" },
+  etc: { blockscout: "?tab=contract" },
+  zksync: { blockscout: "?tab=contract" },
+  immutable: { blockscout: "?tab=contract" },
+  boba: { routescan: "#code-288" },
+  flare: { routescan: "#code-14" },
+  metis: { routescan: "#code-1088" },
+  chiliz: { routescan: "#code-88888" },
+};
+
+export const blockExplorer: { [key: string]: string } = {
+  etherscan: "Etherscan",
+  bscscan: "Bscscan",
+  polygonscan: "Polygonscan",
+  fantom: "FTMScan",
+  cronos: "Cronoscan",
+  avalanche: "Snowtrace",
+  celo: "Celo",
+  aurora: "Aurora",
+  arbiscan: "Arbiscan",
+  buildbear: "Buildbear",
+  optimism: "Optimism",
+  xdc: "(xdc.blocksscan.io)",
+  reefscan: "Reefscan",
+  nordekscan: "Nordek",
+  fuse: "Fuse",
+  blockscout: "Blockscout",
+};
+
+export const contractChain: {
+  [key: string]: {
+    blockchainName: string;
+    description: string;
+    website: string;
+    logoUrl: string;
+
+    platforms: {
+      [key: string]: {
+        label: string;
+        iconUrl: string;
+        chains: {
+          value: string;
+          label: string;
+          icon: string;
+          isDisabled: boolean;
+          website: string;
+        }[];
+      };
+    };
+  };
+} = {
+  etherscan: {
+    blockchainName: "Ethereum",
+    description:
+      "Ethereum is the community-run technology powering the cryptocurrency ether (ETH) and thousands of decentralized applications.",
+    website: "https://ethereum.org/",
+    logoUrl: "blockscan/ethereum",
+    platforms: {
+      etherscan: {
+        label: "Etherscan",
+        iconUrl: "blockscan/etherscan",
+        chains: [
+          {
+            value: "mainnet",
+            label: "Ethereum Mainnet",
+            icon: "",
+            isDisabled: false,
+            website: "https://etherscan.io/",
+          },
+          {
+            value: "sepolia",
+            label: "Sepolia Testnet",
+            icon: "",
+            isDisabled: false,
+            website: "https://sepolia.etherscan.io/",
+          },
+          {
+            value: "goerli",
+            label: "Goerli Testnet",
+            icon: "",
+            isDisabled: false,
+            website: "https://goerli.etherscan.io/",
+          },
+          {
+            value: "holesky",
+            label: "Holesky Testnet",
+            icon: "",
+            isDisabled: false,
+            website: "https://holesky.etherscan.io/",
+          },
+        ],
+      },
+      blockscout: {
+        label: "Blockscout",
+        iconUrl: "blockscan/blockscout",
+        chains: [
+          {
+            value: "eth",
+            label: "Ethereum Mainnet",
+            icon: "",
+            isDisabled: false,
+            website: "https://eth.blockscout.com/",
+          },
+          {
+            value: "eth-sepolia",
+            label: "Sepolia Testnet",
+            icon: "",
+            isDisabled: false,
+            website: "https://eth-sepolia.blockscout.com/",
+          },
+          {
+            value: "eth-goerli",
+            label: "Goerli Testnet",
+            icon: "",
+            isDisabled: false,
+            website: "https://eth-goerli.blockscout.com/",
+          },
+          {
+            value: "eth-holesky",
+            label: "Holesky Testnet",
+            icon: "",
+            isDisabled: false,
+            website: "https://eth-holesky.blockscout.com/",
+          },
+        ],
+      },
+    },
   },
-  {
-    value: "bscscan",
-    icon: "blockscan/bscscan",
-    label: "Binance - (bscscan.com)",
-    isDisabled: true,
+  optimism: {
+    blockchainName: "Optimism",
+    description:
+      "Optimism is a fast, stable, and scalable L2 blockchain built by Ethereum developers, for Ethereum developers.",
+    website: "https://www.optimism.io/",
+    logoUrl: "blockscan/optimism",
+    platforms: {
+      optimism: {
+        label: "Optimism",
+        iconUrl: "blockscan/optimism",
+        chains: [
+          {
+            value: "mainnet",
+            label: "Optimism Mainnet",
+            icon: "",
+            isDisabled: false,
+            website: "https://optimistic.etherscan.io/",
+          },
+          {
+            value: "goerli",
+            label: "Optimism Goerli Testnet",
+            icon: "",
+            isDisabled: false,
+            website: "https://goerli-optimism.etherscan.io/",
+          },
+        ],
+      },
+      blockscout: {
+        label: "Blockscout",
+        iconUrl: "blockscan/blockscout",
+        chains: [
+          {
+            value: "optimism",
+            label: "Optimism Mainnet",
+            icon: "",
+            isDisabled: false,
+            website: "https://optimism.blockscout.com/",
+          },
+          {
+            value: "optimism-goerli",
+            label: "Optimism Goerli Testnet",
+            icon: "",
+            isDisabled: false,
+            website: "https://optimism-goerli.blockscout.com/",
+          },
+          {
+            value: "optimism-sepolia",
+            label: "Optimism Sepolia Testnet",
+            icon: "",
+            isDisabled: false,
+            website: "https://optimism-sepolia.blockscout.com/",
+          },
+        ],
+      },
+    },
   },
-  {
-    value: "avalanche",
-    icon: "blockscan/avalanche",
-    label: "Avalanche C-Chain - (snowtrace.io)",
-    isDisabled: true,
+  bscscan: {
+    blockchainName: "Binance",
+    description:
+      "A community-driven blockchain ecosystemof Layer-1 and Layer-2 scaling solutions.",
+    website: "https://www.bnbchain.org/",
+    logoUrl: "blockscan/binance",
+    platforms: {
+      bscscan: {
+        label: "BscScan",
+        iconUrl: "blockscan/bscscan",
+        chains: [
+          {
+            value: "mainnet",
+            label: "Bsc Mainnet",
+            icon: "",
+            isDisabled: false,
+            website: "https://bscscan.com/",
+          },
+          {
+            value: "testnet",
+            label: "Bsc Testnet",
+            icon: "",
+            isDisabled: false,
+            website: "https://testnet.bscscan.com/",
+          },
+        ],
+      },
+    },
   },
-  {
-    value: "polygonscan",
-    icon: "blockscan/polygonscan",
-    label: "Polygon - (polygonscan.com)",
-    isDisabled: true,
+  polygonscan: {
+    blockchainName: "Polygon",
+    description:
+      "The fundamental protocol that allows anyone to create and exchange value, powered by zero-knowledge technology.",
+    website: "https://polygon.technology/",
+    logoUrl: "blockscan/polygon",
+    platforms: {
+      polygonscan: {
+        label: "PolygonScan",
+        iconUrl: "blockscan/polygonscan",
+        chains: [
+          {
+            value: "mainnet",
+            label: "Polygon Mainnet",
+            icon: "",
+            isDisabled: false,
+            website: "https://polygonscan.com/",
+          },
+          {
+            value: "testnet",
+            label: "Mumbai Testnet",
+            icon: "",
+            isDisabled: false,
+            website: "https://mumbai.polygonscan.com/",
+          },
+        ],
+      },
+      // blockscout: {
+      //   label: "Blockscout",
+      //   iconUrl: "blockscan/blockscout",
+      //   chains: [
+      //     {
+      //       value: "polygon",
+      //       label: "Polygon Mainnet",
+      //       icon: "",
+      //       isDisabled: false,
+      //       website: "https://polygon.blockscout.com/",
+      //     },
+      //   ],
+      // },
+    },
   },
-  {
-    value: "fantom",
-    icon: "blockscan/fantom",
-    label: "Fantom - (ftmscan.com)",
-    isDisabled: true,
+  avalanche: {
+    blockchainName: "Avalanche",
+    description:
+      "Avalanche is a decentralized blockchain platform known for its high-performance consensus protocol and custom subnets, enabling fast and scalable decentralized applications (DApps).",
+    website: "https://www.avax.network/",
+    logoUrl: "blockscan/avalanche",
+    platforms: {
+      avalanche: {
+        label: "Snowtrace",
+        iconUrl: "blockscan/snowtrace",
+        chains: [
+          {
+            value: "mainnet",
+            label: "Avalanche Mainnet",
+            icon: "",
+            isDisabled: false,
+            website: "https://snowtrace.io/",
+          },
+          {
+            value: "testnet",
+            label: "Avalanche Fuji Testnet",
+            icon: "",
+            isDisabled: false,
+            website: "https://testnet.snowtrace.io/",
+          },
+        ],
+      },
+      routescan: {
+        label: "Routescan",
+        iconUrl: "blockscan/routescan",
+        chains: [
+          {
+            value: "c-chain",
+            label: "Avalanche C-Chain",
+            icon: "",
+            isDisabled: false,
+            website: "https://43114.routescan.io/",
+          },
+        ],
+      },
+    },
   },
-  {
-    value: "cronos",
-    icon: "blockscan/cronos",
-    label: "Cronos - (cronoscan.com)",
-    isDisabled: true,
+  fantom: {
+    blockchainName: "Fantom",
+    description:
+      "Fantom is a highly scalable blockchain platform for DeFi, crypto dApps, and enterprise applications.",
+    website: "https://fantom.foundation/",
+    logoUrl: "blockscan/fantom",
+    platforms: {
+      fantom: {
+        label: "FTMScan",
+        iconUrl: "blockscan/ftmscan",
+        chains: [
+          {
+            value: "mainnet",
+            label: "FTM Mainnet",
+            icon: "",
+            isDisabled: false,
+            website: "https://ftmscan.com/",
+          },
+          {
+            value: "testnet",
+            label: "FTM Testnet",
+            icon: "",
+            isDisabled: false,
+            website: "https://testnet.ftmscan.com/",
+          },
+        ],
+      },
+    },
   },
-  {
-    value: "arbiscan",
-    icon: "blockscan/arbiscan",
-    label: "Arbiscan - (arbiscan.io)",
-    isDisabled: true,
+  cronos: {
+    blockchainName: "Cronos",
+    description:
+      "Cronos is a blockchain network developed by Crypto.com, designed to provide Ethereum Virtual Machine (EVM) compatibility and cross-chain capabilities, fostering interoperability and scalability in decentralized applications.",
+    website: "https://cronos.org/",
+    logoUrl: "blockscan/cronos",
+    platforms: {
+      cronos: {
+        label: "Cronos Explorer",
+        iconUrl: "blockscan/cronos",
+        chains: [
+          {
+            value: "mainnet",
+            label: "Cronos Mainnet",
+            icon: "",
+            isDisabled: false,
+            website: "https://cronoscan.com/",
+          },
+          {
+            value: "testnet",
+            label: "Cronos Testnet",
+            icon: "",
+            isDisabled: false,
+            website: "https://explorer.cronos.org/testnet",
+          },
+        ],
+      },
+    },
   },
-  {
-    value: "celo",
-    icon: "blockscan/celo",
-    label: "Celo - (celoscan.io)",
-    isDisabled: true,
+  celo: {
+    blockchainName: "Celo",
+    description:
+      "Celo is a mobile-first blockchain platform focused on financial inclusion, leveraging a stablecoin, cUSD, and a novel proof-of-stake consensus mechanism to enable accessible and affordable financial services for anyone with a mobile phone.",
+    website: "https://celo.org/",
+    logoUrl: "blockscan/celo",
+    platforms: {
+      celo: {
+        label: "Celo Explorer",
+        iconUrl: "blockscan/celo",
+        chains: [
+          {
+            value: "mainnet",
+            label: "Celo Mainnet",
+            icon: "",
+            isDisabled: false,
+            website: "https://celoscan.io/",
+          },
+          {
+            value: "testnet",
+            label: "Alfajores Testnet",
+            icon: "",
+            isDisabled: false,
+            website: "https://alfajores.celoscan.io/",
+          },
+        ],
+      },
+    },
   },
-  {
-    value: "aurora",
-    icon: "blockscan/aurora",
-    label: "Aurora - (aurorascan.dev)",
-    isDisabled: true,
+  aurora: {
+    blockchainName: "Aurora",
+    description:
+      "Aurora is a next-generation Ethereum compatible blockchain and ecosystem that runs on the NEAR Protocol, and powers the innovations behind Aurora Cloud—the fastest path for Web2 businesses to capture the value of Web3.",
+    website: "https://aurora.dev/",
+    logoUrl: "blockscan/aurora",
+    platforms: {
+      aurora: {
+        label: "Blockscout",
+        iconUrl: "blockscan/blockscout",
+        chains: [
+          {
+            value: "mainnet",
+            label: "Aurora Mainnet",
+            icon: "",
+            isDisabled: false,
+            website: "https://explorer.aurora.dev/",
+          },
+          {
+            value: "testnet",
+            label: "Aurora Testnet",
+            icon: "",
+            isDisabled: false,
+            website: "https://explorer.testnet.aurora.dev/",
+          },
+        ],
+      },
+    },
   },
-  {
-    value: "reefscan",
-    icon: "blockscan/reefscan",
-    label: "ReefScan - (reefscan.com)",
-    isDisabled: true,
+  arbiscan: {
+    blockchainName: "Arbitrum",
+    description:
+      "Arbitrum is an Ethereum Layer 2 scaling solution developed by Offchain Labs, utilizing optimistic rollups to enhance transaction throughput and reduce fees on the Ethereum network.",
+    website: "https://arbitrum.io/",
+    logoUrl: "blockscan/arbitrum",
+    platforms: {
+      arbiscan: {
+        label: "Arbiscan",
+        iconUrl: "blockscan/arbitrum",
+        chains: [
+          {
+            value: "mainnet",
+            label: "Arbiscan Mainnet",
+            icon: "",
+            isDisabled: false,
+            website: "https://arbiscan.io/",
+          },
+          {
+            value: "goerli",
+            label: "Arbiscan Goerli",
+            icon: "",
+            isDisabled: false,
+            website: "https://goerli.arbiscan.io/",
+          },
+        ],
+      },
+    },
   },
-  {
-    value: "optimism",
-    icon: "blockscan/optimism",
-    label: "Optimism - (optimism.io)",
-    isDisabled: true,
+  reefscan: {
+    blockchainName: "Reef",
+    description:
+      "Reef chain is an EVM compatible blockchain for DeFi. It is fast, scalable, has low transaction costs and does no wasteful mining. It is built with Substrate Framework and comes with on-chain governance.",
+    website: "https://reef.io/",
+    logoUrl: "blockscan/reefscan",
+    platforms: {
+      reefscan: {
+        label: "ReefScan",
+        iconUrl: "blockscan/reefscan",
+        chains: [
+          {
+            value: "mainnet",
+            label: "ReefScan Mainnet",
+            icon: "",
+            isDisabled: false,
+            website: "https://reefscan.com/",
+          },
+        ],
+      },
+    },
   },
-  {
-    value: "buildbear",
-    icon: "blockscan/buildbear",
-    label: "Buildbear - (buildbear.io)",
-    isDisabled: true,
+  xdc: {
+    blockchainName: "XDC",
+    description:
+      "XDC Network is an enterprise-grade, open-source blockchain protocol. An EVM-compatible chain with enforceable smart contracts, it is uniquely suited to revolutionize, decentralize, and liquify the trade finance industry through the tokenization of real world assets and financial instruments.",
+    website: "https://xdc.org/",
+    logoUrl: "blockscan/xdc",
+    platforms: {
+      xdc: {
+        label: "BlocksScan",
+        iconUrl: "blockscan/blocksscan",
+        chains: [
+          {
+            value: "mainnet",
+            label: "XDC Mainnet",
+            icon: "",
+            isDisabled: false,
+            website: "https://explorer.xinfin.network/",
+          },
+          {
+            value: "testnet",
+            label: "XDC Apothem Network",
+            icon: "",
+            isDisabled: false,
+            website: "https://explorer.apothem.network/",
+          },
+        ],
+      },
+    },
   },
-  {
-    value: "xdc",
-    icon: "blockscan/xdc",
-    label: "XDC - (xdc.blocksscan.io)",
-    isDisabled: true,
+  nordekscan: {
+    blockchainName: "Nordek",
+    description:
+      "NORDEK strives to be the most business and consumer-friendly blockchain ecosystem for mainstream adoption of web3 payments. NORDEK is powered by fast and low-cost EVM-compatible NRK Network blockchain.",
+    website: "https://www.nordek.io/",
+    logoUrl: "blockscan/nordekscan",
+    platforms: {
+      nordekscan: {
+        label: "Blockscout",
+        iconUrl: "blockscan/blockscout",
+        chains: [
+          {
+            value: "mainnet",
+            label: "Nordek Mainnet",
+            icon: "",
+            isDisabled: false,
+            website: "https://nordekscan.com/",
+          },
+        ],
+      },
+    },
   },
-  {
-    value: "nordekscan",
-    icon: "blockscan/nordekscan",
-    label: "Nordek - (nordek.io)",
-    isDisabled: true,
+  fuse: {
+    blockchainName: "Fuse",
+    description:
+      "Fuse's public blockchain ecosystem provides low cost Web3 payments without the development headaches or vendor lock-in.",
+    website: "https://www.fuse.io/",
+    logoUrl: "blockscan/fuse",
+    platforms: {
+      fuse: {
+        label: "Blockscout",
+        iconUrl: "blockscan/blockscout",
+        chains: [
+          {
+            value: "mainnet",
+            label: "Fuse Mainnet",
+            icon: "",
+            isDisabled: false,
+            website: "https://explorer.fuse.io/",
+          },
+          {
+            value: "testnet",
+            label: "Fuse Testnet",
+            icon: "",
+            isDisabled: false,
+            website: "https://explorer.fusespark.io/",
+          },
+        ],
+      },
+    },
   },
-  {
-    value: "fuse",
-    icon: "blockscan/fuse",
-    label: "Fuse - (explorer.fuse.io)",
-    isDisabled: true,
+  basescan: {
+    blockchainName: "Base",
+    description:
+      "Base is a secure, low-cost, builder-friendly Ethereum L2 built to bring the next billion users onchain.",
+    website: "https://base.org/",
+    logoUrl: "blockscan/base",
+    platforms: {
+      basescan: {
+        label: "BaseScan",
+        iconUrl: "blockscan/base",
+        chains: [
+          {
+            value: "mainnet",
+            label: "Base Mainnet",
+            icon: "",
+            isDisabled: false,
+            website: "https://basescan.org/",
+          },
+          {
+            value: "testnet",
+            label: "Base Testnet",
+            icon: "",
+            isDisabled: false,
+            website: "https://goerli.basescan.org/",
+          },
+        ],
+      },
+      blockscout: {
+        label: "Blockscout",
+        iconUrl: "blockscan/blockscout",
+        chains: [
+          {
+            value: "base",
+            label: "Base Mainnet",
+            icon: "",
+            isDisabled: false,
+            website: "https://base.blockscout.com/",
+          },
+          {
+            value: "base-goerli",
+            label: "Base Goerli",
+            icon: "",
+            isDisabled: false,
+            website: "https://base-goerli.blockscout.com/",
+          },
+          {
+            value: "base-sepolia",
+            label: "Base Sepolia",
+            icon: "",
+            isDisabled: false,
+            website: "https://base-sepolia.blockscout.com/",
+          },
+        ],
+      },
+    },
   },
-];
+  gnosis: {
+    blockchainName: "Gnosis",
+    description:
+      "Gnosis is a decentralized platform built on Ethereum that facilitates prediction market and decentralized exchange services, aiming to enable users to forecast and trade on the outcome of various events.",
+    website: "https://www.gnosis.io/",
+    logoUrl: "blockscan/gnosis",
+    platforms: {
+      blockscout: {
+        label: "Blockscout",
+        iconUrl: "blockscan/blockscout",
+        chains: [
+          {
+            value: "gnosis",
+            label: "Gnosis Mainnet",
+            icon: "",
+            isDisabled: false,
+            website: "https://gnosis.blockscout.com/",
+          },
+          {
+            value: "gnosis-chiado",
+            label: "Gnosis Chiado Testnet",
+            icon: "",
+            isDisabled: false,
+            website: "https://gnosis-chiado.blockscout.com/",
+          },
+        ],
+      },
+    },
+  },
+  rootstock: {
+    blockchainName: "Rootstock",
+    description:
+      "Rootstock (RSK) is a smart contract platform that extends the capabilities of the Bitcoin blockchain by enabling the execution of smart contracts and decentralized applications (dApps).",
+    website: "https://rootstock.io/",
+    logoUrl: "blockscan/rootstock",
+    platforms: {
+      blockscout: {
+        label: "Blockscout",
+        iconUrl: "blockscan/blockscout",
+        chains: [
+          {
+            value: "rootstock",
+            label: "Rootstock Mainnet",
+            icon: "",
+            isDisabled: false,
+            website: "https://rootstock.blockscout.com/",
+          },
+        ],
+      },
+    },
+  },
+  neon: {
+    blockchainName: "Neon",
+    description:
+      "Neon is an Ethereum Virtual Machine with the scalability and liquidity of Solana",
+    website: "https://neonevm.org/",
+    logoUrl: "blockscan/neon",
+    platforms: {
+      blockscout: {
+        label: "Blockscout",
+        iconUrl: "blockscan/blockscout",
+        chains: [
+          {
+            value: "neon",
+            label: "Neon Mainnet",
+            icon: "",
+            isDisabled: false,
+            website: "https://neon.blockscout.com/",
+          },
+          {
+            value: "neon-devnet",
+            label: "Neon Devnet",
+            icon: "",
+            isDisabled: false,
+            website: "https://neon-devnet.blockscout.com/",
+          },
+        ],
+      },
+    },
+  },
+  shimmer: {
+    blockchainName: "Shimmer",
+    description:
+      "Shimmer is a high-performance, feeless, and parallelized Directed Acyclic Graph (DAG) ledger offering a chain-agnostic solution for fully customizable smart contract chains to be build on top. Shimmer is a bridge to a new era of interoperability and composability. It enables seamless and feeless value transfers between smart contract chains, opening the door to an interoperable future.",
+    website: "https://shimmer.network/",
+    logoUrl: "blockscan/shimmer",
+    platforms: {
+      blockscout: {
+        label: "Blockscout",
+        iconUrl: "blockscan/blockscout",
+        chains: [
+          {
+            value: "shimmer-mainnet",
+            label: "Shimmer Mainnet",
+            icon: "",
+            isDisabled: false,
+            website: "https://explorer.evm.shimmer.network/",
+          },
+          {
+            value: "shimmer-testnet",
+            label: "Shimmer Testnet",
+            icon: "",
+            isDisabled: false,
+            website: "https://explorer.evm.testnet.shimmer.network/",
+          },
+        ],
+      },
+    },
+  },
+  shibariumscan: {
+    blockchainName: "Shibarium",
+    description:
+      "Gnosis is a decentralized platform built on Ethereum that facilitates prediction market and decentralized exchange services, aiming to enable users to forecast and trade on the outcome of various events.",
+    website: "https://shibarium.shib.io/",
+    logoUrl: "blockscan/shibariumscan",
+    platforms: {
+      blockscout: {
+        label: "Blockscout",
+        iconUrl: "blockscan/blockscout",
+        chains: [
+          {
+            value: "shibariumscan-mainnet",
+            label: "Shibarium Mainnet",
+            icon: "",
+            isDisabled: false,
+            website: "https://www.shibariumscan.io/",
+          },
+          {
+            value: "shibariumscan-testnet",
+            label: "Puppynet Testnet",
+            icon: "",
+            isDisabled: false,
+            website: "https://puppyscan.shib.io/",
+          },
+        ],
+      },
+    },
+  },
+  lightlink: {
+    blockchainName: "Lightlink",
+    description:
+      "Layer 2 blockchain secured by Ethereum, purposefully built for Metaverse, NFT and Gaming applications",
+    website: "https://www.lightlink.io/",
+    logoUrl: "blockscan/lightlink",
+    platforms: {
+      blockscout: {
+        label: "Blockscout",
+        iconUrl: "blockscan/blockscout",
+        chains: [
+          {
+            value: "lightlink-mainnet",
+            label: " LightLink Phoenix Mainnet",
+            icon: "",
+            isDisabled: false,
+            website: "https://phoenix.lightlink.io/",
+          },
+          {
+            value: "lightlink-testnet",
+            label: " LightLink Pegasus  Testnet",
+            icon: "",
+            isDisabled: false,
+            website: "https://pegasus.lightlink.io/",
+          },
+        ],
+      },
+    },
+  },
+  etc: {
+    blockchainName: "Ethereum Classic",
+    description:
+      "Ethereum Classic (ETC) is a decentralized blockchain platform that emerged as a result of a fork in the Ethereum network, maintaining the original principles of immutability and preserving the blockchain's history prior to a controversial hard fork.",
+    website: "https://ethereumclassic.org/",
+    logoUrl: "blockscan/etc",
+    platforms: {
+      blockscout: {
+        label: "Blockscout",
+        iconUrl: "blockscan/blockscout",
+        chains: [
+          {
+            value: "etc",
+            label: "Ethereum Classic Mainnet",
+            icon: "",
+            isDisabled: false,
+            website: "https://etc.blockscout.com/",
+          },
+          {
+            value: "etc-mordor",
+            label: "ETC Mordor Testnet",
+            icon: "",
+            isDisabled: false,
+            website: "https://etc-mordor.blockscout.com/",
+          },
+        ],
+      },
+    },
+  },
+  zksync: {
+    blockchainName: "zkSync",
+    description:
+      "zkSync is a Layer-2 scaling solution for the Ethereum blockchain that employs zk-rollup technology to enhance scalability and efficiency.",
+    website: "https://zksync.io/",
+    logoUrl: "blockscan/zksync",
+    platforms: {
+      blockscout: {
+        label: "Blockscout",
+        iconUrl: "blockscan/blockscout",
+        chains: [
+          {
+            value: "zksync-era-mainnet",
+            label: "zkSync Era Mainnet",
+            icon: "",
+            isDisabled: false,
+            website: "https://zksync.blockscout.com/",
+          },
+        ],
+      },
+    },
+  },
+  immutable: {
+    blockchainName: "Immutable",
+    description:
+      "Build with unmatched speed, scale, and flexibility using Immutable’s simple, end-to-end Web3 solutions. Fuel your game's growth and captivate players like never before.",
+    website: "https://www.immutable.com/",
+    logoUrl: "blockscan/immutable",
+    platforms: {
+      blockscout: {
+        label: "Blockscout",
+        iconUrl: "blockscan/blockscout",
+        chains: [
+          {
+            value: "immutable-testnet",
+            label: "Immutable Testnet",
+            icon: "",
+            isDisabled: false,
+            website: "https://explorer.testnet.immutable.com/",
+          },
+        ],
+      },
+    },
+  },
+  boba: {
+    blockchainName: "BOBA",
+    description:
+      "Boba Network is a multichain layer 2 optimistic rollup that aims to unlock the potential of rollup technology and enable interoperability between blockchains and the real world. The protocol is fully compatible with EVM-based tools and has already deployed multichain support for Ethereum, Avalanche, and BNB supporting lightning-fast transactions and lower fees.",
+    website: "https://boba.network/",
+    logoUrl: "blockscan/boba",
+    platforms: {
+      routescan: {
+        label: "Routescan",
+        iconUrl: "blockscan/routescan",
+        chains: [
+          {
+            value: "boba",
+            label: "Boba Mainnet",
+            icon: "",
+            isDisabled: false,
+            website: "https://bobascan.com/",
+          },
+        ],
+      },
+    },
+  },
+  flare: {
+    blockchainName: "Flare",
+    description:
+      "EVM-based layer1 blockchain with two native data acquisition protocols.",
+    website: "https://flare.network/",
+    logoUrl: "blockscan/flare",
+    platforms: {
+      routescan: {
+        label: "Routescan",
+        iconUrl: "blockscan/routescan",
+        chains: [
+          {
+            value: "flare",
+            label: "Flare Mainnet",
+            icon: "",
+            isDisabled: false,
+            website: "https://mainnet.flarescan.com/",
+          },
+        ],
+      },
+    },
+  },
+  metis: {
+    blockchainName: "Metis",
+    description:
+      "Metis is a blockchain platform that aims to simplify decentralized application development through its user-friendly infrastructure and on-chain governance features.",
+    website: "https://www.metis.io/",
+    logoUrl: "blockscan/metis",
+    platforms: {
+      routescan: {
+        label: "Routescan",
+        iconUrl: "blockscan/routescan",
+        chains: [
+          {
+            value: "metis",
+            label: "Metis Mainnet",
+            icon: "",
+            isDisabled: false,
+            website: "https://explorer.metis.io/",
+          },
+        ],
+      },
+    },
+  },
+  chiliz: {
+    blockchainName: "Chiliz",
+    description:
+      "Chiliz Blockchain is a blockchain infrastructure specializing in sports and entertainment applications, enabling the creation of fan engagement and tokenized experiences within the Chiliz ecosystem.",
+    website: "https://www.chiliz.com/",
+    logoUrl: "blockscan/chiliz",
+    platforms: {
+      routescan: {
+        label: "Routescan",
+        iconUrl: "blockscan/routescan",
+        chains: [
+          {
+            value: "chiliz",
+            label: "Chiliz Mainnet",
+            icon: "",
+            isDisabled: false,
+            website: "https://chiliscan.com/",
+          },
+        ],
+      },
+    },
+  },
+};
+
+export const platformVsChains: {
+  [key: string]: {
+    [key: string]: {
+      chain: string;
+      index: number;
+    };
+  };
+} = {
+  blockscout: {
+    eth: {
+      chain: "etherscan",
+      index: 0,
+    },
+    "eth-goerli": {
+      chain: "etherscan",
+      index: 2,
+    },
+    "eth-sepolia": {
+      chain: "etherscan",
+      index: 1,
+    },
+    "eth-holesky": {
+      chain: "etherscan",
+      index: 3,
+    },
+    gnosis: {
+      chain: "gnosis",
+      index: 0,
+    },
+    "gnosis-chiado": {
+      chain: "gnosis",
+      index: 1,
+    },
+    optimism: {
+      chain: "optimism",
+      index: 0,
+    },
+    "optimism-goerli": {
+      chain: "optimism",
+      index: 1,
+    },
+    "optimism-sepolia": {
+      chain: "optimism",
+      index: 2,
+    },
+    rootstock: {
+      chain: "rootstock",
+      index: 0,
+    },
+    "neon-devnet": {
+      chain: "neon",
+      index: 1,
+    },
+    neon: {
+      chain: "neon",
+      index: 0,
+    },
+    "base-goerli": {
+      chain: "basescan",
+      index: 1,
+    },
+    "base-sepolia": {
+      chain: "basescan",
+      index: 2,
+    },
+    base: {
+      chain: "basescan",
+      index: 0,
+    },
+    polygon: {
+      chain: "polygonscan",
+      index: 0,
+    },
+    "shimmer-mainnet": {
+      chain: "shimmer",
+      index: 0,
+    },
+    "shimmer-testnet": {
+      chain: "shimmer",
+      index: 1,
+    },
+    "shibariumscan-mainnet": {
+      chain: "shibariumscan",
+      index: 0,
+    },
+    "shibariumscan-testnet": {
+      chain: "shibariumscan",
+      index: 1,
+    },
+    "lightlink-testnet": {
+      chain: "lightlink",
+      index: 1,
+    },
+    "lightlink-mainnet": {
+      chain: "lightlink",
+      index: 0,
+    },
+    "fuse-mainnet": {
+      chain: "fuse",
+      index: 0,
+    },
+    "fuse-testnet": {
+      chain: "fuse",
+      index: 1,
+    },
+    etc: {
+      chain: "etc",
+      index: 0,
+    },
+    "etc-mordor": {
+      chain: "etc",
+      index: 1,
+    },
+    "zksync-era-mainnet": {
+      chain: "zksync",
+      index: 0,
+    },
+    "immutable-testnet": {
+      chain: "immutable",
+      index: 0,
+    },
+  },
+  routescan: {
+    boba: {
+      chain: "boba",
+      index: 0,
+    },
+    chiliz: {
+      chain: "chiliz",
+      index: 0,
+    },
+    flare: {
+      chain: "flare",
+      index: 0,
+    },
+    metis: {
+      chain: "metis",
+      index: 0,
+    },
+    "c-chain": {
+      chain: "avalanche",
+      index: 0,
+    },
+  },
+};
 
 export const infographicsData: { [key: string]: string[] } = {
   project_github: [
@@ -1309,5 +2135,51 @@ export const socialIconsList = [
   {
     imgUrl: "twitter",
     link: "https://twitter.com/solidityscan",
+  },
+];
+
+export const pieData = (
+  critical: number,
+  high: number,
+  medium: number,
+  low: number,
+  informational: number,
+  gas: number
+) => [
+  {
+    id: "critical",
+    label: "Critical",
+    value: critical,
+    color: "#960D00",
+  },
+  {
+    id: "high",
+    label: "High",
+    value: high,
+    color: "#FF5C00",
+  },
+  {
+    id: "medium",
+    label: "Medium",
+    value: medium,
+    color: "#FFE600",
+  },
+  {
+    id: "low",
+    label: "Low",
+    value: low,
+    color: "#38CB89",
+  },
+  {
+    id: "informational",
+    label: "Informational",
+    value: informational,
+    color: "#A0AEC0",
+  },
+  {
+    id: "gas",
+    label: "Gas",
+    value: gas,
+    color: "#F795B4",
   },
 ];

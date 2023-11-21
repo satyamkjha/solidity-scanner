@@ -118,7 +118,7 @@ const AddProjectBox: React.FC<{ profileData: Profile }> = ({ profileData }) => {
         textAlign={changeView ? "left" : "center"}
         alignItems="flex-start"
         mb={changeView ? 0 : 5}
-        w={changeView ? "60%" : "100%"}
+        w={changeView ? "calc(100% - 220px)" : "100%"}
       >
         <Text
           sx={{
@@ -145,7 +145,7 @@ const AddProjectBox: React.FC<{ profileData: Profile }> = ({ profileData }) => {
           as={Button}
           variant="brand"
           leftIcon={<AddIcon />}
-          minW={"170px"}
+          w={"170px"}
         >
           Add Project
         </MenuButton>
@@ -288,12 +288,14 @@ const Home: React.FC = () => {
                 <VulnerabilityDistribution
                   view="home"
                   size={changeVulnDistributionView ? "large" : "small"}
-                  critical={data.overview.issue_count_critical}
-                  high={data.overview.issue_count_high}
-                  medium={data.overview.issue_count_medium}
-                  low={data.overview.issue_count_low}
-                  informational={data.overview.issue_count_informational}
-                  gas={data.overview.issue_count_gas}
+                  issueSeverityDistribution={{
+                    critical: data.overview.issue_count_critical,
+                    high: data.overview.issue_count_high,
+                    medium: data.overview.issue_count_medium,
+                    low: data.overview.issue_count_low,
+                    informational: data.overview.issue_count_informational,
+                    gas: data.overview.issue_count_gas,
+                  }}
                 />
               </VStack>
             </Flex>

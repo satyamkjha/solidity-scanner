@@ -4,7 +4,10 @@ import { AiOutlineCopy } from "react-icons/ai";
 import { CheckIcon } from "@chakra-ui/icons";
 import { Finding } from "common/types";
 import { codePlatform } from "common/values";
-import { getProjectFileUrl } from "helpers/helperFunction";
+import {
+  getProjectFileUrl,
+  getContractBlockchainId,
+} from "helpers/helperFunction";
 
 const FileNameTab: React.FC<{
   file: Finding;
@@ -14,6 +17,7 @@ const FileNameTab: React.FC<{
   branchName?: string;
   project_url?: string;
   contract_url?: string;
+  contract_chain?: string;
   contract_platform?: string;
   contract_address?: string;
 }> = ({
@@ -26,6 +30,7 @@ const FileNameTab: React.FC<{
   contract_url,
   contract_platform,
   contract_address,
+  contract_chain,
 }) => {
   const [isHovered, setIsHovered] = useState(false);
   const [showCheck, setShowCheck] = useState(false);
@@ -40,8 +45,15 @@ const FileNameTab: React.FC<{
           : type === "project" && project_url && branchName
           ? getProjectFileUrl(project_url, branchName, file)
           : contract_platform &&
-            codePlatform[contract_platform].platform === "own"
-          ? `${contract_url}${codePlatform[contract_platform].dynamicString}`
+            contract_chain &&
+            codePlatform[
+              getContractBlockchainId(contract_platform, contract_chain)
+            ]
+          ? `${contract_url}${
+              codePlatform[
+                getContractBlockchainId(contract_platform, contract_chain)
+              ][contract_platform]
+            }`
           : ""
       )
       .then(

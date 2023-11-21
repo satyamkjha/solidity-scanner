@@ -100,7 +100,6 @@ const ForgotPasswordForm: React.FC<{
 
   const onSubmit = async ({ email }: FormData) => {
     try {
-      console.log(email);
       let reqHeaders = await getReCaptchaHeaders("send_email");
       const { data } = await API.post<AuthResponse>(
         API_PATH.API_SEND_EMAIL,

@@ -88,6 +88,8 @@ export const API_PATH = {
   API_REMOVE_ORGANISATION_USERS: "/api-remove-organization-users/",
   API_LIST_ORGANISATION_USERS: "/api-list-organization-users/",
   API_UPDATE_ORGANISATION_USERS_ROLE: "/api-update-organization-user-roles/",
+  API_RESEND_ORGANISATION_USERS_INVITE:
+    "/api-resend-organization-users-invite/",
   API_CHECK_ORGANISATION_NAME_AVAILABILITY:
     "/api-check-organization-name-availability/",
   API_ACCEPT_ORGANISATION_REQUEST: "/api-accept-organization-request/",

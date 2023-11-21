@@ -58,6 +58,7 @@ export const Header: React.FC<{ theme: "light" | "dark" }> = ({ theme }) => {
           sx={{
             width: "250px",
             height: "50px",
+            cursor: "pointer",
           }}
           onClick={() => history.push("/")}
           src={`${assetsURL}logo/solidityscan_${

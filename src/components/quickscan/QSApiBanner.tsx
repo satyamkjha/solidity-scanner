@@ -27,7 +27,7 @@ export const QSApiBanner: React.FC = () => {
       mt={20}
       sx={{
         w: "100%",
-        background: `linear-gradient(98deg, #04080D -22.88%, #2900DE 218.68%)`,
+        background: `linear-gradient(94deg, #373737 -9.82%, #1D1D1D 100%)`,
         borderRadius: 20,
         overflow: "hidden",
       }}

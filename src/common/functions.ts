@@ -56,6 +56,19 @@ export const formattedDate = (
   });
 };
 
+export const formattedDateInUTC = (
+  date: Date,
+  month?: "short" | "long" | "2-digit",
+  locale: string = "en-GB"
+) => {
+  return date.toLocaleDateString(locale, {
+    day: "numeric",
+    month: month || "short",
+    year: "numeric",
+    timeZone: "UTC",
+  });
+};
+
 export const getBugStatusNumber = (bug_status: string) => {
   switch (bug_status) {
     case "pending_fix":

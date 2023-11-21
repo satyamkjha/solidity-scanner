@@ -21,6 +21,7 @@ import { formattedDate } from "common/functions";
 import API from "helpers/api";
 import { API_PATH } from "helpers/routeManager";
 import StyledButton from "components/styled-components/StyledButton";
+import { getContractChainLabel } from "helpers/helperFunction";
 
 const PublishReportForm: React.FC<{
   type: "project" | "block";
@@ -343,6 +344,7 @@ const PublishReportForm: React.FC<{
         <StyledButton
           w={"220px"}
           mt={[10, 10, 10, "auto"]}
+          mb={[0, 0, 0, 6]}
           variant={"brand"}
           isLoading={isLoading}
           onClick={publishReport}
@@ -369,43 +371,50 @@ const PublishReportForm: React.FC<{
         bg={"#FAFAFA"}
         borderRadius={"15px"}
         px={6}
-        py={8}
+        py={[2, 2, 2, 8]}
         display={[`${next ? "none" : "flex"}`, null, null, "flex"]}
       >
         {type === "block" ? (
           <>
             <Box>
-              <Text color={"#B0B7C3"} lineHeight={2}>
+              <Text color={"#B0B7C3"} lineHeight={[1.5, 1.5, 1.5, 1.5, 2]}>
                 Contract Name
               </Text>
               <Text fontWeight={600}>{scanData?.scan_report.contractname}</Text>
             </Box>
-            <Box mt={5}>
-              <Text color={"#B0B7C3"} lineHeight={2}>
+            <Box mt={[3, 3, 3, 3, 4, 5]}>
+              <Text color={"#B0B7C3"} lineHeight={[1.5, 1.5, 1.5, 1.5, 2]}>
                 Contract Address
               </Text>
               <Text fontWeight={600}>
                 {scanData?.scan_report.contract_address}
               </Text>
             </Box>
-            <Box mt={5}>
-              <Text color={"#B0B7C3"} lineHeight={2}>
+            <Box mt={[3, 3, 3, 3, 4, 5]}>
+              <Text color={"#B0B7C3"} lineHeight={[1.5, 1.5, 1.5, 1.5, 2]}>
                 Contract Platform
               </Text>
               <Text fontWeight={600}>
                 {scanData?.scan_report.contract_platform}
               </Text>
             </Box>
-            <Box mt={5}>
-              <Text color={"#B0B7C3"} lineHeight={2}>
+            <Box mt={[3, 3, 3, 3, 4, 5]}>
+              <Text color={"#B0B7C3"} lineHeight={[1.5, 1.5, 1.5, 1.5, 2]}>
                 Contract Chain
               </Text>
               <Text fontWeight={600}>
-                {scanData?.scan_report.contract_chain}
+                {scanData &&
+                scanData.scan_report.contract_platform &&
+                scanData.scan_report.contract_chain
+                  ? getContractChainLabel(
+                      scanData.scan_report.contract_platform,
+                      scanData.scan_report.contract_chain
+                    )
+                  : "NA"}
               </Text>
             </Box>
-            <Box mt={5}>
-              <Text color={"#B0B7C3"} lineHeight={2}>
+            <Box mt={[3, 3, 3, 3, 4, 5]}>
+              <Text color={"#B0B7C3"} lineHeight={[1.5, 1.5, 1.5, 1.5, 2]}>
                 Contract URL
               </Text>
               <Text fontWeight={600}>{scanData?.scan_report.contract_url}</Text>
@@ -414,27 +423,27 @@ const PublishReportForm: React.FC<{
         ) : (
           <>
             <Box>
-              <Text color={"#B0B7C3"} lineHeight={2}>
+              <Text color={"#B0B7C3"} lineHeight={[1.5, 1.5, 1.5, 1.5, 2]}>
                 Project Name
               </Text>
               <Text fontWeight={600}>{projectName}</Text>
             </Box>
-            <Box mt={5}>
-              <Text color={"#B0B7C3"} lineHeight={2}>
+            <Box mt={[3, 3, 3, 3, 4, 5]}>
+              <Text color={"#B0B7C3"} lineHeight={[1.5, 1.5, 1.5, 1.5, 2]}>
                 Link to the repository
               </Text>
               <Text fontWeight={600}>{repoUrl}</Text>
             </Box>
           </>
         )}
-        <Box mt={5}>
-          <Text color={"#B0B7C3"} lineHeight={2}>
+        <Box mt={[3, 3, 3, 3, 4, 5]}>
+          <Text color={"#B0B7C3"} lineHeight={[1.5, 1.5, 1.5, 1.5, 2]}>
             Latest Report Update
           </Text>
           <Text fontWeight={600}>{lastTimeUpdate}</Text>
         </Box>
-        <Box mt={5}>
-          <Text color={"#B0B7C3"} lineHeight={2}>
+        <Box mt={[3, 3, 3, 3, 4, 5]}>
+          <Text color={"#B0B7C3"} lineHeight={[1.5, 1.5, 1.5, 1.5, 2]}>
             Date Published
           </Text>
           <Text fontWeight={600}>{datePublished}</Text>

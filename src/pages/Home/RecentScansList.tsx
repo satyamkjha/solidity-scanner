@@ -10,7 +10,11 @@ import {
   useMediaQuery,
 } from "@chakra-ui/react";
 import { ArrowForwardIcon, AddIcon } from "@chakra-ui/icons";
-import { getAssetsURL, getProjectType } from "helpers/helperFunction";
+import {
+  getAssetsURL,
+  getProjectType,
+  getContractBlockChainLogoUrl,
+} from "helpers/helperFunction";
 import VulnerabilityDistribution from "components/vulnDistribution";
 import { useHistory } from "react-router-dom";
 import { capitalize } from "common/functions";
@@ -19,6 +23,7 @@ import { useAllScans } from "hooks/useAllScans";
 import SolidityScoreProgress from "components/common/SolidityScoreProgress";
 import { ScanObj } from "common/types";
 import Loader from "components/styled-components/Loader";
+import { contractChain } from "common/values";
 
 const RecentScansList: React.FC = () => {
   const assetsURL = getAssetsURL();
@@ -50,13 +55,14 @@ const RecentScansList: React.FC = () => {
   const getProjectTypeIconUrl = (
     scanType: string,
     projectUrl: string,
-    contractPlatform: string
+    contractPlatform: string,
+    contractChain: string
   ) =>
     `${assetsURL}${
       scanType === "project"
         ? "icons/integrations/" + getProjectType(projectUrl)
         : scanType === "block"
-        ? "blockscan/" + contractPlatform
+        ? getContractBlockChainLogoUrl(contractPlatform, contractChain)
         : ""
     }.svg`;
 
@@ -144,7 +150,8 @@ const RecentScansList: React.FC = () => {
                     src={getProjectTypeIconUrl(
                       project.scan_type,
                       project.scan_details.project_url || "",
-                      project.scan_details.contract_platform || ""
+                      project.scan_details.contract_platform || "",
+                      project.scan_details.contract_chain || ""
                     )}
                     height="40px"
                     width="40px"
@@ -186,8 +193,10 @@ const RecentScansList: React.FC = () => {
 
                 <Box w="40%">
                   <VulnerabilityDistribution
-                    {...project.scan_details.multi_file_scan_summary
-                      .issue_severity_distribution}
+                    issueSeverityDistribution={
+                      project.scan_details.multi_file_scan_summary
+                        .issue_severity_distribution
+                    }
                     view="scans"
                     showLabel={false}
                   />
@@ -255,7 +264,8 @@ const RecentScansList: React.FC = () => {
                     src={getProjectTypeIconUrl(
                       project.scan_type,
                       project.scan_details.project_url || "",
-                      project.scan_details.contract_platform || ""
+                      project.scan_details.contract_platform || "",
+                      project.scan_details.contract_chain || ""
                     )}
                     height="40px"
                     width="40px"
@@ -277,8 +287,10 @@ const RecentScansList: React.FC = () => {
                 )}
 
                 <VulnerabilityDistribution
-                  {...project.scan_details.multi_file_scan_summary
-                    .issue_severity_distribution}
+                  issueSeverityDistribution={
+                    project.scan_details.multi_file_scan_summary
+                      .issue_severity_distribution
+                  }
                   view="scans"
                 />
               </VStack>
