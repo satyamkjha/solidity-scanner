@@ -9,7 +9,7 @@ const RadioButton: React.FC<{
     <Flex
       w="18px"
       h="18px"
-      backgroundColor={theme === "dark" ? "#2C2C2C" : "#EFEFEF"}
+      backgroundColor={theme === "dark" ? "#595959" : "#EFEFEF"}
       borderRadius="50%"
       justifyContent={"center"}
       alignItems={"center"}

@@ -209,6 +209,15 @@ export const BlockchainSelector: React.FC<{
                       color="#8A94A6"
                       fontWeight={400}
                       fontSize="sm"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        window.open(
+                          blockchain === "buildbear"
+                            ? "https://www.buildbear.io/"
+                            : chain?.website,
+                          "_blank"
+                        );
+                      }}
                     >
                       {blockchain === "buildbear"
                         ? "https://www.buildbear.io/"

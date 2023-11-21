@@ -280,66 +280,6 @@ export const monthNames = [
   "Dec",
 ];
 
-export const blockScans: { [key: string]: string } = {
-  etherscan: "Ethereum",
-  bscscan: "Binance",
-  polygonscan: "Polygon",
-  fantom: "fantom",
-  cronos: "Cronos",
-  avalanche: "Avalanche C-Chain",
-  celo: "celo",
-  aurora: "Aurora",
-  arbiscan: "Arbiscan",
-  buildbear: "Buildbear",
-  optimism: "Optimism",
-  xdc: "XDC",
-  reefscan: "Reefscan",
-  nordekscan: "Nordek",
-  fuse: "Fuse",
-};
-
-export const codePlatform: {
-  [key: string]: {
-    platform: string;
-    dynamicString: string;
-  };
-} = {
-  etherscan: { platform: "own", dynamicString: "#code" },
-  bscscan: { platform: "own", dynamicString: "#code" },
-  polygonscan: { platform: "own", dynamicString: "#code" },
-  fantom: { platform: "own", dynamicString: "#code" },
-  cronos: { platform: "own", dynamicString: "#code" },
-  avalanche: { platform: "own", dynamicString: "#code" },
-  celo: { platform: "own", dynamicString: "#code" },
-  aurora: { platform: "own", dynamicString: "/contracts#address-tabs" },
-  arbiscan: { platform: "own", dynamicString: "#code" },
-  buildbear: { platform: "none", dynamicString: "" },
-  optimism: { platform: "own", dynamicString: "#code" },
-  xdc: { platform: "own", dynamicString: "#readContract" },
-  reefscan: { platform: "own", dynamicString: "" },
-  nordekscan: { platform: "own", dynamicString: "/contracts#address-tabs" },
-  fuse: { platform: "own", dynamicString: "/contracts#address-tabs" },
-};
-
-export const blockExplorer: { [key: string]: string } = {
-  etherscan: "Etherscan",
-  bscscan: "Bscscan",
-  polygonscan: "Polygonscan",
-  fantom: "FTMScan",
-  cronos: "Cronoscan",
-  avalanche: "Snowtrace",
-  celo: "Celo",
-  aurora: "Aurora",
-  arbiscan: "Arbiscan",
-  buildbear: "Buildbear",
-  optimism: "Optimism",
-  xdc: "(xdc.blocksscan.io)",
-  reefscan: "Reefscan",
-  nordekscan: "Nordek",
-  fuse: "Fuse",
-  blockscout: "Blockscout",
-};
-
 export const detectorData: DetectorItemProp[] = [
   {
     attackCategory: "Compiler Version Issues",
@@ -1011,6 +951,78 @@ export const scanStatesLabel: {
   download_failed: "Download failed",
   scan_failed: "",
   scanning: "Scan in Progress...",
+};
+
+export const blockScans: { [key: string]: string } = {
+  etherscan: "Ethereum",
+  bscscan: "Binance",
+  polygonscan: "Polygon",
+  fantom: "fantom",
+  cronos: "Cronos",
+  avalanche: "Avalanche C-Chain",
+  celo: "celo",
+  aurora: "Aurora",
+  arbiscan: "Arbiscan",
+  buildbear: "Buildbear",
+  optimism: "Optimism",
+  xdc: "XDC",
+  reefscan: "Reefscan",
+  nordekscan: "Nordek",
+  fuse: "Fuse",
+};
+
+export const codePlatform: {
+  [key: string]: {
+    [key: string]: string;
+  };
+} = {
+  etherscan: { etherscan: "#code", blockscout: "?tab=contract" },
+  bscscan: { bscscan: "#code" },
+  polygonscan: { polygonscan: "#code", blockscout: "?tab=contract" },
+  fantom: { fantom: "#code" },
+  cronos: { cronos: "#code" },
+  avalanche: { avalanche: "#code", routescan: "#code-43114" },
+  celo: { celo: "#code" },
+  aurora: { aurora: "/contracts#address-tabs" },
+  arbiscan: { arbiscan: "#code" },
+  buildbear: { buildbear: "" },
+  optimism: { optimism: "#code", blockscout: "?tab=contract" },
+  xdc: { xdc: "#readContract" },
+  reefscan: { reefscan: "" },
+  nordekscan: { nordekscan: "/contracts#address-tabs" },
+  fuse: { fuse: "/contracts#address-tabs" },
+  basescan: { basescan: "#code", blockscout: "?tab=contract" },
+  gnosis: { blockscout: "?tab=contract" },
+  rootstock: { blockscout: "?tab=contract" },
+  neon: { blockscout: "?tab=contract" },
+  shimmer: { blockscout: "?tab=contract" },
+  shibariumscan: { blockscout: "?tab=contract" },
+  etc: { blockscout: "?tab=contract" },
+  zksync: { blockscout: "?tab=contract" },
+  immutable: { blockscout: "?tab=contract" },
+  boba: { routescan: "#code-288" },
+  flare: { routescan: "#code-19" },
+  metis: { routescan: "#code-1088" },
+  chiliz: { routescan: "#code-88888" },
+};
+
+export const blockExplorer: { [key: string]: string } = {
+  etherscan: "Etherscan",
+  bscscan: "Bscscan",
+  polygonscan: "Polygonscan",
+  fantom: "FTMScan",
+  cronos: "Cronoscan",
+  avalanche: "Snowtrace",
+  celo: "Celo",
+  aurora: "Aurora",
+  arbiscan: "Arbiscan",
+  buildbear: "Buildbear",
+  optimism: "Optimism",
+  xdc: "(xdc.blocksscan.io)",
+  reefscan: "Reefscan",
+  nordekscan: "Nordek",
+  fuse: "Fuse",
+  blockscout: "Blockscout",
 };
 
 export const contractChain: {

@@ -12,6 +12,7 @@ import {
   Stack,
   VStack,
   Image,
+  CloseButton,
 } from "@chakra-ui/react";
 
 import { SeverityIcon } from "components/icons";
@@ -182,7 +183,10 @@ const QuickScan: React.FC = () => {
             isLoading={isLoading}
           />
         ) : (
-          <QuickScanResultContainer scanReport={scanReport} />
+          <HStack alignItems="flex-start">
+            <QuickScanResultContainer scanReport={scanReport} />
+            <CloseButton onClick={() => setScanReport(null)} />
+          </HStack>
         )}
       </Flex>
 

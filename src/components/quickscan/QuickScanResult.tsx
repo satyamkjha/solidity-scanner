@@ -153,6 +153,8 @@ export const QuickScanResultContainer: React.FC<{
                 fontWeight={300}
                 fontSize="md"
                 mr={2}
+                cursor="pointer"
+                onClick={() => window.open(scanReport.contract_url, "_blank")}
               >
                 {`View on ${sentenceCapitalize(
                   scanReport.contract_platform || " "
