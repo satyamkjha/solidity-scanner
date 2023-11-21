@@ -212,11 +212,10 @@ export const BlockchainSelector: React.FC<{
                       textAlign="left"
                     >
                       <Text
-                        w="100%"
                         color={theme === "dark" ? "white" : "gray.600"}
                         fontWeight={600}
                         fontSize="md"
-                        mr={3}
+                        mr={1}
                       >
                         {blockchain === "buildbear"
                           ? "Buildbear"
@@ -224,7 +223,6 @@ export const BlockchainSelector: React.FC<{
                       </Text>
                       {blockchain !== "buildbear" && (
                         <Text
-                          w="100%"
                           color={theme === "dark" ? "white" : "gray.600"}
                           fontWeight={600}
                           fontSize="md"
@@ -280,8 +278,8 @@ export const BlockchainSelector: React.FC<{
               ? ["350px", "480px", "500px", "770px", "1020px"]
               : ["350px", "480px", "500px", "650px"]
           }
-          h={["fit-content", "fit-content", "37vh", "48vh", "50vh"]}
-          maxH={["60vh", "60vh", "400px", "400px", "480px"]}
+          h={["fit-content", "fit-content", "fit-content", "48vh", "50vh"]}
+          maxH={["60vh", "60vh", "500px", "500px", "580px"]}
           display="flex"
           py={5}
           px={[2, 3, 5]}
@@ -408,22 +406,27 @@ export const BlockchainSelector: React.FC<{
             </Flex>
           ) : (
             <Flex
-              justifyContent={["flex-start", "flex-start", "space-between"]}
+              justifyContent={[
+                "flex-start",
+                "flex-start",
+                "flex-start",
+                "space-between",
+              ]}
               w="100%"
-              h={["fit-content", "fit-content", "100%"]}
-              flexDir={["column", "column", "row"]}
-              alignItems={["center", "center", "flex-start"]}
+              h={["fit-content", "fit-content", "fit-content", "100%"]}
+              flexDir={["column", "column", "column", "row"]}
+              alignItems={["center", "center", "center", "flex-start"]}
               overflowX={"hidden"}
             >
               <Flex
-                flexDir={["row", "row", "column"]}
-                w={["100%", "100%", "120px"]}
-                overflowY={["auto", "auto", "scroll"]}
-                overflowX={["scroll", "scroll", "hidden"]}
-                h={["110px", "110px", "100%"]}
+                flexDir={["row", "row", "row", "column"]}
+                w={["100%", "100%", "100%", "120px"]}
+                overflowY={["auto", "auto", "auto", "scroll"]}
+                overflowX={["scroll", "scroll", "scroll", "hidden"]}
+                h={["120px", "120px", "120px", "100%"]}
               >
                 <Flex
-                  flexDir={["row", "row", "column"]}
+                  flexDir={["row", "row", "row", "column"]}
                   w={"fit-content"}
                   h={"fit-content"}
                   alignItems="center"
@@ -463,21 +466,21 @@ export const BlockchainSelector: React.FC<{
                 </Flex>
               </Flex>
               <Divider
-                display={["none", "none", "block"]}
+                display={["none", "none", "none", "block"]}
                 borderColor={theme === "dark" ? "#424242" : "#8A94A680"}
                 orientation="vertical"
               />
               <Divider
-                display={["block", "block", "none"]}
+                display={["block", "block", "block", "none"]}
                 borderColor={theme === "dark" ? "#424242" : "#8A94A680"}
               />
 
               <Flex
                 justifyContent="flex-start"
-                w={["100%", "100%", "calc(100% - 130px)"]}
-                h={["fit-content", "fit-content", "100%"]}
+                w={["100%", "100%", "100%", "calc(100% - 130px)"]}
+                h={["fit-content", "fit-content", "fit-content", "100%"]}
                 flexDir="column"
-                mt={[5, 5, 0]}
+                mt={[5, 5, 5, 0]}
                 alignItems="flex-start"
                 opacity={showAnimation ? 0 : 1}
                 transform={showAnimation ? `translateX(150px)` : "none"}
@@ -492,7 +495,7 @@ export const BlockchainSelector: React.FC<{
                 >
                   <VStack
                     textAlign="left"
-                    w={["100%", "100%", "auto"]}
+                    w={["100%", "100%", "100%", "auto"]}
                     spacing={1}
                     alignItems="flex-start"
                   >
@@ -546,7 +549,7 @@ export const BlockchainSelector: React.FC<{
                   <ArrowBackIcon
                     fontSize={30}
                     ml={"auto"}
-                    display={["none", "none", "block"]}
+                    display={["none", "none", "none", "block"]}
                     cursor="pointer"
                     color={theme === "dark" ? "white" : "gray.600"}
                     onClick={() => {

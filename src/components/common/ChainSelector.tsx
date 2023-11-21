@@ -155,9 +155,14 @@ export const ChainSelector: React.FC<{
     <Flex
       w="100%"
       h="fit-content"
-      justifyContent={["flex-start", "flex-start", "space-between"]}
-      alignItems={["flex-start", "flex-start", "center"]}
-      flexDir={["column", "column", "row"]}
+      justifyContent={[
+        "flex-start",
+        "flex-start",
+        "flex-start",
+        "space-between",
+      ]}
+      alignItems={["flex-start", "flex-start", "flex-start", "center"]}
+      flexDir={["column", "column", "column", "row"]}
       color="white"
       cursor={"pointer"}
       borderRadius={[10, 10, 0]}
@@ -211,9 +216,14 @@ export const ChainSelector: React.FC<{
         </VStack>
       </HStack>
       <HStack
-        w={["100%", "100%", "fit-content"]}
-        justifyContent={["space-between", "space-between", "flex-end"]}
-        mt={[5, 5, 0]}
+        w={["100%", "100%", "100%", "fit-content"]}
+        justifyContent={[
+          "space-between",
+          "space-between",
+          "space-between",
+          "flex-end",
+        ]}
+        mt={[5, 5, 5, 0]}
       >
         <Select
           formatOptionLabel={FormatOptionLabelWithImage}
