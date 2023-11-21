@@ -135,7 +135,12 @@ export const BlockchainSelector: React.FC<{
       setTimeout(() => {
         setShowAnimation(false);
         setBlockchain(selectedBlockchain);
-        setPlatform("");
+        if (selectedBlockchain === "buildbear") {
+          setPlatform("buildbear");
+        } else {
+          setPlatform("");
+        }
+
         setChain(null);
       }, 125);
     }
