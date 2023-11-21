@@ -1279,7 +1279,7 @@ export const contractChain: {
         ],
       },
       routescan: {
-        label: "Routescan (Avalanche)",
+        label: "Routescan",
         iconUrl: "blockscan/routescan",
         chains: [
           {
@@ -1330,7 +1330,7 @@ export const contractChain: {
     logoUrl: "blockscan/cronos",
     platforms: {
       cronos: {
-        label: "Cronos Chain Explorer",
+        label: "Cronos Explorer",
         iconUrl: "blockscan/cronos",
         chains: [
           {
@@ -1359,7 +1359,7 @@ export const contractChain: {
     logoUrl: "blockscan/celo",
     platforms: {
       celo: {
-        label: "Celo Chain Explorer",
+        label: "Celo Explorer",
         iconUrl: "blockscan/celo",
         chains: [
           {
@@ -1388,7 +1388,7 @@ export const contractChain: {
     logoUrl: "blockscan/aurora",
     platforms: {
       aurora: {
-        label: "Blockscout (Aurora)",
+        label: "Blockscout",
         iconUrl: "blockscan/blockscout",
         chains: [
           {
@@ -1497,7 +1497,7 @@ export const contractChain: {
     logoUrl: "blockscan/nordekscan",
     platforms: {
       nordekscan: {
-        label: "Blockscout (nordekscan)",
+        label: "Blockscout",
         iconUrl: "blockscan/blockscout",
         chains: [
           {
@@ -1519,7 +1519,7 @@ export const contractChain: {
     logoUrl: "blockscan/fuse",
     platforms: {
       fuse: {
-        label: "Blockscout (Fuse)",
+        label: "Blockscout",
         iconUrl: "blockscan/blockscout",
         chains: [
           {
@@ -1568,7 +1568,7 @@ export const contractChain: {
         ],
       },
       blockscout: {
-        label: "Blockscout (Base)",
+        label: "Blockscout",
         iconUrl: "blockscan/blockscout",
         chains: [
           {
@@ -1604,7 +1604,7 @@ export const contractChain: {
     logoUrl: "blockscan/gnosis",
     platforms: {
       blockscout: {
-        label: "Blockscout (Gnosis)",
+        label: "Blockscout",
         iconUrl: "blockscan/blockscout",
         chains: [
           {
@@ -1633,7 +1633,7 @@ export const contractChain: {
     logoUrl: "blockscan/rootstock",
     platforms: {
       blockscout: {
-        label: "Blockscout (Rootstock)",
+        label: "Blockscout",
         iconUrl: "blockscan/blockscout",
         chains: [
           {
@@ -1655,7 +1655,7 @@ export const contractChain: {
     logoUrl: "blockscan/neon",
     platforms: {
       blockscout: {
-        label: "Blockscout (Neon)",
+        label: "Blockscout",
         iconUrl: "blockscan/blockscout",
         chains: [
           {
@@ -1684,7 +1684,7 @@ export const contractChain: {
     logoUrl: "blockscan/shimmer",
     platforms: {
       blockscout: {
-        label: "Blockscout (Shimmer)",
+        label: "Blockscout",
         iconUrl: "blockscan/blockscout",
         chains: [
           {
@@ -1713,7 +1713,7 @@ export const contractChain: {
     logoUrl: "blockscan/shibariumscan",
     platforms: {
       blockscout: {
-        label: "Blockscout (Shibarium)",
+        label: "Blockscout",
         iconUrl: "blockscan/blockscout",
         chains: [
           {
@@ -1742,7 +1742,7 @@ export const contractChain: {
     logoUrl: "blockscan/lightlink",
     platforms: {
       blockscout: {
-        label: "Blockscout (Lightlink)",
+        label: "Blockscout",
         iconUrl: "blockscan/blockscout",
         chains: [
           {
@@ -1771,7 +1771,7 @@ export const contractChain: {
     logoUrl: "blockscan/etc",
     platforms: {
       blockscout: {
-        label: "Blockscout (Ethereum Classic)",
+        label: "Blockscout",
         iconUrl: "blockscan/blockscout",
         chains: [
           {
@@ -1800,7 +1800,7 @@ export const contractChain: {
     logoUrl: "blockscan/zksync",
     platforms: {
       blockscout: {
-        label: "Blockscout (zkSync)",
+        label: "Blockscout",
         iconUrl: "blockscan/blockscout",
         chains: [
           {
@@ -1822,7 +1822,7 @@ export const contractChain: {
     logoUrl: "blockscan/immutable",
     platforms: {
       blockscout: {
-        label: "Blockscout (Immutable)",
+        label: "Blockscout",
         iconUrl: "blockscan/blockscout",
         chains: [
           {
@@ -1844,7 +1844,7 @@ export const contractChain: {
     logoUrl: "blockscan/boba",
     platforms: {
       routescan: {
-        label: "Routescan (BOBA)",
+        label: "Routescan",
         iconUrl: "blockscan/routescan",
         chains: [
           {
@@ -1866,7 +1866,7 @@ export const contractChain: {
     logoUrl: "blockscan/flare",
     platforms: {
       routescan: {
-        label: "Routescan (Flare)",
+        label: "Routescan",
         iconUrl: "blockscan/routescan",
         chains: [
           {
@@ -1888,7 +1888,7 @@ export const contractChain: {
     logoUrl: "blockscan/metis",
     platforms: {
       routescan: {
-        label: "Routescan (Metis)",
+        label: "Routescan",
         iconUrl: "blockscan/routescan",
         chains: [
           {
@@ -1910,7 +1910,7 @@ export const contractChain: {
     logoUrl: "blockscan/chiliz",
     platforms: {
       routescan: {
-        label: "Routescan (Chiliz)",
+        label: "Routescan",
         iconUrl: "blockscan/routescan",
         chains: [
           {

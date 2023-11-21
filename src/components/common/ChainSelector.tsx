@@ -133,7 +133,7 @@ export const ChainSelector: React.FC<{
       ...provided,
       width: "200px",
       maxWidth: "500px",
-      marginRight: "30px",
+      marginRight: "10px",
     }),
     singleValue: (provided: any, state: any) => ({
       ...provided,
