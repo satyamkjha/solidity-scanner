@@ -137,7 +137,7 @@ const ContractForm: React.FC<{
     <Flex
       flexDir="column"
       px={2}
-      h={["90vh", "90vh", "75vh"]}
+      h={["90vh", "90vh", "78vh"]}
       justifyContent={"space-between"}
       alignItems="center"
       borderRadius={20}
