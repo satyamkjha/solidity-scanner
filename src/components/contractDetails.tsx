@@ -14,6 +14,9 @@ export const ContractDetails: React.FC<{
 }> = ({ scanData }) => {
   const config: any = useConfig();
   const assetsURL = getAssetsURL(config);
+
+  console.log(scanData);
+
   return (
     <AccordionPanel backgroundColor={"#F4F5F6"} pb={4} mt={[4, 4, 4, 0]}>
       <Flex
@@ -45,12 +48,14 @@ export const ContractDetails: React.FC<{
           </Text>
           <Image
             src={`${assetsURL}${
-              contractChain[
-                getContractBlockchainId(
-                  scanData.scan_report.contract_platform || "",
-                  scanData.scan_report.contract_chain || ""
-                )
-              ].platforms[scanData.scan_report.contract_platform].iconUrl
+              scanData.scan_report.contract_platform === "buildbear"
+                ? "blockscan/buildbear"
+                : contractChain[
+                    getContractBlockchainId(
+                      scanData.scan_report.contract_platform || "",
+                      scanData.scan_report.contract_chain || ""
+                    )
+                  ].platforms[scanData.scan_report.contract_platform].iconUrl
             }.svg`}
             alt="Product screenshot"
             mx="auto"

@@ -1001,7 +1001,7 @@ export const codePlatform: {
   zksync: { blockscout: "?tab=contract" },
   immutable: { blockscout: "?tab=contract" },
   boba: { routescan: "#code-288" },
-  flare: { routescan: "#code-19" },
+  flare: { routescan: "#code-14" },
   metis: { routescan: "#code-1088" },
   chiliz: { routescan: "#code-88888" },
 };
@@ -1236,19 +1236,19 @@ export const contractChain: {
           },
         ],
       },
-      blockscout: {
-        label: "Blockscout",
-        iconUrl: "blockscan/blockscout",
-        chains: [
-          {
-            value: "polygon",
-            label: "Polygon Mainnet",
-            icon: "",
-            isDisabled: false,
-            website: "https://polygon.blockscout.com/",
-          },
-        ],
-      },
+      // blockscout: {
+      //   label: "Blockscout",
+      //   iconUrl: "blockscan/blockscout",
+      //   chains: [
+      //     {
+      //       value: "polygon",
+      //       label: "Polygon Mainnet",
+      //       icon: "",
+      //       isDisabled: false,
+      //       website: "https://polygon.blockscout.com/",
+      //     },
+      //   ],
+      // },
     },
   },
   avalanche: {
@@ -1910,7 +1910,7 @@ export const contractChain: {
     logoUrl: "blockscan/chiliz",
     platforms: {
       routescan: {
-        label: "Routescan (BOBA)",
+        label: "Routescan (Chiliz)",
         iconUrl: "blockscan/routescan",
         chains: [
           {

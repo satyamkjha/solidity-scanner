@@ -232,7 +232,7 @@ export const ChainSelector: React.FC<{
             }
           }}
         />
-        <RadioButton theme="dark" isActive={platform === platformValue} />
+        <RadioButton theme={view} isActive={platform === platformValue} />
       </HStack>
     </Flex>
   );

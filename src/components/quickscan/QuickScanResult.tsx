@@ -16,6 +16,7 @@ import {
   Link,
   Heading,
   Button,
+  useDisclosure,
 } from "@chakra-ui/react";
 import StyledButton from "components/styled-components/StyledButton";
 import Loader from "components/styled-components/Loader";
@@ -41,12 +42,14 @@ import RadioButton from "components/styled-components/RadioButton";
 import { QuickScanResult } from "common/types";
 import SolidityScoreProgress from "components/common/SolidityScoreProgress";
 import { useHistory } from "react-router-dom";
+import { ManualAuditForm } from "components/modals/manualAuditForm";
 
 export const QuickScanResultContainer: React.FC<{
   scanReport: QuickScanResult;
 }> = ({ scanReport }) => {
   const assetsUrl = getAssetsURL();
   const history = useHistory();
+  const { isOpen, onClose, onOpen } = useDisclosure();
 
   const vulnerabilityCount =
     scanReport.multi_file_scan_summary.issue_severity_distribution.critical +
@@ -332,9 +335,17 @@ export const QuickScanResultContainer: React.FC<{
             textAlign="left"
             color={scanReport.is_approved ? "#52FF00" : "#8D8D8D"}
           >
-            This audit report has been verified by the SolidityScan team. To
-            learn more about our published reports.{" "}
-            <span style={{ color: "white", textDecoration: "underline" }}>
+            This audit report has {scanReport.is_approved ? "" : "not"} been
+            verified by the SolidityScan team. To learn more about our published
+            reports.{" "}
+            <span
+              style={{
+                color: "white",
+                textDecoration: "underline",
+                cursor: "pointer",
+              }}
+              onClick={() => onOpen()}
+            >
               click here.
             </span>
           </Text>
@@ -473,6 +484,7 @@ export const QuickScanResultContainer: React.FC<{
           ))}
         </Flex>
       </Flex>
+      <ManualAuditForm isOpen={isOpen} onClose={onClose} />
     </Flex>
   );
 };
