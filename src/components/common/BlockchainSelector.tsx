@@ -161,7 +161,7 @@ export const BlockchainSelector: React.FC<{
   return (
     <HStack
       borderRadius={15}
-      h="80px"
+      h={["110px", "110px", "80px"]}
       w="90vw"
       pr={"10px"}
       maxW="600px"
@@ -176,8 +176,8 @@ export const BlockchainSelector: React.FC<{
       >
         <PopoverTrigger>
           <HStack
-            h="80px"
-            w="calc(100% - 80px)"
+            h={["110px", "110px", "80px"]}
+            w={["100%", "calc(100% - 80px)"]}
             justifyContent="space-between"
             p={5}
             bgColor={theme === "dark" ? "#272727" : "transparent"}
@@ -205,19 +205,33 @@ export const BlockchainSelector: React.FC<{
                     width="40px"
                   />
                   <VStack textAlign="left" spacing={1}>
-                    <Text
-                      w="100%"
-                      color={theme === "dark" ? "white" : "gray.600"}
-                      fontWeight={600}
-                      fontSize="md"
+                    <Flex
+                      flexDir={["column", "column", "row"]}
+                      alignItems="flex-start"
+                      justifyContent="flex-start"
                     >
-                      {blockchain === "buildbear"
-                        ? "Buildbear"
-                        : contractChain[blockchain].blockchainName +
-                          " (" +
-                          chain?.label +
-                          ")"}
-                    </Text>
+                      <Text
+                        w="100%"
+                        color={theme === "dark" ? "white" : "gray.600"}
+                        fontWeight={600}
+                        fontSize="md"
+                        mr={3}
+                      >
+                        {blockchain === "buildbear"
+                          ? "Buildbear"
+                          : contractChain[blockchain].blockchainName}
+                      </Text>
+                      {blockchain !== "buildbear" && (
+                        <Text
+                          w="100%"
+                          color={theme === "dark" ? "white" : "gray.600"}
+                          fontWeight={600}
+                          fontSize="md"
+                        >
+                          {" (" + chain?.label + ")"}
+                        </Text>
+                      )}
+                    </Flex>
                     <Text
                       cursor="pointer"
                       w="100%"
@@ -608,6 +622,7 @@ export const BlockchainSelector: React.FC<{
         borderRadius="40px"
         filter="drop-shadow(0px 2px 1px rgba(0, 0, 0, 0.25))"
         bgColor={theme === "dark" ? "#272727C0" : "#E1E1E1"}
+        display={["none", "flex"]}
         onClick={() => {
           onOpen();
           setBlockchain("");
