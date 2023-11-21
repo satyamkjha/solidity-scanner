@@ -204,11 +204,12 @@ export const BlockchainSelector: React.FC<{
                     height="40px"
                     width="40px"
                   />
-                  <VStack textAlign="left" spacing={1}>
+                  <VStack alignItems="flex-start" textAlign="left" spacing={1}>
                     <Flex
                       flexDir={["column", "column", "row"]}
                       alignItems="flex-start"
                       justifyContent="flex-start"
+                      textAlign="left"
                     >
                       <Text
                         w="100%"
