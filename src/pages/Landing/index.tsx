@@ -64,6 +64,7 @@ export default function Landing() {
             top: -10,
             right: -30,
             zIndex: 0,
+            pointerEvents: "none",
           }}
         ></Box>
         <Flex
@@ -91,6 +92,7 @@ export default function Landing() {
             bottom: -50,
             left: -30,
             zIndex: 0,
+            pointerEvents: "none",
           }}
         ></Box>
       </Flex>

@@ -19,7 +19,7 @@ import {
   ExternalLinkIcon,
 } from "@chakra-ui/icons";
 import { contractChain } from "common/values";
-import { getAssetsURL } from "helpers/helperFunction";
+import { getAssetsURL, getFeatureGateConfig } from "helpers/helperFunction";
 import { StylesConfig, GroupBase } from "react-select";
 import Select from "react-select";
 import FormatOptionLabelWithImage from "components/FormatOptionLabelWithImage";
@@ -27,6 +27,7 @@ import { FaPen } from "react-icons/fa";
 import RadioButton from "components/styled-components/RadioButton";
 import { BlockchainComp } from "./BlockchainComp";
 import { ChainSelector } from "./ChainSelector";
+import { useConfig } from "hooks/useConfig";
 
 export const BlockchainSelector: React.FC<{
   theme: "dark" | "light";
@@ -76,6 +77,7 @@ export const BlockchainSelector: React.FC<{
   const [firstBlockChain, setFirstBlockchain] = useState("");
 
   const assetsUrl = getAssetsURL();
+  const config = useConfig();
 
   const { onOpen, onClose, isOpen } = useDisclosure();
 
@@ -270,41 +272,50 @@ export const BlockchainSelector: React.FC<{
         >
           {blockchain === "" ? (
             <>
-              {Object.keys(contractChain).map((item, index) => (
-                <VStack
-                  key={index}
-                  w={["100px", "100px", "100px", "110px"]}
-                  justifyContent="center"
-                  alignItems="center"
-                  spacing={3}
-                  cursor="pointer"
-                  onClick={(e) => {
-                    onBlockChainClick(e, item);
-                  }}
-                >
-                  <Flex
-                    height="80px"
-                    width="80px"
-                    padding="10px"
-                    borderRadius="40px"
-                    backgroundColor={theme === "dark" ? "#404040" : "#F3F3F3"}
-                    justifyContent="center"
-                    alignItems="center"
-                    animation={`zoomInAnimation ${
-                      0.1 + index / 100
-                    }s ease-in-out`}
-                  >
-                    <Image
-                      height="50px"
-                      width="50px"
-                      src={`${assetsUrl}${contractChain[item].logoUrl}.svg`}
-                    />
-                  </Flex>
-                  <Text color="#8A94A6" fontSize="xs">
-                    {contractChain[item].blockchainName}
-                  </Text>
-                </VStack>
-              ))}
+              {Object.keys(contractChain).map((item, index) => {
+                if (
+                  !getFeatureGateConfig(config).blockchain_disabled.includes(
+                    item
+                  )
+                )
+                  return (
+                    <VStack
+                      key={index}
+                      w={["100px", "100px", "100px", "110px"]}
+                      justifyContent="center"
+                      alignItems="center"
+                      spacing={3}
+                      cursor="pointer"
+                      onClick={(e) => {
+                        onBlockChainClick(e, item);
+                      }}
+                    >
+                      <Flex
+                        height="80px"
+                        width="80px"
+                        padding="10px"
+                        borderRadius="40px"
+                        backgroundColor={
+                          theme === "dark" ? "#404040" : "#F3F3F3"
+                        }
+                        justifyContent="center"
+                        alignItems="center"
+                        animation={`zoomInAnimation ${
+                          0.1 + index / 100
+                        }s ease-in-out`}
+                      >
+                        <Image
+                          height="50px"
+                          width="50px"
+                          src={`${assetsUrl}${contractChain[item].logoUrl}.svg`}
+                        />
+                      </Flex>
+                      <Text color="#8A94A6" fontSize="xs">
+                        {contractChain[item].blockchainName}
+                      </Text>
+                    </VStack>
+                  );
+              })}
               <VStack
                 w={["100px", "100px", "100px", "110px"]}
                 justifyContent="center"
@@ -555,22 +566,29 @@ export const BlockchainSelector: React.FC<{
                   </>
                 ) : (
                   Object.keys(contractChain[blockchain].platforms).map(
-                    (platformValue, index) => (
-                      <ChainSelector
-                        key={`${platformValue}_${index}`}
-                        index={index}
-                        theme={theme}
-                        onClose={onBlockChainClose}
-                        platform={platform}
-                        platformValue={platformValue}
-                        chain={chain}
-                        setChain={setChain}
-                        setPlatform={setPlatform}
-                        platformData={
-                          contractChain[blockchain].platforms[platformValue]
-                        }
-                      />
-                    )
+                    (platformValue, index) => {
+                      if (
+                        !getFeatureGateConfig(
+                          config
+                        ).platform_disabled.includes(platformValue)
+                      )
+                        return (
+                          <ChainSelector
+                            key={`${platformValue}_${index}`}
+                            index={index}
+                            theme={theme}
+                            onClose={onBlockChainClose}
+                            platform={platform}
+                            platformValue={platformValue}
+                            chain={chain}
+                            setChain={setChain}
+                            setPlatform={setPlatform}
+                            platformData={
+                              contractChain[blockchain].platforms[platformValue]
+                            }
+                          />
+                        );
+                    }
                   )
                 )}
               </Flex>
