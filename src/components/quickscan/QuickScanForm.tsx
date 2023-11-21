@@ -164,13 +164,6 @@ const QuickScanForm: React.FC<{
         pb={isDesktopView ? 20 : "50px"}
         textAlign="center"
       >
-        {playAnimation && !isDesktopView && (
-          <Lottie
-            animationData={ssIconAnimation}
-            style={styleObj}
-            loop={false}
-          />
-        )}
         <Heading
           w={["90%", "90%", "80%", "60%"]}
           color={view === "landing" ? "black" : "white"}
