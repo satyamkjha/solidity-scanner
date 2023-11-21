@@ -120,7 +120,7 @@ export default function PrivateApi() {
         px: [2, 2, 2, 8],
         mx: [0, 0, 4],
         mb: 4,
-        minH: "78vh",
+        minH: "85vh",
       }}
     >
       <Text sx={{ color: "subtle", fontWeight: 600 }}>PERSONAL API ACCESS</Text>
@@ -140,7 +140,7 @@ export default function PrivateApi() {
         <Flex
           bgColor={["bg.subtle", "bg.subtle", "bg.subtle", "white"]}
           w="100%"
-          h={["fit-content", "fit-content", "500px", "650px"]}
+          h={["fit-content", "fit-content", "88%"]}
           borderRadius={"5px"}
           my={6}
           pb={6}
@@ -220,7 +220,7 @@ export default function PrivateApi() {
             border={"2px solid #EAEAEA"}
             borderRadius="15px"
             flexDir={"column"}
-            h={accessKey ? "fit-content" : "500px"}
+            h={accessKey ? "fit-content" : "100%"}
           >
             {isSpinning ? (
               <Flex
@@ -342,7 +342,7 @@ export default function PrivateApi() {
                     </Flex>
                   </>
                 ) : (
-                  <Flex position={"relative"} w="100%" h="10vh">
+                  <Flex position={"relative"} w="100%" h="30vh">
                     <VStack
                       w="100%"
                       spacing={4}
@@ -350,6 +350,7 @@ export default function PrivateApi() {
                       top={0}
                       left={0}
                       opacity={hasAccess ? 1 : 0.5}
+                      position={"relative"}
                     >
                       <Image
                         src={assetsUrl + "background/private_api_cover.svg"}
