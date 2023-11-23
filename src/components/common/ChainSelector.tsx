@@ -28,6 +28,7 @@ import { BlockchainComp } from "./BlockchainComp";
 
 export const ChainSelector: React.FC<{
   theme: "dark" | "light";
+  view: "quickscan" | "homepage";
   platform: string;
   index: number;
   onClose: () => void;
@@ -68,6 +69,7 @@ export const ChainSelector: React.FC<{
   platformData,
   platformValue,
   onClose,
+  view,
 }) => {
   const assetsUrl = getAssetsURL();
 
@@ -184,16 +186,24 @@ export const ChainSelector: React.FC<{
             : "#f6f6f6",
       }}
       onClick={() => setPlatform(platformValue)}
-      px={[3, 3, 7]}
-      py={5}
+      px={view === "homepage" ? 3 : [3, 3, 7]}
+      py={view === "homepage" ? 3 : [2, 2, 5]}
     >
-      <HStack w="100%">
+      <HStack
+        w={["100%", "100%", "100%", "fit-content"]}
+        maxW="calc(100% - 210px)"
+      >
         <Image
           src={`${assetsUrl}${platformData.iconUrl}.svg`}
           height="40px"
           width="40px"
         />
-        <VStack textAlign="left" w="85%" spacing={1} alignItems={"flex-start"}>
+        <VStack
+          textAlign="left"
+          w="calc(100%)"
+          spacing={1}
+          alignItems={"flex-start"}
+        >
           <Text
             w="100%"
             color={theme === "dark" ? "white" : "gray.600"}
@@ -204,11 +214,13 @@ export const ChainSelector: React.FC<{
           </Text>
           {currentChain && (
             <Text
+              isTruncated
               cursor="pointer"
               onClick={() => window.open(currentChain?.website, "_blank")}
               color="#8A94A6"
               fontWeight={400}
               fontSize="sm"
+              w={view === "homepage" ? "120px" : "100%"}
             >
               {currentChain?.website} <ExternalLinkIcon />
             </Text>
@@ -224,6 +236,7 @@ export const ChainSelector: React.FC<{
           "flex-end",
         ]}
         mt={[5, 5, 5, 0]}
+        maxW="200px"
       >
         <Select
           formatOptionLabel={FormatOptionLabelWithImage}

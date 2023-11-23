@@ -12,6 +12,7 @@ import {
   Input,
   useDisclosure,
   useMediaQuery,
+  Button,
 } from "@chakra-ui/react";
 import {
   ChevronDownIcon,
@@ -20,14 +21,11 @@ import {
 } from "@chakra-ui/icons";
 import { contractChain } from "common/values";
 import { getAssetsURL, getFeatureGateConfig } from "helpers/helperFunction";
-import { StylesConfig, GroupBase } from "react-select";
-import Select from "react-select";
-import FormatOptionLabelWithImage from "components/FormatOptionLabelWithImage";
 import { FaPen } from "react-icons/fa";
-import RadioButton from "components/styled-components/RadioButton";
 import { BlockchainComp } from "./BlockchainComp";
 import { ChainSelector } from "./ChainSelector";
 import { useConfig } from "hooks/useConfig";
+import { FaUndo } from "react-icons/fa";
 
 export const BlockchainSelector: React.FC<{
   theme: "dark" | "light";
@@ -68,6 +66,7 @@ export const BlockchainSelector: React.FC<{
   menuPlacement,
   view,
 }) => {
+  const config = useConfig();
   const [elementPosition, setElementPosition] = useState<any>({});
   const [blockchain, setBlockchain] = useState("");
   const [selectedBlockchain, setSelectedBlockchain] = useState("");
@@ -75,10 +74,7 @@ export const BlockchainSelector: React.FC<{
   const [showOtherSection, setShowOtherSection] = useState(false);
   const [showAnimation, setShowAnimation] = useState(true);
   const [firstBlockChain, setFirstBlockchain] = useState("");
-
   const assetsUrl = getAssetsURL();
-  const config = useConfig();
-
   const { onOpen, onClose, isOpen } = useDisclosure();
 
   useEffect(() => {
@@ -159,13 +155,19 @@ export const BlockchainSelector: React.FC<{
   const [isLargerThan1350] = useMediaQuery("(min-width: 1350px)");
 
   return (
-    <HStack
+    <Flex
       borderRadius={15}
-      h={["110px", "110px", "80px"]}
+      h={["fit-content", "fit-content", "80px"]}
       w="90vw"
       pr={"10px"}
       maxW="600px"
-      bgColor={theme === "dark" ? "transparent" : "#ECECEC"}
+      flexDir={["column", "column", "row"]}
+      alignItems="center"
+      bgColor={[
+        "transparent",
+        "transparent",
+        theme === "dark" ? "transparent" : "#ECECEC",
+      ]}
       justifyContent="space-between"
     >
       <Popover
@@ -180,7 +182,7 @@ export const BlockchainSelector: React.FC<{
             w={["100%", "calc(100% - 80px)"]}
             justifyContent="space-between"
             p={5}
-            bgColor={theme === "dark" ? "#272727" : "transparent"}
+            bgColor={theme === "dark" ? "#272727" : "#ECECEC"}
             borderRadius={15}
             border={
               blockchainSelectorError !== "" ? "1px solid #960D00" : "none"
@@ -600,6 +602,7 @@ export const BlockchainSelector: React.FC<{
                         <ChainSelector
                           key={`${platformValue}_${index}`}
                           index={index}
+                          view={view}
                           theme={theme}
                           onClose={onBlockChainClose}
                           platform={platform}
@@ -619,6 +622,17 @@ export const BlockchainSelector: React.FC<{
           )}
         </PopoverContent>
       </Popover>
+      <Button
+        display={["block", "block", "none"]}
+        // borderColor="#2F00FF"
+        // borderWidth={3}
+        mt={4}
+        size="md"
+        bgColor="#ECECEC"
+        leftIcon={<FaUndo color="#2F00FF" />}
+      >
+        Reset
+      </Button>
       <Flex
         w="60px"
         h="60px"
@@ -626,7 +640,7 @@ export const BlockchainSelector: React.FC<{
         borderRadius="40px"
         filter="drop-shadow(0px 2px 1px rgba(0, 0, 0, 0.25))"
         bgColor={theme === "dark" ? "#272727C0" : "#E1E1E1"}
-        display={["none", "flex"]}
+        display={["none", "none", "flex"]}
         onClick={() => {
           onOpen();
           setBlockchain("");
@@ -641,6 +655,6 @@ export const BlockchainSelector: React.FC<{
           width="40px"
         />
       </Flex>
-    </HStack>
+    </Flex>
   );
 };
