@@ -184,7 +184,7 @@ const Layout: React.FC = ({ children }) => {
                     color="white"
                     fontWeight={700}
                     onClick={() =>
-                      window.open("https://lu.ma/x3063d6n", "_blank")
+                      window.open("https://lu.ma/proofofsecurity", "_blank")
                     }
                   >
                     Register here
