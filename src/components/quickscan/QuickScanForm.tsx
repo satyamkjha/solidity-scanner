@@ -160,7 +160,7 @@ const QuickScanForm: React.FC<{
           view === "landing" ? "100vh" : "90vh",
         ]}
         px={[0, 0, 10]}
-        pt={6}
+        pt={[10, 10, 10, 20]}
         pb={isDesktopView ? 20 : "50px"}
         textAlign="center"
       >
@@ -301,7 +301,7 @@ const QuickScanForm: React.FC<{
           isLoading={isLoading}
           loadingText="Scanning"
           spinner={<Loader color={"#3300FF"} size={20} />}
-          mt={isDesktopView ? "auto" : 10}
+          mt={isDesktopView ? "100px" : 10}
           mb={isDesktopView ? 6 : "120px"}
           w={"300px"}
           type="submit"

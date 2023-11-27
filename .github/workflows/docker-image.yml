@@ -49,6 +49,10 @@ jobs:
           elif [[ "${{ inputs.ENV }}" == "prod" ]]; then
             aws s3 cp s3://credshields-prod/env_file/frontend.env ${PROJECT_DIRECTORY}/.env
             aws s3 cp s3://credshields-prod/new-relic/newrelic-browser.js ${PROJECT_DIRECTORY}/
+          elif [[ "${{ inputs.ENV }}" == "backoffice-stage" ]]; then
+            aws s3 cp s3://credshields-dev/env_file/frontend_backoffice.env ${PROJECT_DIRECTORY}/.env
+          elif [[ "${{ inputs.ENV }}" == "backoffice-prod" ]]; then
+            aws s3 cp s3://credshields-prod/env_file/frontend_backoffice.env ${PROJECT_DIRECTORY}/.env
 
           fi
 
@@ -57,6 +61,6 @@ jobs:
 
       - name: Build the Docker image
         run: |
-          docker-compose -f ${DOCKER_COMPOSE_PATH} build
+          docker compose -f ${DOCKER_COMPOSE_PATH} build
       - name: Pusing created images to ECR
-        run: docker-compose -f ${DOCKER_COMPOSE_PATH} push
+        run: docker compose -f ${DOCKER_COMPOSE_PATH} push

@@ -15,8 +15,6 @@ export const ContractDetails: React.FC<{
   const config: any = useConfig();
   const assetsURL = getAssetsURL(config);
 
-  console.log(scanData);
-
   return (
     <AccordionPanel backgroundColor={"#F4F5F6"} pb={4} mt={[4, 4, 4, 0]}>
       <Flex
