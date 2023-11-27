@@ -51,10 +51,8 @@ jobs:
             aws s3 cp s3://credshields-prod/new-relic/newrelic-browser.js ${PROJECT_DIRECTORY}/
           elif [[ "${{ inputs.ENV }}" == "backoffice-stage" ]]; then
             aws s3 cp s3://credshields-dev/env_file/frontend_backoffice.env ${PROJECT_DIRECTORY}/.env
-            aws s3 cp s3://credshields-dev/new-relic/newrelic-browser.js ${PROJECT_DIRECTORY}/
           elif [[ "${{ inputs.ENV }}" == "backoffice-prod" ]]; then
             aws s3 cp s3://credshields-prod/env_file/frontend_backoffice.env ${PROJECT_DIRECTORY}/.env
-            aws s3 cp s3://credshields-prod/new-relic/newrelic-browser.js ${PROJECT_DIRECTORY}/
 
           fi
 
