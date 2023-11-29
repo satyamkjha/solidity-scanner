@@ -2,8 +2,6 @@ import {
   useToast,
   Text,
   Flex,
-  VStack,
-  CircularProgress,
   Button,
   AlertDialog,
   AlertDialogOverlay,
@@ -12,14 +10,8 @@ import {
   CloseButton,
   Divider,
   AlertDialogFooter,
-  Image,
   Box,
 } from "@chakra-ui/react";
-import {
-  formattedDate,
-  getPaymentDaysLeft,
-  getNextPaymentValue,
-} from "common/functions";
 import { Plan } from "common/types";
 import API from "helpers/api";
 import { API_PATH } from "helpers/routeManager";
@@ -154,8 +146,9 @@ const CurrentPlan: React.FC<{
           )}
         </Flex>
         <Flex
-          w={"fit-content"}
+          w={["100%", "100%", "100%", "36%"]}
           mt={[10, 10, 10, 0]}
+          ml={[0, 0, 0, "auto"]}
           flexDir="column"
           justifyContent={"flex-start"}
           alignItems="flex-start"
