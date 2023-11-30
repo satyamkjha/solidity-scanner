@@ -95,24 +95,28 @@ export const BlockchainSelector: React.FC<{
     event: any,
     item: React.SetStateAction<string>
   ) => {
-    event.stopPropagation();
-    if (popoverRef.current) {
-      const clickedRect = event.currentTarget.getBoundingClientRect();
-      const containerRect = popoverRef.current.getBoundingClientRect();
+    try {
+      event.stopPropagation();
+      if (popoverRef.current) {
+        const clickedRect = event.currentTarget.getBoundingClientRect();
+        const containerRect = popoverRef.current.getBoundingClientRect();
 
-      const relativePosition = {
-        top: clickedRect.top - containerRect.top,
-        left: clickedRect.left - containerRect.left,
-      };
-      setElementPosition(relativePosition);
-      setBlockchain(item);
-      if (item === "buildbear") {
-        setPlatform(item);
+        const relativePosition = {
+          top: clickedRect.top - containerRect.top,
+          left: clickedRect.left - containerRect.left,
+        };
+        setElementPosition(relativePosition);
+        setBlockchain(item);
+        if (item === "buildbear") {
+          setPlatform(item);
+        }
+        setFirstBlockchain(item);
+        setShowTransition(true);
+        setShowOtherSection(false);
+        setShowAnimation(true);
       }
-      setFirstBlockchain(item);
-      setShowTransition(true);
-      setShowOtherSection(false);
-      setShowAnimation(true);
+    } catch (e) {
+      console.log(e);
     }
   };
 
