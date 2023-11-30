@@ -18,7 +18,7 @@ export const ConfigProvider = ({ children }) => {
     const fetchConfig = async () => {
       try {
         const { data } = await API.get(API_PATH.API_GET_CONFIGS);
-        if (data.status === "success" && data.configs) {
+        if (data && data.status === "success" && data.configs) {
           setConfig(data.configs);
           setGlobalConfig(data.configs);
           setIsLoading(false);

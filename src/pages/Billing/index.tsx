@@ -11,7 +11,7 @@ import {
 } from "@chakra-ui/react";
 import "./billing.css";
 
-import { Page, Transaction, Profile } from "common/types";
+import { Page, Transaction } from "common/types";
 import { useTransactions } from "hooks/useTransactions";
 import { usePricingPlans } from "hooks/usePricingPlans";
 import ScanCredits from "pages/Billing/components/ScanCredits";

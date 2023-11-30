@@ -23,116 +23,200 @@ import { useUserOrgProfile } from "hooks/useUserOrgProfile";
 import { UserRoleProvider } from "hooks/useUserRole";
 import { onLogout } from "common/functions";
 
-const Landing = lazy(
-  () => import("pages/Landing" /* webpackChunkName: "Landing" */)
+const Landing = lazy(() =>
+  lazyRetry(
+    () => import("pages/Landing" /* webpackChunkName: "Landing" */),
+    "landing"
+  )
 );
 
-const QuickScan = lazy(
-  () => import("pages/QuickScan" /* webpackChunkName: "QuickScan" */)
+const QuickScan = lazy(() =>
+  lazyRetry(
+    () => import("pages/QuickScan" /* webpackChunkName: "QuickScan" */),
+    "quickScan"
+  )
 );
 
-const Report = lazy(
-  () => import("pages/Report" /* webpackChunkName: "Landing" */)
+const Report = lazy(() =>
+  lazyRetry(
+    () => import("pages/Report" /* webpackChunkName: "report" */),
+    "report"
+  )
 );
 
-const Pricing = lazy(
-  () => import("pages/Pricing" /* webpackChunkName: "Pricing" */)
+const Pricing = lazy(() =>
+  lazyRetry(
+    () => import("pages/Pricing" /* webpackChunkName: "Pricing" */),
+    "pricing"
+  )
 );
 
-const TermsOfService = lazy(
-  () => import("pages/Extra/tos" /* webpackChunkName: "TermsOfService" */)
+const TermsOfService = lazy(() =>
+  lazyRetry(
+    () => import("pages/Extra/tos" /* webpackChunkName: "TermsOfService" */),
+    "tos"
+  )
 );
 
-const PrivacyPolicy = lazy(
-  () => import("pages/Extra/privacy" /* webpackChunkName: "PrivacyPolicy" */)
+const PrivacyPolicy = lazy(() =>
+  lazyRetry(
+    () => import("pages/Extra/privacy" /* webpackChunkName: "PrivacyPolicy" */),
+    "privacy"
+  )
 );
 
-const FAQ = lazy(() => import("pages/FAQ" /* webpackChunkName: "FAQ" */));
+const FAQ = lazy(() =>
+  lazyRetry(() => import("pages/FAQ" /* webpackChunkName: "FAQ" */), "faq")
+);
 
 //  Auth Pages
-const SignIn = lazy(
-  () => import("pages/Signin" /* webpackChunkName: "Signin" */)
+const SignIn = lazy(() =>
+  lazyRetry(
+    () => import("pages/Signin" /* webpackChunkName: "Signin" */),
+    "signin"
+  )
 );
 
-const Reset = lazy(
-  () => import("pages/Signin/reset" /* webpackChunkName: "Reset" */)
+const Reset = lazy(() =>
+  lazyRetry(
+    () => import("pages/Signin/reset" /* webpackChunkName: "Reset" */),
+    "reset"
+  )
 );
 
-const SignUp = lazy(
-  () => import("pages/Signup" /* webpackChunkName: "SignUp" */)
+const SignUp = lazy(() =>
+  lazyRetry(
+    () => import("pages/Signup" /* webpackChunkName: "SignUp" */),
+    "signup"
+  )
 );
 
-const CheckEmail = lazy(
-  () => import("pages/Signup/CheckEmail" /* webpackChunkName: "CheckEmail" */)
+const CheckEmail = lazy(() =>
+  lazyRetry(
+    () =>
+      import("pages/Signup/CheckEmail" /* webpackChunkName: "CheckEmail" */),
+    "check"
+  )
 );
 
-const Verify = lazy(
-  () => import("pages/Signup/verify" /* webpackChunkName: "Verify" */)
+const Verify = lazy(() =>
+  lazyRetry(
+    () => import("pages/Signup/verify" /* webpackChunkName: "Verify" */),
+    "verify"
+  )
 );
 
-const ForgotPassword = lazy(
-  () => import("pages/Forgot" /* webpackChunkName: "ForgotPassword" */)
+const ForgotPassword = lazy(() =>
+  lazyRetry(
+    () => import("pages/Forgot" /* webpackChunkName: "ForgotPassword" */),
+    "forgot"
+  )
 );
 
 // Core Pages
-const Home = lazy(() => import("pages/Home" /* webpackChunkName: "Home" */));
-
-const Profile = lazy(
-  () => import("pages/Profile" /* webpackChunkName: "Profile" */)
+const Home = lazy(() =>
+  lazyRetry(() => import("pages/Home" /* webpackChunkName: "Home" */), "home")
 );
 
-const Scans = lazy(() => import("pages/Scans" /* webpackChunkName: "Scans" */));
-
-const ProjectPage = lazy(
-  () =>
-    import("pages/Projects/ProjectPage" /* webpackChunkName: "ProjectPage" */)
+const Profile = lazy(() =>
+  lazyRetry(
+    () => import("pages/Profile" /* webpackChunkName: "Profile" */),
+    "profile"
+  )
 );
 
-const BlockPage = lazy(
-  () => import("pages/Blocks/BlockPage" /* webpackChunkName: "BlockPage" */)
-);
-const Integrations = lazy(
-  () => import("pages/Integrations" /* webpackChunkName: "Integration" */)
-);
-
-const Billing = lazy(
-  () => import("pages/Billing" /* webpackChunkName: "Billing" */)
+const Scans = lazy(() =>
+  lazyRetry(
+    () => import("pages/Scans" /* webpackChunkName: "Scans" */),
+    "scans"
+  )
 );
 
-const PaymentSucess = lazy(
-  () =>
-    import(
-      "pages/Billing/components/PaymentStatus" /* webpackChunkName: "PaymentSucess" */
-    )
+const ProjectPage = lazy(() =>
+  lazyRetry(
+    () =>
+      import(
+        "pages/Projects/ProjectPage" /* webpackChunkName: "ProjectPage" */
+      ),
+    "project"
+  )
 );
 
-const PrivateApi = lazy(
-  () => import("pages/PrivateAPI" /* webpackChunkName: "PrivateApi" */)
+const BlockPage = lazy(() =>
+  lazyRetry(
+    () => import("pages/Blocks/BlockPage" /* webpackChunkName: "BlockPage" */),
+    "block"
+  )
+);
+const Integrations = lazy(() =>
+  lazyRetry(
+    () => import("pages/Integrations" /* webpackChunkName: "Integration" */),
+    "integration"
+  )
 );
 
-const Organisation = lazy(
-  () => import("pages/Organisation" /* webpackChunkName: "Organisation" */)
+const Billing = lazy(() =>
+  lazyRetry(
+    () => import("pages/Billing" /* webpackChunkName: "Billing" */),
+    "billing"
+  )
 );
 
-const PublicReportPage = lazy(
-  () =>
-    import(
-      "pages/Report/PublicReport" /* webpackChunkName: "PublicReportPage" */
-    )
+const PaymentSucess = lazy(() =>
+  lazyRetry(
+    () =>
+      import(
+        "pages/Billing/components/PaymentStatus" /* webpackChunkName: "PaymentSucess" */
+      ),
+    "payment"
+  )
 );
 
-const Detectors = lazy(
-  () => import("pages/Detectors" /* webpackChunkName: "Detectors" */)
+const PrivateApi = lazy(() =>
+  lazyRetry(
+    () => import("pages/PrivateAPI" /* webpackChunkName: "PrivateApi" */),
+    "api"
+  )
 );
 
-const AcceptOrgInvitation = lazy(
-  () =>
-    import(
-      "pages/Organisation/AcceptOrgInvitation" /* webpackChunkName: "AcceptOrganisationInvite" */
-    )
+const Organisation = lazy(() =>
+  lazyRetry(
+    () => import("pages/Organisation" /* webpackChunkName: "Organisation" */),
+    "organisation"
+  )
 );
-const LeaderBoard = lazy(
-  () => import("pages/HackBoard" /* webpackChunkName: "HackerBoard" */)
+
+const PublicReportPage = lazy(() =>
+  lazyRetry(
+    () =>
+      import(
+        "pages/Report/PublicReport" /* webpackChunkName: "PublicReportPage" */
+      ),
+    "publicReport"
+  )
+);
+
+const Detectors = lazy(() =>
+  lazyRetry(
+    () => import("pages/Detectors" /* webpackChunkName: "Detectors" */),
+    "detectors"
+  )
+);
+
+const AcceptOrgInvitation = lazy(() =>
+  lazyRetry(
+    () =>
+      import(
+        "pages/Organisation/AcceptOrgInvitation" /* webpackChunkName: "AcceptOrganisationInvite" */
+      ),
+    "orgInvite"
+  )
+);
+const LeaderBoard = lazy(() =>
+  lazyRetry(
+    () => import("pages/HackBoard" /* webpackChunkName: "HackerBoard" */),
+    "hacks"
+  )
 );
 
 const orgRestrictedRoutes: {
@@ -264,6 +348,30 @@ const Routes: React.FC = () => {
       </ErrorHandler>
     </Router>
   );
+};
+
+const lazyRetry = function <T>(
+  componentImport: () => Promise<T>,
+  name: string
+) {
+  return new Promise<T>((resolve, reject) => {
+    const hasRefreshed = JSON.parse(
+      window.sessionStorage.getItem(`retry-${name}-refreshed`) || "false"
+    );
+
+    componentImport()
+      .then((component) => {
+        window.sessionStorage.setItem(`retry-${name}-refreshed`, "false");
+        resolve(component);
+      })
+      .catch((error) => {
+        if (!hasRefreshed) {
+          window.sessionStorage.setItem(`retry-${name}-refreshed`, "true");
+          window.location.reload();
+        }
+        reject(error);
+      });
+  });
 };
 
 const ErrorHandler: React.FC = ({ children }) => {
