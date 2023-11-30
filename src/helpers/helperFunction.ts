@@ -1,6 +1,7 @@
 import UAParser from "ua-parser-js";
 import reCAPTCHA from "helpers/reCAPTCHA";
 import { Profile, PricingData, Finding } from "common/types";
+import { platformVsChains, contractChain } from "common/values";
 
 let configValue: any = null;
 
@@ -210,6 +211,46 @@ export const getProjectFileUrl = (
     default:
       return "";
   }
+};
+
+export const getContractChainLabel = (platform: string, chain: string) => {
+  if (platformVsChains[platform] && chain) {
+    return contractChain[platformVsChains[platform][chain].chain].platforms[
+      platform
+    ].chains[platformVsChains[platform][chain].index].label;
+  }
+
+  if (
+    chain &&
+    contractChain[platform] &&
+    contractChain[platform].platforms[platform]
+  ) {
+    const chainObj = contractChain[platform].platforms[platform].chains.find(
+      (c) => c.value === chain
+    );
+    return chainObj ? chainObj.label : chain;
+  }
+
+  return chain || "NA";
+};
+
+export const getContractBlockchainId = (platform: string, chain: string) => {
+  if (platformVsChains[platform] && chain) {
+    return platformVsChains[platform][chain].chain;
+  }
+
+  if (contractChain[platform]) return platform;
+
+  return "NA";
+};
+
+export const getContractBlockChainLogoUrl = (
+  platform: string,
+  chain: string
+) => {
+  if (platform === "buildbear") return "blockscan/buildbear";
+
+  return contractChain[getContractBlockchainId(platform, chain)].logoUrl;
 };
 
 export const getTrimmedScanMessage = (scan_status: string) => {

@@ -57,25 +57,39 @@ const AppContent: React.FC = () => {
           src="//js-eu1.hs-scripts.com/24889894.js"
         ></script>
       </Helmet>
-      <Helmet>
-        {process.env.REACT_APP_ENVIRONMENT === "prod" ? (
+      {process.env.REACT_APP_ENVIRONMENT === "prod" ? (
+        <Helmet>
           <script type="text/javascript">
-            {`(function(c,l,a,r,i,t,y){
-                        c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
-                        t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
-                        y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
-                    })(window, document, "clarity", "script", "gj5br0bppy");`}
+            {`
+            try {
+              (function(c,l,a,r,i,t,y){
+                c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
+                t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
+                y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
+            })(window, document, "clarity", "script", "gj5br0bppy");
+            } catch (error) {
+              console.error('Error occurred in clarity script:', error);
+            }
+          `}
           </script>
-        ) : (
+        </Helmet>
+      ) : (
+        <Helmet>
           <script type="text/javascript">
-            {`(function(c,l,a,r,i,t,y){
-                        c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
-                        t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
-                        y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
-                    })(window, document, "clarity", "script", "gmq0xcmyv1");`}
+            {`
+              try {
+                (function(c,l,a,r,i,t,y){
+                  c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
+                  t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
+                  y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
+                })(window, document, "clarity", "script", "gmq0xcmyv1");
+              } catch (error) {
+                console.error('Error occurred in clarity script:', error);
+              }
+            `}
           </script>
-        )}
-      </Helmet>
+        </Helmet>
+      )}
       <QueryClientProvider client={queryClient}>
         <ChakraProvider theme={theme}>
           <MetaMaskProvider>

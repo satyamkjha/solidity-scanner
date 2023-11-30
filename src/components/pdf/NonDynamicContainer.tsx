@@ -70,11 +70,7 @@ const NonDynamicContainer: React.FC<{ issue: IssueDetailObject }> = ({
         issue.issue_details.length > 7;
       if (isPageBreak) {
         const discriptionEl = element.firstElementChild;
-        console.log(
-          discriptionEl?.clientHeight,
-          window.innerHeight,
-          discriptionEl?.innerHTML
-        );
+
         if (
           discriptionEl &&
           discriptionEl.clientHeight > window.innerHeight * 0.35

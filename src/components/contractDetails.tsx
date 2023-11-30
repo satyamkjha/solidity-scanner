@@ -1,8 +1,12 @@
 import { AccordionPanel } from "@chakra-ui/accordion";
 import { Flex, HStack, Text, Image, VStack } from "@chakra-ui/react";
-import { getAssetsURL } from "helpers/helperFunction";
+import {
+  getAssetsURL,
+  getContractChainLabel,
+  getContractBlockchainId,
+} from "helpers/helperFunction";
 import React from "react";
-import { blockExplorer } from "common/values";
+import { blockExplorer, contractChain } from "common/values";
 import { useConfig } from "hooks/useConfig";
 
 export const ContractDetails: React.FC<{
@@ -10,6 +14,7 @@ export const ContractDetails: React.FC<{
 }> = ({ scanData }) => {
   const config: any = useConfig();
   const assetsURL = getAssetsURL(config);
+
   return (
     <AccordionPanel backgroundColor={"#F4F5F6"} pb={4} mt={[4, 4, 4, 0]}>
       <Flex
@@ -40,7 +45,16 @@ export const ContractDetails: React.FC<{
             |
           </Text>
           <Image
-            src={`${assetsURL}blockscan/${scanData.scan_report.contract_platform}-scan.svg`}
+            src={`${assetsURL}${
+              scanData.scan_report.contract_platform === "buildbear"
+                ? "blockscan/buildbear"
+                : contractChain[
+                    getContractBlockchainId(
+                      scanData.scan_report.contract_platform || "",
+                      scanData.scan_report.contract_chain || ""
+                    )
+                  ].platforms[scanData.scan_report.contract_platform].iconUrl
+            }.svg`}
             alt="Product screenshot"
             mx="auto"
             h={"20px"}
@@ -183,9 +197,10 @@ export const ContractDetails: React.FC<{
             Contract Chain
           </Text>
           <Text width={"100%"} as="p" fontSize="14px">
-            {scanData.scan_report.contract_chain
-              ? scanData.scan_report.contract_chain
-              : "NA"}
+            {getContractChainLabel(
+              scanData.scan_report.contract_platform,
+              scanData.scan_report.contract_chain
+            )}
           </Text>
         </VStack>
       </Flex>

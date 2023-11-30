@@ -1,20 +1,9 @@
 import {
-  useToast,
   Text,
   Flex,
   VStack,
   CircularProgress,
-  Button,
-  AlertDialog,
-  AlertDialogOverlay,
-  AlertDialogContent,
-  HStack,
-  CloseButton,
-  Divider,
-  AlertDialogFooter,
   Image,
-  Box,
-  background,
   Heading,
 } from "@chakra-ui/react";
 import {
@@ -24,7 +13,7 @@ import {
 } from "common/functions";
 import { useHistory } from "react-router-dom";
 import { getAssetsURL, sentenceCapitalize } from "helpers/helperFunction";
-import React, { useRef, useState } from "react";
+import React from "react";
 
 const PlanCycleInfo: React.FC<{
   planName: string;
@@ -54,6 +43,7 @@ const PlanCycleInfo: React.FC<{
         src={`${assetsURL}common/pro_upgrade.svg`}
         height="185px"
         width="400px"
+        ml={[0, 0, 0, "auto"]}
         cursor={"pointer"}
         onClick={() => history.push("/billing")}
       />
@@ -62,13 +52,14 @@ const PlanCycleInfo: React.FC<{
     return (
       <Flex
         w="100%"
-        maxW={"400px"}
-        maxH="185px"
+        maxW={["450px", "450px", "450px", "550px"]}
+        maxH={["185px", "185px", "185px", "200px"]}
         px={8}
         py={6}
+        ml={[0, 0, 0, "auto"]}
         cursor={"pointer"}
         background={packageName !== "custom" ? packageName : "none"}
-        height="185px"
+        height={["100%"]}
         backgroundImage={
           packageName === "custom"
             ? `url(${assetsURL}background/custom_plan_cycle_card_bg.svg)`
@@ -113,7 +104,6 @@ const PlanCycleInfo: React.FC<{
           </>
         ) : (
           <>
-            {" "}
             <Flex>
               {subscription ? (
                 <VStack alignItems="flex-start" spacing={1}>
@@ -140,6 +130,7 @@ const PlanCycleInfo: React.FC<{
                   ml="auto"
                   mt={-8}
                   width={"50%"}
+                  maxW={"170px"}
                   h={"auto"}
                 />
               )}

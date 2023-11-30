@@ -119,7 +119,7 @@ const Sidebar: React.FC<{
     <Flex
       sx={{
         width: isCollapsed ? SIDEBAR_WIDTH_COLLAPSED : SIDEBAR_WIDTH_EXPANDED,
-        height: "calc(100vh)",
+        height: "calc(100vh - 30px)",
         borderRightWidth: 1,
         borderRightStyle: "solid",
         borderRightColor: "border",

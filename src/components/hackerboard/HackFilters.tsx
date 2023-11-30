@@ -310,6 +310,7 @@ const HackFilters: React.FC<{
           formatOptionLabel={FormatOptionLabel}
           isSearchable={true}
           isClearable={true}
+          defaultValue={sortOptions[0]}
           options={sortOptions}
           placeholder="Sort By"
           styles={customStylesMiddle}

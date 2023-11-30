@@ -8,18 +8,22 @@ type PieData = {
   color: string;
 };
 
-const MyResponsivePie: React.FC<{ data: PieData[] }> = ({ data }) => (
+const MyResponsivePie: React.FC<{ data: PieData[]; page?: string }> = ({
+  data,
+  page,
+}) => (
   <>
     <ResponsivePie
       data={data}
-      margin={{ top: 5, right: 5, bottom: 5, left: 5 }}
+      margin={{ top: 10, right: 10, bottom: 10, left: 10 }}
       colors={{ datum: "data.color" }}
-      innerRadius={0.5}
-      padAngle={0.7}
-      cornerRadius={3}
+      innerRadius={page === "quickscan" ? 0.75 : 0.5}
+      padAngle={page === "quickscan" ? 0 : 0.7}
+      cornerRadius={page === "quickscan" ? 0 : 3}
       activeOuterRadiusOffset={8}
       borderWidth={1}
       borderColor={{ from: "color", modifiers: [["darker", 0.2]] }}
+      enableArcLabels={page === "quickscan" ? false : true}
       enableArcLinkLabels={false}
       arcLinkLabelsSkipAngle={10}
       arcLinkLabelsTextColor="#333333"
@@ -27,6 +31,7 @@ const MyResponsivePie: React.FC<{ data: PieData[] }> = ({ data }) => (
       arcLinkLabelsColor={{ from: "color" }}
       arcLabelsSkipAngle={10}
       arcLabelsTextColor={{ from: "color", modifiers: [["darker", 2]] }}
+      transitionMode="startAngle"
     />
   </>
 );

@@ -1,24 +1,20 @@
-import React, { PropsWithChildren, useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import {
   Box,
   Heading,
-  Stack,
   Input,
   Button,
   useMediaQuery,
-  useToast,
   Text,
+  Flex,
 } from "@chakra-ui/react";
 import Loader from "components/styled-components/Loader";
-import { StylesConfig, GroupBase } from "react-select";
-import { OptionTypeWithIcon } from "common/types";
-import FormatOptionLabelWithImage from "components/FormatOptionLabelWithImage";
-import { contractChain, platforms } from "common/values";
-import Select from "react-select";
-import { useLocation, useParams } from "react-router-dom";
+
+import { useLocation } from "react-router-dom";
 import Lottie from "lottie-react";
 import ssIconAnimation from "./quickscan_bg.json";
 import { isInViewport } from "common/functions";
+import { BlockchainSelector } from "components/common/BlockchainSelector";
 
 const QuickScanForm: React.FC<{
   view: "landing" | "quickscan";
@@ -30,7 +26,6 @@ const QuickScanForm: React.FC<{
   ) => Promise<void>;
   isLoading: boolean;
 }> = ({ runQuickScan, isLoading, view }) => {
-  const toast = useToast();
   const location = useLocation();
   const [stopAnimation, isDesktopView] = useMediaQuery([
     "(max-width: 600px)",
@@ -38,165 +33,42 @@ const QuickScanForm: React.FC<{
   ]);
   const query = new URLSearchParams(location.search);
   const ref = query.get("ref");
-  const { blockAddress, blockPlatform, blockChain } = useParams<{
-    blockAddress: string;
-    blockPlatform: string;
-    blockChain: string;
-  }>();
+
   const [address, setAddress] = React.useState("");
+  const [adddressError, setAddressError] = useState("");
+  const [blockchainSelectorError, setBlockchainSelectorError] = useState("");
   const [platform, setPlatform] = React.useState("");
   const [node_id, setNodeId] = React.useState("");
   const [chain, setChain] = React.useState<{
     label: string;
     value: string;
     icon: string;
+    website: string;
   } | null>(null);
-  const [chainList, setChainList] = React.useState<
-    { label: string; value: string; icon: string }[]
-  >(contractChain["etherscan"]);
+
   const quickscanRef = useRef<HTMLDivElement>(null);
+  const contractAddressRef = useRef<HTMLInputElement>(null);
   const [animationOffset, setAnimationOffset] = useState(60);
-
-  const customStylesPlatform: StylesConfig<
-    PropsWithChildren<OptionTypeWithIcon>,
-    boolean,
-    GroupBase<PropsWithChildren<OptionTypeWithIcon>>
-  > = {
-    option: (provided: any, state: any) => ({
-      ...provided,
-      borderBottom: "1px solid #f3f3f3",
-      backgroundColor: state.isSelected
-        ? "#FFFFFF"
-        : state.isFocused
-        ? "#E6E6E6"
-        : "#FFFFFF",
-      color: "#000000",
-    }),
-    menu: (provided: any, state: any) => ({
-      ...provided,
-      color: state.selectProps.menuColor,
-      borderRadius: 10,
-      border: "0px solid #ffffff",
-      overflowY: "hidden",
-      width: "300px",
-      textAlign: "left",
-    }),
-    control: (state: any) => ({
-      // none of react-select's styles are passed to <Control />
-      display: "flex",
-      flexDirection: "row",
-      backgroundColor: "#FFFFFF",
-      width: isDesktopView ? "300px" : "100%",
-      maxWidth: "500px",
-      padding: 5,
-      margin: 0,
-      borderTopLeftRadius: 15,
-      borderBottomLeftRadius: 15,
-      borderTopRightRadius: isDesktopView ? 0 : 15,
-      borderBottomRightRadius: isDesktopView ? 0 : 15,
-      border: state.isFocused ? "2px solid #52FF00" : "2px solid #EDF2F7",
-    }),
-    singleValue: (provided: any, state: any) => {
-      const opacity = state.isDisabled ? 0.3 : 1;
-      const transition = "opacity 300ms";
-
-      return { ...provided, opacity, transition };
-    },
-    container: (provided: any, state: any) => ({
-      ...provided,
-      width: isDesktopView ? "300px" : "95%",
-      maxWidth: "500px",
-    }),
-  };
-
-  const customStylesChain: StylesConfig<
-    PropsWithChildren<{
-      value: string;
-      label: string;
-      icon: string;
-    }>,
-    boolean,
-    GroupBase<
-      PropsWithChildren<{
-        value: string;
-        label: string;
-        icon: string;
-      }>
-    >
-  > = {
-    option: (provided: any, state: any) => ({
-      ...provided,
-      borderBottom: "1px solid #f3f3f3",
-      backgroundColor: state.isSelected
-        ? "#FFFFFF"
-        : state.isFocused
-        ? "#E6E6E6"
-        : "#FFFFFF",
-      color: "#000000",
-    }),
-    menu: (provided: any, state: any) => ({
-      ...provided,
-      color: state.selectProps.menuColor,
-      borderRadius: 10,
-      border: "0px solid #ffffff",
-      overflowY: "hidden",
-      width: "250px",
-    }),
-    control: (state: any) => ({
-      // none of react-select's styles are passed to <Control />
-      display: "flex",
-      flexDirection: "row",
-      backgroundColor: "#FFFFFF",
-      width: isDesktopView ? "300px" : "100%",
-      padding: 5,
-      maxWidth: "500px",
-      borderTopLeftRadius: 0,
-      borderBottomLeftRadius: 0,
-      borderRadius: isDesktopView ? 0 : 15,
-      margin: 0,
-      border: state.isFocused ? "2px solid #52FF00" : "2px solid #EDF2F7",
-    }),
-    container: (provided: any, state: any) => ({
-      ...provided,
-      width: isDesktopView ? "300px" : "95%",
-      maxWidth: "500px",
-    }),
-    singleValue: (provided: any, state: any) => {
-      const opacity = state.isDisabled ? 0.3 : 1;
-      const transition = "opacity 300ms";
-      return { ...provided, opacity, transition };
-    },
-  };
 
   const generateQuickScan = () => {
     if (platform === "") {
-      toast({
-        title: "Platform not selected",
-        description: "Please select a Platform to perform the scan",
-        status: "warning",
-        duration: 3000,
-        isClosable: true,
-      });
+      setBlockchainSelectorError(
+        "Please select a Platform to perform the scan"
+      );
       return;
     }
-    if (chain && chain.value === "") {
-      toast({
-        title: "Chain not selected",
-        description: "Please select a Chain to perform the scan",
-        status: "warning",
-        duration: 3000,
-        isClosable: true,
-      });
+    if (!chain && platform !== "buildbear") {
+      setBlockchainSelectorError("Please select a Chain to perform the scan");
       return;
     }
+
+    if (!node_id && platform === "buildbear") {
+      setBlockchainSelectorError("Please enter a Node ID to perform the scan");
+      return;
+    }
+
     if (address === "") {
-      toast({
-        title: "Address not selected",
-        description: "Please enter an address to perform the scan",
-        status: "warning",
-        duration: 3000,
-        isClosable: true,
-      });
+      setAddressError("Please enter an address to perform the scan");
       return;
     }
 
@@ -233,55 +105,8 @@ const QuickScanForm: React.FC<{
       localStorage.setItem("campaign_type", campaign_type);
       localStorage.setItem("campaign_id", campaign_id);
     }
-
-    if (blockAddress) setAddress(blockAddress);
-
-    if (blockPlatform) {
-      setPlatform(blockPlatform);
-      setChainList(contractChain[blockPlatform]);
-      setChain(null);
-    }
-
-    if (blockPlatform === "buildbear") {
-      setNodeId(blockChain);
-    } else {
-      if (blockChain) {
-        contractChain[blockPlatform].forEach((item) => {
-          if (item.value === blockChain) {
-            setChain(item);
-          }
-        });
-      }
-    }
-
-    if (blockAddress && blockChain && blockPlatform) {
-      runQuickScan(blockAddress, blockPlatform, blockChain, ref);
-    }
-
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
-
-  // useEffect(() => {
-  //   const element = document.getElementById("public_layout");
-  //   if (element)
-  //     element.addEventListener("scroll", function (event) {
-  //       if (isInViewport(quickscanRef.current)) {
-  //         setTimeout(() => {
-  //           Lottie.play();
-  //           console.log("start playing");
-  //         }, 5000);
-  //         element?.removeEventListener("scroll", () =>
-  //          { }
-  //         );
-  //       }
-  //     });
-
-  //   return () => {
-  //     element?.removeEventListener("scroll", () =>
-  //      { }
-  //     );
-  //   };
-  // }, []);
 
   const [isVisible, setIsVisible] = useState(false);
   const [playAnimation, setPlayAnimation] = useState(false);
@@ -310,6 +135,12 @@ const QuickScanForm: React.FC<{
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+  const onSelectorClose = () => {
+    if (contractAddressRef && contractAddressRef.current) {
+      contractAddressRef.current.focus();
+    }
+  };
+
   return (
     <Box w="100%" h="fit-content" position="relative" ref={quickscanRef}>
       {isDesktopView && playAnimation ? (
@@ -326,25 +157,18 @@ const QuickScanForm: React.FC<{
           "fit-content",
           "fit-content",
           "fit-content",
-          view === "landing" ? "100vh" : "750px",
+          view === "landing" ? "100vh" : "90vh",
         ]}
         px={[0, 0, 10]}
-        py={isDesktopView ? 20 : 10}
-        pb={isDesktopView ? "200px" : "50px"}
+        pt={[10, 10, 10, 20]}
+        pb={isDesktopView ? 20 : "50px"}
         textAlign="center"
       >
-        {playAnimation && !isDesktopView && (
-          <Lottie
-            animationData={ssIconAnimation}
-            style={styleObj}
-            loop={false}
-          />
-        )}
         <Heading
           w={["90%", "90%", "80%", "60%"]}
           color={view === "landing" ? "black" : "white"}
           fontSize={["3xl", "4xl"]}
-          mb={8}
+          mb={4}
           mt={isDesktopView ? 0 : 8}
           opacity={stopAnimation || isVisible ? 1 : 0}
           transform={
@@ -373,7 +197,7 @@ const QuickScanForm: React.FC<{
         </Heading>
         <Text
           w={["90%", "90%", "80%", "60%"]}
-          fontSize="xl"
+          fontWeight={500}
           color="subtle"
           mb={8}
           opacity={stopAnimation || isVisible ? 1 : 0}
@@ -393,16 +217,13 @@ const QuickScanForm: React.FC<{
           a wide selection of supported protocols and receive a clear, concise
           analysis report in a matter of seconds.
         </Text>
-        <Stack
-          mt={isDesktopView ? 20 : 10}
-          ml={[4, 4, 4, 0]}
+        <Flex
+          mt={1}
           justify="center"
           alignItems="center"
           w={"100%"}
           zIndex={1000}
-          maxW={isDesktopView ? "1500px" : "900px"}
-          direction={isDesktopView ? "row" : "column"}
-          spacing={isDesktopView ? 0 : 3}
+          flexDirection={"column"}
           opacity={stopAnimation || isVisible ? 1 : 0}
           transform={
             stopAnimation
@@ -415,81 +236,73 @@ const QuickScanForm: React.FC<{
               : "opacity 0.25s ease-in, transform 0.5s ease-in"
           }
         >
-          <Select
-            formatOptionLabel={FormatOptionLabelWithImage}
-            options={platforms.map((item) => ({
-              ...item,
-              isDisabled: false,
-            }))}
-            isSearchable={true}
-            value={platforms.find((item) => platform === item.value)}
-            placeholder="Select Contract Platform"
-            styles={customStylesPlatform}
-            onChange={(newValue: any) => {
-              if (newValue) {
-                // setAction(newValue.value)
-                setPlatform(newValue.value);
-                setChainList(contractChain[newValue.value]);
-                setChain(null);
-              }
-            }}
+          <BlockchainSelector
+            theme={view === "quickscan" ? "dark" : "light"}
+            view="quickscan"
+            chain={chain}
+            node_id={node_id}
+            setNodeId={setNodeId}
+            setChain={setChain}
+            setPlatform={setPlatform}
+            platform={platform}
+            menuPlacement="bottom"
+            blockchainSelectorError={blockchainSelectorError}
+            setBlockchainSelectorError={setBlockchainSelectorError}
+            onSelectorClose={onSelectorClose}
           />
-
-          {platform === "buildbear" ? (
-            <Input
-              isRequired
-              placeholder="Node ID"
-              variant="brand"
-              size="lg"
-              height={50}
-              borderRadius={isDesktopView ? 0 : 15}
-              width={isDesktopView ? "300px" : "95%"}
-              maxWidth="500px"
-              value={node_id}
-              onChange={(e) => {
-                setNodeId(e.target.value);
-              }}
-            />
-          ) : (
-            <Select
-              formatOptionLabel={FormatOptionLabelWithImage}
-              isDisabled={platform === ""}
-              isSearchable={false}
-              value={chain}
-              options={chainList}
-              placeholder="Select Contract Chain"
-              styles={customStylesChain}
-              onChange={(newValue: any) => {
-                if (newValue) {
-                  setChain(newValue);
-                }
-              }}
-            />
-          )}
+          <Text
+            w="100%"
+            color={"critical"}
+            fontSize={"sm"}
+            mt={2}
+            textAlign="center"
+          >
+            {blockchainSelectorError || " "}
+          </Text>
           <Input
             isRequired
-            placeholder="Contract Address"
-            variant="brand"
+            ref={contractAddressRef}
+            type={"text"}
+            placeholder="Type or paste your contract address here..."
+            variant={"brand"}
             size="lg"
+            isInvalid={adddressError !== ""}
+            errorBorderColor={"#960D00"}
+            color={view === "quickscan" ? "white" : "gray.800"}
+            _placeholder={{
+              color: view === "quickscan" ? "gray.400" : "gray.500",
+            }}
             height={50}
-            mt={0}
-            borderTopLeftRadius={isDesktopView ? 0 : 15}
-            borderBottomLeftRadius={isDesktopView ? 0 : 15}
-            width={isDesktopView ? "500px" : "95%"}
-            maxWidth="500px"
+            mt={blockchainSelectorError === "" ? 14 : 10}
+            borderColor={view === "quickscan" ? "gray.600" : "gray.200"}
+            backgroundColor={view === "quickscan" ? "#272727" : "#FFFFFF"}
+            borderRadius={15}
+            width={isDesktopView ? "50%" : "90%"}
+            maxWidth="800px"
+            textAlign={"center"}
             value={address}
             onChange={(e) => {
               setAddress(e.target.value);
             }}
           />
-        </Stack>
+
+          <Text
+            w="100%"
+            color={"critical"}
+            fontSize={"sm"}
+            mt={2}
+            textAlign="center"
+          >
+            {adddressError}
+          </Text>
+        </Flex>
 
         <Button
           isLoading={isLoading}
           loadingText="Scanning"
           spinner={<Loader color={"#3300FF"} size={20} />}
-          mt={isDesktopView ? 20 : 10}
-          mb={isDesktopView ? "0px" : "120px"}
+          mt={isDesktopView ? "100px" : 10}
+          mb={isDesktopView ? 6 : "120px"}
           w={"300px"}
           type="submit"
           variant="brand"

@@ -17,6 +17,7 @@ import {
   Divider,
   VStack,
   Heading,
+  CloseButton,
 } from "@chakra-ui/react";
 import { GiHamburgerMenu } from "react-icons/gi";
 import { BiUser, BiPowerOff } from "react-icons/bi";
@@ -37,6 +38,7 @@ import { useUserOrgProfile } from "hooks/useUserOrgProfile";
 import { signInWithCustomToken, User, onAuthStateChanged } from "firebase/auth";
 import { auth } from "helpers/firebase";
 import { useUserRole } from "hooks/useUserRole";
+import { CloseIcon } from "@chakra-ui/icons";
 
 const MotionFlex = motion(Flex);
 
@@ -52,6 +54,8 @@ const Layout: React.FC = ({ children }) => {
   const { data: orgProfile } = useUserOrgProfile(
     profileData?.logged_in_via === "org_login"
   );
+
+  const [isBannerOpen, setIsBannerOpen] = useState(true);
 
   const config: any = useConfig();
   const assetsURL = getAssetsURL(config);
@@ -145,21 +149,56 @@ const Layout: React.FC = ({ children }) => {
               </Link>
             </MotionFlex>
           ) : (
-            // <MotionFlex
-            //   initial={{ height: 0 }}
-            //   animate={{ height: "auto" }}
-            //   sx={{
-            //     w: "100%",
-            //     justifyContent: "center",
-            //     py: 1,
-            //     bg: "brand-dark",
-            //   }}
-            // >
-            //   <Text fontSize="12px" color="white" fontWeight={700}>
-            //     This product is in beta.
-            //   </Text>
-            // </MotionFlex>
-            <></>
+            isBannerOpen && (
+              <MotionFlex
+                initial={{ height: 0 }}
+                animate={{ height: "25px" }}
+                sx={{
+                  w: "100%",
+                  justifyContent: "center",
+                  py: 1,
+                  bg: "brand-dark",
+                }}
+              >
+                <HStack justifyContent="center" w="calc(100% - 30px)">
+                  <Text
+                    cursor="pointer"
+                    fontSize="12px"
+                    color="white"
+                    onClick={() =>
+                      window.open(
+                        "https://proofofsecurity.solidityscan.com/",
+                        "_blank"
+                      )
+                    }
+                    fontWeight={700}
+                  >
+                    Proof of Security Summit'23 - India
+                  </Text>
+                  <Text fontSize="12px" color="white" fontWeight={700}>
+                    |
+                  </Text>
+                  <Text
+                    cursor="pointer"
+                    fontSize="12px"
+                    color="white"
+                    fontWeight={700}
+                    onClick={() =>
+                      window.open("https://lu.ma/x3063d6n", "_blank")
+                    }
+                  >
+                    Register here
+                  </Text>
+                </HStack>
+                <CloseIcon
+                  mr="10px"
+                  cursor="pointer"
+                  fontSize="13px"
+                  color="white"
+                  onClick={() => setIsBannerOpen(false)}
+                />
+              </MotionFlex>
+            )
           )}
         </>
       )}
@@ -210,23 +249,11 @@ const Layout: React.FC = ({ children }) => {
               "100%",
               `calc(100% - ${SIDEBAR_WIDTH_COLLAPSED})`,
             ],
-            height: "calc(100vh)",
+            height: "calc(100vh - 30px)",
             overflowY: "scroll",
             overflowX: "hidden",
           }}
         >
-          {/* <Flex
-            sx={{
-              w: "100%",
-              justifyContent: "center",
-              py: 1,
-              bg: "brand-dark",
-            }}
-          >
-            <Text fontSize="12px" color="white" fontWeight={700}>
-              This product is in beta.
-            </Text>
-          </Flex> */}
           <Flex
             w="100%"
             sx={{
@@ -356,7 +383,7 @@ const Layout: React.FC = ({ children }) => {
               </Menu>
             )}
           </Flex>
-          <Box width={"100%"} height="calc(100% - 90px)">
+          <Box width={"100%"} height="calc(100% - 120px)">
             {children}
           </Box>
         </Box>

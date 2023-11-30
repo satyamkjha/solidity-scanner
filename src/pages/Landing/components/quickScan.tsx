@@ -28,7 +28,7 @@ export default function QuickScan() {
   };
 
   return (
-    <Box w={"100%"} h="fit-content" bg="white">
+    <Box w={"100%"} h="fit-content" bg="white" pt={20}>
       <QuickScanForm
         view="landing"
         runQuickScan={runQuickScan}

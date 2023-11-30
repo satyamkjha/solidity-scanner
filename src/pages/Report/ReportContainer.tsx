@@ -29,6 +29,7 @@ import React from "react";
 import styled from "@emotion/styled";
 import { useConfig } from "hooks/useConfig";
 import UpgradePackageV2 from "components/UpgradePackageV2";
+import { pieData } from "common/values";
 
 export const ReportContainer: React.FC<{
   summary_report: Report;
@@ -49,52 +50,6 @@ export const ReportContainer: React.FC<{
   const assetsURL = getAssetsURL(config);
   const no_of_vuln_detectors =
     config && config.REACT_APP_ISSUES_DATA.no_of_vuln_detectors;
-
-  const pieData = (
-    critical: number,
-    high: number,
-    medium: number,
-    low: number,
-    informational: number,
-    gas: number
-  ) => [
-    {
-      id: "critical",
-      label: "Critical",
-      value: critical,
-      color: "#960D00",
-    },
-    {
-      id: "high",
-      label: "High",
-      value: high,
-      color: "#FF5C00",
-    },
-    {
-      id: "medium",
-      label: "Medium",
-      value: medium,
-      color: "#FFE600",
-    },
-    {
-      id: "low",
-      label: "Low",
-      value: low,
-      color: "#38CB89",
-    },
-    {
-      id: "informational",
-      label: "Informational",
-      value: informational,
-      color: "#A0AEC0",
-    },
-    {
-      id: "gas",
-      label: "Gas",
-      value: gas,
-      color: "#F795B4",
-    },
-  ];
 
   const monthNames = [
     "Jan",

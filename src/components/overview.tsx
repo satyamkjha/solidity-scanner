@@ -21,52 +21,9 @@ import { LogoIcon, NoBugIcon, ScanErrorIcon } from "./icons";
 import ManualAuditCard from "./manualAuditCard";
 import SolidityScoreProgress from "./common/SolidityScoreProgress";
 import { getAssetsURL } from "helpers/helperFunction";
+import { pieData } from "common/values";
 
-const pieData = (
-  critical: number,
-  high: number,
-  medium: number,
-  low: number,
-  informational: number,
-  gas: number
-) => [
-  {
-    id: "critical",
-    label: "Critical",
-    value: critical,
-    color: "#960D00",
-  },
-  {
-    id: "high",
-    label: "High",
-    value: high,
-    color: "#FF5C00",
-  },
-  {
-    id: "medium",
-    label: "Medium",
-    value: medium,
-    color: "#FFE600",
-  },
-  {
-    id: "low",
-    label: "Low",
-    value: low,
-    color: "#38CB89",
-  },
-  {
-    id: "informational",
-    label: "Informational",
-    value: informational,
-    color: "#A0AEC0",
-  },
-  {
-    id: "gas",
-    label: "Gas",
-    value: gas,
-    color: "#F795B4",
-  },
-];
+
 
 const Overview: React.FC<{
   scanData: Scan;
@@ -141,30 +98,23 @@ const Overview: React.FC<{
             </Box>
             <Box w={["100%", "80%", "60%"]}>
               <VulnerabilityDistribution
-                critical={
-                  scanData.multi_file_scan_summary.issue_severity_distribution
-                    .critical
-                }
-                high={
-                  scanData.multi_file_scan_summary.issue_severity_distribution
-                    .high
-                }
-                medium={
-                  scanData.multi_file_scan_summary.issue_severity_distribution
-                    .medium
-                }
-                low={
-                  scanData.multi_file_scan_summary.issue_severity_distribution
-                    .low
-                }
-                informational={
-                  scanData.multi_file_scan_summary.issue_severity_distribution
-                    .informational
-                }
-                gas={
-                  scanData.multi_file_scan_summary.issue_severity_distribution
-                    .gas
-                }
+                issueSeverityDistribution={{
+                  critical:
+                    scanData.multi_file_scan_summary.issue_severity_distribution
+                      .critical,
+                  high: scanData.multi_file_scan_summary
+                    .issue_severity_distribution.high,
+                  medium:
+                    scanData.multi_file_scan_summary.issue_severity_distribution
+                      .medium,
+                  low: scanData.multi_file_scan_summary
+                    .issue_severity_distribution.low,
+                  informational:
+                    scanData.multi_file_scan_summary.issue_severity_distribution
+                      .informational,
+                  gas: scanData.multi_file_scan_summary
+                    .issue_severity_distribution.gas,
+                }}
                 view="scans"
               />
             </Box>
@@ -319,19 +269,18 @@ const Overview: React.FC<{
             </Box>
             <Box w={["70%", "70%", "60%"]}>
               <VulnerabilityDistribution
-                critical={
-                  scanData.scan_summary.issue_severity_distribution.critical
-                }
-                high={scanData.scan_summary.issue_severity_distribution.high}
-                medium={
-                  scanData.scan_summary.issue_severity_distribution.medium
-                }
-                low={scanData.scan_summary.issue_severity_distribution.low}
-                informational={
-                  scanData.scan_summary.issue_severity_distribution
-                    .informational
-                }
-                gas={scanData.scan_summary.issue_severity_distribution.gas}
+                issueSeverityDistribution={{
+                  critical:
+                    scanData.scan_summary.issue_severity_distribution.critical,
+                  high: scanData.scan_summary.issue_severity_distribution.high,
+                  medium:
+                    scanData.scan_summary.issue_severity_distribution.medium,
+                  low: scanData.scan_summary.issue_severity_distribution.low,
+                  informational:
+                    scanData.scan_summary.issue_severity_distribution
+                      .informational,
+                  gas: scanData.scan_summary.issue_severity_distribution.gas,
+                }}
                 view="scans"
               />
             </Box>
