@@ -25,14 +25,18 @@ const MetaMaskLogin: React.FC = () => {
 
   const connectToMetamask = async () => {
     setIsLoading(true);
-    setTimeout(() => setIsLoading(false), 2000);
-    if (status === "unavailable") {
-      onOpen();
-      return;
-    }
-    await connect();
-    if (window.ethereum.selectedAddress) {
-      getNonce(window.ethereum.selectedAddress);
+    try {
+      setTimeout(() => setIsLoading(false), 2000);
+      if (status === "unavailable") {
+        onOpen();
+        return;
+      }
+      await connect();
+      if (window.ethereum.selectedAddress) {
+        getNonce(window.ethereum.selectedAddress);
+      }
+    } catch (e) {
+      console.log(e);
     }
   };
 
@@ -55,12 +59,16 @@ const MetaMaskLogin: React.FC = () => {
   };
 
   const getNonce = async (address: string) => {
-    const { data } = await API.get<{
-      status: string;
-      nonce: string;
-    }>(`${API_PATH.API_METAMASK_LOGIN}?public_address=${address}`);
-    if (data.status === "success") {
-      sign(address, data.nonce);
+    try {
+      const { data } = await API.get<{
+        status: string;
+        nonce: string;
+      }>(`${API_PATH.API_METAMASK_LOGIN}?public_address=${address}`);
+      if (data.status === "success") {
+        sign(address, data.nonce);
+      }
+    } catch (e) {
+      console.log(e);
     }
   };
 
@@ -68,14 +76,18 @@ const MetaMaskLogin: React.FC = () => {
     var from = window.ethereum.selectedAddress;
     var params = [from, nonce];
     var method = "personal_sign";
-    const signature = await ethereum.request({ method, params });
-    const { data } = await API.post(API_PATH.API_METAMASK_LOGIN, {
-      address: address,
-      signature,
-    });
-    if (data.status === "success") {
-      Auth.authenticateUser();
-      history.push("/home");
+    try {
+      const signature = await ethereum.request({ method, params });
+      const { data } = await API.post(API_PATH.API_METAMASK_LOGIN, {
+        address: address,
+        signature,
+      });
+      if (data.status === "success") {
+        Auth.authenticateUser();
+        history.push("/home");
+      }
+    } catch (e) {
+      console.log(e);
     }
   };
 

@@ -163,47 +163,51 @@ const RegisterForm: React.FC<{
   const [step, setStep] = useState(false);
 
   const onSubmit = async () => {
-    let reqHeaders = await getReCaptchaHeaders("register");
-    if (!step) {
-      setStep(true);
-    } else {
-      const campaign_type = localStorage.getItem("campaign_type");
-      const campaign_id = localStorage.getItem("campaign_id");
+    try {
+      let reqHeaders = await getReCaptchaHeaders("register");
+      if (!step) {
+        setStep(true);
+      } else {
+        const campaign_type = localStorage.getItem("campaign_type");
+        const campaign_id = localStorage.getItem("campaign_id");
 
-      let reqBody = {
-        email: email,
-        password1: password,
-        company_name: companyName,
-        contact_number: contactNumber,
-        first_name: name,
-        socials: {
-          telegram: telegram,
-          discord: discord,
-          linkedin: linkedin,
-          twitter: twitter,
-        },
-        campaign:
-          campaign_type && campaign_id
-            ? {
-                campaign_type,
-                campaign_id,
-              }
-            : undefined,
-      };
-      const { data } = await API.post<AuthResponse>(
-        API_PATH.API_REGISTER,
-        reqBody,
-        {
-          headers: reqHeaders,
+        let reqBody = {
+          email: email,
+          password1: password,
+          company_name: companyName,
+          contact_number: contactNumber,
+          first_name: name,
+          socials: {
+            telegram: telegram,
+            discord: discord,
+            linkedin: linkedin,
+            twitter: twitter,
+          },
+          campaign:
+            campaign_type && campaign_id
+              ? {
+                  campaign_type,
+                  campaign_id,
+                }
+              : undefined,
+        };
+        const { data } = await API.post<AuthResponse>(
+          API_PATH.API_REGISTER,
+          reqBody,
+          {
+            headers: reqHeaders,
+          }
+        );
+
+        if (data.status === "success") {
+          setRegistered(true);
+          setEmail(email);
+          localStorage.setItem("current-registered-email", email);
+          history.push("/check-email");
         }
-      );
-
-      if (data.status === "success") {
-        setRegistered(true);
-        setEmail(email);
-        localStorage.setItem("current-registered-email", email);
-        history.push("/check-email");
       }
+    } catch (e) {
+      console.log(e);
     }
   };
 
