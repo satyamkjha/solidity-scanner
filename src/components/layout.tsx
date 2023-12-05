@@ -55,7 +55,7 @@ const Layout: React.FC = ({ children }) => {
     profileData?.logged_in_via === "org_login"
   );
 
-  const [isBannerOpen, setIsBannerOpen] = useState(true);
+  // const [isBannerOpen, setIsBannerOpen] = useState(true);
 
   const config: any = useConfig();
   const assetsURL = getAssetsURL(config);
@@ -120,7 +120,7 @@ const Layout: React.FC = ({ children }) => {
     <Box as="div" height="100vh">
       {profileData && (
         <>
-          {profileData.current_package === "expired" ? (
+          {profileData.current_package === "expired" && (
             <MotionFlex
               initial={{ height: 0 }}
               animate={{ height: "auto" }}
@@ -148,59 +148,61 @@ const Layout: React.FC = ({ children }) => {
                 click here.
               </Link>
             </MotionFlex>
-          ) : (
-            isBannerOpen && (
-              <MotionFlex
-                initial={{ height: 0 }}
-                animate={{ height: "25px" }}
-                sx={{
-                  w: "100%",
-                  justifyContent: "center",
-                  py: 1,
-                  bg: "brand-dark",
-                }}
-              >
-                <HStack justifyContent="center" w="calc(100% - 30px)">
-                  <Text
-                    cursor="pointer"
-                    fontSize="12px"
-                    color="white"
-                    onClick={() =>
-                      window.open(
-                        "https://proofofsecurity.solidityscan.com/",
-                        "_blank"
-                      )
-                    }
-                    fontWeight={700}
-                  >
-                    Proof of Security Summit'23 - India
-                  </Text>
-                  <Text fontSize="12px" color="white" fontWeight={700}>
-                    |
-                  </Text>
-                  <Text
-                    cursor="pointer"
-                    fontSize="12px"
-                    color="white"
-                    fontWeight={700}
-                    onClick={() =>
-                      window.open("https://lu.ma/x3063d6n", "_blank")
-                    }
-                  >
-                    Register here
-                  </Text>
-                </HStack>
-                <CloseIcon
-                  mr="10px"
-                  cursor="pointer"
-                  fontSize="13px"
-                  color="white"
-                  onClick={() => setIsBannerOpen(false)}
-                />
-              </MotionFlex>
-            )
           )}
         </>
+        // ) : (
+        //   isBannerOpen && (
+        //     <MotionFlex
+        //       initial={{ height: 0 }}
+        //       animate={{ height: "25px" }}
+        //       sx={{
+        //         w: "100%",
+        //         justifyContent: "center",
+        //         py: 1,
+        //         bg: "brand-dark",
+        //       }}
+        //     >
+        //       <HStack justifyContent="center" w="calc(100% - 30px)">
+        //         <Text
+        //           cursor="pointer"
+        //           fontSize="12px"
+        //           color="white"
+        //           onClick={() =>
+        //             window.open(
+        //               "https://proofofsecurity.solidityscan.com/",
+        //               "_blank"
+        //             )
+        //           }
+        //           fontWeight={700}
+        //         >
+        //           Proof of Security Summit'23 - India
+        //         </Text>
+        //         <Text fontSize="12px" color="white" fontWeight={700}>
+        //           |
+        //         </Text>
+        //         <Text
+        //           cursor="pointer"
+        //           fontSize="12px"
+        //           color="white"
+        //           fontWeight={700}
+        //           onClick={() =>
+        //             window.open("https://lu.ma/x3063d6n", "_blank")
+        //           }
+        //         >
+        //           Register here
+        //         </Text>
+        //       </HStack>
+        //       <CloseIcon
+        //         mr="10px"
+        //         cursor="pointer"
+        //         fontSize="13px"
+        //         color="white"
+        //         onClick={() => setIsBannerOpen(false)}
+        //       />
+        //     </MotionFlex>
+        //   )
+        // )}
+        //  </>
       )}
       <Flex
         sx={{
@@ -217,7 +219,7 @@ const Layout: React.FC = ({ children }) => {
             width: isSidebarCollapsed
               ? SIDEBAR_WIDTH_COLLAPSED
               : SIDEBAR_WIDTH_EXPANDED,
-            height: "calc(100vh - 26px)",
+            height: "calc(100vh",
             transform: showSidebar
               ? "translate3d(0px,0px,0px)"
               : "translate3d(-280px,0,0px)",
