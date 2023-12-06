@@ -58,7 +58,7 @@ const ReportBlock: React.FC<{
 
   return (
     <Flex
-      alignItems={["flex-start", "center"]}
+      alignItems={["flex-start", "flex-start", "center"]}
       justifyContent="space-between"
       sx={{
         cursor: "pointer",
@@ -100,8 +100,9 @@ const ReportBlock: React.FC<{
       <Flex
         justifyContent={"flex-start"}
         width={["calc(100% - 60px)", "calc(100% - 60px)", "calc(100% - 120px)"]}
-        alignItems="center"
+        alignItems={["flex-start", "flex-start", "center"]}
         flexWrap={"wrap"}
+        flexDir={["column", "column", "row"]}
         height="fit-content"
       >
         <HStack width={["210px"]} my={3}>
@@ -179,6 +180,61 @@ const ReportBlock: React.FC<{
             </Text>
           </HStack>
         )}
+        {isMobileView ? (
+          <Flex
+            flexDir={"row"}
+            width="100%"
+            alignItems="center"
+            justifyContent={"flex-start"}
+          >
+            {(report.is_approved ||
+              report.report_type === "self_published") && (
+              <IconButton
+                my={3}
+                mr={4}
+                aria-label="View Report"
+                backgroundColor={"#F5F2FF"}
+                icon={
+                  printLoading ? (
+                    <Loader size={25} color="#3E15F4" />
+                  ) : (
+                    <ArrowDownIcon color="#3E15F4" />
+                  )
+                }
+                onClick={(e) => {
+                  generatePDF();
+                }}
+              />
+            )}
+            {summaryReport && printLoading && (
+              <Box w={0} h={0} visibility={"hidden"} position="absolute">
+                <Box w="100vw" ref={componentRef}>
+                  <PrintContainer summary_report={summaryReport} />
+                </Box>
+              </Box>
+            )}
+            <IconButton
+              my={[2, 2, 5]}
+              aria-label="View Report"
+              backgroundColor={"#F5F2FF"}
+              icon={<ViewIcon color={"#806CCF"} />}
+              onClick={(e) => {
+                e.stopPropagation();
+                if (report.is_approved) {
+                  window.open(
+                    `http://${document.location.host}/published-report/${type}/${report.report_id}`,
+                    "_blank"
+                  );
+                } else {
+                  window.open(
+                    `http://${document.location.host}/report/${type}/${report.project_id}/${report.report_id}`,
+                    "_blank"
+                  );
+                }
+              }}
+            />
+          </Flex>
+        ) : null}
       </Flex>
       <Flex
         flexDir={["column"]}
@@ -206,58 +262,61 @@ const ReportBlock: React.FC<{
             {report.date_published.slice(3, 6)}
           </Text>
         </Box>
-        <Flex
-          flexDir={["column", "column", "row"]}
-          width="100%"
-          alignItems="center"
-          justifyContent={["flex-start", "flex-start", "flex-end"]}
-        >
-          {(report.is_approved || report.report_type === "self_published") && (
+        {!isMobileView ? (
+          <Flex
+            flexDir={["column", "column", "row"]}
+            width="100%"
+            alignItems="center"
+            justifyContent={["flex-start", "flex-start", "flex-end"]}
+          >
+            {(report.is_approved ||
+              report.report_type === "self_published") && (
+              <IconButton
+                my={[2, 2, 5]}
+                mr={[0, 0, 5]}
+                aria-label="View Report"
+                backgroundColor={"#F5F2FF"}
+                icon={
+                  printLoading ? (
+                    <Loader size={25} color="#3E15F4" />
+                  ) : (
+                    <ArrowDownIcon color="#3E15F4" />
+                  )
+                }
+                onClick={(e) => {
+                  generatePDF();
+                }}
+              />
+            )}
+            {summaryReport && printLoading && (
+              <Box w={0} h={0} visibility={"hidden"} position="absolute">
+                <Box w="100vw" ref={componentRef}>
+                  <PrintContainer summary_report={summaryReport} />
+                </Box>
+              </Box>
+            )}
             <IconButton
               my={[2, 2, 5]}
-              mr={[0, 0, 5]}
               aria-label="View Report"
               backgroundColor={"#F5F2FF"}
-              icon={
-                printLoading ? (
-                  <Loader size={25} color="#3E15F4" />
-                ) : (
-                  <ArrowDownIcon color="#3E15F4" />
-                )
-              }
+              icon={<ViewIcon color={"#806CCF"} />}
               onClick={(e) => {
-                generatePDF();
+                e.stopPropagation();
+                if (report.is_approved) {
+                  window.open(
+                    `http://${document.location.host}/published-report/${type}/${report.report_id}`,
+                    "_blank"
+                  );
+                } else {
+                  window.open(
+                    `http://${document.location.host}/report/${type}/${report.project_id}/${report.report_id}`,
+                    "_blank"
+                  );
+                }
               }}
             />
-          )}
-          {summaryReport && printLoading && (
-            <Box w={0} h={0} visibility={"hidden"} position="absolute">
-              <Box w="100vw" ref={componentRef}>
-                <PrintContainer summary_report={summaryReport} />
-              </Box>
-            </Box>
-          )}
-          <IconButton
-            my={[2, 2, 5]}
-            aria-label="View Report"
-            backgroundColor={"#F5F2FF"}
-            icon={<ViewIcon color={"#806CCF"} />}
-            onClick={(e) => {
-              e.stopPropagation();
-              if (report.is_approved) {
-                window.open(
-                  `http://${document.location.host}/published-report/${type}/${report.report_id}`,
-                  "_blank"
-                );
-              } else {
-                window.open(
-                  `http://${document.location.host}/report/${type}/${report.project_id}/${report.report_id}`,
-                  "_blank"
-                );
-              }
-            }}
-          />
-        </Flex>
+          </Flex>
+        ) : null}
       </Flex>
     </Flex>
   );

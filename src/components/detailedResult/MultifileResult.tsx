@@ -1,4 +1,4 @@
-import React, { useState, useEffect, createContext } from "react";
+import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import {
   Flex,
@@ -142,6 +142,7 @@ const MultifileResult: React.FC<{
   const [bugStatus, setBugStatus] = useState<string | null>(null);
   const [isDisabled, setIsDisabled] = useState<boolean>(true);
   const [filterExpanded, setFilterExpanded] = useState<boolean>(false);
+  const [filterHeight, setFilterHeight] = useState<number>();
 
   const isViewer = role === "viewer";
 
@@ -348,6 +349,16 @@ const MultifileResult: React.FC<{
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedBugs]);
 
+  useEffect(() => {
+    if (filterExpanded)
+      setTimeout(() => {
+        const height = document
+          .getElementById("detailed_filter")
+          ?.getBoundingClientRect().height;
+        setFilterHeight(height);
+      }, 300);
+  }, [filterExpanded]);
+
   const isFileIssueDisabled = () => {
     if (isViewer) return true;
     return isDisabled || (selectedIssues && selectedIssues.length > 1);
@@ -389,7 +400,7 @@ const MultifileResult: React.FC<{
             <HStack
               display={["flex", "flex", "flex", "none"]}
               position={"sticky"}
-              top={filterExpanded ? "455px" : "50px"}
+              top={filterExpanded ? filterHeight : "50px"}
               background="white"
               zIndex={1}
               w={"100%"}

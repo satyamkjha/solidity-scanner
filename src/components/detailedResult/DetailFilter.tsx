@@ -207,7 +207,14 @@ const DetailFilter: React.FC<{
                 <Text color={"#4E5D78"} fontWeight={400} fontSize="sm">
                   By Confidence Parameter
                 </Text>
-                <HStack>
+                <Flex
+                  sx={{
+                    alignItems: "center",
+                    mt: 2.5,
+                    flexWrap: "wrap",
+                    gap: 4,
+                  }}
+                >
                   <Button
                     height="fit-content"
                     variant={"solid"}
@@ -215,7 +222,7 @@ const DetailFilter: React.FC<{
                     background={"#EEFFE6"}
                     py={2}
                     fontWeight="500"
-                    fontSize={"sm"}
+                    fontSize={"xs"}
                     borderRadius={"27px"}
                     onClick={() =>
                       setConfidenceFilter([
@@ -235,6 +242,7 @@ const DetailFilter: React.FC<{
                     py={2}
                     fontWeight="500"
                     borderRadius={"27px"}
+                    fontSize={"xs"}
                     onClick={() =>
                       setConfidenceFilter([
                         confidenceParam[0],
@@ -252,7 +260,7 @@ const DetailFilter: React.FC<{
                     background={"#FFF5F3"}
                     py={2}
                     fontWeight="500"
-                    fontSize={"sm"}
+                    fontSize={"xs"}
                     borderRadius={"27px"}
                     onClick={() =>
                       setConfidenceFilter([
@@ -264,7 +272,7 @@ const DetailFilter: React.FC<{
                   >
                     {confidenceParam[0] && <FiCheck />}&nbsp;Tentative
                   </Button>
-                </HStack>
+                </Flex>
               </VStack>
               <VStack
                 width={"100%"}
@@ -279,7 +287,14 @@ const DetailFilter: React.FC<{
                 <Text color={"#4E5D78"} fontWeight={400} fontSize="sm">
                   By Bug Status
                 </Text>
-                <Flex flexWrap={"wrap"} gridGap={1.5}>
+                <Flex
+                  sx={{
+                    alignItems: "center",
+                    mt: 2.5,
+                    flexWrap: "wrap",
+                    gap: 4,
+                  }}
+                >
                   <Button
                     height="fit-content"
                     variant={bugStatusParam[0] ? "outline" : "solid"}
@@ -288,7 +303,7 @@ const DetailFilter: React.FC<{
                     py={1.5}
                     fontWeight={"normal"}
                     color={"gray.600"}
-                    fontSize={"sm"}
+                    fontSize={"xs"}
                     borderRadius={"27px"}
                     onClick={() =>
                       setBugStatusFilters([
@@ -299,7 +314,10 @@ const DetailFilter: React.FC<{
                       ])
                     }
                   >
-                    <Image src={`${assetsURL}report/pending_fix_color.svg`} />
+                    <Image
+                      src={`${assetsURL}report/pending_fix_color.svg`}
+                      w={"20px"}
+                    />
                     &nbsp;Pending Fixes
                   </Button>
                   <Button
@@ -310,7 +328,7 @@ const DetailFilter: React.FC<{
                     py={1.5}
                     fontWeight={"normal"}
                     color={"gray.600"}
-                    fontSize={"sm"}
+                    fontSize={"xs"}
                     borderRadius={"27px"}
                     onClick={() =>
                       setBugStatusFilters([
@@ -323,7 +341,7 @@ const DetailFilter: React.FC<{
                   >
                     <Image
                       src={`${assetsURL}report/wont_fix_color.svg`}
-                      w="20px"
+                      w="16px"
                     />
                     &nbsp;Won't Fix
                   </Button>
@@ -335,7 +353,7 @@ const DetailFilter: React.FC<{
                     py={1.5}
                     fontWeight={"normal"}
                     color={"gray.600"}
-                    fontSize={"sm"}
+                    fontSize={"xs"}
                     borderRadius={"27px"}
                     onClick={() =>
                       setBugStatusFilters([
@@ -348,6 +366,7 @@ const DetailFilter: React.FC<{
                   >
                     <Image
                       src={`${assetsURL}report/false_positive_color.svg`}
+                      w={"20px"}
                     />
                     &nbsp;False Positive
                   </Button>
