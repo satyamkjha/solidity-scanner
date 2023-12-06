@@ -623,7 +623,6 @@ export const BlockchainSelector: React.FC<{
           )}
         </PopoverContent>
       </Popover>
-
       {blockchain !== "" && platform !== "" && (
         <>
           <Button

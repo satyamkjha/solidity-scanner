@@ -46,6 +46,7 @@ const ApplicationForm: React.FC<{
   const [projectName, setProjectName] = useState("");
   const [githubLink, setGithubLink] = useState("");
   const [visibility, setVisibility] = useState(false);
+  const [webhookCreatePermission, setWebhookCreatePermission] = useState(false);
   const [githubSync, setGithubSync] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [repoTreeUP, setRepoTreeUP] = useState<TreeItemUP | null>(null);
@@ -141,6 +142,25 @@ const ApplicationForm: React.FC<{
         }
         setBranches(data.branches);
         setBranch(data.branches[0]);
+      }
+    } catch (e) {
+      console.log(e);
+    }
+    setIsLoading(false);
+  };
+
+  const getRepoPermission = async () => {
+    setIsLoading(true);
+
+    try {
+      const { data } = await API.post<{
+        has_webhook_create_permission: boolean;
+      }>(API_PATH.API_GET_REPO_PERMISSIONS, {
+        project_url: githubLink,
+      });
+      console.log(data);
+      if (data) {
+        setStep(3);
       }
     } catch (e) {
       console.log(e);
@@ -344,6 +364,7 @@ const ApplicationForm: React.FC<{
             <ConfigSettings
               view="github_app"
               githubSync={githubSync}
+              
               onToggleFunction={async () => setGithubSync(!githubSync)}
               isOauthIntegrated={isOauthIntegrated}
               formType={formType}
@@ -392,16 +413,12 @@ const ApplicationForm: React.FC<{
                 getBranches();
               }
             } else if (step === 2) {
-              setStep(3);
+              getRepoPermission();
             } else {
               runScan();
             }
           }}
-          isDisabled={
-            profileData?.credits === 0 ||
-            isViewer ||
-            (connectAlert && !isOauthIntegrated)
-          }
+          isDisabled={profileData?.credits === 0 || isViewer}
         >
           {step > 2 ? (
             isLoading ? (

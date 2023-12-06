@@ -8,6 +8,7 @@ const ConfigSettings: React.FC<{
   githubSync: boolean;
   onToggleFunction: () => Promise<void>;
   isOauthIntegrated: boolean;
+  webhookCreatePermission?: boolean;
   isLoading?: boolean;
   view: "github_app" | "detailed_result" | "scan_history";
   formType: string;
@@ -18,6 +19,7 @@ const ConfigSettings: React.FC<{
   view,
   isLoading,
   formType,
+  webhookCreatePermission = true,
 }) => {
   const [connectAlert, setConnectAlert] = React.useState(false);
 
