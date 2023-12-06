@@ -51,12 +51,12 @@ const Overview: React.FC<{
           </Flex>
           <VStack
             w={["100%", "100%", "60%"]}
-            alignItems={["center", "center", "center", "flex-start"]}
+            alignItems={["center", "center", "flex-start"]}
             pt={2}
             px={[0, 0, 4]}
             spacing={5}
-            h="63vh"
-            overflowY={["visible", "visible", "visible", "scroll"]}
+            h={["fit-content", "fit-content", "63vh"]}
+            overflowY={["visible", "visible", "scroll"]}
           >
             <Box
               w="100%"
@@ -179,7 +179,7 @@ const Overview: React.FC<{
             w={["100%", "100%", "50%"]}
             alignItems="flex-start"
             p={8}
-            h="63vh"
+            h={["fit-content", "fit-content", "63vh"]}
             spacing={5}
           >
             <Box
@@ -323,7 +323,7 @@ const Overview: React.FC<{
             alignItems="flex-start"
             p={8}
             spacing={5}
-            h="63vh"
+            h={["fit-content", "fit-content", "63vh"]}
           >
             {scansRemaining && (
               <Flex px={2}>

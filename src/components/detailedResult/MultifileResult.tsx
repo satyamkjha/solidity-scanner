@@ -149,7 +149,7 @@ const MultifileResult: React.FC<{
   // const [action, setAction] = useState("");
   const toast = useToast();
 
-  const [isDesktopView] = useMediaQuery("(min-width: 1024px)");
+  const [isDesktopView] = useMediaQuery("(min-width: 1350px)");
 
   const updateBugStatus = async (action: string, comment?: string) => {
     if (files) {
@@ -243,7 +243,7 @@ const MultifileResult: React.FC<{
       const gasIssuesIndex = scanDetails.findIndex(
         (issue) => issue.template_details.issue_severity === "gas"
       );
-      if (scanDetails && scanDetails.length && gasIssuesIndex) {
+      if (scanDetails && scanDetails.length && gasIssuesIndex !== -1) {
         setOpenIssueIndex([gasIssuesIndex]);
         setFiles({
           bug_id:
@@ -379,7 +379,7 @@ const MultifileResult: React.FC<{
           w={["100%", "100%", "100%", "40%"]}
           h={["100%", "100%", "100%", "625px"]}
           spacing={4}
-          mb={[8, 8, 0]}
+          mb={[8, 8, 8, 0]}
           pr={[0, 0, 0, 4]}
           alignItems="flex-start"
           borderRight="1px solid #E2E8F0"
@@ -405,7 +405,7 @@ const MultifileResult: React.FC<{
               zIndex={1}
               w={"100%"}
               py={2}
-              pr={2}
+              p={2}
             >
               <Select
                 formatOptionLabel={FormatOptionLabelWithImage}
@@ -454,9 +454,9 @@ const MultifileResult: React.FC<{
             w="100%"
             h={["100%", "100%", "100%", "auto"]}
             overflowY="hidden"
-            pr={"7px"}
+            px={2}
             _hover={{
-              overflowY: "scroll",
+              overflowY: "auto",
               pr: "0px",
             }}
           >
