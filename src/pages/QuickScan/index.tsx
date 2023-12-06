@@ -62,11 +62,6 @@ const QuickScan: React.FC = () => {
   useEffect(() => {
     if (blockAddress && blockChain && blockPlatform) {
       setIsLoading(true);
-      setTempQSData({
-        blockAddress,
-        blockPlatform,
-        blockChain,
-      });
       runQuickScan(blockAddress, blockPlatform, blockChain, ref);
     }
 
@@ -81,6 +76,11 @@ const QuickScan: React.FC = () => {
   ) => {
     const reqHeaders1 = await getReCaptchaHeaders("quickScan_verify");
     const reqHeaders2 = await getReCaptchaHeaders("quickScan");
+    setTempQSData({
+      blockAddress: address,
+      blockPlatform: platform,
+      blockChain: chain,
+    });
     setScanReport(null);
     if (platform !== "buildbear" && !checkContractAddress(address)) {
       toast({
@@ -91,6 +91,7 @@ const QuickScan: React.FC = () => {
         position: "bottom",
       });
       setIsLoading(false);
+      setTempQSData(null);
       return;
     }
     const req = {
@@ -133,15 +134,18 @@ const QuickScan: React.FC = () => {
               )
               .finally(() => {
                 setIsLoading(false);
+                setTempQSData(null);
               });
           }
         },
         () => {
           setIsLoading(false);
+          setTempQSData(null);
         }
       )
       .catch(() => {
         setIsLoading(false);
+        setTempQSData(null);
       });
   };
 
