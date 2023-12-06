@@ -1,4 +1,4 @@
-import React, { lazy, useEffect, useRef, Suspense } from "react";
+import React, { lazy, useEffect, useRef, Suspense, useState } from "react";
 import {
   getReCaptchaHeaders,
   checkContractAddress,
@@ -26,6 +26,7 @@ import { Header } from "components/header";
 import Loader from "components/styled-components/Loader";
 import { useParams, useLocation } from "react-router-dom";
 import { QuickScanResultContainer } from "components/quickscan/QuickScanResult";
+import { QSScanResultSkeleton } from "components/quickscan/QSScanResultSkeleton";
 
 const RecentScans = lazy(() => import("components/quickscan/RecentScans"));
 const QuickScanDetails = lazy(
@@ -39,6 +40,12 @@ const QuickScan: React.FC = () => {
   const [scanReport, setScanReport] = React.useState<QuickScanResult | null>(
     null
   );
+
+  const [tempQSData, setTempQSData] = useState<{
+    blockAddress: string;
+    blockPlatform: string;
+    blockChain: string;
+  } | null>(null);
 
   const elementRef = useRef<HTMLDivElement>(null);
 
@@ -55,6 +62,11 @@ const QuickScan: React.FC = () => {
   useEffect(() => {
     if (blockAddress && blockChain && blockPlatform) {
       setIsLoading(true);
+      setTempQSData({
+        blockAddress,
+        blockPlatform,
+        blockChain,
+      });
       runQuickScan(blockAddress, blockPlatform, blockChain, ref);
     }
 
@@ -150,15 +162,20 @@ const QuickScan: React.FC = () => {
         bg={"linear-gradient(180deg, #060606 -45.59%, #414141 255.55%)"}
       >
         <Header theme={"dark"} />
-        {isLoading ? (
-          <Flex
-            w="100%"
-            h={["90vh", "90vh", "90vh", "750px"]}
-            justifyContent="center"
+        {isLoading && tempQSData !== null ? (
+          <VStack
+            w="90%"
+            maxW="1800px"
             alignItems="center"
+            justify="flex-start"
+            mb="200px"
           >
-            <Loader />
-          </Flex>
+            <QSScanResultSkeleton
+              blockAddress={tempQSData.blockAddress}
+              blockPlatform={tempQSData.blockPlatform}
+              blockChain={tempQSData.blockChain}
+            />
+          </VStack>
         ) : scanReport === null ? (
           <QuickScanForm
             view="quickscan"
@@ -175,7 +192,10 @@ const QuickScan: React.FC = () => {
           >
             <CloseButton
               alignSelf="flex-end"
-              onClick={() => setScanReport(null)}
+              onClick={() => {
+                setScanReport(null);
+                setTempQSData(null);
+              }}
             />
             <QuickScanResultContainer scanReport={scanReport} />
           </VStack>

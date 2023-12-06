@@ -1,30 +1,17 @@
 import React, { useState, useRef, useEffect, PropsWithChildren } from "react";
 import {
   HStack,
-  PinInput,
-  PinInputField,
   Text,
   VStack,
-  Popover,
-  PopoverTrigger,
-  PopoverContent,
   Flex,
   Image,
   Divider,
   Box,
-  Input,
-  Link,
   Heading,
   Button,
   useDisclosure,
 } from "@chakra-ui/react";
-import StyledButton from "components/styled-components/StyledButton";
-import Loader from "components/styled-components/Loader";
-import {
-  ChevronDownIcon,
-  ArrowBackIcon,
-  ExternalLinkIcon,
-} from "@chakra-ui/icons";
+import { ExternalLinkIcon } from "@chakra-ui/icons";
 import { contractChain, pieData, severityArrayInOrder } from "common/values";
 import PieChart from "components/pieChart";
 import {
@@ -34,11 +21,6 @@ import {
   getContractBlockchainId,
   getContractBlockChainLogoUrl,
 } from "helpers/helperFunction";
-import { StylesConfig, GroupBase } from "react-select";
-import Select from "react-select";
-import FormatOptionLabelWithImage from "components/FormatOptionLabelWithImage";
-import { FaPen } from "react-icons/fa";
-import RadioButton from "components/styled-components/RadioButton";
 import { QuickScanResult } from "common/types";
 import SolidityScoreProgress from "components/common/SolidityScoreProgress";
 import { useHistory } from "react-router-dom";
@@ -81,7 +63,6 @@ export const QuickScanResultContainer: React.FC<{
       flexDir={["column", "column", "row"]}
       justifyContent={["flex-start", "flex-start", "space-between"]}
       alignItems="center"
-      mt={20}
     >
       <VStack
         spacing={5}
@@ -174,7 +155,12 @@ export const QuickScanResultContainer: React.FC<{
                 onClick={() => window.open(scanReport.contract_url, "_blank")}
               >
                 {`View on ${sentenceCapitalize(
-                  scanReport.contract_platform || " "
+                  contractChain[
+                    getContractBlockchainId(
+                      scanReport.contract_platform || "",
+                      scanReport.contract_chain || ""
+                    )
+                  ].platforms[scanReport.contract_platform || ""].label || " "
                 )}`}
                 <ExternalLinkIcon />
               </Text>
