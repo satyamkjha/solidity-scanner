@@ -1,5 +1,5 @@
-import { Dispatch, SetStateAction, useEffect, useRef, useContext } from "react";
-import { Accordion, useMediaQuery, Box } from "@chakra-ui/react";
+import { Dispatch, SetStateAction, useContext } from "react";
+import { Accordion, useMediaQuery } from "@chakra-ui/react";
 import {
   FilesState,
   MetricWiseAggregatedFinding,
@@ -106,9 +106,13 @@ const MultifileIssues: React.FC<MultifileIssuesProps> = ({
     <Accordion
       allowMultiple={isDesktopView}
       allowToggle
-      defaultIndex={!details_enabled ? gasIssueIndex : [0]}
+      defaultIndex={
+        !details_enabled && gasIssueIndex !== -1 ? gasIssueIndex : [0]
+      }
       index={openIssueIndex}
-      onChange={(index: number[]) => setOpenIssueIndex(index)}
+      onChange={(index: number | number[]) => {
+        setOpenIssueIndex(typeof index == "number" ? [index] : index);
+      }}
     >
       {Array.from(issues)
         .sort((issue1, issue2) =>

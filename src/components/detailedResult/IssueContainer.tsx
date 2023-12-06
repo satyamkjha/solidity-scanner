@@ -6,7 +6,6 @@ import {
   AccordionPanel,
   HStack,
   Text,
-  Checkbox,
   Icon,
 } from "@chakra-ui/react";
 import { getBugStatusNumber } from "common/functions";
@@ -22,14 +21,12 @@ import React, {
   useEffect,
   useState,
   useRef,
-  useContext,
 } from "react";
 import { AiOutlineCaretRight } from "react-icons/ai";
 import { SeverityIcon } from "../icons";
 import { TrialWallIssue } from "./TrialWall";
 import IssueBox from "./IssueBox";
 import InputCheckbox from "components/styled-components/inputCheckbox";
-import { DetailResultContext } from "common/contexts";
 
 const IssueContainer: React.FC<{
   type: "block" | "project";
@@ -88,12 +85,6 @@ const IssueContainer: React.FC<{
   }
 
   const scrollToElementRef = useRef<HTMLDivElement>(null);
-
-  const detailResultContextValue = useContext(DetailResultContext);
-  const openIssueIndex = detailResultContextValue?.openIssueIndex;
-  const setOpenIssueIndex =
-    detailResultContextValue?.setOpenIssueIndex ?? (() => {});
-
   const [isHovered, setIsHovered] = useState(false);
   const [isChecked, setIsChecked] = useState(false);
   const [checkedChildren, setCheckedChildren] = useState<
@@ -279,7 +270,7 @@ const IssueContainer: React.FC<{
             </HStack>
             <Icon
               as={AiOutlineCaretRight}
-              mr={[0, 0, 0, 2]}
+              mr={[0, 0, 2]}
               color="subtle"
               fontSize="14px"
               transition="transform 0.2s"

@@ -180,7 +180,7 @@ const MultipleFileExplorer: React.FC<MultipleFileExplorerProps> = ({
                   width={"100%"}
                   justifyContent={"space-between"}
                   alignItems="center"
-                  py={1}
+                  p={1}
                 >
                   <Flex
                     gridColumnGap={4}
@@ -247,7 +247,7 @@ const MultipleFileExplorer: React.FC<MultipleFileExplorerProps> = ({
                       {files.findings[getFileIndex()].line_nos_end}
                     </Text>
                     <HStack
-                      width={["40%", "40%", "40%", "31%"]}
+                      width={["50%", "50%", "50%", "31%"]}
                       my={[2, 2, 2, 0]}
                     >
                       <Image
@@ -271,7 +271,13 @@ const MultipleFileExplorer: React.FC<MultipleFileExplorerProps> = ({
                       </Text>
                     </HStack>
                   </Flex>
-                  <HStack justifyContent={"flex-end"} alignItems="flex-start">
+                  <HStack
+                    justifyContent={"flex-end"}
+                    alignItems="flex-start"
+                    position={["absolute", "absolute", "absolute", "relative"]}
+                    right={[2, 2, 2, 0]}
+                    top={[2, 2, 2, 0]}
+                  >
                     <Tooltip
                       label={fullScreen ? "Minimize" : "Expand"}
                       fontSize="md"
