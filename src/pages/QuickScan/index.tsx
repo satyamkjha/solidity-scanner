@@ -166,7 +166,7 @@ const QuickScan: React.FC = () => {
         bg={"linear-gradient(180deg, #060606 -45.59%, #414141 255.55%)"}
       >
         <Header theme={"dark"} />
-        {isLoading && tempQSData !== null ? (
+        {isLoading ? (
           <VStack
             w="90%"
             maxW="1800px"
@@ -174,11 +174,13 @@ const QuickScan: React.FC = () => {
             justify="flex-start"
             mb="200px"
           >
-            <QSScanResultSkeleton
-              blockAddress={tempQSData.blockAddress}
-              blockPlatform={tempQSData.blockPlatform}
-              blockChain={tempQSData.blockChain}
-            />
+            {tempQSData && (
+              <QSScanResultSkeleton
+                blockAddress={tempQSData.blockAddress}
+                blockPlatform={tempQSData.blockPlatform}
+                blockChain={tempQSData.blockChain}
+              />
+            )}
           </VStack>
         ) : scanReport === null ? (
           <QuickScanForm

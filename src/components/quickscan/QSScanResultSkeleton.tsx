@@ -18,7 +18,6 @@ import {
   getContractBlockChainLogoUrl,
   getContractBlockchainId,
   getContractChainLabel,
-  sentenceCapitalize,
 } from "helpers/helperFunction";
 import { useHistory } from "react-router-dom";
 
