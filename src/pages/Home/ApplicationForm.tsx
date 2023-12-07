@@ -160,6 +160,7 @@ const ApplicationForm: React.FC<{
       });
       console.log(data);
       if (data) {
+        setWebhookCreatePermission(data.has_webhook_create_permission);
         setStep(3);
       }
     } catch (e) {
@@ -364,7 +365,7 @@ const ApplicationForm: React.FC<{
             <ConfigSettings
               view="github_app"
               githubSync={githubSync}
-              
+              webhookCreatePermission={webhookCreatePermission}
               onToggleFunction={async () => setGithubSync(!githubSync)}
               isOauthIntegrated={isOauthIntegrated}
               formType={formType}
