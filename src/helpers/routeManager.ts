@@ -33,6 +33,8 @@ export const API_PATH = {
   API_GET_CONTRACT_STATUS: "/api-get-contract-status/",
   API_GET_PREASSIGNED_URL: "/api-get-presigned-url/",
   API_GET_SUPPORTED_CHAINS: "/api-get-supported-chains/",
+  API_GET_BRANCHES: "/api-get-branches/",
+  API_GET_REPO_PERMISSIONS: "api-get-repo-permissions/",
 
   //SCAN
   API_GET_ALL_SCANS: "/api-get-all-scans/",
@@ -44,7 +46,6 @@ export const API_PATH = {
   API_UPDATE_BUG_STATUS: "/api-update-bug-status/",
   API_TOGGLE_PROJECT_SYNCHRONIZATION: "/api-toggle-project-synchronization/",
   API_REPO_TREE: "/api-repo-tree/",
-  API_GET_BRANCHES: "/api-get-branches/",
   API_UPDATE_SKIP_FILE_PATHS: "/api-update-skip-file-paths/",
   API_DELETE_PROJECT: "/api-delete-project/",
   API_DELETE_BLOCK: "/api-delete-block/",
