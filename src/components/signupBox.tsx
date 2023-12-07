@@ -63,7 +63,7 @@ export const SignupBox: React.FC = () => {
           >
             Have more questions? Talk to our team and get a demo now.
           </Text>
-        </Box>
+        </Box>  
         <Box
           sx={{
             w: ["80%", "70%", "30%"],

@@ -334,13 +334,13 @@ const FolderSettings: React.FC<{
           flexDir={["column", "column", "row"]}
           w="100%"
         >
-          <HStack spacing={3}>
+          <HStack display={["none", "none", "flex"]} spacing={3}>
             <FaCodeBranch />
             <Text>{branch}</Text>
           </HStack>
-          <HStack spacing={3}>
+          <HStack spacing={3} mt={[4, 4, 0]} ml={"auto"}>
             <Button
-              px={10}
+              px={[10]}
               width={["100%", "100%", "150px"]}
               variant="accent-outline"
               isLoading={isLoading}
@@ -402,6 +402,17 @@ const FolderSettings: React.FC<{
             alignItems="flex-start"
             flexDir={"column"}
           >
+            {view === "detailed_result" ? (
+              <HStack
+                display={["flex", "flex", "none"]}
+                spacing={3}
+                ml={4}
+                mb={4}
+              >
+                <FaCodeBranch />
+                <Text>{branch}</Text>
+              </HStack>
+            ) : null}
             {view !== "scan_history" && (
               <HStack spacing={5} ml={5} mb={2}>
                 <Checkbox

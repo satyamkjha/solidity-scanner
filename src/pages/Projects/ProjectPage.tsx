@@ -679,7 +679,7 @@ const ScanDetails: React.FC<{
                 >
                   <Flex
                     width={"100%"}
-                    overflow={"scroll"}
+                    overflow={"auto"}
                     flexDir={"row"}
                     justifyContent="flex-start"
                     align={"center"}

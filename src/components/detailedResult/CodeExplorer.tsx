@@ -8,7 +8,7 @@ const CodeExplorer: React.FC<{
   wait_to_scroll: number;
 }> = ({ file_content, line_nos_start, line_nos_end, wait_to_scroll }) => {
   const elementRef = useRef<HTMLDivElement>(null);
-  const [isDesktopView] = useMediaQuery("(min-width: 1024px)");
+  const [isDesktopView] = useMediaQuery("(min-width: 1350px)");
 
   const scrollToBottom = () => {
     if (isDesktopView) {
@@ -89,9 +89,7 @@ const CodeExplorer: React.FC<{
                     ref={elementRef}
                     align={"flex-start"}
                     spacing={5}
-                    sx={{
-                      scrollMarginTop: isDesktopView ? 20 : "-60vh",
-                    }}
+                    scrollMarginTop={["-60vh", "-60vh", "-38vh", 20]}
                   >
                     <Text
                       color={"gray.600"}

@@ -7,23 +7,17 @@ import {
   Text,
   CircularProgress,
   CircularProgressLabel,
-  Image,
   Divider,
   Link,
 } from "@chakra-ui/react";
 
-import VulnerabilityDistribution, {
-  ErrorVulnerabilityDistribution,
-} from "components/vulnDistribution";
-import PieChart, { ErrorResponsivePie } from "components/pieChart";
+import { ErrorVulnerabilityDistribution } from "components/vulnDistribution";
+import { ErrorResponsivePie } from "components/pieChart";
 import { Scan } from "common/types";
-import { LogoIcon, NoBugIcon, ScanErrorIcon } from "./icons";
+import { LogoIcon, ScanErrorIcon } from "./icons";
 import ManualAuditCard from "./manualAuditCard";
 import SolidityScoreProgress from "./common/SolidityScoreProgress";
-import { getAssetsURL } from "helpers/helperFunction";
-import { pieData } from "common/values";
-
-
+import OverviewPieChart from "./common/OverviewPieChart";
 
 const Overview: React.FC<{
   scanData: Scan;
@@ -33,15 +27,6 @@ const Overview: React.FC<{
   const solidity_score = scanData.multi_file_scan_summary?.score_v2
     ? scanData.multi_file_scan_summary?.score_v2
     : (parseFloat(scanData.multi_file_scan_summary?.score) * 20).toFixed(2);
-  const assetsURL = getAssetsURL();
-
-  const vulnerabilityCount =
-    scanData.multi_file_scan_summary.issue_severity_distribution.critical +
-    scanData.multi_file_scan_summary.issue_severity_distribution.gas +
-    scanData.multi_file_scan_summary.issue_severity_distribution.high +
-    scanData.multi_file_scan_summary.issue_severity_distribution.informational +
-    scanData.multi_file_scan_summary.issue_severity_distribution.low +
-    scanData.multi_file_scan_summary.issue_severity_distribution.medium;
 
   const [fillScore, setFillScore] = useState(false);
 
@@ -59,74 +44,19 @@ const Overview: React.FC<{
       {scanData.multi_file_scan_status === "scan_done" &&
       scanData.multi_file_scan_summary ? (
         <Flex w="100%" sx={{ flexDir: ["column", "column", "row"] }} my={4}>
-          <VStack w={["100%", "100%", "40%"]} mb={[8, 8, 0]}>
-            <Box
-              w={["100%", "100%", "70%"]}
-              display="flex"
-              justifyContent="center"
-              alignItems={"center"}
-              h="300px"
-            >
-              {scanData.multi_file_scan_summary.issues_count === 0 ||
-              vulnerabilityCount === 0 ? (
-                <Flex
-                  flexDir="column"
-                  justifyContent="center"
-                  alignItems="center"
-                >
-                  <Image src={`${assetsURL}common/fixedIssueIcon.svg`} />
-                  <Text> No Bugs Found </Text>
-                </Flex>
-              ) : (
-                <PieChart
-                  data={pieData(
-                    scanData.multi_file_scan_summary.issue_severity_distribution
-                      .critical,
-                    scanData.multi_file_scan_summary.issue_severity_distribution
-                      .high,
-                    scanData.multi_file_scan_summary.issue_severity_distribution
-                      .medium,
-                    scanData.multi_file_scan_summary.issue_severity_distribution
-                      .low,
-                    scanData.multi_file_scan_summary.issue_severity_distribution
-                      .informational,
-                    scanData.multi_file_scan_summary.issue_severity_distribution
-                      .gas
-                  )}
-                />
-              )}
-            </Box>
-            <Box w={["100%", "80%", "60%"]}>
-              <VulnerabilityDistribution
-                issueSeverityDistribution={{
-                  critical:
-                    scanData.multi_file_scan_summary.issue_severity_distribution
-                      .critical,
-                  high: scanData.multi_file_scan_summary
-                    .issue_severity_distribution.high,
-                  medium:
-                    scanData.multi_file_scan_summary.issue_severity_distribution
-                      .medium,
-                  low: scanData.multi_file_scan_summary
-                    .issue_severity_distribution.low,
-                  informational:
-                    scanData.multi_file_scan_summary.issue_severity_distribution
-                      .informational,
-                  gas: scanData.multi_file_scan_summary
-                    .issue_severity_distribution.gas,
-                }}
-                view="scans"
-              />
-            </Box>
-          </VStack>
+          <Flex w="40%" display={["none", "none", "flex"]}>
+            <OverviewPieChart
+              multi_file_scan_summary={scanData.multi_file_scan_summary}
+            />
+          </Flex>
           <VStack
             w={["100%", "100%", "60%"]}
-            alignItems={["center", "center", "center", "flex-start"]}
+            alignItems={["center", "center", "flex-start"]}
             pt={2}
             px={[0, 0, 4]}
             spacing={5}
-            h="63vh"
-            overflowY={["visible", "visible", "visible", "scroll"]}
+            h={["fit-content", "fit-content", "63vh"]}
+            overflowY={["visible", "visible", "scroll"]}
           >
             <Box
               w="100%"
@@ -179,6 +109,12 @@ const Overview: React.FC<{
                 </Link>
               </Flex>
             </Box>
+
+            <Flex w="100%" display={["flex", "flex", "none"]}>
+              <OverviewPieChart
+                multi_file_scan_summary={scanData.multi_file_scan_summary}
+              />
+            </Flex>
             <Flex
               direction={"column"}
               width="100%"
@@ -236,60 +172,14 @@ const Overview: React.FC<{
         </Flex>
       ) : scanData.scan_status === "scan_done" && scanData.scan_summary ? (
         <Flex w="100%" h="50vh" sx={{ flexDir: ["column", "column", "row"] }}>
-          <VStack w={["100%", "100%", "50%"]} mb={[8, 8, 0]}>
-            <Box
-              w={["100%", "100%", "70%"]}
-              display="flex"
-              justifyContent="center"
-              alignItems={"center"}
-              h="300px"
-            >
-              {scanData.scan_summary.issues_count === 0 ? (
-                <Flex
-                  flexDir="column"
-                  justifyContent="center"
-                  alignItems="center"
-                >
-                  <Image src={`${assetsURL}common/fixedIssueIcon.svg`} />
-                  <Text> No Bugs Found </Text>
-                </Flex>
-              ) : (
-                <PieChart
-                  data={pieData(
-                    scanData.scan_summary.issue_severity_distribution.critical,
-                    scanData.scan_summary.issue_severity_distribution.high,
-                    scanData.scan_summary.issue_severity_distribution.medium,
-                    scanData.scan_summary.issue_severity_distribution.low,
-                    scanData.scan_summary.issue_severity_distribution
-                      .informational,
-                    scanData.scan_summary.issue_severity_distribution.gas
-                  )}
-                />
-              )}
-            </Box>
-            <Box w={["70%", "70%", "60%"]}>
-              <VulnerabilityDistribution
-                issueSeverityDistribution={{
-                  critical:
-                    scanData.scan_summary.issue_severity_distribution.critical,
-                  high: scanData.scan_summary.issue_severity_distribution.high,
-                  medium:
-                    scanData.scan_summary.issue_severity_distribution.medium,
-                  low: scanData.scan_summary.issue_severity_distribution.low,
-                  informational:
-                    scanData.scan_summary.issue_severity_distribution
-                      .informational,
-                  gas: scanData.scan_summary.issue_severity_distribution.gas,
-                }}
-                view="scans"
-              />
-            </Box>
-          </VStack>
+          <Flex w="100%" display={["none", "none", "flex"]}>
+            <OverviewPieChart multi_file_scan_summary={scanData.scan_summary} />
+          </Flex>
           <VStack
             w={["100%", "100%", "50%"]}
             alignItems="flex-start"
             p={8}
-            h="63vh"
+            h={["fit-content", "fit-content", "63vh"]}
             spacing={5}
           >
             <Box
@@ -354,6 +244,11 @@ const Overview: React.FC<{
                 </Link>
               </Flex>
             </Box>
+            <Flex w="40%" display={["none", "none", "flex"]}>
+              <OverviewPieChart
+                multi_file_scan_summary={scanData.scan_summary}
+              />
+            </Flex>
             <Box sx={{ w: "100%", borderRadius: 15, bg: "bg.subtle", p: 4 }}>
               <Text sx={{ fontSize: "sm", letterSpacing: "0.7px" }}>
                 SCAN STATISTICS
@@ -428,7 +323,7 @@ const Overview: React.FC<{
             alignItems="flex-start"
             p={8}
             spacing={5}
-            h="63vh"
+            h={["fit-content", "fit-content", "63vh"]}
           >
             {scansRemaining && (
               <Flex px={2}>
