@@ -91,6 +91,7 @@ const BlockPage: React.FC = () => {
     ) {
       setPublishedReportStatus(reportList.reports);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [reportList]);
 
   const handleTabsChange = (index: number) => {
@@ -180,6 +181,7 @@ const BlockPage: React.FC = () => {
         setPublishStatus("Not-Generated");
       }
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [scanData]);
 
   const [summaryReport, setSummaryReport] = useState<Report | null>(null);
@@ -230,7 +232,7 @@ const BlockPage: React.FC = () => {
         borderRadius: "20px",
         mx: [0, 0, 2],
         py: 3,
-        minH: "78vh",
+        minH: ["fit-content", "fit-content", "78vh"],
       }}
       px={[2, 2, 2, 3]}
     >
@@ -629,7 +631,7 @@ const BlockPage: React.FC = () => {
                 >
                   <Flex
                     width={"100%"}
-                    overflow={["scroll", "scroll", "scroll", "visible"]}
+                    overflow={["auto", "auto", "auto", "visible"]}
                     flexDir={"row"}
                     justifyContent="flex-start"
                     align={"center"}
@@ -676,7 +678,7 @@ const BlockPage: React.FC = () => {
                     </TabList>
                   </Flex>
                   <TabPanels>
-                    <TabPanel p={[0, 0, 0, 2]}>
+                    <TabPanel p={2}>
                       {(scanData.scan_report.multi_file_scan_summary ||
                         scanData.scan_report.scan_summary) && (
                         <Overview

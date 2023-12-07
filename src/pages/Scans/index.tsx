@@ -18,7 +18,6 @@ import {
   Image,
 } from "@chakra-ui/react";
 // import Lottie from "lottie-react";
-import { LogoIcon } from "components/icons";
 import API from "helpers/api";
 import { Page, Pagination, ScanObj } from "common/types";
 import { useProfile } from "hooks/useProfile";
@@ -43,6 +42,7 @@ import RadioButton from "components/styled-components/RadioButton";
 
 const Scans: React.FC = () => {
   const [isDesktopView] = useMediaQuery("(min-width: 1920px)");
+  const [isMobileView] = useMediaQuery("(max-width: 500px)");
   const { role } = useUserRole();
   const assetsURL = getAssetsURL();
   const [queryTerm, setQueryTerm] = useState<string>();
@@ -344,9 +344,10 @@ const Scans: React.FC = () => {
         <Text sx={{ color: "subtle", fontWeight: 600, ml: 4 }}>PROJECTS</Text>
         {profileData ? (
           <Flex
-            w={["95%", "95%", "500px"]}
+            w={["100%", "100%", "500px"]}
             mt={[5, 5, 0]}
             mr={[0, 0, 4]}
+            px={[6, 6, 0]}
             ml={"auto"}
           >
             <InputGroup alignItems="center">
@@ -497,6 +498,9 @@ const Scans: React.FC = () => {
           justifyItems={["center", "center", "space-around"]}
           w="100%"
           boxSizing={"border-box"}
+          px={[6, 6, 0]}
+          pt={[4, 4, 0]}
+          pb={[10, 10, 0]}
         >
           <InfiniteScroll
             style={{
@@ -506,7 +510,7 @@ const Scans: React.FC = () => {
               overflow: "hidden",
               boxSizing: "border-box",
               justifyContent: "flex-start",
-              padding: "1rem",
+              padding: isMobileView ? 0 : "1rem",
               paddingRight: 0,
               gap: "2rem",
             }}

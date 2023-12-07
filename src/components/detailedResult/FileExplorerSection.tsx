@@ -26,7 +26,6 @@ import TrialWall from "./TrialWall";
 
 import Select from "react-select";
 import { HiOutlineDocumentText } from "react-icons/hi";
-import { useConfig } from "hooks/useConfig";
 import ConfirmActionForm from "../modals/confirmActionForm";
 import FormatOptionLabelWithImage from "../../components/FormatOptionLabelWithImage";
 import { customStylesForTakeAction } from "../../common/stylesForCustomSelect";
@@ -63,8 +62,7 @@ export const FileExplorerSection: React.FC<{
   contract_address,
   isViewer,
 }) => {
-  const config: any = useConfig();
-  const assetsURL = getAssetsURL(config);
+  const assetsURL = getAssetsURL();
   const { isOpen, onClose, onOpen } = useDisclosure();
   const [bugStatus, setBugStatus] = useState<string | null>(null);
   const [isDisabled, setIsDisabled] = useState<boolean>(true);

@@ -1,4 +1,4 @@
-import React, { useState, useEffect, createContext } from "react";
+import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import {
   Flex,
@@ -142,13 +142,14 @@ const MultifileResult: React.FC<{
   const [bugStatus, setBugStatus] = useState<string | null>(null);
   const [isDisabled, setIsDisabled] = useState<boolean>(true);
   const [filterExpanded, setFilterExpanded] = useState<boolean>(false);
+  const [filterHeight, setFilterHeight] = useState<number>();
 
   const isViewer = role === "viewer";
 
   // const [action, setAction] = useState("");
   const toast = useToast();
 
-  const [isDesktopView] = useMediaQuery("(min-width: 1024px)");
+  const [isDesktopView] = useMediaQuery("(min-width: 1350px)");
 
   const updateBugStatus = async (action: string, comment?: string) => {
     if (files) {
@@ -242,7 +243,7 @@ const MultifileResult: React.FC<{
       const gasIssuesIndex = scanDetails.findIndex(
         (issue) => issue.template_details.issue_severity === "gas"
       );
-      if (scanDetails && scanDetails.length && gasIssuesIndex) {
+      if (scanDetails && scanDetails.length && gasIssuesIndex !== -1) {
         setOpenIssueIndex([gasIssuesIndex]);
         setFiles({
           bug_id:
@@ -348,6 +349,16 @@ const MultifileResult: React.FC<{
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedBugs]);
 
+  useEffect(() => {
+    if (filterExpanded)
+      setTimeout(() => {
+        const height = document
+          .getElementById("detailed_filter")
+          ?.getBoundingClientRect().height;
+        setFilterHeight(height);
+      }, 300);
+  }, [filterExpanded]);
+
   const isFileIssueDisabled = () => {
     if (isViewer) return true;
     return isDisabled || (selectedIssues && selectedIssues.length > 1);
@@ -368,7 +379,7 @@ const MultifileResult: React.FC<{
           w={["100%", "100%", "100%", "40%"]}
           h={["100%", "100%", "100%", "625px"]}
           spacing={4}
-          mb={[8, 8, 0]}
+          mb={[8, 8, 8, 0]}
           pr={[0, 0, 0, 4]}
           alignItems="flex-start"
           borderRight="1px solid #E2E8F0"
@@ -389,12 +400,12 @@ const MultifileResult: React.FC<{
             <HStack
               display={["flex", "flex", "flex", "none"]}
               position={"sticky"}
-              top={filterExpanded ? "455px" : "50px"}
+              top={filterExpanded ? filterHeight : "50px"}
               background="white"
               zIndex={1}
               w={"100%"}
               py={2}
-              pr={2}
+              p={2}
             >
               <Select
                 formatOptionLabel={FormatOptionLabelWithImage}
@@ -443,9 +454,9 @@ const MultifileResult: React.FC<{
             w="100%"
             h={["100%", "100%", "100%", "auto"]}
             overflowY="hidden"
-            pr={"7px"}
+            px={2}
             _hover={{
-              overflowY: "scroll",
+              overflowY: "auto",
               pr: "0px",
             }}
           >
