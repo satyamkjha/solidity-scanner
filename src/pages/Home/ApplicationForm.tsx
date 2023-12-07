@@ -158,7 +158,6 @@ const ApplicationForm: React.FC<{
       }>(API_PATH.API_GET_REPO_PERMISSIONS, {
         project_url: githubLink,
       });
-      console.log(data);
       if (data) {
         setWebhookCreatePermission(data.has_webhook_create_permission);
         setStep(3);

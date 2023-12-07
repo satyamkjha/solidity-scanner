@@ -75,7 +75,7 @@ const ConfigSettings: React.FC<{
       )}
       {!webhookCreatePermission && (
         <ErrorAlert
-          msg="You are not the owner of the Git repository for this project.
+          msg="You are not the owner of the repository for this project.
         To enable Git actions on the repository, ownership is required. Please ensure that you are logged in with the correct credentials or contact the repository owner to grant you the necessary permissions. "
         />
       )}
