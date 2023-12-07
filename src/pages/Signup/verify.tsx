@@ -40,10 +40,12 @@ const Verify: React.FC = () => {
             token,
           }
         );
-        if (data.status === "success") {
+        if (data && data.status === "success") {
           setVerification("success");
           setLoading(false);
           Auth.authenticateUser();
+        } else {
+          setLoading(false);
         }
       } catch (error) {
         setLoading(false);

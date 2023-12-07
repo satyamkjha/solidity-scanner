@@ -43,6 +43,7 @@ import { QuickScanResult } from "common/types";
 import SolidityScoreProgress from "components/common/SolidityScoreProgress";
 import { useHistory } from "react-router-dom";
 import { ManualAuditForm } from "components/modals/manualAuditForm";
+import QSErrorCountModal from "./QSErrorCountModal";
 
 export const QuickScanResultContainer: React.FC<{
   scanReport: QuickScanResult;
@@ -50,6 +51,19 @@ export const QuickScanResultContainer: React.FC<{
   const assetsUrl = getAssetsURL();
   const history = useHistory();
   const { isOpen, onClose, onOpen } = useDisclosure();
+
+  const [errorData, setErrorData] = useState<{
+    errorCount: number;
+    errorType: string;
+  } | null>(null);
+
+  const [open, setOpen] = useState(false);
+
+  useEffect(() => {
+    if (errorData !== null) {
+      setOpen(true);
+    }
+  }, [errorData]);
 
   const vulnerabilityCount =
     scanReport.multi_file_scan_summary.issue_severity_distribution.critical +
@@ -455,6 +469,7 @@ export const QuickScanResultContainer: React.FC<{
             <VStack
               w={["45%", "30%", "100%"]}
               h="fit-content"
+              cursor="pointer"
               px={3}
               py={2}
               bgColor={"#3E3E3E"}
@@ -462,6 +477,14 @@ export const QuickScanResultContainer: React.FC<{
               spacing={0}
               borderRadius={5}
               alignItems="flex-start"
+              onClick={() =>
+                setErrorData({
+                  errorCount:
+                    scanReport.multi_file_scan_summary
+                      .issue_severity_distribution[item.value],
+                  errorType: item.value,
+                })
+              }
             >
               <HStack>
                 <Divider
@@ -471,7 +494,7 @@ export const QuickScanResultContainer: React.FC<{
                   borderWidth={2}
                 />{" "}
                 <Text color="#8A94A6" fontSize="sm">
-                  {item.shortForm}
+                  {item.value}
                 </Text>
               </HStack>
               <Text color="white" fontSize="lg" fontWeight={700}>
@@ -485,6 +508,15 @@ export const QuickScanResultContainer: React.FC<{
         </Flex>
       </Flex>
       <ManualAuditForm isOpen={isOpen} onClose={onClose} />
+      <QSErrorCountModal
+        isOpen={open}
+        errorCount={errorData?.errorCount || 0}
+        errorType={errorData?.errorType || ""}
+        onClose={() => {
+          setErrorData(null);
+          setOpen(false);
+        }}
+      />
     </Flex>
   );
 };
