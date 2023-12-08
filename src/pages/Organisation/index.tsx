@@ -28,13 +28,15 @@ const Organisation: React.FC<{ profileData?: Profile }> = ({ profileData }) => {
         borderRadius: "20px",
         pt: 4,
         pb: 1,
-        px: [2, 2, 2, 8],
+        px: [4, 6, 8, 8],
         mx: [0, 0, 4],
         mb: 4,
         minH: "78vh",
       }}
     >
-      <Text sx={{ color: "subtle", fontWeight: 600 }}>ORGANISATION</Text>
+      <Text ml={[2, 4, 4, 0]} sx={{ color: "subtle", fontWeight: 600 }}>
+        ORGANISATION
+      </Text>
       {!profileData ? (
         <Flex
           sx={{

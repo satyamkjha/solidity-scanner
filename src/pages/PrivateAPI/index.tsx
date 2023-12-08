@@ -117,13 +117,15 @@ export default function PrivateApi() {
         borderRadius: "20px",
         pt: 4,
         pb: 1,
-        px: [2, 2, 2, 8],
+        px: [4, 6, 8, 8],
         mx: [0, 0, 4],
         mb: 4,
         minH: "85vh",
       }}
     >
-      <Text sx={{ color: "subtle", fontWeight: 600 }}>PERSONAL API ACCESS</Text>
+      <Text ml={[4, 4, 4, 0]} sx={{ color: "subtle", fontWeight: 600 }}>
+        PERSONAL API ACCESS
+      </Text>
 
       {isLoading ? (
         <Flex

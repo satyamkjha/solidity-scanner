@@ -341,7 +341,14 @@ const Scans: React.FC = () => {
         }}
         w={"100%"}
       >
-        <Text sx={{ color: "subtle", fontWeight: 600, ml: 4 }}>PROJECTS</Text>
+        <Text
+          width="100%"
+          textAlign="left"
+          sx={{ color: "subtle", fontWeight: 600, ml: 4 }}
+          ml={[10, 10, 10, 0]}
+        >
+          PROJECTS
+        </Text>
         {profileData ? (
           <Flex
             w={["100%", "100%", "500px"]}
