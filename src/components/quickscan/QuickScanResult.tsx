@@ -433,6 +433,7 @@ export const QuickScanResultContainer: React.FC<{
             </Flex>
           </Box>
           <Button
+            display={["none", "none", "block"]}
             variant="brand"
             w={"100%"}
             maxW={"300px"}
@@ -483,6 +484,15 @@ export const QuickScanResultContainer: React.FC<{
             </VStack>
           ))}
         </Flex>
+        <Button
+          display={["block", "block", "none"]}
+          variant="brand"
+          w={"100%"}
+          maxW={"300px"}
+          onClick={() => history.push("/signin")}
+        >
+          View detailed Result
+        </Button>
       </Flex>
       <ManualAuditForm isOpen={isOpen} onClose={onClose} />
     </Flex>
