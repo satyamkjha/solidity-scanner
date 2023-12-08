@@ -45,7 +45,7 @@ export const Footer: React.FC = () => {
     <Flex
       mt={20}
       py={20}
-      mx={[5, 5, 10, 20]}
+      mx={[0, 0, 10, 20]}
       w="100%"
       flexDirection={["column", "column", "row", "row"]}
       justifyContent="space-between"
