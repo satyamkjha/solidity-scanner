@@ -3,7 +3,7 @@ import { ResponsivePie } from "@nivo/pie";
 
 type PieData = {
   id: string;
-  label: string;
+  label?: string;
   value: number;
   color: string;
 };

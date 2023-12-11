@@ -123,9 +123,7 @@ export default function PrivateApi() {
         minH: "85vh",
       }}
     >
-      <Text ml={[4, 4, 4, 0]} sx={{ color: "subtle", fontWeight: 600 }}>
-        PERSONAL API ACCESS
-      </Text>
+      <Text sx={{ color: "subtle", fontWeight: 600 }}>PERSONAL API ACCESS</Text>
 
       {isLoading ? (
         <Flex
@@ -149,7 +147,7 @@ export default function PrivateApi() {
           flexDir="column"
         >
           <Flex
-            m={6}
+            m={[0, 0, 0, 6]}
             mb={[2, 2, 2, 6]}
             align="center"
             flexDir={[
@@ -213,7 +211,7 @@ export default function PrivateApi() {
             )}
           </Flex>
           <Flex
-            mx={[4, 4, 4, 6]}
+            mx={[0, 0, 0, 6]}
             mb={6}
             px={[4, 4, 4, 6]}
             pt={8}

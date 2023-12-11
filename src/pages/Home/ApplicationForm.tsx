@@ -151,7 +151,6 @@ const ApplicationForm: React.FC<{
 
   const getRepoPermission = async () => {
     setIsLoading(true);
-
     try {
       const { data } = await API.post<{
         has_webhook_create_permission: boolean;

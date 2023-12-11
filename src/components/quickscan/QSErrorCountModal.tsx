@@ -91,34 +91,49 @@ const QSErrorCountModal: React.FC<{
                       "flex-start",
                     ]}
                   >
-                    <WarningIcon color={errorType} />{" "}
+                    <WarningIcon fontSize="lg" color={errorType} />{" "}
                     <Text fontSize="lg" fontWeight={700}>
-                      {`${errorCount} ${sentenceCapitalize(errorType)} Found`}
+                      {`${errorCount} ${sentenceCapitalize(
+                        errorType
+                      )} Bugs Found`}
                     </Text>
                   </HStack>
                   <Text fontSize="md" fontWeight={400}>
-                    Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-                    Molestie ultricies id posuere mauris proin duis placerat
-                    lorem. Sed pellentesque tortor, Lorem ipsum dolor sit amet,
-                    consectetur adipiscing elit. Molestie ultricies id posuere
-                    mauris
+                    {errorCount > 0 ? (
+                      <>
+                        We've identified{" "}
+                        <b>{`${errorCount} ${sentenceCapitalize(
+                          errorType
+                        )}`}</b>{" "}
+                        vulnerabilities within the verified contract you
+                        recently scanned. Sign up now to access a comprehensive
+                        result detailing how to effectively address and rectify
+                        these vulnerabilities.
+                      </>
+                    ) : (
+                      `We found no ${sentenceCapitalize(
+                        errorType
+                      )}-priority vulnerabilities during our scan. However, it's crucial to delve into the comprehensive results of our scanner to identify and address any other potential vulnerabilities that may have been detected. Sign up now to access a comprehensive
+                      result detailing how to effectively address and rectify
+                      these vulnerabilities. `
+                    )}
                   </Text>
                 </VStack>
                 <VStack
                   w="100%"
                   justifyContent="flex-start"
+                  display={["flex", "flex", "flex", "none"]}
                   alignItems={["center", "center", "center", "flex-start"]}
                 >
                   <Text fontSize="md" fontWeight={600}>
-                    Check and fix your vulnerability with SolidityScan code
-                    viewer
+                    Check and fix your vulnerability with SolidityScan
                   </Text>
                   <Text fontSize="sm" fontWeight={400}>
-                    Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-                    Molestie ultricies id posuere mauris proin duis placerat
-                    lorem. Sed pellentesque tortor, Lorem ipsum dolor sit amet,
-                    consectetur adipiscing elit. Molestie ultricies id posuere
-                    mauris
+                    Discover the underlying causes of these vulnerabilities by
+                    utilizing our platform, where our sophisticated code viewer
+                    precisely highlights the location of each issue within your
+                    Solidity file. Sign up now to gain comprehensive access to
+                    our platform and empower your development process.
                   </Text>
                 </VStack>
 
@@ -148,18 +163,20 @@ const QSErrorCountModal: React.FC<{
                 alignItems={"flex-start"}
               >
                 <Text fontSize="md" fontWeight={600}>
-                  Check and fix your vulnerability with SolidityScan code viewer
+                  Check and fix your vulnerability with SolidityScan
                 </Text>
                 <Text color="#4E5D78" fontSize="sm" fontWeight={600}>
-                  Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-                  Molestie ultricies id posuere mauris proin duis placerat
-                  lorem. Sed pellentesque tortor, Lorem ipsum dolor sit amet,
-                  consectetur adipiscing elit. Molestie ultricies id posuere
-                  mauris
+                  Discover the underlying causes of these vulnerabilities by
+                  utilizing our platform, where our sophisticated code viewer
+                  precisely highlights the location of each issue within your
+                  Solidity file. But that's not all – our advanced intelligence
+                  also offers expert recommendations for remediation. Sign up
+                  now to gain comprehensive access to our platform and empower
+                  your development process.
                 </Text>
 
                 <Image
-                  src={`${assetsURL}quickscan/screenshot_dashboard_qs_error_count_modal.png`}
+                  src={`${assetsURL}quickscan/screenshot_dashboard_qs_error_count_modal.svg`}
                   height="calc(100% - 100px)"
                   width="auto"
                 />

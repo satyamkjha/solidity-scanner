@@ -13,14 +13,10 @@ import {
   Divider,
   Stack,
   useMediaQuery,
-  Flex,
 } from "@chakra-ui/react";
 import { QuickScanResult } from "common/types";
-import PieChart from "components/pieChart";
 import { useConfig } from "hooks/useConfig";
-import { ArrowForwardIcon } from "@chakra-ui/icons";
 import { ThreatScoreMeter } from "components/threatScoreMeter";
-import { formattedDate } from "common/functions";
 
 const QuickScanDetails: React.FC<{ scanReport: QuickScanResult }> = ({
   scanReport,
@@ -99,9 +95,7 @@ const QuickScanDetails: React.FC<{ scanReport: QuickScanResult }> = ({
               <HStack my={5} width={"100%"}>
                 <Image src={`${assetsURL}icons/${item.issue_status}.svg`} />
                 <VStack ml={"30px !important"} alignItems={"flex-start"}>
-                  <Heading fontSize="md">
-                    {item.issue_name}
-                  </Heading>
+                  <Heading fontSize="md">{item.issue_name}</Heading>
                   <DescriptionWrapper>
                     <Box
                       dangerouslySetInnerHTML={{

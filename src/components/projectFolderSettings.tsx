@@ -338,7 +338,7 @@ const FolderSettings: React.FC<{
             <FaCodeBranch />
             <Text>{branch}</Text>
           </HStack>
-          <HStack spacing={3} mt={[4, 4, 0]} ml={"auto"}>
+          <HStack spacing={3} mt={[4, 4, 0]} ml={[0, 0, "auto"]}>
             <Button
               px={[10]}
               width={["100%", "100%", "150px"]}
