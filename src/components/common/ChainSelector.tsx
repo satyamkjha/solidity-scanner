@@ -106,7 +106,7 @@ export const ChainSelector: React.FC<{
       overflowY: "hidden",
       width: "250px",
       position: "absolute",
-      zIndex: 100,
+      zIndex: 500,
     }),
     control: (state: any) => ({
       // none of react-select's styles are passed to <Control />
@@ -187,7 +187,7 @@ export const ChainSelector: React.FC<{
       }}
       onClick={() => setPlatform(platformValue)}
       px={view === "homepage" ? 3 : [3, 3, 7]}
-      py={view === "homepage" ? 3 : [2, 2, 5]}
+      py={view === "homepage" ? 3 : [5]}
     >
       <HStack
         w={["100%", "100%", "100%", "fit-content"]}

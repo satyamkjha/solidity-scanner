@@ -414,43 +414,45 @@ export const QuickScanResultContainer: React.FC<{
                 <Text> No Bugs Found </Text>
               </Flex>
             ) : (
-              <PieChart
-                data={pieData(
-                  scanReport.multi_file_scan_summary.issue_severity_distribution
-                    .critical,
-                  scanReport.multi_file_scan_summary.issue_severity_distribution
-                    .high,
-                  scanReport.multi_file_scan_summary.issue_severity_distribution
-                    .medium,
-                  scanReport.multi_file_scan_summary.issue_severity_distribution
-                    .low,
-                  scanReport.multi_file_scan_summary.issue_severity_distribution
-                    .informational,
-                  scanReport.multi_file_scan_summary.issue_severity_distribution
-                    .gas
-                )}
-                page={"quickscan"}
-              />
+              <>
+                <PieChart
+                  data={pieData(
+                    scanReport.multi_file_scan_summary
+                      .issue_severity_distribution.critical,
+                    scanReport.multi_file_scan_summary
+                      .issue_severity_distribution.high,
+                    scanReport.multi_file_scan_summary
+                      .issue_severity_distribution.medium,
+                    scanReport.multi_file_scan_summary
+                      .issue_severity_distribution.low,
+                    scanReport.multi_file_scan_summary
+                      .issue_severity_distribution.informational,
+                    scanReport.multi_file_scan_summary
+                      .issue_severity_distribution.gas
+                  )}
+                  page={"quickscan"}
+                />
+                <Flex position={"absolute"} flexDir={"column"}>
+                  <Heading color="white" fontWeight={900}>
+                    {scanReport.multi_file_scan_summary
+                      .issue_severity_distribution.critical +
+                      scanReport.multi_file_scan_summary
+                        .issue_severity_distribution.high +
+                      scanReport.multi_file_scan_summary
+                        .issue_severity_distribution.medium +
+                      scanReport.multi_file_scan_summary
+                        .issue_severity_distribution.low +
+                      scanReport.multi_file_scan_summary
+                        .issue_severity_distribution.informational +
+                      scanReport.multi_file_scan_summary
+                        .issue_severity_distribution.gas}
+                  </Heading>
+                  <Text color="white">
+                    Total Vulnerabilities <br /> found
+                  </Text>
+                </Flex>
+              </>
             )}
-            <Flex position={"absolute"} flexDir={"column"}>
-              <Heading color="white" fontWeight={900}>
-                {scanReport.multi_file_scan_summary.issue_severity_distribution
-                  .critical +
-                  scanReport.multi_file_scan_summary.issue_severity_distribution
-                    .high +
-                  scanReport.multi_file_scan_summary.issue_severity_distribution
-                    .medium +
-                  scanReport.multi_file_scan_summary.issue_severity_distribution
-                    .low +
-                  scanReport.multi_file_scan_summary.issue_severity_distribution
-                    .informational +
-                  scanReport.multi_file_scan_summary.issue_severity_distribution
-                    .gas}
-              </Heading>
-              <Text color="white">
-                Total Vulnerabilities <br /> found
-              </Text>
-            </Flex>
           </Box>
           <Button
             display={["none", "none", "flex"]}
