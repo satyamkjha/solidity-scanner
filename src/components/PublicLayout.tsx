@@ -68,7 +68,9 @@ const PublicLayout: React.FC = ({ children }) => {
               fontSize="12px"
               color="white"
               fontWeight={700}
-              onClick={() => window.open("https://lu.ma/x3063d6n", "_blank")}
+              onClick={() =>
+                window.open("https://lu.ma/proofofsecurity", "_blank")
+              }
             >
               Register here
             </Text>
