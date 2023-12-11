@@ -167,9 +167,7 @@ export const BlockchainSelector: React.FC<{
       maxW="600px"
       flexDir={["column", "column", "row"]}
       alignItems="center"
-      justifyContent={
-        blockchain !== "" && platform !== "" ? "space-between" : "center"
-      }
+      justifyContent={"flex-start"}
     >
       <Popover
         isOpen={isOpen}
@@ -623,43 +621,46 @@ export const BlockchainSelector: React.FC<{
           )}
         </PopoverContent>
       </Popover>
-      {blockchain !== "" && platform !== "" && (
-        <>
-          <Button
-            display={["block", "block", "none"]}
-            // borderColor="#2F00FF"
-            // borderWidth={3}
-            mt={4}
-            size="md"
-            bgColor="#ECECEC"
-            leftIcon={<FaUndo color="#2F00FF" />}
-          >
-            Reset
-          </Button>
-          <Flex
-            w="60px"
-            h="60px"
-            p="10px"
-            borderRadius="40px"
-            filter="drop-shadow(0px 2px 1px rgba(0, 0, 0, 0.25))"
-            bgColor={theme === "dark" ? "#272727C0" : "#E1E1E1"}
-            display={["none", "none", "flex"]}
-            onClick={() => {
-              onOpen();
-              setBlockchain("");
-              setPlatform("");
-              setChain(null);
-            }}
-            cursor="pointer"
-          >
-            <Image
-              src={`${assetsUrl}common/reset-button-${theme}.svg`}
-              height="40px"
-              width="40px"
-            />
-          </Flex>
-        </>
-      )}
+      {blockchain !== "" &&
+        platform !== "" &&
+        (chain !== null || node_id !== "") && (
+          <>
+            <Button
+              display={["block", "block", "none"]}
+              // borderColor="#2F00FF"
+              // borderWidth={3}
+              mt={4}
+              size="md"
+              bgColor="#ECECEC"
+              leftIcon={<FaUndo color="#2F00FF" />}
+            >
+              Reset
+            </Button>
+            <Flex
+              w="60px"
+              h="60px"
+              p="10px"
+              ml={4}
+              borderRadius="40px"
+              filter="drop-shadow(0px 2px 1px rgba(0, 0, 0, 0.25))"
+              bgColor={theme === "dark" ? "#272727C0" : "#E1E1E1"}
+              display={["none", "none", "flex"]}
+              onClick={() => {
+                onOpen();
+                setBlockchain("");
+                setPlatform("");
+                setChain(null);
+              }}
+              cursor="pointer"
+            >
+              <Image
+                src={`${assetsUrl}common/reset-button-${theme}.svg`}
+                height="40px"
+                width="40px"
+              />
+            </Flex>
+          </>
+        )}
     </Flex>
   );
 };

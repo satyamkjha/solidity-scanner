@@ -18,6 +18,7 @@ import {
   getContractBlockChainLogoUrl,
   getContractBlockchainId,
   getContractChainLabel,
+  sentenceCapitalize,
 } from "helpers/helperFunction";
 import { useHistory } from "react-router-dom";
 import PieChart from "components/pieChart";
@@ -373,22 +374,22 @@ export const QSScanResultSkeleton: React.FC<{
               page={"quickscan"}
             />
 
-            <Flex position={"absolute"} flexDir={"column"}>
+            <VStack position={"absolute"} flexDir={"column"}>
               <SkeletonText
                 w="100px"
                 startColor="#4d4d4d"
                 endColor="#757575"
                 noOfLines={1}
-                skeletonHeight="1"
+                skeletonHeight="4"
               />
               <SkeletonText
-                w="200px"
+                w="150px"
                 startColor="#4d4d4d"
                 endColor="#757575"
-                noOfLines={1}
-                skeletonHeight="3"
+                noOfLines={2}
+                skeletonHeight="2"
               />
-            </Flex>
+            </VStack>
           </Box>
           <Button
             variant="brand"
@@ -430,7 +431,7 @@ export const QSScanResultSkeleton: React.FC<{
                   borderWidth={2}
                 />{" "}
                 <Text color="#8A94A6" fontSize="sm">
-                  {item.value}
+                  {sentenceCapitalize(item.value)}
                 </Text>
               </HStack>
               <SkeletonText

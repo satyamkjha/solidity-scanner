@@ -480,6 +480,9 @@ export const QuickScanResultContainer: React.FC<{
               px={3}
               py={2}
               bgColor={"#3E3E3E"}
+              _hover={{
+                bgColor: "#4d4d4d",
+              }}
               border="1px solid #3E3E3E"
               spacing={0}
               borderRadius={5}
@@ -501,7 +504,7 @@ export const QuickScanResultContainer: React.FC<{
                   borderWidth={2}
                 />{" "}
                 <Text color="#8A94A6" fontSize="sm">
-                  {item.value}
+                  {sentenceCapitalize(item.value)}
                 </Text>
               </HStack>
               <Text color="white" fontSize="lg" fontWeight={700}>

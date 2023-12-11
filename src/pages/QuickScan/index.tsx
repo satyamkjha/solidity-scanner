@@ -28,6 +28,9 @@ import { useParams, useLocation } from "react-router-dom";
 import { QuickScanResultContainer } from "components/quickscan/QuickScanResult";
 import { QSScanResultSkeleton } from "components/quickscan/QSScanResultSkeleton";
 
+import ssIconAnimation from "../../common/ssIconAnimation.json";
+import Lottie from "lottie-react";
+
 const RecentScans = lazy(() => import("components/quickscan/RecentScans"));
 const QuickScanDetails = lazy(
   () => import("components/quickscan/QuickScanDetails")
@@ -74,6 +77,7 @@ const QuickScan: React.FC = () => {
     chain: string,
     ref: string | null
   ) => {
+    setIsLoading(true);
     const reqHeaders1 = await getReCaptchaHeaders("quickScan_verify");
     const reqHeaders2 = await getReCaptchaHeaders("quickScan");
     setTempQSData({
@@ -99,7 +103,7 @@ const QuickScan: React.FC = () => {
       contract_platform: platform,
       [platform === "buildbear" ? "node_id" : "contract_chain"]: chain,
     };
-    setIsLoading(true);
+
     API.post<{
       contract_verified: boolean;
       message: string;
@@ -166,22 +170,45 @@ const QuickScan: React.FC = () => {
         bg={"linear-gradient(180deg, #060606 -45.59%, #414141 255.55%)"}
       >
         <Header theme={"dark"} />
-        {isLoading ? (
+        {isLoading && tempQSData ? (
           <VStack
             w="90%"
             maxW="1800px"
             alignItems="center"
             justify="flex-start"
-            mb="200px"
+            mb="150px"
+            spacing={10}
           >
-            {tempQSData && (
-              <QSScanResultSkeleton
-                blockAddress={tempQSData.blockAddress}
-                blockPlatform={tempQSData.blockPlatform}
-                blockChain={tempQSData.blockChain}
-              />
-            )}
+            <QSScanResultSkeleton
+              blockAddress={tempQSData.blockAddress}
+              blockPlatform={tempQSData.blockPlatform}
+              blockChain={tempQSData.blockChain}
+            />
+
+            <HStack>
+              {ssIconAnimation && (
+                <Lottie
+                  style={{
+                    height: "30px",
+                    width: "30px",
+                  }}
+                  animationData={ssIconAnimation}
+                />
+              )}
+              <Text color="white" fontSize="lg" fontWeight={700}>
+                {" "}
+                Your contract is being scanned ...
+              </Text>
+            </HStack>
           </VStack>
+        ) : isLoading ? (
+          <Flex
+            w="90%"
+            maxW="1800px"
+            alignItems="center"
+            justify="flex-start"
+            h="90vh"
+          ></Flex>
         ) : scanReport === null ? (
           <QuickScanForm
             view="quickscan"
@@ -198,6 +225,10 @@ const QuickScan: React.FC = () => {
           >
             <CloseButton
               alignSelf="flex-end"
+              color="white"
+              _hover={{
+                bgColor: "#222222",
+              }}
               onClick={() => {
                 setScanReport(null);
                 setTempQSData(null);
