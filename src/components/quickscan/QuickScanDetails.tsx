@@ -99,7 +99,7 @@ const QuickScanDetails: React.FC<{ scanReport: QuickScanResult }> = ({
               <HStack my={5} width={"100%"}>
                 <Image src={`${assetsURL}icons/${item.issue_status}.svg`} />
                 <VStack ml={"30px !important"} alignItems={"flex-start"}>
-                  <Heading w="100%" fontSize="md">
+                  <Heading fontSize="md">
                     {item.issue_name}
                   </Heading>
                   <DescriptionWrapper>
