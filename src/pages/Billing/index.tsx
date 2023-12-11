@@ -110,7 +110,6 @@ const Billing: React.FC = ({}) => {
         h: "100%",
         bg: "bg.subtle",
         borderRadius: "20px",
-        p: 0,
         pt: 4,
         mx: [0, 0, 4],
         mb: 4,
@@ -126,7 +125,7 @@ const Billing: React.FC = ({}) => {
           mb: 4,
         }}
       >
-        <Text mx={[2, 2, 2, 8]} sx={{ color: "subtle", fontWeight: 600 }}>
+        <Text mx={[4, 6, 8, 8]} sx={{ color: "subtle", fontWeight: 600 }}>
           BILLING & TRANSACTION HISTORY
         </Text>
         {!profileData ||

@@ -219,7 +219,7 @@ const Layout: React.FC = ({ children }) => {
             width: isSidebarCollapsed
               ? SIDEBAR_WIDTH_COLLAPSED
               : SIDEBAR_WIDTH_EXPANDED,
-            height: "calc(100vh",
+            height: "calc(100vh)",
             transform: showSidebar
               ? "translate3d(0px,0px,0px)"
               : "translate3d(-280px,0,0px)",

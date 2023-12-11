@@ -130,6 +130,7 @@ const Sidebar: React.FC<{
         borderRightStyle: "solid",
         borderRightColor: "border",
         bg: "white",
+        h: "100vh",
         flexDir: "column",
         justifyContent: "space-between",
         overflow: "hidden",

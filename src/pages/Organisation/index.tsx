@@ -34,9 +34,7 @@ const Organisation: React.FC<{ profileData?: Profile }> = ({ profileData }) => {
         minH: "78vh",
       }}
     >
-      <Text ml={[2, 4, 4, 0]} sx={{ color: "subtle", fontWeight: 600 }}>
-        ORGANISATION
-      </Text>
+      <Text sx={{ color: "subtle", fontWeight: 600 }}>ORGANISATION</Text>
       {!profileData ? (
         <Flex
           sx={{
