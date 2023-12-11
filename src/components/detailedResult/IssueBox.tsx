@@ -20,7 +20,6 @@ import { FileExplorerSection } from "./FileExplorerSection";
 import { MultifileIcon } from "../icons";
 import InputCheckbox from "../styled-components/inputCheckbox";
 import { getAssetsURL } from "helpers/helperFunction";
-import { useConfig } from "hooks/useConfig";
 import { useUserRole } from "hooks/useUserRole";
 
 const IssueBox: React.FC<{
@@ -64,9 +63,8 @@ const IssueBox: React.FC<{
   contract_address,
   isViewer,
 }) => {
-  const config: any = useConfig();
-  const assetsURL = getAssetsURL(config);
-  const [isDesktopView] = useMediaQuery("(min-width: 1024px)");
+  const assetsURL = getAssetsURL();
+  const [isDesktopView] = useMediaQuery("(min-width: 1350px)");
   const { role } = useUserRole();
   const [isHovered, setIsHovered] = useState(false);
   const [isChecked, setIsChecked] = useState(isSelected);
@@ -87,7 +85,7 @@ const IssueBox: React.FC<{
         <Box
           key={bug_id}
           id={bug_id}
-          p={[0, 0, 0, 3]}
+          p={[0, 0, 3]}
           mb={0.5}
           sx={{
             cursor: "pointer",
@@ -125,7 +123,7 @@ const IssueBox: React.FC<{
           onMouseLeave={() => setIsHovered(false)}
         >
           <HStack justify={"space-between"} ml={2}>
-            <HStack w="50%">
+            <HStack w={"fit-content"} maxW={"50%"}>
               {(isHovered || isChecked) &&
                 !isViewer &&
                 metric_wise_aggregated_finding.bug_status !== "fixed" && (
@@ -135,7 +133,11 @@ const IssueBox: React.FC<{
                     onChange={() => setIsChecked(!isChecked)}
                   />
                 )}
-              <Text isTruncated color={"gray.700"}>
+              <Text
+                isTruncated
+                color={"gray.700"}
+                fontSize={["sm", "sm", "md"]}
+              >
                 {bug_id}
               </Text>
             </HStack>
@@ -157,7 +159,10 @@ const IssueBox: React.FC<{
               )}
 
               {metric_wise_aggregated_finding.bug_status !== "pending_fix" && (
-                <>
+                <HStack
+                  alignItems={["flex-start", "flex-start", "center"]}
+                  spacing={2}
+                >
                   <Image
                     src={`${assetsURL}report/${metric_wise_aggregated_finding.bug_status}_color.svg`}
                   />
@@ -176,7 +181,7 @@ const IssueBox: React.FC<{
                         "Fixed"}
                     </Text>
                   )}
-                </>
+                </HStack>
               )}
             </HStack>
           </HStack>
@@ -208,7 +213,8 @@ const IssueBox: React.FC<{
               >
                 <HStack justify={"space-between"} p={4} w="100%">
                   <HStack
-                    w={
+                    w={"fit-content"}
+                    maxW={
                       metric_wise_aggregated_finding.findings.length > 1
                         ? "50%"
                         : "80%"
@@ -224,7 +230,11 @@ const IssueBox: React.FC<{
                           onChange={() => setIsChecked(!isChecked)}
                         ></Checkbox>
                       )}
-                    <Text isTruncated color={"gray.700"}>
+                    <Text
+                      isTruncated
+                      color={"gray.700"}
+                      fontSize={["sm", "sm", "md"]}
+                    >
                       {bug_id}
                     </Text>
                   </HStack>
@@ -248,7 +258,10 @@ const IssueBox: React.FC<{
 
                     {metric_wise_aggregated_finding.bug_status !==
                       "pending_fix" && (
-                      <>
+                      <HStack
+                        alignItems={["flex-start", "flex-start", "center"]}
+                        spacing={2}
+                      >
                         <Image
                           src={`${assetsURL}report/${metric_wise_aggregated_finding.bug_status}_color.svg`}
                         />
@@ -267,7 +280,7 @@ const IssueBox: React.FC<{
                               "fixed" && "Fixed"}
                           </Text>
                         )}
-                      </>
+                      </HStack>
                     )}
                   </HStack>
                 </HStack>

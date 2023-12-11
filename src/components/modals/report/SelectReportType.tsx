@@ -1,9 +1,7 @@
 import React, { useState, Dispatch, SetStateAction } from "react";
 import {
-  HStack,
   Image,
   Flex,
-  VStack,
   Text,
   Heading,
   Button,
@@ -140,13 +138,14 @@ const ReportTypeCard: React.FC<{
     >
       <Flex
         borderRadius={"15px"}
-        p={4}
+        p={[6, 6, 6, 4]}
         bg={type === reportType ? "white" : "#F7F9FC"}
         border={type === reportType ? "1px solid #52FF01" : "none"}
         boxShadow={type === reportType ? "0px 4px 23px 0px #2FF86B33" : ""}
-        flexDir={"column"}
+        flexDir={["row-reverse", "row-reverse", "row-reverse", "column"]}
         w={["100%", "100%", "100%", "230px"]}
         h={["100%", "100%", "100%", "230px"]}
+        alignItems={"center"}
         onClick={() => setReportType(type)}
       >
         <Flex ml={"auto"}>

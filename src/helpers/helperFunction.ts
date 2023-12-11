@@ -156,21 +156,26 @@ export const checkProjectUrl = (url: string) => {
 };
 
 export const getProjectType = (project_url: string) => {
-  if (project_url === "File Scan") return "filescan";
+  try {
+    if (project_url === "File Scan") return "filescan";
 
-  const url = new URL(project_url);
-  const hostname = url.hostname.toLowerCase();
+    const url = new URL(project_url);
+    const hostname = url.hostname.toLowerCase();
 
-  if (hostname.includes("github.com")) {
-    return "github";
+    if (hostname.includes("github.com")) {
+      return "github";
+    }
+    if (hostname.includes("bitbucket.org")) {
+      return "bitbucket";
+    }
+    if (hostname.includes("gitlab.com")) {
+      return "gitlab";
+    }
+    return "";
+  } catch (e) {
+    console.log("incorrect urk");
+    return "";
   }
-  if (hostname.includes("bitbucket.org")) {
-    return "bitbucket";
-  }
-  if (hostname.includes("gitlab.com")) {
-    return "gitlab";
-  }
-  return "";
 };
 
 export const getProjectFileUrl = (

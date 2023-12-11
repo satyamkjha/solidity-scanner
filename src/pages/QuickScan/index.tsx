@@ -1,4 +1,4 @@
-import React, { lazy, useEffect, useRef, Suspense } from "react";
+import React, { lazy, useEffect, useRef, Suspense, useState } from "react";
 import {
   getReCaptchaHeaders,
   checkContractAddress,
@@ -26,6 +26,10 @@ import { Header } from "components/header";
 import Loader from "components/styled-components/Loader";
 import { useParams, useLocation } from "react-router-dom";
 import { QuickScanResultContainer } from "components/quickscan/QuickScanResult";
+import { QSScanResultSkeleton } from "components/quickscan/QSScanResultSkeleton";
+
+import ssIconAnimation from "../../common/ssIconAnimation.json";
+import Lottie from "lottie-react";
 
 const RecentScans = lazy(() => import("components/quickscan/RecentScans"));
 const QuickScanDetails = lazy(
@@ -39,6 +43,12 @@ const QuickScan: React.FC = () => {
   const [scanReport, setScanReport] = React.useState<QuickScanResult | null>(
     null
   );
+
+  const [tempQSData, setTempQSData] = useState<{
+    blockAddress: string;
+    blockPlatform: string;
+    blockChain: string;
+  } | null>(null);
 
   const elementRef = useRef<HTMLDivElement>(null);
 
@@ -67,8 +77,14 @@ const QuickScan: React.FC = () => {
     chain: string,
     ref: string | null
   ) => {
+    setIsLoading(true);
     const reqHeaders1 = await getReCaptchaHeaders("quickScan_verify");
     const reqHeaders2 = await getReCaptchaHeaders("quickScan");
+    setTempQSData({
+      blockAddress: address,
+      blockPlatform: platform,
+      blockChain: chain,
+    });
     setScanReport(null);
     if (platform !== "buildbear" && !checkContractAddress(address)) {
       toast({
@@ -79,6 +95,7 @@ const QuickScan: React.FC = () => {
         position: "bottom",
       });
       setIsLoading(false);
+      setTempQSData(null);
       return;
     }
     const req = {
@@ -86,7 +103,7 @@ const QuickScan: React.FC = () => {
       contract_platform: platform,
       [platform === "buildbear" ? "node_id" : "contract_chain"]: chain,
     };
-    setIsLoading(true);
+
     API.post<{
       contract_verified: boolean;
       message: string;
@@ -121,15 +138,18 @@ const QuickScan: React.FC = () => {
               )
               .finally(() => {
                 setIsLoading(false);
+                setTempQSData(null);
               });
           }
         },
         () => {
           setIsLoading(false);
+          setTempQSData(null);
         }
       )
       .catch(() => {
         setIsLoading(false);
+        setTempQSData(null);
       });
   };
 
@@ -150,15 +170,45 @@ const QuickScan: React.FC = () => {
         bg={"linear-gradient(180deg, #060606 -45.59%, #414141 255.55%)"}
       >
         <Header theme={"dark"} />
-        {isLoading ? (
-          <Flex
-            w="100%"
-            h={["90vh", "90vh", "90vh", "750px"]}
-            justifyContent="center"
+        {isLoading && tempQSData ? (
+          <VStack
+            w="90%"
+            maxW="1800px"
             alignItems="center"
+            justify="flex-start"
+            mb="150px"
+            spacing={10}
           >
-            <Loader />
-          </Flex>
+            <QSScanResultSkeleton
+              blockAddress={tempQSData.blockAddress}
+              blockPlatform={tempQSData.blockPlatform}
+              blockChain={tempQSData.blockChain}
+            />
+
+            <HStack>
+              {ssIconAnimation && (
+                <Lottie
+                  style={{
+                    height: "30px",
+                    width: "30px",
+                  }}
+                  animationData={ssIconAnimation}
+                />
+              )}
+              <Text color="white" fontSize="lg" fontWeight={700}>
+                {" "}
+                Your contract is being scanned ...
+              </Text>
+            </HStack>
+          </VStack>
+        ) : isLoading ? (
+          <Flex
+            w="90%"
+            maxW="1800px"
+            alignItems="center"
+            justify="flex-start"
+            h="90vh"
+          ></Flex>
         ) : scanReport === null ? (
           <QuickScanForm
             view="quickscan"
@@ -175,7 +225,14 @@ const QuickScan: React.FC = () => {
           >
             <CloseButton
               alignSelf="flex-end"
-              onClick={() => setScanReport(null)}
+              color="white"
+              _hover={{
+                bgColor: "#222222",
+              }}
+              onClick={() => {
+                setScanReport(null);
+                setTempQSData(null);
+              }}
             />
             <QuickScanResultContainer scanReport={scanReport} />
           </VStack>

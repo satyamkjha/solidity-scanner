@@ -136,7 +136,7 @@ const Detectors: React.FC = () => {
         my={10}
         textAlign={["center", "left"]}
         py={10}
-        px={[0, 0, 0, 20]}
+        px={[5, 5, 5, 20]}
         display={["flex"]}
         flexDirection={["column", "column", "column", "row"]}
         alignItems={"center"}

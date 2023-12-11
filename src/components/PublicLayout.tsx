@@ -13,7 +13,7 @@ const MotionFlex = motion(Flex);
 const PublicLayout: React.FC = ({ children }) => {
   const location = useLocation();
 
-  const [isBannerOpen, setIsBannerOpen] = useState(true);
+  // const [isBannerOpen, setIsBannerOpen] = useState(true);
 
   useEffect(() => {
     const element = document.getElementById("public_layout");
@@ -34,7 +34,7 @@ const PublicLayout: React.FC = ({ children }) => {
       m={0}
       h="100vh"
     >
-      {isBannerOpen && (
+      {/* {isBannerOpen && (
         <MotionFlex
           initial={{ height: 0 }}
           animate={{ height: "25px" }}
@@ -83,7 +83,7 @@ const PublicLayout: React.FC = ({ children }) => {
             onClick={() => setIsBannerOpen(false)}
           />
         </MotionFlex>
-      )}
+      )} */}
 
       {children}
       <Box

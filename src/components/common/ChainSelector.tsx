@@ -106,7 +106,7 @@ export const ChainSelector: React.FC<{
       overflowY: "hidden",
       width: "250px",
       position: "absolute",
-      zIndex: 100,
+      zIndex: 500,
     }),
     control: (state: any) => ({
       // none of react-select's styles are passed to <Control />
@@ -149,9 +149,14 @@ export const ChainSelector: React.FC<{
     value: string;
     label: string;
     icon: string;
-    isDisabled: boolean;
     website: string;
   }>();
+
+  useEffect(() => {
+    if (platform === platformValue && chain) {
+      setCurrentChain(chain);
+    }
+  }, []);
 
   return (
     <Flex
@@ -187,11 +192,11 @@ export const ChainSelector: React.FC<{
       }}
       onClick={() => setPlatform(platformValue)}
       px={view === "homepage" ? 3 : [3, 3, 7]}
-      py={view === "homepage" ? 3 : [2, 2, 5]}
+      py={view === "homepage" ? 3 : [5]}
     >
       <HStack
         w={["100%", "100%", "100%", "fit-content"]}
-        maxW="calc(100% - 210px)"
+        maxW={["100%", "100%", "100%", "calc(100% - 210px)"]}
       >
         <Image
           src={`${assetsUrl}${platformData.iconUrl}.svg`}
@@ -236,7 +241,7 @@ export const ChainSelector: React.FC<{
           "flex-end",
         ]}
         mt={[5, 5, 5, 0]}
-        maxW="200px"
+        maxW={["100%", "100%", "100%", "200px"]}
       >
         <Select
           formatOptionLabel={FormatOptionLabelWithImage}

@@ -55,6 +55,7 @@ const Sidebar: React.FC<{
       label: "Home",
       icon: <HomeMenuIcon size={16} />,
       isCollapsed: isCollapsed,
+      setShowSidebar: setShowSidebar,
       transitionDone: transitionDone,
       isExternal: false,
       accessRevoked: [],
@@ -64,6 +65,7 @@ const Sidebar: React.FC<{
       label: "Projects",
       icon: <ProjectsMenuIcon size={16} />,
       isCollapsed: isCollapsed,
+      setShowSidebar: setShowSidebar,
       transitionDone: transitionDone,
       isExternal: false,
       accessRevoked: [],
@@ -73,6 +75,7 @@ const Sidebar: React.FC<{
       label: "Integrations",
       icon: <IntegrationMenuIcon size={24} />,
       isCollapsed: isCollapsed,
+      setShowSidebar: setShowSidebar,
       transitionDone: transitionDone,
       isExternal: false,
       accessRevoked: ["viewer", "editor", "admin"],
@@ -82,6 +85,7 @@ const Sidebar: React.FC<{
       label: "Private API",
       icon: <PrivateApiMenuIcon size={24} />,
       isCollapsed: isCollapsed,
+      setShowSidebar: setShowSidebar,
       transitionDone: transitionDone,
       isExternal: false,
       accessRevoked: ["viewer"],
@@ -91,6 +95,7 @@ const Sidebar: React.FC<{
       label: "Billing",
       icon: <BillingMenuIcon size={16} />,
       isCollapsed: isCollapsed,
+      setShowSidebar: setShowSidebar,
       transitionDone: transitionDone,
       isExternal: false,
       accessRevoked: ["viewer", "editor", "admin"],
@@ -100,6 +105,7 @@ const Sidebar: React.FC<{
       label: "Organisation",
       icon: <OrganisationIcon />,
       isCollapsed: isCollapsed,
+      setShowSidebar: setShowSidebar,
       transitionDone: transitionDone,
       isExternal: false,
       accessRevoked: ["viewer", "editor"],
@@ -109,6 +115,7 @@ const Sidebar: React.FC<{
       label: "User Guide",
       icon: <UserGuideIcon size={24} />,
       isCollapsed: isCollapsed,
+      setShowSidebar: setShowSidebar,
       transitionDone: transitionDone,
       isExternal: true,
       accessRevoked: [],
@@ -119,11 +126,11 @@ const Sidebar: React.FC<{
     <Flex
       sx={{
         width: isCollapsed ? SIDEBAR_WIDTH_COLLAPSED : SIDEBAR_WIDTH_EXPANDED,
-        height: "calc(100vh - 30px)",
         borderRightWidth: 1,
         borderRightStyle: "solid",
         borderRightColor: "border",
         bg: "white",
+        h: "100vh",
         flexDir: "column",
         justifyContent: "space-between",
         overflow: "hidden",
@@ -272,6 +279,7 @@ type SidebarItemProps = {
   transitionDone: boolean;
   isExternal: boolean;
   accessRevoked: string[];
+  setShowSidebar: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
 export const SidebarItem: React.FC<SidebarItemProps> = ({
@@ -281,6 +289,7 @@ export const SidebarItem: React.FC<SidebarItemProps> = ({
   isCollapsed,
   transitionDone,
   isExternal,
+  setShowSidebar,
 }) => {
   const match = useRouteMatch({
     path: link,
@@ -292,6 +301,7 @@ export const SidebarItem: React.FC<SidebarItemProps> = ({
     <>
       <Flex
         onClick={() => {
+          setShowSidebar(false);
           if (isExternal) {
             window.open(link, "_blank");
           } else {

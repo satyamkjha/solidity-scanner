@@ -37,10 +37,9 @@ import {
   getTrimmedScanMessage,
   getAssetsURL,
   getProjectType,
-  getContractBlockchainId,
   getContractBlockChainLogoUrl,
 } from "helpers/helperFunction";
-import { scanStatesLabel, contractChain } from "common/values";
+import { scanStatesLabel } from "common/values";
 
 const ScanCard: React.FC<{
   scan: ScanObj;
@@ -150,7 +149,7 @@ const ScanCard: React.FC<{
       onMouseOver={() => setHover(true)}
       onMouseLeave={() => setHover(false)}
       boxSizing={"border-box"}
-      w={["90%", "95%", "45%", "31%", "31%", "23%"]}
+      w={["100%", "100%", "45%", "31%", "31%", "23%"]}
       onClick={() => {
         if (multi_file_scan_status === "scan_done") {
           history.push(`/${scan.scan_type}s/${scan_id}/${project_id}`);

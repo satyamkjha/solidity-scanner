@@ -56,7 +56,7 @@ const Integrations: React.FC<{ profileData?: Profile }> = ({ profileData }) => {
         bg: "bg.subtle",
         borderRadius: "20px",
         py: 4,
-        px: 8,
+        px: [4, 6, 8, 8],
         mx: [0, 0, 4],
         mb: 4,
         minH: "78vh",
