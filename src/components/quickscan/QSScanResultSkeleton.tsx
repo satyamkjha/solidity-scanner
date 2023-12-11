@@ -20,6 +20,7 @@ import {
   getContractChainLabel,
 } from "helpers/helperFunction";
 import { useHistory } from "react-router-dom";
+import PieChart from "components/pieChart";
 
 export const QSScanResultSkeleton: React.FC<{
   blockAddress: string;
@@ -333,12 +334,62 @@ export const QSScanResultSkeleton: React.FC<{
           h={["fit-content", "fit-content", "100%"]}
           spacing={10}
         >
-          <SkeletonCircle
-            startColor="#4d4d4d"
-            endColor="#575757"
-            height="300px"
-            width="300px"
-          />
+          <Box
+            w={"330px"}
+            p={"20px"}
+            display="flex"
+            justifyContent="center"
+            alignItems={"center"}
+            h="330px"
+            position={"relative"}
+          >
+            <PieChart
+              data={[
+                {
+                  id: "critical",
+                  label: "NA",
+                  value: 34,
+                  color: "#4d4d4d",
+                },
+                {
+                  id: "high",
+                  label: "NA",
+                  value: 49,
+                  color: "#757575",
+                },
+                {
+                  id: "medium",
+                  label: "NA",
+                  value: 65,
+                  color: "#a1a1a1",
+                },
+                {
+                  id: "low",
+                  label: "NA",
+                  value: 77,
+                  color: "#c9c9c9",
+                },
+              ]}
+              page={"quickscan"}
+            />
+
+            <Flex position={"absolute"} flexDir={"column"}>
+              <SkeletonText
+                w="100px"
+                startColor="#4d4d4d"
+                endColor="#757575"
+                noOfLines={1}
+                skeletonHeight="1"
+              />
+              <SkeletonText
+                w="200px"
+                startColor="#4d4d4d"
+                endColor="#757575"
+                noOfLines={1}
+                skeletonHeight="3"
+              />
+            </Flex>
+          </Box>
           <Button
             variant="brand"
             w={"100%"}

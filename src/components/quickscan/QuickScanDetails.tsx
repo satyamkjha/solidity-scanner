@@ -13,14 +13,10 @@ import {
   Divider,
   Stack,
   useMediaQuery,
-  Flex,
 } from "@chakra-ui/react";
 import { QuickScanResult } from "common/types";
-import PieChart from "components/pieChart";
 import { useConfig } from "hooks/useConfig";
-import { ArrowForwardIcon } from "@chakra-ui/icons";
 import { ThreatScoreMeter } from "components/threatScoreMeter";
-import { formattedDate } from "common/functions";
 
 const QuickScanDetails: React.FC<{ scanReport: QuickScanResult }> = ({
   scanReport,

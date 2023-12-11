@@ -1,17 +1,30 @@
 import React, { useState, useRef, useEffect, PropsWithChildren } from "react";
 import {
   HStack,
+  PinInput,
+  PinInputField,
   Text,
   VStack,
+  Popover,
+  PopoverTrigger,
+  PopoverContent,
   Flex,
   Image,
   Divider,
   Box,
+  Input,
+  Link,
   Heading,
   Button,
   useDisclosure,
 } from "@chakra-ui/react";
-import { ExternalLinkIcon } from "@chakra-ui/icons";
+import StyledButton from "components/styled-components/StyledButton";
+import Loader from "components/styled-components/Loader";
+import {
+  ChevronDownIcon,
+  ArrowBackIcon,
+  ExternalLinkIcon,
+} from "@chakra-ui/icons";
 import { contractChain, pieData, severityArrayInOrder } from "common/values";
 import PieChart from "components/pieChart";
 import {
@@ -21,6 +34,11 @@ import {
   getContractBlockchainId,
   getContractBlockChainLogoUrl,
 } from "helpers/helperFunction";
+import { StylesConfig, GroupBase } from "react-select";
+import Select from "react-select";
+import FormatOptionLabelWithImage from "components/FormatOptionLabelWithImage";
+import { FaPen } from "react-icons/fa";
+import RadioButton from "components/styled-components/RadioButton";
 import { QuickScanResult } from "common/types";
 import SolidityScoreProgress from "components/common/SolidityScoreProgress";
 import { useHistory } from "react-router-dom";
@@ -63,6 +81,7 @@ export const QuickScanResultContainer: React.FC<{
       flexDir={["column", "column", "row"]}
       justifyContent={["flex-start", "flex-start", "space-between"]}
       alignItems="center"
+      mt={20}
     >
       <VStack
         spacing={5}
@@ -155,12 +174,7 @@ export const QuickScanResultContainer: React.FC<{
                 onClick={() => window.open(scanReport.contract_url, "_blank")}
               >
                 {`View on ${sentenceCapitalize(
-                  contractChain[
-                    getContractBlockchainId(
-                      scanReport.contract_platform || "",
-                      scanReport.contract_chain || ""
-                    )
-                  ].platforms[scanReport.contract_platform || ""].label || " "
+                  scanReport.contract_platform || " "
                 )}`}
                 <ExternalLinkIcon />
               </Text>
@@ -289,7 +303,13 @@ export const QuickScanResultContainer: React.FC<{
               size={"100px"}
               thickness={"7px"}
             />
-            <VStack ml={5} textAlign="left" alignItems="flex-start" px={4}>
+            <VStack
+              ml={5}
+              mt={[3, 3, 3, 0]}
+              textAlign={["center", "center", "center", "left"]}
+              alignItems="flex-start"
+              px={4}
+            >
               <Text
                 color="white"
                 fontSize="18px"
@@ -332,7 +352,7 @@ export const QuickScanResultContainer: React.FC<{
             width="56px"
           />
           <Text
-            textAlign="left"
+            textAlign={["left", "left", "left"]}
             color={scanReport.is_approved ? "#52FF00" : "#8D8D8D"}
           >
             This audit report has {scanReport.is_approved ? "" : "not"} been
@@ -433,7 +453,7 @@ export const QuickScanResultContainer: React.FC<{
             </Flex>
           </Box>
           <Button
-            display={["none", "none", "block"]}
+            display={["none", "none", "flex"]}
             variant="brand"
             w={"100%"}
             maxW={"300px"}
@@ -494,7 +514,7 @@ export const QuickScanResultContainer: React.FC<{
           ))}
         </Flex>
         <Button
-          display={["block", "block", "none"]}
+          display={["flex", "flex", "none"]}
           variant="brand"
           w={"100%"}
           maxW={"300px"}
