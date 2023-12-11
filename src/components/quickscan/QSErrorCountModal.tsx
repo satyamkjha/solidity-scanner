@@ -99,12 +99,24 @@ const QSErrorCountModal: React.FC<{
                     </Text>
                   </HStack>
                   <Text fontSize="md" fontWeight={400}>
-                    We've identified{" "}
-                    <b>{`${errorCount} ${sentenceCapitalize(errorType)}`}</b>{" "}
-                    vulnerabilities within the verified contract you recently
-                    scanned. Sign up now to access a comprehensive result
-                    detailing how to effectively address and rectify these
-                    vulnerabilities.
+                    {errorCount > 0 ? (
+                      <>
+                        We've identified{" "}
+                        <b>{`${errorCount} ${sentenceCapitalize(
+                          errorType
+                        )}`}</b>{" "}
+                        vulnerabilities within the verified contract you
+                        recently scanned. Sign up now to access a comprehensive
+                        result detailing how to effectively address and rectify
+                        these vulnerabilities.
+                      </>
+                    ) : (
+                      `We found no ${sentenceCapitalize(
+                        errorType
+                      )}-priority vulnerabilities during our scan. However, it's crucial to delve into the comprehensive results of our scanner to identify and address any other potential vulnerabilities that may have been detected. Sign up now to access a comprehensive
+                      result detailing how to effectively address and rectify
+                      these vulnerabilities. `
+                    )}
                   </Text>
                 </VStack>
                 <VStack

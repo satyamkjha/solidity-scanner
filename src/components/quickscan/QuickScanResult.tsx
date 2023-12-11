@@ -176,7 +176,7 @@ export const QuickScanResultContainer: React.FC<{
                 {`View on ${sentenceCapitalize(
                   scanReport.contract_platform || " "
                 )}`}
-                <ExternalLinkIcon />
+                <ExternalLinkIcon ml={2} />
               </Text>
             </Flex>
           </VStack>
@@ -203,8 +203,8 @@ export const QuickScanResultContainer: React.FC<{
             >
               <Image
                 src={`${assetsUrl}quickscan/qs_security_score.svg`}
-                height="40px"
-                width="40px"
+                height="30px"
+                width="30px"
               />
             </Flex>
             <VStack alignItems="flex-start" w="calc(100% - 40px)" spacing={0}>
@@ -237,7 +237,6 @@ export const QuickScanResultContainer: React.FC<{
               width="45px"
               mr={2}
             >
-              {" "}
               <Image
                 src={`${assetsUrl}quickscan/qs_scan_duration.svg`}
                 height="40px"

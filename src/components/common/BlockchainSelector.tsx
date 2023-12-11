@@ -79,6 +79,47 @@ export const BlockchainSelector: React.FC<{
   const popoverRef = useRef<HTMLDivElement>(null);
   const [selectedBlockchain, setSelectedBlockchain] = useState("");
   const [firstBlockChain, setFirstBlockchain] = useState("");
+  const [showTransition, setShowTransition] = useState(false);
+  const [showOtherSection, setShowOtherSection] = useState(false);
+  const [showAnimation, setShowAnimation] = useState(true);
+
+  useEffect(() => {
+    if (showTransition) {
+      setTimeout(() => {
+        setShowTransition(false);
+      }, 10);
+      setTimeout(() => {
+        setShowOtherSection(true);
+        setTimeout(() => {
+          setShowAnimation(false);
+        }, 1);
+      }, 310);
+    }
+  }, [showTransition]);
+
+  useEffect(() => {
+    if (selectedBlockchain) {
+      setTimeout(() => {
+        setShowAnimation(false);
+        setBlockchain(selectedBlockchain);
+        if (selectedBlockchain === "buildbear") {
+          setPlatform("buildbear");
+        } else {
+          setPlatform("");
+        }
+
+        setChain(null);
+      }, 125);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [selectedBlockchain]);
+
+  useEffect(() => {
+    setChain(null);
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [blockchain]);
+
   const [isLargerThan1350, isLargerThan768] = useMediaQuery([
     "(min-width: 1350px)",
     "(min-width: 768px)",
@@ -162,6 +203,12 @@ export const BlockchainSelector: React.FC<{
                 setFirstBlockchain={setFirstBlockchain}
                 view={view}
                 onClose={onClose}
+                setShowAnimation={setShowAnimation}
+                showAnimation={showAnimation}
+                showOtherSection={showOtherSection}
+                showTransition={showTransition}
+                setShowOtherSection={setShowOtherSection}
+                setShowTransition={setShowTransition}
               />
             </PopoverContent>
           </Popover>
@@ -198,8 +245,6 @@ export const BlockchainSelector: React.FC<{
           <Box
             onClick={() => {
               onOpen();
-              console.log(firstBlockChain);
-              console.log(selectedBlockchain);
             }}
             h="fit-content"
             w={["100%", "100%", "calc(100% - 80px)"]}
@@ -259,7 +304,9 @@ export const BlockchainSelector: React.FC<{
             borderRadius={15}
           >
             <ModalHeader w={"100%"}>
-              <ModalCloseButton color="white" />
+              <ModalCloseButton
+                color={theme === "dark" ? "white" : "#323232"}
+              />
             </ModalHeader>
 
             <ModalBody
@@ -296,6 +343,12 @@ export const BlockchainSelector: React.FC<{
                 setFirstBlockchain={setFirstBlockchain}
                 view={view}
                 onClose={onClose}
+                setShowAnimation={setShowAnimation}
+                showAnimation={showAnimation}
+                showOtherSection={showOtherSection}
+                showTransition={showTransition}
+                setShowOtherSection={setShowOtherSection}
+                setShowTransition={setShowTransition}
               />
             </ModalBody>
           </ModalContent>
@@ -453,6 +506,12 @@ const BlockchainSelectorContent: React.FC<{
   >;
   blockchain: string;
   onClose(): any;
+  showTransition: boolean;
+  showOtherSection: boolean;
+  showAnimation: boolean;
+  setShowAnimation: React.Dispatch<React.SetStateAction<boolean>>;
+  setShowOtherSection: React.Dispatch<React.SetStateAction<boolean>>;
+  setShowTransition: React.Dispatch<React.SetStateAction<boolean>>;
 }> = ({
   theme,
   onSelectorClose,
@@ -471,28 +530,18 @@ const BlockchainSelectorContent: React.FC<{
   setFirstBlockchain,
   view,
   onClose,
+  setShowAnimation,
+  showAnimation,
+  showOtherSection,
+  showTransition,
+  setShowOtherSection,
+  setShowTransition,
 }) => {
   const assetsUrl = getAssetsURL();
   const config = useConfig();
   const [elementPosition, setElementPosition] = useState<any>({});
 
-  const [showTransition, setShowTransition] = useState(false);
-  const [showOtherSection, setShowOtherSection] = useState(false);
-  const [showAnimation, setShowAnimation] = useState(true);
-
-  useEffect(() => {
-    if (showTransition) {
-      setTimeout(() => {
-        setShowTransition(false);
-      }, 10);
-      setTimeout(() => {
-        setShowOtherSection(true);
-        setTimeout(() => {
-          setShowAnimation(false);
-        }, 1);
-      }, 310);
-    }
-  }, [showTransition]);
+  console.log(chain);
 
   const onBlockChainClick = (
     event: any,
@@ -531,29 +580,6 @@ const BlockchainSelectorContent: React.FC<{
     onClose();
     onSelectorClose();
   };
-
-  useEffect(() => {
-    if (selectedBlockchain) {
-      setTimeout(() => {
-        setShowAnimation(false);
-        setBlockchain(selectedBlockchain);
-        if (selectedBlockchain === "buildbear") {
-          setPlatform("buildbear");
-        } else {
-          setPlatform("");
-        }
-
-        setChain(null);
-      }, 125);
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [selectedBlockchain]);
-
-  useEffect(() => {
-    setChain(null);
-
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [blockchain]);
 
   const currectBlockChainRef = useRef<HTMLDivElement>(null);
 
@@ -680,6 +706,7 @@ const BlockchainSelectorContent: React.FC<{
           ]}
           w="100%"
           h={["100%", "100%", "500px", "100%"]}
+          minH={["100%", "100%", "fit-content", "100%"]}
           flexDir={["column", "column", "column", "row"]}
           alignItems={["center", "center", "center", "flex-start"]}
           overflowX={"hidden"}

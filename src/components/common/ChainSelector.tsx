@@ -149,9 +149,14 @@ export const ChainSelector: React.FC<{
     value: string;
     label: string;
     icon: string;
-    isDisabled: boolean;
     website: string;
   }>();
+
+  useEffect(() => {
+    if (platform === platformValue && chain) {
+      setCurrentChain(chain);
+    }
+  }, []);
 
   return (
     <Flex
@@ -191,7 +196,7 @@ export const ChainSelector: React.FC<{
     >
       <HStack
         w={["100%", "100%", "100%", "fit-content"]}
-        maxW="calc(100% - 210px)"
+        maxW={["100%", "100%", "100%", "calc(100% - 210px)"]}
       >
         <Image
           src={`${assetsUrl}${platformData.iconUrl}.svg`}
@@ -236,7 +241,7 @@ export const ChainSelector: React.FC<{
           "flex-end",
         ]}
         mt={[5, 5, 5, 0]}
-        maxW="200px"
+        maxW={["100%", "100%", "100%", "200px"]}
       >
         <Select
           formatOptionLabel={FormatOptionLabelWithImage}
