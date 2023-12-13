@@ -1497,8 +1497,8 @@ export const contractChain: {
     logoUrl: "blockscan/nordekscan",
     platforms: {
       nordekscan: {
-        label: "Blockscout",
-        iconUrl: "blockscan/blockscout",
+        label: "Nordekscan",
+        iconUrl: "blockscan/nordekscan",
         chains: [
           {
             value: "mainnet",
