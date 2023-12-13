@@ -492,7 +492,7 @@ export const detectorData: DetectorItemProp[] = [
       "Unnecessary and redundant code blocks found in the contract that are not needed and take up useless deployment cost.",
   },
   {
-    attackCategory: "Inheritence Vulnerabilities",
+    attackCategory: "Inheritance Vulnerabilities",
     swc: ["SWC-125"],
     nod: 1,
     description:
