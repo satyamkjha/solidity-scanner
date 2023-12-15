@@ -1643,6 +1643,13 @@ export const contractChain: {
             isDisabled: false,
             website: "https://rootstock.blockscout.com/",
           },
+          {
+            value: "rootstock",
+            label: "Rootstock Testnet",
+            icon: "",
+            isDisabled: false,
+            website: "https://rootstock-testnet.blockscout.com/",
+          },
         ],
       },
     },
