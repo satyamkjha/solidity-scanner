@@ -1644,7 +1644,7 @@ export const contractChain: {
             website: "https://rootstock.blockscout.com/",
           },
           {
-            value: "rootstock",
+            value: "rootstock-testnet",
             label: "Rootstock Testnet",
             icon: "",
             isDisabled: false,
@@ -1981,6 +1981,10 @@ export const platformVsChains: {
     rootstock: {
       chain: "rootstock",
       index: 0,
+    },
+    "rootstock-testnet": {
+      chain: "rootstock",
+      index: 1,
     },
     "neon-devnet": {
       chain: "neon",

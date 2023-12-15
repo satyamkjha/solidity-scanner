@@ -541,8 +541,6 @@ const BlockchainSelectorContent: React.FC<{
   const config = useConfig();
   const [elementPosition, setElementPosition] = useState<any>({});
 
-  console.log(chain);
-
   const onBlockChainClick = (
     event: any,
     item: React.SetStateAction<string>
