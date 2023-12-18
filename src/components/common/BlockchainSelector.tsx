@@ -134,10 +134,23 @@ export const BlockchainSelector: React.FC<{
       maxW="600px"
       flexDir={["column", "column", "row"]}
       alignItems="center"
-      justifyContent={"flex-start"}
+      justifyContent={["flex-start", "flex-start", "center"]}
     >
       {isLargerThan768 ? (
         <>
+          {blockchain !== "" &&
+            platform !== "" &&
+            (chain !== null || node_id !== "") && (
+              <Flex
+                w="60px"
+                h="60px"
+                p="10px"
+                borderRadius="40px"
+                filter="drop-shadow(0px 2px 1px rgba(0, 0, 0, 0.25))"
+                bgColor={"transparent"}
+                display={["none", "none", "flex"]}
+              ></Flex>
+            )}
           <Popover
             isOpen={isOpen}
             onOpen={onOpen}
@@ -573,8 +586,6 @@ const BlockchainSelectorContent: React.FC<{
     setShowAnimation(true);
     setSelectedBlockchain(selectedChain);
   };
-1  
-
   const onBlockChainClose = () => {
     onClose();
     onSelectorClose();
@@ -878,6 +889,10 @@ const BlockchainSelectorContent: React.FC<{
                     setNodeId(e.target.value);
                   }}
                 />
+                <Button ml={5} mt={5} variant="brand" w="200px">
+                  {" "}
+                  Confirm
+                </Button>
               </>
             ) : (
               Object.keys(contractChain[blockchain].platforms).map(
