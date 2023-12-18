@@ -469,13 +469,13 @@ export const QuickScanResultContainer: React.FC<{
           alignItems="flex-start"
           flexDirection="row"
           flexWrap="wrap"
-          columnGap={5}
+          columnGap={"20px"}
           rowGap={3}
           mt={[5, 10, 0]}
         >
           {severityArrayInOrder.map((item) => (
             <VStack
-              w={["45%", "30%", "100%"]}
+              w={["calc(50% - 10px)", "calc(50% - 10px)", "100%"]}
               h="fit-content"
               cursor="pointer"
               px={3}
@@ -521,6 +521,7 @@ export const QuickScanResultContainer: React.FC<{
           display={["flex", "flex", "none"]}
           variant="brand"
           w={"100%"}
+          mt={5}
           maxW={"300px"}
           onClick={() => history.push("/signin")}
         >
