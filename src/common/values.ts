@@ -2063,11 +2063,11 @@ export const platformVsChains: {
     },
     "immutable-mainnet": {
       chain: "immutable",
-      index: 1,
+      index: 0,
     },
     "immutable-testnet": {
       chain: "immutable",
-      index: 0,
+      index: 1,
     },
   },
   routescan: {

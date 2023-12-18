@@ -889,8 +889,13 @@ const BlockchainSelectorContent: React.FC<{
                     setNodeId(e.target.value);
                   }}
                 />
-                <Button ml={5} mt={5} variant="brand" w="200px">
-                  {" "}
+                <Button
+                  ml={5}
+                  mt={5}
+                  variant="brand"
+                  onClick={() => onClose()}
+                  w="200px"
+                >
                   Confirm
                 </Button>
               </>
