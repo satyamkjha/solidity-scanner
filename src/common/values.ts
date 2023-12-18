@@ -1833,6 +1833,13 @@ export const contractChain: {
         iconUrl: "blockscan/blockscout",
         chains: [
           {
+            value: "immutable-mainnet",
+            label: "Immutable Mainnet",
+            icon: "",
+            isDisabled: false,
+            website: "https://explorer.immutable.com/",
+          },
+          {
             value: "immutable-testnet",
             label: "Immutable Testnet",
             icon: "",
@@ -2053,6 +2060,10 @@ export const platformVsChains: {
     "zksync-era-mainnet": {
       chain: "zksync",
       index: 0,
+    },
+    "immutable-mainnet": {
+      chain: "immutable",
+      index: 1,
     },
     "immutable-testnet": {
       chain: "immutable",

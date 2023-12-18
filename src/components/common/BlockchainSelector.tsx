@@ -573,6 +573,7 @@ const BlockchainSelectorContent: React.FC<{
     setShowAnimation(true);
     setSelectedBlockchain(selectedChain);
   };
+1  
 
   const onBlockChainClose = () => {
     onClose();
