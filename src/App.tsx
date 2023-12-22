@@ -18,6 +18,7 @@ import { MetaMaskProvider } from "metamask-react";
 
 import { Global, css } from "@emotion/react";
 import { ConfigProvider } from "hooks/useConfig";
+import { WebSocketProvider } from "hooks/useWebhookData";
 
 const queryClient = new QueryClient();
 
@@ -39,7 +40,9 @@ export const App: React.FC = () => {
   return (
     <Suspense fallback="">
       <ConfigProvider>
-        <AppContent />
+        <WebSocketProvider serverUrl="wss://api-ws-stage.solidityscan.com/stage/">
+          <AppContent />
+        </WebSocketProvider>
       </ConfigProvider>
     </Suspense>
   );

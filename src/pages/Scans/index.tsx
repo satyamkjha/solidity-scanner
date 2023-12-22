@@ -39,6 +39,7 @@ import { FiFilter } from "react-icons/fi";
 import { RxDoubleArrowDown } from "react-icons/rx";
 import { debounce } from "lodash";
 import RadioButton from "components/styled-components/RadioButton";
+import { useWebSocket } from "hooks/useWebhookData";
 
 const Scans: React.FC = () => {
   const [isDesktopView] = useMediaQuery("(min-width: 1920px)");
@@ -77,6 +78,12 @@ const Scans: React.FC = () => {
   const [projectsIdsInScanning, setProjectsIdsInScanning] = useState<string[]>(
     []
   );
+
+  const { messageQueue } = useWebSocket();
+
+  useEffect(() => {
+    console.log(messageQueue);
+  }, [messageQueue]);
 
   // const [ssIconAnimation, setSsIconAniamtion] = useState<any>(null);
 

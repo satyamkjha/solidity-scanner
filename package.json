@@ -31,7 +31,7 @@
     "focus-visible": "^5.2.0",
     "framer-motion": "^4.0.0",
     "i": "^0.3.7",
-    "js-cookie": "^3.0.1",
+    "js-cookie": "^3.0.5",
     "js-file-download": "^0.4.12",
     "lodash": "^4.17.21",
     "lottie-react": "^2.4.0",
