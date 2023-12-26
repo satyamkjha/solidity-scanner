@@ -30,6 +30,7 @@ import { useUserRole } from "hooks/useUserRole";
 import { infographicsData } from "common/values";
 import { AddProjectFormInfographics } from "./AddProjectFormInfographics";
 import { BlockchainSelector } from "components/common/BlockchainSelector";
+import { useWebSocket } from "hooks/useWebhookData";
 
 const ContractForm: React.FC<{
   profileData: Profile;
@@ -50,7 +51,7 @@ const ContractForm: React.FC<{
   } | null>(null);
 
   const [isDesktopView] = useMediaQuery("(min-width: 1920px)");
-
+  const { sendMessage } = useWebSocket();
   const queryClient = useQueryClient();
   const toast = useToast();
   const history = useHistory();
@@ -95,25 +96,26 @@ const ContractForm: React.FC<{
         async (res) => {
           if (res.data) {
             if (res.data.contract_verified) {
-              const responseData = await API.post(
-                API_PATH.API_START_SCAN_BLOCK,
-                req
-              );
+              sendMessage({
+                type: "block_scan_initiate",
+                body: req,
+              });
               setIsLoading(false);
-              if (responseData.status === 200) {
-                if (responseData.data.status === "success") {
-                  queryClient.invalidateQueries([
-                    "all_scans",
-                    {
-                      pageNo: 1,
-                      perPageCount: isDesktopView ? 20 : 12,
-                    },
-                  ]);
-                  queryClient.invalidateQueries("scan_list");
-                  queryClient.invalidateQueries("profile");
-                  history.push("/projects");
-                }
-              }
+              history.push("/projects");
+              // if (responseData.status === 200) {
+              //   if (responseData.data.status === "success") {
+              //     queryClient.invalidateQueries([
+              //       "all_scans",
+              //       {
+              //         pageNo: 1,
+              //         perPageCount: isDesktopView ? 20 : 12,
+              //       },
+              //     ]);
+              //     queryClient.invalidateQueries("scan_list");
+              //     queryClient.invalidateQueries("profile");
+              //     history.push("/projects");
+              //   }
+              // }
             }
           } else {
             setIsLoading(false);

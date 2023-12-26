@@ -9,7 +9,6 @@ import React, {
 } from "react";
 import { useToast } from "@chakra-ui/react";
 import { debounce } from "lodash";
-import Cookies from "js-cookie";
 import { useUserRole } from "./useUserRole";
 
 const WebSocketContext = createContext();
@@ -30,16 +29,11 @@ export const WebSocketProvider = ({ serverUrl, children }) => {
   const [tempMessageQueue, setTempMessageQueue] = useState([]);
   const [messageQueue, setMessageQueue] = useState([]);
 
-  const wsRef = useRef(null);
-
   useEffect(() => {
     const initializeWebSocket = () => {
       const ws = new WebSocket(
         `wss://api-ws-stage.solidityscan.com/stage?auth_token=${profileData.auth_token}`
       );
-
-      wsRef.current = ws;
-
       setWebSocket(ws);
 
       ws.addEventListener("open", () => {
@@ -74,7 +68,7 @@ export const WebSocketProvider = ({ serverUrl, children }) => {
       // Event listener for when the WebSocket connection is closed
       ws.addEventListener("close", (event) => {
         console.log("WebSocket connection closed:", event.code, event.reason);
-
+        setWebSocket(null);
         // Reopen the WebSocket connection after a short delay (e.g., 3 seconds)
         setTimeout(() => {
           initializeWebSocket();
@@ -88,16 +82,14 @@ export const WebSocketProvider = ({ serverUrl, children }) => {
         // Close the WebSocket connection on error
         ws.close();
       });
+
+      return () => {
+        // Clean up the WebSocket connection when the component unmounts
+        ws.close();
+      };
     };
 
     initializeWebSocket();
-
-    return () => {
-      // Clean up the WebSocket connection when the component unmounts
-      if (wsRef.current) {
-        wsRef.current.close();
-      }
-    };
   }, [serverUrl]);
 
   const processQueue = () => {
@@ -119,7 +111,12 @@ export const WebSocketProvider = ({ serverUrl, children }) => {
   }, [tempMessageQueue]);
 
   const sendMessage = (msg) => {
-    setWebSocket(msg);
+    webSocket.send(
+      JSON.stringify({
+        action: "message",
+        payload: msg,
+      })
+    );
   };
 
   const updateMessageQueue = (msg) => {
