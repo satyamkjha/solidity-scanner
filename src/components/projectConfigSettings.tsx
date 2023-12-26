@@ -4,6 +4,7 @@ import GithubConnectAlert from "./githubConnectAlert";
 import Loader from "./styled-components/Loader";
 import { OauthName } from "common/values";
 import ErrorAlert from "./errorAlert";
+import WarningAlert from "./warningAlert";
 
 const ConfigSettings: React.FC<{
   githubSync: boolean;
@@ -74,7 +75,7 @@ const ConfigSettings: React.FC<{
         />
       )}
       {!webhookCreatePermission && (
-        <ErrorAlert
+        <WarningAlert
           msg="You are not the owner of the repository for this project.
         To enable Git actions on the repository, ownership is required. Please ensure that you are logged in with the correct credentials or contact the repository owner to grant you the necessary permissions. "
         />

@@ -1,11 +1,8 @@
 import "@fontsource/poppins/700.css";
-
 import "@fontsource/inter/400.css";
 import "@fontsource/inter/500.css";
 import "@fontsource/inter/600.css";
-
 import "./styles/global.css";
-
 import React, { Suspense } from "react";
 import { Helmet } from "react-helmet";
 import { QueryClient, QueryClientProvider } from "react-query";
@@ -18,7 +15,6 @@ import { MetaMaskProvider } from "metamask-react";
 
 import { Global, css } from "@emotion/react";
 import { ConfigProvider } from "hooks/useConfig";
-import { WebSocketProvider } from "hooks/useWebhookData";
 
 const queryClient = new QueryClient();
 
@@ -40,9 +36,9 @@ export const App: React.FC = () => {
   return (
     <Suspense fallback="">
       <ConfigProvider>
-        <WebSocketProvider serverUrl="wss://api-ws-stage.solidityscan.com/stage/">
+        
           <AppContent />
-        </WebSocketProvider>
+        
       </ConfigProvider>
     </Suspense>
   );

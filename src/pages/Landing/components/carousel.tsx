@@ -73,8 +73,7 @@ const ImageCarousel = () => {
       <Carousel plugins={["arrows"]}>
         {imgSourceList.map((src) => (
           <Image
-            // boxShadow="5px 5px 15px 15px #88888840"
-            // borderRadius="25px"
+            
             src={`${assetsURL}${src.src}`}
             alt={src.alt}
             // margin="30px"

@@ -1,14 +1,22 @@
 // WebSocketContext.js
 
-import React, { createContext, useContext, useEffect, useState } from "react";
+import React, {
+  createContext,
+  useContext,
+  useEffect,
+  useState,
+  useRef,
+} from "react";
 import { useToast } from "@chakra-ui/react";
 import { debounce } from "lodash";
 import Cookies from "js-cookie";
+import { useUserRole } from "./useUserRole";
 
 const WebSocketContext = createContext();
 
 export const useWebSocket = () => {
   const context = useContext(WebSocketContext);
+
   if (!context) {
     throw new Error("useWebSocket must be used within a WebSocketProvider");
   }
@@ -16,75 +24,93 @@ export const useWebSocket = () => {
 };
 
 export const WebSocketProvider = ({ serverUrl, children }) => {
+  const { profileData } = useUserRole();
   const [webSocket, setWebSocket] = useState(null);
   const toast = useToast();
   const [tempMessageQueue, setTempMessageQueue] = useState([]);
   const [messageQueue, setMessageQueue] = useState([]);
-  const csrftoken = Cookies.get("csrftoken");
+
+  const wsRef = useRef(null);
 
   useEffect(() => {
-    const cookies = document.cookie.split(";").map((cookie) => cookie.trim());
-    const csrftoken = cookies.find((cookie) => cookie.startsWith("csrftoken"));
-  }, []);
+    const initializeWebSocket = () => {
+      const ws = new WebSocket(
+        `wss://api-ws-stage.solidityscan.com/stage?auth_token=${profileData.auth_token}`
+      );
 
-  useEffect(() => {
-    const ws = new WebSocket(serverUrl);
+      wsRef.current = ws;
 
-    setWebSocket(ws);
+      setWebSocket(ws);
 
-    ws.addEventListener("message", (event) => {
-      const receivedMessage = JSON.parse(event.data);
+      ws.addEventListener("open", () => {
+        console.log("WebSocket connection opened");
+      });
 
-      console.log(receivedMessage);
-      // Add the message to the queue
-      // if (receivedMessage) {
-      //   if (receivedMessage.type === "error") {
-      //     if (receivedMessage.payload && receivedMessage.payload.message) {
-      //       toast({
-      //         title: receivedMessage.payload.message,
-      //         status: "error",
-      //         isClosable: true,
-      //         position: "bottom",
-      //       });
-      //     } else {
-      //       toast({
-      //         title: `Unexpected Error`,
-      //         status: "error",
-      //         isClosable: true,
-      //         position: "bottom",
-      //       });
-      //     }
-      //   } else {
-      //     setTempMessageQueue((prevQueue) => [...prevQueue, receivedMessage]);
-      //   }
-      // }
-    });
+      ws.addEventListener("message", (event) => {
+        const receivedMessage = JSON.parse(event.data);
+        if (receivedMessage) {
+          if (receivedMessage.type === "error") {
+            if (receivedMessage.payload && receivedMessage.payload.message) {
+              toast({
+                title: receivedMessage.payload.message,
+                status: "error",
+                isClosable: true,
+                position: "bottom",
+              });
+            } else {
+              toast({
+                title: `Unexpected Error`,
+                status: "error",
+                isClosable: true,
+                position: "bottom",
+              });
+            }
+          } else {
+            setTempMessageQueue((prevQueue) => [...prevQueue, receivedMessage]);
+          }
+        }
+      });
+
+      // Event listener for when the WebSocket connection is closed
+      ws.addEventListener("close", (event) => {
+        console.log("WebSocket connection closed:", event.code, event.reason);
+
+        // Reopen the WebSocket connection after a short delay (e.g., 3 seconds)
+        setTimeout(() => {
+          initializeWebSocket();
+        }, 3000);
+      });
+
+      // Event listener for WebSocket errors
+      ws.addEventListener("error", (error) => {
+        console.error("WebSocket error:", error);
+
+        // Close the WebSocket connection on error
+        ws.close();
+      });
+    };
+
+    initializeWebSocket();
 
     return () => {
       // Clean up the WebSocket connection when the component unmounts
-      ws.close();
+      if (wsRef.current) {
+        wsRef.current.close();
+      }
     };
   }, [serverUrl]);
 
-  useEffect(() => {
-    console.log(webSocket);
-  }, [webSocket]);
-
   const processQueue = () => {
-    setMessageQueue(tempMessageQueue);
+    setMessageQueue((prevQueue) => [...prevQueue, ...tempMessageQueue]);
     setTempMessageQueue([]);
   };
 
-  //   useEffect(() => {
-  //     if (webSocket !== null) {
-  //       ws.send(webSocket);
-  //     }
-  //   }, [webSocket]);
-
-  const debouncedMsgInfusion = debounce(processQueue, 200);
+  const debouncedMsgInfusion = debounce(processQueue, 400);
 
   useEffect(() => {
-    debouncedMsgInfusion();
+    if (tempMessageQueue.length !== 0) {
+      debouncedMsgInfusion();
+    }
 
     return () => {
       debouncedMsgInfusion.cancel();
