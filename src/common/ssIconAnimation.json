@@ -1,0 +1,521 @@
+{
+    "v": "4.8.0",
+    "meta": {
+        "g": "LottieFiles AE 3.4.5",
+        "a": "",
+        "k": "",
+        "d": "",
+        "tc": ""
+    },
+    "fr": 29.9700012207031,
+    "ip": 0,
+    "op": 64.0000026067734,
+    "w": 100,
+    "h": 100,
+    "nm": "SS ICon",
+    "ddd": 0,
+    "assets": [
+        {
+            "id": "image_0",
+            "w": 78,
+            "h": 9,
+            "u": "",
+            "p": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAE4AAAAJCAYAAACc9xrJAAAACXBIWXMAAAABAAAAAQBPJcTWAAAAJHpUWHRDcmVhdG9yAAAImXNMyU9KVXBMK0ktUnBNS0tNLikGAEF6Bs5qehXFAAABsElEQVRIiaWWTXrbIBCGX2DypAsv7O5yk+xyiGx6g16l581KqVUmC8mYEQOSU28wvDA/H59kh3flj8Ir3/goCQgoiawBqjlElEgmQo5lrggQyOteSGg5E5b9tzi6MEhkAiAoLGd0G6PKuea7zZcxNTlvY17Porca67Oy5C61RFJ+/iWraG++MFXDei/ArJuEIxbXQqvC1Da2sNBlbS33vB6zcT1hWubG3bCc0g9RpCSsC2ib3zTtiGbWq4SWbYVx4hphRqKl7iX1mBt3h23FDHM8yadeQJ2mS6EdMSuxLQuGuXF32P84u3FS19meMMecnUMSueafA2E8lwXD/OZHrOOy0vw+O+bsrTCPOft+SaGNq+EkV700wijJfeZLAV1mHTpybytMR7DKoSP2qLPtY33M2eUiNIn81XP7ztgRzW9+zLxfrLGzLXvU2XeHhsPOPnZJyz8FueYLGvovQ2PzAesJMxZt5N6jzm6F6Tl7/5I6LqsYRDSAfHL+HXN6AWEGQKCMy/e5rKWKVeuzOOt2zY9fx7Z57d7N/vlY7F5Px/YCWSYiE/+YSExcmXhi4szHF6aRED3mxk7GAAAAAElFTkSuQmCC",
+            "e": 1
+        },
+        {
+            "id": "image_1",
+            "w": 70,
+            "h": 71,
+            "u": "",
+            "p": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEYAAABHCAYAAAC6cjEhAAAACXBIWXMAAAABAAAAAQBPJcTWAAAAJHpUWHRDcmVhdG9yAAAImXNMyU9KVXBMK0ktUnBNS0tNLikGAEF6Bs5qehXFAAAGLElEQVR4nOWcu44cVRCGv6puZsaO1hGpJYQEERtAvCYmsYQIyMwbkCAhog0RCZYgItoHIPADEMwToJWwBGTmDUBCGMH0KYLTl3PtXWPNWjpb0mqnLzNdVf3X9VwE4KFxIvBY4D4IB9tibBnYYW7DwBbHDseGg+0wNgy2wdgxuC1uvH5gh9nGH9sWx+bbX+9+8T1HoA+Nzww+CM85tgy2Y2CDuW3E98jPyP925Hu8NvO72z+98+U5QP/QOFHYA+8AGIqgGAommCiYAoJZh6A4FOj8PeLvNRMEwY3f9ee6PXAUxYxKOVvOCGYCCGKKE4VRBgKeJh4RLxMW8Iucvf3X+YOf754/UIHzSSmTYqa/8Af9sYwKG6/Zcp+/N2bCn78ZWp4nC++T0BbLkssVHZ+9+fyrRypwGj9i9Uvzg6Nrk4JsVM7IiLthxWQvMOF/eaESKy69z8kDpQhHjSAWP6CEivQ4ZOym6KoXmB/PvFuiONH7EefXh6MUGImPb1IxIX/pC73uC4z4dkqmmLJw/wOOk5O7ESq8pMCsI3MvyFiSU2sPCKFYh2Pwgykcb9CM6ogooDsLHLmcoPThj6dw9OFM3l/CsyCiGB0y+K+6+cEdQo+JD9scFNf3z46lDAef9nDiPytOOqDHBhnTDc+PR64g0mH0yCCYyCno18wyx8iKFFOD4w+vPd0fS7iXoSfC5XL09/h3PXr3+SNMyn7I8NF0xnsdjq3SuiNeFFN1oi1SH+Rd5fxHIUFL4kRbpQgtkX+REDFLxMl9TXt0oGctDysgJldOq1QGwSKz+jKgnvC0SqW8a5G7Q1P/EinKWlWMz28iIAQyO8QrJoeSEMKqRUrljNOVDr3KCbVJsfMtVeZaq0oXR9weHSDwL7KUQrNyuoIpJTG9TeqLid0CktGU1vsWrVLeJolNqZrYTSV7i9QX/ctSRE6IsaTJ3bzzJWszxL2bJFyXYnqb1OdWEnUmg3Bd7ti1qZgpKq25EI2VECY8Uxe9RcrzmNQRa14zpNlgm5S6jBggWsh8b0U/pqM4KBcku1q2M7kdiCmNqjL2fMt2JrRcEsR5TKyc2fnmZcDtzGPinnfajyH2Lz6mt0eHII/JAo4VErzSaGOrVC5/gg5evVnTsPM9+Dym3JPx/lWvGvxulUr+ZXLESxFZSOys6Twm7cfEPShzEofraDJN44hZ60Mxh+tKTG9ZMeX5MovVaN5mkOhLLdIhHD6p9Lw1s7PM5tqkasvBsiIy9C9hTG+RprZDLHPoazQtA9JEr1XK5awVkcVJzW2WBHO4TmUO/IyWyoA40WuV6tF4Hj5Zj+ntUbmIDHveUzO8Mge2XedbnlrHDJK5GS5Fm2sVMVEzPPUvNvdjpGJntyOPyV2InxessT+5LaYUFpHldREa+5dbVkRWV9gEeUw4RBnaXJvUx4ldoeetNTtr2ZQOQKkMCJPdYhEZ21uLNOUxtfH6KfPN1jaGqGmUVpblzLVSLaa3XistKUm+LKcyErk0b1qlkn+JolLNzlr3MbmctX7MLVqWE05nLSknajuEZUDYn2mT+sxlhP4lmgZSXWrbLOVlQFgi6JqdtayYehGpOKBP/UuqxTf+/GY/MO0OsmGwnd9Fw/wuIIPbLNfm8/7/IJsL7vUXxxDsvX8+fjy47anhd/9w0w4mNu4C4nZ4vj1fZlsObHG2Y7DupDb1xcvd0edthmQcW/QMFGeK0RFCzvC7hTgUs/SagpP9MZQCYK47BT0Lx91d8EJNpgXz3Xxt6WMv/8MyYAFJZVnOiyzifrVt0TzvKvMbIiKfmZrqwP/yqmAVB1Vc8JWHvmOSWxEsC7/VFTb13E3N9Le1mH6V4upwPDZirvECE3TP1wpD0inSVdDLOhzlCjjWF2gcn6aXsbYOIv1ce9kSyYzJXgfRi5eD46vKf8qoKE+AWlthE38G/kD1Qi+33z1x1n1ynS+9KBwR++VYalkzmQgR8wuNO5OVgPMHYo+4J896gJ/uPL546/nne+ju+10zQIYxA6TDYf7cGJ4FYBAUPy3L4V2t4XfiQAwwcP2Px1IM/24/so28btadOKRHfPogg+J3AoFlD5sOJyP/wyRTupMJmPSX3JPfAf4DKT0ZeNUP+wMAAAAASUVORK5CYII=",
+            "e": 1
+        }
+    ],
+    "layers": [
+        {
+            "ddd": 0,
+            "ind": 1,
+            "ty": 2,
+            "nm": "Stem",
+            "refId": "image_0",
+            "sr": 1,
+            "ks": {
+                "o": {
+                    "a": 0,
+                    "k": 100,
+                    "ix": 11
+                },
+                "r": {
+                    "a": 0,
+                    "k": 0,
+                    "ix": 10
+                },
+                "p": {
+                    "a": 1,
+                    "k": [
+                        {
+                            "i": {
+                                "x": 0.667,
+                                "y": 1
+                            },
+                            "o": {
+                                "x": 0.333,
+                                "y": 0
+                            },
+                            "t": 0,
+                            "s": [
+                                50.5,
+                                49.998,
+                                0
+                            ],
+                            "to": [
+                                0,
+                                1.75,
+                                0
+                            ],
+                            "ti": [
+                                0,
+                                2.083,
+                                0
+                            ]
+                        },
+                        {
+                            "i": {
+                                "x": 0.667,
+                                "y": 1
+                            },
+                            "o": {
+                                "x": 0.333,
+                                "y": 0
+                            },
+                            "t": 9,
+                            "s": [
+                                50.5,
+                                60.498,
+                                0
+                            ],
+                            "to": [
+                                0,
+                                -2.083,
+                                0
+                            ],
+                            "ti": [
+                                0,
+                                1.75,
+                                0
+                            ]
+                        },
+                        {
+                            "i": {
+                                "x": 0.667,
+                                "y": 1
+                            },
+                            "o": {
+                                "x": 0.333,
+                                "y": 0
+                            },
+                            "t": 29,
+                            "s": [
+                                50.5,
+                                37.498,
+                                0
+                            ],
+                            "to": [
+                                0,
+                                -1.75,
+                                0
+                            ],
+                            "ti": [
+                                0,
+                                -2.083,
+                                0
+                            ]
+                        },
+                        {
+                            "t": 64.0000026067734,
+                            "s": [
+                                50.5,
+                                49.998,
+                                0
+                            ]
+                        }
+                    ],
+                    "ix": 2
+                },
+                "a": {
+                    "a": 0,
+                    "k": [
+                        38.75,
+                        4.139,
+                        0
+                    ],
+                    "ix": 1
+                },
+                "s": {
+                    "a": 0,
+                    "k": [
+                        100,
+                        100,
+                        100
+                    ],
+                    "ix": 6
+                }
+            },
+            "ao": 0,
+            "ip": 0,
+            "op": 328.000013359714,
+            "st": 0,
+            "bm": 0
+        },
+        {
+            "ddd": 0,
+            "ind": 3,
+            "ty": 2,
+            "nm": "Scan BG",
+            "refId": "image_1",
+            "sr": 1,
+            "ks": {
+                "o": {
+                    "a": 0,
+                    "k": 100,
+                    "ix": 11
+                },
+                "r": {
+                    "a": 0,
+                    "k": 0,
+                    "ix": 10
+                },
+                "p": {
+                    "a": 0,
+                    "k": [
+                        50.501,
+                        50,
+                        0
+                    ],
+                    "ix": 2
+                },
+                "a": {
+                    "a": 0,
+                    "k": [
+                        34.9,
+                        35.25,
+                        0
+                    ],
+                    "ix": 1
+                },
+                "s": {
+                    "a": 0,
+                    "k": [
+                        100,
+                        100,
+                        100
+                    ],
+                    "ix": 6
+                }
+            },
+            "ao": 0,
+            "hasMask": true,
+            "masksProperties": [
+                {
+                    "inv": true,
+                    "mode": "a",
+                    "pt": {
+                        "a": 1,
+                        "k": [
+                            {
+                                "i": {
+                                    "x": 0.667,
+                                    "y": 1
+                                },
+                                "o": {
+                                    "x": 0.333,
+                                    "y": 0
+                                },
+                                "t": 0,
+                                "s": [
+                                    {
+                                        "i": [
+                                            [
+                                                0,
+                                                0
+                                            ],
+                                            [
+                                                0,
+                                                0
+                                            ],
+                                            [
+                                                0,
+                                                0
+                                            ],
+                                            [
+                                                0,
+                                                0
+                                            ]
+                                        ],
+                                        "o": [
+                                            [
+                                                0,
+                                                0
+                                            ],
+                                            [
+                                                0,
+                                                0
+                                            ],
+                                            [
+                                                0,
+                                                0
+                                            ],
+                                            [
+                                                0,
+                                                0
+                                            ]
+                                        ],
+                                        "v": [
+                                            [
+                                                80.283,
+                                                21.75
+                                            ],
+                                            [
+                                                -10.1,
+                                                21.75
+                                            ],
+                                            [
+                                                -10.1,
+                                                47.194
+                                            ],
+                                            [
+                                                80.283,
+                                                47.194
+                                            ]
+                                        ],
+                                        "c": true
+                                    }
+                                ]
+                            },
+                            {
+                                "i": {
+                                    "x": 0.667,
+                                    "y": 1
+                                },
+                                "o": {
+                                    "x": 0.333,
+                                    "y": 0
+                                },
+                                "t": 9,
+                                "s": [
+                                    {
+                                        "i": [
+                                            [
+                                                0,
+                                                0
+                                            ],
+                                            [
+                                                0,
+                                                0
+                                            ],
+                                            [
+                                                0,
+                                                0
+                                            ],
+                                            [
+                                                0,
+                                                0
+                                            ]
+                                        ],
+                                        "o": [
+                                            [
+                                                0,
+                                                0
+                                            ],
+                                            [
+                                                0,
+                                                0
+                                            ],
+                                            [
+                                                0,
+                                                0
+                                            ],
+                                            [
+                                                0,
+                                                0
+                                            ]
+                                        ],
+                                        "v": [
+                                            [
+                                                80.283,
+                                                33.75
+                                            ],
+                                            [
+                                                -10.1,
+                                                33.75
+                                            ],
+                                            [
+                                                -10.1,
+                                                59.194
+                                            ],
+                                            [
+                                                80.283,
+                                                59.194
+                                            ]
+                                        ],
+                                        "c": true
+                                    }
+                                ]
+                            },
+                            {
+                                "i": {
+                                    "x": 0.667,
+                                    "y": 1
+                                },
+                                "o": {
+                                    "x": 0.333,
+                                    "y": 0
+                                },
+                                "t": 29,
+                                "s": [
+                                    {
+                                        "i": [
+                                            [
+                                                0,
+                                                0
+                                            ],
+                                            [
+                                                0,
+                                                0
+                                            ],
+                                            [
+                                                0,
+                                                0
+                                            ],
+                                            [
+                                                0,
+                                                0
+                                            ]
+                                        ],
+                                        "o": [
+                                            [
+                                                0,
+                                                0
+                                            ],
+                                            [
+                                                0,
+                                                0
+                                            ],
+                                            [
+                                                0,
+                                                0
+                                            ],
+                                            [
+                                                0,
+                                                0
+                                            ]
+                                        ],
+                                        "v": [
+                                            [
+                                                80.166,
+                                                11
+                                            ],
+                                            [
+                                                -10.217,
+                                                11
+                                            ],
+                                            [
+                                                -10.217,
+                                                36.444
+                                            ],
+                                            [
+                                                80.166,
+                                                36.444
+                                            ]
+                                        ],
+                                        "c": true
+                                    }
+                                ]
+                            },
+                            {
+                                "t": 64.0000026067734,
+                                "s": [
+                                    {
+                                        "i": [
+                                            [
+                                                0,
+                                                0
+                                            ],
+                                            [
+                                                0,
+                                                0
+                                            ],
+                                            [
+                                                0,
+                                                0
+                                            ],
+                                            [
+                                                0,
+                                                0
+                                            ]
+                                        ],
+                                        "o": [
+                                            [
+                                                0,
+                                                0
+                                            ],
+                                            [
+                                                0,
+                                                0
+                                            ],
+                                            [
+                                                0,
+                                                0
+                                            ],
+                                            [
+                                                0,
+                                                0
+                                            ]
+                                        ],
+                                        "v": [
+                                            [
+                                                80.283,
+                                                21.75
+                                            ],
+                                            [
+                                                -10.1,
+                                                21.75
+                                            ],
+                                            [
+                                                -10.1,
+                                                47.194
+                                            ],
+                                            [
+                                                80.283,
+                                                47.194
+                                            ]
+                                        ],
+                                        "c": true
+                                    }
+                                ]
+                            }
+                        ],
+                        "ix": 1
+                    },
+                    "o": {
+                        "a": 0,
+                        "k": 100,
+                        "ix": 3
+                    },
+                    "x": {
+                        "a": 0,
+                        "k": 0,
+                        "ix": 4
+                    },
+                    "nm": "Mask 1"
+                }
+            ],
+            "ip": 0,
+            "op": 328.000013359714,
+            "st": 0,
+            "bm": 0
+        }
+    ],
+    "markers": []
+}

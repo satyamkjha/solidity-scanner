@@ -117,7 +117,7 @@ export default function PrivateApi() {
         borderRadius: "20px",
         pt: 4,
         pb: 1,
-        px: [2, 2, 2, 8],
+        px: [4, 6, 8, 8],
         mx: [0, 0, 4],
         mb: 4,
         minH: "85vh",
@@ -147,7 +147,7 @@ export default function PrivateApi() {
           flexDir="column"
         >
           <Flex
-            m={6}
+            m={[0, 0, 0, 6]}
             mb={[2, 2, 2, 6]}
             align="center"
             flexDir={[
@@ -211,7 +211,7 @@ export default function PrivateApi() {
             )}
           </Flex>
           <Flex
-            mx={[4, 4, 4, 6]}
+            mx={[0, 0, 0, 6]}
             mb={6}
             px={[4, 4, 4, 6]}
             pt={8}

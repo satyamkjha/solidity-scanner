@@ -34,6 +34,7 @@ import {
 import { blockScans, contractChain } from "common/values";
 import Loader from "components/styled-components/Loader";
 import QSApiBanner from "./QSApiBanner";
+import { floor } from "lodash";
 
 export default function RecentScans() {
   const [isDesktopView] = useMediaQuery("(min-width: 1350px)");
@@ -192,7 +193,7 @@ export default function RecentScans() {
                         fontSize="md"
                         fontWeight={700}
                       >
-                        {item.score_v2}
+                        {isDesktopView ? item.score_v2 : floor(item.score_v2)}
                         <Box as={"span"} color="gray.500" fontSize={"xs"}>
                           /100
                         </Box>

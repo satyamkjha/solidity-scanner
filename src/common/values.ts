@@ -492,7 +492,7 @@ export const detectorData: DetectorItemProp[] = [
       "Unnecessary and redundant code blocks found in the contract that are not needed and take up useless deployment cost.",
   },
   {
-    attackCategory: "Inheritence Vulnerabilities",
+    attackCategory: "Inheritance Vulnerabilities",
     swc: ["SWC-125"],
     nod: 1,
     description:
@@ -1497,8 +1497,8 @@ export const contractChain: {
     logoUrl: "blockscan/nordekscan",
     platforms: {
       nordekscan: {
-        label: "Blockscout",
-        iconUrl: "blockscan/blockscout",
+        label: "Nordekscan",
+        iconUrl: "blockscan/nordekscan",
         chains: [
           {
             value: "mainnet",
@@ -1642,6 +1642,13 @@ export const contractChain: {
             icon: "",
             isDisabled: false,
             website: "https://rootstock.blockscout.com/",
+          },
+          {
+            value: "rootstock-testnet",
+            label: "Rootstock Testnet",
+            icon: "",
+            isDisabled: false,
+            website: "https://rootstock-testnet.blockscout.com/",
           },
         ],
       },
@@ -1826,6 +1833,13 @@ export const contractChain: {
         iconUrl: "blockscan/blockscout",
         chains: [
           {
+            value: "immutable-mainnet",
+            label: "Immutable Mainnet",
+            icon: "",
+            isDisabled: false,
+            website: "https://explorer.immutable.com/",
+          },
+          {
             value: "immutable-testnet",
             label: "Immutable Testnet",
             icon: "",
@@ -1975,6 +1989,10 @@ export const platformVsChains: {
       chain: "rootstock",
       index: 0,
     },
+    "rootstock-testnet": {
+      chain: "rootstock",
+      index: 1,
+    },
     "neon-devnet": {
       chain: "neon",
       index: 1,
@@ -2043,9 +2061,13 @@ export const platformVsChains: {
       chain: "zksync",
       index: 0,
     },
-    "immutable-testnet": {
+    "immutable-mainnet": {
       chain: "immutable",
       index: 0,
+    },
+    "immutable-testnet": {
+      chain: "immutable",
+      index: 1,
     },
   },
   routescan: {

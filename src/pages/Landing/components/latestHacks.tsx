@@ -151,7 +151,7 @@ const ArticleComp: React.FC<{
       <Flex
         backgroundImage={`${assetsURL}background/latest_hack_post_bg.svg`}
         width="100%"
-        height={["auto", "270px"]}
+        height={["250px", "250px", "270px"]}
         borderRadius="25px"
         flexDir="column"
         pt={"60px"}
@@ -159,7 +159,7 @@ const ArticleComp: React.FC<{
         alignItems="center"
         backgroundPosition="center"
         backgroundRepeat="no-repeat"
-        backgroundSize="contain"
+        backgroundSize="stretch"
       >
         <Heading
           color={"white"}

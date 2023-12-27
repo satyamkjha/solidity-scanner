@@ -176,7 +176,7 @@ export const QuickScanResultContainer: React.FC<{
                 {`View on ${sentenceCapitalize(
                   scanReport.contract_platform || " "
                 )}`}
-                <ExternalLinkIcon />
+                <ExternalLinkIcon ml={2} />
               </Text>
             </Flex>
           </VStack>
@@ -203,8 +203,8 @@ export const QuickScanResultContainer: React.FC<{
             >
               <Image
                 src={`${assetsUrl}quickscan/qs_security_score.svg`}
-                height="40px"
-                width="40px"
+                height="30px"
+                width="30px"
               />
             </Flex>
             <VStack alignItems="flex-start" w="calc(100% - 40px)" spacing={0}>
@@ -237,7 +237,6 @@ export const QuickScanResultContainer: React.FC<{
               width="45px"
               mr={2}
             >
-              {" "}
               <Image
                 src={`${assetsUrl}quickscan/qs_scan_duration.svg`}
                 height="40px"
@@ -303,7 +302,13 @@ export const QuickScanResultContainer: React.FC<{
               size={"100px"}
               thickness={"7px"}
             />
-            <VStack ml={5} textAlign="left" alignItems="flex-start" px={4}>
+            <VStack
+              ml={5}
+              mt={[3, 3, 3, 0]}
+              textAlign={["center", "center", "center", "left"]}
+              alignItems="flex-start"
+              px={4}
+            >
               <Text
                 color="white"
                 fontSize="18px"
@@ -346,7 +351,7 @@ export const QuickScanResultContainer: React.FC<{
             width="56px"
           />
           <Text
-            textAlign="left"
+            textAlign={["left", "left", "left"]}
             color={scanReport.is_approved ? "#52FF00" : "#8D8D8D"}
           >
             This audit report has {scanReport.is_approved ? "" : "not"} been
@@ -408,45 +413,48 @@ export const QuickScanResultContainer: React.FC<{
                 <Text> No Bugs Found </Text>
               </Flex>
             ) : (
-              <PieChart
-                data={pieData(
-                  scanReport.multi_file_scan_summary.issue_severity_distribution
-                    .critical,
-                  scanReport.multi_file_scan_summary.issue_severity_distribution
-                    .high,
-                  scanReport.multi_file_scan_summary.issue_severity_distribution
-                    .medium,
-                  scanReport.multi_file_scan_summary.issue_severity_distribution
-                    .low,
-                  scanReport.multi_file_scan_summary.issue_severity_distribution
-                    .informational,
-                  scanReport.multi_file_scan_summary.issue_severity_distribution
-                    .gas
-                )}
-                page={"quickscan"}
-              />
+              <>
+                <PieChart
+                  data={pieData(
+                    scanReport.multi_file_scan_summary
+                      .issue_severity_distribution.critical,
+                    scanReport.multi_file_scan_summary
+                      .issue_severity_distribution.high,
+                    scanReport.multi_file_scan_summary
+                      .issue_severity_distribution.medium,
+                    scanReport.multi_file_scan_summary
+                      .issue_severity_distribution.low,
+                    scanReport.multi_file_scan_summary
+                      .issue_severity_distribution.informational,
+                    scanReport.multi_file_scan_summary
+                      .issue_severity_distribution.gas
+                  )}
+                  page={"quickscan"}
+                />
+                <Flex position={"absolute"} flexDir={"column"}>
+                  <Heading color="white" fontWeight={900}>
+                    {scanReport.multi_file_scan_summary
+                      .issue_severity_distribution.critical +
+                      scanReport.multi_file_scan_summary
+                        .issue_severity_distribution.high +
+                      scanReport.multi_file_scan_summary
+                        .issue_severity_distribution.medium +
+                      scanReport.multi_file_scan_summary
+                        .issue_severity_distribution.low +
+                      scanReport.multi_file_scan_summary
+                        .issue_severity_distribution.informational +
+                      scanReport.multi_file_scan_summary
+                        .issue_severity_distribution.gas}
+                  </Heading>
+                  <Text color="white">
+                    Total Vulnerabilities <br /> found
+                  </Text>
+                </Flex>
+              </>
             )}
-            <Flex position={"absolute"} flexDir={"column"}>
-              <Heading color="white" fontWeight={900}>
-                {scanReport.multi_file_scan_summary.issue_severity_distribution
-                  .critical +
-                  scanReport.multi_file_scan_summary.issue_severity_distribution
-                    .high +
-                  scanReport.multi_file_scan_summary.issue_severity_distribution
-                    .medium +
-                  scanReport.multi_file_scan_summary.issue_severity_distribution
-                    .low +
-                  scanReport.multi_file_scan_summary.issue_severity_distribution
-                    .informational +
-                  scanReport.multi_file_scan_summary.issue_severity_distribution
-                    .gas}
-              </Heading>
-              <Text color="white">
-                Total Vulnerabilities <br /> found
-              </Text>
-            </Flex>
           </Box>
           <Button
+            display={["none", "none", "flex"]}
             variant="brand"
             w={"100%"}
             maxW={"300px"}
@@ -461,18 +469,21 @@ export const QuickScanResultContainer: React.FC<{
           alignItems="flex-start"
           flexDirection="row"
           flexWrap="wrap"
-          columnGap={5}
+          columnGap={"20px"}
           rowGap={3}
           mt={[5, 10, 0]}
         >
           {severityArrayInOrder.map((item) => (
             <VStack
-              w={["45%", "30%", "100%"]}
+              w={["calc(50% - 10px)", "calc(50% - 10px)", "100%"]}
               h="fit-content"
               cursor="pointer"
               px={3}
               py={2}
               bgColor={"#3E3E3E"}
+              _hover={{
+                bgColor: "#4d4d4d",
+              }}
               border="1px solid #3E3E3E"
               spacing={0}
               borderRadius={5}
@@ -494,7 +505,7 @@ export const QuickScanResultContainer: React.FC<{
                   borderWidth={2}
                 />{" "}
                 <Text color="#8A94A6" fontSize="sm">
-                  {item.value}
+                  {sentenceCapitalize(item.value)}
                 </Text>
               </HStack>
               <Text color="white" fontSize="lg" fontWeight={700}>
@@ -506,6 +517,16 @@ export const QuickScanResultContainer: React.FC<{
             </VStack>
           ))}
         </Flex>
+        <Button
+          display={["flex", "flex", "none"]}
+          variant="brand"
+          w={"100%"}
+          mt={5}
+          maxW={"300px"}
+          onClick={() => history.push("/signin")}
+        >
+          View detailed Result
+        </Button>
       </Flex>
       <ManualAuditForm isOpen={isOpen} onClose={onClose} />
       <QSErrorCountModal
