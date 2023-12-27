@@ -25,13 +25,14 @@ import { Profile } from "common/types";
 import { useUserRole } from "hooks/useUserRole";
 import { CheckIcon } from "@chakra-ui/icons";
 import { useQueryClient } from "react-query";
+import { useWebSocket } from "hooks/useWebhookData";
 
 const UploadForm: React.FC<{
   profileData: Profile;
   uploadType: "single" | "multiple";
 }> = ({ profileData, uploadType }) => {
   const [isDesktopView] = useMediaQuery("(min-width: 1920px)");
-
+  const { sendMessage } = useWebSocket();
   const queryClient = useQueryClient();
   const history = useHistory();
   const { role } = useUserRole();
@@ -170,21 +171,15 @@ const UploadForm: React.FC<{
   const startFileScan = async () => {
     try {
       setIsLoading(true);
-      await API.post(API_PATH.API_PROJECT_SCAN, {
-        file_urls: [s3url],
-        project_name: name,
-        project_visibility: "public",
-        project_type: "new",
-      });
-
-      queryClient.invalidateQueries([
-        "all_scans",
-        {
-          pageNo: 1,
-          perPageCount: isDesktopView ? 20 : 12,
+      sendMessage({
+        type: "project_scan_initiate",
+        body: {
+          file_urls: [s3url],
+          project_name: name,
+          project_visibility: "public",
+          project_type: "new",
         },
-      ]);
-
+      });
       history.push("/projects");
       setTimeout(() => setIsLoading(false), 1000);
     } catch (e) {

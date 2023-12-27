@@ -126,64 +126,42 @@ const Scans: React.FC = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [projects]);
 
-  useEffect(() => {
-    let intervalId: NodeJS.Timeout;
+  // useEffect(() => {
+  //   let intervalId: NodeJS.Timeout;
 
-    const refetchTillScanComplete = () => {
-      if (
-        projectList &&
-        projectList.some(
-          ({ scan_details }) =>
-            scan_details.multi_file_scan_status === "scanning" ||
-            scan_details.multi_file_scan_status === "initialised"
-        )
-      ) {
-        if (getFeatureGateConfig().event_consumption_enabled) {
-          const scanningScanIds: string[] = projectList
-            .filter((project) =>
-              ["initialised", "downloaded", "scanning"].includes(
-                project.scan_details.multi_file_scan_status
-              )
-            )
-            .map((project) => {
-              return project.scan_details.scan_id;
-            });
-          setProjectsIdsInScanning(scanningScanIds);
-        } else {
-          intervalId = setInterval(async () => {
-            const { data } = await API.get(
-              `${API_PATH.API_GET_PROJECTS_BETA}?page=${1}&per_page=${
-                pagination.perPageCount
-              }`
-            );
-            const pList = [
-              ...data.data,
-              ...projectList.slice(pagination.perPageCount, projectList.length),
-            ];
-            setProjectList(pList);
-            if (
-              pList &&
-              pList.every(
-                ({ _latest_scan }) =>
-                  _latest_scan.multi_file_scan_status === "scan_done"
-              )
-            ) {
-              clearInterval(intervalId);
-            }
-          }, 5000);
-        }
-      }
-    };
+  //   const refetchTillScanComplete = () => {
+  //     if (
+  //       projectList &&
+  //       projectList.some(
+  //         ({ scan_details }) =>
+  //           scan_details.multi_file_scan_status === "scanning" ||
+  //           scan_details.multi_file_scan_status === "initialised"
+  //       )
+  //     ) {
+  //       if (getFeatureGateConfig().event_consumption_enabled) {
+  //         const scanningScanIds: string[] = projectList
+  //           .filter((project) =>
+  //             ["initialised", "downloaded", "scanning"].includes(
+  //               project.scan_details.multi_file_scan_status
+  //             )
+  //           )
+  //           .map((project) => {
+  //             return project.scan_details.scan_id;
+  //           });
+  //         setProjectsIdsInScanning(scanningScanIds);
+  //       }
+  //     }
+  //   };
 
-    if (projectList) {
-      refetchTillScanComplete();
-    }
-    return () => {
-      clearInterval(intervalId);
-    };
+  //   if (projectList) {
+  //     refetchTillScanComplete();
+  //   }
+  //   return () => {
+  //     clearInterval(intervalId);
+  //   };
 
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [projectList]);
+  //   // eslint-disable-next-line react-hooks/exhaustive-deps
+  // }, [projectList]);
 
   const onSearch = async () => {
     if (searchTerm !== undefined) {
