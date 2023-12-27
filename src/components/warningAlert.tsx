@@ -1,5 +1,5 @@
 import React from "react";
-import { Alert, AlertIcon } from "@chakra-ui/react";
+import { Alert, AlertIcon, Text } from "@chakra-ui/react";
 
 const WarningAlert: React.FC<{ msg: string }> = ({ msg }) => {
   return (
@@ -7,15 +7,15 @@ const WarningAlert: React.FC<{ msg: string }> = ({ msg }) => {
       width="100%"
       p={3}
       borderWidth={1}
-      background="yellow.600"
-      borderColor="yellow.900"
+      background="#FFF8ED"
+      borderColor="#FFC661"
       status="warning"
       borderRadius={10}
-      fontSize={"xs"}
-      fontWeight={300}
     >
       <AlertIcon />
-      {msg}
+      <Text fontSize={"xs"} fontWeight={300} color="#4E5D78">
+        {msg}
+      </Text>
     </Alert>
   );
 };

@@ -3,7 +3,6 @@ import React from "react";
 import GithubConnectAlert from "./githubConnectAlert";
 import Loader from "./styled-components/Loader";
 import { OauthName } from "common/values";
-import ErrorAlert from "./errorAlert";
 import WarningAlert from "./warningAlert";
 
 const ConfigSettings: React.FC<{
@@ -57,10 +56,10 @@ const ConfigSettings: React.FC<{
         <Switch
           size="lg"
           variant="brand"
-          isDisabled={isLoading || !webhookCreatePermission}
+          isDisabled={isLoading}
           isChecked={githubSync}
           onChange={() => {
-            if (isOauthIntegrated) {
+            if (isOauthIntegrated && webhookCreatePermission) {
               onToggleFunction();
             } else {
               setConnectAlert(!connectAlert);
@@ -69,17 +68,20 @@ const ConfigSettings: React.FC<{
         />
         {isLoading && <Loader size={25} />}
       </HStack>
-      {!isOauthIntegrated && connectAlert && (
+      {!isOauthIntegrated && connectAlert ? (
         <GithubConnectAlert
           msg={`You need to connect your ${OauthName[formType]} to enable webhooks`}
         />
-      )}
-      {!webhookCreatePermission && (
-        <WarningAlert
-          msg="You are not the owner of the repository for this project.
+      ) : (
+        !webhookCreatePermission &&
+        connectAlert && (
+          <WarningAlert
+            msg="You are not the owner of the repository for this project.
         To enable Git actions on the repository, ownership is required. Please ensure that you are logged in with the correct credentials or contact the repository owner to grant you the necessary permissions. "
-        />
+          />
+        )
       )}
+
       {/* <Text
         sx={{
           fontSize: "lg",
