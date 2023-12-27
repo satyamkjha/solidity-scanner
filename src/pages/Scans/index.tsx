@@ -18,17 +18,14 @@ import {
   Image,
 } from "@chakra-ui/react";
 // import Lottie from "lottie-react";
-import API from "helpers/api";
 import { Page, Pagination, ScanObj } from "common/types";
 import { useProfile } from "hooks/useProfile";
 import InfiniteScroll from "react-infinite-scroll-component";
-import { API_PATH } from "helpers/routeManager";
 import Loader from "components/styled-components/Loader";
 import { useUserRole } from "hooks/useUserRole";
 import { onSnapshot, doc, Unsubscribe } from "firebase/firestore";
 import { db } from "helpers/firebase";
 import {
-  getFeatureGateConfig,
   getAssetsURL,
   // getAssetsFromS3,
 } from "helpers/helperFunction";
@@ -66,24 +63,12 @@ const Scans: React.FC = () => {
     queryTerm,
     filterParam
   );
-  const [projectList, setProjectList] = useState<ScanObj[]>();
+  const [projectList, setProjectList] =
+    useState<{ scanItem: ScanObj; tempScanStatus: string }[]>();
   const [projectsMonitored, setProjectsMonitored] = useState(0);
   const [isProjectsLoading, setIsProjectsLoading] = useState(false);
-  const [projectsInScanning, setProjectsInScanning] = useState<
-    {
-      scanId: string;
-      scanStatus: string;
-    }[]
-  >([]);
-  const [projectsIdsInScanning, setProjectsIdsInScanning] = useState<string[]>(
-    []
-  );
 
-  const { messageQueue } = useWebSocket();
-
-  useEffect(() => {
-    console.log(messageQueue);
-  }, [messageQueue]);
+  const { messageQueue, updateMessageQueue } = useWebSocket();
 
   // const [ssIconAnimation, setSsIconAniamtion] = useState<any>(null);
 
@@ -109,13 +94,19 @@ const Scans: React.FC = () => {
 
   useEffect(() => {
     if (projects) {
+      let alteredPlist = projects.data.map((item) => ({
+        scanItem: item,
+        tempScanStatus: item.scan_details.multi_file_scan_status,
+      }));
+
       let pList =
         projectList && pagination.pageNo > 1
-          ? projectList.concat(projects.data)
-          : projects.data;
+          ? projectList.concat(alteredPlist)
+          : alteredPlist;
       const uniqueProjectList = pList.filter(
         (project, index, self) =>
-          index === self.findIndex((p) => p.scan_id === project.scan_id)
+          index ===
+          self.findIndex((p) => p.scanItem.scan_id === project.scanItem.scan_id)
       );
       setIsProjectsLoading(false);
       setProjectList(uniqueProjectList);
@@ -207,54 +198,6 @@ const Scans: React.FC = () => {
     else refetch();
   };
 
-  useEffect(() => {
-    let listeners: { [docId: string]: Unsubscribe } = {};
-    if (projectsIdsInScanning && projectsIdsInScanning.length) {
-      projectsIdsInScanning.forEach((scan_id) => {
-        listeners[scan_id] = onSnapshot(
-          doc(db, "scan_events", scan_id),
-          (doc) => {
-            if (doc.exists()) {
-              const eventData = doc.data();
-              if (
-                ["scan_done", "download_failed", "scan_failed"].includes(
-                  eventData.scan_status
-                )
-              ) {
-                // Unsubscribe and remove the listener
-                listeners[scan_id]();
-                delete listeners[scan_id];
-
-                fetchProjectList();
-              }
-              let newProjectsInScanning = projectsInScanning.filter(
-                (item) => scan_id !== item.scanId
-              );
-              setProjectsInScanning([
-                ...newProjectsInScanning,
-                { scanId: scan_id, scanStatus: eventData.scan_status },
-              ]);
-            }
-          },
-          (error) => {
-            console.log(error);
-          }
-        );
-      });
-    }
-
-    const filteredProjects = projectsInScanning.filter((project) =>
-      projectsIdsInScanning.includes(project.scanId)
-    );
-    setProjectsInScanning(filteredProjects);
-
-    return () => {
-      if (listeners)
-        Object.values(listeners).forEach((unsubscribe) => unsubscribe());
-    };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [projectsIdsInScanning]);
-
   const fetchMoreProjects = async () => {
     if (page && pagination.pageNo >= page.total_pages) {
       setHasMore(false);
@@ -269,12 +212,47 @@ const Scans: React.FC = () => {
   const updateProjectList = (scan_id: string) => {
     let newProjectList = projectList || [];
     newProjectList = newProjectList.filter((projectItem) => {
-      if (projectItem.scan_id === scan_id) return false;
+      if (projectItem.scanItem.scan_id === scan_id) return false;
       return true;
     });
     setProjectsMonitored(projectsMonitored - 1);
     setProjectList(newProjectList);
   };
+
+  useEffect(() => {
+    if (projectList) {
+      let updatedProjectList = projectList;
+      messageQueue.forEach((msgItem: any) => {
+        if (msgItem.type === "scan_status") {
+          updatedProjectList = updatedProjectList.map((item) => {
+            if (item.scanItem.scan_id === msgItem.payload.scan_id) {
+              return {
+                ...item,
+                tempScanStatus: msgItem.payload.scan_status,
+              };
+            } else return item;
+          });
+        } else if (msgItem.type === "scan_initiate") {
+          updatedProjectList = [
+            {
+              scanItem: msgItem.payload.scan_details,
+              tempScanStatus:
+                msgItem.payload.scan_details.scan_details
+                  .multi_file_scan_status,
+            },
+            ...updatedProjectList,
+          ];
+        }
+      });
+      setProjectList(updatedProjectList);
+      updateMessageQueue(
+        messageQueue.filter(
+          (msg: any) =>
+            msg.type !== "scan_status" || msg.type === "scan_initiate"
+        )
+      );
+    }
+  }, [messageQueue]);
 
   const paramList: {
     param: "gitlab" | "github" | "bitbucket" | "block" | "File Scan" | "";
@@ -516,12 +494,11 @@ const Scans: React.FC = () => {
           >
             {[...(projectList || [])].map((project) => (
               <ScanCard
-                key={project.scan_id}
-                scan={project}
+                key={project.scanItem.scan_id}
+                scan={project.scanItem}
+                tempScanStatus={project.tempScanStatus}
                 updateScanList={updateProjectList}
                 isViewer={role === "viewer"}
-                scanIdsInScanning={projectsIdsInScanning}
-                scanInProgress={projectsInScanning}
               />
             ))}
           </InfiniteScroll>

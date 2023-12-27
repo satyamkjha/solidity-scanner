@@ -40,25 +40,21 @@ import {
   getContractBlockChainLogoUrl,
 } from "helpers/helperFunction";
 import { scanStatesLabel } from "common/values";
+import { useWebSocket } from "hooks/useWebhookData";
 
 const ScanCard: React.FC<{
   scan: ScanObj;
+  tempScanStatus: string;
   // setIconCounter: Dispatch<SetStateAction<number>>;
   updateScanList: (project_id: string) => void;
   isViewer: boolean;
-  scanIdsInScanning: string[];
-  scanInProgress: {
-    scanId: string;
-    scanStatus: string;
-  }[];
   // ssIconAnimation: any;
 }> = ({
   scan,
   // setIconCounter,
   updateScanList,
   isViewer,
-  scanIdsInScanning,
-  scanInProgress,
+  tempScanStatus,
   // ssIconAnimation,
 }) => {
   const {
@@ -73,59 +69,29 @@ const ScanCard: React.FC<{
     project_id,
   } = scan.scan_details;
   const cancelRef = useRef<HTMLButtonElement | null>(null);
-
   const toast = useToast();
   const assetsURL = getAssetsURL();
   const history = useHistory();
   const [hover, setHover] = useState(false);
+  const { sendMessage } = useWebSocket();
 
   const deleteProject = async () => {
-    const url =
-      scan.scan_type === "project"
-        ? API_PATH.API_DELETE_PROJECT
-        : API_PATH.API_DELETE_BLOCK;
-    const { data } = await API.delete(url, {
-      data: {
+    sendMessage({
+      type: scan.scan_type === "project" ? "project_delete" : "block_delete",
+      body: {
         project_ids: [project_id],
       },
     });
-    if (data.status === "success") {
-      toast({
-        title: data.message,
-        status: "success",
-        duration: 2000,
-        isClosable: true,
-        position: "bottom",
-      });
-    } else {
-      toast({
-        title: data.message,
-        status: "error",
-        duration: 2000,
-        isClosable: true,
-        position: "bottom",
-      });
-    }
+    toast({
+      title: "Scan has been deleted",
+      status: "success",
+      duration: 2000,
+      isClosable: true,
+      position: "bottom",
+    });
     onClose();
     updateScanList(scan_id);
   };
-
-  const [scanStatus, setScanStatus] = useState("");
-
-  useEffect(() => {
-    if (
-      scanInProgress &&
-      scanIdsInScanning &&
-      scanIdsInScanning.includes(scan.scan_id)
-    ) {
-      const scanObj = scanInProgress.find(
-        (item) => item.scanId === scan.scan_id
-      );
-      if (scanObj) setScanStatus(scanObj.scanStatus);
-      else setScanStatus("initialised");
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [scanIdsInScanning, scanInProgress]);
 
   const { isOpen, onClose, onOpen } = useDisclosure();
 
@@ -287,7 +253,7 @@ const ScanCard: React.FC<{
               )} */}
             <LogoIcon size={15} />
             <Text mx={2} fontSize="sm">
-              {scanStatesLabel[scanStatus] || scanStatesLabel["scanning"]}
+              {scanStatesLabel[tempScanStatus] || scanStatesLabel["scanning"]}
             </Text>
           </Flex>
           <Progress value={20} isIndeterminate size="xs" />
