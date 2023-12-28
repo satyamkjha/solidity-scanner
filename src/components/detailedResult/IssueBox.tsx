@@ -36,6 +36,7 @@ const IssueBox: React.FC<{
   updateBugHashList: any;
   setFiles: Dispatch<SetStateAction<FilesState | null>>;
   updateBugStatus: any;
+  restrictedBugIds: string[];
   project_url?: string;
   contract_url?: string;
   contract_platform?: string;
@@ -61,6 +62,7 @@ const IssueBox: React.FC<{
   contract_platform,
   branchName,
   contract_address,
+  restrictedBugIds,
   isViewer,
 }) => {
   const assetsURL = getAssetsURL();
@@ -297,6 +299,7 @@ const IssueBox: React.FC<{
                     selectedIssues={selectedIssues}
                     selectedBugs={selectedBugs}
                     updateBugStatus={updateBugStatus}
+                    restrictedBugIds={restrictedBugIds}
                     project_url={project_url}
                     contract_url={contract_url}
                     contract_platform={contract_platform}

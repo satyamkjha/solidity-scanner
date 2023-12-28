@@ -26,8 +26,9 @@ export const WebSocketProvider = ({ serverUrl, children }) => {
   const { profileData } = useUserRole();
   const [webSocket, setWebSocket] = useState(null);
   const toast = useToast();
-  const [tempMessageQueue, setTempMessageQueue] = useState([]);
-  const [messageQueue, setMessageQueue] = useState([]);
+  const emptyArray = [];
+  const [tempMessageQueue, setTempMessageQueue] = useState(emptyArray);
+  const [messageQueue, setMessageQueue] = useState(emptyArray);
 
   useEffect(() => {
     const initializeWebSocket = () => {
@@ -93,11 +94,11 @@ export const WebSocketProvider = ({ serverUrl, children }) => {
   }, [serverUrl]);
 
   const processQueue = () => {
-    setMessageQueue((prevQueue) => [...prevQueue, ...tempMessageQueue]);
-    setTempMessageQueue([]);
+    setMessageQueue([...messageQueue, ...tempMessageQueue]);
+    setTempMessageQueue(emptyArray);
   };
 
-  const debouncedMsgInfusion = debounce(processQueue, 400);
+  const debouncedMsgInfusion = debounce(processQueue, 500);
 
   useEffect(() => {
     if (tempMessageQueue.length !== 0) {

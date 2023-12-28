@@ -19,6 +19,7 @@ type MultifileIssuesProps = {
   files: FilesState | null;
   setFiles: Dispatch<SetStateAction<FilesState | null>>;
   selectedBugs: string[];
+  restrictedBugIds: string[];
   selectedIssues: Issues[];
   setSelectedIssues: Dispatch<SetStateAction<Issues[]>>;
   confidence: boolean[];
@@ -51,6 +52,7 @@ const MultifileIssues: React.FC<MultifileIssuesProps> = ({
   bugStatusFilter,
   details_enabled,
   updateBugStatus,
+  restrictedBugIds,
   project_url,
   contract_url,
   contract_platform,
@@ -157,6 +159,7 @@ const MultifileIssues: React.FC<MultifileIssuesProps> = ({
                     setSelectedIssues={setSelectedIssues}
                     bugStatusFilter={bugStatusFilter}
                     updateBugStatus={updateBugStatus}
+                    restrictedBugIds={restrictedBugIds}
                     project_url={project_url}
                     contract_url={contract_url}
                     contract_platform={contract_platform}

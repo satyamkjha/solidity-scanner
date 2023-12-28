@@ -11,6 +11,7 @@ import {
   Tooltip,
   useDisclosure,
   Button,
+  useToast,
 } from "@chakra-ui/react";
 import { FilesState, Issues } from "../../common/types";
 import { issueActions } from "../../common/values";
@@ -39,6 +40,7 @@ export const FileExplorerSection: React.FC<{
   selectedIssues: Issues[];
   selectedBugs: string[];
   updateBugStatus: any;
+  restrictedBugIds: string[];
   setFiles: Dispatch<SetStateAction<FilesState | null>>;
   project_url?: string;
   contract_url?: string;
@@ -55,6 +57,7 @@ export const FileExplorerSection: React.FC<{
   selectedBugs,
   updateBugStatus,
   setFiles,
+  restrictedBugIds,
   project_url,
   contract_url,
   contract_platform,
@@ -66,7 +69,7 @@ export const FileExplorerSection: React.FC<{
   const { isOpen, onClose, onOpen } = useDisclosure();
   const [bugStatus, setBugStatus] = useState<string | null>(null);
   const [isDisabled, setIsDisabled] = useState<boolean>(true);
-
+  const toast = useToast();
   const [openIssueBox, setOpenIssueBox] = React.useState(true);
   const [tabIndex, setTabIndex] = React.useState(0);
 
@@ -130,11 +133,23 @@ export const FileExplorerSection: React.FC<{
               isDisabled={isDisabled || isViewer}
               onChange={(newValue: any) => {
                 if (newValue) {
-                  if (newValue.value === "wont_fix") {
-                    onOpen();
-                    setBugStatus(newValue.value);
+                  if (
+                    selectedBugs.some((bug) => restrictedBugIds.includes(bug))
+                  ) {
+                    toast({
+                      description:
+                        "Bug Status update in progress for the selected bugs. Please try after some time.",
+                      status: "error",
+                      duration: 3000,
+                      isClosable: true,
+                    });
                   } else {
-                    updateBugStatus(newValue.value);
+                    if (newValue.value === "wont_fix") {
+                      onOpen();
+                      setBugStatus(newValue.value);
+                    } else {
+                      updateBugStatus(newValue.value);
+                    }
                   }
                 }
               }}

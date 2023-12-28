@@ -36,6 +36,7 @@ import {
 } from "helpers/helperFunction";
 import { FileIssue } from "components/icons";
 import { DetailResultContext } from "common/contexts";
+import { useWebSocket } from "hooks/useWebhookData";
 
 const MultifileResult: React.FC<{
   type: "block" | "project";
@@ -150,34 +151,73 @@ const MultifileResult: React.FC<{
   const toast = useToast();
 
   const [isDesktopView] = useMediaQuery("(min-width: 1350px)");
+  const { sendMessage, messageQueue, updateMessageQueue } = useWebSocket();
+
+  const [restrictedBugIds, setRestrictedBugIds] = useState<string[]>([]);
+
+  useEffect(() => {
+    if (
+      messageQueue.length > 0 &&
+      messageQueue.some((msgItem: any) => {
+        if (msgItem.type) {
+          if (msgItem.msgItem.type === "scan_update") return true;
+          else return false;
+        } else return false;
+      })
+    ) {
+      let tempRestrictedBugIds = restrictedBugIds;
+      let tempMessageQueue = messageQueue;
+      tempMessageQueue = tempMessageQueue.map((msgItem: any) => {
+        if (msgItem.type === "scan_update") {
+          tempRestrictedBugIds = tempRestrictedBugIds.filter((bugId) =>
+            msgItem.payload.scan_updates.bug_ids.includes(bugId)
+          );
+        } else return msgItem;
+      });
+      updateMessageQueue(tempMessageQueue);
+    }
+  }, [messageQueue]);
 
   const updateBugStatus = async (action: string, comment?: string) => {
     if (files) {
       if (action === "create_github_issue") {
         createGithubIssue();
       } else {
-        const { data } = await API.post(API_PATH.API_UPDATE_BUG_STATUS, {
-          bug_ids: selectedBugs,
-          scan_id: scanId,
-          project_id: projectId,
-          bug_status: action,
-          comment: comment,
-          scan_type: type,
+        sendMessage({
+          type: "scan_update",
+          body: {
+            bug_ids: selectedBugs,
+            scan_id: scanId,
+            project_id: projectId,
+            bug_status: action,
+            comment: comment,
+            scan_type: type,
+          },
         });
-        if (data.status === "success") {
-          toast({
-            title: "Bug Status Updated",
-            description: data.message,
-            status: "success",
-            duration: 3000,
-            isClosable: true,
+        toast({
+          title: "Bug Status Updated",
+          status: "success",
+          duration: 3000,
+          isClosable: true,
+        });
+        setRestrictedBugIds([...restrictedBugIds, ...selectedBugs]);
+
+        let tempIssues = issues.map((item) => {
+          let tempArray = item.metric_wise_aggregated_findings;
+          tempArray = tempArray.map((arrItem) => {
+            if (selectedBugs.includes(arrItem.bug_hash)) {
+              return {
+                ...arrItem,
+                bug_status: action,
+              };
+            } else return arrItem;
           });
-        }
-        setFiles({
-          ...files,
-          bug_status: action,
-          comment: comment,
+          return {
+            ...item,
+            metric_wise_aggregated_findings: tempArray,
+          };
         });
+        setIssues(tempIssues);
       }
       setSelectedBugs([]);
     }
@@ -417,7 +457,17 @@ const MultifileResult: React.FC<{
                 styles={customStylesForTakeAction}
                 isDisabled={isDisabled || isViewer}
                 onChange={(newValue: any) => {
-                  if (newValue) {
+                  if (
+                    selectedBugs.some((bug) => restrictedBugIds.includes(bug))
+                  ) {
+                    toast({
+                      description:
+                        "Bug Status update in progress for the selected bugs. Please try after some time.",
+                      status: "error",
+                      duration: 3000,
+                      isClosable: true,
+                    });
+                  } else {
                     if (newValue.value === "wont_fix") {
                       onOpen();
                       setBugStatus(newValue.value);
@@ -474,6 +524,7 @@ const MultifileResult: React.FC<{
               confidence={confidence}
               vulnerability={vulnerability}
               updateBugStatus={updateBugStatus}
+              restrictedBugIds={restrictedBugIds}
               bugStatusFilter={bugStatusFilter}
               project_url={project_url}
               contract_url={contract_url}
@@ -494,6 +545,7 @@ const MultifileResult: React.FC<{
             selectedIssues={selectedIssues}
             selectedBugs={selectedBugs}
             updateBugStatus={updateBugStatus}
+            restrictedBugIds={restrictedBugIds}
             project_url={project_url}
             contract_url={contract_url}
             contract_platform={contract_platform}

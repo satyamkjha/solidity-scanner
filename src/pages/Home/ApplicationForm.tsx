@@ -89,7 +89,6 @@ const ApplicationForm: React.FC<{
     try {
       setIsLoading(true);
       const skipFilePaths = getSkipFilePaths(repoTreeUP);
-
       sendMessage({
         type: "project_scan_initiate",
         body: {

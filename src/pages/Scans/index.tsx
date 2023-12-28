@@ -220,10 +220,18 @@ const Scans: React.FC = () => {
   };
 
   useEffect(() => {
-    if (projectList) {
+    console.log(messageQueue, "looping again");
+    if (
+      projectList &&
+      messageQueue.length > 0 &&
+      messageQueue.some((msgItem: any) =>
+        ["scan_initiate", "scan_status", "scan_complete"].includes(msgItem.type)
+      )
+    ) {
       let updatedProjectList = projectList;
       messageQueue.forEach((msgItem: any) => {
         if (msgItem.type === "scan_status") {
+          console.log(msgItem, "when scan status update");
           updatedProjectList = updatedProjectList.map((item) => {
             if (item.scanItem.scan_id === msgItem.payload.scan_id) {
               return {
@@ -233,24 +241,29 @@ const Scans: React.FC = () => {
             } else return item;
           });
         } else if (msgItem.type === "scan_initiate") {
+          console.log(msgItem, "when scan is initialised");
           updatedProjectList = [
             {
-              scanItem: msgItem.payload.scan_details,
-              tempScanStatus:
-                msgItem.payload.scan_details.scan_details
-                  .multi_file_scan_status,
+              scanItem: {
+                scan_id: msgItem.payload.scan_details.scan_id,
+                scan_type: msgItem.payload.scan_details.scan_type,
+                scan_details: msgItem.payload.scan_details,
+              },
+              tempScanStatus: "initialised",
             },
             ...updatedProjectList,
           ];
         }
       });
       setProjectList(updatedProjectList);
-      updateMessageQueue(
-        messageQueue.filter(
-          (msg: any) =>
-            msg.type !== "scan_status" || msg.type === "scan_initiate"
-        )
+      let tempMsgQueue = messageQueue;
+      tempMsgQueue = tempMsgQueue.filter(
+        (msg: any) => msg.type !== "scan_status"
       );
+      tempMsgQueue = tempMsgQueue.filter(
+        (msg: any) => msg.type !== "scan_initiate"
+      );
+      updateMessageQueue(tempMsgQueue);
     }
   }, [messageQueue]);
 

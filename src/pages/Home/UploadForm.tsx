@@ -171,6 +171,7 @@ const UploadForm: React.FC<{
   const startFileScan = async () => {
     try {
       setIsLoading(true);
+
       sendMessage({
         type: "project_scan_initiate",
         body: {
