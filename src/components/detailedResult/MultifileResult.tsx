@@ -156,24 +156,25 @@ const MultifileResult: React.FC<{
   const [restrictedBugIds, setRestrictedBugIds] = useState<string[]>([]);
 
   useEffect(() => {
+    console.log(messageQueue);
     if (
       messageQueue.length > 0 &&
-      messageQueue.some((msgItem: any) => {
-        if (msgItem.type) {
-          if (msgItem.msgItem.type === "scan_update") return true;
-          else return false;
-        } else return false;
-      })
+      messageQueue.some((msgItem: any) =>
+        ["scan_update"].includes(msgItem.type)
+      )
     ) {
       let tempRestrictedBugIds = restrictedBugIds;
-      let tempMessageQueue = messageQueue;
-      tempMessageQueue = tempMessageQueue.map((msgItem: any) => {
-        if (msgItem.type === "scan_update") {
+
+      messageQueue.map((msgItem: any) => {
+        if (msgItem.type && msgItem.type === "scan_update") {
           tempRestrictedBugIds = tempRestrictedBugIds.filter((bugId) =>
             msgItem.payload.scan_updates.bug_ids.includes(bugId)
           );
         } else return msgItem;
       });
+      let tempMessageQueue = messageQueue.filter(
+        (item: any) => item.type !== "scan_update"
+      );
       updateMessageQueue(tempMessageQueue);
     }
   }, [messageQueue]);
