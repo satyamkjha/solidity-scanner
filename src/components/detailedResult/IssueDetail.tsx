@@ -33,8 +33,10 @@ const IssueDetail: React.FC<{
   context: string;
   description_details: any;
   fullScreen?: boolean;
+  setRestrictedBugIds: React.Dispatch<React.SetStateAction<string[]>>;
   handleTabsChange?: (index: number) => void;
   tabIndex?: number;
+  restrictedBugIds: string[];
   setFiles: Dispatch<SetStateAction<FilesState | null>>;
 }> = ({
   type,
@@ -46,6 +48,8 @@ const IssueDetail: React.FC<{
   setFiles,
   fullScreen,
   handleTabsChange,
+  restrictedBugIds,
+  setRestrictedBugIds,
   tabIndex,
 }) => {
   const { data, isLoading } = useIssueDetail(
@@ -91,36 +95,38 @@ const IssueDetail: React.FC<{
   }, [tabIndex]);
 
   const updateComment = async () => {
-    if (comment && comment !== "" && !isCommentUpdateRestricted) {
-      sendMessage({
-        type: "scan_update",
-        body: {
-          bug_ids: [files?.bug_hash],
-          scan_id: scanId,
-          project_id: projectId,
-          bug_status: files?.bug_status,
+    if (comment && comment !== "") {
+      if (restrictedBugIds.includes(files.bug_hash)) {
+        toast({
+          title: "Comment Update in Progress. Please try after some time",
+          status: "error",
+          duration: 3000,
+          isClosable: true,
+        });
+      } else {
+        sendMessage({
+          type: "scan_update",
+          body: {
+            bug_ids: [files?.bug_hash],
+            scan_id: scanId,
+            project_id: projectId,
+            bug_status: files?.bug_status,
+            comment: comment,
+            scan_type: type,
+          },
+        });
+        setRestrictedBugIds([...restrictedBugIds, files.bug_hash]);
+        toast({
+          title: "Comment Updated",
+          status: "success",
+          duration: 3000,
+          isClosable: true,
+        });
+        setFiles({
+          ...files,
           comment: comment,
-          scan_type: type,
-        },
-      });
-      setIsCommentUpdateRestricted(true);
-      toast({
-        title: "Comment Updated",
-        status: "success",
-        duration: 3000,
-        isClosable: true,
-      });
-      setFiles({
-        ...files,
-        comment: comment,
-      });
-    } else {
-      toast({
-        title: "Comment Update in Progress. Please try after some time",
-        status: "error",
-        duration: 3000,
-        isClosable: true,
-      });
+        });
+      }
     }
   };
 

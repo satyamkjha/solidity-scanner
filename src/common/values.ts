@@ -945,6 +945,7 @@ export const attackMethodColor: {
 export const scanStatesLabel: {
   [key: string]: string;
 } = {
+  scan_initiate: "Scan in Queue",
   scan_done: "",
   initialised: "Downloading Code...",
   downloaded: "Code Downloaded...",

@@ -8,11 +8,10 @@ import { Helmet } from "react-helmet";
 import { QueryClient, QueryClientProvider } from "react-query";
 import { ReactQueryDevtools } from "react-query/devtools";
 import { ChakraProvider } from "@chakra-ui/react";
-
 import Routes from "./routes";
 import { theme } from "./theme";
 import { MetaMaskProvider } from "metamask-react";
-
+import { WebSocketProvider } from "hooks/useWebhookData";
 import { Global, css } from "@emotion/react";
 import { ConfigProvider } from "hooks/useConfig";
 
@@ -36,9 +35,7 @@ export const App: React.FC = () => {
   return (
     <Suspense fallback="">
       <ConfigProvider>
-        
-          <AppContent />
-        
+        <AppContent />
       </ConfigProvider>
     </Suspense>
   );
@@ -90,13 +87,15 @@ const AppContent: React.FC = () => {
         </Helmet>
       )}
       <QueryClientProvider client={queryClient}>
-        <ChakraProvider theme={theme}>
-          <MetaMaskProvider>
-            <Global styles={GlobalStyles} />
-            <Routes />
-          </MetaMaskProvider>
-        </ChakraProvider>
-        <ReactQueryDevtools initialIsOpen={false} />
+        <WebSocketProvider>
+          <ChakraProvider theme={theme}>
+            <MetaMaskProvider>
+              <Global styles={GlobalStyles} />
+              <Routes />
+            </MetaMaskProvider>
+          </ChakraProvider>
+          <ReactQueryDevtools initialIsOpen={false} />
+        </WebSocketProvider>
       </QueryClientProvider>
     </>
   );

@@ -30,6 +30,7 @@ import { QSScanResultSkeleton } from "components/quickscan/QSScanResultSkeleton"
 
 import ssIconAnimation from "../../common/ssIconAnimation.json";
 import Lottie from "lottie-react";
+import { useWebSocket } from "hooks/useWebhookData";
 
 const RecentScans = lazy(() => import("components/quickscan/RecentScans"));
 const QuickScanDetails = lazy(
@@ -38,6 +39,8 @@ const QuickScanDetails = lazy(
 
 const QuickScan: React.FC = () => {
   const toast = useToast();
+
+  const { sendMessage, messageQueue } = useWebSocket();
 
   const [isLoading, setIsLoading] = React.useState<boolean>(false);
   const [scanReport, setScanReport] = React.useState<QuickScanResult | null>(
@@ -111,42 +114,34 @@ const QuickScan: React.FC = () => {
     }>(API_PATH.API_GET_CONTRACT_STATUS, req, {
       headers: reqHeaders1,
     })
-      .then(
-        (res) => {
-          if (res.data.contract_verified) {
-            let api_url = `${
-              API_PATH.API_QUICK_SCAN_SSE
-            }?contract_address=${address}&contract_platform=${platform}&${
-              platform === "buildbear" ? "node_id" : "contract_chain"
-            }=${chain}`;
-
-            if (ref) {
-              api_url = api_url + `&ref=${ref}`;
-            }
-            API.get(api_url, {
-              headers: reqHeaders2,
-            })
-              .then(
-                (res) => {
-                  if (res.status === 200) {
-                    setScanReport(res.data.scan_report);
-                  }
-                },
-                () => {
-                  return;
+      .then((res) => {
+        if (res.data.contract_verified) {
+          let req: any = {
+            contract_address: address,
+            contract_platform: platform,
+          };
+          req =
+            platform === "buildbear"
+              ? {
+                  ...req,
+                  node_id: chain,
                 }
-              )
-              .finally(() => {
-                setIsLoading(false);
-                setTempQSData(null);
-              });
+              : {
+                  ...req,
+                  contract_chain: chain,
+                };
+
+          if (ref) {
+            req = { ...req, ref: ref };
           }
-        },
-        () => {
-          setIsLoading(false);
-          setTempQSData(null);
+
+          sendMessage({
+            type: "quick_scan_initiate",
+            body: req,
+          });
+          
         }
-      )
+      })
       .catch(() => {
         setIsLoading(false);
         setTempQSData(null);

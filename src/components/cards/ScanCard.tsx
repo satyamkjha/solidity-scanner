@@ -58,6 +58,7 @@ const ScanCard: React.FC<{
   // ssIconAnimation,
 }) => {
   const {
+    project_name,
     scan_id,
     contract_address,
     contractname,
@@ -128,7 +129,7 @@ const ScanCard: React.FC<{
         justifyContent="space-between"
       >
         <Box ml={4} w="70%">
-          <Text isTruncated>{contract_address}</Text>
+          <Text isTruncated>{project_name || contract_address}</Text>
           <Text sx={{ fontSize: "xs", color: "subtle" }}>
             Last scanned {timeSince(new Date(scan.scan_details._updated))}
           </Text>
@@ -230,7 +231,7 @@ const ScanCard: React.FC<{
             view={"scans"}
           />
         </Flex>
-      ) : ["scanning", "initialised", "downloaded"].includes(
+      ) : ["scanning", "initialised", "downloaded", "scan_initiate"].includes(
           multi_file_scan_status
         ) ? (
         <Box mb={10} p={5} w="100%">
@@ -300,9 +301,8 @@ const ScanCard: React.FC<{
             <AlertDialogBody>
               Are you sure you want to delete{" "}
               <Box as="span" sx={{ fontWeight: 600 }}>
-                {scan.scan_details.project_name
-                  ? scan.scan_details.project_name
-                  : scan.scan_details.contract_address}
+                {scan.scan_details.project_name ||
+                  scan.scan_details.contract_address}
               </Box>
             </AlertDialogBody>
 

@@ -68,7 +68,7 @@ const Profile: React.FC = () => {
   const [firstName, setFirstName] = useState("");
   const [updateLoading, setUpdateLoading] = useState(false);
 
-  const { data, refetch: refetchProfile } = useProfile();
+  const { data, refetch: refetchProfile } = useProfile(true);
   const queryClient = useQueryClient();
 
   const [isOwner, setIsOwner] = useState(true);

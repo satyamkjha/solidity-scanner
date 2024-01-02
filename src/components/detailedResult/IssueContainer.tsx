@@ -45,6 +45,7 @@ const IssueContainer: React.FC<{
   bugStatusFilter: boolean[];
   updateBugStatus: any;
   restrictedBugIds: string[];
+  setRestrictedBugIds: React.Dispatch<React.SetStateAction<string[]>>;
   project_url?: string;
   contract_url?: string;
   contract_platform?: string;
@@ -75,6 +76,7 @@ const IssueContainer: React.FC<{
   branchName,
   contract_address,
   isViewer,
+  setRestrictedBugIds,
   scrollIntoView,
 }) => {
   let pendingFixes;
@@ -310,6 +312,7 @@ const IssueContainer: React.FC<{
                             selectedIssues={selectedIssues}
                             selectedBugs={selectedBugs}
                             setFiles={setFiles}
+                            setRestrictedBugIds={setRestrictedBugIds}
                             updateBugHashList={updateBugHashList}
                             updateBugStatus={updateBugStatus}
                             restrictedBugIds={restrictedBugIds}

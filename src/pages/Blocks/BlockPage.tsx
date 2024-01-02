@@ -60,7 +60,7 @@ const BlockPage: React.FC = () => {
   const [reportingStatus, setReportingStatus] = useState<string>("");
   const [publishStatus, setPublishStatus] = useState("");
 
-  const { data: profile, isLoading: isProfileLoading } = useProfile();
+  const { data: profile, isLoading: isProfileLoading } = useProfile(true);
   const { data: reportList, refetch: refetchReportList } = useReports(
     "block",
     scanData?.scan_report.project_id

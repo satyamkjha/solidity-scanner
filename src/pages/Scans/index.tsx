@@ -82,7 +82,7 @@ const Scans: React.FC = () => {
   //   setSsIconAniamtion(jsonData);
   // };
 
-  const { data: profileData, refetch: refetchProfile } = useProfile();
+  const { data: profileData, refetch: refetchProfile } = useProfile(true);
 
   useEffect(() => {
     if (profileData) {
@@ -234,10 +234,20 @@ const Scans: React.FC = () => {
           console.log(msgItem, "when scan status update");
           updatedProjectList = updatedProjectList.map((item) => {
             if (item.scanItem.scan_id === msgItem.payload.scan_id) {
-              return {
-                ...item,
-                tempScanStatus: msgItem.payload.scan_status,
-              };
+              if (msgItem.payload.scan_status === "scan_done") {
+                return {
+                  scanItem: {
+                    scan_id: msgItem.payload.scan_id,
+                    scan_type: msgItem.payload.scan_details.scan_type,
+                    scan_details: msgItem.payload.scan_details,
+                  },
+                  tempScanStatus: msgItem.payload.scan_status,
+                };
+              } else
+                return {
+                  ...item,
+                  tempScanStatus: msgItem.payload.scan_status,
+                };
             } else return item;
           });
         } else if (msgItem.type === "scan_initiate") {
@@ -249,7 +259,7 @@ const Scans: React.FC = () => {
                 scan_type: msgItem.payload.scan_details.scan_type,
                 scan_details: msgItem.payload.scan_details,
               },
-              tempScanStatus: "initialised",
+              tempScanStatus: "scan_initiate",
             },
             ...updatedProjectList,
           ];

@@ -48,6 +48,7 @@ export const FileExplorerSection: React.FC<{
   branchName?: string;
   contract_address?: string;
   isViewer: boolean;
+  setRestrictedBugIds: React.Dispatch<React.SetStateAction<string[]>>;
 }> = ({
   type,
   is_latest_scan,
@@ -64,6 +65,7 @@ export const FileExplorerSection: React.FC<{
   branchName,
   contract_address,
   isViewer,
+  setRestrictedBugIds,
 }) => {
   const assetsURL = getAssetsURL();
   const { isOpen, onClose, onOpen } = useDisclosure();
@@ -250,11 +252,13 @@ export const FileExplorerSection: React.FC<{
             setOpenIssueBox={setOpenIssueBox}
             files={files}
             type={type}
+            restrictedBugIds={restrictedBugIds}
             setFiles={setFiles}
             project_url={project_url}
             contract_url={contract_url}
             contract_platform={contract_platform}
             branchName={branchName}
+            setRestrictedBugIds={setRestrictedBugIds}
             contract_address={contract_address}
           />
         ) : (

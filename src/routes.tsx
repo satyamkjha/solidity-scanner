@@ -22,7 +22,6 @@ import { OrgUserRole } from "common/types";
 import { useUserOrgProfile } from "hooks/useUserOrgProfile";
 import { UserRoleProvider } from "hooks/useUserRole";
 import { onLogout } from "common/functions";
-import { WebSocketProvider } from "hooks/useWebhookData";
 
 const Landing = lazy(() =>
   lazyRetry(
@@ -307,45 +306,43 @@ const Routes: React.FC = () => {
             </PublicLayout>
           </Route>
           <UserRoleProvider>
-            <WebSocketProvider serverUrl="wss://api-ws-stage.solidityscan.com/stage/">
-              <Layout>
-                <Suspense fallback="">
-                  <Switch>
-                    <PrivateRoute exact path="/home">
-                      <Home />
-                    </PrivateRoute>
-                    <PrivateRoute exact path="/profile">
-                      <Profile />
-                    </PrivateRoute>
-                    <PrivateRoute exact path="/projects">
-                      <Scans />
-                    </PrivateRoute>
+            <Layout>
+              <Suspense fallback="">
+                <Switch>
+                  <PrivateRoute exact path="/home">
+                    <Home />
+                  </PrivateRoute>
+                  <PrivateRoute exact path="/profile">
+                    <Profile />
+                  </PrivateRoute>
+                  <PrivateRoute exact path="/projects">
+                    <Scans />
+                  </PrivateRoute>
 
-                    <PrivateRoute path="/projects/:scanId/:projectId">
-                      <ProjectPage />
-                    </PrivateRoute>
+                  <PrivateRoute path="/projects/:scanId/:projectId">
+                    <ProjectPage />
+                  </PrivateRoute>
 
-                    <PrivateRoute exact path="/blocks/:scanId/:projectId">
-                      <BlockPage />
-                    </PrivateRoute>
-                    <PrivateRoute exact path="/integrations">
-                      <Integrations />
-                    </PrivateRoute>
-                    <PrivateRoute exact path="/private-api">
-                      <PrivateApi />
-                    </PrivateRoute>
-                    <PrivateRoute exact path="/organisation">
-                      <Organisation />
-                    </PrivateRoute>
+                  <PrivateRoute exact path="/blocks/:scanId/:projectId">
+                    <BlockPage />
+                  </PrivateRoute>
+                  <PrivateRoute exact path="/integrations">
+                    <Integrations />
+                  </PrivateRoute>
+                  <PrivateRoute exact path="/private-api">
+                    <PrivateApi />
+                  </PrivateRoute>
+                  <PrivateRoute exact path="/organisation">
+                    <Organisation />
+                  </PrivateRoute>
 
-                    <PrivateRoute exact path="/billing">
-                      <Billing />
-                    </PrivateRoute>
-                    <Route path="*" component={CustomPageNotFound} />
-                  </Switch>
-                </Suspense>
-              </Layout>
-            </WebSocketProvider>
+                  <PrivateRoute exact path="/billing">
+                    <Billing />
+                  </PrivateRoute>
+                  <Route path="*" component={CustomPageNotFound} />
+                </Switch>
+              </Suspense>
+            </Layout>
           </UserRoleProvider>
         </Switch>
       </ErrorHandler>
@@ -460,7 +457,7 @@ const CheckOrgRole: React.FC<{ roles: OrgUserRole[] }> = ({
   children,
   roles,
 }) => {
-  const { data: profile } = useProfile();
+  const { data: profile } = useProfile(true);
   const { data: orgProfile } = useUserOrgProfile(
     profile?.logged_in_via === "org_login"
   );

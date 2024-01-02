@@ -3,6 +3,7 @@ import reCAPTCHA from "helpers/reCAPTCHA";
 import { Profile, PricingData, Finding } from "common/types";
 import { platformVsChains, contractChain } from "common/values";
 
+
 let configValue: any = null;
 
 export const setGlobalConfig = (config: any) => {

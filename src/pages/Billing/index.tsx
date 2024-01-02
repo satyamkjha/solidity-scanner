@@ -26,7 +26,7 @@ import { useProfile } from "hooks/useProfile";
 const Billing: React.FC = ({}) => {
   const [planBillingCycle, setPlanBillingCycle] = useState("");
   const pricingRef = useRef<HTMLDivElement>(null);
-  const { data: profileData, refetch: refetchProfile } = useProfile();
+  const { data: profileData, refetch: refetchProfile } = useProfile(true);
   const promoCodeEnabled = false;
 
   const [pageNo, setPageNo] = useState(1);

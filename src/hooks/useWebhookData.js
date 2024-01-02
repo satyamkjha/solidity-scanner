@@ -10,6 +10,11 @@ import React, {
 import { useToast } from "@chakra-ui/react";
 import { debounce } from "lodash";
 import { useUserRole } from "./useUserRole";
+import { useProfile } from "./useProfile";
+import Auth from "helpers/auth";
+
+export const WSS_URL_DEV = process.env.REACT_APP_WSS_URL_DEV;
+export const WSS_URL_PROD = process.env.REACT_APP_WSS_URL_PROD;
 
 const WebSocketContext = createContext();
 
@@ -22,8 +27,8 @@ export const useWebSocket = () => {
   return context;
 };
 
-export const WebSocketProvider = ({ serverUrl, children }) => {
-  const { profileData } = useUserRole();
+export const WebSocketProvider = ({ children }) => {
+  const { data: profileData } = useProfile(Auth.isUserAuthenticated());
   const [webSocket, setWebSocket] = useState(null);
   const toast = useToast();
   const emptyArray = [];
@@ -31,9 +36,13 @@ export const WebSocketProvider = ({ serverUrl, children }) => {
   const [messageQueue, setMessageQueue] = useState(emptyArray);
 
   useEffect(() => {
-    const initializeWebSocket = () => {
+    const initializeWebSocket = (withAuth) => {
+      console.log("init_ws");
+
       const ws = new WebSocket(
-        `wss://api-ws-stage.solidityscan.com/stage?auth_token=${profileData.auth_token}`
+        `${process.env.NODE_ENV === "production" ? WSS_URL_PROD : WSS_URL_DEV}${
+          withAuth ? `?auth_token=${profileData.auth_token}dx` : ""
+        }`
       );
       setWebSocket(ws);
 
@@ -90,8 +99,16 @@ export const WebSocketProvider = ({ serverUrl, children }) => {
       };
     };
 
-    initializeWebSocket();
-  }, [serverUrl]);
+    if (Auth.isUserAuthenticated) {
+      if (profileData) {
+        initializeWebSocket(true);
+      }
+    } else {
+      initializeWebSocket(false);
+    }
+
+    console.log(Auth.isUserAuthenticated());
+  }, [profileData, Auth.isUserAuthenticated()]);
 
   const processQueue = () => {
     setMessageQueue([...messageQueue, ...tempMessageQueue]);

@@ -526,6 +526,7 @@ const MultifileResult: React.FC<{
               vulnerability={vulnerability}
               updateBugStatus={updateBugStatus}
               restrictedBugIds={restrictedBugIds}
+              setRestrictedBugIds={setRestrictedBugIds}
               bugStatusFilter={bugStatusFilter}
               project_url={project_url}
               contract_url={contract_url}
@@ -542,6 +543,7 @@ const MultifileResult: React.FC<{
             is_latest_scan={is_latest_scan}
             files={files}
             setFiles={setFiles}
+            setRestrictedBugIds={setRestrictedBugIds}
             details_enabled={details_enabled}
             selectedIssues={selectedIssues}
             selectedBugs={selectedBugs}

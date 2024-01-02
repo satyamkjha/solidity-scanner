@@ -171,7 +171,7 @@ const ScanDetails: React.FC<{
     "project",
     projectId
   );
-  const { data: profile, isLoading: isProfileLoading } = useProfile();
+  const { data: profile, isLoading: isProfileLoading } = useProfile(true);
 
   const [tabIndex, setTabIndex] = React.useState(0);
   const [open, setOpen] = useState(false);
