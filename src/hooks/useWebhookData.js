@@ -40,9 +40,11 @@ export const WebSocketProvider = ({ children }) => {
       console.log("init_ws");
 
       const ws = new WebSocket(
-        `${process.env.NODE_ENV === "production" ? WSS_URL_PROD : WSS_URL_DEV}${
-          withAuth ? `?auth_token=${profileData.auth_token}` : ""
-        }`
+        `${
+          process.env.REACT_APP_ENVIRONMENT === "production"
+            ? WSS_URL_PROD
+            : WSS_URL_DEV
+        }${withAuth ? `?auth_token=${profileData.auth_token}` : ""}`
       );
       setWebSocket(ws);
 
