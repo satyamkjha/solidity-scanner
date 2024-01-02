@@ -1519,19 +1519,19 @@ export const contractChain: {
     website: "https://www.fuse.io/",
     logoUrl: "blockscan/fuse",
     platforms: {
-      fuse: {
+      blockscout: {
         label: "Blockscout",
         iconUrl: "blockscan/blockscout",
         chains: [
           {
-            value: "mainnet",
+            value: "fuse-mainnet",
             label: "Fuse Mainnet",
             icon: "",
             isDisabled: false,
             website: "https://explorer.fuse.io/",
           },
           {
-            value: "testnet",
+            value: "fuse-testnet",
             label: "Fuse Testnet",
             icon: "",
             isDisabled: false,
