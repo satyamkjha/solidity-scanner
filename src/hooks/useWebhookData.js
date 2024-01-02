@@ -41,7 +41,7 @@ export const WebSocketProvider = ({ children }) => {
 
       const ws = new WebSocket(
         `${process.env.NODE_ENV === "production" ? WSS_URL_PROD : WSS_URL_DEV}${
-          withAuth ? `?auth_token=${profileData.auth_token}dx` : ""
+          withAuth ? `?auth_token=${profileData.auth_token}` : ""
         }`
       );
       setWebSocket(ws);
@@ -99,7 +99,7 @@ export const WebSocketProvider = ({ children }) => {
       };
     };
 
-    if (Auth.isUserAuthenticated) {
+    if (Auth.isUserAuthenticated()) {
       if (profileData) {
         initializeWebSocket(true);
       }
