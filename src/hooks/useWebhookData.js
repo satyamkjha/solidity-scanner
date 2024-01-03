@@ -28,7 +28,7 @@ export const useWebSocket = () => {
 };
 
 export const WebSocketProvider = ({ children }) => {
-  const { data: profileData } = useProfile(Auth.isUserAuthenticated());
+  const { data: profileData, refetch } = useProfile(Auth.isUserAuthenticated());
   const [webSocket, setWebSocket] = useState(null);
   const toast = useToast();
   const emptyArray = [];
@@ -82,9 +82,10 @@ export const WebSocketProvider = ({ children }) => {
         console.log("WebSocket connection closed:", event.code, event.reason);
         setWebSocket(null);
         // Reopen the WebSocket connection after a short delay (e.g., 3 seconds)
+
         setTimeout(() => {
           initializeWebSocket(withAuth);
-        }, 3000);
+        }, 4000);
       });
 
       // Event listener for WebSocket errors
@@ -92,7 +93,8 @@ export const WebSocketProvider = ({ children }) => {
         console.error("WebSocket error:", error);
 
         // Close the WebSocket connection on error
-        ws.close();
+
+        refetch().finally(() => ws.close());
       });
 
       return () => {
@@ -102,14 +104,12 @@ export const WebSocketProvider = ({ children }) => {
     };
 
     if (Auth.isUserAuthenticated()) {
-      if (profileData) {
+      if (profileData && webSocket === null) {
         initializeWebSocket(true);
       }
     } else {
       initializeWebSocket(false);
     }
-
-    console.log(Auth.isUserAuthenticated());
   }, [profileData, Auth.isUserAuthenticated()]);
 
   const processQueue = () => {
