@@ -108,7 +108,9 @@ export const WebSocketProvider = ({ children }) => {
         initializeWebSocket(true);
       }
     } else {
-      initializeWebSocket(false);
+      if (webSocket === null) {
+        initializeWebSocket(false);
+      }
     }
   }, [profileData, Auth.isUserAuthenticated()]);
 
