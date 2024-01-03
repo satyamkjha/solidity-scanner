@@ -83,7 +83,7 @@ export const WebSocketProvider = ({ children }) => {
         setWebSocket(null);
         // Reopen the WebSocket connection after a short delay (e.g., 3 seconds)
         setTimeout(() => {
-          initializeWebSocket(withAuth);
+          initializeWebSocket();
         }, 3000);
       });
 

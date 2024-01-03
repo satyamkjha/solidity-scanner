@@ -19,7 +19,6 @@ import { SeverityIcon } from "components/icons";
 import API from "helpers/api";
 import { QuickScanResult } from "common/types";
 import { API_PATH } from "helpers/routeManager";
-
 import SolidityScoreProgress from "components/common/SolidityScoreProgress";
 import QuickScanForm from "components/quickscan/QuickScanForm";
 import { Header } from "components/header";
