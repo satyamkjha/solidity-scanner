@@ -42,21 +42,17 @@ const QuickScan: React.FC = () => {
   const [scanReport, setScanReport] = React.useState<QuickScanResult | null>(
     null
   );
-
   const [tempQSData, setTempQSData] = useState<{
     blockAddress: string;
     blockPlatform: string;
     blockChain: string;
   } | null>(null);
-
   const elementRef = useRef<HTMLDivElement>(null);
-
   const { blockAddress, blockPlatform, blockChain } = useParams<{
     blockAddress: string;
     blockPlatform: string;
     blockChain: string;
   }>();
-
   const location = useLocation();
   const query = new URLSearchParams(location.search);
   const ref = query.get("ref");
