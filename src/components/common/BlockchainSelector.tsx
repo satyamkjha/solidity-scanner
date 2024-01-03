@@ -904,7 +904,8 @@ const BlockchainSelectorContent: React.FC<{
                 (platformValue, index) =>
                   !getFeatureGateConfig(config).platform_disabled?.includes(
                     platformValue
-                  ) && (
+                  ) &&
+                  platformValue !== "fuse" && (
                     <ChainSelector
                       key={`${platformValue}_${index}`}
                       index={index}
