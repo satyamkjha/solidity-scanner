@@ -151,7 +151,8 @@ const MultifileResult: React.FC<{
   const toast = useToast();
 
   const [isDesktopView] = useMediaQuery("(min-width: 1350px)");
-  const { sendMessage, messageQueue, updateMessageQueue } = useWebSocket();
+  const { sendMessage, messageQueue, updateMessageQueue, setKeepWSOpen } =
+    useWebSocket();
 
   const [restrictedBugIds, setRestrictedBugIds] = useState<string[]>([]);
 
@@ -175,6 +176,10 @@ const MultifileResult: React.FC<{
         (item: any) => item.type !== "scan_update"
       );
       updateMessageQueue(tempMessageQueue);
+    } else {
+      if (messageQueue.length === 0 && restrictedBugIds.length === 0) {
+        setKeepWSOpen(false);
+      }
     }
   }, [messageQueue]);
 

@@ -37,7 +37,6 @@ import { RxDoubleArrowDown } from "react-icons/rx";
 import { debounce } from "lodash";
 import RadioButton from "components/styled-components/RadioButton";
 import { useWebSocket } from "hooks/useWebhookData";
-import { inProcessScanStates } from "common/values";
 
 const Scans: React.FC = () => {
   const [isDesktopView] = useMediaQuery("(min-width: 1920px)");
