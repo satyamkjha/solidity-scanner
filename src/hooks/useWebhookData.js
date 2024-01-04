@@ -39,8 +39,6 @@ export const WebSocketProvider = ({ children }) => {
 
   useEffect(() => {
     const initializeWebSocket = (withAuth) => {
-      console.log("init_ws");
-
       const ws = new WebSocket(
         `${
           process.env.REACT_APP_ENVIRONMENT === "production"
@@ -51,7 +49,6 @@ export const WebSocketProvider = ({ children }) => {
       setWebSocket(ws);
 
       ws.addEventListener("open", () => {
-        console.log("WebSocket connection opened");
       });
 
       ws.addEventListener("message", (event) => {
@@ -81,10 +78,8 @@ export const WebSocketProvider = ({ children }) => {
 
       // Event listener for when the WebSocket connection is closed
       ws.addEventListener("close", (event) => {
-        console.log("WebSocket connection closed:", event.code, event.reason);
         setWebSocket(null);
         // Reopen the WebSocket connection after a short delay (e.g., 3 seconds)
-
         setTimeout(() => {
           initializeWebSocket(withAuth);
         }, 4000);
@@ -92,10 +87,7 @@ export const WebSocketProvider = ({ children }) => {
 
       // Event listener for WebSocket errors
       ws.addEventListener("error", (error) => {
-        console.error("WebSocket error:", error);
-
         // Close the WebSocket connection on error
-
         refetch().finally(() => ws.close());
       });
 

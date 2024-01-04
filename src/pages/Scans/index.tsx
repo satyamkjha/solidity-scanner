@@ -220,7 +220,6 @@ const Scans: React.FC = () => {
   };
 
   useEffect(() => {
-    console.log(messageQueue, "looping again");
     if (
       projectList &&
       messageQueue.length > 0 &&
@@ -231,7 +230,6 @@ const Scans: React.FC = () => {
       let updatedProjectList = projectList;
       messageQueue.forEach((msgItem: any) => {
         if (msgItem.type === "scan_status") {
-          console.log(msgItem, "when scan status update");
           updatedProjectList = updatedProjectList.map((item) => {
             if (item.scanItem.scan_id === msgItem.payload.scan_id) {
               if (msgItem.payload.scan_status === "scan_done") {
@@ -251,7 +249,6 @@ const Scans: React.FC = () => {
             } else return item;
           });
         } else if (msgItem.type === "scan_initiate") {
-          console.log(msgItem, "when scan is initialised");
           updatedProjectList = [
             {
               scanItem: {

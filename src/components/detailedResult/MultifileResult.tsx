@@ -163,14 +163,14 @@ const MultifileResult: React.FC<{
       )
     ) {
       let tempRestrictedBugIds = restrictedBugIds;
-
       messageQueue.map((msgItem: any) => {
         if (msgItem.type && msgItem.type === "scan_update") {
-          tempRestrictedBugIds = tempRestrictedBugIds.filter((bugId) =>
-            msgItem.payload.scan_updates.bug_ids.includes(bugId)
+          tempRestrictedBugIds = tempRestrictedBugIds.filter(
+            (bugId) => !msgItem.payload.scan_updates.bug_ids.includes(bugId)
           );
         } else return msgItem;
       });
+      setRestrictedBugIds(tempRestrictedBugIds);
       let tempMessageQueue = messageQueue.filter(
         (item: any) => item.type !== "scan_update"
       );
@@ -237,11 +237,22 @@ const MultifileResult: React.FC<{
               isClosable: true,
             });
           }
-          setFiles({
-            ...files,
-            bug_status: action,
-            comment: comment,
+          let tempIssues = issues.map((item) => {
+            let tempArray = item.metric_wise_aggregated_findings;
+            tempArray = tempArray.map((arrItem) => {
+              if (selectedBugs.includes(arrItem.bug_hash)) {
+                return {
+                  ...arrItem,
+                  bug_status: action,
+                };
+              } else return arrItem;
+            });
+            return {
+              ...item,
+              metric_wise_aggregated_findings: tempArray,
+            };
           });
+          setIssues(tempIssues);
         }
       }
       setSelectedBugs([]);
