@@ -22,8 +22,8 @@ const FileDataContainer: React.FC<FileDataContProps> = ({
   const [fileContent, setFileContent] = useState<string[] | undefined>();
 
   useEffect(() => {
-    if (data) {
-      let dataArray = data.file_contents.split("\n");
+    if (data && data.file_contents && data.file_contents.length) {
+      let dataArray = data.file_contents[0].content.split("\n");
       setFileContent([...dataArray]);
     }
   }, [data]);

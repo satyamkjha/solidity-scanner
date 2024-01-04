@@ -14,7 +14,7 @@ const ScanHistoryContainer: React.FC<{
       alignItems="flex-start"
       justifyContent="flex-start"
       flexDir={"column"}
-      py={20}
+      id={"scan-history"}
     >
       <Flex
         sx={{
@@ -120,7 +120,7 @@ const ScanHistoryContainer: React.FC<{
           fontSize="md"
           fontWeight={"extrabold"}
           color={"gray.600"}
-          width={["30%", "30%", "30%", "10%"]}
+          width={["10%"]}
           pl={[4, 4, 4, 0]}
         >
           No
@@ -129,7 +129,7 @@ const ScanHistoryContainer: React.FC<{
           fontSize="md"
           fontWeight={"extrabold"}
           color={"gray.600"}
-          width={["50%", "50%", "50%", "23%"]}
+          width={["18%"]}
         >
           Date
         </Text>
@@ -137,7 +137,7 @@ const ScanHistoryContainer: React.FC<{
           fontSize="md"
           fontWeight={"extrabold"}
           color={"gray.600"}
-          width={"17%"}
+          width={"22%"}
         >
           Security Score
         </Text>
@@ -170,7 +170,7 @@ const ScanHistoryContainer: React.FC<{
             fontSize="md"
             fontWeight={"normal"}
             color={"gray.600"}
-            width={["30%", "30%", "30%", "10%"]}
+            width={["10%"]}
             pl={[4, 4, 4, 0]}
           >
             {index + 1}.
@@ -179,7 +179,7 @@ const ScanHistoryContainer: React.FC<{
             fontSize="md"
             fontWeight={"normal"}
             color={"gray.600"}
-            width={["50%", "50%", "50%", "23%"]}
+            width={["18%"]}
           >
             {scan.scan_time.slice(0, 10)}
           </Text>
@@ -187,7 +187,7 @@ const ScanHistoryContainer: React.FC<{
             fontSize="md"
             fontWeight={"extrabold"}
             color={"#3300FF"}
-            width={["20%", "20%", "20%", "17%"]}
+            width={["22%"]}
           >
             {scan.score}
           </Text>
