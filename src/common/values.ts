@@ -1021,7 +1021,7 @@ export const blockExplorer: { [key: string]: string } = {
   xdc: "(xdc.blocksscan.io)",
   reefscan: "Reefscan",
   nordekscan: "Nordek",
-  fuse: "Fuse",
+  fuse: "Blockscout",
   blockscout: "Blockscout",
 };
 
@@ -1531,6 +1531,26 @@ export const contractChain: {
           },
           {
             value: "fuse-testnet",
+            label: "Fuse Testnet",
+            icon: "",
+            isDisabled: false,
+            website: "https://explorer.fusespark.io/",
+          },
+        ],
+      },
+      fuse: {
+        label: "Blockscout",
+        iconUrl: "blockscan/blockscout",
+        chains: [
+          {
+            value: "fuse",
+            label: "Fuse Mainnet",
+            icon: "",
+            isDisabled: false,
+            website: "https://explorer.fuse.io/",
+          },
+          {
+            value: "fuse",
             label: "Fuse Testnet",
             icon: "",
             isDisabled: false,
