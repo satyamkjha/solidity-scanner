@@ -24,6 +24,9 @@ import React from "react";
 import Loader from "components/styled-components/Loader";
 import { formatString } from "helpers/helperFunction";
 import { useWebSocket } from "hooks/useWebhookData";
+import { useConfig } from "hooks/useConfig";
+import API from "helpers/api";
+import { API_PATH } from "helpers/routeManager";
 
 const IssueDetail: React.FC<{
   type: "project" | "block";
@@ -52,6 +55,7 @@ const IssueDetail: React.FC<{
   setRestrictedBugIds,
   tabIndex,
 }) => {
+  const config: any = useConfig();
   const { data, isLoading } = useIssueDetail(
     issue_id,
     context,
@@ -71,12 +75,11 @@ const IssueDetail: React.FC<{
 
   const [isDesktopView] = useMediaQuery("(min-width: 1024px)");
   const [editComment, setEditComment] = React.useState(false);
-  const [isCommentUpdateRestricted, setIsCommentUpdateRestricted] =
-    useState(false);
+
   const [comment, setComment] = React.useState<string>("");
   const tabRefs = useRef<(HTMLButtonElement | null)[]>([]);
   const toast = useToast();
-  const { sendMessage, messageQueue } = useWebSocket();
+  const { sendMessage } = useWebSocket();
 
   useEffect(() => {
     setEditComment(false);
@@ -96,36 +99,60 @@ const IssueDetail: React.FC<{
 
   const updateComment = async () => {
     if (comment && comment !== "") {
-      if (restrictedBugIds.includes(files.bug_hash)) {
-        toast({
-          title: "Comment Update in Progress. Please try after some time",
-          status: "error",
-          duration: 3000,
-          isClosable: true,
-        });
-      } else {
-        sendMessage({
-          type: "scan_update",
-          body: {
-            bug_ids: [files?.bug_hash],
-            scan_id: scanId,
-            project_id: projectId,
-            bug_status: files?.bug_status,
+      if (config && config.REACT_APP_FEATURE_GATE_CONFIG.websockets_enabled) {
+        if (restrictedBugIds.includes(files.bug_hash)) {
+          toast({
+            title: "Comment Update in Progress. Please try after some time",
+            status: "error",
+            duration: 3000,
+            isClosable: true,
+          });
+        } else {
+          sendMessage({
+            type: "scan_update",
+            body: {
+              bug_ids: [files?.bug_hash],
+              scan_id: scanId,
+              project_id: projectId,
+              bug_status: files?.bug_status,
+              comment: comment,
+              scan_type: type,
+            },
+          });
+          setRestrictedBugIds([...restrictedBugIds, files.bug_hash]);
+          toast({
+            title: "Comment Updated",
+            status: "success",
+            duration: 3000,
+            isClosable: true,
+          });
+          setFiles({
+            ...files,
             comment: comment,
-            scan_type: type,
-          },
-        });
-        setRestrictedBugIds([...restrictedBugIds, files.bug_hash]);
-        toast({
-          title: "Comment Updated",
-          status: "success",
-          duration: 3000,
-          isClosable: true,
-        });
-        setFiles({
-          ...files,
+          });
+        }
+      } else {
+        const { data } = await API.post(API_PATH.API_UPDATE_BUG_STATUS, {
+          bug_ids: [files?.bug_hash],
+          scan_id: scanId,
+          project_id: projectId,
+          bug_status: files?.bug_status,
           comment: comment,
+          scan_type: type,
         });
+        if (data.status === "success") {
+          toast({
+            title: "Comment Updated",
+            description: data.message,
+            status: "success",
+            duration: 3000,
+            isClosable: true,
+          });
+          setFiles({
+            ...files,
+            comment: comment,
+          });
+        }
       }
     }
   };

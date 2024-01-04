@@ -12,6 +12,7 @@ import { debounce } from "lodash";
 import { useUserRole } from "./useUserRole";
 import { useProfile } from "./useProfile";
 import Auth from "helpers/auth";
+import { useConfig } from "hooks/useConfig";
 
 export const WSS_URL_DEV = process.env.REACT_APP_WSS_URL_DEV;
 export const WSS_URL_PROD = process.env.REACT_APP_WSS_URL_PROD;
@@ -28,6 +29,7 @@ export const useWebSocket = () => {
 };
 
 export const WebSocketProvider = ({ children }) => {
+  const config = useConfig();
   const { data: profileData, refetch } = useProfile(Auth.isUserAuthenticated());
   const [webSocket, setWebSocket] = useState(null);
   const toast = useToast();
@@ -103,13 +105,15 @@ export const WebSocketProvider = ({ children }) => {
       };
     };
 
-    if (Auth.isUserAuthenticated()) {
-      if (profileData && webSocket === null) {
-        initializeWebSocket(true);
-      }
-    } else {
-      if (webSocket === null) {
-        initializeWebSocket(false);
+    if (config && config.REACT_APP_FEATURE_GATE_CONFIG.websockets_enabled) {
+      if (Auth.isUserAuthenticated()) {
+        if (profileData && webSocket === null) {
+          initializeWebSocket(true);
+        }
+      } else {
+        if (webSocket === null) {
+          initializeWebSocket(false);
+        }
       }
     }
   }, [profileData, Auth.isUserAuthenticated()]);

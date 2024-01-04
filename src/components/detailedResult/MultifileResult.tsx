@@ -37,6 +37,7 @@ import {
 import { FileIssue } from "components/icons";
 import { DetailResultContext } from "common/contexts";
 import { useWebSocket } from "hooks/useWebhookData";
+import { useConfig } from "hooks/useConfig";
 
 const MultifileResult: React.FC<{
   type: "block" | "project";
@@ -67,6 +68,7 @@ const MultifileResult: React.FC<{
 }) => {
   const [files, setFiles] = useState<FilesState | null>(null);
   const { role } = useUserRole();
+  const config: any = useConfig();
 
   const sortIssuesBasedonPriority = (issueArray: MultiFileScanDetail[]) => {
     const issuePriority: {
@@ -146,8 +148,6 @@ const MultifileResult: React.FC<{
   const [filterHeight, setFilterHeight] = useState<number>();
 
   const isViewer = role === "viewer";
-
-  // const [action, setAction] = useState("");
   const toast = useToast();
 
   const [isDesktopView] = useMediaQuery("(min-width: 1350px)");
@@ -156,7 +156,6 @@ const MultifileResult: React.FC<{
   const [restrictedBugIds, setRestrictedBugIds] = useState<string[]>([]);
 
   useEffect(() => {
-    console.log(messageQueue);
     if (
       messageQueue.length > 0 &&
       messageQueue.some((msgItem: any) =>
@@ -184,45 +183,69 @@ const MultifileResult: React.FC<{
       if (action === "create_github_issue") {
         createGithubIssue();
       } else {
-        sendMessage({
-          type: "scan_update",
-          body: {
+        if (config && config.REACT_APP_FEATURE_GATE_CONFIG.websockets_enabled) {
+          sendMessage({
+            type: "scan_update",
+            body: {
+              bug_ids: selectedBugs,
+              scan_id: scanId,
+              project_id: projectId,
+              bug_status: action,
+              comment: comment,
+              scan_type: type,
+            },
+          });
+          toast({
+            title: "Bug Status Updated",
+            status: "success",
+            duration: 3000,
+            isClosable: true,
+          });
+          setRestrictedBugIds([...restrictedBugIds, ...selectedBugs]);
+
+          let tempIssues = issues.map((item) => {
+            let tempArray = item.metric_wise_aggregated_findings;
+            tempArray = tempArray.map((arrItem) => {
+              if (selectedBugs.includes(arrItem.bug_hash)) {
+                return {
+                  ...arrItem,
+                  bug_status: action,
+                };
+              } else return arrItem;
+            });
+            return {
+              ...item,
+              metric_wise_aggregated_findings: tempArray,
+            };
+          });
+          setIssues(tempIssues);
+        } else {
+          const { data } = await API.post(API_PATH.API_UPDATE_BUG_STATUS, {
             bug_ids: selectedBugs,
             scan_id: scanId,
             project_id: projectId,
             bug_status: action,
             comment: comment,
             scan_type: type,
-          },
-        });
-        toast({
-          title: "Bug Status Updated",
-          status: "success",
-          duration: 3000,
-          isClosable: true,
-        });
-        setRestrictedBugIds([...restrictedBugIds, ...selectedBugs]);
-
-        let tempIssues = issues.map((item) => {
-          let tempArray = item.metric_wise_aggregated_findings;
-          tempArray = tempArray.map((arrItem) => {
-            if (selectedBugs.includes(arrItem.bug_hash)) {
-              return {
-                ...arrItem,
-                bug_status: action,
-              };
-            } else return arrItem;
           });
-          return {
-            ...item,
-            metric_wise_aggregated_findings: tempArray,
-          };
-        });
-        setIssues(tempIssues);
+          if (data.status === "success") {
+            toast({
+              title: "Bug Status Updated",
+              description: data.message,
+              status: "success",
+              duration: 3000,
+              isClosable: true,
+            });
+          }
+          setFiles({
+            ...files,
+            bug_status: action,
+            comment: comment,
+          });
+        }
       }
       setSelectedBugs([]);
     }
-    refetch();
   };
 
   const createGithubIssue = async () => {
