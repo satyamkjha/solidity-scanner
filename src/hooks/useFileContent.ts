@@ -14,7 +14,7 @@ const getFileContent = async (
       : API_PATH.API_GET_FILE_CONTENT_BLOCK,
     {
       scan_id,
-      file_path,
+      file_paths: [file_path],
     }
   );
   return data;
@@ -25,8 +25,7 @@ export const useFileContent = (
   file_path: string,
   type: "project" | "block"
 ) => {
-  return useQuery<{ file_contents: string }>(
-    ["file_content", scan_id, file_path],
-    () => getFileContent(scan_id, file_path, type)
+  return useQuery<any>(["file_content", scan_id, file_path], () =>
+    getFileContent(scan_id, file_path, type)
   );
 };
