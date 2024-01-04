@@ -37,6 +37,7 @@ import { RxDoubleArrowDown } from "react-icons/rx";
 import { debounce } from "lodash";
 import RadioButton from "components/styled-components/RadioButton";
 import { useWebSocket } from "hooks/useWebhookData";
+import { inProcessScanStates } from "common/values";
 
 const Scans: React.FC = () => {
   const [isDesktopView] = useMediaQuery("(min-width: 1920px)");
@@ -69,18 +70,6 @@ const Scans: React.FC = () => {
   const [isProjectsLoading, setIsProjectsLoading] = useState(false);
 
   const { messageQueue, updateMessageQueue } = useWebSocket();
-
-  // const [ssIconAnimation, setSsIconAniamtion] = useState<any>(null);
-
-  // useEffect(() => {
-  //   getSsIconAnimationFromUrl();
-  //   // eslint-disable-next-line react-hooks/exhaustive-deps
-  // }, []);
-
-  // const getSsIconAnimationFromUrl = async () => {
-  //   const jsonData = await getAssetsFromS3("icons/ss_icon_animation.json");
-  //   setSsIconAniamtion(jsonData);
-  // };
 
   const { data: profileData, refetch: refetchProfile } = useProfile(true);
 
@@ -117,43 +106,6 @@ const Scans: React.FC = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [projects]);
 
-  // useEffect(() => {
-  //   let intervalId: NodeJS.Timeout;
-
-  //   const refetchTillScanComplete = () => {
-  //     if (
-  //       projectList &&
-  //       projectList.some(
-  //         ({ scan_details }) =>
-  //           scan_details.multi_file_scan_status === "scanning" ||
-  //           scan_details.multi_file_scan_status === "initialised"
-  //       )
-  //     ) {
-  //       if (getFeatureGateConfig().event_consumption_enabled) {
-  //         const scanningScanIds: string[] = projectList
-  //           .filter((project) =>
-  //             ["initialised", "downloaded", "scanning"].includes(
-  //               project.scan_details.multi_file_scan_status
-  //             )
-  //           )
-  //           .map((project) => {
-  //             return project.scan_details.scan_id;
-  //           });
-  //         setProjectsIdsInScanning(scanningScanIds);
-  //       }
-  //     }
-  //   };
-
-  //   if (projectList) {
-  //     refetchTillScanComplete();
-  //   }
-  //   return () => {
-  //     clearInterval(intervalId);
-  //   };
-
-  //   // eslint-disable-next-line react-hooks/exhaustive-deps
-  // }, [projectList]);
-
   const onSearch = async () => {
     if (searchTerm !== undefined) {
       setIsProjectsLoading(true);
@@ -188,15 +140,6 @@ const Scans: React.FC = () => {
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [searchTerm]);
-
-  const fetchProjectList = async () => {
-    if (pagination.pageNo !== 1)
-      setPagination({
-        pageNo: 1,
-        perPageCount: isDesktopView ? 20 : 12,
-      });
-    else refetch();
-  };
 
   const fetchMoreProjects = async () => {
     if (page && pagination.pageNo >= page.total_pages) {
