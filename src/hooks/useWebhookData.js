@@ -50,8 +50,7 @@ export const WebSocketProvider = ({ children }) => {
       );
       setWebSocket(ws);
 
-      ws.addEventListener("open", () => {
-      });
+      ws.addEventListener("open", () => {});
 
       ws.addEventListener("message", (event) => {
         const receivedMessage = JSON.parse(event.data);
@@ -82,9 +81,12 @@ export const WebSocketProvider = ({ children }) => {
       ws.addEventListener("close", (event) => {
         setWebSocket(null);
         // Reopen the WebSocket connection after a short delay (e.g., 3 seconds)
-        setTimeout(() => {
-          initializeWebSocket(withAuth);
-        }, 4000);
+
+        if (keepWSOpen) {
+          setTimeout(() => {
+            initializeWebSocket(withAuth);
+          }, 4000);
+        }
       });
 
       // Event listener for WebSocket errors
@@ -150,7 +152,7 @@ export const WebSocketProvider = ({ children }) => {
 
   useEffect(() => {
     console.log(webSocket);
-    if (webSocket !== null && tempEmitMsgQueue.length > 0) {
+    if (webSocket !== null && tempEmitMsgQueue && tempEmitMsgQueue.length > 0) {
       tempEmitMsgQueue.forEach((msg) => {
         webSocket.send(
           JSON.stringify({

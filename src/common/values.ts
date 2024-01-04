@@ -942,6 +942,13 @@ export const attackMethodColor: {
   "Oracle Issue": "#EBEBEB",
 };
 
+export const inProcessScanStates = [
+  "scan_initiate",
+  "scanning",
+  "initialised",
+  "downloaded",
+];
+
 export const scanStatesLabel: {
   [key: string]: string;
 } = {

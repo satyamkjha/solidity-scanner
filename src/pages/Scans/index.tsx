@@ -37,6 +37,7 @@ import { RxDoubleArrowDown } from "react-icons/rx";
 import { debounce } from "lodash";
 import RadioButton from "components/styled-components/RadioButton";
 import { useWebSocket } from "hooks/useWebhookData";
+import { inProcessScanStates } from "common/values";
 
 const Scans: React.FC = () => {
   const [isDesktopView] = useMediaQuery("(min-width: 1920px)");
@@ -68,7 +69,7 @@ const Scans: React.FC = () => {
   const [projectsMonitored, setProjectsMonitored] = useState(0);
   const [isProjectsLoading, setIsProjectsLoading] = useState(false);
 
-  const { messageQueue, updateMessageQueue } = useWebSocket();
+  const { messageQueue, updateMessageQueue, setKeepWSOpen } = useWebSocket();
 
   const { data: profileData, refetch: refetchProfile } = useProfile(true);
 
@@ -215,6 +216,18 @@ const Scans: React.FC = () => {
       updateMessageQueue(tempMsgQueue);
     }
   }, [messageQueue]);
+
+  useEffect(() => {
+    if (
+      projectList &&
+      messageQueue.length === 0 &&
+      projectList.some((item) =>
+        inProcessScanStates.includes(item.tempScanStatus)
+      )
+    ) {
+      setKeepWSOpen(true);
+    }
+  }, [projectList]);
 
   const paramList: {
     param: "gitlab" | "github" | "bitbucket" | "block" | "File Scan" | "";
