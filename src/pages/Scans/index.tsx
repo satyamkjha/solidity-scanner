@@ -117,42 +117,6 @@ const Scans: React.FC = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [projects]);
 
-  // useEffect(() => {
-  //   let intervalId: NodeJS.Timeout;
-
-  //   const refetchTillScanComplete = () => {
-  //     if (
-  //       projectList &&
-  //       projectList.some(
-  //         ({ scan_details }) =>
-  //           scan_details.multi_file_scan_status === "scanning" ||
-  //           scan_details.multi_file_scan_status === "initialised"
-  //       )
-  //     ) {
-  //       if (getFeatureGateConfig().event_consumption_enabled) {
-  //         const scanningScanIds: string[] = projectList
-  //           .filter((project) =>
-  //             ["initialised", "downloaded", "scanning"].includes(
-  //               project.scan_details.multi_file_scan_status
-  //             )
-  //           )
-  //           .map((project) => {
-  //             return project.scan_details.scan_id;
-  //           });
-  //         setProjectsIdsInScanning(scanningScanIds);
-  //       }
-  //     }
-  //   };
-
-  //   if (projectList) {
-  //     refetchTillScanComplete();
-  //   }
-  //   return () => {
-  //     clearInterval(intervalId);
-  //   };
-
-  //   // eslint-disable-next-line react-hooks/exhaustive-deps
-  // }, [projectList]);
 
   const onSearch = async () => {
     if (searchTerm !== undefined) {

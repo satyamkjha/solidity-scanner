@@ -108,6 +108,7 @@ const IssueDetail: React.FC<{
             isClosable: true,
           });
         } else {
+          
           sendMessage({
             type: "scan_update",
             body: {

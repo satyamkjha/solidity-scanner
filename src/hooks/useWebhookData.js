@@ -36,6 +36,8 @@ export const WebSocketProvider = ({ children }) => {
   const emptyArray = [];
   const [tempMessageQueue, setTempMessageQueue] = useState(emptyArray);
   const [messageQueue, setMessageQueue] = useState(emptyArray);
+  const [keepWSOpen, setKeepWSOpen] = useState(true);
+  const [tempEmitMsgQueue, setTempEmitMsgQueue] = useState();
 
   useEffect(() => {
     const initializeWebSocket = (withAuth) => {
@@ -105,7 +107,11 @@ export const WebSocketProvider = ({ children }) => {
       };
     };
 
-    if (config && config.REACT_APP_FEATURE_GATE_CONFIG.websockets_enabled) {
+    if (
+      config &&
+      config.REACT_APP_FEATURE_GATE_CONFIG.websockets_enabled &&
+      keepWSOpen
+    ) {
       if (Auth.isUserAuthenticated()) {
         if (profileData && webSocket === null) {
           initializeWebSocket(true);
@@ -116,7 +122,7 @@ export const WebSocketProvider = ({ children }) => {
         }
       }
     }
-  }, [profileData, Auth.isUserAuthenticated()]);
+  }, [profileData, Auth.isUserAuthenticated(), keepWSOpen]);
 
   const processQueue = () => {
     setMessageQueue([...messageQueue, ...tempMessageQueue]);
@@ -137,13 +143,32 @@ export const WebSocketProvider = ({ children }) => {
   }, [tempMessageQueue]);
 
   const sendMessage = (msg) => {
-    webSocket.send(
-      JSON.stringify({
-        action: "message",
-        payload: msg,
-      })
-    );
+    if (keepWSOpen) {
+      webSocket.send(
+        JSON.stringify({
+          action: "message",
+          payload: msg,
+        })
+      );
+    } else {
+      setKeepWSOpen(true);
+      setTempEmitMsgQueue([...tempEmitMsgQueue, msg]);
+    }
   };
+
+  useEffect(() => {
+    console.log(webSocket);
+    if (webSocket !== null && tempEmitMsgQueue.length > 0) {
+      tempEmitMsgQueue.forEach((msg) => {
+        webSocket.send(
+          JSON.stringify({
+            action: "message",
+            payload: msg,
+          })
+        );
+      });
+    }
+  }, [webSocket]);
 
   const updateMessageQueue = (msg) => {
     setMessageQueue(msg);
@@ -153,6 +178,7 @@ export const WebSocketProvider = ({ children }) => {
     messageQueue,
     sendMessage,
     updateMessageQueue,
+    setKeepWSOpen,
   };
 
   return (
