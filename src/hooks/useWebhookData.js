@@ -32,79 +32,80 @@ export const WebSocketProvider = ({ children }) => {
   const config = useConfig();
   const { data: profileData, refetch } = useProfile(Auth.isUserAuthenticated());
   const [webSocket, setWebSocket] = useState(null);
+  const [wsReadyState, setWsReadyState] = useState(3);
   const toast = useToast();
   const emptyArray = [];
   const [tempMessageQueue, setTempMessageQueue] = useState(emptyArray);
   const [messageQueue, setMessageQueue] = useState(emptyArray);
-  const [keepWSOpen, setKeepWSOpen] = useState(true);
-  const [tempEmitMsgQueue, setTempEmitMsgQueue] = useState();
+  const [keepWSOpen, setKeepWSOpen] = useState(false);
+  const [tempEmitMsgQueue, setTempEmitMsgQueue] = useState(emptyArray);
+
+  const initializeWebSocket = (withAuth) => {
+    const ws = new WebSocket(
+      `${
+        process.env.REACT_APP_ENVIRONMENT === "production"
+          ? WSS_URL_PROD
+          : WSS_URL_DEV
+      }${withAuth ? `?auth_token=${profileData.auth_token}` : ""}`
+    );
+    setWebSocket(ws);
+    setWsReadyState(ws.readyState);
+
+    ws.addEventListener("open", () => {
+      setWsReadyState(ws.readyState);
+    });
+
+    ws.addEventListener("message", (event) => {
+      const receivedMessage = JSON.parse(event.data);
+      if (receivedMessage) {
+        if (receivedMessage.type === "error") {
+          if (receivedMessage.payload && receivedMessage.payload.message) {
+            toast({
+              title: receivedMessage.payload.message,
+              status: "error",
+              isClosable: true,
+              position: "bottom",
+            });
+          } else {
+            toast({
+              title: `Unexpected Error`,
+              status: "error",
+              isClosable: true,
+              position: "bottom",
+            });
+          }
+        } else {
+          setTempMessageQueue((prevQueue) => [...prevQueue, receivedMessage]);
+        }
+      }
+    });
+
+    // Event listener for when the WebSocket connection is closed
+    ws.addEventListener("close", (event) => {
+      setWsReadyState(ws.readyState);
+      setWebSocket(null);
+      // Reopen the WebSocket connection after a short delay (e.g., 3 seconds)
+    });
+
+    // Event listener for WebSocket errors
+    ws.addEventListener("error", (error) => {
+      setWsReadyState(ws.readyState);
+      // Close the WebSocket connection on error
+      refetch().finally(() => ws.close());
+    });
+
+    return () => {
+      // Clean up the WebSocket connection when the component unmounts
+      ws.close();
+    };
+  };
 
   useEffect(() => {
-    const initializeWebSocket = (withAuth) => {
-      const ws = new WebSocket(
-        `${
-          process.env.REACT_APP_ENVIRONMENT === "production"
-            ? WSS_URL_PROD
-            : WSS_URL_DEV
-        }${withAuth ? `?auth_token=${profileData.auth_token}` : ""}`
-      );
-      setWebSocket(ws);
-
-      ws.addEventListener("open", () => {});
-
-      ws.addEventListener("message", (event) => {
-        const receivedMessage = JSON.parse(event.data);
-        if (receivedMessage) {
-          if (receivedMessage.type === "error") {
-            if (receivedMessage.payload && receivedMessage.payload.message) {
-              toast({
-                title: receivedMessage.payload.message,
-                status: "error",
-                isClosable: true,
-                position: "bottom",
-              });
-            } else {
-              toast({
-                title: `Unexpected Error`,
-                status: "error",
-                isClosable: true,
-                position: "bottom",
-              });
-            }
-          } else {
-            setTempMessageQueue((prevQueue) => [...prevQueue, receivedMessage]);
-          }
-        }
-      });
-
-      // Event listener for when the WebSocket connection is closed
-      ws.addEventListener("close", (event) => {
-        setWebSocket(null);
-        // Reopen the WebSocket connection after a short delay (e.g., 3 seconds)
-
-        if (keepWSOpen) {
-          setTimeout(() => {
-            initializeWebSocket(withAuth);
-          }, 4000);
-        }
-      });
-
-      // Event listener for WebSocket errors
-      ws.addEventListener("error", (error) => {
-        // Close the WebSocket connection on error
-        refetch().finally(() => ws.close());
-      });
-
-      return () => {
-        // Clean up the WebSocket connection when the component unmounts
-        ws.close();
-      };
-    };
-
     if (
       config &&
       config.REACT_APP_FEATURE_GATE_CONFIG.websockets_enabled &&
-      keepWSOpen
+      keepWSOpen &&
+      webSocket === null
     ) {
       if (Auth.isUserAuthenticated()) {
         if (profileData && webSocket === null) {
@@ -116,7 +117,7 @@ export const WebSocketProvider = ({ children }) => {
         }
       }
     }
-  }, [profileData, Auth.isUserAuthenticated(), keepWSOpen]);
+  }, [profileData, Auth.isUserAuthenticated(), keepWSOpen, webSocket]);
 
   const processQueue = () => {
     setMessageQueue([...messageQueue, ...tempMessageQueue]);
@@ -137,7 +138,7 @@ export const WebSocketProvider = ({ children }) => {
   }, [tempMessageQueue]);
 
   const sendMessage = (msg) => {
-    if (keepWSOpen) {
+    if (wsReadyState === 1) {
       webSocket.send(
         JSON.stringify({
           action: "message",
@@ -151,8 +152,11 @@ export const WebSocketProvider = ({ children }) => {
   };
 
   useEffect(() => {
-    console.log(webSocket);
-    if (webSocket !== null && tempEmitMsgQueue && tempEmitMsgQueue.length > 0) {
+    if (
+      tempEmitMsgQueue &&
+      tempEmitMsgQueue.length > 0 &&
+      webSocket.readyState === 1
+    ) {
       tempEmitMsgQueue.forEach((msg) => {
         webSocket.send(
           JSON.stringify({
@@ -162,7 +166,7 @@ export const WebSocketProvider = ({ children }) => {
         );
       });
     }
-  }, [webSocket]);
+  }, [wsReadyState]);
 
   const updateMessageQueue = (msg) => {
     setMessageQueue(msg);

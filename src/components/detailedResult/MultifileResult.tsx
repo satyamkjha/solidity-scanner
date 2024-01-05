@@ -177,7 +177,7 @@ const MultifileResult: React.FC<{
       );
       updateMessageQueue(tempMessageQueue);
     } else {
-      if (messageQueue.length === 0 && restrictedBugIds.length === 0) {
+      if (restrictedBugIds.length === 0) {
         setKeepWSOpen(false);
       }
     }

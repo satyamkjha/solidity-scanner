@@ -182,7 +182,7 @@ const Scans: React.FC = () => {
                     scan_type: msgItem.payload.scan_details.scan_type,
                     scan_details: msgItem.payload.scan_details,
                   },
-                  tempScanStatus: msgItem.payload.scan_status,
+                  tempScanStatus: "scan_done",
                 };
               } else
                 return {
@@ -205,7 +205,6 @@ const Scans: React.FC = () => {
           ];
         }
       });
-      setProjectList(updatedProjectList);
       let tempMsgQueue = messageQueue;
       tempMsgQueue = tempMsgQueue.filter(
         (msg: any) => msg.type !== "scan_status"
@@ -214,13 +213,20 @@ const Scans: React.FC = () => {
         (msg: any) => msg.type !== "scan_initiate"
       );
       updateMessageQueue(tempMsgQueue);
+      setProjectList(updatedProjectList);
     }
   }, [messageQueue]);
 
   useEffect(() => {
     if (
       projectList &&
-      messageQueue.length === 0 &&
+      !projectList.some((item) =>
+        inProcessScanStates.includes(item.tempScanStatus)
+      )
+    ) {
+      setKeepWSOpen(false);
+    } else if (
+      projectList &&
       projectList.some((item) =>
         inProcessScanStates.includes(item.tempScanStatus)
       )
