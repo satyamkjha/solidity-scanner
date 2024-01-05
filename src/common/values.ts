@@ -2233,3 +2233,65 @@ export const pieData = (
     color: "#F795B4",
   },
 ];
+
+export const reportProjectDetails = [
+  {
+    label: "Language",
+    value: "Solidity",
+  },
+  {
+    label: "Audit Methodology",
+    value: "Static Scanning",
+  },
+  {
+    label: "Commit Hash",
+    value: "git_commit_hash",
+  },
+  {
+    label: "Website",
+    value: "website",
+  },
+  {
+    label: "Publishers/Owner Name",
+    value: "report_owner",
+  },
+  {
+    label: "Organization",
+    value: "organization",
+  },
+  {
+    label: "Contact Email",
+    value: "email",
+  },
+];
+
+export const reportBlockDetails = [
+  {
+    label: "Language",
+    value: "Solidity",
+  },
+  {
+    label: "Audit Methodology",
+    value: "Static Scanning",
+  },
+  {
+    label: "Contract Type",
+    value: "Smart Contract",
+  },
+  {
+    label: "Website",
+    value: "website",
+  },
+  {
+    label: "Publishers/Owner Name",
+    value: "report_owner",
+  },
+  {
+    label: "Organization",
+    value: "organization",
+  },
+  {
+    label: "Contact Email",
+    value: "email",
+  },
+];
