@@ -110,14 +110,18 @@ export const WebSocketProvider = ({ children }) => {
       if (Auth.isUserAuthenticated()) {
         if (profileData && webSocket === null) {
           initializeWebSocket(true);
+        } else {
+          webSocket.close();
         }
       } else {
         if (webSocket === null) {
           initializeWebSocket(false);
+        } else {
+          webSocket.close();
         }
       }
     }
-  }, [profileData, Auth.isUserAuthenticated(), keepWSOpen, webSocket]);
+  }, [profileData, keepWSOpen, webSocket, Auth.isUserAuthenticated()]);
 
   const processQueue = () => {
     setMessageQueue([...messageQueue, ...tempMessageQueue]);

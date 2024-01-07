@@ -87,15 +87,15 @@ const AppContent: React.FC = () => {
         </Helmet>
       )}
       <QueryClientProvider client={queryClient}>
-
-          <ChakraProvider theme={theme}>
+        <ChakraProvider theme={theme}>
+          <WebSocketProvider>
             <MetaMaskProvider>
               <Global styles={GlobalStyles} />
               <Routes />
             </MetaMaskProvider>
-          </ChakraProvider>
-          <ReactQueryDevtools initialIsOpen={false} />
-
+          </WebSocketProvider>
+        </ChakraProvider>
+        <ReactQueryDevtools initialIsOpen={false} />
       </QueryClientProvider>
     </>
   );

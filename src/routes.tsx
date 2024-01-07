@@ -307,45 +307,43 @@ const Routes: React.FC = () => {
             </PublicLayout>
           </Route>
           <UserRoleProvider>
-            <WebSocketProvider>
-              <Layout>
-                <Suspense fallback="">
-                  <Switch>
-                    <PrivateRoute exact path="/home">
-                      <Home />
-                    </PrivateRoute>
-                    <PrivateRoute exact path="/profile">
-                      <Profile />
-                    </PrivateRoute>
-                    <PrivateRoute exact path="/projects">
-                      <Scans />
-                    </PrivateRoute>
+            <Layout>
+              <Suspense fallback="">
+                <Switch>
+                  <PrivateRoute exact path="/home">
+                    <Home />
+                  </PrivateRoute>
+                  <PrivateRoute exact path="/profile">
+                    <Profile />
+                  </PrivateRoute>
+                  <PrivateRoute exact path="/projects">
+                    <Scans />
+                  </PrivateRoute>
 
-                    <PrivateRoute path="/projects/:scanId/:projectId">
-                      <ProjectPage />
-                    </PrivateRoute>
+                  <PrivateRoute path="/projects/:scanId/:projectId">
+                    <ProjectPage />
+                  </PrivateRoute>
 
-                    <PrivateRoute exact path="/blocks/:scanId/:projectId">
-                      <BlockPage />
-                    </PrivateRoute>
-                    <PrivateRoute exact path="/integrations">
-                      <Integrations />
-                    </PrivateRoute>
-                    <PrivateRoute exact path="/private-api">
-                      <PrivateApi />
-                    </PrivateRoute>
-                    <PrivateRoute exact path="/organisation">
-                      <Organisation />
-                    </PrivateRoute>
+                  <PrivateRoute exact path="/blocks/:scanId/:projectId">
+                    <BlockPage />
+                  </PrivateRoute>
+                  <PrivateRoute exact path="/integrations">
+                    <Integrations />
+                  </PrivateRoute>
+                  <PrivateRoute exact path="/private-api">
+                    <PrivateApi />
+                  </PrivateRoute>
+                  <PrivateRoute exact path="/organisation">
+                    <Organisation />
+                  </PrivateRoute>
 
-                    <PrivateRoute exact path="/billing">
-                      <Billing />
-                    </PrivateRoute>
-                    <Route path="*" component={CustomPageNotFound} />
-                  </Switch>
-                </Suspense>
-              </Layout>
-            </WebSocketProvider>
+                  <PrivateRoute exact path="/billing">
+                    <Billing />
+                  </PrivateRoute>
+                  <Route path="*" component={CustomPageNotFound} />
+                </Switch>
+              </Suspense>
+            </Layout>
           </UserRoleProvider>
         </Switch>
       </ErrorHandler>
