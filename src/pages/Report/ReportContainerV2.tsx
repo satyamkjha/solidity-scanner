@@ -169,7 +169,7 @@ export const ReportContainerV2: React.FC<{
         if (elementToRemove) {
           elementToRemove.remove();
         }
-      }, 1000);
+      }, 3000);
     }
   }, [filesContent]);
 
@@ -318,16 +318,15 @@ export const ReportContainerV2: React.FC<{
   return (
     <Container
       maxW={"100vw"}
-      maxH={"100vh"}
+      h={"100vh"}
       p={0}
-      overflow={"hidden"}
-      overflowY={download ? "auto" : "hidden"}
+      overflow={download ? "" : "hidden"}
     >
       <Flex
         w={"100%"}
         h={"100vh"}
         flexDir={"column"}
-        overflow={download ? "auto" : "hidden"}
+        overflow={download ? "" : "hidden"}
         alignItems={"center"}
       >
         {!download && isPublicReport ? (
@@ -365,7 +364,7 @@ export const ReportContainerV2: React.FC<{
           h={"100%"}
           bg={!download ? "#535659" : "white"}
           pt={download ? 0 : 5}
-          overflow={download ? "auto" : "hidden"}
+          overflow={download ? "" : "hidden"}
           alignItems={"center"}
         >
           {!download ? (

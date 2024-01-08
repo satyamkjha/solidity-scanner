@@ -73,7 +73,7 @@ const PDFContainer: React.FC<{
       ></Box>
       <Box
         w="100%"
-        h="1063px"
+        h="1160px"
         py={page !== "cover" ? 10 : 0}
         px={page !== "cover" ? 10 : 0}
         position={"relative"}
