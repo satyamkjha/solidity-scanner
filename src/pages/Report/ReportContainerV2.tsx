@@ -160,6 +160,19 @@ export const ReportContainerV2: React.FC<{
     });
   }, [summary_report.issues]);
 
+  useEffect(() => {
+    if (download) {
+      setTimeout(() => {
+        const elementToRemove = document.getElementById(
+          "hubspot-messages-iframe-container"
+        );
+        if (elementToRemove) {
+          elementToRemove.remove();
+        }
+      }, 1000);
+    }
+  }, [filesContent]);
+
   const getFileContentBatched = async (
     type: "project" | "block",
     allFilePaths: string[]
@@ -191,7 +204,6 @@ export const ReportContainerV2: React.FC<{
           project_type: projectType,
         }
       );
-
       results.push(data);
     }
 
@@ -304,12 +316,18 @@ export const ReportContainerV2: React.FC<{
   };
 
   return (
-    <Container maxW={"100vw"} maxH={"100vh"} p={0} overflow={"hidden"}>
+    <Container
+      maxW={"100vw"}
+      maxH={"100vh"}
+      p={0}
+      overflow={"hidden"}
+      overflowY={download ? "auto" : "hidden"}
+    >
       <Flex
         w={"100%"}
         h={"100vh"}
         flexDir={"column"}
-        overflow={"hidden"}
+        overflow={download ? "auto" : "hidden"}
         alignItems={"center"}
       >
         {!download && isPublicReport ? (
@@ -346,8 +364,8 @@ export const ReportContainerV2: React.FC<{
           w={"100%"}
           h={"100%"}
           bg={!download ? "#535659" : "white"}
-          pt={5}
-          overflow={"hidden"}
+          pt={download ? 0 : 5}
+          overflow={download ? "auto" : "hidden"}
           alignItems={"center"}
         >
           {!download ? (
@@ -376,13 +394,13 @@ export const ReportContainerV2: React.FC<{
           <VStack
             spacing={4}
             align="stretch"
-            mt={6}
+            mt={download ? 0 : 6}
             pb={20}
             w={"803px"}
             minW={"803px"}
-            h={"100%"}
+            h={download ? "inherit" : "100%"}
             bg={!download ? "#535659" : "white"}
-            overflowY="auto"
+            overflowY={download ? "visible" : "auto"}
           >
             <LazyLoad>
               <PDFContainer
