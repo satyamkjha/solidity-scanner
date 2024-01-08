@@ -44,7 +44,7 @@ import VulnerabililtyDetailsContainer from "components/report/VulnerabililtyDeta
 import ScanHistoryContainer from "components/report/ScanHistoryContainer";
 import DisclaimerContainer from "components/report/DisclaimerContainer";
 import FindingBugListContainer from "components/report/FindingBugListContainer";
-import { useParams } from "react-router-dom";
+import { useParams, useLocation } from "react-router-dom";
 import API from "helpers/api";
 import { API_PATH } from "helpers/routeManager";
 import { DownloadIcon } from "@chakra-ui/icons";
@@ -72,6 +72,7 @@ export const ReportContainerV2: React.FC<{
     { label: "Disclaimer", value: "disclaimer" },
   ];
 
+  let counter = -1;
   const { projectType, reportId, projectId } = useParams<{
     projectType: string;
     reportId: string;
@@ -90,6 +91,10 @@ export const ReportContainerV2: React.FC<{
   >([]);
   const [currentPageHeadings, setCurrentPageHeadings] =
     useState<(string | null)[]>();
+
+  const location = useLocation();
+  const searchParams = new URLSearchParams(location.search);
+  const download = searchParams.get("download");
 
   useEffect(() => {
     let totalCount = 0;
@@ -172,13 +177,18 @@ export const ReportContainerV2: React.FC<{
     for (const batch of batches) {
       const { data } = await API.post(
         type === "project"
-          ? API_PATH.API_GET_FILE_CONTENT
+          ? isPublicReport
+            ? API_PATH.API_GET_PUBLIC_FILE_CONTENT
+            : API_PATH.API_GET_FILE_CONTENT
+          : isPublicReport
+          ? API_PATH.API_GET_PUBLIC_FILE_CONTENT_BLOCK
           : API_PATH.API_GET_FILE_CONTENT_BLOCK,
         {
           file_paths: batch,
           report_id: reportId,
           project_id:
             projectId || summary_report.project_summary_report.project_id,
+          project_type: projectType,
         }
       );
 
@@ -202,21 +212,50 @@ export const ReportContainerV2: React.FC<{
     }
   };
 
+  const printReport = async () => {
+    try {
+      const { data } = await API.post(`${API_PATH.API_GET_REPORT_PDF}`, {
+        project_id:
+          projectId || summary_report.project_summary_report.project_id,
+        report_id: reportId,
+        scan_type: projectType,
+      });
+
+      if (data.status === "success" && data.download_url) {
+        const link = document.createElement("a");
+        link.href = data.download_url;
+        link.click();
+      }
+    } catch (e) {
+      console.log(e);
+    }
+  };
+
   const getVulnerabilityDetailSplit = (issue: IssueItem) => {
     if (issue.findings.length === 1) {
       if (
         issue.findings[0].line_nos_end[0] -
           issue.findings[0].line_nos_start[0] +
           3 >
-        4
+        70
       ) {
-        setVulnerabilityDetailSplit([
-          {
-            point: issue.findings[0].file_path,
-            start_line: issue.findings[0].line_nos_start[0],
-            end_line: issue.findings[0].line_nos_end[0],
-          },
-        ]);
+        let split = [];
+        split.push({
+          point: issue.findings[0].file_path,
+          start_line: issue.findings[0].line_nos_start[0],
+          end_line: issue.findings[0].line_nos_start[0] + 27,
+        });
+        split.push({
+          point: issue.findings[0].file_path,
+          start_line: issue.findings[0].line_nos_start[0] + 27 + 1,
+          end_line: issue.findings[0].line_nos_start[0] + 70,
+        });
+        split.push({
+          point: issue.findings[0].file_path,
+          start_line: issue.findings[0].line_nos_start[0] + 70 + 1,
+          end_line: issue.findings[0].line_nos_end[0],
+        });
+        return split;
       } else if (
         issue.findings[0].line_nos_end[0] -
           issue.findings[0].line_nos_start[0] +
@@ -234,63 +273,106 @@ export const ReportContainerV2: React.FC<{
           start_line: issue.findings[0].line_nos_start[0] + 27 + 1,
           end_line: issue.findings[0].line_nos_end[0],
         });
-      }
+        return split;
+      } else if (
+        issue.findings[0].line_nos_end[0] -
+          issue.findings[0].line_nos_start[0] +
+          3 >
+        11
+      ) {
+        return [
+          {
+            point: issue.findings[0].file_path,
+            start_line: issue.findings[0].line_nos_start[0],
+            end_line: issue.findings[0].line_nos_end[0],
+          },
+          {
+            point: "desc",
+            start_line: null,
+            end_line: null,
+          },
+        ];
+      } else
+        return [
+          {
+            point: null,
+            start_line: issue.findings[0].line_nos_start[0],
+            end_line: issue.findings[0].line_nos_end[0],
+          },
+        ];
     }
   };
 
   return (
     <Container maxW={"100vw"} maxH={"100vh"} p={0} overflow={"hidden"}>
-      <Flex w={"100%"} h={"100vh"} flexDir={"column"} overflow={"hidden"}>
-        <Flex
-          w={"100%"}
-          bg={"#333639"}
-          color={"white"}
-          px={10}
-          py={6}
-          boxShadow={"0px -1px 13.800000190734863px 0px #00000040"}
-        >
-          <Text fontSize={"lg"} fontWeight={700}>
-            {summary_report.project_summary_report.project_name ||
-              summary_report.project_summary_report.contract_name}
-          </Text>
-          <Button
-            variant={"accent-outline"}
-            w={["250px"]}
-            ml={"auto"}
-            // onClick={printReport}
+      <Flex
+        w={"100%"}
+        h={"100vh"}
+        flexDir={"column"}
+        overflow={"hidden"}
+        alignItems={"center"}
+      >
+        {!download && isPublicReport ? (
+          <Flex
+            w={"100%"}
+            bg={"#333639"}
+            color={"white"}
+            px={10}
+            py={6}
+            boxShadow={"0px -1px 13.800000190734863px 0px #00000040"}
           >
-            {/* {printLoading ? (
+            <Text fontSize={"lg"} fontWeight={700}>
+              {summary_report.project_summary_report.project_name ||
+                summary_report.project_summary_report.contract_name}
+            </Text>
+            <Button
+              variant={"accent-outline"}
+              w={["250px"]}
+              ml={"auto"}
+              onClick={printReport}
+            >
+              {/* {printLoading ? (
             <Flex mr={5}>
               <Loader size={25} color="#3E15F4" />
             </Flex>
           ) : ( */}
-            <DownloadIcon mr={5} />
-            {/* )} */}
-            Download Report
-          </Button>
-        </Flex>
-        <Flex w={"100%"} h={"100%"} bg={"#535659"} pt={5} overflow={"hidden"}>
-          <Flex w={"25%"} h={"100%"} flexDir={"column"} pt={20} pl={8} pr={2}>
-            {leftNavs.map((nav, index) => (
-              <Text
-                key={index}
-                fontSize="sm"
-                fontWeight={
-                  currentPage && currentPage.value === nav.value ? 600 : 400
-                }
-                color={
-                  currentPage && currentPage.value === nav.value
-                    ? "white"
-                    : "#B0B7C3"
-                }
-                mb={6}
-                cursor={"pointer"}
-                onClick={() => navToPage(nav)}
-              >
-                {nav.label.toUpperCase()}
-              </Text>
-            ))}
+              <DownloadIcon mr={5} />
+              {/* )} */}
+              Download Report
+            </Button>
           </Flex>
+        ) : null}
+        <Flex
+          w={"100%"}
+          h={"100%"}
+          bg={!download ? "#535659" : "white"}
+          pt={5}
+          overflow={"hidden"}
+          alignItems={"center"}
+        >
+          {!download ? (
+            <Flex w={"25%"} h={"100%"} flexDir={"column"} pt={20} pl={8} pr={2}>
+              {leftNavs.map((nav, index) => (
+                <Text
+                  key={index}
+                  fontSize="sm"
+                  fontWeight={
+                    currentPage && currentPage.value === nav.value ? 600 : 400
+                  }
+                  color={
+                    currentPage && currentPage.value === nav.value
+                      ? "white"
+                      : "#B0B7C3"
+                  }
+                  mb={6}
+                  cursor={"pointer"}
+                  onClick={() => navToPage(nav)}
+                >
+                  {nav.label.toUpperCase()}
+                </Text>
+              ))}
+            </Flex>
+          ) : null}
           <VStack
             spacing={4}
             align="stretch"
@@ -299,7 +381,7 @@ export const ReportContainerV2: React.FC<{
             w={"803px"}
             minW={"803px"}
             h={"100%"}
-            bg={"#535659"}
+            bg={!download ? "#535659" : "white"}
             overflowY="auto"
           >
             <LazyLoad>
@@ -490,32 +572,49 @@ export const ReportContainerV2: React.FC<{
 
             {Object.keys(summary_report.issues).map((key, index) =>
               summary_report.issues[key].issue_details.map((issue) => {
-                // <LazyLoad key={"details" + index}>
-
-                return (
-                  <PDFContainer
-                    page={"details"}
-                    pageNumber={
-                      totalVulnerabilitySplit && totalBugsSplit
-                        ? totalVulnerabilitySplit?.length +
-                          totalBugsSplit?.length +
-                          index +
-                          4
-                        : 5 + index
-                    }
-                    content={
-                      <VulnerabililtyDetailsContainer
-                        summary_report={summary_report}
-                        issue={issue}
-                        showVulnerabilityTitle={index === 0}
-                        filesContent={filesContent}
+                const splitResult = getVulnerabilityDetailSplit(issue);
+                if (splitResult) {
+                  return (
+                    splitResult as {
+                      point: string;
+                      start_line: number;
+                      end_line: number;
+                    }[]
+                  ).map((item, index, array) => {
+                    counter = counter + 1;
+                    return (
+                      <PDFContainer
+                        page={"details"}
+                        pageNumber={
+                          totalVulnerabilitySplit && totalBugsSplit
+                            ? totalVulnerabilitySplit?.length +
+                              totalBugsSplit?.length +
+                              counter +
+                              4
+                            : 5 + counter
+                        }
+                        content={
+                          <VulnerabililtyDetailsContainer
+                            type={item.point}
+                            summary_report={summary_report}
+                            issue={issue}
+                            showVulnerabilityTitle={counter === 0}
+                            filesContent={filesContent}
+                            codeStartLine={item.start_line}
+                            codeEndLine={item.end_line}
+                            showMetadata={index === 0}
+                            showDescription={
+                              item.point === "desc" ||
+                              index === array.length - 1
+                            }
+                          />
+                        }
+                        setCurrentPage={setCurrentPage}
+                        setCurrentPageHeadings={setCurrentPageHeadings}
                       />
-                    }
-                    setCurrentPage={setCurrentPage}
-                    setCurrentPageHeadings={setCurrentPageHeadings}
-                  />
-                );
-                // </LazyLoad>
+                    );
+                  });
+                }
               })
             )}
 
@@ -524,7 +623,10 @@ export const ReportContainerV2: React.FC<{
               page={"history"}
               pageNumber={
                 totalVulnerabilitySplit && totalBugsSplit
-                  ? totalVulnerabilitySplit?.length + totalBugsSplit?.length + 5
+                  ? totalVulnerabilitySplit?.length +
+                    totalBugsSplit?.length +
+                    counter +
+                    5
                   : 6
               }
               content={<ScanHistoryContainer summary_report={summary_report} />}
@@ -538,8 +640,11 @@ export const ReportContainerV2: React.FC<{
               page={"disclaimer"}
               pageNumber={
                 totalVulnerabilitySplit && totalBugsSplit
-                  ? totalVulnerabilitySplit?.length + totalBugsSplit?.length + 7
-                  : 8
+                  ? totalVulnerabilitySplit?.length +
+                    totalBugsSplit?.length +
+                    counter +
+                    6
+                  : 7
               }
               content={<DisclaimerContainer />}
               setCurrentPage={setCurrentPage}
@@ -547,29 +652,31 @@ export const ReportContainerV2: React.FC<{
             />
             {/* </LazyLoad> */}
           </VStack>
-          <Flex w={"25%"} h={"100%"} flexDir={"column"} pt={20} pl={8} pr={2}>
-            <Text
-              fontSize="sm"
-              fontWeight={600}
-              color={"white"}
-              mb={6}
-              cursor={"pointer"}
-            >
-              ON THIS PAGE
-            </Text>
-            {currentPageHeadings &&
-              currentPageHeadings.map((nav, index) => (
-                <Text
-                  key={index}
-                  fontSize="sm"
-                  fontWeight={400}
-                  color={"#B0B7C3"}
-                  mb={4}
-                >
-                  {nav}
-                </Text>
-              ))}
-          </Flex>
+          {!download ? (
+            <Flex w={"25%"} h={"100%"} flexDir={"column"} pt={20} pl={8} pr={2}>
+              <Text
+                fontSize="sm"
+                fontWeight={600}
+                color={"white"}
+                mb={6}
+                cursor={"pointer"}
+              >
+                ON THIS PAGE
+              </Text>
+              {currentPageHeadings &&
+                currentPageHeadings.map((nav, index) => (
+                  <Text
+                    key={index}
+                    fontSize="sm"
+                    fontWeight={400}
+                    color={"#B0B7C3"}
+                    mb={4}
+                  >
+                    {nav}
+                  </Text>
+                ))}
+            </Flex>
+          ) : null}
         </Flex>
       </Flex>
     </Container>
