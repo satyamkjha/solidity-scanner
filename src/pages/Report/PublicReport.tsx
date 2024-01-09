@@ -7,6 +7,7 @@ import { useReactToPrint } from "react-to-print";
 import { DownloadIcon } from "@chakra-ui/icons";
 import Loader from "components/styled-components/Loader";
 import { ReportContainer } from "./ReportContainer";
+import { ReportContainerV2 } from "./ReportContainerV2";
 
 export default function ReportPage() {
   const { reportId, projectType } = useParams<{
@@ -31,45 +32,11 @@ export default function ReportPage() {
 
   return (
     <>
-      <HStack
-        w={["100%"]}
-        height={"fit-content"}
-        justifyContent={["center", "center", "flex-end"]}
-        bg={"black"}
-      >
-        <Button
-          variant={"accent-outline"}
-          w={["250px"]}
-          mr={28}
-          my={5}
-          onClick={printReport}
-          disabled={printLoading}
-        >
-          {printLoading ? (
-            <Flex mr={5}>
-              <Loader size={25} color="#3E15F4" />
-            </Flex>
-          ) : (
-            <DownloadIcon mr={5} />
-          )}
-          Download Report
-        </Button>
-      </HStack>
-
       {data ? (
-        <Flex flexDir={"column"} overflow={"hidden"}>
-          {printLoading && (
-            <Box w={0} h={0} visibility={"hidden"}>
-              <Box w="100vw" ref={componentRef}>
-                <PrintContainer summary_report={data.summary_report} />
-              </Box>
-            </Box>
-          )}
-          <ReportContainer
-            summary_report={data.summary_report}
-            isPublicReport={true}
-          />
-        </Flex>
+        <ReportContainerV2
+          summary_report={data.summary_report}
+          isPublicReport={true}
+        />
       ) : (
         <Container py={12} h="100vh" maxW={"100vw"} bg="black">
           <Flex
