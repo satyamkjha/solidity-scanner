@@ -46,7 +46,11 @@ export const WebSocketProvider = ({ children }) => {
         process.env.REACT_APP_ENVIRONMENT === "production"
           ? WSS_URL_PROD
           : WSS_URL_DEV
-      }${withAuth ? `?auth_token=${profileData.auth_token}` : ""}`
+      }?auth_token=${
+        withAuth
+          ? `${profileData.auth_token}`
+          : "75ce522381f289c1d790745d51e8b74bcd5c283c"
+      }`
     );
     setWebSocket(ws);
     setWsReadyState(ws.readyState);
@@ -58,7 +62,15 @@ export const WebSocketProvider = ({ children }) => {
     ws.addEventListener("message", (event) => {
       const receivedMessage = JSON.parse(event.data);
       if (receivedMessage) {
-        if (receivedMessage.type === "error") {
+        if (receivedMessage.message) {
+          toast({
+            title: receivedMessage.message,
+            status: "error",
+            isClosable: true,
+            position: "bottom",
+          });
+          setKeepWSOpen(false);
+        } else if (receivedMessage.type === "error") {
           if (receivedMessage.payload && receivedMessage.payload.message) {
             toast({
               title: receivedMessage.payload.message,
@@ -74,6 +86,7 @@ export const WebSocketProvider = ({ children }) => {
               position: "bottom",
             });
           }
+          setKeepWSOpen(false);
         } else {
           setTempMessageQueue((prevQueue) => [...prevQueue, receivedMessage]);
         }
@@ -169,6 +182,7 @@ export const WebSocketProvider = ({ children }) => {
           })
         );
       });
+      setTempEmitMsgQueue([]);
     }
   }, [wsReadyState]);
 

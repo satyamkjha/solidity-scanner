@@ -44,7 +44,8 @@ const QuickScan: React.FC = () => {
   const [scanReport, setScanReport] = React.useState<QuickScanResult | null>(
     null
   );
-  const { sendMessage, setKeepWSOpen } = useWebSocket();
+  const { sendMessage, setKeepWSOpen, updateMessageQueue, messageQueue } =
+    useWebSocket();
   const [tempQSData, setTempQSData] = useState<{
     blockAddress: string;
     blockPlatform: string;
@@ -81,10 +82,8 @@ const QuickScan: React.FC = () => {
       blockPlatform: platform,
       blockChain: chain,
     });
-
     const reqHeaders1 = await getReCaptchaHeaders("quickScan_verify");
     const reqHeaders2 = await getReCaptchaHeaders("quickScan");
-
     setScanReport(null);
     if (platform !== "buildbear" && !checkContractAddress(address)) {
       toast({
@@ -103,7 +102,6 @@ const QuickScan: React.FC = () => {
       contract_platform: platform,
       [platform === "buildbear" ? "node_id" : "contract_chain"]: chain,
     };
-
     API.post<{
       contract_verified: boolean;
       message: string;
@@ -175,6 +173,31 @@ const QuickScan: React.FC = () => {
         setTempQSData(null);
       });
   };
+
+  useEffect(() => {
+    if (
+      messageQueue.length > 0 &&
+      messageQueue.some((msgItem: any) =>
+        ["quick_scan_status"].includes(msgItem.type)
+      )
+    ) {
+      messageQueue.forEach((msgItem: any) => {
+        if (
+          msgItem.type === "quick_scan_status" &&
+          msgItem.payload.scan_status === "scan_done"
+        ) {
+          setScanReport(msgItem.payload.scan_details.scan_report);
+          setIsLoading(false);
+          setKeepWSOpen(false);
+        }
+      });
+      let tempMsgQueue = messageQueue;
+      tempMsgQueue = tempMsgQueue.filter(
+        (msg: any) => msg.type !== "quick_scan_status"
+      );
+      updateMessageQueue(tempMsgQueue);
+    }
+  }, [messageQueue]);
 
   return (
     <Flex

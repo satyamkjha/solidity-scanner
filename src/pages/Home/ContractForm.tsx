@@ -106,8 +106,8 @@ const ContractForm: React.FC<{
                   type: "block_scan_initiate",
                   body: req,
                 });
-                setIsLoading(false);
                 history.push("/projects");
+                setIsLoading(false);
               }
             } else {
               setIsLoading(false);
