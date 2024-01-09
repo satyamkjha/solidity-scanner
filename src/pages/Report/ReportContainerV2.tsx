@@ -48,6 +48,7 @@ import { useParams, useLocation } from "react-router-dom";
 import API from "helpers/api";
 import { API_PATH } from "helpers/routeManager";
 import { DownloadIcon } from "@chakra-ui/icons";
+import Loader from "components/styled-components/Loader";
 
 export const ReportContainerV2: React.FC<{
   summary_report: Report;
@@ -91,6 +92,7 @@ export const ReportContainerV2: React.FC<{
   >([]);
   const [currentPageHeadings, setCurrentPageHeadings] =
     useState<(string | null)[]>();
+  const [printLoading, setPrintLoading] = useState(false);
 
   const location = useLocation();
   const searchParams = new URLSearchParams(location.search);
@@ -226,13 +228,14 @@ export const ReportContainerV2: React.FC<{
 
   const printReport = async () => {
     try {
+      setPrintLoading(true);
       const { data } = await API.post(`${API_PATH.API_GET_REPORT_PDF}`, {
         project_id:
           projectId || summary_report.project_summary_report.project_id,
         report_id: reportId,
         scan_type: projectType,
       });
-
+      setPrintLoading(false);
       if (data.status === "success" && data.download_url) {
         const link = document.createElement("a");
         link.href = data.download_url;
@@ -240,6 +243,7 @@ export const ReportContainerV2: React.FC<{
       }
     } catch (e) {
       console.log(e);
+      setPrintLoading(false);
     }
   };
 
@@ -348,13 +352,13 @@ export const ReportContainerV2: React.FC<{
               ml={"auto"}
               onClick={printReport}
             >
-              {/* {printLoading ? (
-            <Flex mr={5}>
-              <Loader size={25} color="#3E15F4" />
-            </Flex>
-          ) : ( */}
-              <DownloadIcon mr={5} />
-              {/* )} */}
+              {printLoading ? (
+                <Flex mr={5}>
+                  <Loader size={25} color="#3E15F4" />
+                </Flex>
+              ) : (
+                <DownloadIcon mr={5} />
+              )}
               Download Report
             </Button>
           </Flex>
@@ -391,12 +395,12 @@ export const ReportContainerV2: React.FC<{
             </Flex>
           ) : null}
           <VStack
-            spacing={4}
+            spacing={download ? 0 : 4}
             align="stretch"
             mt={download ? 0 : 6}
             pb={20}
-            w={"809px"}
-            minW={"809px"}
+            w={"813px"}
+            minW={"813px"}
             h={download ? "inherit" : "100%"}
             bg={!download ? "#535659" : "white"}
             overflowY={download ? "visible" : "auto"}
