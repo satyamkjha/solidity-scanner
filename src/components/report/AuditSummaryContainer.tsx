@@ -204,21 +204,31 @@ const AuditSummaryContainer: React.FC<{
           templateColumns={"repeat(3, 1fr)"}
           gap={8}
         >
-          {detailOptions.map((detail, index) => (
-            <VStack alignItems={"flex-start"} spacing={1}>
-              <Text fontSize="xs" fontWeight={400} color={"#8A94A6"}>
-                {detail.label}
-              </Text>
-              <Text fontSize="sm" fontWeight={600}>
-                {detail.label === "Language" ||
-                detail.label === "Audit Methodology"
-                  ? detail.value
-                  : (summary_report.project_summary_report as any)[
-                      detail.value
-                    ] || "-"}
-              </Text>
-            </VStack>
-          ))}
+          {detailOptions.map((detail, index) => {
+            if (
+              summary_report.project_summary_report.project_url &&
+              summary_report.project_summary_report.project_url ===
+                "File Scan" &&
+              detail.value === "git_commit_hash"
+            )
+              return null;
+            else
+              return (
+                <VStack alignItems={"flex-start"} spacing={1}>
+                  <Text fontSize="xs" fontWeight={400} color={"#8A94A6"}>
+                    {detail.label}
+                  </Text>
+                  <Text fontSize="sm" fontWeight={600}>
+                    {detail.label === "Language" ||
+                    detail.label === "Audit Methodology"
+                      ? detail.value
+                      : (summary_report.project_summary_report as any)[
+                          detail.value
+                        ] || "-"}
+                  </Text>
+                </VStack>
+              );
+          })}
         </Grid>
       </Flex>
       <Flex
