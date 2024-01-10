@@ -204,7 +204,9 @@ const VulnerabililtyDetailsContainer: React.FC<{
                     <Flex>
                       <Link
                         href={
-                          summary_report.project_summary_report.project_url
+                          summary_report.project_summary_report.project_url &&
+                          summary_report.project_summary_report.project_url !==
+                            "File Scan"
                             ? getProjectFileUrl(
                                 summary_report.project_summary_report
                                   .project_url,
@@ -241,7 +243,7 @@ const VulnerabililtyDetailsContainer: React.FC<{
             >
               <Image src={`${assetsURL}report/clipboard.svg`} width={6} />
               <Text fontSize="sm" fontWeight={600} width={"100%"}>
-                Effected Code
+                Affected Code
               </Text>
             </HStack>
           </>
