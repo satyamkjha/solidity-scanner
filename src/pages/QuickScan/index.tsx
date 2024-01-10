@@ -183,7 +183,7 @@ const QuickScan: React.FC = () => {
     if (
       messageQueue.length > 0 &&
       messageQueue.some((msgItem: any) =>
-        ["scan_status", "quick_scan_acknowledge"].includes(msgItem.type)
+        ["quick_scan_status", "quick_scan_acknowledge"].includes(msgItem.type)
       )
     ) {
       messageQueue.forEach((msgItem: any) => {
