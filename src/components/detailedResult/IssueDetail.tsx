@@ -108,7 +108,6 @@ const IssueDetail: React.FC<{
             isClosable: true,
           });
         } else {
-          
           sendMessage({
             type: "scan_update",
             body: {
@@ -121,12 +120,6 @@ const IssueDetail: React.FC<{
             },
           });
           setRestrictedBugIds([...restrictedBugIds, files.bug_hash]);
-          toast({
-            title: "Comment Updated",
-            status: "success",
-            duration: 3000,
-            isClosable: true,
-          });
           setFiles({
             ...files,
             comment: comment,
@@ -142,13 +135,6 @@ const IssueDetail: React.FC<{
           scan_type: type,
         });
         if (data.status === "success") {
-          toast({
-            title: "Comment Updated",
-            description: data.message,
-            status: "success",
-            duration: 3000,
-            isClosable: true,
-          });
           setFiles({
             ...files,
             comment: comment,

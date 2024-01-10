@@ -16,6 +16,7 @@ import {
   MenuList,
   MenuItem,
   Image,
+  useToast,
 } from "@chakra-ui/react";
 // import Lottie from "lottie-react";
 import { Page, Pagination, ScanObj } from "common/types";
@@ -68,16 +69,13 @@ const Scans: React.FC = () => {
     useState<{ scanItem: ScanObj; tempScanStatus: string }[]>();
   const [projectsMonitored, setProjectsMonitored] = useState(0);
   const [isProjectsLoading, setIsProjectsLoading] = useState(false);
-
   const { messageQueue, updateMessageQueue, setKeepWSOpen } = useWebSocket();
-
+  const toast = useToast();
   const { data: profileData, refetch: refetchProfile } = useProfile(true);
-
   useEffect(() => {
     if (profileData) {
       setProjectsMonitored(profileData.projects_remaining);
     }
-
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [profileData, refetchProfile]);
 
@@ -167,10 +165,17 @@ const Scans: React.FC = () => {
       projectList &&
       messageQueue.length > 0 &&
       messageQueue.some((msgItem: any) =>
-        ["scan_initiate", "scan_status", "scan_complete"].includes(msgItem.type)
+        [
+          "scan_initiate",
+          "scan_status",
+          "scan_complete",
+          "delete_block_acknowledge",
+          "delete_project_acknowledge",
+        ].includes(msgItem.type)
       )
     ) {
       let updatedProjectList = projectList;
+
       messageQueue.forEach((msgItem: any) => {
         if (msgItem.type === "scan_status") {
           updatedProjectList = updatedProjectList.map((item) => {
@@ -192,25 +197,58 @@ const Scans: React.FC = () => {
             } else return item;
           });
         } else if (msgItem.type === "scan_initiate") {
-          updatedProjectList = [
-            {
-              scanItem: {
-                scan_id: msgItem.payload.scan_details.scan_id,
-                scan_type: msgItem.payload.scan_details.scan_type,
-                scan_details: msgItem.payload.scan_details,
+          let scanAlreadyPresent = false;
+          updatedProjectList = updatedProjectList.map((item) => {
+            if (
+              item.scanItem.scan_details.project_id ===
+              msgItem.payload.scan_details.project_id
+            ) {
+              scanAlreadyPresent = true;
+              return {
+                scanItem: {
+                  scan_id: msgItem.payload.scan_details.scan_id,
+                  scan_type: msgItem.payload.scan_details.scan_type,
+                  scan_details: msgItem.payload.scan_details,
+                },
+                tempScanStatus: "scan_initiate",
+              };
+            } else return item;
+          });
+          if (!scanAlreadyPresent) {
+            updatedProjectList = [
+              {
+                scanItem: {
+                  scan_id: msgItem.payload.scan_details.scan_id,
+                  scan_type: msgItem.payload.scan_details.scan_type,
+                  scan_details: msgItem.payload.scan_details,
+                },
+                tempScanStatus: "scan_initiate",
               },
-              tempScanStatus: "scan_initiate",
-            },
-            ...updatedProjectList,
-          ];
+              ...updatedProjectList,
+            ];
+          }
+        } else if (
+          msgItem.type === "delete_block_acknowledge" ||
+          msgItem.type === "delete_project_acknowledge"
+        ) {
+          toast({
+            title: msgItem.payload.payload.message,
+            status: "success",
+            duration: 3000,
+            isClosable: true,
+          });
         }
       });
       let tempMsgQueue = messageQueue;
       tempMsgQueue = tempMsgQueue.filter(
-        (msg: any) => msg.type !== "scan_status"
-      );
-      tempMsgQueue = tempMsgQueue.filter(
-        (msg: any) => msg.type !== "scan_initiate"
+        (msg: any) =>
+          ![
+            "scan_initiate",
+            "scan_status",
+            "scan_complete",
+            "delete_block_acknowledge",
+            "delete_project_acknowledge",
+          ].includes(msg.type)
       );
       updateMessageQueue(tempMsgQueue);
       setProjectList(updatedProjectList);

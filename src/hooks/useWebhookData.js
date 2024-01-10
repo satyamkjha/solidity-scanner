@@ -71,9 +71,12 @@ export const WebSocketProvider = ({ children }) => {
           });
           setKeepWSOpen(false);
         } else if (receivedMessage.type === "error") {
-          if (receivedMessage.payload && receivedMessage.payload.message) {
+          if (
+            receivedMessage.payload &&
+            receivedMessage.payload.payload.error_message.message
+          ) {
             toast({
-              title: receivedMessage.payload.message,
+              title: receivedMessage.payload.payload.error_message.message,
               status: "error",
               isClosable: true,
               position: "bottom",

@@ -39,6 +39,7 @@ import { signInWithCustomToken, User, onAuthStateChanged } from "firebase/auth";
 import { auth } from "helpers/firebase";
 import { useUserRole } from "hooks/useUserRole";
 import { CloseIcon } from "@chakra-ui/icons";
+import { useWebSocket } from "hooks/useWebhookData";
 
 const MotionFlex = motion(Flex);
 
@@ -55,10 +56,14 @@ const Layout: React.FC = ({ children }) => {
     profileData?.logged_in_via === "org_login"
   );
 
+  const [credits, setCredits] = useState(profileData ? profileData.credits : 0);
+
   // const [isBannerOpen, setIsBannerOpen] = useState(true);
 
   const config: any = useConfig();
   const assetsURL = getAssetsURL(config);
+
+  const { messageQueue, updateMessageQueue } = useWebSocket();
 
   const handleClickOutside = (e: MouseEvent) => {
     if (ref.current && ref.current.contains(e.target as Node)) {
@@ -68,6 +73,27 @@ const Layout: React.FC = ({ children }) => {
     // outside click
     setShowSidebar(false);
   };
+
+  useEffect(() => {
+    console.log(messageQueue);
+    if (
+      messageQueue &&
+      messageQueue.length > 0 &&
+      messageQueue.some(
+        (msgItem: any) => msgItem && msgItem.type === "account_credits_update"
+      )
+    ) {
+      messageQueue.map((msgItem: any) => {
+        if (msgItem.type && msgItem.type === "account_credits_update") {
+          setCredits(msgItem.payload.updated_credits);
+        } else return msgItem;
+      });
+      let tempMessageQueue = messageQueue.filter(
+        (msgItem: any) => msgItem !== "account_credits_update"
+      );
+      updateMessageQueue(tempMessageQueue);
+    }
+  }, [messageQueue]);
 
   const getFirebaseToken = async () => {
     const { data } = await API.get<{ token: string }>(
@@ -308,10 +334,7 @@ const Layout: React.FC = ({ children }) => {
                 >
                   <Image src={`${assetsURL}pricing/coin.svg`} mx="auto" />
                   <Text fontWeight={600} fontSize="2xl" ml={4}>
-                    {profileData.credits.toLocaleString("en-US", {
-                      minimumIntegerDigits: 2,
-                      useGrouping: false,
-                    })}
+                    {credits}
                     <Box as="span" ml={2} color="subtle" fontSize="sm">
                       Scan Credits
                     </Box>

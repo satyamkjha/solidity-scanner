@@ -164,16 +164,26 @@ const MultifileResult: React.FC<{
       )
     ) {
       let tempRestrictedBugIds = restrictedBugIds;
-      messageQueue.map((msgItem: any) => {
+      messageQueue.forEach((msgItem: any) => {
         if (msgItem.type && msgItem.type === "scan_update") {
           tempRestrictedBugIds = tempRestrictedBugIds.filter(
             (bugId) => !msgItem.payload.scan_updates.bug_ids.includes(bugId)
           );
+        } else if (msgItem.type && msgItem.type === "update_bug_acknowledge") {
+          toast({
+            title: msgItem.payload.payload.message,
+            status: "success",
+            duration: 3000,
+            isClosable: true,
+          });
         } else return msgItem;
       });
       setRestrictedBugIds(tempRestrictedBugIds);
       let tempMessageQueue = messageQueue.filter(
         (item: any) => item.type !== "scan_update"
+      );
+      tempMessageQueue = tempMessageQueue.filter(
+        (item: any) => item.type !== "update_bug_acknowledge"
       );
       updateMessageQueue(tempMessageQueue);
     } else {
@@ -199,12 +209,6 @@ const MultifileResult: React.FC<{
               comment: comment,
               scan_type: type,
             },
-          });
-          toast({
-            title: "Bug Status Updated",
-            status: "success",
-            duration: 3000,
-            isClosable: true,
           });
           setRestrictedBugIds([...restrictedBugIds, ...selectedBugs]);
 

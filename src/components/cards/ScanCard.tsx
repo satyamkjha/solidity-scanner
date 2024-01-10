@@ -41,6 +41,7 @@ import {
 } from "helpers/helperFunction";
 import { scanStatesLabel } from "common/values";
 import { useWebSocket } from "hooks/useWebhookData";
+import { useConfig } from "hooks/useConfig";
 
 const ScanCard: React.FC<{
   scan: ScanObj;
@@ -69,28 +70,53 @@ const ScanCard: React.FC<{
     project_id,
   } = scan.scan_details;
   const cancelRef = useRef<HTMLButtonElement | null>(null);
-  const toast = useToast();
+  const config: any = useConfig();
   const assetsURL = getAssetsURL();
   const history = useHistory();
   const [hover, setHover] = useState(false);
   const { sendMessage } = useWebSocket();
+  const toast = useToast();
 
   const deleteProject = async () => {
-    sendMessage({
-      type: scan.scan_type === "project" ? "project_delete" : "block_delete",
-      body: {
-        project_ids: [project_id],
-      },
-    });
-    toast({
-      title: "Scan has been deleted",
-      status: "success",
-      duration: 2000,
-      isClosable: true,
-      position: "bottom",
-    });
-    onClose();
-    updateScanList(scan_id);
+    if (config && config.REACT_APP_FEATURE_GATE_CONFIG.websockets_enabled) {
+      const url =
+        scan.scan_type === "project"
+          ? API_PATH.API_DELETE_PROJECT
+          : API_PATH.API_DELETE_BLOCK;
+      const { data } = await API.delete(url, {
+        data: {
+          project_ids: [project_id],
+        },
+      });
+      if (data.status === "success") {
+        toast({
+          title: data.message,
+          status: "success",
+          duration: 2000,
+          isClosable: true,
+          position: "bottom",
+        });
+      } else {
+        toast({
+          title: data.message,
+          status: "error",
+          duration: 2000,
+          isClosable: true,
+          position: "bottom",
+        });
+      }
+      onClose();
+      updateScanList(scan_id);
+    } else {
+      sendMessage({
+        type: scan.scan_type === "project" ? "project_delete" : "block_delete",
+        body: {
+          project_ids: [project_id],
+        },
+      });
+      onClose();
+      updateScanList(scan_id);
+    }
   };
 
   const { isOpen, onClose, onOpen } = useDisclosure();

@@ -41,6 +41,7 @@ const QuickScan: React.FC = () => {
   const toast = useToast();
   const config: any = useConfig();
   const [isLoading, setIsLoading] = React.useState<boolean>(false);
+  const [showSkeleton, setShowSkeletion] = useState(false);
   const [scanReport, setScanReport] = React.useState<QuickScanResult | null>(
     null
   );
@@ -134,6 +135,7 @@ const QuickScan: React.FC = () => {
                 body: req,
               });
             } else {
+              setShowSkeletion(true);
               let api_url = `${
                 API_PATH.API_QUICK_SCAN_SSE
               }?contract_address=${address}&contract_platform=${platform}&${
@@ -157,6 +159,7 @@ const QuickScan: React.FC = () => {
                   }
                 )
                 .finally(() => {
+                  setShowSkeletion(false);
                   setIsLoading(false);
                   setTempQSData(null);
                 });
@@ -164,11 +167,13 @@ const QuickScan: React.FC = () => {
           }
         },
         () => {
+          setShowSkeletion(false);
           setIsLoading(false);
           setTempQSData(null);
         }
       )
       .catch(() => {
+        setShowSkeletion(false);
         setIsLoading(false);
         setTempQSData(null);
       });
@@ -178,7 +183,7 @@ const QuickScan: React.FC = () => {
     if (
       messageQueue.length > 0 &&
       messageQueue.some((msgItem: any) =>
-        ["quick_scan_status"].includes(msgItem.type)
+        ["scan_status", "quick_scan_acknowledge"].includes(msgItem.type)
       )
     ) {
       messageQueue.forEach((msgItem: any) => {
@@ -187,13 +192,19 @@ const QuickScan: React.FC = () => {
           msgItem.payload.scan_status === "scan_done"
         ) {
           setScanReport(msgItem.payload.scan_details.scan_report);
+          setShowSkeletion(false);
           setIsLoading(false);
           setKeepWSOpen(false);
+        } else if (msgItem.type && msgItem.type === "quick_scan_acknowledge") {
+          setShowSkeletion(true);
         }
       });
       let tempMsgQueue = messageQueue;
       tempMsgQueue = tempMsgQueue.filter(
-        (msg: any) => msg.type !== "quick_scan_status"
+        (msg: any) =>
+          !["quick_scan_status", "quick_scan_acknowledgement"].includes(
+            msg.type
+          )
       );
       updateMessageQueue(tempMsgQueue);
     }
@@ -216,7 +227,7 @@ const QuickScan: React.FC = () => {
         bg={"linear-gradient(180deg, #060606 -45.59%, #414141 255.55%)"}
       >
         <Header theme={"dark"} />
-        {isLoading && tempQSData ? (
+        {showSkeleton && tempQSData ? (
           <VStack
             w="90%"
             maxW="1800px"
@@ -247,14 +258,6 @@ const QuickScan: React.FC = () => {
               </Text>
             </HStack>
           </VStack>
-        ) : isLoading ? (
-          <Flex
-            w="90%"
-            maxW="1800px"
-            alignItems="center"
-            justify="flex-start"
-            h="90vh"
-          ></Flex>
         ) : scanReport === null ? (
           <QuickScanForm
             view="quickscan"
