@@ -107,7 +107,13 @@ const AuditSummaryContainer: React.FC<{
           ) : (
             <ProjectIcon size={50} />
           )}
-          <Flex align={["flex-start"]} flexDir={"column"} mb={0} ml={10}>
+          <Flex
+            w={"60%"}
+            align={["flex-start"]}
+            flexDir={"column"}
+            mb={0}
+            ml={6}
+          >
             <Text fontSize="md" fontWeight={"bold"}>
               {summary_report.project_summary_report.project_name}
               {summary_report.project_summary_report.contract_name}
@@ -138,14 +144,21 @@ const AuditSummaryContainer: React.FC<{
               fontSize="xs"
               fontWeight={400}
               color={"accent"}
+              w={"100%"}
+              display={"flex"}
+              alignItems={"center"}
             >
-              {summary_report.project_summary_report.project_url !== "File Scan"
-                ? summary_report.project_summary_report.project_url
-                : ""}
-              {summary_report.project_summary_report.contract_url}
+              <Text isTruncated>
+                {summary_report.project_summary_report.project_url !==
+                "File Scan"
+                  ? summary_report.project_summary_report.project_url
+                  : ""}
+                {summary_report.project_summary_report.contract_url}
+              </Text>
+
               {summary_report.project_summary_report.project_url !==
               "File Scan" ? (
-                <ExternalLinkIcon ml={2} color={"#8A94A6"} />
+                <ExternalLinkIcon ml={1.5} color={"#8A94A6"} />
               ) : null}
             </Link>
           </Flex>

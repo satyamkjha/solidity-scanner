@@ -45,6 +45,7 @@ const FindingSummaryContainer: React.FC<{
         projectDetails={summary_report.project_summary_report}
         spacing={10}
         theme={"light"}
+        page={"report"}
       />
       <Flex
         w="100%"

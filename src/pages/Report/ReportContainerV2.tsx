@@ -1,54 +1,42 @@
-import {
-  Container,
-  Flex,
-  Heading,
-  Box,
-  HStack,
-  Divider,
-  VStack,
-  CircularProgress,
-  CircularProgressLabel,
-  Text,
-  Image,
-  useMediaQuery,
-  Stack,
-  Link,
-  Button,
-} from "@chakra-ui/react";
-import { ResponsivePie } from "@nivo/pie";
+import { Container, Flex, VStack, Text, Button } from "@chakra-ui/react";
 import LazyLoad from "react-lazyload";
 import { Report, Profile, IssueItem } from "common/types";
-import {
-  Logo,
-  SeverityIcon,
-  GithubIcon,
-  ProjectIcon,
-  ReportCoverDots,
-} from "components/icons";
-import VulnerabilityProgress from "components/VulnerabilityProgress";
-import { getAssetsURL, sentenceCapitalize } from "helpers/helperFunction";
 import React, { useState, useEffect } from "react";
-import styled from "@emotion/styled";
-import { useConfig } from "hooks/useConfig";
-import UpgradePackageV2 from "components/UpgradePackageV2";
-import { pieData } from "common/values";
 import PDFContainer from "components/report/PDFContainer";
-import CoverPageContainer from "components/report/CoverPageContainer";
-import TableContentContainer, {
-  IssueComponent,
-} from "components/report/TableContentContainer";
-import ProjectSummaryContainer from "components/report/ProjectSummaryContainer";
-import AuditSummaryContainer from "components/report/AuditSummaryContainer";
-import FindingSummaryContainer from "components/report/FindingSummaryContainer";
-import VulnerabililtyDetailsContainer from "components/report/VulnerabililtyDetailsContainer";
-import ScanHistoryContainer from "components/report/ScanHistoryContainer";
-import DisclaimerContainer from "components/report/DisclaimerContainer";
-import FindingBugListContainer from "components/report/FindingBugListContainer";
+import { IssueComponent } from "components/report/TableContentContainer";
 import { useParams, useLocation } from "react-router-dom";
 import API from "helpers/api";
 import { API_PATH } from "helpers/routeManager";
 import { DownloadIcon } from "@chakra-ui/icons";
 import Loader from "components/styled-components/Loader";
+
+const CoverPageContainer = React.lazy(
+  () => import("components/report/CoverPageContainer")
+);
+const TableContentContainer = React.lazy(
+  () => import("components/report/TableContentContainer")
+);
+const ProjectSummaryContainer = React.lazy(
+  () => import("components/report/ProjectSummaryContainer")
+);
+const AuditSummaryContainer = React.lazy(
+  () => import("components/report/AuditSummaryContainer")
+);
+const VulnerabililtyDetailsContainer = React.lazy(
+  () => import("components/report/VulnerabililtyDetailsContainer")
+);
+const ScanHistoryContainer = React.lazy(
+  () => import("components/report/ScanHistoryContainer")
+);
+const DisclaimerContainer = React.lazy(
+  () => import("components/report/DisclaimerContainer")
+);
+const FindingBugListContainer = React.lazy(
+  () => import("components/report/FindingBugListContainer")
+);
+const FindingSummaryContainer = React.lazy(
+  () => import("components/report/FindingSummaryContainer")
+);
 
 export const ReportContainerV2: React.FC<{
   summary_report: Report;
@@ -82,14 +70,11 @@ export const ReportContainerV2: React.FC<{
 
   const [currentPage, setCurrentPage] = useState<any>();
   const [bugList, setBugList] = useState<IssueItem[]>();
-  const [filePaths, setFilePaths] = useState<string[]>();
   const [filesContent, setFilesContent] = useState<any[]>([]);
   const [totalVulnerabilitySplit, setTotalVulnerabilitySplit] =
     useState<number[]>();
   const [totalBugsSplit, setTotalBugsSplit] = useState<number[]>();
-  const [vulnerabilityDetailSplit, setVulnerabilityDetailSplit] = useState<
-    any[]
-  >([]);
+
   const [currentPageHeadings, setCurrentPageHeadings] =
     useState<(string | null)[]>();
   const [printLoading, setPrintLoading] = useState(false);
@@ -99,7 +84,6 @@ export const ReportContainerV2: React.FC<{
   const download = searchParams.get("download");
 
   useEffect(() => {
-    let totalCount = 0;
     let doubleCount = 0;
     let split: number[] = [0];
     let bugSplit: number[] = [0];
@@ -138,7 +122,7 @@ export const ReportContainerV2: React.FC<{
         doubleCount = 0;
       }
     });
-    setBugList(issueDetailList);
+    setBugList(getSortedIssues(issueDetailList));
     setTotalBugsSplit(bugSplit);
     setTotalVulnerabilitySplit(split);
 
@@ -152,14 +136,11 @@ export const ReportContainerV2: React.FC<{
         (filePath: string, index: number, array: string[]) =>
           array.indexOf(filePath) === index
       );
-    setFilePaths(uniqueFilePaths);
-    // getFileContent(projectType, uniqueFilePaths).then((data) => {
-    //   setFilesContent(data.file_contents);
-    // });
     getFileContentBatched(projectType, uniqueFilePaths).then((data) => {
       const mergedFileContents = data.flatMap((batch) => batch.file_contents);
       setFilesContent(mergedFileContents);
     });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [summary_report.issues]);
 
   useEffect(() => {
@@ -173,7 +154,34 @@ export const ReportContainerV2: React.FC<{
         }
       }, 3000);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [filesContent]);
+
+  const getSortedIssues = (issues: IssueItem[]) => {
+    const priority_list = [
+      "critical",
+      "high",
+      "medium",
+      "low",
+      "informational",
+      "gas",
+    ];
+
+    const sortedIssues = issues.sort((a, b) => {
+      const severityA = priority_list.indexOf(a.severity);
+      const severityB = priority_list.indexOf(b.severity);
+
+      if (severityA < severityB) {
+        return -1;
+      } else if (severityA > severityB) {
+        return 1;
+      } else {
+        return 0;
+      }
+    });
+
+    return sortedIssues;
+  };
 
   const getFileContentBatched = async (
     type: "project" | "block",
@@ -333,7 +341,7 @@ export const ReportContainerV2: React.FC<{
         overflow={download ? "" : "hidden"}
         alignItems={"center"}
       >
-        {!download && isPublicReport ? (
+        {!download ? (
           <Flex
             w={"100%"}
             bg={"#333639"}
@@ -346,21 +354,23 @@ export const ReportContainerV2: React.FC<{
               {summary_report.project_summary_report.project_name ||
                 summary_report.project_summary_report.contract_name}
             </Text>
-            <Button
-              variant={"accent-outline"}
-              w={["250px"]}
-              ml={"auto"}
-              onClick={printReport}
-            >
-              {printLoading ? (
-                <Flex mr={5}>
-                  <Loader size={25} color="#3E15F4" />
-                </Flex>
-              ) : (
-                <DownloadIcon mr={5} />
-              )}
-              Download Report
-            </Button>
+            {isPublicReport ? (
+              <Button
+                variant={"accent-outline"}
+                w={["250px"]}
+                ml={"auto"}
+                onClick={printReport}
+              >
+                {printLoading ? (
+                  <Flex mr={5}>
+                    <Loader size={25} color="#3E15F4" />
+                  </Flex>
+                ) : (
+                  <DownloadIcon mr={5} />
+                )}
+                Download Report
+              </Button>
+            ) : null}
           </Flex>
         ) : null}
         <Flex
@@ -399,45 +409,45 @@ export const ReportContainerV2: React.FC<{
             align="stretch"
             mt={download ? 0 : 6}
             pb={20}
-            w={"813px"}
-            minW={"813px"}
+            w={"819px"}
+            minW={"819px"}
             h={download ? "inherit" : "100%"}
             bg={!download ? "#535659" : "white"}
             overflowY={download ? "visible" : "auto"}
           >
-            <LazyLoad>
-              <PDFContainer
-                page={"cover"}
-                content={
-                  <CoverPageContainer
-                    d={d}
-                    summary_report={summary_report}
-                    isPublicReport={isPublicReport}
-                  />
-                }
-                setCurrentPage={setCurrentPage}
-                setCurrentPageHeadings={setCurrentPageHeadings}
-              />
-            </LazyLoad>
+            {/* <LazyLoad> */}
+            <PDFContainer
+              page={"cover"}
+              content={
+                <CoverPageContainer
+                  d={d}
+                  summary_report={summary_report}
+                  isPublicReport={isPublicReport}
+                />
+              }
+              setCurrentPage={setCurrentPage}
+              setCurrentPageHeadings={setCurrentPageHeadings}
+            />
+            {/* </LazyLoad> */}
 
-            <LazyLoad>
-              <PDFContainer
-                page={"toc"}
-                pageNumber={1}
-                content={
-                  <TableContentContainer
-                    summaryReport={summary_report}
-                    maxLength={
-                      totalVulnerabilitySplit && totalVulnerabilitySplit.length
-                        ? totalVulnerabilitySplit[1]
-                        : Object.keys(summary_report.issues).length
-                    }
-                  />
-                }
-                setCurrentPage={setCurrentPage}
-                setCurrentPageHeadings={setCurrentPageHeadings}
-              />
-            </LazyLoad>
+            {/* <LazyLoad> */}
+            <PDFContainer
+              page={"toc"}
+              pageNumber={1}
+              content={
+                <TableContentContainer
+                  summaryReport={summary_report}
+                  maxLength={
+                    totalVulnerabilitySplit && totalVulnerabilitySplit.length
+                      ? totalVulnerabilitySplit[1]
+                      : Object.keys(summary_report.issues).length
+                  }
+                />
+              }
+              setCurrentPage={setCurrentPage}
+              setCurrentPageHeadings={setCurrentPageHeadings}
+            />
+            {/* </LazyLoad> */}
             {totalVulnerabilitySplit && totalVulnerabilitySplit.length ? (
               <>
                 {totalVulnerabilitySplit
@@ -512,53 +522,53 @@ export const ReportContainerV2: React.FC<{
               </>
             ) : null}
 
-            <LazyLoad>
-              <PDFContainer
-                page={"summary"}
-                pageNumber={
-                  totalVulnerabilitySplit
-                    ? totalVulnerabilitySplit?.length + 1
-                    : 2
-                }
-                content={
-                  <ProjectSummaryContainer summary_report={summary_report} />
-                }
-                setCurrentPage={setCurrentPage}
-                setCurrentPageHeadings={setCurrentPageHeadings}
-              />
-            </LazyLoad>
+            {/* <LazyLoad> */}
+            <PDFContainer
+              page={"summary"}
+              pageNumber={
+                totalVulnerabilitySplit
+                  ? totalVulnerabilitySplit?.length + 1
+                  : 2
+              }
+              content={
+                <ProjectSummaryContainer summary_report={summary_report} />
+              }
+              setCurrentPage={setCurrentPage}
+              setCurrentPageHeadings={setCurrentPageHeadings}
+            />
+            {/* </LazyLoad> */}
 
-            <LazyLoad>
-              <PDFContainer
-                page={"executive"}
-                pageNumber={
-                  totalVulnerabilitySplit
-                    ? totalVulnerabilitySplit?.length + 2
-                    : 3
-                }
-                content={
-                  <AuditSummaryContainer summary_report={summary_report} />
-                }
-                setCurrentPage={setCurrentPage}
-                setCurrentPageHeadings={setCurrentPageHeadings}
-              />
-            </LazyLoad>
+            {/* <LazyLoad> */}
+            <PDFContainer
+              page={"executive"}
+              pageNumber={
+                totalVulnerabilitySplit
+                  ? totalVulnerabilitySplit?.length + 2
+                  : 3
+              }
+              content={
+                <AuditSummaryContainer summary_report={summary_report} />
+              }
+              setCurrentPage={setCurrentPage}
+              setCurrentPageHeadings={setCurrentPageHeadings}
+            />
+            {/* </LazyLoad> */}
 
-            <LazyLoad>
-              <PDFContainer
-                page={"findings"}
-                pageNumber={
-                  totalVulnerabilitySplit
-                    ? totalVulnerabilitySplit?.length + 3
-                    : 4
-                }
-                content={
-                  <FindingSummaryContainer summary_report={summary_report} />
-                }
-                setCurrentPage={setCurrentPage}
-                setCurrentPageHeadings={setCurrentPageHeadings}
-              />
-            </LazyLoad>
+            {/* <LazyLoad> */}
+            <PDFContainer
+              page={"findings"}
+              pageNumber={
+                totalVulnerabilitySplit
+                  ? totalVulnerabilitySplit?.length + 3
+                  : 4
+              }
+              content={
+                <FindingSummaryContainer summary_report={summary_report} />
+              }
+              setCurrentPage={setCurrentPage}
+              setCurrentPageHeadings={setCurrentPageHeadings}
+            />
+            {/* </LazyLoad> */}
 
             {bugList && totalBugsSplit && totalBugsSplit.length ? (
               <>
@@ -604,6 +614,7 @@ export const ReportContainerV2: React.FC<{
                   ).map((item, index, array) => {
                     counter = counter + 1;
                     return (
+                      // <LazyLoad key={"vul" + counter}>
                       <PDFContainer
                         page={"details"}
                         pageNumber={
@@ -633,6 +644,7 @@ export const ReportContainerV2: React.FC<{
                         setCurrentPage={setCurrentPage}
                         setCurrentPageHeadings={setCurrentPageHeadings}
                       />
+                      // </LazyLoad>
                     );
                   });
                 }
@@ -673,6 +685,7 @@ export const ReportContainerV2: React.FC<{
             />
             {/* </LazyLoad> */}
           </VStack>
+
           {!download ? (
             <Flex w={"25%"} h={"100%"} flexDir={"column"} pt={20} pl={8} pr={2}>
               <Text

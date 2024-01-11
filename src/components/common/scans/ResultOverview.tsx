@@ -25,12 +25,14 @@ const ResultOverview: React.FC<{
   projectDetails: any;
   spacing: number;
   theme?: string;
+  page?: string;
 }> = ({
   type = "block",
   scanReport,
   projectDetails,
   spacing,
   theme = "dark",
+  page = "qs",
 }) => {
   const assetsUrl = getAssetsURL();
 
@@ -40,7 +42,7 @@ const ResultOverview: React.FC<{
         w="100%"
         justifyContent={["flex-start"]}
         alignItems={"center"}
-        flexDir={["column", "column", "row"]}
+        flexDir={page === "report" ? "row" : ["column", "column", "row"]}
       >
         <Flex
           w="60px"
@@ -48,7 +50,7 @@ const ResultOverview: React.FC<{
           backgroundColor={theme === "light" ? "white" : "#272727"}
           justifyContent={"center"}
           alignItems={"center"}
-          flexDir={["column", "column", "row"]}
+          flexDir={page === "report" ? "row" : ["column", "column", "row"]}
         >
           {
             <Image
@@ -67,11 +69,19 @@ const ResultOverview: React.FC<{
           }
         </Flex>
         <VStack
-          ml={5}
-          alignItems={["center", "center", "flex-start"]}
-          w={["100%", "100%", "calc(100% - 60px)"]}
+          ml={page === "report" ? 3 : 5}
+          alignItems={
+            page === "report"
+              ? "flex-start"
+              : ["center", "center", "flex-start"]
+          }
+          w={
+            page === "report"
+              ? "calc(100% - 60px)"
+              : ["100%", "100%", "calc(100% - 60px)"]
+          }
           spacing={0}
-          textAlign={["center", "center", "left"]}
+          textAlign={page === "report" ? "left" : ["center", "center", "left"]}
           color={theme === "light" ? "#171717" : "white"}
         >
           <Text
@@ -163,14 +173,18 @@ const ResultOverview: React.FC<{
       </Flex>
       <Flex
         w="100%"
-        justifyContent={["flex-start", "flex-start", "space-between"]}
+        justifyContent={
+          page === "report"
+            ? "space-between"
+            : ["flex-start", "flex-start", "space-between"]
+        }
         alignItems="center"
-        flexDir={["column", "column", "row"]}
+        flexDir={page === "report" ? "row" : ["column", "column", "row"]}
       >
         <HStack
           bgColor={theme === "light" ? "#FBFBFB" : "#272727"}
           color={theme === "light" ? "#000000" : "white"}
-          w={["100%", "100%", "32%"]}
+          w={page === "report" ? "32%" : ["100%", "100%", "32%"]}
           borderRadius={5}
           p={3}
         >
@@ -205,7 +219,7 @@ const ResultOverview: React.FC<{
         <HStack
           bgColor={theme === "light" ? "#FBFBFB" : "#272727"}
           color={theme === "light" ? "#000000" : "white"}
-          w={["100%", "100%", "32%"]}
+          w={page === "report" ? "32%" : ["100%", "100%", "32%"]}
           mt={[5, 5, 0]}
           borderRadius={5}
           p={3}
@@ -237,7 +251,7 @@ const ResultOverview: React.FC<{
         <HStack
           bgColor={theme === "light" ? "#FBFBFB" : "#272727"}
           color={theme === "light" ? "#000000" : "white"}
-          w={["100%", "100%", "32%"]}
+          w={page === "report" ? "32%" : ["100%", "100%", "32%"]}
           mt={[5, 5, 0]}
           borderRadius={5}
           p={3}

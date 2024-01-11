@@ -17,6 +17,7 @@ const ProjectSummaryContainer: React.FC<{
       justifyContent="flex-start"
       flexDir={"column"}
       id={"project-summary"}
+      px={4}
     >
       <Flex
         sx={{
