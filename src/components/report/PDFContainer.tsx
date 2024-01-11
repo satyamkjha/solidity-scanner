@@ -1,6 +1,7 @@
 import React, { useRef, useEffect, useState } from "react";
 import { Box, Flex, Text, HStack } from "@chakra-ui/react";
 import { getAssetsURL } from "helpers/helperFunction";
+import { useIntersectionObserver } from "helpers/observerManager";
 
 const PDFContainer: React.FC<{
   page: string;
@@ -20,44 +21,40 @@ const PDFContainer: React.FC<{
   const assetsURL = getAssetsURL();
   const containerRef = useRef<HTMLDivElement>(null);
   const [isInViewport, setIsInViewport] = useState(false);
+  const observerRef = useIntersectionObserver((entries) => {
+    entries.forEach((entry) => {
+      // Update state based on whether the container is in the viewport
+      setIsInViewport(entry.isIntersecting);
+      if (entry.isIntersecting && containerRef.current) {
+        const pageElements = containerRef.current.getElementsByClassName(
+          "ss-report-right-nav"
+        );
+        const pageElementsContentList = Array.from(pageElements).map(
+          (element) => element.getAttribute("content")
+        );
+        setCurrentPageHeadings(pageElementsContentList);
+        setCurrentPage({ value: page.split("-")[0] });
+      }
+    });
+  });
 
   useEffect(() => {
-    const options = {
-      root: null,
-      rootMargin: "-10px",
-      threshold: 0.3,
-    };
-
-    const observer = new IntersectionObserver((entries) => {
-      entries.forEach((entry) => {
-        // Update state based on whether the container is in the viewport
-        setIsInViewport(entry.isIntersecting);
-        if (entry.isIntersecting && containerRef.current) {
-          const pageElements = containerRef.current.getElementsByClassName(
-            "ss-report-right-nav"
-          );
-          const pageElementsContentList = Array.from(pageElements).map(
-            (element) => element.getAttribute("content")
-          );
-          setCurrentPageHeadings(pageElementsContentList);
-          setCurrentPage({ value: page.split("-")[0] });
-        }
-      });
-    }, options);
-
-    if (containerRef.current) {
-      observer.observe(containerRef.current);
+    if (containerRef.current && observerRef.current) {
+      observerRef.current.observe(containerRef.current);
     }
 
-    // Cleanup the observer when the component is unmounted
-    return () => observer.disconnect();
-  }, [containerRef]);
+    return () => {
+      if (containerRef.current && observerRef.current) {
+        observerRef.current.unobserve(containerRef.current);
+      }
+    };
+  }, [containerRef, observerRef]);
 
   return (
     <Box
       ref={containerRef}
       className={`ss-report-${page} ${isInViewport ? "in-view" : ""}`}
-      w="805px"
+      w="813px"
       h={"fit-content"}
       bg={"white"}
       position={"relative"}
@@ -73,7 +70,7 @@ const PDFContainer: React.FC<{
       ></Box>
       <Box
         w="100%"
-        h="1143px"
+        h="1150px"
         py={page !== "cover" ? 10 : 0}
         px={page !== "cover" ? 10 : 0}
         position={"relative"}
