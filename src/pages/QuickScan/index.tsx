@@ -65,7 +65,11 @@ const QuickScan: React.FC = () => {
   useEffect(() => {
     if (blockAddress && blockChain && blockPlatform) {
       setIsLoading(true);
-      runQuickScan(blockAddress, blockPlatform, blockChain, ref);
+      if (blockPlatform === "fuse") {
+        runQuickScan(blockAddress, "blockscout", `fuse-${blockChain}`, ref);
+      } else {
+        runQuickScan(blockAddress, blockPlatform, blockChain, ref);
+      }
     }
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
