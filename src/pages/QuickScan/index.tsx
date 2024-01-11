@@ -187,10 +187,13 @@ const QuickScan: React.FC = () => {
       )
     ) {
       messageQueue.forEach((msgItem: any) => {
+        console.log(msgItem.type);
+        console.log(msgItem.payload.scan_status);
         if (
           msgItem.type === "quick_scan_status" &&
           msgItem.payload.scan_status === "scan_done"
         ) {
+          console.log(msgItem.payload.scan_status);
           setScanReport(msgItem.payload.scan_details.scan_report);
           setShowSkeletion(false);
           setIsLoading(false);
@@ -202,9 +205,7 @@ const QuickScan: React.FC = () => {
       let tempMsgQueue = messageQueue;
       tempMsgQueue = tempMsgQueue.filter(
         (msg: any) =>
-          !["quick_scan_status", "quick_scan_acknowledgement"].includes(
-            msg.type
-          )
+          !["quick_scan_status", "quick_scan_acknowledge"].includes(msg.type)
       );
       updateMessageQueue(tempMsgQueue);
     }
