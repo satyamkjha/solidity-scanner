@@ -76,17 +76,11 @@ const Layout: React.FC = ({ children }) => {
 
   useEffect(() => {
     console.log(messageQueue);
-    if (
-      messageQueue &&
-      messageQueue.length > 0 &&
-      messageQueue.some(
-        (msgItem: any) => msgItem && msgItem.type === "account_credits_update"
-      )
-    ) {
-      messageQueue.map((msgItem: any) => {
+    if (messageQueue && messageQueue.length > 0) {
+      messageQueue.forEach((msgItem: any) => {
         if (msgItem.type && msgItem.type === "account_credits_update") {
           setCredits(msgItem.payload.updated_credits);
-        } else return msgItem;
+        }
       });
       let tempMessageQueue = messageQueue.filter(
         (msgItem: any) => msgItem !== "account_credits_update"

@@ -58,6 +58,7 @@ const QuickScan: React.FC = () => {
     blockPlatform: string;
     blockChain: string;
   }>();
+  const [qsStatus, setQSStatus] = useState("");
   const location = useLocation();
   const query = new URLSearchParams(location.search);
   const ref = query.get("ref");
@@ -67,7 +68,6 @@ const QuickScan: React.FC = () => {
       setIsLoading(true);
       runQuickScan(blockAddress, blockPlatform, blockChain, ref);
     }
-
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -83,8 +83,8 @@ const QuickScan: React.FC = () => {
       blockPlatform: platform,
       blockChain: chain,
     });
-    const reqHeaders1 = await getReCaptchaHeaders("quickScan_verify");
-    const reqHeaders2 = await getReCaptchaHeaders("quickScan");
+    const reqHeaders_qs_verfity = await getReCaptchaHeaders("quickScan_verify");
+    const reqHeaders_qs = await getReCaptchaHeaders("quickScan");
     setScanReport(null);
     if (platform !== "buildbear" && !checkContractAddress(address)) {
       toast({
@@ -96,45 +96,38 @@ const QuickScan: React.FC = () => {
       });
       setIsLoading(false);
       setTempQSData(null);
+      setKeepWSOpen(false);
       return;
     }
-    const req = {
+    let req = {
       contract_address: address,
       contract_platform: platform,
       [platform === "buildbear" ? "node_id" : "contract_chain"]: chain,
     };
-    API.post<{
-      contract_verified: boolean;
-      message: string;
-      status: string;
-    }>(API_PATH.API_GET_CONTRACT_STATUS, req, {
-      headers: reqHeaders1,
-    })
-      .then(
-        (res) => {
-          if (res.data.contract_verified) {
-            if (
-              config &&
-              config.REACT_APP_FEATURE_GATE_CONFIG.websockets_enabled
-            ) {
-              let req: any = {
-                contract_address: address,
-                contract_platform: platform,
-              };
-              if (platform === "buildbear") {
-                req = { ...req, node_id: chain };
-              } else {
-                req = { ...req, contract_chain: chain };
-              }
-              if (ref) {
-                req = { ...req, ref };
-              }
-              setKeepWSOpen(true);
-              sendMessage({
-                type: "quick_scan_initiate",
-                body: req,
-              });
-            } else {
+
+    if (config && config.REACT_APP_FEATURE_GATE_CONFIG.websockets_enabled) {
+      if (ref) {
+        req = { ...req, ref };
+      }
+      setKeepWSOpen(true);
+      setQSStatus("Validated");
+      setShowSkeletion(true);
+      sendMessage({
+        type: "quick_scan_initiate",
+        body: req,
+        recaptcha_token: reqHeaders_qs.Recaptchatoken,
+      });
+    } else {
+      API.post<{
+        contract_verified: boolean;
+        message: string;
+        status: string;
+      }>(API_PATH.API_GET_CONTRACT_STATUS, req, {
+        headers: reqHeaders_qs_verfity,
+      })
+        .then(
+          (res) => {
+            if (res.data.contract_verified) {
               setShowSkeletion(true);
               let api_url = `${
                 API_PATH.API_QUICK_SCAN_SSE
@@ -146,7 +139,7 @@ const QuickScan: React.FC = () => {
                 api_url = api_url + `&ref=${ref}`;
               }
               API.get(api_url, {
-                headers: reqHeaders2,
+                headers: reqHeaders_qs,
               })
                 .then(
                   (res) => {
@@ -164,19 +157,19 @@ const QuickScan: React.FC = () => {
                   setTempQSData(null);
                 });
             }
+          },
+          () => {
+            setShowSkeletion(false);
+            setIsLoading(false);
+            setTempQSData(null);
           }
-        },
-        () => {
+        )
+        .catch(() => {
           setShowSkeletion(false);
           setIsLoading(false);
           setTempQSData(null);
-        }
-      )
-      .catch(() => {
-        setShowSkeletion(false);
-        setIsLoading(false);
-        setTempQSData(null);
-      });
+        });
+    }
   };
 
   useEffect(() => {
@@ -191,12 +184,16 @@ const QuickScan: React.FC = () => {
           msgItem.type === "quick_scan_status" &&
           msgItem.payload.scan_status === "scan_done"
         ) {
-          setScanReport(msgItem.payload.scan_details.scan_report);
+          setScanReport(
+            msgItem.payload.scan_details.scan_report ||
+              msgItem.payload.scan_details
+          );
           setShowSkeletion(false);
           setIsLoading(false);
+          setQSStatus("");
           setKeepWSOpen(false);
         } else if (msgItem.type && msgItem.type === "quick_scan_acknowledge") {
-          setShowSkeletion(true);
+          setQSStatus("Scanned");
         }
       });
       let tempMsgQueue = messageQueue;
@@ -252,7 +249,7 @@ const QuickScan: React.FC = () => {
               )}
               <Text color="white" fontSize="lg" fontWeight={700}>
                 {" "}
-                Your contract is being scanned ...
+                Your contract is being {qsStatus} ...
               </Text>
             </HStack>
           </VStack>

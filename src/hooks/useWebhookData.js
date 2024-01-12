@@ -46,11 +46,7 @@ export const WebSocketProvider = ({ children }) => {
         process.env.REACT_APP_ENVIRONMENT === "production"
           ? WSS_URL_PROD
           : WSS_URL_DEV
-      }?auth_token=${
-        withAuth
-          ? `${profileData.auth_token}`
-          : "75ce522381f289c1d790745d51e8b74bcd5c283c"
-      }`
+      }${withAuth ? `?auth_token=${profileData.auth_token}` : ""}`
     );
     setWebSocket(ws);
     setWsReadyState(ws.readyState);
@@ -159,16 +155,20 @@ export const WebSocketProvider = ({ children }) => {
 
   const sendMessage = (msg) => {
     if (wsReadyState === 1) {
-      webSocket.send(
-        JSON.stringify({
-          action: "message",
-          payload: msg,
-        })
-      );
+      emitMessages(msg);
     } else {
       setKeepWSOpen(true);
       setTempEmitMsgQueue([...tempEmitMsgQueue, msg]);
     }
+  };
+
+  const emitMessages = (msg) => {
+    webSocket.send(
+      JSON.stringify({
+        action: "message",
+        payload: msg,
+      })
+    );
   };
 
   useEffect(() => {
@@ -178,12 +178,7 @@ export const WebSocketProvider = ({ children }) => {
       webSocket.readyState === 1
     ) {
       tempEmitMsgQueue.forEach((msg) => {
-        webSocket.send(
-          JSON.stringify({
-            action: "message",
-            payload: msg,
-          })
-        );
+        emitMessages(msg);
       });
       setTempEmitMsgQueue([]);
     }

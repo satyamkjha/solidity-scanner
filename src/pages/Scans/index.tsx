@@ -175,7 +175,6 @@ const Scans: React.FC = () => {
       )
     ) {
       let updatedProjectList = projectList;
-
       messageQueue.forEach((msgItem: any) => {
         if (msgItem.type === "scan_status") {
           updatedProjectList = updatedProjectList.map((item) => {
