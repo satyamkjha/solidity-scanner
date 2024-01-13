@@ -79,6 +79,15 @@ const ScanCard: React.FC<{
 
   const deleteProject = async () => {
     if (config && config.REACT_APP_FEATURE_GATE_CONFIG.websockets_enabled) {
+      sendMessage({
+        type: scan.scan_type === "project" ? "project_delete" : "block_delete",
+        body: {
+          project_ids: [project_id],
+        },
+      });
+      onClose();
+      updateScanList(scan_id);
+    } else {
       const url =
         scan.scan_type === "project"
           ? API_PATH.API_DELETE_PROJECT
@@ -105,15 +114,6 @@ const ScanCard: React.FC<{
           position: "bottom",
         });
       }
-      onClose();
-      updateScanList(scan_id);
-    } else {
-      sendMessage({
-        type: scan.scan_type === "project" ? "project_delete" : "block_delete",
-        body: {
-          project_ids: [project_id],
-        },
-      });
       onClose();
       updateScanList(scan_id);
     }

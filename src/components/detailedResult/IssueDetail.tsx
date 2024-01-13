@@ -99,48 +99,51 @@ const IssueDetail: React.FC<{
 
   const updateComment = async () => {
     if (comment && comment !== "") {
-      if (config && config.REACT_APP_FEATURE_GATE_CONFIG.websockets_enabled) {
-        if (restrictedBugIds.includes(files.bug_hash)) {
-          toast({
-            title: "Comment Update in Progress. Please try after some time",
-            status: "error",
-            duration: 3000,
-            isClosable: true,
-          });
-        } else {
-          sendMessage({
-            type: "scan_update",
-            body: {
-              bug_ids: [files?.bug_hash],
-              scan_id: scanId,
-              project_id: projectId,
-              bug_status: files?.bug_status,
-              comment: comment,
-              scan_type: type,
-            },
-          });
-          setRestrictedBugIds([...restrictedBugIds, files.bug_hash]);
-          setFiles({
-            ...files,
-            comment: comment,
-          });
-        }
-      } else {
-        const { data } = await API.post(API_PATH.API_UPDATE_BUG_STATUS, {
-          bug_ids: [files?.bug_hash],
-          scan_id: scanId,
-          project_id: projectId,
-          bug_status: files?.bug_status,
+      const { data } = await API.post(API_PATH.API_UPDATE_BUG_STATUS, {
+        bug_ids: [files?.bug_hash],
+        scan_id: scanId,
+        project_id: projectId,
+        bug_status: files?.bug_status,
+        comment: comment,
+        scan_type: type,
+      });
+      if (data.status === "success") {
+        setFiles({
+          ...files,
           comment: comment,
-          scan_type: type,
         });
-        if (data.status === "success") {
-          setFiles({
-            ...files,
-            comment: comment,
-          });
-        }
       }
+
+      // commented code
+      // if (config && config.REACT_APP_FEATURE_GATE_CONFIG.websockets_enabled) {
+      //   if (restrictedBugIds.includes(files.bug_hash)) {
+      //     toast({
+      //       title: "Comment Update in Progress. Please try after some time",
+      //       status: "error",
+      //       duration: 3000,
+      //       isClosable: true,
+      //     });
+      //   } else {
+      //     sendMessage({
+      //       type: "scan_update",
+      //       body: {
+      //         bug_ids: [files?.bug_hash],
+      //         scan_id: scanId,
+      //         project_id: projectId,
+      //         bug_status: files?.bug_status,
+      //         comment: comment,
+      //         scan_type: type,
+      //       },
+      //     });
+      //     setRestrictedBugIds([...restrictedBugIds, files.bug_hash]);
+      //     setFiles({
+      //       ...files,
+      //       comment: comment,
+      //     });
+      //   }
+      // } else {
+
+      // }
     }
   };
 

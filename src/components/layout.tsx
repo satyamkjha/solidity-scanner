@@ -21,7 +21,11 @@ import {
 } from "@chakra-ui/react";
 import { GiHamburgerMenu } from "react-icons/gi";
 import { BiUser, BiPowerOff } from "react-icons/bi";
-import { getAssetsURL, getFeatureGateConfig } from "helpers/helperFunction";
+import {
+  getAssetsURL,
+  getFeatureGateConfig,
+  compareTimeStamp,
+} from "helpers/helperFunction";
 import Sidebar from "components/sidebar";
 import { ProfileIconOne } from "components/icons";
 import {
@@ -57,6 +61,7 @@ const Layout: React.FC = ({ children }) => {
   );
 
   const [credits, setCredits] = useState(profileData ? profileData.credits : 0);
+  const [prevTimeStamp, setPrevTimeStamp] = useState("");
 
   // const [isBannerOpen, setIsBannerOpen] = useState(true);
 
@@ -75,15 +80,24 @@ const Layout: React.FC = ({ children }) => {
   };
 
   useEffect(() => {
-    console.log(messageQueue);
-    if (messageQueue && messageQueue.length > 0) {
+    if (
+      messageQueue.length > 0 &&
+      messageQueue.some(
+        (msgItem: any) => msgItem && msgItem.type === "account_credits_update"
+      )
+    ) {
       messageQueue.forEach((msgItem: any) => {
-        if (msgItem.type && msgItem.type === "account_credits_update") {
+        if (
+          msgItem.type &&
+          msgItem.type === "account_credits_update" &&
+          compareTimeStamp(msgItem.event_timestamp, prevTimeStamp)
+        ) {
           setCredits(msgItem.payload.updated_credits);
+          setPrevTimeStamp(msgItem.event_timestamp);
         }
       });
       let tempMessageQueue = messageQueue.filter(
-        (msgItem: any) => msgItem !== "account_credits_update"
+        (msgItem: any) => msgItem.type !== "account_credits_update"
       );
       updateMessageQueue(tempMessageQueue);
     }

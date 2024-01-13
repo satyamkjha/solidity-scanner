@@ -156,113 +156,116 @@ const MultifileResult: React.FC<{
 
   const [restrictedBugIds, setRestrictedBugIds] = useState<string[]>([]);
 
-  useEffect(() => {
-    if (
-      messageQueue.length > 0 &&
-      messageQueue.some((msgItem: any) =>
-        ["scan_update"].includes(msgItem.type)
-      )
-    ) {
-      let tempRestrictedBugIds = restrictedBugIds;
-      messageQueue.forEach((msgItem: any) => {
-        if (msgItem.type && msgItem.type === "scan_update") {
-          tempRestrictedBugIds = tempRestrictedBugIds.filter(
-            (bugId) => !msgItem.payload.scan_updates.bug_ids.includes(bugId)
-          );
-        } else if (msgItem.type && msgItem.type === "update_bug_acknowledge") {
-          toast({
-            title: msgItem.payload.payload.message,
-            status: "success",
-            duration: 3000,
-            isClosable: true,
-          });
-        } else return msgItem;
-      });
-      setRestrictedBugIds(tempRestrictedBugIds);
-      let tempMessageQueue = messageQueue.filter(
-        (item: any) => item.type !== "scan_update"
-      );
-      tempMessageQueue = tempMessageQueue.filter(
-        (item: any) => item.type !== "update_bug_acknowledge"
-      );
-      updateMessageQueue(tempMessageQueue);
-    } else {
-      if (restrictedBugIds.length === 0) {
-        setKeepWSOpen(false);
-      }
-    }
-  }, [messageQueue]);
+  // useEffect(() => {
+  //   if (
+  //     messageQueue.length > 0 &&
+  //     messageQueue.some((msgItem: any) =>
+  //       ["scan_update"].includes(msgItem.type)
+  //     )
+  //   ) {
+  //     let tempRestrictedBugIds = restrictedBugIds;
+  //     messageQueue.forEach((msgItem: any) => {
+  //       if (msgItem.type && msgItem.type === "scan_update") {
+  //         tempRestrictedBugIds = tempRestrictedBugIds.filter(
+  //           (bugId) => !msgItem.payload.scan_updates.bug_ids.includes(bugId)
+  //         );
+  //       } else if (msgItem.type && msgItem.type === "update_bug_acknowledge") {
+  //         toast({
+  //           title: msgItem.payload.payload.message,
+  //           status: "success",
+  //           duration: 3000,
+  //           isClosable: true,
+  //         });
+  //       } else return msgItem;
+  //     });
+  //     setRestrictedBugIds(tempRestrictedBugIds);
+  //     let tempMessageQueue = messageQueue.filter(
+  //       (item: any) => item.type !== "scan_update"
+  //     );
+  //     tempMessageQueue = tempMessageQueue.filter(
+  //       (item: any) => item.type !== "update_bug_acknowledge"
+  //     );
+  //     updateMessageQueue(tempMessageQueue);
+  //   } else {
+  //     if (restrictedBugIds.length === 0) {
+  //       setKeepWSOpen(false);
+  //     }
+  //   }
+  // }, [messageQueue]);
 
   const updateBugStatus = async (action: string, comment?: string) => {
     if (files) {
       if (action === "create_github_issue") {
         createGithubIssue();
       } else {
-        if (config && config.REACT_APP_FEATURE_GATE_CONFIG.websockets_enabled) {
-          sendMessage({
-            type: "scan_update",
-            body: {
-              bug_ids: selectedBugs,
-              scan_id: scanId,
-              project_id: projectId,
-              bug_status: action,
-              comment: comment,
-              scan_type: type,
-            },
+        const { data } = await API.post(API_PATH.API_UPDATE_BUG_STATUS, {
+          bug_ids: selectedBugs,
+          scan_id: scanId,
+          project_id: projectId,
+          bug_status: action,
+          comment: comment,
+          scan_type: type,
+        });
+        if (data.status === "success") {
+          toast({
+            title: "Bug Status Updated",
+            description: data.message,
+            status: "success",
+            duration: 3000,
+            isClosable: true,
           });
-          setRestrictedBugIds([...restrictedBugIds, ...selectedBugs]);
-
-          let tempIssues = issues.map((item) => {
-            let tempArray = item.metric_wise_aggregated_findings;
-            tempArray = tempArray.map((arrItem) => {
-              if (selectedBugs.includes(arrItem.bug_hash)) {
-                return {
-                  ...arrItem,
-                  bug_status: action,
-                };
-              } else return arrItem;
-            });
-            return {
-              ...item,
-              metric_wise_aggregated_findings: tempArray,
-            };
-          });
-          setIssues(tempIssues);
-        } else {
-          const { data } = await API.post(API_PATH.API_UPDATE_BUG_STATUS, {
-            bug_ids: selectedBugs,
-            scan_id: scanId,
-            project_id: projectId,
-            bug_status: action,
-            comment: comment,
-            scan_type: type,
-          });
-          if (data.status === "success") {
-            toast({
-              title: "Bug Status Updated",
-              description: data.message,
-              status: "success",
-              duration: 3000,
-              isClosable: true,
-            });
-          }
-          let tempIssues = issues.map((item) => {
-            let tempArray = item.metric_wise_aggregated_findings;
-            tempArray = tempArray.map((arrItem) => {
-              if (selectedBugs.includes(arrItem.bug_hash)) {
-                return {
-                  ...arrItem,
-                  bug_status: action,
-                };
-              } else return arrItem;
-            });
-            return {
-              ...item,
-              metric_wise_aggregated_findings: tempArray,
-            };
-          });
-          setIssues(tempIssues);
         }
+        let tempIssues = issues.map((item) => {
+          let tempArray = item.metric_wise_aggregated_findings;
+          tempArray = tempArray.map((arrItem) => {
+            if (selectedBugs.includes(arrItem.bug_hash)) {
+              return {
+                ...arrItem,
+                bug_status: action,
+              };
+            } else return arrItem;
+          });
+          return {
+            ...item,
+            metric_wise_aggregated_findings: tempArray,
+          };
+        });
+        setIssues(tempIssues);
+
+        // commented code
+        // if (config && config.REACT_APP_FEATURE_GATE_CONFIG.websockets_enabled) {
+        //   sendMessage({
+        //     type: "scan_update",
+        //     body: {
+        //       bug_ids: selectedBugs,
+        //       scan_id: scanId,
+        //       project_id: projectId,
+        //       bug_status: action,
+        //       comment: comment,
+        //       scan_type: type,
+        //     },
+        //   });
+        //   setRestrictedBugIds([...restrictedBugIds, ...selectedBugs]);
+
+        //   let tempIssues = issues.map((item) => {
+        //     let tempArray = item.metric_wise_aggregated_findings;
+        //     tempArray = tempArray.map((arrItem) => {
+        //       if (selectedBugs.includes(arrItem.bug_hash)) {
+        //         return {
+        //           ...arrItem,
+        //           bug_status: action,
+        //         };
+        //       } else return arrItem;
+        //     });
+        //     return {
+        //       ...item,
+        //       metric_wise_aggregated_findings: tempArray,
+        //     };
+        //   });
+        //   setIssues(tempIssues);
+        // } else {
+
+        // }
       }
       setSelectedBugs([]);
     }

@@ -3,7 +3,6 @@ import reCAPTCHA from "helpers/reCAPTCHA";
 import { Profile, PricingData, Finding } from "common/types";
 import { platformVsChains, contractChain } from "common/values";
 
-
 let configValue: any = null;
 
 export const setGlobalConfig = (config: any) => {
@@ -79,6 +78,14 @@ export const getReCaptchaHeaders = async (action: string) => {
       "Content-Type": "application/json",
     };
   }
+};
+
+export const compareTimeStamp = (timeStamp1: string, timeStamp2: string) => {
+  const time1 = new Date(timeStamp1).getTime();
+  const time2 = new Date(timeStamp2).getTime();
+
+  if (time1 > time2) return true;
+  else return false;
 };
 
 export const checkGenerateReportAccess = (

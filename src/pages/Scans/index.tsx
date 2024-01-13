@@ -245,6 +245,8 @@ const Scans: React.FC = () => {
             "scan_initiate",
             "scan_status",
             "scan_complete",
+            "project_scan_acknowledge",
+            "block_scan_acknowledge",
             "delete_block_acknowledge",
             "delete_project_acknowledge",
           ].includes(msg.type)
