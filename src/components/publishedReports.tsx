@@ -19,6 +19,8 @@ import { getPublicReport } from "hooks/usePublicReport";
 import { PrintContainer } from "pages/Report/PrintContainer";
 import Loader from "./styled-components/Loader";
 import { getAssetsURL } from "helpers/helperFunction";
+import API from "helpers/api";
+import { API_PATH } from "helpers/routeManager";
 
 const ReportBlock: React.FC<{
   report: ReportsListItem;
@@ -28,33 +30,31 @@ const ReportBlock: React.FC<{
   const toast = useToast();
   const assetsURL = getAssetsURL();
 
-  const [summaryReport, setSummaryReport] = useState<Report | null>(null);
   const [printLoading, setPrintLoading] = useState<boolean>(false);
   const componentRef = useRef<HTMLDivElement | null>(null);
 
   const generatePDF = async () => {
     setPrintLoading(true);
-    const publishReportData = await getPublicReport(type, report.report_id);
-
-    if (publishReportData.summary_report) {
-      setSummaryReport(publishReportData.summary_report);
+    try {
+      setPrintLoading(true);
+      const { data } = await API.post(`${API_PATH.API_GET_REPORT_PDF}`, {
+        project_id: report.project_id,
+        report_id: report.report_id,
+        scan_type: type,
+      });
+      setPrintLoading(false);
+      if (data.status === "success" && data.download_url) {
+        const link = document.createElement("a");
+        link.href = data.download_url;
+        link.click();
+      }
+    } catch (e) {
+      console.log(e);
+      setPrintLoading(false);
     }
   };
 
-  const handlePrint = useReactToPrint({
-    content: () => componentRef.current,
-  });
-
   const [isMobileView] = useMediaQuery("(max-width: 500px)");
-
-  useEffect(() => {
-    if (summaryReport) {
-      setTimeout(() => {
-        handlePrint();
-        setPrintLoading(false);
-      }, 100);
-    }
-  }, [handlePrint, summaryReport]);
 
   return (
     <Flex
@@ -206,13 +206,7 @@ const ReportBlock: React.FC<{
                 }}
               />
             )}
-            {summaryReport && printLoading && (
-              <Box w={0} h={0} visibility={"hidden"} position="absolute">
-                <Box w="100vw" ref={componentRef}>
-                  <PrintContainer summary_report={summaryReport} />
-                </Box>
-              </Box>
-            )}
+
             <IconButton
               my={[2, 2, 5]}
               aria-label="View Report"
@@ -287,13 +281,6 @@ const ReportBlock: React.FC<{
                   generatePDF();
                 }}
               />
-            )}
-            {summaryReport && printLoading && (
-              <Box w={0} h={0} visibility={"hidden"} position="absolute">
-                <Box w="100vw" ref={componentRef}>
-                  <PrintContainer summary_report={summaryReport} />
-                </Box>
-              </Box>
             )}
             <IconButton
               my={[2, 2, 5]}

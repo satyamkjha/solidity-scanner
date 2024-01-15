@@ -1,11 +1,12 @@
 import { Flex, Heading, Text, useMediaQuery } from "@chakra-ui/react";
-import { Report } from "common/types";
 import { SeverityIcon } from "components/icons";
 import React from "react";
+import { ScanSummaryItem } from "common/types";
 
 const ScanHistoryContainer: React.FC<{
-  summary_report: Report;
-}> = ({ summary_report }) => {
+  scan_summary: ScanSummaryItem[];
+  startIndex: number;
+}> = ({ scan_summary, startIndex }) => {
   const [isDesktopView] = useMediaQuery("(min-width: 1024px)");
   return (
     <Flex
@@ -153,8 +154,9 @@ const ScanHistoryContainer: React.FC<{
         )}
       </Flex>
 
-      {summary_report.scan_summary.map((scan, index) => (
+      {scan_summary.map((scan, index) => (
         <Flex
+          key={index}
           as="section"
           w="100%"
           alignItems="flex-start"
@@ -173,7 +175,7 @@ const ScanHistoryContainer: React.FC<{
             width={["10%"]}
             pl={[4, 4, 4, 0]}
           >
-            {index + 1}.
+            {index + startIndex}.
           </Text>
           <Text
             fontSize="md"
