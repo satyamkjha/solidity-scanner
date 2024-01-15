@@ -81,6 +81,7 @@ const QuickScan: React.FC = () => {
       blockPlatform: platform,
       blockChain: chain,
     });
+    setQSStatus("Validated");
     setIsLoading(true);
     const reqHeaders_qs_verfity = await getReCaptchaHeaders("quickScan_verify");
     const reqHeaders_qs = await getReCaptchaHeaders("quickScan");
@@ -109,7 +110,6 @@ const QuickScan: React.FC = () => {
         req = { ...req, ref };
       }
       setKeepWSOpen(true);
-      setQSStatus("Validated");
       sendMessage({
         type: "quick_scan_initiate",
         body: req,
@@ -126,6 +126,7 @@ const QuickScan: React.FC = () => {
         .then(
           (res) => {
             if (res.data.contract_verified) {
+              setQSStatus("Scanned");
               let api_url = `${
                 API_PATH.API_QUICK_SCAN_SSE
               }?contract_address=${address}&contract_platform=${platform}&${
