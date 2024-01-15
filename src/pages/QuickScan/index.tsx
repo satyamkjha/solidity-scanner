@@ -41,7 +41,6 @@ const QuickScan: React.FC = () => {
   const toast = useToast();
   const config: any = useConfig();
   const [isLoading, setIsLoading] = React.useState<boolean>(false);
-  const [showSkeleton, setShowSkeletion] = useState(false);
   const [scanReport, setScanReport] = React.useState<QuickScanResult | null>(
     null
   );
@@ -77,12 +76,12 @@ const QuickScan: React.FC = () => {
     chain: string,
     ref: string | null
   ) => {
-    setIsLoading(true);
     setTempQSData({
       blockAddress: address,
       blockPlatform: platform,
       blockChain: chain,
     });
+    setIsLoading(true);
     const reqHeaders_qs_verfity = await getReCaptchaHeaders("quickScan_verify");
     const reqHeaders_qs = await getReCaptchaHeaders("quickScan");
     setScanReport(null);
@@ -111,7 +110,6 @@ const QuickScan: React.FC = () => {
       }
       setKeepWSOpen(true);
       setQSStatus("Validated");
-      setShowSkeletion(true);
       sendMessage({
         type: "quick_scan_initiate",
         body: req,
@@ -128,7 +126,6 @@ const QuickScan: React.FC = () => {
         .then(
           (res) => {
             if (res.data.contract_verified) {
-              setShowSkeletion(true);
               let api_url = `${
                 API_PATH.API_QUICK_SCAN_SSE
               }?contract_address=${address}&contract_platform=${platform}&${
@@ -152,31 +149,36 @@ const QuickScan: React.FC = () => {
                   }
                 )
                 .finally(() => {
-                  setShowSkeletion(false);
                   setIsLoading(false);
                   setTempQSData(null);
                 });
             }
           },
           () => {
-            setShowSkeletion(false);
             setIsLoading(false);
             setTempQSData(null);
           }
         )
         .catch(() => {
-          setShowSkeletion(false);
           setIsLoading(false);
           setTempQSData(null);
         });
     }
   };
 
+  const reset = () => {
+    setIsLoading(false);
+    setQSStatus("");
+    setKeepWSOpen(false);
+  };
+
   useEffect(() => {
     if (
       messageQueue.length > 0 &&
       messageQueue.some((msgItem: any) =>
-        ["quick_scan_status", "quick_scan_acknowledge"].includes(msgItem.type)
+        ["quick_scan_status", "quick_scan_acknowledge", "error"].includes(
+          msgItem.type
+        )
       )
     ) {
       messageQueue.forEach((msgItem: any) => {
@@ -188,18 +190,19 @@ const QuickScan: React.FC = () => {
             msgItem.payload.scan_details.scan_report ||
               msgItem.payload.scan_details
           );
-          setShowSkeletion(false);
-          setIsLoading(false);
-          setQSStatus("");
-          setKeepWSOpen(false);
+          reset();
         } else if (msgItem.type && msgItem.type === "quick_scan_acknowledge") {
           setQSStatus("Scanned");
+        } else if (msgItem.type === "error") {
+          reset();
         }
       });
       let tempMsgQueue = messageQueue;
       tempMsgQueue = tempMsgQueue.filter(
         (msg: any) =>
-          !["quick_scan_status", "quick_scan_acknowledge"].includes(msg.type)
+          !["quick_scan_status", "quick_scan_acknowledge", "error"].includes(
+            msg.type
+          )
       );
       updateMessageQueue(tempMsgQueue);
     }
@@ -222,7 +225,7 @@ const QuickScan: React.FC = () => {
         bg={"linear-gradient(180deg, #060606 -45.59%, #414141 255.55%)"}
       >
         <Header theme={"dark"} />
-        {showSkeleton && tempQSData ? (
+        {isLoading && tempQSData ? (
           <VStack
             w="90%"
             maxW="1800px"

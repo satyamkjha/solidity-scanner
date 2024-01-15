@@ -152,7 +152,7 @@ const ScanCardDuplicate: React.FC<{
       w={["100%", "100%", "45%", "31%", "31%", "23%"]}
       onClick={() => {
         if (multi_file_scan_status === "scan_done") {
-          history.push(`/${scan.scan_type}s/${scan_id}/${project_id}`);
+          history.push(`/${scan.scan_type}s/${project_id}/${scan_id}`);
         }
       }}
     >

@@ -77,6 +77,7 @@ export const WebSocketProvider = ({ children }) => {
               isClosable: true,
               position: "bottom",
             });
+            setTempMessageQueue((prevQueue) => [...prevQueue, receivedMessage]);
           } else {
             toast({
               title: `Unexpected Error`,
