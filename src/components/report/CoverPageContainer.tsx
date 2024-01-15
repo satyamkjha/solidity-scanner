@@ -37,12 +37,7 @@ const CoverPageContainer: React.FC<{
           w="100%"
           h={"100%"}
           alignItems="flex-start"
-          justifyContent={[
-            "flex-start",
-            "flex-start",
-            "flex-start",
-            "space-between",
-          ]}
+          justifyContent={["space-between"]}
           flexDir={"row"}
           py={10}
           px={16}

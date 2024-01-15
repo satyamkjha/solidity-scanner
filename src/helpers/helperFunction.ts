@@ -284,6 +284,16 @@ export const formatString = (template: string, options: any) => {
   return template;
 };
 
+export const splitListIntoChunks = <T>(list: T[], chunkSize: number): T[][] => {
+  const result: T[][] = [];
+
+  for (let i = 0; i < list.length; i += chunkSize) {
+    result.push(list.slice(i, i + chunkSize));
+  }
+
+  return result;
+};
+
 // ^xdc[a-fA-F0-9]{40}$|^0x[a-fA-F0-9]{40}$
 
 // export const getAssetsFromS3 = async (directory: string) => {

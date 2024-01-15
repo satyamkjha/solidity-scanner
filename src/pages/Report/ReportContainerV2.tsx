@@ -1,42 +1,56 @@
 import { Container, Flex, VStack, Text, Button } from "@chakra-ui/react";
 import LazyLoad from "react-lazyload";
-import { Report, Profile, IssueItem } from "common/types";
-import React, { useState, useEffect } from "react";
+import { Report, Profile, IssueItem, ScanSummaryItem } from "common/types";
+import React, { useState, useEffect, useRef } from "react";
 import PDFContainer from "components/report/PDFContainer";
-import { IssueComponent } from "components/report/TableContentContainer";
+import TableContentContainer, {
+  IssueComponent,
+} from "components/report/TableContentContainer";
 import { useParams, useLocation } from "react-router-dom";
 import API from "helpers/api";
 import { API_PATH } from "helpers/routeManager";
 import { DownloadIcon } from "@chakra-ui/icons";
 import Loader from "components/styled-components/Loader";
+import {
+  getFeatureGateConfig,
+  splitListIntoChunks,
+} from "helpers/helperFunction";
+import CoverPageContainer from "components/report/CoverPageContainer";
+import ProjectSummaryContainer from "components/report/ProjectSummaryContainer";
+import AuditSummaryContainer from "components/report/AuditSummaryContainer";
+import FindingSummaryContainer from "components/report/FindingSummaryContainer";
+import FindingBugListContainer from "components/report/FindingBugListContainer";
+import VulnerabililtyDetailsContainer from "components/report/VulnerabililtyDetailsContainer";
+import ScanHistoryContainer from "components/report/ScanHistoryContainer";
+import DisclaimerContainer from "components/report/DisclaimerContainer";
 
-const CoverPageContainer = React.lazy(
-  () => import("components/report/CoverPageContainer")
-);
-const TableContentContainer = React.lazy(
-  () => import("components/report/TableContentContainer")
-);
-const ProjectSummaryContainer = React.lazy(
-  () => import("components/report/ProjectSummaryContainer")
-);
-const AuditSummaryContainer = React.lazy(
-  () => import("components/report/AuditSummaryContainer")
-);
-const VulnerabililtyDetailsContainer = React.lazy(
-  () => import("components/report/VulnerabililtyDetailsContainer")
-);
-const ScanHistoryContainer = React.lazy(
-  () => import("components/report/ScanHistoryContainer")
-);
-const DisclaimerContainer = React.lazy(
-  () => import("components/report/DisclaimerContainer")
-);
-const FindingBugListContainer = React.lazy(
-  () => import("components/report/FindingBugListContainer")
-);
-const FindingSummaryContainer = React.lazy(
-  () => import("components/report/FindingSummaryContainer")
-);
+// const CoverPageContainer = React.lazy(
+//   () => import("components/report/CoverPageContainer")
+// );
+// const TableContentContainer = React.lazy(
+//   () => import("components/report/TableContentContainer")
+// );
+// const ProjectSummaryContainer = React.lazy(
+//   () => import("components/report/ProjectSummaryContainer")
+// );
+// const AuditSummaryContainer = React.lazy(
+//   () => import("components/report/AuditSummaryContainer")
+// );
+// const VulnerabililtyDetailsContainer = React.lazy(
+//   () => import("components/report/VulnerabililtyDetailsContainer")
+// );
+// const ScanHistoryContainer = React.lazy(
+//   () => import("components/report/ScanHistoryContainer")
+// );
+// const DisclaimerContainer = React.lazy(
+//   () => import("components/report/DisclaimerContainer")
+// );
+// const FindingBugListContainer = React.lazy(
+//   () => import("components/report/FindingBugListContainer")
+// );
+// const FindingSummaryContainer = React.lazy(
+//   () => import("components/report/FindingSummaryContainer")
+// );
 
 export const ReportContainerV2: React.FC<{
   summary_report: Report;
@@ -74,6 +88,8 @@ export const ReportContainerV2: React.FC<{
   const [totalVulnerabilitySplit, setTotalVulnerabilitySplit] =
     useState<number[]>();
   const [totalBugsSplit, setTotalBugsSplit] = useState<number[]>();
+  const [scanHistorySplit, setScanHistorySplit] =
+    useState<ScanSummaryItem[][]>();
 
   const [currentPageHeadings, setCurrentPageHeadings] =
     useState<(string | null)[]>();
@@ -82,6 +98,29 @@ export const ReportContainerV2: React.FC<{
   const location = useLocation();
   const searchParams = new URLSearchParams(location.search);
   const download = searchParams.get("download");
+
+  // const containerRef = useRef<HTMLDivElement>(null);
+  // const observer = useRef<IntersectionObserver | null>(null);
+
+  // useEffect(() => {
+  //   const options = {
+  //     root: null,
+  //     rootMargin: "0px",
+  //     threshold: 0.1,
+  //   };
+
+  //   observer.current = new IntersectionObserver(handleIntersection, options);
+
+  //   if (containerRef.current) {
+  //     observer.current.observe(containerRef.current);
+  //   }
+
+  //   return () => {
+  //     if (observer.current) {
+  //       observer.current.disconnect();
+  //     }
+  //   };
+  // }, [])
 
   useEffect(() => {
     let doubleCount = 0;
@@ -125,6 +164,7 @@ export const ReportContainerV2: React.FC<{
     setBugList(getSortedIssues(issueDetailList));
     setTotalBugsSplit(bugSplit);
     setTotalVulnerabilitySplit(split);
+    setScanHistorySplit(splitListIntoChunks(summary_report.scan_summary, 11));
 
     const uniqueFilePaths: string[] = Object.values(summary_report.issues)
       .flatMap((issue) =>
@@ -187,7 +227,7 @@ export const ReportContainerV2: React.FC<{
     type: "project" | "block",
     allFilePaths: string[]
   ) => {
-    const batchSize = 10;
+    const batchSize = getFeatureGateConfig().report_file_batch_size || 5;
     const batches = [];
 
     for (let i = 0; i < allFilePaths.length; i += batchSize) {
@@ -195,28 +235,32 @@ export const ReportContainerV2: React.FC<{
       batches.push(batch);
     }
 
-    const results = [];
+    const promises = batches.map(async (batch) => {
+      try {
+        const { data } = await API.post(
+          type === "project"
+            ? isPublicReport
+              ? API_PATH.API_GET_PUBLIC_FILE_CONTENT
+              : API_PATH.API_GET_FILE_CONTENT
+            : isPublicReport
+            ? API_PATH.API_GET_PUBLIC_FILE_CONTENT_BLOCK
+            : API_PATH.API_GET_FILE_CONTENT_BLOCK,
+          {
+            file_paths: batch,
+            report_id: reportId,
+            project_id:
+              projectId || summary_report.project_summary_report.project_id,
+            project_type: projectType,
+          }
+        );
+        return data;
+      } catch (error) {
+        console.error(`Error fetching file content: ${error.message}`);
+        return null;
+      }
+    });
 
-    for (const batch of batches) {
-      const { data } = await API.post(
-        type === "project"
-          ? isPublicReport
-            ? API_PATH.API_GET_PUBLIC_FILE_CONTENT
-            : API_PATH.API_GET_FILE_CONTENT
-          : isPublicReport
-          ? API_PATH.API_GET_PUBLIC_FILE_CONTENT_BLOCK
-          : API_PATH.API_GET_FILE_CONTENT_BLOCK,
-        {
-          file_paths: batch,
-          report_id: reportId,
-          project_id:
-            projectId || summary_report.project_summary_report.project_id,
-          project_type: projectType,
-        }
-      );
-      results.push(data);
-    }
-
+    const results = await Promise.all(promises);
     return results;
   };
 
@@ -380,6 +424,7 @@ export const ReportContainerV2: React.FC<{
           pt={download ? 0 : 5}
           overflow={download ? "" : "hidden"}
           alignItems={"center"}
+          // ref={containerRef}
         >
           {!download ? (
             <Flex w={"25%"} h={"100%"} flexDir={"column"} pt={20} pl={8} pr={2}>
@@ -404,6 +449,7 @@ export const ReportContainerV2: React.FC<{
               ))}
             </Flex>
           ) : null}
+
           <VStack
             spacing={download ? 0 : 4}
             align="stretch"
@@ -651,22 +697,27 @@ export const ReportContainerV2: React.FC<{
               })
             )}
 
-            {/* <LazyLoad> */}
-            <PDFContainer
-              page={"history"}
-              pageNumber={
-                totalVulnerabilitySplit && totalBugsSplit
-                  ? totalVulnerabilitySplit?.length +
-                    totalBugsSplit?.length +
-                    counter +
-                    5
-                  : 6
-              }
-              content={<ScanHistoryContainer summary_report={summary_report} />}
-              setCurrentPage={setCurrentPage}
-              setCurrentPageHeadings={setCurrentPageHeadings}
-            />
-            {/* </LazyLoad> */}
+            {scanHistorySplit?.map((item, index) => (
+              <PDFContainer
+                page={"history"}
+                pageNumber={
+                  totalVulnerabilitySplit && totalBugsSplit
+                    ? totalVulnerabilitySplit?.length +
+                      totalBugsSplit?.length +
+                      counter +
+                      5
+                    : 6
+                }
+                content={
+                  <ScanHistoryContainer
+                    scan_summary={item}
+                    startIndex={index * 11 + 1}
+                  />
+                }
+                setCurrentPage={setCurrentPage}
+                setCurrentPageHeadings={setCurrentPageHeadings}
+              />
+            ))}
 
             {/* <LazyLoad> */}
             <PDFContainer
