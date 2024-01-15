@@ -1,12 +1,12 @@
 import { Divider, Flex, Heading, HStack, Text, VStack } from "@chakra-ui/react";
-import { Report } from "common/types";
+import { IssueDetailObject } from "common/types";
 import { SeverityIcon } from "components/icons";
 
 import React from "react";
 const TableContentContainer: React.FC<{
-  summaryReport: Report;
+  issues: { [key: string]: IssueDetailObject };
   maxLength: number;
-}> = ({ summaryReport, maxLength }) => {
+}> = ({ issues, maxLength }) => {
   return (
     <Flex
       as="div"
@@ -62,12 +62,12 @@ const TableContentContainer: React.FC<{
           </Text>
         </a>
       </Flex>
-      {Object.keys(summaryReport.issues)
+      {Object.keys(issues)
         .slice(0, maxLength)
         .map((key, index) => (
-          <IssueComponent key={index} issue={summaryReport.issues[key]} />
+          <IssueComponent key={index} issue={issues[key]} />
         ))}
-      {Object.keys(summaryReport.issues).length === maxLength ? (
+      {Object.keys(issues).length === maxLength ? (
         <>
           <Flex w={"100%"}>
             <a href={"#scan-history"}>

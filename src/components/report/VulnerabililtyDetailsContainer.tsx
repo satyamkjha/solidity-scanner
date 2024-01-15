@@ -18,9 +18,6 @@ import {
 } from "helpers/helperFunction";
 import styled from "@emotion/styled";
 import React from "react";
-import DynamicContainer from "./DynamicContainer";
-import NonDynamicContainer from "./NonDynamicContainer";
-import { getFileContent } from "hooks/useFileContent";
 import { ExternalLinkIcon } from "@chakra-ui/icons";
 
 const VulnerabililtyDetailsContainer: React.FC<{
@@ -312,7 +309,7 @@ const VulnerabililtyDetailsContainer: React.FC<{
                             item.line_nos_start[0] === 0
                               ? "#000000"
                               : "#B0B7C3",
-                          whiteSpace: "pre-line",
+                          whiteSpace: "pre-wrap",
                         }}
                         key={cIndex}
                       >
@@ -359,10 +356,11 @@ const VulnerabililtyDetailsContainer: React.FC<{
               w={"100%"}
               pt={2}
               px={6}
-              pb={8}
+              pb={issue.comment ? 0 : 8}
               flexDir={"column"}
               border={"1px solid #D9D9D9"}
               borderTop={"none"}
+              borderBottom={issue.comment ? "none" : "1px solid #D9D9D9"}
             >
               <HStack spacing={2} mt={5} mb={3}>
                 <Image
@@ -383,6 +381,27 @@ const VulnerabililtyDetailsContainer: React.FC<{
                 />
               </DescriptionWrapper>
             </Flex>
+            {issue.comment && issue.bug_status === "wont_fix" && (
+              <Flex
+                w={"100%"}
+                pt={2}
+                px={6}
+                pb={8}
+                flexDir={"column"}
+                border={"1px solid #D9D9D9"}
+                borderTop={"none"}
+              >
+                <HStack spacing={2} mt={5} mb={3}>
+                  <Image src={`${assetsURL}report/comment.svg`} width={6} />
+                  <Text fontSize="sm" fontWeight={600} width={"100%"}>
+                    Comments
+                  </Text>
+                </HStack>
+                <Text fontWeight={400} fontSize={"xs"} wordBreak="break-all">
+                  {issue.comment}
+                </Text>
+              </Flex>
+            )}
           </>
         ) : null}
       </Flex>
