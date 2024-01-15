@@ -68,7 +68,7 @@ const DetailedBill: React.FC<{
               +parseFloat(
                 pricingDetails[duration][selectedPlan]?.amount
               ).toFixed(1) - +parseFloat(updatedPrice).toFixed(1)
-            }0`}{" "}
+            }`}{" "}
           </Heading>
         </HStack>
       )}
