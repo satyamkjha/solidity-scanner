@@ -78,6 +78,7 @@ const LoginForm: React.FC = () => {
             } else {
               Auth.authenticateUser();
               history.push("/home");
+              window.location.reload();
             }
           }
         }

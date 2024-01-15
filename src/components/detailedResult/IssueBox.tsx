@@ -36,6 +36,8 @@ const IssueBox: React.FC<{
   updateBugHashList: any;
   setFiles: Dispatch<SetStateAction<FilesState | null>>;
   updateBugStatus: any;
+  restrictedBugIds: string[];
+  setRestrictedBugIds: React.Dispatch<React.SetStateAction<string[]>>
   project_url?: string;
   contract_url?: string;
   contract_platform?: string;
@@ -62,6 +64,8 @@ const IssueBox: React.FC<{
   branchName,
   contract_address,
   isViewer,
+  setRestrictedBugIds,
+  restrictedBugIds
 }) => {
   const assetsURL = getAssetsURL();
   const [isDesktopView] = useMediaQuery("(min-width: 1350px)");
@@ -297,6 +301,8 @@ const IssueBox: React.FC<{
                     selectedIssues={selectedIssues}
                     selectedBugs={selectedBugs}
                     updateBugStatus={updateBugStatus}
+                    restrictedBugIds={restrictedBugIds}
+                    setRestrictedBugIds={setRestrictedBugIds}
                     project_url={project_url}
                     contract_url={contract_url}
                     contract_platform={contract_platform}

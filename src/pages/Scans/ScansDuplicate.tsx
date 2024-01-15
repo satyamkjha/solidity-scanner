@@ -16,31 +16,31 @@ import {
   MenuList,
   MenuItem,
   Image,
-  useToast,
 } from "@chakra-ui/react";
 // import Lottie from "lottie-react";
+import API from "helpers/api";
 import { Page, Pagination, ScanObj } from "common/types";
 import { useProfile } from "hooks/useProfile";
 import InfiniteScroll from "react-infinite-scroll-component";
+import { API_PATH } from "helpers/routeManager";
 import Loader from "components/styled-components/Loader";
 import { useUserRole } from "hooks/useUserRole";
 import { onSnapshot, doc, Unsubscribe } from "firebase/firestore";
 import { db } from "helpers/firebase";
 import {
+  getFeatureGateConfig,
   getAssetsURL,
   // getAssetsFromS3,
 } from "helpers/helperFunction";
 import { useAllScans } from "hooks/useAllScans";
-import ScanCard from "components/cards/ScanCard";
+import ScanCardDuplicate from "components/cards/ScanCardDuplicate";
 import { Search2Icon, CloseIcon } from "@chakra-ui/icons";
 import { FiFilter } from "react-icons/fi";
 import { RxDoubleArrowDown } from "react-icons/rx";
 import { debounce } from "lodash";
 import RadioButton from "components/styled-components/RadioButton";
-import { useWebSocket } from "hooks/useWebhookData";
-import { inProcessScanStates } from "common/values";
 
-const Scans: React.FC = () => {
+const ScansDuplicate: React.FC = () => {
   const [isDesktopView] = useMediaQuery("(min-width: 1920px)");
   const [isMobileView] = useMediaQuery("(max-width: 500px)");
   const { role } = useUserRole();
@@ -65,35 +65,50 @@ const Scans: React.FC = () => {
     queryTerm,
     filterParam
   );
-  const [projectList, setProjectList] =
-    useState<{ scanItem: ScanObj; tempScanStatus: string }[]>();
+  const [projectList, setProjectList] = useState<ScanObj[]>();
   const [projectsMonitored, setProjectsMonitored] = useState(0);
   const [isProjectsLoading, setIsProjectsLoading] = useState(false);
-  const { messageQueue, updateMessageQueue, setKeepWSOpen } = useWebSocket();
-  const toast = useToast();
+  const [projectsInScanning, setProjectsInScanning] = useState<
+    {
+      scanId: string;
+      scanStatus: string;
+    }[]
+  >([]);
+  const [projectsIdsInScanning, setProjectsIdsInScanning] = useState<string[]>(
+    []
+  );
+
+  // const [ssIconAnimation, setSsIconAniamtion] = useState<any>(null);
+
+  // useEffect(() => {
+  //   getSsIconAnimationFromUrl();
+  //   // eslint-disable-next-line react-hooks/exhaustive-deps
+  // }, []);
+
+  // const getSsIconAnimationFromUrl = async () => {
+  //   const jsonData = await getAssetsFromS3("icons/ss_icon_animation.json");
+  //   setSsIconAniamtion(jsonData);
+  // };
+
   const { data: profileData, refetch: refetchProfile } = useProfile(true);
+
   useEffect(() => {
     if (profileData) {
       setProjectsMonitored(profileData.projects_remaining);
     }
+
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [profileData, refetchProfile]);
 
   useEffect(() => {
     if (projects) {
-      let alteredPlist = projects.data.map((item) => ({
-        scanItem: item,
-        tempScanStatus: item.scan_details.multi_file_scan_status,
-      }));
-
       let pList =
         projectList && pagination.pageNo > 1
-          ? projectList.concat(alteredPlist)
-          : alteredPlist;
+          ? projectList.concat(projects.data)
+          : projects.data;
       const uniqueProjectList = pList.filter(
         (project, index, self) =>
-          index ===
-          self.findIndex((p) => p.scanItem.scan_id === project.scanItem.scan_id)
+          index === self.findIndex((p) => p.scan_id === project.scan_id)
       );
       setIsProjectsLoading(false);
       setProjectList(uniqueProjectList);
@@ -103,6 +118,65 @@ const Scans: React.FC = () => {
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [projects]);
+
+  useEffect(() => {
+    let intervalId: NodeJS.Timeout;
+
+    const refetchTillScanComplete = () => {
+      if (
+        projectList &&
+        projectList.some(
+          ({ scan_details }) =>
+            scan_details.multi_file_scan_status === "scanning" ||
+            scan_details.multi_file_scan_status === "initialised"
+        )
+      ) {
+        if (getFeatureGateConfig().event_consumption_enabled) {
+          const scanningScanIds: string[] = projectList
+            .filter((project) =>
+              ["initialised", "downloaded", "scanning"].includes(
+                project.scan_details.multi_file_scan_status
+              )
+            )
+            .map((project) => {
+              return project.scan_details.scan_id;
+            });
+          setProjectsIdsInScanning(scanningScanIds);
+        } else {
+          intervalId = setInterval(async () => {
+            const { data } = await API.get(
+              `${API_PATH.API_GET_PROJECTS_BETA}?page=${1}&per_page=${
+                pagination.perPageCount
+              }`
+            );
+            const pList = [
+              ...data.data,
+              ...projectList.slice(pagination.perPageCount, projectList.length),
+            ];
+            setProjectList(pList);
+            if (
+              pList &&
+              pList.every(
+                ({ _latest_scan }) =>
+                  _latest_scan.multi_file_scan_status === "scan_done"
+              )
+            ) {
+              clearInterval(intervalId);
+            }
+          }, 5000);
+        }
+      }
+    };
+
+    if (projectList) {
+      refetchTillScanComplete();
+    }
+    return () => {
+      clearInterval(intervalId);
+    };
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [projectList]);
 
   const onSearch = async () => {
     if (searchTerm !== undefined) {
@@ -139,6 +213,63 @@ const Scans: React.FC = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [searchTerm]);
 
+  const fetchProjectList = async () => {
+    if (pagination.pageNo !== 1)
+      setPagination({
+        pageNo: 1,
+        perPageCount: isDesktopView ? 20 : 12,
+      });
+    else refetch();
+  };
+
+  useEffect(() => {
+    let listeners: { [docId: string]: Unsubscribe } = {};
+    if (projectsIdsInScanning && projectsIdsInScanning.length) {
+      projectsIdsInScanning.forEach((scan_id) => {
+        listeners[scan_id] = onSnapshot(
+          doc(db, "scan_events", scan_id),
+          (doc) => {
+            if (doc.exists()) {
+              const eventData = doc.data();
+              if (
+                ["scan_done", "download_failed", "scan_failed"].includes(
+                  eventData.scan_status
+                )
+              ) {
+                // Unsubscribe and remove the listener
+                listeners[scan_id]();
+                delete listeners[scan_id];
+
+                fetchProjectList();
+              }
+              let newProjectsInScanning = projectsInScanning.filter(
+                (item) => scan_id !== item.scanId
+              );
+              setProjectsInScanning([
+                ...newProjectsInScanning,
+                { scanId: scan_id, scanStatus: eventData.scan_status },
+              ]);
+            }
+          },
+          (error) => {
+            console.log(error);
+          }
+        );
+      });
+    }
+
+    const filteredProjects = projectsInScanning.filter((project) =>
+      projectsIdsInScanning.includes(project.scanId)
+    );
+    setProjectsInScanning(filteredProjects);
+
+    return () => {
+      if (listeners)
+        Object.values(listeners).forEach((unsubscribe) => unsubscribe());
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [projectsIdsInScanning]);
+
   const fetchMoreProjects = async () => {
     if (page && pagination.pageNo >= page.total_pages) {
       setHasMore(false);
@@ -153,126 +284,12 @@ const Scans: React.FC = () => {
   const updateProjectList = (scan_id: string) => {
     let newProjectList = projectList || [];
     newProjectList = newProjectList.filter((projectItem) => {
-      if (projectItem.scanItem.scan_id === scan_id) return false;
+      if (projectItem.scan_id === scan_id) return false;
       return true;
     });
     setProjectsMonitored(projectsMonitored - 1);
     setProjectList(newProjectList);
   };
-
-  useEffect(() => {
-    if (
-      projectList &&
-      messageQueue.length > 0 &&
-      messageQueue.some((msgItem: any) =>
-        [
-          "scan_initiate",
-          "scan_status",
-          "scan_complete",
-          "delete_block_acknowledge",
-          "delete_project_acknowledge",
-        ].includes(msgItem.type)
-      )
-    ) {
-      let updatedProjectList = projectList;
-      messageQueue.forEach((msgItem: any) => {
-        if (msgItem.type === "scan_status") {
-          updatedProjectList = updatedProjectList.map((item) => {
-            if (item.scanItem.scan_id === msgItem.payload.scan_id) {
-              if (msgItem.payload.scan_status === "scan_done") {
-                return {
-                  scanItem: {
-                    scan_id: msgItem.payload.scan_id,
-                    scan_type: msgItem.payload.scan_details.scan_type,
-                    scan_details: msgItem.payload.scan_details,
-                  },
-                  tempScanStatus: "scan_done",
-                };
-              } else
-                return {
-                  ...item,
-                  tempScanStatus: msgItem.payload.scan_status,
-                };
-            } else return item;
-          });
-        } else if (msgItem.type === "scan_initiate") {
-          let scanAlreadyPresent = false;
-          updatedProjectList = updatedProjectList.map((item) => {
-            if (
-              item.scanItem.scan_details.project_id ===
-              msgItem.payload.scan_details.project_id
-            ) {
-              scanAlreadyPresent = true;
-              return {
-                scanItem: {
-                  scan_id: msgItem.payload.scan_details.scan_id,
-                  scan_type: msgItem.payload.scan_details.scan_type,
-                  scan_details: msgItem.payload.scan_details,
-                },
-                tempScanStatus: "scan_initiate",
-              };
-            } else return item;
-          });
-          if (!scanAlreadyPresent) {
-            updatedProjectList = [
-              {
-                scanItem: {
-                  scan_id: msgItem.payload.scan_details.scan_id,
-                  scan_type: msgItem.payload.scan_details.scan_type,
-                  scan_details: msgItem.payload.scan_details,
-                },
-                tempScanStatus: "scan_initiate",
-              },
-              ...updatedProjectList,
-            ];
-          }
-        } else if (
-          msgItem.type === "delete_block_acknowledge" ||
-          msgItem.type === "delete_project_acknowledge"
-        ) {
-          toast({
-            title: msgItem.payload.payload.message,
-            status: "success",
-            duration: 3000,
-            isClosable: true,
-          });
-        }
-      });
-      let tempMsgQueue = messageQueue;
-      tempMsgQueue = tempMsgQueue.filter(
-        (msg: any) =>
-          ![
-            "scan_initiate",
-            "scan_status",
-            "scan_complete",
-            "project_scan_acknowledge",
-            "block_scan_acknowledge",
-            "delete_block_acknowledge",
-            "delete_project_acknowledge",
-          ].includes(msg.type)
-      );
-      updateMessageQueue(tempMsgQueue);
-      setProjectList(updatedProjectList);
-    }
-  }, [messageQueue]);
-
-  useEffect(() => {
-    if (
-      projectList &&
-      !projectList.some((item) =>
-        inProcessScanStates.includes(item.tempScanStatus)
-      )
-    ) {
-      setKeepWSOpen(false);
-    } else if (
-      projectList &&
-      projectList.some((item) =>
-        inProcessScanStates.includes(item.tempScanStatus)
-      )
-    ) {
-      setKeepWSOpen(true);
-    }
-  }, [projectList]);
 
   const paramList: {
     param: "gitlab" | "github" | "bitbucket" | "block" | "File Scan" | "";
@@ -513,12 +530,13 @@ const Scans: React.FC = () => {
             scrollableTarget="pageScroll"
           >
             {[...(projectList || [])].map((project) => (
-              <ScanCard
-                key={project.scanItem.scan_id}
-                scan={project.scanItem}
-                tempScanStatus={project.tempScanStatus}
+              <ScanCardDuplicate
+                key={project.scan_id}
+                scan={project}
                 updateScanList={updateProjectList}
                 isViewer={role === "viewer"}
+                scanIdsInScanning={projectsIdsInScanning}
+                scanInProgress={projectsInScanning}
               />
             ))}
           </InfiniteScroll>
@@ -528,4 +546,4 @@ const Scans: React.FC = () => {
   );
 };
 
-export default Scans;
+export default ScansDuplicate;

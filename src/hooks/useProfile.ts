@@ -8,6 +8,8 @@ const getProfile = async () => {
   return data;
 };
 
-export const useProfile = () => {
-  return useQuery<Profile>("profile", () => getProfile());
+export const useProfile = (startScan: boolean) => {
+  return useQuery<Profile>("profile", () => getProfile(), {
+    enabled: startScan,
+  });
 };

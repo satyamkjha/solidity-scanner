@@ -942,9 +942,17 @@ export const attackMethodColor: {
   "Oracle Issue": "#EBEBEB",
 };
 
+export const inProcessScanStates = [
+  "scan_initiate",
+  "scanning",
+  "initialised",
+  "downloaded",
+];
+
 export const scanStatesLabel: {
   [key: string]: string;
 } = {
+  scan_initiate: "Scan in Queue",
   scan_done: "",
   initialised: "Downloading Code...",
   downloaded: "Code Downloaded...",
@@ -2223,5 +2231,67 @@ export const pieData = (
     label: "Gas",
     value: gas,
     color: "#F795B4",
+  },
+];
+
+export const reportProjectDetails = [
+  {
+    label: "Language",
+    value: "Solidity",
+  },
+  {
+    label: "Audit Methodology",
+    value: "Static Scanning",
+  },
+  {
+    label: "Commit Hash",
+    value: "git_commit_hash",
+  },
+  {
+    label: "Website",
+    value: "website",
+  },
+  {
+    label: "Publishers/Owner Name",
+    value: "report_owner",
+  },
+  {
+    label: "Organization",
+    value: "organization",
+  },
+  {
+    label: "Contact Email",
+    value: "email",
+  },
+];
+
+export const reportBlockDetails = [
+  {
+    label: "Language",
+    value: "Solidity",
+  },
+  {
+    label: "Audit Methodology",
+    value: "Static Scanning",
+  },
+  {
+    label: "Contract Type",
+    value: "Smart Contract",
+  },
+  {
+    label: "Website",
+    value: "website",
+  },
+  {
+    label: "Publishers/Owner Name",
+    value: "report_owner",
+  },
+  {
+    label: "Organization",
+    value: "organization",
+  },
+  {
+    label: "Contact Email",
+    value: "email",
   },
 ];
