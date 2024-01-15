@@ -829,6 +829,9 @@ const ScanDetails: React.FC<{
                           scanDetails={
                             scanData.scan_report.multi_file_scan_details
                           }
+                          setReportRegenerationEnabled={
+                            setReportRegenerationEnabled
+                          }
                           project_url={project_url}
                           contract_url={""}
                           contract_platform={""}

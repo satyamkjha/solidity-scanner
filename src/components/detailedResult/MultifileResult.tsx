@@ -51,6 +51,7 @@ const MultifileResult: React.FC<{
   contract_url?: string;
   contract_platform?: string;
   branchName?: string;
+  setReportRegenerationEnabled: React.Dispatch<React.SetStateAction<boolean>>;
   refetch(): any;
 }> = ({
   scanSummary,
@@ -65,6 +66,7 @@ const MultifileResult: React.FC<{
   contract_platform,
   branchName,
   contract_address,
+  setReportRegenerationEnabled,
 }) => {
   const [files, setFiles] = useState<FilesState | null>(null);
   const { role } = useUserRole();
@@ -214,23 +216,24 @@ const MultifileResult: React.FC<{
             duration: 3000,
             isClosable: true,
           });
-        }
-        let tempIssues = issues.map((item) => {
-          let tempArray = item.metric_wise_aggregated_findings;
-          tempArray = tempArray.map((arrItem) => {
-            if (selectedBugs.includes(arrItem.bug_hash)) {
-              return {
-                ...arrItem,
-                bug_status: action,
-              };
-            } else return arrItem;
+          setReportRegenerationEnabled(true);
+          let tempIssues = issues.map((item) => {
+            let tempArray = item.metric_wise_aggregated_findings;
+            tempArray = tempArray.map((arrItem) => {
+              if (selectedBugs.includes(arrItem.bug_hash)) {
+                return {
+                  ...arrItem,
+                  bug_status: action,
+                };
+              } else return arrItem;
+            });
+            return {
+              ...item,
+              metric_wise_aggregated_findings: tempArray,
+            };
           });
-          return {
-            ...item,
-            metric_wise_aggregated_findings: tempArray,
-          };
-        });
-        setIssues(tempIssues);
+          setIssues(tempIssues);
+        }
 
         // commented code
         // if (config && config.REACT_APP_FEATURE_GATE_CONFIG.websockets_enabled) {

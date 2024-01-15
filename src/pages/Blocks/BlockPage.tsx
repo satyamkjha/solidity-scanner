@@ -694,6 +694,9 @@ const BlockPage: React.FC = () => {
                       scanData.scan_report.multi_file_scan_details &&
                       scanData.scan_report.multi_file_scan_summary ? (
                         <MultifileResult
+                          setReportRegenerationEnabled={
+                            setReportRegenerationEnabled
+                          }
                           profileData={profile}
                           details_enabled={scanData.scan_report.details_enabled}
                           type={"block"}
