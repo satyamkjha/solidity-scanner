@@ -43,12 +43,7 @@ const CoverPageContainer: React.FC<{
           px={16}
           backgroundSize="cover"
           backgroundRepeat={"no-repeat"}
-          backgroundImage={[
-            null,
-            null,
-            null,
-            `url('${assetsURL}report/report_cover.svg')`,
-          ]}
+          backgroundImage={`url('${assetsURL}report/report_cover.svg')`}
           position={"relative"}
         >
           <Flex
@@ -61,20 +56,6 @@ const CoverPageContainer: React.FC<{
           >
             <HStack justifyContent={"flex-start"} spacing={4}>
               <Logo fill={"white"} />
-
-              {isPublicReport && (
-                <Image
-                  display={["block", "block", "none"]}
-                  height={75}
-                  width={75}
-                  src={
-                    summary_report.project_summary_report.report_type ===
-                    "self_published"
-                      ? `${assetsURL}report/self_published_badge.svg`
-                      : `${assetsURL}report/verified_report_badge.svg`
-                  }
-                />
-              )}
             </HStack>
             <Text
               fontSize="2xl"
@@ -86,19 +67,14 @@ const CoverPageContainer: React.FC<{
               Security Assessment
             </Text>
             <Heading fontSize={["3xl", "4xl"]} fontWeight={700} mb={3}>
-              {summary_report.project_summary_report.project_name}
+              {summary_report.project_summary_report.project_name ||
+                summary_report.project_summary_report.contract_name}
             </Heading>
-            <Text fontSize="2xl" mb={20} fontWeight={500}>
+            <Text fontSize="xl" mb={20} fontWeight={500}>
               {`${d.getDate()} ${monthNames[d.getMonth()]} ${d.getFullYear()}`}
             </Text>
-            <Box w="100%" h={["50vh", "50vh", "50vh", "auto"]}>
-              <Text
-                fontSize="lg"
-                fontWeight={400}
-                width={["100%", "100%", "80%", "60%"]}
-                color={"subtle"}
-                mb={10}
-              >
+            <Box w="100%" h={"auto"}>
+              <Text fontWeight={400} width={"60%"} color={"subtle"} mb={10}>
                 This security assessment report was prepared by
                 SolidityScan.com, a cloud-based Smart Contract Scanner.
               </Text>
@@ -142,9 +118,9 @@ const CoverPageContainer: React.FC<{
           </Flex>
           {isPublicReport && (
             <Image
-              display={["none", "none", "block"]}
-              height={[150, 150, 150, 250]}
-              width={[150, 150, 150, 250]}
+              display={["block"]}
+              height={[250]}
+              width={[250]}
               src={
                 summary_report.project_summary_report.report_type ===
                 "self_published"
