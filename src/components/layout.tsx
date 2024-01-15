@@ -61,7 +61,6 @@ const Layout: React.FC = ({ children }) => {
   );
 
   const [credits, setCredits] = useState(profileData ? profileData.credits : 0);
-  const [prevTimeStamp, setPrevTimeStamp] = useState("");
 
   // const [isBannerOpen, setIsBannerOpen] = useState(true);
 
@@ -87,13 +86,8 @@ const Layout: React.FC = ({ children }) => {
       )
     ) {
       messageQueue.forEach((msgItem: any) => {
-        if (
-          msgItem.type &&
-          msgItem.type === "account_credits_update" &&
-          compareTimeStamp(msgItem.event_timestamp, prevTimeStamp)
-        ) {
+        if (msgItem.type && msgItem.type === "account_credits_update") {
           setCredits(msgItem.payload.updated_credits);
-          setPrevTimeStamp(msgItem.event_timestamp);
         }
       });
       let tempMessageQueue = messageQueue.filter(
