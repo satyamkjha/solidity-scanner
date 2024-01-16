@@ -152,7 +152,7 @@ export const checkProjectUrl = (url: string) => {
     return true;
   } else if (gitlabRegex.test(url)) {
     return true;
-  }
+  } else return false;
 };
 
 export const getProjectType = (project_url: string) => {
@@ -173,7 +173,7 @@ export const getProjectType = (project_url: string) => {
     }
     return "";
   } catch (e) {
-    console.log("incorrect urk");
+    console.log("incorrect url");
     return "";
   }
 };
