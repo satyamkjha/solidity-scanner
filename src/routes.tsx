@@ -23,6 +23,7 @@ import { useUserOrgProfile } from "hooks/useUserOrgProfile";
 import { UserRoleProvider } from "hooks/useUserRole";
 import { onLogout } from "common/functions";
 import { WebSocketProvider } from "hooks/useWebhookData";
+import { useConfig } from "hooks/useConfig";
 
 const Landing = lazy(() =>
   lazyRetry(
@@ -133,6 +134,13 @@ const Scans = lazy(() =>
   )
 );
 
+const ScansDuplicate = lazy(() =>
+  lazyRetry(
+    () => import("pages/Scans/ScansDuplicate" /* webpackChunkName: "Scans" */),
+    "scans"
+  )
+);
+
 const ProjectPage = lazy(() =>
   lazyRetry(
     () =>
@@ -231,6 +239,7 @@ const orgRestrictedRoutes: {
 ];
 
 const Routes: React.FC = () => {
+  const config: any = useConfig();
   return (
     <Router>
       <ErrorHandler>
@@ -317,7 +326,12 @@ const Routes: React.FC = () => {
                     <Profile />
                   </PrivateRoute>
                   <PrivateRoute exact path="/projects">
-                    <Scans />
+                    {config &&
+                    config.REACT_APP_FEATURE_GATE_CONFIG.websockets_enabled ? (
+                      <Scans />
+                    ) : (
+                      <ScansDuplicate />
+                    )}
                   </PrivateRoute>
                   <PrivateRoute path="/projects/:projectId/:scanId">
                     <ProjectPage />
