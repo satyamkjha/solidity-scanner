@@ -215,22 +215,6 @@ const MultifileResult: React.FC<{
             isClosable: true,
           });
           refetch();
-          let tempIssues = issues.map((item) => {
-            let tempArray = item.metric_wise_aggregated_findings;
-            tempArray = tempArray.map((arrItem) => {
-              if (selectedBugs.includes(arrItem.bug_hash)) {
-                return {
-                  ...arrItem,
-                  bug_status: action,
-                };
-              } else return arrItem;
-            });
-            return {
-              ...item,
-              metric_wise_aggregated_findings: tempArray,
-            };
-          });
-          setIssues(tempIssues);
         }
 
         // commented code
