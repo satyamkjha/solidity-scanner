@@ -331,6 +331,19 @@ export const ReportContainerV2: React.FC<{
       setPrintLoading(false);
     }
   };
+  const splitNumber = (num: number): number[] => {
+    const result: number[] = [0];
+    const initial = 25;
+    const increment = 40;
+
+    let current = initial;
+    while (current < num) {
+      result.push(current);
+      current += increment;
+    }
+
+    return result;
+  };
 
   const getVulnerabilityDetailSplit = (issue: IssueItem) => {
     if (issue.findings.length === 1) {
@@ -338,64 +351,47 @@ export const ReportContainerV2: React.FC<{
         issue.findings[0].line_nos_end[0] -
           issue.findings[0].line_nos_start[0] +
           3 >
-        70
-      ) {
-        let split = [];
-        split.push({
-          point: issue.findings[0].file_path,
-          start_line: issue.findings[0].line_nos_start[0],
-          end_line: issue.findings[0].line_nos_start[0] + 25,
-        });
-        split.push({
-          point: issue.findings[0].file_path,
-          start_line: issue.findings[0].line_nos_start[0] + 25 + 1,
-          end_line: issue.findings[0].line_nos_start[0] + 70,
-        });
-        split.push({
-          point: issue.findings[0].file_path,
-          start_line: issue.findings[0].line_nos_start[0] + 70 + 1,
-          end_line: issue.findings[0].line_nos_end[0],
-        });
-        if (
-          issue.findings[0].line_nos_end[0] -
-            (issue.findings[0].line_nos_start[0] + 70) >
-          37
-        ) {
-          split.push({
-            point: "desc",
-            start_line: null,
-            end_line: null,
-          });
-        }
-        return split;
-      } else if (
-        issue.findings[0].line_nos_end[0] -
-          issue.findings[0].line_nos_start[0] +
-          3 >
         25
       ) {
-        let split = [];
-        split.push({
-          point: issue.findings[0].file_path,
-          start_line: issue.findings[0].line_nos_start[0],
-          end_line: issue.findings[0].line_nos_start[0] + 25,
-        });
-        split.push({
-          point: issue.findings[0].file_path,
-          start_line: issue.findings[0].line_nos_start[0] + 25 + 1,
-          end_line: issue.findings[0].line_nos_end[0],
-        });
-        if (
+        const splitList = splitNumber(
           issue.findings[0].line_nos_end[0] -
-            (issue.findings[0].line_nos_start[0] + 25) >
-          37
-        ) {
-          split.push({
-            point: "desc",
-            start_line: null,
-            end_line: null,
-          });
-        }
+            issue.findings[0].line_nos_start[0]
+        );
+        let split: any[] = [];
+        splitList.forEach((value, index) => {
+          if (index === splitList.length - 1) {
+            split.push({
+              point: issue.findings[0].file_path,
+              start_line: issue.findings[0].line_nos_start[0] + value + 1,
+              end_line: issue.findings[0].line_nos_end[0],
+            });
+            if (
+              issue.findings[0].line_nos_end[0] -
+                (issue.findings[0].line_nos_start[0] + value) >
+              37
+            ) {
+              split.push({
+                point: "desc",
+                start_line: null,
+                end_line: null,
+              });
+            }
+          } else if (index === 0) {
+            split.push({
+              point: issue.findings[0].file_path,
+              start_line: issue.findings[0].line_nos_start[0] + value,
+              end_line:
+                issue.findings[0].line_nos_start[0] + splitList[index + 1],
+            });
+          } else {
+            split.push({
+              point: issue.findings[0].file_path,
+              start_line: issue.findings[0].line_nos_start[0] + value + 1,
+              end_line:
+                issue.findings[0].line_nos_start[0] + splitList[index + 1],
+            });
+          }
+        });
         return split;
       } else if (
         issue.findings[0].line_nos_end[0] -
