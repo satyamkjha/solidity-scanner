@@ -404,6 +404,7 @@ export type IssueItem = {
   issue_remediation: string;
   severity: string;
   comment?: string;
+  audit_type?: string;
 };
 
 export type ReportsListItem = {

@@ -140,7 +140,6 @@ const FindingBugListContainer: React.FC<{
             width={"38%"}
           >
             {issue.issue_name}
-            {/* BYTES CONSTANT MORE EFFICIENT THAN STRING LITERAL */}
           </Text>
           <Text
             fontSize="10px"
@@ -148,7 +147,9 @@ const FindingBugListContainer: React.FC<{
             color={"subtle"}
             width={"13%"}
           >
-            Automated
+            {issue.audit_type
+              ? sentenceCapitalize(issue.audit_type)
+              : "Automated"}
           </Text>
           <Text
             fontSize="10px"
