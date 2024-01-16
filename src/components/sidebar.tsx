@@ -17,7 +17,6 @@ import {
   LogoIcon,
   HomeMenuIcon,
   ProjectsMenuIcon,
-  BlockMenuIcon,
   IntegrationMenuIcon,
   BillingMenuIcon,
   CredshieldsIcon,
@@ -33,7 +32,7 @@ import {
 import ManualAuditForm from "./modals/manualAuditForm";
 import { ArrowBackIcon, ArrowForwardIcon } from "@chakra-ui/icons";
 import { useConfig } from "hooks/useConfig";
-import { getAssetsURL, getFeatureGateConfig } from "helpers/helperFunction";
+import { getAssetsURL } from "helpers/helperFunction";
 import { useUserRole } from "hooks/useUserRole";
 import { socialIconsList } from "common/values";
 

@@ -80,6 +80,14 @@ export const getReCaptchaHeaders = async (action: string) => {
   }
 };
 
+export const compareTimeStamp = (timeStamp1: string, timeStamp2: string) => {
+  const time1 = new Date(timeStamp1).getTime();
+  const time2 = new Date(timeStamp2).getTime();
+
+  if (time1 > time2) return true;
+  else return false;
+};
+
 export const checkGenerateReportAccess = (
   profile: Profile,
   plans: PricingData,
@@ -274,6 +282,16 @@ export const formatString = (template: string, options: any) => {
     template = template.replaceAll("${" + keys + "}", options[keys]);
   }
   return template;
+};
+
+export const splitListIntoChunks = <T>(list: T[], chunkSize: number): T[][] => {
+  const result: T[][] = [];
+
+  for (let i = 0; i < list.length; i += chunkSize) {
+    result.push(list.slice(i, i + chunkSize));
+  }
+
+  return result;
 };
 
 // ^xdc[a-fA-F0-9]{40}$|^0x[a-fA-F0-9]{40}$

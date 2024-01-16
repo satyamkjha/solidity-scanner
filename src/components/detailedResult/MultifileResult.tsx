@@ -36,6 +36,8 @@ import {
 } from "helpers/helperFunction";
 import { FileIssue } from "components/icons";
 import { DetailResultContext } from "common/contexts";
+import { useWebSocket } from "hooks/useWebhookData";
+import { useConfig } from "hooks/useConfig";
 
 const MultifileResult: React.FC<{
   type: "block" | "project";
@@ -66,6 +68,7 @@ const MultifileResult: React.FC<{
 }) => {
   const [files, setFiles] = useState<FilesState | null>(null);
   const { role } = useUserRole();
+  const config: any = useConfig();
 
   const sortIssuesBasedonPriority = (issueArray: MultiFileScanDetail[]) => {
     const issuePriority: {
@@ -145,11 +148,50 @@ const MultifileResult: React.FC<{
   const [filterHeight, setFilterHeight] = useState<number>();
 
   const isViewer = role === "viewer";
-
-  // const [action, setAction] = useState("");
   const toast = useToast();
 
   const [isDesktopView] = useMediaQuery("(min-width: 1350px)");
+  const { sendMessage, messageQueue, updateMessageQueue, setKeepWSOpen } =
+    useWebSocket();
+
+  const [restrictedBugIds, setRestrictedBugIds] = useState<string[]>([]);
+
+  // useEffect(() => {
+  //   if (
+  //     messageQueue.length > 0 &&
+  //     messageQueue.some((msgItem: any) =>
+  //       ["scan_update"].includes(msgItem.type)
+  //     )
+  //   ) {
+  //     let tempRestrictedBugIds = restrictedBugIds;
+  //     messageQueue.forEach((msgItem: any) => {
+  //       if (msgItem.type && msgItem.type === "scan_update") {
+  //         tempRestrictedBugIds = tempRestrictedBugIds.filter(
+  //           (bugId) => !msgItem.payload.scan_updates.bug_ids.includes(bugId)
+  //         );
+  //       } else if (msgItem.type && msgItem.type === "update_bug_acknowledge") {
+  //         toast({
+  //           title: msgItem.payload.payload.message,
+  //           status: "success",
+  //           duration: 3000,
+  //           isClosable: true,
+  //         });
+  //       } else return msgItem;
+  //     });
+  //     setRestrictedBugIds(tempRestrictedBugIds);
+  //     let tempMessageQueue = messageQueue.filter(
+  //       (item: any) => item.type !== "scan_update"
+  //     );
+  //     tempMessageQueue = tempMessageQueue.filter(
+  //       (item: any) => item.type !== "update_bug_acknowledge"
+  //     );
+  //     updateMessageQueue(tempMessageQueue);
+  //   } else {
+  //     if (restrictedBugIds.length === 0) {
+  //       setKeepWSOpen(false);
+  //     }
+  //   }
+  // }, [messageQueue]);
 
   const updateBugStatus = async (action: string, comment?: string) => {
     if (files) {
@@ -172,16 +214,46 @@ const MultifileResult: React.FC<{
             duration: 3000,
             isClosable: true,
           });
+          refetch();
         }
-        setFiles({
-          ...files,
-          bug_status: action,
-          comment: comment,
-        });
+
+        // commented code
+        // if (config && config.REACT_APP_FEATURE_GATE_CONFIG.websockets_enabled) {
+        //   sendMessage({
+        //     type: "scan_update",
+        //     body: {
+        //       bug_ids: selectedBugs,
+        //       scan_id: scanId,
+        //       project_id: projectId,
+        //       bug_status: action,
+        //       comment: comment,
+        //       scan_type: type,
+        //     },
+        //   });
+        //   setRestrictedBugIds([...restrictedBugIds, ...selectedBugs]);
+
+        //   let tempIssues = issues.map((item) => {
+        //     let tempArray = item.metric_wise_aggregated_findings;
+        //     tempArray = tempArray.map((arrItem) => {
+        //       if (selectedBugs.includes(arrItem.bug_hash)) {
+        //         return {
+        //           ...arrItem,
+        //           bug_status: action,
+        //         };
+        //       } else return arrItem;
+        //     });
+        //     return {
+        //       ...item,
+        //       metric_wise_aggregated_findings: tempArray,
+        //     };
+        //   });
+        //   setIssues(tempIssues);
+        // } else {
+
+        // }
       }
       setSelectedBugs([]);
     }
-    refetch();
   };
 
   const createGithubIssue = async () => {
@@ -417,7 +489,17 @@ const MultifileResult: React.FC<{
                 styles={customStylesForTakeAction}
                 isDisabled={isDisabled || isViewer}
                 onChange={(newValue: any) => {
-                  if (newValue) {
+                  if (
+                    selectedBugs.some((bug) => restrictedBugIds.includes(bug))
+                  ) {
+                    toast({
+                      description:
+                        "Bug Status update in progress for the selected bugs. Please try after some time.",
+                      status: "error",
+                      duration: 3000,
+                      isClosable: true,
+                    });
+                  } else {
                     if (newValue.value === "wont_fix") {
                       onOpen();
                       setBugStatus(newValue.value);
@@ -474,6 +556,8 @@ const MultifileResult: React.FC<{
               confidence={confidence}
               vulnerability={vulnerability}
               updateBugStatus={updateBugStatus}
+              restrictedBugIds={restrictedBugIds}
+              setRestrictedBugIds={setRestrictedBugIds}
               bugStatusFilter={bugStatusFilter}
               project_url={project_url}
               contract_url={contract_url}
@@ -490,10 +574,12 @@ const MultifileResult: React.FC<{
             is_latest_scan={is_latest_scan}
             files={files}
             setFiles={setFiles}
+            setRestrictedBugIds={setRestrictedBugIds}
             details_enabled={details_enabled}
             selectedIssues={selectedIssues}
             selectedBugs={selectedBugs}
             updateBugStatus={updateBugStatus}
+            restrictedBugIds={restrictedBugIds}
             project_url={project_url}
             contract_url={contract_url}
             contract_platform={contract_platform}

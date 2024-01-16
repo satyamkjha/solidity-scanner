@@ -10,7 +10,7 @@ export const useUserRole = () => {
 export const UserRoleProvider = ({ children }) => {
   const [role, setRole] = useState("owner");
   const [isLoading, setIsLoading] = useState(true);
-  const { data: profileData } = useProfile();
+  const { data: profileData } = useProfile(true);
   const { data: orgProfile } = useUserOrgProfile(
     profileData?.logged_in_via === "org_login"
   );

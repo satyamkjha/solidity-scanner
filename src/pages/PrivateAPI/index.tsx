@@ -26,7 +26,7 @@ import Loader from "components/styled-components/Loader";
 import { formattedDate } from "common/functions";
 
 export default function PrivateApi() {
-  const { data: profileData, isLoading } = useProfile();
+  const { data: profileData, isLoading } = useProfile(true);
   const [hasAccess, setHasAccess] = useState(false);
   const [accessKey, setAccessKey] = useState("");
   const [createdDate, setCreatedDate] = useState("");

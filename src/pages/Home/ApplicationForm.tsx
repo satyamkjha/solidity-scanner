@@ -30,6 +30,8 @@ import { useUserRole } from "hooks/useUserRole";
 import { AddProjectFormInfographics } from "./AddProjectFormInfographics";
 import { capitalize } from "common/functions";
 import { infographicsData, OauthName } from "common/values";
+import { useWebSocket } from "hooks/useWebhookData";
+import { useConfig } from "hooks/useConfig";
 
 const ApplicationForm: React.FC<{
   profileData: Profile;
@@ -38,7 +40,8 @@ const ApplicationForm: React.FC<{
   formType: string;
 }> = ({ profileData, step, setStep, formType }) => {
   const [isDesktopView] = useMediaQuery("(min-width: 1920px)");
-
+  const config: any = useConfig();
+  const { sendMessage } = useWebSocket();
   const { role } = useUserRole();
   const assetsURL = getAssetsURL();
   const queryClient = useQueryClient();
@@ -85,43 +88,67 @@ const ApplicationForm: React.FC<{
 
   const runScan = async () => {
     if (!runValidation() || !repoTreeUP) return;
-    try {
-      setIsLoading(true);
-      const skipFilePaths = getSkipFilePaths(repoTreeUP);
-      const { data } = await API.post(API_PATH.API_PROJECT_SCAN, {
-        project_url: githubLink,
-        project_name: projectName,
-        project_type: "new",
-        project_branch: branch,
-        recur_scans: githubSync,
-        project_visibility: visibility ? "private" : "public",
-        skip_file_paths: skipFilePaths,
-      });
-
-      setIsLoading(false);
-      if (data.status === "success") {
-        queryClient.invalidateQueries([
-          "all_scans",
-          {
-            pageNo: 1,
-            perPageCount: isDesktopView ? 20 : 12,
+    if (config && config.REACT_APP_FEATURE_GATE_CONFIG.websockets_enabled) {
+      try {
+        setIsLoading(true);
+        const skipFilePaths = getSkipFilePaths(repoTreeUP);
+        sendMessage({
+          type: "project_scan_initiate",
+          body: {
+            project_url: githubLink,
+            project_name: projectName,
+            project_type: "new",
+            project_branch: branch,
+            recur_scans: githubSync,
+            project_visibility: visibility ? "private" : "public",
+            skip_file_paths: skipFilePaths,
           },
-        ]);
-        queryClient.invalidateQueries("scan_list");
-        queryClient.invalidateQueries("profile");
-        history.push("/projects");
-      } else {
-        toast({
-          title: data.message,
-          status: "error",
-          duration: 3000,
-          isClosable: true,
-          position: "bottom",
         });
+        history.push("/projects");
+        setIsLoading(false);
+      } catch (e) {
+        console.log(e);
+        setIsLoading(false);
       }
-    } catch (e) {
-      console.log(e);
-      setIsLoading(false);
+    } else {
+      try {
+        setIsLoading(true);
+        const skipFilePaths = getSkipFilePaths(repoTreeUP);
+        const { data } = await API.post(API_PATH.API_PROJECT_SCAN, {
+          project_url: githubLink,
+          project_name: projectName,
+          project_type: "new",
+          project_branch: branch,
+          recur_scans: githubSync,
+          project_visibility: visibility ? "private" : "public",
+          skip_file_paths: skipFilePaths,
+        });
+
+        setIsLoading(false);
+        if (data.status === "success") {
+          queryClient.invalidateQueries([
+            "all_scans",
+            {
+              pageNo: 1,
+              perPageCount: isDesktopView ? 20 : 12,
+            },
+          ]);
+          queryClient.invalidateQueries("scan_list");
+          queryClient.invalidateQueries("profile");
+          history.push("/projects");
+        } else {
+          toast({
+            title: data.message,
+            status: "error",
+            duration: 3000,
+            isClosable: true,
+            position: "bottom",
+          });
+        }
+      } catch (e) {
+        console.log(e);
+        setIsLoading(false);
+      }
     }
   };
 

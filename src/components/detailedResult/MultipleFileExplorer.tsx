@@ -35,6 +35,8 @@ type MultipleFileExplorerProps = {
   contract_platform?: string;
   branchName?: string;
   contract_address?: string;
+  restrictedBugIds: string[];
+  setRestrictedBugIds: React.Dispatch<React.SetStateAction<string[]>>;
 };
 const MultipleFileExplorer: React.FC<MultipleFileExplorerProps> = ({
   files,
@@ -49,6 +51,8 @@ const MultipleFileExplorer: React.FC<MultipleFileExplorerProps> = ({
   contract_platform,
   branchName,
   contract_address,
+  restrictedBugIds,
+  setRestrictedBugIds,
 }) => {
   const [currentFile, setCurrentFile] = useState<Finding>(files.findings[0]);
   const config: any = useConfig();
@@ -331,6 +335,8 @@ const MultipleFileExplorer: React.FC<MultipleFileExplorerProps> = ({
                 <Box fontSize="sm" w="100%">
                   <IssueDetail
                     type={type}
+                    restrictedBugIds={restrictedBugIds}
+                    setRestrictedBugIds={setRestrictedBugIds}
                     handleTabsChange={handleTabsChange}
                     tabIndex={tabIndex}
                     fullScreen={fullScreen}

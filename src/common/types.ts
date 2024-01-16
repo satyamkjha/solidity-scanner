@@ -21,6 +21,7 @@ export type Profile = {
   promo_code?: string;
   contact_number: string;
   credits: number;
+  auth_token: string;
   public_address?: string;
   company_name: string;
   current_package: string;
@@ -404,6 +405,7 @@ export type IssueItem = {
   issue_remediation: string;
   severity: string;
   comment?: string;
+  audit_type?: string;
 };
 
 export type ReportsListItem = {
