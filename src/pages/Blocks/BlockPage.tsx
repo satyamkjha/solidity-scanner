@@ -59,8 +59,6 @@ const BlockPage: React.FC = () => {
 
   const [reportingStatus, setReportingStatus] = useState<string>("");
   const [publishStatus, setPublishStatus] = useState("");
-  const [reportRegenerationEnabled, setReportRegenerationEnabled] =
-    useState(false);
   const { data: profile, isLoading: isProfileLoading } = useProfile(true);
   const { data: reportList, refetch: refetchReportList } = useReports(
     "block",
@@ -78,9 +76,6 @@ const BlockPage: React.FC = () => {
   useEffect(() => {
     if (scanData) {
       setReportingStatus(scanData.scan_report.reporting_status);
-      setReportRegenerationEnabled(
-        scanData.scan_report.report_regeneration_enabled
-      );
     }
   }, [scanData]);
 
@@ -394,7 +389,7 @@ const BlockPage: React.FC = () => {
                           width={["100%", "100%", "100%", "fit-content"]}
                           height="fit-content"
                         >
-                          {!reportRegenerationEnabled &&
+                          {!scanData.scan_report.report_regeneration_enabled &&
                             scanData.scan_report.reporting_status ===
                               "report_generated" &&
                             publishStatus !== "" &&
@@ -457,7 +452,8 @@ const BlockPage: React.FC = () => {
                           {scanData.scan_report.scan_status === "scan_done" &&
                             reportingStatus !== "" &&
                             publishStatus !== "" &&
-                            (reportRegenerationEnabled ? (
+                            (scanData.scan_report
+                              .report_regeneration_enabled ? (
                               <Button
                                 variant={"accent-outline"}
                                 w={["80%", "80%", "50%", "200px"]}
@@ -559,7 +555,8 @@ const BlockPage: React.FC = () => {
                                 onClick={() => {
                                   if (
                                     reportingStatus === "not_generated" ||
-                                    reportRegenerationEnabled
+                                    scanData.scan_report
+                                      .report_regeneration_enabled
                                   ) {
                                     generateReport(
                                       scanData.scan_report.scan_id,
@@ -589,7 +586,8 @@ const BlockPage: React.FC = () => {
                                   ? "Generating report..."
                                   : reportingStatus === "not_generated"
                                   ? "Generate Report"
-                                  : reportRegenerationEnabled
+                                  : scanData.scan_report
+                                      .report_regeneration_enabled
                                   ? "Re-generate Report"
                                   : reportingStatus === "report_generated"
                                   ? "View Report"
@@ -694,9 +692,6 @@ const BlockPage: React.FC = () => {
                       scanData.scan_report.multi_file_scan_details &&
                       scanData.scan_report.multi_file_scan_summary ? (
                         <MultifileResult
-                          setReportRegenerationEnabled={
-                            setReportRegenerationEnabled
-                          }
                           profileData={profile}
                           details_enabled={scanData.scan_report.details_enabled}
                           type={"block"}

@@ -51,7 +51,6 @@ const MultifileResult: React.FC<{
   contract_url?: string;
   contract_platform?: string;
   branchName?: string;
-  setReportRegenerationEnabled: React.Dispatch<React.SetStateAction<boolean>>;
   refetch(): any;
 }> = ({
   scanSummary,
@@ -66,7 +65,6 @@ const MultifileResult: React.FC<{
   contract_platform,
   branchName,
   contract_address,
-  setReportRegenerationEnabled,
 }) => {
   const [files, setFiles] = useState<FilesState | null>(null);
   const { role } = useUserRole();
@@ -216,7 +214,7 @@ const MultifileResult: React.FC<{
             duration: 3000,
             isClosable: true,
           });
-          setReportRegenerationEnabled(true);
+          refetch();
           let tempIssues = issues.map((item) => {
             let tempArray = item.metric_wise_aggregated_findings;
             tempArray = tempArray.map((arrItem) => {

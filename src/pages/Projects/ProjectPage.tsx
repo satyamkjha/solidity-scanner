@@ -175,8 +175,6 @@ const ScanDetails: React.FC<{
     projectId
   );
   const { data: profile, isLoading: isProfileLoading } = useProfile(true);
-  const [reportRegenerationEnabled, setReportRegenerationEnabled] =
-    useState(false);
   const [tabIndex, setTabIndex] = React.useState(0);
   const [open, setOpen] = useState(false);
 
@@ -191,9 +189,6 @@ const ScanDetails: React.FC<{
   useEffect(() => {
     if (scanData) {
       setReportingStatus(scanData.scan_report.reporting_status);
-      setReportRegenerationEnabled(
-        scanData.scan_report.report_regeneration_enabled
-      );
     }
   }, [scanData]);
 
@@ -472,7 +467,7 @@ const ScanDetails: React.FC<{
                   alignItems={"center"}
                   width={["100%", "100%", "100%", "fit-content"]}
                 >
-                  {!reportRegenerationEnabled &&
+                  {!scanData.scan_report.report_regeneration_enabled &&
                     scanData.scan_report.reporting_status ===
                       "report_generated" &&
                     publishStatus !== "" &&
@@ -533,7 +528,7 @@ const ScanDetails: React.FC<{
                   {scanData.scan_report.scan_status === "scan_done" &&
                     reportingStatus !== "" &&
                     publishStatus !== "" &&
-                    (reportRegenerationEnabled &&
+                    (scanData.scan_report.report_regeneration_enabled &&
                     publishStatus !== "Not-Generated" ? (
                       <Button
                         variant={"black-outline"}
@@ -828,9 +823,6 @@ const ScanDetails: React.FC<{
                           }
                           scanDetails={
                             scanData.scan_report.multi_file_scan_details
-                          }
-                          setReportRegenerationEnabled={
-                            setReportRegenerationEnabled
                           }
                           project_url={project_url}
                           contract_url={""}

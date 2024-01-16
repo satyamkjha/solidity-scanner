@@ -112,6 +112,7 @@ const IssueDetail: React.FC<{
           ...files,
           comment: comment,
         });
+        
       }
 
       // commented code
