@@ -536,12 +536,12 @@ export const ReportContainerV2: React.FC<{
                 align="stretch"
                 mt={download ? 0 : 6}
                 pb={20}
-                w={"819px"}
-                minW={"819px"}
+                w={download ? "826px" : "830px"}
+                minW={download ? "826px" : "830px"}
                 h={download ? "inherit" : "100%"}
                 bg={!download ? "#535659" : "white"}
                 overflowY={download ? "visible" : "auto"}
-                overflowX={"hidden"}
+                overflowX={download ? "visible" : "hidden"}
               >
                 {/* <LazyLoad> */}
                 <PDFContainer
