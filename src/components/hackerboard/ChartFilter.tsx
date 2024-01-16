@@ -59,7 +59,7 @@ const ChartFilter: React.FC<{
           isSearchable={true}
           isClearable={true}
           options={chainsOptions}
-          placeholder="Select BlockChain"
+          placeholder="Select Blockchain"
           styles={customTranslucentDropdown}
           maxMenuHeight={400}
           onChange={(newVal: any) => {
