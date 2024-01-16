@@ -149,7 +149,6 @@ export const ReportContainerV2: React.FC<{
     let issueDetailList: IssueItem[] = [];
 
     const issues = sortIssuesBySeverity(summary_report);
-    console.log(issues);
 
     Object.keys(issues).forEach((key, index) => {
       if (key.length > 77) {
@@ -345,11 +344,11 @@ export const ReportContainerV2: React.FC<{
         split.push({
           point: issue.findings[0].file_path,
           start_line: issue.findings[0].line_nos_start[0],
-          end_line: issue.findings[0].line_nos_start[0] + 27,
+          end_line: issue.findings[0].line_nos_start[0] + 25,
         });
         split.push({
           point: issue.findings[0].file_path,
-          start_line: issue.findings[0].line_nos_start[0] + 27 + 1,
+          start_line: issue.findings[0].line_nos_start[0] + 25 + 1,
           end_line: issue.findings[0].line_nos_start[0] + 70,
         });
         split.push({
@@ -357,24 +356,46 @@ export const ReportContainerV2: React.FC<{
           start_line: issue.findings[0].line_nos_start[0] + 70 + 1,
           end_line: issue.findings[0].line_nos_end[0],
         });
+        if (
+          issue.findings[0].line_nos_end[0] -
+            (issue.findings[0].line_nos_start[0] + 70) >
+          37
+        ) {
+          split.push({
+            point: "desc",
+            start_line: null,
+            end_line: null,
+          });
+        }
         return split;
       } else if (
         issue.findings[0].line_nos_end[0] -
           issue.findings[0].line_nos_start[0] +
           3 >
-        27
+        25
       ) {
         let split = [];
         split.push({
           point: issue.findings[0].file_path,
           start_line: issue.findings[0].line_nos_start[0],
-          end_line: issue.findings[0].line_nos_start[0] + 27,
+          end_line: issue.findings[0].line_nos_start[0] + 25,
         });
         split.push({
           point: issue.findings[0].file_path,
-          start_line: issue.findings[0].line_nos_start[0] + 27 + 1,
+          start_line: issue.findings[0].line_nos_start[0] + 25 + 1,
           end_line: issue.findings[0].line_nos_end[0],
         });
+        if (
+          issue.findings[0].line_nos_end[0] -
+            (issue.findings[0].line_nos_start[0] + 25) >
+          37
+        ) {
+          split.push({
+            point: "desc",
+            start_line: null,
+            end_line: null,
+          });
+        }
         return split;
       } else if (
         issue.findings[0].line_nos_end[0] -
@@ -515,11 +536,12 @@ export const ReportContainerV2: React.FC<{
                 align="stretch"
                 mt={download ? 0 : 6}
                 pb={20}
-                w={"819px"}
-                minW={"819px"}
+                w={download ? "826px" : "830px"}
+                minW={download ? "826px" : "830px"}
                 h={download ? "inherit" : "100%"}
                 bg={!download ? "#535659" : "white"}
                 overflowY={download ? "visible" : "auto"}
+                overflowX={download ? "visible" : "hidden"}
               >
                 {/* <LazyLoad> */}
                 <PDFContainer

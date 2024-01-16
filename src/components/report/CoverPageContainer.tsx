@@ -74,7 +74,13 @@ const CoverPageContainer: React.FC<{
               {`${d.getDate()} ${monthNames[d.getMonth()]} ${d.getFullYear()}`}
             </Text>
             <Box w="100%" h={"auto"}>
-              <Text fontWeight={400} width={"60%"} color={"subtle"} mb={10}>
+              <Text
+                fontWeight={400}
+                fontSize={"sm"}
+                width={"60%"}
+                color={"subtle"}
+                mb={10}
+              >
                 This security assessment report was prepared by
                 SolidityScan.com, a cloud-based Smart Contract Scanner.
               </Text>

@@ -64,6 +64,10 @@ const VulnerabililtyDetailsContainer: React.FC<{
     return dataArray.slice(line_start, line_end + 1);
   };
 
+  const getCodeLineNo = (start: number, index: number) => {
+    return start === 0 ? index + 1 : start - 2 + index + 1;
+  };
+
   return (
     <Flex
       as="div"
@@ -169,7 +173,9 @@ const VulnerabililtyDetailsContainer: React.FC<{
                     Detection Method
                   </Text>
                   <Text fontSize="sm" fontWeight={500}>
-                    Automated
+                    {issue.audit_type
+                      ? sentenceCapitalize(issue.audit_type)
+                      : "Automated"}
                   </Text>
                 </VStack>
               </Flex>
@@ -297,9 +303,9 @@ const VulnerabililtyDetailsContainer: React.FC<{
                         fontSize="10px"
                         fontWeight="normal"
                       >
-                        {item.line_nos_start[0] === 0
-                          ? cIndex + 1
-                          : item.line_nos_start[0] - 2 + cIndex + 1}
+                        {codeStartLine
+                          ? getCodeLineNo(codeStartLine, cIndex)
+                          : getCodeLineNo(item.line_nos_start[0], cIndex)}
                       </Text>
                       <pre
                         style={{

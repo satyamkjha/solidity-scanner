@@ -89,7 +89,7 @@ const FindingBugListContainer: React.FC<{
         <Text fontSize="8px" fontWeight={600} color={"gray.600"} width={"10%"}>
           Line No
         </Text>
-        <Text fontSize="8px" fontWeight={600} color={"gray.600"} width={"12%"}>
+        <Text fontSize="8px" fontWeight={600} color={"gray.600"} width={"13%"}>
           Status
         </Text>
       </Flex>
@@ -140,7 +140,6 @@ const FindingBugListContainer: React.FC<{
             width={"38%"}
           >
             {issue.issue_name}
-            {/* BYTES CONSTANT MORE EFFICIENT THAN STRING LITERAL */}
           </Text>
           <Text
             fontSize="10px"
@@ -148,7 +147,9 @@ const FindingBugListContainer: React.FC<{
             color={"subtle"}
             width={"13%"}
           >
-            Automated
+            {issue.audit_type
+              ? sentenceCapitalize(issue.audit_type)
+              : "Automated"}
           </Text>
           <Text
             fontSize="10px"
@@ -159,7 +160,7 @@ const FindingBugListContainer: React.FC<{
             L{issue.findings[0].line_nos_start} - L
             {issue.findings[0].line_nos_end}
           </Text>
-          <HStack width={"12%"} spacing={1.5}>
+          <HStack width={"13%"} spacing={1.5}>
             <Image
               src={`${assetsURL}report/${issue.bug_status}_color.svg`}
               w={"15px"}
