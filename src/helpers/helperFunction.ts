@@ -80,6 +80,14 @@ export const getReCaptchaHeaders = async (action: string) => {
   }
 };
 
+export const compareTimeStamp = (timeStamp1: string, timeStamp2: string) => {
+  const time1 = new Date(timeStamp1).getTime();
+  const time2 = new Date(timeStamp2).getTime();
+
+  if (time1 > time2) return true;
+  else return false;
+};
+
 export const checkGenerateReportAccess = (
   profile: Profile,
   plans: PricingData,

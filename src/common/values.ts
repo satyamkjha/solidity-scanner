@@ -942,9 +942,17 @@ export const attackMethodColor: {
   "Oracle Issue": "#EBEBEB",
 };
 
+export const inProcessScanStates = [
+  "scan_initiate",
+  "scanning",
+  "initialised",
+  "downloaded",
+];
+
 export const scanStatesLabel: {
   [key: string]: string;
 } = {
+  scan_initiate: "Scan in Queue",
   scan_done: "",
   initialised: "Downloading Code...",
   downloaded: "Code Downloaded...",
@@ -1021,7 +1029,7 @@ export const blockExplorer: { [key: string]: string } = {
   xdc: "(xdc.blocksscan.io)",
   reefscan: "Reefscan",
   nordekscan: "Nordek",
-  fuse: "Fuse",
+  fuse: "Blockscout",
   blockscout: "Blockscout",
 };
 
@@ -1518,19 +1526,39 @@ export const contractChain: {
     website: "https://www.fuse.io/",
     logoUrl: "blockscan/fuse",
     platforms: {
-      fuse: {
+      blockscout: {
         label: "Blockscout",
         iconUrl: "blockscan/blockscout",
         chains: [
           {
-            value: "mainnet",
+            value: "fuse-mainnet",
             label: "Fuse Mainnet",
             icon: "",
             isDisabled: false,
             website: "https://explorer.fuse.io/",
           },
           {
-            value: "testnet",
+            value: "fuse-testnet",
+            label: "Fuse Testnet",
+            icon: "",
+            isDisabled: false,
+            website: "https://explorer.fusespark.io/",
+          },
+        ],
+      },
+      fuse: {
+        label: "Blockscout",
+        iconUrl: "blockscan/blockscout",
+        chains: [
+          {
+            value: "fuse",
+            label: "Fuse Mainnet",
+            icon: "",
+            isDisabled: false,
+            website: "https://explorer.fuse.io/",
+          },
+          {
+            value: "fuse",
             label: "Fuse Testnet",
             icon: "",
             isDisabled: false,

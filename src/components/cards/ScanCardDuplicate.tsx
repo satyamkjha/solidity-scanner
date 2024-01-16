@@ -40,22 +40,25 @@ import {
   getContractBlockChainLogoUrl,
 } from "helpers/helperFunction";
 import { scanStatesLabel } from "common/values";
-import { useWebSocket } from "hooks/useWebhookData";
-import { useConfig } from "hooks/useConfig";
 
-const ScanCard: React.FC<{
+const ScanCardDuplicate: React.FC<{
   scan: ScanObj;
-  tempScanStatus: string;
   // setIconCounter: Dispatch<SetStateAction<number>>;
   updateScanList: (project_id: string) => void;
   isViewer: boolean;
+  scanIdsInScanning: string[];
+  scanInProgress: {
+    scanId: string;
+    scanStatus: string;
+  }[];
   // ssIconAnimation: any;
 }> = ({
   scan,
   // setIconCounter,
   updateScanList,
   isViewer,
-  tempScanStatus,
+  scanIdsInScanning,
+  scanInProgress,
   // ssIconAnimation,
 }) => {
   const {
@@ -70,54 +73,59 @@ const ScanCard: React.FC<{
     project_id,
   } = scan.scan_details;
   const cancelRef = useRef<HTMLButtonElement | null>(null);
-  const config: any = useConfig();
+
+  const toast = useToast();
   const assetsURL = getAssetsURL();
   const history = useHistory();
   const [hover, setHover] = useState(false);
-  const { sendMessage } = useWebSocket();
-  const toast = useToast();
 
   const deleteProject = async () => {
-    if (config && config.REACT_APP_FEATURE_GATE_CONFIG.websockets_enabled) {
-      sendMessage({
-        type: scan.scan_type === "project" ? "project_delete" : "block_delete",
-        body: {
-          project_ids: [project_id],
-        },
+    const url =
+      scan.scan_type === "project"
+        ? API_PATH.API_DELETE_PROJECT
+        : API_PATH.API_DELETE_BLOCK;
+    const { data } = await API.delete(url, {
+      data: {
+        project_ids: [project_id],
+      },
+    });
+    if (data.status === "success") {
+      toast({
+        title: data.message,
+        status: "success",
+        duration: 2000,
+        isClosable: true,
+        position: "bottom",
       });
-      onClose();
-      updateScanList(scan_id);
     } else {
-      const url =
-        scan.scan_type === "project"
-          ? API_PATH.API_DELETE_PROJECT
-          : API_PATH.API_DELETE_BLOCK;
-      const { data } = await API.delete(url, {
-        data: {
-          project_ids: [project_id],
-        },
+      toast({
+        title: data.message,
+        status: "error",
+        duration: 2000,
+        isClosable: true,
+        position: "bottom",
       });
-      if (data.status === "success") {
-        toast({
-          title: data.message,
-          status: "success",
-          duration: 2000,
-          isClosable: true,
-          position: "bottom",
-        });
-      } else {
-        toast({
-          title: data.message,
-          status: "error",
-          duration: 2000,
-          isClosable: true,
-          position: "bottom",
-        });
-      }
-      onClose();
-      updateScanList(scan_id);
     }
+    onClose();
+    updateScanList(scan_id);
   };
+
+  const [scanStatus, setScanStatus] = useState("");
+
+  useEffect(() => {
+    if (
+      scanInProgress &&
+      scanIdsInScanning &&
+      scanIdsInScanning.includes(scan.scan_id)
+    ) {
+      const scanObj = scanInProgress.find(
+        (item) => item.scanId === scan.scan_id
+      );
+      if (scanObj) setScanStatus(scanObj.scanStatus);
+      else setScanStatus("initialised");
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [scanIdsInScanning, scanInProgress]);
 
   const { isOpen, onClose, onOpen } = useDisclosure();
 
@@ -215,8 +223,7 @@ const ScanCard: React.FC<{
           )}
         </HStack>
       </Flex>
-      {multi_file_scan_status === "scan_done" ||
-      tempScanStatus === "scan_done" ? (
+      {multi_file_scan_status === "scan_done" ? (
         <Flex width={"95%"} flexDir="column" height="fit-content" py={5}>
           <Flex
             width={"100%"}
@@ -257,9 +264,7 @@ const ScanCard: React.FC<{
             view={"scans"}
           />
         </Flex>
-      ) : ["scanning", "initialised", "downloaded", "scan_initiate"].includes(
-          multi_file_scan_status
-        ) ? (
+      ) : ["scanning", "initialised", "downloaded"].includes(scan_status) ? (
         <Box mb={10} p={5} w="100%">
           <Flex
             sx={{
@@ -282,7 +287,7 @@ const ScanCard: React.FC<{
               )} */}
             <LogoIcon size={15} />
             <Text mx={2} fontSize="sm">
-              {scanStatesLabel[tempScanStatus] || scanStatesLabel["scanning"]}
+              {scanStatesLabel[scanStatus] || scanStatesLabel["scanning"]}
             </Text>
           </Flex>
           <Progress value={20} isIndeterminate size="xs" />
@@ -327,9 +332,9 @@ const ScanCard: React.FC<{
             <AlertDialogBody>
               Are you sure you want to delete{" "}
               <Box as="span" sx={{ fontWeight: 600 }}>
-                {scan.scan_details.project_name ||
-                  scan.scan_details.contract_address}
-              </Box>
+                {project_name || contractname}
+              </Box>{" "}
+              project ?
             </AlertDialogBody>
 
             <AlertDialogFooter>
@@ -347,4 +352,4 @@ const ScanCard: React.FC<{
   );
 };
 
-export default ScanCard;
+export default ScanCardDuplicate;

@@ -14,7 +14,7 @@ export default function ReportPage() {
     projectId: string;
   }>();
   const { data } = useReport(projectId, reportId);
-  const { data: profile } = useProfile();
+  const { data: profile } = useProfile(true);
 
   return (
     <>

@@ -19,6 +19,8 @@ type MultifileIssuesProps = {
   files: FilesState | null;
   setFiles: Dispatch<SetStateAction<FilesState | null>>;
   selectedBugs: string[];
+  restrictedBugIds: string[];
+  setRestrictedBugIds: React.Dispatch<React.SetStateAction<string[]>>;
   selectedIssues: Issues[];
   setSelectedIssues: Dispatch<SetStateAction<Issues[]>>;
   confidence: boolean[];
@@ -51,6 +53,8 @@ const MultifileIssues: React.FC<MultifileIssuesProps> = ({
   bugStatusFilter,
   details_enabled,
   updateBugStatus,
+  restrictedBugIds,
+  setRestrictedBugIds,
   project_url,
   contract_url,
   contract_platform,
@@ -144,7 +148,7 @@ const MultifileIssues: React.FC<MultifileIssuesProps> = ({
                     type={type}
                     files={files}
                     issue_id={issue_id}
-                    metric_wise_aggregated_findings={
+                    metric_wise_aggregated_findings={  
                       metric_wise_aggregated_findings
                     }
                     template_details={template_details}
@@ -152,11 +156,13 @@ const MultifileIssues: React.FC<MultifileIssuesProps> = ({
                     is_latest_scan={is_latest_scan}
                     details_enabled={details_enabled}
                     setFiles={setFiles}
+                    setRestrictedBugIds={setRestrictedBugIds}
                     selectedIssues={selectedIssues}
                     selectedBugs={selectedBugs}
                     setSelectedIssues={setSelectedIssues}
                     bugStatusFilter={bugStatusFilter}
                     updateBugStatus={updateBugStatus}
+                    restrictedBugIds={restrictedBugIds}
                     project_url={project_url}
                     contract_url={contract_url}
                     contract_platform={contract_platform}
