@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 
 import {
@@ -37,9 +37,6 @@ import ContractDetails from "components/contractDetails";
 import PublishedReports from "components/publishedReports";
 import { usePricingPlans } from "hooks/usePricingPlans";
 import { API_PATH } from "helpers/routeManager";
-import { getPublicReport } from "hooks/usePublicReport";
-import { useReactToPrint } from "react-to-print";
-import { PrintContainer } from "pages/Report/PrintContainer";
 import {
   getAssetsURL,
   checkPublishReportAccess,
@@ -183,36 +180,28 @@ const BlockPage: React.FC = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [scanData]);
 
-  const [summaryReport, setSummaryReport] = useState<Report | null>(null);
   const [printLoading, setPrintLoading] = useState<boolean>(false);
-  const componentRef = useRef<HTMLDivElement | null>(null);
 
   const generatePDF = async () => {
     setPrintLoading(true);
-    const publishReportData = await getPublicReport(
-      "block",
-      scanData?.scan_report.latest_report_id
-    );
-
-    if (publishReportData.summary_report) {
-      setSummaryReport(publishReportData.summary_report);
+    try {
+      setPrintLoading(true);
+      const { data } = await API.post(`${API_PATH.API_GET_REPORT_PDF}`, {
+        project_id: scanData?.scan_report.project_id,
+        report_id: scanData?.scan_report.latest_report_id,
+        scan_type: "block",
+      });
+      setPrintLoading(false);
+      if (data.status === "success" && data.download_url) {
+        const link = document.createElement("a");
+        link.href = data.download_url;
+        link.click();
+      }
+    } catch (e) {
+      console.log(e);
+      setPrintLoading(false);
     }
   };
-
-  const handlePrint = useReactToPrint({
-    content: () => componentRef.current,
-  });
-
-  useEffect(() => {
-    if (summaryReport) {
-      setTimeout(() => {
-        handlePrint();
-        setPrintLoading(false);
-      }, 100);
-    }
-
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [summaryReport]);
 
   const checkIfGeneratingReport = () => {
     if (profile && plans) {
@@ -524,20 +513,6 @@ const BlockPage: React.FC = () => {
                                     </MenuItem>
                                   </MenuList>
                                 </Menu>
-                                {summaryReport && printLoading && (
-                                  <Box
-                                    w={0}
-                                    h={0}
-                                    visibility={"hidden"}
-                                    position="absolute"
-                                  >
-                                    <Box w="100vw" ref={componentRef}>
-                                      <PrintContainer
-                                        summary_report={summaryReport}
-                                      />
-                                    </Box>
-                                  </Box>
-                                )}
                               </HStack>
                             ) : (
                               <Button

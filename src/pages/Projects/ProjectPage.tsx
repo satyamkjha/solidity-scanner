@@ -66,9 +66,6 @@ import PublishedReports from "components/publishedReports";
 import { useReports } from "hooks/useReports";
 import { usePricingPlans } from "hooks/usePricingPlans";
 import { API_PATH } from "helpers/routeManager";
-import { useReactToPrint } from "react-to-print";
-import { PrintContainer } from "pages/Report/PrintContainer";
-import { getPublicReport } from "hooks/usePublicReport";
 import ProjectCustomSettings from "components/projectCustomSettings";
 import FolderSettings from "components/projectFolderSettings";
 import { getRepoTree } from "hooks/getRepoTree";
@@ -322,37 +319,28 @@ const ScanDetails: React.FC<{
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [scanData]);
 
-  const [summaryReport, setSummaryReport] = useState<Report | null>(null);
   const [printLoading, setPrintLoading] = useState<boolean>(false);
-  const componentRef = useRef<HTMLDivElement | null>(null);
 
   const generatePDF = async () => {
-    if (scanData) {
+    setPrintLoading(true);
+    try {
       setPrintLoading(true);
-      const publishReportData = await getPublicReport(
-        "project",
-        scanData.scan_report.latest_report_id
-      );
-      if (publishReportData.summary_report) {
-        setSummaryReport(publishReportData.summary_report);
+      const { data } = await API.post(`${API_PATH.API_GET_REPORT_PDF}`, {
+        project_id: scanData?.scan_report.project_id,
+        report_id: scanData?.scan_report.latest_report_id,
+        scan_type: "project",
+      });
+      setPrintLoading(false);
+      if (data.status === "success" && data.download_url) {
+        const link = document.createElement("a");
+        link.href = data.download_url;
+        link.click();
       }
+    } catch (e) {
+      console.log(e);
+      setPrintLoading(false);
     }
   };
-
-  const handlePrint = useReactToPrint({
-    content: () => componentRef.current,
-  });
-
-  useEffect(() => {
-    if (summaryReport) {
-      setTimeout(() => {
-        handlePrint();
-        setPrintLoading(false);
-      }, 100);
-    }
-
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [summaryReport]);
 
   const checkIfGeneratingReport = () => {
     if (profile && plans) {
@@ -589,19 +577,6 @@ const ScanDetails: React.FC<{
                             </MenuItem>
                           </MenuList>
                         </Menu>
-
-                        {summaryReport && printLoading && (
-                          <Box
-                            w={0}
-                            h={0}
-                            visibility={"hidden"}
-                            position="absolute"
-                          >
-                            <Box w="100vw" ref={componentRef}>
-                              <PrintContainer summary_report={summaryReport} />
-                            </Box>
-                          </Box>
-                        )}
                       </HStack>
                     ) : (
                       <Button
