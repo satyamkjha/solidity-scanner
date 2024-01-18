@@ -49,8 +49,13 @@ export const QuickScanResultContainer: React.FC<{
     <Flex
       w="100%"
       h="fit-content"
-      flexDir={["column", "column", "row"]}
-      justifyContent={["flex-start", "flex-start", "space-between"]}
+      flexDir={["column", "column", "column", "row"]}
+      justifyContent={[
+        "flex-start",
+        "flex-start",
+        "flex-start",
+        "space-between",
+      ]}
       alignItems="center"
       mt={20}
     >
@@ -61,8 +66,8 @@ export const QuickScanResultContainer: React.FC<{
         bgColor="#222222"
         justifyContent="flex-start"
         alignItems="center"
-        h={["fit-content", "fit-content", "520px"]}
-        w={["100%", "100%", "55%"]}
+        h={["fit-content", "fit-content", "fit-content", "520px"]}
+        w={["100%", "100%", "100%", "55%"]}
       >
         <ResultOverview
           scanReport={scanReport.multi_file_scan_summary}
@@ -120,14 +125,20 @@ export const QuickScanResultContainer: React.FC<{
         <ReportTag is_approved={scanReport.is_approved} />
       </VStack>
       <Flex
-        w={["100%", "100%", "calc(45% - 40px)"]}
+        w={["100%", "100%", "100%", "calc(45% - 40px)"]}
         bgColor="#222222"
+        mt={[5, 5, 5, 0]}
         borderRadius={10}
         padding={5}
-        flexDir={["column", "column", "row"]}
+        flexDir={["column", "column", "column", "row"]}
         alignItems={"center"}
-        justifyContent={["flex-start", "flex-start", "space-between"]}
-        h={["fit-content", "fit-content", "520px"]}
+        justifyContent={[
+          "flex-start",
+          "flex-start",
+          "flex-start",
+          "space-between",
+        ]}
+        h={["fit-content", "fit-content", "fit-content", "520px"]}
       >
         <VStack
           w={[
@@ -162,18 +173,23 @@ export const QuickScanResultContainer: React.FC<{
           </Button>
         </VStack>
         <Flex
-          w={["100%", "100%", "120px", "150px", "180px"]}
+          w={["100%", "100%", "100%", "150px", "180px"]}
           justifyContent="flex-start"
           alignItems="flex-start"
           flexDirection="row"
           flexWrap="wrap"
           columnGap={"20px"}
           rowGap={3}
-          mt={[5, 10, 0]}
+          mt={[5, 10, 10, 0]}
         >
           {severityArrayInOrder.map((item) => (
             <VStack
-              w={["calc(50% - 10px)", "calc(50% - 10px)", "100%"]}
+              w={[
+                "calc(50% - 10px)",
+                "calc(50% - 10px)",
+                "calc(33% - 20px)",
+                "100%",
+              ]}
               h="fit-content"
               cursor="pointer"
               px={3}

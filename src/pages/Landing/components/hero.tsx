@@ -87,10 +87,10 @@ export const LandingHero: React.FC = () => {
           vulnerabilities and proactively address risks within your code.
         </Text>
         <Flex
-          justifyContent={"flex-start"}
-          alignItems="flex-start"
+          justifyContent={["center", "center", "center", "flex-start"]}
+          alignItems={["flex-start"]}
           display={["none", "none", "flex"]}
-          flexDir={["column", "column", "row"]}
+          flexDir={["row"]}
           flexWrap={"wrap"}
           rowGap={10}
           mt={10}

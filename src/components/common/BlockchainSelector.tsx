@@ -402,6 +402,7 @@ const BlockchainSelectorControl: React.FC<{
       w="100%"
       justifyContent="space-between"
       p={5}
+      zIndex={-1}
       bgColor={theme === "dark" ? "#272727" : "#ECECEC"}
       borderRadius={15}
       border={blockchainSelectorError !== "" ? "1px solid #960D00" : "none"}
@@ -884,7 +885,7 @@ const BlockchainSelectorContent: React.FC<{
                   borderRadius={15}
                   width={"90%"}
                   maxWidth="600px"
-                  value={node_id} 
+                  value={node_id}
                   onChange={(e) => {
                     setNodeId(e.target.value);
                   }}

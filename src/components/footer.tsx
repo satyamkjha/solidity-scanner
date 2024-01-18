@@ -59,7 +59,8 @@ export const Footer: React.FC = () => {
         flexDirection="column"
         justifyContent="flex-start"
         alignItems={"center"}
-        width={["100%", "100%", "30%"]}
+        width={["100%", "100%", "50%"]}
+        maxW={"350px"}
       >
         <Logo />
         {!isLargerThan768 && <FooterLinks />}
@@ -130,7 +131,7 @@ export const FooterLinks: React.FC = () => {
   return (
     <Grid
       templateColumns={["repeat(1, 1fr)", "repeat(1, 1fr)", "repeat(2, 1fr)"]}
-      width={["100%", "100%", "40%"]}
+      width={["100%", "100%", "50%"]}
       maxW={["350px", "350px", "700px"]}
       mt={[4]}
       p={2}

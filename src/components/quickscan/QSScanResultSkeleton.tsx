@@ -35,8 +35,13 @@ export const QSScanResultSkeleton: React.FC<{
     <Flex
       w="100%"
       h="fit-content"
-      flexDir={["column", "column", "row"]}
-      justifyContent={["flex-start", "flex-start", "space-between"]}
+      flexDir={["column", "column", "column", "row"]}
+      justifyContent={[
+        "flex-start",
+        "flex-start",
+        "flex-start",
+        "space-between",
+      ]}
       alignItems="center"
       mt={10}
     >
@@ -47,8 +52,8 @@ export const QSScanResultSkeleton: React.FC<{
         bgColor="#222222"
         justifyContent="flex-start"
         alignItems="center"
-        h={["fit-content", "fit-content", "520px"]}
-        w={["100%", "100%", "55%"]}
+        h={["fit-content", "fit-content", "fit-content", "520px"]}
+        w={["100%", "100%", "100%", "55%"]}
       >
         <Flex
           w="100%"
@@ -317,7 +322,7 @@ export const QSScanResultSkeleton: React.FC<{
         bgColor="#222222"
         borderRadius={10}
         padding={5}
-        flexDir={["column", "column", "row"]}
+        flexDir={["column", "column", "column", "row"]}
         alignItems={"center"}
         justifyContent={["flex-start", "flex-start", "space-between"]}
         h={["fit-content", "fit-content", "520px"]}

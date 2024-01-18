@@ -222,7 +222,7 @@ const QuickScanForm: React.FC<{
           justify="center"
           alignItems="center"
           w={"100%"}
-          zIndex={1000}
+          zIndex={100}
           flexDirection={"column"}
           opacity={stopAnimation || isVisible ? 1 : 0}
           transform={
@@ -266,6 +266,7 @@ const QuickScanForm: React.FC<{
             placeholder="Type or paste your contract address here..."
             variant={"brand"}
             size="lg"
+            zIndex={-1}
             isInvalid={adddressError !== ""}
             errorBorderColor={"#960D00"}
             color={view === "quickscan" ? "white" : "gray.800"}

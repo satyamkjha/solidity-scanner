@@ -286,7 +286,12 @@ const QuickScan: React.FC = () => {
                 setTempQSData(null);
               }}
             />
-            <QuickScanResultContainer scanReport={scanReport} />
+            {/* <QuickScanResultContainer scanReport={scanReport} /> */}
+            <QSScanResultSkeleton
+              blockAddress={"asdkakashkjdaskda"}
+              blockPlatform={"etherscan"}
+              blockChain={"mainnet"}
+            />
           </VStack>
         )}
       </Flex>
@@ -298,7 +303,7 @@ const QuickScan: React.FC = () => {
         alignItems="center"
         justifyContent={"flex-start"}
         w={"90%"}
-        px={[0, 0, 10]}
+        px={[0, 0, 0, 10]}
         zIndex={10}
         py={[0, 0, 10]}
         borderRadius={20}
