@@ -138,6 +138,7 @@ export const LandingHero: React.FC = () => {
           style={{
             height: "auto",
             width: "100%",
+            maxWidth: "500px",
           }}
           animationData={ssIconAnimation}
         />

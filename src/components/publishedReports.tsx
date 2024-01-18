@@ -144,7 +144,7 @@ const ReportBlock: React.FC<{
           </Text>
         </HStack>
         {(report.is_approved || report.report_type === "self_published") && (
-          <HStack my={3} width={["260px"]} mr={5}>
+          <HStack mb={3} width={["260px"]} mr={5}>
             <AiFillCopy color="#3E15F4" />
             <Text
               align="left"

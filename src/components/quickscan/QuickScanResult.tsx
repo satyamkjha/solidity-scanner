@@ -163,7 +163,7 @@ export const QuickScanResultContainer: React.FC<{
             }
           />
           <Button
-            display={["none", "none", "flex"]}
+            display={["none", "none", "none", "flex"]}
             variant="brand"
             w={"100%"}
             maxW={"300px"}
@@ -180,7 +180,7 @@ export const QuickScanResultContainer: React.FC<{
           flexWrap="wrap"
           columnGap={"20px"}
           rowGap={3}
-          mt={[5, 10, 10, 0]}
+          mt={[5, 5, 5, 0]}
         >
           {severityArrayInOrder.map((item) => (
             <VStack
@@ -232,10 +232,10 @@ export const QuickScanResultContainer: React.FC<{
           ))}
         </Flex>
         <Button
-          display={["flex", "flex", "none"]}
+          display={["flex", "flex", "flex", "none"]}
           variant="brand"
           w={"100%"}
-          mt={5}
+          mt={[5, 5, 10]}
           maxW={"300px"}
           onClick={() => history.push("/signin")}
         >

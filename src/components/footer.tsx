@@ -58,7 +58,7 @@ export const Footer: React.FC = () => {
       <Flex
         flexDirection="column"
         justifyContent="flex-start"
-        alignItems={"center"}
+        alignItems={["center", "center", "flex-start"]}
         width={["100%", "100%", "50%"]}
         maxW={"350px"}
       >

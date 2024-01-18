@@ -305,7 +305,7 @@ const Home: React.FC = () => {
             sx={{
               w: isDesktopView ? "30%" : "100%",
               flexDir: "column",
-              alignItems: "flex-start",
+              alignItems: ["center", "center", "center", "flex-start"],
             }}
             justifyContent="flex-start"
             mr={4}

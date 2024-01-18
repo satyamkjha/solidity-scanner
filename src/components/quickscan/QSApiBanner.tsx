@@ -37,14 +37,14 @@ export const QSApiBanner: React.FC = () => {
           px: [4, 4, 10],
           py: [8, 8, 10],
           w: "100%",
-          flexDir: ["column", "column", "row"],
+          flexDir: ["column", "column", "column", "row"],
           alignItems: "center",
           justifyContent: ["flex-start", "flex-start", "space-between"],
         }}
       >
         <Flex
           sx={{
-            w: ["100%", "95%", "55%"],
+            w: ["100%", "95%", "95%", "55%"],
             alignItems: ["center", "center", "flex-start"],
             justifyContent: "flex-start",
             textAlign: ["center", "center", "left"],
@@ -74,6 +74,13 @@ export const QSApiBanner: React.FC = () => {
             Enhance your platform's trust and empower users to make informed
             decisions with our versatile Quickscan API.
           </Text>
+          <Image
+            display={["block", "block", "block", "none"]}
+            w={["90%"]}
+            my={5}
+            height="auto"
+            src={`${assetsURL}quickscan/QSAPIBanner.svg`}
+          />
           <Flex
             mt={[5, 5, 10]}
             mb={[5, 5, 0]}
@@ -104,7 +111,8 @@ export const QSApiBanner: React.FC = () => {
           </Flex>
         </Flex>
         <Image
-          w={["90%", "90%", "40%"]}
+          display={["none", "none", "none", "block"]}
+          w={["40%"]}
           height="auto"
           src={`${assetsURL}quickscan/QSAPIBanner.svg`}
         />

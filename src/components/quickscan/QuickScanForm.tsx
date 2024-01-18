@@ -29,7 +29,7 @@ const QuickScanForm: React.FC<{
   const location = useLocation();
   const [stopAnimation, isDesktopView] = useMediaQuery([
     "(max-width: 600px)",
-    "(min-width: 1000px)",
+    "(min-width: 768px)",
   ]);
   const query = new URLSearchParams(location.search);
   const ref = query.get("ref");
