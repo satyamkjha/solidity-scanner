@@ -284,7 +284,7 @@ const Routes: React.FC = () => {
               "/faq",
               "/terms-of-service",
               "/privacy-policy",
-              "/hackboard",
+              "/web3hackhub",
             ]}
           >
             <PublicLayout>
@@ -299,7 +299,7 @@ const Routes: React.FC = () => {
                   <Route exact path="/quickscan/" component={QuickScan} />
                   <Route exact path="/pricing" component={Pricing} />
                   <Route exact path="/detectors" component={Detectors} />
-                  <Route exact path="/hackboard" component={LeaderBoard} />
+                  <Route exact path="/web3hackhub" component={LeaderBoard} />
                   <Route exact path="/faq" component={FAQ} />
                   <Route
                     exact
