@@ -75,7 +75,7 @@ export const Header: React.FC = () => {
                 variant="navigation"
                 fontWeight="600"
               >
-                Web3 HackBoard
+                Web3 Web3 HackHub
               </Link>
               <Menu>
                 <MenuButton
@@ -216,7 +216,7 @@ export const Header: React.FC = () => {
                         p={1}
                         ml={3}
                       >
-                        Web3 HackBoard
+                        Web3 Web3 HackHub
                       </Link>
                     </MenuItem>
                     <MenuItem>
