@@ -318,14 +318,20 @@ export const QSScanResultSkeleton: React.FC<{
         </HStack>
       </VStack>
       <Flex
-        w={["100%", "100%", "calc(45% - 40px)"]}
+        w={["100%", "100%", "100%", "calc(45% - 40px)"]}
         bgColor="#222222"
         borderRadius={10}
+        mt={[5, 5, 5, 0]}
         padding={5}
         flexDir={["column", "column", "column", "row"]}
         alignItems={"center"}
-        justifyContent={["flex-start", "flex-start", "space-between"]}
-        h={["fit-content", "fit-content", "520px"]}
+        justifyContent={[
+          "flex-start",
+          "flex-start",
+          "flex-start",
+          "space-between",
+        ]}
+        h={["fit-content", "fit-content", "fit-content", "520px"]}
       >
         <VStack
           w={[
@@ -406,18 +412,23 @@ export const QSScanResultSkeleton: React.FC<{
           </Button>
         </VStack>
         <Flex
-          w={["100%", "100%", "120px", "150px", "180px"]}
+          w={["100%", "100%", "100%", "150px", "180px"]}
           justifyContent="flex-start"
           alignItems="flex-start"
           flexDirection="row"
           flexWrap="wrap"
           columnGap={5}
           rowGap={3}
-          mt={[5, 10, 0]}
+          mt={[5, 10, 10, 0]}
         >
           {severityArrayInOrder.map((item) => (
             <VStack
-              w={["45%", "30%", "100%"]}
+              w={[
+                "calc(50% - 10px)",
+                "calc(50% - 10px)",
+                "calc(33% - 20px)",
+                "100%",
+              ]}
               h="fit-content"
               cursor="pointer"
               px={3}
