@@ -67,12 +67,37 @@ export const InNewsSection: React.FC = () => {
   return (
     <Flex
       as="section"
-      w="100%"
+      w={"100%"}
       alignItems="center"
-      p={0}
       textAlign={["center", "center"]}
       flexDir="column"
     >
+      <Heading
+        width="100%"
+        maxW="1000px"
+        textAlign="center"
+        as="h2"
+        fontSize="3xl"
+        fontWeight={700}
+        my={5}
+        mx={[5, 5, 10]}
+      >
+        Lorem Ipsum dolor that{" "}
+        <Box as="span" sx={{ color: "accent" }}>
+          made the news
+        </Box>
+      </Heading>
+      <Text
+        maxW="1000px"
+        textAlign="center"
+        color="subtle"
+        mx={[5, 5, 10]}
+        fontSize={["lg", "lg", "xl"]}
+        mb={5}
+      >
+        Lorem ipsum dolor sit amet consectetur. Vitae egestas integer est ut
+        iaculis. Volutpat nascetur tortor et ante.
+      </Text>
       <Box
         display={"flex"}
         // flexDir="column"
@@ -130,7 +155,7 @@ const ArticleComp: React.FC<{
       alignItems="center"
       flexDir="column"
       width={"90vw"}
-      maxW="450px"
+      maxW="400px"
       height="fit-content"
       borderRadius="25px"
       background={"#FAFBFC"}
@@ -138,7 +163,7 @@ const ArticleComp: React.FC<{
       <Image
         src={`${assetsURL}${imgLink}`}
         width="100%"
-        height={["250px", "250px", "270px"]}
+        height={["200px", "200px", "220px"]}
         borderTopLeftRadius="25px"
         borderTopRightRadius="25px"
       />
@@ -150,15 +175,15 @@ const ArticleComp: React.FC<{
         borderBottomLeftRadius="25px"
         borderBottomRightRadius="25px"
         width="100%"
-        height={"450px"}
+        height={"400px"}
         textAlign="left"
         background={"#FAFBFC"}
       >
-        <VStack>
-          <Text fontSize="xl" mb={5} fontWeight={700}>
+        <VStack spacing={3}>
+          <Text fontSize="lg" fontWeight={700}>
             {articleHeading}
           </Text>
-          <Text noOfLines={8} mb={5}>
+          <Text fontSize="sm" noOfLines={8}>
             {articlePara}
           </Text>
           <Divider borderWidth={2} />
