@@ -144,8 +144,13 @@ const HacksOverview: React.FC<{ overviewData: any }> = ({ overviewData }) => {
           <Loader width="100%" height="90vh" />
         ) : (
           <>
-            <Text color="#B0B7C3" fontSize={"2xl"}>
-              Web3 HackHub: Gain insights into blockchain hacks
+            <Text
+              w="100%"
+              textAlign={["center", "center", "center", "left"]}
+              color="#B0B7C3"
+              fontSize={"2xl"}
+            >
+              Web3 HackHub: Gain Insights into Blockchain hacks
             </Text>
             <Flex
               flexDir={["column", "column", "column", "row"]}
