@@ -71,7 +71,7 @@ export const Header: React.FC = () => {
               </Link>
               <Link
                 as={RouterLink}
-                to="/hackboard"
+                to="/web3hackhub"
                 variant="navigation"
                 fontWeight="600"
               >
@@ -209,7 +209,7 @@ export const Header: React.FC = () => {
                     <MenuItem>
                       <Link
                         as={RouterLink}
-                        to="/hackboard"
+                        to="/web3hackhub"
                         variant="ghost"
                         fontWeight="400"
                         w={"100%"}

@@ -93,7 +93,7 @@ export const Header: React.FC<{ theme: "light" | "dark" }> = ({ theme }) => {
             </Link>
             <Link
               as={RouterLink}
-              to="/hackboard"
+              to="/web3hackhub"
               variant={linkVariant}
               fontWeight="600"
             >
@@ -253,7 +253,7 @@ export const Header: React.FC<{ theme: "light" | "dark" }> = ({ theme }) => {
                   <MenuItem>
                     <Link
                       as={RouterLink}
-                      to="/hackboard"
+                      to="/web3hackhub"
                       variant="ghost"
                       fontWeight="400"
                       w={"100%"}
