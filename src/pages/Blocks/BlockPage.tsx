@@ -408,7 +408,7 @@ const BlockPage: React.FC = () => {
                                 Publish Report
                               </Button>
                             ) : (
-                              <HStack my={[4, 4, 4, 0]}>
+                              <HStack py={[4, 4, 4, 0]}>
                                 {publishStatus === "Approved" ? (
                                   <CheckCircleIcon color={"#03C04A"} />
                                 ) : publishStatus === "Self-Published" ? (

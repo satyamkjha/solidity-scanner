@@ -486,7 +486,7 @@ const ScanDetails: React.FC<{
                         Publish Report
                       </Button>
                     ) : (
-                      <HStack mb={[5, 5, 5, 0]}>
+                      <HStack my={[5, 5, 5, 0]}>
                         {publishStatus === "Approved" ? (
                           <CheckCircleIcon color={"#03C04A"} />
                         ) : publishStatus === "Self-Published" ? (

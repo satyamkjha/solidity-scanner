@@ -76,8 +76,7 @@ export const Header: React.FC<{ theme: "light" | "dark" }> = ({ theme }) => {
               Pricing
             </Link>
             <Link
-              as={RouterLink}
-              to="/quickscan"
+              onClick={() => window.open("/quickscan", "_self")}
               variant={linkVariant}
               fontWeight="600"
             >

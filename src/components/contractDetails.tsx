@@ -84,7 +84,7 @@ export const ContractDetails: React.FC<{
       >
         <VStack
           textAlign={"left"}
-          width={["100%", "100%", "100%", "33.33%"]}
+          width={["100%", "50%", "33.33%"]}
           spacing={[0, 0, 0, 2]}
         >
           <Text
@@ -104,7 +104,7 @@ export const ContractDetails: React.FC<{
         </VStack>
         <VStack
           textAlign={"left"}
-          width={["100%", "100%", "100%", "33.33%"]}
+          width={["100%", "50%", "33.33%"]}
           spacing={[0, 0, 0, 2]}
         >
           <Text
@@ -124,7 +124,7 @@ export const ContractDetails: React.FC<{
         </VStack>
         <VStack
           textAlign={"left"}
-          width={["100%", "100%", "100%", "33.33%"]}
+          width={["100%", "50%", "33.33%"]}
           spacing={[0, 0, 0, 2]}
         >
           <Text
@@ -144,7 +144,7 @@ export const ContractDetails: React.FC<{
         </VStack>
         <VStack
           textAlign={"left"}
-          width={["100%", "100%", "100%", "33.33%"]}
+          width={["100%", "50%", "33.33%"]}
           spacing={[0, 0, 0, 2]}
         >
           <Text
@@ -164,7 +164,7 @@ export const ContractDetails: React.FC<{
         </VStack>
         <VStack
           textAlign={"left"}
-          width={["100%", "100%", "100%", "33.33%"]}
+          width={["100%", "50%", "33.33%"]}
           spacing={[0, 0, 0, 2]}
         >
           <Text
@@ -184,7 +184,7 @@ export const ContractDetails: React.FC<{
         </VStack>
         <VStack
           textAlign={"left"}
-          width={["100%", "100%", "100%", "33.33%"]}
+          width={["100%", "50%", "33.33%"]}
           spacing={[0, 0, 0, 2]}
         >
           <Text

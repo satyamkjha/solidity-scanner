@@ -189,7 +189,7 @@ const MultipleFileExplorer: React.FC<MultipleFileExplorerProps> = ({
                   <Flex
                     gridColumnGap={4}
                     gridRowGap={0}
-                    flexWrap={["wrap", "wrap", "wrap", "nowrap"]}
+                    flexWrap={["wrap", "wrap", "nowrap", "nowrap"]}
                     width={"80%"}
                   >
                     <HStack

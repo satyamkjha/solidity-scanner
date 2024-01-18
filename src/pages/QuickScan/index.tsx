@@ -286,12 +286,7 @@ const QuickScan: React.FC = () => {
                 setTempQSData(null);
               }}
             />
-            {/* <QuickScanResultContainer scanReport={scanReport} /> */}
-            <QSScanResultSkeleton
-              blockAddress={"asdkakashkjdaskda"}
-              blockPlatform={"etherscan"}
-              blockChain={"mainnet"}
-            />
+            <QuickScanResultContainer scanReport={scanReport} />
           </VStack>
         )}
       </Flex>

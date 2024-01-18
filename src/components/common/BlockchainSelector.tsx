@@ -120,9 +120,9 @@ export const BlockchainSelector: React.FC<{
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [blockchain]);
 
-  const [isLargerThan1350, isLargerThan768] = useMediaQuery([
+  const [isLargerThan1350, isLargerThan950] = useMediaQuery([
     "(min-width: 1350px)",
-    "(min-width: 768px)",
+    "(min-width: 950px)",
   ]);
 
   return (
@@ -136,7 +136,7 @@ export const BlockchainSelector: React.FC<{
       alignItems="center"
       justifyContent={["flex-start", "flex-start", "center"]}
     >
-      {isLargerThan768 ? (
+      {isLargerThan950 ? (
         <>
           {blockchain !== "" &&
             platform !== "" &&
@@ -298,12 +298,12 @@ export const BlockchainSelector: React.FC<{
             )}
         </>
       )}
-      {!isLargerThan768 && (
+      {!isLargerThan950 && (
         <Modal isOpen={isOpen} onClose={onClose}>
           <ModalOverlay />
 
           <ModalContent
-            maxW={"600px"}
+            maxW={"720px"}
             my={5}
             sx={{
               boxShadow: "0px 4px 24px rgba(0, 0, 0, 0.2) !important",
