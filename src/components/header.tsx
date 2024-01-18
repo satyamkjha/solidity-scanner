@@ -97,7 +97,7 @@ export const Header: React.FC<{ theme: "light" | "dark" }> = ({ theme }) => {
               variant={linkVariant}
               fontWeight="600"
             >
-              HackBoard
+              Web3 HackHub
             </Link>
             <Menu matchWidth>
               <MenuButton
@@ -260,7 +260,7 @@ export const Header: React.FC<{ theme: "light" | "dark" }> = ({ theme }) => {
                       p={1}
                       ml={3}
                     >
-                      HackBoard
+                      Web3 HackHub
                     </Link>
                   </MenuItem>
                   <MenuItem>
