@@ -141,7 +141,7 @@ const RecentScansList: React.FC = () => {
                 cursor={"pointer"}
                 onClick={() =>
                   history.push(
-                    `/${project.scan_type}s/${project.scan_id}/${project.scan_details.project_id}`
+                    `/${project.scan_type}s/${project.scan_details.project_id}/${project.scan_details.scan_id}`
                   )
                 }
               >

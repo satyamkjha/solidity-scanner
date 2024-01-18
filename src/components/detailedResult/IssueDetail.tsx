@@ -1,4 +1,4 @@
-import { Dispatch, SetStateAction, useEffect, useRef } from "react";
+import { Dispatch, SetStateAction, useEffect, useRef, useState } from "react";
 import { useParams } from "react-router-dom";
 import styled from "@emotion/styled";
 import {
@@ -17,15 +17,16 @@ import {
   IconButton,
   Textarea,
 } from "@chakra-ui/react";
-
 import { useIssueDetail } from "hooks/useIssueDetail";
 import { FilesState } from "common/types";
-import API from "helpers/api";
 import { ArrowUpIcon, EditIcon } from "@chakra-ui/icons";
 import React from "react";
-import { API_PATH } from "helpers/routeManager";
 import Loader from "components/styled-components/Loader";
 import { formatString } from "helpers/helperFunction";
+import { useWebSocket } from "hooks/useWebhookData";
+import { useConfig } from "hooks/useConfig";
+import API from "helpers/api";
+import { API_PATH } from "helpers/routeManager";
 
 const IssueDetail: React.FC<{
   type: "project" | "block";
@@ -35,8 +36,10 @@ const IssueDetail: React.FC<{
   context: string;
   description_details: any;
   fullScreen?: boolean;
+  setRestrictedBugIds: React.Dispatch<React.SetStateAction<string[]>>;
   handleTabsChange?: (index: number) => void;
   tabIndex?: number;
+  restrictedBugIds: string[];
   setFiles: Dispatch<SetStateAction<FilesState | null>>;
 }> = ({
   type,
@@ -48,8 +51,11 @@ const IssueDetail: React.FC<{
   setFiles,
   fullScreen,
   handleTabsChange,
+  restrictedBugIds,
+  setRestrictedBugIds,
   tabIndex,
 }) => {
+  const config: any = useConfig();
   const { data, isLoading } = useIssueDetail(
     issue_id,
     context,
@@ -68,12 +74,12 @@ const IssueDetail: React.FC<{
     : ["170px", "170px", "200px", "100px"];
 
   const [isDesktopView] = useMediaQuery("(min-width: 1024px)");
-
   const [editComment, setEditComment] = React.useState(false);
 
   const [comment, setComment] = React.useState<string>("");
   const tabRefs = useRef<(HTMLButtonElement | null)[]>([]);
   const toast = useToast();
+  const { sendMessage } = useWebSocket();
 
   useEffect(() => {
     setEditComment(false);
@@ -102,18 +108,43 @@ const IssueDetail: React.FC<{
         scan_type: type,
       });
       if (data.status === "success") {
-        toast({
-          title: "Comment Updated",
-          description: data.message,
-          status: "success",
-          duration: 3000,
-          isClosable: true,
-        });
         setFiles({
           ...files,
           comment: comment,
         });
+        
       }
+
+      // commented code
+      // if (config && config.REACT_APP_FEATURE_GATE_CONFIG.websockets_enabled) {
+      //   if (restrictedBugIds.includes(files.bug_hash)) {
+      //     toast({
+      //       title: "Comment Update in Progress. Please try after some time",
+      //       status: "error",
+      //       duration: 3000,
+      //       isClosable: true,
+      //     });
+      //   } else {
+      //     sendMessage({
+      //       type: "scan_update",
+      //       body: {
+      //         bug_ids: [files?.bug_hash],
+      //         scan_id: scanId,
+      //         project_id: projectId,
+      //         bug_status: files?.bug_status,
+      //         comment: comment,
+      //         scan_type: type,
+      //       },
+      //     });
+      //     setRestrictedBugIds([...restrictedBugIds, files.bug_hash]);
+      //     setFiles({
+      //       ...files,
+      //       comment: comment,
+      //     });
+      //   }
+      // } else {
+
+      // }
     }
   };
 

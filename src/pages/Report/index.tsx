@@ -6,6 +6,7 @@ import { Text } from "@chakra-ui/react";
 import { ReportContainer } from "./ReportContainer";
 import Loader from "components/styled-components/Loader";
 import { useProfile } from "hooks/useProfile";
+import { ReportContainerV2 } from "./ReportContainerV2";
 
 export default function ReportPage() {
   const { reportId, projectId } = useParams<{
@@ -13,7 +14,7 @@ export default function ReportPage() {
     projectId: string;
   }>();
   const { data } = useReport(projectId, reportId);
-  const { data: profile } = useProfile();
+  const { data: profile } = useProfile(true);
 
   return (
     <>
@@ -31,7 +32,7 @@ export default function ReportPage() {
         </Text>
       </Flex>
       {data && profile ? (
-        <ReportContainer
+        <ReportContainerV2
           summary_report={data.summary_report}
           profile={profile}
           isPublicReport={false}

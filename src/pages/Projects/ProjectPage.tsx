@@ -66,9 +66,6 @@ import PublishedReports from "components/publishedReports";
 import { useReports } from "hooks/useReports";
 import { usePricingPlans } from "hooks/usePricingPlans";
 import { API_PATH } from "helpers/routeManager";
-import { useReactToPrint } from "react-to-print";
-import { PrintContainer } from "pages/Report/PrintContainer";
-import { getPublicReport } from "hooks/usePublicReport";
 import ProjectCustomSettings from "components/projectCustomSettings";
 import FolderSettings from "components/projectFolderSettings";
 import { getRepoTree } from "hooks/getRepoTree";
@@ -81,6 +78,8 @@ import Loader from "components/styled-components/Loader";
 import { formattedDate } from "common/functions";
 import { useUserRole } from "hooks/useUserRole";
 import { PublishReport } from "components/modals/report/PublishReport";
+import { useWebSocket } from "hooks/useWebhookData";
+import { useConfig } from "hooks/useConfig";
 
 export const ProjectPage: React.FC = () => {
   const { projectId } = useParams<{ projectId: string }>();
@@ -152,7 +151,8 @@ const ScanDetails: React.FC<{
   getRepoTreeReq,
 }) => {
   const [isDesktopView] = useMediaQuery("(min-width: 1920px)");
-
+  const config: any = useConfig();
+  const { sendMessage } = useWebSocket();
   const { role } = useUserRole();
   const assetsURL = getAssetsURL();
   const [isOpen, setIsOpen] = useState(false);
@@ -171,8 +171,7 @@ const ScanDetails: React.FC<{
     "project",
     projectId
   );
-  const { data: profile, isLoading: isProfileLoading } = useProfile();
-
+  const { data: profile, isLoading: isProfileLoading } = useProfile(true);
   const [tabIndex, setTabIndex] = React.useState(0);
   const [open, setOpen] = useState(false);
 
@@ -230,24 +229,36 @@ const ScanDetails: React.FC<{
   };
 
   const rescan = async () => {
-    setRescanLoading(true);
-    await API.post<{ scan_id: string }>(API_PATH.API_PROJECT_SCAN, {
-      project_id: projectId,
-      project_type: "existing",
-    });
-    setRescanLoading(false);
-    queryClient.invalidateQueries([
-      "all_scans",
-      {
-        pageNo: 1,
-        perPageCount: isDesktopView ? 20 : 12,
-      },
-      undefined,
-      undefined,
-    ]);
-    queryClient.invalidateQueries(["scan_list", projectId]);
-    onClose();
-    history.push(`/projects/`);
+    if (config && config.REACT_APP_FEATURE_GATE_CONFIG.websockets_enabled) {
+      setRescanLoading(true);
+      sendMessage({
+        type: "project_scan_initiate",
+        body: {
+          project_id: projectId,
+          project_type: "existing",
+        },
+      });
+      history.push(`/projects`);
+    } else {
+      setRescanLoading(true);
+      await API.post<{ scan_id: string }>(API_PATH.API_PROJECT_SCAN, {
+        project_id: projectId,
+        project_type: "existing",
+      });
+      setRescanLoading(false);
+      queryClient.invalidateQueries([
+        "all_scans",
+        {
+          pageNo: 1,
+          perPageCount: isDesktopView ? 20 : 12,
+        },
+        undefined,
+        undefined,
+      ]);
+      queryClient.invalidateQueries(["scan_list", projectId]);
+      onClose();
+      history.push(`/projects`);
+    }
   };
 
   const getReportData = async (project_id: string, report_id: string) => {
@@ -308,37 +319,28 @@ const ScanDetails: React.FC<{
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [scanData]);
 
-  const [summaryReport, setSummaryReport] = useState<Report | null>(null);
   const [printLoading, setPrintLoading] = useState<boolean>(false);
-  const componentRef = useRef<HTMLDivElement | null>(null);
 
   const generatePDF = async () => {
-    if (scanData) {
+    setPrintLoading(true);
+    try {
       setPrintLoading(true);
-      const publishReportData = await getPublicReport(
-        "project",
-        scanData.scan_report.latest_report_id
-      );
-      if (publishReportData.summary_report) {
-        setSummaryReport(publishReportData.summary_report);
+      const { data } = await API.post(`${API_PATH.API_GET_REPORT_PDF}`, {
+        project_id: scanData?.scan_report.project_id,
+        report_id: scanData?.scan_report.latest_report_id,
+        scan_type: "project",
+      });
+      setPrintLoading(false);
+      if (data.status === "success" && data.download_url) {
+        const link = document.createElement("a");
+        link.href = data.download_url;
+        link.click();
       }
+    } catch (e) {
+      console.log(e);
+      setPrintLoading(false);
     }
   };
-
-  const handlePrint = useReactToPrint({
-    content: () => componentRef.current,
-  });
-
-  useEffect(() => {
-    if (summaryReport) {
-      setTimeout(() => {
-        handlePrint();
-        setPrintLoading(false);
-      }, 100);
-    }
-
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [summaryReport]);
 
   const checkIfGeneratingReport = () => {
     if (profile && plans) {
@@ -575,19 +577,6 @@ const ScanDetails: React.FC<{
                             </MenuItem>
                           </MenuList>
                         </Menu>
-
-                        {summaryReport && printLoading && (
-                          <Box
-                            w={0}
-                            h={0}
-                            visibility={"hidden"}
-                            position="absolute"
-                          >
-                            <Box w="100vw" ref={componentRef}>
-                              <PrintContainer summary_report={summaryReport} />
-                            </Box>
-                          </Box>
-                        )}
                       </HStack>
                     ) : (
                       <Button

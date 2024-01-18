@@ -22,6 +22,8 @@ import { OrgUserRole } from "common/types";
 import { useUserOrgProfile } from "hooks/useUserOrgProfile";
 import { UserRoleProvider } from "hooks/useUserRole";
 import { onLogout } from "common/functions";
+import { WebSocketProvider } from "hooks/useWebhookData";
+import { useConfig } from "hooks/useConfig";
 
 const Landing = lazy(() =>
   lazyRetry(
@@ -132,6 +134,13 @@ const Scans = lazy(() =>
   )
 );
 
+const ScansDuplicate = lazy(() =>
+  lazyRetry(
+    () => import("pages/Scans/ScansDuplicate" /* webpackChunkName: "Scans" */),
+    "scans"
+  )
+);
+
 const ProjectPage = lazy(() =>
   lazyRetry(
     () =>
@@ -230,6 +239,7 @@ const orgRestrictedRoutes: {
 ];
 
 const Routes: React.FC = () => {
+  const config: any = useConfig();
   return (
     <Router>
       <ErrorHandler>
@@ -316,14 +326,17 @@ const Routes: React.FC = () => {
                     <Profile />
                   </PrivateRoute>
                   <PrivateRoute exact path="/projects">
-                    <Scans />
+                    {config &&
+                    config.REACT_APP_FEATURE_GATE_CONFIG.websockets_enabled ? (
+                      <Scans />
+                    ) : (
+                      <ScansDuplicate />
+                    )}
                   </PrivateRoute>
-
-                  <PrivateRoute path="/projects/:scanId/:projectId">
+                  <PrivateRoute path="/projects/:projectId/:scanId">
                     <ProjectPage />
                   </PrivateRoute>
-
-                  <PrivateRoute exact path="/blocks/:scanId/:projectId">
+                  <PrivateRoute exact path="/blocks/:projectId/:scanId">
                     <BlockPage />
                   </PrivateRoute>
                   <PrivateRoute exact path="/integrations">
@@ -335,7 +348,6 @@ const Routes: React.FC = () => {
                   <PrivateRoute exact path="/organisation">
                     <Organisation />
                   </PrivateRoute>
-
                   <PrivateRoute exact path="/billing">
                     <Billing />
                   </PrivateRoute>
@@ -457,7 +469,7 @@ const CheckOrgRole: React.FC<{ roles: OrgUserRole[] }> = ({
   children,
   roles,
 }) => {
-  const { data: profile } = useProfile();
+  const { data: profile } = useProfile(true);
   const { data: orgProfile } = useUserOrgProfile(
     profile?.logged_in_via === "org_login"
   );

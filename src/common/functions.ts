@@ -88,6 +88,7 @@ export const onLogout = async (history: any, queryClient: QueryClient) => {
   signOut(auth);
   Auth.deauthenticateUser();
   history.push("/signin");
+  window.location.reload();
   queryClient.clear();
 };
 

@@ -30,6 +30,8 @@ import { useUserRole } from "hooks/useUserRole";
 import { infographicsData } from "common/values";
 import { AddProjectFormInfographics } from "./AddProjectFormInfographics";
 import { BlockchainSelector } from "components/common/BlockchainSelector";
+import { useWebSocket } from "hooks/useWebhookData";
+import { useConfig } from "hooks/useConfig";
 
 const ContractForm: React.FC<{
   profileData: Profile;
@@ -37,6 +39,7 @@ const ContractForm: React.FC<{
   setStep: React.Dispatch<React.SetStateAction<number>>;
   changeView: boolean;
 }> = ({ step, setStep, profileData, changeView }) => {
+  const config: any = useConfig();
   const contractAddressRef = useRef<HTMLInputElement>(null);
   const [contractAddress, setContractAddress] = useState("");
   const [nodeId, setNodeId] = useState("");
@@ -50,7 +53,7 @@ const ContractForm: React.FC<{
   } | null>(null);
 
   const [isDesktopView] = useMediaQuery("(min-width: 1920px)");
-
+  const { sendMessage } = useWebSocket();
   const queryClient = useQueryClient();
   const toast = useToast();
   const history = useHistory();
@@ -61,70 +64,131 @@ const ContractForm: React.FC<{
   const assetsURL = getAssetsURL();
 
   const onSubmit = async () => {
-    try {
-      if (platform !== "buildbear" && !checkContractAddress(contractAddress)) {
-        toast({
-          title: "Contract Adddress not Valid",
-          status: "error",
-          duration: 3000,
-          isClosable: true,
-          position: "bottom",
-        });
-        return;
-      }
-      let req = {};
-      if (platform === "buildbear") {
-        req = {
-          contract_address: contractAddress,
-          contract_platform: platform,
-          node_id: nodeId,
-        };
-      } else {
-        req = {
-          contract_address: contractAddress,
-          contract_platform: platform,
-          contract_chain: chain?.value,
-        };
-      }
-      setIsLoading(true);
-      API.post<{
-        contract_verified: boolean;
-        message: string;
-        status: string;
-      }>(API_PATH.API_GET_CONTRACT_STATUS, req).then(
-        async (res) => {
-          if (res.data) {
-            if (res.data.contract_verified) {
-              const responseData = await API.post(
-                API_PATH.API_START_SCAN_BLOCK,
-                req
-              );
-              setIsLoading(false);
-              if (responseData.status === 200) {
-                if (responseData.data.status === "success") {
-                  queryClient.invalidateQueries([
-                    "all_scans",
-                    {
-                      pageNo: 1,
-                      perPageCount: isDesktopView ? 20 : 12,
-                    },
-                  ]);
-                  queryClient.invalidateQueries("scan_list");
-                  queryClient.invalidateQueries("profile");
-                  history.push("/projects");
-                }
+    if (config && config.REACT_APP_FEATURE_GATE_CONFIG.websockets_enabled) {
+      try {
+        if (
+          platform !== "buildbear" &&
+          !checkContractAddress(contractAddress)
+        ) {
+          toast({
+            title: "Contract Adddress not Valid",
+            status: "error",
+            duration: 3000,
+            isClosable: true,
+            position: "bottom",
+          });
+          return;
+        }
+        let req = {};
+        if (platform === "buildbear") {
+          req = {
+            contract_address: contractAddress,
+            contract_platform: platform,
+            node_id: nodeId,
+          };
+        } else {
+          req = {
+            contract_address: contractAddress,
+            contract_platform: platform,
+            contract_chain: chain?.value,
+          };
+        }
+        setIsLoading(true);
+        API.post<{
+          contract_verified: boolean;
+          message: string;
+          status: string;
+        }>(API_PATH.API_GET_CONTRACT_STATUS, req).then(
+          async (res) => {
+            if (res.data) {
+              if (res.data.contract_verified) {
+                sendMessage({
+                  type: "block_scan_initiate",
+                  body: req,
+                });
+                history.push("/projects");
+                setIsLoading(false);
               }
+            } else {
+              setIsLoading(false);
             }
-          } else {
+          },
+          (err) => {
             setIsLoading(false);
           }
-        },
-        (err) => {
-          setIsLoading(false);
+        );
+      } catch (e) {
+        console.log(e);
+      }
+    } else {
+      try {
+        if (
+          platform !== "buildbear" &&
+          !checkContractAddress(contractAddress)
+        ) {
+          toast({
+            title: "Contract Adddress not Valid",
+            status: "error",
+            duration: 3000,
+            isClosable: true,
+            position: "bottom",
+          });
+          return;
         }
-      );
-    } catch (e) {
-      console.log(e);
+        let req = {};
+        if (platform === "buildbear") {
+          req = {
+            contract_address: contractAddress,
+            contract_platform: platform,
+            node_id: nodeId,
+          };
+        } else {
+          req = {
+            contract_address: contractAddress,
+            contract_platform: platform,
+            contract_chain: chain?.value,
+          };
+        }
+        setIsLoading(true);
+        API.post<{
+          contract_verified: boolean;
+          message: string;
+          status: string;
+        }>(API_PATH.API_GET_CONTRACT_STATUS, req).then(
+          async (res) => {
+            if (res.data) {
+              if (res.data.contract_verified) {
+                const responseData = await API.post(
+                  API_PATH.API_START_SCAN_BLOCK,
+                  req
+                );
+                setIsLoading(false);
+                if (responseData.status === 200) {
+                  if (responseData.data.status === "success") {
+                    queryClient.invalidateQueries([
+                      "all_scans",
+                      {
+                        pageNo: 1,
+                        perPageCount: isDesktopView ? 20 : 12,
+                      },
+                    ]);
+                    queryClient.invalidateQueries("scan_list");
+                    queryClient.invalidateQueries("profile");
+                    history.push("/projects");
+                  }
+                }
+              }
+            } else {
+              setIsLoading(false);
+            }
+          },
+          (err) => {
+            setIsLoading(false);
+          }
+        );
+      } catch (e) {
+        console.log(e);
+      }
     }
   };
 

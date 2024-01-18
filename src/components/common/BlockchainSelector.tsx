@@ -884,7 +884,7 @@ const BlockchainSelectorContent: React.FC<{
                   borderRadius={15}
                   width={"90%"}
                   maxWidth="600px"
-                  value={node_id}
+                  value={node_id} 
                   onChange={(e) => {
                     setNodeId(e.target.value);
                   }}
@@ -904,7 +904,8 @@ const BlockchainSelectorContent: React.FC<{
                 (platformValue, index) =>
                   !getFeatureGateConfig(config).platform_disabled?.includes(
                     platformValue
-                  ) && (
+                  ) &&
+                  platformValue !== "fuse" && (
                     <ChainSelector
                       key={`${platformValue}_${index}`}
                       index={index}
