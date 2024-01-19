@@ -15,7 +15,6 @@ import {
 } from "@chakra-ui/react";
 import { useOverview } from "hooks/useOverview";
 import Loader from "components/styled-components/Loader";
-import { useProfile } from "hooks/useProfile";
 import { AddIcon, ArrowForwardIcon } from "@chakra-ui/icons";
 import { getAssetsURL } from "helpers/helperFunction";
 import VulnerabilityDistribution from "components/vulnDistribution";
@@ -27,6 +26,7 @@ import AddProjectForm from "./AddProjectForm";
 import RecentScansList from "./RecentScansList";
 import PlanCycleInfo from "pages/Billing/components/PlanCycleInfo";
 import { useUserRole } from "hooks/useUserRole";
+import ImportScanModal from "components/modals/ImportScanModal";
 
 const OverviewData: React.FC<{
   heading: number;
@@ -201,6 +201,24 @@ const Home: React.FC = () => {
     "(min-width: 1100px)",
     "(min-width: 450px)",
   ]);
+  const { isOpen, onClose, onOpen } = useDisclosure();
+  const [importData, setImportData] = useState<any>();
+
+  useEffect(() => {
+    const import_scan_details = localStorage.getItem("recent_scan_details");
+    if (import_scan_details) {
+      const scan_details = JSON.parse(import_scan_details);
+      setImportData(scan_details);
+      onOpen();
+    }
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  const onImportPopupClose = () => {
+    localStorage.removeItem("recent_scan_details");
+    onClose();
+  };
 
   return (
     <Flex
@@ -431,6 +449,13 @@ const Home: React.FC = () => {
           <Loader />
         </Flex>
       )}
+
+      <ImportScanModal
+        isOpen={isOpen}
+        onClose={onImportPopupClose}
+        scanDetails={importData}
+        profileData={profileData}
+      />
     </Flex>
   );
 };

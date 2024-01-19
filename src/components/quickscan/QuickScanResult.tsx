@@ -17,10 +17,12 @@ import QSErrorCountModal from "./QSErrorCountModal";
 import ReportTag from "components/common/scans/ReportTag";
 import ResultOverview from "components/common/scans/ResultOverview";
 import VulnerabilityChart from "components/common/scans/VulnerabilityChart";
+import Auth from "helpers/auth";
 
 export const QuickScanResultContainer: React.FC<{
   scanReport: QuickScanResult;
-}> = ({ scanReport }) => {
+  projectId: string;
+}> = ({ scanReport, projectId }) => {
   const history = useHistory();
 
   const [errorData, setErrorData] = useState<{
@@ -30,12 +32,6 @@ export const QuickScanResultContainer: React.FC<{
 
   const [open, setOpen] = useState(false);
 
-  useEffect(() => {
-    if (errorData !== null) {
-      setOpen(true);
-    }
-  }, [errorData]);
-
   const vulnerabilityCount =
     scanReport.multi_file_scan_summary.issue_severity_distribution.critical +
     scanReport.multi_file_scan_summary.issue_severity_distribution.gas +
@@ -44,6 +40,24 @@ export const QuickScanResultContainer: React.FC<{
       .informational +
     scanReport.multi_file_scan_summary.issue_severity_distribution.low +
     scanReport.multi_file_scan_summary.issue_severity_distribution.medium;
+
+  useEffect(() => {
+    if (errorData !== null) {
+      setOpen(true);
+    }
+  }, [errorData]);
+
+  const onViewDetailResult = () => {
+    const scan_details = {
+      project_id: projectId,
+      contract_address: scanReport.contract_address,
+      contract_chain: scanReport.contract_chain,
+      contract_platform: scanReport.contract_platform,
+      is_loggedin_user: Auth.isUserAuthenticated(),
+    };
+    localStorage.setItem("recent_scan_details", JSON.stringify(scan_details));
+    history.push("/signin");
+  };
 
   return (
     <Flex
@@ -156,9 +170,9 @@ export const QuickScanResultContainer: React.FC<{
             variant="brand"
             w={"100%"}
             maxW={"300px"}
-            onClick={() => history.push("/signin")}
+            onClick={onViewDetailResult}
           >
-            View detailed Result
+            View detailed Result ⟶
           </Button>
         </VStack>
         <Flex
@@ -221,9 +235,9 @@ export const QuickScanResultContainer: React.FC<{
           w={"100%"}
           mt={5}
           maxW={"300px"}
-          onClick={() => history.push("/signin")}
+          onClick={onViewDetailResult}
         >
-          View detailed Result
+          View detailed Result ⟶
         </Button>
       </Flex>
       <QSErrorCountModal

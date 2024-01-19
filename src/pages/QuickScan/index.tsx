@@ -9,20 +9,15 @@ import {
   Text,
   HStack,
   useToast,
-  Stack,
   VStack,
-  Image,
   CloseButton,
 } from "@chakra-ui/react";
 
-import { SeverityIcon } from "components/icons";
 import API from "helpers/api";
 import { QuickScanResult } from "common/types";
 import { API_PATH } from "helpers/routeManager";
-import SolidityScoreProgress from "components/common/SolidityScoreProgress";
 import QuickScanForm from "components/quickscan/QuickScanForm";
 import { Header } from "components/header";
-import Loader from "components/styled-components/Loader";
 import { useParams, useLocation } from "react-router-dom";
 import { QuickScanResultContainer } from "components/quickscan/QuickScanResult";
 import { QSScanResultSkeleton } from "components/quickscan/QSScanResultSkeleton";
@@ -44,6 +39,7 @@ const QuickScan: React.FC = () => {
   const [scanReport, setScanReport] = React.useState<QuickScanResult | null>(
     null
   );
+  const [projectId, setProjectId] = useState("");
   const { sendMessage, setKeepWSOpen, updateMessageQueue, messageQueue } =
     useWebSocket();
   const [tempQSData, setTempQSData] = useState<{
@@ -147,6 +143,7 @@ const QuickScan: React.FC = () => {
                   (res) => {
                     if (res.status === 200) {
                       setScanReport(res.data.scan_report);
+                      setProjectId(res.data.project_id);
                     }
                   },
                   () => {
@@ -195,6 +192,7 @@ const QuickScan: React.FC = () => {
             msgItem.payload.scan_details.scan_report ||
               msgItem.payload.scan_details
           );
+          setProjectId(msgItem.payload.project_id);
           reset();
         } else if (msgItem.type && msgItem.type === "quick_scan_acknowledge") {
           setQSStatus("Scanned");
@@ -286,7 +284,10 @@ const QuickScan: React.FC = () => {
                 setTempQSData(null);
               }}
             />
-            <QuickScanResultContainer scanReport={scanReport} />
+            <QuickScanResultContainer
+              scanReport={scanReport}
+              projectId={projectId}
+            />
           </VStack>
         )}
       </Flex>

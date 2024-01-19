@@ -24,6 +24,7 @@ import { UserRoleProvider } from "hooks/useUserRole";
 import { onLogout } from "common/functions";
 import { WebSocketProvider } from "hooks/useWebhookData";
 import { useConfig } from "hooks/useConfig";
+import { API_PATH } from "helpers/routeManager";
 
 const Landing = lazy(() =>
   lazyRetry(
@@ -429,6 +430,36 @@ const ErrorHandler: React.FC = ({ children }) => {
 
 const PrivateRoute: React.FC<RouteProps> = ({ children, ...rest }) => {
   const { path } = rest;
+  const isHomeRoute = path === "/home";
+
+  const importScan = async (scanDetails: any) => {
+    const responseData = await API.post(API_PATH.API_START_SCAN_BLOCK, {
+      parent_project_id: scanDetails.project_id,
+      contract_address: scanDetails.contract_address,
+      contract_chain: scanDetails.contract_chain,
+      contract_platform: scanDetails.contract_platform,
+    });
+    if (responseData.status === 200 && responseData.data.status === "success") {
+      localStorage.removeItem("recent_scan_details");
+      return true;
+    }
+    return false;
+  };
+
+  const checkNavigateToProjects = () => {
+    if (isHomeRoute && Auth.isUserAuthenticated()) {
+      const import_scan_details = localStorage.getItem("recent_scan_details");
+      if (import_scan_details) {
+        const scan_details = JSON.parse(import_scan_details);
+        if (!scan_details.is_loggedin_user) {
+          return importScan(scan_details);
+        }
+        return false;
+      }
+      return false;
+    }
+  };
+
   const isRestrictedRoute = (path: string | readonly string[] | undefined) => {
     return orgRestrictedRoutes.some((route) => route.path === path);
   };
@@ -448,6 +479,13 @@ const PrivateRoute: React.FC<RouteProps> = ({ children, ...rest }) => {
               <CheckOrgRole roles={getRestrictedRoles(path)}>
                 {children}
               </CheckOrgRole>
+            ) : checkNavigateToProjects() ? (
+              <Redirect
+                to={{
+                  pathname: "/projects",
+                  state: { from: location },
+                }}
+              />
             ) : (
               children
             )}
