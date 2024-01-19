@@ -9,7 +9,7 @@ import {
   Button,
 } from "@chakra-ui/react";
 import { severityArrayInOrder } from "common/values";
-import { sentenceCapitalize } from "helpers/helperFunction";
+import { sentenceCapitalize, setRecentQuickScan } from "helpers/helperFunction";
 import { QuickScanResult } from "common/types";
 import SolidityScoreProgress from "components/common/SolidityScoreProgress";
 import { useHistory } from "react-router-dom";
@@ -53,9 +53,9 @@ export const QuickScanResultContainer: React.FC<{
       contract_address: scanReport.contract_address,
       contract_chain: scanReport.contract_chain,
       contract_platform: scanReport.contract_platform,
-      is_loggedin_user: Auth.isUserAuthenticated(),
+      new_user: false,
     };
-    localStorage.setItem("recent_scan_details", JSON.stringify(scan_details));
+    setRecentQuickScan(scan_details);
     history.push("/signin");
   };
 

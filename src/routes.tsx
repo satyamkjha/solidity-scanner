@@ -25,6 +25,7 @@ import { onLogout } from "common/functions";
 import { WebSocketProvider } from "hooks/useWebhookData";
 import { useConfig } from "hooks/useConfig";
 import { API_PATH } from "helpers/routeManager";
+import { getRecentQuickScan, setRecentQuickScan } from "helpers/helperFunction";
 
 const Landing = lazy(() =>
   lazyRetry(
@@ -451,7 +452,7 @@ const PrivateRoute: React.FC<RouteProps> = ({ children, ...rest }) => {
       const import_scan_details = localStorage.getItem("recent_scan_details");
       if (import_scan_details) {
         const scan_details = JSON.parse(import_scan_details);
-        if (!scan_details.is_loggedin_user) {
+        if (scan_details.new_user) {
           return importScan(scan_details);
         }
         return false;
@@ -559,6 +560,10 @@ const RedirectRoute: React.FC<RouteProps> = ({ children, ...rest }) => {
     authenticated &&
     Cookies.get("csrftoken")
   ) {
+    const import_scan_details = getRecentQuickScan();
+    if (import_scan_details) {
+      setRecentQuickScan({ ...import_scan_details, new_user: true });
+    }
     localStorage.setItem("authenticated", "true");
   }
   return (

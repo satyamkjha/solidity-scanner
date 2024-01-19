@@ -16,7 +16,7 @@ import {
 import { useOverview } from "hooks/useOverview";
 import Loader from "components/styled-components/Loader";
 import { AddIcon, ArrowForwardIcon } from "@chakra-ui/icons";
-import { getAssetsURL } from "helpers/helperFunction";
+import { getAssetsURL, getRecentQuickScan } from "helpers/helperFunction";
 import VulnerabilityDistribution from "components/vulnDistribution";
 import { useHistory } from "react-router-dom";
 import { capitalize } from "common/functions";
@@ -205,9 +205,8 @@ const Home: React.FC = () => {
   const [importData, setImportData] = useState<any>();
 
   useEffect(() => {
-    const import_scan_details = localStorage.getItem("recent_scan_details");
-    if (import_scan_details) {
-      const scan_details = JSON.parse(import_scan_details);
+    const scan_details = getRecentQuickScan();
+    if (scan_details) {
       setImportData(scan_details);
       onOpen();
     }
@@ -450,12 +449,14 @@ const Home: React.FC = () => {
         </Flex>
       )}
 
-      <ImportScanModal
-        isOpen={isOpen}
-        onClose={onImportPopupClose}
-        scanDetails={importData}
-        profileData={profileData}
-      />
+      {importData ? (
+        <ImportScanModal
+          isOpen={isOpen}
+          onClose={onImportPopupClose}
+          scanDetails={importData}
+          profileData={profileData}
+        />
+      ) : null}
     </Flex>
   );
 };
