@@ -303,6 +303,8 @@ const ScanDetails: React.FC<{
     if (reports[0].report_type === "self_published") {
       setPublishStatus("Self-Published");
     } else if (reports[0].is_approved) setPublishStatus("Approved");
+    else if (reports[0].report_type === "assisted")
+      setPublishStatus("Approved");
     else setPublishStatus("Waiting For Approval");
   };
 
