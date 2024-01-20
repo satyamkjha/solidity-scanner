@@ -82,9 +82,9 @@ export const InNewsSection: React.FC = () => {
         my={5}
         mx={[5, 5, 10]}
       >
-        Lorem Ipsum dolor that{" "}
+        IN THE{" "}
         <Box as="span" sx={{ color: "accent" }}>
-          made the news
+          NEWS
         </Box>
       </Heading>
       <Text
@@ -95,8 +95,7 @@ export const InNewsSection: React.FC = () => {
         fontSize={["lg", "lg", "xl"]}
         mb={5}
       >
-        Lorem ipsum dolor sit amet consectetur. Vitae egestas integer est ut
-        iaculis. Volutpat nascetur tortor et ante.
+        Explore the Buzz Surrounding Our Innovative Solution
       </Text>
       <Box
         display={"flex"}
