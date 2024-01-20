@@ -406,9 +406,10 @@ export const QSScanResultSkeleton: React.FC<{
             variant="brand"
             w={"100%"}
             maxW={"300px"}
+            isDisabled
             onClick={() => history.push("/signin")}
           >
-            View detailed Result
+            View detailed Result ⟶
           </Button>
         </VStack>
         <Flex

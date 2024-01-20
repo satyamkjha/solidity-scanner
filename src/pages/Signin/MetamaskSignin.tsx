@@ -6,6 +6,8 @@ import {
   getDeviceType,
   getFeatureGateConfig,
   getAssetsURL,
+  setRecentQuickScan,
+  getRecentQuickScan,
 } from "helpers/helperFunction";
 import { API_PATH } from "helpers/routeManager";
 import React, { useState } from "react";
@@ -84,6 +86,10 @@ const MetaMaskLogin: React.FC = () => {
       });
       if (data.status === "success") {
         Auth.authenticateUser();
+        const import_scan_details = getRecentQuickScan();
+        if (import_scan_details) {
+          setRecentQuickScan({ ...import_scan_details, new_user: true });
+        }
         history.push("/home");
       }
     } catch (e) {

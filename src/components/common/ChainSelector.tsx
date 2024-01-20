@@ -11,11 +11,17 @@ import {
   Divider,
   Input,
   useDisclosure,
+  Button,
+  PopoverCloseButton,
+  PopoverArrow,
+  PopoverHeader,
+  PopoverBody,
 } from "@chakra-ui/react";
 import {
   ChevronDownIcon,
   ArrowBackIcon,
   ExternalLinkIcon,
+  WarningIcon,
 } from "@chakra-ui/icons";
 import { contractChain } from "common/values";
 import { getAssetsURL } from "helpers/helperFunction";
@@ -197,6 +203,7 @@ export const ChainSelector: React.FC<{
       <HStack
         w={["100%", "100%", "100%", "fit-content"]}
         maxW={["100%", "100%", "100%", "calc(100% - 210px)"]}
+        spacing={5}
       >
         <Image
           src={`${assetsUrl}${platformData.iconUrl}.svg`}
@@ -231,6 +238,27 @@ export const ChainSelector: React.FC<{
             </Text>
           )}
         </VStack>
+
+        <Popover placement="bottom-start">
+          <PopoverTrigger>
+            <WarningIcon fontSize={20} color="#FFD000" />
+          </PopoverTrigger>
+          <PopoverContent>
+            <PopoverArrow />
+            <PopoverCloseButton />
+            <PopoverBody color="black" textAlign="left">
+              <HStack>
+                <WarningIcon fontSize={20} color="#FFD000" />{" "}
+                <Text fontWeight={700}> Blockscout server unavailable</Text>
+              </HStack>
+              <Text>
+                User Roles dolor sit amet consectetur. Lorem pharetra sed
+                consequat velit arcu. Dictum volutpat arcu pellentesque risus mi
+                non. Ornare phasellus lorem{" "}
+              </Text>
+            </PopoverBody>
+          </PopoverContent>
+        </Popover>
       </HStack>
       <HStack
         w={["100%", "100%", "100%", "fit-content"]}

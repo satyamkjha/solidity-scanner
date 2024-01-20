@@ -106,7 +106,7 @@ const ReportBlock: React.FC<{
         height="fit-content"
       >
         <HStack width={["210px"]} my={3}>
-          {report.is_approved ? (
+          {report.is_approved || report.report_type === "assisted" ? (
             <CheckCircleIcon color={"#03C04A"} />
           ) : report.report_type === "self_published" ? (
             <Image
@@ -119,7 +119,7 @@ const ReportBlock: React.FC<{
           )}
           <Text
             color={
-              report.is_approved
+              report.is_approved || report.report_type === "assisted"
                 ? "#03C04A"
                 : report.report_type === "self_published"
                 ? "black"
@@ -127,7 +127,7 @@ const ReportBlock: React.FC<{
             }
             sx={{ fontSize: "md", fontWeight: 600, ml: 2 }}
           >
-            {report.is_approved
+            {report.is_approved || report.report_type === "assisted"
               ? "Approved"
               : report.report_type === "self_published"
               ? "Self-Published"
@@ -136,15 +136,21 @@ const ReportBlock: React.FC<{
         </HStack>
 
         <HStack width={["130px"]} my={3}>
-          {report.is_approved ? <BsPeople /> : <AiOutlineLock />}
+          {report.is_approved || report.report_type === "assisted" ? (
+            <BsPeople />
+          ) : (
+            <AiOutlineLock />
+          )}
           <Text sx={{ fontSize: "md", fontWeight: 600, ml: 2 }}>
-            {report.is_approved || report.report_type === "self_published"
+            {report.is_approved ||
+            ["self_published", "assisted"].includes(report.report_type)
               ? "Public"
               : "Private"}
           </Text>
         </HStack>
-        {(report.is_approved || report.report_type === "self_published") && (
-          <HStack mb={3} width={["260px"]} mr={5}>
+        {(report.is_approved ||
+          ["self_published", "assisted"].includes(report.report_type)) && (
+          <HStack my={3} width={["260px"]} mr={5}>
             <AiFillCopy color="#3E15F4" />
             <Text
               align="left"
@@ -188,7 +194,7 @@ const ReportBlock: React.FC<{
             justifyContent={"flex-start"}
           >
             {(report.is_approved ||
-              report.report_type === "self_published") && (
+              ["self_published", "assisted"].includes(report.report_type)) && (
               <IconButton
                 my={3}
                 mr={4}
@@ -214,7 +220,7 @@ const ReportBlock: React.FC<{
               icon={<ViewIcon color={"#806CCF"} />}
               onClick={(e) => {
                 e.stopPropagation();
-                if (report.is_approved) {
+                if (report.is_approved || report.report_type === "assisted") {
                   window.open(
                     `http://${document.location.host}/published-report/${type}/${report.report_id}`,
                     "_blank"
@@ -264,7 +270,7 @@ const ReportBlock: React.FC<{
             justifyContent={["flex-start", "flex-start", "flex-end"]}
           >
             {(report.is_approved ||
-              report.report_type === "self_published") && (
+              ["self_published", "assisted"].includes(report.report_type)) && (
               <IconButton
                 my={[2, 2, 5]}
                 mr={[0, 0, 5]}
