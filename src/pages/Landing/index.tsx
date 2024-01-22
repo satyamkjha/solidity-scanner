@@ -114,15 +114,9 @@ export default function Landing() {
 
       <Partners />
 
-      <Suspense fallback={<TestimonialSkeleton />}>
-        <UserTestimonial />
-      </Suspense>
-
       <Suspense fallback={<AboutUsSkeleton />}>
         <AboutUs />
       </Suspense>
-
-      <InNewsSection />
 
       <Suspense fallback={<ProductNumbers />}>
         <ProductNumbers />
@@ -131,6 +125,12 @@ export default function Landing() {
       <Suspense fallback={<ManualAuditSkeleton />}>
         <ManualAudit />
       </Suspense>
+
+      <Suspense fallback={<TestimonialSkeleton />}>
+        <UserTestimonial />
+      </Suspense>
+
+      <InNewsSection />
 
       <LatestHacks />
     </>

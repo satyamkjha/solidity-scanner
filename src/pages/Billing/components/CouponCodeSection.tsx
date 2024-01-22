@@ -29,25 +29,34 @@ const CouponCodeSection: React.FC<{
   const [isLargerThan450] = useMediaQuery(["(min-width: 450px)"]);
   const toast = useToast();
   const verifyCouponCode = () => {
-    try {
-      API.get(
-        `api-validate-coupon/?coupon=${couponCode.trim()}&package=${selectedPlan}&duration=${duration}`
-      ).then((res) => {
-        if (res.data.status === "success") {
-          toast({
-            title: `${couponCode} successfully applied`,
-            status: res.data.status,
-            duration: 2000,
-            isClosable: true,
-            position: "bottom",
-          });
-          setActiveCoupon(couponCode.trim());
-          setUpdatedPrice(res.data.updated_price);
-        }
+    if (couponCode === "") {
+      toast({
+        title: `Please enter a Coupon Code`,
+        status: "error",
+        duration: 2000,
+        isClosable: true,
+        position: "bottom",
       });
-    } catch (e) {
-      console.log(e);
-    }
+    } else
+      try {
+        API.get(
+          `api-validate-coupon/?coupon=${couponCode.trim()}&package=${selectedPlan}&duration=${duration}`
+        ).then((res) => {
+          if (res.data.status === "success") {
+            toast({
+              title: `${couponCode} successfully applied`,
+              status: res.data.status,
+              duration: 2000,
+              isClosable: true,
+              position: "bottom",
+            });
+            setActiveCoupon(couponCode.trim());
+            setUpdatedPrice(res.data.updated_price);
+          }
+        });
+      } catch (e) {
+        console.log(e);
+      }
   };
 
   return (

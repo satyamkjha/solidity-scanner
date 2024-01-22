@@ -55,6 +55,7 @@ const OverviewData: React.FC<{
         sx={{
           fontSize: "sm",
           fontWeight: 600,
+          lineHeight: "2",
           textAlign: "center",
           color: "gray.500",
         }}

@@ -556,8 +556,7 @@ const BlockchainSelectorContent: React.FC<{
   const config = useConfig();
   const [elementPosition, setElementPosition] = useState<any>({});
 
-  const { data: platformStatusData, refetch: refetchPlatformStatus } =
-    usePlatformChainStatus();
+  const { data: platformStatusData } = usePlatformChainStatus();
 
   const onBlockChainClick = (
     event: any,

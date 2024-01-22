@@ -29,7 +29,8 @@ export default function ManualAudit() {
       <Flex
         mx={[0, 0, 0, "auto"]}
         my={[0, 0, 0, 10]}
-        p={[5, 10, 20]}
+        py={[10, 10, 20]}
+        px={[5, 10, 20]}
         maxW={"1200px"}
         justifyContent="flex-start"
         alignItems={["center", "center", "center", "flex-start"]}
@@ -47,6 +48,7 @@ export default function ManualAudit() {
           src={`${assetsURL}logo/credshields_white_logo.svg`}
           height={"100px"}
           width={"240px"}
+          mt={[5, 5, 0]}
         />
         <Text
           fontSize="md"
