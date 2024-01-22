@@ -33,6 +33,7 @@ import { BlockchainComp } from "./BlockchainComp";
 import { ChainSelector } from "./ChainSelector";
 import { useConfig } from "hooks/useConfig";
 import { FaUndo } from "react-icons/fa";
+import { usePlatformChainStatus } from "hooks/usePlatformChainStatus";
 
 export const BlockchainSelector: React.FC<{
   theme: "dark" | "light";
@@ -120,9 +121,9 @@ export const BlockchainSelector: React.FC<{
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [blockchain]);
 
-  const [isLargerThan1350, isLargerThan768] = useMediaQuery([
+  const [isLargerThan1350, isLargerThan950] = useMediaQuery([
     "(min-width: 1350px)",
-    "(min-width: 768px)",
+    "(min-width: 950px)",
   ]);
 
   return (
@@ -136,7 +137,7 @@ export const BlockchainSelector: React.FC<{
       alignItems="center"
       justifyContent={["flex-start", "flex-start", "center"]}
     >
-      {isLargerThan768 ? (
+      {isLargerThan950 ? (
         <>
           {blockchain !== "" &&
             platform !== "" &&
@@ -183,7 +184,7 @@ export const BlockchainSelector: React.FC<{
               w={
                 view === "quickscan"
                   ? ["350px", "480px", "500px", "770px", "1020px"]
-                  : ["350px", "480px", "500px", "650px"]
+                  : ["350px", "480px", "500px", "800px"]
               }
               h={["fit-content", "fit-content", "fit-content", "48vh", "50vh"]}
               maxH={["60vh", "60vh", "500px", "500px", "580px"]}
@@ -298,12 +299,12 @@ export const BlockchainSelector: React.FC<{
             )}
         </>
       )}
-      {!isLargerThan768 && (
+      {!isLargerThan950 && (
         <Modal isOpen={isOpen} onClose={onClose}>
           <ModalOverlay />
 
           <ModalContent
-            maxW={"600px"}
+            maxW={"720px"}
             my={5}
             sx={{
               boxShadow: "0px 4px 24px rgba(0, 0, 0, 0.2) !important",
@@ -402,6 +403,7 @@ const BlockchainSelectorControl: React.FC<{
       w="100%"
       justifyContent="space-between"
       p={5}
+      zIndex={-1}
       bgColor={theme === "dark" ? "#272727" : "#ECECEC"}
       borderRadius={15}
       border={blockchainSelectorError !== "" ? "1px solid #960D00" : "none"}
@@ -553,6 +555,8 @@ const BlockchainSelectorContent: React.FC<{
   const assetsUrl = getAssetsURL();
   const config = useConfig();
   const [elementPosition, setElementPosition] = useState<any>({});
+
+  const { data: platformStatusData } = usePlatformChainStatus();
 
   const onBlockChainClick = (
     event: any,
@@ -707,225 +711,232 @@ const BlockchainSelectorContent: React.FC<{
           />
         </Flex>
       ) : (
-        <Flex
-          justifyContent={[
-            "flex-start",
-            "flex-start",
-            "flex-start",
-            "space-between",
-          ]}
-          w="100%"
-          h={["100%", "100%", "500px", "100%"]}
-          minH={["100%", "100%", "fit-content", "100%"]}
-          flexDir={["column", "column", "column", "row"]}
-          alignItems={["center", "center", "center", "flex-start"]}
-          overflowX={"hidden"}
-        >
+        platformStatusData && (
           <Flex
-            flexDir={["row", "row", "row", "column"]}
-            w={["100%", "100%", "100%", "120px"]}
-            overflowY={["auto", "auto", "auto", "scroll"]}
-            overflowX={["scroll", "scroll", "scroll", "hidden"]}
-            h={["120px", "120px", "120px", "100%"]}
+            justifyContent={[
+              "flex-start",
+              "flex-start",
+              "flex-start",
+              "space-between",
+            ]}
+            w="100%"
+            h={["100%", "100%", "500px", "100%"]}
+            minH={["100%", "100%", "fit-content", "100%"]}
+            flexDir={["column", "column", "column", "row"]}
+            alignItems={["center", "center", "center", "flex-start"]}
+            overflowX={"hidden"}
           >
             <Flex
               flexDir={["row", "row", "row", "column"]}
-              w={"fit-content"}
-              h={"fit-content"}
-              alignItems="center"
-              position={"relative"}
+              w={["100%", "100%", "100%", "120px"]}
+              overflowY={["auto", "auto", "auto", "scroll"]}
+              overflowX={["scroll", "scroll", "scroll", "hidden"]}
+              h={["120px", "120px", "120px", "100%"]}
             >
-              <BlockchainComp
-                theme={theme}
-                blockchain={firstBlockChain}
-                selectedChain={blockchain}
-                onBlockchainSelect={onBlockchainSelect}
-              />
-
-              {Object.keys(contractChain).map(
-                (item, index) =>
-                  item !== firstBlockChain &&
-                  !getFeatureGateConfig(config).blockchain_disabled?.includes(
-                    item
-                  ) && (
-                    <BlockchainComp
-                      key={index}
-                      index={index}
-                      theme={theme}
-                      blockchain={item}
-                      selectedChain={blockchain}
-                      onBlockchainSelect={onBlockchainSelect}
-                    />
-                  )
-              )}
-              {firstBlockChain !== "buildbear" && (
+              <Flex
+                flexDir={["row", "row", "row", "column"]}
+                w={"fit-content"}
+                h={"fit-content"}
+                alignItems="center"
+                position={"relative"}
+              >
                 <BlockchainComp
                   theme={theme}
-                  blockchain={"buildbear"}
+                  blockchain={firstBlockChain}
                   selectedChain={blockchain}
                   onBlockchainSelect={onBlockchainSelect}
                 />
-              )}
-            </Flex>
-          </Flex>
-          <Divider
-            display={["none", "none", "none", "block"]}
-            borderColor={theme === "dark" ? "#424242" : "#8A94A680"}
-            orientation="vertical"
-          />
-          <Divider
-            display={["block", "block", "block", "none"]}
-            borderColor={theme === "dark" ? "#424242" : "#8A94A680"}
-          />
 
-          <Flex
-            justifyContent="flex-start"
-            w={["100%", "100%", "100%", "calc(100% - 130px)"]}
-            h={[
-              "calc(100% - 130px)",
-              "calc(100% - 130px)",
-              "calc(100% - 130px)",
-              "100%",
-            ]}
-            flexDir="column"
-            mt={[5, 5, 5, 0]}
-            alignItems="flex-start"
-            opacity={showAnimation ? 0 : 1}
-            transform={showAnimation ? `translateX(150px)` : "none"}
-            transition={"opacity 0.2s ease-in, transform 0.2s ease-out"}
-          >
+                {Object.keys(contractChain).map(
+                  (item, index) =>
+                    item !== firstBlockChain &&
+                    !getFeatureGateConfig(config).blockchain_disabled?.includes(
+                      item
+                    ) && (
+                      <BlockchainComp
+                        key={index}
+                        index={index}
+                        theme={theme}
+                        blockchain={item}
+                        selectedChain={blockchain}
+                        onBlockchainSelect={onBlockchainSelect}
+                      />
+                    )
+                )}
+                {firstBlockChain !== "buildbear" && (
+                  <BlockchainComp
+                    theme={theme}
+                    blockchain={"buildbear"}
+                    selectedChain={blockchain}
+                    onBlockchainSelect={onBlockchainSelect}
+                  />
+                )}
+              </Flex>
+            </Flex>
+            <Divider
+              display={["none", "none", "none", "block"]}
+              borderColor={theme === "dark" ? "#424242" : "#8A94A680"}
+              orientation="vertical"
+            />
+            <Divider
+              display={["block", "block", "block", "none"]}
+              borderColor={theme === "dark" ? "#424242" : "#8A94A680"}
+            />
+
             <Flex
-              mb={5}
-              justifyContent="space-between"
+              justifyContent="flex-start"
+              w={["100%", "100%", "100%", "calc(100% - 130px)"]}
+              h={[
+                "calc(100% - 130px)",
+                "calc(100% - 130px)",
+                "calc(100% - 130px)",
+                "100%",
+              ]}
+              flexDir="column"
+              mt={[5, 5, 5, 0]}
               alignItems="flex-start"
-              pl={5}
-              w={"100%"}
+              opacity={showAnimation ? 0 : 1}
+              transform={showAnimation ? `translateX(150px)` : "none"}
+              transition={"opacity 0.2s ease-in, transform 0.2s ease-out"}
             >
-              <VStack
-                textAlign="left"
-                w={["100%", "100%", "100%", "auto"]}
-                spacing={1}
+              <Flex
+                mb={5}
+                justifyContent="space-between"
                 alignItems="flex-start"
+                pl={5}
+                w={"100%"}
               >
-                <HStack w="100%" justifyContent={"flex-start"}>
-                  <Text
-                    color={theme === "dark" ? "white" : "gray.600"}
-                    fontWeight={600}
-                    fontSize="md"
-                  >
+                <VStack
+                  textAlign="left"
+                  w={["100%", "100%", "100%", "auto"]}
+                  spacing={1}
+                  alignItems="flex-start"
+                >
+                  <HStack w="100%" justifyContent={"flex-start"}>
+                    <Text
+                      color={theme === "dark" ? "white" : "gray.600"}
+                      fontWeight={600}
+                      fontSize="md"
+                    >
+                      {blockchain === "buildbear"
+                        ? "Buildbear"
+                        : contractChain[blockchain].blockchainName}
+                    </Text>
+                    <Divider
+                      orientation="vertical"
+                      h={4}
+                      borderColor="#8A94A6"
+                    />
+                    <Text
+                      cursor="pointer"
+                      onClick={() =>
+                        window.open(
+                          blockchain === "buildbear"
+                            ? "https://www.buildbear.io/"
+                            : contractChain[blockchain].website,
+                          "_blank"
+                        )
+                      }
+                      color="#8A94A6"
+                      fontWeight={400}
+                      fontSize="sm"
+                    >
+                      {blockchain === "buildbear"
+                        ? "https://www.buildbear.io/"
+                        : contractChain[blockchain].website}{" "}
+                      <ExternalLinkIcon color="#8A94A6" />
+                    </Text>
+                  </HStack>
+
+                  <Text w="100%" color="#8A94A6" fontWeight={400} fontSize="sm">
                     {blockchain === "buildbear"
-                      ? "Buildbear"
-                      : contractChain[blockchain].blockchainName}
+                      ? "BuildBear is a platform that allows you to test your DApps at scale and with your entire team and understanding what happens under the hood when you do your complicated blockchain transactions."
+                      : contractChain[blockchain].description}
                   </Text>
-                  <Divider orientation="vertical" h={4} borderColor="#8A94A6" />
+                </VStack>
+                <ArrowBackIcon
+                  fontSize={30}
+                  ml={"auto"}
+                  display={["none", "none", "none", "block"]}
+                  cursor="pointer"
+                  color={theme === "dark" ? "white" : "gray.600"}
+                  onClick={() => {
+                    setBlockchain("");
+                    setFirstBlockchain("");
+                  }}
+                />
+              </Flex>
+              {blockchain === "buildbear" ? (
+                <>
                   <Text
-                    cursor="pointer"
-                    onClick={() =>
-                      window.open(
-                        blockchain === "buildbear"
-                          ? "https://www.buildbear.io/"
-                          : contractChain[blockchain].website,
-                        "_blank"
-                      )
-                    }
-                    color="#8A94A6"
+                    textAlign="left"
+                    my={5}
+                    ml={5}
+                    w="100%"
+                    color={theme === "dark" ? "white" : "gray.600"}
                     fontWeight={400}
                     fontSize="sm"
                   >
-                    {blockchain === "buildbear"
-                      ? "https://www.buildbear.io/"
-                      : contractChain[blockchain].website}{" "}
-                    <ExternalLinkIcon color="#8A94A6" />
+                    Please enter the Node ID for your block chain
                   </Text>
-                </HStack>
-
-                <Text w="100%" color="#8A94A6" fontWeight={400} fontSize="sm">
-                  {blockchain === "buildbear"
-                    ? "BuildBear is a platform that allows you to test your DApps at scale and with your entire team and understanding what happens under the hood when you do your complicated blockchain transactions."
-                    : contractChain[blockchain].description}
-                </Text>
-              </VStack>
-              <ArrowBackIcon
-                fontSize={30}
-                ml={"auto"}
-                display={["none", "none", "none", "block"]}
-                cursor="pointer"
-                color={theme === "dark" ? "white" : "gray.600"}
-                onClick={() => {
-                  setBlockchain("");
-                  setFirstBlockchain("");
-                }}
-              />
+                  <Input
+                    ml={5}
+                    isRequired
+                    placeholder="Node ID"
+                    variant="brand"
+                    size="lg"
+                    color={theme === "dark" ? "white" : "gray.600"}
+                    height={50}
+                    mt={0}
+                    borderColor={theme === "dark" ? "white" : "gray.200"}
+                    backgroundColor="transparent"
+                    borderRadius={15}
+                    width={"90%"}
+                    maxWidth="600px"
+                    value={node_id}
+                    onChange={(e) => {
+                      setNodeId(e.target.value);
+                    }}
+                  />
+                  <Button
+                    ml={5}
+                    mt={5}
+                    variant="brand"
+                    onClick={() => onClose()}
+                    w="200px"
+                  >
+                    Confirm
+                  </Button>
+                </>
+              ) : (
+                Object.keys(contractChain[blockchain].platforms).map(
+                  (platformValue, index) =>
+                    !getFeatureGateConfig(config).platform_disabled?.includes(
+                      platformValue
+                    ) &&
+                    platformValue !== "fuse" && (
+                      <ChainSelector
+                        key={`${platformValue}_${index}`}
+                        index={index}
+                        view={view}
+                        platformStatus={platformStatusData}
+                        theme={theme}
+                        onClose={onBlockChainClose}
+                        platform={platform}
+                        platformValue={platformValue}
+                        chain={chain}
+                        setChain={setChain}
+                        setPlatform={setPlatform}
+                        platformData={
+                          contractChain[blockchain].platforms[platformValue]
+                        }
+                      />
+                    )
+                )
+              )}
             </Flex>
-            {blockchain === "buildbear" ? (
-              <>
-                <Text
-                  textAlign="left"
-                  my={5}
-                  ml={5}
-                  w="100%"
-                  color={theme === "dark" ? "white" : "gray.600"}
-                  fontWeight={400}
-                  fontSize="sm"
-                >
-                  Please enter the Node ID for your block chain
-                </Text>
-                <Input
-                  ml={5}
-                  isRequired
-                  placeholder="Node ID"
-                  variant="brand"
-                  size="lg"
-                  color={theme === "dark" ? "white" : "gray.600"}
-                  height={50}
-                  mt={0}
-                  borderColor={theme === "dark" ? "white" : "gray.200"}
-                  backgroundColor="transparent"
-                  borderRadius={15}
-                  width={"90%"}
-                  maxWidth="600px"
-                  value={node_id} 
-                  onChange={(e) => {
-                    setNodeId(e.target.value);
-                  }}
-                />
-                <Button
-                  ml={5}
-                  mt={5}
-                  variant="brand"
-                  onClick={() => onClose()}
-                  w="200px"
-                >
-                  Confirm
-                </Button>
-              </>
-            ) : (
-              Object.keys(contractChain[blockchain].platforms).map(
-                (platformValue, index) =>
-                  !getFeatureGateConfig(config).platform_disabled?.includes(
-                    platformValue
-                  ) &&
-                  platformValue !== "fuse" && (
-                    <ChainSelector
-                      key={`${platformValue}_${index}`}
-                      index={index}
-                      view={view}
-                      theme={theme}
-                      onClose={onBlockChainClose}
-                      platform={platform}
-                      platformValue={platformValue}
-                      chain={chain}
-                      setChain={setChain}
-                      setPlatform={setPlatform}
-                      platformData={
-                        contractChain[blockchain].platforms[platformValue]
-                      }
-                    />
-                  )
-              )
-            )}
           </Flex>
-        </Flex>
+        )
       )}
     </>
   );

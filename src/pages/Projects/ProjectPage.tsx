@@ -303,6 +303,8 @@ const ScanDetails: React.FC<{
     if (reports[0].report_type === "self_published") {
       setPublishStatus("Self-Published");
     } else if (reports[0].is_approved) setPublishStatus("Approved");
+    else if (reports[0].report_type === "assisted")
+      setPublishStatus("Approved");
     else setPublishStatus("Waiting For Approval");
   };
 
@@ -486,7 +488,7 @@ const ScanDetails: React.FC<{
                         Publish Report
                       </Button>
                     ) : (
-                      <HStack mb={[5, 5, 5, 0]}>
+                      <HStack my={[5, 5, 5, 0]}>
                         {publishStatus === "Approved" ? (
                           <CheckCircleIcon color={"#03C04A"} />
                         ) : publishStatus === "Self-Published" ? (
@@ -517,7 +519,8 @@ const ScanDetails: React.FC<{
                     reportingStatus !== "" &&
                     publishStatus !== "" &&
                     (scanData.scan_report.report_regeneration_enabled &&
-                    publishStatus !== "Not-Generated" ? (
+                    publishStatus !== "Not-Generated" &&
+                    reportingStatus !== "not_generated" ? (
                       <Button
                         variant={"black-outline"}
                         w={["80%", "80%", "50%", "200px"]}

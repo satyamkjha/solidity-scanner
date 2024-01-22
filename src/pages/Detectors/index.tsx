@@ -177,7 +177,12 @@ const Detectors: React.FC = () => {
         >
           <Image
             src={`${assetsURL}detectors/detector_icon_lg.png`}
-            transform="translateX(20px)"
+            transform={[
+              "translateX(0px)",
+              "translateX(0px)",
+              "translateX(0px)",
+              "translateX(20px)",
+            ]}
             zIndex={"10"}
             alt={"Run scans for your smart contracts"}
           />
@@ -197,6 +202,7 @@ const Detectors: React.FC = () => {
             my: [10, 10, 10],
             mx: "auto",
             flexDir: ["column", "column", "row"],
+            flexWrap: "wrap",
           }}
         >
           {headingData.map((item) => (
@@ -206,9 +212,15 @@ const Detectors: React.FC = () => {
                 alignItems: "flex-start",
                 mb: [8, 8, 0],
                 ml: [20, 20, 0],
+                w: "200px",
               }}
             >
-              <Text color={"#00006D"} fontSize="sm" fontWeight={400}>
+              <Text
+                textAlign={"left"}
+                color={"#00006D"}
+                fontSize="sm"
+                fontWeight={400}
+              >
                 {item.title}
               </Text>
               <Heading as="h1" mt={2} fontSize={["3xl", "4xl"]} mb={8}>

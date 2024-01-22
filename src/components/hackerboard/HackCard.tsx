@@ -23,7 +23,7 @@ const HackCard: React.FC<{ hackData: any }> = ({ hackData }) => {
       justifyContent="space-between"
       alignItems="center"
       flexDir="column"
-      w={["100%", "100%", "50%", "calc(33.33% - 15px)"]}
+      w={["100%", "100%", "calc(50% - 15px)", "calc(33.33% - 15px)"]}
       maxW={["550px"]}
       minW={["0px", "300px"]}
       height="250px"

@@ -13,6 +13,7 @@ import { HeroInfographics } from "./components/heroInfographics";
 import { Header } from "../../components/header";
 import { LandingHero } from "./components/hero";
 import QuickScan, { QSSkeleton } from "./components/quickScan";
+import { InNewsSection } from "./components/inNewsSection";
 
 const ProductVideo = lazy(() => import("./components/productVideo"));
 const UserTestimonial = lazy(() => import("./components/testimonial"));
@@ -113,10 +114,6 @@ export default function Landing() {
 
       <Partners />
 
-      <Suspense fallback={<TestimonialSkeleton />}>
-        <UserTestimonial />
-      </Suspense>
-
       <Suspense fallback={<AboutUsSkeleton />}>
         <AboutUs />
       </Suspense>
@@ -128,6 +125,12 @@ export default function Landing() {
       <Suspense fallback={<ManualAuditSkeleton />}>
         <ManualAudit />
       </Suspense>
+
+      <Suspense fallback={<TestimonialSkeleton />}>
+        <UserTestimonial />
+      </Suspense>
+
+      <InNewsSection />
 
       <LatestHacks />
     </>

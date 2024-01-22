@@ -76,12 +76,11 @@ export const Header: React.FC<{ theme: "light" | "dark" }> = ({ theme }) => {
               Pricing
             </Link>
             <Link
-              as={RouterLink}
-              to="/quickscan"
+              onClick={() => window.open("/quickscan", "_self")}
               variant={linkVariant}
               fontWeight="600"
             >
-              Quickscan
+              QuickScan
             </Link>
             <Link
               as={RouterLink}
@@ -183,7 +182,7 @@ export const Header: React.FC<{ theme: "light" | "dark" }> = ({ theme }) => {
                   variant="outline"
                   fontSize={"2xl"}
                 />
-                <MenuList w={"250px"} pt="0">
+                <MenuList position="relative" zIndex={900} w={"250px"} pt="0">
                   <MenuItem
                     p={4}
                     background="linear-gradient(269.8deg, #F9F9F9 0.83%, rgba(249, 249, 249, 0) 114.35%)"

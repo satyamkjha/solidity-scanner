@@ -26,13 +26,13 @@ export const SignupBox: React.FC = () => {
           py: [8, 8, 20],
           w: "100%",
           bg: "rgba(82, 255, 0, 0.06)",
-          flexDir: ["column", "column", "row"],
+          flexDir: ["column", "column", "column", "row"],
           alignItems: "center",
         }}
       >
         <Box
           sx={{
-            w: ["100%", "100%", "70%"],
+            w: ["100%", "100%", "100%", "70%"],
           }}
         >
           <Heading
@@ -40,7 +40,7 @@ export const SignupBox: React.FC = () => {
             fontSize="3xl"
             lineHeight="1.4"
             mb={4}
-            textAlign={["center", "center", "left"]}
+            textAlign={["center", "center", "center", "left"]}
           >
             Start securing your{" "}
             <Box as="span" sx={{ color: "accent" }}>
@@ -54,19 +54,19 @@ export const SignupBox: React.FC = () => {
             w="120px"
             border={"1px solid"}
             borderColor={"accent"}
-            display={["none", "none", "block"]}
+            display={["none", "none", "none", "block"]}
           />
           <Text
             color="accent"
-            textAlign={["center", "center", "left"]}
+            textAlign={["center", "center", "center", "left"]}
             fontSize="lg"
           >
             Have more questions? Talk to our team and get a demo now.
           </Text>
-        </Box>  
+        </Box>
         <Box
           sx={{
-            w: ["80%", "70%", "30%"],
+            w: ["80%", "70%", "350px", "30%"],
           }}
         >
           <Button

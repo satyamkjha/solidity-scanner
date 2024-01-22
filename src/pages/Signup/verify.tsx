@@ -11,6 +11,7 @@ import Auth from "helpers/auth";
 import { AuthResponse } from "common/types";
 import { API_PATH } from "helpers/routeManager";
 import Loader from "components/styled-components/Loader";
+import { getRecentQuickScan, setRecentQuickScan } from "helpers/helperFunction";
 
 const CustomFlex = motion(Flex);
 
@@ -44,6 +45,10 @@ const Verify: React.FC = () => {
           setVerification("success");
           setLoading(false);
           Auth.authenticateUser();
+          const import_scan_details = getRecentQuickScan();
+          if (import_scan_details) {
+            setRecentQuickScan({ ...import_scan_details, new_user: true });
+          }
         } else {
           setLoading(false);
         }

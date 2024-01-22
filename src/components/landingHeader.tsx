@@ -59,7 +59,7 @@ export const Header: React.FC = () => {
                 variant="navigation"
                 fontWeight="600"
               >
-                Quickscan
+                QuickScan
               </Link>
               <Link
                 as={RouterLink}

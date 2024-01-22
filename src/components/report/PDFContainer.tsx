@@ -89,6 +89,7 @@ const PDFContainer: React.FC<{
         className="footer"
         fontSize={"10px"}
         zIndex={2}
+        pointerEvents={"none"}
       >
         {pageNumber ? <Text>Page {pageNumber}</Text> : null}
         <HStack ml={"auto"}>
