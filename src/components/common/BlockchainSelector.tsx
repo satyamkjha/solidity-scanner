@@ -184,7 +184,7 @@ export const BlockchainSelector: React.FC<{
               w={
                 view === "quickscan"
                   ? ["350px", "480px", "500px", "770px", "1020px"]
-                  : ["350px", "480px", "500px", "650px"]
+                  : ["350px", "480px", "500px", "800px"]
               }
               h={["fit-content", "fit-content", "fit-content", "48vh", "50vh"]}
               maxH={["60vh", "60vh", "500px", "500px", "580px"]}

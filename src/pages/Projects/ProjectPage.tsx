@@ -519,7 +519,8 @@ const ScanDetails: React.FC<{
                     reportingStatus !== "" &&
                     publishStatus !== "" &&
                     (scanData.scan_report.report_regeneration_enabled &&
-                    publishStatus !== "Not-Generated" ? (
+                    publishStatus !== "Not-Generated" &&
+                    reportingStatus !== "not_generated" ? (
                       <Button
                         variant={"black-outline"}
                         w={["80%", "80%", "50%", "200px"]}

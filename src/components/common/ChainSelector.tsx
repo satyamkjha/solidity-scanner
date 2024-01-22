@@ -164,11 +164,19 @@ export const ChainSelector: React.FC<{
     website: string;
   }>();
 
+  const selectRef = useRef<any>(null);
+
   useEffect(() => {
     if (platform === platformValue && chain) {
       setCurrentChain(chain);
     }
   }, []);
+
+  useEffect(() => {
+    if (selectRef && selectRef.current) {
+      selectRef.current.focus();
+    }
+  }, [platform]);
 
   const getPlatformChainStatusData = () => {
     let isChainDown = false;
@@ -317,9 +325,11 @@ export const ChainSelector: React.FC<{
           "flex-end",
         ]}
         mt={[5, 5, 5, 0]}
-        maxW={["100%", "100%", "100%", "200px"]}
+        maxW={["100%", "100%", "100%", "300px"]}
       >
         <Select
+          ref={selectRef}
+          openMenuOnFocus
           formatOptionLabel={FormatOptionLabelWithImage}
           isSearchable={false}
           isDisabled={platform !== platformValue}
