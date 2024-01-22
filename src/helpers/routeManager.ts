@@ -35,6 +35,7 @@ export const API_PATH = {
   API_GET_SUPPORTED_CHAINS: "/api-get-supported-chains/",
   API_GET_BRANCHES: "/api-get-branches/",
   API_GET_REPO_PERMISSIONS: "api-get-repo-permissions/",
+  API_GET_PLATFORM_CHAINS_STATUS: "/api-get-platform-chain-status/",
 
   //SCAN
   API_GET_ALL_SCANS: "/api-get-all-scans/",

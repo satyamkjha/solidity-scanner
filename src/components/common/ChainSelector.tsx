@@ -37,6 +37,11 @@ export const ChainSelector: React.FC<{
   view: "quickscan" | "homepage";
   platform: string;
   index: number;
+  platformStatus: {
+    [key: string]: {
+      [key: string]: string;
+    };
+  };
   onClose: () => void;
   setPlatform: React.Dispatch<React.SetStateAction<string>>;
   chain: {
@@ -76,6 +81,7 @@ export const ChainSelector: React.FC<{
   platformValue,
   onClose,
   view,
+  platformStatus,
 }) => {
   const assetsUrl = getAssetsURL();
 
@@ -164,6 +170,42 @@ export const ChainSelector: React.FC<{
     }
   }, []);
 
+  const getPlatformChainStatusData = () => {
+    let isChainDown = false;
+
+    const chains = Object.keys(platformStatus[platformValue]);
+
+    chains.forEach((item) => {
+      if (platformStatus[platformValue][item] === "0") {
+        isChainDown = true;
+      }
+    });
+
+    return isChainDown;
+  };
+
+  const findChainDown = () => {
+    let chainDown = "none";
+
+    const chains = Object.keys(platformStatus[platformValue]);
+
+    console.log(chains);
+
+    chains.forEach((item) => {
+      if (platformStatus[platformValue][item] === "0") {
+        chainDown = item;
+      }
+    });
+
+    platformData.chains.map((item) => {
+      if (item.value === chainDown) {
+        chainDown = item.label;
+      }
+    });
+
+    return chainDown;
+  };
+
   return (
     <Flex
       w="100%"
@@ -239,26 +281,32 @@ export const ChainSelector: React.FC<{
           )}
         </VStack>
 
-        <Popover placement="bottom-start">
-          <PopoverTrigger>
-            <WarningIcon fontSize={20} color="#FFD000" />
-          </PopoverTrigger>
-          <PopoverContent>
-            <PopoverArrow />
-            <PopoverCloseButton />
-            <PopoverBody color="black" textAlign="left">
-              <HStack>
-                <WarningIcon fontSize={20} color="#FFD000" />{" "}
-                <Text fontWeight={700}> Blockscout server unavailable</Text>
-              </HStack>
-              <Text>
-                User Roles dolor sit amet consectetur. Lorem pharetra sed
-                consequat velit arcu. Dictum volutpat arcu pellentesque risus mi
-                non. Ornare phasellus lorem{" "}
-              </Text>
-            </PopoverBody>
-          </PopoverContent>
-        </Popover>
+        {getPlatformChainStatusData() && (
+          <Popover placement="bottom-start">
+            <PopoverTrigger>
+              <WarningIcon fontSize={20} color="#FFD000" />
+            </PopoverTrigger>
+            <PopoverContent>
+              <PopoverArrow />
+              <PopoverCloseButton />
+              <PopoverBody color="black" textAlign="left">
+                <HStack>
+                  <WarningIcon fontSize={20} color="#FFD000" />{" "}
+                  <Text fontWeight={700}>
+                    {" "}
+                    {platformData.label} server unavailable
+                  </Text>
+                </HStack>
+                <Text mt={4} ml={7} fontWeight={300}>
+                  We are not able to connect to <b>{platformData.label}</b>{" "}
+                  server. Their <b>{findChainDown()}</b> Chain seems to be down.
+                  Scans for the contract on <b>{findChainDown()}</b> Chain might
+                  fail. Please try after sometime.
+                </Text>
+              </PopoverBody>
+            </PopoverContent>
+          </Popover>
+        )}
       </HStack>
       <HStack
         w={["100%", "100%", "100%", "fit-content"]}
