@@ -86,6 +86,7 @@ export default function Partners() {
         fontSize="3xl"
         fontWeight={700}
         my={5}
+        mx={[5, 5, 10]}
       >
         Partnering with{" "}
         <Box as="span" sx={{ color: "accent" }}>
@@ -93,7 +94,13 @@ export default function Partners() {
         </Box>{" "}
         for Your Success.
       </Heading>
-      <Text maxW="1000px" color="subtle" fontSize={["lg", "lg", "xl"]} mb={5}>
+      <Text
+        maxW="1000px"
+        color="subtle"
+        mx={[5, 5, 10]}
+        fontSize={["lg", "lg", "xl"]}
+        mb={5}
+      >
         Discover the potential of collaboration as we proudly introduce our
         esteemed partners. These valuable partnerships enable us to deliver
         outstanding solutions and services, supported by a network of expertise

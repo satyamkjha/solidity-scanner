@@ -410,7 +410,7 @@ const BlockPage: React.FC = () => {
                                 Publish Report
                               </Button>
                             ) : (
-                              <HStack my={[4, 4, 4, 0]}>
+                              <HStack py={[4, 4, 4, 0]}>
                                 {publishStatus === "Approved" ? (
                                   <CheckCircleIcon color={"#03C04A"} />
                                 ) : publishStatus === "Self-Published" ? (
@@ -443,8 +443,9 @@ const BlockPage: React.FC = () => {
                           {scanData.scan_report.scan_status === "scan_done" &&
                             reportingStatus !== "" &&
                             publishStatus !== "" &&
-                            (scanData.scan_report
-                              .report_regeneration_enabled ? (
+                            (scanData.scan_report.report_regeneration_enabled &&
+                            publishStatus !== "Not-Generated" &&
+                            reportingStatus !== "not_generated" ? (
                               <Button
                                 variant={"accent-outline"}
                                 w={["80%", "80%", "50%", "200px"]}
@@ -563,9 +564,6 @@ const BlockPage: React.FC = () => {
                                   ? "Generating report..."
                                   : reportingStatus === "not_generated"
                                   ? "Generate Report"
-                                  : scanData.scan_report
-                                      .report_regeneration_enabled
-                                  ? "Re-generate Report"
                                   : reportingStatus === "report_generated"
                                   ? "View Report"
                                   : "Loading"}

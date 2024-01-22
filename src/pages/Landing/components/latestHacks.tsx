@@ -18,61 +18,61 @@ export const LatestHacks: React.FC = () => {
     {
       articleLink:
         "https://blog.solidityscan.com/starsarena-hack-analysis-e71d78704e85?source=rss----3e911405e793---4",
-      articleHeading: "StarsArena Hack Analysis",
+      articleHeading: "StarsArena",
       articleDate: "Fri, 13 Oct 2023",
     },
     {
       articleLink:
         "https://blog.solidityscan.com/exactly-protocol-hack-analysis-6ebc99d3e7b1?source=rss----3e911405e793---4",
-      articleHeading: "Exactly Protocol Hack Analysis",
+      articleHeading: "Exactly Protocol",
       articleDate: "Mon, 09 Oct 2023",
     },
     {
       articleLink:
         "https://blog.solidityscan.com/banana-token-hack-analysis-3f6f84c08b8f?source=rss----3e911405e793---4",
-      articleHeading: "Banana Token Hack Analysis",
+      articleHeading: "Banana Token",
       articleDate: "Tue, 12 Sep 2023",
     },
     {
       articleLink:
         "https://blog.solidityscan.com/dappsocial-hack-analysis-3b8bf243a850?source=rss----3e911405e793---4",
-      articleHeading: "DAppSocial Hack Analysis",
+      articleHeading: "DAppSocial",
       articleDate: "Fri, 08 Sep 2023",
     },
     {
       articleLink:
         "https://blog.solidityscan.com/zunami-protocol-hack-analysis-e95981976e11?source=rss----3e911405e793---4",
-      articleHeading: "Zunami Protocol Hack Analysis",
+      articleHeading: "Zunami Protocol",
       articleDate: "Tue, 05 Sep 2023",
     },
     {
       articleLink:
         "https://blog.solidityscan.com/earningfarm-hack-analysis-f5eba2a1e080?source=rss----3e911405e793---4",
-      articleHeading: "EarningFarm Hack Analysis",
+      articleHeading: "EarningFarm",
       articleDate: "Thu, 24 Aug 2023",
     },
     {
       articleLink:
         "https://blog.solidityscan.com/uwerx-hack-analysis-f03b061bb07b?source=rss----3e911405e793---4",
-      articleHeading: "Uwerx Hack Analysis",
+      articleHeading: "Uwerx",
       articleDate: "Tue, 08 Aug 2023",
     },
     {
       articleLink:
         "https://blog.solidityscan.com/jpegd-hack-analysis-a5a3dc89fa4?source=rss----3e911405e793---4",
-      articleHeading: "JPEG’d Hack Analysis",
+      articleHeading: "JPEG’d",
       articleDate: "Mon, 07 Aug 2023",
     },
     {
       articleLink:
         "https://blog.solidityscan.com/platypus-hack-analysis-a7d2f6d1f96e?source=rss----3e911405e793---4",
-      articleHeading: "Platypus Hack Analysis",
+      articleHeading: "Platypus",
       articleDate: "Thu, 03 Aug 2023",
     },
     {
       articleLink:
         "https://blog.solidityscan.com/ffist-hack-analysis-9cb695c0fad9?source=rss----3e911405e793---4",
-      articleHeading: "$FFIST Hack Analysis",
+      articleHeading: "$FFIST",
       articleDate: "Fri, 28 Jul 2023 ",
     },
   ];
@@ -152,28 +152,43 @@ const ArticleComp: React.FC<{
         backgroundImage={`${assetsURL}background/latest_hack_post_bg.svg`}
         width="100%"
         height={["250px", "250px", "270px"]}
-        borderRadius="25px"
+        borderTopRadius="25px"
         flexDir="column"
         pt={"60px"}
-        justifyContent="flex-start"
-        alignItems="center"
+        justifyContent="space-between"
+        alignItems="flex-start"
         backgroundPosition="center"
         backgroundRepeat="no-repeat"
         backgroundSize="stretch"
       >
-        <Heading
-          color={"white"}
-          w="80%"
-          fontSize={"3xl"}
-          sx={{
-            background:
-              "linear-gradient(129.18deg, #52FF00 8.52%, #00EEFD 93.94%)",
-            backgroundClip: "text",
-            WebkitTextFillColor: "transparent",
-          }}
+        <VStack textAlign="left" alignItems="flex-start" ml={10}>
+          <Text color={"white"} fontSize={"lg"}>
+            HACK ANALYSIS
+          </Text>
+          <Heading
+            color={"white"}
+            fontSize={"3xl"}
+            sx={{
+              background:
+                "linear-gradient(129.18deg, #52FF00 8.52%, #00EEFD 93.94%)",
+              backgroundClip: "text",
+              WebkitTextFillColor: "transparent",
+            }}
+          >
+            {articleHeading}
+          </Heading>
+        </VStack>
+
+        <Text
+          textAlign="left"
+          ml={10}
+          w="100%"
+          mb={8}
+          fontSize="xs"
+          color="#78909C"
         >
-          {articleHeading}
-        </Heading>
+          Published on {articleDate}
+        </Text>
       </Flex>
       <Flex
         justifyContent={["flex-start", "space-between"]}
@@ -186,24 +201,14 @@ const ArticleComp: React.FC<{
         height={["fit-content", "100px"]}
         background={"#FAFBFC"}
       >
-        <VStack
-          spacing={1}
-          textAlign={["center", "left"]}
-          alignItems={["center", "flex-start"]}
-        >
-          <Text fontSize="sm">{articleHeading}</Text>
-          <Text fontSize="xs" color="#78909C">
-            Published in . {articleDate}
-          </Text>
-        </VStack>
         <Button
           onClick={() => window.open(articleLink, "_blank")}
-          fontSize="14px"
-          py={5}
+          fontSize="16px"
+          py={6}
           px={10}
+          w="95%"
           mt={3}
           variant="cta-outline"
-          w=""
         >
           Read Full Article
         </Button>

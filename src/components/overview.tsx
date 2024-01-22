@@ -43,15 +43,19 @@ const Overview: React.FC<{
     <>
       {scanData.multi_file_scan_status === "scan_done" &&
       scanData.multi_file_scan_summary ? (
-        <Flex w="100%" sx={{ flexDir: ["column", "column", "row"] }} my={4}>
-          <Flex w="40%" display={["none", "none", "flex"]}>
+        <Flex
+          w="100%"
+          sx={{ flexDir: ["column", "column", "column", "row"] }}
+          my={4}
+        >
+          <Flex w="40%" display={["none", "none", "none", "flex"]}>
             <OverviewPieChart
               multi_file_scan_summary={scanData.multi_file_scan_summary}
             />
           </Flex>
           <VStack
-            w={["100%", "100%", "60%"]}
-            alignItems={["center", "center", "flex-start"]}
+            w={["100%", "100%", "100%", "60%"]}
+            alignItems={["center", "center", "center", "flex-start"]}
             pt={2}
             px={[0, 0, 4]}
             spacing={5}
@@ -110,7 +114,7 @@ const Overview: React.FC<{
               </Flex>
             </Box>
 
-            <Flex w="100%" display={["flex", "flex", "none"]}>
+            <Flex w="100%" display={["flex", "flex", "flex", "none"]}>
               <OverviewPieChart
                 multi_file_scan_summary={scanData.multi_file_scan_summary}
               />

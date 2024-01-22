@@ -15,9 +15,8 @@ import {
 } from "@chakra-ui/react";
 import { useOverview } from "hooks/useOverview";
 import Loader from "components/styled-components/Loader";
-import { useProfile } from "hooks/useProfile";
 import { AddIcon, ArrowForwardIcon } from "@chakra-ui/icons";
-import { getAssetsURL } from "helpers/helperFunction";
+import { getAssetsURL, getRecentQuickScan } from "helpers/helperFunction";
 import VulnerabilityDistribution from "components/vulnDistribution";
 import { useHistory } from "react-router-dom";
 import { capitalize } from "common/functions";
@@ -27,6 +26,7 @@ import AddProjectForm from "./AddProjectForm";
 import RecentScansList from "./RecentScansList";
 import PlanCycleInfo from "pages/Billing/components/PlanCycleInfo";
 import { useUserRole } from "hooks/useUserRole";
+import ImportScanModal from "components/modals/ImportScanModal";
 
 const OverviewData: React.FC<{
   heading: number;
@@ -55,6 +55,7 @@ const OverviewData: React.FC<{
         sx={{
           fontSize: "sm",
           fontWeight: 600,
+          lineHeight: "2",
           textAlign: "center",
           color: "gray.500",
         }}
@@ -201,6 +202,23 @@ const Home: React.FC = () => {
     "(min-width: 1100px)",
     "(min-width: 450px)",
   ]);
+  const { isOpen, onClose, onOpen } = useDisclosure();
+  const [importData, setImportData] = useState<any>();
+
+  useEffect(() => {
+    const scan_details = getRecentQuickScan();
+    if (scan_details) {
+      setImportData(scan_details);
+      onOpen();
+    }
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  const onImportPopupClose = () => {
+    localStorage.removeItem("recent_scan_details");
+    onClose();
+  };
 
   return (
     <Flex
@@ -305,7 +323,7 @@ const Home: React.FC = () => {
             sx={{
               w: isDesktopView ? "30%" : "100%",
               flexDir: "column",
-              alignItems: "flex-start",
+              alignItems: ["center", "center", "center", "flex-start"],
             }}
             justifyContent="flex-start"
             mr={4}
@@ -431,6 +449,15 @@ const Home: React.FC = () => {
           <Loader />
         </Flex>
       )}
+
+      {importData ? (
+        <ImportScanModal
+          isOpen={isOpen}
+          onClose={onImportPopupClose}
+          scanDetails={importData}
+          profileData={profileData}
+        />
+      ) : null}
     </Flex>
   );
 };

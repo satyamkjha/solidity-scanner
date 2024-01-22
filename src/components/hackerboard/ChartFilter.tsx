@@ -68,7 +68,7 @@ const ChartFilter: React.FC<{
           }}
         />
       </FormControl>
-      <Popover>
+      <Popover placement="bottom-end">
         <PopoverTrigger>
           <Button variant="unstyled" display={["flex", "flex", "flex", "none"]}>
             <FiFilter color={"#FFFFFF80"} size={24} />

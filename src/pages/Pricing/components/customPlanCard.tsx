@@ -33,11 +33,11 @@ const CustomPlanCard = () => {
       w={["100%"]}
       h={["fit-content", "fit-content", "fit-content", "320px"]}
       mt={20}
-      p={[5, 5, 5, 10]}
+      p={[5, 10, 10, 10]}
       borderRadius="15px"
       background={`url('${assetsURL}background/custom_plan_bg.png')`}
       backgroundSize="cover"
-      backgroundPosition={"left"}
+      backgroundPosition={["center", "center", "center", "left"]}
       backgroundRepeat="no-repeat"
       maxW="1920px"
     >
@@ -71,66 +71,89 @@ const CustomPlanCard = () => {
           professionals
         </Text>
       </VStack>
-      <Flex
-        mt={[10, 10, 10, 0]}
-        w={["100%", "90%", "90%", "35%"]}
-        h="100%"
-        flexDir="column"
-        justifyContent="flex-start"
-        alignItems="flex-start"
-        maxWidth="350px"
+      <HStack
+        justifyContent="space-between"
+        alignItems="flex-end"
+        height="100%"
+        w={["100%", "100%", "100%", "35%"]}
       >
-        <HStack
-          width="100%"
-          alignItems={"center"}
+        <Flex
+          mt={[10, 10, 10, 0]}
+          w={"100%"}
+          h="100%"
+          flexDir="column"
           justifyContent="flex-start"
-          spacing={5}
+          alignItems="flex-start"
+          maxWidth="350px"
         >
-          <Image
-            width="35px"
-            height="35px"
-            src={`${assetsURL}pricing/coin.svg`}
-          />
-          <Heading fontSize="22px" color="#FFFFFF" fontWeight={400}>
-            Unlimited Scans
-          </Heading>
-        </HStack>
-        <HStack
-          width="100%"
-          alignItems={"center"}
-          justifyContent="flex-start"
-          spacing={5}
-          mt={4}
-        >
-          <Image
-            width="35px"
-            height="35px"
-            src={`${assetsURL}icons/detectorIcon.svg`}
-          />
-          <Heading fontSize="22px" color="#FFFFFF" fontWeight={400}>
-            All Detectors
-          </Heading>
-        </HStack>
-        <HStack
-          width="100%"
-          alignItems={"center"}
-          justifyContent="flex-start"
-          spacing={5}
-          mt={4}
-        >
-          <Image
-            width="35px"
-            height="35px"
-            src={`${assetsURL}icons/security.svg`}
-          />
-          <Heading fontSize="22px" color="#FFFFFF" fontWeight={400}>
-            Dedicated Security Team
-          </Heading>
-        </HStack>
+          <HStack
+            width="100%"
+            alignItems={"center"}
+            justifyContent="flex-start"
+            spacing={5}
+          >
+            <Image
+              width="35px"
+              height="35px"
+              src={`${assetsURL}pricing/coin.svg`}
+            />
+            <Heading fontSize="22px" color="#FFFFFF" fontWeight={400}>
+              Unlimited Scans
+            </Heading>
+          </HStack>
+          <HStack
+            width="100%"
+            alignItems={"center"}
+            justifyContent="flex-start"
+            spacing={5}
+            mt={4}
+          >
+            <Image
+              width="35px"
+              height="35px"
+              src={`${assetsURL}icons/detectorIcon.svg`}
+            />
+            <Heading fontSize="22px" color="#FFFFFF" fontWeight={400}>
+              All Detectors
+            </Heading>
+          </HStack>
+          <HStack
+            width="100%"
+            alignItems={"center"}
+            justifyContent="flex-start"
+            spacing={5}
+            mt={4}
+          >
+            <Image
+              width="35px"
+              height="35px"
+              src={`${assetsURL}icons/security.svg`}
+            />
+            <Heading fontSize="22px" color="#FFFFFF" fontWeight={400}>
+              Dedicated Security Team
+            </Heading>
+          </HStack>
 
+          <Button
+            width="100%"
+            maxW={"270px"}
+            display={["flex", "flex", "none", "flex"]}
+            onClick={onOpen}
+            py={6}
+            color="white"
+            mt={[5, 5, 5, "auto"]}
+            variant="outline"
+            _hover={{
+              color: "#000000",
+              bgColor: "#FFFFFF",
+            }}
+          >
+            Contact Sales
+          </Button>
+        </Flex>
         <Button
-          width="100%"
-          maxW={"270px"}
+          w={"270px"}
+          display={["none", "none", "flex", "none"]}
           onClick={onOpen}
           py={6}
           color="white"
@@ -143,7 +166,7 @@ const CustomPlanCard = () => {
         >
           Contact Sales
         </Button>
-      </Flex>
+      </HStack>
       <ContactUs onClose={onClose} isOpen={isOpen} />
     </Box>
   );

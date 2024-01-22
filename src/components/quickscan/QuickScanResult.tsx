@@ -9,7 +9,7 @@ import {
   Button,
 } from "@chakra-ui/react";
 import { severityArrayInOrder } from "common/values";
-import { sentenceCapitalize } from "helpers/helperFunction";
+import { sentenceCapitalize, setRecentQuickScan } from "helpers/helperFunction";
 import { QuickScanResult } from "common/types";
 import SolidityScoreProgress from "components/common/SolidityScoreProgress";
 import { useHistory } from "react-router-dom";
@@ -17,10 +17,12 @@ import QSErrorCountModal from "./QSErrorCountModal";
 import ReportTag from "components/common/scans/ReportTag";
 import ResultOverview from "components/common/scans/ResultOverview";
 import VulnerabilityChart from "components/common/scans/VulnerabilityChart";
+import Auth from "helpers/auth";
 
 export const QuickScanResultContainer: React.FC<{
   scanReport: QuickScanResult;
-}> = ({ scanReport }) => {
+  projectId: string;
+}> = ({ scanReport, projectId }) => {
   const history = useHistory();
 
   const [errorData, setErrorData] = useState<{
@@ -29,12 +31,6 @@ export const QuickScanResultContainer: React.FC<{
   } | null>(null);
 
   const [open, setOpen] = useState(false);
-
-  useEffect(() => {
-    if (errorData !== null) {
-      setOpen(true);
-    }
-  }, [errorData]);
 
   const vulnerabilityCount =
     scanReport.multi_file_scan_summary.issue_severity_distribution.critical +
@@ -45,12 +41,35 @@ export const QuickScanResultContainer: React.FC<{
     scanReport.multi_file_scan_summary.issue_severity_distribution.low +
     scanReport.multi_file_scan_summary.issue_severity_distribution.medium;
 
+  useEffect(() => {
+    if (errorData !== null) {
+      setOpen(true);
+    }
+  }, [errorData]);
+
+  const onViewDetailResult = () => {
+    const scan_details = {
+      project_id: projectId,
+      contract_address: scanReport.contract_address,
+      contract_chain: scanReport.contract_chain,
+      contract_platform: scanReport.contract_platform,
+      new_user: false,
+    };
+    setRecentQuickScan(scan_details);
+    history.push("/signin");
+  };
+
   return (
     <Flex
       w="100%"
       h="fit-content"
-      flexDir={["column", "column", "row"]}
-      justifyContent={["flex-start", "flex-start", "space-between"]}
+      flexDir={["column", "column", "column", "row"]}
+      justifyContent={[
+        "flex-start",
+        "flex-start",
+        "flex-start",
+        "space-between",
+      ]}
       alignItems="center"
       mt={20}
     >
@@ -61,8 +80,8 @@ export const QuickScanResultContainer: React.FC<{
         bgColor="#222222"
         justifyContent="flex-start"
         alignItems="center"
-        h={["fit-content", "fit-content", "520px"]}
-        w={["100%", "100%", "55%"]}
+        h={["fit-content", "fit-content", "fit-content", "520px"]}
+        w={["100%", "100%", "100%", "55%"]}
       >
         <ResultOverview
           scanReport={scanReport.multi_file_scan_summary}
@@ -120,14 +139,20 @@ export const QuickScanResultContainer: React.FC<{
         <ReportTag is_approved={scanReport.is_approved} />
       </VStack>
       <Flex
-        w={["100%", "100%", "calc(45% - 40px)"]}
+        w={["100%", "100%", "100%", "calc(45% - 40px)"]}
         bgColor="#222222"
+        mt={[5, 5, 5, 0]}
         borderRadius={10}
         padding={5}
-        flexDir={["column", "column", "row"]}
+        flexDir={["column", "column", "column", "row"]}
         alignItems={"center"}
-        justifyContent={["flex-start", "flex-start", "space-between"]}
-        h={["fit-content", "fit-content", "520px"]}
+        justifyContent={[
+          "flex-start",
+          "flex-start",
+          "flex-start",
+          "space-between",
+        ]}
+        h={["fit-content", "fit-content", "fit-content", "520px"]}
       >
         <VStack
           w={[
@@ -152,28 +177,33 @@ export const QuickScanResultContainer: React.FC<{
             }
           />
           <Button
-            display={["none", "none", "flex"]}
+            display={["none", "none", "none", "flex"]}
             variant="brand"
             w={"100%"}
             maxW={"300px"}
-            onClick={() => history.push("/signin")}
+            onClick={onViewDetailResult}
           >
-            View detailed Result
+            View detailed Result ⟶
           </Button>
         </VStack>
         <Flex
-          w={["100%", "100%", "120px", "150px", "180px"]}
+          w={["100%", "100%", "100%", "150px", "180px"]}
           justifyContent="flex-start"
           alignItems="flex-start"
           flexDirection="row"
           flexWrap="wrap"
           columnGap={"20px"}
           rowGap={3}
-          mt={[5, 10, 0]}
+          mt={[5, 5, 5, 0]}
         >
           {severityArrayInOrder.map((item) => (
             <VStack
-              w={["calc(50% - 10px)", "calc(50% - 10px)", "100%"]}
+              w={[
+                "calc(50% - 10px)",
+                "calc(50% - 10px)",
+                "calc(33% - 20px)",
+                "100%",
+              ]}
               h="fit-content"
               cursor="pointer"
               px={3}
@@ -216,14 +246,14 @@ export const QuickScanResultContainer: React.FC<{
           ))}
         </Flex>
         <Button
-          display={["flex", "flex", "none"]}
+          display={["flex", "flex", "flex", "none"]}
           variant="brand"
           w={"100%"}
-          mt={5}
+          mt={[5, 5, 10]}
           maxW={"300px"}
-          onClick={() => history.push("/signin")}
+          onClick={onViewDetailResult}
         >
-          View detailed Result
+          View detailed Result ⟶
         </Button>
       </Flex>
       <QSErrorCountModal

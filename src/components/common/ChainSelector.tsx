@@ -11,11 +11,17 @@ import {
   Divider,
   Input,
   useDisclosure,
+  Button,
+  PopoverCloseButton,
+  PopoverArrow,
+  PopoverHeader,
+  PopoverBody,
 } from "@chakra-ui/react";
 import {
   ChevronDownIcon,
   ArrowBackIcon,
   ExternalLinkIcon,
+  WarningIcon,
 } from "@chakra-ui/icons";
 import { contractChain } from "common/values";
 import { getAssetsURL } from "helpers/helperFunction";
@@ -31,6 +37,11 @@ export const ChainSelector: React.FC<{
   view: "quickscan" | "homepage";
   platform: string;
   index: number;
+  platformStatus: {
+    [key: string]: {
+      [key: string]: string;
+    };
+  };
   onClose: () => void;
   setPlatform: React.Dispatch<React.SetStateAction<string>>;
   chain: {
@@ -70,6 +81,7 @@ export const ChainSelector: React.FC<{
   platformValue,
   onClose,
   view,
+  platformStatus,
 }) => {
   const assetsUrl = getAssetsURL();
 
@@ -152,11 +164,55 @@ export const ChainSelector: React.FC<{
     website: string;
   }>();
 
+  const selectRef = useRef<any>(null);
+
   useEffect(() => {
     if (platform === platformValue && chain) {
       setCurrentChain(chain);
     }
   }, []);
+
+  useEffect(() => {
+    if (selectRef && selectRef.current) {
+      selectRef.current.focus();
+    }
+  }, [platform]);
+
+  const getPlatformChainStatusData = () => {
+    let isChainDown = false;
+
+    const chains = Object.keys(platformStatus[platformValue]);
+
+    chains.forEach((item) => {
+      if (platformStatus[platformValue][item] === "0") {
+        isChainDown = true;
+      }
+    });
+
+    return isChainDown;
+  };
+
+  const findChainDown = () => {
+    let chainDown = "none";
+
+    const chains = Object.keys(platformStatus[platformValue]);
+
+    console.log(chains);
+
+    chains.forEach((item) => {
+      if (platformStatus[platformValue][item] === "0") {
+        chainDown = item;
+      }
+    });
+
+    platformData.chains.map((item) => {
+      if (item.value === chainDown) {
+        chainDown = item.label;
+      }
+    });
+
+    return chainDown;
+  };
 
   return (
     <Flex
@@ -197,6 +253,7 @@ export const ChainSelector: React.FC<{
       <HStack
         w={["100%", "100%", "100%", "fit-content"]}
         maxW={["100%", "100%", "100%", "calc(100% - 210px)"]}
+        spacing={5}
       >
         <Image
           src={`${assetsUrl}${platformData.iconUrl}.svg`}
@@ -231,6 +288,33 @@ export const ChainSelector: React.FC<{
             </Text>
           )}
         </VStack>
+
+        {getPlatformChainStatusData() && (
+          <Popover placement="bottom-start">
+            <PopoverTrigger>
+              <WarningIcon fontSize={20} color="#FFD000" />
+            </PopoverTrigger>
+            <PopoverContent>
+              <PopoverArrow />
+              <PopoverCloseButton />
+              <PopoverBody color="black" textAlign="left">
+                <HStack>
+                  <WarningIcon fontSize={20} color="#FFD000" />{" "}
+                  <Text fontWeight={700}>
+                    {" "}
+                    {platformData.label} server unavailable
+                  </Text>
+                </HStack>
+                <Text mt={4} ml={7} fontWeight={300}>
+                  We are not able to connect to <b>{platformData.label}</b>{" "}
+                  server. Their <b>{findChainDown()}</b> Chain seems to be down.
+                  Scans for the contract on <b>{findChainDown()}</b> Chain might
+                  fail. Please try after sometime.
+                </Text>
+              </PopoverBody>
+            </PopoverContent>
+          </Popover>
+        )}
       </HStack>
       <HStack
         w={["100%", "100%", "100%", "fit-content"]}
@@ -241,9 +325,11 @@ export const ChainSelector: React.FC<{
           "flex-end",
         ]}
         mt={[5, 5, 5, 0]}
-        maxW={["100%", "100%", "100%", "200px"]}
+        maxW={["100%", "100%", "100%", "300px"]}
       >
         <Select
+          ref={selectRef}
+          openMenuOnFocus
           formatOptionLabel={FormatOptionLabelWithImage}
           isSearchable={false}
           isDisabled={platform !== platformValue}
