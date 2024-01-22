@@ -98,6 +98,7 @@ const AddProjectForm: React.FC<{
                 formType={formType}
                 setStep={setStep}
                 profileData={profileData}
+                onClose={onClose}
               />
             )}
             {formType === "block" && (
@@ -106,6 +107,7 @@ const AddProjectForm: React.FC<{
                 setStep={setStep}
                 profileData={profileData}
                 changeView={changeView}
+                onClose={onClose}
               />
             )}
             {formType === "filescan" && (
@@ -116,6 +118,7 @@ const AddProjectForm: React.FC<{
                 uploadType={uploadType}
                 setUploadType={setUploadType}
                 changeView={changeView}
+                onClose={onClose}
               />
             )}
           </Flex>

@@ -55,9 +55,8 @@ export const AddProjectFormInfographics: React.FC<{
             NOTE: Please verify the following to avoid scan failure:
           </Text>
           <UnorderedList fontSize="sm" w="90%" mt={5} spacing={5}>
-            {instructions.map((item) => (
-              <ListItem>{item}</ListItem>
-            ))}
+            {instructions &&
+              instructions.map((item) => <ListItem>{item}</ListItem>)}
           </UnorderedList>
         </Flex>
       ) : (

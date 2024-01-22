@@ -38,7 +38,8 @@ const ApplicationForm: React.FC<{
   step: number;
   setStep: React.Dispatch<React.SetStateAction<number>>;
   formType: string;
-}> = ({ profileData, step, setStep, formType }) => {
+  onClose: any;
+}> = ({ profileData, step, setStep, formType, onClose }) => {
   const [isDesktopView] = useMediaQuery("(min-width: 1920px)");
   const config: any = useConfig();
   const { sendMessage } = useWebSocket();
@@ -105,6 +106,8 @@ const ApplicationForm: React.FC<{
             skip_file_paths: skipFilePaths,
           },
         });
+        onClose();
+        queryClient.invalidateQueries("profile");
         history.push("/projects");
         setIsLoading(false);
       } catch (e) {
@@ -136,6 +139,7 @@ const ApplicationForm: React.FC<{
           ]);
           queryClient.invalidateQueries("scan_list");
           queryClient.invalidateQueries("profile");
+          onClose();
           history.push("/projects");
         } else {
           toast({
