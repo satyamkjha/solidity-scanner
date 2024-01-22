@@ -204,7 +204,11 @@ const PricingDetails: React.FC<{
         alignItems={"center"}
         justifyContent="flex-end"
         backgroundColor="#FFFFFF00"
-        mt={page === "pricing" ? ["-300px", "-300px", "-220px"] : "-410px"}
+        mt={
+          page === "pricing"
+            ? ["-300px", "-300px", "-180px", "-220px"]
+            : "-410px"
+        }
         px={page === "pricing" ? [4, 4, 4, 10] : [4]}
       >
         <Grid

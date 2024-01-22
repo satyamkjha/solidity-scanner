@@ -389,6 +389,7 @@ export interface Report {
     contract_platform?: string;
     organization: string;
     date_published: string;
+    description?: string;
     email: string;
   };
   scan_summary: ScanSummaryItem[];

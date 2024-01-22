@@ -327,8 +327,8 @@ const Scans: React.FC = () => {
         <Text
           width="100%"
           textAlign="left"
-          sx={{ color: "subtle", fontWeight: 600, ml: 4 }}
-          ml={[10, 10, 10, 0]}
+          sx={{ color: "subtle", fontWeight: 600 }}
+          
         >
           PROJECTS
         </Text>

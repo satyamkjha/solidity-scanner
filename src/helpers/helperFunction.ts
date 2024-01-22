@@ -294,6 +294,17 @@ export const splitListIntoChunks = <T>(list: T[], chunkSize: number): T[][] => {
   return result;
 };
 
+export const getRecentQuickScan = () => {
+  const scan_details = localStorage.getItem("recent_scan_details");
+  if (scan_details) return JSON.parse(scan_details);
+  else return null;
+};
+
+export const setRecentQuickScan = (scan: any) => {
+  scan = JSON.stringify(scan);
+  localStorage.setItem("recent_scan_details", scan);
+};
+
 // ^xdc[a-fA-F0-9]{40}$|^0x[a-fA-F0-9]{40}$
 
 // export const getAssetsFromS3 = async (directory: string) => {
