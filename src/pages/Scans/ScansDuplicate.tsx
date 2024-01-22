@@ -488,12 +488,12 @@ const ScansDuplicate: React.FC = () => {
             width="95px"
             mb={5}
           />
-          <Text fontSize="sm">No projects started yet.</Text>
-          <Link to="/home">
+          <Text fontSize="sm">No projects scanned yet.</Text>
+          {/* <Link to="/home">
             <Button variant="brand" width={["90%", "250px", "350px"]} my={8}>
               Add a New Project
             </Button>
-          </Link>
+          </Link> */}
         </Flex>
       ) : projectList.length === 0 ? (
         <Flex
