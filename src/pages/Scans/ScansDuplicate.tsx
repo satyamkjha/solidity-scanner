@@ -321,7 +321,7 @@ const ScansDuplicate: React.FC = () => {
   return (
     <Box
       sx={{
-        w: ["100%", "100%", "calc(100% - 2rem)"],
+        w: ["100%", "100%", "calc(100% - 1.5rem)"],
         h: "100%",
         bg: "bg.subtle",
         borderRadius: "20px",
@@ -351,8 +351,14 @@ const ScansDuplicate: React.FC = () => {
           PROJECTS
         </Text>
         {profileData ? (
-          <Flex w={"100%"} mt={[5, 5, 0]} mr={[0, 0, 4]} ml={"auto"}>
-            <Flex w={["100%", "100%", "600px"]}>
+          <Flex
+            w={"100%"}
+            mt={[5, 5, 0]}
+            mr={[0, 0, 4]}
+            ml={"auto"}
+            justifyContent={"flex-end"}
+          >
+            <Flex w={["100%", "100%", "500px"]}>
               <InputGroup alignItems="center">
                 <InputLeftElement
                   height="48px"
@@ -455,9 +461,9 @@ const ScansDuplicate: React.FC = () => {
                   }
                 />
               </InputGroup>
-              <Flex ml={4}>
-                <AddProject profileData={profileData} />
-              </Flex>
+            </Flex>
+            <Flex ml={4}>
+              <AddProject profileData={profileData} />
             </Flex>
           </Flex>
         ) : null}

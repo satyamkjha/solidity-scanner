@@ -304,7 +304,7 @@ const Scans: React.FC = () => {
   return (
     <Box
       sx={{
-        w: ["100%", "100%", "calc(100% - 1rem)"],
+        w: ["100%", "100%", "calc(100% - 1.5rem)"],
         h: "100%",
         bg: "bg.subtle",
         borderRadius: "20px",
@@ -319,7 +319,6 @@ const Scans: React.FC = () => {
       <Flex
         sx={{
           alignItems: ["center", "center", "flex-start"],
-          justifyContent: "flex-start",
           flexDirection: ["column", "column", "row"],
           mb: 4,
         }}
@@ -334,8 +333,14 @@ const Scans: React.FC = () => {
           PROJECTS
         </Text>
         {profileData ? (
-          <Flex w={"100%"} mt={[5, 5, 0]} mr={[0, 0, 4]} ml={"auto"}>
-            <Flex w={["100%", "100%", "600px"]}>
+          <Flex
+            w={"100%"}
+            mt={[5, 5, 0]}
+            mr={[0, 0, 4]}
+            ml={"auto"}
+            justifyContent={"flex-end"}
+          >
+            <Flex w={["100%", "100%", "500px"]}>
               <InputGroup alignItems="center">
                 <InputLeftElement
                   height="48px"
@@ -438,9 +443,9 @@ const Scans: React.FC = () => {
                   }
                 />
               </InputGroup>
-              <Flex ml={4}>
-                <AddProject profileData={profileData} />
-              </Flex>
+            </Flex>
+            <Flex ml={4}>
+              <AddProject profileData={profileData} />
             </Flex>
           </Flex>
         ) : null}
