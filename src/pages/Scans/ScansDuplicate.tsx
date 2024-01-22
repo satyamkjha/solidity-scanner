@@ -39,6 +39,7 @@ import { FiFilter } from "react-icons/fi";
 import { RxDoubleArrowDown } from "react-icons/rx";
 import { debounce } from "lodash";
 import RadioButton from "components/styled-components/RadioButton";
+import { AddProject } from "components/common/AddProject";
 
 const ScansDuplicate: React.FC = () => {
   const [isDesktopView] = useMediaQuery("(min-width: 1920px)");
@@ -350,111 +351,114 @@ const ScansDuplicate: React.FC = () => {
           PROJECTS
         </Text>
         {profileData ? (
-          <Flex
-            w={["100%", "100%", "500px"]}
-            mt={[5, 5, 0]}
-            mr={[0, 0, 4]}
-            ml={"auto"}
-          >
-            <InputGroup alignItems="center">
-              <InputLeftElement
-                height="48px"
-                width="45px"
-                children={<Search2Icon color={"#A0AEC0"} />}
-              />
-              <Input
-                placeholder="Search by Project name/Contract address"
-                size="lg"
-                fontSize="sm"
-                bg="white"
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-              />
-              <InputRightElement
-                height="48px"
-                w="80px"
-                children={
-                  <Menu placement={"bottom-end"} matchWidth>
-                    <MenuButton
-                      as={Box}
-                      onClick={(e) => {
-                        e.stopPropagation();
-                      }}
-                    >
-                      <HStack
-                        spacing={2}
-                        p={2}
-                        w="70px"
-                        borderRadius={10}
-                        bg="bg.subtle"
+          <Flex w={"100%"} mt={[5, 5, 0]} mr={[0, 0, 4]} ml={"auto"}>
+            <Flex w={["100%", "100%", "600px"]}>
+              <InputGroup alignItems="center">
+                <InputLeftElement
+                  height="48px"
+                  width="45px"
+                  children={<Search2Icon color={"#A0AEC0"} />}
+                />
+                <Input
+                  placeholder="Search by Project name/Contract address"
+                  size="lg"
+                  fontSize="sm"
+                  bg="white"
+                  value={searchTerm}
+                  onChange={(e) => setSearchTerm(e.target.value)}
+                />
+                <InputRightElement
+                  height="48px"
+                  w="80px"
+                  children={
+                    <Menu placement={"bottom-end"} matchWidth>
+                      <MenuButton
+                        as={Box}
+                        onClick={(e) => {
+                          e.stopPropagation();
+                        }}
                       >
-                        {paramType === "" || paramType === undefined ? (
-                          <FiFilter
-                            color={!paramType ? "#8A94A6" : "#3300ff"}
-                            size={20}
-                          />
-                        ) : (
-                          <Image
-                            height="25px"
-                            width="25px"
-                            src={`${assetsURL}icons/integrations/${
-                              paramType === "File Scan" ? "filescan" : paramType
-                            }.svg`}
-                          />
-                        )}
+                        <HStack
+                          spacing={2}
+                          p={2}
+                          w="70px"
+                          borderRadius={10}
+                          bg="bg.subtle"
+                        >
+                          {paramType === "" || paramType === undefined ? (
+                            <FiFilter
+                              color={!paramType ? "#8A94A6" : "#3300ff"}
+                              size={20}
+                            />
+                          ) : (
+                            <Image
+                              height="25px"
+                              width="25px"
+                              src={`${assetsURL}icons/integrations/${
+                                paramType === "File Scan"
+                                  ? "filescan"
+                                  : paramType
+                              }.svg`}
+                            />
+                          )}
 
-                        <RxDoubleArrowDown color="#C4C4C4" size={16} />
-                      </HStack>
-                    </MenuButton>
-                    <MenuList
-                      sx={{
-                        boxShadow: "0px 4px 12px rgba(0, 0, 0, 0.2) !important",
-                        _hover: "0px 4px 24px rgba(0, 0, 0, 0.2) !important",
-                        px: 6,
-                        py: 4,
-                        w: ["100%", "320px"],
-                        borderRadius: 20,
-                      }}
-                    >
-                      <Text w="100%" textAlign="center" mb={3}>
-                        Filter by Project Type
-                      </Text>
-                      {paramList.map((item) => (
-                        <MenuItem
-                          _focus={{ backgroundColor: "#FFFFFF" }}
-                          _hover={{ backgroundColor: "#FFFFFF" }}
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            setParamType(item.param);
-                          }}
-                          sx={{
-                            py: 4,
-                            borderBottom: "1px solid #ececec",
-                          }}
-                          justifyContent="space-between"
-                        >
-                          {item.label}{" "}
-                          <RadioButton isActive={paramType === item.param} />
-                        </MenuItem>
-                      ))}
-                      <HStack w="100%" justifyContent="center">
-                        <Button
-                          leftIcon={<CloseIcon fontSize="10px" />}
-                          fontSize="sm"
-                          size="sm"
-                          mt={4}
-                          variant="ghost"
-                          color="accent"
-                          onClick={() => setParamType("")}
-                        >
-                          Clear Filter
-                        </Button>
-                      </HStack>
-                    </MenuList>
-                  </Menu>
-                }
-              />
-            </InputGroup>
+                          <RxDoubleArrowDown color="#C4C4C4" size={16} />
+                        </HStack>
+                      </MenuButton>
+                      <MenuList
+                        sx={{
+                          boxShadow:
+                            "0px 4px 12px rgba(0, 0, 0, 0.2) !important",
+                          _hover: "0px 4px 24px rgba(0, 0, 0, 0.2) !important",
+                          px: 6,
+                          py: 4,
+                          w: ["100%", "320px"],
+                          borderRadius: 20,
+                        }}
+                      >
+                        <Text w="100%" textAlign="center" mb={3}>
+                          Filter by Project Type
+                        </Text>
+                        {paramList.map((item) => (
+                          <MenuItem
+                            _focus={{ backgroundColor: "#FFFFFF" }}
+                            _hover={{ backgroundColor: "#FFFFFF" }}
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              setParamType(item.param);
+                            }}
+                            sx={{
+                              py: 4,
+                              borderBottom: "1px solid #ececec",
+                            }}
+                            justifyContent="space-between"
+                          >
+                            {item.label}{" "}
+                            <RadioButton isActive={paramType === item.param} />
+                          </MenuItem>
+                        ))}
+                        <HStack w="100%" justifyContent="center">
+                          <Button
+                            leftIcon={<CloseIcon fontSize="10px" />}
+                            fontSize="sm"
+                            size="sm"
+                            mt={4}
+                            variant="ghost"
+                            color="accent"
+                            onClick={() => setParamType("")}
+                          >
+                            Clear Filter
+                          </Button>
+                        </HStack>
+                      </MenuList>
+                    </Menu>
+                  }
+                />
+              </InputGroup>
+              <Flex ml={4}>
+                <AddProject profileData={profileData} />
+              </Flex>
+            </Flex>
           </Flex>
         ) : null}
       </Flex>
