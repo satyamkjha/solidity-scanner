@@ -54,7 +54,7 @@ export const InNewsSection: React.FC = () => {
         "Blockscout makes it easy to verify and interact with blockchain contracts. Anyone, anywhere can deploy and verify a contract, then start interacting with it immediately. This freedom is essential to web3 and open blockchains, but also can bring up issues when a contract contains bugs, poorly written code, code that can be exploited, or in extreme cases, malicious code intended to steal funds. Ideally, contracts are audited by autonomous 3rd party firms that work with teams to identify and address any vulnerabilities. This is essential for contracts managing large amounts of funds or contracts with minting functionality for valuable tokens. However, auditing firms are expensive, and often have months-long backlogs.",
     },
     {
-      imgLink: "landing/news_1.png",
+      imgLink: "landing/news_and_media/news_4.png",
       articleLink:
         "https://in.investing.com/news/xdc-network-and-solidityscan-forge-powerful-partnership-to-strengthen-blockchain-security-3721367",
       articleHeading:
