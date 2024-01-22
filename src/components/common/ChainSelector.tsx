@@ -307,9 +307,9 @@ export const ChainSelector: React.FC<{
                 </HStack>
                 <Text mt={4} ml={7} fontWeight={300}>
                   We are not able to connect to <b>{platformData.label}</b>{" "}
-                  server. Their <b>{findChainDown()}</b> Chain seems to be down.
-                  Scans for the contract on <b>{findChainDown()}</b> Chain might
-                  fail. Please try after sometime.
+                  Explorer. Their <b>{findChainDown()}</b> Chain seems to be
+                  down. Scans for the contract on <b>{findChainDown()}</b> Chain
+                  might fail. Please try after sometime.
                 </Text>
               </PopoverBody>
             </PopoverContent>
