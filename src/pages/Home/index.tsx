@@ -4,28 +4,24 @@ import {
   Text,
   VStack,
   Button,
-  useDisclosure,
   HStack,
   Image,
-  Menu,
-  MenuButton,
-  MenuList,
-  MenuItem,
   useMediaQuery,
+  useDisclosure,
 } from "@chakra-ui/react";
 import { useOverview } from "hooks/useOverview";
 import Loader from "components/styled-components/Loader";
-import { AddIcon, ArrowForwardIcon } from "@chakra-ui/icons";
+import { ArrowForwardIcon } from "@chakra-ui/icons";
 import { getAssetsURL, getRecentQuickScan } from "helpers/helperFunction";
 import VulnerabilityDistribution from "components/vulnDistribution";
 import { useHistory } from "react-router-dom";
 import { capitalize } from "common/functions";
 import { BiPlug } from "react-icons/bi";
 import { Profile } from "common/types";
-import AddProjectForm from "./AddProjectForm";
 import RecentScansList from "./RecentScansList";
 import PlanCycleInfo from "pages/Billing/components/PlanCycleInfo";
 import { useUserRole } from "hooks/useUserRole";
+import { AddProject } from "components/common/AddProject";
 import ImportScanModal from "components/modals/ImportScanModal";
 
 const OverviewData: React.FC<{
@@ -67,41 +63,7 @@ const OverviewData: React.FC<{
 };
 
 const AddProjectBox: React.FC<{ profileData: Profile }> = ({ profileData }) => {
-  const assetsURL = getAssetsURL();
-
-  const { isOpen, onClose, onOpen } = useDisclosure();
   const [changeView] = useMediaQuery("(min-width: 550px)");
-  const [formType, setFormType] = useState("");
-
-  useEffect(() => {
-    if (formType !== "") {
-      onOpen();
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [setFormType, formType]);
-
-  const menuList = [
-    {
-      text: "Github Application",
-      formType: "github",
-    },
-    {
-      text: "GitLab",
-      formType: "gitlab",
-    },
-    {
-      text: "Bitbucket",
-      formType: "bitbucket",
-    },
-    {
-      text: "Verified Contracts",
-      formType: "block",
-    },
-    {
-      text: "Upload Contract",
-      formType: "filescan",
-    },
-  ];
 
   return (
     <Flex
@@ -141,53 +103,7 @@ const AddProjectBox: React.FC<{ profileData: Profile }> = ({ profileData }) => {
           repositories, contract addresses, or uploading your Solidity files.
         </Text>
       </VStack>
-      <Menu>
-        <MenuButton
-          as={Button}
-          variant="brand"
-          leftIcon={<AddIcon />}
-          w={"170px"}
-        >
-          Add Project
-        </MenuButton>
-        <MenuList
-          p={4}
-          width="250px"
-          borderWidth="0px"
-          sx={{
-            boxShadow: "0px 4px 20px rgba(0, 0, 0, 0.35) !important",
-          }}
-          borderRadius="15px"
-        >
-          {menuList.map((item) => (
-            <MenuItem
-              borderColor="border"
-              py={2}
-              borderRadius="10px"
-              mt={2}
-              onClick={() => setFormType(item.formType)}
-              fontWeight={600}
-            >
-              <Image
-                height="30px"
-                width="30px"
-                mr={2}
-                src={`${assetsURL}icons/integrations/${item.formType}.svg`}
-              />{" "}
-              {item.text}
-            </MenuItem>
-          ))}
-        </MenuList>
-        <AddProjectForm
-          profileData={profileData}
-          formType={formType}
-          isOpen={isOpen}
-          onClose={() => {
-            setFormType("");
-            onClose();
-          }}
-        />
-      </Menu>
+      <AddProject profileData={profileData} />
     </Flex>
   );
 };
