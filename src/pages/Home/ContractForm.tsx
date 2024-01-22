@@ -38,7 +38,8 @@ const ContractForm: React.FC<{
   step: number;
   setStep: React.Dispatch<React.SetStateAction<number>>;
   changeView: boolean;
-}> = ({ step, setStep, profileData, changeView }) => {
+  onClose: any;
+}> = ({ step, setStep, profileData, changeView, onClose }) => {
   const config: any = useConfig();
   const contractAddressRef = useRef<HTMLInputElement>(null);
   const [contractAddress, setContractAddress] = useState("");
@@ -106,6 +107,8 @@ const ContractForm: React.FC<{
                   type: "block_scan_initiate",
                   body: req,
                 });
+                onClose();
+                queryClient.invalidateQueries("profile");
                 history.push("/projects");
                 setIsLoading(false);
               }
@@ -174,6 +177,7 @@ const ContractForm: React.FC<{
                     ]);
                     queryClient.invalidateQueries("scan_list");
                     queryClient.invalidateQueries("profile");
+                    onClose();
                     history.push("/projects");
                   }
                 }

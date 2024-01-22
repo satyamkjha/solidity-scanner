@@ -31,7 +31,8 @@ import { useConfig } from "hooks/useConfig";
 const UploadForm: React.FC<{
   profileData: Profile;
   uploadType: "single" | "multiple";
-}> = ({ profileData, uploadType }) => {
+  onClose: any;
+}> = ({ profileData, uploadType, onClose }) => {
   const config: any = useConfig();
   const [isDesktopView] = useMediaQuery("(min-width: 1920px)");
   const { sendMessage } = useWebSocket();
@@ -183,6 +184,7 @@ const UploadForm: React.FC<{
             project_type: "new",
           },
         });
+        onClose();
         history.push("/projects");
         setTimeout(() => setIsLoading(false), 1000);
       } catch (e) {
@@ -205,6 +207,7 @@ const UploadForm: React.FC<{
             perPageCount: isDesktopView ? 20 : 12,
           },
         ]);
+        onClose();
         history.push("/projects");
         setTimeout(() => setIsLoading(false), 1000);
       } catch (e) {

@@ -17,6 +17,7 @@ const FilescanForm: React.FC<{
   uploadType: "single" | "multiple";
   setUploadType: React.Dispatch<React.SetStateAction<"single" | "multiple">>;
   changeView: boolean;
+  onClose: any;
 }> = ({
   profileData,
   page,
@@ -24,6 +25,7 @@ const FilescanForm: React.FC<{
   uploadType,
   setUploadType,
   changeView,
+  onClose,
 }) => {
   const { role } = useUserRole();
   let isViewer = role === "viewer";
@@ -125,7 +127,11 @@ const FilescanForm: React.FC<{
               width={"100%"}
               h="calc(100% - 200px)"
             >
-              <UploadForm profileData={profileData} uploadType={uploadType} />
+              <UploadForm
+                profileData={profileData}
+                uploadType={uploadType}
+                onClose={onClose}
+              />
             </Flex>
           )}
 
