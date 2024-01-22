@@ -139,7 +139,7 @@ export const InNewsSection: React.FC = () => {
     {
       imgLink: "landing/news_and_media/news_15.svg",
       articleLink:
-        "https://blog.reef.io/solidityscan-the-smart-contract-security-audit-tool-built-for-next-gen-dapps-will-be-integrated-into-reefscan/",
+        "https://yourstory.com/the-decrypting-story/funding-blockchain-startup-credshields-web3-security",
       articleHeading:
         "[FUNDING ALERT] BLOCKCHAIN STARTUP CREDSHIELDS RAISES $500K FUNDS FROM BOOSTVC",
       articlePara:
