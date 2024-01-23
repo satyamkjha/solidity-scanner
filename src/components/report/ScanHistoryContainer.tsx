@@ -186,7 +186,7 @@ const ScanHistoryContainer: React.FC<{
             color={"#3300FF"}
             width={["22%"]}
           >
-            {scan.score}
+            {scan.score_v2 || parseInt(scan.score) * 20}
           </Text>
 
           <Flex

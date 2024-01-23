@@ -31,6 +31,10 @@ const AuditSummaryContainer: React.FC<{
     ? reportProjectDetails
     : reportBlockDetails;
 
+    const solidity_score = summary_report.scan_summary[0].score_v2
+    ? summary_report.scan_summary[0].score_v2
+    : (parseFloat(summary_report.scan_summary[0].score) * 20).toFixed(2);
+
   const getProjectIcon = (url: string) => {
     switch (getProjectType(url)) {
       case "bitbucket":
@@ -257,16 +261,16 @@ const AuditSummaryContainer: React.FC<{
         borderRadius={15}
       >
         <SolidityScoreProgress
-          score={summary_report.scan_summary[0].score}
+          score={solidity_score}
           size={"100px"}
           thickness={"7px"}
         />
         <VStack alignItems="flex-start" px={4}>
           <Text fontSize="18px" fontWeight={600} textAlign="center">
             Security Score is
-            {parseFloat(summary_report.scan_summary[0].score) < 50
+            {parseFloat(solidity_score) < 50
               ? " LOW"
-              : parseFloat(summary_report.scan_summary[0].score) >= 90
+              : parseFloat(solidity_score) >= 90
               ? " GREAT"
               : " AVERAGE"}
           </Text>
