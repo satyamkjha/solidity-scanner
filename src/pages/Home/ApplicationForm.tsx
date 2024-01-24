@@ -231,7 +231,7 @@ const ApplicationForm: React.FC<{
     <Flex
       flexDir="column"
       w="100%"
-      h={["90vh", "90vh", "75vh"]}
+      h={["90vh", "90vh", "90vh", "75vh"]}
       justifyContent={"space-between"}
       alignItems="flex-start"
       opacity={isViewer ? 0.5 : 1}
@@ -243,7 +243,7 @@ const ApplicationForm: React.FC<{
           alignItems="flex-start"
           px={[2, 4, 2, 2]}
           w="100%"
-          h="530px"
+          h="630px"
           mt={0}
           overflowY="scroll"
           borderRadius={20}
