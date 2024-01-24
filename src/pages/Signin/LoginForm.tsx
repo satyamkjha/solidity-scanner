@@ -46,7 +46,7 @@ const LoginForm: React.FC = () => {
         if (res.status === 200) {
           if (res.data.status === "success") {
             Auth.authenticateUser();
-            history.push("/home");
+            window.open("/home", "_self");
           }
         }
         setIsLoading(false);
@@ -77,8 +77,7 @@ const LoginForm: React.FC = () => {
               setTwoFAScreen(true);
             } else {
               Auth.authenticateUser();
-              history.push("/home");
-              window.location.reload();
+              window.open("/home", "_self");
             }
           }
         }
