@@ -363,9 +363,12 @@ export const Header: React.FC<{ theme: "light" | "dark" }> = ({ theme }) => {
               </Button>
             </RouterLink>
           ) : (
-            <RouterLink to="/home">
-              <Button variant="brand">Go to Dashboard</Button>
-            </RouterLink>
+            <Button
+              variant="brand"
+              onClick={() => window.open("/home", "_self")}
+            >
+              Go to Dashboard
+            </Button>
           )}
         </HStack>
       </Flex>

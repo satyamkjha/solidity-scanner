@@ -40,6 +40,10 @@ export const WebSocketProvider = ({ children }) => {
   const [keepWSOpen, setKeepWSOpen] = useState(false);
   const [tempEmitMsgQueue, setTempEmitMsgQueue] = useState(emptyArray);
 
+  const pathname = window.location.pathname;
+
+  console.log(pathname);
+
   const initializeWebSocket = (withAuth) => {
     const ws = new WebSocket(
       `${
@@ -120,18 +124,10 @@ export const WebSocketProvider = ({ children }) => {
       keepWSOpen &&
       webSocket === null
     ) {
-      if (Auth.isUserAuthenticated()) {
-        if (profileData && webSocket === null) {
-          initializeWebSocket(true);
-        } else {
-          webSocket.close();
-        }
+      if (Auth.isUserAuthenticated() && pathname !== "/quickscan") {
+        initializeWebSocket(true);
       } else {
-        if (webSocket === null) {
-          initializeWebSocket(false);
-        } else {
-          webSocket.close();
-        }
+        initializeWebSocket(false);
       }
     }
   }, [profileData, keepWSOpen, webSocket, Auth.isUserAuthenticated()]);
