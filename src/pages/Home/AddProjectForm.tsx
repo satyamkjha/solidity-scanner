@@ -25,7 +25,7 @@ const AddProjectForm: React.FC<{
   formType: string;
   profileData: Profile;
 }> = ({ isOpen, onClose, formType, profileData }) => {
-  const [changeView] = useMediaQuery("(min-width: 768px)");
+  const [changeView] = useMediaQuery("(min-width: 1350px)");
   const [step, setStep] = useState(changeView ? 1 : 0);
   const [uploadType, setUploadType] = useState<"single" | "multiple">("single");
   const assetsURL = getAssetsURL();
@@ -66,7 +66,7 @@ const AddProjectForm: React.FC<{
     >
       <ModalOverlay />
       <ModalContent
-        maxWidth={["450px", "500px", "1200px"]}
+        maxWidth={["450px", "500px", "600px", "1400px"]}
         w={"95%"}
         overflowY={"scroll"}
         overflowX={"scroll"}
@@ -88,7 +88,7 @@ const AddProjectForm: React.FC<{
           h="fit-content"
         >
           <Flex
-            w={["100%", "100%", "55%"]}
+            w={["100%", "100%", "100%", "55%"]}
             justifyContent="center"
             alignItems="center"
           >
@@ -124,7 +124,7 @@ const AddProjectForm: React.FC<{
           </Flex>
           {changeView && (
             <Flex
-              display={["none", "none", "flex"]}
+              display={["none", "none", "none", "flex"]}
               bg="bg.subtle"
               w={["100%", "100%", "42%"]}
               h="75vh"

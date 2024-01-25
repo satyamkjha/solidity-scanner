@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Link as RouterLink, useLocation } from "react-router-dom";
+import { Link as RouterLink, useLocation, useHistory } from "react-router-dom";
 import {
   Flex,
   Heading,
@@ -27,6 +27,7 @@ function useQuery() {
 }
 
 const SignIn: React.FC = () => {
+  const history = useHistory();
   const query = useQuery();
   const isPasswordReset = Boolean(query.get("isPasswordReset")?.toString());
   const toast = useToast();
@@ -53,7 +54,11 @@ const SignIn: React.FC = () => {
     const campaign_id = searchParams.get("utm_campaign");
     if (campaign_type) localStorage.setItem("campaign_type", campaign_type);
     if (campaign_id) localStorage.setItem("campaign_id", campaign_id);
-
+    const handleBackButton = () => {
+      // Your code to handle the back button press
+      window.open("/", "_self");
+    };
+    window.addEventListener("popstate", handleBackButton);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
