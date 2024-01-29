@@ -20,10 +20,10 @@ jobs:
       SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
       SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
       ENV: ${{ inputs.ENV }}
-      DOCKER_COMPOSE_PATH: /home/runner/work/solidity-scanner-frontend/solidity-scanner-frontend/docker-compose.yml
-      PROJECT_DIRECTORY: /home/runner/work/solidity-scanner-frontend/solidity-scanner-frontend/
+      DOCKER_COMPOSE_PATH: /home/ubuntu/actions-runner/work/wallet-tracker-frontend/wallet-tracker-frontend/docker-compose.yml
+      PROJECT_DIRECTORY: /home/ubuntu/actions-runner/work/wallet-tracker-frontend/wallet-tracker-frontend/
 
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
     permissions: read-all
 
     steps:
@@ -61,6 +61,6 @@ jobs:
 
       - name: Build the Docker image
         run: |
-          docker compose -f ${DOCKER_COMPOSE_PATH} build
+          docker compose -f ${DOCKER_COMPOSE_PATH} build --no-cache
       - name: Pusing created images to ECR
         run: docker compose -f ${DOCKER_COMPOSE_PATH} push
