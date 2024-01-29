@@ -1,5 +1,5 @@
 import React from "react";
-import { Flex, Box, Text, HStack, Image } from "@chakra-ui/react";
+import { Flex, Text, HStack, Image } from "@chakra-ui/react";
 import { getAssetsURL } from "helpers/helperFunction";
 import { useConfig } from "hooks/useConfig";
 import RadioButton from "components/styled-components/RadioButton";

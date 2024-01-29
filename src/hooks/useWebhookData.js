@@ -1,15 +1,8 @@
 // WebSocketContext.js
 
-import React, {
-  createContext,
-  useContext,
-  useEffect,
-  useState,
-  useRef,
-} from "react";
+import React, { createContext, useContext, useEffect, useState } from "react";
 import { useToast } from "@chakra-ui/react";
 import { debounce } from "lodash";
-import { useUserRole } from "./useUserRole";
 import { useProfile } from "./useProfile";
 import Auth from "helpers/auth";
 import { useConfig } from "hooks/useConfig";
@@ -128,6 +121,8 @@ export const WebSocketProvider = ({ children }) => {
         initializeWebSocket(false);
       }
     }
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [profileData, keepWSOpen, webSocket, Auth.isUserAuthenticated()]);
 
   const processQueue = () => {
@@ -177,6 +172,7 @@ export const WebSocketProvider = ({ children }) => {
       });
       setTempEmitMsgQueue([]);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [wsReadyState]);
 
   const updateMessageQueue = (msg) => {

@@ -57,18 +57,61 @@ const QuickScan: React.FC = () => {
   const location = useLocation();
   const query = new URLSearchParams(location.search);
   const ref = query.get("ref");
+  const [reqHeaders_QS_Verify, setReqHeaders_QS_Verify] = useState<
+    | {
+        "Content-Type": string;
+        Recaptchatoken: string;
+      }
+    | {
+        "Content-Type": string;
+        Recaptchatoken?: undefined;
+      }
+    | undefined
+  >();
+  const [reqHeaders_QS, setReqHeaders_QS] = useState<
+    | {
+        "Content-Type": string;
+        Recaptchatoken: string;
+      }
+    | {
+        "Content-Type": string;
+        Recaptchatoken?: undefined;
+      }
+    | undefined
+  >();
+
+  const getRecapthaTokens = async () => {
+    console.log("sent Recaptcha req", new Date());
+    const reqHeaders_qs_verify = await getReCaptchaHeaders("quickScan_verify");
+    const reqHeaders_qs = await getReCaptchaHeaders("quickScan");
+    console.log("rec Recaptcha", new Date());
+    setReqHeaders_QS_Verify(reqHeaders_qs_verify);
+    setReqHeaders_QS(reqHeaders_qs);
+  };
 
   useEffect(() => {
     if (blockAddress && blockChain && blockPlatform) {
+      setTempQSData({
+        blockAddress,
+        blockPlatform,
+        blockChain,
+      });
+      setQSStatus("Validated");
       setIsLoading(true);
-      if (blockPlatform === "fuse") {
-        runQuickScan(blockAddress, "blockscout", `fuse-${blockChain}`, ref);
+      if (reqHeaders_QS === undefined) {
+        getRecapthaTokens();
       } else {
-        runQuickScan(blockAddress, blockPlatform, blockChain, ref);
+        if (blockPlatform === "fuse") {
+          runQuickScan(blockAddress, "blockscout", `fuse-${blockChain}`, ref);
+        } else {
+          runQuickScan(blockAddress, blockPlatform, blockChain, ref);
+        }
       }
+    } else if (reqHeaders_QS === undefined) {
+      getRecapthaTokens();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [reqHeaders_QS]);
 
   const runQuickScan = async (
     address: string,
@@ -76,6 +119,7 @@ const QuickScan: React.FC = () => {
     chain: string,
     ref: string | null
   ) => {
+    console.log("starting quickscan", new Date());
     setTempQSData({
       blockAddress: address,
       blockPlatform: platform,
@@ -83,8 +127,6 @@ const QuickScan: React.FC = () => {
     });
     setQSStatus("Validated");
     setIsLoading(true);
-    const reqHeaders_qs_verfity = await getReCaptchaHeaders("quickScan_verify");
-    const reqHeaders_qs = await getReCaptchaHeaders("quickScan");
     setScanReport(null);
     if (platform !== "buildbear" && !checkContractAddress(address)) {
       toast({
@@ -110,18 +152,21 @@ const QuickScan: React.FC = () => {
         req = { ...req, ref };
       }
       setKeepWSOpen(true);
-      sendMessage({
-        type: "quick_scan_initiate",
-        body: req,
-        recaptcha_token: reqHeaders_qs.Recaptchatoken,
-      });
+      {
+        reqHeaders_QS &&
+          sendMessage({
+            type: "quick_scan_initiate",
+            body: req,
+            recaptcha_token: reqHeaders_QS.Recaptchatoken,
+          });
+      }
     } else {
       API.post<{
         contract_verified: boolean;
         message: string;
         status: string;
       }>(API_PATH.API_GET_CONTRACT_STATUS, req, {
-        headers: reqHeaders_qs_verfity,
+        headers: reqHeaders_QS_Verify,
       })
         .then(
           (res) => {
@@ -137,7 +182,7 @@ const QuickScan: React.FC = () => {
                 api_url = api_url + `&ref=${ref}`;
               }
               API.get(api_url, {
-                headers: reqHeaders_qs,
+                headers: reqHeaders_QS,
               })
                 .then(
                   (res) => {

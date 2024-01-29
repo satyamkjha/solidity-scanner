@@ -8,29 +8,22 @@ import {
   PopoverContent,
   Flex,
   Image,
-  Divider,
-  Input,
-  useDisclosure,
-  Button,
+  
   PopoverCloseButton,
   PopoverArrow,
-  PopoverHeader,
+  
   PopoverBody,
 } from "@chakra-ui/react";
 import {
-  ChevronDownIcon,
-  ArrowBackIcon,
+ 
   ExternalLinkIcon,
   WarningIcon,
 } from "@chakra-ui/icons";
-import { contractChain } from "common/values";
 import { getAssetsURL } from "helpers/helperFunction";
 import { StylesConfig, GroupBase } from "react-select";
 import Select from "react-select";
 import FormatOptionLabelWithImage from "components/FormatOptionLabelWithImage";
-import { FaPen } from "react-icons/fa";
 import RadioButton from "components/styled-components/RadioButton";
-import { BlockchainComp } from "./BlockchainComp";
 
 export const ChainSelector: React.FC<{
   theme: "dark" | "light";
