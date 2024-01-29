@@ -20,8 +20,8 @@ jobs:
       SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
       SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
       ENV: ${{ inputs.ENV }}
-      DOCKER_COMPOSE_PATH: /home/ubuntu/actions-runner/work/wallet-tracker-frontend/wallet-tracker-frontend/docker-compose.yml
-      PROJECT_DIRECTORY: /home/ubuntu/actions-runner/work/wallet-tracker-frontend/wallet-tracker-frontend/
+      DOCKER_COMPOSE_PATH: /home/ubuntu/actions-runner/work/solidity-scanner-frontend/solidity-scanner-frontend/docker-compose.yml
+      PROJECT_DIRECTORY: /home/ubuntu/actions-runner/work/solidity-scanner-frontend/solidity-scanner-frontend/
 
     runs-on: self-hosted
     permissions: read-all
