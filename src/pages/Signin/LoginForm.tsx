@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import { Link as RouterLink, useHistory } from "react-router-dom";
+import React, { useState, useEffect } from "react";
+import { Link as RouterLink } from "react-router-dom";
 import {
   Flex,
   Stack,
@@ -30,8 +30,27 @@ const LoginForm: React.FC = () => {
   const [password, setPassword] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [twoFAScreen, setTwoFAScreen] = useState(false);
-
+  const [reqHeaders, setReqHeaders] = useState<
+    | {
+        "Content-Type": string;
+        Recaptchatoken: string;
+      }
+    | {
+        "Content-Type": string;
+        Recaptchatoken?: undefined;
+      }
+    | undefined
+  >();
   const { handleSubmit } = useForm();
+
+  const getRecapthaTokens = async () => {
+    const reqHeaders = await getReCaptchaHeaders("signin");
+    setReqHeaders(reqHeaders);
+  };
+
+  useEffect(() => {
+    getRecapthaTokens();
+  }, []);
 
   const verify2FA = async (otp: string) => {
     setIsLoading(true);
@@ -57,7 +76,6 @@ const LoginForm: React.FC = () => {
   };
 
   const onSubmit = async () => {
-    let reqHeaders = await getReCaptchaHeaders("signin");
     setIsLoading(true);
     API.post<AuthResponse>(
       API_PATH.API_LOGIN,

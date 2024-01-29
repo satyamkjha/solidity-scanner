@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Flex, Box, Text, VStack } from "@chakra-ui/react";
+import { Flex, Box, Text } from "@chakra-ui/react";
 
 import Loader from "components/styled-components/Loader";
 import UserManagementContainer from "./UserManagementContainer";

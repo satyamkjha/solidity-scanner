@@ -22,7 +22,6 @@ import { OrgUserRole } from "common/types";
 import { useUserOrgProfile } from "hooks/useUserOrgProfile";
 import { UserRoleProvider } from "hooks/useUserRole";
 import { onLogout } from "common/functions";
-import { WebSocketProvider } from "hooks/useWebhookData";
 import { useConfig } from "hooks/useConfig";
 import { API_PATH } from "helpers/routeManager";
 import { getRecentQuickScan, setRecentQuickScan } from "helpers/helperFunction";

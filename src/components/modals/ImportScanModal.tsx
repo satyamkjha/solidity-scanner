@@ -11,7 +11,6 @@ import {
   ModalFooter,
   Image,
   Button,
-  useToast,
   ModalHeader,
   Divider,
   VStack,
@@ -36,7 +35,6 @@ const ImportScanModal: React.FC<{
   scanDetails: any;
   profileData: Profile | undefined;
 }> = ({ isOpen, onClose, scanDetails, profileData }) => {
-  const toast = useToast();
   const history = useHistory();
   const assetsUrl = getAssetsURL();
 

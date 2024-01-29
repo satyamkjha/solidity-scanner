@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect, PropsWithChildren } from "react";
+import React from "react";
 import {
   HStack,
   Text,
@@ -10,7 +10,6 @@ import {
   Button,
   SkeletonText,
   SkeletonCircle,
-  Skeleton,
 } from "@chakra-ui/react";
 import { severityArrayInOrder, contractChain } from "common/values";
 import {
@@ -22,12 +21,16 @@ import {
 } from "helpers/helperFunction";
 import { useHistory } from "react-router-dom";
 import PieChart from "components/pieChart";
+import ssIconAnimation from "../../common/ssIconAnimation.json";
+import Lottie from "lottie-react";
+import "./qsStyles.css";
 
 export const QSScanResultSkeleton: React.FC<{
   blockAddress: string;
   blockPlatform: string;
   blockChain: string;
-}> = ({ blockAddress, blockPlatform, blockChain }) => {
+  qsStatus: string;
+}> = ({ blockAddress, blockPlatform, blockChain, qsStatus }) => {
   const assetsUrl = getAssetsURL();
   const history = useHistory();
 
@@ -265,14 +268,14 @@ export const QSScanResultSkeleton: React.FC<{
             <SkeletonCircle
               startColor="#4d4d4d"
               endColor="#757575"
-              height="100px"
-              width="100px"
+              height="140px"
+              width="140px"
             />
             <VStack
               ml={5}
               textAlign="left"
               alignItems="flex-start"
-              w={["100%", "100%", "100%", "calc(100% - 100px)"]}
+              w={["100%", "100%", "100%", "calc(100% - 150px)"]}
               px={4}
               spacing={3}
             >
@@ -287,35 +290,39 @@ export const QSScanResultSkeleton: React.FC<{
                 w="100%"
                 startColor="#4d4d4d"
                 endColor="#757575"
-                noOfLines={4}
+                noOfLines={7}
                 skeletonHeight="2"
               />
             </VStack>
           </Flex>
         </Box>
-        <HStack
+        <VStack
           w="100%"
-          justifyContent="space-between"
-          alignItems="center"
-          bgColor="#272727"
+          justifyContent="flex-start"
+          alignItems="flex-start"
           p={8}
           borderRadius={10}
-          spacing={10}
+          spacing={5}
         >
-          <Skeleton
-            startColor="#4d4d4d"
-            endColor="#757575"
-            height="56px"
-            width="56px"
-          />
-          <SkeletonText
-            w="100%"
-            startColor="#4d4d4d"
-            endColor="#757575"
-            noOfLines={3}
-            skeletonHeight="2"
-          />
-        </HStack>
+          <HStack>
+            {ssIconAnimation && (
+              <Lottie
+                style={{
+                  height: "30px",
+                  width: "30px",
+                }}
+                animationData={ssIconAnimation}
+              />
+            )}
+            <Text color="white" fontSize="lg" fontWeight={700}>
+              {" "}
+              Your contract is being {qsStatus} ...
+            </Text>
+          </HStack>
+          <div className="loading-bar animate">
+            <span></span>
+          </div>
+        </VStack>
       </VStack>
       <Flex
         w={["100%", "100%", "100%", "calc(45% - 40px)"]}

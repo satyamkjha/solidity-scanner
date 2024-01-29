@@ -36,8 +36,6 @@ import {
 } from "helpers/helperFunction";
 import { FileIssue } from "components/icons";
 import { DetailResultContext } from "common/contexts";
-import { useWebSocket } from "hooks/useWebhookData";
-import { useConfig } from "hooks/useConfig";
 
 const MultifileResult: React.FC<{
   type: "block" | "project";
@@ -68,7 +66,6 @@ const MultifileResult: React.FC<{
 }) => {
   const [files, setFiles] = useState<FilesState | null>(null);
   const { role } = useUserRole();
-  const config: any = useConfig();
 
   const sortIssuesBasedonPriority = (issueArray: MultiFileScanDetail[]) => {
     const issuePriority: {
@@ -151,8 +148,6 @@ const MultifileResult: React.FC<{
   const toast = useToast();
 
   const [isDesktopView] = useMediaQuery("(min-width: 1350px)");
-  const { sendMessage, messageQueue, updateMessageQueue, setKeepWSOpen } =
-    useWebSocket();
 
   const [restrictedBugIds, setRestrictedBugIds] = useState<string[]>([]);
 

@@ -161,10 +161,28 @@ const RegisterForm: React.FC<{
   const [twitter, setTwitter] = useState("");
 
   const [step, setStep] = useState(false);
+  const [reqHeaders, setReqHeaders] = useState<
+    | {
+        "Content-Type": string;
+        Recaptchatoken: string;
+      }
+    | {
+        "Content-Type": string;
+        Recaptchatoken?: undefined;
+      }
+    | undefined
+  >();
+  const getRecapthaTokens = async () => {
+    const reqHeaders = await getReCaptchaHeaders("signin");
+    setReqHeaders(reqHeaders);
+  };
+
+  useEffect(() => {
+    getRecapthaTokens();
+  }, []);
 
   const onSubmit = async () => {
     try {
-      let reqHeaders = await getReCaptchaHeaders("register");
       if (!step) {
         setStep(true);
       } else {

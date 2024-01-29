@@ -3,10 +3,9 @@ import { useParams } from "react-router-dom";
 import { Flex, Container } from "@chakra-ui/react";
 import { useReport } from "hooks/useReport";
 import { Text } from "@chakra-ui/react";
-import { ReportContainer } from "./ReportContainer";
 import Loader from "components/styled-components/Loader";
 import { useProfile } from "hooks/useProfile";
-import { ReportContainerV2 } from "./ReportContainerV2";
+import { ReportContainer } from "./ReportContainer";
 
 export default function ReportPage() {
   const { reportId, projectId } = useParams<{
@@ -32,7 +31,7 @@ export default function ReportPage() {
         </Text>
       </Flex>
       {data && profile ? (
-        <ReportContainerV2
+        <ReportContainer
           summary_report={data.summary_report}
           profile={profile}
           isPublicReport={false}

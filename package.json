@@ -75,7 +75,9 @@
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "pretty": "prettier --write \"./**/*.{json,tsx,ts,css,js,html}\""
+    "pretty": "prettier --write \"./**/*.{json,tsx,ts,css,js,html}\"",
+    "lint:check": "eslint ./src/**/*.ts*",
+    "lint:fix": "eslint ./src/**/*.ts* --fix"
   },
   "eslintConfig": {
     "extends": "react-app"

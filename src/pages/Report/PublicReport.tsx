@@ -1,13 +1,9 @@
-import React, { useRef, useState } from "react";
+import React from "react";
 import { useParams } from "react-router-dom";
-import { Flex, Container, Button, HStack, Box } from "@chakra-ui/react";
-import { PrintContainer } from "./PrintContainer";
+import { Flex, Container } from "@chakra-ui/react";
 import { usePublicReport } from "hooks/usePublicReport";
-import { useReactToPrint } from "react-to-print";
-import { DownloadIcon } from "@chakra-ui/icons";
 import Loader from "components/styled-components/Loader";
 import { ReportContainer } from "./ReportContainer";
-import { ReportContainerV2 } from "./ReportContainerV2";
 
 export default function ReportPage() {
   const { reportId, projectType } = useParams<{
@@ -16,24 +12,10 @@ export default function ReportPage() {
   }>();
   const { data } = usePublicReport(projectType, reportId);
 
-  const [printLoading, setPrintLoading] = useState<boolean>(false);
-
-  const componentRef = useRef<HTMLDivElement | null>(null);
-
-  const handlePrint = useReactToPrint({
-    content: () => componentRef.current,
-    onAfterPrint: () => setPrintLoading(false),
-  });
-
-  const printReport = () => {
-    setPrintLoading(true);
-    setTimeout(() => handlePrint());
-  };
-
   return (
     <>
       {data ? (
-        <ReportContainerV2
+        <ReportContainer
           summary_report={data.summary_report}
           isPublicReport={true}
         />

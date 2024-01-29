@@ -44,6 +44,8 @@ export const TrialWallCode: React.FC = () => {
     if (scanSummary && scanSummary.issue_severity_distribution.gas) {
       setGasIssueCount(scanSummary.issue_severity_distribution.gas);
     }
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const viewGasIssue = () => {

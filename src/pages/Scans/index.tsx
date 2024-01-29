@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
 import {
   Flex,
   Box,
@@ -24,8 +23,6 @@ import { useProfile } from "hooks/useProfile";
 import InfiniteScroll from "react-infinite-scroll-component";
 import Loader from "components/styled-components/Loader";
 import { useUserRole } from "hooks/useUserRole";
-import { onSnapshot, doc, Unsubscribe } from "firebase/firestore";
-import { db } from "helpers/firebase";
 import {
   getAssetsURL,
   // getAssetsFromS3,
@@ -61,11 +58,7 @@ const Scans: React.FC = () => {
   });
   const [hasMore, setHasMore] = useState(true);
 
-  const { data: projects, refetch } = useAllScans(
-    pagination,
-    queryTerm,
-    filterParam
-  );
+  const { data: projects } = useAllScans(pagination, queryTerm, filterParam);
   const [projectList, setProjectList] =
     useState<{ scanItem: ScanObj; tempScanStatus: string }[]>();
   const [projectsMonitored, setProjectsMonitored] = useState(0);
@@ -255,6 +248,7 @@ const Scans: React.FC = () => {
       updateMessageQueue(tempMsgQueue);
       setProjectList(updatedProjectList);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [messageQueue]);
 
   useEffect(() => {
@@ -273,6 +267,7 @@ const Scans: React.FC = () => {
     ) {
       setKeepWSOpen(true);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [projectList]);
 
   const paramList: {
@@ -328,7 +323,6 @@ const Scans: React.FC = () => {
           width="100%"
           textAlign="left"
           sx={{ color: "subtle", fontWeight: 600 }}
-          
         >
           PROJECTS
         </Text>

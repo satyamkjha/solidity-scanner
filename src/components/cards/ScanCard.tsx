@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef } from "react";
+import React, { useState, useRef } from "react";
 import { useHistory } from "react-router-dom";
 import {
   Flex,
@@ -62,7 +62,6 @@ const ScanCard: React.FC<{
     project_name,
     scan_id,
     contract_address,
-    contractname,
     contract_platform,
     multi_file_scan_status,
     scan_status,

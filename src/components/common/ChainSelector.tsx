@@ -8,17 +8,11 @@ import {
   PopoverContent,
   Flex,
   Image,
-  
   PopoverCloseButton,
   PopoverArrow,
-  
   PopoverBody,
 } from "@chakra-ui/react";
-import {
- 
-  ExternalLinkIcon,
-  WarningIcon,
-} from "@chakra-ui/icons";
+import { ExternalLinkIcon, WarningIcon } from "@chakra-ui/icons";
 import { getAssetsURL } from "helpers/helperFunction";
 import { StylesConfig, GroupBase } from "react-select";
 import Select from "react-select";
@@ -163,6 +157,7 @@ export const ChainSelector: React.FC<{
     if (platform === platformValue && chain) {
       setCurrentChain(chain);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {
@@ -198,7 +193,7 @@ export const ChainSelector: React.FC<{
       }
     });
 
-    platformData.chains.map((item) => {
+    platformData.chains.forEach((item) => {
       if (item.value === chainDown) {
         chainDown = item.label;
       }

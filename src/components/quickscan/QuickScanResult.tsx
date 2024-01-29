@@ -17,7 +17,6 @@ import QSErrorCountModal from "./QSErrorCountModal";
 import ReportTag from "components/common/scans/ReportTag";
 import ResultOverview from "components/common/scans/ResultOverview";
 import VulnerabilityChart from "components/common/scans/VulnerabilityChart";
-import Auth from "helpers/auth";
 
 export const QuickScanResultContainer: React.FC<{
   scanReport: QuickScanResult;

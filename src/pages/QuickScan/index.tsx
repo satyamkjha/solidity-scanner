@@ -3,15 +3,7 @@ import {
   getReCaptchaHeaders,
   checkContractAddress,
 } from "helpers/helperFunction";
-import {
-  Flex,
-  Box,
-  Text,
-  HStack,
-  useToast,
-  VStack,
-  CloseButton,
-} from "@chakra-ui/react";
+import { Flex, Box, useToast, VStack, CloseButton } from "@chakra-ui/react";
 
 import API from "helpers/api";
 import { QuickScanResult } from "common/types";
@@ -22,8 +14,6 @@ import { useParams, useLocation } from "react-router-dom";
 import { QuickScanResultContainer } from "components/quickscan/QuickScanResult";
 import { QSScanResultSkeleton } from "components/quickscan/QSScanResultSkeleton";
 
-import ssIconAnimation from "../../common/ssIconAnimation.json";
-import Lottie from "lottie-react";
 import { useConfig } from "hooks/useConfig";
 import { useWebSocket } from "hooks/useWebhookData";
 
@@ -81,10 +71,8 @@ const QuickScan: React.FC = () => {
   >();
 
   const getRecapthaTokens = async () => {
-    console.log("sent Recaptcha req", new Date());
     const reqHeaders_qs_verify = await getReCaptchaHeaders("quickScan_verify");
     const reqHeaders_qs = await getReCaptchaHeaders("quickScan");
-    console.log("rec Recaptcha", new Date());
     setReqHeaders_QS_Verify(reqHeaders_qs_verify);
     setReqHeaders_QS(reqHeaders_qs);
   };
@@ -152,14 +140,12 @@ const QuickScan: React.FC = () => {
         req = { ...req, ref };
       }
       setKeepWSOpen(true);
-      {
-        reqHeaders_QS &&
-          sendMessage({
-            type: "quick_scan_initiate",
-            body: req,
-            recaptcha_token: reqHeaders_QS.Recaptchatoken,
-          });
-      }
+      reqHeaders_QS &&
+        sendMessage({
+          type: "quick_scan_initiate",
+          body: req,
+          recaptcha_token: reqHeaders_QS.Recaptchatoken,
+        });
     } else {
       API.post<{
         contract_verified: boolean;
@@ -254,6 +240,7 @@ const QuickScan: React.FC = () => {
       );
       updateMessageQueue(tempMsgQueue);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [messageQueue]);
 
   return (
@@ -283,26 +270,11 @@ const QuickScan: React.FC = () => {
             spacing={10}
           >
             <QSScanResultSkeleton
+              qsStatus={qsStatus}
               blockAddress={tempQSData.blockAddress}
               blockPlatform={tempQSData.blockPlatform}
               blockChain={tempQSData.blockChain}
             />
-
-            <HStack>
-              {ssIconAnimation && (
-                <Lottie
-                  style={{
-                    height: "30px",
-                    width: "30px",
-                  }}
-                  animationData={ssIconAnimation}
-                />
-              )}
-              <Text color="white" fontSize="lg" fontWeight={700}>
-                {" "}
-                Your contract is being {qsStatus} ...
-              </Text>
-            </HStack>
           </VStack>
         ) : scanReport === null ? (
           <QuickScanForm

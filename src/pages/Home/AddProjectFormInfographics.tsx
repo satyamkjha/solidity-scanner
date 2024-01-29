@@ -5,7 +5,6 @@ import {
   Text,
   UnorderedList,
   ListItem,
-  Box,
 } from "@chakra-ui/react";
 import Loader from "components/styled-components/Loader";
 

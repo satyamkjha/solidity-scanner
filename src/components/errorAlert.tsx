@@ -1,5 +1,5 @@
 import React from "react";
-import { Alert, AlertIcon, Link, Text } from "@chakra-ui/react";
+import { Alert, AlertIcon } from "@chakra-ui/react";
 
 const ErrorAlert: React.FC<{ msg: string }> = ({ msg }) => {
   return (

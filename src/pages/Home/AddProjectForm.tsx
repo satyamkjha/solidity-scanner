@@ -1,7 +1,6 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, } from "react";
 import {
   Flex,
-  Image,
   Modal,
   ModalOverlay,
   ModalContent,
@@ -12,7 +11,6 @@ import {
 
 import ApplicationForm from "./ApplicationForm";
 import ContractForm from "./ContractForm";
-import UploadForm from "./UploadForm";
 import { getAssetsURL } from "helpers/helperFunction";
 import { Profile } from "common/types";
 import { AddProjectFormInfographics } from "./AddProjectFormInfographics";

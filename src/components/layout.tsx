@@ -17,15 +17,10 @@ import {
   Divider,
   VStack,
   Heading,
-  CloseButton,
 } from "@chakra-ui/react";
 import { GiHamburgerMenu } from "react-icons/gi";
 import { BiUser, BiPowerOff } from "react-icons/bi";
-import {
-  getAssetsURL,
-  getFeatureGateConfig,
-  compareTimeStamp,
-} from "helpers/helperFunction";
+import { getAssetsURL, getFeatureGateConfig } from "helpers/helperFunction";
 import Sidebar from "components/sidebar";
 import { ProfileIconOne } from "components/icons";
 import {
@@ -42,7 +37,6 @@ import { useUserOrgProfile } from "hooks/useUserOrgProfile";
 import { signInWithCustomToken, User, onAuthStateChanged } from "firebase/auth";
 import { auth } from "helpers/firebase";
 import { useUserRole } from "hooks/useUserRole";
-import { CloseIcon } from "@chakra-ui/icons";
 import { useWebSocket } from "hooks/useWebhookData";
 
 const MotionFlex = motion(Flex);
@@ -54,7 +48,7 @@ const Layout: React.FC = ({ children }) => {
   const history = useHistory();
   const queryClient = useQueryClient();
   const [firebaseToken, setFirebaseToken] = useState<string>();
-  const [firebaseUser, setFirebaseUser] = useState<User>();
+  const [, setFirebaseUser] = useState<User>();
   const { profileData } = useUserRole();
   const { data: orgProfile } = useUserOrgProfile(
     profileData?.logged_in_via === "org_login"
@@ -95,6 +89,8 @@ const Layout: React.FC = ({ children }) => {
       );
       updateMessageQueue(tempMessageQueue);
     }
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [messageQueue]);
 
   const getFirebaseToken = async () => {
