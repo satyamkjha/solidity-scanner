@@ -30,6 +30,7 @@ const QuickScan: React.FC = () => {
     null
   );
   const [projectId, setProjectId] = useState("");
+  const [scanId, setScanId] = useState("");
   const { sendMessage, setKeepWSOpen, updateMessageQueue, messageQueue } =
     useWebSocket();
   const [tempQSData, setTempQSData] = useState<{
@@ -175,6 +176,7 @@ const QuickScan: React.FC = () => {
                     if (res.status === 200) {
                       setScanReport(res.data.scan_report);
                       setProjectId(res.data.project_id);
+                      setScanId(res.data.scan_id);
                     }
                   },
                   () => {
@@ -224,6 +226,7 @@ const QuickScan: React.FC = () => {
               msgItem.payload.scan_details
           );
           setProjectId(msgItem.payload.project_id);
+          setScanId(msgItem.payload.scan_id);
           reset();
         } else if (msgItem.type && msgItem.type === "quick_scan_acknowledge") {
           setQSStatus("Scanned");
@@ -303,6 +306,7 @@ const QuickScan: React.FC = () => {
             />
             <QuickScanResultContainer
               scanReport={scanReport}
+              scanId={scanId}
               projectId={projectId}
             />
           </VStack>

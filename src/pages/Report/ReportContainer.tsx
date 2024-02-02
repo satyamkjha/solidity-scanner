@@ -189,14 +189,17 @@ export const ReportContainer: React.FC<{
 
     const uniqueFilePaths: string[] = Object.values(issues)
       .flatMap((issue) =>
-        issue.issue_details.flatMap((details) =>
-          details.findings.map((finding) => finding.file_path)
-        )
+        issue.issue_details.flatMap((details) => {
+          if (details.findings) {
+            return details.findings?.map((finding) => finding.file_path);
+          } else return [];
+        })
       )
       .filter(
         (filePath: string, index: number, array: string[]) =>
           array.indexOf(filePath) === index
       );
+
     getFileContentBatched(projectType, uniqueFilePaths).then((data) => {
       const mergedFileContents = data.flatMap((batch) => batch.file_contents);
       setFilesContent(mergedFileContents);
@@ -343,7 +346,7 @@ export const ReportContainer: React.FC<{
   };
 
   const getVulnerabilityDetailSplit = (issue: IssueItem) => {
-    if (issue.findings.length === 1) {
+    if (issue && issue.findings !== undefined && issue.findings.length === 1) {
       if (
         issue.findings[0].line_nos_end[0] -
           issue.findings[0].line_nos_start[0] +
@@ -356,7 +359,7 @@ export const ReportContainer: React.FC<{
         );
         let split: any[] = [];
         splitList.forEach((value, index) => {
-          if (index === splitList.length - 1) {
+          if (index === splitList.length - 1 && issue.findings) {
             split.push({
               point: issue.findings[0].file_path,
               start_line: issue.findings[0].line_nos_start[0] + value + 1,
@@ -374,19 +377,23 @@ export const ReportContainer: React.FC<{
               });
             }
           } else if (index === 0) {
-            split.push({
-              point: issue.findings[0].file_path,
-              start_line: issue.findings[0].line_nos_start[0] + value,
-              end_line:
-                issue.findings[0].line_nos_start[0] + splitList[index + 1],
-            });
+            if (issue.findings) {
+              split.push({
+                point: issue.findings[0].file_path,
+                start_line: issue.findings[0].line_nos_start[0] + value,
+                end_line:
+                  issue.findings[0].line_nos_start[0] + splitList[index + 1],
+              });
+            }
           } else {
-            split.push({
-              point: issue.findings[0].file_path,
-              start_line: issue.findings[0].line_nos_start[0] + value + 1,
-              end_line:
-                issue.findings[0].line_nos_start[0] + splitList[index + 1],
-            });
+            if (issue.findings) {
+              split.push({
+                point: issue.findings[0].file_path,
+                start_line: issue.findings[0].line_nos_start[0] + value + 1,
+                end_line:
+                  issue.findings[0].line_nos_start[0] + splitList[index + 1],
+              });
+            }
           }
         });
         return split;
@@ -416,6 +423,14 @@ export const ReportContainer: React.FC<{
             end_line: issue.findings[0].line_nos_end[0],
           },
         ];
+    } else {
+      return [
+        {
+          point: null,
+          start_line: 0,
+          end_line: 0,
+        },
+      ];
     }
   };
 

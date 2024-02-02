@@ -68,6 +68,20 @@ const VulnerabililtyDetailsContainer: React.FC<{
     return start === 0 ? index + 1 : start - 2 + index + 1;
   };
 
+  const demoCodeArray = [
+    "",
+    "    function callback(uint256[] memory ids, uint256 campaignId)onlyOracle public {",
+    '        require(winningTicketIds[campaignId].length + ids.length <= campaigns[campaignId].rewardCount, "exceeded reward limit");',
+    "",
+    "        for(uint256 i = 0; i<ids.length; i++){",
+    "             winningTicketIds[campaignId].push(ids[i]);",
+    "            winningTixketIdExist[campaignId][ids[i]] = true;",
+    "        }",
+    "    }",
+    "",
+    "    function setOracleAddress(address _add) onlyOwner public {",
+  ];
+
   return (
     <Flex
       as="div"
@@ -180,56 +194,59 @@ const VulnerabililtyDetailsContainer: React.FC<{
                 </VStack>
               </Flex>
             </VStack>
-            <Flex
-              px={6}
-              pt={6}
-              borderLeft={"1px solid #D9D9D9"}
-              borderRight={"1px solid #D9D9D9"}
-            >
-              <VStack spacing={1} alignItems={"flex-start"} w={"24%"}>
-                <Text fontSize="xs" fontWeight={400} color={"subtle"}>
-                  Line No.
-                </Text>
-                <Flex flexDir={"column"}>
-                  {issue.findings.map((finding) => (
-                    <Text fontSize="xs" lineHeight={1.8}>
-                      L{finding.line_nos_start} - L{finding.line_nos_end}
-                    </Text>
-                  ))}
-                </Flex>
-              </VStack>
-              <VStack spacing={1} alignItems={"flex-start"}>
-                <Text fontSize="xs" fontWeight={400} color={"subtle"}>
-                  File Location
-                </Text>
-                <Flex flexDir={"column"}>
-                  {issue.findings.map((finding) => (
-                    <Flex>
-                      <Link
-                        href={
-                          summary_report.project_summary_report.project_url &&
-                          summary_report.project_summary_report.project_url !==
-                            "File Scan"
-                            ? getProjectFileUrl(
-                                summary_report.project_summary_report
-                                  .project_url,
-                                "master",
-                                finding
-                              )
-                            : ""
-                        }
-                        target={"_blank"}
-                        fontSize="xs"
-                        lineHeight={1.8}
-                      >
-                        {finding.file_path}
-                        <ExternalLinkIcon ml={2} color={"#8A94A6"} />
-                      </Link>
-                    </Flex>
-                  ))}
-                </Flex>
-              </VStack>
-            </Flex>
+            {issue.findings && (
+              <Flex
+                px={6}
+                pt={6}
+                borderLeft={"1px solid #D9D9D9"}
+                borderRight={"1px solid #D9D9D9"}
+              >
+                <VStack spacing={1} alignItems={"flex-start"} w={"24%"}>
+                  <Text fontSize="xs" fontWeight={400} color={"subtle"}>
+                    Line No.
+                  </Text>
+                  <Flex flexDir={"column"}>
+                    {issue.findings.map((finding) => (
+                      <Text fontSize="xs" lineHeight={1.8}>
+                        L{finding.line_nos_start} - L{finding.line_nos_end}
+                      </Text>
+                    ))}
+                  </Flex>
+                </VStack>
+                <VStack spacing={1} alignItems={"flex-start"}>
+                  <Text fontSize="xs" fontWeight={400} color={"subtle"}>
+                    File Location
+                  </Text>
+                  <Flex flexDir={"column"}>
+                    {issue.findings.map((finding) => (
+                      <Flex>
+                        <Link
+                          href={
+                            summary_report.project_summary_report.project_url &&
+                            summary_report.project_summary_report
+                              .project_url !== "File Scan"
+                              ? getProjectFileUrl(
+                                  summary_report.project_summary_report
+                                    .project_url,
+                                  "master",
+                                  finding
+                                )
+                              : ""
+                          }
+                          target={"_blank"}
+                          fontSize="xs"
+                          lineHeight={1.8}
+                        >
+                          {finding.file_path}
+                          <ExternalLinkIcon ml={2} color={"#8A94A6"} />
+                        </Link>
+                      </Flex>
+                    ))}
+                  </Flex>
+                </VStack>
+              </Flex>
+            )}
+
             <Flex
               px={6}
               borderLeft={"1px solid #D9D9D9"}
@@ -253,18 +270,92 @@ const VulnerabililtyDetailsContainer: React.FC<{
         ) : null}
 
         {type !== "desc" ? (
-          <Flex
-            w={"100%"}
-            h={showDescription ? "auto" : "100%"}
-            px={6}
-            mb={showDescription ? 0 : 4}
-            flexDir={"column"}
-            borderLeft={"1px solid #D9D9D9"}
-            borderRight={"1px solid #D9D9D9"}
-          >
-            {issue.findings.map((item, index) => (
+          issue.findings ? (
+            <Flex
+              w={"100%"}
+              h={showDescription ? "auto" : "100%"}
+              px={6}
+              mb={showDescription ? 0 : 4}
+              flexDir={"column"}
+              borderLeft={"1px solid #D9D9D9"}
+              borderRight={"1px solid #D9D9D9"}
+            >
+              {issue.findings.map((item, index) => (
+                <Flex
+                  key={index}
+                  w={"100%"}
+                  flexDir={"column"}
+                  bg={"#FBFBFB"}
+                  borderRadius={15}
+                  mb={4}
+                  p={4}
+                >
+                  <Flex w={"100%"} pb={3}>
+                    <Text fontSize={"10px"} color={"#323B4B"}>
+                      {item.file_path}
+                    </Text>
+                    <Text fontSize={"10px"} color={"#323B4B"} ml={"auto"}>
+                      L{item.line_nos_start} - L{item.line_nos_end}
+                    </Text>
+                  </Flex>
+                  <Divider mb={3} />
+                  <Flex w={"100%"} flexDir={"column"}>
+                    {getFileContent(
+                      item.file_path,
+                      item.file_path === type && codeStartLine
+                        ? codeStartLine
+                        : item.line_nos_start[0],
+                      item.file_path === type && codeEndLine
+                        ? codeEndLine
+                        : item.line_nos_end[0]
+                    ).map((content: any, cIndex: number, array: any[]) => (
+                      <HStack
+                        as={"div"}
+                        key={cIndex}
+                        align={"flex-start"}
+                        spacing={4}
+                        pb={1}
+                      >
+                        <Text
+                          color={"#D8D8D8"}
+                          fontSize="10px"
+                          fontWeight="normal"
+                        >
+                          {codeStartLine
+                            ? getCodeLineNo(codeStartLine, cIndex)
+                            : getCodeLineNo(item.line_nos_start[0], cIndex)}
+                        </Text>
+                        <pre
+                          style={{
+                            fontSize: "10px",
+                            color:
+                              (cIndex > 0 && cIndex < array.length - 2) ||
+                              item.line_nos_start[0] === 0
+                                ? "#000000"
+                                : "#B0B7C3",
+                            whiteSpace: "pre-wrap",
+                          }}
+                          key={cIndex}
+                        >
+                          {content}
+                        </pre>
+                      </HStack>
+                    ))}
+                  </Flex>
+                </Flex>
+              ))}
+            </Flex>
+          ) : (
+            <Flex
+              w={"100%"}
+              h={showDescription ? "auto" : "100%"}
+              px={6}
+              mb={showDescription ? 0 : 4}
+              flexDir={"column"}
+              borderLeft={"1px solid #D9D9D9"}
+              borderRight={"1px solid #D9D9D9"}
+            >
               <Flex
-                key={index}
                 w={"100%"}
                 flexDir={"column"}
                 bg={"#FBFBFB"}
@@ -274,141 +365,209 @@ const VulnerabililtyDetailsContainer: React.FC<{
               >
                 <Flex w={"100%"} pb={3}>
                   <Text fontSize={"10px"} color={"#323B4B"}>
-                    {item.file_path}
+                    {"item.file_path"}
                   </Text>
                   <Text fontSize={"10px"} color={"#323B4B"} ml={"auto"}>
-                    L{item.line_nos_start} - L{item.line_nos_end}
+                    L{"110"} - L{"120"}
                   </Text>
                 </Flex>
                 <Divider mb={3} />
                 <Flex w={"100%"} flexDir={"column"}>
-                  {getFileContent(
-                    item.file_path,
-                    item.file_path === type && codeStartLine
-                      ? codeStartLine
-                      : item.line_nos_start[0],
-                    item.file_path === type && codeEndLine
-                      ? codeEndLine
-                      : item.line_nos_end[0]
-                  ).map((content: any, cIndex: number, array: any[]) => (
-                    <HStack
-                      as={"div"}
-                      key={cIndex}
-                      align={"flex-start"}
-                      spacing={4}
-                      pb={1}
-                    >
-                      <Text
-                        color={"#D8D8D8"}
-                        fontSize="10px"
-                        fontWeight="normal"
-                      >
-                        {codeStartLine
-                          ? getCodeLineNo(codeStartLine, cIndex)
-                          : getCodeLineNo(item.line_nos_start[0], cIndex)}
-                      </Text>
-                      <pre
-                        style={{
-                          fontSize: "10px",
-                          color:
-                            (cIndex > 0 && cIndex < array.length - 2) ||
-                            item.line_nos_start[0] === 0
-                              ? "#000000"
-                              : "#B0B7C3",
-                          whiteSpace: "pre-wrap",
-                        }}
+                  {demoCodeArray.map(
+                    (content: any, cIndex: number, array: any[]) => (
+                      <HStack
+                        as={"div"}
                         key={cIndex}
+                        align={"flex-start"}
+                        spacing={4}
+                        pb={1}
                       >
-                        {content}
-                      </pre>
-                    </HStack>
-                  ))}
+                        <Text
+                          color={"#D8D8D8"}
+                          fontSize="10px"
+                          fontWeight="normal"
+                        ></Text>
+                        <pre
+                          style={{
+                            fontSize: "10px",
+                            color: "#B0B7C3",
+                            whiteSpace: "pre-wrap",
+                          }}
+                          key={cIndex}
+                        >
+                          {content}
+                        </pre>
+                      </HStack>
+                    )
+                  )}
                 </Flex>
               </Flex>
-            ))}
-          </Flex>
+            </Flex>
+          )
         ) : null}
 
         {showDescription ? (
-          <>
-            <Flex
-              w={"100%"}
-              px={6}
-              flexDir={"column"}
-              borderLeft={"1px solid #D9D9D9"}
-              borderRight={"1px solid #D9D9D9"}
-            >
-              <HStack spacing={2} mt={5} mb={3}>
-                <Image
-                  src={`${assetsURL}report/issue_description.svg`}
-                  width={6}
-                />
-                <Text fontSize="sm" fontWeight={600} width={"100%"}>
-                  Description
-                </Text>
-              </HStack>
-              <DescriptionWrapper>
-                <Box
-                  dangerouslySetInnerHTML={{
-                    __html: issue.issue_description,
-                  }}
-                  fontSize={"xs"}
-                  fontWeight={400}
-                />
-              </DescriptionWrapper>
-            </Flex>
+          issue.issue_remediation && issue.issue_description ? (
+            <>
+              <Flex
+                w={"100%"}
+                px={6}
+                flexDir={"column"}
+                borderLeft={"1px solid #D9D9D9"}
+                borderRight={"1px solid #D9D9D9"}
+              >
+                <HStack spacing={2} mt={5} mb={3}>
+                  <Image
+                    src={`${assetsURL}report/issue_description.svg`}
+                    width={6}
+                  />
+                  <Text fontSize="sm" fontWeight={600} width={"100%"}>
+                    Description
+                  </Text>
+                </HStack>
+                <DescriptionWrapper>
+                  <Box
+                    dangerouslySetInnerHTML={{
+                      __html: issue.issue_description,
+                    }}
+                    fontSize={"xs"}
+                    fontWeight={400}
+                  />
+                </DescriptionWrapper>
+              </Flex>
 
-            <Flex
-              w={"100%"}
-              pt={2}
-              px={6}
-              pb={issue.comment ? 0 : 8}
-              flexDir={"column"}
-              border={"1px solid #D9D9D9"}
-              borderTop={"none"}
-              borderBottom={issue.comment ? "none" : "1px solid #D9D9D9"}
-            >
-              <HStack spacing={2} mt={5} mb={3}>
-                <Image
-                  src={`${assetsURL}report/issue_remediation.svg`}
-                  width={6}
-                />
-                <Text fontSize="sm" fontWeight={600} width={"100%"}>
-                  Remediation
-                </Text>
-              </HStack>
-              <DescriptionWrapper>
-                <Box
-                  dangerouslySetInnerHTML={{
-                    __html: issue.issue_remediation,
-                  }}
-                  fontSize={"xs"}
-                  fontWeight={400}
-                />
-              </DescriptionWrapper>
-            </Flex>
-            {issue.comment && issue.bug_status === "wont_fix" && (
               <Flex
                 w={"100%"}
                 pt={2}
                 px={6}
-                pb={8}
+                pb={issue.comment ? 0 : 8}
                 flexDir={"column"}
                 border={"1px solid #D9D9D9"}
                 borderTop={"none"}
+                borderBottom={issue.comment ? "none" : "1px solid #D9D9D9"}
               >
                 <HStack spacing={2} mt={5} mb={3}>
-                  <Image src={`${assetsURL}report/comment.svg`} width={6} />
+                  <Image
+                    src={`${assetsURL}report/issue_remediation.svg`}
+                    width={6}
+                  />
                   <Text fontSize="sm" fontWeight={600} width={"100%"}>
-                    Comments
+                    Remediation
                   </Text>
                 </HStack>
-                <Text fontWeight={400} fontSize={"xs"} wordBreak="break-all">
-                  {issue.comment}
-                </Text>
+                <DescriptionWrapper>
+                  <Box
+                    dangerouslySetInnerHTML={{
+                      __html: issue.issue_remediation,
+                    }}
+                    fontSize={"xs"}
+                    fontWeight={400}
+                  />
+                </DescriptionWrapper>
               </Flex>
-            )}
-          </>
+              {issue.comment && issue.bug_status === "wont_fix" && (
+                <Flex
+                  w={"100%"}
+                  pt={2}
+                  px={6}
+                  pb={8}
+                  flexDir={"column"}
+                  border={"1px solid #D9D9D9"}
+                  borderTop={"none"}
+                >
+                  <HStack spacing={2} mt={5} mb={3}>
+                    <Image src={`${assetsURL}report/comment.svg`} width={6} />
+                    <Text fontSize="sm" fontWeight={600} width={"100%"}>
+                      Comments
+                    </Text>
+                  </HStack>
+                  <Text fontWeight={400} fontSize={"xs"} wordBreak="break-all">
+                    {issue.comment}
+                  </Text>
+                </Flex>
+              )}
+            </>
+          ) : (
+            <>
+              <Flex
+                w={"100%"}
+                px={6}
+                flexDir={"column"}
+                borderLeft={"1px solid #D9D9D9"}
+                borderRight={"1px solid #D9D9D9"}
+              >
+                <HStack spacing={2} mt={5} mb={3}>
+                  <Image
+                    src={`${assetsURL}report/issue_description.svg`}
+                    width={6}
+                  />
+                  <Text fontSize="sm" fontWeight={600} width={"100%"}>
+                    Description
+                  </Text>
+                </HStack>
+                <DescriptionWrapper>
+                  <Box
+                    dangerouslySetInnerHTML={{
+                      __html: "issue.issue_description",
+                    }}
+                    fontSize={"xs"}
+                    fontWeight={400}
+                  />
+                </DescriptionWrapper>
+              </Flex>
+
+              <Flex
+                w={"100%"}
+                pt={2}
+                px={6}
+                pb={issue.comment ? 0 : 8}
+                flexDir={"column"}
+                border={"1px solid #D9D9D9"}
+                borderTop={"none"}
+                borderBottom={issue.comment ? "none" : "1px solid #D9D9D9"}
+              >
+                <HStack spacing={2} mt={5} mb={3}>
+                  <Image
+                    src={`${assetsURL}report/issue_remediation.svg`}
+                    width={6}
+                  />
+                  <Text fontSize="sm" fontWeight={600} width={"100%"}>
+                    Remediation
+                  </Text>
+                </HStack>
+                <DescriptionWrapper>
+                  <Box
+                    dangerouslySetInnerHTML={{
+                      __html: "issue.issue_remediation",
+                    }}
+                    fontSize={"xs"}
+                    fontWeight={400}
+                  />
+                </DescriptionWrapper>
+              </Flex>
+              {issue.comment && issue.bug_status === "wont_fix" && (
+                <Flex
+                  w={"100%"}
+                  pt={2}
+                  px={6}
+                  pb={8}
+                  flexDir={"column"}
+                  border={"1px solid #D9D9D9"}
+                  borderTop={"none"}
+                >
+                  <HStack spacing={2} mt={5} mb={3}>
+                    <Image src={`${assetsURL}report/comment.svg`} width={6} />
+                    <Text fontSize="sm" fontWeight={600} width={"100%"}>
+                      Comments
+                    </Text>
+                  </HStack>
+                  <Text fontWeight={400} fontSize={"xs"} wordBreak="break-all">
+                    {"issue.comment"}
+                  </Text>
+                </Flex>
+              )}
+            </>
+          )
         ) : null}
       </Flex>
     </Flex>

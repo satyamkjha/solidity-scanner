@@ -61,6 +61,7 @@ export const API_PATH = {
   API_GET_REPORTS: "/api-get-reports/",
   API_GET_REPORT: "/api-get-report/",
   API_GET_PUBLISHED_REPORT: "/api-get-published-report/",
+  API_GET_QS_REPORT: "/api-get-qs-report/",
   API_PUBLISH_REPORT: "/api-publish-report/",
   API_GET_PUBLIC_FILE_CONTENT: "/api-get-public-file-content/",
   API_GET_PUBLIC_FILE_CONTENT_BLOCK: "/api-get-public-file-content-block/",

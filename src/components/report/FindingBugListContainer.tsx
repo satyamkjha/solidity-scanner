@@ -151,15 +151,18 @@ const FindingBugListContainer: React.FC<{
               ? sentenceCapitalize(issue.audit_type)
               : "Automated"}
           </Text>
-          <Text
-            fontSize="10px"
-            fontWeight={"500"}
-            color={"subtle"}
-            width={"10%"}
-          >
-            L{issue.findings[0].line_nos_start} - L
-            {issue.findings[0].line_nos_end}
-          </Text>
+          {issue.findings && (
+            <Text
+              fontSize="10px"
+              fontWeight={"500"}
+              color={"subtle"}
+              width={"10%"}
+            >
+              L{issue.findings[0].line_nos_start} - L
+              {issue.findings[0].line_nos_end}
+            </Text>
+          )}
+
           <HStack width={"13%"} spacing={1.5}>
             <Image
               src={`${assetsURL}report/${issue.bug_status}_color.svg`}

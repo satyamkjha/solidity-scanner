@@ -56,10 +56,14 @@ const NonDynamicContainer: React.FC<{ issue: IssueDetailObject }> = ({
 
   return (
     <>
-      <DescriptionRemediationContainer
-        issue_description={issue.issue_details[0].issue_description}
-        issue_remediation={issue.issue_details[0].issue_remediation}
-      />
+      {issue.issue_details[0].issue_description &&
+        issue.issue_details[0].issue_remediation && (
+          <DescriptionRemediationContainer
+            issue_description={issue.issue_details[0].issue_description}
+            issue_remediation={issue.issue_details[0].issue_remediation}
+          />
+        )}
+
       {commentsMap.map((comment) => (
         <>
           <TableContainer

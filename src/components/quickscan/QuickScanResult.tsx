@@ -17,18 +17,23 @@ import QSErrorCountModal from "./QSErrorCountModal";
 import ReportTag from "components/common/scans/ReportTag";
 import ResultOverview from "components/common/scans/ResultOverview";
 import VulnerabilityChart from "components/common/scans/VulnerabilityChart";
+import { useWebSocket } from "hooks/useWebhookData";
 
 export const QuickScanResultContainer: React.FC<{
   scanReport: QuickScanResult;
   projectId: string;
-}> = ({ scanReport, projectId }) => {
+  scanId: string;
+}> = ({ scanReport, projectId, scanId }) => {
   const history = useHistory();
-
+  const [isLoading, setIsLoading] = useState(false);
+  const { sendMessage, setKeepWSOpen, updateMessageQueue, messageQueue } =
+    useWebSocket();
   const [errorData, setErrorData] = useState<{
     errorCount: number;
     errorType: string;
   } | null>(null);
 
+  const [reportId, setReportId] = useState("");
   const [open, setOpen] = useState(false);
 
   const vulnerabilityCount =
@@ -57,6 +62,51 @@ export const QuickScanResultContainer: React.FC<{
     setRecentQuickScan(scan_details);
     history.push("/signin");
   };
+
+  const openReport = () => {
+    setIsLoading(true);
+    sendMessage({
+      type: "generate_report",
+      body: {
+        project_id: projectId,
+        scan_id: scanId,
+        scan_type: "block",
+      },
+    });
+  };
+
+  useEffect(() => {
+    if (
+      messageQueue.length > 0 &&
+      messageQueue.some((msgItem: any) =>
+        ["report_generation_status"].includes(msgItem.type)
+      )
+    ) {
+      messageQueue.forEach((msgItem: any) => {
+        if (
+          msgItem.type === "report_generation_status" &&
+          msgItem.payload.report_status === "report_generated"
+        ) {
+          setReportId(msgItem.payload.report_id);
+          setIsLoading(false);
+          setKeepWSOpen(false);
+          console.log("ajsgdjasd");
+        }
+      });
+      let tempMsgQueue = messageQueue;
+      tempMsgQueue = tempMsgQueue.filter(
+        (msg: any) => !["report_generation_status", "error"].includes(msg.type)
+      );
+      updateMessageQueue(tempMsgQueue);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [messageQueue]);
+
+  useEffect(() => {
+    if (reportId !== "") {
+      // history.push(`/qs-report/${projectId}/${reportId}`);
+    }
+  }, [reportId]);
 
   return (
     <Flex
@@ -184,6 +234,16 @@ export const QuickScanResultContainer: React.FC<{
           >
             View detailed Result ⟶
           </Button>
+          <Button
+            display={["none", "none", "none", "flex"]}
+            variant="brand"
+            w={"100%"}
+            maxW={"300px"}
+            isLoading={isLoading}
+            onClick={openReport}
+          >
+            View Audit Report PDF ⟶
+          </Button>
         </VStack>
         <Flex
           w={["100%", "100%", "100%", "150px", "180px"]}
@@ -250,7 +310,7 @@ export const QuickScanResultContainer: React.FC<{
           w={"100%"}
           mt={[5, 5, 10]}
           maxW={"300px"}
-          onClick={onViewDetailResult}
+          onClick={openReport}
         >
           View detailed Result ⟶
         </Button>

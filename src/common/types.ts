@@ -397,11 +397,11 @@ export type IssueItem = {
   bug_hash: string;
   bug_id: string;
   bug_status: string;
-  findings: Finding[];
+  findings?: Finding[];
   issue_confidence: string;
-  issue_description: string;
+  issue_description?: string;
   issue_name: string;
-  issue_remediation: string;
+  issue_remediation?: string;
   severity: string;
   comment?: string;
   audit_type?: string;

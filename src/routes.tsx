@@ -196,6 +196,14 @@ const Organisation = lazy(() =>
   )
 );
 
+const QSReport = lazy(() =>
+  lazyRetry(
+    () =>
+      import("pages/Report/QSReport" /* webpackChunkName: "QSReportPage" */),
+    "qsReport"
+  )
+);
+
 const PublicReportPage = lazy(() =>
   lazyRetry(
     () =>
@@ -266,6 +274,11 @@ const Routes: React.FC = () => {
             exact
             path="/published-report/:projectType/:reportId"
             component={PublicReportPage}
+          />
+          <Route
+            exact
+            path="/qs-report/:projectId/:reportId"
+            component={QSReport}
           />
           <Route
             exact
