@@ -20,10 +20,9 @@ jobs:
       SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
       SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
       ENV: ${{ inputs.ENV }}
-      DOCKER_COMPOSE_PATH: /home/ubuntu/actions-runner/work/solidity-scanner-frontend/solidity-scanner-frontend/docker-compose.yml
-      PROJECT_DIRECTORY: /home/ubuntu/actions-runner/work/solidity-scanner-frontend/solidity-scanner-frontend/
-
-    runs-on: self-hosted
+      DOCKER_COMPOSE_PATH: /home/runner/work/solidity-scanner-frontend/solidity-scanner-frontend/docker-compose.yml
+      PROJECT_DIRECTORY: /home/runner/work/solidity-scanner-frontend/solidity-scanner-frontend/
+    runs-on: ubuntu-latest
     permissions: read-all
 
     steps:
