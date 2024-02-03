@@ -18,7 +18,7 @@ export const getQSPdfReport = async (
   report_id: string | undefined
 ) => {
   const { data } = await API.post<{ summary_report: Report }>(
-    API_PATH.API_GET_QS_REPORT,
+    API_PATH.API_GET_REPORT_VIA_TOKEN,
     {
       token,
       report_id,

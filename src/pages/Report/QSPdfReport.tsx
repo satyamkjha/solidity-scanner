@@ -1,9 +1,9 @@
 import React from "react";
 import { useParams, useLocation } from "react-router-dom";
 import { Flex, Container } from "@chakra-ui/react";
-import { usePublicReport } from "hooks/usePublicReport";
 import Loader from "components/styled-components/Loader";
 import { ReportContainer } from "./ReportContainer";
+import { useQSPdfReport } from "hooks/useQSPdfReport";
 
 export default function QSPdfReport() {
   const { reportId } = useParams<{
@@ -14,9 +14,7 @@ export default function QSPdfReport() {
   const searchParams = new URLSearchParams(location.search);
   const token = searchParams.get("token");
 
-  const { data } = usePublicReport(token || "", reportId);
-
-  
+  const { data } = useQSPdfReport(token || "", reportId);
 
   return (
     <>
