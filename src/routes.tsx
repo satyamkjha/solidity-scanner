@@ -204,6 +204,14 @@ const QSReport = lazy(() =>
   )
 );
 
+const QSPdfReport = lazy(() =>
+  lazyRetry(
+    () =>
+      import("pages/Report/QSPdfReport" /* webpackChunkName: "QSPdfReport" */),
+    "qsPdfReport"
+  )
+);
+
 const PublicReportPage = lazy(() =>
   lazyRetry(
     () =>
@@ -279,6 +287,11 @@ const Routes: React.FC = () => {
             exact
             path="/qs-report/:projectId/:reportId"
             component={QSReport}
+          />
+          <Route
+            exact
+            path="/qs-report-token/:reportId"
+            component={QSPdfReport}
           />
           <Route
             exact
