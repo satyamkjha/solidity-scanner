@@ -66,6 +66,8 @@ export const API_PATH = {
   API_PUBLISH_REPORT: "/api-publish-report/",
   API_GET_PUBLIC_FILE_CONTENT: "/api-get-public-file-content/",
   API_GET_PUBLIC_FILE_CONTENT_BLOCK: "/api-get-public-file-content-block/",
+  API_GET_CHECKOUT_PUBLIC_FILE_CONTENT:
+    "/api-get-checkout-public-file-content/",
   API_GET_REPORT_PDF: "/api-get-report-pdf/",
 
   //INTEGRATIONS

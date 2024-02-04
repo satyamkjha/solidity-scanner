@@ -21,6 +21,7 @@ export default function QSPdfReport() {
       {data ? (
         <ReportContainer
           summary_report={data.summary_report}
+          needsTokenValidation={true}
           isPublicReport={true}
         />
       ) : (

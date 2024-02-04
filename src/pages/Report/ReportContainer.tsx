@@ -60,8 +60,14 @@ import DisclaimerContainer from "components/report/DisclaimerContainer";
 export const ReportContainer: React.FC<{
   summary_report: Report;
   isPublicReport: boolean;
+  needsTokenValidation?: boolean;
   profile?: Profile;
-}> = ({ summary_report, isPublicReport, profile }) => {
+}> = ({
+  summary_report,
+  isPublicReport,
+  profile,
+  needsTokenValidation = false,
+}) => {
   const priority_list = [
     "critical",
     "high",
@@ -269,23 +275,34 @@ export const ReportContainer: React.FC<{
 
     const promises = batches.map(async (batch) => {
       try {
-        const { data } = await API.post(
-          type === "project"
-            ? isPublicReport
-              ? API_PATH.API_GET_PUBLIC_FILE_CONTENT
-              : API_PATH.API_GET_FILE_CONTENT
-            : isPublicReport
-            ? API_PATH.API_GET_PUBLIC_FILE_CONTENT_BLOCK
-            : API_PATH.API_GET_FILE_CONTENT_BLOCK,
-          {
-            file_paths: batch,
-            report_id: reportId,
-            project_id:
-              projectId || summary_report.project_summary_report.project_id,
-            project_type: projectType,
-          }
-        );
-        return data;
+        if (needsTokenValidation) {
+          const { data } = await API.post(
+            API_PATH.API_GET_CHECKOUT_PUBLIC_FILE_CONTENT,
+            {
+              file_paths: batch,
+              report_id: reportId,
+            }
+          );
+          return data;
+        } else {
+          const { data } = await API.post(
+            type === "project"
+              ? isPublicReport
+                ? API_PATH.API_GET_PUBLIC_FILE_CONTENT
+                : API_PATH.API_GET_FILE_CONTENT
+              : isPublicReport
+              ? API_PATH.API_GET_PUBLIC_FILE_CONTENT_BLOCK
+              : API_PATH.API_GET_FILE_CONTENT_BLOCK,
+            {
+              file_paths: batch,
+              report_id: reportId,
+              project_id:
+                projectId || summary_report.project_summary_report.project_id,
+              project_type: projectType,
+            }
+          );
+          return data;
+        }
       } catch (error) {
         console.error(`Error fetching file content: ${error.message}`);
         return null;
