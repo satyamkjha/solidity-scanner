@@ -35,19 +35,24 @@ const CurrentPlanDescriptionContainer: React.FC<{
         )}
         {["non-pro", "pro/custom"].includes(packageName) && (
           <HStack mb={4}>
-            <Image
-              width="75px"
-              height="75px"
-              src={
-                "publish_report" === duration
-                  ? `${assetsURL}report/user.svg`
-                  : `${assetsURL}report/ss-shield.svg`
-              }
-              mr={2}
-            />
+            {duration !== "on-demand-report" && (
+              <Image
+                width="75px"
+                height="75px"
+                src={
+                  "publish_report" === duration
+                    ? `${assetsURL}report/user.svg`
+                    : `${assetsURL}report/ss-shield.svg`
+                }
+                mr={2}
+              />
+            )}
+
             <Flex flexDir={"column"}>
               <Text fontSize={"2xl"} fontWeight={700}>
-                {"publish_report" === duration
+                {duration === "on-demand-report"
+                  ? "One Time Audit Report"
+                  : "publish_report" === duration
                   ? "Self-Published Report"
                   : "verified_publish_report" === duration
                   ? "Verified Report"
@@ -67,6 +72,7 @@ const CurrentPlanDescriptionContainer: React.FC<{
             </Flex>
           </HStack>
         )}
+
         {!["non-pro", "pro/custom"].includes(packageName) && (
           <Text fontSize={"2xl"} fontWeight={700}>
             {sentenceCapitalize(plan.name)}

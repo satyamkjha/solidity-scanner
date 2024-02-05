@@ -21,7 +21,14 @@ const CoverPageContainer: React.FC<{
 }> = ({ d, summary_report, isPublicReport }) => {
   const assetsURL = getAssetsURL();
   return (
-    <Flex p={0} w="100%" h="100%" bg="#010101" position={"relative"}>
+    <Flex
+      scale={0.2}
+      p={0}
+      w="100%"
+      h="100%"
+      bg="#010101"
+      position={"relative"}
+    >
       <Box
         position={"absolute"}
         w="100%"
@@ -39,8 +46,8 @@ const CoverPageContainer: React.FC<{
           alignItems="flex-start"
           justifyContent={["space-between"]}
           flexDir={"row"}
-          py={10}
-          px={16}
+          py={[5, 7, 10]}
+          px={[4, 8, 16]}
           backgroundSize="cover"
           backgroundRepeat={"no-repeat"}
           backgroundImage={`url('${assetsURL}report/report_cover.svg')`}
@@ -55,10 +62,10 @@ const CoverPageContainer: React.FC<{
             zIndex={1}
           >
             <HStack justifyContent={"flex-start"} spacing={4}>
-              <Logo fill={"white"} />
+              <Logo size={120} fill={"white"} />
             </HStack>
             <Text
-              fontSize="2xl"
+              fontSize={["md", "lg", "2xl"]}
               fontWeight={400}
               color={"subtle"}
               mt={[10, 10, 10, 20]}
@@ -66,7 +73,7 @@ const CoverPageContainer: React.FC<{
             >
               Security Assessment
             </Text>
-            <Heading fontSize={["3xl", "4xl"]} fontWeight={700} mb={3}>
+            <Heading fontSize={["lg", "xl", "4xl"]} fontWeight={700} mb={3}>
               {summary_report.project_summary_report.project_name ||
                 summary_report.project_summary_report.contract_name}
             </Heading>
@@ -76,7 +83,7 @@ const CoverPageContainer: React.FC<{
             <Box w="100%" h={"auto"}>
               <Text
                 fontWeight={400}
-                fontSize={"sm"}
+                fontSize={["xs", "sm"]}
                 width={"60%"}
                 color={"subtle"}
                 mb={10}
@@ -87,7 +94,7 @@ const CoverPageContainer: React.FC<{
               <ReportCoverDots />
             </Box>
             {isPublicReport && (
-              <Flex mt={"auto"} alignItems={"center"}>
+              <Flex mt={["200px", "400px", "auto"]} alignItems={"center"}>
                 <Image
                   src={
                     summary_report.project_summary_report.report_type ===

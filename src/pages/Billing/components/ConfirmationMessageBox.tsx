@@ -27,7 +27,9 @@ const ConfirmationMessageBox: React.FC<{
             {!["publish_report", "verified_publish_report"].includes(
               duration
             ) && sentenceCapitalize(name)}{" "}
-            {"publish_report" === duration
+            {"on-demand-report" === duration
+              ? ""
+              : "publish_report" === duration
               ? "Self-Published Report"
               : "verified_publish_report" === duration
               ? "Verified Report"

@@ -8,9 +8,10 @@ import {
   VStack,
   Box,
   Link,
+  Button,
 } from "@chakra-ui/react";
 import { Report, IssueItem } from "common/types";
-import { SeverityIcon } from "components/icons";
+import { SeverityIcon, TrialWallIcon } from "components/icons";
 import {
   sentenceCapitalize,
   getAssetsURL,
@@ -18,7 +19,8 @@ import {
 } from "helpers/helperFunction";
 import styled from "@emotion/styled";
 import React from "react";
-import { ExternalLinkIcon } from "@chakra-ui/icons";
+import { ExternalLinkIcon, LockIcon } from "@chakra-ui/icons";
+import { useHistory } from "react-router-dom";
 
 const VulnerabililtyDetailsContainer: React.FC<{
   summary_report: Report;
@@ -30,6 +32,8 @@ const VulnerabililtyDetailsContainer: React.FC<{
   filesContent: any[];
   codeStartLine?: number;
   codeEndLine?: number;
+  onOpen: () => void;
+  isQSReport: boolean;
 }> = ({
   summary_report,
   issue,
@@ -40,9 +44,11 @@ const VulnerabililtyDetailsContainer: React.FC<{
   filesContent,
   codeStartLine,
   codeEndLine,
+  onOpen,
+  isQSReport,
 }) => {
   const assetsURL = getAssetsURL();
-
+  const history = useHistory();
   const getFileContent = (
     file_path: string,
     line_start: number,
@@ -77,16 +83,31 @@ const VulnerabililtyDetailsContainer: React.FC<{
     "             winningTicketIds[campaignId].push(ids[i]);",
     "            winningTixketIdExist[campaignId][ids[i]] = true;",
     "        }",
+    "        for(uint256 i = 0; i<ids.length; i++){",
+    "             winningTicketIds[campaignId].push(ids[i]);",
+    "            winningTixketIdExist[campaignId][ids[i]] = true;",
+    "        }",
+    "        for(uint256 i = 0; i<ids.length; i++){",
+    "             winningTicketIds[campaignId].push(ids[i]);",
+    "            winningTixketIdExist[campaignId][ids[i]] = true;",
+    "        }",
     "    }",
     "",
     "    function setOracleAddress(address _add) onlyOwner public {",
   ];
+
+  const demoIssueDescription =
+    "Access control plays an important role in segregation of privileges in smart contracts and other applications. If this is misconfigured or not properly validated on sensitive functions, it may lead to loss of funds, tokens and in some cases compromise of the smart contract.";
+
+  const demoIssueRemediation =
+    "Access control plays an important role in segregation of privileges in smart contracts and other applications. If this is misconfigured or not properly validated on sensitive functions, it may lead to loss of funds, tokens and in some cases compromise of the smart contract.";
 
   return (
     <Flex
       as="div"
       w="100%"
       h={"100%"}
+      position="relative"
       alignItems="flex-start"
       justifyContent="flex-start"
       flexDir={"column"}
@@ -508,7 +529,7 @@ const VulnerabililtyDetailsContainer: React.FC<{
                 <DescriptionWrapper>
                   <Box
                     dangerouslySetInnerHTML={{
-                      __html: "issue.issue_description",
+                      __html: demoIssueDescription,
                     }}
                     fontSize={"xs"}
                     fontWeight={400}
@@ -538,7 +559,7 @@ const VulnerabililtyDetailsContainer: React.FC<{
                 <DescriptionWrapper>
                   <Box
                     dangerouslySetInnerHTML={{
-                      __html: "issue.issue_remediation",
+                      __html: demoIssueRemediation,
                     }}
                     fontSize={"xs"}
                     fontWeight={400}
@@ -569,6 +590,69 @@ const VulnerabililtyDetailsContainer: React.FC<{
             </>
           )
         ) : null}
+
+        <Flex
+          w="96%"
+          left="2px"
+          top={showVulnerabilityTitle ? "270px" : "190px"}
+          h="730px"
+          position="absolute"
+          sx={{
+            backdropFilter: "blur(6px)",
+          }}
+          bg="rgba(255,255,255,0.3)"
+          alignItems="center"
+          justifyContent="center"
+          flexDir="column"
+        >
+          <Flex
+            w="90%"
+            borderRadius={10}
+            p={7}
+            flexDir="row"
+            alignItems="center"
+            justifyContent="space-between"
+            bg="linear-gradient(rgba(238, 235, 255, 1), rgba(229, 246, 255, 1))"
+          >
+            <VStack
+              alignItems="flex-start"
+              textAlign="left"
+              w="calc(100% - 250px)"
+            >
+              <Text color="#000000" fontWeight={600} fontSize="md">
+                {isQSReport
+                  ? issue.severity === "gas"
+                    ? "SignUp and View Gas issues for free"
+                    : "Make One-time Payment"
+                  : "Upgrade your Plan to view the full report"}
+              </Text>
+              <Text color="#000000" fontWeight={300} fontSize="sm">
+                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla
+                leo viverra semper platea quis nibh lectus cursus. Know More
+              </Text>
+            </VStack>
+            <Button
+              leftIcon={<LockIcon />}
+              mt={2}
+              mb={4}
+              variant="brand"
+              width="200px"
+              onClick={() => {
+                if (isQSReport) {
+                  if (issue.severity === "gas") {
+                    history.push("/signup");
+                  } else {
+                    onOpen();
+                  }
+                } else {
+                  history.push("/billing");
+                }
+              }}
+            >
+              {isQSReport ? "Pay & Unlock report" : "Upgrade"}
+            </Button>
+          </Flex>
+        </Flex>
       </Flex>
     </Flex>
   );

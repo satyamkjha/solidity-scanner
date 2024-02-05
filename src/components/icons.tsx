@@ -452,11 +452,14 @@ export const CredshieldsIcon: React.FC<{
   );
 };
 
-export const Logo: React.FC<{ fill?: string }> = ({ fill = "black" }) => {
+export const Logo: React.FC<{ fill?: string; size?: number }> = ({
+  fill = "black",
+  size = 302,
+}) => {
   return (
     <svg
-      width="302"
-      height="54"
+      width={size}
+      height={(54 / 302) * 302}
       viewBox="0 0 674 135"
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
@@ -3373,11 +3376,12 @@ export const ReportCoverDots: React.FC = () => {
 export const CheckBadge: React.FC<{
   fillColor?: string;
   strokColor?: string;
-}> = ({ fillColor = "white", strokColor = "#38CB89" }) => {
+  size?: number;
+}> = ({ fillColor = "white", strokColor = "#38CB89", size = 28 }) => {
   return (
     <svg
-      width="28"
-      height="28"
+      width={size}
+      height={size}
       viewBox="0 0 28 28"
       fill="none"
       xmlns="http://www.w3.org/2000/svg"

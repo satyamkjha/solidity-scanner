@@ -1,4 +1,11 @@
-import { Container, Flex, VStack, Text, Button } from "@chakra-ui/react";
+import {
+  Container,
+  Flex,
+  VStack,
+  Text,
+  Button,
+  useDisclosure,
+} from "@chakra-ui/react";
 import {
   Report,
   Profile,
@@ -11,10 +18,10 @@ import PDFContainer from "components/report/PDFContainer";
 import TableContentContainer, {
   IssueComponent,
 } from "components/report/TableContentContainer";
-import { useParams, useLocation } from "react-router-dom";
+import { useParams, useLocation, useHistory } from "react-router-dom";
 import API from "helpers/api";
 import { API_PATH } from "helpers/routeManager";
-import { DownloadIcon } from "@chakra-ui/icons";
+import { DownloadIcon, LockIcon } from "@chakra-ui/icons";
 import Loader from "components/styled-components/Loader";
 import {
   getFeatureGateConfig,
@@ -28,6 +35,7 @@ import FindingBugListContainer from "components/report/FindingBugListContainer";
 import VulnerabililtyDetailsContainer from "components/report/VulnerabililtyDetailsContainer";
 import ScanHistoryContainer from "components/report/ScanHistoryContainer";
 import DisclaimerContainer from "components/report/DisclaimerContainer";
+import { QSPaymentModal } from "components/modals/QSPaymentModal";
 
 // const CoverPageContainer = React.lazy(
 //   () => import("components/report/CoverPageContainer")
@@ -61,11 +69,13 @@ export const ReportContainer: React.FC<{
   summary_report: Report;
   isPublicReport: boolean;
   needsTokenValidation?: boolean;
+  isQSReport?: boolean;
   profile?: Profile;
 }> = ({
   summary_report,
   isPublicReport,
   profile,
+  isQSReport = false,
   needsTokenValidation = false,
 }) => {
   const priority_list = [
@@ -102,6 +112,8 @@ export const ReportContainer: React.FC<{
     projectId: string;
   }>();
 
+  const { isOpen, onClose, onOpen } = useDisclosure();
+  const history = useHistory();
   const [isLoading, setIsLoading] = useState(true);
   const [currentPage, setCurrentPage] = useState<any>();
   const [issuesObj, setIssuesObj] = useState<{
@@ -329,23 +341,27 @@ export const ReportContainer: React.FC<{
   };
 
   const printReport = async () => {
-    try {
-      setPrintLoading(true);
-      const { data } = await API.post(`${API_PATH.API_GET_REPORT_PDF}`, {
-        project_id:
-          projectId || summary_report.project_summary_report.project_id,
-        report_id: reportId,
-        scan_type: projectType,
-      });
-      setPrintLoading(false);
-      if (data.status === "success" && data.download_url) {
-        const link = document.createElement("a");
-        link.href = data.download_url;
-        link.click();
+    if (isQSReport) {
+      onOpen();
+    } else {
+      try {
+        setPrintLoading(true);
+        const { data } = await API.post(`${API_PATH.API_GET_REPORT_PDF}`, {
+          project_id:
+            projectId || summary_report.project_summary_report.project_id,
+          report_id: reportId,
+          scan_type: projectType,
+        });
+        setPrintLoading(false);
+        if (data.status === "success" && data.download_url) {
+          const link = document.createElement("a");
+          link.href = data.download_url;
+          link.click();
+        }
+      } catch (e) {
+        console.log(e);
+        setPrintLoading(false);
       }
-    } catch (e) {
-      console.log(e);
-      setPrintLoading(false);
     }
   };
   const splitNumber = (num: number): number[] => {
@@ -500,16 +516,20 @@ export const ReportContainer: React.FC<{
                     variant={"accent-outline"}
                     w={["250px"]}
                     ml={"auto"}
+                    display={["none", "none", "none", "flex"]}
                     onClick={printReport}
                   >
-                    {printLoading ? (
+                    {isQSReport ? (
+                      <LockIcon mr={5} color="#3300FF" />
+                    ) : printLoading ? (
                       <Flex mr={5}>
                         <Loader size={25} color="#3E15F4" />
                       </Flex>
                     ) : (
                       <DownloadIcon mr={5} />
                     )}
-                    Download Report
+
+                    {isQSReport ? "Pay & Unlock report" : "Download Report"}
                   </Button>
                 ) : null}
               </Flex>
@@ -517,10 +537,13 @@ export const ReportContainer: React.FC<{
             <Flex
               w={"100%"}
               h={"100%"}
+              px={5}
               bg={!download ? "#535659" : "white"}
               pt={download ? 0 : 5}
               overflow={download ? "" : "hidden"}
               alignItems={"center"}
+              justifyContent={["center", "center", "center", "space-between"]}
+              flexDir="row"
               // ref={containerRef}
             >
               {!download ? (
@@ -531,6 +554,7 @@ export const ReportContainer: React.FC<{
                   pt={20}
                   pl={8}
                   pr={2}
+                  display={["none", "none", "none", "flex"]}
                 >
                   {leftNavs.map((nav, index) => (
                     <Text
@@ -561,8 +585,8 @@ export const ReportContainer: React.FC<{
                 align="stretch"
                 mt={download ? 0 : 6}
                 pb={20}
-                w={download ? "826px" : "830px"}
-                minW={download ? "826px" : "830px"}
+                w={download ? "826px" : ["90%", "400px", "700px", "830px"]}
+                minW={download ? "826px" : ["360px", "400px", "700px", "830px"]}
                 h={download ? "inherit" : "100%"}
                 bg={!download ? "#535659" : "white"}
                 overflowY={download ? "visible" : "auto"}
@@ -787,6 +811,8 @@ export const ReportContainer: React.FC<{
                                 showVulnerabilityTitle={counter === 0}
                                 filesContent={filesContent}
                                 codeStartLine={item.start_line}
+                                onOpen={onOpen}
+                                isQSReport={isQSReport}
                                 codeEndLine={item.end_line}
                                 showMetadata={index === 0}
                                 showDescription={
@@ -847,38 +873,71 @@ export const ReportContainer: React.FC<{
               </VStack>
 
               {!download ? (
-                <Flex
-                  w={"25%"}
-                  h={"100%"}
-                  flexDir={"column"}
-                  pt={20}
-                  pl={8}
-                  pr={2}
-                >
-                  <Text
-                    fontSize="sm"
-                    fontWeight={600}
-                    color={"white"}
-                    mb={6}
-                    cursor={"pointer"}
+                isQSReport ? (
+                  <VStack
+                    w="300px"
+                    bg={
+                      "linear-gradient(rgba(5, 12, 18, 1), rgba(23, 0, 114, 1))"
+                    }
+                    display={["none", "none", "none", "flex"]}
+                    borderRadius={10}
+                    p={7}
+                    spacing={10}
+                    textAlign="center"
+                    ml={8}
                   >
-                    ON THIS PAGE
-                  </Text>
-                  {currentPageHeadings &&
-                    currentPageHeadings.map((nav, index) => (
-                      <Text
-                        key={index}
-                        fontSize="sm"
-                        fontWeight={400}
-                        color={"#B0B7C3"}
-                        mb={4}
-                      >
-                        {nav}
-                      </Text>
-                    ))}
-                </Flex>
+                    <Text fontWeight={600} fontSize="md" color="white">
+                      Lorem ipsum dolor sit amet consectetur. Lacus elit.
+                    </Text>
+                    <Text fontWeight={400} fontSize="sm" color="subtle">
+                      Lorem ipsum dolor sit amet consectetur. Auctor quam
+                      pretium tellus varius in suspendisse velit pretium massa.
+                      Ornare sed eget aliquam urna duis eget.
+                    </Text>
+                    <Button
+                      w="100%"
+                      onClick={() => history.push("/signin")}
+                      variant="brand"
+                    >
+                      Signup For Free Trial
+                    </Button>
+                  </VStack>
+                ) : (
+                  <Flex
+                    w={"25%"}
+                    h={"100%"}
+                    flexDir={"column"}
+                    pt={20}
+                    display={["none", "none", "none", "flex"]}
+                    pl={8}
+                    pr={2}
+                  >
+                    <Text
+                      fontSize="sm"
+                      fontWeight={600}
+                      color={"white"}
+                      mb={6}
+                      cursor={"pointer"}
+                    >
+                      ON THIS PAGE
+                    </Text>
+                    {currentPageHeadings &&
+                      currentPageHeadings.map((nav, index) => (
+                        <Text
+                          key={index}
+                          fontSize="sm"
+                          fontWeight={400}
+                          color={"#B0B7C3"}
+                          mb={4}
+                        >
+                          {nav}
+                        </Text>
+                      ))}
+                  </Flex>
+                )
               ) : null}
             </Flex>
+            <QSPaymentModal onClose={onClose} isOpen={isOpen} />
           </Flex>
         </Container>
       )}

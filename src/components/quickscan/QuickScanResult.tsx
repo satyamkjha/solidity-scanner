@@ -51,18 +51,6 @@ export const QuickScanResultContainer: React.FC<{
     }
   }, [errorData]);
 
-  const onViewDetailResult = () => {
-    const scan_details = {
-      project_id: projectId,
-      contract_address: scanReport.contract_address,
-      contract_chain: scanReport.contract_chain,
-      contract_platform: scanReport.contract_platform,
-      new_user: false,
-    };
-    setRecentQuickScan(scan_details);
-    history.push("/signin");
-  };
-
   const openReport = () => {
     setIsLoading(true);
     sendMessage({
@@ -73,6 +61,14 @@ export const QuickScanResultContainer: React.FC<{
         scan_type: "block",
       },
     });
+    const scan_details = {
+      project_id: projectId,
+      contract_address: scanReport.contract_address,
+      contract_chain: scanReport.contract_chain,
+      contract_platform: scanReport.contract_platform,
+      new_user: false,
+    };
+    setRecentQuickScan(scan_details);
   };
 
   useEffect(() => {
@@ -104,7 +100,7 @@ export const QuickScanResultContainer: React.FC<{
 
   useEffect(() => {
     if (reportId !== "") {
-      // history.push(`/qs-report/${projectId}/${reportId}`);
+      history.push(`/qs-report/${projectId}/${reportId}/${scanId}`);
     }
   }, [reportId]);
 
@@ -225,7 +221,7 @@ export const QuickScanResultContainer: React.FC<{
               scanReport.multi_file_scan_summary.issue_severity_distribution
             }
           />
-          <Button
+          {/* <Button
             display={["none", "none", "none", "flex"]}
             variant="brand"
             w={"100%"}
@@ -233,7 +229,7 @@ export const QuickScanResultContainer: React.FC<{
             onClick={onViewDetailResult}
           >
             View detailed Result ⟶
-          </Button>
+          </Button> */}
           <Button
             display={["none", "none", "none", "flex"]}
             variant="brand"
@@ -312,11 +308,18 @@ export const QuickScanResultContainer: React.FC<{
           maxW={"300px"}
           onClick={openReport}
         >
-          View detailed Result ⟶
+          View Audit Report PDF ⟶
         </Button>
       </Flex>
       <QSErrorCountModal
         isOpen={open}
+        scan_details={{
+          project_id: projectId,
+          contract_address: scanReport.contract_address,
+          contract_chain: scanReport.contract_chain,
+          contract_platform: scanReport.contract_platform,
+          new_user: false,
+        }}
         errorCount={errorData?.errorCount || 0}
         errorType={errorData?.errorType || ""}
         onClose={() => {

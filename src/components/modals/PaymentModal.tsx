@@ -40,6 +40,8 @@ const PaymentModal: React.FC<{
     };
   };
   paymentMetadata?: any;
+  email?: string;
+  setTransactionId?: React.Dispatch<React.SetStateAction<string>>;
 }> = ({
   isOpen,
   onClose,
@@ -49,6 +51,8 @@ const PaymentModal: React.FC<{
   profileData,
   quantity,
   paymentMetadata,
+  email,
+  setTransactionId,
 }) => {
   const toast = useToast();
 
@@ -65,51 +69,89 @@ const PaymentModal: React.FC<{
 
   const createStripePayment = async () => {
     let req: any = {};
-    if (activeCoupon) {
+
+    if (duration === "on-demand-report") {
       req = {
-        package: selectedPlan,
-        duration: duration,
-        coupon: activeCoupon,
+        email: email,
+        metadata: paymentMetadata,
       };
-    } else {
-      req = {
-        package: selectedPlan,
-        duration: duration,
-      };
-    }
 
-    if (quantity) {
-      req.quantity = quantity;
-    }
+      try {
+        setLoading(true);
+        const { data, status } = await API.post<{
+          status: string;
+          checkout_url: string;
+          message?: string;
+          transaction_id?: string;
+        }>(API_PATH.API_CREATE_QUICK_SCAN_CHECKOUT, req);
 
-    if (paymentMetadata) {
-      req.payment_metadata = paymentMetadata;
-    }
-
-    try {
-      setLoading(true);
-      const { data, status } = await API.post<{
-        status: string;
-        checkout_url: string;
-        message?: string;
-      }>(API_PATH.API_CREATE_STRIPE_SUBSCRIPTION_BETA, req);
-
-      if (status === 200 && data.checkout_url) {
+        if (status === 200 && data.checkout_url) {
+          setLoading(false);
+          window.open(`${data.checkout_url}`, "_blank");
+          // fetchAgain();
+          data.transaction_id &&
+            setTransactionId &&
+            setTransactionId(data.transaction_id);
+          onClose();
+        } else {
+          toast({
+            title: data.message,
+            status: "error",
+            isClosable: true,
+            position: "bottom",
+          });
+        }
+      } catch (e) {
         setLoading(false);
-        window.open(`${data.checkout_url}`, "_blank");
-        // fetchAgain();
-        onClose();
-      } else {
-        toast({
-          title: data.message,
-          status: "error",
-          isClosable: true,
-          position: "bottom",
-        });
+        console.log(e);
       }
-    } catch (e) {
-      setLoading(false);
-      console.log(e);
+    } else {
+      if (activeCoupon) {
+        req = {
+          package: selectedPlan,
+          duration: duration,
+          coupon: activeCoupon,
+        };
+      } else {
+        req = {
+          package: selectedPlan,
+          duration: duration,
+        };
+      }
+
+      if (quantity) {
+        req.quantity = quantity;
+      }
+
+      if (paymentMetadata) {
+        req.payment_metadata = paymentMetadata;
+      }
+
+      try {
+        setLoading(true);
+        const { data, status } = await API.post<{
+          status: string;
+          checkout_url: string;
+          message?: string;
+        }>(API_PATH.API_CREATE_STRIPE_SUBSCRIPTION_BETA, req);
+
+        if (status === 200 && data.checkout_url) {
+          setLoading(false);
+          window.open(`${data.checkout_url}`, "_blank");
+          // fetchAgain();
+          onClose();
+        } else {
+          toast({
+            title: data.message,
+            status: "error",
+            isClosable: true,
+            position: "bottom",
+          });
+        }
+      } catch (e) {
+        setLoading(false);
+        console.log(e);
+      }
     }
   };
 
@@ -136,6 +178,15 @@ const PaymentModal: React.FC<{
           duration: duration,
         };
       }
+
+      if (duration === "on-demand-report") {
+        req = {
+          ...req,
+          email: email,
+          order_type: "quickscan_checkout",
+        };
+      }
+
       if (quantity) {
         req.quantity = quantity;
       }
@@ -146,8 +197,12 @@ const PaymentModal: React.FC<{
         checkout_url: string;
         status: string;
         status_url: string;
+        transaction_id?: string;
       }>(API_PATH.API_CREATE_ORDER_CP, req);
       setLoading(false);
+      data.transaction_id &&
+        setTransactionId &&
+        setTransactionId(data.transaction_id);
       window.open(
         data.checkout_url,
         "",
@@ -289,6 +344,7 @@ const PaymentModal: React.FC<{
                   }
                 />
                 {![
+                  "on-demand-report",
                   "ondemand",
                   "topup",
                   "publish_report",

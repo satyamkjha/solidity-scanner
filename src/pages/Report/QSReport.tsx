@@ -7,7 +7,7 @@ import { useQSReport } from "hooks/useQSReport";
 
 export default function QSReport() {
   const { reportId, projectId } = useParams<{
-    reportId: ScrollSetting;
+    reportId: string;
     projectId: string;
   }>();
   const { data } = useQSReport(projectId, reportId);
@@ -18,6 +18,7 @@ export default function QSReport() {
         <ReportContainer
           summary_report={data.summary_report}
           isPublicReport={true}
+          isQSReport={true}
         />
       ) : (
         <Container py={12} h="100vh" maxW={"100vw"} bg="black">

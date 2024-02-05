@@ -65,10 +65,11 @@ export const API_PATH = {
   API_GET_REPORT_VIA_TOKEN: "/api-get-report-via-token/",
   API_PUBLISH_REPORT: "/api-publish-report/",
   API_GET_PUBLIC_FILE_CONTENT: "/api-get-public-file-content/",
-  API_GET_PUBLIC_FILE_CONTENT_BLOCK: "/api-get-public-file-content-block/",
+  API_GET_PUBLIC_FILE_CONTENT_BLOCK: "/api-get-public-file-contePnt-block/",
   API_GET_CHECKOUT_PUBLIC_FILE_CONTENT:
     "/api-get-checkout-public-file-content/",
   API_GET_REPORT_PDF: "/api-get-report-pdf/",
+  API_GET_QUICK_SCAN_REPORT_PDF: "/api-get-quick-scan-report-pdf/",
 
   //INTEGRATIONS
   API_AUTHENTICATE_INTEGRATIONS: "/api-authenticate-oauth-provider/",
@@ -85,6 +86,8 @@ export const API_PATH = {
   API_GET_ACCEPTED_COINS: "/api-get-accepted-coins/",
   API_CREATE_STRIPE_SUBSCRIPTION_BETA: "/api-create-stripe-subscription-beta/",
   API_CANCEL_STRIPE_SUBSCRIPTION_BETA: "/api-cancel-stripe-subscription-beta/",
+  API_CREATE_QUICK_SCAN_CHECKOUT: "/api-create-quick-scan-checkout/",
+  API_GET_CHECKOUT_TRANSACTION_STATUS: "/api-get-checkout-transaction-status/",
   API_INVALIDATE_ORDER_BETA: "/api-invalidate-order-beta/",
   API_CREATE_ORDER_CP: "api-create-order-cp/",
   API_GET_TRANSACTION: "/api-get-transactions-beta/",

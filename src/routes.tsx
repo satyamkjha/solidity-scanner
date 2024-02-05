@@ -204,6 +204,16 @@ const QSReport = lazy(() =>
   )
 );
 
+const DownloadQSReport = lazy(() =>
+  lazyRetry(
+    () =>
+      import(
+        "pages/Report/DownloadQSReport" /* webpackChunkName: "DownloadQsReport" */
+      ),
+    "DownloadQsReport"
+  )
+);
+
 const QSPdfReport = lazy(() =>
   lazyRetry(
     () =>
@@ -265,6 +275,11 @@ const Routes: React.FC = () => {
             <SignIn />
           </RedirectRoute>
           <Route exact path="/reset" component={Reset} />
+          <Route
+            exact
+            path="/download-qs-report/:transactionId"
+            component={DownloadQSReport}
+          />
           <RedirectRoute exact path="/signup">
             <SignUp />
           </RedirectRoute>
@@ -285,7 +300,7 @@ const Routes: React.FC = () => {
           />
           <Route
             exact
-            path="/qs-report/:projectId/:reportId"
+            path="/qs-report/:projectId/:reportId/:scanId"
             component={QSReport}
           />
           <Route
@@ -299,7 +314,6 @@ const Routes: React.FC = () => {
             component={Report}
           />
           <Route exact path="/payment/:status" component={PaymentSucess} />
-
           <Route
             exact
             path={[
