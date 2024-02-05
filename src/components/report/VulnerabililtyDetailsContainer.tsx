@@ -591,68 +591,70 @@ const VulnerabililtyDetailsContainer: React.FC<{
           )
         ) : null}
 
-        <Flex
-          w="96%"
-          left="2px"
-          top={showVulnerabilityTitle ? "270px" : "190px"}
-          h="730px"
-          position="absolute"
-          sx={{
-            backdropFilter: "blur(6px)",
-          }}
-          bg="rgba(255,255,255,0.3)"
-          alignItems="center"
-          justifyContent="center"
-          flexDir="column"
-        >
+        {isQSReport && (
           <Flex
-            w="90%"
-            borderRadius={10}
-            p={7}
-            flexDir="row"
+            w="96%"
+            left="2px"
+            top={showVulnerabilityTitle ? "270px" : "190px"}
+            h="730px"
+            position="absolute"
+            sx={{
+              backdropFilter: "blur(6px)",
+            }}
+            bg="rgba(255,255,255,0.3)"
             alignItems="center"
-            justifyContent="space-between"
-            bg="linear-gradient(rgba(238, 235, 255, 1), rgba(229, 246, 255, 1))"
+            justifyContent="center"
+            flexDir="column"
           >
-            <VStack
-              alignItems="flex-start"
-              textAlign="left"
-              w="calc(100% - 250px)"
+            <Flex
+              w="90%"
+              borderRadius={10}
+              p={7}
+              flexDir="row"
+              alignItems="center"
+              justifyContent="space-between"
+              bg="linear-gradient(rgba(238, 235, 255, 1), rgba(229, 246, 255, 1))"
             >
-              <Text color="#000000" fontWeight={600} fontSize="md">
-                {isQSReport
-                  ? issue.severity === "gas"
-                    ? "SignUp and View Gas issues for free"
-                    : "Make One-time Payment"
-                  : "Upgrade your Plan to view the full report"}
-              </Text>
-              <Text color="#000000" fontWeight={300} fontSize="sm">
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla
-                leo viverra semper platea quis nibh lectus cursus. Know More
-              </Text>
-            </VStack>
-            <Button
-              leftIcon={<LockIcon />}
-              mt={2}
-              mb={4}
-              variant="brand"
-              width="200px"
-              onClick={() => {
-                if (isQSReport) {
-                  if (issue.severity === "gas") {
-                    history.push("/signup");
+              <VStack
+                alignItems="flex-start"
+                textAlign="left"
+                w="calc(100% - 250px)"
+              >
+                <Text color="#000000" fontWeight={600} fontSize="md">
+                  {isQSReport
+                    ? issue.severity === "gas"
+                      ? "SignUp and View Gas issues for free"
+                      : "Make One-time Payment"
+                    : "Upgrade your Plan to view the full report"}
+                </Text>
+                <Text color="#000000" fontWeight={300} fontSize="sm">
+                  Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla
+                  leo viverra semper platea quis nibh lectus cursus. Know More
+                </Text>
+              </VStack>
+              <Button
+                leftIcon={<LockIcon />}
+                mt={2}
+                mb={4}
+                variant="brand"
+                width="200px"
+                onClick={() => {
+                  if (isQSReport) {
+                    if (issue.severity === "gas") {
+                      history.push("/signup");
+                    } else {
+                      onOpen();
+                    }
                   } else {
-                    onOpen();
+                    history.push("/billing");
                   }
-                } else {
-                  history.push("/billing");
-                }
-              }}
-            >
-              {isQSReport ? "Pay & Unlock report" : "Upgrade"}
-            </Button>
+                }}
+              >
+                {isQSReport ? "Pay & Unlock report" : "Upgrade"}
+              </Button>
+            </Flex>
           </Flex>
-        </Flex>
+        )}
       </Flex>
     </Flex>
   );
