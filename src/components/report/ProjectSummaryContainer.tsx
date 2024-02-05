@@ -17,25 +17,25 @@ const ProjectSummaryContainer: React.FC<{
       justifyContent="flex-start"
       flexDir={"column"}
       id={"project-summary"}
-      px={4}
+      px={[0, 3, 4]}
     >
       <Flex
         sx={{
           color: "#000000",
           mx: 1,
         }}
-        my={10}
+        my={[4, 6, 10]}
         alignItems="center"
         className={"ss-report-h1"}
         content={"Vulnerability Classification and Severity"}
       >
-        <Text fontSize="28px" fontWeight={400}>
+        <Text fontSize={["14px", "20px", "28px"]} fontWeight={400}>
           1.
         </Text>
-        <Heading color={"#52FF00"} fontSize="28px" ml={4}>
+        <Heading color={"#52FF00"} fontSize={["14px", "20px", "28px"]} ml={4}>
           Vulnerability
         </Heading>
-        <Text fontSize="28px" fontWeight={400}>
+        <Text fontSize={["14px", "20px", "28px"]} fontWeight={400}>
           {" "}
           &nbsp;Classification and Severity{" "}
         </Text>
@@ -43,19 +43,24 @@ const ProjectSummaryContainer: React.FC<{
       <Text
         className={"ss-report-right-nav"}
         content={"Description"}
-        fontSize="lg"
+        fontSize={["sm", "md", "lg"]}
         fontWeight={"600"}
-        mt={[6, 6, 6, 12]}
+        mt={[1, 3, 6, 12]}
       >
         Description
       </Text>
-      <Text fontSize="xs" fontWeight={400} color={"#4E5D78"} my={4}>
+      <Text
+        fontSize={["8px", "11px", "xs"]}
+        fontWeight={400}
+        color={"#4E5D78"}
+        my={[1, 2, 4]}
+      >
         To enhance navigability, the document is organized in descending order
         of severity for easy reference. Issues are categorized as &nbsp;
         <Text display="inline-block">
           <Image
             src={`${assetsURL}report/fixed_color.svg`}
-            w={"14px"}
+            width={["5px", "10px", "14px"]}
             alt="F"
             mb={-0.5}
           />
@@ -63,7 +68,7 @@ const ProjectSummaryContainer: React.FC<{
         &nbsp;&nbsp;
         <Text
           display="inline-block"
-          fontSize={"xs"}
+          fontSize={["8px", "11px", "xs"]}
           fontWeight={"500"}
           color={"black"}
           fontStyle={"italic"}
@@ -74,14 +79,14 @@ const ProjectSummaryContainer: React.FC<{
         <Text display="inline-block">
           <Image
             src={`${assetsURL}report/pending_fix_color.svg`}
-            w={"14px"}
+            width={["5px", "10px", "14px"]}
             mb={-0.5}
           />
         </Text>
         &nbsp;&nbsp;
         <Text
           display="inline-block"
-          fontSize={"xs"}
+          fontSize={["8px", "11px", "xs"]}
           fontWeight={"500"}
           color={"black"}
           fontStyle={"italic"}
@@ -92,14 +97,14 @@ const ProjectSummaryContainer: React.FC<{
         <Text display="inline-block">
           <Image
             src={`${assetsURL}report/wont_fix_color.svg`}
-            w={"14px"}
+            width={["5px", "10px", "14px"]}
             mb={-0.5}
           />
         </Text>
         &nbsp;&nbsp;
         <Text
           display="inline-block"
-          fontSize={"xs"}
+          fontSize={["8px", "11px", "xs"]}
           fontWeight={"500"}
           color={"black"}
           fontStyle={"italic"}
@@ -110,14 +115,14 @@ const ProjectSummaryContainer: React.FC<{
         <Text display="inline-block">
           <Image
             src={`${assetsURL}report/wont_fix_color.svg`}
-            w={"14px"}
+            width={["5px", "10px", "14px"]}
             mb={-0.5}
           />
         </Text>
         &nbsp;&nbsp;
         <Text
           display="inline-block"
-          fontSize={"xs"}
+          fontSize={["8px", "11px", "xs"]}
           fontWeight={"500"}
           color={"black"}
           fontStyle={"italic"}
@@ -129,14 +134,14 @@ const ProjectSummaryContainer: React.FC<{
         <Text display="inline-block">
           <Image
             src={`${assetsURL}report/pending_fix_color.svg`}
-            w={"14px"}
+            width={["5px", "10px", "14px"]}
             mb={-0.5}
           />
         </Text>
         &nbsp;&nbsp;
         <Text
           display="inline-block"
-          fontSize={"xs"}
+          fontSize={["8px", "11px", "xs"]}
           fontWeight={"500"}
           color={"black"}
           fontStyle={"italic"}
@@ -152,11 +157,12 @@ const ProjectSummaryContainer: React.FC<{
         content={"Vulnerability Severity"}
         backgroundColor="#FFFFFF00"
         w="100%"
+        maxW={["320px", "350px", "100%"]}
         h="fit-content"
-        px={2}
-        mt={6}
+        px={[0, 0, 2]}
+        mt={[2, 4, 6]}
         templateColumns={"repeat(2, 1fr)"}
-        gap={10}
+        gap={[2, 4, 10]}
       >
         <IssueType
           issueType={"critical"}
@@ -195,11 +201,11 @@ const IssueType: React.FC<{ issueType: string; desc: string }> = ({
     <VStack alignItems={"flex-start"}>
       <Flex alignItems={"center"}>
         <SeverityIcon size={6} variant={issueType} />
-        <Text fontSize={"sm"} fontWeight={600} ml={2}>
+        <Text fontSize={["12px", "xs", "sm"]} fontWeight={600} ml={2}>
           {sentenceCapitalize(issueType)}
         </Text>
       </Flex>
-      <Text fontSize={"xs"} fontWeight={400} color={"#4E5D78"}>
+      <Text fontSize={["8px", "11px", "xs"]} fontWeight={400} color={"#4E5D78"}>
         {desc}
       </Text>
     </VStack>

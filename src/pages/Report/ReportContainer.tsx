@@ -668,7 +668,7 @@ export const ReportContainer: React.FC<{
                                   <>
                                     <a href={"#scan-history"}>
                                       <Text
-                                        fontSize="md"
+                                        fontSize={["xs", "sm", "md"]}
                                         fontWeight={600}
                                         mt={4}
                                         mb={4}
@@ -679,7 +679,7 @@ export const ReportContainer: React.FC<{
 
                                     <a href={"#disclaimer"}>
                                       <Text
-                                        fontSize="md"
+                                        fontSize={["xs", "sm", "md"]}
                                         fontWeight={600}
                                         mt={4}
                                         mb={4}
