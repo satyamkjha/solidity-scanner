@@ -134,6 +134,7 @@ export const ReportContainer: React.FC<{
   const location = useLocation();
   const searchParams = new URLSearchParams(location.search);
   const download = searchParams.get("download");
+  const token = searchParams.get("token");
 
   // const containerRef = useRef<HTMLDivElement>(null);
   // const observer = useRef<IntersectionObserver | null>(null);
@@ -293,6 +294,7 @@ export const ReportContainer: React.FC<{
             {
               file_paths: batch,
               report_id: reportId,
+              token: token,
             }
           );
           return data;

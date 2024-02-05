@@ -30,9 +30,10 @@ export const QSPaymentModal: React.FC<{
   } = useDisclosure();
   const [email, setEmail] = useState("");
   const [transactionId, setTransactionId] = useState("");
-  const { scanId, projectId } = useParams<{
+  const { scanId, projectId, reportId } = useParams<{
     scanId: string;
     projectId: string;
+    reportId: string;
   }>();
   const [paymentStatus, setPaymentStatus] = useState<
     "success" | "loading" | "failed"
@@ -143,6 +144,7 @@ export const QSPaymentModal: React.FC<{
                   paymentMetadata={{
                     project_id: projectId,
                     scan_id: scanId,
+                    report_id: reportId,
                   }}
                   email={email}
                 />
