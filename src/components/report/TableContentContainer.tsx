@@ -36,7 +36,7 @@ const TableContentContainer: React.FC<{
           <Text
             fontSize={["xs", "sm", "md"]}
             fontWeight={600}
-            mt={[8, 12, 16]}
+            mt={[4, 8, 16]}
             mb={[2, 3, 4]}
           >
             01 &nbsp;Vulnerability Classification and Severity
@@ -124,12 +124,12 @@ export const IssueComponent: React.FC<{
   issue: any;
 }> = ({ issue }) => {
   return (
-    <VStack w={"100%"} alignItems={"flex-start"} pl={[3, 4, 5]} mb={2}>
+    <VStack w={"100%"} alignItems={"flex-start"} pl={[3, 4, 5]} mb={[1, 2]}>
       <HStack spacing={[2, 3, 5]} w={"100%"}>
         <Flex alignItems={"center"} w={"80%"}>
           <SeverityIcon size={4} variant={"black"} />
           <Text
-            fontSize={["8px", "10px", "xs"]}
+            fontSize={["7px", "10px", "xs"]}
             fontWeight={"300"}
             lineHeight="1.5"
             ml={2}

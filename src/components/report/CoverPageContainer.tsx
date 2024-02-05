@@ -84,7 +84,7 @@ const CoverPageContainer: React.FC<{
               <Text
                 fontWeight={400}
                 fontSize={["xs", "sm"]}
-                width={"60%"}
+                width={["100%", "100%", "60%"]}
                 color={"subtle"}
                 mb={10}
               >
@@ -94,7 +94,7 @@ const CoverPageContainer: React.FC<{
               <ReportCoverDots />
             </Box>
             {isPublicReport && (
-              <Flex mt={["200px", "400px", "auto"]} alignItems={"center"}>
+              <Flex mt={["100px", "200px", "auto"]} alignItems={"center"}>
                 <Image
                   src={
                     summary_report.project_summary_report.report_type ===
@@ -102,15 +102,22 @@ const CoverPageContainer: React.FC<{
                       ? `${assetsURL}report/user-fill.svg`
                       : `${assetsURL}report/verified-fill.svg`
                   }
+                  height={["30px", "50px", "70px"]}
+                  width={["30px", "50px", "70px"]}
                 />
-                <VStack alignItems={"flex-start"} w={"60%"} spacing={1} ml={4}>
-                  <Text fontSize={"lg"}>
+                <VStack
+                  alignItems={"flex-start"}
+                  w={"60%"}
+                  spacing={1}
+                  ml={[2, 3, 4]}
+                >
+                  <Text fontSize={["sm", "md", "lg"]}>
                     {summary_report.project_summary_report.report_type ===
                     "self_published"
                       ? "Self-published"
                       : "Verified Report"}
                   </Text>
-                  <Text fontSize={"sm"} fontWeight={400}>
+                  <Text fontSize={["8px", "xs", "sm"]} fontWeight={400}>
                     {summary_report.project_summary_report.report_type ===
                     "self_published"
                       ? "This audit report was Self-published by the user."
@@ -132,8 +139,8 @@ const CoverPageContainer: React.FC<{
           {isPublicReport && (
             <Image
               display={["block"]}
-              height={[250]}
-              width={[250]}
+              height={["80px", "150px", 250]}
+              width={["80px", "150px", 250]}
               src={
                 summary_report.project_summary_report.report_type ===
                 "self_published"
