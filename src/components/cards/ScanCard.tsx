@@ -155,11 +155,10 @@ const ScanCard: React.FC<{
       >
         <Box ml={4} w="70%">
           <Text isTruncated>{project_name || contract_address}</Text>
-          {scan.scan_details._updated && (
-            <Text sx={{ fontSize: "xs", color: "subtle" }}>
-              Last scanned {timeSince(new Date(scan.scan_details._updated))}
-            </Text>
-          )}
+          <Text sx={{ fontSize: "xs", color: "subtle" }}>
+            Last scanned{" "}
+            {timeSince(new Date(`${scan.scan_details.scan_init_time}+0000`))}
+          </Text>
         </Box>
         <HStack mr={hover ? 2 : 9} alignItems="flex-start">
           <Image
