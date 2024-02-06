@@ -594,8 +594,8 @@ export const ReportContainer: React.FC<{
                 align="stretch"
                 mt={download ? 0 : 6}
                 pb={20}
-                w={download ? "826px" : ["90%", "450px", "830px"]}
-                minW={download ? "826px" : ["360px", "450px", "830px"]}
+                w={download ? "826px" : "830px"}
+                minW={download ? "826px" : "830px"}
                 h={download ? "inherit" : "100%"}
                 bg={!download ? "#535659" : "white"}
                 overflowY={download ? "visible" : "auto"}
@@ -677,7 +677,7 @@ export const ReportContainer: React.FC<{
                                   <>
                                     <a href={"#scan-history"}>
                                       <Text
-                                        fontSize={["xs", "sm", "md"]}
+                                        fontSize={["md"]}
                                         fontWeight={600}
                                         mt={4}
                                         mb={4}
@@ -688,7 +688,7 @@ export const ReportContainer: React.FC<{
 
                                     <a href={"#disclaimer"}>
                                       <Text
-                                        fontSize={["xs", "sm", "md"]}
+                                        fontSize={["md"]}
                                         fontWeight={600}
                                         mt={4}
                                         mb={4}

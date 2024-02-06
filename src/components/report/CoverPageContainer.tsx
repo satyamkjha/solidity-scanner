@@ -65,7 +65,7 @@ const CoverPageContainer: React.FC<{
               <Logo size={120} fill={"white"} />
             </HStack>
             <Text
-              fontSize={["md", "lg", "2xl"]}
+              fontSize={["2xl"]}
               fontWeight={400}
               color={"subtle"}
               mt={[10, 10, 10, 20]}
@@ -73,7 +73,7 @@ const CoverPageContainer: React.FC<{
             >
               Security Assessment
             </Text>
-            <Heading fontSize={["lg", "xl", "4xl"]} fontWeight={700} mb={3}>
+            <Heading fontSize={["4xl"]} fontWeight={700} mb={3}>
               {summary_report.project_summary_report.project_name ||
                 summary_report.project_summary_report.contract_name}
             </Heading>
@@ -94,7 +94,7 @@ const CoverPageContainer: React.FC<{
               <ReportCoverDots />
             </Box>
             {isPublicReport && (
-              <Flex mt={["100px", "200px", "auto"]} alignItems={"center"}>
+              <Flex mt={["auto"]} alignItems={"center"}>
                 <Image
                   src={
                     summary_report.project_summary_report.report_type ===
@@ -102,8 +102,8 @@ const CoverPageContainer: React.FC<{
                       ? `${assetsURL}report/user-fill.svg`
                       : `${assetsURL}report/verified-fill.svg`
                   }
-                  height={["30px", "50px", "70px"]}
-                  width={["30px", "50px", "70px"]}
+                  height={["70px"]}
+                  width={["70px"]}
                 />
                 <VStack
                   alignItems={"flex-start"}
@@ -111,13 +111,13 @@ const CoverPageContainer: React.FC<{
                   spacing={1}
                   ml={[2, 3, 4]}
                 >
-                  <Text fontSize={["sm", "md", "lg"]}>
+                  <Text fontSize={["lg"]}>
                     {summary_report.project_summary_report.report_type ===
                     "self_published"
                       ? "Self-published"
                       : "Verified Report"}
                   </Text>
-                  <Text fontSize={["8px", "xs", "sm"]} fontWeight={400}>
+                  <Text fontSize={["sm"]} fontWeight={400}>
                     {summary_report.project_summary_report.report_type ===
                     "self_published"
                       ? "This audit report was Self-published by the user."

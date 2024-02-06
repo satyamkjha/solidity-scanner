@@ -58,7 +58,6 @@ const AuditSummaryContainer: React.FC<{
       justifyContent="flex-start"
       flexDir={"column"}
       id={"executive-summary"}
-      transform={"scale(0.7)"}
     >
       <Flex
         sx={{
@@ -258,7 +257,7 @@ const AuditSummaryContainer: React.FC<{
         borderRadius={15}
       >
         <SolidityScoreProgress
-          score={summary_report.scan_summary[0].score}
+          score={summary_report.scan_summary[0].score_v2}
           size={"100px"}
           thickness={"7px"}
         />

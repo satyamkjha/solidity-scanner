@@ -22,10 +22,10 @@ const TableContentContainer: React.FC<{
         }}
         alignItems="center"
       >
-        <Heading color={"#52FF00"} fontSize={["xl", "2xl", "4xl"]}>
+        <Heading color={"#52FF00"} fontSize="4xl">
           Table of
         </Heading>
-        <Text fontSize={["xl", "2xl", "4xl"]} fontWeight={400}>
+        <Text fontSize="4xl" fontWeight={400}>
           {" "}
           &nbsp;Contents.{" "}
         </Text>
@@ -33,12 +33,7 @@ const TableContentContainer: React.FC<{
 
       <Flex w={"100%"}>
         <a href={"#project-summary"}>
-          <Text
-            fontSize={["xs", "sm", "md"]}
-            fontWeight={600}
-            mt={[4, 8, 16]}
-            mb={[2, 3, 4]}
-          >
+          <Text fontSize="md" fontWeight={600} mt={16} mb={4}>
             01 &nbsp;Vulnerability Classification and Severity
           </Text>
         </a>
@@ -46,12 +41,7 @@ const TableContentContainer: React.FC<{
 
       <Flex w={"100%"}>
         <a href={"#executive-summary"}>
-          <Text
-            fontSize={["xs", "sm", "md"]}
-            fontWeight={600}
-            mt={[2, 3, 4]}
-            mb={[2, 3, 4]}
-          >
+          <Text fontSize="md" fontWeight={600} mt={4} mb={4}>
             02 &nbsp;Executive Summary
           </Text>
         </a>
@@ -59,12 +49,7 @@ const TableContentContainer: React.FC<{
 
       <Flex w={"100%"}>
         <a href={"#finding-summary"}>
-          <Text
-            fontSize={["xs", "sm", "md"]}
-            fontWeight={600}
-            mt={[2, 3, 4]}
-            mb={[2, 3, 4]}
-          >
+          <Text fontSize="md" fontWeight={600} mt={4} mb={4}>
             03 &nbsp;Findings Summary
           </Text>
         </a>
@@ -72,12 +57,7 @@ const TableContentContainer: React.FC<{
 
       <Flex w={"100%"}>
         <a href={"#vulnerability-detail"}>
-          <Text
-            fontSize={["xs", "sm", "md"]}
-            fontWeight={600}
-            mt={[2, 3, 4]}
-            mb={[2, 3, 4]}
-          >
+          <Text fontSize="md" fontWeight={600} mt={4} mb={4}>
             04 &nbsp;Vulnerability Details
           </Text>
         </a>
@@ -91,12 +71,7 @@ const TableContentContainer: React.FC<{
         <>
           <Flex w={"100%"}>
             <a href={"#scan-history"}>
-              <Text
-                fontSize={["xs", "sm", "md"]}
-                fontWeight={600}
-                mt={[2, 3, 4]}
-                mb={[2, 3, 4]}
-              >
+              <Text fontSize="md" fontWeight={600} mt={4} mb={4}>
                 05 &nbsp;Scan History
               </Text>
             </a>
@@ -104,12 +79,7 @@ const TableContentContainer: React.FC<{
 
           <Flex w={"100%"}>
             <a href={"#disclaimer"}>
-              <Text
-                fontSize={["xs", "sm", "md"]}
-                fontWeight={600}
-                mt={[2, 3, 4]}
-                mb={[2, 3, 4]}
-              >
+              <Text fontSize="md" fontWeight={600} mt={4} mb={4}>
                 06 &nbsp;Disclaimer
               </Text>
             </a>
@@ -124,16 +94,11 @@ export const IssueComponent: React.FC<{
   issue: any;
 }> = ({ issue }) => {
   return (
-    <VStack w={"100%"} alignItems={"flex-start"} pl={[3, 4, 5]} mb={[1, 2]}>
-      <HStack spacing={[2, 3, 5]} w={"100%"}>
+    <VStack w={"100%"} alignItems={"flex-start"} pl={5} mb={2}>
+      <HStack spacing={5} w={"100%"}>
         <Flex alignItems={"center"} w={"80%"}>
           <SeverityIcon size={4} variant={"black"} />
-          <Text
-            fontSize={["7px", "10px", "xs"]}
-            fontWeight={"300"}
-            lineHeight="1.5"
-            ml={2}
-          >
+          <Text fontSize={["xs"]} fontWeight={"300"} lineHeight="1.5" ml={2}>
             {issue.issue_name}
           </Text>
         </Flex>
