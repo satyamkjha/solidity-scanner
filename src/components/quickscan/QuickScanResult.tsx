@@ -9,7 +9,11 @@ import {
   Button,
 } from "@chakra-ui/react";
 import { severityArrayInOrder } from "common/values";
-import { sentenceCapitalize, setRecentQuickScan } from "helpers/helperFunction";
+import {
+  sentenceCapitalize,
+  setRecentQuickScan,
+  getFeatureGateConfig,
+} from "helpers/helperFunction";
 import { QuickScanResult } from "common/types";
 import SolidityScoreProgress from "components/common/SolidityScoreProgress";
 import { useHistory } from "react-router-dom";
@@ -50,6 +54,18 @@ export const QuickScanResultContainer: React.FC<{
       setOpen(true);
     }
   }, [errorData]);
+
+  const onViewDetailResult = () => {
+    const scan_details = {
+      project_id: projectId,
+      contract_address: scanReport.contract_address,
+      contract_chain: scanReport.contract_chain,
+      contract_platform: scanReport.contract_platform,
+      new_user: false,
+    };
+    setRecentQuickScan(scan_details);
+    history.push("/signin");
+  };
 
   const openReport = () => {
     setIsLoading(true);
@@ -306,9 +322,15 @@ export const QuickScanResultContainer: React.FC<{
           w={"100%"}
           mt={[5, 5, 10]}
           maxW={"300px"}
-          onClick={openReport}
+          onClick={() =>
+            getFeatureGateConfig().qs_report
+              ? openReport()
+              : onViewDetailResult()
+          }
         >
-          View Audit Report PDF ⟶
+          {getFeatureGateConfig().qs_report
+            ? "View Audit Report PDF ⟶"
+            : "View Deatiled Result"}
         </Button>
       </Flex>
       <QSErrorCountModal

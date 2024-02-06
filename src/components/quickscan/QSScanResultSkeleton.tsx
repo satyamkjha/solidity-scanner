@@ -18,6 +18,7 @@ import {
   getContractBlockchainId,
   getContractChainLabel,
   sentenceCapitalize,
+  getFeatureGateConfig,
 } from "helpers/helperFunction";
 import { useHistory } from "react-router-dom";
 import PieChart from "components/pieChart";
@@ -416,7 +417,9 @@ export const QSScanResultSkeleton: React.FC<{
             isDisabled
             onClick={() => history.push("/signin")}
           >
-            View Audit Report PDF ⟶
+            {getFeatureGateConfig().qs_report
+              ? "View Audit Report PDF ⟶"
+              : "View Deatiled Result"}
           </Button>
         </VStack>
         <Flex

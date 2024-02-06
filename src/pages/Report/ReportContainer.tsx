@@ -119,7 +119,9 @@ export const ReportContainer: React.FC<{
   const [issuesObj, setIssuesObj] = useState<{
     [key: string]: IssueDetailObject;
   }>({});
-
+  const [filteredIssues, setFilteredIssues] = useState<{
+    [key: string]: IssueDetailObject;
+  }>({});
 
   const [bugList, setBugList] = useState<IssueItem[]>();
   const [filesContent, setFilesContent] = useState<any[]>([]);
@@ -168,6 +170,27 @@ export const ReportContainer: React.FC<{
     let issueDetailList: IssueItem[] = [];
 
     const issues = sortIssuesBySeverity(summary_report);
+
+    let tempFilteredIssue: {
+      [key: string]: IssueDetailObject;
+    } = {};
+
+    let addedIssue: string[] = [];
+    let tempKey = "";
+
+    Object.keys(issues).forEach((key, index) => {
+      if (!addedIssue.includes(issues[key].issue_details[0].severity)) {
+        tempFilteredIssue[key] = {
+          ...issues[key],
+          issue_details: [issues[key].issue_details[0]],
+        };
+        console.log(tempFilteredIssue);
+        addedIssue.push(issues[key].issue_details[0].severity);
+        console.log(addedIssue);
+      }
+    });
+
+    setFilteredIssues(tempFilteredIssue);
 
     Object.keys(issues).forEach((key, index) => {
       if (key.length > 77) {
@@ -791,56 +814,110 @@ export const ReportContainer: React.FC<{
                   </>
                 ) : null}
 
-                {Object.keys(issuesObj).map((key, index) =>
-                  issuesObj[key].issue_details.map((issue) => {
-                    const splitResult = getVulnerabilityDetailSplit(issue);
-                    if (splitResult) {
-                      return (
-                        splitResult as {
-                          point: string;
-                          start_line: number;
-                          end_line: number;
-                        }[]
-                      ).map((item, index, array) => {
-                        counter = counter + 1;
-                        return (
-                          // <LazyLoad key={"vul" + counter}>
-                          <PDFContainer
-                            page={"details"}
-                            pageNumber={
-                              totalVulnerabilitySplit && totalBugsSplit
-                                ? totalVulnerabilitySplit?.length +
-                                  totalBugsSplit?.length +
-                                  counter +
-                                  4
-                                : 5 + counter
-                            }
-                            content={
-                              <VulnerabililtyDetailsContainer
-                                type={item.point}
-                                summary_report={summary_report}
-                                issue={issue}
-                                showVulnerabilityTitle={counter === 0}
-                                filesContent={filesContent}
-                                codeStartLine={item.start_line}
-                                onOpen={onOpen}
-                                isQSReport={isQSReport}
-                                codeEndLine={item.end_line}
-                                showMetadata={index === 0}
-                                showDescription={
-                                  item.point === "desc" ||
-                                  index === array.length - 1
+                {Object.keys(isQSReport ? filteredIssues : issuesObj).map(
+                  (key, index) => {
+                    if (isQSReport) {
+                      return filteredIssues[key].issue_details.map((issue) => {
+                        const splitResult = getVulnerabilityDetailSplit(issue);
+                        if (splitResult) {
+                          return (
+                            splitResult as {
+                              point: string;
+                              start_line: number;
+                              end_line: number;
+                            }[]
+                          ).map((item, index, array) => {
+                            counter = counter + 1;
+                            return (
+                              // <LazyLoad key={"vul" + counter}>
+                              <PDFContainer
+                                page={"details"}
+                                pageNumber={
+                                  totalVulnerabilitySplit && totalBugsSplit
+                                    ? totalVulnerabilitySplit?.length +
+                                      totalBugsSplit?.length +
+                                      counter +
+                                      4
+                                    : 5 + counter
                                 }
+                                content={
+                                  <VulnerabililtyDetailsContainer
+                                    type={item.point}
+                                    summary_report={summary_report}
+                                    issue={issue}
+                                    showVulnerabilityTitle={counter === 0}
+                                    filesContent={filesContent}
+                                    codeStartLine={item.start_line}
+                                    onOpen={onOpen}
+                                    isQSReport={isQSReport}
+                                    codeEndLine={item.end_line}
+                                    showMetadata={index === 0}
+                                    showDescription={
+                                      item.point === "desc" ||
+                                      index === array.length - 1
+                                    }
+                                  />
+                                }
+                                setCurrentPage={setCurrentPage}
+                                setCurrentPageHeadings={setCurrentPageHeadings}
                               />
-                            }
-                            setCurrentPage={setCurrentPage}
-                            setCurrentPageHeadings={setCurrentPageHeadings}
-                          />
-                          // </LazyLoad>
-                        );
+                              // </LazyLoad>
+                            );
+                          });
+                        } else return splitResult;
                       });
-                    } else return splitResult;
-                  })
+                    } else {
+                      return issuesObj[key].issue_details.map((issue) => {
+                        const splitResult = getVulnerabilityDetailSplit(issue);
+                        if (splitResult) {
+                          return (
+                            splitResult as {
+                              point: string;
+                              start_line: number;
+                              end_line: number;
+                            }[]
+                          ).map((item, index, array) => {
+                            counter = counter + 1;
+                            return (
+                              // <LazyLoad key={"vul" + counter}>
+                              <PDFContainer
+                                page={"details"}
+                                pageNumber={
+                                  totalVulnerabilitySplit && totalBugsSplit
+                                    ? totalVulnerabilitySplit?.length +
+                                      totalBugsSplit?.length +
+                                      counter +
+                                      4
+                                    : 5 + counter
+                                }
+                                content={
+                                  <VulnerabililtyDetailsContainer
+                                    type={item.point}
+                                    summary_report={summary_report}
+                                    issue={issue}
+                                    showVulnerabilityTitle={counter === 0}
+                                    filesContent={filesContent}
+                                    codeStartLine={item.start_line}
+                                    onOpen={onOpen}
+                                    isQSReport={isQSReport}
+                                    codeEndLine={item.end_line}
+                                    showMetadata={index === 0}
+                                    showDescription={
+                                      item.point === "desc" ||
+                                      index === array.length - 1
+                                    }
+                                  />
+                                }
+                                setCurrentPage={setCurrentPage}
+                                setCurrentPageHeadings={setCurrentPageHeadings}
+                              />
+                              // </LazyLoad>
+                            );
+                          });
+                        } else return splitResult;
+                      });
+                    }
+                  }
                 )}
 
                 {scanHistorySplit?.map((item, index) => (
