@@ -16,6 +16,7 @@ import { EmailForm } from "./qs_report/emailForm";
 import { PaymentMsg } from "./qs_report/paymentMsg";
 import API from "helpers/api";
 import { API_PATH } from "helpers/routeManager";
+import { usePricingPlans } from "hooks/usePricingPlans";
 
 export const QSPaymentModal: React.FC<{
   onClose: any;
@@ -23,6 +24,7 @@ export const QSPaymentModal: React.FC<{
 }> = ({ isOpen, onClose }) => {
   const [modalHeader, setModalHeader] = useState("Publish Report");
   const [modalState, setModalState] = useState("enter_email");
+  const { data: pricing_plans } = usePricingPlans();
   const {
     isOpen: openPaymentModal,
     onOpen,
@@ -51,8 +53,8 @@ export const QSPaymentModal: React.FC<{
   }, [transactionId]);
 
   const resetStates = () => {
-    setModalHeader("");
-    setModalState("");
+    setModalHeader("One Time Audit Report");
+    setModalState("enter_email");
     setEmail("");
     setPaymentStatus("loading");
   };
@@ -117,26 +119,12 @@ export const QSPaymentModal: React.FC<{
                   setModalState={setModalState}
                   setPaymentStatus={setPaymentStatus}
                 />
-              ) : modalState === "make_payment" ? (
+              ) : pricing_plans && modalState === "make_payment" ? (
                 <PaymentModal
                   globalDuration={"on-demand-report"}
                   selectedPlan={"non-pro"}
                   setTransactionId={setTransactionId}
-                  pricingDetails={{
-                    "on-demand-report": {
-                      "non-pro": {
-                        amount: "49.99",
-                        description:
-                          "Lorem ipsum dolor sit amet consectetur. Purus diam a consectetur arcu dictumst viverra.",
-                        discount: null,
-                        github: false,
-                        name: "One Time Audit Report",
-                        publishable_report: false,
-                        report: false,
-                        scan_count: 0,
-                      },
-                    },
-                  }}
+                  pricingDetails={pricing_plans.pricing_data}
                   isOpen={openPaymentModal}
                   onClose={() => {
                     closePaymentModal();

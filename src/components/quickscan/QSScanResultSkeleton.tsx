@@ -416,7 +416,7 @@ export const QSScanResultSkeleton: React.FC<{
             isDisabled
             onClick={() => history.push("/signin")}
           >
-            View detailed Result ⟶
+            View Audit Report PDF ⟶
           </Button>
         </VStack>
         <Flex

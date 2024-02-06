@@ -58,6 +58,7 @@ const AuditSummaryContainer: React.FC<{
       justifyContent="flex-start"
       flexDir={"column"}
       id={"executive-summary"}
+      transform={"scale(0.7)"}
     >
       <Flex
         sx={{
