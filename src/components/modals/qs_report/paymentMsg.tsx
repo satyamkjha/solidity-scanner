@@ -17,7 +17,8 @@ import { WarningTwoIcon } from "@chakra-ui/icons";
 export const PaymentMsg: React.FC<{
   email: string;
   paymentStatus: string;
-}> = ({ email, paymentStatus }) => {
+  amount: string;
+}> = ({ email, paymentStatus, amount }) => {
   return (
     <Flex
       w="100%"
@@ -44,24 +45,26 @@ export const PaymentMsg: React.FC<{
 
         {paymentStatus === "success" ? (
           <Text mt={5} fontWeight={300} fontSize={"lg"}>
-            Thank you! Your payment of <b>$ 49.99</b> has been received.
+            Thank you! Your payment of <b>$ {amount}</b> has been received.
           </Text>
         ) : paymentStatus === "loading" ? (
           <Text mt={5} fontWeight={300} fontSize={"lg"}>
-            Plese Wait, Your payment of <b>$ 49.99</b> is under progress.
+            Please wait while we process your payment of <b>$ {amount}</b>
           </Text>
         ) : paymentStatus === "failed" ? (
           <Text mt={5} fontWeight={300} fontSize={"lg"}>
-            Sorry! Your payment of <b>$ 49.99</b> was not successful.
+            Sorry! Your payment of <b>$ {amount}</b> was not successful.
           </Text>
         ) : (
           <></>
         )}
 
         <Text mt={7} maxW="500px" textAlign="center" fontSize={"sm"}>
-          Lorem ipsum dolor sit amet consectetur. Justo dui auctor integer morbi
-          tortor auctor. Gravida ornare lectus eu odio. Phasellus massa pretium
-          ac nec tellus aliquam cras integer.
+          {paymentStatus === "success"
+            ? "The link for the audit report PDF should be available on your email now. Contact the SolidityScan team for further help if needed!"
+            : paymentStatus === "loading"
+            ? "Sit back and relax. You will be getting a confirmation of the payment via email once processed."
+            : ""}
         </Text>
 
         {email && paymentStatus === "success" && (

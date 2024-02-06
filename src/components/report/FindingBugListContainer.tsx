@@ -9,7 +9,8 @@ const FindingBugListContainer: React.FC<{
   showActionTaken: boolean;
   summary_report: Report;
   issues: IssueItem[];
-}> = ({ showActionTaken, issues, summary_report }) => {
+  isQSReport: boolean;
+}> = ({ showActionTaken, issues, summary_report, isQSReport }) => {
   const assetsURL = getAssetsURL();
   return (
     <Flex w="100%" py={8} direction="column">
@@ -86,9 +87,16 @@ const FindingBugListContainer: React.FC<{
         <Text fontSize="8px" fontWeight={600} color={"gray.600"} width={"13%"}>
           Detection Method
         </Text>
-        <Text fontSize="8px" fontWeight={600} color={"gray.600"} width={"10%"}>
-          Line No
-        </Text>
+        {!isQSReport && (
+          <Text
+            fontSize="8px"
+            fontWeight={600}
+            color={"gray.600"}
+            width={"10%"}
+          >
+            Line No
+          </Text>
+        )}
         <Text fontSize="8px" fontWeight={600} color={"gray.600"} width={"13%"}>
           Status
         </Text>

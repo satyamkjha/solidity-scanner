@@ -53,6 +53,7 @@ const DownloadQSReport: React.FC = () => {
 
       if (data.status === "success") {
         sets3url(data.download_url);
+        setReportName(data.contract_address);
       }
       setIsLoading(false);
     } catch (e) {
@@ -73,10 +74,9 @@ const DownloadQSReport: React.FC = () => {
 
       {s3Url === "" ? (
         <Flex align="center" direction="column" textAlign="center" my={40}>
-          <Heading fontSize="2xl">One Time Audit Report Verification</Heading>
+          <Heading fontSize="2xl">Audit Report Email Verification</Heading>
           <Text color="subtle" my={3}>
-            Lorem ipsum dolor sit amet consectetur. Risus ipsum ac sit proin
-            felis.
+            Enter your email ID and confirm to unlock your audit report!
           </Text>
 
           <Stack spacing={6} mt={8} width={["300px", "400px", "600px"]}>
@@ -136,10 +136,9 @@ const DownloadQSReport: React.FC = () => {
           textAlign="center"
           my={[20, 20, 40]}
         >
-          <Heading fontSize="2xl">One Time Audit Report Verification</Heading>
+          <Heading fontSize="2xl">Audit Report Email Verification</Heading>
           <Text color="subtle" my={3}>
-            Lorem ipsum dolor sit amet consectetur. Risus ipsum ac sit proin
-            felis.
+            Email Verified Successfully! Please download your Audit Report.
           </Text>
 
           <Stack
@@ -150,7 +149,7 @@ const DownloadQSReport: React.FC = () => {
             width={["300px", "500px", "800px"]}
           >
             <Text color="subtle" mt={7}>
-              One Time Audit Report
+              One Time Audit Report for
               <span style={{ color: "#000000" }}>
                 <b> {email}</b>
               </span>
@@ -166,10 +165,10 @@ const DownloadQSReport: React.FC = () => {
               alignItems={"center"}
               justifyContent={["flex-start", "flex-start", "space-between"]}
             >
-              <HStack>
+              <HStack w={["90%", "90%", "50%"]}>
                 <Image src={`${assetsURL}icons/pdf-icon.svg`} />
-                <Text color="#000000" fontWeight={700} mt={7}>
-                  Compound Finance V1.3
+                <Text isTruncated color="#000000" fontWeight={700} mt={7}>
+                  {reportName}
                 </Text>
               </HStack>
               <Button

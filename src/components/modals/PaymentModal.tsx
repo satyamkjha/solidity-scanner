@@ -373,9 +373,33 @@ const PaymentModal: React.FC<{
                   }
                   label={disableMessage}
                 >
-                  <Flex mt={"auto"} w="100%">
+                  <Flex
+                    w={"100%"}
+                    justifyContent={[
+                      "flex-start",
+                      "flex-start",
+                      "flex-start",
+                      "space-between",
+                    ]}
+                    mt={"auto"}
+                    alignItems="center"
+                  >
+                    {globalDuration === "on-demand-report" && (
+                      <Button
+                        w={
+                          globalDuration === "on-demand-report" ? "47%" : "100%"
+                        }
+                        variant="accent-outline"
+                        onClick={() => {}}
+                      >
+                        Back
+                      </Button>
+                    )}
                     <Button
-                      w="100%"
+                      mt={
+                        globalDuration === "on-demand-report" ? [2, 2, 2, 0] : 0
+                      }
+                      w={globalDuration === "on-demand-report" ? "47%" : "100%"}
                       variant="brand"
                       isLoading={loading}
                       spinner={<Loader color={"#3300FF"} size={25} />}
@@ -431,7 +455,7 @@ const PaymentModal: React.FC<{
                   {paymentMethod === "cp" && (
                     <CoinPaymentSelect setCoin={setCoin} coin={coin} />
                   )}
-                  {duration !== "topup" && (
+                  {duration !== "topup" && duration !== "on-demand-report" && (
                     <CouponCodeSection
                       duration={duration}
                       selectedPlan={selectedPlan}
@@ -475,24 +499,46 @@ const PaymentModal: React.FC<{
                   />
                 </>
               )}
-              <Button
+              <Flex
+                w={"100%"}
+                justifyContent={[
+                  "flex-start",
+                  "flex-start",
+                  "flex-start",
+                  "space-between",
+                ]}
                 mt={4}
-                w="100%"
-                variant="brand"
-                onClick={() => {
-                  if (step > 0) {
-                    if (paymentMethod === "cp") {
-                      createCPLink();
-                    } else {
-                      createStripePayment();
-                    }
-                  } else {
-                    setStep(1);
-                  }
-                }}
+                alignItems="center"
               >
-                {step > 0 ? "Make Payment" : "Proceed to Payment"}
-              </Button>
+                {globalDuration === "on-demand-report" && (
+                  <Button
+                    w={globalDuration === "on-demand-report" ? "47%" : "100%"}
+                    variant="accent-outline"
+                    onClick={() => {}}
+                  >
+                    Back
+                  </Button>
+                )}
+
+                <Button
+                  mt={globalDuration === "on-demand-report" ? [2, 2, 2, 0] : 0}
+                  w={globalDuration === "on-demand-report" ? "47%" : "100%"}
+                  variant="brand"
+                  onClick={() => {
+                    if (step > 0) {
+                      if (paymentMethod === "cp") {
+                        createCPLink();
+                      } else {
+                        createStripePayment();
+                      }
+                    } else {
+                      setStep(1);
+                    }
+                  }}
+                >
+                  {step > 0 ? "Make Payment" : "Proceed to Payment"}
+                </Button>
+              </Flex>
             </Flex>
           ) : (
             <>

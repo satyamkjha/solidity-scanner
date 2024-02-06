@@ -22,7 +22,6 @@ export const QSPaymentModal: React.FC<{
   onClose: any;
   isOpen: boolean;
 }> = ({ isOpen, onClose }) => {
-  const [modalHeader, setModalHeader] = useState("Publish Report");
   const [modalState, setModalState] = useState("enter_email");
   const { data: pricing_plans } = usePricingPlans();
   const {
@@ -43,7 +42,6 @@ export const QSPaymentModal: React.FC<{
 
   useEffect(() => {
     if (transactionId === "") {
-      setModalHeader("One Time Audit Report");
       setModalState("enter_email");
     } else {
       setModalState("payment_complete");
@@ -53,7 +51,6 @@ export const QSPaymentModal: React.FC<{
   }, [transactionId]);
 
   const resetStates = () => {
-    setModalHeader("One Time Audit Report");
     setModalState("enter_email");
     setEmail("");
     setPaymentStatus("loading");
@@ -95,7 +92,7 @@ export const QSPaymentModal: React.FC<{
           borderRadius="15px"
         >
           <ModalHeader textAlign={["center"]} py={10} pb={2}>
-            {modalHeader}
+            {"Unlock Audit Report"}
           </ModalHeader>
           <ModalCloseButton mt={8} mr={2} />
           <ModalBody h="100%" w={"100%"} px={[6, 6, 6, 12]} pb={10} pt={4}>
@@ -111,8 +108,12 @@ export const QSPaymentModal: React.FC<{
               }
               pb={10}
             >
-              {modalState === "enter_email" ? (
+              {modalState === "enter_email" && pricing_plans ? (
                 <EmailForm
+                  amount={
+                    pricing_plans.pricing_data["on-demand-report"]["non-pro"]
+                      .amount
+                  }
                   email={email}
                   setEmail={setEmail}
                   onOpen={onOpen}
@@ -128,6 +129,8 @@ export const QSPaymentModal: React.FC<{
                   isOpen={openPaymentModal}
                   onClose={() => {
                     closePaymentModal();
+                    resetStates();
+                    onClose();
                   }}
                   paymentMetadata={{
                     project_id: projectId,
@@ -136,8 +139,15 @@ export const QSPaymentModal: React.FC<{
                   }}
                   email={email}
                 />
-              ) : modalState === "payment_complete" ? (
-                <PaymentMsg email={email} paymentStatus={paymentStatus} />
+              ) : modalState === "payment_complete" && pricing_plans ? (
+                <PaymentMsg
+                  amount={
+                    pricing_plans.pricing_data["on-demand-report"]["non-pro"]
+                      .amount
+                  }
+                  email={email}
+                  paymentStatus={paymentStatus}
+                />
               ) : null}
             </Flex>
           </ModalBody>

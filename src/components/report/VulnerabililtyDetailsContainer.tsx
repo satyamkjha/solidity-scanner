@@ -694,13 +694,16 @@ const VulnerabililtyDetailsContainer: React.FC<{
                 <Text color="#000000" fontWeight={600} fontSize="md">
                   {isQSReport
                     ? issue.severity === "gas"
-                      ? "SignUp and View Gas issues for free"
-                      : "Make One-time Payment"
+                      ? "Access Gas Issues"
+                      : "Reveal Detailed Vulnerabilities"
                     : "Upgrade your Plan to view the full report"}
                 </Text>
                 <Text color="#000000" fontWeight={300} fontSize="sm">
-                  Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla
-                  leo viverra semper platea quis nibh lectus cursus. Know More
+                  {isQSReport
+                    ? issue.severity === "gas"
+                      ? "Sign up for a free trial and optimize your contracts for gas absolutely free!"
+                      : "Make a one-time payment and get a detailed security report for your smart contract with security scores, bug descriptions & remediations directly in your inbox!"
+                    : "Please upgrade your plan to view all the issues in your report."}
                 </Text>
               </VStack>
               <Button

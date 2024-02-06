@@ -17,7 +17,7 @@ export default function QSReport() {
       {data ? (
         <ReportContainer
           summary_report={data.summary_report}
-          isPublicReport={true}
+          isPublicReport={false}
           isQSReport={true}
         />
       ) : (

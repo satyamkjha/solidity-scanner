@@ -9,7 +9,9 @@ import {
   Input,
   VStack,
   Button,
+  Image,
 } from "@chakra-ui/react";
+import { getAssetsURL, isEmail } from "helpers/helperFunction";
 
 export const EmailForm: React.FC<{
   email: string;
@@ -18,8 +20,11 @@ export const EmailForm: React.FC<{
   setPaymentStatus: React.Dispatch<
     React.SetStateAction<"success" | "loading" | "failed">
   >;
+  amount: string;
   onOpen: () => void;
-}> = ({ email, setEmail, setModalState, onOpen, setPaymentStatus }) => {
+}> = ({ email, setEmail, setModalState, onOpen, setPaymentStatus, amount }) => {
+  const assetsURL = getAssetsURL();
+
   return (
     <Flex
       w="100%"
@@ -29,7 +34,7 @@ export const EmailForm: React.FC<{
       alignItems={["center", "center", "flex-start"]}
     >
       <VStack
-        w={["100%", "100%", "50%"]}
+        w={["100%", "100%", "100%", "55%"]}
         h="100%"
         justifyContent="space-between"
         alignItems={["center", "center", "flex-start"]}
@@ -43,9 +48,9 @@ export const EmailForm: React.FC<{
           <Text fontSize={"2xl"} fontWeight={700}>
             One Time Audit Report
           </Text>
-          <Flex textAlign="center" my={1}>
+          <Flex textAlign={"center"} my={1}>
             <Heading fontSize={"lg"}>
-              {`$ 49`}
+              {`$ ${amount}`}
               &nbsp;
             </Heading>
             <Text fontSize="xs" color="detail" mt={1}>
@@ -58,15 +63,13 @@ export const EmailForm: React.FC<{
             color="detail"
             fontSize={"sm"}
             width={"100%"}
+            textAlign={["center", "center", "left"]}
           >
-            Lorem ipsum dolor sit amet consectetur. Nunc integer elementum arcu
-            neque lacus ut. Eget congue congue ultrices porttitor ac neque.
-            Fusce eget et lectus faucibus pellentesque lacus natoque consectetur
-            feugiat. Tempor commoLorem ipsum dolor sit amet consectetur. Nunc
-            integer elementum arcu neque lacus ut. Eget r commodo molestie amet
-            ipsum. Facilisis nunc mi vestibulum consequat eros quis felis.
-            Pretium mi non ipsum ipsum arcu. Et nullam ultrices morbi at feugiat
-            euismod.
+            Make a one-time payment of $49 and get your automated smart contract
+            audit report with a detailed security analysis on all the
+            vulnerabilities along with their criticalities, descriptions &
+            remediations. Get easy access to the report via email & share it
+            across your team!
           </Text>
           <Flex
             mt={5}
@@ -100,6 +103,7 @@ export const EmailForm: React.FC<{
         <Button
           w="100%"
           variant="brand"
+          isDisabled={!isEmail(email)}
           onClick={() => {
             setModalState("make_payment");
             setPaymentStatus("loading");
@@ -109,6 +113,22 @@ export const EmailForm: React.FC<{
           {"Proceed to Payment"}
         </Button>
       </VStack>
+      <Flex
+        display={["none", "none", "none", "flex"]}
+        w={"40%"}
+        h="100%"
+        flexDir="row"
+        justifyContent="center"
+        alignItems={"center"}
+        p={5}
+        borderRadius={10}
+      >
+        <Image
+          width="100%"
+          height="auto"
+          src={`${assetsURL}quickscan/quickscan_checkout_payment.svg`}
+        />
+      </Flex>
     </Flex>
   );
 };

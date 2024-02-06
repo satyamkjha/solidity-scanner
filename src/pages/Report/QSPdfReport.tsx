@@ -22,7 +22,7 @@ export default function QSPdfReport() {
         <ReportContainer
           summary_report={data.summary_report}
           needsTokenValidation={true}
-          isPublicReport={true}
+          isPublicReport={false}
         />
       ) : (
         <Container py={12} h="100vh" maxW={"100vw"} bg="black">

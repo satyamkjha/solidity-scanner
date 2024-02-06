@@ -343,27 +343,23 @@ export const ReportContainer: React.FC<{
   };
 
   const printReport = async () => {
-    if (isQSReport) {
-      onOpen();
-    } else {
-      try {
-        setPrintLoading(true);
-        const { data } = await API.post(`${API_PATH.API_GET_REPORT_PDF}`, {
-          project_id:
-            projectId || summary_report.project_summary_report.project_id,
-          report_id: reportId,
-          scan_type: projectType,
-        });
-        setPrintLoading(false);
-        if (data.status === "success" && data.download_url) {
-          const link = document.createElement("a");
-          link.href = data.download_url;
-          link.click();
-        }
-      } catch (e) {
-        console.log(e);
-        setPrintLoading(false);
+    try {
+      setPrintLoading(true);
+      const { data } = await API.post(`${API_PATH.API_GET_REPORT_PDF}`, {
+        project_id:
+          projectId || summary_report.project_summary_report.project_id,
+        report_id: reportId,
+        scan_type: projectType,
+      });
+      setPrintLoading(false);
+      if (data.status === "success" && data.download_url) {
+        const link = document.createElement("a");
+        link.href = data.download_url;
+        link.click();
       }
+    } catch (e) {
+      console.log(e);
+      setPrintLoading(false);
     }
   };
   const splitNumber = (num: number): number[] => {
@@ -513,6 +509,19 @@ export const ReportContainer: React.FC<{
                   {summary_report.project_summary_report.project_name ||
                     summary_report.project_summary_report.contract_name}
                 </Text>
+                {isQSReport && (
+                  <Button
+                    variant={"accent-outline"}
+                    w={["250px"]}
+                    ml={"auto"}
+                    display={["none", "none", "none", "flex"]}
+                    onClick={onOpen}
+                  >
+                    {isQSReport && <LockIcon mr={5} color="#3300FF" />}
+
+                    {"Pay & Unlock report"}
+                  </Button>
+                )}
                 {isPublicReport ? (
                   <Button
                     variant={"accent-outline"}
@@ -521,9 +530,7 @@ export const ReportContainer: React.FC<{
                     display={["none", "none", "none", "flex"]}
                     onClick={printReport}
                   >
-                    {isQSReport ? (
-                      <LockIcon mr={5} color="#3300FF" />
-                    ) : printLoading ? (
+                    {printLoading ? (
                       <Flex mr={5}>
                         <Loader size={25} color="#3E15F4" />
                       </Flex>
@@ -531,7 +538,7 @@ export const ReportContainer: React.FC<{
                       <DownloadIcon mr={5} />
                     )}
 
-                    {isQSReport ? "Pay & Unlock report" : "Download Report"}
+                    {"Download Report"}
                   </Button>
                 ) : null}
               </Flex>
@@ -765,6 +772,7 @@ export const ReportContainer: React.FC<{
                           content={
                             <FindingBugListContainer
                               showActionTaken={index === 0}
+                              isQSReport={isQSReport}
                               summary_report={summary_report}
                               issues={bugList.slice(
                                 totalBugsSplit[index],
@@ -889,19 +897,20 @@ export const ReportContainer: React.FC<{
                     ml={8}
                   >
                     <Text fontWeight={600} fontSize="md" color="white">
-                      Lorem ipsum dolor sit amet consectetur. Lacus elit.
+                      Fix Bugs & Secure Your Smart Contracts Today
                     </Text>
                     <Text fontWeight={400} fontSize="sm" color="subtle">
-                      Lorem ipsum dolor sit amet consectetur. Auctor quam
-                      pretium tellus varius in suspendisse velit pretium massa.
-                      Ornare sed eget aliquam urna duis eget.
+                      Sign Up for a free trial and get one step closer to
+                      securing your smart contracts. Scan entire repositories,
+                      get access to gas issues, publish audit reports & much
+                      more.
                     </Text>
                     <Button
                       w="100%"
                       onClick={() => history.push("/signin")}
                       variant="brand"
                     >
-                      Signup For Free Trial
+                      Secure Your Contract Now!
                     </Button>
                   </VStack>
                 ) : (
