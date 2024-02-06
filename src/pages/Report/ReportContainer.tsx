@@ -119,6 +119,8 @@ export const ReportContainer: React.FC<{
   const [issuesObj, setIssuesObj] = useState<{
     [key: string]: IssueDetailObject;
   }>({});
+
+
   const [bugList, setBugList] = useState<IssueItem[]>();
   const [filesContent, setFilesContent] = useState<any[]>([]);
   const [totalVulnerabilitySplit, setTotalVulnerabilitySplit] =

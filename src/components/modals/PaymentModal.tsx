@@ -604,13 +604,15 @@ const PaymentModal: React.FC<{
                     {paymentMethod === "cp" && (
                       <CoinPaymentSelect setCoin={setCoin} coin={coin} />
                     )}
-                    <CouponCodeSection
-                      duration={duration}
-                      selectedPlan={selectedPlan}
-                      activeCoupon={activeCoupon}
-                      setActiveCoupon={setActiveCoupon}
-                      setUpdatedPrice={setUpdatedPrice}
-                    />
+                    {duration !== "on-demand-report" && (
+                      <CouponCodeSection
+                        duration={duration}
+                        selectedPlan={selectedPlan}
+                        activeCoupon={activeCoupon}
+                        setActiveCoupon={setActiveCoupon}
+                        setUpdatedPrice={setUpdatedPrice}
+                      />
+                    )}
                   </>
                 ) : (
                   <>

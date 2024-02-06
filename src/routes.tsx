@@ -24,7 +24,11 @@ import { UserRoleProvider } from "hooks/useUserRole";
 import { onLogout } from "common/functions";
 import { useConfig } from "hooks/useConfig";
 import { API_PATH } from "helpers/routeManager";
-import { getRecentQuickScan, setRecentQuickScan } from "helpers/helperFunction";
+import {
+  getRecentQuickScan,
+  setRecentQuickScan,
+  getFeatureGateConfig,
+} from "helpers/helperFunction";
 
 const Landing = lazy(() =>
   lazyRetry(
@@ -275,11 +279,14 @@ const Routes: React.FC = () => {
             <SignIn />
           </RedirectRoute>
           <Route exact path="/reset" component={Reset} />
-          <Route
-            exact
-            path="/download-qs-report/:transactionId"
-            component={DownloadQSReport}
-          />
+          {getFeatureGateConfig().qs_report && (
+            <Route
+              exact
+              path="/download-qs-report/:transactionId"
+              component={DownloadQSReport}
+            />
+          )}
+
           <RedirectRoute exact path="/signup">
             <SignUp />
           </RedirectRoute>
@@ -298,11 +305,13 @@ const Routes: React.FC = () => {
             path="/published-report/:projectType/:reportId"
             component={PublicReportPage}
           />
-          <Route
-            exact
-            path="/qs-report/:projectId/:reportId/:scanId"
-            component={QSReport}
-          />
+          {getFeatureGateConfig().qs_report && (
+            <Route
+              exact
+              path="/qs-report/:projectId/:reportId/:scanId"
+              component={QSReport}
+            />
+          )}
           <Route
             exact
             path="/qs-report-token/:reportId"
