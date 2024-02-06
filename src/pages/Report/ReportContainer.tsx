@@ -184,9 +184,7 @@ export const ReportContainer: React.FC<{
           ...issues[key],
           issue_details: [issues[key].issue_details[0]],
         };
-        console.log(tempFilteredIssue);
         addedIssue.push(issues[key].issue_details[0].severity);
-        console.log(addedIssue);
       }
     });
 
