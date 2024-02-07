@@ -332,7 +332,7 @@ export const QuickScanResultContainer: React.FC<{
           maxW={"300px"}
           onClick={() => onViewDetailResult()}
         >
-          View Audit Report PDF ⟶
+          View Detailed Result ⟶
         </Button>
       </Flex>
       <QSErrorCountModal
