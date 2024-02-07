@@ -668,7 +668,11 @@ const VulnerabililtyDetailsContainer: React.FC<{
                   }
                 }}
               >
-                {isQSReport ? "Pay & Unlock report" : "Upgrade"}
+                {isQSReport
+                  ? issue.severity === "gas"
+                    ? "Secure Your Contract Now!"
+                    : "Pay & Unlock report"
+                  : "Upgrade"}
               </Button>
             </Flex>
           </Flex>
