@@ -10,6 +10,7 @@ const FindingBugListContainer: React.FC<{
   summary_report: Report;
   issues: IssueItem[];
   isQSReport: boolean;
+  download: boolean;
 }> = ({ showActionTaken, issues, summary_report, isQSReport }) => {
   const assetsURL = getAssetsURL();
   return (

@@ -11,12 +11,14 @@ const PDFContainer: React.FC<{
   >;
   setCurrentPage: React.Dispatch<React.SetStateAction<any>>;
   pageNumber?: number;
+  download: boolean;
 }> = ({
   page,
   content,
   setCurrentPageHeadings,
   setCurrentPage,
   pageNumber,
+  download,
 }) => {
   const assetsURL = getAssetsURL();
   const containerRef = useRef<HTMLDivElement>(null);
@@ -55,7 +57,7 @@ const PDFContainer: React.FC<{
     <Box
       ref={containerRef}
       className={`ss-report-${page} ${isInViewport ? "in-view" : ""}`}
-      w={["100%", "450px", "826px"]}
+      w={download ? "826px" : ["100%", "450px", "760px", "826px"]}
       h={"fit-content"}
       bg={"white"}
       position={"relative"}
@@ -71,9 +73,9 @@ const PDFContainer: React.FC<{
       ></Box>
       <Box
         w="100%"
-        h={["650px", "850px", "1165px"]}
-        py={page !== "cover" ? [5, 7, 10] : 0}
-        px={page !== "cover" ? [5, 7, 10] : 0}
+        h={download ? "1145px" : ["650px", "850px", "1145px"]}
+        py={page !== "cover" ? (download ? 10 : [5, 7, 10]) : 0}
+        px={page !== "cover" ? (download ? 10 : [5, 7, 10]) : 0}
         position={"relative"}
         className="content"
       >
@@ -82,8 +84,8 @@ const PDFContainer: React.FC<{
       <Flex
         w="100%"
         h={"fit-content"}
-        p={4}
-        px={6}
+        p={download ? 4 : [2, 2, 4]}
+        px={download ? 6 : [2, 4, 6]}
         position={"absolute"}
         bottom={2}
         color={"#8A94A6"}

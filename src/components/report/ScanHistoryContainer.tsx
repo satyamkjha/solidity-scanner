@@ -6,6 +6,7 @@ import { ScanSummaryItem } from "common/types";
 const ScanHistoryContainer: React.FC<{
   scan_summary: ScanSummaryItem[];
   startIndex: number;
+  download: boolean;
 }> = ({ scan_summary, startIndex }) => {
   return (
     <Flex

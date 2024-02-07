@@ -594,8 +594,8 @@ export const ReportContainer: React.FC<{
                 align="stretch"
                 mt={download ? 0 : 6}
                 pb={20}
-                w={download ? "826px" : ["90%", "450px", "830px"]}
-                minW={download ? "826px" : ["360px", "450px", "830px"]}
+                w={download ? "826px" : ["90%", "450px", "760px", "830px"]}
+                minW={download ? "826px" : ["360px", "450px", "760px", "830px"]}
                 h={download ? "inherit" : "100%"}
                 bg={!download ? "#535659" : "white"}
                 overflowY={download ? "visible" : "auto"}
@@ -603,10 +603,12 @@ export const ReportContainer: React.FC<{
               >
                 {/* <LazyLoad> */}
                 <PDFContainer
+                  download={download === "true"}
                   page={"cover"}
                   content={
                     <CoverPageContainer
                       d={d}
+                      download={download === "true"}
                       summary_report={summary_report}
                       isPublicReport={isPublicReport}
                     />
@@ -618,11 +620,13 @@ export const ReportContainer: React.FC<{
 
                 {/* <LazyLoad> */}
                 <PDFContainer
+                  download={download === "true"}
                   page={"toc"}
                   pageNumber={1}
                   content={
                     <TableContentContainer
                       issues={issuesObj}
+                      download={download === "true"}
                       maxLength={
                         totalVulnerabilitySplit &&
                         totalVulnerabilitySplit.length
@@ -643,6 +647,7 @@ export const ReportContainer: React.FC<{
                         return (
                           // <LazyLoad key={"toc-v" + index}>
                           <PDFContainer
+                            download={download === "true"}
                             page={"toc-v"}
                             pageNumber={index + 2}
                             content={
@@ -666,6 +671,7 @@ export const ReportContainer: React.FC<{
                                     return (
                                       <IssueComponent
                                         key={index}
+                                        download={download === "true"}
                                         issue={issuesObj[key]}
                                       />
                                     );
@@ -677,10 +683,12 @@ export const ReportContainer: React.FC<{
                                   <>
                                     <a href={"#scan-history"}>
                                       <Text
-                                        fontSize={["xs", "sm", "md"]}
+                                        fontSize={
+                                          download ? "md" : ["xs", "sm", "md"]
+                                        }
                                         fontWeight={600}
-                                        mt={4}
-                                        mb={4}
+                                        mt={download ? 4 : [2, 3, 4]}
+                                        mb={download ? 4 : [2, 3, 4]}
                                       >
                                         05 &nbsp;Scan History
                                       </Text>
@@ -688,10 +696,12 @@ export const ReportContainer: React.FC<{
 
                                     <a href={"#disclaimer"}>
                                       <Text
-                                        fontSize={["xs", "sm", "md"]}
+                                        fontSize={
+                                          download ? "md" : ["xs", "sm", "md"]
+                                        }
                                         fontWeight={600}
-                                        mt={4}
-                                        mb={4}
+                                        mt={download ? 4 : [2, 3, 4]}
+                                        mb={download ? 4 : [2, 3, 4]}
                                       >
                                         06 &nbsp;Disclaimer
                                       </Text>
@@ -711,6 +721,7 @@ export const ReportContainer: React.FC<{
 
                 {/* <LazyLoad> */}
                 <PDFContainer
+                  download={download === "true"}
                   page={"summary"}
                   pageNumber={
                     totalVulnerabilitySplit
@@ -718,7 +729,10 @@ export const ReportContainer: React.FC<{
                       : 2
                   }
                   content={
-                    <ProjectSummaryContainer summary_report={summary_report} />
+                    <ProjectSummaryContainer
+                      summary_report={summary_report}
+                      download={download === "true"}
+                    />
                   }
                   setCurrentPage={setCurrentPage}
                   setCurrentPageHeadings={setCurrentPageHeadings}
@@ -727,6 +741,7 @@ export const ReportContainer: React.FC<{
 
                 {/* <LazyLoad> */}
                 <PDFContainer
+                  download={download === "true"}
                   page={"executive"}
                   pageNumber={
                     totalVulnerabilitySplit
@@ -734,7 +749,10 @@ export const ReportContainer: React.FC<{
                       : 3
                   }
                   content={
-                    <AuditSummaryContainer summary_report={summary_report} />
+                    <AuditSummaryContainer
+                      download={download === "true"}
+                      summary_report={summary_report}
+                    />
                   }
                   setCurrentPage={setCurrentPage}
                   setCurrentPageHeadings={setCurrentPageHeadings}
@@ -743,6 +761,7 @@ export const ReportContainer: React.FC<{
 
                 {/* <LazyLoad> */}
                 <PDFContainer
+                  download={download === "true"}
                   page={"findings"}
                   pageNumber={
                     totalVulnerabilitySplit
@@ -750,7 +769,10 @@ export const ReportContainer: React.FC<{
                       : 4
                   }
                   content={
-                    <FindingSummaryContainer summary_report={summary_report} />
+                    <FindingSummaryContainer
+                      download={download === "true"}
+                      summary_report={summary_report}
+                    />
                   }
                   setCurrentPage={setCurrentPage}
                   setCurrentPageHeadings={setCurrentPageHeadings}
@@ -763,6 +785,7 @@ export const ReportContainer: React.FC<{
                       return (
                         // <LazyLoad key={"findings" + index}>
                         <PDFContainer
+                          download={download === "true"}
                           page={"findings"}
                           pageNumber={
                             totalVulnerabilitySplit
@@ -771,6 +794,7 @@ export const ReportContainer: React.FC<{
                           }
                           content={
                             <FindingBugListContainer
+                              download={download === "true"}
                               showActionTaken={index === 0}
                               isQSReport={isQSReport}
                               summary_report={summary_report}
@@ -804,6 +828,7 @@ export const ReportContainer: React.FC<{
                         return (
                           // <LazyLoad key={"vul" + counter}>
                           <PDFContainer
+                            download={download === "true"}
                             page={"details"}
                             pageNumber={
                               totalVulnerabilitySplit && totalBugsSplit
@@ -816,6 +841,7 @@ export const ReportContainer: React.FC<{
                             content={
                               <VulnerabililtyDetailsContainer
                                 type={item.point}
+                                download={download === "true"}
                                 summary_report={summary_report}
                                 issue={issue}
                                 showVulnerabilityTitle={counter === 0}
@@ -843,6 +869,7 @@ export const ReportContainer: React.FC<{
 
                 {scanHistorySplit?.map((item, index) => (
                   <PDFContainer
+                    download={download === "true"}
                     page={"history"}
                     pageNumber={
                       totalVulnerabilitySplit && totalBugsSplit
@@ -855,6 +882,7 @@ export const ReportContainer: React.FC<{
                     }
                     content={
                       <ScanHistoryContainer
+                        download={download === "true"}
                         scan_summary={item}
                         startIndex={index * 11 + 1}
                       />
@@ -866,6 +894,7 @@ export const ReportContainer: React.FC<{
 
                 {/* <LazyLoad> */}
                 <PDFContainer
+                  download={download === "true"}
                   page={"disclaimer"}
                   pageNumber={
                     totalVulnerabilitySplit && totalBugsSplit
@@ -875,7 +904,9 @@ export const ReportContainer: React.FC<{
                         6
                       : 7
                   }
-                  content={<DisclaimerContainer />}
+                  content={
+                    <DisclaimerContainer download={download === "true"} />
+                  }
                   setCurrentPage={setCurrentPage}
                   setCurrentPageHeadings={setCurrentPageHeadings}
                 />

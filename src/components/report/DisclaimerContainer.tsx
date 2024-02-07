@@ -2,7 +2,7 @@ import { Flex, Heading, Text } from "@chakra-ui/react";
 
 import React from "react";
 
-const DisclaimerContainer: React.FC = () => {
+const DisclaimerContainer: React.FC<{ download: boolean }> = () => {
   return (
     <Flex
       as="div"

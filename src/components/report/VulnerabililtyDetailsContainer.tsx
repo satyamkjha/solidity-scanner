@@ -34,6 +34,7 @@ const VulnerabililtyDetailsContainer: React.FC<{
   codeStartLine?: number;
   codeEndLine?: number;
   onOpen: () => void;
+  download: boolean;
   isQSReport: boolean;
 }> = ({
   summary_report,

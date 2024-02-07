@@ -7,7 +7,8 @@ import { sentenceCapitalize, getAssetsURL } from "helpers/helperFunction";
 
 const ProjectSummaryContainer: React.FC<{
   summary_report: Report;
-}> = ({ summary_report }) => {
+  download: boolean;
+}> = ({ summary_report, download }) => {
   const assetsURL = getAssetsURL();
   return (
     <Flex
@@ -24,18 +25,28 @@ const ProjectSummaryContainer: React.FC<{
           color: "#000000",
           mx: 1,
         }}
-        my={[4, 6, 10]}
+        my={download ? 10 : [4, 6, 10]}
         alignItems="center"
         className={"ss-report-h1"}
         content={"Vulnerability Classification and Severity"}
       >
-        <Text fontSize={["14px", "20px", "28px"]} fontWeight={400}>
+        <Text
+          fontSize={download ? "28px" : ["14px", "16px", "28px"]}
+          fontWeight={400}
+        >
           1.
         </Text>
-        <Heading color={"#52FF00"} fontSize={["14px", "20px", "28px"]} ml={4}>
+        <Heading
+          color={"#52FF00"}
+          fontSize={download ? "28px" : ["14px", "16px", "28px"]}
+          ml={download ? 4 : [2, 3, 4]}
+        >
           Vulnerability
         </Heading>
-        <Text fontSize={["14px", "20px", "28px"]} fontWeight={400}>
+        <Text
+          fontSize={download ? "28px" : ["14px", "16px", "28px"]}
+          fontWeight={400}
+        >
           {" "}
           &nbsp;Classification and Severity{" "}
         </Text>
@@ -43,24 +54,24 @@ const ProjectSummaryContainer: React.FC<{
       <Text
         className={"ss-report-right-nav"}
         content={"Description"}
-        fontSize={["sm", "md", "lg"]}
+        fontSize={download ? "lg" : ["sm", "md", "lg"]}
         fontWeight={"600"}
-        mt={[1, 3, 6, 12]}
+        mt={download ? 12 : [1, 3, 12, 12]}
       >
         Description
       </Text>
       <Text
-        fontSize={["8px", "11px", "xs"]}
+        fontSize={download ? "xs" : ["8px", "11px", "xs"]}
         fontWeight={400}
         color={"#4E5D78"}
-        my={[1, 2, 4]}
+        my={download ? 4 : [1, 2, 4]}
       >
         To enhance navigability, the document is organized in descending order
         of severity for easy reference. Issues are categorized as &nbsp;
         <Text display="inline-block">
           <Image
             src={`${assetsURL}report/fixed_color.svg`}
-            width={["5px", "10px", "14px"]}
+            width={download ? "14px" : ["5px", "10px", "14px"]}
             alt="F"
             mb={-0.5}
           />
@@ -68,7 +79,7 @@ const ProjectSummaryContainer: React.FC<{
         &nbsp;&nbsp;
         <Text
           display="inline-block"
-          fontSize={["8px", "11px", "xs"]}
+          fontSize={download ? "xs" : ["8px", "11px", "xs"]}
           fontWeight={"500"}
           color={"black"}
           fontStyle={"italic"}
@@ -79,14 +90,14 @@ const ProjectSummaryContainer: React.FC<{
         <Text display="inline-block">
           <Image
             src={`${assetsURL}report/pending_fix_color.svg`}
-            width={["5px", "10px", "14px"]}
+            width={download ? "14px" : ["5px", "10px", "14px"]}
             mb={-0.5}
           />
         </Text>
         &nbsp;&nbsp;
         <Text
           display="inline-block"
-          fontSize={["8px", "11px", "xs"]}
+          fontSize={download ? "xs" : ["8px", "11px", "xs"]}
           fontWeight={"500"}
           color={"black"}
           fontStyle={"italic"}
@@ -97,14 +108,14 @@ const ProjectSummaryContainer: React.FC<{
         <Text display="inline-block">
           <Image
             src={`${assetsURL}report/wont_fix_color.svg`}
-            width={["5px", "10px", "14px"]}
+            width={download ? "14px" : ["5px", "10px", "14px"]}
             mb={-0.5}
           />
         </Text>
         &nbsp;&nbsp;
         <Text
           display="inline-block"
-          fontSize={["8px", "11px", "xs"]}
+          fontSize={download ? "xs" : ["8px", "11px", "xs"]}
           fontWeight={"500"}
           color={"black"}
           fontStyle={"italic"}
@@ -115,14 +126,14 @@ const ProjectSummaryContainer: React.FC<{
         <Text display="inline-block">
           <Image
             src={`${assetsURL}report/wont_fix_color.svg`}
-            width={["5px", "10px", "14px"]}
+            width={download ? "14px" : ["5px", "10px", "14px"]}
             mb={-0.5}
           />
         </Text>
         &nbsp;&nbsp;
         <Text
           display="inline-block"
-          fontSize={["8px", "11px", "xs"]}
+          fontSize={download ? "xs" : ["8px", "11px", "xs"]}
           fontWeight={"500"}
           color={"black"}
           fontStyle={"italic"}
@@ -134,14 +145,14 @@ const ProjectSummaryContainer: React.FC<{
         <Text display="inline-block">
           <Image
             src={`${assetsURL}report/pending_fix_color.svg`}
-            width={["5px", "10px", "14px"]}
+            width={download ? "14px" : ["5px", "10px", "14px"]}
             mb={-0.5}
           />
         </Text>
         &nbsp;&nbsp;
         <Text
           display="inline-block"
-          fontSize={["8px", "11px", "xs"]}
+          fontSize={download ? "xs" : ["8px", "11px", "xs"]}
           fontWeight={"500"}
           color={"black"}
           fontStyle={"italic"}
@@ -157,34 +168,40 @@ const ProjectSummaryContainer: React.FC<{
         content={"Vulnerability Severity"}
         backgroundColor="#FFFFFF00"
         w="100%"
-        maxW={["320px", "350px", "100%"]}
+        maxW={download ? "100%" : ["320px", "350px", "100%"]}
         h="fit-content"
-        px={[0, 0, 2]}
-        mt={[2, 4, 6]}
+        px={download ? 2 : [0, 0, 2]}
+        mt={download ? 6 : [2, 4, 6]}
         templateColumns={"repeat(2, 1fr)"}
-        gap={[2, 4, 10]}
+        gap={download ? 10 : [2, 4, 10]}
       >
         <IssueType
+          download={download}
           issueType={"critical"}
           desc={`The issue affects the contract in such a way that funds may be lost, allocated incorrectly, or otherwise result in a significant loss.`}
         />
         <IssueType
+          download={download}
           issueType={"high"}
           desc={`High-severity vulnerabilities pose a significant risk to both the Smart Contract and the organization. They can lead to user fund losses, may have conditional requirements, and are challenging to exploit.`}
         />
         <IssueType
+          download={download}
           issueType={"medium"}
           desc={`The issue affects the ability of the contract to operate in a way that doesn’t significantly hinder its behavior.`}
         />
         <IssueType
+          download={download}
           issueType={"low"}
           desc={`The issue has minimal impact on the contract’s ability to operate.`}
         />
         <IssueType
+          download={download}
           issueType={"gas"}
           desc={`This category deals with optimizing code and refactoring to conserve gas.`}
         />
         <IssueType
+          download={download}
           issueType={"informational"}
           desc={`The issue does not affect the contract's operational capability but is considered good practice to address.`}
         />
@@ -193,10 +210,11 @@ const ProjectSummaryContainer: React.FC<{
   );
 };
 
-const IssueType: React.FC<{ issueType: string; desc: string }> = ({
-  issueType,
-  desc,
-}) => {
+const IssueType: React.FC<{
+  issueType: string;
+  desc: string;
+  download: boolean;
+}> = ({ issueType, desc, download }) => {
   return (
     <VStack alignItems={"flex-start"}>
       <Flex alignItems={"center"}>
@@ -205,7 +223,11 @@ const IssueType: React.FC<{ issueType: string; desc: string }> = ({
           {sentenceCapitalize(issueType)}
         </Text>
       </Flex>
-      <Text fontSize={["8px", "11px", "xs"]} fontWeight={400} color={"#4E5D78"}>
+      <Text
+        fontSize={download ? "xs" : ["8px", "11px", "xs"]}
+        fontWeight={400}
+        color={"#4E5D78"}
+      >
         {desc}
       </Text>
     </VStack>
