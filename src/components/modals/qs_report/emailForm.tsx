@@ -65,8 +65,8 @@ export const EmailForm: React.FC<{
             width={"100%"}
             textAlign={["center", "center", "left"]}
           >
-            Make a one-time payment of $49 and get your automated smart contract
-            audit report with a detailed security analysis on all the
+            Make a one-time payment of $ {amount} and get your automated smart
+            contract audit report with a detailed security analysis on all the
             vulnerabilities along with their criticalities, descriptions &
             remediations. Get easy access to the report via email & share it
             across your team!

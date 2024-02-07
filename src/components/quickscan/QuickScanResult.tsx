@@ -102,7 +102,6 @@ export const QuickScanResultContainer: React.FC<{
           setReportId(msgItem.payload.report_id);
           setIsLoading(false);
           setKeepWSOpen(false);
-          console.log("ajsgdjasd");
         }
       });
       let tempMsgQueue = messageQueue;

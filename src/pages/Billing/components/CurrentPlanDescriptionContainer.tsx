@@ -18,6 +18,17 @@ const CurrentPlanDescriptionContainer: React.FC<{
   showDescription = true,
 }) => {
   const assetsURL = getAssetsURL();
+
+  const getPlanName = () => {
+    return duration === "on-demand-report"
+      ? "One Time Audit Report"
+      : "publish_report" === duration
+      ? "Self-Published Report"
+      : "verified_publish_report" === duration
+      ? "Verified Report"
+      : sentenceCapitalize(plan.name);
+  };
+
   return (
     <Flex
       w={"100%"}
@@ -50,13 +61,7 @@ const CurrentPlanDescriptionContainer: React.FC<{
 
             <Flex flexDir={"column"}>
               <Text fontSize={"2xl"} fontWeight={700}>
-                {duration === "on-demand-report"
-                  ? "One Time Audit Report"
-                  : "publish_report" === duration
-                  ? "Self-Published Report"
-                  : "verified_publish_report" === duration
-                  ? "Verified Report"
-                  : sentenceCapitalize(plan.name)}
+                {getPlanName()}
               </Text>
               <Flex textAlign="center" my={1}>
                 <Heading fontSize={"lg"}>
