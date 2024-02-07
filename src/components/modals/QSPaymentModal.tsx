@@ -129,6 +129,8 @@ export const QSPaymentModal: React.FC<{
                   isOpen={openPaymentModal}
                   onClose={() => {
                     closePaymentModal();
+                  }}
+                  containerModalClose={() => {
                     resetStates();
                     onClose();
                   }}

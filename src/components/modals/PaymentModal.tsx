@@ -39,6 +39,7 @@ const PaymentModal: React.FC<{
       [plan: string]: Plan;
     };
   };
+  containerModalClose?: any;
   paymentMetadata?: any;
   email?: string;
   setTransactionId?: React.Dispatch<React.SetStateAction<string>>;
@@ -53,6 +54,7 @@ const PaymentModal: React.FC<{
   paymentMetadata,
   email,
   setTransactionId,
+  containerModalClose,
 }) => {
   const toast = useToast();
 
@@ -244,7 +246,13 @@ const PaymentModal: React.FC<{
   }, [coin, paymentMethod, updatedPrice, activeCoupon]);
 
   return (
-    <Modal isOpen={isOpen} onClose={onClose}>
+    <Modal
+      isOpen={isOpen}
+      onClose={() => {
+        onClose();
+        containerModalClose && containerModalClose();
+      }}
+    >
       <ModalOverlay />
       <ModalContent
         overflowY={"scroll"}

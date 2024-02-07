@@ -7,6 +7,7 @@ import {
   Divider,
   Box,
   Button,
+  useMediaQuery,
 } from "@chakra-ui/react";
 import { severityArrayInOrder } from "common/values";
 import {
@@ -39,6 +40,8 @@ export const QuickScanResultContainer: React.FC<{
 
   const [reportId, setReportId] = useState("");
   const [open, setOpen] = useState(false);
+
+  const [isLargerThan850] = useMediaQuery("(min-width: 850px)");
 
   const vulnerabilityCount =
     scanReport.multi_file_scan_summary.issue_severity_distribution.critical +
@@ -251,9 +254,15 @@ export const QuickScanResultContainer: React.FC<{
             w={"100%"}
             maxW={"300px"}
             isLoading={isLoading}
-            onClick={openReport}
+            onClick={() =>
+              getFeatureGateConfig().qs_report
+                ? openReport()
+                : onViewDetailResult()
+            }
           >
-            View Audit Report PDF ⟶
+            {getFeatureGateConfig().qs_report
+              ? "View Audit Report PDF ⟶"
+              : "View Detailed Result"}
           </Button>
         </VStack>
         <Flex
@@ -321,15 +330,9 @@ export const QuickScanResultContainer: React.FC<{
           w={"100%"}
           mt={[5, 5, 10]}
           maxW={"300px"}
-          onClick={() =>
-            getFeatureGateConfig().qs_report
-              ? openReport()
-              : onViewDetailResult()
-          }
+          onClick={() => onViewDetailResult()}
         >
-          {getFeatureGateConfig().qs_report
-            ? "View Audit Report PDF ⟶"
-            : "View Deatiled Result"}
+          View Audit Report PDF ⟶
         </Button>
       </Flex>
       <QSErrorCountModal
