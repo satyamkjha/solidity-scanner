@@ -2,6 +2,7 @@ import React from "react";
 import { HStack, Text, Image, useDisclosure } from "@chakra-ui/react";
 import { getAssetsURL } from "helpers/helperFunction";
 import ManualAuditForm from "components/modals/manualAuditForm";
+import ReportTypeDetailModal from "components/modals/ReportTypeDetailModal";
 
 const ReportTag: React.FC<{ is_approved: boolean; theme?: string }> = ({
   is_approved,
@@ -46,7 +47,7 @@ const ReportTag: React.FC<{ is_approved: boolean; theme?: string }> = ({
           </span>
         </Text>
       </HStack>
-      <ManualAuditForm isOpen={isOpen} onClose={onClose} />
+      <ReportTypeDetailModal isOpen={isOpen} onClose={onClose} />
     </>
   );
 };

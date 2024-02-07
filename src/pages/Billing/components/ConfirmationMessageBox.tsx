@@ -6,14 +6,11 @@ const ConfirmationMessageBox: React.FC<{
   name: string;
   duration: string;
 }> = ({ name, duration }) => {
-  const getMessage = () => {
-    return "on-demand-report" === duration
-      ? ""
-      : "publish_report" === duration
-      ? "Self-Published Report"
-      : "verified_publish_report" === duration
-      ? "Verified Report"
-      : duration !== "ondemand" && sentenceCapitalize(duration);
+  const getPlanDuration = () => {
+    if ("on-demand-report" === duration) return "";
+    else if ("publish_report" === duration) return "Self-Published Report";
+    else if ("verified_publish_report" === duration) return "Verified Report";
+    else if (duration !== "ondemand") return sentenceCapitalize(duration);
   };
 
   return (
@@ -37,7 +34,7 @@ const ConfirmationMessageBox: React.FC<{
             {!["publish_report", "verified_publish_report"].includes(
               duration
             ) && sentenceCapitalize(name)}{" "}
-            {getMessage()}
+            {getPlanDuration()}
           </b>
         </span>
         plan sum of the charges will apply on your confirmation

@@ -20,13 +20,10 @@ const CurrentPlanDescriptionContainer: React.FC<{
   const assetsURL = getAssetsURL();
 
   const getPlanName = () => {
-    return duration === "on-demand-report"
-      ? "One Time Audit Report"
-      : "publish_report" === duration
-      ? "Self-Published Report"
-      : "verified_publish_report" === duration
-      ? "Verified Report"
-      : sentenceCapitalize(plan.name);
+    if ("on-demand-report" === duration) return "One Time Audit Report";
+    else if ("publish_report" === duration) return "Self-Published Report";
+    else if ("verified_publish_report" === duration) return "Verified Report";
+    else return sentenceCapitalize(plan.name);
   };
 
   return (
