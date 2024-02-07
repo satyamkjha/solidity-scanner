@@ -15,7 +15,7 @@ import { FiAtSign } from "react-icons/fi";
 import { FaLock } from "react-icons/fa";
 import API from "helpers/api";
 import Auth from "helpers/auth";
-import { AuthResponse } from "common/types";
+import { AuthResponse, RecaptchaHeader } from "common/types";
 import { ViewIcon, ViewOffIcon } from "@chakra-ui/icons";
 import { API_PATH } from "helpers/routeManager";
 import { getReCaptchaHeaders } from "helpers/helperFunction";
@@ -30,17 +30,7 @@ const LoginForm: React.FC = () => {
   const [password, setPassword] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [twoFAScreen, setTwoFAScreen] = useState(false);
-  const [reqHeaders, setReqHeaders] = useState<
-    | {
-        "Content-Type": string;
-        Recaptchatoken: string;
-      }
-    | {
-        "Content-Type": string;
-        Recaptchatoken?: undefined;
-      }
-    | undefined
-  >();
+  const [reqHeaders, setReqHeaders] = useState<RecaptchaHeader | undefined>();
   const { handleSubmit } = useForm();
 
   const getRecapthaTokens = async () => {

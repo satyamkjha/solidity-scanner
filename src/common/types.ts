@@ -12,6 +12,11 @@ export type OptionTypeWithIcon = {
 
 export type Severity = "high" | "medium" | "low";
 
+export type RecaptchaHeader = {
+  "Content-Type": string;
+  Recaptchatoken?: string | undefined;
+};
+
 export type Profile = {
   "2fa_enabled": boolean;
   name: string;

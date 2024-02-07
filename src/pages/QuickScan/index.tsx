@@ -6,7 +6,7 @@ import {
 import { Flex, Box, useToast, VStack, CloseButton } from "@chakra-ui/react";
 
 import API from "helpers/api";
-import { QuickScanResult } from "common/types";
+import { QuickScanResult, RecaptchaHeader } from "common/types";
 import { API_PATH } from "helpers/routeManager";
 import QuickScanForm from "components/quickscan/QuickScanForm";
 import { Header } from "components/header";
@@ -44,31 +44,16 @@ const QuickScan: React.FC = () => {
     blockPlatform: string;
     blockChain: string;
   }>();
+
   const [qsStatus, setQSStatus] = useState("");
   const location = useLocation();
   const query = new URLSearchParams(location.search);
   const ref = query.get("ref");
   const [reqHeaders_QS_Verify, setReqHeaders_QS_Verify] = useState<
-    | {
-        "Content-Type": string;
-        Recaptchatoken: string;
-      }
-    | {
-        "Content-Type": string;
-        Recaptchatoken?: undefined;
-      }
-    | undefined
+    RecaptchaHeader | undefined
   >();
   const [reqHeaders_QS, setReqHeaders_QS] = useState<
-    | {
-        "Content-Type": string;
-        Recaptchatoken: string;
-      }
-    | {
-        "Content-Type": string;
-        Recaptchatoken?: undefined;
-      }
-    | undefined
+    RecaptchaHeader | undefined
   >();
 
   const getRecapthaTokens = async () => {
