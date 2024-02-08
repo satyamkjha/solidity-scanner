@@ -27,6 +27,7 @@ import Loader from "components/styled-components/Loader";
 import {
   getFeatureGateConfig,
   splitListIntoChunks,
+  setRecentQuickScan,
 } from "helpers/helperFunction";
 import CoverPageContainer from "components/report/CoverPageContainer";
 import ProjectSummaryContainer from "components/report/ProjectSummaryContainer";
@@ -62,6 +63,18 @@ export const ReportContainer: React.FC<{
   ];
 
   let d = new Date();
+
+  const onImportScan = () => {
+    const scan_details = {
+      project_id: projectId,
+      contract_address: summary_report.project_summary_report.contract_address,
+      contract_chain: summary_report.project_summary_report.contract_chain,
+      contract_platform:
+        summary_report.project_summary_report.contract_platform,
+      new_user: false,
+    };
+    setRecentQuickScan(scan_details);
+  };
 
   if (summary_report) {
     d = new Date(
@@ -710,6 +723,7 @@ export const ReportContainer: React.FC<{
                     content={
                       <VulnerabililtyDetailsContainer
                         type={item.point}
+                        onImportScan={onImportScan}
                         summary_report={summary_report}
                         issue={issue}
                         showVulnerabilityTitle={counter === 0}
@@ -758,6 +772,7 @@ export const ReportContainer: React.FC<{
                     content={
                       <VulnerabililtyDetailsContainer
                         type={item.point}
+                        onImportScan={onImportScan}
                         summary_report={summary_report}
                         issue={issue}
                         showVulnerabilityTitle={counter === 0}
@@ -1088,7 +1103,10 @@ export const ReportContainer: React.FC<{
                       </Text>
                       <Button
                         w="100%"
-                        onClick={() => history.push("/signin")}
+                        onClick={() => {
+                          history.push("/signin");
+                          onImportScan();
+                        }}
                         variant="brand"
                       >
                         Secure Your Contract Now!

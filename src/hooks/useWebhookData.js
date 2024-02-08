@@ -41,7 +41,11 @@ export const WebSocketProvider = ({ children }) => {
         process.env.REACT_APP_ENVIRONMENT === "production"
           ? WSS_URL_PROD
           : WSS_URL_DEV
-      }${withAuth ? `?auth_token=${profileData.auth_token}` : ""}`
+      }${
+        withAuth && profileData.auth_token
+          ? `?auth_token=${profileData.auth_token}`
+          : ""
+      }`
     );
     setWebSocket(ws);
     setWsReadyState(ws.readyState);

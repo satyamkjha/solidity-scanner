@@ -36,6 +36,7 @@ const VulnerabililtyDetailsContainer: React.FC<{
   codeStartLine?: number;
   codeEndLine?: number;
   onOpen: () => void;
+  onImportScan: () => void;
   isQSReport: boolean;
 }> = ({
   summary_report,
@@ -48,6 +49,7 @@ const VulnerabililtyDetailsContainer: React.FC<{
   codeStartLine,
   codeEndLine,
   onOpen,
+  onImportScan,
   isQSReport,
 }) => {
   const assetsURL = getAssetsURL();
@@ -702,6 +704,7 @@ const VulnerabililtyDetailsContainer: React.FC<{
                   if (isQSReport) {
                     if (issue.severity === "gas") {
                       history.push("/signup");
+                      onImportScan();
                     } else {
                       onOpen();
                     }

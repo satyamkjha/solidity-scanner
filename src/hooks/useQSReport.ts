@@ -2,9 +2,16 @@ import { useQuery } from "react-query";
 
 import { Report } from "common/types";
 import axios from "axios";
-import API, { PUBLIC_API } from "helpers/api";
+import API, { API_URL_PROD, API_URL_DEV } from "helpers/api";
 import Auth from "helpers/auth";
 import { API_PATH } from "helpers/routeManager";
+
+const PUBLIC_API = axios.create({
+  baseURL: process.env.NODE_ENV === "production" ? API_URL_PROD : API_URL_DEV,
+  headers: {
+    "Content-Type": "application/json",
+  },
+});
 
 export const getQSReport = async (
   project_id: string,

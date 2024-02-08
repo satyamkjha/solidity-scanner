@@ -80,14 +80,6 @@ export const QuickScanResultContainer: React.FC<{
         scan_type: "block",
       },
     });
-    const scan_details = {
-      project_id: projectId,
-      contract_address: scanReport.contract_address,
-      contract_chain: scanReport.contract_chain,
-      contract_platform: scanReport.contract_platform,
-      new_user: false,
-    };
-    setRecentQuickScan(scan_details);
   };
 
   useEffect(() => {
