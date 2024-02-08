@@ -137,8 +137,7 @@ export const ReportTypeDetailModal: React.FC<{
           />
 
           <ModalBody
-            h={"fit-content"}
-            height="700px"
+            height={["fit-content", "fit-content", "700px"]}
             w={"100%"}
             px={[6, 6, 6, 12]}
             pb={6}
@@ -147,15 +146,15 @@ export const ReportTypeDetailModal: React.FC<{
             <VStack
               justifyContent="space-between"
               w="100%"
-              h="600px"
-              spacing={0}
+              height={["fit-content", "fit-content", "700px"]}
+              spacing={[5, 5, 0]}
               alignItems="center"
             >
               {textList.map((item) => (
                 <HStack
                   justifyContent="space-between"
                   w="100%"
-                  h="180px"
+                  h={["fit-content", "fit-content", "180px"]}
                   spacing={4}
                   alignItems="center"
                 >
@@ -164,6 +163,7 @@ export const ReportTypeDetailModal: React.FC<{
                     alignItems="center"
                     bgColor="#FAFAFA"
                     h="180px"
+                    display={["none", "none", "flex"]}
                     w="180px"
                     borderRadius={10}
                   >
@@ -175,8 +175,8 @@ export const ReportTypeDetailModal: React.FC<{
                   </Flex>
                   <VStack
                     p={5}
-                    w="calc(100% - 200px)"
-                    h="180px"
+                    w={["100%", "100%", "calc(100% - 200px)"]}
+                    h={["fit-content", "fit-content", "180px"]}
                     borderRadius={10}
                     bgColor="#FAFAFA"
                     justifyContent="flex-start"
