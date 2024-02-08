@@ -1,5 +1,5 @@
 import React from "react";
-import { Flex, Box, Container, Text, Heading } from "@chakra-ui/react";
+import { Flex, Box, Text, Heading } from "@chakra-ui/react";
 import HacksOverview from "components/hackerboard/HacksOverview";
 import HacksExplorer from "components/hackerboard/HacksExplorer";
 import { useHacksOverview } from "hooks/useHacksOverview";

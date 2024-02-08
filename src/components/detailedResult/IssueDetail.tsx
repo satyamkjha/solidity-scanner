@@ -1,4 +1,4 @@
-import { Dispatch, SetStateAction, useEffect, useRef, useState } from "react";
+import { Dispatch, SetStateAction, useEffect, useRef } from "react";
 import { useParams } from "react-router-dom";
 import styled from "@emotion/styled";
 import {
@@ -11,7 +11,6 @@ import {
   TabPanels,
   Tab,
   TabPanel,
-  useToast,
   Tooltip,
   useMediaQuery,
   IconButton,
@@ -23,8 +22,6 @@ import { ArrowUpIcon, EditIcon } from "@chakra-ui/icons";
 import React from "react";
 import Loader from "components/styled-components/Loader";
 import { formatString } from "helpers/helperFunction";
-import { useWebSocket } from "hooks/useWebhookData";
-import { useConfig } from "hooks/useConfig";
 import API from "helpers/api";
 import { API_PATH } from "helpers/routeManager";
 
@@ -51,11 +48,8 @@ const IssueDetail: React.FC<{
   setFiles,
   fullScreen,
   handleTabsChange,
-  restrictedBugIds,
-  setRestrictedBugIds,
   tabIndex,
 }) => {
-  const config: any = useConfig();
   const { data, isLoading } = useIssueDetail(
     issue_id,
     context,
@@ -78,8 +72,6 @@ const IssueDetail: React.FC<{
 
   const [comment, setComment] = React.useState<string>("");
   const tabRefs = useRef<(HTMLButtonElement | null)[]>([]);
-  const toast = useToast();
-  const { sendMessage } = useWebSocket();
 
   useEffect(() => {
     setEditComment(false);
@@ -112,7 +104,6 @@ const IssueDetail: React.FC<{
           ...files,
           comment: comment,
         });
-        
       }
 
       // commented code

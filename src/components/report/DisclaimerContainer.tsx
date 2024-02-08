@@ -12,9 +12,21 @@ const DisclaimerContainer: React.FC = () => {
       flexDir={"column"}
       id={"disclaimer"}
     >
-      <Heading color={"#52FF00"} fontSize="4xl" my={10}>
-        Disclaimer
-      </Heading>
+      <Flex
+        sx={{
+          color: "#000000",
+          mx: 1,
+        }}
+        mb={10}
+        alignItems="center"
+      >
+        <Text fontSize={["28px"]} fontWeight={400}>
+          6.
+        </Text>
+        <Heading color={"#52FF00"} fontSize="4xl" ml={4}>
+          Disclaimer
+        </Heading>
+      </Flex>
 
       <Text fontSize="sm" fontWeight={400} color={"detail"} mt={8} mb={4}>
         The Reports neither endorse nor condemn any specific project or team,

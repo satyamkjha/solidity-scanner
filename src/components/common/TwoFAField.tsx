@@ -7,7 +7,6 @@ import {
   VStack,
 } from "@chakra-ui/react";
 import StyledButton from "components/styled-components/StyledButton";
-import Loader from "components/styled-components/Loader";
 
 export const TwoFAField: React.FC<{
   buttonText: "Sign In" | "Verify";

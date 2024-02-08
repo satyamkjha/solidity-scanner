@@ -1,40 +1,24 @@
 import React from "react";
 import { useParams } from "react-router-dom";
 import { Flex, Container } from "@chakra-ui/react";
-import { useReport } from "hooks/useReport";
-import { Text } from "@chakra-ui/react";
 import Loader from "components/styled-components/Loader";
-import { useProfile } from "hooks/useProfile";
 import { ReportContainer } from "./ReportContainer";
+import { useQSReport } from "hooks/useQSReport";
 
-export default function ReportPage() {
+export default function QSReport() {
   const { reportId, projectId } = useParams<{
     reportId: string;
     projectId: string;
   }>();
-  const { data } = useReport(projectId, reportId);
-  const { data: profile } = useProfile(true);
+  const { data } = useQSReport(projectId, reportId);
 
   return (
     <>
-      <Flex
-        sx={{
-          w: "100%",
-          justifyContent: "center",
-          py: 1,
-          bg: "#ff715e",
-        }}
-      >
-        <Text fontSize="12px" color="white" fontWeight={700}>
-          You are viewing this report in private mode, accessible only using an
-          authenticated account. This is not a public report.
-        </Text>
-      </Flex>
-      {data && profile ? (
+      {data ? (
         <ReportContainer
           summary_report={data.summary_report}
-          profile={profile}
           isPublicReport={false}
+          isQSReport={true}
         />
       ) : (
         <Container py={12} h="100vh" maxW={"100vw"} bg="black">

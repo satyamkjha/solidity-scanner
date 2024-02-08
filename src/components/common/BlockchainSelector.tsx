@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect, PropsWithChildren } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import {
   HStack,
   Text,

@@ -4,19 +4,16 @@ import {
   Flex,
   Text,
   Heading,
-  Divider,
-  VStack,
+
   Image,
   useDisclosure,
 } from "@chakra-ui/react";
 import React from "react";
-import { useHistory } from "react-router-dom";
 import { getAssetsURL } from "helpers/helperFunction";
 import { useConfig } from "hooks/useConfig";
 import QSApiModal from "./QSApiModal";
 
 export const QSApiBanner: React.FC = () => {
-  const history = useHistory();
   const config: any = useConfig();
   const assetsURL = getAssetsURL(config);
   const { isOpen, onClose, onOpen } = useDisclosure();

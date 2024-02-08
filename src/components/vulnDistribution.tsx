@@ -5,11 +5,6 @@ import { IssueSeverityDistribution } from "common/types";
 import { SeverityIcon } from "./icons";
 import { severityArrayInOrder } from "common/values";
 
-interface VulnerabilityDistributionView {}
-
-type VulnerabilityDistributionProps = IssueSeverityDistribution &
-  VulnerabilityDistributionView;
-
 const VulnerabilityDistribution: React.FC<{
   view: "home" | "scans";
   size?: "small" | "large";

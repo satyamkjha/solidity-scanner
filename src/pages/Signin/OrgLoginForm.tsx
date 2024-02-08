@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Link as RouterLink, useHistory } from "react-router-dom";
 import {
   Flex,
@@ -13,11 +13,11 @@ import {
   InputRightElement,
 } from "@chakra-ui/react";
 import { MdPeopleAlt } from "react-icons/md";
-import { FaLock, FaMobileAlt } from "react-icons/fa";
+import { FaLock } from "react-icons/fa";
 import { FiAtSign } from "react-icons/fi";
 import API from "helpers/api";
 import Auth from "helpers/auth";
-import { AuthResponse } from "common/types";
+import { AuthResponse, RecaptchaHeader } from "common/types";
 import { ViewIcon, ViewOffIcon } from "@chakra-ui/icons";
 import { API_PATH } from "helpers/routeManager";
 import { useForm } from "react-hook-form";
@@ -39,6 +39,16 @@ const OrgLoginForm: React.FC<{
   const [orgName, setOrgName] = useState("");
   const { handleSubmit } = useForm();
   const [twoFAScreen, setTwoFAScreen] = useState(false);
+  const [reqHeaders, setReqHeaders] = useState<RecaptchaHeader | undefined>();
+
+  const getRecapthaTokens = async () => {
+    const reqHeaders = await getReCaptchaHeaders("signin");
+    setReqHeaders(reqHeaders);
+  };
+
+  useEffect(() => {
+    getRecapthaTokens();
+  }, []);
 
   const onSubmit = async () => {
     if (step) {
@@ -72,7 +82,6 @@ const OrgLoginForm: React.FC<{
   };
 
   const signIn = async () => {
-    let reqHeaders = await getReCaptchaHeaders("signin");
     setIsLoading(true);
     API.post<AuthResponse>(
       API_PATH.API_ORG_LOGIN,

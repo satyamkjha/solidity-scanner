@@ -1,12 +1,10 @@
 import React from "react";
 import styled from "@emotion/styled";
-import { Link as RouterLink } from "react-router-dom";
 import { getAssetsURL } from "helpers/helperFunction";
 import {
   Box,
   Text,
   Heading,
-  Button,
   Image,
   HStack,
   VStack,
@@ -21,21 +19,9 @@ import { ThreatScoreMeter } from "components/threatScoreMeter";
 const QuickScanDetails: React.FC<{ scanReport: QuickScanResult }> = ({
   scanReport,
 }) => {
-  let d = new Date();
   const [isDesktopView] = useMediaQuery("(min-width: 1350px)");
   const config: any = useConfig();
   const assetsURL = getAssetsURL(config);
-  const no_of_vuln_detectors =
-    config && config.REACT_APP_ISSUES_DATA.no_of_vuln_detectors;
-
-  const vulnerabilityCount =
-    scanReport.multi_file_scan_summary.issue_severity_distribution.critical +
-    scanReport.multi_file_scan_summary.issue_severity_distribution.gas +
-    scanReport.multi_file_scan_summary.issue_severity_distribution.high +
-    scanReport.multi_file_scan_summary.issue_severity_distribution
-      .informational +
-    scanReport.multi_file_scan_summary.issue_severity_distribution.low +
-    scanReport.multi_file_scan_summary.issue_severity_distribution.medium;
 
   return (
     <Box

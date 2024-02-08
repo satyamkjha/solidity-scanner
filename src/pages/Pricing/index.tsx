@@ -4,7 +4,6 @@ import { Box, Flex } from "@chakra-ui/react";
 import { usePricingPlans } from "hooks/usePricingPlans";
 import Loader from "components/styled-components/Loader";
 import PricingDetails from "./components/PricingDetails";
-import { Header } from "components/header";
 
 const PricingPage: React.FC = () => {
   const location = useLocation();

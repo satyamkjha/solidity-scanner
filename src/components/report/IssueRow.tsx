@@ -21,16 +21,17 @@ const IssueRow: React.FC<{
     >
       <Td w="8%">{issue.bug_id}</Td>
       <Td w={"70%"}>
-        {issue.findings.map((finding) => (
-          <HStack w="100%">
-            <Text w="85%" whiteSpace="pre-line" wordBreak="break-word">
-              {finding.file_path}
-            </Text>
-            <Text w="15%">
-              {finding.line_nos_start}-{finding.line_nos_end}
-            </Text>
-          </HStack>
-        ))}
+        {issue.findings &&
+          issue.findings.map((finding) => (
+            <HStack w="100%">
+              <Text w="85%" whiteSpace="pre-line" wordBreak="break-word">
+                {finding.file_path}
+              </Text>
+              <Text w="15%">
+                {finding.line_nos_start}-{finding.line_nos_end}
+              </Text>
+            </HStack>
+          ))}
       </Td>
       <Td w={"22%"}>
         <HStack>

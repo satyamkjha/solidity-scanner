@@ -1,16 +1,6 @@
 import React from "react";
-import {
-  Flex,
-  Box,
-  Text,
-  Heading,
-  Button,
-  Image,
-  SkeletonText,
-  Skeleton,
-} from "@chakra-ui/react";
-import { getAssetsURL } from "helpers/helperFunction";
-import { Link, useHistory } from "react-router-dom";
+import { Flex, Box, SkeletonText, Skeleton } from "@chakra-ui/react";
+import { useHistory } from "react-router-dom";
 import QuickScanForm from "components/quickscan/QuickScanForm";
 
 export default function QuickScan() {

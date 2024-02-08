@@ -21,10 +21,13 @@ const ScanHistoryContainer: React.FC<{
           color: "#000000",
           mx: 1,
         }}
-        my={10}
+        mb={10}
         alignItems="center"
       >
-        <Heading color={"#52FF00"} fontSize="4xl">
+        <Text fontSize={["28px"]} fontWeight={400}>
+          5.
+        </Text>
+        <Heading color={"#52FF00"} fontSize="4xl" ml={4}>
           Scan
         </Heading>
         <Text fontSize="4xl" fontWeight={400}>

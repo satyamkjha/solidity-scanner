@@ -23,9 +23,8 @@ import {
   Heading,
 } from "@chakra-ui/react";
 import { useForm } from "react-hook-form";
-import { FaUserAlt, FaDiscord, FaEnvelope, FaTelegram } from "react-icons/fa";
+import { FaUserAlt, FaEnvelope } from "react-icons/fa";
 import { MdWork } from "react-icons/md";
-import { GiLetterBomb } from "react-icons/gi";
 import axios from "axios";
 import { getAssetsURL } from "helpers/helperFunction";
 import { useConfig } from "hooks/useConfig";

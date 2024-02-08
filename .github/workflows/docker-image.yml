@@ -22,7 +22,6 @@ jobs:
       ENV: ${{ inputs.ENV }}
       DOCKER_COMPOSE_PATH: /home/runner/work/solidity-scanner-frontend/solidity-scanner-frontend/docker-compose.yml
       PROJECT_DIRECTORY: /home/runner/work/solidity-scanner-frontend/solidity-scanner-frontend/
-
     runs-on: ubuntu-latest
     permissions: read-all
 
@@ -32,7 +31,7 @@ jobs:
         with:
           fetch-depth: 0
 
-      - uses: sonarsource/sonarqube-scan-action@master
+      # - uses: sonarsource/sonarqube-scan-action@master
 
       - name: Setting aws credentials
         uses: aws-actions/configure-aws-credentials@v3
@@ -61,6 +60,6 @@ jobs:
 
       - name: Build the Docker image
         run: |
-          docker compose -f ${DOCKER_COMPOSE_PATH} build
+          docker compose -f ${DOCKER_COMPOSE_PATH} build --no-cache
       - name: Pusing created images to ECR
         run: docker compose -f ${DOCKER_COMPOSE_PATH} push

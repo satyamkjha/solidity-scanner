@@ -39,7 +39,10 @@ const PaymentModal: React.FC<{
       [plan: string]: Plan;
     };
   };
+  containerModalClose?: any;
   paymentMetadata?: any;
+  email?: string;
+  setTransactionId?: React.Dispatch<React.SetStateAction<string>>;
 }> = ({
   isOpen,
   onClose,
@@ -49,6 +52,9 @@ const PaymentModal: React.FC<{
   profileData,
   quantity,
   paymentMetadata,
+  email,
+  setTransactionId,
+  containerModalClose,
 }) => {
   const toast = useToast();
 
@@ -65,51 +71,89 @@ const PaymentModal: React.FC<{
 
   const createStripePayment = async () => {
     let req: any = {};
-    if (activeCoupon) {
+
+    if (duration === "on-demand-report") {
       req = {
-        package: selectedPlan,
-        duration: duration,
-        coupon: activeCoupon,
+        email: email,
+        metadata: paymentMetadata,
       };
-    } else {
-      req = {
-        package: selectedPlan,
-        duration: duration,
-      };
-    }
 
-    if (quantity) {
-      req.quantity = quantity;
-    }
+      try {
+        setLoading(true);
+        const { data, status } = await API.post<{
+          status: string;
+          checkout_url: string;
+          message?: string;
+          transaction_id?: string;
+        }>(API_PATH.API_CREATE_QUICK_SCAN_CHECKOUT, req);
 
-    if (paymentMetadata) {
-      req.payment_metadata = paymentMetadata;
-    }
-
-    try {
-      setLoading(true);
-      const { data, status } = await API.post<{
-        status: string;
-        checkout_url: string;
-        message?: string;
-      }>(API_PATH.API_CREATE_STRIPE_SUBSCRIPTION_BETA, req);
-
-      if (status === 200 && data.checkout_url) {
+        if (status === 200 && data.checkout_url) {
+          setLoading(false);
+          window.open(`${data.checkout_url}`, "_blank");
+          // fetchAgain();
+          data.transaction_id &&
+            setTransactionId &&
+            setTransactionId(data.transaction_id);
+          onClose();
+        } else {
+          toast({
+            title: data.message,
+            status: "error",
+            isClosable: true,
+            position: "bottom",
+          });
+        }
+      } catch (e) {
         setLoading(false);
-        window.open(`${data.checkout_url}`, "_blank");
-        // fetchAgain();
-        onClose();
-      } else {
-        toast({
-          title: data.message,
-          status: "error",
-          isClosable: true,
-          position: "bottom",
-        });
+        console.log(e);
       }
-    } catch (e) {
-      setLoading(false);
-      console.log(e);
+    } else {
+      if (activeCoupon) {
+        req = {
+          package: selectedPlan,
+          duration: duration,
+          coupon: activeCoupon,
+        };
+      } else {
+        req = {
+          package: selectedPlan,
+          duration: duration,
+        };
+      }
+
+      if (quantity) {
+        req.quantity = quantity;
+      }
+
+      if (paymentMetadata) {
+        req.payment_metadata = paymentMetadata;
+      }
+
+      try {
+        setLoading(true);
+        const { data, status } = await API.post<{
+          status: string;
+          checkout_url: string;
+          message?: string;
+        }>(API_PATH.API_CREATE_STRIPE_SUBSCRIPTION_BETA, req);
+
+        if (status === 200 && data.checkout_url) {
+          setLoading(false);
+          window.open(`${data.checkout_url}`, "_blank");
+          // fetchAgain();
+          onClose();
+        } else {
+          toast({
+            title: data.message,
+            status: "error",
+            isClosable: true,
+            position: "bottom",
+          });
+        }
+      } catch (e) {
+        setLoading(false);
+        console.log(e);
+      }
     }
   };
 
@@ -136,6 +180,15 @@ const PaymentModal: React.FC<{
           duration: duration,
         };
       }
+
+      if (duration === "on-demand-report") {
+        req = {
+          ...req,
+          email: email,
+          order_type: "quickscan_checkout",
+        };
+      }
+
       if (quantity) {
         req.quantity = quantity;
       }
@@ -146,8 +199,12 @@ const PaymentModal: React.FC<{
         checkout_url: string;
         status: string;
         status_url: string;
+        transaction_id?: string;
       }>(API_PATH.API_CREATE_ORDER_CP, req);
       setLoading(false);
+      data.transaction_id &&
+        setTransactionId &&
+        setTransactionId(data.transaction_id);
       window.open(
         data.checkout_url,
         "",
@@ -189,7 +246,13 @@ const PaymentModal: React.FC<{
   }, [coin, paymentMethod, updatedPrice, activeCoupon]);
 
   return (
-    <Modal isOpen={isOpen} onClose={onClose}>
+    <Modal
+      isOpen={isOpen}
+      onClose={() => {
+        onClose();
+        containerModalClose && containerModalClose();
+      }}
+    >
       <ModalOverlay />
       <ModalContent
         overflowY={"scroll"}
@@ -259,7 +322,7 @@ const PaymentModal: React.FC<{
                 {paymentMethod === "cp" && (
                   <CoinPaymentSelect setCoin={setCoin} coin={coin} />
                 )}
-                {duration !== "topup" && (
+                {duration !== "topup" && duration !== "on-demand-report" && (
                   <CouponCodeSection
                     duration={duration}
                     selectedPlan={selectedPlan}
@@ -289,6 +352,7 @@ const PaymentModal: React.FC<{
                   }
                 />
                 {![
+                  "on-demand-report",
                   "ondemand",
                   "topup",
                   "publish_report",
@@ -317,9 +381,33 @@ const PaymentModal: React.FC<{
                   }
                   label={disableMessage}
                 >
-                  <Flex mt={"auto"} w="100%">
+                  <Flex
+                    w={"100%"}
+                    justifyContent={[
+                      "flex-start",
+                      "flex-start",
+                      "flex-start",
+                      "space-between",
+                    ]}
+                    mt={"auto"}
+                    alignItems="center"
+                  >
+                    {globalDuration === "on-demand-report" && (
+                      <Button
+                        w={
+                          globalDuration === "on-demand-report" ? "47%" : "100%"
+                        }
+                        variant="accent-outline"
+                        onClick={() => {}}
+                      >
+                        Back
+                      </Button>
+                    )}
                     <Button
-                      w="100%"
+                      mt={
+                        globalDuration === "on-demand-report" ? [2, 2, 2, 0] : 0
+                      }
+                      w={globalDuration === "on-demand-report" ? "47%" : "100%"}
                       variant="brand"
                       isLoading={loading}
                       spinner={<Loader color={"#3300FF"} size={25} />}
@@ -375,7 +463,7 @@ const PaymentModal: React.FC<{
                   {paymentMethod === "cp" && (
                     <CoinPaymentSelect setCoin={setCoin} coin={coin} />
                   )}
-                  {duration !== "topup" && (
+                  {duration !== "topup" && duration !== "on-demand-report" && (
                     <CouponCodeSection
                       duration={duration}
                       selectedPlan={selectedPlan}
@@ -419,24 +507,46 @@ const PaymentModal: React.FC<{
                   />
                 </>
               )}
-              <Button
+              <Flex
+                w={"100%"}
+                justifyContent={[
+                  "flex-start",
+                  "flex-start",
+                  "flex-start",
+                  "space-between",
+                ]}
                 mt={4}
-                w="100%"
-                variant="brand"
-                onClick={() => {
-                  if (step > 0) {
-                    if (paymentMethod === "cp") {
-                      createCPLink();
-                    } else {
-                      createStripePayment();
-                    }
-                  } else {
-                    setStep(1);
-                  }
-                }}
+                alignItems="center"
               >
-                {step > 0 ? "Make Payment" : "Proceed to Payment"}
-              </Button>
+                {globalDuration === "on-demand-report" && (
+                  <Button
+                    w={globalDuration === "on-demand-report" ? "47%" : "100%"}
+                    variant="accent-outline"
+                    onClick={() => {}}
+                  >
+                    Back
+                  </Button>
+                )}
+
+                <Button
+                  mt={globalDuration === "on-demand-report" ? [2, 2, 2, 0] : 0}
+                  w={globalDuration === "on-demand-report" ? "47%" : "100%"}
+                  variant="brand"
+                  onClick={() => {
+                    if (step > 0) {
+                      if (paymentMethod === "cp") {
+                        createCPLink();
+                      } else {
+                        createStripePayment();
+                      }
+                    } else {
+                      setStep(1);
+                    }
+                  }}
+                >
+                  {step > 0 ? "Make Payment" : "Proceed to Payment"}
+                </Button>
+              </Flex>
             </Flex>
           ) : (
             <>
@@ -502,13 +612,15 @@ const PaymentModal: React.FC<{
                     {paymentMethod === "cp" && (
                       <CoinPaymentSelect setCoin={setCoin} coin={coin} />
                     )}
-                    <CouponCodeSection
-                      duration={duration}
-                      selectedPlan={selectedPlan}
-                      activeCoupon={activeCoupon}
-                      setActiveCoupon={setActiveCoupon}
-                      setUpdatedPrice={setUpdatedPrice}
-                    />
+                    {duration !== "on-demand-report" && (
+                      <CouponCodeSection
+                        duration={duration}
+                        selectedPlan={selectedPlan}
+                        activeCoupon={activeCoupon}
+                        setActiveCoupon={setActiveCoupon}
+                        setUpdatedPrice={setUpdatedPrice}
+                      />
+                    )}
                   </>
                 ) : (
                   <>

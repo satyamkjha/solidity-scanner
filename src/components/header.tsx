@@ -24,7 +24,6 @@ import { logout } from "common/functions";
 import { getAssetsURL } from "helpers/helperFunction";
 import { useConfig } from "hooks/useConfig";
 import ContactUs from "components/modals/contactus";
-import { Logo } from "./icons";
 
 export const Header: React.FC<{ theme: "light" | "dark" }> = ({ theme }) => {
   const history = useHistory();
@@ -363,9 +362,12 @@ export const Header: React.FC<{ theme: "light" | "dark" }> = ({ theme }) => {
               </Button>
             </RouterLink>
           ) : (
-            <RouterLink to="/home">
-              <Button variant="brand">Go to Dashboard</Button>
-            </RouterLink>
+            <Button
+              variant="brand"
+              onClick={() => window.open("/home", "_self")}
+            >
+              Go to Dashboard
+            </Button>
           )}
         </HStack>
       </Flex>

@@ -36,10 +36,12 @@ const DynamicContainer: React.FC<{ issue: IssueItem }> = ({ issue }) => {
         borderTopWidth={0}
         borderTopRadius={0}
       >
-        <DescriptionRemediationContainer
-          issue_description={issue.issue_description}
-          issue_remediation={issue.issue_remediation}
-        />
+        {issue.issue_description && issue.issue_remediation && (
+          <DescriptionRemediationContainer
+            issue_description={issue.issue_description}
+            issue_remediation={issue.issue_remediation}
+          />
+        )}
         {issue.comment &&
           issue.comment !== "" &&
           issue.bug_status === "wont_fix" && (

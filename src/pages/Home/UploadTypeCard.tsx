@@ -1,7 +1,5 @@
 import React from "react";
-import { Flex, Box, Text, HStack, Image } from "@chakra-ui/react";
-import { getAssetsURL } from "helpers/helperFunction";
-import { useConfig } from "hooks/useConfig";
+import { Flex, Text, HStack } from "@chakra-ui/react";
 import RadioButton from "components/styled-components/RadioButton";
 import { SingleFileIcon, MultiFileIcon } from "components/icons";
 
@@ -10,8 +8,6 @@ const UploadTypeCard: React.FC<{
   uploadMethod: "single" | "multiple";
   uploadType: "single" | "multiple";
 }> = ({ setUploadType, uploadMethod, uploadType }) => {
-  const config: any = useConfig();
-  const assetsURL = getAssetsURL(config);
 
   return (
     <Flex

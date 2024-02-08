@@ -1,23 +1,28 @@
 import React from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useLocation } from "react-router-dom";
 import { Flex, Container } from "@chakra-ui/react";
-import { usePublicReport } from "hooks/usePublicReport";
 import Loader from "components/styled-components/Loader";
 import { ReportContainer } from "./ReportContainer";
+import { useQSPdfReport } from "hooks/useQSPdfReport";
 
-export default function ReportPage() {
-  const { reportId, projectType } = useParams<{
-    reportId: ScrollSetting;
-    projectType: string;
+export default function QSPdfReport() {
+  const { reportId } = useParams<{
+    reportId: string;
   }>();
-  const { data } = usePublicReport(projectType, reportId);
+
+  const location = useLocation();
+  const searchParams = new URLSearchParams(location.search);
+  const token = searchParams.get("token");
+
+  const { data } = useQSPdfReport(token || "", reportId);
 
   return (
     <>
       {data ? (
         <ReportContainer
           summary_report={data.summary_report}
-          isPublicReport={true}
+          needsTokenValidation={true}
+          isPublicReport={false}
         />
       ) : (
         <Container py={12} h="100vh" maxW={"100vw"} bg="black">
