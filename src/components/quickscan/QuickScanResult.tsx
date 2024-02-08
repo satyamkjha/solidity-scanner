@@ -248,22 +248,24 @@ export const QuickScanResultContainer: React.FC<{
           >
             View detailed Result ⟶
           </Button> */}
-          <Button
-            display={["none", "none", "none", "flex"]}
-            variant="brand"
-            w={"100%"}
-            maxW={"300px"}
-            isLoading={isLoading}
-            onClick={() =>
-              getFeatureGateConfig().qs_report
-                ? openReport()
-                : onViewDetailResult()
-            }
-          >
-            {getFeatureGateConfig().qs_report
-              ? "View Audit Report PDF ⟶"
-              : "View Detailed Result"}
-          </Button>
+          {isLargerThan850 && (
+            <Button
+              display={["none", "none", "none", "flex"]}
+              variant="brand"
+              w={"100%"}
+              maxW={"300px"}
+              isLoading={isLoading}
+              onClick={() =>
+                getFeatureGateConfig().qs_report
+                  ? openReport()
+                  : onViewDetailResult()
+              }
+            >
+              {getFeatureGateConfig().qs_report
+                ? "View Audit Report PDF ⟶"
+                : "View Detailed Result"}
+            </Button>
+          )}
         </VStack>
         <Flex
           w={["100%", "100%", "100%", "150px", "180px"]}
@@ -324,16 +326,17 @@ export const QuickScanResultContainer: React.FC<{
             </VStack>
           ))}
         </Flex>
-        <Button
-          display={["flex", "flex", "flex", "none"]}
-          variant="brand"
-          w={"100%"}
-          mt={[5, 5, 10]}
-          maxW={"300px"}
-          onClick={() => onViewDetailResult()}
-        >
-          View Detailed Result ⟶
-        </Button>
+        {!isLargerThan850 && (
+          <Button
+            variant="brand"
+            w={"100%"}
+            mt={[5, 5, 10]}
+            maxW={"300px"}
+            onClick={() => onViewDetailResult()}
+          >
+            View Detailed Result ⟶
+          </Button>
+        )}
       </Flex>
       <QSErrorCountModal
         isOpen={open}

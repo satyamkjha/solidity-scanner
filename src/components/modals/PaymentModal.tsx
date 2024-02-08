@@ -322,7 +322,7 @@ const PaymentModal: React.FC<{
                 {paymentMethod === "cp" && (
                   <CoinPaymentSelect setCoin={setCoin} coin={coin} />
                 )}
-                {duration !== "topup" && (
+                {duration !== "topup" && duration !== "on-demand-report" && (
                   <CouponCodeSection
                     duration={duration}
                     selectedPlan={selectedPlan}
