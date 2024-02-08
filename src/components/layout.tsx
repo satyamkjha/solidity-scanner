@@ -17,15 +17,10 @@ import {
   Divider,
   VStack,
   Heading,
-  CloseButton,
 } from "@chakra-ui/react";
 import { GiHamburgerMenu } from "react-icons/gi";
 import { BiUser, BiPowerOff } from "react-icons/bi";
-import {
-  getAssetsURL,
-  getFeatureGateConfig,
-  compareTimeStamp,
-} from "helpers/helperFunction";
+import { getAssetsURL, getFeatureGateConfig } from "helpers/helperFunction";
 import Sidebar from "components/sidebar";
 import { ProfileIconOne } from "components/icons";
 import {
@@ -42,8 +37,8 @@ import { useUserOrgProfile } from "hooks/useUserOrgProfile";
 import { signInWithCustomToken, User, onAuthStateChanged } from "firebase/auth";
 import { auth } from "helpers/firebase";
 import { useUserRole } from "hooks/useUserRole";
-import { CloseIcon } from "@chakra-ui/icons";
 import { useWebSocket } from "hooks/useWebhookData";
+import { useProfile } from "hooks/useProfile";
 
 const MotionFlex = motion(Flex);
 
@@ -54,8 +49,9 @@ const Layout: React.FC = ({ children }) => {
   const history = useHistory();
   const queryClient = useQueryClient();
   const [firebaseToken, setFirebaseToken] = useState<string>();
-  const [firebaseUser, setFirebaseUser] = useState<User>();
-  const { profileData } = useUserRole();
+  const [, setFirebaseUser] = useState<User>();
+  const { data: profileData, refetch: refetchProfile } = useProfile(true);
+
   const { data: orgProfile } = useUserOrgProfile(
     profileData?.logged_in_via === "org_login"
   );
@@ -68,6 +64,12 @@ const Layout: React.FC = ({ children }) => {
   const assetsURL = getAssetsURL(config);
 
   const { messageQueue, updateMessageQueue } = useWebSocket();
+
+  useEffect(() => {
+    if (profileData) {
+      setCredits(profileData.credits);
+    }
+  }, [profileData]);
 
   const handleClickOutside = (e: MouseEvent) => {
     if (ref.current && ref.current.contains(e.target as Node)) {
@@ -95,6 +97,8 @@ const Layout: React.FC = ({ children }) => {
       );
       updateMessageQueue(tempMessageQueue);
     }
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [messageQueue]);
 
   const getFirebaseToken = async () => {

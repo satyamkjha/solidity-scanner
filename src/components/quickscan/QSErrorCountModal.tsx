@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import {
   Flex,
   Modal,
@@ -13,7 +13,11 @@ import {
   Text,
   Button,
 } from "@chakra-ui/react";
-import { getAssetsURL, sentenceCapitalize } from "helpers/helperFunction";
+import {
+  getAssetsURL,
+  sentenceCapitalize,
+  setRecentQuickScan,
+} from "helpers/helperFunction";
 import { useConfig } from "hooks/useConfig";
 import { useHistory } from "react-router-dom";
 import { WarningIcon } from "@chakra-ui/icons";
@@ -23,10 +27,22 @@ const QSErrorCountModal: React.FC<{
   isOpen: boolean;
   errorCount: number;
   errorType: string;
-}> = ({ isOpen, onClose, errorCount, errorType }) => {
+  scan_details: {
+    project_id: any;
+    contract_address: any;
+    contract_chain: any;
+    contract_platform: any;
+    new_user: boolean;
+  };
+}> = ({ isOpen, onClose, errorCount, errorType, scan_details }) => {
   const config: any = useConfig();
   const assetsURL = getAssetsURL(config);
   const history = useHistory();
+
+  const onViewDetailResult = () => {
+    setRecentQuickScan(scan_details);
+    history.push("/signin");
+  };
 
   return (
     <>
@@ -137,12 +153,8 @@ const QSErrorCountModal: React.FC<{
                   </Text>
                 </VStack>
 
-                <Button
-                  w="100%"
-                  variant="brand"
-                  onClick={() => history.push("/signup")}
-                >
-                  Signup For Free Trial
+                <Button w="100%" variant="brand" onClick={onViewDetailResult}>
+                  View Detailed Result
                 </Button>
               </Flex>
               <VStack

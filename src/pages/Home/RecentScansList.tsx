@@ -9,7 +9,7 @@ import {
   Image,
   useMediaQuery,
 } from "@chakra-ui/react";
-import { ArrowForwardIcon, AddIcon } from "@chakra-ui/icons";
+import { ArrowForwardIcon } from "@chakra-ui/icons";
 import {
   getAssetsURL,
   getProjectType,
@@ -23,7 +23,6 @@ import { useAllScans } from "hooks/useAllScans";
 import SolidityScoreProgress from "components/common/SolidityScoreProgress";
 import { ScanObj } from "common/types";
 import Loader from "components/styled-components/Loader";
-import { contractChain } from "common/values";
 
 const RecentScansList: React.FC = () => {
   const assetsURL = getAssetsURL();

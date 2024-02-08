@@ -7,9 +7,14 @@ import {
   Divider,
   Box,
   Button,
+  useMediaQuery,
 } from "@chakra-ui/react";
 import { severityArrayInOrder } from "common/values";
-import { sentenceCapitalize, setRecentQuickScan } from "helpers/helperFunction";
+import {
+  sentenceCapitalize,
+  setRecentQuickScan,
+  getFeatureGateConfig,
+} from "helpers/helperFunction";
 import { QuickScanResult } from "common/types";
 import SolidityScoreProgress from "components/common/SolidityScoreProgress";
 import { useHistory } from "react-router-dom";
@@ -17,20 +22,26 @@ import QSErrorCountModal from "./QSErrorCountModal";
 import ReportTag from "components/common/scans/ReportTag";
 import ResultOverview from "components/common/scans/ResultOverview";
 import VulnerabilityChart from "components/common/scans/VulnerabilityChart";
-import Auth from "helpers/auth";
+import { useWebSocket } from "hooks/useWebhookData";
 
 export const QuickScanResultContainer: React.FC<{
   scanReport: QuickScanResult;
   projectId: string;
-}> = ({ scanReport, projectId }) => {
+  scanId: string;
+}> = ({ scanReport, projectId, scanId }) => {
   const history = useHistory();
-
+  const [isLoading, setIsLoading] = useState(false);
+  const { sendMessage, setKeepWSOpen, updateMessageQueue, messageQueue } =
+    useWebSocket();
   const [errorData, setErrorData] = useState<{
     errorCount: number;
     errorType: string;
   } | null>(null);
 
+  const [reportId, setReportId] = useState("");
   const [open, setOpen] = useState(false);
+
+  const [isLargerThan850] = useMediaQuery("(min-width: 850px)");
 
   const vulnerabilityCount =
     scanReport.multi_file_scan_summary.issue_severity_distribution.critical +
@@ -58,6 +69,58 @@ export const QuickScanResultContainer: React.FC<{
     setRecentQuickScan(scan_details);
     history.push("/signin");
   };
+
+  const openReport = () => {
+    setIsLoading(true);
+    sendMessage({
+      type: "generate_report",
+      body: {
+        project_id: projectId,
+        scan_id: scanId,
+        scan_type: "block",
+      },
+    });
+    const scan_details = {
+      project_id: projectId,
+      contract_address: scanReport.contract_address,
+      contract_chain: scanReport.contract_chain,
+      contract_platform: scanReport.contract_platform,
+      new_user: false,
+    };
+    setRecentQuickScan(scan_details);
+  };
+
+  useEffect(() => {
+    if (
+      messageQueue.length > 0 &&
+      messageQueue.some((msgItem: any) =>
+        ["report_generation_status"].includes(msgItem.type)
+      )
+    ) {
+      messageQueue.forEach((msgItem: any) => {
+        if (
+          msgItem.type === "report_generation_status" &&
+          msgItem.payload.report_status === "report_generated"
+        ) {
+          setReportId(msgItem.payload.report_id);
+          setIsLoading(false);
+          setKeepWSOpen(false);
+        }
+      });
+      let tempMsgQueue = messageQueue;
+      tempMsgQueue = tempMsgQueue.filter(
+        (msg: any) => !["report_generation_status", "error"].includes(msg.type)
+      );
+      updateMessageQueue(tempMsgQueue);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [messageQueue]);
+
+  useEffect(() => {
+    if (reportId !== "") {
+      history.push(`/qs-report/${projectId}/${reportId}/${scanId}`);
+    }
+  }, [reportId]);
 
   return (
     <Flex
@@ -176,7 +239,7 @@ export const QuickScanResultContainer: React.FC<{
               scanReport.multi_file_scan_summary.issue_severity_distribution
             }
           />
-          <Button
+          {/* <Button
             display={["none", "none", "none", "flex"]}
             variant="brand"
             w={"100%"}
@@ -184,7 +247,25 @@ export const QuickScanResultContainer: React.FC<{
             onClick={onViewDetailResult}
           >
             View detailed Result ⟶
-          </Button>
+          </Button> */}
+          {isLargerThan850 && (
+            <Button
+              display={["none", "none", "none", "flex"]}
+              variant="brand"
+              w={"100%"}
+              maxW={"300px"}
+              isLoading={isLoading}
+              onClick={() =>
+                getFeatureGateConfig().qs_report
+                  ? openReport()
+                  : onViewDetailResult()
+              }
+            >
+              {getFeatureGateConfig().qs_report
+                ? "View Audit Report PDF ⟶"
+                : "View Detailed Result"}
+            </Button>
+          )}
         </VStack>
         <Flex
           w={["100%", "100%", "100%", "150px", "180px"]}
@@ -245,19 +326,27 @@ export const QuickScanResultContainer: React.FC<{
             </VStack>
           ))}
         </Flex>
-        <Button
-          display={["flex", "flex", "flex", "none"]}
-          variant="brand"
-          w={"100%"}
-          mt={[5, 5, 10]}
-          maxW={"300px"}
-          onClick={onViewDetailResult}
-        >
-          View detailed Result ⟶
-        </Button>
+        {!isLargerThan850 && (
+          <Button
+            variant="brand"
+            w={"100%"}
+            mt={[5, 5, 10]}
+            maxW={"300px"}
+            onClick={() => onViewDetailResult()}
+          >
+            View Detailed Result ⟶
+          </Button>
+        )}
       </Flex>
       <QSErrorCountModal
         isOpen={open}
+        scan_details={{
+          project_id: projectId,
+          contract_address: scanReport.contract_address,
+          contract_chain: scanReport.contract_chain,
+          contract_platform: scanReport.contract_platform,
+          new_user: false,
+        }}
         errorCount={errorData?.errorCount || 0}
         errorType={errorData?.errorType || ""}
         onClose={() => {

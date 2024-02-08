@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { Link as RouterLink, useParams } from "react-router-dom";
 import {
@@ -19,7 +19,7 @@ import { FiAtSign } from "react-icons/fi";
 
 import { Logo, MailSent } from "components/icons";
 import { getReCaptchaHeaders } from "helpers/helperFunction";
-import { AuthResponse } from "common/types";
+import { AuthResponse, RecaptchaHeader } from "common/types";
 import API from "helpers/api";
 import { API_PATH } from "helpers/routeManager";
 import Loader from "components/styled-components/Loader";
@@ -93,14 +93,23 @@ const ForgotPasswordForm: React.FC<{
   setEmail: React.Dispatch<React.SetStateAction<string>>;
 }> = ({ setMailSent, setEmail }) => {
   const { handleSubmit, register, formState } = useForm<FormData>();
+  const [reqHeaders, setReqHeaders] = useState<RecaptchaHeader | undefined>();
 
   const { orgName } = useParams<{
     orgName: string | null;
   }>();
 
+  const getRecapthaTokens = async () => {
+    const reqHeaders = await getReCaptchaHeaders("forgot");
+    setReqHeaders(reqHeaders);
+  };
+
+  useEffect(() => {
+    getRecapthaTokens();
+  }, []);
+
   const onSubmit = async ({ email }: FormData) => {
     try {
-      let reqHeaders = await getReCaptchaHeaders("send_email");
       const { data } = await API.post<AuthResponse>(
         API_PATH.API_SEND_EMAIL,
         {

@@ -8,29 +8,16 @@ import {
   PopoverContent,
   Flex,
   Image,
-  Divider,
-  Input,
-  useDisclosure,
-  Button,
   PopoverCloseButton,
   PopoverArrow,
-  PopoverHeader,
   PopoverBody,
 } from "@chakra-ui/react";
-import {
-  ChevronDownIcon,
-  ArrowBackIcon,
-  ExternalLinkIcon,
-  WarningIcon,
-} from "@chakra-ui/icons";
-import { contractChain } from "common/values";
+import { ExternalLinkIcon, WarningIcon } from "@chakra-ui/icons";
 import { getAssetsURL } from "helpers/helperFunction";
 import { StylesConfig, GroupBase } from "react-select";
 import Select from "react-select";
 import FormatOptionLabelWithImage from "components/FormatOptionLabelWithImage";
-import { FaPen } from "react-icons/fa";
 import RadioButton from "components/styled-components/RadioButton";
-import { BlockchainComp } from "./BlockchainComp";
 
 export const ChainSelector: React.FC<{
   theme: "dark" | "light";
@@ -170,6 +157,7 @@ export const ChainSelector: React.FC<{
     if (platform === platformValue && chain) {
       setCurrentChain(chain);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {
@@ -205,7 +193,7 @@ export const ChainSelector: React.FC<{
       }
     });
 
-    platformData.chains.map((item) => {
+    platformData.chains.forEach((item) => {
       if (item.value === chainDown) {
         chainDown = item.label;
       }

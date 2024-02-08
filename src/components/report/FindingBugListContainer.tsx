@@ -9,7 +9,8 @@ const FindingBugListContainer: React.FC<{
   showActionTaken: boolean;
   summary_report: Report;
   issues: IssueItem[];
-}> = ({ showActionTaken, issues, summary_report }) => {
+  isQSReport: boolean;
+}> = ({ showActionTaken, issues, summary_report, isQSReport }) => {
   const assetsURL = getAssetsURL();
   return (
     <Flex w="100%" py={8} direction="column">
@@ -86,9 +87,16 @@ const FindingBugListContainer: React.FC<{
         <Text fontSize="8px" fontWeight={600} color={"gray.600"} width={"13%"}>
           Detection Method
         </Text>
-        <Text fontSize="8px" fontWeight={600} color={"gray.600"} width={"10%"}>
-          Line No
-        </Text>
+        {!isQSReport && (
+          <Text
+            fontSize="8px"
+            fontWeight={600}
+            color={"gray.600"}
+            width={"10%"}
+          >
+            Line No
+          </Text>
+        )}
         <Text fontSize="8px" fontWeight={600} color={"gray.600"} width={"13%"}>
           Status
         </Text>
@@ -151,15 +159,18 @@ const FindingBugListContainer: React.FC<{
               ? sentenceCapitalize(issue.audit_type)
               : "Automated"}
           </Text>
-          <Text
-            fontSize="10px"
-            fontWeight={"500"}
-            color={"subtle"}
-            width={"10%"}
-          >
-            L{issue.findings[0].line_nos_start} - L
-            {issue.findings[0].line_nos_end}
-          </Text>
+          {issue.findings && (
+            <Text
+              fontSize="10px"
+              fontWeight={"500"}
+              color={"subtle"}
+              width={"10%"}
+            >
+              L{issue.findings[0].line_nos_start} - L
+              {issue.findings[0].line_nos_end}
+            </Text>
+          )}
+
           <HStack width={"13%"} spacing={1.5}>
             <Image
               src={`${assetsURL}report/${issue.bug_status}_color.svg`}

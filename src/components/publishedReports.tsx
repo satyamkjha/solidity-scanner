@@ -9,8 +9,8 @@ import {
   useMediaQuery,
   Image,
 } from "@chakra-ui/react";
-import { ReportsListItem, Profile, Scan, Report } from "common/types";
-import React, { useState, useRef, useEffect } from "react";
+import { ReportsListItem, Profile, Scan } from "common/types";
+import React, { useState } from "react";
 import { AiFillCopy, AiOutlineLock } from "react-icons/ai";
 import { BsPeople } from "react-icons/bs";
 import { ArrowDownIcon } from "@chakra-ui/icons";
@@ -23,12 +23,11 @@ const ReportBlock: React.FC<{
   report: ReportsListItem;
   profile: Profile;
   type: string;
-}> = ({ report, profile, type }) => {
+}> = ({ report, type }) => {
   const toast = useToast();
   const assetsURL = getAssetsURL();
 
   const [printLoading, setPrintLoading] = useState<boolean>(false);
-  const componentRef = useRef<HTMLDivElement | null>(null);
 
   const generatePDF = async () => {
     setPrintLoading(true);

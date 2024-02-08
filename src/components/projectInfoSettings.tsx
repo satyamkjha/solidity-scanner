@@ -8,7 +8,7 @@ import {
   HStack,
   Text,
 } from "@chakra-ui/react";
-import React, { useState } from "react";
+import React from "react";
 import { AiOutlineProject } from "react-icons/ai";
 import { FaFileCode } from "react-icons/fa";
 import GithubConnectAlert from "./githubConnectAlert";

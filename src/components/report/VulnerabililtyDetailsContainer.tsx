@@ -8,17 +8,22 @@ import {
   VStack,
   Box,
   Link,
+  Button,
+  useMediaQuery,
 } from "@chakra-ui/react";
-import { Report, IssueItem } from "common/types";
+import { Report, IssueItem, Finding } from "common/types";
 import { SeverityIcon } from "components/icons";
 import {
   sentenceCapitalize,
   getAssetsURL,
   getProjectFileUrl,
+  getContractBlockchainId,
 } from "helpers/helperFunction";
 import styled from "@emotion/styled";
 import React from "react";
-import { ExternalLinkIcon } from "@chakra-ui/icons";
+import { ExternalLinkIcon, LockIcon } from "@chakra-ui/icons";
+import { useHistory } from "react-router-dom";
+import { codePlatform } from "common/values";
 
 const VulnerabililtyDetailsContainer: React.FC<{
   summary_report: Report;
@@ -30,6 +35,8 @@ const VulnerabililtyDetailsContainer: React.FC<{
   filesContent: any[];
   codeStartLine?: number;
   codeEndLine?: number;
+  onOpen: () => void;
+  isQSReport: boolean;
 }> = ({
   summary_report,
   issue,
@@ -40,9 +47,11 @@ const VulnerabililtyDetailsContainer: React.FC<{
   filesContent,
   codeStartLine,
   codeEndLine,
+  onOpen,
+  isQSReport,
 }) => {
   const assetsURL = getAssetsURL();
-
+  const history = useHistory();
   const getFileContent = (
     file_path: string,
     line_start: number,
@@ -64,8 +73,73 @@ const VulnerabililtyDetailsContainer: React.FC<{
     return dataArray.slice(line_start, line_end + 1);
   };
 
+  const [isLargerThan450, isLargerThan768] = useMediaQuery([
+    "(min-width: 450px)",
+    "(min-width: 768px)",
+  ]);
+
   const getCodeLineNo = (start: number, index: number) => {
     return start === 0 ? index + 1 : start - 2 + index + 1;
+  };
+
+  const demoCodeArray = [
+    "",
+    "    function callback(uint256[] memory ids, uint256 campaignId)onlyOracle public {",
+    '        require(winningTicketIds[campaignId].length + ids.length <= campaigns[campaignId].rewardCount, "exceeded reward limit");',
+    "",
+    "        for(uint256 i = 0; i<ids.length; i++){",
+    "             winningTicketIds[campaignId].push(ids[i]);",
+    "            winningTixketIdExist[campaignId][ids[i]] = true;",
+    "        }",
+    "        for(uint256 i = 0; i<ids.length; i++){",
+    "             winningTicketIds[campaignId].push(ids[i]);",
+    "            winningTixketIdExist[campaignId][ids[i]] = true;",
+    "        }",
+    "        for(uint256 i = 0; i<ids.length; i++){",
+    "             winningTicketIds[campaignId].push(ids[i]);",
+    "            winningTixketIdExist[campaignId][ids[i]] = true;",
+    "        }",
+    "    }",
+    "",
+    "    function setOracleAddress(address _add) onlyOwner public {",
+  ];
+
+  const demoIssueDescription =
+    "Access control plays an important role in segregation of privileges in smart contracts and other applications. If this is misconfigured or not properly validated on sensitive functions, it may lead to loss of funds, tokens and in some cases compromise of the smart contract.";
+
+  const demoIssueRemediation =
+    "Access control plays an important role in segregation of privileges in smart contracts and other applications. If this is misconfigured or not properly validated on sensitive functions, it may lead to loss of funds, tokens and in some cases compromise of the smart contract.";
+
+  const getFileUrlLink = (finding: Finding) => {
+    if (
+      summary_report.project_summary_report.project_url &&
+      summary_report.project_summary_report.project_url !== "File Scan"
+    ) {
+      return getProjectFileUrl(
+        summary_report.project_summary_report.project_url,
+        "master",
+        finding
+      );
+    } else if (
+      summary_report.project_summary_report.contract_url &&
+      summary_report.project_summary_report.contract_platform &&
+      summary_report.project_summary_report.contract_chain &&
+      codePlatform[
+        getContractBlockchainId(
+          summary_report.project_summary_report.contract_platform,
+          summary_report.project_summary_report.contract_chain
+        )
+      ]
+    ) {
+      return `${summary_report.project_summary_report.contract_url}${
+        codePlatform[
+          getContractBlockchainId(
+            summary_report.project_summary_report.contract_platform,
+            summary_report.project_summary_report.contract_chain
+          )
+        ][summary_report.project_summary_report.contract_platform]
+      }`;
+    } else return "";
   };
 
   return (
@@ -73,6 +147,7 @@ const VulnerabililtyDetailsContainer: React.FC<{
       as="div"
       w="100%"
       h={"100%"}
+      position="relative"
       alignItems="flex-start"
       justifyContent="flex-start"
       flexDir={"column"}
@@ -86,13 +161,13 @@ const VulnerabililtyDetailsContainer: React.FC<{
           }}
           alignItems="center"
         >
-          <Text fontSize="28px" fontWeight={400}>
+          <Text fontSize={["28px"]} fontWeight={400}>
             4.
           </Text>
-          <Heading color={"#52FF00"} fontSize="4xl" ml={4}>
+          <Heading color={"#52FF00"} fontSize={["4xl"]} ml={4}>
             Vulnerability
           </Heading>
-          <Text fontSize="4xl" fontWeight={400}>
+          <Text fontSize={["4xl"]} fontWeight={400}>
             {" "}
             &nbsp;Details{" "}
           </Text>
@@ -102,7 +177,7 @@ const VulnerabililtyDetailsContainer: React.FC<{
         w={"100%"}
         h={"100%"}
         flexDir={"column"}
-        mt={showVulnerabilityTitle ? 6 : 0}
+        mt={showVulnerabilityTitle ? [6] : 0}
       >
         {showMetadata ? (
           <>
@@ -112,25 +187,25 @@ const VulnerabililtyDetailsContainer: React.FC<{
               flexDir={"column"}
               alignItems={"flex-start"}
               spacing={6}
-              p={6}
+              p={[6]}
               border={"1px solid #D9D9D9"}
               borderBottom={"none"}
             >
               <Flex w={"100%"}>
                 <VStack spacing={1} alignItems={"flex-start"} w={"24%"}>
-                  <Text fontSize="xs" fontWeight={400} color={"subtle"}>
+                  <Text fontSize={["xs"]} fontWeight={400} color={"subtle"}>
                     Bug ID
                   </Text>
-                  <Text fontSize="sm" fontWeight={600}>
+                  <Text fontSize={["sm"]} fontWeight={600}>
                     {issue.bug_id}
                   </Text>
                 </VStack>
                 <VStack spacing={1} alignItems={"flex-start"}>
-                  <Text fontSize="xs" fontWeight={400} color={"subtle"}>
+                  <Text fontSize={["xs"]} fontWeight={400} color={"subtle"}>
                     Bug Type
                   </Text>
                   <Text
-                    fontSize="sm"
+                    fontSize={["sm"]}
                     fontWeight={600}
                     className={"ss-report-right-nav"}
                     content={issue.issue_name}
@@ -141,25 +216,34 @@ const VulnerabililtyDetailsContainer: React.FC<{
               </Flex>
               <Flex w={"100%"}>
                 <VStack spacing={1} alignItems={"flex-start"} w={"24%"}>
-                  <Text fontSize="xs" fontWeight={400} color={"subtle"}>
+                  <Text fontSize={["xs"]} fontWeight={400} color={"subtle"}>
                     Severity
                   </Text>
-                  <HStack>
-                    <SeverityIcon size={12} variant={issue.severity} />
-                    <Text fontSize="sm" ml={2}>
+                  <HStack spacing={[3]}>
+                    <SeverityIcon
+                      size={isLargerThan768 ? 12 : isLargerThan450 ? 5 : 5}
+                      variant={issue.severity}
+                    />
+                    <Text fontSize={["sm"]} ml={[0, 1, 2]}>
                       {sentenceCapitalize(issue.severity)}
                     </Text>
                   </HStack>
                 </VStack>
                 <VStack spacing={1} alignItems={"flex-start"} w={"24%"}>
-                  <Text fontSize="xs" fontWeight={400} color={"subtle"}>
+                  <Text fontSize={["xs"]} fontWeight={400} color={"subtle"}>
                     Action Taken
                   </Text>
-                  <HStack>
+                  <HStack spacing={[3]}>
                     <Image
+                      height={["10px", "10px", "25px"]}
+                      width={["10px", "10px", "25px"]}
                       src={`${assetsURL}report/${issue.bug_status}_color.svg`}
                     />
-                    <Text fontSize="sm" fontWeight={"500"} fontStyle={"italic"}>
+                    <Text
+                      fontSize={["sm"]}
+                      fontWeight={"500"}
+                      fontStyle={"italic"}
+                    >
                       {issue.bug_status === "false_positive" &&
                         "False Positive"}
                       {issue.bug_status === "wont_fix" && "Won't Fix"}
@@ -169,10 +253,10 @@ const VulnerabililtyDetailsContainer: React.FC<{
                   </HStack>
                 </VStack>
                 <VStack spacing={1} alignItems={"flex-start"}>
-                  <Text fontSize="xs" fontWeight={400} color={"subtle"}>
+                  <Text fontSize={["xs"]} fontWeight={400} color={"subtle"}>
                     Detection Method
                   </Text>
-                  <Text fontSize="sm" fontWeight={500}>
+                  <Text fontSize={["sm"]} fontWeight={500}>
                     {issue.audit_type
                       ? sentenceCapitalize(issue.audit_type)
                       : "Automated"}
@@ -180,56 +264,65 @@ const VulnerabililtyDetailsContainer: React.FC<{
                 </VStack>
               </Flex>
             </VStack>
-            <Flex
-              px={6}
-              pt={6}
-              borderLeft={"1px solid #D9D9D9"}
-              borderRight={"1px solid #D9D9D9"}
-            >
-              <VStack spacing={1} alignItems={"flex-start"} w={"24%"}>
-                <Text fontSize="xs" fontWeight={400} color={"subtle"}>
-                  Line No.
-                </Text>
-                <Flex flexDir={"column"}>
-                  {issue.findings.map((finding) => (
-                    <Text fontSize="xs" lineHeight={1.8}>
-                      L{finding.line_nos_start} - L{finding.line_nos_end}
-                    </Text>
-                  ))}
-                </Flex>
-              </VStack>
-              <VStack spacing={1} alignItems={"flex-start"}>
-                <Text fontSize="xs" fontWeight={400} color={"subtle"}>
-                  File Location
-                </Text>
-                <Flex flexDir={"column"}>
-                  {issue.findings.map((finding) => (
-                    <Flex>
-                      <Link
-                        href={
-                          summary_report.project_summary_report.project_url &&
-                          summary_report.project_summary_report.project_url !==
-                            "File Scan"
-                            ? getProjectFileUrl(
-                                summary_report.project_summary_report
-                                  .project_url,
-                                "master",
-                                finding
-                              )
-                            : ""
-                        }
-                        target={"_blank"}
-                        fontSize="xs"
-                        lineHeight={1.8}
-                      >
-                        {finding.file_path}
-                        <ExternalLinkIcon ml={2} color={"#8A94A6"} />
-                      </Link>
-                    </Flex>
-                  ))}
-                </Flex>
-              </VStack>
-            </Flex>
+            {issue.findings && (
+              <Flex
+                px={[6]}
+                pt={[6]}
+                borderLeft={"1px solid #D9D9D9"}
+                borderRight={"1px solid #D9D9D9"}
+              >
+                <VStack spacing={1} alignItems={"flex-start"} w={"24%"}>
+                  <Text fontSize={["xs"]} fontWeight={400} color={"subtle"}>
+                    Line No.
+                  </Text>
+                  <Flex flexDir={"column"}>
+                    {issue.findings.map((finding) => (
+                      <Text fontSize={["xs"]} lineHeight={1.8}>
+                        L{finding.line_nos_start} - L{finding.line_nos_end}
+                      </Text>
+                    ))}
+                  </Flex>
+                </VStack>
+                <VStack spacing={1} alignItems={"flex-start"}>
+                  <Text fontSize={["xs"]} fontWeight={400} color={"subtle"}>
+                    File Location
+                  </Text>
+                  <Flex flexDir={"column"}>
+                    {issue.findings.map((finding) => {
+                      if (
+                        summary_report.project_summary_report.project_url ===
+                        "File Scan"
+                      )
+                        return (
+                          <Text
+                            fontSize={["xs"]}
+                            lineHeight={1.8}
+                            color="#8A94A6"
+                          >
+                            {finding.file_path}
+                          </Text>
+                        );
+                      else {
+                        return (
+                          <Flex>
+                            <Link
+                              href={getFileUrlLink(finding)}
+                              target={"_blank"}
+                              fontSize={["xs"]}
+                              lineHeight={1.8}
+                            >
+                              {finding.file_path}
+                              <ExternalLinkIcon ml={2} color={"#8A94A6"} />
+                            </Link>
+                          </Flex>
+                        );
+                      }
+                    })}
+                  </Flex>
+                </VStack>
+              </Flex>
+            )}
+
             <Flex
               px={6}
               borderLeft={"1px solid #D9D9D9"}
@@ -245,7 +338,7 @@ const VulnerabililtyDetailsContainer: React.FC<{
               borderRight={"1px solid #D9D9D9"}
             >
               <Image src={`${assetsURL}report/clipboard.svg`} width={6} />
-              <Text fontSize="sm" fontWeight={600} width={"100%"}>
+              <Text fontSize={["sm"]} fontWeight={600} width={"100%"}>
                 Affected Code
               </Text>
             </HStack>
@@ -253,18 +346,92 @@ const VulnerabililtyDetailsContainer: React.FC<{
         ) : null}
 
         {type !== "desc" ? (
-          <Flex
-            w={"100%"}
-            h={showDescription ? "auto" : "100%"}
-            px={6}
-            mb={showDescription ? 0 : 4}
-            flexDir={"column"}
-            borderLeft={"1px solid #D9D9D9"}
-            borderRight={"1px solid #D9D9D9"}
-          >
-            {issue.findings.map((item, index) => (
+          issue.findings ? (
+            <Flex
+              w={"100%"}
+              h={showDescription ? "auto" : "100%"}
+              px={6}
+              mb={showDescription ? 0 : 4}
+              flexDir={"column"}
+              borderLeft={"1px solid #D9D9D9"}
+              borderRight={"1px solid #D9D9D9"}
+            >
+              {issue.findings.map((item, index) => (
+                <Flex
+                  key={index}
+                  w={"100%"}
+                  flexDir={"column"}
+                  bg={"#FBFBFB"}
+                  borderRadius={15}
+                  mb={4}
+                  p={4}
+                >
+                  <Flex w={"100%"} pb={3}>
+                    <Text fontSize={"10px"} color={"#323B4B"}>
+                      {item.file_path}
+                    </Text>
+                    <Text fontSize={"10px"} color={"#323B4B"} ml={"auto"}>
+                      L{item.line_nos_start} - L{item.line_nos_end}
+                    </Text>
+                  </Flex>
+                  <Divider mb={3} />
+                  <Flex w={"100%"} flexDir={"column"}>
+                    {getFileContent(
+                      item.file_path,
+                      item.file_path === type && codeStartLine
+                        ? codeStartLine
+                        : item.line_nos_start[0],
+                      item.file_path === type && codeEndLine
+                        ? codeEndLine
+                        : item.line_nos_end[0]
+                    ).map((content: any, cIndex: number, array: any[]) => (
+                      <HStack
+                        as={"div"}
+                        key={cIndex}
+                        align={"flex-start"}
+                        spacing={4}
+                        pb={1}
+                      >
+                        <Text
+                          color={"#D8D8D8"}
+                          fontSize="10px"
+                          fontWeight="normal"
+                        >
+                          {codeStartLine
+                            ? getCodeLineNo(codeStartLine, cIndex)
+                            : getCodeLineNo(item.line_nos_start[0], cIndex)}
+                        </Text>
+                        <pre
+                          style={{
+                            fontSize: "10px",
+                            color:
+                              (cIndex > 0 && cIndex < array.length - 2) ||
+                              item.line_nos_start[0] === 0
+                                ? "#000000"
+                                : "#B0B7C3",
+                            whiteSpace: "pre-wrap",
+                          }}
+                          key={cIndex}
+                        >
+                          {content}
+                        </pre>
+                      </HStack>
+                    ))}
+                  </Flex>
+                </Flex>
+              ))}
+            </Flex>
+          ) : (
+            <Flex
+              w={"100%"}
+              h={showDescription ? "auto" : "100%"}
+              px={6}
+              mb={showDescription ? 0 : 4}
+              flexDir={"column"}
+              borderLeft={"1px solid #D9D9D9"}
+              borderRight={"1px solid #D9D9D9"}
+            >
               <Flex
-                key={index}
                 w={"100%"}
                 flexDir={"column"}
                 bg={"#FBFBFB"}
@@ -274,142 +441,284 @@ const VulnerabililtyDetailsContainer: React.FC<{
               >
                 <Flex w={"100%"} pb={3}>
                   <Text fontSize={"10px"} color={"#323B4B"}>
-                    {item.file_path}
+                    {"item.file_path"}
                   </Text>
                   <Text fontSize={"10px"} color={"#323B4B"} ml={"auto"}>
-                    L{item.line_nos_start} - L{item.line_nos_end}
+                    L{"110"} - L{"120"}
                   </Text>
                 </Flex>
                 <Divider mb={3} />
                 <Flex w={"100%"} flexDir={"column"}>
-                  {getFileContent(
-                    item.file_path,
-                    item.file_path === type && codeStartLine
-                      ? codeStartLine
-                      : item.line_nos_start[0],
-                    item.file_path === type && codeEndLine
-                      ? codeEndLine
-                      : item.line_nos_end[0]
-                  ).map((content: any, cIndex: number, array: any[]) => (
-                    <HStack
-                      as={"div"}
-                      key={cIndex}
-                      align={"flex-start"}
-                      spacing={4}
-                      pb={1}
-                    >
-                      <Text
-                        color={"#D8D8D8"}
-                        fontSize="10px"
-                        fontWeight="normal"
-                      >
-                        {codeStartLine
-                          ? getCodeLineNo(codeStartLine, cIndex)
-                          : getCodeLineNo(item.line_nos_start[0], cIndex)}
-                      </Text>
-                      <pre
-                        style={{
-                          fontSize: "10px",
-                          color:
-                            (cIndex > 0 && cIndex < array.length - 2) ||
-                            item.line_nos_start[0] === 0
-                              ? "#000000"
-                              : "#B0B7C3",
-                          whiteSpace: "pre-wrap",
-                        }}
+                  {demoCodeArray.map(
+                    (content: any, cIndex: number, array: any[]) => (
+                      <HStack
+                        as={"div"}
                         key={cIndex}
+                        align={"flex-start"}
+                        spacing={4}
+                        pb={1}
                       >
-                        {content}
-                      </pre>
-                    </HStack>
-                  ))}
+                        <Text
+                          color={"#D8D8D8"}
+                          fontSize="10px"
+                          fontWeight="normal"
+                        ></Text>
+                        <pre
+                          style={{
+                            fontSize: "10px",
+                            color: "#B0B7C3",
+                            whiteSpace: "pre-wrap",
+                          }}
+                          key={cIndex}
+                        >
+                          {content}
+                        </pre>
+                      </HStack>
+                    )
+                  )}
                 </Flex>
               </Flex>
-            ))}
-          </Flex>
+            </Flex>
+          )
         ) : null}
 
         {showDescription ? (
-          <>
-            <Flex
-              w={"100%"}
-              px={6}
-              flexDir={"column"}
-              borderLeft={"1px solid #D9D9D9"}
-              borderRight={"1px solid #D9D9D9"}
-            >
-              <HStack spacing={2} mt={5} mb={3}>
-                <Image
-                  src={`${assetsURL}report/issue_description.svg`}
-                  width={6}
-                />
-                <Text fontSize="sm" fontWeight={600} width={"100%"}>
-                  Description
-                </Text>
-              </HStack>
-              <DescriptionWrapper>
-                <Box
-                  dangerouslySetInnerHTML={{
-                    __html: issue.issue_description,
-                  }}
-                  fontSize={"xs"}
-                  fontWeight={400}
-                />
-              </DescriptionWrapper>
-            </Flex>
+          issue.issue_remediation && issue.issue_description ? (
+            <>
+              <Flex
+                w={"100%"}
+                px={6}
+                flexDir={"column"}
+                borderLeft={"1px solid #D9D9D9"}
+                borderRight={"1px solid #D9D9D9"}
+              >
+                <HStack spacing={2} mt={5} mb={3}>
+                  <Image
+                    src={`${assetsURL}report/issue_description.svg`}
+                    width={6}
+                  />
+                  <Text fontSize={["sm"]} fontWeight={600} width={"100%"}>
+                    Description
+                  </Text>
+                </HStack>
+                <DescriptionWrapper>
+                  <Box
+                    dangerouslySetInnerHTML={{
+                      __html: issue.issue_description,
+                    }}
+                    fontSize={"xs"}
+                    fontWeight={400}
+                  />
+                </DescriptionWrapper>
+              </Flex>
 
-            <Flex
-              w={"100%"}
-              pt={2}
-              px={6}
-              pb={issue.comment ? 0 : 8}
-              flexDir={"column"}
-              border={"1px solid #D9D9D9"}
-              borderTop={"none"}
-              borderBottom={issue.comment ? "none" : "1px solid #D9D9D9"}
-            >
-              <HStack spacing={2} mt={5} mb={3}>
-                <Image
-                  src={`${assetsURL}report/issue_remediation.svg`}
-                  width={6}
-                />
-                <Text fontSize="sm" fontWeight={600} width={"100%"}>
-                  Remediation
-                </Text>
-              </HStack>
-              <DescriptionWrapper>
-                <Box
-                  dangerouslySetInnerHTML={{
-                    __html: issue.issue_remediation,
-                  }}
-                  fontSize={"xs"}
-                  fontWeight={400}
-                />
-              </DescriptionWrapper>
-            </Flex>
-            {issue.comment && issue.bug_status === "wont_fix" && (
               <Flex
                 w={"100%"}
                 pt={2}
                 px={6}
-                pb={8}
+                pb={issue.comment ? 0 : 8}
                 flexDir={"column"}
                 border={"1px solid #D9D9D9"}
                 borderTop={"none"}
+                borderBottom={issue.comment ? "none" : "1px solid #D9D9D9"}
               >
                 <HStack spacing={2} mt={5} mb={3}>
-                  <Image src={`${assetsURL}report/comment.svg`} width={6} />
-                  <Text fontSize="sm" fontWeight={600} width={"100%"}>
-                    Comments
+                  <Image
+                    src={`${assetsURL}report/issue_remediation.svg`}
+                    width={6}
+                  />
+                  <Text fontSize={["sm"]} fontWeight={600} width={"100%"}>
+                    Remediation
                   </Text>
                 </HStack>
-                <Text fontWeight={400} fontSize={"xs"} wordBreak="break-all">
-                  {issue.comment}
-                </Text>
+                <DescriptionWrapper>
+                  <Box
+                    dangerouslySetInnerHTML={{
+                      __html: issue.issue_remediation,
+                    }}
+                    fontSize={"xs"}
+                    fontWeight={400}
+                  />
+                </DescriptionWrapper>
               </Flex>
-            )}
-          </>
+              {issue.comment && issue.bug_status === "wont_fix" && (
+                <Flex
+                  w={"100%"}
+                  pt={2}
+                  px={6}
+                  pb={8}
+                  flexDir={"column"}
+                  border={"1px solid #D9D9D9"}
+                  borderTop={"none"}
+                >
+                  <HStack spacing={2} mt={5} mb={3}>
+                    <Image src={`${assetsURL}report/comment.svg`} width={6} />
+                    <Text fontSize={["sm"]} fontWeight={600} width={"100%"}>
+                      Comments
+                    </Text>
+                  </HStack>
+                  <Text fontWeight={400} fontSize={"xs"} wordBreak="break-all">
+                    {issue.comment}
+                  </Text>
+                </Flex>
+              )}
+            </>
+          ) : (
+            <>
+              <Flex
+                w={"100%"}
+                px={6}
+                flexDir={"column"}
+                borderLeft={"1px solid #D9D9D9"}
+                borderRight={"1px solid #D9D9D9"}
+              >
+                <HStack spacing={2} mt={5} mb={3}>
+                  <Image
+                    src={`${assetsURL}report/issue_description.svg`}
+                    width={6}
+                  />
+                  <Text fontSize={["sm"]} fontWeight={600} width={"100%"}>
+                    Description
+                  </Text>
+                </HStack>
+                <DescriptionWrapper>
+                  <Box
+                    dangerouslySetInnerHTML={{
+                      __html: demoIssueDescription,
+                    }}
+                    fontSize={"xs"}
+                    fontWeight={400}
+                  />
+                </DescriptionWrapper>
+              </Flex>
+
+              <Flex
+                w={"100%"}
+                pt={2}
+                px={6}
+                pb={issue.comment ? 0 : 8}
+                flexDir={"column"}
+                border={"1px solid #D9D9D9"}
+                borderTop={"none"}
+                borderBottom={issue.comment ? "none" : "1px solid #D9D9D9"}
+              >
+                <HStack spacing={2} mt={5} mb={3}>
+                  <Image
+                    src={`${assetsURL}report/issue_remediation.svg`}
+                    width={6}
+                  />
+                  <Text fontSize={["sm"]} fontWeight={600} width={"100%"}>
+                    Remediation
+                  </Text>
+                </HStack>
+                <DescriptionWrapper>
+                  <Box
+                    dangerouslySetInnerHTML={{
+                      __html: demoIssueRemediation,
+                    }}
+                    fontSize={"xs"}
+                    fontWeight={400}
+                  />
+                </DescriptionWrapper>
+              </Flex>
+              {issue.comment && issue.bug_status === "wont_fix" && (
+                <Flex
+                  w={"100%"}
+                  pt={2}
+                  px={6}
+                  pb={8}
+                  flexDir={"column"}
+                  border={"1px solid #D9D9D9"}
+                  borderTop={"none"}
+                >
+                  <HStack spacing={2} mt={5} mb={3}>
+                    <Image src={`${assetsURL}report/comment.svg`} width={6} />
+                    <Text fontSize={["sm"]} fontWeight={600} width={"100%"}>
+                      Comments
+                    </Text>
+                  </HStack>
+                  <Text fontWeight={400} fontSize={"xs"} wordBreak="break-all">
+                    {"issue.comment"}
+                  </Text>
+                </Flex>
+              )}
+            </>
+          )
         ) : null}
+
+        {isQSReport && (
+          <Flex
+            w="96%"
+            left="2px"
+            top={showVulnerabilityTitle ? "270px" : "190px"}
+            h="730px"
+            position="absolute"
+            sx={{
+              backdropFilter: "blur(6px)",
+            }}
+            bg="rgba(255,255,255,0.3)"
+            alignItems="center"
+            justifyContent="center"
+            flexDir="column"
+          >
+            <Flex
+              w="90%"
+              borderRadius={10}
+              p={7}
+              flexDir="row"
+              alignItems="center"
+              justifyContent="space-between"
+              bg="linear-gradient(rgba(238, 235, 255, 1), rgba(229, 246, 255, 1))"
+            >
+              <VStack
+                alignItems="flex-start"
+                textAlign="left"
+                w="calc(100% - 250px)"
+              >
+                <Text color="#000000" fontWeight={600} fontSize="md">
+                  {isQSReport
+                    ? issue.severity === "gas"
+                      ? "Access Gas Issues"
+                      : "Reveal Detailed Vulnerabilities"
+                    : "Upgrade your Plan to view the full report"}
+                </Text>
+                <Text color="#000000" fontWeight={300} fontSize="sm">
+                  {isQSReport
+                    ? issue.severity === "gas"
+                      ? "Sign up for a free trial and optimize your contracts for gas absolutely free!"
+                      : "Make a one-time payment and get a detailed security report for your smart contract with security scores, bug descriptions & remediations directly in your inbox!"
+                    : "Please upgrade your plan to view all the issues in your report."}
+                </Text>
+              </VStack>
+              <Button
+                leftIcon={<LockIcon />}
+                mt={2}
+                mb={4}
+                variant="brand"
+                width="fit-content"
+                px={7}
+                minWidth="200px"
+                onClick={() => {
+                  if (isQSReport) {
+                    if (issue.severity === "gas") {
+                      history.push("/signup");
+                    } else {
+                      onOpen();
+                    }
+                  } else {
+                    history.push("/billing");
+                  }
+                }}
+              >
+                {isQSReport
+                  ? issue.severity === "gas"
+                    ? "Secure Your Contract Now!"
+                    : "Pay & Unlock report"
+                  : "Upgrade"}
+              </Button>
+            </Flex>
+          </Flex>
+        )}
       </Flex>
     </Flex>
   );

@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
-import { Flex, Box, Skeleton, useMediaQuery } from "@chakra-ui/react";
+import { Flex, Box, Skeleton } from "@chakra-ui/react";
 import { getAssetsURL } from "helpers/helperFunction";
 import { isInViewport } from "common/functions";
 
@@ -12,7 +12,7 @@ export default function ProductVideo() {
   }, []);
 
   const [isVisible, setIsVisible] = useState(false);
-  const [animationOffset, setAnimationOffset] = useState(70);
+  const [, setAnimationOffset] = useState(70);
   const ref = useRef<HTMLDivElement>(null);
 
   useEffect(() => {

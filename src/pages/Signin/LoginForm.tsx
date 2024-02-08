@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import { Link as RouterLink, useHistory } from "react-router-dom";
+import React, { useState, useEffect } from "react";
+import { Link as RouterLink } from "react-router-dom";
 import {
   Flex,
   Stack,
@@ -15,7 +15,7 @@ import { FiAtSign } from "react-icons/fi";
 import { FaLock } from "react-icons/fa";
 import API from "helpers/api";
 import Auth from "helpers/auth";
-import { AuthResponse } from "common/types";
+import { AuthResponse, RecaptchaHeader } from "common/types";
 import { ViewIcon, ViewOffIcon } from "@chakra-ui/icons";
 import { API_PATH } from "helpers/routeManager";
 import { getReCaptchaHeaders } from "helpers/helperFunction";
@@ -26,13 +26,21 @@ import { TwoFAField } from "components/common/TwoFAField";
 
 const LoginForm: React.FC = () => {
   const [show, setShow] = useState(false);
-  const history = useHistory();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [twoFAScreen, setTwoFAScreen] = useState(false);
-
+  const [reqHeaders, setReqHeaders] = useState<RecaptchaHeader | undefined>();
   const { handleSubmit } = useForm();
+
+  const getRecapthaTokens = async () => {
+    const reqHeaders = await getReCaptchaHeaders("signin");
+    setReqHeaders(reqHeaders);
+  };
+
+  useEffect(() => {
+    getRecapthaTokens();
+  }, []);
 
   const verify2FA = async (otp: string) => {
     setIsLoading(true);
@@ -58,7 +66,6 @@ const LoginForm: React.FC = () => {
   };
 
   const onSubmit = async () => {
-    let reqHeaders = await getReCaptchaHeaders("signin");
     setIsLoading(true);
     API.post<AuthResponse>(
       API_PATH.API_LOGIN,

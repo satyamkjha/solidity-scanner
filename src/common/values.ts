@@ -250,11 +250,11 @@ export const userTestimonials = [
       "Thanks to Solidity Scan team for building a comprehensive vulnerability scanner for smart contracts that will help you protect contracts from potential scams. It helps you not only find bugs in source code, but conveniently manage reports with the dashboard from your account. It is a nice tool not only for investors to know about the security of the contract they are investing in, but also for audit teams who conduct security testing and want to expand their tools for contract analysis.",
   },
   {
-    name: "Stefan Creadore",
-    designation: "Founder and Lead Developer, Exzo Network",
-    imageUrl: "stefan.svg",
+    name: "Nikhil Kulkarni",
+    designation: "Founder, Buk Technology",
+    imageUrl: "nikhil_kulkarni.jpeg",
     testimonial:
-      "I highly recommend using SolidityScan for any development team as it will help projects of all sizes save money and scale their development efforts. I conducted a personal review of the results obtained from our audit from a leading manual audit firm and an automated audit from SolidityScan, the results were almost identical, which is why we have decided to continue working with SolidityScan. It saves weeks on our timelines for security auditing, and troubleshooting, and provides a smooth workflow to enhance development proficiency.",
+      "Hats off to the Solidity Scan team for creating an all-encompassing vulnerability scanner designed specifically for smart contracts. It played a crucial role in securing our contracts from potential scams by efficiently reviewing the source code. Furthermore, the inclusion of a dashboard feature enables effortless management of reports, all conveniently accessible from your own account. Although actual audits remain important, the real-time monitoring capability of this tool provides invaluable support as an additional layer of security.",
   },
   {
     name: "Jon Greenwood",
@@ -1436,11 +1436,18 @@ export const contractChain: {
             website: "https://arbiscan.io/",
           },
           {
-            value: "goerli",
-            label: "Arbiscan Goerli",
+            value: "nova",
+            label: "Arbiscan Nova",
             icon: "",
             isDisabled: false,
-            website: "https://goerli.arbiscan.io/",
+            website: "https://nova.arbiscan.io/",
+          },
+          {
+            value: "sepolia",
+            label: "Arbiscan Sepolia",
+            icon: "",
+            isDisabled: false,
+            website: "https://sepolia.arbiscan.io/",
           },
         ],
       },

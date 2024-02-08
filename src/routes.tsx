@@ -22,10 +22,13 @@ import { OrgUserRole } from "common/types";
 import { useUserOrgProfile } from "hooks/useUserOrgProfile";
 import { UserRoleProvider } from "hooks/useUserRole";
 import { onLogout } from "common/functions";
-import { WebSocketProvider } from "hooks/useWebhookData";
 import { useConfig } from "hooks/useConfig";
 import { API_PATH } from "helpers/routeManager";
-import { getRecentQuickScan, setRecentQuickScan } from "helpers/helperFunction";
+import {
+  getRecentQuickScan,
+  setRecentQuickScan,
+  getFeatureGateConfig,
+} from "helpers/helperFunction";
 
 const Landing = lazy(() =>
   lazyRetry(
@@ -197,6 +200,32 @@ const Organisation = lazy(() =>
   )
 );
 
+const QSReport = lazy(() =>
+  lazyRetry(
+    () =>
+      import("pages/Report/QSReport" /* webpackChunkName: "QSReportPage" */),
+    "qsReport"
+  )
+);
+
+const DownloadQSReport = lazy(() =>
+  lazyRetry(
+    () =>
+      import(
+        "pages/Report/DownloadQSReport" /* webpackChunkName: "DownloadQsReport" */
+      ),
+    "DownloadQsReport"
+  )
+);
+
+const QSPdfReport = lazy(() =>
+  lazyRetry(
+    () =>
+      import("pages/Report/QSPdfReport" /* webpackChunkName: "QSPdfReport" */),
+    "qsPdfReport"
+  )
+);
+
 const PublicReportPage = lazy(() =>
   lazyRetry(
     () =>
@@ -250,6 +279,14 @@ const Routes: React.FC = () => {
             <SignIn />
           </RedirectRoute>
           <Route exact path="/reset" component={Reset} />
+          {getFeatureGateConfig().qs_report && (
+            <Route
+              exact
+              path="/download-qs-report/:transactionId"
+              component={DownloadQSReport}
+            />
+          )}
+
           <RedirectRoute exact path="/signup">
             <SignUp />
           </RedirectRoute>
@@ -268,13 +305,24 @@ const Routes: React.FC = () => {
             path="/published-report/:projectType/:reportId"
             component={PublicReportPage}
           />
+          {getFeatureGateConfig().qs_report && (
+            <Route
+              exact
+              path="/qs-report/:projectId/:reportId/:scanId"
+              component={QSReport}
+            />
+          )}
+          <Route
+            exact
+            path="/qs-report-token/:reportId"
+            component={QSPdfReport}
+          />
           <Route
             exact
             path="/report/:projectType/:projectId/:reportId"
             component={Report}
           />
           <Route exact path="/payment/:status" component={PaymentSucess} />
-
           <Route
             exact
             path={[

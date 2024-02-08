@@ -1,6 +1,6 @@
 import { useQuery } from "react-query";
 import API from "helpers/api";
-import { InvoiceList, Transaction, TransactionList } from "common/types";
+import { InvoiceList } from "common/types";
 import { API_PATH } from "helpers/routeManager";
 
 const getInvoices = async (page: number, page_no: number) => {

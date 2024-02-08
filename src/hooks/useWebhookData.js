@@ -1,15 +1,8 @@
 // WebSocketContext.js
 
-import React, {
-  createContext,
-  useContext,
-  useEffect,
-  useState,
-  useRef,
-} from "react";
+import React, { createContext, useContext, useEffect, useState } from "react";
 import { useToast } from "@chakra-ui/react";
 import { debounce } from "lodash";
-import { useUserRole } from "./useUserRole";
 import { useProfile } from "./useProfile";
 import Auth from "helpers/auth";
 import { useConfig } from "hooks/useConfig";
@@ -39,6 +32,8 @@ export const WebSocketProvider = ({ children }) => {
   const [messageQueue, setMessageQueue] = useState(emptyArray);
   const [keepWSOpen, setKeepWSOpen] = useState(false);
   const [tempEmitMsgQueue, setTempEmitMsgQueue] = useState(emptyArray);
+
+  const pathname = window.location.pathname;
 
   const initializeWebSocket = (withAuth) => {
     const ws = new WebSocket(
@@ -120,20 +115,14 @@ export const WebSocketProvider = ({ children }) => {
       keepWSOpen &&
       webSocket === null
     ) {
-      if (Auth.isUserAuthenticated()) {
-        if (profileData && webSocket === null) {
-          initializeWebSocket(true);
-        } else {
-          webSocket.close();
-        }
+      if (Auth.isUserAuthenticated() && pathname !== "/quickscan") {
+        initializeWebSocket(true);
       } else {
-        if (webSocket === null) {
-          initializeWebSocket(false);
-        } else {
-          webSocket.close();
-        }
+        initializeWebSocket(false);
       }
     }
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [profileData, keepWSOpen, webSocket, Auth.isUserAuthenticated()]);
 
   const processQueue = () => {
@@ -183,6 +172,7 @@ export const WebSocketProvider = ({ children }) => {
       });
       setTempEmitMsgQueue([]);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [wsReadyState]);
 
   const updateMessageQueue = (msg) => {

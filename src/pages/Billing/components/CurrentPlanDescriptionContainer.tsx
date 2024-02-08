@@ -18,6 +18,14 @@ const CurrentPlanDescriptionContainer: React.FC<{
   showDescription = true,
 }) => {
   const assetsURL = getAssetsURL();
+
+  const getPlanName = () => {
+    if ("on-demand-report" === duration) return "One Time Audit Report";
+    else if ("publish_report" === duration) return "Self-Published Report";
+    else if ("verified_publish_report" === duration) return "Verified Report";
+    else return sentenceCapitalize(plan.name);
+  };
+
   return (
     <Flex
       w={"100%"}
@@ -35,23 +43,22 @@ const CurrentPlanDescriptionContainer: React.FC<{
         )}
         {["non-pro", "pro/custom"].includes(packageName) && (
           <HStack mb={4}>
-            <Image
-              width="75px"
-              height="75px"
-              src={
-                "publish_report" === duration
-                  ? `${assetsURL}report/user.svg`
-                  : `${assetsURL}report/ss-shield.svg`
-              }
-              mr={2}
-            />
+            {duration !== "on-demand-report" && (
+              <Image
+                width="75px"
+                height="75px"
+                src={
+                  "publish_report" === duration
+                    ? `${assetsURL}report/user.svg`
+                    : `${assetsURL}report/ss-shield.svg`
+                }
+                mr={2}
+              />
+            )}
+
             <Flex flexDir={"column"}>
               <Text fontSize={"2xl"} fontWeight={700}>
-                {"publish_report" === duration
-                  ? "Self-Published Report"
-                  : "verified_publish_report" === duration
-                  ? "Verified Report"
-                  : sentenceCapitalize(plan.name)}
+                {getPlanName()}
               </Text>
               <Flex textAlign="center" my={1}>
                 <Heading fontSize={"lg"}>
@@ -67,6 +74,7 @@ const CurrentPlanDescriptionContainer: React.FC<{
             </Flex>
           </HStack>
         )}
+
         {!["non-pro", "pro/custom"].includes(packageName) && (
           <Text fontSize={"2xl"} fontWeight={700}>
             {sentenceCapitalize(plan.name)}

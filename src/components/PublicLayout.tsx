@@ -1,14 +1,12 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import Footer from "./footer";
-import Header from "./landingHeader";
-import { Box, Container, HStack, Text, Flex } from "@chakra-ui/react";
+import { Box, Container } from "@chakra-ui/react";
 import Infographics from "./infographics";
 import SignupBox from "./signupBox";
 import { useLocation } from "react-router-dom";
-import { motion } from "framer-motion";
-import { CloseIcon } from "@chakra-ui/icons";
+// import { motion } from "framer-motion";
 
-const MotionFlex = motion(Flex);
+// const MotionFlex = motion(Flex);
 
 const PublicLayout: React.FC = ({ children }) => {
   const location = useLocation();

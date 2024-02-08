@@ -19,7 +19,6 @@ import { AiOutlineProject } from "react-icons/ai";
 import API from "helpers/api";
 import { useSupportedChains } from "hooks/useSupportedPlatforms";
 import {
-  getFeatureGateConfig,
   checkContractAddress,
   getAssetsURL,
 } from "helpers/helperFunction";
@@ -59,9 +58,7 @@ const ContractForm: React.FC<{
   const toast = useToast();
   const history = useHistory();
   const { data: supportedChains } = useSupportedChains();
-  const [adddressError, setAddressError] = useState("");
   const [blockchainSelectorError, setBlockchainSelectorError] = useState("");
-  const platform_supported = getFeatureGateConfig().platform_supported;
   const assetsURL = getAssetsURL();
 
   const onSubmit = async () => {

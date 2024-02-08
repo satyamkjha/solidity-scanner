@@ -1,6 +1,6 @@
 import React, { useEffect, lazy, Suspense } from "react";
 import { useLocation } from "react-router-dom";
-import { Flex, Box, Divider } from "@chakra-ui/react";
+import { Flex, Box } from "@chakra-ui/react";
 import { getAssetsURL } from "helpers/helperFunction";
 import { useConfig } from "hooks/useConfig";
 import { VideoSkeleton } from "./components/productVideo";

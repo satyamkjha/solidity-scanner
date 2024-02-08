@@ -6,6 +6,14 @@ const ConfirmationMessageBox: React.FC<{
   name: string;
   duration: string;
 }> = ({ name, duration }) => {
+  const getPlanDuration = () => {
+    if ("on-demand-report" === duration) return "One Time Audit Report";
+    else if ("publish_report" === duration) return "Self-Published Report";
+    else if ("verified_publish_report" === duration) return "Verified Report";
+    else if (duration !== "ondemand")
+      return `${sentenceCapitalize(duration)} Plan`;
+  };
+
   return (
     <Flex
       bgColor="#FFF8ED"
@@ -17,24 +25,22 @@ const ConfirmationMessageBox: React.FC<{
       mt={"auto"}
     >
       <Text color="detail" fontWeight={300} fontSize={"sm"}>
-        You have currently selected the{" "}
+        You have opted for the
         <span
           style={{
             fontWeight: 900,
           }}
         >
           <b>
-            {!["publish_report", "verified_publish_report"].includes(
-              duration
-            ) && sentenceCapitalize(name)}{" "}
-            {"publish_report" === duration
-              ? "Self-Published Report"
-              : "verified_publish_report" === duration
-              ? "Verified Report"
-              : duration !== "ondemand" && sentenceCapitalize(duration)}{" "}
+            {![
+              "publish_report",
+              "verified_publish_report",
+              "on-demand-report",
+            ].includes(duration) && sentenceCapitalize(name)}{" "}
+            {getPlanDuration()}
           </b>
         </span>
-        plan sum of the charges will apply on your confirmation
+        . Charges will be applied upon your confirmation.
       </Text>
     </Flex>
   );
