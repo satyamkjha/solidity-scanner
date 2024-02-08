@@ -38,6 +38,7 @@ import { signInWithCustomToken, User, onAuthStateChanged } from "firebase/auth";
 import { auth } from "helpers/firebase";
 import { useUserRole } from "hooks/useUserRole";
 import { useWebSocket } from "hooks/useWebhookData";
+import { useProfile } from "hooks/useProfile";
 
 const MotionFlex = motion(Flex);
 
@@ -49,7 +50,8 @@ const Layout: React.FC = ({ children }) => {
   const queryClient = useQueryClient();
   const [firebaseToken, setFirebaseToken] = useState<string>();
   const [, setFirebaseUser] = useState<User>();
-  const { profileData } = useUserRole();
+  const { data: profileData, refetch: refetchProfile } = useProfile(true);
+
   const { data: orgProfile } = useUserOrgProfile(
     profileData?.logged_in_via === "org_login"
   );
@@ -62,6 +64,12 @@ const Layout: React.FC = ({ children }) => {
   const assetsURL = getAssetsURL(config);
 
   const { messageQueue, updateMessageQueue } = useWebSocket();
+
+  useEffect(() => {
+    if (profileData) {
+      setCredits(profileData.credits);
+    }
+  }, [profileData]);
 
   const handleClickOutside = (e: MouseEvent) => {
     if (ref.current && ref.current.contains(e.target as Node)) {
