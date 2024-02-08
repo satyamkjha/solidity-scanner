@@ -1058,35 +1058,42 @@ export const ReportContainer: React.FC<{
 
               {!download ? (
                 isQSReport ? (
-                  <VStack
-                    w="300px"
-                    bg={
-                      "linear-gradient(rgba(5, 12, 18, 1), rgba(23, 0, 114, 1))"
-                    }
-                    display={["none", "none", "none", "flex"]}
-                    borderRadius={10}
-                    p={7}
-                    spacing={10}
-                    textAlign="center"
-                    ml={8}
+                  <Flex
+                    w={"35%"}
+                    alignItems={"center"}
+                    justifyContent={"center"}
                   >
-                    <Text fontWeight={600} fontSize="md" color="white">
-                      Fix Bugs & Secure Your Smart Contracts Today
-                    </Text>
-                    <Text fontWeight={400} fontSize="sm" color="subtle">
-                      Sign Up for a free trial and get one step closer to
-                      securing your smart contracts. Scan entire repositories,
-                      get access to gas issues, publish audit reports & much
-                      more.
-                    </Text>
-                    <Button
+                    <VStack
                       w="100%"
-                      onClick={() => history.push("/signin")}
-                      variant="brand"
+                      maxW={"300px"}
+                      bg={
+                        "linear-gradient(rgba(5, 12, 18, 1), rgba(23, 0, 114, 1))"
+                      }
+                      display={["none", "none", "none", "flex"]}
+                      borderRadius={10}
+                      p={7}
+                      spacing={10}
+                      textAlign="center"
+                      mx={8}
                     >
-                      Secure Your Contract Now!
-                    </Button>
-                  </VStack>
+                      <Text fontWeight={600} fontSize="md" color="white">
+                        Fix Bugs & Secure Your Smart Contracts Today
+                      </Text>
+                      <Text fontWeight={400} fontSize="sm" color="subtle">
+                        Sign Up for a free trial and get one step closer to
+                        securing your smart contracts. Scan entire repositories,
+                        get access to gas issues, publish audit reports & much
+                        more.
+                      </Text>
+                      <Button
+                        w="100%"
+                        onClick={() => history.push("/signin")}
+                        variant="brand"
+                      >
+                        Secure Your Contract Now!
+                      </Button>
+                    </VStack>
+                  </Flex>
                 ) : (
                   <Flex
                     w={"35%"}
