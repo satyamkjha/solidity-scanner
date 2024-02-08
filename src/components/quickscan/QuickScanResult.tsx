@@ -250,7 +250,6 @@ export const QuickScanResultContainer: React.FC<{
           </Button> */}
           {isLargerThan850 && (
             <Button
-              display={["none", "none", "none", "flex"]}
               variant="brand"
               w={"100%"}
               maxW={"300px"}
