@@ -24,7 +24,7 @@ const ProjectSummaryContainer: React.FC<{
           color: "#000000",
           mx: 1,
         }}
-        my={10}
+        mb={10}
         alignItems="center"
         className={"ss-report-h1"}
         content={"Vulnerability Classification and Severity"}

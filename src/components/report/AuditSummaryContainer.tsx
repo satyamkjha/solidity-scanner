@@ -31,7 +31,7 @@ const AuditSummaryContainer: React.FC<{
     ? reportProjectDetails
     : reportBlockDetails;
 
-    const solidity_score = summary_report.scan_summary[0].score_v2
+  const solidity_score = summary_report.scan_summary[0].score_v2
     ? summary_report.scan_summary[0].score_v2
     : (parseFloat(summary_report.scan_summary[0].score) * 20).toFixed(2);
 
@@ -68,11 +68,11 @@ const AuditSummaryContainer: React.FC<{
           color: "#000000",
           mx: 1,
         }}
-        my={10}
+        mb={10}
         alignItems="center"
       >
         <Text fontSize="28px" fontWeight={400}>
-          02.
+          2.
         </Text>
         <Heading color={"#52FF00"} fontSize="28px" ml={4}>
           Executive
