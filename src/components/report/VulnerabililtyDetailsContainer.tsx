@@ -11,17 +11,19 @@ import {
   Button,
   useMediaQuery,
 } from "@chakra-ui/react";
-import { Report, IssueItem } from "common/types";
+import { Report, IssueItem, Finding } from "common/types";
 import { SeverityIcon } from "components/icons";
 import {
   sentenceCapitalize,
   getAssetsURL,
   getProjectFileUrl,
+  getContractBlockchainId,
 } from "helpers/helperFunction";
 import styled from "@emotion/styled";
 import React from "react";
 import { ExternalLinkIcon, LockIcon } from "@chakra-ui/icons";
 import { useHistory } from "react-router-dom";
+import { codePlatform } from "common/values";
 
 const VulnerabililtyDetailsContainer: React.FC<{
   summary_report: Report;
@@ -107,6 +109,38 @@ const VulnerabililtyDetailsContainer: React.FC<{
 
   const demoIssueRemediation =
     "Access control plays an important role in segregation of privileges in smart contracts and other applications. If this is misconfigured or not properly validated on sensitive functions, it may lead to loss of funds, tokens and in some cases compromise of the smart contract.";
+
+  const getFileUrlLink = (finding: Finding) => {
+    if (
+      summary_report.project_summary_report.project_url &&
+      summary_report.project_summary_report.project_url !== "File Scan"
+    ) {
+      return getProjectFileUrl(
+        summary_report.project_summary_report.project_url,
+        "master",
+        finding
+      );
+    } else if (
+      summary_report.project_summary_report.contract_url &&
+      summary_report.project_summary_report.contract_platform &&
+      summary_report.project_summary_report.contract_chain &&
+      codePlatform[
+        getContractBlockchainId(
+          summary_report.project_summary_report.contract_platform,
+          summary_report.project_summary_report.contract_chain
+        )
+      ]
+    ) {
+      return `${summary_report.project_summary_report.contract_url}${
+        codePlatform[
+          getContractBlockchainId(
+            summary_report.project_summary_report.contract_platform,
+            summary_report.project_summary_report.contract_chain
+          )
+        ][summary_report.project_summary_report.contract_platform]
+      }`;
+    } else return "";
+  };
 
   return (
     <Flex
@@ -254,30 +288,36 @@ const VulnerabililtyDetailsContainer: React.FC<{
                     File Location
                   </Text>
                   <Flex flexDir={"column"}>
-                    {issue.findings.map((finding) => (
-                      <Flex>
-                        <Link
-                          href={
-                            summary_report.project_summary_report.project_url &&
-                            summary_report.project_summary_report
-                              .project_url !== "File Scan"
-                              ? getProjectFileUrl(
-                                  summary_report.project_summary_report
-                                    .project_url,
-                                  "master",
-                                  finding
-                                )
-                              : ""
-                          }
-                          target={"_blank"}
-                          fontSize={["xs"]}
-                          lineHeight={1.8}
-                        >
-                          {finding.file_path}
-                          <ExternalLinkIcon ml={2} color={"#8A94A6"} />
-                        </Link>
-                      </Flex>
-                    ))}
+                    {issue.findings.map((finding) => {
+                      if (
+                        summary_report.project_summary_report.project_url ===
+                        "File Scan"
+                      )
+                        return (
+                          <Text
+                            fontSize={["xs"]}
+                            lineHeight={1.8}
+                            color="#8A94A6"
+                          >
+                            {finding.file_path}
+                          </Text>
+                        );
+                      else {
+                        return (
+                          <Flex>
+                            <Link
+                              href={getFileUrlLink(finding)}
+                              target={"_blank"}
+                              fontSize={["xs"]}
+                              lineHeight={1.8}
+                            >
+                              {finding.file_path}
+                              <ExternalLinkIcon ml={2} color={"#8A94A6"} />
+                            </Link>
+                          </Flex>
+                        );
+                      }
+                    })}
                   </Flex>
                 </VStack>
               </Flex>
@@ -655,7 +695,9 @@ const VulnerabililtyDetailsContainer: React.FC<{
                 mt={2}
                 mb={4}
                 variant="brand"
-                width="200px"
+                width="fit-content"
+                px={7}
+                minWidth="200px"
                 onClick={() => {
                   if (isQSReport) {
                     if (issue.severity === "gas") {

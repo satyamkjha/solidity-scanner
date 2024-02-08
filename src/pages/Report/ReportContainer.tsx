@@ -211,6 +211,7 @@ export const ReportContainer: React.FC<{
       const mergedFileContents = data.flatMap((batch) => batch.file_contents);
       setFilesContent(mergedFileContents);
     });
+
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [summary_report.issues]);
 

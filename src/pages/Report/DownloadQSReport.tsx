@@ -18,7 +18,7 @@ import { FiAtSign } from "react-icons/fi";
 import { FaLock } from "react-icons/fa";
 import { useForm } from "react-hook-form";
 import { Logo } from "components/icons";
-import API from "helpers/api";
+import API, { PUBLIC_API } from "helpers/api";
 import { AuthResponse } from "common/types";
 import { ViewIcon, ViewOffIcon } from "@chakra-ui/icons";
 import { API_PATH } from "helpers/routeManager";
@@ -46,10 +46,13 @@ const DownloadQSReport: React.FC = () => {
     try {
       //   let reqHeaders = await getReCaptchaHeaders("forgot_password_set");
       setIsLoading(true);
-      const { data } = await API.post(API_PATH.API_GET_QUICK_SCAN_REPORT_PDF, {
-        transaction_id: transactionId,
-        email,
-      });
+      const { data } = await PUBLIC_API.post(
+        API_PATH.API_GET_QUICK_SCAN_REPORT_PDF,
+        {
+          transaction_id: transactionId,
+          email,
+        }
+      );
 
       if (data.status === "success") {
         sets3url(data.download_url);
