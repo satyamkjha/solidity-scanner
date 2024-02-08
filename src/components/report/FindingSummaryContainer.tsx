@@ -20,7 +20,6 @@ const FindingSummaryContainer: React.FC<{
           color: "#000000",
           mx: 1,
         }}
-        mt={8}
         mb={10}
         alignItems="center"
       >
