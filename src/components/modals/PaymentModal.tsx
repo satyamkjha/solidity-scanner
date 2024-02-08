@@ -398,7 +398,9 @@ const PaymentModal: React.FC<{
                           globalDuration === "on-demand-report" ? "47%" : "100%"
                         }
                         variant="accent-outline"
-                        onClick={() => {}}
+                        onClick={() => {
+                          onClose();
+                        }}
                       >
                         Back
                       </Button>
@@ -522,7 +524,9 @@ const PaymentModal: React.FC<{
                   <Button
                     w={globalDuration === "on-demand-report" ? "47%" : "100%"}
                     variant="accent-outline"
-                    onClick={() => {}}
+                    onClick={() => {
+                      onClose();
+                    }}
                   >
                     Back
                   </Button>
