@@ -128,6 +128,7 @@ export const QSPaymentModal: React.FC<{
                   pricingDetails={pricing_plans.pricing_data}
                   isOpen={openPaymentModal}
                   onClose={() => {
+                    setModalState("enter_email");
                     closePaymentModal();
                   }}
                   containerModalClose={() => {
