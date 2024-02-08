@@ -1,5 +1,4 @@
-import { Container, Flex, VStack, Text, Button } from "@chakra-ui/react";
-import LazyLoad from "react-lazyload";
+import { Container, Flex, VStack, Text, Button, Box } from "@chakra-ui/react";
 import {
   Report,
   Profile,
@@ -7,7 +6,7 @@ import {
   ScanSummaryItem,
   IssueDetailObject,
 } from "common/types";
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect } from "react";
 import PDFContainer from "components/report/PDFContainer";
 import TableContentContainer, {
   IssueComponent,
@@ -29,34 +28,7 @@ import FindingBugListContainer from "components/report/FindingBugListContainer";
 import VulnerabililtyDetailsContainer from "components/report/VulnerabililtyDetailsContainer";
 import ScanHistoryContainer from "components/report/ScanHistoryContainer";
 import DisclaimerContainer from "components/report/DisclaimerContainer";
-
-// const CoverPageContainer = React.lazy(
-//   () => import("components/report/CoverPageContainer")
-// );
-// const TableContentContainer = React.lazy(
-//   () => import("components/report/TableContentContainer")
-// );
-// const ProjectSummaryContainer = React.lazy(
-//   () => import("components/report/ProjectSummaryContainer")
-// );
-// const AuditSummaryContainer = React.lazy(
-//   () => import("components/report/AuditSummaryContainer")
-// );
-// const VulnerabililtyDetailsContainer = React.lazy(
-//   () => import("components/report/VulnerabililtyDetailsContainer")
-// );
-// const ScanHistoryContainer = React.lazy(
-//   () => import("components/report/ScanHistoryContainer")
-// );
-// const DisclaimerContainer = React.lazy(
-//   () => import("components/report/DisclaimerContainer")
-// );
-// const FindingBugListContainer = React.lazy(
-//   () => import("components/report/FindingBugListContainer")
-// );
-// const FindingSummaryContainer = React.lazy(
-//   () => import("components/report/FindingSummaryContainer")
-// );
+import InfiniteScroll from "react-infinite-scroll-component";
 
 export const ReportContainerV2: React.FC<{
   summary_report: Report;
@@ -80,14 +52,18 @@ export const ReportContainerV2: React.FC<{
     );
   }
 
-  const leftNavs = [
-    { label: "Table of Content", value: "toc" },
-    { label: "Vulnerability Classification and Severity", value: "summary" },
-    { label: "Executive Summary", value: "executive" },
-    { label: "Findings Summary", value: "findings" },
-    { label: "Vulnerability Details", value: "details" },
-    { label: "Scan History", value: "history" },
-    { label: "Disclaimer", value: "disclaimer" },
+  let leftNavsObj = [
+    { label: "Table of Content", value: "toc", pageNo: 1 },
+    {
+      label: "Vulnerability Classification and Severity",
+      value: "summary",
+      pageNo: 1,
+    },
+    { label: "Executive Summary", value: "executive", pageNo: 1 },
+    { label: "Findings Summary", value: "findings", pageNo: 1 },
+    { label: "Vulnerability Details", value: "details", pageNo: 1 },
+    { label: "Scan History", value: "history", pageNo: 1 },
+    { label: "Disclaimer", value: "disclaimer", pageNo: 1 },
   ];
 
   let counter = -1;
@@ -97,6 +73,9 @@ export const ReportContainerV2: React.FC<{
     projectId: string;
   }>();
 
+  const [isNavLoading, setIsNavLoading] = useState(false);
+  const [currentLeftNav, setCurrentLeftNav] = useState<any>();
+  const [leftNavs, setLeftNavs] = useState(leftNavsObj);
   const [isLoading, setIsLoading] = useState(true);
   const [currentPage, setCurrentPage] = useState<any>();
   const [issuesObj, setIssuesObj] = useState<{
@@ -115,32 +94,14 @@ export const ReportContainerV2: React.FC<{
   const [printLoading, setPrintLoading] = useState(false);
   const [isHubspotRendered, setIsHubspotRendered] = useState(false);
 
+  const [hasMore, setHasMore] = useState(true);
+  const [displayWindow, setDisplayWindow] = useState(0);
+  const [totalPages, setTotalPages] = useState([]);
+  const [displayPages, setDisplayPages] = useState([]);
+
   const location = useLocation();
   const searchParams = new URLSearchParams(location.search);
   const download = searchParams.get("download");
-
-  // const containerRef = useRef<HTMLDivElement>(null);
-  // const observer = useRef<IntersectionObserver | null>(null);
-
-  // useEffect(() => {
-  //   const options = {
-  //     root: null,
-  //     rootMargin: "0px",
-  //     threshold: 0.1,
-  //   };
-
-  //   observer.current = new IntersectionObserver(handleIntersection, options);
-
-  //   if (containerRef.current) {
-  //     observer.current.observe(containerRef.current);
-  //   }
-
-  //   return () => {
-  //     if (observer.current) {
-  //       observer.current.disconnect();
-  //     }
-  //   };
-  // }, [])
 
   useEffect(() => {
     let doubleCount = 0;
@@ -225,6 +186,35 @@ export const ReportContainerV2: React.FC<{
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [filesContent]);
 
+  useEffect(() => {
+    if (scanHistorySplit && scanHistorySplit.length && filesContent) {
+      const pagesList = getPagesList();
+      setTotalPages(pagesList);
+      setDisplayPages(pagesList.slice(0, 5));
+      setDisplayWindow(5);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [scanHistorySplit, filesContent]);
+
+  useEffect(() => {
+    if (currentLeftNav) {
+      navToPage(currentLeftNav);
+    }
+  }, [currentLeftNav]);
+
+  const fetchMoreData = () => {
+    const sliceEnd = displayWindow + 5;
+    const slicedList = totalPages.slice(displayWindow, sliceEnd);
+    setDisplayPages((prevItems) => [...prevItems, ...slicedList]);
+
+    if (sliceEnd < totalPages.length) {
+      setHasMore(true);
+      setDisplayWindow(sliceEnd);
+    } else {
+      setHasMore(false);
+    }
+  };
+
   const compareSeverity = (severity1: string, severity2: string): number => {
     const index1 = priority_list.indexOf(severity1);
     const index2 = priority_list.indexOf(severity2);
@@ -297,6 +287,23 @@ export const ReportContainerV2: React.FC<{
     return results;
   };
 
+  const leftNavClick = (leftNav: any) => {
+    const scrollTillPage = (Math.floor(leftNav.pageNo / 5) + 1) * 5;
+    if (scrollTillPage > displayWindow) {
+      const slicedList = totalPages.slice(0, scrollTillPage);
+      setDisplayPages(slicedList);
+      setDisplayWindow(scrollTillPage);
+      if (scrollTillPage < totalPages.length) {
+        setHasMore(true);
+      } else {
+        setHasMore(false);
+      }
+      setCurrentLeftNav(leftNav);
+    } else {
+      navToPage(leftNav);
+    }
+  };
+
   const navToPage = (leftNav: any) => {
     const page = document.querySelector(`.ss-report-${leftNav.value}`);
     if (page) {
@@ -308,6 +315,7 @@ export const ReportContainerV2: React.FC<{
       );
       setCurrentPageHeadings(pageElementsContentList);
       setCurrentPage(leftNav);
+      setIsNavLoading(false);
     }
   };
 
@@ -331,6 +339,7 @@ export const ReportContainerV2: React.FC<{
       setPrintLoading(false);
     }
   };
+
   const splitNumber = (num: number): number[] => {
     const result: number[] = [0];
     const initial = 25;
@@ -422,6 +431,305 @@ export const ReportContainerV2: React.FC<{
     }
   };
 
+  const getPagesList = () => {
+    let pageList: any = [];
+    pageList.push(
+      <PDFContainer
+        page={"cover"}
+        content={
+          <CoverPageContainer
+            d={d}
+            summary_report={summary_report}
+            isPublicReport={isPublicReport}
+          />
+        }
+        setCurrentPage={setCurrentPage}
+        setCurrentPageHeadings={setCurrentPageHeadings}
+      />
+    );
+
+    pageList.push(
+      <PDFContainer
+        page={"toc"}
+        pageNumber={1}
+        content={
+          <TableContentContainer
+            issues={issuesObj}
+            maxLength={
+              totalVulnerabilitySplit && totalVulnerabilitySplit.length
+                ? totalVulnerabilitySplit[1]
+                : Object.keys(issuesObj).length
+            }
+          />
+        }
+        setCurrentPage={setCurrentPage}
+        setCurrentPageHeadings={setCurrentPageHeadings}
+      />
+    );
+    setLeftNavs((preValue) => {
+      preValue[0].pageNo = 1;
+      return preValue;
+    });
+
+    if (totalVulnerabilitySplit && totalVulnerabilitySplit.length) {
+      const tocList = totalVulnerabilitySplit
+        .slice(1, totalVulnerabilitySplit.length)
+        .map((value, index) => {
+          return (
+            <PDFContainer
+              page={"toc-v"}
+              pageNumber={index + 2}
+              content={
+                <Flex
+                  as="div"
+                  w="100%"
+                  alignItems="flex-start"
+                  justifyContent="flex-start"
+                  flexDir={"column"}
+                >
+                  {Object.keys(issuesObj)
+                    .slice(
+                      value,
+                      totalVulnerabilitySplit.slice(
+                        1,
+                        totalVulnerabilitySplit.length
+                      )[index + 1] || Object.keys(issuesObj).length
+                    )
+                    .map((key, index) => {
+                      return (
+                        <IssueComponent key={index} issue={issuesObj[key]} />
+                      );
+                    })}
+                  {!totalVulnerabilitySplit.slice(
+                    1,
+                    totalVulnerabilitySplit.length
+                  )[index + 1] ? (
+                    <>
+                      <a href={"#scan-history"}>
+                        <Text fontSize="md" fontWeight={600} mt={4} mb={4}>
+                          05 &nbsp;Scan History
+                        </Text>
+                      </a>
+
+                      <a href={"#disclaimer"}>
+                        <Text fontSize="md" fontWeight={600} mt={4} mb={4}>
+                          06 &nbsp;Disclaimer
+                        </Text>
+                      </a>
+                    </>
+                  ) : null}
+                </Flex>
+              }
+              setCurrentPage={setCurrentPage}
+              setCurrentPageHeadings={setCurrentPageHeadings}
+            />
+          );
+        });
+      pageList = [...pageList, ...tocList];
+    }
+
+    pageList.push(
+      <PDFContainer
+        page={"summary"}
+        pageNumber={
+          totalVulnerabilitySplit ? totalVulnerabilitySplit?.length + 1 : 2
+        }
+        content={<ProjectSummaryContainer summary_report={summary_report} />}
+        setCurrentPage={setCurrentPage}
+        setCurrentPageHeadings={setCurrentPageHeadings}
+      />
+    );
+    setLeftNavs((preValue) => {
+      preValue[1].pageNo = totalVulnerabilitySplit
+        ? totalVulnerabilitySplit?.length + 1
+        : 2;
+      return preValue;
+    });
+
+    pageList.push(
+      <PDFContainer
+        page={"executive"}
+        pageNumber={
+          totalVulnerabilitySplit ? totalVulnerabilitySplit?.length + 2 : 3
+        }
+        content={<AuditSummaryContainer summary_report={summary_report} />}
+        setCurrentPage={setCurrentPage}
+        setCurrentPageHeadings={setCurrentPageHeadings}
+      />
+    );
+    setLeftNavs((preValue) => {
+      preValue[2].pageNo = totalVulnerabilitySplit
+        ? totalVulnerabilitySplit?.length + 2
+        : 3;
+      return preValue;
+    });
+
+    pageList.push(
+      <PDFContainer
+        page={"findings"}
+        pageNumber={
+          totalVulnerabilitySplit ? totalVulnerabilitySplit?.length + 3 : 4
+        }
+        content={<FindingSummaryContainer summary_report={summary_report} />}
+        setCurrentPage={setCurrentPage}
+        setCurrentPageHeadings={setCurrentPageHeadings}
+      />
+    );
+    setLeftNavs((preValue) => {
+      preValue[3].pageNo = totalVulnerabilitySplit
+        ? totalVulnerabilitySplit?.length + 3
+        : 4;
+      return preValue;
+    });
+
+    if (bugList && totalBugsSplit && totalBugsSplit.length) {
+      totalBugsSplit.forEach((value, index) => {
+        pageList.push(
+          <PDFContainer
+            page={"findings"}
+            pageNumber={
+              totalVulnerabilitySplit
+                ? totalVulnerabilitySplit?.length + index + 4
+                : 5 + index
+            }
+            content={
+              <FindingBugListContainer
+                showActionTaken={index === 0}
+                summary_report={summary_report}
+                issues={bugList.slice(
+                  totalBugsSplit[index],
+                  totalBugsSplit[index + 1] || bugList.length - 1
+                )}
+              />
+            }
+            setCurrentPage={setCurrentPage}
+            setCurrentPageHeadings={setCurrentPageHeadings}
+          />
+        );
+      });
+    }
+
+    Object.keys(issuesObj).forEach((key, index) => {
+      issuesObj[key].issue_details.forEach((issue, index) => {
+        const splitResult = getVulnerabilityDetailSplit(issue);
+        if (splitResult) {
+          const list = (
+            splitResult as {
+              point: string;
+              start_line: number;
+              end_line: number;
+            }[]
+          ).map((item, index, array) => {
+            counter = counter + 1;
+            return (
+              <PDFContainer
+                page={"details"}
+                pageNumber={
+                  totalVulnerabilitySplit && totalBugsSplit
+                    ? totalVulnerabilitySplit?.length +
+                      totalBugsSplit?.length +
+                      counter +
+                      4
+                    : 5 + counter
+                }
+                content={
+                  <VulnerabililtyDetailsContainer
+                    type={item.point}
+                    summary_report={summary_report}
+                    issue={issue}
+                    showVulnerabilityTitle={counter === 0}
+                    filesContent={filesContent}
+                    codeStartLine={item.start_line}
+                    codeEndLine={item.end_line}
+                    showMetadata={index === 0}
+                    showDescription={
+                      item.point === "desc" || index === array.length - 1
+                    }
+                  />
+                }
+                setCurrentPage={setCurrentPage}
+                setCurrentPageHeadings={setCurrentPageHeadings}
+              />
+            );
+          });
+          pageList = [...pageList, ...list];
+        }
+      });
+    });
+    setLeftNavs((preValue) => {
+      preValue[4].pageNo =
+        totalVulnerabilitySplit && totalBugsSplit
+          ? totalVulnerabilitySplit?.length + totalBugsSplit?.length + 4
+          : 5;
+      return preValue;
+    });
+
+    scanHistorySplit?.forEach((item, index) =>
+      pageList.push(
+        <PDFContainer
+          page={"history"}
+          pageNumber={
+            totalVulnerabilitySplit && totalBugsSplit
+              ? totalVulnerabilitySplit?.length +
+                totalBugsSplit?.length +
+                counter +
+                5 +
+                index
+              : 6
+          }
+          content={
+            <ScanHistoryContainer
+              scan_summary={item}
+              startIndex={index * 11 + 1}
+            />
+          }
+          setCurrentPage={setCurrentPage}
+          setCurrentPageHeadings={setCurrentPageHeadings}
+        />
+      )
+    );
+
+    setLeftNavs((preValue) => {
+      preValue[5].pageNo =
+        totalVulnerabilitySplit && totalBugsSplit
+          ? totalVulnerabilitySplit?.length +
+            totalBugsSplit?.length +
+            counter +
+            5
+          : 6;
+      return preValue;
+    });
+
+    pageList.push(
+      <PDFContainer
+        page={"disclaimer"}
+        pageNumber={
+          totalVulnerabilitySplit && totalBugsSplit
+            ? totalVulnerabilitySplit?.length +
+              totalBugsSplit?.length +
+              counter +
+              6
+            : 7
+        }
+        content={<DisclaimerContainer />}
+        setCurrentPage={setCurrentPage}
+        setCurrentPageHeadings={setCurrentPageHeadings}
+      />
+    );
+    setLeftNavs((preValue) => {
+      preValue[6].pageNo =
+        totalVulnerabilitySplit && totalBugsSplit
+          ? totalVulnerabilitySplit?.length +
+            totalBugsSplit?.length +
+            counter +
+            6
+          : 7;
+      return preValue;
+    });
+
+    return pageList;
+  };
+
   return (
     <>
       {isLoading ? (
@@ -492,11 +800,11 @@ export const ReportContainerV2: React.FC<{
               pt={download ? 0 : 5}
               overflow={download ? "" : "hidden"}
               alignItems={"center"}
-              // ref={containerRef}
+              position={"relative"}
             >
               {!download ? (
                 <Flex
-                  w={"25%"}
+                  w={"35%"}
                   h={"100%"}
                   flexDir={"column"}
                   pt={20}
@@ -519,7 +827,10 @@ export const ReportContainerV2: React.FC<{
                       }
                       mb={6}
                       cursor={"pointer"}
-                      onClick={() => navToPage(nav)}
+                      onClick={() => {
+                        setIsNavLoading(true);
+                        setTimeout(() => leftNavClick(nav), 10);
+                      }}
                     >
                       {nav.label.toUpperCase()}
                     </Text>
@@ -538,288 +849,74 @@ export const ReportContainerV2: React.FC<{
                 bg={!download ? "#535659" : "white"}
                 overflowY={download ? "visible" : "auto"}
                 overflowX={download ? "visible" : "hidden"}
+                id={"scrollableDiv"}
               >
-                {/* <LazyLoad> */}
-                <PDFContainer
-                  page={"cover"}
-                  content={
-                    <CoverPageContainer
-                      d={d}
-                      summary_report={summary_report}
-                      isPublicReport={isPublicReport}
-                    />
-                  }
-                  setCurrentPage={setCurrentPage}
-                  setCurrentPageHeadings={setCurrentPageHeadings}
-                />
-                {/* </LazyLoad> */}
-
-                {/* <LazyLoad> */}
-                <PDFContainer
-                  page={"toc"}
-                  pageNumber={1}
-                  content={
-                    <TableContentContainer
-                      issues={issuesObj}
-                      maxLength={
-                        totalVulnerabilitySplit &&
-                        totalVulnerabilitySplit.length
-                          ? totalVulnerabilitySplit[1]
-                          : Object.keys(issuesObj).length
+                {totalPages.length ? (
+                  download ? (
+                    totalPages.map((item, index) => item)
+                  ) : (
+                    <InfiniteScroll
+                      dataLength={displayPages.length}
+                      next={() => fetchMoreData()}
+                      hasMore={hasMore}
+                      loader={
+                        <Flex
+                          as="div"
+                          w="100%"
+                          h="100%"
+                          alignItems="center"
+                          justifyContent="center"
+                          flexDir={"row"}
+                          my={10}
+                        >
+                          <Loader />
+                        </Flex>
                       }
-                    />
-                  }
-                  setCurrentPage={setCurrentPage}
-                  setCurrentPageHeadings={setCurrentPageHeadings}
-                />
-                {/* </LazyLoad> */}
-                {totalVulnerabilitySplit && totalVulnerabilitySplit.length ? (
-                  <>
-                    {totalVulnerabilitySplit
-                      .slice(1, totalVulnerabilitySplit.length)
-                      .map((value, index) => {
-                        return (
-                          // <LazyLoad key={"toc-v" + index}>
-                          <PDFContainer
-                            page={"toc-v"}
-                            pageNumber={index + 2}
-                            content={
-                              <Flex
-                                as="div"
-                                w="100%"
-                                alignItems="flex-start"
-                                justifyContent="flex-start"
-                                flexDir={"column"}
-                              >
-                                {Object.keys(issuesObj)
-                                  .slice(
-                                    value,
-                                    totalVulnerabilitySplit.slice(
-                                      1,
-                                      totalVulnerabilitySplit.length
-                                    )[index + 1] ||
-                                      Object.keys(issuesObj).length
-                                  )
-                                  .map((key, index) => {
-                                    return (
-                                      <IssueComponent
-                                        key={index}
-                                        issue={issuesObj[key]}
-                                      />
-                                    );
-                                  })}
-                                {!totalVulnerabilitySplit.slice(
-                                  1,
-                                  totalVulnerabilitySplit.length
-                                )[index + 1] ? (
-                                  <>
-                                    <a href={"#scan-history"}>
-                                      <Text
-                                        fontSize="md"
-                                        fontWeight={600}
-                                        mt={4}
-                                        mb={4}
-                                      >
-                                        05 &nbsp;Scan History
-                                      </Text>
-                                    </a>
-
-                                    <a href={"#disclaimer"}>
-                                      <Text
-                                        fontSize="md"
-                                        fontWeight={600}
-                                        mt={4}
-                                        mb={4}
-                                      >
-                                        06 &nbsp;Disclaimer
-                                      </Text>
-                                    </a>
-                                  </>
-                                ) : null}
-                              </Flex>
-                            }
-                            setCurrentPage={setCurrentPage}
-                            setCurrentPageHeadings={setCurrentPageHeadings}
-                          />
-                          // </LazyLoad>
-                        );
-                      })}
-                  </>
+                      scrollableTarget="scrollableDiv"
+                      style={{
+                        width: "100%",
+                        overflowX: "hidden",
+                        position: "relative",
+                      }}
+                    >
+                      {displayPages.map((item, index) => (
+                        <Box w={"100%"} mb={6} key={index}>
+                          {item}
+                        </Box>
+                      ))}
+                    </InfiniteScroll>
+                  )
                 ) : null}
-
-                {/* <LazyLoad> */}
-                <PDFContainer
-                  page={"summary"}
-                  pageNumber={
-                    totalVulnerabilitySplit
-                      ? totalVulnerabilitySplit?.length + 1
-                      : 2
-                  }
-                  content={
-                    <ProjectSummaryContainer summary_report={summary_report} />
-                  }
-                  setCurrentPage={setCurrentPage}
-                  setCurrentPageHeadings={setCurrentPageHeadings}
-                />
-                {/* </LazyLoad> */}
-
-                {/* <LazyLoad> */}
-                <PDFContainer
-                  page={"executive"}
-                  pageNumber={
-                    totalVulnerabilitySplit
-                      ? totalVulnerabilitySplit?.length + 2
-                      : 3
-                  }
-                  content={
-                    <AuditSummaryContainer summary_report={summary_report} />
-                  }
-                  setCurrentPage={setCurrentPage}
-                  setCurrentPageHeadings={setCurrentPageHeadings}
-                />
-                {/* </LazyLoad> */}
-
-                {/* <LazyLoad> */}
-                <PDFContainer
-                  page={"findings"}
-                  pageNumber={
-                    totalVulnerabilitySplit
-                      ? totalVulnerabilitySplit?.length + 3
-                      : 4
-                  }
-                  content={
-                    <FindingSummaryContainer summary_report={summary_report} />
-                  }
-                  setCurrentPage={setCurrentPage}
-                  setCurrentPageHeadings={setCurrentPageHeadings}
-                />
-                {/* </LazyLoad> */}
-
-                {bugList && totalBugsSplit && totalBugsSplit.length ? (
-                  <>
-                    {totalBugsSplit.map((value, index) => {
-                      return (
-                        // <LazyLoad key={"findings" + index}>
-                        <PDFContainer
-                          page={"findings"}
-                          pageNumber={
-                            totalVulnerabilitySplit
-                              ? totalVulnerabilitySplit?.length + index + 4
-                              : 5 + index
-                          }
-                          content={
-                            <FindingBugListContainer
-                              showActionTaken={index === 0}
-                              summary_report={summary_report}
-                              issues={bugList.slice(
-                                totalBugsSplit[index],
-                                totalBugsSplit[index + 1] || bugList.length - 1
-                              )}
-                            />
-                          }
-                          setCurrentPage={setCurrentPage}
-                          setCurrentPageHeadings={setCurrentPageHeadings}
-                        />
-                        // </LazyLoad>
-                      );
-                    })}
-                  </>
-                ) : null}
-
-                {Object.keys(issuesObj).map((key, index) =>
-                  issuesObj[key].issue_details.map((issue) => {
-                    const splitResult = getVulnerabilityDetailSplit(issue);
-                    if (splitResult) {
-                      return (
-                        splitResult as {
-                          point: string;
-                          start_line: number;
-                          end_line: number;
-                        }[]
-                      ).map((item, index, array) => {
-                        counter = counter + 1;
-                        return (
-                          // <LazyLoad key={"vul" + counter}>
-                          <PDFContainer
-                            page={"details"}
-                            pageNumber={
-                              totalVulnerabilitySplit && totalBugsSplit
-                                ? totalVulnerabilitySplit?.length +
-                                  totalBugsSplit?.length +
-                                  counter +
-                                  4
-                                : 5 + counter
-                            }
-                            content={
-                              <VulnerabililtyDetailsContainer
-                                type={item.point}
-                                summary_report={summary_report}
-                                issue={issue}
-                                showVulnerabilityTitle={counter === 0}
-                                filesContent={filesContent}
-                                codeStartLine={item.start_line}
-                                codeEndLine={item.end_line}
-                                showMetadata={index === 0}
-                                showDescription={
-                                  item.point === "desc" ||
-                                  index === array.length - 1
-                                }
-                              />
-                            }
-                            setCurrentPage={setCurrentPage}
-                            setCurrentPageHeadings={setCurrentPageHeadings}
-                          />
-                          // </LazyLoad>
-                        );
-                      });
-                    }
-                  })
-                )}
-
-                {scanHistorySplit?.map((item, index) => (
-                  <PDFContainer
-                    page={"history"}
-                    pageNumber={
-                      totalVulnerabilitySplit && totalBugsSplit
-                        ? totalVulnerabilitySplit?.length +
-                          totalBugsSplit?.length +
-                          counter +
-                          5 +
-                          index
-                        : 6
-                    }
-                    content={
-                      <ScanHistoryContainer
-                        scan_summary={item}
-                        startIndex={index * 11 + 1}
-                      />
-                    }
-                    setCurrentPage={setCurrentPage}
-                    setCurrentPageHeadings={setCurrentPageHeadings}
-                  />
-                ))}
-
-                {/* <LazyLoad> */}
-                <PDFContainer
-                  page={"disclaimer"}
-                  pageNumber={
-                    totalVulnerabilitySplit && totalBugsSplit
-                      ? totalVulnerabilitySplit?.length +
-                        totalBugsSplit?.length +
-                        counter +
-                        6
-                      : 7
-                  }
-                  content={<DisclaimerContainer />}
-                  setCurrentPage={setCurrentPage}
-                  setCurrentPageHeadings={setCurrentPageHeadings}
-                />
-                {/* </LazyLoad> */}
               </VStack>
 
+              {isNavLoading ? (
+                <Flex
+                  w={"100%"}
+                  h={"100%"}
+                  position={"absolute"}
+                  top={0}
+                  left={0}
+                  alignItems={"center"}
+                >
+                  <Flex
+                    minW={"830px"}
+                    ml={"auto"}
+                    mr={"auto"}
+                    h={"100%"}
+                    alignItems={"center"}
+                    justifyContent="center"
+                    sx={{
+                      backdropFilter: "blur(2px)",
+                    }}
+                    zIndex={10}
+                  >
+                    <Loader />
+                  </Flex>
+                </Flex>
+              ) : null}
               {!download ? (
                 <Flex
-                  w={"25%"}
+                  w={"35%"}
                   h={"100%"}
                   flexDir={"column"}
                   pt={20}
