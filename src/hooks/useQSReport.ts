@@ -11,9 +11,6 @@ const API = axios.create({
   headers: {
     "Content-Type": "application/json",
   },
-  withCredentials: Auth.isUserAuthenticated(),
-  xsrfCookieName: "csrftoken",
-  xsrfHeaderName: "X-CSRFToken",
 });
 
 export const getQSReport = async (
