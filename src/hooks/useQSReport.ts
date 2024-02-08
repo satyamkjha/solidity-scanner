@@ -10,7 +10,7 @@ export const getQSReport = async (
   project_id: string,
   report_id: string | undefined
 ) => {
-  const { data } = await API.post<{ summary_report: Report }>(
+  const { data } = await PUBLIC_API.post<{ summary_report: Report }>(
     API_PATH.API_GET_QS_REPORT,
     {
       project_id,
