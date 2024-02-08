@@ -93,7 +93,6 @@ const QuickScan: React.FC = () => {
     chain: string,
     ref: string | null
   ) => {
-    console.log("starting quickscan", new Date());
     setTempQSData({
       blockAddress: address,
       blockPlatform: platform,
