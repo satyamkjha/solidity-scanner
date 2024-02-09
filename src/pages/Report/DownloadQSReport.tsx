@@ -128,7 +128,10 @@ const DownloadQSReport: React.FC = () => {
               </Button>
               <Text color="subtle" mt={7}>
                 having issues ?{" "}
-                <span style={{ color: "#000000" }}>
+                <span
+                  onClick={onOpen}
+                  style={{ color: "#000000", cursor: "pointer" }}
+                >
                   <b> Contact us</b>
                 </span>
               </Text>
@@ -188,7 +191,10 @@ const DownloadQSReport: React.FC = () => {
             </Stack>
             <Text color="subtle" mt={7}>
               having issues ?{" "}
-              <span onClick={onOpen} style={{ color: "#000000" }}>
+              <span
+                onClick={onOpen}
+                style={{ color: "#000000", cursor: "pointer" }}
+              >
                 <b> Contact us</b>
               </span>
             </Text>
