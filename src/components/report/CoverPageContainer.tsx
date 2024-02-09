@@ -57,37 +57,46 @@ const CoverPageContainer: React.FC<{
             <HStack justifyContent={"flex-start"} spacing={4}>
               <Logo fill={"white"} />
             </HStack>
-            <Text
-              fontSize="2xl"
-              fontWeight={400}
-              color={"subtle"}
-              mt={[10, 10, 10, 20]}
-              mb={3}
-            >
-              Security Assessment
-            </Text>
-            <Heading fontSize={["3xl", "4xl"]} fontWeight={700} mb={3}>
-              {summary_report.project_summary_report.project_name ||
-                summary_report.project_summary_report.contract_name}
-            </Heading>
-            <Text fontSize="xl" mb={20} fontWeight={500}>
-              {`${d.getDate()} ${monthNames[d.getMonth()]} ${d.getFullYear()}`}
-            </Text>
-            <Box w="100%" h={"auto"}>
+            <Flex width={"100%"} flexDir={"column"} mt={"35%"}>
               <Text
+                fontSize="2xl"
                 fontWeight={400}
-                fontSize={"sm"}
-                width={"60%"}
                 color={"subtle"}
-                mb={10}
+                mt={[10, 10, 10, 20]}
+                mb={6}
               >
-                This security assessment report was prepared by
-                SolidityScan.com, a cloud-based Smart Contract Scanner.
+                Security Assessment
               </Text>
-              <ReportCoverDots />
-            </Box>
+              <Heading
+                fontSize={["3xl", "4xl"]}
+                fontWeight={700}
+                mb={3}
+                w={"80%"}
+              >
+                {summary_report.project_summary_report.project_name ||
+                  summary_report.project_summary_report.contract_name}
+              </Heading>
+              <Text fontSize="xl" mb={10} fontWeight={500}>
+                {`${d.getDate()} ${
+                  monthNames[d.getMonth()]
+                } ${d.getFullYear()}`}
+              </Text>
+              <Box w="100%" h={"auto"}>
+                <Text
+                  fontWeight={400}
+                  fontSize={"sm"}
+                  width={"90%"}
+                  color={"subtle"}
+                  mb={10}
+                >
+                  This security assessment report was prepared by
+                  SolidityScan.com, a cloud-based Smart Contract Scanner.
+                </Text>
+                <ReportCoverDots />
+              </Box>
+            </Flex>
             {isPublicReport && (
-              <Flex mt={"auto"} alignItems={"center"}>
+              <Flex mt={"auto"} mb={6} alignItems={"center"}>
                 <Image
                   src={
                     summary_report.project_summary_report.report_type ===
@@ -96,7 +105,7 @@ const CoverPageContainer: React.FC<{
                       : `${assetsURL}report/verified-fill.svg`
                   }
                 />
-                <VStack alignItems={"flex-start"} w={"60%"} spacing={1} ml={4}>
+                <VStack alignItems={"flex-start"} w={"90%"} spacing={1} ml={4}>
                   <Text fontSize={"lg"}>
                     {summary_report.project_summary_report.report_type ===
                     "self_published"
@@ -127,6 +136,7 @@ const CoverPageContainer: React.FC<{
               display={["block"]}
               height={[250]}
               width={[250]}
+              mt={10}
               src={
                 summary_report.project_summary_report.report_type ===
                 "self_published"
