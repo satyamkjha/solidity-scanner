@@ -39,14 +39,16 @@ export const QSApiModal: React.FC<{ onClose(): any; isOpen: boolean }> = ({
   const [organisation, setOrganisation] = useState("");
   const [name, setName] = useState("");
   const [body, setBody] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
   const toast = useToast();
   const config: any = useConfig();
   const assetsURL = getAssetsURL(config);
-  const { handleSubmit } = useForm<FormData>();
+  const { handleSubmit, formState } = useForm<FormData>();
   const onSubmit = () => {
+    setIsLoading(true);
     axios.defaults.headers.post["Content-Type"] = "application/json";
     axios
-      .post("https://formsubmit.co/ajax/info@credshields.com", {
+      .post("https://formsubmit.co/ajax/satyam@credshields.com", {
         email: email,
         subject: organisation,
         name: name,
@@ -61,6 +63,7 @@ export const QSApiModal: React.FC<{ onClose(): any; isOpen: boolean }> = ({
             isClosable: true,
             position: "bottom",
           });
+          setIsLoading(false);
           onClose();
           setEmail("");
           setBody("");
@@ -68,7 +71,10 @@ export const QSApiModal: React.FC<{ onClose(): any; isOpen: boolean }> = ({
           setName("");
         }
       })
-      .catch((error) => console.log(error));
+      .catch((error) => {
+        setIsLoading(false);
+        console.log(error);
+      });
   };
 
   return (
@@ -125,7 +131,7 @@ export const QSApiModal: React.FC<{ onClose(): any; isOpen: boolean }> = ({
                         placeholder="Name"
                         variant="brand"
                         size="lg"
-                        value={email}
+                        value={name}
                         onChange={(e) => {
                           setName(e.target.value);
                         }}
@@ -222,6 +228,7 @@ export const QSApiModal: React.FC<{ onClose(): any; isOpen: boolean }> = ({
                 variant="brand"
                 mr={[0, 0, 0, "50px"]}
                 mb={5}
+                isLoading={isLoading}
                 type="submit"
                 // onClick={() => {
                 //   onSubmit();
