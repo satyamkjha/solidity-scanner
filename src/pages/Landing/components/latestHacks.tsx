@@ -100,7 +100,7 @@ export const LatestHacks: React.FC = () => {
       >
         <Swiper
           slidesPerView={"auto"}
-          spaceBetween={30}
+          spaceBetween={20}
           pagination={{
             clickable: true,
           }}
@@ -142,7 +142,7 @@ const ArticleComp: React.FC<{
       alignItems="center"
       flexDir="column"
       width={"90vw"}
-      maxW="450px"
+      maxW="350px"
       height="fit-content"
       borderRadius="25px"
       mr={5}
@@ -151,7 +151,7 @@ const ArticleComp: React.FC<{
       <Flex
         backgroundImage={`${assetsURL}background/latest_hack_post_bg.svg`}
         width="100%"
-        height={["250px", "250px", "270px"]}
+        height={["220px", "220px", "240px"]}
         borderTopRadius="25px"
         flexDir="column"
         pt={"60px"}
