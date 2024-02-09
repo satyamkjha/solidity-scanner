@@ -1146,7 +1146,7 @@ export const ReportContainer: React.FC<{
                           }}
                           variant="brand"
                         >
-                          Secure Your Contract Now!
+                          Signup for Free Trial
                         </Button>
                       </VStack>
                     </Flex>
