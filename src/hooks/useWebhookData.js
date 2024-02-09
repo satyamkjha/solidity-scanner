@@ -31,6 +31,7 @@ export const WebSocketProvider = ({ children }) => {
   const [tempMessageQueue, setTempMessageQueue] = useState(emptyArray);
   const [messageQueue, setMessageQueue] = useState(emptyArray);
   const [keepWSOpen, setKeepWSOpen] = useState(false);
+  const [needAuthToken, setNeedAuthToken] = useState(true);
   const [tempEmitMsgQueue, setTempEmitMsgQueue] = useState(emptyArray);
 
   const pathname = window.location.pathname;
@@ -41,7 +42,7 @@ export const WebSocketProvider = ({ children }) => {
         process.env.REACT_APP_ENVIRONMENT === "production"
           ? WSS_URL_PROD
           : WSS_URL_DEV
-      }${withAuth ? `?auth_token=${profileData.auth_token}` : ""}`
+      }${needAuthToken ? `?auth_token=${profileData.auth_token}` : ""}`
     );
     setWebSocket(ws);
     setWsReadyState(ws.readyState);
@@ -184,6 +185,7 @@ export const WebSocketProvider = ({ children }) => {
     sendMessage,
     updateMessageQueue,
     setKeepWSOpen,
+    setNeedAuthToken,
   };
 
   return (

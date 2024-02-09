@@ -31,8 +31,13 @@ export const QuickScanResultContainer: React.FC<{
 }> = ({ scanReport, projectId, scanId }) => {
   const history = useHistory();
   const [isLoading, setIsLoading] = useState(false);
-  const { sendMessage, setKeepWSOpen, updateMessageQueue, messageQueue } =
-    useWebSocket();
+  const {
+    sendMessage,
+    setKeepWSOpen,
+    updateMessageQueue,
+    messageQueue,
+    setNeedAuthToken,
+  } = useWebSocket();
   const [errorData, setErrorData] = useState<{
     errorCount: number;
     errorType: string;
@@ -72,6 +77,7 @@ export const QuickScanResultContainer: React.FC<{
 
   const openReport = () => {
     setIsLoading(true);
+    setNeedAuthToken(false);
     sendMessage({
       type: "generate_report",
       body: {
@@ -80,14 +86,6 @@ export const QuickScanResultContainer: React.FC<{
         scan_type: "block",
       },
     });
-    const scan_details = {
-      project_id: projectId,
-      contract_address: scanReport.contract_address,
-      contract_chain: scanReport.contract_chain,
-      contract_platform: scanReport.contract_platform,
-      new_user: false,
-    };
-    setRecentQuickScan(scan_details);
   };
 
   useEffect(() => {
@@ -104,6 +102,7 @@ export const QuickScanResultContainer: React.FC<{
         ) {
           setReportId(msgItem.payload.report_id);
           setIsLoading(false);
+
           setKeepWSOpen(false);
         }
       });

@@ -11,7 +11,12 @@ import {
   Button,
   useMediaQuery,
 } from "@chakra-ui/react";
-import { Report, IssueItem, Finding } from "common/types";
+import {
+  Report,
+  IssueItem,
+  Finding,
+  IssueSeverityDistribution,
+} from "common/types";
 import { SeverityIcon } from "components/icons";
 import {
   sentenceCapitalize,
@@ -36,6 +41,7 @@ const VulnerabililtyDetailsContainer: React.FC<{
   codeStartLine?: number;
   codeEndLine?: number;
   onOpen: () => void;
+  onImportScan: () => void;
   isQSReport: boolean;
 }> = ({
   summary_report,
@@ -48,6 +54,7 @@ const VulnerabililtyDetailsContainer: React.FC<{
   codeStartLine,
   codeEndLine,
   onOpen,
+  onImportScan,
   isQSReport,
 }) => {
   const assetsURL = getAssetsURL();
@@ -220,10 +227,7 @@ const VulnerabililtyDetailsContainer: React.FC<{
                     Severity
                   </Text>
                   <HStack spacing={[3]}>
-                    <SeverityIcon
-                      size={isLargerThan768 ? 12 : isLargerThan450 ? 5 : 5}
-                      variant={issue.severity}
-                    />
+                    <SeverityIcon size={12} variant={issue.severity} />
                     <Text fontSize={["sm"]} ml={[0, 1, 2]}>
                       {sentenceCapitalize(issue.severity)}
                     </Text>
@@ -235,8 +239,8 @@ const VulnerabililtyDetailsContainer: React.FC<{
                   </Text>
                   <HStack spacing={[3]}>
                     <Image
-                      height={["10px", "10px", "25px"]}
-                      width={["10px", "10px", "25px"]}
+                      height={"25px"}
+                      width={"25px"}
                       src={`${assetsURL}report/${issue.bug_status}_color.svg`}
                     />
                     <Text
@@ -646,7 +650,7 @@ const VulnerabililtyDetailsContainer: React.FC<{
           )
         ) : null}
 
-        {isQSReport && (
+        {!issue.findings && (
           <Flex
             w="96%"
             left="2px"
@@ -683,6 +687,15 @@ const VulnerabililtyDetailsContainer: React.FC<{
                     : "Upgrade your Plan to view the full report"}
                 </Text>
                 <Text color="#000000" fontWeight={300} fontSize="sm">
+                  <b>
+                    {
+                      summary_report.scan_summary[0]
+                        .issue_severity_distribution[issue.severity]
+                    }{" "}
+                    {sentenceCapitalize(issue.severity)} Issues Found
+                  </b>
+                </Text>
+                <Text color="#000000" fontWeight={300} fontSize="sm">
                   {isQSReport
                     ? issue.severity === "gas"
                       ? "Sign up for a free trial and optimize your contracts for gas absolutely free!"
@@ -691,7 +704,7 @@ const VulnerabililtyDetailsContainer: React.FC<{
                 </Text>
               </VStack>
               <Button
-                leftIcon={<LockIcon />}
+                leftIcon={issue.severity !== "gas" ? <LockIcon /> : undefined}
                 mt={2}
                 mb={4}
                 variant="brand"
@@ -702,6 +715,7 @@ const VulnerabililtyDetailsContainer: React.FC<{
                   if (isQSReport) {
                     if (issue.severity === "gas") {
                       history.push("/signup");
+                      onImportScan();
                     } else {
                       onOpen();
                     }
@@ -712,8 +726,8 @@ const VulnerabililtyDetailsContainer: React.FC<{
               >
                 {isQSReport
                   ? issue.severity === "gas"
-                    ? "Secure Your Contract Now!"
-                    : "Pay & Unlock report"
+                    ? "Signup for Free Trial"
+                    : "Unlock report"
                   : "Upgrade"}
               </Button>
             </Flex>
