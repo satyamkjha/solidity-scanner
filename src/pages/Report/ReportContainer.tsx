@@ -1000,8 +1000,8 @@ export const ReportContainer: React.FC<{
                 align="stretch"
                 mt={download ? 0 : 6}
                 pb={20}
-                w={download ? "830px" : "835px"}
-                minW={download ? "830px" : "835px"}
+                w={download ? "794px" : "800px"}
+                minW={download ? "794px" : "800px"}
                 h={download ? "inherit" : "100%"}
                 bg={!download ? "#535659" : "white"}
                 overflowY={download ? "visible" : "auto"}
