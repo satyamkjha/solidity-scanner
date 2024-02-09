@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useHistory } from "react-router-dom";
 
 import {
   Flex,
@@ -63,7 +63,7 @@ const BlockPage: React.FC = () => {
   );
   const { data: plans } = usePricingPlans();
   const [open, setOpen] = useState(false);
-
+  const history = useHistory();
   const [lastTimeUpdate, setLastTimeUpdate] = useState("");
 
   const [tabIndex, setTabIndex] = React.useState(0);
@@ -531,7 +531,9 @@ const BlockPage: React.FC = () => {
                                 mb={[4, 4, 4, 0]}
                                 isDisabled={checkIfGeneratingReport()}
                                 onClick={() => {
-                                  if (
+                                  if (profile.current_package === "trial") {
+                                    history.push("/billing");
+                                  } else if (
                                     reportingStatus === "not_generated" ||
                                     scanData.scan_report
                                       .report_regeneration_enabled

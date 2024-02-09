@@ -33,14 +33,14 @@ const LoginForm: React.FC = () => {
   const [reqHeaders, setReqHeaders] = useState<RecaptchaHeader | undefined>();
   const { handleSubmit } = useForm();
 
-  const getRecapthaTokens = async () => {
-    const reqHeaders = await getReCaptchaHeaders("signin");
-    setReqHeaders(reqHeaders);
-  };
+  // const getRecapthaTokens = async () => {
+  //   const reqHeaders = await getReCaptchaHeaders("signin");
+  //   setReqHeaders(reqHeaders);
+  // };
 
-  useEffect(() => {
-    getRecapthaTokens();
-  }, []);
+  // useEffect(() => {
+  //   getRecapthaTokens();
+  // }, []);
 
   const verify2FA = async (otp: string) => {
     setIsLoading(true);
@@ -67,6 +67,7 @@ const LoginForm: React.FC = () => {
 
   const onSubmit = async () => {
     setIsLoading(true);
+    const reqHeaders = await getReCaptchaHeaders("login");
     API.post<AuthResponse>(
       API_PATH.API_LOGIN,
       {

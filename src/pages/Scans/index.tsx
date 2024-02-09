@@ -449,7 +449,7 @@ const Scans: React.FC = () => {
         <Flex w="100%" h="70vh" alignItems="center" justifyContent="center">
           <Loader />
         </Flex>
-      ) : profileData.projects_remaining === 0 ? (
+      ) : profileData.projects_remaining === 0 && projectList.length === 0 ? (
         <Flex
           w="100%"
           h="70vh"

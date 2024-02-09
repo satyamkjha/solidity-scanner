@@ -115,8 +115,9 @@ export const ReportTypeDetailModal: React.FC<{
       <Modal isOpen={isOpen} onClose={onClose}>
         <ModalOverlay />
         <ModalContent
-          maxW={["90vw", "90vw", "75vw"]}
+          w={["90vw", "90vw"]}
           minW={"300px"}
+          maxW={"1000px"}
           minH={"fit-content"}
           borderRadius="15px"
           mb={10}
@@ -137,8 +138,9 @@ export const ReportTypeDetailModal: React.FC<{
           />
 
           <ModalBody
-            height={["fit-content", "fit-content", "fit-content", "700px"]}
+            height={["90vh", "90vh", "600px", "600px"]}
             w={"100%"}
+            overflowY="scroll"
             px={[6, 6, 6, 12]}
             pb={6}
           >
@@ -146,7 +148,7 @@ export const ReportTypeDetailModal: React.FC<{
             <VStack
               justifyContent="space-between"
               w="100%"
-              height={["fit-content", "fit-content", "fit-content", "700px"]}
+              height={["fit-content", "fit-content", "600px", "600px"]}
               spacing={[5, 5, 5, 0]}
               alignItems="center"
             >
@@ -154,7 +156,7 @@ export const ReportTypeDetailModal: React.FC<{
                 <HStack
                   justifyContent="space-between"
                   w="100%"
-                  h={["fit-content", "fit-content", "fit-content", "180px"]}
+                  h={["fit-content", "fit-content", "180px", "180px"]}
                   spacing={4}
                   alignItems="center"
                 >
@@ -163,30 +165,41 @@ export const ReportTypeDetailModal: React.FC<{
                     alignItems="center"
                     bgColor="#FAFAFA"
                     h="180px"
-                    display={["none", "none", "none", "flex"]}
+                    display={["none", "none", "flex", "flex"]}
                     w="180px"
                     borderRadius={10}
                   >
                     <Image
                       src={`${assetsURL}report/${item.iconUrl}.svg`}
-                      w={["120px"]}
-                      h={"120px"}
+                      w={["80px"]}
+                      h={"80px"}
                     />
                   </Flex>
                   <VStack
                     p={5}
-                    w={["100%", "100%", "100%", "calc(100% - 200px)"]}
-                    h={["fit-content", "fit-content", "fit-content", "180px"]}
+                    w={[
+                      "100%",
+                      "100%",
+                      "calc(100% - 200px)",
+                      "calc(100% - 200px)",
+                    ]}
+                    h={["fit-content", "fit-content", "180px", "180px"]}
                     borderRadius={10}
                     bgColor="#FAFAFA"
                     justifyContent="flex-start"
-                    alignItems="flex-start"
+                    alignItems={["center", "center", "flex-start"]}
                     spacing={3}
                   >
-                    <Text fontSize="lg" fontWeight={600}>
+                    <Image
+                      src={`${assetsURL}report/${item.iconUrl}.svg`}
+                      w={["80px"]}
+                      h={"80px"}
+                      display={["block", "block", "none"]}
+                    />
+                    <Text fontSize={["md", "md", "md", "lg"]} fontWeight={600}>
                       {item.heading}
                     </Text>
-                    <Text fontSize="md" color="#4A4A4A">
+                    <Text fontSize={["sm", "sm", "sm", "md"]} color="#4A4A4A">
                       {item.body}
                     </Text>
                   </VStack>

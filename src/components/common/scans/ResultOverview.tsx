@@ -234,7 +234,9 @@ const ResultOverview: React.FC<{
             mr={2}
           >
             <Image
-              src={`${assetsUrl}quickscan/qs_scan_duration.svg`}
+              src={`${assetsUrl}quickscan/qs_scan_duration${
+                theme === "light" ? "_light" : ""
+              }.svg`}
               height="40px"
               width="40px"
             />
@@ -266,7 +268,9 @@ const ResultOverview: React.FC<{
             mr={2}
           >
             <Image
-              src={`${assetsUrl}quickscan/qs_loc.svg`}
+              src={`${assetsUrl}quickscan/qs_loc${
+                theme === "light" ? "_light" : ""
+              }.svg`}
               height="40px"
               width="40px"
             />

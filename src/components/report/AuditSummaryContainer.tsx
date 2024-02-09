@@ -253,9 +253,9 @@ const AuditSummaryContainer: React.FC<{
         my={6}
         px={10}
         py={6}
-        justifyContent={["center", "center", "center", "flex-start"]}
-        alignItems={["center", "center", "center", "flex-start"]}
-        direction={["column", "column", "row"]}
+        justifyContent={"flex-start"}
+        alignItems={"flex-start"}
+        direction={"row"}
         bgImage={`url("${assetsURL}report/gradient_bg.svg")`}
         bgSize={"cover"}
         borderRadius={15}

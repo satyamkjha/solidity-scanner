@@ -100,11 +100,7 @@ export const checkGenerateReportAccess = (
     if (profile.actions_supported)
       return profile.actions_supported.generate_report;
 
-    if (
-      profile.current_package === "expired" ||
-      profile.current_package === "trial"
-    )
-      return false;
+    if (profile.current_package === "expired") return false;
 
     return true;
   }

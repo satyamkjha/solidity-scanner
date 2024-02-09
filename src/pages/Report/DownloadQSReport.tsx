@@ -13,6 +13,7 @@ import {
   InputRightElement,
   HStack,
   Image,
+  useDisclosure,
 } from "@chakra-ui/react";
 import { FiAtSign } from "react-icons/fi";
 import { FaLock } from "react-icons/fa";
@@ -27,6 +28,7 @@ import Loader from "components/styled-components/Loader";
 import { passwordStrength } from "check-password-strength";
 import { isEmail } from "helpers/helperFunction";
 import PasswordError from "components/passwordError";
+import ContactUs from "components/modals/contactus";
 
 function useQuery() {
   return new URLSearchParams(useLocation().search);
@@ -42,6 +44,7 @@ const DownloadQSReport: React.FC = () => {
   const { transactionId } = useParams<{
     transactionId: string;
   }>();
+  const { isOpen, onClose, onOpen } = useDisclosure();
   const onSubmit = async () => {
     try {
       //   let reqHeaders = await getReCaptchaHeaders("forgot_password_set");
@@ -185,13 +188,14 @@ const DownloadQSReport: React.FC = () => {
             </Stack>
             <Text color="subtle" mt={7}>
               having issues ?{" "}
-              <span style={{ color: "#000000" }}>
+              <span onClick={onOpen} style={{ color: "#000000" }}>
                 <b> Contact us</b>
               </span>
             </Text>
           </Stack>
         </Flex>
       )}
+      <ContactUs isOpen={isOpen} onClose={onClose} />
     </>
   );
 };

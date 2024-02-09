@@ -24,7 +24,7 @@ const ReportTag: React.FC<{ is_approved: boolean; theme?: string }> = ({
       >
         <Image
           src={`${assetsUrl}quickscan/ss_quickscan_report${
-            is_approved ? "" : "_not"
+            is_approved ? "" : theme === "light" ? "_not_light" : "_not"
           }_approved.svg`}
           height="56px"
           width="56px"
