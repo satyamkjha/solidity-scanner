@@ -19,7 +19,7 @@ import { FiAtSign } from "react-icons/fi";
 import { FaLock } from "react-icons/fa";
 import { useForm } from "react-hook-form";
 import { Logo } from "components/icons";
-import API, { PUBLIC_API } from "helpers/api";
+import { PUBLIC_API, API_URL_PROD, API_URL_DEV } from "helpers/api";
 import { AuthResponse } from "common/types";
 import { ViewIcon, ViewOffIcon } from "@chakra-ui/icons";
 import { API_PATH } from "helpers/routeManager";
@@ -29,10 +29,22 @@ import { passwordStrength } from "check-password-strength";
 import { isEmail } from "helpers/helperFunction";
 import PasswordError from "components/passwordError";
 import ContactUs from "components/modals/contactus";
+import axios from "axios";
+import Auth from "helpers/auth";
 
 function useQuery() {
   return new URLSearchParams(useLocation().search);
 }
+
+const API = axios.create({
+  baseURL: process.env.NODE_ENV === "production" ? API_URL_PROD : API_URL_DEV,
+  headers: {
+    "Content-Type": "application/json",
+  },
+  withCredentials: Auth.isUserAuthenticated(),
+  xsrfCookieName: "csrftoken",
+  xsrfHeaderName: "X-CSRFToken",
+});
 
 const DownloadQSReport: React.FC = () => {
   const { handleSubmit } = useForm<FormData>();
@@ -49,13 +61,10 @@ const DownloadQSReport: React.FC = () => {
     try {
       //   let reqHeaders = await getReCaptchaHeaders("forgot_password_set");
       setIsLoading(true);
-      const { data } = await PUBLIC_API.post(
-        API_PATH.API_GET_QUICK_SCAN_REPORT_PDF,
-        {
-          transaction_id: transactionId,
-          email,
-        }
-      );
+      const { data } = await API.post(API_PATH.API_GET_QUICK_SCAN_REPORT_PDF, {
+        transaction_id: transactionId,
+        email,
+      });
 
       if (data.status === "success") {
         sets3url(data.download_url);
@@ -145,7 +154,7 @@ const DownloadQSReport: React.FC = () => {
           textAlign="center"
           my={[20, 20, 40]}
         >
-          <Heading fontSize="2xl">Audit Report Email Verification</Heading>
+          <Heading fontSize="2xl">Download One Time Audit Report</Heading>
           <Text color="subtle" my={3}>
             Email Verified Successfully! Please download your Audit Report.
           </Text>

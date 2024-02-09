@@ -227,7 +227,7 @@ const VulnerabililtyDetailsContainer: React.FC<{
                     Severity
                   </Text>
                   <HStack spacing={[3]}>
-                    <SeverityIcon size={15} variant={issue.severity} />
+                    <SeverityIcon size={12} variant={issue.severity} />
                     <Text fontSize={["sm"]} ml={[0, 1, 2]}>
                       {sentenceCapitalize(issue.severity)}
                     </Text>
@@ -239,8 +239,8 @@ const VulnerabililtyDetailsContainer: React.FC<{
                   </Text>
                   <HStack spacing={[3]}>
                     <Image
-                      height={["10px", "10px", "25px"]}
-                      width={["10px", "10px", "25px"]}
+                      height={"25px"}
+                      width={"25px"}
                       src={`${assetsURL}report/${issue.bug_status}_color.svg`}
                     />
                     <Text
