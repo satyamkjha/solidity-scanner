@@ -31,8 +31,13 @@ const QuickScan: React.FC = () => {
   );
   const [projectId, setProjectId] = useState("");
   const [scanId, setScanId] = useState("");
-  const { sendMessage, setKeepWSOpen, updateMessageQueue, messageQueue } =
-    useWebSocket();
+  const {
+    sendMessage,
+    setKeepWSOpen,
+    updateMessageQueue,
+    messageQueue,
+    setNeedAuthToken,
+  } = useWebSocket();
   const [tempQSData, setTempQSData] = useState<{
     blockAddress: string;
     blockPlatform: string;
@@ -125,6 +130,7 @@ const QuickScan: React.FC = () => {
         req = { ...req, ref };
       }
       setKeepWSOpen(true);
+      setNeedAuthToken(false);
       reqHeaders_QS &&
         sendMessage({
           type: "quick_scan_initiate",
