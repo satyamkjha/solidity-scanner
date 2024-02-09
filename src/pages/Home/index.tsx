@@ -12,10 +12,14 @@ import {
 import { useOverview } from "hooks/useOverview";
 import Loader from "components/styled-components/Loader";
 import { ArrowForwardIcon } from "@chakra-ui/icons";
-import { getAssetsURL, getRecentQuickScan } from "helpers/helperFunction";
+import {
+  getAssetsURL,
+  getRecentQuickScan,
+  setRecentQuickScan,
+} from "helpers/helperFunction";
 import VulnerabilityDistribution from "components/vulnDistribution";
 import { useHistory } from "react-router-dom";
-import { capitalize } from "common/functions";
+import { capitalize, importScan } from "common/functions";
 import { BiPlug } from "react-icons/bi";
 import { Profile } from "common/types";
 import RecentScansList from "./RecentScansList";
@@ -122,14 +126,27 @@ const Home: React.FC = () => {
   const [importData, setImportData] = useState<any>();
 
   useEffect(() => {
-    const scan_details = getRecentQuickScan();
-    if (scan_details) {
-      setImportData(scan_details);
-      onOpen();
+    if (profileData) {
+      const import_scan_details = getRecentQuickScan();
+      if (
+        import_scan_details &&
+        profileData.current_package === "trial" &&
+        profileData.credits > 1
+      ) {
+        importQuickScan(import_scan_details);
+      } else {
+        setImportData(import_scan_details);
+        onOpen();
+      }
     }
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [profileData]);
+
+  const importQuickScan = async (import_scan_details: any) => {
+    await importScan(import_scan_details);
+    history.push("/projects");
+  };
 
   const onImportPopupClose = () => {
     localStorage.removeItem("recent_scan_details");
