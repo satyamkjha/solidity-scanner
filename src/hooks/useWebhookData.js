@@ -6,6 +6,7 @@ import { debounce } from "lodash";
 import { useProfile } from "./useProfile";
 import Auth from "helpers/auth";
 import { useConfig } from "hooks/useConfig";
+import { matchPublicRoute } from "./../helpers/helperFunction";
 
 export const WSS_URL_DEV = process.env.REACT_APP_WSS_URL_DEV;
 export const WSS_URL_PROD = process.env.REACT_APP_WSS_URL_PROD;
@@ -22,8 +23,12 @@ export const useWebSocket = () => {
 };
 
 export const WebSocketProvider = ({ children }) => {
+  const pathname = window.location.pathname;
   const config = useConfig();
-  const { data: profileData, refetch } = useProfile(Auth.isUserAuthenticated());
+
+  const { data: profileData, refetch } = useProfile(
+    Auth.isUserAuthenticated() && !matchPublicRoute(pathname)
+  );
   const [webSocket, setWebSocket] = useState(null);
   const [wsReadyState, setWsReadyState] = useState(3);
   const toast = useToast();
@@ -33,8 +38,6 @@ export const WebSocketProvider = ({ children }) => {
   const [keepWSOpen, setKeepWSOpen] = useState(false);
   const [needAuthToken, setNeedAuthToken] = useState(true);
   const [tempEmitMsgQueue, setTempEmitMsgQueue] = useState(emptyArray);
-
-  const pathname = window.location.pathname;
 
   const initializeWebSocket = (withAuth) => {
     const ws = new WebSocket(

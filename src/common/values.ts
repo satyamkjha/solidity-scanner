@@ -1,5 +1,17 @@
 import { DetectorItemProp } from "./types";
 
+export const publicRoutes = [
+  "/",
+  "/quickscan/:blockAddress/:blockPlatform/:blockChain",
+  "/quickscan/",
+  "/pricing",
+  "/detectors",
+  "/faq",
+  "/terms-of-service",
+  "/privacy-policy",
+  "/web3hackhub",
+];
+
 export const severityPriority: { [key: string]: number } = {
   "0": 10,
   critical: 10,
