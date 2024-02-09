@@ -43,7 +43,7 @@ export const QSApiModal: React.FC<{ onClose(): any; isOpen: boolean }> = ({
   const toast = useToast();
   const config: any = useConfig();
   const assetsURL = getAssetsURL(config);
-  const { handleSubmit, formState } = useForm<FormData>();
+  const { handleSubmit } = useForm<FormData>();
   const onSubmit = () => {
     setIsLoading(true);
     axios.defaults.headers.post["Content-Type"] = "application/json";
