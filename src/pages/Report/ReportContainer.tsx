@@ -926,7 +926,7 @@ export const ReportContainer: React.FC<{
                   >
                     {isQSReport && <LockIcon mr={5} color="#3300FF" />}
 
-                    {"Pay & Unlock report"}
+                    {"Unlock report"}
                   </Button>
                 )}
                 {isPublicReport ? (
@@ -1073,79 +1073,85 @@ export const ReportContainer: React.FC<{
               ) : null}
 
               {!download ? (
-                isQSReport ? (
-                  <Flex
-                    w={"35%"}
-                    alignItems={"center"}
-                    justifyContent={"center"}
+                <Flex
+                  w={"35%"}
+                  h={"100%"}
+                  flexDir={"column"}
+                  pt={20}
+                  display={["none", "none", "none", "flex"]}
+                  pl={8}
+                  pr={2}
+                >
+                  <Text
+                    fontSize="sm"
+                    fontWeight={600}
+                    color={"white"}
+                    mb={6}
+                    cursor={"pointer"}
                   >
-                    <VStack
-                      w="100%"
-                      maxW={"300px"}
-                      bg={
-                        "linear-gradient(rgba(5, 12, 18, 1), rgba(23, 0, 114, 1))"
-                      }
-                      display={["none", "none", "none", "flex"]}
-                      borderRadius={10}
-                      p={7}
-                      spacing={10}
-                      textAlign="center"
-                      mx={8}
-                    >
-                      <Text fontWeight={600} fontSize="md" color="white">
-                        Fix Bugs & Secure Your Smart Contracts Today
-                      </Text>
-                      <Text fontWeight={400} fontSize="sm" color="subtle">
-                        Sign Up for a free trial and get one step closer to
-                        securing your smart contracts. Scan entire repositories,
-                        get access to gas issues, publish audit reports & much
-                        more.
-                      </Text>
-                      <Button
-                        w="100%"
-                        onClick={() => {
-                          history.push("/signin");
-                          onImportScan();
-                        }}
-                        variant="brand"
+                    ON THIS PAGE
+                  </Text>
+                  {currentPageHeadings &&
+                    currentPageHeadings.map((nav, index) => (
+                      <Text
+                        key={index}
+                        fontSize="sm"
+                        fontWeight={400}
+                        color={"#B0B7C3"}
+                        mb={4}
                       >
-                        Secure Your Contract Now!
-                      </Button>
-                    </VStack>
-                  </Flex>
-                ) : (
-                  <Flex
-                    w={"35%"}
-                    h={"100%"}
-                    flexDir={"column"}
-                    pt={20}
-                    display={["none", "none", "none", "flex"]}
-                    pl={8}
-                    pr={2}
-                  >
-                    <Text
-                      fontSize="sm"
-                      fontWeight={600}
-                      color={"white"}
-                      mb={6}
-                      cursor={"pointer"}
+                        {nav}
+                      </Text>
+                    ))}
+                  {isQSReport && (
+                    <Flex
+                      mt={
+                        currentPageHeadings && currentPageHeadings.length === 0
+                          ? "70px"
+                          : currentPageHeadings &&
+                            currentPageHeadings.length === 1
+                          ? "35px"
+                          : "0px"
+                      }
+                      w={"100%"}
+                      alignItems={"flex-start"}
+                      justifyContent={"flex-start"}
                     >
-                      ON THIS PAGE
-                    </Text>
-                    {currentPageHeadings &&
-                      currentPageHeadings.map((nav, index) => (
-                        <Text
-                          key={index}
-                          fontSize="sm"
-                          fontWeight={400}
-                          color={"#B0B7C3"}
-                          mb={4}
-                        >
-                          {nav}
+                      <VStack
+                        w="100%"
+                        maxW={"300px"}
+                        bg={
+                          "linear-gradient(rgba(5, 12, 18, 1), rgba(23, 0, 114, 1))"
+                        }
+                        display={["none", "none", "none", "flex"]}
+                        borderRadius={10}
+                        p={7}
+                        spacing={10}
+                        textAlign="center"
+                      >
+                        <Text fontWeight={600} fontSize="md" color="white">
+                          Fix Bugs & Secure Your Smart Contracts Today
                         </Text>
-                      ))}
-                  </Flex>
-                )
+                        <Text fontWeight={400} fontSize="sm" color="subtle">
+                          Sign Up for a free trial and get one step closer to
+                          securing your smart contracts. Scan entire
+                          repositories, get access to gas issues, publish audit
+                          reports & much more.
+                        </Text>
+                        <Button
+                          w="100%"
+                          onClick={() => {
+                            history.push("/signin");
+                            onImportScan();
+                          }}
+                          variant="brand"
+                        >
+                          Secure Your Contract Now!
+                        </Button>
+                      </VStack>
+                    </Flex>
+                  )}
+                </Flex>
               ) : null}
             </Flex>
 
