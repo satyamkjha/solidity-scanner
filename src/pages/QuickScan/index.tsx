@@ -25,7 +25,6 @@ const QuickScanDetails = lazy(
 const QuickScan: React.FC = () => {
   const toast = useToast();
   const config: any = useConfig();
-  const [isLoading, setIsLoading] = React.useState<boolean>(false);
   const [scanReport, setScanReport] = React.useState<QuickScanResult | null>(
     null
   );
@@ -38,18 +37,28 @@ const QuickScan: React.FC = () => {
     messageQueue,
     setNeedAuthToken,
   } = useWebSocket();
-  const [tempQSData, setTempQSData] = useState<{
-    blockAddress: string;
-    blockPlatform: string;
-    blockChain: string;
-  } | null>(null);
   const elementRef = useRef<HTMLDivElement>(null);
   const { blockAddress, blockPlatform, blockChain } = useParams<{
     blockAddress: string;
     blockPlatform: string;
     blockChain: string;
   }>();
-
+  const [isLoading, setIsLoading] = React.useState<boolean>(
+    blockAddress && blockChain && blockPlatform ? true : false
+  );
+  const [tempQSData, setTempQSData] = useState<{
+    blockAddress: string;
+    blockPlatform: string;
+    blockChain: string;
+  } | null>(
+    blockAddress && blockChain && blockPlatform
+      ? {
+          blockAddress,
+          blockPlatform,
+          blockChain,
+        }
+      : null
+  );
   const [qsStatus, setQSStatus] = useState("");
   const location = useLocation();
   const query = new URLSearchParams(location.search);
@@ -70,11 +79,6 @@ const QuickScan: React.FC = () => {
 
   useEffect(() => {
     if (blockAddress && blockChain && blockPlatform) {
-      setTempQSData({
-        blockAddress,
-        blockPlatform,
-        blockChain,
-      });
       setQSStatus("Validated");
       setIsLoading(true);
       if (reqHeaders_QS === undefined) {

@@ -1,7 +1,8 @@
 import UAParser from "ua-parser-js";
 import reCAPTCHA from "helpers/reCAPTCHA";
 import { Profile, PricingData, Finding } from "common/types";
-import { platformVsChains, contractChain } from "common/values";
+import { platformVsChains, contractChain, publicRoutes } from "common/values";
+import { matchPath } from "react-router-dom";
 
 let configValue: any = null;
 
@@ -60,6 +61,13 @@ export const getDeviceType = (): string => {
 export const getAssetsURL = (config?: any) => {
   config = config || getGlobalConfig();
   return config.REACT_APP_ASSETS_URL || "";
+};
+
+export const matchPublicRoute = (pathToMatch: string) => {
+  return publicRoutes.find((route) => {
+    const match = matchPath(pathToMatch, { path: route, exact: true });
+    return match !== null && match.isExact;
+  });
 };
 
 export const getReCaptchaHeaders = async (action: string) => {
