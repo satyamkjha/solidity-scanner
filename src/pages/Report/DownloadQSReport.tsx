@@ -13,12 +13,13 @@ import {
   InputRightElement,
   HStack,
   Image,
+  useDisclosure,
 } from "@chakra-ui/react";
 import { FiAtSign } from "react-icons/fi";
 import { FaLock } from "react-icons/fa";
 import { useForm } from "react-hook-form";
 import { Logo } from "components/icons";
-import API from "helpers/api";
+import { PUBLIC_API, API_URL_PROD, API_URL_DEV } from "helpers/api";
 import { AuthResponse } from "common/types";
 import { ViewIcon, ViewOffIcon } from "@chakra-ui/icons";
 import { API_PATH } from "helpers/routeManager";
@@ -27,10 +28,23 @@ import Loader from "components/styled-components/Loader";
 import { passwordStrength } from "check-password-strength";
 import { isEmail } from "helpers/helperFunction";
 import PasswordError from "components/passwordError";
+import ContactUs from "components/modals/contactus";
+import axios from "axios";
+import Auth from "helpers/auth";
 
 function useQuery() {
   return new URLSearchParams(useLocation().search);
 }
+
+const API = axios.create({
+  baseURL: process.env.NODE_ENV === "production" ? API_URL_PROD : API_URL_DEV,
+  headers: {
+    "Content-Type": "application/json",
+  },
+  withCredentials: Auth.isUserAuthenticated(),
+  xsrfCookieName: "csrftoken",
+  xsrfHeaderName: "X-CSRFToken",
+});
 
 const DownloadQSReport: React.FC = () => {
   const { handleSubmit } = useForm<FormData>();
@@ -42,6 +56,7 @@ const DownloadQSReport: React.FC = () => {
   const { transactionId } = useParams<{
     transactionId: string;
   }>();
+  const { isOpen, onClose, onOpen } = useDisclosure();
   const onSubmit = async () => {
     try {
       //   let reqHeaders = await getReCaptchaHeaders("forgot_password_set");
@@ -122,7 +137,10 @@ const DownloadQSReport: React.FC = () => {
               </Button>
               <Text color="subtle" mt={7}>
                 having issues ?{" "}
-                <span style={{ color: "#000000" }}>
+                <span
+                  onClick={onOpen}
+                  style={{ color: "#000000", cursor: "pointer" }}
+                >
                   <b> Contact us</b>
                 </span>
               </Text>
@@ -136,7 +154,7 @@ const DownloadQSReport: React.FC = () => {
           textAlign="center"
           my={[20, 20, 40]}
         >
-          <Heading fontSize="2xl">Audit Report Email Verification</Heading>
+          <Heading fontSize="2xl">Download One Time Audit Report</Heading>
           <Text color="subtle" my={3}>
             Email Verified Successfully! Please download your Audit Report.
           </Text>
@@ -182,13 +200,17 @@ const DownloadQSReport: React.FC = () => {
             </Stack>
             <Text color="subtle" mt={7}>
               having issues ?{" "}
-              <span style={{ color: "#000000" }}>
+              <span
+                onClick={onOpen}
+                style={{ color: "#000000", cursor: "pointer" }}
+              >
                 <b> Contact us</b>
               </span>
             </Text>
           </Stack>
         </Flex>
       )}
+      <ContactUs isOpen={isOpen} onClose={onClose} />
     </>
   );
 };

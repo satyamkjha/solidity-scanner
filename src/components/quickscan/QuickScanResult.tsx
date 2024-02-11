@@ -7,9 +7,14 @@ import {
   Divider,
   Box,
   Button,
+  useMediaQuery,
 } from "@chakra-ui/react";
 import { severityArrayInOrder } from "common/values";
-import { sentenceCapitalize, setRecentQuickScan } from "helpers/helperFunction";
+import {
+  sentenceCapitalize,
+  setRecentQuickScan,
+  getFeatureGateConfig,
+} from "helpers/helperFunction";
 import { QuickScanResult } from "common/types";
 import SolidityScoreProgress from "components/common/SolidityScoreProgress";
 import { useHistory } from "react-router-dom";
@@ -26,8 +31,13 @@ export const QuickScanResultContainer: React.FC<{
 }> = ({ scanReport, projectId, scanId }) => {
   const history = useHistory();
   const [isLoading, setIsLoading] = useState(false);
-  const { sendMessage, setKeepWSOpen, updateMessageQueue, messageQueue } =
-    useWebSocket();
+  const {
+    sendMessage,
+    setKeepWSOpen,
+    updateMessageQueue,
+    messageQueue,
+    setNeedAuthToken,
+  } = useWebSocket();
   const [errorData, setErrorData] = useState<{
     errorCount: number;
     errorType: string;
@@ -35,6 +45,8 @@ export const QuickScanResultContainer: React.FC<{
 
   const [reportId, setReportId] = useState("");
   const [open, setOpen] = useState(false);
+
+  const [isLargerThan850] = useMediaQuery("(min-width: 850px)");
 
   const vulnerabilityCount =
     scanReport.multi_file_scan_summary.issue_severity_distribution.critical +
@@ -51,16 +63,7 @@ export const QuickScanResultContainer: React.FC<{
     }
   }, [errorData]);
 
-  const openReport = () => {
-    setIsLoading(true);
-    sendMessage({
-      type: "generate_report",
-      body: {
-        project_id: projectId,
-        scan_id: scanId,
-        scan_type: "block",
-      },
-    });
+  const onViewDetailResult = () => {
     const scan_details = {
       project_id: projectId,
       contract_address: scanReport.contract_address,
@@ -69,6 +72,20 @@ export const QuickScanResultContainer: React.FC<{
       new_user: false,
     };
     setRecentQuickScan(scan_details);
+    history.push("/signin");
+  };
+
+  const openReport = () => {
+    setIsLoading(true);
+    setNeedAuthToken(false);
+    sendMessage({
+      type: "generate_report",
+      body: {
+        project_id: projectId,
+        scan_id: scanId,
+        scan_type: "block",
+      },
+    });
   };
 
   useEffect(() => {
@@ -85,8 +102,8 @@ export const QuickScanResultContainer: React.FC<{
         ) {
           setReportId(msgItem.payload.report_id);
           setIsLoading(false);
+
           setKeepWSOpen(false);
-          console.log("ajsgdjasd");
         }
       });
       let tempMsgQueue = messageQueue;
@@ -230,16 +247,23 @@ export const QuickScanResultContainer: React.FC<{
           >
             View detailed Result ⟶
           </Button> */}
-          <Button
-            display={["none", "none", "none", "flex"]}
-            variant="brand"
-            w={"100%"}
-            maxW={"300px"}
-            isLoading={isLoading}
-            onClick={openReport}
-          >
-            View Audit Report PDF ⟶
-          </Button>
+          {isLargerThan850 && (
+            <Button
+              variant="brand"
+              w={"100%"}
+              maxW={"300px"}
+              isLoading={isLoading}
+              onClick={() =>
+                getFeatureGateConfig().qs_report
+                  ? openReport()
+                  : onViewDetailResult()
+              }
+            >
+              {getFeatureGateConfig().qs_report
+                ? "View Audit Report PDF ⟶"
+                : "View Detailed Result"}
+            </Button>
+          )}
         </VStack>
         <Flex
           w={["100%", "100%", "100%", "150px", "180px"]}
@@ -300,16 +324,17 @@ export const QuickScanResultContainer: React.FC<{
             </VStack>
           ))}
         </Flex>
-        <Button
-          display={["flex", "flex", "flex", "none"]}
-          variant="brand"
-          w={"100%"}
-          mt={[5, 5, 10]}
-          maxW={"300px"}
-          onClick={openReport}
-        >
-          View Audit Report PDF ⟶
-        </Button>
+        {!isLargerThan850 && (
+          <Button
+            variant="brand"
+            w={"100%"}
+            mt={[5, 5, 10]}
+            maxW={"300px"}
+            onClick={() => onViewDetailResult()}
+          >
+            View Detailed Result ⟶
+          </Button>
+        )}
       </Flex>
       <QSErrorCountModal
         isOpen={open}

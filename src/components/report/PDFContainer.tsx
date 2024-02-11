@@ -47,7 +47,6 @@ const PDFContainer: React.FC<{
 
     return () => {
       if (containerRef.current && observerRef.current) {
-        // eslint-disable-next-line react-hooks/exhaustive-deps
         observerRef.current.unobserve(containerRef.current);
       }
     };

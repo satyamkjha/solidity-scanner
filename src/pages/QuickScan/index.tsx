@@ -6,7 +6,7 @@ import {
 import { Flex, Box, useToast, VStack, CloseButton } from "@chakra-ui/react";
 
 import API from "helpers/api";
-import { QuickScanResult } from "common/types";
+import { QuickScanResult, RecaptchaHeader } from "common/types";
 import { API_PATH } from "helpers/routeManager";
 import QuickScanForm from "components/quickscan/QuickScanForm";
 import { Header } from "components/header";
@@ -25,50 +25,49 @@ const QuickScanDetails = lazy(
 const QuickScan: React.FC = () => {
   const toast = useToast();
   const config: any = useConfig();
-  const [isLoading, setIsLoading] = React.useState<boolean>(false);
   const [scanReport, setScanReport] = React.useState<QuickScanResult | null>(
     null
   );
   const [projectId, setProjectId] = useState("");
   const [scanId, setScanId] = useState("");
-  const { sendMessage, setKeepWSOpen, updateMessageQueue, messageQueue } =
-    useWebSocket();
-  const [tempQSData, setTempQSData] = useState<{
-    blockAddress: string;
-    blockPlatform: string;
-    blockChain: string;
-  } | null>(null);
+  const {
+    sendMessage,
+    setKeepWSOpen,
+    updateMessageQueue,
+    messageQueue,
+    setNeedAuthToken,
+  } = useWebSocket();
   const elementRef = useRef<HTMLDivElement>(null);
   const { blockAddress, blockPlatform, blockChain } = useParams<{
     blockAddress: string;
     blockPlatform: string;
     blockChain: string;
   }>();
+  const [isLoading, setIsLoading] = React.useState<boolean>(
+    blockAddress && blockChain && blockPlatform ? true : false
+  );
+  const [tempQSData, setTempQSData] = useState<{
+    blockAddress: string;
+    blockPlatform: string;
+    blockChain: string;
+  } | null>(
+    blockAddress && blockChain && blockPlatform
+      ? {
+          blockAddress,
+          blockPlatform,
+          blockChain,
+        }
+      : null
+  );
   const [qsStatus, setQSStatus] = useState("");
   const location = useLocation();
   const query = new URLSearchParams(location.search);
   const ref = query.get("ref");
   const [reqHeaders_QS_Verify, setReqHeaders_QS_Verify] = useState<
-    | {
-        "Content-Type": string;
-        Recaptchatoken: string;
-      }
-    | {
-        "Content-Type": string;
-        Recaptchatoken?: undefined;
-      }
-    | undefined
+    RecaptchaHeader | undefined
   >();
   const [reqHeaders_QS, setReqHeaders_QS] = useState<
-    | {
-        "Content-Type": string;
-        Recaptchatoken: string;
-      }
-    | {
-        "Content-Type": string;
-        Recaptchatoken?: undefined;
-      }
-    | undefined
+    RecaptchaHeader | undefined
   >();
 
   const getRecapthaTokens = async () => {
@@ -80,11 +79,6 @@ const QuickScan: React.FC = () => {
 
   useEffect(() => {
     if (blockAddress && blockChain && blockPlatform) {
-      setTempQSData({
-        blockAddress,
-        blockPlatform,
-        blockChain,
-      });
       setQSStatus("Validated");
       setIsLoading(true);
       if (reqHeaders_QS === undefined) {
@@ -108,7 +102,6 @@ const QuickScan: React.FC = () => {
     chain: string,
     ref: string | null
   ) => {
-    console.log("starting quickscan", new Date());
     setTempQSData({
       blockAddress: address,
       blockPlatform: platform,
@@ -141,6 +134,7 @@ const QuickScan: React.FC = () => {
         req = { ...req, ref };
       }
       setKeepWSOpen(true);
+      setNeedAuthToken(false);
       reqHeaders_QS &&
         sendMessage({
           type: "quick_scan_initiate",

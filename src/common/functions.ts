@@ -221,3 +221,17 @@ export const getPaymentDaysLeft = (
     return remainingDays;
   }
 };
+
+export const importScan = async (scanDetails: any) => {
+  const responseData = await API.post(API_PATH.API_START_SCAN_BLOCK, {
+    parent_project_id: scanDetails.project_id,
+    contract_address: scanDetails.contract_address,
+    contract_chain: scanDetails.contract_chain,
+    contract_platform: scanDetails.contract_platform,
+  });
+  if (responseData.status === 200 && responseData.data.status === "success") {
+    localStorage.removeItem("recent_scan_details");
+    return true;
+  }
+  return false;
+};

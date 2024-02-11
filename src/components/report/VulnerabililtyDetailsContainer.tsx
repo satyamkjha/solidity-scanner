@@ -11,17 +11,24 @@ import {
   Button,
   useMediaQuery,
 } from "@chakra-ui/react";
-import { Report, IssueItem } from "common/types";
-import { SeverityIcon, TrialWallIcon } from "components/icons";
+import {
+  Report,
+  IssueItem,
+  Finding,
+  IssueSeverityDistribution,
+} from "common/types";
+import { SeverityIcon } from "components/icons";
 import {
   sentenceCapitalize,
   getAssetsURL,
   getProjectFileUrl,
+  getContractBlockchainId,
 } from "helpers/helperFunction";
 import styled from "@emotion/styled";
 import React from "react";
 import { ExternalLinkIcon, LockIcon } from "@chakra-ui/icons";
 import { useHistory } from "react-router-dom";
+import { codePlatform } from "common/values";
 
 const VulnerabililtyDetailsContainer: React.FC<{
   summary_report: Report;
@@ -35,6 +42,7 @@ const VulnerabililtyDetailsContainer: React.FC<{
   codeEndLine?: number;
   onOpen: () => void;
   download: boolean;
+  onImportScan: () => void;
   isQSReport: boolean;
 }> = ({
   summary_report,
@@ -47,6 +55,7 @@ const VulnerabililtyDetailsContainer: React.FC<{
   codeStartLine,
   codeEndLine,
   onOpen,
+  onImportScan,
   isQSReport,
 }) => {
   const assetsURL = getAssetsURL();
@@ -109,6 +118,38 @@ const VulnerabililtyDetailsContainer: React.FC<{
   const demoIssueRemediation =
     "Access control plays an important role in segregation of privileges in smart contracts and other applications. If this is misconfigured or not properly validated on sensitive functions, it may lead to loss of funds, tokens and in some cases compromise of the smart contract.";
 
+  const getFileUrlLink = (finding: Finding) => {
+    if (
+      summary_report.project_summary_report.project_url &&
+      summary_report.project_summary_report.project_url !== "File Scan"
+    ) {
+      return getProjectFileUrl(
+        summary_report.project_summary_report.project_url,
+        "master",
+        finding
+      );
+    } else if (
+      summary_report.project_summary_report.contract_url &&
+      summary_report.project_summary_report.contract_platform &&
+      summary_report.project_summary_report.contract_chain &&
+      codePlatform[
+        getContractBlockchainId(
+          summary_report.project_summary_report.contract_platform,
+          summary_report.project_summary_report.contract_chain
+        )
+      ]
+    ) {
+      return `${summary_report.project_summary_report.contract_url}${
+        codePlatform[
+          getContractBlockchainId(
+            summary_report.project_summary_report.contract_platform,
+            summary_report.project_summary_report.contract_chain
+          )
+        ][summary_report.project_summary_report.contract_platform]
+      }`;
+    } else return "";
+  };
+
   return (
     <Flex
       as="div"
@@ -128,13 +169,13 @@ const VulnerabililtyDetailsContainer: React.FC<{
           }}
           alignItems="center"
         >
-          <Text fontSize={["16px", "22px", "28px"]} fontWeight={400}>
+          <Text fontSize={["28px"]} fontWeight={400}>
             4.
           </Text>
-          <Heading color={"#52FF00"} fontSize={["xl", "2xl", "4xl"]} ml={4}>
+          <Heading color={"#52FF00"} fontSize={["4xl"]} ml={4}>
             Vulnerability
           </Heading>
-          <Text fontSize={["xl", "2xl", "4xl"]} fontWeight={400}>
+          <Text fontSize={["4xl"]} fontWeight={400}>
             {" "}
             &nbsp;Details{" "}
           </Text>
@@ -144,7 +185,7 @@ const VulnerabililtyDetailsContainer: React.FC<{
         w={"100%"}
         h={"100%"}
         flexDir={"column"}
-        mt={showVulnerabilityTitle ? [2, 4, 6] : 0}
+        mt={showVulnerabilityTitle ? [6] : 0}
       >
         {showMetadata ? (
           <>
@@ -154,33 +195,25 @@ const VulnerabililtyDetailsContainer: React.FC<{
               flexDir={"column"}
               alignItems={"flex-start"}
               spacing={6}
-              p={[2, 2, 6]}
+              p={[6]}
               border={"1px solid #D9D9D9"}
               borderBottom={"none"}
             >
               <Flex w={"100%"}>
                 <VStack spacing={1} alignItems={"flex-start"} w={"24%"}>
-                  <Text
-                    fontSize={["8px", "8px", "xs"]}
-                    fontWeight={400}
-                    color={"subtle"}
-                  >
+                  <Text fontSize={["xs"]} fontWeight={400} color={"subtle"}>
                     Bug ID
                   </Text>
-                  <Text fontSize={["10px", "12px", "sm"]} fontWeight={600}>
+                  <Text fontSize={["sm"]} fontWeight={600}>
                     {issue.bug_id}
                   </Text>
                 </VStack>
                 <VStack spacing={1} alignItems={"flex-start"}>
-                  <Text
-                    fontSize={["8px", "8px", "xs"]}
-                    fontWeight={400}
-                    color={"subtle"}
-                  >
+                  <Text fontSize={["xs"]} fontWeight={400} color={"subtle"}>
                     Bug Type
                   </Text>
                   <Text
-                    fontSize={["10px", "12px", "sm"]}
+                    fontSize={["sm"]}
                     fontWeight={600}
                     className={"ss-report-right-nav"}
                     content={issue.issue_name}
@@ -191,39 +224,28 @@ const VulnerabililtyDetailsContainer: React.FC<{
               </Flex>
               <Flex w={"100%"}>
                 <VStack spacing={1} alignItems={"flex-start"} w={"24%"}>
-                  <Text
-                    fontSize={["8px", "8px", "xs"]}
-                    fontWeight={400}
-                    color={"subtle"}
-                  >
+                  <Text fontSize={["xs"]} fontWeight={400} color={"subtle"}>
                     Severity
                   </Text>
-                  <HStack spacing={[1, 2, 3]}>
-                    <SeverityIcon
-                      size={isLargerThan768 ? 12 : isLargerThan450 ? 5 : 5}
-                      variant={issue.severity}
-                    />
-                    <Text fontSize={["8px", "10px", "sm"]} ml={[0, 1, 2]}>
+                  <HStack spacing={[3]}>
+                    <SeverityIcon size={12} variant={issue.severity} />
+                    <Text fontSize={["sm"]} ml={[0, 1, 2]}>
                       {sentenceCapitalize(issue.severity)}
                     </Text>
                   </HStack>
                 </VStack>
                 <VStack spacing={1} alignItems={"flex-start"} w={"24%"}>
-                  <Text
-                    fontSize={["8px", "8px", "xs"]}
-                    fontWeight={400}
-                    color={"subtle"}
-                  >
+                  <Text fontSize={["xs"]} fontWeight={400} color={"subtle"}>
                     Action Taken
                   </Text>
-                  <HStack spacing={[1, 2, 3]}>
+                  <HStack spacing={[3]}>
                     <Image
-                      height={["10px", "10px", "25px"]}
-                      width={["10px", "10px", "25px"]}
+                      height={"25px"}
+                      width={"25px"}
                       src={`${assetsURL}report/${issue.bug_status}_color.svg`}
                     />
                     <Text
-                      fontSize={["8px", "10px", "sm"]}
+                      fontSize={["sm"]}
                       fontWeight={"500"}
                       fontStyle={"italic"}
                     >
@@ -236,14 +258,10 @@ const VulnerabililtyDetailsContainer: React.FC<{
                   </HStack>
                 </VStack>
                 <VStack spacing={1} alignItems={"flex-start"}>
-                  <Text
-                    fontSize={["8px", "8px", "xs"]}
-                    fontWeight={400}
-                    color={"subtle"}
-                  >
+                  <Text fontSize={["xs"]} fontWeight={400} color={"subtle"}>
                     Detection Method
                   </Text>
-                  <Text fontSize={["8px", "10px", "sm"]} fontWeight={500}>
+                  <Text fontSize={["sm"]} fontWeight={500}>
                     {issue.audit_type
                       ? sentenceCapitalize(issue.audit_type)
                       : "Automated"}
@@ -253,60 +271,58 @@ const VulnerabililtyDetailsContainer: React.FC<{
             </VStack>
             {issue.findings && (
               <Flex
-                px={[1, 2, 6]}
-                pt={[1, 2, 6]}
+                px={[6]}
+                pt={[6]}
                 borderLeft={"1px solid #D9D9D9"}
                 borderRight={"1px solid #D9D9D9"}
               >
                 <VStack spacing={1} alignItems={"flex-start"} w={"24%"}>
-                  <Text
-                    fontSize={["8px", "10px", "xs"]}
-                    fontWeight={400}
-                    color={"subtle"}
-                  >
+                  <Text fontSize={["xs"]} fontWeight={400} color={"subtle"}>
                     Line No.
                   </Text>
                   <Flex flexDir={"column"}>
                     {issue.findings.map((finding) => (
-                      <Text fontSize={["8px", "10px", "xs"]} lineHeight={1.8}>
+                      <Text fontSize={["xs"]} lineHeight={1.8}>
                         L{finding.line_nos_start} - L{finding.line_nos_end}
                       </Text>
                     ))}
                   </Flex>
                 </VStack>
                 <VStack spacing={1} alignItems={"flex-start"}>
-                  <Text
-                    fontSize={["8px", "10px", "xs"]}
-                    fontWeight={400}
-                    color={"subtle"}
-                  >
+                  <Text fontSize={["xs"]} fontWeight={400} color={"subtle"}>
                     File Location
                   </Text>
                   <Flex flexDir={"column"}>
-                    {issue.findings.map((finding) => (
-                      <Flex>
-                        <Link
-                          href={
-                            summary_report.project_summary_report.project_url &&
-                            summary_report.project_summary_report
-                              .project_url !== "File Scan"
-                              ? getProjectFileUrl(
-                                  summary_report.project_summary_report
-                                    .project_url,
-                                  "master",
-                                  finding
-                                )
-                              : ""
-                          }
-                          target={"_blank"}
-                          fontSize={["8px", "10px", "xs"]}
-                          lineHeight={1.8}
-                        >
-                          {finding.file_path}
-                          <ExternalLinkIcon ml={2} color={"#8A94A6"} />
-                        </Link>
-                      </Flex>
-                    ))}
+                    {issue.findings.map((finding) => {
+                      if (
+                        summary_report.project_summary_report.project_url ===
+                        "File Scan"
+                      )
+                        return (
+                          <Text
+                            fontSize={["xs"]}
+                            lineHeight={1.8}
+                            color="#8A94A6"
+                          >
+                            {finding.file_path}
+                          </Text>
+                        );
+                      else {
+                        return (
+                          <Flex>
+                            <Link
+                              href={getFileUrlLink(finding)}
+                              target={"_blank"}
+                              fontSize={["xs"]}
+                              lineHeight={1.8}
+                            >
+                              {finding.file_path}
+                              <ExternalLinkIcon ml={2} color={"#8A94A6"} />
+                            </Link>
+                          </Flex>
+                        );
+                      }
+                    })}
                   </Flex>
                 </VStack>
               </Flex>
@@ -327,11 +343,7 @@ const VulnerabililtyDetailsContainer: React.FC<{
               borderRight={"1px solid #D9D9D9"}
             >
               <Image src={`${assetsURL}report/clipboard.svg`} width={6} />
-              <Text
-                fontSize={["10px", "12px", "sm"]}
-                fontWeight={600}
-                width={"100%"}
-              >
+              <Text fontSize={["sm"]} fontWeight={600} width={"100%"}>
                 Affected Code
               </Text>
             </HStack>
@@ -490,11 +502,7 @@ const VulnerabililtyDetailsContainer: React.FC<{
                     src={`${assetsURL}report/issue_description.svg`}
                     width={6}
                   />
-                  <Text
-                    fontSize={["10px", "12px", "sm"]}
-                    fontWeight={600}
-                    width={"100%"}
-                  >
+                  <Text fontSize={["sm"]} fontWeight={600} width={"100%"}>
                     Description
                   </Text>
                 </HStack>
@@ -524,11 +532,7 @@ const VulnerabililtyDetailsContainer: React.FC<{
                     src={`${assetsURL}report/issue_remediation.svg`}
                     width={6}
                   />
-                  <Text
-                    fontSize={["10px", "12px", "sm"]}
-                    fontWeight={600}
-                    width={"100%"}
-                  >
+                  <Text fontSize={["sm"]} fontWeight={600} width={"100%"}>
                     Remediation
                   </Text>
                 </HStack>
@@ -554,11 +558,7 @@ const VulnerabililtyDetailsContainer: React.FC<{
                 >
                   <HStack spacing={2} mt={5} mb={3}>
                     <Image src={`${assetsURL}report/comment.svg`} width={6} />
-                    <Text
-                      fontSize={["10px", "12px", "sm"]}
-                      fontWeight={600}
-                      width={"100%"}
-                    >
+                    <Text fontSize={["sm"]} fontWeight={600} width={"100%"}>
                       Comments
                     </Text>
                   </HStack>
@@ -582,11 +582,7 @@ const VulnerabililtyDetailsContainer: React.FC<{
                     src={`${assetsURL}report/issue_description.svg`}
                     width={6}
                   />
-                  <Text
-                    fontSize={["10px", "12px", "sm"]}
-                    fontWeight={600}
-                    width={"100%"}
-                  >
+                  <Text fontSize={["sm"]} fontWeight={600} width={"100%"}>
                     Description
                   </Text>
                 </HStack>
@@ -616,11 +612,7 @@ const VulnerabililtyDetailsContainer: React.FC<{
                     src={`${assetsURL}report/issue_remediation.svg`}
                     width={6}
                   />
-                  <Text
-                    fontSize={["10px", "12px", "sm"]}
-                    fontWeight={600}
-                    width={"100%"}
-                  >
+                  <Text fontSize={["sm"]} fontWeight={600} width={"100%"}>
                     Remediation
                   </Text>
                 </HStack>
@@ -646,11 +638,7 @@ const VulnerabililtyDetailsContainer: React.FC<{
                 >
                   <HStack spacing={2} mt={5} mb={3}>
                     <Image src={`${assetsURL}report/comment.svg`} width={6} />
-                    <Text
-                      fontSize={["10px", "12px", "sm"]}
-                      fontWeight={600}
-                      width={"100%"}
-                    >
+                    <Text fontSize={["sm"]} fontWeight={600} width={"100%"}>
                       Comments
                     </Text>
                   </HStack>
@@ -663,7 +651,7 @@ const VulnerabililtyDetailsContainer: React.FC<{
           )
         ) : null}
 
-        {isQSReport && (
+        {!issue.findings && (
           <Flex
             w="96%"
             left="2px"
@@ -700,6 +688,15 @@ const VulnerabililtyDetailsContainer: React.FC<{
                     : "Upgrade your Plan to view the full report"}
                 </Text>
                 <Text color="#000000" fontWeight={300} fontSize="sm">
+                  <b>
+                    {
+                      summary_report.scan_summary[0]
+                        .issue_severity_distribution[issue.severity]
+                    }{" "}
+                    {sentenceCapitalize(issue.severity)} Issues Found
+                  </b>
+                </Text>
+                <Text color="#000000" fontWeight={300} fontSize="sm">
                   {isQSReport
                     ? issue.severity === "gas"
                       ? "Sign up for a free trial and optimize your contracts for gas absolutely free!"
@@ -708,15 +705,18 @@ const VulnerabililtyDetailsContainer: React.FC<{
                 </Text>
               </VStack>
               <Button
-                leftIcon={<LockIcon />}
+                leftIcon={issue.severity !== "gas" ? <LockIcon /> : undefined}
                 mt={2}
                 mb={4}
                 variant="brand"
-                width="200px"
+                width="fit-content"
+                px={7}
+                minWidth="200px"
                 onClick={() => {
                   if (isQSReport) {
                     if (issue.severity === "gas") {
                       history.push("/signup");
+                      onImportScan();
                     } else {
                       onOpen();
                     }
@@ -725,7 +725,11 @@ const VulnerabililtyDetailsContainer: React.FC<{
                   }
                 }}
               >
-                {isQSReport ? "Pay & Unlock report" : "Upgrade"}
+                {isQSReport
+                  ? issue.severity === "gas"
+                    ? "Signup for Free Trial"
+                    : "Unlock report"
+                  : "Upgrade"}
               </Button>
             </Flex>
           </Flex>

@@ -18,6 +18,7 @@ import {
   getContractBlockchainId,
   getContractChainLabel,
   sentenceCapitalize,
+  getFeatureGateConfig,
 } from "helpers/helperFunction";
 import { useHistory } from "react-router-dom";
 import PieChart from "components/pieChart";
@@ -305,7 +306,7 @@ export const QSScanResultSkeleton: React.FC<{
           spacing={5}
         >
           <HStack>
-            {ssIconAnimation && (
+            {/* {ssIconAnimation && (
               <Lottie
                 style={{
                   height: "30px",
@@ -313,7 +314,7 @@ export const QSScanResultSkeleton: React.FC<{
                 }}
                 animationData={ssIconAnimation}
               />
-            )}
+            )} */}
             <Text color="white" fontSize="lg" fontWeight={700}>
               {" "}
               Your contract is being {qsStatus} ...
@@ -416,7 +417,9 @@ export const QSScanResultSkeleton: React.FC<{
             isDisabled
             onClick={() => history.push("/signin")}
           >
-            View Audit Report PDF ⟶
+            {getFeatureGateConfig().qs_report
+              ? "View Audit Report PDF ⟶"
+              : "View Detailed Result"}
           </Button>
         </VStack>
         <Flex

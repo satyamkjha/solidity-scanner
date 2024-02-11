@@ -84,12 +84,38 @@ const CoverPageContainer: React.FC<{
                 fontSize={download ? "sm" : ["xs", "sm"]}
                 width={download ? "60%" : ["100%", "100%", "60%"]}
                 color={"subtle"}
-                mb={10}
+                mt={[10, 10, 10, 20]}
+                mb={6}
               >
-                This security assessment report was prepared by
-                SolidityScan.com, a cloud-based Smart Contract Scanner.
+                Security Assessment
               </Text>
-              <ReportCoverDots />
+              <Heading
+                fontSize={["3xl", "4xl"]}
+                fontWeight={700}
+                mb={3}
+                w={"80%"}
+              >
+                {summary_report.project_summary_report.project_name ||
+                  summary_report.project_summary_report.contract_name}
+              </Heading>
+              <Text fontSize="xl" mb={10} fontWeight={500}>
+                {`${d.getDate()} ${
+                  monthNames[d.getMonth()]
+                } ${d.getFullYear()}`}
+              </Text>
+              <Box w="100%" h={"auto"}>
+                <Text
+                  fontWeight={400}
+                  fontSize={"sm"}
+                  width={"90%"}
+                  color={"subtle"}
+                  mb={10}
+                >
+                  This security assessment report was prepared by
+                  SolidityScan.com, a cloud-based Smart Contract Scanner.
+                </Text>
+                <ReportCoverDots />
+              </Box>
             </Box>
             {isPublicReport && (
               <Flex

@@ -598,7 +598,9 @@ const ScanDetails: React.FC<{
                           reportingStatus !== "report_generated"
                         }
                         onClick={() => {
-                          if (reportingStatus === "not_generated") {
+                          if (profile.current_package === "trial") {
+                            history.push("/billing");
+                          } else if (reportingStatus === "not_generated") {
                             generateReport();
                           } else if (reportingStatus === "report_generated") {
                             window.open(

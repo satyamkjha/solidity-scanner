@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 
 import {
   Flex,
@@ -28,6 +28,7 @@ import {
 } from "helpers/helperFunction";
 import { contractChain } from "common/values";
 import { ExternalLinkIcon } from "@chakra-ui/icons";
+import StyledButton from "components/styled-components/StyledButton";
 
 const ImportScanModal: React.FC<{
   onClose: any;
@@ -38,7 +39,10 @@ const ImportScanModal: React.FC<{
   const history = useHistory();
   const assetsUrl = getAssetsURL();
 
+  const [isLoading, setIsLoading] = useState(false);
+
   const importScan = async () => {
+    setIsLoading(true);
     const responseData = await API.post(API_PATH.API_START_SCAN_BLOCK, {
       parent_project_id: scanDetails.project_id,
       contract_address: scanDetails.contract_address,
@@ -49,6 +53,7 @@ const ImportScanModal: React.FC<{
       onClose();
       history.push("/projects");
     }
+    setIsLoading(false);
   };
 
   return (
@@ -202,7 +207,7 @@ const ImportScanModal: React.FC<{
                 Cancel
               </Button>
             ) : null}
-            <Button
+            <StyledButton
               h={"50px"}
               mt={"auto"}
               mb={2}
@@ -212,10 +217,11 @@ const ImportScanModal: React.FC<{
               borderRadius={10}
               fontSize={"md"}
               fontWeight={500}
+              isLoading={isLoading}
               onClick={() => (profileData?.credits ? importScan() : onClose())}
             >
               {profileData?.credits ? "Confirm" : "OK"}
-            </Button>
+            </StyledButton>
           </ModalFooter>
         </ModalContent>
       </Modal>

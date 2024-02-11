@@ -18,22 +18,6 @@ import "swiper/css";
 import "swiper/css/pagination";
 import "swiper/css/navigation";
 
-// 15
-// 12
-// 13
-// 14
-// 11
-// 10
-// 9
-// 8
-// 7
-// 6
-// 5
-// 4
-// 3
-// 2
-// 1
-
 export const InNewsSection: React.FC = () => {
   const data: {
     imgLink: string;

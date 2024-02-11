@@ -21,10 +21,15 @@ import { useProfile } from "hooks/useProfile";
 import { OrgUserRole } from "common/types";
 import { useUserOrgProfile } from "hooks/useUserOrgProfile";
 import { UserRoleProvider } from "hooks/useUserRole";
-import { onLogout } from "common/functions";
+import { onLogout, importScan } from "common/functions";
 import { useConfig } from "hooks/useConfig";
 import { API_PATH } from "helpers/routeManager";
-import { getRecentQuickScan, setRecentQuickScan } from "helpers/helperFunction";
+import {
+  getRecentQuickScan,
+  setRecentQuickScan,
+  getFeatureGateConfig,
+} from "helpers/helperFunction";
+import { publicRoutes } from "common/values";
 
 const Landing = lazy(() =>
   lazyRetry(
@@ -275,11 +280,14 @@ const Routes: React.FC = () => {
             <SignIn />
           </RedirectRoute>
           <Route exact path="/reset" component={Reset} />
-          <Route
-            exact
-            path="/download-qs-report/:transactionId"
-            component={DownloadQSReport}
-          />
+          {getFeatureGateConfig().qs_report && (
+            <Route
+              exact
+              path="/download-qs-report/:transactionId"
+              component={DownloadQSReport}
+            />
+          )}
+
           <RedirectRoute exact path="/signup">
             <SignUp />
           </RedirectRoute>
@@ -298,11 +306,13 @@ const Routes: React.FC = () => {
             path="/published-report/:projectType/:reportId"
             component={PublicReportPage}
           />
-          <Route
-            exact
-            path="/qs-report/:projectId/:reportId/:scanId"
-            component={QSReport}
-          />
+          {getFeatureGateConfig().qs_report && (
+            <Route
+              exact
+              path="/qs-report/:projectId/:reportId/:scanId"
+              component={QSReport}
+            />
+          )}
           <Route
             exact
             path="/qs-report-token/:reportId"
@@ -314,20 +324,7 @@ const Routes: React.FC = () => {
             component={Report}
           />
           <Route exact path="/payment/:status" component={PaymentSucess} />
-          <Route
-            exact
-            path={[
-              "/",
-              "/quickscan/:blockAddress/:blockPlatform/:blockChain",
-              "/quickscan/",
-              "/pricing",
-              "/detectors",
-              "/faq",
-              "/terms-of-service",
-              "/privacy-policy",
-              "/web3hackhub",
-            ]}
-          >
+          <Route exact path={publicRoutes}>
             <PublicLayout>
               <Suspense fallback={<Loader width={"100vw"} height={"100vh"} />}>
                 <Switch>
@@ -472,20 +469,6 @@ const PrivateRoute: React.FC<RouteProps> = ({ children, ...rest }) => {
   const { path } = rest;
   const isHomeRoute = path === "/home";
 
-  const importScan = async (scanDetails: any) => {
-    const responseData = await API.post(API_PATH.API_START_SCAN_BLOCK, {
-      parent_project_id: scanDetails.project_id,
-      contract_address: scanDetails.contract_address,
-      contract_chain: scanDetails.contract_chain,
-      contract_platform: scanDetails.contract_platform,
-    });
-    if (responseData.status === 200 && responseData.data.status === "success") {
-      localStorage.removeItem("recent_scan_details");
-      return true;
-    }
-    return false;
-  };
-
   const checkNavigateToProjects = () => {
     if (isHomeRoute && Auth.isUserAuthenticated()) {
       const import_scan_details = localStorage.getItem("recent_scan_details");
@@ -599,10 +582,6 @@ const RedirectRoute: React.FC<RouteProps> = ({ children, ...rest }) => {
     authenticated &&
     Cookies.get("csrftoken")
   ) {
-    const import_scan_details = getRecentQuickScan();
-    if (import_scan_details) {
-      setRecentQuickScan({ ...import_scan_details, new_user: true });
-    }
     localStorage.setItem("authenticated", "true");
   }
   return (

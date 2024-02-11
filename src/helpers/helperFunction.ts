@@ -1,7 +1,8 @@
 import UAParser from "ua-parser-js";
 import reCAPTCHA from "helpers/reCAPTCHA";
 import { Profile, PricingData, Finding } from "common/types";
-import { platformVsChains, contractChain } from "common/values";
+import { platformVsChains, contractChain, publicRoutes } from "common/values";
+import { matchPath } from "react-router-dom";
 
 let configValue: any = null;
 
@@ -62,6 +63,13 @@ export const getAssetsURL = (config?: any) => {
   return config.REACT_APP_ASSETS_URL || "";
 };
 
+export const matchPublicRoute = (pathToMatch: string) => {
+  return publicRoutes.find((route) => {
+    const match = matchPath(pathToMatch, { path: route, exact: true });
+    return match !== null && match.isExact;
+  });
+};
+
 export const getReCaptchaHeaders = async (action: string) => {
   if (getFeatureGateConfig().reCAPTCHA_enabled) {
     const recaptcha = new reCAPTCHA(
@@ -100,11 +108,7 @@ export const checkGenerateReportAccess = (
     if (profile.actions_supported)
       return profile.actions_supported.generate_report;
 
-    if (
-      profile.current_package === "expired" ||
-      profile.current_package === "trial"
-    )
-      return false;
+    if (profile.current_package === "expired") return false;
 
     return true;
   }

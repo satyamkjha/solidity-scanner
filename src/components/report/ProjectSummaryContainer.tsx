@@ -18,7 +18,7 @@ const ProjectSummaryContainer: React.FC<{
       justifyContent="flex-start"
       flexDir={"column"}
       id={"project-summary"}
-      px={[0, 3, 4]}
+      px={4}
     >
       <Flex
         sx={{
@@ -219,7 +219,7 @@ const IssueType: React.FC<{
     <VStack alignItems={"flex-start"}>
       <Flex alignItems={"center"}>
         <SeverityIcon size={6} variant={issueType} />
-        <Text fontSize={["12px", "xs", "sm"]} fontWeight={600} ml={2}>
+        <Text fontSize={"sm"} fontWeight={600} ml={2}>
           {sentenceCapitalize(issueType)}
         </Text>
       </Flex>

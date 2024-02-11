@@ -39,6 +39,7 @@ import { getReCaptchaHeaders } from "helpers/helperFunction";
 import Loader from "components/styled-components/Loader";
 import { isEmail, hasSpecialCharacters } from "helpers/helperFunction";
 import PasswordError from "components/passwordError";
+import { RecaptchaParameters } from "firebase/auth";
 
 const SignUp: React.FC = () => {
   const googleLoginEnabled = true;
@@ -162,15 +163,7 @@ const RegisterForm: React.FC<{
 
   const [step, setStep] = useState(false);
   const [reqHeaders, setReqHeaders] = useState<
-    | {
-        "Content-Type": string;
-        Recaptchatoken: string;
-      }
-    | {
-        "Content-Type": string;
-        Recaptchatoken?: undefined;
-      }
-    | undefined
+    RecaptchaParameters | undefined
   >();
   const getRecapthaTokens = async () => {
     const reqHeaders = await getReCaptchaHeaders("signin");

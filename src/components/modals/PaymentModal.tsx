@@ -39,6 +39,7 @@ const PaymentModal: React.FC<{
       [plan: string]: Plan;
     };
   };
+  containerModalClose?: any;
   paymentMetadata?: any;
   email?: string;
   setTransactionId?: React.Dispatch<React.SetStateAction<string>>;
@@ -53,6 +54,7 @@ const PaymentModal: React.FC<{
   paymentMetadata,
   email,
   setTransactionId,
+  containerModalClose,
 }) => {
   const toast = useToast();
 
@@ -244,7 +246,13 @@ const PaymentModal: React.FC<{
   }, [coin, paymentMethod, updatedPrice, activeCoupon]);
 
   return (
-    <Modal isOpen={isOpen} onClose={onClose}>
+    <Modal
+      isOpen={isOpen}
+      onClose={() => {
+        onClose();
+        containerModalClose && containerModalClose();
+      }}
+    >
       <ModalOverlay />
       <ModalContent
         overflowY={"scroll"}
@@ -314,7 +322,7 @@ const PaymentModal: React.FC<{
                 {paymentMethod === "cp" && (
                   <CoinPaymentSelect setCoin={setCoin} coin={coin} />
                 )}
-                {duration !== "topup" && (
+                {duration !== "topup" && duration !== "on-demand-report" && (
                   <CouponCodeSection
                     duration={duration}
                     selectedPlan={selectedPlan}
@@ -390,7 +398,9 @@ const PaymentModal: React.FC<{
                           globalDuration === "on-demand-report" ? "47%" : "100%"
                         }
                         variant="accent-outline"
-                        onClick={() => {}}
+                        onClick={() => {
+                          onClose();
+                        }}
                       >
                         Back
                       </Button>
@@ -514,7 +524,9 @@ const PaymentModal: React.FC<{
                   <Button
                     w={globalDuration === "on-demand-report" ? "47%" : "100%"}
                     variant="accent-outline"
-                    onClick={() => {}}
+                    onClick={() => {
+                      onClose();
+                    }}
                   >
                     Back
                   </Button>
@@ -604,13 +616,15 @@ const PaymentModal: React.FC<{
                     {paymentMethod === "cp" && (
                       <CoinPaymentSelect setCoin={setCoin} coin={coin} />
                     )}
-                    <CouponCodeSection
-                      duration={duration}
-                      selectedPlan={selectedPlan}
-                      activeCoupon={activeCoupon}
-                      setActiveCoupon={setActiveCoupon}
-                      setUpdatedPrice={setUpdatedPrice}
-                    />
+                    {duration !== "on-demand-report" && (
+                      <CouponCodeSection
+                        duration={duration}
+                        selectedPlan={selectedPlan}
+                        activeCoupon={activeCoupon}
+                        setActiveCoupon={setActiveCoupon}
+                        setUpdatedPrice={setUpdatedPrice}
+                      />
+                    )}
                   </>
                 ) : (
                   <>

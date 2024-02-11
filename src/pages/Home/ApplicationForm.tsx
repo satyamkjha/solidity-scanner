@@ -66,7 +66,6 @@ const ApplicationForm: React.FC<{
   const toast = useToast();
 
   const runValidation = () => {
-    console.log("in validation");
     if (projectName === "") {
       setNameError("Please enter a Project Name of less than 50 characters.");
       return false;
