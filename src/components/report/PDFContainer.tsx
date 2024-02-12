@@ -56,7 +56,7 @@ const PDFContainer: React.FC<{
     <Box
       ref={containerRef}
       className={`ss-report-${page} ${isInViewport ? "in-view" : ""}`}
-      w={download ? "826px" : ["100%", "450px", "760px", "826px"]}
+      w={download ? "794px" : ["100%", "450px", "760px", "826px"]}
       h={"fit-content"}
       bg={"white"}
       position={"relative"}
