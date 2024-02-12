@@ -876,8 +876,16 @@ const VulnerabililtyDetailsContainer: React.FC<{
           <Flex
             w="96%"
             left="2px"
-            top={showVulnerabilityTitle ? "270px" : "190px"}
-            h="730px"
+            top={
+              showVulnerabilityTitle
+                ? download
+                  ? "270px"
+                  : ["150px", "190px", "270px"]
+                : download
+                ? "190px"
+                : ["110px", "140px", "190px"]
+            }
+            h={["280px", "400px", "730px"]}
             position="absolute"
             sx={{
               backdropFilter: "blur(6px)",
@@ -890,8 +898,8 @@ const VulnerabililtyDetailsContainer: React.FC<{
             <Flex
               w="90%"
               borderRadius={10}
-              p={7}
-              flexDir="row"
+              p={[3, 4, 7]}
+              flexDir={["column", "column", "row"]}
               alignItems="center"
               justifyContent="space-between"
               bg="linear-gradient(rgba(238, 235, 255, 1), rgba(229, 246, 255, 1))"
@@ -899,7 +907,7 @@ const VulnerabililtyDetailsContainer: React.FC<{
               <VStack
                 alignItems="flex-start"
                 textAlign="left"
-                w="calc(100% - 250px)"
+                w={["100%", "100%", "calc(100% - 250px)"]}
               >
                 <Text color="#000000" fontWeight={600} fontSize="md">
                   {isQSReport
@@ -908,7 +916,7 @@ const VulnerabililtyDetailsContainer: React.FC<{
                       : "Reveal Detailed Vulnerabilities"
                     : "Upgrade your Plan to view the full report"}
                 </Text>
-                <Text color="#000000" fontWeight={300} fontSize="sm">
+                <Text color="#000000" fontWeight={300} fontSize={["xs", "sm"]}>
                   <b>
                     {
                       summary_report.scan_summary[0]
@@ -917,7 +925,7 @@ const VulnerabililtyDetailsContainer: React.FC<{
                     {sentenceCapitalize(issue.severity)} Issues Found
                   </b>
                 </Text>
-                <Text color="#000000" fontWeight={300} fontSize="sm">
+                <Text color="#000000" fontWeight={300} fontSize={["xs", "sm"]}>
                   {isQSReport
                     ? issue.severity === "gas"
                       ? "Sign up for a free trial and optimize your contracts for gas absolutely free!"
@@ -927,7 +935,7 @@ const VulnerabililtyDetailsContainer: React.FC<{
               </VStack>
               <Button
                 leftIcon={issue.severity !== "gas" ? <LockIcon /> : undefined}
-                mt={download ? 2 : [1, 2, 2]}
+                mt={[3, 4, 2]}
                 mb={4}
                 variant="brand"
                 width="fit-content"
