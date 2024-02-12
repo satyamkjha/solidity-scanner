@@ -136,7 +136,7 @@ export const IssueComponent: React.FC<{
       w={"100%"}
       alignItems={"flex-start"}
       pl={download ? 5 : [3, 4, 5]}
-      mb={download ? 5 : [1, 2]}
+      mb={download ? 2 : [1, 2]}
     >
       <HStack spacing={download ? 5 : [2, 3, 5]} w={"100%"}>
         <Flex alignItems={"center"} w={"80%"}>
