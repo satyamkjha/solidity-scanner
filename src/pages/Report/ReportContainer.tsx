@@ -957,7 +957,7 @@ export const ReportContainer: React.FC<{
                     variant={"accent-outline"}
                     w={["250px"]}
                     ml={"auto"}
-                    display={["none", "none", "none", "flex"]}
+                    display={["none", "none", "flex", "flex"]}
                     onClick={onOpen}
                   >
                     {isQSReport && <LockIcon mr={5} color="#3300FF" />}
@@ -970,6 +970,7 @@ export const ReportContainer: React.FC<{
                     variant={"accent-outline"}
                     w={["250px"]}
                     ml={"auto"}
+                    display={["none", "none", "flex", "flex"]}
                     onClick={printReport}
                   >
                     {printLoading ? (
@@ -1041,6 +1042,7 @@ export const ReportContainer: React.FC<{
                 align="stretch"
                 mt={download ? 0 : 6}
                 pb={20}
+                alignItems={["center", "center", "flex-start"]}
                 w={download ? "794px" : ["90%", "450px", "760px", "830px"]}
                 minW={download ? "794px" : ["360px", "450px", "760px", "830px"]}
                 h={download ? "inherit" : "100%"}
@@ -1049,6 +1051,36 @@ export const ReportContainer: React.FC<{
                 overflowX={download ? "visible" : "hidden"}
                 id={"scrollableDiv"}
               >
+                {isQSReport && (
+                  <Button
+                    variant={"brand"}
+                    maxW={["300px"]}
+                    w="90%"
+                    display={["flex", "flex", "none"]}
+                    onClick={onOpen}
+                  >
+                    {isQSReport && <LockIcon mr={5} color="#3300FF" />}
+
+                    {"Unlock report"}
+                  </Button>
+                )}
+                {isPublicReport ? (
+                  <Button
+                    variant={"accent-outline"}
+                    w={["250px"]}
+                    display={["flex", "flex", "none"]}
+                    onClick={printReport}
+                  >
+                    {printLoading ? (
+                      <Flex mr={5}>
+                        <Loader size={25} color="#3E15F4" />
+                      </Flex>
+                    ) : (
+                      <DownloadIcon mr={5} />
+                    )}
+                    Download Report
+                  </Button>
+                ) : null}
                 {totalPages.length ? (
                   download ? (
                     totalPages.map((item, index) => item)

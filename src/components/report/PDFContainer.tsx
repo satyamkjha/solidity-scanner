@@ -72,7 +72,7 @@ const PDFContainer: React.FC<{
       ></Box>
       <Box
         w="100%"
-        h={download ? "1165px" : ["570px", "750px", "1165px"]}
+        h={download ? "1123px" : ["570px", "750px", "1165px"]}
         py={page !== "cover" ? (download ? 10 : [5, 7, 10]) : 0}
         px={page !== "cover" ? (download ? 10 : [5, 7, 10]) : 0}
         position={"relative"}
