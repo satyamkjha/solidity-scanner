@@ -6,6 +6,15 @@ import {
   Button,
   Box,
   useDisclosure,
+  HStack,
+  Drawer,
+  DrawerOverlay,
+  DrawerContent,
+  DrawerCloseButton,
+  DrawerHeader,
+  DrawerBody,
+  Input,
+  DrawerFooter,
 } from "@chakra-ui/react";
 import {
   Report,
@@ -22,7 +31,7 @@ import TableContentContainer, {
 import { useParams, useLocation, useHistory } from "react-router-dom";
 import API from "helpers/api";
 import { API_PATH } from "helpers/routeManager";
-import { DownloadIcon, LockIcon } from "@chakra-ui/icons";
+import { DownloadIcon, LockIcon, HamburgerIcon } from "@chakra-ui/icons";
 import Loader from "components/styled-components/Loader";
 import {
   getFeatureGateConfig,
@@ -104,6 +113,7 @@ export const ReportContainer: React.FC<{
   }>();
 
   const { isOpen, onClose, onOpen } = useDisclosure();
+  const [open, setOpen] = useState(false);
   const history = useHistory();
 
   const [isNavLoading, setIsNavLoading] = useState(false);
@@ -944,14 +954,43 @@ export const ReportContainer: React.FC<{
                 w={"100%"}
                 bg={"#333639"}
                 color={"white"}
-                px={10}
+                px={[5, 10]}
                 py={6}
                 boxShadow={"0px -1px 13.800000190734863px 0px #00000040"}
               >
-                <Text fontSize={"lg"} fontWeight={700}>
-                  {summary_report.project_summary_report.project_name ||
-                    summary_report.project_summary_report.contract_name}
-                </Text>
+                <HStack spacing={5}>
+                  <HamburgerIcon
+                    display={["block", "block", "block", "none"]}
+                    fontSize={"lg"}
+                    onClick={() => setOpen(true)}
+                  />
+                  <Drawer
+                    isOpen={open}
+                    placement="left"
+                    onClose={() => setOpen(false)}
+                  >
+                    <DrawerOverlay />
+                    <DrawerContent>
+                      <DrawerCloseButton />
+                      <DrawerHeader>Create your account</DrawerHeader>
+
+                      <DrawerBody>
+                        <Input placeholder="Type here..." />
+                      </DrawerBody>
+
+                      <DrawerFooter>
+                        <Button variant="outline" mr={3} onClick={onClose}>
+                          Cancel
+                        </Button>
+                        <Button colorScheme="blue">Save</Button>
+                      </DrawerFooter>
+                    </DrawerContent>
+                  </Drawer>
+                  <Text fontSize={"lg"} fontWeight={700}>
+                    {summary_report.project_summary_report.project_name ||
+                      summary_report.project_summary_report.contract_name}
+                  </Text>
+                </HStack>
                 {isQSReport && (
                   <Button
                     variant={"accent-outline"}
@@ -1051,7 +1090,7 @@ export const ReportContainer: React.FC<{
                 overflowX={download ? "visible" : "hidden"}
                 id={"scrollableDiv"}
               >
-                {isQSReport && (
+                {!download && isQSReport && (
                   <Button
                     variant={"brand"}
                     maxW={["300px"]}
@@ -1064,7 +1103,7 @@ export const ReportContainer: React.FC<{
                     {"Unlock report"}
                   </Button>
                 )}
-                {isPublicReport ? (
+                {!download && isPublicReport ? (
                   <Button
                     variant={"accent-outline"}
                     w={["250px"]}
