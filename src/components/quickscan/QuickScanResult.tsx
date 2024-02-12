@@ -119,6 +119,7 @@ export const QuickScanResultContainer: React.FC<{
     if (reportId !== "") {
       history.push(`/qs-report/${projectId}/${reportId}/${scanId}`);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [reportId]);
 
   return (

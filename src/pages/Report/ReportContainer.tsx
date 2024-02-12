@@ -11,10 +11,7 @@ import {
   DrawerOverlay,
   DrawerContent,
   DrawerCloseButton,
-  DrawerHeader,
   DrawerBody,
-  Input,
-  DrawerFooter,
 } from "@chakra-ui/react";
 import {
   Report,
@@ -139,7 +136,6 @@ export const ReportContainer: React.FC<{
   const [currentPageHeadings, setCurrentPageHeadings] =
     useState<(string | null)[]>();
   const [printLoading, setPrintLoading] = useState(false);
-  const [isHubspotRendered, setIsHubspotRendered] = useState(false);
 
   const [hasMore, setHasMore] = useState(true);
   const [displayWindow, setDisplayWindow] = useState(0);
@@ -164,7 +160,6 @@ export const ReportContainer: React.FC<{
     } = {};
 
     let addedIssue: string[] = [];
-    let tempKey = "";
 
     Object.keys(issues).forEach((key, index) => {
       if (!addedIssue.includes(issues[key].issue_details[0].severity)) {
@@ -247,7 +242,6 @@ export const ReportContainer: React.FC<{
 
         if (elementToRemove) {
           elementToRemove.remove();
-          setIsHubspotRendered(true);
           clearInterval(checkElementInterval);
         }
       }, 1000);

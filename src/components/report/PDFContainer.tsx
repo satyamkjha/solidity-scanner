@@ -42,11 +42,13 @@ const PDFContainer: React.FC<{
 
   useEffect(() => {
     if (containerRef.current && observerRef.current) {
+      // eslint-disable-next-line react-hooks/exhaustive-deps
       observerRef.current.observe(containerRef.current);
     }
 
     return () => {
       if (containerRef.current && observerRef.current) {
+        // eslint-disable-next-line react-hooks/exhaustive-deps
         observerRef.current.unobserve(containerRef.current);
       }
     };
