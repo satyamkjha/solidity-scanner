@@ -959,7 +959,7 @@ export const ReportContainer: React.FC<{
                 boxShadow={"0px -1px 13.800000190734863px 0px #00000040"}
               >
                 <HStack spacing={5}>
-                  <HamburgerIcon
+                  {/* <HamburgerIcon
                     display={["block", "block", "block", "none"]}
                     fontSize={"lg"}
                     onClick={() => setOpen(true)}
@@ -985,7 +985,7 @@ export const ReportContainer: React.FC<{
                         <Button colorScheme="blue">Save</Button>
                       </DrawerFooter>
                     </DrawerContent>
-                  </Drawer>
+                  </Drawer> */}
                   <Text fontSize={"lg"} fontWeight={700}>
                     {summary_report.project_summary_report.project_name ||
                       summary_report.project_summary_report.contract_name}
