@@ -991,6 +991,11 @@ export const ReportContainer: React.FC<{
               bg={!download ? "#535659" : "white"}
               pt={download ? 0 : 5}
               overflow={download ? "" : "hidden"}
+              justifyContent={
+                download
+                  ? "flex-start"
+                  : ["center", "center", "center", "flex-start"]
+              }
               alignItems={"center"}
               position={"relative"}
             >

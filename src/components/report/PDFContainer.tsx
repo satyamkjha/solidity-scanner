@@ -65,14 +65,14 @@ const PDFContainer: React.FC<{
         position={"absolute"}
         top={0}
         right={0}
-        h={"270px"}
-        w={"260px"}
+        h={download ? "270px" : ["140px", "160px", "270px"]}
+        w={download ? "260px" : ["140px", "160px", "260px"]}
         bgImage={`url("${assetsURL}report/report-watermark.svg")`}
         bgSize={"cover"}
       ></Box>
       <Box
         w="100%"
-        h={download ? "1145px" : ["650px", "850px", "1145px"]}
+        h={download ? "1145px" : ["570px", "750px", "1145px"]}
         py={page !== "cover" ? (download ? 10 : [5, 7, 10]) : 0}
         px={page !== "cover" ? (download ? 10 : [5, 7, 10]) : 0}
         position={"relative"}

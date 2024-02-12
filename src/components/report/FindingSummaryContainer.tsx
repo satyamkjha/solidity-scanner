@@ -88,13 +88,20 @@ const FindingSummaryContainer: React.FC<{
           display="flex"
           justifyContent="center"
           alignItems={"center"}
-          h={download ? "330px" : ["170px", "200px", "330axscpx"]}
+          h={download ? "330px" : ["170px", "200px", "330px"]}
           position={"relative"}
         >
           {summary_report.scan_summary[0].issues_count === 0 ? (
             <Flex flexDir="column" justifyContent="center" alignItems="center">
               <Image src={`${assetsURL}common/fixedIssueIcon.svg`} />
-              <Text> No Bugs Found </Text>
+              <Text
+                mt={-10}
+                fontWeight={700}
+                fontSize={download ? "lg" : ["10px", "12px", "lg"]}
+              >
+                {" "}
+                No Bugs Found{" "}
+              </Text>
             </Flex>
           ) : (
             <>

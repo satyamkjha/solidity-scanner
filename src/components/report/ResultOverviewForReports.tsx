@@ -94,7 +94,7 @@ const ResultOverviewReports: React.FC<{
               <Text
                 whiteSpace="nowrap"
                 fontWeight={300}
-                fontSize={download ? "md" : ["xs", "xs", "md"]}
+                fontSize={download ? "md" : ["9px", "12px", "md"]}
               >
                 {projectDetails.contract_platform === "buildbear"
                   ? "Buildbear"
@@ -110,17 +110,17 @@ const ResultOverviewReports: React.FC<{
                 )})`}
               </Text>
               <Divider
-                mx={5}
-                h={7}
+                mx={download ? 5 : [1, 2, 5]}
+                h={download ? 7 : [3, 4, 7]}
                 borderColor="gray.200"
                 orientation="vertical"
-                display={["none", "none", "block"]}
+                display={"block"}
               />
               <Text
                 whiteSpace="nowrap"
                 color="gray.400"
                 fontWeight={300}
-                fontSize={download ? "sm" : ["xs", "xs", "sm"]}
+                fontSize={download ? "sm" : ["9px", "xs", "sm"]}
                 mr={2}
                 cursor="pointer"
                 onClick={() =>
