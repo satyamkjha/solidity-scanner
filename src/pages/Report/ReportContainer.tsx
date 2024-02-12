@@ -959,7 +959,7 @@ export const ReportContainer: React.FC<{
                 boxShadow={"0px -1px 13.800000190734863px 0px #00000040"}
               >
                 <HStack spacing={5}>
-                  {/* <HamburgerIcon
+                  <HamburgerIcon
                     display={["block", "block", "block", "none"]}
                     fontSize={"lg"}
                     onClick={() => setOpen(true)}
@@ -970,22 +970,38 @@ export const ReportContainer: React.FC<{
                     onClose={() => setOpen(false)}
                   >
                     <DrawerOverlay />
-                    <DrawerContent>
+                    <DrawerContent bgColor="#5B5B5B">
                       <DrawerCloseButton />
-                      <DrawerHeader>Create your account</DrawerHeader>
 
-                      <DrawerBody>
-                        <Input placeholder="Type here..." />
+                      <DrawerBody pt={20}>
+                        {leftNavs.map((nav, index) => (
+                          <Text
+                            key={index}
+                            fontSize="sm"
+                            fontWeight={
+                              currentPage && currentPage.value === nav.value
+                                ? 600
+                                : 400
+                            }
+                            color={
+                              currentPage && currentPage.value === nav.value
+                                ? "white"
+                                : "#B0B7C3"
+                            }
+                            mb={6}
+                            cursor={"pointer"}
+                            onClick={() => {
+                              setIsNavLoading(true);
+                              setOpen(false);
+                              setTimeout(() => leftNavClick(nav), 10);
+                            }}
+                          >
+                            {nav.label.toUpperCase()}
+                          </Text>
+                        ))}
                       </DrawerBody>
-
-                      <DrawerFooter>
-                        <Button variant="outline" mr={3} onClick={onClose}>
-                          Cancel
-                        </Button>
-                        <Button colorScheme="blue">Save</Button>
-                      </DrawerFooter>
                     </DrawerContent>
-                  </Drawer> */}
+                  </Drawer>
                   <Text fontSize={"lg"} fontWeight={700}>
                     {summary_report.project_summary_report.project_name ||
                       summary_report.project_summary_report.contract_name}
