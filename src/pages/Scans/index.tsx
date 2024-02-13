@@ -17,16 +17,12 @@ import {
   Image,
   useToast,
 } from "@chakra-ui/react";
-// import Lottie from "lottie-react";
 import { Page, Pagination, ScanObj } from "common/types";
 import { useProfile } from "hooks/useProfile";
 import InfiniteScroll from "react-infinite-scroll-component";
 import Loader from "components/styled-components/Loader";
 import { useUserRole } from "hooks/useUserRole";
-import {
-  getAssetsURL,
-  // getAssetsFromS3,
-} from "helpers/helperFunction";
+import { getAssetsURL } from "helpers/helperFunction";
 import { useAllScans } from "hooks/useAllScans";
 import ScanCard from "components/cards/ScanCard";
 import { Search2Icon, CloseIcon } from "@chakra-ui/icons";

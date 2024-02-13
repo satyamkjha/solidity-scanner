@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { useLocation, useHistory, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import {
   Flex,
   Heading,
@@ -10,31 +10,21 @@ import {
   InputGroup,
   InputLeftElement,
   Input,
-  InputRightElement,
   HStack,
   Image,
   useDisclosure,
 } from "@chakra-ui/react";
 import { FiAtSign } from "react-icons/fi";
-import { FaLock } from "react-icons/fa";
 import { useForm } from "react-hook-form";
 import { Logo } from "components/icons";
-import { PUBLIC_API, API_URL_PROD, API_URL_DEV } from "helpers/api";
-import { AuthResponse } from "common/types";
-import { ViewIcon, ViewOffIcon } from "@chakra-ui/icons";
+import { API_URL_PROD, API_URL_DEV } from "helpers/api";
 import { API_PATH } from "helpers/routeManager";
-import { getReCaptchaHeaders, getAssetsURL } from "helpers/helperFunction";
+import { getAssetsURL } from "helpers/helperFunction";
 import Loader from "components/styled-components/Loader";
-import { passwordStrength } from "check-password-strength";
 import { isEmail } from "helpers/helperFunction";
-import PasswordError from "components/passwordError";
 import ContactUs from "components/modals/contactus";
 import axios from "axios";
 import Auth from "helpers/auth";
-
-function useQuery() {
-  return new URLSearchParams(useLocation().search);
-}
 
 const API = axios.create({
   baseURL: process.env.NODE_ENV === "production" ? API_URL_PROD : API_URL_DEV,

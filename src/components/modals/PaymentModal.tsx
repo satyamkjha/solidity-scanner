@@ -90,7 +90,6 @@ const PaymentModal: React.FC<{
         if (status === 200 && data.checkout_url) {
           setLoading(false);
           window.open(`${data.checkout_url}`, "_blank");
-          // fetchAgain();
           data.transaction_id &&
             setTransactionId &&
             setTransactionId(data.transaction_id);
@@ -140,7 +139,6 @@ const PaymentModal: React.FC<{
         if (status === 200 && data.checkout_url) {
           setLoading(false);
           window.open(`${data.checkout_url}`, "_blank");
-          // fetchAgain();
           onClose();
         } else {
           toast({

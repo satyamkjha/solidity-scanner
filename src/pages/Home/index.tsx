@@ -12,11 +12,7 @@ import {
 import { useOverview } from "hooks/useOverview";
 import Loader from "components/styled-components/Loader";
 import { ArrowForwardIcon } from "@chakra-ui/icons";
-import {
-  getAssetsURL,
-  getRecentQuickScan,
-  setRecentQuickScan,
-} from "helpers/helperFunction";
+import { getAssetsURL, getRecentQuickScan } from "helpers/helperFunction";
 import VulnerabilityDistribution from "components/vulnDistribution";
 import { useHistory } from "react-router-dom";
 import { capitalize, importScan } from "common/functions";

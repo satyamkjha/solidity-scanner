@@ -8,7 +8,6 @@ import {
   Link,
   Grid,
   useBreakpointValue,
-  useMediaQuery,
 } from "@chakra-ui/react";
 import { Report } from "common/types";
 
@@ -291,18 +290,6 @@ const AuditSummaryContainer: React.FC<{
         bgSize={"cover"}
         borderRadius={download ? 15 : [5, 8, 15]}
       >
-        {/* {download || isLargerThan768 ? (
-          <SolidityScoreProgress
-            score={summary_report.scan_summary[0].score_v2}
-            size={"100px"}
-            thickness={"7px"}
-          />
-        ) : (
-          <Text fontSize={["sm", "md"]} fontWeight={700}>
-            {summary_report.scan_summary[0].score_v2}
-          </Text>
-        )} */}
-
         <SolidityScoreProgress
           score={summary_report.scan_summary[0].score_v2}
           size={download ? "100px" : scoreCircleSize}

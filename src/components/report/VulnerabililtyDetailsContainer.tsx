@@ -9,15 +9,9 @@ import {
   Box,
   Link,
   Button,
-  useMediaQuery,
   useBreakpointValue,
 } from "@chakra-ui/react";
-import {
-  Report,
-  IssueItem,
-  Finding,
-  IssueSeverityDistribution,
-} from "common/types";
+import { Report, IssueItem, Finding } from "common/types";
 import { SeverityIcon } from "components/icons";
 import {
   sentenceCapitalize,
@@ -82,11 +76,6 @@ const VulnerabililtyDetailsContainer: React.FC<{
 
     return dataArray.slice(line_start, line_end + 1);
   };
-
-  const [isLargerThan450, isLargerThan768] = useMediaQuery([
-    "(min-width: 450px)",
-    "(min-width: 768px)",
-  ]);
 
   const getCodeLineNo = (start: number, index: number) => {
     return start === 0 ? index + 1 : start - 2 + index + 1;

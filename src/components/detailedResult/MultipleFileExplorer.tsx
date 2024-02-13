@@ -148,21 +148,6 @@ const MultipleFileExplorer: React.FC<MultipleFileExplorerProps> = ({
                 wait_to_scroll={files.wait_to_scroll || 0}
               />
             </Flex>
-            {/* <TabPanels>
-                {files.findings.map((file, index) => (
-                  <TabPanel key={index}>
-                    <FileDataContainer
-                      type={type}
-                      file={{
-                        issue_id: files.issue_id,
-                        file_path: file.file_path,
-                        line_nos_start: file.line_nos_start,
-                        line_nos_end: file.line_nos_end,
-                      }}
-                    />
-                  </TabPanel>
-                ))}
-              </TabPanels> */}
 
             {openIssueBox && (
               <Box
@@ -263,10 +248,6 @@ const MultipleFileExplorer: React.FC<MultipleFileExplorerProps> = ({
                         color={"gray.600"}
                         fontStyle={"italic"}
                       >
-                        {/* {sentenceCapitalize(
-                            issue.status.toLowerCase().replace("_", " ")
-                          )} */}
-
                         {files.bug_status === "false_positive" &&
                           "False Positive"}
                         {files.bug_status === "wont_fix" && "Won't Fix"}

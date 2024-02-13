@@ -22,8 +22,6 @@ import {
 } from "helpers/helperFunction";
 import { useHistory } from "react-router-dom";
 import PieChart from "components/pieChart";
-import ssIconAnimation from "../../common/ssIconAnimation.json";
-import Lottie from "lottie-react";
 import "./qsStyles.css";
 
 export const QSScanResultSkeleton: React.FC<{
@@ -306,15 +304,6 @@ export const QSScanResultSkeleton: React.FC<{
           spacing={5}
         >
           <HStack>
-            {/* {ssIconAnimation && (
-              <Lottie
-                style={{
-                  height: "30px",
-                  width: "30px",
-                }}
-                animationData={ssIconAnimation}
-              />
-            )} */}
             <Text color="white" fontSize="lg" fontWeight={700}>
               {" "}
               Your contract is being {qsStatus} ...

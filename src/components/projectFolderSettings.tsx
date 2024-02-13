@@ -120,12 +120,7 @@ const FolderItem: React.FC<{
   view: "github_app" | "detailed_result" | "scan_history";
   updateCheck: (path: string, check: boolean) => void;
 }> = ({ folderItem, view, updateCheck }) => {
-  // const [isChecked, setIsChecked] = React.useState(folderItem.checked);
   const [show, setShow] = React.useState(false);
-
-  // useEffect(() => {
-  //   setIsChecked(folderItem.checked);
-  // }, [folderItem.checked]);
 
   return (
     <>
@@ -189,12 +184,7 @@ const FileItem: React.FC<{
   view: "github_app" | "detailed_result" | "scan_history";
   updateCheck: (path: string, check: boolean) => void;
 }> = ({ fileItem, view, updateCheck }) => {
-  // const [isChecked, setIsChecked] = React.useState(fileItem.checked);
-  // const [show, setShow] = React.useState(false);
-
-  // useEffect(() => {
-  //   setIsChecked(fileItem.checked);
-  // }, [fileItem.checked]);
+  
 
   return (
     <Flex
@@ -206,7 +196,6 @@ const FileItem: React.FC<{
       }
       width={"fit-content"}
       cursor={"pointer"}
-      // onClick={() => setShow(!show)}
       justifyContent="flex-start"
       alignItems="center"
       borderRadius={5}
@@ -222,7 +211,6 @@ const FileItem: React.FC<{
           borderColor={"gray.500"}
           onChange={() => {
             updateCheck(fileItem.path, !fileItem.checked);
-            // setIsChecked(!isChecked);
           }}
         ></Checkbox>
       )}

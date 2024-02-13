@@ -1,96 +1,30 @@
-import React, { useState } from "react";
+import React from "react";
 
 import {
-  Button,
   Flex,
-  Icon,
-  Input,
-  InputGroup,
-  InputLeftElement,
   Image,
-  Link,
   Modal,
   ModalBody,
   ModalCloseButton,
   ModalContent,
   ModalHeader,
   ModalOverlay,
-  Stack,
-  Textarea,
-  useToast,
   Text,
   VStack,
   HStack,
   Divider,
 } from "@chakra-ui/react";
-import { FaDiscord, FaEnvelope, FaTelegram } from "react-icons/fa";
-import { GiLetterBomb } from "react-icons/gi";
-
-import axios from "axios";
-import { CredshieldsIcon, MailSent } from "../icons";
 import { getAssetsURL } from "helpers/helperFunction";
 import { useConfig } from "hooks/useConfig";
-import Loader from "../styled-components/Loader";
 
 export const ReportTypeDetailModal: React.FC<{
   onClose(): any;
   isOpen: boolean;
   type?: string;
   header?: string;
-}> = ({
-  isOpen,
-  onClose,
-  type = "Manual_Audit",
-  header = "Request Manual Audit",
-}) => {
-  const [mailSent, setMailSent] = useState(false);
-  const [loading, setLoading] = useState(false);
+}> = ({ isOpen, onClose, type = "Manual_Audit" }) => {
   const config: any = useConfig();
   const assetsURL = getAssetsURL(config);
-
-  const [email, setEmail] = useState("");
-  const [subject, setSubject] = useState("");
-  const [discord, setDiscord] = useState("");
-  const [telegram, setTelegram] = useState("");
-  const [body, setBody] = useState("");
-  const toast = useToast();
-
-  const onSubmit = () => {
-    if (!email || !subject || !body) {
-      toast({
-        title: "Email, Subject and Body fields cannot be empty.",
-        status: "error",
-        duration: 2000,
-        isClosable: true,
-        position: "bottom",
-      });
-      return;
-    }
-    setLoading(true);
-    axios.defaults.headers.post["Content-Type"] = "application/json";
-    axios
-      .post("https://formsubmit.co/ajax/info@credshields.com", {
-        email: email,
-        subject: `[${type}] ` + subject,
-        discord: discord,
-        telegram: telegram,
-        message: body,
-      })
-      .then((response) => {
-        if (response.data.success) {
-          setMailSent(true);
-          setEmail("");
-          setBody("");
-          setSubject("");
-          setDiscord("");
-          setTelegram("");
-        }
-      })
-      .catch(() => {
-        setMailSent(false);
-      })
-      .finally(() => setLoading(false));
-  };
 
   const textList = [
     {
@@ -132,7 +66,6 @@ export const ReportTypeDetailModal: React.FC<{
           <ModalCloseButton
             m={[2, 2, 6]}
             onClick={() => {
-              setMailSent(false);
               onClose();
             }}
           />

@@ -36,7 +36,6 @@ import { sentenceCapitalize } from "helpers/helperFunction";
 import { useUserOrgProfile } from "hooks/useUserOrgProfile";
 import { signInWithCustomToken, User, onAuthStateChanged } from "firebase/auth";
 import { auth } from "helpers/firebase";
-import { useUserRole } from "hooks/useUserRole";
 import { useWebSocket } from "hooks/useWebhookData";
 import { useProfile } from "hooks/useProfile";
 
@@ -50,7 +49,7 @@ const Layout: React.FC = ({ children }) => {
   const queryClient = useQueryClient();
   const [firebaseToken, setFirebaseToken] = useState<string>();
   const [, setFirebaseUser] = useState<User>();
-  const { data: profileData, refetch: refetchProfile } = useProfile(true);
+  const { data: profileData } = useProfile(true);
 
   const { data: orgProfile } = useUserOrgProfile(
     profileData?.logged_in_via === "org_login"

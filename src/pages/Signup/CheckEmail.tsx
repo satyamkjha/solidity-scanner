@@ -5,9 +5,13 @@ import { MailSent } from "components/icons";
 
 import { Helmet } from "react-helmet";
 import Auth from "helpers/auth";
+import { useHistory } from "react-router-dom";
 
 const CheckEmail: React.FC = () => {
   const [email, setEmail] = useState<string | null>("");
+
+  const history = useHistory();
+
   useEffect(() => {
     if (localStorage.getItem("current-registered-email")) {
       setEmail(localStorage.getItem("current-registered-email"));
@@ -17,7 +21,7 @@ const CheckEmail: React.FC = () => {
     const checkIfAuthenticated = () => {
       intervalId = setInterval(async () => {
         if (Auth.isUserAuthenticated()) {
-          // history.push("/home");
+          history.push("/home");
         }
       }, 2000);
     };
@@ -25,6 +29,7 @@ const CheckEmail: React.FC = () => {
     return () => {
       clearInterval(intervalId);
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (

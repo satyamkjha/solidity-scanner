@@ -1,7 +1,6 @@
 import React from "react";
 import { HStack, Text, Image, useDisclosure } from "@chakra-ui/react";
 import { getAssetsURL } from "helpers/helperFunction";
-import ManualAuditForm from "components/modals/manualAuditForm";
 import ReportTypeDetailModal from "components/modals/ReportTypeDetailModal";
 
 const ReportTag: React.FC<{
