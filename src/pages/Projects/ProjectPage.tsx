@@ -788,7 +788,7 @@ const ScanDetails: React.FC<{
                         </Flex>
                       )}
                     </TabPanel>
-                    <TabPanel p={[0, 0, 0, 2]}>
+                    <TabPanel p={[0, 0, 0, 0]}>
                       {scanData.scan_report.multi_file_scan_status ===
                         "scan_done" &&
                       scanData.scan_report.multi_file_scan_details &&

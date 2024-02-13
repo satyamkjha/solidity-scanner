@@ -895,10 +895,10 @@ const VulnerabililtyDetailsContainer: React.FC<{
             >
               <HStack w="100%">
                 <VStack
-                  alignItems="flex-start"
+                  alignItems={["center", "center", "flex-start"]}
                   textAlign="left"
                   w={["100%", "100%", "calc(100% - 200px)"]}
-                  spacing={[2, 3]}
+                  spacing={[4, 4]}
                 >
                   <Text color="#000000" fontWeight={600} fontSize="md">
                     {isQSReport
@@ -923,6 +923,7 @@ const VulnerabililtyDetailsContainer: React.FC<{
                   <Text
                     color="#000000"
                     fontWeight={300}
+                    textAlign={["center", "center", "left"]}
                     fontSize={["xs", "sm"]}
                   >
                     {isQSReport
@@ -962,6 +963,9 @@ const VulnerabililtyDetailsContainer: React.FC<{
                   display={["none", "none", "block"]}
                   height="200px"
                   width="200px"
+                  style={{
+                    mixBlendMode: "hard-light",
+                  }}
                   src={`${assetsURL}report/paywall.svg`}
                 />
               </HStack>

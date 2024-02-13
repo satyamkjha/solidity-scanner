@@ -282,7 +282,7 @@ const Layout: React.FC = ({ children }) => {
               "100%",
               `calc(100% - ${SIDEBAR_WIDTH_COLLAPSED})`,
             ],
-            height: "calc(100vh - 30px)",
+            height: "calc(100vh)",
             overflowY: "scroll",
             overflowX: "hidden",
           }}
@@ -413,7 +413,7 @@ const Layout: React.FC = ({ children }) => {
               </Menu>
             )}
           </Flex>
-          <Box width={"100%"} height="calc(100% - 120px)">
+          <Box width={"100%"} height="calc(100% - 100px)">
             {children}
           </Box>
         </Box>
