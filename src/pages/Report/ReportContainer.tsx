@@ -543,6 +543,7 @@ export const ReportContainer: React.FC<{
       <PDFContainer
         page={"toc"}
         pageNumber={1}
+        showHeaderImage={true}
         download={download === "true"}
         content={
           <TableContentContainer
@@ -629,6 +630,7 @@ export const ReportContainer: React.FC<{
     pageList.push(
       <PDFContainer
         page={"summary"}
+        showHeaderImage={true}
         download={download === "true"}
         pageNumber={
           totalVulnerabilitySplit ? totalVulnerabilitySplit?.length + 1 : 2
@@ -654,6 +656,7 @@ export const ReportContainer: React.FC<{
       <PDFContainer
         download={download === "true"}
         page={"executive"}
+        showHeaderImage={true}
         pageNumber={
           totalVulnerabilitySplit ? totalVulnerabilitySplit?.length + 2 : 3
         }
@@ -681,6 +684,7 @@ export const ReportContainer: React.FC<{
         pageNumber={
           totalVulnerabilitySplit ? totalVulnerabilitySplit?.length + 3 : 4
         }
+        showHeaderImage={true}
         content={
           <FindingSummaryContainer
             download={download === "true"}
@@ -745,6 +749,7 @@ export const ReportContainer: React.FC<{
                 return (
                   <PDFContainer
                     page={"details"}
+                    showHeaderImage={counter === 0}
                     download={download === "true"}
                     pageNumber={
                       totalVulnerabilitySplit && totalBugsSplit
@@ -797,6 +802,7 @@ export const ReportContainer: React.FC<{
                   <PDFContainer
                     page={"details"}
                     download={download === "true"}
+                    showHeaderImage={counter === 0}
                     pageNumber={
                       totalVulnerabilitySplit && totalBugsSplit
                         ? totalVulnerabilitySplit?.length +
@@ -847,6 +853,7 @@ export const ReportContainer: React.FC<{
       pageList.push(
         <PDFContainer
           download={download === "true"}
+          showHeaderImage={true}
           page={"history"}
           pageNumber={
             totalVulnerabilitySplit && totalBugsSplit
@@ -884,6 +891,7 @@ export const ReportContainer: React.FC<{
     pageList.push(
       <PDFContainer
         page={"disclaimer"}
+        showHeaderImage={true}
         download={download === "true"}
         pageNumber={
           totalVulnerabilitySplit && totalBugsSplit

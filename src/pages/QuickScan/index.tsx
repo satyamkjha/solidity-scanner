@@ -63,17 +63,13 @@ const QuickScan: React.FC = () => {
   const location = useLocation();
   const query = new URLSearchParams(location.search);
   const ref = query.get("ref");
-  const [reqHeaders_QS_Verify, setReqHeaders_QS_Verify] = useState<
-    RecaptchaHeader | undefined
-  >();
+
   const [reqHeaders_QS, setReqHeaders_QS] = useState<
     RecaptchaHeader | undefined
   >();
 
   const getRecapthaTokens = async () => {
-    const reqHeaders_qs_verify = await getReCaptchaHeaders("quickScan_verify");
     const reqHeaders_qs = await getReCaptchaHeaders("quickScan");
-    setReqHeaders_QS_Verify(reqHeaders_qs_verify);
     setReqHeaders_QS(reqHeaders_qs);
   };
 
@@ -146,9 +142,7 @@ const QuickScan: React.FC = () => {
         contract_verified: boolean;
         message: string;
         status: string;
-      }>(API_PATH.API_GET_CONTRACT_STATUS, req, {
-        headers: reqHeaders_QS_Verify,
-      })
+      }>(API_PATH.API_GET_CONTRACT_STATUS, req)
         .then(
           (res) => {
             if (res.data.contract_verified) {

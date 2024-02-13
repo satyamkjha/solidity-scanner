@@ -10,6 +10,7 @@ const PDFContainer: React.FC<{
     React.SetStateAction<(string | null)[] | undefined>
   >;
   setCurrentPage: React.Dispatch<React.SetStateAction<any>>;
+  showHeaderImage?: boolean;
   pageNumber?: number;
   download: boolean;
 }> = ({
@@ -19,6 +20,7 @@ const PDFContainer: React.FC<{
   setCurrentPage,
   pageNumber,
   download,
+  showHeaderImage = false,
 }) => {
   const assetsURL = getAssetsURL();
   const containerRef = useRef<HTMLDivElement>(null);
@@ -63,15 +65,18 @@ const PDFContainer: React.FC<{
       bg={"white"}
       position={"relative"}
     >
-      <Box
-        position={"absolute"}
-        top={0}
-        right={0}
-        h={download ? "270px" : ["140px", "160px", "270px"]}
-        w={download ? "260px" : ["140px", "160px", "260px"]}
-        bgImage={`url("${assetsURL}report/report-watermark.svg")`}
-        bgSize={"cover"}
-      ></Box>
+      {showHeaderImage && (
+        <Box
+          position={"absolute"}
+          top={0}
+          right={0}
+          h={download ? "270px" : ["140px", "160px", "270px"]}
+          w={download ? "260px" : ["140px", "160px", "260px"]}
+          bgImage={`url("${assetsURL}report/report-watermark.svg")`}
+          bgSize={"cover"}
+        ></Box>
+      )}
+
       <Box
         w="100%"
         h={download ? "1185px" : ["570px", "750px", "1165px"]}
