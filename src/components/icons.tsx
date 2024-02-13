@@ -1290,7 +1290,7 @@ export const GitlabIcon: React.FC<{ size: number }> = ({ size }) => {
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
     >
-      <g clip-path="url(#clip0_9424_14478)">
+      <g clipPath="url(#clip0_9424_14478)">
         <path
           d="M44.0258 81.1537L60.2178 31.3203H27.8335L44.0258 81.1537Z"
           fill="#E24329"
