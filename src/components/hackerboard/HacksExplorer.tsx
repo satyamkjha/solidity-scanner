@@ -177,71 +177,66 @@ const HacksExplorer: React.FC<{ overviewData: any }> = ({ overviewData }) => {
         mb={4}
       >
         <Input type="text" variant={"brand"} size="lg" />
-        <InputRightElement
-          height="48px"
-          fontSize="2xl"
-          width="fit-content"
-          children={
-            <HStack spacing={2} mr={2}>
-              <SearchIcon color="gray.300" /> <Text color="gray.300"> |</Text>
-              <Popover>
-                <PopoverTrigger>
-                  <Button
-                    fontSize="2xl"
-                    variant="unstyled"
-                    display={["flex", "flex", "flex", "flex", "none"]}
+        <InputRightElement height="48px" fontSize="2xl" width="fit-content">
+          <HStack spacing={2} mr={2}>
+            <SearchIcon color="gray.300" /> <Text color="gray.300"> |</Text>
+            <Popover>
+              <PopoverTrigger>
+                <Button
+                  fontSize="2xl"
+                  variant="unstyled"
+                  display={["flex", "flex", "flex", "flex", "none"]}
+                >
+                  <Icon as={FiFilter} color="gray.300" />
+                </Button>
+              </PopoverTrigger>
+              <Portal>
+                <PopoverContent w="fit-content">
+                  <PopoverArrow />
+                  <PopoverCloseButton />
+                  <PopoverBody
+                    display={"flex"}
+                    justifyContent="flex-start"
+                    alignItems={"center"}
+                    flexDir={"column"}
+                    w="fit-content"
                   >
-                    <Icon as={FiFilter} color="gray.300" />
-                  </Button>
-                </PopoverTrigger>
-                <Portal>
-                  <PopoverContent w="fit-content">
-                    <PopoverArrow />
-                    <PopoverCloseButton />
-                    <PopoverBody
-                      display={"flex"}
-                      justifyContent="flex-start"
+                    <Flex
+                      justify={"flex-start"}
                       alignItems={"center"}
-                      flexDir={"column"}
+                      mx={0}
+                      mt={7}
+                      borderRadius={10}
                       w="fit-content"
+                      height={"fit-content"}
+                      flexDir={"column"}
+                      backgroundColor={"#EDF2F7"}
+                      pb={5}
                     >
-                      <Flex
-                        justify={"flex-start"}
-                        alignItems={"center"}
-                        mx={0}
-                        mt={7}
-                        borderRadius={10}
-                        w="fit-content"
-                        height={"fit-content"}
-                        flexDir={"column"}
-                        backgroundColor={"#EDF2F7"}
-                        pb={5}
-                      >
-                        <HackFilters
-                          overviewData={overviewData}
-                          filters={filters}
-                          setFilters={setFilters}
-                          sortBy={sortBy}
-                          setSortBy={setSortBy}
-                          refetchHacks={refetchHacks}
-                        />
-                      </Flex>
-                      <Button
-                        color="#3300FF"
-                        my={5}
-                        textDecoration={"underline"}
-                        variant="link"
-                        display={["flex", "flex", "flex", "flex", "none"]}
-                      >
-                        Clear Filters
-                      </Button>
-                    </PopoverBody>
-                  </PopoverContent>
-                </Portal>
-              </Popover>
-            </HStack>
-          }
-        />
+                      <HackFilters
+                        overviewData={overviewData}
+                        filters={filters}
+                        setFilters={setFilters}
+                        sortBy={sortBy}
+                        setSortBy={setSortBy}
+                        refetchHacks={refetchHacks}
+                      />
+                    </Flex>
+                    <Button
+                      color="#3300FF"
+                      my={5}
+                      textDecoration={"underline"}
+                      variant="link"
+                      display={["flex", "flex", "flex", "flex", "none"]}
+                    >
+                      Clear Filters
+                    </Button>
+                  </PopoverBody>
+                </PopoverContent>
+              </Portal>
+            </Popover>
+          </HStack>
+        </InputRightElement>
       </InputGroup>
 
       {!hacksList ? (

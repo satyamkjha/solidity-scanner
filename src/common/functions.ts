@@ -30,7 +30,7 @@ export function timeSince(date: Date): string {
 export function getCookie(name: string) {
   const value = `; ${document.cookie}`;
   const parts = value.split(`; ${name}=`);
-  if (parts.length === 2) return (parts.pop() || "").split(";").shift();
+  if (parts.length === 2) return (parts.pop() ?? "").split(";").shift();
 }
 
 export function daysRemaining(date: Date, days: number): number {
@@ -51,7 +51,7 @@ export const formattedDate = (
 ) => {
   return date.toLocaleDateString(locale, {
     day: "numeric",
-    month: month || "short",
+    month: month ?? "short",
     year: "numeric",
   });
 };
@@ -63,7 +63,7 @@ export const formattedDateInUTC = (
 ) => {
   return date.toLocaleDateString(locale, {
     day: "numeric",
-    month: month || "short",
+    month: month ?? "short",
     year: "numeric",
     timeZone: "UTC",
   });

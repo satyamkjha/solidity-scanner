@@ -14,10 +14,12 @@ import {
 } from "common/stylesForCustomSelect";
 import FormatOptionLabel from "components/common/FormatOptionLabel";
 
+type Filter = "all" | "W" | "M" | "Y";
+
 const FilterButton: React.FC<{
-  timeFilter: "all" | "W" | "M" | "Y";
-  filterValue: "all" | "W" | "M" | "Y";
-  setTimeFilter: React.Dispatch<React.SetStateAction<"all" | "W" | "M" | "Y">>;
+  timeFilter: Filter;
+  filterValue: Filter;
+  setTimeFilter: React.Dispatch<React.SetStateAction<Filter>>;
   onFilterSelect: any;
 }> = ({ timeFilter, filterValue, setTimeFilter, onFilterSelect }) => {
   return (

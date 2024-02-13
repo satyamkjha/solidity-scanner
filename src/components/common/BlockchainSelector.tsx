@@ -28,11 +28,10 @@ import {
 } from "@chakra-ui/icons";
 import { contractChain } from "common/values";
 import { getAssetsURL, getFeatureGateConfig } from "helpers/helperFunction";
-import { FaPen } from "react-icons/fa";
+import { FaPen, FaUndo } from "react-icons/fa";
 import { BlockchainComp } from "./BlockchainComp";
 import { ChainSelector } from "./ChainSelector";
 import { useConfig } from "hooks/useConfig";
-import { FaUndo } from "react-icons/fa";
 import { usePlatformChainStatus } from "hooks/usePlatformChainStatus";
 
 export const BlockchainSelector: React.FC<{
@@ -79,7 +78,7 @@ export const BlockchainSelector: React.FC<{
   const { onOpen, onClose, isOpen } = useDisclosure();
   const popoverRef = useRef<HTMLDivElement>(null);
   const [selectedBlockchain, setSelectedBlockchain] = useState("");
-  const [firstBlockChain, setFirstBlockchain] = useState("");
+  const [firstBlockChain, setFirstBlockChain] = useState("");
   const [showTransition, setShowTransition] = useState(false);
   const [showOtherSection, setShowOtherSection] = useState(false);
   const [showAnimation, setShowAnimation] = useState(true);
@@ -214,7 +213,7 @@ export const BlockchainSelector: React.FC<{
                 selectedBlockchain={selectedBlockchain}
                 firstBlockChain={firstBlockChain}
                 setSelectedBlockchain={setSelectedBlockchain}
-                setFirstBlockchain={setFirstBlockchain}
+                setFirstBlockchain={setFirstBlockChain}
                 view={view}
                 onClose={onClose}
                 setShowAnimation={setShowAnimation}
@@ -277,25 +276,23 @@ export const BlockchainSelector: React.FC<{
           {blockchain !== "" &&
             platform !== "" &&
             (chain !== null || node_id !== "") && (
-              <>
-                <Button
-                  display={["block", "block", "none"]}
-                  // borderColor="#2F00FF"
-                  // borderWidth={3}
-                  onClick={() => {
-                    onOpen();
-                    setBlockchain("");
-                    setPlatform("");
-                    setChain(null);
-                  }}
-                  mt={4}
-                  size="md"
-                  bgColor="#ECECEC"
-                  leftIcon={<FaUndo color="#2F00FF" />}
-                >
-                  Reset
-                </Button>
-              </>
+              <Button
+                display={["block", "block", "none"]}
+                // borderColor="#2F00FF"
+                // borderWidth={3}
+                onClick={() => {
+                  onOpen();
+                  setBlockchain("");
+                  setPlatform("");
+                  setChain(null);
+                }}
+                mt={4}
+                size="md"
+                bgColor="#ECECEC"
+                leftIcon={<FaUndo color="#2F00FF" />}
+              >
+                Reset
+              </Button>
             )}
         </>
       )}
@@ -354,7 +351,7 @@ export const BlockchainSelector: React.FC<{
                 selectedBlockchain={selectedBlockchain}
                 firstBlockChain={firstBlockChain}
                 setSelectedBlockchain={setSelectedBlockchain}
-                setFirstBlockchain={setFirstBlockchain}
+                setFirstBlockchain={setFirstBlockChain}
                 view={view}
                 onClose={onClose}
                 setShowAnimation={setShowAnimation}

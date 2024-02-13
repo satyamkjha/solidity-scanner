@@ -538,7 +538,6 @@ const MultifileResult: React.FC<{
           >
             <MultifileIssues
               type={type}
-              profileData={profileData}
               details_enabled={details_enabled}
               is_latest_scan={is_latest_scan}
               issues={issues}

@@ -26,7 +26,7 @@ const HacksOverview: React.FC<{ overviewData: any }> = ({ overviewData }) => {
     "all" | "W" | "M" | "Y"
   >("Y");
   const [filterValue, setFilterValue] = useState("");
-  const [filteredData, setFilterData] = useState<any>();
+  const [filterData, setFilterData] = useState<any>();
   const [isChartLoading, setIsChartLoading] = useState(true);
   const { data, refetch } = useHacksGraph(
     formattedDate(startDate, "2-digit", "es-CL"),
@@ -208,11 +208,11 @@ const HacksOverview: React.FC<{ overviewData: any }> = ({ overviewData }) => {
                   ) : (
                     <>
                       <Chart
-                        hacksList={filteredData.attack_list}
+                        hacksList={filterData.attack_list}
                         selectedTimeFilter={selectedTimeFilter}
                         selectedFilterValue={filterValue}
                       />
-                      <HackCummulativeData filteredData={filteredData} />
+                      <HackCummulativeData filteredData={filterData} />
                     </>
                   )}
                 </Flex>
@@ -220,25 +220,25 @@ const HacksOverview: React.FC<{ overviewData: any }> = ({ overviewData }) => {
                   <Heading color={"white"} fontSize={"2xl"} fontWeight={500}>
                     Attack Trends
                   </Heading>
-                  {filteredData && (
+                  {filterData && (
                     <Heading color={"white"} fontSize={"2xl"} fontWeight={900}>
-                      {filteredData.no_of_attacks}
+                      {filterData.no_of_attacks}
                     </Heading>
                   )}
                 </HStack>
-                {filteredData && (
+                {filterData && (
                   <>
                     <Flex width="98%" my={4} ml={3}>
-                      {filteredData.attack_trends?.map(
+                      {filterData.attack_trends?.map(
                         (item: any, index: number) => (
                           <Flex
                             key={index}
                             height="15px"
                             bg={attackTrendsColors[index]}
                             width={`${
-                              (item.count / filteredData.no_of_attacks) *
+                              (item.count / filterData.no_of_attacks) *
                               (100 +
-                                (filteredData.no_of_attacks * 5) / item.count)
+                                (filterData.no_of_attacks * 5) / item.count)
                             }%`}
                             ml={-3}
                             zIndex={11 - index}
@@ -248,7 +248,7 @@ const HacksOverview: React.FC<{ overviewData: any }> = ({ overviewData }) => {
                         )
                       )}
                     </Flex>
-                    {filteredData.attack_trends?.map(
+                    {filterData.attack_trends?.map(
                       (item: any, index: number) => (
                         <HStack
                           key={index}
@@ -296,11 +296,11 @@ const HacksOverview: React.FC<{ overviewData: any }> = ({ overviewData }) => {
                 ) : (
                   <>
                     <Chart
-                      hacksList={filteredData.attack_list}
+                      hacksList={filterData.attack_list}
                       selectedTimeFilter={selectedTimeFilter}
                       selectedFilterValue={filterValue}
                     />
-                    <HackCummulativeData filteredData={filteredData} />
+                    <HackCummulativeData filteredData={filterData} />
                   </>
                 )}
               </Flex>

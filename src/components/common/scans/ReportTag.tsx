@@ -42,6 +42,7 @@ const ReportTag: React.FC<{
               textDecoration: "underline",
               cursor: "pointer",
             }}
+            role="textbox"
             onKeyDown={onOpen}
             onClick={onOpen}
           >

@@ -265,55 +265,53 @@ const DummyIssue: React.FC<{
   severity: string;
 }> = ({ severity, filesCount, issueTitle }) => {
   return (
-    <>
-      <Flex
-        sx={{
-          w: "100%",
-          my: 3,
+    <Flex
+      sx={{
+        w: "100%",
+        my: 3,
 
-          alignItems: "center",
-          justifyContent: "space-between",
-          backgroundColor: "gray.100",
-        }}
-        h={10}
-      >
-        <Flex sx={{ alignItems: "center" }}>
-          <Text
-            sx={{
-              ml: 3,
-              fontWeight: 600,
-              color: "#4E5D78",
-              maxW: 250,
-              fontSize: "sm",
-            }}
-            w={"100%"}
-            isTruncated
-          >
-            {issueTitle}
-          </Text>
-        </Flex>
-        <HStack>
-          <Text
-            sx={{
-              mr: 3,
-              fontSize: "sm",
-              fontWeight: 600,
-              color: "subtle",
-            }}
-          >
-            {filesCount} files
-          </Text>{" "}
-          <Icon
-            as={AiOutlineCaretRight}
-            mr={2}
-            color="subtle"
-            fontSize="14px"
-            transition="transform 0.2s"
-            transform="rotate(90deg)"
-          />
-        </HStack>
+        alignItems: "center",
+        justifyContent: "space-between",
+        backgroundColor: "gray.100",
+      }}
+      h={10}
+    >
+      <Flex sx={{ alignItems: "center" }}>
+        <Text
+          sx={{
+            ml: 3,
+            fontWeight: 600,
+            color: "#4E5D78",
+            maxW: 250,
+            fontSize: "sm",
+          }}
+          w={"100%"}
+          isTruncated
+        >
+          {issueTitle}
+        </Text>
       </Flex>
-    </>
+      <HStack>
+        <Text
+          sx={{
+            mr: 3,
+            fontSize: "sm",
+            fontWeight: 600,
+            color: "subtle",
+          }}
+        >
+          {filesCount} files
+        </Text>{" "}
+        <Icon
+          as={AiOutlineCaretRight}
+          mr={2}
+          color="subtle"
+          fontSize="14px"
+          transition="transform 0.2s"
+          transform="rotate(90deg)"
+        />
+      </HStack>
+    </Flex>
   );
 };
 

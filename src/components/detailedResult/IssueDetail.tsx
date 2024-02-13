@@ -1,4 +1,4 @@
-import { Dispatch, SetStateAction, useEffect, useRef } from "react";
+import React, { Dispatch, SetStateAction, useEffect, useRef } from "react";
 import { useParams } from "react-router-dom";
 import styled from "@emotion/styled";
 import {
@@ -19,7 +19,7 @@ import {
 import { useIssueDetail } from "hooks/useIssueDetail";
 import { FilesState } from "common/types";
 import { ArrowUpIcon, EditIcon } from "@chakra-ui/icons";
-import React from "react";
+
 import Loader from "components/styled-components/Loader";
 import { formatString } from "helpers/helperFunction";
 import API from "helpers/api";
@@ -33,7 +33,6 @@ const IssueDetail: React.FC<{
   context: string;
   description_details: any;
   fullScreen?: boolean;
-  setRestrictedBugIds: React.Dispatch<React.SetStateAction<string[]>>;
   handleTabsChange?: (index: number) => void;
   tabIndex?: number;
   restrictedBugIds: string[];

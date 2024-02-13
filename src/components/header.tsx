@@ -171,178 +171,170 @@ export const Header: React.FC<{ theme: "light" | "dark" }> = ({ theme }) => {
             </Menu>
           </HStack>
         ) : (
-          <>
-            <Box as={"div"} mr="2">
-              <Menu autoSelect={false} offset={[0, -40]}>
-                <MenuButton
-                  as={IconButton}
-                  aria-label="Options"
-                  icon={<HamburgerIcon />}
-                  variant="outline"
-                  fontSize={"2xl"}
-                />
-                <MenuList position="relative" zIndex={900} w={"250px"} pt="0">
-                  <MenuItem
-                    p={4}
-                    background="linear-gradient(269.8deg, #F9F9F9 0.83%, rgba(249, 249, 249, 0) 114.35%)"
+          <Box as={"div"} mr="2">
+            <Menu autoSelect={false} offset={[0, -40]}>
+              <MenuButton
+                as={IconButton}
+                aria-label="Options"
+                icon={<HamburgerIcon />}
+                variant="outline"
+                fontSize={"2xl"}
+              />
+              <MenuList position="relative" zIndex={900} w={"250px"} pt="0">
+                <MenuItem
+                  p={4}
+                  background="linear-gradient(269.8deg, #F9F9F9 0.83%, rgba(249, 249, 249, 0) 114.35%)"
+                >
+                  <CloseIcon ml={"auto"} color={"#B0B7C3"} onClick={onClose} />
+                </MenuItem>
+                {Auth.isUserAuthenticated() && (
+                  <MenuItem>
+                    <Link
+                      as={RouterLink}
+                      to="/home"
+                      variant="ghost"
+                      fontWeight="400"
+                      w={"100%"}
+                      p={1}
+                      ml={3}
+                    >
+                      Go to Dashboard
+                    </Link>
+                  </MenuItem>
+                )}
+                <MenuItem>
+                  <Link
+                    as={RouterLink}
+                    to="/pricing"
+                    variant="ghost"
+                    fontWeight="400"
+                    w={"100%"}
+                    p={1}
+                    ml={3}
                   >
-                    <CloseIcon
-                      ml={"auto"}
-                      color={"#B0B7C3"}
-                      onClick={onClose}
-                    />
+                    Pricing
+                  </Link>
+                </MenuItem>
+                <MenuItem>
+                  <Link
+                    as={RouterLink}
+                    to="/quickscan"
+                    variant="ghost"
+                    fontWeight="400"
+                    w={"100%"}
+                    p={1}
+                    ml={3}
+                  >
+                    Quickscan
+                  </Link>
+                </MenuItem>
+                <MenuItem>
+                  <Link
+                    as={RouterLink}
+                    to="/detectors"
+                    variant="ghost"
+                    fontWeight="400"
+                    w={"100%"}
+                    p={1}
+                    ml={3}
+                  >
+                    What we Detect
+                  </Link>
+                </MenuItem>
+                <MenuItem>
+                  <Link
+                    as={RouterLink}
+                    to="/web3hackhub"
+                    variant="ghost"
+                    fontWeight="400"
+                    w={"100%"}
+                    p={1}
+                    ml={3}
+                  >
+                    Web3 HackHub
+                  </Link>
+                </MenuItem>
+                <MenuItem>
+                  <Link
+                    onClick={() => {
+                      window.open("https://docs.solidityscan.com/", "_blank");
+                    }}
+                    variant="ghost"
+                    fontWeight="400"
+                    w={"100%"}
+                    p={1}
+                    ml={3}
+                  >
+                    Docs
+                  </Link>
+                </MenuItem>
+                <MenuItem>
+                  <Link
+                    onClick={() => {
+                      window.open(
+                        "https://solidityscan.com/discover/",
+                        "_blank"
+                      );
+                    }}
+                    variant="ghost"
+                    fontWeight="400"
+                    p={1}
+                    ml={3}
+                  >
+                    Discover
+                  </Link>
+                </MenuItem>
+                <MenuItem>
+                  <Link
+                    onClick={() => {
+                      window.open("https://blog.solidityscan.com/", "_blank");
+                    }}
+                    variant="ghost"
+                    fontWeight="400"
+                    w={"100%"}
+                    p={1}
+                    ml={3}
+                  >
+                    Blogs
+                  </Link>
+                </MenuItem>
+                <MenuItem>
+                  <Link
+                    onClick={onOpen}
+                    variant="ghost"
+                    fontWeight="400"
+                    w={"100%"}
+                    p={1}
+                    ml={3}
+                  >
+                    Contact Us
+                  </Link>
+                </MenuItem>
+                {!Auth.isUserAuthenticated() ? (
+                  <MenuItem mt={20}>
+                    <RouterLink to="/signin">
+                      <Button variant="brand" p={6} ml={4} w="100%">
+                        Sign In
+                      </Button>
+                    </RouterLink>
                   </MenuItem>
-                  {Auth.isUserAuthenticated() && (
-                    <>
-                      <MenuItem>
-                        <Link
-                          as={RouterLink}
-                          to="/home"
-                          variant="ghost"
-                          fontWeight="400"
-                          w={"100%"}
-                          p={1}
-                          ml={3}
-                        >
-                          Go to Dashboard
-                        </Link>
-                      </MenuItem>
-                    </>
-                  )}
-                  <MenuItem>
+                ) : (
+                  <MenuItem mt={20}>
                     <Link
-                      as={RouterLink}
-                      to="/pricing"
+                      onClick={() => logout(history, queryClient)}
                       variant="ghost"
                       fontWeight="400"
                       w={"100%"}
                       p={1}
                       ml={3}
                     >
-                      Pricing
+                      Sign Out
                     </Link>
                   </MenuItem>
-                  <MenuItem>
-                    <Link
-                      as={RouterLink}
-                      to="/quickscan"
-                      variant="ghost"
-                      fontWeight="400"
-                      w={"100%"}
-                      p={1}
-                      ml={3}
-                    >
-                      Quickscan
-                    </Link>
-                  </MenuItem>
-                  <MenuItem>
-                    <Link
-                      as={RouterLink}
-                      to="/detectors"
-                      variant="ghost"
-                      fontWeight="400"
-                      w={"100%"}
-                      p={1}
-                      ml={3}
-                    >
-                      What we Detect
-                    </Link>
-                  </MenuItem>
-                  <MenuItem>
-                    <Link
-                      as={RouterLink}
-                      to="/web3hackhub"
-                      variant="ghost"
-                      fontWeight="400"
-                      w={"100%"}
-                      p={1}
-                      ml={3}
-                    >
-                      Web3 HackHub
-                    </Link>
-                  </MenuItem>
-                  <MenuItem>
-                    <Link
-                      onClick={() => {
-                        window.open("https://docs.solidityscan.com/", "_blank");
-                      }}
-                      variant="ghost"
-                      fontWeight="400"
-                      w={"100%"}
-                      p={1}
-                      ml={3}
-                    >
-                      Docs
-                    </Link>
-                  </MenuItem>
-                  <MenuItem>
-                    <Link
-                      onClick={() => {
-                        window.open(
-                          "https://solidityscan.com/discover/",
-                          "_blank"
-                        );
-                      }}
-                      variant="ghost"
-                      fontWeight="400"
-                      p={1}
-                      ml={3}
-                    >
-                      Discover
-                    </Link>
-                  </MenuItem>
-                  <MenuItem>
-                    <Link
-                      onClick={() => {
-                        window.open("https://blog.solidityscan.com/", "_blank");
-                      }}
-                      variant="ghost"
-                      fontWeight="400"
-                      w={"100%"}
-                      p={1}
-                      ml={3}
-                    >
-                      Blogs
-                    </Link>
-                  </MenuItem>
-                  <MenuItem>
-                    <Link
-                      onClick={onOpen}
-                      variant="ghost"
-                      fontWeight="400"
-                      w={"100%"}
-                      p={1}
-                      ml={3}
-                    >
-                      Contact Us
-                    </Link>
-                  </MenuItem>
-                  {!Auth.isUserAuthenticated() ? (
-                    <MenuItem mt={20}>
-                      <RouterLink to="/signin">
-                        <Button variant="brand" p={6} ml={4} w="100%">
-                          Sign In
-                        </Button>
-                      </RouterLink>
-                    </MenuItem>
-                  ) : (
-                    <MenuItem mt={20}>
-                      <Link
-                        onClick={() => logout(history, queryClient)}
-                        variant="ghost"
-                        fontWeight="400"
-                        w={"100%"}
-                        p={1}
-                        ml={3}
-                      >
-                        Sign Out
-                      </Link>
-                    </MenuItem>
-                  )}
-                </MenuList>
-              </Menu>
-            </Box>
-          </>
+                )}
+              </MenuList>
+            </Menu>
+          </Box>
         )}
 
         <HStack spacing={4} sx={{ display: isDesktopView ? "flex" : "none" }}>
