@@ -29,6 +29,16 @@ const PaginationNav: React.FC<{
     }
   };
 
+  const getButtonVariant = (i: number) => {
+    if (i === currentPage) return "brand";
+    else return "outline";
+  };
+
+  const getButtonColor = (i: number) => {
+    if (i === currentPage) return "black";
+    else return "subtle";
+  };
+
   const renderPageButtons = () => {
     const buttons = [];
 
@@ -37,8 +47,8 @@ const PaginationNav: React.FC<{
         buttons.push(
           <Button
             key={i}
-            variant={i === currentPage ? "brand" : "outline"}
-            color={i === currentPage ? "black" : "subtle"}
+            variant={getButtonVariant(i)}
+            color={getButtonColor(i)}
             bgColor={"white"}
             borderRadius={"8px"}
             padding={[0, 0, 4]}
@@ -56,8 +66,8 @@ const PaginationNav: React.FC<{
           buttons.push(
             <Button
               key={i}
-              variant={i === currentPage ? "brand" : "outline"}
-              color={i === currentPage ? "black" : "subtle"}
+              variant={getButtonVariant(i)}
+              color={getButtonColor(i)}
               bgColor={"white"}
               borderRadius={"8px"}
               padding={[0, 0, 4]}
@@ -123,8 +133,8 @@ const PaginationNav: React.FC<{
           buttons.push(
             <Button
               key={i}
-              variant={i === currentPage ? "brand" : "outline"}
-              color={i === currentPage ? "black" : "subtle"}
+              variant={getButtonVariant(i)}
+              color={getButtonColor(i)}
               bgColor={"white"}
               borderRadius={"8px"}
               padding={[0, 0, 4]}
@@ -156,8 +166,8 @@ const PaginationNav: React.FC<{
           buttons.push(
             <Button
               key={i}
-              variant={i === currentPage ? "brand" : "outline"}
-              color={i === currentPage ? "black" : "subtle"}
+              variant={getButtonVariant(i)}
+              color={getButtonColor(i)}
               bgColor={"white"}
               borderRadius={"8px"}
               padding={[0, 0, 4]}
