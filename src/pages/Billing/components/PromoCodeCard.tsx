@@ -75,7 +75,7 @@ const PromoCodeCard: React.FC<{ profileData: Profile }> = ({ profileData }) => {
           minW={"160px"}
           maxW={"360px"}
           disabled={
-            promoCode.length < 0 ||
+            promoCode.length === 0 ||
             promoCode.length > 50 ||
             profileData.current_package !== "trial" ||
             activePromo !== undefined

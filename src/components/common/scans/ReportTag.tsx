@@ -42,7 +42,8 @@ const ReportTag: React.FC<{
               textDecoration: "underline",
               cursor: "pointer",
             }}
-            onClick={() => onOpen()}
+            onKeyDown={onOpen}
+            onClick={onOpen}
           >
             click here.
           </span>

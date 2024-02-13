@@ -129,6 +129,7 @@ const DownloadQSReport: React.FC = () => {
                 having issues ?{" "}
                 <span
                   onClick={onOpen}
+                  onKeyDown={onOpen}
                   style={{ color: "#000000", cursor: "pointer" }}
                 >
                   <b> Contact us</b>
@@ -192,6 +193,7 @@ const DownloadQSReport: React.FC = () => {
               having issues ?{" "}
               <span
                 onClick={onOpen}
+                onKeyDown={onOpen}
                 style={{ color: "#000000", cursor: "pointer" }}
               >
                 <b> Contact us</b>
