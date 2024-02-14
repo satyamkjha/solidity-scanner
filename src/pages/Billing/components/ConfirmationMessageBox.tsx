@@ -25,7 +25,7 @@ const ConfirmationMessageBox: React.FC<{
       mt={"auto"}
     >
       <Text color="detail" fontWeight={300} fontSize={"sm"}>
-        You have opted for the
+        You have opted for the{" "}
         <span
           style={{
             fontWeight: 900,
