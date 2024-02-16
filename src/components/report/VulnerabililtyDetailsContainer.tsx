@@ -549,7 +549,7 @@ const VulnerabililtyDetailsContainer: React.FC<{
                         </Text>
                         <pre
                           style={{
-                            fontSize: codeFontSize,
+                            fontSize: download ? "10px" : codeFontSize,
                             color:
                               (cIndex > 0 && cIndex < array.length - 2) ||
                               item.line_nos_start[0] === 0
@@ -618,7 +618,7 @@ const VulnerabililtyDetailsContainer: React.FC<{
                         ></Text>
                         <pre
                           style={{
-                            fontSize: codeFontSize,
+                            fontSize: download ? "10px" : codeFontSize,
                             color: "#B0B7C3",
                             whiteSpace: "pre-wrap",
                           }}
