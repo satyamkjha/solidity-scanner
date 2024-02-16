@@ -353,6 +353,69 @@ const ScanDetails: React.FC<{
     return true;
   };
 
+  const rescanIconHoverStyles = () => {
+    if (
+      scansRemaining === 0 ||
+      role === "viewer" ||
+      scanData?.scan_report.scan_status === "scanning"
+    ) {
+      return {
+        opacity: 0.4,
+      };
+    } else {
+      return {
+        opacity: 0.6,
+      };
+    }
+  };
+
+  const isRescanButtonDisabled = () => {
+    if (
+      scansRemaining === 0 ||
+      scanData?.scan_report.scan_status === "scanning" ||
+      role === "viewer"
+    )
+      return true;
+    else return false;
+  };
+
+  const checkToShowPublishReportButton = () => {
+    if (
+      !scanData?.scan_report.report_regeneration_enabled &&
+      scanData?.scan_report.reporting_status === "report_generated" &&
+      publishStatus !== "" &&
+      publishStatus !== "Not-Generated"
+    )
+      return true;
+    else return false;
+  };
+
+  const generateReportButtonLabel = () => {
+    if (reportingStatus === "generating_report") return "Generating report...";
+    else if (reportingStatus === "not_generated") return "Generate Report";
+    else if (reportingStatus === "report_generated") return "View Report";
+    else return "Loading";
+  };
+
+  const onGenerateReportClick = () => {
+    if (profile?.current_package === "trial") {
+      history.push("/billing");
+    } else if (reportingStatus === "not_generated") {
+      generateReport();
+    } else if (reportingStatus === "report_generated") {
+      window.open(
+        `http://${document.location.host}/report/project/${projectId}/${scanData?.scan_report.latest_report_id}`,
+        "_blank"
+      );
+    }
+  };
+
+  const getPublishStatusColor = () => {
+    if (publishStatus === "Approved") return "#03C04A";
+    else if (publishStatus === "Self-Published") return "black";
+    else return "#FF5C00";
+  };
+
   return (
     <>
       <Box
@@ -402,19 +465,8 @@ const ScanDetails: React.FC<{
                         width="58px"
                         mr={[0, 0, 0, 6]}
                         onClick={() => setIsOpen(true)}
-                        _hover={{
-                          opacity:
-                            scansRemaining === 0 ||
-                            role === "viewer" ||
-                            scanData.scan_report.scan_status === "scanning"
-                              ? 0.4
-                              : 0.9,
-                        }}
-                        isDisabled={
-                          scansRemaining === 0 ||
-                          scanData.scan_report.scan_status === "scanning" ||
-                          role === "viewer"
-                        }
+                        _hover={rescanIconHoverStyles()}
+                        isDisabled={isRescanButtonDisabled()}
                       >
                         <Flex sx={{ flexDir: "column", alignItems: "center" }}>
                           <RescanIcon size={50} />
@@ -457,11 +509,7 @@ const ScanDetails: React.FC<{
                   alignItems={"center"}
                   width={["100%", "100%", "100%", "fit-content"]}
                 >
-                  {!scanData.scan_report.report_regeneration_enabled &&
-                    scanData.scan_report.reporting_status ===
-                      "report_generated" &&
-                    publishStatus !== "" &&
-                    publishStatus !== "Not-Generated" &&
+                  {checkToShowPublishReportButton() &&
                     (publishStatus === "Not-Published" ? (
                       <Button
                         variant={"accent-outline"}
@@ -501,13 +549,7 @@ const ScanDetails: React.FC<{
                           <TimeIcon color={"#FF5C00"} />
                         )}
                         <Text
-                          color={
-                            publishStatus === "Approved"
-                              ? "#03C04A"
-                              : publishStatus === "Self-Published"
-                              ? "black"
-                              : "#FF5C00"
-                          }
+                          color={getPublishStatusColor()}
                           sx={{ fontSize: "md", fontWeight: 600, ml: 2 }}
                         >
                           {publishStatus}
@@ -597,18 +639,7 @@ const ScanDetails: React.FC<{
                           checkIfGeneratingReport() &&
                           reportingStatus !== "report_generated"
                         }
-                        onClick={() => {
-                          if (profile.current_package === "trial") {
-                            history.push("/billing");
-                          } else if (reportingStatus === "not_generated") {
-                            generateReport();
-                          } else if (reportingStatus === "report_generated") {
-                            window.open(
-                              `http://${document.location.host}/report/project/${projectId}/${scanData?.scan_report.latest_report_id}`,
-                              "_blank"
-                            );
-                          }
-                        }}
+                        onClick={onGenerateReportClick}
                       >
                         {reportingStatus === "generating_report" && (
                           <Flex mr={3}>
@@ -619,13 +650,7 @@ const ScanDetails: React.FC<{
                           reportingStatus !== "report_generated" && (
                             <LockIcon color={"accent"} mr={3} />
                           )}
-                        {reportingStatus === "generating_report"
-                          ? "Generating report..."
-                          : reportingStatus === "not_generated"
-                          ? "Generate Report"
-                          : reportingStatus === "report_generated"
-                          ? "View Report"
-                          : "Loading"}
+                        {generateReportButtonLabel()}
                       </Button>
                     ))}
                 </Flex>
