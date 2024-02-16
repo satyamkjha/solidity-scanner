@@ -89,7 +89,7 @@ export const DemoCodeBlock: React.FC<{ download: boolean }> = ({
               ></Text>
               <pre
                 style={{
-                  fontSize: codeFontSize,
+                  fontSize: download ? "10px" : codeFontSize,
                   color: "#B0B7C3",
                   whiteSpace: "pre-wrap",
                 }}

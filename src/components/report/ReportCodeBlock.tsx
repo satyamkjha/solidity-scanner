@@ -121,7 +121,7 @@ export const ReportCodeBlock: React.FC<{
                 </Text>
                 <pre
                   style={{
-                    fontSize: codeFontSize,
+                    fontSize: download ? "10px" : codeFontSize,
                     color:
                       (cIndex > 0 && cIndex < array.length - 2) ||
                       item.line_nos_start[0] === 0

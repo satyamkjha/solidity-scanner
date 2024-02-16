@@ -54,7 +54,11 @@ const Scans: React.FC = () => {
   });
   const [hasMore, setHasMore] = useState(true);
 
-  const { data: projects } = useAllScans(pagination, queryTerm, filterParam);
+  const { data: projects, refetch: refetchProjects } = useAllScans(
+    pagination,
+    queryTerm,
+    filterParam
+  );
   const [projectList, setProjectList] =
     useState<{ scanItem: ScanObj; tempScanStatus: string }[]>();
   const [projectsMonitored, setProjectsMonitored] = useState(0);
@@ -170,6 +174,7 @@ const Scans: React.FC = () => {
           updatedProjectList = updatedProjectList.map((item) => {
             if (item.scanItem.scan_id === msgItem.payload.scan_id) {
               if (msgItem.payload.scan_status === "scan_done") {
+                refetchProjects();
                 return {
                   scanItem: {
                     scan_id: msgItem.payload.scan_id,

@@ -8,12 +8,18 @@ const ScanHistoryContainer: React.FC<{
   startIndex: number;
   download: boolean;
 }> = ({ scan_summary, startIndex, download }) => {
-  let severityIconSize =
+  let responsiveIconSize =
     useBreakpointValue({
       base: 5,
       sm: 6,
       md: 10,
     }) || 10;
+
+  let severityIconSize = download ? 10 : responsiveIconSize;
+
+  const bigFontSize = download ? "md" : ["7px", "9px", "md"];
+  const marginLeft = download ? 2 : ["2px", 1, 2];
+  const marginRight = download ? 5 : [2, 2, 5];
 
   return (
     <Flex
@@ -60,78 +66,66 @@ const ScanHistoryContainer: React.FC<{
         justifyContent="flex-end"
         flexDir={"row"}
         textAlign={["left", "left"]}
-        py={download ? 2 : ["2px", 1, 2]}
+        py={marginLeft}
         px={download ? 10 : [3, 4, 10]}
       >
-        <SeverityIcon
-          size={download ? 10 : severityIconSize}
-          variant={"critical"}
-        />
+        <SeverityIcon size={severityIconSize} variant={"critical"} />
         <Text
-          fontSize={download ? "md" : ["7px", "9px", "md"]}
+          fontSize={bigFontSize}
           fontWeight={"normal"}
           color={"gray.600"}
-          ml={download ? 2 : ["2px", 1, 2]}
-          mr={download ? 5 : [2, 2, 5]}
+          ml={marginLeft}
+          mr={marginRight}
         >
           Critical
         </Text>
-        <SeverityIcon
-          size={download ? 10 : severityIconSize}
-          variant={"high"}
-        />
+        <SeverityIcon size={severityIconSize} variant={"high"} />
         <Text
-          fontSize={download ? "md" : ["7px", "9px", "md"]}
+          fontSize={bigFontSize}
           fontWeight={"normal"}
           color={"gray.600"}
-          ml={download ? 2 : ["2px", 1, 2]}
-          mr={download ? 5 : [2, 2, 5]}
+          ml={marginLeft}
+          mr={marginRight}
         >
           High
         </Text>
-        <SeverityIcon
-          size={download ? 10 : severityIconSize}
-          variant={"medium"}
-        />
+        <SeverityIcon size={severityIconSize} variant={"medium"} />
         <Text
-          fontSize={download ? "md" : ["7px", "9px", "md"]}
+          fontSize={bigFontSize}
           fontWeight={"normal"}
           color={"gray.600"}
-          ml={download ? 2 : ["2px", 1, 2]}
-          mr={download ? 5 : [2, 2, 5]}
+          ml={marginLeft}
+          mr={marginRight}
         >
           Medium
         </Text>
-        <SeverityIcon size={download ? 10 : severityIconSize} variant={"low"} />
+        <SeverityIcon size={severityIconSize} variant={"low"} />
         <Text
-          fontSize={download ? "md" : ["7px", "9px", "md"]}
+          fontSize={bigFontSize}
           fontWeight={"normal"}
           color={"gray.600"}
-          ml={download ? 2 : ["2px", 1, 2]}
-          mr={download ? 5 : [2, 2, 5]}
+          ml={marginLeft}
+          mr={marginRight}
         >
           Low
         </Text>
-        <SeverityIcon
-          size={download ? 10 : severityIconSize}
-          variant={"informational"}
-        />
+        <SeverityIcon size={severityIconSize} variant={"informational"} />
         <Text
-          fontSize={download ? "md" : ["7px", "9px", "md"]}
+          fontSize={bigFontSize}
           fontWeight={"normal"}
           color={"gray.600"}
-          ml={download ? 2 : ["2px", 1, 2]}
-          mr={download ? 5 : [2, 2, 5]}
+          ml={marginLeft}
+          mr={marginRight}
         >
           Informational
         </Text>
-        <SeverityIcon size={download ? 10 : severityIconSize} variant={"gas"} />
+        <SeverityIcon size={severityIconSize} variant={"gas"} />
         <Text
-          fontSize={download ? "md" : ["7px", "9px", "md"]}
+          fontSize={bigFontSize}
           fontWeight={"normal"}
           color={"gray.600"}
-          ml={download ? 2 : ["2px", 1, 2]}
-          mr={download ? 5 : [2, 2, 5]}
+          ml={marginLeft}
+          mr={marginRight}
         >
           Gas
         </Text>
@@ -148,7 +142,7 @@ const ScanHistoryContainer: React.FC<{
         backgroundColor={"#F5F5F5"}
       >
         <Text
-          fontSize={download ? "md" : ["7px", "9px", "md"]}
+          fontSize={bigFontSize}
           fontWeight={"extrabold"}
           color={"gray.600"}
           width={["10%"]}
@@ -157,7 +151,7 @@ const ScanHistoryContainer: React.FC<{
           No
         </Text>
         <Text
-          fontSize={download ? "md" : ["7px", "9px", "md"]}
+          fontSize={bigFontSize}
           fontWeight={"extrabold"}
           color={"gray.600"}
           width={["18%"]}
@@ -165,7 +159,7 @@ const ScanHistoryContainer: React.FC<{
           Date
         </Text>
         <Text
-          fontSize={download ? "md" : ["7px", "9px", "md"]}
+          fontSize={bigFontSize}
           fontWeight={"extrabold"}
           color={"gray.600"}
           width={"22%"}
@@ -173,7 +167,7 @@ const ScanHistoryContainer: React.FC<{
           Security Score
         </Text>
         <Text
-          fontSize={download ? "md" : ["7px", "9px", "md"]}
+          fontSize={bigFontSize}
           fontWeight={"extrabold"}
           color={"gray.600"}
           width={"50%"}
@@ -197,7 +191,7 @@ const ScanHistoryContainer: React.FC<{
           borderBottomColor={"#E4E4E4"}
         >
           <Text
-            fontSize={download ? "md" : ["7px", "9px", "md"]}
+            fontSize={bigFontSize}
             fontWeight={"normal"}
             color={"gray.600"}
             width={["10%"]}
@@ -206,7 +200,7 @@ const ScanHistoryContainer: React.FC<{
             {index + startIndex}.
           </Text>
           <Text
-            fontSize={download ? "md" : ["7px", "9px", "md"]}
+            fontSize={bigFontSize}
             fontWeight={"normal"}
             color={"gray.600"}
             width={["18%"]}
@@ -214,7 +208,7 @@ const ScanHistoryContainer: React.FC<{
             {scan.scan_time.slice(0, 10)}
           </Text>
           <Text
-            fontSize={download ? "md" : ["7px", "9px", "md"]}
+            fontSize={bigFontSize}
             fontWeight={"extrabold"}
             color={"#3300FF"}
             width={["22%"]}
@@ -230,80 +224,62 @@ const ScanHistoryContainer: React.FC<{
             justifyContent="flex-start"
             flexDir={"row"}
           >
-            <SeverityIcon
-              size={download ? 10 : severityIconSize}
-              variant={"critical"}
-            />
+            <SeverityIcon size={severityIconSize} variant={"critical"} />
             <Text
-              fontSize={download ? "md" : ["7px", "9px", "md"]}
+              fontSize={bigFontSize}
               fontWeight={"normal"}
               color={"gray.600"}
-              ml={download ? 2 : ["2px", 1, 2]}
+              ml={marginLeft}
               width={"18%"}
             >
               {scan.issue_severity_distribution.critical}
             </Text>
-            <SeverityIcon
-              size={download ? 10 : severityIconSize}
-              variant={"high"}
-            />
+            <SeverityIcon size={severityIconSize} variant={"high"} />
             <Text
-              fontSize={download ? "md" : ["7px", "9px", "md"]}
+              fontSize={bigFontSize}
               fontWeight={"normal"}
               color={"gray.600"}
-              ml={download ? 2 : ["2px", 1, 2]}
+              ml={marginLeft}
               width={"18%"}
             >
               {scan.issue_severity_distribution.high}
             </Text>
-            <SeverityIcon
-              size={download ? 10 : severityIconSize}
-              variant={"medium"}
-            />
+            <SeverityIcon size={severityIconSize} variant={"medium"} />
             <Text
-              fontSize={download ? "md" : ["7px", "9px", "md"]}
+              fontSize={bigFontSize}
               fontWeight={"normal"}
               color={"gray.600"}
-              ml={download ? 2 : ["2px", 1, 2]}
+              ml={marginLeft}
               width={"18%"}
             >
               {scan.issue_severity_distribution.medium}
             </Text>
-            <SeverityIcon
-              size={download ? 10 : severityIconSize}
-              variant={"low"}
-            />
+            <SeverityIcon size={severityIconSize} variant={"low"} />
             <Text
-              fontSize={download ? "md" : ["7px", "9px", "md"]}
+              fontSize={bigFontSize}
               fontWeight={"normal"}
               color={"gray.600"}
-              ml={download ? 2 : ["2px", 1, 2]}
+              ml={marginLeft}
               width={"18%"}
             >
               {scan.issue_severity_distribution.low}
             </Text>
-            <SeverityIcon
-              size={download ? 10 : severityIconSize}
-              variant={"informational"}
-            />
+            <SeverityIcon size={severityIconSize} variant={"informational"} />
             <Text
-              fontSize={download ? "md" : ["7px", "9px", "md"]}
+              fontSize={bigFontSize}
               fontWeight={"normal"}
               color={"gray.600"}
-              ml={download ? 2 : ["2px", 1, 2]}
+              ml={marginLeft}
               width={"18%"}
             >
               {scan.issue_severity_distribution.informational}
             </Text>
-            <SeverityIcon
-              size={download ? 10 : severityIconSize}
-              variant={"gas"}
-            />
+            <SeverityIcon size={severityIconSize} variant={"gas"} />
             <Text
-              fontSize={download ? "md" : ["7px", "9px", "md"]}
+              fontSize={bigFontSize}
               fontWeight={"normal"}
               color={"gray.600"}
-              ml={download ? 2 : ["2px", 1, 2]}
+              ml={marginLeft}
               width={"18%"}
             >
               {scan.issue_severity_distribution.gas}

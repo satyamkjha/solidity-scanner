@@ -290,6 +290,7 @@ const QuickScan: React.FC = () => {
               onClick={() => {
                 setScanReport(null);
                 setTempQSData(null);
+                getRecapthaTokens();
               }}
             />
             <QuickScanResultContainer
