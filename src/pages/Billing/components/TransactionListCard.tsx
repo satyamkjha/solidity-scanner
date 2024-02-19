@@ -27,9 +27,17 @@ const TransactionListCard: React.FC<{
   transactionList: Transaction[];
   page: Page;
   pageNo: number;
+  fetchAgain: () => Promise<void>;
   fetchMore: () => Promise<void>;
   onPaymentCancel: () => Promise<void>;
-}> = ({ transactionList, page, pageNo, fetchMore, onPaymentCancel }) => {
+}> = ({
+  transactionList,
+  page,
+  pageNo,
+  fetchMore,
+  onPaymentCancel,
+  fetchAgain,
+}) => {
   const [isLargerThan800] = useMediaQuery("(min-width: 800px)");
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [orderId, setOrderId] = useState("");
@@ -479,6 +487,7 @@ const TransactionListCard: React.FC<{
         isOpen={isOpen}
         onClose={onClose}
         orderId={orderId}
+        fetchAgain={fetchAgain}
         paymentPlatform={paymentPlatform}
         onPaymentCancel={onPaymentCancel}
       />

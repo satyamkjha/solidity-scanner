@@ -89,9 +89,6 @@ const Billing: React.FC = () => {
 
   const onPaymentCancel = (payment_type: string) => {
     setCompletePaymentOpen(false);
-    setTimeout(() => {
-      fetchAgain();
-    }, 1500);
   };
 
   const onUpgradePlan = () => {
@@ -263,6 +260,7 @@ const Billing: React.FC = () => {
                       <LatestInvoice
                         transactionData={transactionList[0]}
                         selectedPlan={transactionList[0].package}
+                        fetchAgain={fetchAgain}
                         planData={
                           plans.pricing_data[transactionList[0].billing_cycle][
                             transactionList[0].package
@@ -312,6 +310,7 @@ const Billing: React.FC = () => {
                   page={page}
                   onPaymentCancel={fetchAgain}
                   pageNo={pageNo}
+                  fetchAgain={fetchAgain}
                   fetchMore={fetchMore}
                 />
               </TabPanel>

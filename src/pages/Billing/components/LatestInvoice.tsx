@@ -8,9 +8,16 @@ import CurrentPlanDescriptionContainer from "./CurrentPlanDescriptionContainer";
 const LatestInvoice: React.FC<{
   planData: Plan;
   selectedPlan: string;
+  fetchAgain: () => Promise<void>;
   transactionData: Transaction;
   onPaymentCancel: any;
-}> = ({ planData, selectedPlan, transactionData, onPaymentCancel }) => {
+}> = ({
+  planData,
+  selectedPlan,
+  transactionData,
+  onPaymentCancel,
+  fetchAgain,
+}) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
 
   const onCancel = () => {
@@ -113,6 +120,7 @@ const LatestInvoice: React.FC<{
       <CancelPaymentDialog
         isOpen={isOpen}
         onClose={onClose}
+        fetchAgain={fetchAgain}
         orderId={transactionData.order_id}
         paymentPlatform={transactionData.payment_platform}
         onPaymentCancel={onPaymentCancel}
