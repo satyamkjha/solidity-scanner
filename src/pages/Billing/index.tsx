@@ -89,7 +89,9 @@ const Billing: React.FC = () => {
 
   const onPaymentCancel = (payment_type: string) => {
     setCompletePaymentOpen(false);
-    fetchAgain();
+    setTimeout(() => {
+      fetchAgain();
+    }, 1500);
   };
 
   const onUpgradePlan = () => {

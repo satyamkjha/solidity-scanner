@@ -177,7 +177,7 @@ const ResultOverviewReports: React.FC<{
           w={"32%"}
           spacing={download ? 2 : [0, 0, 2]}
           borderRadius={5}
-          p={download ? 3 : [0, 1, 3]}
+          p={download ? 3 : ["3px", 1, 3]}
         >
           <Flex
             bgColor={theme === "light" ? "#F8F8F8" : "#272727"}
@@ -208,7 +208,7 @@ const ResultOverviewReports: React.FC<{
           >
             <Text
               color="gray.400"
-              fontSize={download ? "sm" : ["9px", "11px", "sm"]}
+              fontSize={download ? "sm" : ["8px", "11px", "sm"]}
               fontWeight={300}
             >
               Security Score
@@ -235,7 +235,7 @@ const ResultOverviewReports: React.FC<{
           w={"32%"}
           mt={0}
           borderRadius={5}
-          p={download ? 3 : [0, 1, 3]}
+          p={download ? 3 : ["3px", 1, 3]}
         >
           <Flex
             padding={download ? 2 : [1, 1, 2]}
@@ -267,7 +267,7 @@ const ResultOverviewReports: React.FC<{
           >
             <Text
               color="gray.400"
-              fontSize={download ? "sm" : ["9px", "11px", "sm"]}
+              fontSize={download ? "sm" : ["8px", "11px", "sm"]}
               fontWeight={300}
             >
               Scan duration
@@ -285,7 +285,7 @@ const ResultOverviewReports: React.FC<{
           color={theme === "light" ? "#000000" : "white"}
           w={"32%"}
           borderRadius={5}
-          p={download ? 3 : [0, 1, 3]}
+          p={download ? 3 : ["3px", 1, 3]}
         >
           <Flex
             padding={download ? 2 : [0, 0, 2]}
@@ -317,7 +317,7 @@ const ResultOverviewReports: React.FC<{
           >
             <Text
               color="gray.400"
-              fontSize={download ? "sm" : ["9px", "11px", "sm"]}
+              fontSize={download ? "sm" : ["8px", "11px", "sm"]}
               fontWeight={300}
             >
               Lines of code

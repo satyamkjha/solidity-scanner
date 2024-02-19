@@ -31,23 +31,22 @@ const ProjectSummaryContainer: React.FC<{
         content={"Vulnerability Classification and Severity"}
       >
         <Text
-          fontSize={download ? "28px" : ["14px", "16px", "28px"]}
+          fontSize={download ? "28px" : ["13px", "16px", "28px"]}
           fontWeight={400}
         >
           1.
         </Text>
         <Heading
           color={"#52FF00"}
-          fontSize={download ? "28px" : ["14px", "16px", "28px"]}
-          ml={download ? 4 : [2, 3, 4]}
+          fontSize={download ? "28px" : ["13px", "16px", "28px"]}
+          ml={download ? 4 : [1, 2, 4]}
         >
           Vulnerability
         </Heading>
         <Text
-          fontSize={download ? "28px" : ["14px", "16px", "28px"]}
+          fontSize={download ? "28px" : ["13px", "16px", "28px"]}
           fontWeight={400}
         >
-          {" "}
           &nbsp;Classification and Severity{" "}
         </Text>
       </Flex>
@@ -219,7 +218,11 @@ const IssueType: React.FC<{
     <VStack alignItems={"flex-start"}>
       <Flex alignItems={"center"}>
         <SeverityIcon size={6} variant={issueType} />
-        <Text fontSize={"sm"} fontWeight={600} ml={2}>
+        <Text
+          fontSize={download ? "sm" : ["9px", "10px", "sm"]}
+          fontWeight={600}
+          ml={2}
+        >
           {sentenceCapitalize(issueType)}
         </Text>
       </Flex>
