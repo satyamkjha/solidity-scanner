@@ -417,6 +417,14 @@ const ScanDetails: React.FC<{
     else return "#FF5C00";
   };
 
+  const checkOAuthInformationData = () => {
+    return (
+      profile?._integrations?.github?.status === "successful" ||
+      profile?._integrations?.gitlab?.status === "successful" ||
+      profile?._integrations?.bitbucket?.status === "successful"
+    );
+  };
+
   return (
     <>
       <Box
@@ -873,14 +881,7 @@ const ScanDetails: React.FC<{
                             getRepoTreeReq={getRepoTreeReq}
                             project_url={scanData.scan_report.project_url}
                             project_id={scanData.scan_report.project_id}
-                            isGithubIntegrated={
-                              profile._integrations?.github?.status ===
-                                "successful" ||
-                              profile._integrations?.gitlab?.status ===
-                                "successful" ||
-                              profile._integrations?.bitbucket?.status ===
-                                "successful"
-                            }
+                            isGithubIntegrated={checkOAuthInformationData()}
                           />
                         </TabPanel>
                       )}
