@@ -25,12 +25,12 @@ const TableContentContainer: React.FC<{
       >
         <Heading
           color={"#52FF00"}
-          fontSize={download ? "4xl" : ["xl", "2xl", "4xl"]}
+          fontSize={download ? "28px" : ["14px", "20px", "28px"]}
         >
           Table of
         </Heading>
         <Text
-          fontSize={download ? "4xl" : ["xl", "2xl", "4xl"]}
+          fontSize={download ? "28px" : ["14px", "20px", "28px"]}
           fontWeight={400}
         >
           {" "}

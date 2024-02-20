@@ -42,12 +42,12 @@ const FindingSummaryContainer: React.FC<{
         </Text>
         <Heading
           color={"#52FF00"}
-          fontSize={download ? "4xl" : ["xl", "2xl", "4xl"]}
+          fontSize={download ? "28px" : ["14px", "20px", "28px"]}
         >
           Findings
         </Heading>
         <Text
-          fontSize={download ? "4xl" : ["xl", "2xl", "4xl"]}
+          fontSize={download ? "28px" : ["14px", "20px", "28px"]}
           fontWeight={400}
         >
           {" "}
@@ -70,7 +70,7 @@ const FindingSummaryContainer: React.FC<{
         w="100%"
         pb={download ? 10 : [3, 4, 10]}
         pt={download ? 6 : [2, 3, 6]}
-        my={download ? 4 : [1, 2, 4]}
+        my={download ? 4 : [2, 3, 4]}
         px={download ? 8 : [3, 4, 8]}
         alignItems={"center"}
         justifyContent={"center"}

@@ -269,6 +269,7 @@ export const QSScanResultSkeleton: React.FC<{
               endColor="#757575"
               height="140px"
               width="140px"
+              mb={[3, 3, 0]}
             />
             <VStack
               ml={5}

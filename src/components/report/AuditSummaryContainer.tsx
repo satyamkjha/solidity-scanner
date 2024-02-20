@@ -113,7 +113,7 @@ const AuditSummaryContainer: React.FC<{
         <Heading
           color={"#52FF00"}
           fontSize={download ? "28px" : ["14px", "20px", "28px"]}
-          ml={4}
+          ml={download ? 4 : [1, 2, 4]}
         >
           Executive
         </Heading>

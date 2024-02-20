@@ -18,7 +18,15 @@ const CancelPaymentDialog: React.FC<{
   isOpen: boolean;
   onClose: () => void;
   onPaymentCancel: any;
-}> = ({ orderId, paymentPlatform, isOpen, onClose, onPaymentCancel }) => {
+  fetchAgain: () => Promise<void>;
+}> = ({
+  orderId,
+  paymentPlatform,
+  isOpen,
+  onClose,
+  onPaymentCancel,
+  fetchAgain,
+}) => {
   const cancelRef = useRef<HTMLButtonElement | null>(null);
   const toast = useToast();
 
@@ -37,6 +45,9 @@ const CancelPaymentDialog: React.FC<{
         isClosable: true,
         position: "bottom",
       });
+      setTimeout(() => {
+        fetchAgain();
+      }, 2000);
       onPaymentCancel("stripe");
       onClose();
     }
