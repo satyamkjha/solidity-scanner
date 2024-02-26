@@ -39,16 +39,6 @@ const OrgLoginForm: React.FC<{
   const [orgName, setOrgName] = useState("");
   const { handleSubmit } = useForm();
   const [twoFAScreen, setTwoFAScreen] = useState(false);
-  const [reqHeaders, setReqHeaders] = useState<RecaptchaHeader | undefined>();
-
-  const getRecapthaTokens = async () => {
-    const reqHeaders = await getReCaptchaHeaders("signin");
-    setReqHeaders(reqHeaders);
-  };
-
-  useEffect(() => {
-    getRecapthaTokens();
-  }, []);
 
   const onSubmit = async () => {
     if (step) {
@@ -83,6 +73,7 @@ const OrgLoginForm: React.FC<{
 
   const signIn = async () => {
     setIsLoading(true);
+    const reqHeaders = await getReCaptchaHeaders("login");
     API.post<AuthResponse>(
       API_PATH.API_ORG_LOGIN,
       { org_name: orgName, email, password },

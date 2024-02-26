@@ -30,17 +30,7 @@ const LoginForm: React.FC = () => {
   const [password, setPassword] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [twoFAScreen, setTwoFAScreen] = useState(false);
-  const [reqHeaders, setReqHeaders] = useState<RecaptchaHeader | undefined>();
   const { handleSubmit } = useForm();
-
-  // const getRecapthaTokens = async () => {
-  //   const reqHeaders = await getReCaptchaHeaders("signin");
-  //   setReqHeaders(reqHeaders);
-  // };
-
-  // useEffect(() => {
-  //   getRecapthaTokens();
-  // }, []);
 
   const verify2FA = async (otp: string) => {
     setIsLoading(true);
