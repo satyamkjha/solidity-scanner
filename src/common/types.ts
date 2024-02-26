@@ -25,6 +25,9 @@ export type Profile = {
   contact_number: string;
   credits: number;
   auth_token: string;
+  credit_system: string;
+  total_loc: number;
+  loc_remaining: number;
   public_address?: string;
   company_name: string;
   current_package: string;
@@ -268,6 +271,7 @@ export type ScanMeta = {
   project_id: string;
   scan_score: string;
   scan_score_v2: string;
+  loc_consumed: number;
   scan_name: string;
   latest_report_id: string;
   skip_file_paths?: string[];
@@ -440,6 +444,7 @@ export type Plan = {
   amount: string;
   github: boolean;
   report: boolean;
+  loc: number;
   publishable_report: boolean;
 };
 

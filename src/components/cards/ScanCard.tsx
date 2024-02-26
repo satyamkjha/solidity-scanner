@@ -46,16 +46,22 @@ import { useConfig } from "hooks/useConfig";
 const ScanCard: React.FC<{
   scan: ScanObj;
   tempScanStatus: string;
+  setInScanDetails: React.Dispatch<any>;
+  inScanDetails: any;
   // setIconCounter: Dispatch<SetStateAction<number>>;
   updateScanList: (project_id: string) => void;
   isViewer: boolean;
+  openScanStateModal: () => void;
   // ssIconAnimation: any;
 }> = ({
   scan,
   // setIconCounter,
   updateScanList,
   isViewer,
+  inScanDetails,
+  setInScanDetails,
   tempScanStatus,
+  openScanStateModal,
   // ssIconAnimation,
 }) => {
   const {
@@ -67,6 +73,8 @@ const ScanCard: React.FC<{
     scan_status,
     multi_file_scan_summary,
     project_id,
+    contract_url,
+    contract_chain,
   } = scan.scan_details;
   const cancelRef = useRef<HTMLButtonElement | null>(null);
   const config: any = useConfig();
@@ -144,6 +152,34 @@ const ScanCard: React.FC<{
       onClick={() => {
         if (multi_file_scan_status === "scan_done") {
           history.push(`/${scan.scan_type}s/${project_id}/${scan_id}`);
+        } else {
+          if (
+            inScanDetails &&
+            inScanDetails.project_id === project_id &&
+            inScanDetails.scan_state === tempScanStatus
+          ) {
+            openScanStateModal();
+          } else {
+            if (scan.scan_type === "block")
+              setInScanDetails({
+                project_id,
+                contract_address,
+                contract_platform,
+                contract_chain,
+                contract_url,
+                scan_state: tempScanStatus,
+                scan_type: scan.scan_type,
+              });
+            else {
+              setInScanDetails({
+                project_id,
+                project_url: scan.scan_details.project_url,
+                project_name: scan.scan_details.project_name,
+                scan_state: tempScanStatus,
+                scan_type: scan.scan_type,
+              });
+            }
+          }
         }
       }}
     >

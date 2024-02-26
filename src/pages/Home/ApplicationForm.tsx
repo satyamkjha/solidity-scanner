@@ -11,6 +11,7 @@ import {
   useToast,
   Image,
   useMediaQuery,
+  useDisclosure,
 } from "@chakra-ui/react";
 import API from "helpers/api";
 import {
@@ -32,6 +33,7 @@ import { capitalize } from "common/functions";
 import { infographicsData, OauthName } from "common/values";
 import { useWebSocket } from "hooks/useWebhookData";
 import { useConfig } from "hooks/useConfig";
+import InsufficientLocModal from "components/modals/InsufficientLocModal";
 
 const ApplicationForm: React.FC<{
   profileData: Profile;
@@ -65,6 +67,8 @@ const ApplicationForm: React.FC<{
     profileData?._integrations?.bitbucket?.status === "successful";
   const toast = useToast();
 
+  const { isOpen, onClose: closeModal, onOpen } = useDisclosure();
+
   const runValidation = () => {
     if (projectName === "") {
       setNameError("Please enter a Project Name of less than 50 characters.");
@@ -88,7 +92,16 @@ const ApplicationForm: React.FC<{
 
   const runScan = async () => {
     if (!runValidation() || !repoTreeUP) return;
-    if (config && config.REACT_APP_FEATURE_GATE_CONFIG.websockets_enabled) {
+    if (
+      profileData.credit_system === "loc" &&
+      profileData.loc_remaining <
+        parseInt(process.env.REACT_APP_MIN_LOCS_REQ || "200")
+    ) {
+      onOpen();
+    } else if (
+      config &&
+      config.REACT_APP_FEATURE_GATE_CONFIG.websockets_enabled
+    ) {
       try {
         setIsLoading(true);
         const skipFilePaths = getSkipFilePaths(repoTreeUP);
@@ -447,7 +460,11 @@ const ApplicationForm: React.FC<{
               runScan();
             }
           }}
-          isDisabled={profileData?.credits === 0 || isViewer}
+          isDisabled={
+            profileData.credit_system === "loc"
+              ? false
+              : profileData?.credits === 0 || isViewer
+          }
         >
           {step > 2 ? (
             isLoading ? (
@@ -460,6 +477,19 @@ const ApplicationForm: React.FC<{
           )}
         </Button>
       </Flex>
+      {isOpen && (
+        <InsufficientLocModal
+          open={isOpen}
+          closeModal={closeModal}
+          scanDetails={{
+            project_name: projectName,
+            project_url: githubLink,
+            scan_type: "project",
+          }}
+          profileData={profileData}
+        />
+
+      )}
     </Flex>
   );
 };

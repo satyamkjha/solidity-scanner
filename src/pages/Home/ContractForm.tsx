@@ -14,14 +14,12 @@ import {
   useToast,
   Box,
   useMediaQuery,
+  useDisclosure,
 } from "@chakra-ui/react";
 import { AiOutlineProject } from "react-icons/ai";
 import API from "helpers/api";
 import { useSupportedChains } from "hooks/useSupportedPlatforms";
-import {
-  checkContractAddress,
-  getAssetsURL,
-} from "helpers/helperFunction";
+import { checkContractAddress, getAssetsURL } from "helpers/helperFunction";
 import { API_PATH } from "helpers/routeManager";
 import { Profile } from "common/types";
 import Loader from "components/styled-components/Loader";
@@ -31,6 +29,7 @@ import { AddProjectFormInfographics } from "./AddProjectFormInfographics";
 import { BlockchainSelector } from "components/common/BlockchainSelector";
 import { useWebSocket } from "hooks/useWebhookData";
 import { useConfig } from "hooks/useConfig";
+import InsufficientLocModal from "components/modals/InsufficientLocModal";
 
 const ContractForm: React.FC<{
   profileData: Profile;
@@ -61,8 +60,20 @@ const ContractForm: React.FC<{
   const [blockchainSelectorError, setBlockchainSelectorError] = useState("");
   const assetsURL = getAssetsURL();
 
+  const { isOpen, onClose: closeModal, onOpen } = useDisclosure();
+
+  const minLOCReq = process.env.REACT_APP_MIN_LOCS_REQ;
+
   const onSubmit = async () => {
-    if (config && config.REACT_APP_FEATURE_GATE_CONFIG.websockets_enabled) {
+    if (
+      profileData.credit_system === "loc" &&
+      profileData.loc_remaining < parseInt(minLOCReq || "200")
+    ) {
+      onOpen();
+    } else if (
+      config &&
+      config.REACT_APP_FEATURE_GATE_CONFIG.websockets_enabled
+    ) {
       try {
         if (
           platform !== "buildbear" &&
@@ -333,11 +344,29 @@ const ContractForm: React.FC<{
         spinner={<Loader color={"#3300FF"} size={25} />}
         isDisabled={
           step === 1 &&
-          (profileData?.credits === 0 || isViewer || contractAddress.length < 1)
+          ((profileData.credit_system === "loc"
+            ? false
+            : profileData?.credits === 0) ||
+            isViewer ||
+            contractAddress.length < 1)
         }
       >
         {step === 1 ? "Start Scan" : "Proceed"}
       </Button>
+      {isOpen && (
+        <InsufficientLocModal
+          open={isOpen}
+          closeModal={closeModal}
+          scanDetails={{
+            contract_address: contractAddress,
+            contract_platform: platform,
+            contract_chain: chain?.value,
+            loc: "insufficient",
+            scan_type: "block",
+          }}
+          profileData={profileData}
+        />
+      )}
     </Flex>
   );
 };

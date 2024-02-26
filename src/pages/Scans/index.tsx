@@ -16,6 +16,7 @@ import {
   MenuItem,
   Image,
   useToast,
+  useDisclosure,
 } from "@chakra-ui/react";
 import { Page, Pagination, ScanObj } from "common/types";
 import { useProfile } from "hooks/useProfile";
@@ -33,6 +34,7 @@ import RadioButton from "components/styled-components/RadioButton";
 import { useWebSocket } from "hooks/useWebhookData";
 import { inProcessScanStates } from "common/values";
 import { AddProject } from "components/common/AddProject";
+import InScanModal from "components/modals/InScanModal";
 
 const Scans: React.FC = () => {
   const [isDesktopView] = useMediaQuery("(min-width: 1920px)");
@@ -53,7 +55,7 @@ const Scans: React.FC = () => {
     perPageCount: isDesktopView ? 20 : 12,
   });
   const [hasMore, setHasMore] = useState(true);
-
+  const { isOpen, onClose, onOpen } = useDisclosure();
   const { data: projects, refetch: refetchProjects } = useAllScans(
     pagination,
     queryTerm,
@@ -63,6 +65,9 @@ const Scans: React.FC = () => {
     useState<{ scanItem: ScanObj; tempScanStatus: string }[]>();
   const [projectsMonitored, setProjectsMonitored] = useState(0);
   const [isProjectsLoading, setIsProjectsLoading] = useState(false);
+
+  const [inScanDetails, setInScanDetails] = useState<any>(null);
+
   const { messageQueue, updateMessageQueue, setKeepWSOpen } = useWebSocket();
   const toast = useToast();
   const { data: profileData, refetch: refetchProfile } = useProfile(true);
@@ -175,6 +180,8 @@ const Scans: React.FC = () => {
             if (item.scanItem.scan_id === msgItem.payload.scan_id) {
               if (msgItem.payload.scan_status === "scan_done") {
                 refetchProjects();
+                onClose();
+                setInScanDetails(null);
                 return {
                   scanItem: {
                     scan_id: msgItem.payload.scan_id,
@@ -221,6 +228,24 @@ const Scans: React.FC = () => {
               ...updatedProjectList,
             ];
           }
+          if (msgItem.payload.scan_details.scan_type === "blocks")
+            setInScanDetails({
+              project_id: msgItem.payload.scan_details.project_id,
+              contract_address: msgItem.payload.scan_details.contract_address,
+              contract_platform: msgItem.payload.scan_details.contract_platform,
+              contract_url: msgItem.payload.scan_details.contract_url,
+              contract_chain: msgItem.payload.scan_details.contract_chain,
+              scan_state: msgItem.payload.scan_details.scan_state,
+              scan_type: msgItem.payload.scan_details.scan_type,
+            });
+          else
+            setInScanDetails({
+              project_id: msgItem.payload.scan_details.project_id,
+              project_url: msgItem.payload.scan_details.project_url,
+              project_name: msgItem.payload.scan_details.project_name,
+              scan_state: msgItem.payload.scan_details.scan_state,
+              scan_type: msgItem.payload.scan_details.scan_type,
+            });
         } else if (
           msgItem.type === "delete_block_acknowledge" ||
           msgItem.type === "delete_project_acknowledge"
@@ -251,6 +276,12 @@ const Scans: React.FC = () => {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [messageQueue]);
+
+  useEffect(() => {
+    if (inScanDetails !== null) {
+      onOpen();
+    }
+  }, [inScanDetails]);
 
   useEffect(() => {
     if (
@@ -523,10 +554,20 @@ const Scans: React.FC = () => {
                 tempScanStatus={project.tempScanStatus}
                 updateScanList={updateProjectList}
                 isViewer={role === "viewer"}
+                setInScanDetails={setInScanDetails}
+                inScanDetails={inScanDetails}
+                openScanStateModal={onOpen}
               />
             ))}
           </InfiniteScroll>
         </Flex>
+      )}
+      {inScanDetails && (
+        <InScanModal
+          inScanDetails={inScanDetails}
+          isOpen={isOpen}
+          onClose={onClose}
+        />
       )}
     </Box>
   );

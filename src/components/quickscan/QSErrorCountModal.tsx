@@ -33,6 +33,7 @@ const QSErrorCountModal: React.FC<{
     contract_chain: any;
     contract_platform: any;
     new_user: boolean;
+    loc: number;
   };
 }> = ({ isOpen, onClose, errorCount, errorType, scan_details }) => {
   const config: any = useConfig();

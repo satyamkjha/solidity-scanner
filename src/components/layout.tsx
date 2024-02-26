@@ -17,6 +17,8 @@ import {
   Divider,
   VStack,
   Heading,
+  Collapse,
+  useDisclosure,
 } from "@chakra-ui/react";
 import { GiHamburgerMenu } from "react-icons/gi";
 import { BiUser, BiPowerOff } from "react-icons/bi";
@@ -38,6 +40,10 @@ import { signInWithCustomToken, User, onAuthStateChanged } from "firebase/auth";
 import { auth } from "helpers/firebase";
 import { useWebSocket } from "hooks/useWebhookData";
 import { useProfile } from "hooks/useProfile";
+import { LOCHeader } from "./locHeader";
+import { usePricingPlans } from "hooks/usePricingPlans";
+import { LOCInfoContainer } from "./locInfoContainer";
+import { PlanDataContainer } from "./planDataContainer";
 
 const MotionFlex = motion(Flex);
 
@@ -55,20 +61,12 @@ const Layout: React.FC = ({ children }) => {
     profileData?.logged_in_via === "org_login"
   );
 
-  const [credits, setCredits] = useState(profileData ? profileData.credits : 0);
-
   // const [isBannerOpen, setIsBannerOpen] = useState(true);
 
   const config: any = useConfig();
   const assetsURL = getAssetsURL(config);
 
-  const { messageQueue, updateMessageQueue } = useWebSocket();
-
-  useEffect(() => {
-    if (profileData) {
-      setCredits(profileData.credits);
-    }
-  }, [profileData]);
+  const { data: pricingPlans } = usePricingPlans();
 
   const handleClickOutside = (e: MouseEvent) => {
     if (ref.current && ref.current.contains(e.target as Node)) {
@@ -78,27 +76,6 @@ const Layout: React.FC = ({ children }) => {
     // outside click
     setShowSidebar(false);
   };
-
-  useEffect(() => {
-    if (
-      messageQueue.length > 0 &&
-      messageQueue.some(
-        (msgItem: any) => msgItem && msgItem.type === "account_credits_update"
-      )
-    ) {
-      messageQueue.forEach((msgItem: any) => {
-        if (msgItem.type && msgItem.type === "account_credits_update") {
-          setCredits(msgItem.payload.updated_credits);
-        }
-      });
-      let tempMessageQueue = messageQueue.filter(
-        (msgItem: any) => msgItem.type !== "account_credits_update"
-      );
-      updateMessageQueue(tempMessageQueue);
-    }
-
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [messageQueue]);
 
   const getFirebaseToken = async () => {
     const { data } = await API.get<{ token: string }>(
@@ -146,6 +123,8 @@ const Layout: React.FC = ({ children }) => {
       document.removeEventListener("mousedown", handleClickOutside);
     };
   }, [showSidebar]);
+
+  const { isOpen, onToggle } = useDisclosure();
 
   return (
     <Box as="div" height="100vh">
@@ -300,7 +279,7 @@ const Layout: React.FC = ({ children }) => {
               width="90%"
               sx={{ alignItems: "center", justifyContent: "space-between" }}
             >
-              <HStack width={["100%", "100%", "50%", "50%", "60%"]}>
+              <HStack width={["100%", "100%", "50%", "50%"]}>
                 <Icon
                   as={GiHamburgerMenu}
                   sx={{
@@ -331,19 +310,36 @@ const Layout: React.FC = ({ children }) => {
                 )}
               </HStack>
 
-              {profileData && (
+              <HStack
+                border="1px solid #FFC661"
+                bgColor="#FFFCF7"
+                display={["none", "none", "flex"]}
+                borderRadius={20}
+                w="400px"
+                px={5}
+                spacing={5}
+                onClick={() => history.push("/billing")}
+              >
+                <Image
+                  w="34px"
+                  h="34px"
+                  src={`${assetsURL}icons/loudspeaker.svg`}
+                />
+                <Text fontSize="sm" color="#FFA403" fontWeight={600}>
+                  Alert!! - New Pricing Plan March 2024
+                </Text>
+              </HStack>
+
+              {profileData && pricingPlans && (
                 <Flex
-                  ml={20}
+                  w="300px"
+                  ml={10}
                   sx={{ display: ["none", "none", "flex"] }}
-                  onClick={() => history.push("/billing")}
                 >
-                  <Image src={`${assetsURL}pricing/coin.svg`} mx="auto" />
-                  <Text fontWeight={600} fontSize="2xl" ml={4}>
-                    {credits}
-                    <Box as="span" ml={2} color="subtle" fontSize="sm">
-                      Scan Credits
-                    </Box>
-                  </Text>
+                  <LOCHeader
+                    profileData={profileData}
+                    pricingPlans={pricingPlans}
+                  />
                 </Flex>
               )}
             </Flex>
@@ -364,7 +360,8 @@ const Layout: React.FC = ({ children }) => {
                 <MenuList
                   p={4}
                   zIndex={10}
-                  width="250px"
+                  width={["100%", "370px", "250px"]}
+                  maxW="370px"
                   borderWidth="0px"
                   sx={{
                     boxShadow: "0px 4px 20px rgba(0, 0, 0, 0.35) !important",
@@ -391,12 +388,39 @@ const Layout: React.FC = ({ children }) => {
                       </VStack>
                     )}
 
+                  <Box
+                    display={["flex", "flex", "none"]}
+                    w="100%"
+                    onClick={onToggle}
+                  >
+                    {profileData && (
+                      <LOCInfoContainer
+                        view="header"
+                        profileData={profileData}
+                      />
+                    )}
+                  </Box>
+                  <Box w="100%" display={["flex", "flex", "none"]}>
+                    <Collapse in={isOpen} animateOpacity>
+                      <Box mt={4} w="100%" bgColor="#F9F9F9" borderRadius={10}>
+                        {profileData && pricingPlans && (
+                          <PlanDataContainer
+                            pricingPlans={pricingPlans}
+                            profileData={profileData}
+                          />
+                        )}
+                      </Box>
+                    </Collapse>
+                  </Box>
+
+                  <Divider my={5} display={["flex", "flex", "none"]} />
+
                   <MenuItem
                     borderBottom="1px solid"
                     borderColor="border"
                     py={2}
                     onClick={() => history.push("/profile")}
-                    borderTopRadius="10px"
+                    borderTopRadius={["0xp", "0px", "10px"]}
                   >
                     <Icon as={BiUser} mr={3} color="gray.500" />
                     Profile

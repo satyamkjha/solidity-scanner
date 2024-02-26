@@ -27,7 +27,7 @@ const PricingDetailsList: React.FC<{
           fontWeight={300}
           width="100%"
         >
-          No of Scans
+          Remaining Lines of code
         </Text>
         <HStack
           width="100%"
@@ -39,10 +39,10 @@ const PricingDetailsList: React.FC<{
           <Image
             width="20px"
             height="20px"
-            src={`${assetsURL}pricing/coin.svg`}
+            src={`${assetsURL}common/loc-code.svg`}
           />
-          <Text fontWeight={700}>{plan.scan_count}</Text>
-          <Text fontWeight={500}>Scans</Text>
+          <Text fontWeight={700}>{plan.loc}</Text>
+          <Text fontWeight={500}>LoCs</Text>
         </HStack>
       </VStack>
       {pricing_card_description_data.map((item) => (

@@ -434,6 +434,11 @@ export const theme = extendTheme({
             bgColor: "#3E15F4",
           },
         },
+        loc: {
+          filledTrack: {
+            bgColor: "#24A149",
+          },
+        },
       },
     },
     Switch: {

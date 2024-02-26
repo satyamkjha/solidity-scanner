@@ -14,6 +14,7 @@ import {
   Progress,
   CloseButton,
   useMediaQuery,
+  useDisclosure,
 } from "@chakra-ui/react";
 import { AiOutlineProject } from "react-icons/ai";
 import { SolidityFileIcon, UploadIcon, ZipFileIcon } from "components/icons";
@@ -27,6 +28,7 @@ import { CheckIcon } from "@chakra-ui/icons";
 import { useQueryClient } from "react-query";
 import { useWebSocket } from "hooks/useWebhookData";
 import { useConfig } from "hooks/useConfig";
+import InsufficientLocModal from "components/modals/InsufficientLocModal";
 
 const UploadForm: React.FC<{
   profileData: Profile;
@@ -45,6 +47,8 @@ const UploadForm: React.FC<{
   const [name, setName] = useState("");
   const [s3url, setS3Url] = useState<string>("");
   const [isLoading, setIsLoading] = useState(false);
+
+  const { isOpen, onClose: closeModal, onOpen } = useDisclosure();
 
   let isViewer = role === "viewer";
   const extension = uploadType === "single" ? "sol" : "zip";
@@ -172,7 +176,16 @@ const UploadForm: React.FC<{
   };
 
   const startFileScan = async () => {
-    if (config && config.REACT_APP_FEATURE_GATE_CONFIG.websockets_enabled) {
+    if (
+      profileData.credit_system === "loc" &&
+      profileData.loc_remaining <
+        parseInt(process.env.REACT_APP_MIN_LOCS_REQ || "200")
+    ) {
+      onOpen();
+    } else if (
+      config &&
+      config.REACT_APP_FEATURE_GATE_CONFIG.websockets_enabled
+    ) {
       try {
         setIsLoading(true);
         sendMessage({
@@ -331,18 +344,33 @@ const UploadForm: React.FC<{
           isLoading={isLoading}
           spinner={<Loader color={"#3300FF"} size={25} />}
           disabled={
+            (profileData.credit_system === "loc"
+              ? false
+              : profileData?.credits === 0) ||
+            isViewer ||
             isLoading ||
             step < 2 ||
             name === "" ||
             (profileData.actions_supported &&
-              !profileData.actions_supported.file_scan) ||
-            isViewer
+              !profileData.actions_supported.file_scan)
           }
           onClick={startFileScan}
         >
           Start Scan
         </Button>
       </Flex>
+      {isOpen && (
+        <InsufficientLocModal
+          open={isOpen}
+          closeModal={closeModal}
+          scanDetails={{
+            project_name: name,
+            project_url: "File Scan",
+            scan_type: "project",
+          }}
+          profileData={profileData}
+        />
+      )}
     </>
   );
 };

@@ -11,16 +11,17 @@ import {
   MenuButton,
   Divider,
   useDisclosure,
-  HStack,
-  VStack,
+  InputGroup,
+  InputLeftElement,
+  Input,
 } from "@chakra-ui/react";
 import { Profile, Plan } from "common/types";
 import { sentenceCapitalize, getAssetsURL } from "helpers/helperFunction";
 import { ChevronUpIcon, ChevronDownIcon } from "@chakra-ui/icons";
 import PaymentModal from "../../../components/modals/PaymentModal";
-import ContactUs from "components/modals/contactus";
+import { LOCInfoContainer } from "components/locInfoContainer";
 
-const ScanCredits: React.FC<{
+const LocTopUp: React.FC<{
   planData: Plan;
   profile: Profile;
   topUpData: {
@@ -37,6 +38,7 @@ const ScanCredits: React.FC<{
   const [optionsSelected, setOptionsSelected] = useState(false);
   const [selectedIndex, setSelectedIndex] = useState(0);
   const currentTopUpPlan = topUpData[profile.current_package];
+  const [noOfLoc, setNoOfLoc] = useState(0);
   const creditOptions = ["00", "02", "05", "10", "20", "40", "60", "80"];
 
   return (
@@ -75,9 +77,9 @@ const ScanCredits: React.FC<{
               <Flex key={index} w="100%" fontSize="sm" fontWeight="600">
                 <Text>{sentenceCapitalize(topUpData[key].name)}</Text>
                 <Text ml="auto">{`$ ${parseFloat(topUpData[key].amount).toFixed(
-                  2
+                  3
                 )}`}</Text>
-                <Text fontWeight={400}>&nbsp;/ Credit</Text>
+                <Text fontWeight={400}>&nbsp;/ LoCs</Text>
               </Flex>
               {index !== Object.keys(topUpData).length - 1 && (
                 <Divider borderColor="#F3F3F3" my={1} />
@@ -93,8 +95,8 @@ const ScanCredits: React.FC<{
           borderRadius={"15px"}
         >
           <Text color="detail" fontWeight={400}>
-            Increase your scan credits with our top-up option. It will cost{" "}
-            <strong>${currentTopUpPlan.amount} </strong> per credit for your
+            Increase your LoCs with our top-up option. It will cost{" "}
+            <strong>${currentTopUpPlan.amount} </strong> per LoC for your
             current
             <strong> {sentenceCapitalize(planData.name)} </strong> plan.
           </Text>
@@ -109,67 +111,80 @@ const ScanCredits: React.FC<{
         px={10}
         ml={[0, 0, 0, 10]}
       >
-        <VStack
-          alignItems={["center", "center", "flex-start"]}
-          justifyContent="flex-start"
-          textAlign={["center", "center", "left"]}
-          spacing={3}
+        <Text fontSize="lg">How many loCs you need to buy?</Text>
+        <Box w="100%" my={5}>
+          <LOCInfoContainer view="topup_page" profileData={profile} />
+        </Box>
+        {/* <Flex w="100%">
+          
+        </Flex> */}
+        <InputGroup alignItems="center">
+          <InputLeftElement
+            height="80px"
+            width="80px"
+            children={
+              <Image
+                w="50px"
+                h="50px"
+                src={`${assetsURL}common/loc-code.svg`}
+              />
+            }
+          />
+          <Input
+            placeholder="Enter required LoCs here"
+            variant={"brand"}
+            size="lg"
+            pl="80px"
+            height="80px"
+            value={noOfLoc}
+            type="number"
+            onChange={(e) => setNoOfLoc(parseInt(e.target.value))}
+          />
+        </InputGroup>
+        <Text fontSize="xl" mt={8}>{`${noOfLoc || "00"} LoCs`}</Text>
+        <Flex w="100%" textColor="subtle" my={2}>
+          <Text>{`$${currentTopUpPlan.amount} Per LoCs  X  ${
+            noOfLoc || 0
+          }`}</Text>
+          <Text ml="auto">{`$${
+            parseFloat(currentTopUpPlan.amount) * (noOfLoc || 0)
+          }`}</Text>
+        </Flex>
+        <Divider borderColor={"#EAEAEA"} my={4} />
+        <Flex align="center" w="100%">
+          <Text fontSize="lg">Total</Text>
+          <Text fontSize="2xl" fontWeight={800} ml="auto">
+            {`$${Number(
+              parseFloat(currentTopUpPlan.amount) * (noOfLoc || 0)
+            ).toFixed(2)}`}
+          </Text>
+        </Flex>
+        <Divider borderColor={"#EAEAEA"} my={4} />
+        <Button
+          variant="brand"
+          p={6}
+          mt={"auto"}
           w="100%"
-          border="1px solid #FFC661"
-          bgColor="#FFFCF7"
-          p={5}
-          borderRadius={10}
+          alignSelf="center"
+          isDisabled={noOfLoc === 0}
+          onClick={onOpen}
         >
-          <HStack spacing={4}>
-            <Image w="34px" h="34px" src={`${assetsURL}pricing/coin.svg`} />
-            <Text fontSize="lg" color="#000000" fontWeight={600}>
-              Scan Credits Top-up
-            </Text>
-          </HStack>
-          <Text fontSize="sm" color="#4E5D78" fontWeight={300}>
-            We are upgrading to new pricing plans, If u need Scan Credits please
-            contact our team for the Scan Credits Top-up . Eu On Demand blandit
-            arcu et massa sit. Purus aliquam sagittis convallis vitae aliquam
-            magna.
-          </Text>
-          <HStack justifyContent="space-between" w="100%" alignItems="flex-end">
-            <Button
-              minW="200px"
-              borderRadius={7}
-              onClick={onOpen}
-              variant="black-outline"
-            >
-              Contact Us
-            </Button>
-            <Image w="70px" h="70px" src={`${assetsURL}icons/mail-icon.svg`} />
-          </HStack>
-        </VStack>
-        <VStack
-          alignItems="center"
-          justifyContent="flex-start"
-          textAlign="center"
-          background="linear-gradient(to right, #1BD8E330, #FBEAAA30)"
-          spacing={3}
-          p={5}
-          display={["none", "none", "flex"]}
-          borderRadius={10}
-          mt={5}
-        >
-          <Text fontWeight={600} fontSize="lg">
-            New Pricing Plans 2024
-          </Text>
-          <Text fontWeight={300}>
-            Lorem ipsum dolor sit amet consectetur. Elit cras purus ultricies
-            eget tempor. Viverra leo id potenti.
-          </Text>
-          <Button w="100%" variant="brand">
-            Get LoCs Top up now
-          </Button>
-        </VStack>
+          Make Payment
+        </Button>
       </Flex>
-      {isOpen && <ContactUs isOpen={isOpen} onClose={onClose} />}
+      {isOpen && (
+        <PaymentModal
+          globalDuration={"topup"}
+          selectedPlan={profile.current_package}
+          quantity={noOfLoc}
+          profileData={profile}
+          pricingDetails={pricingDetails}
+          isOpen={isOpen}
+          onClose={onClose}
+        />
+      )}
     </Flex>
   );
 };
 
-export default ScanCredits;
+export default LocTopUp;

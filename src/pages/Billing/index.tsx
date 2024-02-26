@@ -22,6 +22,7 @@ import PromoCodeCard from "./components/PromoCodeCard";
 import TransactionListCard from "./components/TransactionListCard";
 import Loader from "components/styled-components/Loader";
 import { useProfile } from "hooks/useProfile";
+import LocTopUp from "./components/LocTopUp";
 
 const Billing: React.FC = () => {
   const [planBillingCycle, setPlanBillingCycle] = useState("");
@@ -163,7 +164,15 @@ const Billing: React.FC = () => {
                 </Tab>
                 {!["trial", "custom", "expired"].includes(
                   profileData.current_package
-                ) && (
+                ) && profileData.credit_system === "loc" ? (
+                  <Tab
+                    minW={["150px", "150px", "200px"]}
+                    bgColor={"#F5F5F5"}
+                    mx={[2, 3, 5]}
+                  >
+                    LoCs TopUp
+                  </Tab>
+                ) : (
                   <Tab
                     minW={["150px", "150px", "200px"]}
                     bgColor={"#F5F5F5"}
@@ -215,6 +224,7 @@ const Billing: React.FC = () => {
                         discount: null,
                         scan_count: 0,
                         amount: "NA",
+                        loc: 100000,
                         github: true,
                         report: true,
                         publishable_report: true,
@@ -285,7 +295,25 @@ const Billing: React.FC = () => {
               </TabPanel>
               {!["trial", "custom", "expired"].includes(
                 profileData.current_package
-              ) && (
+              ) && profileData.credit_system === "loc" ? (
+                <TabPanel px={[0, 0, 4]} mx={[0, 0, 4]}>
+                  {plans.pricing_data[planBillingCycle] &&
+                    plans.pricing_data[planBillingCycle][
+                      profileData.current_package
+                    ] && (
+                      <LocTopUp
+                        planData={
+                          plans.pricing_data[planBillingCycle][
+                            profileData.current_package
+                          ]
+                        }
+                        profile={profileData}
+                        topUpData={plans.pricing_data["topup"]}
+                        pricingDetails={plans.pricing_data}
+                      />
+                    )}
+                </TabPanel>
+              ) : (
                 <TabPanel px={[0, 0, 4]} mx={[0, 0, 4]}>
                   {plans.pricing_data[planBillingCycle] &&
                     plans.pricing_data[planBillingCycle][
