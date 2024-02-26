@@ -105,9 +105,10 @@ const QuickScan: React.FC = () => {
     });
     setQSStatus("Validated");
     setIsLoading(true);
-    setNeedAuthToken(true);
     setScanReport(null);
     const reqHeaders_qs = await getReCaptchaHeaders("quickScan");
+    setNeedAuthToken(false);
+
     if (platform !== "buildbear" && !checkContractAddress(address)) {
       toast({
         title: "Contract Adddress not Valid",
