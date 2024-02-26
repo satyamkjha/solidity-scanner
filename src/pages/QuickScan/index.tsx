@@ -63,38 +63,34 @@ const QuickScan: React.FC = () => {
   const location = useLocation();
   const query = new URLSearchParams(location.search);
   const ref = query.get("ref");
-  const [reqHeaders_QS_Verify, setReqHeaders_QS_Verify] = useState<
-    RecaptchaHeader | undefined
-  >();
-  const [reqHeaders_QS, setReqHeaders_QS] = useState<
-    RecaptchaHeader | undefined
-  >();
+  // const [reqHeaders_QS_Verify, setReqHeaders_QS_Verify] = useState<
+  //   RecaptchaHeader | undefined
+  // >();
+  // const [reqHeaders_QS, setReqHeaders_QS] = useState<
+  //   RecaptchaHeader | undefined
+  // >();
 
-  const getRecapthaTokens = async () => {
-    const reqHeaders_qs_verify = await getReCaptchaHeaders("quickScan_verify");
-    const reqHeaders_qs = await getReCaptchaHeaders("quickScan");
-    setReqHeaders_QS_Verify(reqHeaders_qs_verify);
-    setReqHeaders_QS(reqHeaders_qs);
-  };
+  // const getRecapthaTokens = async () => {
+  //   const reqHeaders_qs_verify = await getReCaptchaHeaders("quickScan_verify");
+  //   const reqHeaders_qs = await getReCaptchaHeaders("quickScan");
+  //   setReqHeaders_QS_Verify(reqHeaders_qs_verify);
+  //   setReqHeaders_QS(reqHeaders_qs);
+  // };
 
   useEffect(() => {
     if (blockAddress && blockChain && blockPlatform) {
       setQSStatus("Validated");
       setIsLoading(true);
-      if (reqHeaders_QS === undefined) {
-        getRecapthaTokens();
+
+      if (blockPlatform === "fuse") {
+        runQuickScan(blockAddress, "blockscout", `fuse-${blockChain}`, ref);
       } else {
-        if (blockPlatform === "fuse") {
-          runQuickScan(blockAddress, "blockscout", `fuse-${blockChain}`, ref);
-        } else {
-          runQuickScan(blockAddress, blockPlatform, blockChain, ref);
-        }
+        runQuickScan(blockAddress, blockPlatform, blockChain, ref);
       }
-    } else if (reqHeaders_QS === undefined) {
-      getRecapthaTokens();
     }
+
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [reqHeaders_QS]);
+  }, []);
 
   const runQuickScan = async (
     address: string,
@@ -110,6 +106,9 @@ const QuickScan: React.FC = () => {
     setQSStatus("Validated");
     setIsLoading(true);
     setScanReport(null);
+    const reqHeaders_qs = await getReCaptchaHeaders("quickScan");
+    setNeedAuthToken(false);
+
     if (platform !== "buildbear" && !checkContractAddress(address)) {
       toast({
         title: "Contract Adddress not Valid",
@@ -129,70 +128,17 @@ const QuickScan: React.FC = () => {
       [platform === "buildbear" ? "node_id" : "contract_chain"]: chain,
     };
 
-    if (config && config.REACT_APP_FEATURE_GATE_CONFIG.websockets_enabled) {
-      if (ref) {
-        req = { ...req, ref };
-      }
-      setKeepWSOpen(true);
-      setNeedAuthToken(false);
-      reqHeaders_QS &&
-        sendMessage({
-          type: "quick_scan_initiate",
-          body: req,
-          recaptcha_token: reqHeaders_QS.Recaptchatoken,
-        });
-    } else {
-      API.post<{
-        contract_verified: boolean;
-        message: string;
-        status: string;
-      }>(API_PATH.API_GET_CONTRACT_STATUS, req, {
-        headers: reqHeaders_QS_Verify,
-      })
-        .then(
-          (res) => {
-            if (res.data.contract_verified) {
-              setQSStatus("Scanned");
-              let api_url = `${
-                API_PATH.API_QUICK_SCAN_SSE
-              }?contract_address=${address}&contract_platform=${platform}&${
-                platform === "buildbear" ? "node_id" : "contract_chain"
-              }=${chain}`;
-
-              if (ref) {
-                api_url = api_url + `&ref=${ref}`;
-              }
-              API.get(api_url, {
-                headers: reqHeaders_QS,
-              })
-                .then(
-                  (res) => {
-                    if (res.status === 200) {
-                      setScanReport(res.data.scan_report);
-                      setProjectId(res.data.project_id);
-                      setScanId(res.data.scan_id);
-                    }
-                  },
-                  () => {
-                    return;
-                  }
-                )
-                .finally(() => {
-                  setIsLoading(false);
-                  setTempQSData(null);
-                });
-            }
-          },
-          () => {
-            setIsLoading(false);
-            setTempQSData(null);
-          }
-        )
-        .catch(() => {
-          setIsLoading(false);
-          setTempQSData(null);
-        });
+    if (ref) {
+      req = { ...req, ref };
     }
+    setKeepWSOpen(true);
+    setNeedAuthToken(false);
+    reqHeaders_qs &&
+      sendMessage({
+        type: "quick_scan_initiate",
+        body: req,
+        recaptcha_token: reqHeaders_qs.Recaptchatoken,
+      });
   };
 
   const reset = () => {

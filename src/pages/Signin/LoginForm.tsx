@@ -30,17 +30,7 @@ const LoginForm: React.FC = () => {
   const [password, setPassword] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [twoFAScreen, setTwoFAScreen] = useState(false);
-  const [reqHeaders, setReqHeaders] = useState<RecaptchaHeader | undefined>();
   const { handleSubmit } = useForm();
-
-  // const getRecapthaTokens = async () => {
-  //   const reqHeaders = await getReCaptchaHeaders("signin");
-  //   setReqHeaders(reqHeaders);
-  // };
-
-  // useEffect(() => {
-  //   getRecapthaTokens();
-  // }, []);
 
   const verify2FA = async (otp: string) => {
     setIsLoading(true);
@@ -189,7 +179,7 @@ const LoginForm: React.FC = () => {
               spinner={<Loader color={"#3300FF"} size={25} />}
               disabled={
                 email.length < 1 ||
-                password.length < 1 ||
+                password.length < 6 ||
                 email.length > 50 ||
                 password.length > 50 ||
                 !isEmail(email)

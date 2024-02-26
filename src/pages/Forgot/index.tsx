@@ -93,23 +93,14 @@ const ForgotPasswordForm: React.FC<{
   setEmail: React.Dispatch<React.SetStateAction<string>>;
 }> = ({ setMailSent, setEmail }) => {
   const { handleSubmit, register, formState } = useForm<FormData>();
-  const [reqHeaders, setReqHeaders] = useState<RecaptchaHeader | undefined>();
 
   const { orgName } = useParams<{
     orgName: string | null;
   }>();
 
-  const getRecapthaTokens = async () => {
-    const reqHeaders = await getReCaptchaHeaders("forgot");
-    setReqHeaders(reqHeaders);
-  };
-
-  useEffect(() => {
-    getRecapthaTokens();
-  }, []);
-
   const onSubmit = async ({ email }: FormData) => {
     try {
+      const reqHeaders = await getReCaptchaHeaders("forgot");
       const { data } = await API.post<AuthResponse>(
         API_PATH.API_SEND_EMAIL,
         {
