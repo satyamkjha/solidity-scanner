@@ -279,7 +279,7 @@ const OrgLoginForm: React.FC<{
               disabled={
                 step
                   ? email.length < 1 ||
-                    password.length < 1 ||
+                    password.length < 6 ||
                     email.length > 50 ||
                     password.length > 50 ||
                     !isEmail(email)

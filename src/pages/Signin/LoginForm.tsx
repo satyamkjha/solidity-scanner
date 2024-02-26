@@ -179,7 +179,7 @@ const LoginForm: React.FC = () => {
               spinner={<Loader color={"#3300FF"} size={25} />}
               disabled={
                 email.length < 1 ||
-                password.length < 1 ||
+                password.length < 6 ||
                 email.length > 50 ||
                 password.length > 50 ||
                 !isEmail(email)
