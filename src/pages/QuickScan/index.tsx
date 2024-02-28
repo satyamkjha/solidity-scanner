@@ -168,6 +168,20 @@ const QuickScan: React.FC = () => {
           setProjectId(msgItem.payload.project_id);
           setScanId(msgItem.payload.scan_id);
           reset();
+        } else if (
+          msgItem.type === "quick_scan_status" &&
+          ["download_failed", "scan_failed"].includes(
+            msgItem.payload.scan_status
+          )
+        ) {
+          toast({
+            title: msgItem.payload.scan_status_err_message,
+            status: "error",
+            duration: 3000,
+            isClosable: true,
+            position: "bottom",
+          });
+          reset();
         } else if (msgItem.type && msgItem.type === "quick_scan_acknowledge") {
           setQSStatus("Scanned");
         } else if (msgItem.type === "error") {
