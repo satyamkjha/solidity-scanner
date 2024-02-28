@@ -259,7 +259,7 @@ const ScanCard: React.FC<{
         </Flex>
       ) : ["scanning", "initialised", "downloaded", "scan_initiate"].includes(
           multi_file_scan_status
-        ) ? (
+        ) && !["download_failed", "scan_failed"].includes(tempScanStatus) ? (
         <Box mb={10} p={5} w="100%">
           <Flex
             sx={{
@@ -300,7 +300,9 @@ const ScanCard: React.FC<{
           <HStack mb={2}>
             <WarningIcon color="#FF5630" />
             <Heading sx={{ fontSize: "sm", color: "#FF5630" }}>
-              {scan_status.length > 25
+              {["download_failed", "scan_failed"].includes(tempScanStatus)
+                ? snakeToNormal(tempScanStatus)
+                : scan_status.length > 25
                 ? getTrimmedScanMessage(scan_status)
                 : snakeToNormal(scan_status)}
             </Heading>
@@ -308,7 +310,8 @@ const ScanCard: React.FC<{
           <Text sx={{ fontSize: "xs", color: "#4E5D78" }}>
             {scan_status.length > 25
               ? scan_status
-              : scan.scan_details.scan_message ||
+              : scan.scan_err_message ||
+                scan.scan_details.scan_message ||
                 "This scan has failed, lost credit will be reimbursed in a few minutes. Please contact support"}
           </Text>
         </Box>

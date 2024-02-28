@@ -182,6 +182,19 @@ const Scans: React.FC = () => {
                   },
                   tempScanStatus: "scan_done",
                 };
+              } else if (
+                ["download_failed", "scan_failed"].includes(
+                  msgItem.payload.scan_status
+                )
+              ) {
+                return {
+                  scanItem: {
+                    ...item.scanItem,
+                    scan_id: msgItem.payload.scan_id,
+                    scan_err_message: msgItem.payload.scan_status_err_message,
+                  },
+                  tempScanStatus: msgItem.payload.scan_status,
+                };
               } else
                 return {
                   ...item,
