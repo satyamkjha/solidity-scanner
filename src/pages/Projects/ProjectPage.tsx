@@ -28,46 +28,22 @@ import {
   MenuButton,
   MenuList,
   MenuItem,
-  Collapse,
-  Popover,
-  PopoverArrow,
-  PopoverBody,
-  PopoverCloseButton,
-  PopoverContent,
-  PopoverTrigger,
   useMediaQuery,
 } from "@chakra-ui/react";
 import Overview from "components/overview";
 import MultifileResult from "components/detailedResult/MultifileResult";
 import { RescanIcon, LogoIcon, ScanErrorIcon } from "components/icons";
-import { InfoIcon } from "@chakra-ui/icons";
 import API from "helpers/api";
-import { restructureRepoTree, updateCheckedValue } from "helpers/fileStructure";
 import { useScans } from "hooks/useScans";
 import { useScan } from "hooks/useScan";
-import {
-  Profile,
-  Report,
-  ReportsListItem,
-  ScanMeta,
-  TreeItem,
-  TreeItemUP,
-} from "common/types";
+import { Report, ReportsListItem, ScanMeta, TreeItem } from "common/types";
 import { useProfile } from "hooks/useProfile";
-import {
-  CheckCircleIcon,
-  LockIcon,
-  TimeIcon,
-  ChevronUpIcon,
-  ChevronDownIcon,
-} from "@chakra-ui/icons";
-import { monthNames } from "common/values";
+import { CheckCircleIcon, LockIcon, TimeIcon } from "@chakra-ui/icons";
 import PublishedReports from "components/publishedReports";
 import { useReports } from "hooks/useReports";
 import { usePricingPlans } from "hooks/usePricingPlans";
 import { API_PATH } from "helpers/routeManager";
 import ProjectCustomSettings from "components/projectCustomSettings";
-import FolderSettings from "components/projectFolderSettings";
 import { getRepoTree } from "hooks/getRepoTree";
 import {
   checkGenerateReportAccess,
@@ -370,9 +346,21 @@ const ScanDetails: React.FC<{
     }
   };
 
+  const checkUserCredits = () => {
+    if (
+      profile?.credit_system === "loc" &&
+      profile.loc_remaining <
+        parseInt(process.env.REACT_APP_MIN_LOCS_REQ || "10")
+    ) {
+      return true;
+    } else if (profile?.credit_system === "scan_credit" && scansRemaining === 0)
+      return true;
+    else return false;
+  };
+
   const isRescanButtonDisabled = () => {
     if (
-      scansRemaining === 0 ||
+      checkUserCredits() ||
       scanData?.scan_report.scan_status === "scanning" ||
       role === "viewer"
     )
@@ -940,10 +928,12 @@ const ScanDetails: React.FC<{
 
             <AlertDialogBody>
               Are you sure? You have{" "}
-              <Box as="span" sx={{ fontWeight: 600 }}>
-                {scansRemaining}
-              </Box>{" "}
-              scans remaining.
+              <strong>
+                {profile?.credit_system === "loc"
+                  ? profile.loc_remaining
+                  : scansRemaining}
+              </strong>{" "}
+              {profile?.credit_system === "loc" ? "LoCs" : "scans"} remaining.
             </AlertDialogBody>
 
             <AlertDialogFooter>

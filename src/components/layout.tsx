@@ -279,7 +279,7 @@ const Layout: React.FC = ({ children }) => {
               width="90%"
               sx={{ alignItems: "center", justifyContent: "space-between" }}
             >
-              <HStack width={["100%", "100%", "50%", "50%"]}>
+              <HStack width={["100%", "100%", "40%", "35%"]}>
                 <Icon
                   as={GiHamburgerMenu}
                   sx={{

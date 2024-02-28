@@ -23,8 +23,15 @@ import TransactionListCard from "./components/TransactionListCard";
 import Loader from "components/styled-components/Loader";
 import { useProfile } from "hooks/useProfile";
 import LocTopUp from "./components/LocTopUp";
+import { useLocation } from "react-router-dom";
+import { billingTabs } from "common/values";
 
 const Billing: React.FC = () => {
+  const location = useLocation();
+  const searchParams = new URLSearchParams(location.search);
+  const tab = searchParams.get("tab") || "billing";
+  const tabIndex = billingTabs.findIndex((item) => item === tab);
+
   const [planBillingCycle, setPlanBillingCycle] = useState("");
   const pricingRef = useRef<HTMLDivElement>(null);
   const { data: profileData, refetch: refetchProfile } = useProfile(true);
@@ -144,6 +151,7 @@ const Billing: React.FC = () => {
             w={"100%"}
             variant="soft-rounded"
             colorScheme="green"
+            defaultIndex={tabIndex}
           >
             <Flex
               width={"90%"}
@@ -164,23 +172,17 @@ const Billing: React.FC = () => {
                 </Tab>
                 {!["trial", "custom", "expired"].includes(
                   profileData.current_package
-                ) && profileData.credit_system === "loc" ? (
+                ) ? (
                   <Tab
                     minW={["150px", "150px", "200px"]}
                     bgColor={"#F5F5F5"}
                     mx={[2, 3, 5]}
                   >
-                    LoCs TopUp
+                    {profileData.credit_system === "loc"
+                      ? "LoCs TopUp"
+                      : "Scan Credits"}
                   </Tab>
-                ) : (
-                  <Tab
-                    minW={["150px", "150px", "200px"]}
-                    bgColor={"#F5F5F5"}
-                    mx={[2, 3, 5]}
-                  >
-                    Scan Credits
-                  </Tab>
-                )}
+                ) : null}
                 <Tab
                   minW={["150px", "150px", "200px"]}
                   bgColor={"#F5F5F5"}
@@ -295,43 +297,40 @@ const Billing: React.FC = () => {
               </TabPanel>
               {!["trial", "custom", "expired"].includes(
                 profileData.current_package
-              ) && profileData.credit_system === "loc" ? (
+              ) ? (
                 <TabPanel px={[0, 0, 4]} mx={[0, 0, 4]}>
                   {plans.pricing_data[planBillingCycle] &&
-                    plans.pricing_data[planBillingCycle][
-                      profileData.current_package
-                    ] && (
-                      <LocTopUp
-                        planData={
-                          plans.pricing_data[planBillingCycle][
-                            profileData.current_package
-                          ]
-                        }
-                        profile={profileData}
-                        topUpData={plans.pricing_data["topup"]}
-                        pricingDetails={plans.pricing_data}
-                      />
-                    )}
+                  plans.pricing_data[planBillingCycle][
+                    profileData.current_package
+                  ] ? (
+                    <>
+                      {profileData.credit_system === "loc" ? (
+                        <LocTopUp
+                          planData={
+                            plans.pricing_data[planBillingCycle][
+                              profileData.current_package
+                            ]
+                          }
+                          profile={profileData}
+                          topUpData={plans.pricing_data["topup"]}
+                          pricingDetails={plans.pricing_data}
+                        />
+                      ) : (
+                        <ScanCredits
+                          planData={
+                            plans.pricing_data[planBillingCycle][
+                              profileData.current_package
+                            ]
+                          }
+                          profile={profileData}
+                          topUpData={plans.pricing_data["topup"]}
+                          pricingDetails={plans.pricing_data}
+                        />
+                      )}
+                    </>
+                  ) : null}
                 </TabPanel>
-              ) : (
-                <TabPanel px={[0, 0, 4]} mx={[0, 0, 4]}>
-                  {plans.pricing_data[planBillingCycle] &&
-                    plans.pricing_data[planBillingCycle][
-                      profileData.current_package
-                    ] && (
-                      <ScanCredits
-                        planData={
-                          plans.pricing_data[planBillingCycle][
-                            profileData.current_package
-                          ]
-                        }
-                        profile={profileData}
-                        topUpData={plans.pricing_data["topup"]}
-                        pricingDetails={plans.pricing_data}
-                      />
-                    )}
-                </TabPanel>
-              )}
+              ) : null}
               <TabPanel px={[0, 0, 4]} mx={[0, 0, 4]}>
                 <TransactionListCard
                   transactionList={transactionList}

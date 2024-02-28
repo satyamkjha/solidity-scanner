@@ -1,7 +1,6 @@
 import React, { useEffect, useState, useRef } from "react";
 import { HStack, Image, Text, Box, VStack, Progress } from "@chakra-ui/react";
 import { Profile } from "common/types";
-import { useConfig } from "hooks/useConfig";
 import { getAssetsURL } from "helpers/helperFunction";
 import { useWebSocket } from "hooks/useWebhookData";
 
@@ -9,8 +8,7 @@ export const LOCInfoContainer: React.FC<{
   profileData: Profile;
   view: "insufficient_scan_modal" | "header" | "topup_page";
 }> = ({ profileData, view }) => {
-  const config: any = useConfig();
-  const assetsURL = getAssetsURL(config);
+  const assetsURL = getAssetsURL();
 
   return (
     <HStack justifyContent="flex-start" alignItems="center" w="100%">
@@ -77,15 +75,7 @@ export const LOCInfoContainer: React.FC<{
         </Box>
         {view !== "topup_page" && (
           <Text color="subtle" fontSize="xs">
-            Used{" "}
-            <span
-              style={{
-                fontWeight: 700,
-              }}
-            >
-              {" "}
-              Lines of Code
-            </span>
+            Used <strong> Lines of Code</strong>
           </Text>
         )}
       </VStack>

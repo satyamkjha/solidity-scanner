@@ -188,6 +188,12 @@ export const ScanTitleComponent: React.FC<{
                       scanData.contract_platform || "",
                       scanData.contract_chain || ""
                     )
+                  ] &&
+                  contractChain[
+                    getContractBlockchainId(
+                      scanData.contract_platform || "",
+                      scanData.contract_chain || ""
+                    )
                   ].blockchainName.toUpperCase()}{" "}
               {`(${getContractChainLabel(
                 scanData.contract_platform || "",

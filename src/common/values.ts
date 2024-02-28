@@ -2314,3 +2314,5 @@ export const reportBlockDetails = [
     value: "email",
   },
 ];
+
+export const billingTabs = ["billing", "topup", "transactions"];

@@ -267,7 +267,10 @@ export const getContractBlockChainLogoUrl = (
 ) => {
   if (platform === "buildbear") return "blockscan/buildbear";
 
-  return contractChain[getContractBlockchainId(platform, chain)].logoUrl;
+  return (
+    contractChain[getContractBlockchainId(platform, chain)] &&
+    contractChain[getContractBlockchainId(platform, chain)].logoUrl
+  );
 };
 
 export const getTrimmedScanMessage = (scan_status: string) => {

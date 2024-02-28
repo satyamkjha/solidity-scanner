@@ -131,8 +131,7 @@ const ScanCard: React.FC<{
   return (
     <Flex
       sx={{
-        cursor:
-          multi_file_scan_status === "scan_done" ? "pointer" : "not-allowed",
+        cursor: "pointer",
         flexDir: "column",
         justifyContent: "space-between",
         h: "260px",

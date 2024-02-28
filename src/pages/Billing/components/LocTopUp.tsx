@@ -20,6 +20,7 @@ import { sentenceCapitalize, getAssetsURL } from "helpers/helperFunction";
 import { ChevronUpIcon, ChevronDownIcon } from "@chakra-ui/icons";
 import PaymentModal from "../../../components/modals/PaymentModal";
 import { LOCInfoContainer } from "components/locInfoContainer";
+import { useLocation } from "react-router-dom";
 
 const LocTopUp: React.FC<{
   planData: Plan;
@@ -33,12 +34,17 @@ const LocTopUp: React.FC<{
     };
   };
 }> = ({ planData, profile, topUpData, pricingDetails }) => {
+  const location = useLocation();
+  const searchParams = new URLSearchParams(location.search);
+  const paramsLoc = searchParams.get("loc");
+
   const { isOpen, onClose, onOpen } = useDisclosure();
   const assetsURL = getAssetsURL();
   const [optionsSelected, setOptionsSelected] = useState(false);
   const [selectedIndex, setSelectedIndex] = useState(0);
   const currentTopUpPlan = topUpData[profile.current_package];
-  const [noOfLoc, setNoOfLoc] = useState(0);
+  const [noOfLoc, setNoOfLoc] = useState(paramsLoc ? +paramsLoc : 0);
+  const locPriceUnits = currentTopUpPlan.loc;
   const creditOptions = ["00", "02", "05", "10", "20", "40", "60", "80"];
 
   return (
@@ -143,11 +149,11 @@ const LocTopUp: React.FC<{
         </InputGroup>
         <Text fontSize="xl" mt={8}>{`${noOfLoc || "00"} LoCs`}</Text>
         <Flex w="100%" textColor="subtle" my={2}>
-          <Text>{`$${currentTopUpPlan.amount} Per LoCs  X  ${
-            noOfLoc || 0
+          <Text>{`$${currentTopUpPlan.amount} Per ${locPriceUnits} LoCs  X  ${
+            noOfLoc / locPriceUnits || 0
           }`}</Text>
           <Text ml="auto">{`$${
-            parseFloat(currentTopUpPlan.amount) * (noOfLoc || 0)
+            parseFloat(currentTopUpPlan.amount) * (noOfLoc / locPriceUnits || 0)
           }`}</Text>
         </Flex>
         <Divider borderColor={"#EAEAEA"} my={4} />
@@ -155,7 +161,8 @@ const LocTopUp: React.FC<{
           <Text fontSize="lg">Total</Text>
           <Text fontSize="2xl" fontWeight={800} ml="auto">
             {`$${Number(
-              parseFloat(currentTopUpPlan.amount) * (noOfLoc || 0)
+              parseFloat(currentTopUpPlan.amount) *
+                (noOfLoc / locPriceUnits || 0)
             ).toFixed(2)}`}
           </Text>
         </Flex>

@@ -228,7 +228,7 @@ const Scans: React.FC = () => {
               ...updatedProjectList,
             ];
           }
-          if (msgItem.payload.scan_details.scan_type === "blocks")
+          if (msgItem.payload.scan_details.scan_type === "block")
             setInScanDetails({
               project_id: msgItem.payload.scan_details.project_id,
               contract_address: msgItem.payload.scan_details.contract_address,
@@ -281,7 +281,7 @@ const Scans: React.FC = () => {
     if (inScanDetails !== null) {
       onOpen();
     }
-  }, [inScanDetails]);
+  }, [inScanDetails, onOpen]);
 
   useEffect(() => {
     if (
@@ -562,13 +562,13 @@ const Scans: React.FC = () => {
           </InfiniteScroll>
         </Flex>
       )}
-      {inScanDetails && (
+      {inScanDetails ? (
         <InScanModal
           inScanDetails={inScanDetails}
           isOpen={isOpen}
           onClose={onClose}
         />
-      )}
+      ) : null}
     </Box>
   );
 };

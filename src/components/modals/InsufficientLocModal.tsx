@@ -34,6 +34,11 @@ const InsufficientLocModal: React.FC<{
   const history = useHistory();
   const assetsUrl = getAssetsURL();
 
+  const navigateToTopup = () => {
+    closeModal();
+    history.push(`/billing?tab=topup&loc=${scanDetails.loc}`);
+  };
+
   return (
     <>
       <Modal isCentered isOpen={open} onClose={closeModal}>
@@ -127,10 +132,7 @@ const InsufficientLocModal: React.FC<{
                   Lorem ipsum dolor sit amet consectetur. Morbi tellus nunc
                   risus amet. Dolor rhoncus.
                 </Text>
-                <Button
-                  onClick={() => history.push("/billing")}
-                  variant="brand"
-                >
+                <Button onClick={navigateToTopup} variant="brand">
                   Get LoCs Top up now
                 </Button>
               </VStack>
@@ -138,7 +140,7 @@ const InsufficientLocModal: React.FC<{
                 display={["flex", "flex", "none"]}
                 mt={10}
                 variant="brand"
-                onClick={() => history.push("/billing")}
+                onClick={navigateToTopup}
               >
                 Get LoCs Top up now
               </Button>

@@ -156,7 +156,7 @@ const Home: React.FC = () => {
   };
 
   const onInsufficientLocPopupClose = () => {
-    // localStorage.removeItem("recent_scan_details");
+    localStorage.removeItem("recent_scan_details");
     setOpen(false);
   };
 

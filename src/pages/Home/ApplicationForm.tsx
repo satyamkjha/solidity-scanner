@@ -95,7 +95,7 @@ const ApplicationForm: React.FC<{
     if (
       profileData.credit_system === "loc" &&
       profileData.loc_remaining <
-        parseInt(process.env.REACT_APP_MIN_LOCS_REQ || "200")
+        parseInt(process.env.REACT_APP_MIN_LOCS_REQ || "10")
     ) {
       onOpen();
     } else if (
@@ -488,7 +488,6 @@ const ApplicationForm: React.FC<{
           }}
           profileData={profileData}
         />
-
       )}
     </Flex>
   );

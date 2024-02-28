@@ -40,7 +40,7 @@ const ScanCredits: React.FC<{
   const creditOptions = ["00", "02", "05", "10", "20", "40", "60", "80"];
 
   return (
-    <Flex w="100%" h={"60vh"} flexDir={["column", "column", "column", "row"]}>
+    <Flex w="100%" h={"100%"} flexDir={["column", "column", "column", "row"]}>
       <Flex
         w={["100%", "100%", "100%", "55%"]}
         h="100%"
