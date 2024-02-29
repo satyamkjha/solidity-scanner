@@ -1,13 +1,13 @@
-import React, { useEffect, useState, useRef } from "react";
+import React from "react";
 import { HStack, Image, Text, Box, VStack, Progress } from "@chakra-ui/react";
 import { Profile } from "common/types";
 import { getAssetsURL } from "helpers/helperFunction";
-import { useWebSocket } from "hooks/useWebhookData";
 
 export const LOCInfoContainer: React.FC<{
   profileData: Profile;
+  remainingLoc?: number;
   view: "insufficient_scan_modal" | "header" | "topup_page";
-}> = ({ profileData, view }) => {
+}> = ({ profileData, remainingLoc = profileData.loc_remaining, view }) => {
   const assetsURL = getAssetsURL();
 
   return (
@@ -39,7 +39,7 @@ export const LOCInfoContainer: React.FC<{
           ) : (
             <HStack spacing={0}>
               <Text fontWeight={700} fontSize="lg">
-                {profileData.loc_remaining}
+                {remainingLoc}
               </Text>
               <Text color="subtle" fontSize="sm">
                 /{profileData.total_loc}
@@ -69,7 +69,7 @@ export const LOCInfoContainer: React.FC<{
           <Progress
             variant="loc"
             size="xs"
-            value={profileData.loc_remaining}
+            value={remainingLoc}
             max={profileData.total_loc}
           />
         </Box>

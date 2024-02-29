@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 
 import {
   Flex,
@@ -8,17 +8,11 @@ import {
   ModalCloseButton,
   ModalContent,
   ModalOverlay,
-  ModalFooter,
-  Image,
   Button,
-  ModalHeader,
-  Divider,
   VStack,
   HStack,
   Box,
 } from "@chakra-ui/react";
-import API from "helpers/api";
-import { API_PATH } from "helpers/routeManager";
 import { useHistory } from "react-router-dom";
 import { Profile } from "common/types";
 import { getAssetsURL } from "helpers/helperFunction";

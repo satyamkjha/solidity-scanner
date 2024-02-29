@@ -22,27 +22,21 @@ import {
 } from "@chakra-ui/react";
 import { GiHamburgerMenu } from "react-icons/gi";
 import { BiUser, BiPowerOff } from "react-icons/bi";
-import { getAssetsURL, getFeatureGateConfig } from "helpers/helperFunction";
+import { getAssetsURL } from "helpers/helperFunction";
 import Sidebar from "components/sidebar";
 import { ProfileIconOne } from "components/icons";
 import {
   SIDEBAR_WIDTH_EXPANDED,
   SIDEBAR_WIDTH_COLLAPSED,
 } from "common/constants";
-import API from "helpers/api";
-import { API_PATH } from "helpers/routeManager";
 import { useConfig } from "hooks/useConfig";
 import { useQueryClient } from "react-query";
 import { logout } from "common/functions";
 import { sentenceCapitalize } from "helpers/helperFunction";
 import { useUserOrgProfile } from "hooks/useUserOrgProfile";
-import { signInWithCustomToken, User, onAuthStateChanged } from "firebase/auth";
-import { auth } from "helpers/firebase";
-import { useWebSocket } from "hooks/useWebhookData";
 import { useProfile } from "hooks/useProfile";
 import { LOCHeader } from "./locHeader";
 import { usePricingPlans } from "hooks/usePricingPlans";
-import { LOCInfoContainer } from "./locInfoContainer";
 import { PlanDataContainer } from "./planDataContainer";
 
 const MotionFlex = motion(Flex);
@@ -356,10 +350,10 @@ const Layout: React.FC = ({ children }) => {
                     w="100%"
                     onClick={onToggle}
                   >
-                    {profileData && (
-                      <LOCInfoContainer
-                        view="header"
+                    {profileData && pricingPlans && (
+                      <LOCHeader
                         profileData={profileData}
+                        pricingPlans={pricingPlans}
                       />
                     )}
                   </Box>

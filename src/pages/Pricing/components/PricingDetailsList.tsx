@@ -1,96 +1,82 @@
 import React from "react";
-import { Text, HStack, Image, VStack } from "@chakra-ui/react";
+import { Text, HStack, Image, VStack, Flex } from "@chakra-ui/react";
 import { pricing_card_description_data } from "common/values";
 import { getAssetsURL } from "helpers/helperFunction";
-import { useConfig } from "hooks/useConfig";
 import { Plan } from "common/types";
+import PricingModelItem from "components/pricing/PricingModalItem";
+import PricingCardItem from "components/pricing/PricingCardItem";
+import { CheckIcon } from "@chakra-ui/icons";
 
 const PricingDetailsList: React.FC<{
   plan: Plan;
   page: "billing" | "pricing";
-}> = ({ plan, page }) => {
-  const config: any = useConfig();
-  const assetsURL = getAssetsURL(config);
+  view?: string;
+  planTheme?: { [key: string]: string };
+}> = ({ plan, page, view, planTheme }) => {
+  const assetsURL = getAssetsURL();
   return (
     <>
-      <VStack
-        pl={page === "pricing" ? 7 : 4}
-        width="250px"
-        alignItems={"flex-start"}
-        mb={5}
-        spacing={0}
-      >
-        <Text
-          fontSize="xs"
-          mb={1}
-          color="#7F7F7F"
-          fontWeight={300}
-          width="100%"
-        >
-          Remaining Lines of code
-        </Text>
-        <HStack
-          width="100%"
+      {view === "pricing-card" ? (
+        <Flex
+          w={"100%"}
           alignItems={"center"}
-          justifyContent="flex-start"
-          mb={5}
-          spacing={2}
+          justifyContent={"flex-start"}
+          pl={page === "billing" ? 4 : 6}
+          mb={6}
         >
-          <Image
-            width="20px"
-            height="20px"
-            src={`${assetsURL}common/loc-code.svg`}
-          />
-          <Text fontWeight={700}>{plan.loc}</Text>
-          <Text fontWeight={500}>LoCs</Text>
-        </HStack>
-      </VStack>
-      {pricing_card_description_data.map((item) => (
+          <CheckIcon color={planTheme ? planTheme.color : "black"} />
+          <Text fontSize={page === "billing" ? "md" : "lg"} ml={3}>
+            {plan.name === "custom" ? "Custom" : plan.loc.toLocaleString("us")}{" "}
+            LoCs
+          </Text>
+        </Flex>
+      ) : (
         <VStack
-          width="250px"
           pl={page === "pricing" ? 7 : 4}
+          width="250px"
           alignItems={"flex-start"}
           mb={5}
-          spacing={1}
-          opacity={
-            item.key === "detector"
-              ? 1
-              : item.key === "github" || item.key === "actions"
-              ? plan.github
-                ? 1
-                : 0.5
-              : item.key === "report" || item.key === "private"
-              ? plan.publishable_report
-                ? 1
-                : 0.5
-              : 0.5
-          }
+          spacing={0}
         >
           <Text
             fontSize="xs"
+            mb={1}
             color="#7F7F7F"
-            textAlign={"left"}
             fontWeight={300}
             width="100%"
           >
-            {item.description}
+            Remaining Lines of code
           </Text>
           <HStack
             width="100%"
             alignItems={"center"}
             justifyContent="flex-start"
+            mb={5}
             spacing={2}
           >
             <Image
               width="20px"
               height="20px"
-              src={`${assetsURL}${item.icon}`}
+              src={`${assetsURL}common/loc-code.svg`}
             />
-            <Text fontSize="sm" fontWeight={400}>
-              {item.title}
-            </Text>
+            <Text fontWeight={700}>{plan.loc}</Text>
+            <Text fontWeight={500}>LoCs</Text>
           </HStack>
         </VStack>
+      )}
+      {pricing_card_description_data.map((item) => (
+        <>
+          {view === "pricing-card" ? (
+            <PricingCardItem
+              item={item}
+              plan={plan}
+              page={page}
+              planTheme={planTheme}
+            />
+          ) : (
+            <PricingModelItem item={item} plan={plan} page={page} />
+          )}
+        </>
       ))}
     </>
   );

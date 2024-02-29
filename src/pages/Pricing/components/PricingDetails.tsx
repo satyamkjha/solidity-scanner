@@ -226,25 +226,29 @@ const PricingDetails: React.FC<{
           gap={page === "pricing" ? 6 : 4}
         >
           {Object.keys(pricingDetails.pricing_data["ondemand"]).map((plan) => {
-            if (plan !== "custom" && plan !== "trial") {
-              return (
-                <PricingCard
-                  page={page}
-                  globalDuration={"ondemand"}
-                  plan={plan}
-                  profileData={profileData}
-                  selectedPlan={selectedPlan}
-                  setSelectedPlan={setSelectedPlan}
-                  pricingDetails={pricingDetails.pricing_data}
-                />
-              );
-            }
-            return <></>;
+            return (
+              <PricingCard
+                page={page}
+                globalDuration={"ondemand"}
+                plan={plan}
+                profileData={profileData}
+                selectedPlan={selectedPlan}
+                setSelectedPlan={setSelectedPlan}
+                pricingDetails={pricingDetails.pricing_data}
+              />
+            );
           })}
           {Object.keys(pricingDetails.pricing_data[duration])
-            .sort((a, b) => a[0].localeCompare(b[0]))
+            .sort((a, b) => {
+              const planOrder: Record<string, number> = {
+                beginner: 1,
+                pro: 2,
+                custom: 3,
+              };
+              return planOrder[a] - planOrder[b];
+            })
             .map((plan) => {
-              if (plan !== "custom" && plan !== "trial") {
+              if (plan !== "trial") {
                 return (
                   <PricingCard
                     page={page}
@@ -262,9 +266,9 @@ const PricingDetails: React.FC<{
         </Grid>
       </Flex>
       <Suspense fallback={""}>
-        <Flex px={page === "pricing" ? [8, 8, 8, 16] : [4]}>
+        {/* <Flex px={page === "pricing" ? [8, 8, 8, 16] : [4]}>
           <CustomPlanCard />
-        </Flex>
+        </Flex> */}
         <PricingTable
           pricing_data={pricingDetails.pricing_data}
           pricing_table_data={pricing_table_data}

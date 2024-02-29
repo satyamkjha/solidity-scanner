@@ -1,11 +1,9 @@
-import React, { useEffect, useState, useRef } from "react";
+import React, { useEffect, useState } from "react";
 import {
   HStack,
   Image,
   Text,
   Box,
-  VStack,
-  Progress,
   Popover,
   PopoverTrigger,
   PopoverContent,
@@ -28,24 +26,31 @@ export const LOCHeader: React.FC<{
 
   useEffect(() => {
     if (profileData) {
-      setCredits(profileData.credits);
+      if (profileData.credit_system === "loc") {
+        setCredits(profileData.loc_remaining);
+      } else setCredits(profileData.credits);
     }
   }, [profileData]);
 
   useEffect(() => {
-    if (
-      messageQueue.length > 0 &&
-      messageQueue.some(
-        (msgItem: any) => msgItem && msgItem.type === "account_credits_update"
-      )
-    ) {
-      messageQueue.forEach((msgItem: any) => {
-        if (msgItem.type && msgItem.type === "account_credits_update") {
-          setCredits(msgItem.payload.updated_credits);
+    if (messageQueue.length > 0) {
+      const messageType =
+        profileData.credit_system === "loc"
+          ? "account_loc_update"
+          : "account_credits_update";
+      const creditUpdateMessage = messageQueue.filter(
+        (msgItem: any) => msgItem.type === messageType
+      );
+      if (creditUpdateMessage && creditUpdateMessage.length) {
+        if (profileData.credit_system === "loc") {
+          setCredits(creditUpdateMessage[0].payload.updated_loc);
+        } else {
+          setCredits(creditUpdateMessage[0].payload.updated_credits);
         }
-      });
+      }
+
       let tempMessageQueue = messageQueue.filter(
-        (msgItem: any) => msgItem.type !== "account_credits_update"
+        (msgItem: any) => msgItem.type !== messageType
       );
       updateMessageQueue(tempMessageQueue);
     }
@@ -58,7 +63,11 @@ export const LOCHeader: React.FC<{
       <Popover>
         <PopoverTrigger>
           <Box w="100%">
-            <LOCInfoContainer view="header" profileData={profileData} />
+            <LOCInfoContainer
+              view="header"
+              remainingLoc={credits}
+              profileData={profileData}
+            />
           </Box>
         </PopoverTrigger>
         <PopoverContent w="400px" borderRadius={10}>
