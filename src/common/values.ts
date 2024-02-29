@@ -2316,3 +2316,11 @@ export const reportBlockDetails = [
 ];
 
 export const billingTabs = ["billing", "topup", "transactions"];
+
+export const packageLabel: { [key: string]: string } = {
+  trial: "Trial",
+  pro: "Pro",
+  ondemand: "On Demand",
+  beginner: "Individual",
+  custom: "Enterprise",
+};

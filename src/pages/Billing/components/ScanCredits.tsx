@@ -1,24 +1,18 @@
 import React, { useState } from "react";
 import {
-  Box,
   Flex,
   Image,
   Text,
   Button,
-  Menu,
-  MenuList,
-  MenuItem,
-  MenuButton,
   Divider,
   useDisclosure,
   HStack,
   VStack,
 } from "@chakra-ui/react";
 import { Profile, Plan } from "common/types";
-import { sentenceCapitalize, getAssetsURL } from "helpers/helperFunction";
-import { ChevronUpIcon, ChevronDownIcon } from "@chakra-ui/icons";
-import PaymentModal from "../../../components/modals/PaymentModal";
+import { getAssetsURL } from "helpers/helperFunction";
 import ContactUs from "components/modals/contactus";
+import { packageLabel } from "common/values";
 
 const ScanCredits: React.FC<{
   planData: Plan;
@@ -57,7 +51,7 @@ const ScanCredits: React.FC<{
             src={`${assetsURL}pricing/${profile.current_package}-heading.svg`}
           />
           <Text fontSize="2xl" fontWeight={700} ml={1}>
-            {sentenceCapitalize(planData.name)}
+            {packageLabel[planData.name]}
           </Text>
         </Flex>
         <Text color="detail" fontWeight={400}>
@@ -73,7 +67,7 @@ const ScanCredits: React.FC<{
           {Object.keys(topUpData).map((key, index) => (
             <>
               <Flex key={index} w="100%" fontSize="sm" fontWeight="600">
-                <Text>{sentenceCapitalize(topUpData[key].name)}</Text>
+                <Text>{packageLabel[topUpData[key].name]}</Text>
                 <Text ml="auto">{`$ ${parseFloat(topUpData[key].amount).toFixed(
                   2
                 )}`}</Text>
@@ -96,7 +90,7 @@ const ScanCredits: React.FC<{
             Increase your scan credits with our top-up option. It will cost{" "}
             <strong>${currentTopUpPlan.amount} </strong> per credit for your
             current
-            <strong> {sentenceCapitalize(planData.name)} </strong> plan.
+            <strong> {packageLabel[planData.name]} </strong> plan.
           </Text>
         </Flex>
       </Flex>

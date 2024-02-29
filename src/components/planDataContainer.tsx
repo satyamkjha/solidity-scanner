@@ -18,6 +18,7 @@ import { useWebSocket } from "hooks/useWebhookData";
 import { CheckBadge } from "./icons";
 import { formattedDate } from "common/functions";
 import PlanDetailsModal from "pages/Billing/components/PlanDetailsModal";
+import { packageLabel } from "common/values";
 
 export const PlanDataContainer: React.FC<{
   profileData: Profile;
@@ -98,11 +99,13 @@ export const PlanDataContainer: React.FC<{
           />
           <Text fontSize={"2xl"} fontWeight={700}>
             {
-              pricingPlans.pricing_data[
-                profileData.billing_cycle === "N/A"
-                  ? "trial"
-                  : profileData.billing_cycle
-              ][profileData.current_package].name
+              packageLabel[
+                pricingPlans.pricing_data[
+                  profileData.billing_cycle === "N/A"
+                    ? "trial"
+                    : profileData.billing_cycle
+                ][profileData.current_package].name
+              ]
             }
           </Text>
           <Flex ml={2}>

@@ -59,7 +59,7 @@ const PricingDetailsList: React.FC<{
               height="20px"
               src={`${assetsURL}common/loc-code.svg`}
             />
-            <Text fontWeight={700}>{plan.loc}</Text>
+            <Text fontWeight={700}>{plan.loc.toLocaleString("us")}</Text>
             <Text fontWeight={500}>LoCs</Text>
           </HStack>
         </VStack>

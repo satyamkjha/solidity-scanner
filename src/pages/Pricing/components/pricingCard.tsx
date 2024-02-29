@@ -20,6 +20,7 @@ import { useHistory } from "react-router-dom";
 import PricingDetailsList from "./PricingDetailsList";
 import PaymentModal from "components/modals/PaymentModal";
 import ContactUs from "components/modals/contactus";
+import { packageLabel } from "common/values";
 
 export const PricingCard: React.FC<{
   page: "billing" | "pricing";
@@ -74,6 +75,7 @@ export const PricingCard: React.FC<{
   );
   const history = useHistory();
 
+  const planDetails = pricingDetails[duration][plan];
   const currentPackage = profileData?.current_package;
   const mouse = selectedPlan === plan;
   const [openContactUs, setOpenContactUs] = useState(false);
@@ -113,7 +115,7 @@ export const PricingCard: React.FC<{
           <CheckBadge />
           <Text ml={2}>Currently Subscribed</Text>
         </Flex>
-      ) : pricingDetails[duration][plan].discount ? (
+      ) : planDetails.discount ? (
         <Flex
           h="80px"
           flexDir="row"
@@ -127,7 +129,7 @@ export const PricingCard: React.FC<{
           w="60%"
           borderRadius={20}
         >
-          {JSON.parse(pricingDetails[duration][plan].discount || "").banner}
+          {JSON.parse(planDetails.discount || "").banner}
         </Flex>
       ) : null}
       <Flex
@@ -136,15 +138,15 @@ export const PricingCard: React.FC<{
           bg: "#FFFFFF",
           w: "100%",
           border: `1px solid ${
-            packageTheme[pricingDetails[duration][plan].name]
-              ? packageTheme[pricingDetails[duration][plan].name].color
+            packageTheme[planDetails.name]
+              ? packageTheme[planDetails.name].color
               : "black"
           }`,
           py: 4,
           borderRadius: 20,
           background: `${
-            packageTheme[pricingDetails[duration][plan].name]
-              ? packageTheme[pricingDetails[duration][plan].name].background
+            packageTheme[planDetails.name]
+              ? packageTheme[planDetails.name].background
               : "white"
           }`,
           display: "flex",
@@ -168,8 +170,8 @@ export const PricingCard: React.FC<{
               width="35px"
               height="35px"
               src={
-                packageTheme[pricingDetails[duration][plan].name]
-                  ? packageTheme[pricingDetails[duration][plan].name].icon
+                packageTheme[planDetails.name]
+                  ? packageTheme[planDetails.name].icon
                   : `${assetsURL}pricing/${plan}-heading.svg`
               }
             />
@@ -177,12 +179,12 @@ export const PricingCard: React.FC<{
               fontSize="2xl"
               fontWeight={500}
               color={
-                packageTheme[pricingDetails[duration][plan].name]
-                  ? packageTheme[pricingDetails[duration][plan].name].color
+                packageTheme[planDetails.name]
+                  ? packageTheme[planDetails.name].color
                   : "black"
               }
             >
-              {sentenceCapitalize(pricingDetails[duration][plan].name)}
+              {packageLabel[planDetails.name]}
             </Text>
           </HStack>
           {plan === "pro" && (
@@ -203,7 +205,7 @@ export const PricingCard: React.FC<{
           px={page === "pricing" ? 7 : 4}
           color={"detail"}
         >
-          {pricingDetails[duration][plan].description}
+          {planDetails.description}
         </Text>
 
         <Flex
@@ -215,24 +217,30 @@ export const PricingCard: React.FC<{
           w="100%"
           px={page === "pricing" ? 7 : 4}
         >
-          <Flex
-            flexDir="row"
-            w="100%"
-            justifyContent={"flex-start"}
-            alignItems={"flex-end"}
-            my={1}
-          >
-            <Heading fontSize="2xl" lineHeight="title" fontWeight={900}>
-              {`$ ${pricingDetails[duration][plan].amount}`}
+          {planDetails.name === "custom" ? (
+            <Heading fontSize="2xl" lineHeight="title" fontWeight={900} mt={2}>
+              Custom
             </Heading>
-            <Text fontSize="2xl" fontWeight={300}>
-              /
-            </Text>
-            <Text mb={1} fontSize="md" fontWeight={300}>
-              {duration}
-            </Text>
-          </Flex>
-          {duration !== "ondemand" && (
+          ) : (
+            <Flex
+              flexDir="row"
+              w="100%"
+              justifyContent={"flex-start"}
+              alignItems={"flex-end"}
+              my={1}
+            >
+              <Heading fontSize="2xl" lineHeight="title" fontWeight={900}>
+                {`$ ${planDetails.amount}`}
+              </Heading>
+              <Text fontSize="2xl" fontWeight={300}>
+                /
+              </Text>
+              <Text mb={1} fontSize="md" fontWeight={300}>
+                {duration}
+              </Text>
+            </Flex>
+          )}
+          {!["ondemand", "custom"].includes(planDetails.name) && (
             <>
               <Flex
                 mt={2}
@@ -269,7 +277,7 @@ export const PricingCard: React.FC<{
                   Yearly
                 </Text>
               </Flex>
-              {duration === "yearly" && (
+              {duration === "yearly" && planDetails.name !== "custom" ? (
                 <Flex
                   flexDir={"column"}
                   position={"absolute"}
@@ -286,14 +294,12 @@ export const PricingCard: React.FC<{
                     <Heading fontSize={"lg"} color="#3300FF">
                       $
                       {parseFloat(
-                        JSON.parse(
-                          pricingDetails[duration][plan].discount || ""
-                        ).amount
+                        JSON.parse(planDetails.discount || "").amount
                       ).toFixed(2)}
                     </Heading>
                   </Flex>
                 </Flex>
-              )}
+              ) : null}
             </>
           )}
         </Flex>
@@ -304,9 +310,9 @@ export const PricingCard: React.FC<{
           justifyContent={"flex-start"}
         >
           <PricingDetailsList
-            plan={pricingDetails[duration][plan]}
+            plan={planDetails}
             page={page}
-            planTheme={packageTheme[pricingDetails[duration][plan].name]}
+            planTheme={packageTheme[planDetails.name]}
             view={"pricing-card"}
           />
         </Flex>
@@ -322,8 +328,7 @@ export const PricingCard: React.FC<{
             variant={mouse ? "brand" : "gray-outline"}
             onClick={() => {
               if (page === "billing") {
-                if (pricingDetails[duration][plan].name === "custom")
-                  setOpenContactUs(true);
+                if (planDetails.name === "custom") setOpenContactUs(true);
                 else onOpen();
               } else {
                 if (Auth.isUserAuthenticated()) {
@@ -334,7 +339,7 @@ export const PricingCard: React.FC<{
               }
             }}
           >
-            {pricingDetails[duration][plan].name === "custom"
+            {planDetails.name === "custom"
               ? "Contact Us"
               : mouse
               ? "Select Plan"

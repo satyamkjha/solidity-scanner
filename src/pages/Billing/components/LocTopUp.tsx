@@ -21,6 +21,7 @@ import { ChevronUpIcon, ChevronDownIcon } from "@chakra-ui/icons";
 import PaymentModal from "../../../components/modals/PaymentModal";
 import { LOCInfoContainer } from "components/locInfoContainer";
 import { useLocation } from "react-router-dom";
+import { packageLabel } from "common/values";
 
 const LocTopUp: React.FC<{
   planData: Plan;
@@ -65,7 +66,7 @@ const LocTopUp: React.FC<{
             src={`${assetsURL}pricing/${profile.current_package}-heading.svg`}
           />
           <Text fontSize="2xl" fontWeight={700} ml={1}>
-            {sentenceCapitalize(planData.name)}
+            {packageLabel[planData.name]}
           </Text>
         </Flex>
         <Text color="detail" fontWeight={400}>
@@ -81,7 +82,7 @@ const LocTopUp: React.FC<{
           {Object.keys(topUpData).map((key, index) => (
             <>
               <Flex key={index} w="100%" fontSize="sm" fontWeight="600">
-                <Text>{sentenceCapitalize(topUpData[key].name)}</Text>
+                <Text>{packageLabel[topUpData[key].name]}</Text>
                 <Text ml="auto">{`$ ${parseFloat(topUpData[key].amount).toFixed(
                   3
                 )}`}</Text>
@@ -104,7 +105,7 @@ const LocTopUp: React.FC<{
             Increase your LoCs with our top-up option. It will cost{" "}
             <strong>${currentTopUpPlan.amount} </strong> per LoC for your
             current
-            <strong> {sentenceCapitalize(planData.name)} </strong> plan.
+            <strong> {packageLabel[planData.name]} </strong> plan.
           </Text>
         </Flex>
       </Flex>

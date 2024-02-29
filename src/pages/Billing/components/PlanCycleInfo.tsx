@@ -14,6 +14,7 @@ import {
 import { useHistory } from "react-router-dom";
 import { getAssetsURL, sentenceCapitalize } from "helpers/helperFunction";
 import React from "react";
+import { packageLabel } from "common/values";
 
 const PlanCycleInfo: React.FC<{
   planName: string;
@@ -169,7 +170,7 @@ const PlanCycleInfo: React.FC<{
                   &nbsp; days
                 </Text>
                 <Text fontSize="sm" fontWeight="400">
-                  remaining for the {sentenceCapitalize(planName)} Plan
+                  remaining for the {packageLabel[planName]} Plan
                 </Text>
               </VStack>
             </Flex>

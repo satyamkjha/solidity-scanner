@@ -3,6 +3,7 @@ import { Flex, Text, Heading, Image, HStack } from "@chakra-ui/react";
 import { getAssetsURL, sentenceCapitalize } from "helpers/helperFunction";
 import { Plan } from "common/types";
 import { CheckBadge } from "components/icons";
+import { packageLabel } from "common/values";
 
 const CurrentPlanDescriptionContainer: React.FC<{
   packageName: string;
@@ -77,7 +78,7 @@ const CurrentPlanDescriptionContainer: React.FC<{
 
         {!["non-pro", "pro/custom"].includes(packageName) && (
           <Text fontSize={"2xl"} fontWeight={700}>
-            {sentenceCapitalize(plan.name)}
+            {packageLabel[plan.name]}
           </Text>
         )}
         {showCheckIcon && (
@@ -103,12 +104,12 @@ const CurrentPlanDescriptionContainer: React.FC<{
           <Heading fontSize={"x-large"}>
             {plan.amount === "Free"
               ? "Free"
-              : `$ ${parseFloat(plan.amount).toFixed(2)}`}
+              : `$ ${parseFloat(plan.amount).toFixed(3)}`}
             &nbsp;
           </Heading>
           {packageName !== "trial" && packageName !== "ondemand" && (
             <Text fontSize="xs" color="detail" mt={2}>
-              {`/ ${duration === "topup" ? "credit" : duration} `}
+              {`/ ${duration === "topup" ? "LoC" : duration} `}
             </Text>
           )}
         </Flex>
