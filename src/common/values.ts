@@ -2323,4 +2323,5 @@ export const packageLabel: { [key: string]: string } = {
   ondemand: "On Demand",
   beginner: "Individual",
   custom: "Enterprise",
+  expired: "Expired",
 };
