@@ -107,6 +107,7 @@ export type ScanObj = {
   scan_id: string;
   scan_type: string;
   scan_details: Scan;
+  scan_err_message?: string;
 };
 
 export type AllScanList = {

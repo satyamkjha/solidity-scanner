@@ -84,6 +84,7 @@ export const QuickScanResultContainer: React.FC<{
       body: {
         project_id: projectId,
         scan_id: scanId,
+        report_id: scanReport.latest_report_id || null,
         scan_type: "block",
       },
     });

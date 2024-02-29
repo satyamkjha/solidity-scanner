@@ -53,10 +53,8 @@ const Layout: React.FC = ({ children }) => {
   const ref = useRef<HTMLDivElement>(null);
   const history = useHistory();
   const queryClient = useQueryClient();
-  const [firebaseToken, setFirebaseToken] = useState<string>();
-  const [, setFirebaseUser] = useState<User>();
-  const { data: profileData } = useProfile(true);
 
+  const { data: profileData } = useProfile(true);
   const { data: orgProfile } = useUserOrgProfile(
     profileData?.logged_in_via === "org_login"
   );
@@ -76,41 +74,6 @@ const Layout: React.FC = ({ children }) => {
     // outside click
     setShowSidebar(false);
   };
-
-  const getFirebaseToken = async () => {
-    const { data } = await API.get<{ token: string }>(
-      API_PATH.API_CREATE_FIREBASE_TOKEN
-    );
-    if (data && data.token) setFirebaseToken(data.token);
-  };
-
-  useEffect(() => {
-    if (getFeatureGateConfig().event_consumption_enabled) {
-      const unsubscribe = onAuthStateChanged(auth, async (user) => {
-        if (user) {
-          const idTokenResult = await user.getIdTokenResult();
-          setFirebaseToken(idTokenResult.token);
-        } else {
-          getFirebaseToken();
-        }
-      });
-      return () => {
-        unsubscribe();
-      };
-    }
-  }, []);
-
-  useEffect(() => {
-    if (firebaseToken && !auth.currentUser) {
-      signInWithCustomToken(auth, firebaseToken)
-        .then((userCredential) => {
-          setFirebaseUser(userCredential.user);
-        })
-        .catch((error) => {
-          console.log(error);
-        });
-    }
-  }, [firebaseToken]);
 
   useEffect(() => {
     if (showSidebar) {
