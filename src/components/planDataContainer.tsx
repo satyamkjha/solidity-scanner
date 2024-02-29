@@ -87,69 +87,76 @@ export const PlanDataContainer: React.FC<{
         </HStack>
       </VStack>
       <Divider />
-      <VStack w="100%" justifyContent="flex-start" alignItems="flex-start">
-        <Text color="subtle" fontSize="xs">
-          Current Subscribed Plan
-        </Text>
-        <HStack>
-          <Image
-            width="35px"
-            height="35px"
-            src={`${assetsURL}pricing/${profileData.current_package}-heading.svg`}
-          />
-          <Text fontSize={"2xl"} fontWeight={700}>
-            {
-              packageLabel[
-                pricingPlans.pricing_data[
-                  profileData.billing_cycle === "N/A"
-                    ? "trial"
-                    : profileData.billing_cycle
-                ][profileData.current_package].name
-              ]
+      {!["expired", "custom"].includes(profileData.current_package) ? (
+        <>
+          <VStack w="100%" justifyContent="flex-start" alignItems="flex-start">
+            <Text color="subtle" fontSize="xs">
+              Current Subscribed Plan
+            </Text>
+            <HStack>
+              <Image
+                width="35px"
+                height="35px"
+                src={`${assetsURL}pricing/${profileData.current_package}-heading.svg`}
+              />
+              <Text fontSize={"2xl"} fontWeight={700}>
+                {
+                  packageLabel[
+                    pricingPlans.pricing_data[
+                      profileData.billing_cycle === "N/A"
+                        ? "trial"
+                        : profileData.billing_cycle
+                    ][profileData.current_package].name
+                  ]
+                }
+              </Text>
+              <Flex ml={2}>
+                <CheckBadge fillColor={"#38CB89"} strokColor={"white"} />
+              </Flex>
+            </HStack>
+          </VStack>
+          <HStack w="100%" justifyContent="space-between" alignItems="center">
+            <Box>
+              <Text fontWeight={400} fontSize="sm" mb={1} color="#4E5D78">
+                Subscribed on
+              </Text>
+              <Text fontWeight={500} fontSize="md">
+                {formattedDate(
+                  new Date(profileData.package_recharge_date),
+                  "long"
+                )}
+              </Text>
+            </Box>
+            <Button
+              variant="accent-outline"
+              borderRadius={"8px"}
+              background="white"
+              color={"blue"}
+              fontSize="sm"
+              fontWeight="400"
+              px={8}
+              onClick={onOpen}
+            >
+              Plan Details
+            </Button>
+          </HStack>
+          <PlanDetailsModal
+            subscription={profileData.is_cancellable}
+            currentPackage={profileData.current_package}
+            duration={profileData.billing_cycle}
+            packageRechargeDate={profileData.package_recharge_date}
+            plan={
+              pricingPlans.pricing_data[
+                profileData.billing_cycle === "N/A"
+                  ? "trial"
+                  : profileData.billing_cycle
+              ][profileData.current_package]
             }
-          </Text>
-          <Flex ml={2}>
-            <CheckBadge fillColor={"#38CB89"} strokColor={"white"} />
-          </Flex>
-        </HStack>
-      </VStack>
-      <HStack w="100%" justifyContent="space-between" alignItems="center">
-        <Box>
-          <Text fontWeight={400} fontSize="sm" mb={1} color="#4E5D78">
-            Subscribed on
-          </Text>
-          <Text fontWeight={500} fontSize="md">
-            {formattedDate(new Date(profileData.package_recharge_date), "long")}
-          </Text>
-        </Box>
-        <Button
-          variant="accent-outline"
-          borderRadius={"8px"}
-          background="white"
-          color={"blue"}
-          fontSize="sm"
-          fontWeight="400"
-          px={8}
-          onClick={onOpen}
-        >
-          Plan Details
-        </Button>
-      </HStack>
-      <PlanDetailsModal
-        subscription={profileData.is_cancellable}
-        currentPackage={profileData.current_package}
-        duration={profileData.billing_cycle}
-        packageRechargeDate={profileData.package_recharge_date}
-        plan={
-          pricingPlans.pricing_data[
-            profileData.billing_cycle === "N/A"
-              ? "trial"
-              : profileData.billing_cycle
-          ][profileData.current_package]
-        }
-        open={isOpen}
-        onModalClose={onClose}
-      />
+            open={isOpen}
+            onModalClose={onClose}
+          />
+        </>
+      ) : null}
     </VStack>
   );
 };
