@@ -33,33 +33,33 @@ jobs:
 
       - uses: sonarsource/sonarqube-scan-action@master
 
-      # - name: Setting aws credentials
-      #   uses: aws-actions/configure-aws-credentials@v3
-      #   with:
-      #     aws-region: us-east-2
-      #     aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-      #     aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+      - name: Setting aws credentials
+        uses: aws-actions/configure-aws-credentials@v3
+        with:
+          aws-region: us-east-2
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
 
-      # - name: Cloning files from S3
-      #   run: |
-      #     if [[ "${{ inputs.ENV }}" == "stage" ]]; then
-      #       aws s3 cp s3://credshields-dev/env_file/frontend.env ${PROJECT_DIRECTORY}/.env
-      #       aws s3 cp s3://credshields-dev/new-relic/newrelic-browser.js ${PROJECT_DIRECTORY}/
-      #     elif [[ "${{ inputs.ENV }}" == "prod" ]]; then
-      #       aws s3 cp s3://credshields-prod/env_file/frontend.env ${PROJECT_DIRECTORY}/.env
-      #       aws s3 cp s3://credshields-prod/new-relic/newrelic-browser.js ${PROJECT_DIRECTORY}/
-      #     elif [[ "${{ inputs.ENV }}" == "backoffice-stage" ]]; then
-      #       aws s3 cp s3://credshields-dev/env_file/frontend_backoffice.env ${PROJECT_DIRECTORY}/.env
-      #     elif [[ "${{ inputs.ENV }}" == "backoffice-prod" ]]; then
-      #       aws s3 cp s3://credshields-prod/env_file/frontend_backoffice.env ${PROJECT_DIRECTORY}/.env
+      - name: Cloning files from S3
+        run: |
+          if [[ "${{ inputs.ENV }}" == "stage" ]]; then
+            aws s3 cp s3://credshields-dev/env_file/frontend.env ${PROJECT_DIRECTORY}/.env
+            aws s3 cp s3://credshields-dev/new-relic/newrelic-browser.js ${PROJECT_DIRECTORY}/
+          elif [[ "${{ inputs.ENV }}" == "prod" ]]; then
+            aws s3 cp s3://credshields-prod/env_file/frontend.env ${PROJECT_DIRECTORY}/.env
+            aws s3 cp s3://credshields-prod/new-relic/newrelic-browser.js ${PROJECT_DIRECTORY}/
+          elif [[ "${{ inputs.ENV }}" == "backoffice-stage" ]]; then
+            aws s3 cp s3://credshields-dev/env_file/frontend_backoffice.env ${PROJECT_DIRECTORY}/.env
+          elif [[ "${{ inputs.ENV }}" == "backoffice-prod" ]]; then
+            aws s3 cp s3://credshields-prod/env_file/frontend_backoffice.env ${PROJECT_DIRECTORY}/.env
 
-      #     fi
+          fi
 
-      # - name: Logging in on aws ecr
-      #   run: aws ecr get-login-password --region us-east-2 | docker login --username AWS --password-stdin 132830644905.dkr.ecr.us-east-2.amazonaws.com
+      - name: Logging in on aws ecr
+        run: aws ecr get-login-password --region us-east-2 | docker login --username AWS --password-stdin 132830644905.dkr.ecr.us-east-2.amazonaws.com
 
-      # - name: Build the Docker image
-      #   run: |
-      #     docker compose -f ${DOCKER_COMPOSE_PATH} build --no-cache
-      # - name: Pusing created images to ECR
-      #   run: docker compose -f ${DOCKER_COMPOSE_PATH} push
+      - name: Build the Docker image
+        run: |
+          docker compose -f ${DOCKER_COMPOSE_PATH} build --no-cache
+      - name: Pusing created images to ECR
+        run: docker compose -f ${DOCKER_COMPOSE_PATH} push
