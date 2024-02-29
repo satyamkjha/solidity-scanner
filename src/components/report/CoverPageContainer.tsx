@@ -142,8 +142,8 @@ const CoverPageContainer: React.FC<{
                   >
                     {summary_report.project_summary_report.report_type ===
                     "self_published"
-                      ? "This audit report was Self-published by the user."
-                      : "This audit report has been verified by the SolidityScan team."}{" "}
+                      ? "This automated audit report was Self-published by the user."
+                      : "This automated audit report has been verified by the SolidityScan team."}{" "}
                     To learn more about our published reports{" "}
                     <Link
                       href="https://docs.solidityscan.com/report/"

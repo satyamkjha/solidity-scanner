@@ -162,17 +162,6 @@ const RegisterForm: React.FC<{
   const [twitter, setTwitter] = useState("");
 
   const [step, setStep] = useState(false);
-  const [reqHeaders, setReqHeaders] = useState<
-    RecaptchaParameters | undefined
-  >();
-  const getRecapthaTokens = async () => {
-    const reqHeaders = await getReCaptchaHeaders("signin");
-    setReqHeaders(reqHeaders);
-  };
-
-  useEffect(() => {
-    getRecapthaTokens();
-  }, []);
 
   const onSubmit = async () => {
     try {
@@ -181,6 +170,7 @@ const RegisterForm: React.FC<{
       } else {
         const campaign_type = localStorage.getItem("campaign_type");
         const campaign_id = localStorage.getItem("campaign_id");
+        const reqHeaders = await getReCaptchaHeaders("signin");
 
         let reqBody = {
           email: email,
