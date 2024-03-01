@@ -486,7 +486,6 @@ const ApplicationForm: React.FC<{
             project_url: githubLink,
             scan_type: "project",
           }}
-          profileData={profileData}
         />
       )}
     </Flex>

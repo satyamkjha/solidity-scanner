@@ -179,7 +179,7 @@ const UploadForm: React.FC<{
     if (
       profileData.credit_system === "loc" &&
       profileData.loc_remaining <
-        parseInt(process.env.REACT_APP_MIN_LOCS_REQ || "200")
+        parseInt(process.env.REACT_APP_MIN_LOCS_REQ || "10")
     ) {
       onOpen();
     } else if (
@@ -368,7 +368,6 @@ const UploadForm: React.FC<{
             project_url: "File Scan",
             scan_type: "project",
           }}
-          profileData={profileData}
         />
       )}
     </>

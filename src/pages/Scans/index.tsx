@@ -37,10 +37,23 @@ import { AddProject } from "components/common/AddProject";
 import InScanModal from "components/modals/InScanModal";
 
 const Scans: React.FC = () => {
+  const scanMessageTypes = [
+    "scan_initiate",
+    "scan_status",
+    "scan_complete",
+    "insufficient_loc",
+    "project_scan_acknowledge",
+    "block_scan_acknowledge",
+    "delete_block_acknowledge",
+    "delete_project_acknowledge",
+  ];
+
   const [isDesktopView] = useMediaQuery("(min-width: 1920px)");
   const [isMobileView] = useMediaQuery("(max-width: 500px)");
+
   const { role } = useUserRole();
   const assetsURL = getAssetsURL();
+
   const [queryTerm, setQueryTerm] = useState<string>();
   const [searchTerm, setSearchTerm] = useState<string>();
   const [filterParam, setFilterParam] = useState<
@@ -61,6 +74,7 @@ const Scans: React.FC = () => {
     queryTerm,
     filterParam
   );
+  const [insufficientMsg, setInsufficientMsg] = useState<any>();
   const [projectList, setProjectList] =
     useState<{ scanItem: ScanObj; tempScanStatus: string }[]>();
   const [projectsMonitored, setProjectsMonitored] = useState(0);
@@ -71,6 +85,7 @@ const Scans: React.FC = () => {
   const { messageQueue, updateMessageQueue, setKeepWSOpen } = useWebSocket();
   const toast = useToast();
   const { data: profileData, refetch: refetchProfile } = useProfile(true);
+
   useEffect(() => {
     if (profileData) {
       setProjectsMonitored(profileData.projects_remaining);
@@ -160,21 +175,20 @@ const Scans: React.FC = () => {
   };
 
   useEffect(() => {
-    if (
-      projectList &&
-      messageQueue.length > 0 &&
-      messageQueue.some((msgItem: any) =>
-        [
-          "scan_initiate",
-          "scan_status",
-          "scan_complete",
-          "delete_block_acknowledge",
-          "delete_project_acknowledge",
-        ].includes(msgItem.type)
-      )
-    ) {
-      let updatedProjectList = projectList;
-      messageQueue.forEach((msgItem: any) => {
+    if (projectList && messageQueue.length > 0) {
+      const isMessageTypeIncluded = (msg: any) =>
+        scanMessageTypes.includes(msg.type);
+
+      const filteredMessages = messageQueue.filter((msg: any) =>
+        isMessageTypeIncluded(msg)
+      );
+      if (filteredMessages.length === 0) {
+        return;
+      }
+
+      let tempMsgQueue = [...messageQueue];
+      let updatedProjectList = [...projectList];
+      filteredMessages.forEach((msgItem: any) => {
         if (msgItem.type === "scan_status") {
           updatedProjectList = updatedProjectList.map((item) => {
             if (item.scanItem.scan_id === msgItem.payload.scan_id) {
@@ -259,6 +273,16 @@ const Scans: React.FC = () => {
               scan_state: msgItem.payload.scan_details.scan_state,
               scan_type: msgItem.payload.scan_details.scan_type,
             });
+        } else if (msgItem.type === "insufficient_loc") {
+          const inScanProject = updatedProjectList.filter(
+            (proj) => proj.scanItem.scan_id === msgItem.payload.scan_id
+          );
+          if (inScanProject && inScanProject.length)
+            setInScanDetails({
+              loc: msgItem.payload.loc_required,
+              ...inScanProject[0].scanItem.scan_details,
+            });
+          setInsufficientMsg(msgItem.payload);
         } else if (
           msgItem.type === "delete_block_acknowledge" ||
           msgItem.type === "delete_project_acknowledge"
@@ -270,20 +294,9 @@ const Scans: React.FC = () => {
             isClosable: true,
           });
         }
+        tempMsgQueue = tempMsgQueue.filter((msg) => msg.type !== msgItem.type);
       });
-      let tempMsgQueue = messageQueue;
-      tempMsgQueue = tempMsgQueue.filter(
-        (msg: any) =>
-          ![
-            "scan_initiate",
-            "scan_status",
-            "scan_complete",
-            "project_scan_acknowledge",
-            "block_scan_acknowledge",
-            "delete_block_acknowledge",
-            "delete_project_acknowledge",
-          ].includes(msg.type)
-      );
+
       updateMessageQueue(tempMsgQueue);
       setProjectList(updatedProjectList);
     }
@@ -294,7 +307,8 @@ const Scans: React.FC = () => {
     if (inScanDetails !== null) {
       onOpen();
     }
-  }, [inScanDetails, onOpen]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [inScanDetails]);
 
   useEffect(() => {
     if (
@@ -579,7 +593,11 @@ const Scans: React.FC = () => {
         <InScanModal
           inScanDetails={inScanDetails}
           isOpen={isOpen}
-          onClose={onClose}
+          onClose={() => {
+            setInsufficientMsg(null);
+            onClose();
+          }}
+          insufficientMsg={insufficientMsg}
         />
       ) : null}
     </Box>

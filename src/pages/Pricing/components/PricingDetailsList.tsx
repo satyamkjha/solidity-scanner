@@ -6,13 +6,15 @@ import { Plan } from "common/types";
 import PricingModelItem from "components/pricing/PricingModalItem";
 import PricingCardItem from "components/pricing/PricingCardItem";
 import { CheckIcon } from "@chakra-ui/icons";
+import PricingPopover from "components/pricing/PricingPopover";
 
 const PricingDetailsList: React.FC<{
   plan: Plan;
   page: "billing" | "pricing";
+  mouseHover?: boolean;
   view?: string;
   planTheme?: { [key: string]: string };
-}> = ({ plan, page, view, planTheme }) => {
+}> = ({ plan, page, mouseHover = false, view, planTheme }) => {
   const assetsURL = getAssetsURL();
   return (
     <>
@@ -27,8 +29,19 @@ const PricingDetailsList: React.FC<{
           <CheckIcon color={planTheme ? planTheme.color : "black"} />
           <Text fontSize={page === "billing" ? "md" : "lg"} ml={3}>
             {plan.name === "custom" ? "Custom" : plan.loc.toLocaleString("us")}{" "}
-            LoCs
+            LOC
           </Text>
+          {mouseHover && (
+            <PricingPopover
+              item={{
+                title: "Lines Of Code",
+                icon: "common/loc-code.svg",
+                tooltipText:
+                  "Lorem ipsum dolor sit amet consectetur. Nunc nec nunc risus maecenas. Sed nibh accumsan eget venenatis ornare scelerisque bibendum enim. Vitae justo sociis mattis vitae amet eleifend commodo. Vivamus condimentum non id sit magnis arcu iaculis. Maecenas mauris in morbi adils.",
+              }}
+              mouseHover
+            />
+          )}
         </Flex>
       ) : (
         <VStack
@@ -60,7 +73,7 @@ const PricingDetailsList: React.FC<{
               src={`${assetsURL}common/loc-code.svg`}
             />
             <Text fontWeight={700}>{plan.loc.toLocaleString("us")}</Text>
-            <Text fontWeight={500}>LoCs</Text>
+            <Text fontWeight={500}>LOC</Text>
           </HStack>
         </VStack>
       )}
@@ -72,6 +85,7 @@ const PricingDetailsList: React.FC<{
               plan={plan}
               page={page}
               planTheme={planTheme}
+              mouseHover={mouseHover}
             />
           ) : (
             <PricingModelItem item={item} plan={plan} page={page} />

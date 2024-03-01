@@ -67,7 +67,7 @@ const ContractForm: React.FC<{
   const onSubmit = async () => {
     if (
       profileData.credit_system === "loc" &&
-      profileData.loc_remaining < parseInt(minLOCReq || "200")
+      profileData.loc_remaining < parseInt(minLOCReq || "10")
     ) {
       onOpen();
     } else if (
@@ -364,7 +364,6 @@ const ContractForm: React.FC<{
             loc: "insufficient",
             scan_type: "block",
           }}
-          profileData={profileData}
         />
       )}
     </Flex>

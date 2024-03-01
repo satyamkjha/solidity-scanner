@@ -161,21 +161,25 @@ const ScanCard: React.FC<{
           } else {
             if (scan.scan_type === "block")
               setInScanDetails({
-                project_id,
                 contract_address,
                 contract_platform,
                 contract_chain,
                 contract_url,
-                scan_state: tempScanStatus,
-                scan_type: scan.scan_type,
+                scan_state:
+                  tempScanStatus || multi_file_scan_status.length > 25
+                    ? getTrimmedScanMessage(multi_file_scan_status)
+                    : multi_file_scan_status,
+                ...scan.scan_details,
               });
             else {
               setInScanDetails({
-                project_id,
                 project_url: scan.scan_details.project_url,
                 project_name: scan.scan_details.project_name,
-                scan_state: tempScanStatus,
-                scan_type: scan.scan_type,
+                scan_state:
+                  tempScanStatus || multi_file_scan_status.length > 25
+                    ? getTrimmedScanMessage(multi_file_scan_status)
+                    : multi_file_scan_status,
+                ...scan.scan_details,
               });
             }
           }

@@ -63,11 +63,7 @@ export const LOCHeader: React.FC<{
       <Popover>
         <PopoverTrigger>
           <Box w="100%">
-            <LOCInfoContainer
-              view="header"
-              remainingLoc={credits}
-              profileData={profileData}
-            />
+            <LOCInfoContainer view="header" remainingLoc={credits} />
           </Box>
         </PopoverTrigger>
         <PopoverContent w="400px" borderRadius={10}>

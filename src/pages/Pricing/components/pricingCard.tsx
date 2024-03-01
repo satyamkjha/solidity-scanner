@@ -313,6 +313,7 @@ export const PricingCard: React.FC<{
             plan={planDetails}
             page={page}
             planTheme={packageTheme[planDetails.name]}
+            mouseHover={mouse}
             view={"pricing-card"}
           />
         </Flex>

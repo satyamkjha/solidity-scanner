@@ -157,7 +157,7 @@ const ScanCredits: React.FC<{
             eget tempor. Viverra leo id potenti.
           </Text>
           <Button w="100%" variant="brand">
-            Get LoCs Top up now
+            Get LOC Top up now
           </Button>
         </VStack>
       </Flex>

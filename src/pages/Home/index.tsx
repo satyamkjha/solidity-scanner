@@ -403,7 +403,6 @@ const Home: React.FC = () => {
           open={open}
           closeModal={onInsufficientLocPopupClose}
           scanDetails={{ ...importData, scan_type: "block" }}
-          profileData={profileData}
         />
       ) : null}
     </Flex>

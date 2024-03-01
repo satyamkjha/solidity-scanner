@@ -1,11 +1,10 @@
-import React, { useEffect, useState, useRef } from "react";
+import React from "react";
 import {
   HStack,
   Image,
   Text,
   Box,
   VStack,
-  Progress,
   Divider,
   Flex,
   Button,
@@ -14,7 +13,6 @@ import {
 import { Profile, PricingData } from "common/types";
 import { useConfig } from "hooks/useConfig";
 import { getAssetsURL } from "helpers/helperFunction";
-import { useWebSocket } from "hooks/useWebhookData";
 import { CheckBadge } from "./icons";
 import { formattedDate } from "common/functions";
 import PlanDetailsModal from "pages/Billing/components/PlanDetailsModal";
@@ -58,7 +56,7 @@ export const PlanDataContainer: React.FC<{
           </Text>
         </HStack>
         <HStack w="100%" justifyContent="space-between" alignItems="center">
-          <Text fontWeight={600}>Used LoCs</Text>
+          <Text fontWeight={600}>Used LOC</Text>
           <Text fontWeight={600}>
             {profileData.total_loc - profileData.loc_remaining}{" "}
             <span
@@ -72,7 +70,7 @@ export const PlanDataContainer: React.FC<{
           </Text>
         </HStack>
         <HStack w="100%" justifyContent="space-between" alignItems="center">
-          <Text fontWeight={600}>Remaining LoCs</Text>
+          <Text fontWeight={600}>Remaining LOC</Text>
           <Text fontWeight={600}>
             {profileData.loc_remaining}{" "}
             <span

@@ -267,25 +267,27 @@ const Layout: React.FC = ({ children }) => {
                 )}
               </HStack>
 
-              <HStack
-                border="1px solid #FFC661"
-                bgColor="#FFFCF7"
-                display={["none", "none", "flex"]}
-                borderRadius={20}
-                w="400px"
-                px={5}
-                spacing={5}
-                onClick={() => history.push("/billing")}
-              >
-                <Image
-                  w="34px"
-                  h="34px"
-                  src={`${assetsURL}icons/loudspeaker.svg`}
-                />
-                <Text fontSize="sm" color="#FFA403" fontWeight={600}>
-                  Alert!! - New Pricing Plan March 2024
-                </Text>
-              </HStack>
+              {profileData && profileData.credit_system === "scan_credit" ? (
+                <HStack
+                  border="1px solid #FFC661"
+                  bgColor="#FFFCF7"
+                  display={["none", "none", "flex"]}
+                  borderRadius={20}
+                  w="400px"
+                  px={5}
+                  spacing={5}
+                  onClick={() => history.push("/billing")}
+                >
+                  <Image
+                    w="34px"
+                    h="34px"
+                    src={`${assetsURL}icons/loudspeaker.svg`}
+                  />
+                  <Text fontSize="sm" color="#FFA403" fontWeight={600}>
+                    Alert!! - New Pricing Plan March 2024
+                  </Text>
+                </HStack>
+              ) : null}
 
               {profileData && pricingPlans && (
                 <Flex

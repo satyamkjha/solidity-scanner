@@ -5,10 +5,6 @@ import {
   Image,
   Text,
   Button,
-  Menu,
-  MenuList,
-  MenuItem,
-  MenuButton,
   Divider,
   useDisclosure,
   InputGroup,
@@ -16,8 +12,7 @@ import {
   Input,
 } from "@chakra-ui/react";
 import { Profile, Plan } from "common/types";
-import { sentenceCapitalize, getAssetsURL } from "helpers/helperFunction";
-import { ChevronUpIcon, ChevronDownIcon } from "@chakra-ui/icons";
+import { getAssetsURL } from "helpers/helperFunction";
 import PaymentModal from "../../../components/modals/PaymentModal";
 import { LOCInfoContainer } from "components/locInfoContainer";
 import { useLocation } from "react-router-dom";
@@ -41,12 +36,9 @@ const LocTopUp: React.FC<{
 
   const { isOpen, onClose, onOpen } = useDisclosure();
   const assetsURL = getAssetsURL();
-  const [optionsSelected, setOptionsSelected] = useState(false);
-  const [selectedIndex, setSelectedIndex] = useState(0);
   const currentTopUpPlan = topUpData[profile.current_package];
   const [noOfLoc, setNoOfLoc] = useState(paramsLoc ? +paramsLoc : 0);
   const locPriceUnits = currentTopUpPlan.loc;
-  const creditOptions = ["00", "02", "05", "10", "20", "40", "60", "80"];
 
   return (
     <Flex w="100%" h={"60vh"} flexDir={["column", "column", "column", "row"]}>
@@ -84,9 +76,9 @@ const LocTopUp: React.FC<{
               <Flex key={index} w="100%" fontSize="sm" fontWeight="600">
                 <Text>{packageLabel[topUpData[key].name]}</Text>
                 <Text ml="auto">{`$ ${parseFloat(topUpData[key].amount).toFixed(
-                  3
+                  2
                 )}`}</Text>
-                <Text fontWeight={400}>&nbsp;/ LoCs</Text>
+                <Text fontWeight={400}>&nbsp;/ LOC</Text>
               </Flex>
               {index !== Object.keys(topUpData).length - 1 && (
                 <Divider borderColor="#F3F3F3" my={1} />
@@ -102,7 +94,7 @@ const LocTopUp: React.FC<{
           borderRadius={"15px"}
         >
           <Text color="detail" fontWeight={400}>
-            Increase your LoCs with our top-up option. It will cost{" "}
+            Increase your LOC with our top-up option. It will cost{" "}
             <strong>${currentTopUpPlan.amount} </strong> per LoC for your
             current
             <strong> {packageLabel[planData.name]} </strong> plan.
@@ -118,9 +110,9 @@ const LocTopUp: React.FC<{
         px={10}
         ml={[0, 0, 0, 10]}
       >
-        <Text fontSize="lg">How many loCs you need to buy?</Text>
+        <Text fontSize="lg">How many LOC you need to buy?</Text>
         <Box w="100%" my={5}>
-          <LOCInfoContainer view="topup_page" profileData={profile} />
+          <LOCInfoContainer view="topup_page" />
         </Box>
         {/* <Flex w="100%">
           
@@ -138,7 +130,7 @@ const LocTopUp: React.FC<{
             }
           />
           <Input
-            placeholder="Enter required LoCs here"
+            placeholder="Enter required LOC here"
             variant={"brand"}
             size="lg"
             pl="80px"
@@ -148,9 +140,9 @@ const LocTopUp: React.FC<{
             onChange={(e) => setNoOfLoc(parseInt(e.target.value))}
           />
         </InputGroup>
-        <Text fontSize="xl" mt={8}>{`${noOfLoc || "00"} LoCs`}</Text>
+        <Text fontSize="xl" mt={8}>{`${noOfLoc || "00"} LOC`}</Text>
         <Flex w="100%" textColor="subtle" my={2}>
-          <Text>{`$${currentTopUpPlan.amount} Per ${locPriceUnits} LoCs  X  ${
+          <Text>{`$${currentTopUpPlan.amount} Per LOC  X  ${
             noOfLoc / locPriceUnits || 0
           }`}</Text>
           <Text ml="auto">{`$${

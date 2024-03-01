@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 
 import {
   Flex,
@@ -8,21 +8,15 @@ import {
   ModalCloseButton,
   ModalContent,
   ModalOverlay,
-  ModalFooter,
   Image,
-  Button,
-  ModalHeader,
   Divider,
   VStack,
-  HStack,
   Box,
   Progress,
   Link,
+  HStack,
+  Heading,
 } from "@chakra-ui/react";
-import API from "helpers/api";
-import { API_PATH } from "helpers/routeManager";
-import { useHistory } from "react-router-dom";
-import { Profile } from "common/types";
 import {
   getContractBlockChainLogoUrl,
   getAssetsURL,
@@ -30,82 +24,108 @@ import {
   getContractChainLabel,
   sentenceCapitalize,
   getProjectType,
+  getTrimmedScanMessage,
+  snakeToNormal,
 } from "helpers/helperFunction";
 import { contractChain, scanStatesLabel } from "common/values";
-import { ExternalLinkIcon } from "@chakra-ui/icons";
-import StyledButton from "components/styled-components/StyledButton";
-import { LOCHeader } from "components/locHeader";
-import { LOCInfoContainer } from "components/locInfoContainer";
+import { ExternalLinkIcon, WarningIcon } from "@chakra-ui/icons";
 import { LogoIcon } from "components/icons";
+import InsufficientLocModal from "./InsufficientLocModal";
 
 const InScanModal: React.FC<{
   onClose: any;
   isOpen: boolean;
   inScanDetails: any;
-}> = ({ isOpen, onClose, inScanDetails }) => {
-  const assetsUrl = getAssetsURL();
-
-  const getProjectTypeIconUrl = (
-    scanType: string,
-    projectUrl: string,
-    contractPlatform: string,
-    contractChain: string
-  ) =>
-    `${assetsUrl}${
-      scanType === "project"
-        ? "icons/integrations/" + getProjectType(projectUrl)
-        : scanType === "block"
-        ? getContractBlockChainLogoUrl(contractPlatform, contractChain)
-        : ""
-    }.svg`;
-
+  insufficientMsg?: any;
+}> = ({ isOpen, onClose, inScanDetails, insufficientMsg }) => {
   return (
     <>
-      <Modal isCentered isOpen={isOpen} onClose={onClose}>
-        <ModalOverlay />
-        <ModalContent
-          overflowY={"scroll"}
-          overflowX={"scroll"}
-          bg="bg.subtle"
-          w={"90vw"}
-          maxW={"800px"}
-          minW={"300px"}
-          minH={"fit-content"}
-          borderRadius={20}
-          px={[2, 3, 8]}
-        >
-          <ModalCloseButton mt={4} />
-          <ModalBody h={"fit-content"} w={"100%"} px={[0]} py={10}>
-            <Flex
-              justifyContent={"center"}
-              alignItems={"center"}
-              w={"100%"}
-              flexDir="column"
-            >
-              <ScanTitleComponent scanData={inScanDetails} />
-              <Box mb={10} p={5} w="100%">
-                <Flex
-                  sx={{
-                    display: "inline-flex",
+      {insufficientMsg ? (
+        <InsufficientLocModal
+          open={isOpen}
+          closeModal={onClose}
+          scanDetails={inScanDetails}
+        />
+      ) : (
+        <Modal isCentered isOpen={isOpen} onClose={onClose}>
+          <ModalOverlay />
+          <ModalContent
+            overflowY={"scroll"}
+            overflowX={"scroll"}
+            bg="bg.subtle"
+            w={"90vw"}
+            maxW={"800px"}
+            minW={"300px"}
+            minH={"fit-content"}
+            borderRadius={20}
+            px={[2, 3, 8]}
+          >
+            <ModalCloseButton mt={4} />
+            <ModalBody h={"fit-content"} w={"100%"} px={[0]} py={10}>
+              <Flex
+                justifyContent={"center"}
+                alignItems={"center"}
+                w={"100%"}
+                flexDir="column"
+              >
+                <ScanTitleComponent scanData={inScanDetails} />
+                {![
+                  "download_failed",
+                  "scan_failed",
+                  "Download Failed",
+                  "Scan Failed",
+                ].includes(inScanDetails.scan_state) ? (
+                  <Box mb={10} p={5} w="100%">
+                    <Flex
+                      sx={{
+                        display: "inline-flex",
 
-                    alignItems: "center",
+                        alignItems: "center",
 
-                    mb: 2,
-                    borderRadius: 15,
-                  }}
-                >
-                  <LogoIcon size={15} />
-                  <Text mx={2} fontSize="sm">
-                    {scanStatesLabel[inScanDetails.scan_state] ||
-                      scanStatesLabel["scanning"]}
-                  </Text>
-                </Flex>
-                <Progress value={20} isIndeterminate size="xs" />
-              </Box>
-            </Flex>
-          </ModalBody>
-        </ModalContent>
-      </Modal>
+                        mb: 2,
+                        borderRadius: 15,
+                      }}
+                    >
+                      <LogoIcon size={15} />
+                      <Text mx={2} fontSize="sm">
+                        {scanStatesLabel[inScanDetails.scan_state] ||
+                          scanStatesLabel["scanning"]}
+                      </Text>
+                    </Flex>
+                    <Progress value={20} isIndeterminate size="xs" />
+                  </Box>
+                ) : (
+                  <Box
+                    w="100%"
+                    sx={{
+                      p: 3,
+                      m: 3,
+                      h: "fit-content",
+                      borderRadius: 5,
+                      backgroundColor: "#FCFCFF",
+                    }}
+                  >
+                    <HStack mb={2}>
+                      <WarningIcon color="#FF5630" />
+                      <Heading sx={{ fontSize: "sm", color: "#FF5630" }}>
+                        {inScanDetails.scan_state.length > 25
+                          ? getTrimmedScanMessage(inScanDetails.scan_state)
+                          : snakeToNormal(inScanDetails.scan_state)}
+                      </Heading>
+                    </HStack>
+                    <Text sx={{ fontSize: "xs", color: "#4E5D78" }}>
+                      {inScanDetails.scan_state.length > 25
+                        ? inScanDetails.scan_state
+                        : inScanDetails.scan_status ||
+                          "This scan has failed, lost credits will be reimbursed in a few minutes. Please contact support"}
+                    </Text>
+                  </Box>
+                )}
+              </Flex>
+            </ModalBody>
+          </ModalContent>
+        </Modal>
+      )}
     </>
   );
 };

@@ -179,7 +179,7 @@ const Billing: React.FC = () => {
                     mx={[2, 3, 5]}
                   >
                     {profileData.credit_system === "loc"
-                      ? "LoCs TopUp"
+                      ? "LOC TopUp"
                       : "Scan Credits"}
                   </Tab>
                 ) : null}

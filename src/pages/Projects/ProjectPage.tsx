@@ -933,7 +933,7 @@ const ScanDetails: React.FC<{
                   ? profile.loc_remaining
                   : scansRemaining}
               </strong>{" "}
-              {profile?.credit_system === "loc" ? "LoCs" : "scans"} remaining.
+              {profile?.credit_system === "loc" ? "LOC" : "scans"} remaining.
             </AlertDialogBody>
 
             <AlertDialogFooter>

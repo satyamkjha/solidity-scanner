@@ -12,7 +12,7 @@ import {
   getPaymentDaysLeft,
 } from "common/functions";
 import { useHistory } from "react-router-dom";
-import { getAssetsURL, sentenceCapitalize } from "helpers/helperFunction";
+import { getAssetsURL } from "helpers/helperFunction";
 import React from "react";
 import { packageLabel } from "common/values";
 

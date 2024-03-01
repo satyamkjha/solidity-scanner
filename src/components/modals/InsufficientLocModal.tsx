@@ -14,8 +14,6 @@ import {
   Box,
 } from "@chakra-ui/react";
 import { useHistory } from "react-router-dom";
-import { Profile } from "common/types";
-import { getAssetsURL } from "helpers/helperFunction";
 import { LOCInfoContainer } from "components/locInfoContainer";
 import { ScanTitleComponent } from "./InScanModal";
 
@@ -23,10 +21,8 @@ const InsufficientLocModal: React.FC<{
   closeModal: any;
   open: boolean;
   scanDetails: any;
-  profileData: Profile | undefined;
-}> = ({ open, closeModal, scanDetails, profileData }) => {
+}> = ({ open, closeModal, scanDetails }) => {
   const history = useHistory();
-  const assetsUrl = getAssetsURL();
 
   const navigateToTopup = () => {
     closeModal();
@@ -70,13 +66,12 @@ const InsufficientLocModal: React.FC<{
                   spacing={5}
                 >
                   <Text fontSize="lg" color="#FFA403" fontWeight={700}>
-                    Your current project has Insufficient LoCs !
+                    Your current project has Insufficient LOC !
                   </Text>
                   <Text fontSize="sm" color="#4E5D78" fontWeight={300}>
-                    The current project has {scanDetails.loc} Lines of Code, as
-                    per. Pulvinar sit nulla semper pellentesque ac eget. In nisl
-                    suspendisse pellentesque augue egestas. Aliquam diam
-                    scelerisque risus cursus vel diam nam.
+                    The selected project has {scanDetails.loc} lines of code.
+                    Upgrade your plan or top-up your account with more lines of
+                    code to initiate the scan.
                   </Text>
                   <HStack
                     justifyContent={["center", "center", "space-between"]}
@@ -99,18 +94,13 @@ const InsufficientLocModal: React.FC<{
                       </VStack>
                     )}
 
-                    {profileData && (
-                      <Box display={["none", "none", "flex"]} w="250px">
-                        <LOCInfoContainer
-                          view="insufficient_scan_modal"
-                          profileData={profileData}
-                        />
-                      </Box>
-                    )}
+                    <Box display={["none", "none", "flex"]} w="250px">
+                      <LOCInfoContainer view="insufficient_scan_modal" />
+                    </Box>
                   </HStack>
                 </VStack>
               </HStack>
-              <VStack
+              {/* <VStack
                 alignItems="flex-start"
                 justifyContent="flex-start"
                 textAlign="left"
@@ -121,22 +111,23 @@ const InsufficientLocModal: React.FC<{
                 borderRadius={10}
                 mt={5}
               >
-                <Text fontWeight={900}>Get the LoCs Top-up</Text>
+                <Text fontWeight={900}>Get the LOC Top-up</Text>
                 <Text>
                   Lorem ipsum dolor sit amet consectetur. Morbi tellus nunc
                   risus amet. Dolor rhoncus.
                 </Text>
                 <Button onClick={navigateToTopup} variant="brand">
-                  Get LoCs Top up now
+                  Get LOC Top up now
                 </Button>
-              </VStack>
+              </VStack> */}
               <Button
-                display={["flex", "flex", "none"]}
+                display={"flex"}
                 mt={10}
+                px={6}
                 variant="brand"
                 onClick={navigateToTopup}
               >
-                Get LoCs Top up now
+                Get LOC Top up now
               </Button>
             </Flex>
           </ModalBody>

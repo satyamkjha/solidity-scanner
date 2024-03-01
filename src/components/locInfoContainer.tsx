@@ -1,14 +1,15 @@
 import React from "react";
 import { HStack, Image, Text, Box, VStack, Progress } from "@chakra-ui/react";
-import { Profile } from "common/types";
 import { getAssetsURL } from "helpers/helperFunction";
+import { useUserRole } from "hooks/useUserRole";
 
 export const LOCInfoContainer: React.FC<{
-  profileData: Profile;
   remainingLoc?: number;
   view: "insufficient_scan_modal" | "header" | "topup_page";
-}> = ({ profileData, remainingLoc = profileData.loc_remaining, view }) => {
+}> = ({ remainingLoc, view }) => {
   const assetsURL = getAssetsURL();
+  const { profileData } = useUserRole();
+  remainingLoc = remainingLoc || profileData?.loc_remaining;
 
   return (
     <HStack justifyContent="flex-start" alignItems="center" w="100%">
@@ -27,7 +28,7 @@ export const LOCInfoContainer: React.FC<{
         spacing={0}
       >
         <HStack justifyContent="space-between" w="100%">
-          {profileData.current_package === "trial" ? (
+          {profileData?.current_package === "trial" ? (
             <HStack spacing={1}>
               <Text fontWeight={600} fontSize="sm">
                 Gas Bugs Only
@@ -42,7 +43,7 @@ export const LOCInfoContainer: React.FC<{
                 {remainingLoc}
               </Text>
               <Text color="subtle" fontSize="sm">
-                /{profileData.total_loc}
+                /{profileData?.total_loc}
               </Text>
               {view === "topup_page" && (
                 <Text color="subtle" fontSize="sm">
@@ -70,7 +71,7 @@ export const LOCInfoContainer: React.FC<{
             variant="loc"
             size="xs"
             value={remainingLoc}
-            max={profileData.total_loc}
+            max={profileData?.total_loc}
           />
         </Box>
         {view !== "topup_page" && (

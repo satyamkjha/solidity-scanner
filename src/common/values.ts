@@ -903,30 +903,40 @@ export const pricing_card_description_data = [
     title: "All Detectors",
     description: "Vulnerability Detectors coverage",
     icon: "detectors/detectorIcon.svg",
+    tooltipText:
+      "Lorem ipsum dolor sit amet consectetur. Nunc nec nunc risus maecenas. Sed nibh accumsan eget venenatis ornare scelerisque bibendum enim. Vitae justo sociis mattis vitae amet eleifend commodo. Vivamus condimentum non id sit magnis arcu iaculis. Maecenas mauris in morbi adils.",
   },
   {
     key: "report",
     title: "Pay per Report",
     description: "Generate and Publish report",
     icon: "pricing/pricing_card_icons/report.svg",
+    tooltipText:
+      "Lorem ipsum dolor sit amet consectetur. Nunc nec nunc risus maecenas. Sed nibh accumsan eget venenatis ornare scelerisque bibendum enim. Vitae justo sociis mattis vitae amet eleifend commodo. Vivamus condimentum non id sit magnis arcu iaculis. Maecenas mauris in morbi adils.",
   },
   {
     key: "github",
     title: "Private Github",
     description: "Private Github",
     icon: "pricing/pricing_card_icons/github.svg",
+    tooltipText:
+      "Lorem ipsum dolor sit amet consectetur. Nunc nec nunc risus maecenas. Sed nibh accumsan eget venenatis ornare scelerisque bibendum enim. Vitae justo sociis mattis vitae amet eleifend commodo. Vivamus condimentum non id sit magnis arcu iaculis. Maecenas mauris in morbi adils.",
   },
   {
     key: "github",
     title: "Github Actions",
     description: "Github Actions",
     icon: "pricing/pricing_card_icons/actions.svg",
+    tooltipText:
+      "Lorem ipsum dolor sit amet consectetur. Nunc nec nunc risus maecenas. Sed nibh accumsan eget venenatis ornare scelerisque bibendum enim. Vitae justo sociis mattis vitae amet eleifend commodo. Vivamus condimentum non id sit magnis arcu iaculis. Maecenas mauris in morbi adils.",
   },
   {
     key: "github",
     title: "Private API Access",
     description: "Private API Access",
     icon: "pricing/pricing_card_icons/private.svg",
+    tooltipText:
+      "Lorem ipsum dolor sit amet consectetur. Nunc nec nunc risus maecenas. Sed nibh accumsan eget venenatis ornare scelerisque bibendum enim. Vitae justo sociis mattis vitae amet eleifend commodo. Vivamus condimentum non id sit magnis arcu iaculis. Maecenas mauris in morbi adils.",
   },
 ];
 
