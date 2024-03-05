@@ -91,7 +91,6 @@ const DetectorItem: React.FC<{ item: DetectorItemProp }> = ({ item }) => {
           {item.description}
         </Text>
       </Flex>
-
       <HStack
         sx={{
           width: "180px",

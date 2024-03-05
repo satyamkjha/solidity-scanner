@@ -151,7 +151,14 @@ const ScanCard: React.FC<{
       onClick={() => {
         if (multi_file_scan_status === "scan_done") {
           history.push(`/${scan.scan_type}s/${project_id}/${scan_id}`);
-        } else {
+        } else if (
+          ![
+            "scan_failed",
+            "download_failed",
+            "Download Failed",
+            "Scan Failed",
+          ].includes(tempScanStatus)
+        ) {
           if (
             inScanDetails &&
             inScanDetails.project_id === project_id &&
@@ -165,20 +172,14 @@ const ScanCard: React.FC<{
                 contract_platform,
                 contract_chain,
                 contract_url,
-                scan_state:
-                  tempScanStatus || multi_file_scan_status.length > 25
-                    ? getTrimmedScanMessage(multi_file_scan_status)
-                    : multi_file_scan_status,
+                scan_state: tempScanStatus,
                 ...scan.scan_details,
               });
             else {
               setInScanDetails({
                 project_url: scan.scan_details.project_url,
                 project_name: scan.scan_details.project_name,
-                scan_state:
-                  tempScanStatus || multi_file_scan_status.length > 25
-                    ? getTrimmedScanMessage(multi_file_scan_status)
-                    : multi_file_scan_status,
+                scan_state: tempScanStatus,
                 ...scan.scan_details,
               });
             }

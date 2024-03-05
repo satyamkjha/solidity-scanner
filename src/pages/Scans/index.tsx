@@ -23,7 +23,7 @@ import { useProfile } from "hooks/useProfile";
 import InfiniteScroll from "react-infinite-scroll-component";
 import Loader from "components/styled-components/Loader";
 import { useUserRole } from "hooks/useUserRole";
-import { getAssetsURL } from "helpers/helperFunction";
+import { getAssetsURL, getTrimmedScanMessage } from "helpers/helperFunction";
 import { useAllScans } from "hooks/useAllScans";
 import ScanCard from "components/cards/ScanCard";
 import { Search2Icon, CloseIcon } from "@chakra-ui/icons";
@@ -97,7 +97,10 @@ const Scans: React.FC = () => {
     if (projects) {
       let alteredPlist = projects.data.map((item) => ({
         scanItem: item,
-        tempScanStatus: item.scan_details.multi_file_scan_status,
+        tempScanStatus:
+          item.scan_details.multi_file_scan_status.length > 25
+            ? getTrimmedScanMessage(item.scan_details.multi_file_scan_status)
+            : item.scan_details.multi_file_scan_status,
       }));
 
       let pList =
@@ -209,6 +212,15 @@ const Scans: React.FC = () => {
                   msgItem.payload.scan_status
                 )
               ) {
+                if (
+                  inScanDetails &&
+                  msgItem.payload.project_id === inScanDetails.project_id
+                ) {
+                  setInScanDetails({
+                    ...inScanDetails,
+                    scan_state: msgItem.payload.scan_status,
+                  });
+                }
                 return {
                   scanItem: {
                     ...item.scanItem,
@@ -217,11 +229,21 @@ const Scans: React.FC = () => {
                   },
                   tempScanStatus: msgItem.payload.scan_status,
                 };
-              } else
+              } else {
+                if (
+                  inScanDetails &&
+                  msgItem.payload.project_id === inScanDetails.project_id
+                ) {
+                  setInScanDetails({
+                    ...inScanDetails,
+                    scan_state: msgItem.payload.scan_status,
+                  });
+                }
                 return {
                   ...item,
                   tempScanStatus: msgItem.payload.scan_status,
                 };
+              }
             } else return item;
           });
         } else if (msgItem.type === "scan_initiate") {
