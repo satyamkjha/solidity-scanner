@@ -14,6 +14,7 @@ import { detectorData } from "common/values";
 import { useConfig } from "hooks/useConfig";
 import { getAssetsURL } from "helpers/helperFunction";
 import { Header } from "components/header";
+import { useDetectorsData } from "hooks/useDetectorsData";
 
 const DetectorItem: React.FC<{ item: DetectorItemProp }> = ({ item }) => {
   const config: any = useConfig();
@@ -119,6 +120,8 @@ const Detectors: React.FC = () => {
       ? config.REACT_APP_ISSUES_DATA.detectorPageData
       : [];
   const assetsURL = getAssetsURL(config);
+
+  const data = useDetectorsData();
 
   return (
     <Flex
