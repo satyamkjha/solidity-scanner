@@ -34,7 +34,7 @@ export const LOCInfoContainer: React.FC<{
                 Gas Bugs Only
               </Text>
               <Text color="subtle" fontSize="xs">
-                (Free Trail)
+                (Free Trial)
               </Text>
             </HStack>
           ) : (

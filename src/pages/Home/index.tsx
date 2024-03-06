@@ -128,11 +128,14 @@ const Home: React.FC = () => {
       const import_scan_details = getRecentQuickScan();
       if (import_scan_details && import_scan_details.loc !== null) {
         if (profileData.current_package === "trial") {
-          importQuickScan(import_scan_details);
+          if (profileData.projects_remaining < 2)
+            importQuickScan(import_scan_details);
+          else {
+          }
         } else {
           setImportData(import_scan_details);
           if (profileData.credit_system === "loc") {
-            if (profileData.loc_remaining > import_scan_details.loc) {
+            if (profileData.loc_remaining >= import_scan_details.loc) {
               onOpen();
             } else {
               setOpen(true);
@@ -156,7 +159,6 @@ const Home: React.FC = () => {
   };
 
   const onInsufficientLocPopupClose = () => {
-    localStorage.removeItem("recent_scan_details");
     setOpen(false);
   };
 

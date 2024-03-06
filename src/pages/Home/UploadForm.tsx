@@ -175,14 +175,22 @@ const UploadForm: React.FC<{
     return false;
   };
 
+  const minLOCReq = process.env.REACT_APP_MIN_LOCS_REQ;
+
   const startFileScan = async () => {
-    if (
+    if (profileData.current_package === "trial") {
+      if (profileData.projects_remaining > 2) {
+        return;
+      }
+    } else if (
       profileData.credit_system === "loc" &&
-      profileData.loc_remaining <
-        parseInt(process.env.REACT_APP_MIN_LOCS_REQ || "10")
+      profileData.loc_remaining < parseInt(minLOCReq || "10")
     ) {
       onOpen();
-    } else if (
+      return;
+    }
+    
+    if (
       config &&
       config.REACT_APP_FEATURE_GATE_CONFIG.websockets_enabled
     ) {

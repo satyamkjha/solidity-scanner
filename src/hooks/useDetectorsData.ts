@@ -1,6 +1,6 @@
 import { useQuery } from "react-query";
 import API from "helpers/api";
-import { PricingData, DetectorItemProp } from "common/types";
+import { DetectorItemProp } from "common/types";
 import { API_PATH } from "helpers/routeManager";
 
 const getDetectorsData = async () => {

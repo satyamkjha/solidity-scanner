@@ -36,7 +36,6 @@ export const WebSocketProvider = ({ children }) => {
   const [tempMessageQueue, setTempMessageQueue] = useState(emptyArray);
   const [messageQueue, setMessageQueue] = useState(emptyArray);
   const [keepWSOpen, setKeepWSOpen] = useState(false);
-  const [checkAuthToken, setCheckAuthToken] = useState(false);
   const [needAuthToken, setNeedAuthToken] = useState(true);
   const [tempEmitMsgQueue, setTempEmitMsgQueue] = useState(emptyArray);
 
@@ -46,7 +45,7 @@ export const WebSocketProvider = ({ children }) => {
         process.env.REACT_APP_ENVIRONMENT === "production"
           ? WSS_URL_PROD
           : WSS_URL_DEV
-      }`
+      }${needAuthToken ? `?auth_token=${profileData.auth_token}` : ""}`
     );
     setWebSocket(ws);
     setWsReadyState(ws.readyState);
@@ -87,10 +86,6 @@ export const WebSocketProvider = ({ children }) => {
             });
           }
           setKeepWSOpen(false);
-        } else if (receivedMessage.type === "auth_token_register") {
-          if (receivedMessage.payload.message === "Auth token registered.") {
-            setCheckAuthToken(true);
-          }
         } else {
           setTempMessageQueue((prevQueue) => [...prevQueue, receivedMessage]);
         }
@@ -176,34 +171,13 @@ export const WebSocketProvider = ({ children }) => {
       tempEmitMsgQueue.length > 0 &&
       webSocket.readyState === 1
     ) {
-      if (needAuthToken) {
-        if (checkAuthToken) {
-          tempEmitMsgQueue.forEach((msg) => {
-            emitMessages(msg);
-          });
-          setTempEmitMsgQueue([]);
-        } else {
-          webSocket.send(
-            JSON.stringify({
-              action: "message",
-              payload: {
-                type: "auth_token_register",
-                body: {
-                  auth_token: profileData.auth_token,
-                },
-              },
-            })
-          );
-        }
-      } else {
-        tempEmitMsgQueue.forEach((msg) => {
-          emitMessages(msg);
-        });
-        setTempEmitMsgQueue([]);
-      }
+      tempEmitMsgQueue.forEach((msg) => {
+        emitMessages(msg);
+      });
+      setTempEmitMsgQueue([]);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [wsReadyState, checkAuthToken]);
+  }, [wsReadyState]);
 
   const updateMessageQueue = (msg) => {
     setMessageQueue(msg);

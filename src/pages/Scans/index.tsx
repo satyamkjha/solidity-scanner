@@ -296,6 +296,7 @@ const Scans: React.FC = () => {
               scan_type: msgItem.payload.scan_details.scan_type,
             });
         } else if (msgItem.type === "insufficient_loc") {
+          
           const inScanProject = updatedProjectList.filter(
             (proj) => proj.scanItem.scan_id === msgItem.payload.scan_id
           );

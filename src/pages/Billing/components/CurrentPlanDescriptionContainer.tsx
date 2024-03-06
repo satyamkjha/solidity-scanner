@@ -104,7 +104,7 @@ const CurrentPlanDescriptionContainer: React.FC<{
           <Heading fontSize={"x-large"}>
             {plan.amount === "Free"
               ? "Free"
-              : `$ ${parseFloat(plan.amount).toFixed(3)}`}
+              : `$ ${parseFloat(plan.amount).toFixed(2)}`}
             &nbsp;
           </Heading>
           {packageName !== "trial" && packageName !== "ondemand" && (

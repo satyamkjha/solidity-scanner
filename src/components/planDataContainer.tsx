@@ -44,7 +44,9 @@ export const PlanDataContainer: React.FC<{
         <HStack w="100%" justifyContent="space-between" alignItems="center">
           <Text fontWeight={600}>Total LoC Quota </Text>
           <Text fontWeight={600}>
-            {profileData.total_loc}{" "}
+            {profileData.current_package === "trial"
+              ? "--"
+              : profileData.total_loc}{" "}
             <span
               style={{
                 fontWeight: 300,
@@ -58,7 +60,9 @@ export const PlanDataContainer: React.FC<{
         <HStack w="100%" justifyContent="space-between" alignItems="center">
           <Text fontWeight={600}>Used LOC</Text>
           <Text fontWeight={600}>
-            {profileData.total_loc - profileData.loc_remaining}{" "}
+            {profileData.current_package === "trial"
+              ? "--"
+              : profileData.total_loc - profileData.loc_remaining}{" "}
             <span
               style={{
                 fontWeight: 300,
@@ -72,7 +76,9 @@ export const PlanDataContainer: React.FC<{
         <HStack w="100%" justifyContent="space-between" alignItems="center">
           <Text fontWeight={600}>Remaining LOC</Text>
           <Text fontWeight={600}>
-            {profileData.loc_remaining}{" "}
+            {profileData.current_package === "trial"
+              ? "--"
+              : profileData.loc_remaining}{" "}
             <span
               style={{
                 fontWeight: 300,
@@ -92,11 +98,14 @@ export const PlanDataContainer: React.FC<{
               Current Subscribed Plan
             </Text>
             <HStack>
-              <Image
-                width="35px"
-                height="35px"
-                src={`${assetsURL}pricing/${profileData.current_package}-heading.svg`}
-              />
+              {profileData.current_package !== "trial" && (
+                <Image
+                  width="35px"
+                  height="35px"
+                  src={`${assetsURL}pricing/${profileData.current_package}-heading.svg`}
+                />
+              )}
+
               <Text fontSize={"2xl"} fontWeight={700}>
                 {
                   packageLabel[
