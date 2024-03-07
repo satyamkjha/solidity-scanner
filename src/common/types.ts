@@ -28,6 +28,8 @@ export type Profile = {
   credit_system: string;
   total_loc: number;
   loc_remaining: number;
+  plan_loc_remaining: number;
+  on_demand_loc_remaining: number;
   public_address?: string;
   company_name: string;
   current_package: string;

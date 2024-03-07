@@ -310,6 +310,9 @@ const Layout: React.FC = ({ children }) => {
                   variant="unstyled"
                   borderRadius="100%"
                   border="2px solid"
+                  sx={{
+                    boxShadow: "0px 4px 20px rgba(0, 0, 0, 0.35) !important",
+                  }}
                   borderColor="brand-dark"
                   overflow="hidden"
                   mr={4}
