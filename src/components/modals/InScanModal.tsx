@@ -61,7 +61,13 @@ const InScanModal: React.FC<{
             px={[2, 3, 8]}
           >
             <ModalCloseButton mt={4} />
-            <ModalBody h={"fit-content"} w={"100%"} px={[0]} py={10}>
+            <ModalBody
+              h={"fit-content"}
+              w={"100%"}
+              overflowX={"hidden"}
+              px={[0]}
+              py={10}
+            >
               <Flex
                 justifyContent={"center"}
                 alignItems={"center"}

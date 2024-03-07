@@ -37,7 +37,9 @@ const LocTopUp: React.FC<{
   const { isOpen, onClose, onOpen } = useDisclosure();
   const assetsURL = getAssetsURL();
   const currentTopUpPlan = topUpData[profile.current_package];
-  const [noOfLoc, setNoOfLoc] = useState(paramsLoc ? +paramsLoc : 0);
+  const [noOfLoc, setNoOfLoc] = useState(
+    paramsLoc ? +paramsLoc - profile.loc_remaining : 0
+  );
   const locPriceUnits = currentTopUpPlan.loc;
 
   return (
