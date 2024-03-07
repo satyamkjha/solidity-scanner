@@ -22,7 +22,7 @@ import {
 } from "@chakra-ui/react";
 import { GiHamburgerMenu } from "react-icons/gi";
 import { BiUser, BiPowerOff } from "react-icons/bi";
-import { getAssetsURL } from "helpers/helperFunction";
+import { getAssetsURL, getFeatureGateConfig } from "helpers/helperFunction";
 import Sidebar from "components/sidebar";
 import { ProfileIconOne } from "components/icons";
 import {
@@ -275,8 +275,11 @@ const Layout: React.FC = ({ children }) => {
                   borderRadius={20}
                   w="400px"
                   px={5}
+                  cursor="pointer"
                   spacing={5}
-                  onClick={() => history.push("/billing")}
+                  onClick={() =>
+                    history.push(getFeatureGateConfig().alert_link)
+                  }
                 >
                   <Image
                     w="34px"
@@ -284,7 +287,7 @@ const Layout: React.FC = ({ children }) => {
                     src={`${assetsURL}icons/loudspeaker.svg`}
                   />
                   <Text fontSize="sm" color="#FFA403" fontWeight={600}>
-                    Alert!! - New Pricing Plan March 2024
+                    {getFeatureGateConfig().alert_data}
                   </Text>
                 </HStack>
               ) : null}

@@ -33,7 +33,7 @@ export const PlanDataContainer: React.FC<{
       w="100%"
       justifyContent="flex-start"
       alignItems="center"
-      spacing={7}
+      spacing={5}
     >
       <VStack
         w="100%"
