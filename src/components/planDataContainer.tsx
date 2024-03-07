@@ -38,6 +38,81 @@ export const PlanDataContainer: React.FC<{
       <VStack
         w="100%"
         justifyContent="flex-start"
+        spacing={2}
+        bgColor="#E6FAEC"
+        px={5}
+        borderRadius={10}
+        py={2}
+      >
+        <HStack w="100%" justifyContent="space-between" alignItems="center">
+          <Text fontWeight={600} fontSize="sm">
+            Plan LoCs Quota
+          </Text>
+          <Text fontWeight={600} color="#B0B7C3" fontSize="xs">
+            Expires in
+          </Text>
+        </HStack>
+        <HStack w="100%" justifyContent="space-between" alignItems="center">
+          <HStack spacing={0}>
+            <Text fontWeight={700} fontSize="lg">
+              {profileData.plan_loc_remaining}
+            </Text>
+            <Text color="subtle" fontSize="sm">
+              /
+              {
+                pricingPlans.pricing_data[
+                  profileData.billing_cycle === "N/A"
+                    ? "trial"
+                    : profileData.billing_cycle
+                ][profileData.current_package].loc
+              }
+            </Text>
+          </HStack>
+          <Text fontWeight={600} fontSize="sm">
+            With Current Plan
+          </Text>
+        </HStack>
+      </VStack>
+      <VStack
+        w="100%"
+        justifyContent="flex-start"
+        spacing={2}
+        bgColor="#FFFCF7"
+        px={5}
+        borderRadius={10}
+        py={2}
+      >
+        <HStack w="100%" justifyContent="space-between" alignItems="center">
+          <Text fontWeight={600} fontSize="sm">
+            Plan LoCs Quota
+          </Text>
+          <Text fontWeight={600} color="#B0B7C3" fontSize="xs">
+            Expires in
+          </Text>
+        </HStack>
+        <HStack w="100%" justifyContent="space-between" alignItems="center">
+          <HStack spacing={0}>
+            <Text fontWeight={700} fontSize="lg">
+              {profileData.on_demand_loc_remaining}
+            </Text>
+            <Text color="subtle" fontSize="sm">
+              /
+              {profileData.total_loc -
+                pricingPlans.pricing_data[
+                  profileData.billing_cycle === "N/A"
+                    ? "trial"
+                    : profileData.billing_cycle
+                ][profileData.current_package].loc}
+            </Text>
+          </HStack>
+          <Text fontWeight={600} fontSize="sm">
+            Never Expires
+          </Text>
+        </HStack>
+      </VStack>
+      <VStack
+        w="100%"
+        justifyContent="flex-start"
         alignItems="center"
         spacing={3}
       >
