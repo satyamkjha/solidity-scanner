@@ -57,6 +57,7 @@ const LoginForm: React.FC = () => {
 
   const onSubmit = async () => {
     setIsLoading(true);
+    const reqHeaders = await getReCaptchaHeaders("login");
     API.post<AuthResponse>(
       API_PATH.API_LOGIN,
       {
