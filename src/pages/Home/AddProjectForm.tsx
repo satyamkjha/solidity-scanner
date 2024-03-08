@@ -1,4 +1,4 @@
-import React, { useState, } from "react";
+import React, { useState } from "react";
 import {
   Flex,
   Modal,
@@ -61,13 +61,12 @@ const AddProjectForm: React.FC<{
         onClose();
         setStep(changeView ? 1 : 0);
       }}
+      scrollBehavior={"inside"}
     >
       <ModalOverlay />
       <ModalContent
         maxWidth={["450px", "500px", "600px", "1400px"]}
         w={"95%"}
-        overflowY={"scroll"}
-        overflowX={"scroll"}
         bg="white"
         minH={"fit-content"}
         pt={[0, 2, 2]}

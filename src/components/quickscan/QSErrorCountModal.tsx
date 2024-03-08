@@ -47,15 +47,13 @@ const QSErrorCountModal: React.FC<{
 
   return (
     <>
-      <Modal isOpen={isOpen} onClose={onClose}>
+      <Modal isOpen={isOpen} onClose={onClose} scrollBehavior={"inside"}>
         <ModalOverlay />
         <ModalContent
           w={"90vw"}
           maxW={["90vw", "500px", "500px", "1100px"]}
           h="90vh"
           maxH="800px"
-          overflowY={"scroll"}
-          overflowX={"scroll"}
           bg="white"
           minH={"fit-content"}
           py={[3, 3, 3, 5]}

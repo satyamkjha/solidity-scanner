@@ -7,23 +7,16 @@ import {
   ModalBody,
   ModalCloseButton,
   ModalContent,
-  ModalOverlay,
-  Image,
-  Divider,
-  VStack,
-  Box,
-  Progress,
-  Link,
   HStack,
   Heading,
   Button,
 } from "@chakra-ui/react";
 import { getTrimmedScanMessage, snakeToNormal } from "helpers/helperFunction";
-import { contractChain, scanStatesLabel } from "common/values";
-import { ExternalLinkIcon, WarningIcon } from "@chakra-ui/icons";
-import { LogoIcon, RescanIcon } from "components/icons";
+import { WarningIcon } from "@chakra-ui/icons";
+import { RescanIcon } from "components/icons";
 import { ScanTitleComponent } from "./InScanModal";
 import { useHistory } from "react-router-dom";
+import ModalBlurOverlay from "components/common/ModalBlurOverlay";
 
 const ScanErrorModal: React.FC<{
   onClose: any;
@@ -33,11 +26,14 @@ const ScanErrorModal: React.FC<{
 }> = ({ isOpen, onClose, inScanDetails, insufficientMsg }) => {
   const history = useHistory();
   return (
-    <Modal isCentered isOpen={isOpen} onClose={onClose}>
-      <ModalOverlay />
+    <Modal
+      isCentered
+      isOpen={isOpen}
+      onClose={onClose}
+      scrollBehavior={"inside"}
+    >
+      <ModalBlurOverlay />
       <ModalContent
-        overflowY={"scroll"}
-        overflowX={"scroll"}
         bg="bg.subtle"
         w={"90vw"}
         maxW={"800px"}

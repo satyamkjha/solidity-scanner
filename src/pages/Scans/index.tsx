@@ -110,7 +110,11 @@ const Scans: React.FC = () => {
       const uniqueProjectList = pList.filter(
         (project, index, self) =>
           index ===
-          self.findIndex((p) => p.scanItem.scan_id === project.scanItem.scan_id)
+          self.findIndex(
+            (p) =>
+              p.scanItem.scan_details.project_id ===
+              project.scanItem.scan_details.project_id
+          )
       );
       setIsProjectsLoading(false);
       setProjectList(uniqueProjectList);
@@ -167,10 +171,11 @@ const Scans: React.FC = () => {
     });
   };
 
-  const updateProjectList = (scan_id: string) => {
+  const updateProjectList = (project_id: string) => {
     let newProjectList = projectList || [];
     newProjectList = newProjectList.filter((projectItem) => {
-      if (projectItem.scanItem.scan_id === scan_id) return false;
+      if (projectItem.scanItem.scan_details.project_id === project_id)
+        return false;
       return true;
     });
     setProjectsMonitored(projectsMonitored - 1);
@@ -178,7 +183,7 @@ const Scans: React.FC = () => {
   };
 
   useEffect(() => {
-    if (messageQueue.length > 0) {
+    if (projectList && messageQueue.length > 0) {
       const isMessageTypeIncluded = (msg: any) =>
         scanMessageTypes.includes(msg.type);
 
@@ -194,7 +199,10 @@ const Scans: React.FC = () => {
         filteredMessages.forEach((msgItem: any) => {
           if (msgItem.type === "scan_status") {
             updatedProjectList = updatedProjectList.map((item) => {
-              if (item.scanItem.scan_id === msgItem.payload.scan_id) {
+              if (
+                item.scanItem.scan_details.project_id ===
+                msgItem.payload.project_id
+              ) {
                 if (msgItem.payload.scan_status === "scan_done") {
                   refetchProjects();
                   onClose();
@@ -258,7 +266,6 @@ const Scans: React.FC = () => {
                 item.scanItem.scan_details.project_id ===
                 msgItem.payload.project_id
             );
-
             if (findIndex !== -1) {
               updatedProjectList[findIndex] = {
                 scanItem: {
@@ -295,7 +302,7 @@ const Scans: React.FC = () => {
               scan_type,
               ...msgItem.payload,
             });
-            console.log("done");
+            onOpen();
           } else if (msgItem.type === "scan_initiate") {
             const findIndex = updatedProjectList.findIndex(
               (item) =>
@@ -379,13 +386,6 @@ const Scans: React.FC = () => {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [messageQueue]);
-
-  useEffect(() => {
-    if (inScanDetails !== null) {
-      onOpen();
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [inScanDetails]);
 
   useEffect(() => {
     if (
@@ -653,7 +653,7 @@ const Scans: React.FC = () => {
           >
             {[...(projectList || [])].map((project) => (
               <ScanCard
-                key={project.scanItem.scan_id}
+                key={project.scanItem.scan_details.project_id}
                 scan={project.scanItem}
                 tempScanStatus={project.tempScanStatus}
                 updateScanList={updateProjectList}
