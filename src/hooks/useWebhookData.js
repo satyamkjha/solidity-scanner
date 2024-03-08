@@ -58,7 +58,6 @@ export const WebSocketProvider = ({ children }) => {
     ws.addEventListener("message", (event) => {
       const receivedMessage = JSON.parse(event.data);
       if (receivedMessage) {
-        console.log(receivedMessage);
         if (receivedMessage.message) {
           toast({
             title: receivedMessage.message,

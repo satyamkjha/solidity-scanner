@@ -94,7 +94,7 @@ const ScanCard: React.FC<{
         },
       });
       onClose();
-      updateScanList(scan_id);
+      updateScanList(project_id);
     } else {
       const url =
         scan.scan_type === "project"
@@ -123,7 +123,7 @@ const ScanCard: React.FC<{
         });
       }
       onClose();
-      updateScanList(scan_id);
+      updateScanList(project_id);
     }
   };
 
@@ -303,9 +303,14 @@ const ScanCard: React.FC<{
             view={"scans"}
           />
         </Flex>
-      ) : ["scanning", "initialised", "downloaded", "scan_initiate"].includes(
-          multi_file_scan_status
-        ) && !["download_failed", "scan_failed"].includes(tempScanStatus) ? (
+      ) : [
+          "scanning",
+          "initialised",
+          "downloaded",
+          "scan_initiate",
+          "in_queue",
+        ].includes(multi_file_scan_status) &&
+        !["download_failed", "scan_failed"].includes(tempScanStatus) ? (
         <Box mb={10} p={5} w="100%">
           <Flex
             sx={{
