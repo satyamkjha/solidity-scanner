@@ -284,7 +284,7 @@ const Scans: React.FC = () => {
               contract_platform: msgItem.payload.scan_details.contract_platform,
               contract_url: msgItem.payload.scan_details.contract_url,
               contract_chain: msgItem.payload.scan_details.contract_chain,
-              scan_state: msgItem.payload.scan_details.scan_state,
+              scan_state: msgItem.payload.scan_details.multi_file_scan_status,
               scan_type: msgItem.payload.scan_details.scan_type,
             });
           else
@@ -292,18 +292,20 @@ const Scans: React.FC = () => {
               project_id: msgItem.payload.scan_details.project_id,
               project_url: msgItem.payload.scan_details.project_url,
               project_name: msgItem.payload.scan_details.project_name,
-              scan_state: msgItem.payload.scan_details.scan_state,
+              scan_state: msgItem.payload.scan_details.multi_file_scan_status,
               scan_type: msgItem.payload.scan_details.scan_type,
             });
         } else if (msgItem.type === "insufficient_loc") {
-          const inScanProject = updatedProjectList.filter(
+          const inScanProjectIndex = updatedProjectList.findIndex(
             (proj) => proj.scanItem.scan_id === msgItem.payload.scan_id
           );
-          if (inScanProject && inScanProject.length)
+          if (inScanProjectIndex !== -1) {
+            const inScanProject = updatedProjectList[inScanProjectIndex];
             setInScanDetails({
               loc: msgItem.payload.loc_required,
-              ...inScanProject[0].scanItem.scan_details,
+              ...inScanProject.scanItem.scan_details,
             });
+          }
           setInsufficientMsg(msgItem.payload);
         } else if (
           msgItem.type === "delete_block_acknowledge" ||
