@@ -118,10 +118,10 @@ const ContractForm: React.FC<{
                   type: "block_scan_initiate",
                   body: req,
                 });
-                onClose();
                 queryClient.invalidateQueries("profile");
                 history.push("/projects");
                 setIsLoading(false);
+                onClose();
               }
             } else {
               setIsLoading(false);

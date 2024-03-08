@@ -7,7 +7,6 @@ import {
   ModalBody,
   ModalCloseButton,
   ModalContent,
-  ModalOverlay,
   Button,
   VStack,
   HStack,
@@ -16,6 +15,7 @@ import {
 import { useHistory } from "react-router-dom";
 import { LOCInfoContainer } from "components/locInfoContainer";
 import { ScanTitleComponent } from "./InScanModal";
+import ModalBlurOverlay from "components/common/ModalBlurOverlay";
 
 const InsufficientLocModal: React.FC<{
   closeModal: any;
@@ -32,7 +32,7 @@ const InsufficientLocModal: React.FC<{
   return (
     <>
       <Modal isCentered isOpen={open} onClose={closeModal}>
-        <ModalOverlay />
+        <ModalBlurOverlay />
         <ModalContent
           overflowY={"scroll"}
           overflowX={"scroll"}

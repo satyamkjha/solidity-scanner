@@ -7,7 +7,6 @@ import {
   ModalBody,
   ModalCloseButton,
   ModalContent,
-  ModalOverlay,
   Image,
   Divider,
   VStack,
@@ -31,6 +30,7 @@ import { contractChain, scanStatesLabel } from "common/values";
 import { ExternalLinkIcon, WarningIcon } from "@chakra-ui/icons";
 import { LogoIcon } from "components/icons";
 import InsufficientLocModal from "./InsufficientLocModal";
+import ModalBlurOverlay from "components/common/ModalBlurOverlay";
 
 const InScanModal: React.FC<{
   onClose: any;
@@ -48,7 +48,7 @@ const InScanModal: React.FC<{
         />
       ) : (
         <Modal isCentered isOpen={isOpen} onClose={onClose}>
-          <ModalOverlay />
+          <ModalBlurOverlay />
           <ModalContent
             overflowY={"scroll"}
             overflowX={"scroll"}

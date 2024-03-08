@@ -147,9 +147,9 @@ const LocTopUp: React.FC<{
           <Text>{`$${currentTopUpPlan.amount} Per LOC  X  ${
             noOfLoc / locPriceUnits || 0
           }`}</Text>
-          <Text ml="auto">{`$${
+          <Text ml="auto">{`$${(
             parseFloat(currentTopUpPlan.amount) * (noOfLoc / locPriceUnits || 0)
-          }`}</Text>
+          ).toFixed(2)}`}</Text>
         </Flex>
         <Divider borderColor={"#EAEAEA"} my={4} />
         <Flex align="center" w="100%">

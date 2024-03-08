@@ -26,6 +26,11 @@ export const PlanDataContainer: React.FC<{
   const assetsURL = getAssetsURL(config);
   const { isOpen, onOpen, onClose } = useDisclosure();
 
+  const userPlan =
+    pricingPlans.pricing_data[
+      profileData.billing_cycle === "N/A" ? "trial" : profileData.billing_cycle
+    ][profileData.current_package];
+
   return (
     <VStack
       px={4}
@@ -58,14 +63,7 @@ export const PlanDataContainer: React.FC<{
               {profileData.plan_loc_remaining}
             </Text>
             <Text color="subtle" fontSize="sm">
-              /
-              {
-                pricingPlans.pricing_data[
-                  profileData.billing_cycle === "N/A"
-                    ? "trial"
-                    : profileData.billing_cycle
-                ][profileData.current_package].loc
-              }
+              /{userPlan ? userPlan.loc : "--"}
             </Text>
           </HStack>
           <Text fontWeight={600} fontSize="sm">
@@ -96,13 +94,7 @@ export const PlanDataContainer: React.FC<{
               {profileData.on_demand_loc_remaining}
             </Text>
             <Text color="subtle" fontSize="sm">
-              /
-              {profileData.total_loc -
-                pricingPlans.pricing_data[
-                  profileData.billing_cycle === "N/A"
-                    ? "trial"
-                    : profileData.billing_cycle
-                ][profileData.current_package].loc}
+              /{userPlan ? profileData.total_loc - userPlan.loc : "--"}
             </Text>
           </HStack>
           <Text fontWeight={600} fontSize="sm">

@@ -1,6 +1,5 @@
 import {
   Modal,
-  ModalOverlay,
   Flex,
   Divider,
   HStack,
@@ -26,6 +25,7 @@ import ConfirmationMessageBox from "../../pages/Billing/components/ConfirmationM
 import DetailedBill from "../../pages/Billing/components/DetailedBill";
 import SwitchDuration from "../../pages/Billing/components/SwitchDuration";
 import Loader from "components/styled-components/Loader";
+import ModalBlurOverlay from "components/common/ModalBlurOverlay";
 
 const PaymentModal: React.FC<{
   isOpen: boolean;
@@ -251,7 +251,7 @@ const PaymentModal: React.FC<{
         containerModalClose && containerModalClose();
       }}
     >
-      <ModalOverlay />
+      <ModalBlurOverlay />
       <ModalContent
         overflowY={"scroll"}
         overflowX={"scroll"}

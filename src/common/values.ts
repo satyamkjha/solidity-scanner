@@ -974,7 +974,8 @@ export const inProcessScanStates = [
 export const scanStatesLabel: {
   [key: string]: string;
 } = {
-  scan_initiate: "Scan in Queue",
+  in_queue: "Scan in Queue",
+  scan_initiate: "Downloading Code...",
   scan_done: "",
   initialised: "Downloading Code...",
   downloaded: "Code Downloaded...",
