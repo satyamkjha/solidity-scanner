@@ -79,13 +79,11 @@ export const QSApiModal: React.FC<{ onClose(): any; isOpen: boolean }> = ({
 
   return (
     <>
-      <Modal isOpen={isOpen} onClose={onClose}>
+      <Modal isOpen={isOpen} onClose={onClose} scrollBehavior={"inside"}>
         <ModalOverlay />
         <ModalContent
           maxW={["90vw", "90vw", "70vw"]}
           minW={"300px"}
-          overflowY={"scroll"}
-          overflowX={"scroll"}
           bg="bg.subtle"
           minH={"fit-content"}
         >

@@ -58,11 +58,9 @@ const ImportScanModal: React.FC<{
 
   return (
     <>
-      <Modal isOpen={isOpen} onClose={onClose}>
+      <Modal isOpen={isOpen} onClose={onClose} scrollBehavior={"inside"}>
         <ModalOverlay />
         <ModalContent
-          overflowY={"scroll"}
-          overflowX={"scroll"}
           bg="bg.subtle"
           w={"50vw"}
           maxW={"800px"}

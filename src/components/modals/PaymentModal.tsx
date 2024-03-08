@@ -250,11 +250,10 @@ const PaymentModal: React.FC<{
         onClose();
         containerModalClose && containerModalClose();
       }}
+      scrollBehavior={"inside"}
     >
       <ModalBlurOverlay />
       <ModalContent
-        overflowY={"scroll"}
-        overflowX={"scroll"}
         bg="white"
         borderRadius="15px"
         h={duration === "topup" ? "75%" : "85%"}

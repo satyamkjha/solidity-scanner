@@ -31,11 +31,14 @@ const InsufficientLocModal: React.FC<{
 
   return (
     <>
-      <Modal isCentered isOpen={open} onClose={closeModal}>
+      <Modal
+        isCentered
+        isOpen={open}
+        onClose={closeModal}
+        scrollBehavior={"inside"}
+      >
         <ModalBlurOverlay />
         <ModalContent
-          overflowY={"scroll"}
-          overflowX={"scroll"}
           bg="bg.subtle"
           w={"90vw"}
           maxW={"800px"}

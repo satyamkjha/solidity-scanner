@@ -91,7 +91,7 @@ export const ManualAuditForm: React.FC<{
   };
   return (
     <>
-      <Modal isOpen={isOpen} onClose={onClose}>
+      <Modal isOpen={isOpen} onClose={onClose} scrollBehavior={"inside"}>
         <ModalOverlay />
         <ModalContent
           maxW={["90vw", "90vw", "75vw"]}

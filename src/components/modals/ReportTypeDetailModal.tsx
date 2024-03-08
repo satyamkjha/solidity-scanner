@@ -46,7 +46,7 @@ export const ReportTypeDetailModal: React.FC<{
 
   return (
     <>
-      <Modal isOpen={isOpen} onClose={onClose}>
+      <Modal isOpen={isOpen} onClose={onClose} scrollBehavior={"inside"}>
         <ModalOverlay />
         <ModalContent
           w={["90vw", "90vw"]}

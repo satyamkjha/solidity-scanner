@@ -47,11 +47,14 @@ const InScanModal: React.FC<{
           scanDetails={inScanDetails}
         />
       ) : (
-        <Modal isCentered isOpen={isOpen} onClose={onClose}>
+        <Modal
+          isCentered
+          isOpen={isOpen}
+          onClose={onClose}
+          scrollBehavior={"inside"}
+        >
           <ModalBlurOverlay />
           <ModalContent
-            overflowY={"scroll"}
-            overflowX={"scroll"}
             bg="bg.subtle"
             w={"90vw"}
             maxW={"800px"}
