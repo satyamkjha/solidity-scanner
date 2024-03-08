@@ -52,7 +52,7 @@ const OverviewData: React.FC<{
         sx={{
           fontSize: "sm",
           fontWeight: 600,
-          lineHeight: "2",
+          lineHeight: "1.5",
           textAlign: "center",
           color: "gray.500",
         }}

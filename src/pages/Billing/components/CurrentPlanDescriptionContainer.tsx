@@ -109,7 +109,7 @@ const CurrentPlanDescriptionContainer: React.FC<{
           </Heading>
           {packageName !== "trial" && packageName !== "ondemand" && (
             <Text fontSize="xs" color="detail" mt={2}>
-              {`/ ${duration === "topup" ? "LoC" : duration} `}
+              {`/ ${duration === "topup" ? "LOC" : duration} `}
             </Text>
           )}
         </Flex>

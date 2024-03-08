@@ -97,7 +97,7 @@ const LocTopUp: React.FC<{
         >
           <Text color="detail" fontWeight={400}>
             Increase your LOC with our top-up option. It will cost{" "}
-            <strong>${currentTopUpPlan.amount} </strong> per LoC for your
+            <strong>${currentTopUpPlan.amount} </strong> per LOC for your
             current
             <strong> {packageLabel[planData.name]} </strong> plan.
           </Text>
@@ -137,12 +137,17 @@ const LocTopUp: React.FC<{
             size="lg"
             pl="80px"
             height="80px"
-            value={noOfLoc}
-            type="number"
-            onChange={(e) => setNoOfLoc(parseInt(e.target.value))}
+            value={noOfLoc === 0 ? "" : noOfLoc.toLocaleString("us")}
+            type="text"
+            onChange={(e) => {
+              const value = parseInt(e.target.value.replace(/,/g, ""), 10);
+              setNoOfLoc(isNaN(value) ? 0 : value);
+            }}
           />
         </InputGroup>
-        <Text fontSize="xl" mt={8}>{`${noOfLoc || "00"} LOC`}</Text>
+        <Text fontSize="xl" mt={8}>{`${
+          noOfLoc.toLocaleString("us") || "00"
+        } LOC`}</Text>
         <Flex w="100%" textColor="subtle" my={2}>
           <Text>{`$${currentTopUpPlan.amount} Per LOC  X  ${
             noOfLoc / locPriceUnits || 0

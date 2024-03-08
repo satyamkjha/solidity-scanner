@@ -77,15 +77,12 @@ const SignIn: React.FC = () => {
       <Flex align="center" direction="column" my={8}>
         <Heading fontSize="2xl">Sign In {orgLogin && "Organisation"}</Heading>
         {orgLogin ? (
-          <HStack my={3} spacing={2}>
-            <Text color="subtle">Type details to Sign In to</Text>
-            <Text
-              fontWeight={700}
-              color={organisation === "" ? "subtle" : "#000"}
-            >
-              {organisation === "" ? "an" : organisation}
+          <HStack my={3} spacing={2} color="subtle">
+            <Text>Type details to Sign In to</Text>
+            <Text>
+              {!organisation ? "an" : <strong>{organisation}</strong>}
             </Text>
-            <Text color="subtle">Organisation</Text>
+            <Text>Organisation</Text>
           </HStack>
         ) : (
           <Text color="subtle" my={3}>
