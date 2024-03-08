@@ -121,10 +121,10 @@ const ApplicationForm: React.FC<{
             skip_file_paths: skipFilePaths,
           },
         });
-        onClose();
         queryClient.invalidateQueries("profile");
         history.push("/projects");
         setIsLoading(false);
+        onClose();
       } catch (e) {
         console.log(e);
         setIsLoading(false);

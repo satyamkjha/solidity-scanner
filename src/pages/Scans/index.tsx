@@ -178,151 +178,204 @@ const Scans: React.FC = () => {
   };
 
   useEffect(() => {
-    if (projectList && messageQueue.length > 0) {
+    if (messageQueue.length > 0) {
       const isMessageTypeIncluded = (msg: any) =>
         scanMessageTypes.includes(msg.type);
 
-      const filteredMessages = messageQueue.filter((msg: any) =>
-        isMessageTypeIncluded(msg)
-      );
+      const filteredMessages = messageQueue.filter(isMessageTypeIncluded);
       if (filteredMessages.length === 0) {
         return;
       }
 
-      let tempMsgQueue = [...messageQueue];
-      let updatedProjectList = [...projectList];
-      filteredMessages.forEach((msgItem: any) => {
-        if (msgItem.type === "scan_status") {
-          updatedProjectList = updatedProjectList.map((item) => {
-            if (item.scanItem.scan_id === msgItem.payload.scan_id) {
-              if (msgItem.payload.scan_status === "scan_done") {
-                refetchProjects();
-                onClose();
-                setInScanDetails(null);
-                return {
+      setProjectList((prevProjectList) => {
+        let updatedProjectList = prevProjectList ? [...prevProjectList] : [];
+        let tempMsgQueue = [...messageQueue];
+
+        filteredMessages.forEach((msgItem: any) => {
+          if (msgItem.type === "scan_status") {
+            updatedProjectList = updatedProjectList.map((item) => {
+              if (item.scanItem.scan_id === msgItem.payload.scan_id) {
+                if (msgItem.payload.scan_status === "scan_done") {
+                  refetchProjects();
+                  onClose();
+                  setInScanDetails(null);
+                  return {
+                    scanItem: {
+                      scan_id: msgItem.payload.scan_id,
+                      scan_type: msgItem.payload.scan_details.scan_type,
+                      scan_details: msgItem.payload.scan_details,
+                    },
+                    tempScanStatus: msgItem.payload.scan_status,
+                  };
+                } else if (
+                  ["download_failed", "scan_failed"].includes(
+                    msgItem.payload.scan_status
+                  )
+                ) {
+                  if (
+                    inScanDetails &&
+                    msgItem.payload.project_id === inScanDetails.project_id
+                  ) {
+                    setInScanDetails({
+                      ...inScanDetails,
+                      scan_state: msgItem.payload.scan_status,
+                    });
+                  }
+                  return {
+                    scanItem: {
+                      ...item.scanItem,
+                      scan_id: msgItem.payload.scan_id,
+                      scan_err_message: msgItem.payload.scan_status_err_message,
+                    },
+                    tempScanStatus: msgItem.payload.scan_status,
+                  };
+                } else {
+                  if (
+                    inScanDetails &&
+                    msgItem.payload.project_id === inScanDetails.project_id
+                  ) {
+                    setInScanDetails({
+                      ...inScanDetails,
+                      scan_state: msgItem.payload.scan_status,
+                    });
+                  }
+                  return {
+                    ...item,
+                    tempScanStatus: msgItem.payload.scan_status,
+                  };
+                }
+              } else return item;
+            });
+          } else if (
+            ["block_scan_acknowledge", "project_scan_acknowledge"].includes(
+              msgItem.type
+            )
+          ) {
+            const scan_type =
+              msgItem.type === "block_scan_acknowledge" ? "block" : "project";
+            const findIndex = updatedProjectList.findIndex(
+              (item) =>
+                item.scanItem.scan_details.project_id ===
+                msgItem.payload.project_id
+            );
+
+            if (findIndex !== -1) {
+              updatedProjectList[findIndex] = {
+                scanItem: {
+                  scan_id: "",
+                  scan_type,
+                  scan_details: {
+                    ...msgItem.payload,
+                    multi_file_scan_status: "in_queue",
+                    scan_status: "in_queue",
+                  },
+                },
+                tempScanStatus: "in_queue",
+              };
+            } else {
+              updatedProjectList = [
+                {
                   scanItem: {
-                    scan_id: msgItem.payload.scan_id,
+                    scan_id: "",
+                    scan_type,
+                    scan_details: {
+                      ...msgItem.payload,
+                      multi_file_scan_status: "in_queue",
+                      scan_status: "in_queue",
+                    },
+                  },
+                  tempScanStatus: "in_queue",
+                },
+                ...updatedProjectList,
+              ];
+            }
+            setInScanDetails({
+              project_id: msgItem.payload.project_id,
+              scan_state: "in_queue",
+              scan_type,
+              ...msgItem.payload,
+            });
+            console.log("done");
+          } else if (msgItem.type === "scan_initiate") {
+            const findIndex = updatedProjectList.findIndex(
+              (item) =>
+                item.scanItem.scan_details.project_id ===
+                msgItem.payload.scan_details.project_id
+            );
+
+            if (findIndex !== -1) {
+              updatedProjectList[findIndex] = {
+                scanItem: {
+                  scan_id: msgItem.payload.scan_details.scan_id,
+                  scan_type: msgItem.payload.scan_details.scan_type,
+                  scan_details: msgItem.payload.scan_details,
+                },
+                tempScanStatus: msgItem.type,
+              };
+            } else {
+              updatedProjectList = [
+                {
+                  scanItem: {
+                    scan_id: msgItem.payload.scan_details.scan_id,
                     scan_type: msgItem.payload.scan_details.scan_type,
                     scan_details: msgItem.payload.scan_details,
                   },
-                  tempScanStatus: "scan_done",
-                };
-              } else if (
-                ["download_failed", "scan_failed"].includes(
-                  msgItem.payload.scan_status
-                )
-              ) {
-                if (
-                  inScanDetails &&
-                  msgItem.payload.project_id === inScanDetails.project_id
-                ) {
-                  setInScanDetails({
-                    ...inScanDetails,
-                    scan_state: msgItem.payload.scan_status,
-                  });
-                }
-                return {
-                  scanItem: {
-                    ...item.scanItem,
-                    scan_id: msgItem.payload.scan_id,
-                    scan_err_message: msgItem.payload.scan_status_err_message,
-                  },
-                  tempScanStatus: msgItem.payload.scan_status,
-                };
-              } else {
-                if (
-                  inScanDetails &&
-                  msgItem.payload.project_id === inScanDetails.project_id
-                ) {
-                  setInScanDetails({
-                    ...inScanDetails,
-                    scan_state: msgItem.payload.scan_status,
-                  });
-                }
-                return {
-                  ...item,
-                  tempScanStatus: msgItem.payload.scan_status,
-                };
-              }
-            } else return item;
-          });
-        } else if (msgItem.type === "scan_initiate") {
-          let scanAlreadyPresent = false;
-          updatedProjectList = updatedProjectList.map((item) => {
-            if (
-              item.scanItem.scan_details.project_id ===
-              msgItem.payload.scan_details.project_id
-            ) {
-              scanAlreadyPresent = true;
-              return {
-                scanItem: {
-                  scan_id: msgItem.payload.scan_details.scan_id,
-                  scan_type: msgItem.payload.scan_details.scan_type,
-                  scan_details: msgItem.payload.scan_details,
+                  tempScanStatus: msgItem.type,
                 },
-                tempScanStatus: "scan_initiate",
-              };
-            } else return item;
-          });
-          if (!scanAlreadyPresent) {
-            updatedProjectList = [
-              {
-                scanItem: {
-                  scan_id: msgItem.payload.scan_details.scan_id,
-                  scan_type: msgItem.payload.scan_details.scan_type,
-                  scan_details: msgItem.payload.scan_details,
-                },
-                tempScanStatus: "scan_initiate",
-              },
-              ...updatedProjectList,
-            ];
+                ...updatedProjectList,
+              ];
+            }
+            if (msgItem.payload.scan_details.scan_type === "block")
+              setInScanDetails({
+                project_id: msgItem.payload.scan_details.project_id,
+                contract_address: msgItem.payload.scan_details.contract_address,
+                contract_platform:
+                  msgItem.payload.scan_details.contract_platform,
+                contract_url: msgItem.payload.scan_details.contract_url,
+                contract_chain: msgItem.payload.scan_details.contract_chain,
+                scan_state: msgItem.type,
+                scan_type: msgItem.payload.scan_details.scan_type,
+              });
+            else
+              setInScanDetails({
+                project_id: msgItem.payload.scan_details.project_id,
+                project_url: msgItem.payload.scan_details.project_url,
+                project_name: msgItem.payload.scan_details.project_name,
+                scan_state: msgItem.type,
+                scan_type: msgItem.payload.scan_details.scan_type,
+              });
+          } else if (msgItem.type === "insufficient_loc") {
+            const inScanProjectIndex = updatedProjectList.findIndex(
+              (proj) => proj.scanItem.scan_id === msgItem.payload.scan_id
+            );
+            if (inScanProjectIndex !== -1) {
+              const inScanProject = updatedProjectList[inScanProjectIndex];
+              setInScanDetails({
+                loc: msgItem.payload.loc_required,
+                ...inScanProject.scanItem.scan_details,
+              });
+            }
+            setInsufficientMsg(msgItem.payload);
+          } else if (
+            msgItem.type === "delete_block_acknowledge" ||
+            msgItem.type === "delete_project_acknowledge"
+          ) {
+            toast({
+              title: msgItem.payload.payload.message,
+              status: "success",
+              duration: 3000,
+              isClosable: true,
+            });
           }
-          if (msgItem.payload.scan_details.scan_type === "block")
-            setInScanDetails({
-              project_id: msgItem.payload.scan_details.project_id,
-              contract_address: msgItem.payload.scan_details.contract_address,
-              contract_platform: msgItem.payload.scan_details.contract_platform,
-              contract_url: msgItem.payload.scan_details.contract_url,
-              contract_chain: msgItem.payload.scan_details.contract_chain,
-              scan_state: msgItem.payload.scan_details.multi_file_scan_status,
-              scan_type: msgItem.payload.scan_details.scan_type,
-            });
-          else
-            setInScanDetails({
-              project_id: msgItem.payload.scan_details.project_id,
-              project_url: msgItem.payload.scan_details.project_url,
-              project_name: msgItem.payload.scan_details.project_name,
-              scan_state: msgItem.payload.scan_details.multi_file_scan_status,
-              scan_type: msgItem.payload.scan_details.scan_type,
-            });
-        } else if (msgItem.type === "insufficient_loc") {
-          const inScanProjectIndex = updatedProjectList.findIndex(
-            (proj) => proj.scanItem.scan_id === msgItem.payload.scan_id
+          tempMsgQueue = tempMsgQueue.filter(
+            (msg) => msg.type !== msgItem.type
           );
-          if (inScanProjectIndex !== -1) {
-            const inScanProject = updatedProjectList[inScanProjectIndex];
-            setInScanDetails({
-              loc: msgItem.payload.loc_required,
-              ...inScanProject.scanItem.scan_details,
-            });
-          }
-          setInsufficientMsg(msgItem.payload);
-        } else if (
-          msgItem.type === "delete_block_acknowledge" ||
-          msgItem.type === "delete_project_acknowledge"
-        ) {
-          toast({
-            title: msgItem.payload.payload.message,
-            status: "success",
-            duration: 3000,
-            isClosable: true,
-          });
-        }
-        tempMsgQueue = tempMsgQueue.filter((msg) => msg.type !== msgItem.type);
-      });
+        });
 
-      updateMessageQueue(tempMsgQueue);
-      setProjectList(updatedProjectList);
+        updateMessageQueue(tempMsgQueue);
+
+        return updatedProjectList;
+      });
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [messageQueue]);

@@ -189,11 +189,8 @@ const UploadForm: React.FC<{
       onOpen();
       return;
     }
-    
-    if (
-      config &&
-      config.REACT_APP_FEATURE_GATE_CONFIG.websockets_enabled
-    ) {
+
+    if (config && config.REACT_APP_FEATURE_GATE_CONFIG.websockets_enabled) {
       try {
         setIsLoading(true);
         sendMessage({
@@ -205,9 +202,9 @@ const UploadForm: React.FC<{
             project_type: "new",
           },
         });
-        onClose();
         history.push("/projects");
-        setTimeout(() => setIsLoading(false), 1000);
+        setIsLoading(false);
+        onClose();
       } catch (e) {
         setTimeout(() => setIsLoading(false), 1000);
         console.log(e);

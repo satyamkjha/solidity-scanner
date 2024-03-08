@@ -47,12 +47,13 @@ export const LOCHeader: React.FC<{
         } else {
           setCredits(creditUpdateMessage[0].payload.updated_credits);
         }
-      }
 
-      let tempMessageQueue = messageQueue.filter(
-        (msgItem: any) => msgItem.type !== messageType
-      );
-      updateMessageQueue(tempMessageQueue);
+        // remove message from queue after consuming the event
+        let tempMessageQueue = messageQueue.filter(
+          (msgItem: any) => msgItem.type !== messageType
+        );
+        updateMessageQueue(tempMessageQueue);
+      }
     }
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
