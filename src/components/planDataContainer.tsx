@@ -139,7 +139,12 @@ export const PlanDataContainer: React.FC<{
               {profileData.on_demand_loc_remaining}
             </Text>
             <Text color="subtle" fontSize="sm">
-              /{userPlan ? profileData.total_loc - userPlan.loc : "--"}
+              /
+              {userPlan
+                ? profileData.current_package === "ondemand"
+                  ? profileData.total_loc
+                  : profileData.total_loc - userPlan.loc
+                : "--"}
             </Text>
           </HStack>
           <Text fontWeight={600} fontSize="sm">
