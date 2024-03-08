@@ -160,6 +160,7 @@ const ScanCard: React.FC<{
             "download_failed",
             "Download Failed",
             "Scan Failed",
+            "insufficient_loc",
           ].includes(tempScanStatus)
         ) {
           setOpenScanError(true);
@@ -332,7 +333,7 @@ const ScanCard: React.FC<{
           </Flex>
           <Progress value={20} isIndeterminate size="xs" />
         </Box>
-      ) : tempScanStatus === "insufficient_locs" ? (
+      ) : tempScanStatus === "insufficient_loc" ? (
         <Box
           sx={{
             p: 3,

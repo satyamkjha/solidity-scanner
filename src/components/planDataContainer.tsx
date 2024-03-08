@@ -35,44 +35,47 @@ export const PlanDataContainer: React.FC<{
       alignItems="center"
       spacing={5}
     >
-      <VStack
-        w="100%"
-        justifyContent="flex-start"
-        spacing={2}
-        bgColor="#E6FAEC"
-        px={5}
-        borderRadius={10}
-        py={2}
-      >
-        <HStack w="100%" justifyContent="space-between" alignItems="center">
-          <Text fontWeight={600} fontSize="sm">
-            Plan LoCs Quota
-          </Text>
-          <Text fontWeight={600} color="#B0B7C3" fontSize="xs">
-            Expires in
-          </Text>
-        </HStack>
-        <HStack w="100%" justifyContent="space-between" alignItems="center">
-          <HStack spacing={0}>
-            <Text fontWeight={700} fontSize="lg">
-              {profileData.plan_loc_remaining}
+      {["beginner", "pro", "custom"].includes(profileData.current_package) && (
+        <VStack
+          w="100%"
+          justifyContent="flex-start"
+          spacing={2}
+          bgColor={profileData.plan_loc_remaining === 0 ? "#F8F8F8" : "#E6FAEC"}
+          px={5}
+          borderRadius={10}
+          py={2}
+        >
+          <HStack w="100%" justifyContent="space-between" alignItems="center">
+            <Text fontWeight={600} fontSize="sm">
+              Plan LoCs Quota
             </Text>
-            <Text color="subtle" fontSize="sm">
-              /
-              {
-                pricingPlans.pricing_data[
-                  profileData.billing_cycle === "N/A"
-                    ? "trial"
-                    : profileData.billing_cycle
-                ][profileData.current_package].loc
-              }
+            <Text fontWeight={600} color="#B0B7C3" fontSize="xs">
+              Expires in
             </Text>
           </HStack>
-          <Text fontWeight={600} fontSize="sm">
-            With Current Plan
-          </Text>
-        </HStack>
-      </VStack>
+          <HStack w="100%" justifyContent="space-between" alignItems="center">
+            <HStack spacing={0}>
+              <Text fontWeight={700} fontSize="lg">
+                {profileData.plan_loc_remaining}
+              </Text>
+              <Text color="subtle" fontSize="sm">
+                /
+                {
+                  pricingPlans.pricing_data[
+                    profileData.billing_cycle === "N/A"
+                      ? "trial"
+                      : profileData.billing_cycle
+                  ][profileData.current_package].loc
+                }
+              </Text>
+            </HStack>
+            <Text fontWeight={600} fontSize="sm">
+              With Current Plan
+            </Text>
+          </HStack>
+        </VStack>
+      )}
+
       <VStack
         w="100%"
         justifyContent="flex-start"
@@ -116,54 +119,87 @@ export const PlanDataContainer: React.FC<{
         alignItems="center"
         spacing={3}
       >
-        <HStack w="100%" justifyContent="space-between" alignItems="center">
-          <Text fontWeight={600}>Total LoC Quota </Text>
-          <Text fontWeight={600}>
-            {profileData.current_package === "trial"
-              ? "--"
-              : profileData.total_loc}{" "}
-            <span
-              style={{
-                fontWeight: 300,
-                fontSize: "sm",
-              }}
-            >
-              LOCs
-            </span>{" "}
-          </Text>
-        </HStack>
-        <HStack w="100%" justifyContent="space-between" alignItems="center">
-          <Text fontWeight={600}>Used LOC</Text>
-          <Text fontWeight={600}>
-            {profileData.current_package === "trial"
-              ? "--"
-              : profileData.total_loc - profileData.loc_remaining}{" "}
-            <span
-              style={{
-                fontWeight: 300,
-                fontSize: "sm",
-              }}
-            >
-              LOCs
-            </span>{" "}
-          </Text>
-        </HStack>
-        <HStack w="100%" justifyContent="space-between" alignItems="center">
-          <Text fontWeight={600}>Remaining LOC</Text>
-          <Text fontWeight={600}>
-            {profileData.current_package === "trial"
-              ? "--"
-              : profileData.loc_remaining}{" "}
-            <span
-              style={{
-                fontWeight: 300,
-                fontSize: "sm",
-              }}
-            >
-              LOCs
-            </span>{" "}
-          </Text>
-        </HStack>
+        {["beginner", "pro", "custom"].includes(
+          profileData.current_package
+        ) && (
+          <>
+            <HStack w="100%" justifyContent="space-between" alignItems="center">
+              <Text fontWeight={600}>
+                Total LoC Quota{" "}
+                <span
+                  style={{
+                    fontSize: "xs",
+                    color: "#8A94A6",
+                  }}
+                >
+                  {" "}
+                  (Plan+Top-Up)
+                </span>{" "}
+              </Text>
+              <Text fontWeight={600}>
+                {profileData.current_package === "trial"
+                  ? "--"
+                  : profileData.total_loc}{" "}
+                <span
+                  style={{
+                    fontWeight: 300,
+                    fontSize: "sm",
+                  }}
+                >
+                  LOCs
+                </span>{" "}
+              </Text>
+            </HStack>
+            <HStack w="100%" justifyContent="space-between" alignItems="center">
+              <Text fontWeight={600}>Used LOC</Text>
+              <Text fontWeight={600}>
+                {profileData.current_package === "trial"
+                  ? "--"
+                  : profileData.total_loc - profileData.loc_remaining}{" "}
+                <span
+                  style={{
+                    fontWeight: 300,
+                    fontSize: "sm",
+                  }}
+                >
+                  LOCs
+                </span>{" "}
+              </Text>
+            </HStack>
+          </>
+        )}
+
+        {profileData.current_package === "trial" ? (
+          <HStack w="100%" justifyContent="space-between" alignItems="center">
+            <Text fontWeight={600}>Remaining Projects</Text>
+            <Text fontWeight={600}>
+              0{2 - profileData.projects_remaining}{" "}
+              <span
+                style={{
+                  fontWeight: 300,
+                  fontSize: "sm",
+                }}
+              >
+                LOCs
+              </span>{" "}
+            </Text>
+          </HStack>
+        ) : (
+          <HStack w="100%" justifyContent="space-between" alignItems="center">
+            <Text fontWeight={600}>Remaining LOC</Text>
+            <Text fontWeight={600}>
+              {profileData.loc_remaining}{" "}
+              <span
+                style={{
+                  fontWeight: 300,
+                  fontSize: "sm",
+                }}
+              >
+                LOCs
+              </span>{" "}
+            </Text>
+          </HStack>
+        )}
       </VStack>
       <Divider />
       {!["expired", "custom"].includes(profileData.current_package) ? (
