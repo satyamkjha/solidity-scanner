@@ -90,27 +90,25 @@ export const PlanDataContainer: React.FC<{
               Plan LOC Quota
             </Text>
             <Text fontWeight={600} color="#B0B7C3" fontSize="xs">
-              Expires in
+              Valid till
             </Text>
           </HStack>
           <HStack w="100%" justifyContent="space-between" alignItems="center">
             <HStack spacing={0}>
               <Text fontWeight={700} fontSize="lg">
-                {profileData.plan_loc_remaining}
+                {profileData.plan_loc_remaining.toLocaleString("us")}
               </Text>
               <Text color="subtle" fontSize="sm">
-                /
-                {
-                  pricingPlans.pricing_data[
-                    profileData.billing_cycle === "N/A"
-                      ? "trial"
-                      : profileData.billing_cycle
-                  ][profileData.current_package].loc
-                }
+                /{userPlan ? userPlan.loc.toLocaleString("us") : "--"}
               </Text>
             </HStack>
             <Text fontWeight={600} fontSize="sm">
-              With Current Plan
+              {profileData.subscription
+                ? formattedDate(
+                    new Date(profileData.subscription?.end_date),
+                    "long"
+                  )
+                : "With Current Plan"}
             </Text>
           </HStack>
         </VStack>
@@ -127,19 +125,22 @@ export const PlanDataContainer: React.FC<{
       >
         <HStack w="100%" justifyContent="space-between" alignItems="center">
           <Text fontWeight={600} fontSize="sm">
-            Plan LOC Quota
+            Added Tou-Up LOC
           </Text>
           <Text fontWeight={600} color="#B0B7C3" fontSize="xs">
-            Expires in
+            Valid till
           </Text>
         </HStack>
         <HStack w="100%" justifyContent="space-between" alignItems="center">
           <HStack spacing={0}>
             <Text fontWeight={700} fontSize="lg">
-              {profileData.on_demand_loc_remaining}
+              {profileData.on_demand_loc_remaining.toLocaleString("us")}
             </Text>
             <Text color="subtle" fontSize="sm">
-              /{userPlan ? profileData.total_loc - userPlan.loc : "--"}
+              /
+              {userPlan
+                ? (profileData.total_loc - userPlan.loc).toLocaleString("us")
+                : "--"}
             </Text>
           </HStack>
           <Text fontWeight={600} fontSize="sm">
@@ -159,7 +160,7 @@ export const PlanDataContainer: React.FC<{
           <>
             <HStack w="100%" justifyContent="space-between" alignItems="center">
               <Text fontWeight={600}>
-                Total LoC Quota{" "}
+                Total LOC Quota{" "}
                 <span
                   style={{
                     fontSize: "xs",
@@ -173,7 +174,7 @@ export const PlanDataContainer: React.FC<{
               <Text fontWeight={600}>
                 {profileData.current_package === "trial"
                   ? "--"
-                  : profileData.total_loc}{" "}
+                  : profileData.total_loc.toLocaleString("us")}{" "}
                 <span
                   style={{
                     fontWeight: 300,
@@ -189,7 +190,9 @@ export const PlanDataContainer: React.FC<{
               <Text fontWeight={600}>
                 {profileData.current_package === "trial"
                   ? "--"
-                  : profileData.total_loc - profileData.loc_remaining}{" "}
+                  : (
+                      profileData.total_loc - profileData.loc_remaining
+                    ).toLocaleString("us")}{" "}
                 <span
                   style={{
                     fontWeight: 300,
@@ -222,7 +225,7 @@ export const PlanDataContainer: React.FC<{
           <HStack w="100%" justifyContent="space-between" alignItems="center">
             <Text fontWeight={600}>Remaining LOC</Text>
             <Text fontWeight={600}>
-              {profileData.loc_remaining}{" "}
+              {profileData.loc_remaining.toLocaleString("us")}{" "}
               <span
                 style={{
                   fontWeight: 300,
