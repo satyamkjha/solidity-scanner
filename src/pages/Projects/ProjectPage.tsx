@@ -350,7 +350,7 @@ const ScanDetails: React.FC<{
     if (
       profile?.credit_system === "loc" &&
       profile.loc_remaining <
-        parseInt(process.env.REACT_APP_MIN_LOCS_REQ || "10")
+        parseInt(process.env.REACT_APP_MIN_LOC_REQ || "10")
     ) {
       return true;
     } else if (profile?.credit_system === "scan_credit" && scansRemaining === 0)
@@ -803,78 +803,83 @@ const ScanDetails: React.FC<{
                       "Scan Failed",
                       "insufficient_loc",
                     ].includes(scanData.scan_report.multi_file_scan_status) && (
-                      <>
-                        <TabPanel p={[0, 0, 0, 2]}>
-                          {scanData.scan_report.multi_file_scan_status ===
-                            "scan_done" &&
-                          (scanData.scan_report.multi_file_scan_summary ||
-                            scanData.scan_report.scan_summary) ? (
-                            <Overview
-                              scansRemaining={scansRemaining}
-                              scanData={scanData.scan_report}
-                              onTabChange={handleTabsChange}
-                            />
-                          ) : (
-                            <Flex
-                              w="97%"
-                              m={4}
-                              borderRadius="20px"
-                              bgColor="high-subtle"
-                              p={4}
-                            >
-                              <ScanErrorIcon size={28} />
-                              <Text fontSize={"xs"} color="high" ml={4}>
-                                {scanData.scan_report.multi_file_scan_status
-                                  ? scanData.scan_report.multi_file_scan_status
-                                  : "Please do Rescan to carry out a Multifile Scan "}
-                              </Text>
-                            </Flex>
-                          )}
-                        </TabPanel>
-                        <TabPanel p={[0, 0, 0, 0]}>
-                          {scanData.scan_report.multi_file_scan_status ===
-                            "scan_done" &&
-                          scanData.scan_report.multi_file_scan_details &&
-                          scanData.scan_report.multi_file_scan_summary ? (
-                            <MultifileResult
-                              type="project"
-                              details_enabled={
-                                scanData.scan_report.details_enabled
-                              }
-                              profileData={profile}
-                              is_latest_scan={scanData.is_latest_scan}
-                              scanSummary={
-                                scanData.scan_report.multi_file_scan_summary
-                              }
-                              scanDetails={
-                                scanData.scan_report.multi_file_scan_details
-                              }
-                              project_url={project_url}
-                              contract_url={""}
-                              contract_platform={""}
-                              branchName={project_branch}
-                              refetch={refetch}
-                              contract_address=""
-                            />
-                          ) : (
-                            <Flex
-                              w="97%"
-                              m={4}
-                              borderRadius="20px"
-                              bgColor="high-subtle"
-                              p={4}
-                            >
-                              <ScanErrorIcon size={28} />
-                              <Text fontSize={"xs"} color="high" ml={4}>
-                                {scanData.scan_report.multi_file_scan_status
-                                  ? scanData.scan_report.multi_file_scan_status
-                                  : "Please do Rescan to carry out a Multifile Scan "}
-                              </Text>
-                            </Flex>
-                          )}
-                        </TabPanel>
-                      </>
+                      <TabPanel p={[0, 0, 0, 2]}>
+                        {scanData.scan_report.multi_file_scan_summary ||
+                        scanData.scan_report.scan_summary ? (
+                          <Overview
+                            scansRemaining={scansRemaining}
+                            scanData={scanData.scan_report}
+                            onTabChange={handleTabsChange}
+                          />
+                        ) : (
+                          <Flex
+                            w="97%"
+                            m={4}
+                            borderRadius="20px"
+                            bgColor="high-subtle"
+                            p={4}
+                          >
+                            <ScanErrorIcon size={28} />
+                            <Text fontSize={"xs"} color="high" ml={4}>
+                              {scanData.scan_report.multi_file_scan_status
+                                ? scanData.scan_report.multi_file_scan_status
+                                : "Please do Rescan to carry out a Multifile Scan "}
+                            </Text>
+                          </Flex>
+                        )}
+                      </TabPanel>
                     )}
+                    {![
+                      "scan_failed",
+                      "download_failed",
+                      "Download Failed",
+                      "Scan Failed",
+                      "insufficient_loc",
+                    ].includes(scanData.scan_report.multi_file_scan_status) && (
+                      <TabPanel p={[0, 0, 0, 0]}>
+                        {scanData.scan_report.multi_file_scan_status ===
+                          "scan_done" &&
+                        scanData.scan_report.multi_file_scan_details &&
+                        scanData.scan_report.multi_file_scan_summary ? (
+                          <MultifileResult
+                            type="project"
+                            details_enabled={
+                              scanData.scan_report.details_enabled
+                            }
+                            profileData={profile}
+                            is_latest_scan={scanData.is_latest_scan}
+                            scanSummary={
+                              scanData.scan_report.multi_file_scan_summary
+                            }
+                            scanDetails={
+                              scanData.scan_report.multi_file_scan_details
+                            }
+                            project_url={project_url}
+                            contract_url={""}
+                            contract_platform={""}
+                            branchName={project_branch}
+                            refetch={refetch}
+                            contract_address=""
+                          />
+                        ) : (
+                          <Flex
+                            w="97%"
+                            m={4}
+                            borderRadius="20px"
+                            bgColor="high-subtle"
+                            p={4}
+                          >
+                            <ScanErrorIcon size={28} />
+                            <Text fontSize={"xs"} color="high" ml={4}>
+                              {scanData.scan_report.multi_file_scan_status
+                                ? scanData.scan_report.multi_file_scan_status
+                                : "Please do Rescan to carry out a Multifile Scan "}
+                            </Text>
+                          </Flex>
+                        )}
+                      </TabPanel>
+                    )}
+
                     {scanData.scan_report.project_skip_files &&
                       scanData.scan_report.project_url &&
                       scanData.scan_report.project_url !== "File Scan" &&

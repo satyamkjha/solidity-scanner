@@ -90,7 +90,7 @@ const ApplicationForm: React.FC<{
     return true;
   };
 
-  const minLOCReq = process.env.REACT_APP_MIN_LOCS_REQ;
+  const minLOCReq = process.env.REACT_APP_MIN_LOC_REQ;
 
   const runScan = async () => {
     if (!runValidation() || !repoTreeUP) return;

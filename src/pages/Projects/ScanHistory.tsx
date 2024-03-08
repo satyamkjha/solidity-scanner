@@ -200,7 +200,7 @@ const ScanBlock: React.FC<{
               <Text fontSize={"sm"} color="gray.400">
                 Lines of Code
               </Text>
-              <Text fontSize={"md"}>{scan.loc_consumed} LOCs</Text>
+              <Text fontSize={"md"}>{scan.loc_consumed} LOC</Text>
             </VStack>
             <Flex
               justifyContent={"flex-start"}
@@ -409,7 +409,7 @@ const ScanBlock: React.FC<{
                 <Text fontSize={"sm"} color="gray.400">
                   Lines of Code
                 </Text>
-                <Text fontSize={"md"}>{scan.loc_consumed} LOCs</Text>
+                <Text fontSize={"md"}>{scan.loc_consumed} LOC</Text>
               </VStack>
             </Flex>
             <Divider my={5} />

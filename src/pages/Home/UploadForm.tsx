@@ -175,7 +175,7 @@ const UploadForm: React.FC<{
     return false;
   };
 
-  const minLOCReq = process.env.REACT_APP_MIN_LOCS_REQ;
+  const minLOCReq = process.env.REACT_APP_MIN_LOC_REQ;
 
   const startFileScan = async () => {
     if (profileData.current_package === "trial") {

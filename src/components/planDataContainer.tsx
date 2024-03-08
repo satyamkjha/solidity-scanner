@@ -54,7 +54,7 @@ export const PlanDataContainer: React.FC<{
         >
           <VStack w="100%" justifyContent="flex-start" alignItems="flex-start">
             <Text fontWeight={600} fontSize="sm">
-              Plan LoCs Quota
+              Plan LOC Quota
             </Text>
             <HStack spacing={0}>
               <Text fontWeight={700} fontSize="lg">
@@ -87,7 +87,7 @@ export const PlanDataContainer: React.FC<{
         >
           <HStack w="100%" justifyContent="space-between" alignItems="center">
             <Text fontWeight={600} fontSize="sm">
-              Plan LoCs Quota
+              Plan LOC Quota
             </Text>
             <Text fontWeight={600} color="#B0B7C3" fontSize="xs">
               Expires in
@@ -127,7 +127,7 @@ export const PlanDataContainer: React.FC<{
       >
         <HStack w="100%" justifyContent="space-between" alignItems="center">
           <Text fontWeight={600} fontSize="sm">
-            Plan LoCs Quota
+            Plan LOC Quota
           </Text>
           <Text fontWeight={600} color="#B0B7C3" fontSize="xs">
             Expires in
@@ -180,7 +180,7 @@ export const PlanDataContainer: React.FC<{
                     fontSize: "sm",
                   }}
                 >
-                  LOCs
+                  LOC
                 </span>{" "}
               </Text>
             </HStack>
@@ -196,7 +196,7 @@ export const PlanDataContainer: React.FC<{
                     fontSize: "sm",
                   }}
                 >
-                  LOCs
+                  LOC
                 </span>{" "}
               </Text>
             </HStack>
@@ -214,7 +214,7 @@ export const PlanDataContainer: React.FC<{
                   fontSize: "sm",
                 }}
               >
-                LOCs
+                LOC
               </span>{" "}
             </Text>
           </HStack>
@@ -229,7 +229,7 @@ export const PlanDataContainer: React.FC<{
                   fontSize: "sm",
                 }}
               >
-                LOCs
+                LOC
               </span>{" "}
             </Text>
           </HStack>

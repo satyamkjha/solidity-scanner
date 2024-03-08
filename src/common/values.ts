@@ -904,39 +904,35 @@ export const pricing_card_description_data = [
     description: "Vulnerability Detectors coverage",
     icon: "detectors/detectorIcon.svg",
     tooltipText:
-      "Lorem ipsum dolor sit amet consectetur. Nunc nec nunc risus maecenas. Sed nibh accumsan eget venenatis ornare scelerisque bibendum enim. Vitae justo sociis mattis vitae amet eleifend commodo. Vivamus condimentum non id sit magnis arcu iaculis. Maecenas mauris in morbi adils.",
+      "Access a comprehensive list of smart contract vulnerabilities, misconfigurations, logical issues, weaknesses, technology-specific smart contract vulnerabilities, and gas optimization techniques to reduce gas costs developed by the researchers of the SolidityScan team.",
   },
   {
     key: "report",
     title: "Pay per Report",
     description: "Generate and Publish report",
     icon: "pricing/pricing_card_icons/report.svg",
-    tooltipText:
-      "Lorem ipsum dolor sit amet consectetur. Nunc nec nunc risus maecenas. Sed nibh accumsan eget venenatis ornare scelerisque bibendum enim. Vitae justo sociis mattis vitae amet eleifend commodo. Vivamus condimentum non id sit magnis arcu iaculis. Maecenas mauris in morbi adils.",
+    tooltipText: "",
   },
   {
     key: "github",
     title: "Private Github",
     description: "Private Github",
     icon: "pricing/pricing_card_icons/github.svg",
-    tooltipText:
-      "Lorem ipsum dolor sit amet consectetur. Nunc nec nunc risus maecenas. Sed nibh accumsan eget venenatis ornare scelerisque bibendum enim. Vitae justo sociis mattis vitae amet eleifend commodo. Vivamus condimentum non id sit magnis arcu iaculis. Maecenas mauris in morbi adils.",
+    tooltipText: "",
   },
   {
     key: "github",
     title: "Github Actions",
     description: "Github Actions",
     icon: "pricing/pricing_card_icons/actions.svg",
-    tooltipText:
-      "Lorem ipsum dolor sit amet consectetur. Nunc nec nunc risus maecenas. Sed nibh accumsan eget venenatis ornare scelerisque bibendum enim. Vitae justo sociis mattis vitae amet eleifend commodo. Vivamus condimentum non id sit magnis arcu iaculis. Maecenas mauris in morbi adils.",
+    tooltipText: "",
   },
   {
     key: "github",
     title: "Private API Access",
     description: "Private API Access",
     icon: "pricing/pricing_card_icons/private.svg",
-    tooltipText:
-      "Lorem ipsum dolor sit amet consectetur. Nunc nec nunc risus maecenas. Sed nibh accumsan eget venenatis ornare scelerisque bibendum enim. Vitae justo sociis mattis vitae amet eleifend commodo. Vivamus condimentum non id sit magnis arcu iaculis. Maecenas mauris in morbi adils.",
+    tooltipText: "",
   },
 ];
 

@@ -196,9 +196,9 @@ const ImportScanModal: React.FC<{
                 fontWeight={"300"}
               >
                 Heads up! You currently can consume{" "}
-                <strong>{profileData?.loc_remaining}</strong> LOCs. Viewing full
+                <strong>{profileData?.loc_remaining}</strong> LOC. Viewing full
                 detail result of a scan will use{" "}
-                <strong>{scanDetails.loc}</strong> LOCs. Do you wish to proceed?
+                <strong>{scanDetails.loc}</strong> LOC. Do you wish to proceed?
               </Text>
             </Flex>
           </ModalBody>

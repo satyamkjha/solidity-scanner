@@ -62,7 +62,7 @@ const ContractForm: React.FC<{
 
   const { isOpen, onClose: closeModal, onOpen } = useDisclosure();
 
-  const minLOCReq = process.env.REACT_APP_MIN_LOCS_REQ;
+  const minLOCReq = process.env.REACT_APP_MIN_LOC_REQ;
 
   const onSubmit = async () => {
     if (profileData.current_package === "trial") {
