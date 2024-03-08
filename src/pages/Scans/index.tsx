@@ -98,9 +98,9 @@ const Scans: React.FC = () => {
       let alteredPlist = projects.data.map((item) => ({
         scanItem: item,
         tempScanStatus:
-          item.scan_details.multi_file_scan_status.length > 25
-            ? getTrimmedScanMessage(item.scan_details.multi_file_scan_status)
-            : item.scan_details.multi_file_scan_status,
+          item.scan_details.scan_status.length > 25
+            ? getTrimmedScanMessage(item.scan_details.scan_status)
+            : item.scan_details.scan_status,
       }));
 
       let pList =
@@ -296,7 +296,6 @@ const Scans: React.FC = () => {
               scan_type: msgItem.payload.scan_details.scan_type,
             });
         } else if (msgItem.type === "insufficient_loc") {
-          
           const inScanProject = updatedProjectList.filter(
             (proj) => proj.scanItem.scan_id === msgItem.payload.scan_id
           );

@@ -42,6 +42,7 @@ import {
 import { scanStatesLabel } from "common/values";
 import { useWebSocket } from "hooks/useWebhookData";
 import { useConfig } from "hooks/useConfig";
+import ScanErrorModal from "components/modals/ScanErrorModal";
 
 const ScanCard: React.FC<{
   scan: ScanObj;
@@ -128,6 +129,8 @@ const ScanCard: React.FC<{
 
   const { isOpen, onClose, onOpen } = useDisclosure();
 
+  const [openScanError, setOpenScanError] = useState(false);
+
   return (
     <Flex
       sx={{
@@ -152,13 +155,15 @@ const ScanCard: React.FC<{
         if (multi_file_scan_status === "scan_done") {
           history.push(`/${scan.scan_type}s/${project_id}/${scan_id}`);
         } else if (
-          ![
+          [
             "scan_failed",
             "download_failed",
             "Download Failed",
             "Scan Failed",
           ].includes(tempScanStatus)
         ) {
+          setOpenScanError(true);
+        } else {
           if (
             inScanDetails &&
             inScanDetails.project_id === project_id &&
@@ -327,6 +332,30 @@ const ScanCard: React.FC<{
           </Flex>
           <Progress value={20} isIndeterminate size="xs" />
         </Box>
+      ) : tempScanStatus === "insufficient_locs" ? (
+        <Box
+          sx={{
+            p: 3,
+            m: 3,
+            h: "fit-content",
+            borderRadius: 5,
+            backgroundColor: "#FCFCFF",
+          }}
+        >
+          <HStack mb={2}>
+            <WarningIcon color="#FFA403" />
+            <Heading sx={{ fontSize: "sm", color: "#FFA403" }}>
+              Scan Failed
+            </Heading>
+          </HStack>
+          <Text sx={{ fontSize: "xs", color: "#4E5D78" }}>
+            {scan_status.length > 25
+              ? scan_status
+              : scan.scan_err_message ||
+                scan.scan_details.scan_message ||
+                "This scan has failed, lost credit will be reimbursed in a few minutes. Please contact support"}
+          </Text>
+        </Box>
       ) : (
         <Box
           sx={{
@@ -356,6 +385,11 @@ const ScanCard: React.FC<{
           </Text>
         </Box>
       )}
+      <ScanErrorModal
+        onClose={() => setOpenScanError(false)}
+        isOpen={openScanError}
+        inScanDetails={{ scan_state: tempScanStatus, ...scan.scan_details }}
+      />
       <AlertDialog
         isOpen={isOpen}
         onClose={onClose}
