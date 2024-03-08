@@ -17,6 +17,7 @@ import { CheckBadge } from "./icons";
 import { formattedDate } from "common/functions";
 import PlanDetailsModal from "pages/Billing/components/PlanDetailsModal";
 import { packageLabel } from "common/values";
+import { useHistory } from "react-router-dom";
 
 export const PlanDataContainer: React.FC<{
   profileData: Profile;
@@ -25,6 +26,8 @@ export const PlanDataContainer: React.FC<{
   const config: any = useConfig();
   const assetsURL = getAssetsURL(config);
   const { isOpen, onOpen, onClose } = useDisclosure();
+
+  const history = useHistory();
 
   return (
     <VStack
@@ -35,6 +38,39 @@ export const PlanDataContainer: React.FC<{
       alignItems="center"
       spacing={5}
     >
+      {profileData.current_package === "trial" && (
+        <HStack
+          w="100%"
+          justifyContent="space-between"
+          spacing={2}
+          bgColor={"#E6FAEC"}
+          px={5}
+          borderRadius={10}
+          py={2}
+        >
+          <VStack w="100%" justifyContent="flex-start" alignItems="flex-start">
+            <Text fontWeight={600} fontSize="sm">
+              Plan LoCs Quota
+            </Text>
+            <HStack spacing={0}>
+              <Text fontWeight={700} fontSize="lg">
+                00
+              </Text>
+              <Text color="subtle" fontSize="sm">
+                /Gas bugs Only
+              </Text>
+            </HStack>
+          </VStack>
+          <Button
+            variant="brand"
+            width="150px"
+            onClick={() => history.push("/billing")}
+          >
+            Upgrade
+          </Button>
+        </HStack>
+      )}
+
       {["beginner", "pro", "custom"].includes(profileData.current_package) && (
         <VStack
           w="100%"
@@ -218,15 +254,7 @@ export const PlanDataContainer: React.FC<{
               )}
 
               <Text fontSize={"2xl"} fontWeight={700}>
-                {
-                  packageLabel[
-                    pricingPlans.pricing_data[
-                      profileData.billing_cycle === "N/A"
-                        ? "trial"
-                        : profileData.billing_cycle
-                    ][profileData.current_package].name
-                  ]
-                }
+                {packageLabel[profileData.current_package]}
               </Text>
               <Flex ml={2}>
                 <CheckBadge fillColor={"#38CB89"} strokColor={"white"} />
