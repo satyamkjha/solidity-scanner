@@ -139,7 +139,9 @@ export const PlanDataContainer: React.FC<{
             <Text color="subtle" fontSize="sm">
               /
               {userPlan
-                ? (profileData.total_loc - userPlan.loc).toLocaleString("us")
+                ? profileData.current_package === "ondemand"
+                  ? profileData.total_loc
+                  : profileData.total_loc - userPlan.loc
                 : "--"}
             </Text>
           </HStack>
