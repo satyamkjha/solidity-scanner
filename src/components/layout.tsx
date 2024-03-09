@@ -365,18 +365,25 @@ const Layout: React.FC = ({ children }) => {
                       />
                     )}
                   </Box>
-                  <Box w="100%" display={["flex", "flex", "none"]}>
-                    <Collapse in={isOpen} animateOpacity>
-                      <Box mt={4} w="100%" bgColor="#F9F9F9" borderRadius={10}>
-                        {profileData && pricingPlans && (
-                          <PlanDataContainer
-                            pricingPlans={pricingPlans}
-                            profileData={profileData}
-                          />
-                        )}
-                      </Box>
-                    </Collapse>
-                  </Box>
+                  {profileData.credit_system === "loc" ? (
+                    <Box w="100%" display={["flex", "flex", "none"]}>
+                      <Collapse in={isOpen} animateOpacity>
+                        <Box
+                          mt={4}
+                          w="100%"
+                          bgColor="#F9F9F9"
+                          borderRadius={10}
+                        >
+                          {profileData && pricingPlans && (
+                            <PlanDataContainer
+                              pricingPlans={pricingPlans}
+                              profileData={profileData}
+                            />
+                          )}
+                        </Box>
+                      </Collapse>
+                    </Box>
+                  ) : null}
 
                   <Divider my={5} display={["flex", "flex", "none"]} />
 

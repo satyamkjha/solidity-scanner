@@ -250,7 +250,6 @@ const PaymentModal: React.FC<{
         onClose();
         containerModalClose && containerModalClose();
       }}
-      scrollBehavior={"inside"}
     >
       <ModalBlurOverlay />
       <ModalContent
