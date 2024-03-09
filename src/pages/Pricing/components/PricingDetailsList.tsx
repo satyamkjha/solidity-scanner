@@ -28,7 +28,9 @@ const PricingDetailsList: React.FC<{
         >
           <CheckIcon color={planTheme ? planTheme.color : "black"} />
           <Text fontSize={page === "billing" ? "md" : "lg"} ml={3}>
-            {plan.name === "custom" ? "Custom" : plan.loc.toLocaleString("us")}{" "}
+            {plan.name === "custom"
+              ? "Custom"
+              : plan.loc.toLocaleString("en-US")}{" "}
             LOC
           </Text>
           {mouseHover && (
@@ -72,7 +74,7 @@ const PricingDetailsList: React.FC<{
               height="20px"
               src={`${assetsURL}common/loc-code.svg`}
             />
-            <Text fontWeight={700}>{plan.loc.toLocaleString("us")}</Text>
+            <Text fontWeight={700}>{plan.loc.toLocaleString("en-US")}</Text>
             <Text fontWeight={500}>LOC</Text>
           </HStack>
         </VStack>

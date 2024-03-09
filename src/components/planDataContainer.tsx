@@ -96,10 +96,10 @@ export const PlanDataContainer: React.FC<{
           <HStack w="100%" justifyContent="space-between" alignItems="center">
             <HStack spacing={0}>
               <Text fontWeight={700} fontSize="lg">
-                {profileData.plan_loc_remaining.toLocaleString("us")}
+                {profileData.plan_loc_remaining.toLocaleString("en-US")}
               </Text>
               <Text color="subtle" fontSize="sm">
-                /{userPlan ? userPlan.loc.toLocaleString("us") : "--"}
+                /{userPlan ? userPlan.loc.toLocaleString("en-US") : "--"}
               </Text>
             </HStack>
             <Text fontWeight={600} fontSize="sm">
@@ -134,14 +134,16 @@ export const PlanDataContainer: React.FC<{
         <HStack w="100%" justifyContent="space-between" alignItems="center">
           <HStack spacing={0}>
             <Text fontWeight={700} fontSize="lg">
-              {profileData.on_demand_loc_remaining.toLocaleString("us")}
+              {profileData.on_demand_loc_remaining.toLocaleString("en-US")}
             </Text>
             <Text color="subtle" fontSize="sm">
               /
               {userPlan
                 ? profileData.current_package === "ondemand"
-                  ? profileData.total_loc
-                  : profileData.total_loc - userPlan.loc
+                  ? profileData.total_loc.toLocaleString("en-US")
+                  : (profileData.total_loc - userPlan.loc).toLocaleString(
+                      "en-US"
+                    )
                 : "--"}
             </Text>
           </HStack>
@@ -176,7 +178,7 @@ export const PlanDataContainer: React.FC<{
               <Text fontWeight={600}>
                 {profileData.current_package === "trial"
                   ? "--"
-                  : profileData.total_loc.toLocaleString("us")}{" "}
+                  : profileData.total_loc.toLocaleString("en-US")}{" "}
                 <span
                   style={{
                     fontWeight: 300,
@@ -194,7 +196,7 @@ export const PlanDataContainer: React.FC<{
                   ? "--"
                   : (
                       profileData.total_loc - profileData.loc_remaining
-                    ).toLocaleString("us")}{" "}
+                    ).toLocaleString("en-US")}{" "}
                 <span
                   style={{
                     fontWeight: 300,
@@ -227,7 +229,7 @@ export const PlanDataContainer: React.FC<{
           <HStack w="100%" justifyContent="space-between" alignItems="center">
             <Text fontWeight={600}>Remaining LOC</Text>
             <Text fontWeight={600}>
-              {profileData.loc_remaining.toLocaleString("us")}{" "}
+              {profileData.loc_remaining.toLocaleString("en-US")}{" "}
               <span
                 style={{
                   fontWeight: 300,

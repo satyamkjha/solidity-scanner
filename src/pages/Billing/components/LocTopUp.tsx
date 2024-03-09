@@ -137,7 +137,7 @@ const LocTopUp: React.FC<{
             size="lg"
             pl="80px"
             height="80px"
-            value={noOfLoc === 0 ? "" : noOfLoc.toLocaleString("us")}
+            value={noOfLoc === 0 ? "" : noOfLoc.toLocaleString("en-US")}
             type="text"
             onChange={(e) => {
               const value = parseInt(e.target.value.replace(/,/g, ""), 10);
@@ -146,7 +146,7 @@ const LocTopUp: React.FC<{
           />
         </InputGroup>
         <Text fontSize="xl" mt={8}>{`${
-          noOfLoc.toLocaleString("us") || "00"
+          noOfLoc.toLocaleString("en-US") || "00"
         } LOC`}</Text>
         <Flex w="100%" textColor="subtle" my={2}>
           <Text>{`$${currentTopUpPlan.amount} Per LOC  X  ${

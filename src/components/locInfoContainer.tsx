@@ -40,10 +40,10 @@ export const LOCInfoContainer: React.FC<{
           ) : (
             <HStack spacing={0}>
               <Text fontWeight={700} fontSize="lg">
-                {remainingLoc?.toLocaleString("us")}
+                {remainingLoc?.toLocaleString("en-US")}
               </Text>
               <Text color="subtle" fontSize="sm">
-                /{profileData?.total_loc.toLocaleString("us")}
+                /{profileData?.total_loc.toLocaleString("en-US")}
               </Text>
               {view === "topup_page" && (
                 <Text color="subtle" fontSize="sm">
