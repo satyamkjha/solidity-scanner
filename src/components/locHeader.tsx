@@ -7,9 +7,9 @@ import {
   Popover,
   PopoverTrigger,
   PopoverContent,
+  useDisclosure,
 } from "@chakra-ui/react";
 import { Profile, PricingData } from "common/types";
-import { useConfig } from "hooks/useConfig";
 import { getAssetsURL } from "helpers/helperFunction";
 import { useWebSocket } from "hooks/useWebhookData";
 import { LOCInfoContainer } from "./locInfoContainer";
@@ -19,8 +19,8 @@ export const LOCHeader: React.FC<{
   profileData: Profile;
   pricingPlans: PricingData;
 }> = ({ profileData, pricingPlans }) => {
-  const config: any = useConfig();
-  const assetsURL = getAssetsURL(config);
+  const { isOpen, onToggle, onClose } = useDisclosure();
+  const assetsURL = getAssetsURL();
   const [credits, setCredits] = useState(profileData.credits);
   const { messageQueue, updateMessageQueue } = useWebSocket();
 
@@ -61,9 +61,9 @@ export const LOCHeader: React.FC<{
 
   if (profileData.credit_system === "loc")
     return (
-      <Popover>
+      <Popover onClose={onClose} isOpen={isOpen}>
         <PopoverTrigger>
-          <Box w="100%">
+          <Box w="100%" cursor="pointer" onClick={onToggle}>
             <LOCInfoContainer view="header" remainingLoc={credits} />
           </Box>
         </PopoverTrigger>
@@ -78,6 +78,7 @@ export const LOCHeader: React.FC<{
             <PlanDataContainer
               profileData={profileData}
               pricingPlans={pricingPlans}
+              onPopoverClose={onClose}
             />
           </Box>
         </PopoverContent>

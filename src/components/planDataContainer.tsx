@@ -11,7 +11,6 @@ import {
   useDisclosure,
 } from "@chakra-ui/react";
 import { Profile, PricingData } from "common/types";
-import { useConfig } from "hooks/useConfig";
 import { getAssetsURL } from "helpers/helperFunction";
 import { CheckBadge } from "./icons";
 import { formattedDate } from "common/functions";
@@ -22,9 +21,9 @@ import { useHistory } from "react-router-dom";
 export const PlanDataContainer: React.FC<{
   profileData: Profile;
   pricingPlans: PricingData;
-}> = ({ profileData, pricingPlans }) => {
-  const config: any = useConfig();
-  const assetsURL = getAssetsURL(config);
+  onPopoverClose?: any;
+}> = ({ profileData, pricingPlans, onPopoverClose }) => {
+  const assetsURL = getAssetsURL();
   const { isOpen, onOpen, onClose } = useDisclosure();
 
   const history = useHistory();
@@ -68,7 +67,10 @@ export const PlanDataContainer: React.FC<{
           <Button
             variant="brand"
             width="150px"
-            onClick={() => history.push("/billing")}
+            onClick={() => {
+              onPopoverClose();
+              history.push("/billing");
+            }}
           >
             Upgrade
           </Button>
