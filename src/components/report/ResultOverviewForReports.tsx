@@ -19,38 +19,36 @@ import {
 import { ExternalLinkIcon } from "@chakra-ui/icons";
 import { contractChain } from "common/values";
 
-const ResultOverview: React.FC<{
+const ResultOverviewReports: React.FC<{
   type?: "project" | "block";
   scanReport: any;
   projectDetails: any;
-  spacing: number;
   theme?: string;
-  page?: string;
+  download: boolean;
 }> = ({
   type = "block",
   scanReport,
   projectDetails,
-  spacing,
+  download,
   theme = "dark",
-  page = "qs",
 }) => {
   const assetsUrl = getAssetsURL();
 
   return (
-    <VStack w="100%" spacing={spacing}>
+    <VStack w="100%" spacing={download ? 10 : [2, 3, 10]}>
       <Flex
         w="100%"
         justifyContent={["flex-start"]}
         alignItems={"center"}
-        flexDir={page === "report" ? "row" : ["column", "column", "row"]}
+        flexDir={"row"}
       >
         <Flex
-          w="60px"
-          h="60px"
+          w={download ? "60px" : ["22px", "30px", "60px"]}
+          h={download ? "60px" : ["22px", "30px", "60px"]}
           backgroundColor={theme === "light" ? "white" : "#272727"}
           justifyContent={"center"}
           alignItems={"center"}
-          flexDir={page === "report" ? "row" : ["column", "column", "row"]}
+          flexDir={"row"}
         >
           {
             <Image
@@ -64,31 +62,23 @@ const ResultOverview: React.FC<{
                       projectDetails.project_url || ""
                     )}.svg`
               }
-              width="50px"
+              width={download ? "50px" : ["20px", "25px", "50px"]}
             />
           }
         </Flex>
         <VStack
-          ml={page === "report" ? 3 : 5}
-          alignItems={
-            page === "report"
-              ? "flex-start"
-              : ["center", "center", "flex-start"]
-          }
-          w={
-            page === "report"
-              ? "calc(100% - 60px)"
-              : ["100%", "100%", "calc(100% - 60px)"]
-          }
+          ml={3}
+          alignItems={"flex-start"}
+          w={"calc(100% - 60px)"}
           spacing={0}
-          textAlign={page === "report" ? "left" : ["center", "center", "left"]}
+          textAlign={"left"}
           color={theme === "light" ? "#171717" : "white"}
         >
           <Text
             w="100%"
             overflowWrap="break-word"
             fontWeight={600}
-            fontSize="lg"
+            fontSize={download ? "lg" : ["xs", "sm", "lg"]}
           >
             {type === "block"
               ? projectDetails.contract_address
@@ -99,9 +89,13 @@ const ResultOverview: React.FC<{
               w="100%"
               justifyContent={["flex-start"]}
               alignItems={"center"}
-              flexDir={["column", "column", "row"]}
+              flexDir={["row"]}
             >
-              <Text whiteSpace="nowrap" fontWeight={300} fontSize="md">
+              <Text
+                whiteSpace="nowrap"
+                fontWeight={300}
+                fontSize={download ? "md" : ["9px", "12px", "md"]}
+              >
                 {projectDetails.contract_platform === "buildbear"
                   ? "Buildbear"
                   : contractChain[
@@ -116,17 +110,17 @@ const ResultOverview: React.FC<{
                 )})`}
               </Text>
               <Divider
-                mx={5}
-                h={7}
+                mx={download ? 5 : [1, 2, 5]}
+                h={download ? 7 : [3, 4, 7]}
                 borderColor="gray.200"
                 orientation="vertical"
-                display={["none", "none", "block"]}
+                display={"block"}
               />
               <Text
                 whiteSpace="nowrap"
                 color="gray.400"
                 fontWeight={300}
-                fontSize="md"
+                fontSize={download ? "sm" : ["9px", "xs", "sm"]}
                 mr={2}
                 cursor="pointer"
                 onClick={() =>
@@ -136,7 +130,7 @@ const ResultOverview: React.FC<{
                 {`View on ${sentenceCapitalize(
                   projectDetails.contract_platform || " "
                 )}`}
-                <ExternalLinkIcon ml={2} />
+                <ExternalLinkIcon ml={download ? 2 : [0, 1, 2]} />
               </Text>
             </Flex>
           ) : (
@@ -154,7 +148,7 @@ const ResultOverview: React.FC<{
                   projectDetails.project_url
                 }
                 target={"_blank"}
-                fontSize="sm"
+                fontSize={download ? "sm" : ["xs", "xs", "sm"]}
                 fontWeight={400}
                 textDecoration={"none"}
               >
@@ -165,7 +159,7 @@ const ResultOverview: React.FC<{
                     sentenceCapitalize(
                       getProjectType(projectDetails.project_url)
                     )}
-                <ExternalLinkIcon ml={2} />
+                <ExternalLinkIcon ml={download ? 2 : [0, 1, 2]} />
               </Link>
             </Flex>
           )}
@@ -173,44 +167,63 @@ const ResultOverview: React.FC<{
       </Flex>
       <Flex
         w="100%"
-        justifyContent={
-          page === "report"
-            ? "space-between"
-            : ["flex-start", "flex-start", "space-between"]
-        }
+        justifyContent={"space-between"}
         alignItems="center"
-        flexDir={page === "report" ? "row" : ["column", "column", "row"]}
+        flexDir={"row"}
       >
         <HStack
           bgColor={theme === "light" ? "#FBFBFB" : "#272727"}
           color={theme === "light" ? "#000000" : "white"}
-          w={page === "report" ? "32%" : ["100%", "100%", "32%"]}
+          w={"32%"}
+          spacing={download ? 2 : [0, 0, 2]}
           borderRadius={5}
-          p={3}
+          p={download ? 3 : ["3px", 1, 3]}
         >
           <Flex
             bgColor={theme === "light" ? "#F8F8F8" : "#272727"}
             justifyContent="center"
             alignItems="center"
-            height="45px"
-            width="45px"
-            mr={2}
+            height={download ? "45px" : ["20px", "25px", "45px"]}
+            width={download ? "45px" : ["20px", "25px", "45px"]}
+            mr={download ? 2 : [1, 1, 2]}
           >
             <Image
               src={`${assetsUrl}quickscan/qs_security_score.svg`}
-              height="30px"
-              width="30px"
+              height={download ? "30px" : ["14px", "18px", "30px"]}
+              width={download ? "30px" : ["14px", "18px", "30px"]}
             />
           </Flex>
-          <VStack alignItems="flex-start" w="calc(100% - 40px)" spacing={0}>
-            <Text color="gray.400" fontSize="sm" fontWeight={300}>
+          <VStack
+            alignItems="flex-start"
+            w={
+              download
+                ? "calc(100% - 40px)"
+                : [
+                    "calc(100% - 40px)",
+                    "calc(100% - 40px)",
+                    "calc(100% - 40px)",
+                  ]
+            }
+            spacing={0}
+          >
+            <Text
+              color="gray.400"
+              fontSize={download ? "sm" : ["8px", "11px", "sm"]}
+              fontWeight={300}
+            >
               Security Score
             </Text>
             <HStack spacing={0}>
-              <Text fontSize="lg" fontWeight={600}>
+              <Text
+                fontSize={download ? "lg" : ["xs", "sm", "lg"]}
+                fontWeight={600}
+              >
                 {scanReport.score_v2}
               </Text>
-              <Text fontSize="sm" fontWeight={400}>
+              <Text
+                fontSize={download ? "sm" : ["xs", "xs", "sm"]}
+                fontWeight={400}
+              >
                 /100
               </Text>
             </HStack>
@@ -219,33 +232,50 @@ const ResultOverview: React.FC<{
         <HStack
           bgColor={theme === "light" ? "#FBFBFB" : "#272727"}
           color={theme === "light" ? "#000000" : "white"}
-          w={page === "report" ? "32%" : ["100%", "100%", "32%"]}
-          mt={[5, 5, 0]}
+          w={"32%"}
+          mt={0}
           borderRadius={5}
-          p={3}
+          p={download ? 3 : ["3px", 1, 3]}
         >
           <Flex
-            padding={2}
+            padding={download ? 2 : [1, 1, 2]}
             bgColor={theme === "light" ? "#F8F8F8" : "#272727"}
             justifyContent="center"
             alignItems="center"
-            height="45px"
-            width="45px"
-            mr={2}
+            height={download ? "45px" : ["20px", "25px", "45px"]}
+            width={download ? "45px" : ["20px", "25px", "45px"]}
+            mr={download ? 2 : [1, 1, 2]}
           >
             <Image
-              src={`${assetsUrl}quickscan/qs_scan_duration${
-                theme === "light" ? "_light" : ""
-              }.svg`}
-              height="40px"
-              width="40px"
+              src={`${assetsUrl}quickscan/qs_scan_duration.svg`}
+              height={download ? "40px" : ["16px", "20px", "40px"]}
+              width={download ? "40px" : ["16px", "20px", "40px"]}
             />
           </Flex>
-          <VStack alignItems="flex-start" w="calc(100% - 40px)" spacing={0}>
-            <Text color="gray.400" fontSize="sm" fontWeight={300}>
+          <VStack
+            alignItems="flex-start"
+            w={
+              download
+                ? "calc(100% - 40px)"
+                : [
+                    "calc(100% - 40px)",
+                    "calc(100% - 40px)",
+                    "calc(100% - 40px)",
+                  ]
+            }
+            spacing={0}
+          >
+            <Text
+              color="gray.400"
+              fontSize={download ? "sm" : ["8px", "11px", "sm"]}
+              fontWeight={300}
+            >
               Scan duration
             </Text>
-            <Text fontSize="lg" fontWeight={600}>
+            <Text
+              fontSize={download ? "lg" : ["xs", "sm", "lg"]}
+              fontWeight={600}
+            >
               {scanReport.scan_time_taken} secs
             </Text>
           </VStack>
@@ -253,33 +283,49 @@ const ResultOverview: React.FC<{
         <HStack
           bgColor={theme === "light" ? "#FBFBFB" : "#272727"}
           color={theme === "light" ? "#000000" : "white"}
-          w={page === "report" ? "32%" : ["100%", "100%", "32%"]}
-          mt={[5, 5, 0]}
+          w={"32%"}
           borderRadius={5}
-          p={3}
+          p={download ? 3 : ["3px", 1, 3]}
         >
           <Flex
-            padding={2}
+            padding={download ? 2 : [0, 0, 2]}
             bgColor={theme === "light" ? "#F8F8F8" : "#272727"}
             justifyContent="center"
             alignItems="center"
-            height="45px"
-            width="45px"
-            mr={2}
+            height={download ? "45px" : ["20px", "25px", "45px"]}
+            width={download ? "45px" : ["20px", "25px", "45px"]}
+            mr={download ? 2 : [1, 1, 2]}
           >
             <Image
-              src={`${assetsUrl}quickscan/qs_loc${
-                theme === "light" ? "_light" : ""
-              }.svg`}
-              height="40px"
-              width="40px"
+              src={`${assetsUrl}quickscan/qs_loc.svg`}
+              height={download ? "40px" : ["16px", "20px", "40px"]}
+              width={download ? "40px" : ["16px", "20px", "40px"]}
             />
           </Flex>
-          <VStack alignItems="flex-start" w="calc(100% - 40px)" spacing={0}>
-            <Text color="gray.400" fontSize="sm" fontWeight={300}>
+          <VStack
+            alignItems="flex-start"
+            w={
+              download
+                ? "calc(100% - 40px)"
+                : [
+                    "calc(100% - 40px)",
+                    "calc(100% - 40px)",
+                    "calc(100% - 40px)",
+                  ]
+            }
+            spacing={0}
+          >
+            <Text
+              color="gray.400"
+              fontSize={download ? "sm" : ["8px", "11px", "sm"]}
+              fontWeight={300}
+            >
               Lines of code
             </Text>
-            <Text fontSize="lg" fontWeight={600}>
+            <Text
+              fontSize={download ? "lg" : ["xs", "sm", "lg"]}
+              fontWeight={600}
+            >
               {scanReport.lines_analyzed_count}
             </Text>
           </VStack>
@@ -289,4 +335,4 @@ const ResultOverview: React.FC<{
   );
 };
 
-export default ResultOverview;
+export default ResultOverviewReports;

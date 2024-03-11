@@ -17,16 +17,12 @@ import {
   Image,
   useToast,
 } from "@chakra-ui/react";
-// import Lottie from "lottie-react";
 import { Page, Pagination, ScanObj } from "common/types";
 import { useProfile } from "hooks/useProfile";
 import InfiniteScroll from "react-infinite-scroll-component";
 import Loader from "components/styled-components/Loader";
 import { useUserRole } from "hooks/useUserRole";
-import {
-  getAssetsURL,
-  // getAssetsFromS3,
-} from "helpers/helperFunction";
+import { getAssetsURL } from "helpers/helperFunction";
 import { useAllScans } from "hooks/useAllScans";
 import ScanCard from "components/cards/ScanCard";
 import { Search2Icon, CloseIcon } from "@chakra-ui/icons";
@@ -58,7 +54,11 @@ const Scans: React.FC = () => {
   });
   const [hasMore, setHasMore] = useState(true);
 
-  const { data: projects } = useAllScans(pagination, queryTerm, filterParam);
+  const { data: projects, refetch: refetchProjects } = useAllScans(
+    pagination,
+    queryTerm,
+    filterParam
+  );
   const [projectList, setProjectList] =
     useState<{ scanItem: ScanObj; tempScanStatus: string }[]>();
   const [projectsMonitored, setProjectsMonitored] = useState(0);
@@ -174,6 +174,7 @@ const Scans: React.FC = () => {
           updatedProjectList = updatedProjectList.map((item) => {
             if (item.scanItem.scan_id === msgItem.payload.scan_id) {
               if (msgItem.payload.scan_status === "scan_done") {
+                refetchProjects();
                 return {
                   scanItem: {
                     scan_id: msgItem.payload.scan_id,

@@ -6,6 +6,12 @@ import {
   Button,
   Box,
   useDisclosure,
+  HStack,
+  Drawer,
+  DrawerOverlay,
+  DrawerContent,
+  DrawerCloseButton,
+  DrawerBody,
 } from "@chakra-ui/react";
 import {
   Report,
@@ -22,7 +28,7 @@ import TableContentContainer, {
 import { useParams, useLocation, useHistory } from "react-router-dom";
 import API from "helpers/api";
 import { API_PATH } from "helpers/routeManager";
-import { DownloadIcon, LockIcon } from "@chakra-ui/icons";
+import { DownloadIcon, LockIcon, HamburgerIcon } from "@chakra-ui/icons";
 import Loader from "components/styled-components/Loader";
 import {
   getFeatureGateConfig,
@@ -104,6 +110,7 @@ export const ReportContainer: React.FC<{
   }>();
 
   const { isOpen, onClose, onOpen } = useDisclosure();
+  const [open, setOpen] = useState(false);
   const history = useHistory();
 
   const [isNavLoading, setIsNavLoading] = useState(false);
@@ -129,7 +136,6 @@ export const ReportContainer: React.FC<{
   const [currentPageHeadings, setCurrentPageHeadings] =
     useState<(string | null)[]>();
   const [printLoading, setPrintLoading] = useState(false);
-  const [isHubspotRendered, setIsHubspotRendered] = useState(false);
 
   const [hasMore, setHasMore] = useState(true);
   const [displayWindow, setDisplayWindow] = useState(0);
@@ -154,7 +160,6 @@ export const ReportContainer: React.FC<{
     } = {};
 
     let addedIssue: string[] = [];
-    let tempKey = "";
 
     Object.keys(issues).forEach((key, index) => {
       if (!addedIssue.includes(issues[key].issue_details[0].severity)) {
@@ -237,7 +242,6 @@ export const ReportContainer: React.FC<{
 
         if (elementToRemove) {
           elementToRemove.remove();
-          setIsHubspotRendered(true);
           clearInterval(checkElementInterval);
         }
       }, 1000);
@@ -521,9 +525,11 @@ export const ReportContainer: React.FC<{
     pageList.push(
       <PDFContainer
         page={"cover"}
+        download={download === "true"}
         content={
           <CoverPageContainer
             d={d}
+            download={download === "true"}
             summary_report={summary_report}
             isPublicReport={isPublicReport}
           />
@@ -537,9 +543,12 @@ export const ReportContainer: React.FC<{
       <PDFContainer
         page={"toc"}
         pageNumber={1}
+        showHeaderImage={true}
+        download={download === "true"}
         content={
           <TableContentContainer
             issues={issuesObj}
+            download={download === "true"}
             maxLength={
               totalVulnerabilitySplit && totalVulnerabilitySplit.length
                 ? totalVulnerabilitySplit[1]
@@ -564,6 +573,7 @@ export const ReportContainer: React.FC<{
             <PDFContainer
               page={"toc-v"}
               pageNumber={index + 2}
+              download={download === "true"}
               content={
                 <Flex
                   as="div"
@@ -582,7 +592,11 @@ export const ReportContainer: React.FC<{
                     )
                     .map((key, index) => {
                       return (
-                        <IssueComponent key={index} issue={issuesObj[key]} />
+                        <IssueComponent
+                          download={download === "true"}
+                          key={index}
+                          issue={issuesObj[key]}
+                        />
                       );
                     })}
                   {!totalVulnerabilitySplit.slice(
@@ -616,10 +630,17 @@ export const ReportContainer: React.FC<{
     pageList.push(
       <PDFContainer
         page={"summary"}
+        showHeaderImage={true}
+        download={download === "true"}
         pageNumber={
           totalVulnerabilitySplit ? totalVulnerabilitySplit?.length + 1 : 2
         }
-        content={<ProjectSummaryContainer summary_report={summary_report} />}
+        content={
+          <ProjectSummaryContainer
+            download={download === "true"}
+            summary_report={summary_report}
+          />
+        }
         setCurrentPage={setCurrentPage}
         setCurrentPageHeadings={setCurrentPageHeadings}
       />
@@ -633,11 +654,18 @@ export const ReportContainer: React.FC<{
 
     pageList.push(
       <PDFContainer
+        download={download === "true"}
         page={"executive"}
+        showHeaderImage={true}
         pageNumber={
           totalVulnerabilitySplit ? totalVulnerabilitySplit?.length + 2 : 3
         }
-        content={<AuditSummaryContainer summary_report={summary_report} />}
+        content={
+          <AuditSummaryContainer
+            download={download === "true"}
+            summary_report={summary_report}
+          />
+        }
         setCurrentPage={setCurrentPage}
         setCurrentPageHeadings={setCurrentPageHeadings}
       />
@@ -652,10 +680,17 @@ export const ReportContainer: React.FC<{
     pageList.push(
       <PDFContainer
         page={"findings"}
+        download={download === "true"}
         pageNumber={
           totalVulnerabilitySplit ? totalVulnerabilitySplit?.length + 3 : 4
         }
-        content={<FindingSummaryContainer summary_report={summary_report} />}
+        showHeaderImage={true}
+        content={
+          <FindingSummaryContainer
+            download={download === "true"}
+            summary_report={summary_report}
+          />
+        }
         setCurrentPage={setCurrentPage}
         setCurrentPageHeadings={setCurrentPageHeadings}
       />
@@ -671,6 +706,7 @@ export const ReportContainer: React.FC<{
       totalBugsSplit.forEach((value, index) => {
         pageList.push(
           <PDFContainer
+            download={download === "true"}
             page={"findings"}
             pageNumber={
               totalVulnerabilitySplit
@@ -679,6 +715,7 @@ export const ReportContainer: React.FC<{
             }
             content={
               <FindingBugListContainer
+                download={download === "true"}
                 showActionTaken={index === 0}
                 isQSReport={isQSReport}
                 summary_report={summary_report}
@@ -712,6 +749,8 @@ export const ReportContainer: React.FC<{
                 return (
                   <PDFContainer
                     page={"details"}
+                    showHeaderImage={counter === 0}
+                    download={download === "true"}
                     pageNumber={
                       totalVulnerabilitySplit && totalBugsSplit
                         ? totalVulnerabilitySplit?.length +
@@ -724,6 +763,7 @@ export const ReportContainer: React.FC<{
                       <VulnerabililtyDetailsContainer
                         type={item.point}
                         onImportScan={onImportScan}
+                        download={download === "true"}
                         summary_report={summary_report}
                         issue={issue}
                         showVulnerabilityTitle={counter === 0}
@@ -761,6 +801,8 @@ export const ReportContainer: React.FC<{
                 return (
                   <PDFContainer
                     page={"details"}
+                    download={download === "true"}
+                    showHeaderImage={counter === 0}
                     pageNumber={
                       totalVulnerabilitySplit && totalBugsSplit
                         ? totalVulnerabilitySplit?.length +
@@ -772,6 +814,7 @@ export const ReportContainer: React.FC<{
                     content={
                       <VulnerabililtyDetailsContainer
                         type={item.point}
+                        download={download === "true"}
                         onImportScan={onImportScan}
                         summary_report={summary_report}
                         issue={issue}
@@ -809,6 +852,8 @@ export const ReportContainer: React.FC<{
     scanHistorySplit?.forEach((item, index) =>
       pageList.push(
         <PDFContainer
+          download={download === "true"}
+          showHeaderImage={true}
           page={"history"}
           pageNumber={
             totalVulnerabilitySplit && totalBugsSplit
@@ -821,6 +866,7 @@ export const ReportContainer: React.FC<{
           }
           content={
             <ScanHistoryContainer
+              download={download === "true"}
               scan_summary={item}
               startIndex={index * 11 + 1}
             />
@@ -845,6 +891,8 @@ export const ReportContainer: React.FC<{
     pageList.push(
       <PDFContainer
         page={"disclaimer"}
+        showHeaderImage={true}
+        download={download === "true"}
         pageNumber={
           totalVulnerabilitySplit && totalBugsSplit
             ? totalVulnerabilitySplit?.length +
@@ -853,7 +901,7 @@ export const ReportContainer: React.FC<{
               6
             : 7
         }
-        content={<DisclaimerContainer />}
+        content={<DisclaimerContainer download={download === "true"} />}
         setCurrentPage={setCurrentPage}
         setCurrentPageHeadings={setCurrentPageHeadings}
       />
@@ -908,20 +956,65 @@ export const ReportContainer: React.FC<{
                 w={"100%"}
                 bg={"#333639"}
                 color={"white"}
-                px={10}
+                px={[5, 10]}
                 py={6}
                 boxShadow={"0px -1px 13.800000190734863px 0px #00000040"}
               >
-                <Text fontSize={"lg"} fontWeight={700}>
-                  {summary_report.project_summary_report.project_name ||
-                    summary_report.project_summary_report.contract_name}
-                </Text>
+                <HStack spacing={5}>
+                  <HamburgerIcon
+                    display={["block", "block", "block", "none"]}
+                    fontSize={"lg"}
+                    onClick={() => setOpen(true)}
+                  />
+                  <Drawer
+                    isOpen={open}
+                    placement="left"
+                    onClose={() => setOpen(false)}
+                  >
+                    <DrawerOverlay />
+                    <DrawerContent bgColor="#5B5B5B">
+                      <DrawerCloseButton />
+
+                      <DrawerBody pt={20}>
+                        {leftNavs.map((nav, index) => (
+                          <Text
+                            key={index}
+                            fontSize="sm"
+                            fontWeight={
+                              currentPage && currentPage.value === nav.value
+                                ? 600
+                                : 400
+                            }
+                            color={
+                              currentPage && currentPage.value === nav.value
+                                ? "white"
+                                : "#B0B7C3"
+                            }
+                            mb={6}
+                            cursor={"pointer"}
+                            onClick={() => {
+                              setIsNavLoading(true);
+                              setOpen(false);
+                              setTimeout(() => leftNavClick(nav), 10);
+                            }}
+                          >
+                            {nav.label.toUpperCase()}
+                          </Text>
+                        ))}
+                      </DrawerBody>
+                    </DrawerContent>
+                  </Drawer>
+                  <Text fontSize={"lg"} fontWeight={700}>
+                    {summary_report.project_summary_report.project_name ||
+                      summary_report.project_summary_report.contract_name}
+                  </Text>
+                </HStack>
                 {isQSReport && (
                   <Button
                     variant={"accent-outline"}
                     w={["250px"]}
                     ml={"auto"}
-                    display={["none", "none", "none", "flex"]}
+                    display={["none", "none", "flex", "flex"]}
                     onClick={onOpen}
                   >
                     {isQSReport && <LockIcon mr={5} color="#3300FF" />}
@@ -934,6 +1027,7 @@ export const ReportContainer: React.FC<{
                     variant={"accent-outline"}
                     w={["250px"]}
                     ml={"auto"}
+                    display={["none", "none", "flex", "flex"]}
                     onClick={printReport}
                   >
                     {printLoading ? (
@@ -955,6 +1049,11 @@ export const ReportContainer: React.FC<{
               bg={!download ? "#535659" : "white"}
               pt={download ? 0 : 5}
               overflow={download ? "" : "hidden"}
+              justifyContent={
+                download
+                  ? "flex-start"
+                  : ["center", "center", "center", "flex-start"]
+              }
               alignItems={"center"}
               position={"relative"}
             >
@@ -1000,14 +1099,45 @@ export const ReportContainer: React.FC<{
                 align="stretch"
                 mt={download ? 0 : 6}
                 pb={20}
-                w={download ? "794px" : "800px"}
-                minW={download ? "794px" : "800px"}
+                alignItems={["center", "center", "flex-start"]}
+                w={download ? "794px" : ["90%", "450px", "760px", "830px"]}
+                minW={download ? "794px" : ["360px", "450px", "760px", "830px"]}
                 h={download ? "inherit" : "100%"}
                 bg={!download ? "#535659" : "white"}
                 overflowY={download ? "visible" : "auto"}
                 overflowX={download ? "visible" : "hidden"}
                 id={"scrollableDiv"}
               >
+                {!download && isQSReport && (
+                  <Button
+                    variant={"brand"}
+                    maxW={["300px"]}
+                    w="90%"
+                    display={["flex", "flex", "none"]}
+                    onClick={onOpen}
+                  >
+                    {isQSReport && <LockIcon mr={5} color="#3300FF" />}
+
+                    {"Unlock report"}
+                  </Button>
+                )}
+                {!download && isPublicReport ? (
+                  <Button
+                    variant={"accent-outline"}
+                    w={["250px"]}
+                    display={["flex", "flex", "none"]}
+                    onClick={printReport}
+                  >
+                    {printLoading ? (
+                      <Flex mr={5}>
+                        <Loader size={25} color="#3E15F4" />
+                      </Flex>
+                    ) : (
+                      <DownloadIcon mr={5} />
+                    )}
+                    Download Report
+                  </Button>
+                ) : null}
                 {totalPages.length ? (
                   download ? (
                     totalPages.map((item, index) => item)

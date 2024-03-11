@@ -353,6 +353,31 @@ const ScanDetails: React.FC<{
     return true;
   };
 
+  const getRescanHoverStyles = () => {
+    if (
+      scansRemaining === 0 ||
+      role === "viewer" ||
+      scanData?.scan_report.scan_status === "scanning"
+    ) {
+      return {
+        opacity: 0.4,
+      };
+    } else
+      return {
+        opacity: 0.9,
+      };
+  };
+
+  const checkIfRescanDisabled = () => {
+    if (
+      scansRemaining === 0 ||
+      scanData?.scan_report.scan_status === "scanning" ||
+      role === "viewer"
+    )
+      return true;
+    else return false;
+  };
+
   return (
     <>
       <Box
@@ -402,20 +427,9 @@ const ScanDetails: React.FC<{
                         width="58px"
                         mr={[0, 0, 0, 6]}
                         onClick={() => setIsOpen(true)}
-                        _hover={{
-                          opacity:
-                            scansRemaining === 0 ||
-                            role === "viewer" ||
-                            scanData.scan_report.scan_status === "scanning"
-                              ? 0.4
-                              : 0.9,
-                        }}
-                        isDisabled={
-                          scansRemaining === 0 ||
-                          scanData.scan_report.scan_status === "scanning" ||
-                          role === "viewer"
-                        }
-                      >
+                        _hover={getRescanHoverStyles()}
+                        isDisabled={checkIfRescanDisabled()}
+                      > 
                         <Flex sx={{ flexDir: "column", alignItems: "center" }}>
                           <RescanIcon size={50} />
                         </Flex>
@@ -788,7 +802,7 @@ const ScanDetails: React.FC<{
                         </Flex>
                       )}
                     </TabPanel>
-                    <TabPanel p={[0, 0, 0, 2]}>
+                    <TabPanel p={[0, 0, 0, 0]}>
                       {scanData.scan_report.multi_file_scan_status ===
                         "scan_done" &&
                       scanData.scan_report.multi_file_scan_details &&

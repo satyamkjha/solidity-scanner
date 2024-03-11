@@ -10,13 +10,17 @@ const PDFContainer: React.FC<{
     React.SetStateAction<(string | null)[] | undefined>
   >;
   setCurrentPage: React.Dispatch<React.SetStateAction<any>>;
+  showHeaderImage?: boolean;
   pageNumber?: number;
+  download: boolean;
 }> = ({
   page,
   content,
   setCurrentPageHeadings,
   setCurrentPage,
   pageNumber,
+  download,
+  showHeaderImage = false,
 }) => {
   const assetsURL = getAssetsURL();
   const containerRef = useRef<HTMLDivElement>(null);
@@ -40,11 +44,13 @@ const PDFContainer: React.FC<{
 
   useEffect(() => {
     if (containerRef.current && observerRef.current) {
+      // eslint-disable-next-line react-hooks/exhaustive-deps
       observerRef.current.observe(containerRef.current);
     }
 
     return () => {
       if (containerRef.current && observerRef.current) {
+        // eslint-disable-next-line react-hooks/exhaustive-deps
         observerRef.current.unobserve(containerRef.current);
       }
     };
@@ -54,25 +60,28 @@ const PDFContainer: React.FC<{
     <Box
       ref={containerRef}
       className={`ss-report-${page} ${isInViewport ? "in-view" : ""}`}
-      w="794px"
+      w={download ? "826px" : ["100%", "450px", "760px", "826px"]}
       h={"fit-content"}
       bg={"white"}
       position={"relative"}
     >
-      <Box
-        position={"absolute"}
-        top={0}
-        right={0}
-        h={"270px"}
-        w={"260px"}
-        bgImage={`url("${assetsURL}report/report-watermark.svg")`}
-        bgSize={"cover"}
-      ></Box>
+      {showHeaderImage && (
+        <Box
+          position={"absolute"}
+          top={0}
+          right={0}
+          h={download ? "270px" : ["140px", "160px", "270px"]}
+          w={download ? "260px" : ["140px", "160px", "260px"]}
+          bgImage={`url("${assetsURL}report/report-watermark.svg")`}
+          bgSize={"cover"}
+        ></Box>
+      )}
+
       <Box
         w="100%"
-        h="1123px"
-        py={page !== "cover" ? 10 : 0}
-        px={page !== "cover" ? 10 : 0}
+        h={download ? "1185px" : ["570px", "750px", "1165px"]}
+        py={page !== "cover" ? (download ? 10 : [5, 7, 10]) : 0}
+        px={page !== "cover" ? (download ? 10 : [5, 7, 10]) : 0}
         position={"relative"}
         className="content"
       >
@@ -81,8 +90,8 @@ const PDFContainer: React.FC<{
       <Flex
         w="100%"
         h={"fit-content"}
-        p={4}
-        px={6}
+        p={download ? 4 : [2, 2, 4]}
+        px={download ? 6 : [2, 4, 6]}
         position={"absolute"}
         bottom={2}
         color={"#8A94A6"}

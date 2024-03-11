@@ -405,7 +405,6 @@ const MultifileResult: React.FC<{
   }, [files]);
 
   useEffect(() => {
-    if (!selectedBugs) setIssues(issues);
     const isViewer = role === "viewer";
     if (selectedBugs && selectedBugs.length && !isViewer) {
       setIsDisabled(false);
@@ -539,7 +538,6 @@ const MultifileResult: React.FC<{
           >
             <MultifileIssues
               type={type}
-              profileData={profileData}
               details_enabled={details_enabled}
               is_latest_scan={is_latest_scan}
               issues={issues}

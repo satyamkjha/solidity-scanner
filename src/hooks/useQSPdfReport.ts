@@ -3,7 +3,6 @@ import { useQuery } from "react-query";
 import { Report } from "common/types";
 import axios from "axios";
 import { API_URL_PROD, API_URL_DEV } from "helpers/api";
-import Auth from "helpers/auth";
 import { API_PATH } from "helpers/routeManager";
 
 const API = axios.create({

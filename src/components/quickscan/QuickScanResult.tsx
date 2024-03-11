@@ -120,6 +120,7 @@ export const QuickScanResultContainer: React.FC<{
     if (reportId !== "") {
       history.push(`/qs-report/${projectId}/${reportId}/${scanId}`);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [reportId]);
 
   return (
@@ -331,9 +332,15 @@ export const QuickScanResultContainer: React.FC<{
             w={"100%"}
             mt={[5, 5, 10]}
             maxW={"300px"}
-            onClick={() => onViewDetailResult()}
+            onClick={() =>
+              getFeatureGateConfig().qs_report
+                ? openReport()
+                : onViewDetailResult()
+            }
           >
-            View Detailed Result ⟶
+            {getFeatureGateConfig().qs_report
+              ? "View Audit Report PDF ⟶"
+              : "View Detailed Result"}
           </Button>
         )}
       </Flex>

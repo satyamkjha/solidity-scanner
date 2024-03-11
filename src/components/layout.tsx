@@ -36,9 +36,9 @@ import { sentenceCapitalize } from "helpers/helperFunction";
 import { useUserOrgProfile } from "hooks/useUserOrgProfile";
 import { signInWithCustomToken, User, onAuthStateChanged } from "firebase/auth";
 import { auth } from "helpers/firebase";
-import { useUserRole } from "hooks/useUserRole";
 import { useWebSocket } from "hooks/useWebhookData";
 import { useProfile } from "hooks/useProfile";
+import { CloseIcon } from "@chakra-ui/icons";
 
 const MotionFlex = motion(Flex);
 
@@ -57,7 +57,7 @@ const Layout: React.FC = ({ children }) => {
 
   const [credits, setCredits] = useState(profileData ? profileData.credits : 0);
 
-  // const [isBannerOpen, setIsBannerOpen] = useState(true);
+  const [isBannerOpen, setIsBannerOpen] = useState(true);
 
   const config: any = useConfig();
   const assetsURL = getAssetsURL(config);
@@ -128,21 +128,30 @@ const Layout: React.FC = ({ children }) => {
                 bg: "red.500",
               }}
             >
-              <Text fontSize="12px" color="white" fontWeight={700}>
-                Your package has expired. To renew your package
-              </Text>
-              <Link
-                as={RouterLink}
-                to="/billing"
+              <HStack justifyContent="center" w="calc(100% - 30px)">
+                <Text fontSize="12px" color="white" fontWeight={700}>
+                  Your package has expired. To renew your package
+                </Text>
+                <Link
+                  as={RouterLink}
+                  to="/billing"
+                  color="white"
+                  textDecor="underline"
+                  fontWeight="700"
+                  fontSize="12px"
+                  ml="3px"
+                  mt="1px"
+                >
+                  click here.
+                </Link>
+              </HStack>
+              <CloseIcon
+                mr="10px"
+                cursor="pointer"
+                fontSize="13px"
                 color="white"
-                textDecor="underline"
-                fontWeight="700"
-                fontSize="12px"
-                ml="3px"
-                mt="1px"
-              >
-                click here.
-              </Link>
+                onClick={() => setIsBannerOpen(false)}
+              />
             </MotionFlex>
           )}
         </>
@@ -247,7 +256,7 @@ const Layout: React.FC = ({ children }) => {
               "100%",
               `calc(100% - ${SIDEBAR_WIDTH_COLLAPSED})`,
             ],
-            height: "calc(100vh - 30px)",
+            height: "calc(100vh)",
             overflowY: "scroll",
             overflowX: "hidden",
           }}
@@ -378,7 +387,7 @@ const Layout: React.FC = ({ children }) => {
               </Menu>
             )}
           </Flex>
-          <Box width={"100%"} height="calc(100% - 120px)">
+          <Box width={"100%"} height="calc(100% - 100px)">
             {children}
           </Box>
         </Box>

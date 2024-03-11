@@ -137,7 +137,7 @@ export const customStylesForInviteMember: StylesConfig<
       ? "#FFFFFF"
       : state.isFocused
       ? "#FAFBFC"
-      : "#FAFBFC",
+      : "",
     color: "#000000",
   }),
 };
@@ -228,4 +228,3 @@ export const customTranslucentDropdown: StylesConfig<
     return { ...provided, opacity, transition, color };
   },
 };
-

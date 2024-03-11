@@ -1,14 +1,12 @@
-import { Dispatch, SetStateAction, useContext } from "react";
+import React, { Dispatch, SetStateAction, useContext } from "react";
 import { Accordion, useMediaQuery } from "@chakra-ui/react";
 import {
   FilesState,
   MetricWiseAggregatedFinding,
   MultiFileScanDetail,
-  Profile,
   Issues,
 } from "common/types";
 import { severityPriority } from "common/values";
-import React from "react";
 import IssueContainer from "./IssueContainer";
 import { getBugStatusNumber } from "common/functions";
 import { DetailResultContext } from "common/contexts";
@@ -26,7 +24,6 @@ type MultifileIssuesProps = {
   confidence: boolean[];
   vulnerability: boolean[];
   bugStatusFilter: boolean[];
-  profileData: Profile;
   details_enabled: boolean;
   is_latest_scan: boolean;
   updateBugStatus: any;
@@ -148,11 +145,11 @@ const MultifileIssues: React.FC<MultifileIssuesProps> = ({
                     type={type}
                     files={files}
                     issue_id={issue_id}
-                    metric_wise_aggregated_findings={  
+                    metric_wise_aggregated_findings={
                       metric_wise_aggregated_findings
                     }
                     template_details={template_details}
-                    no_of_findings={issue_count ? issue_count : no_of_findings}
+                    no_of_findings={issue_count ?? no_of_findings}
                     is_latest_scan={is_latest_scan}
                     details_enabled={details_enabled}
                     setFiles={setFiles}

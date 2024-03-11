@@ -81,7 +81,6 @@ const ApplicationForm: React.FC<{
       setLinkError("Please enter a valid repository link");
       return false;
     }
-    setGithubLink(githubLink);
     setNameError(null);
     setLinkError(null);
     return true;

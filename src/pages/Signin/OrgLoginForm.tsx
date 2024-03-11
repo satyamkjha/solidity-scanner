@@ -44,7 +44,6 @@ const OrgLoginForm: React.FC<{
     if (step) {
       signIn();
     } else {
-      // setStep(true);
       checkOrganisationNameRequest();
     }
   };

@@ -1,14 +1,7 @@
-import React, { useState, useEffect } from "react";
+import React from "react";
 import {
   Flex,
-  Stack,
   Text,
-  Heading,
-  useMediaQuery,
-  InputGroup,
-  Input,
-  VStack,
-  Button,
 } from "@chakra-ui/react";
 import { CheckBadge } from "components/icons";
 import Loader from "components/styled-components/Loader";

@@ -308,12 +308,3 @@ export const setRecentQuickScan = (scan: any) => {
   scan = JSON.stringify(scan);
   localStorage.setItem("recent_scan_details", scan);
 };
-
-// ^xdc[a-fA-F0-9]{40}$|^0x[a-fA-F0-9]{40}$
-
-// export const getAssetsFromS3 = async (directory: string) => {
-//   const assetsURL = getAssetsURL();
-//   const response = await axios.get(`${assetsURL}${directory}`);
-//   const jsonData = response.data;
-//   return jsonData;
-// };
