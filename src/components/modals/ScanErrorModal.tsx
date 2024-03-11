@@ -39,16 +39,15 @@ const ScanErrorModal: React.FC<{
       });
     } else {
       let req = {};
-          req = {
-            contract_address: inScanDetails.contract_address,
-            contract_platform: inScanDetails.contract_platform,
-            contract_chain: inScanDetails.contract_chain,
-          };
-          sendMessage({
-            type: "block_scan_initiate",
-            body: req,
-          });
-        }
+      req = {
+        contract_address: inScanDetails.contract_address,
+        contract_platform: inScanDetails.contract_platform,
+        contract_chain: inScanDetails.contract_chain,
+      };
+      sendMessage({
+        type: "block_scan_initiate",
+        body: req,
+      });
     }
   };
 
@@ -141,7 +140,12 @@ const ScanErrorModal: React.FC<{
                   alignItems="center"
                   mt={5}
                 >
-                  <HStack onClick={() => {}} spacing={5}>
+                  <HStack
+                    onClick={() => {
+                      rescan();
+                    }}
+                    spacing={5}
+                  >
                     <RescanIcon size={80} />
                     <Text
                       w="100%"
