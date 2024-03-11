@@ -149,6 +149,7 @@ const CurrentPlan: React.FC<{
       >
         <SubscriptionDataContainer
           packageName={packageName}
+          isCancellable={isCancellable}
           packageRechargeDate={packageRechargeDate}
         />
         <Flex

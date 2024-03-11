@@ -7,6 +7,7 @@ import PricingModelItem from "components/pricing/PricingModalItem";
 import PricingCardItem from "components/pricing/PricingCardItem";
 import { CheckIcon } from "@chakra-ui/icons";
 import PricingPopover from "components/pricing/PricingPopover";
+import { profile } from "console";
 
 const PricingDetailsList: React.FC<{
   plan: Plan;
@@ -38,8 +39,7 @@ const PricingDetailsList: React.FC<{
               item={{
                 title: "Lines Of Code",
                 icon: "common/loc-code.svg",
-                tooltipText:
-                  "Lorem ipsum dolor sit amet consectetur. Nunc nec nunc risus maecenas. Sed nibh accumsan eget venenatis ornare scelerisque bibendum enim. Vitae justo sociis mattis vitae amet eleifend commodo. Vivamus condimentum non id sit magnis arcu iaculis. Maecenas mauris in morbi adils.",
+                tooltipText: `Scan up to ${plan.loc} lines of code with zero limitation on the number of projects scanned.`,
               }}
               mouseHover
             />
@@ -74,12 +74,17 @@ const PricingDetailsList: React.FC<{
               height="20px"
               src={`${assetsURL}common/loc-code.svg`}
             />
-            <Text fontWeight={700}>{plan.loc.toLocaleString("en-US")}</Text>
+            <Text fontWeight={700}>
+              {" "}
+              {plan.name === "Trial"
+                ? "Unlimited Gas Bugs"
+                : plan.loc.toLocaleString("en-US")}
+            </Text>
             <Text fontWeight={500}>LOC</Text>
           </HStack>
         </VStack>
       )}
-      {pricing_card_description_data.map((item) => (
+      {pricing_card_description_data(plan.name).map((item) => (
         <>
           {view === "pricing-card" ? (
             <PricingCardItem

@@ -86,6 +86,31 @@ export const LatestHacks: React.FC = () => {
       textAlign={["center", "center"]}
       flexDir="column"
     >
+      <Heading
+        width="100%"
+        maxW="1000px"
+        textAlign="center"
+        as="h2"
+        fontSize="3xl"
+        fontWeight={700}
+        my={5}
+        mx={[5, 5, 10]}
+      >
+        In The{" "}
+        <Box as="span" sx={{ color: "accent" }}>
+          News
+        </Box>
+      </Heading>
+      <Text
+        maxW="1000px"
+        textAlign="center"
+        color="subtle"
+        mx={[5, 5, 10]}
+        fontSize={["lg", "lg", "xl"]}
+        mb={5}
+      >
+        Explore the Buzz Surrounding Our Innovative Solution
+      </Text>
       <Box
         display={"flex"}
         // flexDir="column"

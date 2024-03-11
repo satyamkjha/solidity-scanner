@@ -163,12 +163,12 @@ export const InNewsSection: React.FC = () => {
         my={5}
         mx={[5, 5, 10]}
       >
-        In The{" "}
+        Most recent hacks that{" "}
         <Box as="span" sx={{ color: "accent" }}>
-          News
+          made the news
         </Box>
       </Heading>
-      <Text
+      {/* <Text
         maxW="1000px"
         textAlign="center"
         color="subtle"
@@ -177,7 +177,7 @@ export const InNewsSection: React.FC = () => {
         mb={5}
       >
         Explore the Buzz Surrounding Our Innovative Solution
-      </Text>
+      </Text> */}
       <Box
         display={"flex"}
         // flexDir="column"

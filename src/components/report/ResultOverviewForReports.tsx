@@ -247,7 +247,7 @@ const ResultOverviewReports: React.FC<{
             mr={download ? 2 : [1, 1, 2]}
           >
             <Image
-              src={`${assetsUrl}quickscan/qs_scan_duration.svg`}
+              src={`${assetsUrl}quickscan/qs_scan_duration_light.svg`}
               height={download ? "40px" : ["16px", "20px", "40px"]}
               width={download ? "40px" : ["16px", "20px", "40px"]}
             />
@@ -297,7 +297,7 @@ const ResultOverviewReports: React.FC<{
             mr={download ? 2 : [1, 1, 2]}
           >
             <Image
-              src={`${assetsUrl}quickscan/qs_loc.svg`}
+              src={`${assetsUrl}quickscan/qs_loc_light.svg`}
               height={download ? "40px" : ["16px", "20px", "40px"]}
               width={download ? "40px" : ["16px", "20px", "40px"]}
             />

@@ -185,7 +185,7 @@ export default function Partners() {
               }
             >
               <Image
-                onClick={() => window.open("", "_blank")}
+                // onClick={() => window.open("", "_blank")}
                 src={`${assetsURL}${item.url}`}
               />
             </GridItem>

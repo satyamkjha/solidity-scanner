@@ -29,6 +29,7 @@ import { useQueryClient } from "react-query";
 import { useWebSocket } from "hooks/useWebhookData";
 import { useConfig } from "hooks/useConfig";
 import InsufficientLocModal from "components/modals/InsufficientLocModal";
+import ProjectsExceededModal from "components/modals/ProjectsExceededModal";
 
 const UploadForm: React.FC<{
   profileData: Profile;
@@ -49,6 +50,7 @@ const UploadForm: React.FC<{
   const [isLoading, setIsLoading] = useState(false);
 
   const { isOpen, onClose: closeModal, onOpen } = useDisclosure();
+  const [openExceededLimitModal, setOpenExceededLimitModal] = useState(false);
 
   let isViewer = role === "viewer";
   const extension = uploadType === "single" ? "sol" : "zip";
@@ -179,7 +181,8 @@ const UploadForm: React.FC<{
 
   const startFileScan = async () => {
     if (profileData.current_package === "trial") {
-      if (profileData.projects_remaining > 2) {
+      if (profileData.projects_remaining >= 2) {
+        setOpenExceededLimitModal(true);
         return;
       }
     } else if (
@@ -368,6 +371,18 @@ const UploadForm: React.FC<{
         <InsufficientLocModal
           open={isOpen}
           closeModal={closeModal}
+          scanDetails={{
+            project_name: name,
+            project_url: "File Scan",
+            scan_type: "project",
+          }}
+        />
+      )}
+
+      {openExceededLimitModal && (
+        <ProjectsExceededModal
+          open={openExceededLimitModal}
+          closeModal={() => setOpenExceededLimitModal(false)}
           scanDetails={{
             project_name: name,
             project_url: "File Scan",

@@ -17,7 +17,7 @@ import { LOCInfoContainer } from "components/locInfoContainer";
 import { ScanTitleComponent } from "./InScanModal";
 import ModalBlurOverlay from "components/common/ModalBlurOverlay";
 
-const InsufficientLocModal: React.FC<{
+const ProjectsExceededModal: React.FC<{
   closeModal: any;
   open: boolean;
   scanDetails: any;
@@ -26,7 +26,7 @@ const InsufficientLocModal: React.FC<{
 
   const navigateToTopup = () => {
     closeModal();
-    history.push(`/billing?tab=topup&loc=${scanDetails.loc}`);
+    history.push(`/billing`);
   };
 
   return (
@@ -69,44 +69,20 @@ const InsufficientLocModal: React.FC<{
                   spacing={5}
                 >
                   <Text fontSize="lg" color="#FFA403" fontWeight={700}>
-                    Your current project has Insufficient LOC !
+                    Project Limit Exceeded !
                   </Text>
                   <Text fontSize="sm" color="#4E5D78" fontWeight={300}>
-                    The selected project has {scanDetails.loc} lines of code.
-                    Upgrade your plan or top-up your account with more lines of
-                    code to initiate the scan.
+                    You have exceeded the maximum permisseable limit of 2
+                    projects available in Free Trial account. Please upgrade to
+                    a Plan to Scan more projects.
                   </Text>
-                  <HStack
-                    justifyContent={["center", "center", "space-between"]}
-                    w="100%"
-                    alignItems="center"
-                  >
-                    {scanDetails.loc !== "insufficient" && (
-                      <VStack
-                        color="#323B4B"
-                        spacing={0}
-                        textAlign={["center", "center", "left"]}
-                        alignItems={["center", "center", "flex-start"]}
-                      >
-                        <Text fontSize="2xl" fontWeight={500}>
-                          {scanDetails.loc}
-                        </Text>
-                        <Text fontSize="sm" fontWeight={300}>
-                          Required Lines of Code
-                        </Text>
-                      </VStack>
-                    )}
-
-                    <Box display={["none", "none", "flex"]} w="250px">
-                      <LOCInfoContainer view="insufficient_scan_modal" />
-                    </Box>
-                  </HStack>
                 </VStack>
               </HStack>
               <VStack
                 alignItems="flex-start"
                 justifyContent="flex-start"
                 textAlign="left"
+                w="100% "
                 background="linear-gradient(to right, #1BD8E330, #FBEAAA30)"
                 spacing={4}
                 p={7}
@@ -114,13 +90,10 @@ const InsufficientLocModal: React.FC<{
                 borderRadius={10}
                 mt={5}
               >
-                <Text fontWeight={900}>Get the LOC Top-up</Text>
-                <Text>
-                  Lorem ipsum dolor sit amet consectetur. Morbi tellus nunc
-                  risus amet. Dolor rhoncus.
-                </Text>
-                <Button onClick={navigateToTopup} variant="brand">
-                  Get LOC Top up now
+                <Text fontWeight={900}>Upgrade your Plan</Text>
+                <Text>Please Upgrade to a plan</Text>
+                <Button w="250px" onClick={navigateToTopup} variant="brand">
+                  Upgrade
                 </Button>
               </VStack>
               <Button
@@ -140,4 +113,4 @@ const InsufficientLocModal: React.FC<{
   );
 };
 
-export default InsufficientLocModal;
+export default ProjectsExceededModal;

@@ -20,13 +20,13 @@ export default function ProductNumbers() {
     {
       color: "#EDFCFE",
       heading: "M $ +",
-      headingNumber: 200,
+      headingNumber: 100,
       subHeading: "Hacks & exploits losses",
     },
     {
       color: "#F4EFFF",
       heading: " +",
-      headingNumber: 140,
+      headingNumber: 160,
       subHeading: "Code patterns detected",
     },
     {

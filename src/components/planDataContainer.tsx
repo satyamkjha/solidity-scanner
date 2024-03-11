@@ -114,44 +114,47 @@ export const PlanDataContainer: React.FC<{
         </VStack>
       )}
 
-      <VStack
-        w="100%"
-        justifyContent="flex-start"
-        spacing={2}
-        bgColor="#FFFCF7"
-        px={5}
-        borderRadius={10}
-        py={2}
-      >
-        <HStack w="100%" justifyContent="space-between" alignItems="center">
-          <Text fontWeight={600} fontSize="sm">
-            Added Tou-Up LOC
-          </Text>
-          <Text fontWeight={600} color="#B0B7C3" fontSize="xs">
-            Valid till
-          </Text>
-        </HStack>
-        <HStack w="100%" justifyContent="space-between" alignItems="center">
-          <HStack spacing={0}>
-            <Text fontWeight={700} fontSize="lg">
-              {profileData.on_demand_loc_remaining.toLocaleString("en-US")}
+      {profileData.current_package !== "trial" && (
+        <VStack
+          w="100%"
+          justifyContent="flex-start"
+          spacing={2}
+          bgColor="#FFFCF7"
+          px={5}
+          borderRadius={10}
+          py={2}
+        >
+          <HStack w="100%" justifyContent="space-between" alignItems="center">
+            <Text fontWeight={600} fontSize="sm">
+              Added Tou-Up LOC
             </Text>
-            <Text color="subtle" fontSize="sm">
-              /
-              {userPlan
-                ? profileData.current_package === "ondemand"
-                  ? profileData.total_loc.toLocaleString("en-US")
-                  : (profileData.total_loc - userPlan.loc).toLocaleString(
-                      "en-US"
-                    )
-                : "--"}
+            <Text fontWeight={600} color="#B0B7C3" fontSize="xs">
+              Valid till
             </Text>
           </HStack>
-          <Text fontWeight={600} fontSize="sm">
-            Never Expires
-          </Text>
-        </HStack>
-      </VStack>
+          <HStack w="100%" justifyContent="space-between" alignItems="center">
+            <HStack spacing={0}>
+              <Text fontWeight={700} fontSize="lg">
+                {profileData.on_demand_loc_remaining.toLocaleString("en-US")}
+              </Text>
+              <Text color="subtle" fontSize="sm">
+                /
+                {userPlan
+                  ? profileData.current_package === "ondemand"
+                    ? profileData.total_loc.toLocaleString("en-US")
+                    : (profileData.total_loc - userPlan.loc).toLocaleString(
+                        "en-US"
+                      )
+                  : "--"}
+              </Text>
+            </HStack>
+            <Text fontWeight={600} fontSize="sm">
+              Never Expires
+            </Text>
+          </HStack>
+        </VStack>
+      )}
+
       <VStack
         w="100%"
         justifyContent="flex-start"
@@ -213,17 +216,7 @@ export const PlanDataContainer: React.FC<{
         {profileData.current_package === "trial" ? (
           <HStack w="100%" justifyContent="space-between" alignItems="center">
             <Text fontWeight={600}>Remaining Projects</Text>
-            <Text fontWeight={600}>
-              0{2 - profileData.projects_remaining}{" "}
-              <span
-                style={{
-                  fontWeight: 300,
-                  fontSize: "sm",
-                }}
-              >
-                LOC
-              </span>{" "}
-            </Text>
+            <Text fontWeight={600}>0{profileData.max_project_count} </Text>
           </HStack>
         ) : (
           <HStack w="100%" justifyContent="space-between" alignItems="center">

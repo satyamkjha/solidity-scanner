@@ -897,44 +897,55 @@ export const pricing_table_data = [
   },
 ];
 
-export const pricing_card_description_data = [
-  {
-    key: "detector",
-    title: "All Detectors",
-    description: "Vulnerability Detectors coverage",
-    icon: "detectors/detectorIcon.svg",
-    tooltipText:
-      "Access a comprehensive list of smart contract vulnerabilities, misconfigurations, logical issues, weaknesses, technology-specific smart contract vulnerabilities, and gas optimization techniques to reduce gas costs developed by the researchers of the SolidityScan team.",
-  },
-  {
-    key: "report",
-    title: "Pay per Report",
-    description: "Generate and Publish report",
-    icon: "pricing/pricing_card_icons/report.svg",
-    tooltipText: "",
-  },
-  {
-    key: "github",
-    title: "Private Github",
-    description: "Private Github",
-    icon: "pricing/pricing_card_icons/github.svg",
-    tooltipText: "",
-  },
-  {
-    key: "github",
-    title: "Github Actions",
-    description: "Github Actions",
-    icon: "pricing/pricing_card_icons/actions.svg",
-    tooltipText: "",
-  },
-  {
-    key: "github",
-    title: "Private API Access",
-    description: "Private API Access",
-    icon: "pricing/pricing_card_icons/private.svg",
-    tooltipText: "",
-  },
-];
+export const pricing_card_description_data = (current_package: string) => {
+  return [
+    {
+      key: "detector",
+      title: "All Detectors",
+      description: "Vulnerability Detectors coverage",
+      icon: "detectors/detectorIcon.svg",
+      tooltipText:
+        "Access a comprehensive list of smart contract vulnerabilities, misconfigurations, logical issues, weaknesses, technology-specific smart contract vulnerabilities, and gas optimization techniques to reduce gas costs developed by the researchers of the SolidityScan team.",
+    },
+    {
+      key: "report",
+      title:
+        current_package === "pro" || current_package === "custom"
+          ? "Unlimited Reports "
+          : "Pay per Report",
+      description: "Generate and Publish report",
+      icon: "pricing/pricing_card_icons/report.svg",
+      tooltipText:
+        current_package === "pro" || current_package === "custom"
+          ? "Generate and self publish any number of automated reports with extensive results & summaries at no additional cost."
+          : "Pay for your report on the go",
+    },
+    {
+      key: "github",
+      title: "Private Github",
+      description: "Private Github",
+      icon: "pricing/pricing_card_icons/github.svg",
+      tooltipText:
+        "Easily integrate your private Github Repositories & scan your contracts on the platform hassle-free.",
+    },
+    {
+      key: "github",
+      title: "Github Actions",
+      description: "Github Actions",
+      icon: "pricing/pricing_card_icons/actions.svg",
+      tooltipText:
+        "Enable Github Actions to support your continuous development process with top notch security & set automated scanning of new commits.",
+    },
+    {
+      key: "github",
+      title: "Private API Access",
+      description: "Private API Access",
+      icon: "pricing/pricing_card_icons/private.svg",
+      tooltipText:
+        "Access Private APIs to scan & fix contracts directly from your development environments and streamline your security.",
+    },
+  ];
+};
 
 export const actionTaken: {
   [key: string]: string;
