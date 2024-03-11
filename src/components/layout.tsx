@@ -38,6 +38,7 @@ import { useProfile } from "hooks/useProfile";
 import { LOCHeader } from "./locHeader";
 import { usePricingPlans } from "hooks/usePricingPlans";
 import { PlanDataContainer } from "./planDataContainer";
+import { CloseIcon } from "@chakra-ui/icons";
 
 const MotionFlex = motion(Flex);
 
@@ -48,12 +49,15 @@ const Layout: React.FC = ({ children }) => {
   const history = useHistory();
   const queryClient = useQueryClient();
 
-  const { data: profileData } = useProfile(true);
+  const { data: profileData, refetch: refetchProfile } = useProfile(true);
+
   const { data: orgProfile } = useUserOrgProfile(
     profileData?.logged_in_via === "org_login"
   );
 
   // const [isBannerOpen, setIsBannerOpen] = useState(true);
+
+  const [isBannerOpen, setIsBannerOpen] = useState(true);
 
   const config: any = useConfig();
   const assetsURL = getAssetsURL(config);
@@ -99,21 +103,30 @@ const Layout: React.FC = ({ children }) => {
                 bg: "red.500",
               }}
             >
-              <Text fontSize="12px" color="white" fontWeight={700}>
-                Your package has expired. To renew your package
-              </Text>
-              <Link
-                as={RouterLink}
-                to="/billing"
+              <HStack justifyContent="center" w="calc(100% - 30px)">
+                <Text fontSize="12px" color="white" fontWeight={700}>
+                  Your package has expired. To renew your package
+                </Text>
+                <Link
+                  as={RouterLink}
+                  to="/billing"
+                  color="white"
+                  textDecor="underline"
+                  fontWeight="700"
+                  fontSize="12px"
+                  ml="3px"
+                  mt="1px"
+                >
+                  click here.
+                </Link>
+              </HStack>
+              <CloseIcon
+                mr="10px"
+                cursor="pointer"
+                fontSize="13px"
                 color="white"
-                textDecor="underline"
-                fontWeight="700"
-                fontSize="12px"
-                ml="3px"
-                mt="1px"
-              >
-                click here.
-              </Link>
+                onClick={() => setIsBannerOpen(false)}
+              />
             </MotionFlex>
           )}
         </>
