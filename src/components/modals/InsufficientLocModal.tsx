@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 
 import {
   Flex,
@@ -16,6 +16,7 @@ import { useHistory } from "react-router-dom";
 import { LOCInfoContainer } from "components/locInfoContainer";
 import { ScanTitleComponent } from "./InScanModal";
 import ModalBlurOverlay from "components/common/ModalBlurOverlay";
+import { useUserRole } from "hooks/useUserRole";
 
 const InsufficientLocModal: React.FC<{
   closeModal: any;
@@ -23,10 +24,20 @@ const InsufficientLocModal: React.FC<{
   scanDetails: any;
 }> = ({ open, closeModal, scanDetails }) => {
   const history = useHistory();
+  const { profileData } = useUserRole();
+  const [requiredLoc, setRequiredLoc] = useState<number>();
+
+  useEffect(() => {
+    if (profileData && scanDetails.loc !== "insufficient") {
+      setRequiredLoc(
+        Math.min(scanDetails.loc - profileData.loc_remaining, scanDetails.loc)
+      );
+    }
+  }, [profileData, scanDetails.loc]);
 
   const navigateToTopup = () => {
     closeModal();
-    history.push(`/billing?tab=topup&loc=${scanDetails.loc}`);
+    history.push(`/billing?tab=topup&loc=${requiredLoc}`);
   };
 
   return (
@@ -72,9 +83,9 @@ const InsufficientLocModal: React.FC<{
                     Your current project has Insufficient LOC !
                   </Text>
                   <Text fontSize="sm" color="#4E5D78" fontWeight={300}>
-                    The selected project has {scanDetails.loc} lines of code.
-                    Upgrade your plan or top-up your account with more lines of
-                    code to initiate the scan.
+                    The selected project has <strong>{scanDetails.loc}</strong>{" "}
+                    lines of code. Upgrade your plan or top-up your account with
+                    more lines of code to initiate the scan.
                   </Text>
                   <HStack
                     justifyContent={["center", "center", "space-between"]}
@@ -89,7 +100,7 @@ const InsufficientLocModal: React.FC<{
                         alignItems={["center", "center", "flex-start"]}
                       >
                         <Text fontSize="2xl" fontWeight={500}>
-                          {scanDetails.loc}
+                          {requiredLoc}
                         </Text>
                         <Text fontSize="sm" fontWeight={300}>
                           Required Lines of Code
