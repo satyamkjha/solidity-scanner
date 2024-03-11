@@ -99,6 +99,7 @@ const PlanDetailsModal: React.FC<{
               >
                 {subscription && (
                   <SubscriptionDataContainer
+                    isCancellable={false}
                     packageName={currentPackage}
                     packageRechargeDate={packageRechargeDate}
                   />

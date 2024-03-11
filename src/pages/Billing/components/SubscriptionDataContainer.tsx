@@ -1,7 +1,6 @@
 import React from "react";
 import { Box, Text, HStack } from "@chakra-ui/react";
 import { formattedDate } from "common/functions";
-import { isCancelable } from "react-query/types/core/retryer";
 
 const SubscriptionDataContainer: React.FC<{
   packageName: string;
