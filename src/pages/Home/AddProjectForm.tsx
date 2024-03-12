@@ -95,7 +95,10 @@ const AddProjectForm: React.FC<{
                 formType={formType}
                 setStep={setStep}
                 profileData={profileData}
-                onClose={onClose}
+                onClose={() => {
+                  onClose();
+                  setStep(changeView ? 1 : 0);
+                }}
               />
             )}
             {formType === "block" && (

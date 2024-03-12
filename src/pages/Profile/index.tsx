@@ -388,7 +388,11 @@ const Profile: React.FC = () => {
                     <Flex w={"100%"}>
                       Email
                       <Tooltip
-                        label="Email verification is pending"
+                        label={
+                          emailSend
+                            ? "Email verification is pending"
+                            : "Please add your Email"
+                        }
                         placement="top"
                       >
                         <InfoIcon color={"accent"} ml={1} fontSize="sm" />

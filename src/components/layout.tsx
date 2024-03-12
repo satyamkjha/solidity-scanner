@@ -39,6 +39,7 @@ import { LOCHeader } from "./locHeader";
 import { usePricingPlans } from "hooks/usePricingPlans";
 import { PlanDataContainer } from "./planDataContainer";
 import { CloseIcon } from "@chakra-ui/icons";
+import DowntimeAlertModal from "./modals/DowntimeAlertModal";
 
 const MotionFlex = motion(Flex);
 
@@ -84,6 +85,32 @@ const Layout: React.FC = ({ children }) => {
       document.removeEventListener("mousedown", handleClickOutside);
     };
   }, [showSidebar]);
+
+  const [openModal, setOpenModal] = useState(false);
+
+  useEffect(() => {
+    if (getFeatureGateConfig().maintenance_start) {
+      const maintenanceInfo = localStorage.getItem("maintenance_info");
+      if (maintenanceInfo) {
+        var date1 = new Date(getFeatureGateConfig().maintenance_start);
+        var date2 = new Date(maintenanceInfo);
+
+        if (date1 > date2) {
+          localStorage.setItem(
+            "maintenance_info",
+            getFeatureGateConfig().maintenance_start
+          );
+          setOpenModal(true);
+        }
+      } else {
+        localStorage.setItem(
+          "maintenance_info",
+          getFeatureGateConfig().maintenance_start
+        );
+        setOpenModal(true);
+      }
+    }
+  }, []);
 
   const { isOpen, onToggle } = useDisclosure();
 
@@ -427,6 +454,10 @@ const Layout: React.FC = ({ children }) => {
           </Box>
         </Box>
       </Flex>
+      <DowntimeAlertModal
+        isOpen={openModal}
+        onClose={() => setOpenModal(false)}
+      />
     </Box>
   );
 };

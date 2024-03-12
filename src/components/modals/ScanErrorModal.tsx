@@ -49,6 +49,7 @@ const ScanErrorModal: React.FC<{
         body: req,
       });
     }
+    onClose();
   };
 
   return (
