@@ -145,6 +145,7 @@ const ScanErrorModal: React.FC<{
                       rescan();
                     }}
                     spacing={5}
+                    cursor={"pointer"}
                   >
                     <RescanIcon size={80} />
                     <Text
