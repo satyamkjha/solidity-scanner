@@ -259,12 +259,11 @@ const Billing: React.FC = () => {
                   {completePaymentOpen && (
                     <Flex
                       h="100%"
-                      position={[
-                        "relative",
-                        "relative",
-                        "relative",
-                        "absolute",
-                      ]}
+                      position={
+                        profileData.current_package === "expired"
+                          ? "relative"
+                          : ["relative", "relative", "relative", "absolute"]
+                      }
                       left={[0, 0, 0, "55%"]}
                       top={0}
                       right={4}

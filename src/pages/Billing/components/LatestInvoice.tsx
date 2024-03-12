@@ -35,6 +35,8 @@ const LatestInvoice: React.FC<{
         backgroundColor={"white"}
         borderRadius="15px"
         mt={4}
+        h="fit-content"
+        background="white"
         px={[5, 5, 10]}
         py={[5, 5, 8]}
         boxShadow={"0px 2px 10px rgba(0, 0, 0, 0.15)"}
@@ -108,7 +110,7 @@ const LatestInvoice: React.FC<{
         ) : null}
         <Button
           variant="brand"
-          mt={["auto"]}
+          mt={[5]}
           mx={[2, 2, 2, 14]}
           onClick={() => {
             window.open(`${transactionData.invoice_url}`, "_blank");
