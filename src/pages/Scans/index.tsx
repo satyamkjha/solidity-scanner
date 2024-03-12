@@ -17,6 +17,7 @@ import {
   Image,
   useToast,
   useDisclosure,
+  Icon,
 } from "@chakra-ui/react";
 import { Page, Pagination, ScanObj } from "common/types";
 import { useProfile } from "hooks/useProfile";
@@ -35,6 +36,7 @@ import { useWebSocket } from "hooks/useWebhookData";
 import { inProcessScanStates } from "common/values";
 import { AddProject } from "components/common/AddProject";
 import InScanModal from "components/modals/InScanModal";
+import { MdCancel } from "react-icons/md";
 
 const Scans: React.FC = () => {
   const scanMessageTypes = [
@@ -487,89 +489,102 @@ const Scans: React.FC = () => {
                 />
                 <InputRightElement
                   height="48px"
-                  w="80px"
+                  w={searchTerm ? "105px" : "80px"}
                   children={
-                    <Menu placement={"bottom-end"} matchWidth>
-                      <MenuButton
-                        as={Box}
-                        onClick={(e) => {
-                          e.stopPropagation();
-                        }}
-                      >
-                        <HStack
-                          spacing={2}
-                          p={2}
-                          w="70px"
-                          borderRadius={10}
-                          bg="bg.subtle"
+                    <HStack>
+                      {searchTerm ? (
+                        <Icon
+                          as={MdCancel}
+                          color={"#8A94A6"}
+                          cursor={"pointer"}
+                          onClick={() => setSearchTerm("")}
+                        />
+                      ) : null}
+                      <Menu placement={"bottom-end"} matchWidth>
+                        <MenuButton
+                          as={Box}
+                          onClick={(e) => {
+                            e.stopPropagation();
+                          }}
                         >
-                          {paramType === "" || paramType === undefined ? (
-                            <FiFilter
-                              color={!paramType ? "#8A94A6" : "#3300ff"}
-                              size={20}
-                            />
-                          ) : (
-                            <Image
-                              height="25px"
-                              width="25px"
-                              src={`${assetsURL}icons/integrations/${
-                                paramType === "File Scan"
-                                  ? "filescan"
-                                  : paramType
-                              }.svg`}
-                            />
-                          )}
+                          <HStack
+                            spacing={2}
+                            p={2}
+                            w="70px"
+                            borderRadius={10}
+                            bg="bg.subtle"
+                          >
+                            {paramType === "" || paramType === undefined ? (
+                              <FiFilter
+                                color={!paramType ? "#8A94A6" : "#3300ff"}
+                                size={20}
+                              />
+                            ) : (
+                              <Image
+                                height="25px"
+                                width="25px"
+                                src={`${assetsURL}icons/integrations/${
+                                  paramType === "File Scan"
+                                    ? "filescan"
+                                    : paramType
+                                }.svg`}
+                              />
+                            )}
 
-                          <RxDoubleArrowDown color="#C4C4C4" size={16} />
-                        </HStack>
-                      </MenuButton>
-                      <MenuList
-                        sx={{
-                          boxShadow:
-                            "0px 4px 12px rgba(0, 0, 0, 0.2) !important",
-                          _hover: "0px 4px 24px rgba(0, 0, 0, 0.2) !important",
-                          px: 6,
-                          py: 4,
-                          w: ["100%", "320px"],
-                          borderRadius: 20,
-                        }}
-                      >
-                        <Text w="100%" textAlign="center" mb={3}>
-                          Filter by Project Type
-                        </Text>
-                        {paramList.map((item) => (
-                          <MenuItem
-                            _focus={{ backgroundColor: "#FFFFFF" }}
-                            _hover={{ backgroundColor: "#FFFFFF" }}
-                            onClick={(e) => {
-                              e.stopPropagation();
-                              setParamType(item.param);
-                            }}
-                            sx={{
-                              py: 4,
-                              borderBottom: "1px solid #ececec",
-                            }}
-                            justifyContent="space-between"
-                          >
-                            {item.label}{" "}
-                            <RadioButton isActive={paramType === item.param} />
-                          </MenuItem>
-                        ))}
-                        <HStack w="100%" justifyContent="center">
-                          <Button
-                            leftIcon={<CloseIcon fontSize="10px" />}
-                            fontSize="sm"
-                            size="sm"
-                            mt={4}
-                            variant="ghost"
-                            color="accent"
-                            onClick={() => setParamType("")}
-                          >
-                            Clear Filter
-                          </Button>
-                        </HStack>
-                      </MenuList>
-                    </Menu>
+                            <RxDoubleArrowDown color="#C4C4C4" size={16} />
+                          </HStack>
+                        </MenuButton>
+                        <MenuList
+                          sx={{
+                            boxShadow:
+                              "0px 4px 12px rgba(0, 0, 0, 0.2) !important",
+                            _hover:
+                              "0px 4px 24px rgba(0, 0, 0, 0.2) !important",
+                            px: 6,
+                            py: 4,
+                            w: ["100%", "320px"],
+                            borderRadius: 20,
+                          }}
+                        >
+                          <Text w="100%" textAlign="center" mb={3}>
+                            Filter by Project Type
+                          </Text>
+                          {paramList.map((item) => (
+                            <MenuItem
+                              _focus={{ backgroundColor: "#FFFFFF" }}
+                              _hover={{ backgroundColor: "#FFFFFF" }}
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                setParamType(item.param);
+                              }}
+                              sx={{
+                                py: 4,
+                                borderBottom: "1px solid #ececec",
+                              }}
+                              justifyContent="space-between"
+                            >
+                              {item.label}{" "}
+                              <RadioButton
+                                isActive={paramType === item.param}
+                              />
+                            </MenuItem>
+                          ))}
+                          <HStack w="100%" justifyContent="center">
+                            <Button
+                              leftIcon={<CloseIcon fontSize="10px" />}
+                              fontSize="sm"
+                              size="sm"
+                              mt={4}
+                              variant="ghost"
+                              color="accent"
+                              onClick={() => setParamType("")}
+                            >
+                              Clear Filter
+                            </Button>
+                          </HStack>
+                        </MenuList>
+                      </Menu>
+                    </HStack>
                   }
                 />
               </InputGroup>
