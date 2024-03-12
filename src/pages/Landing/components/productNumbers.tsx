@@ -9,8 +9,14 @@ import {
 } from "@chakra-ui/react";
 import AnimatedNumbers from "react-animated-numbers";
 import { isInViewport } from "common/functions";
+import { useConfig } from "hooks/useConfig";
 
 export default function ProductNumbers() {
+  const config: any = useConfig();
+
+  const no_of_vuln_detectors =
+    config && config.REACT_APP_ISSUES_DATA.no_of_vuln_detectors;
+
   const data: {
     color: string;
     heading: string;
@@ -26,7 +32,7 @@ export default function ProductNumbers() {
     {
       color: "#F4EFFF",
       heading: " +",
-      headingNumber: 160,
+      headingNumber: parseInt(`${no_of_vuln_detectors}`),
       subHeading: "Code patterns detected",
     },
     {

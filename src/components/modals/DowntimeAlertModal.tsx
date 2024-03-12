@@ -34,8 +34,6 @@ const DowntimeAlertModal: React.FC<{
 
   const d = new Date(getFeatureGateConfig().maintenance_start);
 
-  console.log(d.getHours());
-
   return (
     <>
       <Modal isOpen={isOpen} onClose={onClose} scrollBehavior={"inside"}>
