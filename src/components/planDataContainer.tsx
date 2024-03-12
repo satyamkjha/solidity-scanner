@@ -128,7 +128,7 @@ export const PlanDataContainer: React.FC<{
         >
           <HStack w="100%" justifyContent="space-between" alignItems="center">
             <Text fontWeight={600} fontSize="sm">
-              Added Tou-Up LOC
+              Added Top-Up LOC
             </Text>
             <Text fontWeight={600} color="#B0B7C3" fontSize="xs">
               Valid till
