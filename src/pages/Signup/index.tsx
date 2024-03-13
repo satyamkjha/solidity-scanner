@@ -8,38 +8,26 @@ import {
   Text,
   Button,
   Icon,
-  InputGroup,
-  InputLeftElement,
-  Input,
   Link,
   Box,
-  InputRightElement,
   HStack,
   Divider,
 } from "@chakra-ui/react";
-import {
-  FaDiscord,
-  FaLinkedin,
-  FaPhoneAlt,
-  FaTelegram,
-  FaTwitter,
-} from "react-icons/fa";
-import { FiAtSign } from "react-icons/fi";
+import { FaDiscord, FaLinkedin, FaTelegram, FaTwitter } from "react-icons/fa";
 import { MdWork } from "react-icons/md";
-import { passwordStrength } from "check-password-strength";
-import { FaLock, FaUserAlt } from "react-icons/fa";
 import { Logo } from "components/icons";
 import API from "helpers/api";
 import { AuthResponse } from "common/types";
-import { ViewOffIcon, ViewIcon } from "@chakra-ui/icons";
 import MetaMaskLogin from "pages/Signin/MetamaskSignin";
 import { API_PATH } from "helpers/routeManager";
 import GoogleSignIn from "pages/Signin/GoogleSignin";
 import { getReCaptchaHeaders } from "helpers/helperFunction";
 import Loader from "components/styled-components/Loader";
-import { isEmail, hasSpecialCharacters } from "helpers/helperFunction";
-import PasswordError from "components/passwordError";
-import { RecaptchaParameters } from "firebase/auth";
+import EmailInput from "components/forms/EmailInput";
+import NameInput from "components/forms/NameInput";
+import PasswordInput from "components/forms/PasswordInput";
+import PhoneInput from "components/forms/PhoneInput";
+import LinkInput from "components/forms/LinkInput";
 
 const SignUp: React.FC = () => {
   const googleLoginEnabled = true;
@@ -143,15 +131,8 @@ const RegisterForm: React.FC<{
 }> = ({ setRegistered, setEmail, email }) => {
   const { handleSubmit, formState } = useForm<FormData>();
 
-  const [show, setShow] = useState(false);
   const history = useHistory();
   const [password, setPassword] = useState("");
-  const [passwordError, setPasswordError] = useState<{
-    contains: string[];
-    id: number;
-    value: string;
-    length: number;
-  } | null>(null);
   const [contactNumber, setContactNumber] = useState("");
   const [name, setName] = useState("");
   const [companyName, setCompanyName] = useState("");
@@ -162,6 +143,7 @@ const RegisterForm: React.FC<{
   const [twitter, setTwitter] = useState("");
 
   const [step, setStep] = useState(false);
+  const [errors, setErrors] = useState<{ [key: string]: string }>({});
 
   const onSubmit = async () => {
     try {
@@ -212,20 +194,6 @@ const RegisterForm: React.FC<{
     }
   };
 
-  const checkFormValidation = step
-    ? false
-    : email.length < 1 ||
-      email.length > 50 ||
-      !isEmail(email) ||
-      (passwordError &&
-        (passwordError.value === "Too Weak" ||
-          passwordError.value === "Weak")) ||
-      password.length > 50 ||
-      name.length > 20 ||
-      name.length < 3 ||
-      hasSpecialCharacters(name) ||
-      hasSpecialCharacters(companyName);
-
   return (
     <form
       style={{
@@ -239,173 +207,131 @@ const RegisterForm: React.FC<{
       <Stack spacing={6} mt={8} width={["90%", "80%", "600px"]}>
         {step ? (
           <>
-            <InputGroup mt={0} alignItems="center">
-              <InputLeftElement
-                height="48px"
-                children={<Icon as={FaDiscord} color="gray.300" />}
-              />
-              <Input
-                placeholder="Discord (optional)"
-                variant="brand"
-                size="lg"
-                value={discord}
-                onChange={(e) => {
-                  setDiscord(e.target.value);
-                }}
-              />
-            </InputGroup>
-            <InputGroup mt={0} alignItems="center">
-              <InputLeftElement
-                height="48px"
-                children={<Icon as={FaTelegram} color="gray.300" />}
-              />
-              <Input
-                placeholder="Telegram (optional)"
-                variant="brand"
-                size="lg"
-                value={telegram}
-                onChange={(e) => {
-                  setTelegram(e.target.value);
-                }}
-              />
-            </InputGroup>
-            <InputGroup mt={0} alignItems="center">
-              <InputLeftElement
-                height="48px"
-                children={<Icon as={FaLinkedin} color="gray.300" />}
-              />
-              <Input
-                placeholder="Linkedin (optional)"
-                variant="brand"
-                size="lg"
-                value={linkedin}
-                onChange={(e) => {
-                  setLinkedin(e.target.value);
-                }}
-              />
-            </InputGroup>
-            <InputGroup mt={0} alignItems="center">
-              <InputLeftElement
-                height="48px"
-                children={<Icon as={FaTwitter} color="gray.300" />}
-              />
-              <Input
-                placeholder="Twitter (optional)"
-                variant="brand"
-                size="lg"
-                value={twitter}
-                onChange={(e) => {
-                  setTwitter(e.target.value);
-                }}
-              />
-            </InputGroup>
+            <LinkInput
+              title={"Discord"}
+              placeholder="Discord (optional)"
+              iconChild={<Icon as={FaDiscord} color="gray.300" />}
+              value={discord}
+              onChange={(e) => {
+                setDiscord(e.target.value);
+              }}
+              onError={(e: any) =>
+                setErrors((prv) => {
+                  return { ...prv, Discord: e };
+                })
+              }
+            />
+
+            <LinkInput
+              title={"Telegram"}
+              placeholder="Telegram (optional)"
+              iconChild={<Icon as={FaTelegram} color="gray.300" />}
+              value={telegram}
+              onChange={(e) => {
+                setTelegram(e.target.value);
+              }}
+              onError={(e: any) =>
+                setErrors((prv) => {
+                  return { ...prv, Telegram: e };
+                })
+              }
+            />
+
+            <LinkInput
+              title={"LinkedIn"}
+              placeholder="LinkedIn (optional)"
+              iconChild={<Icon as={FaLinkedin} color="gray.300" />}
+              value={linkedin}
+              onChange={(e) => {
+                setLinkedin(e.target.value);
+              }}
+              onError={(e: any) =>
+                setErrors((prv) => {
+                  return { ...prv, LinkedIn: e };
+                })
+              }
+            />
+
+            <LinkInput
+              title={"Twitter"}
+              placeholder="Twitter (optional)"
+              iconChild={<Icon as={FaTwitter} color="gray.300" />}
+              value={twitter}
+              onChange={(e) => {
+                setTwitter(e.target.value);
+              }}
+              onError={(e: any) =>
+                setErrors((prv) => {
+                  return { ...prv, Twitter: e };
+                })
+              }
+            />
           </>
         ) : (
           <>
-            <InputGroup alignItems="center">
-              <InputLeftElement
-                height="48px"
-                children={<Icon as={FiAtSign} color="gray.300" />}
-              />
-              <Input
-                isRequired
-                value={email}
-                type="email"
-                name="email"
-                placeholder="Your email"
-                variant="brand"
-                size="lg"
-                onChange={(event) => setEmail(event.target.value)}
-              />
-            </InputGroup>
+            <EmailInput
+              isRequired
+              showLeftIcon
+              placeholder="Your email"
+              value={email}
+              onChange={(event) => setEmail(event.target.value)}
+              onError={(e: any) =>
+                setErrors((prv) => {
+                  return { ...prv, Email: e };
+                })
+              }
+            />
 
-            <InputGroup alignItems="center">
-              <InputLeftElement
-                height="48px"
-                children={<Icon as={FaUserAlt} color="gray.300" />}
-              />
-              <Input
-                isRequired
-                name="name"
-                value={name}
-                type="text"
-                placeholder="Your name"
-                variant="brand"
-                size="lg"
-                onChange={(event) => setName(event.target.value)}
-              />
-            </InputGroup>
+            <NameInput
+              isRequired
+              showLeftIcon
+              placeholder="Your name"
+              value={name}
+              onChange={(event) => setName(event.target.value)}
+              onError={(e: any) =>
+                setErrors((prv) => {
+                  return { ...prv, Name: e };
+                })
+              }
+            />
 
-            <InputGroup>
-              <InputLeftElement
-                height="48px"
-                color="gray.300"
-                children={<Icon as={FaLock} color="gray.300" />}
-              />
-              <Input
-                isRequired
-                value={password}
-                name="password"
-                type={show ? "text" : "password"}
-                placeholder="Create password"
-                variant="brand"
-                size="lg"
-                onChange={(event) => {
-                  setPassword(event.target.value);
-                  setPasswordError(passwordStrength(event.target.value));
-                }}
-              />
-              <InputRightElement
-                height="48px"
-                color="gray.300"
-                children={
-                  show ? (
-                    <ViewOffIcon
-                      color={"gray.500"}
-                      mr={5}
-                      boxSize={5}
-                      onClick={() => setShow(false)}
-                    />
-                  ) : (
-                    <ViewIcon
-                      color={"gray.500"}
-                      mr={5}
-                      boxSize={5}
-                      onClick={() => setShow(true)}
-                    />
-                  )
-                }
-              />
-            </InputGroup>
+            <PasswordInput
+              isRequired
+              showLeftIcon
+              value={password}
+              placeholder="Create password"
+              onChange={(event) => setPassword(event.target.value)}
+              onError={(e: any) =>
+                setErrors((prv) => {
+                  return { ...prv, Password: e };
+                })
+              }
+            />
 
-            <InputGroup alignItems="center">
-              <InputLeftElement
-                height="48px"
-                children={<Icon as={MdWork} color="gray.300" />}
-              />
-              <Input
-                value={companyName}
-                placeholder="Your company (Optional)"
-                variant="brand"
-                size="lg"
-                onChange={(event) => setCompanyName(event.target.value)}
-              />
-            </InputGroup>
+            <NameInput
+              showLeftIcon
+              value={companyName}
+              iconChild={<Icon as={MdWork} color="gray.300" />}
+              placeholder="Your company (Optional)"
+              onChange={(event) => setCompanyName(event.target.value)}
+              onError={(e: any) =>
+                setErrors((prv) => {
+                  return { ...prv, Company: e };
+                })
+              }
+            />
 
-            <InputGroup alignItems="center">
-              <InputLeftElement
-                height="48px"
-                children={<Icon as={FaPhoneAlt} color="gray.300" />}
-              />
-              <Input
-                value={contactNumber}
-                placeholder="Your phone number (Optional)"
-                variant="brand"
-                size="lg"
-                onChange={(event) => setContactNumber(event.target.value)}
-              />
-            </InputGroup>
-            <PasswordError passwordError={passwordError} />
+            <PhoneInput
+              showLeftIcon
+              value={contactNumber}
+              placeholder="Your phone number (Optional)"
+              onChange={(event) => setContactNumber(event.target.value)}
+              onError={(e: any) =>
+                setErrors((prv) => {
+                  return { ...prv, Phone: e };
+                })
+              }
+            />
           </>
         )}
         <Button
@@ -413,7 +339,7 @@ const RegisterForm: React.FC<{
           variant="brand"
           isLoading={formState.isSubmitting}
           spinner={<Loader color={"#3300FF"} size={25} />}
-          isDisabled={checkFormValidation}
+          isDisabled={Object.values(errors).join("").length > 0}
         >
           {!step ? "Next" : "Submit"}
         </Button>
