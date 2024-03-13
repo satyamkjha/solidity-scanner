@@ -301,15 +301,7 @@ const PaymentModal: React.FC<{
                     paymentMethod={paymentMethod}
                     setPaymentMethod={setPaymentMethod}
                   />
-                  {profileData ? (
-                    profileData.email_verified && (
-                      <PaymentMethodCard
-                        paymentType={"stripe"}
-                        paymentMethod={paymentMethod}
-                        setPaymentMethod={setPaymentMethod}
-                      />
-                    )
-                  ) : (
+                  {profileData?.email_verified && (
                     <PaymentMethodCard
                       paymentType={"stripe"}
                       paymentMethod={paymentMethod}
@@ -551,115 +543,113 @@ const PaymentModal: React.FC<{
               </Flex>
             </Flex>
           ) : (
-            <>
-              <Flex
-                w="75vw"
-                maxW={"300px"}
-                flexDir="column"
-                h="100%"
-                justifyContent={"flex-start"}
-                pt={5}
-              >
-                {step === 0 ? (
-                  <>
-                    <CurrentPlanDescriptionContainer
-                      packageName={selectedPlan}
-                      plan={pricingDetails[duration][selectedPlan]}
+            <Flex
+              w="75vw"
+              maxW={"300px"}
+              flexDir="column"
+              h="100%"
+              justifyContent={"flex-start"}
+              pt={5}
+            >
+              {step === 0 ? (
+                <>
+                  <CurrentPlanDescriptionContainer
+                    packageName={selectedPlan}
+                    plan={pricingDetails[duration][selectedPlan]}
+                    duration={duration}
+                  />
+                  {![
+                    "ondemand",
+                    "topup",
+                    "publish_report",
+                    "verified_publish_report",
+                  ].includes(duration) && (
+                    <SwitchDuration
+                      setDuration={setDuration}
+                      setActiveCoupon={setActiveCoupon}
+                      setUpdatedPrice={setUpdatedPrice}
                       duration={duration}
                     />
-                    {![
-                      "ondemand",
-                      "topup",
-                      "publish_report",
-                      "verified_publish_report",
-                    ].includes(duration) && (
-                      <SwitchDuration
-                        setDuration={setDuration}
-                        setActiveCoupon={setActiveCoupon}
-                        setUpdatedPrice={setUpdatedPrice}
-                        duration={duration}
-                      />
-                    )}
-                  </>
-                ) : step === 1 ? (
-                  <VStack
-                    w="100%"
-                    justifyContent={"flex-start"}
-                    alignItems={"center"}
-                    spacing={5}
-                  >
-                    <PaymentMethodCard
-                      paymentType={"cp"}
-                      paymentMethod={paymentMethod}
-                      setPaymentMethod={setPaymentMethod}
-                    />
-                    {profileData ? (
-                      profileData.email_verified && (
-                        <PaymentMethodCard
-                          paymentType={"stripe"}
-                          paymentMethod={paymentMethod}
-                          setPaymentMethod={setPaymentMethod}
-                        />
-                      )
-                    ) : (
+                  )}
+                </>
+              ) : step === 1 ? (
+                <VStack
+                  w="100%"
+                  justifyContent={"flex-start"}
+                  alignItems={"center"}
+                  spacing={5}
+                >
+                  <PaymentMethodCard
+                    paymentType={"cp"}
+                    paymentMethod={paymentMethod}
+                    setPaymentMethod={setPaymentMethod}
+                  />
+                  {profileData ? (
+                    profileData.email_verified && (
                       <PaymentMethodCard
                         paymentType={"stripe"}
                         paymentMethod={paymentMethod}
                         setPaymentMethod={setPaymentMethod}
                       />
-                    )}
-                  </VStack>
-                ) : step === 2 ? (
-                  <>
-                    {paymentMethod === "cp" && (
-                      <CoinPaymentSelect setCoin={setCoin} coin={coin} />
-                    )}
-                    {duration !== "on-demand-report" && (
-                      <CouponCodeSection
-                        duration={duration}
-                        selectedPlan={selectedPlan}
-                        activeCoupon={activeCoupon}
-                        setActiveCoupon={setActiveCoupon}
-                        setUpdatedPrice={setUpdatedPrice}
-                      />
-                    )}
-                  </>
-                ) : (
-                  <>
-                    <ConfirmationMessageBox
-                      name={pricingDetails[duration][selectedPlan].name}
-                      duration={duration}
+                    )
+                  ) : (
+                    <PaymentMethodCard
+                      paymentType={"stripe"}
+                      paymentMethod={paymentMethod}
+                      setPaymentMethod={setPaymentMethod}
                     />
-                    <DetailedBill
+                  )}
+                </VStack>
+              ) : step === 2 ? (
+                <>
+                  {paymentMethod === "cp" && (
+                    <CoinPaymentSelect setCoin={setCoin} coin={coin} />
+                  )}
+                  {duration !== "on-demand-report" && (
+                    <CouponCodeSection
                       duration={duration}
-                      pricingDetails={pricingDetails}
                       selectedPlan={selectedPlan}
                       activeCoupon={activeCoupon}
-                      updatedPrice={updatedPrice}
-                      quantity={quantity}
+                      setActiveCoupon={setActiveCoupon}
+                      setUpdatedPrice={setUpdatedPrice}
                     />
-                  </>
-                )}
-                <Button
-                  mt={"auto"}
-                  w="100%"
-                  variant="brand"
-                  onClick={() => {
-                    if (step > 2) {
-                      if (paymentMethod === "cp") {
-                        createCPLink();
-                      } else {
-                        createStripePayment();
-                      }
+                  )}
+                </>
+              ) : (
+                <>
+                  <ConfirmationMessageBox
+                    name={pricingDetails[duration][selectedPlan].name}
+                    duration={duration}
+                  />
+                  <DetailedBill
+                    duration={duration}
+                    pricingDetails={pricingDetails}
+                    selectedPlan={selectedPlan}
+                    activeCoupon={activeCoupon}
+                    updatedPrice={updatedPrice}
+                    quantity={quantity}
+                  />
+                </>
+              )}
+              <Button
+                mt={"auto"}
+                w="100%"
+                variant="brand"
+                onClick={() => {
+                  if (step > 2) {
+                    if (paymentMethod === "cp") {
+                      createCPLink();
                     } else {
-                      setStep(step + 1);
+                      createStripePayment();
                     }
-                  }}
-                >
-                  {step === 0 ? "Confirm Plan" : "Proceed to Payment"}
-                </Button>
-              </Flex>
-            </>
+                  } else {
+                    setStep(step + 1);
+                  }
+                }}
+              >
+                {step === 0 ? "Confirm Plan" : "Proceed to Payment"}
+              </Button>
+            </Flex>
           )}
         </ModalBody>
       </ModalContent>
