@@ -141,7 +141,7 @@ export const hasUserRole = (
 
 export function isInViewport(element: any, setAnimationOffset: any) {
   if (element !== null) {
-    var bounding = element.getBoundingClientRect();
+    let bounding = element.getBoundingClientRect();
     if (bounding.bottom < 0) {
       setAnimationOffset(-60);
     } else {
@@ -166,7 +166,7 @@ export function isInViewport(element: any, setAnimationOffset: any) {
 
 export function isInStartViewport(element: any, index: number) {
   if (element !== null) {
-    var bounding = element.getBoundingClientRect();
+    let bounding = element.getBoundingClientRect();
 
     if (
       (bounding.bottom >= window.innerHeight / 3 || index === 5) &&
