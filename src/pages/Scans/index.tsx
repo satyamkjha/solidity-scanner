@@ -359,8 +359,15 @@ const Scans: React.FC = () => {
             );
             if (inScanProjectIndex !== -1) {
               const inScanProject = updatedProjectList[inScanProjectIndex];
+              inScanProject.tempScanStatus = "scan_failed";
+              inScanProject.scanItem.scan_err_message =
+                msgItem.payload.scan_status_err_message;
+              inScanProject.scanItem.scan_details.scan_status =
+                msgItem.payload.scan_status_err_message;
               setInScanDetails({
                 loc: msgItem.payload.loc_required,
+                scan_state: "scan_failed",
+                scan_err_message: msgItem.payload.scan_status_err_message,
                 ...inScanProject.scanItem.scan_details,
               });
             }

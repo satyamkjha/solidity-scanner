@@ -40,7 +40,6 @@ import Loader from "components/styled-components/Loader";
 import { onLogout } from "common/functions";
 import { monthNames } from "common/values";
 import { useUserOrgProfile } from "hooks/useUserOrgProfile";
-import { passwordStrength } from "check-password-strength";
 import Setup2FA from "./Setup2FA";
 import { setup2FARequest, disable2FARequest } from "api/functions/twoFA";
 import StyledButton from "components/styled-components/StyledButton";
@@ -431,12 +430,6 @@ const ChangePasswordForm: React.FC<{
   const [password, setPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
-  const [passwordError, setPasswordError] = useState<{
-    contains: string[];
-    id: number;
-    value: string;
-    length: number;
-  } | null>(null);
   const { handleSubmit } = useForm<FormData>();
 
   const { isOpen, onClose, onOpen } = useDisclosure();
@@ -528,10 +521,6 @@ const ChangePasswordForm: React.FC<{
     }
     setIsLoading(false);
   };
-
-  useEffect(() => {
-    setPasswordError(passwordStrength(newPassword));
-  }, [newPassword]);
 
   return (
     <Box w="100%" bgColor="white" borderRadius="20px" p={4} px={6} mt={8}>

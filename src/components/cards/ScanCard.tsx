@@ -85,8 +85,6 @@ const ScanCard: React.FC<{
   const { sendMessage } = useWebSocket();
   const toast = useToast();
 
-  console.log(tempScanStatus);
-
   const deleteProject = async () => {
     if (config && config.REACT_APP_FEATURE_GATE_CONFIG.websockets_enabled) {
       sendMessage({
