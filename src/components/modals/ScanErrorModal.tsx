@@ -12,7 +12,7 @@ import {
   Button,
 } from "@chakra-ui/react";
 import { getTrimmedScanMessage, snakeToNormal } from "helpers/helperFunction";
-import { WarningIcon } from "@chakra-ui/icons";
+import { WarningIcon, ExternalLinkIcon } from "@chakra-ui/icons";
 import { RescanIcon } from "components/icons";
 import { ScanTitleComponent } from "./InScanModal";
 import { useHistory } from "react-router-dom";
@@ -27,6 +27,8 @@ const ScanErrorModal: React.FC<{
 }> = ({ isOpen, onClose, inScanDetails, insufficientMsg }) => {
   const history = useHistory();
   const { sendMessage } = useWebSocket();
+
+  
 
   const rescan = () => {
     if (inScanDetails.scan_type === "project") {
@@ -88,12 +90,12 @@ const ScanErrorModal: React.FC<{
                 borderRadius: 10,
                 backgroundColor:
                   inScanDetails.tempScanStatus === "insufficient_loc"
-                    ? ""
-                    : "#FFFCF7",
+                    ? "#FFFCF7"
+                    : "#FCFCFF",
                 border:
                   inScanDetails.tempScanStatus === "insufficient_loc"
-                    ? ""
-                    : "1px solid #FFC661",
+                    ? "1px solid #FFC661"
+                    : "1px solid #FF5630",
                 justifyContent: "flex-start",
                 flexDir: "column",
                 alignItems: "center",
@@ -103,8 +105,8 @@ const ScanErrorModal: React.FC<{
                 <WarningIcon
                   color={
                     inScanDetails.tempScanStatus === "insufficient_loc"
-                      ? "#FF5630"
-                      : "#FFC661"
+                      ? "#FFC661"
+                      : "#FF5630"
                   }
                 />
                 <Heading
@@ -112,8 +114,8 @@ const ScanErrorModal: React.FC<{
                     fontSize: "sm",
                     color:
                       inScanDetails.tempScanStatus === "insufficient_loc"
-                        ? "#FF5630"
-                        : "#FFC661",
+                        ? "#FFC661"
+                        : "#FF5630",
                   }}
                 >
                   {inScanDetails.scan_state.length > 25
@@ -162,11 +164,13 @@ const ScanErrorModal: React.FC<{
                   {inScanDetails.scan_type === "project" &&
                     inScanDetails.project_url !== "File Scan" && (
                       <Button
+                        rightIcon={<ExternalLinkIcon />}
                         onClick={() =>
                           history.push(
                             `/${inScanDetails.scan_type}s/${inScanDetails.project_id}/${inScanDetails.scan_id}`
                           )
                         }
+                        size="sm"
                         variant="text"
                         minW="150px"
                         color="#3300FF"

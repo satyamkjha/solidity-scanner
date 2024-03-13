@@ -85,6 +85,8 @@ const ScanCard: React.FC<{
   const { sendMessage } = useWebSocket();
   const toast = useToast();
 
+  console.log(tempScanStatus);
+
   const deleteProject = async () => {
     if (config && config.REACT_APP_FEATURE_GATE_CONFIG.websockets_enabled) {
       sendMessage({
@@ -373,7 +375,7 @@ const ScanCard: React.FC<{
           }}
         >
           <HStack mb={2}>
-            <WarningIcon color="#FF5630" />
+            <WarningIcon color={"#FF5630"} />
             <Heading sx={{ fontSize: "sm", color: "#FF5630" }}>
               {["download_failed", "scan_failed"].includes(tempScanStatus)
                 ? snakeToNormal(tempScanStatus)
