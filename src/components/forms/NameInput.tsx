@@ -47,6 +47,9 @@ const NameInput: React.FC<
         const error = `${title} is required`;
         onError(error);
         setErrorMessage("");
+      } else if (!value) {
+        onError("");
+        setErrorMessage("");
       }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps

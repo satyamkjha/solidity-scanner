@@ -4,9 +4,6 @@ import {
   Button,
   Flex,
   Icon,
-  Input,
-  InputGroup,
-  InputLeftElement,
   Image,
   Link,
   Modal,
@@ -21,7 +18,7 @@ import {
   Text,
   VStack,
 } from "@chakra-ui/react";
-import { FaDiscord, FaEnvelope, FaTelegram } from "react-icons/fa";
+import { FaDiscord, FaTelegram } from "react-icons/fa";
 import { GiLetterBomb } from "react-icons/gi";
 
 import axios from "axios";
@@ -29,6 +26,9 @@ import { CredshieldsIcon, MailSent } from "../icons";
 import { getAssetsURL } from "helpers/helperFunction";
 import { useConfig } from "hooks/useConfig";
 import Loader from "../styled-components/Loader";
+import EmailInput from "components/forms/EmailInput";
+import NameInput from "components/forms/NameInput";
+import LinkInput from "components/forms/LinkInput";
 
 export const ManualAuditForm: React.FC<{
   onClose(): any;
@@ -52,6 +52,7 @@ export const ManualAuditForm: React.FC<{
   const [telegram, setTelegram] = useState("");
   const [body, setBody] = useState("");
   const toast = useToast();
+  const [errors, setErrors] = useState<{ [key: string]: string }>({});
 
   const onSubmit = () => {
     if (!email || !subject || !body) {
@@ -137,71 +138,67 @@ export const ManualAuditForm: React.FC<{
                     }}
                   >
                     <Stack zIndex={"10"} spacing={6} mt={4} w={"100%"}>
-                      <InputGroup mt={0} alignItems="center">
-                        <InputLeftElement
-                          height="48px"
-                          children={<Icon as={FaEnvelope} color="gray.300" />}
-                        />
-                        <Input
-                          isRequired
-                          type="email"
-                          placeholder="Your Email"
-                          variant="brand"
-                          size="lg"
-                          value={email}
-                          onChange={(e) => {
-                            setEmail(e.target.value);
-                          }}
-                        />
-                      </InputGroup>
-                      <InputGroup mt={0} alignItems="center">
-                        <InputLeftElement
-                          height="48px"
-                          children={<Icon as={GiLetterBomb} color="gray.300" />}
-                        />
-                        <Input
-                          isRequired
-                          placeholder="Subject of your Query"
-                          variant="brand"
-                          size="lg"
-                          value={subject}
-                          onChange={(e) => {
-                            setSubject(e.target.value);
-                          }}
-                        />
-                      </InputGroup>
-                      <InputGroup mt={0} alignItems="center">
-                        <InputLeftElement
-                          height="48px"
-                          children={<Icon as={FaDiscord} color="gray.300" />}
-                        />
-                        <Input
-                          isRequired
-                          placeholder="Discord (Optional)"
-                          variant="brand"
-                          size="lg"
-                          value={discord}
-                          onChange={(e) => {
-                            setDiscord(e.target.value);
-                          }}
-                        />
-                      </InputGroup>
-                      <InputGroup mt={0} alignItems="center">
-                        <InputLeftElement
-                          height="48px"
-                          children={<Icon as={FaTelegram} color="gray.300" />}
-                        />
-                        <Input
-                          isRequired
-                          placeholder="Telegram (Optional)"
-                          variant="brand"
-                          size="lg"
-                          value={telegram}
-                          onChange={(e) => {
-                            setTelegram(e.target.value);
-                          }}
-                        />
-                      </InputGroup>
+                      <EmailInput
+                        isRequired
+                        showLeftIcon
+                        placeholder="Your Email"
+                        value={email}
+                        onChange={(e) => {
+                          setEmail(e.target.value);
+                        }}
+                        onError={(e: any) =>
+                          setErrors((prv) => {
+                            return { ...prv, Email: e };
+                          })
+                        }
+                      />
+
+                      <NameInput
+                        isRequired
+                        showLeftIcon
+                        iconChild={<Icon as={GiLetterBomb} color="gray.300" />}
+                        title={"Query"}
+                        placeholder="Subject of your Query"
+                        value={subject}
+                        onChange={(e) => {
+                          setSubject(e.target.value);
+                        }}
+                        onError={(e: any) =>
+                          setErrors((prv) => {
+                            return { ...prv, Query: e };
+                          })
+                        }
+                      />
+                      <LinkInput
+                        title={"Discord"}
+                        placeholder="Discord (optional)"
+                        showLeftIcon
+                        iconChild={<Icon as={FaDiscord} color="gray.300" />}
+                        value={discord}
+                        onChange={(e) => {
+                          setDiscord(e.target.value);
+                        }}
+                        onError={(e: any) =>
+                          setErrors((prv) => {
+                            return { ...prv, Discord: e };
+                          })
+                        }
+                      />
+                      <LinkInput
+                        title={"Telegram"}
+                        placeholder="Telegram (optional)"
+                        showLeftIcon
+                        iconChild={<Icon as={FaTelegram} color="gray.300" />}
+                        value={telegram}
+                        onChange={(e) => {
+                          setTelegram(e.target.value);
+                        }}
+                        onError={(e: any) =>
+                          setErrors((prv) => {
+                            return { ...prv, Telegram: e };
+                          })
+                        }
+                      />
                       <Textarea
                         variant={"brand"}
                         placeholder="Enter your query here"
@@ -232,6 +229,7 @@ export const ManualAuditForm: React.FC<{
                       fontSize={"md"}
                       fontWeight={500}
                       type="submit"
+                      isDisabled={Object.values(errors).join("").length > 0}
                       onClick={() => {
                         onSubmit();
                       }}

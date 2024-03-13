@@ -208,6 +208,7 @@ const RegisterForm: React.FC<{
         {step ? (
           <>
             <LinkInput
+              showLeftIcon
               title={"Discord"}
               placeholder="Discord (optional)"
               iconChild={<Icon as={FaDiscord} color="gray.300" />}
@@ -223,6 +224,7 @@ const RegisterForm: React.FC<{
             />
 
             <LinkInput
+              showLeftIcon
               title={"Telegram"}
               placeholder="Telegram (optional)"
               iconChild={<Icon as={FaTelegram} color="gray.300" />}
@@ -238,6 +240,7 @@ const RegisterForm: React.FC<{
             />
 
             <LinkInput
+              showLeftIcon
               title={"LinkedIn"}
               placeholder="LinkedIn (optional)"
               iconChild={<Icon as={FaLinkedin} color="gray.300" />}
@@ -253,6 +256,7 @@ const RegisterForm: React.FC<{
             />
 
             <LinkInput
+              showLeftIcon
               title={"Twitter"}
               placeholder="Twitter (optional)"
               iconChild={<Icon as={FaTwitter} color="gray.300" />}
