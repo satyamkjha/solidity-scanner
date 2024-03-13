@@ -60,6 +60,7 @@ const ApplicationForm: React.FC<{
   const [branch, setBranch] = useState<string>("");
   const [nameError, setNameError] = useState<null | string>(null);
   const [linkError, setLinkError] = useState<null | string>(null);
+  const [connectError, setConnectError] = useState<null | string>(null);
   const [connectAlert, setConnectAlert] = useState(false);
   const isOauthIntegrated =
     profileData?._integrations?.github?.status === "successful" ||
@@ -80,11 +81,22 @@ const ApplicationForm: React.FC<{
     }
     if (
       !checkProjectUrl(githubLink) &&
-      getProjectType(githubLink) === formType
+      getProjectType(githubLink) !== formType
     ) {
-      setLinkError("Please enter a valid repository link");
+      setLinkError(`Please enter a valid ${formType} repository link`);
       return false;
     }
+    if (visibility) {
+      console.log(formType);
+      console.log(profileData._integrations[formType].status);
+      if (profileData._integrations[formType].status !== "successful") {
+        setConnectError(
+          `Please integrate your ${formType} to Scan private ${formType} repository link`
+        );
+        return false;
+      }
+    }
+
     setNameError(null);
     setLinkError(null);
     return true;
@@ -380,6 +392,7 @@ const ApplicationForm: React.FC<{
             </Box>
           ) : step === 1 ? (
             <InfoSettings
+              connectError={connectError}
               nameError={nameError}
               linkError={linkError}
               visibility={visibility}

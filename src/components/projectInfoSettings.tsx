@@ -16,6 +16,7 @@ import GithubConnectAlert from "./githubConnectAlert";
 const InfoSettings: React.FC<{
   nameError: string | null;
   linkError: string | null;
+  connectError: string | null;
   visibility: boolean;
   projectName: string;
   githubLink: string;
@@ -41,6 +42,7 @@ const InfoSettings: React.FC<{
   connectAlert,
   setConnectAlert,
   formType,
+  connectError,
 }) => {
   const placeholder: { [key: string]: string } = {
     github: "github.com",
@@ -114,6 +116,12 @@ const InfoSettings: React.FC<{
         />
         <Text>Private</Text>
       </HStack>
+
+      {connectError && (
+        <Text mb={0} color="#FF2400" fontSize="sm">
+          {connectError}
+        </Text>
+      )}
 
       {!isOauthIntegrated && connectAlert && (
         <GithubConnectAlert
