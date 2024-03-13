@@ -91,7 +91,7 @@ export default function ManualAudit() {
               mr={[0, 0, 10]}
               mt={10}
             >
-              Request manual audit
+              Request Manual Audit
             </Button>
             <Button
               variant="white-ghost"

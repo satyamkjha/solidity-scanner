@@ -37,7 +37,7 @@ export const ReportPayWall: React.FC<{
           ? "190px"
           : ["110px", "140px", "190px"]
       }
-      h={["280px", "400px", "730px"]}
+      h={["280px", "400px", showVulnerabilityTitle ? "800px" : "870px"]}
       position="absolute"
       sx={{
         backdropFilter: "blur(6px)",
@@ -60,7 +60,11 @@ export const ReportPayWall: React.FC<{
           <VStack
             alignItems={["center", "center", "flex-start"]}
             textAlign="left"
-            w={["100%", "100%", "calc(100% - 200px)"]}
+            w={
+              issue_severity === "gas"
+                ? ["100%", "100%", "calc(100% - 200px)"]
+                : "100%"
+            }
             spacing={[4, 4]}
           >
             <Text color="#000000" fontWeight={600} fontSize="md">
@@ -92,6 +96,7 @@ export const ReportPayWall: React.FC<{
               variant="brand"
               w="90%"
               minWidth="200px"
+              maxW="280px"
               onClick={() => {
                 if (isQSReport) {
                   if (issue_severity === "gas") {
@@ -113,7 +118,9 @@ export const ReportPayWall: React.FC<{
             </Button>
           </VStack>
           <Image
-            display={["none", "none", "block"]}
+            display={
+              issue_severity === "gas" ? ["none", "none", "block"] : "none"
+            }
             height="200px"
             width="200px"
             style={{
@@ -123,7 +130,9 @@ export const ReportPayWall: React.FC<{
           />
         </HStack>
         <Image
-          display={["none", "none", "block"]}
+          display={
+            issue_severity === "gas" ? ["none", "none", "block"] : "none"
+          }
           height="390px"
           width="auto"
           src={`${assetsURL}report/paywall_screenshot.svg`}

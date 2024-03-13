@@ -48,9 +48,9 @@ export default function ProductSlides() {
       lightColor: "#A4FF7960",
     },
     {
-      heading: "AI-Driven Pro Features",
+      heading: "Organizational Features",
       imgAlt: "Customize and silence issues and set your own rules",
-      text: `Effortlessly upload your code, configure automated scans upon updates, and track code quality trends with AI insights.`,
+      text: `Invite team members to view or edit projects & collaborate effortlessly. Harness your team's collective expertise & streamline security!`,
       imgUrl: "landing/product_slides/slide_3_desktop.svg",
       mobileImgUrl: "landing/product_slides/slide_3_mobile.svg",
       numberColorLinearGradient:

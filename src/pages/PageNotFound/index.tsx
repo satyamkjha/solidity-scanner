@@ -23,6 +23,19 @@ const CustomFlex = motion(Flex);
 const PageNotFound: React.FC = () => {
   const config: any = useConfig();
   const assetsURL = getAssetsURL(config);
+  const history = useHistory();
+
+  useEffect(() => {
+    const handleBackButton = () => {
+      // Your code to handle the back button press
+      if (Auth.isUserAuthenticated()) {
+        history.push("/home");
+      } else {
+        window.open("/", "_self");
+      }
+    };
+    window.addEventListener("popstate", handleBackButton);
+  }, []);
 
   return (
     <>

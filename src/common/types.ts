@@ -236,9 +236,9 @@ export type PricingData = {
   pricing_table_data: {
     title: string;
     data: {
-      beginner: boolean | string | number;
+      individual: boolean | string | number;
       custom: boolean | string | number;
-      intermediate: boolean | string | number;
+
       ondemand: boolean | string | number;
       pro: boolean | string | number;
       title: string;

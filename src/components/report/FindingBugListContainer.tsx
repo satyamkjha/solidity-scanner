@@ -208,7 +208,7 @@ const FindingBugListContainer: React.FC<{
               ? sentenceCapitalize(issue.audit_type)
               : "Automated"}
           </Text>
-          {issue.findings && (
+          {issue.findings ? (
             <Text
               fontSize={download ? "10px" : ["5px", "6px", "10px"]}
               fontWeight={"500"}
@@ -218,6 +218,13 @@ const FindingBugListContainer: React.FC<{
               L{issue.findings[0].line_nos_start} - L
               {issue.findings[0].line_nos_end}
             </Text>
+          ) : (
+            <Text
+              fontSize={download ? "10px" : ["5px", "6px", "10px"]}
+              fontWeight={"500"}
+              color={"subtle"}
+              width={"10%"}
+            ></Text>
           )}
 
           <HStack width={"13%"} spacing={1.5}>

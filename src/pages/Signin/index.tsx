@@ -116,7 +116,7 @@ const SignIn: React.FC = () => {
                 src={`${assetsURL}common/org_icon.svg`}
                 height="35px"
                 width="35px"
-              />
+              />  
               Sign in to an Organisation
             </Button>
             <HStack spacing={5} width={["90%", "80%", "600px"]}>

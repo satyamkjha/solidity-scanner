@@ -32,7 +32,7 @@ const DowntimeAlertModal: React.FC<{
   const assetsUrl = getAssetsURL();
   const config = useConfig();
 
-  const d = new Date(getFeatureGateConfig().maintenance_start);
+  const d = new Date(getFeatureGateConfig().maintenance_info.maintenance_start);
 
   return (
     <>
@@ -76,7 +76,9 @@ const DowntimeAlertModal: React.FC<{
                 we expect it to take around
                 <strong>
                   {" "}
-                  {getFeatureGateConfig().maintenance_duration}{" "}
+                  {
+                    getFeatureGateConfig().maintenance_info.maintenance_duration
+                  }{" "}
                 </strong>{" "}
                 hours.
               </Text>

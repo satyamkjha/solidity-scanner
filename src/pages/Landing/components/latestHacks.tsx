@@ -96,21 +96,11 @@ export const LatestHacks: React.FC = () => {
         my={5}
         mx={[5, 5, 10]}
       >
-        In The{" "}
+        Most recent hacks that{" "}
         <Box as="span" sx={{ color: "accent" }}>
-          News
+          made the news
         </Box>
       </Heading>
-      <Text
-        maxW="1000px"
-        textAlign="center"
-        color="subtle"
-        mx={[5, 5, 10]}
-        fontSize={["lg", "lg", "xl"]}
-        mb={5}
-      >
-        Explore the Buzz Surrounding Our Innovative Solution
-      </Text>
       <Box
         display={"flex"}
         // flexDir="column"

@@ -89,10 +89,15 @@ const Layout: React.FC = ({ children }) => {
   const [openModal, setOpenModal] = useState(false);
 
   useEffect(() => {
-    if (getFeatureGateConfig().maintenance_start) {
+    if (
+      getFeatureGateConfig().maintenance_info &&
+      getFeatureGateConfig().maintenance_info.enabled
+    ) {
       const maintenanceInfo = localStorage.getItem("maintenance_info");
       if (maintenanceInfo) {
-        var date1 = new Date(getFeatureGateConfig().maintenance_start);
+        var date1 = new Date(
+          getFeatureGateConfig().maintenance_info.maintenance_start
+        );
         var date2 = new Date(maintenanceInfo);
 
         if (date1 > date2) {
@@ -454,10 +459,12 @@ const Layout: React.FC = ({ children }) => {
           </Box>
         </Box>
       </Flex>
-      <DowntimeAlertModal
-        isOpen={openModal}
-        onClose={() => setOpenModal(false)}
-      />
+      {getFeatureGateConfig().maintenance_info && (
+        <DowntimeAlertModal
+          isOpen={openModal}
+          onClose={() => setOpenModal(false)}
+        />
+      )}
     </Box>
   );
 };

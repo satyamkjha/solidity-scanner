@@ -67,7 +67,7 @@ const PricingTable: React.FC<PricingData> = ({
                   <Th w="12%" textAlign="center">
                     Trial
                   </Th>
-                  {Object.keys(pricing_data["ondemand"])
+                  {/* {Object.keys(pricing_data["ondemand"])
                     .sort((a, b) => a[0].localeCompare(b[0]))
                     .map((plan) => {
                       if (plan !== "custom") {
@@ -90,8 +90,16 @@ const PricingTable: React.FC<PricingData> = ({
                         );
                       }
                       return <></>;
-                    })}
-
+                    })} */}
+                  <Th w="12%" textAlign="center">
+                    On Demand
+                  </Th>
+                  <Th w="12%" textAlign="center">
+                    Individual
+                  </Th>
+                  <Th w="12%" textAlign="center">
+                    Pro
+                  </Th>
                   <Th w="12%" textAlign="center">
                     Enterprise
                   </Th>
@@ -128,27 +136,14 @@ const PricingTable: React.FC<PricingData> = ({
                       )}
                     </Td>
                     <Td
-                      bgColor={row.beginner ? "#FFFFFF" : "#FCFCFF"}
+                      bgColor={row.individual ? "#FFFFFF" : "#FCFCFF"}
                       textAlign="center"
                       border="1px solid #D6D6D6"
                     >
-                      {typeof row.beginner !== "boolean" ? (
-                        row.beginner
-                      ) : row.beginner ? (
+                      {typeof row.individual !== "boolean" ? (
+                        row.individual
+                      ) : row.individual ? (
                         <TickComp color="#54C0EB" />
-                      ) : (
-                        ""
-                      )}
-                    </Td>
-                    <Td
-                      bgColor={row.intermediate ? "#FFFFFF" : "#FCFCFF"}
-                      textAlign="center"
-                      border="1px solid #D6D6D6"
-                    >
-                      {typeof row.intermediate !== "boolean" ? (
-                        row.intermediate
-                      ) : row.intermediate ? (
-                        <TickComp color="#FF5630" />
                       ) : (
                         ""
                       )}

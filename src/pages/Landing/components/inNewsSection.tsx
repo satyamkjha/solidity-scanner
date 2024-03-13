@@ -26,6 +26,15 @@ export const InNewsSection: React.FC = () => {
     articlePara: string;
   }[] = [
     {
+      imgLink: "landing/news_and_media/news_16.png",
+      articleLink:
+        "https://cxotoday.com/press-release/credshields-secures-1-million-in-funding-to-bolster-web3-security-backed-by-draper-associates/",
+      articleHeading:
+        "CredShields Secures $1 Million in Funding to Bolster Web3 Security, Backed by Draper Associates",
+      articlePara:
+        "In a significant boost to the future of Web3 security, CredShields, a leader in blockchain security solutions, has announced a strategic investment of $1 million from Draper Associates. This funding propels CredShields’ mission to enhance the security of the digital landscape through the development of SolidityScan, a cutting-edge tool designed to automate and streamline smart contract audits.",
+    },
+    {
       imgLink: "landing/news_and_media/news_15.svg",
       articleLink:
         "https://yourstory.com/the-decrypting-story/funding-blockchain-startup-credshields-web3-security",
@@ -163,12 +172,12 @@ export const InNewsSection: React.FC = () => {
         my={5}
         mx={[5, 5, 10]}
       >
-        Most recent hacks that{" "}
+        In The{" "}
         <Box as="span" sx={{ color: "accent" }}>
-          made the news
+          News
         </Box>
       </Heading>
-      {/* <Text
+      <Text
         maxW="1000px"
         textAlign="center"
         color="subtle"
@@ -177,7 +186,8 @@ export const InNewsSection: React.FC = () => {
         mb={5}
       >
         Explore the Buzz Surrounding Our Innovative Solution
-      </Text> */}
+      </Text>
+
       <Box
         display={"flex"}
         // flexDir="column"

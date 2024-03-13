@@ -10,6 +10,7 @@ import {
 import AnimatedNumbers from "react-animated-numbers";
 import { isInViewport } from "common/functions";
 import { useConfig } from "hooks/useConfig";
+import { getFeatureGateConfig } from "helpers/helperFunction";
 
 export default function ProductNumbers() {
   const config: any = useConfig();
@@ -26,25 +27,25 @@ export default function ProductNumbers() {
     {
       color: "#EDFCFE",
       heading: "M $ +",
-      headingNumber: 100,
+      headingNumber: getFeatureGateConfig().product_numbers.hacks_value,
       subHeading: "Hacks & exploits losses",
     },
     {
       color: "#F4EFFF",
       heading: " +",
-      headingNumber: parseInt(`${no_of_vuln_detectors}`),
+      headingNumber: getFeatureGateConfig().product_numbers.vuln_detectors,
       subHeading: "Code patterns detected",
     },
     {
       color: "#F4EFFF",
       heading: "M $ +",
-      headingNumber: 52.4,
+      headingNumber: getFeatureGateConfig().product_numbers.contracts_worth,
       subHeading: "Worth of contracts secured",
     },
     {
       color: "#EDFCFE",
       heading: "M +",
-      headingNumber: 6.4,
+      headingNumber: getFeatureGateConfig().product_numbers.lines_of_code,
       subHeading: "Line of code scanned",
     },
   ];
