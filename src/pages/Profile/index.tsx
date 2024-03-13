@@ -9,8 +9,6 @@ import {
   Icon,
   FormControl,
   FormLabel,
-  InputGroup,
-  InputRightElement,
   VStack,
   Input,
   useToast,
@@ -29,12 +27,7 @@ import {
 import { useForm } from "react-hook-form";
 import { getReCaptchaHeaders } from "helpers/helperFunction";
 import { useQueryClient } from "react-query";
-import {
-  AiOutlineEdit,
-  AiOutlineSave,
-  AiOutlineEye,
-  AiOutlineEyeInvisible,
-} from "react-icons/ai";
+import { AiOutlineEdit, AiOutlineSave } from "react-icons/ai";
 import { sentenceCapitalize } from "helpers/helperFunction";
 import { useProfile } from "hooks/useProfile";
 import DeleteAccountForm from "./DeleteAccountForm";
@@ -47,12 +40,14 @@ import Loader from "components/styled-components/Loader";
 import { onLogout } from "common/functions";
 import { monthNames } from "common/values";
 import { useUserOrgProfile } from "hooks/useUserOrgProfile";
-import { hasSpecialCharacters } from "helpers/helperFunction";
-import PasswordError from "components/passwordError";
 import { passwordStrength } from "check-password-strength";
 import Setup2FA from "./Setup2FA";
 import { setup2FARequest, disable2FARequest } from "api/functions/twoFA";
 import StyledButton from "components/styled-components/StyledButton";
+import NameInput from "components/forms/NameInput";
+import PhoneInput from "components/forms/PhoneInput";
+import EmailInput from "components/forms/EmailInput";
+import PasswordInput from "components/forms/PasswordInput";
 
 const Profile: React.FC = () => {
   const toast = useToast();
@@ -60,7 +55,7 @@ const Profile: React.FC = () => {
   const [emailSend, setEmailSend] = useState(false);
   const [metaMaskEmail, setMetaMaskEmail] = useState("");
   const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState("");
+  const [errors, setErrors] = useState<{ [key: string]: string }>({});
   const { data: orgProfile, refetch: refetchOrgProfile } =
     useUserOrgProfile(true);
   const [companyName, setCompanyName] = useState("");
@@ -85,53 +80,7 @@ const Profile: React.FC = () => {
     }
   }, [data]);
 
-  const validateEmail = (value: string) => {
-    const emailRegex = /^([a-zA-Z0-9._%-+]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,})$/;
-    if (!emailRegex.test(value)) {
-      setError("Please enter a valid email address.");
-      return false;
-    }
-    setError("");
-    return true;
-  };
-  const validationError = (msg: string) => {
-    toast({
-      title: msg,
-      status: "error",
-      duration: 2000,
-      isClosable: true,
-      position: "bottom",
-    });
-  };
-
-  const checkFormValidation = () => {
-    if (companyName && (companyName.length < 5 || companyName.length > 40)) {
-      validationError("Company Name is Invalid");
-      return false;
-    }
-    if (
-      contactNumber &&
-      (contactNumber.length < 8 || contactNumber.length > 15)
-    ) {
-      validationError("Contact Number is Invalid");
-      return false;
-    }
-    if (
-      firstName &&
-      (firstName.length < 3 ||
-        firstName.length > 30 ||
-        hasSpecialCharacters(firstName))
-    ) {
-      validationError("Name is Invalid");
-      return false;
-    }
-    return true;
-  };
-
   const onSave = async () => {
-    if (!checkFormValidation()) {
-      return;
-    }
     try {
       setUpdateLoading(true);
       const { data } = isOwner
@@ -164,7 +113,7 @@ const Profile: React.FC = () => {
   };
 
   const updateEmail = async () => {
-    if (metaMaskEmail && validateEmail(metaMaskEmail)) {
+    if (metaMaskEmail) {
       setIsLoading(true);
       const { data } = await API.put(API_PATH.API_UPDATE_EMAIL, {
         email: metaMaskEmail,
@@ -264,10 +213,10 @@ const Profile: React.FC = () => {
                 <Button
                   variant="accent-ghost"
                   type="submit"
+                  isDisabled={Object.values(errors).join("").length > 0}
                   isLoading={updateLoading}
                   spinner={<Loader color={"#3300FF"} size={25} />}
                   onClick={(e) => {
-                    e.preventDefault();
                     onSave();
                   }}
                 >
@@ -290,16 +239,17 @@ const Profile: React.FC = () => {
               <FormControl id="name">
                 <FormLabel color="subtle">Name</FormLabel>
                 {isEditable ? (
-                  <Input
-                    borderRadius="15px"
-                    size="lg"
+                  <NameInput
                     isRequired
                     isDisabled={updateLoading}
-                    type="text"
-                    w="100%"
-                    maxW="600px"
                     defaultValue={data.name}
+                    value={firstName}
                     onChange={(e) => setFirstName(e.target.value)}
+                    onError={(e: any) =>
+                      setErrors((prv) => {
+                        return { ...prv, Name: e };
+                      })
+                    }
                   />
                 ) : (
                   <Text fontSize="lg">{data.name}</Text>
@@ -308,17 +258,19 @@ const Profile: React.FC = () => {
               <FormControl id="companyName">
                 <FormLabel color="subtle">Company Name</FormLabel>
                 {isEditable ? (
-                  <Input
-                    borderRadius="15px"
-                    size="lg"
+                  <NameInput
+                    title={"Company Name"}
                     isDisabled={updateLoading || !isOwner}
-                    type="text"
-                    w="100%"
-                    maxW="600px"
                     defaultValue={data.company_name}
+                    value={companyName}
                     onChange={(e) => {
                       setCompanyName(e.target.value);
                     }}
+                    onError={(e: any) =>
+                      setErrors((prv) => {
+                        return { ...prv, Company: e };
+                      })
+                    }
                   />
                 ) : (
                   <Text fontSize="lg">{data.company_name}</Text>
@@ -327,17 +279,18 @@ const Profile: React.FC = () => {
               <FormControl id="mobileNumber">
                 <FormLabel color="subtle">Mobile Number</FormLabel>
                 {isEditable ? (
-                  <Input
-                    borderRadius="15px"
-                    size="lg"
+                  <PhoneInput
                     isDisabled={updateLoading}
-                    type="number"
-                    w="100%"
-                    maxW="600px"
                     defaultValue={data.contact_number}
+                    value={contactNumber}
                     onChange={(e) => {
                       setContactNumber(e.target.value);
                     }}
+                    onError={(e: any) =>
+                      setErrors((prv) => {
+                        return { ...prv, Phone: e };
+                      })
+                    }
                   />
                 ) : (
                   <Text fontSize="lg">{data.contact_number}</Text>
@@ -352,7 +305,7 @@ const Profile: React.FC = () => {
                       borderRadius="15px"
                       size="lg"
                       isDisabled
-                      type="email"
+                      type="text"
                       w="100%"
                       maxW="600px"
                       value={data.public_address}
@@ -367,14 +320,14 @@ const Profile: React.FC = () => {
                 <FormControl id="email">
                   <FormLabel color="subtle">Email ID</FormLabel>
                   {isEditable ? (
-                    <Input
-                      borderRadius="15px"
-                      size="lg"
+                    <EmailInput
                       isDisabled
-                      type="email"
-                      w="100%"
-                      maxW="600px"
                       value={data.email}
+                      onError={(e: any) =>
+                        setErrors((prv) => {
+                          return { ...prv, Email: e };
+                        })
+                      }
                     />
                   ) : (
                     <Text fontSize="lg">{data.email}</Text>
@@ -403,20 +356,24 @@ const Profile: React.FC = () => {
                     spacing={6}
                     direction={["column", "column", "column", "row"]}
                   >
-                    <Input
-                      borderRadius="15px"
-                      size="lg"
+                    <EmailInput
                       isDisabled={data.verification_email_sent}
-                      type="email"
-                      w="100%"
-                      maxW="600px"
-                      defaultValue={metaMaskEmail}
+                      value={metaMaskEmail}
                       onChange={(e) => setMetaMaskEmail(e.target.value)}
+                      onError={(e: any) =>
+                        setErrors((prv) => {
+                          return { ...prv, Email: e };
+                        })
+                      }
                     />
                     <Button
                       variant={"brand"}
                       onClick={!emailSend ? updateEmail : onResendEmail}
-                      disabled={!metaMaskEmail}
+                      disabled={
+                        errors["Email"] && errors["Email"].length > 0
+                          ? true
+                          : !metaMaskEmail
+                      }
                       px={10}
                       minW={"150px"}
                     >
@@ -435,9 +392,6 @@ const Profile: React.FC = () => {
                       inbox for verification link.
                     </Text>
                   )}
-                  <Text my={2} color="#FF2400" fontSize="sm">
-                    {error}
-                  </Text>
                 </FormControl>
               )}
             </VStack>
@@ -489,7 +443,7 @@ const ChangePasswordForm: React.FC<{
   const [open, setOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [loading2FA, setLoading2FA] = useState(false);
-
+  const [errors, setErrors] = useState<{ [key: string]: string }>({});
   const [twoFAsetupData, setTwoFASetupData] = useState<{
     provisioning_uri: string;
     two_factor_hash: string;
@@ -590,42 +544,56 @@ const ChangePasswordForm: React.FC<{
         }}
         onSubmit={handleSubmit(onSubmit)}
       >
-        <ViewableInputGroup
-          key="password"
-          label="Old Password"
-          value={password}
-          setValue={setPassword}
-        />
-        <ViewableInputGroup
-          key="new_password"
-          label="New Password"
-          value={newPassword}
-          setValue={setNewPassword}
-        />
-        <PasswordError passwordError={passwordError} />
-        <ViewableInputGroup
-          key="confirm_password"
-          label="Confirm Password"
-          value={confirmPassword}
-          setValue={setConfirmPassword}
-        />
+        <Stack spacing={6} width={["90%", "80%", "600px"]}>
+          <PasswordInput
+            isRequired
+            showLeftIcon
+            value={password}
+            placeholder="Old Password"
+            onChange={(event) => setPassword(event.target.value)}
+            onError={(e: any) =>
+              setErrors((prv) => {
+                return { ...prv, Password: e };
+              })
+            }
+          />
 
+          <PasswordInput
+            isRequired
+            showLeftIcon
+            value={newPassword}
+            placeholder="New Password"
+            onChange={(event) => setNewPassword(event.target.value)}
+            onError={(e: any) =>
+              setErrors((prv) => {
+                return { ...prv, NewPassword: e };
+              })
+            }
+          />
+
+          <PasswordInput
+            isRequired
+            showLeftIcon
+            value={confirmPassword}
+            placeholder="Confirm Password"
+            onChange={(event) => setConfirmPassword(event.target.value)}
+            onError={(e: any) =>
+              setErrors((prv) => {
+                return { ...prv, ConfirmPassword: e };
+              })
+            }
+          />
+        </Stack>
         <Button
           variant="brand"
           type="submit"
-          mt={4}
+          mt={6}
           onClick={onSubmit}
           isLoading={isLoading}
           spinner={<Loader color={"#3300FF"} size={25} />}
           isDisabled={
-            (passwordError &&
-              (passwordError.value === "Too Weak" ||
-                passwordError.value === "Weak")) ||
-            newPassword.length > 50 ||
-            password.length < 1 ||
-            password.length > 50 ||
-            confirmPassword.length < 1 ||
-            confirmPassword.length > 50
+            Object.values(errors).join("").length > 0 ||
+            newPassword !== confirmPassword
           }
         >
           Change Password
@@ -891,38 +859,6 @@ const DeleteAccountBox: React.FC = () => {
       </Button>
       <DeleteAccountForm onClose={onClose} isOpen={isOpen} />
     </Box>
-  );
-};
-
-const ViewableInputGroup: React.FC<{
-  label: string;
-  key: string;
-  value: string;
-  setValue: React.Dispatch<React.SetStateAction<string>>;
-}> = ({ label, key, value, setValue }) => {
-  const [isViewable, setViewable] = useState(false);
-  return (
-    <>
-      <Text color="subtle" mt={4}>
-        {label}
-      </Text>
-      <InputGroup size="lg" w="100%" maxW="400px">
-        <Input
-          borderRadius="15px"
-          type={isViewable ? "text" : "password"}
-          value={value}
-          onChange={(e) => setValue(e.target.value)}
-        />
-        <InputRightElement>
-          <Icon
-            cursor="pointer"
-            color="gray.500"
-            as={isViewable ? AiOutlineEyeInvisible : AiOutlineEye}
-            onClick={() => setViewable(!isViewable)}
-          />
-        </InputRightElement>
-      </InputGroup>
-    </>
   );
 };
 
