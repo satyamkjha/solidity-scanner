@@ -30,7 +30,7 @@ export default function ProductSlides() {
     {
       heading: "Enhance Your Code Security Posture",
       imgAlt: "Keep track of the bugs in your project",
-      text: `Upload your code or provide a repository link, set up automated scans for updates, and monitor the evolution of your code quality.`,
+      text: `Upload your code or provide a repository link, set up automated scans for updates, and monitor the evolution of your code security.`,
       imgUrl: "landing/product_slides/slide_1_desktop.svg",
       mobileImgUrl: "landing/product_slides/slide_1_mobile.svg",
       numberColorLinearGradient:
