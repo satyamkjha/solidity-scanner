@@ -82,10 +82,7 @@ const NameInput: React.FC<
           type="text"
           w="100%"
           maxW="600px"
-          variant={"brand"}
-          border={
-            errorMessage ? "1px solid red !important" : "1px solid #CBD5E0"
-          }
+          variant={errorMessage ? "error" : "brand"}
           onInput={handleInput}
           {...props}
         />
