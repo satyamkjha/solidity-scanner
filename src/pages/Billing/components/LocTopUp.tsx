@@ -10,6 +10,7 @@ import {
   InputGroup,
   InputLeftElement,
   Input,
+  Tooltip,
 } from "@chakra-ui/react";
 import { Profile, Plan } from "common/types";
 import { getAssetsURL } from "helpers/helperFunction";
@@ -41,6 +42,7 @@ const LocTopUp: React.FC<{
     paramsLoc && +paramsLoc > profile.loc_remaining ? parseInt(paramsLoc) : 0
   );
   const locPriceUnits = currentTopUpPlan.loc;
+  const minimum_loc_topup = process.env.REACT_APP_MINIMUM_LOC_TOPUP || 100;
 
   return (
     <Flex w="100%" h={"60vh"} flexDir={["column", "column", "column", "row"]}>
@@ -167,17 +169,24 @@ const LocTopUp: React.FC<{
           </Text>
         </Flex>
         <Divider borderColor={"#EAEAEA"} my={4} />
-        <Button
-          variant="brand"
-          p={6}
-          mt={"auto"}
-          w="100%"
-          alignSelf="center"
-          isDisabled={noOfLoc === 0}
-          onClick={onOpen}
+        <Tooltip
+          label={`Minimum of ${minimum_loc_topup} LOC required for Top-Up`}
+          isDisabled={noOfLoc >= minimum_loc_topup}
         >
-          Make Payment
-        </Button>
+          <Flex w={"100%"}>
+            <Button
+              variant="brand"
+              p={6}
+              mt={"auto"}
+              w="100%"
+              alignSelf="center"
+              isDisabled={noOfLoc < minimum_loc_topup}
+              onClick={onOpen}
+            >
+              Make Payment
+            </Button>
+          </Flex>
+        </Tooltip>
       </Flex>
       {isOpen && (
         <PaymentModal
