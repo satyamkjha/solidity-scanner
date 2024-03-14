@@ -238,6 +238,9 @@ export const theme = extendTheme({
             background: "#3300FF",
             color: "#FFFFFF",
           },
+          _disabled: {
+            color: "#3300FF !important",
+          },
         }),
         label: (props: StyleFunctionProps) => ({
           ...defaultTheme.components.Button.variants.solid(props),

@@ -14,7 +14,6 @@ import {
   Text,
   useToast,
   InputGroup,
-  Input,
   InputRightElement,
   useMediaQuery,
 } from "@chakra-ui/react";
@@ -26,6 +25,7 @@ import { customStylesForInviteMember } from "../../common/stylesForCustomSelect"
 import FormatOptionLabelWithImage from "../../components/FormatOptionLabelWithImage";
 import { userRolesList } from "../../common/values";
 import { isEmail } from "helpers/helperFunction";
+import EmailInput from "components/forms/EmailInput";
 
 const InviteMemberForm: React.FC<{
   onClose(): any;
@@ -45,6 +45,8 @@ const InviteMemberForm: React.FC<{
   const [userRole, setUserRole] = useState<"admin" | "reader" | "editor">(
     "admin"
   );
+  const [errors, setErrors] = useState<{ [key: string]: string }>({});
+
   const clearState = () => {
     setUserEmail("");
     setUserRole("admin");
@@ -185,15 +187,14 @@ const InviteMemberForm: React.FC<{
                 justifyContent={"flex-start"}
               >
                 <InputGroup alignItems="center" mb={1}>
-                  <Input
+                  <EmailInput
                     isRequired
-                    type="email"
                     placeholder="Type email ID to send invite"
                     variant={"brand"}
                     bgColor="#f7f9fa"
                     h="55px"
+                    maxW={"100%"}
                     value={userEmail}
-                    size="lg"
                     onKeyDown={(e) => {
                       if (e.keyCode === 13) {
                         addUsers();
@@ -202,6 +203,11 @@ const InviteMemberForm: React.FC<{
                     onChange={(e) => {
                       setUserEmail(e.target.value);
                     }}
+                    onError={(e: any) =>
+                      setErrors((prv) => {
+                        return { ...prv, Email: e };
+                      })
+                    }
                   />
                   {isDesktopView && (
                     <InputRightElement
@@ -228,6 +234,9 @@ const InviteMemberForm: React.FC<{
                             variant={"cta-outline"}
                             borderWidth={"1px"}
                             fontWeight={500}
+                            isDisabled={
+                              Object.values(errors).join("").length > 0
+                            }
                             px={5}
                             py={1}
                             ml={[0, 0, 0, "auto"]}

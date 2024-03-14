@@ -56,7 +56,7 @@ const EmailInput: React.FC<
   };
 
   return (
-    <VStack alignItems={"flex-start"} justifyContent={"flex-start"}>
+    <VStack w="100%" alignItems={"flex-start"} justifyContent={"flex-start"}>
       <InputGroup alignItems="center">
         {showLeftIcon && (
           <InputLeftElement

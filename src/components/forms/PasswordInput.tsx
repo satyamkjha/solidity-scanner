@@ -15,8 +15,18 @@ import { passwordStrength, DiversityType } from "check-password-strength";
 import { debounce } from "lodash";
 
 const PasswordInput: React.FC<
-  InputProps & { onError: (error: string) => void; showLeftIcon?: boolean }
-> = ({ children, onError, showLeftIcon = false, ...props }) => {
+  InputProps & {
+    onError: (error: string) => void;
+    showLeftIcon?: boolean;
+    enableSpecialCharCheck?: boolean;
+  }
+> = ({
+  children,
+  onError,
+  showLeftIcon = false,
+  enableSpecialCharCheck = true,
+  ...props
+}) => {
   const { value, isRequired, title = "Password" } = props;
 
   const [errorMessage, setErrorMessage] = useState("");
@@ -49,7 +59,7 @@ const PasswordInput: React.FC<
 
         if (strength.id === 0) {
           return "Weak password. Please use a stronger one.";
-        } else if (missingCharTypes.length > 0) {
+        } else if (enableSpecialCharCheck && missingCharTypes.length > 0) {
           return `Password must include ${missingCharTypes.join(
             ", "
           )} character(s).`;
