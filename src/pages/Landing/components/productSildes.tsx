@@ -28,7 +28,7 @@ export default function ProductSlides() {
 
   const data = [
     {
-      heading: "Enhance Your Code Security Posture",
+      heading: "Enhance Your Code Posture",
       imgAlt: "Keep track of the bugs in your project",
       text: `Upload your code or provide a repository link, set up automated scans for updates, and monitor the evolution of your code security.`,
       imgUrl: "landing/product_slides/slide_1_desktop.svg",
