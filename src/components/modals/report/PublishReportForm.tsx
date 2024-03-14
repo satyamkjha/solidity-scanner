@@ -15,14 +15,13 @@ import {
   Link,
 } from "@chakra-ui/react";
 import { AiOutlineProject } from "react-icons/ai";
-import { FaInternetExplorer, FaBuilding } from "react-icons/fa";
+import { FaInternetExplorer, FaBuilding, FaEnvelope } from "react-icons/fa";
 import { Scan, Profile } from "common/types";
 import { formattedDate } from "common/functions";
 import API from "helpers/api";
 import { API_PATH } from "helpers/routeManager";
 import StyledButton from "components/styled-components/StyledButton";
 import { getContractChainLabel } from "helpers/helperFunction";
-import EmailInput from "components/forms/EmailInput";
 
 const PublishReportForm: React.FC<{
   type: "project" | "block";
@@ -63,7 +62,6 @@ const PublishReportForm: React.FC<{
   const [pubEmail, setPubEmail] = useState("");
   const [emailSwitch, setEmailSwitch] = useState(true);
   const [publishInfoSwitch, setPublishInfoSwitch] = useState(true);
-  const [errors, setErrors] = useState<{ [key: string]: string }>({});
 
   useEffect(() => {
     if (scanData) {
@@ -208,25 +206,28 @@ const PublishReportForm: React.FC<{
               boxShadow: "0px 12px 23px rgba(107, 255, 55, 0.1)",
             }}
           >
-            <EmailInput
-              showLeftIcon
-              placeholder="Publisher's Email"
-              border={"none"}
-              _focus={{
-                border: "none",
-              }}
-              fontSize={"15px"}
-              fontWeight={500}
-              value={pubEmail}
-              onChange={(e) => {
-                setPubEmail(e.target.value);
-              }}
-              onError={(e: any) =>
-                setErrors((prv) => {
-                  return { ...prv, Email: e };
-                })
-              }
-            />
+            <InputGroup alignItems="center">
+              <InputLeftElement
+                height="48px"
+                children={<Icon as={FaEnvelope} color="gray.300" />}
+              />
+              <Input
+                isRequired
+                type="email"
+                placeholder="Publisher's Email"
+                size="lg"
+                border={"0px solid #FFFFFF"}
+                _focus={{
+                  border: "0px solid #FFFFFF",
+                }}
+                fontSize={"15px"}
+                fontWeight={500}
+                value={pubEmail}
+                onChange={(e) => {
+                  setPubEmail(e.target.value);
+                }}
+              />
+            </InputGroup>
             {isDesktopView && (
               <>
                 <SwitchComp
