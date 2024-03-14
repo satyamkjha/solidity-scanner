@@ -87,12 +87,7 @@ const ApplicationForm: React.FC<{
       return false;
     }
     if (visibility) {
-      console.log(formType);
-      console.log(profileData._integrations[formType].status);
       if (profileData._integrations[formType].status !== "successful") {
-        setConnectError(
-          `Please integrate your ${formType} to Scan private ${formType} repository link`
-        );
         return false;
       }
     }
@@ -392,11 +387,13 @@ const ApplicationForm: React.FC<{
             </Box>
           ) : step === 1 ? (
             <InfoSettings
+              profileData={profileData}
               connectError={connectError}
               nameError={nameError}
               linkError={linkError}
               visibility={visibility}
               projectName={projectName}
+              setConnectError={setConnectError}
               githubLink={githubLink}
               isOauthIntegrated={isOauthIntegrated}
               setProjectName={setProjectName}

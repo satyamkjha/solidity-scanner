@@ -12,6 +12,8 @@ import React from "react";
 import { AiOutlineProject } from "react-icons/ai";
 import { FaFileCode } from "react-icons/fa";
 import GithubConnectAlert from "./githubConnectAlert";
+import { Profile } from "common/types";
+import { sentenceCapitalize } from "helpers/helperFunction";
 
 const InfoSettings: React.FC<{
   nameError: string | null;
@@ -19,11 +21,13 @@ const InfoSettings: React.FC<{
   connectError: string | null;
   visibility: boolean;
   projectName: string;
+  profileData: Profile;
   githubLink: string;
   isViewer: boolean;
   formType: string;
   connectAlert: boolean;
   isOauthIntegrated: boolean;
+  setConnectError: React.Dispatch<React.SetStateAction<string | null>>;
   setProjectName: React.Dispatch<React.SetStateAction<string>>;
   setGithubLink: React.Dispatch<React.SetStateAction<string>>;
   setVisibility: React.Dispatch<React.SetStateAction<boolean>>;
@@ -42,7 +46,9 @@ const InfoSettings: React.FC<{
   connectAlert,
   setConnectAlert,
   formType,
+  setConnectError,
   connectError,
+  profileData,
 }) => {
   const placeholder: { [key: string]: string } = {
     github: "github.com",
@@ -108,7 +114,17 @@ const InfoSettings: React.FC<{
           isChecked={visibility}
           onChange={() => {
             if (isOauthIntegrated) {
-              setVisibility(!visibility);
+              if (profileData._integrations[formType].status === "successful") {
+                setVisibility(!visibility);
+              } else {
+                setConnectError(
+                  `Please integrate your ${sentenceCapitalize(
+                    formType
+                  )} Account to Scan Private ${sentenceCapitalize(
+                    formType
+                  )} repositories`
+                );
+              }
             } else {
               setConnectAlert(!connectAlert);
             }

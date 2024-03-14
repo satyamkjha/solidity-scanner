@@ -90,32 +90,59 @@ const Layout: React.FC = ({ children }) => {
 
   useEffect(() => {
     if (
-      getFeatureGateConfig().maintenance_info &&
-      getFeatureGateConfig().maintenance_info.enabled
+      profileData &&
+      getFeatureGateConfig().maintenance_data &&
+      getFeatureGateConfig().maintenance_data.enabled
     ) {
-      const maintenanceInfo = localStorage.getItem("maintenance_info");
-      if (maintenanceInfo) {
-        var date1 = new Date(
-          getFeatureGateConfig().maintenance_info.maintenance_start
-        );
-        var date2 = new Date(maintenanceInfo);
+      let maintenance = localStorage.getItem("maintenance_info");
+      let maintenanceInfo;
+      if (maintenance) {
+        maintenanceInfo = JSON.parse(maintenance);
+      }
 
+      if (
+        maintenanceInfo &&
+        maintenanceInfo.emails &&
+        maintenanceInfo.emails.includes(profileData.email)
+      ) {
+        var date1 = new Date(
+          getFeatureGateConfig().maintenance_data.maintenance_start
+        );
+        var date2 = new Date(
+          maintenanceInfo.maintenance_data.maintenance_start
+        );
         if (date1 > date2) {
           localStorage.setItem(
             "maintenance_info",
-            getFeatureGateConfig().maintenance_start
+            JSON.stringify({
+              maintenance_data: getFeatureGateConfig().maintenance_data,
+              emails: [profileData.email],
+            })
           );
           setOpenModal(true);
         }
       } else {
-        localStorage.setItem(
-          "maintenance_info",
-          getFeatureGateConfig().maintenance_start
-        );
+        if (maintenanceInfo && maintenanceInfo.emails)
+          localStorage.setItem(
+            "maintenance_info",
+            JSON.stringify({
+              maintenance_data: getFeatureGateConfig().maintenance_data,
+              emails: [...maintenanceInfo.emails, profileData.email],
+            })
+          );
+        else {
+          localStorage.setItem(
+            "maintenance_info",
+            JSON.stringify({
+              maintenance_data: getFeatureGateConfig().maintenance_data,
+              emails: [profileData.email],
+            })
+          );
+        }
         setOpenModal(true);
       }
     }
-  }, []);
+  }, [profileData]);
 
   const { isOpen, onToggle } = useDisclosure();
 
@@ -459,7 +486,7 @@ const Layout: React.FC = ({ children }) => {
           </Box>
         </Box>
       </Flex>
-      {getFeatureGateConfig().maintenance_info && (
+      {getFeatureGateConfig().maintenance_data && (
         <DowntimeAlertModal
           isOpen={openModal}
           onClose={() => setOpenModal(false)}

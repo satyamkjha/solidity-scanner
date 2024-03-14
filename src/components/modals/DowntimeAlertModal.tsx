@@ -15,24 +15,16 @@ import {
   Divider,
   VStack,
 } from "@chakra-ui/react";
-
-import { useHistory } from "react-router-dom";
-import { Profile } from "common/types";
-import { getAssetsURL, getFeatureGateConfig } from "helpers/helperFunction";
+import { getFeatureGateConfig } from "helpers/helperFunction";
 
 import StyledButton from "components/styled-components/StyledButton";
-import { useConfig } from "hooks/useConfig";
 import { monthNames } from "common/values";
 
 const DowntimeAlertModal: React.FC<{
   onClose: any;
   isOpen: boolean;
 }> = ({ isOpen, onClose }) => {
-  const history = useHistory();
-  const assetsUrl = getAssetsURL();
-  const config = useConfig();
-
-  const d = new Date(getFeatureGateConfig().maintenance_info.maintenance_start);
+  const d = new Date(getFeatureGateConfig().maintenance_data.maintenance_start);
 
   return (
     <>
@@ -77,7 +69,7 @@ const DowntimeAlertModal: React.FC<{
                 <strong>
                   {" "}
                   {
-                    getFeatureGateConfig().maintenance_info.maintenance_duration
+                    getFeatureGateConfig().maintenance_data.maintenance_duration
                   }{" "}
                 </strong>{" "}
                 hours.
