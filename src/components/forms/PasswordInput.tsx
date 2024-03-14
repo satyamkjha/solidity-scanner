@@ -12,6 +12,7 @@ import {
 import { FaLock } from "react-icons/fa";
 import { ViewOffIcon, ViewIcon } from "@chakra-ui/icons";
 import { passwordStrength, DiversityType } from "check-password-strength";
+import { debounce } from "lodash";
 
 const PasswordInput: React.FC<
   InputProps & { onError: (error: string) => void; showLeftIcon?: boolean }
@@ -70,6 +71,14 @@ const PasswordInput: React.FC<
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isRequired, value, title, triggerValidation]);
 
+  const triggerValidationDebounced = debounce(() => {
+    setTriggerValidation(true);
+  }, 1000);
+
+  const handleInput = (event: any) => {
+    triggerValidationDebounced();
+  };
+
   return (
     <VStack alignItems={"flex-start"} justifyContent={"flex-start"}>
       <InputGroup alignItems="center">
@@ -90,10 +99,7 @@ const PasswordInput: React.FC<
           border={
             errorMessage ? "1px solid red !important" : "1px solid #CBD5E0"
           }
-          onBlur={() => setTriggerValidation(true)}
-          _focus={{
-            border: "1px solid #52FF00",
-          }}
+          onInput={handleInput}
           {...props}
         />
         <InputRightElement

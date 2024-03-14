@@ -9,6 +9,7 @@ import {
   InputLeftElement,
 } from "@chakra-ui/react";
 import { FaLink } from "react-icons/fa";
+import { debounce } from "lodash";
 
 const LinkInput: React.FC<
   InputProps & {
@@ -63,6 +64,14 @@ const LinkInput: React.FC<
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isRequired, value, title, triggerValidation]);
 
+  const triggerValidationDebounced = debounce(() => {
+    setTriggerValidation(true);
+  }, 1000);
+
+  const handleInput = (event: any) => {
+    triggerValidationDebounced();
+  };
+
   return (
     <VStack alignItems={"flex-start"} justifyContent={"flex-start"}>
       <InputGroup alignItems="center">
@@ -85,7 +94,7 @@ const LinkInput: React.FC<
           border={
             errorMessage ? "1px solid red !important" : "1px solid #CBD5E0"
           }
-          onBlur={() => setTriggerValidation(true)}
+          onInput={handleInput}
           {...props}
         />
       </InputGroup>
