@@ -190,7 +190,6 @@ const InviteMemberForm: React.FC<{
                   <EmailInput
                     isRequired
                     placeholder="Type email ID to send invite"
-                    variant={"brand"}
                     bgColor="#f7f9fa"
                     h="55px"
                     maxW={"100%"}

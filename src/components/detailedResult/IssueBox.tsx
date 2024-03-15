@@ -37,7 +37,7 @@ const IssueBox: React.FC<{
   setFiles: Dispatch<SetStateAction<FilesState | null>>;
   updateBugStatus: any;
   restrictedBugIds: string[];
-  setRestrictedBugIds: React.Dispatch<React.SetStateAction<string[]>>
+  setRestrictedBugIds: React.Dispatch<React.SetStateAction<string[]>>;
   project_url?: string;
   contract_url?: string;
   contract_platform?: string;
@@ -65,7 +65,7 @@ const IssueBox: React.FC<{
   contract_address,
   isViewer,
   setRestrictedBugIds,
-  restrictedBugIds
+  restrictedBugIds,
 }) => {
   const assetsURL = getAssetsURL();
   const [isDesktopView] = useMediaQuery("(min-width: 1350px)");
@@ -95,17 +95,17 @@ const IssueBox: React.FC<{
             cursor: "pointer",
             bg:
               bug_id === files?.bug_id
-                ? "gray.300"
-                : metric_wise_aggregated_finding.bug_status === "pending_fix"
-                ? "gray.100"
-                : "gray.50",
+                ? "#D7DDE4"
+                : isSelected
+                ? "#E9EEF3"
+                : "#F8FAFC",
             color: "text",
             fontSize: "sm",
-            transition: "0.2s background",
             _hover: {
-              bg: "gray.200",
+              bg: "#D7DDE4",
             },
           }}
+          borderLeft={bug_id === files?.bug_id ? "3px solid black" : "none"}
           onClick={() => {
             setFiles({
               bug_id: bug_id,
