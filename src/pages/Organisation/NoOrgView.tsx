@@ -12,6 +12,8 @@ import { getAssetsURL } from "helpers/helperFunction";
 import { useConfig } from "hooks/useConfig";
 import UpgradePackage from "components/upgradePackage";
 import CreateOrganisationForm from "./CreateOrganisationForm";
+import { useUserRole } from "hooks/useUserRole";
+import AddEmailModal from "components/modals/AddEmailModal";
 
 const NoOrgView: React.FC<{
   hasAccess: boolean;
@@ -20,6 +22,7 @@ const NoOrgView: React.FC<{
   const { isOpen, onClose, onOpen } = useDisclosure();
   const config: any = useConfig();
   const assetsUrl = getAssetsURL(config);
+  const { profileData } = useUserRole();
 
   return (
     <>
@@ -119,11 +122,22 @@ const NoOrgView: React.FC<{
           )}
         </Flex>
       </Flex>
-      <CreateOrganisationForm
-        refetch={refetch}
-        isOpen={isOpen}
-        onClose={onClose}
-      />
+      {profileData && profileData.email_verified && (
+        <CreateOrganisationForm
+          refetch={refetch}
+          isOpen={isOpen}
+          onClose={onClose}
+        />
+      )}
+
+      {profileData && !profileData.email_verified && (
+        <AddEmailModal
+          onClose={onClose}
+          isOpen={isOpen}
+          profileData={profileData}
+          description={"Please add your Email to Create an Organistion"}
+        />
+      )}
     </>
   );
 };

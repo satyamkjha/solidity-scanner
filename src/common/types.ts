@@ -140,7 +140,6 @@ export type Scan = {
   client_id: number;
   latest_report_id: string;
   project_url?: string;
-
   project_branch?: string;
   project_name?: string;
   project_id: string;

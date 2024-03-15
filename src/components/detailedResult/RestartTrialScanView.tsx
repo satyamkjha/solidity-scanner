@@ -1,72 +1,40 @@
 import { getAssetsURL } from "helpers/helperFunction";
 import React, { useState, useContext, useEffect } from "react";
 import { DetailResultContext } from "common/contexts";
-import { Flex, VStack, Box, Text, Button, Divider } from "@chakra-ui/react";
+import {
+  Flex,
+  VStack,
+  Box,
+  Text,
+  Button,
+  Divider,
+  useDisclosure,
+} from "@chakra-ui/react";
 import UpgradePackage from "components/upgradePackage";
 import { DummyCode } from "./TrialWall";
 import { RescanIcon } from "components/icons";
+import ReScanTrialScanModal from "components/modals/scans/ReScanTrialScanModal";
 
-export const RestartTrialScanView: React.FC = () => {
-  const assetsURL = getAssetsURL();
-  const [gasIssueCount, setGasIssueCount] = useState<number>(0);
-
-
-  
-
+export const RestartTrialScanView: React.FC<{
+  type: "block" | "project";
+  project_url?: string;
+  contract_url?: string;
+  contract_platform?: string;
+  contract_address?: string;
+  contract_chain?: string;
+  project_name?: string;
+}> = ({
+  type,
+  project_url,
+  project_name,
+  contract_url,
+  contract_chain,
+  contract_address,
+  contract_platform,
+}) => {
+  const { isOpen, onOpen, onClose } = useDisclosure();
   const detailResultContextValue = useContext(DetailResultContext);
-  const issues = detailResultContextValue?.issues ?? null;
-  const setFiles = detailResultContextValue?.setFiles ?? null;
   const scanSummary = detailResultContextValue?.scanSummary;
-  const openIssueIndex = detailResultContextValue?.openIssueIndex;
-  const setOpenIssueIndex =
-    detailResultContextValue?.setOpenIssueIndex ?? (() => {});
-
-  useEffect(() => {
-    if (scanSummary && scanSummary.issue_severity_distribution.gas) {
-      setGasIssueCount(scanSummary.issue_severity_distribution.gas);
-    }
-
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
-  const viewGasIssue = () => {
-    const gasIssuesIndex =
-      issues &&
-      issues.findIndex(
-        (issue) => issue.template_details.issue_severity === "gas"
-      );
-    if (issues && setFiles && gasIssuesIndex && gasIssuesIndex !== -1) {
-      const expandedIssues = openIssueIndex
-        ? [gasIssuesIndex, ...openIssueIndex]
-        : [gasIssueCount];
-      setOpenIssueIndex(expandedIssues);
-      setFiles({
-        bug_id:
-          issues[gasIssuesIndex].metric_wise_aggregated_findings[0].bug_id,
-        issue_id: issues[gasIssuesIndex].issue_id,
-        bug_hash:
-          issues[gasIssuesIndex].metric_wise_aggregated_findings[0].bug_hash,
-        bug_status:
-          issues[gasIssuesIndex].metric_wise_aggregated_findings[0].bug_status,
-        findings:
-          issues[gasIssuesIndex].metric_wise_aggregated_findings[0].findings,
-        description_details:
-          issues[gasIssuesIndex].metric_wise_aggregated_findings[0]
-            .description_details,
-        template_details: issues[gasIssuesIndex].template_details,
-        comment:
-          issues[gasIssuesIndex].metric_wise_aggregated_findings[0].comment,
-        issue_description:
-          issues[gasIssuesIndex].metric_wise_aggregated_findings[0]
-            .issue_description,
-        issue_remediation:
-          issues[gasIssuesIndex].metric_wise_aggregated_findings[0]
-            .issue_remediation,
-
-        wait_to_scroll: 1000,
-      });
-    }
-  };
   return (
     <Flex
       w="100%"
@@ -145,7 +113,7 @@ export const RestartTrialScanView: React.FC = () => {
               viverra semper platea quis nibh lectus cursus. Neque sem iaculis
               augue sit egestas vivamus massa.
             </Text>
-            <Button mt={10} variant="brand" width="250px">
+            <Button onClick={onOpen} mt={10} variant="brand" width="250px">
               Unlock Details
             </Button>
           </Flex>
@@ -157,7 +125,7 @@ export const RestartTrialScanView: React.FC = () => {
             justifyContent="center"
             flexDir="row"
           >
-            <VStack onClick={() => {}} w="25%" spacing={2}>
+            <VStack cursor="pointer" onClick={onOpen} w="25%" spacing={2}>
               <RescanIcon size={80} />
               <Text
                 fontFamily="monospace"
@@ -199,6 +167,27 @@ export const RestartTrialScanView: React.FC = () => {
           </Flex>
         </Flex>
       </Flex>
+      <ReScanTrialScanModal
+        closeModal={onClose}
+        open={isOpen}
+        scanDetails={
+          type === "project"
+            ? {
+                project_name,
+                project_url,
+                scan_type: type,
+                loc: scanSummary?.lines_analyzed_count,
+              }
+            : {
+                contract_url,
+                contract_address,
+                contract_chain,
+                contract_platform,
+                scan_type: type,
+                loc: scanSummary?.lines_analyzed_count,
+              }
+        }
+      />
     </Flex>
   );
 };

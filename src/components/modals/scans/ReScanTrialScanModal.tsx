@@ -17,6 +17,7 @@ import { useHistory } from "react-router-dom";
 import { ScanTitleComponent } from "./InScanModal";
 import ModalBlurOverlay from "components/common/ModalBlurOverlay";
 import { useWebSocket } from "hooks/useWebhookData";
+import AddProjectForm from "pages/Home/AddProjectForm";
 
 const ReScanTrialScanModal: React.FC<{
   closeModal: any;
@@ -107,7 +108,7 @@ const ReScanTrialScanModal: React.FC<{
                   egestas. Aliquam diam scelerisque risus cursus vel diam nam.
                   scelerisque risus cursus vel diam.
                 </Text>
-                <Button onClick={rescan} variant="brand">
+                <Button width="250px" onClick={rescan} variant="brand">
                   {scanDetails.scan_type === "project" &&
                   scanDetails.project_url === "File Scan"
                     ? "Upload Files"
@@ -117,6 +118,7 @@ const ReScanTrialScanModal: React.FC<{
             </Flex>
           </ModalBody>
         </ModalContent>
+        <AddProjectForm formType="filescan" onClose={onClose} isOpen={isOpen} />
       </Modal>
     </>
   );

@@ -44,8 +44,10 @@ export const FileExplorerSection: React.FC<{
   updateBugStatus: any;
   restrictedBugIds: string[];
   setFiles: Dispatch<SetStateAction<FilesState | null>>;
+  project_name?: string;
   project_url?: string;
   contract_url?: string;
+  contract_chain?: string;
   contract_platform?: string;
   branchName?: string;
   contract_address?: string;
@@ -70,6 +72,8 @@ export const FileExplorerSection: React.FC<{
   contract_address,
   isViewer,
   setRestrictedBugIds,
+  project_name,
+  contract_chain,
 }) => {
   const assetsURL = getAssetsURL();
   const { isOpen, onClose, onOpen } = useDisclosure();
@@ -252,7 +256,15 @@ export const FileExplorerSection: React.FC<{
           profileData?.current_package === "trial" ? (
             <TrialWall />
           ) : (
-            <RestartTrialScanView />
+            <RestartTrialScanView
+              type={type}
+              project_url={project_url}
+              project_name={project_name}
+              contract_chain={contract_chain}
+              contract_url={contract_url}
+              contract_address={contract_address}
+              contract_platform={contract_platform}
+            />
           )
         ) : files ? (
           <MultipleFileExplorer
