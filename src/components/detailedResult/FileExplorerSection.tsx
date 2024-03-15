@@ -158,7 +158,11 @@ export const FileExplorerSection: React.FC<{
             width={"100%"}
             spacing={3}
           >
-            <TakeAction markedAction={markedAction} onBugSelect={onBugSelect} />
+            <TakeAction
+              markedAction={markedAction}
+              isDisabled={isDisabled || isViewer}
+              onBugSelect={onBugSelect}
+            />
             {project_url && project_url !== "File Scan" && (
               <Tooltip
                 label={"Please select only one issue"}

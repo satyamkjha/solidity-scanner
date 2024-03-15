@@ -16,8 +16,9 @@ import { getAssetsURL } from "helpers/helperFunction";
 
 export const TakeAction: React.FC<{
   markedAction: string;
+  isDisabled: boolean;
   onBugSelect: any;
-}> = ({ markedAction, onBugSelect }) => {
+}> = ({ markedAction, isDisabled, onBugSelect }) => {
   const assetsURL = getAssetsURL();
 
   return (
@@ -33,6 +34,7 @@ export const TakeAction: React.FC<{
         _active={{
           bg: "#FAFBFC",
         }}
+        isDisabled={isDisabled}
       >
         {actionTaken[markedAction] || markedAction}
       </MenuButton>

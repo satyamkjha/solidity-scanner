@@ -506,6 +506,7 @@ const MultifileResult: React.FC<{
             >
               <TakeAction
                 markedAction={markedAction}
+                isDisabled={isDisabled || isViewer}
                 onBugSelect={onBugSelect}
               />
 
