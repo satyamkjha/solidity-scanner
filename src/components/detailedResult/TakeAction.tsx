@@ -46,7 +46,11 @@ export const TakeAction: React.FC<{
         {issueActions &&
           issueActions.map((item, index) => (
             <Tooltip
-              label={"Action already marked!"}
+              label={
+                markedAction === "Take Action" && item.value === "pending_fix"
+                  ? ""
+                  : "Action already marked!"
+              }
               isDisabled={markedAction !== item.value}
               placement={"right-end"}
             >
@@ -55,7 +59,11 @@ export const TakeAction: React.FC<{
                   key={index}
                   pl={6}
                   py={2.5}
-                  isDisabled={markedAction === item.value}
+                  isDisabled={
+                    markedAction === item.value ||
+                    (markedAction === "Take Action" &&
+                      item.value === "pending_fix")
+                  }
                   onClick={() => onBugSelect(item)}
                 >
                   <Image
