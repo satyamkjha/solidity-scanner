@@ -107,6 +107,7 @@ const LoginForm: React.FC = () => {
             <PasswordInput
               isRequired
               showLeftIcon
+              enableSpecialCharCheck={false}
               placeholder="Password"
               autoComplete="current-password"
               value={password}

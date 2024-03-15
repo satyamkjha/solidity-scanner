@@ -8,17 +8,9 @@ import {
   HStack,
   VStack,
   Stack,
-  Icon,
-  InputGroup,
-  InputLeftElement,
-  Input,
-  InputRightElement,
   useToast,
 } from "@chakra-ui/react";
-import { passwordStrength } from "check-password-strength";
-import { FaLock, FaUserAlt } from "react-icons/fa";
 import { Logo } from "components/icons";
-import { ViewIcon, ViewOffIcon } from "@chakra-ui/icons";
 import { useValidateInviteLink } from "hooks/useValidateInviteLink";
 import API from "helpers/api";
 import { API_PATH } from "helpers/routeManager";
@@ -26,8 +18,8 @@ import Loader from "components/styled-components/Loader";
 import { NoBugIcon } from "components/icons";
 import StyledButton from "components/styled-components/StyledButton";
 import { useForm } from "react-hook-form";
-import PasswordError from "components/passwordError";
-import { hasSpecialCharacters } from "helpers/helperFunction";
+import NameInput from "components/forms/NameInput";
+import PasswordInput from "components/forms/PasswordInput";
 
 function useQuery() {
   return new URLSearchParams(useLocation().search);
@@ -45,13 +37,8 @@ const AcceptOrgInvitation: React.FC = () => {
   const [name, setName] = useState("");
   const [password, setPassword] = useState("");
   const [next, setNext] = useState(false);
-  const [show, setShow] = useState(false);
-  const [passwordError, setPasswordError] = useState<{
-    contains: string[];
-    id: number;
-    value: string;
-    length: number;
-  } | null>(null);
+  const [errors, setErrors] = useState<{ [key: string]: string }>({});
+
   const { handleSubmit } = useForm();
 
   const rejectOrgRequest = async () => {
@@ -199,81 +186,35 @@ const AcceptOrgInvitation: React.FC = () => {
                       <Text mb={0} fontSize="sm">
                         Name
                       </Text>
-                      <InputGroup alignItems="center">
-                        <InputLeftElement
-                          height="48px"
-                          children={<Icon as={FaUserAlt} color="gray.300" />}
-                        />
-                        <Input
-                          isRequired
-                          name="name"
-                          value={name}
-                          type="text"
-                          autoComplete="off"
-                          placeholder="Your name"
-                          variant="brand"
-                          size="lg"
-                          onChange={(event) => setName(event.target.value)}
-                        />
-                      </InputGroup>
-                      {hasSpecialCharacters(name) && (
-                        <Text
-                          w="100%"
-                          color={"subtle"}
-                          fontSize={"sm"}
-                          my={2}
-                          mb={4}
-                          textAlign="left"
-                        >
-                          Name should not contain special character such as @,
-                          +, -, etc
-                        </Text>
-                      )}
+
+                      <NameInput
+                        isRequired
+                        name="name"
+                        value={name}
+                        autoComplete="off"
+                        placeholder="Your name"
+                        onChange={(event) => setName(event.target.value)}
+                        onError={(e: any) =>
+                          setErrors((prv) => {
+                            return { ...prv, Name: e };
+                          })
+                        }
+                      />
                       <Text mt={3} fontSize="sm">
                         Password
                       </Text>
-                      <InputGroup>
-                        <InputLeftElement
-                          height="48px"
-                          color="gray.300"
-                          children={<Icon as={FaLock} color="gray.300" />}
-                        />
-                        <Input
-                          isRequired
-                          type={show ? "text" : "password"}
-                          placeholder="Password"
-                          autoComplete="current-password"
-                          variant="brand"
-                          size="lg"
-                          value={password}
-                          onChange={(e) => {
-                            setPassword(e.target.value);
-                            setPasswordError(passwordStrength(e.target.value));
-                          }}
-                        />
-                        <InputRightElement
-                          height="48px"
-                          color="gray.300"
-                          children={
-                            show ? (
-                              <ViewOffIcon
-                                color={"gray.500"}
-                                mr={5}
-                                boxSize={5}
-                                onClick={() => setShow(false)}
-                              />
-                            ) : (
-                              <ViewIcon
-                                color={"gray.500"}
-                                mr={5}
-                                boxSize={5}
-                                onClick={() => setShow(true)}
-                              />
-                            )
-                          }
-                        />
-                      </InputGroup>
-                      <PasswordError passwordError={passwordError} />
+                      <PasswordInput
+                        isRequired
+                        placeholder="Password"
+                        autoComplete="current-password"
+                        value={password}
+                        onChange={(e) => setPassword(e.target.value)}
+                        onError={(e: any) =>
+                          setErrors((prv) => {
+                            return { ...prv, Password: e };
+                          })
+                        }
+                      />
                     </VStack>
                   ) : (
                     <Text fontSize="sm" mt={10}>
@@ -290,15 +231,7 @@ const AcceptOrgInvitation: React.FC = () => {
                       w="90%"
                       isLoading={loading}
                       type="submit"
-                      isDisabled={
-                        name.length > 20 ||
-                        name.length < 3 ||
-                        hasSpecialCharacters(name) ||
-                        (passwordError &&
-                          (passwordError.value === "Too Weak" ||
-                            passwordError.value === "Weak")) ||
-                        password.length > 50
-                      }
+                      isDisabled={Object.values(errors).join("").length > 0}
                     >
                       Join Organisation
                     </StyledButton>

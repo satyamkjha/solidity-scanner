@@ -10,9 +10,13 @@ import {
 } from "@chakra-ui/react";
 import { FiAtSign } from "react-icons/fi";
 import { isEmail } from "helpers/helperFunction";
+import { debounce } from "lodash";
 
 const EmailInput: React.FC<
-  InputProps & { onError: (error: string) => void; showLeftIcon?: boolean }
+  InputProps & {
+    onError: (error: string) => void;
+    showLeftIcon?: boolean;
+  }
 > = ({ children, onError, showLeftIcon = false, ...props }) => {
   const { value, isRequired, title = "Email" } = props;
 
@@ -43,8 +47,16 @@ const EmailInput: React.FC<
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isRequired, value, title, triggerValidation]);
 
+  const triggerValidationDebounced = debounce(() => {
+    setTriggerValidation(true);
+  }, 1000);
+
+  const handleInput = (event: any) => {
+    triggerValidationDebounced();
+  };
+
   return (
-    <VStack alignItems={"flex-start"} justifyContent={"flex-start"}>
+    <VStack w="100%" alignItems={"flex-start"} justifyContent={"flex-start"}>
       <InputGroup alignItems="center">
         {showLeftIcon && (
           <InputLeftElement
@@ -57,11 +69,8 @@ const EmailInput: React.FC<
           type="email"
           w="100%"
           maxW="600px"
-          variant={"brand"}
-          border={
-            errorMessage ? "1px solid red !important" : "1px solid #CBD5E0"
-          }
-          onBlur={() => setTriggerValidation(true)}
+          variant={errorMessage ? "error" : "brand"}
+          onInput={handleInput}
           {...props}
         />
       </InputGroup>

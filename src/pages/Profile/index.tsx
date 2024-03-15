@@ -537,6 +537,7 @@ const ChangePasswordForm: React.FC<{
           <PasswordInput
             isRequired
             showLeftIcon
+            enableSpecialCharCheck={false}
             value={password}
             placeholder="Old Password"
             onChange={(event) => setPassword(event.target.value)}

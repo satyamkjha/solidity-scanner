@@ -238,6 +238,9 @@ export const theme = extendTheme({
             background: "#3300FF",
             color: "#FFFFFF",
           },
+          _disabled: {
+            color: "#3300FF !important",
+          },
         }),
         label: (props: StyleFunctionProps) => ({
           ...defaultTheme.components.Button.variants.solid(props),
@@ -285,17 +288,13 @@ export const theme = extendTheme({
             field: {
               ...defaultTheme.components.Input.variants.outline(props).field,
               borderRadius: "15px",
-              borderWidth: "2px",
+              borderWidth: "1px",
               fontSize: "15px",
               borderColor: "#FF2400",
               fontWeight: 500,
               bg: "white",
               _hover: {
-                borderColor: "gray.200",
-              },
-              _focus: {
-                borderColor: "#52FF00",
-                boxShadow: "0px 12px 23px rgba(107, 255, 55, 0.1)",
+                borderColor: "#FF2400",
               },
             },
           };

@@ -12,10 +12,21 @@ import {
 import { FaLock } from "react-icons/fa";
 import { ViewOffIcon, ViewIcon } from "@chakra-ui/icons";
 import { passwordStrength, DiversityType } from "check-password-strength";
+import { debounce } from "lodash";
 
 const PasswordInput: React.FC<
-  InputProps & { onError: (error: string) => void; showLeftIcon?: boolean }
-> = ({ children, onError, showLeftIcon = false, ...props }) => {
+  InputProps & {
+    onError: (error: string) => void;
+    showLeftIcon?: boolean;
+    enableSpecialCharCheck?: boolean;
+  }
+> = ({
+  children,
+  onError,
+  showLeftIcon = false,
+  enableSpecialCharCheck = true,
+  ...props
+}) => {
   const { value, isRequired, title = "Password" } = props;
 
   const [errorMessage, setErrorMessage] = useState("");
@@ -48,7 +59,7 @@ const PasswordInput: React.FC<
 
         if (strength.id === 0) {
           return "Weak password. Please use a stronger one.";
-        } else if (missingCharTypes.length > 0) {
+        } else if (enableSpecialCharCheck && missingCharTypes.length > 0) {
           return `Password must include ${missingCharTypes.join(
             ", "
           )} character(s).`;
@@ -70,6 +81,14 @@ const PasswordInput: React.FC<
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isRequired, value, title, triggerValidation]);
 
+  const triggerValidationDebounced = debounce(() => {
+    setTriggerValidation(true);
+  }, 1000);
+
+  const handleInput = (event: any) => {
+    triggerValidationDebounced();
+  };
+
   return (
     <VStack alignItems={"flex-start"} justifyContent={"flex-start"}>
       <InputGroup alignItems="center">
@@ -86,14 +105,8 @@ const PasswordInput: React.FC<
           type={show ? "text" : "password"}
           w="100%"
           maxW="600px"
-          variant={"brand"}
-          border={
-            errorMessage ? "1px solid red !important" : "1px solid #CBD5E0"
-          }
-          onBlur={() => setTriggerValidation(true)}
-          _focus={{
-            border: "1px solid #52FF00",
-          }}
+          variant={errorMessage ? "error" : "brand"}
+          onInput={handleInput}
           {...props}
         />
         <InputRightElement
