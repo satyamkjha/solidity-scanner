@@ -267,7 +267,7 @@ const ScanCard: React.FC<{
           <Flex
             width={"100%"}
             flexDir="row"
-            justifyContent={"flex-start"}
+            justifyContent={"space-between"}
             height="fit-content"
             ml={2}
             mb={7}
@@ -281,6 +281,18 @@ const ScanCard: React.FC<{
                 "0"
               }
             />
+
+            <Text
+              height="fit-content"
+              px={7}
+              mr={5}
+              py={1}
+              borderRadius={3}
+              bgColor="#F1F1F1"
+              color="#323B4B"
+            >
+              Free Trial
+            </Text>
           </Flex>
           <VulnerabilityDistribution
             issueSeverityDistribution={{

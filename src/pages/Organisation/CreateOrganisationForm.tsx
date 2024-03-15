@@ -97,7 +97,7 @@ const CreateOrganisationForm: React.FC<{
     }
   };
 
-  const debouncedSearch = debounce(checkOrganisationNameRequest, 1000);
+  const debouncedSearch = debounce(checkOrganisationNameRequest, 3000);
 
   useEffect(() => {
     debouncedSearch();

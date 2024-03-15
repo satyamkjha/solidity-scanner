@@ -109,6 +109,7 @@ export type Project = {
 export type ScanObj = {
   scan_id: string;
   scan_type: string;
+  is_trial_scan?: boolean;
   scan_details: Scan;
   scan_err_message?: string;
 };
