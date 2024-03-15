@@ -11,7 +11,6 @@ import {
   useDisclosure,
   Button,
 } from "@chakra-ui/react";
-import Select from "react-select";
 import {
   FilesState,
   MultiFileScanDetail,
@@ -19,14 +18,11 @@ import {
   Profile,
   Issues,
 } from "common/types";
-import { issueActions } from "common/values";
 import API from "helpers/api";
 import { API_PATH } from "helpers/routeManager";
 import DetailFilter from "./DetailFilter";
 import MultifileIssues from "./MultifileIssues";
 import FileExplorerSection from "./FileExplorerSection";
-import FormatOptionLabelWithImage from "components/FormatOptionLabelWithImage";
-import { customStylesForTakeAction } from "common/stylesForCustomSelect";
 import ConfirmActionForm from "../modals/confirmActionForm";
 import { useUserRole } from "hooks/useUserRole";
 import {
@@ -36,6 +32,7 @@ import {
 } from "helpers/helperFunction";
 import { FileIssue } from "components/icons";
 import { DetailResultContext } from "common/contexts";
+import { TakeAction } from "./TakeAction";
 
 const MultifileResult: React.FC<{
   type: "block" | "project";
@@ -153,6 +150,7 @@ const MultifileResult: React.FC<{
   const [isDesktopView] = useMediaQuery("(min-width: 1350px)");
 
   const [restrictedBugIds, setRestrictedBugIds] = useState<string[]>([]);
+  const [markedAction, setMarkedAction] = useState("Take Action");
 
   // useEffect(() => {
   //   if (
@@ -381,6 +379,20 @@ const MultifileResult: React.FC<{
       .flatMap((issue) => issue.bugs || [])
       .map((finding) => finding.bug_hash);
     setSelectedBugs(bugHashList);
+    if (selectedIssues.length === 1 && selectedIssues[0].bugs) {
+      const statusList = selectedIssues[0].bugs.map((bug) => bug.bug_status);
+      const uniqueStatusList = Array.from(new Set(statusList));
+      if (
+        uniqueStatusList.length === 1 &&
+        uniqueStatusList[0] !== "pending_fix"
+      ) {
+        setMarkedAction(uniqueStatusList[0]);
+      } else {
+        setMarkedAction("Take Action");
+      }
+    } else {
+      setMarkedAction("Take Action");
+    }
   }, [selectedIssues]);
 
   useEffect(() => {
@@ -433,6 +445,25 @@ const MultifileResult: React.FC<{
     return isDisabled || (selectedIssues && selectedIssues.length > 1);
   };
 
+  const onBugSelect = (item: any) => {
+    if (selectedBugs.some((bug) => restrictedBugIds.includes(bug))) {
+      toast({
+        description:
+          "Bug Status update in progress for the selected bugs. Please try after some time.",
+        status: "error",
+        duration: 3000,
+        isClosable: true,
+      });
+    } else {
+      if (item.value === "wont_fix") {
+        onOpen();
+        setBugStatus(item.value);
+      } else {
+        updateBugStatus(item.value);
+      }
+    }
+  };
+
   return (
     <DetailResultContext.Provider
       value={{
@@ -476,36 +507,12 @@ const MultifileResult: React.FC<{
               py={2}
               p={2}
             >
-              <Select
-                formatOptionLabel={FormatOptionLabelWithImage}
-                options={issueActions}
-                value={issueActions.find(
-                  (item) => files?.bug_status === item.value
-                )}
-                placeholder="Take Action"
-                styles={customStylesForTakeAction}
+              <TakeAction
+                markedAction={markedAction}
                 isDisabled={isDisabled || isViewer}
-                onChange={(newValue: any) => {
-                  if (
-                    selectedBugs.some((bug) => restrictedBugIds.includes(bug))
-                  ) {
-                    toast({
-                      description:
-                        "Bug Status update in progress for the selected bugs. Please try after some time.",
-                      status: "error",
-                      duration: 3000,
-                      isClosable: true,
-                    });
-                  } else {
-                    if (newValue.value === "wont_fix") {
-                      onOpen();
-                      setBugStatus(newValue.value);
-                    } else {
-                      updateBugStatus(newValue.value);
-                    }
-                  }
-                }}
+                onBugSelect={onBugSelect}
               />
+
               {project_url && project_url !== "File Scan" && (
                 <Button
                   background={isFileIssueDisabled() ? "#FAFBFC" : "white"}

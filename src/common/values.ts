@@ -58,12 +58,6 @@ export const publishReportType: { [key: string]: string } = {
 };
 
 export const issueActions = [
-  {
-    value: "pending_fix",
-    icon: "",
-    label: "Take action",
-    isDisabled: true,
-  },
   { value: "wont_fix", icon: "report/wont_fix_color", label: "Won't Fix" },
   {
     value: "false_positive",

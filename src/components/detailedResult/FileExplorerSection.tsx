@@ -14,7 +14,6 @@ import {
   useToast,
 } from "@chakra-ui/react";
 import { FilesState, Issues } from "../../common/types";
-import { issueActions } from "../../common/values";
 import MultipleFileExplorer from "./MultipleFileExplorer";
 import {
   sentenceCapitalize,
@@ -25,14 +24,12 @@ import React, { Dispatch, SetStateAction, useEffect, useState } from "react";
 import { BiBulb, BiCodeCurly, BiComment } from "react-icons/bi";
 import TrialWall from "./TrialWall";
 
-import Select from "react-select";
 import { HiOutlineDocumentText } from "react-icons/hi";
 import ConfirmActionForm from "../modals/confirmActionForm";
-import FormatOptionLabelWithImage from "../../components/FormatOptionLabelWithImage";
-import { customStylesForTakeAction } from "../../common/stylesForCustomSelect";
 import { FileIssue } from "components/icons";
 import { useUserRole } from "hooks/useUserRole";
 import { RestartTrialScanView } from "./RestartTrialScanView";
+import { TakeAction } from "./TakeAction";
 
 export const FileExplorerSection: React.FC<{
   type: "block" | "project";
@@ -76,20 +73,38 @@ export const FileExplorerSection: React.FC<{
   contract_chain,
 }) => {
   const assetsURL = getAssetsURL();
+  const toast = useToast();
+
   const { isOpen, onClose, onOpen } = useDisclosure();
   const [bugStatus, setBugStatus] = useState<string | null>(null);
   const [isDisabled, setIsDisabled] = useState<boolean>(true);
-  const toast = useToast();
-  const [openIssueBox, setOpenIssueBox] = React.useState(true);
-  const [tabIndex, setTabIndex] = React.useState(0);
   const { profileData } = useUserRole();
+  const [openIssueBox, setOpenIssueBox] = useState(true);
+  const [tabIndex, setTabIndex] = useState(0);
+  const [markedAction, setMarkedAction] = useState("Take Action");
 
   useEffect(() => {
     if (selectedBugs && selectedBugs.length) {
+      if (selectedIssues.length === 1 && selectedIssues[0].bugs) {
+        const statusList = selectedIssues[0].bugs.map((bug) => bug.bug_status);
+        const uniqueStatusList = Array.from(new Set(statusList));
+        if (
+          uniqueStatusList.length === 1 &&
+          uniqueStatusList[0] !== "pending_fix"
+        ) {
+          setMarkedAction(uniqueStatusList[0]);
+        } else {
+          setMarkedAction("Take Action");
+        }
+      } else {
+        setMarkedAction("Take Action");
+      }
       setIsDisabled(false);
     } else {
+      setMarkedAction("Take Action");
       setIsDisabled(true);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedBugs]);
 
   const handleTabsChange = (index: number) => {
@@ -109,6 +124,25 @@ export const FileExplorerSection: React.FC<{
   const isFileIssueDisabled = () => {
     if (isViewer) return true;
     return isDisabled || (selectedIssues && selectedIssues.length > 1);
+  };
+
+  const onBugSelect = (item: any) => {
+    if (selectedBugs.some((bug) => restrictedBugIds.includes(bug))) {
+      toast({
+        description:
+          "Bug Status update in progress for the selected bugs. Please try after some time.",
+        status: "error",
+        duration: 3000,
+        isClosable: true,
+      });
+    } else {
+      if (item.value === "wont_fix") {
+        onOpen();
+        setBugStatus(item.value);
+      } else {
+        updateBugStatus(item.value);
+      }
+    }
   };
 
   return (
@@ -133,37 +167,10 @@ export const FileExplorerSection: React.FC<{
             width={"100%"}
             spacing={3}
           >
-            <Select
-              formatOptionLabel={FormatOptionLabelWithImage}
-              options={issueActions}
-              value={issueActions.find(
-                (item) => files?.bug_status === item.value
-              )}
-              placeholder="Take Action"
-              styles={customStylesForTakeAction}
+            <TakeAction
+              markedAction={markedAction}
               isDisabled={isDisabled || isViewer}
-              onChange={(newValue: any) => {
-                if (newValue) {
-                  if (
-                    selectedBugs.some((bug) => restrictedBugIds.includes(bug))
-                  ) {
-                    toast({
-                      description:
-                        "Bug Status update in progress for the selected bugs. Please try after some time.",
-                      status: "error",
-                      duration: 3000,
-                      isClosable: true,
-                    });
-                  } else {
-                    if (newValue.value === "wont_fix") {
-                      onOpen();
-                      setBugStatus(newValue.value);
-                    } else {
-                      updateBugStatus(newValue.value);
-                    }
-                  }
-                }
-              }}
+              onBugSelect={onBugSelect}
             />
             {project_url && project_url !== "File Scan" && (
               <Tooltip
