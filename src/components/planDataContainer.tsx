@@ -36,7 +36,7 @@ export const PlanDataContainer: React.FC<{
   const { messageQueue, updateMessageQueue } = useWebSocket();
 
   const [totalRemainingLoc, setTotalRemainingLoc] = useState(
-    profileData.total_loc
+    profileData.loc_remaining
   );
 
   const [planRemainingLoc, setPlanRemainingLoc] = useState(
@@ -145,7 +145,7 @@ export const PlanDataContainer: React.FC<{
           <HStack w="100%" justifyContent="space-between" alignItems="center">
             <HStack spacing={0}>
               <Text fontWeight={700} fontSize="lg">
-                {profileData.plan_loc_remaining.toLocaleString("en-US")}
+                {planRemainingLoc.toLocaleString("en-US")}
               </Text>
               <Text color="subtle" fontSize="sm">
                 /{userPlan ? userPlan.loc.toLocaleString("en-US") : "--"}
@@ -184,7 +184,7 @@ export const PlanDataContainer: React.FC<{
           <HStack w="100%" justifyContent="space-between" alignItems="center">
             <HStack spacing={0}>
               <Text fontWeight={700} fontSize="lg">
-                {profileData.on_demand_loc_remaining.toLocaleString("en-US")}
+                {topupRemainingLoc.toLocaleString("en-US")}
               </Text>
               <Text color="subtle" fontSize="sm">
                 /
@@ -246,9 +246,9 @@ export const PlanDataContainer: React.FC<{
               <Text fontWeight={600}>
                 {profileData.current_package === "trial"
                   ? "--"
-                  : (
-                      profileData.total_loc - profileData.loc_remaining
-                    ).toLocaleString("en-US")}{" "}
+                  : (profileData.total_loc - totalRemainingLoc).toLocaleString(
+                      "en-US"
+                    )}{" "}
                 <span
                   style={{
                     fontWeight: 300,
@@ -271,7 +271,7 @@ export const PlanDataContainer: React.FC<{
           <HStack w="100%" justifyContent="space-between" alignItems="center">
             <Text fontWeight={600}>Remaining LOC</Text>
             <Text fontWeight={600}>
-              {profileData.loc_remaining.toLocaleString("en-US")}{" "}
+              {totalRemainingLoc.toLocaleString("en-US")}{" "}
               <span
                 style={{
                   fontWeight: 300,
