@@ -42,7 +42,7 @@ import {
 import { scanStatesLabel } from "common/values";
 import { useWebSocket } from "hooks/useWebhookData";
 import { useConfig } from "hooks/useConfig";
-import ScanErrorModal from "components/modals/ScanErrorModal";
+import ScanErrorModal from "components/modals/scans/ScanErrorModal";
 
 const ScanCard: React.FC<{
   scan: ScanObj;
@@ -282,17 +282,19 @@ const ScanCard: React.FC<{
               }
             />
 
-            <Text
-              height="fit-content"
-              px={7}
-              mr={5}
-              py={1}
-              borderRadius={3}
-              bgColor="#F1F1F1"
-              color="#323B4B"
-            >
-              Free Trial
-            </Text>
+            {scan.is_trial_scan && (
+              <Text
+                height="fit-content"
+                px={7}
+                mr={5}
+                py={1}
+                borderRadius={3}
+                bgColor="#F1F1F1"
+                color="#323B4B"
+              >
+                Free Trial
+              </Text>
+            )}
           </Flex>
           <VulnerabilityDistribution
             issueSeverityDistribution={{

@@ -846,6 +846,7 @@ const ScanDetails: React.FC<{
                             details_enabled={
                               scanData.scan_report.details_enabled
                             }
+                            is_trial_scan={scanData.scan_report.is_trial_scan}
                             profileData={profile}
                             is_latest_scan={scanData.is_latest_scan}
                             scanSummary={

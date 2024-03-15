@@ -31,6 +31,8 @@ import ConfirmActionForm from "../modals/confirmActionForm";
 import FormatOptionLabelWithImage from "../../components/FormatOptionLabelWithImage";
 import { customStylesForTakeAction } from "../../common/stylesForCustomSelect";
 import { FileIssue } from "components/icons";
+import { useUserRole } from "hooks/useUserRole";
+import { RestartTrialScanView } from "./RestartTrialScanView";
 
 export const FileExplorerSection: React.FC<{
   type: "block" | "project";
@@ -48,6 +50,7 @@ export const FileExplorerSection: React.FC<{
   branchName?: string;
   contract_address?: string;
   isViewer: boolean;
+  is_trial_scan: boolean;
   setRestrictedBugIds: React.Dispatch<React.SetStateAction<string[]>>;
 }> = ({
   type,
@@ -58,6 +61,7 @@ export const FileExplorerSection: React.FC<{
   selectedBugs,
   updateBugStatus,
   setFiles,
+  is_trial_scan,
   restrictedBugIds,
   project_url,
   contract_url,
@@ -74,6 +78,7 @@ export const FileExplorerSection: React.FC<{
   const toast = useToast();
   const [openIssueBox, setOpenIssueBox] = React.useState(true);
   const [tabIndex, setTabIndex] = React.useState(0);
+  const { profileData } = useUserRole();
 
   useEffect(() => {
     if (selectedBugs && selectedBugs.length) {
@@ -242,8 +247,13 @@ export const FileExplorerSection: React.FC<{
         }}
       >
         {!details_enabled &&
-        files?.template_details.issue_severity !== "gas" ? (
-          <TrialWall />
+        files?.template_details.issue_severity !== "gas" &&
+        is_trial_scan ? (
+          profileData?.current_package === "trial" ? (
+            <TrialWall />
+          ) : (
+            <RestartTrialScanView />
+          )
         ) : files ? (
           <MultipleFileExplorer
             handleTabsChange={handleTabsChange}

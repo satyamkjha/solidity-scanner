@@ -28,8 +28,6 @@ const ScanErrorModal: React.FC<{
   const history = useHistory();
   const { sendMessage } = useWebSocket();
 
-  
-
   const rescan = () => {
     if (inScanDetails.scan_type === "project") {
       sendMessage({

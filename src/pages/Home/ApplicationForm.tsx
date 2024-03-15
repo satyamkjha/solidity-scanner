@@ -33,7 +33,7 @@ import { capitalize } from "common/functions";
 import { infographicsData, OauthName } from "common/values";
 import { useWebSocket } from "hooks/useWebhookData";
 import { useConfig } from "hooks/useConfig";
-import InsufficientLocModal from "components/modals/InsufficientLocModal";
+import InsufficientLocModal from "components/modals/scans/InsufficientLocModal";
 
 const ApplicationForm: React.FC<{
   profileData: Profile;

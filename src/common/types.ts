@@ -167,6 +167,7 @@ export type Scan = {
   scan_details?: ScanDetail[];
   reporting_status: string;
   details_enabled: boolean;
+  is_trial_scan: boolean;
   _created: string;
   _updated: string;
   multi_file_scan_details: MultiFileScanDetail[];

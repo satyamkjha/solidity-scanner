@@ -35,7 +35,7 @@ import RadioButton from "components/styled-components/RadioButton";
 import { useWebSocket } from "hooks/useWebhookData";
 import { inProcessScanStates } from "common/values";
 import { AddProject } from "components/common/AddProject";
-import InScanModal from "components/modals/InScanModal";
+import InScanModal from "components/modals/scans/InScanModal";
 import { MdCancel } from "react-icons/md";
 
 const Scans: React.FC = () => {

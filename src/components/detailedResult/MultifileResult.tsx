@@ -43,6 +43,7 @@ const MultifileResult: React.FC<{
   scanSummary: MultiFileScanSummary;
   scanDetails: MultiFileScanDetail[];
   profileData: Profile;
+  is_trial_scan: boolean;
   details_enabled: boolean;
   contract_address?: string;
   project_url?: string;
@@ -62,6 +63,7 @@ const MultifileResult: React.FC<{
   contract_url,
   contract_platform,
   branchName,
+  is_trial_scan,
   contract_address,
 }) => {
   const [files, setFiles] = useState<FilesState | null>(null);
@@ -538,6 +540,7 @@ const MultifileResult: React.FC<{
           >
             <MultifileIssues
               type={type}
+              is_trial_scan={is_trial_scan}
               details_enabled={details_enabled}
               is_latest_scan={is_latest_scan}
               issues={issues}
@@ -564,6 +567,7 @@ const MultifileResult: React.FC<{
         {isDesktopView && (
           <FileExplorerSection
             type={type}
+            is_trial_scan={is_trial_scan}
             is_latest_scan={is_latest_scan}
             files={files}
             setFiles={setFiles}

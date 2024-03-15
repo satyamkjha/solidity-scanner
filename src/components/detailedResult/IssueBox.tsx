@@ -28,6 +28,7 @@ const IssueBox: React.FC<{
   files: FilesState | null;
   issue_id: string;
   is_latest_scan: boolean;
+  is_trial_scan: boolean;
   metric_wise_aggregated_finding: MetricWiseAggregatedFinding;
   template_details: MultiFileTemplateDetail;
   isSelected: boolean;
@@ -37,7 +38,7 @@ const IssueBox: React.FC<{
   setFiles: Dispatch<SetStateAction<FilesState | null>>;
   updateBugStatus: any;
   restrictedBugIds: string[];
-  setRestrictedBugIds: React.Dispatch<React.SetStateAction<string[]>>
+  setRestrictedBugIds: React.Dispatch<React.SetStateAction<string[]>>;
   project_url?: string;
   contract_url?: string;
   contract_platform?: string;
@@ -48,6 +49,7 @@ const IssueBox: React.FC<{
   type,
   bug_id,
   files,
+  is_trial_scan,
   issue_id,
   is_latest_scan,
   metric_wise_aggregated_finding,
@@ -65,7 +67,7 @@ const IssueBox: React.FC<{
   contract_address,
   isViewer,
   setRestrictedBugIds,
-  restrictedBugIds
+  restrictedBugIds,
 }) => {
   const assetsURL = getAssetsURL();
   const [isDesktopView] = useMediaQuery("(min-width: 1350px)");
@@ -296,6 +298,7 @@ const IssueBox: React.FC<{
                     type={type}
                     is_latest_scan={is_latest_scan}
                     files={files}
+                    is_trial_scan={is_trial_scan}
                     setFiles={setFiles}
                     details_enabled={true}
                     selectedIssues={selectedIssues}

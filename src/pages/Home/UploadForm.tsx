@@ -28,8 +28,8 @@ import { CheckIcon } from "@chakra-ui/icons";
 import { useQueryClient } from "react-query";
 import { useWebSocket } from "hooks/useWebhookData";
 import { useConfig } from "hooks/useConfig";
-import InsufficientLocModal from "components/modals/InsufficientLocModal";
-import ProjectsExceededModal from "components/modals/ProjectsExceededModal";
+import InsufficientLocModal from "components/modals/scans/InsufficientLocModal";
+import ProjectsExceededModal from "components/modals/scans/ProjectsExceededModal";
 
 const UploadForm: React.FC<{
   profileData: Profile;

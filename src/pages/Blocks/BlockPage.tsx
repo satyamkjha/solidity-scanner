@@ -676,6 +676,7 @@ const BlockPage: React.FC = () => {
                           scanSummary={
                             scanData.scan_report.multi_file_scan_summary
                           }
+                          is_trial_scan={scanData.scan_report.is_trial_scan}
                           scanDetails={
                             scanData.scan_report.multi_file_scan_details
                           }
