@@ -16,8 +16,9 @@ const EmailInput: React.FC<
   InputProps & {
     onError: (error: string) => void;
     showLeftIcon?: boolean;
+    rightElement?: any;
   }
-> = ({ children, onError, showLeftIcon = false, ...props }) => {
+> = ({ children, onError, rightElement, showLeftIcon = false, ...props }) => {
   const { value, isRequired, title = "Email" } = props;
 
   const [errorMessage, setErrorMessage] = useState("");
@@ -73,6 +74,7 @@ const EmailInput: React.FC<
           onInput={handleInput}
           {...props}
         />
+        {rightElement ? rightElement : null}
       </InputGroup>
       {errorMessage && (
         <Text color={"red"} fontSize={"xs"}>
