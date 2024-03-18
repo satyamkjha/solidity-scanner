@@ -929,7 +929,7 @@ export const pricing_card_description_data = (current_package: string) => {
         "Enable Github Actions to support your continuous development process with top notch security & set automated scanning of new commits.",
     },
     {
-      key: "github",
+      key: "private_api",
       title: "Private API Access",
       description: "Private API Access",
       icon: "pricing/pricing_card_icons/private.svg",

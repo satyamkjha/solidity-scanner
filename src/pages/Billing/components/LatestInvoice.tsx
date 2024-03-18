@@ -104,7 +104,9 @@ const LatestInvoice: React.FC<{
           <Flex>
             <Text color={"detail"}>Total &nbsp; </Text>
             <Text fontWeight="600">
-              {transactionData.amount + transactionData.currency}
+              {transactionData.currency === "usd"
+                ? `$${parseFloat(transactionData.amount).toFixed(2)}`
+                : transactionData.amount + transactionData.currency}
             </Text>
           </Flex>
         ) : null}
