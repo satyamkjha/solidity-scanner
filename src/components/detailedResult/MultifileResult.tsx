@@ -147,7 +147,10 @@ const MultifileResult: React.FC<{
   const [isDesktopView] = useMediaQuery("(min-width: 1350px)");
 
   const [restrictedBugIds, setRestrictedBugIds] = useState<string[]>([]);
-  const [markedAction, setMarkedAction] = useState("Take Action");
+  const [markedAction, setMarkedAction] = useState({
+    placeholder: "Take Action",
+    disabled: "",
+  });
 
   // useEffect(() => {
   //   if (
@@ -383,12 +386,26 @@ const MultifileResult: React.FC<{
         uniqueStatusList.length === 1 &&
         uniqueStatusList[0] !== "pending_fix"
       ) {
-        setMarkedAction(uniqueStatusList[0]);
+        setMarkedAction({
+          placeholder: uniqueStatusList[0],
+          disabled: uniqueStatusList[0],
+        });
+      } else if (uniqueStatusList.length > 1) {
+        setMarkedAction({
+          placeholder: "Take Action",
+          disabled: "",
+        });
       } else {
-        setMarkedAction("Take Action");
+        setMarkedAction({
+          placeholder: "Take Action",
+          disabled: "pending_fix",
+        });
       }
     } else {
-      setMarkedAction("Take Action");
+      setMarkedAction({
+        placeholder: "Take Action",
+        disabled: "",
+      });
     }
   }, [selectedIssues]);
 

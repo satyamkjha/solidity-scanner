@@ -18,11 +18,13 @@ const PasswordInput: React.FC<
   InputProps & {
     onError: (error: string) => void;
     showLeftIcon?: boolean;
+    showError?: boolean;
     enableSpecialCharCheck?: boolean;
   }
 > = ({
   children,
   onError,
+  showError = true,
   showLeftIcon = false,
   enableSpecialCharCheck = true,
   ...props
@@ -90,7 +92,7 @@ const PasswordInput: React.FC<
   };
 
   return (
-    <VStack alignItems={"flex-start"} justifyContent={"flex-start"}>
+    <VStack w={"100%"} alignItems={"flex-start"} justifyContent={"flex-start"}>
       <InputGroup alignItems="center">
         {showLeftIcon && (
           <InputLeftElement
@@ -105,7 +107,7 @@ const PasswordInput: React.FC<
           type={show ? "text" : "password"}
           w="100%"
           maxW="600px"
-          variant={errorMessage ? "error" : "brand"}
+          variant={errorMessage && showError ? "error" : "brand"}
           onInput={handleInput}
           {...props}
         />
@@ -131,7 +133,7 @@ const PasswordInput: React.FC<
           }
         />
       </InputGroup>
-      {errorMessage && (
+      {errorMessage && showError && (
         <Text color={"red"} fontSize={"xs"}>
           {errorMessage}
         </Text>

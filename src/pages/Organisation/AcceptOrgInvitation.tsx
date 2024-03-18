@@ -191,6 +191,7 @@ const AcceptOrgInvitation: React.FC = () => {
                         isRequired
                         name="name"
                         value={name}
+                        w={"100%"}
                         autoComplete="off"
                         placeholder="Your name"
                         onChange={(event) => setName(event.target.value)}
@@ -207,6 +208,7 @@ const AcceptOrgInvitation: React.FC = () => {
                         isRequired
                         placeholder="Password"
                         autoComplete="current-password"
+                        w={"100%"}
                         value={password}
                         onChange={(e) => setPassword(e.target.value)}
                         onError={(e: any) =>
