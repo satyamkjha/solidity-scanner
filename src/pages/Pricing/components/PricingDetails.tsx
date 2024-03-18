@@ -241,7 +241,7 @@ const PricingDetails: React.FC<{
           {Object.keys(pricingDetails.pricing_data[duration])
             .sort((a, b) => {
               const planOrder: Record<string, number> = {
-                beginner: 1,
+                individual: 1,
                 pro: 2,
                 custom: 3,
               };

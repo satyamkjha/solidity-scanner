@@ -44,10 +44,12 @@ export const theme = extendTheme({
     pro: "#FAF9FF",
     beginner: "#EFFAFF",
     intermediate: "#FFEDE9",
+    individual: "#FFEDE9",
     expired: "#F4F4F4",
     "pro-dark": "#806CCF",
     "beginner-dark": "#54C0EB",
     "intermediate-dark": "#FF5630",
+    "individual-dark": "#FF5630",
     bg: {
       subtle: "#FAFBFC",
     },
