@@ -5,10 +5,10 @@ import { useConfig } from "hooks/useConfig";
 import RadioButton from "components/styled-components/RadioButton";
 
 const PaymentMethodCard: React.FC<{
-  setPaymentMethod: React.Dispatch<React.SetStateAction<"cp" | "stripe">>;
+  changePaymentMethod: (paymentMethod: "cp" | "stripe") => void;
   paymentMethod: "cp" | "stripe";
   paymentType: "cp" | "stripe";
-}> = ({ setPaymentMethod, paymentMethod, paymentType }) => {
+}> = ({ changePaymentMethod, paymentMethod, paymentType }) => {
   const config: any = useConfig();
   const assetsURL = getAssetsURL(config);
 
@@ -31,7 +31,7 @@ const PaymentMethodCard: React.FC<{
       }
       border={paymentMethod === paymentType ? "1px solid #52FF00" : ""}
       onClick={() => {
-        setPaymentMethod(paymentType);
+        changePaymentMethod(paymentType);
       }}
     >
       <HStack w="100%" justifyContent="flex-end">

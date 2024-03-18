@@ -29,7 +29,7 @@ import { AddProjectFormInfographics } from "./AddProjectFormInfographics";
 import { BlockchainSelector } from "components/common/BlockchainSelector";
 import { useWebSocket } from "hooks/useWebhookData";
 import { useConfig } from "hooks/useConfig";
-import InsufficientLocModal from "components/modals/InsufficientLocModal";
+import InsufficientLocModal from "components/modals/scans/InsufficientLocModal";
 
 const ContractForm: React.FC<{
   profileData: Profile;

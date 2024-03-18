@@ -109,6 +109,7 @@ export type Project = {
 export type ScanObj = {
   scan_id: string;
   scan_type: string;
+  is_trial_scan?: boolean;
   scan_details: Scan;
   scan_err_message?: string;
 };
@@ -139,7 +140,6 @@ export type Scan = {
   client_id: number;
   latest_report_id: string;
   project_url?: string;
-
   project_branch?: string;
   project_name?: string;
   project_id: string;
@@ -166,6 +166,7 @@ export type Scan = {
   scan_details?: ScanDetail[];
   reporting_status: string;
   details_enabled: boolean;
+  is_trial_scan: boolean;
   _created: string;
   _updated: string;
   multi_file_scan_details: MultiFileScanDetail[];

@@ -22,8 +22,8 @@ import RecentScansList from "./RecentScansList";
 import PlanCycleInfo from "pages/Billing/components/PlanCycleInfo";
 import { useUserRole } from "hooks/useUserRole";
 import { AddProject } from "components/common/AddProject";
-import ImportScanModal from "components/modals/ImportScanModal";
-import InsufficientLocModal from "components/modals/InsufficientLocModal";
+import ImportScanModal from "components/modals/scans/ImportScanModal";
+import InsufficientLocModal from "components/modals/scans/InsufficientLocModal";
 
 const OverviewData: React.FC<{
   heading: number;

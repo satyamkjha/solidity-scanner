@@ -12,22 +12,21 @@ import {
 import ApplicationForm from "./ApplicationForm";
 import ContractForm from "./ContractForm";
 import { getAssetsURL } from "helpers/helperFunction";
-import { Profile } from "common/types";
 import { AddProjectFormInfographics } from "./AddProjectFormInfographics";
 import { infographicsData } from "common/values";
 import FilescanForm from "./FilescanForm";
+import { useUserRole } from "hooks/useUserRole";
 
 const AddProjectForm: React.FC<{
   onClose(): any;
   isOpen: boolean;
   formType: string;
-  profileData: Profile;
-}> = ({ isOpen, onClose, formType, profileData }) => {
+}> = ({ isOpen, onClose, formType }) => {
   const [changeView] = useMediaQuery("(min-width: 1350px)");
   const [step, setStep] = useState(changeView ? 1 : 0);
   const [uploadType, setUploadType] = useState<"single" | "multiple">("single");
   const assetsURL = getAssetsURL();
-
+  const { profileData } = useUserRole();
   const getInstructionsList = () =>
     infographicsData[
       formType === "block"
@@ -84,44 +83,47 @@ const AddProjectForm: React.FC<{
           p={[3, 5]}
           h="fit-content"
         >
-          <Flex
-            w={["100%", "100%", "100%", "55%"]}
-            justifyContent="center"
-            alignItems="center"
-          >
-            {["github", "gitlab", "bitbucket"].includes(formType) && (
-              <ApplicationForm
-                step={step}
-                formType={formType}
-                setStep={setStep}
-                profileData={profileData}
-                onClose={() => {
-                  onClose();
-                  setStep(changeView ? 1 : 0);
-                }}
-              />
-            )}
-            {formType === "block" && (
-              <ContractForm
-                step={step}
-                setStep={setStep}
-                profileData={profileData}
-                changeView={changeView}
-                onClose={onClose}
-              />
-            )}
-            {formType === "filescan" && (
-              <FilescanForm
-                page={step}
-                setPage={setStep}
-                profileData={profileData}
-                uploadType={uploadType}
-                setUploadType={setUploadType}
-                changeView={changeView}
-                onClose={onClose}
-              />
-            )}
-          </Flex>
+          {profileData && (
+            <Flex
+              w={["100%", "100%", "100%", "55%"]}
+              justifyContent="center"
+              alignItems="center"
+            >
+              {["github", "gitlab", "bitbucket"].includes(formType) && (
+                <ApplicationForm
+                  step={step}
+                  formType={formType}
+                  setStep={setStep}
+                  profileData={profileData}
+                  onClose={() => {
+                    onClose();
+                    setStep(changeView ? 1 : 0);
+                  }}
+                />
+              )}
+              {formType === "block" && (
+                <ContractForm
+                  step={step}
+                  setStep={setStep}
+                  profileData={profileData}
+                  changeView={changeView}
+                  onClose={onClose}
+                />
+              )}
+              {formType === "filescan" && (
+                <FilescanForm
+                  page={step}
+                  setPage={setStep}
+                  profileData={profileData}
+                  uploadType={uploadType}
+                  setUploadType={setUploadType}
+                  changeView={changeView}
+                  onClose={onClose}
+                />
+              )}
+            </Flex>
+          )}
+
           {changeView && (
             <Flex
               display={["none", "none", "none", "flex"]}

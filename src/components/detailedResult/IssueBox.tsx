@@ -28,6 +28,7 @@ const IssueBox: React.FC<{
   files: FilesState | null;
   issue_id: string;
   is_latest_scan: boolean;
+  is_trial_scan: boolean;
   metric_wise_aggregated_finding: MetricWiseAggregatedFinding;
   template_details: MultiFileTemplateDetail;
   isSelected: boolean;
@@ -48,6 +49,7 @@ const IssueBox: React.FC<{
   type,
   bug_id,
   files,
+  is_trial_scan,
   issue_id,
   is_latest_scan,
   metric_wise_aggregated_finding,
@@ -296,6 +298,7 @@ const IssueBox: React.FC<{
                     type={type}
                     is_latest_scan={is_latest_scan}
                     files={files}
+                    is_trial_scan={is_trial_scan}
                     setFiles={setFiles}
                     details_enabled={true}
                     selectedIssues={selectedIssues}

@@ -89,7 +89,6 @@ export const AddProject: React.FC<{
         ))}
       </MenuList>
       <AddProjectForm
-        profileData={profileData}
         formType={formType}
         isOpen={isOpen}
         onClose={() => {

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import {
   HStack,
   Image,
@@ -17,6 +17,7 @@ import { formattedDate } from "common/functions";
 import PlanDetailsModal from "pages/Billing/components/PlanDetailsModal";
 import { packageLabel } from "common/values";
 import { useHistory } from "react-router-dom";
+import { useWebSocket } from "hooks/useWebhookData";
 
 export const PlanDataContainer: React.FC<{
   profileData: Profile;
@@ -31,6 +32,52 @@ export const PlanDataContainer: React.FC<{
     pricingPlans.pricing_data[
       profileData.billing_cycle === "N/A" ? "trial" : profileData.billing_cycle
     ][profileData.current_package];
+
+  const { messageQueue, updateMessageQueue } = useWebSocket();
+
+  const [totalRemainingLoc, setTotalRemainingLoc] = useState(
+    profileData.loc_remaining
+  );
+
+  const [planRemainingLoc, setPlanRemainingLoc] = useState(
+    profileData.plan_loc_remaining
+  );
+
+  const [topupRemainingLoc, setTopupRemainingLoc] = useState(
+    profileData.on_demand_loc_remaining
+  );
+
+  useEffect(() => {
+    if (messageQueue.length > 0) {
+      const messageType =
+        profileData.credit_system === "loc"
+          ? "account_loc_update"
+          : "account_credits_update";
+      const creditUpdateMessage = messageQueue.filter(
+        (msgItem: any) => msgItem.type === messageType
+      );
+      if (creditUpdateMessage && creditUpdateMessage.length) {
+        if (profileData.credit_system === "loc") {
+          setTotalRemainingLoc(
+            creditUpdateMessage[0].payload.total_remaining_loc
+          );
+          setTopupRemainingLoc(
+            creditUpdateMessage[0].payload.topup_remaining_loc
+          );
+          setPlanRemainingLoc(
+            creditUpdateMessage[0].payload.plan_remaining_loc
+          );
+        }
+        // remove message from queue after consuming the event
+        let tempMessageQueue = messageQueue.filter(
+          (msgItem: any) => msgItem.type !== messageType
+        );
+        updateMessageQueue(tempMessageQueue);
+      }
+    }
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [messageQueue]);
 
   return (
     <VStack
@@ -98,7 +145,7 @@ export const PlanDataContainer: React.FC<{
           <HStack w="100%" justifyContent="space-between" alignItems="center">
             <HStack spacing={0}>
               <Text fontWeight={700} fontSize="lg">
-                {profileData.plan_loc_remaining.toLocaleString("en-US")}
+                {planRemainingLoc.toLocaleString("en-US")}
               </Text>
               <Text color="subtle" fontSize="sm">
                 /{userPlan ? userPlan.loc.toLocaleString("en-US") : "--"}
@@ -137,7 +184,7 @@ export const PlanDataContainer: React.FC<{
           <HStack w="100%" justifyContent="space-between" alignItems="center">
             <HStack spacing={0}>
               <Text fontWeight={700} fontSize="lg">
-                {profileData.on_demand_loc_remaining.toLocaleString("en-US")}
+                {topupRemainingLoc.toLocaleString("en-US")}
               </Text>
               <Text color="subtle" fontSize="sm">
                 /
@@ -199,9 +246,9 @@ export const PlanDataContainer: React.FC<{
               <Text fontWeight={600}>
                 {profileData.current_package === "trial"
                   ? "--"
-                  : (
-                      profileData.total_loc - profileData.loc_remaining
-                    ).toLocaleString("en-US")}{" "}
+                  : (profileData.total_loc - totalRemainingLoc).toLocaleString(
+                      "en-US"
+                    )}{" "}
                 <span
                   style={{
                     fontWeight: 300,
@@ -224,7 +271,7 @@ export const PlanDataContainer: React.FC<{
           <HStack w="100%" justifyContent="space-between" alignItems="center">
             <Text fontWeight={600}>Remaining LOC</Text>
             <Text fontWeight={600}>
-              {profileData.loc_remaining.toLocaleString("en-US")}{" "}
+              {totalRemainingLoc.toLocaleString("en-US")}{" "}
               <span
                 style={{
                   fontWeight: 300,

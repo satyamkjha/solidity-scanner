@@ -27,6 +27,7 @@ type MultifileIssuesProps = {
   details_enabled: boolean;
   is_latest_scan: boolean;
   updateBugStatus: any;
+  is_trial_scan: boolean;
   project_url?: string;
   contract_url?: string;
   contract_platform?: string;
@@ -57,6 +58,7 @@ const MultifileIssues: React.FC<MultifileIssuesProps> = ({
   contract_platform,
   branchName,
   contract_address,
+  is_trial_scan,
 }) => {
   const [isDesktopView] = useMediaQuery("(min-width: 1350px)");
   let issue_count: number;
@@ -143,6 +145,7 @@ const MultifileIssues: React.FC<MultifileIssuesProps> = ({
                     key={issue_id + index}
                     index={index}
                     type={type}
+                    is_trial_scan={is_trial_scan}
                     files={files}
                     issue_id={issue_id}
                     metric_wise_aggregated_findings={

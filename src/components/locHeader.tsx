@@ -43,7 +43,7 @@ export const LOCHeader: React.FC<{
       );
       if (creditUpdateMessage && creditUpdateMessage.length) {
         if (profileData.credit_system === "loc") {
-          setCredits(creditUpdateMessage[0].payload.updated_loc);
+          setCredits(creditUpdateMessage[0].payload.total_remaining_loc);
         } else {
           setCredits(creditUpdateMessage[0].payload.updated_credits);
         }

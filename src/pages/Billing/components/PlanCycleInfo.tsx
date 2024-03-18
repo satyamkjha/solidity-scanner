@@ -41,7 +41,9 @@ const PlanCycleInfo: React.FC<{
   if (packageName === "trial" || packageName === "ondemand")
     return (
       <Image
-        src={`${assetsURL}common/pro_upgrade.svg`}
+        src={`${assetsURL}common/pro_upgrade${
+          packageName === "ondemand" ? "_ondemand" : ""
+        }.svg`}
         height="185px"
         width="400px"
         ml={[0, 0, 0, "auto"]}
