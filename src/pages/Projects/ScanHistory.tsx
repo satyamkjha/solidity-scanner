@@ -183,7 +183,9 @@ const ScanBlockDesktop: React.FC<{
       onClick={() => {
         if (scan.scan_status === "scan_done") {
           setTabIndex(0);
-          history.push(`/projects/${scan.project_id}/${scan.scan_id}`);
+          history.push(
+            `/projects/${scan.project_id}/${scan.scan_id}?scan_name=${scan.scan_name}`
+          );
         }
       }}
       sx={{
@@ -436,7 +438,9 @@ const ScanBlock: React.FC<{
       onClick={() => {
         if (scan.scan_status === "scan_done") {
           setTabIndex(0);
-          history.push(`/projects/${scan.project_id}/${scan.scan_id}`);
+          history.push(
+            `/projects/${scan.project_id}/${scan.scan_id}?scan_name=${scan.scan_name}`
+          );
         }
       }}
       sx={{

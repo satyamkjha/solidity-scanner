@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useRef } from "react";
 import { useQueryClient } from "react-query";
-import { useParams, useHistory } from "react-router-dom";
+import { useParams, useHistory, useLocation } from "react-router-dom";
 import { ArrowDownIcon } from "@chakra-ui/icons";
 import {
   Flex,
@@ -141,6 +141,9 @@ const ScanDetails: React.FC<{
     projectId: string;
     scanId: string;
   }>();
+  const location = useLocation();
+  const searchParams = new URLSearchParams(location.search);
+  const scanName = searchParams.get("scan_name");
   const history = useHistory();
   const { data: plans } = usePricingPlans();
   const { data: scanData, isLoading, refetch } = useScan(scanId);
@@ -479,9 +482,28 @@ const ScanDetails: React.FC<{
                     justifyContent={"flex-start"}
                     spacing={0}
                   >
-                    <Text sx={{ fontSize: "xl", fontWeight: 600 }}>
-                      {project_name}
-                    </Text>
+                    <HStack spacing={4}>
+                      <Text sx={{ fontSize: "xl", fontWeight: 600 }}>
+                        {project_name}
+                      </Text>
+                      {scanName && (
+                        <Text
+                          height="fit-content"
+                          px={7}
+                          mr={5}
+                          py={1}
+                          borderRadius={3}
+                          bgColor="#F1F1F1"
+                          color="#323B4B"
+                        >
+                          {`${scanName}${
+                            scanData.scan_report.is_trial_scan
+                              ? " - Free Trial"
+                              : ""
+                          }`}
+                        </Text>
+                      )}
+                    </HStack>
                     {project_url !== "File Scan" && (
                       <Link
                         fontSize="14px"
@@ -742,6 +764,16 @@ const ScanDetails: React.FC<{
                           </Tab>
                         </>
                       )}
+                      <Tab
+                        fontSize={"sm"}
+                        h="35px"
+                        minW={"120px"}
+                        bgColor={"#F5F5F5"}
+                        mx={4}
+                        whiteSpace="nowrap"
+                      >
+                        Scan History
+                      </Tab>
 
                       {scanData.scan_report.project_skip_files &&
                         scanData.scan_report.project_url &&
@@ -785,16 +817,6 @@ const ScanDetails: React.FC<{
                           Published Reports
                         </Tab>
                       )}
-                      <Tab
-                        fontSize={"sm"}
-                        h="35px"
-                        minW={"120px"}
-                        bgColor={"#F5F5F5"}
-                        mx={4}
-                        whiteSpace="nowrap"
-                      >
-                        Scan History
-                      </Tab>
                     </TabList>
                   </Flex>
                   <TabPanels>
@@ -883,6 +905,17 @@ const ScanDetails: React.FC<{
                       </TabPanel>
                     )}
 
+                    <TabPanel p={[0, 0, 0, 2]}>
+                      <ScanHistory
+                        project_url={project_url}
+                        getRepoTreeReq={getRepoTreeReq}
+                        repoTree={repoTree}
+                        profile={profile}
+                        scans={scans}
+                        setTabIndex={setTabIndex}
+                      />
+                    </TabPanel>
+
                     {scanData.scan_report.project_skip_files &&
                       scanData.scan_report.project_url &&
                       scanData.scan_report.project_url !== "File Scan" &&
@@ -929,17 +962,6 @@ const ScanDetails: React.FC<{
                         />
                       </TabPanel>
                     )}
-
-                    <TabPanel p={[0, 0, 0, 2]}>
-                      <ScanHistory
-                        project_url={project_url}
-                        getRepoTreeReq={getRepoTreeReq}
-                        repoTree={repoTree}
-                        profile={profile}
-                        scans={scans}
-                        setTabIndex={setTabIndex}
-                      />
-                    </TabPanel>
                   </TabPanels>
                 </Tabs>
               )}
