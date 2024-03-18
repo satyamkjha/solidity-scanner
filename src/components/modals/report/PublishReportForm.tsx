@@ -133,7 +133,12 @@ const PublishReportForm: React.FC<{
         alignItems={["center", "center", "center", "flex-start"]}
         display={[`${!next ? "none" : "flex"}`, null, null, "flex"]}
       >
-        <VStack zIndex={"10"} w={["100%"]} spacing={6}>
+        <VStack
+          zIndex={"10"}
+          w={["100%"]}
+          spacing={6}
+          alignItems={"flex-start"}
+        >
           {!isDesktopView && (
             <HStack my={6}>
               <Text>Private</Text>
@@ -217,10 +222,13 @@ const PublishReportForm: React.FC<{
           />
 
           <HStack
-            alignItems="center"
+            alignItems={"center"}
+            justifyContent={"flex-start"}
             spacing={2}
             pr={5}
+            mr={"auto"}
             w={"100%"}
+            maxW={"600px"}
             bgColor={"white"}
             border={"1px solid #EDF2F7"}
             borderRadius={"16px"}
@@ -252,16 +260,14 @@ const PublishReportForm: React.FC<{
               />
             </InputGroup>
             {isDesktopView && (
-              <>
-                <SwitchComp
-                  isChecked={webSwitch}
-                  onChange={() => {
-                    setWebSwitch(!webSwitch);
-                  }}
-                  size="lg"
-                  variant={webSwitch ? "brand" : "disabled"}
-                />
-              </>
+              <SwitchComp
+                isChecked={webSwitch}
+                onChange={() => {
+                  setWebSwitch(!webSwitch);
+                }}
+                size="lg"
+                variant={webSwitch ? "brand" : "disabled"}
+              />
             )}
           </HStack>
 

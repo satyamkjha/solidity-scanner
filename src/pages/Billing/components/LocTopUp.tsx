@@ -43,6 +43,7 @@ const LocTopUp: React.FC<{
   );
   const locPriceUnits = currentTopUpPlan.loc;
   const minimum_loc_topup = process.env.REACT_APP_MINIMUM_LOC_TOPUP || 100;
+  const maximum_loc_topup = process.env.REACT_APP_MAXIMUM_LOC_TOPUP || 50000;
 
   return (
     <Flex w="100%" h={"60vh"} flexDir={["column", "column", "column", "row"]}>
@@ -121,32 +122,47 @@ const LocTopUp: React.FC<{
         {/* <Flex w="100%">
           
         </Flex> */}
-        <InputGroup alignItems="center">
-          <InputLeftElement
-            height="80px"
-            width="80px"
-            children={
-              <Image
-                w="50px"
-                h="50px"
-                src={`${assetsURL}common/loc-code.svg`}
-              />
-            }
-          />
-          <Input
-            placeholder="Enter required LOC here"
-            variant={"brand"}
-            size="lg"
-            pl="80px"
-            height="80px"
-            value={noOfLoc === 0 ? "" : noOfLoc.toLocaleString("en-US")}
-            type="text"
-            onChange={(e) => {
-              const value = parseInt(e.target.value.replace(/,/g, ""), 10);
-              setNoOfLoc(isNaN(value) ? 0 : value);
-            }}
-          />
-        </InputGroup>
+        <Tooltip
+          label={
+            noOfLoc < minimum_loc_topup
+              ? `Top-Up requires a minimum of ${minimum_loc_topup} LOC`
+              : `You can top-up with up to ${maximum_loc_topup.toLocaleString(
+                  "en-US"
+                )} LOC`
+          }
+          isDisabled={
+            noOfLoc >= minimum_loc_topup && noOfLoc <= maximum_loc_topup
+          }
+          isOpen={noOfLoc > maximum_loc_topup}
+          // hasArrow
+        >
+          <InputGroup alignItems="center">
+            <InputLeftElement
+              height="80px"
+              width="80px"
+              children={
+                <Image
+                  w="50px"
+                  h="50px"
+                  src={`${assetsURL}common/loc-code.svg`}
+                />
+              }
+            />
+            <Input
+              placeholder="Enter required LOC here"
+              variant={"brand"}
+              size="lg"
+              pl="80px"
+              height="80px"
+              value={noOfLoc === 0 ? "" : noOfLoc.toLocaleString("en-US")}
+              type="text"
+              onChange={(e) => {
+                const value = parseInt(e.target.value.replace(/,/g, ""), 10);
+                setNoOfLoc(isNaN(value) ? 0 : value);
+              }}
+            />
+          </InputGroup>
+        </Tooltip>
         <Text fontSize="xl" mt={8}>{`${
           noOfLoc.toLocaleString("en-US") || "00"
         } LOC`}</Text>
@@ -170,8 +186,16 @@ const LocTopUp: React.FC<{
         </Flex>
         <Divider borderColor={"#EAEAEA"} my={4} />
         <Tooltip
-          label={`Minimum of ${minimum_loc_topup} LOC required for Top-Up`}
-          isDisabled={noOfLoc >= minimum_loc_topup}
+          label={
+            noOfLoc < minimum_loc_topup
+              ? `Top-Up requires a minimum of ${minimum_loc_topup} LOC`
+              : `You can top-up with up to ${maximum_loc_topup.toLocaleString(
+                  "en-US"
+                )} LOC`
+          }
+          isDisabled={
+            noOfLoc >= minimum_loc_topup && noOfLoc <= maximum_loc_topup
+          }
         >
           <Flex w={"100%"}>
             <Button
@@ -180,7 +204,9 @@ const LocTopUp: React.FC<{
               mt={"auto"}
               w="100%"
               alignSelf="center"
-              isDisabled={noOfLoc < minimum_loc_topup}
+              isDisabled={
+                noOfLoc < minimum_loc_topup || noOfLoc > maximum_loc_topup
+              }
               onClick={onOpen}
             >
               Make Payment

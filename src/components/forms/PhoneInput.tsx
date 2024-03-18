@@ -28,11 +28,15 @@ const PhoneInput: React.FC<
         const error = `${title} is required`;
         onError(error);
         setErrorMessage(error);
+      } else if (isNaN(Number(value))) {
+        const error = `Please enter a valid ${title}`;
+        onError(error);
+        setErrorMessage(error);
       } else if (
         value &&
         (value.toString().length < 8 || value.toString().length > 15)
       ) {
-        const error = `${title} is Invalid`;
+        const error = `Please enter a valid ${title}`;
         onError(error);
         setErrorMessage(error);
       } else {
@@ -70,7 +74,7 @@ const PhoneInput: React.FC<
         )}
         <Input
           size="lg"
-          type="number"
+          type="tel"
           w="100%"
           maxW="600px"
           variant={errorMessage ? "error" : "brand"}

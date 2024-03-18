@@ -207,6 +207,7 @@ export const ManualAuditForm: React.FC<{
                         borderColor={"gray.200"}
                         borderWidth={"1px"}
                         noOfLines={4}
+                        maxW={"600px"}
                         value={body}
                         onChange={(e) => {
                           setBody(e.target.value);
