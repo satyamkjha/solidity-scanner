@@ -61,12 +61,11 @@ const ApplicationForm: React.FC<{
   const [branch, setBranch] = useState<string>("");
   const [nameError, setNameError] = useState<null | string>(null);
   const [linkError, setLinkError] = useState<null | string>(null);
-  const [connectError, setConnectError] = useState<null | string>(null);
   const [connectAlert, setConnectAlert] = useState(false);
+  // const [isOauthIntegrated, setIsOauthIntegrated] = useState(false);
   const isOauthIntegrated =
-    profileData?._integrations?.github?.status === "successful" ||
-    profileData?._integrations?.gitlab?.status === "successful" ||
-    profileData?._integrations?.bitbucket?.status === "successful";
+    profileData._integrations[formType].status === "successful";
+
   const toast = useToast();
 
   const { isOpen, onClose: closeModal, onOpen } = useDisclosure();
@@ -392,12 +391,10 @@ const ApplicationForm: React.FC<{
           ) : step === 1 ? (
             <InfoSettings
               profileData={profileData}
-              connectError={connectError}
               nameError={nameError}
               linkError={linkError}
               visibility={visibility}
               projectName={projectName}
-              setConnectError={setConnectError}
               githubLink={githubLink}
               isOauthIntegrated={isOauthIntegrated}
               setProjectName={setProjectName}

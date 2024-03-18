@@ -18,7 +18,7 @@ import { sentenceCapitalize } from "helpers/helperFunction";
 const InfoSettings: React.FC<{
   nameError: string | null;
   linkError: string | null;
-  connectError: string | null;
+
   visibility: boolean;
   projectName: string;
   profileData: Profile;
@@ -27,7 +27,7 @@ const InfoSettings: React.FC<{
   formType: string;
   connectAlert: boolean;
   isOauthIntegrated: boolean;
-  setConnectError: React.Dispatch<React.SetStateAction<string | null>>;
+
   setProjectName: React.Dispatch<React.SetStateAction<string>>;
   setGithubLink: React.Dispatch<React.SetStateAction<string>>;
   setVisibility: React.Dispatch<React.SetStateAction<boolean>>;
@@ -46,8 +46,7 @@ const InfoSettings: React.FC<{
   connectAlert,
   setConnectAlert,
   formType,
-  setConnectError,
-  connectError,
+
   profileData,
 }) => {
   const placeholder: { [key: string]: string } = {
@@ -116,14 +115,6 @@ const InfoSettings: React.FC<{
             if (isOauthIntegrated) {
               if (profileData._integrations[formType].status === "successful") {
                 setVisibility(!visibility);
-              } else {
-                setConnectError(
-                  `Please integrate your ${sentenceCapitalize(
-                    formType
-                  )} Account to Scan Private ${sentenceCapitalize(
-                    formType
-                  )} repositories`
-                );
               }
             } else {
               setConnectAlert(!connectAlert);
@@ -133,17 +124,11 @@ const InfoSettings: React.FC<{
         <Text>Private</Text>
       </HStack>
 
-      {connectError && (
-        <Text mb={0} color="#FF2400" fontSize="sm">
-          {connectError}
-        </Text>
-      )}
-
       {!isOauthIntegrated && connectAlert && (
         <GithubConnectAlert
-          msg={
-            "You need to connect any of your code hosting platform like GitHub, GitLab or Bitbucket to start a private scan."
-          }
+          msg={`You need to connect your code hosting platform ${sentenceCapitalize(
+            formType
+          )} to start a private scan.`}
         />
       )}
 
