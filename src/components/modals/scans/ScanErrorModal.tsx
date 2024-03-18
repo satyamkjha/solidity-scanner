@@ -20,6 +20,7 @@ import { useHistory } from "react-router-dom";
 import ModalBlurOverlay from "components/common/ModalBlurOverlay";
 import { useWebSocket } from "hooks/useWebhookData";
 import AddProjectForm from "pages/Home/AddProjectForm";
+import { useQueryClient } from "react-query";
 
 const ScanErrorModal: React.FC<{
   onClose: any;
@@ -28,6 +29,7 @@ const ScanErrorModal: React.FC<{
   insufficientMsg?: any;
 }> = ({ isOpen, onClose, inScanDetails, insufficientMsg }) => {
   const history = useHistory();
+  const queryClient = useQueryClient();
   const { sendMessage } = useWebSocket();
   const { isOpen: openModal, onOpen, onClose: closeModal } = useDisclosure();
 
@@ -43,6 +45,7 @@ const ScanErrorModal: React.FC<{
             project_type: "existing",
           },
         });
+        queryClient.invalidateQueries("profile");
         onClose();
       }
     } else {
@@ -56,6 +59,7 @@ const ScanErrorModal: React.FC<{
         type: "block_scan_initiate",
         body: req,
       });
+      queryClient.invalidateQueries("profile");
       onClose();
     }
   };

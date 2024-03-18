@@ -215,6 +215,7 @@ const ScanDetails: React.FC<{
           project_type: "existing",
         },
       });
+      queryClient.invalidateQueries("profile");
       history.push(`/projects`);
     } else {
       setRescanLoading(true);

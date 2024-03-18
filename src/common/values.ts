@@ -727,7 +727,7 @@ export const pricing_table_data: {
         custom: true,
       },
       {
-        title: "No. of LoCs",
+        title: "No. of LOC",
         trial: "--",
         ondemand: 1000,
         individual: 8000,

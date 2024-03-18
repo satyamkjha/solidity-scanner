@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React from "react";
 
 import {
   Flex,
@@ -9,8 +9,6 @@ import {
   ModalContent,
   Button,
   VStack,
-  HStack,
-  Box,
   useDisclosure,
 } from "@chakra-ui/react";
 import { useHistory, useParams } from "react-router-dom";
@@ -18,7 +16,7 @@ import { ScanTitleComponent } from "./InScanModal";
 import ModalBlurOverlay from "components/common/ModalBlurOverlay";
 import { useWebSocket } from "hooks/useWebhookData";
 import AddProjectForm from "pages/Home/AddProjectForm";
-import { useUserRole } from "hooks/useUserRole";
+import { useQueryClient } from "react-query";
 
 const ReScanTrialScanModal: React.FC<{
   closeModal: any;
@@ -27,6 +25,7 @@ const ReScanTrialScanModal: React.FC<{
 }> = ({ open, closeModal, scanDetails }) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const history = useHistory();
+  const queryClient = useQueryClient();
   const { sendMessage } = useWebSocket();
   const { projectId } = useParams<{ projectId: string }>();
   const rescan = () => {
@@ -41,6 +40,7 @@ const ReScanTrialScanModal: React.FC<{
             project_type: "existing",
           },
         });
+        queryClient.invalidateQueries("profile");
         history.push("/projects");
         closeModal();
       }
@@ -55,6 +55,7 @@ const ReScanTrialScanModal: React.FC<{
         type: "block_scan_initiate",
         body: req,
       });
+      queryClient.invalidateQueries("profile");
       history.push("/projects");
       closeModal();
     }
@@ -106,7 +107,7 @@ const ReScanTrialScanModal: React.FC<{
                   {scanDetails.scan_type === "project" &&
                   scanDetails.project_url === "File Scan"
                     ? "Rescan Project"
-                    : `${scanDetails.loc} LoCs`}
+                    : `${scanDetails.loc} LOC`}
                 </Text>
                 <Text>
                   {scanDetails.scan_type === "project" &&

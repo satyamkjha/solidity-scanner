@@ -124,7 +124,9 @@ export const PlanDataContainer: React.FC<{
         </HStack>
       )}
 
-      {["beginner", "pro", "custom"].includes(profileData.current_package) && (
+      {["individual", "pro", "custom"].includes(
+        profileData.current_package
+      ) && (
         <VStack
           w="100%"
           justifyContent="flex-start"
