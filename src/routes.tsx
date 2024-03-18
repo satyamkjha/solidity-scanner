@@ -23,7 +23,10 @@ import { useUserOrgProfile } from "hooks/useUserOrgProfile";
 import { UserRoleProvider } from "hooks/useUserRole";
 import { onLogout, importScan } from "common/functions";
 import { useConfig } from "hooks/useConfig";
-import { getFeatureGateConfig } from "helpers/helperFunction";
+import {
+  getFeatureGateConfig,
+  getCookieExpiration,
+} from "helpers/helperFunction";
 import { publicRoutes } from "common/values";
 
 const Landing = lazy(() =>
@@ -424,6 +427,22 @@ const ErrorHandler: React.FC = ({ children }) => {
   const history = useHistory();
   const queryClient = useQueryClient();
 
+  // console.log(getCookieExpiration("csrftoken"));
+
+  useEffect(() => {
+    const interceptor = API.interceptors.request.use(
+      (config) => {
+        // Check if CSRF token expiration time is set and token has expired
+        console.log("asdas");
+        return config;
+      },
+      (error) => {
+        // If there's an error with the request, just return the error
+        return Promise.reject(error);
+      }
+    );
+  }, []);
+
   useEffect(() => {
     const interceptor = API.interceptors.response.use(
       (response) => {
@@ -451,12 +470,14 @@ const ErrorHandler: React.FC = ({ children }) => {
         return error;
       }
     );
+
     return () => {
       API.interceptors.response.eject(interceptor);
     };
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
   return <>{children}</>;
 };
 

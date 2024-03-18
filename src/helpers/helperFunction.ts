@@ -3,6 +3,7 @@ import reCAPTCHA from "helpers/reCAPTCHA";
 import { Profile, PricingData, Finding } from "common/types";
 import { platformVsChains, contractChain, publicRoutes } from "common/values";
 import { matchPath } from "react-router-dom";
+import Cookies from "js-cookie";
 
 let configValue: any = null;
 
@@ -166,6 +167,19 @@ export const checkProjectUrl = (url: string) => {
     return true;
   } else return false;
 };
+
+export function getCookieExpiration(cookieName: string) {
+  const cookieValue = Cookies.get(cookieName);
+  if (cookieValue) {
+    console.log(cookieValue);
+    const cookieObject = JSON.parse(cookieValue);
+
+    if (cookieObject.expires) {
+      return new Date(cookieObject.expires).toLocaleString();
+    }
+  }
+  return null; // Cookie not found or does not have an expiration time
+}
 
 export const getProjectType = (project_url: string) => {
   try {

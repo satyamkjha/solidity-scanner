@@ -27,7 +27,7 @@ const SubscriptionDataContainer: React.FC<{
           <Text fontWeight={500} fontSize="md">
             {packageName === "trial" ||
             packageName === "ondemand" ||
-            isCancellable
+            !isCancellable
               ? "--"
               : "Stripe Payment"}
           </Text>
