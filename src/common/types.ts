@@ -277,6 +277,7 @@ export type ScanMeta = {
   reporting_status: string;
   project_id: string;
   scan_score: string;
+  is_trial_scan: boolean;
   scan_score_v2: string;
   loc_consumed: number;
   scan_name: string;
