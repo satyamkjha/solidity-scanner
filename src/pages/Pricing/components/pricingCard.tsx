@@ -14,7 +14,7 @@ import { Plan, Profile } from "common/types";
 import { CurlyArrowBlue, CheckBadge } from "components/icons";
 import * as React from "react";
 import { useState } from "react";
-import { getAssetsURL, sentenceCapitalize } from "helpers/helperFunction";
+import { getAssetsURL } from "helpers/helperFunction";
 import Auth from "helpers/auth";
 import { useHistory } from "react-router-dom";
 import PricingDetailsList from "./PricingDetailsList";

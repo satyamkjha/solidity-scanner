@@ -16,7 +16,6 @@ import { CurlyArrowUp, CurlyArrowDown } from "components/icons";
 import { PricingCard } from "./pricingCard";
 import { Header } from "components/header";
 
-const CustomPlanCard = lazy(() => import("./customPlanCard"));
 const PricingTable = lazy(() => import("./pricingTable"));
 
 const PricingDetails: React.FC<{

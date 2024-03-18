@@ -197,7 +197,10 @@ const OrgLoginForm: React.FC<{
                     fontSize="sm"
                     mr={1}
                     my={1}
-                    onClick={() => setStep(false)}
+                    onClick={() => {
+                      setErrors({});
+                      setStep(false);
+                    }}
                   >
                     Back
                   </Button>
