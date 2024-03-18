@@ -17,8 +17,16 @@ const NameInput: React.FC<
     onError: (error: string) => void;
     showLeftIcon?: boolean;
     iconChild?: any;
+    rightElement?: any;
   }
-> = ({ children, onError, showLeftIcon = false, iconChild, ...props }) => {
+> = ({
+  children,
+  onError,
+  showLeftIcon = false,
+  iconChild,
+  rightElement,
+  ...props
+}) => {
   const { value, isRequired, title = "Name" } = props;
 
   const [errorMessage, setErrorMessage] = useState("");
@@ -65,7 +73,7 @@ const NameInput: React.FC<
   };
 
   return (
-    <VStack alignItems={"flex-start"} justifyContent={"flex-start"}>
+    <VStack w={"100%"} alignItems={"flex-start"} justifyContent={"flex-start"}>
       <InputGroup alignItems="center">
         {showLeftIcon && (
           <InputLeftElement
@@ -86,6 +94,7 @@ const NameInput: React.FC<
           onInput={handleInput}
           {...props}
         />
+        {rightElement ? rightElement : null}
       </InputGroup>
       {errorMessage && (
         <Text color={"red"} fontSize={"xs"}>

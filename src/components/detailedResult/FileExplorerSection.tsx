@@ -81,7 +81,10 @@ export const FileExplorerSection: React.FC<{
   const { profileData } = useUserRole();
   const [openIssueBox, setOpenIssueBox] = useState(true);
   const [tabIndex, setTabIndex] = useState(0);
-  const [markedAction, setMarkedAction] = useState("Take Action");
+  const [markedAction, setMarkedAction] = useState({
+    placeholder: "Take Action",
+    disabled: "",
+  });
 
   useEffect(() => {
     if (selectedBugs && selectedBugs.length) {
@@ -92,16 +95,33 @@ export const FileExplorerSection: React.FC<{
           uniqueStatusList.length === 1 &&
           uniqueStatusList[0] !== "pending_fix"
         ) {
-          setMarkedAction(uniqueStatusList[0]);
+          setMarkedAction({
+            placeholder: uniqueStatusList[0],
+            disabled: uniqueStatusList[0],
+          });
+        } else if (uniqueStatusList.length > 1) {
+          setMarkedAction({
+            placeholder: "Take Action",
+            disabled: "",
+          });
         } else {
-          setMarkedAction("Take Action");
+          setMarkedAction({
+            placeholder: "Take Action",
+            disabled: "pending_fix",
+          });
         }
       } else {
-        setMarkedAction("Take Action");
+        setMarkedAction({
+          placeholder: "Take Action",
+          disabled: "",
+        });
       }
       setIsDisabled(false);
     } else {
-      setMarkedAction("Take Action");
+      setMarkedAction({
+        placeholder: "Take Action",
+        disabled: "pending_fix",
+      });
       setIsDisabled(true);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps

@@ -12,15 +12,14 @@ import {
   HStack,
   Text,
   useToast,
-  InputGroup,
-  Input,
-  InputRightElement,
   useMediaQuery,
+  InputRightElement,
 } from "@chakra-ui/react";
 import { API_PATH } from "helpers/routeManager";
 import API from "helpers/api";
 import { debounce } from "lodash";
 import { checkOrgName } from "helpers/helperFunction";
+import NameInput from "components/forms/NameInput";
 
 const CreateOrganisationForm: React.FC<{
   onClose(): any;
@@ -29,8 +28,9 @@ const CreateOrganisationForm: React.FC<{
 }> = ({ isOpen, onClose, refetch }) => {
   const toast = useToast();
   const [orgName, setOrgName] = useState("");
-  const [availabililtyStatus, setAvailabilityStatus] = useState("");
+  const [availabilityStatus, setAvailabilityStatus] = useState("");
   const [isDesktopView] = useMediaQuery("(min-width: 950px)");
+  const [errors, setErrors] = useState<{ [key: string]: string }>({});
 
   const createOrganisationRequest = async () => {
     if (checkOrgName(orgName)) {
@@ -153,59 +153,63 @@ const CreateOrganisationForm: React.FC<{
                 textAlign="center"
                 justifyContent={"flex-start"}
               >
-                <Text fontSize="md" fontWeight={500}>
+                <Text fontSize="md" fontWeight={500} mb={10}>
                   Setup your Organization Name
                 </Text>
-                {/* <Text fontSize="sm" color="#4E5D78" fontWeight={300}>
-                  Lorem ipsum dolor sit amet consectetur. Iaculis libero eget.
-                </Text> */}
-                <InputGroup mt={10} alignItems="center" mb={4}>
-                  <Input
-                    isRequired
-                    type="text"
-                    placeholder="Enter Organization name here"
-                    variant={"brand"}
-                    bgColor="#f7f9fa"
-                    size="lg"
-                    onKeyDown={(e) => {
-                      if (e.keyCode === 13) {
-                        createOrganisationRequest();
-                      }
-                    }}
-                    onChange={(e) => {
-                      setOrgName(e.target.value);
-                    }}
-                  />
-                  {isDesktopView && (
-                    <InputRightElement w="150px">
-                      <HStack mt={2}>
-                        <Text
-                          color={
-                            availabililtyStatus === "Available"
-                              ? "low"
-                              : availabililtyStatus === "Not-Available"
-                              ? "high"
-                              : "#000000"
-                          }
-                        >
-                          {availabililtyStatus}
-                        </Text>
-                      </HStack>
-                    </InputRightElement>
-                  )}
-                </InputGroup>
+                <NameInput
+                  isRequired
+                  placeholder="Enter Organization name here"
+                  variant={"brand"}
+                  bgColor="#f7f9fa"
+                  rightElement={
+                    isDesktopView ? (
+                      <InputRightElement
+                        w={
+                          availabilityStatus === "Available" ? "160px" : "200px"
+                        }
+                      >
+                        <HStack mt={2}>
+                          <Text
+                            color={
+                              availabilityStatus === "Available"
+                                ? "low"
+                                : availabilityStatus === "Not-Available"
+                                ? "high"
+                                : "#000000"
+                            }
+                          >
+                            {availabilityStatus}
+                          </Text>
+                        </HStack>
+                      </InputRightElement>
+                    ) : null
+                  }
+                  onKeyDown={(e) => {
+                    if (e.keyCode === 13) {
+                      createOrganisationRequest();
+                    }
+                  }}
+                  onChange={(e) => {
+                    setOrgName(e.target.value);
+                  }}
+                  onError={(e: any) =>
+                    setErrors((prv) => {
+                      return { ...prv, Org: e };
+                    })
+                  }
+                />
                 {!isDesktopView && (
                   <HStack w="100%" justifyContent="flex-end">
                     <Text
                       color={
-                        availabililtyStatus === "Available"
+                        availabilityStatus === "Available"
                           ? "low"
-                          : availabililtyStatus === "Not-Available"
+                          : availabilityStatus === "Not-Available"
                           ? "high"
                           : "#000000"
                       }
                     >
-                      {availabililtyStatus}
+                      {availabilityStatus}
                     </Text>
                   </HStack>
                 )}
@@ -222,9 +226,8 @@ const CreateOrganisationForm: React.FC<{
                 fontWeight={500}
                 onClick={createOrganisationRequest}
                 disabled={
-                  orgName.length < 1 ||
-                  orgName.length > 50 ||
-                  availabililtyStatus === "Not-Available"
+                  Object.values(errors).join("").length > 0 ||
+                  availabilityStatus === "Not-Available"
                 }
               >
                 Create Organization

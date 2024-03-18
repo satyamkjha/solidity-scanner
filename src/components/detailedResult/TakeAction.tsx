@@ -15,12 +15,11 @@ import { actionTaken, issueActions } from "common/values";
 import { getAssetsURL } from "helpers/helperFunction";
 
 export const TakeAction: React.FC<{
-  markedAction: string;
+  markedAction: any;
   isDisabled: boolean;
   onBugSelect: any;
 }> = ({ markedAction, isDisabled, onBugSelect }) => {
   const assetsURL = getAssetsURL();
-
   return (
     <Menu>
       <MenuButton
@@ -36,7 +35,7 @@ export const TakeAction: React.FC<{
         }}
         isDisabled={isDisabled}
       >
-        {actionTaken[markedAction] || markedAction}
+        {actionTaken[markedAction.placeholder] || markedAction.placeholder}
       </MenuButton>
       <MenuList
         border={"none"}
@@ -47,11 +46,12 @@ export const TakeAction: React.FC<{
           issueActions.map((item, index) => (
             <Tooltip
               label={
-                markedAction === "Take Action" && item.value === "pending_fix"
+                markedAction.placeholder === "Take Action" &&
+                item.value === "pending_fix"
                   ? ""
                   : "Action already marked!"
               }
-              isDisabled={markedAction !== item.value}
+              isDisabled={markedAction.disabled !== item.value}
               placement={"right-end"}
             >
               <Flex w={"100%"}>
@@ -59,11 +59,7 @@ export const TakeAction: React.FC<{
                   key={index}
                   pl={6}
                   py={2.5}
-                  isDisabled={
-                    markedAction === item.value ||
-                    (markedAction === "Take Action" &&
-                      item.value === "pending_fix")
-                  }
+                  isDisabled={markedAction.disabled === item.value}
                   onClick={() => onBugSelect(item)}
                 >
                   <Image

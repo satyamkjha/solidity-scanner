@@ -537,6 +537,7 @@ const ChangePasswordForm: React.FC<{
           <PasswordInput
             isRequired
             showLeftIcon
+            showError={false}
             enableSpecialCharCheck={false}
             value={password}
             placeholder="Old Password"
@@ -578,6 +579,7 @@ const ChangePasswordForm: React.FC<{
           variant="brand"
           type="submit"
           mt={6}
+          px={6}
           onClick={onSubmit}
           isLoading={isLoading}
           spinner={<Loader color={"#3300FF"} size={25} />}
