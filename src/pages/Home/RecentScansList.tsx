@@ -91,7 +91,7 @@ const RecentScansList: React.FC = () => {
               color: "gray.500",
             }}
           >
-            Recenly Scanned Projects
+            Recently Scanned Projects
           </Text>
 
           <Button

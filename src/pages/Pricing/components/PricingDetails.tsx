@@ -16,7 +16,6 @@ import { CurlyArrowUp, CurlyArrowDown } from "components/icons";
 import { PricingCard } from "./pricingCard";
 import { Header } from "components/header";
 
-const CustomPlanCard = lazy(() => import("./customPlanCard"));
 const PricingTable = lazy(() => import("./pricingTable"));
 
 const PricingDetails: React.FC<{
@@ -241,7 +240,7 @@ const PricingDetails: React.FC<{
           {Object.keys(pricingDetails.pricing_data[duration])
             .sort((a, b) => {
               const planOrder: Record<string, number> = {
-                beginner: 1,
+                individual: 1,
                 pro: 2,
                 custom: 3,
               };
