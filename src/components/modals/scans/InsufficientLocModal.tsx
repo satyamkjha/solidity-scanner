@@ -127,8 +127,8 @@ const InsufficientLocModal: React.FC<{
               >
                 <Text fontWeight={900}>Get the LOC Top-up</Text>
                 <Text>
-                  Lorem ipsum dolor sit amet consectetur. Morbi tellus nunc
-                  risus amet. Dolor rhoncus.
+                  Your current code analysis quota is running low. To continue
+                  scanning your projects, you'll need to top up your lines.
                 </Text>
                 <Button onClick={navigateToTopup} variant="brand">
                   Get LOC Top up now

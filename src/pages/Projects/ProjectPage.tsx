@@ -360,7 +360,9 @@ const ScanDetails: React.FC<{
 
   const isRescanButtonDisabled = () => {
     if (
-      checkUserCredits() ||
+      (profile &&
+        profile.credit_system === "scan_credits" &&
+        checkUserCredits()) ||
       scanData?.scan_report.scan_status === "scanning" ||
       role === "viewer"
     )

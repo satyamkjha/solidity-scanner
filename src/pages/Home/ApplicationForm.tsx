@@ -34,6 +34,7 @@ import { infographicsData, OauthName } from "common/values";
 import { useWebSocket } from "hooks/useWebhookData";
 import { useConfig } from "hooks/useConfig";
 import InsufficientLocModal from "components/modals/scans/InsufficientLocModal";
+import ProjectsExceededModal from "components/modals/scans/ProjectsExceededModal";
 
 const ApplicationForm: React.FC<{
   profileData: Profile;
@@ -70,6 +71,8 @@ const ApplicationForm: React.FC<{
 
   const { isOpen, onClose: closeModal, onOpen } = useDisclosure();
 
+  const [projectsExceededModal, setProjectsExceededModal] = useState(false);
+
   const runValidation = () => {
     if (projectName === "") {
       setNameError("Please enter a Project Name of less than 50 characters.");
@@ -102,7 +105,8 @@ const ApplicationForm: React.FC<{
   const runScan = async () => {
     if (!runValidation() || !repoTreeUP) return;
     if (profileData.current_package === "trial") {
-      if (profileData.projects_remaining > 2) {
+      if (profileData.trial_projects_remaining === 0) {
+        setProjectsExceededModal(true);
         return;
       }
     } else if (
@@ -495,6 +499,17 @@ const ApplicationForm: React.FC<{
         <InsufficientLocModal
           open={isOpen}
           closeModal={closeModal}
+          scanDetails={{
+            project_name: projectName,
+            project_url: githubLink,
+            scan_type: "project",
+          }}
+        />
+      )}
+      {projectsExceededModal && (
+        <ProjectsExceededModal
+          open={projectsExceededModal}
+          closeModal={() => setProjectsExceededModal}
           scanDetails={{
             project_name: projectName,
             project_url: githubLink,

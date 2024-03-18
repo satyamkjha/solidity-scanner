@@ -121,10 +121,9 @@ const ScanCredits: React.FC<{
             </Text>
           </HStack>
           <Text fontSize="sm" color="#4E5D78" fontWeight={300}>
-            We are upgrading to new pricing plans, If u need Scan Credits please
-            contact our team for the Scan Credits Top-up . Eu On Demand blandit
-            arcu et massa sit. Purus aliquam sagittis convallis vitae aliquam
-            magna.
+            We are upgrading to new pricing plans. Please contact our team
+            incase you want to top-up your scan credits till your existing plan
+            period.
           </Text>
           <HStack justifyContent="space-between" w="100%" alignItems="flex-end">
             <Button
@@ -153,8 +152,8 @@ const ScanCredits: React.FC<{
             New Pricing Plans 2024
           </Text>
           <Text fontWeight={300}>
-            Lorem ipsum dolor sit amet consectetur. Elit cras purus ultricies
-            eget tempor. Viverra leo id potenti.
+            We have revamped our pricing plans! Top-up your accounts with lines
+            of code instead of scan credits now.
           </Text>
           <Button w="100%" variant="brand">
             Get LOC Top up now

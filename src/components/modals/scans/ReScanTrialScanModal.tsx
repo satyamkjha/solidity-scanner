@@ -13,11 +13,12 @@ import {
   Box,
   useDisclosure,
 } from "@chakra-ui/react";
-import { useHistory } from "react-router-dom";
+import { useHistory, useParams } from "react-router-dom";
 import { ScanTitleComponent } from "./InScanModal";
 import ModalBlurOverlay from "components/common/ModalBlurOverlay";
 import { useWebSocket } from "hooks/useWebhookData";
 import AddProjectForm from "pages/Home/AddProjectForm";
+import { useUserRole } from "hooks/useUserRole";
 
 const ReScanTrialScanModal: React.FC<{
   closeModal: any;
@@ -25,7 +26,9 @@ const ReScanTrialScanModal: React.FC<{
   scanDetails: any;
 }> = ({ open, closeModal, scanDetails }) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
+  const history = useHistory();
   const { sendMessage } = useWebSocket();
+  const { projectId } = useParams<{ projectId: string }>();
   const rescan = () => {
     if (scanDetails.scan_type === "project") {
       if (scanDetails.project_url === "File Scan") {
@@ -34,10 +37,12 @@ const ReScanTrialScanModal: React.FC<{
         sendMessage({
           type: "project_scan_initiate",
           body: {
-            project_id: scanDetails.project_id,
+            project_id: projectId,
             project_type: "existing",
           },
         });
+        history.push("/projects");
+        closeModal();
       }
     } else {
       let req = {};
@@ -50,8 +55,9 @@ const ReScanTrialScanModal: React.FC<{
         type: "block_scan_initiate",
         body: req,
       });
+      history.push("/projects");
+      closeModal();
     }
-    closeModal();
   };
 
   return (
@@ -103,10 +109,10 @@ const ReScanTrialScanModal: React.FC<{
                     : `${scanDetails.loc} LoCs`}
                 </Text>
                 <Text>
-                  The current project , as per. Pulvinar sit nulla semper
-                  pellentesque ac eget. In nisl suspendisse pellentesque augue
-                  egestas. Aliquam diam scelerisque risus cursus vel diam nam.
-                  scelerisque risus cursus vel diam.
+                  {scanDetails.scan_type === "project" &&
+                  scanDetails.project_url === "File Scan"
+                    ? "For optimal security and privacy, SolidityScan does not store your code after a scan is complete. To ensure the most up-to-date and accurate results, please upload your Solidity file again for rescanning."
+                    : `Your project has ${scanDetails.loc} lines of code and is ready for a rescan. Upon initiating the rescan, the corresponding number of lines will be deducted from your code analysis credits.`}
                 </Text>
                 <Button width="250px" onClick={rescan} variant="brand">
                   {scanDetails.scan_type === "project" &&

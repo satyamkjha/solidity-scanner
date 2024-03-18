@@ -37,6 +37,7 @@ export type Profile = {
   billing_cycle: string;
   email_verified: boolean;
   verification_email_sent: boolean;
+  trial_projects_remaining: number;
   projects_remaining: number;
   package_recharge_date: string;
   package_end_date: string;

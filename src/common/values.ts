@@ -269,6 +269,13 @@ export const userTestimonials = [
     testimonial:
       "A perfect tool for startup projects in Web 3.0 ! Personally used this as a reference tool while morphing contracts and governance protocols to have a second set of eyes in real-time. Nothing beats actual audits, but the access and ease of use of Solidity Scan make it a no-brainer !",
   },
+  {
+    name: "Blockscout",
+    designation: "",
+    imageUrl: "blockscout.svg",
+    testimonial:
+      "SolidityScan has been an invaluable partner in enhancing smart contract security for Blockscout users. Their AI-driven tools provide real-time insights into contract vulnerabilities, empowering both developers and blockchain users to make informed decisions. The seamless integration with Blockscout simplifies the process of identifying potential risks, ensuring a safer and more secure blockchain ecosystem. We're proud to collaborate with SolidityScan in promoting transparency and security in smart contract development.",
+  },
 ];
 
 export const monthNames = [
@@ -555,7 +562,17 @@ export const detectorData: DetectorItemProp[] = [
   },
 ];
 
-export const pricing_table_data = [
+export const pricing_table_data: {
+  title: string;
+  data: {
+    title: string;
+    trial: any;
+    ondemand: any;
+    individual: any;
+    pro: any;
+    custom: any;
+  }[];
+}[] = [
   {
     title: "Vulnerability",
     data: [
@@ -647,24 +664,6 @@ export const pricing_table_data = [
     title: "Scan",
     data: [
       {
-        title: "Threat Scan Score",
-        trial: true,
-        ondemand: true,
-        individual: true,
-
-        pro: true,
-        custom: true,
-      },
-      {
-        title: "Threat Scan Details",
-        trial: true,
-        ondemand: true,
-        individual: true,
-
-        pro: true,
-        custom: true,
-      },
-      {
         title: "Private APIs",
         trial: false,
         ondemand: false,
@@ -752,9 +751,8 @@ export const pricing_table_data = [
       {
         title: "Generate Audit Report",
         trial: false,
-        ondemand: true,
-        individual: true,
-
+        ondemand: "Pay per Use",
+        individual: "Pay per Use",
         pro: true,
         custom: true,
       },
@@ -763,7 +761,6 @@ export const pricing_table_data = [
         trial: false,
         ondemand: false,
         individual: false,
-
         pro: true,
         custom: true,
       },
@@ -813,7 +810,6 @@ export const pricing_table_data = [
         trial: false,
         ondemand: false,
         individual: false,
-
         pro: true,
         custom: true,
       },
@@ -822,7 +818,6 @@ export const pricing_table_data = [
         trial: false,
         ondemand: false,
         individual: false,
-
         pro: true,
         custom: true,
       },
@@ -831,7 +826,6 @@ export const pricing_table_data = [
         trial: false,
         ondemand: false,
         individual: false,
-
         pro: true,
         custom: true,
       },
@@ -840,7 +834,6 @@ export const pricing_table_data = [
         trial: false,
         ondemand: false,
         individual: false,
-
         pro: true,
         custom: true,
       },
@@ -854,7 +847,6 @@ export const pricing_table_data = [
         trial: false,
         ondemand: false,
         individual: false,
-
         pro: false,
         custom: true,
       },
@@ -863,7 +855,6 @@ export const pricing_table_data = [
         trial: false,
         ondemand: false,
         individual: false,
-
         pro: false,
         custom: true,
       },
@@ -872,7 +863,6 @@ export const pricing_table_data = [
         trial: false,
         ondemand: false,
         individual: false,
-
         pro: false,
         custom: true,
       },

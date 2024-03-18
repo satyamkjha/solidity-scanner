@@ -113,7 +113,7 @@ const NoOrgView: React.FC<{
               text={
                 <>
                   Upgrade to our<strong> Pro </strong>plan or a
-                  <strong> Custom </strong>
+                  <strong> Enterprise </strong>
                   plan to use this feature and much more
                 </>
               }

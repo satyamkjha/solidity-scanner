@@ -88,62 +88,6 @@ const Layout: React.FC = ({ children }) => {
 
   const [openModal, setOpenModal] = useState(false);
 
-  // useEffect(() => {
-  //   if (
-  //     profileData &&
-  //     getFeatureGateConfig().maintenance_data &&
-  //     getFeatureGateConfig().maintenance_data.enabled
-  //   ) {
-  //     let maintenance = localStorage.getItem("maintenance_info");
-  //     let maintenanceInfo;
-  //     if (maintenance) {
-  //       maintenanceInfo = JSON.parse(maintenance);
-  //     }
-
-  //     if (
-  //       maintenanceInfo &&
-  //       maintenanceInfo.emails &&
-  //       maintenanceInfo.emails.includes(profileData.email)
-  //     ) {
-  //       var date1 = new Date(
-  //         getFeatureGateConfig().maintenance_data.maintenance_start
-  //       );
-  //       var date2 = new Date(
-  //         maintenanceInfo.maintenance_data.maintenance_start
-  //       );
-  //       if (date1 > date2) {
-  //         localStorage.setItem(
-  //           "maintenance_info",
-  //           JSON.stringify({
-  //             maintenance_data: getFeatureGateConfig().maintenance_data,
-  //             emails: [profileData.email],
-  //           })
-  //         );
-  //         setOpenModal(true);
-  //       }
-  //     } else {
-  //       if (maintenanceInfo && maintenanceInfo.emails)
-  //         localStorage.setItem(
-  //           "maintenance_info",
-  //           JSON.stringify({
-  //             maintenance_data: getFeatureGateConfig().maintenance_data,
-  //             emails: [...maintenanceInfo.emails, profileData.email],
-  //           })
-  //         );
-  //       else {
-  //         localStorage.setItem(
-  //           "maintenance_info",
-  //           JSON.stringify({
-  //             maintenance_data: getFeatureGateConfig().maintenance_data,
-  //             emails: [profileData.email],
-  //           })
-  //         );
-  //       }
-  //       setOpenModal(true);
-  //     }
-  //   }
-  // }, [profileData]);
-
   useEffect(() => {
     if (
       profileData &&
