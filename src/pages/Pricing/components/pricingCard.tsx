@@ -52,7 +52,7 @@ export const PricingCard: React.FC<{
         "linear-gradient(90deg, #FFFFFF 2.08%, #FFFFFF 2.09%, #F9FFF5 100%)",
       icon: `${assetsURL}pricing/${plan}-heading.svg`,
     },
-    beginner: {
+    individual: {
       color: "#EF3D15",
       background:
         "linear-gradient(90deg, #FFFFFF 0%, #FFFFFF 0.01%, #FFFDFD 100%)",

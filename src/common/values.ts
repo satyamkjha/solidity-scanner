@@ -2334,4 +2334,5 @@ export const packageLabel: { [key: string]: string } = {
   beginner: "Individual",
   custom: "Enterprise",
   expired: "Expired",
+  individual: "Individual",
 };

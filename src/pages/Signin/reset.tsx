@@ -109,6 +109,7 @@ const Reset: React.FC = () => {
               isLoading={isLoading}
               spinner={<Loader color={"#3300FF"} size={25} />}
               w="100%"
+              mt={10}
               isDisabled={Object.values(errors).join("").length > 0}
             >
               Update Password
