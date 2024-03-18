@@ -30,6 +30,7 @@ import { BlockchainSelector } from "components/common/BlockchainSelector";
 import { useWebSocket } from "hooks/useWebhookData";
 import { useConfig } from "hooks/useConfig";
 import InsufficientLocModal from "components/modals/scans/InsufficientLocModal";
+import ProjectsExceededModal from "components/modals/scans/ProjectsExceededModal";
 
 const ContractForm: React.FC<{
   profileData: Profile;
@@ -61,7 +62,7 @@ const ContractForm: React.FC<{
   const assetsURL = getAssetsURL();
 
   const { isOpen, onClose: closeModal, onOpen } = useDisclosure();
-
+  const [projectsExceededModal, setProjectsExceededModal] = useState(false);
   const minLOCReq = process.env.REACT_APP_MIN_LOC_REQ;
 
   const onSubmit = async () => {
@@ -365,6 +366,18 @@ const ContractForm: React.FC<{
             contract_platform: platform,
             contract_chain: chain?.value,
             loc: "insufficient",
+            scan_type: "block",
+          }}
+        />
+      )}
+      {projectsExceededModal && (
+        <ProjectsExceededModal
+          open={projectsExceededModal}
+          closeModal={() => setProjectsExceededModal}
+          scanDetails={{
+            contract_address: contractAddress,
+            contract_platform: platform,
+            contract_chain: chain?.value,
             scan_type: "block",
           }}
         />

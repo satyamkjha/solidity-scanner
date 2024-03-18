@@ -14,6 +14,8 @@ import UpgradePackage from "components/upgradePackage";
 import { DummyCode } from "./TrialWall";
 import { RescanIcon } from "components/icons";
 import ReScanTrialScanModal from "components/modals/scans/ReScanTrialScanModal";
+import InsufficientLocModal from "components/modals/scans/InsufficientLocModal";
+import { useUserRole } from "hooks/useUserRole";
 
 export const RestartTrialScanView: React.FC<{
   type: "block" | "project";
@@ -32,9 +34,24 @@ export const RestartTrialScanView: React.FC<{
   contract_address,
   contract_platform,
 }) => {
+  const { profileData } = useUserRole();
   const { isOpen, onOpen, onClose } = useDisclosure();
+  const [open, setOpen] = useState(false);
   const detailResultContextValue = useContext(DetailResultContext);
   const scanSummary = detailResultContextValue?.scanSummary;
+
+  const onSubmit = () => {
+    if (
+      profileData &&
+      scanSummary &&
+      scanSummary.lines_analyzed_count > profileData?.loc_remaining
+    ) {
+      setOpen(true);
+    } else {
+      onOpen();
+    }
+  };
+
   return (
     <Flex
       w="100%"
@@ -99,7 +116,7 @@ export const RestartTrialScanView: React.FC<{
               fontSize="lg"
               color="black"
             >
-              Lorem ipsum dolor sit amet
+              ReScan Project
             </Text>
             <Text
               mt={3}
@@ -109,11 +126,11 @@ export const RestartTrialScanView: React.FC<{
               fontSize="sm"
               color="detail"
             >
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla leo
-              viverra semper platea quis nibh lectus cursus. Neque sem iaculis
-              augue sit egestas vivamus massa.
+              This project was scanned during your trial period and only
+              included gas optimization analysis To unlock the details of these
+              vulnerabilities, consider rescanning your project.
             </Text>
-            <Button onClick={onOpen} mt={10} variant="brand" width="250px">
+            <Button onClick={onSubmit} mt={10} variant="brand" width="250px">
               Unlock Details
             </Button>
           </Flex>
@@ -125,7 +142,7 @@ export const RestartTrialScanView: React.FC<{
             justifyContent="center"
             flexDir="row"
           >
-            <VStack cursor="pointer" onClick={onOpen} w="25%" spacing={2}>
+            <VStack cursor="pointer" onClick={onSubmit} w="25%" spacing={2}>
               <RescanIcon size={80} />
               <Text
                 fontFamily="monospace"
@@ -159,9 +176,8 @@ export const RestartTrialScanView: React.FC<{
                 fontSize="sm"
                 color="detail"
               >
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla
-                leo viverra semper platea quis nibh lectus cursus. Neque sem
-                iaculis augue sit egestas vivamus massa.
+                Rescan your project to leverage the full power of SolidityScan,
+                your new plan provides comprehensive security analysis.
               </Text>
             </VStack>
           </Flex>
@@ -170,6 +186,27 @@ export const RestartTrialScanView: React.FC<{
       <ReScanTrialScanModal
         closeModal={onClose}
         open={isOpen}
+        scanDetails={
+          type === "project"
+            ? {
+                project_name,
+                project_url,
+                scan_type: type,
+                loc: scanSummary?.lines_analyzed_count,
+              }
+            : {
+                contract_url,
+                contract_address,
+                contract_chain,
+                contract_platform,
+                scan_type: type,
+                loc: scanSummary?.lines_analyzed_count,
+              }
+        }
+      />
+      <InsufficientLocModal
+        open={open}
+        closeModal={() => setOpen(true)}
         scanDetails={
           type === "project"
             ? {

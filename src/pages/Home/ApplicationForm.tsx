@@ -34,6 +34,7 @@ import { infographicsData, OauthName } from "common/values";
 import { useWebSocket } from "hooks/useWebhookData";
 import { useConfig } from "hooks/useConfig";
 import InsufficientLocModal from "components/modals/scans/InsufficientLocModal";
+import ProjectsExceededModal from "components/modals/scans/ProjectsExceededModal";
 
 const ApplicationForm: React.FC<{
   profileData: Profile;
@@ -60,15 +61,16 @@ const ApplicationForm: React.FC<{
   const [branch, setBranch] = useState<string>("");
   const [nameError, setNameError] = useState<null | string>(null);
   const [linkError, setLinkError] = useState<null | string>(null);
-  const [connectError, setConnectError] = useState<null | string>(null);
   const [connectAlert, setConnectAlert] = useState(false);
+  // const [isOauthIntegrated, setIsOauthIntegrated] = useState(false);
   const isOauthIntegrated =
-    profileData?._integrations?.github?.status === "successful" ||
-    profileData?._integrations?.gitlab?.status === "successful" ||
-    profileData?._integrations?.bitbucket?.status === "successful";
+    profileData._integrations[formType].status === "successful";
+
   const toast = useToast();
 
   const { isOpen, onClose: closeModal, onOpen } = useDisclosure();
+
+  const [projectsExceededModal, setProjectsExceededModal] = useState(false);
 
   const runValidation = () => {
     if (projectName === "") {
@@ -102,7 +104,8 @@ const ApplicationForm: React.FC<{
   const runScan = async () => {
     if (!runValidation() || !repoTreeUP) return;
     if (profileData.current_package === "trial") {
-      if (profileData.projects_remaining > 2) {
+      if (profileData.trial_projects_remaining === 0) {
+        setProjectsExceededModal(true);
         return;
       }
     } else if (
@@ -388,12 +391,10 @@ const ApplicationForm: React.FC<{
           ) : step === 1 ? (
             <InfoSettings
               profileData={profileData}
-              connectError={connectError}
               nameError={nameError}
               linkError={linkError}
               visibility={visibility}
               projectName={projectName}
-              setConnectError={setConnectError}
               githubLink={githubLink}
               isOauthIntegrated={isOauthIntegrated}
               setProjectName={setProjectName}
@@ -495,6 +496,17 @@ const ApplicationForm: React.FC<{
         <InsufficientLocModal
           open={isOpen}
           closeModal={closeModal}
+          scanDetails={{
+            project_name: projectName,
+            project_url: githubLink,
+            scan_type: "project",
+          }}
+        />
+      )}
+      {projectsExceededModal && (
+        <ProjectsExceededModal
+          open={projectsExceededModal}
+          closeModal={() => setProjectsExceededModal}
           scanDetails={{
             project_name: projectName,
             project_url: githubLink,

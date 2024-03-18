@@ -91,7 +91,7 @@ const ProjectsExceededModal: React.FC<{
                 mt={5}
               >
                 <Text fontWeight={900}>Upgrade your Plan</Text>
-                <Text>Please Upgrade to a plan</Text>
+                <Text>Please Upgrade your plan to scan more projects</Text>
                 <Button w="250px" onClick={navigateToTopup} variant="brand">
                   Upgrade
                 </Button>

@@ -326,8 +326,9 @@ export const RestartTrialScan: React.FC<{
           color="black"
           mb={8}
         >
-          Lorem ipsum dolor sit amet consectetur. Ut in pharetra et egestas sed
-          lectus.{" "}
+          This project was scanned during your trial period and only included
+          gas optimization analysis To unlock the details of these
+          vulnerabilities, consider rescanning your project.{" "}
         </Text>
         {!isDesktopView && (
           <Button onClick={() => {}} mt={2} px={4} variant="brand" width="100%">

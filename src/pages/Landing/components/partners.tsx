@@ -21,25 +21,24 @@ export default function Partners() {
   }[] = [
     {
       url: "landing/partners/polygon.svg",
-      link: "https://polygon.technology/",
+      link: "https://twitter.com/SolidityScan/status/1673605524829470720",
     },
     {
       url: "landing/partners/immunefi.svg",
-      link: "https://immunefi.com/",
+      link: "https://twitter.com/SolidityScan/status/1689555988641431552",
     },
     {
       url: "landing/partners/xdc.svg",
-      link: "https://xdc.org/",
+      link: "https://solidityscan.com/discover/2023/07/solidify-your-xdc-smart-contracts-safeguarding-with-solidityscan/",
     },
     {
       url: "landing/partners/resonance.svg",
-      link: "https://www.resonance.security/",
+      link: "https://solidityscan.com/discover/2024/03/solidityscan-and-resonance-security-join-forces-streamlining-smart-contract-security/",
     },
     {
       url: "landing/partners/nordek.svg",
-      link: "https://www.nordek.io/",
+      link: "https://twitter.com/SolidityScan/status/1747990837986758964",
     },
-    { url: "landing/partners/hacken.svg", link: "https://www.nordek.io/" },
   ];
 
   const [isVisible, setIsVisible] = useState(false);
@@ -162,6 +161,7 @@ export default function Partners() {
               key={index}
               borderRadius={20}
               w="100%"
+              onClick={() => window.open("", "_blank")}
               h="220px"
               p={4}
               display="flex"
@@ -184,10 +184,7 @@ export default function Partners() {
                     }s ease-in`
               }
             >
-              <Image
-                // onClick={() => window.open("", "_blank")}
-                src={`${assetsURL}${item.url}`}
-              />
+              <Image src={`${assetsURL}${item.url}`} />
             </GridItem>
           ))}
         </Grid>

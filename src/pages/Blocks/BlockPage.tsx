@@ -686,6 +686,7 @@ const BlockPage: React.FC = () => {
                           contract_platform={
                             scanData?.scan_report.contract_platform
                           }
+                          contract_chain={scanData.scan_report.contract_chain}
                           contract_address={
                             scanData?.scan_report.contract_address
                           }

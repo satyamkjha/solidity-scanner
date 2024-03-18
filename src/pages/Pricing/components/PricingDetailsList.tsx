@@ -60,7 +60,7 @@ const PricingDetailsList: React.FC<{
             fontWeight={300}
             width="100%"
           >
-            Remaining Lines of code
+            Lines of code
           </Text>
           <HStack
             width="100%"
@@ -77,10 +77,10 @@ const PricingDetailsList: React.FC<{
             <Text fontWeight={700}>
               {" "}
               {plan.name === "Trial"
-                ? "Unlimited Gas Bugs"
+                ? "Gas Bugs Only"
                 : plan.loc.toLocaleString("en-US")}
             </Text>
-            <Text fontWeight={500}>LOC</Text>
+            <Text fontWeight={500}>{plan.name !== "Trial" && "LOC"}</Text>
           </HStack>
         </VStack>
       )}

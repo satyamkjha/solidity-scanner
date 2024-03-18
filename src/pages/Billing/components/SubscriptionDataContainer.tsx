@@ -14,9 +14,7 @@ const SubscriptionDataContainer: React.FC<{
           Subscribed on
         </Text>
         <Text fontWeight={500} fontSize="md">
-          {packageName === "trial" || packageName === "ondemand"
-            ? "--"
-            : formattedDate(new Date(packageRechargeDate), "long")}
+          {formattedDate(new Date(packageRechargeDate), "long")}
         </Text>
       </Box>
       {packageName !== "custom" && (
@@ -27,7 +25,7 @@ const SubscriptionDataContainer: React.FC<{
           <Text fontWeight={500} fontSize="md">
             {packageName === "trial" ||
             packageName === "ondemand" ||
-            isCancellable
+            !isCancellable
               ? "--"
               : "Stripe Payment"}
           </Text>

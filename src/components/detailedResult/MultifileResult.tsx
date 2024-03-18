@@ -46,6 +46,7 @@ const MultifileResult: React.FC<{
   project_url?: string;
   project_name?: string;
   contract_url?: string;
+  contract_chain?: string;
   contract_platform?: string;
   branchName?: string;
   refetch(): any;
@@ -58,9 +59,11 @@ const MultifileResult: React.FC<{
   details_enabled,
   refetch,
   project_url,
-  contract_url, project_name,
+  contract_url,
+  project_name,
   contract_platform,
   branchName,
+  contract_chain,
   is_trial_scan,
   contract_address,
 }) => {
@@ -606,6 +609,7 @@ const MultifileResult: React.FC<{
             project_url={project_url}
             contract_url={contract_url}
             contract_platform={contract_platform}
+            contract_chain={contract_chain}
             branchName={branchName}
             contract_address={contract_address}
             isViewer={isViewer}

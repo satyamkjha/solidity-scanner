@@ -10,6 +10,7 @@ import {
   HStack,
   Heading,
   Button,
+  useDisclosure,
 } from "@chakra-ui/react";
 import { getTrimmedScanMessage, snakeToNormal } from "helpers/helperFunction";
 import { WarningIcon, ExternalLinkIcon } from "@chakra-ui/icons";
@@ -18,6 +19,7 @@ import { ScanTitleComponent } from "./InScanModal";
 import { useHistory } from "react-router-dom";
 import ModalBlurOverlay from "components/common/ModalBlurOverlay";
 import { useWebSocket } from "hooks/useWebhookData";
+import AddProjectForm from "pages/Home/AddProjectForm";
 
 const ScanErrorModal: React.FC<{
   onClose: any;
@@ -27,16 +29,22 @@ const ScanErrorModal: React.FC<{
 }> = ({ isOpen, onClose, inScanDetails, insufficientMsg }) => {
   const history = useHistory();
   const { sendMessage } = useWebSocket();
+  const { isOpen: openModal, onOpen, onClose: closeModal } = useDisclosure();
 
   const rescan = () => {
     if (inScanDetails.scan_type === "project") {
-      sendMessage({
-        type: "project_scan_initiate",
-        body: {
-          project_id: inScanDetails.project_id,
-          project_type: "existing",
-        },
-      });
+      if (inScanDetails.project_url === "File Scan") {
+        onOpen();
+      } else {
+        sendMessage({
+          type: "project_scan_initiate",
+          body: {
+            project_id: inScanDetails.project_id,
+            project_type: "existing",
+          },
+        });
+        onClose();
+      }
     } else {
       let req = {};
       req = {
@@ -48,8 +56,8 @@ const ScanErrorModal: React.FC<{
         type: "block_scan_initiate",
         body: req,
       });
+      onClose();
     }
-    onClose();
   };
 
   return (
@@ -131,57 +139,61 @@ const ScanErrorModal: React.FC<{
                   : inScanDetails.scan_status ||
                     "This scan has failed, lost credits will be reimbursed in a few minutes. Please contact support"}
               </Text>
-              {!(
-                inScanDetails.scan_type === "project" &&
-                inScanDetails.project_url === "File Scan"
-              ) && (
-                <Flex
-                  w="100%"
-                  justifyContent="space-between"
-                  alignItems="center"
-                  mt={5}
+
+              <Flex
+                w="100%"
+                justifyContent="space-between"
+                alignItems="center"
+                mt={5}
+              >
+                <HStack
+                  onClick={() => {
+                    rescan();
+                  }}
+                  spacing={5}
+                  cursor={"pointer"}
                 >
-                  <HStack
-                    onClick={() => {
-                      rescan();
-                    }}
-                    spacing={5}
-                    cursor={"pointer"}
+                  <RescanIcon size={80} />
+                  <Text
+                    w="100%"
+                    overflowWrap="break-word"
+                    isTruncated
+                    fontWeight={600}
+                    fontSize="md"
                   >
-                    <RescanIcon size={80} />
-                    <Text
-                      w="100%"
-                      overflowWrap="break-word"
-                      isTruncated
-                      fontWeight={600}
-                      fontSize="md"
+                    Rescan Project
+                  </Text>
+                </HStack>
+                {inScanDetails.scan_type === "project" &&
+                  inScanDetails.project_url !== "File Scan" && (
+                    <Button
+                      rightIcon={<ExternalLinkIcon />}
+                      onClick={() =>
+                        history.push(
+                          `/${inScanDetails.scan_type}s/${inScanDetails.project_id}/${inScanDetails.scan_id}`
+                        )
+                      }
+                      size="sm"
+                      variant="text"
+                      minW="150px"
+                      color="#3300FF"
                     >
-                      Rescan Project
-                    </Text>
-                  </HStack>
-                  {inScanDetails.scan_type === "project" &&
-                    inScanDetails.project_url !== "File Scan" && (
-                      <Button
-                        rightIcon={<ExternalLinkIcon />}
-                        onClick={() =>
-                          history.push(
-                            `/${inScanDetails.scan_type}s/${inScanDetails.project_id}/${inScanDetails.scan_id}`
-                          )
-                        }
-                        size="sm"
-                        variant="text"
-                        minW="150px"
-                        color="#3300FF"
-                      >
-                        View Scan History
-                      </Button>
-                    )}
-                </Flex>
-              )}
+                      View Scan History
+                    </Button>
+                  )}
+              </Flex>
             </Flex>
           </Flex>
         </ModalBody>
       </ModalContent>
+      <AddProjectForm
+        formType="filescan"
+        onClose={() => {
+          closeModal();
+          onClose();
+        }}
+        isOpen={openModal}
+      />
     </Modal>
   );
 };

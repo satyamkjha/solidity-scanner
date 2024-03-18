@@ -265,7 +265,9 @@ export const PlanDataContainer: React.FC<{
         {profileData.current_package === "trial" ? (
           <HStack w="100%" justifyContent="space-between" alignItems="center">
             <Text fontWeight={600}>Remaining Projects</Text>
-            <Text fontWeight={600}>0{profileData.max_project_count} </Text>
+            <Text fontWeight={600}>
+              0{profileData.trial_projects_remaining}{" "}
+            </Text>
           </HStack>
         ) : (
           <HStack w="100%" justifyContent="space-between" alignItems="center">
