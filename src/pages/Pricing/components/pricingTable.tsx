@@ -143,7 +143,7 @@ const PricingTable: React.FC<PricingData> = ({
                       {typeof row.individual !== "boolean" ? (
                         row.individual
                       ) : row.individual ? (
-                        <TickComp color="#54C0EB" />
+                        <TickComp color="#EF3D15" />
                       ) : (
                         ""
                       )}

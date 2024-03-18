@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   Flex,
   Modal,
@@ -23,6 +23,8 @@ import { API_PATH } from "helpers/routeManager";
 import API from "helpers/api";
 import { useHistory } from "react-router-dom";
 import StyledButton from "components/styled-components/StyledButton";
+import { useUserRole } from "hooks/useUserRole";
+import EmailInput from "components/forms/EmailInput";
 
 const DeleteAccountForm: React.FC<{
   onClose(): any;
@@ -32,8 +34,18 @@ const DeleteAccountForm: React.FC<{
 
   const queryClient = useQueryClient();
   const toast = useToast();
+  const { profileData } = useUserRole();
 
   const [isLoading, setIsLoading] = useState(false);
+  const [email, setEmail] = useState("");
+  const [step, setStep] = useState(1);
+  const [error, setError] = useState("");
+
+  useEffect(() => {
+    if (profileData && profileData.email_verified) {
+      setEmail(profileData.email);
+    }
+  }, []);
 
   const deleteAccount = async () => {
     try {
@@ -43,6 +55,7 @@ const DeleteAccountForm: React.FC<{
           reason: optionList[radioOption],
           comment: comment,
           can_contact_user: check,
+          email,
         },
       });
       if (data.status === "success") {
@@ -68,6 +81,16 @@ const DeleteAccountForm: React.FC<{
     } catch (e) {
       console.log(e);
       setIsLoading(false);
+    }
+  };
+
+  const handleSubmitButton = async () => {
+    if (profileData && profileData.email_verified) {
+      deleteAccount();
+    } else {
+      if (step === 1) {
+        setStep(2);
+      } else deleteAccount();
     }
   };
 
@@ -111,31 +134,34 @@ const DeleteAccountForm: React.FC<{
             borderBottomWidth={"2px"}
           />
           <ModalBody h={"100%"} w={"100%"} px={[6, 6, 6, 12]}>
-            <Flex
-              justifyContent={"center"}
-              w={"100%"}
-              h={"50vh"}
-              direction="column"
-              alignItems={"center"}
-              textAlign="center"
-            >
-              <RadioGroup w="100%">
-                <VStack
-                  w="100%"
-                  alignItems={"flex-start"}
-                  justifyContent={"flex-start"}
-                >
-                  {optionList.map((item, index) => (
-                    <Radio
-                      onChange={(e) => setRadioOption(index)}
-                      variant="brand"
-                      value={index.toString()}
-                    >
-                      {item}
-                    </Radio>
-                  ))}
+            {profileData && (
+              <Flex
+                justifyContent={"center"}
+                w={"100%"}
+                h={"50vh"}
+                direction="column"
+                alignItems={"center"}
+                textAlign="center"
+              >
+                {step === 1 && (
+                  <>
+                    <RadioGroup w="100%">
+                      <VStack
+                        w="100%"
+                        alignItems={"flex-start"}
+                        justifyContent={"flex-start"}
+                      >
+                        {optionList.map((item, index) => (
+                          <Radio
+                            onChange={(e) => setRadioOption(index)}
+                            variant="brand"
+                            value={index.toString()}
+                          >
+                            {item}
+                          </Radio>
+                        ))}
 
-                  {/* <Radio variant="brand" value="2">
+                        {/* <Radio variant="brand" value="2">
                     Customer support could not clarity my questions or resolve
                     my issue
                   </Radio>
@@ -145,76 +171,98 @@ const DeleteAccountForm: React.FC<{
                   <Radio variant="brand" value="4">
                     Do not wish to specify/Others
                   </Radio> */}
-                </VStack>
-              </RadioGroup>
-              <Textarea
-                variant={"brand"}
-                placeholder="Add Comment (Optional)"
-                borderRadius={"16px"}
-                fontSize={"15px"}
-                backgroundColor={"#F6F6F6"}
-                noOfLines={4}
-                mt={10}
-                p={5}
-                value={comment}
-                onChange={(e) => {
-                  setComment(e.target.value);
-                }}
-                height={"120px"}
-                size="sm"
-                _focus={{
-                  boxShadow: "0px 12px 23px rgba(107, 255, 55, 0.1)",
-                }}
-              />
-              <HStack
-                width={"100%"}
-                mt={3}
-                alignItems={"center"}
-                justifyContent={"flex-start"}
-              >
-                <Checkbox
-                  isChecked={check}
-                  colorScheme={"purple"}
-                  onChange={() => {
-                    setCheck(!check);
-                  }}
-                />
-                <Text fontSize={"sm"}>
-                  You can contact me if you’d like to learn more why I delete my
-                  account
+                      </VStack>
+                    </RadioGroup>
+                    <Textarea
+                      variant={"brand"}
+                      placeholder="Add Comment (Optional)"
+                      borderRadius={"16px"}
+                      fontSize={"15px"}
+                      backgroundColor={"#F6F6F6"}
+                      noOfLines={4}
+                      mt={10}
+                      p={5}
+                      value={comment}
+                      onChange={(e) => {
+                        setComment(e.target.value);
+                      }}
+                      height={"120px"}
+                      size="sm"
+                      _focus={{
+                        boxShadow: "0px 12px 23px rgba(107, 255, 55, 0.1)",
+                      }}
+                    />
+                    <HStack
+                      width={"100%"}
+                      mt={3}
+                      alignItems={"center"}
+                      justifyContent={"flex-start"}
+                    >
+                      <Checkbox
+                        isChecked={check}
+                        colorScheme={"purple"}
+                        onChange={() => {
+                          setCheck(!check);
+                        }}
+                      />
+                      <Text fontSize={"sm"}>
+                        You can contact me if you’d like to learn more why I
+                        delete my account
+                      </Text>
+                    </HStack>
+                  </>
+                )}
+                {step === 2 && (
+                  <>
+                    <Text mb={3}>Enter your email to delete account </Text>
+                    <EmailInput
+                      isRequired
+                      showLeftIcon
+                      placeholder="Your email"
+                      autoComplete="username"
+                      value={email}
+                      onChange={(e) => setEmail(e.target.value)}
+                      onError={(e: any) => setError(e)}
+                    />
+                  </>
+                )}
+                <Text
+                  width="100%"
+                  p={5}
+                  borderWidth={1}
+                  borderColor="#FFC661"
+                  background="#FFF8ED"
+                  color="#4E5D78"
+                  my={7}
+                  fontSize={"sm"}
+                  fontWeight={300}
+                  borderRadius={10}
+                >
+                  Deleting account can’t be undone and the data can’t be
+                  restored
                 </Text>
-              </HStack>
-              <Text
-                width="100%"
-                p={5}
-                borderWidth={1}
-                borderColor="#FFC661"
-                background="#FFF8ED"
-                color="#4E5D78"
-                my={7}
-                fontSize={"sm"}
-                fontWeight={300}
-                borderRadius={10}
-              >
-                Deleting account can’t be undone and the data can’t be restored
-              </Text>
-              <StyledButton
-                h={"50px"}
-                mt={"auto"}
-                mb={2}
-                w="80%"
-                variant="brand"
-                px={12}
-                isLoading={isLoading}
-                borderRadius={10}
-                fontSize={"md"}
-                fontWeight={500}
-                disabled={false}
-                onClick={deleteAccount}
-              >
-                Delete Account
-              </StyledButton>
-            </Flex>
+                <StyledButton
+                  h={"50px"}
+                  mt={"auto"}
+                  mb={2}
+                  w="80%"
+                  variant="brand"
+                  px={12}
+                  isLoading={isLoading}
+                  borderRadius={10}
+                  fontSize={"md"}
+                  fontWeight={500}
+                  disabled={error ? true : false}
+                  onClick={handleSubmitButton}
+                >
+                  {profileData.email_verified
+                    ? "Delete Account"
+                    : step === 1
+                    ? "Proceed"
+                    : "Delete Account"}
+                </StyledButton>
+              </Flex>
+            )}
           </ModalBody>
         </ModalContent>
       </Modal>
