@@ -97,7 +97,7 @@ const CreateOrganisationForm: React.FC<{
     }
   };
 
-  const debouncedSearch = debounce(checkOrganisationNameRequest, 3000);
+  const debouncedSearch = debounce(checkOrganisationNameRequest, 1000);
 
   useEffect(() => {
     debouncedSearch();
@@ -184,6 +184,7 @@ const CreateOrganisationForm: React.FC<{
                       </InputRightElement>
                     ) : null
                   }
+                  value={orgName}
                   onKeyDown={(e) => {
                     if (e.keyCode === 13) {
                       createOrganisationRequest();
