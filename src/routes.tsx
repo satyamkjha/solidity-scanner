@@ -23,10 +23,7 @@ import { useUserOrgProfile } from "hooks/useUserOrgProfile";
 import { UserRoleProvider } from "hooks/useUserRole";
 import { onLogout, importScan } from "common/functions";
 import { useConfig } from "hooks/useConfig";
-import {
-  getFeatureGateConfig,
-  getCookieExpiration,
-} from "helpers/helperFunction";
+import { getFeatureGateConfig } from "helpers/helperFunction";
 import { publicRoutes } from "common/values";
 
 const Landing = lazy(() =>
