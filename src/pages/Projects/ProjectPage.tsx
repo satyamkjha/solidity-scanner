@@ -406,17 +406,7 @@ const ScanDetails: React.FC<{
     if (profile?.current_package === "trial") {
       history.push("/billing");
     } else if (scanData?.scan_report.is_trial_scan) {
-      if (
-        profile &&
-        scanData &&
-        scanData.scan_report.multi_file_scan_summary &&
-        profile.loc_remaining <=
-          scanData.scan_report.multi_file_scan_summary?.lines_analyzed_count
-      ) {
-        setOpenInsufficeintLocModal(true);
-      } else {
-        setOpenRescanTrialScanModal(true);
-      }
+      setOpenRescanTrialScanModal(true);
     } else if (reportingStatus === "not_generated") {
       generateReport();
     } else if (reportingStatus === "report_generated") {
