@@ -132,7 +132,8 @@ const ReportBlock: React.FC<{
         </HStack>
 
         <HStack width={["130px"]} my={3}>
-          {report.is_approved || report.report_type === "assisted" ? (
+          {report.is_approved ||
+          ["self_published", "assisted"].includes(report.report_type) ? (
             <BsPeople />
           ) : (
             <AiOutlineLock />
