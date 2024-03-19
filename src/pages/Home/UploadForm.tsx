@@ -14,6 +14,7 @@ import {
   Progress,
   CloseButton,
   useMediaQuery,
+  useDisclosure,
 } from "@chakra-ui/react";
 import { AiOutlineProject } from "react-icons/ai";
 import { SolidityFileIcon, UploadIcon, ZipFileIcon } from "components/icons";
@@ -27,6 +28,8 @@ import { CheckIcon } from "@chakra-ui/icons";
 import { useQueryClient } from "react-query";
 import { useWebSocket } from "hooks/useWebhookData";
 import { useConfig } from "hooks/useConfig";
+import InsufficientLocModal from "components/modals/scans/InsufficientLocModal";
+import ProjectsExceededModal from "components/modals/scans/ProjectsExceededModal";
 
 const UploadForm: React.FC<{
   profileData: Profile;
@@ -45,6 +48,9 @@ const UploadForm: React.FC<{
   const [name, setName] = useState("");
   const [s3url, setS3Url] = useState<string>("");
   const [isLoading, setIsLoading] = useState(false);
+
+  const { isOpen, onClose: closeModal, onOpen } = useDisclosure();
+  const [openExceededLimitModal, setOpenExceededLimitModal] = useState(false);
 
   let isViewer = role === "viewer";
   const extension = uploadType === "single" ? "sol" : "zip";
@@ -171,7 +177,22 @@ const UploadForm: React.FC<{
     return false;
   };
 
+  const minLOCReq = process.env.REACT_APP_MIN_LOC_REQ;
+
   const startFileScan = async () => {
+    if (profileData.current_package === "trial") {
+      if (profileData.projects_remaining >= 2) {
+        setOpenExceededLimitModal(true);
+        return;
+      }
+    } else if (
+      profileData.credit_system === "loc" &&
+      profileData.loc_remaining < parseInt(minLOCReq || "10")
+    ) {
+      onOpen();
+      return;
+    }
+
     if (config && config.REACT_APP_FEATURE_GATE_CONFIG.websockets_enabled) {
       try {
         setIsLoading(true);
@@ -184,9 +205,10 @@ const UploadForm: React.FC<{
             project_type: "new",
           },
         });
-        onClose();
+        queryClient.invalidateQueries("scan_list");
         history.push("/projects");
-        setTimeout(() => setIsLoading(false), 1000);
+        setIsLoading(false);
+        onClose();
       } catch (e) {
         setTimeout(() => setIsLoading(false), 1000);
         console.log(e);
@@ -331,18 +353,44 @@ const UploadForm: React.FC<{
           isLoading={isLoading}
           spinner={<Loader color={"#3300FF"} size={25} />}
           disabled={
+            (profileData.credit_system === "loc"
+              ? false
+              : profileData?.credits === 0) ||
+            isViewer ||
             isLoading ||
             step < 2 ||
             name === "" ||
             (profileData.actions_supported &&
-              !profileData.actions_supported.file_scan) ||
-            isViewer
+              !profileData.actions_supported.file_scan)
           }
           onClick={startFileScan}
         >
           Start Scan
         </Button>
       </Flex>
+      {isOpen && (
+        <InsufficientLocModal
+          open={isOpen}
+          closeModal={closeModal}
+          scanDetails={{
+            project_name: name,
+            project_url: "File Scan",
+            scan_type: "project",
+          }}
+        />
+      )}
+
+      {openExceededLimitModal && (
+        <ProjectsExceededModal
+          open={openExceededLimitModal}
+          closeModal={() => setOpenExceededLimitModal(false)}
+          scanDetails={{
+            project_name: name,
+            project_url: "File Scan",
+            scan_type: "project",
+          }}
+        />
+      )}
     </>
   );
 };

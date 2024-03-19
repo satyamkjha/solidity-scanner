@@ -451,12 +451,14 @@ const ErrorHandler: React.FC = ({ children }) => {
         return error;
       }
     );
+
     return () => {
       API.interceptors.response.eject(interceptor);
     };
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
   return <>{children}</>;
 };
 

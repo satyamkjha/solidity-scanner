@@ -58,12 +58,6 @@ export const publishReportType: { [key: string]: string } = {
 };
 
 export const issueActions = [
-  {
-    value: "pending_fix",
-    icon: "",
-    label: "Take action",
-    isDisabled: true,
-  },
   { value: "wont_fix", icon: "report/wont_fix_color", label: "Won't Fix" },
   {
     value: "false_positive",
@@ -274,6 +268,13 @@ export const userTestimonials = [
     imageUrl: "jon.svg",
     testimonial:
       "A perfect tool for startup projects in Web 3.0 ! Personally used this as a reference tool while morphing contracts and governance protocols to have a second set of eyes in real-time. Nothing beats actual audits, but the access and ease of use of Solidity Scan make it a no-brainer !",
+  },
+  {
+    name: "Blockscout",
+    designation: "",
+    imageUrl: "blockscout.svg",
+    testimonial:
+      "SolidityScan has been an invaluable partner in enhancing smart contract security for Blockscout users. Their AI-driven tools provide real-time insights into contract vulnerabilities, empowering both developers and blockchain users to make informed decisions. The seamless integration with Blockscout simplifies the process of identifying potential risks, ensuring a safer and more secure blockchain ecosystem. We're proud to collaborate with SolidityScan in promoting transparency and security in smart contract development.",
   },
 ];
 
@@ -561,7 +562,17 @@ export const detectorData: DetectorItemProp[] = [
   },
 ];
 
-export const pricing_table_data = [
+export const pricing_table_data: {
+  title: string;
+  data: {
+    title: string;
+    trial: any;
+    ondemand: any;
+    individual: any;
+    pro: any;
+    custom: any;
+  }[];
+}[] = [
   {
     title: "Vulnerability",
     data: [
@@ -569,8 +580,8 @@ export const pricing_table_data = [
         title: "Vulnerability Scan Score",
         trial: true,
         ondemand: true,
-        beginner: true,
-        intermediate: true,
+        individual: true,
+
         pro: true,
         custom: true,
       },
@@ -578,8 +589,8 @@ export const pricing_table_data = [
         title: "Vulnerability Scan Count",
         trial: true,
         ondemand: true,
-        beginner: true,
-        intermediate: true,
+        individual: true,
+
         pro: true,
         custom: true,
       },
@@ -587,8 +598,8 @@ export const pricing_table_data = [
         title: "Vulnerability Name",
         trial: true,
         ondemand: true,
-        beginner: true,
-        intermediate: true,
+        individual: true,
+
         pro: true,
         custom: true,
       },
@@ -596,8 +607,8 @@ export const pricing_table_data = [
         title: "Vulnerability Description",
         trial: false,
         ondemand: true,
-        beginner: true,
-        intermediate: true,
+        individual: true,
+
         pro: true,
         custom: true,
       },
@@ -605,8 +616,8 @@ export const pricing_table_data = [
         title: "Vulnerability Remediation",
         trial: false,
         ondemand: true,
-        beginner: true,
-        intermediate: true,
+        individual: true,
+
         pro: true,
         custom: true,
       },
@@ -614,17 +625,17 @@ export const pricing_table_data = [
         title: "Vulnerability Location/Details",
         trial: false,
         ondemand: true,
-        beginner: true,
-        intermediate: true,
+        individual: true,
+
         pro: true,
         custom: true,
       },
       {
         title: "Vulnerability Actions",
-        trial: false,
+        trial: true,
         ondemand: true,
-        beginner: true,
-        intermediate: true,
+        individual: true,
+
         pro: true,
         custom: true,
       },
@@ -632,17 +643,17 @@ export const pricing_table_data = [
         title: "Gas Optimization Detection",
         trial: true,
         ondemand: true,
-        beginner: true,
-        intermediate: true,
+        individual: true,
+
         pro: true,
         custom: true,
       },
       {
         title: "Gas Optimization Suggestions",
-        trial: false,
+        trial: true,
         ondemand: true,
-        beginner: true,
-        intermediate: true,
+        individual: true,
+
         pro: true,
         custom: true,
       },
@@ -653,65 +664,47 @@ export const pricing_table_data = [
     title: "Scan",
     data: [
       {
-        title: "Threat Scan Score",
-        trial: true,
-        ondemand: true,
-        beginner: true,
-        intermediate: true,
-        pro: true,
-        custom: true,
-      },
-      {
-        title: "Threat Scan Details",
-        trial: true,
-        ondemand: true,
-        beginner: true,
-        intermediate: true,
-        pro: true,
-        custom: true,
-      },
-      {
         title: "Private APIs",
         trial: false,
         ondemand: false,
-        beginner: false,
-        intermediate: false,
+        individual: false,
+
         pro: true,
         custom: true,
       },
       {
-        title: "Public Github integration",
+        title: "Public Github/Bitbucket/Gitlab Integration",
         trial: true,
         ondemand: true,
-        beginner: true,
-        intermediate: true,
+        individual: true,
+
         pro: true,
         custom: true,
       },
       {
-        title: "Private Github Integration",
+        title: "Private Github/Bitbucket/Gitlab Integration",
         trial: false,
         ondemand: false,
-        beginner: false,
-        intermediate: true,
+        individual: false,
+
         pro: true,
         custom: true,
       },
       {
-        title: "Github Actions",
+        title: "Github/Bitbucket/Gitlab Actions",
         trial: false,
         ondemand: false,
-        beginner: false,
-        intermediate: true,
+        individual: false,
+
         pro: true,
         custom: true,
       },
       {
         title: "Verified Contract Scan",
-        trial: false,
-        ondemand: false,
-        beginner: true,
-        intermediate: true,
+        trial: true,
+        ondemand: true,
+        individual: true,
+
         pro: true,
         custom: true,
       },
@@ -719,8 +712,8 @@ export const pricing_table_data = [
         title: "Scan History",
         trial: true,
         ondemand: true,
-        beginner: true,
-        intermediate: true,
+        individual: true,
+
         pro: true,
         custom: true,
       },
@@ -728,26 +721,24 @@ export const pricing_table_data = [
         title: "Scans Overview",
         trial: true,
         ondemand: true,
-        beginner: true,
-        intermediate: true,
+        individual: true,
+
         pro: true,
         custom: true,
       },
       {
-        title: "No. of scan credits",
-        trial: 2,
-        ondemand: 2,
-        beginner: 20,
-        intermediate: 40,
-        pro: 80,
+        title: "No. of LOC",
+        trial: "--",
+        ondemand: 1000,
+        individual: 8000,
+        pro: 50000,
         custom: "Unlimited",
       },
       {
         title: "Maximum Computing Time per scan",
         trial: "5 min or less",
         ondemand: "5 min or less",
-        beginner: "5 min or less",
-        intermediate: "5 min or less",
+        individual: "5 min or less",
         pro: "5 min or less",
         custom: "5 min or less",
       },
@@ -760,9 +751,8 @@ export const pricing_table_data = [
       {
         title: "Generate Audit Report",
         trial: false,
-        ondemand: false,
-        beginner: false,
-        intermediate: true,
+        ondemand: "Pay per Use",
+        individual: "Pay per Use",
         pro: true,
         custom: true,
       },
@@ -770,8 +760,7 @@ export const pricing_table_data = [
         title: "Audit Report History",
         trial: false,
         ondemand: false,
-        beginner: false,
-        intermediate: true,
+        individual: false,
         pro: true,
         custom: true,
       },
@@ -779,8 +768,8 @@ export const pricing_table_data = [
         title: "Download Audit Report",
         trial: false,
         ondemand: false,
-        beginner: false,
-        intermediate: false,
+        individual: false,
+
         pro: true,
         custom: true,
       },
@@ -788,8 +777,8 @@ export const pricing_table_data = [
         title: "Publish Audit Report",
         trial: false,
         ondemand: false,
-        beginner: false,
-        intermediate: false,
+        individual: false,
+
         pro: true,
         custom: true,
       },
@@ -797,8 +786,8 @@ export const pricing_table_data = [
         title: "Customize Audit Report",
         trial: false,
         ondemand: false,
-        beginner: false,
-        intermediate: false,
+        individual: false,
+
         pro: true,
         custom: true,
       },
@@ -806,9 +795,8 @@ export const pricing_table_data = [
         title: "Assisted Report Customisation",
         trial: false,
         ondemand: false,
-        beginner: false,
-        intermediate: false,
-        pro: false,
+        individual: false,
+        pro: "Pay per User",
         custom: true,
       },
     ],
@@ -817,20 +805,10 @@ export const pricing_table_data = [
     title: "Additional Team Support",
     data: [
       {
-        title: "Assisted Report Customization",
-        trial: false,
-        ondemand: false,
-        beginner: false,
-        intermediate: false,
-        pro: true,
-        custom: true,
-      },
-      {
         title: "Assisted Auditing",
         trial: false,
         ondemand: false,
-        beginner: false,
-        intermediate: false,
+        individual: false,
         pro: true,
         custom: true,
       },
@@ -838,8 +816,7 @@ export const pricing_table_data = [
         title: "Email Support",
         trial: false,
         ondemand: false,
-        beginner: false,
-        intermediate: false,
+        individual: false,
         pro: true,
         custom: true,
       },
@@ -847,8 +824,7 @@ export const pricing_table_data = [
         title: "Dedicated Discord/Telegram Support",
         trial: false,
         ondemand: false,
-        beginner: false,
-        intermediate: false,
+        individual: false,
         pro: true,
         custom: true,
       },
@@ -861,26 +837,23 @@ export const pricing_table_data = [
         title: "Mention in monthly newsletter",
         trial: false,
         ondemand: false,
-        beginner: false,
-        intermediate: false,
-        pro: true,
+        individual: false,
+        pro: false,
         custom: true,
       },
       {
         title: "Dedicated post on all social media handles",
         trial: false,
         ondemand: false,
-        beginner: false,
-        intermediate: false,
-        pro: true,
+        individual: false,
+        pro: false,
         custom: true,
       },
       {
         title: "Dedicated blog post",
         trial: false,
         ondemand: false,
-        beginner: false,
-        intermediate: false,
+        individual: false,
         pro: false,
         custom: true,
       },
@@ -888,8 +861,8 @@ export const pricing_table_data = [
         title: "Twitter Spaces",
         trial: false,
         ondemand: false,
-        beginner: false,
-        intermediate: false,
+        individual: false,
+
         pro: false,
         custom: true,
       },
@@ -897,38 +870,55 @@ export const pricing_table_data = [
   },
 ];
 
-export const pricing_card_description_data = [
-  {
-    key: "detector",
-    title: "All Detectors",
-    description: "Vulnerability Detectors coverage",
-    icon: "detectors/detectorIcon.svg",
-  },
-  {
-    key: "github",
-    title: "Private Github",
-    description: "Private Github",
-    icon: "pricing/pricing_card_icons/github.svg",
-  },
-  {
-    key: "actions",
-    title: "Github Actions",
-    description: "Github Actions",
-    icon: "pricing/pricing_card_icons/actions.svg",
-  },
-  {
-    key: "report",
-    title: "Publish Reports",
-    description: "Generate and Publish report",
-    icon: "pricing/pricing_card_icons/report.svg",
-  },
-  {
-    key: "private",
-    title: "API Access",
-    description: "Private API Access",
-    icon: "pricing/pricing_card_icons/private.svg",
-  },
-];
+export const pricing_card_description_data = (current_package: string) => {
+  return [
+    {
+      key: "detector",
+      title: "All Detectors",
+      description: "Vulnerability Detectors coverage",
+      icon: "detectors/detectorIcon.svg",
+      tooltipText:
+        "Access a comprehensive list of smart contract vulnerabilities, misconfigurations, logical issues, weaknesses, technology-specific smart contract vulnerabilities, and gas optimization techniques to reduce gas costs developed by the researchers of the SolidityScan team.",
+    },
+    {
+      key: "report",
+      title:
+        current_package === "pro" || current_package === "custom"
+          ? "Unlimited Reports "
+          : "Pay per Report",
+      description: "Generate and Publish report",
+      icon: "pricing/pricing_card_icons/report.svg",
+      tooltipText:
+        current_package === "pro" || current_package === "custom"
+          ? "Generate and self publish any number of automated reports with extensive results & summaries at no additional cost."
+          : "Pay for your report on the go",
+    },
+    {
+      key: "github",
+      title: "Private Github",
+      description: "Private Github",
+      icon: "pricing/pricing_card_icons/github.svg",
+      tooltipText:
+        "Easily integrate your private Github Repositories & scan your contracts on the platform hassle-free.",
+    },
+    {
+      key: "github",
+      title: "Github Actions",
+      description: "Github Actions",
+      icon: "pricing/pricing_card_icons/actions.svg",
+      tooltipText:
+        "Enable Github Actions to support your continuous development process with top notch security & set automated scanning of new commits.",
+    },
+    {
+      key: "private_api",
+      title: "Private API Access",
+      description: "Private API Access",
+      icon: "pricing/pricing_card_icons/private.svg",
+      tooltipText:
+        "Access Private APIs to scan & fix contracts directly from your development environments and streamline your security.",
+    },
+  ];
+};
 
 export const actionTaken: {
   [key: string]: string;
@@ -964,7 +954,8 @@ export const inProcessScanStates = [
 export const scanStatesLabel: {
   [key: string]: string;
 } = {
-  scan_initiate: "Scan in Queue",
+  in_queue: "Scan in Queue",
+  scan_initiate: "Downloading Code...",
   scan_done: "",
   initialised: "Downloading Code...",
   downloaded: "Code Downloaded...",
@@ -2314,3 +2305,15 @@ export const reportBlockDetails = [
     value: "email",
   },
 ];
+
+export const billingTabs = ["billing", "topup", "transactions"];
+
+export const packageLabel: { [key: string]: string } = {
+  trial: "Free Trial",
+  pro: "Pro",
+  ondemand: "On Demand",
+  beginner: "Individual",
+  custom: "Enterprise",
+  expired: "Expired",
+  individual: "Individual",
+};

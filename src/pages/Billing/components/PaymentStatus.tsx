@@ -28,6 +28,8 @@ export default function PaymentSucess() {
         </Flex>
       </Flex>
       <Container
+
+      
         h="60vh"
         maxW="60vw"
         justifyContent={"center"}

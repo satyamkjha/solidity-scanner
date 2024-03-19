@@ -22,7 +22,8 @@ import RecentScansList from "./RecentScansList";
 import PlanCycleInfo from "pages/Billing/components/PlanCycleInfo";
 import { useUserRole } from "hooks/useUserRole";
 import { AddProject } from "components/common/AddProject";
-import ImportScanModal from "components/modals/ImportScanModal";
+import ImportScanModal from "components/modals/scans/ImportScanModal";
+import InsufficientLocModal from "components/modals/scans/InsufficientLocModal";
 
 const OverviewData: React.FC<{
   heading: number;
@@ -51,7 +52,7 @@ const OverviewData: React.FC<{
         sx={{
           fontSize: "sm",
           fontWeight: 600,
-          lineHeight: "2",
+          lineHeight: "1.5",
           textAlign: "center",
           color: "gray.500",
         }}
@@ -119,20 +120,28 @@ const Home: React.FC = () => {
     "(min-width: 450px)",
   ]);
   const { isOpen, onClose, onOpen } = useDisclosure();
+  const [open, setOpen] = useState(false);
   const [importData, setImportData] = useState<any>();
 
   useEffect(() => {
     if (profileData) {
       const import_scan_details = getRecentQuickScan();
-      if (
-        import_scan_details &&
-        profileData.current_package === "trial" &&
-        profileData.credits > 1
-      ) {
-        importQuickScan(import_scan_details);
-      } else {
-        setImportData(import_scan_details);
-        onOpen();
+      if (import_scan_details && import_scan_details.loc !== null) {
+        if (profileData.current_package === "trial") {
+          if (profileData.projects_remaining < 2)
+            importQuickScan(import_scan_details);
+          else {
+          }
+        } else {
+          setImportData(import_scan_details);
+          if (profileData.credit_system === "loc") {
+            if (profileData.loc_remaining >= import_scan_details.loc) {
+              onOpen();
+            } else {
+              setOpen(true);
+            }
+          }
+        }
       }
     }
 
@@ -147,6 +156,10 @@ const Home: React.FC = () => {
   const onImportPopupClose = () => {
     localStorage.removeItem("recent_scan_details");
     onClose();
+  };
+
+  const onInsufficientLocPopupClose = () => {
+    setOpen(false);
   };
 
   return (
@@ -385,6 +398,13 @@ const Home: React.FC = () => {
           onClose={onImportPopupClose}
           scanDetails={importData}
           profileData={profileData}
+        />
+      ) : null}
+      {importData ? (
+        <InsufficientLocModal
+          open={open}
+          closeModal={onInsufficientLocPopupClose}
+          scanDetails={{ ...importData, scan_type: "block" }}
         />
       ) : null}
     </Flex>

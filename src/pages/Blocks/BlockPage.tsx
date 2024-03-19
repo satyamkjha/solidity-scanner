@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useParams, useHistory } from "react-router-dom";
+import InsufficientLocModal from "components/modals/scans/InsufficientLocModal";
 
 import {
   Flex,
@@ -48,6 +49,7 @@ import Loader from "components/styled-components/Loader";
 import { formattedDate } from "common/functions";
 import { useUserRole } from "hooks/useUserRole";
 import { PublishReport } from "components/modals/report/PublishReport";
+import ReScanTrialScanModal from "components/modals/scans/ReScanTrialScanModal";
 
 const BlockPage: React.FC = () => {
   const { scanId } = useParams<{ scanId: string }>();
@@ -93,6 +95,11 @@ const BlockPage: React.FC = () => {
   const handleTabsChange = (index: number) => {
     setTabIndex(index);
   };
+
+  const [openRescanTrialScanModal, setOpenRescanTrialScanModal] =
+    useState(false);
+  const [openInsufficeintLocModal, setOpenInsufficeintLocModal] =
+    useState(false);
 
   const generateReport = async (scanId: string, projectId: string) => {
     setReportingStatus("generating_report");
@@ -534,6 +541,23 @@ const BlockPage: React.FC = () => {
                                   if (profile.current_package === "trial") {
                                     history.push("/billing");
                                   } else if (
+                                    scanData.scan_report.is_trial_scan
+                                  ) {
+                                    if (
+                                      profile &&
+                                      scanData &&
+                                      scanData.scan_report
+                                        .multi_file_scan_summary &&
+                                      profile.loc_remaining >=
+                                        scanData.scan_report
+                                          .multi_file_scan_summary
+                                          .lines_analyzed_count
+                                    ) {
+                                      setOpenRescanTrialScanModal(true);
+                                    } else {
+                                      setOpenInsufficeintLocModal(true);
+                                    }
+                                  } else if (
                                     reportingStatus === "not_generated" ||
                                     scanData.scan_report
                                       .report_regeneration_enabled
@@ -676,6 +700,7 @@ const BlockPage: React.FC = () => {
                           scanSummary={
                             scanData.scan_report.multi_file_scan_summary
                           }
+                          is_trial_scan={scanData.scan_report.is_trial_scan}
                           scanDetails={
                             scanData.scan_report.multi_file_scan_details
                           }
@@ -685,6 +710,7 @@ const BlockPage: React.FC = () => {
                           contract_platform={
                             scanData?.scan_report.contract_platform
                           }
+                          contract_chain={scanData.scan_report.contract_chain}
                           contract_address={
                             scanData?.scan_report.contract_address
                           }
@@ -735,6 +761,38 @@ const BlockPage: React.FC = () => {
             </Box>
           </>
         )
+      )}
+
+      {openRescanTrialScanModal && (
+        <ReScanTrialScanModal
+          closeModal={() => setOpenRescanTrialScanModal(false)}
+          open={openRescanTrialScanModal}
+          scanDetails={{
+            contract_address: scanData?.scan_report.contract_address,
+            contract_url: scanData?.scan_report.contract_url,
+            contract_chain: scanData?.scan_report.contract_chain,
+            loc: scanData?.scan_report.multi_file_scan_summary
+              .lines_analyzed_count,
+            contract_platform: scanData?.scan_report.contract_platform,
+            scan_type: "block",
+          }}
+        />
+      )}
+
+      {openInsufficeintLocModal && (
+        <InsufficientLocModal
+          open={openInsufficeintLocModal}
+          closeModal={() => setOpenInsufficeintLocModal(false)}
+          scanDetails={{
+            contract_address: scanData?.scan_report.contract_address,
+            contract_url: scanData?.scan_report.contract_url,
+            contract_chain: scanData?.scan_report.contract_chain,
+            loc: scanData?.scan_report.multi_file_scan_summary
+              .lines_analyzed_count,
+            contract_platform: scanData?.scan_report.contract_platform,
+            scan_type: "block",
+          }}
+        />
       )}
 
       {scanData && profile && plans && open ? (

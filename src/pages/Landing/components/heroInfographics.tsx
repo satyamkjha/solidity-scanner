@@ -11,8 +11,9 @@ export const HeroInfographics: React.FC = () => {
     "(max-width: 600px)",
     "(max-width: 1200px)",
   ]);
+  const no_of_vuln_detectors =
+    config && config.REACT_APP_ISSUES_DATA.no_of_vuln_detectors;
 
- 
   const data: {
     url: string;
     text: string;
@@ -24,7 +25,7 @@ export const HeroInfographics: React.FC = () => {
     },
     {
       url: "landing/infographics/vulnerability_detectors.svg",
-      text: `140+ Vulnerability Detectors`,
+      text: `${no_of_vuln_detectors}+ Vulnerability Detectors`,
     },
     {
       url: "landing/infographics/audit_report.svg",

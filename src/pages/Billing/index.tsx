@@ -22,8 +22,16 @@ import PromoCodeCard from "./components/PromoCodeCard";
 import TransactionListCard from "./components/TransactionListCard";
 import Loader from "components/styled-components/Loader";
 import { useProfile } from "hooks/useProfile";
+import LocTopUp from "./components/LocTopUp";
+import { useLocation } from "react-router-dom";
+import { billingTabs } from "common/values";
 
 const Billing: React.FC = () => {
+  const location = useLocation();
+  const searchParams = new URLSearchParams(location.search);
+  const tab = searchParams.get("tab") || "billing";
+  const tabIndex = billingTabs.findIndex((item) => item === tab);
+
   const [planBillingCycle, setPlanBillingCycle] = useState("");
   const pricingRef = useRef<HTMLDivElement>(null);
   const { data: profileData, refetch: refetchProfile } = useProfile(true);
@@ -143,6 +151,7 @@ const Billing: React.FC = () => {
             w={"100%"}
             variant="soft-rounded"
             colorScheme="green"
+            defaultIndex={tabIndex}
           >
             <Flex
               width={"90%"}
@@ -163,15 +172,17 @@ const Billing: React.FC = () => {
                 </Tab>
                 {!["trial", "custom", "expired"].includes(
                   profileData.current_package
-                ) && (
+                ) ? (
                   <Tab
                     minW={["150px", "150px", "200px"]}
                     bgColor={"#F5F5F5"}
                     mx={[2, 3, 5]}
                   >
-                    Scan Credits
+                    {profileData.credit_system === "loc"
+                      ? "LOC TopUp"
+                      : "Scan Credits"}
                   </Tab>
-                )}
+                ) : null}
                 <Tab
                   minW={["150px", "150px", "200px"]}
                   bgColor={"#F5F5F5"}
@@ -202,6 +213,7 @@ const Billing: React.FC = () => {
                 >
                   {profileData.current_package === "custom" ? (
                     <CurrentPlan
+                      pricing={plans}
                       subscription={profileData.subscription}
                       isCancellable={profileData.is_cancellable}
                       billingCycle={planBillingCycle}
@@ -215,6 +227,7 @@ const Billing: React.FC = () => {
                         discount: null,
                         scan_count: 0,
                         amount: "NA",
+                        loc: 100000,
                         github: true,
                         report: true,
                         publishable_report: true,
@@ -228,6 +241,7 @@ const Billing: React.FC = () => {
                       profileData.current_package
                     ] && (
                       <CurrentPlan
+                        pricing={plans}
                         subscription={profileData.subscription}
                         isCancellable={profileData.is_cancellable}
                         billingCycle={planBillingCycle}
@@ -247,12 +261,11 @@ const Billing: React.FC = () => {
                   {completePaymentOpen && (
                     <Flex
                       h="100%"
-                      position={[
-                        "relative",
-                        "relative",
-                        "relative",
-                        "absolute",
-                      ]}
+                      position={
+                        profileData.current_package === "expired"
+                          ? "relative"
+                          : ["relative", "relative", "relative", "absolute"]
+                      }
                       left={[0, 0, 0, "55%"]}
                       top={0}
                       right={4}
@@ -285,25 +298,40 @@ const Billing: React.FC = () => {
               </TabPanel>
               {!["trial", "custom", "expired"].includes(
                 profileData.current_package
-              ) && (
+              ) ? (
                 <TabPanel px={[0, 0, 4]} mx={[0, 0, 4]}>
                   {plans.pricing_data[planBillingCycle] &&
-                    plans.pricing_data[planBillingCycle][
-                      profileData.current_package
-                    ] && (
-                      <ScanCredits
-                        planData={
-                          plans.pricing_data[planBillingCycle][
-                            profileData.current_package
-                          ]
-                        }
-                        profile={profileData}
-                        topUpData={plans.pricing_data["topup"]}
-                        pricingDetails={plans.pricing_data}
-                      />
-                    )}
+                  plans.pricing_data[planBillingCycle][
+                    profileData.current_package
+                  ] ? (
+                    <>
+                      {profileData.credit_system === "loc" ? (
+                        <LocTopUp
+                          planData={
+                            plans.pricing_data[planBillingCycle][
+                              profileData.current_package
+                            ]
+                          }
+                          profile={profileData}
+                          topUpData={plans.pricing_data["topup"]}
+                          pricingDetails={plans.pricing_data}
+                        />
+                      ) : (
+                        <ScanCredits
+                          planData={
+                            plans.pricing_data[planBillingCycle][
+                              profileData.current_package
+                            ]
+                          }
+                          profile={profileData}
+                          topUpData={plans.pricing_data["topup"]}
+                          pricingDetails={plans.pricing_data}
+                        />
+                      )}
+                    </>
+                  ) : null}
                 </TabPanel>
-              )}
+              ) : null}
               <TabPanel px={[0, 0, 4]} mx={[0, 0, 4]}>
                 <TransactionListCard
                   transactionList={transactionList}

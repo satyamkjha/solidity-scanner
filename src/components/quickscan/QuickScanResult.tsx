@@ -69,6 +69,7 @@ export const QuickScanResultContainer: React.FC<{
       contract_address: scanReport.contract_address,
       contract_chain: scanReport.contract_chain,
       contract_platform: scanReport.contract_platform,
+      loc: scanReport.multi_file_scan_summary.lines_analyzed_count,
       new_user: false,
     };
     setRecentQuickScan(scan_details);
@@ -351,6 +352,7 @@ export const QuickScanResultContainer: React.FC<{
           contract_address: scanReport.contract_address,
           contract_chain: scanReport.contract_chain,
           contract_platform: scanReport.contract_platform,
+          loc: scanReport.multi_file_scan_summary.lines_analyzed_count,
           new_user: false,
         }}
         errorCount={errorData?.errorCount || 0}

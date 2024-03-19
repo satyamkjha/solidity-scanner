@@ -51,11 +51,13 @@ export const ReportContainer: React.FC<{
   isPublicReport: boolean;
   needsTokenValidation?: boolean;
   isQSReport?: boolean;
+  onDemandReport?: boolean;
   profile?: Profile;
 }> = ({
   summary_report,
   isPublicReport,
   profile,
+  onDemandReport = false,
   isQSReport = false,
   needsTokenValidation = false,
 }) => {
@@ -732,115 +734,115 @@ export const ReportContainer: React.FC<{
       });
     }
 
-    Object.keys(isQSReport ? filteredIssues : issuesObj).forEach(
-      (key, index) => {
-        if (isQSReport) {
-          filteredIssues[key].issue_details.forEach((issue) => {
-            const splitResult = getVulnerabilityDetailSplit(issue);
-            if (splitResult) {
-              const list = (
-                splitResult as {
-                  point: string;
-                  start_line: number;
-                  end_line: number;
-                }[]
-              ).map((item, index, array) => {
-                counter = counter + 1;
-                return (
-                  <PDFContainer
-                    page={"details"}
-                    showHeaderImage={counter === 0}
-                    download={download === "true"}
-                    pageNumber={
-                      totalVulnerabilitySplit && totalBugsSplit
-                        ? totalVulnerabilitySplit?.length +
-                          totalBugsSplit?.length +
-                          counter +
-                          4
-                        : 5 + counter
-                    }
-                    content={
-                      <VulnerabililtyDetailsContainer
-                        type={item.point}
-                        onImportScan={onImportScan}
-                        download={download === "true"}
-                        summary_report={summary_report}
-                        issue={issue}
-                        showVulnerabilityTitle={counter === 0}
-                        filesContent={filesContent}
-                        codeStartLine={item.start_line}
-                        onOpen={onOpen}
-                        isQSReport={isQSReport}
-                        codeEndLine={item.end_line}
-                        showMetadata={index === 0}
-                        showDescription={
-                          item.point === "desc" || index === array.length - 1
-                        }
-                      />
-                    }
-                    setCurrentPage={setCurrentPage}
-                    setCurrentPageHeadings={setCurrentPageHeadings}
-                  />
-                );
-              });
-              pageList = [...pageList, ...list];
-            } else return splitResult;
-          });
-        } else {
-          issuesObj[key].issue_details.forEach((issue, index) => {
-            const splitResult = getVulnerabilityDetailSplit(issue);
-            if (splitResult) {
-              const list = (
-                splitResult as {
-                  point: string;
-                  start_line: number;
-                  end_line: number;
-                }[]
-              ).map((item, index, array) => {
-                counter = counter + 1;
-                return (
-                  <PDFContainer
-                    page={"details"}
-                    download={download === "true"}
-                    showHeaderImage={counter === 0}
-                    pageNumber={
-                      totalVulnerabilitySplit && totalBugsSplit
-                        ? totalVulnerabilitySplit?.length +
-                          totalBugsSplit?.length +
-                          counter +
-                          4
-                        : 5 + counter
-                    }
-                    content={
-                      <VulnerabililtyDetailsContainer
-                        type={item.point}
-                        download={download === "true"}
-                        onImportScan={onImportScan}
-                        summary_report={summary_report}
-                        issue={issue}
-                        showVulnerabilityTitle={counter === 0}
-                        filesContent={filesContent}
-                        codeStartLine={item.start_line}
-                        onOpen={onOpen}
-                        isQSReport={isQSReport}
-                        codeEndLine={item.end_line}
-                        showMetadata={index === 0}
-                        showDescription={
-                          item.point === "desc" || index === array.length - 1
-                        }
-                      />
-                    }
-                    setCurrentPage={setCurrentPage}
-                    setCurrentPageHeadings={setCurrentPageHeadings}
-                  />
-                );
-              });
-              pageList = [...pageList, ...list];
-            }
-          });
-        }
+    Object.keys(
+      isQSReport || onDemandReport ? filteredIssues : issuesObj
+    ).forEach((key, index) => {
+      if (isQSReport || onDemandReport) {
+        filteredIssues[key].issue_details.forEach((issue) => {
+          const splitResult = getVulnerabilityDetailSplit(issue);
+          if (splitResult) {
+            const list = (
+              splitResult as {
+                point: string;
+                start_line: number;
+                end_line: number;
+              }[]
+            ).map((item, index, array) => {
+              counter = counter + 1;
+              return (
+                <PDFContainer
+                  page={"details"}
+                  showHeaderImage={counter === 0}
+                  download={download === "true"}
+                  pageNumber={
+                    totalVulnerabilitySplit && totalBugsSplit
+                      ? totalVulnerabilitySplit?.length +
+                        totalBugsSplit?.length +
+                        counter +
+                        4
+                      : 5 + counter
+                  }
+                  content={
+                    <VulnerabililtyDetailsContainer
+                      type={item.point}
+                      onImportScan={onImportScan}
+                      download={download === "true"}
+                      summary_report={summary_report}
+                      issue={issue}
+                      showVulnerabilityTitle={counter === 0}
+                      filesContent={filesContent}
+                      codeStartLine={item.start_line}
+                      onOpen={onOpen}
+                      isQSReport={isQSReport}
+                      codeEndLine={item.end_line}
+                      showMetadata={index === 0}
+                      showDescription={
+                        item.point === "desc" || index === array.length - 1
+                      }
+                    />
+                  }
+                  setCurrentPage={setCurrentPage}
+                  setCurrentPageHeadings={setCurrentPageHeadings}
+                />
+              );
+            });
+            pageList = [...pageList, ...list];
+          } else return splitResult;
+        });
+      } else {
+        issuesObj[key].issue_details.forEach((issue, index) => {
+          const splitResult = getVulnerabilityDetailSplit(issue);
+          if (splitResult) {
+            const list = (
+              splitResult as {
+                point: string;
+                start_line: number;
+                end_line: number;
+              }[]
+            ).map((item, index, array) => {
+              counter = counter + 1;
+              return (
+                <PDFContainer
+                  page={"details"}
+                  download={download === "true"}
+                  showHeaderImage={counter === 0}
+                  pageNumber={
+                    totalVulnerabilitySplit && totalBugsSplit
+                      ? totalVulnerabilitySplit?.length +
+                        totalBugsSplit?.length +
+                        counter +
+                        4
+                      : 5 + counter
+                  }
+                  content={
+                    <VulnerabililtyDetailsContainer
+                      type={item.point}
+                      download={download === "true"}
+                      onImportScan={onImportScan}
+                      summary_report={summary_report}
+                      issue={issue}
+                      showVulnerabilityTitle={counter === 0}
+                      filesContent={filesContent}
+                      codeStartLine={item.start_line}
+                      onOpen={onOpen}
+                      isQSReport={isQSReport}
+                      codeEndLine={item.end_line}
+                      showMetadata={index === 0}
+                      showDescription={
+                        item.point === "desc" || index === array.length - 1
+                      }
+                    />
+                  }
+                  setCurrentPage={setCurrentPage}
+                  setCurrentPageHeadings={setCurrentPageHeadings}
+                />
+              );
+            });
+            pageList = [...pageList, ...list];
+          }
+        });
       }
-    );
+    });
     setLeftNavs((preValue) => {
       preValue[4].pageNo =
         totalVulnerabilitySplit && totalBugsSplit

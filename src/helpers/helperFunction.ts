@@ -3,6 +3,7 @@ import reCAPTCHA from "helpers/reCAPTCHA";
 import { Profile, PricingData, Finding } from "common/types";
 import { platformVsChains, contractChain, publicRoutes } from "common/values";
 import { matchPath } from "react-router-dom";
+import Cookies from "js-cookie";
 
 let configValue: any = null;
 
@@ -143,7 +144,7 @@ export const isEmail = (email: string) =>
   /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i.test(email);
 
 export const hasSpecialCharacters = (email: string) =>
-  /[`!@#$%^&*()_+\-=[\]{};':"\\|,.<>/?~]/i.test(email);
+  /[`!@#$%^&*()+\-=[\]{};':"\\|,.<>/?~]/i.test(email);
 
 export const checkOrgName = (email: string) =>
   /[`!@#$\s%^&*()+\-=[\]{};':"\\|,.<>/?~]/i.test(email);
@@ -267,7 +268,10 @@ export const getContractBlockChainLogoUrl = (
 ) => {
   if (platform === "buildbear") return "blockscan/buildbear";
 
-  return contractChain[getContractBlockchainId(platform, chain)].logoUrl;
+  return (
+    contractChain[getContractBlockchainId(platform, chain)] &&
+    contractChain[getContractBlockchainId(platform, chain)].logoUrl
+  );
 };
 
 export const getTrimmedScanMessage = (scan_status: string) => {
@@ -277,7 +281,7 @@ export const getTrimmedScanMessage = (scan_status: string) => {
   )
     return "Download Failed";
   else if (scan_status.includes("Scan Failed")) return "Scan Failed";
-
+  else if (scan_status.includes("Insufficient LoCs")) return "insufficient_loc";
   return "Scan Failed";
 };
 

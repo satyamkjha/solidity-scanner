@@ -10,6 +10,7 @@ import {
   useMediaQuery,
   Image,
   Link as ChakraLink,
+  useDisclosure,
 } from "@chakra-ui/react";
 import { Link } from "react-router-dom";
 import { CodeBlock, atomOneLight } from "react-code-blocks";
@@ -19,6 +20,10 @@ import { WarningTwoIcon } from "@chakra-ui/icons";
 import UpgradePackage from "../upgradePackage";
 import { getAssetsURL } from "helpers/helperFunction";
 import { DetailResultContext } from "common/contexts";
+import ReScanTrialScanModal from "components/modals/scans/ReScanTrialScanModal";
+import { type } from "os";
+import InsufficientLocModal from "components/modals/scans/InsufficientLocModal";
+import { useUserRole } from "hooks/useUserRole";
 export const TrialWall: React.FC = () => {
   return (
     <Flex w="100%" sx={{ flexDir: "column" }}>
@@ -259,6 +264,169 @@ export const TrialWallIssue: React.FC<{
   );
 };
 
+export const RestartTrialScan: React.FC<{
+  no_of_issue: number;
+  severity: string;
+  project_name?: string;
+  project_url?: string;
+  contract_url?: string;
+  contract_address?: string;
+  contract_chain?: string;
+  contract_platform?: string;
+  scan_type: string;
+}> = ({
+  no_of_issue,
+  severity,
+  contract_url,
+  contract_address,
+  contract_chain,
+  contract_platform,
+  scan_type,
+  project_name,
+  project_url,
+}) => {
+  const [isDesktopView] = useMediaQuery("(min-width: 1024px)");
+  const { isOpen, onOpen, onClose } = useDisclosure();
+  const [open, setOpen] = useState(false);
+  const detailResultContextValue = useContext(DetailResultContext);
+  const scanSummary = detailResultContextValue?.scanSummary;
+  const { profileData } = useUserRole();
+
+  return (
+    <Flex
+      w="100%"
+      sx={{ flexDir: ["column", "column", "column"] }}
+      position="relative"
+    >
+      <VStack w={"100%"} alignItems="flex-start" spacing={5} px={4}>
+        <Box
+          sx={{
+            w: "100%",
+            position: "sticky",
+            top: 8,
+          }}
+        >
+          {dummyIssues.map(({ filesCount, issueTitle, severity }) => (
+            <DummyIssue
+              filesCount={filesCount}
+              issueTitle={issueTitle}
+              severity={severity}
+            />
+          ))}
+        </Box>
+      </VStack>
+      <Flex
+        w="100%"
+        h="100%"
+        position="absolute"
+        sx={{
+          backdropFilter: "blur(6px)",
+        }}
+        bg="rgba(255,255,255,0.3)"
+        alignItems="center"
+        justifyContent="center"
+        flexDir="column"
+      >
+        <WarningTwoIcon color={severity} fontSize={50} />
+        <Text
+          textAlign={"center"}
+          w={"80%"}
+          fontWeight={700}
+          fontSize="md"
+          color="black"
+          mb={4}
+          display={"flex"}
+          alignItems={"center"}
+          justifyContent={"center"}
+        >
+          {no_of_issue}
+          <Text textTransform="capitalize" mx={1}>
+            {severity}{" "}
+          </Text>
+          Vulnerabilities found !
+        </Text>
+        <Text
+          textAlign={"center"}
+          w={"80%"}
+          fontWeight={300}
+          fontSize="sm"
+          color="black"
+          mb={8}
+        >
+          This project was scanned during your trial period and only included
+          gas optimization analysis To unlock the details of these
+          vulnerabilities, consider rescanning your project.{" "}
+        </Text>
+        {!isDesktopView && (
+          <Button
+            maxW="250px"
+            onClick={() => {
+              if (
+                profileData &&
+                scanSummary &&
+                scanSummary.lines_analyzed_count > profileData?.loc_remaining
+              ) {
+                setOpen(true);
+              } else {
+                onOpen();
+              }
+            }}
+            mt={2}
+            mb={5}
+            px={4}
+            variant="brand"
+            width="100%"
+          >
+            Unlock Details
+          </Button>
+        )}
+      </Flex>
+      <ReScanTrialScanModal
+        closeModal={onClose}
+        open={isOpen}
+        scanDetails={
+          scan_type === "project"
+            ? {
+                project_name,
+                project_url,
+                scan_type,
+                loc: scanSummary?.lines_analyzed_count,
+              }
+            : {
+                contract_url,
+                contract_address,
+                contract_chain,
+                contract_platform,
+                scan_type,
+                loc: scanSummary?.lines_analyzed_count,
+              }
+        }
+      />
+      <InsufficientLocModal
+        open={open}
+        closeModal={() => setOpen(false)}
+        scanDetails={
+          scan_type === "project"
+            ? {
+                project_name,
+                project_url,
+                scan_type,
+                loc: scanSummary?.lines_analyzed_count,
+              }
+            : {
+                contract_url,
+                contract_address,
+                contract_chain,
+                contract_platform,
+                scan_type,
+                loc: scanSummary?.lines_analyzed_count,
+              }
+        }
+      />
+    </Flex>
+  );
+};
+
 const DummyIssue: React.FC<{
   filesCount: number;
   issueTitle: string;
@@ -315,7 +483,7 @@ const DummyIssue: React.FC<{
   );
 };
 
-const DummyCode: React.FC = () => {
+export const DummyCode: React.FC = () => {
   return (
     <Box w="100%">
       <Box

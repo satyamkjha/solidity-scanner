@@ -11,7 +11,6 @@ import {
   useDisclosure,
   Button,
 } from "@chakra-ui/react";
-import Select from "react-select";
 import {
   FilesState,
   MultiFileScanDetail,
@@ -19,14 +18,11 @@ import {
   Profile,
   Issues,
 } from "common/types";
-import { issueActions } from "common/values";
 import API from "helpers/api";
 import { API_PATH } from "helpers/routeManager";
 import DetailFilter from "./DetailFilter";
 import MultifileIssues from "./MultifileIssues";
 import FileExplorerSection from "./FileExplorerSection";
-import FormatOptionLabelWithImage from "components/FormatOptionLabelWithImage";
-import { customStylesForTakeAction } from "common/stylesForCustomSelect";
 import ConfirmActionForm from "../modals/confirmActionForm";
 import { useUserRole } from "hooks/useUserRole";
 import {
@@ -36,6 +32,7 @@ import {
 } from "helpers/helperFunction";
 import { FileIssue } from "components/icons";
 import { DetailResultContext } from "common/contexts";
+import { TakeAction } from "./TakeAction";
 
 const MultifileResult: React.FC<{
   type: "block" | "project";
@@ -43,10 +40,13 @@ const MultifileResult: React.FC<{
   scanSummary: MultiFileScanSummary;
   scanDetails: MultiFileScanDetail[];
   profileData: Profile;
+  is_trial_scan: boolean;
   details_enabled: boolean;
   contract_address?: string;
   project_url?: string;
+  project_name?: string;
   contract_url?: string;
+  contract_chain?: string;
   contract_platform?: string;
   branchName?: string;
   refetch(): any;
@@ -60,8 +60,11 @@ const MultifileResult: React.FC<{
   refetch,
   project_url,
   contract_url,
+  project_name,
   contract_platform,
   branchName,
+  contract_chain,
+  is_trial_scan,
   contract_address,
 }) => {
   const [files, setFiles] = useState<FilesState | null>(null);
@@ -150,6 +153,10 @@ const MultifileResult: React.FC<{
   const [isDesktopView] = useMediaQuery("(min-width: 1350px)");
 
   const [restrictedBugIds, setRestrictedBugIds] = useState<string[]>([]);
+  const [markedAction, setMarkedAction] = useState({
+    placeholder: "Take Action",
+    disabled: "",
+  });
 
   // useEffect(() => {
   //   if (
@@ -209,6 +216,11 @@ const MultifileResult: React.FC<{
             duration: 3000,
             isClosable: true,
           });
+          if (comment)
+            setFiles({
+              ...files,
+              comment: comment,
+            });
           refetch();
         }
 
@@ -378,6 +390,34 @@ const MultifileResult: React.FC<{
       .flatMap((issue) => issue.bugs || [])
       .map((finding) => finding.bug_hash);
     setSelectedBugs(bugHashList);
+    if (selectedIssues.length === 1 && selectedIssues[0].bugs) {
+      const statusList = selectedIssues[0].bugs.map((bug) => bug.bug_status);
+      const uniqueStatusList = Array.from(new Set(statusList));
+      if (
+        uniqueStatusList.length === 1 &&
+        uniqueStatusList[0] !== "pending_fix"
+      ) {
+        setMarkedAction({
+          placeholder: uniqueStatusList[0],
+          disabled: uniqueStatusList[0],
+        });
+      } else if (uniqueStatusList.length > 1) {
+        setMarkedAction({
+          placeholder: "Take Action",
+          disabled: "",
+        });
+      } else {
+        setMarkedAction({
+          placeholder: "Take Action",
+          disabled: "pending_fix",
+        });
+      }
+    } else {
+      setMarkedAction({
+        placeholder: "Take Action",
+        disabled: "",
+      });
+    }
   }, [selectedIssues]);
 
   useEffect(() => {
@@ -430,6 +470,25 @@ const MultifileResult: React.FC<{
     return isDisabled || (selectedIssues && selectedIssues.length > 1);
   };
 
+  const onBugSelect = (item: any) => {
+    if (selectedBugs.some((bug) => restrictedBugIds.includes(bug))) {
+      toast({
+        description:
+          "Bug Status update in progress for the selected bugs. Please try after some time.",
+        status: "error",
+        duration: 3000,
+        isClosable: true,
+      });
+    } else {
+      if (item.value === "wont_fix") {
+        onOpen();
+        setBugStatus(item.value);
+      } else {
+        updateBugStatus(item.value);
+      }
+    }
+  };
+
   return (
     <DetailResultContext.Provider
       value={{
@@ -473,36 +532,12 @@ const MultifileResult: React.FC<{
               py={2}
               p={2}
             >
-              <Select
-                formatOptionLabel={FormatOptionLabelWithImage}
-                options={issueActions}
-                value={issueActions.find(
-                  (item) => files?.bug_status === item.value
-                )}
-                placeholder="Take Action"
-                styles={customStylesForTakeAction}
+              <TakeAction
+                markedAction={markedAction}
                 isDisabled={isDisabled || isViewer}
-                onChange={(newValue: any) => {
-                  if (
-                    selectedBugs.some((bug) => restrictedBugIds.includes(bug))
-                  ) {
-                    toast({
-                      description:
-                        "Bug Status update in progress for the selected bugs. Please try after some time.",
-                      status: "error",
-                      duration: 3000,
-                      isClosable: true,
-                    });
-                  } else {
-                    if (newValue.value === "wont_fix") {
-                      onOpen();
-                      setBugStatus(newValue.value);
-                    } else {
-                      updateBugStatus(newValue.value);
-                    }
-                  }
-                }}
+                onBugSelect={onBugSelect}
               />
+
               {project_url && project_url !== "File Scan" && (
                 <Button
                   background={isFileIssueDisabled() ? "#FAFBFC" : "white"}
@@ -538,9 +573,12 @@ const MultifileResult: React.FC<{
           >
             <MultifileIssues
               type={type}
+              is_trial_scan={is_trial_scan}
               details_enabled={details_enabled}
               is_latest_scan={is_latest_scan}
               issues={issues}
+              project_name={project_name}
+              contract_chain={contract_chain}
               files={files}
               setFiles={setFiles}
               selectedBugs={selectedBugs}
@@ -564,8 +602,10 @@ const MultifileResult: React.FC<{
         {isDesktopView && (
           <FileExplorerSection
             type={type}
+            is_trial_scan={is_trial_scan}
             is_latest_scan={is_latest_scan}
             files={files}
+            project_name={project_name}
             setFiles={setFiles}
             setRestrictedBugIds={setRestrictedBugIds}
             details_enabled={details_enabled}
@@ -576,6 +616,7 @@ const MultifileResult: React.FC<{
             project_url={project_url}
             contract_url={contract_url}
             contract_platform={contract_platform}
+            contract_chain={contract_chain}
             branchName={branchName}
             contract_address={contract_address}
             isViewer={isViewer}

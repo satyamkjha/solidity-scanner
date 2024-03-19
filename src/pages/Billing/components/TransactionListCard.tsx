@@ -15,7 +15,7 @@ import "../billing.css";
 import { Page, Transaction } from "common/types";
 import { sentenceCapitalize } from "helpers/helperFunction";
 import InfiniteScroll from "react-infinite-scroll-component";
-import { monthNames } from "common/values";
+import { monthNames, packageLabel } from "common/values";
 import CancelPaymentDialog from "./CancelPaymentDialog";
 import Loader from "components/styled-components/Loader";
 import { DownloadIcon } from "@chakra-ui/icons";
@@ -204,7 +204,7 @@ const TransactionListCard: React.FC<{
                         ? "Verified Report"
                         : transaction.billing_cycle === "publish_report"
                         ? "Self-Published Report"
-                        : sentenceCapitalize(transaction.package)}
+                        : packageLabel[transaction.package]}
                     </Text>
                     <Text w="10%" fontWeight={500} color={"gray.400"}>
                       {transaction.billing_cycle === "verified_publish_report"
@@ -338,7 +338,7 @@ const TransactionListCard: React.FC<{
                       Plan Name
                     </Text>
                     <Text fontSize={"md"}>
-                      {sentenceCapitalize(transaction.package)}
+                      {packageLabel[transaction.package]}
                     </Text>
                   </VStack>
                   <VStack

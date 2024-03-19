@@ -86,6 +86,7 @@ export const getBugStatusNumber = (bug_status: string) => {
 
 export const onLogout = async (history: any, queryClient: QueryClient) => {
   signOut(auth);
+  localStorage.removeItem("maintenance_info");
   Auth.deauthenticateUser();
   history.push("/signin");
   window.location.reload();

@@ -18,7 +18,7 @@ import {
   Box,
 } from "@chakra-ui/react";
 import React from "react";
-import { Plan } from "common/types";
+import { Plan, PricingData } from "common/types";
 import CurrentPlanDescriptionContainer from "./CurrentPlanDescriptionContainer";
 import SubscriptionDataContainer from "./SubscriptionDataContainer";
 import PricingDetailsList from "pages/Pricing/components/PricingDetailsList";
@@ -30,17 +30,21 @@ const PlanDetailsModal: React.FC<{
   onModalClose: any;
   currentPackage: string;
   duration: string;
+  isCancellable: boolean;
   packageRechargeDate: string;
   subscription: boolean;
   plan: Plan;
+  pricing: PricingData;
 }> = ({
   open: isOpen,
   onModalClose,
   currentPackage,
   duration,
+  pricing,
   plan,
   packageRechargeDate,
   subscription,
+  isCancellable,
 }) => {
   return (
     <Modal isOpen={isOpen} onClose={onModalClose}>
@@ -79,7 +83,7 @@ const PlanDetailsModal: React.FC<{
               alignItems="flex-start"
             >
               <Flex
-                w={["100%", "100%", "60%"]}
+                w={["100%", "100%", "50%"]}
                 flexDir="column"
                 justifyContent={"flex-start"}
                 alignItems="flex-start"
@@ -99,6 +103,7 @@ const PlanDetailsModal: React.FC<{
               >
                 {subscription && (
                   <SubscriptionDataContainer
+                    isCancellable={isCancellable}
                     packageName={currentPackage}
                     packageRechargeDate={packageRechargeDate}
                   />
@@ -119,7 +124,7 @@ const PlanDetailsModal: React.FC<{
             </Flex>
             <Divider mb={10} />
             <TableContainer width="100%">
-              {pricing_table_data.map((table) => (
+              {pricing.pricing_table_data.map((table) => (
                 <Table mb={20} border="none" variant="unstyled" width="100%">
                   <Thead width="100%">
                     <Tr width="100%">

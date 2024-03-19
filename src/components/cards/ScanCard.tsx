@@ -42,20 +42,27 @@ import {
 import { scanStatesLabel } from "common/values";
 import { useWebSocket } from "hooks/useWebhookData";
 import { useConfig } from "hooks/useConfig";
+import ScanErrorModal from "components/modals/scans/ScanErrorModal";
 
 const ScanCard: React.FC<{
   scan: ScanObj;
   tempScanStatus: string;
+  setInScanDetails: React.Dispatch<any>;
+  inScanDetails: any;
   // setIconCounter: Dispatch<SetStateAction<number>>;
   updateScanList: (project_id: string) => void;
   isViewer: boolean;
+  openScanStateModal: () => void;
   // ssIconAnimation: any;
 }> = ({
   scan,
   // setIconCounter,
   updateScanList,
   isViewer,
+  inScanDetails,
+  setInScanDetails,
   tempScanStatus,
+  openScanStateModal,
   // ssIconAnimation,
 }) => {
   const {
@@ -67,6 +74,8 @@ const ScanCard: React.FC<{
     scan_status,
     multi_file_scan_summary,
     project_id,
+    contract_url,
+    contract_chain,
   } = scan.scan_details;
   const cancelRef = useRef<HTMLButtonElement | null>(null);
   const config: any = useConfig();
@@ -85,7 +94,7 @@ const ScanCard: React.FC<{
         },
       });
       onClose();
-      updateScanList(scan_id);
+      updateScanList(project_id);
     } else {
       const url =
         scan.scan_type === "project"
@@ -114,17 +123,19 @@ const ScanCard: React.FC<{
         });
       }
       onClose();
-      updateScanList(scan_id);
+      updateScanList(project_id);
     }
   };
 
+
   const { isOpen, onClose, onOpen } = useDisclosure();
+
+  const [openScanError, setOpenScanError] = useState(false);
 
   return (
     <Flex
       sx={{
-        cursor:
-          multi_file_scan_status === "scan_done" ? "pointer" : "not-allowed",
+        cursor: "pointer",
         flexDir: "column",
         justifyContent: "space-between",
         h: "260px",
@@ -144,6 +155,42 @@ const ScanCard: React.FC<{
       onClick={() => {
         if (multi_file_scan_status === "scan_done") {
           history.push(`/${scan.scan_type}s/${project_id}/${scan_id}`);
+        } else if (
+          [
+            "scan_failed",
+            "download_failed",
+            "Download Failed",
+            "Scan Failed",
+            "insufficient_loc",
+          ].includes(tempScanStatus)
+        ) {
+          setOpenScanError(true);
+        } else {
+          if (
+            inScanDetails &&
+            inScanDetails.project_id === project_id &&
+            inScanDetails.scan_state === tempScanStatus
+          ) {
+            openScanStateModal();
+          } else {
+            if (scan.scan_type === "block")
+              setInScanDetails({
+                contract_address,
+                contract_platform,
+                contract_chain,
+                contract_url,
+                scan_state: tempScanStatus,
+                ...scan.scan_details,
+              });
+            else {
+              setInScanDetails({
+                project_url: scan.scan_details.project_url,
+                project_name: scan.scan_details.project_name,
+                scan_state: tempScanStatus,
+                ...scan.scan_details,
+              });
+            }
+          }
         }
       }}
     >
@@ -221,7 +268,7 @@ const ScanCard: React.FC<{
           <Flex
             width={"100%"}
             flexDir="row"
-            justifyContent={"flex-start"}
+            justifyContent={"space-between"}
             height="fit-content"
             ml={2}
             mb={7}
@@ -235,6 +282,20 @@ const ScanCard: React.FC<{
                 "0"
               }
             />
+
+            {scan.is_trial_scan && (
+              <Text
+                height="fit-content"
+                px={7}
+                mr={5}
+                py={1}
+                borderRadius={3}
+                bgColor="#F1F1F1"
+                color="#323B4B"
+              >
+                Free Trial
+              </Text>
+            )}
           </Flex>
           <VulnerabilityDistribution
             issueSeverityDistribution={{
@@ -257,9 +318,14 @@ const ScanCard: React.FC<{
             view={"scans"}
           />
         </Flex>
-      ) : ["scanning", "initialised", "downloaded", "scan_initiate"].includes(
-          multi_file_scan_status
-        ) && !["download_failed", "scan_failed"].includes(tempScanStatus) ? (
+      ) : [
+          "scanning",
+          "initialised",
+          "downloaded",
+          "scan_initiate",
+          "in_queue",
+        ].includes(multi_file_scan_status) &&
+        !["download_failed", "scan_failed"].includes(tempScanStatus) ? (
         <Box mb={10} p={5} w="100%">
           <Flex
             sx={{
@@ -287,6 +353,28 @@ const ScanCard: React.FC<{
           </Flex>
           <Progress value={20} isIndeterminate size="xs" />
         </Box>
+      ) : tempScanStatus === "insufficient_loc" ? (
+        <Box
+          sx={{
+            p: 3,
+            m: 3,
+            h: "fit-content",
+            borderRadius: 5,
+            backgroundColor: "#FCFCFF",
+          }}
+        >
+          <HStack mb={2} color="#FFA403">
+            <WarningIcon />
+            <Heading sx={{ fontSize: "sm" }}>Scan Failed</Heading>
+          </HStack>
+          <Text sx={{ fontSize: "xs", color: "#4E5D78" }}>
+            {scan_status.length > 25
+              ? scan_status
+              : scan.scan_err_message ||
+                scan.scan_details.scan_message ||
+                "This scan has failed, lost LOC will be reimbursed in a few minutes. Please contact support"}
+          </Text>
+        </Box>
       ) : (
         <Box
           sx={{
@@ -298,7 +386,7 @@ const ScanCard: React.FC<{
           }}
         >
           <HStack mb={2}>
-            <WarningIcon color="#FF5630" />
+            <WarningIcon color={"#FF5630"} />
             <Heading sx={{ fontSize: "sm", color: "#FF5630" }}>
               {["download_failed", "scan_failed"].includes(tempScanStatus)
                 ? snakeToNormal(tempScanStatus)
@@ -312,10 +400,15 @@ const ScanCard: React.FC<{
               ? scan_status
               : scan.scan_err_message ||
                 scan.scan_details.scan_message ||
-                "This scan has failed, lost credit will be reimbursed in a few minutes. Please contact support"}
+                "This scan has failed, lost LOC will be reimbursed in a few minutes. Please contact support"}
           </Text>
         </Box>
       )}
+      <ScanErrorModal
+        onClose={() => setOpenScanError(false)}
+        isOpen={openScanError}
+        inScanDetails={{ scan_state: tempScanStatus, ...scan.scan_details }}
+      />
       <AlertDialog
         isOpen={isOpen}
         onClose={onClose}

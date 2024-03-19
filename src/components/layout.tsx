@@ -17,6 +17,8 @@ import {
   Divider,
   VStack,
   Heading,
+  Collapse,
+  useDisclosure,
 } from "@chakra-ui/react";
 import { GiHamburgerMenu } from "react-icons/gi";
 import { BiUser, BiPowerOff } from "react-icons/bi";
@@ -27,18 +29,17 @@ import {
   SIDEBAR_WIDTH_EXPANDED,
   SIDEBAR_WIDTH_COLLAPSED,
 } from "common/constants";
-import API from "helpers/api";
-import { API_PATH } from "helpers/routeManager";
 import { useConfig } from "hooks/useConfig";
 import { useQueryClient } from "react-query";
 import { logout } from "common/functions";
 import { sentenceCapitalize } from "helpers/helperFunction";
 import { useUserOrgProfile } from "hooks/useUserOrgProfile";
-import { signInWithCustomToken, User, onAuthStateChanged } from "firebase/auth";
-import { auth } from "helpers/firebase";
-import { useWebSocket } from "hooks/useWebhookData";
 import { useProfile } from "hooks/useProfile";
+import { LOCHeader } from "./locHeader";
+import { usePricingPlans } from "hooks/usePricingPlans";
+import { PlanDataContainer } from "./planDataContainer";
 import { CloseIcon } from "@chakra-ui/icons";
+import DowntimeAlertModal from "./modals/DowntimeAlertModal";
 
 const MotionFlex = motion(Flex);
 
@@ -55,20 +56,14 @@ const Layout: React.FC = ({ children }) => {
     profileData?.logged_in_via === "org_login"
   );
 
-  const [credits, setCredits] = useState(profileData ? profileData.credits : 0);
+  // const [isBannerOpen, setIsBannerOpen] = useState(true);
 
   const [isBannerOpen, setIsBannerOpen] = useState(true);
 
   const config: any = useConfig();
   const assetsURL = getAssetsURL(config);
 
-  const { messageQueue, updateMessageQueue } = useWebSocket();
-
-  useEffect(() => {
-    if (profileData) {
-      setCredits(profileData.credits);
-    }
-  }, [profileData]);
+  const { data: pricingPlans } = usePricingPlans();
 
   const handleClickOutside = (e: MouseEvent) => {
     if (ref.current && ref.current.contains(e.target as Node)) {
@@ -78,27 +73,6 @@ const Layout: React.FC = ({ children }) => {
     // outside click
     setShowSidebar(false);
   };
-
-  useEffect(() => {
-    if (
-      messageQueue.length > 0 &&
-      messageQueue.some(
-        (msgItem: any) => msgItem && msgItem.type === "account_credits_update"
-      )
-    ) {
-      messageQueue.forEach((msgItem: any) => {
-        if (msgItem.type && msgItem.type === "account_credits_update") {
-          setCredits(msgItem.payload.updated_credits);
-        }
-      });
-      let tempMessageQueue = messageQueue.filter(
-        (msgItem: any) => msgItem.type !== "account_credits_update"
-      );
-      updateMessageQueue(tempMessageQueue);
-    }
-
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [messageQueue]);
 
   useEffect(() => {
     if (showSidebar) {
@@ -111,6 +85,50 @@ const Layout: React.FC = ({ children }) => {
       document.removeEventListener("mousedown", handleClickOutside);
     };
   }, [showSidebar]);
+
+  const [openModal, setOpenModal] = useState(false);
+
+  useEffect(() => {
+    if (
+      profileData &&
+      getFeatureGateConfig().maintenance_data &&
+      getFeatureGateConfig().maintenance_data.enabled
+    ) {
+      let maintenance = localStorage.getItem("maintenance_info");
+      let maintenanceInfo;
+      if (maintenance) {
+        maintenanceInfo = JSON.parse(maintenance);
+      }
+
+      if (maintenanceInfo) {
+        var date1 = new Date(
+          getFeatureGateConfig().maintenance_data.maintenance_start
+        );
+        var date2 = new Date(
+          maintenanceInfo.maintenance_data.maintenance_start
+        );
+        if (date1 > date2) {
+          localStorage.setItem(
+            "maintenance_info",
+            JSON.stringify({
+              maintenance_data: getFeatureGateConfig().maintenance_data,
+            })
+          );
+          setOpenModal(true);
+        }
+      } else {
+        localStorage.setItem(
+          "maintenance_info",
+          JSON.stringify({
+            maintenance_data: getFeatureGateConfig().maintenance_data,
+          })
+        );
+        setOpenModal(true);
+      }
+    }
+  }, [profileData]);
+
+  const { isOpen, onToggle } = useDisclosure();
 
   return (
     <Box as="div" height="100vh">
@@ -274,7 +292,7 @@ const Layout: React.FC = ({ children }) => {
               width="90%"
               sx={{ alignItems: "center", justifyContent: "space-between" }}
             >
-              <HStack width={["100%", "100%", "50%", "50%", "60%"]}>
+              <HStack width={["100%", "100%", "40%", "35%"]}>
                 <Icon
                   as={GiHamburgerMenu}
                   sx={{
@@ -305,19 +323,41 @@ const Layout: React.FC = ({ children }) => {
                 )}
               </HStack>
 
-              {profileData && (
-                <Flex
-                  ml={20}
-                  sx={{ display: ["none", "none", "flex"] }}
-                  onClick={() => history.push("/billing")}
+              {profileData && profileData.credit_system === "scan_credit" ? (
+                <HStack
+                  border="1px solid #FFC661"
+                  bgColor="#FFFCF7"
+                  display={["none", "none", "flex"]}
+                  borderRadius={20}
+                  w="400px"
+                  px={5}
+                  cursor="pointer"
+                  spacing={5}
+                  onClick={() =>
+                    history.push(getFeatureGateConfig().alert_link)
+                  }
                 >
-                  <Image src={`${assetsURL}pricing/coin.svg`} mx="auto" />
-                  <Text fontWeight={600} fontSize="2xl" ml={4}>
-                    {credits}
-                    <Box as="span" ml={2} color="subtle" fontSize="sm">
-                      Scan Credits
-                    </Box>
+                  <Image
+                    w="34px"
+                    h="34px"
+                    src={`${assetsURL}icons/loudspeaker.svg`}
+                  />
+                  <Text fontSize="sm" color="#FFA403" fontWeight={600}>
+                    {getFeatureGateConfig().alert_data}
                   </Text>
+                </HStack>
+              ) : null}
+
+              {profileData && pricingPlans && (
+                <Flex
+                  w="300px"
+                  ml={10}
+                  sx={{ display: ["none", "none", "flex"] }}
+                >
+                  <LOCHeader
+                    profileData={profileData}
+                    pricingPlans={pricingPlans}
+                  />
                 </Flex>
               )}
             </Flex>
@@ -329,6 +369,9 @@ const Layout: React.FC = ({ children }) => {
                   variant="unstyled"
                   borderRadius="100%"
                   border="2px solid"
+                  sx={{
+                    boxShadow: "0px 4px 20px rgba(0, 0, 0, 0.35) !important",
+                  }}
                   borderColor="brand-dark"
                   overflow="hidden"
                   mr={4}
@@ -338,7 +381,8 @@ const Layout: React.FC = ({ children }) => {
                 <MenuList
                   p={4}
                   zIndex={10}
-                  width="250px"
+                  width={["100%", "370px", "250px"]}
+                  maxW="370px"
                   borderWidth="0px"
                   sx={{
                     boxShadow: "0px 4px 20px rgba(0, 0, 0, 0.35) !important",
@@ -365,12 +409,46 @@ const Layout: React.FC = ({ children }) => {
                       </VStack>
                     )}
 
+                  <Box
+                    display={["flex", "flex", "none"]}
+                    w="100%"
+                    onClick={onToggle}
+                  >
+                    {profileData && pricingPlans && (
+                      <LOCHeader
+                        profileData={profileData}
+                        pricingPlans={pricingPlans}
+                      />
+                    )}
+                  </Box>
+                  {profileData.credit_system === "loc" ? (
+                    <Box w="100%" display={["flex", "flex", "none"]}>
+                      <Collapse in={isOpen} animateOpacity>
+                        <Box
+                          mt={4}
+                          w="100%"
+                          bgColor="#F9F9F9"
+                          borderRadius={10}
+                        >
+                          {profileData && pricingPlans && (
+                            <PlanDataContainer
+                              pricingPlans={pricingPlans}
+                              profileData={profileData}
+                            />
+                          )}
+                        </Box>
+                      </Collapse>
+                    </Box>
+                  ) : null}
+
+                  <Divider my={5} display={["flex", "flex", "none"]} />
+
                   <MenuItem
                     borderBottom="1px solid"
                     borderColor="border"
                     py={2}
                     onClick={() => history.push("/profile")}
-                    borderTopRadius="10px"
+                    borderTopRadius={["0xp", "0px", "10px"]}
                   >
                     <Icon as={BiUser} mr={3} color="gray.500" />
                     Profile
@@ -392,6 +470,12 @@ const Layout: React.FC = ({ children }) => {
           </Box>
         </Box>
       </Flex>
+      {getFeatureGateConfig().maintenance_data && (
+        <DowntimeAlertModal
+          isOpen={openModal}
+          onClose={() => setOpenModal(false)}
+        />
+      )}
     </Box>
   );
 };

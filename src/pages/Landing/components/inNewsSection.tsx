@@ -26,6 +26,52 @@ export const InNewsSection: React.FC = () => {
     articlePara: string;
   }[] = [
     {
+      imgLink: "landing/news_and_media/news_19.svg",
+      articleLink:
+        "https://cxotoday.com/press-release/credshields-secures-1-million-in-funding-to-bolster-web3-security-backed-by-draper-associates/",
+      articleHeading:
+        "CredShields Secures $1 Million in Funding to Bolster Web3 Security, Backed by Draper Associates",
+      articlePara:
+        "In a significant boost to the future of Web3 security, CredShields, a leader in blockchain security solutions, has announced a strategic investment of $1 million from Draper Associates. This funding propels CredShields’ mission to enhance the security of the digital landscape through the development of SolidityScan, a cutting-edge tool designed to automate and streamline smart contract audits.",
+    },
+    {
+      imgLink: "landing/news_and_media/news_18.svg",
+      articleLink:
+        "https://bnnbreaking.com/tech/credshields-lands-1m-from-draper-associates-for-solidityscan-elevating-blockchain-security",
+      articleHeading:
+        "CredShields Lands $1M from Draper Associates for SolidityScan, Elevating Blockchain Security",
+      articlePara:
+        "In a significant move towards enhancing blockchain security, CredShields has successfully secured a strategic investment of $1 million from Draper Associates. This investment is earmarked for the development of SolidityScan, a revolutionary tool designed to automate and streamline the process of smart contract audits. Founded by the visionary duo Shashank and Indranil Roy, CredShields is on a mission to bolster the security of the digital landscape, focusing on safeguarding digital assets and ensuring the integrity of blockchain transactions.",
+    },
+    {
+      imgLink: "landing/news_and_media/news_17.svg",
+      articleLink:
+        "https://bwdisrupt.businessworld.in/article/Cybersecurity-Solution-Provider-CredShields-Bags-1-Mn-From-Draper-Associates/01-03-2024-511717/",
+      articleHeading:
+        "Cybersecurity Solution Provider CredShields Bags $1 Mn From Draper Associates",
+      articlePara:
+        "Web3 security solution maker CredShields bags strategic investment of USD 1 million from Draper Associates. This funding propels CredShields' mission to enhance the security of the digital landscape through the development of SolidityScan, a cutting-edge tool designed to automate and streamline smart contract audits.",
+    },
+    {
+      imgLink: "landing/news_and_media/news_20.svg",
+      articleLink:
+        "https://cryptonewsbtc.org/2024/03/01/credshields-lands-1m-from-draper-associates-for-solidityscan-elevating-blockchain-security/",
+      articleHeading:
+        "CredShields Lands $1M from Draper Associates for SolidityScan, Elevating Blockchain Security",
+      articlePara:
+        "In a major transfer in direction of enhancing blockchain safety, CredShields has efficiently secured a strategic funding of $1 million from Draper Associates. This funding is earmarked for the event of SolidityScan, a revolutionary device designed to automate and streamline the method of sensible contract audits. Based by the visionary duo Shashank and Indranil Roy, CredShields is on a mission to bolster the safety of the digital panorama, specializing in safeguarding digital belongings and guaranteeing the integrity of blockchain transactions.",
+    },
+    {
+      imgLink: "landing/news_and_media/news_16.svg",
+      articleLink:
+        "https://yourstory.com/hindi/credshields-secures-1million-funding-bolster-web3-security-draper-associates",
+      articleHeading:
+        "CREDSHIELDS RAISES $1 MILLION FUNDING TO BOOST WEB3 SECURITY",
+      articlePara:
+        "lockchain Startup to Boost Web3 Security﻿CredShields﻿Has secured funding of 1 million (10 lakh) dollars from Draper Associates. This funding furthers CredShields' mission to enhance the security of the digital landscape through the development of SolidityScan, a cutting-edge tool designed to automate and streamline smart contract audits.",
+    },
+
+    {
       imgLink: "landing/news_and_media/news_15.svg",
       articleLink:
         "https://yourstory.com/the-decrypting-story/funding-blockchain-startup-credshields-web3-security",
@@ -178,6 +224,7 @@ export const InNewsSection: React.FC = () => {
       >
         Explore the Buzz Surrounding Our Innovative Solution
       </Text>
+
       <Box
         display={"flex"}
         // flexDir="column"

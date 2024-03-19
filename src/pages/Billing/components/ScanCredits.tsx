@@ -1,21 +1,18 @@
 import React, { useState } from "react";
 import {
-  Box,
   Flex,
   Image,
   Text,
   Button,
-  Menu,
-  MenuList,
-  MenuItem,
-  MenuButton,
   Divider,
   useDisclosure,
+  HStack,
+  VStack,
 } from "@chakra-ui/react";
 import { Profile, Plan } from "common/types";
-import { sentenceCapitalize, getAssetsURL } from "helpers/helperFunction";
-import { ChevronUpIcon, ChevronDownIcon } from "@chakra-ui/icons";
-import PaymentModal from "../../../components/modals/PaymentModal";
+import { getAssetsURL } from "helpers/helperFunction";
+import ContactUs from "components/modals/contactus";
+import { packageLabel } from "common/values";
 
 const ScanCredits: React.FC<{
   planData: Plan;
@@ -37,7 +34,7 @@ const ScanCredits: React.FC<{
   const creditOptions = ["00", "02", "05", "10", "20", "40", "60", "80"];
 
   return (
-    <Flex w="100%" h={"60vh"} flexDir={["column", "column", "column", "row"]}>
+    <Flex w="100%" h={"100%"} flexDir={["column", "column", "column", "row"]}>
       <Flex
         w={["100%", "100%", "100%", "55%"]}
         h="100%"
@@ -51,10 +48,10 @@ const ScanCredits: React.FC<{
           <Image
             width="35px"
             height="35px"
-            src={`${assetsURL}pricing/${planData.name}-heading.svg`}
+            src={`${assetsURL}pricing/${profile.current_package}-heading.svg`}
           />
           <Text fontSize="2xl" fontWeight={700} ml={1}>
-            {sentenceCapitalize(planData.name)}
+            {packageLabel[planData.name]}
           </Text>
         </Flex>
         <Text color="detail" fontWeight={400}>
@@ -70,7 +67,7 @@ const ScanCredits: React.FC<{
           {Object.keys(topUpData).map((key, index) => (
             <>
               <Flex key={index} w="100%" fontSize="sm" fontWeight="600">
-                <Text>{sentenceCapitalize(topUpData[key].name)}</Text>
+                <Text>{packageLabel[topUpData[key].name]}</Text>
                 <Text ml="auto">{`$ ${parseFloat(topUpData[key].amount).toFixed(
                   2
                 )}`}</Text>
@@ -93,7 +90,7 @@ const ScanCredits: React.FC<{
             Increase your scan credits with our top-up option. It will cost{" "}
             <strong>${currentTopUpPlan.amount} </strong> per credit for your
             current
-            <strong> {sentenceCapitalize(planData.name)} </strong> plan.
+            <strong> {packageLabel[planData.name]} </strong> plan.
           </Text>
         </Flex>
       </Flex>
@@ -106,161 +103,64 @@ const ScanCredits: React.FC<{
         px={10}
         ml={[0, 0, 0, 10]}
       >
-        <Text fontSize="lg">How many credits you need to buy?</Text>
-        <Flex
+        <VStack
+          alignItems={["center", "center", "flex-start"]}
+          justifyContent="flex-start"
+          textAlign={["center", "center", "left"]}
+          spacing={3}
           w="100%"
-          h="80px"
-          my={5}
-          borderRadius={"15px"}
-          border={optionsSelected ? "1px solid #52FF00" : "1px solid #ECECEC"}
-          boxShadow={
-            optionsSelected ? "0px 12px 23px rgba(107, 255, 55, 0.06)" : "none"
-          }
-          onClick={() => setOptionsSelected(true)}
+          border="1px solid #FFC661"
+          bgColor="#FFFCF7"
+          p={5}
+          borderRadius={10}
         >
-          <Flex w="100%">
-            <Menu matchWidth>
-              <MenuButton w="100%" textAlign="left">
-                <Flex p={4} w="100%">
-                  <Image
-                    w="34px"
-                    h="34px"
-                    src={`${assetsURL}pricing/coin.svg`}
-                  />
-
-                  <Box w="1px" background="#ECECEC" mx={4}></Box>
-                  <Text fontSize="2xl" fontWeight={800} ml={2}>
-                    {creditOptions[selectedIndex]}
-                  </Text>
-                </Flex>
-              </MenuButton>
-              <MenuList
-                maxH={"220px"}
-                overflow="scroll"
-                boxShadow={"0px 2px 13px rgba(0, 0, 0, 0.25)"}
-                borderRadius="15px"
-              >
-                {creditOptions.map((item: string, index: number) => (
-                  <>
-                    {index !== 0 && (
-                      <MenuItem
-                        w="100%"
-                        p={2}
-                        pl={6}
-                        onClick={() => setSelectedIndex(index)}
-                      >
-                        <Image
-                          w="20px"
-                          h="20px"
-                          src={`${assetsURL}pricing/coin.svg`}
-                        />
-                        <Flex align="center">
-                          <Text fontSize="2xl" fontWeight={800} ml={4}>
-                            {item}
-                          </Text>
-                          <Text fontSize="lg" ml={2}>
-                            credits
-                          </Text>
-                        </Flex>
-                      </MenuItem>
-                    )}
-                    {index !== 0 && creditOptions.length - 1 !== index && (
-                      <Divider borderColor={"#ECECEC"} />
-                    )}
-                  </>
-                ))}
-              </MenuList>
-            </Menu>
-          </Flex>
-          <Flex
-            flexDir="column"
-            ml="auto"
-            w={["15%", "15%", "10%", "10%"]}
-            h="100%"
-            alignItems="center"
-            justifyContent="center"
-            borderLeft={"1px solid #ECECEC"}
-          >
-            <Flex
-              w="100%"
-              h="50%"
-              align="center"
-              justifyContent="center"
-              borderTopRightRadius="15px"
-              cursor="pointer"
-              _hover={{
-                background: "#ECECEC",
-              }}
-              onClick={() =>
-                setSelectedIndex(
-                  Math.min(selectedIndex + 1, creditOptions.length - 1)
-                )
-              }
-            >
-              <ChevronUpIcon color={"subtle"} fontSize="xl" />
-            </Flex>
-            <Divider borderColor={"#ECECEC"} />
-            <Flex
-              w="100%"
-              h="50%"
-              align="center"
-              justifyContent="center"
-              borderBottomRightRadius="15px"
-              cursor="pointer"
-              _hover={{
-                background: "#ECECEC",
-              }}
-              onClick={() => setSelectedIndex(Math.max(selectedIndex - 1, 0))}
-            >
-              <ChevronDownIcon color={"subtle"} fontSize="xl" />
-            </Flex>
-          </Flex>
-        </Flex>
-        <Text
-          fontSize="xl"
-          mt={2}
-        >{`${creditOptions[selectedIndex]} credits`}</Text>
-        <Flex w="100%" textColor="subtle" my={2}>
-          <Text>{`$${currentTopUpPlan.amount} Per Credit  X  ${creditOptions[selectedIndex]}`}</Text>
-          <Text ml="auto">{`$${
-            parseFloat(currentTopUpPlan.amount) *
-            parseInt(creditOptions[selectedIndex])
-          }`}</Text>
-        </Flex>
-        <Divider borderColor={"#EAEAEA"} my={4} />
-        <Flex align="center" w="100%">
-          <Text fontSize="lg">Total</Text>
-          <Text fontSize="2xl" fontWeight={800} ml="auto">
-            {`$${Number(
-              parseFloat(currentTopUpPlan.amount) *
-                parseInt(creditOptions[selectedIndex])
-            ).toFixed(2)}`}
+          <HStack spacing={4}>
+            <Image w="34px" h="34px" src={`${assetsURL}pricing/coin.svg`} />
+            <Text fontSize="lg" color="#000000" fontWeight={600}>
+              Scan Credits Top-up
+            </Text>
+          </HStack>
+          <Text fontSize="sm" color="#4E5D78" fontWeight={300}>
+            We are upgrading to new pricing plans. Please contact our team
+            incase you want to top-up your scan credits till your existing plan
+            period.
           </Text>
-        </Flex>
-        <Divider borderColor={"#EAEAEA"} my={4} />
-        <Button
-          variant="brand"
-          p={6}
-          mt={"auto"}
-          w="100%"
-          alignSelf="center"
-          isDisabled={selectedIndex === 0}
-          onClick={onOpen}
+          <HStack justifyContent="space-between" w="100%" alignItems="flex-end">
+            <Button
+              minW="200px"
+              borderRadius={7}
+              onClick={onOpen}
+              variant="black-outline"
+            >
+              Contact Us
+            </Button>
+            <Image w="70px" h="70px" src={`${assetsURL}icons/mail-icon.svg`} />
+          </HStack>
+        </VStack>
+        <VStack
+          alignItems="center"
+          justifyContent="flex-start"
+          textAlign="center"
+          background="linear-gradient(to right, #1BD8E330, #FBEAAA30)"
+          spacing={3}
+          p={5}
+          display={["none", "none", "flex"]}
+          borderRadius={10}
+          mt={5}
         >
-          Make Payment
-        </Button>
+          <Text fontWeight={600} fontSize="lg">
+            New Pricing Plans 2024
+          </Text>
+          <Text fontWeight={300}>
+            We have revamped our pricing plans! Top-up your accounts with lines
+            of code instead of scan credits now.
+          </Text>
+          <Button w="100%" variant="brand">
+            Get LOC Top up now
+          </Button>
+        </VStack>
       </Flex>
-      {isOpen && (
-        <PaymentModal
-          globalDuration={"topup"}
-          selectedPlan={planData.name}
-          quantity={parseInt(creditOptions[selectedIndex])}
-          profileData={profile}
-          pricingDetails={pricingDetails}
-          isOpen={isOpen}
-          onClose={onClose}
-        />
-      )}
+      {isOpen && <ContactUs isOpen={isOpen} onClose={onClose} />}
     </Flex>
   );
 };

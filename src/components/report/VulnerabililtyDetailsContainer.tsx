@@ -8,7 +8,6 @@ import {
   VStack,
   Box,
   Link,
-  Button,
   useBreakpointValue,
 } from "@chakra-ui/react";
 import { Report, IssueItem, Finding } from "common/types";
@@ -21,8 +20,7 @@ import {
 } from "helpers/helperFunction";
 import styled from "@emotion/styled";
 import React from "react";
-import { ExternalLinkIcon, LockIcon } from "@chakra-ui/icons";
-import { useHistory } from "react-router-dom";
+import { ExternalLinkIcon } from "@chakra-ui/icons";
 import { codePlatform } from "common/values";
 import { ReportPayWall } from "./ReportPayWall";
 import { DemoCodeBlock } from "./DemoCodeBlock";
@@ -58,7 +56,6 @@ const VulnerabililtyDetailsContainer: React.FC<{
   isQSReport,
 }) => {
   const assetsURL = getAssetsURL();
-  const history = useHistory();
 
   const demoIssueDescription =
     "Access control plays an important role in segregation of privileges in smart contracts and other applications. If this is misconfigured or not properly validated on sensitive functions, it may lead to loss of funds, tokens and in some cases compromise of the smart contract.";

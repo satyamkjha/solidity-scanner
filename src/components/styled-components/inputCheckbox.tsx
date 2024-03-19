@@ -24,7 +24,7 @@ const InputCheckbox: React.FC<InputCheckboxProps> = ({
   onChange,
 }) => {
   return (
-    <Flex alignItems="center" justifyContent={"center"}>
+    <Flex alignItems="center" justifyContent={"center"} cursor={"pointer"}>
       <input
         id={"sol-checkbox"}
         name={name}

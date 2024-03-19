@@ -24,9 +24,10 @@ import React, {
 } from "react";
 import { AiOutlineCaretRight } from "react-icons/ai";
 import { SeverityIcon } from "../icons";
-import { TrialWallIssue } from "./TrialWall";
+import { TrialWallIssue, RestartTrialScan } from "./TrialWall";
 import IssueBox from "./IssueBox";
 import InputCheckbox from "components/styled-components/inputCheckbox";
+import { useUserRole } from "hooks/useUserRole";
 
 const IssueContainer: React.FC<{
   type: "block" | "project";
@@ -44,6 +45,7 @@ const IssueContainer: React.FC<{
   is_latest_scan: boolean;
   bugStatusFilter: boolean[];
   updateBugStatus: any;
+  is_trial_scan: boolean;
   restrictedBugIds: string[];
   setRestrictedBugIds: React.Dispatch<React.SetStateAction<string[]>>;
   project_url?: string;
@@ -52,6 +54,8 @@ const IssueContainer: React.FC<{
   branchName?: string;
   contract_address?: string;
   isViewer: boolean;
+  contract_chain?: string;
+  project_name?: string;
   scrollIntoView: boolean;
 }> = ({
   type,
@@ -76,6 +80,9 @@ const IssueContainer: React.FC<{
   branchName,
   contract_address,
   isViewer,
+  contract_chain,
+  project_name,
+  is_trial_scan,
   setRestrictedBugIds,
   scrollIntoView,
 }) => {
@@ -94,6 +101,8 @@ const IssueContainer: React.FC<{
   const [checkedChildren, setCheckedChildren] = useState<
     (string | undefined)[]
   >([]);
+
+  const { profileData } = useUserRole();
 
   useEffect(() => {
     if (
@@ -282,11 +291,27 @@ const IssueContainer: React.FC<{
             />
           </AccordionButton>
           <AccordionPanel p={0} pb={4}>
-            {!details_enabled && template_details.issue_severity !== "gas" ? (
-              <TrialWallIssue
-                severity={template_details.issue_severity}
-                no_of_issue={no_of_findings}
-              />
+            {!details_enabled &&
+            template_details.issue_severity !== "gas" &&
+            is_trial_scan ? (
+              profileData?.current_package === "trial" ? (
+                <TrialWallIssue
+                  severity={template_details.issue_severity}
+                  no_of_issue={no_of_findings}
+                />
+              ) : (
+                <RestartTrialScan
+                  severity={template_details.issue_severity}
+                  no_of_issue={no_of_findings}
+                  scan_type={type}
+                  project_url={project_url}
+                  project_name={project_name}
+                  contract_chain={contract_chain}
+                  contract_url={contract_url}
+                  contract_address={contract_address}
+                  contract_platform={contract_platform}
+                />
+              )
             ) : (
               <>
                 {isExpanded && (
@@ -299,6 +324,7 @@ const IssueContainer: React.FC<{
                           <IssueBox
                             key={item.bug_id + index}
                             type={type}
+                            is_trial_scan={is_trial_scan}
                             bug_id={item.bug_id}
                             files={files}
                             issue_id={issue_id}

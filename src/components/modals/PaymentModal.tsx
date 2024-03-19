@@ -1,6 +1,5 @@
 import {
   Modal,
-  ModalOverlay,
   Flex,
   Divider,
   HStack,
@@ -26,6 +25,8 @@ import ConfirmationMessageBox from "../../pages/Billing/components/ConfirmationM
 import DetailedBill from "../../pages/Billing/components/DetailedBill";
 import SwitchDuration from "../../pages/Billing/components/SwitchDuration";
 import Loader from "components/styled-components/Loader";
+import ModalBlurOverlay from "components/common/ModalBlurOverlay";
+import AddEmailModal from "./AddEmailModal";
 
 const PaymentModal: React.FC<{
   isOpen: boolean;
@@ -59,6 +60,17 @@ const PaymentModal: React.FC<{
   const toast = useToast();
 
   const [paymentMethod, setPaymentMethod] = useState<"cp" | "stripe">("cp");
+
+  const [open, setOpen] = useState(false);
+
+  const changePaymentMethod = (paymentMethod: "cp" | "stripe") => {
+    if (profileData && profileData.email_verified) {
+      setPaymentMethod(paymentMethod);
+    } else {
+      setOpen(true);
+    }
+  };
+
   const [coin, setCoin] = useState("");
   const [step, setStep] = useState(0);
   const [activeCoupon, setActiveCoupon] = useState<string | null>(null);
@@ -251,10 +263,8 @@ const PaymentModal: React.FC<{
         containerModalClose && containerModalClose();
       }}
     >
-      <ModalOverlay />
+      <ModalBlurOverlay />
       <ModalContent
-        overflowY={"scroll"}
-        overflowX={"scroll"}
         bg="white"
         borderRadius="15px"
         h={duration === "topup" ? "75%" : "85%"}
@@ -299,15 +309,13 @@ const PaymentModal: React.FC<{
                   <PaymentMethodCard
                     paymentType={"cp"}
                     paymentMethod={paymentMethod}
-                    setPaymentMethod={setPaymentMethod}
+                    changePaymentMethod={changePaymentMethod}
                   />
-                  {profileData?.email_verified && (
-                    <PaymentMethodCard
-                      paymentType={"stripe"}
-                      paymentMethod={paymentMethod}
-                      setPaymentMethod={setPaymentMethod}
-                    />
-                  )}
+                  <PaymentMethodCard
+                    paymentType={"stripe"}
+                    paymentMethod={paymentMethod}
+                    changePaymentMethod={changePaymentMethod}
+                  />
                 </HStack>
                 {paymentMethod === "cp" && (
                   <CoinPaymentSelect setCoin={setCoin} coin={coin} />
@@ -434,23 +442,13 @@ const PaymentModal: React.FC<{
                     <PaymentMethodCard
                       paymentType={"cp"}
                       paymentMethod={paymentMethod}
-                      setPaymentMethod={setPaymentMethod}
+                      changePaymentMethod={changePaymentMethod}
                     />
-                    {profileData ? (
-                      profileData.email_verified && (
-                        <PaymentMethodCard
-                          paymentType={"stripe"}
-                          paymentMethod={paymentMethod}
-                          setPaymentMethod={setPaymentMethod}
-                        />
-                      )
-                    ) : (
-                      <PaymentMethodCard
-                        paymentType={"stripe"}
-                        paymentMethod={paymentMethod}
-                        setPaymentMethod={setPaymentMethod}
-                      />
-                    )}
+                    <PaymentMethodCard
+                      paymentType={"stripe"}
+                      paymentMethod={paymentMethod}
+                      changePaymentMethod={changePaymentMethod}
+                    />
                   </HStack>
                   {paymentMethod === "cp" && (
                     <CoinPaymentSelect setCoin={setCoin} coin={coin} />
@@ -582,23 +580,13 @@ const PaymentModal: React.FC<{
                   <PaymentMethodCard
                     paymentType={"cp"}
                     paymentMethod={paymentMethod}
-                    setPaymentMethod={setPaymentMethod}
+                    changePaymentMethod={changePaymentMethod}
                   />
-                  {profileData ? (
-                    profileData.email_verified && (
-                      <PaymentMethodCard
-                        paymentType={"stripe"}
-                        paymentMethod={paymentMethod}
-                        setPaymentMethod={setPaymentMethod}
-                      />
-                    )
-                  ) : (
-                    <PaymentMethodCard
-                      paymentType={"stripe"}
-                      paymentMethod={paymentMethod}
-                      setPaymentMethod={setPaymentMethod}
-                    />
-                  )}
+                  <PaymentMethodCard
+                    paymentType={"stripe"}
+                    paymentMethod={paymentMethod}
+                    changePaymentMethod={changePaymentMethod}
+                  />
                 </VStack>
               ) : step === 2 ? (
                 <>
@@ -653,6 +641,14 @@ const PaymentModal: React.FC<{
           )}
         </ModalBody>
       </ModalContent>
+      {profileData && (
+        <AddEmailModal
+          onClose={() => setOpen(false)}
+          isOpen={open}
+          profileData={profileData}
+          description="Please add your email to pay through Stripe"
+        />
+      )}
     </Modal>
   );
 };

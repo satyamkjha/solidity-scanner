@@ -123,7 +123,7 @@ export default function PrivateApi() {
         minH: "85vh",
       }}
     >
-      <Text sx={{ color: "subtle", fontWeight: 600 }}>PERSONAL API ACCESS</Text>
+      <Text sx={{ color: "subtle", fontWeight: 600 }}>PRIVATE API ACCESS</Text>
 
       {isLoading ? (
         <Flex
@@ -375,7 +375,7 @@ export default function PrivateApi() {
                         text={
                           <>
                             Upgrade to our<strong> Pro </strong>plan or a
-                            <strong> Custom </strong>
+                            <strong> Enterprise </strong>
                             plan to use this feature and much more
                           </>
                         }
