@@ -141,7 +141,7 @@ export const BlockchainSelector: React.FC<{
       h="fit-content"
       w="90vw"
       pr={"10px"}
-      maxW="600px"
+      maxW={["100%", "100%", "100%", "600px"]}
       flexDir={["column", "column", "row"]}
       alignItems="center"
       justifyContent={["flex-start", "flex-start", "center"]}
