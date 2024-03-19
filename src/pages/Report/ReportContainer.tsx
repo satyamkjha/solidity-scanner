@@ -1287,7 +1287,7 @@ export const ReportContainer: React.FC<{
               ) : null}
             </Flex>
 
-            <QSPaymentModal onClose={onClose} isOpen={isOpen} />
+            {isOpen && <QSPaymentModal onClose={onClose} isOpen={isOpen} />}
           </Flex>
         </Container>
       )}
