@@ -99,11 +99,11 @@ const ScanErrorModal: React.FC<{
                 h: "fit-content",
                 borderRadius: 10,
                 backgroundColor:
-                  inScanDetails.tempScanStatus === "insufficient_loc"
+                  inScanDetails.scan_state === "insufficient_loc"
                     ? "#FFFCF7"
                     : "#FCFCFF",
                 border:
-                  inScanDetails.tempScanStatus === "insufficient_loc"
+                  inScanDetails.scan_state === "insufficient_loc"
                     ? "1px solid #FFC661"
                     : "1px solid #FF5630",
                 justifyContent: "flex-start",
@@ -111,21 +111,19 @@ const ScanErrorModal: React.FC<{
                 alignItems: "center",
               }}
             >
-              <HStack w="100%" mb={2}>
-                <WarningIcon
-                  color={
-                    inScanDetails.tempScanStatus === "insufficient_loc"
-                      ? "#FFC661"
-                      : "#FF5630"
-                  }
-                />
+              <HStack
+                color={
+                  inScanDetails.scan_state === "insufficient_loc"
+                    ? "#FFA403"
+                    : "#FF5630"
+                }
+                w="100%"
+                mb={2}
+              >
+                <WarningIcon />
                 <Heading
                   sx={{
                     fontSize: "sm",
-                    color:
-                      inScanDetails.tempScanStatus === "insufficient_loc"
-                        ? "#FFC661"
-                        : "#FF5630",
                   }}
                 >
                   {inScanDetails.scan_state.length > 25

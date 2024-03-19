@@ -127,7 +127,6 @@ const ScanCard: React.FC<{
     }
   };
 
-  console.log(tempScanStatus);
 
   const { isOpen, onClose, onOpen } = useDisclosure();
 
