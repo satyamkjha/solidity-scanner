@@ -206,7 +206,7 @@ export const RestartTrialScanView: React.FC<{
       />
       <InsufficientLocModal
         open={open}
-        closeModal={() => setOpen(true)}
+        closeModal={() => setOpen(false)}
         scanDetails={
           type === "project"
             ? {

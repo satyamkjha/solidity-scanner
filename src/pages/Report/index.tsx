@@ -34,6 +34,7 @@ export default function ReportPage() {
         <ReportContainer
           summary_report={data.summary_report}
           profile={profile}
+          onDemandReport={profile.current_package === "ondemand"}
           isPublicReport={false}
         />
       ) : (

@@ -57,6 +57,9 @@ import { PublishReport } from "components/modals/report/PublishReport";
 import { useWebSocket } from "hooks/useWebhookData";
 import { useConfig } from "hooks/useConfig";
 import { ScanHistory } from "./ScanHistory";
+import ProjectsExceededModal from "components/modals/scans/ProjectsExceededModal";
+import InsufficientLocModal from "components/modals/scans/InsufficientLocModal";
+import { type } from "os";
 
 export const ProjectPage: React.FC = () => {
   const { projectId } = useParams<{ projectId: string }>();
@@ -154,6 +157,10 @@ const ScanDetails: React.FC<{
   const { data: profile, isLoading: isProfileLoading } = useProfile(true);
   const [tabIndex, setTabIndex] = React.useState(0);
   const [open, setOpen] = useState(false);
+  const [openInsufficeintLocModal, setOpenInsufficeintLocModal] =
+    useState(false);
+  const [openProjectsExceededModal, setOpenProjectsExceededModal] =
+    useState(false);
 
   const [publishStatus, setPublishStatus] = useState("");
   const [commitHash, setCommitHash] = useState("");
@@ -466,7 +473,24 @@ const ScanDetails: React.FC<{
                         height="58px"
                         width="58px"
                         mr={[0, 0, 0, 6]}
-                        onClick={() => setIsOpen(true)}
+                        onClick={() => {
+                          if (profile.credit_system === "loc") {
+                            if (profile.current_package === "trial") {
+                              if (profile.trial_projects_remaining === 0) {
+                                setOpenProjectsExceededModal(true);
+                              } else setIsOpen(true);
+                            } else {
+                              if (
+                                scanData.scan_report.multi_file_scan_summary
+                                  .lines_analyzed_count < profile.loc_remaining
+                              ) {
+                                setIsOpen(true);
+                              } else {
+                                setOpenInsufficeintLocModal(true);
+                              }
+                            }
+                          }
+                        }}
                         _hover={rescanIconHoverStyles()}
                         isDisabled={isRescanButtonDisabled()}
                       >
@@ -734,15 +758,8 @@ const ScanDetails: React.FC<{
                         w: "100%",
                       }}
                     >
-                      {![
-                        "scan_failed",
-                        "download_failed",
-                        "Download Failed",
-                        "Scan Failed",
-                        "insufficient_loc",
-                      ].includes(
-                        scanData.scan_report.multi_file_scan_status
-                      ) && (
+                      {scanData.scan_report.multi_file_scan_status ===
+                        "scan_done" && (
                         <>
                           <Tab
                             fontSize={"sm"}
@@ -786,7 +803,6 @@ const ScanDetails: React.FC<{
                             h="35px"
                             minW={"175px"}
                             bgColor={"#F5F5F5"}
-                            ml={4}
                             whiteSpace="nowrap"
                           >
                             Custom Settings
@@ -822,13 +838,8 @@ const ScanDetails: React.FC<{
                     </TabList>
                   </Flex>
                   <TabPanels>
-                    {![
-                      "scan_failed",
-                      "download_failed",
-                      "Download Failed",
-                      "Scan Failed",
-                      "insufficient_loc",
-                    ].includes(scanData.scan_report.multi_file_scan_status) && (
+                    {scanData.scan_report.multi_file_scan_status ===
+                      "scan_done" && (
                       <TabPanel p={[0, 0, 0, 2]}>
                         {scanData.scan_report.multi_file_scan_summary ||
                         scanData.scan_report.scan_summary ? (
@@ -855,13 +866,8 @@ const ScanDetails: React.FC<{
                         )}
                       </TabPanel>
                     )}
-                    {![
-                      "scan_failed",
-                      "download_failed",
-                      "Download Failed",
-                      "Scan Failed",
-                      "insufficient_loc",
-                    ].includes(scanData.scan_report.multi_file_scan_status) && (
+                    {scanData.scan_report.multi_file_scan_status ===
+                      "scan_done" && (
                       <TabPanel p={[0, 0, 0, 0]}>
                         {scanData.scan_report.multi_file_scan_status ===
                           "scan_done" &&
@@ -988,10 +994,17 @@ const ScanDetails: React.FC<{
               Are you sure? You have{" "}
               <strong>
                 {profile?.credit_system === "loc"
-                  ? profile.loc_remaining
+                  ? profile.current_package === "trial"
+                    ? profile.trial_projects_remaining
+                    : profile.loc_remaining
                   : scansRemaining}
               </strong>{" "}
-              {profile?.credit_system === "loc" ? "LOC" : "scans"} remaining.
+              {profile?.credit_system === "loc"
+                ? profile.current_package === "trial"
+                  ? "scan"
+                  : "LOC"
+                : "scans"}{" "}
+              remaining.
             </AlertDialogBody>
 
             <AlertDialogFooter>
@@ -1011,6 +1024,43 @@ const ScanDetails: React.FC<{
           </AlertDialogContent>
         </AlertDialogOverlay>
       </AlertDialog>
+
+      {openProjectsExceededModal && (
+        <ProjectsExceededModal
+          open={openProjectsExceededModal}
+          closeModal={() => setOpenProjectsExceededModal(false)}
+          scanDetails={{
+            project_name: scanData?.scan_report.project_name,
+            project_url: scanData?.scan_report.project_url,
+            scan_type: "project",
+          }}
+        />
+      )}
+      {openInsufficeintLocModal && (
+        <InsufficientLocModal
+          open={openInsufficeintLocModal}
+          closeModal={() => setOpenInsufficeintLocModal(false)}
+          scanDetails={{
+            project_name: scanData?.scan_report.project_name,
+            project_url: scanData?.scan_report.project_url,
+            scan_type: "project",
+            loc: scanData?.scan_report.multi_file_scan_summary
+              .lines_analyzed_count,
+          }}
+        />
+      )}
+
+      {openProjectsExceededModal && (
+        <ProjectsExceededModal
+          open={openProjectsExceededModal}
+          closeModal={() => setOpenProjectsExceededModal(false)}
+          scanDetails={{
+            project_name: scanData?.scan_report.project_name,
+            project_url: scanData?.scan_report.project_url,
+            scan_type: "project",
+          }}
+        />
+      )}
 
       {scanData && profile && plans && open ? (
         <PublishReport

@@ -83,16 +83,25 @@ const InsufficientLocModal: React.FC<{
                     Your current project has Insufficient LOC !
                   </Text>
                   <Text fontSize="sm" color="#4E5D78" fontWeight={300}>
-                    The selected project has <strong>{scanDetails.loc}</strong>{" "}
-                    lines of code. Upgrade your plan or top-up your account with
-                    more lines of code to initiate the scan.
+                    {scanDetails.loc ? (
+                      <>
+                        The selected project has{" "}
+                        <strong>{scanDetails.loc}</strong> lines of code
+                      </>
+                    ) : (
+                      <>
+                        You have insufficient line of code to scan this project
+                      </>
+                    )}
+                    . Upgrade your plan or top-up your account with more lines
+                    of code to initiate the scan.
                   </Text>
                   <HStack
                     justifyContent={["center", "center", "space-between"]}
                     w="100%"
                     alignItems="center"
                   >
-                    {scanDetails.loc !== "insufficient" && (
+                    {scanDetails.loc && (
                       <VStack
                         color="#323B4B"
                         spacing={0}

@@ -506,7 +506,7 @@ const ApplicationForm: React.FC<{
       {projectsExceededModal && (
         <ProjectsExceededModal
           open={projectsExceededModal}
-          closeModal={() => setProjectsExceededModal}
+          closeModal={() => setProjectsExceededModal(false)}
           scanDetails={{
             project_name: projectName,
             project_url: githubLink,

@@ -701,8 +701,8 @@ export const pricing_table_data: {
       },
       {
         title: "Verified Contract Scan",
-        trial: false,
-        ondemand: false,
+        trial: true,
+        ondemand: true,
         individual: true,
 
         pro: true,

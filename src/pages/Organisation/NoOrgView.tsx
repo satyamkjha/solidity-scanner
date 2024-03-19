@@ -112,7 +112,7 @@ const NoOrgView: React.FC<{
             <UpgradePackage
               text={
                 <>
-                  Upgrade to our<strong> Pro </strong>plan or a
+                  Upgrade to our<strong> Pro </strong>plan or
                   <strong> Enterprise </strong>
                   plan to use this feature and much more
                 </>

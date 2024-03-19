@@ -73,8 +73,8 @@ const ProjectsExceededModal: React.FC<{
                   </Text>
                   <Text fontSize="sm" color="#4E5D78" fontWeight={300}>
                     You have exceeded the maximum permisseable limit of 2
-                    projects available in Free Trial account. Please upgrade to
-                    a Plan to Scan more projects.
+                    projects available in Free Trial account. Please upgrade
+                    your Plan to Scan more projects.
                   </Text>
                 </VStack>
               </HStack>

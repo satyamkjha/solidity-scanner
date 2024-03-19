@@ -30,6 +30,7 @@ const PlanDetailsModal: React.FC<{
   onModalClose: any;
   currentPackage: string;
   duration: string;
+  isCancellable: boolean;
   packageRechargeDate: string;
   subscription: boolean;
   plan: Plan;
@@ -41,6 +42,7 @@ const PlanDetailsModal: React.FC<{
   plan,
   packageRechargeDate,
   subscription,
+  isCancellable,
 }) => {
   return (
     <Modal isOpen={isOpen} onClose={onModalClose}>
@@ -99,7 +101,7 @@ const PlanDetailsModal: React.FC<{
               >
                 {subscription && (
                   <SubscriptionDataContainer
-                    isCancellable={false}
+                    isCancellable={isCancellable}
                     packageName={currentPackage}
                     packageRechargeDate={packageRechargeDate}
                   />

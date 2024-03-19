@@ -224,7 +224,9 @@ const FindingBugListContainer: React.FC<{
               fontWeight={"500"}
               color={"subtle"}
               width={"10%"}
-            ></Text>
+            >
+              --
+            </Text>
           )}
 
           <HStack width={"13%"} spacing={1.5}>

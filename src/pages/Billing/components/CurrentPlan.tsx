@@ -194,6 +194,7 @@ const CurrentPlan: React.FC<{
         subscription={subscription ? true : false}
         currentPackage={packageName}
         duration={billingCycle}
+        isCancellable={isCancellable}
         packageRechargeDate={packageRechargeDate}
         plan={plan}
         open={open}

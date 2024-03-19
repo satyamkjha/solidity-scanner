@@ -215,16 +215,16 @@ export const PlanDataContainer: React.FC<{
         ) && (
           <>
             <HStack w="100%" justifyContent="space-between" alignItems="center">
-              <Text fontWeight={600}>
+              <Text fontWeight={600} alignItems="flex-start">
                 Total LOC Quota{" "}
                 <span
                   style={{
-                    fontSize: "xs",
+                    fontSize: "12px",
                     color: "#8A94A6",
                   }}
                 >
                   {" "}
-                  (Plan+Top-Up)
+                  (Plan + TopUp)
                 </span>{" "}
               </Text>
               <Text fontWeight={600}>
@@ -336,6 +336,7 @@ export const PlanDataContainer: React.FC<{
             </Button>
           </HStack>
           <PlanDetailsModal
+            isCancellable={profileData.is_cancellable}
             subscription={profileData.is_cancellable}
             currentPackage={profileData.current_package}
             duration={profileData.billing_cycle}

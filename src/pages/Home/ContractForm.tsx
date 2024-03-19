@@ -67,7 +67,8 @@ const ContractForm: React.FC<{
 
   const onSubmit = async () => {
     if (profileData.current_package === "trial") {
-      if (profileData.projects_remaining > 2) {
+      if (profileData.trial_projects_remaining === 0) {
+        setProjectsExceededModal(true);
         return;
       }
     } else if (
@@ -373,7 +374,7 @@ const ContractForm: React.FC<{
       {projectsExceededModal && (
         <ProjectsExceededModal
           open={projectsExceededModal}
-          closeModal={() => setProjectsExceededModal}
+          closeModal={() => setProjectsExceededModal(false)}
           scanDetails={{
             contract_address: contractAddress,
             contract_platform: platform,

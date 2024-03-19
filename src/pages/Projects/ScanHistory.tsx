@@ -247,7 +247,7 @@ const ScanBlockDesktop: React.FC<{
               width: "100px",
             }}
           >
-            {scan.scan_score_v2
+            {scan.scan_score_v2 && scan.scan_score_v2 !== "N/A"
               ? parseFloat(scan.scan_score_v2).toFixed(2)
               : "--"}
           </Text>
@@ -319,7 +319,12 @@ const ScanBlockDesktop: React.FC<{
         {project_url !== "File Scan" &&
           scan.skip_file_paths &&
           scan.scan_status === "scan_done" && (
-            <HStack spacing={3} mr={3} my={2}>
+            <HStack
+              onClick={(e) => e.stopPropagation()}
+              spacing={3}
+              mr={3}
+              my={2}
+            >
               <Button
                 variant="text"
                 size="sm"
@@ -330,7 +335,8 @@ const ScanBlockDesktop: React.FC<{
                 }}
                 isLoading={isLoading}
                 spinner={<Loader color={"#3300FF"} size={25} />}
-                onClick={async () => {
+                onClick={async (e) => {
+                  e.stopPropagation();
                   if (show) {
                     setShow(false);
                   } else {
@@ -589,7 +595,12 @@ const ScanBlock: React.FC<{
           {project_url !== "File Scan" &&
             scan.skip_file_paths &&
             scan.scan_status === "scan_done" && (
-              <HStack spacing={3} mr={3} my={2}>
+              <HStack
+                onClick={(e) => e.stopPropagation()}
+                spacing={3}
+                mr={3}
+                my={2}
+              >
                 <Button
                   variant="text"
                   minW="150px"
@@ -600,7 +611,8 @@ const ScanBlock: React.FC<{
                   }}
                   isLoading={isLoading}
                   spinner={<Loader color={"#3300FF"} size={25} />}
-                  onClick={async () => {
+                  onClick={async (e) => {
+                    e.stopPropagation();
                     if (show) {
                       setShow(false);
                     } else {
