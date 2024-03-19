@@ -131,6 +131,7 @@ export const WebSocketProvider = ({ children }) => {
     // Event listener for when the WebSocket connection is closed
     ws.addEventListener("close", (event) => {
       setWsReadyState(ws.readyState);
+      setCheckAuthToken(false);
       setWebSocket(null);
       // Reopen the WebSocket connection after a short delay (e.g., 3 seconds)
     });
