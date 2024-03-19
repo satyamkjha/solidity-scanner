@@ -764,16 +764,18 @@ const ScanDetails: React.FC<{
                           </Tab>
                         </>
                       )}
-                      <Tab
-                        fontSize={"sm"}
-                        h="35px"
-                        minW={"120px"}
-                        bgColor={"#F5F5F5"}
-                        mx={4}
-                        whiteSpace="nowrap"
-                      >
-                        Scan History
-                      </Tab>
+                      {scanData.scan_report.project_url !== "File Scan" && (
+                        <Tab
+                          fontSize={"sm"}
+                          h="35px"
+                          minW={"120px"}
+                          bgColor={"#F5F5F5"}
+                          mx={4}
+                          whiteSpace="nowrap"
+                        >
+                          Scan History
+                        </Tab>
+                      )}
 
                       {scanData.scan_report.project_skip_files &&
                         scanData.scan_report.project_url &&
@@ -904,17 +906,18 @@ const ScanDetails: React.FC<{
                         )}
                       </TabPanel>
                     )}
-
-                    <TabPanel p={[0, 0, 0, 2]}>
-                      <ScanHistory
-                        project_url={project_url}
-                        getRepoTreeReq={getRepoTreeReq}
-                        repoTree={repoTree}
-                        profile={profile}
-                        scans={scans}
-                        setTabIndex={setTabIndex}
-                      />
-                    </TabPanel>
+                    {scanData.scan_report.project_url !== "File Scan" && (
+                      <TabPanel p={[0, 0, 0, 2]}>
+                        <ScanHistory
+                          project_url={project_url}
+                          getRepoTreeReq={getRepoTreeReq}
+                          repoTree={repoTree}
+                          profile={profile}
+                          scans={scans}
+                          setTabIndex={setTabIndex}
+                        />
+                      </TabPanel>
+                    )}
 
                     {scanData.scan_report.project_skip_files &&
                       scanData.scan_report.project_url &&

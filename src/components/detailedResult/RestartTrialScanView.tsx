@@ -127,7 +127,7 @@ export const RestartTrialScanView: React.FC<{
               color="detail"
             >
               This project was scanned during your trial period and only
-              included gas optimization analysis To unlock the details of these
+              included gas optimization analysis. To unlock the details of these
               vulnerabilities, consider rescanning your project.
             </Text>
             <Button onClick={onSubmit} mt={10} variant="brand" width="250px">

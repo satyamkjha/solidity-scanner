@@ -106,7 +106,7 @@ const ReScanTrialScanModal: React.FC<{
                   {scanDetails.scan_type === "project" &&
                   scanDetails.project_url === "File Scan"
                     ? "Rescan Project"
-                    : `${scanDetails.loc} LoCs`}
+                    : `${scanDetails.loc} LOC`}
                 </Text>
                 <Text>
                   {scanDetails.scan_type === "project" &&

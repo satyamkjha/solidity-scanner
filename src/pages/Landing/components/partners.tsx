@@ -39,6 +39,18 @@ export default function Partners() {
       url: "landing/partners/nordek.svg",
       link: "https://twitter.com/SolidityScan/status/1747990837986758964",
     },
+    {
+      url: "landing/partners/arthera.svg",
+      link: "https://solidityscan.com/discover/2024/02/credshields-partners-with-arthera-to-enhance-security-across-the-web3-spectrum/",
+    },
+    {
+      url: "landing/partners/gnosid.svg",
+      link: "https://solidityscan.com/discover/2024/01/credshields-aligns-forces-with-gnosis-to-fortify-web3s-security-landscape/",
+    },
+    {
+      url: "landing/partners/blockscout.svg",
+      link: "https://www.blog.blockscout.com/solidityscan-blockscout-making-smart-contracts-more-secure/",
+    },
   ];
 
   const [isVisible, setIsVisible] = useState(false);
@@ -161,7 +173,8 @@ export default function Partners() {
               key={index}
               borderRadius={20}
               w="100%"
-              onClick={() => window.open("", "_blank")}
+              cursor="pointer"
+              onClick={() => window.open(item.link, "_blank")}
               h="220px"
               p={4}
               display="flex"

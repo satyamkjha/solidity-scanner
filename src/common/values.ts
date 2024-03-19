@@ -632,7 +632,7 @@ export const pricing_table_data: {
       },
       {
         title: "Vulnerability Actions",
-        trial: false,
+        trial: true,
         ondemand: true,
         individual: true,
 
@@ -650,7 +650,7 @@ export const pricing_table_data: {
       },
       {
         title: "Gas Optimization Suggestions",
-        trial: false,
+        trial: true,
         ondemand: true,
         individual: true,
 
@@ -673,7 +673,7 @@ export const pricing_table_data: {
         custom: true,
       },
       {
-        title: "Public Github integration",
+        title: "Public Github/Bitbucket/Gitlab Integration",
         trial: true,
         ondemand: true,
         individual: true,
@@ -682,7 +682,7 @@ export const pricing_table_data: {
         custom: true,
       },
       {
-        title: "Private Github Integration",
+        title: "Private Github/Bitbucket/Gitlab Integration",
         trial: false,
         ondemand: false,
         individual: false,
@@ -691,7 +691,7 @@ export const pricing_table_data: {
         custom: true,
       },
       {
-        title: "Github Actions",
+        title: "Github/Bitbucket/Gitlab Actions",
         trial: false,
         ondemand: false,
         individual: false,
@@ -727,7 +727,7 @@ export const pricing_table_data: {
         custom: true,
       },
       {
-        title: "No. of LoCs",
+        title: "No. of LOC",
         trial: "--",
         ondemand: 1000,
         individual: 8000,
@@ -796,8 +796,7 @@ export const pricing_table_data: {
         trial: false,
         ondemand: false,
         individual: false,
-
-        pro: false,
+        pro: "Pay per User",
         custom: true,
       },
     ],
@@ -805,14 +804,6 @@ export const pricing_table_data: {
   {
     title: "Additional Team Support",
     data: [
-      {
-        title: "Assisted Report Customization",
-        trial: false,
-        ondemand: false,
-        individual: false,
-        pro: true,
-        custom: true,
-      },
       {
         title: "Assisted Auditing",
         trial: false,

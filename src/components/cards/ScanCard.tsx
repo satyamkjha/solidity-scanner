@@ -373,7 +373,7 @@ const ScanCard: React.FC<{
               ? scan_status
               : scan.scan_err_message ||
                 scan.scan_details.scan_message ||
-                "This scan has failed, lost LoCs will be reimbursed in a few minutes. Please contact support"}
+                "This scan has failed, lost LOC will be reimbursed in a few minutes. Please contact support"}
           </Text>
         </Box>
       ) : (
@@ -401,7 +401,7 @@ const ScanCard: React.FC<{
               ? scan_status
               : scan.scan_err_message ||
                 scan.scan_details.scan_message ||
-                "This scan has failed, lost LoCs will be reimbursed in a few minutes. Please contact support"}
+                "This scan has failed, lost LOC will be reimbursed in a few minutes. Please contact support"}
           </Text>
         </Box>
       )}
