@@ -10,6 +10,7 @@ import {
   useMediaQuery,
   Image,
   Link as ChakraLink,
+  useDisclosure,
 } from "@chakra-ui/react";
 import { Link } from "react-router-dom";
 import { CodeBlock, atomOneLight } from "react-code-blocks";
@@ -19,6 +20,10 @@ import { WarningTwoIcon } from "@chakra-ui/icons";
 import UpgradePackage from "../upgradePackage";
 import { getAssetsURL } from "helpers/helperFunction";
 import { DetailResultContext } from "common/contexts";
+import ReScanTrialScanModal from "components/modals/scans/ReScanTrialScanModal";
+import { type } from "os";
+import InsufficientLocModal from "components/modals/scans/InsufficientLocModal";
+import { useUserRole } from "hooks/useUserRole";
 export const TrialWall: React.FC = () => {
   return (
     <Flex w="100%" sx={{ flexDir: "column" }}>
@@ -262,8 +267,31 @@ export const TrialWallIssue: React.FC<{
 export const RestartTrialScan: React.FC<{
   no_of_issue: number;
   severity: string;
-}> = ({ no_of_issue, severity }) => {
+  project_name?: string;
+  project_url?: string;
+  contract_url?: string;
+  contract_address?: string;
+  contract_chain?: string;
+  contract_platform?: string;
+  scan_type: string;
+}> = ({
+  no_of_issue,
+  severity,
+  contract_url,
+  contract_address,
+  contract_chain,
+  contract_platform,
+  scan_type,
+  project_name,
+  project_url,
+}) => {
   const [isDesktopView] = useMediaQuery("(min-width: 1024px)");
+  const { isOpen, onOpen, onClose } = useDisclosure();
+  const [open, setOpen] = useState(false);
+  const detailResultContextValue = useContext(DetailResultContext);
+  const scanSummary = detailResultContextValue?.scanSummary;
+  const { profileData } = useUserRole();
+
   return (
     <Flex
       w="100%"
@@ -296,9 +324,8 @@ export const RestartTrialScan: React.FC<{
         }}
         bg="rgba(255,255,255,0.3)"
         alignItems="center"
-        justifyContent="flex-start"
+        justifyContent="center"
         flexDir="column"
-        pt={20}
       >
         <WarningTwoIcon color={severity} fontSize={50} />
         <Text
@@ -331,11 +358,71 @@ export const RestartTrialScan: React.FC<{
           vulnerabilities, consider rescanning your project.{" "}
         </Text>
         {!isDesktopView && (
-          <Button onClick={() => {}} mt={2} px={4} variant="brand" width="100%">
+          <Button
+            maxW="250px"
+            onClick={() => {
+              if (
+                profileData &&
+                scanSummary &&
+                scanSummary.lines_analyzed_count > profileData?.loc_remaining
+              ) {
+                setOpen(true);
+              } else {
+                onOpen();
+              }
+            }}
+            mt={2}
+            mb={5}
+            px={4}
+            variant="brand"
+            width="100%"
+          >
             Unlock Details
           </Button>
         )}
       </Flex>
+      <ReScanTrialScanModal
+        closeModal={onClose}
+        open={isOpen}
+        scanDetails={
+          scan_type === "project"
+            ? {
+                project_name,
+                project_url,
+                scan_type,
+                loc: scanSummary?.lines_analyzed_count,
+              }
+            : {
+                contract_url,
+                contract_address,
+                contract_chain,
+                contract_platform,
+                scan_type,
+                loc: scanSummary?.lines_analyzed_count,
+              }
+        }
+      />
+      <InsufficientLocModal
+        open={open}
+        closeModal={() => setOpen(false)}
+        scanDetails={
+          scan_type === "project"
+            ? {
+                project_name,
+                project_url,
+                scan_type,
+                loc: scanSummary?.lines_analyzed_count,
+              }
+            : {
+                contract_url,
+                contract_address,
+                contract_chain,
+                contract_platform,
+                scan_type,
+                loc: scanSummary?.lines_analyzed_count,
+              }
+        }
+      />
     </Flex>
   );
 };

@@ -54,6 +54,8 @@ const IssueContainer: React.FC<{
   branchName?: string;
   contract_address?: string;
   isViewer: boolean;
+  contract_chain?: string;
+  project_name?: string;
   scrollIntoView: boolean;
 }> = ({
   type,
@@ -78,6 +80,8 @@ const IssueContainer: React.FC<{
   branchName,
   contract_address,
   isViewer,
+  contract_chain,
+  project_name,
   is_trial_scan,
   setRestrictedBugIds,
   scrollIntoView,
@@ -299,6 +303,13 @@ const IssueContainer: React.FC<{
                 <RestartTrialScan
                   severity={template_details.issue_severity}
                   no_of_issue={no_of_findings}
+                  scan_type={type}
+                  project_url={project_url}
+                  project_name={project_name}
+                  contract_chain={contract_chain}
+                  contract_url={contract_url}
+                  contract_address={contract_address}
+                  contract_platform={contract_platform}
                 />
               )
             ) : (

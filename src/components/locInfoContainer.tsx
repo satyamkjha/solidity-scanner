@@ -70,7 +70,7 @@ export const LOCInfoContainer: React.FC<{
           <Progress
             variant="loc"
             size="xs"
-            value={remainingLoc}
+            value={remainingLoc || profileData?.loc_remaining}
             max={profileData?.total_loc}
           />
         </Box>

@@ -577,6 +577,8 @@ const MultifileResult: React.FC<{
               details_enabled={details_enabled}
               is_latest_scan={is_latest_scan}
               issues={issues}
+              project_name={project_name}
+              contract_chain={contract_chain}
               files={files}
               setFiles={setFiles}
               selectedBugs={selectedBugs}

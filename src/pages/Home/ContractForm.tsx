@@ -120,7 +120,7 @@ const ContractForm: React.FC<{
                   type: "block_scan_initiate",
                   body: req,
                 });
-                queryClient.invalidateQueries("profile");
+                queryClient.invalidateQueries("scan_list");
                 history.push("/projects");
                 setIsLoading(false);
                 onClose();
