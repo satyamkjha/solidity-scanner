@@ -132,7 +132,7 @@ const PricingDetails: React.FC<{
         <Flex
           flexDir={"row"}
           position={"relative"}
-          py={2}
+          py={8}
           mt={page === "pricing" ? 0 : 10}
           alignItems={["flex-start", "flex-start", "flex-end"]}
           justifyContent="center"
@@ -205,7 +205,7 @@ const PricingDetails: React.FC<{
         backgroundColor="#FFFFFF00"
         mt={
           page === "pricing"
-            ? ["-300px", "-300px", "-180px", "-250px"]
+            ? ["-300px", "-300px", "-120px", "-250px"]
             : "-450px"
         }
         px={page === "pricing" ? [4, 4, 4, 10] : [4]}
