@@ -195,7 +195,7 @@ const ImportScanModal: React.FC<{
               >
                 Heads up! You currently have{" "}
                 <strong>{profileData?.loc_remaining}</strong> LOC. Viewing full
-                detail result of a scan will use{" "}
+                detail result of this scan will use{" "}
                 <strong>{scanDetails.loc}</strong> LOC. Do you wish to proceed?
               </Text>
             </Flex>
