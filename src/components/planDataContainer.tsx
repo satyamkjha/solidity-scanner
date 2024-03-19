@@ -79,6 +79,14 @@ export const PlanDataContainer: React.FC<{
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [messageQueue]);
 
+  useEffect(() => {
+    if (profileData) {
+      setTotalRemainingLoc(profileData.loc_remaining);
+      setTopupRemainingLoc(profileData.on_demand_loc_remaining);
+      setPlanRemainingLoc(profileData.plan_loc_remaining);
+    }
+  }, [profileData]);
+
   return (
     <VStack
       px={4}
