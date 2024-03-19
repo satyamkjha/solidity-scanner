@@ -19,7 +19,7 @@ const SolidityScoreProgress: React.FC<{
       color="accent"
       thickness={thickness}
       size={size}
-      p={padding ? padding : 2}
+      p={padding ?? 2}
       capIsRound
       background="white"
       borderRadius={"50%"}

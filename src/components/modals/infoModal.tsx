@@ -17,11 +17,9 @@ export const PublishReportInfo: React.FC<{
 }> = ({ isOpen, onClose }) => {
   return (
     <>
-      <Modal isOpen={isOpen} onClose={onClose}>
+      <Modal isOpen={isOpen} onClose={onClose} scrollBehavior={"inside"}>
         <ModalOverlay />
         <ModalContent
-          overflowY={"scroll"}
-          overflowX={"scroll"}
           bg="bg.subtle"
           maxW="70vw"
           minW={"300px"}
@@ -66,11 +64,9 @@ export const GenerateReportInfo: React.FC<{
 }> = ({ isOpen, onClose }) => {
   return (
     <>
-      <Modal isOpen={isOpen} onClose={onClose}>
+      <Modal isOpen={isOpen} onClose={onClose} scrollBehavior={"inside"}>
         <ModalOverlay />
         <ModalContent
-          overflowY={"scroll"}
-          overflowX={"scroll"}
           bg="bg.subtle"
           maxW="70vw"
           minW={"300px"}

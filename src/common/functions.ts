@@ -30,7 +30,7 @@ export function timeSince(date: Date): string {
 export function getCookie(name: string) {
   const value = `; ${document.cookie}`;
   const parts = value.split(`; ${name}=`);
-  if (parts.length === 2) return (parts.pop() || "").split(";").shift();
+  if (parts.length === 2) return (parts.pop() ?? "").split(";").shift();
 }
 
 export function daysRemaining(date: Date, days: number): number {
@@ -51,7 +51,7 @@ export const formattedDate = (
 ) => {
   return date.toLocaleDateString(locale, {
     day: "numeric",
-    month: month || "short",
+    month: month ?? "short",
     year: "numeric",
   });
 };
@@ -63,7 +63,7 @@ export const formattedDateInUTC = (
 ) => {
   return date.toLocaleDateString(locale, {
     day: "numeric",
-    month: month || "short",
+    month: month ?? "short",
     year: "numeric",
     timeZone: "UTC",
   });
@@ -86,6 +86,7 @@ export const getBugStatusNumber = (bug_status: string) => {
 
 export const onLogout = async (history: any, queryClient: QueryClient) => {
   signOut(auth);
+  localStorage.removeItem("maintenance_info");
   Auth.deauthenticateUser();
   history.push("/signin");
   window.location.reload();
@@ -141,7 +142,7 @@ export const hasUserRole = (
 
 export function isInViewport(element: any, setAnimationOffset: any) {
   if (element !== null) {
-    var bounding = element.getBoundingClientRect();
+    let bounding = element.getBoundingClientRect();
     if (bounding.bottom < 0) {
       setAnimationOffset(-60);
     } else {
@@ -166,7 +167,7 @@ export function isInViewport(element: any, setAnimationOffset: any) {
 
 export function isInStartViewport(element: any, index: number) {
   if (element !== null) {
-    var bounding = element.getBoundingClientRect();
+    let bounding = element.getBoundingClientRect();
 
     if (
       (bounding.bottom >= window.innerHeight / 3 || index === 5) &&

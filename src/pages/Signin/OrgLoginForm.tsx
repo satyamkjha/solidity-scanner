@@ -1,37 +1,25 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { Link as RouterLink, useHistory } from "react-router-dom";
-import {
-  Flex,
-  Stack,
-  Button,
-  Icon,
-  InputGroup,
-  InputLeftElement,
-  Input,
-  Link,
-  useToast,
-  InputRightElement,
-} from "@chakra-ui/react";
+import { Flex, Stack, Button, Icon, Link, useToast } from "@chakra-ui/react";
 import { MdPeopleAlt } from "react-icons/md";
-import { FaLock } from "react-icons/fa";
-import { FiAtSign } from "react-icons/fi";
 import API from "helpers/api";
 import Auth from "helpers/auth";
-import { AuthResponse, RecaptchaHeader } from "common/types";
-import { ViewIcon, ViewOffIcon } from "@chakra-ui/icons";
+import { AuthResponse } from "common/types";
 import { API_PATH } from "helpers/routeManager";
 import { useForm } from "react-hook-form";
 import { getReCaptchaHeaders } from "helpers/helperFunction";
 import StyledButton from "components/styled-components/StyledButton";
-import { isEmail, checkOrgName } from "helpers/helperFunction";
 import { TwoFAField } from "components/common/TwoFAField";
+import NameInput from "components/forms/NameInput";
+import EmailInput from "components/forms/EmailInput";
+import PasswordInput from "components/forms/PasswordInput";
 
 const OrgLoginForm: React.FC<{
   setOrganisation: React.Dispatch<React.SetStateAction<string>>;
 }> = ({ setOrganisation }) => {
-  const [show, setShow] = useState(false);
   const history = useHistory();
   const toast = useToast();
+
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [isLoading, setIsLoading] = useState(false);
@@ -39,12 +27,12 @@ const OrgLoginForm: React.FC<{
   const [orgName, setOrgName] = useState("");
   const { handleSubmit } = useForm();
   const [twoFAScreen, setTwoFAScreen] = useState(false);
+  const [errors, setErrors] = useState<{ [key: string]: string }>({});
 
   const onSubmit = async () => {
     if (step) {
       signIn();
     } else {
-      // setStep(true);
       checkOrganisationNameRequest();
     }
   };
@@ -99,17 +87,6 @@ const OrgLoginForm: React.FC<{
   };
 
   const checkOrganisationNameRequest = async () => {
-    if (orgName.length > 50 || orgName.length < 1 || checkOrgName(orgName)) {
-      toast({
-        title: "Organisation Name not Valid",
-        description:
-          "The number of characters allowed for an Organisation Name should be less than 50",
-        status: "error",
-        duration: 3000,
-        isClosable: true,
-      });
-      return;
-    }
     try {
       setIsLoading(true);
       const { data } = await API.post<{
@@ -169,81 +146,47 @@ const OrgLoginForm: React.FC<{
           <>
             {step ? (
               <>
-                <InputGroup alignItems="center">
-                  <InputLeftElement
-                    height="48px"
-                    children={<Icon as={FiAtSign} color="gray.300" />}
-                  />
-                  <Input
-                    isRequired
-                    type="email"
-                    placeholder="Your email"
-                    autoComplete="username"
-                    variant="brand"
-                    value={email}
-                    size="lg"
-                    onChange={(e) => setEmail(e.target.value)}
-                  />
-                </InputGroup>
-                <InputGroup>
-                  <InputLeftElement
-                    height="48px"
-                    color="gray.300"
-                    children={<Icon as={FaLock} color="gray.300" />}
-                  />
-                  <Input
-                    isRequired
-                    type={show ? "text" : "password"}
-                    placeholder="Password"
-                    autoComplete="current-password"
-                    variant="brand"
-                    size="lg"
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                  />
-                  <InputRightElement
-                    height="48px"
-                    color="gray.300"
-                    children={
-                      show ? (
-                        <ViewOffIcon
-                          color={"gray.500"}
-                          mr={5}
-                          boxSize={5}
-                          onClick={() => setShow(false)}
-                        />
-                      ) : (
-                        <ViewIcon
-                          color={"gray.500"}
-                          mr={5}
-                          boxSize={5}
-                          onClick={() => setShow(true)}
-                        />
-                      )
-                    }
-                  />
-                </InputGroup>
-              </>
-            ) : (
-              <InputGroup alignItems="center">
-                <InputLeftElement
-                  height="48px"
-                  children={
-                    <Icon size={30} as={MdPeopleAlt} color="gray.300" />
+                <EmailInput
+                  isRequired
+                  showLeftIcon
+                  placeholder="Your email"
+                  value={email}
+                  onChange={(event) => setEmail(event.target.value)}
+                  onError={(e: any) =>
+                    setErrors((prv) => {
+                      return { ...prv, Email: e };
+                    })
                   }
                 />
-                <Input
+                <PasswordInput
                   isRequired
-                  name="org_name"
-                  type="text"
-                  placeholder="Organisation Name"
-                  autoComplete="off"
-                  variant="brand"
-                  value={orgName}
-                  size="lg"
-                  onChange={(e) => setOrgName(e.target.value)}
+                  showLeftIcon
+                  value={password}
+                  placeholder="Password"
+                  onChange={(event) => setPassword(event.target.value)}
+                  onError={(e: any) =>
+                    setErrors((prv) => {
+                      return { ...prv, Password: e };
+                    })
+                  }
                 />
-              </InputGroup>
+              </>
+            ) : (
+              <NameInput
+                isRequired
+                showLeftIcon
+                title="Organisation Name"
+                placeholder="Organisation Name"
+                autoComplete="off"
+                iconChild={<Icon size={30} as={MdPeopleAlt} color="gray.300" />}
+                value={orgName}
+                onChange={(e) => setOrgName(e.target.value)}
+                onError={(e: any) =>
+                  setErrors((prv) => {
+                    return { ...prv, Name: e };
+                  })
+                }
+              />
             )}
 
             <Flex width="100%" justify={step ? "space-between" : "flex-end"}>
@@ -254,7 +197,10 @@ const OrgLoginForm: React.FC<{
                     fontSize="sm"
                     mr={1}
                     my={1}
-                    onClick={() => setStep(false)}
+                    onClick={() => {
+                      setErrors({});
+                      setStep(false);
+                    }}
                   >
                     Back
                   </Button>
@@ -276,17 +222,7 @@ const OrgLoginForm: React.FC<{
               type="submit"
               variant="brand"
               isLoading={isLoading}
-              disabled={
-                step
-                  ? email.length < 1 ||
-                    password.length < 6 ||
-                    email.length > 50 ||
-                    password.length > 50 ||
-                    !isEmail(email)
-                  : orgName.length < 1 ||
-                    orgName.length > 50 ||
-                    checkOrgName(orgName)
-              }
+              disabled={Object.values(errors).join("").length > 0}
             >
               {step ? "Sign in" : "Proceed to Sign in"}
             </StyledButton>

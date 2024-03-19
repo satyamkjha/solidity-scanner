@@ -7,6 +7,7 @@ import {
   VStack,
   Link,
   Grid,
+  useBreakpointValue,
 } from "@chakra-ui/react";
 import { Report } from "common/types";
 
@@ -24,8 +25,40 @@ import SolidityScoreProgress from "components/common/SolidityScoreProgress";
 
 const AuditSummaryContainer: React.FC<{
   summary_report: Report;
-}> = ({ summary_report }) => {
+  download: boolean;
+}> = ({ summary_report, download }) => {
   const assetsURL = getAssetsURL();
+
+  let iconSize = useBreakpointValue({ base: 15, sm: 20, md: 50 });
+  if (download) {
+    iconSize = 50;
+  }
+
+  let scoreCircleSize =
+    useBreakpointValue({
+      base: "75px",
+      sm: "85px",
+      md: "100px",
+    }) || "100px";
+  let scoreCirclePadding =
+    useBreakpointValue({
+      base: 1,
+      sm: 1,
+      md: 2,
+    }) || 2;
+  let scoreCircleThickness =
+    useBreakpointValue({
+      base: "4px",
+      sm: "4px",
+      md: "7px",
+    }) || "7px";
+
+  let scoreFontSize =
+    useBreakpointValue({
+      base: "15px",
+      sm: "18px",
+      md: "20px",
+    }) || "20px";
 
   const detailOptions = summary_report.project_summary_report.project_url
     ? reportProjectDetails
@@ -38,15 +71,15 @@ const AuditSummaryContainer: React.FC<{
   const getProjectIcon = (url: string) => {
     switch (getProjectType(url)) {
       case "bitbucket":
-        return <BitbucketIcon size={50} />;
+        return <BitbucketIcon size={iconSize || 50} />;
       case "github":
-        return <GithubIcon size={50} />;
+        return <GithubIcon size={iconSize || 50} />;
       case "gitlab":
-        return <GithubIcon size={50} />;
+        return <GithubIcon size={iconSize || 50} />;
       case "filescan":
         return (
           <Image
-            w={"60px"}
+            w={download ? "60px" : ["20px", "30px", "60px"]}
             src={`${assetsURL}icons/integrations/${getProjectType(
               url || ""
             )}.svg`}
@@ -68,23 +101,33 @@ const AuditSummaryContainer: React.FC<{
           color: "#000000",
           mx: 1,
         }}
-        mb={10}
+        my={download ? 10 : [4, 6, 10]}
         alignItems="center"
       >
-        <Text fontSize="28px" fontWeight={400}>
-          2.
+        <Text
+          fontSize={download ? "28px" : ["14px", "20px", "28px"]}
+          fontWeight={400}
+        >
+          02.
         </Text>
-        <Heading color={"#52FF00"} fontSize="28px" ml={4}>
+        <Heading
+          color={"#52FF00"}
+          fontSize={download ? "28px" : ["14px", "20px", "28px"]}
+          ml={download ? 4 : [1, 2, 4]}
+        >
           Executive
         </Heading>
-        <Text fontSize="28px" fontWeight={400}>
+        <Text
+          fontSize={download ? "28px" : ["14px", "20px", "28px"]}
+          fontWeight={400}
+        >
           {" "}
           &nbsp;Summary{" "}
         </Text>
       </Flex>
       <Flex
-        py={6}
-        px={7}
+        py={download ? 6 : [2, 3, 6]}
+        px={download ? 7 : [2, 3, 7]}
         w="100%"
         flexDir={"column"}
         backgroundColor={"#FBFBFB"}
@@ -106,23 +149,31 @@ const AuditSummaryContainer: React.FC<{
                 summary_report.project_summary_report.contract_platform || "",
                 summary_report.project_summary_report.contract_chain || ""
               )}.svg`}
-              w={"50px"}
+              w={download ? "50px" : ["15px", "20px", "50px"]}
             />
           ) : (
-            <ProjectIcon size={50} />
+            <ProjectIcon size={iconSize || 50} />
           )}
           <Flex
             w={"60%"}
             align={["flex-start"]}
             flexDir={"column"}
             mb={0}
-            ml={6}
+            ml={download ? 6 : [2, 3, 6]}
           >
-            <Text fontSize="md" fontWeight={"bold"}>
+            <Text
+              fontSize={download ? "md" : ["xs", "sm", "md"]}
+              fontWeight={"bold"}
+            >
               {summary_report.project_summary_report.project_name}
               {summary_report.project_summary_report.contract_name}
             </Text>
-            <Text fontSize="sm" fontWeight={400} wordBreak="break-all" mt={1.5}>
+            <Text
+              fontSize={download ? "sm" : ["10px", "12px", "sm"]}
+              fontWeight={400}
+              wordBreak="break-all"
+              mt={download ? 1.5 : [0, 1, 1.5]}
+            >
               {summary_report.project_summary_report.project_url !== "File Scan"
                 ? `${
                     summary_report.project_summary_report.project_url
@@ -145,7 +196,7 @@ const AuditSummaryContainer: React.FC<{
                 summary_report.project_summary_report.contract_url
               }
               target={"_blank"}
-              fontSize="xs"
+              fontSize={download ? "xs" : ["6px", "8px", "xs"]}
               fontWeight={400}
               color={"accent"}
               w={"100%"}
@@ -162,64 +213,33 @@ const AuditSummaryContainer: React.FC<{
 
               {summary_report.project_summary_report.project_url !==
               "File Scan" ? (
-                <ExternalLinkIcon ml={1.5} color={"#8A94A6"} />
+                <ExternalLinkIcon
+                  ml={download ? 1.5 : [0, 1, 1.5]}
+                  color={"#8A94A6"}
+                />
               ) : null}
             </Link>
           </Flex>
 
           {summary_report.project_summary_report.date_published ? (
-            <Text fontSize="xs" fontWeight={400} color={"#8A94A6"} ml={"auto"}>
+            <Text
+              fontSize={download ? "xs" : ["6px", "8px", "xs"]}
+              fontWeight={400}
+              color={"#8A94A6"}
+              ml={"auto"}
+            >
               Published on{" "}
               {summary_report.project_summary_report.date_published}
             </Text>
           ) : null}
-
-          {/* <VStack align={"center"}>
-          <CircularProgress
-            value={
-              summary_report.scan_summary[0].score_v2
-                ? parseFloat(summary_report.scan_summary[0].score_v2)
-                : parseFloat(
-                    (
-                      parseFloat(summary_report.scan_summary[0].score) * 20
-                    ).toFixed(2)
-                  )
-            }
-            color="accent"
-            thickness="8px"
-            size="90px"
-            capIsRound
-          >
-            <CircularProgressLabel
-              sx={{ display: "flex", justifyContent: "center" }}
-            >
-              <Flex flexDir="column" alignItems="center" w="100%">
-                <Text fontSize="lg" fontWeight={900} color="accent">
-                  {summary_report.scan_summary[0].score_v2 ||
-                    (
-                      parseFloat(summary_report.scan_summary[0].score) * 20
-                    ).toFixed(2)}
-                </Text>
-              </Flex>
-            </CircularProgressLabel>
-          </CircularProgress>
-          <Text
-            fontSize="md"
-            fontWeight={"600"}
-            color={"accent"}
-            width={"100%"}
-          >
-            Security Score
-          </Text>
-        </VStack> */}
         </Flex>
 
-        <Divider my={6} borderColor={"#D8D8D8"} />
+        <Divider my={download ? 6 : [2, 3, 6]} borderColor={"#D8D8D8"} />
         <Grid
           w="100%"
           h="fit-content"
           templateColumns={"repeat(3, 1fr)"}
-          gap={8}
+          gap={download ? 8 : [1, 3, 8]}
         >
           {detailOptions.map((detail, index) => {
             if (
@@ -231,11 +251,21 @@ const AuditSummaryContainer: React.FC<{
               return null;
             else
               return (
-                <VStack alignItems={"flex-start"} spacing={1}>
-                  <Text fontSize="xs" fontWeight={400} color={"#8A94A6"}>
+                <VStack
+                  alignItems={"flex-start"}
+                  spacing={download ? 1 : [0, 0, 1]}
+                >
+                  <Text
+                    fontSize={download ? "xs" : ["6px", "8px", "xs"]}
+                    fontWeight={400}
+                    color={"#8A94A6"}
+                  >
                     {detail.label}
                   </Text>
-                  <Text fontSize="sm" fontWeight={600}>
+                  <Text
+                    fontSize={download ? "sm" : ["10px", "12px", "sm"]}
+                    fontWeight={600}
+                  >
                     {detail.label === "Language" ||
                     detail.label === "Audit Methodology"
                       ? detail.value
@@ -250,23 +280,30 @@ const AuditSummaryContainer: React.FC<{
       </Flex>
       <Flex
         w="100%"
-        my={6}
-        px={10}
-        py={6}
-        justifyContent={"flex-start"}
-        alignItems={"flex-start"}
-        direction={"row"}
+        my={download ? 6 : [2, 3, 6]}
+        px={download ? 10 : [2, 3, 10]}
+        py={download ? 6 : [1, 2, 6]}
+        justifyContent={["flex-start"]}
+        alignItems={["flex-start"]}
+        direction={["row"]}
         bgImage={`url("${assetsURL}report/gradient_bg.svg")`}
         bgSize={"cover"}
-        borderRadius={15}
+        borderRadius={download ? 15 : [5, 8, 15]}
       >
         <SolidityScoreProgress
           score={summary_report.scan_summary[0].score_v2}
-          size={"100px"}
-          thickness={"7px"}
+          size={download ? "100px" : scoreCircleSize}
+          fontSize={scoreFontSize}
+          thickness={download ? "7px" : scoreCircleThickness}
+          padding={scoreCirclePadding}
         />
-        <VStack alignItems="flex-start" px={4}>
-          <Text fontSize="18px" fontWeight={600} textAlign="center">
+
+        <VStack alignItems="flex-start" px={download ? 4 : [1, 2, 4]}>
+          <Text
+            fontSize={download ? "18px" : ["12px", "14px", "18px"]}
+            fontWeight={600}
+            textAlign="center"
+          >
             Security Score is
             {parseFloat(solidity_score) < 50
               ? " LOW"
@@ -274,7 +311,11 @@ const AuditSummaryContainer: React.FC<{
               ? " GREAT"
               : " AVERAGE"}
           </Text>
-          <Text color="subtle" fontSize="xs" fontWeight={400}>
+          <Text
+            color="subtle"
+            fontSize={download ? "xs" : ["8px", "10px", "xs"]}
+            fontWeight={400}
+          >
             The SolidityScan score is calculated based on lines of code and
             weights assigned to each issue depending on the severity and
             confidence. To improve your score, view the detailed result and
@@ -283,12 +324,18 @@ const AuditSummaryContainer: React.FC<{
         </VStack>
       </Flex>
       {summary_report.project_summary_report.description ? (
-        <Text fontSize="xs" fontWeight={400}>
+        <Text
+          fontSize={download ? "xs" : ["6px", "8px", "xs"]}
+          fontWeight={400}
+        >
           {summary_report.project_summary_report.description}
         </Text>
       ) : (
         <>
-          <Text fontSize="xs" fontWeight={400}>
+          <Text
+            fontSize={download ? "xs" : ["6px", "8px", "xs"]}
+            fontWeight={400}
+          >
             This report has been prepared for{" "}
             {summary_report.project_summary_report.project_name} using
             SolidityScan to scan and discover vulnerabilities and safe coding
@@ -302,7 +349,11 @@ const AuditSummaryContainer: React.FC<{
             the following areas:{" "}
           </Text>
 
-          <Text fontSize="xs" fontWeight={400} mt={2}>
+          <Text
+            fontSize={download ? "xs" : ["6px", "8px", "xs"]}
+            fontWeight={400}
+            mt={2}
+          >
             Various common and uncommon attack vectors will be investigated to
             ensure that the smart contracts are secure from malicious actors.
             The scanner modules find and flag issues related to Gas
@@ -311,7 +362,11 @@ const AuditSummaryContainer: React.FC<{
             standards to ensure compliance It makes sure that the officially
             recognized libraries used in the code are secure and up to date
           </Text>
-          <Text fontSize="xs" fontWeight={400} mt={2}>
+          <Text
+            fontSize={download ? "xs" : ["6px", "8px", "xs"]}
+            fontWeight={400}
+            mt={2}
+          >
             The SolidityScan Team recommends running regular audit scans to
             identify any vulnerabilities that are introduced after{" "}
             {summary_report.project_summary_report.project_name} introduces new

@@ -8,9 +8,16 @@ import CurrentPlanDescriptionContainer from "./CurrentPlanDescriptionContainer";
 const LatestInvoice: React.FC<{
   planData: Plan;
   selectedPlan: string;
+  fetchAgain: () => Promise<void>;
   transactionData: Transaction;
   onPaymentCancel: any;
-}> = ({ planData, selectedPlan, transactionData, onPaymentCancel }) => {
+}> = ({
+  planData,
+  selectedPlan,
+  transactionData,
+  onPaymentCancel,
+  fetchAgain,
+}) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
 
   const onCancel = () => {
@@ -28,6 +35,8 @@ const LatestInvoice: React.FC<{
         backgroundColor={"white"}
         borderRadius="15px"
         mt={4}
+        h="fit-content"
+        background="white"
         px={[5, 5, 10]}
         py={[5, 5, 8]}
         boxShadow={"0px 2px 10px rgba(0, 0, 0, 0.15)"}
@@ -95,13 +104,15 @@ const LatestInvoice: React.FC<{
           <Flex>
             <Text color={"detail"}>Total &nbsp; </Text>
             <Text fontWeight="600">
-              {transactionData.amount + transactionData.currency}
+              {transactionData.currency === "usd"
+                ? `$${parseFloat(transactionData.amount).toFixed(2)}`
+                : transactionData.amount + transactionData.currency}
             </Text>
           </Flex>
         ) : null}
         <Button
           variant="brand"
-          mt={["auto"]}
+          mt={[5]}
           mx={[2, 2, 2, 14]}
           onClick={() => {
             window.open(`${transactionData.invoice_url}`, "_blank");
@@ -113,6 +124,7 @@ const LatestInvoice: React.FC<{
       <CancelPaymentDialog
         isOpen={isOpen}
         onClose={onClose}
+        fetchAgain={fetchAgain}
         orderId={transactionData.order_id}
         paymentPlatform={transactionData.payment_platform}
         onPaymentCancel={onPaymentCancel}

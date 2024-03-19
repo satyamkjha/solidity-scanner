@@ -4,8 +4,9 @@ import { formattedDate } from "common/functions";
 
 const SubscriptionDataContainer: React.FC<{
   packageName: string;
+  isCancellable: boolean;
   packageRechargeDate: string;
-}> = ({ packageName, packageRechargeDate }) => {
+}> = ({ packageName, packageRechargeDate, isCancellable }) => {
   return (
     <HStack spacing={20}>
       <Box>
@@ -22,7 +23,9 @@ const SubscriptionDataContainer: React.FC<{
             Recurring Payment
           </Text>
           <Text fontWeight={500} fontSize="md">
-            {packageName === "trial" || packageName === "ondemand"
+            {packageName === "trial" ||
+            packageName === "ondemand" ||
+            !isCancellable
               ? "--"
               : "Stripe Payment"}
           </Text>

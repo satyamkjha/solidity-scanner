@@ -99,7 +99,7 @@ const ResultOverview: React.FC<{
               w="100%"
               justifyContent={["flex-start"]}
               alignItems={"center"}
-              flexDir={["row"]}
+              flexDir={["column", "column", "row"]}
             >
               <Text whiteSpace="nowrap" fontWeight={300} fontSize="md">
                 {projectDetails.contract_platform === "buildbear"

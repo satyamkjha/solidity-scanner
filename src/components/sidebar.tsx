@@ -34,7 +34,7 @@ import { ArrowBackIcon, ArrowForwardIcon } from "@chakra-ui/icons";
 import { useConfig } from "hooks/useConfig";
 import { getAssetsURL } from "helpers/helperFunction";
 import { useUserRole } from "hooks/useUserRole";
-import { socialIconsList } from "common/values";
+import { socialIconsList, packageLabel } from "common/values";
 
 const Sidebar: React.FC<{
   isCollapsed: boolean;
@@ -193,7 +193,9 @@ const Sidebar: React.FC<{
                       <Text fontSize="13px">
                         {profileData.current_package === "custom"
                           ? "ENTERPRISE"
-                          : profileData.current_package.toUpperCase()}
+                          : packageLabel[
+                              profileData.current_package
+                            ].toUpperCase()}
                       </Text>
                     ))}
                 </Box>
@@ -256,7 +258,7 @@ const Sidebar: React.FC<{
         >
           <CredshieldsIcon size={90} />
           <Button mt={[5, 5, 5, 7]} px={5} variant="dark" onClick={onOpen}>
-            <Text fontSize="xs"> Request manual audit</Text>
+            <Text fontSize="xs"> Request Manual Audit</Text>
           </Button>
         </Box>
         <HStack justifyContent="flex-start" mt={3} spacing={5}>

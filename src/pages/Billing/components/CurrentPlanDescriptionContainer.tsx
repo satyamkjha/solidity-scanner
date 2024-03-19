@@ -3,6 +3,7 @@ import { Flex, Text, Heading, Image, HStack } from "@chakra-ui/react";
 import { getAssetsURL, sentenceCapitalize } from "helpers/helperFunction";
 import { Plan } from "common/types";
 import { CheckBadge } from "components/icons";
+import { packageLabel } from "common/values";
 
 const CurrentPlanDescriptionContainer: React.FC<{
   packageName: string;
@@ -23,6 +24,7 @@ const CurrentPlanDescriptionContainer: React.FC<{
     if ("on-demand-report" === duration) return "One Time Audit Report";
     else if ("publish_report" === duration) return "Self-Published Report";
     else if ("verified_publish_report" === duration) return "Verified Report";
+    else if (duration === "trial") return "Free Trial";
     else return sentenceCapitalize(plan.name);
   };
 
@@ -41,6 +43,7 @@ const CurrentPlanDescriptionContainer: React.FC<{
             src={`${assetsURL}pricing/${packageName}-heading.svg`}
           />
         )}
+
         {["non-pro", "pro/custom"].includes(packageName) && (
           <HStack mb={4}>
             {duration !== "on-demand-report" && (
@@ -63,7 +66,7 @@ const CurrentPlanDescriptionContainer: React.FC<{
               <Flex textAlign="center" my={1}>
                 <Heading fontSize={"lg"}>
                   {plan.amount === "Free"
-                    ? "Free"
+                    ? ""
                     : `$ ${parseFloat(plan.amount).toFixed(2)}`}
                   &nbsp;
                 </Heading>
@@ -74,10 +77,9 @@ const CurrentPlanDescriptionContainer: React.FC<{
             </Flex>
           </HStack>
         )}
-
         {!["non-pro", "pro/custom"].includes(packageName) && (
           <Text fontSize={"2xl"} fontWeight={700}>
-            {sentenceCapitalize(plan.name)}
+            {packageLabel[plan.name.toLowerCase()]}
           </Text>
         )}
         {showCheckIcon && (
@@ -102,13 +104,13 @@ const CurrentPlanDescriptionContainer: React.FC<{
         <Flex textAlign="center" my={2}>
           <Heading fontSize={"x-large"}>
             {plan.amount === "Free"
-              ? "Free"
+              ? ""
               : `$ ${parseFloat(plan.amount).toFixed(2)}`}
             &nbsp;
           </Heading>
           {packageName !== "trial" && packageName !== "ondemand" && (
             <Text fontSize="xs" color="detail" mt={2}>
-              {`/ ${duration === "topup" ? "credit" : duration} `}
+              {`/ ${duration === "topup" ? "LOC" : duration} `}
             </Text>
           )}
         </Flex>

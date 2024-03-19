@@ -11,6 +11,7 @@ import {
   useToast,
   Image,
   useMediaQuery,
+  useDisclosure,
 } from "@chakra-ui/react";
 import API from "helpers/api";
 import {
@@ -32,6 +33,8 @@ import { capitalize } from "common/functions";
 import { infographicsData, OauthName } from "common/values";
 import { useWebSocket } from "hooks/useWebhookData";
 import { useConfig } from "hooks/useConfig";
+import InsufficientLocModal from "components/modals/scans/InsufficientLocModal";
+import ProjectsExceededModal from "components/modals/scans/ProjectsExceededModal";
 
 const ApplicationForm: React.FC<{
   profileData: Profile;
@@ -59,11 +62,15 @@ const ApplicationForm: React.FC<{
   const [nameError, setNameError] = useState<null | string>(null);
   const [linkError, setLinkError] = useState<null | string>(null);
   const [connectAlert, setConnectAlert] = useState(false);
+  // const [isOauthIntegrated, setIsOauthIntegrated] = useState(false);
   const isOauthIntegrated =
-    profileData?._integrations?.github?.status === "successful" ||
-    profileData?._integrations?.gitlab?.status === "successful" ||
-    profileData?._integrations?.bitbucket?.status === "successful";
+    profileData._integrations[formType].status === "successful";
+
   const toast = useToast();
+
+  const { isOpen, onClose: closeModal, onOpen } = useDisclosure();
+
+  const [projectsExceededModal, setProjectsExceededModal] = useState(false);
 
   const runValidation = () => {
     if (projectName === "") {
@@ -76,19 +83,38 @@ const ApplicationForm: React.FC<{
     }
     if (
       !checkProjectUrl(githubLink) &&
-      getProjectType(githubLink) === formType
+      getProjectType(githubLink) !== formType
     ) {
-      setLinkError("Please enter a valid repository link");
+      setLinkError(`Please enter a valid ${formType} repository link`);
       return false;
     }
-    setGithubLink(githubLink);
+    if (visibility) {
+      if (profileData._integrations[formType].status !== "successful") {
+        return false;
+      }
+    }
+
     setNameError(null);
     setLinkError(null);
     return true;
   };
 
+  const minLOCReq = process.env.REACT_APP_MIN_LOC_REQ;
+
   const runScan = async () => {
     if (!runValidation() || !repoTreeUP) return;
+    if (profileData.current_package === "trial") {
+      if (profileData.trial_projects_remaining === 0) {
+        setProjectsExceededModal(true);
+        return;
+      }
+    } else if (
+      profileData.credit_system === "loc" &&
+      profileData.loc_remaining < parseInt(minLOCReq || "10")
+    ) {
+      onOpen();
+      return;
+    }
     if (config && config.REACT_APP_FEATURE_GATE_CONFIG.websockets_enabled) {
       try {
         setIsLoading(true);
@@ -105,10 +131,10 @@ const ApplicationForm: React.FC<{
             skip_file_paths: skipFilePaths,
           },
         });
-        onClose();
         queryClient.invalidateQueries("profile");
         history.push("/projects");
         setIsLoading(false);
+        onClose();
       } catch (e) {
         console.log(e);
         setIsLoading(false);
@@ -364,6 +390,7 @@ const ApplicationForm: React.FC<{
             </Box>
           ) : step === 1 ? (
             <InfoSettings
+              profileData={profileData}
               nameError={nameError}
               linkError={linkError}
               visibility={visibility}
@@ -448,7 +475,11 @@ const ApplicationForm: React.FC<{
               runScan();
             }
           }}
-          isDisabled={profileData?.credits === 0 || isViewer}
+          isDisabled={
+            profileData.credit_system === "loc"
+              ? false
+              : profileData?.credits === 0 || isViewer
+          }
         >
           {step > 2 ? (
             isLoading ? (
@@ -461,6 +492,28 @@ const ApplicationForm: React.FC<{
           )}
         </Button>
       </Flex>
+      {isOpen && (
+        <InsufficientLocModal
+          open={isOpen}
+          closeModal={closeModal}
+          scanDetails={{
+            project_name: projectName,
+            project_url: githubLink,
+            scan_type: "project",
+          }}
+        />
+      )}
+      {projectsExceededModal && (
+        <ProjectsExceededModal
+          open={projectsExceededModal}
+          closeModal={() => setProjectsExceededModal(false)}
+          scanDetails={{
+            project_name: projectName,
+            project_url: githubLink,
+            scan_type: "project",
+          }}
+        />
+      )}
     </Flex>
   );
 };

@@ -73,9 +73,9 @@ const MetaMaskLogin: React.FC = () => {
   };
 
   const sign = async (address: string, nonce: string) => {
-    var from = window.ethereum.selectedAddress;
-    var params = [from, nonce];
-    var method = "personal_sign";
+    let from = window.ethereum.selectedAddress;
+    let params = [from, nonce];
+    let method = "personal_sign";
     try {
       const signature = await ethereum.request({ method, params });
       const { data } = await API.post(API_PATH.API_METAMASK_LOGIN, {

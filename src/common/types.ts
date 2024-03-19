@@ -25,12 +25,19 @@ export type Profile = {
   contact_number: string;
   credits: number;
   auth_token: string;
+  credit_system: string;
+  total_loc: number;
+  loc_remaining: number;
+  plan_loc_remaining: number;
+  on_demand_loc_remaining: number;
   public_address?: string;
   company_name: string;
+  max_project_count: number;
   current_package: string;
   billing_cycle: string;
   email_verified: boolean;
   verification_email_sent: boolean;
+  trial_projects_remaining: number;
   projects_remaining: number;
   package_recharge_date: string;
   package_end_date: string;
@@ -103,6 +110,7 @@ export type Project = {
 export type ScanObj = {
   scan_id: string;
   scan_type: string;
+  is_trial_scan?: boolean;
   scan_details: Scan;
   scan_err_message?: string;
 };
@@ -159,6 +167,7 @@ export type Scan = {
   scan_details?: ScanDetail[];
   reporting_status: string;
   details_enabled: boolean;
+  is_trial_scan: boolean;
   _created: string;
   _updated: string;
   multi_file_scan_details: MultiFileScanDetail[];
@@ -229,9 +238,9 @@ export type PricingData = {
   pricing_table_data: {
     title: string;
     data: {
-      beginner: boolean | string | number;
+      individual: boolean | string | number;
       custom: boolean | string | number;
-      intermediate: boolean | string | number;
+
       ondemand: boolean | string | number;
       pro: boolean | string | number;
       title: string;
@@ -268,7 +277,9 @@ export type ScanMeta = {
   reporting_status: string;
   project_id: string;
   scan_score: string;
+  is_trial_scan: boolean;
   scan_score_v2: string;
+  loc_consumed: number;
   scan_name: string;
   latest_report_id: string;
   skip_file_paths?: string[];
@@ -441,6 +452,7 @@ export type Plan = {
   amount: string;
   github: boolean;
   report: boolean;
+  loc: number;
   publishable_report: boolean;
 };
 

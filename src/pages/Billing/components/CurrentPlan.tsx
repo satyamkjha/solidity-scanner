@@ -12,7 +12,7 @@ import {
   AlertDialogFooter,
   Box,
 } from "@chakra-ui/react";
-import { Plan } from "common/types";
+import { Plan, PricingData } from "common/types";
 import API from "helpers/api";
 import { API_PATH } from "helpers/routeManager";
 import React, { useRef, useState } from "react";
@@ -27,6 +27,7 @@ const CurrentPlan: React.FC<{
   packageName: string;
   packageRechargeDate: string;
   packageValidity: number;
+  pricing: PricingData;
   plan: Plan;
   subscription?: {
     end_date: string;
@@ -41,6 +42,7 @@ const CurrentPlan: React.FC<{
   packageRechargeDate,
   packageValidity,
   plan,
+  pricing,
   isCancellable,
   subscription,
   upgradePlan,
@@ -70,34 +72,6 @@ const CurrentPlan: React.FC<{
 
   const [isCancelSub, setIsCancelSub] = useState(false);
   const onClose = () => setIsCancelSub(false);
-
-  // const getNextPaymentValue = (startDate: Date, nextDate?: Date) => {
-  //   const remainingDays = getPaymentDaysLeft(nextDate);
-  //   if (nextDate) {
-  //     const timeDifference = nextDate.getTime() - startDate.getTime();
-  //     const totalDays = Math.ceil(timeDifference / (1000 * 3600 * 24));
-  //     return (remainingDays * 100) / totalDays;
-  //   } else {
-  //     return (remainingDays * 100) / packageValidity;
-  //   }
-  // };
-
-  // const getPaymentDaysLeft = (nextDate?: Date) => {
-  //   if (nextDate) {
-  //     const timeDifference = nextDate.getTime() - new Date().getTime();
-  //     return Math.ceil(timeDifference / (1000 * 3600 * 24));
-  //   } else {
-  //     const startDate = new Date(packageRechargeDate);
-  //     const currentDate = new Date();
-  //     const millisecondsPerDay = 24 * 60 * 60 * 1000;
-
-  //     const elapsedTime = currentDate.getTime() - startDate.getTime();
-  //     const elapsedDays = Math.floor(elapsedTime / millisecondsPerDay);
-
-  //     const remainingDays = packageValidity - elapsedDays;
-  //     return remainingDays;
-  //   }
-  // };
 
   return (
     <Box
@@ -177,6 +151,7 @@ const CurrentPlan: React.FC<{
       >
         <SubscriptionDataContainer
           packageName={packageName}
+          isCancellable={isCancellable}
           packageRechargeDate={packageRechargeDate}
         />
         <Flex
@@ -221,8 +196,10 @@ const CurrentPlan: React.FC<{
         subscription={subscription ? true : false}
         currentPackage={packageName}
         duration={billingCycle}
+        isCancellable={isCancellable}
         packageRechargeDate={packageRechargeDate}
         plan={plan}
+        pricing={pricing}
         open={open}
         onModalClose={onModalClose}
       />

@@ -16,7 +16,6 @@ interface IProps {
   datum?: any;
   x?: number;
   y?: number;
-  center?: any;
 }
 
 const CustomTooltip = (props: IProps) => {

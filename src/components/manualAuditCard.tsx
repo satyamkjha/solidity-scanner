@@ -54,7 +54,7 @@ export default function ManualAuditCard() {
           >
             <CredshieldsIcon size={isDesktopView ? 90 : 70} />
             <Button px={5} variant="dark" onClick={onOpen}>
-              <Text fontSize="xs"> Request manual audit</Text>
+              <Text fontSize="xs"> Request Manual Audit</Text>
             </Button>
           </HStack>
         </Box>

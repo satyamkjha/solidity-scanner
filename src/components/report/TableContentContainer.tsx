@@ -6,7 +6,8 @@ import React from "react";
 const TableContentContainer: React.FC<{
   issues: { [key: string]: IssueDetailObject };
   maxLength: number;
-}> = ({ issues, maxLength }) => {
+  download: boolean;
+}> = ({ issues, maxLength, download }) => {
   return (
     <Flex
       as="div"
@@ -22,10 +23,16 @@ const TableContentContainer: React.FC<{
         }}
         alignItems="center"
       >
-        <Heading color={"#52FF00"} fontSize="4xl">
+        <Heading
+          color={"#52FF00"}
+          fontSize={download ? "28px" : ["14px", "20px", "28px"]}
+        >
           Table of
         </Heading>
-        <Text fontSize="4xl" fontWeight={400}>
+        <Text
+          fontSize={download ? "28px" : ["14px", "20px", "28px"]}
+          fontWeight={400}
+        >
           {" "}
           &nbsp;Contents.{" "}
         </Text>
@@ -33,7 +40,12 @@ const TableContentContainer: React.FC<{
 
       <Flex w={"100%"}>
         <a href={"#project-summary"}>
-          <Text fontSize="md" fontWeight={600} mt={16} mb={4}>
+          <Text
+            fontSize={download ? "md" : ["xs", "sm", "md"]}
+            fontWeight={600}
+            mt={download ? 16 : [4, 8, 16]}
+            mb={download ? 4 : [2, 3, 4]}
+          >
             01 &nbsp;Vulnerability Classification and Severity
           </Text>
         </a>
@@ -41,7 +53,12 @@ const TableContentContainer: React.FC<{
 
       <Flex w={"100%"}>
         <a href={"#executive-summary"}>
-          <Text fontSize="md" fontWeight={600} mt={4} mb={4}>
+          <Text
+            fontSize={download ? "md" : ["xs", "sm", "md"]}
+            fontWeight={600}
+            mt={download ? 4 : [2, 3, 4]}
+            mb={download ? 4 : [2, 3, 4]}
+          >
             02 &nbsp;Executive Summary
           </Text>
         </a>
@@ -49,7 +66,12 @@ const TableContentContainer: React.FC<{
 
       <Flex w={"100%"}>
         <a href={"#finding-summary"}>
-          <Text fontSize="md" fontWeight={600} mt={4} mb={4}>
+          <Text
+            fontSize={download ? "md" : ["xs", "sm", "md"]}
+            fontWeight={600}
+            mt={download ? 4 : [2, 3, 4]}
+            mb={download ? 4 : [2, 3, 4]}
+          >
             03 &nbsp;Findings Summary
           </Text>
         </a>
@@ -57,7 +79,12 @@ const TableContentContainer: React.FC<{
 
       <Flex w={"100%"}>
         <a href={"#vulnerability-detail"}>
-          <Text fontSize="md" fontWeight={600} mt={4} mb={4}>
+          <Text
+            fontSize={download ? "md" : ["xs", "sm", "md"]}
+            fontWeight={600}
+            mt={download ? 4 : [2, 3, 4]}
+            mb={download ? 4 : [2, 3, 4]}
+          >
             04 &nbsp;Vulnerability Details
           </Text>
         </a>
@@ -65,13 +92,18 @@ const TableContentContainer: React.FC<{
       {Object.keys(issues)
         .slice(0, maxLength)
         .map((key, index) => (
-          <IssueComponent key={index} issue={issues[key]} />
+          <IssueComponent key={index} download={download} issue={issues[key]} />
         ))}
       {Object.keys(issues).length === maxLength ? (
         <>
           <Flex w={"100%"}>
             <a href={"#scan-history"}>
-              <Text fontSize="md" fontWeight={600} mt={4} mb={4}>
+              <Text
+                fontSize={download ? "md" : ["xs", "sm", "md"]}
+                fontWeight={600}
+                mt={download ? 4 : [2, 3, 4]}
+                mb={download ? 4 : [2, 3, 4]}
+              >
                 05 &nbsp;Scan History
               </Text>
             </a>
@@ -79,7 +111,12 @@ const TableContentContainer: React.FC<{
 
           <Flex w={"100%"}>
             <a href={"#disclaimer"}>
-              <Text fontSize="md" fontWeight={600} mt={4} mb={4}>
+              <Text
+                fontSize={download ? "md" : ["xs", "sm", "md"]}
+                fontWeight={600}
+                mt={download ? 4 : [2, 3, 4]}
+                mb={download ? 4 : [2, 3, 4]}
+              >
                 06 &nbsp;Disclaimer
               </Text>
             </a>
@@ -92,13 +129,24 @@ const TableContentContainer: React.FC<{
 
 export const IssueComponent: React.FC<{
   issue: any;
-}> = ({ issue }) => {
+  download: boolean;
+}> = ({ issue, download }) => {
   return (
-    <VStack w={"100%"} alignItems={"flex-start"} pl={5} mb={2}>
-      <HStack spacing={5} w={"100%"}>
+    <VStack
+      w={"100%"}
+      alignItems={"flex-start"}
+      pl={download ? 5 : [3, 4, 5]}
+      mb={download ? 2 : [1, 2]}
+    >
+      <HStack spacing={download ? 5 : [2, 3, 5]} w={"100%"}>
         <Flex alignItems={"center"} w={"80%"}>
           <SeverityIcon size={4} variant={"black"} />
-          <Text fontSize={["xs"]} fontWeight={"300"} lineHeight="1.5" ml={2}>
+          <Text
+            fontSize={download ? "xs" : ["7px", "10px", "xs"]}
+            fontWeight={"300"}
+            lineHeight="1.5"
+            ml={2}
+          >
             {issue.issue_name}
           </Text>
         </Flex>

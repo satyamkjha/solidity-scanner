@@ -16,17 +16,15 @@ import {
   MenuItem,
   Image,
   useToast,
+  useDisclosure,
+  Icon,
 } from "@chakra-ui/react";
-// import Lottie from "lottie-react";
 import { Page, Pagination, ScanObj } from "common/types";
 import { useProfile } from "hooks/useProfile";
 import InfiniteScroll from "react-infinite-scroll-component";
 import Loader from "components/styled-components/Loader";
 import { useUserRole } from "hooks/useUserRole";
-import {
-  getAssetsURL,
-  // getAssetsFromS3,
-} from "helpers/helperFunction";
+import { getAssetsURL, getTrimmedScanMessage } from "helpers/helperFunction";
 import { useAllScans } from "hooks/useAllScans";
 import ScanCard from "components/cards/ScanCard";
 import { Search2Icon, CloseIcon } from "@chakra-ui/icons";
@@ -37,12 +35,27 @@ import RadioButton from "components/styled-components/RadioButton";
 import { useWebSocket } from "hooks/useWebhookData";
 import { inProcessScanStates } from "common/values";
 import { AddProject } from "components/common/AddProject";
+import InScanModal from "components/modals/scans/InScanModal";
+import { MdCancel } from "react-icons/md";
 
 const Scans: React.FC = () => {
+  const scanMessageTypes = [
+    "scan_initiate",
+    "scan_status",
+    "scan_complete",
+    "insufficient_loc",
+    "project_scan_acknowledge",
+    "block_scan_acknowledge",
+    "delete_block_acknowledge",
+    "delete_project_acknowledge",
+  ];
+
   const [isDesktopView] = useMediaQuery("(min-width: 1920px)");
   const [isMobileView] = useMediaQuery("(max-width: 500px)");
+
   const { role } = useUserRole();
   const assetsURL = getAssetsURL();
+
   const [queryTerm, setQueryTerm] = useState<string>();
   const [searchTerm, setSearchTerm] = useState<string>();
   const [filterParam, setFilterParam] = useState<
@@ -57,15 +70,24 @@ const Scans: React.FC = () => {
     perPageCount: isDesktopView ? 20 : 12,
   });
   const [hasMore, setHasMore] = useState(true);
-
-  const { data: projects } = useAllScans(pagination, queryTerm, filterParam);
+  const { isOpen, onClose, onOpen } = useDisclosure();
+  const { data: projects, refetch: refetchProjects } = useAllScans(
+    pagination,
+    queryTerm,
+    filterParam
+  );
+  const [insufficientMsg, setInsufficientMsg] = useState<any>();
   const [projectList, setProjectList] =
     useState<{ scanItem: ScanObj; tempScanStatus: string }[]>();
   const [projectsMonitored, setProjectsMonitored] = useState(0);
   const [isProjectsLoading, setIsProjectsLoading] = useState(false);
+
+  const [inScanDetails, setInScanDetails] = useState<any>(null);
+
   const { messageQueue, updateMessageQueue, setKeepWSOpen } = useWebSocket();
   const toast = useToast();
   const { data: profileData, refetch: refetchProfile } = useProfile(true);
+
   useEffect(() => {
     if (profileData) {
       setProjectsMonitored(profileData.projects_remaining);
@@ -77,7 +99,10 @@ const Scans: React.FC = () => {
     if (projects) {
       let alteredPlist = projects.data.map((item) => ({
         scanItem: item,
-        tempScanStatus: item.scan_details.multi_file_scan_status,
+        tempScanStatus:
+          item.scan_details.scan_status.length > 25
+            ? getTrimmedScanMessage(item.scan_details.scan_status)
+            : item.scan_details.scan_status,
       }));
 
       let pList =
@@ -87,7 +112,11 @@ const Scans: React.FC = () => {
       const uniqueProjectList = pList.filter(
         (project, index, self) =>
           index ===
-          self.findIndex((p) => p.scanItem.scan_id === project.scanItem.scan_id)
+          self.findIndex(
+            (p) =>
+              p.scanItem.scan_details.project_id ===
+              project.scanItem.scan_details.project_id
+          )
       );
       setIsProjectsLoading(false);
       setProjectList(uniqueProjectList);
@@ -144,10 +173,11 @@ const Scans: React.FC = () => {
     });
   };
 
-  const updateProjectList = (scan_id: string) => {
+  const updateProjectList = (project_id: string) => {
     let newProjectList = projectList || [];
     newProjectList = newProjectList.filter((projectItem) => {
-      if (projectItem.scanItem.scan_id === scan_id) return false;
+      if (projectItem.scanItem.scan_details.project_id === project_id)
+        return false;
       return true;
     });
     setProjectsMonitored(projectsMonitored - 1);
@@ -155,111 +185,213 @@ const Scans: React.FC = () => {
   };
 
   useEffect(() => {
-    if (
-      projectList &&
-      messageQueue.length > 0 &&
-      messageQueue.some((msgItem: any) =>
-        [
-          "scan_initiate",
-          "scan_status",
-          "scan_complete",
-          "delete_block_acknowledge",
-          "delete_project_acknowledge",
-        ].includes(msgItem.type)
-      )
-    ) {
-      let updatedProjectList = projectList;
-      messageQueue.forEach((msgItem: any) => {
-        if (msgItem.type === "scan_status") {
-          updatedProjectList = updatedProjectList.map((item) => {
-            if (item.scanItem.scan_id === msgItem.payload.scan_id) {
-              if (msgItem.payload.scan_status === "scan_done") {
-                return {
+    if (projectList && messageQueue.length > 0) {
+      const isMessageTypeIncluded = (msg: any) =>
+        scanMessageTypes.includes(msg.type);
+
+      const filteredMessages = messageQueue.filter(isMessageTypeIncluded);
+      if (filteredMessages.length === 0) {
+        return;
+      }
+
+      setProjectList((prevProjectList) => {
+        let updatedProjectList = prevProjectList ? [...prevProjectList] : [];
+        let tempMsgQueue = [...messageQueue];
+
+        filteredMessages.forEach((msgItem: any) => {
+          if (msgItem.type === "scan_status") {
+            updatedProjectList = updatedProjectList.map((item) => {
+              if (
+                item.scanItem.scan_details.project_id ===
+                msgItem.payload.project_id
+              ) {
+                if (msgItem.payload.scan_status === "scan_done") {
+                  refetchProjects();
+                  onClose();
+                  setInScanDetails(null);
+                  return {
+                    scanItem: {
+                      scan_id: msgItem.payload.scan_id,
+                      scan_type: msgItem.payload.scan_details.scan_type,
+                      scan_details: msgItem.payload.scan_details,
+                    },
+                    tempScanStatus: msgItem.payload.scan_status,
+                  };
+                } else if (
+                  ["download_failed", "scan_failed"].includes(
+                    msgItem.payload.scan_status
+                  )
+                ) {
+                  if (
+                    inScanDetails &&
+                    msgItem.payload.project_id === inScanDetails.project_id
+                  ) {
+                    setInScanDetails({
+                      ...inScanDetails,
+                      scan_state: msgItem.payload.scan_status,
+                    });
+                  }
+                  return {
+                    scanItem: {
+                      ...item.scanItem,
+                      scan_id: msgItem.payload.scan_id,
+                      scan_err_message: msgItem.payload.scan_status_err_message,
+                    },
+                    tempScanStatus: msgItem.payload.scan_status,
+                  };
+                } else {
+                  if (
+                    inScanDetails &&
+                    msgItem.payload.project_id === inScanDetails.project_id
+                  ) {
+                    setInScanDetails({
+                      ...inScanDetails,
+                      scan_state: msgItem.payload.scan_status,
+                    });
+                  }
+                  return {
+                    ...item,
+                    tempScanStatus: msgItem.payload.scan_status,
+                  };
+                }
+              } else return item;
+            });
+          } else if (
+            ["block_scan_acknowledge", "project_scan_acknowledge"].includes(
+              msgItem.type
+            )
+          ) {
+            const scan_type =
+              msgItem.type === "block_scan_acknowledge" ? "block" : "project";
+            const findIndex = updatedProjectList.findIndex(
+              (item) =>
+                item.scanItem.scan_details.project_id ===
+                msgItem.payload.project_id
+            );
+            if (findIndex !== -1) {
+              updatedProjectList[findIndex] = {
+                scanItem: {
+                  scan_id: "",
+                  scan_type,
+                  scan_details: {
+                    ...msgItem.payload,
+                    multi_file_scan_status: "in_queue",
+                    scan_status: "in_queue",
+                  },
+                },
+                tempScanStatus: "in_queue",
+              };
+            } else {
+              updatedProjectList = [
+                {
                   scanItem: {
-                    scan_id: msgItem.payload.scan_id,
+                    scan_id: "",
+                    scan_type,
+                    scan_details: {
+                      ...msgItem.payload,
+                      multi_file_scan_status: "in_queue",
+                      scan_status: "in_queue",
+                    },
+                  },
+                  tempScanStatus: "in_queue",
+                },
+                ...updatedProjectList,
+              ];
+            }
+            setInScanDetails({
+              project_id: msgItem.payload.project_id,
+              scan_state: "in_queue",
+              scan_type,
+              ...msgItem.payload,
+            });
+            onOpen();
+          } else if (msgItem.type === "scan_initiate") {
+            const findIndex = updatedProjectList.findIndex(
+              (item) =>
+                item.scanItem.scan_details.project_id ===
+                msgItem.payload.scan_details.project_id
+            );
+
+            if (findIndex !== -1) {
+              updatedProjectList[findIndex] = {
+                scanItem: {
+                  scan_id: msgItem.payload.scan_details.scan_id,
+                  scan_type: msgItem.payload.scan_details.scan_type,
+                  scan_details: msgItem.payload.scan_details,
+                },
+                tempScanStatus: msgItem.type,
+              };
+            } else {
+              updatedProjectList = [
+                {
+                  scanItem: {
+                    scan_id: msgItem.payload.scan_details.scan_id,
                     scan_type: msgItem.payload.scan_details.scan_type,
                     scan_details: msgItem.payload.scan_details,
                   },
-                  tempScanStatus: "scan_done",
-                };
-              } else if (
-                ["download_failed", "scan_failed"].includes(
-                  msgItem.payload.scan_status
-                )
-              ) {
-                return {
-                  scanItem: {
-                    ...item.scanItem,
-                    scan_id: msgItem.payload.scan_id,
-                    scan_err_message: msgItem.payload.scan_status_err_message,
-                  },
-                  tempScanStatus: msgItem.payload.scan_status,
-                };
-              } else
-                return {
-                  ...item,
-                  tempScanStatus: msgItem.payload.scan_status,
-                };
-            } else return item;
-          });
-        } else if (msgItem.type === "scan_initiate") {
-          let scanAlreadyPresent = false;
-          updatedProjectList = updatedProjectList.map((item) => {
-            if (
-              item.scanItem.scan_details.project_id ===
-              msgItem.payload.scan_details.project_id
-            ) {
-              scanAlreadyPresent = true;
-              return {
-                scanItem: {
-                  scan_id: msgItem.payload.scan_details.scan_id,
-                  scan_type: msgItem.payload.scan_details.scan_type,
-                  scan_details: msgItem.payload.scan_details,
+                  tempScanStatus: msgItem.type,
                 },
-                tempScanStatus: "scan_initiate",
-              };
-            } else return item;
-          });
-          if (!scanAlreadyPresent) {
-            updatedProjectList = [
-              {
-                scanItem: {
-                  scan_id: msgItem.payload.scan_details.scan_id,
-                  scan_type: msgItem.payload.scan_details.scan_type,
-                  scan_details: msgItem.payload.scan_details,
-                },
-                tempScanStatus: "scan_initiate",
-              },
-              ...updatedProjectList,
-            ];
+                ...updatedProjectList,
+              ];
+            }
+            if (msgItem.payload.scan_details.scan_type === "block")
+              setInScanDetails({
+                project_id: msgItem.payload.scan_details.project_id,
+                contract_address: msgItem.payload.scan_details.contract_address,
+                contract_platform:
+                  msgItem.payload.scan_details.contract_platform,
+                contract_url: msgItem.payload.scan_details.contract_url,
+                contract_chain: msgItem.payload.scan_details.contract_chain,
+                scan_state: msgItem.type,
+                scan_type: msgItem.payload.scan_details.scan_type,
+              });
+            else
+              setInScanDetails({
+                project_id: msgItem.payload.scan_details.project_id,
+                project_url: msgItem.payload.scan_details.project_url,
+                project_name: msgItem.payload.scan_details.project_name,
+                scan_state: msgItem.type,
+                scan_type: msgItem.payload.scan_details.scan_type,
+              });
+          } else if (msgItem.type === "insufficient_loc") {
+            const inScanProjectIndex = updatedProjectList.findIndex(
+              (proj) => proj.scanItem.scan_id === msgItem.payload.scan_id
+            );
+            if (inScanProjectIndex !== -1) {
+              const inScanProject = updatedProjectList[inScanProjectIndex];
+              inScanProject.tempScanStatus = "scan_failed";
+              inScanProject.scanItem.scan_err_message =
+                msgItem.payload.scan_status_err_message;
+              inScanProject.scanItem.scan_details.scan_status =
+                msgItem.payload.scan_status_err_message;
+              setInScanDetails({
+                loc: msgItem.payload.loc_required,
+                scan_state: "scan_failed",
+                scan_err_message: msgItem.payload.scan_status_err_message,
+                ...inScanProject.scanItem.scan_details,
+              });
+            }
+            setInsufficientMsg(msgItem.payload);
+          } else if (
+            msgItem.type === "delete_block_acknowledge" ||
+            msgItem.type === "delete_project_acknowledge"
+          ) {
+            toast({
+              title: msgItem.payload.payload.message,
+              status: "success",
+              duration: 3000,
+              isClosable: true,
+            });
           }
-        } else if (
-          msgItem.type === "delete_block_acknowledge" ||
-          msgItem.type === "delete_project_acknowledge"
-        ) {
-          toast({
-            title: msgItem.payload.payload.message,
-            status: "success",
-            duration: 3000,
-            isClosable: true,
-          });
-        }
+          tempMsgQueue = tempMsgQueue.filter(
+            (msg) => msg.type !== msgItem.type
+          );
+        });
+
+        updateMessageQueue(tempMsgQueue);
+
+        return updatedProjectList;
       });
-      let tempMsgQueue = messageQueue;
-      tempMsgQueue = tempMsgQueue.filter(
-        (msg: any) =>
-          ![
-            "scan_initiate",
-            "scan_status",
-            "scan_complete",
-            "project_scan_acknowledge",
-            "block_scan_acknowledge",
-            "delete_block_acknowledge",
-            "delete_project_acknowledge",
-          ].includes(msg.type)
-      );
-      updateMessageQueue(tempMsgQueue);
-      setProjectList(updatedProjectList);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [messageQueue]);
@@ -364,89 +496,102 @@ const Scans: React.FC = () => {
                 />
                 <InputRightElement
                   height="48px"
-                  w="80px"
+                  w={searchTerm ? "105px" : "80px"}
                   children={
-                    <Menu placement={"bottom-end"} matchWidth>
-                      <MenuButton
-                        as={Box}
-                        onClick={(e) => {
-                          e.stopPropagation();
-                        }}
-                      >
-                        <HStack
-                          spacing={2}
-                          p={2}
-                          w="70px"
-                          borderRadius={10}
-                          bg="bg.subtle"
+                    <HStack>
+                      {searchTerm ? (
+                        <Icon
+                          as={MdCancel}
+                          color={"#8A94A6"}
+                          cursor={"pointer"}
+                          onClick={() => setSearchTerm("")}
+                        />
+                      ) : null}
+                      <Menu placement={"bottom-end"} matchWidth>
+                        <MenuButton
+                          as={Box}
+                          onClick={(e) => {
+                            e.stopPropagation();
+                          }}
                         >
-                          {paramType === "" || paramType === undefined ? (
-                            <FiFilter
-                              color={!paramType ? "#8A94A6" : "#3300ff"}
-                              size={20}
-                            />
-                          ) : (
-                            <Image
-                              height="25px"
-                              width="25px"
-                              src={`${assetsURL}icons/integrations/${
-                                paramType === "File Scan"
-                                  ? "filescan"
-                                  : paramType
-                              }.svg`}
-                            />
-                          )}
+                          <HStack
+                            spacing={2}
+                            p={2}
+                            w="70px"
+                            borderRadius={10}
+                            bg="bg.subtle"
+                          >
+                            {paramType === "" || paramType === undefined ? (
+                              <FiFilter
+                                color={!paramType ? "#8A94A6" : "#3300ff"}
+                                size={20}
+                              />
+                            ) : (
+                              <Image
+                                height="25px"
+                                width="25px"
+                                src={`${assetsURL}icons/integrations/${
+                                  paramType === "File Scan"
+                                    ? "filescan"
+                                    : paramType
+                                }.svg`}
+                              />
+                            )}
 
-                          <RxDoubleArrowDown color="#C4C4C4" size={16} />
-                        </HStack>
-                      </MenuButton>
-                      <MenuList
-                        sx={{
-                          boxShadow:
-                            "0px 4px 12px rgba(0, 0, 0, 0.2) !important",
-                          _hover: "0px 4px 24px rgba(0, 0, 0, 0.2) !important",
-                          px: 6,
-                          py: 4,
-                          w: ["100%", "320px"],
-                          borderRadius: 20,
-                        }}
-                      >
-                        <Text w="100%" textAlign="center" mb={3}>
-                          Filter by Project Type
-                        </Text>
-                        {paramList.map((item) => (
-                          <MenuItem
-                            _focus={{ backgroundColor: "#FFFFFF" }}
-                            _hover={{ backgroundColor: "#FFFFFF" }}
-                            onClick={(e) => {
-                              e.stopPropagation();
-                              setParamType(item.param);
-                            }}
-                            sx={{
-                              py: 4,
-                              borderBottom: "1px solid #ececec",
-                            }}
-                            justifyContent="space-between"
-                          >
-                            {item.label}{" "}
-                            <RadioButton isActive={paramType === item.param} />
-                          </MenuItem>
-                        ))}
-                        <HStack w="100%" justifyContent="center">
-                          <Button
-                            leftIcon={<CloseIcon fontSize="10px" />}
-                            fontSize="sm"
-                            size="sm"
-                            mt={4}
-                            variant="ghost"
-                            color="accent"
-                            onClick={() => setParamType("")}
-                          >
-                            Clear Filter
-                          </Button>
-                        </HStack>
-                      </MenuList>
-                    </Menu>
+                            <RxDoubleArrowDown color="#C4C4C4" size={16} />
+                          </HStack>
+                        </MenuButton>
+                        <MenuList
+                          sx={{
+                            boxShadow:
+                              "0px 4px 12px rgba(0, 0, 0, 0.2) !important",
+                            _hover:
+                              "0px 4px 24px rgba(0, 0, 0, 0.2) !important",
+                            px: 6,
+                            py: 4,
+                            w: ["100%", "320px"],
+                            borderRadius: 20,
+                          }}
+                        >
+                          <Text w="100%" textAlign="center" mb={3}>
+                            Filter by Project Type
+                          </Text>
+                          {paramList.map((item) => (
+                            <MenuItem
+                              _focus={{ backgroundColor: "#FFFFFF" }}
+                              _hover={{ backgroundColor: "#FFFFFF" }}
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                setParamType(item.param);
+                              }}
+                              sx={{
+                                py: 4,
+                                borderBottom: "1px solid #ececec",
+                              }}
+                              justifyContent="space-between"
+                            >
+                              {item.label}{" "}
+                              <RadioButton
+                                isActive={paramType === item.param}
+                              />
+                            </MenuItem>
+                          ))}
+                          <HStack w="100%" justifyContent="center">
+                            <Button
+                              leftIcon={<CloseIcon fontSize="10px" />}
+                              fontSize="sm"
+                              size="sm"
+                              mt={4}
+                              variant="ghost"
+                              color="accent"
+                              onClick={() => setParamType("")}
+                            >
+                              Clear Filter
+                            </Button>
+                          </HStack>
+                        </MenuList>
+                      </Menu>
+                    </HStack>
                   }
                 />
               </InputGroup>
@@ -530,16 +675,30 @@ const Scans: React.FC = () => {
           >
             {[...(projectList || [])].map((project) => (
               <ScanCard
-                key={project.scanItem.scan_id}
+                key={project.scanItem.scan_details.project_id}
                 scan={project.scanItem}
                 tempScanStatus={project.tempScanStatus}
                 updateScanList={updateProjectList}
                 isViewer={role === "viewer"}
+                setInScanDetails={setInScanDetails}
+                inScanDetails={inScanDetails}
+                openScanStateModal={onOpen}
               />
             ))}
           </InfiniteScroll>
         </Flex>
       )}
+      {inScanDetails ? (
+        <InScanModal
+          inScanDetails={inScanDetails}
+          isOpen={isOpen}
+          onClose={() => {
+            setInsufficientMsg(null);
+            onClose();
+          }}
+          insufficientMsg={insufficientMsg}
+        />
+      ) : null}
     </Box>
   );
 };

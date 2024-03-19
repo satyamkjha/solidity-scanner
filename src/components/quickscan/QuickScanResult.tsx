@@ -69,6 +69,7 @@ export const QuickScanResultContainer: React.FC<{
       contract_address: scanReport.contract_address,
       contract_chain: scanReport.contract_chain,
       contract_platform: scanReport.contract_platform,
+      loc: scanReport.multi_file_scan_summary.lines_analyzed_count,
       new_user: false,
     };
     setRecentQuickScan(scan_details);
@@ -120,6 +121,7 @@ export const QuickScanResultContainer: React.FC<{
     if (reportId !== "") {
       history.push(`/qs-report/${projectId}/${reportId}/${scanId}`);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [reportId]);
 
   return (
@@ -331,9 +333,15 @@ export const QuickScanResultContainer: React.FC<{
             w={"100%"}
             mt={[5, 5, 10]}
             maxW={"300px"}
-            onClick={() => onViewDetailResult()}
+            onClick={() =>
+              getFeatureGateConfig().qs_report
+                ? openReport()
+                : onViewDetailResult()
+            }
           >
-            View Detailed Result ⟶
+            {getFeatureGateConfig().qs_report
+              ? "View Audit Report PDF ⟶"
+              : "View Detailed Result"}
           </Button>
         )}
       </Flex>
@@ -344,6 +352,7 @@ export const QuickScanResultContainer: React.FC<{
           contract_address: scanReport.contract_address,
           contract_chain: scanReport.contract_chain,
           contract_platform: scanReport.contract_platform,
+          loc: scanReport.multi_file_scan_summary.lines_analyzed_count,
           new_user: false,
         }}
         errorCount={errorData?.errorCount || 0}

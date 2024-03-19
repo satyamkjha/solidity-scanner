@@ -1,14 +1,12 @@
-import { Dispatch, SetStateAction, useContext } from "react";
+import React, { Dispatch, SetStateAction, useContext } from "react";
 import { Accordion, useMediaQuery } from "@chakra-ui/react";
 import {
   FilesState,
   MetricWiseAggregatedFinding,
   MultiFileScanDetail,
-  Profile,
   Issues,
 } from "common/types";
 import { severityPriority } from "common/values";
-import React from "react";
 import IssueContainer from "./IssueContainer";
 import { getBugStatusNumber } from "common/functions";
 import { DetailResultContext } from "common/contexts";
@@ -26,16 +24,18 @@ type MultifileIssuesProps = {
   confidence: boolean[];
   vulnerability: boolean[];
   bugStatusFilter: boolean[];
-  profileData: Profile;
   details_enabled: boolean;
   is_latest_scan: boolean;
   updateBugStatus: any;
+  is_trial_scan: boolean;
   project_url?: string;
   contract_url?: string;
   contract_platform?: string;
   branchName?: string;
   contract_address?: string;
   isViewer: boolean;
+  project_name?: string;
+  contract_chain?: string;
 };
 
 const MultifileIssues: React.FC<MultifileIssuesProps> = ({
@@ -60,6 +60,9 @@ const MultifileIssues: React.FC<MultifileIssuesProps> = ({
   contract_platform,
   branchName,
   contract_address,
+  is_trial_scan,
+  project_name,
+  contract_chain,
 }) => {
   const [isDesktopView] = useMediaQuery("(min-width: 1350px)");
   let issue_count: number;
@@ -146,13 +149,14 @@ const MultifileIssues: React.FC<MultifileIssuesProps> = ({
                     key={issue_id + index}
                     index={index}
                     type={type}
+                    is_trial_scan={is_trial_scan}
                     files={files}
                     issue_id={issue_id}
-                    metric_wise_aggregated_findings={  
+                    metric_wise_aggregated_findings={
                       metric_wise_aggregated_findings
                     }
                     template_details={template_details}
-                    no_of_findings={issue_count ? issue_count : no_of_findings}
+                    no_of_findings={issue_count ?? no_of_findings}
                     is_latest_scan={is_latest_scan}
                     details_enabled={details_enabled}
                     setFiles={setFiles}
@@ -164,6 +168,8 @@ const MultifileIssues: React.FC<MultifileIssuesProps> = ({
                     updateBugStatus={updateBugStatus}
                     restrictedBugIds={restrictedBugIds}
                     project_url={project_url}
+                    project_name={project_name}
+                    contract_chain={contract_chain}
                     contract_url={contract_url}
                     contract_platform={contract_platform}
                     branchName={branchName}

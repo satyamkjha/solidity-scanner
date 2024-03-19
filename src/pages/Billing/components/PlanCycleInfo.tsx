@@ -12,8 +12,9 @@ import {
   getPaymentDaysLeft,
 } from "common/functions";
 import { useHistory } from "react-router-dom";
-import { getAssetsURL, sentenceCapitalize } from "helpers/helperFunction";
+import { getAssetsURL } from "helpers/helperFunction";
 import React from "react";
+import { packageLabel } from "common/values";
 
 const PlanCycleInfo: React.FC<{
   planName: string;
@@ -40,7 +41,9 @@ const PlanCycleInfo: React.FC<{
   if (packageName === "trial" || packageName === "ondemand")
     return (
       <Image
-        src={`${assetsURL}common/pro_upgrade.svg`}
+        src={`${assetsURL}common/pro_upgrade${
+          packageName === "ondemand" ? "_ondemand" : ""
+        }.svg`}
         height="185px"
         width="400px"
         ml={[0, 0, 0, "auto"]}
@@ -169,7 +172,7 @@ const PlanCycleInfo: React.FC<{
                   &nbsp; days
                 </Text>
                 <Text fontSize="sm" fontWeight="400">
-                  remaining for the {sentenceCapitalize(planName)} Plan
+                  remaining for the {packageLabel[planName]} Plan
                 </Text>
               </VStack>
             </Flex>

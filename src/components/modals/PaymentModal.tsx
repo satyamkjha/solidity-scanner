@@ -1,6 +1,5 @@
 import {
   Modal,
-  ModalOverlay,
   Flex,
   Divider,
   HStack,
@@ -26,6 +25,8 @@ import ConfirmationMessageBox from "../../pages/Billing/components/ConfirmationM
 import DetailedBill from "../../pages/Billing/components/DetailedBill";
 import SwitchDuration from "../../pages/Billing/components/SwitchDuration";
 import Loader from "components/styled-components/Loader";
+import ModalBlurOverlay from "components/common/ModalBlurOverlay";
+import AddEmailModal from "./AddEmailModal";
 
 const PaymentModal: React.FC<{
   isOpen: boolean;
@@ -59,6 +60,17 @@ const PaymentModal: React.FC<{
   const toast = useToast();
 
   const [paymentMethod, setPaymentMethod] = useState<"cp" | "stripe">("cp");
+
+  const [open, setOpen] = useState(false);
+
+  const changePaymentMethod = (paymentMethod: "cp" | "stripe") => {
+    if (profileData && profileData.email_verified) {
+      setPaymentMethod(paymentMethod);
+    } else {
+      setOpen(true);
+    }
+  };
+
   const [coin, setCoin] = useState("");
   const [step, setStep] = useState(0);
   const [activeCoupon, setActiveCoupon] = useState<string | null>(null);
@@ -90,7 +102,6 @@ const PaymentModal: React.FC<{
         if (status === 200 && data.checkout_url) {
           setLoading(false);
           window.open(`${data.checkout_url}`, "_blank");
-          // fetchAgain();
           data.transaction_id &&
             setTransactionId &&
             setTransactionId(data.transaction_id);
@@ -140,7 +151,6 @@ const PaymentModal: React.FC<{
         if (status === 200 && data.checkout_url) {
           setLoading(false);
           window.open(`${data.checkout_url}`, "_blank");
-          // fetchAgain();
           onClose();
         } else {
           toast({
@@ -253,10 +263,8 @@ const PaymentModal: React.FC<{
         containerModalClose && containerModalClose();
       }}
     >
-      <ModalOverlay />
+      <ModalBlurOverlay />
       <ModalContent
-        overflowY={"scroll"}
-        overflowX={"scroll"}
         bg="white"
         borderRadius="15px"
         h={duration === "topup" ? "75%" : "85%"}
@@ -301,23 +309,13 @@ const PaymentModal: React.FC<{
                   <PaymentMethodCard
                     paymentType={"cp"}
                     paymentMethod={paymentMethod}
-                    setPaymentMethod={setPaymentMethod}
+                    changePaymentMethod={changePaymentMethod}
                   />
-                  {profileData ? (
-                    profileData.email_verified && (
-                      <PaymentMethodCard
-                        paymentType={"stripe"}
-                        paymentMethod={paymentMethod}
-                        setPaymentMethod={setPaymentMethod}
-                      />
-                    )
-                  ) : (
-                    <PaymentMethodCard
-                      paymentType={"stripe"}
-                      paymentMethod={paymentMethod}
-                      setPaymentMethod={setPaymentMethod}
-                    />
-                  )}
+                  <PaymentMethodCard
+                    paymentType={"stripe"}
+                    paymentMethod={paymentMethod}
+                    changePaymentMethod={changePaymentMethod}
+                  />
                 </HStack>
                 {paymentMethod === "cp" && (
                   <CoinPaymentSelect setCoin={setCoin} coin={coin} />
@@ -444,23 +442,13 @@ const PaymentModal: React.FC<{
                     <PaymentMethodCard
                       paymentType={"cp"}
                       paymentMethod={paymentMethod}
-                      setPaymentMethod={setPaymentMethod}
+                      changePaymentMethod={changePaymentMethod}
                     />
-                    {profileData ? (
-                      profileData.email_verified && (
-                        <PaymentMethodCard
-                          paymentType={"stripe"}
-                          paymentMethod={paymentMethod}
-                          setPaymentMethod={setPaymentMethod}
-                        />
-                      )
-                    ) : (
-                      <PaymentMethodCard
-                        paymentType={"stripe"}
-                        paymentMethod={paymentMethod}
-                        setPaymentMethod={setPaymentMethod}
-                      />
-                    )}
+                    <PaymentMethodCard
+                      paymentType={"stripe"}
+                      paymentMethod={paymentMethod}
+                      changePaymentMethod={changePaymentMethod}
+                    />
                   </HStack>
                   {paymentMethod === "cp" && (
                     <CoinPaymentSelect setCoin={setCoin} coin={coin} />
@@ -553,118 +541,114 @@ const PaymentModal: React.FC<{
               </Flex>
             </Flex>
           ) : (
-            <>
-              <Flex
-                w="75vw"
-                maxW={"300px"}
-                flexDir="column"
-                h="100%"
-                justifyContent={"flex-start"}
-                pt={5}
-              >
-                {step === 0 ? (
-                  <>
-                    <CurrentPlanDescriptionContainer
-                      packageName={selectedPlan}
-                      plan={pricingDetails[duration][selectedPlan]}
+            <Flex
+              w="75vw"
+              maxW={"300px"}
+              flexDir="column"
+              h="100%"
+              justifyContent={"flex-start"}
+              pt={5}
+            >
+              {step === 0 ? (
+                <>
+                  <CurrentPlanDescriptionContainer
+                    packageName={selectedPlan}
+                    plan={pricingDetails[duration][selectedPlan]}
+                    duration={duration}
+                  />
+                  {![
+                    "ondemand",
+                    "topup",
+                    "publish_report",
+                    "verified_publish_report",
+                  ].includes(duration) && (
+                    <SwitchDuration
+                      setDuration={setDuration}
+                      setActiveCoupon={setActiveCoupon}
+                      setUpdatedPrice={setUpdatedPrice}
                       duration={duration}
                     />
-                    {![
-                      "ondemand",
-                      "topup",
-                      "publish_report",
-                      "verified_publish_report",
-                    ].includes(duration) && (
-                      <SwitchDuration
-                        setDuration={setDuration}
-                        setActiveCoupon={setActiveCoupon}
-                        setUpdatedPrice={setUpdatedPrice}
-                        duration={duration}
-                      />
-                    )}
-                  </>
-                ) : step === 1 ? (
-                  <VStack
-                    w="100%"
-                    justifyContent={"flex-start"}
-                    alignItems={"center"}
-                    spacing={5}
-                  >
-                    <PaymentMethodCard
-                      paymentType={"cp"}
-                      paymentMethod={paymentMethod}
-                      setPaymentMethod={setPaymentMethod}
-                    />
-                    {profileData ? (
-                      profileData.email_verified && (
-                        <PaymentMethodCard
-                          paymentType={"stripe"}
-                          paymentMethod={paymentMethod}
-                          setPaymentMethod={setPaymentMethod}
-                        />
-                      )
-                    ) : (
-                      <PaymentMethodCard
-                        paymentType={"stripe"}
-                        paymentMethod={paymentMethod}
-                        setPaymentMethod={setPaymentMethod}
-                      />
-                    )}
-                  </VStack>
-                ) : step === 2 ? (
-                  <>
-                    {paymentMethod === "cp" && (
-                      <CoinPaymentSelect setCoin={setCoin} coin={coin} />
-                    )}
-                    {duration !== "on-demand-report" && (
-                      <CouponCodeSection
-                        duration={duration}
-                        selectedPlan={selectedPlan}
-                        activeCoupon={activeCoupon}
-                        setActiveCoupon={setActiveCoupon}
-                        setUpdatedPrice={setUpdatedPrice}
-                      />
-                    )}
-                  </>
-                ) : (
-                  <>
-                    <ConfirmationMessageBox
-                      name={pricingDetails[duration][selectedPlan].name}
+                  )}
+                </>
+              ) : step === 1 ? (
+                <VStack
+                  w="100%"
+                  justifyContent={"flex-start"}
+                  alignItems={"center"}
+                  spacing={5}
+                >
+                  <PaymentMethodCard
+                    paymentType={"cp"}
+                    paymentMethod={paymentMethod}
+                    changePaymentMethod={changePaymentMethod}
+                  />
+                  <PaymentMethodCard
+                    paymentType={"stripe"}
+                    paymentMethod={paymentMethod}
+                    changePaymentMethod={changePaymentMethod}
+                  />
+                </VStack>
+              ) : step === 2 ? (
+                <>
+                  {paymentMethod === "cp" && (
+                    <CoinPaymentSelect setCoin={setCoin} coin={coin} />
+                  )}
+                  {duration !== "on-demand-report" && (
+                    <CouponCodeSection
                       duration={duration}
-                    />
-                    <DetailedBill
-                      duration={duration}
-                      pricingDetails={pricingDetails}
                       selectedPlan={selectedPlan}
                       activeCoupon={activeCoupon}
-                      updatedPrice={updatedPrice}
-                      quantity={quantity}
+                      setActiveCoupon={setActiveCoupon}
+                      setUpdatedPrice={setUpdatedPrice}
                     />
-                  </>
-                )}
-                <Button
-                  mt={"auto"}
-                  w="100%"
-                  variant="brand"
-                  onClick={() => {
-                    if (step > 2) {
-                      if (paymentMethod === "cp") {
-                        createCPLink();
-                      } else {
-                        createStripePayment();
-                      }
+                  )}
+                </>
+              ) : (
+                <>
+                  <ConfirmationMessageBox
+                    name={pricingDetails[duration][selectedPlan].name}
+                    duration={duration}
+                  />
+                  <DetailedBill
+                    duration={duration}
+                    pricingDetails={pricingDetails}
+                    selectedPlan={selectedPlan}
+                    activeCoupon={activeCoupon}
+                    updatedPrice={updatedPrice}
+                    quantity={quantity}
+                  />
+                </>
+              )}
+              <Button
+                mt={"auto"}
+                w="100%"
+                variant="brand"
+                onClick={() => {
+                  if (step > 2) {
+                    if (paymentMethod === "cp") {
+                      createCPLink();
                     } else {
-                      setStep(step + 1);
+                      createStripePayment();
                     }
-                  }}
-                >
-                  {step === 0 ? "Confirm Plan" : "Proceed to Payment"}
-                </Button>
-              </Flex>
-            </>
+                  } else {
+                    setStep(step + 1);
+                  }
+                }}
+              >
+                {step === 0 ? "Confirm Plan" : "Proceed to Payment"}
+              </Button>
+            </Flex>
           )}
         </ModalBody>
       </ModalContent>
+      {profileData && (
+        <AddEmailModal
+          onClose={() => setOpen(false)}
+          isOpen={open}
+          profileData={profileData}
+          description="Please add your email to pay through Stripe"
+        />
+      )}
     </Modal>
   );
 };

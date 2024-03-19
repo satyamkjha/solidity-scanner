@@ -14,14 +14,12 @@ import {
   useToast,
   Box,
   useMediaQuery,
+  useDisclosure,
 } from "@chakra-ui/react";
 import { AiOutlineProject } from "react-icons/ai";
 import API from "helpers/api";
 import { useSupportedChains } from "hooks/useSupportedPlatforms";
-import {
-  checkContractAddress,
-  getAssetsURL,
-} from "helpers/helperFunction";
+import { checkContractAddress, getAssetsURL } from "helpers/helperFunction";
 import { API_PATH } from "helpers/routeManager";
 import { Profile } from "common/types";
 import Loader from "components/styled-components/Loader";
@@ -31,6 +29,8 @@ import { AddProjectFormInfographics } from "./AddProjectFormInfographics";
 import { BlockchainSelector } from "components/common/BlockchainSelector";
 import { useWebSocket } from "hooks/useWebhookData";
 import { useConfig } from "hooks/useConfig";
+import InsufficientLocModal from "components/modals/scans/InsufficientLocModal";
+import ProjectsExceededModal from "components/modals/scans/ProjectsExceededModal";
 
 const ContractForm: React.FC<{
   profileData: Profile;
@@ -61,7 +61,23 @@ const ContractForm: React.FC<{
   const [blockchainSelectorError, setBlockchainSelectorError] = useState("");
   const assetsURL = getAssetsURL();
 
+  const { isOpen, onClose: closeModal, onOpen } = useDisclosure();
+  const [projectsExceededModal, setProjectsExceededModal] = useState(false);
+  const minLOCReq = process.env.REACT_APP_MIN_LOC_REQ;
+
   const onSubmit = async () => {
+    if (profileData.current_package === "trial") {
+      if (profileData.trial_projects_remaining === 0) {
+        setProjectsExceededModal(true);
+        return;
+      }
+    } else if (
+      profileData.credit_system === "loc" &&
+      profileData.loc_remaining < parseInt(minLOCReq || "10")
+    ) {
+      onOpen();
+      return;
+    }
     if (config && config.REACT_APP_FEATURE_GATE_CONFIG.websockets_enabled) {
       try {
         if (
@@ -104,10 +120,10 @@ const ContractForm: React.FC<{
                   type: "block_scan_initiate",
                   body: req,
                 });
-                onClose();
-                queryClient.invalidateQueries("profile");
+                queryClient.invalidateQueries("scan_list");
                 history.push("/projects");
                 setIsLoading(false);
+                onClose();
               }
             } else {
               setIsLoading(false);
@@ -206,6 +222,7 @@ const ContractForm: React.FC<{
     <Flex
       flexDir="column"
       px={2}
+      w="100%"
       h={["90vh", "90vh", "78vh"]}
       justifyContent={"space-between"}
       alignItems="center"
@@ -333,11 +350,40 @@ const ContractForm: React.FC<{
         spinner={<Loader color={"#3300FF"} size={25} />}
         isDisabled={
           step === 1 &&
-          (profileData?.credits === 0 || isViewer || contractAddress.length < 1)
+          ((profileData.credit_system === "loc"
+            ? false
+            : profileData?.credits === 0) ||
+            isViewer ||
+            contractAddress.length < 1)
         }
       >
         {step === 1 ? "Start Scan" : "Proceed"}
       </Button>
+      {isOpen && (
+        <InsufficientLocModal
+          open={isOpen}
+          closeModal={closeModal}
+          scanDetails={{
+            contract_address: contractAddress,
+            contract_platform: platform,
+            contract_chain: chain?.value,
+            loc: "insufficient",
+            scan_type: "block",
+          }}
+        />
+      )}
+      {projectsExceededModal && (
+        <ProjectsExceededModal
+          open={projectsExceededModal}
+          closeModal={() => setProjectsExceededModal(false)}
+          scanDetails={{
+            contract_address: contractAddress,
+            contract_platform: platform,
+            contract_chain: chain?.value,
+            scan_type: "block",
+          }}
+        />
+      )}
     </Flex>
   );
 };

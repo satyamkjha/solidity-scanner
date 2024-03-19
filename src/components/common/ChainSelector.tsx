@@ -14,8 +14,7 @@ import {
 } from "@chakra-ui/react";
 import { ExternalLinkIcon, WarningIcon } from "@chakra-ui/icons";
 import { getAssetsURL } from "helpers/helperFunction";
-import { StylesConfig, GroupBase } from "react-select";
-import Select from "react-select";
+import Select, { StylesConfig, GroupBase } from "react-select";
 import FormatOptionLabelWithImage from "components/FormatOptionLabelWithImage";
 import RadioButton from "components/styled-components/RadioButton";
 

@@ -1,6 +1,7 @@
 import { Flex, Text } from "@chakra-ui/react";
 import { sentenceCapitalize } from "helpers/helperFunction";
 import React from "react";
+import { packageLabel } from "common/values";
 
 const ConfirmationMessageBox: React.FC<{
   name: string;
@@ -25,7 +26,7 @@ const ConfirmationMessageBox: React.FC<{
       mt={"auto"}
     >
       <Text color="detail" fontWeight={300} fontSize={"sm"}>
-        You have opted for the
+        You have opted for the{" "}
         <span
           style={{
             fontWeight: 900,
@@ -36,7 +37,7 @@ const ConfirmationMessageBox: React.FC<{
               "publish_report",
               "verified_publish_report",
               "on-demand-report",
-            ].includes(duration) && sentenceCapitalize(name)}{" "}
+            ].includes(duration) && packageLabel[name]}{" "}
             {getPlanDuration()}
           </b>
         </span>

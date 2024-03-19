@@ -10,10 +10,10 @@ import {
   VStack,
 } from "@chakra-ui/react";
 import { DetectorItemProp } from "common/types";
-import { detectorData } from "common/values";
 import { useConfig } from "hooks/useConfig";
 import { getAssetsURL } from "helpers/helperFunction";
 import { Header } from "components/header";
+import { useDetectorsData } from "hooks/useDetectorsData";
 
 const DetectorItem: React.FC<{ item: DetectorItemProp }> = ({ item }) => {
   const config: any = useConfig();
@@ -91,7 +91,6 @@ const DetectorItem: React.FC<{ item: DetectorItemProp }> = ({ item }) => {
           {item.description}
         </Text>
       </Flex>
-
       <HStack
         sx={{
           width: "180px",
@@ -120,6 +119,8 @@ const Detectors: React.FC = () => {
       ? config.REACT_APP_ISSUES_DATA.detectorPageData
       : [];
   const assetsURL = getAssetsURL(config);
+
+  const { data: detectorsData } = useDetectorsData();
 
   return (
     <Flex
@@ -251,9 +252,8 @@ const Detectors: React.FC = () => {
         >
           SolidityScan Detectors
         </Heading>
-        {detectorData.map((item) => (
-          <DetectorItem item={item} />
-        ))}
+        {detectorsData &&
+          detectorsData.data.map((item) => <DetectorItem item={item} />)}
       </Box>
     </Flex>
   );

@@ -7,6 +7,7 @@ import {
   Image,
   Link,
   VStack,
+  useBreakpointValue,
 } from "@chakra-ui/react";
 import { Report } from "common/types";
 import { monthNames } from "common/values";
@@ -18,8 +19,17 @@ const CoverPageContainer: React.FC<{
   d: Date;
   summary_report: Report;
   isPublicReport: boolean;
-}> = ({ d, summary_report, isPublicReport }) => {
+  download: boolean;
+}> = ({ d, summary_report, isPublicReport, download }) => {
   const assetsURL = getAssetsURL();
+
+  let logoIconSize =
+    useBreakpointValue({
+      base: 150,
+      sm: 180,
+      md: 300,
+    }) || 300;
+
   return (
     <Flex p={0} w="100%" h="100%" bg="#010101" position={"relative"}>
       <Box
@@ -39,8 +49,8 @@ const CoverPageContainer: React.FC<{
           alignItems="flex-start"
           justifyContent={["space-between"]}
           flexDir={"row"}
-          py={10}
-          px={16}
+          py={download ? 10 : [5, 7, 10]}
+          px={download ? 16 : [4, 8, 16]}
           backgroundSize="cover"
           backgroundRepeat={"no-repeat"}
           backgroundImage={`url('${assetsURL}report/report_cover.svg')`}
@@ -55,28 +65,31 @@ const CoverPageContainer: React.FC<{
             zIndex={1}
           >
             <HStack justifyContent={"flex-start"} spacing={4}>
-              <Logo fill={"white"} />
+              <Logo size={download ? 300 : logoIconSize} fill={"white"} />
             </HStack>
-            <Flex width={"100%"} flexDir={"column"} mt={"35%"}>
+            <Box w="100%" h={"auto"}>
               <Text
-                fontSize="2xl"
+                fontSize={["md", "lg", "2xl"]}
                 fontWeight={400}
                 color={"subtle"}
-                mt={[10, 10, 10, 20]}
-                mb={6}
+                mt={download ? "250px" : [10, 14, "250px"]}
+                mb={3}
               >
                 Security Assessment
               </Text>
               <Heading
-                fontSize={["3xl", "4xl"]}
+                fontSize={download ? "xl" : ["lg", "xl", "4xl"]}
                 fontWeight={700}
                 mb={3}
-                w={"80%"}
               >
                 {summary_report.project_summary_report.project_name ||
                   summary_report.project_summary_report.contract_name}
               </Heading>
-              <Text fontSize="xl" mb={10} fontWeight={500}>
+              <Text
+                fontSize={download ? "xl" : ["xs", "sm", "xl"]}
+                mb={10}
+                fontWeight={500}
+              >
                 {`${d.getDate()} ${
                   monthNames[d.getMonth()]
                 } ${d.getFullYear()}`}
@@ -84,7 +97,7 @@ const CoverPageContainer: React.FC<{
               <Box w="100%" h={"auto"}>
                 <Text
                   fontWeight={400}
-                  fontSize={"sm"}
+                  fontSize={download ? "sm" : ["xs", "xs", "sm"]}
                   width={"90%"}
                   color={"subtle"}
                   mb={10}
@@ -94,9 +107,13 @@ const CoverPageContainer: React.FC<{
                 </Text>
                 <ReportCoverDots />
               </Box>
-            </Flex>
+            </Box>
             {isPublicReport && (
-              <Flex mt={"auto"} mb={6} alignItems={"center"}>
+              <Flex
+                w="100%"
+                mt={download ? "auto" : ["100px", "200px", "auto"]}
+                alignItems={"center"}
+              >
                 <Image
                   src={
                     summary_report.project_summary_report.report_type ===
@@ -104,15 +121,25 @@ const CoverPageContainer: React.FC<{
                       ? `${assetsURL}report/user-fill.svg`
                       : `${assetsURL}report/verified-fill.svg`
                   }
+                  height={download ? "70px" : ["30px", "40px", "70px"]}
+                  width={download ? "70px" : ["30px", "40px", "70px"]}
                 />
-                <VStack alignItems={"flex-start"} w={"90%"} spacing={1} ml={4}>
-                  <Text fontSize={"lg"}>
+                <VStack
+                  alignItems={"flex-start"}
+                  w={download ? "60%" : ["100%", "100%", "60%"]}
+                  spacing={1}
+                  ml={[2, 3, 4]}
+                >
+                  <Text fontSize={download ? "lg" : ["sm", "md", "lg"]}>
                     {summary_report.project_summary_report.report_type ===
                     "self_published"
                       ? "Self-published"
                       : "Verified Report"}
                   </Text>
-                  <Text fontSize={"sm"} fontWeight={400}>
+                  <Text
+                    fontSize={download ? "sm" : ["8px", "xs", "sm"]}
+                    fontWeight={400}
+                  >
                     {summary_report.project_summary_report.report_type ===
                     "self_published"
                       ? "This automated audit report was Self-published by the user."
@@ -134,9 +161,8 @@ const CoverPageContainer: React.FC<{
           {isPublicReport && (
             <Image
               display={["block"]}
-              height={[250]}
-              width={[250]}
-              mt={10}
+              height={download ? 250 : ["80px", "100px", 250]}
+              width={download ? 250 : ["80px", "100px", 250]}
               src={
                 summary_report.project_summary_report.report_type ===
                 "self_published"

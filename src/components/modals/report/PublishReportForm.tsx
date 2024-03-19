@@ -13,15 +13,18 @@ import {
   useMediaQuery,
   Stack,
   Link,
+  InputRightElement,
 } from "@chakra-ui/react";
 import { AiOutlineProject } from "react-icons/ai";
-import { FaInternetExplorer, FaBuilding, FaEnvelope } from "react-icons/fa";
+import { FaInternetExplorer, FaBuilding } from "react-icons/fa";
 import { Scan, Profile } from "common/types";
 import { formattedDate } from "common/functions";
 import API from "helpers/api";
 import { API_PATH } from "helpers/routeManager";
 import StyledButton from "components/styled-components/StyledButton";
 import { getContractChainLabel } from "helpers/helperFunction";
+import NameInput from "components/forms/NameInput";
+import EmailInput from "components/forms/EmailInput";
 
 const PublishReportForm: React.FC<{
   type: "project" | "block";
@@ -62,6 +65,7 @@ const PublishReportForm: React.FC<{
   const [pubEmail, setPubEmail] = useState("");
   const [emailSwitch, setEmailSwitch] = useState(true);
   const [publishInfoSwitch, setPublishInfoSwitch] = useState(true);
+  const [errors, setErrors] = useState<{ [key: string]: string }>({});
 
   useEffect(() => {
     if (scanData) {
@@ -129,7 +133,12 @@ const PublishReportForm: React.FC<{
         alignItems={["center", "center", "center", "flex-start"]}
         display={[`${!next ? "none" : "flex"}`, null, null, "flex"]}
       >
-        <VStack zIndex={"10"} w={["100%"]} spacing={6}>
+        <VStack
+          zIndex={"10"}
+          w={["100%"]}
+          spacing={6}
+          alignItems={"flex-start"}
+        >
           {!isDesktopView && (
             <HStack my={6}>
               <Text>Private</Text>
@@ -144,111 +153,84 @@ const PublishReportForm: React.FC<{
               <Text>Public</Text>
             </HStack>
           )}
-          <HStack
-            alignItems="center"
-            spacing={3}
-            px={5}
-            w={"100%"}
-            bgColor={"white"}
-            border={"2px solid #EDF2F7"}
-            borderRadius={"16px"}
-            _hover={{
-              borderColor: "#52FF00",
-              boxShadow: "0px 12px 23px rgba(107, 255, 55, 0.1)",
-            }}
-          >
-            <InputGroup alignItems="center">
-              <InputLeftElement
-                height="48px"
-                children={<Icon as={AiOutlineProject} color="gray.300" />}
-              />
-              <Input
-                isRequired
-                type="text"
-                placeholder="Publisher's name"
-                border={"0px solid #FFFFFF"}
-                _focus={{
-                  border: "0px solid #FFFFFF",
-                }}
-                fontSize={"15px"}
-                fontWeight={500}
-                size="lg"
-                value={pubName}
-                onChange={(e) => {
-                  setPubName(e.target.value);
-                }}
-              />
-            </InputGroup>
-            {isDesktopView && (
-              <>
-                <SwitchComp
-                  isChecked={nameSwitch}
-                  onChange={() => {
-                    setNameSwitch(!nameSwitch);
-                  }}
-                  size="lg"
-                  variant={nameSwitch ? "brand" : "disabled"}
+
+          <NameInput
+            showLeftIcon
+            iconChild={<Icon as={AiOutlineProject} color="gray.300" />}
+            rightElement={
+              isDesktopView && (
+                <InputRightElement
+                  right={6}
+                  top={"auto"}
+                  bottom={"auto"}
+                  children={
+                    <SwitchComp
+                      isChecked={nameSwitch}
+                      onChange={() => {
+                        setNameSwitch(!nameSwitch);
+                      }}
+                      size="lg"
+                      variant={nameSwitch ? "brand" : "disabled"}
+                    />
+                  }
                 />
-              </>
-            )}
-          </HStack>
+              )
+            }
+            placeholder="Publisher's name"
+            title={"Publisher's name"}
+            fontSize={"15px"}
+            fontWeight={500}
+            value={pubName}
+            onChange={(e) => {
+              setPubName(e.target.value);
+            }}
+            onError={(e: any) =>
+              setErrors((prv) => {
+                return { ...prv, Name: e };
+              })
+            }
+          />
+
+          <EmailInput
+            showLeftIcon
+            placeholder="Publisher's Email"
+            fontSize={"15px"}
+            fontWeight={500}
+            rightElement={
+              isDesktopView && (
+                <InputRightElement right={6} top={"auto"} bottom={"auto"}>
+                  <SwitchComp
+                    isChecked={emailSwitch}
+                    onChange={() => {
+                      setEmailSwitch(!emailSwitch);
+                    }}
+                    size="lg"
+                    variant={emailSwitch ? "brand" : "disabled"}
+                  />
+                </InputRightElement>
+              )
+            }
+            value={pubEmail}
+            onChange={(e) => {
+              setPubEmail(e.target.value);
+            }}
+            onError={(e: any) =>
+              setErrors((prv) => {
+                return { ...prv, Email: e };
+              })
+            }
+          />
 
           <HStack
-            alignItems="center"
-            spacing={3}
-            px={5}
+            alignItems={"center"}
+            justifyContent={"flex-start"}
+            spacing={2}
+            pr={5}
+            mr={"auto"}
             w={"100%"}
+            maxW={"600px"}
             bgColor={"white"}
-            border={"2px solid #EDF2F7"}
-            borderRadius={"16px"}
-            _hover={{
-              borderColor: "#52FF00",
-              boxShadow: "0px 12px 23px rgba(107, 255, 55, 0.1)",
-            }}
-          >
-            <InputGroup alignItems="center">
-              <InputLeftElement
-                height="48px"
-                children={<Icon as={FaEnvelope} color="gray.300" />}
-              />
-              <Input
-                isRequired
-                type="email"
-                placeholder="Publisher's Email"
-                size="lg"
-                border={"0px solid #FFFFFF"}
-                _focus={{
-                  border: "0px solid #FFFFFF",
-                }}
-                fontSize={"15px"}
-                fontWeight={500}
-                value={pubEmail}
-                onChange={(e) => {
-                  setPubEmail(e.target.value);
-                }}
-              />
-            </InputGroup>
-            {isDesktopView && (
-              <>
-                <SwitchComp
-                  isChecked={emailSwitch}
-                  onChange={() => {
-                    setEmailSwitch(!emailSwitch);
-                  }}
-                  size="lg"
-                  variant={emailSwitch ? "brand" : "disabled"}
-                />
-              </>
-            )}
-          </HStack>
-
-          <HStack
-            alignItems="center"
-            spacing={3}
-            px={5}
-            w={"100%"}
-            bgColor={"white"}
-            border={"2px solid #EDF2F7"}
+            border={"1px solid #EDF2F7"}
             borderRadius={"16px"}
             _hover={{
               borderColor: "#52FF00",
@@ -278,67 +260,49 @@ const PublishReportForm: React.FC<{
               />
             </InputGroup>
             {isDesktopView && (
-              <>
-                <SwitchComp
-                  isChecked={webSwitch}
-                  onChange={() => {
-                    setWebSwitch(!webSwitch);
-                  }}
-                  size="lg"
-                  variant={webSwitch ? "brand" : "disabled"}
-                />
-              </>
+              <SwitchComp
+                isChecked={webSwitch}
+                onChange={() => {
+                  setWebSwitch(!webSwitch);
+                }}
+                size="lg"
+                variant={webSwitch ? "brand" : "disabled"}
+              />
             )}
           </HStack>
 
-          <HStack
-            alignItems="center"
-            spacing={3}
-            px={5}
-            w={"100%"}
-            bgColor={"white"}
-            border={"2px solid #EDF2F7"}
-            borderRadius={"16px"}
-            _hover={{
-              borderColor: "#52FF00",
-              boxShadow: "0px 12px 23px rgba(107, 255, 55, 0.1)",
+          <NameInput
+            showLeftIcon
+            iconChild={<Icon as={FaBuilding} color="gray.300" />}
+            rightElement={
+              isDesktopView && (
+                <InputRightElement right={6} top={"auto"} bottom={"auto"}>
+                  <SwitchComp
+                    isChecked={orgSwitch}
+                    onChange={() => {
+                      setOrgSwitch(!orgSwitch);
+                    }}
+                    size="lg"
+                    variant={orgSwitch ? "brand" : "disabled"}
+                  />
+                </InputRightElement>
+              )
+            }
+            placeholder="Publisher's Organization"
+            title={"Organization"}
+            size="lg"
+            fontSize={"15px"}
+            fontWeight={500}
+            value={pubOrg}
+            onChange={(e) => {
+              setPubOrg(e.target.value);
             }}
-          >
-            <InputGroup alignItems="center">
-              <InputLeftElement
-                height="48px"
-                children={<Icon as={FaBuilding} color="gray.300" />}
-              />
-              <Input
-                isRequired
-                type="text"
-                placeholder="Publisher's Organization"
-                size="lg"
-                border={"0px solid #FFFFFF"}
-                _focus={{
-                  border: "0px solid #FFFFFF",
-                }}
-                fontSize={"15px"}
-                fontWeight={500}
-                value={pubOrg}
-                onChange={(e) => {
-                  setPubOrg(e.target.value);
-                }}
-              />
-            </InputGroup>
-            {isDesktopView && (
-              <>
-                <SwitchComp
-                  isChecked={orgSwitch}
-                  onChange={() => {
-                    setOrgSwitch(!orgSwitch);
-                  }}
-                  size="lg"
-                  variant={orgSwitch ? "brand" : "disabled"}
-                />
-              </>
-            )}
-          </HStack>
+            onError={(e: any) =>
+              setErrors((prv) => {
+                return { ...prv, OrgName: e };
+              })
+            }
+          />
         </VStack>
 
         <StyledButton
@@ -347,6 +311,7 @@ const PublishReportForm: React.FC<{
           mb={[0, 0, 0, 6]}
           variant={"brand"}
           isLoading={isLoading}
+          isDisabled={Object.values(errors).join("").length > 0}
           onClick={publishReport}
         >
           {reportType === "self_published" &&

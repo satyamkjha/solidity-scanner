@@ -58,11 +58,9 @@ const ImportScanModal: React.FC<{
 
   return (
     <>
-      <Modal isOpen={isOpen} onClose={onClose}>
+      <Modal isOpen={isOpen} onClose={onClose} scrollBehavior={"inside"}>
         <ModalOverlay />
         <ModalContent
-          overflowY={"scroll"}
-          overflowX={"scroll"}
           bg="bg.subtle"
           w={"50vw"}
           maxW={"800px"}
@@ -167,7 +165,7 @@ const ImportScanModal: React.FC<{
                   </Flex>
                 </VStack>
               </Flex>
-              {profileData?.credits ? (
+              {/* {profileData?.credits ? (
                 <Text
                   fontSize="md"
                   textAlign="center"
@@ -188,7 +186,18 @@ const ImportScanModal: React.FC<{
                 >
                   Not enough scan credits
                 </Text>
-              )}
+              )} */}
+              <Text
+                fontSize="md"
+                textAlign="center"
+                lineHeight="title"
+                fontWeight={"300"}
+              >
+                Heads up! You currently can consume{" "}
+                <strong>{profileData?.loc_remaining}</strong> LOC. Viewing full
+                detail result of a scan will use{" "}
+                <strong>{scanDetails.loc}</strong> LOC. Do you wish to proceed?
+              </Text>
             </Flex>
           </ModalBody>
           <ModalFooter mt={10}>
@@ -218,9 +227,12 @@ const ImportScanModal: React.FC<{
               fontSize={"md"}
               fontWeight={500}
               isLoading={isLoading}
-              onClick={() => (profileData?.credits ? importScan() : onClose())}
+              // onClick={() => (profileData?.credits ? importScan() : onClose())}
+              onClick={() => {
+                importScan();
+              }}
             >
-              {profileData?.credits ? "Confirm" : "OK"}
+              {/* {profileData?.credits ? "Confirm" : "OK"} */}Confirm
             </StyledButton>
           </ModalFooter>
         </ModalContent>

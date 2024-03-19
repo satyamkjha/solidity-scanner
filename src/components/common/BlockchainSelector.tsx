@@ -28,11 +28,10 @@ import {
 } from "@chakra-ui/icons";
 import { contractChain } from "common/values";
 import { getAssetsURL, getFeatureGateConfig } from "helpers/helperFunction";
-import { FaPen } from "react-icons/fa";
+import { FaPen, FaUndo } from "react-icons/fa";
 import { BlockchainComp } from "./BlockchainComp";
 import { ChainSelector } from "./ChainSelector";
 import { useConfig } from "hooks/useConfig";
-import { FaUndo } from "react-icons/fa";
 import { usePlatformChainStatus } from "hooks/usePlatformChainStatus";
 
 export const BlockchainSelector: React.FC<{
@@ -79,7 +78,7 @@ export const BlockchainSelector: React.FC<{
   const { onOpen, onClose, isOpen } = useDisclosure();
   const popoverRef = useRef<HTMLDivElement>(null);
   const [selectedBlockchain, setSelectedBlockchain] = useState("");
-  const [firstBlockChain, setFirstBlockchain] = useState("");
+  const [firstBlockChain, setFirstBlockChain] = useState("");
   const [showTransition, setShowTransition] = useState(false);
   const [showOtherSection, setShowOtherSection] = useState(false);
   const [showAnimation, setShowAnimation] = useState(true);
@@ -126,32 +125,40 @@ export const BlockchainSelector: React.FC<{
     "(min-width: 950px)",
   ]);
 
+  const showResetButton = () => {
+    if (
+      blockchain !== "" &&
+      platform !== "" &&
+      (chain !== null || node_id !== "")
+    )
+      return true;
+    else return false;
+  };
+
   return (
     <Flex
       borderRadius={15}
       h="fit-content"
       w="90vw"
       pr={"10px"}
-      maxW="600px"
+      maxW={["100%", "100%", "100%", "600px"]}
       flexDir={["column", "column", "row"]}
       alignItems="center"
       justifyContent={["flex-start", "flex-start", "center"]}
     >
       {isLargerThan950 ? (
         <>
-          {blockchain !== "" &&
-            platform !== "" &&
-            (chain !== null || node_id !== "") && (
-              <Flex
-                w="60px"
-                h="60px"
-                p="10px"
-                borderRadius="40px"
-                filter="drop-shadow(0px 2px 1px rgba(0, 0, 0, 0.25))"
-                bgColor={"transparent"}
-                display={["none", "none", "flex"]}
-              ></Flex>
-            )}
+          {showResetButton() && (
+            <Flex
+              w="60px"
+              h="60px"
+              p="10px"
+              borderRadius="40px"
+              filter="drop-shadow(0px 2px 1px rgba(0, 0, 0, 0.25))"
+              bgColor={"transparent"}
+              display={["none", "none", "flex"]}
+            ></Flex>
+          )}
           <Popover
             isOpen={isOpen}
             onOpen={onOpen}
@@ -214,7 +221,7 @@ export const BlockchainSelector: React.FC<{
                 selectedBlockchain={selectedBlockchain}
                 firstBlockChain={firstBlockChain}
                 setSelectedBlockchain={setSelectedBlockchain}
-                setFirstBlockchain={setFirstBlockchain}
+                setFirstBlockchain={setFirstBlockChain}
                 view={view}
                 onClose={onClose}
                 setShowAnimation={setShowAnimation}
@@ -226,33 +233,31 @@ export const BlockchainSelector: React.FC<{
               />
             </PopoverContent>
           </Popover>
-          {blockchain !== "" &&
-            platform !== "" &&
-            (chain !== null || node_id !== "") && (
-              <Flex
-                w="60px"
-                h="60px"
-                p="10px"
-                ml={4}
-                borderRadius="40px"
-                filter="drop-shadow(0px 2px 1px rgba(0, 0, 0, 0.25))"
-                bgColor={theme === "dark" ? "#272727C0" : "#E1E1E1"}
-                display={["none", "none", "flex"]}
-                onClick={() => {
-                  onOpen();
-                  setBlockchain("");
-                  setPlatform("");
-                  setChain(null);
-                }}
-                cursor="pointer"
-              >
-                <Image
-                  src={`${assetsUrl}common/reset-button-${theme}.svg`}
-                  height="40px"
-                  width="40px"
-                />
-              </Flex>
-            )}
+          {showResetButton() && (
+            <Flex
+              w="60px"
+              h="60px"
+              p="10px"
+              ml={4}
+              borderRadius="40px"
+              filter="drop-shadow(0px 2px 1px rgba(0, 0, 0, 0.25))"
+              bgColor={theme === "dark" ? "#272727C0" : "#E1E1E1"}
+              display={["none", "none", "flex"]}
+              onClick={() => {
+                onOpen();
+                setBlockchain("");
+                setPlatform("");
+                setChain(null);
+              }}
+              cursor="pointer"
+            >
+              <Image
+                src={`${assetsUrl}common/reset-button-${theme}.svg`}
+                height="40px"
+                width="40px"
+              />
+            </Flex>
+          )}
         </>
       ) : (
         <>
@@ -274,29 +279,23 @@ export const BlockchainSelector: React.FC<{
               node_id={node_id}
             />
           </Box>
-          {blockchain !== "" &&
-            platform !== "" &&
-            (chain !== null || node_id !== "") && (
-              <>
-                <Button
-                  display={["block", "block", "none"]}
-                  // borderColor="#2F00FF"
-                  // borderWidth={3}
-                  onClick={() => {
-                    onOpen();
-                    setBlockchain("");
-                    setPlatform("");
-                    setChain(null);
-                  }}
-                  mt={4}
-                  size="md"
-                  bgColor="#ECECEC"
-                  leftIcon={<FaUndo color="#2F00FF" />}
-                >
-                  Reset
-                </Button>
-              </>
-            )}
+          {showResetButton() && (
+            <Button
+              display={["block", "block", "none"]}
+              onClick={() => {
+                onOpen();
+                setBlockchain("");
+                setPlatform("");
+                setChain(null);
+              }}
+              mt={4}
+              size="md"
+              bgColor="#ECECEC"
+              leftIcon={<FaUndo color="#2F00FF" />}
+            >
+              Reset
+            </Button>
+          )}
         </>
       )}
       {!isLargerThan950 && (
@@ -354,7 +353,7 @@ export const BlockchainSelector: React.FC<{
                 selectedBlockchain={selectedBlockchain}
                 firstBlockChain={firstBlockChain}
                 setSelectedBlockchain={setSelectedBlockchain}
-                setFirstBlockchain={setFirstBlockchain}
+                setFirstBlockchain={setFirstBlockChain}
                 view={view}
                 onClose={onClose}
                 setShowAnimation={setShowAnimation}
@@ -397,6 +396,15 @@ const BlockchainSelectorControl: React.FC<{
   onOpen,
 }) => {
   const assetsUrl = getAssetsURL();
+
+  const getBlockChainIconUrl = () => {
+    if (blockchain === "buildbear")
+      return `${assetsUrl}blockscan/buildbear-${
+        theme === "dark" ? "white" : "black"
+      }.svg`;
+    else return `${assetsUrl}${contractChain[blockchain].logoUrl}.svg`;
+  };
+
   return (
     <HStack
       h={["110px", "110px", "80px"]}
@@ -418,17 +426,7 @@ const BlockchainSelectorControl: React.FC<{
       (chain !== null || node_id !== "") ? (
         <>
           <HStack justifyContent="flex-start">
-            <Image
-              src={
-                blockchain === "buildbear"
-                  ? `${assetsUrl}blockscan/buildbear-${
-                      theme === "dark" ? "white" : "black"
-                    }.svg`
-                  : `${assetsUrl}${contractChain[blockchain].logoUrl}.svg`
-              }
-              height="40px"
-              width="40px"
-            />
+            <Image src={getBlockChainIconUrl()} height="40px" width="40px" />
             <VStack alignItems="flex-start" textAlign="left" spacing={1}>
               <Flex
                 flexDir={["column", "column", "row"]}

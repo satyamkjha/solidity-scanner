@@ -83,6 +83,7 @@ export const API_PATH = {
 
   //BILLING
   API_GET_PRICING: "/api-get-prices/",
+  API_GET_DETECTORS_DATA: "/api-get-detectors-data/",
   API_GET_ACCEPTED_COINS: "/api-get-accepted-coins/",
   API_CREATE_STRIPE_SUBSCRIPTION_BETA: "/api-create-stripe-subscription-beta/",
   API_CANCEL_STRIPE_SUBSCRIPTION_BETA: "/api-cancel-stripe-subscription-beta/",
