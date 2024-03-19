@@ -490,6 +490,8 @@ const ScanDetails: React.FC<{
                                 setOpenInsufficeintLocModal(true);
                               }
                             }
+                          } else {
+                            setIsOpen(true);
                           }
                         }}
                         _hover={rescanIconHoverStyles()}
