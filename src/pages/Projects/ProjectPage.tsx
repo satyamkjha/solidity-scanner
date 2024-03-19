@@ -488,7 +488,7 @@ const ScanDetails: React.FC<{
                               ) {
                                 if (
                                   scanData.scan_report.multi_file_scan_summary
-                                    .lines_analyzed_count <
+                                    .lines_analyzed_count <=
                                   profile.loc_remaining
                                 ) {
                                   setIsOpen(true);
