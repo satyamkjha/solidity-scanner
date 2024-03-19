@@ -64,7 +64,10 @@ const PaymentModal: React.FC<{
   const [open, setOpen] = useState(false);
 
   const changePaymentMethod = (paymentMethod: "cp" | "stripe") => {
-    if (profileData && profileData.email_verified) {
+    if (
+      (profileData && profileData.email_verified) ||
+      duration === "on-demand-report"
+    ) {
       setPaymentMethod(paymentMethod);
     } else {
       setOpen(true);
