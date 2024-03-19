@@ -153,7 +153,7 @@ export const PricingCard: React.FC<{
           flexDir: "column",
           justifyContent: "flex-start",
           alignItems: "center",
-          mt: -10,
+          mt: plan === "custom" ? 10 : -10,
           _hover: {
             boxShadow: "0px 4px 24px rgba(0, 0, 0, 0.4)",
           },
