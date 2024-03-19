@@ -482,12 +482,21 @@ const ScanDetails: React.FC<{
                               } else setIsOpen(true);
                             } else {
                               if (
+                                scanData.scan_report.multi_file_scan_summary &&
                                 scanData.scan_report.multi_file_scan_summary
-                                  .lines_analyzed_count < profile.loc_remaining
+                                  .lines_analyzed_count
                               ) {
-                                setIsOpen(true);
+                                if (
+                                  scanData.scan_report.multi_file_scan_summary
+                                    .lines_analyzed_count <
+                                  profile.loc_remaining
+                                ) {
+                                  setIsOpen(true);
+                                } else {
+                                  setOpenInsufficeintLocModal(true);
+                                }
                               } else {
-                                setOpenInsufficeintLocModal(true);
+                                setIsOpen(true);
                               }
                             }
                           } else {
