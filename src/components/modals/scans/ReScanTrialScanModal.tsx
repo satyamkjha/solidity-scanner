@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 
 import {
   Flex,
@@ -17,6 +17,8 @@ import ModalBlurOverlay from "components/common/ModalBlurOverlay";
 import { useWebSocket } from "hooks/useWebhookData";
 import AddProjectForm from "pages/Home/AddProjectForm";
 import { useQueryClient } from "react-query";
+import InsufficientLocModal from "./InsufficientLocModal";
+import { useUserRole } from "hooks/useUserRole";
 
 const ReScanTrialScanModal: React.FC<{
   closeModal: any;
@@ -25,39 +27,46 @@ const ReScanTrialScanModal: React.FC<{
 }> = ({ open, closeModal, scanDetails }) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const history = useHistory();
+  const { profileData } = useUserRole();
   const queryClient = useQueryClient();
   const { sendMessage } = useWebSocket();
+  const [openInsufficeintLocModal, setOpenInsufficeintLocModal] =
+    useState(false);
   const { projectId } = useParams<{ projectId: string }>();
   const rescan = () => {
-    if (scanDetails.scan_type === "project") {
-      if (scanDetails.project_url === "File Scan") {
-        onOpen();
+    if (profileData && profileData.loc_remaining >= scanDetails.loc) {
+      if (scanDetails.scan_type === "project") {
+        if (scanDetails.project_url === "File Scan") {
+          onOpen();
+        } else {
+          sendMessage({
+            type: "project_scan_initiate",
+            body: {
+              project_id: projectId,
+              project_type: "existing",
+            },
+          });
+          queryClient.invalidateQueries("profile");
+          history.push("/projects");
+          closeModal();
+        }
       } else {
+        let req = {};
+        req = {
+          contract_address: scanDetails.contract_address,
+          contract_platform: scanDetails.contract_platform,
+          contract_chain: scanDetails.contract_chain,
+        };
         sendMessage({
-          type: "project_scan_initiate",
-          body: {
-            project_id: projectId,
-            project_type: "existing",
-          },
+          type: "block_scan_initiate",
+          body: req,
         });
         queryClient.invalidateQueries("profile");
         history.push("/projects");
         closeModal();
       }
     } else {
-      let req = {};
-      req = {
-        contract_address: scanDetails.contract_address,
-        contract_platform: scanDetails.contract_platform,
-        contract_chain: scanDetails.contract_chain,
-      };
-      sendMessage({
-        type: "block_scan_initiate",
-        body: req,
-      });
-      queryClient.invalidateQueries("profile");
-      history.push("/projects");
-      closeModal();
+      setOpenInsufficeintLocModal(true);
     }
   };
 
@@ -125,6 +134,16 @@ const ReScanTrialScanModal: React.FC<{
             </Flex>
           </ModalBody>
         </ModalContent>
+        {openInsufficeintLocModal && (
+          <InsufficientLocModal
+            open={openInsufficeintLocModal}
+            closeModal={() => {
+              setOpenInsufficeintLocModal(false);
+              closeModal();
+            }}
+            scanDetails={scanDetails}
+          />
+        )}
         <AddProjectForm formType="filescan" onClose={onClose} isOpen={isOpen} />
       </Modal>
     </>

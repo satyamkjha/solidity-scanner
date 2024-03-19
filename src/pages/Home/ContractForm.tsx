@@ -367,7 +367,6 @@ const ContractForm: React.FC<{
             contract_address: contractAddress,
             contract_platform: platform,
             contract_chain: chain?.value,
-            loc: "insufficient",
             scan_type: "block",
           }}
         />
