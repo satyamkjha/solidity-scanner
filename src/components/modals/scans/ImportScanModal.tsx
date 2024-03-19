@@ -193,7 +193,7 @@ const ImportScanModal: React.FC<{
                 lineHeight="title"
                 fontWeight={"300"}
               >
-                Heads up! You currently can consume{" "}
+                Heads up! You currently have{" "}
                 <strong>{profileData?.loc_remaining}</strong> LOC. Viewing full
                 detail result of a scan will use{" "}
                 <strong>{scanDetails.loc}</strong> LOC. Do you wish to proceed?
