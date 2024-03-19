@@ -127,6 +127,8 @@ const ScanCard: React.FC<{
     }
   };
 
+  console.log(tempScanStatus);
+
   const { isOpen, onClose, onOpen } = useDisclosure();
 
   const [openScanError, setOpenScanError] = useState(false);
@@ -362,11 +364,9 @@ const ScanCard: React.FC<{
             backgroundColor: "#FCFCFF",
           }}
         >
-          <HStack mb={2}>
-            <WarningIcon color="#FFA403" />
-            <Heading sx={{ fontSize: "sm", color: "#FFA403" }}>
-              Scan Failed
-            </Heading>
+          <HStack mb={2} color="#FFA403">
+            <WarningIcon />
+            <Heading sx={{ fontSize: "sm" }}>Scan Failed</Heading>
           </HStack>
           <Text sx={{ fontSize: "xs", color: "#4E5D78" }}>
             {scan_status.length > 25

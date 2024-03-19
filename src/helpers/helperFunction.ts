@@ -281,7 +281,7 @@ export const getTrimmedScanMessage = (scan_status: string) => {
   )
     return "Download Failed";
   else if (scan_status.includes("Scan Failed")) return "Scan Failed";
-  else if (scan_status.includes("Insufficient LOC")) return "insufficient_loc";
+  else if (scan_status.includes("Insufficient LoCs")) return "insufficient_loc";
   return "Scan Failed";
 };
 
