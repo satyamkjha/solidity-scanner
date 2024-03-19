@@ -24,32 +24,36 @@ export default function Partners() {
       link: "https://twitter.com/SolidityScan/status/1673605524829470720",
     },
     {
-      url: "landing/partners/immunefi.svg",
-      link: "https://twitter.com/SolidityScan/status/1689555988641431552",
-    },
-    {
-      url: "landing/partners/xdc.svg",
-      link: "https://solidityscan.com/discover/2023/07/solidify-your-xdc-smart-contracts-safeguarding-with-solidityscan/",
-    },
-    {
-      url: "landing/partners/resonance.svg",
-      link: "https://solidityscan.com/discover/2024/03/solidityscan-and-resonance-security-join-forces-streamlining-smart-contract-security/",
-    },
-    {
-      url: "landing/partners/nordek.svg",
-      link: "https://twitter.com/SolidityScan/status/1747990837986758964",
+      url: "landing/partners/blockscout.svg",
+      link: "https://www.blog.blockscout.com/solidityscan-blockscout-making-smart-contracts-more-secure/",
     },
     {
       url: "landing/partners/arthera.svg",
       link: "https://solidityscan.com/discover/2024/02/credshields-partners-with-arthera-to-enhance-security-across-the-web3-spectrum/",
     },
     {
+      url: "landing/partners/rootstock.svg",
+      link: "https://solidityscan.com/discover/2024/02/enhancing-web3-security-credshields-integrates-with-rootstock-for-a-safer-blockchain-ecosystem/",
+    },
+    {
+      url: "landing/partners/nordek.svg",
+      link: "https://twitter.com/SolidityScan/status/1747990837986758964",
+    },
+    {
+      url: "landing/partners/xdc.svg",
+      link: "https://solidityscan.com/discover/2023/07/solidify-your-xdc-smart-contracts-safeguarding-with-solidityscan/",
+    },
+    {
       url: "landing/partners/gnosid.svg",
       link: "https://solidityscan.com/discover/2024/01/credshields-aligns-forces-with-gnosis-to-fortify-web3s-security-landscape/",
     },
     {
-      url: "landing/partners/blockscout.svg",
-      link: "https://www.blog.blockscout.com/solidityscan-blockscout-making-smart-contracts-more-secure/",
+      url: "landing/partners/resonance.svg",
+      link: "https://solidityscan.com/discover/2024/03/solidityscan-and-resonance-security-join-forces-streamlining-smart-contract-security/",
+    },
+    {
+      url: "landing/partners/immunefi.svg",
+      link: "https://twitter.com/SolidityScan/status/1689555988641431552",
     },
   ];
 
